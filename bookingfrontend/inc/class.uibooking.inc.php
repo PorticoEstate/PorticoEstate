@@ -804,7 +804,7 @@
 		public function resource_users( $resources, $group_id )
 		{
 			$contacts = array();
-			$orglist = array();
+			$orglist = '';
 			foreach ($resources as $res)
 			{
 				$cres = $this->resource_bo->read_single($res);

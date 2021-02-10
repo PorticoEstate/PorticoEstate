@@ -612,12 +612,12 @@
 			else
 			{
 				$resources = explode(",", phpgw::get_var('resource', 'string'));
-				array_set_default($booking, 'resources', $resources);
+				array_set_default($booking, 'resources', (array)$resources);
 			}
-			array_set_default($booking, 'season_id', phpgw::get_var('season_id', 'int'));
-			array_set_default($booking, 'group_id', phpgw::get_var('group_id', 'int'));
-			array_set_default($booking, 'building_id', phpgw::get_var('building_id', 'int'));
-			array_set_default($booking, 'building_name', phpgw::get_var('building_name', 'string'));
+			array_set_default($booking, 'season_id', (array)phpgw::get_var('season_id', 'int'));
+			array_set_default($booking, 'group_id', (array)phpgw::get_var('group_id', 'int'));
+			array_set_default($booking, 'building_id', (array)phpgw::get_var('building_id', 'int'));
+			array_set_default($booking, 'building_name', (array)phpgw::get_var('building_name', 'string'));
 			if (strstr($application['building_name'], "%"))
 			{
 				$search = array('%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86', '%C3%A6');

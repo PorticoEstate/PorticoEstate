@@ -161,7 +161,7 @@
 			}
 			$this->flash_form_errors($errors);
 			$agegroup['cancel_link'] = self::link(array('menuaction' => 'booking.uiagegroup.index'));
-			array_set_default($agegroup, 'sort', '0');
+			array_set_default($agegroup, 'sort', array(0));
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('add agegroup'), 'link' => '#agegroup_add');
