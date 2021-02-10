@@ -839,6 +839,14 @@ external archive key	booking	no	Eksternt saksnummer
 transfer case to external system?	booking	no	Overføre sak til dokumentarkiv?
 register participants	booking	no	Deltagerregistrering
 capacity	booking	no	Kapasitet
+Complete extended application text booking	booking	no	Ny søknad generert for å øke tid. For å fullføre søknadsprosessen må du trykke på knappen «Fullfør søknad» og logge inn via ID-porten og bekrefte kontaktopplysninger.
 Could not copy application	booking	no	Kunne ikke kopiere søknad
 Copy application	booking	no	Kopier søknad
+Show my events	booking	no	Se mine arrangement
+Search for organizations	booking	no	Søk etter organisasjoner
+From date	booking	no	Fra dato
+To date	booking	no	Til dato
+Building name (2021)	booking	no	Bygningsnavn
+Building type	booking	no	Bygningstype
+Search for events	booking	no	Finn arrangement
 

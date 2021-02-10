@@ -2,7 +2,7 @@
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"/>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"/>
-	<div id="booking-new-page-content" class="margin-top-content">
+	<div id="booking-edit-page-content" class="margin-top-content">
 		<div class="container wrapper">
 			<div class="location">
 				<span>
@@ -14,19 +14,38 @@
 					</a>
 				</span>
 				<span>
-					<xsl:value-of select="php:function('lang', 'New Booking')"/>
+					<xsl:value-of select="php:function('lang', 'Booking')"/> #<xsl:value-of select="booking/id"/>
 				</span>
 			</div>
 			<div class="row">
-				<form action="" method="POST" id="booking_form" name="form" class="col-md-8">
-					<div class="col mb-5">
+				<form action="" method="POST" id="booking_form" class="col-md-8">
+					<div class="col mb-4">
 						<xsl:call-template name="msgbox"/>
 					</div>
-					<input type="hidden" class="form-control" name="season_id" value="{booking/season_id}"/>
-					<input type="hidden" class="form-control" name="allocation_id" value="{booking/allocation_id}"/>
-
+					<input type="hidden" name="season_id" value="{booking/season_id}"/>
+					<input type="hidden" name="allocation_id" value="{booking/allocation_id}"/>
+					<input type="hidden" name="step" value="1"/>
 					<div class="form-group">
-						<label>
+						<label class="text-uppercase">
+							<xsl:value-of select="php:function('lang', 'Active')"/>
+						</label>
+						<select id="field_active" class="form-control" name="active">
+							<option value="1">
+								<xsl:if test="booking/active=1">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'Active')"/>
+							</option>
+							<option value="0">
+								<xsl:if test="booking/active=0">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'Inactive')"/>
+							</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label class="text-uppercase">
 							<xsl:value-of select="php:function('lang', 'Activity')" />
 						</label>
 						<select name="activity_id" class="form-control" id="field_activity">
@@ -53,7 +72,7 @@
 						</select>
 					</div>
 					<div class="form-group">
-						<label>
+						<label class="text-uppercase">
 							<xsl:value-of select="php:function('lang', 'Building (2018)')"/>
 						</label>
 						<input id="field_building_id" class="form-control" name="building_id" type="hidden" value="{booking/building_id}">
@@ -61,13 +80,13 @@
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
 							<xsl:attribute name="data-validation-error-msg">
-								<xsl:value-of select="php:function('lang', 'Please enter a building name')" />
+								<xsl:value-of select="php:function('lang', 'Please enter a building')" />
 							</xsl:attribute>
 						</input>
-						<xsl:value-of select="booking/building_name" />
+						<xsl:value-of select="booking/building_name"/>
 					</div>
 					<div class="form-group">
-						<label>
+						<label class="text-uppercase">
 							<xsl:value-of select="php:function('lang', 'Resource (2018)')" />
 						</label>
 						<button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown">
@@ -97,36 +116,42 @@
 						</span>
 					</div>
 					<div class="form-group">
-						<label>
+						<label class="text-uppercase">
 							<xsl:value-of select="php:function('lang', 'Organization')"/>
 						</label>
-						<xsl:value-of select="booking/organization_name" />
+						<input id="field_organization_id" class="form-control" name="organization_id" type="hidden" value="{booking/organization_id}">
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please enter an organization')" />
+							</xsl:attribute>
+						</input>
+						<xsl:value-of select="booking/organization_name"/>
 					</div>
 					<div class="form-group">
-						<label>
+						<label class="text-uppercase">
 							<xsl:value-of select="php:function('lang', 'Group')"/>
 						</label>
-						<div id="group_container">
-							<select name="group_id" class="form-control">
-								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-error-msg">
-									<xsl:value-of select="php:function('lang', 'Please select a group')" />
-								</xsl:attribute>
-								<option value="">
-									<xsl:value-of select="php:function('lang', 'Select a group')"/>
+						<select name="group_id" class="form-control">
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please select a group')" />
+							</xsl:attribute>
+							<option value="">
+								<xsl:value-of select="php:function('lang', 'Select a group')"/>
+							</option>
+							<xsl:for-each select="groups">
+								<option value="{id}">
+									<xsl:if test="../booking/group_id = id">
+										<xsl:attribute name="selected">selected</xsl:attribute>
+									</xsl:if>
+									<xsl:value-of select="name"/>
 								</option>
-								<xsl:for-each select="groups">
-									<option value="{id}">
-										<xsl:if test="../booking/group_id = id">
-											<xsl:attribute name="selected">selected</xsl:attribute>
-										</xsl:if>
-										<xsl:value-of select="name"/>
-									</option>
-								</xsl:for-each>
-							</select>
-						</div>
+							</xsl:for-each>
+						</select>
 					</div>
 					<div class="form-group">
 						<label>
@@ -190,40 +215,7 @@
 						</input>
 					</div>
 					<div class="form-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'Interval')" />
-						</label>
-
-						<xsl:value-of select="../field_interval" />
-						<select id="field_interval" class="form-control" name="field_interval">
-							<option value="1">
-								<xsl:if test="interval=1">
-									<xsl:attribute name="selected">selected</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="php:function('lang', '1 week')" />
-							</option>
-							<option value="2">
-								<xsl:if test="interval=2">
-									<xsl:attribute name="selected">selected</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="php:function('lang', '2 weeks')" />
-							</option>
-							<option value="3">
-								<xsl:if test="interval=3">
-									<xsl:attribute name="selected">selected</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="php:function('lang', '3 weeks')" />
-							</option>
-							<option value="4">
-								<xsl:if test="interval=4">
-									<xsl:attribute name="selected">selected</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="php:function('lang', '4 weeks')" />
-							</option>
-						</select>
-					</div>
-					<div class="form-group">
-						<label>
+						<label class="text-uppercase">
 							<xsl:value-of select="php:function('lang', 'Target audience')" />
 						</label>
 						<div class="dropdown d-inline-block">
@@ -237,7 +229,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label>
+						<label class="text-uppercase">
 							<xsl:value-of select="php:function('lang', 'Estimated number of participants')" />
 						</label>
 						<div class="p-2 border">
@@ -254,7 +246,6 @@
 									<xsl:value-of select="php:function('lang', 'Female')" />
 								</div>
 							</div>
-
 							<div class="row mb-2" data-bind="foreach: agegroup">
 								<span data-bind="text: id, visible: false"/>
 								<div class="col-3">
@@ -271,7 +262,7 @@
 					</div>
 					<input type="submit" class="btn btn-light mr-4">
 						<xsl:attribute name="value">
-							<xsl:value-of select="php:function('lang', 'Create')"/>
+							<xsl:value-of select="php:function('lang', 'Save')"/>
 						</xsl:attribute>
 					</input>
 					<a class="cancel">
@@ -284,22 +275,17 @@
 			</div>
 		</div>
 	</div>
-	<div class="push"></div>
 	<script>
-		var initialSelection = <xsl:value-of select="booking/resource_ids_json" />;
-		var initialAudience = <xsl:value-of select="booking/audience_json" />;
+		var initialSelection = <xsl:value-of select="booking/resource_ids_json"/>;
+		var initialAudience = <xsl:value-of select="booking/audience_json"/>;
 		var initialSelectionAgegroup = <xsl:value-of select="booking/agegroups_json" />;
 		var building_id = <xsl:value-of select="booking/building_id"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resources Type')" />;
-
-
 		$(".maleInput").attr('data-bind', "textInput: inputCountMale, attr: {'name': malename }");
 		$(".femaleInput").attr('data-bind', "textInput: inputCountFemale, attr: {'name': femalename }");
-
 		BookingNewModel = GenerateUIModelForResourceAudienceAndAgegroup();
 		bnm = new BookingNewModel();
 		ko.applyBindings(bnm, document.getElementById("booking-new-page-content"));
-
 		AddBookableResourceDataWithinBooking(building_id, initialSelection, bnm.bookableresource);
 		AddAudiencesAndAgegroupData(building_id, bnm.agegroup, initialSelectionAgegroup, bnm.audiences, initialAudience);
 		bnm.audienceSelectedValue(<xsl:value-of select="booking/audience" />);

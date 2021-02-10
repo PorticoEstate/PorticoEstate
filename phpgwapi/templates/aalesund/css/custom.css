@@ -703,7 +703,7 @@ body{
     flex:1;
 }
 
-.mainSearchInput, .locationFilter, .dateFilter {
+.mainSearchInput, .locationFilter, .dateFilter, .eventSearchInput {
 	padding: 16px 0px 16px 49px;
 	border-radius: 12px;
 	box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
@@ -726,6 +726,17 @@ body{
 	background-size: 20px;
 	width: 576px;
 	margin-bottom: 20px;
+}
+
+.eventSearchInput {
+	background: url(../img/search.svg) no-repeat scroll 16px 16px;
+	background-size: 20px;
+	margin-bottom: 10px;
+	margin-top: 20px;
+}
+
+.dateFilter.dateFilterEvent {
+	margin-bottom: 10px;
 }
 
 .locationFilter {
@@ -838,17 +849,40 @@ filterbokser søkesiden
  */
 /* Dropdown Button */
 .dropbtn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 16px;
+    background-color: #f5f5ff;
+	padding: 16px;
+	border-radius: 12px;
     font-size: 16px;
-    border: none;
+	border: solid 1px #28358f;
+	font-family: Rubik;
+	font-size: 1rem;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.25;
+	letter-spacing: normal;
+	color: #3a3a4c;
     cursor: pointer;
+	text-align: center;
+}
+
+#buildingNameDropDown, #buildingTypeDropDown {
+	width: 92%;
 }
 
 /* Dropdown button on hover & focus */
 .dropbtn:hover, .dropbtn:focus {
-    background-color: #3e8e41;
+    background-color: #f9f9ff;
+}
+
+#applyEventFilterBtn {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#removeEventFilterBtn {
+	margin-top: 10px;
+	margin-bottom: 20px;
 }
 
 /* The search field */
@@ -913,7 +947,9 @@ select option:focus {
 	color: #3a3a4c !important;
 }
 
-
+.cardElementLeft {
+	height: 92px;
+}
 
 .eventCard {
 	border-radius: 12px;
@@ -1016,11 +1052,13 @@ select option:focus {
 .locationContainer {
 	position: absolute;
 	top: 19px;
-	left: 37px;
-	text-overflow: ellipsis;
+	left: 24px;
 	font-family: Rubik;
 	line-height: 1.56;
 	color: #0b1214;
+	white-space: nowrap;
+	width: 84%;
+	overflow: hidden;
 }
 
 .locationName {
@@ -1039,12 +1077,15 @@ select option:focus {
 
 .orgNameContainer {
 	position: absolute;
-	left: 37px;
+	left: 25px;
 	display: flex;
 	bottom: 19px;
 	font-family: Rubik;
 	line-height: 1.56;
 	color: #0b1214;
+	white-space: nowrap;
+	width: 84%;
+	overflow: hidden;
 }
 
 .orgName {
@@ -1055,6 +1096,8 @@ select option:focus {
 	white-space: pre;
 	overflow: hidden;
 }
+
+
 
 .orgName:before {
 	content: url(../img/event-organizer.svg);

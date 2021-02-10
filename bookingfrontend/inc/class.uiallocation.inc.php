@@ -380,11 +380,14 @@
 				'sort'		 => 'name'));
 			$allocation['resources'] = $resources['results'];
 			$res_names				 = array();
+			$res_ids				 = array();
 			foreach ($allocation['resources'] as $res)
 			{
 				$res_names[] = $res['name'];
+				$res_ids[] = $res['id'];
 			}
 			$allocation['resource']		 = phpgw::get_var('resource');
+			$allocation['resource_ids']	 = $res_ids;
 			$allocation['resource_info'] = join(', ', $res_names);
 			$allocation['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id'		 => $allocation['building_id']));
@@ -396,11 +399,13 @@
 				$allocation['add_link']		 = self::link(array('menuaction'	 => 'bookingfrontend.uibooking.add',
 						'allocation_id'	 => $allocation['id'], 'from_'			 => $allocation['from_'],
 						'to_'			 => $allocation['to_'],
-						'resource'		 => $allocation['resource']));
+						'resource'		 => $allocation['resource'],
+						'resource_ids'	 => $allocation['resource_ids']));
 				$allocation['cancel_link']	 = self::link(array('menuaction'	 => 'bookingfrontend.uiallocation.cancel',
 						'allocation_id'	 => $allocation['id'], 'from_'			 => $allocation['from_'],
 						'to_'			 => $allocation['to_'],
-						'resource'		 => $allocation['resource']));
+						'resource'		 => $allocation['resource'],
+						'resource_ids'		 => $allocation['resource_ids']));
 
 				if ($allocation['application_id'] != null)
 				{

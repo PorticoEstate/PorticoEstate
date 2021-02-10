@@ -1,6 +1,7 @@
 
 <?php
 	phpgw::import_class('booking.uievent');
+	phpgw::import_class('booking.uiapplication');
 
 	class bookingfrontend_uievent extends booking_uievent
 	{
@@ -14,6 +15,8 @@
 			'show'	=> true
 		);
 
+		protected $application_ui;
+
 		public function __construct()
 		{
 			parent::__construct();
@@ -21,6 +24,7 @@
 			$this->building_bo = CreateObject('booking.bobuilding');
 			$this->organization_bo = CreateObject('booking.boorganization');
 			$this->booking_bo = CreateObject('booking.bobooking');
+			$this->application_ui = new booking_uiapplication();
 		}
 
 		public function edit()
@@ -35,6 +39,7 @@
 			$config->read();
 			$errors = array();
 			$customer = array();
+			array_set_default($event, 'resource_ids', phpgw::get_var('resource_ids'));
 
 			if ($event['customer_identifier_type'])
 			{
@@ -109,7 +114,16 @@
 
 				if ($event['from_'] < $test['from_'] || $event['to_'] > $test['to_'])
 				{
-					$errors['out_of_range'] = lang("You can't extend the event, for that contact administrator");
+					try {
+						$_POST['from_'] = array(date("d-m-Y H:i", strtotime($event['from_'])));
+						$_POST['to_'] = array(date("d-m-Y H:i", strtotime($event['to_'])));
+						$_POST['formstage'] = 'partial1';
+						$_POST['extend_date'] = True;
+						$this->application_ui->add();
+						$test = 0;
+					} catch (Exception $e) {
+						$errors['out_of_range'] = lang("You can't extend the event, for that contact administrator");
+					}
 				}
 
 				if (sizeof($currres) != sizeof($_POST['resources']))
@@ -146,6 +160,7 @@
 			$date = substr($event['from_'], 0, 10);
 			self::add_javascript('bookingfrontend', 'base', 'event.js');
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
+			$event['resource_ids_json'] = json_encode(array_map('intval', $event['resource_ids']));
 			$event['audiences_json'] = json_encode(array_map('intval', $event['audience']));
 			$event['agegroups_json'] = json_encode($event['agegroups']);
 			$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
@@ -397,11 +412,14 @@
 			//echo $event['name'];
 			$event['resources'] = $resources['results'];
 			$res_names = array();
+			$res_ids = array();
 			foreach ($event['resources'] as $res)
 			{
 				$res_names[] = $res['name'];
+				$res_ids[] = $res['id'];
 			}
 			$event['resource_info'] = join(', ', $res_names);
+			$event['resource_ids'] = $res_ids;
 			$event['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $event['building_id']));
 			$interval = (new DateTime($event['from_']))->diff(new DateTime($event['to_']));
@@ -420,9 +438,11 @@
 			if ($bouser->is_organization_admin($event['customer_organization_id']))
 			{
 				$event['edit_link'] = self::link(array('menuaction' => 'bookingfrontend.uievent.edit',
-						'id' => $event['id']));
+						'id' => $event['id'],
+						'resource_ids' => $event['resource_ids']));
 				$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uievent.cancel',
-						'id' => $event['id']));
+						'id' => $event['id'],
+						'resource_ids' => $event['resource_ids']));
 
 				if ($event['application_id'] != null)
 				{
