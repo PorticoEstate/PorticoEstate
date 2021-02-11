@@ -879,13 +879,13 @@
 					$activity_id = $resource['activity_id'];
 				}
 
-				array_set_default($application, 'resources', $resources);
+				array_set_default($application, 'resources', (array)$resources);
 			}
-			array_set_default($application, 'building_id', $building_id);
+			array_set_default($application, 'building_id', (array)$building_id);
 
 			$_building = $this->building_bo->so->read_single($building_id);
 
-			array_set_default($application, 'building_name', $_building['name']);
+			array_set_default($application, 'building_name', (array)$_building['name']);
 			array_set_default($application, 'audience', array());
 
 			if (strstr($application['building_name'], "%"))
@@ -924,7 +924,7 @@
 				$default_dates = array_map(array($this, '_combine_dates'), array(), array());
 			}
 
-			array_set_default($application, 'dates', $default_dates);
+			array_set_default($application, 'dates', (array)$default_dates);
 
 			$this->flash_form_errors($errors);
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
@@ -958,7 +958,7 @@
 				$filter_activity_top = $top_level_activity > 0 ? $top_level_activity : 0;
 			}
 			$application['frontpage_link'] = self::link(array());
-			array_set_default($application, 'activity_id', $activity_id);
+			array_set_default($application, 'activity_id', (array)$activity_id);
 			$activities = $this->activity_bo->fetch_activities($filter_activity_top);
 			$activities = $activities['results'];
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
@@ -1236,7 +1236,7 @@
 						$partial2_fields = array('contact_email','contact_name','contact_phone',
 							'customer_identifier_type','customer_organization_number','customer_organization_id',
 							'customer_organization_name','customer_ssn',
-							'responsible_city','responsible_street','responsible_zip_code', 'audience');
+							'responsible_city','responsible_street','responsible_zip_code');
 						foreach ($partials['results'] as &$application)
 						{
 							// Remove certain unused fields from the update
@@ -1555,6 +1555,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$application = $this->bo->read_single($id);
 
 			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($application['resources'], true);

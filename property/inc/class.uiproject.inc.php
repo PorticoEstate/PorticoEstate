@@ -1261,7 +1261,7 @@ JS;
 
 						if((int)$values['budget'])
 						{
-							if(!((int)$values['budget'] >= $_budget_amount) )
+							if(!(((int)$values['budget'] + (int)$project['budget']) >= $_budget_amount) )
 							{
 								$this->receipt['error'][]	 = array('msg' => lang('The budget for project %1 must be at least %2', $id, $_budget_amount ));
 								$error_id					 = true;

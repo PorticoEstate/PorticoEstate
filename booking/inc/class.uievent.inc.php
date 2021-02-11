@@ -572,7 +572,7 @@
 				$errors['warning'] = lang('NB! No data will be saved, if you navigate away you will loose all.');
 			}
 			$default_dates = array_map(array($this, '_combine_dates'), array(), array());
-			array_set_default($event, 'dates', $default_dates);
+			array_set_default($event, 'dates', (array)$default_dates);
 
 			if (!phpgw::get_var('from_report', 'POST'))
 			{
@@ -583,7 +583,7 @@
 			array_set_default($event, 'resources', array());
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
 			$event['cancel_link'] = self::link(array('menuaction' => 'booking.uievent.index'));
-			array_set_default($event, 'cost', '0');
+			array_set_default($event, 'cost', array(0));
 
 			$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', -1);
 			$activity_path = $this->activity_bo->get_path($activity_id);
@@ -659,6 +659,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$event = $this->bo->read_single($id);
 
 			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($event['resources'], true);

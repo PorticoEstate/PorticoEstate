@@ -136,7 +136,7 @@
 			array_set_default($report, 'resources', array());
 			$report['resources_json'] = json_encode(array_map('intval', $report['resources']));
 			$report['cancel_link'] = self::link(array('menuaction' => 'booking.uireports.index'));
-			array_set_default($report, 'cost', '0');
+			array_set_default($report, 'cost', array(0));
 			$activities = $this->activity_bo->get_top_level();
 			$report['days'] = array(
 				array('id' => 1, 'name' => lang('Monday')),
