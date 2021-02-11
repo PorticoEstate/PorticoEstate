@@ -1125,7 +1125,7 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
-			$event['audience_json'] = json_encode(array_map('intval', $event['audience']));
+			$event['audience_json'] = json_encode(array_map('intval', (array)$event['audience']));
 
 			$this->install_customer_identifier_ui($event);
 			$this->add_template_helpers();
