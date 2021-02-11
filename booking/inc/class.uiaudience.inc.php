@@ -181,7 +181,7 @@
 					$this->redirect(array('menuaction' => 'booking.uiaudience.index'));
 				}
 			}
-			array_set_default($audience, 'sort', '0');
+			array_set_default($audience, 'sort', array(0));
 			$this->flash_form_errors($errors);
 			$audience['cancel_link'] = self::link(array('menuaction' => 'booking.uiaudience.index'));
 
@@ -198,6 +198,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$audience = $this->bo->read_single($id);
 			$activities = $this->activity_bo->get_top_level($audience['activity_id']);
 

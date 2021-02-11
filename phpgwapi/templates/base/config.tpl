@@ -80,12 +80,12 @@
 
    <tr bgcolor="{row_on}">
     <td>{lang_Enter_the_site_username_for_peer_servers}.</td>
-    <td><input name="newsettings[site_username]" value="{value_site_username}" autocomplete="off"></td>
+    <td><input name="newsettings[site_username]" value="{value_site_username}" autocomplete="off"/></td>
    </tr>
 
    <tr bgcolor="{row_off}">
     <td>{lang_Enter_the_site_password_for_peer_servers}.</td>
-    <td><input type="password" name="newsettings[site_password]" value="{value_site_password}"></td>
+    <td><input type="password" name="newsettings[site_password]" value="{value_site_password}" autocomplete="off"/></td>
    </tr>
 
 <!-- END body -->

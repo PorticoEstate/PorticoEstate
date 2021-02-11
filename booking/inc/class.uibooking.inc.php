@@ -505,7 +505,16 @@
 					}
 
 					$max_dato = phpgwapi_datetime::date_to_timestamp($_POST['to_']); // highest date from input
-					$interval = $_POST['field_interval'] * 60 * 60 * 24 * 7; // weeks in seconds
+
+					if(phpgw::get_var('field_interval', 'int', 'POST') == 5)
+					{
+						$interval = 60 * 60 * 24; // day in seconds
+					}
+					else
+					{
+						$interval = $_POST['field_interval'] * 60 * 60 * 24 * 7; // weeks in seconds
+					}
+
 					$i = 0;
 					// calculating valid and invalid dates from the first booking's to-date to the repeat_until date is reached
 					// the form from step 1 should validate and if we encounter any errors they are caused by double bookings.
@@ -603,12 +612,12 @@
 			else
 			{
 				$resources = explode(",", phpgw::get_var('resource', 'string'));
-				array_set_default($booking, 'resources', $resources);
+				array_set_default($booking, 'resources', (array)$resources);
 			}
-			array_set_default($booking, 'season_id', phpgw::get_var('season_id', 'int'));
-			array_set_default($booking, 'group_id', phpgw::get_var('group_id', 'int'));
-			array_set_default($booking, 'building_id', phpgw::get_var('building_id', 'int'));
-			array_set_default($booking, 'building_name', phpgw::get_var('building_name', 'string'));
+			array_set_default($booking, 'season_id', (array)phpgw::get_var('season_id', 'int'));
+			array_set_default($booking, 'group_id', (array)phpgw::get_var('group_id', 'int'));
+			array_set_default($booking, 'building_id', (array)phpgw::get_var('building_id', 'int'));
+			array_set_default($booking, 'building_name', (array)phpgw::get_var('building_name', 'string'));
 			if (strstr($application['building_name'], "%"))
 			{
 				$search = array('%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86', '%C3%A6');
@@ -724,6 +733,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$booking = $this->bo->read_single($id);
 
 			$activity_path = $this->activity_bo->get_path($booking['activity_id']);

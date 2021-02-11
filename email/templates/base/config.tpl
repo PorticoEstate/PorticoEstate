@@ -82,7 +82,7 @@
 	</tr>
 	<tr class="row_off">
 		<td>{lang_Enter_your_SMTP_server_password}:</td>
-    <td><input type= "password" name="newsettings[smtpPassword]" value="{value_smtpPassword}"></td>
+    <td><input type= "password" name="newsettings[smtpPassword]" value="{value_smtpPassword}" autocomplete="off"></td>
 	</tr>
 	<tr class="row_on">
 	    <td>{lang_SMTPSecure}:</td>

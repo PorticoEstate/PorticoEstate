@@ -4872,7 +4872,7 @@
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT MAX(id)+1  as next_id FROM bb_rescategory", __LINE__, __FILE__);
 		$GLOBALS['phpgw_setup']->oProc->next_record();
 		
-		$next_id = $GLOBALS['phpgw_setup']->oProc->f('next_id');
+		$next_id = (int)$GLOBALS['phpgw_setup']->oProc->f('next_id');
 		$next_id_2 = $next_id +1;
 
 		$bb_rescategory = array(

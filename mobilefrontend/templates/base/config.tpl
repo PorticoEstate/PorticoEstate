@@ -50,7 +50,7 @@
 		</tr>
 		<tr class="row_on">
 			<td>{lang_Anonymous_password}:</td>
-			<td><input type="password" name="newsettings[anonymous_passwd]" value="{value_anonymous_passwd}"></td>
+			<td><input type="password" name="newsettings[anonymous_passwd]" value="{value_anonymous_passwd}" autocomplete="off"></td>
 		</tr>
 		<tr class="row_on">
 			<td>{lang_external_host_address}:{lang_example}: https://www.bergen.kommune.no</td>

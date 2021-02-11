@@ -364,6 +364,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$document = $this->bo->read_single($id);
 
 			$errors = array();

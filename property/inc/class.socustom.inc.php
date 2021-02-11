@@ -329,8 +329,6 @@
 			//FIXME:
 			$ordermethod = '';
 
-			$this->db->query($sql, __LINE__, __FILE__);
-			$this->total_records = $this->db->num_rows();
 
 			if($update)
 			{
@@ -338,11 +336,16 @@
 			}
 			else if (!$allrows)
 			{
+				$this->db->query("SELECT count(*) as cnt FROM ({$sql}) as t", __LINE__, __FILE__);
+				$this->db->next_record();
+				$this->total_records = (int)$this->db->f('cnt');
+
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
 				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
+				$this->total_records = $this->db->num_rows();
 			}
 
 			$values = array();
