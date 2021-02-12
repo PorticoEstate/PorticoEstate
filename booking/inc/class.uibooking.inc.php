@@ -612,12 +612,12 @@
 			else
 			{
 				$resources = explode(",", phpgw::get_var('resource', 'string'));
-				array_set_default($booking, 'resources', (array)$resources);
+				array_set_default($booking, 'resources', $resources);
 			}
-			array_set_default($booking, 'season_id', (array)phpgw::get_var('season_id', 'int'));
-			array_set_default($booking, 'group_id', (array)phpgw::get_var('group_id', 'int'));
-			array_set_default($booking, 'building_id', (array)phpgw::get_var('building_id', 'int'));
-			array_set_default($booking, 'building_name', (array)phpgw::get_var('building_name', 'string'));
+			array_set_default($booking, 'season_id', phpgw::get_var('season_id', 'int'));
+			array_set_default($booking, 'group_id', phpgw::get_var('group_id', 'int'));
+			array_set_default($booking, 'building_id', phpgw::get_var('building_id', 'int'));
+			array_set_default($booking, 'building_name', phpgw::get_var('building_name', 'string'));
 			if (strstr($application['building_name'], "%"))
 			{
 				$search = array('%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86', '%C3%A6');
@@ -637,7 +637,7 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
-			$booking['audience_json'] = json_encode(array_map('intval', $booking['audience']));
+			$booking['audience_json'] = json_encode(array_map('intval', (array)$booking['audience']));
 
 			$groups = $this->group_bo->so->read(array('results' => -1, 'filters' => array('organization_id' => $allocation['organization_id'],
 					'active' => 1)));
@@ -801,7 +801,7 @@
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 			$cost_history = $this->bo->so->get_ordered_costs($id);
-			$booking['audience_json'] = json_encode(array_map('intval', $booking['audience']));
+			$booking['audience_json'] = json_encode(array_map('intval', (array)$booking['audience']));
 
 			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime');
 			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime');
