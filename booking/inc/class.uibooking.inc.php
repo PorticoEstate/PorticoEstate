@@ -637,7 +637,7 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
-			$booking['audience_json'] = json_encode(array_map('intval', $booking['audience']));
+			$booking['audience_json'] = json_encode(array_map('intval', (array)$booking['audience']));
 
 			$groups = $this->group_bo->so->read(array('results' => -1, 'filters' => array('organization_id' => $allocation['organization_id'],
 					'active' => 1)));
@@ -801,7 +801,7 @@
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 			$cost_history = $this->bo->so->get_ordered_costs($id);
-			$booking['audience_json'] = json_encode(array_map('intval', $booking['audience']));
+			$booking['audience_json'] = json_encode(array_map('intval', (array)$booking['audience']));
 
 			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime');
 			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime');

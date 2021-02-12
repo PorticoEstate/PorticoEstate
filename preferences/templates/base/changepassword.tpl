@@ -17,7 +17,7 @@
         {lang_reenter_password}
        </td>
        <td>
-        <input type="password" name="n_passwd_2">
+        <input type="password" name="n_passwd_2" autocomplete="off"/>
        </td>
      </tr>
      <tr>
