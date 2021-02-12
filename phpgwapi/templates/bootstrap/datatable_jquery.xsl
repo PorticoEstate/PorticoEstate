@@ -1029,6 +1029,30 @@
 				menuaction += '_type_' + table_url.searchObject.type;
 			}
 
+			//https://datatables.net/forums/discussion/33028/searchdelay-for-server-side-issue
+			$.fn.dataTable.Debounce = function ( table, options ) {
+
+				var tableId = table.api().settings()[0].sTableId;
+				$('.dataTables_filter input[aria-controls="' + tableId + '"]') // select the correct input field
+					.unbind() // Unbind previous default bindings
+					.bind('input', (delay(function (e) { // Bind our desired behavior
+						table.api().search($(this).val()).draw();
+						return;
+					}, 1200))); // Set delay in milliseconds
+			}
+
+			function delay(callback, ms) {
+
+				var timer = 0;
+				return function () {
+					var context = this, args = arguments;
+					clearTimeout(timer);
+					timer = setTimeout(function () {
+						callback.apply(context, args);
+					}, ms || 0);
+				};
+			}
+
 			oTable = $('#datatable-container').dataTable({
 				paginate:		disablePagination ? false : true,
 				pagingType:		"input",
@@ -1283,6 +1307,8 @@
 					{
 						initCompleteDatatable(oSettings, json, oTable);
 					}
+
+					var debounce = new $.fn.dataTable.Debounce(oTable);
 				},
 				lengthMenu:		JqueryPortico.i18n.lengthmenu(),
 				language:		JqueryPortico.i18n.datatable(),
