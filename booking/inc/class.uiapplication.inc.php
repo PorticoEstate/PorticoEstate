@@ -26,7 +26,8 @@
 			'associated' => true,
 			'toggle_show_inactive' => true,
 			'custom_fields_example' => true,
-			'export_pdf'			=> true
+			'export_pdf'			=> true,
+			'add_comment_to_application' => true,
 		);
 		protected $customer_id,
 			$default_module = 'bookingfrontend',
@@ -241,6 +242,24 @@
 			$application['display_in_dashboard'] = ($bool === true ? 1 : 0);
 			return true;
 		}
+
+		function add_comment_to_application($application_id, $comment, $changeStatus)
+		{
+			$application = $this->application_bo->read_single($application_id);
+
+			$this->add_comment($application, $comment);
+			$this->set_display_in_dashboard($application, true, array('force' => true));
+			$application['frontend_modified'] = 'now';
+
+			if ($changeStatus && $application['status'] != 'PENDING')
+			{
+				$application['status'] = 'PENDING';
+			}
+
+			$this->bo->send_admin_notification($application, $comment);
+			$this->bo->update($application);
+		}
+
 
 		protected function add_comment( &$application, $comment, $type = 'comment' )
 		{

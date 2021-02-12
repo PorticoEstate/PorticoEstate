@@ -108,23 +108,64 @@
 				$_POST['org_from'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['org_from']));
 				$_POST['org_to'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['org_to']));
 
-				$event['from_'] = substr($_POST['org_from'], 0, 11) . $_POST['from_'] . ":00";
-				$event['to_'] = substr($_POST['org_to'], 0, 11) . $_POST['to_'] . ":00";
+				$new_date['from_'] = substr($_POST['org_from'], 0, 11) . $_POST['from_'] . ":00";
+				$new_date['to_'] = substr($_POST['org_to'], 0, 11) . $_POST['to_'] . ":00";
 				array_set_default($_POST, 'resources', array());
 
-				if ($event['from_'] < $test['from_'] || $event['to_'] > $test['to_'])
+				if ($_POST['org_from'] <= $new_date['from_'] && $_POST['org_to'] >= $new_date['to_'])
 				{
-					try {
-						$_POST['from_'] = array(date("d-m-Y H:i", strtotime($event['from_'])));
-						$_POST['to_'] = array(date("d-m-Y H:i", strtotime($event['to_'])));
-						$_POST['formstage'] = 'partial1';
-						$_POST['extend_date'] = True;
-						$this->application_ui->add();
-						$test = 0;
-					} catch (Exception $e) {
+					$event['from_'] = $new_date['from_'];
+					$event['to_'] = $new_date['to_'];
+				}
+				else
+				{
+					if ($_POST['org_from'] <= $new_date['from_'])
+					{
+						$event['from_'] = $new_date['from_'];
+					}
+					else
+					{
+						$event['from_'] = $_POST['org_from'];
+					}
+
+					if ($_POST['org_to'] >= $new_date['to_'])
+					{
+						$event['to_'] = $new_date['to_'];
+					}
+					else
+					{
+						$event['to_'] = $_POST['org_to'];
+					}
+
+					try
+					{
+						if (!is_null($event['application_id']) && $event['application_id'] != '')
+						{
+							$comment = lang("User has made a request to increase time on existing booking") . ' ' . $new_date['from_'] . ' - ' . $new_date['to_'];
+
+							$this->application_ui->add_comment_to_application($event['application_id'], $comment , True);
+							phpgwapi_cache::message_set(lang('Request for changed time') . '</br>' . lang('Follow status' ));
+
+						}
+					}
+					catch (Exception $e)
+					{
 						$errors['out_of_range'] = lang("You can't extend the event, for that contact administrator");
 					}
 				}
+
+				if ($test['equipment'] != $event['equipment'] )
+				{
+					if (!is_null($event['application_id']) && $event['application_id'] != '') {
+
+						$comment = lang("User has changed field for equipment") . ' ' . $event['equipment'];
+
+						$this->application_ui->add_comment_to_application($event['application_id'], $comment , false);
+						phpgwapi_cache::message_set(lang('Request for equipment has been sent') . '</br>' . lang('Follow status' ));
+
+					}
+				}
+
 
 				if (sizeof($currres) != sizeof($_POST['resources']))
 				{

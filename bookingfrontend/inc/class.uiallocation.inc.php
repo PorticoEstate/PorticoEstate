@@ -1,5 +1,8 @@
 <?php
 	phpgw::import_class('booking.uiallocation');
+	phpgw::import_class('booking.soallocation');
+	phpgw::import_class('booking.uiapplication');
+	phpgw::import_class('booking.boapplication');
 	use Kigkonsult\Icalcreator\Vcalendar;
 
 	class bookingfrontend_uiallocation extends booking_uiallocation
@@ -9,7 +12,8 @@
 			(
 			'info'	 => true,
 			'cancel' => true,
-			'show'	 => true
+			'show'	 => true,
+			'edit'	 => true
 		);
 
 		public function __construct()
@@ -21,6 +25,9 @@
 			$this->system_message_bo = CreateObject('booking.bosystem_message');
 			$this->organization_bo	 = CreateObject('booking.boorganization');
 			$this->booking_bo		 = CreateObject('booking.bobooking');
+			$this->allocation_so     = new booking_soallocation();
+			$this->application_ui 	 = new booking_uiapplication();
+			$this->application_bo 	 = new booking_boapplication();
 		}
 
 		public function building_users( $building_id, $type = false, $activities = array() )
@@ -573,5 +580,126 @@
 				), array(
 				'allocation'	 => $allocation,
 				'datatable_def'	 => $datatable_def));
+		}
+
+		public function edit()
+		{
+			$config = CreateObject('phpgwapi.config', 'booking');
+			$config->read();
+
+			$allocation = $this->bo->read_single(intval(phpgw::get_var('allocation_id', 'int')));
+			$original_from = $allocation['from_'];
+			$organization = $this->organization_bo->read_single($allocation['organization_id']);
+			$application = $this->application_bo->read_single($allocation['application_id']);
+			$errors = array();
+			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+				$outseason = $_POST['outseason'];
+				$recurring = $_POST['recurring'];
+				$repeat_until = $_POST['repeat_until'];
+				$field_interval = $_POST['field_interval'];
+
+				$new_from_ = date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $_POST['from_'])));
+				$new_to_ = date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $_POST['to_'])));
+
+				$system_message = array();
+				$system_message['building_id'] = intval($allocation['building_id']);
+				$system_message['building_name'] = $this->bo->so->get_building($system_message['building_id']);
+				$system_message['created'] =(new DateTime('now', new DateTimeZone('Europe/Oslo')))->format('Y-m-d  H:i');
+				$system_message['type'] = 'message';
+				$system_message['status'] = 'NEW';
+				$system_message['name'] = $allocation['organization_name'] . ' - ' . $organization['contacts'][0]['name'];
+				$system_message['phone'] = $organization['contacts'][0]['phone'];
+				$system_message['email'] = $organization['contacts'][0]['email'];
+
+
+
+				if ($allocation['from_'] > $new_from_ || $allocation['to_'] < $new_to_) {
+					$comment = lang("User has made a request to increase time on existing booking") . ' ' . $new_from_ . ' - ' . $new_to_;
+					$message = lang('Request for changed time');
+
+					if ($outseason == 'on') {
+						$comment .= ' ' . lang('for remaining season');
+					} elseif ($recurring == 'on' && $repeat_until != '') {
+						$comment .= ' ' . lang('for allocations until') . ' ' . $repeat_until;
+					}
+
+					if ($outseason == 'on' || $recurring = 'on') {
+						if ($field_interval == '1') {
+							$field_interval = ' ';
+						} else {
+							$field_interval .= '. ';
+						}
+						$comment .= ' ' . lang('every (2021)') . ' ' . $field_interval . lang('week (2021)');
+						$message .= '</br>' . lang('Follow status');
+					}
+
+					if (!is_null($allocation['application_id']) && $allocation['application_id'] != '') {
+						$this->application_ui->add_comment_to_application($allocation['application_id'], $comment, True);
+					}
+
+					$system_message['title'] = lang("Request to increase time on existing booking") . " " . $allocation['id'];
+					$system_message['message'] = $comment . '<br/>' . '<a href="/index.php?menuaction=booking.uiallocation.show&id=' . $allocation['id'] . '" target="_blank">' . lang('Go to allocation') .'</a>';
+
+					$this->system_message_bo->add($system_message);
+					phpgwapi_cache::message_set($message);
+				}
+
+				if ($allocation['from_'] < $new_from_) {
+					$any_bookings = $this->allocation_so->check_for_booking_between_date($allocation['id'], $new_from_, 'from_');
+
+					if (!$any_bookings) {
+						$allocation['from_'] = $new_from_;
+						$this->allocation_so->update($allocation);
+						phpgwapi_cache::message_set(lang('Successfully changed from time'));
+					} else {
+						phpgwapi_cache::message_set(lang('Decrease of from time overlap with existing booking'), 'error');
+					}
+				}
+
+				if ($allocation['to_'] > $new_to_) {
+					$any_bookings = $this->allocation_so->check_for_booking_between_date($allocation['id'], $new_to_, 'to_');
+
+					if (!$any_bookings) {
+						$allocation['to_'] = $new_to_;
+						$this->allocation_so->update($allocation);
+						phpgwapi_cache::message_set(lang('Successfully changed end time') . ' ' . $allocation['to_']);
+
+					} else {
+						phpgwapi_cache::message_set(lang('Decrease of to time overlap with existing booking'), 'error');
+					}
+				}
+
+				if ((!empty($application) && $application['equipment'] != $_POST['equipment']) || (empty($application) && $_POST['equipment'] != ''))
+				{
+					$comment = lang("User has changed field for equipment") . ' ' . $application['equipment'];
+					$message = lang('Request for equipment has been sent');
+
+
+					if (!empty($application))
+					{
+						$application['equipment'] = $_POST['equipment'];
+						$this->application_bo->update($application);
+						$this->application_ui->add_comment_to_application($allocation['application_id'], $comment , false);
+						$message .= '</br>' . lang('Follow status' );
+					}
+
+					$system_message['title'] = lang("Request for equipment") . " " . $allocation['id'];
+					$system_message['message'] = $comment . '<br/>' . '<a href="/index.php?menuaction=booking.uiallocation.show&id=' . $allocation['id'] . '" target="_blank">' . lang('Go to allocation') .'</a>';
+
+					$this->system_message_bo->add($system_message);
+					phpgwapi_cache::message_set($message);
+				}
+			}
+
+			$allocation['from_'] = pretty_timestamp($allocation['from_']);
+			$allocation['to_'] = pretty_timestamp($allocation['to_']);
+			$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+				'id' => $allocation['building_id'], 'date' => date("Y-m-d", strtotime($original_from))));
+
+			self::add_javascript('bookingfrontend', 'base', 'allocation.js', 'text/javascript', true);
+			self::rich_text_editor('field-message');
+			self::render_template_xsl('allocation_edit', array(
+				'allocation' => $allocation,
+				'application' => $application));
 		}
 	}

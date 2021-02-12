@@ -303,6 +303,19 @@
 			return $this->db->f('id', false);
 		}
 
+		function check_for_booking_between_date($id, $new_date_, $date_var )
+		{
+			$id = (int) $id;
+			$sql = "SELECT id FROM bb_booking  WHERE allocation_id = ($id) AND '$new_date_' != $date_var AND '$new_date_' BETWEEN from_ AND to_";
+
+			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
+			if (!$this->db->next_record())
+			{
+				return False;
+			}
+			return $this->db->f('id', false);
+		}
+
 		public function delete_allocation( $id )
 		{
 			$id = (int) $id;
