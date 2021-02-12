@@ -481,10 +481,10 @@
 				}
 
 				array_set_default($allocation, 'resources', array(phpgw::get_var('resource', 'int')));
-				array_set_default($allocation, 'building_id', (array)phpgw::get_var('building_id', 'int'));
-				array_set_default($allocation, 'building_name', (array)phpgw::get_var('building_name', 'string'));
-				array_set_default($allocation, 'from_', (array)$timeFrom);
-				array_set_default($allocation, 'to_', (array)$timeTo);
+				array_set_default($allocation, 'building_id', phpgw::get_var('building_id', 'int'));
+				array_set_default($allocation, 'building_name', phpgw::get_var('building_name', 'string'));
+				array_set_default($allocation, 'from_', $timeFrom);
+				array_set_default($allocation, 'to_', $timeTo);
 				$weekday = phpgw::get_var('weekday', 'string');
 			}
 
@@ -492,7 +492,7 @@
 			self::add_javascript('booking', 'base', 'allocation.js');
 			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
-			array_set_default($allocation, 'cost', array(0));
+			array_set_default($allocation, 'cost', '0');
 
 //			$_timeFrom = $timeFrom ? $timeFrom : '';
 			$_timeTo = $timeTo ? $timeTo : '';

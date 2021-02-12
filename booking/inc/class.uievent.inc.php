@@ -572,7 +572,7 @@
 				$errors['warning'] = lang('NB! No data will be saved, if you navigate away you will loose all.');
 			}
 			$default_dates = array_map(array($this, '_combine_dates'), array(), array());
-			array_set_default($event, 'dates', (array)$default_dates);
+			array_set_default($event, 'dates', $default_dates);
 
 			if (!phpgw::get_var('from_report', 'POST'))
 			{
@@ -583,7 +583,7 @@
 			array_set_default($event, 'resources', array());
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
 			$event['cancel_link'] = self::link(array('menuaction' => 'booking.uievent.index'));
-			array_set_default($event, 'cost', array(0));
+			array_set_default($event, 'cost', '0');
 
 			$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', -1);
 			$activity_path = $this->activity_bo->get_path($activity_id);
@@ -1125,7 +1125,7 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
-			$event['audience_json'] = json_encode(array_map('intval', $event['audience']));
+			$event['audience_json'] = json_encode(array_map('intval', (array)$event['audience']));
 
 			$this->install_customer_identifier_ui($event);
 			$this->add_template_helpers();
