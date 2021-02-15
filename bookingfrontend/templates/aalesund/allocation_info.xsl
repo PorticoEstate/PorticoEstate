@@ -84,11 +84,20 @@
 	</xsl:if>
 	<xsl:if test="allocation/ical_link">
 		<div class="actions">
+			<xsl:if test="allocation/edit_link">
+				<a href="{allocation/edit_link}" target="_blank" class="btn btn-light mt-4">
+					<xsl:value-of select="php:function('lang', 'Edit allocation')"/>
+				</a>
+			</xsl:if>
 			<xsl:if test="allocation/copy_link">
 				<a href="{allocation/copy_link}" target="_blank" class="btn btn-light mt-4">
 					<xsl:value-of select="php:function('lang', 'Copy application')"/>
 				</a>
 			</xsl:if>
+		</div>
+	</xsl:if>
+	<xsl:if test="allocation/ical_link">
+		<div class="actions">
 			<a class="btn btn-light mt-4" href="{allocation/ical_link}" target="_blank">
 				iCal
 			</a>

@@ -413,6 +413,9 @@
 						'to_'			 => $allocation['to_'],
 						'resource'		 => $allocation['resource'],
 						'resource_ids'		 => $allocation['resource_ids']));
+				$allocation['edit_link']	 = self::link(array('menuaction'	 => 'bookingfrontend.uiallocation.edit',
+						'allocation_id'	 => $allocation['id']));
+
 
 				if ($allocation['application_id'] != null)
 				{
