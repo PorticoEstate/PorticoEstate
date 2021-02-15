@@ -194,6 +194,21 @@
 								<div class="pure-custom"  id="set_user_container_alternative"/>
 							</div>
 
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Send e-mail')"/>
+								</label>
+								<input type="checkbox" id="send_email" name="values[send_mail]" value="1">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'Choose to send mailnotification')"/>
+									</xsl:attribute>
+									<xsl:if test="pref_send_mail = '1'">
+										<xsl:attribute name="checked">
+											<xsl:text>checked</xsl:text>
+										</xsl:attribute>
+									</xsl:if>
+								</input>
+							</div>
 							<xsl:if test="disable_priority !='1'">
 								<div class="pure-control-group">
 									<label>
