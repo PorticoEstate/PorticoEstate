@@ -435,7 +435,7 @@
 				# split into name and value
 				list($name, $value) = explode(' as ', trim($i), 2);
 
-				$name = trim($name);
+				$name = str_replace(array(" ", "|", "'"),'',$name);
 				$value = trim($value);
 
 				# if name already exists
