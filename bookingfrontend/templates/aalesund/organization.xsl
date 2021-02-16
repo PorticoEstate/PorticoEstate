@@ -180,9 +180,8 @@
 					<div class="button-group dropdown calendar-tool invisible">
 						<!--<xsl:if test="false">-->
 							<div class="dropdown-container">
-								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-									<!--<xsl:value-of select="php:function('lang', 'choose a date')"/>-->
-									Lokaler
+								<button type="button" class="btn btn-default dropdown-toggle resources-dropdown" data-toggle="dropdown">
+									<xsl:value-of select="php:function('lang', 'Resources (2021)')"/>
 									<span class="caret"></span>
 								</button>
 
@@ -191,7 +190,7 @@
 										<div class="form-check checkbox checkbox-primary">
 
 											<label class="check-box-label">
-												<input class="form-check-input choosenResource" type="checkbox"  checked="checked" data-bind="html: name"/>
+												<input class="form-check-input choosenResource" type="checkbox" data-bind="value: id, checked:$root.selectedResourceIds"/>
 												<span class="label-text" data-bind="html: building_name + ' - ' + name "></span>
 											</label>
 										</div>
@@ -199,7 +198,7 @@
 								</ul>
 							</div>
 							<div class="dropdown-container">
-								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								<button type="button" class="btn btn-default dropdown-toggle group-dropdown" data-toggle="dropdown">
 									<xsl:value-of select="php:function('lang', 'groups')"/>
 									<span class="caret"></span>
 								</button>
@@ -209,7 +208,7 @@
 										<div class="form-check checkbox checkbox-primary">
 
 											<label class="check-box-label">
-												<input class="form-check-input choosenGroup" type="checkbox"  checked="checked" data-bind="html: name"/>
+												<input class="form-check-input chosenGroup" type="checkbox" data-bind="html: name, value: id, checked:$root.selectedGroupIds" />
 												<span class="label-text" data-bind="html: name"></span>
 											</label>
 										</div>
