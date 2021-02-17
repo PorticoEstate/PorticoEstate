@@ -277,8 +277,9 @@ function PopulateCalendarEvents() {
 								defaultIds.push(events[i].resource);
 							}
 						}
-
 						viewmodel.selectedResourceIds(defaultIds);
+					} else {
+						findEventsForCalendar();
 					}
 
 					$(".overlay").hide();
