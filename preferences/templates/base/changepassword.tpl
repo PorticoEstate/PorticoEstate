@@ -9,7 +9,7 @@
         {lang_enter_password}
        </td>
        <td>
-        <input type="password" name="n_passwd">
+        <input type="password" name="n_passwd" autocomplete="off"/>
        </td>
      </tr>
      <tr>
