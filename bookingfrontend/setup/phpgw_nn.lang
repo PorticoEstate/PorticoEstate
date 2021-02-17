@@ -545,6 +545,7 @@ Request for equipment	bookingfrontend	nn	Ønske om nødvendig utstyr på tildeli
 Request for equipment has been sent	bookingfrontend	nn	Ønske om nødvendig utstyr er sendt til saksbehandler
 Resources (2021)	bookingfrontend	nn	Lokaler
 Upcomming Events (2021)	bookingfrontend	nn	Kommende Arrangement
-
+expired (2021)	bookingfrontend	nn	Utløpt
+Missing rights (2021)	bookingfrontend	nn	Mangler rettigheter
 
 

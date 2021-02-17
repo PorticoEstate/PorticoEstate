@@ -52,6 +52,56 @@
 						</dl>
 					</xsl:if>
 				</div>
+			</div>
+			<br/>
+			<div class="row">
+				<div class="col-8">
+					<div class="form-group">
+						<label class="text-uppercase">
+							<xsl:value-of select="php:function('lang', 'Associated items')" />
+						</label>
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th scope="col">ID</th>
+									<th scope="col">Type</th>
+									<th scope="col"><xsl:value-of select="php:function('lang', 'from')"/></th>
+									<th scope="col"><xsl:value-of select="php:function('lang', 'to')"/></th>
+									<th scope="col"><xsl:value-of select="php:function('lang', 'Edit')"/></th>
+									<th scope="col"><xsl:value-of select="php:function('lang', 'Cancel booking')"/></th>
+								</tr>
+							</thead>
+							<tbody>
+								<xsl:for-each select="associations">
+									<tr>
+										<th scope="row"><xsl:value-of select="id"/></th>
+										<td><xsl:value-of select="type"/></td>
+										<td><xsl:value-of select="from_"/></td>
+										<td><xsl:value-of select="to_"/></td>
+										<td>
+											<a>
+												<xsl:attribute name="href">
+													<xsl:value-of select="edit_link"/>
+												</xsl:attribute>
+												<xsl:attribute name="target">_blank</xsl:attribute>
+												<xsl:value-of select="edit_text"/>
+											</a>
+										</td>
+										<td>
+											<a>
+												<xsl:attribute name="href">
+													<xsl:value-of select="cancel_link"/>
+												</xsl:attribute>
+												<xsl:attribute name="target">_blank</xsl:attribute>
+												<xsl:value-of select="cancel_text"/>
+											</a>
+										</td>
+									</tr>
+								</xsl:for-each>
+							</tbody>
+						</table>
+					</div>
+				</div>
 				<div class="col-12">
 					<div class="form-group">
 						<label class="text-uppercase">
