@@ -9,7 +9,7 @@
 			parent::__construct('bb_building', array(
 				'id' => array('type' => 'int'),
 				'name' => array('type' => 'string', 'query' => true, 'required' => true),
-				'homepage' => array('type' => 'string'),
+				'homepage' => array('type' => 'string', 'required' => true),
 				'calendar_text' => array('type' => 'string'),
 				'description' => array('type' => 'string'),
 				'opening_hours' => array('type' => 'string'),

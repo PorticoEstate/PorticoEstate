@@ -288,6 +288,9 @@ function GetAutocompleteData()
 
 	$.getJSON(requestURL, function (result)
 	{
+		//start hack
+		result.unshift({name:"",type:"organisasjon",id:"",menuaction:""});
+		//end hack
 		$.each(result, function (i, field)
 		{
 			autocompleteData.push({value: i, label: field.name, type: field.type, menuaction: field.menuaction, id: field.id
