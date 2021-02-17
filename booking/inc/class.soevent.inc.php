@@ -561,11 +561,11 @@
 			return $results;
 		}
 
-	function get_events_from_date($fromDate=null, $toDate=null, $org_number=null, $buildingID=null, $facilityTypeID=null, $loggedInOrgs=null, $start=0, $end=50)
+	function get_events_from_date($fromDate=null, $toDate=null, $org_info=null, $buildingID=null, $facilityTypeID=null, $loggedInOrgs=null, $start=0, $end=50)
 	{
 		$loggedInOrgsSql = null;
 		$facilityTypeIDSql = null;
-		$org_number_sql = null;
+		$org_info_sql = null;
 		$toDateSql = null;
 		$buildingIDSQL = null;
 
@@ -579,8 +579,20 @@
 		if ($buildingID !== "") {
 			$buildingIDSQL = " AND bbe.building_id = '$buildingID' ";
 		}
-		if ($org_number !== "") {
-			$org_number_sql = " AND bbe.customer_organization_number='$org_number' ";
+		if (!empty($org_info)) {
+			if ($org_info['organization_number'] !== '')
+			{
+				$org_pre_sql = " AND ";
+				$org_number_sql = "bbe.customer_organization_number='" . $org_info['organization_number'] ."' ";
+				$org_info_sql = $org_pre_sql . $org_number_sql;
+			}
+
+			if ($org_info['organization_name'] !== '')
+			{
+				$org_pre_sql = " AND (";
+				$org_name_sql = "OR bbe.organizer='" . $org_info['organization_name'] ."') ";
+				$org_info_sql = $org_pre_sql . $org_number_sql . $org_name_sql;
+			}
 		}
 		if ($toDate !== "") {
 			$toDateSql = " AND bbe.to_ <= '$toDate' ";
@@ -595,6 +607,7 @@
 				    bbe.name as event_name,
 				    bbe.customer_organization_id,
 				    bbe.customer_organization_number,
+					bbe.organizer,
 			       	br.name as resource_name,
 			    	bbrc.name as resource_type
 				from bb_event bbe
@@ -609,7 +622,7 @@
 			    	bbe.is_public = 1
 				  	AND bbe.from_ >= '$fromDate' "
 						.$toDateSql
-						.$org_number_sql
+						.$org_info_sql
 						.$buildingIDSQL
 						.$facilityTypeIDSql
 						.$loggedInOrgsSql
@@ -627,8 +640,9 @@
 				'location_name' => $this->db->f('location_name', true),
 				'event_id' => $this->db->f('event_id'),
 				'building_id' => $this->db->f('building_id'),
+				'org_id' => $this->db->f('customer_organization_id'),
 				'org_num' => $this->db->f('customer_organization_number'),
-				'org_id' => $this->db->f('customer_organization_id')
+				'organizer' => $this->db->f('organizer')
 			);
 
 		}

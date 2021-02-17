@@ -104,17 +104,31 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 			$result_string = "'" . str_replace(",", "','", $loggedInOrgs) . "'";
 		}
 
-		$org_numb = '';
+		$org_info = array();
 		if (isset($orgID) && $orgID != '')
 		{
-			$org_numb = $this->so_organization->get_organization_number($orgID);
+			$org_info = $this->so_organization->get_organization_number($orgID);
 		}
 
-		$events = $this->bosearch->soevent->get_events_from_date($fromDate, $toDate, $org_numb, $buildingId, $facilityTypeID, $result_string, $start, $end);
+		$events = $this->bosearch->soevent->get_events_from_date($fromDate, $toDate, $org_info, $buildingId, $facilityTypeID, $result_string, $start, $end);
 
 		foreach ($events as &$event)
 		{
-			$event['org_name'] = $this->so_organization->get_organization_name($event['org_num']);
+			$organization_info = $this->so_organization->get_organization_info($event['org_num']);
+
+			if ($organization_info['name'] === '')
+			{
+				$event['org_name'] = ($event['organizer'] === '' ? 'Ingen' : $event['organizer']);
+			}
+			else
+			{
+				$event['org_name'] = $organization_info['name'];
+			}
+
+			if ($organization_info['id'] !== '' && $event['org_id'] === '')
+			{
+				$event['org_id'] = $organization_info['id'];
+			}
 		}
 		unset($event);
 

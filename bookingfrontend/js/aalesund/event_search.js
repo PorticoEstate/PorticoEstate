@@ -1,5 +1,6 @@
 var months = ["Januar", "Februar", "Mars", "April", "Mai", "Juni", "July", "August", "September", "Oktober", "November", "Desember"];
 var viewmodel;
+var showAll = true;
 var fromDate = "";
 var toDate = "";
 var organization = "";
@@ -7,6 +8,7 @@ var buildingID = "";
 var facilityTypeID = "";
 var facilityTypeList = [];
 var loggedInUserOrgs = [];
+var loggedInUserOrgsResult = [];
 
 //########## Listeners #############
 $('#from').change(function() {
@@ -65,7 +67,7 @@ function getOrgsIfLoggedIn() {
         url: requestURL,
         dataType : 'json',
         success: function (result) {
-            loggedInUserOrgs = result;
+            loggedInUserOrgsResult = result;
             let elem = document.getElementById("my_orgs_button");
             if (result.length > 0) {
                 elem.style.display = 'block';
@@ -110,38 +112,41 @@ function AppViewModel() {
     };
 
     self.goToOrganization = function (event) {
-        window.location = event.org_url();
+    	if (event.org_id() !== '') {
+			window.location = event.org_url();
+		}
     }
 }
 
 function toggleMyOrgs() {
-    var el = document.getElementById('my_orgs_button');
-    console.log(el.innerText);
-    if (el.innerText === "Vis Alle") {
-        el.innerText = "Vis mine arrangement";
-        getUpcomingEvents();
-        showAllEvents = false;
-    } else {
-        el.innerText = "Vis Alle";
-        getUpcomingEvents(organization,fromDate,toDate,buildingID,facilityTypeID,loggedInUserOrgs.toString());
-    }
+   showAll = !showAll;
+
+    if (showAll){
+    	$('#my_orgs_icon').attr('class', 'far fa-circle');
+		loggedInUserOrgs = [];
+	} else {
+		$('#my_orgs_icon').attr('class', 'green fa fa-circle');
+		loggedInUserOrgs = loggedInUserOrgsResult;
+	}
+	getUpcomingEvents();
+
 }
 
-function getUpcomingEvents(orgID = "", from = "", to= "",buildingID= "", facilityTypeID = "",loggedInOrgs = "") {
-    if (from === "") {
-        from = Util.Format.FormatDateForBackend(new Date());
+function getUpcomingEvents() {
+    if (fromDate === "") {
+		fromDate = Util.Format.FormatDateForBackend(new Date());
     }
     let requestURL;
-    console.log(`${orgID} ${from} ${to} ${buildingID} ${facilityTypeID} ${loggedInOrgs}` )
+    console.log(`${organization} ${fromDate} ${toDate} ${buildingID} ${facilityTypeID} ${loggedInUserOrgs.toString()}` )
 
     reqObject = {
         menuaction: "bookingfrontend.uieventsearch.upcomingEvents",
-        orgID: orgID,
-        fromDate: from,
-        toDate: to,
+        orgID: organization,
+        fromDate: fromDate,
+        toDate: toDate,
         buildingID : buildingID,
         facilityTypeID : facilityTypeID,
-        loggedInOrgs : loggedInOrgs,
+        loggedInOrgs : loggedInUserOrgs.toString(),
 		start: 0,
 		end: 50
     }
@@ -253,8 +258,11 @@ function clearFilters() {
 	$('#to').val('');
 	setFromPicker('');
 	setToPicker('');
+	buildingID = "";
+	organization = "";
+	facilityTypeID = "";
+	fromDate = "";
+	toDate = "";
     getUpcomingEvents();
-    buildingID = "";
-    organization = "";
-    facilityTypeID = "";
+
 }

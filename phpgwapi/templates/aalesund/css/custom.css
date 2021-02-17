@@ -248,7 +248,40 @@ a {
  width: 100%;
 }
 
-.Kommende-arrangement {
+.header-container-search {
+	background-color: #f5f5ff;
+}
+
+.my_orgs_button {
+	padding: 2px 9px 2px 9px;
+	border-radius: 12px;
+	box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+	border: solid 1px #28358f;
+	background-color: #ffffff !important;
+	font-family: Rubik;
+	font-size: 1rem;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.25;
+	letter-spacing: normal;
+	outline: none !important;
+
+}
+
+i.green {
+	color:  #7fff7f;
+}
+
+i#my_orgs_icon {
+	padding-right: 5px;
+}
+
+.event-title-container {
+	padding-bottom: 20px;
+}
+
+.upcomming-events {
     position: center;
     margin: 0 auto;
     /*width: 800px;*/
@@ -1058,6 +1091,24 @@ select option:focus {
 	white-space: nowrap;
 	width: 84%;
 	overflow: hidden;
+}
+
+.event_container {
+	background-color: #f5f5ff;
+	padding-bottom: 60px;
+}
+
+.container_event_search{
+	background-color: #DDDDFF;
+}
+
+.event-search-container {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.event-content-container {
+	padding-top: 30px;
 }
 
 .locationName {
