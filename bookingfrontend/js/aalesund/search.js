@@ -15,10 +15,10 @@ function ViewModel()
 {
 	let self = this;
 
-	self.goToBuilding = function (event) { window.location = event.building_url(); };
-	self.goToOrganization = function (event) { window.location = event.org_url(); }
-	self.goToResource = function (event) { window.location = event.resource_url; }
-	self.goToApplication = function (event) {window.location = event.application_url + `&start=${event.fromDateParam}&end=${event.toDateParam}`;}
+	self.goToBuilding = function (event) { window.open(event.building_url(), '_blank'); };
+	self.goToOrganization = function (event) { window.open(event.org_url(), '_blank'); }
+	self.goToResource = function (event) { window.open(event.resource_url, '_blank'); }
+	self.goToApplication = function (event) {window.open(event.application_url + `&start=${event.fromDateParam}&end=${event.toDateParam}`, '_blank');}
 	self.goToEvents = function (event) { window.location = baseURL + '?menuaction=bookingfrontend.uieventsearch.show'; }
 
 	self.toggleTown = function (event) {
@@ -320,6 +320,9 @@ function getAutocompleteData() {
 
 	$.getJSON(requestURL, function (result)
 	{
+		//start hack
+		result.unshift({name:"",type:"organisasjon",id:"",menuaction:""});
+		//end hack
 		$.each(result, function (i, field)
 		{
 			autocompleteData.push({value: i, label: field.name, type: field.type, menuaction: field.menuaction, id: field.id});
