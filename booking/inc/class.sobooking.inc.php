@@ -1,11 +1,15 @@
 <?php
 	phpgw::import_class('booking.socommon');
+	phpgw::import_class('booking.soorganization');
 
 	class booking_sobooking extends booking_socommon
 	{
+		protected $organization_so;
 
 		function __construct()
 		{
+			$this->organization_so = new booking_soorganization();
+
 			parent::__construct('bb_booking', array(
 				'id' => array('type' => 'int'),
 				'active' => array('type' => 'int', 'required' => true),
@@ -377,6 +381,8 @@
 		{
 			$organization_id = intval($organization_id);
 
+			$organization_info = $this->organization_so->get_organization_number($organization_id);
+
 			if(is_array($resource_id))
 			{
 				$resource_ids = $resource_id;
@@ -392,7 +398,7 @@
 			$this->db->query("SELECT id FROM bb_event"
 				. " JOIN bb_event_resource ON (event_id=id AND resource_id IN (" . implode(',', $resource_ids) . ") )"
 				. " WHERE active=1"
-				. " AND customer_organization_id = $organization_id"
+				. " AND (customer_organization_id = $organization_id OR customer_organization_number = '" . $organization_info['organization_number'] ."')"
 				. " AND ((from_ >= '$start' AND from_ < '$end')"
 				. " OR (to_ > '$start' AND to_ <= '$end') OR (from_ < '$start'"
 				. " AND to_ > '$end'))", __LINE__, __FILE__);
