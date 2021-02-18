@@ -110,18 +110,24 @@ HTML;
 
 		if(isset($GLOBALS['phpgw_info']['server']['support_address']) && $GLOBALS['phpgw_info']['server']['support_address'])
 		{
-			$support_url = "javascript:openwindow('"
-			 . $GLOBALS['phpgw']->link('/index.php', array
-			 (
-			 	'menuaction'=> 'manual.uisupport.send',
-			 	'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
-			 )) . "','700','600')";
+
+			$support_js = <<<JS
+
+			support_request = function()
+			{
+				var oArgs = {menuaction:'manual.uisupport.send',app:'{$GLOBALS['phpgw_info']['flags']['currentapp']}', form_type:'stacked'};
+				var strURL = phpGWLink('index.php', oArgs);
+				TINY.box.show({iframe:strURL, boxid:"frameless",width:700,height:500,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+			}
+JS;
+
+			$var['support_request'] = $support_js;
 
 			$support_text = lang('support');
 
 			$var['topmenu'] .= <<<HTML
 			<li class="nav-item">
-				<a href="{$support_url}" class="nav-link">{$support_text}</a>
+				<a href="javascript:support_request();" class="nav-link">{$support_text}</a>
 			</li>
 HTML;
 		}

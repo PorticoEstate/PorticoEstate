@@ -68,7 +68,7 @@
 
 			if(!empty($reservation['participant_limit']))
 			{
-				$resource_paricipant_limit = $allocation['participant_limit'];
+				$resource_paricipant_limit = $reservation['participant_limit'];
 			}
 			else
 			{
@@ -84,8 +84,8 @@
 
 				$participant_registration_link = $external_site_address
 					. "/bookingfrontend/?menuaction=bookingfrontend.uiparticipant.add"
-					. "&reservation_type=allocation"
-					. "&reservation_id={$allocation['id']}";
+					. "&reservation_type={$reservation_type}"
+					. "&reservation_id={$reservation_id}";
 
 				$description.= "</br><a href='{$participant_registration_link}'><b>Innregistrering her</b></a>";
 			}
@@ -457,6 +457,28 @@ ICAL;
 				$name = $reservation['name'];
 			}
 
+			$holidays = phpgwapi_datetime::get_holidays(date('Y'));
+
+			$_from = new DateTime(date('Y-m-d H:i:s', strtotime($reservation['from_'])),$DateTimeZone);
+
+			$after_hour = false;
+
+			if(in_array($reservation_type,array('allocation')))
+			{
+				if(in_array($_from->format('Y-m-d'), $holidays))
+				{
+					$after_hour = true;
+				}
+				else if(in_array($_from->format('w'), array(0, 6))) // Sunday || Saturday
+				{
+					$after_hour = true;
+				}
+				else if($_from->format('H') > 15)
+				{
+					$after_hour = true;
+				}
+			}
+
 			$data = array
 			(
 				'participanttext'		 => !empty($config['participanttext'])? $config['participanttext'] :'',
@@ -470,6 +492,7 @@ ICAL;
 				'phone'					 => $participant['phone'],
 				'email'					 => $participant['email'],
 				'quantity'				 => $participant['quantity'],
+				'after_hour'			 => $after_hour,
 				'name'					 => $name,
 				'reservation'			 => $reservation,
 				'participant_limit'		 => $participant_limit,
@@ -491,28 +514,27 @@ ICAL;
 
 		public function index()
 		{
-			if(!CreateObject('bookingfrontend.bouser')->is_logged_in())
+			$results = array();
+
+			if(CreateObject('bookingfrontend.bouser')->is_logged_in())
 			{
-				return array();
-			}
+				$_REQUEST['filter_reservation_id'] = phpgw::get_var('filter_reservation_id', 'int', 'REQUEST', -1);
+				$participants = $this->bo->read();
 
+				$data = array('results' => array(), 'total_records' => 0, 'start' => 0, 'sort' => $participants['sort'], 'dir' => $participants['dir']);
 
-			$_REQUEST['filter_reservation_id'] = phpgw::get_var('filter_reservation_id', 'int', 'REQUEST', -1);
-			$participants = $this->bo->read();
-
-			$data = array('results' => array(), 'total_records' => 0, 'start' => 0, 'sort' => $participants['sort'], 'dir' => $participants['dir']);
-
-			foreach ($participants['results'] as $participant)
-			{
-				if($participant['to_'])
+				foreach ($participants['results'] as $participant)
 				{
-					continue;
+					if($participant['to_'])
+					{
+						continue;
+					}
+					$data['results'][] = $participant;
+					$data['total_records'] += 1;
 				}
-				$data['results'][] = $participant;
-				$data['total_records'] += 1;
-			}
 
-			$results = $this->jquery_results($data);
+				$results = $this->jquery_results($data);
+			}
 
 			return $results;
 		}

@@ -1103,26 +1103,26 @@
 					);
 					break;
 				case 'project_status':
-					$info	 = array
-						(
+					$info	 = array(
 						'table'			 => 'fm_project_status',
 						'id'			 => array('name' => 'id', 'type' => 'varchar'),
-						'fields'		 => array
-							(
-							array
-								(
+						'fields'		 => array(
+							array(
 								'name'	 => 'descr',
 								'descr'	 => lang('descr'),
 								'type'	 => 'varchar'
 							),
-							array
-								(
+							array(
+								'name'	 => 'request',
+								'descr'	 => lang('request'),
+								'type'	 => 'checkbox'
+							),
+							array(
 								'name'	 => 'approved',
 								'descr'	 => lang('approved'),
 								'type'	 => 'checkbox'
 							),
-							array
-								(
+							array(
 								'name'	 => 'closed',
 								'descr'	 => lang('closed'),
 								'type'	 => 'checkbox'
@@ -1137,44 +1137,46 @@
 					);
 					break;
 				case 'workorder_status':
-					$info	 = array
-						(
+					$info	 = array(
 						'table'			 => 'fm_workorder_status',
 						'id'			 => array('name' => 'id', 'type' => 'varchar'),
-						'fields'		 => array
-							(
-							array
-								(
+						'fields'		 => array(
+							array(
 								'name'	 => 'descr',
 								'descr'	 => lang('descr'),
 								'type'	 => 'varchar'
 							),
-							array
-								(
+							array(
+								'name'	 => 'request',
+								'descr'	 => lang('request'),
+								'type'	 => 'checkbox'
+							),
+							array(
 								'name'	 => 'approved',
 								'descr'	 => lang('approved'),
 								'type'	 => 'checkbox'
 							),
-							array
-								(
+							array(
+								'name'	 => 'sent',
+								'descr'	 => lang('sent'),
+								'type'	 => 'checkbox'
+							),
+							array(
 								'name'	 => 'in_progress',
 								'descr'	 => lang('In progress'),
 								'type'	 => 'checkbox'
 							),
-							array
-								(
+							array(
 								'name'	 => 'delivered',
 								'descr'	 => lang('delivered'),
 								'type'	 => 'checkbox'
 							),
-							array
-								(
+							array(
 								'name'	 => 'closed',
 								'descr'	 => lang('closed'),
 								'type'	 => 'checkbox'
 							),
-							array
-								(
+							array(
 								'name'	 => 'canceled',
 								'descr'	 => lang('canceled'),
 								'type'	 => 'checkbox'

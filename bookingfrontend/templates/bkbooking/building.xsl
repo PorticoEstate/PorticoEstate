@@ -152,7 +152,7 @@
 				var rResources = 'results';
 				var rBuilding_users = [{n: 'ResultSet'},{n: 'Result'}];
 
-				var colDefsResources = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'type', label: lang['Resource Type']}, {key: 'activity_name', label: lang['Activity']}];
+				var colDefsResources = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'rescategory_name', label: lang['Resource Type']}, {key: 'activity_name', label: lang['Activity']}];
 				var colDefsDocument = [{key: 'description', label: lang['Name'], formatter: genericLink}];
 				var colDefsBuilding_users = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'activity_name', label: lang['Activity']}];
 

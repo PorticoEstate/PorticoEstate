@@ -247,6 +247,7 @@ Start date must be after %1	booking	no	Fradato må være etter %1
 To date must be before %1	booking	no	Tildato må være før %1
 Add Activity	booking	no	Ny Aktivitet
 Completed	booking	no	Klar for fakturering
+1 day	booking	no	1 dag
 1 week	booking	no	1 uke
 2 weeks	booking	no	2 uker
 3 weeks	booking	no	3 uker
@@ -486,9 +487,9 @@ Bookings and allocations	booking	no	Kalender-ukeplan
 Send warning to building responsible	booking	no	Send e-post til ansvarlig på bygget
 Optional e-mail adress	booking	no	Valgfri e-post adresse
 Message about new event	booking	no	Melding om nytt arrangement
-Deactivate application	booking	no	Inaktiver søknad (frontend)
-Deactivate calendar	booking	no	Inaktiver kalender (frontend)
-Deactivate send message	booking	no	Inaktiver mulighet for å sende melding(frontend)
+Deactivate application	booking	no	Deaktiver søknad (frontend)
+Deactivate calendar	booking	no	Deaktiver kalender (frontend)
+Deactivate send message	booking	no	Deaktiver mulighet for å sende melding(frontend)
 Can not repeat from a date in the past	booking	no	Du kan ikke repetere fra en dato i fortiden
 Can not create a booking in the past	booking	no	Du kan ikke opprette en interntildeling i fortiden
 Allocations  with existing allocations or bookings (%1)	booking	no	Tildelinger med eksisterende tildelinger eller bookinger (%1)

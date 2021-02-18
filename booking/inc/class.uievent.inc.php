@@ -659,6 +659,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$event = $this->bo->read_single($id);
 
 			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($event['resources'], true);
@@ -1121,7 +1125,7 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
-			$event['audience_json'] = json_encode(array_map('intval', $event['audience']));
+			$event['audience_json'] = json_encode(array_map('intval', (array)$event['audience']));
 
 			$this->install_customer_identifier_ui($event);
 			$this->add_template_helpers();

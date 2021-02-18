@@ -1171,7 +1171,24 @@
 					$partial2['customer_organization_number']	 = $customer_organization_number_arr[1];
 					$organization								 = $this->organization_bo->read_single(intval($customer_organization_number_arr[0]));
 					$partial2['customer_organization_name']		 = $organization['name'];
-					$partial2['customer_identifier_type']		 = $organization['customer_identifier_type'];
+
+					$update_org = false;
+					if(!$organization['customer_identifier_type'] == 'organization_number')
+					{
+						$organization['customer_identifier_type'] = 'organization_number';
+						$update_org = true;
+					}
+
+					if(!empty($customer_organization_number_arr[1]) && empty($organization['customer_organization_number']))
+					{
+						$organization['customer_organization_number'] = $customer_organization_number_arr[1];
+						$update_org = true;
+					}
+
+					if($update_org && !$this->organization_bo->validate($organization))
+					{
+						$this->organization_bo->update($organization);
+					}
 				}
 
 				// Application contains only contact details. Use dummy values for event fields
@@ -1244,6 +1261,7 @@
 
 							$receipt = $this->bo->update($application);
 
+							$this->update_user_info($application, $external_login_info);
 
 							/**
 							 * Start direct booking
@@ -1309,15 +1327,6 @@
 								$event['reminder'] = 0;
 								$event['customer_internal'] = 0;
 								$event['cost'] = 0;
-
-//								if($event['customer_organization_id'])
-//								{
-//									$customer_organization = $this->organization_bo->read_single($event['customer_organization_id']);
-//									if($customer_organization['customer_identifier_type'])
-//									{
-//										$event['customer_identifier_type'] = $customer_organization['customer_identifier_type'];
-//									}
-//								}
 
 								$building_info = $this->bo->so->get_building_info($application['id']);
 								$event['building_id'] = $building_info['id'];
@@ -1399,29 +1408,6 @@
 				}
 			}
 
-	//		$this->install_customer_identifier_ui($partial2);
-//			if ($organization_number && $organization_number != '000000000')
-//			{
-//				$partial2['customer_identifier_type'] = 'organization_number';
-//				$partial2['customer_organization_number'] = $organization_number;
-//				$orgid = $this->organization_bo->so->get_orgid($organization_number);
-//				$organization = $this->organization_bo->read_single($orgid);
-//				if ($organization['contacts'][0]['name'] != '')
-//				{
-//					$partial2['contact_name'] = $organization['contacts'][0]['name'];
-//					$partial2['contact_email'] = $organization['contacts'][0]['email'];
-//					$partial2['contact_email2'] = $organization['contacts'][0]['email'];
-//					$partial2['contact_phone'] = $organization['contacts'][0]['phone'];
-//				}
-//				else
-//				{
-//					$partial2['contact_name'] = $organization['contacts'][1]['name'];
-//					$partial2['contact_email'] = $organization['contacts'][1]['email'];
-//					$partial2['contact_email2'] = $organization['contacts'][1]['email'];
-//					$partial2['contact_phone'] = $organization['contacts'][1]['phone'];
-//				}
-//			}
-
 			if(!empty($external_login_info['ssn']))
 			{
 				$user_id = CreateObject('booking.souser')->get_user_id($external_login_info['ssn']);
@@ -1498,7 +1484,14 @@
 
 			$delegate_data = CreateObject('booking.souser')->get_delegate($external_login_info['ssn'], $organization_number);
 
-//			_debug_array($delegate_data);
+			$filtered_delegate_data = array();
+			foreach ($delegate_data as $delegate_entry)
+			{
+				if($delegate_entry['active'])
+				{
+					$filtered_delegate_data[] = $delegate_entry;
+				}
+			}
 
 			/**
 			 * This one is for bookingfrontend
@@ -1507,14 +1500,54 @@
 
 			self::render_template_xsl('application_contact', array(
 				'application'			 => $partial2,
-				'delegate_data'			 => $delegate_data,
+				'delegate_data'			 => $filtered_delegate_data,
 				'add_img'				 => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
 				'config'				 => CreateObject('phpgwapi.config', 'booking')->read()
 				)
 			);
 		}
 
+		private function update_user_info($application, $external_login_info = array() )
+		{
+			if(empty($external_login_info['ssn']))
+			{
+				return;
+			}
 
+			$user_id = CreateObject('booking.souser')->get_user_id($external_login_info['ssn']);
+			if($user_id)
+			{
+				$bo_user = CreateObject('booking.bouser');
+				$user	 = $bo_user->read_single($user_id);
+
+				$update_user = false;
+				if(empty($user['email']) && $application['contact_email'])
+				{
+					$update_user = true;
+					$user['email'] = $application['contact_email'];
+				}
+				if(empty($user['street']) && $application['responsible_street'])
+				{
+					$update_user = true;
+					$user['street'] = $application['responsible_street'];
+				}
+				if(empty($user['zip_code']) && $application['responsible_street'])
+				{
+					$update_user = true;
+					$user['zip_code'] = $application['responsible_zip_code'];
+				}
+				if(empty($user['city']) && $application['responsible_city'])
+				{
+					$update_user = true;
+					$user['city'] = $application['responsible_city'];
+				}
+
+				if($update_user && !$bo_user->validate($user))
+				{
+					$bo_user->update($user);
+				}
+			}
+		}
 		public function confirm() {
         	self::render_template_xsl('application_new_confirm', array());
         }
@@ -1522,6 +1555,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$application = $this->bo->read_single($id);
 
 			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($application['resources'], true);

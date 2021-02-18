@@ -90,7 +90,7 @@
 		var participantURL = phpGWLink('index.php', {menuaction:'booking.uiparticipant.index', sort:'phone', filter_reservation_id: allocation_id, filter_reservation_type: 'allocation', length:-1}, true);
 
     ]]>
-		var colDefs = [{key: 'name', label: lang['Name'], formatter: genericLink()}, {key: 'type', label: lang['Resource Type']}];
+		var colDefs = [{key: 'name', label: lang['Name'], formatter: genericLink()}, {key: 'rescategory_name', label: lang['Resource Type']}];
 		createTable('resources_container',resourcesURL,colDefs, 'data', 'pure-table pure-table-bordered');
 
 		var colDefsParticipantURL = [

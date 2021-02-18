@@ -144,16 +144,18 @@
 					$filtermethod = "RESSURSNR = '{$identificator_arr[1]}'";
 				}
 
-				$sql = "SELECT ORG_ENHET_ID, ORG_NAVN FROM FELLESDATA.V_PORTICO_ANSATT WHERE {$filtermethod}";
+				$sql = "SELECT TJENESTESTED, V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN FROM FELLESDATA.V_PORTICO_ANSATT "
+					. " JOIN V_ORG_ENHET ON V_ORG_ENHET.ORG_ENHET_ID = V_PORTICO_ANSATT.ORG_ENHET_ID WHERE {$filtermethod}";
 
 				$db->query($sql, __LINE__, __FILE__);
 				$values = array();
 
 				if ($db->next_record())
 				{
+					$arbeidssted = $db->f('TJENESTESTED');
 					$values = array(
 						'org_unit_id'	 => $db->f('ORG_ENHET_ID'),
-						'org_unit'		 => $db->f('ORG_NAVN', true)
+						'org_unit'		 => $arbeidssted . ' ' .$db->f('ORG_NAVN', true)
 					);
 				}
 				return $values;

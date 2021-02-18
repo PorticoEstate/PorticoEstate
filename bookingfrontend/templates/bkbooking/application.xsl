@@ -558,7 +558,7 @@
         ]]>
 
 		if (resourceIds) {
-		var colDefsResource = [{key: 'name', label: lang['Resources'], formatter: genericLink}, {key: 'type', label: lang['Resource Type']}];
+		var colDefsResource = [{key: 'name', label: lang['Resources'], formatter: genericLink}, {key: 'rescategory_name', label: lang['Resource Type']}];
 		createTable('resources_container', resourcesURL, colDefsResource, 'results', 'pure-table pure-table-bordered');
 		var colDefsApplication = [
 		{key: 'id', label: lang['ID'], formatter: genericLink},

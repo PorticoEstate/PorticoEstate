@@ -11121,4 +11121,41 @@
 		}
 	}
 
+	/**
+	 * Notes
+	 * Add column to reflect status-variants
+	 */
+	$test[] = '0.9.17.752';
+	function property_upgrade0_9_17_752()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project_status', 'request', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder_status', 'request', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder_status', 'sent', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => True
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.753';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
 
