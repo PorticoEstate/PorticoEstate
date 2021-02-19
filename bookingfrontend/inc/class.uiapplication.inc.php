@@ -206,7 +206,7 @@
 							$association['cancel_link'] = self::link(array('menuaction' => "{$this->module}.uiallocation.cancel", 'allocation_id' => $association['id']));
 							$association['cancel_text'] = $lang_cancel;
 						} else {
-							$association['cancel_link'] = '';
+							$association['cancel_link'] = '#';
 							$association['cancel_text'] = $lang_rights;
 						}
 					}
@@ -222,7 +222,7 @@
 						}
 						else
 						{
-							$association['cancel_link'] = '';
+							$association['cancel_link'] = '#';
 							$association['cancel_text'] = $lang_rights;
 						}
 					}
@@ -238,15 +238,17 @@
 						}
 						else
 						{
-							$association['cancel_link'] = '';
+							$association['cancel_link'] = '#';
 							$association['cancel_text'] = $lang_rights;
 						}
 					}
 				}
 				else
 				{
-					$association['edit_link'] = $lang_expired;
-					$association['cancel_link'] = $lang_expired;
+					$association['edit_link'] = '#';
+					$association['edit_text'] = $lang_expired;
+					$association['cancel_link'] = '#';
+					$association['cancel_text'] = $lang_expired;
 				}
 
 				$association['type'] = lang($association['type']);
