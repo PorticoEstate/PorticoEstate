@@ -198,6 +198,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$audience = $this->bo->read_single($id);
 			$activities = $this->activity_bo->get_top_level($audience['activity_id']);
 

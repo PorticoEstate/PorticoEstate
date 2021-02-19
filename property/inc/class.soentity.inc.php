@@ -2881,6 +2881,36 @@
 					);
 				}
 
+
+				$sql = "SELECT DISTINCT location_id FROM fm_bim_item WHERE p_location_id = {$p_location_id} AND p_id = '{$p_id}'";
+				$this->db->query($sql, __LINE__, __FILE__);
+				while ($this->db->next_record())
+				{
+					$location_id = $this->db->f('location_id');
+					$sql = "SELECT count(*) as hits FROM fm_bim_item WHERE location_id = {$location_id} AND p_location_id = {$p_location_id} AND p_id = '{$p_id}'";
+					$this->db->query($sql, __LINE__, __FILE__);
+					$this->db->next_record();
+					if ($this->db->f('hits'))
+					{
+						$entity['related'][] = array
+							(
+							'entity_link'	 => $GLOBALS['phpgw']->link('/index.php', array
+								(
+								'menuaction'	 => "property.uientity.index",
+								'entity_id'		 => $entry['entity_id'],
+								'cat_id'		 => $entry['cat_id'],
+								'p_entity_id'	 => $entity_id,
+								'p_cat_id'		 => $cat_id,
+								'p_num'			 => $p_id,
+								'type'			 => $type
+								)
+							),
+							'name'			 => $entry['name'] . ' [' . $this->db->f('hits') . ']',
+							'descr'			 => $entry['descr']
+						);
+					}
+				}
+
 				foreach ($category as $entry)
 				{
 					if ($type == 'catch' && $entry['entity_id'] == 1 && $entry['cat_id'] == 1)
@@ -2890,9 +2920,9 @@
 
 					if ($entry['is_eav'])
 					{
-						$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$type], ".{$type}.{$entry['entity_id']}.{$entry['cat_id']}");
-
-						$sql = "SELECT count(*) as hits FROM fm_bim_item WHERE location_id = {$location_id} AND p_location_id = {$p_location_id} AND p_id = '{$p_id}'";
+						continue;
+//						$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$type], ".{$type}.{$entry['entity_id']}.{$entry['cat_id']}");
+//						$sql = "SELECT count(*) as hits FROM fm_bim_item WHERE location_id = {$location_id} AND p_location_id = {$p_location_id} AND p_id = '{$p_id}'";
 					}
 					else
 					{
@@ -2923,70 +2953,72 @@
 				}
 			}
 
-			$sql = "SELECT count(*) as hits FROM fm_tts_tickets WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
+			$sql = "SELECT DISTINCT id, subject FROM fm_tts_tickets WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
 			$this->db->query($sql, __LINE__, __FILE__);
-			$this->db->next_record();
-			if ($this->db->f('hits'))
+			while ($this->db->next_record())
 			{
-				$hits				 = $this->db->f('hits');
+				$subject				 = $this->db->f('subject', true);
 				$entity['related'][] = array
 					(
-					'entity_link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.index',
-						//	'p_entity_id'	=> $entity_id,
-						//	'p_cat_id' 		=> $cat_id,
-						'p_num'		 => $p_id,
-						'query'		 => "entity.{$entity_id}.{$cat_id}.{$p_id}")),
-					'name'			 => lang('Helpdesk') . " [{$hits}]",
+					'entity_link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
+						'id'		 => $this->db->f('id'),
+//						'p_num'		 => $p_id,
+//						'query'		 => "entity.{$entity_id}.{$cat_id}.{$p_id}"
+						)),
+					'name'			 => lang('Helpdesk') . " [{$subject}]",
 					'descr'			 => lang('Helpdesk')
 				);
 			}
 
-			$sql = "SELECT count(*) as hits FROM fm_request WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
+			$sql = "SELECT DISTINCT id, title AS subject FROM fm_request WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
 			$this->db->query($sql, __LINE__, __FILE__);
-			$this->db->next_record();
-			if ($this->db->f('hits'))
+			while ($this->db->next_record())
 			{
-				$hits				 = $this->db->f('hits');
+				$subject				 = $this->db->f('subject', true);
 				$entity['related'][] = array
 					(
-					'entity_link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uirequest.index',
+					'entity_link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uirequest.view',
+						'id'		 => $this->db->f('id'),
 						//	'p_entity_id'	=> $entity_id,
 						//	'p_cat_id' 		=> $cat_id,
-						'p_num'		 => $p_id,
-						'query'		 => "entity.{$entity_id}.{$cat_id}.{$p_id}")),
-					'name'			 => lang('request') . " [{$hits}]",
+//						'p_num'		 => $p_id,
+//						'query'		 => "entity.{$entity_id}.{$cat_id}.{$p_id}"
+						)),
+					'name'			 => lang('request') . " [{$subject}]",
 					'descr'			 => lang('request')
 				);
 			}
 
-			$sql = "SELECT count(*) as hits FROM fm_project WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
+			$sql = "SELECT DISTINCT id, name AS subject  FROM fm_project WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
 			$this->db->query($sql, __LINE__, __FILE__);
-			$this->db->next_record();
-			if ($this->db->f('hits'))
+			while ($this->db->next_record())
 			{
-				$hits				 = $this->db->f('hits');
+				$subject				 = $this->db->f('subject', true);
 				$entity['related'][] = array
 					(
-					'entity_link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'property.uiproject.index',
-						'query'			 => "entity.{$entity_id}.{$cat_id}.{$p_id}",
-						'criteria_id'	 => 6)), //FIXME: criteria 6 is for entities should be altered to locations
-					'name'			 => lang('project') . " [{$hits}]",
+					'entity_link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'property.uiproject.view',
+						'id'		 => $this->db->f('id'),
+//						'query'			 => "entity.{$entity_id}.{$cat_id}.{$p_id}",
+//						'criteria_id'	 => 6
+						)), //FIXME: criteria 6 is for entities should be altered to locations
+					'name'			 => lang('project') . " [{$subject}]",
 					'descr'			 => lang('project')
 				);
 			}
 
-			$sql = "SELECT count(*) as hits FROM fm_s_agreement {$this->join} fm_s_agreement_detail ON fm_s_agreement.id = fm_s_agreement_detail.agreement_id WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
+			$sql = "SELECT DISTINCT fm_s_agreement.id, fm_s_agreement.name AS subject FROM fm_s_agreement {$this->join} fm_s_agreement_detail ON fm_s_agreement.id = fm_s_agreement_detail.agreement_id WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
 			$this->db->query($sql, __LINE__, __FILE__);
-			$this->db->next_record();
-			if ($this->db->f('hits'))
+			while ($this->db->next_record())
 			{
-				$hits				 = $this->db->f('hits');
+				$subject				 = $this->db->f('subject', true);
 				$entity['related'][] = array
 					(
-					'entity_link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uis_agreement.index',
-						'query'		 => "entity.{$entity_id}.{$cat_id}.{$p_id}",
-						'p_num'		 => $p_id)),
-					'name'			 => lang('service agreement') . " [{$hits}]",
+					'entity_link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uis_agreement.view',
+						'id'		 => $this->db->f('id'),
+//						'query'		 => "entity.{$entity_id}.{$cat_id}.{$p_id}",
+//						'p_num'		 => $p_id
+						)),
+					'name'			 => lang('service agreement') . " [{$subject}]",
 					'descr'			 => lang('service agreement')
 				);
 			}

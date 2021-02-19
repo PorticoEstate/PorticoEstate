@@ -119,6 +119,7 @@
 				'from_address' => $GLOBALS['phpgw_info']['user']['preferences']['common']['email'],
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'manual.uisupport.send')),
 				'support_address' => $support_address,
+				'form_type'		=> phpgw::get_var('form_type', 'string', 'GET', 'aligned')
 			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file('support');

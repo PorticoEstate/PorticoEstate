@@ -1261,7 +1261,7 @@ JS;
 
 						if((int)$values['budget'])
 						{
-							if(!((int)$values['budget'] >= $_budget_amount) )
+							if(!(((int)$values['budget'] + (int)$project['budget']) >= $_budget_amount) )
 							{
 								$this->receipt['error'][]	 = array('msg' => lang('The budget for project %1 must be at least %2', $id, $_budget_amount ));
 								$error_id					 = true;
@@ -2268,24 +2268,26 @@ JS;
 
 			$_formatter_voucher_link = isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'formatLink_invoicehandler_2' : '';//formatLink_voucher';
 
-			$invoice_def = array
-				(
-				array('key'			 => 'workorder_id', 'label'			 => lang('Workorder'), 'sortable'		 => true,
-					'formatter'		 => 'formatLink', 'value_footer'	 => lang('Sum')),
-				array('key'		 => 'voucher_id', 'label'		 => lang('bilagsnr'), 'sortable'	 => true,
-					'formatter'	 => $_formatter_voucher_link),
+			$invoice_def = array(
+				array('key' => 'workorder_id', 'label' => lang('Workorder'), 'sortable' => true,
+					'formatter' => 'formatLink', 'value_footer' => lang('Sum')),
+				array('key' => 'voucher_id', 'label' => lang('bilagsnr'), 'sortable' => true,
+					'formatter' => $_formatter_voucher_link),
 //				array('key' => 'voucher_out_id', 'hidden' => true),
 				array('key' => 'invoice_id', 'label' => lang('invoice number'), 'sortable' => false),
 				array('key' => 'vendor', 'label' => lang('vendor'), 'sortable' => false),
-				array('key'		 => 'amount', 'label'		 => lang('amount'), 'sortable'	 => true,
-					'className'	 => 'right',
-					'formatter'	 => 'JqueryPortico.FormatterAmount2'),
+				array('key' => 'amount_ex_tax', 'label' => lang('ex tax'), 'sortable' => true, 'className' => 'right',
+					'formatter' => 'JqueryPortico.FormatterAmount2'),
+				array('key' => 'amount_tax', 'label' => lang('tax'), 'sortable' => true, 'className' => 'right',
+					'formatter' => 'JqueryPortico.FormatterAmount2'),
+				array('key' => 'amount', 'label' => lang('amount'), 'sortable' => true, 'className' => 'right',
+					'formatter' => 'JqueryPortico.FormatterAmount2'),
 //				array('key' => 'approved_amount', 'label' => lang('approved amount'), 'sortable' => false,
 //					'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount2'),
 				array('key' => 'period', 'label' => lang('period'), 'sortable' => true),
 				array('key' => 'periodization', 'label' => lang('periodization'), 'sortable' => false),
-				array('key'		 => 'periodization_start', 'label'		 => lang('periodization start'),
-					'sortable'	 => false),
+				array('key' => 'periodization_start', 'label' => lang('periodization start'),
+					'sortable' => false),
 				array('key' => 'currency', 'label' => lang('currency'), 'sortable' => false),
 				array('key' => 'type', 'label' => lang('type'), 'sortable' => true),
 				array('key' => 'budget_responsible', 'label' => lang('budget responsible'), 'sortable' => true),
@@ -3017,7 +3019,6 @@ JS;
 					$voucher_id = $entry['external_voucher_id'];
 				}
 
-
 				$values[] = array
 					(
 					'voucher_id'			 => $voucher_id,
@@ -3033,6 +3034,8 @@ JS;
 					'dimb'					 => $entry['dimb'],
 					'dimd'					 => $entry['dimd'],
 					'type'					 => $entry['type'],
+					'amount_ex_tax'			 => ((float)$entry['amount'] * 0.8),
+					'amount_tax'			 => ((float)$entry['amount'] * 0.2),
 					'amount'				 => $entry['amount'],
 					'approved_amount'		 => $entry['approved_amount'],
 					'vendor'				 => $entry['vendor'],

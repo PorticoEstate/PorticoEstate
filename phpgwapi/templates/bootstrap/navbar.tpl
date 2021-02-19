@@ -1,4 +1,7 @@
 <body>
+	<script>
+		{support_request}
+	</script>
 	<div class="wrapper">
 		<!-- Sidebar  -->
 		<nav id="sidebar" class="{menu_state}">

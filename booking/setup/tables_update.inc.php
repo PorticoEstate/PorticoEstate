@@ -4872,7 +4872,7 @@
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT MAX(id)+1  as next_id FROM bb_rescategory", __LINE__, __FILE__);
 		$GLOBALS['phpgw_setup']->oProc->next_record();
 		
-		$next_id = $GLOBALS['phpgw_setup']->oProc->f('next_id');
+		$next_id = (int)$GLOBALS['phpgw_setup']->oProc->f('next_id');
 		$next_id_2 = $next_id +1;
 
 		$bb_rescategory = array(
@@ -4918,3 +4918,36 @@
 		}
 	}
 
+	/**
+	 * Update booking version from 0.2.67 to 0.2.68
+	 *
+	 */
+	$test[] = '0.2.67';
+	function booking_upgrade0_2_67()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_block', array(
+				'fd' => array(
+					'id'		 => array('type' => 'auto', 'nullable' => false),
+					'active'	 => array('type' => 'int', 'precision' => 2, 'nullable' => false, 'default' => 1),
+					'from_'		 => array('type' => 'timestamp', 'nullable' => false),
+					'to_'		 => array('type' => 'timestamp', 'nullable' => false),
+					'entry_time' => array('type' => 'timestamp', 'nullable' => false, 'default' => 'current_timestamp'),
+					'session_id' => array('type' => 'varchar', 'precision' => 64, 'nullable' => true),
+					'resource_id'  => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.68';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

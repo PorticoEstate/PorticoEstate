@@ -212,6 +212,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$season = $this->bo->read_single($id);
 			$season['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$season['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',

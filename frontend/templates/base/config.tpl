@@ -152,7 +152,7 @@
 
 		<tr class="row_on">
 			<td>{lang_login_external_db_password}:</td>
-			<td><input type ="password" name="newsettings[external_db_password]" value="{value_external_db_password}"></td>
+			<td><input type ="password" name="newsettings[external_db_password]" value="{value_external_db_password}" autocomplete="off"></td>
 		</tr>
 		<tr class="row_on">
 			<td colspan="2">&nbsp;<b>{lang_email_settings}</b></td>

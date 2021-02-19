@@ -295,6 +295,12 @@
 		function _unmarshal( $value, $type, $modifier ='')
 		{
 			$type = strtolower($type);
+
+			if($modifier && method_exists($this,$modifier))
+			{
+				call_user_func_array(array($this, "$modifier"), array(&$value));
+			}
+
 			/* phpgw always returns empty strings (i.e '') for null values */
 			if (($value === null) || ($type != 'string' && (strlen(trim($value)) === 0)))
 			{
@@ -323,11 +329,6 @@
 			if (!$this->valid_field_type($type))
 			{
 				throw new LogicException(sprintf('Invalid type "%s"', $type));
-			}
-
-			if($modifier && method_exists($this,$modifier))
-			{
-				call_user_func_array(array($this, "$modifier"), array(&$value));
 			}
 
 			return $value;
@@ -793,6 +794,18 @@
 					$datetime->setTimeZone(new DateTimeZone($timezone));
 					$value = $datetime->format('Y-m-d H:i:s');
 				}
+			}
+		}
+
+		/**
+		 * Add "http://" - if missing in url
+		 * @param string $value
+		 */
+		protected function validate_url( &$value, $reverse = false )
+		{
+			if (!empty($value) && !preg_match('/^http/i', $value))
+			{
+				$value = "http://{$value}";
 			}
 		}
 

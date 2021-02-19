@@ -86,7 +86,7 @@
 		</tr>
 		<tr>
 			<td>{lang_Anonymous_password}:</td>
-			<td><input type="password" name="newsettings[anonymous_pass]" value="{value_anonymous_pass}"></td>
+			<td><input type="password" name="newsettings[anonymous_pass]" value="{value_anonymous_pass}" autocomplete="off"></td>
 		</tr>
 
 		<tr>

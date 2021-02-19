@@ -505,7 +505,16 @@
 					}
 
 					$max_dato = phpgwapi_datetime::date_to_timestamp($_POST['to_']); // highest date from input
-					$interval = $_POST['field_interval'] * 60 * 60 * 24 * 7; // weeks in seconds
+
+					if(phpgw::get_var('field_interval', 'int', 'POST') == 5)
+					{
+						$interval = 60 * 60 * 24; // day in seconds
+					}
+					else
+					{
+						$interval = $_POST['field_interval'] * 60 * 60 * 24 * 7; // weeks in seconds
+					}
+
 					$i = 0;
 					// calculating valid and invalid dates from the first booking's to-date to the repeat_until date is reached
 					// the form from step 1 should validate and if we encounter any errors they are caused by double bookings.
@@ -628,7 +637,7 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
-			$booking['audience_json'] = json_encode(array_map('intval', $booking['audience']));
+			$booking['audience_json'] = json_encode(array_map('intval', (array)$booking['audience']));
 
 			$groups = $this->group_bo->so->read(array('results' => -1, 'filters' => array('organization_id' => $allocation['organization_id'],
 					'active' => 1)));
@@ -724,6 +733,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$booking = $this->bo->read_single($id);
 
 			$activity_path = $this->activity_bo->get_path($booking['activity_id']);
@@ -788,7 +801,7 @@
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 			$cost_history = $this->bo->so->get_ordered_costs($id);
-			$booking['audience_json'] = json_encode(array_map('intval', $booking['audience']));
+			$booking['audience_json'] = json_encode(array_map('intval', (array)$booking['audience']));
 
 			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime');
 			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime');

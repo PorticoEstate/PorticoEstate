@@ -70,7 +70,7 @@
 		</tr>
 		<tr class="pure-table-odd">
 			<td>{lang_Anonymous_password}:</td>
-			<td><input type="password" name="newsettings[anonymous_passwd]" value="{value_anonymous_passwd}"></td>
+			<td><input type="password" name="newsettings[anonymous_passwd]" value="{value_anonymous_passwd}" autocomplete="off"></td>
 		</tr>
 		<tr>
 			<td>{lang_custom_login_url}:</td>
@@ -102,7 +102,7 @@
 		</tr>
 		<tr>
 			<td>{lang_password} Fiks folkeregister:</td>
-			<td><input type="password" name="newsettings[password_fiks_folkeregister]" value="{value_password_fiks_folkeregister}"></td>
+			<td><input type="password" name="newsettings[password_fiks_folkeregister]" value="{value_password_fiks_folkeregister}" autocomplete="off"></td>
 		</tr>
 		<tr>
 			<td>{lang_login_webservicehost} Fiks folkeregister:</td>
@@ -143,7 +143,7 @@
 		</tr>
 		<tr class="pure-table-odd">
 			<td>{lang_login_soap_client_password}:</td>
-			<td><input type ="password" name="newsettings[soap_password]" value="{value_soap_password}"></td>
+			<td><input type ="password" name="newsettings[soap_password]" value="{value_soap_password}" autocomplete="off"></td>
 		</tr>
 		<tr class="pure-table-odd">
 			<td>{lang_login_soap_client_wsdl}:</td>

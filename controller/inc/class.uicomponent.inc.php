@@ -173,7 +173,7 @@
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
 
-			if($entity_group_id)
+//			if($entity_group_id)
 			{
 				$location_filter = phpgwapi_cache::session_get('controller', "location_filter_{$entity_group_id}");
 			}
@@ -206,8 +206,14 @@
 					$location_filter = array();
 					foreach ($entity_list as $entry)
 					{
-						$categories = $this->soadmin_entity->read_category(array('entity_id' => $entry['id'],
-							'order' => 'name', 'sort' => 'asc', 'enable_controller' => true, 'allrows' => true));
+						$categories = $this->soadmin_entity->read_category(array(
+							'entity_id' => $entry['id'],
+							'order' => 'name',
+							'sort' => 'asc',
+							'enable_controller' => true,
+							'get_inherited' => $this->config['get_inherited_values'],
+							'allrows' => true
+							));
 						foreach ($categories as $category)
 						{
 

@@ -170,7 +170,7 @@ $(document).ready(function ()
 					$('#item-description').html('<b>' + result.results[i].name + '</b>' + result.results[i].description);
 					$('#resource_list').hide();
 
-					set_conditional_translation(result.results[i].type);
+//					set_conditional_translation(result.results[i].type);
 
 				}
 				if (!day_default_lenght)
@@ -236,6 +236,9 @@ $(document).ready(function ()
 
 });
 
+/**
+ * Note: deprecated
+ */
 function set_conditional_translation(type)
 {
 	if (type == 'Equipment')
@@ -334,6 +337,27 @@ function PopulatePostedDate()
 	if ($("#resource_id").val())
 	{
 		getFreetime();
+
+		var parameter = {
+				menuaction: "bookingfrontend.uiapplication.set_block",
+				resource_id: $("#resource_id").val(),
+				from_:StartTime.toJSON(),
+				to_:EndTime.toJSON()
+			};
+
+		$.getJSON(phpGWLink('bookingfrontend/', parameter, true), function (result)
+		{
+			if(result.status == 'reserved')
+			{
+				alert('Opptatt');
+				window.location.replace(phpGWLink('bookingfrontend/',
+				{
+					menuaction: "bookingfrontend.uiresource.show",
+					building_id:urlParams['building_id'],
+					id: $("#resource_id").val()}
+				));
+			}
+		});
 	}
 }
 
@@ -491,7 +515,7 @@ $(document).ready(function ()
 					booking_month_horizon = Number(resource.booking_month_horizon) +1;
 				}
 
-				set_conditional_translation(resource.type);
+//				set_conditional_translation(resource.type);
 				$('#item-description').html(resource.description);
 
 				$('#bookingStartTime').val(time_default_start);

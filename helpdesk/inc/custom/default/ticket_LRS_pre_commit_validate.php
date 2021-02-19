@@ -181,4 +181,4 @@
 	}
 
 	$ticket_LRS_pre_commit_validate = new ticket_LRS_pre_commit_validate();
-	$ticket_LRS_pre_commit_validate->validate($id, $data, $values_attribute);
+	$ticket_LRS_pre_commit_validate->validate(empty($id)?null:$id, $data, $values_attribute);

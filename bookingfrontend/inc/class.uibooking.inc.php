@@ -323,7 +323,7 @@
 			$booking['agegroups_json'] = json_encode($booking['agegroups']);
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
-			$booking['audience_json'] = json_encode(array_map('intval', $booking['audience']));
+			$booking['audience_json'] = json_encode(array_map('intval', (array)$booking['audience']));
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 			$groups = $this->group_bo->so->read(array('filters' => array('organization_id' => $allocation['organization_id'],
@@ -589,7 +589,7 @@
 			$audience = $audience['results'];
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
-			$booking['audience_json'] = json_encode(array_map('intval', $booking['audience']));
+			$booking['audience_json'] = json_encode(array_map('intval', (array)$booking['audience']));
 			$booking['agegroups_json'] = json_encode($booking['agegroups']);
 			$group = $this->group_bo->so->read_single($booking['group_id']);
 			$groups = $this->group_bo->so->read(array('filters' => array('organization_id' => $group['organization_id'],
@@ -731,7 +731,7 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
-			$booking['audience_json'] = json_encode(array_map('intval', $booking['audience']));
+			$booking['audience_json'] = json_encode(array_map('intval', (array)$booking['audience']));
 
 			$group = $this->group_bo->so->read_single($booking['group_id']);
 			$groups = $this->group_bo->so->read(array('filters' => array('organization_id' => $group['organization_id'],
@@ -804,7 +804,7 @@
 		public function resource_users( $resources, $group_id )
 		{
 			$contacts = array();
-			$orglist = array();
+			$orglist = '';
 			foreach ($resources as $res)
 			{
 				$cres = $this->resource_bo->read_single($res);

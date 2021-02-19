@@ -138,12 +138,12 @@
 			$cols = array();
 			while ($this->db->next_record())
 			{
-				$cols[] = array
-					(
+				$cols[] = array(
 					'id'		 => $this->db->f('id'),
 					'name'		 => $this->db->f('name'),
 					'descr'		 => $this->db->f('descr', true),
-					'sorting'	 => $this->db->f('sorting')
+					'sorting'	 => $this->db->f('sorting'),
+					'datatype'	 => preg_match('/(name|descr|title)/i', $this->db->f('name')) ? 'text' : ''
 				);
 			}
 			return $cols;
@@ -192,7 +192,7 @@
 				$sql	 = "SELECT max(sorting) as max_sort FROM fm_custom_cols WHERE custom_id=" . $custom['custom_id'];
 				$this->db->query($sql);
 				$this->db->next_record();
-				$sorting = $this->db->f('max_sort') + 1;
+				$sorting = (int)$this->db->f('max_sort') + 1;
 
 				$values = array(
 					$custom['custom_id'],
@@ -245,18 +245,18 @@
 			if (is_array($data))
 			{
 				$resort		 = (isset($data['resort']) ? $data['resort'] : 'up');
-				$custom_id	 = (isset($data['id']) ? $data['custom_id'] : '');
-				$id			 = (isset($data['id']) ? $data['id'] : '');
+				$custom_id	 = (isset($data['id']) ? (int)$data['custom_id'] : '');
+				$id			 = (isset($data['id']) ? (int)$data['id'] : 0);
 			}
 
 			$sql		 = "SELECT sorting FROM fm_custom_cols WHERE custom_id = $custom_id AND id=$id";
 			$this->db->query($sql);
 			$this->db->next_record();
-			$sorting	 = $this->db->f('sorting');
+			$sorting	 = (int)$this->db->f('sorting');
 			$sql		 = "SELECT max(sorting) as max_sort FROM fm_custom_cols WHERE custom_id = $custom_id";
 			$this->db->query($sql);
 			$this->db->next_record();
-			$max_sort	 = $this->db->f('max_sort');
+			$max_sort	 = (int)$this->db->f('max_sort');
 			switch ($resort)
 			{
 				case 'up':
@@ -287,7 +287,7 @@
 		{
 			$start		 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$filter		 = isset($data['filter']) && $data['filter'] ? $data['filter'] : 'none';
-			$query		 = isset($data['query']) ? $data['query'] : '';
+			$query		 = isset($data['query']) ? $this->db->db_addslashes($data['query']) : '';
 			$sort		 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 			$order		 = isset($data['order']) ? $data['order'] : '';
 			$allrows	 = isset($data['allrows']) ? $data['allrows'] : '';
@@ -328,9 +328,65 @@
 
 			//FIXME:
 			$ordermethod = '';
+			$filtermethod = '';
+			$filter_arr = array();
 
-			$this->db->query($sql, __LINE__, __FILE__);
-			$this->total_records = $this->db->num_rows();
+			$sql_arr = explode('order', strtolower($sql));
+			$sql_arr1 =  explode('select ', trim(str_replace(array("\n"), ' ', $sql_arr[0])));
+			$sql_arr2 =  explode('from ', trim($sql_arr1[1]));
+
+			$filter_col_map = array();
+			if($query && !$update)
+			{
+				$cols = $this->proper_parse_str($sql_arr2[0]);
+				foreach ($uicols as $uicol)
+				{
+					if(!$uicol['datatype'] == 'text')
+					{
+						continue;
+					}
+
+					foreach ($cols as $col_name => $alias)
+					{
+						if($alias == $uicol['name'])
+						{
+							$filter_col_map[] = $col_name;
+						}
+						elseif (preg_match("/.{$uicol['name']}/", $col_name))
+						{
+							if(in_array($col_name, $filter_col_map))
+							{
+								continue;
+							}
+							$filter_col_map[] = $col_name;
+						}
+					}
+
+				}
+
+				foreach ($filter_col_map as $filter_col)
+				{
+					$filter_arr[] = "{$filter_col} {$this->db->like} '{$query}%'";
+				}
+
+				if(preg_match('/WHERE/i', $sql) && $filter_arr)
+				{
+					$filtermethod = ' AND (';
+					$filtermethod .= implode(' OR ', $filter_arr) . ')';
+				}
+				else if ($filter_arr)
+				{
+					$filtermethod = ' WHERE 1=1 AND (';
+					$filtermethod .= implode(' OR ', $filter_arr) . ')';
+				}
+			}
+
+			$_sql = $sql_arr[0] . $filtermethod;
+
+			if(isset($sql_arr[1]))
+			{
+				$ordermethod .= " ORDER {$sql_arr[1]}";
+			}
 
 			if($update)
 			{
@@ -338,11 +394,16 @@
 			}
 			else if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
+				$this->db->query("SELECT count(*) as cnt FROM ({$_sql}) as t", __LINE__, __FILE__);
+				$this->db->next_record();
+				$this->total_records = (int)$this->db->f('cnt');
+
+				$this->db->limit_query($_sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
-				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
+				$this->db->query($_sql . $ordermethod, __LINE__, __FILE__);
+				$this->total_records = $this->db->num_rows();
 			}
 
 			$values = array();
@@ -358,6 +419,47 @@
 			}
 
 			return $values;
+		}
+
+		function proper_parse_str( $str )
+		{
+			# result array
+			$arr = array();
+
+			# split on outer delimiter
+			$pairs = explode(',', $str);
+
+			# loop through each pair
+			foreach ($pairs as $i)
+			{
+				# split into name and value
+				list($name, $value) = explode(' as ', trim($i), 2);
+
+				$name = str_replace(array(" ", "|", "'"),'',$name);
+				$value = trim($value);
+
+				# if name already exists
+				if (isset($arr[$name]))
+				{
+					# stick multiple values into an array
+					if (is_array($arr[$name]))
+					{
+						$arr[$name][] = $value;
+					}
+					else
+					{
+						$arr[$name] = array($arr[$name], $value);
+					}
+				}
+				# otherwise, simply stick it in a scalar
+				else
+				{
+					$arr[$name] = $value;
+				}
+			}
+
+			# return result array
+			return $arr;
 		}
 
 		function delete( $custom_id )
