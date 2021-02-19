@@ -77,8 +77,10 @@
 			$table_name = $this->table_name;
 			$db = $this->db;
 			$ids = join(', ', array_map(array($this, 'select_id'), $expired));
-			$ids[] = -1; // in case there are none
-			$sql = "UPDATE {$table_name} SET active = 0 WHERE {$table_name}.id IN ($ids);";
-			$db->query($sql, __LINE__, __FILE__);
+			if($ids)
+			{
+				$sql = "UPDATE {$table_name} SET active = 0 WHERE {$table_name}.id IN ($ids);";
+				$db->query($sql, __LINE__, __FILE__);
+			}
 		}
 	}

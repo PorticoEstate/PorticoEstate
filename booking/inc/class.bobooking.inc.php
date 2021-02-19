@@ -1027,9 +1027,11 @@
 			$resources	= $this->resource_so->read(array('filters' => $resource_filters,
 				'sort' => 'sort', 'results' => -1));
 
+			$resource_ids = array();
 			$event_ids = array();
 			foreach ($resources['results'] as &$resource)
 			{
+				$resource_ids[] = $resource['id'];
 				$from = clone $_from;
 
 				if($resource['simple_booking_start_date'])
@@ -1106,8 +1108,8 @@
 				$events = $this->event_so->read(array('filters' => array('id' => $event_ids),
 					'results' => -1));
 			}
-			
-			$this->get_partials( $events);
+
+			$this->get_partials( $events, $resource_ids);
 
 			$availlableTimeSlots		 = array();
 			$defaultStartHour			 = 8;
@@ -1270,7 +1272,7 @@
 			return $availlableTimeSlots;
 		}
 
-		private function get_partials(& $events)
+		private function get_partials(& $events, $resource_ids)
 		{
 			$session_id = $GLOBALS['phpgw']->session->get_session_id();
 			if (!empty($session_id))
@@ -1278,7 +1280,7 @@
 				$filters = array('status' => 'NEWPARTIAL1', 'session_id' => $session_id);
 				$params = array('filters' => $filters, 'results' =>'all');
 				$applications = CreateObject('booking.soapplication')->read($params);
-				
+
 				if($applications['results'])
 				{
 					foreach ($applications['results'] as & $application)
@@ -1289,6 +1291,18 @@
 
 					$events['results'] = array_merge((array)$events['results'],$applications['results']);
 				}
+			}
+
+			$filters = array('active' => 1, 'resource_id' => $resource_ids);
+			$params = array('filters' => $filters, 'results' =>'all');
+			$blocks = CreateObject('booking.soblock')->read($params);
+			if($blocks['results'])
+			{
+				foreach ($blocks['results'] as & $block)
+				{
+				  $block['resources'] = array( $block['resource_id']);
+				}
+				$events['results'] = array_merge((array)$events['results'],$blocks['results']);
 			}
 		}
 
@@ -1629,7 +1643,7 @@
 					while (true);
 				}
 			}
-			
+
 			foreach ($new_bookings as &$new_booking)
 			{
 				$booking_from	= new DateTime($new_booking['date'] . ' ' . $new_booking['from_']);
@@ -1639,7 +1653,7 @@
 				{
 					$conflict_from	 = new DateTime($conflict['from_']);
 					$conflict_to	 = new DateTime($conflict['to_']);
-					
+
 					if(
 					  ($booking_from <= $conflict_from AND $booking_to > $conflict_from)
                       || ($booking_from > $conflict_from AND $booking_to < $conflict_to)
@@ -1658,7 +1672,7 @@
 		function _remove_event_conflicts( $bookings, &$events, $list_conflicts = false )
 		{
 			$conflict_map = array();
-			
+
 			foreach ($events as &$e)
 			{
 				$e['conflicts'] = array();
@@ -1707,7 +1721,7 @@
 						if($list_conflicts && !isset($conflict_map["{$b['type']}_{$b['id']}"]))
 						{
 							$e['conflicts'][]	 = $b;
-							$conflict_map["{$b['type']}_{$b['id']}"] = true;							
+							$conflict_map["{$b['type']}_{$b['id']}"] = true;
 						}
 
 						$bf	 = $b['from_'];
