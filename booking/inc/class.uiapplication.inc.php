@@ -610,6 +610,80 @@
 			return $comment_text;
 		}
 
+		public function set_block()
+		{
+			$resource_id = phpgw::get_var('resource_id', 'int' ,'REQUEST', -1 );
+			$from_ = (new DateTime(phpgw::get_var('from_')));
+			$to_ = (new DateTime(phpgw::get_var('to_')));
+
+			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+
+			try
+			{
+				$DateTimeZone	 = new DateTimeZone($timezone);
+			}
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
+
+			$from_->setTimezone($DateTimeZone);
+			$to_->setTimezone($DateTimeZone);
+
+			$bo_block = createObject('booking.boblock');
+
+			$session_id = $GLOBALS['phpgw']->session->get_session_id();
+			$previous_block = $bo_block->so->read(array(
+				'filters' => array('where' =>  "(bb_block.active = 1"
+					. " AND bb_block.session_id = '{$session_id}'"
+					. " AND bb_block.resource_id = {$resource_id}"
+					. " AND bb_block.from_ = '" . $from_->format('Y-m-d H:i:s') . "'"
+					. " AND bb_block.to_ = '" . $to_->format('Y-m-d H:i:s') . "')"),
+				'results' => 1));
+
+
+			$collision = false;
+			$status = '';
+			$message = '';
+			if($previous_block['total_records'] > 0)
+			{
+				$status = 'registered';
+				return array(
+					'status' => $status,
+					'message'	=> $message
+				);
+			}
+			else
+			{
+				$collision = $this->bo->so->check_collision(array($resource_id), $from_->format('Y-m-d H:i:s'), $to_->format('Y-m-d H:i:s'));
+			}
+
+			if ($collision)
+			{
+				$status = 'reserved';
+			}
+			else
+			{
+				$block = array(
+					'session_id'	=> $session_id,
+					'resource_id'	=> $resource_id,
+					'from_'			=> $from_->format('Y-m-d H:i:s'),
+					'to_'			=> $to_->format('Y-m-d H:i:s')
+					);
+				$receipt = $bo_block->add($block);
+				if($receipt['id'])
+				{
+					$status = 'saved';
+					$message = $receipt['message'][0]['msg'];
+				}
+			}
+
+			return array(
+				'status' => $status,
+				'message'	=> $message
+			);
+		}
+
 		public function add()
 		{
 			$organization_number = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
@@ -1298,7 +1372,7 @@
 								$collision_dates = array();
 								foreach ($application['dates'] as &$date)
 								{
-									$collision = $this->bo->so->check_collision($application['resources'], $date['from_'], $date['to_']);
+									$collision = $this->bo->so->check_collision($application['resources'], $date['from_'], $date['to_'], $session_id);
 									if ($collision)
 									{
 										$collision_dates[] = $date['from_'];
@@ -1342,6 +1416,8 @@
 
 								if (!$errors)
 								{
+									$bo_block = createObject('booking.boblock');
+									$bo_block->cancel_block($session_id, $application['dates'],$application['resources']);
 									$receipt = $booking_boevent->so->add($event);
 									$booking_boevent->so->update_id_string();
 									CreateObject('booking.souser')->collect_users($application['customer_ssn']);
@@ -2271,11 +2347,16 @@ JS;
 			if (!empty($session_id) && $id > 0)
 			{
 				$partials = $this->get_partials($session_id);
+
+				$GLOBALS['phpgw']->db->transaction_begin();
+
 				$exists = false;
 				foreach ($partials as $partial)
 				{
 					if ($partial['id'] == $id)
 					{
+						$bo_block = createObject('booking.boblock');
+						$bo_block->cancel_block($session_id, $partial['dates'],$partial['resources']);
 						$exists = true;
 						break;
 					}
@@ -2285,6 +2366,9 @@ JS;
 					$this->bo->delete_application($id);
 					$status['deleted'] = true;
 				}
+
+				$GLOBALS['phpgw']->db->transaction_commit();
+
 			}
 			return $status;
 		}
