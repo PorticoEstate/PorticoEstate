@@ -349,26 +349,50 @@
 
 		public function delete_application($id)
 		{
-			$db = $this->db;
-			$db->transaction_begin();
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 			$tablesuffixes = array('agegroup', 'comment', 'date', 'resource', 'targetaudience');
 			foreach ($tablesuffixes as $suffix)
 			{
 				$table_name = sprintf('%s_%s', $this->table_name, $suffix);
 				$sql = "DELETE FROM $table_name WHERE application_id=$id";
-				$db->query($sql, __LINE__, __FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 			}
 			$table_name = $this->table_name;
 			$sql = "DELETE FROM $table_name WHERE id=$id";
-			$db->query($sql, __LINE__, __FILE__);
-			return	$db->transaction_commit();
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			if (!$this->global_lock)
+			{
+				return	$this->db->transaction_commit();
+			}
 		}
 
 
-		function check_collision( $resources, $from_, $to_ )
+		function check_collision( $resources, $from_, $to_ , $session_id = null)
 		{
+			$filter_block = '';
+			if($session_id)
+			{
+				$filter_block = " AND session_id != '{$session_id}'";
+			}
+
 			$rids = join(',', array_map("intval", $resources));
-			$sql = "SELECT ba.id
+			$sql = "SELECT bb_block.id
+                      FROM bb_block
+                      WHERE  bb_block.resource_id in ($rids)
+                      AND ((bb_block.from_ <= '$from_' AND bb_block.to_ >= '$from_')
+                      OR (bb_block.from_ > '$from_' AND bb_block.to_ < '$to_')
+                      OR (bb_block.from_ < '$to_' AND bb_block.to_ > '$to_')) AND active = 1 {$filter_block}
+                      UNION
+					  SELECT ba.id
                       FROM bb_allocation ba, bb_allocation_resource bar
                       WHERE ba.id = bar.allocation_id
                       AND bar.resource_id in ($rids)
