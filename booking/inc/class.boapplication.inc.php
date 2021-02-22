@@ -442,7 +442,7 @@
 
 			$extra_mail_addresses = $this->get_mail_addresses( $building_info['id'], $application['case_officer_id'] );
 
-			if($mailadresses)
+			if(!empty($mailadresses[0]))
 			{
 				$mailadresses = array_merge($mailadresses, array_values($extra_mail_addresses));
 			}
