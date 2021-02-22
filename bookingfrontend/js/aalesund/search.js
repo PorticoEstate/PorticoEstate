@@ -16,7 +16,7 @@ function ViewModel()
 	let self = this;
 
 	self.goToBuilding = function (event) { window.open(event.building_url(), '_blank'); };
-	self.goToOrganization = function (event) { window.open(event.org_url(), '_blank'); }
+	self.goToOrganization = function (event) { if (event.org_id() !== '') {window.open(event.org_url(), '_blank');} }
 	self.goToResource = function (event) { window.open(event.resource_url, '_blank'); }
 	self.goToApplication = function (event) {window.open(event.application_url + `&start=${event.fromDateParam}&end=${event.toDateParam}`, '_blank');}
 	self.goToEvents = function (event) { window.location = baseURL + '?menuaction=bookingfrontend.uieventsearch.show'; }

@@ -177,7 +177,7 @@
 			<!--</xsl:if>-->
 			<div class="row margin-top-and-bottom">
 				<div class="col-6">
-					<div class="button-group dropdown calendar-tool invisible">
+					<div class="button-group dropdown calendar-tool">
 						<!--<xsl:if test="false">-->
 							<div class="dropdown-container">
 								<button type="button" class="btn btn-default dropdown-toggle resources-dropdown" data-toggle="dropdown">
@@ -225,7 +225,7 @@
 				</div>
 				<!--<xsl:if test="false">-->
 
-					<div class="col-6 col-md-3 offset-md-3 col-lg-3 offset-lg-3 col-xl-2 offset-xl-4 col-sm-5 offset-sm-1 col-12 mt-2 calendar-text invisible">
+					<div class="col-6 col-md-3 offset-md-3 col-lg-3 offset-lg-3 col-xl-2 offset-xl-4 col-sm-5 offset-sm-1 col-12 mt-2 calendar-text">
 						<div class="">
 							<div class="square allocation"></div>
 							<span>

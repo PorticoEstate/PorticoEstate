@@ -268,8 +268,6 @@ function PopulateCalendarEvents() {
 			} else {
 				setTimeout(function () {
 					if (events.length !== 0) {
-						$(".calendar-tool").removeClass("invisible");
-						$(".calendar-text").removeClass("invisible");
 
 						let defaultIds = [];
 						for (let i = 0; i < events.length && defaultIds.length < 3; i++) {
