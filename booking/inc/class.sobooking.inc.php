@@ -396,7 +396,7 @@
 
 			$results = array();
 			$this->db->query("SELECT id FROM bb_event"
-				. " JOIN bb_event_resource ON (event_id=id AND resource_id IN (" . implode(',', $resource_ids) . ") )"
+				//. " JOIN bb_event_resource ON (event_id=id AND resource_id IN (" . implode(',', $resource_ids) . ") )"
 				. " WHERE active=1"
 				. " AND (customer_organization_id = $organization_id OR customer_organization_number = '" . $organization_info['organization_number'] ."')"
 				. " AND ((from_ >= '$start' AND from_ < '$end')"

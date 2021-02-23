@@ -768,6 +768,22 @@
 
 		$resources		 = $resources['results'];
 
+		if (empty($resources))
+		{
+			foreach ($bookings as $booking)
+			{
+				$booking_res = $this->resource_so->read(array('filters'	 => array('building_id'	 => $booking['building_id'],
+					'active' => 1), 'results'	 => -1))['results'];
+				foreach ($booking_res as $resource)
+				{
+					if (!in_array($resource, $resources))
+					{
+						$resources[] = $resource;
+					}
+				}
+			}
+		}
+
 		foreach ($resources as $key => $row)
 		{
 			$sort[$key] = $row['sort'];
