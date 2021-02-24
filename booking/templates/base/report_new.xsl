@@ -58,7 +58,7 @@
 									<xsl:for-each select="activities">
 										<li>
 											<label>
-												<input type="checkbox" name="activity_id[]" value="{id}">
+												<input type="checkbox" filter="activity" name="activity_id[]" value="{id}">
 													<xsl:attribute name="data-validation">checkbox_group</xsl:attribute>
 													<xsl:attribute name="data-validation-qty">min1</xsl:attribute>
 													<!--xsl:if test="selected = 1"-->
