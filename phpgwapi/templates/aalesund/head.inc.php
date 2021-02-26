@@ -184,8 +184,8 @@ JS;
 	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/custom.js";
 	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/nb-NO.js";
 	$javascripts[]	 = "/phpgwapi/js/dateformat/dateformat.js";
-	$javascripts[]	 = "/phpgwapi/templates/bootstrap/js/bootstrap-datetimepicker.min.js";
-	$javascripts[]	 = "/phpgwapi/templates/bootstrap/js/bootstrap-datetimepicker.pt-BR.js";
+//	$javascripts[]	 = "/phpgwapi/templates/bootstrap/js/bootstrap-datetimepicker.min.js";
+//	$javascripts[]	 = "/phpgwapi/templates/bootstrap/js/bootstrap-datetimepicker.pt-BR.js";
 	foreach ($javascripts as $javascript)
 	{
 		if (file_exists(PHPGW_SERVER_ROOT . $javascript))
