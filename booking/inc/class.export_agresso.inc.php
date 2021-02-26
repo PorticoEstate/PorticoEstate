@@ -41,13 +41,21 @@
 				$file_written = true;
 			}
 
-			if ($file_written && $this->config->config_data['invoice_export_method'] != 'ftp')
+			$transfer_ok = false;
+			if ($file_written)
 			{
-				$transfer_ok = true;
-			}
-			else if ($file_written)
-			{
-				$transfer_ok = $this->transfer($filnavn);
+				if($this->config->config_data['invoice_export_method'] == 'ftp')
+				{
+					$transfer_ok = $this->transfer($filnavn);
+				}
+				else if($this->config->config_data['invoice_export_method'] == 'ftps')
+				{
+					$transfer_ok = $this->transfer_ftps($filnavn);
+				}
+				else
+				{
+					$transfer_ok = true;
+				}
 			}
 
 			if ($transfer_ok)
@@ -86,6 +94,21 @@
 
 			//Ingen løpenr er ledige, gi feilmelding
 			return false;
+		}
+
+		private function transfer_ftps( $filnavn )
+		{
+			$transfer_ok = false;
+			$basedir = $this->config->config_data['invoice_ftp_basedir'];
+			if ($basedir)
+			{
+				$newfile = $basedir . '/' . basename($filnavn);
+			}
+			else
+			{
+				$newfile = basename($filnavn);
+			}
+			
 		}
 
 		protected function transfer( $filnavn )
