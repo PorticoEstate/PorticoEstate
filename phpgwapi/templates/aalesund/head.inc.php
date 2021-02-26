@@ -54,7 +54,7 @@ JS;
 	$stylesheets = array();
 
 
-	$stylesheets[]	 = "/phpgwapi/templates/aalesund/css/bootstrap.min.css";
+	$stylesheets[]	 = "/phpgwapi/js/bootstrap/css/bootstrap.min.css";
 	$stylesheets[]	 = "/phpgwapi/templates/aalesund/css/fontawesome.all.css";
 	$stylesheets[]	 = "/phpgwapi/templates/aalesund/css/jquery.autocompleter.css";
 	$stylesheets[]	 = "https://fonts.googleapis.com/css?family=Work+Sans";
@@ -174,12 +174,11 @@ JS;
 	phpgwapi_jquery::load_widget('core');
 
 	$javascripts	 = array();
-	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/popper.min.js";
-	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/bootstrap.min.js";
+	$javascripts[]	 = "/phpgwapi/js/popper/popper.min.js";
+	$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
+
 	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/knockout-min.js";
 	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/knockout.validation.js";
-//	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/aui-min.js";
-//	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js";
 	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/jquery.autocompleter.js";
 	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/common.js";
 	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/custom.js";
