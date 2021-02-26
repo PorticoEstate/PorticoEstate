@@ -18,7 +18,8 @@
 		$cache_refresh_token = "?n={$GLOBALS['phpgw_info']['server']['cache_refresh_token']}";
 	}
 
-	$config_frontend = CreateObject('phpgwapi.config', $app)->read();
+	$config_frontend = CreateObject('phpgwapi.config', 'bookingfrontend')->read();
+	$config_backend = CreateObject('phpgwapi.config', 'booking')->read();
 
 	$tracker_id		 = !empty($config_frontend['tracker_id']) ? $config_frontend['tracker_id'] : '';
 	$tracker_code1	 = <<<JS
@@ -151,15 +152,23 @@ JS;
 //	$municipality_email = 'servicetorget@alesund.kommune.no';
 //	$GLOBALS['phpgw']->template->set_var( 'municipality_email', $municipality_email );
 
-	if (!empty($GLOBALS['phpgw_info']['server']['support_address']))
+
+	if (!empty($config_backend['support_address']))
 	{
-		$support_email = $GLOBALS['phpgw_info']['server']['support_address'];
-		$GLOBALS['phpgw']->template->set_var('support_email', $support_email);
+		$support_email = $config_backend['support_address'];
 	}
 	else
 	{
-		$GLOBALS['phpgw']->template->set_var('support_email', 'support@aktivkommune.no');
+		if (!empty($GLOBALS['phpgw_info']['server']['support_address']))
+		{
+			$support_email = $GLOBALS['phpgw_info']['server']['support_address'];
+		}
+		else
+		{
+			$support_email = 'support@aktivkommune.no';
+		}
 	}
+	$GLOBALS['phpgw']->template->set_var('support_email', $support_email);
 
 //loads jquery
 	phpgwapi_jquery::load_widget('core');
@@ -276,12 +285,37 @@ JS;
 
 	$site_base = $app == 'bookingfrontend' ? "/{$app}/" : '/index.php';
 
+	$site_url			= $GLOBALS['phpgw']->link($site_base, array());
+	$placeholder_search = lang('Search');
+
+	$nav = <<<HTML
+
+		<nav class="navbar navbar-default sticky-top navbar-expand-md navbar-light  header_borderline"   id="headcon">
+			<div class="container header-container my_class">
+				<a class="navbar-brand brand-site-title" href="{$site_url}">{$site_title} </a>
+				<a href="{$site_url}"><img class="navbar-brand brand-site-img" src="{$headlogoimg}" alt="{$logo_title}"/></a>
+				<!-- Search Box -->
+				<!--div class="search-container">
+					<form id="navSearchForm" class="search-form">
+						<input type="text" class="search-input" placeholder="{$placeholder_search}"    id="searchInput"  />
+						<button class="searchButton" type="submit" ><i class="fas fa-search"></i></button>
+					</form>
+				</div-->
+			</div>
+            <div class="navbar-organization-select">
+            </div>
+		</nav>
+		<div class="overlay">
+            <div id="loading-img"><i class="fas fa-spinner fa-spin fa-3x"></i></div>
+        </div>
+HTML;
+
+
 	$tpl_vars = array
 		(
 		'css'					 => $GLOBALS['phpgw']->common->get_css($cache_refresh_token),
 		'javascript'			 => $GLOBALS['phpgw']->common->get_javascript($cache_refresh_token),
 		'img_icon'				 => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
-		'site_title'			 => $site_title,
 		'str_base_url'			 => $GLOBALS['phpgw']->link('/', array(), true),
 		'dateformat_backend'	 => $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],
 		'site_url'				 => $GLOBALS['phpgw']->link($site_base, array()),
@@ -294,17 +328,16 @@ JS;
 		'metainfo_description'	 => $description,
 		'metainfo_robots'		 => $robots,
 		'lbl_search'			 => lang('Search'),
-//		'placeholder_search' => lang('Search building, resource, organization'),
-		'placeholder_search' => lang('Search'),
 		'logofile'				 => $logofile_frontend,
-		'header_search_class'	 => 'hidden'//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
+		'header_search_class'	 => 'hidden',//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
+		'nav'					 => empty($GLOBALS['phpgw_info']['flags']['noframework']) ? $nav : ''
 	);
 
 
 //	$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 //	_debug_array($user);
 
-	$bouser	 = CreateObject('bookingfrontend.bouser');
+	$bouser	 = CreateObject('bookingfrontend.bouser', true);
 
 	/**
 	 * Might be set wrong in the ui-class
@@ -320,30 +353,6 @@ JS;
 	if ($bouser->is_logged_in())
 	{
 
-		$orgs = phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);
-
-		$session_org_id = phpgw::get_var('session_org_id', 'string', 'GET');
-
-		function get_ids_from_array( $org )
-		{
-			return $org['orgnumber'];
-		}
-		if ($session_org_id && in_array($session_org_id, array_map("get_ids_from_array", $orgs)))
-		{
-			try
-			{
-				$org_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($session_org_id);
-				if ($org_number)
-				{
-					$bouser->change_org($org_number);
-				}
-			}
-			catch (sfValidatorError $e)
-			{
-				$session_org_id = -1;
-			}
-		}
-
 		if ($bouser->orgname == '000000000')
 		{
 			$tpl_vars['login_text_org']	 = lang('SSN not registred');
@@ -353,7 +362,7 @@ JS;
 		else
 		{
 			$org_url = $GLOBALS['phpgw']->link("/{$app}/", array('menuaction' => 'bookingfrontend.uiorganization.show',
-				'id' => $org->get_orgid($bouser->orgnr)));
+				'id' => $org->get_orgid($bouser->orgnr, $bouser->ssn)));
 
 			$lang_organization = lang('Organization');
 			$tpl_vars['org_info_view'] = "<span><img class='login-logo' src='{$loginlogo}' alt='{$lang_organization}'></img><a href='{$org_url}'>{$bouser->orgname}</a></span>";
@@ -383,6 +392,7 @@ JS;
 //			$LOGIN  =   $tpl_vars['login_url'];
 		}
 	}
+
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
 
 	$GLOBALS['phpgw']->template->pfp('out', 'head');
