@@ -81,10 +81,21 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
-				$file_ending = 'cs15';
+				$config_data = CreateObject('phpgwapi.config', 'booking')->read();
+				if($config_data['external_format'] == 'FACTUM')
+				{
+					header('Content-type: text/xml');
+					$file_ending = 'xml';
+				}
+				else
+				{
+					header('Content-type: text/plain');
+					$file_ending = 'cs15';
+				}
+
 				$type = 'kundefil_aktiv_kommune';
 				$date = date('Ymd', time());
-				header('Content-type: text/plain');
+
 				header("Content-Disposition: attachment; filename=PE_{$type}_{$date}.{$file_ending}");
 				print $this->bo->get_customer_list();
 				return;

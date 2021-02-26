@@ -8,10 +8,6 @@
 			$file_storage,
 			$so_completed_reservation,
 			$so_completed_reservation_export;
-		protected static $export_type_to_file_type_map = array(
-			'internal' => 'csv',
-			'external' => 'txt',
-		);
 
 		function __construct()
 		{
@@ -35,54 +31,36 @@
 
 		protected function file_type_for_export_type( $export_type )
 		{
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
+			$config_data = CreateObject('phpgwapi.config', 'booking')->read();
 
 			if ($export_type === 'internal')
 			{
-				if ($config->config_data['internal_format'] == 'CSV')
-				{
-					return 'csv';
-				}
-				elseif ($config->config_data['internal_format'] == 'AGRESSO')
-				{
-					return 'txt';
-				}
-				elseif ($config->config_data['internal_format'] == 'KOMMFAKT')
-				{
-					return 'txt';
-				}
-				elseif ($config->config_data['internal_format'] == 'VISMA')
-				{
-					return 'txt';
-				}
+				$format = $config_data['internal_format'];
 			}
 			elseif ($export_type === 'external')
 			{
-				if ($config->config_data['external_format'] == 'CSV')
-				{
-					return 'csv';
-				}
-				elseif ($config->config_data['external_format'] == 'AGRESSO')
-				{
-					return 'txt';
-				}
-				elseif ($config->config_data['external_format'] == 'KOMMFAKT')
-				{
-					return 'txt';
-				}
-				elseif ($config->config_data['external_format'] == 'VISMA')
-				{
-					return 'txt';
-				}
+				$format = $config_data['external_format'];
 			}
-			else
+
+			switch ($format)
 			{
-				return 'txt';
+				case 'AGRESSO':
+				case 'KOMMFAKT':
+				case 'VISMA':
+					$file_type =  'txt';
+					break;
+				case 'CSV':
+					$file_type =  'csv';
+					break;
+				case 'FACTUM':
+					$file_type =  'xml';
+					break;
+				default:
+					$file_type =  'txt';
+					break;
 			}
-#			return isset(self::$export_type_to_file_type_map[$export_type]) ? 
-#				self::$export_type_to_file_type_map[$export_type] :
-#				'txt';
+
+			return $file_type;
 		}
 
 		protected function get_available_export_types()
