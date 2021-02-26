@@ -363,6 +363,12 @@
 							</xsl:if>
 							VISMA
 						</option>
+						<option value="FACTUM">
+							<xsl:if test="config_data/internal_format='FACTUM'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							FACTUM
+						</option>
 					</select>
 				</div>
 				<div class="pure-control-group">

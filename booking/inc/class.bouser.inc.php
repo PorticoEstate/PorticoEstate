@@ -170,7 +170,7 @@
 				if(empty($entry['zip_code']))
 				{
 					phpgwapi_cache::message_set("{$entry['name']} mangler PostNr", 'error');
-//					continue;
+					continue;
 				}
 
 				$country_code = 'NO';
@@ -196,11 +196,10 @@
 				{
 					xmlwriter_write_element($memory, 'Fodselsnummer', $identifier);
 				}
-
 				xmlwriter_write_element($memory, 'Fagsystemkundeid', $this->client);
-				xmlwriter_write_element($memory, 'Navn', iconv("UTF-8", "ISO-8859-1", $entry['name']));
-				xmlwriter_write_element($memory, 'AdresseLinje1', iconv("UTF-8", "ISO-8859-1", $entry['street']));
-				xmlwriter_write_element($memory, 'Poststed', iconv("UTF-8", "ISO-8859-1", $entry['city']));
+				xmlwriter_write_element($memory, 'Navn', $entry['name']);
+				xmlwriter_write_element($memory, 'AdresseLinje1', $entry['street']);
+				xmlwriter_write_element($memory, 'Poststed', $entry['city']);
 				xmlwriter_write_element($memory, 'TelefonMobil', $entry['phone']);
 				xmlwriter_write_element($memory, 'Epost', $entry['email']);
 				xmlwriter_write_element($memory, 'Adressetype', 'O'); //Offentlig = O,Midlertidig = M, OffentligReg = R, Utenlands = U, UtenlandsMidlertidig = X
@@ -212,16 +211,6 @@
 
 			xmlwriter_end_element($memory);
 			$xml = xmlwriter_output_memory($memory, true);
-
-
-//    $memory = xmlwriter_open_memory();
-//	xmlwriter_set_indent($memory, true);
-//   xmlwriter_start_document($memory, '1.0', 'ISO-8859-1');
-//    xmlwriter_start_element($memory, "DB");
-//    xmlwriter_write_element($memory, "Record", 'Record');
-//    xmlwriter_write_element($memory, "Verify", 'Verify');
-//    xmlwriter_end_element($memory);
-//    $xml = xmlwriter_output_memory($memory, true);
 
 			return $xml;
 		}
