@@ -423,6 +423,12 @@
 							</xsl:if>
 							ftp
 						</option>
+						<option value="ftps">
+							<xsl:if test="config_data/invoice_export_method='ftps'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							ftp
+						</option>
 					</select>
 				</div>
 				<div class="pure-control-group">
