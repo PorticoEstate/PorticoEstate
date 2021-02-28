@@ -1182,6 +1182,11 @@
 
 		public function format_factum( array &$reservations, array $account_codes, $sequential_number_generator )
 		{
+			$memory = xmlwriter_open_memory();
+			xmlwriter_set_indent($memory, true);
+			xmlwriter_start_document($memory, '1.0', 'ISO-8859-1');
+			xmlwriter_start_element($memory, 'BkPffFakturagrunnlags');
+
 			//$orders = array();
 			$export_info = array();
 			$output = array();
@@ -1265,6 +1270,8 @@
 			foreach ($reservations as &$reservation)
 			{
 
+				xmlwriter_start_element($memory, 'BkPffFakturagrunnlag');
+
 				switch ($reservation['reservation_type'])
 				{
 					case 'allocation':
@@ -1337,6 +1344,7 @@
 					//Nøkkelfelt, kundens personnr/orgnr. - men differensiert for undergrupper innenfor samme orgnr
 					$check_customer_identifier = $this->get_customer_identifier_value_for($reservation) . '::' . $customer_number;
 				}
+
 
 				if ($stored_header == array() || $stored_header['tekst2'] != $check_customer_identifier)
 				{
@@ -1453,7 +1461,16 @@
 					$header['voucher_type'] = $voucher_type;
 					$stored_header['voucher_type'] = $voucher_type;
 
+					xmlwriter_write_element($memory, 'Blanketttype', 'F');
+					xmlwriter_write_element($memory, 'Fagsystemkundeid', $client_id);
+					xmlwriter_write_element($memory, 'Faktureringsmetode', 'F');
+					xmlwriter_write_element($memory, 'Fakturahyppighet', 'MND');
+					xmlwriter_write_element($memory, 'Startfakturering', '01.01.2012');
+					xmlwriter_write_element($memory, 'Stoppfakturering', '31.01.2012');
+					xmlwriter_write_element($memory, 'Systemid', '');
 					//item level
+					xmlwriter_start_element($memory, 'Fakturalinjer');
+
 					$item = $this->get_agresso_row_template();
 					$line_no = 1;
 					$item['accept_flag'] = '0';
@@ -1571,6 +1588,8 @@
 				else
 				{
 
+					xmlwriter_start_element($memory, 'BkPffFakturagrunnlaglinje');
+
 					//item level
 					$item = $this->get_agresso_row_template();
 					$line_no += 1;
@@ -1663,7 +1682,16 @@
 
 					$log[] = implode(';',  $line_field);
 
+					//BkPffFakturagrunnlaglinje
+					xmlwriter_end_element($memory);
+
 				}
+				
+				//Fakturalinjer
+				xmlwriter_end_element($memory);
+				//BkPffFakturagrunnlag
+				xmlwriter_end_element($memory);
+
 			}
 
 			if (count($export_info) == 0)
