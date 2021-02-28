@@ -26,7 +26,7 @@
 				$where_clauses[] = "%%table%%" . sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($to_date));
 			}
 
-			if (count($where_clauses) > O)
+			if (count($where_clauses) > 0)
 			{
 				$params['filters']['where'] = $where_clauses;
 			}
