@@ -11,7 +11,8 @@
 			$completed_reservation_bo,
 			$account_code_set_so,
 			$customer_id,
-			$sequential_number_generator_so;
+			$sequential_number_generator_so,
+			$config_data;
 
 		function __construct()
 		{
@@ -62,6 +63,8 @@
 					)),
 				)
 			);
+			
+			$this->config_data = CreateObject('phpgwapi.config', 'booking')->read();
 		}
 
 		protected function _get_search_to_date( &$entity )
@@ -299,9 +302,7 @@
 
 		public function select_external( $reservation )
 		{
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
-			if ($config->config_data['output_files'] == 'single')
+			if ($this->config_data['output_files'] == 'single')
 			{
 				return true;
 			}
@@ -313,9 +314,7 @@
 
 		public function select_internal( $reservation )
 		{
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
-			if ($config->config_data['output_files'] == 'single')
+			if ($this->config_data['output_files'] == 'single')
 			{
 				return false;
 			}
@@ -330,26 +329,24 @@
 		 */
 		public function export_external( array &$reservations, array $account_codes )
 		{
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
 
-			if ($config->config_data['external_format'] == 'CSV')
+			if ($this->config_data['external_format'] == 'CSV')
 			{
 				$export_format = 'csv';
 			}
-			elseif ($config->config_data['external_format'] == 'AGRESSO')
+			elseif ($this->config_data['external_format'] == 'AGRESSO')
 			{
 				$export_format = 'agresso';
 			}
-			elseif ($config->config_data['external_format'] == 'FACTUM')
+			elseif ($this->config_data['external_format'] == 'FACTUM')
 			{
 				$export_format = 'factum';
 			}
-			elseif ($config->config_data['external_format'] == 'KOMMFAKT')
+			elseif ($this->config_data['external_format'] == 'KOMMFAKT')
 			{
 				$export_format = 'kommfakt';
 			}
-			elseif ($config->config_data['external_format'] == 'VISMA')
+			elseif ($this->config_data['external_format'] == 'VISMA')
 			{
 				$export_format = 'visma';
 			}
@@ -364,31 +361,31 @@
 						throw new UnexpectedValueException("Unable to find sequential number generator for external export");
 					}
 
-					if ($config->config_data['external_format'] == 'CSV')
+					if ($this->config_data['external_format'] == 'CSV')
 					{
 						return $this->build_export_result(
 								$export_format, count(array_filter($internal_reservations, array($this, 'not_free'))), $this->calculate_total_cost($internal_reservations), $this->format_csv($internal_reservations, $account_codes, $number_generator)
 						);
 					}
-					elseif ($config->config_data['external_format'] == 'AGRESSO')
+					elseif ($this->config_data['external_format'] == 'AGRESSO')
 					{
 						return $this->build_export_result(
 								$export_format, count(array_filter($external_reservations, array($this, 'not_free'))), $this->calculate_total_cost($external_reservations), $this->format_agresso($external_reservations, $account_codes, $number_generator)
 						);
 					}
-					elseif ($config->config_data['external_format'] == 'FACTUM')
+					elseif ($this->config_data['external_format'] == 'FACTUM')
 					{
 						return $this->build_export_result(
 								$export_format, count(array_filter($external_reservations, array($this, 'not_free'))), $this->calculate_total_cost($external_reservations), $this->format_factum($external_reservations, $account_codes, $number_generator)
 						);
 					}
-					elseif ($config->config_data['external_format'] == 'KOMMFAKT')
+					elseif ($this->config_data['external_format'] == 'KOMMFAKT')
 					{
 						return $this->build_export_result(
 								$export_format, count(array_filter($external_reservations, array($this, 'not_free'))), $this->calculate_total_cost($external_reservations), $this->format_kommfakt($external_reservations, $account_codes, $number_generator)
 						);
 					}
-					elseif ($config->config_data['external_format'] == 'VISMA')
+					elseif ($this->config_data['external_format'] == 'VISMA')
 					{
 						return $this->build_export_result(
 								$export_format, count(array_filter($external_reservations, array($this, 'not_free'))), $this->calculate_total_cost($external_reservations), $this->format_visma($external_reservations, $account_codes, $number_generator)
@@ -404,26 +401,24 @@
 		 */
 		public function export_internal( array &$reservations, array $account_codes )
 		{
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
 
-			if ($config->config_data['internal_format'] == 'CSV')
+			if ($this->config_data['internal_format'] == 'CSV')
 			{
 				$export_format = 'csv';
 			}
-			elseif ($config->config_data['internal_format'] == 'AGRESSO')
+			elseif ($this->config_data['internal_format'] == 'AGRESSO')
 			{
 				$export_format = 'agresso';
 			}
-			elseif ($config->config_data['internal_format'] == 'FACTUM')
+			elseif ($this->config_data['internal_format'] == 'FACTUM')
 			{
 				$export_format = 'factum';
 			}
-			elseif ($config->config_data['internal_format'] == 'KOMMFAKT')
+			elseif ($this->config_data['internal_format'] == 'KOMMFAKT')
 			{
 				$export_format = 'kommfakt';
 			}
-			elseif ($config->config_data['internal_format'] == 'VISMA')
+			elseif ($this->config_data['internal_format'] == 'VISMA')
 			{
 				$export_format = 'visma';
 			}
@@ -437,31 +432,31 @@
 					{
 						throw new UnexpectedValueException("Unable to find sequential number generator for internal export");
 					}
-					if ($config->config_data['internal_format'] == 'CSV')
+					if ($this->config_data['internal_format'] == 'CSV')
 					{
 						return $this->build_export_result(
 								$export_format, count(array_filter($internal_reservations, array($this, 'not_free'))), $this->calculate_total_cost($internal_reservations), $this->format_csv($internal_reservations, $account_codes, $number_generator)
 						);
 					}
-					elseif ($config->config_data['internal_format'] == 'AGRESSO')
+					elseif ($this->config_data['internal_format'] == 'AGRESSO')
 					{
 						return $this->build_export_result(
 								$export_format, count(array_filter($internal_reservations, array($this, 'not_free'))), $this->calculate_total_cost($internal_reservations), $this->format_agresso($internal_reservations, $account_codes, $number_generator)
 						);
 					}
-					elseif ($config->config_data['internal_format'] == 'FACTUM')
+					elseif ($this->config_data['internal_format'] == 'FACTUM')
 					{
 						return $this->build_export_result(
 								$export_format, count(array_filter($internal_reservations, array($this, 'not_free'))), $this->calculate_total_cost($internal_reservations), $this->format_factum($internal_reservations, $account_codes, $number_generator)
 						);
 					}
-					elseif ($config->config_data['internal_format'] == 'KOMMFAKT')
+					elseif ($this->config_data['internal_format'] == 'KOMMFAKT')
 					{
 						return $this->build_export_result(
 								$export_format, count(array_filter($internal_reservations, array($this, 'not_free'))), $this->calculate_total_cost($internal_reservations), $this->format_kommfakt($internal_reservations, $account_codes, $number_generator)
 						);
 					}
-					elseif ($config->config_data['internal_format'] == 'VISMA')
+					elseif ($this->config_data['internal_format'] == 'VISMA')
 					{
 						return $this->build_export_result(
 								$export_format, count(array_filter($internal_reservations, array($this, 'not_free'))), $this->calculate_total_cost($internal_reservations), $this->format_visma($internal_reservations, $account_codes, $number_generator)
@@ -722,10 +717,6 @@
 
 			$date = str_pad(date('Ymd'), 17, ' ', STR_PAD_LEFT);
 
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
-
-
 
 			static $stored_header = array();
 			$line_no = 0;
@@ -872,7 +863,7 @@
 				$fakturalinje['betform'] = 'BG';
 
 				//Skal leverer oppdragsgiver, blir et nr. pr. fagavdeling. XXXX, et pr. fagavdeling
-				if (isset($config->config_data['dim_value_1']))
+				if (isset($this->config_data['dim_value_1']))
 				{
 //					$fakturalinje['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['object_number']), 3, '0', STR_PAD_LEFT);
 					$fakturalinje['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
@@ -894,7 +885,7 @@
 				$linjetekst['kundenr'] = $kundenr;
 
 				//Skal leverer oppdragsgiver, blir et nr. pr. fagavdeling. XXXX, et pr. fagavdeling
-				if (isset($config->config_data['dim_value_1']))
+				if (isset($this->config_data['dim_value_1']))
 				{
 //					$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['object_number']), 3, '0', STR_PAD_LEFT);
 					$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
@@ -973,7 +964,7 @@
 			{
 				return null;
 			}
-			if ($config->config_data['external_format_linebreak'] == 'Windows')
+			if ($this->config_data['external_format_linebreak'] == 'Windows')
 			{
 				$file_format_linebreak = "\r\n";
 			}
@@ -993,44 +984,41 @@
 			$export_info = array();
 			$output = array();
 
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
-
 			$columns[] = 'amount';
 			$columns[] = 'art_descr';
 			$columns[] = 'art';
-			if (isset($config->config_data['dim_1']))
+			if (isset($this->config_data['dim_1']))
 			{
-				$columns[] = $config->config_data['dim_1'];
+				$columns[] = $this->config_data['dim_1'];
 			}
-			if (isset($config->config_data['dim_2']))
+			if (isset($this->config_data['dim_2']))
 			{
-				$columns[] = $config->config_data['dim_2'];
+				$columns[] = $this->config_data['dim_2'];
 			}
-			if (isset($config->config_data['dim_3']))
+			if (isset($this->config_data['dim_3']))
 			{
-				$columns[] = $config->config_data['dim_3'];
+				$columns[] = $this->config_data['dim_3'];
 			}
-			if (isset($config->config_data['dim_4']))
+			if (isset($this->config_data['dim_4']))
 			{
-				$columns[] = $config->config_data['dim_4'];
+				$columns[] = $this->config_data['dim_4'];
 			}
 			$columns[] = 'article';
-			if (isset($config->config_data['dim_5']))
+			if (isset($this->config_data['dim_5']))
 			{
-				$columns[] = $config->config_data['dim_5'];
+				$columns[] = $this->config_data['dim_5'];
 			}
-			if (isset($config->config_data['dim_value_1']))
+			if (isset($this->config_data['dim_value_1']))
 			{
-				$columns[] = $config->config_data['dim_value_1'];
+				$columns[] = $this->config_data['dim_value_1'];
 			}
-			if (isset($config->config_data['dim_value_4']))
+			if (isset($this->config_data['dim_value_4']))
 			{
-				$columns[] = $config->config_data['dim_value_4'];
+				$columns[] = $this->config_data['dim_value_4'];
 			}
-			if (isset($config->config_data['dim_value_5']))
+			if (isset($this->config_data['dim_value_5']))
 			{
-				$columns[] = $config->config_data['dim_value_5'];
+				$columns[] = $this->config_data['dim_value_5'];
 			}
 			$columns[] = 'ext_ord_ref';
 			$columns[] = 'invoice_instruction';
@@ -1055,45 +1043,45 @@
 				$item['art_descr'] = str_pad(substr($reservation['article_description'], 0, 35), 35, ' '); //35 chars long
 				$item['article'] = str_pad(substr(strtoupper($account_codes['article']), 0, 15), 15, ' ');
 				//Ansvarssted for inntektsføring for varelinjen avleveres i feltet (ANSVAR - f.eks 724300). ansvarsted (6 siffer) knyttet mot bygg /sesong
-				if (isset($config->config_data['dim_1']))
+				if (isset($this->config_data['dim_1']))
 				{
 					$item['dim_1'] = str_pad(strtoupper(substr($account_codes['responsible_code'], 0, 8)), 8, ' ');
 				}
 
 				//Tjeneste, eks. 38010 drift av idrettsbygg.  Kan ligge på artikkel i Agresso. Blank eller tjenestenr. (eks.38010) vi ikke legger det i artikkel
-				if (isset($config->config_data['dim_2']))
+				if (isset($this->config_data['dim_2']))
 				{
 					$item['dim_2'] = str_pad(strtoupper(substr($account_codes['service'], 0, 8)), 8, ' ');
 				}
 
 				//Objektnr. vil være knyttet til hvert hus (FDVU)
-				if (isset($config->config_data['dim_3']))
+				if (isset($this->config_data['dim_3']))
 				{
 					$item['dim_3'] = str_pad(strtoupper(substr($account_codes['object_number'], 0, 8)), 8, ' ');
 				}
 
-				if (isset($config->config_data['dim_4']))
+				if (isset($this->config_data['dim_4']))
 				{
 					$item['dim_4'] = str_pad(substr($account_codes['dim_4'], 0, 8), 8, ' ');
 				}
 
 				//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt
-				if (isset($config->config_data['dim_5']))
+				if (isset($this->config_data['dim_5']))
 				{
 					$item['dim_5'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
 				}
 
-				if (isset($config->config_data['dim_value_1']))
+				if (isset($this->config_data['dim_value_1']))
 				{
 					$item['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
 				}
 
-				if (isset($config->config_data['dim_value_4']))
+				if (isset($this->config_data['dim_value_4']))
 				{
 					$item['dim_value_4'] = str_pad(substr($account_codes['dim_value_4'], 0, 12), 12, ' ');
 				}
 
-				if (isset($config->config_data['dim_value_5']))
+				if (isset($this->config_data['dim_value_5']))
 				{
 					$item['dim_value_5'] = str_pad(substr($account_codes['dim_value_5'], 0, 12), 12, ' ');
 				}
@@ -1205,15 +1193,12 @@
 			$date = str_pad(date('Ymd'), 17, ' ', STR_PAD_LEFT);
 			//$date = str_pad(date('ymd'), 17, ' ');
 
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
-
 			$batch_id = strtoupper(sprintf('BO%s%s', $account_codes['unit_prefix'], date('ymd')));
 			$batch_id = str_pad(substr($batch_id, 0, 12), 12, ' ');
 
-			if (!empty($config->config_data['voucher_client']))
+			if (!empty($this->config_data['voucher_client']))
 			{
-				$client_id = str_pad(substr(strtoupper($config->config_data['voucher_client']), 0, 2), 2, ' ');
+				$client_id = str_pad(substr(strtoupper($this->config_data['voucher_client']), 0, 2), 2, ' ');
 			}
 			else
 			{
@@ -1235,9 +1220,9 @@
 			$period = str_pad(substr('00' . date('Ym'), 0, 8), 8, '0', STR_PAD_LEFT);
 			//$period = str_pad(substr(date('Ym'), 0, 8), 8, ' ');
 
-			if (!empty($config->config_data['voucher_responsible']))
+			if (!empty($this->config_data['voucher_responsible']))
 			{
-				$responsible = str_pad(substr(strtoupper($config->config_data['voucher_responsible']), 0, 8), 8, ' ');
+				$responsible = str_pad(substr(strtoupper($this->config_data['voucher_responsible']), 0, 8), 8, ' ');
 			}
 			else
 			{
@@ -1248,9 +1233,9 @@
 			$status = str_pad(substr(strtoupper('N'), 0, 1), 1, ' ');
 			$trans_type = str_pad(substr(strtoupper('42'), 0, 2), 2, ' ');
 
-			if (!empty($config->config_data['voucher_type']))
+			if (!empty($this->config_data['voucher_type']))
 			{
-				$voucher_type = str_pad(substr(strtoupper($config->config_data['voucher_type']), 0, 2), 2, ' ');
+				$voucher_type = str_pad(substr(strtoupper($this->config_data['voucher_type']), 0, 2), 2, ' ');
 			}
 			else
 			{
@@ -1364,63 +1349,63 @@
 					$header['currency'] = $currency;
 					$header['deliv_date'] = $header['confirm_date'];
 
-					if (!empty($config->config_data['att_1_id']))
+					if (!empty($this->config_data['att_1_id']))
 					{
-						$header['att_1_id'] = str_pad(strtoupper(substr($config->config_data['att_1_id'], 0, 2)), 2, ' ');
+						$header['att_1_id'] = str_pad(strtoupper(substr($this->config_data['att_1_id'], 0, 2)), 2, ' ');
 					}
-					if (!empty($config->config_data['att_2_id']))
+					if (!empty($this->config_data['att_2_id']))
 					{
-						$header['att_2_id'] = str_pad(strtoupper(substr($config->config_data['att_2_id'], 0, 2)), 2, ' ');
+						$header['att_2_id'] = str_pad(strtoupper(substr($this->config_data['att_2_id'], 0, 2)), 2, ' ');
 					}
-					if (!empty($config->config_data['att_3_id']))
+					if (!empty($this->config_data['att_3_id']))
 					{
-						$header['att_3_id'] = str_pad(strtoupper(substr($config->config_data['att_3_id'], 0, 2)), 2, ' ');
+						$header['att_3_id'] = str_pad(strtoupper(substr($this->config_data['att_3_id'], 0, 2)), 2, ' ');
 					}
-					if (!empty($config->config_data['att_4_id']))
+					if (!empty($this->config_data['att_4_id']))
 					{
-						$header['att_4_id'] = str_pad(strtoupper(substr($config->config_data['att_4_id'], 0, 2)), 2, ' ');
+						$header['att_4_id'] = str_pad(strtoupper(substr($this->config_data['att_4_id'], 0, 2)), 2, ' ');
 					}
-					if (!empty($config->config_data['att_5_id']))
+					if (!empty($this->config_data['att_5_id']))
 					{
-						$header['att_5_id'] = str_pad(strtoupper(substr($config->config_data['att_5_id'], 0, 2)), 2, ' ');
+						$header['att_5_id'] = str_pad(strtoupper(substr($this->config_data['att_5_id'], 0, 2)), 2, ' ');
 					}
-					if (!empty($config->config_data['att_6_id']))
+					if (!empty($this->config_data['att_6_id']))
 					{
-						$header['att_6_id'] = str_pad(strtoupper(substr($config->config_data['att_6_id'], 0, 2)), 2, ' ');
+						$header['att_6_id'] = str_pad(strtoupper(substr($this->config_data['att_6_id'], 0, 2)), 2, ' ');
 					}
-					if (!empty($config->config_data['att_7_id']))
+					if (!empty($this->config_data['att_7_id']))
 					{
-						$header['att_7_id'] = str_pad(strtoupper(substr($config->config_data['att_7_id'], 0, 2)), 2, ' ');
+						$header['att_7_id'] = str_pad(strtoupper(substr($this->config_data['att_7_id'], 0, 2)), 2, ' ');
 					}
 
 					//Skal leverer oppdragsgiver, blir et nr. pr. fagavdeling. XXXX, et pr. fagavdeling
-					if (isset($config->config_data['dim_value_1']))
+					if (isset($this->config_data['dim_value_1']))
 					{
 						$header['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
 					}
 
-					if (isset($config->config_data['dim_value_2']))
+					if (isset($this->config_data['dim_value_2']))
 					{
 						$header['dim_value_2'] = str_pad(substr($account_codes['dim_value_2'], 0, 12), 12, ' ');
 					}
-					if (isset($config->config_data['dim_value_3']))
+					if (isset($this->config_data['dim_value_3']))
 					{
 						$header['dim_value_3'] = str_pad(substr($account_codes['dim_value_3'], 0, 12), 12, ' ');
 					}
-					if (isset($config->config_data['dim_value_4']))
+					if (isset($this->config_data['dim_value_4']))
 					{
 						$header['dim_value_4'] = str_pad(substr($account_codes['dim_value_4'], 0, 12), 12, ' ');
 					}
 
-					if (isset($config->config_data['dim_value_5']))
+					if (isset($this->config_data['dim_value_5']))
 					{
 						$header['dim_value_5'] = str_pad(substr($account_codes['dim_value_5'], 0, 12), 12, ' ');
 					}
-					if (isset($config->config_data['dim_value_6']))
+					if (isset($this->config_data['dim_value_6']))
 					{
 						$header['dim_value_6'] = str_pad(substr($account_codes['dim_value_6'], 0, 12), 12, ' ');
 					}
-					if (isset($config->config_data['dim_value_7']))
+					if (isset($this->config_data['dim_value_7']))
 					{
 						$header['dim_value_7'] = str_pad(substr($account_codes['dim_value_7'], 0, 12), 12, ' ');
 					}
@@ -1430,7 +1415,7 @@
 
 					if ($type == 'internal')
 					{
-						$header['tekst2'] = str_pad(substr($config->config_data['organization_value'], 0, 12), 12, ' ');
+						$header['tekst2'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
 						$header['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
 					}
 					else
@@ -1489,38 +1474,38 @@
 					$item['client'] = $header['client'];
 
 					//Ansvarssted for inntektsføring for varelinjen avleveres i feltet (ANSVAR - f.eks 724300). ansvarsted (6 siffer) knyttet mot bygg /sesong
-					if (isset($config->config_data['dim_1']))
+					if (isset($this->config_data['dim_1']))
 					{
 						$item['dim_1'] = str_pad(strtoupper(substr($account_codes['responsible_code'], 0, 8)), 8, ' ');
 					}
 
 					//Tjeneste, eks. 38010 drift av idrettsbygg.  Kan ligge på artikkel i Agresso. Blank eller tjenestenr. (eks.38010) vi ikke legger det i artikkel
-					if (isset($config->config_data['dim_2']))
+					if (isset($this->config_data['dim_2']))
 					{
 						$item['dim_2'] = str_pad(strtoupper(substr($account_codes['service'], 0, 8)), 8, ' ');
 					}
 
 					//Objektnr. vil være knyttet til hvert hus (FDVU)
-					if (isset($config->config_data['dim_3']))
+					if (isset($this->config_data['dim_3']))
 					{
 						$item['dim_3'] = str_pad(strtoupper(substr($account_codes['object_number'], 0, 8)), 8, ' ');
 					}
 
-					if (isset($config->config_data['dim_4']))
+					if (isset($this->config_data['dim_4']))
 					{
 						$item['dim_4'] = str_pad(substr($account_codes['dim_4'], 0, 8), 8, ' ');
 					}
 
 					//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt
-					if (isset($config->config_data['dim_5']))
+					if (isset($this->config_data['dim_5']))
 					{
 						$item['dim_5'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
 					}
-					if (isset($config->config_data['dim_6']))
+					if (isset($this->config_data['dim_6']))
 					{
 						$item['dim_6'] = str_pad(substr($account_codes['dim_6'], 0, 4), 4, ' ');
 					}
-					if (isset($config->config_data['dim_7']))
+					if (isset($this->config_data['dim_7']))
 					{
 						$item['dim_7'] = str_pad(substr($account_codes['dim_7'], 0, 4), 4, ' ');
 					}
@@ -1609,30 +1594,30 @@
 					$item['client'] = $stored_header['client'];
 
 					//Ansvarssted for inntektsføring for varelinjen avleveres i feltet (ANSVAR - f.eks 724300). ansvarsted (6 siffer) knyttet mot bygg /sesong
-					if (isset($config->config_data['dim_1']))
+					if (isset($this->config_data['dim_1']))
 					{
 						$item['dim_1'] = str_pad(strtoupper(substr($account_codes['responsible_code'], 0, 8)), 8, ' ');
 					}
 
 					//Tjeneste, eks. 38010 drift av idrettsbygg.  Kan ligge på artikkel i Agresso. Blank eller tjenestenr. (eks.38010) vi ikke legger det i artikkel
-					if (isset($config->config_data['dim_2']))
+					if (isset($this->config_data['dim_2']))
 					{
 						$item['dim_2'] = str_pad(strtoupper(substr($account_codes['service'], 0, 8)), 8, ' ');
 					}
 
 					//Objektnr. vil være knyttet til hvert hus (FDVU)
-					if (isset($config->config_data['dim_3']))
+					if (isset($this->config_data['dim_3']))
 					{
 						$item['dim_3'] = str_pad(strtoupper(substr($account_codes['object_number'], 0, 8)), 8, ' ');
 					}
 
-					if (isset($config->config_data['dim_4']))
+					if (isset($this->config_data['dim_4']))
 					{
 						$item['dim_4'] = str_pad(substr($account_codes['dim_4'], 0, 8), 8, ' ');
 					}
 
 					//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt
-					if (isset($config->config_data['dim_5']))
+					if (isset($this->config_data['dim_5']))
 					{
 						$item['dim_5'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
 					}
@@ -1699,7 +1684,7 @@
 				return null;
 			}
 
-			if ($config->config_data['external_format_linebreak'] == 'Windows')
+			if ($this->config_data['external_format_linebreak'] == 'Windows')
 			{
 				$file_format_linebreak = "\r\n";
 			}
@@ -1745,15 +1730,13 @@
 			$date = str_pad(date('Ymd'), 17, ' ', STR_PAD_LEFT);
 			//$date = str_pad(date('ymd'), 17, ' ');
 
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
 
 			$batch_id = strtoupper(sprintf('BO%s%s', $account_codes['unit_prefix'], date('ymd')));
 			$batch_id = str_pad(substr($batch_id, 0, 12), 12, ' ');
 
-			if (!empty($config->config_data['voucher_client']))
+			if (!empty($this->config_data['voucher_client']))
 			{
-				$client_id = str_pad(substr(strtoupper($config->config_data['voucher_client']), 0, 2), 2, ' ');
+				$client_id = str_pad(substr(strtoupper($this->config_data['voucher_client']), 0, 2), 2, ' ');
 			}
 			else
 			{
@@ -1775,9 +1758,9 @@
 			$period = str_pad(substr('00' . date('Ym'), 0, 8), 8, '0', STR_PAD_LEFT);
 			//$period = str_pad(substr(date('Ym'), 0, 8), 8, ' ');
 
-			if (!empty($config->config_data['voucher_responsible']))
+			if (!empty($this->config_data['voucher_responsible']))
 			{
-				$responsible = str_pad(substr(strtoupper($config->config_data['voucher_responsible']), 0, 8), 8, ' ');
+				$responsible = str_pad(substr(strtoupper($this->config_data['voucher_responsible']), 0, 8), 8, ' ');
 			}
 			else
 			{
@@ -1788,9 +1771,9 @@
 			$status = str_pad(substr(strtoupper('N'), 0, 1), 1, ' ');
 			$trans_type = str_pad(substr(strtoupper('42'), 0, 2), 2, ' ');
 
-			if (!empty($config->config_data['voucher_type']))
+			if (!empty($this->config_data['voucher_type']))
 			{
-				$voucher_type = str_pad(substr(strtoupper($config->config_data['voucher_type']), 0, 2), 2, ' ');
+				$voucher_type = str_pad(substr(strtoupper($this->config_data['voucher_type']), 0, 2), 2, ' ');
 			}
 			else
 			{
@@ -1901,63 +1884,63 @@
 					$header['currency'] = $currency;
 					$header['deliv_date'] = $header['confirm_date'];
 
-					if (!empty($config->config_data['att_1_id']))
+					if (!empty($this->config_data['att_1_id']))
 					{
-						$header['att_1_id'] = str_pad(strtoupper(substr($config->config_data['att_1_id'], 0, 2)), 2, ' ');
+						$header['att_1_id'] = str_pad(strtoupper(substr($this->config_data['att_1_id'], 0, 2)), 2, ' ');
 					}
-					if (!empty($config->config_data['att_2_id']))
+					if (!empty($this->config_data['att_2_id']))
 					{
-						$header['att_2_id'] = str_pad(strtoupper(substr($config->config_data['att_2_id'], 0, 2)), 2, ' ');
+						$header['att_2_id'] = str_pad(strtoupper(substr($this->config_data['att_2_id'], 0, 2)), 2, ' ');
 					}
-					if (!empty($config->config_data['att_3_id']))
+					if (!empty($this->config_data['att_3_id']))
 					{
-						$header['att_3_id'] = str_pad(strtoupper(substr($config->config_data['att_3_id'], 0, 2)), 2, ' ');
+						$header['att_3_id'] = str_pad(strtoupper(substr($this->config_data['att_3_id'], 0, 2)), 2, ' ');
 					}
-					if (!empty($config->config_data['att_4_id']))
+					if (!empty($this->config_data['att_4_id']))
 					{
-						$header['att_4_id'] = str_pad(strtoupper(substr($config->config_data['att_4_id'], 0, 2)), 2, ' ');
+						$header['att_4_id'] = str_pad(strtoupper(substr($this->config_data['att_4_id'], 0, 2)), 2, ' ');
 					}
-					if (!empty($config->config_data['att_5_id']))
+					if (!empty($this->config_data['att_5_id']))
 					{
-						$header['att_5_id'] = str_pad(strtoupper(substr($config->config_data['att_5_id'], 0, 2)), 2, ' ');
+						$header['att_5_id'] = str_pad(strtoupper(substr($this->config_data['att_5_id'], 0, 2)), 2, ' ');
 					}
-					if (!empty($config->config_data['att_6_id']))
+					if (!empty($this->config_data['att_6_id']))
 					{
-						$header['att_6_id'] = str_pad(strtoupper(substr($config->config_data['att_6_id'], 0, 2)), 2, ' ');
+						$header['att_6_id'] = str_pad(strtoupper(substr($this->config_data['att_6_id'], 0, 2)), 2, ' ');
 					}
-					if (!empty($config->config_data['att_7_id']))
+					if (!empty($this->config_data['att_7_id']))
 					{
-						$header['att_7_id'] = str_pad(strtoupper(substr($config->config_data['att_7_id'], 0, 2)), 2, ' ');
+						$header['att_7_id'] = str_pad(strtoupper(substr($this->config_data['att_7_id'], 0, 2)), 2, ' ');
 					}
 
 					//Skal leverer oppdragsgiver, blir et nr. pr. fagavdeling. XXXX, et pr. fagavdeling
-					if (isset($config->config_data['dim_value_1']))
+					if (isset($this->config_data['dim_value_1']))
 					{
 						$header['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
 					}
 
-					if (isset($config->config_data['dim_value_2']))
+					if (isset($this->config_data['dim_value_2']))
 					{
 						$header['dim_value_2'] = str_pad(substr($account_codes['dim_value_2'], 0, 12), 12, ' ');
 					}
-					if (isset($config->config_data['dim_value_3']))
+					if (isset($this->config_data['dim_value_3']))
 					{
 						$header['dim_value_3'] = str_pad(substr($account_codes['dim_value_3'], 0, 12), 12, ' ');
 					}
-					if (isset($config->config_data['dim_value_4']))
+					if (isset($this->config_data['dim_value_4']))
 					{
 						$header['dim_value_4'] = str_pad(substr($account_codes['dim_value_4'], 0, 12), 12, ' ');
 					}
 
-					if (isset($config->config_data['dim_value_5']))
+					if (isset($this->config_data['dim_value_5']))
 					{
 						$header['dim_value_5'] = str_pad(substr($account_codes['dim_value_5'], 0, 12), 12, ' ');
 					}
-					if (isset($config->config_data['dim_value_6']))
+					if (isset($this->config_data['dim_value_6']))
 					{
 						$header['dim_value_6'] = str_pad(substr($account_codes['dim_value_6'], 0, 12), 12, ' ');
 					}
-					if (isset($config->config_data['dim_value_7']))
+					if (isset($this->config_data['dim_value_7']))
 					{
 						$header['dim_value_7'] = str_pad(substr($account_codes['dim_value_7'], 0, 12), 12, ' ');
 					}
@@ -1967,7 +1950,7 @@
 
 					if ($type == 'internal')
 					{
-						$header['tekst2'] = str_pad(substr($config->config_data['organization_value'], 0, 12), 12, ' ');
+						$header['tekst2'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
 						$header['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
 					}
 					else
@@ -2017,38 +2000,38 @@
 					$item['client'] = $header['client'];
 
 					//Ansvarssted for inntektsføring for varelinjen avleveres i feltet (ANSVAR - f.eks 724300). ansvarsted (6 siffer) knyttet mot bygg /sesong
-					if (isset($config->config_data['dim_1']))
+					if (isset($this->config_data['dim_1']))
 					{
 						$item['dim_1'] = str_pad(strtoupper(substr($account_codes['responsible_code'], 0, 8)), 8, ' ');
 					}
 
 					//Tjeneste, eks. 38010 drift av idrettsbygg.  Kan ligge på artikkel i Agresso. Blank eller tjenestenr. (eks.38010) vi ikke legger det i artikkel
-					if (isset($config->config_data['dim_2']))
+					if (isset($this->config_data['dim_2']))
 					{
 						$item['dim_2'] = str_pad(strtoupper(substr($account_codes['service'], 0, 8)), 8, ' ');
 					}
 
 					//Objektnr. vil være knyttet til hvert hus (FDVU)
-					if (isset($config->config_data['dim_3']))
+					if (isset($this->config_data['dim_3']))
 					{
 						$item['dim_3'] = str_pad(strtoupper(substr($account_codes['object_number'], 0, 8)), 8, ' ');
 					}
 
-					if (isset($config->config_data['dim_4']))
+					if (isset($this->config_data['dim_4']))
 					{
 						$item['dim_4'] = str_pad(substr($account_codes['dim_4'], 0, 8), 8, ' ');
 					}
 
 					//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt
-					if (isset($config->config_data['dim_5']))
+					if (isset($this->config_data['dim_5']))
 					{
 						$item['dim_5'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
 					}
-					if (isset($config->config_data['dim_6']))
+					if (isset($this->config_data['dim_6']))
 					{
 						$item['dim_6'] = str_pad(substr($account_codes['dim_6'], 0, 4), 4, ' ');
 					}
-					if (isset($config->config_data['dim_7']))
+					if (isset($this->config_data['dim_7']))
 					{
 						$item['dim_7'] = str_pad(substr($account_codes['dim_7'], 0, 4), 4, ' ');
 					}
@@ -2137,30 +2120,30 @@
 					$item['client'] = $stored_header['client'];
 
 					//Ansvarssted for inntektsføring for varelinjen avleveres i feltet (ANSVAR - f.eks 724300). ansvarsted (6 siffer) knyttet mot bygg /sesong
-					if (isset($config->config_data['dim_1']))
+					if (isset($this->config_data['dim_1']))
 					{
 						$item['dim_1'] = str_pad(strtoupper(substr($account_codes['responsible_code'], 0, 8)), 8, ' ');
 					}
 
 					//Tjeneste, eks. 38010 drift av idrettsbygg.  Kan ligge på artikkel i Agresso. Blank eller tjenestenr. (eks.38010) vi ikke legger det i artikkel
-					if (isset($config->config_data['dim_2']))
+					if (isset($this->config_data['dim_2']))
 					{
 						$item['dim_2'] = str_pad(strtoupper(substr($account_codes['service'], 0, 8)), 8, ' ');
 					}
 
 					//Objektnr. vil være knyttet til hvert hus (FDVU)
-					if (isset($config->config_data['dim_3']))
+					if (isset($this->config_data['dim_3']))
 					{
 						$item['dim_3'] = str_pad(strtoupper(substr($account_codes['object_number'], 0, 8)), 8, ' ');
 					}
 
-					if (isset($config->config_data['dim_4']))
+					if (isset($this->config_data['dim_4']))
 					{
 						$item['dim_4'] = str_pad(substr($account_codes['dim_4'], 0, 8), 8, ' ');
 					}
 
 					//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt
-					if (isset($config->config_data['dim_5']))
+					if (isset($this->config_data['dim_5']))
 					{
 						$item['dim_5'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
 					}
@@ -2221,7 +2204,7 @@
 				return null;
 			}
 
-			if ($config->config_data['external_format_linebreak'] == 'Windows')
+			if ($this->config_data['external_format_linebreak'] == 'Windows')
 			{
 				$file_format_linebreak = "\r\n";
 			}
@@ -2299,10 +2282,6 @@
 			$log = array();
 
 			$date = str_pad(date('Ymd'), 17, ' ', STR_PAD_LEFT);
-
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
-
 
 
 			$stored_header = array();
@@ -2473,7 +2452,7 @@
 			{
 				return null;
 			}
-			if ($config->config_data['external_format_linebreak'] == 'Windows')
+			if ($this->config_data['external_format_linebreak'] == 'Windows')
 			{
 				$file_format_linebreak = "\r\n";
 			}
