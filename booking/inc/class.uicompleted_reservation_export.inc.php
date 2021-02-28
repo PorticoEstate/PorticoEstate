@@ -208,7 +208,8 @@
 				);
 			}
 
-			$filters_to = strtotime(extract_values($_GET, array("filter_to")));
+			$filters_to_array = extract_values($_GET, array("filter_to"));
+			$filters_to = strtotime($filters_to_array["filter_to"]);
 			$data['filters'] = date("Y-m-d", $filters_to);
 
 			self::render_template_xsl('datatable_jquery', $data);
