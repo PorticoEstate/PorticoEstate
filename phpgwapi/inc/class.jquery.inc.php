@@ -301,6 +301,29 @@
 
 					break;
 
+				case 'daterangepicker':
+					$load = array
+					(
+						'daterangepicker' => array(
+							"js/moment.min",
+							"js/daterangepicker.min"
+
+						)
+					);
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/daterangepicker/css/daterangepicker.css");
+
+					break;
+
+				case 'timepicker':
+					$load = array
+					(
+						'timepicker' => array(
+							"js/jquery.timepicker.min"
+						)
+					);
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/timepicker/css/jquery.timepicker.min.css");
+
+					break;
 				default:
 					$err = "Unsupported jQuery widget '%1' supplied to phpgwapi_jquery::load_widget()";
 					trigger_error(lang($err, $widget), E_USER_WARNING);

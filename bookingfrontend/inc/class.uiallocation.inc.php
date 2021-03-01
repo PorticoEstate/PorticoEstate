@@ -700,6 +700,8 @@
 				'id' => $allocation['building_id'], 'date' => date("Y-m-d", strtotime($original_from))));
 
 			self::add_javascript('bookingfrontend', 'base', 'allocation.js', 'text/javascript', true);
+			phpgwapi_jquery::load_widget('daterangepicker');
+
 			self::rich_text_editor('field-message');
 			self::render_template_xsl('allocation_edit', array(
 				'allocation' => $allocation,

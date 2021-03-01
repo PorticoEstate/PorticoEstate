@@ -1,12 +1,4 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<link href='https://fonts.googleapis.com/css?family=Rubik' rel='stylesheet'/>
-	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css"/>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"/>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"/>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"/>
-
-
 	<div id="search-page-content">
       <div class="headerSection">
          <div class="noteRectangle">

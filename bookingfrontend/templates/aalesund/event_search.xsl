@@ -1,8 +1,4 @@
 <xsl:template match="data" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	<link href='https://fonts.googleapis.com/css?family=Rubik' rel='stylesheet'/>
-	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"/>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"/>
 	<div class="event_container">
 		<div id="container_event_search col" class="container_event_search">
 			<div class="header-container-search">

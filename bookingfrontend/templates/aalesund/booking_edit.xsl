@@ -1,7 +1,4 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"/>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"/>
 	<div id="booking-edit-page-content" class="margin-top-content">
 		<div class="container wrapper">
 			<div class="location">

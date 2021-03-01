@@ -60,6 +60,9 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		$config = CreateObject('phpgwapi.config', 'booking');
 		$config->read();
 		phpgwapi_jquery::load_widget("core");
+		phpgwapi_jquery::load_widget('daterangepicker');
+		$GLOBALS['phpgw']->css->add_external_file("phpgwapi/templates/aalesund/css/rubik-font.css");
+
 
 
 		self::add_javascript('bookingfrontend', 'aalesund', 'event_search.js', 'text/javascript', true);
