@@ -273,9 +273,7 @@
 
 			if ($filter_to)
 			{
-				$filter_to2 = explode("/", $filter_to);
-				$filter_to = $filter_to2[1] . "/" . $filter_to2[0] . "/" . $filter_to2[2];
-				$filters['where'][] = "%%table%%" . sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
+				$filters['where'][] = "%%table%%" . sprintf(".to_ <= '%s 23:59:59'", date("Y-m-d", phpgwapi_datetime::date_to_timestamp($filter_to)));
 			}
 
 			$params = array(
