@@ -750,6 +750,7 @@ body{
 	line-height: 1.25;
 	letter-spacing: normal;
 	color: #3a3a4c;
+	height: 54px;
 }
 
 .mainSearchInput {
@@ -897,6 +898,7 @@ filterbokser søkesiden
 	color: #3a3a4c;
     cursor: pointer;
 	text-align: center;
+	height: 54px;
 }
 
 #buildingNameDropDown, #buildingTypeDropDown {
@@ -1267,6 +1269,7 @@ select option:focus {
 	border-radius: 6px;
 	border: solid 1px #c2c2ff;
 	font-family: Rubik;
+	height: 48px;
 }
 
 .timeInput {
@@ -1276,6 +1279,7 @@ select option:focus {
 	border-radius: 6px;
 	border: solid 1px #c2c2ff;
 	font-family: Rubik;
+	height: 48px;
 }
 
 .searchResultContainer{
