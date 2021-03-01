@@ -756,8 +756,8 @@
 
 				if ($_POST['organization_name'])
 				{
-					$event['customer_organization_name'] = $_POST['organization_name'];
-					$event['customer_organization_id'] = $_POST['organization_id'];
+					$event['customer_organization_name'] = phpgw::get_var('organization_name', 'string', 'POST');
+					$event['customer_organization_id'] = phpgw::get_var('organization_id', 'int', 'POST');
 					$organization = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'int')));
 
 					if ($organization['customer_internal'] == 0)
@@ -790,12 +790,14 @@
 				elseif ($_POST['customer_identifier_type'] == 'ssn')
 				{
 					$event['customer_identifier_type'] = 'ssn';
-					$event['customer_ssn'] = $_POST['customer_ssn'];
+					$event['customer_ssn'] = phpgw::get_var('customer_ssn');
 				}
 				elseif ($_POST['customer_identifier_type'] == 'organization_number')
 				{
 					$event['customer_identifier_type'] = 'organization_number';
-					$event['customer_organization_number'] = $_POST['customer_organization_number'];
+					$event['customer_organization_number'] = phpgw::get_var('customer_organization_number', 'string', 'POST');
+					$event['customer_organization_name'] = phpgw::get_var('customer_organization_name', 'string', 'POST');
+					$event['customer_organization_id'] = phpgw::get_var('customer_organization_id', 'int', 'POST');
 				}
 
 				if ($_POST['cost'] != 0 and ! $event['customer_organization_number'] and ! $event['customer_ssn'])
