@@ -12,7 +12,6 @@ services:
       PGDATA: /data/postgres
     volumes:
        - postgres:/data/postgres
-       - ./:/tmp
     restart: unless-stopped
 
   web:
