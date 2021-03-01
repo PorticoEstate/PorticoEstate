@@ -26,13 +26,16 @@
 				$where_clauses[] = "%%table%%" . sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($to_date));
 			}
 			
-			
 			/**
-			 * Todo - filter on already processed
+			 * filter on already processed
 			 */
-			if(false)
+			if(phpgw::get_var('generate_files', 'bool', 'POST') )
 			{
-				$where_clauses[] = "%%table%%.export_file_id IS NOT NULL";
+				$where_clauses[] = '%%table%%.id IN (' .
+				' SELECT bb_completed_reservation_export.id FROM bb_completed_reservation_export'.
+				' JOIN bb_completed_reservation_export_configuration '.
+				' ON bb_completed_reservation_export_configuration.export_id = bb_completed_reservation_export.id'.
+				' AND export_file_id IS NULL)';
 			}
 
 			if (count($where_clauses) > 0)
