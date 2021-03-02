@@ -530,6 +530,7 @@
 			$combined_data = array();
 			$export_format = null;
 			$combine_method = null;
+			$file_type = null;
 
 			foreach ($export_results as &$export_result)
 			{
@@ -547,6 +548,8 @@
 				{
 					throw new InvalidArgumentException('Different export formats cannot be combined into a single result');
 				}
+
+				$file_type = file_type_for_export_type($export_format);
 
 				if (!array_key_exists('export', $export_result))
 				{
@@ -566,9 +569,29 @@
 				call_user_func_array($combine_method, array(&$combined_data, &$export_result['export']));
 			}
 
-			return count($combined_data) > 0 ? join('', $combined_data) : '';
+			if($file_type == 'xml')
+			{
+
+				return count($combined_data) > 0 ? $this->format_factum_out($combined_data) : '';
+
+			}
+			else
+			{
+				// What if xml...?
+				return count($combined_data) > 0 ? join('', $combined_data) : '';
+			}
 		}
 
+		protected function format_factum_out( $combined_data )
+		{
+			/*
+			 * Create xml file
+			 */
+
+			$xml = '';
+			return $xml;
+
+		}
 		protected function &combine_csv_export_data( array &$combined_data, $export )
 		{
 			if (count($combined_data) == 0)
@@ -1168,78 +1191,47 @@
 			return $write;
 		}
 
+		protected function combine_factum_export_data( array &$combined_data, $export )
+		{
+			if (count($combined_data) == 0)
+			{
+				$combined_data[] = $export['data'];
+			}
+			else
+			{
+				$combined_data[] = "\n";
+				$combined_data[] = $export['data'];
+			}
+		}
+
 		public function format_factum( array &$reservations, array $account_codes, $sequential_number_generator )
 		{
-			$memory = xmlwriter_open_memory();
-			xmlwriter_set_indent($memory, true);
-			xmlwriter_start_document($memory, '1.0', 'ISO-8859-1');
-			xmlwriter_start_element($memory, 'BkPffFakturagrunnlags');
-
-			//$orders = array();
+			$headers = array();
+			$fakturalinjer = array();
 			$export_info = array();
 			$output = array();
 
 			$log = array();
 
-			/* NOTE: The specification states that values of type date
-			 * should be left padded with spaces. The example file,
-			 * however, is right padded with spaces.
-			 *
-			 * Using left padding with spaces (i.e specced version).
-			 *
-			 * Quote from spec. about values of type date:
-			 * Dato. Begynner med mellomrom. Format: ÅÅMMDD
-			 */
-			$date = str_pad(date('Ymd'), 17, ' ', STR_PAD_LEFT);
-			//$date = str_pad(date('ymd'), 17, ' ');
-
-			$batch_id = strtoupper(sprintf('BO%s%s', $account_codes['unit_prefix'], date('ymd')));
-			$batch_id = str_pad(substr($batch_id, 0, 12), 12, ' ');
-
 			if (!empty($this->config_data['voucher_client']))
 			{
-				$client_id = str_pad(substr(strtoupper($this->config_data['voucher_client']), 0, 2), 2, ' ');
+				$client_id = substr(strtoupper($this->config_data['voucher_client']), 0, 2);
 			}
 			else
 			{
-				$client_id = str_pad(substr(strtoupper('BY'), 0, 2), 2, ' ');
+				$client_id = 'BY';
 			}
 
-			$currency = str_pad(substr(strtoupper('NOK'), 0, 3), 3, ' ');
-			$order_type = str_pad(substr(strtoupper('FS'), 0, 2), 2, ' ');
-			$pay_method = str_pad(substr(strtoupper('IP'), 0, 2), 2, ' ');
-
-			/* NOTE: The specification states i8 format (integer left padded with zeroes)
-			 * whereas the example file uses c8 format (8 characters right padded with spaces).
-			 *
-			 * Using i8 for now (i.e specced version)
-			 *
-			 * Quoted from spec (note the use of leading zeroes):
-			 * ÅÅÅÅMM (ok leveres, eksempel 00200806). Skal leveres, perioden for ordren - blir liggende på selve ordren i Agresso, har ikke betydning for reskontro/hoevdbok - som vil få aktuell måned ved fakturering (SO13)
-			 */
-			$period = str_pad(substr('00' . date('Ym'), 0, 8), 8, '0', STR_PAD_LEFT);
-			//$period = str_pad(substr(date('Ym'), 0, 8), 8, ' ');
-
-			if (!empty($this->config_data['voucher_responsible']))
-			{
-				$responsible = str_pad(substr(strtoupper($this->config_data['voucher_responsible']), 0, 8), 8, ' ');
-			}
-			else
-			{
-				$responsible = str_pad(substr(strtoupper('BOOKING'), 0, 8), 8, ' ');
-			}
-
-			$responsible2 = str_pad(substr(strtoupper($responsible), 0, 8), 8, ' ');
-			$status = str_pad(substr(strtoupper('N'), 0, 1), 1, ' ');
-			$trans_type = str_pad(substr(strtoupper('42'), 0, 2), 2, ' ');
+			$status = 'N';
+			$trans_type = '42';
 
 			if (!empty($this->config_data['voucher_type']))
 			{
-				$voucher_type = str_pad(substr(strtoupper($this->config_data['voucher_type']), 0, 2), 2, ' ');
+				$voucher_type = substr(strtoupper($this->config_data['voucher_type']), 0, 2);
 			}
 			else
 			{
-				$voucher_type = str_pad(substr(strtoupper('FK'), 0, 2), 2, ' ');
+				$voucher_type = 'FK';
 			}
 
 			$stored_header = array();
@@ -1250,13 +1242,8 @@
 			$log_customer_nr = '';
 			$log_buidling = '';
 
-			$internal = false;
-
 			foreach ($reservations as &$reservation)
 			{
-
-				xmlwriter_start_element($memory, 'BkPffFakturagrunnlag');
-
 				switch ($reservation['reservation_type'])
 				{
 					case 'allocation':
@@ -1288,6 +1275,9 @@
 				}
 
 				$type = $reservation['customer_type'];
+
+				$from_date = new DateTime($reservation['from_']);
+				$to_date = new DateTime($reservation['to_']);
 
 				$log_customer_name = '';
 				if (!empty($reservation['organization_id']))
@@ -1337,208 +1327,163 @@
 					$export_info[] = $this->create_export_item_info($reservation, $order_id);
 					$header_count += 1;
 					//header level
-					$header = $this->get_agresso_row_template();
-					$header['accept_flag'] = '1';
+					$header = array();
 
-					// TODO: Introduce a unique id if several transfers in one day?
-					$header['batch_id'] = $stored_header['batch_id'] = $batch_id;
-
-					$header['client'] = $client_id;
 					$stored_header['client'] = $client_id;
-					$header['confirm_date'] = $date;
-					$header['currency'] = $currency;
-					$header['deliv_date'] = $header['confirm_date'];
-
-					if (!empty($this->config_data['att_1_id']))
-					{
-						$header['att_1_id'] = str_pad(strtoupper(substr($this->config_data['att_1_id'], 0, 2)), 2, ' ');
-					}
-					if (!empty($this->config_data['att_2_id']))
-					{
-						$header['att_2_id'] = str_pad(strtoupper(substr($this->config_data['att_2_id'], 0, 2)), 2, ' ');
-					}
-					if (!empty($this->config_data['att_3_id']))
-					{
-						$header['att_3_id'] = str_pad(strtoupper(substr($this->config_data['att_3_id'], 0, 2)), 2, ' ');
-					}
-					if (!empty($this->config_data['att_4_id']))
-					{
-						$header['att_4_id'] = str_pad(strtoupper(substr($this->config_data['att_4_id'], 0, 2)), 2, ' ');
-					}
-					if (!empty($this->config_data['att_5_id']))
-					{
-						$header['att_5_id'] = str_pad(strtoupper(substr($this->config_data['att_5_id'], 0, 2)), 2, ' ');
-					}
-					if (!empty($this->config_data['att_6_id']))
-					{
-						$header['att_6_id'] = str_pad(strtoupper(substr($this->config_data['att_6_id'], 0, 2)), 2, ' ');
-					}
-					if (!empty($this->config_data['att_7_id']))
-					{
-						$header['att_7_id'] = str_pad(strtoupper(substr($this->config_data['att_7_id'], 0, 2)), 2, ' ');
-					}
-
-					//Skal leverer oppdragsgiver, blir et nr. pr. fagavdeling. XXXX, et pr. fagavdeling
-					if (isset($this->config_data['dim_value_1']))
-					{
-						$header['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
-					}
-
-					if (isset($this->config_data['dim_value_2']))
-					{
-						$header['dim_value_2'] = str_pad(substr($account_codes['dim_value_2'], 0, 12), 12, ' ');
-					}
-					if (isset($this->config_data['dim_value_3']))
-					{
-						$header['dim_value_3'] = str_pad(substr($account_codes['dim_value_3'], 0, 12), 12, ' ');
-					}
-					if (isset($this->config_data['dim_value_4']))
-					{
-						$header['dim_value_4'] = str_pad(substr($account_codes['dim_value_4'], 0, 12), 12, ' ');
-					}
-
-					if (isset($this->config_data['dim_value_5']))
-					{
-						$header['dim_value_5'] = str_pad(substr($account_codes['dim_value_5'], 0, 12), 12, ' ');
-					}
-					if (isset($this->config_data['dim_value_6']))
-					{
-						$header['dim_value_6'] = str_pad(substr($account_codes['dim_value_6'], 0, 12), 12, ' ');
-					}
-					if (isset($this->config_data['dim_value_7']))
-					{
-						$header['dim_value_7'] = str_pad(substr($account_codes['dim_value_7'], 0, 12), 12, ' ');
-					}
 
 					//Nøkkelfelt, kundens personnr/orgnr. - men differensiert for undergrupper innenfor samme orgnr
 					$stored_header['tekst2'] = $check_customer_identifier;
 
 					if ($type == 'internal')
 					{
-						$header['tekst2'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
-						$header['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
+//						$header['tekst2'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
+						$ext_ord_ref = substr($this->get_customer_identifier_value_for($reservation), 0, 30);
 					}
 					else
 					{
-						$header['tekst2'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
-						$header['ext_ord_ref'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $customer_number), 0, 15), 15, ' ');
+//						$header['tekst2'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
+						$ext_ord_ref = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $customer_number), 0, 30);
 					}
 
-					$header['line_no'] = '0000'; //Nothing here according to example file but spec. says so
-					//Topptekst til faktura, knyttet mot fagavdeling
-					$header['long_info1'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 120), 120, ' ');
+					$kundenr = substr($this->get_customer_identifier_value_for($reservation), 0, 11);
+					$stored_header['kundenr'] = $kundenr;
 
-					//Ordrenr. UNIKT, løpenr. genereres i booking ut fra gitt serie, eks. 38000000
-					$header['order_id'] = str_pad($order_id, 9, 0, STR_PAD_LEFT);
-					$stored_header['order_id'] = str_pad($order_id, 9, 0, STR_PAD_LEFT);
+					$stored_header['order_id'] = $order_id;
 
-					$header['order_type'] = $order_type;
-					$header['pay_method'] = $pay_method;
-					$header['period'] = $period;
-					$stored_header['period'] = $period;
-					$header['responsible'] = $responsible;
-					$header['responsible2'] = $responsible2;
-					//$header['sequence_no'] = str_repeat('0', 8); //Shouldn't be here although some examples provide it here
-					$header['status'] = $status;
 					$stored_header['status'] = $status;
-					$header['trans_type'] = $trans_type;
 					$stored_header['trans_type'] = $trans_type;
-					$header['voucher_type'] = $voucher_type;
 					$stored_header['voucher_type'] = $voucher_type;
 
-					xmlwriter_write_element($memory, 'Blanketttype', 'F');
-					xmlwriter_write_element($memory, 'Fagsystemkundeid', $client_id);
-					xmlwriter_write_element($memory, 'Faktureringsmetode', 'F');
-					xmlwriter_write_element($memory, 'Fakturahyppighet', 'MND');
-					xmlwriter_write_element($memory, 'Startfakturering', '01.01.2012');
-					xmlwriter_write_element($memory, 'Stoppfakturering', '31.01.2012');
-					xmlwriter_write_element($memory, 'Systemid', '');
-					//item level
-					xmlwriter_start_element($memory, 'Fakturalinjer');
 
-					$item = $this->get_agresso_row_template();
+					$header = array();
+					
+					$header['AntallDagerForfall'] = 30; //int
+//					$header['Avtalenr'] = ''; //int
+//					$header['AvtaltForfallFast'] = ''; //int
+					$header['AvtaltForfallTilfeldig'] = 30; //int
+					$header['Beregningsmodus'] = 'B';//char(3)
+//					$header['Bestillingsnr'] = '';
+//					$header['Blankettbehandling'] = '';//char(3)
+//					$header['Blankettekstnr'] = ''; //int
+					$header['Blanketttype'] = 'F';//char(1) F = Faktura
+					$header['datoendr'] = date('d.m.Y');//dato 31.01.1997
+					$header['Deresref'] = $ext_ord_ref;//char(30)
+					$header['Fagsystemkundeid'] = $client_id;//char(128)
+					$header['Fakturadato'] = date('d.m.Y');
+					$header['Fakturahyppighet'] = 'MND';//char(3)
+
+
 					$line_no = 1;
-					$item['accept_flag'] = '0';
 
-					$item['amount'] = $this->format_cost($reservation['cost']); //Feltet viser netto totalbeløp i firmavaluta for hver ordrelinje. Brukes hvis amount_set er 1. Hvis ikke, brukes prisregisteret (*100 angis). Dersom beløpet i den aktuelle valutaen er angitt i filen, vil beløpet beregnes på grunnlag av beløpet i den aktuelle valutaen ved hjelp av firmaets valutakurs-oversikt.
-					$item['amount_set'] = '1';
+					$fakturalinje = array();
 
-					/* Data hentes fra booking, tidspunkt legges i eget felt som kommer på
-					 * linjen under: 78_short_info. <navn på bygg>,  <navn på ressurs>
-					 */
-					$item['art_descr'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description']), 0, 35), 35, ' '); //35 chars long
-					//Artikkel opprettes i Agresso (4 siffer), en for kultur og en for idrett, inneholder konteringsinfo.
-					$item['article'] = str_pad(substr(strtoupper($account_codes['article']), 0, 15), 15, ' ');
-
-					$item['batch_id'] = $header['batch_id'];
-					$item['client'] = $header['client'];
-
+					//item level
 					//Ansvarssted for inntektsføring for varelinjen avleveres i feltet (ANSVAR - f.eks 724300). ansvarsted (6 siffer) knyttet mot bygg /sesong
 					if (isset($this->config_data['dim_1']))
 					{
-						$item['dim_1'] = str_pad(strtoupper(substr($account_codes['responsible_code'], 0, 8)), 8, ' ');
+						$fakturalinje['AnsvarDim'] = strtoupper(substr($account_codes['responsible_code'], 0, 8));	//char(8)
 					}
-
 					//Tjeneste, eks. 38010 drift av idrettsbygg.  Kan ligge på artikkel i Agresso. Blank eller tjenestenr. (eks.38010) vi ikke legger det i artikkel
 					if (isset($this->config_data['dim_2']))
 					{
-						$item['dim_2'] = str_pad(strtoupper(substr($account_codes['service'], 0, 8)), 8, ' ');
+						$item['dim_2'] = strtoupper(substr($account_codes['service'], 0, 8));
 					}
 
+					$fakturalinje['antall']	 = 1;	//Desimal
+					$fakturalinje['ArtDim']	 = '';  //char(8)
+					$fakturalinje['Avgift']	 = '';  //Beløp
+					$fakturalinje['BalanseDim']	 = '';  //char(8)
+					$fakturalinje['enhetspris']	 = $reservation['cost'];  //Beløp
+					$fakturalinje['Fagsystemkontoid']	 = '';  //char(30)
+					$fakturalinje['Fagsystemvareid']	 = '';  //char(30)
+					$fakturalinje['FeiletLinjeFelt']	 = '';  //Char
+					$fakturalinje['FormalDim']	 = '';  //char(8)
+					$fakturalinje['fradato']	 = $from_date->format('d.m.Y');  //dato
+
+//					$fakturalinje['FremmedrefGUID']	 = '';  //char(38)
+//					$fakturalinje['Fremmedrefnr']	 = '';  //char(60)
+//					$fakturalinje['GjelderFakturalinjeGuid']	 = '';  //
+//					$fakturalinje['GjelderFakturalinjenr']	 = '';  //
+//					$fakturalinje['GjelderFakturanr']	 = '';  //int
+//					$fakturalinje['Gjenstandident']	 = '';  //
+//					$fakturalinje['GrunnlaglinjeGUID']	 = '';  //char(38)
+//					$fakturalinje['Grunnlagtype']	 = '';  //
+//					$fakturalinje['Linjefeilmelding']	 = '';  //string
+					$fakturalinje['Linjenr']	 = $line_no;  //
+//					$fakturalinje['mvakode']	 = '';  //char(1)
 					//Objektnr. vil være knyttet til hvert hus (FDVU)
 					if (isset($this->config_data['dim_3']))
 					{
-						$item['dim_3'] = str_pad(strtoupper(substr($account_codes['object_number'], 0, 8)), 8, ' ');
+						$fakturalinje['ObjektDim'] = strtoupper(substr($account_codes['object_number'], 0, 8));//char(8)
 					}
+//					$fakturalinje['Oppdateringsresultat']	 = '';  //string
+//					$fakturalinje['orgkode']	 = '';  //char(8)
+//					$fakturalinje['OrgvareGUID']	 = '';  //
+//					$fakturalinje['PrisGUID']	 = '';  //
+//					$fakturalinje['rabatt']	 = '';  //Desimal
+//					$fakturalinje['Regnskapstype']	 = '';  //Char(2)
 
-					if (isset($this->config_data['dim_4']))
-					{
-						$item['dim_4'] = str_pad(substr($account_codes['dim_4'], 0, 8), 8, ' ');
-					}
+					$fakturalinje['SumPrisUtenAvgift']	 =$reservation['cost'];  //Beløp
 
-					//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt
-					if (isset($this->config_data['dim_5']))
-					{
-						$item['dim_5'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
-					}
-					if (isset($this->config_data['dim_6']))
-					{
-						$item['dim_6'] = str_pad(substr($account_codes['dim_6'], 0, 4), 4, ' ');
-					}
-					if (isset($this->config_data['dim_7']))
-					{
-						$item['dim_7'] = str_pad(substr($account_codes['dim_7'], 0, 4), 4, ' ');
-					}
+					$fakturalinje['tildato']	 = $to_date->format('d.m.Y');  //Dato
+//					$fakturalinje['Tilleggstekst']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description']), 0, 225);  //char(255)
+					$fakturalinje['Tilleggstekst'] = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 0, 225);
+//					$fakturalinje['VareGuid']	 = '';  //
+					$fakturalinje['Varekode']	 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
 
-					$item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
+//					$fakturalinje['Fakturaorgkode']	 = '';  //
 
-					$item['order_id'] = $header['order_id'];
-					$item['period'] = $header['period'];
-					$item['sequence_no'] = str_repeat('0', 8);
+					//Topptekst til faktura, knyttet mot fagavdeling
+					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
+//					$fakturalinje['Faktureringsmetode']	 = 'T';  //
+//					$fakturalinje['FeiletFelt']	 = '';  //
+//					$fakturalinje['Feilmelding']	 = '';  //
+//					$fakturalinje['Forfallsdato']	 = '';  //Dato
+//					$fakturalinje['FremmedRefnr']	 = '';  //char(60)
+//					$fakturalinje['GjelderFakturanr']	 = '';  //
+//					$fakturalinje['GjelderKravGUID']	 = '';  //
+//					$fakturalinje['GrunnlagGUID']	 = '';  //
+//					$fakturalinje['Grunnlagid']	 = '';  //
+//					$fakturalinje['Importkjorenr']	 = '';  //
+//					$fakturalinje['InitEndr']	 = '';  //
+//					$fakturalinje['Kontaktpersoner']	 = '';  //
 
-					$item['status'] = $header['status'];
-					$item['trans_type'] = $header['trans_type'];
+					$fakturalinje['Kundenr']	 = $stored_header['kundenr'];  //
+//					$fakturalinje['Oppdateringsresultat']	 = '';  //
+//					$fakturalinje['RegningsmottakerFagsystemkundeid']	 = '';  //char(128)
+//					$fakturalinje['Regningsmottakerkundenr']	 = '';  //Int
+//					$fakturalinje['Samlefakturasortering']	 = '';  //
+//					$fakturalinje['Systemid']	 = '';  //
+//					$fakturalinje['tidendr']	 = '';  //tid
+//					$fakturalinje['VaremottakerFagsystemkundeid']	 = '';  //char(128)
+//					$fakturalinje['Varemottakerkundenr']	 = '';  //int
+//					$fakturalinje['VarRef']	 = '';  //char(30)
 
-					$item['value_1'] = str_pad(1 * 100, 17, 0, STR_PAD_LEFT); //Units. Multiplied by 100.
-					$item['voucher_type'] = $header['voucher_type'];
 
-					//text level
-					$text = $this->get_agresso_row_template();
-					$text['accept_flag'] = '0';
-					$text['order_id'] = $header['order_id'];
-					$text['batch_id'] = $header['batch_id'];
-					$text['client'] = $header['client'];
-					$text['line_no'] = $item['line_no'];
-					$text['short_info'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 0, 60), 60, ' ');
-					$text['trans_type'] = $header['trans_type'];
-					$text['voucher_type'] = $header['voucher_type'];
 
-					$text['sequence_no'] = str_pad(intval($item['sequence_no']) + 1, 8, '0', STR_PAD_LEFT);
+//					if (isset($this->config_data['dim_4']))
+//					{
+//						$item['dim_4'] = str_pad(substr($account_codes['dim_4'], 0, 8), 8, ' ');
+//					}
+//
+//					//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt
+//					if (isset($this->config_data['dim_5']))
+//					{
+//						$item['dim_5'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
+//					}
+//					if (isset($this->config_data['dim_6']))
+//					{
+//						$item['dim_6'] = str_pad(substr($account_codes['dim_6'], 0, 4), 4, ' ');
+//					}
+//					if (isset($this->config_data['dim_7']))
+//					{
+//						$item['dim_7'] = str_pad(substr($account_codes['dim_7'], 0, 4), 4, ' ');
+//					}
+//
+//
+					$fakturalinjer[$check_customer_identifier][] = $fakturalinje;
 
-					//Add to orders
-					$output[] = implode('', str_replace(array("\n", "\r"), '', $header));
-					$output[] = implode('', str_replace(array("\n", "\r"), '', $item));
-					$output[] = implode('', str_replace(array("\n", "\r"), '', $text));
+					$headers[$check_customer_identifier] = $header;
 
 					$log_order_id = $order_id;
 
@@ -1550,7 +1495,6 @@
 					{
 						$log_customer_nr = $header['tekst2'];
 					}
-
 
 					$log_buidling = $reservation['building_name'];
 					$log_cost = $reservation['cost'];
@@ -1572,86 +1516,53 @@
 				}
 				else
 				{
+					//item level
+					$line_no += 1;
 
-					xmlwriter_start_element($memory, 'BkPffFakturagrunnlaglinje');
+					$fakturalinje = array();
 
 					//item level
-					$item = $this->get_agresso_row_template();
-					$line_no += 1;
-					$item['accept_flag'] = '0';
-
-					$item['amount'] = $this->format_cost($reservation['cost']); //Feltet viser netto totalbeløp i firmavaluta for hver ordrelinje. Brukes hvis amount_set er 1. Hvis ikke, brukes prisregisteret (*100 angis). Dersom beløpet i den aktuelle valutaen er angitt i filen, vil beløpet beregnes på grunnlag av beløpet i den aktuelle valutaen ved hjelp av firmaets valutakurs-oversikt.
-					$item['amount_set'] = '1';
-
-					/* Data hentes fra booking, tidspunkt legges i eget felt som kommer på
-					 * linjen under: 78_short_info. <navn på bygg>,  <navn på ressurs>
-					 */
-					$item['art_descr'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description']), 0, 35), 35, ' '); //35 chars long
-					//Artikkel opprettes i Agresso (4 siffer), en for kultur og en for idrett, inneholder konteringsinfo.
-					$item['article'] = str_pad(substr(strtoupper($account_codes['article']), 0, 15), 15, ' ');
-
-					$item['batch_id'] = $stored_header['batch_id'];
-					$item['client'] = $stored_header['client'];
-
 					//Ansvarssted for inntektsføring for varelinjen avleveres i feltet (ANSVAR - f.eks 724300). ansvarsted (6 siffer) knyttet mot bygg /sesong
 					if (isset($this->config_data['dim_1']))
 					{
-						$item['dim_1'] = str_pad(strtoupper(substr($account_codes['responsible_code'], 0, 8)), 8, ' ');
+						$fakturalinje['AnsvarDim'] = strtoupper(substr($account_codes['responsible_code'], 0, 8));	//char(8)
 					}
-
 					//Tjeneste, eks. 38010 drift av idrettsbygg.  Kan ligge på artikkel i Agresso. Blank eller tjenestenr. (eks.38010) vi ikke legger det i artikkel
 					if (isset($this->config_data['dim_2']))
 					{
 						$item['dim_2'] = str_pad(strtoupper(substr($account_codes['service'], 0, 8)), 8, ' ');
 					}
 
+					$fakturalinje['antall']				 = 1; //Desimal
+					$fakturalinje['ArtDim']				 = '';  //char(8)
+					$fakturalinje['Avgift']				 = '';  //Beløp
+					$fakturalinje['BalanseDim']			 = '';  //char(8)
+					$fakturalinje['enhetspris']			 = $reservation['cost'];  //Beløp
+					$fakturalinje['Fagsystemkontoid']	 = '';  //char(30)
+					$fakturalinje['Fagsystemvareid']	 = '';  //char(30)
+					$fakturalinje['FeiletLinjeFelt']	 = '';  //Char
+					$fakturalinje['FormalDim']			 = '';  //char(8)
+					$fakturalinje['fradato']			 = $from_date->format('d.m.Y');  //dato
+
+					$fakturalinje['Linjenr'] = $line_no;  //
 					//Objektnr. vil være knyttet til hvert hus (FDVU)
 					if (isset($this->config_data['dim_3']))
 					{
-						$item['dim_3'] = str_pad(strtoupper(substr($account_codes['object_number'], 0, 8)), 8, ' ');
+						$fakturalinje['ObjektDim'] = strtoupper(substr($account_codes['object_number'], 0, 8));//char(8)
 					}
 
-					if (isset($this->config_data['dim_4']))
-					{
-						$item['dim_4'] = str_pad(substr($account_codes['dim_4'], 0, 8), 8, ' ');
-					}
+					$fakturalinje['SumPrisUtenAvgift'] = $reservation['cost'];  //Beløp
 
-					//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt
-					if (isset($this->config_data['dim_5']))
-					{
-						$item['dim_5'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
-					}
+					$fakturalinje['tildato']			 = $to_date->format('d.m.Y');  //Dato
+					$fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 0, 225);
+					$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
+					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
+					$fakturalinje['Kundenr']			 = $stored_header['kundenr'];
 
-					$item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
+					$fakturalinjer[$check_customer_identifier][] = $fakturalinje;
 
-					$item['order_id'] = $stored_header['order_id'];
-					$item['period'] = $stored_header['period'];
-					$item['sequence_no'] = str_repeat('0', 8);
-
-					$item['status'] = $stored_header['status'];
-					$item['trans_type'] = $stored_header['trans_type'];
-
-					$item['value_1'] = str_pad(1 * 100, 17, 0, STR_PAD_LEFT); //Units. Multiplied by 100.
-					$item['voucher_type'] = $stored_header['voucher_type'];
-
-					//text level
-					$text = $this->get_agresso_row_template();
-					$text['accept_flag'] = '0';
-					$text['order_id'] = $stored_header['order_id'];
-					$text['batch_id'] = $stored_header['batch_id'];
-					$text['client'] = $stored_header['client'];
-					$text['line_no'] = $item['line_no'];
-					$text['short_info'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 0, 60), 60, ' ');
-					$text['trans_type'] = $stored_header['trans_type'];
-					$text['voucher_type'] = $stored_header['voucher_type'];
-
-					$text['sequence_no'] = str_pad(intval($item['sequence_no']) + 1, 8, '0', STR_PAD_LEFT);
-
-					$output[] = implode('', str_replace(array("\n", "\r"), '', $item));
-					$output[] = implode('', str_replace(array("\n", "\r"), '', $text));
-
-					$log_buidling = $reservation['building_name'];
-					$log_cost = $reservation['cost'];
+					$log_buidling			 = $reservation['building_name'];
+					$log_cost				 = $reservation['cost'];
 					$log_varelinjer_med_dato = $reservation['article_description'] . ' - ' . $reservation['description'];
 
 					$line_field = array();
@@ -1667,16 +1578,17 @@
 
 					$log[] = implode(';',  $line_field);
 
-					//BkPffFakturagrunnlaglinje
-					xmlwriter_end_element($memory);
-
 				}
-				
-				//Fakturalinjer
-				xmlwriter_end_element($memory);
-				//BkPffFakturagrunnlag
-				xmlwriter_end_element($memory);
+			}
 
+			$invoice = array();
+			foreach ($fakturalinjer as $key => $_fakturalinjer)
+			{
+				$fakturagrunnlag = $headers[$key];
+				$fakturagrunnlag['Fakturalinjer'] = $_fakturalinjer;
+				$invoice[] = array(
+					'BkPffFakturagrunnlag' => $fakturagrunnlag
+				);
 			}
 
 			if (count($export_info) == 0)
@@ -1684,16 +1596,7 @@
 				return null;
 			}
 
-			if ($this->config_data['external_format_linebreak'] == 'Windows')
-			{
-				$file_format_linebreak = "\r\n";
-			}
-			else
-			{
-				$file_format_linebreak = "\n";
-			}
-
-			return array('data' => implode($file_format_linebreak, $output), 'data_log' => implode(PHP_EOL, $log),
+			return array('invoice' => $invoice, 'data' => $invoice, 'data_log' => implode(PHP_EOL, $log),
 				'info' => $export_info, 'header_count' => $header_count);
 		}
 
