@@ -239,25 +239,23 @@
 			return $results;
 		}
 
-		public function get_facilityTypes()
+		public function get_facility_types()
 		{
 			$result = array();
 			$queryURL = "select id,name from bb_rescategory";
 			$this->db->query($queryURL);
-			while ($this->db->next_record()) {
+			while ($this->db->next_record())
+			{
 				$result[] = array(
-//					'resource_id' => $this->db->f('resource_id',false),
-//					'resource_name' => $this->db->f('resource_name',false),
 					'id' => $this->db->f('id',false),
 					'name' => $this->db->f('name',false),
-
-
 				);
 			}
 			return $result;
 		}
 
-		public function get_building_id_from_resource_id($resource_id) {
+		public function get_building_id_from_resource_id($resource_id)
+		{
 			$queryURL = "select building_id from bb_building_resource where resource_id = {$resource_id}";
 			$this->db->query($queryURL);
 

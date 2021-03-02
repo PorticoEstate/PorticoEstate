@@ -294,7 +294,8 @@
 			return $results;
 		}
 
-		function allocation_ids_for_organization($organization_id, $resource_id, $start, $end) {
+		function allocation_ids_for_organization($organization_id, $resource_id, $start, $end)
+		{
 			$organization_id = intval($organization_id);
 
 			if(is_array($resource_id))

@@ -561,23 +561,23 @@
 			return $results;
 		}
 
-	function get_events_from_date($fromDate=null, $toDate=null, $org_info=null, $buildingID=null, $facilityTypeID=null, $loggedInOrgs=null, $start=0, $end=50)
+	function get_events_from_date($from_date=null, $to_date=null, $org_info=null, $building_id=null, $facility_type_id=null, $logged_in_orgs=null, $start=0, $end=50)
 	{
-		$loggedInOrgsSql = null;
-		$facilityTypeIDSql = null;
+		$logged_in_orgs_sql = null;
+		$facility_type_id_sql = null;
 		$org_info_sql = null;
-		$toDateSql = null;
-		$buildingIDSQL = null;
+		$to_date_sql = null;
+		$building_id_sql = null;
 
-		if ($loggedInOrgs !== "") {
-			$loggedInOrgsSql = " AND bbe.customer_organization_number in ($loggedInOrgs) ";
+		if ($logged_in_orgs !== "") {
+			$logged_in_orgs_sql = " AND bbe.customer_organization_number in ($logged_in_orgs) ";
 		}
 
-		if ($facilityTypeID !== "") {
-			$facilityTypeIDSql = " AND bbrc.id = '$facilityTypeID' ";
+		if ($facility_type_id !== "") {
+			$facility_type_id_sql = " AND bbrc.id = '$facility_type_id' ";
 		}
-		if ($buildingID !== "") {
-			$buildingIDSQL = " AND bbe.building_id = '$buildingID' ";
+		if ($building_id !== "") {
+			$building_id_sql = " AND bbe.building_id = '$building_id' ";
 		}
 		if (!empty($org_info)) {
 			if ($org_info['organization_number'] !== '')
@@ -594,10 +594,10 @@
 				$org_info_sql = $org_pre_sql . $org_number_sql . $org_name_sql;
 			}
 		}
-		if ($toDate !== "") {
-			$toDateSql = " AND bbe.to_ <= '$toDate' ";
+		if ($to_date !== "") {
+			$to_date_sql = " AND bbe.to_ <= '$to_date' ";
 		}
-		$sqlQuery = "
+		$sql_query = "
 				SELECT DISTINCT ON (bbe.id, bbe.from_)
 				    bbe.id as event_id,
 			       	bbe.from_,
@@ -620,16 +620,16 @@
 				where 
 		        	bbe.from_ > current_date and
 			    	bbe.is_public = 1
-				  	AND bbe.from_ >= '$fromDate' "
-						.$toDateSql
+				  	AND bbe.from_ >= '$from_date' "
+						.$to_date
 						.$org_info_sql
-						.$buildingIDSQL
-						.$facilityTypeIDSql
-						.$loggedInOrgsSql
+						.$building_id_sql
+						.$facility_type_id_sql
+						.$logged_in_orgs_sql
 						." AND bbe.is_public = 1
 						ORDER BY bbe.from_ ASC  LIMIT $end OFFSET $start;";
 
-		$this->db->query($sqlQuery);
+		$this->db->query($sql_query);
 
 		$results = array();
 		while ($this->db->next_record()) {
@@ -644,31 +644,6 @@
 				'org_num' => $this->db->f('customer_organization_number'),
 				'organizer' => $this->db->f('organizer')
 			);
-
-		}
-		return $results;
-	}
-
-	private function getFacilities($event_id)
-	{
-		$sqlQuery ="select e.id as event_id, e.name as event_name,rc.id as rescat_id, rc.name as rescat_name, r.id as resource_id, r.name as resource_name
-					from bb_rescategory rc, bb_event_resource er, bb_resource r , bb_event e
-					where e.id = er.event_id 
-						and er.resource_id = r.id 
-						and rc.id = r.rescategory_id
-						and e.id = '$event_id'";
-
-		$this->db->query($sqlQuery);
-		$results = array();
-		$facilityInfo = new stdClass();
-		while ($this->db->next_record()) {
-			$facilityInfo->event_name = $this->db->f('event_name',false);
-			$facilityInfo->event_id = $this->db->f('event_id',false);
-			$facilityInfo->resource_category_id = $this->db->f('rescat_id',false);
-			$facilityInfo->resource_category_name = $this->db->f('rescat_name',false);
-			$facilityInfo->resource_id = $this->db->f('resource_id',false);
-			$facilityInfo->resource_name = $this->db->f('resource_name',false);
-			array_push($results, $facilityInfo);
 
 		}
 		return $results;
