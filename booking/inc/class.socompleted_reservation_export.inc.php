@@ -549,7 +549,7 @@
 					throw new InvalidArgumentException('Different export formats cannot be combined into a single result');
 				}
 
-				$file_type = file_type_for_export_type($export_format);
+				$file_type = createObject('booking.socompleted_reservation_export_file')->file_type_for_export_type($export_format);
 
 				if (!array_key_exists('export', $export_result))
 				{
@@ -571,13 +571,11 @@
 
 			if($file_type == 'xml')
 			{
-
 				return count($combined_data) > 0 ? $this->format_factum_out($combined_data) : '';
 
 			}
 			else
 			{
-				// What if xml...?
 				return count($combined_data) > 0 ? join('', $combined_data) : '';
 			}
 		}
@@ -587,8 +585,11 @@
 			/*
 			 * Create xml file
 			 */
+			$xmltool = CreateObject('phpgwapi.xmltool');
+			$xmltool->set_encoding('ISO-8859-1');
 
-			$xml = '';
+			$xml	 = $xmltool->import_var('BkPffFakturagrunnlags', $combined_data, true, true);
+
 			return $xml;
 
 		}
