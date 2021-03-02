@@ -640,31 +640,17 @@
 		$allocations	 = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids),
 			'results' => -1));
 		$allocations	 = $allocations['results'];
+		$alloc_array = array();
+
 		foreach ($allocations as &$allocation)
 		{
-			$allocation['name']		 = $allocation['organization_name'];
-			$allocation['shortname'] = $allocation['organization_shortname'];
-			$allocation['type']		 = 'allocation';
-			$allocation['building_name'] = $allocation['building_name'];
-			$allocation['building_id'] = $allocation['building_id'];
-			unset($allocation['costs']);
-			unset($allocation['comments']);
-			unset($allocation['secret']);
-			unset($allocation['customer_ssn']);
-			unset($allocation['organizer']);
-			unset($allocation['contact_name']);
-			unset($allocation['contact_email']);
-			unset($allocation['contact_phone']);
-			unset($allocation['cost']);
-			unset($allocation['sms_total']);
-			unset($allocation['customer_organization_name']);
-			unset($allocation['customer_organization_id']);
-			unset($allocation['customer_identifier_type']);
-			unset($allocation['customer_organization_number']);
-			unset($allocation['customer_internal']);
-			unset($allocation['include_in_list']);
-			unset($allocation['agegroups']);
-			unset($allocation['audience']);
+			$alloc_array[] = array(
+				'name'      => $allocation['organization_name'],
+				'shortname' => $allocation['organization_shortname'],
+				'type'      => 'allocation',
+				'building_name' => $allocation['building_name'],
+				'building_id' => $allocation['building_id']
+			);
 		}
 
 
@@ -713,7 +699,7 @@
 			);
 		}
 
-		$allocations = $this->split_allocations($allocations, $bookings);
+		$allocations = $this->split_allocations($alloc_array, $bookings);
 
 		$event_ids	 = $this->so->event_ids_for_organization($organization_id, $resource_ids, $from, $to);
 
