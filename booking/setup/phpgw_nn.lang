@@ -842,7 +842,6 @@ global participant limit is set to %1	booking	nn	Generell grense for deltakarar 
 overridden participant limit is set to %1	booking	nn	Overstyrt grense for deltakarar er sett til %1
 register participants	booking	nn	Deltakarregistrering
 capacity	booking	nn	Kapasitet
-Complete extended application text booking	booking	nn	Ny søknad generert for å øke tid. For å fullføre søknadsprosessen må du trykke på knappen «Fullfør søknad» og logge inn via ID-porten og bekrefte kontaktopplysninger.
 Could not copy application	booking	nn	Kunne ikke kopiere søknad
 Copy application	booking	nn	Kopier søknad
 Show my events	booking	nn	Se mine arrangement

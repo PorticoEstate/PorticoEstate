@@ -349,6 +349,8 @@
 
 			$this->flash_form_errors($errors);
 			self::add_javascript('bookingfrontend', 'base', 'booking.js');
+			phpgwapi_jquery::load_widget('daterangepicker');
+
 			array_set_default($booking, 'resources', array());
 			array_set_default($booking, 'resource_ids', array());
 			array_set_default($booking, 'audience', array());
@@ -621,6 +623,8 @@
 			}
 			$this->flash_form_errors($errors);
 			self::add_javascript('bookingfrontend', 'base', 'booking.js');
+			phpgwapi_jquery::load_widget('daterangepicker');
+
 			if ($step < 2)
 			{
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));

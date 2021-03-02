@@ -34,10 +34,15 @@
 		{
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('treeview');
+			phpgwapi_jquery::load_widget('daterangepicker');
+			phpgwapi_jquery::load_widget('timepicker');
 
 			self::add_javascript('bookingfrontend', 'base', 'search.js', 'text/javascript', true);
 			self::add_javascript('bookingfrontend', 'base', 'util.js', 'text/javascript', true);
+
+
 			$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
+			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/templates/aalesund/css/rubik-font.css");
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 			$searchterm = trim(phpgw::get_var('searchterm', 'string', 'REQUEST', null));

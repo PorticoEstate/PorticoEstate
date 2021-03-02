@@ -60,7 +60,6 @@ JS;
 	$stylesheets[]	 = "https://fonts.googleapis.com/css?family=Work+Sans";
 	$stylesheets[]	 = "/phpgwapi/templates/aalesund/css/custom.css";
 	$stylesheets[]	 = "/phpgwapi/templates/aalesund/css/normalize.css";
-	$stylesheets[]	 = "/phpgwapi/templates/bootstrap/css/bootstrap-datetimepicker.min.css";
 
 	if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
@@ -184,8 +183,6 @@ JS;
 	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/custom.js";
 	$javascripts[]	 = "/phpgwapi/templates/aalesund/js/nb-NO.js";
 	$javascripts[]	 = "/phpgwapi/js/dateformat/dateformat.js";
-//	$javascripts[]	 = "/phpgwapi/templates/bootstrap/js/bootstrap-datetimepicker.min.js";
-//	$javascripts[]	 = "/phpgwapi/templates/bootstrap/js/bootstrap-datetimepicker.pt-BR.js";
 	foreach ($javascripts as $javascript)
 	{
 		if (file_exists(PHPGW_SERVER_ROOT . $javascript))

@@ -228,6 +228,7 @@
 			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'time');
 			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'time');
 			phpgwapi_jquery::load_widget('datepicker');
+			phpgwapi_jquery::load_widget('timepicker');
 
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 				'file'), 'event_form');
