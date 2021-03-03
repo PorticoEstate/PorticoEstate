@@ -75,8 +75,6 @@
 				phpgw::no_access();
 			}
 
-			$confirm = phpgw::get_var('confirm', 'bool', 'POST');
-
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
