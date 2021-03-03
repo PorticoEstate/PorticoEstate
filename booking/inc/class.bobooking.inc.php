@@ -649,7 +649,22 @@
 				'shortname' => $allocation['organization_shortname'],
 				'type'      => 'allocation',
 				'building_name' => $allocation['building_name'],
-				'building_id' => $allocation['building_id']
+				'building_id' => $allocation['building_id'],
+				'id' => $allocation['id'],
+				'id_string' => $allocation['id_string'],
+				'active' => $allocation['active'],
+				'application_id' => $allocation['application_id'],
+				'organization_id' => $allocation['organization_id'],
+				'season_id' => $allocation['season_id'],
+				'from_' => $allocation['from_'],
+				'to_' => $allocation['to_'],
+				'cost' => $allocation['cost'],
+				'completed' => $allocation['completed'],
+				'organization_name' => $allocation['organization_name'],
+				'organization_shortname' => $allocation['organization_shortname'],
+				'season_name' => $allocation['season_name'],
+				'resources' => $allocation['resources'],
+				'costs' => $allocation['costs'],
 			);
 		}
 
