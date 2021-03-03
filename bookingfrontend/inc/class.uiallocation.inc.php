@@ -1,4 +1,4 @@
-<?php
+	<?php
 	phpgw::import_class('booking.uiallocation');
 	phpgw::import_class('booking.soallocation');
 	phpgw::import_class('booking.uiapplication');
@@ -442,10 +442,10 @@
 			$allocation['ical_link'] = self::link(array('menuaction' => 'bookingfrontend.uiparticipant.ical','reservation_type' => 'allocation','reservation_id' => $allocation['id']));
 
 			$resource_paricipant_limit_gross = $this->resource_bo->so->get_paricipant_limit($allocation['resources'], true);
-			
+
 			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
 			{
-				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];	
+				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];
 			}
 
 			if(!$allocation['participant_limit'])
@@ -518,10 +518,10 @@
 			$allocation['participanttext'] = !empty($config['participanttext'])? $config['participanttext'] :'';
 
 			$resource_paricipant_limit_gross = $this->resource_bo->so->get_paricipant_limit($allocation['resources'], true);
-			
+
 			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
 			{
-				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];	
+				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];
 			}
 
 			if(!$allocation['participant_limit'])
@@ -545,7 +545,7 @@
 
 			$allocation['get_participants_link'] = $get_participants_link;
 
-			$datatable_def	 = array();		
+			$datatable_def	 = array();
 			if(CreateObject('bookingfrontend.bouser')->is_logged_in())
 			{
 				$datatable_def[] = array
@@ -594,8 +594,8 @@
 			$original_from = $allocation['from_'];
 			$organization = $this->organization_bo->read_single($allocation['organization_id']);
 			$application = $this->application_bo->read_single($allocation['application_id']);
-			$errors = array();
-			if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			{
 				$outseason = $_POST['outseason'];
 				$recurring = $_POST['recurring'];
 				$repeat_until = $_POST['repeat_until'];
@@ -616,27 +616,36 @@
 
 
 
-				if ($allocation['from_'] > $new_from_ || $allocation['to_'] < $new_to_) {
+				if ($allocation['from_'] > $new_from_ || $allocation['to_'] < $new_to_)
+				{
 					$comment = lang("User has made a request to increase time on existing booking") . ' ' . $new_from_ . ' - ' . $new_to_;
 					$message = lang('Request for changed time');
 
-					if ($outseason == 'on') {
+					if ($outseason == 'on')
+					{
 						$comment .= ' ' . lang('for remaining season');
-					} elseif ($recurring == 'on' && $repeat_until != '') {
+					}
+					elseif ($recurring == 'on' && $repeat_until != '')
+					{
 						$comment .= ' ' . lang('for allocations until') . ' ' . $repeat_until;
 					}
 
-					if ($outseason == 'on' || $recurring = 'on') {
-						if ($field_interval == '1') {
+					if ($outseason == 'on' || $recurring = 'on')
+					{
+						if ($field_interval == '1')
+						{
 							$field_interval = ' ';
-						} else {
+						}
+						else
+						{
 							$field_interval .= '. ';
 						}
 						$comment .= ' ' . lang('every (2021)') . ' ' . $field_interval . lang('week (2021)');
 						$message .= '</br>' . lang('Follow status');
 					}
 
-					if (!is_null($allocation['application_id']) && $allocation['application_id'] != '') {
+					if (!is_null($allocation['application_id']) && $allocation['application_id'] != '')
+					{
 						$this->application_ui->add_comment_to_application($allocation['application_id'], $comment, True);
 					}
 
@@ -647,27 +656,35 @@
 					phpgwapi_cache::message_set($message);
 				}
 
-				if ($allocation['from_'] < $new_from_) {
+				if ($allocation['from_'] < $new_from_)
+				{
 					$any_bookings = $this->allocation_so->check_for_booking_between_date($allocation['id'], $new_from_, 'from_');
 
-					if (!$any_bookings) {
+					if (!$any_bookings)
+					{
 						$allocation['from_'] = $new_from_;
 						$this->allocation_so->update($allocation);
 						phpgwapi_cache::message_set(lang('Successfully changed from time'));
-					} else {
+					}
+					else
+					{
 						phpgwapi_cache::message_set(lang('Decrease of from time overlap with existing booking'), 'error');
 					}
 				}
 
-				if ($allocation['to_'] > $new_to_) {
+				if ($allocation['to_'] > $new_to_)
+				{
 					$any_bookings = $this->allocation_so->check_for_booking_between_date($allocation['id'], $new_to_, 'to_');
 
-					if (!$any_bookings) {
+					if (!$any_bookings)
+					{
 						$allocation['to_'] = $new_to_;
 						$this->allocation_so->update($allocation);
 						phpgwapi_cache::message_set(lang('Successfully changed end time') . ' ' . $allocation['to_']);
 
-					} else {
+					}
+					else
+					{
 						phpgwapi_cache::message_set(lang('Decrease of to time overlap with existing booking'), 'error');
 					}
 				}
