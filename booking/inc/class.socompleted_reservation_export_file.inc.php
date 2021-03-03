@@ -252,9 +252,6 @@
 					$this->db_query($sql, __LINE__, __FILE__);
 				}
 
-//				$this->delete_export_system_files($export_files);
-//				$this->db->transaction_abort();
-
 				if ($this->db->transaction_commit())
 				{
 					return $entity_export_files;

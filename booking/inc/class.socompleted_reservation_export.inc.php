@@ -530,7 +530,6 @@
 			$combined_data = array();
 			$export_format = null;
 			$combine_method = null;
-			$file_type = null;
 
 			foreach ($export_results as &$export_result)
 			{
@@ -543,13 +542,12 @@
 				{
 					$export_format = $export_result['export_format'];
 					$combine_method = array($this, sprintf('combine_%s_export_data', $export_format));
+					$format_out_method = sprintf('format_%s_out', $export_format);
 				}
 				elseif ($export_format != $export_result['export_format'])
 				{
 					throw new InvalidArgumentException('Different export formats cannot be combined into a single result');
 				}
-
-				$file_type = createObject('booking.socompleted_reservation_export_file')->file_type_for_export_type($export_format);
 
 				if (!array_key_exists('export', $export_result))
 				{
@@ -569,14 +567,18 @@
 				call_user_func_array($combine_method, array(&$combined_data, &$export_result['export']));
 			}
 
-			if($file_type == 'xml')
-			{
-				return count($combined_data) > 0 ? $this->format_factum_out($combined_data) : '';
 
-			}
-			else
+			if(!$combined_data)
 			{
-				return count($combined_data) > 0 ? join('', $combined_data) : '';
+				return '';
+			}
+
+			switch ($export_format)
+			{
+				case 'factum':
+					return $this->format_factum_out($combined_data);
+				default:
+					return join('', $combined_data);
 			}
 		}
 
@@ -593,6 +595,11 @@
 			return $xml;
 
 		}
+		protected function combine_factum_export_data( array &$combined_data, $export )
+		{
+			$combined_data = array_merge($combined_data, $export['data']);
+		}
+
 		protected function &combine_csv_export_data( array &$combined_data, $export )
 		{
 			if (count($combined_data) == 0)
@@ -1192,19 +1199,6 @@
 			return $write;
 		}
 
-		protected function combine_factum_export_data( array &$combined_data, $export )
-		{
-			if (count($combined_data) == 0)
-			{
-				$combined_data[] = $export['data'];
-			}
-			else
-			{
-				$combined_data[] = "\n";
-				$combined_data[] = $export['data'];
-			}
-		}
-
 		public function format_factum( array &$reservations, array $account_codes, $sequential_number_generator )
 		{
 			$headers = array();
@@ -1300,12 +1294,6 @@
 						{
 							$data = $this->event_bo->read_single($reservation['reservation_id']);
 							$log_customer_name = $data['contact_name'];
-#							} elseif ($reservation['reservation_type'] == 'booking') {
-#								$data = $this->booking_bo->read_single($reservation['reservation_id']);
-#								error_log('b'.$data['id']." ".$data['group_id']);
-#							} else {
-#								$data = $this->allocation_bo->read_single($reservation['reservation_id']);
-#								error_log('a'.$data['id']." ".$data['organization_id']);
 						}
 					}
 				}
@@ -1428,7 +1416,8 @@
 
 					$fakturalinje['tildato']	 = $to_date->format('d.m.Y');  //Dato
 //					$fakturalinje['Tilleggstekst']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description']), 0, 225);  //char(255)
-					$fakturalinje['Tilleggstekst'] = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 0, 225);
+					$fakturalinje['Tilleggstekst'] = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description'] . ' - ' . $reservation['description']), 0, 225);
+
 //					$fakturalinje['VareGuid']	 = '';  //
 					$fakturalinje['Varekode']	 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
 
@@ -1488,14 +1477,7 @@
 
 					$log_order_id = $order_id;
 
-					if ($type == 'internal')
-					{
-						$log_customer_nr = $header['tekst2'] . ' ' . $header['ext_ord_ref'];
-					}
-					else
-					{
-						$log_customer_nr = $header['tekst2'];
-					}
+					$log_customer_nr = $stored_header['kundenr'];
 
 					$log_buidling = $reservation['building_name'];
 					$log_cost = $reservation['cost'];
@@ -1555,7 +1537,7 @@
 					$fakturalinje['SumPrisUtenAvgift'] = $reservation['cost'];  //Beløp
 
 					$fakturalinje['tildato']			 = $to_date->format('d.m.Y');  //Dato
-					$fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 0, 225);
+					$fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description'] . ' - ' . $reservation['description']), 0, 225);
 					$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
 					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
 					$fakturalinje['Kundenr']			 = $stored_header['kundenr'];
@@ -1587,17 +1569,14 @@
 			{
 				$fakturagrunnlag = $headers[$key];
 				$fakturagrunnlag['Fakturalinjer'] = $_fakturalinjer;
-				$invoice[] = array(
-					'BkPffFakturagrunnlag' => $fakturagrunnlag
-				);
+				$invoice['BkPffFakturagrunnlag'][] = $fakturagrunnlag;
 			}
 
 			if (count($export_info) == 0)
 			{
 				return null;
 			}
-
-			return array('invoice' => $invoice, 'data' => $invoice, 'data_log' => implode(PHP_EOL, $log),
+			return array('data' => $invoice, 'data_log' => implode(PHP_EOL, $log),
 				'info' => $export_info, 'header_count' => $header_count);
 		}
 
