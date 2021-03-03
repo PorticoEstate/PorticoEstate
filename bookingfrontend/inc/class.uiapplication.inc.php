@@ -213,12 +213,16 @@
 					}
 					if ($association['type'] === 'event')
 					{
-						$association['edit_link'] = self::link(array('menuaction' => "{$this->module}.uievent.edit", 'id' => $association['id']));
+						$association['edit_link'] = self::link(array('menuaction' => "{$this->module}.uievent.edit",
+							'id' => $association['id'],
+							'resource_ids' => $application['resources']));
 						$association['edit_text'] = $lang_edit;
 
 						if ($config['user_can_delete_events'] == 'yes')
 						{
-							$association['cancel_link'] = self::link(array('menuaction' => "{$this->module}.uievent.cancel", 'id' => $association['id']));
+							$association['cancel_link'] = self::link(array('menuaction' => "{$this->module}.uievent.cancel",
+								'id' => $association['id'],
+								'resource_ids' => $application['resources']));
 							$association['cancel_text'] = $lang_cancel;
 						}
 						else
@@ -229,12 +233,16 @@
 					}
 					if ($association['type'] === 'booking')
 					{
-						$association['edit_link'] = self::link(array('menuaction' => "{$this->module}.uibooking.edit", 'id' => $association['id']));
+						$association['edit_link'] = self::link(array('menuaction' => "{$this->module}.uibooking.edit",
+							'id' => $association['id'],
+							'resource_ids' => $application['resources']));
 						$association['edit_text'] = $lang_edit;
 
 						if ($config['user_can_delete_bookings'] == 'yes')
 						{
-							$association['cancel_link'] = self::link(array('menuaction' => "{$this->module}.uibooking.cancel", 'id' => $association['id']));
+							$association['cancel_link'] = self::link(array('menuaction' => "{$this->module}.uibooking.cancel",
+								'id' => $association['id'],
+								'resource_ids' => $application['resources']));
 							$association['cancel_text'] = $lang_cancel;
 						}
 						else
@@ -252,7 +260,7 @@
 					$association['cancel_text'] = $lang_expired;
 				}
 
-				$association['type'] = lang($association['type']);
+				$association['type'] = lang($association['type'].' show');
 				$association['from_'] = DateTime::createFromFormat('Y-m-d H:i:s', $association['from_'])->format('d.m.Y H:i');
 				$association['to_'] = DateTime::createFromFormat('Y-m-d H:i:s', $association['to_'])->format('d.m.Y H:i');
 			}

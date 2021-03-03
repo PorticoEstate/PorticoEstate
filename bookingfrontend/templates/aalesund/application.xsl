@@ -58,7 +58,7 @@
 				<div class="col-8">
 					<div class="form-group">
 						<label class="text-uppercase">
-							<xsl:value-of select="php:function('lang', 'Associated items')" />
+							<xsl:value-of select="php:function('lang', 'Associated bookings')" />
 						</label>
 						<table class="table table-striped">
 							<thead>

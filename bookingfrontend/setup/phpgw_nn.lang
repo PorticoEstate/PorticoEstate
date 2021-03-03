@@ -505,7 +505,7 @@ view booking	bookingfrontend	nn	Vis interntildeling
 Phone is already registered	bookingfrontend	nn	Telefonnummeret er alt registrert
 registration	bookingfrontend	nn	Registrering
 download to your calendar	bookingfrontend	nn	Last ned til din kalendar
-Find available resources	bookingfrontend	nn	Finn fasiliteter/etableringer
+Find available resources	bookingfrontend	nn	Søk etter leieobjekter
 Search available resources	bookingfrontend	nn	Søk etter tilgjengelige lokaler
 Choose date	bookingfrontend	nn	Velg dato
 Find available	bookingfrontend	nn	Finn tilgjengelig
@@ -547,4 +547,8 @@ Resources (2021)	bookingfrontend	nn	Lokaler
 Upcomming Events (2021)	bookingfrontend	nn	Kommende Arrangement
 expired (2021)	bookingfrontend	nn	Utløpt
 Missing rights (2021)	bookingfrontend	nn	Mangler rettigheter
+allocation show	bookingfrontend	nn	Tildeling
+booking show	bookingfrontend	nn	Interntildeling
+event show	bookingfrontend	nn	Arrangement
+Associated bookings	bookingfrontend	nn	Tilhørende tildelinger/arrangementer
 

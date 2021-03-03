@@ -497,7 +497,7 @@ download to your calendar	bookingfrontend	no	Last ned til din kalender
 organization type	bookingfrontend	no	Organisasjonstype
 personal group	bookingfrontend	no	Ikke registrert i Brønnøysund
 Official organization	bookingfrontend	no	Registrert i Brønnøysund
-Find available resources	bookingfrontend	no	Finn fasiliteter/etableringer
+Find available resources	bookingfrontend	no	Søk etter leieobjekter
 Search available resources	bookingfrontend	no	Søk etter tilgjengelige lokaler
 Choose date	bookingfrontend	no	Velg dato
 Find available	bookingfrontend	no	Finn tilgjengelig
@@ -539,6 +539,10 @@ Resources (2021)	bookingfrontend	no	Lokaler
 Upcomming Events (2021)	bookingfrontend	no	Kommende Arrangement
 expired (2021)	bookingfrontend	no	Utløpt
 Missing rights (2021)	bookingfrontend	no	Mangler rettigheter
+allocation show	bookingfrontend	no	Tildeling
+booking show	bookingfrontend	no	Interntildeling
+event show	bookingfrontend	no	Arrangement
+Associated bookings	bookingfrontend	no	Tilhørende tildelinger/arrangementer
 
 
 
