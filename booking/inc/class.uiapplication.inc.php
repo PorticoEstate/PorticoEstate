@@ -795,6 +795,8 @@
 							lang("Complete application text booking") .
 							'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
 							lang("Complete applications") .
+							'</button><button onclick="window.location.href = phpGWLink(\'bookingfrontend/\', {})" class="ml-2 btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
+							lang("new application") .
 							'</button>'
 						);
 						// Redirect to same URL so as to present a new, empty form
@@ -906,6 +908,8 @@
 							lang("Complete application text booking") .
 							'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
 							lang("Complete applications") .
+							'</button><button onclick="window.location.href = phpGWLink(\'bookingfrontend/\', {})" class="ml-2 btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
+							lang("new application") .
 							'</button>'
 						);
 						// Redirect to same URL so as to present a new, empty form
