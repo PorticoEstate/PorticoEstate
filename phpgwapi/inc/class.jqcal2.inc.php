@@ -61,7 +61,7 @@
 			}
 			if(ctype_digit($value) && $value)
 			{
-				$start_value = date('Y/m/d H:i', $value);
+				$start_value = date('Y-m-d H:i', $value);
 			}
 			else
 			{
@@ -116,8 +116,8 @@
 			{
 				if($datepicker)
 				{
-//					$start_value = "new Date('{$start_value}')";
-					$start_value = "'{$start_value}'";
+					$start_value = "new Date('{$start_value}')";
+//					$start_value = "'{$start_value}'";
 				}
 				else if($timepicker)
 				{
