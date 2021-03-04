@@ -551,7 +551,7 @@
 
 		function set_fields_insert_prototyped( $field, $value, $index )
 		{
-			if (!array_key_exist($field, $this->inserts[$index]['data']))
+			if (!array_key_exists($field, $this->inserts[$index]['data']))
 			{
 				$this->inserts[$index]['fields'] .= ', ' . $field;
 				$this->inserts[$index]['values'] .= ', ' . $value;
@@ -1049,7 +1049,7 @@
 // 			{
 			return;
 // 			}
-
+			$output = '';
 			$classname = '<strong>Class: ' . get_class($this) . "<br>Function: $myfoo<br></strong>";
 
 			switch ($type)
