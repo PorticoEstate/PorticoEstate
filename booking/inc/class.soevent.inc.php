@@ -621,7 +621,7 @@
 		        	bbe.from_ > current_date and
 			    	bbe.is_public = 1
 				  	AND bbe.from_ >= '$from_date' "
-						.$to_date
+						.$to_date_sql
 						.$org_info_sql
 						.$building_id_sql
 						.$facility_type_id_sql
