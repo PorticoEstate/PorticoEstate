@@ -651,8 +651,8 @@
 			$active_tab = 'generic';
 
 			$GLOBALS['phpgw']->jqcal2->add_listener('field_repeat_until', 'date');
-			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime', strtotime($booking['from_']));
-			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime', strtotime($booking['to_']));
+			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime');
 
 			$booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$booking['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
