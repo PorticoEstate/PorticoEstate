@@ -660,7 +660,7 @@
 			}
 			else
 			{
-				phpgwapi_sql::null();
+				$value = phpgwapi_sql::null();
 			}
 
 			if ($this->values)
