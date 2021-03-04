@@ -647,8 +647,8 @@
 					'date', 'security', 'file'));
 			$cost_history = $this->bo->so->get_ordered_costs($id);
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime');
-			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime', phpgwapi_datetime::date_to_timestamp($allocation['from_']));
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime', phpgwapi_datetime::date_to_timestamp($allocation['to_']));
 
 			self::render_template_xsl('allocation_edit', array('allocation' => $allocation,
 				'cost_history' => $cost_history));

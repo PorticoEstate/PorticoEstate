@@ -651,8 +651,8 @@
 			$active_tab = 'generic';
 
 			$GLOBALS['phpgw']->jqcal2->add_listener('field_repeat_until', 'date');
-			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime', phpgwapi_datetime::date_to_timestamp($booking['from_']));
-			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime', phpgwapi_datetime::date_to_timestamp($booking['to_']));
+			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime', strtotime($booking['from_']));
+			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime', strtotime($booking['to_']));
 
 			$booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$booking['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
@@ -803,8 +803,8 @@
 			$cost_history = $this->bo->so->get_ordered_costs($id);
 			$booking['audience_json'] = json_encode(array_map('intval', (array)$booking['audience']));
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime');
-			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime',phpgwapi_datetime::date_to_timestamp($booking['from_']));
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime',phpgwapi_datetime::date_to_timestamp($booking['to_']));
 
 			$booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$booking['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
