@@ -151,7 +151,8 @@
 									  <div data-bind="foreach: towns">
 										  <label  class="checkboxContainer">
 											  <input type="checkbox"
-												 data-bind="value: id, checked:$root.selectedTownIds" />
+												 data-bind="value: id,
+												 checked:$root.selectedTownIds" />
 											  <div class="checkmark"/>
 											  <span class="checkboxText" data-bind="text: name"/>
 										  </label>
@@ -175,7 +176,9 @@
 									  <div data-bind="foreach: facilities">
 										  <label class="checkboxContainer">
 											  <input type="checkbox"
-													 data-bind="value: id, checked:$root.selectedFacilityIds" />
+													 data-bind="value: id,
+													 checked:$root.selectedFacilityIds,
+													 enable: enabled" />
 											  <div class="checkmark"/>
 											  <span class="checkboxText" data-bind="text: name"/>
 										  </label>
@@ -199,7 +202,9 @@
 									  <div data-bind="foreach: activities">
 										  <label class="checkboxContainer">
 											  <input type="checkbox"
-													 data-bind="value: id, checked:$root.selectedActivityIds" />
+													 data-bind="value: id,
+													 checked:$root.selectedActivityIds,
+													 enable: enabled" />
 											  <div class="checkmark"/>
 											  <span class="checkboxText" data-bind="text: name"/>
 										  </label>
