@@ -43,28 +43,28 @@
 				</div>
 				<div class="row justify-content-center">
 					<div class="col-4">
-						<button onclick="buildingNameDropDown()" class="form-control dropbtn" id="dropBuildingNameButton"><xsl:value-of select="php:function('lang', 'Building name (2021)')"/></button>
+						<input onclick="buildingNameDropDown()" class="form-control dropbtn" id="field_building_name">
+							<xsl:attribute name="placeholder">
+								<xsl:value-of select="php:function('lang', 'Building name')"/>
+							</xsl:attribute>
+						</input>
 						<div id="buildingNameDropDown" class="dropdown-content">
-							<input type="text" placeholder="Search.." id="field_building_name"/>
 							<input type="hidden" id="field_building_id"/>
 							<div class="dropdown_list_container" id="building_container"/>
 						</div>
 					</div>
 					<div class="col-4">
-						<button onclick="buildingTypeDropDown()" class="form-control dropbtn" id="dropBuildingTypeButton"><xsl:value-of select="php:function('lang', 'Building type')"/></button>
+						<input onclick="buildingTypeDropDown()" class="form-control dropbtn" id="field_type_name" onfocus="this.placeholder.css = ''">
+							<xsl:attribute name="placeholder">
+								<xsl:value-of select="php:function('lang', 'Building type')"/>
+							</xsl:attribute>
+						</input>
 						<div id="buildingTypeDropDown" class="dropdown-content">
-							<input type="text" placeholder="Search.." id="field_type_name"/>
 							<input type="hidden" id="field_type_id"/>
 							<div class="dropdown_list_container" id="buildingtype_container"></div>
 						</div>
 					</div>
 				</div>
-				<!--<div class="row justify-content-center">
-					<div class="col-4">
-						Apply filter button
-						<div id="applyEventFilterBtn" class="applyFilterBtn" onclick="getUpcomingEvents()"><xsl:value-of select="php:function('lang', 'Search for events')"/></div>
-					</div>
-				</div>-->
 				<div class="row justify-content-center">
 					<div class="col-4">
 						<!-- Remove filter button -->

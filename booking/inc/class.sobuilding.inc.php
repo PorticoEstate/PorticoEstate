@@ -239,11 +239,15 @@
 			return $results;
 		}
 
-		public function get_facility_types()
+		public function get_facility_types($query="")
 		{
+			$query_SQL = " where lower(name) like '$query%'";
+			if (empty($query)) {
+				$query_SQL = '';
+			}
 			$result = array();
-			$queryURL = "select id,name from bb_rescategory";
-			$this->db->query($queryURL);
+			$queryURL = "select id,name from bb_rescategory".$query_SQL;
+			$this->db->query($queryURL  );
 			while ($this->db->next_record())
 			{
 				$result[] = array(

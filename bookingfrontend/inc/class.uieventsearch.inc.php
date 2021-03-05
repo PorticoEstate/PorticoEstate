@@ -42,13 +42,17 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 
 	public function get_facilityTypes()
 	{
-		$ret =  $this->bobuilding->get_facilityTypes();
+		$query = phpgw::get_var('query', 'string', 'REQUEST', null);
+
+		$ret =  $this->bobuilding->get_facilityTypes($query);
+		//keep 15 of the first...
+
 
 		$result_data['start'] = 0;
 		$result_data['dir'] = 'asc';
 		$result_data['sort'] = null;
 
-		$result_data['results'] = $ret;
+		$result_data['results'] = array_slice($ret, 0, 15);
 		$result_data['total_records'] = count($ret);
 
 		return $this->jquery_results($result_data);

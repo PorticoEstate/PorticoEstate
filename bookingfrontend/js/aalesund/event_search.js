@@ -39,7 +39,7 @@ $('#field_building_name').on('autocompleteselect', function (event, ui) {
 	if (building_id !== buildingID) {
 		buildingID = building_id;
 	}
-	document.getElementById("dropBuildingNameButton").innerText = ui.item.label;
+	document.getElementById("field_building_name").innerText = ui.item.label;
 	buildingNameDropDown();
 	getUpcomingEvents(organization,fromDate,toDate,buildingID);
 });
@@ -49,7 +49,7 @@ $('#field_type_name').on('autocompleteselect', function (event, ui) {
 	if (building_type_id != facilityTypeID) {
 		facilityTypeID = building_type_id;
 	}
-	document.getElementById("dropBuildingTypeButton").innerText = ui.item.label;
+	document.getElementById("field_type_name").innerText = ui.item.label;
 	buildingTypeDropDown();
 	getUpcomingEvents(organization,fromDate,toDate,buildingID,facilityTypeID);
 });

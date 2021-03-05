@@ -1,13 +1,13 @@
 <?php
 	phpgw::import_class('booking.bocommon_authorized');
-
+	phpgw::import_class('booking.sobuilding');
 	class booking_bobuilding extends booking_bocommon_authorized
 	{
-
+		protected $so;
 		function __construct()
 		{
 			parent::__construct();
-			$this->so = CreateObject('booking.sobuilding');
+			$this->so = new booking_sobuilding();
 		}
 
 		protected function get_object_role_permissions( $forObject, $defaultPermissions )
@@ -96,8 +96,8 @@
 			return $this->so->find_buildings_used_by($organization_id, $this->build_default_read_params());
 		}
 
-		function get_facilityTypes()
+		function get_facilityTypes($query)
 		{
-			return $this->so->get_facilityTypes();
+			return $this->so->get_facility_types($query);
 		}
 	}

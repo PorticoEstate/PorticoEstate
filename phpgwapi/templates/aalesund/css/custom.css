@@ -2125,6 +2125,10 @@ input:focus{
     outline: none;
 }
 
+input.form-control.dropbtn:focus::placeholder{
+    color: transparent;
+}
+
 .form-control:focus {
   border-color: inherit;
   -webkit-box-shadow: none;
