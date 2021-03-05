@@ -576,6 +576,7 @@ HTML;
 			}
 			else
 			{
+				$cd_array['lang'] = phpgw::get_var('lang', 'string', 'GET');
 				$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
 				exit;
 			}
