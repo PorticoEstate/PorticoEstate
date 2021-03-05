@@ -1,10 +1,14 @@
 var selectedAutocompleteValue = false;
 var selectedTown = false;
+var showResults = false;
+var updatingFilter = false;
 var viewmodel;
 var months = ["Januar", "Februar", "Mars", "April", "Mai", "Juni", "July", "August", "September", "Oktober", "November", "Desember"];
 var urlParams = [];
 var autocompleteData = [];
 var towns = [];
+
+var searchResults = [];
 
 CreateUrlParams(window.location.search);
 
@@ -47,7 +51,6 @@ function ViewModel()
 	self.capacities = ko.observableArray([]);
 
 	self.showEvents = ko.observable(true);
-	//self.showResults = ko.observable(true);
 	self.showSearchText = ko.observable(false);
 	self.showTown = ko.observable(true);
 	self.showFacility = ko.observable(true);
@@ -101,6 +104,10 @@ function ViewModel()
 			newSelectedTowns.push(selectedTown.id);
 		});
 		self.selectedTowns(newSelectedTowns);
+
+		if (showResults) {
+			findSearchMethod();
+		}
 	});
 
 	self.selectedFacilityIds.subscribe(function(newValue) {
@@ -113,6 +120,7 @@ function ViewModel()
 			newSelectedFacilities.push(selectedFacility.id);
 		});
 		self.selectedFacilities(newSelectedFacilities);
+		updateResults();
 	});
 
 	self.selectedActivityIds.subscribe(function(newValue) {
@@ -125,6 +133,7 @@ function ViewModel()
 			newSelectedActivities.push(selectedActivity.id);
 		});
 		self.selectedActivities(newSelectedActivities);
+		updateResults();
 	});
 
 	self.selectedGearIds.subscribe(function(newValue) {
@@ -152,6 +161,47 @@ function ViewModel()
 	});
 }
 
+function updateResults() {
+
+	let matchingResources = [];
+	let matchingFacilities = new Set();
+	let matchingActivities = new Set();
+
+	for(let i = 0; i < searchResults.length; i++) {
+		if (viewmodel.selectedFacilities().every(r=>searchResults[i].facilities.includes(r)) && viewmodel.selectedActivities().every(r=>searchResults[i].activities.includes(r))) {
+			matchingResources.push(searchResults[i]);
+			matchingFacilities = new Set([... matchingFacilities, ...searchResults[i].facilities]);
+			matchingActivities = new Set([... matchingActivities, ...searchResults[i].activities]);
+		}
+	}
+
+	matchingFacilities = Array.from(matchingFacilities);
+	matchingActivities = Array.from(matchingActivities);
+
+	ko.utils.arrayForEach(viewmodel.facilities(), function(facility) {
+		if (matchingFacilities.includes(facility.id)) {
+			facility.enabled = true;
+		} else {
+			facility.enabled = false;
+		}
+	});
+
+	ko.utils.arrayForEach(viewmodel.activities(), function(activity) {
+		if (matchingActivities.includes(activity.id)) {
+			activity.enabled = true;
+		} else {
+			activity.enabled = false;
+		}
+	});
+
+	viewmodel.resources(matchingResources);
+	viewmodel.toggleFacility(viewmodel);
+	viewmodel.toggleFacility(viewmodel);
+	viewmodel.toggleActivity(viewmodel);
+	viewmodel.toggleActivity(viewmodel);
+}
+
+
 $(document).ready(function () {
 	$('.overlay').show();
 
@@ -164,8 +214,8 @@ $(document).ready(function () {
 	setTowns();
 	setDateTimePicker();
 	getUpcomingEvents();
-
 	$("#searchResults").hide();
+	showResults = false;
 });
 
 function searchtermSearch() {
@@ -192,18 +242,14 @@ function doSearch(url, params) {
 	$("#mainSearchInput").blur();
 
 	let dates = findDate();
-
-	let fromTime = typeof $("#fromTime").val() === 'undefined' ? '' : $("#fromTime").val();
-	let toTime = typeof $("#toTime").val() === 'undefined' ? '' : $("#toTime").val()
+	let time = findTime()
 
 	let data = {
 		part_of_town_id: viewmodel.selectedTowns,
-		facility_id: viewmodel.selectedFacilities,
-		activity_id: viewmodel.selectedActivities,
 		from_date: dates[0] + ' 00:00:00',
 		to_date: dates[1] + ' 23:59:59',
-		from_time: fromTime,
-		to_time: toTime,
+		from_time: time[0],
+		to_time: time[1],
 	};
 
 	Object.assign(data, params);
@@ -220,19 +266,18 @@ function doSearch(url, params) {
 			$("#dateFilter").hide();
 			$("#searchBtn").hide();
 			$("#searchResults").show();
+			showResults = true;
 			viewmodel.showEvents(false);
 			viewmodel.resources.removeAll();
-			viewmodel.towns.removeAll();
 			viewmodel.facilities.removeAll();
 			viewmodel.activities.removeAll();
 			viewmodel.gear.removeAll();
 			viewmodel.capacities.removeAll();
+			resetFilters();
 
 			setResources(response.available_resources, fromTime, toTime);
-			setTownData(response.partoftowns);
 			setFacilityData(response.facilities);
-			setActivityData(response.
-				activities);
+			setActivityData(response.activities);
 
 			setTimeout(function () {
 				$('html, body').animate({
@@ -276,17 +321,10 @@ function findSearchMethod() {
 }
 
 function resetFilters() {
-	viewmodel.dateFilter('');
-	$("#fromTime").val('')
-	$("#toTime").val('')
-
-	viewmodel.selectedTowns.removeAll();
-	viewmodel.selectedTownIds.removeAll();
-	viewmodel.selectedFacilities.removeAll();
 	viewmodel.selectedFacilityIds.removeAll();
-	viewmodel.selectedActivities.removeAll();
 	viewmodel.selectedActivityIds.removeAll();
-	findSearchMethod();
+	viewmodel.selectedFacilities.removeAll();
+	viewmodel.selectedActivities.removeAll();
 }
 
 function findDate() {
@@ -313,6 +351,27 @@ function findDate() {
 	}
 
 	return [fromDate, toDate];
+}
+
+function findTime() {
+	let fromTime = typeof $("#fromTime").val() === 'undefined' || (/[a-zA-Z]/g).test($("#fromTime").val()) ? '' : $("#fromTime").val();
+	let toTime = typeof $("#toTime").val() === 'undefined' || (/[a-zA-Z]/g).test($("#toTime").val()) ? '' : $("#toTime").val();
+
+
+	if (fromTime !== '' && toTime === '') {
+		toTime = '23:30';
+	}
+
+	if (fromTime !== '' && toTime !== '') {
+		var startTime = moment(fromTime, "HH:mm");
+		var endTime = moment(toTime, "HH:mm");
+
+		if (startTime.isAfter(endTime)){
+			toTime = '23:30';
+			$("#toTime").val('23:30');
+		}
+	}
+	return [fromTime, toTime];
 }
 
 function getAutocompleteData() {
@@ -396,8 +455,10 @@ function setSearchListener() {
 				$("#locationFilter").show();
 				$("#dateFilter").show();
 				$("#searchResults").hide();
+				showResults = false;
 				resetFilters();
-				setTowns();
+				viewmodel.selectedTownIds.removeAll();
+				viewmodel.selectedTowns.removeAll();
 			}
 		}
 	});
@@ -428,20 +489,22 @@ function setTowns() {
 		url: requestURL,
 		dataType : 'json',
 		success: function (result) {
-			const lowercased = result.map(res => {
-				let lower = res.name.toLowerCase();
-				res.name = res.name.charAt(0) + lower.slice(1);
-			});
-
-			result.sort(compare);
-
-			towns = result;
-			viewmodel.towns(result);
+			setTownData(result);
 		},
 		error: function (error) {
 			console.log(error);
 		}
 	});
+}
+
+function timeListener() {
+	if (typeof($('#fromTime').val()) === 'undefined' || $('#fromTime').val() === '' || (/[a-zA-Z]/g).test($('#fromTime').val())) {
+		$('#toTime').prop("disabled", true);
+	} else {
+		$('#toTime').prop("disabled", false);
+		$('#toTime').timepicker({ 'timeFormat': 'HH:mm', startTime: $('#fromTime').val(), change: findSearchMethod});
+		findSearchMethod();
+	}
 }
 
 function setDateTimePicker() {
@@ -464,14 +527,18 @@ function setDateTimePicker() {
 		} else {
 			viewmodel.dateFilter(startDate + ' - ' + endDate);
 		}
+
+		if($('.dateFilterResult').val() !== '' && showResults) {
+			findSearchMethod();
+		}
 	});
 
 	$('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
 		viewmodel.dateFilter('');
 	});
 
-	$('#fromTime').timepicker({ 'timeFormat': 'HH:mm' });
-	$('#toTime').timepicker({ 'timeFormat': 'HH:mm' });
+	$('#fromTime').timepicker({ 'timeFormat': 'HH:mm', change: timeListener });
+	$('#toTime').prop("disabled", true);
 
 }
 
@@ -501,11 +568,11 @@ function setEventData(result) {
 }
 
 function setResources(resources, fromTime, toTime) {
-	if (resources.length !== 0) {
+	searchResults = [];
 		for (let i = 0; i < resources.length; i++) {
 			let dates = splitDateIntoDateAndTime(resources[i].from, resources[i].to, fromTime, toTime);
 
-			viewmodel.resources.push({
+			searchResults.push({
 				name: resources[i].resource_name,
 				id: resources[i].resource_id,
 				location: resources[i].building_name,
@@ -517,9 +584,12 @@ function setResources(resources, fromTime, toTime) {
 				resource_url: phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiresource.show", id: resources[i].resource_id, building_id: resources[i].building_id}, false),
 				building_url: phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibuilding.show", id: resources[i].building_id}, false),
 				application_url: phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.add", building_id: resources[i].building_id, resource_id: resources[i].resource_id}, false),
-		});
+				activities: resources[i].activities,
+				facilities: resources[i].facilities,
+				town_id: resources[i].part_of_town_id
+			});
 		}
-	}
+	viewmodel.resources(searchResults);
 }
 
 function splitDateIntoDateAndTime(from, to, fromTimeFilter, toTimeFilter) {
@@ -556,15 +626,13 @@ function splitDateIntoDateAndTime(from, to, fromTimeFilter, toTimeFilter) {
 
 function setTownData(towns) {
 	if (towns.length !== 0) {
-		const lowercased = towns.map(res => {
-			let lower = res.name.toLowerCase();
-			res.name = res.name.charAt(0) + lower.slice(1);
-		});
+		towns.sort(compare);
+		for (let i = 0; i < towns.length; i++) {
+			let lower = towns[i].name.toLowerCase();
 
-		for (let i = 0; i < lowercased.length; i++) {
 			viewmodel.towns.push({
-				name: towns[i].name,
-				id: towns[i].id
+				name: towns[i].name.charAt(0) + lower.slice(1),
+				id:  towns[i].id,
 			});
 		}
 	} else {
@@ -577,7 +645,8 @@ function setFacilityData(facilities) {
 		for (let i = 0; i < facilities.length; i++) {
 			viewmodel.facilities.push({
 				name: facilities[i].name,
-				id: facilities[i].id
+				id: facilities[i].id,
+				enabled: true
 			});
 		}
 	} else {
@@ -590,7 +659,8 @@ function setActivityData(activities) {
 		for (let i = 0; i < activities.length; i++) {
 			viewmodel.activities.push({
 				name: activities[i].name,
-				id: activities[i].id
+				id: activities[i].id,
+				enabled: true
 			});
 		}
 	} else {

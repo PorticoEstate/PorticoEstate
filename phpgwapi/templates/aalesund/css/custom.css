@@ -1197,6 +1197,22 @@ select option:focus {
 	position: absolute;
 }
 
+.checkboxContainer:hover input[type='checkbox'][disabled] ~ .checkmark {
+	background-color: #cccccc;
+	cursor: default;
+}
+.checkboxContainer:hover input[type='checkbox'][disabled] ~ .checkboxText {
+	cursor: default;
+}
+
+.checkboxContainer input[type='checkbox'][disabled] ~ .checkmark {
+	background-color: #cccccc;
+}
+
+.checkboxContainer input[type='checkbox'][disabled] ~ .checkboxText {
+	color: #cccccc;
+}
+
 .resultDate {
 	display: inline-block;
 
@@ -1462,7 +1478,7 @@ select option:focus {
 }
 
 .checkboxContainer:hover input[type='checkbox'] ~ .checkmark {
-	background-color: #ccc;
+	background-color: #3a3a4c;
 }
 
 .checkboxContainer input[type='checkbox']:checked ~ .checkmark {
