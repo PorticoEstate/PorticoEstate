@@ -583,13 +583,57 @@ input[type=submit] {
 #search-page-content{
     background: white !important;
 }
+
+.noteBody h1 h2 h3 {
+	font-family: Martel;
+}
+
+.noteBody h1 {
+	font-weight: 900;
+	font-family: Martel;
+	font-size: 22px;
+}
+
+.noteBody h2 {
+	font-weight: 900;
+	font-family: Martel;
+	font-size: 20px;
+}
+
+.noteBody h3 {
+	font-weight: 900;
+	font-family: Martel;
+	font-size: 19px;
+}
+
+.noteBody h4 {
+	font-weight: 900;
+	font-family: Martel;
+	font-size: 18px;
+}
+
+.noteBody h5 {
+	font-weight: 900;
+	font-family: Martel;
+	font-size: 17px;
+}
+
+.noteBody p {
+	font-family: Rubik;
+	font-size: 17px;
+}
+
+.noteBody u {
+	color: #77878a;
+	text-decoration: none;
+}
+
 .noteRectangle, .descriptionRectangle{
   width:90%;
   max-width: 848px;
   border-radius: 12px;
   border: solid 1px #e7ebb2;
   background-color: #fbffc2;
-  font-family: Rubik;
   font-size: 18px;
   font-weight: normal;
   font-stretch: normal;

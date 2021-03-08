@@ -2,24 +2,14 @@
 	<div id="search-page-content">
       <div class="headerSection">
          <div class="noteRectangle">
-            <div class="noteTitle">
-               Korona-situasjonen
-            </div>
             <div class="noteBody">
-               Idrettsanlegg og kulturbygg i Øygarden kommune er delvis stengt framover, som eit tiltak mot spreiing av koronaviruset.  Og kan kun brukes etter tilrådningar fra Folkehelsedirektoratet og Øygarden kommune.
-               <br /><br />
-               Søknadar som vert lagt inn i portalen, vert sakshandsama, men vil bli lengre sakshandsamartid. Følg med her for meir informasjon.
-               <br /><br />
-               Du kan framleis låne/leiga lokale i portalen fram i tid, med forbehold om at bygga vert opna for bruk etter avstengningsperioden.
-            </div>
+				<xsl:value-of disable-output-escaping="yes" select="frontimagetext"/>
+           </div>
          </div>
          <div class="descriptionRectangle">
-            <div class="noteTitle">
-               Tittel om hva tjenesten leverer
-            </div>
             <div class="noteBody">
-               Her finner du informasjon om kommunale bygg, skular, idrettsanlegg, og utstyr som er til utlån/utleige i Øygarden kommune. Ein del private anlegg, forsamlingshus o.l ligg og i portalen, med kontaktinformasjon til eigarar av bygga. Du kan også søke på lag og organisasjoner i kommunen.
-            </div>
+				<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
+			</div>
          </div>
       </div>
 
