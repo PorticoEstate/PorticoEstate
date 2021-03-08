@@ -114,14 +114,28 @@
 
 				if ($_POST['org_from'] <= $new_date['from_'] && $_POST['org_to'] >= $new_date['to_'])
 				{
-					$event['from_'] = $new_date['from_'];
-					$event['to_'] = $new_date['to_'];
+					if ($new_date['from_'] > $new_date['to_'])
+					{
+						$errors['start_time'] = lang('Cannot change start time');
+					}
+					else
+					{
+						$event['from_'] = $new_date['from_'];
+						$event['to_'] = $new_date['to_'];
+					}
 				}
 				else
 				{
 					if ($_POST['org_from'] <= $new_date['from_'])
 					{
-						$event['from_'] = $new_date['from_'];
+						if ($new_date['from_'] > $new_date['to_'])
+						{
+							$errors['start_time'] = lang('Cannot change start time');
+						}
+						else
+						{
+							$event['from_'] = $new_date['from_'];
+						}
 					}
 					else
 					{
@@ -130,33 +144,34 @@
 
 					if ($_POST['org_to'] >= $new_date['to_'])
 					{
-						$event['to_'] = $new_date['to_'];
+						if ($new_date['to_'] < $new_date['from_'])
+						{
+							$errors['end_time'] = lang('Cannot change end time');
+						}
+						else
+						{
+							$event['to_'] = $new_date['to_'];
+						}
+
 					}
 					else
 					{
 						$event['to_'] = $_POST['org_to'];
 					}
 
-					try
+					if (!is_null($event['application_id']) && $event['application_id'] != '' && !$errors['start_time'] && !$errors['end_time'])
 					{
-						if (!is_null($event['application_id']) && $event['application_id'] != '')
-						{
-							$comment = "ID: " . $allocation['id'] . " " . lang("User has made a request to increase time on existing booking") . ' ' . $new_date['from_'] . ' - ' . $new_date['to_'];
+						$comment = "ID: " . $allocation['id'] . " " . lang("User has made a request to increase time on existing booking") . ' ' . $new_date['from_'] . ' - ' . $new_date['to_'];
 
-							$this->application_ui->add_comment_to_application($event['application_id'], $comment , True);
-							phpgwapi_cache::message_set(lang('Request for changed time') . '</br>' . lang('Follow status' ));
-
-						}
-					}
-					catch (Exception $e)
-					{
-						$errors['out_of_range'] = lang("You can't extend the event, for that contact administrator");
+						$this->application_ui->add_comment_to_application($event['application_id'], $comment , True);
+						phpgwapi_cache::message_set(lang('Request for changed time') . '</br>' . lang('Follow status' ));
 					}
 				}
 
 				if ($test['equipment'] != $event['equipment'] )
 				{
-					if (!is_null($event['application_id']) && $event['application_id'] != '') {
+					if (!is_null($event['application_id']) && $event['application_id'] != '')
+					{
 
 						$comment = "ID: " . $event['id'] . " " . lang("User has changed field for equipment") . ' ' . $event['equipment'];
 
@@ -172,7 +187,7 @@
 					$errors['resource_number'] = lang("You can't change resources to the event, for that contact administrator");
 				}
 
-				if (!$errors['event'] and ! $errors['resource_number'] and ! $errors['organization_number'] and ! $errors['invoice_data'] && !$errors['contact_name'] && !$errors['out_of_range'])
+				if (!$errors['event'] and ! $errors['resource_number'] and ! $errors['organization_number'] and ! $errors['invoice_data'] && !$errors['contact_name'] && !$errors['out_of_range'] && !$errors['start_time'] && !$errors['end_time'])
 				{
 
 					if ($event['from_'] > $test['from_'] || $event['to_'] < $test['to_'])

@@ -618,42 +618,49 @@
 
 				if ($allocation['from_'] > $new_from_ || $allocation['to_'] < $new_to_)
 				{
-					$comment = "ID: " . $allocation['id'] . " " . lang("User has made a request to increase time on existing booking") . ' ' . $new_from_ . ' - ' . $new_to_;
-					$message = lang('Request for changed time');
-
-					if ($outseason == 'on')
+					if ($new_from_ > $new_to_)
 					{
-						$comment .= ' ' . lang('for remaining season');
+						phpgwapi_cache::message_set(lang('Cannot change start time'), 'error');
 					}
-					elseif ($recurring == 'on' && $repeat_until != '')
+					else
 					{
-						$comment .= ' ' . lang('for allocations until') . ' ' . $repeat_until;
-					}
+						$comment = "ID: " . $allocation['id'] . " " . lang("User has made a request to increase time on existing booking") . ' ' . $new_from_ . ' - ' . $new_to_;
+						$message = lang('Request for changed time');
 
-					if ($outseason == 'on' || $recurring = 'on')
-					{
-						if ($field_interval == '1')
+						if ($outseason == 'on')
 						{
-							$field_interval = ' ';
+							$comment .= ' ' . lang('for remaining season');
 						}
-						else
+						elseif ($recurring == 'on' && $repeat_until != '')
 						{
-							$field_interval .= '. ';
+							$comment .= ' ' . lang('for allocations until') . ' ' . $repeat_until;
 						}
-						$comment .= ' ' . lang('every (2021)') . ' ' . $field_interval . lang('week (2021)');
-						$message .= '</br>' . lang('Follow status');
+
+						if ($outseason == 'on' || $recurring = 'on')
+						{
+							if ($field_interval == '1')
+							{
+								$field_interval = ' ';
+							}
+							else
+							{
+								$field_interval .= '. ';
+							}
+							$comment .= ' ' . lang('every (2021)') . ' ' . $field_interval . lang('week (2021)');
+							$message .= '</br>' . lang('Follow status');
+						}
+
+						if (!is_null($allocation['application_id']) && $allocation['application_id'] != '')
+						{
+							$this->application_ui->add_comment_to_application($allocation['application_id'], $comment, True);
+						}
+
+						$system_message['title'] = lang("Request to increase time on existing booking") . " " . $allocation['id'];
+						$system_message['message'] = $comment . '<br/>' . '<a href="/index.php?menuaction=booking.uiallocation.show&id=' . $allocation['id'] . '" target="_blank">' . lang('Go to allocation') .'</a>';
+
+						$this->system_message_bo->add($system_message);
+						phpgwapi_cache::message_set($message);
 					}
-
-					if (!is_null($allocation['application_id']) && $allocation['application_id'] != '')
-					{
-						$this->application_ui->add_comment_to_application($allocation['application_id'], $comment, True);
-					}
-
-					$system_message['title'] = lang("Request to increase time on existing booking") . " " . $allocation['id'];
-					$system_message['message'] = $comment . '<br/>' . '<a href="/index.php?menuaction=booking.uiallocation.show&id=' . $allocation['id'] . '" target="_blank">' . lang('Go to allocation') .'</a>';
-
-					$this->system_message_bo->add($system_message);
-					phpgwapi_cache::message_set($message);
 				}
 
 				if ($allocation['from_'] < $new_from_)
