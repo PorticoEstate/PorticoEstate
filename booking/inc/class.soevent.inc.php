@@ -460,8 +460,8 @@
 
 			$sql = "SELECT id FROM bb_completed_reservation WHERE reservation_id = $id AND reservation_type = 'event' AND export_file_id IS NULL";
 			$db->query($sql, __LINE__, __FILE__);
-			$this->db->next_record();
-			$completed_reservation_id = (int)$this->db->f('id');
+			$db->next_record();
+			$completed_reservation_id = (int)$db->f('id');
 			if($completed_reservation_id)
 			{
 				$sql = "DELETE FROM bb_completed_reservation_resource WHERE completed_reservation_id = $completed_reservation_id";
