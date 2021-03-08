@@ -40,7 +40,19 @@
 		{
 			$table_name = $this->table_name;
 
-			$resource_ids = join(', ', array_map(array($this, 'select_id'), $resources));
+			if(!$resources)
+			{
+				return;
+			}
+			else if(isset($resources[0]['id']))
+			{
+				$resource_ids = join(', ', array_map(array($this, 'select_id'), $resources));
+			}
+			else
+			{
+				$resource_ids = join(', ', $resources);
+			}
+
 			foreach ($dates as $checkdate)
 			{
 				$checkdate['from_'];

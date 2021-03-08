@@ -26,7 +26,7 @@
 				AND se.building_id = bu.id 
 				AND ag.active = 1
 				AND date_trunc('day' ,bo.from_) >= to_date($P{DATE_FROM} ,'YYYY-MM-DD')
-				AND date_trunc('day' ,bo.from_) <= to_date($P{DATE_TO}, 'YYYY-MM-DD')
+				AND date_trunc('day' ,bo.to_) <= to_date($P{DATE_TO}, 'YYYY-MM-DD')
 				AND re.id = ANY (string_to_array($P{RESOURCES}, ',')::int4[])
 				AND EXTRACT(DOW FROM bo.from_) = ANY (string_to_array($P{WEEKDAYS}, ',')::int4[])
 				UNION
@@ -38,7 +38,7 @@
 				INNER JOIN bb_resource re ON re.id = er.resource_id
 				INNER JOIN bb_building bu ON bu.id = ev.building_id
 				WHERE date_trunc('day' ,ev.from_) >= to_date($P{DATE_FROM} ,'YYYY-MM-DD')
-				AND date_trunc('day' ,ev.from_) <= to_date($P{DATE_TO}, 'YYYY-MM-DD')
+				AND date_trunc('day' ,ev.to_) <= to_date($P{DATE_TO}, 'YYYY-MM-DD')
 				AND EXTRACT(DOW FROM ev.from_) = ANY (string_to_array($P{WEEKDAYS}, ',')::int4[])
 				AND er.resource_id = ANY (string_to_array($P{RESOURCES}, ',')::int4[])
 				ORDER BY resource_name ASC, agegroup_sort]]>
@@ -69,7 +69,7 @@
 			INNER JOIN bb_season se ON se.id = al.season_id
 			INNER JOIN bb_building bu ON bu.id = se.building_id
 			WHERE date_trunc('day', bo.from_) >= to_date($P{BK_DATE_FROM}, 'YYYY-MM-DD')
-			AND date_trunc('day', bo.from_) <= to_date($P{BK_DATE_TO}, 'YYYY-MM-DD')
+			AND date_trunc('day', bo.to_) <= to_date($P{BK_DATE_TO}, 'YYYY-MM-DD')
 			AND ar.resource_id = ANY (string_to_array($P{BK_RESOURCES}, ',')::int4[])
 			AND EXTRACT(DOW FROM bo.from_) = ANY (string_to_array($P{BK_WEEKDAYS}, ',')::int4[])
 			UNION
@@ -79,7 +79,7 @@
 			inner join bb_resource re on re.id = er.resource_id
 			inner join bb_building bu on bu.id = ev.building_id
 			WHERE date_trunc('day', ev.from_) >= to_date($P{BK_DATE_FROM}, 'YYYY-MM-DD')
-			AND date_trunc('day', ev.from_) <= to_date($P{BK_DATE_TO}, 'YYYY-MM-DD')
+			AND date_trunc('day', ev.to_) <= to_date($P{BK_DATE_TO}, 'YYYY-MM-DD')
 			AND re.id = ANY (string_to_array($P{BK_RESOURCES}, ',')::int4[])
 			AND EXTRACT(DOW FROM ev.from_) = ANY (string_to_array($P{BK_WEEKDAYS}, ',')::int4[])
 			order by building_name]]>

@@ -1488,6 +1488,7 @@
 				foreach ($blocks['results'] as & $block)
 				{
 				  $block['resources'] = array( $block['resource_id']);
+				  $block['type'] = 'block';
 				}
 				$events['results'] = array_merge((array)$events['results'],$blocks['results']);
 			}
@@ -1513,7 +1514,7 @@
                       || ($event_start < $endTime AND $event_end >= $endTime)
 					)
 					{
-						$overlap = true;
+						$overlap = $event['type'] == 'block' ? 2 : 1;
 						break;
 					}
 				}

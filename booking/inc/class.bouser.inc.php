@@ -134,9 +134,85 @@
 
 			if ($config['external_format'] == 'AGRESSO')
 			{
+				$factum_customer = new factum_customer($config);
+				return $factum_customer->get_customer_list($customers);
 				$agresso_cs15 = new agresso_cs15($config);
 				return $agresso_cs15->get_customer_list($customers);
 			}
+			else if ($config['external_format'] == 'FACTUM')
+			{
+				$factum_customer = new factum_customer($config);
+				return $factum_customer->get_customer_list($customers);
+			}
+		}
+	}
+
+	class factum_customer
+	{
+		private $client, $apar_gr_id, $pay_method;
+
+		public function __construct($config)
+		{
+			$this->client = !empty($config['voucher_client']) ? $config['voucher_client'] : 'BY';
+			$this->apar_gr_id = !empty($config['apar_gr_id']) ? $config['apar_gr_id'] : '10';
+			$this->pay_method = !empty($config['pay_method']) ? $config['pay_method'] : 'IP';//'BG';//'IP' 
+		}
+
+		public function get_customer_list( $customers )
+		{
+			$memory = xmlwriter_open_memory();
+			xmlwriter_set_indent($memory, true);
+			xmlwriter_start_document($memory, '1.0', 'ISO-8859-1');
+			xmlwriter_start_element($memory, 'BkPffKunder');
+
+			foreach ($customers as $entry) // Runs through all parties
+			{
+				if(empty($entry['zip_code']))
+				{
+					phpgwapi_cache::message_set("{$entry['name']} mangler PostNr", 'error');
+					continue;
+				}
+
+				$country_code = 'NO';
+				// TODO: Which standard for the country codes does Agresso follow?
+				if ($country_code != 'NO' && $country_code != 'SV' && $country_code != 'IS') // Shouldn't get postal place for Norway, Sweden and Iceland
+				{
+					/**
+					 * Not implemented
+					 */
+					//$this->get_postal_place();
+				}
+
+				xmlwriter_start_element($memory, 'BkPffKunde');
+
+				$identifier = $entry['organization_number'] ? $entry['organization_number'] : $entry['customer_ssn'];
+				$customer_type = $entry['organization_number'] ? 'O' : 'P';
+
+				if($customer_type == 'O')
+				{
+					xmlwriter_write_element($memory, 'Foretaksnummer', $identifier);
+				}
+				else
+				{
+					xmlwriter_write_element($memory, 'Fodselsnummer', $identifier);
+				}
+				xmlwriter_write_element($memory, 'Fagsystemkundeid', $this->client);
+				xmlwriter_write_element($memory, 'Navn', $entry['name']);
+				xmlwriter_write_element($memory, 'AdresseLinje1', $entry['street']);
+				xmlwriter_write_element($memory, 'Poststed', $entry['city']);
+				xmlwriter_write_element($memory, 'TelefonMobil', $entry['phone']);
+				xmlwriter_write_element($memory, 'Epost', $entry['email']);
+				xmlwriter_write_element($memory, 'Adressetype', 'O'); //Offentlig = O,Midlertidig = M, OffentligReg = R, Utenlands = U, UtenlandsMidlertidig = X
+				xmlwriter_write_element($memory, 'Landkode', $country_code);
+				xmlwriter_write_element($memory, 'PostNr', $entry['zip_code']);
+				xmlwriter_write_element($memory, 'Kundekategori', $customer_type);
+				xmlwriter_end_element($memory);
+			}
+
+			xmlwriter_end_element($memory);
+			$xml = xmlwriter_output_memory($memory, true);
+
+			return $xml;
 		}
 	}
 
@@ -149,7 +225,7 @@
 		{
 			$this->client = !empty($config['voucher_client']) ? $config['voucher_client'] : 'BY';
 			$this->apar_gr_id = !empty($config['apar_gr_id']) ? $config['apar_gr_id'] : '10';
-			$this->pay_method = !empty($config['pay_method']) ? $config['pay_method'] : 'IP';//'BG';//'IP' 
+			$this->pay_method = !empty($config['pay_method']) ? $config['pay_method'] : 'IP';//'BG';//'IP'
 		}
 
 

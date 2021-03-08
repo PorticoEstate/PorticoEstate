@@ -166,7 +166,7 @@
 								<!--<pre data-bind="text: ko.toJSON(availlableTimeSlots, null, 2)"></pre>-->
 								<div class="mt-2" data-bind="foreach: availlableTimeSlots">
 									<ul class="list-group list-group-flush">
-										<div data-bind="if: overlap">
+										<div data-bind="if: overlap == 1">
 											<li class="list-group-item">
 												<i class="far fa-clock mr-2 pt-1" style="color: #ff3333;"></i>
 												<span data-bind="html: when"></span>
@@ -175,9 +175,17 @@
 												</span>
 											</li>
 										</div>
+										<div data-bind="if: overlap == 2">
+											<li class="list-group-item">
+												<i class="far fa-clock mr-2 pt-1" style="color: #ffc107;"></i>
+												<span data-bind="html: when"></span>
+												<span class="ml-2" style="font-weight: bold; color: #ffc107;">
+													<xsl:value-of select="php:function('lang', 'reserved')"/>
+												</span>
+											</li>
+										</div>
 
 										<div data-bind="if: overlap == false">
-
 											<li class="list-group-item">
 												<i class="far fa-clock mr-2 pt-1" style="color: #1a8f65;"></i>
 												<a class="bookable-timeslots-link-href" data-bind="" href="">

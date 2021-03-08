@@ -281,6 +281,12 @@
 							</xsl:if>
 							VISMA
 						</option>
+						<option value="FACTUM">
+							<xsl:if test="config_data/external_format='FACTUM'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							FACTUM
+						</option>
 					</select>
 				</div>
 				<div class="pure-control-group">
@@ -357,6 +363,12 @@
 							</xsl:if>
 							VISMA
 						</option>
+						<option value="FACTUM">
+							<xsl:if test="config_data/internal_format='FACTUM'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							FACTUM
+						</option>
 					</select>
 				</div>
 				<div class="pure-control-group">
@@ -407,6 +419,12 @@
 						</option>
 						<option value="ftp">
 							<xsl:if test="config_data/invoice_export_method='ftp'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							ftp
+						</option>
+						<option value="ftps">
+							<xsl:if test="config_data/invoice_export_method='ftps'">
 								<xsl:attribute name="selected">checked</xsl:attribute>
 							</xsl:if>
 							ftp

@@ -4,12 +4,12 @@
 /.settings
 /.project
 /.vscode
+/.vscode/launch.json
 /.nbproject
 /nbproject
 /vendor
 /phpgwapi/test/_output
+.vscode/launch.json
 /.idea/
-/phpgwapi/inc/phpmailer/nbproject/private/
 /phpgwapi/doc/ebe_20201217.backup
 /ebe_20201217.backup
-/php.ini

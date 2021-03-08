@@ -576,6 +576,7 @@ HTML;
 			}
 			else
 			{
+				$cd_array['lang'] = phpgw::get_var('lang', 'string', 'GET');
 				$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
 				exit;
 			}
@@ -599,6 +600,7 @@ HTML;
 			}
 
 			$extra_vars['cd'] = 'yes';
+			$lightbox			 = isset($_REQUEST['lightbox']) && $_REQUEST['lightbox'] ? true : false;
 
 			if ($lightbox)
 			{
@@ -607,6 +609,7 @@ HTML;
 			else
 			{
 				$GLOBALS['phpgw']->hooks->process('login');
+				$after = phpgw::get_var('after', 'bool');
 				if ($after)
 				{
 					$this->redirect_after();

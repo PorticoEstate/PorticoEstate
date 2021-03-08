@@ -627,8 +627,18 @@
 			$sql = "DELETE FROM $table_name WHERE booking_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
 
-			$sql = "DELETE FROM bb_completed_reservation WHERE reservation_id = $id AND reservation_type = 'booking' AND export_file_id IS NULL";
+			$sql = "SELECT id FROM bb_completed_reservation WHERE reservation_id = $id AND reservation_type = 'booking' AND export_file_id IS NULL";
 			$db->query($sql, __LINE__, __FILE__);
+			$db->next_record();
+			$completed_reservation_id = (int)$db->f('id');
+			if($completed_reservation_id)
+			{
+				$sql = "DELETE FROM bb_completed_reservation_resource WHERE completed_reservation_id = $completed_reservation_id";
+				$db->query($sql, __LINE__, __FILE__);
+
+				$sql = "DELETE FROM bb_completed_reservation WHERE id = $completed_reservation_id";
+				$db->query($sql, __LINE__, __FILE__);	
+			}
 
 			$table_name = $this->table_name;
 			$sql = "DELETE FROM $table_name WHERE id = ($id)";
@@ -650,8 +660,18 @@
 			$sql = "DELETE FROM bb_allocation_resource WHERE allocation_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
 
-			$sql = "DELETE FROM bb_completed_reservation WHERE reservation_id = $id AND reservation_type = 'allocation' AND export_file_id IS NULL";
+			$sql = "SELECT id FROM bb_completed_reservation WHERE reservation_id = $id AND reservation_type = 'allocation' AND export_file_id IS NULL";
 			$db->query($sql, __LINE__, __FILE__);
+			$db->next_record();
+			$completed_reservation_id = (int)$db->f('id');
+			if($completed_reservation_id)
+			{
+				$sql = "DELETE FROM bb_completed_reservation_resource WHERE completed_reservation_id = $completed_reservation_id";
+				$db->query($sql, __LINE__, __FILE__);
+
+				$sql = "DELETE FROM bb_completed_reservation WHERE id = $completed_reservation_id";
+				$db->query($sql, __LINE__, __FILE__);	
+			}
 
 			$sql = "DELETE FROM bb_allocation WHERE id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);

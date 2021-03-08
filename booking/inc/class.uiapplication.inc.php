@@ -658,6 +658,17 @@
 			$bo_block = createObject('booking.boblock');
 
 			$session_id = $GLOBALS['phpgw']->session->get_session_id();
+			$collision = $this->bo->so->check_collision(array($resource_id), $from_->format('Y-m-d H:i:s'), $to_->format('Y-m-d H:i:s'), $session_id);
+
+			if ($collision)
+			{
+				$status = 'reserved';
+				return array(
+					'status' => $status,
+					'message'	=> $message
+				);
+			}
+
 			$previous_block = $bo_block->so->read(array(
 				'filters' => array('where' =>  "(bb_block.active = 1"
 					. " AND bb_block.session_id = '{$session_id}'"
@@ -667,25 +678,11 @@
 				'results' => 1));
 
 
-			$collision = false;
 			$status = '';
 			$message = '';
 			if($previous_block['total_records'] > 0)
 			{
 				$status = 'registered';
-				return array(
-					'status' => $status,
-					'message'	=> $message
-				);
-			}
-			else
-			{
-				$collision = $this->bo->so->check_collision(array($resource_id), $from_->format('Y-m-d H:i:s'), $to_->format('Y-m-d H:i:s'));
-			}
-
-			if ($collision)
-			{
-				$status = 'reserved';
 			}
 			else
 			{
@@ -851,6 +848,8 @@
 							lang("Complete application text booking") .
 							'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
 							lang("Complete applications") .
+							'</button><button onclick="window.location.href = phpGWLink(\'bookingfrontend/\', {})" class="ml-2 btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
+							lang("new application") .
 							'</button>'
 						);
 						// Redirect to same URL so as to present a new, empty form
@@ -962,6 +961,8 @@
 							lang("Complete application text booking") .
 							'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
 							lang("Complete applications") .
+							'</button><button onclick="window.location.href = phpGWLink(\'bookingfrontend/\', {})" class="ml-2 btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
+							lang("new application") .
 							'</button>'
 						);
 						// Redirect to same URL so as to present a new, empty form
