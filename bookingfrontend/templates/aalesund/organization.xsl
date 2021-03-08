@@ -182,7 +182,7 @@
 							<div class="dropdown-container">
 								<button type="button" class="btn btn-default dropdown-toggle resources-dropdown" data-toggle="dropdown">
 									<xsl:value-of select="php:function('lang', 'Resources (2021)')"/>
-									<span class="caret"></span>
+									<span data-bind="html: ' ' + selectedResourceIds().length + '/' + bookableResource().length"/>
 								</button>
 
 								<ul class="dropdown-menu px-2" data-bind="foreach: bookableResource">
@@ -200,7 +200,7 @@
 							<div class="dropdown-container">
 								<button type="button" class="btn btn-default dropdown-toggle group-dropdown" data-toggle="dropdown">
 									<xsl:value-of select="php:function('lang', 'groups')"/>
-									<span class="caret"></span>
+									<span data-bind="html: ' ' + selectedGroupIds().length + '/' + bookedByGroup().length"/>
 								</button>
 
 								<ul class="dropdown-menu px-2" data-bind="foreach: bookedByGroup">

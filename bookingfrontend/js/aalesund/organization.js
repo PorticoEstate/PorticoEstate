@@ -155,6 +155,8 @@ function PopulateCalendarEvents() {
 		success: function (result) {
 			viewmodel.bookableResource.removeAll();
 			viewmodel.bookedByGroup.removeAll();
+			viewmodel.selectedGroupIds.removeAll();
+			viewmodel.selectedResourceIds.removeAll();
 
 			console.log(result);
 
