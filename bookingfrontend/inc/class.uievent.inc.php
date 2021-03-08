@@ -141,7 +141,7 @@
 					{
 						if (!is_null($event['application_id']) && $event['application_id'] != '')
 						{
-							$comment = lang("User has made a request to increase time on existing booking") . ' ' . $new_date['from_'] . ' - ' . $new_date['to_'];
+							$comment = "ID: " . $allocation['id'] . " " . lang("User has made a request to increase time on existing booking") . ' ' . $new_date['from_'] . ' - ' . $new_date['to_'];
 
 							$this->application_ui->add_comment_to_application($event['application_id'], $comment , True);
 							phpgwapi_cache::message_set(lang('Request for changed time') . '</br>' . lang('Follow status' ));
@@ -158,7 +158,7 @@
 				{
 					if (!is_null($event['application_id']) && $event['application_id'] != '') {
 
-						$comment = lang("User has changed field for equipment") . ' ' . $event['equipment'];
+						$comment = "ID: " . $event['id'] . " " . lang("User has changed field for equipment") . ' ' . $event['equipment'];
 
 						$this->application_ui->add_comment_to_application($event['application_id'], $comment , false);
 						phpgwapi_cache::message_set(lang('Request for equipment has been sent') . '</br>' . lang('Follow status' ));
