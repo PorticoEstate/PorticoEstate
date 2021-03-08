@@ -746,8 +746,7 @@
 		function resquery_available_resources ($params = array()) {
 			$returnres = $this->resquery($params);
 
-			$returnres['available_resources']   = $this->available_resources($returnres, $params);
-			usort($returnres['available_resources'], function ($a,$b) { return strcmp(strtolower($a['resource_name']),strtolower($b['resource_name'])); });
+			$returnres['available_resources']   = $this->available_resources($returnres['buildings'], $params);
 
 			$all_activities = array();
 			$all_facilities = array();
@@ -770,6 +769,10 @@
 				}
 			}
 
+			usort($returnres['available_resources'], function ($a,$b) { return strcmp(strtolower($a['resource_name']),strtolower($b['resource_name'])); });
+			usort($all_activities, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
+			usort($all_facilities, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
+
 			$returnres['activities'] = $all_activities;
 			$returnres['facilities'] = $all_facilities;
 			return $returnres;
@@ -779,6 +782,8 @@
 			$from_date = DateTime::createFromFormat('d.m.Y H:i:s', $params['from_date']);
 			$from_date_test = $from_date->format('Y-m-d H:i:s');
 			$to_date = DateTime::createFromFormat('d.m.Y H:i:s', $params['to_date']);
+			$to_date_test = $to_date->format('Y-m-d H:i:s');
+
 
 			$is_time_set = false;
 			if($params['from_time'] != "" && $params['to_time'] != "")
@@ -861,72 +866,93 @@
 						$booked_times_len = count($booked_times);
 						$last_end_date = $booked_times[0]['to_'];
 
-						for ($i = 0; $i < $booked_times_len; $i++) {
-
+						for ($i = 0; $i < $booked_times_len; $i++)
+						{
 							$from = $booked_times[$i]['from_'];
 							$to = $booked_times[$i]['to_'];
 
-
-							if ($from >= $from_date_test) {
-								if ($i == 0) {
+							if ($from >= $from_date_test)
+							{
+								if ($i == 0)
+								{
 									$available_resource['from'] = $from_date;
 									$available_resource['to'] = DateTime::createFromFormat('Y-m-d H:i:s', $booked_times[$i]['from_']);
 
-									if ($is_time_set) {
+									if ($is_time_set)
+									{
 										$available_resource_time = $available_resource['from']->format('H:i');
 										$available_resource_to = $available_resource['to']->format('H:i');
 
-										if ($available_resource_time <= $from_time && $available_resource_to >= $to_time) {
+										if ($available_resource_time <= $from_time && $available_resource_to >= $to_time)
+										{
 											$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
 											$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
 											array_push($available_resources, $available_resource);
 										}
-									} else {
+									}
+									else
+									{
 										$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
 										$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
 										array_push($available_resources, $available_resource);
 									}
-								} else if ($from > $last_end_date) {
+								}
+								else if ($from > $last_end_date)
+								{
 									$available_resource['from'] = DateTime::createFromFormat('Y-m-d H:i:s', $last_end_date);
 									$available_resource['to'] = DateTime::createFromFormat('Y-m-d H:i:s', $from);
 
-									if ($is_time_set) {
+									if ($is_time_set)
+									{
 										$available_resource_time = $available_resource['from']->format('H:i');
 										$available_resource_to = $available_resource['to']->format('H:i');
 
-										if ($available_resource_time <= $from_time && $available_resource_to >= $to_time) {
+										if ($available_resource_time <= $from_time && $available_resource_to >= $to_time)
+										{
 											$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
 											$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
 											array_push($available_resources, $available_resource);
 										}
-									} else {
+									}
+									else
+									{
 										$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
 										$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
 										array_push($available_resources, $available_resource);
 									}
 
 									$last_end_date = $to;
-								} else if ($from <= $last_end_date && $to >= $last_end_date) {
+								}
+								else if ($from <= $last_end_date && $to >= $last_end_date)
+								{
 									$last_end_date = $to;
 								}
 
-								if ($i + 1 == $booked_times_len) {
-									$available_resource['from'] = DateTime::createFromFormat('Y-m-d H:i:s', $last_end_date);
-									$available_resource['to'] = $to_date;
+								if ($i + 1 == $booked_times_len)
+								{
+									if ($last_end_date < $to_date_test)
+									{
+										$available_resource['from'] = DateTime::createFromFormat('Y-m-d H:i:s', $last_end_date);
+										$available_resource['to'] = $to_date;
 
-									if ($is_time_set) {
-										$available_resource_time = $available_resource['from']->format('H:i');
-										$available_resource_to = $available_resource['to']->format('H:i');
+										if ($is_time_set)
+										{
+											$available_resource_time = $available_resource['from']->format('H:i');
+											$available_resource_to = $available_resource['to']->format('H:i');
 
-										if ($available_resource_time <= $from_time && $available_resource_to >= $to_time) {
+											if ($available_resource_time <= $from_time && $available_resource_to >= $to_time)
+											{
+												$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
+												$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
+												array_push($available_resources, $available_resource);
+											}
+										}
+										else
+										{
 											$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
 											$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
 											array_push($available_resources, $available_resource);
 										}
-									} else {
-										$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
-										$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
-										array_push($available_resources, $available_resource);
 									}
 								}
 							}

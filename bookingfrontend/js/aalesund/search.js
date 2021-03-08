@@ -1,7 +1,7 @@
 var selectedAutocompleteValue = false;
 var selectedTown = false;
 var showResults = false;
-var updatingFilter = false;
+var autoUpdate = true;
 var viewmodel;
 var months = ["Januar", "Februar", "Mars", "April", "Mai", "Juni", "July", "August", "September", "Oktober", "November", "Desember"];
 var urlParams = [];
@@ -22,7 +22,10 @@ function ViewModel()
 	self.goToBuilding = function (event) { window.open(event.building_url(), '_blank'); };
 	self.goToOrganization = function (event) { if (event.org_id() !== '') {window.open(event.org_url(), '_blank');} }
 	self.goToResource = function (event) { window.open(event.resource_url, '_blank'); }
-	self.goToApplication = function (event) {window.open(event.application_url + `&start=${event.fromDateParam}&end=${event.toDateParam}`, '_blank');}
+	self.goToApplication = function (event) {
+		console.log(event);
+		window.open(
+		event.application_url + `&start=${event.fromDateParam}&end=${event.toDateParam}`, '_blank');}
 	self.goToEvents = function (event) { window.location = baseURL + '?menuaction=bookingfrontend.uieventsearch.show'; }
 
 	self.toggleTown = function (event) {
@@ -120,7 +123,10 @@ function ViewModel()
 			newSelectedFacilities.push(selectedFacility.id);
 		});
 		self.selectedFacilities(newSelectedFacilities);
-		updateResults();
+
+		if (autoUpdate) {
+			updateResults();
+		}
 	});
 
 	self.selectedActivityIds.subscribe(function(newValue) {
@@ -133,7 +139,10 @@ function ViewModel()
 			newSelectedActivities.push(selectedActivity.id);
 		});
 		self.selectedActivities(newSelectedActivities);
-		updateResults();
+
+		if (autoUpdate) {
+			updateResults();
+		}
 	});
 
 	self.selectedGearIds.subscribe(function(newValue) {
@@ -178,18 +187,28 @@ function updateResults() {
 	matchingFacilities = Array.from(matchingFacilities);
 	matchingActivities = Array.from(matchingActivities);
 
+	let keepFilterVals = [];
 	ko.utils.arrayForEach(viewmodel.facilities(), function(facility) {
 		if (matchingFacilities.includes(facility.id)) {
 			facility.enabled = true;
 		} else {
+			if (viewmodel.selectedFacilityIds().includes(facility.id)) {
+				console.log("checked but should be unchecked");
+				keepFilterVals.push(facility.id);
+			}
 			facility.enabled = false;
 		}
 	});
 
+	keepFilterVals = [];
 	ko.utils.arrayForEach(viewmodel.activities(), function(activity) {
 		if (matchingActivities.includes(activity.id)) {
 			activity.enabled = true;
 		} else {
+			if (viewmodel.selectedActivityIds().includes(activity.id)) {
+				console.log("checked but should be unchecked");
+				keepFilterVals.push(activity.id);
+			}
 			activity.enabled = false;
 		}
 	});
@@ -201,6 +220,32 @@ function updateResults() {
 	viewmodel.toggleActivity(viewmodel);
 }
 
+function validateFilters() {
+	if (viewmodel.facilities().length === 0) {
+		viewmodel.selectedFacilityIds.removeAll();
+	} else {
+		let keepFilterVals = [];
+		ko.utils.arrayForEach(viewmodel.selectedFacilityIds(), function(facilityId) {
+			if (viewmodel.facilities().filter(function(e) {return e.id === facilityId; }).length !== 0) {
+				keepFilterVals.push(facilityId);
+			}
+		});
+
+		viewmodel.selectedFacilityIds(keepFilterVals);
+	}
+
+	if (viewmodel.activities().length === 0) {
+		viewmodel.selectedActivityIds.removeAll();
+	} else {
+	let keepFilterVals = [];
+	ko.utils.arrayForEach(viewmodel.selectedActivityIds(), function(activityId) {
+		if (viewmodel.activities().filter(function(e) {return e.id === activityId; }).length !== 0) {
+			keepFilterVals.push(activityId);
+		}
+	});
+	viewmodel.selectedActivityIds(keepFilterVals);
+	}
+}
 
 $(document).ready(function () {
 	$('.overlay').show();
@@ -273,11 +318,17 @@ function doSearch(url, params) {
 			viewmodel.activities.removeAll();
 			viewmodel.gear.removeAll();
 			viewmodel.capacities.removeAll();
-			resetFilters();
 
-			setResources(response.available_resources, fromTime, toTime);
+			setResources(response.available_resources, time[0], time[1]);
 			setFacilityData(response.facilities);
 			setActivityData(response.activities);
+
+			if (viewmodel.selectedFacilityIds().length > 0 || viewmodel.selectedActivityIds().length > 0) {
+				autoUpdate = false;
+				validateFilters();
+				updateResults();
+				autoUpdate = true;
+			}
 
 			setTimeout(function () {
 				$('html, body').animate({
@@ -676,20 +727,4 @@ function compare( a, b ) {
 		return 1;
 	}
 	return 0;
-}
-
-function GetTypeName(type)
-{
-	if (type.toLowerCase() == "building")
-	{
-		return "anlegg";
-	}
-	else if (type.toLowerCase() == "resource")
-	{
-		return "lokale";
-	}
-	else if (type.toLowerCase() == "organization")
-	{
-		return "org";
-	}
 }
