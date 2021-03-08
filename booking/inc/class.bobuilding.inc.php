@@ -3,7 +3,8 @@
 	phpgw::import_class('booking.sobuilding');
 	class booking_bobuilding extends booking_bocommon_authorized
 	{
-		protected $so;
+
+		public $so;
 		function __construct()
 		{
 			parent::__construct();
