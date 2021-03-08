@@ -50,6 +50,7 @@
 		$var = array
 		(
 			'cart_complete_application'	 => lang('Complete applications'),
+			'cart_add_application'		 => lang('new application'),
 			'cart_confirm_delete'		 => lang('Do you want to delete application?'),
 			'cart_header'				 => lang('Application basket'),
 			'footer_about'				 => lang('About the service'),

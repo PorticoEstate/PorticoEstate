@@ -14,6 +14,7 @@
 			'show' => true,
 			'get_activity_data' => true,
 			'get_partials' => true,
+			'set_block'		=> true
 		);
 
 		function get_activity_data()

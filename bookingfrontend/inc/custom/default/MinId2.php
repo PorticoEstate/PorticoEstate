@@ -142,10 +142,11 @@
 
 					$results[] = array
 					(
-						'orgnr' => $org['orgnr']
+						'orgnr' => $org['organizationNumber'],
+						'customer_ssn'	 => null
 					);
 
-					$orgs_validate[] = $org['orgnr'];
+					$orgs_validate[] = $org['organizationNumber'];
 				}
 			}
 
@@ -161,7 +162,6 @@
 				. " FROM bb_organization"
 				. " WHERE (customer_ssn = '{$fodselsnr}' AND customer_identifier_type = 'ssn')"
 				. " OR organization_number IN ('". implode("','", $orgs_validate) ."') ) as t", __LINE__, __FILE__);
-
 
 			while($this->db->next_record())
 			{

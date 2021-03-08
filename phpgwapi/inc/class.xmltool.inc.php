@@ -33,6 +33,12 @@
 	*/
 	class xmltool
 	{
+		/**
+		 * @var string
+		 * @access private
+		 */
+		var $_encoding = 'UTF-8';
+
 		/* for root nodes */
 		var $xmlversion = '1.0';
 		var $doctype = array();
@@ -65,6 +71,24 @@
 					exit;
 				}
 			}
+		}
+
+		/**
+		 * Supported encodings are "ISO-8859-1", which is also the default
+		 * if no encoding is specified, "UTF-8" and "US-ASCII". Can take any encoding
+		 * xml_parser_create(string encoding) can.
+		 *
+		 * @param  string  $enc
+		 */
+		function set_encoding( $enc )
+		{
+			$enc = strtoupper($enc);
+			if ($enc != 'ISO-8859-1' && $enc != 'UTF-8' && $enc != 'US-ASCII')
+			{
+				echo 'Unsupported encoding specified. Using default/current.<br>';
+				exit;
+			}
+			$this->_encoding = $enc;
 		}
 
 		public function set_version($version = '1.0')
@@ -466,7 +490,7 @@
 			$type_error = false;
 			if ($this->node_type == 'root')
 			{
-				$result = "<?xml version=\"{$this->xmlversion}\" encoding=\"UTF-8\"?>\n";
+				$result = "<?xml version=\"{$this->xmlversion}\" encoding=\"{$this->_encoding}\"?>\n";
 
 				if ( count($this->doctype) == 1 )
 				{
@@ -501,7 +525,7 @@
 				{
 					foreach ( $this->attributes as $key => $val )
 					{
-						$val = htmlspecialchars($val, ENT_QUOTES, 'UTF-8');
+						$val = htmlspecialchars($val, ENT_QUOTES, $this->_encoding);
 						$result .= " {$key}=\"{$val}\"";
 					}
 				}
@@ -528,7 +552,7 @@
 							$this->data = html_entity_decode($this->data);
 							if ( strlen($this->data) > 30 && !empty($this->indentstring) )
 							{
-								$this->data = htmlspecialchars($this->data, ENT_QUOTES, 'UTF-8');
+								$this->data = htmlspecialchars($this->data, ENT_QUOTES, $this->_encoding);
 								$result .= "{$this->data}";
 								//XXX Caeies : OUCH Is see no way to add data INTO the note for indenting ... WTF ?
 								//XXX Yes this kill me because I got more than 30 chars in URL for images ... I let you test what a long_url_to_img%0A do in that case ...
@@ -537,7 +561,7 @@
 							}
 							else
 							{
-								$result .= htmlspecialchars($this->data, ENT_QUOTES, 'UTF-8');
+								$result .= htmlspecialchars($this->data, ENT_QUOTES, $this->_encoding);
 								$endtag_indent = '';
 							}
 							break;
