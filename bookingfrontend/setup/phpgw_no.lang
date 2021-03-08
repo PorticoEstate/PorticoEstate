@@ -509,7 +509,7 @@ Town part	bookingfrontend	no	Bydel
 No available options	bookingfrontend	no	Ingen tilgjengelige valg
 Facilities	bookingfrontend	no	Fasiliteter
 Apply filter	bookingfrontend	no	Aktiver filter
-Reset filter	bookingfrontend	no	Nullstill filter
+Reset filter	bookingfrontend	no	Nullstill Søk
 To application site	bookingfrontend	no	Til søknadsside
 locations	bookingfrontend	no	Lokaler
 User has made a request to increase time on existing booking	bookingfrontend	no	Ønsker å øke lengden på arrangement. Ny tid:
@@ -543,9 +543,4 @@ allocation show	bookingfrontend	no	Tildeling
 booking show	bookingfrontend	no	Interntildeling
 event show	bookingfrontend	no	Arrangement
 Associated bookings	bookingfrontend	no	Tilhørende tildelinger/arrangementer
-
-
-
-
-
-
+Building or facility name	bookingfrontend	no	Bygning/anleggsnavn

@@ -845,12 +845,13 @@ capacity	booking	nn	Kapasitet
 Could not copy application	booking	nn	Kunne ikke kopiere søknad
 Copy application	booking	nn	Kopier søknad
 Show my events	booking	nn	Se mine arrangement
-Search for organizations	booking	nn	Søk etter organisasjoner
+Search for organizations	booking	nn	Søk etter arrangør
 From date	booking	nn	Fra dato
 To date	booking	nn	Til dato
 Building name (2021)	booking	nn	Bygningsnavn
 Building type	booking	nn	Bygningstype
 Search for events	booking	nn	Finn arrangement
+Building or facility name	booking nn	Bygning/anleggsnavn
 
 
 

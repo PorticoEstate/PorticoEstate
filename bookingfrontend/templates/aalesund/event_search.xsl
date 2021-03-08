@@ -45,7 +45,7 @@
 					<div class="col-4">
 						<input onclick="buildingNameDropDown()" class="form-control dropbtn" id="field_building_name">
 							<xsl:attribute name="placeholder">
-								<xsl:value-of select="php:function('lang', 'Building name')"/>
+								<xsl:value-of select="php:function('lang', 'Building or facility name')"/>
 							</xsl:attribute>
 						</input>
 						<div id="buildingNameDropDown" class="dropdown-content">

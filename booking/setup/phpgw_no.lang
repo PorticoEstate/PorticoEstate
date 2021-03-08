@@ -844,10 +844,11 @@ capacity	booking	no	Kapasitet
 Could not copy application	booking	no	Kunne ikke kopiere søknad
 Copy application	booking	no	Kopier søknad
 Show my events	booking	no	Se mine arrangement
-Search for organizations	booking	no	Søk etter organisasjoner
+Search for organizations	booking	no	Søk etter arrangør
 From date	booking	no	Fra dato
 To date	booking	no	Til dato
 Building name (2021)	booking	no	Bygningsnavn
 Building type	booking	no	Bygningstype
 Search for events	booking	no	Finn arrangement
+Building or facility name	booking no	Bygning/anleggsnavn
 
