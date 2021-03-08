@@ -241,7 +241,7 @@
 
 		public function get_facility_types($query="")
 		{
-			$query_SQL = " where lower(name) like '$query%'";
+			$query_SQL = " where lower(name) like '%$query%'";
 			if (empty($query)) {
 				$query_SQL = '';
 			}
