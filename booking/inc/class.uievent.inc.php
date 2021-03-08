@@ -1092,8 +1092,8 @@
 			$event['from_'] = pretty_timestamp($event['from_']);
 			$event['to_'] = pretty_timestamp($event['to_']);
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime');
-			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime', phpgwapi_datetime::date_to_timestamp($event['from_']));
+			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'datetime', phpgwapi_datetime::date_to_timestamp($event['to_']));
 			phpgwapi_jquery::load_widget('datepicker');
 
 

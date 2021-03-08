@@ -1214,17 +1214,11 @@
 						var select_name = select.prop("name");
 						var select_value = select.val();
 						aoData[select_name] = select_value;
-
-						if(select_value && select_value !=0 )
-						{
-//							active_filters_html.push(i);
-						}
 					}
-//					console.log(oControls);
+
 					oControls.each(function()
 					{
 						var test = $(this).val();
-//						console.log(test);
 //						console.log(test.constructor);
 						if ( $(this).attr('name') && test != null && test.constructor !== Array)
 						{
@@ -1239,12 +1233,13 @@
 						{
 							value = $(this).val();
 							aoData[ $(this).attr('name') ] = value;
+
+							if(value.length > 0 )
+							{
+								active_filters_html.push($(this).attr('title'));
+							}
 						}
 
-//						if(value && value !=0 )
-//						{
-//							active_filters_html.push($(this).attr('name'));
-//						}
 					});
 
 					if(active_filters_html.length > 0 )
@@ -1571,11 +1566,18 @@
 		reset_filter = function()
 		{
 			var api = oTable.api();
-
 			for (var i in filter_selects)
 			{
 				select = $("#" + filter_selects[i]);
 				select.prop('selectedIndex',0);
+				try
+				{
+					$("#" + filter_selects[i]).multiselect('deselectAll', false);
+			//		$("#" + filter_selects[i]).multiselect({ buttonContainer: '' });
+					$("#" + filter_selects[i]).multiselect('refresh');
+				}
+				catch(e)
+				{}
 			}
 
 			var oControls = $('.dtable_custom_controls:first').find(':input[name]');
