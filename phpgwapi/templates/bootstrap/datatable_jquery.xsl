@@ -1233,7 +1233,6 @@
 							if(value && value !=0 )
 							{
 								active_filters_html.push($(this).attr('title'));
-								console.log($(this).attr('title'));
 							}
 						}
 						if ( $(this).attr('name') && test != null && test.constructor === Array)
