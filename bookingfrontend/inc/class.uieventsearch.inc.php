@@ -114,7 +114,7 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		$org_info = array();
 		if (isset($orgID) && $orgID != '')
 		{
-			$org_info = $this->so_organization->get_organization_number($orgID);
+			$org_info = $this->so_organization->read_single($orgID);
 		}
 
 		$events = $this->bosearch->soevent->get_events_from_date($fromDate, $toDate, $org_info, $buildingId, $facilityTypeID, $result_string, $start, $end);

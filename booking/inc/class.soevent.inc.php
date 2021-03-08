@@ -590,6 +590,7 @@
 			$building_id_sql = " AND bbe.building_id = '$building_id' ";
 		}
 		if (!empty($org_info)) {
+			$org_number_sql = "";
 			if ($org_info['organization_number'] !== '')
 			{
 				$org_pre_sql = " AND ";
@@ -597,10 +598,10 @@
 				$org_info_sql = $org_pre_sql . $org_number_sql;
 			}
 
-			if ($org_info['organization_name'] !== '')
+			if ($org_info['name'] !== "")
 			{
 				$org_pre_sql = " AND (";
-				$org_name_sql = "OR bbe.organizer='" . $org_info['organization_name'] ."') ";
+				$org_name_sql = ($org_number_sql == '' ? " bbe.organizer='" .$org_info['name'] ."')" : " OR bbe.organizer='" . $org_info['name'] ."') ");
 				$org_info_sql = $org_pre_sql . $org_number_sql . $org_name_sql;
 			}
 		}
