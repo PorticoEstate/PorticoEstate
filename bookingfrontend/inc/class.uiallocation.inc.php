@@ -618,7 +618,7 @@
 
 				if ($allocation['from_'] > $new_from_ || $allocation['to_'] < $new_to_)
 				{
-					$comment = lang("User has made a request to increase time on existing booking") . ' ' . $new_from_ . ' - ' . $new_to_;
+					$comment = "ID: " . $allocation['id'] . " " . lang("User has made a request to increase time on existing booking") . ' ' . $new_from_ . ' - ' . $new_to_;
 					$message = lang('Request for changed time');
 
 					if ($outseason == 'on')
@@ -662,9 +662,16 @@
 
 					if (!$any_bookings)
 					{
-						$allocation['from_'] = $new_from_;
-						$this->allocation_so->update($allocation);
-						phpgwapi_cache::message_set(lang('Successfully changed from time'));
+						if ($new_from_ < $new_to_)
+						{
+							$allocation['from_'] = $new_from_;
+							$this->allocation_so->update($allocation);
+							phpgwapi_cache::message_set(lang('Successfully changed start time') . ' ' . $allocation['from_']);
+						}
+						else
+						{
+							phpgwapi_cache::message_set(lang('Cannot change start time'), 'error');
+						}
 					}
 					else
 					{
@@ -678,9 +685,17 @@
 
 					if (!$any_bookings)
 					{
-						$allocation['to_'] = $new_to_;
-						$this->allocation_so->update($allocation);
-						phpgwapi_cache::message_set(lang('Successfully changed end time') . ' ' . $allocation['to_']);
+						if ($new_to_ > $new_from_)
+						{
+							$allocation['to_'] = $new_to_;
+							$this->allocation_so->update($allocation);
+							phpgwapi_cache::message_set(lang('Successfully changed end time') . ' ' . $allocation['to_']);
+						}
+						else
+						{
+							phpgwapi_cache::message_set(lang('Cannot change end time'), 'error');
+						}
+
 
 					}
 					else
@@ -691,7 +706,7 @@
 
 				if ((!empty($application) && $application['equipment'] != $_POST['equipment']) || (empty($application) && $_POST['equipment'] != ''))
 				{
-					$comment = lang("User has changed field for equipment") . ' ' . $application['equipment'];
+					$comment = lang("User has changed field for equipment") . ' ' . $_POST['equipment'];
 					$message = lang('Request for equipment has been sent');
 
 
