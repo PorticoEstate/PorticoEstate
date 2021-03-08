@@ -1247,10 +1247,19 @@
 //						}
 					});
 
-					if(active_filters_html.length > 0)
+					if(active_filters_html.length > 0 )
 					{
 						$('#active_filters').html("Aktive filter: " + active_filters_html.join(', '));
+					}
+					var search_value = $('.dataTables_filter input[aria-controls="datatable-container"]').val();
+
+					if(active_filters_html.length > 0 || search_value)
+					{
 						$('#reset_filter').show();
+					}
+					else
+					{
+						$('#reset_filter').hide();
 					}
 
 				 },

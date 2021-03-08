@@ -95,6 +95,12 @@
 		}
 	</style>
 	<div id="active_filters"></div>
+	<div id="reset_filter" style="display: none;">
+		<input id="reset_filter_btn" type="checkbox" onclick="reset_filter();"/>
+		<label for="reset_filter_btn">
+			<xsl:value-of select="php:function('lang', 'reset filter')"/>
+		</label>
+	</div>
 	<xsl:if test="item">
 		<input class="toggle-box" id="header1" type="checkbox" />
 		<label for="header1">
@@ -1060,6 +1066,8 @@
 				};
 			}
 
+			init_table = function()
+			{
 			oTable = $('#datatable-container').dataTable({
 				paginate:		disablePagination ? false : true,
 				processing:		true,
@@ -1218,7 +1226,7 @@
 
 						if(select_value && select_value !=0 )
 						{
-							active_filters_html.push(i);
+//							active_filters_html.push(i);
 						}
 					}
 //					console.log(oControls);
@@ -1231,6 +1239,10 @@
 						{
 							value = $(this).val().replace('"', '"');
 							aoData[ $(this).attr('name') ] = value;
+							if(value && value !=0 )
+							{
+								active_filters_html.push($(this).attr('title'));
+							}
 						}
 						if ( $(this).attr('name') && test != null && test.constructor === Array)
 						{
@@ -1244,11 +1256,21 @@
 //						}
 					});
 
-					if(active_filters_html.length > 0)
+					if(active_filters_html.length > 0 )
 					{
 						$('#active_filters').html("Aktive filter: " + active_filters_html.join(', '));
 					}
+					var search_value = $('.dataTables_filter input[aria-controls="datatable-container"]').val();
 
+					if(active_filters_html.length > 0 || search_value)
+					{
+						$('#reset_filter').show();
+						$('#reset_filter_btn').prop('checked', false);
+					}
+					else
+					{
+						$('#reset_filter').hide();
+					}
 				 },
 				fnCreatedRow  : function( nRow, aData, iDataIndex ){
  				},
@@ -1328,6 +1350,9 @@
 				"order": order_def,
 				buttons: JqueryPortico.buttons
 			});
+			};
+
+			init_table();
 
 			$('#datatable-container tbody').on( 'click', 'tr', function () {
 					$(this).toggleClass('selected');
@@ -1551,6 +1576,34 @@
 				return cnt;
 			}
 		});
+
+		reset_filter = function()
+		{
+			var api = oTable.api();
+
+			for (var i in filter_selects)
+			{
+				select = $("#" + filter_selects[i]);
+				select.prop('selectedIndex',0);
+			}
+
+			var oControls = $('.dtable_custom_controls:first').find(':input[name]');
+
+			oControls.each(function()
+			{
+				var test = $(this).val();
+				if ( $(this).attr('name') && test != null && test.constructor !== Array)
+				{
+					value = $(this).val('');
+				}
+			});
+
+			api.state.clear();
+			api.destroy();
+			init_table();
+			$('#reset_filter').hide();
+			$('#active_filters').html("");
+		}
 
 		function searchData(query)
 		{
