@@ -201,7 +201,14 @@
 				if ($association['active'] === 1)
 				{
 					if ($association['type'] === 'allocation') {
-						$association['edit_link'] = self::link(array('menuaction' => "{$this->module}.uiallocation.edit", 'allocation_id' => $association['id']));
+						if ($association['from_'] > Date('Y-m-d H:i:s'))
+						{
+							$association['edit_link'] = self::link(array('menuaction' => "{$this->module}.uiallocation.edit", 'allocation_id' => $association['id']));
+						}
+						else
+						{
+							$association['edit_link'] = '#';
+						}
 						$association['edit_text'] = $lang_edit;
 						if ($config['user_can_delete_allocations'] == 'yes') {
 							$association['cancel_link'] = self::link(array('menuaction' => "{$this->module}.uiallocation.cancel", 'allocation_id' => $association['id']));
@@ -213,10 +220,18 @@
 					}
 					if ($association['type'] === 'event')
 					{
-						$association['edit_link'] = self::link(array('menuaction' => "{$this->module}.uievent.edit",
-							'id' => $association['id'],
-							'resource_ids' => $application['resources']));
-						$association['edit_text'] = $lang_edit;
+						if ($association['from_'] > Date('Y-m-d H:i:s'))
+						{
+							$association['edit_link'] = self::link(array('menuaction' => "{$this->module}.uievent.edit",
+								'id' => $association['id'],
+								'resource_ids' => $application['resources']));
+							$association['edit_text'] = $lang_edit;
+						}
+						else
+						{
+							$association['edit_link'] = '#';
+						}
+
 
 						if ($config['user_can_delete_events'] == 'yes')
 						{
@@ -233,10 +248,18 @@
 					}
 					if ($association['type'] === 'booking')
 					{
-						$association['edit_link'] = self::link(array('menuaction' => "{$this->module}.uibooking.edit",
-							'id' => $association['id'],
-							'resource_ids' => $application['resources']));
-						$association['edit_text'] = $lang_edit;
+						if ($association['from_'] > Date('Y-m-d H:i:s'))
+						{
+							$association['edit_link'] = self::link(array('menuaction' => "{$this->module}.uibooking.edit",
+								'id' => $association['id'],
+								'resource_ids' => $application['resources']));
+							$association['edit_text'] = $lang_edit;
+
+						}
+						else
+						{
+							$association['edit_link'] = '#';
+						}
 
 						if ($config['user_can_delete_bookings'] == 'yes')
 						{
