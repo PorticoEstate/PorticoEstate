@@ -1328,14 +1328,12 @@
 					$booking['edit_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.edit',
 						'id' => $booking['id'],
 						'resource_ids' => $booking['resource_ids']));
-				}
-				else{
-					$booking['edit_link'] = '#';
-				}
 
-				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.cancel',
+					$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.cancel',
 						'id' => $booking['id'],
 						'resource_ids' => $booking['resource_ids']));
+				}
+
 
 				if ($booking['application_id'] != null)
 				{

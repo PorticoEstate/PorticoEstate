@@ -499,14 +499,11 @@
 					$event['edit_link'] = self::link(array('menuaction' => 'bookingfrontend.uievent.edit',
 						'id' => $event['id'],
 						'resource_ids' => $event['resource_ids']));
-				}
-				else
-				{
-					$event['edit_link'] = '#';
-				}
-				$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uievent.cancel',
+
+					$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uievent.cancel',
 						'id' => $event['id'],
 						'resource_ids' => $event['resource_ids']));
+				}
 
 				if ($event['application_id'] != null)
 				{
