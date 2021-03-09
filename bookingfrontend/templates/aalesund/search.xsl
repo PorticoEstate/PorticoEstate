@@ -29,7 +29,7 @@
 			  <div class="input-group bk">
 				  <input id="mainSearchInput" class="mainSearchInput" aria-label="Large">
 					  <xsl:attribute name="placeholder">
-						  <xsl:value-of select="php:function('lang', 'Search available resources')"/>
+						  <xsl:value-of disable-output-escaping="yes" select="frontpagetitle"/>
 					  </xsl:attribute>
 				  </input>
 			  </div>
@@ -38,7 +38,7 @@
 					  <select id="locationFilter" class="form-control locationFilter" aria-label="Large" data-bind="options: towns,
                        optionsText: 'name',
                        value: selectedTown,
-                       optionsCaption: 'Velg bydel'"/>
+                       optionsCaption: 'Område/bydel'"/>
 				  </div>
 				  <div  id="dateWrapper">
 					  <input id="dateFilter" data-bind="value: dateFilter" class="form-control dateFilter" name="datefilter" aria-label="Large" autocomplete="off" value="">
