@@ -1323,9 +1323,16 @@
 			$bouser = CreateObject('bookingfrontend.bouser');
 			if ($bouser->is_group_admin($booking['group_id']))
 			{
-				$booking['edit_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.edit',
+				if ($booking['from_'] > Date('Y-m-d H:i:s'))
+				{
+					$booking['edit_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.edit',
 						'id' => $booking['id'],
 						'resource_ids' => $booking['resource_ids']));
+				}
+				else{
+					$booking['edit_link'] = '#';
+				}
+
 				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.cancel',
 						'id' => $booking['id'],
 						'resource_ids' => $booking['resource_ids']));
