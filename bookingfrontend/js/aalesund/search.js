@@ -292,7 +292,7 @@ function doSearch(url, params) {
 	let data = {
 		part_of_town_id: viewmodel.selectedTowns,
 		from_date: dates[0] + ' 00:00:00',
-		to_date: dates[1] + ' 23:59:59',
+		to_date: dates[1] + ' 23:59:00',
 		from_time: time[0],
 		to_time: time[1],
 	};
@@ -497,9 +497,9 @@ function setSearchListener() {
 		if (e.key === "Enter") {
 			let inputValue = $('#mainSearchInput').val();
 
-			if (inputValue !== '') {
-				findSearchMethod();
-			} else {
+			$('#autocompleter-1').attr('class', 'autocompleter autocompleter-closed');
+
+			if (inputValue === '') {
 				viewmodel.showSearchText(false);
 				viewmodel.showEvents(true);
 				$("#searchBtn").show();

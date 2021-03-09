@@ -762,7 +762,7 @@ YUI({lang: 'nb-NO'}).use(
 		};
 
 		var initDateTime = new Date();
-		initDateTime.setHours(07);
+		initDateTime.setHours(12);
 		initDateTime.setMinutes(00);
 
 		let resources = viewmodel.selectedResourceIds();

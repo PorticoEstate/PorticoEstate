@@ -871,7 +871,7 @@
 							$from = $booked_times[$i]['from_'];
 							$to = $booked_times[$i]['to_'];
 
-							if ($from >= $from_date_test)
+							if ($from > $from_date_test)
 							{
 								if ($i == 0)
 								{
