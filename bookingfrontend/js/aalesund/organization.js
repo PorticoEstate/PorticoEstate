@@ -939,8 +939,10 @@ YUI({lang: 'nb-no'}).use(
 	});
 
 function toggleCal() {
-	if($('.calendar-view').attr('id') === 'myScheduler') {
+	if($('.calendar-view').attr('id') === 'myScheduler' || $('.calendar-view').attr('id') === '') {
 		$('.calendar-view').attr('id', 'mySchedulerSmallDeviceView');
+		$('#myScheduler').removeClass('d-lg-block');
+
 	} else {
 		$('.calendar-view').attr('id', 'myScheduler');
 	}

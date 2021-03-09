@@ -257,7 +257,8 @@
 					</div>
 				</div>-->
 				<!--<xsl:if test="true">-->
-					<div id="myScheduler" class="calendar-view d-none d-lg-block margin-bottom col-12"></div>
+					<div id="" class="calendar-view d-none d-lg-block margin-bottom col-12"></div>
+					<div id="myScheduler" class="d-none d-lg-block margin-bottom col-12"></div>
 					<div id="mySchedulerSmallDeviceView" class="d-lg-none margin-bottom col-12"></div>
 				<!--</xsl:if>-->
 
