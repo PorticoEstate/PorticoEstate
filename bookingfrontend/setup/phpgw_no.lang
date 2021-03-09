@@ -547,3 +547,4 @@ event show	bookingfrontend	no	Arrangement
 Associated bookings	bookingfrontend	no	Tilhørende tildelinger/arrangementer
 Building or facility name	bookingfrontend	no	Bygning/anleggsnavn
 reserved	bookingfrontend	no	Reservert
+calendar view	bookingfrontend	no	Dags-/ukesvisning

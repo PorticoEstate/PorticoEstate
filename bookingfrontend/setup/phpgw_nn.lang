@@ -555,3 +555,4 @@ event show	bookingfrontend	nn	Arrangement
 Associated bookings	bookingfrontend	nn	Tilhørende tildelinger/arrangementer
 Building or facility name	bookingfrontend	nn	Bygning/anleggsnavn
 reserved	bookingfrontend	nn	Reservert
+calendar view	bookingfrontend	nn	Dags-/ukesvisning

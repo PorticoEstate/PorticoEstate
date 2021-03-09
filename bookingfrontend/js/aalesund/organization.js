@@ -938,6 +938,15 @@ YUI({lang: 'nb-no'}).use(
 		});
 	});
 
+function toggleCal() {
+	if($('.calendar-view').attr('id') === 'myScheduler') {
+		$('.calendar-view').attr('id', 'mySchedulerSmallDeviceView');
+	} else {
+		$('.calendar-view').attr('id', 'myScheduler');
+	}
+	GenerateCalendarForEvents(date);
+}
+
 function GroupOptionsChanged(group, checkValue) {
 
 	$(".scheduler-event").each(function (index)
