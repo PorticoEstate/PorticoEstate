@@ -2,6 +2,20 @@ var building_id_selection = "";
 $(document).ready(function ()
 {
 
+	$("#field_from").change(function ()
+	{
+		var temp_field_to = $("#field_to").datetimepicker('getValue');
+		var temp_field_from = $("#field_from").datetimepicker('getValue');
+		if(!temp_field_to || (temp_field_to < temp_field_from))
+		{
+			$("#field_to").val($("#field_from").val());
+
+			$('#field_to').datetimepicker('setOptions', {
+				startDate: new Date(temp_field_from)
+			});
+		}
+	});
+
 	$('#field_cost_comment').hide();
 	$('#field_cost').on('input propertychange paste', function ()
 	{

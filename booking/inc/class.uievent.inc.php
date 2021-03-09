@@ -571,7 +571,7 @@
 			{
 				$errors['warning'] = lang('NB! No data will be saved, if you navigate away you will loose all.');
 			}
-			$default_dates = array_map(array($this, '_combine_dates'), array(), array());
+			$default_dates = array_map(array($this, '_combine_dates'), array(''), array(''));
 			array_set_default($event, 'dates', $default_dates);
 
 			if (!phpgw::get_var('from_report', 'POST'))
