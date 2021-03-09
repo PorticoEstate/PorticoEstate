@@ -26,7 +26,6 @@
 
 		function show()
 		{
-			$ssn = (string)$_SERVER['HTTP_UID'];
 			$id = phpgw::get_var('id', 'int');
 			$secret =  phpgw::get_var('secret', 'string');
 			$config = CreateObject('phpgwapi.config', 'booking')->read();

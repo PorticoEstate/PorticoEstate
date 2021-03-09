@@ -983,8 +983,9 @@ HTML;
 				'text'	 => lang('check date type'),
 				'list'	 => array(
 					array(
-						'id'	 => 1,
-						'name'	 => lang('modified date')
+						'id'	 => '',// translated to 1
+						'name'	 => lang('modified date'),
+						'selected'	 => 1
 					),
 					array(
 						'id'	 => 2,
