@@ -461,6 +461,7 @@
 			unset($building);
 			$all_partoftown_list = array_values($all_partoftown);
 			usort($all_partoftown_list, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
+			$returnres['resources'] = $resources;
 			$returnres['buildings']   = $buildings;
 			$returnres['activities']  = $all_activities_list;
 			$returnres['facilities']  = $all_facilities_list;
@@ -744,9 +745,111 @@
 		}
 
 		function resquery_available_resources ($params = array()) {
+			$returnres = array(
+				'buildings'   => array(),
+				'activities'  => array(),
+				'facilities'  => array(),
+				'partoftowns' => array(),
+			);
+			$fields_resource = array('id','name','activities_list','facilities_list', 'simple_booking', 'activities', 'facilities', 'building');
+			$fields_building = array('id','name','street','zip_code','city','part_of_town_id','part_of_town_name');
+
+			// Get a list of all part_of_town that are used for buildings, creating a list keyed on the part_of_town id
+			$partoftownlist = array();
+			$potlist = execMethod('property.solocation.get_booking_part_of_towns');
+			foreach ($potlist as $pot)
+			{
+				$id = $pot['id'];
+				$partoftownlist[$id] = $pot;
+			}
+
+			// Validate parameters. rescategory_id must always be present
+			$invalid_params = False;
+			if (!(isset($params['rescategory_id']) && is_int($params['rescategory_id']) && $params['rescategory_id'] > 0))
+			{
+				$invalid_params = True;
+			}
+			$multiintparams = array('part_of_town_id');
+			foreach ($multiintparams as $multiintparam)
+			{
+				if (isset($params[$multiintparam]))
+				{
+					if (empty($params[$multiintparam]))
+					{
+						$params[$multiintparam] = null;
+					}
+					else
+					{
+						foreach ($params[$multiintparam] as $val)
+						{
+							if (!(is_int($val) && $val > 0))
+							{
+								$invalid_params = True;
+								break;
+							}
+						}
+					}
+					if (!$invalid_params && is_array($params[$multiintparam]))
+					{
+						sort($params[$multiintparam]);
+					}
+				}
+			}
+			if ($invalid_params)
+			{
+				return $returnres;
+			}
+
+			// Get resources
+			$resource_filters = array('active' => 1, 'rescategory_active' => 1);
+			$resource_filters['rescategory_id'] = $params['rescategory_id'];
+			$resources = $this->soresource->read(array('filters' => $resource_filters, 'sort' => 'sort', 'results' => $params['length']))['results'];
+			$this->boresource->add_activity_facility_data($resources);
+
+			// Group the resources on buildings, and get data on the buildings to which the resources belong as well as
+			// check the activities and facilities
+
+			$applicable_resources = array();
+			foreach ($resources as &$resource)
+			{
+				//Get building data
+				$building_filters = array('id' => $resource['buildings'][0], 'active' => 1);
+				$resource['building'] = $this->sobuilding->read(array('filters' => $building_filters, 'sort' => 'name', 'results' => $params['length']))['results'][0];
+
+				// Keep only the wanted fields
+				$building_ids = $resource['buildings'];
+				foreach ($resource as $k => $v)
+				{
+					if (!in_array($k,$fields_resource))
+					{
+						unset($resource[$k]);
+					}
+				}
+
+				foreach ($resource['building'] as $k => $v)
+				{
+					if (!in_array($k,$fields_building))
+					{
+						unset($resource['building'][$k]);
+					}
+				}
+
+				//Handle the part of towns filter
+				if (isset($params['part_of_town_id']) && !in_array($resource['building']['part_of_town_id'],$params['part_of_town_id']))
+				{
+					unset($resource);
+				}
+				else
+				{
+					$applicable_resources[] = $resource;
+				}
+			}
+			unset($resource);
+
+			// HER
 			$returnres = $this->resquery($params);
 
-			$returnres['available_resources']   = $this->available_resources($returnres['buildings'], $params);
+			$returnres['available_resources']   = $this->available_resources($applicable_resources, $params);
 
 			$all_activities = array();
 			$all_facilities = array();
@@ -794,23 +897,21 @@
 				$is_time_set = True;
 			}
 			$available_resources = array();
-
-			foreach ($buildings as $building)
-			{
-				array_set_default($available_resource, 'facilities', array());
-				array_set_default($available_resource, 'activities', array());
-				array_set_default($available_resource, 'facilities_list', array());
-				array_set_default($available_resource, 'activities_list', array());
-
-				$available_resource['building_id'] = $building['id'];
-				$available_resource['building_name'] = $building['name'];
-				$available_resource['building_city'] = $building['city'];
-				$available_resource['building_street'] = $building['street'];
-				$available_resource['building_zip_code'] = $building['zip_code'];
-				$available_resource['part_of_town_id'] = $building['part_of_town_id'];
-
-				foreach ($building['resources'] as $resource)
+				foreach ($buildings as $resource)
 				{
+					array_set_default($available_resource, 'facilities', array());
+					array_set_default($available_resource, 'activities', array());
+					array_set_default($available_resource, 'facilities_list', array());
+					array_set_default($available_resource, 'activities_list', array());
+
+					$available_resource['building_id'] = $resource['building']['id'];
+					$available_resource['building_name'] = $resource['building']['name'];
+					$available_resource['building_city'] = $resource['building']['city'];
+					$available_resource['building_street'] = $resource['building']['street'];
+					$available_resource['building_zip_code'] = $resource['building']['zip_code'];
+					$available_resource['part_of_town_id'] = $resource['building']['part_of_town_id'];
+
+
 					$available_resource['resource_id'] = $resource['id'];
 					$available_resource['resource_name'] = $resource['name'];
 					$available_resource['facilities'] = array_column($resource['facilities_list'], 'id');
@@ -959,7 +1060,6 @@
 						}
 					}
 				}
-			}
 			return $available_resources;
 		}
 

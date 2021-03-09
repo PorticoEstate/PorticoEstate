@@ -371,7 +371,7 @@
 			$to_date = phpgw::get_var('to_date', 'string', 'REQUEST', '');
 			$from_time = phpgw::get_var('from_time', 'string', 'REQUEST', '');
 			$to_time = phpgw::get_var('to_time', 'string', 'REQUEST', '');
-			$fields_multiids = array('facility_id', 'part_of_town_id', 'activity_id');
+			$fields_multiids = array('part_of_town_id');
 			$multiids = array();
 			foreach ($fields_multiids as $field)
 			{
@@ -386,8 +386,8 @@
 				}
 				$multiids[$field] = array_unique($ids);
 			}
-			return $this->bo->resquery_available_resources(array('rescategory_id' => $rescategory_id, 'activity_id' => $multiids['activity_id'],
-				'facility_id' => $multiids['facility_id'], 'part_of_town_id' => $multiids['part_of_town_id'], 'from_date' => $from_date,
+			return $this->bo->resquery_available_resources(array('rescategory_id' => $rescategory_id,
+				'part_of_town_id' => $multiids['part_of_town_id'], 'from_date' => $from_date,
 				'to_date' => $to_date, 'from_time' => $from_time, 'to_time' => $to_time,  'length' => $length));
 		}
 
