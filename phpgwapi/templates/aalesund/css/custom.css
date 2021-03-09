@@ -806,6 +806,11 @@ body{
 	margin-bottom: 20px;
 }
 
+.mainSearchInput::-webkit-search-cancel-button{
+	position:relative;
+	right:10px;
+}
+
 .eventSearchInput {
 	background: url(../img/search.svg) no-repeat scroll 16px 16px;
 	background-size: 20px;

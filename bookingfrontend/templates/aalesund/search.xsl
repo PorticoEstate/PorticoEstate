@@ -27,7 +27,7 @@
 		  <!-- Search Container -->
 		  <div id="searchContainer">
 			  <div class="input-group bk">
-				  <input id="mainSearchInput" class="mainSearchInput" aria-label="Large">
+				  <input type="search" id="mainSearchInput" class="mainSearchInput" aria-label="Large">
 					  <xsl:attribute name="placeholder">
 						  <xsl:value-of disable-output-escaping="yes" select="frontpagetitle"/>
 					  </xsl:attribute>
