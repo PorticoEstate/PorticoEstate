@@ -301,6 +301,23 @@
 			return $account->id;
 		}
 
+
+		/**
+		 * Create useraccount on login for SSO/ntlm
+		 *
+		 * @return void
+		 */
+		public function auto_addaccount()
+		{
+			try
+			{
+				$GLOBALS['phpgw']->auth->auto_addaccount();
+			}
+			catch (Exception $ex)
+			{
+
+			}
+		}
 		/**
 		 * Create a account account
 		 *
@@ -733,7 +750,7 @@
 				{
 					continue;
 				}
-				$aclobj->delete_repository($app, 'admin', $user->id);			
+				$aclobj->delete_repository($app, 'admin', $user->id);
 			}
 
 			$aclobj->delete_repository('preferences', 'changepassword', $user->id);

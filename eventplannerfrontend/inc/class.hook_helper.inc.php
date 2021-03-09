@@ -263,8 +263,14 @@ JS;
 				return;
 			}
 
-			$headers = getallheaders();
-			$ssn = $headers['uid'];
+			if (!empty($_SERVER['HTTP_UID']))
+			{
+				$ssn = (string)$_SERVER['HTTP_UID'];
+			}
+			else
+			{
+				$ssn = (string)$_SERVER['OIDC_pid'];
+			}
 
 			if(!$ssn)
 			{

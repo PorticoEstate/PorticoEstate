@@ -370,7 +370,7 @@ HTML;
 					(
 						'account_lid' => $login
 					);
-					$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('frontend', 'helpdesk'));
+					$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('login'));
 
 					if (strstr($login, '#') === false && $logindomain)
 					{

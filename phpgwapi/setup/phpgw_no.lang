@@ -341,3 +341,5 @@ Upload multiple files with the file dialog, or by dragging and dropping images o
 value is used in records	common	no	Verdien er brukt i registrerte poster
 %1: login blocked for user '%2', ip %3	common	no	%1: login blokkert for bruker '%2', IP %3
 reset filter	common	no	Nullstill filter
+autocreate user	common	no	Autogenerer bruker fra SSO-info
+required group	common	no	Må være medlem av gruppe
