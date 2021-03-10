@@ -118,7 +118,7 @@
 		//			array('disableFilter' => true),
 		//			array('disablePagination' => true),
 		//			array('rows_per_page' => $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']),
-					array('order' => json_encode(array(0, 'asc'))),
+					array('order' => json_encode(array(0, 'desc'))),
 				)
 			);
 
@@ -153,7 +153,7 @@
 		//			array('disableFilter' => true),
 		//			array('disablePagination' => true),
 		//			array('rows_per_page' => $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']),
-					array('order' => json_encode(array(0, 'asc'))),
+					array('order' => json_encode(array(0, 'desc'))),
 				)
 			);
 

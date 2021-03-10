@@ -1585,7 +1585,7 @@
 			oControls.each(function()
 			{
 				var test = $(this).val();
-				if ( $(this).attr('name') && test != null && test.constructor !== Array)
+				if ( !$(this).is('select') && $(this).attr('name') && test != null && test.constructor !== Array)
 				{
 					value = $(this).val('');
 				}
