@@ -184,6 +184,12 @@ HTML;
 
 			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && isset($GLOBALS['phpgw_info']['server']['mapping']) && !empty($GLOBALS['phpgw_info']['server']['mapping']) && isset($_SERVER['REMOTE_USER']))
 			{
+				if ( !isset($GLOBALS['phpgw']->mapping)
+					|| !is_object($GLOBALS['phpgw']->mapping) )
+				{
+					$GLOBALS['phpgw']->mapping = createObject('phpgwapi.mapping');
+				}
+
 				$login = $GLOBALS['phpgw']->mapping->get_mapping($_SERVER['REMOTE_USER']);
 				if ($login == '') // mapping failed
 				{
@@ -370,7 +376,7 @@ HTML;
 					(
 						'account_lid' => $login
 					);
-					$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('login'));
+//					$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('login'));
 
 					if (strstr($login, '#') === false && $logindomain)
 					{

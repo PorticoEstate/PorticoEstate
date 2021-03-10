@@ -10,6 +10,34 @@
 	* @package phpgroupware
 	* @version $Id$
 	*/
+//	$_SERVER['REMOTE_USER'] = 'hc481';
+
+
+	if(!isset($GLOBALS['phpgw_info']))
+	{
+		$GLOBALS['phpgw_info'] = array();
+
+		$GLOBALS['phpgw_info']['flags'] = array
+		(
+	//		'disable_template_class' => true,
+	//		'login'                  => true,
+			'currentapp'             => 'login',
+			'noheader'               => true
+		);
+
+		$header =  '../../../header.inc.php';
+
+		if ( !file_exists($header) )
+		{
+			Header('Location: ../../../setup/index.php');
+			exit;
+		}
+		/**
+		* Include phpgroupware header
+		*/
+		require_once $header;
+
+	}
 
 
 
@@ -198,19 +226,19 @@
 				'password'	=> lang('password')
 			);
 
-			$text_len = 0;
-			foreach($lang as $key => $text)
-			{
-				if($text_len < strlen($text))
-				{
-					$text_len = strlen($text);
-				}
-			}
-
-			foreach($lang as $key => & $text)
-			{
-				$text = str_repeat('&nbsp;', ($text_len-strlen($text))) . $text;
-			}
+//			$text_len = 0;
+//			foreach($lang as $key => $text)
+//			{
+//				if($text_len < strlen($text))
+//				{
+//					$text_len = strlen($text);
+//				}
+//			}
+//
+//			foreach($lang as $key => & $text)
+//			{
+//				$text = str_repeat('&nbsp;', ($text_len-strlen($text))) . $text;
+//			}
 
 			$this->tmpl->set_file(array('login_form'  => 'login.tpl'));
 
@@ -571,9 +599,12 @@ HTML;
 				$this->tmpl->set_var('login_right_message', $GLOBALS['phpgw_info']['login_right_message']);
 				$this->tmpl->parse('header_blocks', 'header_block');
 				$this->tmpl->parse('instruction_blocks', 'instruction_block');
-				$this->tmpl->parse('forgotten_password_blocks', 'forgotten_password_block');
-				$this->tmpl->parse('info_blocks', 'info_block');
-				$this->tmpl->parse('footer_blocks', 'footer_block');
+				if(empty($variables['lang_firstname']) )
+				{
+					$this->tmpl->parse('forgotten_password_blocks', 'forgotten_password_block');
+					$this->tmpl->parse('info_blocks', 'info_block');
+					$this->tmpl->parse('footer_blocks', 'footer_block');
+				}
 
 			}
 
@@ -598,6 +629,11 @@ HTML;
 					$this->tmpl->set_var('message_class', 'error');
 					$this->tmpl->set_var('message_class_item', 'error message fade');
 				}
+				$this->tmpl->parse('message_blocks', 'message_block');
+			}
+
+			if($variables['lang_message'])
+			{
 				$this->tmpl->parse('message_blocks', 'message_block');
 			}
 

@@ -259,7 +259,7 @@
 		*
 		* @return integer Account id
 		*/
-		public function auto_add($accountname, $passwd, $expiredate = 0, $account_status = 'A')
+		public function auto_add($accountname, $passwd, $firstname, $lastname, $expiredate = 0, $account_status = 'A')
 		{
 			if ($expiredate)
 			{
@@ -281,16 +281,13 @@
 				$expires = time() + (60 * 60 * 24 * 7); // 1 week - sane default
 			}
 
-			$acct_info = array
-			(
-				'account_lid'       => $accountname,
-				'account_type'      => 'u',
-				'account_passwd'    => $passwd,
-				'account_firstname' => '',
-				'account_lastname'  => '',
-				'account_status'    => $account_status == 'A',
-				'account_expires'   => $expires
-			);
+			$acct_info = new phpgwapi_user();
+			$acct_info->lid = $accountname;
+			$acct_info->firstname = $firstname;
+			$acct_info->lastname = $lastname;
+			$acct_info->passwd = $passwd;
+			$acct_info->enabled = $account_status == 'A';
+			$acct_info->expires = $expires;
 
 			$group = array
 			(
