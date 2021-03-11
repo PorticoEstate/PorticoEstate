@@ -33,6 +33,17 @@
 
 	$login = $GLOBALS['phpgw']->auth->get_username(true);
 
+	if(isset($_SERVER["OIDC_groups"]))
+	{
+		$ad_groups = json_decode(phpgw::get_var('OIDC_groups', 'raw', 'SERVER'), true);
+		$default_group_lid = !empty($GLOBALS['phpgw_info']['server']['default_group_lid']) ? $GLOBALS['phpgw_info']['server']['default_group_lid'] : 'Default';
+		if (!in_array($default_group_lid, $ad_groups))
+		{
+			echo lang('Feil med gruppetilhørighet ( navnet...)');
+			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
+	}
+
 	if(empty($login))
 	{
 		echo lang('Wrong configuration');
