@@ -290,6 +290,17 @@ $(document).ready(function ()
 		width: '100%'
 	});
 
+	$('#order_cat_id').on('select2:open', function (e) {
+
+		$(".select2-search__field").each(function()
+		{
+			if ($(this).attr("aria-controls") == 'select2-order_cat_id-results')
+			{
+				$(this)[0].focus();
+			}
+		});
+	});
+
 	$("#tags").select2({
 		placeholder: "Velg en eller flere tagger, eller lag ny",
 		width: '50%',

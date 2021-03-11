@@ -123,6 +123,19 @@
 		abstract public function create_user_account($account);
 
 		/**
+		 * Create a new group account  - this only creates the acccount
+		 *
+		 * For creating a fully working user, use self::create()
+		 *
+		 * @param object $account the phpgwapi_user object for the new account
+		 *
+		 * @return integer the new user id
+		 *
+		 * @see self::create
+		 */
+		abstract public function create_group_account($account);
+
+		/**
 		 * Delete an account
 		 *
 		 * @param integer $account_id the account to delete
@@ -783,7 +796,7 @@
 		/**
 		 * Update the account data
 		 *
-		 * @param array $data the account data to use
+		 * @param object $data the account data to use
 		 *
 		 * @return object the account
 		 *
