@@ -182,52 +182,6 @@ HTML;
 
 			/* Program starts here */
 
-			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && isset($GLOBALS['phpgw_info']['server']['mapping']) && !empty($GLOBALS['phpgw_info']['server']['mapping']) && isset($_SERVER['REMOTE_USER']))
-			{
-				$phpgw_map_location = isset($_SERVER['HTTP_SHIB_ORIGIN_SITE']) ? $_SERVER['HTTP_SHIB_ORIGIN_SITE'] : 'local';
-				$phpgw_map_authtype = isset($_SERVER['HTTP_SHIB_ORIGIN_SITE']) ? 'shibboleth':'remoteuser';
-
-				//Create the mapping if necessary :
-				if(isset($GLOBALS['phpgw_info']['server']['mapping']) && !empty($GLOBALS['phpgw_info']['server']['mapping']))
-				{
-					if(!is_object($GLOBALS['phpgw']->mapping))
-					{
-						$GLOBALS['phpgw']->mapping = CreateObject('phpgwapi.mapping', array('auth_type'=> $phpgw_map_authtype, 'location' => $phpgw_map_location));
-					}
-				}
-
-				$login = $GLOBALS['phpgw']->mapping->get_mapping($_SERVER['REMOTE_USER']);
-				if ($login == '') // mapping failed
-				{
-					if (isset($GLOBALS['phpgw_info']['server']['auto_create_acct']) && $GLOBALS['phpgw_info']['server']['auto_create_acct'] == true)
-					{
-						// Redirection to create the new account :
-						$GLOBALS['phpgw']->redirect_link('/phpgwapi/inc/sso/create_account.php');
-					}
-					else if ($GLOBALS['phpgw_info']['server']['mapping'] == 'table' || $GLOBALS['phpgw_info']['server']['mapping'] == 'all')
-					{
-						// Redirection to create a new mapping :
-						$GLOBALS['phpgw']->redirect_link('/phpgwapi/inc/sso/create_mapping.php');
-					}
-					else if (!(isset($_GET['cd']) && $_GET['cd'] != '0'))
-					{
-						// An error occurs, bailed out
-						$GLOBALS['phpgw']->redirect_link('/' . $partial_url, array('cd' => '20'));
-					}
-				}
-				$passwd	 = $login;
-				if (!(isset($_GET['cd']) && $_GET['cd'] != '0'))
-				{
-					$_POST['submitit'] = true;
-				}
-			}
-			else
-			{
-				$login	 = phpgw::get_var('login', 'string', 'POST');
-				// remove entities to stop mangling
-				$passwd	 = html_entity_decode(phpgw::get_var('passwd', 'string', 'POST'));
-			}
-
 			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'http' && isset($_SERVER['PHP_AUTH_USER']))
 			{
 				$submit	 = true;
@@ -370,7 +324,11 @@ HTML;
 				$this->login_forward();
 			}
 
-			else if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'azure' && !empty($GLOBALS['phpgw_info']['server']['mapping']) && isset($_SERVER['OIDC_upn']) && empty($_REQUEST['skip_remote']))
+			else if (
+				in_array($GLOBALS['phpgw_info']['server']['auth_type'],  array('remoteuser', 'azure'))
+				&& !empty($GLOBALS['phpgw_info']['server']['mapping'])
+				&& (isset($_SERVER['OIDC_upn']) || isset($_SERVER['REMOTE_USER']))
+				&& empty($_REQUEST['skip_remote']))
 			{
 				$phpgw_map_location = isset($_SERVER['HTTP_SHIB_ORIGIN_SITE']) ? $_SERVER['HTTP_SHIB_ORIGIN_SITE'] : 'local';
 				$phpgw_map_authtype = isset($_SERVER['HTTP_SHIB_ORIGIN_SITE']) ? 'shibboleth':'remoteuser';
@@ -444,6 +402,10 @@ HTML;
 				{
 					$GLOBALS['phpgw']->redirect_link('/' . $partial_url, array('cd' => '5'));
 				}
+
+				$login	 = phpgw::get_var('login', 'string', 'POST');
+				// remove entities to stop mangling
+				$passwd	 = html_entity_decode(phpgw::get_var('passwd', 'string', 'POST'));
 
 				$logindomain = phpgw::get_var('logindomain', 'string', 'POST');
 				if (strstr($login, '#') === false && $logindomain)
