@@ -117,7 +117,7 @@
 
 				<div class="pure-g">
 
-					<div class="l-box l-box-lrg pure-u-1 pure-u-md-1-2">
+					<div class="l-box l-box-lrg pure-u-1 {grid_css}">
 
 						<!-- BEGIN message_block -->
 						<dl id="system-message">
@@ -152,7 +152,11 @@
 								</div>
 								<div class="pure-control-group">
 									<label for="lastname">{lang_lastname}</label>
-									<input type="text" value="{lastname}" name="lastname" id="lastname"  maxlength="100" required="required">
+									<input type="text" value="{lastname}" name="lastname" id="lastname" maxlength="100" required="required">
+								</div>
+								<div class="pure-control-group">
+									<label for="email">{lang_email}</label>
+									<input type="email" value="{email}" maxlength="100" name="email" id="email" required="required">
 								</div>
 
 								<!-- END login_additional_info -->

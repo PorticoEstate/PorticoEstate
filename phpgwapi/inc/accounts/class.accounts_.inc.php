@@ -307,27 +307,11 @@
 				$this->name2id($GLOBALS['phpgw_info']['server']['default_group_lid'])
 			);
 
-			$account = $this->create($acct_info, $group);
-			return $account->id;
+			$account_id = $this->create($acct_info, $group);
+			return $account_id;
 		}
 
 
-		/**
-		 * Create useraccount on login for SSO/ntlm
-		 *
-		 * @return void
-		 */
-		public function auto_addaccount()
-		{
-			try
-			{
-				$GLOBALS['phpgw']->auth->auto_addaccount();
-			}
-			catch (Exception $ex)
-			{
-
-			}
-		}
 		/**
 		 * Create a account account
 		 *

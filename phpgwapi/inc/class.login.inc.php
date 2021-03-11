@@ -363,21 +363,19 @@ HTML;
 
 				$this->login_forward();
 			}
-			else if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'azure' &&  (!isset($_REQUEST['skip_remote']) || !$_REQUEST['skip_remote']))
+
+			else if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'azure' && !empty($GLOBALS['phpgw_info']['server']['mapping']) && isset($_SERVER['OIDC_upn']) && empty($_REQUEST['skip_remote']))
 			{
-				//Reset auth object
-				$GLOBALS['phpgw']->auth	= createObject('phpgwapi.auth');
+				if ( !isset($GLOBALS['phpgw']->mapping)
+					|| !is_object($GLOBALS['phpgw']->mapping) )
+				{
+					$GLOBALS['phpgw']->mapping = createObject('phpgwapi.mapping');
+				}
+
 				$login = $GLOBALS['phpgw']->auth->get_username();
-				$logindomain = phpgw::get_var('domain', 'string', 'GET');
 
 				if($login)
 				{
-					$GLOBALS['hook_values'] = array
-					(
-						'account_lid' => $login
-					);
-//					$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('login'));
-
 					if (strstr($login, '#') === false && $logindomain)
 					{
 						$login .= "#{$logindomain}";
@@ -385,9 +383,22 @@ HTML;
 
 					$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, '');
 				}
-
-				if (!$login || empty($GLOBALS['sessionid']))
+				else if (!$login || empty($GLOBALS['sessionid']))
 				{
+					if(!empty($GLOBALS['phpgw_info']['server']['auto_create_acct']))
+					{
+						if ($GLOBALS['phpgw_info']['server']['mapping'] == 'id')
+						{
+							// Redirection to create the new account :
+							$GLOBALS['phpgw']->redirect_link('/phpgwapi/inc/sso/create_account.php');
+						}
+						else if ($GLOBALS['phpgw_info']['server']['mapping'] == 'table' || $GLOBALS['phpgw_info']['server']['mapping'] == 'all')
+						{
+							// Redirection to create a new mapping :
+							$GLOBALS['phpgw']->redirect_link('/phpgwapi/inc/sso/create_mapping.php');
+						}
+					}
+
 					$cd_array = array();
 					if ($GLOBALS['phpgw']->session->cd_reason)
 					{
@@ -405,7 +416,6 @@ HTML;
 					}
 
 					$this->login_failed( $partial_url, $cd_array, $anonymous, $frontend );
-//					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
 					exit;
 				}
 

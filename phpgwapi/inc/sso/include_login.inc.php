@@ -10,8 +10,6 @@
 	* @package phpgroupware
 	* @version $Id$
 	*/
-//	$_SERVER['REMOTE_USER'] = 'hc481';
-
 
 	if(!isset($GLOBALS['phpgw_info']))
 	{
@@ -19,8 +17,6 @@
 
 		$GLOBALS['phpgw_info']['flags'] = array
 		(
-	//		'disable_template_class' => true,
-	//		'login'                  => true,
 			'currentapp'             => 'login',
 			'noheader'               => true
 		);
@@ -226,25 +222,11 @@
 				'password'	=> lang('password')
 			);
 
-//			$text_len = 0;
-//			foreach($lang as $key => $text)
-//			{
-//				if($text_len < strlen($text))
-//				{
-//					$text_len = strlen($text);
-//				}
-//			}
-//
-//			foreach($lang as $key => & $text)
-//			{
-//				$text = str_repeat('&nbsp;', ($text_len-strlen($text))) . $text;
-//			}
 
 			$this->tmpl->set_file(array('login_form'  => 'login.tpl'));
 
 			$this->tmpl->set_block('login_form', 'header_block', 'header_blocks');
 			$this->tmpl->set_block('login_form', 'instruction_block', 'instruction_blocks');
-
 
 			$this->tmpl->set_block('login_form', 'message_block', 'message_blocks');
 			$this->tmpl->set_block('login_form', 'domain_option', 'domain_options');
@@ -375,6 +357,7 @@
 				//then first / last name
 				$this->tmpl->set_var('lang_firstname', $variables['lang_firstname']);
 				$this->tmpl->set_var('lang_lastname', $variables['lang_lastname']);
+				$this->tmpl->set_var('lang_email', $variables['lang_email']);
 				if(isset($variables['firstname']))
 				{
 					$this->tmpl->set_var('firstname', $variables['firstname']);
@@ -382,6 +365,10 @@
 				if(isset($variables['lastname']))
 				{
 					$this->tmpl->set_var('lastname', $variables['lastname']);
+				}
+				if(isset($variables['email']))
+				{
+					$this->tmpl->set_var('email', $variables['email']);
 				}
 				//parsing the block
 				$this->tmpl->parse('login_additional_infos', 'login_additional_info');
@@ -574,6 +561,10 @@ JS;
 			$this->tmpl->set_var('system_css', $system_css);
 			$this->tmpl->set_var('base_css', $base_css);
 			$this->tmpl->set_var('login_css', $login_css);
+			if(empty($variables['lang_firstname']))
+			{
+				$this->tmpl->set_var('grid_css', 'pure-u-md-1-2');
+			}
 			$this->tmpl->set_var('rounded_css', $rounded_css);
 			$this->tmpl->set_var('flag_no', $flag_no);
 			$this->tmpl->set_var('flag_en', $flag_en);

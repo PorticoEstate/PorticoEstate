@@ -30,22 +30,22 @@
 		$GLOBALS['phpgw']->common->phpgw_exit();
 	}
 
-	$loginn = '';
-	if(!isset($_SERVER['REMOTE_USER']))
+
+	$login = $GLOBALS['phpgw']->auth->get_username(true);
+
+	if(empty($login))
 	{
 		echo lang('Wrong configuration');
 		$GLOBALS['phpgw']->common->phpgw_exit();
 	}
 	else
 	{
-		if($GLOBALS['phpgw']->mapping->get_mapping($_SERVER['REMOTE_USER']) != '')
+		if($GLOBALS['phpgw']->mapping->get_mapping($login) != '')
 		{
-			_debug_array($_SERVER['REMOTE_USER']);
 			echo lang('Username already taken');
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
-		$loginn = $_SERVER['REMOTE_USER'];
-		if(($account = $GLOBALS['phpgw']->mapping->exist_mapping($loginn)) != '')
+		if(($account = $GLOBALS['phpgw']->mapping->exist_mapping($login)) != '')
 		{
 			$GLOBALS['phpgw']->redirect_link('/phpgwapi/inc/sso/create_mapping.php', array('cd' => '21', 'phpgw_account' => $account));
 		}
@@ -66,11 +66,6 @@
 		$lastname = $_SERVER["HTTP_SHIB_SURNAME"];
 	}
 
-	if(isset($_SERVER["OIDC_upn"]))
-	{
-		$remote_user = explode('@', phpgw::get_var('OIDC_upn', 'string', 'SERVER'));
-		$loginn  = $remote_user[0];
-	}
 	if(isset($_SERVER["OIDC_given_name"]))
 	{
 		$firstname = phpgw::get_var('OIDC_given_name', 'string', 'SERVER');
@@ -86,22 +81,26 @@
 	if ( $_SERVER['REQUEST_METHOD'] == 'POST' && phpgw::get_var('submitit', 'bool', 'POST') )
 	{
 		$submit		= phpgw::get_var('submitit', 'bool', 'POST');
-  		$loginn		= phpgw::get_var('login', 'string', 'POST');
+		if(!$GLOBALS['phpgw_info']['server']['mapping'] == 'id')// using REMOTE_USER for account_lid
+		{
+			$login	= phpgw::get_var('login', 'string', 'POST');
+		}
 		$firstname	= phpgw::get_var('firstname', 'string', 'POST');
 		$lastname	= phpgw::get_var('lastname', 'string', 'POST');
 		$password1  = !empty($_POST['passwd']) ? html_entity_decode(phpgw::get_var('passwd', 'string', 'POST')) : '';
 		$password2  = !empty($_POST['passwd_confirm']) ? html_entity_decode(phpgw::get_var('passwd_confirm', 'string', 'POST')) : '';
+		$email		= phpgw::get_var('email', 'email', 'POST');
 	}
 
 	$error = array();
 	if (isset($submit) && $submit)
 	{
-		if(!$loginn)
+		if(!$login)
 		{
 			$error[] = lang('You have to choose a login');  
 		}
 		
-		if (!preg_match("/^[0-9_a-z]*$/i",$loginn))
+		if (!preg_match("/^[0-9_a-z]*$/i",$login))
 		{
 			$error[] = lang('Please submit just letters and numbers for your login');
 		}
@@ -126,39 +125,31 @@
 		}
 
 		
-		if($GLOBALS['phpgw']->accounts->exists($loginn))
+		if($GLOBALS['phpgw']->accounts->exists($login))
 		{
-			$error[] = lang("user %1 already exists, please try another login",$loginn);  
+			$error[] = lang("user %1 already exists, please try another login",$login);  
 		}
 		
 		if(!is_array($error) || count($error) == 0)
 		{
 			if (!$firstname)
 			{
-				$firstname = $loginn;
+				$firstname = $login;
 			}
 			if (!$lastname)
 			{
-				$lastname = $loginn;
+				$lastname = $login;
 			}
-			$account_id = $GLOBALS['phpgw']->accounts->auto_add($loginn, $password1, $firstname, $lastname);
 
-
-//			$GLOBALS['phpgw']->accounts->get($account_id);
-//			$account = CreateObject('phpgwapi.accounts',$loginn,'u');
-//			$data = $account->read();
-//			$data->account_firstname = $firstname;
-//			$data->account_lastname = $lastname;
-//			$account->update_data($data);
-//			$account->save_repository();
+			$account_id = $GLOBALS['phpgw']->accounts->auto_add($login, $password1, $firstname, $lastname);
 
 			if($GLOBALS['phpgw_info']['server']['mapping'] == 'table' ) // using only mapping by table
 			{
-				$GLOBALS['phpgw']->mapping->add_mapping($_SERVER['REMOTE_USER'],$loginn);
+				$GLOBALS['phpgw']->mapping->add_mapping($_SERVER['REMOTE_USER'],$login);
 			}
-			else if($GLOBALS['phpgw_info']['server']['mapping'] == 'all' && $loginn != $_SERVER['REMOTE_USER'])
+			else if($GLOBALS['phpgw_info']['server']['mapping'] == 'all' && $login != $_SERVER['REMOTE_USER'])
 			{
-				$GLOBALS['phpgw']->mapping->add_mapping($_SERVER['REMOTE_USER'],$loginn);
+				$GLOBALS['phpgw']->mapping->add_mapping($_SERVER['REMOTE_USER'],$login);
 			}
 
 			if ($account_id)
@@ -187,8 +178,6 @@
 					'p1' => $username));
 			}
 
-
-
 			$GLOBALS['phpgw']->redirect($GLOBALS['phpgw_info']['server']['webserver_url'] . $phpgw_url_for_sso);
 		}
 	}
@@ -206,11 +195,13 @@
 		$variables['lang_message'] .= $GLOBALS['phpgw']->common->error_list($error);
 	}
 	$variables['lang_login'] = lang('new account and login');
-	$variables['login'] = $loginn ;
+	$variables['login'] = $login ;
 	$variables['lang_firstname'] = lang('firstname');
 	$variables['lang_lastname'] = lang('lastname');
+	$variables['lang_email'] = lang('email');
 	$variables['firstname'] = $firstname;
 	$variables['lastname'] = $lastname;
+	$variables['email'] = $email;
 	$variables['lang_confirm_password'] = lang('confirm password');
 	$variables['partial_url'] = 'phpgwapi/inc/sso/create_account.php';
 	if(!($GLOBALS['phpgw_info']['server']['mapping'] == 'id'))
