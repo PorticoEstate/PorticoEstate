@@ -17,7 +17,6 @@
 	* Using with Signle Sign-On (Shibboleth, CAS, ...)
 	* 
 	*/
-	
  	require_once 'include_login.inc.php';
  
 	if(!isset($GLOBALS['phpgw_info']['server']['auto_create_acct']) || $GLOBALS['phpgw_info']['server']['auto_create_acct'] != True)
@@ -41,7 +40,8 @@
 	{
 		if($GLOBALS['phpgw']->mapping->get_mapping($_SERVER['REMOTE_USER']) != '')
 		{
-			echo lang('Access denied!');
+			_debug_array($_SERVER['REMOTE_USER']);
+			echo lang('Username already taken');
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 		$loginn = $_SERVER['REMOTE_USER'];
@@ -65,15 +65,32 @@
 	{
 		$lastname = $_SERVER["HTTP_SHIB_SURNAME"];
 	}
-												
+
+	if(isset($_SERVER["OIDC_upn"]))
+	{
+		$remote_user = explode('@', phpgw::get_var('OIDC_upn', 'string', 'SERVER'));
+		$loginn  = $remote_user[0];
+	}
+	if(isset($_SERVER["OIDC_given_name"]))
+	{
+		$firstname = phpgw::get_var('OIDC_given_name', 'string', 'SERVER');
+	}
+	if(isset($_SERVER["OIDC_family_name"]))
+	{
+		$lastname = phpgw::get_var('OIDC_family_name', 'string', 'SERVER');
+	}
+
+	$email		= phpgw::get_var('OIDC_email', 'string', 'SERVER');
+	$ssn		= phpgw::get_var('OIDC_pid', 'string', 'SERVER');
+
 	if ( $_SERVER['REQUEST_METHOD'] == 'POST' && phpgw::get_var('submitit', 'bool', 'POST') )
 	{
 		$submit		= phpgw::get_var('submitit', 'bool', 'POST');
   		$loginn		= phpgw::get_var('login', 'string', 'POST');
 		$firstname	= phpgw::get_var('firstname', 'string', 'POST');
 		$lastname	= phpgw::get_var('lastname', 'string', 'POST');
-		$password1	= phpgw::get_var('passwd', 'string', 'POST');
-		$password2	= phpgw::get_var('passwd_confirm', 'string', 'POST');
+		$password1  = !empty($_POST['passwd']) ? html_entity_decode(phpgw::get_var('passwd', 'string', 'POST')) : '';
+		$password2  = !empty($_POST['passwd_confirm']) ? html_entity_decode(phpgw::get_var('passwd_confirm', 'string', 'POST')) : '';
 	}
 
 	$error = array();
@@ -98,11 +115,16 @@
 			$error[] = lang('Please, check your password');  
 		}
 		
-		if (strlen($password1) < 4) 
+		$account	= new phpgwapi_user();
+		try
 		{
-			$error[] = lang('Please, type more than 4 characters for your password'); 
+			$account->validate_password($password1);
 		}
-		
+		catch(Exception $e)
+		{
+			$error[] = $e->getMessage();
+		}
+
 		
 		if($GLOBALS['phpgw']->accounts->exists($loginn))
 		{
@@ -119,13 +141,16 @@
 			{
 				$lastname = $loginn;
 			}
-			$GLOBALS['phpgw']->accounts->auto_add($loginn,$password1);
-			$account = CreateObject('phpgwapi.accounts',$loginn,'u');
-			$data = $account->read();
-			$data['account_firstname'] = $firstname;
-			$data['account_lastname'] = $lastname;
-			$account->update_data($data);
-			$account->save_repository();
+			$account_id = $GLOBALS['phpgw']->accounts->auto_add($loginn, $password1, $firstname, $lastname);
+
+
+//			$GLOBALS['phpgw']->accounts->get($account_id);
+//			$account = CreateObject('phpgwapi.accounts',$loginn,'u');
+//			$data = $account->read();
+//			$data->account_firstname = $firstname;
+//			$data->account_lastname = $lastname;
+//			$account->update_data($data);
+//			$account->save_repository();
 
 			if($GLOBALS['phpgw_info']['server']['mapping'] == 'table' ) // using only mapping by table
 			{
@@ -135,6 +160,35 @@
 			{
 				$GLOBALS['phpgw']->mapping->add_mapping($_SERVER['REMOTE_USER'],$loginn);
 			}
+
+			if ($account_id)
+			{
+				if (!empty($email))
+				{
+					$title = lang('User access');
+					$message = lang('account has been created');
+					$from = "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+					$send	 = CreateObject('phpgwapi.send');
+
+					try
+					{
+						$send->msg('email', $email, $title, stripslashes(nl2br($message)), '', '', '', $from, 'System message', 'html', '', array(), false);
+					}
+					catch (Exception $ex)
+					{
+
+					}
+				}
+				$preferences = createObject('phpgwapi.preferences', $account_id);
+				$preferences->add('common', 'email', $email);
+				$preferences->save_repository();
+
+				$GLOBALS['phpgw']->log->write(array('text' => 'I-Notification, user created %1',
+					'p1' => $username));
+			}
+
+
+
 			$GLOBALS['phpgw']->redirect($GLOBALS['phpgw_info']['server']['webserver_url'] . $phpgw_url_for_sso);
 		}
 	}

@@ -123,6 +123,19 @@
 		abstract public function create_user_account($account);
 
 		/**
+		 * Create a new group account  - this only creates the acccount
+		 *
+		 * For creating a fully working user, use self::create()
+		 *
+		 * @param object $account the phpgwapi_user object for the new account
+		 *
+		 * @return integer the new user id
+		 *
+		 * @see self::create
+		 */
+		abstract public function create_group_account($account);
+
+		/**
 		 * Delete an account
 		 *
 		 * @param integer $account_id the account to delete
@@ -259,7 +272,7 @@
 		*
 		* @return integer Account id
 		*/
-		public function auto_add($accountname, $passwd, $expiredate = 0, $account_status = 'A')
+		public function auto_add($accountname, $passwd, $firstname, $lastname, $expiredate = 0, $account_status = 'A')
 		{
 			if ($expiredate)
 			{
@@ -281,16 +294,13 @@
 				$expires = time() + (60 * 60 * 24 * 7); // 1 week - sane default
 			}
 
-			$acct_info = array
-			(
-				'account_lid'       => $accountname,
-				'account_type'      => 'u',
-				'account_passwd'    => $passwd,
-				'account_firstname' => '',
-				'account_lastname'  => '',
-				'account_status'    => $account_status == 'A',
-				'account_expires'   => $expires
-			);
+			$acct_info = new phpgwapi_user();
+			$acct_info->lid = $accountname;
+			$acct_info->firstname = $firstname;
+			$acct_info->lastname = $lastname;
+			$acct_info->passwd = $passwd;
+			$acct_info->enabled = $account_status == 'A';
+			$acct_info->expires = $expires;
 
 			$group = array
 			(
@@ -786,7 +796,7 @@
 		/**
 		 * Update the account data
 		 *
-		 * @param array $data the account data to use
+		 * @param object $data the account data to use
 		 *
 		 * @return object the account
 		 *

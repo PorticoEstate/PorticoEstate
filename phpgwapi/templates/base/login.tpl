@@ -148,11 +148,11 @@
 								<!-- BEGIN login_additional_info -->
 								<div class="pure-control-group">
 									<label for="firstname">{lang_firstname}</label>
-									<input type="text" value="{firstname}" maxlength="100" name="firstname" id="firstname" >
+									<input type="text" value="{firstname}" maxlength="100" name="firstname" id="firstname" required="required">
 								</div>
 								<div class="pure-control-group">
 									<label for="lastname">{lang_lastname}</label>
-									<input type="text" value="{lastname}" name="lastname" id="lastname"  maxlength="100">
+									<input type="text" value="{lastname}" name="lastname" id="lastname"  maxlength="100" required="required">
 								</div>
 
 								<!-- END login_additional_info -->
