@@ -175,7 +175,7 @@
 				$preferences->save_repository();
 
 				$GLOBALS['phpgw']->log->write(array('text' => 'I-Notification, user created %1',
-					'p1' => $username));
+					'p1' => $login));
 			}
 
 			$GLOBALS['phpgw']->redirect($GLOBALS['phpgw_info']['server']['webserver_url'] . $phpgw_url_for_sso);
