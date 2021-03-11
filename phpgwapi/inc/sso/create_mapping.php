@@ -18,7 +18,7 @@
 	*
 	* Using with Single Sign-On(Shibbolelt, CAS, ...)
 	*/
-	
+
 	require_once 'include_login.inc.php';
 
 	if(!isset($GLOBALS['phpgw_info']['server']['mapping']) || $GLOBALS['phpgw_info']['server']['mapping'] == 'id')
@@ -38,7 +38,7 @@
 	}
 	if($GLOBALS['phpgw']->mapping->get_mapping($_SERVER['REMOTE_USER']) != '')
 	{
-		echo('Access denied!');
+		echo('Username already taken');
 		$GLOBALS['phpgw']->common->phpgw_exit();
 	}
 
@@ -53,6 +53,7 @@
 			if($GLOBALS['phpgw']->mapping->valid_user($loginn,$password))
 			{
 				$GLOBALS['phpgw']->mapping->add_mapping($_SERVER['REMOTE_USER'],$loginn);
+				$phpgw_url_for_sso	 = 'login.php';
 				$GLOBALS['phpgw']->redirect_link('/'. $phpgw_url_for_sso);
 			}
 			else

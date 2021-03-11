@@ -184,10 +184,16 @@ HTML;
 
 			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && isset($GLOBALS['phpgw_info']['server']['mapping']) && !empty($GLOBALS['phpgw_info']['server']['mapping']) && isset($_SERVER['REMOTE_USER']))
 			{
-				if ( !isset($GLOBALS['phpgw']->mapping)
-					|| !is_object($GLOBALS['phpgw']->mapping) )
+				$phpgw_map_location = isset($_SERVER['HTTP_SHIB_ORIGIN_SITE']) ? $_SERVER['HTTP_SHIB_ORIGIN_SITE'] : 'local';
+				$phpgw_map_authtype = isset($_SERVER['HTTP_SHIB_ORIGIN_SITE']) ? 'shibboleth':'remoteuser';
+
+				//Create the mapping if necessary :
+				if(isset($GLOBALS['phpgw_info']['server']['mapping']) && !empty($GLOBALS['phpgw_info']['server']['mapping']))
 				{
-					$GLOBALS['phpgw']->mapping = createObject('phpgwapi.mapping');
+					if(!is_object($GLOBALS['phpgw']->mapping))
+					{
+						$GLOBALS['phpgw']->mapping = CreateObject('phpgwapi.mapping', array('auth_type'=> $phpgw_map_authtype, 'location' => $phpgw_map_location));
+					}
 				}
 
 				$login = $GLOBALS['phpgw']->mapping->get_mapping($_SERVER['REMOTE_USER']);
@@ -366,10 +372,16 @@ HTML;
 
 			else if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'azure' && !empty($GLOBALS['phpgw_info']['server']['mapping']) && isset($_SERVER['OIDC_upn']) && empty($_REQUEST['skip_remote']))
 			{
-				if ( !isset($GLOBALS['phpgw']->mapping)
-					|| !is_object($GLOBALS['phpgw']->mapping) )
+				$phpgw_map_location = isset($_SERVER['HTTP_SHIB_ORIGIN_SITE']) ? $_SERVER['HTTP_SHIB_ORIGIN_SITE'] : 'local';
+				$phpgw_map_authtype = isset($_SERVER['HTTP_SHIB_ORIGIN_SITE']) ? 'shibboleth':'remoteuser';
+
+				//Create the mapping if necessary :
+				if(isset($GLOBALS['phpgw_info']['server']['mapping']) && !empty($GLOBALS['phpgw_info']['server']['mapping']))
 				{
-					$GLOBALS['phpgw']->mapping = createObject('phpgwapi.mapping');
+					if(!is_object($GLOBALS['phpgw']->mapping))
+					{
+						$GLOBALS['phpgw']->mapping = CreateObject('phpgwapi.mapping', array('auth_type'=> $phpgw_map_authtype, 'location' => $phpgw_map_location));
+					}
 				}
 
 				$login = $GLOBALS['phpgw']->auth->get_username();

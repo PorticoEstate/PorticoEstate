@@ -17,7 +17,7 @@
 	* Using with Signle Sign-On (Shibboleth, CAS, ...)
 	* 
 	*/
- 	require_once 'include_login.inc.php';
+	require_once 'include_login.inc.php';
  
 	if(!isset($GLOBALS['phpgw_info']['server']['auto_create_acct']) || $GLOBALS['phpgw_info']['server']['auto_create_acct'] != True)
 	{
