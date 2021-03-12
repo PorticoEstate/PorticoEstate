@@ -178,7 +178,7 @@
 								<!-- BEGIN domain_select -->
 								<div class="pure-control-group">
 									<label for="logindomain">{lang_domain}</label>
-									<select name="logindomain" id="logindomain">
+									<select name="logindomain" id="logindomain" class="pure-u-1">
 										<!-- BEGIN domain_option -->
 										<option value="{domain_name}" {domain_selected}>{domain_display_name}</option>
 										<!-- END domain_option -->
