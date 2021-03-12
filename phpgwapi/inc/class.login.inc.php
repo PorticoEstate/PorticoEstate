@@ -91,6 +91,12 @@
 			*/
 			require_once $header;
 
+			if(!empty($_GET['debug']))
+			{
+				_debug_array($_SERVER);
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
 		}
 
 		public function login($frontend = '', $anonymous = false)
