@@ -1271,6 +1271,10 @@ function GenerateCalendarForEvents(date)
 					$('.tooltip').tooltip('hide');
 				}
 			});
+			$(".yui3-widget-bd").mouseenter(function () {
+				console.log("test")
+				$(".tooltip").remove();
+			});
 		}
 	);
 }
