@@ -99,6 +99,13 @@
 
 		}
 
+		public function create_account( )
+		{
+			require_once dirname(realpath(__FILE__)) . '/sso/create_account.php';
+			$create_account = new phpgwapi_create_account();
+			return $create_account->display_create();
+		}
+
 		public function login($frontend = '', $anonymous = false)
 		{
 
@@ -366,10 +373,14 @@ HTML;
 				{
 					if(!empty($GLOBALS['phpgw_info']['server']['auto_create_acct']))
 					{
+						require_once dirname(realpath(__FILE__)) . '/sso/include_login.inc.php';
+
 						if ($GLOBALS['phpgw_info']['server']['mapping'] == 'id')
 						{
+							return $this->create_account();
+
 							// Redirection to create the new account :
-							$GLOBALS['phpgw']->redirect_link('/phpgwapi/inc/sso/create_account.php');
+						//	$GLOBALS['phpgw']->redirect_link('/phpgwapi/inc/sso/create_account.php');
 						}
 						else if ($GLOBALS['phpgw_info']['server']['mapping'] == 'table' || $GLOBALS['phpgw_info']['server']['mapping'] == 'all')
 						{

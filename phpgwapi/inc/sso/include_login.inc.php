@@ -404,6 +404,11 @@
 				}
 			}
 
+			if(isset($variables['extra_vars']) && is_array($variables['extra_vars']))
+			{
+				$extra_vars = array_merge($extra_vars, $variables['extra_vars']);
+			}
+
 			$cd = 0;
 			if ( isset($_GET['cd']) )
 			{
