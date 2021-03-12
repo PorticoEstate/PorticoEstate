@@ -54,6 +54,8 @@
 				$default_group_lid	 = !empty($GLOBALS['phpgw_info']['server']['default_group_lid']) ? $GLOBALS['phpgw_info']['server']['default_group_lid'] : 'Default';
 				if (!in_array($default_group_lid, $ad_groups))
 				{
+					_debug_array($default_group_lid);
+					_debug_array($ad_groups);
 					echo lang('Feil med gruppetilhørighet ( navnet...)');
 					$GLOBALS['phpgw']->common->phpgw_exit();
 				}

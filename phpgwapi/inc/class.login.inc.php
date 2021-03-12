@@ -385,15 +385,13 @@ HTML;
 
 						if ($GLOBALS['phpgw_info']['server']['mapping'] == 'id')
 						{
-							return $this->create_account();
-
 							// Redirection to create the new account :
-						//	$GLOBALS['phpgw']->redirect_link('/phpgwapi/inc/sso/create_account.php');
+							return $this->create_account();
 						}
 						else if ($GLOBALS['phpgw_info']['server']['mapping'] == 'table' || $GLOBALS['phpgw_info']['server']['mapping'] == 'all')
 						{
 							// Redirection to create a new mapping :
-							$GLOBALS['phpgw']->redirect_link('/phpgwapi/inc/sso/create_mapping.php');
+							return $this->create_mapping();
 						}
 					}
 
