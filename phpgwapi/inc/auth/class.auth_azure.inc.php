@@ -83,6 +83,8 @@
 
 			if($primary)
 			{
+				_debug_array($remote_user);
+				_debug_array($_SERVER);
 				return $remote_user[0];
 			}
 
