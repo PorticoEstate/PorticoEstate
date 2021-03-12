@@ -46,7 +46,7 @@
 
 	if(empty($login))
 	{
-		echo lang('Wrong configuration');
+		echo lang('Did not find any username');
 		$GLOBALS['phpgw']->common->phpgw_exit();
 	}
 	else
