@@ -110,6 +110,7 @@
 			}
 
 			$email	 = phpgw::get_var('OIDC_email', 'string', 'SERVER');
+			$cellphone = '';
 			$ssn	 = phpgw::get_var('OIDC_pid', 'string', 'SERVER');
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST' && phpgw::get_var('submitit', 'bool', 'POST'))
@@ -124,6 +125,8 @@
 				$password1	 = !empty($_POST['passwd']) ? html_entity_decode(phpgw::get_var('passwd', 'string', 'POST')) : '';
 				$password2	 = !empty($_POST['passwd_confirm']) ? html_entity_decode(phpgw::get_var('passwd_confirm', 'string', 'POST')) : '';
 				$email		 = phpgw::get_var('email', 'email', 'POST');
+				$cellphone	 = phpgw::get_var('cellphone', 'string', 'POST');
+				
 			}
 
 			$error = array();
@@ -205,6 +208,11 @@
 						}
 						$preferences = createObject('phpgwapi.preferences', $account_id);
 						$preferences->add('common', 'email', $email);
+						if($cellphone)
+						{
+							$preferences->add('common', 'cellphone', $cellphone);
+						}
+
 						$preferences->save_repository();
 
 						$GLOBALS['phpgw']->log->write(array('text'	 => 'I-Notification, user created %1',
@@ -232,9 +240,11 @@
 			$variables['lang_firstname']		 = lang('firstname');
 			$variables['lang_lastname']			 = lang('lastname');
 			$variables['lang_email']			 = lang('email');
+			$variables['lang_cellphone']		 = lang('cellphone');
 			$variables['firstname']				 = $firstname;
 			$variables['lastname']				 = $lastname;
 			$variables['email']					 = $email;
+			$variables['cellphone']				 = $cellphone;
 			$variables['lang_confirm_password']	 = lang('confirm password');
 			$variables['partial_url']			 = 'login.php';
 			$variables['extra_vars']			 = array('create_account' => true);

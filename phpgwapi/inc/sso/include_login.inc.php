@@ -358,6 +358,8 @@
 				$this->tmpl->set_var('lang_firstname', $variables['lang_firstname']);
 				$this->tmpl->set_var('lang_lastname', $variables['lang_lastname']);
 				$this->tmpl->set_var('lang_email', $variables['lang_email']);
+				$this->tmpl->set_var('lang_cellphone', $variables['lang_cellphone']);
+				
 				if(isset($variables['firstname']))
 				{
 					$this->tmpl->set_var('firstname', $variables['firstname']);
@@ -369,6 +371,10 @@
 				if(isset($variables['email']))
 				{
 					$this->tmpl->set_var('email', $variables['email']);
+				}
+				if(isset($variables['cellphone']))
+				{
+					$this->tmpl->set_var('cellphone', $variables['cellphone']);
 				}
 				//parsing the block
 				$this->tmpl->parse('login_additional_infos', 'login_additional_info');
