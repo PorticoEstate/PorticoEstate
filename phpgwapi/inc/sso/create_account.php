@@ -50,13 +50,17 @@
 
 			if (isset($_SERVER["OIDC_groups"]))
 			{
-				//_debug_array($_SERVER["OIDC_groups"]);
-				$OIDC_groups = str_replace(array('\\xc3\\xa6','\\xc3\\x86','\\xc3\\xb8', '\\xc3\\x98','\\xc3\\xa5','\\xc3\\x85'), array('æ','Æ','ø', 'Ø','å','Å'),$_SERVER["OIDC_groups"]);
+				$OIDC_groups = str_replace(array('\xc3\xa6','\xc3\x86','\xc3\xb8', '\xc3\x98','\xc3\xa5','\xc3\x85'), array('æ','Æ','ø', 'Ø','å','Å'),$_SERVER["OIDC_groups"]);
 				$ad_groups	= json_decode($OIDC_groups, true);
 				$default_group_lid	 = !empty($GLOBALS['phpgw_info']['server']['default_group_lid']) ? $GLOBALS['phpgw_info']['server']['default_group_lid'] : 'Default';
 				if (!in_array($default_group_lid, $ad_groups))
 				{
-					_debug_array($default_group_lid);
+					header('Content-type: text/plain');
+					header("Content-Disposition: attachment; filename=OIDC_groups.txt");			
+					echo $_SERVER["OIDC_groups"];
+
+					die();
+						_debug_array($default_group_lid);
 					_debug_array($ad_groups);
 					echo lang('Feil med gruppetilhørighet ( navnet...)');
 					$GLOBALS['phpgw']->common->phpgw_exit();
