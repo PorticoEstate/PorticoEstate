@@ -324,10 +324,13 @@ HTML;
 				$this->login_forward();
 			}
 
+			/**
+			 * OpenID Connect
+			 */
 			else if (
 				in_array($GLOBALS['phpgw_info']['server']['auth_type'],  array('remoteuser', 'azure'))
 				&& !empty($GLOBALS['phpgw_info']['server']['mapping'])
-				&& (isset($_SERVER['OIDC_upn']) || isset($_SERVER['REMOTE_USER']))
+				&& (isset($_SERVER['OIDC_upn']) || isset($_SERVER['REMOTE_USER']) || isset($_SERVER['OIDC_pid']))
 				&& empty($_REQUEST['skip_remote']))
 			{
 				$phpgw_map_location = isset($_SERVER['HTTP_SHIB_ORIGIN_SITE']) ? $_SERVER['HTTP_SHIB_ORIGIN_SITE'] : 'local';

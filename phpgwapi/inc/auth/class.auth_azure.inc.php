@@ -78,8 +78,6 @@
 		 */
 		public function get_username($primary = false)
 		{
-			$ssn = phpgw::get_var('OIDC_pid', 'string', 'SERVER');
-
 			$remote_user = explode('@', phpgw::get_var('OIDC_upn', 'string', 'SERVER'));
 
 			if($primary)
@@ -93,6 +91,8 @@
 			{
 				$username = $GLOBALS['phpgw']->mapping->get_mapping($_SERVER['REMOTE_USER']);
 			}
+
+			$ssn = phpgw::get_var('OIDC_pid', 'string', 'SERVER');
 
 			/**
 			 * Azure from inside firewall
