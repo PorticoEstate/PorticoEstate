@@ -97,14 +97,23 @@
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
+			require_once dirname(realpath(__FILE__)) . '/sso/include_login.inc.php';
 		}
 
 		public function create_account( )
 		{
 			require_once dirname(realpath(__FILE__)) . '/sso/create_account.php';
 			$create_account = new phpgwapi_create_account();
-			return $create_account->display_create();
+			$create_account->display_create();
 		}
+
+		public function create_mapping( )
+		{
+			require_once dirname(realpath(__FILE__)) . '/sso/create_mapping.php';
+			$create_account = new phpgwapi_create_mapping();
+			$create_account->create_mapping();
+		}
+
 
 		public function login($frontend = '', $anonymous = false)
 		{
@@ -373,7 +382,6 @@ HTML;
 				{
 					if(!empty($GLOBALS['phpgw_info']['server']['auto_create_acct']))
 					{
-						require_once dirname(realpath(__FILE__)) . '/sso/include_login.inc.php';
 
 						if ($GLOBALS['phpgw_info']['server']['mapping'] == 'id')
 						{
@@ -498,7 +506,6 @@ HTML;
 				}
 			}
 
-			require_once dirname(realpath(__FILE__)) . '/sso/include_login.inc.php';
 			$uilogin = new phpgw_uilogin($GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && !isset($GLOBALS['phpgw_remote_user']));
 			$uilogin->phpgw_display_login($variables);
 		}

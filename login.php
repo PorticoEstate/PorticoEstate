@@ -15,9 +15,13 @@
 
 	$phpgwlogin = new phpgwapi_login;
 
-	if(!empty($_GET['create_account']))
+	if (!empty($_GET['create_account']))
 	{
 		$phpgwlogin->create_account();
+	}
+	else if (!empty($_GET['create_mapping']))
+	{
+		$phpgwlogin->create_mapping();
 	}
 	else
 	{
