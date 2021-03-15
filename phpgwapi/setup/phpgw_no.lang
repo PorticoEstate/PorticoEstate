@@ -350,3 +350,4 @@ Username already taken	common	no	Brukernavnet er allerede registrert
 confirm password	common	no	Bekreft passord
 please, check your password	common	no	Kontroller passord
 cellphone	common	no	Mobiltelefon
+missing membership: "%1" is not in the list	common	no	Feil med gruppetilhørighet: finner ikke "%1" i listen

@@ -50,16 +50,12 @@
 
 			if (isset($_SERVER["OIDC_groups"]))
 			{
-//				echo utf8_encode(utf8_decode("Innovasjon og st\xc3\xb8ttetjenester"));
-				$OIDC_groups = utf8_encode(utf8_decode(trim($_SERVER["OIDC_groups"], '["]')));
-				$ad_groups	= explode('","',$OIDC_groups);
-
+				$OIDC_groups = utf8_encode(utf8_decode($_SERVER["OIDC_groups"]));
+				$ad_groups	= explode(",",$OIDC_groups);
 				$default_group_lid	 = !empty($GLOBALS['phpgw_info']['server']['default_group_lid']) ? $GLOBALS['phpgw_info']['server']['default_group_lid'] : 'Default';
 				if (!in_array($default_group_lid, $ad_groups))
 				{
-					_debug_array($default_group_lid);
-					_debug_array($ad_groups);
-					echo lang('Feil med gruppetilhørighet: finner ikke %1 ikke i listen', $default_group_lid);
+					echo lang('missing membership: "%1" is not in the list', $default_group_lid);
 					$GLOBALS['phpgw']->common->phpgw_exit();
 				}
 			}
