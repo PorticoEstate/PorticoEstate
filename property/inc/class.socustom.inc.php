@@ -331,8 +331,8 @@
 			$filtermethod = '';
 			$filter_arr = array();
 
-			$sql_arr = explode('order', strtolower($sql));
-			$sql_arr1 =  explode('select ', trim(str_replace(array("\n"), ' ', $sql_arr[0])));
+			$sql_arr = explode('order by', trim(str_replace(array("\n", "\t", "  "), array(" ", " ", " "), $sql)));
+			$sql_arr1 =  explode('select ', $sql_arr[0]);
 			$sql_arr2 =  explode('from ', trim($sql_arr1[1]));
 
 			$filter_col_map = array();
