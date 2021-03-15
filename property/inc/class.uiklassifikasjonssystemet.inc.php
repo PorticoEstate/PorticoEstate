@@ -643,7 +643,7 @@
 			foreach ($floors as $floor)
 			{
 				$_rooms = $solocation->read(array('type_id'			 => 5, 'location_code'		 => $floor['location_code'],
-					'allrows'			 => $allrows, 'additional_fields'	 => array('nettoareal', 'bruttoareal',
+					'allrows'			 => $allrows, 'additional_fields'	 => array('area_gross', 'area_net',
 						'id_delfunsjon'), 'cat_id'			 => $selected_categories));
 
 				foreach ($_rooms as &$room)
@@ -654,8 +654,8 @@
 						'name'			 => "{$room['loc1_name']},  {$room['loc2_name']} ,  {$room['loc3_name']} ,  {$room['loc4_name']} ,  {$room['loc5_name']}",
 						'descr'			 => $room['romspesifikasjon'],
 						'rom_nr_id'		 => $room['rom_nr_id'],
-						'area_net'		 => $room['nettoareal'],
-						'area_gross'	 => $room['bruttoareal'],
+						'area_net'		 => $room['area_net'],
+						'area_gross'	 => $room['area_gross'],
 						'portico_id'	 => $room['location_code'],
 						'category'		 => $room['category'],
 						'id_delfunsjon'	 => $room['id_delfunsjon']
