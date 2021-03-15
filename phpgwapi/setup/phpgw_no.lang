@@ -343,3 +343,11 @@ value is used in records	common	no	Verdien er brukt i registrerte poster
 reset filter	common	no	Nullstill filter
 autocreate user	common	no	Autogenerer bruker fra SSO-info
 required group	common	no	Må være medlem av gruppe
+Did not find any username	common	no	Fant ikke brukernavn
+your account doesn't exist, please fill in infos !	common	no	Brukeren opprettes ved å fylle inn skjemaet
+new account and login	common	no	Registrering av ny bruker, og pålogging
+Username already taken	common	no	Brukernavnet er allerede registrert
+confirm password	common	no	Bekreft passord
+please, check your password	common	no	Kontroller passord
+cellphone	common	no	Mobiltelefon
+missing membership: "%1" is not in the list	common	no	Feil med gruppetilhørighet: finner ikke "%1" i listen

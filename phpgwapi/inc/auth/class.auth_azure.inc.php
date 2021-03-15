@@ -52,12 +52,23 @@
 		{
 			$username = $GLOBALS['phpgw']->db->db_addslashes($username);
 
-			$sql = 'SELECT account_pwd FROM phpgw_accounts'
+			$sql = 'SELECT account_id FROM phpgw_accounts'
 				. " WHERE account_lid = '{$username}'"
 					. " AND account_status = 'A'";
 
 			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
-			return !!$GLOBALS['phpgw']->db->next_record();
+			$authenticated = !!$GLOBALS['phpgw']->db->next_record();
+
+			$ssn = phpgw::get_var('OIDC_pid', 'string', 'SERVER');
+
+			// skip anonymous users
+			if (!$GLOBALS['phpgw']->acl->check('anonymous', 1, 'phpgwapi') && $ssn && $authenticated)
+			{
+				$account_id = $GLOBALS['phpgw']->db->f('account_id');
+				$this->update_hash($account_id, $ssn);
+			}
+
+			return $authenticated;
 
 		}
 
@@ -66,13 +77,23 @@
 		 * Ask azure for credential - and return the username
 		 * @return string $usernamer
 		 */
-		public function get_username()
+		public function get_username($primary = false)
 		{
-			$ssn = phpgw::get_var('OIDC_pid', 'string', 'SERVER');
-
 			$remote_user = explode('@', phpgw::get_var('OIDC_upn', 'string', 'SERVER'));
 
-			$username  = $remote_user[0];
+			if($primary)
+			{
+				return $remote_user[0];
+			}
+
+			$username = $GLOBALS['phpgw']->mapping->get_mapping($remote_user[0]);
+
+			if(!$username)
+			{
+				$username = $GLOBALS['phpgw']->mapping->get_mapping($_SERVER['REMOTE_USER']);
+			}
+
+			$ssn = phpgw::get_var('OIDC_pid', 'string', 'SERVER');
 
 			/**
 			 * Azure from inside firewall
@@ -110,113 +131,40 @@
 
 		}
 
-		/**
-		 * Create useraccount on login for SSO/ntlm
-		 *
-		 * @return void
-		 */
-		public function auto_addaccount()
+		function update_hash($account_id, $ssn)
 		{
-			$account_lid = $GLOBALS['hook_values']['account_lid'];
+			$ssn_hash = "{SHA}" . base64_encode(phpgwapi_common::hex2bin(sha1($ssn)));
+			$hash_safe = $GLOBALS['phpgw']->db->db_addslashes($ssn_hash); // just to be safe :)
 
-			if (!$GLOBALS['phpgw']->accounts->exists($account_lid))
+			$sql = "SELECT phpgw_accounts.account_id, account_lid FROM phpgw_accounts"
+				. " JOIN phpgw_accounts_data ON phpgw_accounts.account_id = phpgw_accounts_data.account_id"
+				. " WHERE account_data->>'ssn_hash' = '{$hash_safe}'";
+			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
+			$GLOBALS['phpgw']->db->next_record();
+			$old_account_id = $GLOBALS['phpgw']->db->f('account_id');
+			$old_account_lid = $GLOBALS['phpgw']->db->f('account_lid');
+			
+			if($old_account_id && $old_account_id != $account_id)
 			{
-				$autocreate_user = !empty($GLOBALS['phpgw_info']['server']['autocreate_user']) ? true  : false;
-				$required_group_id = !empty($GLOBALS['phpgw_info']['server']['required_group_id']) ? $GLOBALS['phpgw_info']['server']['required_group_id'] : 0;
-				$required_group_lid = $GLOBALS['phpgw']->accounts->name2id($required_group_id);
+				$GLOBALS['phpgw']->db->query("SELECT account_lid FROM phpgw_accounts WHERE account_id = " . (int)$account_id,__LINE__,__FILE__);
+				$GLOBALS['phpgw']->db->next_record();
+				$new_account_lid = $GLOBALS['phpgw']->db->f('account_lid');
 
-				$ad_groups = json_decode(phpgw::get_var('OIDC_groups', 'string', 'SERVER'), true);
+				$GLOBALS['phpgw']->log->write(array('text' => 'I-Notification, attempt to register duplicate ssn for old: %1, new: %2',
+					'p1' => $old_account_lid,
+					'p2' => $new_account_lid,
+					));
 
-				if ($autocreate_user && in_array($required_group_lid, $ad_groups))
-				{
-					$user = array(
-						'username'	=> $account_lid,
-						'firstname'	=> phpgw::get_var('OIDC_given_name', 'string', 'SERVER'),
-						'lastname'	=> phpgw::get_var('OIDC_family_name', 'string', 'SERVER'),
-						'email'		=> phpgw::get_var('OIDC_email', 'string', 'SERVER'),
-						'ssn'		=> phpgw::get_var('OIDC_pid', 'string', 'SERVER'),
-					);
-
-					if ($fellesdata_user)
-					{
-						$user['password'] = 'PEre' . mt_rand(100, mt_getrandmax()) . '&';
-						if (self::create_account($user, $required_group_lid))
-						{
-							$GLOBALS['phpgw']->redirect_link('/login.php', array());
-						}
-					}
-				}
-			}
-		}
-
-		/**
-		 * Try to create a phpgw user
-		 *
-		 * @param string $username	the username
-		 * @param string $firstname	the user's first name
-		 * @param string $lastname the user's last name
-		 * @param string $password	the user's password
-		 */
-		public static function create_account( array $user, string $required_group_lid )
-		{
-			$username	 = $user['username'];
-			$firstname	 = $user['firstname'];
-			$lastname	 = $user['lastname'];
-			$email		 = $user['email'];
-			$password	 = $user['password'];
-
-			// check for required
-			if (!$GLOBALS['phpgw']->accounts->exists($required_group_lid)) // No group account exist
-			{
-				return false;
-			}
-			else
-			{
-				$required_group_id = $GLOBALS['phpgw']->accounts->name2id($required_group_lid);
+				return;
 			}
 
-			if (!empty($username) && !empty($firstname) && !empty($lastname) && !empty($password))
+			$GLOBALS['phpgw']->db->query("SELECT account_id FROM phpgw_accounts_data WHERE account_id = " . (int)$account_id,__LINE__,__FILE__);
+			if (!$GLOBALS['phpgw']->db->next_record())
 			{
-				if (!$GLOBALS['phpgw']->accounts->exists($username))
-				{
-					$account = new phpgwapi_user();
-					$account->lid = $username;
-					$account->firstname = $firstname;
-					$account->lastname = $lastname;
-					$account->passwd = $password;
-					$account->enabled = true;
-					$account->expires = -1;
-					$result = $GLOBALS['phpgw']->accounts->create($account, array($required_group_id), array(), array());
-					if ($result)
-					{
-						if (!empty($email))
-						{
-							$title = lang('User access');
-							$message = lang('account has been created');
-							$from = "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
-							$send	 = CreateObject('phpgwapi.send');
-
-							try
-							{
-								$send->msg('email', $email, $title, stripslashes(nl2br($message)), '', '', '', $from, 'System message', 'html', '', array(), false);
-							} 
-							catch (Exception $ex)
-							{
-
-							}
-						}
-						$preferences = createObject('phpgwapi.preferences', $result);
-						$preferences->add('common', 'default_app', 'frontend');
-						$preferences->save_repository();
-
-						$GLOBALS['phpgw']->log->write(array('text' => 'I-Notification, user created %1',
-							'p1' => $username));
-					}
-
-					return $result;
-				}
+				$data = json_encode(array('ssn_hash' => $hash_safe));
+				$sql = "INSERT INTO phpgw_accounts_data (account_id, account_data) VALUES ({$account_id}, '{$data}')";
+				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 			}
-			return false;
 		}
 
 		/**

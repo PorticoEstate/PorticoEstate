@@ -78,7 +78,6 @@
 	(
 		'menu'	=> 'phpgwapi.menu_apps.get_menu',
 		'login'	=> 'phpgwapi.menu.clear',
-		'auto_addaccount' => 'phpgwapi.accounts.auto_addaccount',
 	);
 
 	// Basic information about this app

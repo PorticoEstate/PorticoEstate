@@ -255,25 +255,6 @@
 			</tr>
 
 			<tr class="pure-table-odd">
-				<td>{lang_autocreate_user} (Azure AD):</td>
-				<td>
-					<select name="newsettings[autocreate_user]">
-						<option value="">{lang_No}</option>
-						<option value="True"{selected_autocreate_user_True}>{lang_Yes}</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>{lang_required_group}:</td>
-				<td>
-					<select name="newsettings[required_group_id]">
-						{hook_required_group}
-					</select>
-				</td>
-			</tr>
-
-
-			<tr class="pure-table-odd">
 				<td>{lang_Disable_auto_completion_of_the_login_form_}:</td>
 				<td>
 					<select name="newsettings[autocomplete_login]">

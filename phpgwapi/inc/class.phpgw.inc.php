@@ -542,15 +542,18 @@
 
 					case 'email':
 						$filtered = filter_var($value, FILTER_VALIDATE_EMAIL);
-						if ( $filtered == $value )
+						if ($filtered == $value)
 						{
-                                if ($filtered) {
+							if ($filtered)
+							{
 								return $filtered;
-                                } else {
-                                    return $value;
-                                }
+							}
+							else
+							{
+								return $value;
+							}
 						}
-						return (string) $default;
+						return (string)$default;
 
 					case 'filename':
 						if ( $value != '.' || $value != '..' )

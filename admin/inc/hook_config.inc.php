@@ -113,31 +113,3 @@
 		}
 		return $out;
 	}
-
-	/**
-	 * Get HTML checkbox with groups that are candidates for the field finnish date at tts
-	 *
-	 * @param $config
-	 * @return string HTML checkboxes to be placed in a table
-	 */
-	function required_group( $config )
-	{
-		$groups			 = $GLOBALS['phpgw']->accounts->get_list('groups');
-		$groups_assigned = !empty($config['required_group']) ? $config['required_group'] : 0;
-		$out	 = '<option value="">' . lang('none') . '</option>' . "\n";
-
-		foreach ($groups as $group => $label)
-		{
-			$selected = '';
-			if ($group == $groups_assigned)
-			{
-				$selected = ' selected = "selected"';
-			}
-
-			$out .= <<<HTML
-			<option value='{$group}'{$selected}>{$label}</option>
-HTML;
-		}
-		return $out;
-	}
-

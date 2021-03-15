@@ -204,7 +204,7 @@ HTML;
 			return $values;
 		}
 
-		function step2( $errors = array(), $r_reg = '', $o_reg = '', $missing_fields = '' )
+		function step2( $errors = array(), $r_reg = array(), $o_reg = array(), $missing_fields = array() )
 		{
 			phpgwapi_jquery::load_widget('core');
 			$GLOBALS['phpgw']->js->validate_file('portico', 'ajax', 'registration');
