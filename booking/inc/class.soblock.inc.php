@@ -88,7 +88,7 @@
 			$expired = $this->find_expired();
 			$table_name = $this->table_name;
 			$db = $this->db;
-			$ids = join(', ', array_map(array($this, 'select_id'), $expired));
+			$ids = join(', ', array_map(array($this, 'select_id'), $expired['results']));
 			if($ids)
 			{
 				$sql = "UPDATE {$table_name} SET active = 0 WHERE {$table_name}.id IN ($ids);";
