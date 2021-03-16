@@ -742,6 +742,7 @@
 			</xsl:attribute>
 			<xsl:value-of select="php:function('lang', 'condition degree')"/>
 		</label>
+		<input type="hidden" name="values[condition][{condition_type}][condition_type]" value="{condition_type}"/>
 		<select name="values[condition][{condition_type}][degree]"  class="pure-input-1-2" >
 			<xsl:attribute name="title">
 				<xsl:value-of select="php:function('lang', 'select value')"/>
