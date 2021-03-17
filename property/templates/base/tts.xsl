@@ -931,34 +931,28 @@
 												<xsl:apply-templates select="delivery_type_list/options"/>
 											</select>
 										</div>
-										<div id="payment_type" class="pure-control-group" style="display:none;">
-											<xsl:variable name="lang_payment_type">
-												<xsl:value-of select="php:function('lang', 'payment type')"/>
-											</xsl:variable>
-											<label>
-												<xsl:value-of select="$lang_payment_type"/>
-											</label>
-
-											<select name="values[payment_type]" class="pure-input-3-4" >
-												<xsl:attribute name="title">
-													<xsl:value-of select="$lang_payment_type"/>
-												</xsl:attribute>
-												<xsl:attribute name="data-validation">
-													<xsl:text>required</xsl:text>
-												</xsl:attribute>
-												<xsl:attribute name="data-validation-error-msg">
-													<xsl:value-of select="$lang_payment_type"/>
-												</xsl:attribute>
-												<option value="">
-													<xsl:value-of select="$lang_payment_type"/>
-												</option>
-												<xsl:apply-templates select="payment_type_list/options"/>
-											</select>
-										</div>
-
+										<xsl:call-template name="payment_type"/>
 									</xsl:if>
 
 								</xsl:when>
+								<xsl:otherwise>
+									<xsl:if test="verified_transfered !=1 and count(order_template_list/options) &gt; 0">
+										<div class="pure-control-group">
+											<label>
+												<xsl:text> </xsl:text>
+											</label>
+											<input type="button" class="pure-button pure-button-primary" name="show_payment_type" onClick="show_payment_types();">
+												<xsl:attribute name="value">
+													<xsl:value-of select="php:function('lang', 'change payment type')"/>
+												</xsl:attribute>
+												<xsl:attribute name="title">
+													<xsl:value-of select="php:function('lang', 'change payment type')"/>
+												</xsl:attribute>
+											</input>
+										</div>
+										<xsl:call-template name="payment_type"/>
+									</xsl:if>
+									</xsl:otherwise>
 							</xsl:choose>
 							<xsl:choose>
 								<xsl:when test="value_order_id!=''">
@@ -1960,4 +1954,31 @@
 			<xsl:value-of select="email"/>
 		</td>
 	</tr>
+</xsl:template>
+
+<xsl:template xmlns:php="http://php.net/xsl" name="payment_type">
+	<div id="payment_type" class="pure-control-group" style="display:none;">
+		<xsl:variable name="lang_payment_type">
+			<xsl:value-of select="php:function('lang', 'payment type')"/>
+		</xsl:variable>
+		<label>
+			<xsl:value-of select="$lang_payment_type"/>
+		</label>
+
+		<select name="values[payment_type]" class="pure-input-3-4" >
+			<xsl:attribute name="title">
+				<xsl:value-of select="$lang_payment_type"/>
+			</xsl:attribute>
+			<xsl:attribute name="data-validation">
+				<xsl:text>required</xsl:text>
+			</xsl:attribute>
+			<xsl:attribute name="data-validation-error-msg">
+				<xsl:value-of select="$lang_payment_type"/>
+			</xsl:attribute>
+			<option value="">
+				<xsl:value-of select="$lang_payment_type"/>
+			</option>
+			<xsl:apply-templates select="payment_type_list/options"/>
+		</select>
+	</div>
 </xsl:template>
