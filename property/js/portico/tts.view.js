@@ -2,6 +2,7 @@ var d;
 var vendor_id = 0;
 var amount = 0;
 
+
 this.local_DrawCallback4 = function (container)
 {
 	var api = $("#" + container).dataTable().api();
@@ -66,6 +67,12 @@ var FormatterCenter = function (key, oData)
 
 
 /********************************************************************************/
+
+function show_payment_types()
+{
+	$("#payment_type").is(":visible") ? $("#payment_type").hide() : $("#payment_type").show();
+//	$("#payment_type").show();
+}
 
 this.confirm_session = function (action)
 {
@@ -499,6 +506,7 @@ set_tab = function ()
 	//Dummy
 };
 
+
 window.on_location_updated = function (location_code)
 {
 	location_code = location_code || $("#loc1").val();
@@ -544,6 +552,7 @@ window.on_location_updated = function (location_code)
 
 $(document).ready(function ()
 {
+
 	$("#tags").select2({
 		placeholder: "Velg en eller flere tagger, eller lag ny",
 		width: '75%',

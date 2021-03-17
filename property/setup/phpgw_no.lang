@@ -2437,3 +2437,4 @@ delete files	property	no	Slett filer
 duplicate	property	no	Duplikat
 transfer to external	property	no	Overfør til eksternt system
 default tax code	property	no	Standard mva-kode
+change payment type	property	no	Endre betalingstype

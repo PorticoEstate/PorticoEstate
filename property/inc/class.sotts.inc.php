@@ -1017,6 +1017,8 @@
 				$ticket['delivery_type']		 = $this->db->f('delivery_type');
 				$ticket['payment_type']			 = $this->db->f('payment_type');
 				$ticket['charge_tenant']		 = $this->db->f('charge_tenant');
+				$ticket['verified_transfered']	 = $this->db->f('verified_transfered');
+				
 
 				$user_id = (int)$this->db->f('user_id');
 
@@ -1421,6 +1423,7 @@
 			$old_order_dim1			 = (int)$this->db->f('order_dim1');
 			$order_sent				 = $this->db->f('order_sent');
 			$old_order_id			 = $this->db->f('order_id');
+			$old_payment_type		 = (int)$this->db->f('payment_type');
 
 			$ticket['tenant_id']= $this->db->f('tenant_id');
 
@@ -1758,6 +1761,12 @@
 				unset($interlink);
 			}
 
+			if((int)$ticket['payment_type'] && $old_payment_type != (int)$ticket['payment_type'] )
+			{
+				$payment_type = $ticket['payment_type'];
+				$this->db->query("UPDATE fm_tts_tickets SET payment_type = {$payment_type}  WHERE id={$id}", __LINE__, __FILE__);
+			}
+			
 			if (!$old_order_id && isset($ticket['make_order']) && $ticket['make_order'])
 			{
 				$order_id = execMethod('property.socommon.increment_id', 'order');
