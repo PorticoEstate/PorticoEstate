@@ -484,17 +484,8 @@
 				}
 			}
 
-			$values = $this->so->read(array
-				(
-				'start'					 => $data['start'],
-				'results'				 => $data['results'],
-				'query'					 => $data['query'],
-				'order'					 => $data['order'],
-				'sort'					 => $data['sort'],
-				'allrows'				 => $data['allrows'],
-				'list_descr'			 => $data['list_descr'],
-				'make_relation'			 => $data['make_relation'],
-				'dry_run'				 => $data['dry_run'],
+			$values = $this->so->read(array_merge($data, array
+			(
 				'filter'				 => $this->filter,
 				'district_id'			 => $this->district_id,
 				'cat_id'				 => $this->cat_id,
@@ -509,7 +500,7 @@
 				'condition_survey_id'	 => $this->condition_survey_id,
 				'responsible_unit'		 => $this->responsible_unit,
 				'recommended_year'		 => $this->recommended_year
-				)
+				))
 			);
 
 			$this->total_records		 = $this->so->total_records;
