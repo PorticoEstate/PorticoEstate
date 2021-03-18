@@ -58,13 +58,13 @@
 
 			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 			$authenticated = !!$GLOBALS['phpgw']->db->next_record();
+			$account_id = (int)$GLOBALS['phpgw']->db->f('account_id');
 
 			$ssn = phpgw::get_var('OIDC_pid', 'string', 'SERVER');
 
 			// skip anonymous users
 			if (!$GLOBALS['phpgw']->acl->check('anonymous', 1, 'phpgwapi') && $ssn && $authenticated)
 			{
-				$account_id = $GLOBALS['phpgw']->db->f('account_id');
 				$this->update_hash($account_id, $ssn);
 			}
 
