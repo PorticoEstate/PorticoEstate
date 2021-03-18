@@ -936,7 +936,7 @@
 
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:if test="verified_transfered !=1 and count(order_template_list/options) &gt; 0">
+									<xsl:if test="value_order_sent !=1 and count(order_template_list/options) &gt; 0">
 										<div class="pure-control-group">
 											<label>
 												<xsl:text> </xsl:text>

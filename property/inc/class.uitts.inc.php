@@ -3784,7 +3784,6 @@ JS;
 				'payment_type_list'				 => array('options' => execMethod('property.bogeneric.get_list', array('type' => 'order_template_payment_type', 'selected' => $ticket['payment_type']))),
 				'content_files'					 => $content_files,
 				'tag_list'						 => array('options' => createObject('property.bofiles')->get_all_tags()),
-				'verified_transfered'			 => $ticket['verified_transfered']	
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
