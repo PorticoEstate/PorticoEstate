@@ -327,3 +327,15 @@ privacy policy	common	nn	Retningslinjer for personvern
 write here...	common	nn	Skriv her...
 Upload multiple files with the file dialog, or by dragging and dropping images onto the dashed region	common	nn	Last opp fleire filer ved enten å dra-og-slepp i markert område, eller ved å velje filene direkte.
 %1: login blocked for user '%2', ip %3	common	nn	%1: login blokkert for bruker '%2', IP %3
+reset filter	common	nn	Nullstill filter
+autocreate user	common	nn	Autogenerer bruker frå SSO-info
+required group	common	nn	Må være medlem av gruppe
+required group	common	nn	Må være medlem av gruppe
+Did not find any username	common	nn	Fann ikke brukarnamn
+your account doesn't exist, please fill in infos !	common	nn	Brukaren vert oppretta ved å fylle inn skjemaet
+new account and login	common	nn	Registrering av ny brukar, og pålogging
+Username already taken	common	nn	Brukarnamnet er allereie registrert
+confirm password	common	nn	Bekreft passord
+please, check your password	common	nn	Kontroller passord
+cellphone	common	nn	Mobiltelefon
+missing membership: "%1" is not in the list	common	nn	Feil med gruppemedlemskap: finner ikke "%1" i listen

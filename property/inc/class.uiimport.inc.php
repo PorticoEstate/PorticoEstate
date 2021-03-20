@@ -80,6 +80,7 @@
 				'bb_building'				 => array('name'		 => 'bb_building (' . 'Ressursgruppe' . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'bb_resource'				 => array('name'		 => 'bb_resource (' . 'Ressurser' . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'bb_building_resource'		 => array('name'		 => 'bb_building_resource (' . 'Ressurskobling' . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'fm_building_part'	 => array('name'		 => 'fm_building_part (' . 'Bygningsdel' . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 			);
 
 			$location_types = execMethod('property.soadmin_location.select_location_type');

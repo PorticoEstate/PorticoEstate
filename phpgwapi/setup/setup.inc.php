@@ -77,7 +77,7 @@
 	$setup_info['phpgwapi']['hooks'] = array
 	(
 		'menu'	=> 'phpgwapi.menu_apps.get_menu',
-		'login'	=> 'phpgwapi.menu.clear'
+		'login'	=> 'phpgwapi.menu.clear',
 	);
 
 	// Basic information about this app

@@ -147,10 +147,6 @@
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',
 								array('menuaction' => 'admin.uiaccounts.list_users'))
 				);
-			}
-
-			if ( $is_admin || $local_admin)
-			{
 				$menus['admin']['groups'] = array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('manage groups', array(), true),

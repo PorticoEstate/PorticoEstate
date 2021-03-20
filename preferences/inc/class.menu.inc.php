@@ -71,25 +71,6 @@
 					'url'	=> $GLOBALS['phpgw']->link('/preferences/changepassword.php')
 				);
 			}
-			if ( (isset($GLOBALS['phpgw_info']['server']['auth_type'])
-					&& $GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser')
-				|| (isset($GLOBALS['phpgw_info']['server']['half_remote_user'])
-					&& $GLOBALS['phpgw_info']['server']['half_remote_user'] == 'remoteuser') )
-			{
-				if ( $GLOBALS['phpgw_info']['server']['mapping'] == 'table'
-					|| $GLOBALS['phpgw_info']['server']['mapping'] == 'all' )
-				{
-					$menus['navigation'][] = array
-					(
-						'text'	=> $GLOBALS['phpgw']->translation->translate('Mapping', array(), true),
-						'url'	=> $GLOBALS['phpgw']->link('/index.php', array
-									(
-										'menuaction' => 'preferences.uimapping.index',
-										'appname' => 'preferences'
-									))
-					);
-				}
-			}
 
 			if ( isset($navbar['admin']) )
 			{
@@ -120,6 +101,26 @@
 					'url'	=> $GLOBALS['phpgw']->link('/preferences/changepassword.php')
 				)
 			);
+
+			if ( (isset($GLOBALS['phpgw_info']['server']['auth_type'])
+					&& in_array($GLOBALS['phpgw_info']['server']['auth_type'],  array('remoteuser', 'azure')))
+				|| (isset($GLOBALS['phpgw_info']['server']['half_remote_user'])
+					&& $GLOBALS['phpgw_info']['server']['half_remote_user'] == 'remoteuser') )
+			{
+				if ( $GLOBALS['phpgw_info']['server']['mapping'] == 'table'
+					|| $GLOBALS['phpgw_info']['server']['mapping'] == 'all' )
+				{
+					$menus['preferences'][] = array
+					(
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Mapping', array(), true),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array
+									(
+										'menuaction' => 'preferences.uimapping.index',
+										'appname' => 'preferences'
+									))
+					);
+				}
+			}
 
 			return $menus;
 		}

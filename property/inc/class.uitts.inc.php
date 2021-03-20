@@ -983,8 +983,9 @@ HTML;
 				'text'	 => lang('check date type'),
 				'list'	 => array(
 					array(
-						'id'	 => 1,
-						'name'	 => lang('modified date')
+						'id'	 => '',// translated to 1
+						'name'	 => lang('modified date'),
+						'selected'	 => 1
 					),
 					array(
 						'id'	 => 2,
@@ -2507,7 +2508,7 @@ HTML;
 				$coordinator_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
 				$coordinator_email	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
 
-				$subject = lang(Approval) . ": " . $ticket['order_id'];
+				$subject = lang('Approval') . ": " . $ticket['order_id'];
 				$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
 						'id'		 => $id), false, true) . '">' . lang('Workorder %1 needs approval', $ticket['order_id']) . '</a>';
 
@@ -3782,7 +3783,7 @@ JS;
 				'delivery_type_list'			 => array('options' => execMethod('property.bogeneric.get_list', array('type' => 'order_template_delivery_type', 'selected' => $ticket['delivery_type']))),
 				'payment_type_list'				 => array('options' => execMethod('property.bogeneric.get_list', array('type' => 'order_template_payment_type', 'selected' => $ticket['payment_type']))),
 				'content_files'					 => $content_files,
-				'tag_list'							 => array('options' => createObject('property.bofiles')->get_all_tags())
+				'tag_list'						 => array('options' => createObject('property.bofiles')->get_all_tags()),
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');

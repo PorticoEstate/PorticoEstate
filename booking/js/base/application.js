@@ -5,10 +5,10 @@ $(document).ready(function ()
 {
 	$("#start_date").change(function ()
 	{
-//		if(!$("#end_date").val())
+		var temp_end_date = $("#end_date").datetimepicker('getValue');
+		var temp_start_date = $("#start_date").datetimepicker('getValue');
+		if(!temp_end_date || (temp_end_date < temp_start_date))
 		{
-			var temp_start_date = $("#start_date").datetimepicker('getValue');
-//			console.log(temp_start_date);
 			$("#end_date").val($("#start_date").val());
 
 			$('#end_date').datetimepicker('setOptions', {

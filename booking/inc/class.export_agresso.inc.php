@@ -12,6 +12,13 @@
 	 * 				2) configurasjon for pålogging til ftp-server (IP/Login/Passord/envt katalog)
 	 *
 	 */
+	require_once PHPGW_API_INC . '/flysystem2/autoload.php';
+
+	use League\Flysystem\Filesystem;
+	use League\Flysystem\PhpseclibV2\SftpConnectionProvider;
+	use League\Flysystem\PhpseclibV2\SftpAdapter;
+	use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
+	
 	class export_agresso
 	{
 
@@ -41,13 +48,21 @@
 				$file_written = true;
 			}
 
-			if ($file_written && $this->config->config_data['invoice_export_method'] != 'ftp')
+			$transfer_ok = false;
+			if ($file_written)
 			{
-				$transfer_ok = true;
-			}
-			else if ($file_written)
-			{
-				$transfer_ok = $this->transfer($filnavn);
+				if($this->config->config_data['invoice_export_method'] == 'ftp')
+				{
+					$transfer_ok = $this->transfer($filnavn);
+				}
+				else if($this->config->config_data['invoice_export_method'] == 'ftps')
+				{
+					$transfer_ok = $this->transfer_ftps($filnavn);
+				}
+				else
+				{
+					$transfer_ok = true;
+				}
 			}
 
 			if ($transfer_ok)
@@ -55,7 +70,7 @@
 				$this->db->transaction_commit();
 				$this->config->config_data['invoice_last_id'] = $id;
 				$this->config->save_repository();
-				$message = "Godkjent: periode: {$Periode} antall bilag/underbilag overfort: {$antall} , fil: {$filnavn}";
+				$message = "Overfort fil: {$filnavn}";
 			}
 			else
 			{
@@ -68,6 +83,10 @@
 		protected function lagfilnavn()
 		{
 			$fil_katalog = $this->config->config_data['invoice_export_path'];
+			if(!$fil_katalog)
+			{
+				$fil_katalog = sys_get_temp_dir();
+			}
 			$continue = true;
 			$i = 1;
 			do
@@ -86,6 +105,61 @@
 
 			//Ingen løpenr er ledige, gi feilmelding
 			return false;
+		}
+
+		private function transfer_ftps( $filnavn )
+		{
+			$content = file_get_contents($filnavn);
+			$basedir = rtrim($this->config->config_data['invoice_ftp_basedir'],'/');
+			if ($basedir)
+			{
+				$newfile = $basedir . '/' . basename($filnavn);
+			}
+			else
+			{
+				$newfile = basename($filnavn);
+			}
+			$host = $this->config->config_data['invoice_ftp_host'];
+			$user = $this->config->config_data['invoice_ftp_user'];
+			$pass = $this->config->config_data['invoice_ftp_password'];
+
+			$filesystem = new Filesystem(new SftpAdapter(
+				new SftpConnectionProvider(
+					$host, // host (required)
+					$user, // username (required)
+					$pass, // password (optional, default: null) set to null if privateKey is used
+					null, // private key (optional, default: null) can be used instead of password, set to null if password is set
+					null, // passphrase (optional, default: null), set to null if privateKey is not used or has no passphrase
+					22, // port (optional, default: 22)
+					false, // use agent (optional, default: false)
+					10, // timeout (optional, default: 10)
+					40, // max tries (optional, default: 4)
+					null, // host fingerprint (optional, default: null),
+					null, // connectivity checker (must be an implementation of 'League\Flysystem\PhpseclibV2\ConnectivityChecker' to check if a connection can be established (optional, omit if you don't need some special handling for setting reliable connections)
+				),
+				$basedir, // root path (required)
+				PortableVisibilityConverter::fromArray([
+					'file' => [
+						'public' => 0640,
+						'private' => 0604,
+					],
+					'dir' => [
+						'public' => 0740,
+						'private' => 7604,
+					],
+				])
+			));
+
+			try
+			{
+				$filesystem->write(basename($newfile), $content);
+				$transfer_ok = true;
+			}
+			catch (FilesystemError $exception)
+			{
+				$transfer_ok = false;
+			}
+			return $transfer_ok;
 		}
 
 		protected function transfer( $filnavn )

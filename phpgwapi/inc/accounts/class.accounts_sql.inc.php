@@ -474,7 +474,7 @@
 
 			$where = 'WHERE';
 
-			if($filter['active'] == 1)
+			if(isset($filter['active']) && $filter['active'] == 1)
 			{
 				$whereclause = "{$where} account_status = 'A'";
 				$where = 'AND';

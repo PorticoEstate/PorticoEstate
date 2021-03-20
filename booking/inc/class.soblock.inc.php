@@ -40,7 +40,19 @@
 		{
 			$table_name = $this->table_name;
 
-			$resource_ids = join(', ', array_map(array($this, 'select_id'), $resources));
+			if(!$resources)
+			{
+				return;
+			}
+			else if(isset($resources[0]['id']))
+			{
+				$resource_ids = join(', ', array_map(array($this, 'select_id'), $resources));
+			}
+			else
+			{
+				$resource_ids = join(', ', $resources);
+			}
+
 			foreach ($dates as $checkdate)
 			{
 				$checkdate['from_'];
@@ -76,7 +88,7 @@
 			$expired = $this->find_expired();
 			$table_name = $this->table_name;
 			$db = $this->db;
-			$ids = join(', ', array_map(array($this, 'select_id'), $expired));
+			$ids = join(', ', array_map(array($this, 'select_id'), $expired['results']));
 			if($ids)
 			{
 				$sql = "UPDATE {$table_name} SET active = 0 WHERE {$table_name}.id IN ($ids);";

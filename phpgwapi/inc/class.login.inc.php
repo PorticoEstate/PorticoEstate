@@ -91,7 +91,29 @@
 			*/
 			require_once $header;
 
+			if(!empty($_GET['debug']))
+			{
+				_debug_array($_SERVER);
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			require_once dirname(realpath(__FILE__)) . '/sso/include_login.inc.php';
 		}
+
+		public function create_account( )
+		{
+			require_once dirname(realpath(__FILE__)) . '/sso/create_account.php';
+			$create_account = new phpgwapi_create_account();
+			$create_account->display_create();
+		}
+
+		public function create_mapping( )
+		{
+			require_once dirname(realpath(__FILE__)) . '/sso/create_mapping.php';
+			$create_account = new phpgwapi_create_mapping();
+			$create_account->create_mapping();
+		}
+
 
 		public function login($frontend = '', $anonymous = false)
 		{
@@ -181,40 +203,6 @@ HTML;
 			}
 
 			/* Program starts here */
-
-			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && isset($GLOBALS['phpgw_info']['server']['mapping']) && !empty($GLOBALS['phpgw_info']['server']['mapping']) && isset($_SERVER['REMOTE_USER']))
-			{
-				$login = $GLOBALS['phpgw']->mapping->get_mapping($_SERVER['REMOTE_USER']);
-				if ($login == '') // mapping failed
-				{
-					if (isset($GLOBALS['phpgw_info']['server']['auto_create_acct']) && $GLOBALS['phpgw_info']['server']['auto_create_acct'] == true)
-					{
-						// Redirection to create the new account :
-						$GLOBALS['phpgw']->redirect_link('/phpgwapi/inc/sso/create_account.php');
-					}
-					else if ($GLOBALS['phpgw_info']['server']['mapping'] == 'table' || $GLOBALS['phpgw_info']['server']['mapping'] == 'all')
-					{
-						// Redirection to create a new mapping :
-						$GLOBALS['phpgw']->redirect_link('/phpgwapi/inc/sso/create_mapping.php');
-					}
-					else if (!(isset($_GET['cd']) && $_GET['cd'] != '0'))
-					{
-						// An error occurs, bailed out
-						$GLOBALS['phpgw']->redirect_link('/' . $partial_url, array('cd' => '20'));
-					}
-				}
-				$passwd	 = $login;
-				if (!(isset($_GET['cd']) && $_GET['cd'] != '0'))
-				{
-					$_POST['submitit'] = true;
-				}
-			}
-			else
-			{
-				$login	 = phpgw::get_var('login', 'string', 'POST');
-				// remove entities to stop mangling
-				$passwd	 = html_entity_decode(phpgw::get_var('passwd', 'string', 'POST'));
-			}
 
 			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'http' && isset($_SERVER['PHP_AUTH_USER']))
 			{
@@ -357,21 +345,32 @@ HTML;
 
 				$this->login_forward();
 			}
-			else if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'azure' &&  (!isset($_REQUEST['skip_remote']) || !$_REQUEST['skip_remote']))
+
+			/**
+			 * OpenID Connect
+			 */
+			else if (
+				in_array($GLOBALS['phpgw_info']['server']['auth_type'],  array('remoteuser', 'azure'))
+				&& !empty($GLOBALS['phpgw_info']['server']['mapping'])
+				&& (isset($_SERVER['OIDC_upn']) || isset($_SERVER['REMOTE_USER']) || isset($_SERVER['OIDC_pid']))
+				&& empty($_REQUEST['skip_remote']))
 			{
-				//Reset auth object
-				$GLOBALS['phpgw']->auth	= createObject('phpgwapi.auth');
+				$phpgw_map_location = isset($_SERVER['HTTP_SHIB_ORIGIN_SITE']) ? $_SERVER['HTTP_SHIB_ORIGIN_SITE'] : 'local';
+				$phpgw_map_authtype = isset($_SERVER['HTTP_SHIB_ORIGIN_SITE']) ? 'shibboleth':'remoteuser';
+
+				//Create the mapping if necessary :
+				if(isset($GLOBALS['phpgw_info']['server']['mapping']) && !empty($GLOBALS['phpgw_info']['server']['mapping']))
+				{
+					if(!is_object($GLOBALS['phpgw']->mapping))
+					{
+						$GLOBALS['phpgw']->mapping = CreateObject('phpgwapi.mapping', array('auth_type'=> $phpgw_map_authtype, 'location' => $phpgw_map_location));
+					}
+				}
+
 				$login = $GLOBALS['phpgw']->auth->get_username();
-				$logindomain = phpgw::get_var('domain', 'string', 'GET');
 
 				if($login)
 				{
-					$GLOBALS['hook_values'] = array
-					(
-						'account_lid' => $login
-					);
-					$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('frontend', 'helpdesk'));
-
 					if (strstr($login, '#') === false && $logindomain)
 					{
 						$login .= "#{$logindomain}";
@@ -379,9 +378,23 @@ HTML;
 
 					$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, '');
 				}
-
-				if (!$login || empty($GLOBALS['sessionid']))
+				else if (!$login || empty($GLOBALS['sessionid']))
 				{
+					if(!empty($GLOBALS['phpgw_info']['server']['auto_create_acct']))
+					{
+
+						if ($GLOBALS['phpgw_info']['server']['mapping'] == 'id')
+						{
+							// Redirection to create the new account :
+							return $this->create_account();
+						}
+						else if ($GLOBALS['phpgw_info']['server']['mapping'] == 'table' || $GLOBALS['phpgw_info']['server']['mapping'] == 'all')
+						{
+							// Redirection to create a new mapping :
+							return $this->create_mapping();
+						}
+					}
+
 					$cd_array = array();
 					if ($GLOBALS['phpgw']->session->cd_reason)
 					{
@@ -399,7 +412,6 @@ HTML;
 					}
 
 					$this->login_failed( $partial_url, $cd_array, $anonymous, $frontend );
-//					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
 					exit;
 				}
 
@@ -416,6 +428,10 @@ HTML;
 				{
 					$GLOBALS['phpgw']->redirect_link('/' . $partial_url, array('cd' => '5'));
 				}
+
+				$login	 = phpgw::get_var('login', 'string', 'POST');
+				// remove entities to stop mangling
+				$passwd	 = html_entity_decode(phpgw::get_var('passwd', 'string', 'POST'));
 
 				$logindomain = phpgw::get_var('logindomain', 'string', 'POST');
 				if (strstr($login, '#') === false && $logindomain)
@@ -488,7 +504,6 @@ HTML;
 				}
 			}
 
-			require_once dirname(realpath(__FILE__)) . '/sso/include_login.inc.php';
 			$uilogin = new phpgw_uilogin($GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && !isset($GLOBALS['phpgw_remote_user']));
 			$uilogin->phpgw_display_login($variables);
 		}
@@ -576,6 +591,7 @@ HTML;
 			}
 			else
 			{
+				$cd_array['lang'] = phpgw::get_var('lang', 'string', 'GET');
 				$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
 				exit;
 			}
@@ -599,6 +615,7 @@ HTML;
 			}
 
 			$extra_vars['cd'] = 'yes';
+			$lightbox			 = isset($_REQUEST['lightbox']) && $_REQUEST['lightbox'] ? true : false;
 
 			if ($lightbox)
 			{
@@ -607,6 +624,7 @@ HTML;
 			else
 			{
 				$GLOBALS['phpgw']->hooks->process('login');
+				$after = phpgw::get_var('after', 'bool');
 				if ($after)
 				{
 					$this->redirect_after();

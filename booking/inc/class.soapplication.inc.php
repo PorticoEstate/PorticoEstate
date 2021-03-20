@@ -388,17 +388,17 @@
 			$sql = "SELECT bb_block.id
                       FROM bb_block
                       WHERE  bb_block.resource_id in ($rids)
-                      AND ((bb_block.from_ <= '$from_' AND bb_block.to_ >= '$from_')
-                      OR (bb_block.from_ > '$from_' AND bb_block.to_ < '$to_')
-                      OR (bb_block.from_ < '$to_' AND bb_block.to_ > '$to_')) AND active = 1 {$filter_block}
+                      AND ((bb_block.from_ <= '$from_' AND bb_block.to_ > '$from_')
+                      OR (bb_block.from_ >= '$from_' AND bb_block.to_ <= '$to_')
+                      OR (bb_block.from_ < '$to_' AND bb_block.to_ >= '$to_')) AND active = 1 {$filter_block}
                       UNION
 					  SELECT ba.id
                       FROM bb_allocation ba, bb_allocation_resource bar
                       WHERE ba.id = bar.allocation_id
                       AND bar.resource_id in ($rids)
-                      AND ((ba.from_ < '$from_' AND ba.to_ > '$from_')
-                      OR (ba.from_ > '$from_' AND ba.to_ < '$to_')
-                      OR (ba.from_ < '$to_' AND ba.to_ > '$to_'))
+                      AND ((ba.from_ <= '$from_' AND ba.to_ > '$from_')
+                      OR (ba.from_ >= '$from_' AND ba.to_ <= '$to_')
+                      OR (ba.from_ < '$to_' AND ba.to_ >= '$to_'))
                       UNION
                       SELECT be.id
                       FROM bb_event be, bb_event_resource ber, bb_event_date bed
@@ -406,9 +406,9 @@
 					  AND be.id = ber.event_id
                       AND be.id = bed.event_id
                       AND ber.resource_id in ($rids)
-                      AND ((bed.from_ < '$from_' AND bed.to_ > '$from_')
-                      OR (bed.from_ > '$from_' AND bed.to_ < '$to_')
-                      OR (bed.from_ < '$to_' AND bed.to_ > '$to_'))";
+                      AND ((bed.from_ <= '$from_' AND bed.to_ > '$from_')
+                      OR (bed.from_ >= '$from_' AND bed.to_ <= '$to_')
+                      OR (bed.from_ < '$to_' AND bed.to_ >= '$to_'))";
 
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 

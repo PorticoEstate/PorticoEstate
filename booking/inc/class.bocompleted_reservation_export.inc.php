@@ -25,8 +25,20 @@
 				$to_date = date('Y-m-d', phpgwapi_datetime::date_to_timestamp($filter_to));
 				$where_clauses[] = "%%table%%" . sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($to_date));
 			}
+			
+			/**
+			 * filter on already processed
+			 */
+			if(phpgw::get_var('generate_files', 'bool', 'POST') )
+			{
+				$where_clauses[] = '%%table%%.id IN (' .
+				' SELECT bb_completed_reservation_export.id FROM bb_completed_reservation_export'.
+				' JOIN bb_completed_reservation_export_configuration '.
+				' ON bb_completed_reservation_export_configuration.export_id = bb_completed_reservation_export.id'.
+				' AND export_file_id IS NULL)';
+			}
 
-			if (count($where_clauses) > O)
+			if (count($where_clauses) > 0)
 			{
 				$params['filters']['where'] = $where_clauses;
 			}

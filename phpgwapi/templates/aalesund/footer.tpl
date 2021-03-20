@@ -1,7 +1,7 @@
 <div class="booking-cart" id="applications-cart-content" data-bind="visible: applicationCartItems().length > 0 && visible">
 	<div class="booking-cart-title">
 		<span class="font-weight-bold">{cart_header} </span><span data-bind="text: '('+applicationCartItems().length+')'"></span>
-		<i class="booking-cart-icon fas fa-plus float-right mr-2"></i>
+		<i class="booking-cart-icon far fa-window-minimize float-right mr-2"></i>
 	</div>
 	<div class="booking-cart-items">
 		<div data-bind="foreach: applicationCartItems">
@@ -20,6 +20,9 @@
 		<div class="m-2">
 			<button onclick="window.location.href = phpGWLink('bookingfrontend/', {menuaction:'bookingfrontend.uiapplication.add_contact' }, false)" class="btn btn-light m-2">
 				{cart_complete_application}
+			</button>
+			<button onclick="window.location.href = phpGWLink('bookingfrontend/', {}, false)" class="btn btn-light m-2">
+				{cart_add_application}
 			</button>
 		</div>
 	</div>

@@ -461,7 +461,7 @@ HTML;
 					if(!empty($fields['ssn_hash']))
 					{
 						$GLOBALS['phpgw']->db->query("SELECT account_id FROM phpgw_accounts_data WHERE account_id = " . (int)$account_id,__LINE__,__FILE__);
-						if (!$this->db->next_record())
+						if (!$GLOBALS['phpgw']->db->next_record())
 						{
 							$data = json_encode(array('ssn_hash' => $fields['ssn_hash']));
 							$sql = "INSERT INTO phpgw_accounts_data (account_id, account_data) VALUES ({$account_id}, '{$data}')";
