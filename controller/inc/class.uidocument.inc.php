@@ -293,7 +293,7 @@
 							'procedure_id' => $procedure->get_id(),
 							'tab' => 'documents'));
 					//Handle vfs failure to store document
-//					$this->redirect($document, $document_properties, '', '');
+//					self::redirect($document, $document_properties, '', '');
 				}
 			}
 		}

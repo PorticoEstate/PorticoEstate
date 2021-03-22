@@ -404,7 +404,7 @@
 				}
 
 				$control_id = $this->so->store($control);
-				$this->redirect(array('menuaction' => 'controller.uicontrol.view_control_groups',
+				self::redirect(array('menuaction' => 'controller.uicontrol.view_control_groups',
 					'control_id' => $control_id));
 			}
 			else
@@ -523,7 +523,7 @@
 			}
 
 			// Redirect: view_control_items
-			$this->redirect(array('menuaction' => 'controller.uicontrol.view_control_items',
+			self::redirect(array('menuaction' => 'controller.uicontrol.view_control_items',
 				'control_id' => $control_id));
 		}
 
@@ -662,7 +662,7 @@
 				}
 			}
 
-			$this->redirect(array('menuaction' => 'controller.uicontrol.view_check_list',
+			self::redirect(array('menuaction' => 'controller.uicontrol.view_check_list',
 				'control_id' => $control_id));
 		}
 

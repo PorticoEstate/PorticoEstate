@@ -18,7 +18,7 @@
 				'allocation'
 			);
 			
-			$age_days = 28;
+			$age_days = 14;
 
 			$participant_so = CreateObject('booking.soparticipant');
 

@@ -389,7 +389,7 @@
 					{
 						$receipt = $this->bo->add($allocation);
 						$this->bo->so->update_id_string();
-						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $receipt['id']));
+						self::redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $receipt['id']));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -448,7 +448,7 @@
 					if ($step == 3)
 					{
 						$this->bo->so->update_id_string();
-						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $receipt['id']));
+						self::redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $receipt['id']));
 					}
 				}
 			}
@@ -623,7 +623,7 @@
 						$receipt = $this->bo->update($allocation);
 						$this->bo->so->update_id_string();
 						$this->send_mailnotification_to_organization($organization, lang('Allocation changed'), phpgw::get_var('mail', 'html', 'POST'));
-						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $allocation['id']));
+						self::redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $allocation['id']));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -690,7 +690,7 @@
 					else
 					{
 						$err = $this->bo->so->delete_allocation($id);
-						$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $allocation['building_id']));
+						self::redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $allocation['building_id']));
 					}
 				}
 				else
@@ -749,7 +749,7 @@
 					}
 					if ($step == 3)
 					{
-						$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $allocation['building_id']));
+						self::redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $allocation['building_id']));
 					}
 				}
 			}

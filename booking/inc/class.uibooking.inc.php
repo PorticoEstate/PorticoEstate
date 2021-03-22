@@ -490,7 +490,7 @@
 						$booking['secret'] = $this->generate_secret();
 						$receipt = $this->bo->add($booking);
 					}
-					$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
+					self::redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
 				}
 				else if (($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on') && !$_errors && $step > 1)
 				{
@@ -586,11 +586,11 @@
 					{
 						if ($application_id != '0')
 						{
-							$this->redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $application_id));
+							self::redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $application_id));
 						}
 						else
 						{
-							$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
+							self::redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
 						}
 					}
 				}
@@ -775,7 +775,7 @@
 					{
 						$receipt = $this->bo->update($booking);
 						$this->send_mailnotification_to_group($group, lang('Booking changed'), phpgw::get_var('mail', 'html', 'POST'));
-						$this->redirect(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
+						self::redirect(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -846,7 +846,7 @@
 					if ($_POST['delete_allocation'] != 'on')
 					{
 						$this->bo->so->delete_booking($id);
-						$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
+						self::redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
 					}
 					else
 					{
@@ -860,7 +860,7 @@
 						else
 						{
 							$err = $this->allocation_bo->so->delete_allocation($allocation_id);
-							$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
+							self::redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
 						}
 					}
 				}
@@ -935,10 +935,10 @@
 						$application_id = $booking['application_id'] ? $booking['application_id'] : $allocation['application_id'];
 						if($application_id)
 						{
-							$this->redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $application_id));
+							self::redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $application_id));
 						}
 						$building_id = $booking['building_id'] ? $booking['building_id'] : $allocation['building_id'];
-						$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $building_id));
+						self::redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $building_id));
 					}
 				}
 			}

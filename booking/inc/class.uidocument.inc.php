@@ -88,7 +88,7 @@
 		{
 			if ($this->is_inline())
 			{
-				$this->redirect($this->get_parent_url_link_params());
+				self::redirect($this->get_parent_url_link_params());
 			}
 
 			return false;
@@ -328,7 +328,7 @@
 
 						$receipt = $this->bo->add($document);
 						$this->redirect_to_parent_if_inline();
-						$this->redirect($this->get_owner_typed_link_params('index'));
+						self::redirect($this->get_owner_typed_link_params('index'));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -381,7 +381,7 @@
 					{
 						$receipt = $this->bo->update($document);
 						$this->redirect_to_parent_if_inline();
-						$this->redirect($this->get_owner_typed_link_params('index'));
+						self::redirect($this->get_owner_typed_link_params('index'));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -423,7 +423,7 @@
 			$this->bo->delete($id);
 
 			$this->redirect_to_parent_if_inline();
-			$this->redirect($this->get_owner_typed_link_params('index'));
+			self::redirect($this->get_owner_typed_link_params('index'));
 		}
 
 		/**

@@ -2150,7 +2150,7 @@
 				$_tax_code		 = $this->db->f('tax_code');
 				$_actual_cost	 = $this->db->f('actual_cost');
 
-				if ($_tax_code && !empty($tax_codes[$_tax_code]))
+				if (!empty($tax_codes[$_tax_code]))
 				{
 					$_actual_cost = $_actual_cost / (1 + ($tax_codes[$_tax_code] / 100));
 				}

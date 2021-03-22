@@ -203,7 +203,7 @@
 					try
 					{
 						$receipt = $this->bo->add($resource);
-						$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $receipt['id']));
+						self::redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $receipt['id']));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -277,7 +277,7 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->update($resource);
-					$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
+					self::redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
 				}
 			}
 
@@ -367,7 +367,7 @@
 					try
 					{
 						$receipt = $this->bo->update($resource);
-						$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
+						self::redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -410,7 +410,7 @@
 					try
 					{
 						$receipt = $this->bo->update($resource);
-						$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
+						self::redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
 					}
 					catch (booking_unauthorized_exception $e)
 					{

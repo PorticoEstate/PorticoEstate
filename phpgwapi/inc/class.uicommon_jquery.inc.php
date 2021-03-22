@@ -240,7 +240,7 @@
 			return $GLOBALS['phpgw']->link($base, $data, $redirect, $external, $force_backend);
 		}
 
-		public function redirect( $link_data )
+		public static function redirect( $link_data )
 		{
 			$base = self::get_link_base();
 			$GLOBALS['phpgw']->redirect_link($base, $link_data);
@@ -874,7 +874,7 @@
 			{
 				$_SESSION['showall'] = "1";
 			}
-			$this->redirect(array('menuaction' => $this->url_prefix . '.index'));
+			self::redirect(array('menuaction' => $this->url_prefix . '.index'));
 		}
 
 		public function toggle_show_inactive()
@@ -887,7 +887,7 @@
 			{
 				$_SESSION['showall'] = "1";
 			}
-			$this->redirect(array('menuaction' => $this->url_prefix . '.index'));
+			self::redirect(array('menuaction' => $this->url_prefix . '.index'));
 		}
 
 		static protected function fix_php_files_array( $data )

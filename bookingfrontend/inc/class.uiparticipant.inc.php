@@ -400,7 +400,7 @@ ICAL;
 
 					phpgwapi_cache::message_set($sms_text);
 
-					$this->redirect(array('menuaction'	=> 'bookingfrontend.uiparticipant.add',
+					self::redirect(array('menuaction'	=> 'bookingfrontend.uiparticipant.add',
 					'reservation_type'	 => $reservation_type, 'reservation_id'	 => $reservation_id));
 				}
 			}
