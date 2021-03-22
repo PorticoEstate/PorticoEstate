@@ -2868,7 +2868,14 @@ JS;
 				if (isset($location_parent) && $location_parent)
 				{
 					$location_code_parent	 = implode('-', $location_parent);
-					$values					 = $this->bo->read_single($location_code_parent);
+					if(count(explode('-', $location_code)) > count($location_parent) )
+					{
+						$values					 = $this->bo->read_single($location_code);						
+					}
+					else
+					{
+						$values					 = $this->bo->read_single($location_code_parent);
+					}
 
 					$values['attributes']	 = $this->bo->find_attribute(".location.{$this->type_id}");
 					$values					 = $this->bo->prepare_attribute($values, ".location.{$this->type_id}");

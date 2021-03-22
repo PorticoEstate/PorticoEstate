@@ -1233,7 +1233,6 @@
 					oControls.each(function()
 					{
 						var test = $(this).val();
-//						console.log(test);
 //						console.log(test.constructor);
 						if ( $(this).attr('name') && test != null && test.constructor !== Array)
 						{
@@ -1248,12 +1247,13 @@
 						{
 							value = $(this).val();
 							aoData[ $(this).attr('name') ] = value;
+
+							if(value.length > 0 )
+							{
+								active_filters_html.push($(this).attr('title'));
+							}
 						}
 
-//						if(value && value !=0 )
-//						{
-//							active_filters_html.push($(this).attr('name'));
-//						}
 					});
 
 					if(active_filters_html.length > 0 )
@@ -1585,6 +1585,14 @@
 			{
 				select = $("#" + filter_selects[i]);
 				select.prop('selectedIndex',0);
+				try
+				{
+					$("#" + filter_selects[i]).multiselect('deselectAll', false);
+			//		$("#" + filter_selects[i]).multiselect({ buttonContainer: '' });
+					$("#" + filter_selects[i]).multiselect('refresh');
+				}
+				catch(e)
+				{}
 			}
 
 			var oControls = $('.dtable_custom_controls:first').find(':input[name]');
@@ -1592,7 +1600,7 @@
 			oControls.each(function()
 			{
 				var test = $(this).val();
-				if ( $(this).attr('name') && test != null && test.constructor !== Array)
+				if ( !$(this).is('select') && $(this).attr('name') && test != null && test.constructor !== Array)
 				{
 					value = $(this).val('');
 				}

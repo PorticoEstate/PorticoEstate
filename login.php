@@ -14,4 +14,17 @@
 	require_once 'phpgwapi/inc/class.login.inc.php';
 
 	$phpgwlogin = new phpgwapi_login;
-	$phpgwlogin->login();
+
+	if (!empty($_GET['create_account']))
+	{
+		$phpgwlogin->create_account();
+	}
+	else if (!empty($_GET['create_mapping']))
+	{
+		$phpgwlogin->create_mapping();
+	}
+	else
+	{
+		$phpgwlogin->login();
+	}
+

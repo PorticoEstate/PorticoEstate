@@ -240,7 +240,7 @@
 			return $GLOBALS['phpgw']->link($base, $data, $redirect, $external, $force_backend);
 		}
 
-		public function redirect( $link_data )
+		public static function redirect( $link_data )
 		{
 			$base = self::get_link_base();
 			$GLOBALS['phpgw']->redirect_link($base, $link_data);

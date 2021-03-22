@@ -11,6 +11,30 @@
 	* @version $Id$
 	*/
 
+	if(!isset($GLOBALS['phpgw_info']))
+	{
+		$GLOBALS['phpgw_info'] = array();
+
+		$GLOBALS['phpgw_info']['flags'] = array
+		(
+			'currentapp'             => 'login',
+			'noheader'               => true
+		);
+
+		$header =  '../../../header.inc.php';
+
+		if ( !file_exists($header) )
+		{
+			Header('Location: ../../../setup/index.php');
+			exit;
+		}
+		/**
+		* Include phpgroupware header
+		*/
+		require_once $header;
+
+	}
+
 
 
 	/*
@@ -198,25 +222,11 @@
 				'password'	=> lang('password')
 			);
 
-			$text_len = 0;
-			foreach($lang as $key => $text)
-			{
-				if($text_len < strlen($text))
-				{
-					$text_len = strlen($text);
-				}
-			}
-
-			foreach($lang as $key => & $text)
-			{
-				$text = str_repeat('&nbsp;', ($text_len-strlen($text))) . $text;
-			}
 
 			$this->tmpl->set_file(array('login_form'  => 'login.tpl'));
 
 			$this->tmpl->set_block('login_form', 'header_block', 'header_blocks');
 			$this->tmpl->set_block('login_form', 'instruction_block', 'instruction_blocks');
-
 
 			$this->tmpl->set_block('login_form', 'message_block', 'message_blocks');
 			$this->tmpl->set_block('login_form', 'domain_option', 'domain_options');
@@ -347,6 +357,9 @@
 				//then first / last name
 				$this->tmpl->set_var('lang_firstname', $variables['lang_firstname']);
 				$this->tmpl->set_var('lang_lastname', $variables['lang_lastname']);
+				$this->tmpl->set_var('lang_email', $variables['lang_email']);
+				$this->tmpl->set_var('lang_cellphone', $variables['lang_cellphone']);
+				
 				if(isset($variables['firstname']))
 				{
 					$this->tmpl->set_var('firstname', $variables['firstname']);
@@ -354,6 +367,14 @@
 				if(isset($variables['lastname']))
 				{
 					$this->tmpl->set_var('lastname', $variables['lastname']);
+				}
+				if(isset($variables['email']))
+				{
+					$this->tmpl->set_var('email', $variables['email']);
+				}
+				if(isset($variables['cellphone']))
+				{
+					$this->tmpl->set_var('cellphone', $variables['cellphone']);
 				}
 				//parsing the block
 				$this->tmpl->parse('login_additional_infos', 'login_additional_info');
@@ -387,6 +408,11 @@
 				{
 					$extra_vars[$name] = urlencode($value);
 				}
+			}
+
+			if(isset($variables['extra_vars']) && is_array($variables['extra_vars']))
+			{
+				$extra_vars = array_merge($extra_vars, $variables['extra_vars']);
 			}
 
 			$cd = 0;
@@ -546,6 +572,10 @@ JS;
 			$this->tmpl->set_var('system_css', $system_css);
 			$this->tmpl->set_var('base_css', $base_css);
 			$this->tmpl->set_var('login_css', $login_css);
+			if(empty($variables['lang_firstname']))
+			{
+				$this->tmpl->set_var('grid_css', 'pure-u-md-1-2');
+			}
 			$this->tmpl->set_var('rounded_css', $rounded_css);
 			$this->tmpl->set_var('flag_no', $flag_no);
 			$this->tmpl->set_var('flag_en', $flag_en);
@@ -571,9 +601,12 @@ HTML;
 				$this->tmpl->set_var('login_right_message', $GLOBALS['phpgw_info']['login_right_message']);
 				$this->tmpl->parse('header_blocks', 'header_block');
 				$this->tmpl->parse('instruction_blocks', 'instruction_block');
-				$this->tmpl->parse('forgotten_password_blocks', 'forgotten_password_block');
-				$this->tmpl->parse('info_blocks', 'info_block');
-				$this->tmpl->parse('footer_blocks', 'footer_block');
+				if(empty($variables['lang_firstname']) )
+				{
+					$this->tmpl->parse('forgotten_password_blocks', 'forgotten_password_block');
+					$this->tmpl->parse('info_blocks', 'info_block');
+					$this->tmpl->parse('footer_blocks', 'footer_block');
+				}
 
 			}
 
@@ -598,6 +631,11 @@ HTML;
 					$this->tmpl->set_var('message_class', 'error');
 					$this->tmpl->set_var('message_class_item', 'error message fade');
 				}
+				$this->tmpl->parse('message_blocks', 'message_block');
+			}
+
+			if($variables['lang_message'])
+			{
 				$this->tmpl->parse('message_blocks', 'message_block');
 			}
 

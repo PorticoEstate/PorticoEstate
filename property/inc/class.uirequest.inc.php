@@ -571,9 +571,12 @@
 			$insert_record			 = $GLOBALS['phpgw']->session->appsession('insert_record', 'property');
 			$insert_record_entity	 = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}", 'property');
 
-			for ($j = 0; $j < count($insert_record_entity); $j++)
+			if($insert_record_entity && is_array($insert_record_entity))
 			{
-				$insert_record['extra'][$insert_record_entity[$j]] = $insert_record_entity[$j];
+				for ($j = 0; $j < count($insert_record_entity); $j++)
+				{
+					$insert_record['extra'][$insert_record_entity[$j]] = $insert_record_entity[$j];
+				}
 			}
 			$values = $this->bocommon->collect_locationdata($values, $insert_record);
 
@@ -1508,11 +1511,15 @@ JS;
 			);
 
 
-			$j = count($values['files']);
-			for ($i = 0; $i < $j; $i++)
+			if(!empty($values['files']))
 			{
-				$values['files'][$i]['file_name'] = urlencode($values['files'][$i]['name']);
+				foreach ($values['files'] as & $file)
+				{
+					$file['file_name'] = urlencode($file['name']);
+				}
+				unset($file);
 			}
+
 
 			$datatable_def	 = array();
 			$datatable_def[] = array
@@ -1540,10 +1547,17 @@ JS;
 
 			$content_files = array();
 
-			for ($z = 0; $z < count($values['files']); $z++)
+			if(!empty($values['files']))
 			{
-				$content_files[$z]['file_name']		 = '<a href="' . $link_view_file . '&amp;file_id=' . $values['files'][$z]['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $values['files'][$z]['name'] . '</a>';
-				$content_files[$z]['delete_file']	 = '<input type="checkbox" name="values[file_action][]" value="' . $values['files'][$z]['file_id'] . '" title="' . lang('Check to delete file') . '" >';
+				foreach ($values['files'] as $file)
+				{
+					$content_files[] = array(
+						'file_name'		 => '<a href="' . $link_view_file . '&amp;file_id=' . $file['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $file['name'] . '</a>',
+						'delete_file'	 => '<input type="checkbox" name="values[file_action][]" value="' . $file['file_id'] . '" title="' . lang('Check to delete file') . '" >'
+
+					);
+				}
+
 			}
 
 			$files_def = array
@@ -1947,11 +1961,15 @@ JS;
 			{
 				$out = $values;
 			}
-			else
+			else if($total_records)
 			{
 				$page		 = ceil(( $start / $total_records ) * ($total_records / $num_rows));
 				$values_part = array_chunk($values, $num_rows);
 				$out		 = $values_part[$page];
+			}
+			else
+			{
+				$out = array();
 			}
 
 //------ End pagination

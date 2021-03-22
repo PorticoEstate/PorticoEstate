@@ -794,7 +794,10 @@
 			$this->_db->fetchmode = 'ASSOC';
 
 //			$sql2 = "SELECT count(*) as cnt, sum(amount_investment) as sum_investment, sum(amount_operation) as sum_operation, sum(amount_potential_grants) as sum_potential_grants FROM ({$sql}) as t";
-			$sql2 = "SELECT count(*) as cnt, (sum(amount_investment * multiplier)) as sum_investment, (sum(amount_operation * multiplier)) as sum_operation, (sum(amount_potential_grants * multiplier)) as sum_potential_grants FROM {$sql_arr[1]}";
+			$sql2 = "SELECT count(DISTINCT fm_request.id) as cnt, (sum(amount_investment * multiplier)) as sum_investment,"
+				. " (sum(amount_operation * multiplier)) as sum_operation,"
+				. " (sum(amount_potential_grants * multiplier)) as sum_potential_grants"
+				. " FROM {$sql_arr[1]}";
 
 			$this->_db->query($sql2, __LINE__, __FILE__);
 			$this->_db->next_record();
@@ -875,9 +878,9 @@
 			$request = array();
 			if ($this->_db->next_record())
 			{
-				$amount_investment		 = $this->_db->f('amount_investment');
-				$amount_operation		 = $this->_db->f('amount_operation');
-				$amount_potential_grants = $this->_db->f('amount_potential_grants');
+				$amount_investment		 = (int)$this->_db->f('amount_investment');
+				$amount_operation		 = (int)$this->_db->f('amount_operation');
+				$amount_potential_grants = (int)$this->_db->f('amount_potential_grants');
 				$budget					 = $amount_investment + $amount_operation;
 				$recommended_year		 = $this->_db->f('recommended_year');
 

@@ -45,6 +45,11 @@
 			return isset($_SERVER['REMOTE_USER']) && !!strlen($_SERVER['REMOTE_USER']);
 		}
 		
+		public function get_username()
+		{
+			return $_SERVER['REMOTE_USER'];
+		}
+
 		public function change_password($old_passwd, $new_passwd, $account_id = '')
 		{
 			return false;

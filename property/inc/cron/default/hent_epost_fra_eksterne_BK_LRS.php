@@ -506,7 +506,7 @@
 					$target['id']	 = $ticket_id;
 				}
 			}
-			else if (preg_match("/helpdesk@bergen.kommune.no/i", $sender))
+			else if (preg_match("/ansattservice@bergen.kommune.no/i", $sender))
 			{
 
 				$message_cat_id	 = 302; // Fra postmottak LRS
