@@ -334,6 +334,8 @@
 				$receipt = $this->bo->set_permission($values, $r_processed, false, $initials);
 			}
 
+			$processed = array();
+
 			$num_records = 0;
 			if ($this->location)
 			{
@@ -444,8 +446,6 @@
 					}
 				}
 
-
-				$processed = @implode("_", $processed);
 			}
 
 
@@ -534,7 +534,7 @@
 				'done_action'						 => $GLOBALS['phpgw']->link('/admin/index.php'),
 				'lang_save'							 => lang('save'),
 				'lang_done'							 => lang('done'),
-				'processed'							 => (isset($processed) ? $processed : ''),
+				'processed'							 => $processed ? implode("_", $processed): '',
 				'location'							 => $this->location,
 				'num_records'						 => $num_records,
 				'all_records'						 => isset($this->bo->total_records) && $this->bo->total_records ? $this->bo->total_records : 0,
