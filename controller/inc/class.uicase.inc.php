@@ -1531,13 +1531,13 @@ JS;
 			if (!$this->add && !$this->edit)
 			{
 				phpgwapi_cache::message_set('No access', 'error');
-				$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list',
+				self::redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list',
 					'check_list_id' => $check_list_id));
 			}
 
 			$message_ticket_id = $this->send_case_message_step_2($check_list_id,$location_code, $message_title, $message_cat_id, $case_ids );
 
-			$this->redirect(array('menuaction' => 'controller.uicase.view_case_message', 'check_list_id' => $check_list_id,
+			self::redirect(array('menuaction' => 'controller.uicase.view_case_message', 'check_list_id' => $check_list_id,
 				'message_ticket_id' => $message_ticket_id));
 
 		}

@@ -113,7 +113,7 @@
 					try
 					{
 						$receipt = $this->bo->add($facility);
-						$this->redirect(array('menuaction' => 'booking.uifacility.index'));
+						self::redirect(array('menuaction' => 'booking.uifacility.index'));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -153,7 +153,7 @@
 					try
 					{
 						$receipt = $this->bo->update($facility);
-						$this->redirect(array('menuaction' => 'booking.uifacility.index'));
+						self::redirect(array('menuaction' => 'booking.uifacility.index'));
 					}
 					catch (booking_unauthorized_exception $e)
 					{

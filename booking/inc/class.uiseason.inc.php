@@ -169,7 +169,7 @@
 					try
 					{
 						$receipt = $this->bo->add($season);
-						$this->redirect(array('menuaction' => 'booking.uiseason.show', 'id' => $receipt['id']));
+						self::redirect(array('menuaction' => 'booking.uiseason.show', 'id' => $receipt['id']));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -247,7 +247,7 @@
 					try
 					{
 						$receipt = $this->bo->update($season);
-						$this->redirect(array('menuaction' => 'booking.uiseason.show', 'id' => $season['id']));
+						self::redirect(array('menuaction' => 'booking.uiseason.show', 'id' => $season['id']));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -353,7 +353,7 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->add_boundary($boundary);
-					$this->redirect(array('menuaction' => 'booking.uiseason.boundaries', 'id' => $season_id));
+					self::redirect(array('menuaction' => 'booking.uiseason.boundaries', 'id' => $season_id));
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -387,7 +387,7 @@
 			$boundary = $this->bo->read_boundary($boundary_id);
 			$season_id = $boundary['season_id'];
 			$this->bo->delete_boundary($boundary);
-			$this->redirect(array('menuaction' => 'booking.uiseason.boundaries', 'id' => $season_id));
+			self::redirect(array('menuaction' => 'booking.uiseason.boundaries', 'id' => $season_id));
 		}
 
 		public function delete_wtemplate_alloc()

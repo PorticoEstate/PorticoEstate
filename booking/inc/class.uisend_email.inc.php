@@ -77,7 +77,7 @@
 //					$contacts = $this->get_email_addresses($building_id, $season);
 
 					$result = $this->send_emails($_contacts, $mailsubject, $mailbody);
-					$this->redirect(array('menuaction' => 'booking.uisend_email.receipt',
+					self::redirect(array('menuaction' => 'booking.uisend_email.receipt',
 						'ok' => count($result['ok']),
 						'failed' => count($result['failed'])
 					));

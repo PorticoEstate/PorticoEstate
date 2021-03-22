@@ -65,7 +65,7 @@
 		{
 			if ($this->is_inline())
 			{
-				$this->redirect($this->link_to_parent_params());
+				self::redirect($this->link_to_parent_params());
 			}
 
 			return false;

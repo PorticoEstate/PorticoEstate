@@ -563,7 +563,7 @@
 						$receipt = $this->bo->add($event);
 						$this->bo->so->update_id_string();
 					}
-					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $receipt['id'],
+					self::redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $receipt['id'],
 						'secret' => $event['secret'], 'warnings' => $errors));
 				}
 			}
@@ -1057,17 +1057,17 @@
 								$this->add_comment($event, $comment);
 							}
 //						$receipt = $this->bo->update($event);
-//						$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$event['id']));
+//						self::redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$event['id']));
 						}
 					}
 					$receipt = $this->bo->update($event);
 					if(empty($event['application_id']))
 					{
-						$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $event['id']));
+						self::redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $event['id']));
 					}
 					else
 					{
-						$this->redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $event['application_id']));
+						self::redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $event['application_id']));
 					}
 				}
 			}
@@ -1157,11 +1157,11 @@
 			}
 			if (isset($application_id))
 			{
-				$this->redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $application_id));
+				self::redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $application_id));
 			}
 			else
 			{
-				$this->redirect(array('menuaction' => 'booking.uievent.index'));
+				self::redirect(array('menuaction' => 'booking.uievent.index'));
 			}
 		}
 

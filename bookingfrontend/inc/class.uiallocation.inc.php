@@ -120,7 +120,7 @@
 					$system_message['message']	 = $system_message['message'] . "<br /><br />" . lang('To cancel allocation use this link') . " - <a href='" . $link . "'>" . lang('Delete') . "</a>";
 					$this->bo->send_admin_notification($allocation, $maildata, $system_message);
 					$this->system_message_bo->add($system_message);
-					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+					self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 						'id'		 => $system_message['building_id'], 'date'		 => date("Y-m-d", strtotime($original_from))));
 				}
 
@@ -215,7 +215,7 @@
 							$this->bo->send_admin_notification($allocation, $maildata, $system_message);
 							$this->bo->send_notification($allocation, $maildata, $mailadresses);
 							$this->bo->so->delete_allocation($id);
-							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+							self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 								'id'		 => $allocation['building_id'], 'date'		 => date("Y-m-d", strtotime($original_from))));
 						}
 					}
@@ -308,7 +308,7 @@
 							$this->bo->send_admin_notification($allocation, $maildata, $system_message);
 							$this->bo->send_notification($allocation, $maildata, $mailadresses);
 							$this->system_message_bo->add($system_message);
-							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+							self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 								'id'		 => $allocation['building_id'], 'date'		 => date("Y-m-d", strtotime($original_from))));
 						}
 					}

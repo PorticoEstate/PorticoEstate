@@ -243,7 +243,7 @@
 			return $this->current_app() == 'bookingfrontend';
 		}
 
-		public function redirect( $link_data )
+		public static function redirect( $link_data )
 		{
 			$this->store_flash_msgs();
 
@@ -305,7 +305,7 @@
 			{
 				$activate = extract_values($_POST, array("status", "activate_id"));
 				$this->bo->set_active(intval($activate['activate_id']), intval($activate['status']));
-				$this->redirect(array('menuaction' => $url, 'id' => $activate['activate_id']));
+				self::redirect(array('menuaction' => $url, 'id' => $activate['activate_id']));
 			}
 		}
 

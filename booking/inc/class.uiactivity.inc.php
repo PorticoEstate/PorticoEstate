@@ -135,7 +135,7 @@
 					//Add locations for application and resources
 					$GLOBALS['phpgw']->hooks->single(array('id' => $receipt['id'], 'name' => $activity['name'],
 						'location' => 'activity_add'), 'booking');
-					$this->redirect(array('menuaction' => 'booking.uiactivity.index'));
+					self::redirect(array('menuaction' => 'booking.uiactivity.index'));
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -184,7 +184,7 @@
 					//Edit locations for application and resources
 					$GLOBALS['phpgw']->hooks->single(array('id' => $id, 'name' => $activity['name'],
 						'location' => 'activity_edit'), 'booking');
-					$this->redirect(array('menuaction' => 'booking.uiactivity.index'));
+					self::redirect(array('menuaction' => 'booking.uiactivity.index'));
 				}
 			}
 			$this->flash_form_errors($errors);

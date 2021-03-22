@@ -168,7 +168,7 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->add($document);
-					$this->redirect(array('menuaction' => 'booking.uidocumentation.index'));
+					self::redirect(array('menuaction' => 'booking.uidocumentation.index'));
 				}
 			}
 
@@ -201,7 +201,7 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->update($document);
-					$this->redirect(array('menuaction' => 'booking.uidocumentation.index'));
+					self::redirect(array('menuaction' => 'booking.uidocumentation.index'));
 				}
 			}
 
@@ -233,7 +233,7 @@
 			$id = phpgw::get_var('id', 'int');
 			$this->bo->delete($id);
 
-			$this->redirect(array('menuaction' => 'booking.uidocumentation.index'));
+			self::redirect(array('menuaction' => 'booking.uidocumentation.index'));
 		}
 
 		/**
