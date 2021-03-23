@@ -431,8 +431,8 @@ function findDate() {
 }
 
 function findTime() {
-	let fromTime = typeof $("#fromTime").val() === 'undefined' || (/[a-zA-Z]/g).test($("#fromTime").val()) ? '' : $("#fromTime").val();
-	let toTime = typeof $("#toTime").val() === 'undefined' || (/[a-zA-Z]/g).test($("#toTime").val()) ? '' : $("#toTime").val();
+	let fromTime =  $("#fromTime").val() === 'undefined' || (/[a-zA-Z]/g).test($("#fromTime").val()) ? '' : $("#fromTime").val();
+	let toTime =  $("#toTime").val() === 'undefined' || (/[a-zA-Z]/g).test($("#toTime").val()) ? '' : $("#toTime").val();
 
 
 	if (fromTime !== '' && toTime === '') {
@@ -445,7 +445,7 @@ function findTime() {
 
 		if (startTime.isAfter(endTime)){
 			toTime = '23:30';
-			$("#toTime").val('23:30');
+			$("#toTime").val('');
 		}
 	}
 	return [fromTime, toTime];
@@ -587,7 +587,7 @@ function timeListener() {
 		$('#toTime').prop("disabled", true);
 	} else {
 		$('#toTime').prop("disabled", false);
-		$('#toTime').timepicker({ 'timeFormat': 'HH:mm', startTime: $('#fromTime').val(), change: findSearchMethod});
+		$('#toTime').timepicker('option', 'minTime', $('#fromTime').val());
 		findSearchMethod();
 	}
 }
@@ -623,7 +623,24 @@ function setDateTimePicker() {
 		viewmodel.dateFilter('');
 	});
 
-	$('#fromTime').timepicker({ 'timeFormat': 'HH:mm', change: timeListener });
+	$('#fromTime').timepicker({
+		timeFormat: 'HH:mm',
+		interval: 30,
+		minTime: '00:00',
+		maxTime: '23:30',
+		dynamic: false,
+		dropdown: true,
+		scrollbar: true,
+		change: timeListener});
+
+	$('#toTime').timepicker({
+		timeFormat: 'HH:mm',
+		interval: 30,
+		minTime: '00:00',
+		maxTime: '23:30',
+		dynamic: false,
+		dropdown: true,
+		scrollbar: true});
 	$('#toTime').prop("disabled", true);
 
 }
