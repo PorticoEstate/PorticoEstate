@@ -320,7 +320,7 @@ i#my_orgs_icon {
     border-color: #c2c2ff;
     border-image-slice: 1;
     text-align: center;
-    transition: 0.3s;
+    transition: 0.1s;
 }
 .arrangement-link-box:hover {
     background-color: #c2c2ff;
