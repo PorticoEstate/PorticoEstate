@@ -763,7 +763,7 @@
 				$formatter = 'JqueryPortico.formatLinkTicket';
 				$this->botts	 = CreateObject('property.botts', true);
 				$project_values = $this->botts->read_single($values['ticket_id'], array(), true);
-//	_debug_array($project_values);
+
 				$project_values['workorder_budget'] = array(
 					array(
 						'workorder_id' => $values['ticket_id'],
@@ -789,9 +789,19 @@
 				$_vouchers	 = array();
 				$vouchers	 = $soinvoice->read_invoice(array('paid'			 => '1', 'workorder_id'	 => $workorder['workorder_id'],
 					'user_lid'		 => 'all'));
+				$_add_actual_cost = false;
+				if(!isset($workorder['actual_cost']))
+				{
+					$workorder['actual_cost'] = 0;
+					$_add_actual_cost = true;
+				}
 				foreach ($vouchers as $entry)
 				{
 					$_vouchers[] = $entry['voucher_id'];
+					if($_add_actual_cost)
+					{
+						$workorder['actual_cost'] += $entry['amount'];
+					}
 				}
 				$vouchers = $soinvoice->read_invoice(array('workorder_id'	 => $workorder['workorder_id'],
 					'user_lid'		 => 'all'));
@@ -930,7 +940,6 @@
 				}
 			}
 
-
 			$myColumnDefs0 = array
 				(
 				array('key'			 => 'workorder_id', 'label'			 => lang('Workorder'), 'sortable'		 => true,
@@ -989,13 +998,13 @@
 
 			$lang_view_file		 = lang('click to view file');
 			$lang_delete_file	 = lang('Check to delete file');
-			$z					 = 0;
 			$content_files		 = array();
 			foreach ($_files as $_file)
 			{
-				$content_files[$z]['file_name']		 = "<a href=\"{$link_view_file}&amp;file_id={$_file['file_id']}\" target=\"_blank\" title=\"{$lang_view_file}\">{$_file['name']}</a>";
-				$content_files[$z]['delete_file']	 = "<input type=\"checkbox\" name=\"values[file_action][]\" value=\"{$_file['file_id']}\" title=\"{$lang_delete_file}\">";
-				$z++;
+				$content_files[] = array(
+					'file_name'	 => "<a href=\"{$link_view_file}&amp;file_id={$_file['file_id']}\" target=\"_blank\" title=\"{$lang_view_file}\">{$_file['name']}</a>",
+				    'delete_file' => "<input type=\"checkbox\" name=\"values[file_action][]\" value=\"{$_file['file_id']}\" title=\"{$lang_delete_file}\">"
+				);
 			}
 
 			$myColumnDefs1 = array
@@ -1053,7 +1062,7 @@
 				'lang_start_date'					 => lang('Project start date'),
 				'value_start_date'					 => $project_values['start_date'],
 				'value_entry_date'					 => $values['entry_date'] ? $GLOBALS['phpgw']->common->show_date($values['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) : '',
-				'base_java_url'						 => json_encode(array(menuaction => "property.uitenant_claim.update_data", 'id' => $claim_id)),
+				'base_java_url'						 => json_encode(array('menuaction' => "property.uitenant_claim.update_data", 'id' => $claim_id)),
 				'lang_end_date'						 => lang('Project end date'),
 				'value_end_date'					 => $project_values['end_date'],
 				'lang_charge_tenant'				 => lang('Charge tenant'),
