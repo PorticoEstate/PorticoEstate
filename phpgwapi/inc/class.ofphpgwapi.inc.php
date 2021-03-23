@@ -139,6 +139,7 @@
 				case 'ntlm':
 				case 'remoteuser':
 				case 'sql':
+				case 'azure':
 					$class = "auth_{$auth_type}";
 					include_once PHPGW_API_INC . "/auth/class.{$class}.inc.php";
 

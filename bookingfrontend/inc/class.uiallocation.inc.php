@@ -408,21 +408,17 @@
 						'to_'			 => $allocation['to_'],
 						'resource'		 => $allocation['resource'],
 						'resource_ids'	 => $allocation['resource_ids']));
-				$allocation['cancel_link']	 = self::link(array('menuaction'	 => 'bookingfrontend.uiallocation.cancel',
-						'allocation_id'	 => $allocation['id'], 'from_'			 => $allocation['from_'],
-						'to_'			 => $allocation['to_'],
-						'resource'		 => $allocation['resource'],
-						'resource_ids'		 => $allocation['resource_ids']));
 				if ($allocation['from_'] > Date('Y-m-d H:i:s'))
 				{
 					$allocation['edit_link']	 = self::link(array('menuaction'	 => 'bookingfrontend.uiallocation.edit',
 						'allocation_id'	 => $allocation['id']));
-				}
-				else
-				{
-					$allocation['edit_link'] = '#';
-				}
 
+					$allocation['cancel_link']	 = self::link(array('menuaction'	 => 'bookingfrontend.uiallocation.cancel',
+						'allocation_id'	 => $allocation['id'], 'from_'			 => $allocation['from_'],
+						'to_'			 => $allocation['to_'],
+						'resource'		 => $allocation['resource'],
+						'resource_ids'		 => $allocation['resource_ids']));
+				}
 
 				if ($allocation['application_id'] != null)
 				{

@@ -273,8 +273,15 @@
 
 			if (!$errors)
 			{
-				$headers = getallheaders();
-				$ssn	 = $headers['uid'];
+				if (!empty($_SERVER['HTTP_UID']))
+				{
+					$ssn = (string)$_SERVER['HTTP_UID'];
+				}
+				else
+				{
+					$ssn = (string)$_SERVER['OIDC_pid'];
+				}
+
 				if ($ssn)
 				{
 					$ssn_hash			 = "{SHA}" . base64_encode(phpgwapi_common::hex2bin(sha1($ssn)));

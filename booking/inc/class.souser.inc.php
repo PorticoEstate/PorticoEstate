@@ -50,7 +50,9 @@
 
 			$customer_organization_number = $bouser->orgnr ? $bouser->orgnr : -1;
 
-			$this->db->query("SELECT * FROM bb_application WHERE customer_ssn ='{$ssn}' OR customer_organization_number = '{$customer_organization_number}'", __LINE__, __FILE__);
+			$this->db->query("SELECT * FROM bb_application"
+				. " WHERE customer_ssn ='{$ssn}' OR customer_organization_number = '{$customer_organization_number}'"
+				. " ORDER BY id DESC", __LINE__, __FILE__);
 
 			$values = array();
 			while ($this->db->next_record())
@@ -79,8 +81,10 @@
 
 			$customer_organization_number = $bouser->orgnr ? $bouser->orgnr : -1;
 
-			$this->db->query("SELECT * FROM bb_completed_reservation WHERE (customer_ssn ='{$ssn}' OR customer_organization_number = '{$customer_organization_number}')"
-			. " AND cost > 0", __LINE__, __FILE__);
+			$this->db->query("SELECT * FROM bb_completed_reservation"
+				. " WHERE (customer_ssn ='{$ssn}' OR customer_organization_number = '{$customer_organization_number}')"
+				. " AND cost > 0"
+				. " ORDER BY id DESC", __LINE__, __FILE__);
 
 			$values = array();
 			while ($this->db->next_record())

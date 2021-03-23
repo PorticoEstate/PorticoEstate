@@ -885,10 +885,6 @@ YUI({lang: 'nb-NO'}).use(
 			$(this).tooltip('show');
 		});
 
-		$(".tooltip").mouseleave(function ()
-		{
-			//$('.tooltip').tooltip('hide');
-		});
 
 		$(".scheduler-event-disabled").mouseleave(function ()
 		{
@@ -915,6 +911,9 @@ YUI({lang: 'nb-NO'}).use(
 		});
 	}
 );
+	$(".yui3-widget-bd").mouseenter(function () {
+		$(".tooltip").remove();
+	});
 }
 
 YUI({lang: 'nb-no'}).use(

@@ -571,7 +571,7 @@
 			{
 				$errors['warning'] = lang('NB! No data will be saved, if you navigate away you will loose all.');
 			}
-			$default_dates = array_map(array($this, '_combine_dates'), array(), array());
+			$default_dates = array_map(array($this, '_combine_dates'), array(''), array(''));
 			array_set_default($event, 'dates', $default_dates);
 
 			if (!phpgw::get_var('from_report', 'POST'))
@@ -1092,8 +1092,8 @@
 			$event['from_'] = pretty_timestamp($event['from_']);
 			$event['to_'] = pretty_timestamp($event['to_']);
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime');
-			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime', phpgwapi_datetime::date_to_timestamp($event['from_']));
+			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'datetime', phpgwapi_datetime::date_to_timestamp($event['to_']));
 			phpgwapi_jquery::load_widget('datepicker');
 
 

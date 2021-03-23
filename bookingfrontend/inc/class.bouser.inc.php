@@ -326,9 +326,13 @@
 				$ssn = 	$this->config->config_data['test_ssn'];
 				phpgwapi_cache::message_set('Warning: ssn is set by test-data', 'error');
 			}
-			else
+			else if (!empty($_SERVER['HTTP_UID']))
 			{
 				$ssn = (string)$_SERVER['HTTP_UID'];
+			}
+			else
+			{
+				$ssn = (string)$_SERVER['OIDC_pid'];
 			}
 
 			if( isset($this->config->config_data['bypass_external_login']) && $this->config->config_data['bypass_external_login'] )

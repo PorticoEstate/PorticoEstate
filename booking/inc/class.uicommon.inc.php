@@ -243,7 +243,7 @@
 			return $this->current_app() == 'bookingfrontend';
 		}
 
-		public function redirect( $link_data )
+		public static function redirect( $link_data )
 		{
 			$this->store_flash_msgs();
 
