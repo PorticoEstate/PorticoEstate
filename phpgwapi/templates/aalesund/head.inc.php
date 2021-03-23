@@ -282,6 +282,7 @@ JS;
 	$site_base = $app == 'bookingfrontend' ? "/{$app}/" : '/index.php';
 
 	$site_url			= $GLOBALS['phpgw']->link($site_base, array());
+	$eventsearch_url = $GLOBALS['phpgw']->link('/bookingfrontend/',array('menuaction'=>'bookingfrontend.uieventsearch.show'));
 	$placeholder_search = lang('Search');
 
 	$nav = <<<HTML
@@ -291,7 +292,7 @@ JS;
 				<a class="navbar-brand brand-site-title" href="{$site_url}">{$site_title} </a>
 				<a href="{$site_url}"><img class="navbar-brand brand-site-img" src="{$headlogoimg}" alt="{$logo_title}"/></a>
 				<div class="arrangement-link-box">
-					<a class="Arrangement_link" href="{eventsearch_url}">Arrangement</a>
+					<a class="Arrangement_link" href="{$eventsearch_url}">Arrangement</a>
 				</div>
 				<!-- Search Box -->
 				<!--div class="search-container">
