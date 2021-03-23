@@ -968,6 +968,47 @@
 			return $results;
 		}
 
+		function get_all_alllocations_and_events_for_resource($resource_id, $start, $end)
+		{
+			$start = $start->format('Y-m-d H:i');
+			$end = $end->format('Y-m-d H:i');
+
+			if(is_array($resource_id))
+			{
+				$resource_ids = $resource_id;
+			}
+			else
+			{
+				$resource_ids = array((int)$resource_id);
+			}
+
+			$results = array();
+
+
+			$sql = "SELECT from_, to_"
+				. " FROM bb_allocation JOIN bb_allocation_resource ON (allocation_id=id AND resource_id IN (" . implode(',', $resource_ids) . ") )"
+				. " AND ((bb_allocation.from_ >= '$start'"
+				. " AND bb_allocation.from_ < '$end') OR (bb_allocation.to_ > '$start'"
+				. " AND bb_allocation.to_ <= '$end') OR (bb_allocation.from_ < '$start' AND bb_allocation.to_ > '$end'))"
+				. " UNION"
+				. " SELECT from_, to_ FROM bb_event"
+				. " JOIN bb_event_resource ON (event_id=id AND resource_id IN (" . implode(',', $resource_ids) . ") )"
+				. " WHERE active=1 AND ((from_ >= '$start' AND from_ < '$end')"
+				. " OR (to_ > '$start' AND to_ <= '$end') OR (from_ < '$start'"
+				. " AND to_ > '$end'))";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = array(
+					'from_' => $this->db->f('from_', false),
+					'to_' => $this->db->f('to_', false),
+				);
+			}
+			return $results;
+		}
+
+
 		function get_screen_event( $building_id, $start, $end, $resources = '' )
 		{
 			$start = $start->format('Y-m-d H:i:s');

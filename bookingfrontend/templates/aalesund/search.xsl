@@ -33,6 +33,7 @@
 					  </xsl:attribute>
 				  </input>
 			  </div>
+
 			  <div>
 				  <div id="locationWrapper">
 					  <select id="locationFilter" class="form-control locationFilter" aria-label="Large" data-bind="options: towns,
@@ -49,7 +50,10 @@
 				  </div>
 			  </div>
 			  <div class="input-group bk">
-			  <button id="searchBtn" class="greenBtn"><xsl:value-of select="php:function('lang', 'Find available')"/></button>
+			  	<button id="searchBtn" class="greenBtn"><xsl:value-of select="php:function('lang', 'Find available')"/></button>
+			  </div>
+			  <div data-bind="if: showResults">
+				  <div id="clearSearchBtn" class="clearSearchBtn" onclick="clearSearch()"><xsl:value-of select="php:function('lang', 'Reset filter')"/></div>
 			  </div>
 		  </div>
 
@@ -245,32 +249,38 @@
 						  </div>
 
 						  <!-- Apply filter button -->
-						  <div id="applyFilterBtn" class="applyFilterBtn" onclick="findSearchMethod()"><xsl:value-of select="php:function('lang', 'Apply filter')"/></div>
+						  <!--<div id="applyFilterBtn" class="applyFilterBtn" onclick="findSearchMethod()"><xsl:value-of select="php:function('lang', 'Apply filter')"/></div>-->
 
 						  <!-- Remove filter button -->
-						  <div id="removeFilterBtn" class="removeFilterBtn" onclick="resetFilters()"><xsl:value-of select="php:function('lang', 'Reset filter')"/></div>
+						  <div id="removeFilterBtn" class="removeFilterBtn" onclick="resetFilters()"><xsl:value-of select="php:function('lang', 'Reset filters')"/></div>
 					  </div>
 
 
-					  <div class="resultContainer" data-bind="foreach: resources">
-						  <div class="resultCard row">
-							  <div class="col-2">
-								  <div class="resultCalIcon"/>
-								  <span class="resultDate" data-bind="text: date"/>
-								  <span class="resultMonth" data-bind="text: month"/>
+					  <div class="resultContainer">
+						  <div data-bind="foreach: resources">
+							  <div class="resultCard row">
+								  <div class="col-2">
+									  <div class="resultCalIcon"/>
+									  <span class="resultDate" data-bind="text: date"/>
+									  <span class="resultMonth" data-bind="text: month"/>
+								  </div>
+								  <div class="col-7">
+									  <div class="resultText" href="#" data-bind="text: name, click:$parent.goToResource"/>
+									  <div class="resultTextLocation" data-bind="text: location"/>
+								  </div>
+								  <div class="col-3">
+									  <div class="resultClockIcon"/>
+									  <div class="resultClockText" data-bind="text: time"/>
+									  <div class ="resultBtnText" href="#" data-bind="click:$parent.goToApplication"><xsl:value-of select="php:function('lang', 'To application site')"/></div>
+								  </div>
 							  </div>
-							  <div class="col-7">
-								  <div class="resultText" href="#" data-bind="text: name, click:$parent.goToResource"/>
-								  <div class="resultTextLocation" data-bind="text: location"/>
-							  </div>
-							  <div class="col-3">
-								  <div class="resultClockIcon"/>
-								  <div class="resultClockText" data-bind="text: time"/>
-								  <div class ="resultBtnText" href="#" data-bind="click:$parent.goToApplication"><xsl:value-of select="php:function('lang', 'To application site')"/></div>
-							  </div>
+						  </div>
+						  <div class="showMoreContainer" data-bind="if: resources().length === limit">
+							  <span class="showMoreText" onclick="showMore()"><xsl:value-of select="php:function('lang', 'Show more results')"/></span>
 						  </div>
 					  </div>
 				  </div>
+
 
 			  </div>
 		  </div>

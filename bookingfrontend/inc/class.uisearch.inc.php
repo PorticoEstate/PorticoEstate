@@ -279,30 +279,11 @@
 			$activity_top_level = phpgw::get_var('activity_top_level', 'int', 'REQUEST', null);
 			$building_id = phpgw::get_var('building_id', 'int', 'REQUEST', null);
 			$_filter_part_of_town = explode(',', phpgw::get_var('part_of_town_id', 'string'));
-			$_filter_activities = explode(',', phpgw::get_var('activity_id', 'string'));
-			$_filter_facilities = explode(',', phpgw::get_var('facility_id', 'string'));
 			$from_date = phpgw::get_var('from_date', 'string', 'REQUEST', '');
 			$to_date = phpgw::get_var('to_date', 'string', 'REQUEST', '');
 			$from_time = phpgw::get_var('from_time', 'string', 'REQUEST', '');
 			$to_time = phpgw::get_var('to_time', 'string', 'REQUEST', '');
-
-			$filter_activities = array();
-			foreach ($_filter_activities as $key => $value)
-			{
-				if ($value && ctype_digit($value))
-				{
-					$filter_activities[] = (int)$value;
-				}
-			}
-
-			$filter_facilities = array();
-			foreach ($_filter_facilities as $key => $value)
-			{
-				if ($value && ctype_digit($value))
-				{
-					$filter_facilities[] = (int)$value;
-				}
-			}
+			$limit = phpgw::get_var('limit', 'int', 'REQUEST', 50);
 
 			$filter_part_of_town = array();
 			foreach ($_filter_part_of_town as $key => $value)
@@ -357,8 +338,8 @@
 				}
 			}
 			$data = $this->bo->search_available_resources($searchterm, $building_id, $filter_part_of_town, $filter_top_level,
-					$activity_criteria, $filter_activities, $filter_facilities, $length, array('from_date' => $from_date,
-						'to_date' => $to_date, 'from_time' => $from_time, 'to_time' => $to_time,  'length' => $length));
+					$activity_criteria, $length, array('from_date' => $from_date,
+						'to_date' => $to_date, 'from_time' => $from_time, 'to_time' => $to_time, 'limit' => $limit, 'length' => $length));
 
 			return $data;
 		}
@@ -372,6 +353,7 @@
 			$from_time = phpgw::get_var('from_time', 'string', 'REQUEST', '');
 			$to_time = phpgw::get_var('to_time', 'string', 'REQUEST', '');
 			$fields_multiids = array('part_of_town_id');
+			$limit = phpgw::get_var('limit', 'int', 'REQUEST', 10);
 			$multiids = array();
 			foreach ($fields_multiids as $field)
 			{
@@ -388,7 +370,7 @@
 			}
 			return $this->bo->resquery_available_resources(array('rescategory_id' => $rescategory_id,
 				'part_of_town_id' => $multiids['part_of_town_id'], 'from_date' => $from_date,
-				'to_date' => $to_date, 'from_time' => $from_time, 'to_time' => $to_time,  'length' => $length));
+				'to_date' => $to_date, 'from_time' => $from_time, 'to_time' => $to_time,  'length' => $length, 'limit' => $limit));
 		}
 
 

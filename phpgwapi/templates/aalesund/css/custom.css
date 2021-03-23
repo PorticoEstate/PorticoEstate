@@ -1234,6 +1234,30 @@ select option:focus {
 	padding-left: 30px;
 }
 
+.showMoreContainer {
+	margin-top: 30px;
+}
+
+.showMoreText {
+	font-family: Rubik;
+	font-size: 18px;
+	padding-left: 17px;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.4;
+	letter-spacing: normal;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.showMoreText:hover {
+	color: #83338f;
+
+}
+
+
+
 .timeContainer {
 	display: flex;
 }
@@ -1569,7 +1593,7 @@ select option:focus {
 }
 
 .removeFilterBtn {
-	margin: 12px 0 0;
+	margin: 21px 0 0;
 	padding: 4px 0 4px 0;
 	border-radius: 12px;
 	border: solid 1px #c2c2ff;
@@ -1587,6 +1611,30 @@ select option:focus {
 }
 
 .removeFilterBtn:hover {
+	background-color: #F2F2F2;
+}
+
+.clearSearchBtn {
+	margin: auto;
+	margin-top: 10px;
+	padding: 4px 0 4px 0;
+	border-radius: 12px;
+	border: solid 1px #c2c2ff;
+	background-color: #ffffff;
+	font-family: Rubik;
+	font-size: 18px;
+	font-weight: normal;
+	font-stretch: normal;
+	font-style: normal;
+	line-height: 1.56;
+	letter-spacing: normal;
+	color: #0b1214;
+	cursor: pointer;
+	text-align: center;
+	width: 325px;
+}
+
+.clearSearchBtn:hover {
 	background-color: #F2F2F2;
 }
 
