@@ -640,7 +640,8 @@ function setDateTimePicker() {
 		maxTime: '23:30',
 		dynamic: false,
 		dropdown: true,
-		scrollbar: true});
+		scrollbar: true,
+		change: timeListener});
 	$('#toTime').prop("disabled", true);
 
 }
