@@ -316,7 +316,7 @@ function doSearch(url, params) {
 			viewmodel.activities.removeAll();
 			viewmodel.gear.removeAll();
 			viewmodel.capacities.removeAll();
-			toggleMargin()
+			toggleMargin();
 
 			setResources(response.available_resources, time[0], time[1]);
 			setFacilityData(response.facilities);
