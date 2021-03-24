@@ -76,7 +76,7 @@
 			if (!$bouser->is_organization_admin($customer['customer_organization_id']))
 			{
 				$date = substr($event['from_'], 0, 10);
-				$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+				self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $event['building_id'], 'date' => $date));
 			}
 
@@ -199,7 +199,7 @@
 					$this->bo->send_admin_notification(true, $event, $message, $orgdate);
 					$this->bo->update($event);
 					$date = substr($event['from_'], 0, 10);
-					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+					self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 						'id' => $event['building_id'], 'date' => $date));
 				}
 			}
@@ -314,7 +314,7 @@
 							$this->bo->update($event);
 						}
 						$date = substr($event['from_'], 0, 10);
-						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+						self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 							'id' => $event['building_id'], 'date' => $date));
 					}
 					else

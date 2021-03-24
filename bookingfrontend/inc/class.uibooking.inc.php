@@ -291,7 +291,7 @@
 				if (!$errors && $_POST['recurring'] != 'on' && $_POST['outseason'] != 'on')
 				{
 					$receipt = $this->bo->add($booking);
-					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+					self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 						'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
 				}
 				else if (($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on') && !$errors && $step > 1)
@@ -341,7 +341,7 @@
 					}
 					if ($step == 3)
 					{
-						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+						self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 							'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
 					}
 				}
@@ -530,7 +530,7 @@
 					if (!$errors)
 					{
 						$receipt = $this->bo->update($booking);
-						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+						self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 							'id' => $booking['building_id'], 'date' => $temp_date));
 					}
 				}
@@ -988,7 +988,7 @@
 					$system_message['message'] = $system_message['message'] . "\n\n" . lang('To cancel booking use this link') . " - <a href='" . $link . "'>" . lang('Delete') . "</a>";
 					$this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation);
 					$receipt = $this->system_message_bo->add($system_message);
-					$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+					self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 						'id' => $system_message['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 				}
 
@@ -1113,7 +1113,7 @@
 						$system_message['message'] = $system_message['message'] . "<br />" . $info_deleted;
 						$receipt = $this->system_message_bo->add($system_message);
 
-						$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+						self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 							'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 					}
 					else
@@ -1225,7 +1225,7 @@
 							$this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation, $valid_dates);
 							$this->bo->send_notification($booking, $allocation, $maildata, $mailadresses, $valid_dates);
 							$receipt = $this->system_message_bo->add($system_message);
-							$this->redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+							self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 								'id' => $allocation['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 						}
 					}

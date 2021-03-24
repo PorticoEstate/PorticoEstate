@@ -48,7 +48,7 @@
 
 			if ($application['secret'] != $secret)
 			{
-				$this->redirect(array('menuaction' => 'bookingfrontend.uisearch.index'));
+				self::redirect(array('menuaction' => 'bookingfrontend.uisearch.index'));
 			}
 
 			$comment = phpgw::get_var('comment', 'html', 'POST');
@@ -61,7 +61,7 @@
 				$this->bo->send_admin_notification($application, $comment);
 
 				$receipt = $this->bo->update($application);
-				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'],
+				self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'],
 					'secret' => $application['secret']));
 			}
 			/** Start attachment * */

@@ -29,7 +29,7 @@
 
 		public function redirect_to( $action, $params = array() )
 		{
-			return $this->redirect($this->link_to_params($action, $params));
+			return self::redirect($this->link_to_params($action, $params));
 		}
 
 		public function link_to_params( $action, $params = array() )

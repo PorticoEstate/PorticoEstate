@@ -305,7 +305,7 @@
 			{
 				$activate = extract_values($_POST, array("status", "activate_id"));
 				$this->bo->set_active(intval($activate['activate_id']), intval($activate['status']));
-				$this->redirect(array('menuaction' => $url, 'id' => $activate['activate_id']));
+				self::redirect(array('menuaction' => $url, 'id' => $activate['activate_id']));
 			}
 		}
 

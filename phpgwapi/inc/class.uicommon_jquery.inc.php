@@ -874,7 +874,7 @@
 			{
 				$_SESSION['showall'] = "1";
 			}
-			$this->redirect(array('menuaction' => $this->url_prefix . '.index'));
+			self::redirect(array('menuaction' => $this->url_prefix . '.index'));
 		}
 
 		public function toggle_show_inactive()
@@ -887,7 +887,7 @@
 			{
 				$_SESSION['showall'] = "1";
 			}
-			$this->redirect(array('menuaction' => $this->url_prefix . '.index'));
+			self::redirect(array('menuaction' => $this->url_prefix . '.index'));
 		}
 
 		static protected function fix_php_files_array( $data )

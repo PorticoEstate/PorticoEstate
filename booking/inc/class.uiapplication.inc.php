@@ -853,13 +853,13 @@
 							'</button>'
 						);
 						// Redirect to same URL so as to present a new, empty form
-						$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple, resource_id => phpgw::get_var('resource_id', 'int')));
+						self::redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple, resource_id => phpgw::get_var('resource_id', 'int')));
 					}
 					else
 					{
 						$repost_add_application = 	phpgwapi_cache::session_get('booking', 'repost_add_application', $receipt['id']);
 						$application = $this->bo->read_single($repost_add_application);
-						$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $repost_add_application,
+						self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $repost_add_application,
 								'secret' => $application['secret']));
 					}
 				}
@@ -968,11 +968,11 @@
 						// Redirect to same URL so as to present a new, empty form
 						if($simple)
 						{
-							$this->redirect(array('menuaction' => $this->module . '.uiresource.show',  'id' => phpgw::get_var('resource_id', 'int'), 'building_id' => $building_id ));
+							self::redirect(array('menuaction' => $this->module . '.uiresource.show',  'id' => phpgw::get_var('resource_id', 'int'), 'building_id' => $building_id ));
 						}
 						else
 						{
-							$this->redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
+							self::redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
 						}
 					}
 					else
@@ -987,7 +987,7 @@
 //								 lang("Please check your Spam Filter if you are missing mail."));
 
 						phpgwapi_cache::session_set('booking', 'repost_add_application', $receipt['id']);
-						$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $receipt['id'],
+						self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $receipt['id'],
 							'secret' => $application['secret']));
 					}
 				}
@@ -1360,7 +1360,7 @@
 					{
 						$errors['records'] = lang("No partial applications exist for this session, contact details are not saved");
 						// Redirect to the front page
-						$this->redirect(array());
+						self::redirect(array());
 					}
 					else
 					{
@@ -1536,7 +1536,7 @@
 
 						phpgwapi_cache::message_set(implode("<br/>", $message_arr ));
 						// Redirect to the front page
-						$this->redirect(array());
+						self::redirect(array());
 					}
 				}
 			}
@@ -1743,7 +1743,7 @@
 				{
 					$receipt = $this->bo->update($application);
 					$this->bo->send_notification($application);
-					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id']));
+					self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id']));
 				}
 			}
 
@@ -2058,7 +2058,7 @@
 				{
 					phpgwapi_cache::message_set( 'integrasjonsmetode er ikke konfigurert', 'error');
 				}
-				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'], 'return_after_action' => true));
+				self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'], 'return_after_action' => true));
 			}
 
 		}
@@ -2087,7 +2087,7 @@
 			{
 				if ($_POST['create'])
 				{
-					$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id']));
+					self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id']));
 				}
 
 				$update = false;
@@ -2211,7 +2211,7 @@
 				$update AND $receipt = $this->bo->update($application);
 				$notify AND $this->bo->send_notification($application);
 
-				$this->redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'], 'return_after_action' => $return_after_action));
+				self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'], 'return_after_action' => $return_after_action));
 			}
 
 			$application['dashboard_link'] = self::link(array('menuaction' => 'booking.uidashboard.index'));
