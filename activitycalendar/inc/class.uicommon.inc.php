@@ -46,7 +46,6 @@
 
 		//public $dateFormat;
 		public $type_of_user;
-		public $flash_msgs;
 		public $user_rows_per_page;
 
 		public function __construct()

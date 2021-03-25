@@ -34,15 +34,12 @@
 	{
 
 		const UI_SESSION_FLASH = 'flash_msgs';
+		public static $flash_msgs = array();
 
 		protected
-			$filesArray,
-			$ui_session_key,
-			$flash_msgs;
+			$filesArray;
 		public $dateFormat;
 		public $type_of_user;
-
-		//	public $flash_msgs;
 
 		public function __construct( $currentapp = '', $yui = '' )
 		{
@@ -139,46 +136,51 @@
 			}
 		}
 
-		private function get_ui_session_key()
+		public static function get_ui_session_key()
 		{
-			return $this->ui_session_key;
+			return self::current_app() . '_uicommon';
 		}
 
-		protected function restore_flash_msgs()
+		protected static function current_app()
 		{
-			if (($flash_msgs = $this->session_get(self::UI_SESSION_FLASH)))
+			return $GLOBALS['phpgw_info']['flags']['currentapp'];
+		}
+
+		protected static function restore_flash_msgs()
+		{
+			if (($flash_msgs = self::session_get(self::UI_SESSION_FLASH)))
 			{
 				if (is_array($flash_msgs))
 				{
-					$this->flash_msgs = $flash_msgs;
-					$this->session_set(self::UI_SESSION_FLASH, array());
+					self::$flash_msgs = $flash_msgs;
+					self::session_set(self::UI_SESSION_FLASH, array());
 					return true;
 				}
 			}
 
-			$this->flash_msgs = array();
+			self::$flash_msgs = array();
 			return false;
 		}
 
-		protected function store_flash_msgs()
+		protected static function store_flash_msgs()
 		{
-			return $this->session_set(self::UI_SESSION_FLASH, $this->flash_msgs);
+			return self::session_set(self::UI_SESSION_FLASH, self::$flash_msgs);
 		}
 
 		protected function reset_flash_msgs()
 		{
-			$this->flash_msgs = array();
-			$this->store_flash_msgs();
+			self::$flash_msgs = array();
+			self::store_flash_msgs();
 		}
 
-		protected function session_set( $key, $data )
+		protected static function session_set( $key, $data )
 		{
-			return phpgwapi_cache::session_set($this->get_ui_session_key(), $key, $data);
+			return phpgwapi_cache::session_set(self::get_ui_session_key(), $key, $data);
 		}
 
-		protected function session_get( $key )
+		protected static function session_get( $key )
 		{
-			return phpgwapi_cache::session_get($this->get_ui_session_key(), $key);
+			return phpgwapi_cache::session_get(self::get_ui_session_key(), $key);
 		}
 
 		/**
@@ -248,14 +250,14 @@
 
 		public function flash( $msg, $type = 'success' )
 		{
-			$this->flash_msgs[$msg] = $type == 'success';
+			self::$flash_msgs[$msg] = $type == 'success';
 		}
 
 		public function flash_form_errors( $errors )
 		{
 			foreach ($errors as $field => $msg)
 			{
-				$this->flash_msgs[$msg] = false;
+				self::$flash_msgs[$msg] = false;
 			}
 		}
 
@@ -330,9 +332,9 @@
 		public function render_template( $output )
 		{
 			$GLOBALS['phpgw']->common->phpgw_header(true);
-			if ($this->flash_msgs)
+			if (self::$flash_msgs)
 			{
-				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data(self::$flash_msgs);
 				$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				foreach ($msgbox_data as & $message)
 				{
@@ -448,9 +450,9 @@
 				}
 			}
 
-			if ($this->flash_msgs)
+			if (self::$flash_msgs)
 			{
-				$data['msgbox_data'] = $GLOBALS['phpgw']->common->msgbox($this->flash_msgs);
+				$data['msgbox_data'] = $GLOBALS['phpgw']->common->msgbox(self::$flash_msgs);
 			}
 			else
 			{
