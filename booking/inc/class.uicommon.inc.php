@@ -155,12 +155,11 @@
 
 			self::add_javascript('booking', 'base', 'common');
 
-			$this->ui_session_key = $this->current_app() . '_uicommon';
-			//$this->restore_flash_msgs();
+//			self::restore_flash_msgs();
 			$this->config = CreateObject('phpgwapi.config', 'bookingfrontend');
 			$this->config->read();
 
-			if ($this->current_app() == 'bookingfrontend')
+			if (self::current_app() == 'bookingfrontend')
 			{
 				$GLOBALS['phpgw']->translation->add_app('booking');
 			}
@@ -233,19 +232,15 @@
 			}
 		}
 
-		protected function current_app()
-		{
-			return $GLOBALS['phpgw_info']['flags']['currentapp'];
-		}
 
 		public function in_frontend()
 		{
-			return $this->current_app() == 'bookingfrontend';
+			return self::current_app() == 'bookingfrontend';
 		}
 
 		public static function redirect( $link_data )
 		{
-			$this->store_flash_msgs();
+			self::store_flash_msgs();
 
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{
