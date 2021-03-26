@@ -192,6 +192,8 @@
 
 				$lang = strtolower($lang);
 
+				phpgwapi_cache::system_clear('phpgwapi', "lang_{$lang}");
+
 				if($DEBUG)
 				{
 					echo '<br>add_langs(): Working on: ' . $lang . ' for ' . $appname;
