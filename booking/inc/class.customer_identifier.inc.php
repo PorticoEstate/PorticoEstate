@@ -217,7 +217,7 @@ JST;
 				$this->add_current_identifier_info($entity);
 			}
 
-			$ui->add_template_file('customer_identifier');
+			$ui::add_template_file('customer_identifier');
 			$ui->add_js_load_event($js);
 		}
 
