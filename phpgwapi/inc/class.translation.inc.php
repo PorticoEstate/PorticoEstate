@@ -65,7 +65,7 @@
 				$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 			}
 
-			$this->set_userlang($userlang);
+			$this->set_userlang($userlang, true);
 
 			if ( isset($GLOBALS['phpgw_info']['server']['collect_missing_translations'])
 				&& $GLOBALS['phpgw_info']['server']['collect_missing_translations'])
@@ -92,7 +92,7 @@
 		/**
 		* Set the user's selected language
 		*/
-		public function set_userlang($lang, $reset = true)
+		public function set_userlang($lang, $reset = false)
 		{
 			if ( strlen($lang) != 2 )
 			{

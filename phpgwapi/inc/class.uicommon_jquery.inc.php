@@ -35,6 +35,7 @@
 
 		const UI_SESSION_FLASH = 'flash_msgs';
 		public static $flash_msgs = array();
+		public static $tmpl_search_path;
 
 		protected
 			$filesArray;
@@ -54,13 +55,15 @@
 					$GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'] = 'ckeditor';
 				}
 			}
-
+/*
 			$this->tmpl_search_path = array();
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $currentapp . '/templates/base');
 			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $currentapp . '/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
+*/
+			self::get_tmpl_search_path();
 
 			if ($yui == 'yui3')
 			{
@@ -136,6 +139,25 @@
 			}
 		}
 
+		private static function get_tmpl_search_path()
+		{
+			if(self::$tmpl_search_path)
+			{
+				return self::$tmpl_search_path;
+			}
+			else
+			{
+				$tmpl_search_path = array();
+//				array_push($tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
+				array_push($tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
+				array_push($tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
+				array_push($tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/base');
+				array_push($tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
+				self::$tmpl_search_path = $tmpl_search_path;
+			}
+			return $tmpl_search_path;
+		}
+
 		public static function get_ui_session_key()
 		{
 			return self::current_app() . '_uicommon';
@@ -167,7 +189,7 @@
 			return self::session_set(self::UI_SESSION_FLASH, self::$flash_msgs);
 		}
 
-		protected function reset_flash_msgs()
+		protected static function reset_flash_msgs()
 		{
 			self::$flash_msgs = array();
 			self::store_flash_msgs();
@@ -307,17 +329,21 @@
 		/**
 		 * A more flexible version of xslttemplate.add_file
 		 */
-		public function add_template_file( $tmpl )
+		public static function add_template_file( $tmpl )
 		{
+
+			$tmpl_search_path = self::get_tmpl_search_path();
+
 			if (is_array($tmpl))
 			{
 				foreach ($tmpl as $t)
 				{
-					$this->add_template_file($t);
+					self::add_template_file($t);
 				}
 				return;
 			}
-			foreach (array_reverse($this->tmpl_search_path) as $path)
+
+			foreach (array_reverse($tmpl_search_path) as $path)
 			{
 				$filename = $path . '/' . $tmpl . '.xsl';
 				if (file_exists($filename))
@@ -326,7 +352,7 @@
 					return;
 				}
 			}
-			throw new Exception("Template $tmpl not found in search path:". print_r($this->tmpl_search_path, true));
+			throw new Exception("Template $tmpl not found in search path:". print_r($tmpl_search_path, true));
 		}
 
 		public function render_template( $output )
@@ -360,9 +386,9 @@
 			return $keys;
 		}
 
-		public function add_jquery_translation( &$data )
+		public static function add_jquery_translation( &$data )
 		{
-			$this->add_template_file('jquery_phpgw_i18n');
+			self::add_template_file('jquery_phpgw_i18n');
 			$previous = lang('prev');
 			$next = lang('next');
 			$first = lang('first');
@@ -435,7 +461,7 @@
 
 		public function add_template_helpers()
 		{
-			$this->add_template_file('helpers');
+			self::add_template_file('helpers');
 		}
 
 		public function render_template_xsl( $files, $data, $xsl_rootdir = '' , $base = 'data')
@@ -444,9 +470,9 @@
 
 			if($xsl_rootdir)
 			{
-				if(!in_array($xsl_rootdir, $this->tmpl_search_path))
+				if(!in_array($xsl_rootdir, self::$tmpl_search_path))
 				{
-					array_push($this->tmpl_search_path, $xsl_rootdir);
+					array_push(self::$tmpl_search_path, $xsl_rootdir);
 				}
 			}
 
@@ -456,12 +482,12 @@
 			}
 			else
 			{
-				$this->add_template_file('msgbox');
+				self::add_template_file('msgbox');
 			}
 
-			$this->reset_flash_msgs();
+			self::reset_flash_msgs();
 
-			$this->add_jquery_translation($data);
+			self::add_jquery_translation($data);
 			$data['webserver_url'] = $GLOBALS['phpgw_info']['server']['webserver_url'];
 
 			if (preg_match("/(Trident\/(\d{2,}|7|8|9)(.*)rv:(\d{2,}))|(MSIE\ (\d{2,}|8|9)(.*)Tablet\ PC)|(Trident\/(\d{2,}|7|8|9))/", $_SERVER["HTTP_USER_AGENT"]))
@@ -481,7 +507,7 @@
 
 			$output = phpgw::get_var('output', 'string', 'REQUEST', 'html');
 			$GLOBALS['phpgw']->xslttpl->set_output($output);
-			$this->add_template_file($files);
+			self::add_template_file($files);
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array($base => $data));
 		}
 
@@ -627,7 +653,7 @@
 			}
 
 			ob_start();
-			foreach (array_reverse($this->tmpl_search_path) as $path)
+			foreach (array_reverse(self::$tmpl_search_path) as $path)
 			{
 				$filename = $path . '/' . $template;
 				if (file_exists($filename))
