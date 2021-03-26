@@ -285,6 +285,11 @@ JS;
 
 	$site_url			= $GLOBALS['phpgw']->link($site_base, array());
 	$placeholder_search = lang('Search');
+	$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+	$flag_no = "{$webserver_url}/phpgwapi/templates/base/images/flag_no.gif";
+	$flag_en = "{$webserver_url}/phpgwapi/templates/base/images/flag_en.gif";
+	
+	$self_uri = $_SERVER['REQUEST_URI'];
 
 	$nav = <<<HTML
    
@@ -300,6 +305,18 @@ JS;
 					</form>
 				</div-->
 			</div>
+
+			<ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+				<li class="nav-item">
+					<a class="nav-link p-2" href="{$self_uri}&lang={$userlang}" aria-label="Norsk"><img src="{$flag_no}" alt="Norsk (Norway)" title="Norsk (Norway)" />
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link p-2" href="{$self_uri}&lang=en" aria-label="English"><img src="{$flag_en}" alt="English (United Kingdom)" title="English (United Kingdom)" />
+					</a>
+				</li>
+			</ul>
+
             <div class="navbar-organization-select">
             </div>
 		</nav>
@@ -319,7 +336,7 @@ HTML;
 		'webserver_url'			 => $webserver_url,
 		'win_on_events'			 => $test,
 		'metainfo_author'		 => $author,
-		'userlang'				 => $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'],
+		'userlang'				 => $userlang,
 		'metainfo_keywords'		 => $keywords,
 		'metainfo_description'	 => $description,
 		'metainfo_robots'		 => $robots,

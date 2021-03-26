@@ -165,6 +165,7 @@
 			}
 
 			phpgwapi_jquery::load_widget('autocomplete');
+			array_unshift(parent::$tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
 
 		}
 

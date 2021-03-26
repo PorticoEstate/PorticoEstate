@@ -106,10 +106,16 @@ HTML;
 // BEGIN Stuff copied from functions.inc.php
 /////////////////////////////////////////////////////////////////////////////
 
-	if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] != 'en')
+	$selected_lang = phpgwapi_cache::session_get('bookingfrontend', 'selected_lang');
+
+	if ($selected_lang = phpgw::get_var('lang', 'string', 'GET', ''))
 	{
-		$GLOBALS['phpgw']->translation->set_userlang($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'], true);
+		phpgwapi_cache::session_set('bookingfrontend', 'selected_lang', $selected_lang);
 	}
+
+	$userlang = $selected_lang ? $selected_lang : $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+
+	$GLOBALS['phpgw']->translation->set_userlang($selected_lang, true);
 
 	/* A few hacker resistant constants that will be used throught the program */
 	define('PHPGW_TEMPLATE_DIR', ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'phpgwapi'));
