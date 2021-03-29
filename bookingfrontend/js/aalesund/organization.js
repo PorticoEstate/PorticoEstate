@@ -272,7 +272,7 @@ function PopulateCalendarEvents() {
 					if (events.length !== 0) {
 
 						let defaultIds = [];
-						for (let i = 0; i < events.length && defaultIds.length < 3; i++) {
+						for (let i = 0; i < events.length; i++) {
 							if(!defaultIds.includes(events[i].resource)) {
 								defaultIds.push(events[i].resource);
 							}
