@@ -69,9 +69,9 @@ function getOrgsIfLoggedIn() {
         url: requestURL,
         dataType : 'json',
         success: function (result) {
-            loggedInUserOrgsResult = result;
+			loggedInUserOrgsResult = result.orgnr;
             let elem = document.getElementById("my_orgs_button");
-            if (result.length > 0) {
+            if (result !== "") {
                 elem.style.display = 'block';
             } else {
                 elem.style.display = 'none';
