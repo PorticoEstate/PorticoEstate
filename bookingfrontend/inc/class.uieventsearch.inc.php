@@ -80,15 +80,8 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		$bouser = new bookingfrontend_bouser();
 		$orgs = null;
 		if ($bouser->is_logged_in()) {
-			$orgs = (array)phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);
+			return $bouser;
 		}
-
-		$orgs_map = array();
-		foreach ($orgs as $org)
-		{
-			$orgs_map[] = $org['orgnumber'];
-		}
-		return $orgs_map;
 	}
 
 	/***

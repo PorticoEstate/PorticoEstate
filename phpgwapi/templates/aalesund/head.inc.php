@@ -284,6 +284,7 @@ JS;
 	$site_url			= $GLOBALS['phpgw']->link($site_base, array());
 	$eventsearch_url = $GLOBALS['phpgw']->link('/bookingfrontend/',array('menuaction'=>'bookingfrontend.uieventsearch.show'));
 	$placeholder_search = lang('Search');
+	$myorgs_text = lang('Show my events');
 
 	$nav = <<<HTML
 
@@ -291,9 +292,6 @@ JS;
 			<div class="container header-container my_class">
 				<a class="navbar-brand brand-site-title" href="{$site_url}">{$site_title} </a>
 				<a href="{$site_url}"><img class="navbar-brand brand-site-img" src="{$headlogoimg}" alt="{$logo_title}"/></a>
-				<div class="arrangement-link-box">
-					<a class="Arrangement_link" href="{$eventsearch_url}">Arrangement</a>
-				</div>
 				<!-- Search Box -->
 				<!--div class="search-container">
 					<form id="navSearchForm" class="search-form">
@@ -301,9 +299,18 @@ JS;
 						<button class="searchButton" type="submit" ><i class="fas fa-search"></i></button>
 					</form>
 				</div-->
+		</div>
+		<div class="event_navbar_container">
+			<div class="arrangement-link-box">
+				<a class="Arrangement_link" href="{$eventsearch_url}">Arrangement</a>
 			</div>
-            <div class="navbar-organization-select">
-            </div>
+			<button onclick="toggleMyOrgs()" class="my_orgs_button" id="my_orgs_button" style="display='none';">
+				<i id="my_orgs_icon" class="far fa-circle"></i>
+				{$myorgs_text}
+			</button>
+		</div>
+        <div class="navbar-organization-select">
+        </div>
 		</nav>
 		<div class="overlay">
             <div id="loading-img"><i class="fas fa-spinner fa-spin fa-3x"></i></div>

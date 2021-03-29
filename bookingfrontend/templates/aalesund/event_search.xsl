@@ -2,12 +2,6 @@
 	<div class="event_container">
 		<div id="container_event_search col" class="container_event_search">
 			<div class="header-container-search">
-				<div class="col">
-					<button onclick="toggleMyOrgs()" class="my_orgs_button" id="my_orgs_button" style="display='none';">
-						<i id="my_orgs_icon" class="far fa-circle"/>
-						<xsl:value-of select="php:function('lang', 'Show my events')" />
-					</button>
-				</div>
 				<div class="event-title-container">
 					<h2 class="upcomming-events">
 						<xsl:value-of select="php:function('lang', 'Upcomming Events (2021)')"/>
