@@ -204,6 +204,7 @@
 			$errors = array();
 			$booking = array();
 			$booking['building_id'] = phpgw::get_var('building_id', 'int');
+			$from_org = phpgw::get_var('from_org', 'boolean', "REQUEST", false);
 			$allocation_id = phpgw::get_var('allocation_id', 'int');
 			#The string replace is a workaround for a problem at Bergen Kommune
 			$booking['from_'] = str_replace('%3A', ':', phpgw::get_var('from_', 'string', 'GET'));
@@ -291,9 +292,14 @@
 				if (!$errors && $_POST['recurring'] != 'on' && $_POST['outseason'] != 'on')
 				{
 					$receipt = $this->bo->add($booking);
-					self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-						'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
-				}
+
+					if ($from_org && $allocation_id) {
+						self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
+							'id' => $allocation['organization_id'], 'date' => date("Y-m-d", strtotime($booking['from_']))));
+					} else {
+						self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+							'id' => $booking['building_id'], 'date' => date("Y-m-d", strtotime($booking['from_']))));
+					}}
 				else if (($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on') && !$errors && $step > 1)
 				{
 					if ($_POST['recurring'] == 'on')
@@ -339,10 +345,14 @@
 						}
 						$i++;
 					}
-					if ($step == 3)
-					{
-						self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-							'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
+					if ($step == 3) {
+						if ($from_org && $allocation_id) {
+							self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
+								'id' => $allocation['organization_id'], 'date' => date("Y-m-d", strtotime($booking['from_']))));
+						} else {
+							self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+								'id' => $booking['building_id'], 'date' => date("Y-m-d", strtotime($booking['from_']))));
+						}
 					}
 				}
 			}
@@ -367,8 +377,15 @@
 
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['resource_ids_json'] = json_encode(array_map('intval', $booking['resource_ids']));
-			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+
+			if ($from_org && $allocation_id) {
+				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
+					'id' => $allocation['organization_id'], 'date' => date("Y-m-d", strtotime($booking['from_']))));
+			} else {
+				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
+			}
+
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
 			$booking['agegroups_json'] = json_encode($booking['agegroups']);
@@ -498,6 +515,7 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			$from_org = phpgw::get_var('from_org', 'boolean', 'REQUEST', false);
 			$booking = $this->bo->read_single($id);
 			$booking['building'] = $this->building_bo->so->read_single($booking['building_id']);
 			$booking['building_name'] = $booking['building']['name'];
@@ -530,8 +548,14 @@
 					if (!$errors)
 					{
 						$receipt = $this->bo->update($booking);
-						self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-							'id' => $booking['building_id'], 'date' => $temp_date));
+
+						if ($from_org) {
+							self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
+								'id' => $_POST['organization_id'], 'date' => $temp_date));
+						} else {
+							self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+								'id' => $booking['building_id'], 'date' => $temp_date));
+						}
 					}
 				}
 				else
@@ -635,9 +659,6 @@
 
 			$activity_path = $this->activity_bo->get_path($booking['activity_id']);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
-
-			$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
-					'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
@@ -650,6 +671,14 @@
 			$groups = $this->group_bo->so->read(array('filters' => array('organization_id' => $group['organization_id'],
 					'active' => 1)));
 			$groups = $groups['results'];
+
+			if ($from_org) {
+				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
+					'id' => $group['organization_id'], 'date' => date("Y-m-d", strtotime($booking['from_']))));
+			} else {
+				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+					'id' => $booking['building_id'], 'date' => date("Y-m-d", strtotime($booking['from_']))));
+			}
 
 			$booking['from_'] = pretty_timestamp($booking['from_']);
 			$booking['to_'] = pretty_timestamp($booking['to_']);
@@ -936,6 +965,8 @@
 			$id = phpgw::get_var('id', 'int');
 			$original_from = null;
 
+			$from_org = phpgw::get_var('from_org', 'boolean', 'REQUEST', false);
+
 			if ($config->config_data['user_can_delete_bookings'] != 'yes')
 			{
 				phpgwapi_cache::message_set('user can not delete bookings', 'error');
@@ -988,8 +1019,14 @@
 					$system_message['message'] = $system_message['message'] . "\n\n" . lang('To cancel booking use this link') . " - <a href='" . $link . "'>" . lang('Delete') . "</a>";
 					$this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation);
 					$receipt = $this->system_message_bo->add($system_message);
-					self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-						'id' => $system_message['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
+
+					if ($from_org) {
+						self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
+							'id' => $organization_id, 'date' => date("Y-m-d",strtotime($original_from))));
+					} else {
+						self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+							'id' => $system_message['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
+					}
 				}
 
 				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
@@ -1113,8 +1150,15 @@
 						$system_message['message'] = $system_message['message'] . "<br />" . $info_deleted;
 						$receipt = $this->system_message_bo->add($system_message);
 
-						self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-							'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
+
+						if ($from_org && $allocation !== null) {
+							self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
+								'id' => $allocation['organization_id'], 'date' => date("Y-m-d",strtotime($original_from))));
+						} else {
+							self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+								'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
+						}
+
 					}
 					else
 					{
@@ -1225,8 +1269,14 @@
 							$this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation, $valid_dates);
 							$this->bo->send_notification($booking, $allocation, $maildata, $mailadresses, $valid_dates);
 							$receipt = $this->system_message_bo->add($system_message);
-							self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-								'id' => $allocation['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
+
+							if ($from_org) {
+								self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
+									'id' => $allocation['organization_id'], 'date' => date("Y-m-d",strtotime($original_from))));
+							} else {
+								self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+									'id' => $allocation['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
+							}
 						}
 					}
 				}
@@ -1247,8 +1297,15 @@
 //				self::add_javascript('booking', 'base', 'booking.js');
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 #				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show', 'id' => $booking['id']));
-				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+
+				if ($from_org && $allocation !== null) {
+					$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
+						'id' => $allocation['organization_id'], 'date' => date("Y-m-d",strtotime($original_from))));
+				} else {
+					$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 						'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
+				}
+
 				$booking['booking_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show',
 						'id' => $booking['id']));
 
@@ -1299,6 +1356,7 @@
 			{
 				$user_can_delete_bookings = 1;
 			}
+			$from_org = phpgw::get_var('from_org', 'boolean', 'REQUEST', false);
 			$booking = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$booking['group'] = $this->group_bo->read_single($booking['group_id']);
 			$resources = $this->resource_bo->so->read(array('filters' => array('id' => $booking['resources']),
@@ -1327,11 +1385,13 @@
 				{
 					$booking['edit_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.edit',
 						'id' => $booking['id'],
-						'resource_ids' => $booking['resource_ids']));
+						'resource_ids' => $booking['resource_ids'],
+						'from_org' => $from_org));
 
 					$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.cancel',
 						'id' => $booking['id'],
-						'resource_ids' => $booking['resource_ids']));
+						'resource_ids' => $booking['resource_ids'],
+						'from_org' => $from_org));
 				}
 
 

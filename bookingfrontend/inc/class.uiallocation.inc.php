@@ -74,6 +74,8 @@
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 
+			$from_org = phpgw::get_var('from_org', 'boolean', "REQUEST", false);
+
 			if ($config->config_data['user_can_delete_allocations'] != 'yes')
 			{
 
@@ -127,13 +129,25 @@
 					$system_message['message']	 = $system_message['message'] . "<br /><br />" . lang('To cancel allocation use this link') . " - <a href='" . $link . "'>" . lang('Delete') . "</a>";
 					$this->bo->send_admin_notification($allocation, $maildata, $system_message);
 					$this->system_message_bo->add($system_message);
-					self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-						'id'		 => $system_message['building_id'], 'date'		 => date("Y-m-d", strtotime($original_from))));
+
+					if ($from_org) {
+						self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
+							'id' => $allocation['organization_id'], 'date' => date("Y-m-d", strtotime($original_from))));
+					} else {
+						self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+							'id'		 => $system_message['building_id'], 'date'		 => date("Y-m-d", strtotime($original_from))));
+					}
 				}
 
 				$this->flash_form_errors($errors);
-				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+
+				if ($from_org) {
+					$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
+						'id' => $allocation['organization_id'], 'date' => date("Y-m-d", strtotime($original_from))));
+				} else {
+					$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 						'id'		 => $allocation['building_id'], 'date'		 => date("Y-m-d", strtotime($original_from))));
+				}
 
 				$allocation['from_'] = pretty_timestamp($allocation['from_']);
 				$allocation['to_']	 = pretty_timestamp($allocation['to_']);
@@ -222,8 +236,14 @@
 							$this->bo->send_admin_notification($allocation, $maildata, $system_message);
 							$this->bo->send_notification($allocation, $maildata, $mailadresses);
 							$this->bo->so->delete_allocation($id);
-							self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-								'id'		 => $allocation['building_id'], 'date'		 => date("Y-m-d", strtotime($original_from))));
+
+							if ($from_org) {
+								self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
+									'id' => $allocation['organization_id'], 'date' => date("Y-m-d", strtotime($original_from))));
+							} else {
+								self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+									'id'		 => $allocation['building_id'], 'date'		 => date("Y-m-d", strtotime($original_from))));
+							}
 						}
 					}
 					else
@@ -315,8 +335,14 @@
 							$this->bo->send_admin_notification($allocation, $maildata, $system_message);
 							$this->bo->send_notification($allocation, $maildata, $mailadresses);
 							$this->system_message_bo->add($system_message);
-							self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-								'id'		 => $allocation['building_id'], 'date'		 => date("Y-m-d", strtotime($original_from))));
+
+							if ($from_org) {
+								self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
+									'id' => $allocation['organization_id'], 'date' => date("Y-m-d", strtotime($original_from))));
+							} else {
+								self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+									'id'		 => $allocation['building_id'], 'date'		 => date("Y-m-d", strtotime($original_from))));
+							}
 						}
 					}
 				}
@@ -325,11 +351,16 @@
 
 				$allocation['resources_json']	 = json_encode(array_map('intval', $allocation['resources']));
 #				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiallocation.show', 'id' => $allocation['id']));
-				$allocation['cancel_link']		 = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+				if ($from_org) {
+					$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
+						'id' => $allocation['organization_id'], 'date' => date("Y-m-d", strtotime($original_from))));
+				} else {
+					$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 						'id'		 => $allocation['building_id'], 'date'		 => date("Y-m-d", strtotime($original_from))));
+				}
+
 				$allocation['application_link']	 = self::link(array('menuaction' => 'bookingfrontend.uiapplication.show',
 						'id'		 => $allocation['application_id']));
-
 				$allocation['from_'] = pretty_timestamp($allocation['from_']);
 				$allocation['to_']	 = pretty_timestamp($allocation['to_']);
 
@@ -401,23 +432,28 @@
 			$allocation['org_link']		 = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
 					'id'		 => $allocation['organization_id']));
 			$bouser						 = CreateObject('bookingfrontend.bouser');
+
+			$from_org = phpgw::get_var('from_org', 'boolean', "GET", false);
 			if ($bouser->is_organization_admin($allocation['organization_id']))
 			{
 				$allocation['add_link']		 = self::link(array('menuaction'	 => 'bookingfrontend.uibooking.add',
 						'allocation_id'	 => $allocation['id'], 'from_'			 => $allocation['from_'],
 						'to_'			 => $allocation['to_'],
 						'resource'		 => $allocation['resource'],
-						'resource_ids'	 => $allocation['resource_ids']));
+						'resource_ids'	 => $allocation['resource_ids'],
+						'from_org' 		 => $from_org));
 				if ($allocation['from_'] > Date('Y-m-d H:i:s'))
 				{
 					$allocation['edit_link']	 = self::link(array('menuaction'	 => 'bookingfrontend.uiallocation.edit',
-						'allocation_id'	 => $allocation['id']));
+						'allocation_id'	 => $allocation['id'],
+						'from_org' 		 => $from_org));
 
 					$allocation['cancel_link']	 = self::link(array('menuaction'	 => 'bookingfrontend.uiallocation.cancel',
 						'allocation_id'	 => $allocation['id'], 'from_'			 => $allocation['from_'],
 						'to_'			 => $allocation['to_'],
 						'resource'		 => $allocation['resource'],
-						'resource_ids'		 => $allocation['resource_ids']));
+						'resource_ids'		 => $allocation['resource_ids'],
+						'from_org' 		 => $from_org));
 				}
 
 				if ($allocation['application_id'] != null)
@@ -594,6 +630,7 @@
 			$config->read();
 
 			$allocation = $this->bo->read_single(intval(phpgw::get_var('allocation_id', 'int')));
+			$from_org = phpgw::get_var('from_org', 'boolean', "REQUEST", false);
 			$original_from = $allocation['from_'];
 			$organization = $this->organization_bo->read_single($allocation['organization_id']);
 			$application = $this->application_bo->read_single($allocation['application_id']);
@@ -738,8 +775,16 @@
 
 			$allocation['from_'] = pretty_timestamp($allocation['from_']);
 			$allocation['to_'] = pretty_timestamp($allocation['to_']);
-			$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
-				'id' => $allocation['building_id'], 'date' => date("Y-m-d", strtotime($original_from))));
+			if ($from_org)
+			{
+				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
+					'id' => $allocation['organization_id'], 'date' => date("Y-m-d", strtotime($original_from))));
+			}
+			else
+			{
+				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+					'id' => $allocation['building_id'], 'date' => date("Y-m-d", strtotime($original_from))));
+			}
 
 			self::add_javascript('bookingfrontend', 'base', 'allocation.js', 'text/javascript', true);
 			phpgwapi_jquery::load_widget('daterangepicker');

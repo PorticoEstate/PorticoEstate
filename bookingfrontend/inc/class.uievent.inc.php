@@ -30,6 +30,7 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			$from_org = phpgw::get_var('from_org', 'boolean', 'REQUEST', false);
 			$event = $this->bo->read_single($id);
 			$building_info = $this->bo->so->get_building_info($id);
 			$event['building_id'] = $building_info['id'];
@@ -199,8 +200,14 @@
 					$this->bo->send_admin_notification(true, $event, $message, $orgdate);
 					$this->bo->update($event);
 					$date = substr($event['from_'], 0, 10);
-					self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-						'id' => $event['building_id'], 'date' => $date));
+
+					if ($from_org && $event['customer_organization_id'] !== null) {
+						self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
+							'id' => $event['customer_organization_id'], 'date' => $date));
+					} else {
+						self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+							'id' => $event['building_id'], 'date' => $date));
+					}
 				}
 			}
 
@@ -219,8 +226,14 @@
 			$event['resource_ids_json'] = json_encode(array_map('intval', $event['resource_ids']));
 			$event['audiences_json'] = json_encode(array_map('intval', $event['audience']));
 			$event['agegroups_json'] = json_encode($event['agegroups']);
-			$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+
+			if ($from_org && $event['customer_organization_id'] !== null) {
+				$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
+					'id' => $event['customer_organization_id'], 'date' => $date));
+			} else {
+				$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $event['building_id'], 'date' => $date));
+			}
 
 			$activity_path = $this->activity_bo->get_path($event['activity_id']);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : .1;
@@ -258,6 +271,7 @@
 			$config->read();
 
 			$event = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$from_org = phpgw::get_var('from_org', 'boolean', 'REQUEST', false);
 			$bouser = CreateObject('bookingfrontend.bouser');
 			$errors = array();
 
@@ -314,8 +328,14 @@
 							$this->bo->update($event);
 						}
 						$date = substr($event['from_'], 0, 10);
-						self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
-							'id' => $event['building_id'], 'date' => $date));
+
+						if ($from_org && $event['customer_organization_id'] !== null) {
+							self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
+								'id' => $event['customer_organization_id'], 'date' => $date));
+						} else {
+							self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
+								'id' => $event['building_id'], 'date' => $date));
+						}
 					}
 					else
 					{
@@ -331,8 +351,15 @@
 			$date = substr($event['from_'], 0, 10);
 			self::add_javascript('bookingfrontend', 'base', 'event.js');
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
-			$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
+
+			if ($from_org && $event['customer_organization_id'] !== null) {
+				$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
+					'id' => $event['customer_organization_id'], 'date' => $date));
+			} else {
+				$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $event['building_id'], 'date' => $date));
+			}
+
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 			$this->install_customer_identifier_ui($event);
@@ -390,6 +417,7 @@
 		{
 			$contacts = array();
 			$orglist = array();
+			$orgs = array();
 			foreach ($resources as $res)
 			{
 				$cres = $this->resource_bo->read_single($res);
@@ -398,7 +426,9 @@
 					$orglist .= $cres['organizations_ids'] . ',';
 				}
 			}
-			$orgs = explode(",", rtrim($orglist, ","));
+			if (!empty($orglist)) {
+				$orgs = explode(",", rtrim($orglist, ","));
+			}
 			$organizations = $this->organization_bo->so->read(array('filters' => array('id' => $orgs),
 				'sort' => 'name'));
 			foreach ($organizations['results'] as $key => $org)
@@ -448,6 +478,7 @@
 				$user_can_delete_events = 1;
 			}
 			$event = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$from_org = phpgw::get_var('from_org', 'boolean', 'REQUEST', false);
 			unset($event['comments']);
 			$resources = $this->resource_bo->so->read(array('filters' => array('id' => $event['resources']),
 				'sort' => 'name'));
@@ -498,11 +529,13 @@
 				{
 					$event['edit_link'] = self::link(array('menuaction' => 'bookingfrontend.uievent.edit',
 						'id' => $event['id'],
-						'resource_ids' => $event['resource_ids']));
+						'resource_ids' => $event['resource_ids'],
+						'from_org' => $from_org));
 
 					$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uievent.cancel',
 						'id' => $event['id'],
-						'resource_ids' => $event['resource_ids']));
+						'resource_ids' => $event['resource_ids'],
+						'from_org' => $from_org));
 				}
 
 				if ($event['application_id'] != null)

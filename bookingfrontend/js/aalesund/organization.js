@@ -978,6 +978,9 @@ function tooltipDetails() {
 	$.ajax({
 		url: url,
 		type: 'GET',
+		data: {
+			from_org: true
+		},
 		async: false,
 		success: function (response)
 		{
