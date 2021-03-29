@@ -23,11 +23,12 @@
 
 		function __construct()
 		{
+
 			parent::__construct();
-			$this->bo = new bookingfrontend_bosearch();
-			$old_top = array_pop($this->tmpl_search_path);
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
-			array_push($this->tmpl_search_path, $old_top);
+			$this->bo = CreateObject('bookingfrontend.bosearch');
+//			$old_top = array_pop(parent::$tmpl_search_path);
+//			array_push(parent::$tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
+//			array_push(parent::$tmpl_search_path, $old_top);
 		}
 
 		function index()

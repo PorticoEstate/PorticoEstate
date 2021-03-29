@@ -27,7 +27,6 @@
 		//public $dateFormat;
 
 		public $type_of_user;
-		public $flash_msgs;
 		public $decimalSeparator;
 		public $thousandsSeparator;
 		public $decimalPlaces;
