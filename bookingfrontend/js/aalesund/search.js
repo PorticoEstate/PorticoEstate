@@ -318,7 +318,7 @@ function doSearch(url, params) {
 			viewmodel.capacities.removeAll();
 			toggleMargin();
 
-			setResources(response.available_resources, time[0], time[1]);
+			setResources(response.available_resources);
 			setFacilityData(response.facilities);
 			setActivityData(response.activities);
 
@@ -671,10 +671,10 @@ function setEventData(result) {
 	$('.overlay').hide();
 }
 
-function setResources(resources, fromTime, toTime) {
+function setResources(resources) {
 	searchResults = [];
 		for (let i = 0; i < resources.length; i++) {
-			let dates = splitDateIntoDateAndTime(resources[i].from, resources[i].to, fromTime, toTime);
+			let dates = splitDateIntoDateAndTime(resources[i].from, resources[i].to);
 
 			searchResults.push({
 				name: resources[i].resource_name,
@@ -697,13 +697,7 @@ function setResources(resources, fromTime, toTime) {
 	viewmodel.resources(searchResults);
 }
 
-function splitDateIntoDateAndTime(from, to, fromTimeFilter, toTimeFilter) {
-
-	if (fromTimeFilter === '' || toTimeFilter === '') {
-		fromTimeFilter = from.substr(11, 5);
-		toTimeFilter = to.substr(11, 5);
-	}
-
+function splitDateIntoDateAndTime(from, to) {
 	let fromDay = from.substr(0,2);
 	let fromMonth = from.substr(3,2);
 	let fromYear = from.substr(6, 4);
@@ -719,8 +713,8 @@ function splitDateIntoDateAndTime(from, to, fromTimeFilter, toTimeFilter) {
 		'month': month,
 		'time': time,
 		'fromDateParam': fromDateParam,
-		'fromTimeParam': fromTimeFilter,
-		'toTimeParam': toTimeFilter
+		'fromTimeParam': from.substr(11, 5),
+		'toTimeParam': to.substr(11, 5)
 	}
 
 }
