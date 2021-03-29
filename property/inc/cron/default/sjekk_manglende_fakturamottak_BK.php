@@ -58,6 +58,7 @@
 			$this->soap_username	 = $config->config_data['external_register']['username'];
 			$this->soap_password	 = $config->config_data['external_register']['password'];
 			$this->config_invoice	 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			require_once PHPGW_SERVER_ROOT . '/property/inc/soap_client/agresso/autoload.php';
 		}
 
 		function execute()
@@ -160,10 +161,10 @@
 				$sql	 = <<<SQL
 					SELECT fakturamottak.regtid
 					FROM ( SELECT  fm_ecobilagoverf.regtid
-						FROM fm_ecobilagoverf WHERE external_voucher_id = {$valueset['bilagsNr']}
+						FROM fm_ecobilagoverf WHERE external_voucher_id = '{$valueset['bilagsNr']}'
 							UNION ALL
 						SELECT fm_ecobilag.regtid
-						FROM fm_ecobilag WHERE external_voucher_id = {$valueset['bilagsNr']}
+						FROM fm_ecobilag WHERE external_voucher_id = '{$valueset['bilagsNr']}'
 						 ) fakturamottak
 SQL;
 				$this->db->query($sql, __LINE__, __FILE__);
@@ -284,7 +285,12 @@ SQL;
 			return $connection;
 		}
 
-		function get_data()
+		/**
+		 * Curl-versjonen, via tjeneste hos SDI
+		 * @return array
+		 * @throws Exception
+		 */
+		function get_data_old()
 		{
 			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/manglendevaremottak
 			$url		 = "{$this->soap_url}/manglendevaremottak";
@@ -311,5 +317,98 @@ SQL;
 			$result = json_decode($result, true);
 
 			return $result;
+		}
+
+
+		/**
+		 * Ny spørring direkte i Agresso/UBW
+		 * @return array
+		 */
+		function get_data()
+		{
+			$this->debug = false;
+
+			$username				 = 'WEBSER';
+			$password				 = 'wser10';
+			$client					 = 'BY';
+
+			$TemplateId				 = '10432'; //Spørring på varemottak
+
+
+			$service	 = new \QueryEngineV201101(array(
+				'trace' => 1,
+				'location' => $this->soap_url,
+				'uri'		=> 'http://services.agresso.com/QueryEngineService/QueryEngineV201101'
+				),$this->soap_url);
+			$Credentials = new \WSCredentials();
+			$Credentials->setUsername($username);
+			$Credentials->setPassword($password);
+			$Credentials->setClient($client);
+
+			// Get the default settings for a template (templateId)
+			try
+			{
+				$searchProp = $service->GetSearchCriteria(new \GetSearchCriteria($TemplateId, true, $Credentials));
+				if ($this->debug)
+				{
+					echo "SOAP HEADERS:\n" . $service->__getLastRequestHeaders() . PHP_EOL;
+					echo "SOAP REQUEST:\n" . $service->__getLastRequest() . PHP_EOL;
+				}
+			}
+			catch (SoapFault $fault)
+			{
+				echo '<pre>';
+				print_r($fault);
+				echo '</pre>';
+				$msg = "SOAP Fault:\n faultcode: {$fault->faultcode},\n faultstring: {$fault->faultstring}";
+				echo $msg . PHP_EOL;
+				trigger_error(nl2br($msg), E_USER_ERROR);
+			}
+
+			//Kriterier
+			//		_debug_array($searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties());
+
+			$input									 = new InputForTemplateResult($TemplateId);
+			$options								 = $service->GetTemplateResultOptions(new \GetTemplateResultOptions($Credentials));
+
+//			_debug_array($options);
+			$options->RemoveHiddenColumns			 = true;
+			$options->ShowDescriptions				 = true;
+			$options->Aggregated					 = false;
+			$options->OverrideAggregation			 = false;
+			$options->CalculateFormulas				 = false;
+			$options->FormatAlternativeBreakColumns	 = false;
+			$options->FirstRecord					 = false;
+			$options->LastRecord					 = false;
+
+			$input->setTemplateResultOptions($options);
+			// Get new values to SearchCriteria (if that’s what you want to do
+			$input->setSearchCriteriaPropertiesList($searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList());
+			//Retrieve result
+
+			$result = $service->GetTemplateResultAsDataSet(new \GetTemplateResultAsDataSet($input, $Credentials));
+
+			$data = $result->getGetTemplateResultAsDataSetResult()->getTemplateResult()->getAny();
+			if ($this->debug)
+			{
+				echo "SOAP HEADERS:\n" . $service->__getLastRequestHeaders() . PHP_EOL;
+				echo "SOAP REQUEST:\n" . $service->__getLastRequest() . PHP_EOL;
+			}
+
+			$xmlparse	 = CreateObject('property.XmlToArray');
+			$xmlparse->setEncoding('utf-8');
+			$xmlparse->setDecodesUTF8Automaticly(false);
+			$var_result	 = $xmlparse->parse($data);
+
+			if ($var_result)
+			{
+				$ret = $var_result['Agresso'][0]['AgressoQE'];
+			}
+			else
+			{
+				$ret = array();
+			}
+
+			return $ret;
 		}
 	}
