@@ -409,6 +409,7 @@
 
 		function get_list_info( $type_id = '', $selected = '' )
 		{
+			$location = array();
 			if ($type_id)
 			{
 				$location_types = $this->so->select_location_type();
