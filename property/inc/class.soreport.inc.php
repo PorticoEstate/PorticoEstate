@@ -29,7 +29,17 @@
 	 */
 	class property_soreport
 	{
-
+		protected 
+			$operators,
+			$db,
+			$join,
+			$left_join,
+			$like,
+			$total_records,
+			$operators_equal,
+			$operators_like,
+			$operators_in,
+			$operators_null;
 		function __construct()
 		{
 			$this->db			 = & $GLOBALS['phpgw']->db;
@@ -441,6 +451,7 @@
 				$values[$_group][] = $value;
 			}
 
+			$result = array();
 			if (count($values))
 			{
 				$result = $this->_generate_total_sum($values, $array_sum, $array_count);

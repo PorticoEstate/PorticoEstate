@@ -176,6 +176,10 @@ schedule.nextWeek = function ()
 
 $(window).on('load', function()
 {
+
+	
+/**
+ * Used?
 	function searchSchedule ()
 	{
 		var location_id = $('#location_id').val();
@@ -200,7 +204,7 @@ $(window).on('load', function()
 
 		schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
 	}
-
+*/
 	$('select.searchSchedule').on('change', function()
 	{
 		schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);

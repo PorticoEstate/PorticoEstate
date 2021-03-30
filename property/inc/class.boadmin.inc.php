@@ -40,6 +40,7 @@
 		var $cat_id;
 		var $offset;
 		var $acl_app;
+		var $so, $bocommon, $right,$account_id, $use_session, $location,$granting_group, $allrows,$acl;
 
 		function __construct( $session = '' )
 		{

@@ -41,6 +41,7 @@
 		public $sum_potential_grants = 0;
 		public $uicols				 = array();
 		protected $global_lock		 = false;
+		public $soproject, $historylog, $bocommon, $interlink;
 
 		function __construct()
 		{
@@ -334,7 +335,7 @@
 			$GLOBALS['phpgw']->config->read();
 
 			$uicols			 = array();
-			$cols			 .= "{$entity_table}.location_code";
+			$cols			 = "{$entity_table}.location_code";
 			$cols			 .= ",{$entity_table}.loc1";
 			$cols_return[]	 = 'location_code';
 			$cols_group[]	 = "{$entity_table}.location_code";
@@ -737,6 +738,7 @@
 				$where			 = 'AND';
 			}
 
+			$querymethod = '';
 			if ($query)
 			{
 				if (stristr($query, '.') && $p_num)
@@ -746,6 +748,7 @@
 				}
 				else
 				{
+					$_filter_id = '';
 					if (ctype_digit($query))
 					{
 						$_filter_id = "OR fm_request.id =" . (int)$query;
@@ -1407,7 +1410,7 @@
 		public function get_user_list()
 		{
 			$values	 = array();
-			$users	 = $GLOBALS['phpgw']->accounts->get_list('accounts', $start	 = -1, $sort	 = 'ASC', $order	 = 'account_lastname', $query, $offset	 = -1);
+			$users	 = $GLOBALS['phpgw']->accounts->get_list('accounts', $start	 = -1, $sort	 = 'ASC', $order	 = 'account_lastname', $query = '', $offset	 = -1);
 			$sql	 = 'SELECT DISTINCT coordinator FROM fm_request';
 			$this->_db->query($sql, __LINE__, __FILE__);
 
