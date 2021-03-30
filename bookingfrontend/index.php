@@ -108,14 +108,15 @@ HTML;
 
 	$selected_lang = phpgw::get_var('selected_lang','string', 'COOKIE');
 
-	if ($selected_lang = phpgw::get_var('lang', 'string', 'GET', ''))
+	if (phpgw::get_var('lang', 'bool', 'GET'))
 	{
+		$selected_lang = phpgw::get_var('lang', 'string', 'GET');
 		$GLOBALS['phpgw']->session->phpgw_setcookie('selected_lang', $selected_lang, (time() + (60 * 60 * 24 * 14)));
 	}
 
 	$userlang = $selected_lang ? $selected_lang : $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 
-	$GLOBALS['phpgw']->translation->set_userlang($selected_lang, true);
+	$GLOBALS['phpgw']->translation->set_userlang($userlang, true);
 
 	/* A few hacker resistant constants that will be used throught the program */
 	define('PHPGW_TEMPLATE_DIR', ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'phpgwapi'));
