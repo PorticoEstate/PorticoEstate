@@ -320,7 +320,7 @@ JS;
 			<div class="arrangement-link-box">
 				<a class="Arrangement_link" href="{$eventsearch_url}">Arrangement</a>
 			</div>
-			<button onclick="toggleMyOrgs()" class="my_orgs_button" id="my_orgs_button" style="display='none';">
+			<button onclick="toggleMyOrgs()" class="my_orgs_button" id="my_orgs_button" style="display:none;">
 				<i id="my_orgs_icon" class="far fa-circle"></i>
 				{$myorgs_text}
 			</button>
