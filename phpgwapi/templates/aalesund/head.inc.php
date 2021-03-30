@@ -291,6 +291,8 @@ JS;
 	$flag_en = "{$webserver_url}/phpgwapi/templates/base/images/flag_en.gif";
 
 	$self_uri = $_SERVER['REQUEST_URI'];
+	$separator = strpos($self_uri, '?') ? '&' : '?';
+	$self_uri = str_replace(array("{$separator}lang=no", "{$separator}lang=en"), '', $self_uri);
 
 	$nav = <<<HTML
 
@@ -308,11 +310,11 @@ JS;
 		</div>
 		<ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
 				<li class="nav-item">
-					<a class="nav-link p-2" href="{$self_uri}&lang={$userlang}" aria-label="Norsk"><img src="{$flag_no}" alt="Norsk (Norway)" title="Norsk (Norway)" />
+					<a class="nav-link p-2" href="{$self_uri}{$separator}lang={$userlang}" aria-label="Norsk"><img src="{$flag_no}" alt="Norsk (Norway)" title="Norsk (Norway)" />
 					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link p-2" href="{$self_uri}&lang=en" aria-label="English"><img src="{$flag_en}" alt="English (United Kingdom)" title="English (United Kingdom)" />
+					<a class="nav-link p-2" href="{$self_uri}{$separator}lang=en" aria-label="English"><img src="{$flag_en}" alt="English (United Kingdom)" title="English (United Kingdom)" />
 					</a>
 				</li>
 		</ul>		
