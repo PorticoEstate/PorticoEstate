@@ -64,7 +64,7 @@
 		function __construct()
 		{
 			parent::__construct();
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/property/templates/base');
+			array_push(parent::$tmpl_search_path, PHPGW_SERVER_ROOT . '/property/templates/base');
 			$called_class		 = get_called_class();
 			$called_class_arr	 = explode('_', $called_class);
 			$call_appname		 = !empty($called_class_arr[0]) && !empty($GLOBALS['phpgw_info']['apps'][$called_class_arr[0]]) ? $called_class_arr[0] : 'property';

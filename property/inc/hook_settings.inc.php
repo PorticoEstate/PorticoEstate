@@ -320,6 +320,7 @@
 	$cat_data	 = $cats->formatted_xslt_list(array('globals' => true, 'link_data' => array()));
 	$cat_list	 = $cat_data['cat_list'];
 
+	$_categories_vendor = array();
 	if (is_array($cat_list))
 	{
 		foreach ($cat_list as $entry)

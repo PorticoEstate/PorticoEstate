@@ -87,9 +87,9 @@
 			'get_category_list'	 => true,
 			'get_attrib_list'	 => true
 		);
-		var $type_app;
+		var $type_app,$bocommon,$so,$allrows;
 
-		function __construct( $session = false )
+		function __construct()
 		{
 			$this->bocommon	 = CreateObject('property.bocommon');
 			$this->custom	 = createObject('property.custom_fields');

@@ -38,12 +38,12 @@
 		public $query;
 		public $sort;
 		public $order;
-		public $allrows;
+		public $allrows,$total_records;
 
 		/**
 		 * @var object $custom reference to custom fields object
 		 */
-		protected $custom;
+		protected $custom, $so, $bocommon,$use_session;
 		var $public_functions = array
 			(
 			'read'			 => true,
@@ -135,7 +135,7 @@
 			return $receipt;
 		}
 
-		function delete( $type_id, $id, $attrib = '', $group_id )
+		function delete( $type_id, $id, $attrib = '', $group_id = 0)
 		{
 			if ($id && !$attrib)
 			{
@@ -173,6 +173,10 @@
 				{
 					$receipt['error'][] = array('msg' => lang('something went wrong'));
 				}
+			}
+			else
+			{
+				$receipt = array();
 			}
 
 			return $receipt;
