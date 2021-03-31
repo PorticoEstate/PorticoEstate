@@ -60,6 +60,7 @@ JS;
 	$stylesheets[]	 = "https://fonts.googleapis.com/css?family=Work+Sans";
 	$stylesheets[]	 = "/phpgwapi/templates/aalesund/css/custom.css";
 	$stylesheets[]	 = "/phpgwapi/templates/aalesund/css/normalize.css";
+	$stylesheets[]   = "/phpgwapi/templates/aalesund/css/rubik-font.css";
 
 	if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
