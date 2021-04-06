@@ -590,7 +590,7 @@
 						$combos[] = array('type'	 => 'filter',
 							'name'	 => $attrib['column_name'],
 							'extra'	 => '',
-							'text'	 => lang($attrib['column_name']),
+							'text'	 => $attrib['input_text'],
 							'list'	 => $values_combo_box[$count]
 						);
 
