@@ -647,9 +647,9 @@
 					$requirement = $this->so_requirement->get_single($requirement_id);
 				}
 
-				if ($this->flash_msgs)
+				if (self::$flash_msgs)
 				{
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data(self::$flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
 
