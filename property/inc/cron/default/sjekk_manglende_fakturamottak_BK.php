@@ -158,13 +158,34 @@
 
 			foreach ($data as &$valueset)
 			{
+				if(empty($valueset['voucher_no']))
+				{
+					continue;
+				}
+/*
+           [tab] => A
+            [account] => 123015
+            [voucher_no] => 921097628
+            [order_id] => 45045416
+            [ext_inv_ref] => 100296
+            [amount] => 545.03
+            [step] => Forsinkelse til varer er mottatt
+            [xwf_state] => Arbeidsflyt pågår
+            [apar_id] => 100497
+            [xapar_id] => BERGEN ELEKTROSERVICE AS
+            [voucher_date] => 2021-03-17T00:00:00+01:00
+            [due_date] => 2021-04-30T00:00:00+02:00
+*/
+
+
+
 				$sql	 = <<<SQL
 					SELECT fakturamottak.regtid
 					FROM ( SELECT  fm_ecobilagoverf.regtid
-						FROM fm_ecobilagoverf WHERE external_voucher_id = '{$valueset['bilagsNr']}'
+						FROM fm_ecobilagoverf WHERE external_voucher_id = '{$valueset['voucher_no']}'
 							UNION ALL
 						SELECT fm_ecobilag.regtid
-						FROM fm_ecobilag WHERE external_voucher_id = '{$valueset['bilagsNr']}'
+						FROM fm_ecobilag WHERE external_voucher_id = '{$valueset['voucher_no']}'
 						 ) fakturamottak
 SQL;
 				$this->db->query($sql, __LINE__, __FILE__);
@@ -181,7 +202,7 @@ SQL;
 					{
 						$fil_katalog = $this->config_invoice->config_data['export']['path'];
 						
-						$filename = "{$fil_katalog}/V3_varemottak_{$valueset['ordreNr']}_{$valueset['bilagsNr']}.xml";
+						$filename = "{$fil_katalog}/V3_varemottak_{$valueset['order_id']}_{$valueset['voucher_no']}.xml";
 
 						//Sjekk om filen eksisterer
 						if (file_exists($filename))
@@ -332,7 +353,7 @@ SQL;
 			$password				 = 'wser10';
 			$client					 = 'BY';
 
-			$TemplateId				 = '10432'; //Spørring på varemottak
+			$TemplateId				 = '12770'; //Spørring på varemottak
 
 
 			$service	 = new \QueryEngineV201101(array(
