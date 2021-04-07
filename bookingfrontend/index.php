@@ -70,6 +70,10 @@
 			echo <<<HTML
 				<div class="error">$lang_denied</div>
 HTML;
+			/**
+			 * Used for footer on exit
+			 */
+			define('PHPGW_APP_INC', ExecMethod('phpgwapi.phpgw.common.get_inc_dir'));
 			$GLOBALS['phpgw']->common->phpgw_exit(True);
 		}
 	}
