@@ -50,13 +50,7 @@
 			$this->function_name = get_class($this);
 			$this->sub_location	 = lang('property');
 			$this->function_msg	 = 'Manglende fakturamottak i Agresso';
-			/**
-			 * Bruker konffigurasjon fra '.ticket' - fordi denne definerer oppslaget mot fullmaktsregisteret ved bestilling.
-			 */
-			$config					 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
-			$this->soap_url			 = $config->config_data['external_register']['url'];
-			$this->soap_username	 = $config->config_data['external_register']['username'];
-			$this->soap_password	 = $config->config_data['external_register']['password'];
+			$this->soap_url			 = 'http://agrpweb.adm.bgo/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101';
 			$this->config_invoice	 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			require_once PHPGW_SERVER_ROOT . '/property/inc/soap_client/agresso/autoload.php';
 		}
@@ -305,41 +299,6 @@ SQL;
 			$this->connection = $connection;
 			return $connection;
 		}
-
-		/**
-		 * Curl-versjonen, via tjeneste hos SDI
-		 * @return array
-		 * @throws Exception
-		 */
-		function get_data_old()
-		{
-			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/manglendevaremottak
-			$url		 = "{$this->soap_url}/manglendevaremottak";
-			$username	 = $this->soap_username; //'portico';
-			$password	 = $this->soap_password; //'********';
-
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_USERPWD, "{$username}:{$password}");
-			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-
-			$result = curl_exec($ch);
-
-			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			if (!$httpCode)
-			{
-				throw new Exception("No connection: {$url}");
-			}
-			curl_close($ch);
-
-			$result = json_decode($result, true);
-
-			return $result;
-		}
-
 
 		/**
 		 * Ny spørring direkte i Agresso/UBW
