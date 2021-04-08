@@ -161,7 +161,7 @@
 			$GLOBALS['phpgw']->db->query("SELECT account_id FROM phpgw_accounts_data WHERE account_id = " . (int)$account_id,__LINE__,__FILE__);
 			if (!$GLOBALS['phpgw']->db->next_record())
 			{
-				$data = json_encode(array('ssn_hash' => $hash_safe));
+				$data = json_encode(array('ssn_hash' => $hash_safe,'updated' => date('Y-m-d H:i:s')));
 				$sql = "INSERT INTO phpgw_accounts_data (account_id, account_data) VALUES ({$account_id}, '{$data}')";
 				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
 			}
