@@ -579,17 +579,21 @@
 		$to_date_sql = null;
 		$building_id_sql = null;
 
-		if ($logged_in_orgs !== "") {
+		if ($logged_in_orgs !== "")
+		{
 			$logged_in_orgs_sql = " AND bbe.customer_organization_number in ($logged_in_orgs) ";
 		}
 
-		if ($facility_type_id !== "") {
+		if ($facility_type_id !== "")
+		{
 			$facility_type_id_sql = " AND bbrc.id = '$facility_type_id' ";
 		}
-		if ($building_id !== "") {
+		if ($building_id !== "")
+		{
 			$building_id_sql = " AND bbe.building_id = '$building_id' ";
 		}
-		if (!empty($org_info)) {
+		if (!empty($org_info))
+		{
 			$org_number_sql = "";
 			if ($org_info['organization_number'] !== '')
 			{
@@ -605,7 +609,8 @@
 				$org_info_sql = $org_pre_sql . $org_number_sql . $org_name_sql;
 			}
 		}
-		if ($to_date !== "") {
+		if ($to_date !== "")
+		{
 			$to_date_sql = " AND bbe.to_ <= '$to_date' ";
 		}
 		$sql_query = "
@@ -643,7 +648,8 @@
 		$this->db->query($sql_query);
 
 		$results = array();
-		while ($this->db->next_record()) {
+		while ($this->db->next_record())
+		{
 			$results[] = array(
 				'from' => $this->db->f('from_'),
 				'to' => $this->db->f('to_'),
