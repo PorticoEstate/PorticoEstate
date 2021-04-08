@@ -409,9 +409,4 @@
 		{
 			 return execMethod('property.solocation.get_booking_part_of_towns');
 		}
-
-        public function get_all_available_buildings()
-        {
-			return $this->bo->get_all_booked_ids();
-        }
 	}

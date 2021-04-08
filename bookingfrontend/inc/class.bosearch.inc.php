@@ -1056,9 +1056,4 @@
 
 	}
 
-		public function get_all_booked_ids($from_date, $to_date)
-		{
-			return $this->sobuilding->get_all_booked_ids($from_date, $to_date);
-		}
-
 	}
