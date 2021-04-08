@@ -146,6 +146,7 @@ ko.applyBindings(searchViewModel, document.getElementById("search-page-content")
 
 $(document).ready(function ()
 {
+
 	$(".overlay").show();
 	if (urlParams['searchterm'] != "" && typeof urlParams['searchterm'] !== "undefined")
 	{
@@ -282,6 +283,7 @@ function GetFilterBoxData()
 
 function GetAutocompleteData()
 {
+
 	var autocompleteData = [];
 //  var requestURL = baseURL + "?menuaction=bookingfrontend.uisearch.autocomplete&phpgw_return_as=json";
 	var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.autocomplete"}, true);
@@ -316,6 +318,7 @@ function GetAutocompleteData()
 		$(".overlay").hide();
 	});
 }
+
 
 function doSearch(searchterm_value)
 {
@@ -403,7 +406,6 @@ function doSearch(searchterm_value)
 
 function DoFilterSearch()
 {
-    console.log("YY");
 	$("#mainSearchInput").blur();
 	$("#welcomeResult").hide();
 	results.removeAll();
