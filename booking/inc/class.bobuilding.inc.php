@@ -97,7 +97,7 @@
 			return $this->so->find_buildings_used_by($organization_id, $this->build_default_read_params());
 		}
 
-		function get_facilityTypes($query)
+		function get_facility_types($query)
 		{
 			return $this->so->get_facility_types($query);
 		}

@@ -61,7 +61,7 @@ function getOrgsIfLoggedIn() {
     let requestURL;
 
     reqObject = {
-        menuaction: "bookingfrontend.uieventsearch.getOrgsIfLoggedIn"
+        menuaction: "bookingfrontend.uieventsearch.get_orgs_if_logged_in"
     }
 
     requestURL = phpGWLink('bookingfrontend/', reqObject, true);
@@ -93,7 +93,7 @@ $(document).ready(function () {
     JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uibuilding.index'}, true),
         'field_building_name', 'field_building_id', 'building_container');
 
-    JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uieventsearch.get_facilityTypes'}, true),
+    JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uieventsearch.get_facility_types'}, true),
         'field_type_name', 'field_type_id', 'buildingtype_container');
     viewmodel = new AppViewModel();
     getUpcomingEvents();
@@ -142,7 +142,7 @@ function getUpcomingEvents() {
     console.log(`${organization} ${fromDate} ${toDate} ${buildingID} ${facilityTypeID} ${loggedInUserOrgs.toString()}` )
 
     reqObject = {
-        menuaction: "bookingfrontend.uieventsearch.upcomingEvents",
+        menuaction: "bookingfrontend.uieventsearch.upcoming_events",
         orgID: organization,
         fromDate: fromDate,
         toDate: toDate,

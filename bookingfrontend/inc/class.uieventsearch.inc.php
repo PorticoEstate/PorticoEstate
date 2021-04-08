@@ -16,9 +16,9 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 	(
 		'index' => true,
 		'show'  => true,
-		'upcomingEvents' => true,
-		'getOrgsIfLoggedIn' => true,
-		'get_facilityTypes' => true
+		'upcoming_events' => true,
+		'get_orgs_if_logged_in' => true,
+		'get_facility_types' => true
 	);
 
 	protected $module;
@@ -40,11 +40,11 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		$this->so_organization = new booking_soorganization();
 	}
 
-	public function get_facilityTypes()
+	public function get_facility_types()
 	{
 		$query = phpgw::get_var('query', 'string', 'REQUEST', null);
 
-		$ret =  $this->bobuilding->get_facilityTypes($query);
+		$ret =  $this->bobuilding->get_facility_types($query);
 		//keep 15 of the first...
 
 
@@ -75,7 +75,7 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 
 	}
 
-	public function getOrgsIfLoggedIn()
+	public function get_orgs_if_logged_in()
 	{
 		$bouser = new bookingfrontend_bouser();
 		$orgs = null;
@@ -87,30 +87,30 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 	/***
 	 * Metode for å hente events til søkesiden
 	 */
-	public function upcomingEvents()
+	public function upcoming_events()
 	{
-		$orgID = phpgw::get_var('orgID', 'string', 'REQUEST', null);
-		$fromDate = phpgw::get_var('fromDate', 'string', 'REQUEST', null);
-		$toDate = phpgw::get_var('toDate', 'string', 'REQUEST', null);
-		$buildingId = phpgw::get_var('buildingID', 'string', 'REQUEST', null);
-		$facilityTypeID = phpgw::get_var('facilityTypeID', 'string', 'REQUEST', null);
-		$loggedInOrgs = phpgw::get_var('loggedInOrgs', 'string', 'REQUEST', null);
+		$org_id = phpgw::get_var('orgID', 'string', 'REQUEST', null);
+		$from_date = phpgw::get_var('fromDate', 'string', 'REQUEST', null);
+		$to_date = phpgw::get_var('toDate', 'string', 'REQUEST', null);
+		$building_id = phpgw::get_var('buildingID', 'string', 'REQUEST', null);
+		$facility_type_id = phpgw::get_var('facilityTypeID', 'string', 'REQUEST', null);
+		$logged_in_orgs = phpgw::get_var('loggedInOrgs', 'string', 'REQUEST', null);
 		$start = phpgw::get_var('start', 'int', 'REQUEST', 0);;
 		$end = phpgw::get_var('end', 'int', 'REQUEST', 50);;
 
 		$result_string = '';
-		if ($loggedInOrgs != '')
+		if ($logged_in_orgs != '')
 		{
-			$result_string = "'" . str_replace(",", "','", $loggedInOrgs) . "'";
+			$result_string = "'" . str_replace(",", "','", $logged_in_orgs) . "'";
 		}
 
 		$org_info = array();
-		if (isset($orgID) && $orgID != '')
+		if (isset($org_id) && $org_id != '')
 		{
-			$org_info = $this->so_organization->read_single($orgID);
+			$org_info = $this->so_organization->read_single($org_id);
 		}
 
-		$events = $this->bosearch->soevent->get_events_from_date($fromDate, $toDate, $org_info, $buildingId, $facilityTypeID, $result_string, $start, $end);
+		$events = $this->bosearch->soevent->get_events_from_date($from_date, $to_date, $org_info, $building_id, $facility_type_id, $result_string, $start, $end);
 
 		foreach ($events as &$event)
 		{
@@ -137,7 +137,6 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 
 	public function index()
 	{
-		_debug_json($GLOBALS);
 		phpgwapi_jquery::load_widget('autocomplete');
 
 		if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -150,6 +149,5 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 
 	public function query()
 	{
-		// TODO: Implement query() method.
 	}
 }
