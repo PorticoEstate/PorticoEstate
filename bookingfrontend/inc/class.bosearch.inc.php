@@ -394,7 +394,8 @@
 					}
 				}
 				// Add the resource to the building, unless given filter criterias are not met
-				if ((isset($params['activity_id']) && !$include_on_activity) || (isset($params['facility_id']) && !$include_on_facility)) {
+				if ((isset($params['activity_id']) && !$include_on_activity) || (isset($params['facility_id']) && !$include_on_facility))
+				{
 					$resource['ignore'] = True;
 				}
 				foreach ($building_ids as $building_id)
@@ -689,7 +690,8 @@
 			return $returnres;
 		}
 
-		function resquery_available_resources ($params = array()) {
+		function resquery_available_resources ($params = array())
+		{
 			$returnres = array(
 				'buildings'   => array(),
 				'activities'  => array(),
@@ -826,7 +828,8 @@
 			return $returnres;
 		}
 
-		function available_resources($resources, $params = array()) {
+		function available_resources($resources, $params = array())
+		{
 			$from_date = DateTime::createFromFormat('d.m.Y H:i:s', $params['from_date']);
 			$from_date_test = $from_date->format('Y-m-d H:i:s');
 			$to_date = DateTime::createFromFormat('d.m.Y H:i:s', $params['to_date']);
@@ -868,7 +871,8 @@
 
 				if (!empty($booked_times))
 				{
-					usort($booked_times, function ($a, $b) {
+					usort($booked_times, function ($a, $b)
+					{
 						$ad = strtotime($a['from_']);
 						$bd = strtotime($b['from_']);
 						return ($ad - $bd);
@@ -1018,7 +1022,8 @@
 			return $results;
 		}
 
-		public function get_resource_and_building_autocomplete_data() {
+		public function get_resource_and_building_autocomplete_data()
+		{
 			$sql = "SELECT DISTINCT bb_rescategory.name AS names,
 					'lokale' AS type,
 					'bookingfrontend.uiresource.show' AS menuaction,

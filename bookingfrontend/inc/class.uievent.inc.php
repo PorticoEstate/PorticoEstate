@@ -201,7 +201,8 @@
 					$this->bo->update($event);
 					$date = substr($event['from_'], 0, 10);
 
-					if ($from_org && $event['customer_organization_id'] !== null) {
+					if ($from_org && $event['customer_organization_id'] !== null)
+					{
 						self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
 							'id' => $event['customer_organization_id'], 'date' => $date));
 					} else {
@@ -227,10 +228,13 @@
 			$event['audiences_json'] = json_encode(array_map('intval', $event['audience']));
 			$event['agegroups_json'] = json_encode($event['agegroups']);
 
-			if ($from_org && $event['customer_organization_id'] !== null) {
+			if ($from_org && $event['customer_organization_id'] !== null)
+			{
 				$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
 					'id' => $event['customer_organization_id'], 'date' => $date));
-			} else {
+			}
+			else
+			{
 				$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $event['building_id'], 'date' => $date));
 			}
@@ -329,10 +333,13 @@
 						}
 						$date = substr($event['from_'], 0, 10);
 
-						if ($from_org && $event['customer_organization_id'] !== null) {
+						if ($from_org && $event['customer_organization_id'] !== null)
+						{
 							self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
 								'id' => $event['customer_organization_id'], 'date' => $date));
-						} else {
+						}
+						else
+						{
 							self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 								'id' => $event['building_id'], 'date' => $date));
 						}
@@ -352,10 +359,13 @@
 			self::add_javascript('bookingfrontend', 'base', 'event.js');
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
 
-			if ($from_org && $event['customer_organization_id'] !== null) {
+			if ($from_org && $event['customer_organization_id'] !== null)
+			{
 				$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
 					'id' => $event['customer_organization_id'], 'date' => $date));
-			} else {
+			}
+			else
+			{
 				$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $event['building_id'], 'date' => $date));
 			}
@@ -426,7 +436,8 @@
 					$orglist .= $cres['organizations_ids'] . ',';
 				}
 			}
-			if (!empty($orglist)) {
+			if (!empty($orglist))
+			{
 				$orgs = explode(",", rtrim($orglist, ","));
 			}
 			$organizations = $this->organization_bo->so->read(array('filters' => array('id' => $orgs),

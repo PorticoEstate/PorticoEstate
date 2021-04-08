@@ -274,7 +274,8 @@
 				'facility_id' => $multiids['facility_id'], 'part_of_town_id' => $multiids['part_of_town_id'], 'length' => $length));
 		}
 
-		function query_available_resources() {
+		function query_available_resources()
+		{
 			$length = phpgw::get_var('length', 'int', 'REQUEST', null);
 			$searchterm = trim(phpgw::get_var('searchterm', 'string', 'REQUEST', null));
 			$activity_top_level = phpgw::get_var('activity_top_level', 'int', 'REQUEST', null);
@@ -405,7 +406,8 @@
 			exit();
 		}
 
-		function get_all_towns() {
+		function get_all_towns()
+		{
 			 return execMethod('property.solocation.get_booking_part_of_towns');
 		}
 

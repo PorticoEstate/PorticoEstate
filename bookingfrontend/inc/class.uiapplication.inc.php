@@ -199,7 +199,8 @@
 			{
 				if ($association['active'] === 1)
 				{
-					if ($association['type'] === 'allocation') {
+					if ($association['type'] === 'allocation')
+					{
 						if ($association['from_'] > Date('Y-m-d H:i:s'))
 						{
 							$association['edit_link'] = self::link(array('menuaction' => "{$this->module}.uiallocation.edit", 'allocation_id' => $association['id']));
@@ -210,7 +211,8 @@
 							$association['edit_text'] = $lang_expired;
 						}
 						$association['edit_text'] = $lang_edit;
-						if ($config['user_can_delete_allocations'] == 'yes') {
+						if ($config['user_can_delete_allocations'] == 'yes')
+						{
 							if ($association['from_'] > Date('Y-m-d H:i:s'))
 							{
 								$association['cancel_link'] = self::link(array('menuaction' => "{$this->module}.uiallocation.cancel", 'allocation_id' => $association['id']));

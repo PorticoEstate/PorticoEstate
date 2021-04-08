@@ -156,14 +156,16 @@
 			return $data;
 		}
 
-		public function organization_schedule() {
+		public function organization_schedule()
+		{
 			$date = new DateTime(phpgw::get_var('date'));
 			$organization_id = phpgw::get_var('organization_id');
 
 			$_building_ids = $this->building_bo->find_buildings_used_by($organization_id)['results'];
 
 			$building_ids = array();
-			foreach ($_building_ids as $building_id) {
+			foreach ($_building_ids as $building_id)
+			{
 				$building_ids[] = $building_id['id'];
 			}
 
@@ -171,7 +173,8 @@
 				'active' => 1), 'results' => -1));
 
 			$group_ids = array();
-			foreach ($groups['results'] as $group) {
+			foreach ($groups['results'] as $group)
+			{
 				$group_ids[] = $group['id'];
 			}
 
@@ -293,7 +296,8 @@
 				{
 					$receipt = $this->bo->add($booking);
 
-					if ($from_org && $allocation_id) {
+					if ($from_org && $allocation_id)
+					{
 						self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
 							'id' => $allocation['organization_id'], 'date' => date("Y-m-d", strtotime($booking['from_']))));
 					} else {
@@ -345,11 +349,15 @@
 						}
 						$i++;
 					}
-					if ($step == 3) {
-						if ($from_org && $allocation_id) {
+					if ($step == 3)
+					{
+						if ($from_org && $allocation_id)
+						{
 							self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
 								'id' => $allocation['organization_id'], 'date' => date("Y-m-d", strtotime($booking['from_']))));
-						} else {
+						}
+						else
+						{
 							self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 								'id' => $booking['building_id'], 'date' => date("Y-m-d", strtotime($booking['from_']))));
 						}
@@ -378,10 +386,13 @@
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['resource_ids_json'] = json_encode(array_map('intval', $booking['resource_ids']));
 
-			if ($from_org && $allocation_id) {
+			if ($from_org && $allocation_id)
+			{
 				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
 					'id' => $allocation['organization_id'], 'date' => date("Y-m-d", strtotime($booking['from_']))));
-			} else {
+			}
+			else
+			{
 				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($booking['from_']))));
 			}
@@ -468,9 +479,12 @@
 
 			$interval = (new DateTime($booking['from_']))->diff(new DateTime($booking['to_']));
 			$when = "";
-			if($interval->days > 0) {
+			if($interval->days > 0)
+			{
 				$when = pretty_timestamp($booking['from_']) . ' - ' . pretty_timestamp($booking['to_']);
-			} else {
+			}
+			else
+			{
 				$end = new DateTime($booking['to_']);
 				$when = pretty_timestamp($booking['from_']) . ' - ' . $end->format('H:i');
 			}
@@ -549,10 +563,13 @@
 					{
 						$receipt = $this->bo->update($booking);
 
-						if ($from_org) {
+						if ($from_org)
+						{
 							self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
 								'id' => $_POST['organization_id'], 'date' => $temp_date));
-						} else {
+						}
+						else
+						{
 							self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 								'id' => $booking['building_id'], 'date' => $temp_date));
 						}
@@ -672,10 +689,13 @@
 					'active' => 1)));
 			$groups = $groups['results'];
 
-			if ($from_org) {
+			if ($from_org)
+			{
 				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
 					'id' => $group['organization_id'], 'date' => date("Y-m-d", strtotime($booking['from_']))));
-			} else {
+			}
+			else
+			{
 				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $booking['building_id'], 'date' => date("Y-m-d", strtotime($booking['from_']))));
 			}
@@ -1020,7 +1040,8 @@
 					$this->bo->send_admin_notification($booking, $maildata, $system_message, $allocation);
 					$receipt = $this->system_message_bo->add($system_message);
 
-					if ($from_org) {
+					if ($from_org)
+					{
 						self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
 							'id' => $organization_id, 'date' => date("Y-m-d",strtotime($original_from))));
 					} else {
@@ -1151,10 +1172,13 @@
 						$receipt = $this->system_message_bo->add($system_message);
 
 
-						if ($from_org && $allocation !== null) {
+						if ($from_org && $allocation !== null)
+						{
 							self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
 								'id' => $allocation['organization_id'], 'date' => date("Y-m-d",strtotime($original_from))));
-						} else {
+						}
+						else
+						{
 							self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 								'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 						}
@@ -1270,10 +1294,13 @@
 							$this->bo->send_notification($booking, $allocation, $maildata, $mailadresses, $valid_dates);
 							$receipt = $this->system_message_bo->add($system_message);
 
-							if ($from_org) {
+							if ($from_org)
+							{
 								self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
 									'id' => $allocation['organization_id'], 'date' => date("Y-m-d",strtotime($original_from))));
-							} else {
+							}
+							else
+							{
 								self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 									'id' => $allocation['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 							}
@@ -1298,10 +1325,13 @@
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 #				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show', 'id' => $booking['id']));
 
-				if ($from_org && $allocation !== null) {
+				if ($from_org && $allocation !== null)
+				{
 					$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
 						'id' => $allocation['organization_id'], 'date' => date("Y-m-d",strtotime($original_from))));
-				} else {
+				}
+				else
+				{
 					$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 						'id' => $booking['building_id'], 'date' => date("Y-m-d",strtotime($original_from))));
 				}
@@ -1403,9 +1433,12 @@
 			}
 			$interval = (new DateTime($booking['from_']))->diff(new DateTime($booking['to_']));
 			$when = "";
-			if($interval->days > 0) {
+			if($interval->days > 0)
+			{
 				$when = pretty_timestamp($booking['from_']) . ' - ' . pretty_timestamp($booking['to_']);
-			} else {
+			}
+			else
+			{
 				$end = new DateTime($booking['to_']);
 				$when = pretty_timestamp($booking['from_']) . ' - ' . $end->format('H:i');
 			}
