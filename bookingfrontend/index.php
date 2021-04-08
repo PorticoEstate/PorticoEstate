@@ -122,6 +122,19 @@ HTML;
 
 	$GLOBALS['phpgw']->translation->set_userlang($userlang, true);
 
+	$template_set = phpgw::get_var('template_set','string', 'COOKIE');
+
+	switch ($template_set)
+	{
+		case 'aalesund':
+		case 'bookingfrontend':
+			$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] = $template_set;
+			break;
+		default:
+			break;
+	}
+
+
 	/* A few hacker resistant constants that will be used throught the program */
 	define('PHPGW_TEMPLATE_DIR', ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'phpgwapi'));
 	define('PHPGW_IMAGES_DIR', ExecMethod('phpgwapi.phpgw.common.get_image_path', 'phpgwapi'));
