@@ -403,6 +403,7 @@ function doSearch(searchterm_value)
 
 function DoFilterSearch()
 {
+    console.log("YY");
 	$("#mainSearchInput").blur();
 	$("#welcomeResult").hide();
 	results.removeAll();
