@@ -9,14 +9,15 @@
 		</div>
 		<!-- Content Container -->
 		<div class="jumbotron jumbotron-fluid">
-			<div class="container searchContainer">
-				<h2 class="text-center font-weight-bold">
-					<xsl:value-of disable-output-escaping="yes" select="frontpagetitle"/>
-				</h2>
-				<div class="text-center mt-4 mb-5">
+			<!-- Title -->
+			<div class="container">
+				<div class="flex-container" id="frontpagetitle">
 					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
 				</div>
-				<div class="input-group input-group-lg">
+			</div>
+			<!-- Search Container -->
+			<div class="container searchContainer"     >
+				<div class="input-group input-group-lg mainpageserchcontainer">
 					<input type="text" id="mainSearchInput" class="form-control searchInput" aria-label="Large">
 						<xsl:attribute name="placeholder">
 							<xsl:value-of select="php:function('lang', 'Search building, resource, organization')"/>
@@ -29,10 +30,10 @@
 					</div>
 				</div>
 				<div id="search-autocomplete"></div>
-				<!-- FILTER BOXES> -->
-				<h5 class="mt-5 font-weight-bold">
-					<xsl:value-of select="filterboxtitle"/>
-				</h5>
+				<!-- Filter Boxes -->
+				<h2 class="mt-5 font-weight-bold">
+					<xsl:value-of select="php:function('lang', 'Choose categories')"/>
+				</h2>
 				<div class="row mx-auto" data-bind="if: filterboxes().length > 0">
 					<div data-bind="foreach: filterboxes">
 						<div class="dropdown d-inline-block mr-2">
@@ -90,6 +91,7 @@
 				</div>
 			</div>
 		</div>
+		<!-- Arrangement Container -->
 		<div class="container pageResults">
 			<!-- Upcomming Arrangements -->
 			<div id="welcomeResult" class=" container">
