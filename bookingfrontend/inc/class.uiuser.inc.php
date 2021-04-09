@@ -72,7 +72,7 @@
 				$id = $this->bo->so->get_user_id($this->ssn);
 				if(!$id)
 				{
-					$this->redirect(array('menuaction' => 'bookingfrontend.uiuser.add'));
+					self::redirect(array('menuaction' => 'bookingfrontend.uiuser.add'));
 				}
 			}
 
@@ -239,7 +239,7 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->add($user);
-					$this->redirect(array('menuaction' => $this->module  . '.uiuser.show', 'id' => $receipt['id']));
+					self::redirect(array('menuaction' => $this->module  . '.uiuser.show', 'id' => $receipt['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -266,7 +266,7 @@
 
 			if(!$id)
 			{
-				$this->redirect(array('menuaction' => 'bookingfrontend.uiuser.add'));
+				self::redirect(array('menuaction' => 'bookingfrontend.uiuser.add'));
 			}
 
 			$user = $this->bo->read_single($id);
@@ -295,12 +295,12 @@
 					$receipt = $this->bo->update($user);
 					if ($this->module == "bookingfrontend")
 					{
-						$this->redirect(array('menuaction' => 'bookingfrontend.uiuser.show',
+						self::redirect(array('menuaction' => 'bookingfrontend.uiuser.show',
 							'id' => $receipt["id"]));
 					}
 					else
 					{
-						$this->redirect(array('menuaction' => 'booking.uiuser.show', 'id' => $receipt["id"]));
+						self::redirect(array('menuaction' => 'booking.uiuser.show', 'id' => $receipt["id"]));
 					}
 				}
 			}

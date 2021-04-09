@@ -102,7 +102,7 @@
 		 *
 		 * @return array the menu structure for the current user
 		 */
-		private function load()
+		private static function load()
 		{
 			$menus = array();
 			$raw_menus = $GLOBALS['phpgw']->hooks->process('menu');

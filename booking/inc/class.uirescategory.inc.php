@@ -120,7 +120,7 @@
 					try
 					{
 						$receipt = $this->bo->add($rescategory);
-						$this->redirect(array('menuaction' => 'booking.uirescategory.index'));
+						self::redirect(array('menuaction' => 'booking.uirescategory.index'));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -170,7 +170,7 @@
 					try
 					{
 						$receipt = $this->bo->update($rescategory);
-						$this->redirect(array('menuaction' => 'booking.uirescategory.index'));
+						self::redirect(array('menuaction' => 'booking.uirescategory.index'));
 					}
 					catch (booking_unauthorized_exception $e)
 					{

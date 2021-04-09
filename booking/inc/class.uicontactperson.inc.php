@@ -149,7 +149,7 @@
 					{
 						$receipt = $this->bo->add($person);
 					}
-					$this->redirect(array('menuaction' => $this->module . '.uicontactperson.show',
+					self::redirect(array('menuaction' => $this->module . '.uicontactperson.show',
 						'id' => $receipt['id']));
 				}
 			}

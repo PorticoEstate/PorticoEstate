@@ -687,7 +687,17 @@ HTML;
 			//Do your magic...
 			foreach ($datalines as $data)
 			{
-				$_ok = $this->import_conversion->add($data);
+				try
+				{
+					$_ok = $this->import_conversion->add($data);
+				}
+				catch (Exception $ex)
+				{
+					$this->errors[] = "Import of data failed. (" . (time() - $this->start_time) . " seconds)";
+					$this->errors[] = $ex->getMessage();
+					$this->db->transaction_abort();
+					return false;
+				}
 
 				if (!$_ok)
 				{

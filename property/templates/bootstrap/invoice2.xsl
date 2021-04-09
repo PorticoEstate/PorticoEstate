@@ -40,6 +40,13 @@
 			display: none;
 			z-index:1000;
 		}
+
+		#voucher_details
+		{
+			line-height: 0.8;
+			font-size: 11px;
+		}
+
 	</style>
 
 	<xsl:call-template name="invoice" />

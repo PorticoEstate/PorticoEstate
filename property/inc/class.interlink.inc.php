@@ -253,6 +253,10 @@
 				$type = $linkend_location;
 			}
 
+			if ($type == '.tenant_claim')
+			{
+				$link = array('menuaction' => "{$linkend_location['appname']}.uitenant_claim.edit", 'claim_id' => $id);
+			}
 			if ($type == '.ticket')
 			{
 				$link = array('menuaction' => "{$linkend_location['appname']}.uitts.view", 'id' => $id);

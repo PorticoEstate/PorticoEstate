@@ -163,7 +163,13 @@ JS;
 				}
 				else if ($attributes['datatype'] == 'T' && $view_only)
 				{
-					$attributes['value'] = nl2br($attributes['value']);
+					/**
+					 * Check if value is html
+					 */
+					if($attributes['value'] && $attributes['value'] != strip_tags($attributes['value']))
+					{
+						$attributes['value'] = nl2br($attributes['value']);
+					}
 				}
 				else if ($attributes['datatype'] == 'AB')
 				{

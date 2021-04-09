@@ -252,7 +252,7 @@
 						);
 					}
 
-					$this->redirect(array('menuaction' => 'booking.uiorganization.show', 'id' => $receipt['id']));
+					self::redirect(array('menuaction' => 'booking.uiorganization.show', 'id' => $receipt['id']));
 				}
 				else if (phpgw::get_var('phpgw_return_as') == 'json')
 				{
@@ -344,12 +344,12 @@
 					$receipt = $this->bo->update($organization);
 					if ($this->module == "bookingfrontend")
 					{
-						$this->redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
+						self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
 							'id' => $receipt["id"]));
 					}
 					else
 					{
-						$this->redirect(array('menuaction' => 'booking.uiorganization.show', 'id' => $receipt["id"]));
+						self::redirect(array('menuaction' => 'booking.uiorganization.show', 'id' => $receipt["id"]));
 					}
 				}
 			}

@@ -27,7 +27,6 @@
 		//public $dateFormat;
 
 		public $type_of_user;
-		public $flash_msgs;
 		public $decimalSeparator;
 		public $thousandsSeparator;
 		public $decimalPlaces;
@@ -197,7 +196,7 @@
 			{
 				$activate = $this->extract_values($_POST, array("status", "activate_id"));
 				$this->bo->set_active(intval($activate['activate_id']), intval($activate['status']));
-				$this->redirect(array('menuaction' => $url, 'id' => $activate['activate_id']));
+				self::redirect(array('menuaction' => $url, 'id' => $activate['activate_id']));
 			}
 		}
 

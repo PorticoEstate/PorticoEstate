@@ -34,15 +34,13 @@
 	{
 
 		const UI_SESSION_FLASH = 'flash_msgs';
+		public static $flash_msgs = array();
+		public static $tmpl_search_path;
 
 		protected
-			$filesArray,
-			$ui_session_key,
-			$flash_msgs;
+			$filesArray;
 		public $dateFormat;
 		public $type_of_user;
-
-		//	public $flash_msgs;
 
 		public function __construct( $currentapp = '', $yui = '' )
 		{
@@ -58,12 +56,7 @@
 				}
 			}
 
-			$this->tmpl_search_path = array();
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $currentapp . '/templates/base');
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $currentapp . '/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
+			self::get_tmpl_search_path();
 
 			if ($yui == 'yui3')
 			{
@@ -139,46 +132,70 @@
 			}
 		}
 
-		private function get_ui_session_key()
+		private static function get_tmpl_search_path()
 		{
-			return $this->ui_session_key;
+			if(self::$tmpl_search_path)
+			{
+				return self::$tmpl_search_path;
+			}
+			else
+			{
+				$tmpl_search_path = array();
+//				array_push($tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
+				array_push($tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
+				array_push($tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
+				array_push($tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/base');
+				array_push($tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
+				self::$tmpl_search_path = $tmpl_search_path;
+			}
+			return $tmpl_search_path;
 		}
 
-		protected function restore_flash_msgs()
+		public static function get_ui_session_key()
 		{
-			if (($flash_msgs = $this->session_get(self::UI_SESSION_FLASH)))
+			return self::current_app() . '_uicommon';
+		}
+
+		protected static function current_app()
+		{
+			return $GLOBALS['phpgw_info']['flags']['currentapp'];
+		}
+
+		protected static function restore_flash_msgs()
+		{
+			if (($flash_msgs = self::session_get(self::UI_SESSION_FLASH)))
 			{
 				if (is_array($flash_msgs))
 				{
-					$this->flash_msgs = $flash_msgs;
-					$this->session_set(self::UI_SESSION_FLASH, array());
+					self::$flash_msgs = $flash_msgs;
+					self::session_set(self::UI_SESSION_FLASH, array());
 					return true;
 				}
 			}
 
-			$this->flash_msgs = array();
+			self::$flash_msgs = array();
 			return false;
 		}
 
-		protected function store_flash_msgs()
+		protected static function store_flash_msgs()
 		{
-			return $this->session_set(self::UI_SESSION_FLASH, $this->flash_msgs);
+			return self::session_set(self::UI_SESSION_FLASH, self::$flash_msgs);
 		}
 
-		protected function reset_flash_msgs()
+		protected static function reset_flash_msgs()
 		{
-			$this->flash_msgs = array();
-			$this->store_flash_msgs();
+			self::$flash_msgs = array();
+			self::store_flash_msgs();
 		}
 
-		protected function session_set( $key, $data )
+		protected static function session_set( $key, $data )
 		{
-			return phpgwapi_cache::session_set($this->get_ui_session_key(), $key, $data);
+			return phpgwapi_cache::session_set(self::get_ui_session_key(), $key, $data);
 		}
 
-		protected function session_get( $key )
+		protected static function session_get( $key )
 		{
-			return phpgwapi_cache::session_get($this->get_ui_session_key(), $key);
+			return phpgwapi_cache::session_get(self::get_ui_session_key(), $key);
 		}
 
 		/**
@@ -240,7 +257,7 @@
 			return $GLOBALS['phpgw']->link($base, $data, $redirect, $external, $force_backend);
 		}
 
-		public function redirect( $link_data )
+		public static function redirect( $link_data )
 		{
 			$base = self::get_link_base();
 			$GLOBALS['phpgw']->redirect_link($base, $link_data);
@@ -248,14 +265,14 @@
 
 		public function flash( $msg, $type = 'success' )
 		{
-			$this->flash_msgs[$msg] = $type == 'success';
+			self::$flash_msgs[$msg] = $type == 'success';
 		}
 
 		public function flash_form_errors( $errors )
 		{
 			foreach ($errors as $field => $msg)
 			{
-				$this->flash_msgs[$msg] = false;
+				self::$flash_msgs[$msg] = false;
 			}
 		}
 
@@ -305,17 +322,21 @@
 		/**
 		 * A more flexible version of xslttemplate.add_file
 		 */
-		public function add_template_file( $tmpl )
+		public static function add_template_file( $tmpl )
 		{
+
+			$tmpl_search_path = self::get_tmpl_search_path();
+
 			if (is_array($tmpl))
 			{
 				foreach ($tmpl as $t)
 				{
-					$this->add_template_file($t);
+					self::add_template_file($t);
 				}
 				return;
 			}
-			foreach (array_reverse($this->tmpl_search_path) as $path)
+
+			foreach (array_reverse($tmpl_search_path) as $path)
 			{
 				$filename = $path . '/' . $tmpl . '.xsl';
 				if (file_exists($filename))
@@ -324,15 +345,15 @@
 					return;
 				}
 			}
-			throw new Exception("Template $tmpl not found in search path:". print_r($this->tmpl_search_path, true));
+			throw new Exception("Template $tmpl not found in search path:". print_r($tmpl_search_path, true));
 		}
 
 		public function render_template( $output )
 		{
 			$GLOBALS['phpgw']->common->phpgw_header(true);
-			if ($this->flash_msgs)
+			if (self::$flash_msgs)
 			{
-				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+				$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data(self::$flash_msgs);
 				$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				foreach ($msgbox_data as & $message)
 				{
@@ -358,9 +379,9 @@
 			return $keys;
 		}
 
-		public function add_jquery_translation( &$data )
+		public static function add_jquery_translation( &$data )
 		{
-			$this->add_template_file('jquery_phpgw_i18n');
+			self::add_template_file('jquery_phpgw_i18n');
 			$previous = lang('prev');
 			$next = lang('next');
 			$first = lang('first');
@@ -433,7 +454,7 @@
 
 		public function add_template_helpers()
 		{
-			$this->add_template_file('helpers');
+			self::add_template_file('helpers');
 		}
 
 		public function render_template_xsl( $files, $data, $xsl_rootdir = '' , $base = 'data')
@@ -442,24 +463,24 @@
 
 			if($xsl_rootdir)
 			{
-				if(!in_array($xsl_rootdir, $this->tmpl_search_path))
+				if(!in_array($xsl_rootdir, self::$tmpl_search_path))
 				{
-					array_push($this->tmpl_search_path, $xsl_rootdir);
+					array_push(self::$tmpl_search_path, $xsl_rootdir);
 				}
 			}
 
-			if ($this->flash_msgs)
+			if (self::$flash_msgs)
 			{
-				$data['msgbox_data'] = $GLOBALS['phpgw']->common->msgbox($this->flash_msgs);
+				$data['msgbox_data'] = $GLOBALS['phpgw']->common->msgbox(self::$flash_msgs);
 			}
 			else
 			{
-				$this->add_template_file('msgbox');
+				self::add_template_file('msgbox');
 			}
 
-			$this->reset_flash_msgs();
+			self::reset_flash_msgs();
 
-			$this->add_jquery_translation($data);
+			self::add_jquery_translation($data);
 			$data['webserver_url'] = $GLOBALS['phpgw_info']['server']['webserver_url'];
 
 			if (preg_match("/(Trident\/(\d{2,}|7|8|9)(.*)rv:(\d{2,}))|(MSIE\ (\d{2,}|8|9)(.*)Tablet\ PC)|(Trident\/(\d{2,}|7|8|9))/", $_SERVER["HTTP_USER_AGENT"]))
@@ -479,7 +500,7 @@
 
 			$output = phpgw::get_var('output', 'string', 'REQUEST', 'html');
 			$GLOBALS['phpgw']->xslttpl->set_output($output);
-			$this->add_template_file($files);
+			self::add_template_file($files);
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array($base => $data));
 		}
 
@@ -625,7 +646,7 @@
 			}
 
 			ob_start();
-			foreach (array_reverse($this->tmpl_search_path) as $path)
+			foreach (array_reverse(self::$tmpl_search_path) as $path)
 			{
 				$filename = $path . '/' . $template;
 				if (file_exists($filename))
@@ -874,7 +895,7 @@
 			{
 				$_SESSION['showall'] = "1";
 			}
-			$this->redirect(array('menuaction' => $this->url_prefix . '.index'));
+			self::redirect(array('menuaction' => $this->url_prefix . '.index'));
 		}
 
 		public function toggle_show_inactive()
@@ -887,7 +908,7 @@
 			{
 				$_SESSION['showall'] = "1";
 			}
-			$this->redirect(array('menuaction' => $this->url_prefix . '.index'));
+			self::redirect(array('menuaction' => $this->url_prefix . '.index'));
 		}
 
 		static protected function fix_php_files_array( $data )

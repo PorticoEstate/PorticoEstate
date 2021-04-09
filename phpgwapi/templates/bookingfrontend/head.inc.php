@@ -285,6 +285,58 @@ JS;
 
 	$site_url			= $GLOBALS['phpgw']->link($site_base, array());
 	$placeholder_search = lang('Search');
+	$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+
+	switch($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
+	{
+		case 'aalesund':
+			$selected_aalesund = ' selected = "selected"';
+			$selected_bookingfrontend = '';
+			break;
+		case 'bookingfrontend':
+			$selected_aalesund = '';
+			$selected_bookingfrontend = ' selected = "selected"';
+			break;
+	}
+
+	$template_selector = <<<HTML
+
+	<li class="nav-item">
+	   <select id = "template_selector" class="btn btn-link btn-sm nav-link dropdown-toggle" style="padding-top: .315rem;-webkit-appearance: none;-moz-appearance: none;">
+		<option class="nav-link" value="bookingfrontend"{$selected_bookingfrontend}>AK V1</option>
+		<option value="aalesund"{$selected_aalesund}>AK V2</option>
+	   </select>
+	</li>
+HTML;
+
+
+	$lang_selector = '';
+
+	/**
+	 * Disabled for now
+	 */
+	if(false)
+	{
+		$flag_no = "{$webserver_url}/phpgwapi/templates/base/images/flag_no.gif";
+		$flag_en = "{$webserver_url}/phpgwapi/templates/base/images/flag_en.gif";
+
+
+		$self_uri = $_SERVER['REQUEST_URI'];
+		$separator = strpos($self_uri, '?') ? '&' : '?';
+		$self_uri = str_replace(array("{$separator}lang=no", "{$separator}lang=en"), '', $self_uri);
+
+		$lang_selector = <<<HTML
+				<li class="nav-item">
+					<a class="nav-link p-2" href="{$self_uri}{$separator}lang={$userlang}" aria-label="Norsk"><img src="{$flag_no}" alt="Norsk (Norway)" title="Norsk (Norway)" />
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link p-2" href="{$self_uri}{$separator}lang=en" aria-label="English"><img src="{$flag_en}" alt="English (United Kingdom)" title="English (United Kingdom)" />
+					</a>
+				</li>
+HTML;
+
+	}
 
 	$nav = <<<HTML
    
@@ -300,6 +352,10 @@ JS;
 					</form>
 				</div-->
 			</div>
+			<ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+				{$lang_selector}
+				{$template_selector}
+			</ul
             <div class="navbar-organization-select">
             </div>
 		</nav>
@@ -319,7 +375,7 @@ HTML;
 		'webserver_url'			 => $webserver_url,
 		'win_on_events'			 => $test,
 		'metainfo_author'		 => $author,
-		'userlang'				 => $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'],
+		'userlang'				 => $userlang,
 		'metainfo_keywords'		 => $keywords,
 		'metainfo_description'	 => $description,
 		'metainfo_robots'		 => $robots,

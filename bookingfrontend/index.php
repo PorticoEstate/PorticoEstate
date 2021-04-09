@@ -70,6 +70,10 @@
 			echo <<<HTML
 				<div class="error">$lang_denied</div>
 HTML;
+			/**
+			 * Used for footer on exit
+			 */
+			define('PHPGW_APP_INC', ExecMethod('phpgwapi.phpgw.common.get_inc_dir'));
 			$GLOBALS['phpgw']->common->phpgw_exit(True);
 		}
 	}
@@ -106,10 +110,30 @@ HTML;
 // BEGIN Stuff copied from functions.inc.php
 /////////////////////////////////////////////////////////////////////////////
 
-	if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] != 'en')
+	$selected_lang = phpgw::get_var('selected_lang','string', 'COOKIE');
+
+	if (phpgw::get_var('lang', 'bool', 'GET'))
 	{
-		$GLOBALS['phpgw']->translation->set_userlang($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'], true);
+		$selected_lang = phpgw::get_var('lang', 'string', 'GET');
+		$GLOBALS['phpgw']->session->phpgw_setcookie('selected_lang', $selected_lang, (time() + (60 * 60 * 24 * 14)));
 	}
+
+	$userlang = $selected_lang ? $selected_lang : $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+
+	$GLOBALS['phpgw']->translation->set_userlang($userlang, true);
+
+	$template_set = phpgw::get_var('template_set','string', 'COOKIE');
+
+	switch ($template_set)
+	{
+		case 'aalesund':
+		case 'bookingfrontend':
+			$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] = $template_set;
+			break;
+		default:
+			break;
+	}
+
 
 	/* A few hacker resistant constants that will be used throught the program */
 	define('PHPGW_TEMPLATE_DIR', ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'phpgwapi'));

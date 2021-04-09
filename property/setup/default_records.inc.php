@@ -714,6 +714,7 @@
 		$default_attrib['input_text'][] = 'modified_on';
 		$default_attrib['statustext'][] = 'modified_on';
 
+		$pk = array();
 		for ($i = 1; $i < $location_type + 1; $i++)
 		{
 			$pk[$i - 1] = 'loc' . $i;

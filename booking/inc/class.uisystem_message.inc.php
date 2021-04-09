@@ -307,7 +307,7 @@
 						$receipt = $this->bo->add($system_message);
 					}
 
-					$this->redirect(array('menuaction' => 'booking.uisystem_message.edit', 'id' => $receipt['id'],
+					self::redirect(array('menuaction' => 'booking.uisystem_message.edit', 'id' => $receipt['id'],
 						'warnings' => $errors));
 				}
 			}
@@ -348,7 +348,7 @@
 				{
 					$system_message['status'] = 'CLOSED';
 					$receipt = $this->bo->update($system_message);
-					$this->redirect(array('menuaction' => 'booking.uisystem_message.show', 'id' => $receipt['id'],
+					self::redirect(array('menuaction' => 'booking.uisystem_message.show', 'id' => $receipt['id'],
 						'warnings' => $errors));
 				}
 			}

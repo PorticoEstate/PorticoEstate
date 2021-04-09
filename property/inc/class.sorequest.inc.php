@@ -41,6 +41,7 @@
 		public $sum_potential_grants = 0;
 		public $uicols				 = array();
 		protected $global_lock		 = false;
+		public $soproject, $historylog, $bocommon, $interlink;
 
 		function __construct()
 		{
@@ -334,7 +335,7 @@
 			$GLOBALS['phpgw']->config->read();
 
 			$uicols			 = array();
-			$cols			 .= "{$entity_table}.location_code";
+			$cols			 = "{$entity_table}.location_code";
 			$cols			 .= ",{$entity_table}.loc1";
 			$cols_return[]	 = 'location_code';
 			$cols_group[]	 = "{$entity_table}.location_code";
@@ -737,6 +738,7 @@
 				$where			 = 'AND';
 			}
 
+			$querymethod = '';
 			if ($query)
 			{
 				if (stristr($query, '.') && $p_num)
@@ -746,6 +748,7 @@
 				}
 				else
 				{
+					$_filter_id = '';
 					if (ctype_digit($query))
 					{
 						$_filter_id = "OR fm_request.id =" . (int)$query;
@@ -791,20 +794,40 @@
 			$cols_return		 = $this->bocommon->cols_return;
 			$this->cols_extra	 = $this->bocommon->cols_extra;
 
+			//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
+			if ($dry_run)
+			{
+				return array();
+			}
+
 			$this->_db->fetchmode = 'ASSOC';
 
-//			$sql2 = "SELECT count(*) as cnt, sum(amount_investment) as sum_investment, sum(amount_operation) as sum_operation, sum(amount_potential_grants) as sum_potential_grants FROM ({$sql}) as t";
-			$sql2 = "SELECT count(DISTINCT fm_request.id) as cnt, (sum(amount_investment * multiplier)) as sum_investment,"
+			$request_ids = array();
+			$sql2 = "SELECT DISTINCT fm_request.id FROM {$sql_arr[1]}";
+			$this->_db->query($sql2, __LINE__, __FILE__);
+			while($this->_db->next_record())
+			{
+				$request_ids[] = $this->_db->f('id');
+			}
+			$this->_total_records		 = count($request_ids);
+			$this->sum_investment		 = 0;
+			$this->sum_operation		 = 0;
+			$this->sum_potential_grants	 = 0;
+
+			if($request_ids)
+			{
+				$sql2 = "SELECT (sum(amount_investment * multiplier)) as sum_investment,"
 				. " (sum(amount_operation * multiplier)) as sum_operation,"
 				. " (sum(amount_potential_grants * multiplier)) as sum_potential_grants"
-				. " FROM {$sql_arr[1]}";
+				. " FROM fm_request WHERE id IN (" . implode(',', $request_ids) . ")";
+				$this->_db->query($sql2, __LINE__, __FILE__);
+				$this->_db->next_record();
+				$this->sum_investment		 = $this->_db->f('sum_investment');
+				$this->sum_operation		 = $this->_db->f('sum_operation');
+				$this->sum_potential_grants	 = $this->_db->f('sum_potential_grants');
 
-			$this->_db->query($sql2, __LINE__, __FILE__);
-			$this->_db->next_record();
-			$this->_total_records		 = $this->_db->f('cnt');
-			$this->sum_investment		 = $this->_db->f('sum_investment');
-			$this->sum_operation		 = $this->_db->f('sum_operation');
-			$this->sum_potential_grants	 = $this->_db->f('sum_potential_grants');
+			}
+
 			/*
 			  $sql3 = "SELECT sum(fm_request_consume.amount) as sum_consume  FROM {$sql_arr[1]}";
 			  $this->_db->query($sql3, __LINE__, __FILE__);
@@ -812,22 +835,15 @@
 			  $this->sum_consume = $this->_db->f('sum_consume');
 			 */
 //			_debug_array($sql_arr);
-			//cramirez.r@ccfirst.com 23/10/08 avoid retrieve data in first time, only render definition for headers (var myColumnDefs)
-			if ($dry_run)
+			if (!$allrows)
 			{
-				return array();
+				$this->_db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
-				if (!$allrows)
-				{
-					$this->_db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
-				}
-				else
-				{
-					$this->_db->query($sql . $ordermethod, __LINE__, __FILE__);
-				}
+				$this->_db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
+			
 			$_datatype = array();
 			foreach ($this->uicols['name'] as $key => $_name)
 			{
@@ -1394,7 +1410,7 @@
 		public function get_user_list()
 		{
 			$values	 = array();
-			$users	 = $GLOBALS['phpgw']->accounts->get_list('accounts', $start	 = -1, $sort	 = 'ASC', $order	 = 'account_lastname', $query, $offset	 = -1);
+			$users	 = $GLOBALS['phpgw']->accounts->get_list('accounts', $start	 = -1, $sort	 = 'ASC', $order	 = 'account_lastname', $query = '', $offset	 = -1);
 			$sql	 = 'SELECT DISTINCT coordinator FROM fm_request';
 			$this->_db->query($sql, __LINE__, __FILE__);
 

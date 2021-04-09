@@ -40,8 +40,8 @@
 		protected $sub_location	 = 'sub_location';
 		protected $function_msg	 = 'function_msg';
 		protected $cron			 = false;
-
-		function __construct()
+		protected $db;
+					function __construct()
 		{
 			$this->db		 = & $GLOBALS['phpgw']->db;
 			$this->join		 = & $this->db->join;
@@ -60,6 +60,7 @@
 			}
 			else
 			{
+				$cron		 = false;
 				$confirm = phpgw::get_var('confirm', 'bool', 'POST');
 				$execute = phpgw::get_var('execute', 'bool', 'GET');
 			}

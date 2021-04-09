@@ -70,7 +70,7 @@
 		{
 			if ($this->is_inline())
 			{
-				$this->redirect($this->link_to_parent_params());
+				self::redirect($this->link_to_parent_params());
 			}
 
 			return false;
@@ -341,7 +341,7 @@
 					}
 
 					$this->redirect_to_parent_if_inline();
-					$this->redirect($this->link_to_params('show', array('id' => $receipt['id'])));
+					self::redirect($this->link_to_params('show', array('id' => $receipt['id'])));
 				}
 			}
 			$this->flash_form_errors($errors);

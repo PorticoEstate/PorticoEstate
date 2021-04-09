@@ -2494,7 +2494,7 @@
 
 			if($__config['street_id'] == $current_level)
 			{
-				$name_field = "fm_streetaddress.descr || ' ' || fm_location{$current_level}.street_number";
+				$name_field = "fm_streetaddress.descr || ' ' || fm_location{$current_level}.street_number || ' (' || fm_location{$current_level}.loc{$current_level}_name ||')'";
 				$sql = "SELECT location_code, {$name_field} AS name"
 					. " FROM fm_location{$current_level}"
 					. " {$this->join} fm_streetaddress ON (fm_location{$current_level}.street_id = fm_streetaddress.id)"
@@ -2514,7 +2514,7 @@
 			{
 				if($__config['street_id'] == $next_level)
 				{
-					$name_field = "fm_streetaddress.descr || ' ' || fm_location{$next_level}.street_number";
+					$name_field = "fm_streetaddress.descr || ' ' || fm_location{$next_level}.street_number  || ' (' || fm_location{$next_level}.loc{$next_level}_name ||')'";
 					$sql .= " UNION"
 						. " SELECT location_code, $name_field AS name"
 						. " FROM fm_location{$next_level}"
@@ -2542,10 +2542,10 @@
 
 					if($__config['street_id'] == $j)
 					{
-						$name_field = "fm_streetaddress.descr || ' ' || fm_location{$j}.street_number";
+						$name_field = "fm_streetaddress.descr || ' ' || fm_location{$j}.street_number  || ' (' || fm_location{$j}.loc{$j}_name ||')'";
 						if(isset($metadata['etasje']))
 						{
-							$name_field .= " || fm_location{$j}.etasje";
+							$name_field .= " || ' Etasje:' || fm_location{$j}.etasje";
 						}
 
 						$_sql[]= " SELECT location_code, {$name_field} AS name"

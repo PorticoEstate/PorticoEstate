@@ -40,7 +40,7 @@
 
 		public function redirect_to( $action, $params = array() )
 		{
-			return $this->redirect($this->link_to_params($action, $params));
+			return self::redirect($this->link_to_params($action, $params));
 		}
 
 		public function link_to_params( $action, $params = array() )
@@ -361,7 +361,7 @@
 			}
 			$export = $this->bo->read_single($id);
 			$this->add_default_display_data($export);
-			$this->add_template_file('helpers');
+			self::add_template_file('helpers');
 			$export['cancel_link'] = self::link(array('menuaction' => 'booking.uicompleted_reservation_export.index'));
 
 			$tabs = array();
