@@ -145,6 +145,7 @@ if ($.formUtils)
 }
 
 function setDateTimePicker() {
+	moment.locale('nb');
 	$('input[name="from_"]').daterangepicker({
 		singleDatePicker: true,
 		timePicker: true,
@@ -152,7 +153,8 @@ function setDateTimePicker() {
 		timePickerIncrement: 15,
 		locale: {
 			format: 'DD/MM/YYYY HH:mm',
-			cancelLabel: 'Clear',
+			applyLabel: "Ferdig",
+			cancelLabel: "Avbryt",
 			firstDay: 1
 		}
 	});

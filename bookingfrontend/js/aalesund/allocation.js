@@ -3,6 +3,7 @@ $(document).ready(function () {
 });
 
 function addDateRangePicker() {
+	moment.locale('nb');
 	$('input[name="from_"]').daterangepicker({
 		singleDatePicker: true,
 		timePicker: true,
@@ -10,7 +11,8 @@ function addDateRangePicker() {
 		timePickerIncrement: 15,
 		locale: {
 			format: 'DD/MM/YYYY HH:mm',
-			cancelLabel: 'Clear',
+			applyLabel: "Ferdig",
+			cancelLabel: "Avbryt",
 			firstDay: 1
 		}
 	});

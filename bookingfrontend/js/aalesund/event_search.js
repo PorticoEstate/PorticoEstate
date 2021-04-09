@@ -198,6 +198,7 @@ function buildingTypeDropDown() {
 }
 
 function setFromPicker(maxDate) {
+	moment.locale('nb');
 	$('input[id="from"]').daterangepicker({
 		singleDatePicker: true,
 		autoUpdateInput: false,
