@@ -190,10 +190,10 @@
 			$associations = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id']),
 				'sort' => 'from_', 'dir' => 'asc', 'results' =>'all'))['results'];
 
-			$lang_expired = lang('expired (2021)');
+			$lang_expired = lang('expired for edit');
 			$lang_edit = lang('edit');
 			$lang_cancel = lang('Cancel booking');
-			$lang_rights = lang('Missing rights (2021)');
+			$lang_rights = lang('Missing rights');
 
 			foreach ($associations as &$association)
 			{

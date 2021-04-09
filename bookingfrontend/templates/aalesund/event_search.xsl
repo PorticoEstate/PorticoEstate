@@ -4,7 +4,7 @@
 			<div class="header-container-search">
 				<div class="event-title-container">
 					<h2 class="upcomming-events">
-						<xsl:value-of select="php:function('lang', 'Upcomming Events (2021)')"/>
+						<xsl:value-of select="php:function('lang', 'Upcomming Events')"/>
 					</h2>
 				</div>
 			</div>

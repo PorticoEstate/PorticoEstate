@@ -527,8 +527,8 @@ Request for changed time	bookingfrontend	nn	Forespørsel om øke tid er sendt ti
 Follow status	bookingfrontend	nn	Du kan følge med på status under Min side --> Søknader
 for remaining season	bookingfrontend	nn	for gjenværende sesong
 for allocations until	bookingfrontend	nn	for tildelinger frem til:
-every (2021)	bookingfrontend	nn	hver
-week (2021)	bookingfrontend	nn	uke
+every	bookingfrontend	nn	hver
+week	bookingfrontend	nn	uke
 Could not find application id. Contact case officer with allocation id	bookingfrontend	nn	Kunne ikke finne tihørende søknad. For å øke tid må du kontakte saksbehandler med tildeling:
 Decrease of from time overlap with existing booking	bookingfrontend	nn	Kan ikke endre dato. Starttidspunkt overlapper med eksisterende interntildeling
 Decrease of to time overlap with existing booking	bookingfrontend	nn	Kan ikke endre dato. Sluttidspunkt overlapper med eksisterende interntildeling
@@ -536,9 +536,9 @@ Successfully changed start time	bookingfrontend	nn	Endring av startidspunkt er v
 Successfully changed end time	bookingfrontend	nn	Endring av sluttidspunkt er vellykket. Nytt sluttidspunkt for tildeling er:
 Cannot change start time	bookingfrontend	nn	Endring av startidspunkt feilet. Startdato kan ikke være senere enn sluttdato
 Cannot change end time	bookingfrontend	nn	Endring av sluttidspunkt feilet. Sluttdato kan ikke være før startdato
-Edit information (2021)	bookingfrontend	nn	Skal du berre endra tildeling på valt dato, vel Endre-knappen nede for å vise tida som ledig og tiden blir vist som ledig i kalenderen, og kan tildeles andre klubber/org.
-Edit information2 (2021)	bookingfrontend	nn	Skal du endra fleire kan du velge "Ut sesong" eller "Endre til" og velg en dato, du kan også velge intervall (f.eks. annankvar veke).
-Change allocation (2021)	bookingfrontend	nn	Endre tildeling
+Edit allocation information	bookingfrontend	nn	Skal du berre endra tildeling på valt dato, vel Endre-knappen nede for å vise tida som ledig og tiden blir vist som ledig i kalenderen, og kan tildeles andre klubber/org.
+Edit allocation information2	bookingfrontend	nn	Skal du endra fleire kan du velge "Ut sesong" eller "Endre til" og velg en dato, du kan også velge intervall (f.eks. annankvar veke).
+Change the allocation	bookingfrontend	nn	Endre tildeling
 Recurring allocation edit	bookingfrontend	nn	Endre i intervall
 Edit until	bookingfrontend	nn	Endre til
 Request to increase time on existing booking	bookingfrontend	nn	Ønske om å øke tildelt tid på tildeling:
@@ -546,10 +546,10 @@ Go to allocation	bookingfrontend	nn	Gå til tildeling
 Equipment text	bookingfrontend	nn	I feltet under skriver du inn om du har spesielle behov tilknyttet aktiviteten
 Request for equipment	bookingfrontend	nn	Ønske om nødvendig utstyr på tildeling:
 Request for equipment has been sent	bookingfrontend	nn	Ønske om nødvendig utstyr er sendt til saksbehandler
-Resources (2021)	bookingfrontend	nn	Lokaler
-Upcomming Events (2021)	bookingfrontend	nn	Kommende Arrangement
-expired (2021)	bookingfrontend	nn	Utløpt
-Missing rights (2021)	bookingfrontend	nn	Mangler rettigheter
+Resources type	bookingfrontend	nn	Lokaler
+Upcomming Events	bookingfrontend	nn	Kommende Arrangement
+expired for edit	bookingfrontend	nn	Utløpt
+Missing rights	bookingfrontend	nn	Mangler rettigheter
 allocation show	bookingfrontend	nn	Tildeling
 booking show	bookingfrontend	nn	Interntildeling
 event show	bookingfrontend	nn	Arrangement

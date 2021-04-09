@@ -181,7 +181,7 @@
 						<!--<xsl:if test="false">-->
 							<div class="dropdown-container">
 								<button type="button" class="btn btn-default dropdown-toggle resources-dropdown" data-toggle="dropdown">
-									<xsl:value-of select="php:function('lang', 'Resources (2021)')"/>
+									<xsl:value-of select="php:function('lang', 'Resources type')"/>
 									<span data-bind="html: ' ' + selectedResourceIds().length + '/' + bookableResource().length"/>
 								</button>
 

@@ -701,7 +701,7 @@
 							{
 								$field_interval .= '. ';
 							}
-							$comment .= ' ' . lang('every (2021)') . ' ' . $field_interval . lang('week (2021)');
+							$comment .= ' ' . lang('every') . ' ' . $field_interval . lang('week');
 							$message .= '</br>' . lang('Follow status');
 						}
 

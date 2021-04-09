@@ -20,8 +20,8 @@
 						<xsl:call-template name="msgbox"/>
 					</div>
 					<div class="form-group">
-						<xsl:value-of select="php:function('lang', 'Edit Information (2021)')"/>&#160;
-						<xsl:value-of select="php:function('lang', 'Edit Information2 (2021)')"/>
+						<xsl:value-of select="php:function('lang', 'Edit allocation information')"/>&#160;
+						<xsl:value-of select="php:function('lang', 'Edit allocation information2')"/>
 					</div>
 					<input type="hidden" name="application_id" value="{allocation/application_id}"/>
 					<input id="field_org_id" name="organization_id" type="hidden" value="{allocation/organization_id}" />
@@ -144,7 +144,7 @@
 					<div class="form-group mt-5">
 						<input type="submit" class="btn btn-light mr-4">
 							<xsl:attribute name="value">
-								<xsl:value-of select="php:function('lang', 'Change allocation (2021)')"/>
+								<xsl:value-of select="php:function('lang', 'Change the allocation')"/>
 							</xsl:attribute>
 						</input>
 						<a class="cancel">
