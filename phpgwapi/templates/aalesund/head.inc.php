@@ -295,6 +295,29 @@ JS;
 	$separator = strpos($self_uri, '?') ? '&' : '?';
 	$self_uri = str_replace(array("{$separator}lang=no", "{$separator}lang=en"), '', $self_uri);
 
+switch($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
+{
+	case 'aalesund':
+		$selected_aalesund = ' selected = "selected"';
+		$selected_bookingfrontend = '';
+		break;
+	case 'bookingfrontend':
+		$selected_aalesund = '';
+		$selected_bookingfrontend = ' selected = "selected"';
+		break;
+}
+
+$template_selector = <<<HTML
+
+	<li class="nav-item">
+	   <select id = "template_selector" class="btn btn-link btn-sm nav-link dropdown-toggle" style="padding-top: .315rem;-webkit-appearance: none;-moz-appearance: none;">
+		<option class="nav-link" value="bookingfrontend"{$selected_bookingfrontend}>AK V1</option>
+		<option value="aalesund"{$selected_aalesund}>AK V2</option>
+	   </select>
+	</li>
+HTML;
+
+
 	$nav = <<<HTML
 
 		<nav class="navbar navbar-default sticky-top navbar-expand-md navbar-light  header_borderline"   id="headcon">
@@ -318,6 +341,7 @@ JS;
 					<a class="nav-link p-2" href="{$self_uri}{$separator}lang=en" aria-label="English"><img src="{$flag_en}" alt="English (United Kingdom)" title="English (United Kingdom)" />
 					</a>
 				</li>
+				{$template_selector}
 		</ul>		
 		<div class="event_navbar_container">
 			<div class="arrangement-link-box">
