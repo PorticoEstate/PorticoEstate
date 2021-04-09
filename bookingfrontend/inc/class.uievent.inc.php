@@ -426,20 +426,18 @@
 		public function resource_users( $resources )
 		{
 			$contacts = array();
-			$orglist = array();
-			$orgs = array();
+			$orgs = "";
 			foreach ($resources as $res)
 			{
 				$cres = $this->resource_bo->read_single($res);
 				if ($cres['organizations_ids'] != '')
 				{
-					$orglist .= $cres['organizations_ids'] . ',';
+					$orgs .= $cres['organizations_ids'] . ',';
 				}
 			}
-			if (!empty($orglist))
-			{
-				$orgs = explode(",", rtrim($orglist, ","));
-			}
+
+			$orgs = rtrim(orgs, ",");
+
 			$organizations = $this->organization_bo->so->read(array('filters' => array('id' => $orgs),
 				'sort' => 'name'));
 			foreach ($organizations['results'] as $key => $org)
