@@ -436,7 +436,7 @@
 				}
 			}
 
-			$orgs = rtrim(orgs, ",");
+			$orgs = explode(",", rtrim($orgs, ","));
 
 			$organizations = $this->organization_bo->so->read(array('filters' => array('id' => $orgs),
 				'sort' => 'name'));
