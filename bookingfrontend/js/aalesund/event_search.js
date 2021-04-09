@@ -1,4 +1,4 @@
-var months = ["Januar", "Februar", "Mars", "April", "Mai", "Juni", "July", "August", "September", "Oktober", "November", "Desember"];
+var months;
 var viewmodel;
 var showAll = true;
 var fromDate = "";

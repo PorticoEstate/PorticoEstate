@@ -402,7 +402,8 @@
 			self::link(array(
 				'menuaction' => 'bookingfrontend.uisearch.autocomplete_resource_and_building',
 				'phpgw_return_as' => 'json'));
-			return json_encode($this->bo->get_resource_and_building_autocomplete_data());
+			return ($this->bo->get_resource_and_building_autocomplete_data());
+			return ($this->bo->get_resource_and_building_autocomplete_data());
 		}
 
 		function get_all_towns()

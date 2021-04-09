@@ -2,7 +2,7 @@ var selectedAutocompleteValue = false;
 var selectedTown = false;
 var autoUpdate = true;
 var viewmodel;
-var months = ["Januar", "Februar", "Mars", "April", "Mai", "Juni", "July", "August", "September", "Oktober", "November", "Desember"];
+var months;
 var urlParams = [];
 var autocompleteData = [];
 var towns = [];
@@ -491,7 +491,7 @@ function getAutocompleteData() {
 function getUpcomingEvents() {
 	let requestURL;
 	let reqObject = {
-		menuaction: "bookingfrontend.uieventsearch.upcomingEvents",
+		menuaction: "bookingfrontend.uieventsearch.upcoming_events",
 		orgID: '',
 		fromDate: Util.Format.FormatDateForBackend(new Date()),
 		toDate: '',
