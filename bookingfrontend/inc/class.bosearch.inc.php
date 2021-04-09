@@ -657,6 +657,8 @@
 			}
 			unset($resource);
 
+			usort($applicable_resources, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
+
 			$returnres['available_resources'] = $this->available_resources($applicable_resources, $params);
 
 			$all_activities = array();
@@ -680,7 +682,6 @@
 				}
 			}
 
-			usort($returnres['available_resources'], function ($a,$b) { return strcmp(strtolower($a['resource_name']),strtolower($b['resource_name'])); });
 			usort($all_activities, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
 			usort($all_facilities, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
 
@@ -793,8 +794,7 @@
 			}
 			unset($resource);
 
-			// HER
-			$returnres = $this->resquery($params);
+			usort($applicable_resources, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
 
 			$returnres['available_resources']   = $this->available_resources($applicable_resources, $params);
 
@@ -819,7 +819,6 @@
 				}
 			}
 
-			usort($returnres['available_resources'], function ($a,$b) { return strcmp(strtolower($a['resource_name']),strtolower($b['resource_name'])); });
 			usort($all_activities, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
 			usort($all_facilities, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
 
