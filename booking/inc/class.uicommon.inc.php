@@ -261,7 +261,7 @@
 		public function flash_form_errors( $errors )
 		{
 			$error_stack = $this->create_error_stack($errors);
-			$this->flash_msgs = $error_stack->to_flash_error_msgs();
+			self::$flash_msgs = $error_stack->to_flash_error_msgs();
 		}
 
 		public function send_file( $file_path, $options = array() )

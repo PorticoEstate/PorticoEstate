@@ -18,6 +18,7 @@
 	function property_upgrade0_9_17_500()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$origin = array();
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_origin', array(
 				'fd' => array(
@@ -193,6 +194,8 @@
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT count(*) as cnt FROM fm_location_type");
 		$GLOBALS['phpgw_setup']->oProc->next_record();
 		$locations = $GLOBALS['phpgw_setup']->oProc->f('cnt');
+		$standard = array();
+		$pk = array();
 
 		for($location_type = 1; $location_type < ($locations + 1); $location_type++)
 		{
@@ -10847,7 +10850,7 @@
 					'descr' => array('type' => 'text', 'nullable' => false),
 				),
 				'pk' => array('id'),
-				'ix' => array(),
+				'fk' => array(),
 				'ix' => array(),
 				'uc' => array()
 			)
@@ -10861,7 +10864,7 @@
 					'descr' => array('type' => 'text', 'nullable' => false),
 				),
 				'pk' => array('id'),
-				'ix' => array(),
+				'fk' => array(),
 				'ix' => array(),
 				'uc' => array()
 			)

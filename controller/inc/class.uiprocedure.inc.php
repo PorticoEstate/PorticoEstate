@@ -416,9 +416,9 @@
 			}
 			else
 			{
-				if ($this->flash_msgs)
+				if (self::$flash_msgs)
 				{
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data(self::$flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
 
@@ -594,9 +594,9 @@
 					return;
 				}
 
-				if ($this->flash_msgs)
+				if (self::$flash_msgs)
 				{
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data(self::$flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
 

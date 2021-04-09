@@ -55,14 +55,7 @@
 					$GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'] = 'ckeditor';
 				}
 			}
-/*
-			$this->tmpl_search_path = array();
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/base');
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $currentapp . '/templates/base');
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $currentapp . '/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
-*/
+
 			self::get_tmpl_search_path();
 
 			if ($yui == 'yui3')

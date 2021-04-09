@@ -360,9 +360,9 @@
 //					'control_areas' => $control_group->get_control_area_id()));
 				$procedure_array = $this->so_procedure->get_procedures_by_control_area($control_group->get_control_area_id());
 
-				if ($this->flash_msgs)
+				if (self::$flash_msgs)
 				{
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data(self::$flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
 
@@ -488,9 +488,9 @@
 				$procedure_array = $this->so_procedure->get_procedures_by_control_area($control_group->get_control_area_id());
 
 
-				if ($this->flash_msgs)
+				if (self::$flash_msgs)
 				{
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data(self::$flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
 
@@ -855,9 +855,9 @@
 				}
 				//var_dump($control_group);
 
-				if ($this->flash_msgs)
+				if (self::$flash_msgs)
 				{
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data(self::$flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
 

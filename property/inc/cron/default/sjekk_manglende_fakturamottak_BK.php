@@ -50,13 +50,7 @@
 			$this->function_name = get_class($this);
 			$this->sub_location	 = lang('property');
 			$this->function_msg	 = 'Manglende fakturamottak i Agresso';
-			/**
-			 * Bruker konffigurasjon fra '.ticket' - fordi denne definerer oppslaget mot fullmaktsregisteret ved bestilling.
-			 */
-			$config					 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
-			$this->soap_url			 = $config->config_data['external_register']['url'];
-			$this->soap_username	 = $config->config_data['external_register']['username'];
-			$this->soap_password	 = $config->config_data['external_register']['password'];
+			$this->soap_url			 = 'http://agrpweb.adm.bgo/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101';
 			$this->config_invoice	 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			require_once PHPGW_SERVER_ROOT . '/property/inc/soap_client/agresso/autoload.php';
 		}
@@ -158,13 +152,34 @@
 
 			foreach ($data as &$valueset)
 			{
+				if(empty($valueset['voucher_no']))
+				{
+					continue;
+				}
+/*
+           [tab] => A
+            [account] => 123015
+            [voucher_no] => 921097628
+            [order_id] => 45045416
+            [ext_inv_ref] => 100296
+            [amount] => 545.03
+            [step] => Forsinkelse til varer er mottatt
+            [xwf_state] => Arbeidsflyt pågår
+            [apar_id] => 100497
+            [xapar_id] => BERGEN ELEKTROSERVICE AS
+            [voucher_date] => 2021-03-17T00:00:00+01:00
+            [due_date] => 2021-04-30T00:00:00+02:00
+*/
+
+
+
 				$sql	 = <<<SQL
 					SELECT fakturamottak.regtid
 					FROM ( SELECT  fm_ecobilagoverf.regtid
-						FROM fm_ecobilagoverf WHERE external_voucher_id = '{$valueset['bilagsNr']}'
+						FROM fm_ecobilagoverf WHERE external_voucher_id = '{$valueset['voucher_no']}'
 							UNION ALL
 						SELECT fm_ecobilag.regtid
-						FROM fm_ecobilag WHERE external_voucher_id = '{$valueset['bilagsNr']}'
+						FROM fm_ecobilag WHERE external_voucher_id = '{$valueset['voucher_no']}'
 						 ) fakturamottak
 SQL;
 				$this->db->query($sql, __LINE__, __FILE__);
@@ -181,7 +196,7 @@ SQL;
 					{
 						$fil_katalog = $this->config_invoice->config_data['export']['path'];
 						
-						$filename = "{$fil_katalog}/V3_varemottak_{$valueset['ordreNr']}_{$valueset['bilagsNr']}.xml";
+						$filename = "{$fil_katalog}/V3_varemottak_{$valueset['order_id']}_{$valueset['voucher_no']}.xml";
 
 						//Sjekk om filen eksisterer
 						if (file_exists($filename))
@@ -286,41 +301,6 @@ SQL;
 		}
 
 		/**
-		 * Curl-versjonen, via tjeneste hos SDI
-		 * @return array
-		 * @throws Exception
-		 */
-		function get_data_old()
-		{
-			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/manglendevaremottak
-			$url		 = "{$this->soap_url}/manglendevaremottak";
-			$username	 = $this->soap_username; //'portico';
-			$password	 = $this->soap_password; //'********';
-
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_USERPWD, "{$username}:{$password}");
-			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-
-			$result = curl_exec($ch);
-
-			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			if (!$httpCode)
-			{
-				throw new Exception("No connection: {$url}");
-			}
-			curl_close($ch);
-
-			$result = json_decode($result, true);
-
-			return $result;
-		}
-
-
-		/**
 		 * Ny spørring direkte i Agresso/UBW
 		 * @return array
 		 */
@@ -332,7 +312,7 @@ SQL;
 			$password				 = 'wser10';
 			$client					 = 'BY';
 
-			$TemplateId				 = '10432'; //Spørring på varemottak
+			$TemplateId				 = '12770'; //Spørring på varemottak
 
 
 			$service	 = new \QueryEngineV201101(array(
