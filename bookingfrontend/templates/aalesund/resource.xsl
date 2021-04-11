@@ -273,7 +273,7 @@
 	<script>
 		var lang = <xsl:value-of select="php:function('js_lang', 'new application', 'Resource (2018)')" />;
 		var resourcename = "<xsl:value-of select="resource/name" />";
-		var deactivate_application = <xsl:value-of select="building/deactivate_application" />;
+		var deactivate_application = <xsl:value-of select="building/deactivate_application" /> + <xsl:value-of select="resource/deactivate_application" />;
 		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
 		var building_id = "<xsl:value-of select="building/id" />";
 		var simple_booking = "<xsl:value-of select="resource/simple_booking" />";
