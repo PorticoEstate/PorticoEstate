@@ -172,6 +172,27 @@
 						</select>
 					</div>
 				</xsl:if>
+				<xsl:if test="not(new_form)">
+					<div class="pure-control-group">
+						<label for="for_field_deactivate_application">
+							<xsl:value-of select="php:function('lang', 'Deactivate application')"/>
+						</label>
+						<select id="for_field_deactivate_application" name="deactivate_application" class="pure-input-3-4" >
+							<option value="1">
+								<xsl:if test="resource/deactivate_application=1">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'Yes')"/>
+							</option>
+							<option value="0">
+								<xsl:if test="resource/deactivate_application=0">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'No')"/>
+							</option>
+						</select>
+					</div>
+				</xsl:if>
 
 				<div id="capacity_form">
 					<xsl:if test="new_form or resource/rescategory_capacity != 1">
