@@ -689,12 +689,7 @@
     if (resourceItems < anleggItems) {
     	while (resourceItems < anleggItems) {
 			resource +=
-				'<li data-label="hiddenText' +
-				'" class="' +
-				classes.join(' ') +
-				' hiddenText">' +
-				"hiddenText" +
-				'</li>';
+				'<li/>';
 			resourceItems++;
 		}
 	}
@@ -702,12 +697,7 @@
 	  if (anleggItems < resourceItems) {
 		  while (anleggItems < resourceItems) {
 			  anlegg +=
-				  '<li data-label="hiddenText' +
-				  '" class="' +
-				  classes.join(' ') +
-				  ' hiddenText">' +
-				  "hiddenText" +
-				  '</li>';
+				  '<li/>';
 			  anleggItems++;
 		  }
 	  }

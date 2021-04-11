@@ -585,7 +585,7 @@ function setSearchListener() {
 	});
 
 	$("#searchBtn").click(function () {
-		findSearchMethod($());
+		findSearchMethod();
 	});
 }
 
@@ -805,10 +805,8 @@ function setActivityData(activities) {
 function toggleMargin() {
 	if (viewmodel.showResults()) {
 		$('.mainSearchInput').css('margin-bottom', '0px');
-		$('.greenBtn').css('margin-top', '0px');
 	} else {
 		$('.mainSearchInput').css('margin-bottom', '20px');
-		$('.greenBtn').css('margin-top', '20px');
 	}
 }
 

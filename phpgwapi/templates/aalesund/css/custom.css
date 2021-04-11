@@ -549,6 +549,12 @@ input[type=submit] {
     background: #f5f5ff !important;
 	padding-top: 15px !important;
 }
+
+.containerSearch {
+	background-color: #DDDDFF;
+	padding: 30px 0 40px 0;
+}
+
 #searchContainerContent{
     margin:auto;
     max-width: 720px;
@@ -562,6 +568,7 @@ input[type=submit] {
     text-align: center !important;
 }
 
+
 .searchContainerStyle {
 	width: 755px;
 	height: 348px;
@@ -574,7 +581,7 @@ input[type=submit] {
 .pageContentWrapper{
     margin:auto;
     max-width: 1240px;
-	overflow: hidden;
+	/*overflow: hidden;*/
 }
 #searchContainer #searchWrapper{
     margin-bottom: 20px;
@@ -835,7 +842,7 @@ body{
 	display: block;
 	background: url(../img/search.svg) no-repeat scroll 16px 16px;
 	background-size: 20px;
-	width: 576px;
+	width: 100%;
 	margin-bottom: 20px;
 }
 
@@ -1133,7 +1140,6 @@ select option:focus {
 	color: #0b1214;
 	display: block;
 	margin: 0 auto;
-	width: 455px;
 	height: 28px;
 	font-family: Rubik;
 	font-stretch: normal;
@@ -1144,10 +1150,7 @@ select option:focus {
 
 .eventTimeContainer {
 	position: absolute;
-	right: 32px;
-	bottom: 334px;
 	top: 36px;
-	width: 120px;
 	height: 24px;
 	font-size: 14px;
 	text-align: right;
@@ -1163,6 +1166,10 @@ select option:focus {
 .eventClockIcon {
 	position: absolute;
 	content: url(../img/time-clock.svg);
+}
+
+.event_time {
+	padding-left: 20px;
 }
 
 .locationContainer {
@@ -1241,6 +1248,7 @@ select option:focus {
 .allEventsBtn {
 	float: right;
 	margin-top: 30px;
+	margin-bottom: 50px;
 	display: flex;
 	width: 287px;
 	padding: 8px 32px 8px 40px;
@@ -1422,9 +1430,20 @@ select option:focus {
 	float: left;
 }
 
+.filterContainer2 {
+	/*height: max-content;*/
+	margin: 24px 24px 0 0;
+	padding: 24px;
+	padding-bottom: 70px;
+	border-radius: 12px;
+	border: solid 1px #ebebeb;
+	background-color: #ffffff;
+	float: left;
+}
+
 .resultContainer {
-	width: 65%;
-	float: right;
+	/*width: 65%;
+	float: right;*/
 }
 
 .resultCard {
@@ -1483,6 +1502,10 @@ select option:focus {
 	top: 53%;
 	/* Transform looks at the element itself and not the parent. */
 	transform: translateY(20%);
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: center;
 }
 
 .resultBtnText:hover {
@@ -2560,7 +2583,7 @@ textarea:focus{
 	right: 0;
 	margin-left: auto;
 	margin-right: auto;
-	width: 576px;
+	width: 100%;
 	float: none;
 	text-align: left;
 	top: 77%;
@@ -2594,6 +2617,7 @@ textarea:focus{
 	font-size: 16px;
 	font-weight: normal;
 	font-stretch: normal;
+	height: 40px;
 	font-style: normal;
 	line-height: 1.4;
 	letter-spacing: normal;
@@ -2614,9 +2638,23 @@ textarea:focus{
 	vertical-align: bottom;
 }
 
-.anlegg-li li:after {
+.bk .lokale-li li span {
+	display: inline-block;
+	max-width: 230px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	vertical-align: bottom;
+}
+
+.anlegg-li .category-title:after {
 	content: url(../img/chevy-side.svg);
 	float: right;
+
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	vertical-align: bottom;
 }
 
 .bk .autocompleter-item {
