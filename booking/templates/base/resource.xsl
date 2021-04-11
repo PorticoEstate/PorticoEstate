@@ -58,6 +58,18 @@
 					</div>
 				</div>
 				<div class="pure-control-group">
+					<label for="for_field_deactivate_application">
+						<xsl:value-of select="php:function('lang', 'Deactivate application')"/>
+					</label>
+					<xsl:if test="resource/deactivate_application=1">
+						<xsl:value-of select="php:function('lang', 'Yes')"/>
+					</xsl:if>
+					<xsl:if test="resource/deactivate_application=0">
+						<xsl:value-of select="php:function('lang', 'No')"/>
+					</xsl:if>
+				</div>
+
+				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Resource category')"/>
 					</label>
