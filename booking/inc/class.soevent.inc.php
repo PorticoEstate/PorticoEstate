@@ -643,9 +643,9 @@
 						.$facility_type_id_sql
 						.$logged_in_orgs_sql
 						." AND bbe.is_public = 1
-						ORDER BY bbe.from_ ASC  LIMIT $end OFFSET $start;";
+						ORDER BY bbe.from_ ASC";
 
-		$this->db->query($sql_query);
+		$this->db->limit_query($sql_query, $start, __LINE__, __FILE__, $end);
 
 		$results = array();
 		while ($this->db->next_record())
