@@ -3,6 +3,7 @@ exports.__esModule = true;
 var SelectNodeHandler = /** @class */ (function () {
     function SelectNodeHandler(treeWidget) {
         this.treeWidget = treeWidget;
+        this.selectedNodes = new Set();
         this.clear();
     }
     SelectNodeHandler.prototype.getSelectedNode = function () {
@@ -15,20 +16,19 @@ var SelectNodeHandler = /** @class */ (function () {
         }
     };
     SelectNodeHandler.prototype.getSelectedNodes = function () {
+        var _this = this;
         if (this.selectedSingleNode) {
             return [this.selectedSingleNode];
         }
         else {
-            var selectedNodes = [];
-            for (var id in this.selectedNodes) {
-                if (this.selectedNodes.hasOwnProperty(id)) {
-                    var node = this.treeWidget.getNodeById(id);
-                    if (node) {
-                        selectedNodes.push(node);
-                    }
+            var selectedNodes_1 = [];
+            this.selectedNodes.forEach(function (id) {
+                var node = _this.treeWidget.getNodeById(id);
+                if (node) {
+                    selectedNodes_1.push(node);
                 }
-            }
-            return selectedNodes;
+            });
+            return selectedNodes_1;
         }
     };
     SelectNodeHandler.prototype.getSelectedNodesUnder = function (parent) {
@@ -43,7 +43,7 @@ var SelectNodeHandler = /** @class */ (function () {
         else {
             var selectedNodes = [];
             for (var id in this.selectedNodes) {
-                if (this.selectedNodes.hasOwnProperty(id)) {
+                if (Object.prototype.hasOwnProperty.call(this.selectedNodes, id)) {
                     var node = this.treeWidget.getNodeById(id);
                     if (node && parent.isParentOf(node)) {
                         selectedNodes.push(node);
@@ -54,16 +54,8 @@ var SelectNodeHandler = /** @class */ (function () {
         }
     };
     SelectNodeHandler.prototype.isNodeSelected = function (node) {
-        if (!node) {
-            return false;
-        }
-        else if (node.id != null) {
-            if (this.selectedNodes[node.id]) {
-                return true;
-            }
-            else {
-                return false;
-            }
+        if (node.id != null) {
+            return this.selectedNodes.has(node.id);
         }
         else if (this.selectedSingleNode) {
             return this.selectedSingleNode.element === node.element;
@@ -73,22 +65,25 @@ var SelectNodeHandler = /** @class */ (function () {
         }
     };
     SelectNodeHandler.prototype.clear = function () {
-        this.selectedNodes = {};
+        this.selectedNodes.clear();
         this.selectedSingleNode = null;
     };
     SelectNodeHandler.prototype.removeFromSelection = function (node, includeChildren) {
         var _this = this;
         if (includeChildren === void 0) { includeChildren = false; }
         if (node.id == null) {
-            if (this.selectedSingleNode && node.element === this.selectedSingleNode.element) {
+            if (this.selectedSingleNode &&
+                node.element === this.selectedSingleNode.element) {
                 this.selectedSingleNode = null;
             }
         }
         else {
-            delete this.selectedNodes[node.id];
+            this.selectedNodes["delete"](node.id);
             if (includeChildren) {
                 node.iterate(function () {
-                    delete _this.selectedNodes[node.id];
+                    if (node.id != null) {
+                        _this.selectedNodes["delete"](node.id);
+                    }
                     return true;
                 });
             }
@@ -96,11 +91,17 @@ var SelectNodeHandler = /** @class */ (function () {
     };
     SelectNodeHandler.prototype.addToSelection = function (node) {
         if (node.id != null) {
-            this.selectedNodes[node.id] = true;
+            this.selectedNodes.add(node.id);
         }
         else {
             this.selectedSingleNode = node;
         }
+    };
+    SelectNodeHandler.prototype.isFocusOnTree = function () {
+        var activeElement = document.activeElement;
+        return Boolean(activeElement &&
+            activeElement.tagName === "SPAN" &&
+            this.treeWidget._containsElement(activeElement));
     };
     return SelectNodeHandler;
 }());

@@ -4,8 +4,8 @@ var util_1 = require("./util");
 var ElementsRenderer = /** @class */ (function () {
     function ElementsRenderer(treeWidget) {
         this.treeWidget = treeWidget;
-        this.openedIconElement = this.createButtonElement(treeWidget.options.openedIcon);
-        this.closedIconElement = this.createButtonElement(treeWidget.options.closedIcon);
+        this.openedIconElement = this.createButtonElement(treeWidget.options.openedIcon || "+");
+        this.closedIconElement = this.createButtonElement(treeWidget.options.closedIcon || "-");
     }
     ElementsRenderer.prototype.render = function (fromNode) {
         if (fromNode && fromNode.parent) {
@@ -66,14 +66,18 @@ var ElementsRenderer = /** @class */ (function () {
                 classString += " jqtree-rtl";
             }
         }
+        if (this.treeWidget.options.dragAndDrop) {
+            classString += " jqtree-dnd";
+        }
         var ul = document.createElement("ul");
         ul.className = "jqtree_common " + classString;
         ul.setAttribute("role", role);
         return ul;
     };
     ElementsRenderer.prototype.createLi = function (node, level) {
-        var isSelected = Boolean(this.treeWidget.selectNodeHandler && this.treeWidget.selectNodeHandler.isNodeSelected(node));
-        var mustShowFolder = node.isFolder() || (node.isEmptyFolder && this.treeWidget.options.showEmptyFolder);
+        var isSelected = Boolean(this.treeWidget.selectNodeHandler.isNodeSelected(node));
+        var mustShowFolder = node.isFolder() ||
+            (node.isEmptyFolder && this.treeWidget.options.showEmptyFolder);
         var li = mustShowFolder
             ? this.createFolderLi(node, level, isSelected)
             : this.createNodeLi(node, level, isSelected);
@@ -85,7 +89,9 @@ var ElementsRenderer = /** @class */ (function () {
     ElementsRenderer.prototype.createFolderLi = function (node, level, isSelected) {
         var buttonClasses = this.getButtonClasses(node);
         var folderClasses = this.getFolderClasses(node, isSelected);
-        var iconElement = node.is_open ? this.openedIconElement : this.closedIconElement;
+        var iconElement = node.is_open
+            ? this.openedIconElement
+            : this.closedIconElement;
         // li
         var li = document.createElement("li");
         li.className = "jqtree_common " + folderClasses;
@@ -142,9 +148,17 @@ var ElementsRenderer = /** @class */ (function () {
         titleSpan.setAttribute("aria-selected", util_1.getBoolString(isSelected));
         titleSpan.setAttribute("aria-expanded", util_1.getBoolString(isOpen));
         if (isSelected) {
-            titleSpan.setAttribute("tabindex", this.treeWidget.options.tabIndex);
+            var tabIndex = this.treeWidget.options.tabIndex;
+            if (tabIndex !== undefined) {
+                titleSpan.setAttribute("tabindex", "" + tabIndex);
+            }
         }
-        titleSpan.innerHTML = this.escapeIfNecessary(nodeName);
+        if (this.treeWidget.options.autoEscape) {
+            titleSpan.textContent = nodeName;
+        }
+        else {
+            titleSpan.innerHTML = nodeName;
+        }
         return titleSpan;
     };
     ElementsRenderer.prototype.getButtonClasses = function (node) {
@@ -172,14 +186,6 @@ var ElementsRenderer = /** @class */ (function () {
             classes.push("jqtree-loading");
         }
         return classes.join(" ");
-    };
-    ElementsRenderer.prototype.escapeIfNecessary = function (value) {
-        if (this.treeWidget.options.autoEscape) {
-            return util_1.htmlEscape(value);
-        }
-        else {
-            return value;
-        }
     };
     ElementsRenderer.prototype.createButtonElement = function (value) {
         if (typeof value === "string") {

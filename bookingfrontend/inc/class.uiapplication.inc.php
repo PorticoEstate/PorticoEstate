@@ -1,5 +1,7 @@
 <?php
 	phpgw::import_class('booking.uiapplication');
+	phpgw::import_class('booking.boapplication');
+	phpgw::import_class('booking.soapplication');
 
 	class bookingfrontend_uiapplication extends booking_uiapplication
 	{
@@ -26,6 +28,7 @@
 		{
 			$id = phpgw::get_var('id', 'int');
 			$secret =  phpgw::get_var('secret', 'string');
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
 
 			/**
 			 * check external login - and return here
@@ -168,6 +171,7 @@
 			$application['resource_ids'] = $resource_ids;
 			$application['description'] = html_entity_decode(nl2br($application['description']));
 			$application['equipment'] = html_entity_decode(nl2br($application['equipment']));
+			$application['copy_link'] = self::link(array('menuaction' => "{$this->module}.uiapplication.add", 'application_id' => $application['id']));
 
 			if(!empty($application['comments']))
 			{
@@ -182,6 +186,137 @@
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
 
+			$this->assoc_bo = new booking_boapplication_association();
+			$associations = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id']),
+				'sort' => 'from_', 'dir' => 'asc', 'results' =>'all'))['results'];
+
+			$lang_expired = lang('expired for edit');
+			$lang_edit = lang('edit');
+			$lang_cancel = lang('Cancel booking');
+			$lang_rights = lang('Missing rights');
+
+			foreach ($associations as &$association)
+			{
+				if ($association['active'] === 1)
+				{
+					if ($association['type'] === 'allocation')
+					{
+						if ($association['from_'] > Date('Y-m-d H:i:s'))
+						{
+							$association['edit_link'] = self::link(array('menuaction' => "{$this->module}.uiallocation.edit", 'allocation_id' => $association['id']));
+						}
+						else
+						{
+							$association['edit_link'] = '#';
+							$association['edit_text'] = $lang_expired;
+						}
+						$association['edit_text'] = $lang_edit;
+						if ($config['user_can_delete_allocations'] == 'yes')
+						{
+							if ($association['from_'] > Date('Y-m-d H:i:s'))
+							{
+								$association['cancel_link'] = self::link(array('menuaction' => "{$this->module}.uiallocation.cancel", 'allocation_id' => $association['id']));
+								$association['cancel_text'] = $lang_cancel;
+							}
+							else
+							{
+								$association['cancel_link'] = '#';
+								$association['cancel_text'] = $lang_expired;
+							}
+						}
+						else
+							{
+							$association['cancel_link'] = '#';
+							$association['cancel_text'] = $lang_rights;
+						}
+					}
+					if ($association['type'] === 'event')
+					{
+						if ($association['from_'] > Date('Y-m-d H:i:s'))
+						{
+							$association['edit_link'] = self::link(array('menuaction' => "{$this->module}.uievent.edit",
+								'id' => $association['id'],
+								'resource_ids' => $application['resources']));
+							$association['edit_text'] = $lang_edit;
+						}
+						else
+						{
+							$association['edit_link'] = '#';
+							$association['edit_text'] = $lang_expired;
+						}
+
+						if ($config['user_can_delete_events'] == 'yes')
+						{
+							if ($association['from_'] > Date('Y-m-d H:i:s'))
+							{
+								$association['cancel_link'] = self::link(array('menuaction' => "{$this->module}.uievent.cancel",
+									'id' => $association['id'],
+									'resource_ids' => $application['resources']));
+								$association['cancel_text'] = $lang_cancel;
+							}
+							else
+							{
+								$association['cancel_link'] = '#';
+								$association['cancel_text'] = $lang_expired;
+							}
+
+						}
+						else
+						{
+							$association['cancel_link'] = '#';
+							$association['cancel_text'] = $lang_rights;
+						}
+					}
+					if ($association['type'] === 'booking')
+					{
+						if ($association['from_'] > Date('Y-m-d H:i:s'))
+						{
+							$association['edit_link'] = self::link(array('menuaction' => "{$this->module}.uibooking.edit",
+								'id' => $association['id'],
+								'resource_ids' => $application['resources']));
+							$association['edit_text'] = $lang_edit;
+						}
+						else
+						{
+							$association['edit_link'] = '#';
+							$association['edit_text'] = $lang_expired;
+						}
+
+						if ($config['user_can_delete_bookings'] == 'yes')
+						{
+							if ($association['from_'] > Date('Y-m-d H:i:s'))
+							{
+								$association['cancel_link'] = self::link(array('menuaction' => "{$this->module}.uibooking.cancel",
+									'id' => $association['id'],
+									'resource_ids' => $application['resources']));
+								$association['cancel_text'] = $lang_cancel;
+							}
+							else
+							{
+								$association['cancel_link'] = '#';
+								$association['cancel_text'] = $lang_expired;
+							}
+						}
+						else
+						{
+							$association['cancel_link'] = '#';
+							$association['cancel_text'] = $lang_rights;
+						}
+					}
+				}
+				else
+				{
+					$association['edit_link'] = '#';
+					$association['edit_text'] = $lang_expired;
+					$association['cancel_link'] = '#';
+					$association['cancel_text'] = $lang_expired;
+				}
+
+				$association['type'] = lang($association['type'].' show');
+				$association['from_'] = DateTime::createFromFormat('Y-m-d H:i:s', $association['from_'])->format('d.m.Y H:i');
+				$association['to_'] = DateTime::createFromFormat('Y-m-d H:i:s', $association['to_'])->format('d.m.Y H:i');
+			}
+
 			phpgwapi_jquery::formvalidator_generate(array('file'), 'file_form');
 
 			self::render_template_xsl('application', array(
@@ -190,7 +325,9 @@
 				'agegroups'		 => $agegroups,
 				'frontend'		 => 'true',
 				'simple'		 => $simple,
+				'associations'	 => $associations,
 				'config'		 => CreateObject('phpgwapi.config', 'booking')->read()
+
 				)
 			);
 		}

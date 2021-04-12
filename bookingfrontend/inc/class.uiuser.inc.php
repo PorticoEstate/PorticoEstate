@@ -80,6 +80,8 @@
 			$datatable_def = array();
 
 			$lang_view = lang('view');
+			$lang_copy = lang('copy');
+			$lang_application = lang('application');
 
 			$application_def = array
 			(
@@ -89,7 +91,8 @@
 				array('key' => 'building_name', 'label' => lang('Where'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'customer_organization_number', 'label' => lang('organization number'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'contact_name', 'label' => lang('contact'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'link', 'label' => $lang_view, 'sortable' => false, 'resizeable' => true)
+				array('key' => 'link', 'label' => $lang_view, 'sortable' => false, 'resizeable' => true),
+				array('key' => 'copy_link', 'label' => $lang_application, 'sortable' => false, 'resizeable' => true)
 			);
 
 			$application_data = $this->bo->so->get_applications($this->ssn);
@@ -100,7 +103,7 @@
 				$entry['lang_status'] = lang($entry['status']);
 				$entry['date'] = $GLOBALS['phpgw']->common->show_date(strtotime($entry['created']), $dateformat);
 				$entry['link'] = '<a href="' .self::link(array('menuaction' => "{$this->module}.uiapplication.show", 'id' => $entry['id'], 'secret' => $entry['secret'])) . '">' . $lang_view . '</a>';
-
+				$entry['copy_link'] ='<a href="' .self::link(array('menuaction' => "{$this->module}.uiapplication.add", 'application_id' => $entry['id'])) . '" target="_blank">' . $lang_copy . '</a>';
 			}
 			unset($entry);
 
