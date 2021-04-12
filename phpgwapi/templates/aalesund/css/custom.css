@@ -1327,6 +1327,20 @@ select option:focus {
 	color: #cccccc;
 }
 
+@media (max-width: 1048px) {
+	.resultCard .col-md-6 {
+		margin-top: 0 !important;
+	}
+}
+
+@media (max-width: 767px) {
+	.resultCard .col-md-4 {
+		padding-bottom: 0 !important;
+	}
+}
+
+
+
 .resultDate {
 	display: inline-block;
 
@@ -1343,7 +1357,6 @@ select option:focus {
 	line-height: normal;
 	letter-spacing: normal;
 	color: #0b1214;
-	word-break: break-word;
 }
 
 .resultMonth {
@@ -1357,20 +1370,15 @@ select option:focus {
 	font-size: 16px;
 	color: #0b1214;
 	font-family: Rubik;
-	word-break: break-word;
 }
 
 .resultClockIcon {
 	content: url(../img/time-clock.svg);
-	position: absolute;
-	top: 20%;
 	/* Transform looks at the element itself and not the parent. */
-	transform: translateY(-30%);
-	right: 130px;
+	transform: translateY(30%);
 }
 
 .resultClockText {
-	position: absolute;
 	font-family: Rubik;
 	font-size: 14px;
 	font-weight: normal;
@@ -1378,11 +1386,12 @@ select option:focus {
 	font-style: normal;
 	line-height: normal;
 	letter-spacing: normal;
-	right: 35px;
 	color: #0b1214;
-	top: 20%;
 	/* Transform looks at the element itself and not the parent. */
-	transform: translateY(-30%);
+	transform: translateY(-65%) translateX(20px);
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
 }
 
 .horizontalgap {
@@ -1432,7 +1441,7 @@ select option:focus {
 
 .filterContainer2 {
 	/*height: max-content;*/
-	margin: 24px 24px 0 0;
+	margin: 24px 0 0 0;
 	padding: 24px;
 	padding-bottom: 70px;
 	border-radius: 12px;
@@ -1464,6 +1473,8 @@ select option:focus {
 	line-height: normal;
 	letter-spacing: normal;
 	color: #0b1214;
+	word-break: break-all;
+
 }
 
 .resultText:hover {
@@ -1481,6 +1492,8 @@ select option:focus {
 	letter-spacing: normal;
 	color: #0b1214;
 	margin-top: 5px;
+	word-break: break-all;
+
 }
 
 .resultTextLocation:before {
@@ -1489,7 +1502,6 @@ select option:focus {
 }
 
 .resultBtnText {
-	position: absolute;
 	font-family: Rubik;
 	font-size: 15px;
 	font-weight: normal;
@@ -1497,15 +1509,12 @@ select option:focus {
 	font-style: normal;
 	line-height: normal;
 	letter-spacing: normal;
-	right: 37px;
 	color: #0b1214;
-	top: 53%;
 	/* Transform looks at the element itself and not the parent. */
 	transform: translateY(20%);
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
-	text-align: center;
 }
 
 .resultBtnText:hover {
@@ -1582,6 +1591,7 @@ select option:focus {
 	line-height: 1.33;
 	letter-spacing: normal;
 	color: #0b1214;
+	word-break: break-all;
 }
 
 .checkboxInvalid {
