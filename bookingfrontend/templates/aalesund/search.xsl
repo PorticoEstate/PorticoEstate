@@ -72,7 +72,7 @@
 			<div class="pageContentWrapper">
 				<div data-bind="if:showEvents">
 					<div class="headerText headerEvent">
-						<xsl:value-of select="php:function('lang', 'Happening in Bergen')"/>
+						<xsl:value-of select="php:function('lang', 'Upcoming events')"/>
 					</div>
 					<div data-bind="foreach: events">
 						<div class="eventCard2 row">

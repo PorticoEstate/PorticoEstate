@@ -205,7 +205,9 @@
 					{
 						self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
 							'id' => $event['customer_organization_id'], 'date' => $date));
-					} else {
+					}
+					else
+					{
 						self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 							'id' => $event['building_id'], 'date' => $date));
 					}
