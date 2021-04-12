@@ -234,36 +234,6 @@
 									</div>
 								</div>
 
-								<!-- Activity filter -->
-								<div class="accordionFilter">
-									<div class="accordionHeader" data-bind="click: toggleActivity">
-										<div class="accordionHeaderText">
-											<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>
-										</div>
-										<div data-bind="css: activityArrowIcon"/>
-									</div>
-									<div data-bind="if: (showActivity)">
-										<div class="accordionHeaderUnderline"/>
-										<div class="accordionContent">
-											<div data-bind="foreach: activities">
-												<label class="checkboxContainer">
-													<input type="checkbox"
-														   data-bind="value: id,
-													 checked:$root.selectedActivityIds,
-													 enable: enabled"/>
-													<div class="checkmark"/>
-													<span class="checkboxText" data-bind="text: name"/>
-												</label>
-											</div>
-											<label data-bind="if: activities().length == 0">
-												<span class="checkboxText checkboxInvalid">
-													<xsl:value-of select="php:function('lang', 'No available options')"/>
-												</span>
-											</label>
-										</div>
-									</div>
-								</div>
-
 								<!-- Gear filter -->
 								<div class="accordionFilter" data-bind="if: gear().length > 0">
 									<div class="accordionHeader" data-bind="click: toggleGear">
@@ -315,16 +285,16 @@
 							<div class="resultContainer">
 								<div data-bind="foreach: resources">
 									<div class="resultCard row">
-										<div class="col-2">
+										<div class="col-3 col-sm-2">
 											<div class="resultCalIcon"/>
 											<span class="resultDate" data-bind="text: date"/>
 											<span class="resultMonth" data-bind="text: month"/>
 										</div>
-										<div class="col-7">
+										<div class="col-6 col-sm-7 col-md-6 col-lg-7">
 											<div class="resultText" href="#" data-bind="text: name, click:$parent.goToResource"/>
 											<div class="resultTextLocation" data-bind="text: location"/>
 										</div>
-										<div class="col-3">
+										<div class="col-3 col-md-4 col-lg-3">
 											<div class="resultClockIcon"/>
 											<div class="resultClockText" data-bind="text: time"/>
 											<div class="resultBtnText" href="#" data-bind="click:$parent.goToApplication">
