@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 exports.__esModule = true;
 var DataLoader = /** @class */ (function () {
     function DataLoader(treeWidget) {
@@ -25,9 +36,8 @@ var DataLoader = /** @class */ (function () {
         };
         var handleError = function (jqXHR) {
             stopLoading();
-            var onLoadFailed = _this.treeWidget.options.onLoadFailed;
-            if (onLoadFailed) {
-                onLoadFailed(jqXHR);
+            if (_this.treeWidget.options.onLoadFailed) {
+                _this.treeWidget.options.onLoadFailed(jqXHR);
             }
         };
         this.submitRequest(urlInfo, handleSuccess, handleError);
@@ -51,9 +61,8 @@ var DataLoader = /** @class */ (function () {
         }
     };
     DataLoader.prototype.notifyLoading = function (isLoading, node, $el) {
-        var onLoading = this.treeWidget.options.onLoading;
-        if (onLoading) {
-            onLoading(isLoading, node, $el);
+        if (this.treeWidget.options.onLoading) {
+            this.treeWidget.options.onLoading(isLoading, node, $el);
         }
         this.treeWidget._triggerEvent("tree.loading_data", {
             isLoading: isLoading,
@@ -61,20 +70,32 @@ var DataLoader = /** @class */ (function () {
             $el: $el
         });
     };
-    DataLoader.prototype.submitRequest = function (urlInfo, handleSuccess, handleError) {
-        var ajaxSettings = jQuery.extend({ method: "GET" }, typeof urlInfo === "string" ? { url: urlInfo } : urlInfo, {
-            cache: false,
-            dataType: "json",
-            success: handleSuccess,
-            error: handleError
-        });
-        ajaxSettings.method = ajaxSettings.method.toUpperCase();
-        jQuery.ajax(ajaxSettings);
+    DataLoader.prototype.submitRequest = function (urlInfoInput, handleSuccess, handleError) {
+        var _a;
+        var urlInfo = typeof urlInfoInput === "string"
+            ? { url: urlInfoInput }
+            : urlInfoInput;
+        var ajaxSettings = __assign({ method: "GET", cache: false, dataType: "json", success: handleSuccess, error: handleError }, urlInfo);
+        ajaxSettings.method = ((_a = ajaxSettings.method) === null || _a === void 0 ? void 0 : _a.toUpperCase()) || "GET";
+        void jQuery.ajax(ajaxSettings);
     };
     DataLoader.prototype.parseData = function (data) {
         var dataFilter = this.treeWidget.options.dataFilter;
-        var parsedData = data instanceof Array || typeof data === "object" ? data : data != null ? jQuery.parseJSON(data) : [];
-        return dataFilter ? dataFilter(parsedData) : parsedData;
+        var getParsedData = function () {
+            if (typeof data === "string") {
+                return JSON.parse(data);
+            }
+            else {
+                return data;
+            }
+        };
+        var parsedData = getParsedData();
+        if (dataFilter) {
+            return dataFilter(parsedData);
+        }
+        else {
+            return parsedData;
+        }
     };
     return DataLoader;
 }());
