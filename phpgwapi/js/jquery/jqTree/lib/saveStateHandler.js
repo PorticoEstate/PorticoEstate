@@ -15,9 +15,9 @@ var SaveStateHandler = /** @class */ (function () {
         }
     };
     SaveStateHandler.prototype.getStateFromStorage = function () {
-        var jsonData = this._loadFromStorage();
+        var jsonData = this.loadFromStorage();
         if (jsonData) {
-            return this._parseState(jsonData);
+            return this.parseState(jsonData);
         }
         else {
             return null;
@@ -35,13 +35,19 @@ var SaveStateHandler = /** @class */ (function () {
             });
             return openNodes;
         };
-        var getSelectedNodeIds = function () { return _this.treeWidget.getSelectedNodes().map(function (n) { return n.id; }); };
-        /* eslint-disable @typescript-eslint/camelcase */
+        var getSelectedNodeIds = function () {
+            var selectedNodeIds = [];
+            _this.treeWidget.getSelectedNodes().forEach(function (node) {
+                if (node.id != null) {
+                    selectedNodeIds.push(node.id);
+                }
+            });
+            return selectedNodeIds;
+        };
         return {
             open_nodes: getOpenNodeIds(),
             selected_node: getSelectedNodeIds()
         };
-        /* eslint-enable @typescript-eslint/camelcase */
     };
     /*
     Set initial state
@@ -56,18 +62,18 @@ var SaveStateHandler = /** @class */ (function () {
         else {
             var mustLoadOnDemand = false;
             if (state.open_nodes) {
-                mustLoadOnDemand = this._openInitialNodes(state.open_nodes);
+                mustLoadOnDemand = this.openInitialNodes(state.open_nodes);
             }
             if (state.selected_node) {
-                this._resetSelection();
-                this._selectInitialNodes(state.selected_node);
+                this.resetSelection();
+                this.selectInitialNodes(state.selected_node);
             }
             return mustLoadOnDemand;
         }
     };
     SaveStateHandler.prototype.setInitialStateOnDemand = function (state, cbFinished) {
         if (state) {
-            this._setInitialStateOnDemand(state.open_nodes, state.selected_node, cbFinished);
+            this.doSetInitialStateOnDemand(state.open_nodes, state.selected_node, cbFinished);
         }
         else {
             cbFinished();
@@ -82,31 +88,34 @@ var SaveStateHandler = /** @class */ (function () {
             return null;
         }
     };
-    SaveStateHandler.prototype._parseState = function (jsonData) {
-        var state = jQuery.parseJSON(jsonData);
+    SaveStateHandler.prototype.parseState = function (jsonData) {
+        var state = JSON.parse(jsonData);
         // Check if selected_node is an int (instead of an array)
         if (state && state.selected_node && util_1.isInt(state.selected_node)) {
             // Convert to array
-            state.selected_node = [state.selected_node]; // eslint-disable-line @typescript-eslint/camelcase
+            state.selected_node = [state.selected_node];
         }
         return state;
     };
-    SaveStateHandler.prototype._loadFromStorage = function () {
+    SaveStateHandler.prototype.loadFromStorage = function () {
         if (this.treeWidget.options.onGetStateFromStorage) {
             return this.treeWidget.options.onGetStateFromStorage();
         }
         else if (this.supportsLocalStorage()) {
             return localStorage.getItem(this.getKeyName());
         }
+        else {
+            return null;
+        }
     };
-    SaveStateHandler.prototype._openInitialNodes = function (nodeIds) {
+    SaveStateHandler.prototype.openInitialNodes = function (nodeIds) {
         var mustLoadOnDemand = false;
         for (var _i = 0, nodeIds_1 = nodeIds; _i < nodeIds_1.length; _i++) {
             var nodeDd = nodeIds_1[_i];
             var node = this.treeWidget.getNodeById(nodeDd);
             if (node) {
                 if (!node.load_on_demand) {
-                    node.is_open = true; // eslint-disable-line @typescript-eslint/camelcase
+                    node.is_open = true;
                 }
                 else {
                     mustLoadOnDemand = true;
@@ -115,30 +124,26 @@ var SaveStateHandler = /** @class */ (function () {
         }
         return mustLoadOnDemand;
     };
-    SaveStateHandler.prototype._selectInitialNodes = function (nodeIds) {
+    SaveStateHandler.prototype.selectInitialNodes = function (nodeIds) {
         var selectCount = 0;
         for (var _i = 0, nodeIds_2 = nodeIds; _i < nodeIds_2.length; _i++) {
             var nodeId = nodeIds_2[_i];
             var node = this.treeWidget.getNodeById(nodeId);
             if (node) {
                 selectCount += 1;
-                if (this.treeWidget.selectNodeHandler) {
-                    this.treeWidget.selectNodeHandler.addToSelection(node);
-                }
+                this.treeWidget.selectNodeHandler.addToSelection(node);
             }
         }
         return selectCount !== 0;
     };
-    SaveStateHandler.prototype._resetSelection = function () {
+    SaveStateHandler.prototype.resetSelection = function () {
         var selectNodeHandler = this.treeWidget.selectNodeHandler;
-        if (selectNodeHandler) {
-            var selectedNodes = selectNodeHandler.getSelectedNodes();
-            selectedNodes.forEach(function (node) {
-                selectNodeHandler.removeFromSelection(node);
-            });
-        }
+        var selectedNodes = selectNodeHandler.getSelectedNodes();
+        selectedNodes.forEach(function (node) {
+            selectNodeHandler.removeFromSelection(node);
+        });
     };
-    SaveStateHandler.prototype._setInitialStateOnDemand = function (nodeIdsParam, selectedNodes, cbFinished) {
+    SaveStateHandler.prototype.doSetInitialStateOnDemand = function (nodeIdsParam, selectedNodes, cbFinished) {
         var _this = this;
         var loadingCount = 0;
         var nodeIds = nodeIdsParam;
@@ -162,7 +167,7 @@ var SaveStateHandler = /** @class */ (function () {
                 }
             }
             nodeIds = newNodesIds;
-            if (_this._selectInitialNodes(selectedNodes)) {
+            if (_this.selectInitialNodes(selectedNodes)) {
                 _this.treeWidget._refreshElements(null);
             }
             if (loadingCount === 0) {

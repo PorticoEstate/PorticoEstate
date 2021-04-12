@@ -26,7 +26,7 @@
 				'cost' => array('type' => 'decimal', 'required' => true),
 				'contact_name' => array('type' => 'string', 'required' => true, 'query' => true),
 				'contact_email' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array(
-						'invalid' => '%field% is invalid'))),
+					'invalid' => '%field% is invalid'))),
 				'contact_phone' => array('type' => 'string'),
 				'completed' => array('type' => 'int', 'required' => true, 'nullable' => false,
 					'default' => '0'),
@@ -46,7 +46,7 @@
 				'customer_ssn' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN'),
 					'required' => false),
 				'customer_organization_number' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array(
-						'invalid' => '%field% is invalid'))),
+					'invalid' => '%field% is invalid'))),
 				'customer_internal' => array('type' => 'int', 'required' => true),
 				'include_in_list' => array('type' => 'int', 'required' => true, 'nullable' => false, 'default' => '0'),
 				'activity_name' => array('type' => 'string',
@@ -104,10 +104,10 @@
 		function update( $entry )
 		{
 			$receipt = parent::update($entry);
-			
+
 			$cost = $this->_marshal($entry['cost'], 'decimal');
 			$id = (int)$entry['id'];
-			
+
 			$sql = "UPDATE bb_completed_reservation SET cost = '{$cost}'"
 			. " WHERE reservation_type = 'event'"
 			. " AND reservation_id = {$id}"
@@ -289,7 +289,6 @@
 			);
 
 			return $this->db->insert($sql, $valueset, __LINE__, __FILE__);
-		
 		}
 
 		protected function doValidate( $entity, booking_errorstack $errors )
@@ -571,4 +570,99 @@
 			}
 			return $results;
 		}
+
+	function get_events_from_date($from_date=null, $to_date=null, $org_info=null, $building_id=null, $facility_type_id=null, $logged_in_orgs=null, $start=0, $end=50)
+	{
+		$logged_in_orgs_sql = null;
+		$facility_type_id_sql = null;
+		$org_info_sql = null;
+		$to_date_sql = null;
+		$building_id_sql = null;
+
+		if ($logged_in_orgs !== "")
+		{
+			$logged_in_orgs_sql = " AND bbe.customer_organization_number in ($logged_in_orgs) ";
+		}
+
+		if ($facility_type_id !== "")
+		{
+			$facility_type_id_sql = " AND bbrc.id = '$facility_type_id' ";
+		}
+		if ($building_id !== "")
+		{
+			$building_id_sql = " AND bbe.building_id = '$building_id' ";
+		}
+		if (!empty($org_info))
+		{
+			$org_number_sql = "";
+			if ($org_info['organization_number'] !== '')
+			{
+				$org_pre_sql = " AND ";
+				$org_number_sql = "bbe.customer_organization_number='" . $org_info['organization_number'] ."' ";
+				$org_info_sql = $org_pre_sql . $org_number_sql;
+			}
+
+			if ($org_info['name'] !== "")
+			{
+				$org_pre_sql = " AND (";
+				$org_name_sql = ($org_number_sql == '' ? " bbe.organizer='" .$org_info['name'] ."')" : " OR bbe.organizer='" . $org_info['name'] ."') ");
+				$org_info_sql = $org_pre_sql . $org_number_sql . $org_name_sql;
+			}
+		}
+		if ($to_date !== "")
+		{
+			$to_date_sql = " AND bbe.to_ <= '$to_date' ";
+		}
+		$sql_query = "
+				SELECT DISTINCT ON (bbe.id, bbe.from_)
+				    bbe.id as event_id,
+			       	bbe.from_,
+			       	bbe.to_, 
+				    bbe.building_id as building_id,
+			       	bbe.building_name as location_name,
+				    bbe.name as event_name,
+				    bbe.customer_organization_id,
+				    bbe.customer_organization_number,
+					bbe.organizer,
+			       	br.name as resource_name,
+			    	bbrc.name as resource_type
+				from bb_event bbe
+				    inner join
+				        bb_event_resource ber on bbe.id = ber.event_id
+				    inner join
+				        bb_resource br on ber.resource_id = br.id
+				    inner join
+				        bb_rescategory bbrc on br.rescategory_id = bbrc.id
+				where 
+		        	bbe.from_ > current_date and
+			    	bbe.is_public = 1
+				  	AND bbe.from_ >= '$from_date' "
+						.$to_date_sql
+						.$org_info_sql
+						.$building_id_sql
+						.$facility_type_id_sql
+						.$logged_in_orgs_sql
+						." AND bbe.is_public = 1
+						ORDER BY bbe.from_ ASC";
+
+		$this->db->limit_query($sql_query, $start, __LINE__, __FILE__, $end);
+
+		$results = array();
+		while ($this->db->next_record())
+		{
+			$results[] = array(
+				'from' => $this->db->f('from_'),
+				'to' => $this->db->f('to_'),
+				'event_name' => $this->db->f('event_name', true),
+				'location_name' => $this->db->f('location_name', true),
+				'event_id' => $this->db->f('event_id'),
+				'building_id' => $this->db->f('building_id'),
+				'org_id' => $this->db->f('customer_organization_id'),
+				'org_num' => $this->db->f('customer_organization_number'),
+				'organizer' => $this->db->f('organizer')
+			);
+
+		}
+		return $results;
 	}
+}

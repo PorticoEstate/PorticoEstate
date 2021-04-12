@@ -216,10 +216,11 @@
 							</label>
 						</div>
 
-						<textarea id="field_description" style="resize: none;" class="form-input" rows="3" name="description">
-						<xsl:attribute name="placeholder">
-							<xsl:value-of select="php:function('lang', 'write here...')" />
-						</xsl:attribute>
+						<textarea id="field_description" style="resize: none;" class="form-input" rows="3" name="description" value="{application/description}">
+							<xsl:attribute name="placeholder">
+								<xsl:value-of select="php:function('lang', 'write here...')" />
+							</xsl:attribute>
+							<xsl:value-of select="application/description"/>
 						</textarea>
 					</div>
 
@@ -357,5 +358,6 @@
 		var errorAcceptedDocs = '<xsl:value-of select="config/application_terms2"/>';
 		var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
 		var direct_booking = '<xsl:value-of select="direct_booking"/>';
+		var building_id = '<xsl:value-of select="application/building_id"/>';
 	</script>
 </xsl:template>

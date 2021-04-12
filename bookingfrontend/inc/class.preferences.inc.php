@@ -14,7 +14,7 @@
 
 		public function set()
 		{
-			$template_set = phpgw::get_var('template_set');
+			$template_set = phpgw::get_var('template_set', 'string', 'POST');
 
 			switch ($template_set)
 			{

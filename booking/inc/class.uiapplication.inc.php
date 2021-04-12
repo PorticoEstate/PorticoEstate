@@ -4,6 +4,8 @@
 
 	phpgw::import_class('booking.uidocument_building');
 	phpgw::import_class('booking.uipermission_building');
+	phpgw::import_class('booking.sobuilding');
+	phpgw::import_class('booking.boapplication');
 
 //	phpgw::import_class('phpgwapi.uicommon_jquery');
 
@@ -24,11 +26,14 @@
 			'associated' => true,
 			'toggle_show_inactive' => true,
 			'custom_fields_example' => true,
-			'export_pdf'			=> true
+			'export_pdf'			=> true,
+			'add_comment_to_application' => true,
 		);
 		protected $customer_id,
 			$default_module = 'bookingfrontend',
 			$module;
+		protected $application_bo;
+		protected $building_so;
 
 		public function __construct()
 		{
@@ -50,6 +55,8 @@
 			$this->organization_bo = CreateObject('booking.boorganization');
 			$this->document_building = CreateObject('booking.bodocument_building');
 			$this->document_resource = CreateObject('booking.bodocument_resource');
+			$this->building_so = new booking_sobuilding();
+			$this->application_bo = new booking_boapplication();
 
 			self::set_active_menu('booking::applications::applications');
 			$this->fields = array(
@@ -235,6 +242,24 @@
 			$application['display_in_dashboard'] = ($bool === true ? 1 : 0);
 			return true;
 		}
+
+		function add_comment_to_application($application_id, $comment, $changeStatus)
+		{
+			$application = $this->application_bo->read_single($application_id);
+
+			$this->add_comment($application, $comment);
+			$this->set_display_in_dashboard($application, true, array('force' => true));
+			$application['frontend_modified'] = 'now';
+
+			if ($changeStatus && $application['status'] != 'PENDING')
+			{
+				$application['status'] = 'PENDING';
+			}
+
+			$this->bo->send_admin_notification($application, $comment);
+			$this->bo->update($application);
+		}
+
 
 		protected function add_comment( &$application, $comment, $type = 'comment' )
 		{
@@ -689,6 +714,38 @@
 			$simple = phpgw::get_var('simple', 'bool');
 
 			$errors = array();
+			$application_id = phpgw::get_var('application_id', 'int');
+			if (isset($application_id))
+			{
+				$existing_application = $this->application_bo->read_single($application_id);
+				$building_info = $this->so->get_building_info($application_id);
+				$building_id = $building_info['id'];
+
+				if ($_SERVER['REQUEST_METHOD'] != 'POST')
+				{
+					$bouser = CreateObject('bookingfrontend.bouser');
+					$external_login_info = $bouser->validate_ssn_login(array('menuaction' => 'bookingfrontend.uiapplication.add'));
+
+					if ($existing_application['customer_organization_number'] == $organization_number || $existing_application['customer_ssn'] == $external_login_info['ssn'])
+					{
+						$application['resources'] = $existing_application['resources'];
+						$application['building_name'] = $existing_application['building_name'];
+						$application['building_id'] = $building_id;
+						$application['activity_id'] = $existing_application['activity_id'];
+						$application['name'] = $existing_application['name'];
+						$application['organizer'] = $existing_application['organizer'];
+						$application['homepage'] = $existing_application['homepage'];
+						$application['description'] = $existing_application['description'];
+						$application['equipment'] = $existing_application['equipment'];
+						$application['audience'] = $existing_application['audience'];
+						$application['agegroups'] = $existing_application['agegroups'];
+					}
+					else
+					{
+						$errors['copy_permission'] = lang('Could not copy application');
+					}
+				}
+			}
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{

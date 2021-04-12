@@ -3,7 +3,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -13,6 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
+exports.BorderDropHint = exports.FolderElement = exports.NodeElement = void 0;
 var node_1 = require("./node");
 var NodeElement = /** @class */ (function () {
     function NodeElement(node, treeWidget) {
@@ -35,13 +36,14 @@ var NodeElement = /** @class */ (function () {
         }
     };
     NodeElement.prototype.select = function (mustSetFocus) {
+        var _a;
         var $li = this.getLi();
         $li.addClass("jqtree-selected");
         $li.attr("aria-selected", "true");
         var $span = this.getSpan();
-        $span.attr("tabindex", this.treeWidget.options.tabIndex);
+        $span.attr("tabindex", (_a = this.treeWidget.options.tabIndex) !== null && _a !== void 0 ? _a : null);
         if (mustSetFocus) {
-            $span.focus();
+            $span.trigger("focus");
         }
     };
     NodeElement.prototype.deselect = function () {
@@ -56,7 +58,9 @@ var NodeElement = /** @class */ (function () {
         return this.$element.children("ul:first");
     };
     NodeElement.prototype.getSpan = function () {
-        return this.$element.children(".jqtree-element").find("span.jqtree-title");
+        return this.$element
+            .children(".jqtree-element")
+            .find("span.jqtree-title");
     };
     NodeElement.prototype.getLi = function () {
         return this.$element;
@@ -79,7 +83,7 @@ var FolderElement = /** @class */ (function (_super) {
         if (this.node.is_open) {
             return;
         }
-        this.node.is_open = true; // eslint-disable-line @typescript-eslint/camelcase
+        this.node.is_open = true;
         var $button = this.getButton();
         $button.removeClass("jqtree-closed");
         $button.html("");
@@ -115,7 +119,7 @@ var FolderElement = /** @class */ (function (_super) {
         if (!this.node.is_open) {
             return;
         }
-        this.node.is_open = false; // eslint-disable-line @typescript-eslint/camelcase
+        this.node.is_open = false;
         var $button = this.getButton();
         $button.addClass("jqtree-closed");
         $button.html("");
@@ -145,7 +149,9 @@ var FolderElement = /** @class */ (function (_super) {
         return !this.node.is_open && position === node_1.Position.Inside;
     };
     FolderElement.prototype.getButton = function () {
-        return this.$element.children(".jqtree-element").find("a.jqtree-toggler");
+        return this.$element
+            .children(".jqtree-element")
+            .find("a.jqtree-toggler");
     };
     return FolderElement;
 }(NodeElement));

@@ -3,7 +3,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -13,9 +13,11 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
-var jQuery = require("jquery");
+exports.HitAreasGenerator = exports.DragAndDropHandler = void 0;
+var jQueryProxy = require("jquery");
 var node_1 = require("./node");
-var util_1 = require("./util");
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+var jQuery = jQueryProxy["default"] || jQueryProxy;
 var DragAndDropHandler = /** @class */ (function () {
     function DragAndDropHandler(treeWidget) {
         this.treeWidget = treeWidget;
@@ -30,7 +32,8 @@ var DragAndDropHandler = /** @class */ (function () {
         if (!this.mustCaptureElement($element)) {
             return null;
         }
-        if (this.treeWidget.options.onIsMoveHandle && !this.treeWidget.options.onIsMoveHandle($element)) {
+        if (this.treeWidget.options.onIsMoveHandle &&
+            !this.treeWidget.options.onIsMoveHandle($element)) {
             return null;
         }
         var nodeElement = this.treeWidget._getNodeElement($element);
@@ -42,32 +45,23 @@ var DragAndDropHandler = /** @class */ (function () {
         this.currentItem = nodeElement;
         return this.currentItem != null;
     };
-    DragAndDropHandler.prototype.generateHitAreas = function () {
-        if (!this.currentItem) {
-            this.hitAreas = [];
-        }
-        else {
-            var hitAreasGenerator = new HitAreasGenerator(this.treeWidget.tree, this.currentItem.node, this.getTreeDimensions().bottom);
-            this.hitAreas = hitAreasGenerator.generate();
-        }
-    };
     DragAndDropHandler.prototype.mouseStart = function (positionInfo) {
-        if (!this.currentItem || positionInfo.pageX === undefined || positionInfo.pageY === undefined) {
+        var _a;
+        if (!this.currentItem ||
+            positionInfo.pageX === undefined ||
+            positionInfo.pageY === undefined) {
             return false;
         }
-        else {
-            this.refresh();
-            var offset = jQuery(positionInfo.target).offset();
-            var left = offset ? offset.left : 0;
-            var top_1 = offset ? offset.top : 0;
-            var node = this.currentItem.node;
-            var nodeName = this.treeWidget.options.autoEscape ? util_1.htmlEscape(node.name) : node.name;
-            this.dragElement = new DragElement(nodeName, positionInfo.pageX - left, positionInfo.pageY - top_1, this.treeWidget.element);
-            this.isDragging = true;
-            this.positionInfo = positionInfo;
-            this.currentItem.$element.addClass("jqtree-moving");
-            return true;
-        }
+        this.refresh();
+        var offset = jQuery(positionInfo.target).offset();
+        var left = offset ? offset.left : 0;
+        var top = offset ? offset.top : 0;
+        var node = this.currentItem.node;
+        this.dragElement = new DragElement(node.name, positionInfo.pageX - left, positionInfo.pageY - top, this.treeWidget.element, (_a = this.treeWidget.options.autoEscape) !== null && _a !== void 0 ? _a : true);
+        this.isDragging = true;
+        this.positionInfo = positionInfo;
+        this.currentItem.$element.addClass("jqtree-moving");
+        return true;
     };
     DragAndDropHandler.prototype.mouseDrag = function (positionInfo) {
         if (!this.currentItem ||
@@ -76,39 +70,36 @@ var DragAndDropHandler = /** @class */ (function () {
             positionInfo.pageY === undefined) {
             return false;
         }
-        else {
-            this.dragElement.move(positionInfo.pageX, positionInfo.pageY);
-            this.positionInfo = positionInfo;
-            var area = this.findHoveredArea(positionInfo.pageX, positionInfo.pageY);
-            var canMoveTo = this.canMoveToArea(area);
-            if (canMoveTo && area) {
-                if (!area.node.isFolder()) {
-                    this.stopOpenFolderTimer();
-                }
-                if (this.hoveredArea !== area) {
-                    this.hoveredArea = area;
-                    // If this is a closed folder, start timer to open it
-                    if (this.mustOpenFolderTimer(area)) {
-                        this.startOpenFolderTimer(area.node);
-                    }
-                    else {
-                        this.stopOpenFolderTimer();
-                    }
-                    this.updateDropHint();
-                }
-            }
-            else {
-                this.removeHover();
-                this.removeDropHint();
+        this.dragElement.move(positionInfo.pageX, positionInfo.pageY);
+        this.positionInfo = positionInfo;
+        var area = this.findHoveredArea(positionInfo.pageX, positionInfo.pageY);
+        if (area && this.canMoveToArea(area)) {
+            if (!area.node.isFolder()) {
                 this.stopOpenFolderTimer();
             }
-            if (!area) {
-                if (this.treeWidget.options.onDragMove) {
-                    this.treeWidget.options.onDragMove(this.currentItem.node, positionInfo.originalEvent);
+            if (this.hoveredArea !== area) {
+                this.hoveredArea = area;
+                // If this is a closed folder, start timer to open it
+                if (this.mustOpenFolderTimer(area)) {
+                    this.startOpenFolderTimer(area.node);
                 }
+                else {
+                    this.stopOpenFolderTimer();
+                }
+                this.updateDropHint();
             }
-            return true;
         }
+        else {
+            this.removeDropHint();
+            this.stopOpenFolderTimer();
+            this.hoveredArea = area;
+        }
+        if (!area) {
+            if (this.treeWidget.options.onDragMove) {
+                this.treeWidget.options.onDragMove(this.currentItem.node, positionInfo.originalEvent);
+            }
+        }
+        return true;
     };
     DragAndDropHandler.prototype.mouseStop = function (positionInfo) {
         this.moveItem(positionInfo);
@@ -140,20 +131,27 @@ var DragAndDropHandler = /** @class */ (function () {
             }
         }
     };
+    DragAndDropHandler.prototype.generateHitAreas = function () {
+        if (!this.currentItem) {
+            this.hitAreas = [];
+        }
+        else {
+            var hitAreasGenerator = new HitAreasGenerator(this.treeWidget.tree, this.currentItem.node, this.getTreeDimensions().bottom);
+            this.hitAreas = hitAreasGenerator.generate();
+        }
+    };
     DragAndDropHandler.prototype.mustCaptureElement = function ($element) {
         return !$element.is("input,select,textarea");
     };
     DragAndDropHandler.prototype.canMoveToArea = function (area) {
-        if (!area || !this.currentItem) {
-            return false;
-        }
-        else if (this.treeWidget.options.onCanMoveTo) {
-            var positionName = node_1.getPositionName(area.position);
-            return this.treeWidget.options.onCanMoveTo(this.currentItem.node, area.node, positionName);
-        }
-        else {
+        if (!this.treeWidget.options.onCanMoveTo) {
             return true;
         }
+        if (!this.currentItem) {
+            return false;
+        }
+        var positionName = node_1.getPositionName(area.position);
+        return this.treeWidget.options.onCanMoveTo(this.currentItem.node, area.node, positionName);
     };
     DragAndDropHandler.prototype.removeHitAreas = function () {
         this.hitAreas = [];
@@ -174,7 +172,10 @@ var DragAndDropHandler = /** @class */ (function () {
     };
     DragAndDropHandler.prototype.findHoveredArea = function (x, y) {
         var dimensions = this.getTreeDimensions();
-        if (x < dimensions.left || y < dimensions.top || x > dimensions.right || y > dimensions.bottom) {
+        if (x < dimensions.left ||
+            y < dimensions.top ||
+            x > dimensions.right ||
+            y > dimensions.bottom) {
             return null;
         }
         var low = 0;
@@ -196,7 +197,9 @@ var DragAndDropHandler = /** @class */ (function () {
     };
     DragAndDropHandler.prototype.mustOpenFolderTimer = function (area) {
         var node = area.node;
-        return node.isFolder() && !node.is_open && area.position === node_1.Position.Inside;
+        return (node.isFolder() &&
+            !node.is_open &&
+            area.position === node_1.Position.Inside);
     };
     DragAndDropHandler.prototype.updateDropHint = function () {
         if (!this.hoveredArea) {
@@ -236,14 +239,13 @@ var DragAndDropHandler = /** @class */ (function () {
             var position_1 = this.hoveredArea.position;
             var previousParent = movedNode_1.parent;
             if (position_1 === node_1.Position.Inside) {
-                this.hoveredArea.node.is_open = true; // eslint-disable-line @typescript-eslint/camelcase
+                this.hoveredArea.node.is_open = true;
             }
             var doMove = function () {
                 _this.treeWidget.tree.moveNode(movedNode_1, targetNode_1, position_1);
                 _this.treeWidget.element.empty();
                 _this.treeWidget._refreshElements(null);
             };
-            /* eslint-disable @typescript-eslint/camelcase */
             var event_1 = this.treeWidget._triggerEvent("tree.move", {
                 move_info: {
                     moved_node: movedNode_1,
@@ -254,7 +256,6 @@ var DragAndDropHandler = /** @class */ (function () {
                     original_event: positionInfo.originalEvent
                 }
             });
-            /* eslint-enable @typescript-eslint/camelcase */
             if (!event_1.isDefaultPrevented()) {
                 doMove();
             }
@@ -459,10 +460,16 @@ var HitAreasGenerator = /** @class */ (function (_super) {
 }(VisibleNodeIterator));
 exports.HitAreasGenerator = HitAreasGenerator;
 var DragElement = /** @class */ (function () {
-    function DragElement(nodeName, offsetX, offsetY, $tree) {
+    function DragElement(nodeName, offsetX, offsetY, $tree, autoEscape) {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
-        this.$element = jQuery("<span class=\"jqtree-title jqtree-dragging\">" + nodeName + "</span>");
+        this.$element = jQuery("<span>").addClass("jqtree-title jqtree-dragging");
+        if (autoEscape) {
+            this.$element.text(nodeName);
+        }
+        else {
+            this.$element.html(nodeName);
+        }
         this.$element.css("position", "absolute");
         $tree.append(this.$element);
     }

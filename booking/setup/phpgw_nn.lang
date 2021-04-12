@@ -842,3 +842,16 @@ global participant limit is set to %1	booking	nn	Generell grense for deltakarar 
 overridden participant limit is set to %1	booking	nn	Overstyrt grense for deltakarar er sett til %1
 register participants	booking	nn	Deltakarregistrering
 capacity	booking	nn	Kapasitet
+Could not copy application	booking	nn	Kunne ikke kopiere søknad
+Copy application	booking	nn	Kopier søknad
+Show my events	booking	nn	Se mine arrangement
+Search for organizations	booking	nn	Søk etter arrangør
+From date	booking	nn	Fra dato
+To date	booking	nn	Til dato
+Building type	booking	nn	Bygningstype
+Search for events	booking	nn	Finn arrangement
+Building or facility name	booking nn	Bygning/anleggsnavn
+
+
+
+
