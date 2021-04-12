@@ -74,40 +74,22 @@
 					<div class="headerResultNumb" data-bind="text: events().length + ' treff'"/>
 				</div>
 				<div data-bind="foreach: events">
-					<div class="row eventCard">
-						<div class="col-2">
-							<div class="cardElementLeft">
-								<div class="formattedDate-container">
-									<div class="eventCalIcon"/>
-									<span class="formattedEventDate"  data-bind="text: formattedDate"/>
-									<span class="eventMonthTag" data-bind="text:monthText"/>
-								</div>
-							</div>
+					<div class="eventCard2 row">
+						<div class="col-3 col-sm-2 col-md-2 col-lg-1 verticalLineBorder">
+							<div class="resultCalIcon"/>
+							<span class="resultDate" data-bind="text: formattedDate"/>
+							<span class="resultMonth" data-bind="text: monthText"/>
 						</div>
-						<div class="col-5">
-							<div class="verticalLine"/>
-							<div class="eventNameContainer">
-								<span class="event_name" data-bind="text: event_name"/>
-							</div>
+
+						<div class="col-6 col-sm-7 col-md-6 col-lg-8 verticalLineBorder">
+							<div class="eventText" data-bind="text: event_name"/>
+							<div class="eventTextLocation" data-bind="text: location_name, click:$parent.goToBuilding"/>
 						</div>
-						<div class="col-2">
-							<div class="eventTimeContainer">
-								<div class="eventClockIcon"/>
-								<span class="event_time" data-bind="text: event_time"/>
-							</div>
-						</div>
-						<div class="col-3">
-							<div class="verticalLine"/>
-							<div class="locationContainer" >
-								<a href="#" data-bind="click:$parent.goToBuilding">
-									<span class="locationName" data-bind="text: location_name"/>
-								</a>
-							</div>
-							<div class ="orgNameContainer">
-								<a href="#" data-bind="click:$parent.goToOrganization">
-									<span class="orgName" data-bind="text: org_name"/>
-								</a>
-							</div>
+
+						<div class="col-3 col-sm-3 col-md-4 col-lg-3">
+							<div class="resultClockIcon"/>
+							<div class="resultClockText" data-bind="text: event_time"/>
+							<div class="orgName" href="#" data-bind="text: org_name, click:$parent.goToOrganization"/>
 						</div>
 					</div>
 				</div>

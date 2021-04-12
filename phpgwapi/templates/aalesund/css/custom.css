@@ -1083,11 +1083,31 @@ select option:focus {
 	list-style-type: none;
 }
 
+.eventCard2 {
+	margin: 24px 0 0 0;
+	padding: 16px 0 16px 0;
+	border-radius: 12px;
+	border: solid 1px #ebebeb;
+	background-color: #ffffff;
+}
+
+
+.resultCard .col-md-6 {
+
+}
+
+
+
 .verticalLine {
+	border-right: 1px solid #c2c2ff;
 	width: 1px;
 	height: 76px;
 	margin: 8px 0 0 0;
 	background-color: #c2c2ff;
+}
+
+.verticalLineBorder {
+	border-right: 1px solid #c2c2ff;
 }
 
 .eventCalIcon {
@@ -1230,6 +1250,7 @@ select option:focus {
 }
 
 .orgName {
+	font-family: Rubik;
 	word-wrap: break-word;
 	font-size: 14px;
 	line-height: 1.56;
@@ -1238,7 +1259,10 @@ select option:focus {
 	overflow: hidden;
 }
 
-
+.orgName:hover {
+	cursor: pointer;
+	color: #83338f
+}
 
 .orgName:before {
 	content: url(../img/event-organizer.svg);
@@ -1331,10 +1355,17 @@ select option:focus {
 	.resultCard .col-md-6 {
 		margin-top: 0 !important;
 	}
+	.eventCard2 .col-md-6 {
+		margin-top: 0 !important;
+	}
 }
 
 @media (max-width: 767px) {
 	.resultCard .col-md-4 {
+		padding-bottom: 0 !important;
+	}
+
+	.eventCard2 .col-md-4 {
 		padding-bottom: 0 !important;
 	}
 }
@@ -1463,7 +1494,7 @@ select option:focus {
 	background-color: #ffffff;
 }
 
-.resultText {
+.resultText, .eventText{
 	max-width: max-content;
 	font-family: Rubik;
 	font-size: 19px;
@@ -1474,7 +1505,6 @@ select option:focus {
 	letter-spacing: normal;
 	color: #0b1214;
 	word-break: break-all;
-
 }
 
 .resultText:hover {
@@ -1482,7 +1512,7 @@ select option:focus {
 	color: #83338f
 }
 
-.resultTextLocation {
+.resultTextLocation, .eventTextLocation {
 	font-family: Rubik;
 	font-size: 13px;
 	font-weight: normal;
@@ -1493,13 +1523,23 @@ select option:focus {
 	color: #0b1214;
 	margin-top: 5px;
 	word-break: break-all;
-
 }
 
 .resultTextLocation:before {
 	content: url(../img/pin.svg);
 	padding-right: 4px;
 }
+
+.eventTextLocation:hover {
+	cursor: pointer;
+	color: #83338f
+}
+
+.eventTextLocation:before {
+	content: url(../img/pin.svg);
+	padding-right: 4px;
+}
+
 
 .resultBtnText {
 	font-family: Rubik;
