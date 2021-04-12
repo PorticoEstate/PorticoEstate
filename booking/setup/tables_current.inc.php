@@ -197,6 +197,8 @@
 				'booking_month_horizon' => array('type' => 'int', 'nullable' => true, 'precision' => 4),
 				'booking_day_horizon' => array('type' => 'int', 'nullable' => true, 'precision' => 4),
 				'capacity' => array('type' => 'int', 'nullable' => true, 'precision' => 4),
+				'deactivate_application' => array('type' => 'int', 'nullable' => False, 'precision' => '4',
+					'default' => 0),
 			),
 			'pk' => array('id'),
 			'fk' => array(

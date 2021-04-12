@@ -209,7 +209,7 @@ $(document).ready(function ()
 
 					var now = Math.floor(Date.now() / 1000);
 
-					if (result.results[i].simple_booking && result.results[i].simple_booking_start_date < now)
+					if ( (result.results[i].simple_booking && result.results[i].simple_booking_start_date < now) || result.results[i].deactivate_application == 1)
 					{
 						//skip this one
 						resource_name += ' *';

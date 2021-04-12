@@ -4951,3 +4951,26 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+	/**
+	 * Update booking version from 0.2.67 to 0.2.68
+	 *
+	 */
+	$test[] = '0.2.68';
+	function booking_upgrade0_2_68()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$table = "bb_resource";
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN deactivate_calendar int NOT NULL DEFAULT 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE $table SET deactivate_calendar = 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN deactivate_application int NOT NULL DEFAULT 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE $table SET deactivate_application = 0");
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.69';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
