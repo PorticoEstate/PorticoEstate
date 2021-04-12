@@ -1472,13 +1472,14 @@ select option:focus {
 
 .filterContainer2 {
 	/*height: max-content;*/
-	margin: 24px 0 0 0;
+	margin: 24px 0 30px 0;
 	padding: 24px;
 	padding-bottom: 70px;
 	border-radius: 12px;
 	border: solid 1px #ebebeb;
 	background-color: #ffffff;
 	float: left;
+
 }
 
 .resultContainer {

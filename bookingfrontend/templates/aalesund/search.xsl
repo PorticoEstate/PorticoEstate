@@ -70,34 +70,36 @@
 
 			<!-- Events -->
 			<div class="pageContentWrapper">
-				<div class="headerText headerEvent">
-					<xsl:value-of select="php:function('lang', 'Happening in Bergen')"/>
-				</div>
-				<div data-bind="foreach: events">
-					<div class="eventCard2 row">
-						<div class="col-3 col-sm-2 col-md-2 col-lg-1 verticalLineBorder">
-							<div class="resultCalIcon"/>
-							<span class="resultDate" data-bind="text: formattedDate"/>
-							<span class="resultMonth" data-bind="text: monthText"/>
-						</div>
+				<div data-bind="if:showEvents">
+					<div class="headerText headerEvent">
+						<xsl:value-of select="php:function('lang', 'Happening in Bergen')"/>
+					</div>
+					<div data-bind="foreach: events">
+						<div class="eventCard2 row">
+							<div class="col-3 col-sm-2 col-md-2 col-lg-1 verticalLineBorder">
+								<div class="resultCalIcon"/>
+								<span class="resultDate" data-bind="text: formattedDate"/>
+								<span class="resultMonth" data-bind="text: monthText"/>
+							</div>
 
-						<div class="col-6 col-sm-7 col-md-6 col-lg-8 verticalLineBorder">
-							<div class="eventText" data-bind="text: event_name"/>
-							<div class="eventTextLocation" data-bind="text: location_name, click:$parent.goToBuilding"/>
-						</div>
+							<div class="col-6 col-sm-7 col-md-6 col-lg-8 verticalLineBorder">
+								<div class="eventText" data-bind="text: event_name"/>
+								<div class="eventTextLocation" data-bind="text: location_name, click:$parent.goToBuilding"/>
+							</div>
 
-						<div class="col-3 col-sm-3 col-md-4 col-lg-3">
-							<div class="resultClockIcon"/>
-							<div class="resultClockText" data-bind="text: event_time"/>
-							<div class="orgName" href="#" data-bind="text: org_name, click:$parent.goToOrganization"/>
+							<div class="col-3 col-sm-3 col-md-4 col-lg-3">
+								<div class="resultClockIcon"/>
+								<div class="resultClockText" data-bind="text: event_time"/>
+								<div class="orgName" href="#" data-bind="text: org_name, click:$parent.goToOrganization"/>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="row justify-content-end">
-					<div class="col-4">
-						<div id="allEventsBtn" class="allEventsBtn" href="#" data-bind="click: $root.goToEvents">
-							<xsl:value-of select="php:function('lang', 'View all events')"/>
-							<div class="allEventsIcon"/>
+					<div class="row justify-content-end">
+						<div class="col-4">
+							<div id="allEventsBtn" class="allEventsBtn" href="#" data-bind="click: $root.goToEvents">
+								<xsl:value-of select="php:function('lang', 'View all events')"/>
+								<div class="allEventsIcon"/>
+							</div>
 						</div>
 					</div>
 				</div>
