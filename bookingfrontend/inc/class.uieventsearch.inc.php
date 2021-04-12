@@ -79,7 +79,8 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 	{
 		$bouser = new bookingfrontend_bouser();
 		$orgs = null;
-		if ($bouser->is_logged_in()) {
+		if ($bouser->is_logged_in())
+		{
 			return $bouser;
 		}
 	}
