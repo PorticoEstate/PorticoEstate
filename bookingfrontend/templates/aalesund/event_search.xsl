@@ -97,11 +97,6 @@
 		</div>
 	</div>
 	<script>
-		var months = [
-		'<xsl:value-of select="php:function('lang', 'January')" />', '<xsl:value-of select="php:function('lang', 'February')" />', '<xsl:value-of select="php:function('lang', 'March')" />',
-		'<xsl:value-of select="php:function('lang', 'April')" />', '<xsl:value-of select="php:function('lang', 'May')" />', '<xsl:value-of select="php:function('lang', 'June')" />',
-		'<xsl:value-of select="php:function('lang', 'July')" />', '<xsl:value-of select="php:function('lang', 'August')" />', '<xsl:value-of select="php:function('lang', 'September')" />',
-		'<xsl:value-of select="php:function('lang', 'October')" />', '<xsl:value-of select="php:function('lang', 'November')" />', '<xsl:value-of select="php:function('lang', 'December')" />',
-		];
+		var months = <xsl:value-of select="php:function('js_lang', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')" />;
 	</script>
 </xsl:template>

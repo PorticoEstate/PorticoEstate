@@ -8,6 +8,8 @@ var autocompleteData = [];
 var towns = [];
 var limit = 50;
 
+var monthList = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
 var searchResults = [];
 
 CreateUrlParams(window.location.search);
@@ -744,12 +746,12 @@ function splitDateIntoDateAndTime(from, to) {
 	let fromDateParam =`${fromMonth}/${fromDay}/${fromYear}`;
 
 	let date = (from.substr(0,10) === to.substr(0,10)) ? from.substr(0,3) : from.substr(0,3) + '-' + to.substr(0,3);
-	let month = months[parseInt(from.substr(3,2))-1]
+	let month = (monthList[parseInt(from.substr(3,2))-1]);
 	let time = from.substr(11, 5) + ' - ' + to.substr(11, 5);
 
 	return {
 		'date': date,
-		'month': month,
+		'month': months[month],
 		'time': time,
 		'fromDateParam': fromDateParam,
 		'fromTimeParam': from.substr(11, 5),

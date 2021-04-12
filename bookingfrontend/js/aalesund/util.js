@@ -19,11 +19,13 @@ var Util = function () {
 
 			if (fromDate.getDate() === toDate.getDate()) {
 				ret.push(fromDate.getDate()+". ")
-				ret.push(months[fromDate.getMonth()]);
+				let month = monthList[fromDate.getMonth()];
+				ret.push(months[month]);
 				return ret;
 			} else {
 				ret.push(fromDate.getDate() + ".-" + toDate.getDate() + ".");
-				ret.push(months[fromDate.getMonth()]);
+				let month = monthList[fromDate.getMonth()];
+				ret.push(months[month]);
 				return ret;
 			}
 		}
