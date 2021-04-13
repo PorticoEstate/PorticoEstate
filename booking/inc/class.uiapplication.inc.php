@@ -718,7 +718,7 @@
 			if (isset($application_id))
 			{
 				$existing_application = $this->application_bo->read_single($application_id);
-				$building_info = $this->so->get_building_info($application_id);
+				$building_info = $this->bo->so->get_building_info($application_id);
 				$building_id = $building_info['id'];
 
 				if ($_SERVER['REQUEST_METHOD'] != 'POST')
