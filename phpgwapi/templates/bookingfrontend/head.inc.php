@@ -355,7 +355,7 @@ HTML;
 			<ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
 				{$lang_selector}
 				{$template_selector}
-			</ul
+			</ul>
             <div class="navbar-organization-select">
             </div>
 		</nav>
