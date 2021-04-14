@@ -57,7 +57,8 @@
 		</tr>
 		<tr>
 			<td>{lang_Anonymous_password}:</td>
-			<td><input type="password" name="newsettings[anonymous_passwd]" value="{value_anonymous_passwd}" autocomplete="off"></td>
+			<td><input type="password" name="newsettings[anonymous_passwd]" value="{value_anonymous_passwd}" autocomplete="off"
+					   readonly="readonly" onfocus="this.removeAttribute('readonly');"></td>
 		</tr>
 		<tr>
 			<td>{lang_custom_login_url}:</td>
@@ -101,7 +102,8 @@
 		</tr>
 		<tr>
 			<td>{lang_login_soap_client_password}:</td>
-			<td><input type="password" name="newsettings[soap_password]" value="{value_soap_password}" autocomplete="off"></td>
+			<td><input type="password" name="newsettings[soap_password]" value="{value_soap_password}" autocomplete="off"
+					   readonly="readonly" onfocus="this.removeAttribute('readonly');"></td>
 		</tr>
 		<tr>
 			<td>{lang_login_soap_client_wsdl}:</td>
