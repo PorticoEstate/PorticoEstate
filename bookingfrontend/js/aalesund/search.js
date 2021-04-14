@@ -338,49 +338,10 @@ function doSearch(url, params) {
 			}, 800);
 
 			$('.overlay').hide();
-
-			if (response.available_resources.length >= limit) {
-				doBackgroundSearch(url, data);
-			}
 		},
 		error: function (e) {
 			console.log(e);
 			$('.overlay').hide();
-		}
-	});
-}
-
-function doBackgroundSearch(url, data) {
-	let params = {limit: 500};
-	Object.assign(data, params)
-
-	$.ajax({
-		url: url,
-		type: "get",
-		contentType: 'text/plain',
-		data: data,
-		success: function (response)
-		{
-			viewmodel.resources.removeAll();
-			viewmodel.facilities.removeAll();
-			viewmodel.activities.removeAll();
-			viewmodel.gear.removeAll();
-			viewmodel.capacities.removeAll();
-			toggleMargin();
-
-			setResources(response.available_resources);
-			setFacilityData(response.facilities);
-			setActivityData(response.activities);
-
-			if (viewmodel.selectedFacilityIds().length > 0 || viewmodel.selectedActivityIds().length > 0) {
-				autoUpdate = false;
-				validateFilters();
-				updateResults();
-				autoUpdate = true;
-			}
-		},
-		error: function (e) {
-			console.log(e);
 		}
 	});
 }
