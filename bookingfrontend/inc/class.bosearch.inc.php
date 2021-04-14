@@ -844,8 +844,31 @@
 
 				$is_time_set = True;
 			}
+
+			$resource_ids = array();
+			foreach ($resources as $resource)
+			{
+				$resource_ids[] = $resource['id'];
+			}
+
+			$booked_times = $this->sobooking->get_all_allocations_and_events_for_resource($resource_ids, $from_date, $to_date);
+
+			foreach ($resources as &$resource)
+			{
+				$resource['booked_times'] = array();
+				foreach ($booked_times as $booked_time)
+				{
+					if($resource['id'] == $booked_time['resource_id'])
+					{
+						$resource['booked_times'][] = $booked_time;
+					}
+				}
+				unset($booked_time);
+			}
+			unset($resource);
+
 			$available_resources = array();
-			foreach ($resources as $resource) if (count($available_resources) < $limit)
+			foreach ($resources as $resource)
 			{
 				array_set_default($available_resource, 'facilities', array());
 				array_set_default($available_resource, 'activities', array());
@@ -866,19 +889,7 @@
 				$available_resource['facilities_list'] = $resource['facilities_list'];
 				$available_resource['activities_list'] = $resource['activities_list'];
 
-				$booked_times = $this->sobooking->get_all_alllocations_and_events_for_resource($resource['id'], $from_date, $to_date);
-
-				if (!empty($booked_times))
-				{
-					usort($booked_times, function ($a, $b)
-					{
-						$ad = strtotime($a['from_']);
-						$bd = strtotime($b['from_']);
-						return ($ad - $bd);
-					});
-				}
-
-				if (empty($booked_times))
+				if (empty($resource['booked_times']))
 				{
 					$available_resource['from'] = $from_date;
 					$available_resource['to'] = $to_date;
@@ -889,20 +900,27 @@
 				}
 				else
 				{
-					$booked_times_len = count($booked_times);
-					$last_end_date = $booked_times[0]['to_'];
-
-					for ($i = 0; $i < $booked_times_len && count($available_resources) < $limit; $i++)
+					usort($resource['booked_times'], function ($a, $b)
 					{
-						$from = $booked_times[$i]['from_'];
-						$to = $booked_times[$i]['to_'];
+						$ad = strtotime($a['from_']);
+						$bd = strtotime($b['from_']);
+						return ($ad - $bd);
+					});
+
+					$booked_times_len = count($resource['booked_times']);
+					$last_end_date = $resource['booked_times'][0]['to_'];
+
+					for ($i = 0; $i < $booked_times_len; $i++)
+					{
+						$from = $resource['booked_times'][$i]['from_'];
+						$to = $resource['booked_times'][$i]['to_'];
 
 						if ($from > $from_date_test)
 						{
 							if ($i == 0)
 							{
 								$available_resource['from'] = $from_date;
-								$available_resource['to'] = DateTime::createFromFormat('Y-m-d H:i:s', $booked_times[$i]['from_']);
+								$available_resource['to'] = DateTime::createFromFormat('Y-m-d H:i:s', $resource['booked_times'][$i]['from_']);
 
 								if ($is_time_set)
 								{
