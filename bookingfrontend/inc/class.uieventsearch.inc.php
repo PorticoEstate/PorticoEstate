@@ -126,7 +126,7 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 				$event['org_name'] = $organization_info['name'];
 			}
 
-			if ($organization_info['id'] !== '' && $event['org_id'] === '')
+			if (!empty($organization_info['id']) && empty($event['org_id']))
 			{
 				$event['org_id'] = $organization_info['id'];
 			}

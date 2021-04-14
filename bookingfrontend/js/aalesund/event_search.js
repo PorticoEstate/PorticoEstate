@@ -22,11 +22,18 @@ $('#from').change(function() {
 
 $('#to').change(function() {
 	var input = findDate(this.value);
-	toDate = Util.Format.FormatDateForBackend(input);
-	var endOfDayHours = " 23:59:59";
-	toDate = toDate.substring(0,toDate.lastIndexOf(' '))+endOfDayHours;
-	getUpcomingEvents(organization,fromDate,toDate);
-	setFromPicker(input);
+	if (input == "") {
+		toDate = "";
+		getUpcomingEvents(organization,fromDate,toDate);
+		setFromPicker("");
+	}
+	else {
+		toDate = Util.Format.FormatDateForBackend(input);
+		var endOfDayHours = " 23:59:59";
+		toDate = toDate.substring(0,toDate.lastIndexOf(' '))+endOfDayHours;
+		getUpcomingEvents(organization,fromDate,toDate);
+		setFromPicker(input);
+	}
 });
 
 $('#field_org_name').on('autocompleteselect', function (event, ui) {
