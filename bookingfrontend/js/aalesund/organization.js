@@ -104,7 +104,7 @@ $(document).ready(function ()
 
 function PopulateOrganizationData() {
 
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uigroup.index", filter_organization_id:urlParams['id'], length:-1}, true);
+	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uigroup.index", filter_organization_id:organization_id, length:-1}, true);
 
 	$.getJSON(getJsonURL, function(result){
 		for(var i=0; i<result.data.length; i++) {
@@ -117,12 +117,12 @@ function PopulateOrganizationData() {
 	});
 
 
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_organization.index_images", filter_owner_id:urlParams['id']}, true);
+	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_organization.index_images", filter_owner_id:organization_id}, true);
 	$.getJSON(getJsonURL, function(result){
 		var mainPictureFound = false;
 		if(result.ResultSet.Result.length > 0) {
 			for(var i=0; i<result.ResultSet.Result.length; i++) {
-				var src = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_organization.download", id: result.ResultSet.Result[i].id, filter_owner_id: urlParams['id']}, false);
+				var src = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_organization.download", id: result.ResultSet.Result[i].id, filter_owner_id: organization_id}, false);
 				var imgTag = '<img id="modal-img-'+i+'" src="'+src+'" data-toggle="modal" data-target="#lightbox" class="img-thumbnail m-1" alt=""></img>';
 				$(".organization-images").append(imgTag);
 				if (result.ResultSet.Result[i].category == 'picture_main' && !mainPictureFound) {
@@ -150,7 +150,7 @@ function PopulateCalendarEvents() {
 		contentType: 'text/plain',
 		data: {
 			date: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
-			organization_id: urlParams['id']
+			organization_id: organization_id
 		},
 		success: function (result) {
 			viewmodel.bookableResource.removeAll();

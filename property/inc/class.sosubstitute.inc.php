@@ -97,7 +97,7 @@
 		 * @param int $substitute_user_id
 		 * @return boolean true on success
 		 */
-		public function update_substitute( $user_id, $substitute_user_id = 0, $start_time )
+		public function update_substitute( $user_id, $substitute_user_id = 0, $start_time = 0 )
 		{
 			if (!$substitute_user_id || !$start_time)
 			{

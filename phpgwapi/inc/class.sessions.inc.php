@@ -1641,7 +1641,7 @@
 				return $this->_cookie_domain;
 			}
 
-			if ( isset($GLOBALS['phpgw_info']['server']['cookie_domain']) )
+			if ( !empty($GLOBALS['phpgw_info']['server']['cookie_domain']) )
 			{
 				$this->_cookie_domain = $GLOBALS['phpgw_info']['server']['cookie_domain'];
 			}
