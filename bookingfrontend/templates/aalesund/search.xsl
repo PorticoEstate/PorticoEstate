@@ -76,13 +76,13 @@
 					</div>
 					<div data-bind="foreach: events">
 						<div class="eventCard2 row">
-							<div class="col-3 col-sm-2 col-md-2 col-lg-1 verticalLineBorder">
+							<div class="col-3 col-sm-3 col-md-2 col-lg-2 verticalLineBorder">
 								<div class="resultCalIcon"/>
 								<span class="resultDate" data-bind="text: formattedDate"/>
 								<span class="resultMonth" data-bind="text: monthText"/>
 							</div>
 
-							<div class="col-6 col-sm-7 col-md-6 col-lg-8 verticalLineBorder">
+							<div class="col-6 col-sm-6 col-md-6 col-lg-7 verticalLineBorder">
 								<div class="eventText" data-bind="text: event_name"/>
 								<div class="eventTextLocation" data-bind="text: location_name, click:$parent.goToBuilding"/>
 							</div>
