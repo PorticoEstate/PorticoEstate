@@ -984,6 +984,10 @@
 
 			$results = array();
 
+			if(!$resource_ids)
+			{
+				return $results;
+			}
 
 			$sql = "SELECT from_, to_, resource_id"
 				. " FROM bb_allocation JOIN bb_allocation_resource ON (allocation_id=id AND resource_id IN (" . implode(',', $resource_ids) . ") )"
