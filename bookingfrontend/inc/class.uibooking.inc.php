@@ -597,8 +597,6 @@
 					if (!$errors)
 					{
 
-						$max_dato = strtotime($_POST['to_']); // highest date from input
-
 						$season = $this->season_bo->read_single($booking['season_id']);
 
 						if ($_POST['recurring'] == 'on')
@@ -673,11 +671,11 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			self::add_javascript('bookingfrontend', 'base', 'booking.js');
-			phpgwapi_jquery::load_widget('daterangepicker');
 
 			if ($step < 2)
 			{
+				self::add_javascript('bookingfrontend', 'base', 'booking.js');
+				phpgwapi_jquery::load_widget('daterangepicker');
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 				$booking['resource_ids_json'] = json_encode(array_map('intval', $booking['resource_ids']));
 				$booking['organization_name'] = $group['organization_name'];
@@ -694,7 +692,6 @@
 			$activities = $activities['results'];
 			$booking['audience_json'] = json_encode(array_map('intval', (array)$booking['audience']));
 			$booking['agegroups_json'] = json_encode($booking['agegroups']);
-			$group = $this->group_bo->so->read_single($booking['group_id']);
 			$groups = $this->group_bo->so->read(array('filters' => array('organization_id' => $group['organization_id'],
 					'active' => 1)));
 			$groups = $groups['results'];
