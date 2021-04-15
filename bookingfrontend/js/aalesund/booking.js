@@ -174,6 +174,7 @@ function setDateTimePicker() {
 	$('input[name="repeat_until"]').daterangepicker({
 		singleDatePicker: true,
 		autoUpdateInput: false,
+		startDate: $('#from_date').val(),
 		autoApply: true,
 		locale: {
 			cancelLabel: 'Clear',
