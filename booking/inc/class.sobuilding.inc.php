@@ -202,4 +202,15 @@
 			}
 			return $this->db->f('building_id');
 		}
+
+		/**
+		 * Implement me
+		 * @param string $query
+		 */
+		public function get_facility_types( $query )
+		{
+			$query = $this->db->db_addslashes($query);
+
+			return array();
+		}
 	}
