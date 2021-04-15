@@ -9,7 +9,8 @@
         {lang_enter_password}
        </td>
        <td>
-        <input type="password" name="n_passwd" autocomplete="off"/>
+        <input type="password" name="n_passwd" autocomplete="off"
+			   readonly="readonly" onfocus="this.removeAttribute('readonly');"/>
        </td>
      </tr>
      <tr>
@@ -17,7 +18,8 @@
         {lang_reenter_password}
        </td>
        <td>
-        <input type="password" name="n_passwd_2" autocomplete="off"/>
+        <input type="password" name="n_passwd_2" autocomplete="off"
+			   readonly="readonly" onfocus="this.removeAttribute('readonly');"/>
        </td>
      </tr>
      <tr>

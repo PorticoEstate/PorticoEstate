@@ -230,7 +230,7 @@ JS;
 	}
 	if ($keywords != '')
 	{
-		$keywords = '<meta name="keywords" content="' . $keywords . '">';
+		$keywords = '<meta name="keywords" content="' . htmlspecialchars($keywords) . '">';
 	}
 	else
 	{
