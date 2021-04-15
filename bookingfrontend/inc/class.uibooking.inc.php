@@ -292,6 +292,10 @@
 					$step++;
 				}
 
+				if ($errors  && phpgw::get_var('repeat_until', 'bool'))
+				{
+					$_POST['repeat_until'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
+				}
 				if (!$errors && $_POST['recurring'] != 'on' && $_POST['outseason'] != 'on')
 				{
 					$receipt = $this->bo->add($booking);
@@ -300,20 +304,25 @@
 					{
 						self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
 							'id' => $allocation['organization_id'], 'date' => date("Y-m-d", strtotime($booking['from_']))));
-					} else {
+					}
+					else
+					{
 						self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 							'id' => $booking['building_id'], 'date' => date("Y-m-d", strtotime($booking['from_']))));
-					}}
+					}
+				}
 				else if (($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on') && !$errors && $step > 1)
 				{
-					if ($_POST['recurring'] == 'on')
+					if (phpgw::get_var('repeat_until', 'bool'))
 					{
 						$repeat_until = phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']) + 60 * 60 * 24;
+						/*hack to preserve dateformat for next step*/
+						$_POST['repeat_until'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
 					}
 					else
 					{
 						$repeat_until = strtotime($season['to_']) + 60 * 60 * 24;
-						$_POST['repeat_until'] = pretty_timestamp($season['to_']);
+						$_POST['repeat_until'] = $season['to_'];
 					}
 
 					$max_dato = phpgwapi_datetime::date_to_timestamp($_POST['to_']); // highest date from input
