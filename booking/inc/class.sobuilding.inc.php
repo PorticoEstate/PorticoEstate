@@ -193,7 +193,7 @@
 
 		public function get_facility_types($query="")
 		{
-			$query_SQL = " where lower(name) like '%$query%'";
+			$query_SQL = " where name ilike '$query%'";
 			if (empty($query)) {
 				$query_SQL = '';
 			}
@@ -204,7 +204,7 @@
 			{
 				$result[] = array(
 					'id' => $this->db->f('id',false),
-					'name' => $this->db->f('name',false),
+					'name' => $this->db->f('name',true),
 				);
 			}
 			return $result;
@@ -220,16 +220,5 @@
 				return false;
 			}
 			return $this->db->f('building_id');
-		}
-
-		/**
-		 * Implement me
-		 * @param string $query
-		 */
-		public function get_facility_types( $query )
-		{
-			$query = $this->db->db_addslashes($query);
-
-			return array();
 		}
 	}
