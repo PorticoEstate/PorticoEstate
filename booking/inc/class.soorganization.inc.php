@@ -120,7 +120,11 @@
 
 		function get_resource_activity( $resources )
 		{
-//            print_r($resources);
+			if(!$resources)
+			{
+				return array();
+			}
+
 			$resource_ids = implode(',', $resources);
 			$results = array();
 			$sql = "SELECT activity_id FROM bb_resource where id in (" . $resource_ids . ")";

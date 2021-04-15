@@ -41,7 +41,7 @@
 		public $sum_potential_grants = 0;
 		public $uicols				 = array();
 		protected $global_lock		 = false;
-		public $soproject, $historylog, $bocommon, $interlink;
+		public $soproject, $historylog, $bocommon, $interlink,$custom;
 
 		function __construct()
 		{

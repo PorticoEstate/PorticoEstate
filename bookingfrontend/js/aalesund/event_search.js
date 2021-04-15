@@ -73,21 +73,26 @@ function getOrgsIfLoggedIn() {
     }
 
     requestURL = phpGWLink('bookingfrontend/', reqObject, true);
-    $.ajax({
-        url: requestURL,
-        dataType : 'json',
-        success: function (result) {
-			loggedInUserOrgsResult = result.orgnr;
-            let elem = document.getElementById("my_orgs_button");
-            if (result !== "") {
-                elem.style.display = 'block';
-            } else {
-                elem.style.display = 'none';
-            }
-        },
-        error: function (error) {
-        }
-    });
+	$.ajax({
+		url: requestURL,
+		dataType: 'json',
+		success: function (result)
+		{
+			let elem = document.getElementById("my_orgs_button");
+			if (result)
+			{
+				loggedInUserOrgsResult.push(result);
+				elem.style.display = 'block';
+			}
+			else
+			{
+				elem.style.display = 'none';
+			}
+		},
+		error: function (error)
+		{
+		}
+	});
 }
 
 $(document).ready(function () {

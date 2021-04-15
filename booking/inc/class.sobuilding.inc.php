@@ -191,6 +191,25 @@
 			}
 		}
 
+		public function get_facility_types($query="")
+		{
+			$query_SQL = " where name ilike '$query%'";
+			if (empty($query)) {
+				$query_SQL = '';
+			}
+			$result = array();
+			$queryURL = "select id,name from bb_rescategory".$query_SQL;
+			$this->db->query($queryURL  );
+			while ($this->db->next_record())
+			{
+				$result[] = array(
+					'id' => $this->db->f('id',false),
+					'name' => $this->db->f('name',true),
+				);
+			}
+			return $result;
+		}
+
 		public function get_building_id_from_resource_id($resource_id)
 		{
 			$queryURL = "select building_id from bb_building_resource where resource_id = {$resource_id}";
