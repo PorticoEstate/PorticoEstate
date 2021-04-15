@@ -14,9 +14,12 @@
 
 		public function populate_grid_data ($params)
 		{
-			$rescategories = $this->so->read($params);
+			$_params = $params;
+			$_params['length'] = -1;
+			$rescategories = $this->so->read($_params);
 			$activities = $this->list_id_name($this->activity_bo->get_top_level());
 
+			$rescategory_names = array();
 			foreach ($rescategories['results'] as &$rescategory)
 			{
 				if($rescategory['parent_id'])
@@ -42,6 +45,34 @@
 				}
 				sort($_activity_names);
 				$rescategory['activities_name'] = implode(', ', $_activity_names);
+
+				$rescategory_names[] = $rescategory['name'];
+
+			}
+
+			if($params['sort'] == 'name' && $params['dir'] == 'asc')
+			{
+				array_multisort($rescategory_names, SORT_ASC, $rescategories['results']);
+			}
+			else
+			{
+				array_multisort($rescategory_names, SORT_DESC, $rescategories['results']);
+			}
+
+			$maxmatchs	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+
+			$start = isset($params['start']) && $params['start'] ? (int)$params['start'] : 0;
+			$results = isset($params['results']) && $params['results'] ? $params['results'] : $maxmatchs;
+
+			if($results == -1 || $results ==='all' || (!empty($params['length']) && $params['length'] == -1))
+			{
+				$out = $rescategories['results'];
+			}
+			else
+			{
+				$page		 = ceil(( $start / $results));
+				$values_part = array_chunk($rescategories['results'], $results);
+				$out		 = $values_part[$page];
 			}
 
 			$data = array(
@@ -49,7 +80,7 @@
 				'start' => $rescategories['start'],
 				'sort' => $rescategories['sort'],
 				'dir' => $rescategories['dir'],
-				'results' => $rescategories['results'],
+				'results' => $out,
 			);
 
 			return $data;
