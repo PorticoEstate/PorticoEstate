@@ -292,6 +292,10 @@
 					$step++;
 				}
 
+				if ($errors  && phpgw::get_var('repeat_until', 'bool'))
+				{
+					$_POST['repeat_until'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
+				}
 				if (!$errors && $_POST['recurring'] != 'on' && $_POST['outseason'] != 'on')
 				{
 					$receipt = $this->bo->add($booking);
@@ -300,20 +304,25 @@
 					{
 						self::redirect(array('menuaction' => 'bookingfrontend.uiorganization.show',
 							'id' => $allocation['organization_id'], 'date' => date("Y-m-d", strtotime($booking['from_']))));
-					} else {
+					}
+					else
+					{
 						self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 							'id' => $booking['building_id'], 'date' => date("Y-m-d", strtotime($booking['from_']))));
-					}}
+					}
+				}
 				else if (($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on') && !$errors && $step > 1)
 				{
-					if ($_POST['recurring'] == 'on')
+					if (phpgw::get_var('repeat_until', 'bool'))
 					{
 						$repeat_until = phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']) + 60 * 60 * 24;
+						/*hack to preserve dateformat for next step*/
+						$_POST['repeat_until'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
 					}
 					else
 					{
 						$repeat_until = strtotime($season['to_']) + 60 * 60 * 24;
-						$_POST['repeat_until'] = pretty_timestamp($season['to_']);
+						$_POST['repeat_until'] = $season['to_'];
 					}
 
 					$max_dato = phpgwapi_datetime::date_to_timestamp($_POST['to_']); // highest date from input
@@ -366,8 +375,6 @@
 			}
 
 			$this->flash_form_errors($errors);
-			self::add_javascript('bookingfrontend', 'base', 'booking.js');
-			phpgwapi_jquery::load_widget('daterangepicker');
 
 			array_set_default($booking, 'resources', array());
 			array_set_default($booking, 'resource_ids', array());
@@ -429,6 +436,9 @@
 
 			if ($step < 2)
 			{
+				self::add_javascript('bookingfrontend', 'base', 'booking.js');
+				phpgwapi_jquery::load_widget('daterangepicker');
+
 				self::render_template_xsl('booking_new', array('booking' => $booking,
 					'activities' => $activities,
 					'agegroups' => $agegroups,
@@ -587,8 +597,6 @@
 					if (!$errors)
 					{
 
-						$max_dato = strtotime($_POST['to_']); // highest date from input
-
 						$season = $this->season_bo->read_single($booking['season_id']);
 
 						if ($_POST['recurring'] == 'on')
@@ -663,11 +671,11 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			self::add_javascript('bookingfrontend', 'base', 'booking.js');
-			phpgwapi_jquery::load_widget('daterangepicker');
 
 			if ($step < 2)
 			{
+				self::add_javascript('bookingfrontend', 'base', 'booking.js');
+				phpgwapi_jquery::load_widget('daterangepicker');
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 				$booking['resource_ids_json'] = json_encode(array_map('intval', $booking['resource_ids']));
 				$booking['organization_name'] = $group['organization_name'];
@@ -684,7 +692,6 @@
 			$activities = $activities['results'];
 			$booking['audience_json'] = json_encode(array_map('intval', (array)$booking['audience']));
 			$booking['agegroups_json'] = json_encode($booking['agegroups']);
-			$group = $this->group_bo->so->read_single($booking['group_id']);
 			$groups = $this->group_bo->so->read(array('filters' => array('organization_id' => $group['organization_id'],
 					'active' => 1)));
 			$groups = $groups['results'];
