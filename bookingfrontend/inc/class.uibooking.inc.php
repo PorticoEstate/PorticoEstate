@@ -375,8 +375,6 @@
 			}
 
 			$this->flash_form_errors($errors);
-			self::add_javascript('bookingfrontend', 'base', 'booking.js');
-			phpgwapi_jquery::load_widget('daterangepicker');
 
 			array_set_default($booking, 'resources', array());
 			array_set_default($booking, 'resource_ids', array());
@@ -438,6 +436,9 @@
 
 			if ($step < 2)
 			{
+				self::add_javascript('bookingfrontend', 'base', 'booking.js');
+				phpgwapi_jquery::load_widget('daterangepicker');
+
 				self::render_template_xsl('booking_new', array('booking' => $booking,
 					'activities' => $activities,
 					'agegroups' => $agegroups,
