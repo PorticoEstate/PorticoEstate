@@ -996,11 +996,14 @@
 			if ($query)
 			{
 				$query	 = $this->db->db_addslashes($query);
-				$query	 = str_replace(",", '.', $query);
-				if (stristr($query, '.'))
+				$_query	 = str_replace(",", '.', $query);
+				if (stristr($_query, '.'))
 				{
-					$query_part		 = explode(".", $query);
-					$_querymethod[]	 = "(fm_location{$type_id}.loc1='{$query_part[0]}' AND fm_location{$type_id}.loc{$type_id}='{$query_part[1]}')";
+					$query_part	 = explode(".", $_query);
+					if(ctype_digit($query_part[0]) && ctype_digit($query_part[1]))
+					{
+						$_querymethod[]	 = "(fm_location{$type_id}.loc1='{$query_part[0]}' AND fm_location{$type_id}.loc{$type_id}='{$query_part[1]}')";
+					}
 				}
 				//		else
 				{
@@ -1133,7 +1136,7 @@
 
 			if (!$cache_info)
 			{
-				$this->db->query('SELECT count(*) AS cnt ' . substr($sql, strripos($sql, ' from')), __LINE__, __FILE__);
+				$this->db->query('SELECT count(*) AS cnt ' . substr($sql, stripos($sql, ' from')), __LINE__, __FILE__);
 				$this->db->next_record();
 
 				$cache_info = array
