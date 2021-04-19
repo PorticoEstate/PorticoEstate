@@ -1144,7 +1144,7 @@ JS;
 					}
 
 					$approve_role = execMethod('property.boinvoice.check_role', $values['ecodimb']);
-					if (!$approve_role['is_supervisor'] && !$approve_role['is_budget_responsible'])
+					if (!$approve_role['is_janitor'] && !$approve_role['is_supervisor'] && !$approve_role['is_budget_responsible'])
 					{
 						$this->receipt['error'][]	 = array('msg' => lang('you are not approved for this dimb: %1', $values['ecodimb']));
 						$error_id					 = true;
