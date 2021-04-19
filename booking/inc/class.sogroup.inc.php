@@ -125,7 +125,7 @@
 			while ($this->db->next_record())
 			{
 				$id = $this->db->f('id');
-				$grouplist[$id] = array('id' => $id, 'name' => $this->db->f('name'), 'active' => $this->db->f('active'));
+				$grouplist[$id] = array('id' => $id, 'name' => $this->db->f('name', true), 'active' => $this->db->f('active'));
 			}
 			return $grouplist;
 		}
@@ -150,7 +150,7 @@
 				$this->group_tree[]	 = array
 					(
 					'id'			 => $id,
-					'name'			 => str_repeat('..', $level) . $db->f('name'),
+					'name'			 => str_repeat('..', $level) . $db->f('name', true),
 					'parent_id'		 => $db->f('parent_id'),
 				);
 				$this->get_children2($id, $level + 1);
@@ -202,12 +202,12 @@
 			{
 				return False;
 			}
-			return array('name' => $this->db->f('name', false),
-				'shortname' => $this->db->f('shortname', false),
-				'organization' => $this->db->f('organization', false),
-				'district' => $this->db->f('district', false),
-				'city' => $this->db->f('city', false),
-				'description' => $this->db->f('description', false));
+			return array('name' => $this->db->f('name', true),
+				'shortname' => $this->db->f('shortname', true),
+				'organization' => $this->db->f('organization', true),
+				'district' => $this->db->f('district', true),
+				'city' => $this->db->f('city', true),
+				'description' => $this->db->f('description', true));
 		}
 
 		/**

@@ -609,8 +609,8 @@ Booking Canceled Subject	booking	nn	Interntildeling avbestilt e-postemne
 Mail for booking canceled	booking	nn	Interntildeling avbestilt e-posttekst
 Allocation Canceled Subject	booking	nn	Tildeling avbestilt e-postemne
 Mail for allocation canceled	booking	nn	Tildeling avbestilt e-posttekst
-Frontend users can delete bookings/events	booking	nn	Frontendbrukar kan slette tildelinger/arrangementer
-Events is deleted from database	booking	nn	Arrangementer sletta frå databasen
+Frontend users can delete bookings	booking	nn	Frontendbrukar kan slette interntildelingar
+Frontend users can delete events	booking	nn	Frontendbrukar kan slette arrangementer
 Frontend users can delete allocations	booking	nn	Frontendbruker kan slette tildelinger
 Activate extra kalendar field on building	booking	nn	Aktiver ekstra kalenderfelt på bygg
 Ids that should be included in the calendar	booking	nn	Id som skal brukast i ekstra kalender

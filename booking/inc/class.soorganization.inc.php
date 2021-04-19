@@ -77,11 +77,11 @@
 			{
 				return False;
 			}
-			return array('name' => $this->db->f('name', false),
-				'shortname' => $this->db->f('shortname', false),
-				'district' => $this->db->f('district', false),
-				'city' => $this->db->f('city', false),
-				'description' => $this->db->f('description', false));
+			return array('name' => $this->db->f('name', true),
+				'shortname' => $this->db->f('shortname', true),
+				'district' => $this->db->f('district', true),
+				'city' => $this->db->f('city', true),
+				'description' => $this->db->f('description', true));
 		}
 
 		function get_orgid( $orgnr, $customer_ssn = null )

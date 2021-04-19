@@ -599,8 +599,8 @@ Booking Canceled Subject	booking	en	Booking canceled subject
 Mail for booking canceled	booking	en	Mail for booking canceled
 Allocation Canceled Subject	booking	en	Allocation canceled subject
 Mail for allocation canceled	booking	en	Mail for allocation canceled
-Frontend users can delete bookings/events	booking	en	Frontend users can delete bookings/events
-Events is deleted from database	booking	en	Events is deleted from database
+Frontend users can delete bookings	booking	en	Frontend users can delete bookings
+Frontend users can delete events	booking	en	Frontend users can delete events
 Frontend users can delete allocations	booking	en	Frontend users can delete allocations
 Activate extra kalendar field on building	booking	en	Activate extra kalendar field on building
 Ids that should be included in the calendar	booking	en	Ids that should be included in the calendar
