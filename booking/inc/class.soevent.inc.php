@@ -148,7 +148,7 @@
 			while ($this->db->next_record())
 			{
 				$results[] = array('time' => $this->db->f('time', false),
-					'author' => $this->db->f('author', false),
+					'author' => $this->db->f('author', true),
 					'comment' => $this->db->f('comment', true),
 					'type' => $this->db->f('type', false));
 			}
@@ -186,7 +186,7 @@
 				return False;
 			}
 			return array('id' => $this->db->f('id', false),
-				'name' => $this->db->f('name', false));
+				'name' => $this->db->f('name', true));
 		}
 
 		function get_overlap_time_info( $resource_id, $overlap_id, $type )
@@ -492,7 +492,7 @@
 			{
 				return False;
 			}
-			return $this->db->f('name', false);
+			return $this->db->f('name', true);
 		}
 
 		function get_org( $orgnumber )
@@ -509,10 +509,10 @@
 			{
 				$results = array(
 					'id' => $this->db->f('id', false),
-					'name' => $this->db->f('name', false),
-					'street' => $this->db->f('street', false),
+					'name' => $this->db->f('name', true),
+					'street' => $this->db->f('street', true),
 					'zip_code' => $this->db->f('zip_code', false),
-					'city' => $this->db->f('city', false),
+					'city' => $this->db->f('city', true),
 					);
 			}
 			else
@@ -531,7 +531,7 @@
 			while ($this->db->next_record())
 			{
 				$results[] = array('id' => $this->db->f('id', false),
-					'name' => $this->db->f('name', false));
+					'name' => $this->db->f('name', true));
 			}
 			return $results;
 		}
@@ -543,7 +543,7 @@
 			$this->db->query("SELECT id,name FROM bb_activity WHERE parent_id is NULL", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$results[] = array('id' => $this->db->f('id', false), 'name' => $this->db->f('name', false));
+				$results[] = array('id' => $this->db->f('id', false), 'name' => $this->db->f('name', true));
 			}
 			return $results;
 		}
@@ -566,7 +566,7 @@
 			$this->db->query("select name from bb_resource where id in ($ids)", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$results[] = $this->db->f('name', false);
+				$results[] = $this->db->f('name', true);
 			}
 			return $results;
 		}
@@ -660,7 +660,7 @@
 				'building_id' => $this->db->f('building_id'),
 				'org_id' => $this->db->f('customer_organization_id'),
 				'org_num' => $this->db->f('customer_organization_number'),
-				'organizer' => $this->db->f('organizer')
+				'organizer' => $this->db->f('organizer', true)
 			);
 
 		}

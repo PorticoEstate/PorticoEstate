@@ -90,7 +90,7 @@
 				$id = $this->db->f('id');
 				$rescategory = array(
 					'id'		 => $id,
-					'name'		 => $this->db->f('name'),
+					'name'		 => $this->db->f('name', true),
 					'capacity'	 => $this->db->f('capacity'),
 					'e_lock'	 => $this->db->f('e_lock'),
 				);
@@ -172,7 +172,7 @@
 			while ($this->db->next_record())
 			{
 				$id = $this->db->f('id');
-				$grouplist[$id] = array('id' => $id, 'name' => $this->db->f('name'), 'active' => $this->db->f('active'));
+				$grouplist[$id] = array('id' => $id, 'name' => $this->db->f('name', true), 'active' => $this->db->f('active'));
 			}
 			return $grouplist;
 		}
@@ -196,7 +196,7 @@
 				$id	 = $db->f('id');
 				$this->entity_tree[]	 = array(
 					'id'			 => $id,
-					'name'			 => str_repeat('..', $level) . $db->f('name'),
+					'name'			 => str_repeat('..', $level) . $db->f('name', true),
 					'parent_id'		 => $parent_id,
 				);
 				$this->get_children2($id, $level + 1);

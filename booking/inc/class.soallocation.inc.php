@@ -186,7 +186,7 @@
 			{
 				return False;
 			}
-			return $this->db->f('name', false);
+			return $this->db->f('name', true);
 		}
 
 		function get_building( $id )
@@ -196,7 +196,7 @@
 			{
 				return False;
 			}
-			return $this->db->f('name', false);
+			return $this->db->f('name', true);
 		}
 
 		function get_buildings()
@@ -207,7 +207,7 @@
 			while ($this->db->next_record())
 			{
 				$results[] = array('id' => $this->db->f('id', false),
-					'name' => $this->db->f('name', false));
+					'name' => $this->db->f('name', true));
 			}
 			return $results;
 		}
@@ -230,7 +230,7 @@
 			while ($this->db->next_record())
 			{
 				$results[] = array('id' => $this->db->f('id', false),
-					'name' => $this->db->f('name', false));
+					'name' => $this->db->f('name', true));
 			}
 			return $results;
 		}
@@ -261,7 +261,7 @@
 			while ($this->db->next_record())
 			{
 				$results[] = array('id' => $this->db->f('id', false),
-					'name' => $this->db->f('name', false));
+					'name' => $this->db->f('name', true));
 			}
 			return $results;
 		}

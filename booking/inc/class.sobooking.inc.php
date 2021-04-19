@@ -733,7 +733,7 @@
 			{
 				return False;
 			}
-			return $this->db->f('name', false);
+			return $this->db->f('name', true);
 		}
 
 		function get_building( $id )
@@ -743,7 +743,7 @@
 			{
 				return False;
 			}
-			return $this->db->f('name', false);
+			return $this->db->f('name', true);
 		}
 
 		function get_season( $id )
@@ -792,7 +792,7 @@
 			while ($this->db->next_record())
 			{
 				$results[] = array('id' => $this->db->f('id', false),
-					'name' => $this->db->f('name', false));
+					'name' => $this->db->f('name', true));
 			}
 			return $results;
 		}
@@ -957,10 +957,10 @@
 					'resource_id' => $this->db->f('resource_id', false),
 					'group_id' => $this->db->f('group_id', false),
 					'allocation_id' => $this->db->f('allocation_id', false),
-					'building_name' => $this->db->f('building_name', false),
-					'resource_name' => $this->db->f('resource_name', false),
-					'group_name' => $this->db->f('group_name', false),
-					'group_shortname' => $this->db->f('group_shortname', false),
+					'building_name' => $this->db->f('building_name', true),
+					'resource_name' => $this->db->f('resource_name', true),
+					'group_name' => $this->db->f('group_name', true),
+					'group_shortname' => $this->db->f('group_shortname', true),
 					'from_' => $this->db->f('from_', false),
 					'to_' => $this->db->f('to_', false),
 				);
@@ -1063,10 +1063,10 @@
 					'id' => $this->db->f('id', false),
 					'building_id' => $this->db->f('building_id', false),
 					'resource_id' => $this->db->f('resource_id', false),
-					'building_name' => $this->db->f('building_name', false),
+					'building_name' => $this->db->f('building_name', true),
 					'resource_id' => $this->db->f('resource_id', false),
-					'resource_name' => $this->db->f('resource_name', false),
-					'description' => $this->db->f('description', false),
+					'resource_name' => $this->db->f('resource_name', true),
+					'description' => $this->db->f('description', true),
 					'from_' => $this->db->f('from_', false),
 					'to_' => $this->db->f('to_', false),
 				);

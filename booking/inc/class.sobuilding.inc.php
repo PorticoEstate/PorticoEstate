@@ -73,10 +73,10 @@
 			{
 				return False;
 			}
-			return array('name' => $this->db->f('name', false),
-				'district' => $this->db->f('district', false),
-				'city' => $this->db->f('city', false),
-				'description' => $this->db->f('description', false));
+			return array('name' => $this->db->f('name', true),
+				'district' => $this->db->f('district', true),
+				'city' => $this->db->f('city', true),
+				'description' => $this->db->f('description', true));
 		}
 
 		/**
