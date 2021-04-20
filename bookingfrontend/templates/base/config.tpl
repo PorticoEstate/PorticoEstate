@@ -203,6 +203,15 @@
 			<td>{lang_manual}:</td>
 			<td><input name="newsettings[bookingfrontend_manual]" value="{value_bookingfrontend_manual}"></td>
 		</tr>
+		<tr>
+			<td>{lang_enable_upload_attachment}:</td>
+			<td>
+				<select name="newsettings[enable_upload_attachment]">
+					<option value="" {selected_enable_upload_attachment_}>NO</option>
+					<option value="1" {selected_enable_upload_attachment_1}>YES</option>
+				</select>
+			</td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->
