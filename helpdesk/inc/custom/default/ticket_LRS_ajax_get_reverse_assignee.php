@@ -170,6 +170,7 @@
 				{
 					return;
 				}
+				$values = array();
 
 				if(strlen($query) < 4)
 				{
@@ -285,7 +286,6 @@
 
 
 				$db->limit_query($sql, 0, __LINE__, __FILE__, 10);
-				$values = array();
 
 				while ($db->next_record())
 				{
@@ -336,7 +336,7 @@
 				if(!$values)
 				{
 					$_values = array();
-					$filtermethod =	"account_lid ilike '{$query}'"
+					$filtermethod =	"account_lid ilike '{$query}%'"
 					. " OR account_lastname  = '{$query}'"
 					. " OR account_firstname  = '{$query}'";
 
