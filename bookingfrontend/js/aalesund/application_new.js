@@ -602,53 +602,55 @@ function showAlert(message, className)
 }
 
 // Shows remove attachment button when input has text:
-attInput.addEventListener("change", function ()
+if(attInput)
 {
+	attInput.addEventListener("change", function ()
+	{
 
-	if (attInput.value === '' && attInput.textContent === '')
+		if (attInput.value === '' && attInput.textContent === '')
+		{
+			return
+		}
+		else
+		{
+			attRemove.style.display = "block";
+		}
+	})
+	// Pushes filename to field_name_input and validates file size
+	document.getElementById('field_name').onchange = function ()
 	{
-		return
-	}
-	else
+		var filePath = this.value;
+		if (filePath)
+		{
+			var fileName = filePath.split(/(\\|\/)/g).pop();
+			$("#field_name_input").empty().append(fileName);
+		}
+		// Checks if file size is greater than 2MB
+		if (attInput.files[0].size > 2000000)
+		{
+			showAlert('Filen er for stor!', 'alert-danger')
+			attFileInput.textContent = '';
+			attInput.value = '';
+		};
+	};
+	// Removes attachment when clicked
+	attRemove.addEventListener("click", function ()
 	{
-		attRemove.style.display = "block";
-	}
-})
+		if (attFileInput.textContent === '' && attInput.value === '')
+		{
+			return;
+		}
+		else
+		{
+			showAlert('Vedlegg fjernet!', "alert-success")
+			attFileInput.textContent = '';
+			attInput.value = '';
+			attRemove.style.display = "none";
+		}
+	})
+}
 
-// Removes attachment when clicked
-attRemove.addEventListener("click", function ()
-{
-	if (attFileInput.textContent === '' && attInput.value === '')
-	{
-		return;
-	}
-	else
-	{
-		showAlert('Vedlegg fjernet!', "alert-success")
-		attFileInput.textContent = '';
-		attInput.value = '';
-		attRemove.style.display = "none";
-	}
-})
 
-// Pushes filename to field_name_input and validates file size
-document.getElementById('field_name').onchange = function ()
-{
-	var filePath = this.value;
-	if (filePath)
-	{
-		var fileName = filePath.split(/(\\|\/)/g).pop();
-		$("#field_name_input").empty().append(fileName);
-	}
-	// Checks if file size is greater than 2MB
-	if (attInput.files[0].size > 2000000)
-	{
-		showAlert('Filen er for stor!', 'alert-danger')
-		attFileInput.textContent = '';
-		attInput.value = '';
-	}
-	;
-};
 
 
 window.onload = function ()

@@ -98,29 +98,31 @@
 						<dd>
 							<div id="attachments_container"/>
 						</dd>
-						<dd>
-							<form method="POST" enctype='multipart/form-data' id='file_form'>
-								<input name="name" id='field_name' type='file' >
-									<xsl:attribute name='title'>
-										<xsl:value-of select="document/name"/>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation">
-										<xsl:text>mime size</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-allowing">
-										<xsl:text>jpg, jpeg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-max-size">
-										<xsl:text>2M</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:text>Max 2M:: jpg, jpeg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
-									</xsl:attribute>
-								</input>
-								<br/>
-								<input type="submit" class="btn btn-light mt-4" value="{php:function('lang', 'Add attachment')}" />
-							</form>
-						</dd>
+						<xsl:if test="config/enable_upload_attachment =1">
+							<dd>
+								<form method="POST" enctype='multipart/form-data' id='file_form'>
+									<input name="name" id='field_name' type='file' >
+										<xsl:attribute name='title'>
+											<xsl:value-of select="document/name"/>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation">
+											<xsl:text>mime size</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-allowing">
+											<xsl:text>jpg, jpeg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-max-size">
+											<xsl:text>2M</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:text>Max 2M:: jpg, jpeg, png, gif, xls, xlsx, doc, docx, txt, pdf, odt, ods</xsl:text>
+										</xsl:attribute>
+									</input>
+									<br/>
+									<input type="submit" class="btn btn-light mt-4" value="{php:function('lang', 'Add attachment')}" />
+								</form>
+							</dd>
+						</xsl:if>
 					</dl>
 				</div>
 				<div class="col-12 mt-4">
