@@ -504,8 +504,8 @@ Delete allocation	booking	en	Delete allocation
 Delete allocations	booking	en	Delete allocations
 Delete booking	booking	en	Delete booking
 Delete bookings	booking	en	Delete bookings
-Allocations that will be deleted	booking	en	Allocations that will be deleted
-Allocations  with existing bookings (%1)	booking	en	Allocations  with existing bookings (%1)
+Allocations that will be deleted (%1)	booking	en	Allocations that will be deleted (%1)
+Allocations with existing bookings (%1)	booking	en	Allocations with existing bookings (%1)
 Delete allocation also	booking	en	Delete allocation also
 Bookings to be deleted	booking	en	Bookings to be deleted
 Allocations that is going to be deleted	booking	en	Allocations that is going to be deleted

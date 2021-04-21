@@ -191,7 +191,6 @@
 				}
 				$resources		 = $allocation['resources'];
 				$activity		 = $this->organization_bo->so->get_resource_activity($resources);
-				$mailadresses	 = $this->building_users($allocation['building_id'], $split, $activity);
 
 				$maildata					 = array();
 				$maildata['outseason']		 = $outseason;
@@ -201,6 +200,8 @@
 
 				if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				{
+					$mailadresses	 = $this->building_users($allocation['building_id'], $split, $activity);
+
 					$_POST['from_']			 = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
 					$_POST['to_']			 = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
 					$_POST['repeat_until']	 = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));

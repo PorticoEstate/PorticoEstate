@@ -127,7 +127,7 @@
 
 			//Resort because the sorting order from the database may have been screwed up above
 			//when choosing between name and description of document
-			usort($documents['results'], array(self, 'sort_by_params'));
+			usort($documents['results'], array('booking_uidocument_view', 'sort_by_params'));
 
 			return $this->jquery_results($documents);
 		}
