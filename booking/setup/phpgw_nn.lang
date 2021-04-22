@@ -514,8 +514,8 @@ Delete allocation	booking	nn	Slett tildeling
 Delete allocations	booking	nn	Slett tildelinger
 Delete booking	booking	nn	Slett interntildeling
 Delete bookings	booking	nn	Slett interntildelinger
-Allocations that will be deleted	booking	nn	Tildelingar som vert sletta
-Allocations  with existing bookings (%1)	booking	nn	Tildelingar med eksisterande interntildelingar (%1)
+Allocations that will be deleted (%1)	booking	nn	Tildelingar som vert sletta (%1)
+Allocations with existing bookings (%1)	booking	nn	Tildelingar med eksisterande interntildelingar (%1)
 Delete allocation also	booking	nn	Slett underliggande interntildelingar
 Bookings to be deleted	booking	nn	Booking for sletting
 Allocations that is going to be deleted	booking	nn	Tildelingar for sletting

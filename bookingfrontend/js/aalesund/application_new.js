@@ -619,19 +619,35 @@ if(attInput)
 	// Pushes filename to field_name_input and validates file size
 	document.getElementById('field_name').onchange = function ()
 	{
+		var error = false;
 		var filePath = this.value;
+		var accepted_filetypes = this.accept;
 		if (filePath)
 		{
 			var fileName = filePath.split(/(\\|\/)/g).pop();
 			$("#field_name_input").empty().append(fileName);
+
+			var suffix = '.' + fileName.split('.').pop();
+			const regex =  new RegExp(suffix);
+			if( !accepted_filetypes.match(regex))
+			{
+				error = true;
+				showAlert('Ugyldig filtype!', 'alert-danger')
+			}
 		}
 		// Checks if file size is greater than 2MB
 		if (attInput.files[0].size > 2000000)
 		{
+			error = true;
 			showAlert('Filen er for stor!', 'alert-danger')
+		};
+
+		if(error)
+		{
 			attFileInput.textContent = '';
 			attInput.value = '';
-		};
+			attRemove.style.display = "none";
+		}
 	};
 	// Removes attachment when clicked
 	attRemove.addEventListener("click", function ()

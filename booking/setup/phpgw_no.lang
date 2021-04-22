@@ -504,8 +504,8 @@ Delete allocation	booking	no	Slett tildeling
 Delete allocations	booking	no	Slett tildelinger
 Delete booking	booking	no	Slett interntildeling
 Delete bookings	booking	no	Slett interntildelinger
-Allocations that will be deleted	booking	no	Tildelinger som vil bli slettet
-Allocations  with existing bookings (%1)	booking	no	Tildelinger med eksisterende interntildelinger (%1)
+Allocations that will be deleted (%1)	booking	no	Tildelinger som vil bli slettet (%1)
+Allocations with existing bookings (%1)	booking	no	Tildelinger med eksisterende interntildelinger (%1)
 Delete allocation also	booking	no	Slett underliggende interntildelinger
 Bookings to be deleted	booking	no	Booking for sletting
 Allocations that is going to be deleted	booking	no	Tildelinger for sletting
@@ -850,4 +850,4 @@ To date	booking	no	Til dato
 Building type	booking	no	Bygningstype
 Search for events	booking	no	Finn arrangement
 Building or facility name	booking no	Bygning/anleggsnavn
-enable upload attachment	booking no  Aktiver opplasting av vedlegg
+enable upload attachment	booking	no	Aktiver opplasting av vedlegg

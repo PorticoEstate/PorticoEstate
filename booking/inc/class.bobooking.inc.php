@@ -802,7 +802,7 @@
 		return array('total_records' => count($results), 'results' => $results);
 	}
 
-		function building_infoscreen_schedule( $building_id, $date, $res = False )
+		function building_infoscreen_schedule( $building_id, $date, $res = false, $resource_id = false )
 		{
 			$from = clone $date;
 			$from->setTime(0, 0, 0);
@@ -815,6 +815,7 @@
 			$to->modify('+7 days');
 			$to->modify('-1 minute');
 
+			$resources = '';
 			if ($res != False)
 			{
 				$resources	 = $this->so->get_screen_resources($building_id, $res);
@@ -822,11 +823,21 @@
 				{
 					$resources	 = "AND bb_resource.id IN (" . implode(",", $resources) . ")";
 				}
+			}
+
+			if($resource_id)
+			{
+				if(is_array($resource_id))
+				{
+					$resource_ids = $resource_id;
+				}
 				else
 				{
-					$resources	 = '';
+					$resource_ids = array($resource_id);
 				}
+				$resources	 .= "AND bb_resource.id IN (" . implode(",", $resource_ids) . ")";
 			}
+
 			$allocations = $this->so->get_screen_allocation($building_id, $from, $to, $resources);
 			$bookings	 = $this->so->get_screen_booking($building_id, $from, $to, $resources);
 			$events		 = $this->so->get_screen_event($building_id, $from, $to, $resources);

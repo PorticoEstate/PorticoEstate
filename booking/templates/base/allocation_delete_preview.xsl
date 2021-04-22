@@ -48,7 +48,7 @@
 					</div>
 					<div class="pure-control-group">
 						<h4>
-							<xsl:value-of select="php:function('lang', 'Allocations  with existing bookings (%1)', count(result/invalid[from_]))" />
+							<xsl:value-of select="php:function('lang', 'Allocations with existing bookings (%1)', count(result/invalid[from_]))" />
 						</h4>
 						<div class="allocation-list">
 							<xsl:for-each select="invalid_dates">
