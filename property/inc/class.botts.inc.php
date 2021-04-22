@@ -467,12 +467,8 @@
 					break;
 			}
 
-			$_filters[0]['id']	 = 'all';
-			$_filters[0]['name'] = lang('All');
-
 			$filters = $this->_get_status_list(true);
-
-			$filters = array_merge($_filters, $filters);
+			array_unshift($filters, array('id' => 'O', 'name' => lang('Open')));
 
 			return $this->bocommon->select_list($selected, $filters);
 		}
