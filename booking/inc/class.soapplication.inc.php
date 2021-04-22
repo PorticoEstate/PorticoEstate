@@ -358,15 +358,18 @@
 				$this->db->transaction_begin();
 			}
 
+			$sql = "DELETE FROM bb_document_application WHERE owner_id=" . (int) $id;
+			$this->db->query($sql, __LINE__, __FILE__);
+
 			$tablesuffixes = array('agegroup', 'comment', 'date', 'resource', 'targetaudience');
 			foreach ($tablesuffixes as $suffix)
 			{
 				$table_name = sprintf('%s_%s', $this->table_name, $suffix);
-				$sql = "DELETE FROM $table_name WHERE application_id=$id";
+				$sql = "DELETE FROM $table_name WHERE application_id=" . (int) $id;
 				$this->db->query($sql, __LINE__, __FILE__);
 			}
 			$table_name = $this->table_name;
-			$sql = "DELETE FROM $table_name WHERE id=$id";
+			$sql = "DELETE FROM $table_name WHERE id=" . (int) $id;
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			if (!$this->global_lock)

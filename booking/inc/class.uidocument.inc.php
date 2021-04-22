@@ -256,7 +256,7 @@
 				{
 					$documents['results'][] = $doc;
 				}
-				$documents['total_records'] = count($documents['results']);
+				$documents['total_records'] = count($doc_backup['results']);
 			}
 			return $this->jquery_results($documents);
 		}

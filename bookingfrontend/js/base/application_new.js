@@ -555,53 +555,72 @@ function showAlert(message, className)
 }
 
 // Shows remove attachment button when input has text:
-attInput.addEventListener("change", function ()
+if(attInput)
 {
+	attInput.addEventListener("change", function ()
+	{
 
-	if (attInput.value === '' && attInput.textContent === '')
+		if (attInput.value === '' && attInput.textContent === '')
+		{
+			return
+		}
+		else
+		{
+			attRemove.style.display = "block";
+		}
+	})
+	// Pushes filename to field_name_input and validates file size
+	document.getElementById('field_name').onchange = function ()
 	{
-		return
-	}
-	else
-	{
-		attRemove.style.display = "block";
-	}
-})
+		var error = false;
+		var filePath = this.value;
+		var accepted_filetypes = this.accept;
+		if (filePath)
+		{
+			var fileName = filePath.split(/(\\|\/)/g).pop();
+			$("#field_name_input").empty().append(fileName);
 
-// Removes attachment when clicked
-attRemove.addEventListener("click", function ()
-{
-	if (attFileInput.textContent === '' && attInput.value === '')
-	{
-		return;
-	}
-	else
-	{
-		showAlert('Vedlegg fjernet!', "alert-success")
-		attFileInput.textContent = '';
-		attInput.value = '';
-		attRemove.style.display = "none";
-	}
-})
+			var suffix = '.' + fileName.split('.').pop();
+			const regex =  new RegExp(suffix);
+			if( !accepted_filetypes.match(regex))
+			{
+				error = true;
+				showAlert('Ugyldig filtype!', 'alert-danger')
+			}
+		}
+		// Checks if file size is greater than 2MB
+		if (attInput.files[0].size > 2000000)
+		{
+			error = true;
+			showAlert('Filen er for stor!', 'alert-danger')
+		};
 
-// Pushes filename to field_name_input and validates file size
-document.getElementById('field_name').onchange = function ()
-{
-	var filePath = this.value;
-	if (filePath)
+		if(error)
+		{
+			attFileInput.textContent = '';
+			attInput.value = '';
+			attRemove.style.display = "none";
+		}
+	};
+
+	// Removes attachment when clicked
+	attRemove.addEventListener("click", function ()
 	{
-		var fileName = filePath.split(/(\\|\/)/g).pop();
-		$("#field_name_input").empty().append(fileName);
-	}
-	// Checks if file size is greater than 2MB
-	if (attInput.files[0].size > 2000000)
-	{
-		showAlert('Filen er for stor!', 'alert-danger')
-		attFileInput.textContent = '';
-		attInput.value = '';
-	}
-	;
-};
+		if (attFileInput.textContent === '' && attInput.value === '')
+		{
+			return;
+		}
+		else
+		{
+			showAlert('Vedlegg fjernet!', "alert-success")
+			attFileInput.textContent = '';
+			attInput.value = '';
+			attRemove.style.display = "none";
+		}
+	})
+
+}
+
 
 
 window.onload = function ()

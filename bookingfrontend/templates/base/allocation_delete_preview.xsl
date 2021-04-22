@@ -41,7 +41,7 @@
 					</xsl:for-each>
 					<div class="form-group">
 						<label class="text-uppercase">
-							<xsl:value-of select="php:function('lang', 'Allocations that will be deleted')" />
+							<xsl:value-of select="php:function('lang', 'Allocations that will be deleted (%1)', count(valid_dates[from_]))" />
 						</label>
 						<xsl:for-each select="valid_dates">
 							<li>
@@ -51,7 +51,7 @@
 					</div>
 					<div class="form-group">
 						<label class="text-uppercase">
-							<xsl:value-of select="php:function('lang', 'Allocations  with existing bookings (%1)', count(result/invalid[from_]))" />
+							<xsl:value-of select="php:function('lang', 'Allocations with existing bookings (%1)', count(invalid_dates[from_]))" />
 						</label>
 						<xsl:for-each select="invalid_dates">
 							<li>

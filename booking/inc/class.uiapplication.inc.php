@@ -953,6 +953,10 @@
 							phpgwapi_cache::message_set(lang('Could not add object due to insufficient permissions'),'error');
 						}
 					}
+					else
+					{
+						$this->flash_form_errors($document_errors);
+					}
 
 					/** End attachment * */
 					$this->bo->so->update_id_string();
