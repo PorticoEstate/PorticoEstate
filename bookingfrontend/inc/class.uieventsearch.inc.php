@@ -111,11 +111,20 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 			$org_info = $this->so_organization->read_single($org_id);
 		}
 
+		$organizations = array();
 		$events = $this->bosearch->soevent->get_events_from_date($from_date, $to_date, $org_info, $building_id, $facility_type_id, $result_string, $start, $end);
 
 		foreach ($events as &$event)
 		{
-			$organization_info = $this->so_organization->get_organization_info($event['org_num']);
+			if(isset($organizations[$event['org_num']]))
+			{
+				$organization_info = $organizations[$event['org_num']];
+			}
+			else
+			{
+				$organization_info = $this->so_organization->get_organization_info($event['org_num']);
+				$organizations[$event['org_num']] = $organization_info;
+			}
 
 			if ($organization_info['name'] === '')
 			{

@@ -115,7 +115,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'Send e-mail')"/>
 								</label>
-								<input type="checkbox" name="values[send_mail]" value="1">
+								<input id="send_email" type="checkbox" name="values[send_mail]" value="1">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Choose to send mailnotification')"/>
 									</xsl:attribute>
@@ -606,7 +606,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'Send e-mail')"/>
 								</label>
-								<input type="checkbox" name="values[send_mail]" value="1">
+								<input id="send_email" type="checkbox" name="values[send_mail]" value="1">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Choose to send mailnotification')"/>
 									</xsl:attribute>

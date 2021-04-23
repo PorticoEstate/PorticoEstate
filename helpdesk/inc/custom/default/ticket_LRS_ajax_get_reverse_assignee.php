@@ -336,7 +336,7 @@
 				if(!$values)
 				{
 					$_values = array();
-					$filtermethod =	"account_lid ilike '{$query}%'"
+					$filtermethod =	"account_lid = '{$query}'"
 					. " OR account_lastname  = '{$query}'"
 					. " OR account_firstname  = '{$query}'";
 
