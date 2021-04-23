@@ -983,6 +983,7 @@
 				'customer_identifier_type' => array('type' => 'varchar', 'precision' => '255',
 					'nullable' => True),
 				'customer_organization_number' => array('type' => 'varchar', 'precision' => '9'),
+				'customer_number' => array('type' => 'text', 'nullable' => True),
 				'customer_ssn' => array('type' => 'varchar', 'precision' => '12'),
 				'exported' => array('type' => 'int', 'precision' => '4'),
 				'description' => array('type' => 'text', 'nullable' => false),
