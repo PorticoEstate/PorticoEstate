@@ -571,17 +571,25 @@
 			return $results;
 		}
 
-	function get_events_from_date($from_date=null, $to_date=null, $org_info=null, $building_id=null, $facility_type_id=null, $logged_in_orgs=null, $start=0, $end=50)
+	function get_events_from_date($from_date=null, $to_date=null, $org_info=null, $building_id=null, $facility_type_id=null, $filter_organization=null, $logged_in_as = false, $start=0, $end=50)
 	{
-		$logged_in_orgs_sql = null;
+		$filter_organization_sql = null;
 		$facility_type_id_sql = null;
 		$org_info_sql = null;
 		$to_date_sql = null;
 		$building_id_sql = null;
 
-		if ($logged_in_orgs !== "")
+		if ($filter_organization && $logged_in_as)
 		{
-			$logged_in_orgs_sql = " AND bbe.customer_organization_number in ($logged_in_orgs) ";
+			$filter_organization_sql = " AND bbe.customer_organization_number = '$logged_in_as'";
+		}
+		else if (!$filter_organization && $logged_in_as)
+		{
+			$filter_organization_sql = " AND (include_in_list = 1 OR bbe.customer_organization_number = '$logged_in_as')";
+		}
+		else
+		{
+			$filter_organization_sql = " AND include_in_list = 1";
 		}
 
 		if ($facility_type_id !== "")
@@ -592,6 +600,7 @@
 		{
 			$building_id_sql = " AND bbe.building_id = '$building_id' ";
 		}
+
 		if (!empty($org_info))
 		{
 			$org_number_sql = "";
@@ -635,13 +644,12 @@
 				        bb_rescategory bbrc on br.rescategory_id = bbrc.id
 				where 
 		        	bbe.from_ > current_date
-			    	AND include_in_list = 1
 				  	AND bbe.from_ >= '$from_date' "
 						.$to_date_sql
 						.$org_info_sql
 						.$building_id_sql
 						.$facility_type_id_sql
-						.$logged_in_orgs_sql
+						.$filter_organization_sql
 						." AND bbe.active = 1
 						ORDER BY bbe.from_ ASC";
 
