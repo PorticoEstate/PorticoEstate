@@ -634,15 +634,14 @@
 				    inner join
 				        bb_rescategory bbrc on br.rescategory_id = bbrc.id
 				where 
-		        	bbe.from_ > current_date and
-			    	bbe.is_public = 1
+		        	bbe.from_ > current_date
+			    	AND include_in_list = 1
 				  	AND bbe.from_ >= '$from_date' "
 						.$to_date_sql
 						.$org_info_sql
 						.$building_id_sql
 						.$facility_type_id_sql
 						.$logged_in_orgs_sql
-						." AND bbe.is_public = 1"
 						." AND bbe.active = 1
 						ORDER BY bbe.from_ ASC";
 
