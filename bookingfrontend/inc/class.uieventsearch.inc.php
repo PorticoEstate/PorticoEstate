@@ -95,14 +95,17 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		$to_date = phpgw::get_var('toDate', 'string', 'REQUEST', null);
 		$building_id = phpgw::get_var('buildingID', 'string', 'REQUEST', null);
 		$facility_type_id = phpgw::get_var('facilityTypeID', 'string', 'REQUEST', null);
-		$logged_in_orgs = phpgw::get_var('loggedInOrgs', 'string', 'REQUEST', null);
+		$logged_in_orgs = phpgw::get_var('loggedInOrgs', 'bool');
 		$start = phpgw::get_var('start', 'int', 'REQUEST', 0);;
 		$end = phpgw::get_var('end', 'int', 'REQUEST', 50);;
 
-		$result_string = '';
-		if ($logged_in_orgs != '')
+
+		$logged_in_as = $this->get_orgs_if_logged_in();
+
+		$filter_organization = null;
+		if ($logged_in_orgs && $logged_in_as)
 		{
-			$result_string = "'" . str_replace(",", "','", $logged_in_orgs) . "'";
+			$filter_organization = true;
 		}
 
 		$org_info = array();
@@ -112,7 +115,7 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		}
 
 		$organizations = array();
-		$events = $this->bosearch->soevent->get_events_from_date($from_date, $to_date, $org_info, $building_id, $facility_type_id, $result_string, $start, $end);
+		$events = $this->bosearch->soevent->get_events_from_date($from_date, $to_date, $org_info, $building_id, $facility_type_id, $filter_organization, $logged_in_as, $start, $end);
 
 		foreach ($events as &$event)
 		{
