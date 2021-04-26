@@ -939,25 +939,28 @@
 						'owner_id' => $application['id'],
 						'files' => $this->get_files_from_post()
 					);
-					$document_errors = $document_application->bo->validate($document);
 
-					if (!$document_errors)
+					if($document)
 					{
-						try
+						$document_errors = $document_application->bo->validate($document);
+
+						if (!$document_errors)
 						{
-							booking_bocommon_authorized::disable_authorization();
-							$document_receipt = $document_application->bo->add($document);
+							try
+							{
+								booking_bocommon_authorized::disable_authorization();
+								$document_receipt = $document_application->bo->add($document);
+							}
+							catch (booking_unauthorized_exception $e)
+							{
+								phpgwapi_cache::message_set(lang('Could not add object due to insufficient permissions'),'error');
+							}
 						}
-						catch (booking_unauthorized_exception $e)
+						else
 						{
-							phpgwapi_cache::message_set(lang('Could not add object due to insufficient permissions'),'error');
+							$this->flash_form_errors($document_errors);
 						}
 					}
-					else
-					{
-						$this->flash_form_errors($document_errors);
-					}
-
 					/** End attachment * */
 					$this->bo->so->update_id_string();
 					if ($is_partial1)

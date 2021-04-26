@@ -153,9 +153,9 @@
 			$config->read();
 			$test = '';
 
-			$pools = $config->config_data['split_pool_ids'];
-			$halls = $config->config_data['split_pool2_ids'];
-			$meeting = $config->config_data['split_pool3_ids'];
+			$pools = !empty($config->config_data['split_pool_ids']) ? $config->config_data['split_pool_ids'] : '-1';
+			$halls = !empty($config->config_data['split_pool2_ids']) ? $config->config_data['split_pool2_ids'] : '-1';
+			$meeting = !empty($config->config_data['split_pool3_ids']) ? $config->config_data['split_pool3_ids'] : '-1';
 			$excluded = !empty($config->config_data['split_pool4_ids']) ? $config->config_data['split_pool4_ids'] : '-1';
 
 			if ($split)
