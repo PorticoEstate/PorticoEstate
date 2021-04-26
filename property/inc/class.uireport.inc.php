@@ -85,6 +85,7 @@
 		private function _get_filters()
 		{
 			$views = $this->bo->get_datasets();
+			$list = array();
 			foreach ($views as $view)
 			{
 				$list[] = array('id' => $view['id'], 'name' => $view['name']);
