@@ -931,17 +931,17 @@
 					$application['id'] = $receipt['id'];
 
 
-					/** Start attachment * */
-					$document_application = createObject('booking.uidocument_application');
-
-					$document = array(
-						'category' => 'other',
-						'owner_id' => $application['id'],
-						'files' => $this->get_files_from_post()
-					);
-
-					if($document)
+					if( isset($_FILES['name']['name']) && $_FILES['name']['name'] )
 					{
+						/** Start attachment * */
+						$document_application = createObject('booking.uidocument_application');
+
+						$document = array(
+							'category' => 'other',
+							'owner_id' => $application['id'],
+							'files' => $this->get_files_from_post()
+						);
+
 						$document_errors = $document_application->bo->validate($document);
 
 						if (!$document_errors)
