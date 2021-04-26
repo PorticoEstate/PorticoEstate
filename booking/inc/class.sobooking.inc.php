@@ -708,6 +708,7 @@
 
 		function get_organization( $id )
 		{
+			$id = (int) $id;
 			$this->db->limit_query("SELECT name FROM bb_organization where id=(select organization_id from bb_group where id=($id))", 0, __LINE__, __FILE__, 1);
 			if (!$this->db->next_record())
 			{
@@ -718,7 +719,7 @@
 
 		function get_groups_of_organization( $grp_id )
 		{
-			$this->db->limit_query("select organization_id from bb_group where id=($grp_id)", 0, __LINE__, __FILE__, 1);
+			$this->db->limit_query("select organization_id from bb_group where id=" . (int)$grp_id, 0, __LINE__, __FILE__, 1);
 			if (!$this->db->next_record())
 			{
 				return False;
@@ -728,7 +729,7 @@
 
 		function get_resource( $id )
 		{
-			$this->db->limit_query("SELECT name FROM bb_resource where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			$this->db->limit_query("SELECT name FROM bb_resource where id=" . (int)$id, 0, __LINE__, __FILE__, 1);
 			if (!$this->db->next_record())
 			{
 				return False;
@@ -738,7 +739,7 @@
 
 		function get_building( $id )
 		{
-			$this->db->limit_query("SELECT name FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			$this->db->limit_query("SELECT name FROM bb_building where id=" . (int)$id, 0, __LINE__, __FILE__, 1);
 			if (!$this->db->next_record())
 			{
 				return False;
@@ -748,7 +749,7 @@
 
 		function get_season( $id )
 		{
-			$this->db->limit_query("SELECT id FROM bb_season where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			$this->db->limit_query("SELECT id FROM bb_season where id=" . (int)$id, 0, __LINE__, __FILE__, 1);
 			if (!$this->db->next_record())
 			{
 				return False;
@@ -759,7 +760,7 @@
 		public function get_group_contacts_of_organization( $id )
 		{
 			$results = array();
-			$sql = "SELECT bb_group_contact.id,bb_group_contact.group_id,bb_group_contact.email FROM bb_group,bb_group_contact WHERE bb_group.id=bb_group_contact.group_id AND bb_group.active = 1 AND bb_group.organization_id=(" . intval($id) . ")";
+			$sql = "SELECT bb_group_contact.id,bb_group_contact.group_id,bb_group_contact.email FROM bb_group,bb_group_contact WHERE bb_group.id=bb_group_contact.group_id AND bb_group.active = 1 AND bb_group.organization_id=(" . (int)$id . ")";
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
@@ -773,7 +774,7 @@
 		public function get_all_group_of_organization_from_groupid( $id )
 		{
 			$results = array();
-			$sql = "SELECT bb_group_contact.id,bb_group_contact.group_id,bb_group_contact.email FROM bb_group,bb_group_contact WHERE bb_group.id=bb_group_contact.group_id AND bb_group.active = 1 AND bb_group.organization_id=(select organization_id from bb_group where id=(" . intval($id) . "))";
+			$sql = "SELECT bb_group_contact.id,bb_group_contact.group_id,bb_group_contact.email FROM bb_group,bb_group_contact WHERE bb_group.id=bb_group_contact.group_id AND bb_group.active = 1 AND bb_group.organization_id=(select organization_id from bb_group where id=(" . (int)$id . "))";
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
@@ -817,12 +818,12 @@
 			$table_name = $this->table_name;
 			$db = $this->db;
 			$ids = join(', ', array_map(array($this, 'select_id'), $bookings));
-			$sql = "UPDATE $table_name SET completed = 1 WHERE {$table_name}.id IN ($ids);";
-			$db->query($sql, __LINE__, __FILE__);
-
-			//Avoid double invoices
 			if ($ids)
 			{
+				$sql = "UPDATE $table_name SET completed = 1 WHERE {$table_name}.id IN ($ids);";
+				$db->query($sql, __LINE__, __FILE__);
+
+				//Avoid double invoices
 				$allocations = array();
 				$sql = "SELECT DISTINCT allocation_id FROM bb_booking WHERE id IN ($ids) AND allocation_id IS NOT NULL";
 				$db->query($sql, __LINE__, __FILE__);
@@ -1076,6 +1077,7 @@
 
 		function get_ordered_costs( $id )
 		{
+			$id = (int) $id;
 			$results = array();
 			$this->db->query("SELECT * FROM bb_booking_cost WHERE booking_id=($id) ORDER BY time DESC", __LINE__, __FILE__);
 			while ($this->db->next_record())
