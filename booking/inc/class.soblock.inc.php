@@ -79,7 +79,7 @@
 		protected function find_expired_sql_conditions()
 		{
 			$table_name = $this->table_name;
-			$now = date('Y-m-d H:i:s', time() + 10 * 60);
+			$now = date('Y-m-d H:i:s', time() - 10 * 60);
 			return "({$table_name}.active != 0 AND {$table_name}.entry_time < '{$now}')";
 		}
 
@@ -93,6 +93,25 @@
 			{
 				$sql = "UPDATE {$table_name} SET active = 0 WHERE {$table_name}.id IN ($ids);";
 				$db->query($sql, __LINE__, __FILE__);
+			}
+
+			/**
+			 * Delete old partial applications as well
+			 */
+			$yesterday = date('Y-m-d H:i:s', time() -  24 * 3600);
+
+			$sql = "SELECT id FROM bb_application WHERE status = 'NEWPARTIAL1' AND created < '$yesterday'";
+			$db->query($sql, __LINE__, __FILE__);
+			$applications = array();
+			while($this->db->next_record())
+			{
+				$applications[] = $this->db->f('id');
+			}
+
+			$soapplication = createObject('booking.soapplication');
+			foreach ($applications as $application_id)
+			{
+				$soapplication->delete_application($application_id);
 			}
 		}
 	}
