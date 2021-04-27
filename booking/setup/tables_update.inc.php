@@ -4988,6 +4988,9 @@
 			'nullable' => True
 		));
 
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_completed_reservation SET customer_number = bb_organization.customer_number"
+			. "FROM bb_organization WHERE bb_completed_reservation.organization_id = bb_organization.id", __LINE__, __FILE__);
+
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.70';
