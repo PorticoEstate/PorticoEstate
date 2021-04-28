@@ -4988,6 +4988,40 @@
 			'nullable' => True
 		));
 
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_completed_reservation SET customer_number = bb_organization.customer_number"
+			. " FROM bb_organization WHERE bb_completed_reservation.organization_id = bb_organization.id", __LINE__, __FILE__);
+
+
+		$asyncservice = CreateObject('phpgwapi.asyncservice');
+		$asyncservice->delete('booking_async_task_delete_expired_blocks');
+		$asyncservice->delete('booking_async_task_update_reservation_state');
+		$asyncservice->delete('booking_async_task_delete_participants');
+
+		/**
+		 * Reservation
+		 */
+		$asyncservice->set_timer(
+			array('min' => "*/5"), 'booking_async_task_delete_expired_blocks', 'booking.async_task.doRun', array(
+					'task_class' => "booking.async_task_delete_expired_blocks")
+		);
+
+		/**
+		 * Billing
+		 */
+		$asyncservice->set_timer(
+			array('hour' => "*/1"), 'booking_async_task_update_reservation_state', 'booking.async_task.doRun', array(
+					'task_class' => "booking.async_task_update_reservation_state")
+		);
+
+		/**
+		 * Participants
+		 */
+		$asyncservice->set_timer(
+			array('day' => "*/1"), 'booking_async_task_delete_participants', 'booking.async_task.doRun', array(
+					'task_class' => "booking.async_task_delete_participants")
+		);
+
+
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.70';
