@@ -866,8 +866,8 @@
 
 			foreach ($events as &$event)
 			{
-				$event['name']		 = substr($event['description'], 0, 34);
-				$event['shortname']	 = substr($event['description'], 0, 12);
+				$event['name']		 = substr($event['name'], 0, 34);
+				$event['shortname']	 = substr($event['name'], 0, 12);
 				$event['type']		 = 'event';
 				$datef				 = strtotime($event['from_']);
 				$event['weekday']	 = date('D', $datef);
