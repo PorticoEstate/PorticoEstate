@@ -369,3 +369,30 @@
 		)
 	);
 
+	$asyncservice = CreateObject('phpgwapi.asyncservice');
+
+	/**
+	 * Reservation
+	 */
+	$asyncservice->set_timer(
+		array('min' => "*/5"), 'booking_async_task_delete_expired_blocks', 'booking.async_task.doRun', array(
+				'task_class' => "booking.async_task_delete_expired_blocks")
+	);
+
+	/**
+	 * Billing
+	 */
+	$asyncservice->set_timer(
+		array('hour' => "*/1"), 'booking_async_task_update_reservation_state', 'booking.async_task.doRun', array(
+				'task_class' => "booking.async_task_update_reservation_state")
+	);
+
+	/**
+	 * Participants
+	 */
+	$asyncservice->set_timer(
+		array('day' => "*/1"), 'booking_async_task_delete_participants', 'booking.async_task.doRun', array(
+				'task_class' => "booking.async_task_delete_participants")
+	);
+
+
