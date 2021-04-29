@@ -216,13 +216,17 @@
 							}
 							else
 							{
-								list($min,$max) = $arr = explode('-',$one);
 								if (empty($one) || $one == '*')
 								{
 									$min = $min_unit[$u];
 									$max = $max_unit[$u];
 								}
-								else if (count($arr) != 2 || $min > $max)
+								else
+								{
+									list($min,$max) = $arr = explode('-',$one);
+								}
+
+								if (count($arr) != 2 || $min > $max)
 								{
 									if ($this->debug)
 									{
@@ -291,7 +295,10 @@
 								break;
 
 						}
-						if ($valid && ($u != $next || $unit_value > $over))	 // valid and not over
+						$_next = isset($next) ? $next : '';
+						$_over = isset( $over) ?  $over : 0;
+//						if ($valid && ($u != $next || $unit_value > $over))	 // valid and not over
+						if ($valid && ($u != $_next || $unit_value > $_over))	 // valid and not over
 						{
 							$found[$u] = $unit_value;
 							$future = $future || $unit_value > $unit_now;
@@ -710,9 +717,13 @@
 			$this->other_cronlines = array();
 			if (($crontab = popen('/bin/sh -c "'.$this->crontab.' -l" 2>&1','r')) !== False)
 			{
+				$n = 0;
 				while ($line = fgets($crontab,256))
 				{
-					if ($this->debug) echo 'line '.++$n.": $line<br>\n";
+					if ($this->debug)
+					{
+						echo 'line '.++$n.": $line<br>\n";
+					}
 					$parts = explode(' ',$line,6);
 
 					if ($line[0] == '#' || count($parts) < 6 || ($parts[5][0] != '/' && substr($parts[5],0,3) != 'php'))
@@ -756,6 +767,7 @@
 			}
 			$this->installed();	// find other installed cronlines
 
+			$cronline = '';
 			if (($crontab = popen('/bin/sh -c "'.$this->crontab.' -" 2>&1','w')) !== False)
 			{
 				$cron_units = array('min','hour','day','month','dow');
@@ -771,7 +783,7 @@
 				{
 					fwrite($crontab,$cronline);		// preserv the other lines
 				}
-				@pclose($crontab);
+				pclose($crontab);
 			}
 			return $this->installed();
 		}
