@@ -189,7 +189,7 @@
 				'cat_header'	 => $cat_header,
 				'cat_data'		 => $content,
 				'cat_add'		 => $cat_add,
-				'tabs'			 => self::_generate_tabs('category_assignment'),
+				'tabs'			 => $this->_generate_tabs('category_assignment'),
 			);
 
 //			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang($mode);
@@ -217,7 +217,7 @@
 			return phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 		}
 
-		public function save()
+		public function save($ajax = false)
 		{
 			$values = phpgw::get_var('values');
 
@@ -427,10 +427,10 @@
 				'form_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uisettings.users")),
 				'edit_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uisettings.users")),
 				'cancel_url'	 => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
-				'cat_header'	 => $cat_header,
-				'cat_data'		 => $content,
-				'cat_add'		 => $cat_add,
-				'tabs'			 => self::_generate_tabs('users'),
+//				'cat_header'	 => $cat_header,
+//				'cat_data'		 => $content,
+//				'cat_add'		 => $cat_add,
+				'tabs'			 => $this->_generate_tabs('users'),
 			);
 
 			phpgwapi_jquery::load_widget('bootstrap-multiselect');
