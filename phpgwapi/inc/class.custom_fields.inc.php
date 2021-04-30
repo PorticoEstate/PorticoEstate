@@ -983,12 +983,8 @@
 			{
 				foreach ($attrib['delete_choice'] as $choice_id)
 				{
-					$choice_id = (int) $choice_id;
-					$sql = "DELETE FROM phpgw_cust_choice"
-						. " WHERE location_id = {$location_id}"
-							. " AND attrib_id = {$attrib_id}"
-							. " AND id = {$choice_id}";
-					$this->_db->query($sql, __LINE__, __FILE__);
+					$replacement_id = !empty($attrib['replacement_id']) ? (int) $attrib['replacement_id'] : null;
+					$this->delete_choice($location_id,$attrib_id,$choice_id, $replacement_id);
 				}
 			}
 
@@ -1058,7 +1054,7 @@
 			}
 		}
 
-		public function delete_choice( $location_id, $attrib_id, $choice_id )
+		public function delete_choice( $location_id, $attrib_id, $choice_id, $replacement_id = null )
 		{
 			/**
 			 * Perform check if $choice_id is used anywhere before deleting it
@@ -1077,10 +1073,20 @@
 					. " AND (NULLIF(json_representation->>'{$column_name}', '')::text IS NOT NULL"
 					. " AND json_representation->>'{$column_name}' = '" . (int)$choice_id . "')";
 				$this->_db->query($sql, __LINE__, __FILE__);
+				$this->_db->next_record();
+				$_test_for_hit = $this->_db->f('location_id');
 
-				if($this->_db->next_record())
+				if($_test_for_hit && !$replacement_id)
 				{
 					return false;
+				}
+				else if ($_test_for_hit && $replacement_id)
+				{
+					$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{{$column_name}}', '\"{$replacement_id}\"', true)"
+					. " WHERE location_id = " . (int) $location_id
+					. " AND (NULLIF(json_representation->>'{$column_name}', '')::text IS NOT NULL"
+					. " AND json_representation->>'{$column_name}' = '" . (int)$choice_id . "')";
+					$this->_db->query($sql, __LINE__, __FILE__);
 				}
 
 			}
@@ -1100,11 +1106,18 @@
 				$this->_db->query($sql, __LINE__, __FILE__);
 
 				$this->_db->next_record();
+				$_test_for_hit = (int)$this->_db->f('cnt');
 				
-				if((int)$this->_db->f('cnt') > 0)
+				if($_test_for_hit && !$replacement_id)
 				{
 					return false;
 				}
+				else if ($_test_for_hit && $replacement_id)
+				{
+					$sql = "UPDATE {$tbl} SET  {$column_name} = '" . (int)$replacement_id . "' WHERE {$column_name} = '" . (int)$choice_id . "'";
+					$this->_db->query($sql, __LINE__, __FILE__);
+				}
+
 			}
 
 			$sql = "DELETE FROM phpgw_cust_choice"
