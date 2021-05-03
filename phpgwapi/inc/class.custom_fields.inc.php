@@ -1814,6 +1814,11 @@
 		 */
 		public function get_table_def($table = '', $table_def = array())
 		{
+			if(!isset($GLOBALS['phpgw_setup']))
+			{
+				$GLOBALS['phpgw_setup'] = new stdClass();//CreateObject('phpgwapi.setup', True, True);
+			}
+
 			if( !$GLOBALS['phpgw_setup']->oProc
 				|| !is_object($GLOBALS['phpgw_setup']->oProc) )
 			{
@@ -1823,6 +1828,7 @@
 			$GLOBALS['phpgw_setup']->oProc->m_odb->fetchmode = 'BOTH';
 
 			$setup = createobject('phpgwapi.setup_process');
+
 			$tableinfo = $setup->sql_to_array($table);
 
 			$fd = '$fd = array(' . str_replace("\t",'',$tableinfo[0]) .');';
