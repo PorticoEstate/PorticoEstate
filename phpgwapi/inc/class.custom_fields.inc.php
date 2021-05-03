@@ -981,14 +981,13 @@
 
 			if ( isset($attrib['delete_choice']) && is_array($attrib['delete_choice']) && !$doubled )
 			{
-				foreach ($attrib['delete_choice'] as $choice_id)
+				$replacement_id = !empty($attrib['replacement_id']) ? (int) $attrib['replacement_id'] : null;
+				if(!$replacement_id || (!in_array($replacement_id, $attrib['delete_choice'])))
 				{
-					$replacement_id = !empty($attrib['replacement_id']) ? (int) $attrib['replacement_id'] : null;
-					if($replacement_id == (int)$choice_id)
+					foreach ($attrib['delete_choice'] as $choice_id)
 					{
-						continue;
+						$this->delete_choice($location_id,$attrib_id,$choice_id, $replacement_id);
 					}
-					$this->delete_choice($location_id,$attrib_id,$choice_id, $replacement_id);
 				}
 			}
 
