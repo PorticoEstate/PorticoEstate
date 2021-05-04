@@ -757,7 +757,7 @@
 		/**
 		* phpgw version checking, is param 1 < param 2 in phpgw versionspeak?
 		* @param string $a phpgw version number to check if less than $b
-		* @param sting $b phpgw version number to check $a against
+		* @param string $b phpgw version number to check $a against
 		* @return bool True if $a < $b
 		*/
 		function alessthanb($a, $b, $debug = false)

@@ -981,10 +981,13 @@
 
 			if ( isset($attrib['delete_choice']) && is_array($attrib['delete_choice']) && !$doubled )
 			{
-				foreach ($attrib['delete_choice'] as $choice_id)
+				$replacement_id = !empty($attrib['replacement_id']) ? (int) $attrib['replacement_id'] : null;
+				if(!$replacement_id || (!in_array($replacement_id, $attrib['delete_choice'])))
 				{
-					$replacement_id = !empty($attrib['replacement_id']) ? (int) $attrib['replacement_id'] : null;
-					$this->delete_choice($location_id,$attrib_id,$choice_id, $replacement_id);
+					foreach ($attrib['delete_choice'] as $choice_id)
+					{
+						$this->delete_choice($location_id,$attrib_id,$choice_id, $replacement_id);
+					}
 				}
 			}
 
@@ -1056,6 +1059,16 @@
 
 		public function delete_choice( $location_id, $attrib_id, $choice_id, $replacement_id = null )
 		{
+			
+			/**
+			 * Can not delete, and replace with the deleted
+			 */
+
+			 if($replacement_id && ((int)$replacement_id == (int)$choice_id))
+			 {
+				 return;
+			 }
+			
 			/**
 			 * Perform check if $choice_id is used anywhere before deleting it
 			 */
@@ -1713,7 +1726,7 @@
 			{
 				$children[] = array(
 					'id'		=> "ajson{$this->node_id}",
-					'db_id'		=> $id,
+					'db_id'		=> $this->_db2->f('id'),
 					'parent'	=> $parent,
 					'parent_id'	=> $this->_db2->f('parent_id'),
 					'text'	=> $this->_db2->f('name',true),
@@ -1800,6 +1813,11 @@
 		 */
 		public function get_table_def($table = '', $table_def = array())
 		{
+			if(!isset($GLOBALS['phpgw_setup']))
+			{
+				$GLOBALS['phpgw_setup'] = new stdClass();//CreateObject('phpgwapi.setup', True, True);
+			}
+
 			if( !$GLOBALS['phpgw_setup']->oProc
 				|| !is_object($GLOBALS['phpgw_setup']->oProc) )
 			{
@@ -1809,6 +1827,7 @@
 			$GLOBALS['phpgw_setup']->oProc->m_odb->fetchmode = 'BOTH';
 
 			$setup = createobject('phpgwapi.setup_process');
+
 			$tableinfo = $setup->sql_to_array($table);
 
 			$fd = '$fd = array(' . str_replace("\t",'',$tableinfo[0]) .');';

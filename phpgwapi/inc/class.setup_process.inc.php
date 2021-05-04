@@ -645,7 +645,7 @@
 				{
 					if($DEBUG)
 					{
-						echo '<br>process->upgrade(): Application not installed: ' . $appname . "\n";
+						echo '<br>process->upgrade(): Application not installed: ' . $setup_info[$key]['name'] . "\n";
 					}
 					unset($setup_info[$key]);
 					continue;
