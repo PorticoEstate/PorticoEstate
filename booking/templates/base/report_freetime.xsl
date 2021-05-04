@@ -161,7 +161,7 @@
 										<td>
 											<script type="text/javascript">
 												eventParams[<xsl:value-of select="counter"/>] = <xsl:value-of select="event_params"/>;
-												var eventaddURL = phpGWLink('index.php', {menuaction:'menuaction=booking.uievent.add'});
+												var eventaddURL = phpGWLink('index.php', {menuaction:'booking.uievent.add'});
 											</script>
 											<a href="#" onclick="JqueryPortico.booking.postToUrl(eventaddURL, eventParams[{counter}]);">Lag arrangement</a>
 										</td>

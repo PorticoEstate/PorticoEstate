@@ -367,6 +367,7 @@ HTML;
 
 			foreach ($my_planned_controls as $planned_date_ts => $planned_controls_on_date)
 			{
+				$_row_class = '';
 				foreach ($planned_controls_on_date as $my_planned_control)
 				{
 

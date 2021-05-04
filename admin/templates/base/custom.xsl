@@ -1212,6 +1212,9 @@
 </xsl:template>
 
 <xsl:template name="choice" xmlns:php="http://php.net/xsl">
+	<xsl:variable name="lang_replace_title">
+		<xsl:value-of select="php:function('lang', 'this value will replace the one to delete')"/>
+	</xsl:variable>
 	<table class="pure-table pure-table-bordered" border="0" cellspacing="2" cellpadding="2">
 		<thead>
 			<tr>
@@ -1229,6 +1232,9 @@
 				</th>
 				<th width="10%" align="center">
 					<xsl:value-of select="lang_delete_value"/>
+				</th>
+				<th width="10%" align="center">
+					<xsl:value-of select="php:function('lang', 'replace')"/>
 				</th>
 			</tr>
 		</thead>
@@ -1272,6 +1278,13 @@
 					<input type="checkbox" name="values[delete_choice][]" value="{id}">
 						<xsl:attribute name="title">
 							<xsl:value-of select="//lang_delete_choice_statustext"/>
+						</xsl:attribute>
+					</input>
+				</td>
+				<td align="center">
+					<input type="radio" name="values[replacement_id]" value="{id}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="$lang_replace_title"/>
 						</xsl:attribute>
 					</input>
 				</td>
