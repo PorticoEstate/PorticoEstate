@@ -433,7 +433,7 @@ XML;
 				"Content-length: " . strlen($soap_request)
 			);
 
-			$soapUrl = "http://agrpweb.adm.bgo/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101";
+			$soapUrl = "https://agrpweb.adm.bgo/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101";
 
 			$ch = curl_init($soapUrl);
 

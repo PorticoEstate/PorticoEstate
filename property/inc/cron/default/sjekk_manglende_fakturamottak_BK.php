@@ -50,7 +50,7 @@
 			$this->function_name = get_class($this);
 			$this->sub_location	 = lang('property');
 			$this->function_msg	 = 'Manglende fakturamottak i Agresso';
-			$this->soap_url			 = 'http://agrpweb.adm.bgo/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101';
+			$this->soap_url			 = 'https://agrpweb.adm.bgo/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101';
 			$this->config_invoice	 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			require_once PHPGW_SERVER_ROOT . '/property/inc/soap_client/agresso/autoload.php';
 		}
