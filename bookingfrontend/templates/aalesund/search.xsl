@@ -1,16 +1,20 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div id="search-page-content">
 		<div class="headerSection">
-			<xsl:if test="frontimagetext">
-				<div class="noteRectangle">
-					<div class="noteBody">
-						<xsl:value-of disable-output-escaping="yes" select="frontimagetext"/>
+			<div class="row justify-content-center">
+				<xsl:if test="frontimagetext">
+					<div class="noteRectangle">
+						<div class="noteBody">
+							<xsl:value-of disable-output-escaping="yes" select="frontimagetext"/>
+						</div>
 					</div>
-				</div>
-			</xsl:if>
-			<div class="descriptionRectangle">
-				<div class="noteBody">
-					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
+				</xsl:if>
+			</div>
+			<div class="row justify-content-center">
+				<div class="descriptionRectangle">
+					<div class="noteBody">
+						<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -1469,23 +1469,38 @@
 
 								$building_info = $this->bo->so->get_building_info($application['id']);
 								$event['building_id'] = $building_info['id'];
+								$booking_boevent = createObject('booking.boevent');
+								$errors = array();
+
+								/**
+								 * Validate timeslots
+								 */
 								foreach ($application['dates'] as $checkdate)
 								{
 									$event['from_'] = $checkdate['from_'];
 									$event['to_'] = $checkdate['to_'];
+									$errors = array_merge($errors, $booking_boevent->validate($event));
 								}
-
-								$booking_boevent = createObject('booking.boevent');
-
-								$errors = $booking_boevent->validate($event);
+								unset($checkdate);
 
 								if (!$errors)
 								{
+									CreateObject('booking.souser')->collect_users($application['customer_ssn']);
 									$bo_block = createObject('booking.boblock');
 									$bo_block->cancel_block($session_id, $application['dates'],$application['resources']);
-									$receipt = $booking_boevent->so->add($event);
+
+									/**
+									 * Add event for each timeslot
+									 */
+									foreach ($application['dates'] as $checkdate)
+									{
+										$event['from_'] = $checkdate['from_'];
+										$event['to_'] = $checkdate['to_'];
+										$receipt = $booking_boevent->so->add($event);
+									}
+
 									$booking_boevent->so->update_id_string();
-									CreateObject('booking.souser')->collect_users($application['customer_ssn']);
+
 									$GLOBALS['phpgw']->db->transaction_commit();
 									$this->bo->send_notification($application);
 								}
