@@ -146,7 +146,7 @@
 				{
 					foreach ($user_info as $user_id => $role_info)
 					{
-						$new_roles = (int)array_sum($role_info['new']);
+						$new_roles = (int)array_sum((array)$role_info['new']);
 						$old_roles = (int)$role_info['original'];
 
 						if($old_roles != $new_roles)
