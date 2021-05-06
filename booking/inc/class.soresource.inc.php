@@ -660,4 +660,61 @@
 
 			return $ret;
 		}
+
+		public function get_season_boundary(&$resources, $start, $end)
+		{
+			$resource_ids = array();
+			foreach ($resources as $resource)
+			{
+				$resource_ids[] = $resource['id'];
+			}
+			unset($resource);
+
+			$start_query = $start->format('Y-m-d H:i');
+			$end_query = $end->format('Y-m-d H:i');
+
+			$boundary_date = $start->format('Y-m-d');
+
+			$dayofweek = date('w', strtotime($start_query));
+			$dayofweek = $dayofweek === "0" ? "7" : $dayofweek;
+
+			$sql = "SELECT resource_id, bsb.from_ as from_, bsb.to_ as to_"
+				. " FROM bb_season_resource bsr, bb_season bs, bb_season_boundary bsb"
+				. " WHERE bsr.resource_id in (" . implode(',', $resource_ids) . ")"
+				. " AND bsr.season_id = bs.id"
+				. " AND bsr.season_id = bsb.season_id"
+				. " AND status = 'PUBLISHED'"
+				. " AND active = 1"
+				. " AND bs.from_ <= '$start_query'"
+				. " AND bs.to_ >= '$end_query'"
+				. " AND bsb.wday = $dayofweek";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$results = array();
+			while ($this->db->next_record())
+			{
+				$results[] = array(
+					'resource_id' => $this->db->f('resource_id'),
+					'from_' => $boundary_date . ' ' . $this->db->f('from_'),
+					'to_' => $boundary_date . ' ' . $this->db->f('to_'),
+				);
+			}
+
+			foreach ($resources as $k => &$resource)
+			{
+				$resource['boundary'] = array();
+				foreach ($results as $result)
+				{
+					if ($resource['id'] === $result['resource_id'])
+					{
+						$resource['boundary'] = array('from_' => $result['from_'], 'to_' => $result['to_']);
+					}
+				}
+				if (empty($resource['boundary']))
+				{
+					unset($resources[$k]);
+				}
+			}
+			$resources = array_values($resources);
+		}
 	}

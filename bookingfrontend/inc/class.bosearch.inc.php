@@ -13,6 +13,7 @@
 	    public $sobuilding;
 	    public $sobooking;
 	    public $soallocation;
+	    public $soresource;
 
 		function __construct()
 		{
@@ -830,11 +831,9 @@
 		function available_resources($resources, $params = array())
 		{
 			$from_date = DateTime::createFromFormat('d.m.Y H:i:s', $params['from_date']);
-			$from_date_test = $from_date->format('Y-m-d H:i:s');
 			$to_date = DateTime::createFromFormat('d.m.Y H:i:s', $params['to_date']);
-			$to_date_test = $to_date->format('Y-m-d H:i:s');
-			$limit = (int) $params['limit'];
 
+			$this->soresource->get_season_boundary($resources, $from_date, $to_date);
 
 			$is_time_set = false;
 			if($params['from_time'] != "" && $params['to_time'] != "")
@@ -891,11 +890,9 @@
 
 				if (empty($resource['booked_times']))
 				{
-					$available_resource['from'] = $from_date;
-					$available_resource['to'] = $to_date;
+					$available_resource['from'] = DateTime::createFromFormat('Y-m-d H:i:s', $resource['boundary']['from_'])->format('d.m.Y H:i');
+					$available_resource['to'] = DateTime::createFromFormat('Y-m-d H:i:s', $resource['boundary']['to_'])->format('d.m.Y H:i');
 
-					$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
-					$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
 					array_push($available_resources, $available_resource);
 				}
 				else
@@ -915,11 +912,11 @@
 						$from = $resource['booked_times'][$i]['from_'];
 						$to = $resource['booked_times'][$i]['to_'];
 
-						if ($from > $from_date_test)
+						if ($from > $resource['boundary']['from_'])
 						{
 							if ($i == 0)
 							{
-								$available_resource['from'] = $from_date;
+								$available_resource['from'] = DateTime::createFromFormat('Y-m-d H:i:s', $resource['boundary']['from_']);
 								$available_resource['to'] = DateTime::createFromFormat('Y-m-d H:i:s', $resource['booked_times'][$i]['from_']);
 
 								if ($is_time_set)
@@ -971,32 +968,31 @@
 							{
 								$last_end_date = $to;
 							}
-
-							if ($i + 1 == $booked_times_len)
+						}
+						if ($i + 1 == $booked_times_len)
+						{
+							if ($last_end_date < $resource['boundary']['to_'])
 							{
-								if ($last_end_date < $to_date_test)
+								$available_resource['from'] = DateTime::createFromFormat('Y-m-d H:i:s', $last_end_date);
+								$available_resource['to'] = DateTime::createFromFormat('Y-m-d H:i:s', $resource['boundary']['to_']);
+
+								if ($is_time_set)
 								{
-									$available_resource['from'] = DateTime::createFromFormat('Y-m-d H:i:s', $last_end_date);
-									$available_resource['to'] = $to_date;
+									$available_resource_time = $available_resource['from']->format('H:i');
+									$available_resource_to = $available_resource['to']->format('H:i');
 
-									if ($is_time_set)
-									{
-										$available_resource_time = $available_resource['from']->format('H:i');
-										$available_resource_to = $available_resource['to']->format('H:i');
-
-										if ($available_resource_time <= $from_time && $available_resource_to >= $to_time)
-										{
-											$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
-											$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
-											array_push($available_resources, $available_resource);
-										}
-									}
-									else
+									if ($available_resource_time <= $from_time && $available_resource_to >= $to_time)
 									{
 										$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
 										$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
 										array_push($available_resources, $available_resource);
 									}
+								}
+								else
+								{
+									$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
+									$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
+									array_push($available_resources, $available_resource);
 								}
 							}
 						}
