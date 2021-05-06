@@ -101,7 +101,7 @@
 
 		public function read_single( $control_id )
 		{
-			$this->db->query('SELECT ticket_cat_id FROM controller_control WHERE id = ' . (int)$cat_id, __LINE__, __FILE__);
+			$this->db->query('SELECT ticket_cat_id FROM controller_control WHERE id = ' . (int)$control_id, __LINE__, __FILE__);
 			$this->db->next_record();
 			return (int)$this->db->f('ticket_cat_id');
 		}
