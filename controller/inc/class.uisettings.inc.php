@@ -427,9 +427,7 @@
 				'form_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uisettings.users")),
 				'edit_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uisettings.users")),
 				'cancel_url'	 => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
-//				'cat_header'	 => $cat_header,
-//				'cat_data'		 => $content,
-//				'cat_add'		 => $cat_add,
+				'cat_add'		 => '',
 				'tabs'			 => $this->_generate_tabs('users'),
 			);
 
