@@ -32,7 +32,7 @@
 				'to_' => array('type' => 'timestamp', 'required' => true),
 				'organization_id' => array('type' => 'int'),
 				'customer_type' => array('type' => 'string', 'nullable' => False),
-				'customer_number' => array('type' => 'string', 'required' => true, 'nullable' => true),// sub-identificator within organization
+				'customer_number' => array('type' => 'string', 'required' => false, 'nullable' => true),// sub-identificator within organization
 				'customer_identifier_type' => array('type' => 'string', 'required' => False),
 				'customer_organization_number' => array('type' => 'string', 'precision' => '9',
 					'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array(

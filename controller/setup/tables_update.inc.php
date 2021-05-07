@@ -1572,6 +1572,20 @@
 		}
 	}
 
+	$test[] = '0.1.69';
+	function controller_upgrade0_1_69()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.checklist', 'Checklist', 'controller', $allow_grant = false, $custom_tbl = null, $c_function = true, $c_attrib = false);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.70';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+
 
 
 

@@ -955,18 +955,18 @@
 
 			phpgw::import_class('property.multiuploader');
 
-			if(!$id)
-			{
-				$response = array(files => array(array('error' => 'missing id in request')));
-				$upload_handler->generate_response($response);
-				$GLOBALS['phpgw']->common->phpgw_exit();
-			}
-
 			$options['fakebase'] = "/controller";
 			$options['base_dir'] = "check_list/{$id}";
 			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/controller/'.$options['base_dir'].'/';
 			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => "controller.uicheck_list.handle_multi_upload_file", 'id' => $id)));
 			$upload_handler = new property_multiuploader($options, false);
+
+			if(!$id)
+			{
+				$response = array('files' => array(array('error' => 'missing id in request')));
+				$upload_handler->generate_response($response);
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
 
 			switch ($_SERVER['REQUEST_METHOD']) {
 				case 'OPTIONS':
@@ -1457,6 +1457,7 @@
 						$check_list->set_id($check_list_id);
 						$this->_set_required_control_items($check_list);
 					}
+
 
 					$ret = array();
 					if(!$submit_deviation)
@@ -1988,6 +1989,30 @@
 
 			if ($this->so->store($check_list))
 			{
+
+				$criteria = array
+					(
+					'appname' => 'controller',
+					'location' => $this->acl_location,
+					'allrows' => true
+				);
+
+				$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+				foreach ($custom_functions as $entry)
+				{
+					// prevent path traversal
+					if (preg_match('/\.\./', $entry['file_name']))
+					{
+						continue;
+					}
+
+					$file = PHPGW_SERVER_ROOT . "/controller/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+					if ($entry['active'] && is_file($file) && !$entry['client_side'] && $entry['pre_commit'])
+					{
+						require $file;
+					}
+				}
 
 				/**
 				 * create message....
