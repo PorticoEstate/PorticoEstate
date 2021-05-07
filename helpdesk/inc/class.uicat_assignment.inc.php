@@ -178,7 +178,7 @@
 		}
 
 
-		public function save()
+		public function save($dummy= false)
 		{
 			$values = phpgw::get_var('values');
 			
