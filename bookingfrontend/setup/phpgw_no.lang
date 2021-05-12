@@ -539,7 +539,7 @@ Equipment text	bookingfrontend	no	I feltet under skriver du inn om du har spesie
 Request for equipment	bookingfrontend	no	Ønske om nødvendig utstyr på tildeling:
 Request for equipment has been sent	bookingfrontend	no	Ønske om nødvendig utstyr er sendt til saksbehandler
 Resources type	bookingfrontend	no	Lokaler
-Upcomming Events	bookingfrontend	no	Kommende Arrangement
+Upcomming Events	bookingfrontend	no	Kommende arrangement
 expired for edit	bookingfrontend	no	Utløpt
 Missing rights	bookingfrontend	no	Mangler rettigheter
 allocation show	bookingfrontend	no	Tildeling
