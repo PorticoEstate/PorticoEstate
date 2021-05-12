@@ -142,11 +142,11 @@
 
 					$results[] = array
 					(
-						'orgnr' => $org['organizationNumber'],
+						'orgnr' => $org['orgnr'],
 						'customer_ssn'	 => null
 					);
 
-					$orgs_validate[] = $org['organizationNumber'];
+					$orgs_validate[] = $org['orgnr'];
 				}
 			}
 
