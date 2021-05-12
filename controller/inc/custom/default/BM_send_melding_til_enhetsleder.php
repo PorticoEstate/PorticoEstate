@@ -64,5 +64,19 @@
 				return $db;
 			}
 
+			public function get_head_of_school($location_code)
+			{
+
+
+$sql = "SELECT org_enhet_id, rental_party.* FROM rental_party
+ JOIN rental_contract_party ON rental_party.id = rental_contract_party.party_id
+ JOIN rental_contract ON rental_contract_party.contract_id = rental_contract.id
+ JOIN rental_contract_composite ON rental_contract_composite.contract_id = rental_contract.id
+ JOIN rental_unit ON rental_contract_composite.composite_id = rental_unit.composite_id
+ WHERE location_code = '1135-01'
+ AND rental_contract.date_end > extract(epoch from now())";
+
+
+			}
 		}
 	}
