@@ -200,7 +200,7 @@
 				case 'chart':
 					$load = array
 						(
-						'chart' => array("Chart{$_type}")
+						'chart' => array("chart{$_type}")
 					);
 
 					break;
