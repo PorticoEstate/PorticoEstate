@@ -551,12 +551,10 @@ HTML;
 			if($anonymous && $frontend)
 			{
 				$GLOBALS['phpgw_info']['server']['auth_type'] = 'sql';
-				$c = createobject('phpgwapi.config', $frontend);
-				$c->read();
-				$config = $c->config_data;
+				$config = createobject('phpgwapi.config', $frontend)->read();
 
-				$login = $c->config_data['anonymous_user'];
-				$passwd = $c->config_data['anonymous_passwd'];
+				$login = $config['anonymous_user'];
+				$passwd = $config['anonymous_passwd'];
 				$_POST['submitit'] = "";
 				$domain = phpgw::get_var('domain', 'string', 'GET');
 				if (strstr($login, '#') === false && $domain)
