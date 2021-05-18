@@ -1357,7 +1357,9 @@
 					$header['Blanketttype'] = 'F';//char(1) F = Faktura
 					$header['datoendr'] = date('d.m.Y');//dato 31.01.1997
 					$header['Deresref'] = $ext_ord_ref;//char(30)
-					$header['Fagsystemkundeid'] = $client_id;//char(128)
+// 12/5: kunde id
+//					$header['Fagsystemkundeid'] = $client_id;//char(128)
+					$header['Fagsystemkundeid'] = $kundenr;
 					$header['Fakturadato'] = date('d.m.Y');
 					$header['Fakturahyppighet'] = 'MND';//char(3)
 
