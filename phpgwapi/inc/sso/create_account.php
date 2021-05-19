@@ -64,6 +64,12 @@
 
 			if (empty($this->login))
 			{
+				//reserve fallback
+				if( phpgw::get_var('OIDC_pid', 'bool', 'SERVER'))
+				{
+					$GLOBALS['phpgw']->redirect_link('login.php', array('skip_remote' => true));
+				}
+				//fallback failed
 				echo lang('Did not find any username');
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
@@ -79,7 +85,6 @@
 					$GLOBALS['phpgw']->redirect_link('login.php', array('create_mapping' => true,'cd' => '21', 'phpgw_account' => $account));
 				}
 			}
-
 		}
 
 		public function display_create()
@@ -108,7 +113,6 @@
 
 			$email	 = phpgw::get_var('OIDC_email', 'string', 'SERVER');
 			$cellphone = '';
-			$ssn	 = phpgw::get_var('OIDC_pid', 'string', 'SERVER');
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST' && phpgw::get_var('submitit', 'bool', 'POST'))
 			{

@@ -111,7 +111,7 @@
 			$this->_db->query($sql, __LINE__, __FILE__);
 			if ( $this->_db->next_record() )
 			{
-				$custom_function['id'] += $this->_db->f('maximum');
+				$custom_function['id'] += (int)$this->_db->f('maximum');
 			}
 
 			$custom_sort = 0;
@@ -120,7 +120,7 @@
 			$this->_db->query($sql, __LINE__, __FILE__);
 			if ( $this->_db->next_record() )
 			{
-				$custom_sort = $this->_db->f('max_sort') + 1;
+				$custom_sort = (int)$this->_db->f('max_sort') + 1;
 			}
 
 			$values = array
