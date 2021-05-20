@@ -670,6 +670,11 @@
 			}
 			unset($resource);
 
+			if(!$resource_ids)
+			{
+				return;
+			}
+
 			$start_query = $start->format('Y-m-d H:i');
 			$end_query = $end->format('Y-m-d H:i');
 
