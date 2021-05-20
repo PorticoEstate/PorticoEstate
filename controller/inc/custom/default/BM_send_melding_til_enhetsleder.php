@@ -53,8 +53,8 @@ HTML;
 
 					$to_array = array('Luis.Brunet@bergen.kommune.no', 'Sigurd Nes <Sigurd.Nes@bergen.kommune.no>');
 //					$to_array[] = $head_of_school['email'];
-					$to = implode(',', $to_array);
-					
+					$to = implode(';', $to_array);
+
 					$send = CreateObject('phpgwapi.send');
 					try
 					{
@@ -140,7 +140,8 @@ HTML;
 	if($check_list->get_status() == controller_check_list::STATUS_DONE)
 	{
 
-		$message_title = $this->so_control->get_single($check_list->get_control_id())->get_title();
+		$so_control = CreateObject('controller.socontrol');
+		$message_title = $so_control->get_single($check_list->get_control_id())->get_title();
 
 		$alert_head_of_school = new controller_alert_head_of_school($message_title);
 
