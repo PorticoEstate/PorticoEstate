@@ -51,7 +51,7 @@ HTML;
 					$from_email	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
 					$cc = $from_email;
 
-					$to_array = array('Brunet, Luis Andres Jorn <Luis.Brunet@bergen.kommune.no>', 'Sigurd Nes <Sigurd.Nes@bergen.kommune.no>');
+					$to_array = array('Luis.Brunet@bergen.kommune.no', 'Sigurd Nes <Sigurd.Nes@bergen.kommune.no>');
 //					$to_array[] = $head_of_school['email'];
 					$to = implode(',', $to_array);
 					
