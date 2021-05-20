@@ -1311,6 +1311,7 @@
 
 			$availlableTimeSlots		 = array();
 			$defaultStartHour			 = 8;
+			$defaultStartMinute			 = 0;
 			$defaultStartHour_fallback	 = 8;
 			$defaultEndHour				 = 16;
 
@@ -1341,6 +1342,8 @@
 					$booking_lenght	 = $resource['booking_day_default_lenght'];
 					$booking_start	 = $resource['booking_time_default_start'];
 					$booking_end	 = $resource['booking_time_default_end'];
+					$booking_time_minutes	 = $resource['booking_time_minutes'] > 0 ? $resource['booking_time_minutes'] : 0;
+
 
 					/**
 					 * Make sure start is before end
@@ -1410,7 +1413,8 @@
 							}
 						}
 
-						$StartTime->setTime($defaultStartHour, 0, 0);
+//						$StartTime->setTime($defaultStartHour, 0, 0);
+						$StartTime->setTime($defaultStartHour, $defaultStartMinute, 0);
 
 						$endTime = clone ($StartTime);
 
@@ -1425,7 +1429,9 @@
 						}
 						else
 						{
-							$endTime->setTime(min($booking_end, $StartTime->format('H')) + 1, 0, 0);
+							$test = $endTime->format('i');
+//							$endTime->setTime(min($booking_end, $StartTime->format('H')) + 1, 0, 0);
+							$endTime->setTime(min($booking_end, $StartTime->format('H')), (int)$endTime->format('i') + $booking_time_minutes, 0);
 						}
 
 						$checkDate = clone ($endTime);
@@ -1456,6 +1462,7 @@
 						if ($booking_lenght == -1)
 						{
 							$defaultStartHour = $endTime->format('H');
+							$defaultStartMinute = (int)$endTime->format('i');
 
 							if($defaultStartHour > $defaultEndHour_fallback)
 							{

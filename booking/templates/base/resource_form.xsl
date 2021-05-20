@@ -377,6 +377,18 @@
 						</xsl:attribute>
 					</input>
 				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'minutes')"/>
+					</label>
+					<input type="number" min="-1" id="booking_time_minutes" name="booking_time_minutes" value="{resource/booking_time_minutes}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'minutes')"/>
+							&nbsp;
+							<xsl:value-of select="php:function('lang', 'value is ignored for -1')"/>
+						</xsl:attribute>
+					</input>
+				</div>
 
 				<div id="e_lock_form">
 					<xsl:if test="new_form or resource/rescategory_e_lock != 1">

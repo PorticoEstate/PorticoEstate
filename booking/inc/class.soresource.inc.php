@@ -34,6 +34,7 @@
 //				'booking_dow_default_end' => array('type' => 'int', 'required' => false),
 				'booking_time_default_start' => array('type' => 'int', 'required' => false),
 				'booking_time_default_end' => array('type' => 'int', 'required' => false),
+				'booking_time_minutes' => array('type' => 'int', 'required' => false),
 				'building_id' => array(
 					'type' => 'int',
 					'query' => true,
@@ -669,6 +670,11 @@
 				$resource_ids[] = $resource['id'];
 			}
 			unset($resource);
+
+			if(!$resource_ids)
+			{
+				return;
+			}
 
 			$start_query = $start->format('Y-m-d H:i');
 			$end_query = $end->format('Y-m-d H:i');

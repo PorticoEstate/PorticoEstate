@@ -1462,6 +1462,8 @@
 					$ret = array();
 					if(!$submit_deviation)
 					{
+						$this->custom_functions($check_list);
+
 						$ret = $this->notify_supervisor($check_list);
 					}
 
@@ -1989,30 +1991,7 @@
 
 			if ($this->so->store($check_list))
 			{
-
-				$criteria = array
-					(
-					'appname' => 'controller',
-					'location' => $this->acl_location,
-					'allrows' => true
-				);
-
-				$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
-
-				foreach ($custom_functions as $entry)
-				{
-					// prevent path traversal
-					if (preg_match('/\.\./', $entry['file_name']))
-					{
-						continue;
-					}
-
-					$file = PHPGW_SERVER_ROOT . "/controller/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
-					if ($entry['active'] && is_file($file) && !$entry['client_side'] && $entry['pre_commit'])
-					{
-						require $file;
-					}
-				}
+				$this->custom_functions($check_list);
 
 				/**
 				 * create message....
@@ -2027,6 +2006,33 @@
 			}
 		}
 
+		private function custom_functions( $check_list )
+		{
+			$criteria = array
+			(
+				'appname' => 'controller',
+				'location' => $this->acl_location,
+				'allrows' => true
+			);
+
+			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+			foreach ($custom_functions as $entry)
+			{
+				// prevent path traversal
+				if (preg_match('/\.\./', $entry['file_name']))
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/controller/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				if ($entry['active'] && is_file($file) && !$entry['client_side'])
+				{
+					require $file;
+				}
+			}
+
+		}
 
 		private function notify_supervisor($check_list)
 		{
