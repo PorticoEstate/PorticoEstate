@@ -5029,3 +5029,29 @@
 		}
 	}
 
+
+	/**
+	 * Update booking version from 0.2.70 to 0.2.71
+	 *
+	 */
+	$test[] = '0.2.70';
+	function booking_upgrade0_2_70()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'booking_time_minutes',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True,
+				'default' => -1
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.71';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

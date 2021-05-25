@@ -239,6 +239,12 @@
 					</label>
 					<xsl:value-of select="resource/booking_time_default_end"/>
 				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'minutes')"/>
+					</label>
+					<xsl:value-of select="resource/booking_time_minutes"/>
+				</div>
 
 				<xsl:if test="resource/rescategory_e_lock = 1">
 					<div class="pure-control-group">
