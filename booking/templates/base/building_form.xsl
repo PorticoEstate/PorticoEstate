@@ -28,7 +28,7 @@
 							<xsl:text>required</xsl:text>
 						</xsl:attribute>
 						<xsl:attribute name="data-validation-error-msg">
-							<xsl:value-of select="php:function('lang', 'Please enter a name')"/>
+							<xsl:value-of select="php:function('lang', 'Building Name')"/>
 						</xsl:attribute>
 					</input>
 				</div>
@@ -36,19 +36,39 @@
 					<label for="field_street">
 						<xsl:value-of select="php:function('lang', 'Street')"/>
 					</label>
-					<input id="field_street" name="street" type="text" value="{building/street}" class="pure-input-3-4" />
+					<input id="field_street" name="street" type="text" value="{building/street}" class="pure-input-3-4" >
+						<xsl:attribute name="data-validation">
+							<xsl:text>required</xsl:text>
+						</xsl:attribute>
+						<xsl:attribute name="data-validation-error-msg">
+							<xsl:value-of select="php:function('lang', 'Street')"/>
+						</xsl:attribute>
+					</input>
 				</div>
 				<div class="pure-control-group">
 					<label for="field_district">
 						<xsl:value-of select="php:function('lang', 'District')"/>
 					</label>
-					<input type="text" name="district" id="field_district" value="{building/district}" class="pure-input-3-4" />
+					<input type="text" name="district" id="field_district" value="{building/district}" class="pure-input-3-4" >
+						<xsl:attribute name="data-validation">
+							<xsl:text>required</xsl:text>
+						</xsl:attribute>
+						<xsl:attribute name="data-validation-error-msg">
+							<xsl:value-of select="php:function('lang', 'District')"/>
+						</xsl:attribute>
+					</input>
 				</div>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Activity')" />
 					</label>
 					<select id="field_activity_id" name="activity_id" class="pure-input-3-4" >
+						<xsl:attribute name="data-validation">
+							<xsl:text>required</xsl:text>
+						</xsl:attribute>
+						<xsl:attribute name="data-validation-error-msg">
+							<xsl:value-of select="php:function('lang', 'Activity')"/>
+						</xsl:attribute>
 						<option value="">
 							<xsl:value-of select="php:function('lang', 'select')" />
 						</option>
@@ -87,6 +107,12 @@
 						<xsl:value-of select="php:function('lang', 'Homepage')" />
 					</label>
 					<input id="field_homepage" name="homepage" type="text" value="{building/homepage}" class="pure-input-3-4" >
+						<xsl:attribute name="data-validation">
+							<xsl:text>required</xsl:text>
+						</xsl:attribute>
+						<xsl:attribute name="data-validation-error-msg">
+							<xsl:value-of select="php:function('lang', 'Homepage')"/>
+						</xsl:attribute>
 					</input>
 				</div>
 

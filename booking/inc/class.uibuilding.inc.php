@@ -129,6 +129,10 @@
 						'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
+							'key' => 'id',
+							'label' => lang('id'),
+						),
+						array(
 							'key' => 'name',
 							'label' => lang('Building'),
 							'formatter' => 'JqueryPortico.formatLink'

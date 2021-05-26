@@ -26,7 +26,7 @@
 				'deactivate_sendmessage' => array('type' => 'int'),
 				'extra_kalendar' => array('type' => 'int'),
 				'location_code' => array('type' => 'string', 'required' => false),
-				'activity_id' => array('type' => 'int', 'required' => false),
+				'activity_id' => array('type' => 'int', 'required' => true),
 				'part_of_town_id' => array('type' => 'string',
 					'required' => false,
 //					'join' => array(
