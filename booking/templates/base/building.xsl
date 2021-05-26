@@ -8,6 +8,14 @@
 			<div id="building_show" class="booking-container">
 				<div class="pure-control-group">
 					<label>
+						<xsl:value-of select="php:function('lang', 'Building Name')" />
+					</label>
+					<div class="custom-container">
+						<xsl:value-of select="building/name" disable-output-escaping="yes"/>
+					</div>
+				</div>
+				<div class="pure-control-group">
+					<label>
 						<xsl:value-of select="php:function('lang', 'Description')" />
 					</label>
 					<div class="custom-container">
