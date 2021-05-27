@@ -1393,8 +1393,32 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
-
-			/**
+			else if (preg_match("/UBW Brukerregister - sjekk /i", $subject))
+			{
+				$message_cat_id	 = 291; // Brukertilganger
+				$group_id		 = 4169; //LRS-SERVICE_Regnskap
+				$priority		 = 1;
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type, $priority);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Manuell håndtering, Feilutbetalt lønn/i", $subject))
+			{
+				$message_cat_id	 = 251; // Feilutbetalt lønn
+				$group_id		 = 3159; //LRS-DRIFT_Lønn
+				$priority		 = 1;
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type, $priority);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}			/**
 			 * Ticket created / updated
 			 */
 			if ($target)
