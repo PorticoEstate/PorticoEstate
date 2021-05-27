@@ -248,8 +248,12 @@
 			}
 
 			$file = $this->bo->get_file($export_file);
+
+			$path_parts = pathinfo($export_file['filename']);
+			$extension = $path_parts['extension'];
+
 			$content = file_get_contents($file->get_system_identifier(), false);
-			$this->export_agresso->do_your_magic($content, $id);
+			$this->export_agresso->do_your_magic($content, $id, $extension);
 			$this->redirect_to('index');
 		}
 	}
