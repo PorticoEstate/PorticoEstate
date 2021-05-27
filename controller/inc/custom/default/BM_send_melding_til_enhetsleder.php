@@ -40,6 +40,7 @@
 					$html = <<<HTML
 						<br/>
 						<p>Leder: {$head_of_school['unit_leader']}</p>
+						<p>Epost: {$head_of_school['email']}</p>
 						<a href="$report_link">Rapport fra kontrollen</a>
 						<br/>
 						<br/>
@@ -59,7 +60,7 @@ HTML;
 					try
 					{
 						$subject = "Kontroll gjennomført: {$head_of_school['company_name']} / {$this->message_title}";
-						$rc = $send->msg('email', $to, $subject, $html, '', $cc='', $bcc='',$from_email, $from_name,'html');
+						$rc = $send->msg('email', $to, $subject, $html, '', $cc='', $bcc = $from_email,$from_email, $from_name,'html');
 					}
 					catch (Exception $e)
 					{
