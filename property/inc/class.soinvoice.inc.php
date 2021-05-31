@@ -2677,7 +2677,8 @@
 //					$where					 = 'AND';
 //				}
 
-				$filtermethod 	 .= " {$where} oppsynsigndato IS NOT NULL AND saksigndato IS NULL";
+				$filtermethod 	 .= " {$where} ( oppsynsigndato IS NOT NULL AND saksigndato IS NULL";
+				$filtermethod 	 .= " OR oppsynsmannid = '{$data['supervisor_lid']}' AND oppsynsigndato IS NULL AND saksigndato IS NULL)";
 				$where			 = 'AND';
 
 				$filtermethod	 .= " {$where} saksbehandlerid = '{$data['supervisor_lid']}'";
