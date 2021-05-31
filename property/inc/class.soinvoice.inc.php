@@ -2646,54 +2646,65 @@
 
 			if ($data['janitor_lid'])
 			{
-				if (stripos($data['janitor_lid'], '*') === 0)
-				{
+//				if (stripos($data['janitor_lid'], '*') === 0)
+//				{
 					$data['janitor_lid'] = ltrim($data['janitor_lid'], '*');
-					$filtermethod		 .= " $where oppsynsigndato IS NULL";
-					$where				 = 'AND';
-				}
-				$filtermethod	 .= " $where oppsynsmannid = '{$data['janitor_lid']}'";
+//					$filtermethod		 .= " $where oppsynsigndato IS NULL";
+//					$where				 = 'AND';
+//				}
+
+				$filtermethod		 .= " {$where} oppsynsigndato IS NULL AND saksbehandlerid != '{$data['janitor_lid']}'";
+				$where				 = 'AND';
+
+				$filtermethod	 .= " {$where} oppsynsmannid = '{$data['janitor_lid']}'";
 				$where			 = 'AND';
 			}
 
 			if ($data['supervisor_lid'])
 			{
-				if (stripos($data['supervisor_lid'], '*') === 0)
-				{
+//				if (stripos($data['supervisor_lid'], '*') === 0)
+//				{
 					$data['supervisor_lid']	 = ltrim($data['supervisor_lid'], '*');
-					if($data['supervisor_lid']	== $GLOBALS['phpgw_info']['user']['account_lid'])
-					{
-						$filtermethod 	 .= " $where oppsynsigndato IS NOT NULL AND saksigndato IS NULL";
-					}
-					else
-					{
-						$filtermethod	 .= " $where saksigndato IS NULL";
-					}
+//					if($data['supervisor_lid']	== $GLOBALS['phpgw_info']['user']['account_lid'])
+//					{
+//						$filtermethod 	 .= " $where oppsynsigndato IS NOT NULL AND saksigndato IS NULL";
+//					}
+//					else
+//					{
+//						$filtermethod	 .= " $where saksigndato IS NULL";
+//					}
+//
+//					$where					 = 'AND';
+//				}
 
-					$where					 = 'AND';
-				}
+				$filtermethod 	 .= " {$where} oppsynsigndato IS NOT NULL AND saksigndato IS NULL";
+				$where			 = 'AND';
 
-				$filtermethod	 .= " $where saksbehandlerid = '{$data['supervisor_lid']}'";
+				$filtermethod	 .= " {$where} saksbehandlerid = '{$data['supervisor_lid']}'";
 				$where			 = 'AND';
 			}
 
 			if ($data['budget_responsible_lid'])
 			{
-				if (stripos($data['budget_responsible_lid'], '*') === 0)
-				{
+//				if (stripos($data['budget_responsible_lid'], '*') === 0)
+//				{
 					$data['budget_responsible_lid']	 = ltrim($data['budget_responsible_lid'], '*');
-					if($data['budget_responsible_lid']	== $GLOBALS['phpgw_info']['user']['account_lid'])
-					{
-						$filtermethod					 .= " $where saksigndato IS NOT NULL AND budsjettsigndato IS NULL";
-					}
-					else
-					{
-						$filtermethod					 .= " $where budsjettsigndato IS NULL";
-					}
-					
-					$where							 = 'AND';
-				}
-				$filtermethod	 .= " $where budsjettansvarligid = '{$data['budget_responsible_lid']}'";
+//					if($data['budget_responsible_lid']	== $GLOBALS['phpgw_info']['user']['account_lid'])
+//					{
+//						$filtermethod					 .= " $where saksigndato IS NOT NULL AND budsjettsigndato IS NULL";
+//					}
+//					else
+//					{
+//						$filtermethod					 .= " $where budsjettsigndato IS NULL";
+//					}
+//
+//					$where							 = 'AND';
+//				}
+
+				$filtermethod					 .= " $where saksigndato IS NOT NULL AND budsjettsigndato IS NULL";
+				$where							 = 'AND';
+
+				$filtermethod	 .= " {$where} budsjettansvarligid = '{$data['budget_responsible_lid']}'";
 				$where			 = 'AND';
 			}
 
