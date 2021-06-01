@@ -67,7 +67,7 @@
 		protected $_like;
 		protected $_global_lock = false;
 
-		protected $custom;
+		public $custom;
 
 		public function __construct()
 		{
