@@ -2654,20 +2654,36 @@
 
 			if ($data['supervisor_lid'])
 			{
-				$data['supervisor_lid']	 = ltrim($data['supervisor_lid'], '*');
-
-				$filtermethod 	 .= " {$where} (( saksbehandlerid = '{$data['supervisor_lid']}' AND oppsynsigndato IS NOT NULL	AND saksigndato IS NULL )
+				if (stripos($data['supervisor_lid'], '*') === 0)
+				{
+					$data['supervisor_lid']	 = ltrim($data['supervisor_lid'], '*');
+					$filtermethod 	 .= " {$where} (( saksbehandlerid = '{$data['supervisor_lid']}' AND oppsynsigndato IS NOT NULL	AND saksigndato IS NULL )
 					OR (saksbehandlerid = '{$data['supervisor_lid']}' AND oppsynsigndato IS NULL AND saksigndato IS NULL)
 					OR (oppsynsmannid = '{$data['supervisor_lid']}' AND saksbehandlerid = '{$data['supervisor_lid']}' AND oppsynsigndato IS NULL AND saksigndato IS NULL ))";
+				}
+				else
+				{
+					$filtermethod 	 .= " {$where} ( saksbehandlerid = '{$data['supervisor_lid']}' )";
+
+				}
 
 				$where			 = 'OR';
 			}
 
 			if ($data['budget_responsible_lid'])
 			{
-				$data['budget_responsible_lid']	 = ltrim($data['budget_responsible_lid'], '*');
-				$filtermethod		.= " $where (saksigndato IS NOT NULL AND budsjettsigndato IS NULL";
-				$filtermethod	 .= " AND budsjettansvarligid = '{$data['budget_responsible_lid']}')";
+				if (stripos($data['budget_responsible_lid'], '*') === 0)
+				{
+					$data['budget_responsible_lid']	 = ltrim($data['budget_responsible_lid'], '*');
+					$filtermethod	.= " {$where} (saksigndato IS NOT NULL AND budsjettsigndato IS NULL";
+					$filtermethod	.= " AND budsjettansvarligid = '{$data['budget_responsible_lid']}')";
+
+				}
+				else
+				{
+					$filtermethod	.= " {$where} (budsjettansvarligid = '{$data['budget_responsible_lid']}')";
+				}
+
 				$where	= 'AND';
 
 			}
@@ -2907,8 +2923,8 @@
 				{
 					throw new Exception('soinvoice::perform_bulk_split() - incomplete dataset in input');
 				}
-				
-				$_data[] = $entry; 
+
+				$_data[] = $entry;
 			}
 			unset($entry);
 
