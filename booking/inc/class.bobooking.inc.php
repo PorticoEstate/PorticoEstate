@@ -1342,7 +1342,7 @@
 					$booking_lenght	 = $resource['booking_day_default_lenght'];
 					$booking_start	 = $resource['booking_time_default_start'];
 					$booking_end	 = $resource['booking_time_default_end'];
-					$booking_time_minutes	 = $resource['booking_time_minutes'] > 0 ? $resource['booking_time_minutes'] : 0;
+					$booking_time_minutes	 = $resource['booking_time_minutes'] > 0 ? $resource['booking_time_minutes'] : 60;
 
 
 					/**
