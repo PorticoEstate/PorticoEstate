@@ -5055,3 +5055,37 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.71 to 0.2.72
+	 *
+	 */
+	$test[] = '0.2.71';
+	function booking_upgrade0_2_71()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'booking_limit_number',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True,
+				'default' => -1
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'booking_limit_number_horizont',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True,
+				'default' => -1
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.72';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

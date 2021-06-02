@@ -852,5 +852,6 @@ Building type	booking	nn	Bygningstype
 Search for events	booking	nn	Finn arrangement
 Building or facility name	booking nn	Bygning/anleggsnavn
 enable upload attachment	booking nn	Aktiver opplasting av vedlegg
-
-
+minutes	booking	no	Minutt
+limit number	booking	no	Begrensning på antall
+limit number horizont	booking	no	Begrensningshorisont (dager)

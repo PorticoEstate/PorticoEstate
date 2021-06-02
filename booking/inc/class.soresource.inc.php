@@ -35,6 +35,9 @@
 				'booking_time_default_start' => array('type' => 'int', 'required' => false),
 				'booking_time_default_end' => array('type' => 'int', 'required' => false),
 				'booking_time_minutes' => array('type' => 'int', 'required' => false),
+				'booking_limit_number' => array('type' => 'int', 'required' => false),
+				'booking_limit_number_horizont' => array('type' => 'int', 'required' => false),
+
 				'building_id' => array(
 					'type' => 'int',
 					'query' => true,
