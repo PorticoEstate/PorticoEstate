@@ -320,7 +320,21 @@
 			{
 				if ($cdate < $event['to_'])
 				{
-					if ($bouser->is_organization_admin($event['customer_organization_id']))
+					$event_owner = false;
+
+					if($event['customer_identifier_type'] == 'ssn')
+					{
+						$external_login_info = $bouser->validate_ssn_login(array('menuaction' => 'bookingfrontend.uievent.cancel',
+							'id' => $event['id'],
+							'resource_ids' => $event['resource_ids']));
+						$event_owner = $event['customer_ssn'] == $external_login_info['ssn'] ? true : false;
+					}
+					else
+					{
+						$event_owner = $bouser->is_organization_admin($event['customer_organization_id']);
+					}
+
+					if ($event_owner)
 					{
 						$this->bo->send_notification(false, $event, $mailadresses);
 						$this->bo->send_admin_notification(false, $event, $_POST['message']);
