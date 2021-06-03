@@ -40,6 +40,7 @@
 					$html = <<<HTML
 						<br/>
 						<p>Leder: {$head_of_school['unit_leader']}</p>
+						<p>Epost: {$head_of_school['email']}</p>
 						<a href="$report_link">Rapport fra kontrollen</a>
 						<br/>
 						<br/>
@@ -49,17 +50,21 @@ HTML;
 
 					$from_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
 					$from_email	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
-					$cc = $from_email;
 
-					$to_array = array('Luis.Brunet@bergen.kommune.no', 'Sigurd Nes <Sigurd.Nes@bergen.kommune.no>');
-//					$to_array[] = $head_of_school['email'];
+					$to_array = array();
+					$to_array[] = $head_of_school['email'];
 					$to = implode(';', $to_array);
+
+					$cc_array = array('Luis.Brunet@bergen.kommune.no', 'Sigurd Nes <Sigurd.Nes@bergen.kommune.no>');
+					$cc = implode(';', $cc_array);
+
+					$bcc = $from_email;
 
 					$send = CreateObject('phpgwapi.send');
 					try
 					{
 						$subject = "Kontroll gjennomført: {$head_of_school['company_name']} / {$this->message_title}";
-						$rc = $send->msg('email', $to, $subject, $html, '', $cc='', $bcc='',$from_email, $from_name,'html');
+						$rc = $send->msg('email', $to, $subject, $html, '', $cc, $bcc, $from_email, $from_name,'html');
 					}
 					catch (Exception $e)
 					{
@@ -127,7 +132,7 @@ HTML;
 						$company_name = $org_unit_with_leader['ORG_UNIT_NAME'];
 					}
 				 }
-				 
+
 				 return array(
 					 'company_name'	 => $company_name,
 					 'unit_leader'	 => $unit_leader,
@@ -137,7 +142,7 @@ HTML;
 		}
 	}
 
-	if($check_list->get_status() == controller_check_list::STATUS_DONE)
+	if($check_list->get_control_id() === 9 && $check_list->get_status() == controller_check_list::STATUS_DONE)
 	{
 
 		$so_control = CreateObject('controller.socontrol');
@@ -154,5 +159,5 @@ HTML;
 			phpgwapi_cache::message_set($exc->getMessage(), 'error');
 		}
 	}
-	
+
 

@@ -389,6 +389,26 @@
 						</xsl:attribute>
 					</input>
 				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'limit number')"/>
+					</label>
+					<input type="number" min="-1" id="booking_limit_number" name="booking_limit_number" value="{resource/booking_limit_number}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'limit number')"/>
+						</xsl:attribute>
+					</input>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'limit number horizont')"/>
+					</label>
+					<input type="number" min="-1" id="booking_limit_number_horizont" name="booking_limit_number_horizont" value="{resource/booking_limit_number_horizont}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'limit number horizont')"/>
+						</xsl:attribute>
+					</input>
+				</div>
 
 				<div id="e_lock_form">
 					<xsl:if test="new_form or resource/rescategory_e_lock != 1">

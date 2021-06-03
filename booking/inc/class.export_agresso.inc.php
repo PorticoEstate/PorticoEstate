@@ -29,14 +29,14 @@
 			$this->config->read_repository();
 		}
 
-		public function do_your_magic( $buffer, $id )
+		public function do_your_magic( $buffer, $id, $extension)
 		{
 			// Viktig: må kunne rulle tilbake dersom noe feiler.
 			$this->db->transaction_begin();
 
 //			$buffer = 'test';
 
-			$filnavn = $this->lagfilnavn();
+			$filnavn = $this->lagfilnavn($extension);
 
 			$file_written = false;
 
@@ -80,9 +80,9 @@
 			return $message;
 		}
 
-		protected function lagfilnavn()
+		protected function lagfilnavn($extension = 'TXT')
 		{
-			$fil_katalog = $this->config->config_data['invoice_export_path'];
+			$fil_katalog = rtrim($this->config->config_data['invoice_export_path'],"/");
 			if(!$fil_katalog)
 			{
 				$fil_katalog = sys_get_temp_dir();
@@ -91,7 +91,7 @@
 			$i = 1;
 			do
 			{
-				$filnavn = $fil_katalog . '/AktivbyLG04_' . date("ymd") . '_' . sprintf("%02s", $i) . '.TXT';
+				$filnavn = $fil_katalog . '/AktivbyLG04_' . date("ymd") . '_' . sprintf("%02s", $i) . ".{$extension}";
 
 				//Sjekk om filen eksisterer
 				If (!file_exists($filnavn))
