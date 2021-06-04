@@ -550,3 +550,4 @@ Building or facility name	bookingfrontend	no	Bygning/anleggsnavn
 reserved	bookingfrontend	no	Reservert
 calendar view	bookingfrontend	no	Dags-/ukesvisning
 Show more results	bookingfrontend	no	Last inn flere resultater
+quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days	bookingfrontend	no	Antallsbegrensning (%1) overskredet for %2:<br/> maks %3 ganger innenfor en periode på %4 dager

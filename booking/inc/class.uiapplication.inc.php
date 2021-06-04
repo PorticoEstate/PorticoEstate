@@ -712,6 +712,7 @@
 
 			$building_id = phpgw::get_var('building_id', 'int' ,'REQUEST', -1 );
 			$simple = phpgw::get_var('simple', 'bool');
+			$bouser = CreateObject('bookingfrontend.bouser');
 
 			$errors = array();
 			$application_id = phpgw::get_var('application_id', 'int');
@@ -723,7 +724,6 @@
 
 				if ($_SERVER['REQUEST_METHOD'] != 'POST')
 				{
-					$bouser = CreateObject('bookingfrontend.bouser');
 					$external_login_info = $bouser->validate_ssn_login(array('menuaction' => 'bookingfrontend.uiapplication.add'));
 
 					if ($existing_application['customer_organization_number'] == $organization_number || $existing_application['customer_ssn'] == $external_login_info['ssn'])
@@ -871,6 +871,41 @@
 					$errors['session_id'] = lang('No session ID found, application aborted');
 				}
 
+				// if logged in
+				$user_data = phpgwapi_cache::session_get($bouser->get_module(), $bouser::USERARRAY_SESSION_KEY);
+				if($user_data['ssn'])
+				{
+					$resources = $this->resource_bo->so->read(array(
+								'sort'    => 'sort',
+								'results' =>'all',
+								'filters' => array('id' => $application['resources']), 'results' =>'all'
+					));
+
+					foreach ($resources['results'] as $resource)
+					{
+						if($resource['booking_limit_number_horizont'] > 0 && $resource['booking_limit_number'] > 0)
+						{
+							$limit_reached = $this->bo->so->check_booking_limit(
+								$GLOBALS['phpgw']->session->get_session_id(),
+								$resource['id'],
+								$user_data['ssn'],
+								$resource['booking_limit_number_horizont'],
+								$resource['booking_limit_number'] );
+
+							if($limit_reached)
+							{
+								$errors['error_message'] = lang('quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days',
+									$limit_reached,
+									$resource['name'],
+									$resource['booking_limit_number'],
+									$resource['booking_limit_number_horizont']);
+							}
+						}
+
+					}
+					unset($resources);
+					unset($resource);
+				}
 				if (!$is_partial1)
 				{
 					if ($_POST['contact_email'] != $_POST['contact_email2'])
@@ -1103,6 +1138,11 @@
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
+			//hack
+			if($application['audience'] == -1)
+			{
+				$application['audience'] = array();
+			}
 			$application['audience_json'] = json_encode(array_map('intval', $application['audience']));
 
 			$audience = $audience['results'];
@@ -1435,9 +1475,13 @@
 
 									if($limit_reached)
 									{
-										phpgwapi_cache::message_set( "Antallsbegrensning ({$limit_reached}) overskredet for {$resource['name']}:<br/>"
-										. " maks {$resource['booking_limit_number']} ganger innenfor en periode på"
-										. " {$resource['booking_limit_number_horizont']} dager", 'error');
+										$error_message = lang('quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days',
+											$limit_reached,
+											$resource['name'],
+											$resource['booking_limit_number'],
+											$resource['booking_limit_number_horizont']);
+
+										phpgwapi_cache::message_set( $error_message, 'error');
 									}
 								}
 
