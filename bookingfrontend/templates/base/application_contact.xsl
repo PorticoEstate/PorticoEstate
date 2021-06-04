@@ -106,7 +106,7 @@
 							<div class="invalid-feedback">
 								Vennligst velg en organisasjon.
 							</div>
-
+<!--
 							<label>
 								<a id="add_new_value" href="#" data-toggle="modal" data-target="#new_organization">
 									<img src="{add_img}" width="23"/>
@@ -114,7 +114,7 @@
 									<xsl:value-of select="php:function('lang', 'new organization')"/>
 								</a>
 							</label>
-
+-->
 						</div>
 
 						<!-- Customer Personal Number -->
