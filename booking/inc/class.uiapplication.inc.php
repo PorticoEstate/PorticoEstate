@@ -1424,12 +1424,39 @@
 
 							foreach ($resources['results'] as $resource)
 							{
+								if($resource['booking_limit_number_horizont'] > 0 && $resource['booking_limit_number'] > 0)
+								{
+									$limit_reached = $this->bo->so->check_booking_limit(
+										$session_id,
+										$resource['id'],
+										$external_login_info['ssn'],
+										$resource['booking_limit_number_horizont'],
+										$resource['booking_limit_number'] );
+
+									if($limit_reached)
+									{
+										phpgwapi_cache::message_set( "Antallsbegrensning ({$limit_reached}) overskredet for {$resource['name']}:<br/>"
+										. " maks {$resource['booking_limit_number']} ganger innenfor en periode på"
+										. " {$resource['booking_limit_number_horizont']} dager", 'error');
+									}
+								}
+
 								$max_date = max($from_dates);
 
 								if($resource['direct_booking'] && $resource['direct_booking'] < $max_date)
 								{
 									$check_direct_booking ++;
 								}
+							}
+
+							if($limit_reached)
+							{
+								CreateObject('booking.souser')->collect_users($application['customer_ssn']);
+								$bo_block = createObject('booking.boblock');
+								$bo_block->cancel_block($session_id, $application['dates'],$application['resources']);
+								$this->bo->delete_application($application['id']);
+								$GLOBALS['phpgw']->db->transaction_commit();
+								self::redirect(array());
 							}
 
 							if($resources['results'] && count($resources['results']) == $check_direct_booking)

@@ -245,6 +245,18 @@
 					</label>
 					<xsl:value-of select="resource/booking_time_minutes"/>
 				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'limit number')"/>
+					</label>
+					<xsl:value-of select="resource/booking_limit_number"/>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'limit number horizont')"/>
+					</label>
+					<xsl:value-of select="resource/booking_limit_number_horizont"/>
+				</div>
 
 				<xsl:if test="resource/rescategory_e_lock = 1">
 					<div class="pure-control-group">
