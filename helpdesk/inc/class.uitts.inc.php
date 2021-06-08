@@ -2228,6 +2228,11 @@ JS;
 					}
 				}
 
+				if ($GLOBALS['phpgw']->session->is_repost())
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.index', 'parent_cat_id' => $this->parent_cat_id));
+				}
+
 				$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
 
 				$notified = createObject('property.notify')->read(array('location_id' => $location_id, 'location_item_id' => $id));
