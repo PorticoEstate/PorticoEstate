@@ -531,6 +531,8 @@ Show messages	booking	nn	Vis meldingar
 Internal account	booking	nn	Internkontering
 Internal customer output format	booking	nn	Internkunde eksportformat
 Internal_account_helptext	booking	nn	Data som vert brukt for fakturaeksport av interne kunder
+external_account_helptext	booking	nn	Data som vert brukt for fakturaeksport av eksterne kunder
+export_help_text	booking	nn	Data som vert brukt for filoverføring
 searchfield	booking	nn	Fritekstsøk
 Backend	booking	nn	Backend
 Documentation	booking	nn	Dokumentasjon
@@ -713,12 +715,14 @@ vertical	booking	nn	Vertikal
 permission add	booking	nn	Legg til tilgang
 activity new	booking	nn	Ny aktivitet
 account new	booking	nn	Ny konteringsstreng
-external account	booking	nn	Ekstern konto
+external account	booking	nn	Ekstern kontering
 external customer output format	booking	nn	Ekstern kunde ut-format
 external file linebreak	booking	nn	Tegn for linjeskift
 export invoice	booking	nn	Fakturaeksport
-export method	booking	nn	Eksport metode
+export method	booking	nn	Eksportmetode
 export path	booking	nn	Eksport sti
+customer list	booking	nn	Kundeliste
+customer list format	booking	nn	Kundelisteformat
 ftp host	booking	nn	Ftp vert
 ftp basedir	booking	nn	Ftp initiell katalog ved pålogging
 ftp user	booking	nn	Ftp bruker

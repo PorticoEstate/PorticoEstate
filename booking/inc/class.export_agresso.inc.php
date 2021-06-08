@@ -29,12 +29,50 @@
 			$this->config->read_repository();
 		}
 
+		public function transfer_customer_list( $buffer, $filnavn)
+		{
+			$file_written = false;
+
+			$fp = fopen($filnavn, "wb");
+			fwrite($fp, $buffer);
+
+			if (fclose($fp))
+			{
+				$file_written = true;
+			}
+
+			$transfer_ok = false;
+			if ($file_written)
+			{
+				if($this->config->config_data['invoice_export_method'] == 'ftp')
+				{
+					$transfer_ok = $this->transfer($filnavn);
+				}
+				else if($this->config->config_data['invoice_export_method'] == 'ftps')
+				{
+					$transfer_ok = $this->transfer_ftps($filnavn);
+				}
+				else
+				{
+					$transfer_ok = true;
+				}
+			}
+
+			if ($transfer_ok)
+			{
+				$message = "Overfort fil: {$filnavn}";
+			}
+			else
+			{
+				$message = 'Noe gikk galt med overforing av godkjendte fakturaer!';
+			}
+			return $message;
+		}
+
 		public function do_your_magic( $buffer, $id, $extension)
 		{
 			// Viktig: må kunne rulle tilbake dersom noe feiler.
 			$this->db->transaction_begin();
-
-//			$buffer = 'test';
 
 			$filnavn = $this->lagfilnavn($extension);
 

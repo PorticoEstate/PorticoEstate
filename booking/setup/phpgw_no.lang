@@ -520,7 +520,9 @@ Show applications	booking	no	Vis søknader
 Show messages	booking	no	Vis meldinger
 Internal account	booking	no	Intern kontering
 Internal customer output format	booking	no	Intern kunde eksport format
-Internal_account_helptext	booking	no	Data som brukes for faktura eksport av interne kunder
+Internal_account_helptext	booking	no	Data som brukes for fakturaeksport av interne kunder
+external_account_helptext	booking	no	Data som brukes for fakturaeksport av eksterne kunder
+export_help_text	booking	no	Data som brukes for filoverføring
 searchfield	booking	no	Fritekstsøk
 Backend	booking	no	Backend
 Documentation	booking	no	Dokumentasjon
@@ -703,12 +705,14 @@ vertical	booking	no	Vertikal
 permission add	booking	no	Legg til tilatelse
 activity new	booking	no	Ny aktivitet
 account new	booking	no	Ny konteringsstreng
-external account	booking	no	Ekstern konto
+external account	booking	no	Ekstern kontering
 external customer output format	booking	no	Ekstern kunde output format
 external file linebreak	booking	no	Tegn for linjeskift
-export invoice	booking	no	Faktura eksport
-export method	booking	no	Eksport metode
+export invoice	booking	no	Fakturaeksport
+export method	booking	no	Eksportmetode
 export path	booking	no	Eksport sti
+customer list format	booking	no	Kundelisteformat
+customer list	booking	no	Kundeliste
 ftp host	booking	no	Ftp vert
 ftp basedir	booking	no	Ftp initiell katalog ved pålogging
 ftp user	booking	no	Ftp bruker
