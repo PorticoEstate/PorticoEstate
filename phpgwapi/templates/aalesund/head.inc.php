@@ -141,10 +141,6 @@ JS;
 	$executiveofficer_url = $webserver_url . "/";
 	$GLOBALS['phpgw']->template->set_var('executiveofficer_url', $executiveofficer_url);
 
-	$stringmunicipality = '  kommune';
-
-//	$municipality =     $site_title   .   $stringmunicipality;
-
 	$municipality = $site_title;
 
 	$GLOBALS['phpgw']->template->set_var('municipality', $municipality);
@@ -362,7 +358,8 @@ HTML;
 
 
 	$tpl_vars = array
-		(
+	(
+		'site_title'			 => $site_title,
 		'css'					 => $GLOBALS['phpgw']->common->get_css($cache_refresh_token),
 		'javascript'			 => $GLOBALS['phpgw']->common->get_javascript($cache_refresh_token),
 		'img_icon'				 => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
