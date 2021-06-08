@@ -601,6 +601,7 @@
 
 			$resources		 = $resources['results'];
 
+			$sort = array();
 			foreach ($resources as $key => $row)
 			{
 				$sort[$key] = $row['sort'];
@@ -785,6 +786,7 @@
 			}
 		}
 
+		$sort = array();
 		foreach ($resources as $key => $row)
 		{
 			$sort[$key] = $row['sort'];
@@ -1170,6 +1172,7 @@
 					'active'	 => 1, 'results'	 => -1)));
 			$resources		 = $resources['results'];
 
+			$sort = array();
 			foreach ($resources as $key => $row)
 			{
 				$sort[$key] = $row['sort'];
