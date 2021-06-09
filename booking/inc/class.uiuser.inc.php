@@ -94,8 +94,15 @@
 				$type = 'kundefil_aktiv_kommune';
 				$date = date('Ymd', time());
 
-				header("Content-Disposition: attachment; filename=PE_{$type}_{$date}.{$file_ending}");
-				print $this->bo->get_customer_list();
+				$filename = "PE_{$type}_{$date}.{$file_ending}";
+
+				header("Content-Disposition: attachment; filename={$filename}");
+				$content =  $this->bo->get_customer_list();
+
+				$export_agresso = CreateObject('booking.export_agresso');
+				$export_agresso->transfer_customer_list( $content, $filename);
+
+				print $content;
 				return;
 			}
 			else

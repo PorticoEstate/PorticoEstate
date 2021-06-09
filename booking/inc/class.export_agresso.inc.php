@@ -29,9 +29,18 @@
 			$this->config->read_repository();
 		}
 
-		public function transfer_customer_list( $buffer, $filnavn)
+		public function transfer_customer_list( $buffer, $filnavn_base)
 		{
 			$file_written = false;
+
+			$fil_katalog = rtrim($this->config->config_data['invoice_export_path'],"/");
+
+			if(!$fil_katalog)
+			{
+				$fil_katalog = sys_get_temp_dir();
+			}
+
+			$filnavn = $fil_katalog . "/{$filnavn_base}";
 
 			$fp = fopen($filnavn, "wb");
 			fwrite($fp, $buffer);
