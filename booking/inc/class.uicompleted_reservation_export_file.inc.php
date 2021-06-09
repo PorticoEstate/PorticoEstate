@@ -252,8 +252,38 @@
 			$path_parts = pathinfo($export_file['filename']);
 			$extension = $path_parts['extension'];
 
+			$file_type_arr = explode('_', $export_file['filename']);
+
+			$type = $file_type_arr[1];
+
+			$config_data = CreateObject('phpgwapi.config', 'booking')->read();
+
+			switch ($config_data["{$type}_format"])
+			{
+				case 'FACTUM':
+					$file_name_part = 'FACTUM_';
+					break;
+				case 'VISMA':
+					$file_name_part = 'VISMA_';
+					break;
+				case 'AGRESSO':
+					$file_name_part = 'AktivbyLG04_';
+					break;
+				case 'CSV':
+					$file_name_part = 'CSV_';
+					break;
+				case 'KOMMFAKT':
+					$file_name_part = 'KOMMFAKT_';
+					break;
+				default:
+					$file_name_part = 'AktivbyLG04_';
+					break;
+			}
+
+			$file_name_part .= substr($file_type_arr[2], 0, -4);
+
 			$content = file_get_contents($file->get_system_identifier(), false);
-			$this->export_agresso->do_your_magic($content, $id, $extension);
+			$this->export_agresso->do_your_magic($content, $id, $file_name_part, $extension);
 			$this->redirect_to('index');
 		}
 	}

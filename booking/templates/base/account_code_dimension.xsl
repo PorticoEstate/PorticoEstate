@@ -18,7 +18,10 @@
 					</div>
 					<div class="pure-control-group">
 						<label>Client (pos 359 -360)</label>
-						<input id="field_voucher_client" name="voucher_client" type="text" maxlength="2">
+						<input id="field_voucher_client" name="voucher_client" type="text">
+							<xsl:if test="config_data/external_format='AGRESSO'">
+								<xsl:attribute name="maxlength">2</xsl:attribute>
+							</xsl:if>
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/voucher_client"/>
 							</xsl:attribute>
@@ -390,6 +393,35 @@
 						</option>
 					</select>
 				</div>
+				<div class="pure-control-group">
+					<div class="heading">
+						<legend>
+							<h3>
+								<xsl:value-of select="php:function('lang', 'customer list')"/>
+							</h3>
+						</legend>
+					</div>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'customer list format')"/>
+					</label>
+					<select id="field_invoice_export_method" name="customer_list_format">
+						<option value="AGRESSO">
+							<xsl:if test="config_data/customer_list_format='AGRESSO'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							AGRESSO
+						</option>
+						<option value="FACTUM">
+							<xsl:if test="config_data/customer_list_format='FACTUM'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							FACTUM
+						</option>
+					</select>
+				</div>
+
 				<div class="pure-control-group">
 					<div class="heading">
 						<legend>

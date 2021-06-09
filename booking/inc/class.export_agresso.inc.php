@@ -29,14 +29,61 @@
 			$this->config->read_repository();
 		}
 
-		public function do_your_magic( $buffer, $id, $extension)
+		public function transfer_customer_list( $buffer, $filnavn_base)
+		{
+			$file_written = false;
+
+			$fil_katalog = rtrim($this->config->config_data['invoice_export_path'],"/");
+
+			if(!$fil_katalog)
+			{
+				$fil_katalog = sys_get_temp_dir();
+			}
+
+			$filnavn = $fil_katalog . "/{$filnavn_base}";
+
+			$fp = fopen($filnavn, "wb");
+			fwrite($fp, $buffer);
+
+			if (fclose($fp))
+			{
+				$file_written = true;
+			}
+
+			$transfer_ok = false;
+			if ($file_written)
+			{
+				if($this->config->config_data['invoice_export_method'] == 'ftp')
+				{
+					$transfer_ok = $this->transfer($filnavn);
+				}
+				else if($this->config->config_data['invoice_export_method'] == 'ftps')
+				{
+					$transfer_ok = $this->transfer_ftps($filnavn);
+				}
+				else
+				{
+					$transfer_ok = true;
+				}
+			}
+
+			if ($transfer_ok)
+			{
+				$message = "Overfort fil: {$filnavn}";
+			}
+			else
+			{
+				$message = 'Noe gikk galt med overforing av godkjendte fakturaer!';
+			}
+			return $message;
+		}
+
+		public function do_your_magic( $buffer, $id, $file_name, $extension)
 		{
 			// Viktig: må kunne rulle tilbake dersom noe feiler.
 			$this->db->transaction_begin();
 
-//			$buffer = 'test';
-
-			$filnavn = $this->lagfilnavn($extension);
+			$filnavn = $this->lagfilnavn($file_name, $extension);
 
 			$file_written = false;
 
@@ -80,18 +127,23 @@
 			return $message;
 		}
 
-		protected function lagfilnavn($extension = 'TXT')
+		protected function lagfilnavn($file_name_part, $extension = 'TXT')
 		{
 			$fil_katalog = rtrim($this->config->config_data['invoice_export_path'],"/");
 			if(!$fil_katalog)
 			{
 				$fil_katalog = sys_get_temp_dir();
 			}
+
+			$filnavn = $fil_katalog . "/{$file_name_part}_" . date("ymd") . ".{$extension}";
+			return $filnavn;
+
+/*
 			$continue = true;
 			$i = 1;
 			do
 			{
-				$filnavn = $fil_katalog . '/AktivbyLG04_' . date("ymd") . '_' . sprintf("%02s", $i) . ".{$extension}";
+				$filnavn = $fil_katalog . "/{$file_name_part}_" . date("ymd") . '_' . sprintf("%02s", $i) . ".{$extension}";
 
 				//Sjekk om filen eksisterer
 				If (!file_exists($filnavn))
@@ -105,6 +157,8 @@
 
 			//Ingen løpenr er ledige, gi feilmelding
 			return false;
+ * 
+ */
 		}
 
 		private function transfer_ftps( $filnavn )

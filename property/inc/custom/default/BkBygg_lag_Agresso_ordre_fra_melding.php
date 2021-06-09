@@ -97,6 +97,11 @@
 				$vendor_data = $contacts->read_single(array('id' => $_ticket['vendor_id']), $vendor_data);
 				if (is_array($vendor_data))
 				{
+					if($vendor_data['category'] == 2) // intern leverandør
+					{
+						return 2;					
+					}
+
 					foreach ($vendor_data['attributes'] as $attribute)
 					{
 						if ($attribute['name'] == 'adresse')
