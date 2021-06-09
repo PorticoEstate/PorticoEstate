@@ -1346,22 +1346,20 @@
 
 					$header = array();
 					
-					$header['AntallDagerForfall'] = 30; //int
+//					$header['AntallDagerForfall'] = 30; //int
 //					$header['Avtalenr'] = ''; //int
 //					$header['AvtaltForfallFast'] = ''; //int
-					$header['AvtaltForfallTilfeldig'] = 30; //int
-					$header['Beregningsmodus'] = 'B';//char(3)
+//					$header['AvtaltForfallTilfeldig'] = 30; //int
+//					$header['Beregningsmodus'] = 'B';//char(3)
 //					$header['Bestillingsnr'] = '';
 //					$header['Blankettbehandling'] = '';//char(3)
 //					$header['Blankettekstnr'] = ''; //int
 					$header['Blanketttype'] = 'F';//char(1) F = Faktura
 					$header['datoendr'] = date('d.m.Y');//dato 31.01.1997
 					$header['Deresref'] = $ext_ord_ref;//char(30)
-// 12/5: kunde id
-//					$header['Fagsystemkundeid'] = $client_id;//char(128)
 					$header['Fagsystemkundeid'] = $kundenr;
-					$header['Fakturadato'] = date('d.m.Y');
-					$header['Fakturahyppighet'] = 'MND';//char(3)
+//					$header['Fakturadato'] = date('d.m.Y');
+//					$header['Fakturahyppighet'] = 'MND';//char(3)
 
 
 					$line_no = 1;
@@ -1385,7 +1383,7 @@
 					$fakturalinje['Avgift']	 = '';  //Beløp
 					$fakturalinje['BalanseDim']	 = '';  //char(8)
 					$fakturalinje['enhetspris']	 = $reservation['cost'];  //Beløp
-					$fakturalinje['Fagsystemkontoid']	 = '';  //char(30)
+					$fakturalinje['Fagsystemkontoid']	 = '';  //char(30) ???
 					$fakturalinje['Fagsystemvareid']	 = '';  //char(30)
 					$fakturalinje['FeiletLinjeFelt']	 = '';  //Char
 					$fakturalinje['FormalDim']	 = '';  //char(8)
@@ -1408,7 +1406,7 @@
 						$fakturalinje['ObjektDim'] = strtoupper(substr($account_codes['object_number'], 0, 8));//char(8)
 					}
 //					$fakturalinje['Oppdateringsresultat']	 = '';  //string
-//					$fakturalinje['orgkode']	 = '';  //char(8)
+					$fakturalinje['orgkode']	 = '';  //char(8)
 //					$fakturalinje['OrgvareGUID']	 = '';  //
 //					$fakturalinje['PrisGUID']	 = '';  //
 //					$fakturalinje['rabatt']	 = '';  //Desimal
@@ -1423,7 +1421,7 @@
 //					$fakturalinje['VareGuid']	 = '';  //
 					$fakturalinje['Varekode']	 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
 
-//					$fakturalinje['Fakturaorgkode']	 = '';  //
+					$fakturalinje['Fakturaorgkode']	 = '';  //
 
 					//Topptekst til faktura, knyttet mot fagavdeling
 					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
@@ -1440,12 +1438,12 @@
 //					$fakturalinje['InitEndr']	 = '';  //
 //					$fakturalinje['Kontaktpersoner']	 = '';  //
 
-					$fakturalinje['Kundenr']	 = $stored_header['kundenr'];  //
+//					$fakturalinje['Kundenr']	 = $stored_header['kundenr'];  //
 //					$fakturalinje['Oppdateringsresultat']	 = '';  //
 //					$fakturalinje['RegningsmottakerFagsystemkundeid']	 = '';  //char(128)
 //					$fakturalinje['Regningsmottakerkundenr']	 = '';  //Int
 //					$fakturalinje['Samlefakturasortering']	 = '';  //
-//					$fakturalinje['Systemid']	 = '';  //
+					$fakturalinje['Systemid']	 = $client_id;  //
 //					$fakturalinje['tidendr']	 = '';  //tid
 //					$fakturalinje['VaremottakerFagsystemkundeid']	 = '';  //char(128)
 //					$fakturalinje['Varemottakerkundenr']	 = '';  //int
@@ -1542,7 +1540,8 @@
 					$fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description'] . ' - ' . $reservation['description']), 0, 225);
 					$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
 					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
-					$fakturalinje['Kundenr']			 = $stored_header['kundenr'];
+//					$fakturalinje['Kundenr']			 = $stored_header['kundenr'];
+					$fakturalinje['Systemid']	 = $client_id;  //
 
 					$fakturalinjer[$check_customer_identifier][] = $fakturalinje;
 

@@ -132,14 +132,12 @@
 			$config		 = CreateObject('phpgwapi.config', 'booking')->read();
 			$customers	 = $this->so->get_customer_list();
 
-			if ($config['external_format'] == 'AGRESSO')
+			if ($config['customer_list_format'] == 'AGRESSO')
 			{
-				$factum_customer = new factum_customer($config);
-				return $factum_customer->get_customer_list($customers);
 				$agresso_cs15 = new agresso_cs15($config);
 				return $agresso_cs15->get_customer_list($customers);
 			}
-			else if ($config['external_format'] == 'FACTUM')
+			else if ($config['customer_list_format'] == 'FACTUM')
 			{
 				$factum_customer = new factum_customer($config);
 				return $factum_customer->get_customer_list($customers);
@@ -195,17 +193,20 @@
 				else
 				{
 					xmlwriter_write_element($memory, 'Fodselsnummer', $identifier);
+					xmlwriter_write_element($memory, 'Fornavn', $entry['name']);
 				}
-				xmlwriter_write_element($memory, 'Fagsystemkundeid', $this->client);
 				xmlwriter_write_element($memory, 'Navn', $entry['name']);
 				xmlwriter_write_element($memory, 'AdresseLinje1', $entry['street']);
+				xmlwriter_write_element($memory, 'Adressetype', 'O'); //Offentlig = O,Midlertidig = M, OffentligReg = R, Utenlands = U, UtenlandsMidlertidig = X
+				xmlwriter_write_element($memory, 'Fagsystemkundeid', $entry['id']);
 				xmlwriter_write_element($memory, 'Poststed', $entry['city']);
 				xmlwriter_write_element($memory, 'TelefonMobil', $entry['phone']);
 				xmlwriter_write_element($memory, 'Epost', $entry['email']);
-				xmlwriter_write_element($memory, 'Adressetype', 'O'); //Offentlig = O,Midlertidig = M, OffentligReg = R, Utenlands = U, UtenlandsMidlertidig = X
 				xmlwriter_write_element($memory, 'Landkode', $country_code);
 				xmlwriter_write_element($memory, 'PostNr', $entry['zip_code']);
 				xmlwriter_write_element($memory, 'Kundekategori', $customer_type);
+				xmlwriter_write_element($memory, 'SystemIdEndr', $this->client); //??
+
 				xmlwriter_end_element($memory);
 			}
 

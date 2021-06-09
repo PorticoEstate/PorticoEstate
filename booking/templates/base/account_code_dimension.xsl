@@ -394,6 +394,35 @@
 					<div class="heading">
 						<legend>
 							<h3>
+								<xsl:value-of select="php:function('lang', 'customer list')"/>
+							</h3>
+						</legend>
+					</div>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'customer list format')"/>
+					</label>
+					<select id="field_invoice_export_method" name="customer_list_format">
+						<option value="AGRESSO">
+							<xsl:if test="config_data/customer_list_format='AGRESSO'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							AGRESSO
+						</option>
+						<option value="FACTUM">
+							<xsl:if test="config_data/customer_list_format='FACTUM'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							FACTUM
+						</option>
+					</select>
+				</div>
+
+				<div class="pure-control-group">
+					<div class="heading">
+						<legend>
+							<h3>
 								<xsl:value-of select="php:function('lang', 'export invoice')"/>
 							</h3>
 						</legend>

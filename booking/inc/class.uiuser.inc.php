@@ -80,7 +80,7 @@
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 				$config_data = CreateObject('phpgwapi.config', 'booking')->read();
-				if($config_data['external_format'] == 'FACTUM')
+				if($config_data['customer_list_format'] == 'FACTUM')
 				{
 					header('Content-type: text/xml');
 					$file_ending = 'xml';
