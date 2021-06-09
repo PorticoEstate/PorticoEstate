@@ -6,7 +6,7 @@ $(document).ready(function ()
 	JqueryPortico.autocompleteHelper(requestUrl, 'field_building_name', 'field_building_id', 'building_container');
 });
 
-$(window).on('load', function()
+$(window).on('load', function ()
 {
 	var building_id = $('#field_building_id').val();
 	if (building_id > 0)
@@ -27,13 +27,18 @@ $(window).on('load', function()
 
 function populateTableChkResources(building_id, selection)
 {
-	oArgs = {menuaction: 'booking.uiresource.index', sort: 'name', filter_building_id: building_id, filter_activity_id: $("#field_activity").val(), length: -1};
+	oArgs = {menuaction: 'booking.uiresource.index', sort: 'name', filter_building_id: building_id, length: -1};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	$("input:checkbox[filter=activity]:checked").each(function ()
+	{
+		requestUrl += '&filter_activity_id[]=' + $(this).val();
+	});
 	var container = 'resources_container';
 	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [
 						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}, {name: 'checked', value: 'checked'}
 					]}
-			], value: 'id'/*, checked: selection*/}, {key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}
+			], value: 'id'/*, checked: selection*/}, {key: 'name', label: lang['Name']}, {key: 'rescategory_name', label: lang['Resource Type']}
 	];
 	populateTableChk(requestUrl, container, colDefsResources);
 }

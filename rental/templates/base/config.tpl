@@ -165,7 +165,8 @@
 
 			<tr>
 				<td>{lang_login_external_db_password}:</td>
-				<td><input type ="password" name="newsettings[external_db_password]" value="{value_external_db_password}"></td>
+				<td><input type ="password" name="newsettings[external_db_password]" value="{value_external_db_password}" autocomplete="off"
+						   readonly="readonly" onfocus="this.removeAttribute('readonly');"></td>
 			</tr>
 
 			<tr>

@@ -67,6 +67,8 @@
 		protected $_like;
 		protected $_global_lock = false;
 
+		public $custom;
+
 		public function __construct()
 		{
 			$this->account		 = (int)$GLOBALS['phpgw_info']['user']['account_id'];

@@ -173,7 +173,7 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->add($permission);
-					$this->redirect($this->generate_link_params('index'));
+					self::redirect($this->generate_link_params('index'));
 				}
 			}
 
@@ -200,6 +200,6 @@
 		{
 			$id = phpgw::get_var('id', 'int');
 			$this->bo->delete($id);
-			$this->redirect($this->generate_link_params('index'));
+			self::redirect($this->generate_link_params('index'));
 		}
 	}

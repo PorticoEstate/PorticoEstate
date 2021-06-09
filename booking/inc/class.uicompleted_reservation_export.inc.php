@@ -40,7 +40,7 @@
 
 		public function redirect_to( $action, $params = array() )
 		{
-			return $this->redirect($this->link_to_params($action, $params));
+			return self::redirect($this->link_to_params($action, $params));
 		}
 
 		public function link_to_params( $action, $params = array() )
@@ -208,7 +208,8 @@
 				);
 			}
 
-			$filters_to = strtotime(extract_values($_GET, array("filter_to")));
+			$filters_to_array = extract_values($_GET, array("filter_to"));
+			$filters_to = strtotime($filters_to_array["filter_to"]);
 			$data['filters'] = date("Y-m-d", $filters_to);
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -272,9 +273,7 @@
 
 			if ($filter_to)
 			{
-				$filter_to2 = explode("/", $filter_to);
-				$filter_to = $filter_to2[1] . "/" . $filter_to2[0] . "/" . $filter_to2[2];
-				$filters['where'][] = "%%table%%" . sprintf(".to_ <= '%s 23:59:59'", $GLOBALS['phpgw']->db->db_addslashes($filter_to));
+				$filters['where'][] = "%%table%%" . sprintf(".to_ <= '%s 23:59:59'", date("Y-m-d", phpgwapi_datetime::date_to_timestamp($filter_to)));
 			}
 
 			$params = array(
@@ -362,7 +361,7 @@
 			}
 			$export = $this->bo->read_single($id);
 			$this->add_default_display_data($export);
-			$this->add_template_file('helpers');
+			self::add_template_file('helpers');
 			$export['cancel_link'] = self::link(array('menuaction' => 'booking.uicompleted_reservation_export.index'));
 
 			$tabs = array();

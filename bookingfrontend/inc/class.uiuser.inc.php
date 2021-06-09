@@ -72,7 +72,7 @@
 				$id = $this->bo->so->get_user_id($this->ssn);
 				if(!$id)
 				{
-					$this->redirect(array('menuaction' => 'bookingfrontend.uiuser.add'));
+					self::redirect(array('menuaction' => 'bookingfrontend.uiuser.add'));
 				}
 			}
 
@@ -80,6 +80,8 @@
 			$datatable_def = array();
 
 			$lang_view = lang('view');
+			$lang_copy = lang('copy');
+			$lang_application = lang('application');
 
 			$application_def = array
 			(
@@ -89,7 +91,8 @@
 				array('key' => 'building_name', 'label' => lang('Where'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'customer_organization_number', 'label' => lang('organization number'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'contact_name', 'label' => lang('contact'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'link', 'label' => $lang_view, 'sortable' => false, 'resizeable' => true)
+				array('key' => 'link', 'label' => $lang_view, 'sortable' => false, 'resizeable' => true),
+				array('key' => 'copy_link', 'label' => $lang_application, 'sortable' => false, 'resizeable' => true)
 			);
 
 			$application_data = $this->bo->so->get_applications($this->ssn);
@@ -100,7 +103,7 @@
 				$entry['lang_status'] = lang($entry['status']);
 				$entry['date'] = $GLOBALS['phpgw']->common->show_date(strtotime($entry['created']), $dateformat);
 				$entry['link'] = '<a href="' .self::link(array('menuaction' => "{$this->module}.uiapplication.show", 'id' => $entry['id'], 'secret' => $entry['secret'])) . '">' . $lang_view . '</a>';
-
+				$entry['copy_link'] ='<a href="' .self::link(array('menuaction' => "{$this->module}.uiapplication.add", 'application_id' => $entry['id'])) . '" target="_blank">' . $lang_copy . '</a>';
 			}
 			unset($entry);
 
@@ -118,7 +121,7 @@
 		//			array('disableFilter' => true),
 		//			array('disablePagination' => true),
 		//			array('rows_per_page' => $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']),
-					array('order' => json_encode(array(0, 'asc'))),
+					array('order' => json_encode(array(0, 'desc'))),
 				)
 			);
 
@@ -153,7 +156,7 @@
 		//			array('disableFilter' => true),
 		//			array('disablePagination' => true),
 		//			array('rows_per_page' => $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']),
-					array('order' => json_encode(array(0, 'asc'))),
+					array('order' => json_encode(array(0, 'desc'))),
 				)
 			);
 
@@ -239,7 +242,7 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->add($user);
-					$this->redirect(array('menuaction' => $this->module  . '.uiuser.show', 'id' => $receipt['id']));
+					self::redirect(array('menuaction' => $this->module  . '.uiuser.show', 'id' => $receipt['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -266,7 +269,7 @@
 
 			if(!$id)
 			{
-				$this->redirect(array('menuaction' => 'bookingfrontend.uiuser.add'));
+				self::redirect(array('menuaction' => 'bookingfrontend.uiuser.add'));
 			}
 
 			$user = $this->bo->read_single($id);
@@ -295,12 +298,12 @@
 					$receipt = $this->bo->update($user);
 					if ($this->module == "bookingfrontend")
 					{
-						$this->redirect(array('menuaction' => 'bookingfrontend.uiuser.show',
+						self::redirect(array('menuaction' => 'bookingfrontend.uiuser.show',
 							'id' => $receipt["id"]));
 					}
 					else
 					{
-						$this->redirect(array('menuaction' => 'booking.uiuser.show', 'id' => $receipt["id"]));
+						self::redirect(array('menuaction' => 'booking.uiuser.show', 'id' => $receipt["id"]));
 					}
 				}
 			}

@@ -233,6 +233,12 @@
 										</xsl:if>
 										<xsl:value-of select="php:function('lang', '4 weeks')" />
 									</option>
+									<option value="5">
+										<xsl:if test="interval=5">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="php:function('lang', '1 day')" />
+									</option>
 								</select>
 							</div>
 						</div>

@@ -180,6 +180,12 @@
 							'label'		 => lang('enable controller'),
 							'sortable'	 => false
 						),
+						array
+							(
+							'key'		 => 'list_address',
+							'label'		 => lang('address'),
+							'sortable'	 => false
+						),
 					)
 				)
 			);

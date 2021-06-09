@@ -50,14 +50,9 @@
 			$this->function_name = get_class($this);
 			$this->sub_location	 = lang('property');
 			$this->function_msg	 = 'Manglende fakturamottak i Agresso';
-			/**
-			 * Bruker konffigurasjon fra '.ticket' - fordi denne definerer oppslaget mot fullmaktsregisteret ved bestilling.
-			 */
-			$config					 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
-			$this->soap_url			 = $config->config_data['external_register']['url'];
-			$this->soap_username	 = $config->config_data['external_register']['username'];
-			$this->soap_password	 = $config->config_data['external_register']['password'];
+			$this->soap_url			 = 'https://agrpweb.adm.bgo/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101';
 			$this->config_invoice	 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			require_once PHPGW_SERVER_ROOT . '/property/inc/soap_client/agresso/autoload.php';
 		}
 
 		function execute()
@@ -157,13 +152,34 @@
 
 			foreach ($data as &$valueset)
 			{
+				if(empty($valueset['voucher_no']))
+				{
+					continue;
+				}
+/*
+           [tab] => A
+            [account] => 123015
+            [voucher_no] => 921097628
+            [order_id] => 45045416
+            [ext_inv_ref] => 100296
+            [amount] => 545.03
+            [step] => Forsinkelse til varer er mottatt
+            [xwf_state] => Arbeidsflyt pågår
+            [apar_id] => 100497
+            [xapar_id] => BERGEN ELEKTROSERVICE AS
+            [voucher_date] => 2021-03-17T00:00:00+01:00
+            [due_date] => 2021-04-30T00:00:00+02:00
+*/
+
+
+
 				$sql	 = <<<SQL
 					SELECT fakturamottak.regtid
 					FROM ( SELECT  fm_ecobilagoverf.regtid
-						FROM fm_ecobilagoverf WHERE external_voucher_id = {$valueset['bilagsNr']}
+						FROM fm_ecobilagoverf WHERE external_voucher_id = '{$valueset['voucher_no']}'
 							UNION ALL
 						SELECT fm_ecobilag.regtid
-						FROM fm_ecobilag WHERE external_voucher_id = {$valueset['bilagsNr']}
+						FROM fm_ecobilag WHERE external_voucher_id = '{$valueset['voucher_no']}'
 						 ) fakturamottak
 SQL;
 				$this->db->query($sql, __LINE__, __FILE__);
@@ -180,7 +196,7 @@ SQL;
 					{
 						$fil_katalog = $this->config_invoice->config_data['export']['path'];
 						
-						$filename = "{$fil_katalog}/V3_varemottak_{$valueset['ordreNr']}_{$valueset['bilagsNr']}.xml";
+						$filename = "{$fil_katalog}/V3_varemottak_{$valueset['order_id']}_{$valueset['voucher_no']}.xml";
 
 						//Sjekk om filen eksisterer
 						if (file_exists($filename))
@@ -284,32 +300,95 @@ SQL;
 			return $connection;
 		}
 
+		/**
+		 * Ny spørring direkte i Agresso/UBW
+		 * @return array
+		 */
 		function get_data()
 		{
-			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/manglendevaremottak
-			$url		 = "{$this->soap_url}/manglendevaremottak";
-			$username	 = $this->soap_username; //'portico';
-			$password	 = $this->soap_password; //'********';
+			$this->debug = false;
 
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_USERPWD, "{$username}:{$password}");
-			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			$username				 = 'WEBSER';
+			$password				 = 'wser10';
+			$client					 = 'BY';
 
-			$result = curl_exec($ch);
+			$TemplateId				 = '12770'; //Spørring på varemottak
 
-			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			if (!$httpCode)
+
+			$service	 = new \QueryEngineV201101(array(
+				'trace' => 1,
+				'location' => $this->soap_url,
+				'uri'		=> 'http://services.agresso.com/QueryEngineService/QueryEngineV201101'
+				),$this->soap_url);
+			$Credentials = new \WSCredentials();
+			$Credentials->setUsername($username);
+			$Credentials->setPassword($password);
+			$Credentials->setClient($client);
+
+			// Get the default settings for a template (templateId)
+			try
 			{
-				throw new Exception("No connection: {$url}");
+				$searchProp = $service->GetSearchCriteria(new \GetSearchCriteria($TemplateId, true, $Credentials));
+				if ($this->debug)
+				{
+					echo "SOAP HEADERS:\n" . $service->__getLastRequestHeaders() . PHP_EOL;
+					echo "SOAP REQUEST:\n" . $service->__getLastRequest() . PHP_EOL;
+				}
 			}
-			curl_close($ch);
+			catch (SoapFault $fault)
+			{
+				echo '<pre>';
+				print_r($fault);
+				echo '</pre>';
+				$msg = "SOAP Fault:\n faultcode: {$fault->faultcode},\n faultstring: {$fault->faultstring}";
+				echo $msg . PHP_EOL;
+				trigger_error(nl2br($msg), E_USER_ERROR);
+			}
 
-			$result = json_decode($result, true);
+			//Kriterier
+			//		_debug_array($searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties());
 
-			return $result;
+			$input									 = new InputForTemplateResult($TemplateId);
+			$options								 = $service->GetTemplateResultOptions(new \GetTemplateResultOptions($Credentials));
+
+//			_debug_array($options);
+			$options->RemoveHiddenColumns			 = true;
+			$options->ShowDescriptions				 = true;
+			$options->Aggregated					 = false;
+			$options->OverrideAggregation			 = false;
+			$options->CalculateFormulas				 = false;
+			$options->FormatAlternativeBreakColumns	 = false;
+			$options->FirstRecord					 = false;
+			$options->LastRecord					 = false;
+
+			$input->setTemplateResultOptions($options);
+			// Get new values to SearchCriteria (if that’s what you want to do
+			$input->setSearchCriteriaPropertiesList($searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList());
+			//Retrieve result
+
+			$result = $service->GetTemplateResultAsDataSet(new \GetTemplateResultAsDataSet($input, $Credentials));
+
+			$data = $result->getGetTemplateResultAsDataSetResult()->getTemplateResult()->getAny();
+			if ($this->debug)
+			{
+				echo "SOAP HEADERS:\n" . $service->__getLastRequestHeaders() . PHP_EOL;
+				echo "SOAP REQUEST:\n" . $service->__getLastRequest() . PHP_EOL;
+			}
+
+			$xmlparse	 = CreateObject('property.XmlToArray');
+			$xmlparse->setEncoding('utf-8');
+			$xmlparse->setDecodesUTF8Automaticly(false);
+			$var_result	 = $xmlparse->parse($data);
+
+			if ($var_result)
+			{
+				$ret = $var_result['Agresso'][0]['AgressoQE'];
+			}
+			else
+			{
+				$ret = array();
+			}
+
+			return $ret;
 		}
 	}

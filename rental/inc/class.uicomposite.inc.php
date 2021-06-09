@@ -1478,7 +1478,7 @@ JS;
 			}
 
 			$schedule['composite_id'] = $composite_id;
-			$schedule['date'] = $date;
+			$schedule['date'] = $date->format('Y-m-d');
 			$schedule['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
 			$schedule['toolbar'] = json_encode($toolbar);
 			$data['schedule'] = $schedule;
@@ -1491,7 +1491,6 @@ JS;
 
 		public function get_schedule ()
 		{
-			$composite_id = (int)phpgw::get_var('id');
 			$date = new DateTime(phpgw::get_var('date'));
 
 			if ($date->format('w') != 1)

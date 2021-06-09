@@ -293,6 +293,12 @@
 				$season = $this->season_bo->read_single(phpgw::get_var('season_id', 'int'));
 				array_set_default($_POST, 'resources', array());
 
+				if(phpgw::get_var('customer_organization_id', 'bool', 'POST'))
+				{
+					$_POST['organization_id'] = phpgw::get_var('customer_organization_id', 'int');
+					$_POST['organization_name'] = phpgw::get_var('customer_organization_name', 'string');
+				}
+
 				if(empty($_POST['organization_id']))
 				{
 					$application_id = phpgw::get_var('application_id', 'int', 'POST');
@@ -383,7 +389,7 @@
 					{
 						$receipt = $this->bo->add($allocation);
 						$this->bo->so->update_id_string();
-						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $receipt['id']));
+						self::redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $receipt['id']));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -442,7 +448,7 @@
 					if ($step == 3)
 					{
 						$this->bo->so->update_id_string();
-						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $receipt['id']));
+						self::redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $receipt['id']));
 					}
 				}
 			}
@@ -583,8 +589,11 @@
 
 		public function edit()
 		{
-
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$allocation = $this->bo->read_single($id);
 			$allocation['building'] = $this->building_bo->so->read_single($allocation['building_id']);
 			$allocation['building_name'] = $allocation['building']['name'];
@@ -614,7 +623,7 @@
 						$receipt = $this->bo->update($allocation);
 						$this->bo->so->update_id_string();
 						$this->send_mailnotification_to_organization($organization, lang('Allocation changed'), phpgw::get_var('mail', 'html', 'POST'));
-						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $allocation['id']));
+						self::redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $allocation['id']));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -638,8 +647,8 @@
 					'date', 'security', 'file'));
 			$cost_history = $this->bo->so->get_ordered_costs($id);
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime');
-			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime', phpgwapi_datetime::date_to_timestamp($allocation['from_']));
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime', phpgwapi_datetime::date_to_timestamp($allocation['to_']));
 
 			self::render_template_xsl('allocation_edit', array('allocation' => $allocation,
 				'cost_history' => $cost_history));
@@ -681,7 +690,7 @@
 					else
 					{
 						$err = $this->bo->so->delete_allocation($id);
-						$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $allocation['building_id']));
+						self::redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $allocation['building_id']));
 					}
 				}
 				else
@@ -740,7 +749,7 @@
 					}
 					if ($step == 3)
 					{
-						$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $allocation['building_id']));
+						self::redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $allocation['building_id']));
 					}
 				}
 			}

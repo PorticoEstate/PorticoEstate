@@ -42,7 +42,7 @@
 			{
 				$this->bo->show_all_objects();
 			}
-			$this->redirect(array('menuaction' => 'booking.uiaudience.index'));
+			self::redirect(array('menuaction' => 'booking.uiaudience.index'));
 		}
 
 		function treeitem( $children, $parent_id )
@@ -178,7 +178,7 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->add($audience);
-					$this->redirect(array('menuaction' => 'booking.uiaudience.index'));
+					self::redirect(array('menuaction' => 'booking.uiaudience.index'));
 				}
 			}
 			array_set_default($audience, 'sort', '0');
@@ -198,6 +198,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$audience = $this->bo->read_single($id);
 			$activities = $this->activity_bo->get_top_level($audience['activity_id']);
 
@@ -216,7 +220,7 @@
 				if (!$errors)
 				{
 					$audience = $this->bo->update($audience);
-					$this->redirect(array('menuaction' => 'booking.uiaudience.index', 'id' => $audience['id']));
+					self::redirect(array('menuaction' => 'booking.uiaudience.index', 'id' => $audience['id']));
 				}
 			}
 			$this->flash_form_errors($errors);

@@ -77,9 +77,10 @@
 					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_ecodimd'					 => array('name' => 'fm_ecodimd', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'phpgw_categories'				 => array('name'		 => 'phpgw_categories (' . lang('categories') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'bb_building'				 => array('name'		 => 'bb_building (' . Ressursgruppe . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'bb_resource'				 => array('name'		 => 'bb_resource (' . Ressurser . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'bb_building_resource'		 => array('name'		 => 'bb_building_resource (' . Ressurskobling . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'bb_building'				 => array('name'		 => 'bb_building (' . 'Ressursgruppe' . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'bb_resource'				 => array('name'		 => 'bb_resource (' . 'Ressurser' . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'bb_building_resource'		 => array('name'		 => 'bb_building_resource (' . 'Ressurskobling' . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				'fm_building_part'	 => array('name'		 => 'fm_building_part (' . 'Bygningsdel' . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 			);
 
 			$location_types = execMethod('property.soadmin_location.select_location_type');
@@ -686,7 +687,17 @@ HTML;
 			//Do your magic...
 			foreach ($datalines as $data)
 			{
-				$_ok = $this->import_conversion->add($data);
+				try
+				{
+					$_ok = $this->import_conversion->add($data);
+				}
+				catch (Exception $ex)
+				{
+					$this->errors[] = "Import of data failed. (" . (time() - $this->start_time) . " seconds)";
+					$this->errors[] = $ex->getMessage();
+					$this->db->transaction_abort();
+					return false;
+				}
 
 				if (!$_ok)
 				{
@@ -857,15 +868,20 @@ HTML;
 
 		protected function get_import_conv( $selected = '' )
 		{
-			$dir_handle	 = @opendir(PHPGW_SERVER_ROOT . "/property/inc/import/{$GLOBALS['phpgw_info']['user']['domain']}");
-			$i			 = 0;
+			$conv_list = array();
+			$dir_handle	 = opendir(PHPGW_SERVER_ROOT . "/property/inc/import/{$GLOBALS['phpgw_info']['user']['domain']}");
+
+			if(!$dir_handle)
+			{
+				return $conv_list;
+			}
+
 			$myfilearray = array();
-			while ($file		 = readdir($dir_handle))
+			while ($file = readdir($dir_handle))
 			{
 				if ((substr($file, 0, 1) != '.') && is_file(PHPGW_SERVER_ROOT . "/property/inc/import/{$GLOBALS['phpgw_info']['user']['domain']}/{$file}"))
 				{
-					$myfilearray[$i] = $file;
-					$i++;
+					$myfilearray[] = $file;
 				}
 			}
 			closedir($dir_handle);
@@ -876,7 +892,7 @@ HTML;
 				$fname = preg_replace('/_/', ' ', $myfilearray[$i]);
 
 				$conv_list[] = array
-					(
+				(
 					'id'		 => $myfilearray[$i],
 					'name'		 => $fname,
 					'selected'	 => $myfilearray[$i] == $selected ? 1 : 0

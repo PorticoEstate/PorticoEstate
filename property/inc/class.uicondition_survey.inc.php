@@ -616,6 +616,8 @@
 				)
 			);
 
+			$data_validation_format = str_ireplace(array('Y','m', 'd'), array('yyyy', 'mm', 'dd' ), $this->dateFormat);
+
 			$data = array
 				(
 				'datatable_def'		 => $datatable_def,
@@ -629,7 +631,8 @@
 						'add_empty'	 => true))),
 				'editable'			 => $mode == 'edit',
 				'tabs'				 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'multiple_uploader'	 => $mode == 'edit' ? true : ''
+				'multiple_uploader'	 => $mode == 'edit' ? true : '',
+				'data_validation_format'	 => $data_validation_format
 			);
 
 			//print_r($data['tabs']); die;

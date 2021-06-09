@@ -165,6 +165,10 @@ JqueryPortico.move_record = function (sUrl)
 
 JqueryPortico.searchLink = function (key, oData)
 {
+	if(typeof(oData[key]) == 'undefined')
+	{
+		return;
+	}
 	var name = oData[key];
 	var link = oData['query_location'][key];
 

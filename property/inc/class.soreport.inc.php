@@ -29,7 +29,19 @@
 	 */
 	class property_soreport
 	{
+		public
+			$operators,
+			$total_records,
+			$operators_equal,
+			$operators_like,
+			$operators_in,
+			$operators_null;
 
+		protected 
+			$db,
+			$join,
+			$left_join,
+			$like;
 		function __construct()
 		{
 			$this->db			 = & $GLOBALS['phpgw']->db;
@@ -441,6 +453,7 @@
 				$values[$_group][] = $value;
 			}
 
+			$result = array();
 			if (count($values))
 			{
 				$result = $this->_generate_total_sum($values, $array_sum, $array_count);
@@ -500,7 +513,8 @@
 					}
 					else
 					{
-						$grand_total[$columm] = ($grand_total[$columm] + $value[$columm]) ? ($grand_total[$columm] + $value[$columm]) : '';
+						$temp = isset($grand_total[$columm]) && (float)$grand_total[$columm] ? $grand_total[$columm] : 0;
+						$grand_total[$columm] = ($temp + (float)$value[$columm]) ? ($temp + (float)$value[$columm]) : 0;
 					}
 				}
 			}

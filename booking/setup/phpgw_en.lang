@@ -1,0 +1,844 @@
+current activities	booking	en	Current activities
+select	booking	en	Select
+-- select an activity --	booking	en	-- select an activity --
+-- select a building --	booking	en	-- select a building --
+-- select a season --	booking	en	-- select a season --
+why?	booking	en	Why?
+where?	booking	en	Where?
+when?	booking	en	When?
+who?	booking	en	Who?
+how many?	booking	en	How many?
+accept application	booking	en	Accept application
+accepted	booking	en	Accepted
+account	booking	en	Account
+actions	booking	en	Actions
+active	booking	en	Active
+active applications	booking	en	Active applications
+activity	booking	en	Activity
+add a comment	booking	en	Add a comment
+add another date	booking	en	Add another date
+add boundary	booking	en	Add boundary
+add comment	booking	en	Add comment
+comment	booking	en	Comment
+add document	booking	en	Add document
+add new event	booking	en	Add new event
+event settings	booking	en	Event settings
+application event settings	booking	en	Application event settings
+add permission	booking	en	Add permission
+edit permission	booking	en	Edit permission
+admin 1	booking	en	Admin 1
+admin 2	booking	en	Admin 2
+admins	booking	en	Admins
+age group	booking	en	Age group
+agegroup	booking	en	Agegroup
+allocation	booking	en	Allocation
+allocations	booking	en	Allocations
+allocations colliding with existing bookings or allocations (%1)	booking	en	Allocations colliding with existing bookings or allocations (%1)
+allocations that can be created (%1)	booking	en	Allocations that can be created (%1)
+application	booking	en	Application
+applications	booking	en	Applications
+archived	booking	en	Archived
+audience	booking	en	Audience
+bookable resources	booking	en	Bookable resources
+booking	booking	en	Booking
+booking district	booking	en	Booking district
+booking name	booking	en	Booking name
+bookings	booking	en	Bookings
+boundaries	booking	en	Boundaries
+building	booking	en	Building
+building name	booking	en	Building name
+building schedule	booking	en	Building schedule
+buildings	booking	en	Buildings
+bygning	booking	en	Bygning
+cancel	booking	en	Cancel
+cancelled	booking	en	Cancelled
+case officer	booking	en	Case officer
+category	booking	en	Category
+choose a date	booking	en	Choose a date
+choose file	booking	en	Choose file
+city	booking	en	City
+click to sort ascending	booking	en	Click to sort ascending
+click to sort descending	booking	en	Click to sort descending
+contact	booking	en	Contact
+contact 1	booking	en	Contact 1
+contact 2	booking	en	Contact 2
+contact information	booking	en	Contact information
+cost	booking	en	Cost
+create	booking	en	Create
+created	booking	en	Created
+dashboard	booking	en	Dashboard
+day of the week	booking	en	Day of the week
+description	booking	en	Description
+Extra information	booking	en	Extra information
+district	booking	en	District
+document	booking	en	Document
+document name	booking	en	Document name
+documents	booking	en	Documents
+drawing	booking	en	Drawing
+edit	booking	en	Edit
+add agegroup	booking	en	Add agegroup
+edit agegroup	booking	en	Edit agegroup
+edit allocation	booking	en	Edit allocation
+edit audience group	booking	en	Edit audience group
+edit booking	booking	en	Edit booking
+edit event	booking	en	Edit event
+edit organization	booking	en	Edit organization
+editer	booking	en	Editer
+equipment	booking	en	Equipment
+equipment name	booking	en	Equipment name
+event	booking	en	Event
+events	booking	en	Events
+female	booking	en	Female
+filnavn	booking	en	Filnavn
+found %1 results	booking	en	Found %1 results
+fr	booking	en	Fr
+from	booking	en	From
+generate allocations	booking	en	Generate allocations
+generate allocations from week template	booking	en	Generate allocations from week template
+go back to the template week	booking	en	Go back to the template week
+group	booking	en	Group
+history and comments (%1)	booking	en	History and comments (%1)
+History of Cost (%1)	booking	en	History of cost (%1)
+cost is set	booking	en	Cost is set
+cost comment	booking	en	Cost comment
+hms document	booking	en	Hms document
+homepage	booking	en	Homepage
+id	booking	en	Id
+inactivate	booking	en	Inactivate
+inactive	booking	en	Inactive
+invoice information	booking	en	Invoice information
+responsible applicant	booking	en	Responsible applicant
+last modified	booking	en	Last modified
+joading...	booking	en	Joading...
+location	booking	en	Location
+male	booking	en	Male
+mo	booking	en	Mo
+modified	booking	en	Modified
+more info	booking	en	More info
+name	booking	en	Name
+new	booking	en	New
+new activity	booking	en	New activity
+new age group	booking	en	New age group
+new allocation	booking	en	New allocation
+new application	booking	en	New application
+exit to homepage	booking	en	Exit to homepage
+new audience group	booking	en	New audience group
+new booking	booking	en	New booking
+new booking application	booking	en	New booking application
+new building	booking	en	New building
+new building permission	booking	en	New building permission
+New Resource Permission	booking	en	New resource permission
+new contact	booking	en	New contact
+new document	booking	en	New document
+new equipment	booking	en	New equipment
+new event	booking	en	New event
+new group	booking	en	New group
+new organization	booking	en	New organization
+new resource	booking	en	New resource
+new root permission	booking	en	New root permission
+new season	booking	en	New season
+new season permission	booking	en	New season permission
+no Data.	booking	en	No data.
+no description yet	booking	en	No description yet
+no parents	booking	en	No parents
+no records found.	booking	en	No records found.
+no records found.	booking	en	No records found.
+number of participants	booking	en	Number of participants
+estimated number of participants	booking	en	Estimated number of participants
+of	booking	en	Of
+officer	booking	en	Officer
+organization	booking	en	Organization
+organization number	booking	en	Organization number
+organizations	booking	en	Organizations
+other	booking	en	Other
+parent activity	booking	en	Parent activity
+parent id	booking	en	Parent id
+permissions	booking	en	Permissions
+phone	booking	en	Phone
+picture	booking	en	Picture
+planning	booking	en	Planning
+prev	booking	en	Prev
+preview	booking	en	Preview
+price list	booking	en	Price list
+primary admin	booking	en	Primary admin
+primary contact	booking	en	Primary contact
+published	booking	en	Published
+reject application	booking	en	Reject application
+rejected	booking	en	Rejected
+resource	booking	en	Resource
+resource name	booking	en	Resource name
+resource schedule	booking	en	Resource schedule
+resource type	booking	en	Resource type
+resources	booking	en	Resources
+role	booking	en	Role
+root permissions	booking	en	Root permissions
+Sa	booking	en	Sa
+schedule	booking	en	Schedule
+season	booking	en	Season
+season name	booking	en	Season name
+seasons	booking	en	Seasons
+secondary admin	booking	en	Secondary admin
+select a building first	booking	en	Select a building first
+select category...	booking	en	Select category...
+select role...	booking	en	Select role...
+select activity...	booking	en	Select activity...
+settings	booking	en	Settings
+show only active	booking	en	Show only active
+showing items	booking	en	Showing items
+showing items {startRecord} - {endRecord} of {totalRecords}	booking	en	Showing items {startrecord} - {endrecord} of {totalrecords}
+social security number	booking	en	Social security number
+Ssn	booking	en	Ssn
+Date of birth or SSN	booking	en	Date of birth or ssn
+status	booking	en	Status
+street	booking	en	Street
+su	booking	en	Su
+submit	booking	en	Submit
+successfully created %1 allocations:	booking	en	Successfully created %1 allocations:
+surname	booking	en	Surname
+target audience	booking	en	Target audience
+telephone	booking	en	Telephone
+terms and conditions	booking	en	Terms and conditions
+th	booking	en	Th
+to	booking	en	To
+tu	booking	en	Tu
+upload document	booking	en	Upload document
+user	booking	en	User
+we	booking	en	We
+week template	booking	en	Week template
+when	booking	en	When
+when?	booking	en	When?
+where	booking	en	Where
+where?	booking	en	Where?
+who	booking	en	Who
+who?	booking	en	Who?
+why	booking	en	Why
+why?	booking	en	Why?
+zip code	booking	en	Zip code
+postal city	booking	en	Postal city
+team leaders	booking	en	Team leaders
+team leader 1	booking	en	Team leader 1
+team leader 2	booking	en	Team leader 2
+regulation	booking	en	Regulation
+Object No.	booking	en	Object no.
+Article	booking	en	Article
+Unit No.	booking	en	Unit no.
+Unit Prefix	booking	en	Unit prefix
+Invoice Instruction	booking	en	Invoice instruction
+Responsible Code	booking	en	Responsible code
+Service	booking	en	Service
+Project No.	booking	en	Project no.
+Account Codes	booking	en	Account codes
+Account Codes	booking	en	Account codes
+New Account Codes	booking	en	New account codes
+- Actions -	booking	en	- actions -
+- Created -	booking	en	- created -
+Create allocation	booking	en	Create allocation
+Create booking	booking	en	Create booking
+Create event	booking	en	Create event
+Event was created	booking	en	Event was created
+Loading...	booking	en	Loading...
+Back to season	booking	en	Back to season
+Field %1 is required	booking	en	Field %1 is required
+Download	booking	en	Download
+Invoice Data Exports	booking	en	Invoice data exports
+Internal	booking	en	Internal
+External	booking	en	External
+Start date must be after %1	booking	en	Start date must be after %1
+To date must be before %1	booking	en	To date must be before %1
+Add Activity	booking	en	Add activity
+Completed	booking	en	Completed
+1 day	booking	en	1 day
+1 week	booking	en	1 week
+2 weeks	booking	en	2 weeks
+3 weeks	booking	en	3 weeks
+4 weeks	booking	en	4 weeks
+Interval	booking	en	Interval
+Text written in the text area below will be sent as an email to all registered contact persons.	booking	en	Text written in the text area below will be sent as an email to all registered contact persons.
+Inform contact persons	booking	en	Inform contact persons
+Back to Dashboard	booking	en	Back to dashboard
+Booking changed	booking	en	Booking changed
+Allocation changed	booking	en	Allocation changed
+Event changed	booking	en	Event changed
+send reminder for participants statistics	booking	en	Send reminder for participants statistics
+Send reminder	booking	en	Send reminder
+Do not send reminder	booking	en	Do not send reminder
+User has responded to the reminder	booking	en	User has responded to the reminder
+Reminder sent. Not responded to	booking	en	Reminder sent. Not responded to
+In order to work with this application, you must first	booking	en	In order to work with this application, you must first
+assign yourself	booking	en	Assign yourself
+as the case officer responsible for this application.	booking	en	As the case officer responsible for this application.
+In order to work with this application, you must therefore first	booking	en	In order to work with this application, you must therefore first
+Last modified by public	booking	en	Last modified by public
+User '%s' was assigned	booking	en	User '%s' was assigned
+User '%s' was unassigned	booking	en	User '%s' was unassigned
+Show only applications assigned to me	booking	en	Show only applications assigned to me
+Confirm application	booking	en	Confirm application
+confirmed	booking	en	Confirmed
+One or more bookings, allocations or events needs to be created before an application can be Accepted	booking	en	One or more bookings, allocations or events needs to be created before an application can be accepted
+Hide from my Dashboard until new activity occurs	booking	en	Hide from my dashboard until new activity occurs
+Display in my Dashboard	booking	en	Display in my dashboard
+Re-assign to me	booking	en	Re-assign to me
+Assign to me	booking	en	Assign to me
+Currently assigned to user:	booking	en	Currently assigned to user:
+Overlaps with existing event	booking	en	Overlaps with existing event
+Overlaps with existing allocation	booking	en	Overlaps with existing allocation
+Overlaps with existing booking	booking	en	Overlaps with existing booking
+This booking is not within the selected season	booking	en	This booking is not within the selected season
+This resource is not related to a direct booking season	booking	en	This resource is not related to a direct booking season
+This application is not within the selected season	booking	en	This application is not within the selected season
+Invalid from date	booking	en	Invalid from date
+invalid to date	booking	en	Invalid to date
+This booking is outside the organization's allocated time	booking	en	This booking is outside the organization's allocated time
+Overlaps other organizations allocation	booking	en	Overlaps other organizations allocation
+The booking uses resources not in the containing allocation	booking	en	The booking uses resources not in the containing allocation
+Field %1: Invalid format	booking	en	Field %1: invalid format
+Missing file for document	booking	en	Missing file for document
+Permission already exists	booking	en	Permission already exists
+TO needs to be later than FROM	booking	en	To needs to be later than from
+This boundary overlaps another boundary	booking	en	This boundary overlaps another boundary
+COST needs to be non-negative	booking	en	Cost needs to be non-negative
+This allocation overlaps another allocation	booking	en	This allocation overlaps another allocation
+This allocation is outside season boundaries	booking	en	This allocation is outside season boundaries
+Could not update object due to insufficient permissions	booking	en	Could not update object due to insufficient permissions
+Could not add object due to insufficient permissions	booking	en	Could not add object due to insufficient permissions
+Invalid parent activity	booking	en	Invalid parent activity
+Invalid category	booking	en	Invalid category
+Invalid Resource Type	booking	en	Invalid resource type
+Invalid customer type	booking	en	Invalid customer type
+Nothing to export	booking	en	Nothing to export
+Unable to export: Missing a valid Customer ID on some rows	booking	en	Unable to export: missing a valid customer id on some rows
+The invoice data in this list already has generated files	booking	en	The invoice data in this list already has generated files
+The user has accepted the following documents	booking	en	The user has accepted the following documents
+The user has accepted the document under point 8	booking	en	The user has accepted the document under point 8
+Send e-mail	booking	en	Send e-mail
+All fields are required	booking	en	All fields are required
+Send e-mails	booking	en	Send e-mails
+Recipients	booking	en	Recipients
+Mail subject	booking	en	Mail subject
+Mail body	booking	en	Mail body
+The emails were sent successfully	booking	en	The emails were sent successfully
+What	booking	en	What
+Res. Type	booking	en	Res. Type
+Cust. Type	booking	en	Cust. Type
+Customer ID	booking	en	Customer id
+Exported	booking	en	Exported
+Export File	booking	en	Export file
+Order id	booking	en	Order id
+Export Settings	booking	en	Export settings
+Export	booking	en	Export
+Not Generated	booking	en	Not generated
+Generated Files	booking	en	Generated files
+Generate files	booking	en	Generate files
+Exported Files	booking	en	Exported files
+All	booking	en	All
+Choose	booking	en	Choose
+Internal Account Codes	booking	en	Internal account codes
+External Account Codes	booking	en	External account codes
+Total Items	booking	en	Total items
+Total Cost	booking	en	Total cost
+Int. invoice file	booking	en	Int. invoice file
+Ext. invoice file	booking	en	Ext. invoice file
+Asynchronous Tasks	booking	en	Asynchronous tasks
+booking_async_task_update_reservation_state_enabled	booking	en	Booking_async_task_update_reservation_state_enabled
+booking_async_task_send_reminder_enabled	booking	en	Booking_async_task_send_reminder_enabled
+Update	booking	en	Update
+Cannot generate files from empty list	booking	en	Cannot generate files from empty list
+Associated items	booking	en	Associated items
+Unassign me	booking	en	Unassign me
+Order	booking	en	Order
+Completed reservations	booking	en	Completed reservations
+Edit completed reservation	booking	en	Edit completed reservation
+Article Description	booking	en	Article description
+Customer Type	booking	en	Customer type
+Internal Customer	booking	en	Internal customer
+SMS total	booking	en	Sms total
+Type	booking	en	Type
+Participants	booking	en	Participants
+Format	booking	en	Format
+Create report	booking	en	Create report
+No buildings selected	booking	en	No buildings selected
+Reports	booking	en	Reports
+Unable to set classpath	booking	en	Unable to set classpath
+Unable to perform chdir	booking	en	Unable to perform chdir
+Corrupt template	booking	en	Corrupt template
+Unable to fill report	booking	en	Unable to fill report
+Corrupt report object	booking	en	Corrupt report object
+Unable to export to PDF	booking	en	Unable to export to pdf
+Unable to export to CSV	booking	en	Unable to export to csv
+Unable to export to XLS	booking	en	Unable to export to xls
+Unable to parse configuration	booking	en	Unable to parse configuration
+Invalid output-type provided	booking	en	Invalid output-type provided
+Unable to load the MySQL driver	booking	en	Unable to load the mysql driver
+Unable to load the PostgreSQL driver	booking	en	Unable to load the postgresql driver
+Unable to connect to database	booking	en	Unable to connect to database
+Missing report-name	booking	en	Missing report-name
+Invalid report-name	booking	en	Invalid report-name
+Missing connection-string	booking	en	Missing connection-string
+Missing DB-username	booking	en	Missing db-username
+Missing DB-password	booking	en	Missing db-password
+Missing configuration file	booking	en	Missing configuration file
+Participants Per Age Group Per Month	booking	en	Participants per age group per month
+Location Code	booking	en	Location code
+Edit Activity	booking	en	Edit activity
+No parent	booking	en	No parent
+Sort order	booking	en	Sort order
+Edit target audience	booking	en	Edit target audience
+Manager	booking	en	Manager
+Edit document	booking	en	Edit document
+Edit resource	booking	en	Edit resource
+Edit Group	booking	en	Edit group
+Select Type	booking	en	Select type
+Customer number	booking	en	Customer number
+Send	booking	en	Send
+your application has now been processed and a confirmation email has been sent to you.	booking	en	Your application has now been processed and a confirmation email has been sent to you.
+Your application has now been registered and a confirmation email has been sent to you.	booking	en	Your application has now been registered and a confirmation email has been sent to you.
+Your applications have now been registered and confirmation emails have been sent to you.	booking	en	Your applications have now been registered and confirmation emails have been sent to you.
+A Case officer will review your application as soon as possible.	booking	en	A case officer will review your application as soon as possible.
+A Case officer will review your applications as soon as possible.	booking	en	A case officer will review your applications as soon as possible.
+Please check your Spam Filter if you are missing mail.	booking	en	Please check your spam filter if you are missing mail.
+customer_ssn contains an invalid Norwegian social security number (6 or 11 digits)	booking	en	Customer_ssn contains an invalid norwegian social security number (6 or 11 digits)
+customer_organization_number is invalid	booking	en	Customer_organization_number is invalid
+Organization_number	booking	en	Organization_number
+Select an organization first	booking	en	Select an organization first
+Add Resource	booking	en	Add resource
+%1 e-mails were sent successfully	booking	en	%1 e-mails were sent successfully
+%1 e-mails were not sent successfully	booking	en	%1 e-mails were not sent successfully
+activity_id	booking	en	Activity_id
+contact_email	booking	en	Contact_email
+contact_name	booking	en	Contact_name
+contact_phone	booking	en	Contact_phone
+customer_identifier_type	booking	en	Customer_identifier_type
+Or	booking	en	Or
+group_id	booking	en	Group_id
+organization_id	booking	en	Organization_id
+season_id	booking	en	Season_id
+from_	booking	en	From_
+to_	booking	en	To_
+owner_id	booking	en	Owner_id
+object_id	booking	en	Object_id
+building_id	booking	en	Building_id
+subject_id	booking	en	Subject_id
+export_configurations[external][account_code_set_id]	booking	en	Export_configurations[external][account_code_set_id]
+export_configurations[internal][account_code_set_id]	booking	en	Export_configurations[internal][account_code_set_id]
+new target audience	booking	en	New target audience
+Information about the event	booking	en	Information about the event
+Short description. For public events, activities and training under the direction of organizations and clubs, this information will be displayed on the internet	booking	en	Short description. For public events, activities and training under the direction of organizations and clubs, this information will be displayed on the internet
+To borrow premises you must verify that you have read terms and conditions	booking	en	To borrow premises you must verify that you have read terms and conditions
+In order to send the invoice we need information about either customer organization number or norwegian social security number	booking	en	In order to send the invoice we need information about either customer organization number or norwegian social security number
+Event type	booking	en	Event type
+Private event	booking	en	Private event
+Public event	booking	en	Public event
+customer_ssn contains an invalid Norwegian social security number (11 digits)	booking	en	Customer_ssn contains an invalid norwegian social security number (11 digits)
+show only unexported	booking	en	Show only unexported
+Free time	booking	en	Free time
+Weekdays	booking	en	Weekdays
+Account Code Dimension	booking	en	Account code dimension
+Labels	booking	en	Labels
+account_code_dimension_helptext	booking	en	Account_code_dimension_helptext
+Access denied	booking	en	Access denied
+Send to contact	booking	en	Send to contact
+Send to contact for overlaping allocations/bookings	booking	en	Send to contact for overlaping allocations/bookings
+Message sent about the changes in the reservations	booking	en	Message sent about the changes in the reservations
+There are changes to your reservations	booking	en	There are changes to your reservations
+Multiple Events was created	booking	en	Multiple events was created
+Event created, Overlaps with existing allocation, Remember to send a notification	booking	en	Event created, overlaps with existing allocation, remember to send a notification
+Event created, Overlaps with existing booking, Remember to send a notification	booking	en	Event created, overlaps with existing booking, remember to send a notification
+Print as PDF	booking	en	Print as pdf
+Pending	booking	en	Pending
+This booking is not connected to a season	booking	en	This booking is not connected to a season
+Message from Bergen county - AktivBy	booking	en	Message from bergen county - aktivby
+Organization shortname	booking	en	Organization shortname
+Group shortname	booking	en	Group shortname
+contacts[0][email] contains an invalid email	booking	en	Contacts[0][email] contains an invalid email
+contacts[1][email] contains an invalid email	booking	en	Contacts[1][email] contains an invalid email
+Time is set wrong	booking	en	Time is set wrong
+title	booking	en	Title
+Message	booking	en	Message
+New system message	booking	en	New system message
+New message	booking	en	New message
+System message	booking	en	System message
+System messages	booking	en	System messages
+Edit System Message	booking	en	Edit system message
+The user currently assigned as the responsible case officer for this application is	booking	en	The user currently assigned as the responsible case officer for this application is
+Back	booking	en	Back
+Close	booking	en	Close
+CLOSED	booking	en	Closed
+Show all applications	booking	en	Show all applications
+Show all messages	booking	en	Show all messages
+Show only messages assigned to me	booking	en	Show only messages assigned to me
+E-mail address	booking	en	E-mail address
+Confirm e-mail address	booking	en	Confirm e-mail address
+The e-mail addresses you entered do not match	booking	en	The e-mail addresses you entered do not match
+Lengt of shortname is to long, max 11 characters long	booking	en	Lengt of shortname is to long, max 11 characters long
+Lengt of name is to long, max 50 characters long	booking	en	Lengt of name is to long, max 50 characters long
+The organization number is wrong or not present	booking	en	The organization number is wrong or not present
+The resource number is wrong or not present	booking	en	The resource number is wrong or not present
+Recurring allocation	booking	en	Recurring allocation
+weekday	booking	en	Weekday
+Out season	booking	en	Out season
+Allocations colliding with existing allocations or bookings (%1)	booking	en	Allocations colliding with existing allocations or bookings (%1)
+Allocations that can be created	booking	en	Allocations that can be created
+There is set a cost, but no invoice data is filled inn	booking	en	There is set a cost, but no invoice data is filled inn
+Create new booking	booking	en	Create new booking
+Recurring booking	booking	en	Recurring booking
+Repeat until	booking	en	Repeat until
+Bookings that can be created	booking	en	Bookings that can be created
+Bookings and allocations	booking	en	Bookings and allocations
+Send warning to building responsible	booking	en	Send warning to building responsible
+Optional e-mail adress	booking	en	Optional e-mail adress
+Message about new event	booking	en	Message about new event
+Deactivate application	booking	en	Deactivate application
+Deactivate calendar	booking	en	Deactivate calendar
+Deactivate send message	booking	en	Deactivate send message
+Can not repeat from a date in the past	booking	en	Can not repeat from a date in the past
+Can not create a booking in the past	booking	en	Can not create a booking in the past
+Allocations  with existing allocations or bookings (%1)	booking	en	Allocations  with existing allocations or bookings (%1)
+Contact information name is to long. max 50 characters	booking	en	Contact information name is to long. max 50 characters
+Show in portal	booking	en	Show in portal
+NB! No data will be saved, if you navigate away you will loose all.	booking	en	Nb! No data will be saved, if you navigate away you will loose all.
+Activity	booking	en	Activity
+Not selected	booking	en	Not selected
+Delete until	booking	en	Delete until
+Recurring allocation deletion	booking	en	Recurring allocation deletion
+Delete allocation	booking	en	Delete allocation
+Delete allocations	booking	en	Delete allocations
+Delete booking	booking	en	Delete booking
+Delete bookings	booking	en	Delete bookings
+Allocations that will be deleted (%1)	booking	en	Allocations that will be deleted (%1)
+Allocations with existing bookings (%1)	booking	en	Allocations with existing bookings (%1)
+Delete allocation also	booking	en	Delete allocation also
+Bookings to be deleted	booking	en	Bookings to be deleted
+Allocations that is going to be deleted	booking	en	Allocations that is going to be deleted
+Allocations with still existing bookings (%1)	booking	en	Allocations with still existing bookings (%1)
+Messages	booking	en	Messages
+cancelation	booking	en	Cancelation
+Cancelation of allocation from	booking	en	Cancelation of allocation from
+Cancelation of booking from	booking	en	Cancelation of booking from
+To cancel booking use this link	booking	en	To cancel booking use this link
+To cancel allocation use this link	booking	en	To cancel allocation use this link
+Show applications	booking	en	Show applications
+Show messages	booking	en	Show messages
+Internal account	booking	en	Internal account
+Internal customer output format	booking	en	Internal customer output format
+Internal_account_helptext	booking	en	Internal_account_helptext
+searchfield	booking	en	Searchfield
+Backend	booking	en	Backend
+Documentation	booking	en	Documentation
+Upload manual	booking	en	Upload manual
+Are you sure you want to delete?	booking	en	Are you sure you want to delete?
+Event id	booking	en	Event id
+Allocations deleted on	booking	en	Allocations deleted on
+Allocation deleted on	booking	en	Allocation deleted on
+Booking and allocations deleted on	booking	en	Booking and allocations deleted on
+Booking deleted on	booking	en	Booking deleted on
+Bookings and allocations deleted on	booking	en	Bookings and allocations deleted on
+Bookings deleted on	booking	en	Bookings deleted on
+Cancelation of booking and allocation from	booking	en	Cancelation of booking and allocation from
+Cancelation of booking from	booking	en	Cancelation of booking from
+Cancelation of bookings and allocations from	booking	en	Cancelation of bookings and allocations from
+Cancelation of bookings from	booking	en	Cancelation of bookings from
+Booking system settings	booking	en	Booking system settings
+Frontend users can delete bookings and allocations	booking	en	Frontend users can delete bookings and allocations
+Delete Information	booking	en	Delete information
+Delete information2	booking	en	Delete information2
+Booking Delete information	booking	en	Booking delete information
+Booking Delete information3	booking	en	Booking delete information3
+Booking  Delete information2	booking	en	Booking  delete information2
+There is a cost of %1 assosiated with the allocation you are useing	booking	en	There is a cost of %1 assosiated with the allocation you are useing
+Export	booking	en	Export
+Upload	booking	en	Upload
+Get all contact and invoice information from organization	booking	en	Get all contact and invoice information from organization
+Current internal billing sequence number	booking	en	Current internal billing sequence number
+Current external billing sequence number	booking	en	Current external billing sequence number
+Billing sequence numbers	booking	en	Billing sequence numbers
+Do not change these values unless you know what they are.	booking	en	Do not change these values unless you know what they are.
+Organization is missing booking charge	booking	en	Organization is missing booking charge
+Logfile	booking	en	Logfile
+log	booking	en	Log
+Agegroups can not be larger than 9999 peoples	booking	en	Agegroups can not be larger than 9999 peoples
+Resourcenumber is wrong, 5 or 6 characters long	booking	en	Resourcenumber is wrong, 5 or 6 characters long
+office	booking	en	Office
+office user	booking	en	Office user
+Mail Settings	booking	en	Mail settings
+Application Settings	booking	en	Application settings
+Booking application settings	booking	en	Booking application settings
+Booking email settings	booking	en	Booking email settings
+System name	booking	en	System name
+Subject	booking	en	Subject
+Mail text for application created	booking	en	Mail text for application created
+Mail text for application pending	booking	en	Mail text for application pending
+Mail text for application accepted	booking	en	Mail text for application accepted
+Mail text for application rejected	booking	en	Mail text for application rejected
+notify on accepted	booking	en	Notify on accepted
+Signature	booking	en	Signature
+Tilsynsvakt name	booking	en	Tilsynsvakt name
+Tilsynsvakt email	booking	en	Tilsynsvakt email
+Tilsynsvakt telephone	booking	en	Tilsynsvakt telephone
+Metadata	common	en	Metadata
+Author	booking	en	Author
+Robots	booking	en	Robots
+Frontpage text	booking	en	Frontpage text
+frontimage text	booking	en	Frontimage text
+Calendar text	booking	en	Calendar text
+Reference	booking	en	Reference
+Event Mail Settings	booking	en	Event mail settings
+Booking event email settings	booking	en	Booking event email settings
+Event Change Subject	booking	en	Event change subject
+Mail for event change	booking	en	Mail for event change
+Event Conflict Subject	booking	en	Event conflict subject
+Mail text to event contact when collision	booking	en	Mail text to event contact when collision
+Mail text to conflicting event contact when collision	booking	en	Mail text to conflicting event contact when collision
+Event message to building Subject	booking	en	Event message to building subject
+Mail text to building contact	booking	en	Mail text to building contact
+Event Canceled Subject	booking	en	Event canceled subject
+Mail for event canceled	booking	en	Mail for event canceled
+Extra kalendar for public opening times	booking	en	Extra kalendar for public opening times
+Apply for time	booking	en	Apply for time
+Cancel booking/allocation email settings	booking	en	Cancel booking/allocation email settings
+Booking Canceled Subject	booking	en	Booking canceled subject
+Mail for booking canceled	booking	en	Mail for booking canceled
+Allocation Canceled Subject	booking	en	Allocation canceled subject
+Mail for allocation canceled	booking	en	Mail for allocation canceled
+Frontend users can delete bookings	booking	en	Frontend users can delete bookings
+Frontend users can delete events	booking	en	Frontend users can delete events
+Frontend users can delete allocations	booking	en	Frontend users can delete allocations
+Activate extra kalendar field on building	booking	en	Activate extra kalendar field on building
+Ids that should be included in the calendar	booking	en	Ids that should be included in the calendar
+Extra information for the event	booking	en	Extra information for the event
+Event Edited Subject	booking	en	Event edited subject
+Mail for event edited	booking	en	Mail for event edited
+Email warnings	booking	en	Email warnings
+Cancelation Email Adresses	booking	en	Cancelation email adresses
+file configuration	common	en	File configuration
+file attributes	common	en	File attributes
+file categories	common	en	File categories
+Outdoors	booking	en	Outdoors
+Indoors	booking	en	Indoors
+Activities	booking	en	Activities
+Application on this building is not possible.	booking	en	Application on this building is not possible.
+Split mail if building contains swiming pools resources	booking	en	Split mail if building contains swiming pools resources
+Split mail when building has swiming pool	booking	en	Split mail when building has swiming pool
+activities that uses swimming pools	booking	en	Activities that uses swimming pools
+other activities	booking	en	Other activities
+activities that all should get except those in the next field.	booking	en	Activities that all should get except those in the next field.
+activities that never should get mail	booking	en	Activities that never should get mail
+Who get cancelation mails	booking	en	Who get cancelation mails
+Users of current season or users the last 300 days	booking	en	Users of current season or users the last 300 days
+Last 300 days	booking	en	Last 300 days
+Cancelation Email Addresses	booking	en	Cancelation email addresses
+One e-mail pr. line.	booking	en	One e-mail pr. line.
+Application email settings	booking	en	Application email settings
+Application comment email settings	booking	en	Application comment email settings
+Subject caseofficer	booking	en	Subject caseofficer
+Mail text for comment added	booking	en	Mail text for comment added
+organzations_ids_description	booking	en	Organzations_ids_description
+organzations_ids	booking	en	Organzations_ids
+cost history	booking	en	Cost history
+extra info	booking	en	Extra info
+add group	booking	en	Add group
+agegroups	booking	en	Agegroups
+booking edit	booking	en	Booking edit
+booking new	booking	en	Booking new
+building_name	booking	en	Building_name
+custom field groups	booking	en	Custom field groups
+end date	booking	en	End date
+entity %1 has been saved	booking	en	Entity %1 has been saved
+entity %1 has been updated	booking	en	Entity %1 has been updated
+minute	booking	en	Minute
+please enter a building	booking	en	Please enter a building
+please enter a building name	booking	en	Please enter a building name
+please enter a contact name	booking	en	Please enter a contact name
+please enter a description	booking	en	Please enter a description
+please enter a organization	booking	en	Please enter a organization
+please enter a start date	booking	en	Please enter a start date
+please enter a valid end date	booking	en	Please enter a valid end date
+please enter a valid from date	booking	en	Please enter a valid from date
+please enter an end date	booking	en	Please enter an end date
+please enter an valid end date	booking	en	Please enter an valid end date
+please select a customer type	booking	en	Please select a customer type
+please select a group	booking	en	Please select a group
+please select a season	booking	en	Please select a season
+please select an activity	booking	en	Please select an activity
+select date	booking	en	Select date
+start date	booking	en	Start date
+toggle show inactive	booking	en	Toggle show inactive
+season edit	booking	en	Season edit
+season show	booking	en	Season show
+application edit	booking	en	Application edit
+delegates	booking	en	Delegates
+delegate	booking	en	Delegate
+new delegate	booking	en	New delegate
+please enter a delegate	booking	en	Please enter a delegate
+please enter an email	booking	en	Please enter an email
+ssn is invalid	booking	en	Ssn is invalid
+edit delegate	booking	en	Edit delegate
+duplicate ssn	booking	en	Duplicate ssn
+building show	booking	en	Building show
+building edit	booking	en	Building edit
+free	booking	en	Free
+document new	booking	en	Document new
+example	booking	en	Example
+booking settings	booking	en	Booking settings
+support email address	booking	en	Support email address
+external host address	booking	en	External host address
+custom email sender	booking	en	Custom email sender
+logopath frontend	booking	en	Logopath frontend
+image maxheight	booking	en	Image maxheight
+image maxwidth	booking	en	Image maxwidth
+case_officer	booking	en	Case_officer
+allocation new	booking	en	Allocation new
+event new	booking	en	Event new
+edit	booking	en	Edit
+Delete	booking	en	Delete
+season new	booking	en	Season new
+report participants	booking	en	Report participants
+report freetime	booking	en	Report freetime
+report new	booking	en	Report new
+participants per agegroupe	booking	en	Participants per agegroupe
+start time	booking	en	Start time
+end time	booking	en	End time
+variables	booking	en	Variables
+horizontal	booking	en	Horizontal
+vertical	booking	en	Vertical
+permission add	booking	en	Permission add
+activity new	booking	en	Activity new
+account new	booking	en	Account new
+external account	booking	en	External account
+external customer output format	booking	en	External customer output format
+external file linebreak	booking	en	External file linebreak
+export invoice	booking	en	Export invoice
+export method	booking	en	Export method
+export path	booking	en	Export path
+ftp host	booking	en	Ftp host
+ftp basedir	booking	en	Ftp basedir
+ftp user	booking	en	Ftp user
+ftp password	booking	en	Ftp password
+last id	booking	en	Last id
+do not edit!	booking	en	Do not edit!
+approve	booking	en	Approve
+return to application	booking	en	Return to application
+application add	booking	en	Application add
+duplicate in name	booking	en	Duplicate in name
+Add date and time	booking	en	Add date and time
+Application for	booking	en	Application for
+applicationcart empty	booking	en	Applicationcart empty
+At least one activity must be selected	booking	en	At least one activity must be selected
+Bookable resources (2018)	booking	en	Bookable resources (2018)
+For rent	booking	en	For rent
+Booking (2018)	booking	en	Booking (2018)
+Building (2018)	booking	en	Building (2018)
+Calendar	booking	en	Calendar
+choose a	booking	en	Choose a
+Chosen resources (2018)	booking	en	Chosen resources (2018)
+Contact and invoice information	booking	en	Contact and invoice information
+Date and time	booking	en	Date and time
+Edit activities	booking	en	Edit activities
+Edit facilities	booking	en	Edit facilities
+edit facility	booking	en	Edit facility
+edit resource activities	booking	en	Edit resource activities
+edit resource category	booking	en	Edit resource category
+edit resource facilities	booking	en	Edit resource facilities
+Equipment (2018)	booking	en	Equipment (2018)
+Event name	booking	en	Event name
+Facilities	booking	en	Facilities
+Facility	booking	en	Facility
+Front page filtering	booking	en	Front page filtering
+Frontpage title	booking	en	Frontpage title
+Group (2018)	booking	en	Group (2018)
+Groups (2018)	booking	en	Groups (2018)
+Help text calendar: Book	booking	en	Help text calendar: book
+Help text organization: Edit group	booking	en	Help text organization: edit group
+Help texts	booking	en	Help texts
+Homepage for the event	booking	en	Homepage for the event
+Include in event list	booking	en	Include in event list
+legal condition	booking	en	Legal condition
+Main activity	booking	en	Main activity
+New facility	booking	en	New facility
+New resource category	booking	en	New resource category
+No partial applications exist for this session, contact details are not saved	booking	en	No partial applications exist for this session, contact details are not saved
+No resource chosen (2018)	booking	en	No resource chosen (2018)
+No session ID found, application aborted	booking	en	No session id found, application aborted
+Not a top level activity	booking	en	Not a top level activity
+One filter box per line	booking	en	One filter box per line
+Opening hours	booking	en	Opening hours
+Organizer	booking	en	Organizer
+Picture main	booking	en	Picture main
+Please select a resource category	booking	en	Please select a resource category
+Resource (2018)	booking	en	Resource (2018)
+Resource categories	booking	en	Resource categories
+Resource category	booking	en	Resource category
+Resources (2018)	booking	en	Resources (2018)
+responsible_city	booking	en	Responsible_city
+responsible_street	booking	en	Responsible_street
+responsible_zip_code	booking	en	Responsible_zip_code
+Select a date and time	booking	en	Select a date and time
+Select a target audience	booking	en	Select a target audience
+Selected date and time	booking	en	Selected date and time
+Send as sms	booking	en	Send as sms
+Send sms to contact	booking	en	Send sms to contact
+Text and activity IDs for each filter box	booking	en	Text and activity ids for each filter box
+Title for filter boxes	booking	en	Title for filter boxes
+Title for upcoming events	booking	en	Title for upcoming events
+Upcoming events	booking	en	Upcoming events
+Your application with event details has been added. You can add another application, or finalise the application with contact details.	booking	en	Your application with event details has been added. You can add another application, or finalise the application with contact details.
+Complete application text booking	booking	en	Complete application text booking
+duplicate	booking	en	Duplicate
+collect users	booking	en	Collect users
+do you really want to collect users again	booking	en	Do you really want to collect users again
+again	booking	en	Again
+Do you really want to collect users	booking	en	Do you really want to collect users
+Back to user list	booking	en	Back to user list
+Collects users from all applications and events	booking	en	Collects users from all applications and events
+added %1 users	booking	en	Added %1 users
+found none	booking	en	Found none
+direct booking	booking	en	Direct booking
+export customer	booking	en	Export customer
+Enter both first and last name	booking	en	Enter both first and last name
+parent group	booking	en	Parent group
+Electronic lock	booking	en	Electronic lock
+booking_async_task_send_access_request	booking	en	Booking_async_task_send_access_request
+add electronic lock	booking	en	Add electronic lock
+System id	booking	en	System id
+resource id	booking	en	Resource id
+access code format	booking	en	Access code format
+day of week	booking	en	Day of week
+day default lenght	booking	en	Day default lenght
+dow default start	booking	en	Dow default start
+dow default end	booking	en	Dow default end
+time default start	booking	en	Time default start
+time default end	booking	en	Time default end
+added	booking	en	Added
+updated	booking	en	Updated
+value is ignored for -1	booking	en	Value is ignored for -1
+Simple booking	booking	en	Simple booking
+reservation	booking	en	Reservation
+Booking	booking	en	Booking
+default event type	booking	en	Default event type
+month horizon	booking	en	Month horizon
+day horizon	booking	en	Day horizon
+Notify on new application	booking	en	Notify on new application
+and	booking	en	And
+not completed	booking	en	Not completed
+newpartial1	booking	en	Newpartial1
+missing id	booking	en	Missing id
+participants	booking	en	Participants
+quantity	booking	en	Quantity
+Pre-registration	bookingfrontend	en	Pre-registration
+Register in	booking	en	Register in
+Register out	booking	en	Register out
+booking_async_task_delete_participants	booking	en	Booking_async_task_delete_participants
+booking_async_task_delete_expired_blocks	booking	en	Booking_async_task_delete_expired_blocks
+register participant text	booking	en	Register participant text
+participant limit	booking	en	Participant limit
+additional requirements	booking	en	Additional requirements
+PDF-export to archive	booking	en	Pdf-export to archive
+add participant limit	booking	en	Add participant limit
+registration has ended	booking	en	Registration has ended
+participant limit sms	booking	en	Participant limit sms
+global participant limit is set to %1	booking	en	Global participant limit is set to %1
+overridden participant limit is set to %1	booking	en	Overridden participant limit is set to %1
+external archive key	booking	en	External archive key
+transfer case to external system?	booking	en	Transfer case to external system?
+register participants	booking	en	Register participants
+capacity	booking	en	Capacity
+enable upload attachment	booking en	Enable upload attachment

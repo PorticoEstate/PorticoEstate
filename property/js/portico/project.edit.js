@@ -107,7 +107,7 @@ this.local_DrawCallback2 = function (container)
 			i : 0;
 	};
 
-	var columns = ["4"];
+	var columns = ["4", "5", "6"];
 
 	columns.forEach(function (col)
 	{
@@ -156,12 +156,34 @@ $(document).ready(function ()
 		language: "no",
 		width: '75%'
 	});
+	$('#user_id').on('select2:open', function (e) {
+
+		$(".select2-search__field").each(function()
+		{
+			if ($(this).attr("aria-controls") == 'select2-user_id-results')
+			{
+				$(this)[0].focus();
+			}
+		});
+	});
 
 	$("#global_category_id").select2({
 		placeholder: lang["select category"],
 		language: "no",
 		width: '75%'
 	});
+
+	$('#global_category_id').on('select2:open', function (e) {
+
+		$(".select2-search__field").each(function()
+		{
+			if ($(this).attr("aria-controls") == 'select2-global_category_id-results')
+			{
+				$(this)[0].focus();
+			}
+		});
+	});
+
 
 	$("#branch_id").select2({
 		placeholder: lang['Select branch'],

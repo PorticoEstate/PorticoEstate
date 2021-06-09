@@ -490,7 +490,7 @@
 						$booking['secret'] = $this->generate_secret();
 						$receipt = $this->bo->add($booking);
 					}
-					$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
+					self::redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
 				}
 				else if (($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on') && !$_errors && $step > 1)
 				{
@@ -505,7 +505,16 @@
 					}
 
 					$max_dato = phpgwapi_datetime::date_to_timestamp($_POST['to_']); // highest date from input
-					$interval = $_POST['field_interval'] * 60 * 60 * 24 * 7; // weeks in seconds
+
+					if(phpgw::get_var('field_interval', 'int', 'POST') == 5)
+					{
+						$interval = 60 * 60 * 24; // day in seconds
+					}
+					else
+					{
+						$interval = $_POST['field_interval'] * 60 * 60 * 24 * 7; // weeks in seconds
+					}
+
 					$i = 0;
 					// calculating valid and invalid dates from the first booking's to-date to the repeat_until date is reached
 					// the form from step 1 should validate and if we encounter any errors they are caused by double bookings.
@@ -577,11 +586,11 @@
 					{
 						if ($application_id != '0')
 						{
-							$this->redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $application_id));
+							self::redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $application_id));
 						}
 						else
 						{
-							$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
+							self::redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
 						}
 					}
 				}
@@ -628,7 +637,7 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
-			$booking['audience_json'] = json_encode(array_map('intval', $booking['audience']));
+			$booking['audience_json'] = json_encode(array_map('intval', (array)$booking['audience']));
 
 			$groups = $this->group_bo->so->read(array('results' => -1, 'filters' => array('organization_id' => $allocation['organization_id'],
 					'active' => 1)));
@@ -642,8 +651,8 @@
 			$active_tab = 'generic';
 
 			$GLOBALS['phpgw']->jqcal2->add_listener('field_repeat_until', 'date');
-			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime', phpgwapi_datetime::date_to_timestamp($booking['from_']));
-			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime', phpgwapi_datetime::date_to_timestamp($booking['to_']));
+			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime');
 
 			$booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$booking['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
@@ -724,6 +733,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$booking = $this->bo->read_single($id);
 
 			$activity_path = $this->activity_bo->get_path($booking['activity_id']);
@@ -762,7 +775,7 @@
 					{
 						$receipt = $this->bo->update($booking);
 						$this->send_mailnotification_to_group($group, lang('Booking changed'), phpgw::get_var('mail', 'html', 'POST'));
-						$this->redirect(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
+						self::redirect(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -788,10 +801,10 @@
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 			$cost_history = $this->bo->so->get_ordered_costs($id);
-			$booking['audience_json'] = json_encode(array_map('intval', $booking['audience']));
+			$booking['audience_json'] = json_encode(array_map('intval', (array)$booking['audience']));
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime');
-			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime',phpgwapi_datetime::date_to_timestamp($booking['from_']));
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime',phpgwapi_datetime::date_to_timestamp($booking['to_']));
 
 			$booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$booking['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
@@ -833,7 +846,7 @@
 					if ($_POST['delete_allocation'] != 'on')
 					{
 						$this->bo->so->delete_booking($id);
-						$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
+						self::redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
 					}
 					else
 					{
@@ -847,7 +860,7 @@
 						else
 						{
 							$err = $this->allocation_bo->so->delete_allocation($allocation_id);
-							$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
+							self::redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
 						}
 					}
 				}
@@ -922,10 +935,10 @@
 						$application_id = $booking['application_id'] ? $booking['application_id'] : $allocation['application_id'];
 						if($application_id)
 						{
-							$this->redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $application_id));
+							self::redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $application_id));
 						}
 						$building_id = $booking['building_id'] ? $booking['building_id'] : $allocation['building_id'];
-						$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $building_id));
+						self::redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $building_id));
 					}
 				}
 			}

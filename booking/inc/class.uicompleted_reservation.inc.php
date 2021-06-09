@@ -49,7 +49,7 @@
 
 		public function redirect_to( $action, $params = array() )
 		{
-			return $this->redirect($this->link_to_params($action, $params));
+			return self::redirect($this->link_to_params($action, $params));
 		}
 
 		public function link_to_params( $action, $params = array() )
@@ -112,7 +112,7 @@
 			{
 				$this->bo->show_all_completed_reservations();
 			}
-			$this->redirect(array('menuaction' => $this->url_prefix . '.index'));
+			self::redirect(array('menuaction' => $this->url_prefix . '.index'));
 		}
 
 		public function index()

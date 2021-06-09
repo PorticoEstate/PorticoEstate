@@ -258,7 +258,7 @@
 					$check_list_id = $this->so_control->get_check_list_id_for_deadline($serie_id, $deadline_ts);
 					if ($check_list_id)
 					{
-						$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list',
+						self::redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list',
 							'check_list_id' => $check_list_id));
 					}
 				}
@@ -492,7 +492,7 @@
 				$this->so->set_completed_item($check_list_id, $location_id, $item_id);
 			}
 
-			$this->redirect(array('menuaction' => 'controller.uicase.add_case',
+			self::redirect(array('menuaction' => 'controller.uicase.add_case',
 					'check_list_id' => $check_list_id));
 
 		}
@@ -955,18 +955,18 @@
 
 			phpgw::import_class('property.multiuploader');
 
-			if(!$id)
-			{
-				$response = array(files => array(array('error' => 'missing id in request')));
-				$upload_handler->generate_response($response);
-				$GLOBALS['phpgw']->common->phpgw_exit();
-			}
-
 			$options['fakebase'] = "/controller";
 			$options['base_dir'] = "check_list/{$id}";
 			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/controller/'.$options['base_dir'].'/';
 			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => "controller.uicheck_list.handle_multi_upload_file", 'id' => $id)));
 			$upload_handler = new property_multiuploader($options, false);
+
+			if(!$id)
+			{
+				$response = array('files' => array(array('error' => 'missing id in request')));
+				$upload_handler->generate_response($response);
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
 
 			switch ($_SERVER['REQUEST_METHOD']) {
 				case 'OPTIONS':
@@ -1155,7 +1155,7 @@
 			if (!$this->add && !$this->edit)
 			{
 				phpgwapi_cache::message_set('No access', 'error');
-				$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list',
+				self::redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list',
 					'check_list_id' => $check_list_id));
 			}
 
@@ -1252,7 +1252,7 @@
 				{
 					if (!$this->_check_for_required($check_list))
 					{
-						$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list',
+						self::redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list',
 							'check_list_id' => $check_list_id));
 					}
 				}
@@ -1458,9 +1458,12 @@
 						$this->_set_required_control_items($check_list);
 					}
 
+
 					$ret = array();
 					if(!$submit_deviation)
 					{
+						$this->custom_functions($check_list);
+
 						$ret = $this->notify_supervisor($check_list);
 					}
 
@@ -1477,12 +1480,12 @@
 					}
 					else if($submit_deviation)
 					{
-						$this->redirect(array('menuaction' => 'controller.uicase.add_case',
+						self::redirect(array('menuaction' => 'controller.uicase.add_case',
 							'check_list_id' => $check_list_id));
 					}
 					else
 					{
-						$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list',
+						self::redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list',
 							'check_list_id' => $check_list_id));
 					}
 				}
@@ -1507,7 +1510,7 @@
 				}
 				else
 				{
-					$this->redirect(array('menuaction' => 'controller.uicheck_list.add_check_list',
+					self::redirect(array('menuaction' => 'controller.uicheck_list.add_check_list',
 						'control_id' => $control_id,
 						'location_id' => $location_id,
 						'component_id' => $component_id,
@@ -1988,6 +1991,7 @@
 
 			if ($this->so->store($check_list))
 			{
+				$this->custom_functions($check_list);
 
 				/**
 				 * create message....
@@ -2002,6 +2006,33 @@
 			}
 		}
 
+		private function custom_functions( $check_list )
+		{
+			$criteria = array
+			(
+				'appname' => 'controller',
+				'location' => $this->acl_location,
+				'allrows' => true
+			);
+
+			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+			foreach ($custom_functions as $entry)
+			{
+				// prevent path traversal
+				if (preg_match('/\.\./', $entry['file_name']))
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/controller/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				if ($entry['active'] && is_file($file) && !$entry['client_side'])
+				{
+					require $file;
+				}
+			}
+
+		}
 
 		private function notify_supervisor($check_list)
 		{

@@ -96,7 +96,7 @@
 				$account->lid		 = $group_lid;
 				$account->firstname	 = 'Frontend';
 				$account->lastname	 = 'Delegates';
-				$frontend_delegates	 = $GLOBALS['phpgw']->accounts->create($account, array(), array(), $modules);
+				$frontend_delegates	 = $GLOBALS['phpgw']->accounts->create($account, array());
 
 				$aclobj = & $GLOBALS['phpgw']->acl;
 				$aclobj->set_account_id($frontend_delegates, true);

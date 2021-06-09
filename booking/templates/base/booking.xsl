@@ -91,12 +91,12 @@
 	<script type="text/javascript">
 		var resourceIds = '<xsl:value-of select="booking/resource_ids"/>';
 		var booking_id = '<xsl:value-of select="booking/id"/>';
-		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type', 'Resource Type', 'phone', 'email', 'quantity', 'from', 'to')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type', 'phone', 'email', 'quantity', 'from', 'to')"/>;
     <![CDATA[
 			var resourcesURL = phpGWLink('index.php', {menuaction: 'booking.uiresource.index', sort:'name', length:-1}, true) +'&' + resourceIds;
 			var participantURL = phpGWLink('index.php', {menuaction:'booking.uiparticipant.index', sort:'phone', filter_reservation_id: booking_id, filter_reservation_type: 'booking', length:-1}, true);
       ]]>
-		var colDefsResources = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'type', label: lang['Resource Type']}];
+		var colDefsResources = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'rescategory_name', label: lang['Resource Type']}];
 		createTable('resources_container',resourcesURL,colDefsResources, '', 'pure-table pure-table-bordered');
 
 		var colDefsParticipantURL = [

@@ -499,7 +499,6 @@
 		 * Check if an application has info in the db
 		*
 		 * @param	$appname	Application 'name' with a matching $setup_info[$appname] array slice
-		 * @param	$enabled	optional, set to False to not enable this app
 		 */
 		function app_registered($appname)
 		{
@@ -512,7 +511,7 @@
 
 			if ( isset($GLOBALS['DEBUG']) && $GLOBALS['DEBUG'] )
 			{
-				echo '<br>app_registered(): checking ' . $appname . ', table: ' . $appstbl;
+				echo '<br>app_registered(): checking ' . $appname;
 				// _debug_array($setup_info[$appname]);
 			}
 
@@ -520,13 +519,13 @@
 			$this->db->next_record();
 			if($this->db->f('cnt'))
 			{
-				if(@$GLOBALS['DEBUG'])
+				if ( isset($GLOBALS['DEBUG']) && $GLOBALS['DEBUG'] )
 				{
 					echo '... app previously registered.';
 				}
 				return True;
 			}
-			if(@$GLOBALS['DEBUG'])
+			if ( isset($GLOBALS['DEBUG']) && $GLOBALS['DEBUG'] )
 			{
 				echo '... app not registered';
 			}
@@ -537,7 +536,6 @@
 		 * Update application info in the db
 		*
 		 * @param	$appname	Application 'name' with a matching $setup_info[$appname] array slice
-		 * @param	$enabled	optional, set to False to not enable this app
 		 */
 		function update_app($appname)
 		{
@@ -759,14 +757,18 @@
 		/**
 		* phpgw version checking, is param 1 < param 2 in phpgw versionspeak?
 		* @param string $a phpgw version number to check if less than $b
-		* @param sting $b phpgw version number to check $a against
+		* @param string $b phpgw version number to check $a against
 		* @return bool True if $a < $b
 		*/
-		function alessthanb($a, $b, $DEBUG=False)
+		function alessthanb($a, $b, $debug = false)
 		{
+			if ( isset($GLOBALS['DEBUG']) && $GLOBALS['DEBUG'] )
+			{
+				$debug = true;
+			}
 			$num = array('1st','2nd','3rd','4th');
 
-			if($DEBUG)
+			if($debug)
 			{
 				echo'<br>Input values: '
 					. 'A="'.$a.'", B="'.$b.'"';
@@ -778,6 +780,10 @@
 			{
 				$testa[1] = 0;
 			}
+			if(empty($testa[2]))
+			{
+				$testa[2] = 0;
+			}
 			if(empty($testa[3]))
 			{
 				$testa[3] = 0;
@@ -787,6 +793,10 @@
 			{
 				$testb[1] = 0;
 			}
+			if(empty($testb[2]))
+			{
+				$testb[2] = 0;
+			}
 			if(empty($testb[3]))
 			{
 				$testb[3] = 0;
@@ -795,51 +805,83 @@
 
 			for($i=0;$i<count($testa);$i++)
 			{
-				if($DEBUG) { echo'<br>Checking if '. intval($testa[$i]) . ' is less than ' . intval($testb[$i]) . ' ...'; }
+				if($debug)
+				{
+					echo'<br>Checking if '. intval($testa[$i]) . ' is less than ' . intval($testb[$i]) . ' ...';
+				}
 				if(intval($testa[$i]) < intval($testb[$i]))
 				{
-					if ($DEBUG) { echo ' yes.'; }
+					if ($debug)
+					{
+						echo ' yes.';
+					}
 					$less++;
 					if($i<3)
 					{
 						/* Ensure that this is definitely smaller */
-						if($DEBUG) { echo"  This is the $num[$i] octet, so A is definitely less than B."; }
+						if($debug)
+						{
+							echo"  This is the $num[$i] octet, so A is definitely less than B.";
+						}
 						$less = 5;
 						break;
 					}
 				}
 				elseif(intval($testa[$i]) > intval($testb[$i]))
 				{
-					if($DEBUG) { echo ' no.'; }
+					if($debug)
+					{
+						echo ' no.';
+					}
+
 					$less--;
+
 					if($i<2)
 					{
 						/* Ensure that this is definitely greater */
-						if($DEBUG) { echo"  This is the $num[$i] octet, so A is definitely greater than B."; }
+						if($debug)
+						{
+							echo"  This is the $num[$i] octet, so A is definitely greater than B.";
+						}
 						$less = -5;
 						break;
 					}
 				}
 				else
 				{
-					if($DEBUG) { echo ' no, they are equal.'; }
+					if($debug)
+					{
+						echo ' no, they are equal.';
+					}
 					$less = 0;
 				}
 			}
-			if($DEBUG) { echo '<br>Check value is: "'.$less.'"'; }
+			if($debug)
+			{
+				echo '<br>Check value is: "'.$less.'"';
+			}
 			if($less>0)
 			{
-				if($DEBUG) { echo '<br>A is less than B'; }
+				if($debug)
+				{
+					echo '<br>A is less than B';
+				}
 				return True;
 			}
 			elseif($less<0)
 			{
-				if($DEBUG) { echo '<br>A is greater than B'; }
+				if($debug)
+				{
+					echo '<br>A is greater than B';
+				}
 				return False;
 			}
 			else
 			{
-				if($DEBUG) { echo '<br>A is equal to B'; }
+				if($debug)
+				{
+					echo '<br>A is equal to B';
+				}
 				return False;
 			}
 		}
@@ -851,11 +893,11 @@
 		 * @param	$b	phpgw version number to check $a against
 		 * #return	True if $a < $b
 		 */
-		function amorethanb($a,$b,$DEBUG=False)
+		function amorethanb($a,$b,$debug=False)
 		{
 			$num = array('1st','2nd','3rd','4th');
 
-			if($DEBUG)
+			if($debug)
 			{
 				echo'<br>Input values: '
 					. 'A="'.$a.'", B="'.$b.'"';
@@ -876,7 +918,7 @@
 
 			for($i=0;$i<count($testa);$i++)
 			{
-				if($DEBUG)
+				if($debug)
 				{
 					echo'<br>Checking if '. intval($testa[$i]) . ' is more than ' . intval($testb[$i]) . ' ...';
 				}
@@ -884,12 +926,12 @@
 				if ( isset($testa[$i]) &&  isset($testb[$i])
 					&& (int)$testa[$i] > (int)$testb[$i] )
 				{
-					if($DEBUG) { echo ' yes.'; }
+					if($debug) { echo ' yes.'; }
 					$less++;
 					if($i<3)
 					{
 						/* Ensure that this is definitely greater */
-						if($DEBUG) { echo"  This is the $num[$i] octet, so A is definitely greater than B."; }
+						if($debug) { echo"  This is the $num[$i] octet, so A is definitely greater than B."; }
 						$less = 5;
 						break;
 					}
@@ -897,36 +939,36 @@
 				else if ( isset($testa[$i]) &&  isset($testb[$i])
 					&& (int)$testa[$i] < (int)$testb[$i] )
 				{
-					if($DEBUG) { echo ' no.'; }
+					if($debug) { echo ' no.'; }
 					$less--;
 					if($i<2)
 					{
 						/* Ensure that this is definitely smaller */
-						if($DEBUG) { echo"  This is the $num[$i] octet, so A is definitely less than B."; }
+						if($debug) { echo"  This is the $num[$i] octet, so A is definitely less than B."; }
 						$less = -5;
 						break;
 					}
 				}
 				else
 				{
-					if($DEBUG) { echo ' no, they are equal.'; }
+					if($debug) { echo ' no, they are equal.'; }
 					$less = 0;
 				}
 			}
-			if($DEBUG) { echo '<br>Check value is: "'.$less.'"'; }
+			if($debug) { echo '<br>Check value is: "'.$less.'"'; }
 			if($less>0)
 			{
-				if($DEBUG) { echo '<br>A is greater than B'; }
+				if($debug) { echo '<br>A is greater than B'; }
 				return True;
 			}
 			elseif($less<0)
 			{
-				if($DEBUG) { echo '<br>A is less than B'; }
+				if($debug) { echo '<br>A is less than B'; }
 				return False;
 			}
 			else
 			{
-				if($DEBUG) { echo '<br>A is equal to B'; }
+				if($debug) { echo '<br>A is equal to B'; }
 				return False;
 			}
 		}

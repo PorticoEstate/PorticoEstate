@@ -9,7 +9,6 @@
 		<meta http-equiv="Pragma" content="no-cache">
 		<meta http-equiv="Cache-control" content="no-cache">
 		<meta http-equiv="content-type" content="text/html;charset=utf-8">
-
 		<style type="text/css">
 		<!-- 
 			/* FIXME move this to an external CSS file */

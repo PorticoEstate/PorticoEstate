@@ -118,11 +118,13 @@
 			</tr>
 			<tr>
 				<td>{lang_Enter_your_SMTP_server_user}:</td>
-				<td><input name="newsettings[smtpUser]" value="{value_smtpUser}" autocomplete="off"></td>
+				<td><input name="newsettings[smtpUser]" value="{value_smtpUser}" autocomplete="off"
+						   readonly="readonly" onfocus="this.removeAttribute('readonly');"></td>
 			</tr>
 			<tr class="pure-table-odd">
 				<td>{lang_Enter_your_SMTP_server_password}:</td>
-				<td><input type= "password" name="newsettings[smtpPassword]" value="{value_smtpPassword}" autocomplete="off"></td>
+				<td><input type= "password" name="newsettings[smtpPassword]" value="{value_smtpPassword}" autocomplete="off"
+						   readonly="readonly" onfocus="this.removeAttribute('readonly');"></td>
 			</tr>
 			<tr>
 				<td>{lang_SMTPSecure}:</td>

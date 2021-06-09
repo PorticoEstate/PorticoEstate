@@ -5,10 +5,10 @@ $(document).ready(function ()
 {
 	$("#start_date").change(function ()
 	{
-//		if(!$("#end_date").val())
+		var temp_end_date = $("#end_date").datetimepicker('getValue');
+		var temp_start_date = $("#start_date").datetimepicker('getValue');
+		if(!temp_end_date || (temp_end_date < temp_start_date))
 		{
-			var temp_start_date = $("#start_date").datetimepicker('getValue');
-//			console.log(temp_start_date);
 			$("#end_date").val($("#start_date").val());
 
 			$('#end_date').datetimepicker('setOptions', {
@@ -352,7 +352,7 @@ function populateTableChkResources(building_id, selection)
 	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [
 						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}, {name: 'class', value: 'chkRegulations'}
 					]}
-			], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}
+			], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}, {key: 'rescategory_name', label: lang['Resource Type']}
 	];
 	populateTableResources(url, container, colDefsResources);
 }

@@ -907,7 +907,8 @@ import from csv	property	no	Fil-import til Faktura
 import invoice	property	no	Import faktura
 import this invoice	property	no	Importer denne fakturaen
 import vcard	common	no	Importer visittkort
-incl tax	property	no	inkl mva
+incl tax	property	no	inkl. mva
+ex tax	property	no	eks. mva
 include in location form	property	no	Inkluder i lokaliseringsskjema
 include in search	property	no	Inkluder i søk
 include the workorder to this claim	property	no	Inkluder bestillingen i dette kravet
@@ -2436,3 +2437,4 @@ delete files	property	no	Slett filer
 duplicate	property	no	Duplikat
 transfer to external	property	no	Overfør til eksternt system
 default tax code	property	no	Standard mva-kode
+change payment type	property	no	Endre betalingstype

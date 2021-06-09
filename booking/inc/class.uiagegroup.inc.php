@@ -41,7 +41,7 @@
 			{
 				$this->bo->show_all_objects();
 			}
-			$this->redirect(array('menuaction' => 'booking.uiagegroup.index'));
+			self::redirect(array('menuaction' => 'booking.uiagegroup.index'));
 		}
 
 		function treeitem( $children, $parent_id )
@@ -156,7 +156,7 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->add($agegroup);
-					$this->redirect(array('menuaction' => 'booking.uiagegroup.index', 'id' => $receipt['id']));
+					self::redirect(array('menuaction' => 'booking.uiagegroup.index', 'id' => $receipt['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -176,6 +176,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$resource = $this->bo->read_single($id);
 			$activities = $this->activity_bo->get_top_level($resource['activity_id']);
 
@@ -194,7 +198,7 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->update($resource);
-					$this->redirect(array('menuaction' => 'booking.uiagegroup.index', 'id' => $resource['id']));
+					self::redirect(array('menuaction' => 'booking.uiagegroup.index', 'id' => $resource['id']));
 				}
 			}
 			$this->flash_form_errors($errors);

@@ -4872,7 +4872,7 @@
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT MAX(id)+1  as next_id FROM bb_rescategory", __LINE__, __FILE__);
 		$GLOBALS['phpgw_setup']->oProc->next_record();
 		
-		$next_id = $GLOBALS['phpgw_setup']->oProc->f('next_id');
+		$next_id = (int)$GLOBALS['phpgw_setup']->oProc->f('next_id');
 		$next_id_2 = $next_id +1;
 
 		$bb_rescategory = array(
@@ -4918,3 +4918,174 @@
 		}
 	}
 
+	/**
+	 * Update booking version from 0.2.67 to 0.2.68
+	 *
+	 */
+	$test[] = '0.2.67';
+	function booking_upgrade0_2_67()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_block', array(
+				'fd' => array(
+					'id'		 => array('type' => 'auto', 'nullable' => false),
+					'active'	 => array('type' => 'int', 'precision' => 2, 'nullable' => false, 'default' => 1),
+					'from_'		 => array('type' => 'timestamp', 'nullable' => false),
+					'to_'		 => array('type' => 'timestamp', 'nullable' => false),
+					'entry_time' => array('type' => 'timestamp', 'nullable' => false, 'default' => 'current_timestamp'),
+					'session_id' => array('type' => 'varchar', 'precision' => 64, 'nullable' => true),
+					'resource_id'  => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.68';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	/**
+	 * Update booking version from 0.2.68 to 0.2.69
+	 *
+	 */
+	$test[] = '0.2.68';
+	function booking_upgrade0_2_68()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$table = "bb_resource";
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN deactivate_calendar int NOT NULL DEFAULT 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE $table SET deactivate_calendar = 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN deactivate_application int NOT NULL DEFAULT 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE $table SET deactivate_application = 0");
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.69';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.69 to 0.2.70
+	 *
+	 */
+	$test[] = '0.2.69';
+	function booking_upgrade0_2_69()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_completed_reservation','customer_number',array(
+			'type' => 'text',
+			'nullable' => True
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_completed_reservation SET customer_number = bb_organization.customer_number"
+			. " FROM bb_organization WHERE bb_completed_reservation.organization_id = bb_organization.id", __LINE__, __FILE__);
+
+
+		$asyncservice = CreateObject('phpgwapi.asyncservice');
+		$asyncservice->delete('booking_async_task_delete_expired_blocks');
+		$asyncservice->delete('booking_async_task_update_reservation_state');
+		$asyncservice->delete('booking_async_task_delete_participants');
+
+		/**
+		 * Reservation
+		 */
+		$asyncservice->set_timer(
+			array('min' => "*/5"), 'booking_async_task_delete_expired_blocks', 'booking.async_task.doRun', array(
+					'task_class' => "booking.async_task_delete_expired_blocks")
+		);
+
+		/**
+		 * Billing
+		 */
+		$asyncservice->set_timer(
+			array('hour' => "*/1"), 'booking_async_task_update_reservation_state', 'booking.async_task.doRun', array(
+					'task_class' => "booking.async_task_update_reservation_state")
+		);
+
+		/**
+		 * Participants
+		 */
+		$asyncservice->set_timer(
+			array('day' => "*/1"), 'booking_async_task_delete_participants', 'booking.async_task.doRun', array(
+					'task_class' => "booking.async_task_delete_participants")
+		);
+
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.70';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+
+	/**
+	 * Update booking version from 0.2.70 to 0.2.71
+	 *
+	 */
+	$test[] = '0.2.70';
+	function booking_upgrade0_2_70()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'booking_time_minutes',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True,
+				'default' => -1
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.71';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.71 to 0.2.72
+	 *
+	 */
+	$test[] = '0.2.71';
+	function booking_upgrade0_2_71()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'booking_limit_number',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True,
+				'default' => -1
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'booking_limit_number_horizont',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True,
+				'default' => -1
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.72';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

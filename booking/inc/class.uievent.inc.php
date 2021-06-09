@@ -563,7 +563,7 @@
 						$receipt = $this->bo->add($event);
 						$this->bo->so->update_id_string();
 					}
-					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $receipt['id'],
+					self::redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $receipt['id'],
 						'secret' => $event['secret'], 'warnings' => $errors));
 				}
 			}
@@ -571,7 +571,7 @@
 			{
 				$errors['warning'] = lang('NB! No data will be saved, if you navigate away you will loose all.');
 			}
-			$default_dates = array_map(array($this, '_combine_dates'), array(), array());
+			$default_dates = array_map(array($this, '_combine_dates'), array(''), array(''));
 			array_set_default($event, 'dates', $default_dates);
 
 			if (!phpgw::get_var('from_report', 'POST'))
@@ -659,6 +659,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$event = $this->bo->read_single($id);
 
 			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($event['resources'], true);
@@ -752,8 +756,8 @@
 
 				if ($_POST['organization_name'])
 				{
-					$event['customer_organization_name'] = $_POST['organization_name'];
-					$event['customer_organization_id'] = $_POST['organization_id'];
+					$event['customer_organization_name'] = phpgw::get_var('organization_name', 'string', 'POST');
+					$event['customer_organization_id'] = phpgw::get_var('organization_id', 'int', 'POST');
 					$organization = $this->organization_bo->read_single(intval(phpgw::get_var('organization_id', 'int')));
 
 					if ($organization['customer_internal'] == 0)
@@ -786,12 +790,14 @@
 				elseif ($_POST['customer_identifier_type'] == 'ssn')
 				{
 					$event['customer_identifier_type'] = 'ssn';
-					$event['customer_ssn'] = $_POST['customer_ssn'];
+					$event['customer_ssn'] = phpgw::get_var('customer_ssn');
 				}
 				elseif ($_POST['customer_identifier_type'] == 'organization_number')
 				{
 					$event['customer_identifier_type'] = 'organization_number';
-					$event['customer_organization_number'] = $_POST['customer_organization_number'];
+					$event['customer_organization_number'] = phpgw::get_var('customer_organization_number', 'string', 'POST');
+					$event['customer_organization_name'] = phpgw::get_var('customer_organization_name', 'string', 'POST');
+					$event['customer_organization_id'] = phpgw::get_var('customer_organization_id', 'int', 'POST');
 				}
 
 				if ($_POST['cost'] != 0 and ! $event['customer_organization_number'] and ! $event['customer_ssn'])
@@ -1051,17 +1057,17 @@
 								$this->add_comment($event, $comment);
 							}
 //						$receipt = $this->bo->update($event);
-//						$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$event['id']));
+//						self::redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$event['id']));
 						}
 					}
 					$receipt = $this->bo->update($event);
 					if(empty($event['application_id']))
 					{
-						$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $event['id']));
+						self::redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $event['id']));
 					}
 					else
 					{
-						$this->redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $event['application_id']));
+						self::redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $event['application_id']));
 					}
 				}
 			}
@@ -1086,8 +1092,8 @@
 			$event['from_'] = pretty_timestamp($event['from_']);
 			$event['to_'] = pretty_timestamp($event['to_']);
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime');
-			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime', phpgwapi_datetime::date_to_timestamp($event['from_']));
+			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'datetime', phpgwapi_datetime::date_to_timestamp($event['to_']));
 			phpgwapi_jquery::load_widget('datepicker');
 
 
@@ -1121,7 +1127,7 @@
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
-			$event['audience_json'] = json_encode(array_map('intval', $event['audience']));
+			$event['audience_json'] = json_encode(array_map('intval', (array)$event['audience']));
 
 			$this->install_customer_identifier_ui($event);
 			$this->add_template_helpers();
@@ -1151,11 +1157,11 @@
 			}
 			if (isset($application_id))
 			{
-				$this->redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $application_id));
+				self::redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $application_id));
 			}
 			else
 			{
-				$this->redirect(array('menuaction' => 'booking.uievent.index'));
+				self::redirect(array('menuaction' => 'booking.uievent.index'));
 			}
 		}
 

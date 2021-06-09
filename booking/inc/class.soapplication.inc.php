@@ -45,7 +45,7 @@
 					)),
 				'name' => array('type' => 'string', 'query' => true, 'required' => true),
 				'organizer' => array('type' => 'string', 'query' => true, 'required' => true),
-				'homepage' => array('type' => 'string', 'query' => true, 'required' => false),
+				'homepage' => array('type' => 'string', 'query' => true, 'required' => false,'read_callback' => 'validate_url'),
 				'description' => array('type' => 'string', 'query' => true, 'required' => false),
 				'equipment' => array('type' => 'string', 'query' => true, 'required' => false),
 				'contact_name' => array('type' => 'string', 'query' => true, 'required' => true),
@@ -349,32 +349,59 @@
 
 		public function delete_application($id)
 		{
-			$db = $this->db;
-			$db->transaction_begin();
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
+			$sql = "DELETE FROM bb_document_application WHERE owner_id=" . (int) $id;
+			$this->db->query($sql, __LINE__, __FILE__);
+
 			$tablesuffixes = array('agegroup', 'comment', 'date', 'resource', 'targetaudience');
 			foreach ($tablesuffixes as $suffix)
 			{
 				$table_name = sprintf('%s_%s', $this->table_name, $suffix);
-				$sql = "DELETE FROM $table_name WHERE application_id=$id";
-				$db->query($sql, __LINE__, __FILE__);
+				$sql = "DELETE FROM $table_name WHERE application_id=" . (int) $id;
+				$this->db->query($sql, __LINE__, __FILE__);
 			}
 			$table_name = $this->table_name;
-			$sql = "DELETE FROM $table_name WHERE id=$id";
-			$db->query($sql, __LINE__, __FILE__);
-			return	$db->transaction_commit();
+			$sql = "DELETE FROM $table_name WHERE id=" . (int) $id;
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			if (!$this->global_lock)
+			{
+				return	$this->db->transaction_commit();
+			}
 		}
 
 
-		function check_collision( $resources, $from_, $to_ )
+		function check_collision( $resources, $from_, $to_ , $session_id = null)
 		{
+			$filter_block = '';
+			if($session_id)
+			{
+				$filter_block = " AND session_id != '{$session_id}'";
+			}
+
 			$rids = join(',', array_map("intval", $resources));
-			$sql = "SELECT ba.id
+			$sql = "SELECT bb_block.id
+                      FROM bb_block
+                      WHERE  bb_block.resource_id in ($rids)
+                      AND ((bb_block.from_ <= '$from_' AND bb_block.to_ > '$from_')
+                      OR (bb_block.from_ >= '$from_' AND bb_block.to_ <= '$to_')
+                      OR (bb_block.from_ < '$to_' AND bb_block.to_ >= '$to_')) AND active = 1 {$filter_block}
+                      UNION
+					  SELECT ba.id
                       FROM bb_allocation ba, bb_allocation_resource bar
                       WHERE ba.id = bar.allocation_id
                       AND bar.resource_id in ($rids)
-                      AND ((ba.from_ < '$from_' AND ba.to_ > '$from_')
-                      OR (ba.from_ > '$from_' AND ba.to_ < '$to_')
-                      OR (ba.from_ < '$to_' AND ba.to_ > '$to_'))
+                      AND ((ba.from_ <= '$from_' AND ba.to_ > '$from_')
+                      OR (ba.from_ >= '$from_' AND ba.to_ <= '$to_')
+                      OR (ba.from_ < '$to_' AND ba.to_ >= '$to_'))
                       UNION
                       SELECT be.id
                       FROM bb_event be, bb_event_resource ber, bb_event_date bed
@@ -382,9 +409,9 @@
 					  AND be.id = ber.event_id
                       AND be.id = bed.event_id
                       AND ber.resource_id in ($rids)
-                      AND ((bed.from_ < '$from_' AND bed.to_ > '$from_')
-                      OR (bed.from_ > '$from_' AND bed.to_ < '$to_')
-                      OR (bed.from_ < '$to_' AND bed.to_ > '$to_'))";
+                      AND ((bed.from_ <= '$from_' AND bed.to_ > '$from_')
+                      OR (bed.from_ >= '$from_' AND bed.to_ <= '$to_')
+                      OR (bed.from_ < '$to_' AND bed.to_ >= '$to_'))";
 
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 
@@ -429,6 +456,69 @@
 		{
 			$external_archive_key = $this->db->db_addslashes($external_archive_key);
 			return $this->db->query("UPDATE bb_application SET external_archive_key = '{$external_archive_key}' WHERE id =" . (int)$id, __LINE__, __FILE__);
+		}
+		function check_booking_limit($session_id, $resource_id, $ssn, $booking_limit_number_horizont,$booking_limit_number )
+		{
+			if(!$ssn || !$booking_limit_number_horizont || ! $booking_limit_number)
+			{
+				return false;
+			}
+			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+
+			$now = new DateTime();
+
+			try
+			{
+				$DateTimeZone	 = new DateTimeZone($timezone);
+				$now->setTimezone($DateTimeZone);
+			}
+			catch (Exception $ex)
+			{
+			}
+
+
+			$limit_number_horizont_days = floor($booking_limit_number_horizont / 2);
+			$limit_number_horizont_hours = floor((($booking_limit_number_horizont / 2) - $limit_number_horizont_days) * 10)*24;
+
+			$future_limit_half = clone ($now);
+			$future_limit_full = clone ($now);
+			$future_limit_full->modify("+{$booking_limit_number_horizont} days");
+
+			$future_limit_half->modify("+{$limit_number_horizont_days} days");
+			$future_limit_half->modify("+{$limit_number_horizont_hours} hours");
+			$future_limit_date_full = $future_limit_full->format('Y-m-d H:i');
+			$future_limit_date_half = $future_limit_half->format('Y-m-d H:i');
+
+			$history_limit_half = clone ($now);
+			$history_limit_full = clone ($now);
+			$history_limit_full->modify("-{$booking_limit_number_horizont} days");
+			$history_limit_half->modify("-{$limit_number_horizont_days} days");
+			$history_limit_half->modify("-{$limit_number_horizont_hours} hours");
+			$history_limit_date_full = $history_limit_half->format('Y-m-d H:i');
+			$history_limit_date_half = $history_limit_half->format('Y-m-d H:i');
+
+			$resource_id = (int) $resource_id;
+
+			$sql = "SELECT count(*) as cnt FROM"
+				. " (SELECT bb_application.id FROM bb_application"
+				. " JOIN bb_application_date ON bb_application.id = bb_application_date.application_id"
+				. " JOIN bb_application_resource"
+				. " ON bb_application.id = bb_application_resource.application_id AND bb_application_resource.resource_id = {$resource_id}"
+				. " WHERE (customer_ssn = '{$ssn}' OR (status = 'NEWPARTIAL1' AND session_id = '$session_id'))"
+				. " AND ((to_ > '{$history_limit_date_half}' AND from_ < '$future_limit_date_half')"
+				. " OR to_ > '{$history_limit_date_full}'"
+				. " OR from_ < '$future_limit_date_full')) as t";
+
+			$this->db->query($sql,__LINE__, __FILE__);
+			$this->db->next_record();
+			$cnt =  (int)$this->db->f('cnt');
+
+			$limit_reached = 0;
+			if($cnt > $booking_limit_number)
+			{
+				$limit_reached = $cnt;
+			}
+			return $limit_reached;
 		}
 	}
 

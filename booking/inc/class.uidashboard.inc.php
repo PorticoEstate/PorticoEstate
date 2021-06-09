@@ -44,7 +44,7 @@
 				$_SESSION[self::SHOW_ALL_DASHBOARD_APPLICATIONS_SESSION_KEY] = true;
 				unset($_SESSION[self::SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY]);
 			}
-			$this->redirect(array('menuaction' => $this->url_prefix . '.index'));
+			self::redirect(array('menuaction' => $this->url_prefix . '.index'));
 		}
 
 		public function show_all_dashboard_applications()
@@ -63,7 +63,7 @@
 				$_SESSION[self::SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY] = true;
 				unset($_SESSION[self::SHOW_ALL_DASHBOARD_APPLICATIONS_SESSION_KEY]);
 			}
-			$this->redirect(array('menuaction' => $this->url_prefix . '.index'));
+			self::redirect(array('menuaction' => $this->url_prefix . '.index'));
 		}
 
 		public function show_all_dashboard_messages()

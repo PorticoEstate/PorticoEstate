@@ -756,15 +756,15 @@ HTML;
 			$values_combo_box	 = array();
 			$combos				 = array();
 
-			$values_combo_box[3] = $this->bo->filter(array('format'	 => $group_filters, 'filter'	 => $this->status_id,
+			$values_combo_box[3] = $this->bo->filter(array( 'filter'	 => $this->status_id,
 				'default'	 => 'O'));
 
 			if (isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'])
 			{
 				array_unshift($values_combo_box[3], array('id' => 'O2', 'name' => $this->bo->config->config_data['tts_lang_open']));
 			}
-			$default_value = array('id' => '', 'name' => lang('Open'));
-			array_unshift($values_combo_box[3], $default_value);
+
+			array_unshift($values_combo_box[3], array('id' => '', 'name' => lang('All')));
 
 			$combos[] = array('type'	 => 'filter',
 				'name'	 => 'status_id',
@@ -774,8 +774,7 @@ HTML;
 			);
 
 			$values_combo_box[1] = $this->bocommon->select_district_list('filter', $this->district_id);
-			$default_value		 = array('id' => '', 'name' => lang('no district'));
-			array_unshift($values_combo_box[1], $default_value);
+			array_unshift($values_combo_box[1],  array('id' => '', 'name' => lang('no district')));
 			$link				 = self::link(array(
 					'menuaction'		 => 'property.uilocation.get_part_of_town',
 					'district_id'		 => $this->district_id,
@@ -805,8 +804,8 @@ HTML;
 			);
 
 			$values_combo_box[2] = $this->bocommon->select_part_of_town('filter', $this->part_of_town_id, $this->district_id);
-			$default_value		 = array('id' => '', 'name' => lang('no part of town'));
-			array_unshift($values_combo_box[2], $default_value);
+
+			array_unshift($values_combo_box[2], array('id' => '', 'name' => lang('no part of town')));
 			$combos[]			 = array('type'	 => 'filter',
 				'name'	 => 'part_of_town_id',
 				'extra'	 => '',
@@ -983,8 +982,9 @@ HTML;
 				'text'	 => lang('check date type'),
 				'list'	 => array(
 					array(
-						'id'	 => 1,
-						'name'	 => lang('modified date')
+						'id'	 => '',// translated to 1
+						'name'	 => lang('modified date'),
+						'selected'	 => 1
 					),
 					array(
 						'id'	 => 2,
@@ -2507,7 +2507,7 @@ HTML;
 				$coordinator_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
 				$coordinator_email	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
 
-				$subject = lang(Approval) . ": " . $ticket['order_id'];
+				$subject = lang('Approval') . ": " . $ticket['order_id'];
 				$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
 						'id'		 => $id), false, true) . '">' . lang('Workorder %1 needs approval', $ticket['order_id']) . '</a>';
 
@@ -3782,7 +3782,7 @@ JS;
 				'delivery_type_list'			 => array('options' => execMethod('property.bogeneric.get_list', array('type' => 'order_template_delivery_type', 'selected' => $ticket['delivery_type']))),
 				'payment_type_list'				 => array('options' => execMethod('property.bogeneric.get_list', array('type' => 'order_template_payment_type', 'selected' => $ticket['payment_type']))),
 				'content_files'					 => $content_files,
-				'tag_list'							 => array('options' => createObject('property.bofiles')->get_all_tags())
+				'tag_list'						 => array('options' => createObject('property.bofiles')->get_all_tags()),
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');

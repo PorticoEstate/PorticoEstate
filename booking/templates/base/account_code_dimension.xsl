@@ -281,6 +281,12 @@
 							</xsl:if>
 							VISMA
 						</option>
+						<option value="FACTUM">
+							<xsl:if test="config_data/external_format='FACTUM'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							FACTUM
+						</option>
 					</select>
 				</div>
 				<div class="pure-control-group">
@@ -357,6 +363,12 @@
 							</xsl:if>
 							VISMA
 						</option>
+						<option value="FACTUM">
+							<xsl:if test="config_data/internal_format='FACTUM'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							FACTUM
+						</option>
 					</select>
 				</div>
 				<div class="pure-control-group">
@@ -378,6 +390,35 @@
 						</option>
 					</select>
 				</div>
+				<div class="pure-control-group">
+					<div class="heading">
+						<legend>
+							<h3>
+								<xsl:value-of select="php:function('lang', 'customer list')"/>
+							</h3>
+						</legend>
+					</div>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'customer list format')"/>
+					</label>
+					<select id="field_invoice_export_method" name="customer_list_format">
+						<option value="AGRESSO">
+							<xsl:if test="config_data/customer_list_format='AGRESSO'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							AGRESSO
+						</option>
+						<option value="FACTUM">
+							<xsl:if test="config_data/customer_list_format='FACTUM'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							FACTUM
+						</option>
+					</select>
+				</div>
+
 				<div class="pure-control-group">
 					<div class="heading">
 						<legend>
@@ -407,6 +448,12 @@
 						</option>
 						<option value="ftp">
 							<xsl:if test="config_data/invoice_export_method='ftp'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							ftp
+						</option>
+						<option value="ftps">
+							<xsl:if test="config_data/invoice_export_method='ftps'">
 								<xsl:attribute name="selected">checked</xsl:attribute>
 							</xsl:if>
 							ftp

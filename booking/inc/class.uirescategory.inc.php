@@ -120,7 +120,7 @@
 					try
 					{
 						$receipt = $this->bo->add($rescategory);
-						$this->redirect(array('menuaction' => 'booking.uirescategory.index'));
+						self::redirect(array('menuaction' => 'booking.uirescategory.index'));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -146,6 +146,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$rescategory = $this->bo->read_single($id);
 			$errors = array();
 			$tabs = array();
@@ -166,7 +170,7 @@
 					try
 					{
 						$receipt = $this->bo->update($rescategory);
-						$this->redirect(array('menuaction' => 'booking.uirescategory.index'));
+						self::redirect(array('menuaction' => 'booking.uirescategory.index'));
 					}
 					catch (booking_unauthorized_exception $e)
 					{

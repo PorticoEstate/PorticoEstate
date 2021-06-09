@@ -406,7 +406,8 @@
 			$attribute_filter	 = " location_id = {$location_id}";
 //			$attribute_choice_filter = " location_id = {$location_id}";
 
-
+			$cols_return = array();
+			$uicols = array();
 			if (!$sql)
 			{
 				$location_types = $this->soadmin_location->select_location_type();
@@ -673,8 +674,8 @@
 			}
 			else
 			{
-				$uicols		 = $this->socommon->fm_cache('uicols_' . $type_id . '_' . $lookup_tenant . '_' . $lookup . '_f' . !!$filter_role_on_contact);
-				$cols_return = $this->socommon->fm_cache('cols_return_' . $type_id . '_' . $lookup_tenant . '_' . $lookup . '_f' . !!$filter_role_on_contact);
+				$uicols		 = (array)$this->socommon->fm_cache('uicols_' . $type_id . '_' . $lookup_tenant . '_' . $lookup . '_f' . !!$filter_role_on_contact);
+				$cols_return = (array)$this->socommon->fm_cache('cols_return_' . $type_id . '_' . $lookup_tenant . '_' . $lookup . '_f' . !!$filter_role_on_contact);
 
 				$sub_query_tenant	 = $this->socommon->fm_cache('sub_query_tenant_' . $type_id . '_' . $lookup_tenant . '_' . $lookup);
 				$sub_query_street	 = $this->socommon->fm_cache('sub_query_street_' . $type_id . '_' . $lookup_tenant . '_' . $lookup);
@@ -995,11 +996,14 @@
 			if ($query)
 			{
 				$query	 = $this->db->db_addslashes($query);
-				$query	 = str_replace(",", '.', $query);
-				if (stristr($query, '.'))
+				$_query	 = str_replace(",", '.', $query);
+				if (stristr($_query, '.'))
 				{
-					$query_part		 = explode(".", $query);
-					$_querymethod[]	 = "(fm_location{$type_id}.loc1='{$query_part[0]}' AND fm_location{$type_id}.loc{$type_id}='{$query_part[1]}')";
+					$query_part	 = explode(".", $_query);
+					if(ctype_digit($query_part[0]) && ctype_digit($query_part[1]))
+					{
+						$_querymethod[]	 = "(fm_location{$type_id}.loc1='{$query_part[0]}' AND fm_location{$type_id}.loc{$type_id}='{$query_part[1]}')";
+					}
 				}
 				//		else
 				{
@@ -1132,7 +1136,7 @@
 
 			if (!$cache_info)
 			{
-				$this->db->query('SELECT count(*) AS cnt ' . substr($sql, strripos($sql, ' from')), __LINE__, __FILE__);
+				$this->db->query('SELECT count(*) AS cnt ' . substr($sql, stripos($sql, ' from')), __LINE__, __FILE__);
 				$this->db->next_record();
 
 				$cache_info = array
@@ -2493,7 +2497,7 @@
 
 			if($__config['street_id'] == $current_level)
 			{
-				$name_field = "fm_streetaddress.descr || ' ' || fm_location{$current_level}.street_number";
+				$name_field = "fm_streetaddress.descr || ' ' || fm_location{$current_level}.street_number || ' (' || fm_location{$current_level}.loc{$current_level}_name ||')'";
 				$sql = "SELECT location_code, {$name_field} AS name"
 					. " FROM fm_location{$current_level}"
 					. " {$this->join} fm_streetaddress ON (fm_location{$current_level}.street_id = fm_streetaddress.id)"
@@ -2513,7 +2517,7 @@
 			{
 				if($__config['street_id'] == $next_level)
 				{
-					$name_field = "fm_streetaddress.descr || ' ' || fm_location{$next_level}.street_number";
+					$name_field = "fm_streetaddress.descr || ' ' || fm_location{$next_level}.street_number  || ' (' || fm_location{$next_level}.loc{$next_level}_name ||')'";
 					$sql .= " UNION"
 						. " SELECT location_code, $name_field AS name"
 						. " FROM fm_location{$next_level}"
@@ -2541,10 +2545,10 @@
 
 					if($__config['street_id'] == $j)
 					{
-						$name_field = "fm_streetaddress.descr || ' ' || fm_location{$j}.street_number";
+						$name_field = "fm_streetaddress.descr || ' ' || fm_location{$j}.street_number  || ' (' || fm_location{$j}.loc{$j}_name ||')'";
 						if(isset($metadata['etasje']))
 						{
-							$name_field .= " || fm_location{$j}.etasje";
+							$name_field .= " || ' Etasje:' || fm_location{$j}.etasje";
 						}
 
 						$_sql[]= " SELECT location_code, {$name_field} AS name"

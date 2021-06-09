@@ -1,8 +1,10 @@
 <?php
 	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('bookingfrontend.bosearch');
 
 	class bookingfrontend_uisearch extends booking_uicommon
 	{
+	    public $bo;
 
 		public $public_functions = array
 			(
@@ -11,7 +13,12 @@
 			'get_filterboxdata' => true,
 			'index'             => true,
 			'query'             => true,
+			'query_available_resources' => true,
 			'resquery'          => true,
+			'resquery_available_resources' => true,
+			'get_all_available_buildings' => true,
+			'autocomplete_resource_and_building' => true,
+			'get_all_towns' => true,
 		);
 
 		function __construct()
@@ -19,18 +26,24 @@
 
 			parent::__construct();
 			$this->bo = CreateObject('bookingfrontend.bosearch');
-			$old_top = array_pop($this->tmpl_search_path);
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
-			array_push($this->tmpl_search_path, $old_top);
+//			$old_top = array_pop(parent::$tmpl_search_path);
+//			array_push(parent::$tmpl_search_path, PHPGW_SERVER_ROOT . '/booking/templates/base');
+//			array_push(parent::$tmpl_search_path, $old_top);
 		}
 
 		function index()
 		{
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('treeview');
+			phpgwapi_jquery::load_widget('daterangepicker');
+			phpgwapi_jquery::load_widget('timepicker');
 
 			self::add_javascript('bookingfrontend', 'base', 'search.js', 'text/javascript', true);
+			self::add_javascript('bookingfrontend', 'base', 'util.js', 'text/javascript', true);
+
+
 			$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
+			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/templates/aalesund/css/rubik-font.css");
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 			$searchterm = trim(phpgw::get_var('searchterm', 'string', 'REQUEST', null));
@@ -242,8 +255,7 @@
 		{
 			$length = phpgw::get_var('length', 'int', 'REQUEST', null);
 			$rescategory_id = phpgw::get_var('rescategory_id', 'int', 'REQUEST', null);
-			$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', null);
-			$fields_multiids = array('facility_id', 'part_of_town_id');
+			$fields_multiids = array('facility_id', 'part_of_town_id', 'activity_id');
 			$multiids = array();
 			foreach ($fields_multiids as $field)
 			{
@@ -258,8 +270,107 @@
 				}
 				$multiids[$field] = array_unique($ids);
 			}
-			return $this->bo->resquery(array('rescategory_id' => $rescategory_id, 'activity_id' => $activity_id,
+			return $this->bo->resquery(array('rescategory_id' => $rescategory_id, 'activity_id' => $multiids['activity_id'],
 				'facility_id' => $multiids['facility_id'], 'part_of_town_id' => $multiids['part_of_town_id'], 'length' => $length));
+		}
+
+		function query_available_resources()
+		{
+			$length = phpgw::get_var('length', 'int', 'REQUEST', null);
+			$searchterm = trim(phpgw::get_var('searchterm', 'string', 'REQUEST', null));
+			$activity_top_level = phpgw::get_var('activity_top_level', 'int', 'REQUEST', null);
+			$building_id = phpgw::get_var('building_id', 'int', 'REQUEST', null);
+			$_filter_part_of_town = explode(',', phpgw::get_var('part_of_town_id', 'string'));
+			$from_date = phpgw::get_var('from_date', 'string', 'REQUEST', '');
+			$to_date = phpgw::get_var('to_date', 'string', 'REQUEST', '');
+			$from_time = phpgw::get_var('from_time', 'string', 'REQUEST', '');
+			$to_time = phpgw::get_var('to_time', 'string', 'REQUEST', '');
+
+			$filter_part_of_town = array();
+			foreach ($_filter_part_of_town as $key => $value)
+			{
+				if ($value && ctype_digit($value))
+				{
+					$filter_part_of_town[] = (int)$value;
+				}
+			}
+			unset($value);
+			$_filter_top_level = explode(',', phpgw::get_var('filter_top_level', 'string'));
+
+			$filter_top_level = array();
+			foreach ($_filter_top_level as $key => $value)
+			{
+				if ($value)
+				{
+					$filter_top_level[] = $value;
+				}
+			}
+			unset($value);
+
+			if (!$filter_top_level)
+			{
+				$activities = ExecMethod('booking.boactivity.get_top_level');
+				foreach ($activities as $activity)
+				{
+					$filter_top_level[] = $activity['id'];
+				}
+			}
+
+			$criteria = phpgw::get_var('criteria', 'string', 'REQUEST', array());
+			$activity_criteria = array();
+			foreach ($criteria as $entry)
+			{
+				if (isset($entry['activity_top_level']) && !in_array($entry['activity_top_level'], $filter_top_level))
+				{
+					continue;
+				}
+				if (isset($entry['activity_top_level']) && $entry['activity_top_level'])
+				{
+					$activity_criteria[$entry['activity_top_level']]['activity_top_level'] = $entry['activity_top_level'];
+				}
+				if (isset($entry['cat_id']) && !in_array($entry['cat_id'], $filter_top_level))
+				{
+					continue;
+				}
+				if (!empty($entry['cat_id']))
+				{
+					$activity_criteria[$entry['cat_id']]['activity_top_level'] = $entry['cat_id'];
+					$activity_criteria[$entry['cat_id']]['choice'][] = $entry;
+				}
+			}
+			$data = $this->bo->search_available_resources($searchterm, $building_id, $filter_part_of_town, $filter_top_level,
+					$activity_criteria, $length, array('from_date' => $from_date,
+						'to_date' => $to_date, 'from_time' => $from_time, 'to_time' => $to_time, 'length' => $length));
+
+			return $data;
+		}
+
+		function resquery_available_resources()
+		{
+			$length = phpgw::get_var('length', 'int', 'REQUEST', null);
+			$rescategory_id = phpgw::get_var('rescategory_id', 'int', 'REQUEST', null);
+			$from_date = phpgw::get_var('from_date', 'string', 'REQUEST', '');
+			$to_date = phpgw::get_var('to_date', 'string', 'REQUEST', '');
+			$from_time = phpgw::get_var('from_time', 'string', 'REQUEST', '');
+			$to_time = phpgw::get_var('to_time', 'string', 'REQUEST', '');
+			$fields_multiids = array('part_of_town_id');
+			$multiids = array();
+			foreach ($fields_multiids as $field)
+			{
+				$_ids = explode(',', phpgw::get_var($field, 'string', 'REQUEST', null));
+				$ids = array();
+				foreach ($_ids as $id)
+				{
+					if (ctype_digit($id))
+					{
+						$ids[] = (int)$id;
+					}
+				}
+				$multiids[$field] = array_unique($ids);
+			}
+			return $this->bo->resquery_available_resources(array('rescategory_id' => $rescategory_id,
+				'part_of_town_id' => $multiids['part_of_town_id'], 'from_date' => $from_date,
+				'to_date' => $to_date, 'from_time' => $from_time, 'to_time' => $to_time,  'length' => $length));
 		}
 
 
@@ -284,4 +395,17 @@
 			exit();
 		}
 
+		function autocomplete_resource_and_building()
+		{
+			self::link(array(
+				'menuaction' => 'bookingfrontend.uisearch.autocomplete_resource_and_building',
+				'phpgw_return_as' => 'json'));
+			return ($this->bo->get_resource_and_building_autocomplete_data());
+			return ($this->bo->get_resource_and_building_autocomplete_data());
+		}
+
+		function get_all_towns()
+		{
+			 return execMethod('property.solocation.get_booking_part_of_towns');
+		}
 	}

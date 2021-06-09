@@ -144,16 +144,18 @@
 					$filtermethod = "RESSURSNR = '{$identificator_arr[1]}'";
 				}
 
-				$sql = "SELECT ORG_ENHET_ID, ORG_NAVN FROM FELLESDATA.V_PORTICO_ANSATT WHERE {$filtermethod}";
+				$sql = "SELECT TJENESTESTED, V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN FROM FELLESDATA.V_PORTICO_ANSATT "
+					. " JOIN V_ORG_ENHET ON V_ORG_ENHET.ORG_ENHET_ID = V_PORTICO_ANSATT.ORG_ENHET_ID WHERE {$filtermethod}";
 
 				$db->query($sql, __LINE__, __FILE__);
 				$values = array();
 
 				if ($db->next_record())
 				{
+					$arbeidssted = $db->f('TJENESTESTED');
 					$values = array(
 						'org_unit_id'	 => $db->f('ORG_ENHET_ID'),
-						'org_unit'		 => $db->f('ORG_NAVN', true)
+						'org_unit'		 => $arbeidssted . ' ' .$db->f('ORG_NAVN', true)
 					);
 				}
 				return $values;
@@ -168,6 +170,7 @@
 				{
 					return;
 				}
+				$values = array();
 
 				if(strlen($query) < 4)
 				{
@@ -283,7 +286,6 @@
 
 
 				$db->limit_query($sql, 0, __LINE__, __FILE__, 10);
-				$values = array();
 
 				while ($db->next_record())
 				{
@@ -334,7 +336,7 @@
 				if(!$values)
 				{
 					$_values = array();
-					$filtermethod =	"account_lid ilike '{$query}'"
+					$filtermethod =	"account_lid = '{$query}'"
 					. " OR account_lastname  = '{$query}'"
 					. " OR account_firstname  = '{$query}'";
 

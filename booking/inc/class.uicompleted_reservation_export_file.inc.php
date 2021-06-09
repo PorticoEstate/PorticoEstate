@@ -41,7 +41,7 @@
 
 		public function redirect_to( $action, $params = array() )
 		{
-			return $this->redirect($this->link_to_params($action, $params));
+			return self::redirect($this->link_to_params($action, $params));
 		}
 
 		public function link_to_params( $action, $params = array() )
@@ -248,8 +248,12 @@
 			}
 
 			$file = $this->bo->get_file($export_file);
+
+			$path_parts = pathinfo($export_file['filename']);
+			$extension = $path_parts['extension'];
+
 			$content = file_get_contents($file->get_system_identifier(), false);
-			$this->export_agresso->do_your_magic($content, $id);
+			$this->export_agresso->do_your_magic($content, $id, $extension);
 			$this->redirect_to('index');
 		}
 	}

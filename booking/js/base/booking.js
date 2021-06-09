@@ -4,9 +4,17 @@ $(document).ready(function ()
 {
 	$("#start_date").change(function ()
 	{
-		$("#end_date").val($("#start_date").val());
-	});
+		var temp_end_date = $("#end_date").datetimepicker('getValue');
+		var temp_start_date = $("#start_date").datetimepicker('getValue');
+		if(!temp_end_date || (temp_end_date < temp_start_date))
+		{
+			$("#end_date").val($("#start_date").val());
 
+			$('#end_date').datetimepicker('setOptions', {
+				startDate: new Date(temp_start_date)
+			});
+		}
+	});
 
 	$('#field_cost_comment').hide();
 	$('#field_cost').on('input propertychange paste', function ()
@@ -255,7 +263,7 @@ function populateTableChkResources(building_id, selection)
 	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [
 						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}
 					]}
-			], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}
+			], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}, {key: 'rescategory_name', label: lang['Resource Type']}
 	];
 	populateTableChk(url, container, colDefsResources);
 }

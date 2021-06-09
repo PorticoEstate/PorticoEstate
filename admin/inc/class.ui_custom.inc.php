@@ -62,10 +62,24 @@
 
 			$this->acl			 = & $GLOBALS['phpgw']->acl;
 			$this->acl_location	 = '.admin';
-			$this->acl_read		 = $this->acl->check($this->acl_location, PHPGW_ACL_READ, $this->appname);
-			$this->acl_add		 = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, $this->appname);
-			$this->acl_edit		 = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, $this->appname);
-			$this->acl_delete	 = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, $this->appname);
+
+
+			if ($this->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$this->acl_read		 = true;
+				$this->acl_add		 = true;
+				$this->acl_edit		 = true;
+				$this->acl_delete	 = true;
+	
+			}
+			else
+			{
+				$this->acl_read		 = $this->acl->check($this->acl_location, PHPGW_ACL_READ, $this->appname);
+				$this->acl_add		 = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, $this->appname);
+				$this->acl_edit		 = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, $this->appname);
+				$this->acl_delete	 = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, $this->appname);
+	
+			}
 
 			if($GLOBALS['phpgw_info']['flags']['menu_selection'] = phpgw::get_var('menu_selection'))
 			{

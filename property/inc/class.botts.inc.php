@@ -467,12 +467,8 @@
 					break;
 			}
 
-			$_filters[0]['id']	 = 'all';
-			$_filters[0]['name'] = lang('All');
-
 			$filters = $this->_get_status_list(true);
-
-			$filters = array_merge($_filters, $filters);
+			array_unshift($filters, array('id' => 'O', 'name' => lang('Open')));
 
 			return $this->bocommon->select_list($selected, $filters);
 		}
@@ -1753,8 +1749,8 @@ HTML;
 				{
 					$receipt_claim		 = $boclaim->save($value_set);
 					unset($receipt_claim['id']);
-					$receipt['error']	 = array_merge($receipt['error'], $receipt_claim['error']);
-					$receipt['message']	 = array_merge($receipt['message'], $receipt_claim['message']);
+					$receipt['error']	 = array_merge((array)$receipt['error'], (array)$receipt_claim['error']);
+					$receipt['message']	 = array_merge((array)$receipt['message'], (array)$receipt_claim['message']);
 				}
 			}
 

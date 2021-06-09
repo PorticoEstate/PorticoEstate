@@ -28,7 +28,7 @@
 	/**
 	 * Get HTML checkbox with groups that are candidates for simplified tts interface
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
 	function fmtts_assign_group_candidates( $config )
@@ -54,7 +54,7 @@ HTML;
 	/**
 	 * Get HTML checkbox with groups that are candidates for simplified tts interface
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
 	function fmttssimple_group( $config )
@@ -80,7 +80,7 @@ HTML;
 	/**
 	 * Get HTML checkbox with groups that are candidates for simplified tts interface
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
 	function fmttssimple_categories( $config )
@@ -109,7 +109,7 @@ HTML;
 	/**
 	 * Get HTML checkbox with groups that are candidates for the field finnish date at tts
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
 	function fmtts_group_finnish_date( $config )
@@ -135,7 +135,7 @@ HTML;
 	/**
 	 * Get HTML listbox with categories that are candidates for the dimb responsibility_1
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML listbox to be placed in a table
 	 */
 	function dimb_cat_1( $config )
@@ -152,7 +152,7 @@ HTML;
 	/**
 	 * Get HTML listbox with categories that are candidates for the dimb responsibility_2
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML listbox to be placed in a table
 	 */
 	function dimb_cat_2( $config )
@@ -169,7 +169,7 @@ HTML;
 	/**
 	 * Get HTML listbox with project status that are to be set when asking for approval
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
 	function project_approval_status( $config )
@@ -198,7 +198,7 @@ HTML;
 	/**
 	 * Get HTML listbox with project status that are to be set when asking for approval
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
 	function project_status_on_last_order_closed( $config )
@@ -223,7 +223,7 @@ HTML;
 	/**
 	 * Get HTML listbox with workorder status that are to be set when asking for approval
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
 	function workorder_approval_status( $config )
@@ -252,7 +252,7 @@ HTML;
 	/**
 	 * Get HTML listbox with ticket order status that are to be set when asking for approval
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
 	function ticket_approval_status( $config )
@@ -280,7 +280,7 @@ HTML;
 	/**
 	 * Get HTML listbox with workorder status that are to be set when asking for approval
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
 	function workorder_ordered_status( $config )
@@ -309,7 +309,7 @@ HTML;
 	/**
 	 * Get HTML listbox with request status that are to be set when request is added to a project
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML listbox to be placed in a table
 	 */
 	function request_project_hookup_status( $config )
@@ -334,7 +334,7 @@ HTML;
 	/**
 	 * Get HTML listbox with request status that are to be set when request is added to a ticket
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML listbox to be placed in a table
 	 */
 	function request_ticket_hookup_status( $config )
@@ -359,7 +359,7 @@ HTML;
 	/**
 	 * Get HTML listbox with workorder status that are to be set when invoice is processed
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
 	function workorder_closed_status( $config )
@@ -388,7 +388,7 @@ HTML;
 	/**
 	 * Get HTML listbox with workorder reopen status that are to be set when invoice is processed
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
 	function workorder_reopen_status( $config )
@@ -417,7 +417,7 @@ HTML;
 	/**
 	 * Get HTML checkbox with location levels that should be listed in lists
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
 	function list_location_level( $config )
@@ -444,7 +444,7 @@ HTML;
 	/**
 	 * Get HTML options with location levels that should be listed in a listbox
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML options to be placed in a select
 	 */
 	function list_location_level_otions( $config )
@@ -470,7 +470,7 @@ HTML;
 	/**
 	 * Get HTML options with location levels that should be listed in a listbox
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML options to be placed in a select
 	 */
 	function list_location_level_otions_survey( $config )
@@ -496,7 +496,7 @@ HTML;
 	/**
 	 * Get HTML options with roles for responsibilities that should be listed in a listbox
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML options to be placed in a select
 	 */
 	function list_contact_at_location( $config )
@@ -521,7 +521,7 @@ HTML;
 	/**
 	 * Get HTML checkbox with filter buildingpart
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML listbox to be placed in a table
 	 */
 	function filter_buildingpart( $config )
@@ -573,7 +573,7 @@ HTML;
 	/**
 	 * Get HTML listboks with categories that are candidates for condition survey import categories
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string options for selectbox
 	 */
 	function condition_survey_import_cat( $config )
@@ -626,7 +626,7 @@ HTML;
 	/**
 	 * Get HTML listbox with initial status that are to be set when condition survey are imported
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML listboxes to be placed in a table
 	 */
 	function condition_survey_initial_status( $config )
@@ -655,7 +655,7 @@ HTML;
 	/**
 	 * Get HTML listbox with initial status that are to be set when condition survey are imported
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML listboxes to be placed in a table
 	 */
 	function condition_survey_hidden_status( $config )
@@ -684,7 +684,7 @@ HTML;
 	/**
 	 * Get HTML listbox with obsolete status that are to be set when condition survey are imported
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML listboxes to be placed in a table
 	 */
 	function condition_survey_obsolete_status( $config )
@@ -713,7 +713,7 @@ HTML;
 	/**
 	 * Get HTML checkbox with entities to bypass ACL
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML checkboxes to be placed in a table
 	 */
 	function bypass_acl_at_entity( $config )
@@ -740,7 +740,7 @@ HTML;
 	/**
 	 * Get HTML options with roles for responsibilities that should be listed in a listbox
 	 *
-	 * @param $config
+	 * @param array $config
 	 * @return string HTML options to be placed in a select
 	 */
 	function tts_deviation_category( $config )

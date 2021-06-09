@@ -4,7 +4,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="author" content="{system} http://savannah.nongnu.org/projects/fmsystem/">
+		<meta name="author" content="{system} https://github.com/PorticoEstate/PorticoEstate">
 		<meta name="description" content="{system} login screen, working environment powered by Portico Estate">
 		<meta name="keywords" content="{system} login screen, phpgroupware, groupware, groupware suite, facilities management, CAFM">
 		<meta name="robots" content="noindex,nofollow">
@@ -117,7 +117,7 @@
 
 				<div class="pure-g">
 
-					<div class="l-box l-box-lrg pure-u-1 pure-u-md-1-2">
+					<div class="l-box l-box-lrg pure-u-1 {grid_css}">
 
 						<!-- BEGIN message_block -->
 						<dl id="system-message">
@@ -142,19 +142,26 @@
 								</div>
 								<!-- END loging_block -->
 								<!-- BEGIN domain_from_host -->
-								@{logindomain}<input type="hidden" id="logindomain" name="logindomain" value="{logindomain}">
+								@{logindomain}<input type="hidden" id="logindomain" name="logindomain" value="{logindomain}"/>
 								<!-- END domain_from_host -->
 								<br>
 								<!-- BEGIN login_additional_info -->
 								<div class="pure-control-group">
 									<label for="firstname">{lang_firstname}</label>
-									<input type="text" value="{firstname}" maxlength="100" name="firstname" id="firstname" >
+									<input type="text" value="{firstname}" maxlength="100" name="firstname" id="firstname" required="required"/>
 								</div>
 								<div class="pure-control-group">
 									<label for="lastname">{lang_lastname}</label>
-									<input type="text" value="{lastname}" name="lastname" id="lastname"  maxlength="100">
+									<input type="text" value="{lastname}" name="lastname" id="lastname" maxlength="100" required="required"/>
 								</div>
-
+								<div class="pure-control-group">
+									<label for="email">{lang_email}</label>
+									<input type="email" value="{email}" maxlength="100" name="email" id="email" required="required"/>
+								</div>
+								<div class="pure-control-group">
+									<label for="cellphone">{lang_cellphone}</label>
+									<input type="tel" value="{cellphone}" name="cellphone" id="cellphone" required="required"/>
+								</div>
 								<!-- END login_additional_info -->
 								<!-- BEGIN password_block -->
 								<div class="pure-control-group">
@@ -171,7 +178,7 @@
 								<!-- BEGIN domain_select -->
 								<div class="pure-control-group">
 									<label for="logindomain">{lang_domain}</label>
-									<select name="logindomain" id="logindomain">
+									<select name="logindomain" id="logindomain" class="pure-u-1">
 										<!-- BEGIN domain_option -->
 										<option value="{domain_name}" {domain_selected}>{domain_display_name}</option>
 										<!-- END domain_option -->
@@ -226,7 +233,7 @@
 			<div class="footer is-center">
 				<noscript>Warning! JavaScript must be enabled for proper operation of the Administrator back-end.</noscript>
 				<p class="copyright">
-					<a href="http://savannah.nongnu.org/projects/fmsystem/" target="_blank">{system} {version}</a> is Free Software released under the <a href="http://www.gnu.org/licenses/gpl-2.0.html">GNU/GPL License</a>.
+					<a href="https://github.com/PorticoEstate/PorticoEstate" target="_blank">{system} {version}</a> is Free Software released under the <a href="http://www.gnu.org/licenses/gpl-2.0.html">GNU/GPL License</a>.
 				</p>
 			</div>
 			<!-- END footer_block -->

@@ -515,6 +515,8 @@
 			$vfs		 = CreateObject('phpgwapi.vfs');
 			$file_info	 = $vfs->get_info($id);
 
+			$data_validation_format = str_ireplace(array('Y','m', 'd'), array('yyyy', 'mm', 'dd' ), $this->dateFormat);
+
 			$data = array
 				(
 				'datatable_def'				 => $datatable_def,
@@ -533,7 +535,8 @@
 				'category_filter'			 => array('options' => $category_filter),
 				'district_filter'			 => array('options' => $district_filter),
 				'part_of_town_filter'		 => array('options' => $part_of_town_filter),
-				'link_controller_example'	 => self::link(array('menuaction' => 'controller.uicomponent.index'))
+				'link_controller_example'	 => self::link(array('menuaction' => 'controller.uicomponent.index')),
+				'data_validation_format'	 => $data_validation_format
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('generic document');

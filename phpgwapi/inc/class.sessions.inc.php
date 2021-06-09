@@ -289,12 +289,15 @@
 				return false;
 			}
 
-			if ( !$accounts->exists($this->_account_lid)
-					&& $GLOBALS['phpgw_info']['server']['auto_create_acct'] )
-			{
-				$this->_account_id = $accounts->auto_add($this->_account_lid, $passwd);
-			}
-			else
+			/**
+			 * Disable autocreate here, only for sso-mapping
+			 */
+//			if ( !$accounts->exists($this->_account_lid)
+//					&& $GLOBALS['phpgw_info']['server']['auto_create_acct'] )
+//			{
+//				$this->_account_id = $accounts->auto_add($this->_account_lid, $passwd, $firstname, $lastname);
+//			}
+//			else
 			{
 				$this->_account_id = $accounts->name2id($this->_account_lid);
 			}
@@ -1638,7 +1641,7 @@
 				return $this->_cookie_domain;
 			}
 
-			if ( isset($GLOBALS['phpgw_info']['server']['cookie_domain']) )
+			if ( !empty($GLOBALS['phpgw_info']['server']['cookie_domain']) )
 			{
 				$this->_cookie_domain = $GLOBALS['phpgw_info']['server']['cookie_domain'];
 			}

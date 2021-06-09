@@ -178,7 +178,7 @@
 		{
 			if (!$selected)
 			{
-				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $this->type_id . !!$this->lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id . !!$this->lookup] : '';
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $this->type_id . !!$this->lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id . !!$this->lookup] : array();
 			}
 			$filter = array('list' => ''); // translates to "list IS NULL"
 			//$columns = $this->custom->find('property', '.location.' . $type_id, 0, '', '', '', true, false, $filter);

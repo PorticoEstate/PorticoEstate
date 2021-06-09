@@ -166,7 +166,7 @@
 								<!--<pre data-bind="text: ko.toJSON(availlableTimeSlots, null, 2)"></pre>-->
 								<div class="mt-2" data-bind="foreach: availlableTimeSlots">
 									<ul class="list-group list-group-flush">
-										<div data-bind="if: overlap">
+										<div data-bind="if: overlap == 1">
 											<li class="list-group-item">
 												<i class="far fa-clock mr-2 pt-1" style="color: #ff3333;"></i>
 												<span data-bind="html: when"></span>
@@ -176,8 +176,17 @@
 											</li>
 										</div>
 
-										<div data-bind="if: overlap == false">
+										<div data-bind="if: overlap == 2">
+											<li class="list-group-item">
+												<i class="far fa-clock mr-2 pt-1" style="color: #ffc107;"></i>
+												<span data-bind="html: when"></span>
+												<span class="ml-2" style="font-weight: bold; color: #ffc107;">
+													<xsl:value-of select="php:function('lang', 'reserved')"/>
+												</span>
+											</li>
+										</div>
 
+										<div data-bind="if: overlap == false">
 											<li class="list-group-item">
 												<i class="far fa-clock mr-2 pt-1" style="color: #1a8f65;"></i>
 												<a class="bookable-timeslots-link-href" data-bind="" href="">
@@ -214,7 +223,7 @@
 					</button>
 				</xsl:if>
 
-				<xsl:if test="building/deactivate_application=0">
+				<xsl:if test="building/deactivate_application=0 and resource/deactivate_application=0">
 					<a href="" class="btn btn-default bookBtnForward">
 						<i class="fas fa-plus"></i>&#160;
 						<xsl:value-of select="php:function('lang', 'Application')" />
@@ -264,8 +273,8 @@
 	</div>
 	<script>
 		var lang = <xsl:value-of select="php:function('js_lang', 'new application', 'Resource (2018)')" />;
-		var resourcename = "<xsl:value-of select="resource/name" />";
-		var deactivate_application = <xsl:value-of select="building/deactivate_application" />;
+		var resourcename = '<xsl:value-of select="resource/name" />';
+		var deactivate_application = <xsl:value-of select="building/deactivate_application" /> + <xsl:value-of select="resource/deactivate_application" />;
 		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
 		var building_id = "<xsl:value-of select="building/id" />";
 		var simple_booking = "<xsl:value-of select="resource/simple_booking" />";

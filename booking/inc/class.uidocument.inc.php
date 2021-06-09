@@ -88,7 +88,7 @@
 		{
 			if ($this->is_inline())
 			{
-				$this->redirect($this->get_parent_url_link_params());
+				self::redirect($this->get_parent_url_link_params());
 			}
 
 			return false;
@@ -256,7 +256,7 @@
 				{
 					$documents['results'][] = $doc;
 				}
-				$documents['total_records'] = count($documents['results']);
+				$documents['total_records'] = count($doc_backup['results']);
 			}
 			return $this->jquery_results($documents);
 		}
@@ -328,7 +328,7 @@
 
 						$receipt = $this->bo->add($document);
 						$this->redirect_to_parent_if_inline();
-						$this->redirect($this->get_owner_typed_link_params('index'));
+						self::redirect($this->get_owner_typed_link_params('index'));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -364,6 +364,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$document = $this->bo->read_single($id);
 
 			$errors = array();
@@ -377,7 +381,7 @@
 					{
 						$receipt = $this->bo->update($document);
 						$this->redirect_to_parent_if_inline();
-						$this->redirect($this->get_owner_typed_link_params('index'));
+						self::redirect($this->get_owner_typed_link_params('index'));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -419,7 +423,7 @@
 			$this->bo->delete($id);
 
 			$this->redirect_to_parent_if_inline();
-			$this->redirect($this->get_owner_typed_link_params('index'));
+			self::redirect($this->get_owner_typed_link_params('index'));
 		}
 
 		/**

@@ -66,10 +66,14 @@
 //				'booking_dow_default_end' => 'int',
 				'booking_time_default_start' => 'int',
 				'booking_time_default_end' => 'int',
+				'booking_time_minutes' => 'int',
+				'booking_limit_number' => 'int',
+				'booking_limit_number_horizont' => 'int',
 				'simple_booking_start_date' => 'string',
 				'simple_booking_end_date' => 'string',
 				'booking_month_horizon' => 'int',
 				'booking_day_horizon' => 'int',
+				'deactivate_application' => 'int',
 			);
 			self::set_active_menu('booking::buildings::resources::resources');
 			$this->display_name = lang('resources');
@@ -203,7 +207,7 @@
 					try
 					{
 						$receipt = $this->bo->add($resource);
-						$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $receipt['id']));
+						self::redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $receipt['id']));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -242,6 +246,10 @@
 			$GLOBALS['phpgw_info']['flags']['allow_html_iframe'] = true;
 			$id = phpgw::get_var('id', 'int');
 			$resource = $this->bo->read_single($id);
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$resource['id'] = $id;
 			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
 					'id' => $resource['id']));
@@ -273,7 +281,7 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->update($resource);
-					$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
+					self::redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
 				}
 			}
 
@@ -363,7 +371,7 @@
 					try
 					{
 						$receipt = $this->bo->update($resource);
-						$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
+						self::redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -406,7 +414,7 @@
 					try
 					{
 						$receipt = $this->bo->update($resource);
-						$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
+						self::redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
 					}
 					catch (booking_unauthorized_exception $e)
 					{

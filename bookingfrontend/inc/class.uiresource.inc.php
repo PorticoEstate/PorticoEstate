@@ -20,9 +20,9 @@
 			$this->bo = CreateObject('booking.boresource');
 			$this->building_bo = CreateObject('booking.bobuilding');
 			$this->activity_bo = CreateObject('booking.boactivity');
-			$old_top = array_pop($this->tmpl_search_path);
-			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/bookingfrontend/templates/base');
-			array_push($this->tmpl_search_path, $old_top);
+//			$old_top = array_pop(parent::$tmpl_search_path);
+//			array_push(parent::$tmpl_search_path, PHPGW_SERVER_ROOT . '/bookingfrontend/templates/base');
+//			array_push(parent::$tmpl_search_path, $old_top);
 		}
 
 		public function index_json()

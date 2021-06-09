@@ -232,7 +232,7 @@
 
 			if ($property_locations_update)
 			{
-				if (count($property_locations) > 0)
+				if (isset($property_locations) && count($property_locations) > 0)
 				{
 					$this->header_state['selected_location'] = $property_locations[0]['location_code'];
 					$param_selected_location = $property_locations[0]['location_code'];
@@ -244,7 +244,7 @@
 				}
 
 				$this->header_state['locations'] = $property_locations;
-				$this->header_state['number_of_locations'] = count($property_locations);
+				$this->header_state['number_of_locations'] = count((array)$property_locations);
 				//FIXME
 				$this->calculate_totals($property_locations);
 			}

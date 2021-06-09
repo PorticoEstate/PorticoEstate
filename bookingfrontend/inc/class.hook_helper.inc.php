@@ -105,20 +105,13 @@ HTML;
 
 			if ($orgs)
 			{
-				if(!empty($_GET['menuaction']))
+				if(isset($_GET) && $_GET)
 				{
-					$action = $GLOBALS['phpgw']->link('/bookingfrontend/',
-						array
-						(
-							'menuaction' => phpgw::get_var('menuaction')
-						)
-					);
 					$base = 'bookingfrontend/';
-					$oArgs = '{menuaction:"' . phpgw::get_var('menuaction') .'"}';
+					$oArgs = json_encode($_GET);
 				}
 				else
 				{
-					$action = $GLOBALS['phpgw']->link('/bookingfrontend/index.php');
 					$base = 'bookingfrontend/index.php';
 					$oArgs = '{}';
 				}

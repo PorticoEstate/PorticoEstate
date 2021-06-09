@@ -60,7 +60,8 @@
 					(
 					'write' => array_fill_keys(array('active', 'description', 'from_', 'to_', 'contact_name',
 						'contact_email',
-						'contact_phone', 'activity_name', 'audience', 'agegroups', 'is_public', 'include_in_list'), true),
+						'contact_phone', 'activity_name', 'audience', 'agegroups', 'is_public', 'include_in_list',
+						'equipment'), true),
 				);
 			}
 
@@ -217,7 +218,7 @@
 
 			$extra_mail_addresses = CreateObject('booking.boapplication')->get_mail_addresses( $event['building_id'] );
 
-			if($mailadresses)
+			if(!empty($mailadresses[0]))
 			{
 				$mailadresses = array_merge($mailadresses, array_values($extra_mail_addresses));
 			}

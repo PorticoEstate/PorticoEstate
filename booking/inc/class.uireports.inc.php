@@ -654,7 +654,7 @@ HTML;
 				$allocations = $this->get_free_allocations(
 					phpgw::get_var('building'), $from_, $to_, phpgw::get_var('weekdays')
 				);
-				_debug_array($allocations);
+//				_debug_array($allocations);
 				$counter = 0;
 				foreach ($allocations['results'] as &$allocation)
 				{

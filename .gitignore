@@ -9,4 +9,4 @@
 /nbproject
 /vendor
 /phpgwapi/test/_output
-/phpgwapi/inc/phpmailer/nbproject/private/
+.vscode/launch.json

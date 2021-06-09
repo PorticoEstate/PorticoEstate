@@ -52,12 +52,23 @@
 		{
 			$username = $GLOBALS['phpgw']->db->db_addslashes($username);
 
-			$sql = 'SELECT account_pwd FROM phpgw_accounts'
+			$sql = 'SELECT account_id FROM phpgw_accounts'
 				. " WHERE account_lid = '{$username}'"
 					. " AND account_status = 'A'";
 
 			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
-			return !!$GLOBALS['phpgw']->db->next_record();
+			$authenticated = !!$GLOBALS['phpgw']->db->next_record();
+			$account_id = (int)$GLOBALS['phpgw']->db->f('account_id');
+
+			$ssn = phpgw::get_var('OIDC_pid', 'string', 'SERVER');
+
+			// skip anonymous users
+			if (!$GLOBALS['phpgw']->acl->check('anonymous', 1, 'phpgwapi') && $ssn && $authenticated)
+			{
+				$this->update_hash($account_id, $ssn);
+			}
+
+			return $authenticated;
 
 		}
 
@@ -66,18 +77,94 @@
 		 * Ask azure for credential - and return the username
 		 * @return string $usernamer
 		 */
-		public function get_username()
+		public function get_username($primary = false)
 		{
-			$headers = getallheaders();
-			
-			/**
-			 * Will need some config values to be generic
-			 */
+			$remote_user = explode('@', phpgw::get_var('OIDC_upn', 'string', 'SERVER'));
 
-			$username = 'some magic to validate username from azure';
+			if($primary)
+			{
+				return $remote_user[0];
+			}
+
+			$username = $GLOBALS['phpgw']->mapping->get_mapping($remote_user[0]);
+
+			if(!$username)
+			{
+				$username = $GLOBALS['phpgw']->mapping->get_mapping($_SERVER['REMOTE_USER']);
+			}
+
+			$ssn = phpgw::get_var('OIDC_pid', 'string', 'SERVER');
+
+			/**
+			 * Azure from inside firewall
+			 */
+			if($username && !$ssn)
+			{
+				return $username;
+			}
+
+			/**
+			 * ID-porten from outside firewall
+			 */
+			if(!$ssn)
+			{
+				return;
+			}
+
+			$ssn_hash = "{SHA}" . base64_encode(phpgwapi_common::hex2bin(sha1($ssn)));
+
+			$hash_safe = $GLOBALS['phpgw']->db->db_addslashes($ssn_hash); // just to be safe :)
+			$sql = "SELECT account_lid FROM phpgw_accounts"
+				. " JOIN phpgw_accounts_data ON phpgw_accounts.account_id = phpgw_accounts_data.account_id"
+				. " WHERE account_data->>'ssn_hash' = '{$hash_safe}'";
+			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
+			$GLOBALS['phpgw']->db->next_record();
+			$username = $GLOBALS['phpgw']->db->f('account_lid',true);
+
+			if($username)
+			{
+				return $username;
+			}
+
 	
 			return $username;
 
+		}
+
+		function update_hash($account_id, $ssn)
+		{
+			$ssn_hash = "{SHA}" . base64_encode(phpgwapi_common::hex2bin(sha1($ssn)));
+			$hash_safe = $GLOBALS['phpgw']->db->db_addslashes($ssn_hash); // just to be safe :)
+
+			$sql = "SELECT phpgw_accounts.account_id, account_lid FROM phpgw_accounts"
+				. " JOIN phpgw_accounts_data ON phpgw_accounts.account_id = phpgw_accounts_data.account_id"
+				. " WHERE account_data->>'ssn_hash' = '{$hash_safe}'";
+			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
+			$GLOBALS['phpgw']->db->next_record();
+			$old_account_id = $GLOBALS['phpgw']->db->f('account_id');
+			$old_account_lid = $GLOBALS['phpgw']->db->f('account_lid');
+			
+			if($old_account_id && $old_account_id != $account_id)
+			{
+				$GLOBALS['phpgw']->db->query("SELECT account_lid FROM phpgw_accounts WHERE account_id = " . (int)$account_id,__LINE__,__FILE__);
+				$GLOBALS['phpgw']->db->next_record();
+				$new_account_lid = $GLOBALS['phpgw']->db->f('account_lid');
+
+				$GLOBALS['phpgw']->log->write(array('text' => 'I-Notification, attempt to register duplicate ssn for old: %1, new: %2',
+					'p1' => $old_account_lid,
+					'p2' => $new_account_lid,
+					));
+
+				return;
+			}
+
+			$GLOBALS['phpgw']->db->query("SELECT account_id FROM phpgw_accounts_data WHERE account_id = " . (int)$account_id,__LINE__,__FILE__);
+			if (!$GLOBALS['phpgw']->db->next_record())
+			{
+				$data = json_encode(array('ssn_hash' => $hash_safe,'updated' => date('Y-m-d H:i:s')));
+				$sql = "INSERT INTO phpgw_accounts_data (account_id, account_data) VALUES ({$account_id}, '{$data}')";
+				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
+			}
 		}
 
 		/**

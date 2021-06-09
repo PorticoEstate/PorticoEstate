@@ -113,7 +113,7 @@
 					try
 					{
 						$receipt = $this->bo->add($facility);
-						$this->redirect(array('menuaction' => 'booking.uifacility.index'));
+						self::redirect(array('menuaction' => 'booking.uifacility.index'));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -134,6 +134,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$facility = $this->bo->read_single($id);
 			$errors = array();
 			$tabs = array();
@@ -149,7 +153,7 @@
 					try
 					{
 						$receipt = $this->bo->update($facility);
-						$this->redirect(array('menuaction' => 'booking.uifacility.index'));
+						self::redirect(array('menuaction' => 'booking.uifacility.index'));
 					}
 					catch (booking_unauthorized_exception $e)
 					{

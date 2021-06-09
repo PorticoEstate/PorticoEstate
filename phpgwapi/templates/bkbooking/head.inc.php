@@ -151,7 +151,7 @@ JS;
 	}
 	if($keywords != '')
 	{
-		$keywords = '<meta name="keywords" content="'.$keywords.'">';
+		$keywords = '<meta name="keywords" content="'.htmlspecialchars($keywords) . '">';
 	}
 	else
 	{
@@ -159,7 +159,7 @@ JS;
 	}
 	if($description != '')
 	{
-		$description = '<meta name="description" content="'.$description.'">';
+		$description = '<meta name="description" content="' . htmlspecialchars($description) . '">';
 	}
 	else
 	{

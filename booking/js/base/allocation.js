@@ -2,6 +2,20 @@ var building_id_selection = "";
 $(document).ready(function ()
 {
 
+	$("#field_from").change(function ()
+	{
+		var temp_field_to = $("#field_to").datetimepicker('getValue');
+		var temp_field_from = $("#field_from").datetimepicker('getValue');
+		if(!temp_field_to || (temp_field_to < temp_field_from))
+		{
+			$("#field_to").val($("#field_from").val());
+
+			$('#field_to').datetimepicker('setOptions', {
+				startDate: new Date(temp_field_from)
+			});
+		}
+	});
+
 	$('#field_cost_comment').hide();
 	$('#field_cost').on('input propertychange paste', function ()
 	{
@@ -60,7 +74,7 @@ function populateTableChkResources(building_id, selection)
 	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [
 						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}, {name: 'data-validation', value: 'checkbox_group'}, {name: 'data-validation-qty', value: 'min1'}, {name: 'data-validation-error-msg', value: 'Please choose at least 1 resource'}
 					]}
-			], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}
+			], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}, {key: 'rescategory_name', label: lang['Resource Type']}
 	];
 	populateTableChk(url, container, colDefsResources);
 }

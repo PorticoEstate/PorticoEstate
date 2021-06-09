@@ -24,6 +24,7 @@
 			$this->account	 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db		 = & $GLOBALS['phpgw']->db;
 			$this->join		 = $this->db->join;
+			$this->db->Exception_On_Error = true;
 
 			if ($location_id && !$category = execMethod('property.soadmin_entity.get_single_category', $location_id))
 			{
@@ -86,13 +87,21 @@
 
 		public function add( $data )
 		{
-			if ($this->is_eav)
+			try
 			{
-				$ok = $this->_add_eav($data);
+				if ($this->is_eav)
+				{
+					$ok = $this->_add_eav($data);
+				}
+				else
+				{
+					$ok = $this->_add_sql($data);
+				}
+				
 			}
-			else
+			catch(Exception $ex)
 			{
-				$ok = $this->_add_sql($data);
+				throw $ex;
 			}
 			return $ok;
 		}
@@ -219,7 +228,14 @@
 
 				$_value_set = $this->db->validate_update($_value_set);
 
-				$sql = "UPDATE fm_bim_item SET $_value_set WHERE id = $id AND location_id = {$location_id}";
+				try
+				{
+					$sql = "UPDATE fm_bim_item SET $_value_set WHERE id = $id AND location_id = {$location_id}";
+				}
+				catch (Exception $ex)
+				{
+					throw $ex;
+				}
 			}
 			else
 			{
@@ -281,16 +297,16 @@
 			}
 			else
 			{
-				$ok = $this->db->query($sql, __LINE__, __FILE__);
-			}
-
-			if ($ok)
-			{
-				$this->messages[] = "Successfully imported record: id ({$id})";
-			}
-			else
-			{
-				$this->errors[] = "Error importing record: id ({$id})";
+				try
+				{
+					$ok = $this->db->query($sql, __LINE__, __FILE__);
+					$this->messages[] = "Successfully imported record: id ({$id})";
+				}
+				catch (Exception $ex)
+				{
+					$this->errors[] = "Error importing record: id ({$id})";
+					throw $ex;
+				}
 			}
 			return $ok;
 		}
@@ -392,17 +408,18 @@
 			}
 			else
 			{
-				$ok = $this->db->query($sql, __LINE__, __FILE__);
+				try
+				{
+					$ok = $this->db->query($sql, __LINE__, __FILE__);				
+					$this->messages[] = "Successfully {$action} record: " . implode(', ', $primary_key);
+				}
+				catch (Exception $ex)
+				{
+					$this->errors[] = "Error importing record: " . implode(', ', $primary_key);
+					throw $ex;
+				}
 			}
 
-			if ($ok)
-			{
-				$this->messages[] = "Successfully {$action} record: " . implode(', ', $primary_key);
-			}
-			else
-			{
-				$this->errors[] = "Error importing record: " . implode(', ', $primary_key);
-			}
 			return $ok;
 		}
 
@@ -451,14 +468,15 @@
 				$this->db->next_record();
 				$next_value	 = $this->db->f('next_value');
 
-				$ok = $this->db->query("SELECT setval('{$this->sequence}', {$next_value}, false)", __LINE__, __FILE__);
-				if($ok)
+				try
 				{
+					$ok = $this->db->query("SELECT setval('{$this->sequence}', {$next_value}, false)", __LINE__, __FILE__);
 					$this->messages[] = "Sequence '{$this->sequence}' updated to {$next_value}";
 				}
-				else
+				catch (Exception $ex)
 				{
 					$this->errors[] = "Updating Sequence '{$this->sequence}' failed";
+					throw $ex;
 				}
 			}
 		}

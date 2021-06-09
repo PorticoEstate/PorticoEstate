@@ -129,6 +129,10 @@
 						'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
+							'key' => 'id',
+							'label' => lang('id'),
+						),
+						array(
 							'key' => 'name',
 							'label' => lang('Building'),
 							'formatter' => 'JqueryPortico.formatLink'
@@ -207,7 +211,7 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->add($building);
-					$this->redirect(array('menuaction' => 'booking.uibuilding.show', 'id' => $receipt['id']));
+					self::redirect(array('menuaction' => 'booking.uibuilding.show', 'id' => $receipt['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -236,6 +240,10 @@
 			$GLOBALS['phpgw_info']['flags']['allow_html_image']	 = true;
 			$GLOBALS['phpgw_info']['flags']['allow_html_iframe'] = true;
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$building = $this->bo->read_single($id);
 			$building['id'] = $id;
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
@@ -263,7 +271,7 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->update($building);
-					$this->redirect(array('menuaction' => 'booking.uibuilding.show', 'id' => $receipt['id']));
+					self::redirect(array('menuaction' => 'booking.uibuilding.show', 'id' => $receipt['id']));
 				}
 			}
 			$activity_data = $this->activity_bo->get_top_level();

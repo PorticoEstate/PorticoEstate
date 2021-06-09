@@ -104,7 +104,7 @@
 
 			$extra_mail_addresses = CreateObject('booking.boapplication')->get_mail_addresses( $allocation['building_id'] );
 
-			if($mailadresses)
+			if(!empty($mailadresses[0]))
 			{
 				$mailadresses = array_merge($mailadresses, array_values($extra_mail_addresses));
 			}

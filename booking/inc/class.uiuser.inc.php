@@ -75,16 +75,25 @@
 				phpgw::no_access();
 			}
 
-			$confirm = phpgw::get_var('confirm', 'bool', 'POST');
-
 			if (phpgw::get_var('confirm', 'bool', 'POST'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
-				$file_ending = 'cs15';
+				$config_data = CreateObject('phpgwapi.config', 'booking')->read();
+				if($config_data['customer_list_format'] == 'FACTUM')
+				{
+					header('Content-type: text/xml');
+					$file_ending = 'xml';
+				}
+				else
+				{
+					header('Content-type: text/plain');
+					$file_ending = 'cs15';
+				}
+
 				$type = 'kundefil_aktiv_kommune';
 				$date = date('Ymd', time());
-				header('Content-type: text/plain');
+
 				header("Content-Disposition: attachment; filename=PE_{$type}_{$date}.{$file_ending}");
 				print $this->bo->get_customer_list();
 				return;
@@ -258,7 +267,7 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->add($user);
-					$this->redirect(array('menuaction' => 'booking.uiuser.show', 'id' => $receipt['id']));
+					self::redirect(array('menuaction' => 'booking.uiuser.show', 'id' => $receipt['id']));
 				}
 			}
 			$this->flash_form_errors($errors);
@@ -282,6 +291,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 
 			$user = $this->bo->read_single($id);
 			$user['id'] = $id;
@@ -310,12 +323,12 @@
 					$receipt = $this->bo->update($user);
 					if ($this->module == "bookingfrontend")
 					{
-						$this->redirect(array('menuaction' => 'bookingfrontend.uiuser.show',
+						self::redirect(array('menuaction' => 'bookingfrontend.uiuser.show',
 							'id' => $receipt["id"]));
 					}
 					else
 					{
-						$this->redirect(array('menuaction' => 'booking.uiuser.show', 'id' => $receipt["id"]));
+						self::redirect(array('menuaction' => 'booking.uiuser.show', 'id' => $receipt["id"]));
 					}
 				}
 			}
@@ -372,7 +385,7 @@
 
 			$this->bo->delete($id);
 
-			$this->redirect(array('menuaction' => $this->module . '.uiuser.show',
+			self::redirect(array('menuaction' => $this->module . '.uiuser.show',
 				'id' => $id));
 		}
 	}

@@ -293,7 +293,7 @@
 							'procedure_id' => $procedure->get_id(),
 							'tab' => 'documents'));
 					//Handle vfs failure to store document
-//					$this->redirect($document, $document_properties, '', '');
+//					self::redirect($document, $document_properties, '', '');
 				}
 			}
 		}
@@ -469,9 +469,9 @@
 					return;
 				}
 
-				if ($this->flash_msgs)
+				if (self::$flash_msgs)
 				{
-					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->flash_msgs);
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data(self::$flash_msgs);
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
 

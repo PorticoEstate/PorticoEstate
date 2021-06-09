@@ -24,14 +24,13 @@
 	   You should have received a copy of the GNU General Public License
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
-
-	$phpgw_info = array();
+        $phpgw_info = array();
 	if (!file_exists('header.inc.php'))
 	{
 		Header('Location: setup/index.php');
 		exit;
 	}
-
+ 
 	/**
 	* @global string $GLOBALS['sessionid']
 	* @internal FIXME this is ugly and probably not needed - skwashd jan08

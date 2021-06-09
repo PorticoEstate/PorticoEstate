@@ -167,7 +167,7 @@
 		function read( $data )
 		{
 			$start				 = isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
-			$status_id			 = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'O'; //O='Open'
+			$status_id			 = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'all'; //O='Open'
 			$user_id			 = isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : 0;
 			$group_id			 = !empty($data['group_id']) ? (int)$data['group_id'] : 0;
 			$reported_by		 = isset($data['reported_by']) && $data['reported_by'] ? (int)$data['reported_by'] : 0;
@@ -598,7 +598,8 @@
 				$querymethod = " $where ((subject $this->like '%$query%'"
 					. " OR address $this->like '%$query%' "
 					. " OR fm_location1.loc1_name $this->like '%$query%'"
-					. " OR fm_tts_tickets.location_code $this->like '%$query%'";
+					. " OR fm_tts_tickets.location_code $this->like '%$query%'"
+					. " OR fm_tts_tickets.order_descr $this->like '%$query%'";
 
 				if (ctype_digit($query))
 				{
@@ -1017,6 +1018,8 @@
 				$ticket['delivery_type']		 = $this->db->f('delivery_type');
 				$ticket['payment_type']			 = $this->db->f('payment_type');
 				$ticket['charge_tenant']		 = $this->db->f('charge_tenant');
+				$ticket['verified_transfered']	 = $this->db->f('verified_transfered');
+				
 
 				$user_id = (int)$this->db->f('user_id');
 
@@ -1421,6 +1424,7 @@
 			$old_order_dim1			 = (int)$this->db->f('order_dim1');
 			$order_sent				 = $this->db->f('order_sent');
 			$old_order_id			 = $this->db->f('order_id');
+			$old_payment_type		 = (int)$this->db->f('payment_type');
 
 			$ticket['tenant_id']= $this->db->f('tenant_id');
 
@@ -1758,6 +1762,12 @@
 				unset($interlink);
 			}
 
+			if((int)$ticket['payment_type'] && $old_payment_type != (int)$ticket['payment_type'] )
+			{
+				$payment_type = $ticket['payment_type'];
+				$this->db->query("UPDATE fm_tts_tickets SET payment_type = {$payment_type}  WHERE id={$id}", __LINE__, __FILE__);
+			}
+			
 			if (!$old_order_id && isset($ticket['make_order']) && $ticket['make_order'])
 			{
 				$order_id = execMethod('property.socommon.increment_id', 'order');

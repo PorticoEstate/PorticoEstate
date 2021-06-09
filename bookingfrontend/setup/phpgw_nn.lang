@@ -505,3 +505,57 @@ view booking	bookingfrontend	nn	Vis interntildeling
 Phone is already registered	bookingfrontend	nn	Telefonnummeret er alt registrert
 registration	bookingfrontend	nn	Registrering
 download to your calendar	bookingfrontend	nn	Last ned til din kalendar
+Find available resources	bookingfrontend	nn	Søk etter leieobjekter
+Search available resources	bookingfrontend	nn	Søk etter tilgjengelige lokaler
+Choose date	bookingfrontend	nn	Velg dato
+Find available	bookingfrontend	nn	Finn tilgjengelig
+Happening in Bergen	bookingfrontend	nn	Dette skjer i Bergen kommune
+View all events	bookingfrontend	nn	Se alle arrangement
+From time	bookingfrontend	nn	Fra kl
+To time	bookingfrontend	nn	Til kl
+Town part	bookingfrontend	nn	Område/bydel
+No available options	bookingfrontend	nn	Ingen tilgjengelige valg
+Facilities	bookingfrontend	nn	Fasiliteter
+Apply filter	bookingfrontend	nn	Aktiver filter
+Reset filter	bookingfrontend	nn	Nullstill søk
+Reset filters	bookingfrontend	nn	Nullstill filter
+To application site	bookingfrontend	nn	Til søknadsside
+locations	bookingfrontend	nn	Lokaler
+User has made a request to increase time on existing booking	bookingfrontend	nn	Ønsker å øke lengden på arrangement. Ny tid:
+User has changed field for equipment	bookingfrontend	nn	Endring av felt for nødvendig utstyr:
+Request for changed time	bookingfrontend	nn	Forespørsel om øke tid er sendt til saksbehandler
+Follow status	bookingfrontend	nn	Du kan følge med på status under Min side --> Søknader
+for remaining season	bookingfrontend	nn	for gjenværende sesong
+for allocations until	bookingfrontend	nn	for tildelinger frem til:
+every	bookingfrontend	nn	hver
+week	bookingfrontend	nn	uke
+Could not find application id. Contact case officer with allocation id	bookingfrontend	nn	Kunne ikke finne tihørende søknad. For å øke tid må du kontakte saksbehandler med tildeling:
+Decrease of from time overlap with existing booking	bookingfrontend	nn	Kan ikke endre dato. Starttidspunkt overlapper med eksisterende interntildeling
+Decrease of to time overlap with existing booking	bookingfrontend	nn	Kan ikke endre dato. Sluttidspunkt overlapper med eksisterende interntildeling
+Successfully changed start time	bookingfrontend	nn	Endring av startidspunkt er vellykket. Nytt startidspunkt for tildeling er:
+Successfully changed end time	bookingfrontend	nn	Endring av sluttidspunkt er vellykket. Nytt sluttidspunkt for tildeling er:
+Cannot change start time	bookingfrontend	nn	Endring av startidspunkt feilet. Startdato kan ikke være senere enn sluttdato
+Cannot change end time	bookingfrontend	nn	Endring av sluttidspunkt feilet. Sluttdato kan ikke være før startdato
+Edit allocation information	bookingfrontend	nn	Skal du berre endra tildeling på valt dato, vel Endre-knappen nede for å vise tida som ledig og tiden blir vist som ledig i kalenderen, og kan tildeles andre klubber/org.
+Edit allocation information2	bookingfrontend	nn	Skal du endra fleire kan du velge "Ut sesong" eller "Endre til" og velg en dato, du kan også velge intervall (f.eks. annankvar veke).
+Change the allocation	bookingfrontend	nn	Endre tildeling
+Recurring allocation edit	bookingfrontend	nn	Endre i intervall
+Edit until	bookingfrontend	nn	Endre til
+Request to increase time on existing booking	bookingfrontend	nn	Ønske om å øke tildelt tid på tildeling:
+Go to allocation	bookingfrontend	nn	Gå til tildeling
+Equipment text	bookingfrontend	nn	I feltet under skriver du inn om du har spesielle behov tilknyttet aktiviteten
+Request for equipment	bookingfrontend	nn	Ønske om nødvendig utstyr på tildeling:
+Request for equipment has been sent	bookingfrontend	nn	Ønske om nødvendig utstyr er sendt til saksbehandler
+Resources type	bookingfrontend	nn	Lokaler
+Upcomming Events	bookingfrontend	nn	Kommande arrangement
+expired for edit	bookingfrontend	nn	Utløpt
+Missing rights	bookingfrontend	nn	Mangler rettigheter
+allocation show	bookingfrontend	nn	Tildeling
+booking show	bookingfrontend	nn	Interntildeling
+event show	bookingfrontend	nn	Arrangement
+Associated bookings	bookingfrontend	nn	Tilhørende tildelinger/arrangementer
+Building or facility name	bookingfrontend	nn	Bygning/anleggsnavn
+reserved	bookingfrontend	nn	Reservert
+calendar view	bookingfrontend	nn	Dags-/ukesvisning
+Show more results	bookingfrontend	nn	Last inn flere resultater
+quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days	bookingfrontend	nn	Maksimumgrense (%1) overskreden for %2:<br/> maks %3 gonger innanfor ein periode på %4 dagar

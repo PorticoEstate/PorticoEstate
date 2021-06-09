@@ -1374,7 +1374,7 @@
 			$periodization_id = isset($workorder['budget_periodization']) && $workorder['budget_periodization'] ? (int)$workorder['budget_periodization'] : 0;
 			if ($combined_cost)
 			{
-				$this->_update_order_budget($id, $workorder['budget_year'], $periodization_id, $workorder['budget'], $workorder['contract_sum'], $combined_cost);
+				$this->_update_order_budget($id, $workorder['budget_year'], (int)$periodization_id, (int)$workorder['budget'], (int)$workorder['contract_sum'], (int)$combined_cost);
 			}
 
 			$this->_update_project_budget($workorder['project_id']);
@@ -2150,7 +2150,7 @@
 				$_tax_code		 = $this->db->f('tax_code');
 				$_actual_cost	 = $this->db->f('actual_cost');
 
-				if ($_tax_code && !empty($tax_codes[$_tax_code]))
+				if (!empty($tax_codes[$_tax_code]))
 				{
 					$_actual_cost = $_actual_cost / (1 + ($tax_codes[$_tax_code] / 100));
 				}

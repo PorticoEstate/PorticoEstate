@@ -76,7 +76,7 @@
 		{
 			if ($this->is_inline())
 			{
-				$this->redirect($this->get_parent_url_link_params());
+				self::redirect($this->get_parent_url_link_params());
 			}
 
 			return false;
@@ -310,7 +310,7 @@
 					{
 						$receipt = $this->bo->add($permission);
 						$this->redirect_to_parent_if_inline();
-						$this->redirect($this->get_object_typed_link_params('index'));
+						self::redirect($this->get_object_typed_link_params('index'));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -346,6 +346,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$permission = $this->bo->read_single($id);
 
 			$errors = array();
@@ -359,7 +363,7 @@
 					{
 						$receipt = $this->bo->update($permission);
 						$this->redirect_to_parent_if_inline();
-						$this->redirect($this->get_object_typed_link_params('index'));
+						self::redirect($this->get_object_typed_link_params('index'));
 					}
 					catch (booking_unauthorized_exception $e)
 					{
@@ -392,7 +396,7 @@
 			$this->bo->delete($id);
 
 			$this->redirect_to_parent_if_inline();
-			$this->redirect($this->get_object_typed_link_params('index'));
+			self::redirect($this->get_object_typed_link_params('index'));
 		}
 
 		/**
