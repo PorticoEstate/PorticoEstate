@@ -1377,7 +1377,8 @@ HTML;
 			(
 				'menuaction' => 'controller.uicalendar_planner.inspection_history',
 				'part_of_town_id' => $part_of_town_id,
-				'deviation'	=> $deviation
+				'deviation'	=> $deviation,
+				'limit_date' => date($this->dateformat, $limit_date)
 			);
 
 			$nm = array
