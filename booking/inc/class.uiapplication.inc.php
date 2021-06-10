@@ -1381,11 +1381,11 @@
 					}
 					else
 					{
-//						$organization_info = $this->add_organization($partial2['customer_organization_number'], $external_login_info['ssn']);
-//						if(!empty($organization_info['id']))
-//						{
-//							$partial2['customer_organization_id']		 = $organization_info['id'];
-//						}
+						$organization_info = $this->add_organization($partial2['customer_organization_number'], $external_login_info['ssn']);
+						if(!empty($organization_info['id']))
+						{
+							$partial2['customer_organization_id']		 = $organization_info['id'];
+						}
 					}
 				}
 
@@ -1793,13 +1793,25 @@
 					'city'							 => $postadresse['poststed'],
 					'activity_id'					 => $first_activity
 				);
+
+				if( $organization_info['hjemmeside'])
+				{
+					$organization['homepage'] = $organization_info['hjemmeside'];
+				}
 			}
 			else
 			{
 				return false;
 			}
 
-			$receipt = $this->organization_bo->add($organization);
+			$receipt = array();
+
+			$errors = $this->organization_bo->validate($organization);
+
+			if(!$errors)
+			{
+				$receipt = $this->organization_bo->add($organization);
+			}
 
 			return $receipt;
 		}
