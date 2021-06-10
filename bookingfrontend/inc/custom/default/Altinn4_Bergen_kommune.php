@@ -184,7 +184,7 @@
 			}
 
 			$test_organizations = (array)explode(',', $this->config->config_data['test_organization']);
-			if ($this->debug && $test_organizations)
+			if ($this->debug && $test_organizations[0])
 			{
 				foreach ($test_organizations as $test_organization)
 				{

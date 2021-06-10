@@ -1343,6 +1343,7 @@
 			{
 				$partial2 = $this->extract_form_data();
 
+				$customer_organization_number_fallback		 = phpgw::get_var('customer_organization_number_fallback');
 				$customer_organization_number_arr			 = explode('_', phpgw::get_var('customer_organization_number'));
 				if (!empty($customer_organization_number_arr[0]))
 				{
@@ -1368,6 +1369,11 @@
 					{
 						$this->organization_bo->update($organization);
 					}
+				}
+				else if($customer_organization_number_fallback)
+				{
+					$partial2['customer_organization_number']	 = $customer_organization_number_fallback;
+					$partial2['customer_identifier_type']	 = 'organization_number';
 				}
 
 				// Application contains only contact details. Use dummy values for event fields
