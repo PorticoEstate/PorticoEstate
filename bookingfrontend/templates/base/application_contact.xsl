@@ -82,15 +82,26 @@
 							<xsl:value-of select="php:function('lang', 'choose a')" />
 						</p>
 						<!-- Organization Number -->
-						<!--						<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
-							<label>
-								<xsl:value-of select="php:function('lang', 'organization number')" />*</label>
-							<input name="customer_organization_number" value="{application/customer_organization_number}" type="text" class="form-control" required="true"/>
-							<div class="invalid-feedback">
-								Vennligst oppgi gyldig organisasjonsnummer.
+						<xsl:if test="count(delegate_data)=0">
+							<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
+								<label>
+									<xsl:value-of select="php:function('lang', 'organization number')" />*</label>
+								<input name="customer_organization_number_fallback" value="{application/customer_organization_number}" type="text" class="form-control" required="true"/>
+								<div class="invalid-feedback">
+									Vennligst oppgi gyldig organisasjonsnummer.
+								</div>
 							</div>
-						</div>-->
+							<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
+								<label>
+									<xsl:value-of select="php:function('lang', 'organization')" />*</label>
+								<input name="customer_organization_name" value="{application/customer_organization_name}" type="text" class="form-control" required="true"/>
+								<div class="invalid-feedback">
+									Vennligst oppgi organisasjonsnavn.
+								</div>
+							</div>
+						</xsl:if>
 
+						<xsl:if test="count(delegate_data) > 0">
 						<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
 							<label>
 								<xsl:value-of select="php:function('lang', 'organization number')" />*</label>
@@ -116,6 +127,7 @@
 							</label>
 -->
 						</div>
+						</xsl:if>
 
 						<!-- Customer Personal Number -->
 						<div class="form-group" data-bind="visible: typeApplicationRadio() === 'ssn'">
