@@ -1372,8 +1372,21 @@
 				}
 				else if($customer_organization_number_fallback)
 				{
-					$partial2['customer_organization_number']	 = $customer_organization_number_fallback;
+					$partial2['customer_organization_number']	 = str_replace(" ", "", $customer_organization_number_fallback);
 					$partial2['customer_identifier_type']	 = 'organization_number';
+					$organization_info = $this->organization_bo->get_organization_info($partial2['customer_organization_number']);
+					if(!empty($organization_info['id']))
+					{
+						$partial2['customer_organization_id']		 = $organization_info['id'];
+					}
+					else
+					{
+						$organization_info = $this->add_organization($partial2['customer_organization_number'], $external_login_info['ssn']);
+						if(!empty($organization_info['id']))
+						{
+							$partial2['customer_organization_id']		 = $organization_info['id'];
+						}
+					}
 				}
 
 				// Application contains only contact details. Use dummy values for event fields
@@ -1738,6 +1751,69 @@
 				'config'				 => CreateObject('phpgwapi.config', 'booking')->read()
 				)
 			);
+		}
+
+		private function add_organization( $organization_number, $ssn )
+		{
+			try
+			{
+				$organization_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($organization_number);
+			}
+			catch (sfValidatorError $e)
+			{
+				return false;
+			}
+
+			if($organization_number == '000000000')
+			{
+				return false;
+			}
+
+			$organization_info = createObject('bookingfrontend.organization_helper')->get_organization($organization_number);
+			$activities = CreateObject('booking.soactivity')->read(array('filters' => array('active' => 1)));
+
+			// just guessing...
+			$first_activity = $activities['results'][0]['id'];
+
+			if (!empty($organization_info['organisasjonsnummer']))
+			{
+				$postadresse	 = $organization_info['postadresse'];
+				$organization	 = array(
+					'customer_internal'				 => 0,
+					'show_in_portal'				 => 1,
+					'customer_ssn'					 => $ssn,
+					'active'						 => 1,
+					'organization_number'			 => $organization_number,
+					'customer_identifier_type'		 => 'organization_number',
+					'customer_organization_number'	 => $organization_number,
+					'name'							 => $organization_info['navn'] . ' [ikke validert]',
+					'shortname'						 => substr($organization_info['navn'], 0, 11),
+					'street'						 => implode(' ', $postadresse['adresse']),
+					'zip_code'						 => $postadresse['postnummer'],
+					'city'							 => $postadresse['poststed'],
+					'activity_id'					 => $first_activity
+				);
+
+				if( $organization_info['hjemmeside'])
+				{
+					$organization['homepage'] = $organization_info['hjemmeside'];
+				}
+			}
+			else
+			{
+				return false;
+			}
+
+			$receipt = array();
+
+			$errors = $this->organization_bo->validate($organization);
+
+			if(!$errors)
+			{
+				$receipt = $this->organization_bo->add($organization);
+			}
+
+			return $receipt;
 		}
 
 		private function update_user_info($application, $external_login_info = array() )
