@@ -102,31 +102,31 @@
 						</xsl:if>
 
 						<xsl:if test="count(delegate_data) > 0">
-						<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
-							<label>
-								<xsl:value-of select="php:function('lang', 'organization number')" />*</label>
-							<xsl:for-each select="delegate_data">
-								<div class="form-check form-check-inline" data-bind="visible: typeApplicationRadio() === 'organization_number'">
-									<input class="form-check-input" type="radio" name="customer_organization_number" id="customer_organization_number_{id}" value="{id}_{organization_number}" required="true"/>
-									<label class="form-check-label" for="customer_organization_number_{id}">
-										<xsl:value-of select="organization_number"/>
-										[ <xsl:value-of select="name"/> ]
-									</label>
+							<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
+								<label>
+									<xsl:value-of select="php:function('lang', 'organization number')" />*</label>
+								<xsl:for-each select="delegate_data">
+									<div class="form-check form-check-inline" data-bind="visible: typeApplicationRadio() === 'organization_number'">
+										<input class="form-check-input" type="radio" name="customer_organization_number" id="customer_organization_number_{id}" value="{id}_{organization_number}" required="true"/>
+										<label class="form-check-label" for="customer_organization_number_{id}">
+											<xsl:value-of select="organization_number"/>
+											[ <xsl:value-of select="name"/> ]
+										</label>
+									</div>
+								</xsl:for-each>
+								<div class="invalid-feedback">
+									Vennligst velg en organisasjon.
 								</div>
-							</xsl:for-each>
-							<div class="invalid-feedback">
-								Vennligst velg en organisasjon.
-							</div>
 <!--
-							<label>
-								<a id="add_new_value" href="#" data-toggle="modal" data-target="#new_organization">
-									<img src="{add_img}" width="23"/>
-									<xsl:text> </xsl:text>
-									<xsl:value-of select="php:function('lang', 'new organization')"/>
-								</a>
-							</label>
+								<label>
+									<a id="add_new_value" href="#" data-toggle="modal" data-target="#new_organization">
+										<img src="{add_img}" width="23"/>
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="php:function('lang', 'new organization')"/>
+									</a>
+								</label>
 -->
-						</div>
+							</div>
 						</xsl:if>
 
 						<!-- Customer Personal Number -->
