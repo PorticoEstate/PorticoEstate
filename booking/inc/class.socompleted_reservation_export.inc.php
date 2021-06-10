@@ -1017,39 +1017,46 @@
 
 			$columns[] = 'amount';
 			$columns[] = 'art_descr';
-			$columns[] = 'art';
+			$columns[] = 'article';
 			if (isset($this->config_data['dim_1']))
 			{
-				$columns[] = $this->config_data['dim_1'];
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_1']);
 			}
 			if (isset($this->config_data['dim_2']))
 			{
-				$columns[] = $this->config_data['dim_2'];
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_2']);
 			}
 			if (isset($this->config_data['dim_3']))
 			{
-				$columns[] = $this->config_data['dim_3'];
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_3']);
 			}
 			if (isset($this->config_data['dim_4']))
 			{
-				$columns[] = $this->config_data['dim_4'];
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_4']);
 			}
-			$columns[] = 'article';
 			if (isset($this->config_data['dim_5']))
 			{
-				$columns[] = $this->config_data['dim_5'];
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_5']);
 			}
 			if (isset($this->config_data['dim_value_1']))
 			{
-				$columns[] = $this->config_data['dim_value_1'];
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_value_1']);
+			}
+			if (isset($this->config_data['dim_value_2']))
+			{
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_value_2']);
+			}
+			if (isset($this->config_data['dim_value_3']))
+			{
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_value_3']);
 			}
 			if (isset($this->config_data['dim_value_4']))
 			{
-				$columns[] = $this->config_data['dim_value_4'];
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_value_4']);
 			}
 			if (isset($this->config_data['dim_value_5']))
 			{
-				$columns[] = $this->config_data['dim_value_5'];
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_value_5']);
 			}
 			$columns[] = 'ext_ord_ref';
 			$columns[] = 'invoice_instruction';
@@ -1067,7 +1074,15 @@
 				$order_id = $sequential_number_generator->increment()->get_current();
 				$export_info[] = $this->create_export_item_info($reservation, $order_id);
 
-				$reservation = array_map('utf8_decode', $reservation);
+//				$reservation = array_map('utf8_decode', $reservation);
+
+				foreach ($reservation as $key => &$value)
+				{
+					if(!is_array($value))
+					{
+						$value = iconv("utf-8", "ISO-8859-1//TRANSLIT", $value);
+					}
+				}
 
 				$item = array();
 				$item['amount'] = $this->format_cost($reservation['cost']); //Feltet viser netto totalbeløp i firmavaluta for hver ordrelinje. Brukes hvis amount_set er 1. Hvis ikke, brukes prisregisteret (*100 angis). Dersom beløpet i den aktuelle valutaen er angitt i filen, vil beløpet beregnes på grunnlag av beløpet i den aktuelle valutaen ved hjelp av firmaets valutakurs-oversikt.
@@ -1105,6 +1120,14 @@
 				if (isset($this->config_data['dim_value_1']))
 				{
 					$item['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
+				}
+				if (isset($this->config_data['dim_value_2']))
+				{
+					$item['dim_value_2'] = str_pad(strtoupper(substr($account_codes['dim_value_2'], 0, 12)), 12, ' ');
+				}
+				if (isset($this->config_data['dim_value_3']))
+				{
+					$item['dim_value_3'] = str_pad(strtoupper(substr($account_codes['dim_value_3'], 0, 12)), 12, ' ');
 				}
 
 				if (isset($this->config_data['dim_value_4']))
@@ -1168,7 +1191,8 @@
 					// Quote character is present in field
 					$quote_field = true;
 				}
-				elseif (
+				elseif
+				(
 					strpos($fields[$i], "\n") !== false || strpos($fields[$i], "\r") !== false
 				)
 				{
@@ -1210,7 +1234,7 @@
 
 			if (!empty($this->config_data['voucher_client']))
 			{
-				$client_id = substr(strtoupper($this->config_data['voucher_client']), 0, 2);
+				$client_id = strtoupper($this->config_data['voucher_client']);
 			}
 			else
 			{

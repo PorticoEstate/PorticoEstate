@@ -1287,6 +1287,12 @@
 
 			$documentation_url = $this->bocommon->get_documentation_url($workorder_id);
 
+			$ressursnr		 = isset($GLOBALS['phpgw']->preferences->data['property']['ressursnr']) ? 'Brukes ikke for denne ordren' : '';
+			if($ressursnr && $workorder['vendor_category'] == 2)
+			{
+				$ressursnr	 = $GLOBALS['phpgw']->preferences->data['property']['ressursnr'];
+			}
+
 			$email_data = array
 				(
 				'documentation_url'			 => $documentation_url,
@@ -1309,7 +1315,7 @@
 				'from_phone'				 => $GLOBALS['phpgw']->preferences->data['common']['cellphone'],
 				'lang_district'				 => lang('District'),
 				'district'					 => $project['location_data']['district_id'],
-				'ressursnr'					 => isset($GLOBALS['phpgw']->preferences->data['property']['ressursnr']) ? 'Brukes ikke for denne ordren' : '',
+				'ressursnr'					 => $ressursnr,
 				'lang_to'					 => lang('To'),
 				'to_name'					 => $workorder['vendor_name'],
 				'lang_title'				 => lang('Title'),

@@ -593,6 +593,9 @@
 				$custom					 = createObject('property.custom_fields');
 				$vendor['attributes']	 = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 				$vendor					 = $contacts->read_single(array('id' => $workorder['vendor_id']), $vendor);
+
+				$workorder['vendor_category'] = $vendor['category'];
+
 				foreach ($vendor['attributes'] as $attribute)
 				{
 					if ($attribute['name'] == 'org_name')
