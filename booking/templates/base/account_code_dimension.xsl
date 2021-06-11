@@ -406,7 +406,7 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'customer list format')"/>
 					</label>
-					<select id="field_invoice_export_method" name="customer_list_format">
+					<select id="field_customer_list_format" name="customer_list_format">
 						<option value="AGRESSO">
 							<xsl:if test="config_data/customer_list_format='AGRESSO'">
 								<xsl:attribute name="selected">checked</xsl:attribute>
@@ -459,7 +459,7 @@
 							<xsl:if test="config_data/invoice_export_method='ftps'">
 								<xsl:attribute name="selected">checked</xsl:attribute>
 							</xsl:if>
-							ftp
+							ftps
 						</option>
 					</select>
 				</div>
