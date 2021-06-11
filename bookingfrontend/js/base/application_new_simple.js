@@ -329,6 +329,7 @@ function PopulatePostedDate()
 		$('#to_').val(formatSingleDate(EndTime));
 		$('#start_date').val(formatSingleDateWithoutHours(StartTime));
 		$('#selected_period').html(formatPeriodeHours(StartTime, EndTime));
+		$('#start_date').prop('disabled', true);
 
 	}
 	$('#bookingStartTime').val(time_default_start);

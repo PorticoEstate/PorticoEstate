@@ -1385,6 +1385,12 @@
 						if(!empty($organization_info['id']))
 						{
 							$partial2['customer_organization_id']		 = $organization_info['id'];
+							$partial2['customer_organization_name']		 = $organization_info['name'];
+
+							/**
+							 * Do something clever later on, as redirect to organization details - or something
+							 */
+							$organization_created = true;
 						}
 					}
 				}
@@ -1791,7 +1797,11 @@
 					'street'						 => implode(' ', $postadresse['adresse']),
 					'zip_code'						 => $postadresse['postnummer'],
 					'city'							 => $postadresse['poststed'],
-					'activity_id'					 => $first_activity
+					'activity_id'					 => $first_activity,
+					'homepage'						 => 'N/A',
+					'phone'							 => 'N/A',
+					'description'					 => 'N/A',
+					'district'						 => 'N/A',
 				);
 
 				if( $organization_info['hjemmeside'])
@@ -1810,10 +1820,21 @@
 
 			if(!$errors)
 			{
-				$receipt = $this->organization_bo->add($organization);
+				/**
+				 * Email won't validate
+				 */
+				$organization['email'] = 'N/A';
+
+				/**
+				 * TEMPORARY!!
+				 * Bypassing acl on create
+				 */
+				$receipt = CreateObject('booking.soorganization')->add($organization);
+//				$receipt = $this->organization_bo->add($organization);
+				$organization['id'] = $receipt['id'];
 			}
 
-			return $receipt;
+			return $organization;
 		}
 
 		private function update_user_info($application, $external_login_info = array() )
