@@ -57,11 +57,15 @@ $(document).ready(function ()
 		if (selected === "organization_number")
 		{
 			$("input[name='customer_organization_number']").prop('required', true);
+			$("input[name='customer_organization_number_fallback']").prop('required', true);
+			$("input[name='customer_organization_name']").prop('required', true);
 		}
 		else if (selected === "ssn")
 		{
 			$("input[name='customer_organization_number']").prop('checked', false);
 			$("input[name='customer_organization_number']").prop('required', false);
+			$("input[name='customer_organization_number_fallback']").prop('required', false);
+			$("input[name='customer_organization_name']").prop('required', false);
 		}
 	});
 });
