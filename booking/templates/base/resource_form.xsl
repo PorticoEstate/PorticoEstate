@@ -229,14 +229,12 @@
 						<xsl:value-of select="php:function('lang', 'season')"/>
 					</label>
 					<select id="field_direct_booking_season_id" name="direct_booking_season_id" class="pure-input-3-4">
-						<!--
 						<xsl:attribute name="data-validation">
-							<xsl:text>required</xsl:text>
+							<xsl:text>required_season</xsl:text>
 						</xsl:attribute>
 						<xsl:attribute name="data-validation-error-msg">
 							<xsl:value-of select="php:function('lang', 'Please select a season')" />
 						</xsl:attribute>
-						-->
 						<option value=''>
 							<xsl:value-of select="php:function('lang', 'Select')" />
 						</option>
