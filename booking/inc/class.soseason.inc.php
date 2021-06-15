@@ -140,9 +140,13 @@
 				$start_of_week_f = $end_of_week->format('Y-m-d H:i:s');
 
 				if (false == $this->timespan_within_season($season_id, $from_, $end_of_week))
+				{
 					return false;
+				}
 				if (false == $this->timespan_within_season($season_id, $start_of_week, $to_))
+				{
 					return false;
+				}
 				return true;
 			}
 
