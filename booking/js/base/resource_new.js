@@ -271,3 +271,30 @@ add_participant_limit = function ()
 		}
 	});
 };
+
+	$.formUtils.addValidator({
+		name: 'required_season',
+		validatorFunction: function (value, $el, config, language, $form)
+		{
+			var v = false;
+
+			var direct_booking = $('#direct_booking').val();
+			var simple_booking = $('#simple_booking').is(':checked')
+			var season_id = $('#field_direct_booking_season_id').val();
+			if (direct_booking  && season_id)
+			{
+				v = true;
+			}
+			else if ( simple_booking && season_id )
+			{
+				v = true;
+			}
+			else if ( !simple_booking && !direct_booking)
+			{
+				v = true;
+			}
+			return v;
+		},
+		errorMessage: 'Please select a season',
+		errorMessageKey: 'select_a_season'
+	});
