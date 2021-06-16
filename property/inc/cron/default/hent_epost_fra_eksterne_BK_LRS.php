@@ -1418,7 +1418,21 @@
 					$target['type']				 = 'helpdesk';
 					$target['id']				 = $ticket_id;
 				}
-			}			/**
+			}
+			else if (preg_match("/PREKONT-/i", $subject))
+			{
+				$message_cat_id	 = 334; // LRS-Regnskap- underkategori: 28 Kostfordeling/prekontering
+				$group_id		 = 4253; //LRS-DRIFT_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+
+			/**
 			 * Ticket created / updated
 			 */
 			if ($target)
