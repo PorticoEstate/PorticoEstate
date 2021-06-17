@@ -388,8 +388,8 @@
 							'label' => lang('Building')
 						),
 						array(
-							'key' => 'what',
-							'label' => lang('What'),
+							'key' => 'resource_names',
+							'label' => lang('resources'),
 							'sortable' => false
 						),
 						array(
@@ -512,18 +512,19 @@
 				$application['created'] = pretty_timestamp($application['created']);
 				$application['modified'] = pretty_timestamp($application['modified']);
 				$application['frontend_modified'] = pretty_timestamp($application['frontend_modified']);
-				$application['resources'] = $this->resource_bo->so->read(array('results' =>'all', 'filters' => array(
+				$resources = $this->resource_bo->so->read(array('results' =>'all', 'filters' => array(
 						'id' => $application['resources'])));
-				$application['resources'] = $application['resources']['results'];
-				if ($application['resources'])
+
+				$resource_names = array();
+
+				if ($resources['results'])
 				{
-					$names = array();
-					foreach ($application['resources'] as $res)
+					foreach ($resources['results'] as $resource)
 					{
-						$names[] = $res['name'];
+						$resource_names[] = $resource['name'];
 					}
-					$application['what'] = $application['resources'][0]['building_name'] . ' (' . join(', ', $names) . ')';
 				}
+				$application['resource_names'] = implode(', ', $resource_names);
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
 
