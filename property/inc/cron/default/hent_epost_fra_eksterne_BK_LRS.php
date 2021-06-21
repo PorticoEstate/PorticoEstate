@@ -164,11 +164,11 @@
 					'group_id'		 => 4253, //LRS-Drift_Regnskap
 					'subject'		 => 'Arbeidsflyt og ehandel'
 				),
-				'Innkassokrav'						 => array
+				'Inkassokrav'						 => array
 					(
-					'message_cat_id' => 321, // 24 Purringer/Inkasso
+					'message_cat_id' => 381, // 24 Inkasso
 					'group_id'		 => 4253, //LRS-Drift_Regnskap
-					'subject'		 => 'Innkassokrav',
+					'subject'		 => 'Inkassokrav',
 					'priority'		 => 1
 				),
 				'Purring/Inkassovarsel'				 => array
