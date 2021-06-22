@@ -127,16 +127,16 @@
 			{
 				$query = $this->db->db_addslashes($query);
 
-				$querymethod = " $where (address {$this->like} '%{$query}%'"
-					. " OR first_name {$this->like} '%{$query}%'"
-					. " OR last_name {$this->like} '%{$query}%'"
+				$querymethod = " $where (fm_project.address {$this->like} '%{$query}%'"
+					. " OR fm_tenant.first_name {$this->like} '%{$query}%'"
+					. " OR fm_tenant.last_name {$this->like} '%{$query}%'"
 					. " OR fm_project.location_code {$this->like} '{$query}%'"
 					. " OR fm_tenant.last_name || ', ' || fm_tenant.first_name {$this->like} '%{$query}%'"
 					. " OR cast(fm_tenant_claim.id as text) {$this->like} '{$query}%'"
 					. " OR fm_project.id=" . (int)$query . ')';
-				$querymethod_ticket = " $where (address {$this->like} '%{$query}%'"
-					. " OR first_name {$this->like} '%{$query}%'"
-					. " OR last_name {$this->like} '%{$query}%'"
+				$querymethod_ticket = " $where (fm_tts_tickets.address {$this->like} '%{$query}%'"
+					. " OR fm_tenant.first_name {$this->like} '%{$query}%'"
+					. " OR fm_tenant.last_name {$this->like} '%{$query}%'"
 					. " OR fm_tts_tickets.location_code {$this->like} '{$query}%'"
 					. " OR fm_tenant.last_name || ', ' || fm_tenant.first_name {$this->like} '%{$query}%'"
 					. " OR cast(fm_tenant_claim.id as text) {$this->like} '{$query}%'"
