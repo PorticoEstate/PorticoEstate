@@ -31,7 +31,7 @@
 	class booking_gi_arkiv
 	{
 
-		private $debug, $webservicehost, $authkey, $proxy, $archive_user_id, $OppdateringService, $kontekst;
+		private $debug, $webservicehost, $username, $password, $proxy, $archive_user_id, $OppdateringService, $kontekst;
 
 		public function __construct()
 		{
@@ -46,11 +46,26 @@
 			}
 
 			$this->webservicehost	 = !empty($custom_config_data['webservicehost']) ? $custom_config_data['webservicehost'] : '';
-			$this->authkey			 = !empty($custom_config_data['authkey']) ? $custom_config_data['authkey'] : '';
+			$this->username			 = 'sql\geosys';!empty($custom_config_data['username']) ? $custom_config_data['username'] : '';
+			$this->password			 = 'test';!empty($custom_config_data['password']) ? $custom_config_data['password'] : '';
+			$this->webservicehost	 = "https://svc-geointaktivkommune-test.baerum.kommune.no/N5WS/ArkivOppdateringservice.svc/ArkivOppdateringService";
+			$this->webservicehost	 = "https://eksterntest.acos.no/GI/N5WS/ArkivOppdateringservice.svc/ArkivOppdateringService";
 			$this->proxy			 = !empty($config['proxy']) ? $config['proxy'] : '';
 			$this->archive_user_id	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['archive_user_id'];
 
-			$wsdl						 = "{$this->webservicehost}&wsdl";
+			$wsdl = 'http://rep.geointegrasjon.no/Arkiv/Oppdatering/xml.wsdl/2012.01.31/giArkivOppdatering20120131.wsdl';
+			$options = array(
+				'login'			 => $this->username,
+				'password'		 => $this->password,
+				'soap_version'	 => SOAP_1_2,
+				'location'		 => $this->webservicehost,//the URL of the SOAP server to send the request to
+	//			'uri'			 => //target namespace of the SOAP service,
+				'trace'			 => true,
+				'proxy_host'	 => 'http://proxy.bergen.kommune.no',
+				'proxy_port'	 => 8080,
+				'encoding'		 => 'UTF-8',
+			);
+
 			$this->OppdateringService	 = new OppdateringService($options, $wsdl);
 
 			$kontekst = new ArkivKontekst();
@@ -148,7 +163,27 @@
 			$SakspartListe->setListe($Saksparter);
 			$Saksmappe->setSakspart($SakspartListe);
 
-			$ret = $this->OppdateringService->NySaksmappe(new NySaksmappe($Saksmappe, $this->kontekst));
+			try
+			{
+				$ret = $this->OppdateringService->NySaksmappe(new NySaksmappe($Saksmappe, $this->kontekst));
+
+				if ($this->debug)
+				{
+					echo "SOAP HEADERS:\n" . $this->OppdateringService->__getLastRequestHeaders() . PHP_EOL;
+					echo "SOAP REQUEST:\n" . $this->OppdateringService->__getLastRequest() . PHP_EOL;
+				}
+			}
+			catch (SoapFault $fault)
+			{
+				echo "SOAP HEADERS:\n" .  $this->OppdateringService->__getLastRequestHeaders() . PHP_EOL;
+				echo '<pre>';
+				print_r($fault);
+				echo '</pre>';
+				$msg = "SOAP Fault:\n faultcode: {$fault->faultcode},\n faultstring: {$fault->faultstring}";
+				echo $msg . PHP_EOL;
+				trigger_error(nl2br($msg), E_USER_ERROR);
+			}
+
 			return $ret->getReturn();
 		}
 
@@ -161,17 +196,18 @@
 			array_pop($name_array);
 			$first_name	 = implode(' ', $name_array);
 
-			$FirstName	 = $person_data['FirstName'] ? $person_data['FirstName'] : $data['first_name'];
-			$MiddleName	 = $person_data['MiddleName'] ? " {$person_data['MiddleName']}" : ' ';
-			$LastName	 = $person_data['LastName'] ? $person_data['LastName'] : $data['last_name'];
+			$FirstName	 = !empty($person_data['first_name']) ? $person_data['first_name'] : $first_name;
+			$MiddleName	 = !empty($person_data['Middle_name']) ? " {$person_data['Middle_name']}" : ' ';
+			$LastName	 = !empty($person_data['last_name']) ? $person_data['last_name'] : $last_name;
 
 			$EnkelAdresseListe = new EnkelAdresseListe();
 
-			$EnkelAdresse				 = new EnkelAdresse();
-			$EnkelAdresse->setAdresselinje1($data['street']);
+			$EnkelAdressetype			 = new EnkelAdressetype('Postadresse');
+			$EnkelAdresse				 = new EnkelAdresse($EnkelAdressetype);
+			$EnkelAdresse->setAdresselinje1($person_data['street']);
 			$PostadministrativeOmraader	 = new PostadministrativeOmraader();
-			$PostadministrativeOmraader->setPostnummer($data['zip_code']);
-			$PostadministrativeOmraader->setPoststed($data['city']);
+			$PostadministrativeOmraader->setPostnummer($person_data['zip_code']);
+			$PostadministrativeOmraader->setPoststed($person_data['city']);
 			$EnkelAdresse->setPostadresse($PostadministrativeOmraader);
 			$EnkelAdresse->setLandkode('NOR');
 
@@ -184,11 +220,13 @@
 			$ElektroniskAdresseListe->setListe(array(new ElektroniskAdresse()));
 			$Kontakt->setElektroniskeAdresser($ElektroniskAdresseListe);
 
-			$Kontakt->setPersonid(new Personidentifikator());
-			$Kontakt->personid->setPersonidentifikatorNr($application['customer_ssn']);
-			$Kontakt->personid->setpersonidentifikatorType(new PersonidentifikatorType('F'));
+			$Personidentifikator = new Personidentifikator();
+			$Personidentifikator->setPersonidentifikatorNr($application['customer_ssn']);
+			$Personidentifikator->setpersonidentifikatorType(new PersonidentifikatorType('F'));
+
+			$Kontakt->setPersonid($Personidentifikator);
 			$Kontakt->setEtternavn($LastName);
-			$Kontakt->setFornavn("{$FirstName}{$MiddleName}");
+			$Kontakt->setFornavn(trim("{$FirstName}{$MiddleName}"));
 
 			return $Kontakt;
 		}
@@ -313,7 +351,7 @@
 		}
 
 		/**
-		 * 
+		 *
 		 * @param string $organization_number
 		 * @return array
 		 */
