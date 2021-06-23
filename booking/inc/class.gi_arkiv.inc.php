@@ -46,27 +46,52 @@
 			}
 
 			$this->webservicehost	 = !empty($custom_config_data['webservicehost']) ? $custom_config_data['webservicehost'] : '';
-			$this->username			 = 'sql\geosys';!empty($custom_config_data['username']) ? $custom_config_data['username'] : '';
-			$this->password			 = 'test';!empty($custom_config_data['password']) ? $custom_config_data['password'] : '';
+			$this->username			 = !empty($custom_config_data['username']) ? $custom_config_data['username'] : '';
+			$this->password			 = !empty($custom_config_data['password']) ? $custom_config_data['password'] : '';
 			$this->webservicehost	 = "https://svc-geointaktivkommune-test.baerum.kommune.no/N5WS/ArkivOppdateringservice.svc/ArkivOppdateringService";
-			$this->webservicehost	 = "https://eksterntest.acos.no/GI/N5WS/ArkivOppdateringservice.svc/ArkivOppdateringService";
+//			$this->username			 = 'sql\geosys';
+//			$this->password			 = 'test';
+//			$this->webservicehost	 = "https://eksterntest.acos.no/GI/N5WS/ArkivOppdateringservice.svc/ArkivOppdateringService";
 			$this->proxy			 = !empty($config['proxy']) ? $config['proxy'] : '';
 			$this->archive_user_id	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['archive_user_id'];
 
 			$wsdl = 'http://rep.geointegrasjon.no/Arkiv/Oppdatering/xml.wsdl/2012.01.31/giArkivOppdatering20120131.wsdl';
 			$options = array(
 				'login'			 => $this->username,
-				'password'		 => $this->password,
+				'password'		 => 'test',//$this->password,
 				'soap_version'	 => SOAP_1_2,
 				'location'		 => $this->webservicehost,//the URL of the SOAP server to send the request to
 	//			'uri'			 => //target namespace of the SOAP service,
 				'trace'			 => true,
-				'proxy_host'	 => 'http://proxy.bergen.kommune.no',
+				'proxy_host'	 => 'proxy.bergen.kommune.no',
 				'proxy_port'	 => 8080,
+//				'stream_context' => stream_context_create(
+//					array(
+//						'ssl' => array(
+//							'verify_peer'       => false,
+//							'verify_peer_name'  => false,
+//							'proxy' => "tcp://proxy.bergen.kommune.no:8080",
+//							'request_fulluri' => true,
+//						)
+//					)
+//				),
 				'encoding'		 => 'UTF-8',
+//				'encoding'		 => 'ISO-8859-1',
+//				'cache_wsdl' => WSDL_CACHE_NONE
 			);
 
+			$auth = "<Username>$this->username</Username>";
+			$auth .= "<Password>$this->password</Password>";
+			$auth_block = new SoapVar( $auth, XSD_ANYXML, NULL, NULL, NULL, NULL );
+
+			$header = new SoapHeader( 'http://schemas.xmlsoap.org/soap/envelope/', 'Header', $auth_block );
+
 			$this->OppdateringService	 = new OppdateringService($options, $wsdl);
+//			$headers = array();
+//			$headers[] = new SoapHeader('http://schemas.xmlsoap.org/soap/envelope/', 'Username', $this->username);
+//			$headers[] = new SoapHeader('http://schemas.xmlsoap.org/soap/envelope/', 'Password', $this->password);
+
+			$this->OppdateringService->__setSoapHeaders( $header );
 
 			$kontekst = new ArkivKontekst();
 			$kontekst->setKlientnavn("Portico");
@@ -134,6 +159,24 @@
 		private function create_case( $title, $application )
 		{
 			$Saksmappe = new Saksmappe($title);
+			$Saksmappe->setMappetype(new Mappetype('GS'));	//GS : Generell sak
+
+			$Saksmappe->setSaksstatus(new Saksstatus('B'));//B : Under behandling
+
+			/**
+			 * Note: konfigurable...
+			 */
+			$Saksmappe->setJournalenhet(new Journalenhet('DOKS'));//DOKS : Felles journalenhet i Bærum kommune
+			
+			$KlasseListe = new KlasseListe();
+			$Klassifikasjonssystem = new Klassifikasjonssystem('FNR');//FNR : Fødselsnummer
+			$klasseID = $application['customer_ssn'];
+			$Klasse = new Klasse($Klassifikasjonssystem, $klasseID);
+			$Klasse->setRekkefoelge(1);
+			$Klasse->setSkjermetKlasse(false);
+			$KlasseListe->setListe(array($Klasse));
+			$Saksmappe->setKlasse($KlasseListe);
+
 
 			$EksternNoekkel = new EksternNoekkel('Portico');
 			$EksternNoekkel->setNoekkel($application['id']);
@@ -176,6 +219,7 @@
 			catch (SoapFault $fault)
 			{
 				echo "SOAP HEADERS:\n" .  $this->OppdateringService->__getLastRequestHeaders() . PHP_EOL;
+				echo "SOAP REQUEST:\n" . $this->OppdateringService->__getLastRequest() . PHP_EOL;
 				echo '<pre>';
 				print_r($fault);
 				echo '</pre>';
@@ -222,7 +266,8 @@
 
 			$Personidentifikator = new Personidentifikator();
 			$Personidentifikator->setPersonidentifikatorNr($application['customer_ssn']);
-			$Personidentifikator->setpersonidentifikatorType(new PersonidentifikatorType('F'));
+//			$Personidentifikator->setpersonidentifikatorType(new PersonidentifikatorType('F'));
+			$Personidentifikator->setpersonidentifikatorType(new PersonidentifikatorType('Fødselsnummer'));
 
 			$Kontakt->setPersonid($Personidentifikator);
 			$Kontakt->setEtternavn($LastName);
