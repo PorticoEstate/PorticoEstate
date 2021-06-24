@@ -31,7 +31,12 @@
 	class booking_gi_arkiv
 	{
 
-		private $debug, $webservicehost, $username, $password, $proxy, $archive_user_id, $OppdateringService, $kontekst;
+		private $debug,
+			$webservicehost, $username, $password, $proxy,
+			$archive_user_id, $OppdateringService, $kontekst,
+			$journalenhet, $arkivnøkkel, $arkivnøkkel_text,
+			$fagsystem, $arkivdel, $sakspart_rolle,
+			$klientnavn, $klientversjon, $referanseoppsett;
 
 		public function __construct()
 		{
@@ -49,56 +54,106 @@
 			$this->username			 = !empty($custom_config_data['username']) ? $custom_config_data['username'] : '';
 			$this->password			 = !empty($custom_config_data['password']) ? $custom_config_data['password'] : '';
 			$this->webservicehost	 = "https://svc-geointaktivkommune-test.baerum.kommune.no/N5WS/ArkivOppdateringservice.svc/ArkivOppdateringService";
-//			$this->username			 = 'sql\geosys';
-//			$this->password			 = 'test';
-//			$this->webservicehost	 = "https://eksterntest.acos.no/GI/N5WS/ArkivOppdateringservice.svc/ArkivOppdateringService";
 			$this->proxy			 = !empty($config['proxy']) ? $config['proxy'] : '';
 			$this->archive_user_id	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['archive_user_id'];
+
+			$this->journalenhet = 'DOKS';
+			$this->arkivnøkkel = 'N';
+			$this->arkivnøkkel_text = 'N – 068.1 Leieavtaler – kontrakter';
+			$this->fagsystem = 'Aktiv kommune';
+			$this->arkivdel = 'AKTIV';
+			$this->sakspart_rolle = 'sakspart';
+			$this->klientnavn = 'Portico';
+			$this->klientversjon = '2';
+			$this->referanseoppsett = 'Portico referanseoppsett';
 
 			$wsdl = 'http://rep.geointegrasjon.no/Arkiv/Oppdatering/xml.wsdl/2012.01.31/giArkivOppdatering20120131.wsdl';
 			$options = array(
 				'login'			 => $this->username,
-				'password'		 => 'test',//$this->password,
-				'soap_version'	 => SOAP_1_2,
+				'password'		 => $this->password,
+				'soap_version'	 => SOAP_1_1,
 				'location'		 => $this->webservicehost,//the URL of the SOAP server to send the request to
-	//			'uri'			 => //target namespace of the SOAP service,
 				'trace'			 => true,
 				'proxy_host'	 => 'proxy.bergen.kommune.no',
 				'proxy_port'	 => 8080,
-//				'stream_context' => stream_context_create(
-//					array(
-//						'ssl' => array(
-//							'verify_peer'       => false,
-//							'verify_peer_name'  => false,
-//							'proxy' => "tcp://proxy.bergen.kommune.no:8080",
-//							'request_fulluri' => true,
-//						)
-//					)
-//				),
 				'encoding'		 => 'UTF-8',
-//				'encoding'		 => 'ISO-8859-1',
-//				'cache_wsdl' => WSDL_CACHE_NONE
 			);
 
-			$auth = "<Username>$this->username</Username>";
-			$auth .= "<Password>$this->password</Password>";
-			$auth_block = new SoapVar( $auth, XSD_ANYXML, NULL, NULL, NULL, NULL );
-
-			$header = new SoapHeader( 'http://schemas.xmlsoap.org/soap/envelope/', 'Header', $auth_block );
-
 			$this->OppdateringService	 = new OppdateringService($options, $wsdl);
-//			$headers = array();
-//			$headers[] = new SoapHeader('http://schemas.xmlsoap.org/soap/envelope/', 'Username', $this->username);
-//			$headers[] = new SoapHeader('http://schemas.xmlsoap.org/soap/envelope/', 'Password', $this->password);
-
+			$header = $this->soapClientWSSecurityHeader($this->username, $this->password);
 			$this->OppdateringService->__setSoapHeaders( $header );
 
 			$kontekst = new ArkivKontekst();
-			$kontekst->setKlientnavn("Portico");
-			$kontekst->setKlientversjon("2");
-			$kontekst->setReferanseoppsett("Portico referanseoppsett");
+			$kontekst->setKlientnavn($this->klientnavn);
+			$kontekst->setKlientversjon($this->klientversjon);
+			$kontekst->setReferanseoppsett($this->referanseoppsett);
 
 			$this->kontekst = $kontekst;
+		}
+
+		/**
+		 * This function implements a WS-Security digest authentification for PHP.
+		 * Adapted from https://stackoverflow.com/questions/953639/connecting-to-ws-security-protected-web-service-with-php
+		 * @access private
+		 * @param string $user
+		 * @param string $password
+		 * @return SoapHeader
+		 */
+		function soapClientWSSecurityHeader( $user, $password, $encode = false )
+		{
+			// Creating date using yyyy-mm-ddThh:mm:ssZ format
+			$tm_created	 = gmdate('Y-m-d\TH:i:s\Z');
+			$tm_expires	 = gmdate('Y-m-d\TH:i:s\Z', gmdate('U') + 180); //only necessary if using the timestamp element
+			// Generating and encoding a random number
+			$simple_nonce	 = mt_rand();
+			$encoded_nonce	 = base64_encode($simple_nonce);
+
+			// Initializing namespaces
+			$ns_wsse		 = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd';
+			$ns_wsu			 = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd';
+
+			if($encode)
+			{
+				$encoding_type	 = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary';
+				$password_type	 = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest';
+				// Compiling WSS string
+				$passdigest = base64_encode(sha1($simple_nonce . $tm_created . $password, true));
+			}
+			else
+			{
+				$password_type	 = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText';
+				$passdigest = $password;
+			}
+
+			// Creating WSS identification header using SimpleXML
+			$root = new SimpleXMLElement('<root/>');
+
+			$security = $root->addChild('wsse:Security', null, $ns_wsse);
+			$security->addAttribute('mustUnderstand', 1);
+
+			//the timestamp element is not required by all servers
+			$timestamp = $security->addChild('wsu:Timestamp', null, $ns_wsu);
+			$timestamp->addAttribute('wsu:Id', 'Timestamp-28');
+			$timestamp->addChild('wsu:Created', $tm_created, $ns_wsu);
+			$timestamp->addChild('wsu:Expires', $tm_expires, $ns_wsu);
+
+			$usernameToken = $security->addChild('wsse:UsernameToken', null, $ns_wsse);
+			$usernameToken->addChild('wsse:Username', $user, $ns_wsse);
+			$usernameToken->addChild('wsse:Password', $passdigest, $ns_wsse)->addAttribute('Type', $password_type);
+			if($encode)
+			{
+				$usernameToken->addChild('wsse:Nonce', $encoded_nonce, $ns_wsse)->addAttribute('EncodingType', $encoding_type);
+			}
+			$usernameToken->addChild('wsu:Created', $tm_created, $ns_wsu);
+
+			// Recovering XML value from that object
+			$root->registerXPathNamespace('wsse', $ns_wsse);
+			$full	 = $root->xpath('/root/wsse:Security');
+			$auth	 = $full[0]->asXML();
+
+			$header_content = new SoapVar($auth, XSD_ANYXML);
+			$header = new SoapHeader($ns_wsse, 'Security', $header_content, true);
+			return $header;
 		}
 
 		public function export_data( $_title, $application, $files )
@@ -161,36 +216,54 @@
 			$Saksmappe = new Saksmappe($title);
 			$Saksmappe->setMappetype(new Mappetype('GS'));	//GS : Generell sak
 
+			/*
+			 * A : Saken avsluttet
+			 * B : Under behandling
+			 * R : Reservert sak
+			 * U : Saken utgår
+			 * X : Saken er ikke gjenstand for oppfølging
+			 */
 			$Saksmappe->setSaksstatus(new Saksstatus('B'));//B : Under behandling
 
 			/**
 			 * Note: konfigurable...
 			 */
-			$Saksmappe->setJournalenhet(new Journalenhet('DOKS'));//DOKS : Felles journalenhet i Bærum kommune
-			
+			$Saksmappe->setJournalenhet(new Journalenhet($this->journalenhet));//DOKS : Felles journalenhet i Bærum kommune
+
+			$Klasser = array();
 			$KlasseListe = new KlasseListe();
+
 			$Klassifikasjonssystem = new Klassifikasjonssystem('FNR');//FNR : Fødselsnummer
-			$klasseID = $application['customer_ssn'];
-			$Klasse = new Klasse($Klassifikasjonssystem, $klasseID);
+			$Klasse = new Klasse($Klassifikasjonssystem, $application['customer_ssn']);
 			$Klasse->setRekkefoelge(1);
 			$Klasse->setSkjermetKlasse(false);
-			$KlasseListe->setListe(array($Klasse));
+
+			$Klasser[] = $Klasse;
+
+			//konfigurerbar
+			$Klasse2 = new Klasse(new Klassifikasjonssystem($this->arkivnøkkel), $this->arkivnøkkel_text);//N : Arkivnøkkel
+			$Klasse2->setRekkefoelge(2);
+			$Klasse2->setSkjermetKlasse(false);
+
+			$Klasser[] = $Klasse2;
+
+			$KlasseListe->setListe($Klasser);
 			$Saksmappe->setKlasse($KlasseListe);
 
 
-			$EksternNoekkel = new EksternNoekkel('Portico');
+			//konfigurerbar
+			$EksternNoekkel = new EksternNoekkel($this->fagsystem);
 			$EksternNoekkel->setNoekkel($application['id']);
 
 			$Saksmappe->setReferanseEksternNoekkel($EksternNoekkel);
 			$Saksmappe->setSaksansvarlig($this->archive_user_id);
-
 
 			$Saksparter = array();
 			if ($application['customer_ssn'])
 			{
 				$Kontakt		 = $this->get_contakt_person($application);
 				$Sakspart		 = new Sakspart($Kontakt);
-				$Sakspart->setSakspartRolle(new SakspartRolle('sakspart'));
+				$Sakspart->setSakspartRolle(new SakspartRolle($this->sakspart_rolle));
 				$Saksparter[]	 = $Sakspart;
 			}
 
@@ -198,7 +271,7 @@
 			{
 				$Kontakt2		 = $this->get_contakt_organization($application);
 				$Sakspart2		 = new Sakspart($Kontakt2);
-				$Sakspart2->setSakspartRolle(new SakspartRolle('sakspart'));
+				$Sakspart2->setSakspartRolle(new SakspartRolle($this->sakspart_rolle));
 				$Saksparter[]	 = $Sakspart2;
 			}
 
@@ -302,7 +375,31 @@
 		{
 
 			$journalpost = new Journalpost($title);
+			/**
+				I : Inngående brev
+				SK : Sakskart
+				N : Internt notat
+				MP : Møteprotokoll
+				S : Saksframlegg/innstilling
+				U : Utgående brev
+				X : Internt notat uten oppfølging
+				MB : Møtebok
+				L : Ikke arkivverdig dokument
+				R : Registrert dokument
+			 */
 			$journalpost->setJournalposttype(new Journalposttype('U'));
+
+			/**
+				A : Registrering avsluttet, arkiveksemplar tilgjengelig.
+				E : Ekspedert av saksbehandler, leder eller annen instans.
+				F : Ferdig fra saksbehandler/leder og klargjort for ekspedering.
+				J : Journalført og/eller kontrollert av arkivet.
+				M : Midlertidig journalført av arkivet
+				R : Reservert av/for saksbehandler.
+				S : Registrert i første hånd eller ajourført av saksbehandler/leder.
+				U : Dokumentet utgår eller er flyttet til en annen sak.
+				D : Skjemaer fra ACOS Mottak
+			 */
 			$journalpost->setJournalstatus(new Journalstatus('J'));
 			$journalpost->setSkjermetTittel(false);
 
@@ -324,14 +421,16 @@
 			if (false)
 			{
 				$skjerming			 = new Skjerming();
-				$tilgangsrestriksjon = new Tilgangsrestriksjon('UO');
+				// konfigurerbar..
+				$tilgangsrestriksjon = new Tilgangsrestriksjon('U');
 				$tilgangsrestriksjon->setKodebeskrivelse('Unntatt offentlighet');
 				$skjerming->setTilgangsrestriksjon($tilgangsrestriksjon);
-				$skjerming->setSkjermingshjemmel('Offl §13, Fvl § 13.1');
+				$skjerming->setSkjermingshjemmel('offl. § 13 Taushetsplikt, jf fvl. §13');
 				$journalpost->setSkjerming($skjerming);
 			}
 
-			$journalpost->setReferanseArkivdel(new Arkivdel(''));
+			//konfigurerbar
+			$journalpost->setReferanseArkivdel(new Arkivdel($this->arkivdel));
 			$journalpost->setOffentligTittel($title);
 			$KorrespondansepartListe = new KorrespondansepartListe();
 
@@ -359,6 +458,7 @@
 			$korrespondansepart_3->setBehandlingsansvarlig(1);
 			$korrespondansepart_3->setSkjermetKorrespondansepart(false);
 			$korrespondansepart_3->setSaksbehandlerInit($this->archive_user_id);
+			$korrespondanseparter[]	 = $korrespondansepart_3;
 
 			$KorrespondansepartListe->setListe($korrespondanseparter);
 
@@ -375,7 +475,12 @@
 
 				$dokument->setVariantformat(new Variantformat('p'));
 				$dokument->setTilknyttetRegistreringSom(new TilknyttetRegistreringSom('H'));
-				$dokument->setDokumentstatus(new Dokumentstatus('F'));
+
+				/*
+				 * B : Under behandling
+				 * F : Ferdig
+				 */
+				$dokument->setDokumentstatus(new Dokumentstatus('B'));
 
 				$mimeType = $mime_magic->filename2mime($file['file_name']);
 
