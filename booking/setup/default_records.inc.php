@@ -327,7 +327,7 @@
 			'input_type'	=> 'listbox',
 			'name'			=> 'method',
 			'descr'			=> 'Export / import method',
-			'choice'		=> array('public360'),
+			'choice'		=> array('public360','gi_arkiv'),
 		//	'value'			=> '',
 		)
 	);
@@ -362,6 +362,143 @@
 	$receipt = $custom_config->add_attrib(array
 		(
 			'section_id'	=> $receipt_section_public360['section_id'],
+			'input_type'	=> 'listbox',
+			'name'			=> 'debug',
+			'descr'			=> 'debug',
+			'choice'		=> array(1),
+		)
+	);
+
+	$receipt_section_gi_arkiv = $custom_config->add_section(array
+		(
+			'name' => 'gi_arkiv',
+			'descr' => 'Geointegrasjon arkiv'
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'webservicehost',
+			'descr'			=> 'webservicehost',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'username',
+			'descr'			=> 'username',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'password',
+			'name'			=> 'password',
+			'descr'			=> 'password',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'journalenhet',
+			'descr'			=> 'journalenhet',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'arkivnoekkel',
+			'descr'			=> 'arkivnoekkel',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'arkivnoekkel_text',
+			'descr'			=> 'arkivnoekkel_text',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'fagsystem',
+			'descr'			=> 'fagsystem',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'arkivdel',
+			'descr'			=> 'arkivdel',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'sakspart_rolle',
+			'descr'			=> 'sakspart_rolle',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'klientnavn',
+			'descr'			=> 'klientnavn',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'klientversjon',
+			'descr'			=> 'klientversjon',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'referanseoppsett',
+			'descr'			=> 'referanseoppsett',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
 			'input_type'	=> 'listbox',
 			'name'			=> 'debug',
 			'descr'			=> 'debug',

@@ -482,7 +482,7 @@
 				if ($values['save'] || $values['apply'])
 				{
 
-					$values[section_id] = $section_id;
+					$values['section_id'] = $section_id;
 
 					if(!$values['name'])
 					{

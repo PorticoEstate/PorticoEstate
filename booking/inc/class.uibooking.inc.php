@@ -97,9 +97,13 @@
 					'sorted_by' => array('key' => 4, 'dir' => 'desc'),//id
 					'field' => array(
 						array(
+							'key' => 'id',
+							'label' => lang('ID'),
+							'formatter' => 'JqueryPortico.formatLink'
+						),
+						array(
 							'key' => 'activity_name',
 							'label' => lang('Activity'),
-							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'group_name',
@@ -108,6 +112,11 @@
 						array(
 							'key' => 'building_name',
 							'label' => lang('Building')
+						),
+						array(
+							'key' => 'resource_names',
+							'label' => lang('resources'),
+							'sortable' => false,
 						),
 						array(
 							'key' => 'season_name',
@@ -211,6 +220,21 @@
 				$booking['from_'] = pretty_timestamp($booking['from_']);
 				$booking['to_'] = pretty_timestamp($booking['to_']);
 				$booking['cost_history'] = count($this->bo->so->get_ordered_costs($booking['id']));
+
+				$resources = $this->resource_bo->so->read(array(
+								'sort'    => 'sort',
+								'results' =>'all',
+								'filters' => array('id' => $booking['resources']), 'results' =>'all'
+					));
+				$resource_names = array();
+				if($resources['results'])
+				{
+					foreach ($resources['results'] as $resource)
+					{
+						$resource_names[] = $resource['name'];
+					}
+				}
+				$booking['resource_names'] = implode(', ', $resource_names);
 			}
 
 			array_walk($bookings["results"], array($this, "_add_links"), "booking.uibooking.show");

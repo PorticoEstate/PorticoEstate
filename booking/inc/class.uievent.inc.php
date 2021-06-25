@@ -115,6 +115,11 @@
 							'label' => lang('Building')
 						),
 						array(
+							'key' => 'resource_names',
+							'label' => lang('resources'),
+							'sortable' => false,
+						),
+						array(
 							'key' => 'from_',
 							'label' => lang('From')
 						),
@@ -198,6 +203,21 @@
 				$event['from_'] = pretty_timestamp($event['from_']);
 				$event['to_'] = pretty_timestamp($event['to_']);
 				$event['cost_history'] = count($this->bo->so->get_ordered_costs($event['id']));
+
+				$resources = $this->resource_bo->so->read(array(
+								'sort'    => 'sort',
+								'results' =>'all',
+								'filters' => array('id' => $event['resources']), 'results' =>'all'
+					));
+				$resource_names = array();
+				if($resources['results'])
+				{
+					foreach ($resources['results'] as $resource)
+					{
+						$resource_names[] = $resource['name'];
+					}
+				}
+				$event['resource_names'] = implode(", " , $resource_names);
 			}
 
 			array_walk($events["results"], array($this, "_add_links"), "booking.uievent.edit");
