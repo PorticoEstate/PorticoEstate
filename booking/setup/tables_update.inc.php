@@ -5089,3 +5089,176 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.72 to 0.2.73
+	 *
+	 */
+	$test[] = '0.2.72';
+	function booking_upgrade0_2_72()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$location_id = $GLOBALS['phpgw']->locations->get_id('booking', 'run');
+
+		$sql = "SELECT phpgw_config2_choice.* FROM phpgw_config2_section"
+			. " JOIN phpgw_config2_attrib ON phpgw_config2_section.id = phpgw_config2_attrib.section_id"
+			. " JOIN phpgw_config2_choice ON phpgw_config2_section.id = phpgw_config2_choice.section_id AND phpgw_config2_attrib.id = phpgw_config2_choice.attrib_id"
+			. " WHERE location_id = {$location_id} AND phpgw_config2_section.name = 'common_archive'";
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$section_id = $GLOBALS['phpgw_setup']->oProc->f('section_id');
+		$attrib_id = $GLOBALS['phpgw_setup']->oProc->f('attrib_id');
+		$id = (int)$GLOBALS['phpgw_setup']->oProc->f('id');
+		$id ++;
+
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_config2_choice ( section_id, attrib_id, id, value)"
+				. " VALUES ({$section_id},{$attrib_id}, {$id}, 'gi_arkiv')", __LINE__, __FILE__);
+
+		$custom_config = CreateObject('admin.soconfig', $location_id);
+
+		$receipt_section_gi_arkiv = $custom_config->add_section(array
+			(
+				'name' => 'gi_arkiv',
+				'descr' => 'Geointegrasjon arkiv'
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'webservicehost',
+				'descr'			=> 'webservicehost',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'username',
+				'descr'			=> 'username',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'password',
+				'name'			=> 'password',
+				'descr'			=> 'password',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'journalenhet',
+				'descr'			=> 'journalenhet',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'arkivnoekkel',
+				'descr'			=> 'arkivnoekkel',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'arkivnoekkel_text',
+				'descr'			=> 'arkivnoekkel_text',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'fagsystem',
+				'descr'			=> 'fagsystem',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'arkivdel',
+				'descr'			=> 'arkivdel',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'sakspart_rolle',
+				'descr'			=> 'sakspart_rolle',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'klientnavn',
+				'descr'			=> 'klientnavn',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'klientversjon',
+				'descr'			=> 'klientversjon',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'referanseoppsett',
+				'descr'			=> 'referanseoppsett',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'debug',
+				'descr'			=> 'debug',
+				'choice'		=> array(1),
+			)
+		);
+
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.73';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

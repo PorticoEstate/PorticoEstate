@@ -34,7 +34,7 @@
 		private $debug,
 			$webservicehost, $username, $password, $proxy,
 			$archive_user_id, $OppdateringService, $kontekst,
-			$journalenhet, $arkivnøkkel, $arkivnøkkel_text,
+			$journalenhet, $arkivnoekkel, $arkivnoekkel_text,
 			$fagsystem, $arkivdel, $sakspart_rolle,
 			$klientnavn, $klientversjon, $referanseoppsett;
 
@@ -57,15 +57,15 @@
 			$this->proxy			 = !empty($config['proxy']) ? $config['proxy'] : '';
 			$this->archive_user_id	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['archive_user_id'];
 
-			$this->journalenhet = 'DOKS';
-			$this->arkivnøkkel = 'N';
-			$this->arkivnøkkel_text = 'N – 068.1 Leieavtaler – kontrakter';
-			$this->fagsystem = 'Aktiv kommune';
-			$this->arkivdel = 'AKTIV';
-			$this->sakspart_rolle = 'sakspart';
-			$this->klientnavn = 'Portico';
-			$this->klientversjon = '2';
-			$this->referanseoppsett = 'Portico referanseoppsett';
+			$this->journalenhet		 = !empty($custom_config_data['journalenhet']) ? $custom_config_data['journalenhet'] : 'DOKS';
+			$this->arkivnoekkel		 = !empty($custom_config_data['arkivnoekkel']) ? $custom_config_data['arkivnoekkel'] : 'N';
+			$this->arkivnoekkel_text = !empty($custom_config_data['arkivnoekkel_text']) ? $custom_config_data['arkivnoekkel_text'] : 'N – 068.1 Leieavtaler – kontrakter';
+			$this->fagsystem		 = !empty($custom_config_data['fagsystem']) ? $custom_config_data['fagsystem'] : 'Aktiv kommune';
+			$this->arkivdel			 = !empty($custom_config_data['arkivdel']) ? $custom_config_data['arkivdel'] : 'AKTIV';
+			$this->sakspart_rolle	 = !empty($custom_config_data['sakspart_rolle']) ? $custom_config_data['sakspart_rolle'] : 'sakspart';
+			$this->klientnavn		 = !empty($custom_config_data['klientnavn']) ? $custom_config_data['klientnavn'] : 'Portico';
+			$this->klientversjon	 = !empty($custom_config_data['klientversjon']) ? $custom_config_data['klientversjon'] : '2';
+			$this->referanseoppsett	 = !empty($custom_config_data['referanseoppsett']) ? $custom_config_data['referanseoppsett'] : 'Portico referanseoppsett';
 
 			$wsdl = 'http://rep.geointegrasjon.no/Arkiv/Oppdatering/xml.wsdl/2012.01.31/giArkivOppdatering20120131.wsdl';
 			$options = array(
@@ -241,7 +241,7 @@
 			$Klasser[] = $Klasse;
 
 			//konfigurerbar
-			$Klasse2 = new Klasse(new Klassifikasjonssystem($this->arkivnøkkel), $this->arkivnøkkel_text);//N : Arkivnøkkel
+			$Klasse2 = new Klasse(new Klassifikasjonssystem($this->arkivnoekkel), $this->arkivnoekkel_text);//N : Arkivnøkkel
 			$Klasse2->setRekkefoelge(2);
 			$Klasse2->setSkjermetKlasse(false);
 
@@ -279,6 +279,8 @@
 			$SakspartListe->setListe($Saksparter);
 			$Saksmappe->setSakspart($SakspartListe);
 
+//	_debug_array($Saksmappe);
+//			die();
 			try
 			{
 				$ret = $this->OppdateringService->NySaksmappe(new NySaksmappe($Saksmappe, $this->kontekst));
@@ -301,7 +303,43 @@
 				trigger_error(nl2br($msg), E_USER_ERROR);
 			}
 
+//			$this->oppdater_sakspart($ret->getReturn(), $SakspartListe);
+//			$this->oppdater_sakspart(array(), $SakspartListe);
 			return $ret->getReturn();
+		}
+
+
+		/**
+		 * Test oppdatering av saksparter for å inkludere Personidentifikator
+		 * @param type $case_data
+		 * @param type $SakspartListe
+		 */
+		private function oppdater_sakspart($case_data, $SakspartListe )
+		{
+			$Saksnoekkel = new SakSystemId(new SystemID($case_data->getSystemID()));
+//			$Saksnoekkel = new SakSystemId(new SystemID('tt'));
+			try
+			{
+				$ret = $this->OppdateringService->NySakspart( new NySakspart($SakspartListe, $Saksnoekkel, $this->kontekst));
+
+				if ($this->debug)
+				{
+					echo "SOAP HEADERS:\n" . $this->OppdateringService->__getLastRequestHeaders() . PHP_EOL;
+					echo "SOAP REQUEST:\n" . $this->OppdateringService->__getLastRequest() . PHP_EOL;
+				}
+			}
+			catch (SoapFault $fault)
+			{
+				echo "SOAP HEADERS:\n" .  $this->OppdateringService->__getLastRequestHeaders() . PHP_EOL;
+				echo "SOAP REQUEST:\n" . $this->OppdateringService->__getLastRequest() . PHP_EOL;
+				echo '<pre>';
+				print_r($fault);
+				echo '</pre>';
+				$msg = "SOAP Fault:\n faultcode: {$fault->faultcode},\n faultstring: {$fault->faultstring}";
+				echo $msg . PHP_EOL;
+				trigger_error(nl2br($msg), E_USER_ERROR);
+			}
+
 		}
 
 		private function get_contakt_person( $application )
@@ -340,7 +378,10 @@
 			$Personidentifikator = new Personidentifikator();
 			$Personidentifikator->setPersonidentifikatorNr($application['customer_ssn']);
 //			$Personidentifikator->setpersonidentifikatorType(new PersonidentifikatorType('F'));
-			$Personidentifikator->setpersonidentifikatorType(new PersonidentifikatorType('Fødselsnummer'));
+			$PersonidentifikatorType = new PersonidentifikatorType('F');
+			$PersonidentifikatorType->setErGyldig(true);
+			$PersonidentifikatorType->setKodebeskrivelse('Fødselsnummer');
+			$Personidentifikator->setPersonidentifikatorType($PersonidentifikatorType);
 
 			$Kontakt->setPersonid($Personidentifikator);
 			$Kontakt->setEtternavn($LastName);
