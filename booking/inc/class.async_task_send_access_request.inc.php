@@ -56,8 +56,8 @@
 
 			$stages = array(
 				0	 => 60 * 60 * 3, // 3 hours : send SMS and email as reminder
-				1	 => 60 * 10, // 10 minutes : request access
-				2	 => 60 * 5, // 5 minutes : get request status
+				1	 => 60 * 15, // 15 minutes : request access
+				2	 => 60 * 10, // 5 minutes : get request status
 			);
 
 			$so_resource = CreateObject('booking.soresource');

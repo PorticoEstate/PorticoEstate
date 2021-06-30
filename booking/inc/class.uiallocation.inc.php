@@ -88,9 +88,13 @@
 					'source' => self::link(array('menuaction' => 'booking.uiallocation.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
+							'key' => 'id',
+							'label' => lang('ID'),
+							'formatter' => 'JqueryPortico.formatLink'
+						),
+						array(
 							'key' => 'organization_name',
 							'label' => lang('Organization'),
-							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'organization_shortname',
@@ -99,6 +103,11 @@
 						array(
 							'key' => 'building_name',
 							'label' => lang('Building')
+						),
+						array(
+							'key' => 'resource_names',
+							'label' => lang('resources'),
+							'sortable' => false,
 						),
 						array(
 							'key' => 'season_name',
@@ -201,6 +210,20 @@
 				$allocation['from_'] = pretty_timestamp($allocation['from_']);
 				$allocation['to_'] = pretty_timestamp($allocation['to_']);
 				$allocation['cost_history'] = count($this->bo->so->get_ordered_costs($allocation['id']));
+				$resources = $this->resource_bo->so->read(array(
+								'sort'    => 'sort',
+								'results' =>'all',
+								'filters' => array('id' => $allocation['resources']), 'results' =>'all'
+					));
+				$resource_names = array();
+				if($resources['results'])
+				{
+					foreach ($resources['results'] as $resource)
+					{
+						$resource_names[] = $resource['name'];
+					}
+				}
+				$allocation['resource_names'] = implode(', ', $resource_names);
 			}
 
 			return $this->jquery_results($allocations);

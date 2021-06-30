@@ -306,7 +306,7 @@ SQL;
 			{
 				$GLOBALS['phpgw']->db->insert($sql, $vendors, __LINE__, __FILE__);
 
-				$GLOBALS['phpgw']->db->query("UPDATE fm_vendor SET active = 0", __LINE__, __FILE__);
+				$GLOBALS['phpgw']->db->query("UPDATE fm_vendor SET active = 0 WHERE category != 2", __LINE__, __FILE__); // intern leverandør
 
 				$GLOBALS['phpgw']->db->query("UPDATE fm_vendor SET"
 					. " active = 1,"

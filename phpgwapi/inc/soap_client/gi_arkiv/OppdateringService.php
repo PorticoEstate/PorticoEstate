@@ -249,7 +249,7 @@ class OppdateringService extends \SoapClient
       'features' => 1,
     ), $options);
       if (!$wsdl) {
-        $wsdl = '/home/hc483/Bk360/giArkivOppdatering20120131.wsdl';
+        $wsdl = 'http://rep.geointegrasjon.no/Arkiv/Oppdatering/xml.wsdl/2012.01.31/giArkivOppdatering20120131.wsdl';
       }
       parent::__construct($wsdl, $options);
     }

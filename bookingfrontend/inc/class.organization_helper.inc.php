@@ -63,7 +63,7 @@
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 				'accept: application/json',
 				'Content-Type: application/json',
-				'Content-Length: ' . strlen($data_json)
+				'Content-Length: 0'
 				));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -98,7 +98,7 @@
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 				'accept: application/json',
 				'Content-Type: application/json',
-				'Content-Length: ' . strlen($data_json)
+				'Content-Length: 0'
 				));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

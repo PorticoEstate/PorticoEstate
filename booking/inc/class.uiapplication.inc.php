@@ -388,8 +388,8 @@
 							'label' => lang('Building')
 						),
 						array(
-							'key' => 'what',
-							'label' => lang('What'),
+							'key' => 'resource_names',
+							'label' => lang('resources'),
 							'sortable' => false
 						),
 						array(
@@ -512,18 +512,19 @@
 				$application['created'] = pretty_timestamp($application['created']);
 				$application['modified'] = pretty_timestamp($application['modified']);
 				$application['frontend_modified'] = pretty_timestamp($application['frontend_modified']);
-				$application['resources'] = $this->resource_bo->so->read(array('results' =>'all', 'filters' => array(
+				$resources = $this->resource_bo->so->read(array('results' =>'all', 'filters' => array(
 						'id' => $application['resources'])));
-				$application['resources'] = $application['resources']['results'];
-				if ($application['resources'])
+
+				$resource_names = array();
+
+				if ($resources['results'])
 				{
-					$names = array();
-					foreach ($application['resources'] as $res)
+					foreach ($resources['results'] as $resource)
 					{
-						$names[] = $res['name'];
+						$resource_names[] = $resource['name'];
 					}
-					$application['what'] = $application['resources'][0]['building_name'] . ' (' . join(', ', $names) . ')';
 				}
+				$application['resource_names'] = implode(', ', $resource_names);
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "booking.uiapplication.show");
 
@@ -1343,6 +1344,7 @@
 			{
 				$partial2 = $this->extract_form_data();
 
+				$customer_organization_number_fallback		 = phpgw::get_var('customer_organization_number_fallback');
 				$customer_organization_number_arr			 = explode('_', phpgw::get_var('customer_organization_number'));
 				if (!empty($customer_organization_number_arr[0]))
 				{
@@ -1367,6 +1369,30 @@
 					if($update_org && !$this->organization_bo->validate($organization))
 					{
 						$this->organization_bo->update($organization);
+					}
+				}
+				else if($customer_organization_number_fallback)
+				{
+					$partial2['customer_organization_number']	 = str_replace(" ", "", $customer_organization_number_fallback);
+					$partial2['customer_identifier_type']	 = 'organization_number';
+					$organization_info = $this->organization_bo->get_organization_info($partial2['customer_organization_number']);
+					if(!empty($organization_info['id']))
+					{
+						$partial2['customer_organization_id']		 = $organization_info['id'];
+					}
+					else
+					{
+						$organization_info = $this->add_organization($partial2['customer_organization_number'], $external_login_info['ssn']);
+						if(!empty($organization_info['id']))
+						{
+							$partial2['customer_organization_id']		 = $organization_info['id'];
+							$partial2['customer_organization_name']		 = $organization_info['name'];
+
+							/**
+							 * Do something clever later on, as redirect to organization details - or something
+							 */
+							$organization_created = true;
+						}
 					}
 				}
 
@@ -1732,6 +1758,84 @@
 				'config'				 => CreateObject('phpgwapi.config', 'booking')->read()
 				)
 			);
+		}
+
+		private function add_organization( $organization_number, $ssn )
+		{
+			try
+			{
+				$organization_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($organization_number);
+			}
+			catch (sfValidatorError $e)
+			{
+				return false;
+			}
+
+			if($organization_number == '000000000')
+			{
+				return false;
+			}
+
+			$organization_info = createObject('bookingfrontend.organization_helper')->get_organization($organization_number);
+			$activities = CreateObject('booking.soactivity')->read(array('filters' => array('active' => 1)));
+
+			// just guessing...
+			$first_activity = $activities['results'][0]['id'];
+
+			if (!empty($organization_info['organisasjonsnummer']))
+			{
+				$postadresse	 = $organization_info['postadresse'];
+				$organization	 = array(
+					'customer_internal'				 => 0,
+					'show_in_portal'				 => 1,
+					'customer_ssn'					 => $ssn,
+					'active'						 => 1,
+					'organization_number'			 => $organization_number,
+					'customer_identifier_type'		 => 'organization_number',
+					'customer_organization_number'	 => $organization_number,
+					'name'							 => $organization_info['navn'] . ' [ikke validert]',
+					'shortname'						 => substr($organization_info['navn'], 0, 11),
+					'street'						 => implode(' ', $postadresse['adresse']),
+					'zip_code'						 => $postadresse['postnummer'],
+					'city'							 => $postadresse['poststed'],
+					'activity_id'					 => $first_activity,
+					'homepage'						 => 'N/A',
+					'phone'							 => 'N/A',
+					'description'					 => 'N/A',
+					'district'						 => 'N/A',
+				);
+
+				if( $organization_info['hjemmeside'])
+				{
+					$organization['homepage'] = $organization_info['hjemmeside'];
+				}
+			}
+			else
+			{
+				return false;
+			}
+
+			$receipt = array();
+
+			$errors = $this->organization_bo->validate($organization);
+
+			if(!$errors)
+			{
+				/**
+				 * Email won't validate
+				 */
+				$organization['email'] = 'N/A';
+
+				/**
+				 * TEMPORARY!!
+				 * Bypassing acl on create
+				 */
+				$receipt = CreateObject('booking.soorganization')->add($organization);
+//				$receipt = $this->organization_bo->add($organization);
+				$organization['id'] = $receipt['id'];
+			}
+
+			return $organization;
 		}
 
 		private function update_user_info($application, $external_login_info = array() )
