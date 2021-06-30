@@ -26,7 +26,7 @@
 				'deactivate_sendmessage' => array('type' => 'int'),
 				'extra_kalendar' => array('type' => 'int'),
 				'location_code' => array('type' => 'string', 'required' => false),
-				'activity_id' => array('type' => 'int', 'required' => false),
+				'activity_id' => array('type' => 'int', 'required' => true),
 				'part_of_town_id' => array('type' => 'string',
 					'required' => false,
 //					'join' => array(
@@ -73,10 +73,10 @@
 			{
 				return False;
 			}
-			return array('name' => $this->db->f('name', false),
-				'district' => $this->db->f('district', false),
-				'city' => $this->db->f('city', false),
-				'description' => $this->db->f('description', false));
+			return array('name' => $this->db->f('name', true),
+				'district' => $this->db->f('district', true),
+				'city' => $this->db->f('city', true),
+				'description' => $this->db->f('description', true));
 		}
 
 		/**
@@ -191,4 +191,34 @@
 			}
 		}
 
+		public function get_facility_types($query="")
+		{
+			$query_SQL = " where name ilike '$query%'";
+			if (empty($query)) {
+				$query_SQL = '';
+			}
+			$result = array();
+			$queryURL = "select id,name from bb_rescategory".$query_SQL;
+			$this->db->query($queryURL  );
+			while ($this->db->next_record())
+			{
+				$result[] = array(
+					'id' => $this->db->f('id',false),
+					'name' => $this->db->f('name',true),
+				);
+			}
+			return $result;
+		}
+
+		public function get_building_id_from_resource_id($resource_id)
+		{
+			$queryURL = "select building_id from bb_building_resource where resource_id = {$resource_id}";
+			$this->db->query($queryURL);
+
+			if (!$this->db->next_record())
+			{
+				return false;
+			}
+			return $this->db->f('building_id');
+		}
 	}

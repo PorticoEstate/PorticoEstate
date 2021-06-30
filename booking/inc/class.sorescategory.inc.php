@@ -90,7 +90,7 @@
 				$id = $this->db->f('id');
 				$rescategory = array(
 					'id'		 => $id,
-					'name'		 => $this->db->f('name'),
+					'name'		 => $this->db->f('name', true),
 					'capacity'	 => $this->db->f('capacity'),
 					'e_lock'	 => $this->db->f('e_lock'),
 				);
@@ -172,7 +172,7 @@
 			while ($this->db->next_record())
 			{
 				$id = $this->db->f('id');
-				$grouplist[$id] = array('id' => $id, 'name' => $this->db->f('name'), 'active' => $this->db->f('active'));
+				$grouplist[$id] = array('id' => $id, 'name' => $this->db->f('name', true), 'active' => $this->db->f('active'));
 			}
 			return $grouplist;
 		}
@@ -188,7 +188,7 @@
 			}
 			$db		 = clone($this->db);
 			$table	 = "bb_rescategory";
-			$sql	 = "SELECT id, name FROM {$table} WHERE  parent_id = {$parent_id} ORDER BY name ASC";
+			$sql	 = "SELECT id, name FROM {$table} WHERE active=1 AND parent_id = {$parent_id} ORDER BY name ASC";
 			$db->query($sql, __LINE__, __FILE__);
 
 			while ($db->next_record())
@@ -196,7 +196,7 @@
 				$id	 = $db->f('id');
 				$this->entity_tree[]	 = array(
 					'id'			 => $id,
-					'name'			 => str_repeat('..', $level) . $db->f('name'),
+					'name'			 => str_repeat('..', $level) . $db->f('name', true),
 					'parent_id'		 => $parent_id,
 				);
 				$this->get_children2($id, $level + 1);
@@ -208,7 +208,7 @@
 		{
 			$table	 = "bb_rescategory";
 
-			$sql = "SELECT id, name FROM $table WHERE parent_id = 0 OR parent_id IS NULL ORDER BY name ASC";
+			$sql = "SELECT id, name FROM $table WHERE active=1 AND (parent_id = 0 OR parent_id IS NULL) ORDER BY name ASC";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 

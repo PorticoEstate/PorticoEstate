@@ -31,7 +31,7 @@
 			{
 				return False;
 			}
-			return $this->db->f('name', false);
+			return $this->db->f('name', true);
 		}
 	}
 

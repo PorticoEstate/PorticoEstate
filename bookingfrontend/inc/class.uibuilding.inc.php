@@ -33,7 +33,8 @@
 			$building = $this->bo->read_single($building_id);
 			$start = phpgw::get_var('start', 'int', 'GET');
 			$end = phpgw::get_var('end', 'int', 'GET');
-			$res = phpgw::get_var('res', 'string', 'GET');
+			$res = phpgw::get_var('res', 'int', 'GET');
+			$resource_id = phpgw::get_var('resource_id', 'int', 'GET');
 			$color = phpgw::get_var('color', 'string', 'GET');
 			$fontsize = phpgw::get_var('fontsize', 'int', 'GET');
 			$weekend = phpgw::get_var('weekend', 'int', 'GET');
@@ -70,7 +71,12 @@
 				"Sun" => "Søndag"
 			);
 
-			$bookings = $this->booking_bo->building_infoscreen_schedule($building_id, $date, $res);
+			$bookings = $this->booking_bo->building_infoscreen_schedule($building_id, $date, $res, $resource_id);
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $bookings;
+			}
 			$from = clone $date;
 			$from->setTime(0, 0, 0);
 			// Make sure $from is a monday

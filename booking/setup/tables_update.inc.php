@@ -4951,3 +4951,314 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+	/**
+	 * Update booking version from 0.2.68 to 0.2.69
+	 *
+	 */
+	$test[] = '0.2.68';
+	function booking_upgrade0_2_68()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$table = "bb_resource";
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN deactivate_calendar int NOT NULL DEFAULT 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE $table SET deactivate_calendar = 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE $table ADD COLUMN deactivate_application int NOT NULL DEFAULT 0");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE $table SET deactivate_application = 0");
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.69';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.69 to 0.2.70
+	 *
+	 */
+	$test[] = '0.2.69';
+	function booking_upgrade0_2_69()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_completed_reservation','customer_number',array(
+			'type' => 'text',
+			'nullable' => True
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE bb_completed_reservation SET customer_number = bb_organization.customer_number"
+			. " FROM bb_organization WHERE bb_completed_reservation.organization_id = bb_organization.id", __LINE__, __FILE__);
+
+
+		$asyncservice = CreateObject('phpgwapi.asyncservice');
+		$asyncservice->delete('booking_async_task_delete_expired_blocks');
+		$asyncservice->delete('booking_async_task_update_reservation_state');
+		$asyncservice->delete('booking_async_task_delete_participants');
+
+		/**
+		 * Reservation
+		 */
+		$asyncservice->set_timer(
+			array('min' => "*/5"), 'booking_async_task_delete_expired_blocks', 'booking.async_task.doRun', array(
+					'task_class' => "booking.async_task_delete_expired_blocks")
+		);
+
+		/**
+		 * Billing
+		 */
+		$asyncservice->set_timer(
+			array('hour' => "*/1"), 'booking_async_task_update_reservation_state', 'booking.async_task.doRun', array(
+					'task_class' => "booking.async_task_update_reservation_state")
+		);
+
+		/**
+		 * Participants
+		 */
+		$asyncservice->set_timer(
+			array('day' => "*/1"), 'booking_async_task_delete_participants', 'booking.async_task.doRun', array(
+					'task_class' => "booking.async_task_delete_participants")
+		);
+
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.70';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+
+	/**
+	 * Update booking version from 0.2.70 to 0.2.71
+	 *
+	 */
+	$test[] = '0.2.70';
+	function booking_upgrade0_2_70()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'booking_time_minutes',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True,
+				'default' => -1
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.71';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.71 to 0.2.72
+	 *
+	 */
+	$test[] = '0.2.71';
+	function booking_upgrade0_2_71()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'booking_limit_number',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True,
+				'default' => -1
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'booking_limit_number_horizont',
+			array(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => True,
+				'default' => -1
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.72';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.72 to 0.2.73
+	 *
+	 */
+	$test[] = '0.2.72';
+	function booking_upgrade0_2_72()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$location_id = $GLOBALS['phpgw']->locations->get_id('booking', 'run');
+
+		$sql = "SELECT phpgw_config2_choice.* FROM phpgw_config2_section"
+			. " JOIN phpgw_config2_attrib ON phpgw_config2_section.id = phpgw_config2_attrib.section_id"
+			. " JOIN phpgw_config2_choice ON phpgw_config2_section.id = phpgw_config2_choice.section_id AND phpgw_config2_attrib.id = phpgw_config2_choice.attrib_id"
+			. " WHERE location_id = {$location_id} AND phpgw_config2_section.name = 'common_archive'";
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$section_id = $GLOBALS['phpgw_setup']->oProc->f('section_id');
+		$attrib_id = $GLOBALS['phpgw_setup']->oProc->f('attrib_id');
+		$id = (int)$GLOBALS['phpgw_setup']->oProc->f('id');
+		$id ++;
+
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_config2_choice ( section_id, attrib_id, id, value)"
+				. " VALUES ({$section_id},{$attrib_id}, {$id}, 'gi_arkiv')", __LINE__, __FILE__);
+
+		$custom_config = CreateObject('admin.soconfig', $location_id);
+
+		$receipt_section_gi_arkiv = $custom_config->add_section(array
+			(
+				'name' => 'gi_arkiv',
+				'descr' => 'Geointegrasjon arkiv'
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'webservicehost',
+				'descr'			=> 'webservicehost',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'username',
+				'descr'			=> 'username',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'password',
+				'name'			=> 'password',
+				'descr'			=> 'password',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'journalenhet',
+				'descr'			=> 'journalenhet',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'arkivnoekkel',
+				'descr'			=> 'arkivnoekkel',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'arkivnoekkel_text',
+				'descr'			=> 'arkivnoekkel_text',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'fagsystem',
+				'descr'			=> 'fagsystem',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'arkivdel',
+				'descr'			=> 'arkivdel',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'sakspart_rolle',
+				'descr'			=> 'sakspart_rolle',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'klientnavn',
+				'descr'			=> 'klientnavn',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'klientversjon',
+				'descr'			=> 'klientversjon',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'referanseoppsett',
+				'descr'			=> 'referanseoppsett',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'debug',
+				'descr'			=> 'debug',
+				'choice'		=> array(1),
+			)
+		);
+
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.73';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

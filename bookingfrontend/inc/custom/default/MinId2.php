@@ -142,11 +142,11 @@
 
 					$results[] = array
 					(
-						'orgnr' => $org['organizationNumber'],
+						'orgnr' => $org['orgnr'],
 						'customer_ssn'	 => null
 					);
 
-					$orgs_validate[] = $org['organizationNumber'];
+					$orgs_validate[] = $org['orgnr'];
 				}
 			}
 
@@ -189,7 +189,7 @@
 			}
 
 			$test_organizations = (array)explode(',', $this->config->config_data['test_organization']);
-			if ($this->debug && $test_organizations)
+			if ($this->debug && $test_organizations[0])
 			{
 				foreach ($test_organizations as $test_organization)
 				{

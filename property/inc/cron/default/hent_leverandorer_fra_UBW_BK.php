@@ -306,7 +306,7 @@ SQL;
 			{
 				$GLOBALS['phpgw']->db->insert($sql, $vendors, __LINE__, __FILE__);
 
-				$GLOBALS['phpgw']->db->query("UPDATE fm_vendor SET active = 0", __LINE__, __FILE__);
+				$GLOBALS['phpgw']->db->query("UPDATE fm_vendor SET active = 0 WHERE category != 2", __LINE__, __FILE__); // intern leverandør
 
 				$GLOBALS['phpgw']->db->query("UPDATE fm_vendor SET"
 					. " active = 1,"
@@ -597,7 +597,7 @@ XML;
 			);
 
 //			$soapUrl = "http://10.19.14.242/agresso-webservices/service.svc?QueryEngineService/QueryEngineV201101"; // asmx URL of WSDL
-			$soapUrl = "http://agrpweb.adm.bgo/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101";
+			$soapUrl = "https://agrpweb.adm.bgo/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101";
 
 			$ch = curl_init($soapUrl);
 

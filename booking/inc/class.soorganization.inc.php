@@ -77,11 +77,11 @@
 			{
 				return False;
 			}
-			return array('name' => $this->db->f('name', false),
-				'shortname' => $this->db->f('shortname', false),
-				'district' => $this->db->f('district', false),
-				'city' => $this->db->f('city', false),
-				'description' => $this->db->f('description', false));
+			return array('name' => $this->db->f('name', true),
+				'shortname' => $this->db->f('shortname', true),
+				'district' => $this->db->f('district', true),
+				'city' => $this->db->f('city', true),
+				'description' => $this->db->f('description', true));
 		}
 
 		function get_orgid( $orgnr, $customer_ssn = null )
@@ -120,7 +120,11 @@
 
 		function get_resource_activity( $resources )
 		{
-//            print_r($resources);
+			if(!$resources)
+			{
+				return array();
+			}
+
 			$resource_ids = implode(',', $resources);
 			$results = array();
 			$sql = "SELECT activity_id FROM bb_resource where id in (" . $resource_ids . ")";
@@ -149,9 +153,9 @@
 			$config->read();
 			$test = '';
 
-			$pools = $config->config_data['split_pool_ids'];
-			$halls = $config->config_data['split_pool2_ids'];
-			$meeting = $config->config_data['split_pool3_ids'];
+			$pools = !empty($config->config_data['split_pool_ids']) ? $config->config_data['split_pool_ids'] : '-1';
+			$halls = !empty($config->config_data['split_pool2_ids']) ? $config->config_data['split_pool2_ids'] : '-1';
+			$meeting = !empty($config->config_data['split_pool3_ids']) ? $config->config_data['split_pool3_ids'] : '-1';
 			$excluded = !empty($config->config_data['split_pool4_ids']) ? $config->config_data['split_pool4_ids'] : '-1';
 
 			if ($split)
@@ -251,6 +255,48 @@
 			{
 				$entity['organization_number'] = str_replace(" ", "", $entity['organization_number']);
 			}
+		}
+
+		function get_organization_info( $org_number)
+		{
+			$result = array();
+			array_set_default($result, 'name', '');
+			array_set_default($result, 'id', '');
+			$org_number = (int)$org_number;
+			if ($org_number)
+			{
+				$org_number = intval($org_number);
+				$q1 = "SELECT name, id FROM bb_organization WHERE organization_number='{$org_number}'";
+				$this->db->query($q1, __LINE__, __FILE__);
+				if($this->db->next_record())
+				{
+					$result['name'] = $this->db->f('name', true);
+					$result['id'] = $this->db->f('id');
+				}
+			}
+
+			return $result;
+		}
+
+		function get_organization_number( $org_id )
+		{
+			$result = array();
+			array_set_default($result, 'organization_number', '');
+			array_set_default($result, 'organization_name', '');
+			$org_id = (int)$org_id;
+			if ($org_id)
+			{
+				$org_id = intval($org_id);
+				$q1 = "SELECT organization_number, name FROM bb_organization WHERE id={$org_id}";
+				$this->db->query($q1, __LINE__, __FILE__);
+
+				if ($this->db->next_record())
+				{
+					$result['organization_number'] = $this->db->f('organization_number', true);
+					$result['organization_name'] = $this->db->f('name', true);
+				}
+			}
+			return $result;
 		}
 
 	}

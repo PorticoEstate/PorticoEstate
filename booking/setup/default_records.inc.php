@@ -327,7 +327,7 @@
 			'input_type'	=> 'listbox',
 			'name'			=> 'method',
 			'descr'			=> 'Export / import method',
-			'choice'		=> array('public360'),
+			'choice'		=> array('public360','gi_arkiv'),
 		//	'value'			=> '',
 		)
 	);
@@ -368,4 +368,168 @@
 			'choice'		=> array(1),
 		)
 	);
+
+	$receipt_section_gi_arkiv = $custom_config->add_section(array
+		(
+			'name' => 'gi_arkiv',
+			'descr' => 'Geointegrasjon arkiv'
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'webservicehost',
+			'descr'			=> 'webservicehost',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'username',
+			'descr'			=> 'username',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'password',
+			'name'			=> 'password',
+			'descr'			=> 'password',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'journalenhet',
+			'descr'			=> 'journalenhet',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'arkivnoekkel',
+			'descr'			=> 'arkivnoekkel',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'arkivnoekkel_text',
+			'descr'			=> 'arkivnoekkel_text',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'fagsystem',
+			'descr'			=> 'fagsystem',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'arkivdel',
+			'descr'			=> 'arkivdel',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'sakspart_rolle',
+			'descr'			=> 'sakspart_rolle',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'klientnavn',
+			'descr'			=> 'klientnavn',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'klientversjon',
+			'descr'			=> 'klientversjon',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'text',
+			'name'			=> 'referanseoppsett',
+			'descr'			=> 'referanseoppsett',
+			'value'			=> '',
+		)
+	);
+
+	$receipt = $custom_config->add_attrib(array
+		(
+			'section_id'	=> $receipt_section_gi_arkiv['section_id'],
+			'input_type'	=> 'listbox',
+			'name'			=> 'debug',
+			'descr'			=> 'debug',
+			'choice'		=> array(1),
+		)
+	);
+
+	$asyncservice = CreateObject('phpgwapi.asyncservice');
+
+	/**
+	 * Reservation
+	 */
+	$asyncservice->set_timer(
+		array('min' => "*/5"), 'booking_async_task_delete_expired_blocks', 'booking.async_task.doRun', array(
+				'task_class' => "booking.async_task_delete_expired_blocks")
+	);
+
+	/**
+	 * Billing
+	 */
+	$asyncservice->set_timer(
+		array('hour' => "*/1"), 'booking_async_task_update_reservation_state', 'booking.async_task.doRun', array(
+				'task_class' => "booking.async_task_update_reservation_state")
+	);
+
+	/**
+	 * Participants
+	 */
+	$asyncservice->set_timer(
+		array('day' => "*/1"), 'booking_async_task_delete_participants', 'booking.async_task.doRun', array(
+				'task_class' => "booking.async_task_delete_participants")
+	);
+
 

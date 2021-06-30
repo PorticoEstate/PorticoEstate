@@ -7,7 +7,7 @@
 				<div id="settings" class="booking-container">
 					<div class="pure-control-group">
 						<label for="field_user_can_delete_bookings">
-							<xsl:value-of select="php:function('lang', 'Frontend users can delete bookings/events')"/>
+							<xsl:value-of select="php:function('lang', 'Frontend users can delete bookings')"/>
 						</label>
 						<select id="field_user_can_delete_bookings" name="config_data[user_can_delete_bookings]" class="pure-input-1-2" >
 							<option value="no">
@@ -26,7 +26,7 @@
 					</div>
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="php:function('lang', 'Events is deleted from database')"/>
+							<xsl:value-of select="php:function('lang', 'Frontend users can delete events')"/>
 						</label>
 						<select id="field_user_can_delete_events" name="config_data[user_can_delete_events]" class="pure-input-1-2" >
 							<option value="no">

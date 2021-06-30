@@ -1,11 +1,15 @@
 <?php
 	phpgw::import_class('booking.socommon');
+	phpgw::import_class('booking.soorganization');
 
 	class booking_sobooking extends booking_socommon
 	{
+		protected $organization_so;
 
 		function __construct()
 		{
+			$this->organization_so = new booking_soorganization();
+
 			parent::__construct('bb_booking', array(
 				'id' => array('type' => 'int'),
 				'active' => array('type' => 'int', 'required' => true),
@@ -289,6 +293,123 @@
 			}
 			return $results;
 		}
+
+		function allocation_ids_for_organization($organization_id, $resource_id, $start, $end)
+		{
+			$organization_id = intval($organization_id);
+
+			if(is_array($resource_id))
+			{
+				$resource_ids = $resource_id;
+			}
+			else
+			{
+				$resource_ids = array((int)$resource_id);
+			}
+
+			$start = $start->format('Y-m-d H:i');
+			$end = $end->format('Y-m-d H:i');
+
+			$results = array();
+
+			$sql = "SELECT bb_allocation.id AS id"
+				. " FROM bb_allocation JOIN bb_allocation_resource ON (allocation_id=id AND resource_id IN (" . implode(',', $resource_ids) . ") )"
+				. " JOIN bb_resource as res ON ( res.id IN (" . implode(',', $resource_ids) . ") )"
+				. " JOIN bb_season ON (bb_allocation.season_id=bb_season.id AND bb_allocation.active=1)"
+				. " JOIN bb_building_resource ON bb_building_resource.resource_id = res.id "
+				. " WHERE bb_season.building_id=bb_building_resource.building_id"
+				. " AND bb_season.active=1"
+				. " AND bb_season.status='PUBLISHED'"
+				. " AND bb_allocation.organization_id=$organization_id"
+				. " AND ((bb_allocation.from_ >= '$start'"
+				. " AND bb_allocation.from_ < '$end') OR (bb_allocation.to_ > '$start'"
+				. " AND bb_allocation.to_ <= '$end') OR (bb_allocation.from_ < '$start' AND bb_allocation.to_ > '$end'))";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
+			}
+			return $results;
+		}
+
+		function booking_ids_for_organization($organization_group_id, $resource_id, $start, $end)
+		{
+			if(is_array($organization_group_id))
+			{
+				$organization_group_ids = $organization_group_id;
+			}
+			else
+			{
+				$organization_group_ids = array((int)$organization_group_id);
+			}
+
+			if(is_array($resource_id))
+			{
+				$resource_ids = $resource_id;
+			}
+			else
+			{
+				$resource_ids = array((int)$resource_id);
+			}
+
+			$start = $start->format('Y-m-d H:i');
+			$end = $end->format('Y-m-d H:i');
+
+			$results = array();
+			$sql = "SELECT bb_booking.id AS id"
+				. " FROM bb_booking JOIN bb_booking_resource ON (booking_id=id AND resource_id IN (" . implode(',', $resource_ids) . ") )"
+				. " JOIN bb_resource as res ON ( res.id IN (" . implode(',', $resource_ids) . ") )"
+				. " JOIN bb_season ON (bb_booking.season_id=bb_season.id AND bb_booking.active=1)"
+				. " JOIN bb_building_resource ON bb_building_resource.resource_id = res.id "
+				. " WHERE bb_season.building_id=bb_building_resource.building_id AND bb_season.active=1"
+				. " AND bb_season.status='PUBLISHED'"
+				. " AND bb_booking.group_id IN (" . implode(',', $organization_group_ids) . ")"
+				. " AND ((bb_booking.from_ >= '$start'"
+				. " AND bb_booking.from_ < '$end') OR (bb_booking.to_ > '$start'"
+				. " AND bb_booking.to_ <= '$end') OR (bb_booking.from_ < '$start'"
+				. " AND bb_booking.to_ > '$end'))";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
+			}
+			return $results;
+		}
+
+		function event_ids_for_organization($organization_id, $resource_id, $start, $end )
+		{
+			$organization_id = intval($organization_id);
+
+			$organization_info = $this->organization_so->get_organization_number($organization_id);
+
+			if(is_array($resource_id))
+			{
+				$resource_ids = $resource_id;
+			}
+			else
+			{
+				$resource_ids = array((int)$resource_id);
+			}
+			$start = $start->format('Y-m-d H:i');
+			$end = $end->format('Y-m-d H:i');
+
+			$results = array();
+			$this->db->query("SELECT id FROM bb_event"
+				//. " JOIN bb_event_resource ON (event_id=id AND resource_id IN (" . implode(',', $resource_ids) . ") )"
+				. " WHERE active=1"
+				. " AND (customer_organization_id = $organization_id OR customer_organization_number = '" . $organization_info['organization_number'] ."')"
+				. " AND ((from_ >= '$start' AND from_ < '$end')"
+				. " OR (to_ > '$start' AND to_ <= '$end') OR (from_ < '$start'"
+				. " AND to_ > '$end'))", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = $this->_unmarshal($this->db->f('id', false), 'int');
+			}
+			return $results;
+		}
+
 
 		function allocation_ids_for_building( $building_id, $start, $end )
 		{
@@ -587,6 +708,7 @@
 
 		function get_organization( $id )
 		{
+			$id = (int) $id;
 			$this->db->limit_query("SELECT name FROM bb_organization where id=(select organization_id from bb_group where id=($id))", 0, __LINE__, __FILE__, 1);
 			if (!$this->db->next_record())
 			{
@@ -597,7 +719,7 @@
 
 		function get_groups_of_organization( $grp_id )
 		{
-			$this->db->limit_query("select organization_id from bb_group where id=($grp_id)", 0, __LINE__, __FILE__, 1);
+			$this->db->limit_query("select organization_id from bb_group where id=" . (int)$grp_id, 0, __LINE__, __FILE__, 1);
 			if (!$this->db->next_record())
 			{
 				return False;
@@ -607,27 +729,27 @@
 
 		function get_resource( $id )
 		{
-			$this->db->limit_query("SELECT name FROM bb_resource where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			$this->db->limit_query("SELECT name FROM bb_resource where id=" . (int)$id, 0, __LINE__, __FILE__, 1);
 			if (!$this->db->next_record())
 			{
 				return False;
 			}
-			return $this->db->f('name', false);
+			return $this->db->f('name', true);
 		}
 
 		function get_building( $id )
 		{
-			$this->db->limit_query("SELECT name FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			$this->db->limit_query("SELECT name FROM bb_building where id=" . (int)$id, 0, __LINE__, __FILE__, 1);
 			if (!$this->db->next_record())
 			{
 				return False;
 			}
-			return $this->db->f('name', false);
+			return $this->db->f('name', true);
 		}
 
 		function get_season( $id )
 		{
-			$this->db->limit_query("SELECT id FROM bb_season where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			$this->db->limit_query("SELECT id FROM bb_season where id=" . (int)$id, 0, __LINE__, __FILE__, 1);
 			if (!$this->db->next_record())
 			{
 				return False;
@@ -638,7 +760,7 @@
 		public function get_group_contacts_of_organization( $id )
 		{
 			$results = array();
-			$sql = "SELECT bb_group_contact.id,bb_group_contact.group_id,bb_group_contact.email FROM bb_group,bb_group_contact WHERE bb_group.id=bb_group_contact.group_id AND bb_group.active = 1 AND bb_group.organization_id=(" . intval($id) . ")";
+			$sql = "SELECT bb_group_contact.id,bb_group_contact.group_id,bb_group_contact.email FROM bb_group,bb_group_contact WHERE bb_group.id=bb_group_contact.group_id AND bb_group.active = 1 AND bb_group.organization_id=(" . (int)$id . ")";
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
@@ -652,7 +774,7 @@
 		public function get_all_group_of_organization_from_groupid( $id )
 		{
 			$results = array();
-			$sql = "SELECT bb_group_contact.id,bb_group_contact.group_id,bb_group_contact.email FROM bb_group,bb_group_contact WHERE bb_group.id=bb_group_contact.group_id AND bb_group.active = 1 AND bb_group.organization_id=(select organization_id from bb_group where id=(" . intval($id) . "))";
+			$sql = "SELECT bb_group_contact.id,bb_group_contact.group_id,bb_group_contact.email FROM bb_group,bb_group_contact WHERE bb_group.id=bb_group_contact.group_id AND bb_group.active = 1 AND bb_group.organization_id=(select organization_id from bb_group where id=(" . (int)$id . "))";
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
@@ -671,7 +793,7 @@
 			while ($this->db->next_record())
 			{
 				$results[] = array('id' => $this->db->f('id', false),
-					'name' => $this->db->f('name', false));
+					'name' => $this->db->f('name', true));
 			}
 			return $results;
 		}
@@ -696,12 +818,12 @@
 			$table_name = $this->table_name;
 			$db = $this->db;
 			$ids = join(', ', array_map(array($this, 'select_id'), $bookings));
-			$sql = "UPDATE $table_name SET completed = 1 WHERE {$table_name}.id IN ($ids);";
-			$db->query($sql, __LINE__, __FILE__);
-
-			//Avoid double invoices
 			if ($ids)
 			{
+				$sql = "UPDATE $table_name SET completed = 1 WHERE {$table_name}.id IN ($ids);";
+				$db->query($sql, __LINE__, __FILE__);
+
+				//Avoid double invoices
 				$allocations = array();
 				$sql = "SELECT DISTINCT allocation_id FROM bb_booking WHERE id IN ($ids) AND allocation_id IS NOT NULL";
 				$db->query($sql, __LINE__, __FILE__);
@@ -836,16 +958,62 @@
 					'resource_id' => $this->db->f('resource_id', false),
 					'group_id' => $this->db->f('group_id', false),
 					'allocation_id' => $this->db->f('allocation_id', false),
-					'building_name' => $this->db->f('building_name', false),
-					'resource_name' => $this->db->f('resource_name', false),
-					'group_name' => $this->db->f('group_name', false),
-					'group_shortname' => $this->db->f('group_shortname', false),
+					'building_name' => $this->db->f('building_name', true),
+					'resource_name' => $this->db->f('resource_name', true),
+					'group_name' => $this->db->f('group_name', true),
+					'group_shortname' => $this->db->f('group_shortname', true),
 					'from_' => $this->db->f('from_', false),
 					'to_' => $this->db->f('to_', false),
 				);
 			}
 			return $results;
 		}
+
+		function get_all_allocations_and_events_for_resource($resource_id, $start, $end)
+		{
+			$start = $start->format('Y-m-d H:i');
+			$end = $end->format('Y-m-d H:i');
+
+			if(is_array($resource_id))
+			{
+				$resource_ids = $resource_id;
+			}
+			else
+			{
+				$resource_ids = array((int)$resource_id);
+			}
+
+			$results = array();
+
+			if(!$resource_ids)
+			{
+				return $results;
+			}
+
+			$sql = "SELECT from_, to_, resource_id"
+				. " FROM bb_allocation JOIN bb_allocation_resource ON (allocation_id=id AND resource_id IN (" . implode(',', $resource_ids) . ") )"
+				. " AND ((bb_allocation.from_ >= '$start'"
+				. " AND bb_allocation.from_ < '$end') OR (bb_allocation.to_ > '$start'"
+				. " AND bb_allocation.to_ <= '$end') OR (bb_allocation.from_ < '$start' AND bb_allocation.to_ > '$end'))"
+				. " UNION"
+				. " SELECT from_, to_, resource_id FROM bb_event"
+				. " JOIN bb_event_resource ON (event_id=id AND resource_id IN (" . implode(',', $resource_ids) . ") )"
+				. " WHERE active=1 AND ((from_ >= '$start' AND from_ < '$end')"
+				. " OR (to_ > '$start' AND to_ <= '$end') OR (from_ < '$start'"
+				. " AND to_ > '$end'))";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$results[] = array(
+					'from_' => $this->db->f('from_', false),
+					'to_' => $this->db->f('to_', false),
+					'resource_id' => $this->db->f('resource_id', false),
+				);
+			}
+			return $results;
+		}
+
 
 		function get_screen_event( $building_id, $start, $end, $resources = '' )
 		{
@@ -896,10 +1064,10 @@
 					'id' => $this->db->f('id', false),
 					'building_id' => $this->db->f('building_id', false),
 					'resource_id' => $this->db->f('resource_id', false),
-					'building_name' => $this->db->f('building_name', false),
+					'building_name' => $this->db->f('building_name', true),
 					'resource_id' => $this->db->f('resource_id', false),
-					'resource_name' => $this->db->f('resource_name', false),
-					'description' => $this->db->f('description', false),
+					'resource_name' => $this->db->f('resource_name', true),
+					'description' => $this->db->f('description', true),
 					'from_' => $this->db->f('from_', false),
 					'to_' => $this->db->f('to_', false),
 				);
@@ -909,6 +1077,7 @@
 
 		function get_ordered_costs( $id )
 		{
+			$id = (int) $id;
 			$results = array();
 			$this->db->query("SELECT * FROM bb_booking_cost WHERE booking_id=($id) ORDER BY time DESC", __LINE__, __FILE__);
 			while ($this->db->next_record())

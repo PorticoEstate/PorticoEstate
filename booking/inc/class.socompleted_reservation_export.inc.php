@@ -264,7 +264,7 @@
 			}
 
 			$reservations = $this->completed_reservation_so->read(array('filters' => $filters,
-				'results' => 'all', 'sort' => 'customer_type,customer_identifier_type,customer_organization_number,customer_ssn,to_',
+				'results' => 'all', 'sort' => 'customer_type,customer_identifier_type,customer_organization_number,customer_number,customer_ssn,to_',
 				'dir' => 'asc'));
 
 			if (count($reservations['results']) > 0)
@@ -1017,39 +1017,46 @@
 
 			$columns[] = 'amount';
 			$columns[] = 'art_descr';
-			$columns[] = 'art';
+			$columns[] = 'article';
 			if (isset($this->config_data['dim_1']))
 			{
-				$columns[] = $this->config_data['dim_1'];
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_1']);
 			}
 			if (isset($this->config_data['dim_2']))
 			{
-				$columns[] = $this->config_data['dim_2'];
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_2']);
 			}
 			if (isset($this->config_data['dim_3']))
 			{
-				$columns[] = $this->config_data['dim_3'];
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_3']);
 			}
 			if (isset($this->config_data['dim_4']))
 			{
-				$columns[] = $this->config_data['dim_4'];
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_4']);
 			}
-			$columns[] = 'article';
 			if (isset($this->config_data['dim_5']))
 			{
-				$columns[] = $this->config_data['dim_5'];
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_5']);
 			}
 			if (isset($this->config_data['dim_value_1']))
 			{
-				$columns[] = $this->config_data['dim_value_1'];
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_value_1']);
+			}
+			if (isset($this->config_data['dim_value_2']))
+			{
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_value_2']);
+			}
+			if (isset($this->config_data['dim_value_3']))
+			{
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_value_3']);
 			}
 			if (isset($this->config_data['dim_value_4']))
 			{
-				$columns[] = $this->config_data['dim_value_4'];
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_value_4']);
 			}
 			if (isset($this->config_data['dim_value_5']))
 			{
-				$columns[] = $this->config_data['dim_value_5'];
+				$columns[] = iconv("utf-8", "ISO-8859-1//TRANSLIT", $this->config_data['dim_value_5']);
 			}
 			$columns[] = 'ext_ord_ref';
 			$columns[] = 'invoice_instruction';
@@ -1067,7 +1074,15 @@
 				$order_id = $sequential_number_generator->increment()->get_current();
 				$export_info[] = $this->create_export_item_info($reservation, $order_id);
 
-				$reservation = array_map('utf8_decode', $reservation);
+//				$reservation = array_map('utf8_decode', $reservation);
+
+				foreach ($reservation as $key => &$value)
+				{
+					if(!is_array($value))
+					{
+						$value = iconv("utf-8", "ISO-8859-1//TRANSLIT", $value);
+					}
+				}
 
 				$item = array();
 				$item['amount'] = $this->format_cost($reservation['cost']); //Feltet viser netto totalbeløp i firmavaluta for hver ordrelinje. Brukes hvis amount_set er 1. Hvis ikke, brukes prisregisteret (*100 angis). Dersom beløpet i den aktuelle valutaen er angitt i filen, vil beløpet beregnes på grunnlag av beløpet i den aktuelle valutaen ved hjelp av firmaets valutakurs-oversikt.
@@ -1105,6 +1120,14 @@
 				if (isset($this->config_data['dim_value_1']))
 				{
 					$item['dim_value_1'] = str_pad(strtoupper(substr($account_codes['unit_number'], 0, 12)), 12, ' ');
+				}
+				if (isset($this->config_data['dim_value_2']))
+				{
+					$item['dim_value_2'] = str_pad(strtoupper(substr($account_codes['dim_value_2'], 0, 12)), 12, ' ');
+				}
+				if (isset($this->config_data['dim_value_3']))
+				{
+					$item['dim_value_3'] = str_pad(strtoupper(substr($account_codes['dim_value_3'], 0, 12)), 12, ' ');
 				}
 
 				if (isset($this->config_data['dim_value_4']))
@@ -1168,7 +1191,8 @@
 					// Quote character is present in field
 					$quote_field = true;
 				}
-				elseif (
+				elseif
+				(
 					strpos($fields[$i], "\n") !== false || strpos($fields[$i], "\r") !== false
 				)
 				{
@@ -1210,7 +1234,7 @@
 
 			if (!empty($this->config_data['voucher_client']))
 			{
-				$client_id = substr(strtoupper($this->config_data['voucher_client']), 0, 2);
+				$client_id = strtoupper($this->config_data['voucher_client']);
 			}
 			else
 			{
@@ -1346,20 +1370,20 @@
 
 					$header = array();
 					
-					$header['AntallDagerForfall'] = 30; //int
+//					$header['AntallDagerForfall'] = 30; //int
 //					$header['Avtalenr'] = ''; //int
 //					$header['AvtaltForfallFast'] = ''; //int
-					$header['AvtaltForfallTilfeldig'] = 30; //int
-					$header['Beregningsmodus'] = 'B';//char(3)
+//					$header['AvtaltForfallTilfeldig'] = 30; //int
+//					$header['Beregningsmodus'] = 'B';//char(3)
 //					$header['Bestillingsnr'] = '';
 //					$header['Blankettbehandling'] = '';//char(3)
 //					$header['Blankettekstnr'] = ''; //int
 					$header['Blanketttype'] = 'F';//char(1) F = Faktura
 					$header['datoendr'] = date('d.m.Y');//dato 31.01.1997
 					$header['Deresref'] = $ext_ord_ref;//char(30)
-					$header['Fagsystemkundeid'] = $client_id;//char(128)
-					$header['Fakturadato'] = date('d.m.Y');
-					$header['Fakturahyppighet'] = 'MND';//char(3)
+					$header['Fagsystemkundeid'] = $kundenr;
+//					$header['Fakturadato'] = date('d.m.Y');
+//					$header['Fakturahyppighet'] = 'MND';//char(3)
 
 
 					$line_no = 1;
@@ -1383,7 +1407,7 @@
 					$fakturalinje['Avgift']	 = '';  //Beløp
 					$fakturalinje['BalanseDim']	 = '';  //char(8)
 					$fakturalinje['enhetspris']	 = $reservation['cost'];  //Beløp
-					$fakturalinje['Fagsystemkontoid']	 = '';  //char(30)
+					$fakturalinje['Fagsystemkontoid']	 = '';  //char(30) ???
 					$fakturalinje['Fagsystemvareid']	 = '';  //char(30)
 					$fakturalinje['FeiletLinjeFelt']	 = '';  //Char
 					$fakturalinje['FormalDim']	 = '';  //char(8)
@@ -1406,7 +1430,7 @@
 						$fakturalinje['ObjektDim'] = strtoupper(substr($account_codes['object_number'], 0, 8));//char(8)
 					}
 //					$fakturalinje['Oppdateringsresultat']	 = '';  //string
-//					$fakturalinje['orgkode']	 = '';  //char(8)
+					$fakturalinje['orgkode']	 = '';  //char(8)
 //					$fakturalinje['OrgvareGUID']	 = '';  //
 //					$fakturalinje['PrisGUID']	 = '';  //
 //					$fakturalinje['rabatt']	 = '';  //Desimal
@@ -1421,7 +1445,7 @@
 //					$fakturalinje['VareGuid']	 = '';  //
 					$fakturalinje['Varekode']	 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
 
-//					$fakturalinje['Fakturaorgkode']	 = '';  //
+					$fakturalinje['Fakturaorgkode']	 = '';  //
 
 					//Topptekst til faktura, knyttet mot fagavdeling
 					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
@@ -1438,12 +1462,12 @@
 //					$fakturalinje['InitEndr']	 = '';  //
 //					$fakturalinje['Kontaktpersoner']	 = '';  //
 
-					$fakturalinje['Kundenr']	 = $stored_header['kundenr'];  //
+//					$fakturalinje['Kundenr']	 = $stored_header['kundenr'];  //
 //					$fakturalinje['Oppdateringsresultat']	 = '';  //
 //					$fakturalinje['RegningsmottakerFagsystemkundeid']	 = '';  //char(128)
 //					$fakturalinje['Regningsmottakerkundenr']	 = '';  //Int
 //					$fakturalinje['Samlefakturasortering']	 = '';  //
-//					$fakturalinje['Systemid']	 = '';  //
+					$fakturalinje['Systemid']	 = $client_id;  //
 //					$fakturalinje['tidendr']	 = '';  //tid
 //					$fakturalinje['VaremottakerFagsystemkundeid']	 = '';  //char(128)
 //					$fakturalinje['Varemottakerkundenr']	 = '';  //int
@@ -1540,7 +1564,8 @@
 					$fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description'] . ' - ' . $reservation['description']), 0, 225);
 					$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
 					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
-					$fakturalinje['Kundenr']			 = $stored_header['kundenr'];
+//					$fakturalinje['Kundenr']			 = $stored_header['kundenr'];
+					$fakturalinje['Systemid']	 = $client_id;  //
 
 					$fakturalinjer[$check_customer_identifier][] = $fakturalinje;
 

@@ -112,7 +112,7 @@
 			while ($this->db->next_record())
 			{
 				$id = $this->db->f('id');
-				$activitylist[$id] = array('id' => $id, 'name' => $this->db->f('name'), 'active' => $this->db->f('active'));
+				$activitylist[$id] = array('id' => $id, 'name' => $this->db->f('name',true), 'active' => $this->db->f('active'));
 			}
 			return $activitylist;
 		}

@@ -358,15 +358,18 @@
 				$this->db->transaction_begin();
 			}
 
+			$sql = "DELETE FROM bb_document_application WHERE owner_id=" . (int) $id;
+			$this->db->query($sql, __LINE__, __FILE__);
+
 			$tablesuffixes = array('agegroup', 'comment', 'date', 'resource', 'targetaudience');
 			foreach ($tablesuffixes as $suffix)
 			{
 				$table_name = sprintf('%s_%s', $this->table_name, $suffix);
-				$sql = "DELETE FROM $table_name WHERE application_id=$id";
+				$sql = "DELETE FROM $table_name WHERE application_id=" . (int) $id;
 				$this->db->query($sql, __LINE__, __FILE__);
 			}
 			$table_name = $this->table_name;
-			$sql = "DELETE FROM $table_name WHERE id=$id";
+			$sql = "DELETE FROM $table_name WHERE id=" . (int) $id;
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			if (!$this->global_lock)
@@ -453,6 +456,69 @@
 		{
 			$external_archive_key = $this->db->db_addslashes($external_archive_key);
 			return $this->db->query("UPDATE bb_application SET external_archive_key = '{$external_archive_key}' WHERE id =" . (int)$id, __LINE__, __FILE__);
+		}
+		function check_booking_limit($session_id, $resource_id, $ssn, $booking_limit_number_horizont,$booking_limit_number )
+		{
+			if(!$ssn || !$booking_limit_number_horizont || ! $booking_limit_number)
+			{
+				return false;
+			}
+			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+
+			$now = new DateTime();
+
+			try
+			{
+				$DateTimeZone	 = new DateTimeZone($timezone);
+				$now->setTimezone($DateTimeZone);
+			}
+			catch (Exception $ex)
+			{
+			}
+
+
+			$limit_number_horizont_days = floor($booking_limit_number_horizont / 2);
+			$limit_number_horizont_hours = floor((($booking_limit_number_horizont / 2) - $limit_number_horizont_days) * 10)*24;
+
+			$future_limit_half = clone ($now);
+			$future_limit_full = clone ($now);
+			$future_limit_full->modify("+{$booking_limit_number_horizont} days");
+
+			$future_limit_half->modify("+{$limit_number_horizont_days} days");
+			$future_limit_half->modify("+{$limit_number_horizont_hours} hours");
+			$future_limit_date_full = $future_limit_full->format('Y-m-d H:i');
+			$future_limit_date_half = $future_limit_half->format('Y-m-d H:i');
+
+			$history_limit_half = clone ($now);
+			$history_limit_full = clone ($now);
+			$history_limit_full->modify("-{$booking_limit_number_horizont} days");
+			$history_limit_half->modify("-{$limit_number_horizont_days} days");
+			$history_limit_half->modify("-{$limit_number_horizont_hours} hours");
+			$history_limit_date_full = $history_limit_half->format('Y-m-d H:i');
+			$history_limit_date_half = $history_limit_half->format('Y-m-d H:i');
+
+			$resource_id = (int) $resource_id;
+
+			$sql = "SELECT count(*) as cnt FROM"
+				. " (SELECT bb_application.id FROM bb_application"
+				. " JOIN bb_application_date ON bb_application.id = bb_application_date.application_id"
+				. " JOIN bb_application_resource"
+				. " ON bb_application.id = bb_application_resource.application_id AND bb_application_resource.resource_id = {$resource_id}"
+				. " WHERE (customer_ssn = '{$ssn}' OR (status = 'NEWPARTIAL1' AND session_id = '$session_id'))"
+				. " AND ((to_ > '{$history_limit_date_half}' AND from_ < '$future_limit_date_half')"
+				. " OR to_ > '{$history_limit_date_full}'"
+				. " OR from_ < '$future_limit_date_full')) as t";
+
+			$this->db->query($sql,__LINE__, __FILE__);
+			$this->db->next_record();
+			$cnt =  (int)$this->db->f('cnt');
+
+			$limit_reached = 0;
+			if($cnt > $booking_limit_number)
+			{
+				$limit_reached = $cnt;
+			}
+			return $limit_reached;
 		}
 	}
 

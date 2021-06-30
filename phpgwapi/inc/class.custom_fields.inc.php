@@ -981,14 +981,13 @@
 
 			if ( isset($attrib['delete_choice']) && is_array($attrib['delete_choice']) && !$doubled )
 			{
-				foreach ($attrib['delete_choice'] as $choice_id)
+				$replacement_id = !empty($attrib['replacement_id']) ? (int) $attrib['replacement_id'] : null;
+				if(!$replacement_id || (!in_array($replacement_id, $attrib['delete_choice'])))
 				{
-					$choice_id = (int) $choice_id;
-					$sql = "DELETE FROM phpgw_cust_choice"
-						. " WHERE location_id = {$location_id}"
-							. " AND attrib_id = {$attrib_id}"
-							. " AND id = {$choice_id}";
-					$this->_db->query($sql, __LINE__, __FILE__);
+					foreach ($attrib['delete_choice'] as $choice_id)
+					{
+						$this->delete_choice($location_id,$attrib_id,$choice_id, $replacement_id);
+					}
 				}
 			}
 
@@ -1058,8 +1057,18 @@
 			}
 		}
 
-		public function delete_choice( $location_id, $attrib_id, $choice_id )
+		public function delete_choice( $location_id, $attrib_id, $choice_id, $replacement_id = null )
 		{
+			
+			/**
+			 * Can not delete, and replace with the deleted
+			 */
+
+			 if($replacement_id && ((int)$replacement_id == (int)$choice_id))
+			 {
+				 return;
+			 }
+			
 			/**
 			 * Perform check if $choice_id is used anywhere before deleting it
 			 */
@@ -1077,10 +1086,20 @@
 					. " AND (NULLIF(json_representation->>'{$column_name}', '')::text IS NOT NULL"
 					. " AND json_representation->>'{$column_name}' = '" . (int)$choice_id . "')";
 				$this->_db->query($sql, __LINE__, __FILE__);
+				$this->_db->next_record();
+				$_test_for_hit = $this->_db->f('location_id');
 
-				if($this->_db->next_record())
+				if($_test_for_hit && !$replacement_id)
 				{
 					return false;
+				}
+				else if ($_test_for_hit && $replacement_id)
+				{
+					$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{{$column_name}}', '\"{$replacement_id}\"', true)"
+					. " WHERE location_id = " . (int) $location_id
+					. " AND (NULLIF(json_representation->>'{$column_name}', '')::text IS NOT NULL"
+					. " AND json_representation->>'{$column_name}' = '" . (int)$choice_id . "')";
+					$this->_db->query($sql, __LINE__, __FILE__);
 				}
 
 			}
@@ -1100,11 +1119,18 @@
 				$this->_db->query($sql, __LINE__, __FILE__);
 
 				$this->_db->next_record();
+				$_test_for_hit = (int)$this->_db->f('cnt');
 				
-				if((int)$this->_db->f('cnt') > 0)
+				if($_test_for_hit && !$replacement_id)
 				{
 					return false;
 				}
+				else if ($_test_for_hit && $replacement_id)
+				{
+					$sql = "UPDATE {$tbl} SET  {$column_name} = '" . (int)$replacement_id . "' WHERE {$column_name} = '" . (int)$choice_id . "'";
+					$this->_db->query($sql, __LINE__, __FILE__);
+				}
+
 			}
 
 			$sql = "DELETE FROM phpgw_cust_choice"
@@ -1700,7 +1726,7 @@
 			{
 				$children[] = array(
 					'id'		=> "ajson{$this->node_id}",
-					'db_id'		=> $id,
+					'db_id'		=> $this->_db2->f('id'),
 					'parent'	=> $parent,
 					'parent_id'	=> $this->_db2->f('parent_id'),
 					'text'	=> $this->_db2->f('name',true),
@@ -1787,6 +1813,11 @@
 		 */
 		public function get_table_def($table = '', $table_def = array())
 		{
+			if(!isset($GLOBALS['phpgw_setup']))
+			{
+				$GLOBALS['phpgw_setup'] = new stdClass();//CreateObject('phpgwapi.setup', True, True);
+			}
+
 			if( !$GLOBALS['phpgw_setup']->oProc
 				|| !is_object($GLOBALS['phpgw_setup']->oProc) )
 			{
@@ -1796,6 +1827,7 @@
 			$GLOBALS['phpgw_setup']->oProc->m_odb->fetchmode = 'BOTH';
 
 			$setup = createobject('phpgwapi.setup_process');
+
 			$tableinfo = $setup->sql_to_array($table);
 
 			$fd = '$fd = array(' . str_replace("\t",'',$tableinfo[0]) .');';

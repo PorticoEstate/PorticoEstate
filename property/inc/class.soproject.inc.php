@@ -3194,10 +3194,19 @@
 					continue;
 				}
 
-				$this->db->query("SELECT status, vendor_id FROM fm_workorder WHERE id = '{$id}'", __LINE__, __FILE__);
+				$this->db->query("SELECT fm_workorder.status, fm_workorder.vendor_id, canceled"
+					. " FROM fm_workorder"
+					. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+					. " WHERE fm_workorder.id = '{$id}'", __LINE__, __FILE__);
 				$this->db->next_record();
 				$old_status	 = $this->db->f('status');
 				$vendor_id	 = $this->db->f('vendor_id');
+				$canceled	 = $this->db->f('canceled');
+
+				if($canceled)
+				{
+					continue;
+				}
 
 				if ($old_status != $status_new)
 				{

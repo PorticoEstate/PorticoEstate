@@ -504,8 +504,8 @@ Delete allocation	booking	en	Delete allocation
 Delete allocations	booking	en	Delete allocations
 Delete booking	booking	en	Delete booking
 Delete bookings	booking	en	Delete bookings
-Allocations that will be deleted	booking	en	Allocations that will be deleted
-Allocations  with existing bookings (%1)	booking	en	Allocations  with existing bookings (%1)
+Allocations that will be deleted (%1)	booking	en	Allocations that will be deleted (%1)
+Allocations with existing bookings (%1)	booking	en	Allocations with existing bookings (%1)
 Delete allocation also	booking	en	Delete allocation also
 Bookings to be deleted	booking	en	Bookings to be deleted
 Allocations that is going to be deleted	booking	en	Allocations that is going to be deleted
@@ -599,8 +599,8 @@ Booking Canceled Subject	booking	en	Booking canceled subject
 Mail for booking canceled	booking	en	Mail for booking canceled
 Allocation Canceled Subject	booking	en	Allocation canceled subject
 Mail for allocation canceled	booking	en	Mail for allocation canceled
-Frontend users can delete bookings/events	booking	en	Frontend users can delete bookings/events
-Events is deleted from database	booking	en	Events is deleted from database
+Frontend users can delete bookings	booking	en	Frontend users can delete bookings
+Frontend users can delete events	booking	en	Frontend users can delete events
 Frontend users can delete allocations	booking	en	Frontend users can delete allocations
 Activate extra kalendar field on building	booking	en	Activate extra kalendar field on building
 Ids that should be included in the calendar	booking	en	Ids that should be included in the calendar
@@ -841,3 +841,4 @@ external archive key	booking	en	External archive key
 transfer case to external system?	booking	en	Transfer case to external system?
 register participants	booking	en	Register participants
 capacity	booking	en	Capacity
+enable upload attachment	booking en	Enable upload attachment

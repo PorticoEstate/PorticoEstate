@@ -216,10 +216,11 @@
 							</label>
 						</div>
 
-						<textarea id="field_description" style="resize: none;" class="form-input" rows="3" name="description">
-						<xsl:attribute name="placeholder">
-							<xsl:value-of select="php:function('lang', 'write here...')" />
-						</xsl:attribute>
+						<textarea id="field_description" style="resize: none;" class="form-input" rows="3" name="description" value="{application/description}">
+							<xsl:attribute name="placeholder">
+								<xsl:value-of select="php:function('lang', 'write here...')" />
+							</xsl:attribute>
+							<xsl:value-of select="application/description"/>
 						</textarea>
 					</div>
 
@@ -272,32 +273,34 @@
 						</div>
 					</div>
 					<!-- Upload Attachment -->
-					<div id="attachment" class="form-group">
-						<div class="textContainer">
-							<label>
-								<xsl:value-of select="php:function('lang', 'Upload Attachment')" />
-							</label>
-							<label>
-								<xsl:value-of select="php:function('lang', 'optional')" />
-							</label>
-						</div>
-					
-						<div id="attachment-upload">
-							<label for="field_name" class="upload-button">
-								<xsl:value-of select="php:function('lang', 'Upload')" />
-							</label>
+					<xsl:if test="config/enable_upload_attachment =1">
+						<div id="attachment" class="form-group">
+							<div class="textContainer">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Upload Attachment')" />
+								</label>
+								<label>
+									<xsl:value-of select="php:function('lang', 'optional')" />
+								</label>
+							</div>
+						
+							<div id="attachment-upload">
+								<label for="field_name" class="upload-button">
+									<xsl:value-of select="php:function('lang', 'Upload')" />
+								</label>
+								
+							</div>
+							<div id="show-attachment">
+								<span id="field_name_input"></span>
+								<a style="display: none" id="attachment-remove">Fjern Vedlegg</a>
+								<!-- Input -->
+								<input name="name" id='field_name' type='file' style="display: none" accept=".jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.txt,.pdf,.odt,.ods">
+								</input>
+							</div>
+							<!-- Remove Attachment -->
 							
 						</div>
-						<div id="show-attachment">
-							<span id="field_name_input"></span>
-							<a style="display: none" id="attachment-remove">Fjern Vedlegg</a>
-							<!-- Input -->
-							<input name="name" id='field_name' type='file' style="display: none" accept=".jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.txt,.pdf,.odt,.ods">
-							</input>
-						</div>
-						<!-- Remove Attachment -->
-						
-					</div>
+					</xsl:if>
 
 
 					<!-- Terms and Conditions -->
@@ -357,5 +360,6 @@
 		var errorAcceptedDocs = '<xsl:value-of select="config/application_terms2"/>';
 		var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
 		var direct_booking = '<xsl:value-of select="direct_booking"/>';
+		var building_id = '<xsl:value-of select="application/building_id"/>';
 	</script>
 </xsl:template>

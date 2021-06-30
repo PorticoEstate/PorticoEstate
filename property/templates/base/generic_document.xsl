@@ -127,7 +127,7 @@
 						<xsl:choose>
 							<xsl:when test="editable = 1">
 								<input id="report_date" name='values[report_date]' type="text" value="{document/report_date}"
-										   data-validation="date" data-validation-format="dd/mm/yyyy"/>
+										   data-validation="date" data-validation-format="{data_validation_format}"/>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:value-of select="document/report_date"/>

@@ -115,6 +115,11 @@
 							'label' => lang('Building')
 						),
 						array(
+							'key' => 'resource_names',
+							'label' => lang('resources'),
+							'sortable' => false,
+						),
+						array(
 							'key' => 'from_',
 							'label' => lang('From')
 						),
@@ -198,6 +203,21 @@
 				$event['from_'] = pretty_timestamp($event['from_']);
 				$event['to_'] = pretty_timestamp($event['to_']);
 				$event['cost_history'] = count($this->bo->so->get_ordered_costs($event['id']));
+
+				$resources = $this->resource_bo->so->read(array(
+								'sort'    => 'sort',
+								'results' =>'all',
+								'filters' => array('id' => $event['resources']), 'results' =>'all'
+					));
+				$resource_names = array();
+				if($resources['results'])
+				{
+					foreach ($resources['results'] as $resource)
+					{
+						$resource_names[] = $resource['name'];
+					}
+				}
+				$event['resource_names'] = implode(", " , $resource_names);
 			}
 
 			array_walk($events["results"], array($this, "_add_links"), "booking.uievent.edit");
@@ -637,7 +657,7 @@
 			{
 				try
 				{
-					$send->msg('email', $receiver, $subject, $body, '', '', '', $from, 'AktivKommune', 'html');
+					return $send->msg('email', $receiver, $subject, $body, '', '', '', $from, 'AktivKommune', 'html');
 				}
 				catch (Exception $e)
 				{
@@ -839,11 +859,14 @@
 								$body = "<p>" . $config->config_data['event_mail_conflict_contact_active_collision'] . "<br />\n" . phpgw::get_var('mail','html', 'POST') . "\n";
 								$body .= '<br /><a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . '</a></p>';
 								$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
-								$mail_sendt_to = '';
+								$sendt = 0;
+								$mail_sendt_to = [];
 								foreach (array_keys($maildata) as $mail)
 								{
 									if ($mail == '')
+									{
 										continue;
+									}
 									usort($maildata[$mail], function($a, $b)
 									{
 										$adate = explode('-', $a['date']);
@@ -855,17 +878,18 @@
 
 									$mailbody = '';
 									$comment_text_log = "Reserverasjoner som har blitt overskrevet: \n";
-									$mail_sendt_to = $mail_sendt_to . ' ' . $mail;
+									$mail_sendt_to[] = $mail;
 									foreach ($maildata[$mail] as $data)
 									{
 										$comment_text_log .= $data['date'] . ', ' . $data['building'] . ', ' . $data['resource'] . ', Kl. ' . $data['start'] . ' - ' . $data['end'] . " \n";
 									}
 									$mailbody .= $body . "<pre>" . $comment_text_log . "</pre>";
+									$sendt++;
 									$this->send_mailnotification($mail, $subject, $mailbody);
 								}
-								if (strpos($mail_sendt_to, '@') !== False)
+								if ($sendt)
 								{
-									$comment = "<p>Melding om konflikt er sendt til" . $mail_sendt_to . "<br />\n" . phpgw::get_var('mail','html', 'POST') . "</p>";
+									$comment = "<p>Melding om konflikt er sendt til" . implode(', ', $mail_sendt_to) . "<br />\n" . phpgw::get_var('mail','html', 'POST') . "</p>";
 									$this->add_comment($event, $comment);
 								}
 							}
@@ -936,41 +960,41 @@
 								$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
 
 								$sendt = 0;
-								$mail_sendt_to = '';
+								$mail_sendt_to = [];
 								if ($event['contact_email'])
 								{
 									$sendt++;
-									$mail_sendt_to = $mail_sendt_to . ' ' . $event['contact_email'];
+									$mail_sendt_to[] = $event['contact_email'];
 									$this->send_mailnotification($event['contact_email'], $subject, $body);
 								}
 								if ($building_info['email'])
 								{
 									$sendt++;
-									$mail_sendt_to = $mail_sendt_to . ' ' . $building_info['email'];
+									$mail_sendt_to[] = $building_info['email'];
 									$this->send_mailnotification($building_info['email'], $subject, $body);
 								}
 								if ($building_info['tilsyn_email'])
 								{
 									$sendt++;
-									$mail_sendt_to = $mail_sendt_to . ' ' . $building_info['tilsyn_email'];
+									$mail_sendt_to[] = $building_info['tilsyn_email'];
 									$this->send_mailnotification($building_info['tilsyn_email'], $subject, $body);
 								}
 								if ($building_info['tilsyn_email2'])
 								{
 									$sendt++;
-									$mail_sendt_to = $mail_sendt_to . ' ' . $building_info['tilsyn_email2'];
-									$this->send_mailnotification($building_info['sendtorbuilding_email2'], $subject, $body);
+									$mail_sendt_to[] = $building_info['tilsyn_email2'];
+									$this->send_mailnotification($building_info['tilsyn_email2'], $subject, $body);
 								}
 								if ($_POST['sendtorbuilding_email1'])
 								{
 									$sendt++;
-									$mail_sendt_to = $mail_sendt_to . ' ' . $_POST['sendtorbuilding_email1'];
+									$mail_sendt_to[] = $_POST['sendtorbuilding_email1'];
 									$this->send_mailnotification($_POST['sendtorbuilding_email1'], $subject, $body);
 								}
 								if ($_POST['sendtorbuilding_email2'])
 								{
 									$sendt++;
-									$mail_sendt_to = $mail_sendt_to . ' ' . $_POST['sendtorbuilding_email2'];
+									$mail_sendt_to[] = $_POST['sendtorbuilding_email2'];
 									$this->send_mailnotification($_POST['sendtorbuilding_email2'], $subject, $body);
 								}
 								if ($sendt <= 0)
@@ -980,7 +1004,7 @@
 								else
 								{
 									$comment_text_log = phpgw::get_var('mail','string', 'POST');
-									$comment = 'Melding om endring er sendt til ansvarlig for bygg: ' . $mail_sendt_to . '<br />' . $comment_text_log;
+									$comment = 'Melding om endring er sendt til ansvarlig for bygg: ' . implode(', ', $mail_sendt_to) . '<br />' . $comment_text_log;
 									$this->add_comment($event, $comment);
 								}
 							}
@@ -1016,35 +1040,35 @@
 							$body = html_entity_decode($body);
 
 							$sendt = 0;
-							$mail_sendt_to = '';
+							$mail_sendt_to = [];
 							if ($building_info['email'])
 							{
 								$sendt++;
-								$mail_sendt_to = $mail_sendt_to . ' ' . $building_info['email'];
+								$mail_sendt_to[] = $building_info['email'];
 								$this->send_mailnotification($building_info['email'], $subject, $body);
 							}
 							if ($building_info['tilsyn_email'])
 							{
 								$sendt++;
-								$mail_sendt_to = $mail_sendt_to . ' ' . $building_info['tilsyn_email'];
+								$mail_sendt_to[] = $building_info['tilsyn_email'];
 								$this->send_mailnotification($building_info['tilsyn_email'], $subject, $body);
 							}
 							if ($building_info['tilsyn_email2'])
 							{
 								$sendt++;
-								$mail_sendt_to = $mail_sendt_to . ' ' . $building_info['tilsyn_email2'];
+								$mail_sendt_to[] = $building_info['tilsyn_email2'];
 								$this->send_mailnotification($building_info['tilsyn_email2'], $subject, $body);
 							}
 							if ($_POST['sendtorbuilding_email1'])
 							{
 								$sendt++;
-								$mail_sendt_to = $mail_sendt_to . ' ' . $_POST['sendtorbuilding_email1'];
+								$mail_sendt_to[] = $_POST['sendtorbuilding_email1'];
 								$this->send_mailnotification($_POST['sendtorbuilding_email1'], $subject, $body);
 							}
 							if ($_POST['sendtorbuilding_email2'])
 							{
 								$sendt++;
-								$mail_sendt_to = $mail_sendt_to . ' ' . $_POST['sendtorbuilding_email2'];
+								$mail_sendt_to[] = $_POST['sendtorbuilding_email2'];
 								$this->send_mailnotification($_POST['sendtorbuilding_email2'], $subject, $body);
 							}
 							if ($sendt <= 0)
@@ -1053,7 +1077,7 @@
 							}
 							else
 							{
-								$comment = '<span style="color:red;">Dette arrangemenet er kanselert</span>. Denne er sendt til ' . $mail_sendt_to . '<br />' . phpgw::get_var('mail','string', 'POST');
+								$comment = '<span style="color:red;">Dette arrangemenet er kanselert</span>. Denne er sendt til ' . implode(', ',$mail_sendt_to) . '<br />' . phpgw::get_var('mail','string', 'POST');
 								$this->add_comment($event, $comment);
 							}
 //						$receipt = $this->bo->update($event);

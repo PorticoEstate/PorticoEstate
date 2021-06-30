@@ -504,8 +504,8 @@ Delete allocation	booking	no	Slett tildeling
 Delete allocations	booking	no	Slett tildelinger
 Delete booking	booking	no	Slett interntildeling
 Delete bookings	booking	no	Slett interntildelinger
-Allocations that will be deleted	booking	no	Tildelinger som vil bli slettet
-Allocations  with existing bookings (%1)	booking	no	Tildelinger med eksisterende interntildelinger (%1)
+Allocations that will be deleted (%1)	booking	no	Tildelinger som vil bli slettet (%1)
+Allocations with existing bookings (%1)	booking	no	Tildelinger med eksisterende interntildelinger (%1)
 Delete allocation also	booking	no	Slett underliggende interntildelinger
 Bookings to be deleted	booking	no	Booking for sletting
 Allocations that is going to be deleted	booking	no	Tildelinger for sletting
@@ -520,7 +520,9 @@ Show applications	booking	no	Vis søknader
 Show messages	booking	no	Vis meldinger
 Internal account	booking	no	Intern kontering
 Internal customer output format	booking	no	Intern kunde eksport format
-Internal_account_helptext	booking	no	Data som brukes for faktura eksport av interne kunder
+Internal_account_helptext	booking	no	Data som brukes for fakturaeksport av interne kunder
+external_account_helptext	booking	no	Data som brukes for fakturaeksport av eksterne kunder
+export_help_text	booking	no	Data som brukes for filoverføring
 searchfield	booking	no	Fritekstsøk
 Backend	booking	no	Backend
 Documentation	booking	no	Dokumentasjon
@@ -599,8 +601,8 @@ Booking Canceled Subject	booking	no	Interntildeling avbestilt e-post emne
 Mail for booking canceled	booking	no	Interntildeling avbestilt e-post tekst
 Allocation Canceled Subject	booking	no	Tildeling avbestilt e-post emne
 Mail for allocation canceled	booking	no	Tildeling avbestilt e-post tekst
-Frontend users can delete bookings/events	booking	no	Frontend bruker kan slette tildelinger/arrangementer
-Events is deleted from database	booking	no	Arrangementer slettes fra databasen
+Frontend users can delete bookings	booking	no	Frontendbrukar kan slette interntildelinger
+Frontend users can delete events	booking	no	Frontendbrukar kan slette arrangementer
 Frontend users can delete allocations	booking	no	Frontend bruker kan slette tildelinger
 Activate extra kalendar field on building	booking	no	Aktiver ekstra kalender felt på bygg
 Ids that should be included in the calendar	booking	no	Id som skal brukes i ekstra kalender
@@ -703,12 +705,14 @@ vertical	booking	no	Vertikal
 permission add	booking	no	Legg til tilatelse
 activity new	booking	no	Ny aktivitet
 account new	booking	no	Ny konteringsstreng
-external account	booking	no	Ekstern konto
+external account	booking	no	Ekstern kontering
 external customer output format	booking	no	Ekstern kunde output format
 external file linebreak	booking	no	Tegn for linjeskift
-export invoice	booking	no	Faktura eksport
-export method	booking	no	Eksport metode
+export invoice	booking	no	Fakturaeksport
+export method	booking	no	Eksportmetode
 export path	booking	no	Eksport sti
+customer list format	booking	no	Kundelisteformat
+customer list	booking	no	Kundeliste
 ftp host	booking	no	Ftp vert
 ftp basedir	booking	no	Ftp initiell katalog ved pålogging
 ftp user	booking	no	Ftp bruker
@@ -841,3 +845,16 @@ external archive key	booking	no	Eksternt saksnummer
 transfer case to external system?	booking	no	Overføre sak til dokumentarkiv?
 register participants	booking	no	Deltagerregistrering
 capacity	booking	no	Kapasitet
+Could not copy application	booking	no	Kunne ikke kopiere søknad
+Copy application	booking	no	Kopier søknad
+Show my events	booking	no	Se mine arrangement
+Search for organizations	booking	no	Søk etter arrangør
+From date	booking	no	Fra dato
+To date	booking	no	Til dato
+Building type	booking	no	Bygningstype
+Search for events	booking	no	Finn arrangement
+Building or facility name	booking no	Bygning/anleggsnavn
+enable upload attachment	booking	no	Aktiver opplasting av vedlegg
+minutes	booking	no	Minutter
+limit number	booking	no	Begrensning på antall
+limit number horizont	booking	no	Begrensningshorisont (dager)

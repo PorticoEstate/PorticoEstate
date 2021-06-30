@@ -8,6 +8,14 @@
 			<div id="building_show" class="booking-container">
 				<div class="pure-control-group">
 					<label>
+						<xsl:value-of select="php:function('lang', 'Building Name')" />
+					</label>
+					<div class="custom-container">
+						<xsl:value-of select="building/name" disable-output-escaping="yes"/>
+					</div>
+				</div>
+				<div class="pure-control-group">
+					<label>
 						<xsl:value-of select="php:function('lang', 'Description')" />
 					</label>
 					<div class="custom-container">
@@ -193,7 +201,7 @@
 	</form>
 	<script type="text/javascript">
 		var building_id = <xsl:value-of select="building/id"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Account', 'Role', 'Edit', 'Delete', 'Resource Type', 'Sort order', 'Direct booking', 'simple booking', 'active')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Account', 'Role', 'Edit', 'Delete', 'Resource Type', 'Sort order', 'Direct booking', 'simple booking', 'active', 'Deactivate application')"/>;
 	
     <![CDATA[
     //    var resourcesURL     = 'index.php?menuaction=booking.uiresource.index&sort=name&filter_building_id=' + building_id + '&phpgw_return_as=json&';
@@ -207,7 +215,7 @@
 
 
         ]]>
-		var colDefsResources = [{key: 'sort', label: lang['Sort order']},{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'rescategory_name', label: lang['Resource Type']},{key: 'direct_booking_date', label: lang['Direct booking']},{key: 'simple_booking', label: lang['simple booking']},{key: 'active', label: lang['active']} ];
+		var colDefsResources = [{key: 'sort', label: lang['Sort order']},{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'rescategory_name', label: lang['Resource Type']},{key: 'direct_booking_date', label: lang['Direct booking']},{key: 'simple_booking', label: lang['simple booking']},{key: 'active', label: lang['active']},{key: 'deactivate_application', label: lang['Deactivate application']} ];
 		var colDefsDocuments = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'category', label: lang['Category']}, {key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label:lang['Edit']}, {name: 'delete', label:lang['Delete']})}];
 		var colDefsPermissions = [{key: 'subject_name', label: lang['Account']}, {key: 'role', label: lang['Role']}, {key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label: 'Edit'}, {name: 'delete', label:lang['Delete']})}];
 

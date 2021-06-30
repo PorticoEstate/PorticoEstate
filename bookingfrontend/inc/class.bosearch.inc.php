@@ -1,16 +1,29 @@
 <?php
 	phpgw::import_class('booking.bocommon');
+	phpgw::import_class('booking.soevent');
+	phpgw::import_class('booking.sobuilding');
+	phpgw::import_class('booking.sobooking');
+	phpgw::import_class('booking.soallocation');
+
 
 	class bookingfrontend_bosearch extends booking_bocommon
 	{
 
+	    public $soevent;
+	    public $sobuilding;
+	    public $sobooking;
+	    public $soallocation;
+	    public $soresource;
+
 		function __construct()
 		{
 			parent::__construct();
-			$this->sobuilding = CreateObject('booking.sobuilding');
+			$this->sobuilding = new booking_sobuilding();
 			$this->soorganization = CreateObject('booking.soorganization');
 			$this->soresource = CreateObject('booking.soresource');
-			$this->soevent = CreateObject('booking.soevent');
+			$this->soevent = new booking_soevent();
+			$this->sobooking = new booking_sobooking();
+			$this->soallocation = new booking_soallocation();
 			$this->borescategory = CreateObject('booking.borescategory');
 			$this->boresource = CreateObject('booking.boresource');
 			$this->boactivity = CreateObject('booking.boactivity');
@@ -278,23 +291,7 @@
 			{
 				$invalid_params = True;
 			}
-			$intparams = array('activity_id');
-			foreach ($intparams as $intparam)
-			{
-				if (isset($params[$intparam]))
-				{
-					if (empty($params[$intparam]))
-					{
-						$params[$intparam] = null;
-					}
-					elseif (!(is_int($params[$intparam]) && $params[$intparam] > 0))
-					{
-						$invalid_params = True;
-						break;
-					}
-				}
-			}
-			$multiintparams = array('facility_id','part_of_town_id');
+			$multiintparams = array('facility_id','part_of_town_id', 'activity_id');
 			foreach ($multiintparams as $multiintparam)
 			{
 				if (isset($params[$multiintparam]))
@@ -314,7 +311,8 @@
 							}
 						}
 					}
-					if (!$invalid_params)
+
+					if (!$invalid_params && is_array($params[$multiintparam]))
 					{
 						sort($params[$multiintparam]);
 					}
@@ -349,6 +347,7 @@
 				}
 				// Handle the activities
 				$include_on_activity = False;
+				$activities_matched = array();
 				foreach ($resource['activities_list'] as $activity)
 				{
 					if (!array_key_exists($activity['id'], $all_activities))
@@ -356,11 +355,21 @@
 						$all_activities[$activity['id']] = array('id' => $activity['id'], 'name' => $activity['name']);
 					}
 					// Check filter criteria
-					if (isset($params['activity_id']) && $activity['id'] == $params['activity_id'])
+					if (isset($params['activity_id']) && in_array($activity['id'], $params['activity_id']))
+					{
+						$activities_matched[] = $activity['id'];
+					}
+				}
+				// If applicable, check if all activity criterias are met
+				if (!empty($activities_matched))
+				{
+					sort($activities_matched);
+					if ($activities_matched === $params['activity_id'])
 					{
 						$include_on_activity = True;
 					}
 				}
+
 				// Handle the facilities
 				$include_on_facility = False;
 				$facilities_matched = array();
@@ -386,7 +395,8 @@
 					}
 				}
 				// Add the resource to the building, unless given filter criterias are not met
-				if ((isset($params['activity_id']) && !$include_on_activity) || (isset($params['facility_id']) && !$include_on_facility)) {
+				if ((isset($params['activity_id']) && !$include_on_activity) || (isset($params['facility_id']) && !$include_on_facility))
+				{
 					$resource['ignore'] = True;
 				}
 				foreach ($building_ids as $building_id)
@@ -453,14 +463,14 @@
 			unset($building);
 			$all_partoftown_list = array_values($all_partoftown);
 			usort($all_partoftown_list, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
-
+			$returnres['resources'] = $resources;
 			$returnres['buildings']   = $buildings;
 			$returnres['activities']  = $all_activities_list;
 			$returnres['facilities']  = $all_facilities_list;
 			$returnres['partoftowns'] = $all_partoftown_list;
+
 			return $returnres;
 		}
-
 
 		function events()
 		{
@@ -476,8 +486,8 @@
 			$fields_events = array('building_name','from_','homepage','id','name','organizer','to_');
 			$now = date('Y-m-d');
 			$conditions = "(bb_event.active != 0 AND bb_event.include_in_list = 1 AND bb_event.completed = 0 AND bb_event.to_ > '{$now}' AND bb_event.name != '')";
-			
-			
+
+
 			/**
 			 * All ( Alter to enable pagination )
 			 */
@@ -594,6 +604,404 @@
 			return $data;
 		}
 
+		function search_available_resources($searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria = array(), $length, $params)
+		{
+			$returnres = array(
+				'buildings'   => array(),
+				'activities'  => array(),
+				'facilities'  => array(),
+				'partoftowns' => array(),
+			);
+			$fields_resource = array('id','name','activities_list','facilities_list', 'simple_booking', 'activities', 'facilities', 'building');
+			$fields_building = array('id','name','street','zip_code','city','part_of_town_id','part_of_town_name');
+
+			$resources = $this->search($searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria, $length)['results'];
+			$this->boresource->add_activity_facility_data($resources);
+
+			// Group the resources on buildings, and get data on the buildings to which the resources belong as well as
+			// check the activities and facilities
+
+			$applicable_resources = array();
+			foreach ($resources as &$resource)
+			{
+				//Get building data
+				$building_filters = array('id' => $resource['buildings'][0], 'active' => 1);
+				$resource['building'] = $this->sobuilding->read(array('filters' => $building_filters, 'sort' => 'name', 'results' => $params['length']))['results'][0];
+
+				// Keep only the wanted fields
+				$building_ids = $resource['buildings'];
+				foreach ($resource as $k => $v)
+				{
+					if (!in_array($k,$fields_resource))
+					{
+						unset($resource[$k]);
+					}
+				}
+
+				foreach ($resource['building'] as $k => $v)
+				{
+					if (!in_array($k,$fields_building))
+					{
+						unset($resource['building'][$k]);
+					}
+				}
+
+				//Handle the part of towns filter
+				if (empty($resource['building']) || (isset($params['part_of_town_id']) && !in_array($resource['building']['part_of_town_id'],$params['part_of_town_id'])))
+				{
+					unset($resource);
+				}
+				else
+				{
+					$applicable_resources[] = $resource;
+				}
+			}
+			unset($resource);
+
+			usort($applicable_resources, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
+
+			$returnres['available_resources'] = $this->available_resources($applicable_resources, $params);
+
+			$all_activities = array();
+			$all_facilities = array();
+			foreach ($returnres['available_resources'] as $resource)
+			{
+				foreach ($resource['activities_list'] as $activity)
+				{
+					if (!array_key_exists($activity['id'], $all_activities))
+					{
+						$all_activities[$activity['id']] = array('id' => $activity['id'], 'name' => $activity['name']);
+					}
+				}
+
+				foreach ($resource['facilities_list'] as $facility)
+				{
+					if (!array_key_exists($facility['id'], $all_facilities))
+					{
+						$all_facilities[$facility['id']] = array('id' => $facility['id'], 'name' => $facility['name']);
+					}
+				}
+			}
+
+			usort($all_activities, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
+			usort($all_facilities, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
+
+			$returnres['activities']  = $all_activities;
+			$returnres['facilities']  = $all_facilities;
+
+			return $returnres;
+		}
+
+		function resquery_available_resources ($params = array())
+		{
+			$returnres = array(
+				'buildings'   => array(),
+				'activities'  => array(),
+				'facilities'  => array(),
+				'partoftowns' => array(),
+			);
+			$fields_resource = array('id','name','activities_list','facilities_list', 'simple_booking', 'activities', 'facilities', 'building');
+			$fields_building = array('id','name','street','zip_code','city','part_of_town_id','part_of_town_name');
+
+			// Get a list of all part_of_town that are used for buildings, creating a list keyed on the part_of_town id
+			$partoftownlist = array();
+			$potlist = execMethod('property.solocation.get_booking_part_of_towns');
+			foreach ($potlist as $pot)
+			{
+				$id = $pot['id'];
+				$partoftownlist[$id] = $pot;
+			}
+
+			// Validate parameters. rescategory_id must always be present
+			$invalid_params = False;
+			if (!(isset($params['rescategory_id']) && is_int($params['rescategory_id']) && $params['rescategory_id'] > 0))
+			{
+				$invalid_params = True;
+			}
+			$multiintparams = array('part_of_town_id');
+			foreach ($multiintparams as $multiintparam)
+			{
+				if (isset($params[$multiintparam]))
+				{
+					if (empty($params[$multiintparam]))
+					{
+						$params[$multiintparam] = null;
+					}
+					else
+					{
+						foreach ($params[$multiintparam] as $val)
+						{
+							if (!(is_int($val) && $val > 0))
+							{
+								$invalid_params = True;
+								break;
+							}
+						}
+					}
+					if (!$invalid_params && is_array($params[$multiintparam]))
+					{
+						sort($params[$multiintparam]);
+					}
+				}
+			}
+			if ($invalid_params)
+			{
+				return $returnres;
+			}
+
+			// Get resources
+			$resource_filters = array('active' => 1, 'rescategory_active' => 1);
+			$resource_filters['rescategory_id'] = $params['rescategory_id'];
+			$resources = $this->soresource->read(array('filters' => $resource_filters, 'sort' => 'sort', 'results' => $params['length']))['results'];
+			$this->boresource->add_activity_facility_data($resources);
+
+			// Group the resources on buildings, and get data on the buildings to which the resources belong as well as
+			// check the activities and facilities
+
+			$applicable_resources = array();
+			foreach ($resources as &$resource)
+			{
+				//Get building data
+				$building_filters = array('id' => $resource['buildings'][0], 'active' => 1);
+				$resource['building'] = $this->sobuilding->read(array('filters' => $building_filters, 'sort' => 'name', 'results' => $params['length']))['results'][0];
+
+				// Keep only the wanted fields
+				$building_ids = $resource['buildings'];
+				foreach ($resource as $k => $v)
+				{
+					if (!in_array($k,$fields_resource))
+					{
+						unset($resource[$k]);
+					}
+				}
+
+				foreach ($resource['building'] as $k => $v)
+				{
+					if (!in_array($k,$fields_building))
+					{
+						unset($resource['building'][$k]);
+					}
+				}
+
+				//Handle the part of towns filter
+				if (empty($resource['building']) || (isset($params['part_of_town_id']) && !in_array($resource['building']['part_of_town_id'],$params['part_of_town_id'])))
+				{
+					unset($resource);
+				}
+				else
+				{
+					$applicable_resources[] = $resource;
+				}
+			}
+			unset($resource);
+
+			usort($applicable_resources, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
+
+			$returnres['available_resources']   = $this->available_resources($applicable_resources, $params);
+
+			$all_activities = array();
+			$all_facilities = array();
+			foreach ($returnres['available_resources'] as $resource)
+			{
+				foreach ($resource['activities_list'] as $activity)
+				{
+					if (!array_key_exists($activity['id'], $all_activities))
+					{
+						$all_activities[$activity['id']] = array('id' => $activity['id'], 'name' => $activity['name']);
+					}
+				}
+
+				foreach ($resource['facilities_list'] as $facility)
+				{
+					if (!array_key_exists($facility['id'], $all_facilities))
+					{
+						$all_facilities[$facility['id']] = array('id' => $facility['id'], 'name' => $facility['name']);
+					}
+				}
+			}
+
+			usort($all_activities, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
+			usort($all_facilities, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
+
+			$returnres['activities'] = $all_activities;
+			$returnres['facilities'] = $all_facilities;
+			return $returnres;
+		}
+
+		function available_resources($resources, $params = array())
+		{
+			$from_date = DateTime::createFromFormat('d.m.Y H:i:s', $params['from_date']);
+			$to_date = DateTime::createFromFormat('d.m.Y H:i:s', $params['to_date']);
+
+			$this->soresource->get_season_boundary($resources, $from_date, $to_date);
+
+			$is_time_set = false;
+			if($params['from_time'] != "" && $params['to_time'] != "")
+			{
+				$from_time = DateTime::createFromFormat('H:i', $_GET['from_time'])->format('H:i');
+				$to_time = DateTime::createFromFormat('H:i', $_GET['to_time'])->format('H:i');
+
+				$is_time_set = True;
+			}
+
+			$resource_ids = array();
+			foreach ($resources as $resource)
+			{
+				$resource_ids[] = $resource['id'];
+			}
+
+			$booked_times = $this->sobooking->get_all_allocations_and_events_for_resource($resource_ids, $from_date, $to_date);
+
+			foreach ($resources as &$resource)
+			{
+				$resource['booked_times'] = array();
+				foreach ($booked_times as $booked_time)
+				{
+					if($resource['id'] == $booked_time['resource_id'])
+					{
+						$resource['booked_times'][] = $booked_time;
+					}
+				}
+				unset($booked_time);
+			}
+			unset($resource);
+
+			$available_resources = array();
+			foreach ($resources as $resource)
+			{
+				array_set_default($available_resource, 'facilities', array());
+				array_set_default($available_resource, 'activities', array());
+				array_set_default($available_resource, 'facilities_list', array());
+				array_set_default($available_resource, 'activities_list', array());
+
+				$available_resource['building_id'] = $resource['building']['id'];
+				$available_resource['building_name'] = $resource['building']['name'];
+				$available_resource['building_city'] = $resource['building']['city'];
+				$available_resource['building_street'] = $resource['building']['street'];
+				$available_resource['building_zip_code'] = $resource['building']['zip_code'];
+				$available_resource['part_of_town_id'] = $resource['building']['part_of_town_id'];
+
+				$available_resource['resource_id'] = $resource['id'];
+				$available_resource['resource_name'] = $resource['name'];
+				$available_resource['facilities'] = array_column($resource['facilities_list'], 'id');
+				$available_resource['activities'] = array_column($resource['activities_list'], 'id');
+				$available_resource['facilities_list'] = $resource['facilities_list'];
+				$available_resource['activities_list'] = $resource['activities_list'];
+
+				if (empty($resource['booked_times']))
+				{
+					$available_resource['from'] = DateTime::createFromFormat('Y-m-d H:i:s', $resource['boundary']['from_'])->format('d.m.Y H:i');
+					$available_resource['to'] = DateTime::createFromFormat('Y-m-d H:i:s', $resource['boundary']['to_'])->format('d.m.Y H:i');
+
+					array_push($available_resources, $available_resource);
+				}
+				else
+				{
+					usort($resource['booked_times'], function ($a, $b)
+					{
+						$ad = strtotime($a['from_']);
+						$bd = strtotime($b['from_']);
+						return ($ad - $bd);
+					});
+
+					$booked_times_len = count($resource['booked_times']);
+					$last_end_date = $resource['booked_times'][0]['to_'];
+
+					for ($i = 0; $i < $booked_times_len; $i++)
+					{
+						$from = $resource['booked_times'][$i]['from_'];
+						$to = $resource['booked_times'][$i]['to_'];
+
+						if ($from > $resource['boundary']['from_'])
+						{
+							if ($i == 0)
+							{
+								$available_resource['from'] = DateTime::createFromFormat('Y-m-d H:i:s', $resource['boundary']['from_']);
+								$available_resource['to'] = DateTime::createFromFormat('Y-m-d H:i:s', $resource['booked_times'][$i]['from_']);
+
+								if ($is_time_set)
+								{
+									$available_resource_time = $available_resource['from']->format('H:i');
+									$available_resource_to = $available_resource['to']->format('H:i');
+
+									if ($available_resource_time <= $from_time && $available_resource_to >= $to_time)
+									{
+										$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
+										$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
+										array_push($available_resources, $available_resource);
+									}
+								}
+								else
+								{
+									$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
+									$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
+									array_push($available_resources, $available_resource);
+								}
+							}
+							else if ($from > $last_end_date)
+							{
+								$available_resource['from'] = DateTime::createFromFormat('Y-m-d H:i:s', $last_end_date);
+								$available_resource['to'] = DateTime::createFromFormat('Y-m-d H:i:s', $from);
+
+								if ($is_time_set)
+								{
+									$available_resource_time = $available_resource['from']->format('H:i');
+									$available_resource_to = $available_resource['to']->format('H:i');
+
+									if ($available_resource_time <= $from_time && $available_resource_to >= $to_time)
+									{
+										$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
+										$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
+										array_push($available_resources, $available_resource);
+									}
+								}
+								else
+								{
+									$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
+									$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
+									array_push($available_resources, $available_resource);
+								}
+
+								$last_end_date = $to;
+							}
+							else if ($from <= $last_end_date && $to >= $last_end_date)
+							{
+								$last_end_date = $to;
+							}
+						}
+						if ($i + 1 == $booked_times_len)
+						{
+							if ($last_end_date < $resource['boundary']['to_'])
+							{
+								$available_resource['from'] = DateTime::createFromFormat('Y-m-d H:i:s', $last_end_date);
+								$available_resource['to'] = DateTime::createFromFormat('Y-m-d H:i:s', $resource['boundary']['to_']);
+
+								if ($is_time_set)
+								{
+									$available_resource_time = $available_resource['from']->format('H:i');
+									$available_resource_to = $available_resource['to']->format('H:i');
+
+									if ($available_resource_time <= $from_time && $available_resource_to >= $to_time)
+									{
+										$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
+										$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
+										array_push($available_resources, $available_resource);
+									}
+								}
+								else
+								{
+									$available_resource['from'] = $available_resource['from']->format('d.m.Y H:i');
+									$available_resource['to'] = $available_resource['to']->format('d.m.Y H:i');
+									array_push($available_resources, $available_resource);
+								}
+							}
+						}
+					}
+				}
+			}
+			return $available_resources;
+		}
+
 
 		function getAutoCompleteData()
 		{
@@ -626,5 +1034,39 @@
 			}
 			return $results;
 		}
+
+		public function get_resource_and_building_autocomplete_data()
+		{
+			$sql = "SELECT DISTINCT bb_rescategory.name AS names,
+					'lokale' AS type,
+					'bookingfrontend.uiresource.show' AS menuaction,
+					bb_rescategory.id AS id
+					FROM bb_rescategory
+					WHERE bb_rescategory.active=1
+					UNION
+					SELECT DISTINCT bb_building.name AS names,
+					'anlegg' AS type,
+					'bookingfrontend.uibuilding.show' AS menuaction,
+					bb_building.id AS id
+					FROM bb_building
+					WHERE bb_building.active=1
+					ORDER BY names asc";
+
+			$results = array();
+			$db = & $GLOBALS['phpgw']->db;
+			$db->query($sql, __LINE__, __FILE__);
+			$i = 0;
+			while ($db->next_record())
+			{
+				$results[$i]["name"] = $db->f('names', true);
+				$results[$i]["type"] = $db->f('type', true);
+				$results[$i]["id"] = $db->f('id');
+				$results[$i]["menuaction"] = $db->f('menuaction', true);
+				$i++;
+			}
+
+			return $results;
+
+	}
 
 	}

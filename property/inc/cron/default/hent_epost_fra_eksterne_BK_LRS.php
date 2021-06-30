@@ -164,11 +164,11 @@
 					'group_id'		 => 4253, //LRS-Drift_Regnskap
 					'subject'		 => 'Arbeidsflyt og ehandel'
 				),
-				'Innkassokrav'						 => array
+				'Inkassokrav'						 => array
 					(
-					'message_cat_id' => 321, // 24 Purringer/Inkasso
+					'message_cat_id' => 381, // 24 Inkasso
 					'group_id'		 => 4253, //LRS-Drift_Regnskap
-					'subject'		 => 'Innkassokrav',
+					'subject'		 => 'Inkassokrav',
 					'priority'		 => 1
 				),
 				'Purring/Inkassovarsel'				 => array
@@ -1382,6 +1382,44 @@
 				}
 			}
 			else if (preg_match("/faktura med feil MVA-beregning/i", $subject))
+			{
+				$message_cat_id	 = 334; // LRS-Regnskap- underkategori: 28 Kostfordeling/prekontering
+				$group_id		 = 4253; //LRS-DRIFT_Regnskap
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/UBW Brukerregister - sjekk /i", $subject))
+			{
+				$message_cat_id	 = 291; // Brukertilganger
+				$group_id		 = 4169; //LRS-SERVICE_Regnskap
+				$priority		 = 1;
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type, $priority);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/Manuell håndtering, Feilutbetalt lønn/i", $subject))
+			{
+				$message_cat_id	 = 251; // Feilutbetalt lønn
+				$group_id		 = 3159; //LRS-DRIFT_Lønn
+				$priority		 = 1;
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type, $priority);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
+			}
+			else if (preg_match("/PREKONT-/i", $subject))
 			{
 				$message_cat_id	 = 334; // LRS-Regnskap- underkategori: 28 Kostfordeling/prekontering
 				$group_id		 = 4253; //LRS-DRIFT_Regnskap

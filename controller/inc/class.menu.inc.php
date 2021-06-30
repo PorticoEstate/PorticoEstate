@@ -280,6 +280,12 @@
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uisettings.edit')),
 						'image' => array('property', 'location_1')
 					),
+					'custom_functions' => array
+					(
+					'text' => lang('custom functions'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function',
+						'appname' => 'controller', 'location' => '.checklist', 'menu_selection' => 'admin::controller::custom_functions'))
+				),
 
 				);
 			}

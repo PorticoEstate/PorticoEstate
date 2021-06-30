@@ -101,10 +101,12 @@
 		 	$this->_db->query('SELECT location_id FROM phpgw_locations'
 		 			. " WHERE app_id = {$app} AND name = '{$location}'", __LINE__, __FILE__);
 
-		 	if ( $this->_db->next_record() )
+			$location_id = null;
+			if ( $this->_db->next_record() )
 			{
-				return $this->_db->f('location_id'); // already exists so just return the id
+				$location_id =  (int)$this->_db->f('location_id'); // already exists so just return the id
 		 	}
+			 
 
 			if($custom_tbl)
 			{
@@ -123,12 +125,20 @@
 				'allow_c_function'	=> $c_function
 			);
 
-			$cols = implode(',', array_keys($value_set));
-			$values	= $this->_db->validate_insert(array_values($value_set));
+			if(!$location_id)
+			{
+				$cols = implode(',', array_keys($value_set));
+				$values	= $this->_db->validate_insert(array_values($value_set));
+				$this->_db->query("INSERT INTO phpgw_locations ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
+				$location_id = $this->_db->get_last_insert_id('phpgw_locations', 'location_id');
+			}
+			else
+			{
+				$value_set = $this->_db->validate_update($value_set);
+				$this->_db->query("UPDATE phpgw_locations SET $value_set WHERE location_id = {$location_id}", __LINE__, __FILE__);
+			}
 
-			$this->_db->query("INSERT INTO phpgw_locations ({$cols}) VALUES ({$values})",__LINE__,__FILE__);
-
-			return $this->_db->get_last_insert_id('phpgw_locations', 'location_id');
+			return $location_id;
 		}
 
 		/**

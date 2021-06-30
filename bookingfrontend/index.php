@@ -238,11 +238,10 @@ HTML;
 	{
 		include_once(PHPGW_APP_INC . '/header.inc.php');
 	}
-
+        
 /////////////////////////////////////////////////////////////////////////////
 // END Stuff copied from functions.inc.php
 /////////////////////////////////////////////////////////////////////////////
-
 	if (isset($_GET['menuaction']))
 	{
 		list($app, $class, $method) = explode('.', $_GET['menuaction']);

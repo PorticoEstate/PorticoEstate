@@ -101,7 +101,7 @@
 
 		public function read_single( $control_id )
 		{
-			$this->db->query('SELECT ticket_cat_id FROM controller_control WHERE id = ' . (int)$cat_id, __LINE__, __FILE__);
+			$this->db->query('SELECT ticket_cat_id FROM controller_control WHERE id = ' . (int)$control_id, __LINE__, __FILE__);
 			$this->db->next_record();
 			return (int)$this->db->f('ticket_cat_id');
 		}
@@ -146,7 +146,7 @@
 				{
 					foreach ($user_info as $user_id => $role_info)
 					{
-						$new_roles = (int)array_sum($role_info['new']);
+						$new_roles = (int)array_sum((array)$role_info['new']);
 						$old_roles = (int)$role_info['original'];
 
 						if($old_roles != $new_roles)

@@ -172,6 +172,27 @@
 						</select>
 					</div>
 				</xsl:if>
+				<xsl:if test="not(new_form)">
+					<div class="pure-control-group">
+						<label for="for_field_deactivate_application">
+							<xsl:value-of select="php:function('lang', 'Deactivate application')"/>
+						</label>
+						<select id="for_field_deactivate_application" name="deactivate_application" class="pure-input-3-4" >
+							<option value="1">
+								<xsl:if test="resource/deactivate_application=1">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'Yes')"/>
+							</option>
+							<option value="0">
+								<xsl:if test="resource/deactivate_application=0">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'No')"/>
+							</option>
+						</select>
+					</div>
+				</xsl:if>
 
 				<div id="capacity_form">
 					<xsl:if test="new_form or resource/rescategory_capacity != 1">
@@ -208,14 +229,12 @@
 						<xsl:value-of select="php:function('lang', 'season')"/>
 					</label>
 					<select id="field_direct_booking_season_id" name="direct_booking_season_id" class="pure-input-3-4">
-						<!--
 						<xsl:attribute name="data-validation">
-							<xsl:text>required</xsl:text>
+							<xsl:text>required_season</xsl:text>
 						</xsl:attribute>
 						<xsl:attribute name="data-validation-error-msg">
 							<xsl:value-of select="php:function('lang', 'Please select a season')" />
 						</xsl:attribute>
-						-->
 						<option value=''>
 							<xsl:value-of select="php:function('lang', 'Select')" />
 						</option>
@@ -353,6 +372,38 @@
 							<xsl:value-of select="php:function('lang', 'time default end')"/>
 							&nbsp;
 							<xsl:value-of select="php:function('lang', 'value is ignored for -1')"/>
+						</xsl:attribute>
+					</input>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'minutes')"/>
+					</label>
+					<input type="number" min="-1" id="booking_time_minutes" name="booking_time_minutes" value="{resource/booking_time_minutes}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'minutes')"/>
+							&nbsp;
+							<xsl:value-of select="php:function('lang', 'value is ignored for -1')"/>
+						</xsl:attribute>
+					</input>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'limit number')"/>
+					</label>
+					<input type="number" min="-1" id="booking_limit_number" name="booking_limit_number" value="{resource/booking_limit_number}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'limit number')"/>
+						</xsl:attribute>
+					</input>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'limit number horizont')"/>
+					</label>
+					<input type="number" min="-1" id="booking_limit_number_horizont" name="booking_limit_number_horizont" value="{resource/booking_limit_number_horizont}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'limit number horizont')"/>
 						</xsl:attribute>
 					</input>
 				</div>

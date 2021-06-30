@@ -66,10 +66,14 @@
 //				'booking_dow_default_end' => 'int',
 				'booking_time_default_start' => 'int',
 				'booking_time_default_end' => 'int',
+				'booking_time_minutes' => 'int',
+				'booking_limit_number' => 'int',
+				'booking_limit_number_horizont' => 'int',
 				'simple_booking_start_date' => 'string',
 				'simple_booking_end_date' => 'string',
 				'booking_month_horizon' => 'int',
 				'booking_day_horizon' => 'int',
+				'deactivate_application' => 'int',
 			);
 			self::set_active_menu('booking::buildings::resources::resources');
 			$this->display_name = lang('resources');

@@ -32,6 +32,7 @@
 				'to_' => array('type' => 'timestamp', 'required' => true),
 				'organization_id' => array('type' => 'int'),
 				'customer_type' => array('type' => 'string', 'nullable' => False),
+				'customer_number' => array('type' => 'string', 'required' => false, 'nullable' => true),// sub-identificator within organization
 				'customer_identifier_type' => array('type' => 'string', 'required' => False),
 				'customer_organization_number' => array('type' => 'string', 'precision' => '9',
 					'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array(
@@ -325,6 +326,10 @@
 					$entity['customer_organization_number'] = $organization['organization_number'];
 					$entity['customer_identifier_type'] = 'organization_number';
 				}
+			}
+			if(!empty($organization['customer_number']))
+			{
+				$entity['customer_number'] = $organization['customer_number'];
 			}
 		}
 

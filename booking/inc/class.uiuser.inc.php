@@ -80,7 +80,7 @@
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 				$config_data = CreateObject('phpgwapi.config', 'booking')->read();
-				if($config_data['external_format'] == 'FACTUM')
+				if($config_data['customer_list_format'] == 'FACTUM')
 				{
 					header('Content-type: text/xml');
 					$file_ending = 'xml';
@@ -94,8 +94,15 @@
 				$type = 'kundefil_aktiv_kommune';
 				$date = date('Ymd', time());
 
-				header("Content-Disposition: attachment; filename=PE_{$type}_{$date}.{$file_ending}");
-				print $this->bo->get_customer_list();
+				$filename = "PE_{$type}_{$date}.{$file_ending}";
+
+				header("Content-Disposition: attachment; filename={$filename}");
+				$content =  $this->bo->get_customer_list();
+
+				$export_agresso = CreateObject('booking.export_agresso');
+				$export_agresso->transfer_customer_list( $content, $filename);
+
+				print $content;
 				return;
 			}
 			else

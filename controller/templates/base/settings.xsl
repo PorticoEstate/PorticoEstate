@@ -230,7 +230,7 @@
 				</xsl:variable>
 				<input type="submit" name="save" value="{$lang_add}" class="pure-button pure-button-primary" >
 					<xsl:attribute name="title">
-						<xsl:value-of select="lang_add_statustext"/>
+						<xsl:value-of select="$lang_add"/>
 					</xsl:attribute>
 				</input>
 			</td>

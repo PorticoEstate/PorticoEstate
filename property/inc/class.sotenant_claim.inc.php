@@ -39,6 +39,7 @@
 			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->db		 = & $GLOBALS['phpgw']->db;
 			$this->join		 = & $this->db->join;
+			$this->left_join = & $this->db->left_join;
 			$this->like		 = & $this->db->like;
 			$this->interlink = CreateObject('property.interlink');
 		}
@@ -88,14 +89,14 @@
 
 			if ($project_id > 0)
 			{
-				$filtermethod	 .= " $where project_id='$project_id' ";
+				$filtermethod	 .= " $where fm_project.id='$project_id' ";
 				$filtermethod_ticket	 .= " $where ticket_id=-1 ";
 				$where			 = 'AND';
 			}
 
 			if ($ticket_id > 0)
 			{
-				$filtermethod	 .= " $where project_id=-1 ";
+				$filtermethod	 .= " $where fm_project.id=-1 ";
 				$filtermethod_ticket	 .= " $where ticket_id='{$ticket_id}' ";
 				$where			 = 'AND';
 			}
@@ -126,39 +127,57 @@
 			{
 				$query = $this->db->db_addslashes($query);
 
-				$querymethod = " $where (address {$this->like} '%{$query}%'"
-					. " OR first_name {$this->like} '%{$query}%'"
-					. " OR last_name {$this->like} '%{$query}%'"
+				$querymethod = " $where (fm_project.address {$this->like} '%{$query}%'"
+					. " OR fm_tenant.first_name {$this->like} '%{$query}%'"
+					. " OR fm_tenant.last_name {$this->like} '%{$query}%'"
 					. " OR fm_project.location_code {$this->like} '{$query}%'"
 					. " OR fm_tenant.last_name || ', ' || fm_tenant.first_name {$this->like} '%{$query}%'"
 					. " OR cast(fm_tenant_claim.id as text) {$this->like} '{$query}%'"
-					. " OR project_id=" . (int)$query . ')';
-				$querymethod_ticket = " $where (address {$this->like} '%{$query}%'"
-					. " OR first_name {$this->like} '%{$query}%'"
-					. " OR last_name {$this->like} '%{$query}%'"
+					. " OR fm_project.id=" . (int)$query . ')';
+				$querymethod_ticket = " $where (fm_tts_tickets.address {$this->like} '%{$query}%'"
+					. " OR fm_tenant.first_name {$this->like} '%{$query}%'"
+					. " OR fm_tenant.last_name {$this->like} '%{$query}%'"
 					. " OR fm_tts_tickets.location_code {$this->like} '{$query}%'"
 					. " OR fm_tenant.last_name || ', ' || fm_tenant.first_name {$this->like} '%{$query}%'"
 					. " OR cast(fm_tenant_claim.id as text) {$this->like} '{$query}%'"
 					. " OR ticket_id=" . (int)$query . ')';
 			}
 
-			$sql = "SELECT 'project' as type, fm_tenant_claim.*, fm_tenant_claim_category.descr as claim_category, fm_tenant.last_name, fm_tenant.first_name,district_id,"
-				. " fm_project.address, fm_project.category, fm_project.location_code FROM fm_tenant_claim "
+			$sql = "SELECT * FROM "
+				. "(SELECT 'project' as type, fm_tenant_claim.*, fm_tenant_claim_category.descr as claim_category, fm_tenant.last_name, fm_tenant.first_name,district_id,"
+				. " fm_project.address, fm_project.category, fm_project.location_code,"
+				. "CASE WHEN
+					(
+						fm_orders_actual_cost_view.actual_cost IS NULL
+					)"
+				. " THEN 0 ELSE fm_orders_actual_cost_view.actual_cost END as actual_cost"
+				. " FROM fm_tenant_claim "
 				. " $this->join fm_tenant_claim_category on fm_tenant_claim.category=fm_tenant_claim_category.id"
 				. " $this->join fm_tenant on fm_tenant_claim.tenant_id=fm_tenant.id"
 				. " $this->join fm_project ON fm_project.id = fm_tenant_claim.project_id"
+				. " $this->join fm_workorder ON fm_project.id = fm_workorder.project_id"
 				. " $this->join fm_location1 ON fm_project.loc1=fm_location1.loc1"
 				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.id"
+				. " $this->left_join fm_orders_actual_cost_view ON fm_orders_actual_cost_view.order_id = fm_workorder.id"
+
 				. " $filtermethod $querymethod";
 			$sql .= " UNION "
 				. " SELECT 'ticket' as type, fm_tenant_claim.*, fm_tenant_claim_category.descr as claim_category, fm_tenant.last_name, fm_tenant.first_name,district_id,"
-				. " fm_tts_tickets.address, fm_tts_tickets.cat_id, fm_tts_tickets.location_code FROM fm_tenant_claim "
+				. " fm_tts_tickets.address, fm_tts_tickets.cat_id, fm_tts_tickets.location_code,"
+				. "CASE WHEN
+					(
+						fm_orders_actual_cost_view.actual_cost IS NULL
+					)"
+				. " THEN 0 ELSE fm_orders_actual_cost_view.actual_cost END as actual_cost"
+				. " FROM fm_tenant_claim "
 				. " $this->join fm_tenant_claim_category on fm_tenant_claim.category=fm_tenant_claim_category.id"
 				. " $this->join fm_tenant on fm_tenant_claim.tenant_id=fm_tenant.id"
 				. " $this->join fm_tts_tickets ON fm_tts_tickets.id = fm_tenant_claim.ticket_id"
 				. " $this->join fm_location1 ON fm_tts_tickets.loc1=fm_location1.loc1"
 				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.id"
-				. " $filtermethod_ticket $querymethod_ticket";
+				. " $this->left_join fm_orders_actual_cost_view ON fm_orders_actual_cost_view.order_id = fm_tts_tickets.order_id"
+				. " $filtermethod_ticket $querymethod_ticket"
+				. ") as t";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -194,22 +213,23 @@
 					'category'		 => $this->db->f('category'),
 					'location_code'	 => $this->db->f('location_code'),
 					'claim_category' => $this->db->f('claim_category', true),
-					'amount'		 => $this->db->f('amount')
+					'amount'		 => $this->db->f('amount'),
+					'actual_cost'	 => (float)$this->db->f('actual_cost'),
 				);
 			}
 
-			$soproject = CreateObject('property.soproject');
-			foreach ($claims as &$claim)
-			{
-				$project_budget	 = $soproject->get_budget($claim['project_id']);
-				$actual_cost	 = 0;
-				foreach ($project_budget as $entry)
-				{
-					$actual_cost += (float)$entry['actual_cost'];
-				}
-
-				$claim['actual_cost'] = $actual_cost;
-			}
+//			$soproject = CreateObject('property.soproject');
+//			foreach ($claims as &$claim)
+//			{
+//				$project_budget	 = $soproject->get_budget($claim['project_id']);
+//				$actual_cost	 = 0;
+//				foreach ($project_budget as $entry)
+//				{
+//					$actual_cost += (float)$entry['actual_cost'];
+//				}
+//
+//				$claim['actual_cost'] = $actual_cost;
+//			}
 
 			return $claims;
 		}

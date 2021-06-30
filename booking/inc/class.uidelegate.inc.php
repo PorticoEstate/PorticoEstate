@@ -330,14 +330,10 @@
 			}
 
 			phpgwapi_jquery::load_widget('autocomplete');
-			self::rich_text_editor('field_description');
 
 			$tabs = array();
-			$tab_text = ($id) ? 'Delegate Edit' : 'Delegate New';
-			if (id)
-			{
-				$tabs['generic'] = array('label' => lang($tab_text), 'link' => '#delegate_edit');
-			}
+			$tab_text = ($id) ? 'Edit delegate Edit' : 'New delegate';
+			$tabs['generic'] = array('label' => lang($tab_text), 'link' => '#delegate_edit');
 			$active_tab = 'generic';
 			$delegate['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$delegate['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',

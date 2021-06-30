@@ -155,7 +155,7 @@
 
 			self::add_javascript('booking', 'base', 'common');
 
-//			self::restore_flash_msgs();
+			self::restore_flash_msgs();
 			$this->config = CreateObject('phpgwapi.config', 'bookingfrontend');
 			$this->config->read();
 
@@ -261,7 +261,7 @@
 		public function flash_form_errors( $errors )
 		{
 			$error_stack = $this->create_error_stack($errors);
-			self::$flash_msgs = $error_stack->to_flash_error_msgs();
+			self::$flash_msgs = array_merge(self::$flash_msgs, $error_stack->to_flash_error_msgs());
 		}
 
 		public function send_file( $file_path, $options = array() )

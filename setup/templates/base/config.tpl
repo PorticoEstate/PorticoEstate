@@ -259,7 +259,8 @@
 
 		<tr class="row_off">
 			<td>{lang_LDAP_Default_homedirectory_prefix_(e.g._/home_for_/home/username)}:</td>
-			<td><input name="newsettings[ldap_account_home]" value="{value_ldap_account_home}" autocomplete="off"></td>
+			<td><input name="newsettings[ldap_account_home]" value="{value_ldap_account_home}" autocomplete="off"
+					   readonly="readonly" onfocus="this.removeAttribute('readonly');"></td>
 		</tr>
 
 		<tr class="row_on">

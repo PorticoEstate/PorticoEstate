@@ -39,6 +39,19 @@
 			return $this->db->f('id');
 		}
 
+		function get_validate_orgnr()
+		{
+			$bouser = CreateObject('bookingfrontend.bouser');
+
+			$organization_number = $bouser->orgnr ? $bouser->orgnr : -1;
+			if($organization_number == '000000000')
+			{
+				$organization_number = -1;
+			}
+
+			return $organization_number;
+		}
+
 		function get_applications( $ssn )
 		{
 			if(!$ssn)
@@ -46,9 +59,8 @@
 				return array();
 			}
 
-			$bouser = CreateObject('bookingfrontend.bouser');
 
-			$customer_organization_number = $bouser->orgnr ? $bouser->orgnr : -1;
+			$customer_organization_number = $this->get_validate_orgnr();
 
 			$this->db->query("SELECT * FROM bb_application"
 				. " WHERE customer_ssn ='{$ssn}' OR customer_organization_number = '{$customer_organization_number}'"
@@ -77,9 +89,7 @@
 				return array();
 			}
 
-			$bouser = CreateObject('bookingfrontend.bouser');
-
-			$customer_organization_number = $bouser->orgnr ? $bouser->orgnr : -1;
+			$customer_organization_number = $this->get_validate_orgnr();
 
 			$this->db->query("SELECT * FROM bb_completed_reservation"
 				. " WHERE (customer_ssn ='{$ssn}' OR customer_organization_number = '{$customer_organization_number}')"
@@ -115,9 +125,11 @@
 			{
 				if(is_array($organization_number))
 				{
-					$filter_organization_number= "organization_number IN ('" . implode("','", $organization_number) . "')";									
+					$organization_numbers = array_diff( $organization_number, ['000000000'] );
+					$organization_numbers[] = -1;
+					$filter_organization_number= "organization_number IN ('" . implode("','", $organization_numbers) . "')";
 				}
-				else
+				else if($organization_number !== '000000000')
 				{
 					$filter_organization_number= "organization_number = '$organization_number'";				
 				}

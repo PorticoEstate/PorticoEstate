@@ -304,7 +304,7 @@ JS;
 	<li class="nav-item">
 	   <select id = "template_selector" class="btn btn-link btn-sm nav-link dropdown-toggle" style="padding-top: .315rem;-webkit-appearance: none;-moz-appearance: none;">
 		<option class="nav-link" value="bookingfrontend"{$selected_bookingfrontend}>AK V1</option>
-		<option value="aalesund"{$selected_aalesund}>AK V2</option>
+		<option class="nav-link" value="aalesund"{$selected_aalesund}>AK V2</option>
 	   </select>
 	</li>
 HTML;
@@ -355,7 +355,7 @@ HTML;
 			<ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
 				{$lang_selector}
 				{$template_selector}
-			</ul
+			</ul>
             <div class="navbar-organization-select">
             </div>
 		</nav>

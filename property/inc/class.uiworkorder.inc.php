@@ -50,6 +50,7 @@
 		var $criteria_id;
 		var $filter_year;
 		var $account;
+		var $acl_location;
 		var $public_functions = array
 			(
 			'columns'					 => true,
@@ -3019,11 +3020,7 @@ JS;
 			}
 
 			$suppresscoordination	 = isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
-			$user_list				 = $this->bocommon->get_user_list('select', isset($values['user_id']) && $values['user_id'] ? $values['user_id'] : $this->account, false, false, -1, false, false, '', -1);
-			foreach ($user_list as &$user)
-			{
-				$user['id'] = $user['user_id'];
-			}
+			$user_list				 = $this->bocommon->get_user_list_right2('', PHPGW_ACL_ADD | PHPGW_ACL_EDIT, !empty($values['user_id']) ? $values['user_id'] : $this->account, $this->acl_location);
 
 			$value_coordinator = isset($project['coordinator']) ? $GLOBALS['phpgw']->accounts->get($project['coordinator'])->__toString() : $GLOBALS['phpgw']->accounts->get($this->account)->__toString();
 

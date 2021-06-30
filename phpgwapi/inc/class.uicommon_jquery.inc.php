@@ -348,7 +348,7 @@
 			throw new Exception("Template $tmpl not found in search path:". print_r($tmpl_search_path, true));
 		}
 
-		public function render_template( $output )
+		public static function render_template( $output )
 		{
 			$GLOBALS['phpgw']->common->phpgw_header(true);
 			if (self::$flash_msgs)
@@ -457,7 +457,7 @@
 			self::add_template_file('helpers');
 		}
 
-		public function render_template_xsl( $files, $data, $xsl_rootdir = '' , $base = 'data')
+		public static function render_template_xsl( $files, $data, $xsl_rootdir = '' , $base = 'data')
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
