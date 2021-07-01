@@ -2266,8 +2266,13 @@ HTML;
 			$from	 = lang('date') . ": {$date}\n";
 			$from	 .= lang('dimb') . ": {$ecodimb}\n";
 			$from	 .= lang('from') . ":\n   {$from_name}";
-			$from	 .= "\n   {$GLOBALS['phpgw']->preferences->data['common']['email']}";
-			$from	 .= "\n   {$GLOBALS['phpgw']->preferences->data['common']['cellphone']}";
+			$from	 .= "\n Epost:  {$GLOBALS['phpgw']->preferences->data['common']['email']}";
+			$from	 .= "\n Tlf:  {$GLOBALS['phpgw']->preferences->data['common']['cellphone']}";
+
+			if(!empty($GLOBALS['phpgw']->preferences->data['property']['ressursnr']) && $workorder['vendor_category'] == 2)
+			{
+				$from	 .= "\n Ressursnr: {$ressursnr}";
+			}
 
 			$data = array
 				(
