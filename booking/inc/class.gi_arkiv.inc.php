@@ -69,6 +69,7 @@
 
 			$wsdl = 'http://rep.geointegrasjon.no/Arkiv/Oppdatering/xml.wsdl/2012.01.31/giArkivOppdatering20120131.wsdl';
 			$options = array(
+				'uri'			 => 'http://rep.geointegrasjon.no/Arkiv/Oppdatering/xml.wsdl/2012.01.31',
 				'login'			 => $this->username,
 				'password'		 => $this->password,
 				'soap_version'	 => SOAP_1_1,
@@ -77,6 +78,7 @@
 				'proxy_host'	 => 'proxy.bergen.kommune.no',
 				'proxy_port'	 => 8080,
 				'encoding'		 => 'UTF-8',
+				'cache_wsdl'	 => 0
 			);
 
 			$this->OppdateringService	 = new OppdateringService($options, $wsdl);
@@ -279,8 +281,6 @@
 			$SakspartListe->setListe($Saksparter);
 			$Saksmappe->setSakspart($SakspartListe);
 
-//	_debug_array($Saksmappe);
-//			die();
 			try
 			{
 				$ret = $this->OppdateringService->NySaksmappe(new NySaksmappe($Saksmappe, $this->kontekst));
@@ -295,9 +295,20 @@
 			{
 				echo "SOAP HEADERS:\n" .  $this->OppdateringService->__getLastRequestHeaders() . PHP_EOL;
 				echo "SOAP REQUEST:\n" . $this->OppdateringService->__getLastRequest() . PHP_EOL;
-				echo '<pre>';
-				print_r($fault);
-				echo '</pre>';
+/*
+				$request = $this->OppdateringService->__getLastRequest();
+				$xml = simplexml_load_string($request);
+				$xml->registerXPathNamespace('ns2','http://rep.geointegrasjon.no/Arkiv/Kjerne/xml.schema/2012.01.31');
+
+				$Kontakt = $xml->xpath('//ns2:Kontakt')[0];
+				$Kontakt->addAttribute('type', 'Person');
+				$personid = $Kontakt->addChild('personid', null, 'http://rep.geointegrasjon.no/Felles/Kontakt/xml.schema/2012.01.31');
+				$personid->addChild('personidentifikatorNr', '15060511409');
+				$personidentifikatorType = $personid->addChild('personidentifikatorType');
+				$personidentifikatorType->addChild('kodeverdi', 'Fødselsnummer', 'http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31');
+				$edited_request = $xml->asXML();
+				_debug_array($edited_request);
+*/
 				$msg = "SOAP Fault:\n faultcode: {$fault->faultcode},\n faultstring: {$fault->faultstring}";
 				echo $msg . PHP_EOL;
 				trigger_error(nl2br($msg), E_USER_ERROR);
