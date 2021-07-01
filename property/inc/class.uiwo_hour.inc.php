@@ -2265,13 +2265,13 @@ HTML;
 			$ecodimb = !empty($common_data['workorder']['ecodimb']) ? $common_data['workorder']['ecodimb'] : $project['ecodimb'];
 			$from	 = lang('date') . ": {$date}\n";
 			$from	 .= lang('dimb') . ": {$ecodimb}\n";
-			$from	 .= lang('from') . ":\n   {$from_name}";
+			$from	 .= lang('from') . ":\n {$from_name}";
 			$from	 .= "\n Epost:  {$GLOBALS['phpgw']->preferences->data['common']['email']}";
 			$from	 .= "\n Tlf:  {$GLOBALS['phpgw']->preferences->data['common']['cellphone']}";
 
-			if(!empty($GLOBALS['phpgw']->preferences->data['property']['ressursnr']) && $workorder['vendor_category'] == 2)
+			if(!empty($GLOBALS['phpgw']->preferences->data['property']['ressursnr']) && $common_data['workorder']['vendor_category'] == 2)
 			{
-				$from	 .= "\n Ressursnr: {$ressursnr}";
+				$from	 .= "\n Ressursnr: {$GLOBALS['phpgw']->preferences->data['property']['ressursnr']}";
 			}
 
 			$data = array
