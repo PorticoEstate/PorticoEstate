@@ -30,6 +30,55 @@
 				$this->socat_assignment = createObject('helpdesk.socat_assignment');
 			}
 
+			function alert_and_reopen_origin($origin_id)
+			{
+				$botts = createObject('helpdesk.botts');
+				$botts->reset_views($origin_id);
+				$ticket	= $botts->read_single($origin_id);
+
+				if(!empty($ticket['assignedto']))
+				{
+					$assignedto = $ticket['assignedto'];
+				}
+				else if(!empty($ticket['reverse_id']))
+				{
+					$assignedto = $ticket['reverse_id'];
+				}
+				else
+				{
+					$assignedto = $ticket['user_id'];
+				}
+
+				$subject = "LRSHD: Sak #{$origin_id} er referert til fra ny sak";
+
+				$link_to_ticket =  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.view',
+					'id' => $origin_id), false, true);
+
+				$body = "<p>Sak #{$origin_id}er referert til fra ny sak, ";
+				$body .= "<a href ='{$link_to_ticket}'>klikk her for detaljer</a></p>";
+
+				$prefs = $botts->bocommon->create_preferences('common',$assignedto);
+				$to = $prefs['email'];
+				$from_name = 'Ikke svar';
+				$from_address ="Ikke svar<IkkeSvarLRS@Bergen.kommune.no>";
+
+				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+				{
+					try
+					{
+						$rc = $this->send->msg('email', $to, $subject, $body, '', $cc='', $bcc='',$from_address, $from_name,'html');
+					}
+					catch (Exception $e)
+					{
+					}
+				}
+
+				if ($rc && $to)
+				{
+					$botts->historylog->add('M', $id, $to);
+				}
+			}
+
 			/**
 			 * Do your magic
 			 * @param integer $id
@@ -38,6 +87,10 @@
 			 */
 			function validate( $id = 0, &$data, $values_attribute = array() )
 			{
+				if(!empty($data['origin_id']))
+				{
+					$this->alert_and_reopen_origin((int)$data['origin_id']);
+				}
 				if($id) // on edit
 				{
 					/**
@@ -52,7 +105,7 @@
 							)
 						);
 					}
-					
+
 					return;
 				}
 

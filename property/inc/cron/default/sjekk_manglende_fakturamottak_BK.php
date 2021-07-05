@@ -314,11 +314,20 @@ SQL;
 
 			$TemplateId				 = '12770'; //Spørring på varemottak
 
+			$context = stream_context_create([
+				'ssl' => [
+					// set some SSL/TLS specific options
+					'verify_peer'		 => false,
+					'verify_peer_name'	 => false,
+					'allow_self_signed'	 => true
+				]
+			]);
 
 			$service	 = new \QueryEngineV201101(array(
 				'trace' => 1,
 				'location' => $this->soap_url,
-				'uri'		=> 'http://services.agresso.com/QueryEngineService/QueryEngineV201101'
+				'uri'		=> 'http://services.agresso.com/QueryEngineService/QueryEngineV201101',
+				'stream_context' => $context
 				),$this->soap_url);
 			$Credentials = new \WSCredentials();
 			$Credentials->setUsername($username);
