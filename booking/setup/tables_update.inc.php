@@ -4871,7 +4871,7 @@
 
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT MAX(id)+1  as next_id FROM bb_rescategory", __LINE__, __FILE__);
 		$GLOBALS['phpgw_setup']->oProc->next_record();
-		
+
 		$next_id = (int)$GLOBALS['phpgw_setup']->oProc->f('next_id');
 		$next_id_2 = $next_id +1;
 
@@ -5259,6 +5259,162 @@
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.73';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.73 to 0.2.74
+	 *
+	 */
+	$test[] = '0.2.73';
+	function booking_upgrade0_2_73()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_customer',  array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+				'customer_type' => array('type' => 'varchar', 'precision' => '12', 'nullable' => False, 'default' => 'person'),
+				'customer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		)
+			);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+
+		'bb_order',  array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+				'application_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'customer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'timestamp' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
+
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_application' => array('application_id' => 'id'),
+				'bb_customer' => array('customer_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+
+		'bb_order_lines',  array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'order_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+				'artichle_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'unit_prize' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+				'overridden_unit_price' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+				'currency' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),
+				'quantity' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+				'amount' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+				'tax_code' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'tax' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_order' => array('order_id' => 'id'),
+				'bb_artichle' => array('artichle_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_artichle', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'artichle_type' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false, 'default' => 'resource'),
+				'unit' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false ),
+				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'service_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+
+			),
+			'pk' => array('id'),
+			'fk' => array(
+			),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_service', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false),
+				'description' => array('type' => 'text', 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+			),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_resource_service', array(
+			'fd' => array(
+				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'service_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('resource_id', 'service_id'),
+			'fk' => array(
+				'bb_resource' => array('resource_id' => 'id'),
+				'bb_service' => array('service_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_artichle_price', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'artichle_id' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false, 'default' => 'resource'),
+				'from_' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
+				'prize' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_artichle' => array('artichle_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_artichle_price_reduction',  array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'artichle_id' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false, 'default' => 'resource'),
+				'from_' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
+				'percent' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_artichle' => array('artichle_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.74';
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}

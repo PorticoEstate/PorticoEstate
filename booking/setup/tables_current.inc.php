@@ -81,6 +81,9 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		/**
+		 * New order / payment scheme
+		 */
 		'bb_customer' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
@@ -152,6 +155,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'name' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false),
+				'description' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
