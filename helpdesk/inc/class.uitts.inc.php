@@ -1199,16 +1199,6 @@ HTML;
 			self::add_javascript('helpdesk', 'portico', 'tts.index.js');
 
 			phpgwapi_jquery::load_widget('bootstrap-multiselect');
-//			if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap' )
-//			{
-//				phpgwapi_jquery::load_widget('bootstrap-multiselect');
-//			}
-//			else
-//			{
-//				self::add_javascript('phpgwapi', 'materialize', 'js/materialize.min.js');
-//				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/materialize/css/materialize.css');
-//				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/materialize/css/materialize_override.css');
-//			}
 
 			$start_date = urldecode($this->start_date);
 			$end_date = urldecode($this->end_date);
@@ -1284,43 +1274,6 @@ HTML;
 						api.ajax.reload();
 				}, {$refreshinterval} );
 JS;
-			}
-
-			foreach ($filters as $filter)
-			{
-				if($filter['type'] == 'filter' && $filter['multiple'] == true)
-				{
-					if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap' )
-					{
-							$js .=<<<JS
-
-						$("#{$filter['name']}").multiselect({
-							buttonWidth: 250,
-							includeSelectAllOption: true,
-							enableFiltering: true,
-							enableCaseInsensitiveFiltering: true,
-							onChange: function (\$option)
-							{
-								// Check if the filter was used.
-								var query = $("#user_id").find("li.multiselect-filter input").val();
-								if (query)
-								{
-									$("#user_id").find("li.multiselect-filter input").val("").trigger("keydown");
-								}
-							}
-						});
-JS;
-					}
-					else
-					{
-							$js .=<<<JS
-							$("#{$filter['name']}").hide();
-							$("#{$filter['name']}").formSelect();
-JS;
-					}
-
-
-				}
 			}
 
 			if($js)
