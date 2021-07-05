@@ -66,7 +66,7 @@
 				{
 					try
 					{
-						$rc = $this->send->msg('email', $to, $subject, $body, '', $cc='', $bcc='',$from_address, $from_name,'html');
+						$rc = $botts->send->msg('email', $to, $subject, $body, '', $cc='', $bcc='',$from_address, $from_name,'html');
 					}
 					catch (Exception $e)
 					{
