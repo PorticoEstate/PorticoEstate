@@ -5308,14 +5308,31 @@
 			'uc' => array()
 		));
 
-		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_article', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'article_type' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false, 'default' => 'resource'),
+				'unit' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false ),
+				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'service_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+
+			),
+			'pk' => array('id'),
+			'fk' => array(
+			),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 		'bb_order_lines',  array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'order_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
-				'artichle_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'article_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'unit_prize' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
 				'overridden_unit_price' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
 				'currency' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),
@@ -5328,24 +5345,7 @@
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_order' => array('order_id' => 'id'),
-				'bb_artichle' => array('artichle_id' => 'id'),
-			),
-			'ix' => array(),
-			'uc' => array()
-		));
-
-		$GLOBALS['phpgw_setup']->oProc->CreateTable(
-		'bb_artichle', array(
-			'fd' => array(
-				'id' => array('type' => 'auto', 'nullable' => false),
-				'artichle_type' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false, 'default' => 'resource'),
-				'unit' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false ),
-				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'service_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-
-			),
-			'pk' => array('id'),
-			'fk' => array(
+				'bb_article' => array('article_id' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()
@@ -5381,32 +5381,32 @@
 		));
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
-		'bb_artichle_price', array(
+		'bb_article_price', array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
-				'artichle_id' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false, 'default' => 'resource'),
+				'article_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'from_' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
 				'prize' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'bb_artichle' => array('artichle_id' => 'id'),
+				'bb_article' => array('article_id' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()
 		));
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
-		'bb_artichle_price_reduction',  array(
+		'bb_article_price_reduction',  array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
-				'artichle_id' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false, 'default' => 'resource'),
+				'article_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'from_' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
 				'percent' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'bb_artichle' => array('artichle_id' => 'id'),
+				'bb_article' => array('article_id' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()
