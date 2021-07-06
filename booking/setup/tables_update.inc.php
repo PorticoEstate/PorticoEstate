@@ -5293,6 +5293,7 @@
 		'bb_order',  array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
+				'parent_id' => array('type' => 'int', 'nullable' => true, 'precision' => '4'),
 				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 				'application_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'customer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
@@ -5314,9 +5315,9 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'article_type' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false, 'default' => 'resource'),
-				'unit' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false ),
 				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'service_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'unit' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false ),
 
 			),
 			'pk' => array('id'),
