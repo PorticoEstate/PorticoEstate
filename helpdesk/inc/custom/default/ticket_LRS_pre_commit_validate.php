@@ -32,9 +32,10 @@
 
 			function alert_and_reopen_origin($origin_id)
 			{
-				$botts = createObject('helpdesk.botts');
+				$botts	 = createObject('helpdesk.botts');
 				$botts->reset_views($origin_id);
-				$ticket	= $botts->read_single($origin_id);
+				$ticket	 = $botts->read_single($origin_id);
+				$send	 = CreateObject('phpgwapi.send');
 
 				if(!empty($ticket['assignedto']))
 				{
@@ -66,7 +67,7 @@
 				{
 					try
 					{
-						$rc = $botts->send->msg('email', $to, $subject, $body, '', $cc='', $bcc='',$from_address, $from_name,'html');
+						$rc = $send->msg('email', $to, $subject, $body, '', $cc='', $bcc='',$from_address, $from_name,'html');
 					}
 					catch (Exception $e)
 					{
