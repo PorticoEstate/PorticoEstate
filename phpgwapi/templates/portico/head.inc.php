@@ -60,7 +60,8 @@
 	$stylesheets[] = "/phpgwapi/js/DataTables/DataTables/css/jquery.dataTables.min.css";
 	$stylesheets[] = "/phpgwapi/js/DataTables/DataTables/css/dataTables.jqueryui.min.css";
 	$stylesheets[] = "/phpgwapi/js/DataTables/Responsive/css/responsive.dataTables.min.css";
-	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
+//	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
+	$stylesheets[] = "/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
 
 	$stylesheets[] = "/phpgwapi/templates/base/css/base.css";
 	$stylesheets[] = "/phpgwapi/templates/portico/css/base.css";

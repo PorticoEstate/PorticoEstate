@@ -49,7 +49,7 @@
 
 	$stylesheets[] = "/phpgwapi/js/bootstrap/css/bootstrap.min.css";
 
-	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
+	$stylesheets[] = "/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
 
 //	$stylesheets[] = "/phpgwapi/templates/base/font-awesome/css/font-awesome.min.css";
 	
