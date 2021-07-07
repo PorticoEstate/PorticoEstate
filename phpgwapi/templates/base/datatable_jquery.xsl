@@ -1163,6 +1163,14 @@
 													includeSelectAllOption: true,
 													enableFiltering: true,
 													enableCaseInsensitiveFiltering: true,
+
+													onDropdownShown : function(event) {
+														setTimeout(function(){
+															oControl.parent().find("button.multiselect-clear-filter").click();
+															oControl.parent().find("input[type='text'].multiselect-search").focus();
+														}, 100);
+													},
+
 													onChange: function($option) {
 														// Check if the filter was used.
 														var query = $(oControl).find('li.multiselect-filter input').val();
