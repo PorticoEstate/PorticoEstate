@@ -1359,7 +1359,9 @@
 
 			$sql = "SELECT DISTINCT account_lid,account_lastname, account_firstname FROM fm_ecodimb_role_user"
 				. " {$this->db->join} phpgw_accounts ON fm_ecodimb_role_user.user_id = phpgw_accounts.account_id"
-				. " WHERE {$role_filter} {$filter_dimb} AND expired_on IS NULL"
+				. " WHERE {$role_filter} {$filter_dimb}"
+				. " AND expired_on IS NULL"
+				. " AND account_status = 'A'"
 				. ' AND active_from < ' . time()
 				. ' AND (active_to > ' . time() . ' OR active_to = 0)'
 				. " ORDER BY account_lastname ASC, account_firstname ASC";

@@ -993,6 +993,11 @@
 
 			$receipt = $this->so->add($data, $values_attribute);
 
+			/*
+			 * $id is used for the custom functions
+			 */
+			$id = $receipt['id'];
+
 			$this->config->read();
 
 			if (!empty($data['send_mail']) || !empty($this->config->config_data['mailnotification'] ))

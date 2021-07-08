@@ -832,14 +832,14 @@
 
 				if (!$errors['event'] and ! $errors['resource_number'] and ! $errors['organization_number'] and ! $errors['invoice_data'] && !$errors['contact_name'] && !$errors['cost'])
 				{
-					if ( phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtocollision', 'POST') ||  phpgw::get_var('sendsmstocontact', 'POST'))
+		//			if ( phpgw::get_var('sendtorbuilding', 'bool', 'POST') || phpgw::get_var('sendtocontact', 'bool', 'POST') || phpgw::get_var('sendtocollision', 'bool', 'POST') ||  phpgw::get_var('sendsmstocontact', 'bool', 'POST') || phpgw::get_var('sendtorbuilding_email1', 'bool', 'POST') || phpgw::get_var('sendtorbuilding_email2', 'bool', 'POST'))
 					{
 
-						if ((phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendsmstocontact', 'POST')) && phpgw::get_var('active', 'POST'))
+						if ((phpgw::get_var('sendtocollision', 'bool', 'POST') || phpgw::get_var('sendtocontact', 'bool', 'POST') || phpgw::get_var('sendtorbuilding', 'bool', 'POST') || phpgw::get_var('sendsmstocontact', 'bool', 'POST')  || phpgw::get_var('sendtorbuilding_email1', 'bool', 'POST') || phpgw::get_var('sendtorbuilding_email2', 'bool', 'POST')) && phpgw::get_var('active', 'bool', 'POST'))
 						{
 							$maildata = $this->create_sendt_mail_notification_comment_text($event, $errors);
 
-							if (phpgw::get_var('sendtocollision', 'POST'))
+							if (phpgw::get_var('sendtocollision', 'bool', 'POST'))
 							{
 								$comment_text_log = "<span style='color: green;'>" . lang('Message sent about the changes in the reservations') . ':</span><br />';
 								$res = array();
@@ -852,7 +852,7 @@
 								$comment_text_log .= $event['building_name'] . " (" . substr($resname, 0, -2) . ") " . pretty_timestamp($event['from_']) . " - " . pretty_timestamp($event['to_']);
 								$this->add_comment($event, $comment_text_log);
 							}
-							if (phpgw::get_var('sendtocollision', 'POST'))
+							if (phpgw::get_var('sendtocollision', 'bool', 'POST'))
 							{
 
 								$subject = $config->config_data['event_conflict_mail_subject'];
@@ -893,7 +893,7 @@
 									$this->add_comment($event, $comment);
 								}
 							}
-							if (phpgw::get_var('sendtocontact', 'POST'))
+							if (phpgw::get_var('sendtocontact', 'bool', 'POST'))
 							{
 								$subject = $config->config_data['event_change_mail_subject'];
 								$body = "<p>" . $config->config_data['event_change_mail'] . "\n<br /Melding:" . phpgw::get_var('mail','html', 'POST');
@@ -904,7 +904,7 @@
 								$this->add_comment($event, $comment);
 							}
 							//sms
-                            if (phpgw::get_var('sendsmstocontact', 'POST'))
+                            if (phpgw::get_var('sendsmstocontact', 'bool', 'POST'))
 							{
                                 $rool = phpgw::get_var('mail','html', 'POST');
                                 $phone_number = phpgw::get_var('contact_phone', 'string', 'POST');
@@ -931,7 +931,7 @@
 								}
 							}
 
-							if (phpgw::get_var('sendtorbuilding', 'POST'))
+							if (phpgw::get_var('sendtorbuilding', 'bool', 'POST') || phpgw::get_var('sendtorbuilding_email1', 'bool', 'POST') || phpgw::get_var('sendtorbuilding_email2', 'bool', 'POST'))
 							{
 
 								$subject = $config->config_data['event_mail_building_subject'];
@@ -961,37 +961,39 @@
 
 								$sendt = 0;
 								$mail_sendt_to = [];
+/*
 								if ($event['contact_email'])
 								{
 									$sendt++;
 									$mail_sendt_to[] = $event['contact_email'];
 									$this->send_mailnotification($event['contact_email'], $subject, $body);
 								}
-								if ($building_info['email'])
+*/
+								if (phpgw::get_var('sendtorbuilding', 'bool', 'POST') && $building_info['email'])
 								{
 									$sendt++;
 									$mail_sendt_to[] = $building_info['email'];
 									$this->send_mailnotification($building_info['email'], $subject, $body);
 								}
-								if ($building_info['tilsyn_email'])
+								if (phpgw::get_var('sendtorbuilding', 'bool', 'POST') && $building_info['tilsyn_email'])
 								{
 									$sendt++;
 									$mail_sendt_to[] = $building_info['tilsyn_email'];
 									$this->send_mailnotification($building_info['tilsyn_email'], $subject, $body);
 								}
-								if ($building_info['tilsyn_email2'])
+								if (phpgw::get_var('sendtorbuilding', 'bool', 'POST') && $building_info['tilsyn_email2'])
 								{
 									$sendt++;
 									$mail_sendt_to[] = $building_info['tilsyn_email2'];
 									$this->send_mailnotification($building_info['tilsyn_email2'], $subject, $body);
 								}
-								if ($_POST['sendtorbuilding_email1'])
+								if (phpgw::get_var('sendtorbuilding_email1', 'bool', 'POST'))
 								{
 									$sendt++;
 									$mail_sendt_to[] = $_POST['sendtorbuilding_email1'];
 									$this->send_mailnotification($_POST['sendtorbuilding_email1'], $subject, $body);
 								}
-								if ($_POST['sendtorbuilding_email2'])
+								if (phpgw::get_var('sendtorbuilding_email2', 'bool', 'POST'))
 								{
 									$sendt++;
 									$mail_sendt_to[] = $_POST['sendtorbuilding_email2'];
@@ -1009,7 +1011,7 @@
 								}
 							}
 						}
-						if (!phpgw::get_var('active', 'POST') && phpgw::get_var('sendtorbuilding', 'POST'))
+						if (!phpgw::get_var('active', 'bool', 'POST') && phpgw::get_var('sendtorbuilding', 'bool', 'POST'))
 						{
 
 							$subject = $config->config_data['event_canceled_mail_subject'];

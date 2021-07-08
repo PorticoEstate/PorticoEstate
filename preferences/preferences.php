@@ -775,7 +775,7 @@
 					<script>
 						var oArgs = {menuaction: 'preferences.boadmin_acl.get_users'};
 						var strURL = phpGWLink('index.php', oArgs, true);
-						
+
 						$("#account_id").select2({
 						  ajax: {
 							url: strURL,
@@ -794,7 +794,20 @@
 						  minimumInputLength: 2,
 						  language: "no",
 						  allowClear: true
-						});						
+						});
+
+						$('#account_id').on('select2:open', function (e) {
+
+							$(".select2-search__field").each(function()
+							{
+								if ($(this).attr("aria-controls") == 'select2-account_id-results')
+								{
+									$(this)[0].focus();
+								}
+							});
+						});
+
+
 					</script>
 HTML;
 

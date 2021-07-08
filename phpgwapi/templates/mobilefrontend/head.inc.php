@@ -50,8 +50,8 @@
 	$stylesheets[] = "/{$app}/templates/mobilefrontend/css/base.css";
 //	$stylesheets[] = "/{$app}/templates/mobilefrontend/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	$stylesheets[] = "/phpgwapi/templates/mobilefrontend/css/base.css";
-//	$stylesheets[] = "/phpgwapi/templates/base/font-awesome/css/font-awesome.min.css";
-	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
+//	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
+	$stylesheets[] = "/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
 
 	foreach ( $stylesheets as $stylesheet )
 	{
