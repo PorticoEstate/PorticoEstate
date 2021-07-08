@@ -74,13 +74,14 @@
 		'bb_participant',
 		'bb_participant_limit',
 		'bb_customer',
-		'bb_order',
-		'bb_order_lines',
+		'bb_article_type',
 		'bb_article',
 		'bb_service',
 		'bb_resource_service',
 		'bb_article_price',
 		'bb_article_price_reduction',
+		'bb_order',
+		'bb_order_lines',
 	);
 
 	$setup_info['booking']['description'] = 'Bergen kommune booking';

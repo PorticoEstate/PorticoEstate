@@ -5272,6 +5272,17 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+		# BEGIN Evil
+//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_price_reduction');
+//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_price');
+//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_resource_service');
+//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_service');
+//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_order_lines');
+//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article');
+//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_category');
+//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_order');
+//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_customer');
+		# END Evil
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 		'bb_customer',  array(
@@ -5289,7 +5300,6 @@
 			);
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
-
 		'bb_order',  array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
@@ -5309,22 +5319,38 @@
 			'uc' => array()
 		));
 
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_article_category', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO bb_article_category ( id, name)"
+				. " VALUES (1, 'resource')", __LINE__, __FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO bb_article_category ( id, name)"
+				. " VALUES (2, 'service')", __LINE__, __FILE__);
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 		'bb_article', array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
-				'article_type' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false, 'default' => 'resource'),
-				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'service_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'article_cat_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'article_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'unit' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false ),
-
 			),
 			'pk' => array('id'),
 			'fk' => array(
+				'bb_article_category' => array('article_cat_id' => 'id'),
 			),
 			'ix' => array(),
-			'uc' => array()
+			'uc' => array('article_cat_id', 'article_id')
 		));
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(

@@ -1202,19 +1202,30 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_article_category' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
 		'bb_article' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
-				'article_type' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false, 'default' => 'resource'),
-				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'service_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'article_cat_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'article_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'unit' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false ),
 			),
 			'pk' => array('id'),
 			'fk' => array(
+				'bb_article_category' => array('article_cat_id' => 'id'),
 			),
 			'ix' => array(),
-			'uc' => array()
+			'uc' => array('article_cat_id', 'article_id')
 		),
 		'bb_order_lines' => array(
 			'fd' => array(

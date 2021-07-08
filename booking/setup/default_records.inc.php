@@ -533,3 +533,8 @@
 	);
 
 
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO bb_article_category ( id, name)"
+			. " VALUES (1, 'resource')", __LINE__, __FILE__);
+
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO bb_article_category ( id, name)"
+			. " VALUES (2, 'service')", __LINE__, __FILE__);
