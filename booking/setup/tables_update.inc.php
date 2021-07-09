@@ -5270,18 +5270,21 @@
 	$test[] = '0.2.73';
 	function booking_upgrade0_2_73()
 	{
+
+		$GLOBALS['phpgw']->locations->add('.article', 'article', 'booking');
+
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
 		# BEGIN Evil
-//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_price_reduction');
-//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_price');
-//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_resource_service');
-//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_service');
-//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_order_lines');
-//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article');
-//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_category');
-//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_order');
-//		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_customer');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_price_reduction');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_price');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_resource_service');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_service');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_order_lines');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_category');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_order');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_customer');
 		# END Evil
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
@@ -5344,6 +5347,7 @@
 				'article_cat_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'article_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'unit' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false ),
+				'owner_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(

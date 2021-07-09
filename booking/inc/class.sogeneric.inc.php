@@ -120,6 +120,32 @@
 					);
 
 					break;
+				case 'article_category':
+					$info = array(
+						'table'				 => 'bb_article_category',
+						'id'				 => array('name' => 'id', 'type' => 'auto'),
+						'fields'			 => array(
+							array(
+								'name'	 => 'name',
+								'descr'	 => lang('name'),
+								'type'	 => 'varchar'
+							),
+						),
+						'edit_msg'			 => lang('edit'),
+						'add_msg'			 => lang('add'),
+						'name'				 => $GLOBALS['phpgw']->translation->translate('article category', array(), false, 'booking'),
+						'acl_app'			 => 'booking',
+						'acl_location'		 => '.admin',
+						'system_location'	 => '.article',
+						'menu_selection'	 => 'booking::settings::article',
+						'default'			 => array(
+							'owner_id'		 => array('add' => '$this->account'),
+						),
+						'check_grant'		 => false
+					);
+
+					break;
+
 // END BOOKING TABLES
 				default:
 					$message = lang('ERROR: illegal type %1', $type);

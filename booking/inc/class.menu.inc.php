@@ -226,6 +226,12 @@
 						),
 					)
 				),
+				'article' => array
+				(
+					'text'	=> lang('article'),
+				 	'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiarticle.index') ),
+				                     'image'	=> array('property', 'article'),
+				),
 				// 'costs' => array
 				// (
 				// 	'text'	=> lang('Costs'),

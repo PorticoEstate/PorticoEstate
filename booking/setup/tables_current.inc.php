@@ -1219,6 +1219,7 @@
 				'article_cat_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'article_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'unit' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false ),
+				'owner_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
