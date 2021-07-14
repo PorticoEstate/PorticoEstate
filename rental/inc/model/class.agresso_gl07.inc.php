@@ -348,7 +348,34 @@
 			$amount = -1.0 * $price_item->get_total_price();
 			$bill_year = $this->billing_job->get_year();
 			$bill_month = $this->billing_job->get_month();
-	//		$this->billing_job->get_month()
+
+			$contract = rental_socontract::get_instance()->get_single($invoice->get_contract_id());
+			$party_names = explode('<br/>', rtrim($contract->get_party_name(), '<br/>'));
+			$serialized_party = $invoice->get_party()->serialize();
+			$party_address = $serialized_party['address'];
+			$party_name = $serialized_party['name'];
+			$_party_names = array();
+
+			if (count($party_names) > 1)
+			{
+				foreach ($party_names as $value)
+				{
+					if ($party_name == $value)
+					{
+						continue;
+					}
+					$_party_names[] = $value;
+				}
+			}
+			else
+			{
+				$_party_names = $party_names;
+			}
+
+			//navn på leieboer,
+			$party_full_name = implode(', ', $_party_names);
+
+			//		$this->billing_job->get_month()
 			//$order_id = $order_id + 39500000;
 			// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 			//$order = array();
@@ -362,7 +389,7 @@
 				'bill_year' => $bill_year,
 				'bill_month' => $bill_month,
 				'building' => $building,
-				'name' => $party_name,
+				'name' => $party_full_name,
 				'amount' => $this->get_formatted_amount_excel($amount),
 				'article description' => utf8_decode($product_item['article_description']),
 				'article_code' => $part_no, //$product_item['article_code'],
@@ -485,7 +512,7 @@
 //            var_dump($amount);
 //            var_dump($belop);
 			$amount = round($amount, 2) * 100;
-			$belop = substr($amount, 0, strlen($amount) - 2) . '.' . substr($amount, -2);
+			$belop = substr($amount, 0, strlen($amount) - 2) . ',' . substr($amount, -2);
 			if ($amount < 0) // Negative number
 			{
 				return '-' . sprintf("%016.16s", abs($belop)); // We have to have the sign at the start of the string
