@@ -226,11 +226,20 @@
 						),
 					)
 				),
-				'article' => array
+				'commerce' => array
 				(
-					'text'	=> lang('article'),
+					'text'	=> lang('commerce'),
 				 	'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiarticle.index') ),
 				                     'image'	=> array('property', 'article'),
+					'children'	=> array(
+						'article' => array
+						(
+							'text'	=> lang('article'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiarticle.index') ),
+											 'image'	=> array('property', 'article'),
+						),
+
+					)
 				),
 				// 'costs' => array
 				// (

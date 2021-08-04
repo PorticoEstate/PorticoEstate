@@ -77,6 +77,21 @@
 			return $category_options;
 		}
 
+		private function get_unit_list( $selected = 0 )
+		{
+			$unit_list = array();
+			$unit_list[] = array('id' => 'each', 'name' => lang('each'));
+			$unit_list[] = array('id' => 'kg', 'name' => lang('kg'));
+			$unit_list[] = array('id' => 'm', 'name' => lang('meter'));
+			$unit_list[] = array('id' => 'm2', 'name' => lang('square meter'));
+
+			foreach ($unit_list as &$unit)
+			{
+				$unit['selected'] = $unit['id'] == $selected ? 1 : 0;
+			}
+			return $unit_list;
+		}
+
 		public function index()
 		{
 			if (empty($this->permissions[PHPGW_ACL_READ]))
@@ -109,13 +124,13 @@
 								'text' => lang('category'),
 								'list' =>  $this->get_category_options()
 							),
-							array(
-								'type' =>  $this->currentapp == 'booking' ? 'checkbox' : 'hidden',
-								'name' => 'filter_active',
-								'text' => lang('showall'),
-								'value' =>  1,
-								'checked'=> 1,
-							)
+//							array(
+//								'type' =>  $this->currentapp == 'booking' ? 'checkbox' : 'hidden',
+//								'name' => 'filter_active',
+//								'text' => lang('showall'),
+//								'value' =>  1,
+//								'checked'=> 1,
+//							)
 						)
 					)
 				),
@@ -162,7 +177,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript($this->currentapp, 'portico', 'article.index.js');
+			self::add_javascript($this->currentapp, 'base', 'article.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -196,9 +211,13 @@
 				'label' => lang('article'),
 				'link' => '#first_tab',
 			);
-			$tabs['booking'] = array(
-				'label' => lang('booking'),
-				'link' => '#booking',
+			$tabs['prizing'] = array(
+				'label' => lang('prizing'),
+				'link' => '#prizing',
+			);
+			$tabs['files'] = array(
+				'label' => lang('files'),
+				'link' => '#files',
 			);
 
 			$bocommon = CreateObject('property.bocommon');
@@ -255,20 +274,26 @@
 
 			$config = CreateObject('phpgwapi.config', 'booking')->read();
 			$booking_interval = !empty($config['booking_interval']) ? $config['booking_interval'] : null;
-			$data = array(
-				'datatable_def' => $datatable_def,
-				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uiarticle.save")),
-				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uiarticle.index",)),
-				'article' => $article,
-				'category_list' => array('options' => $this->get_category_options( $article->category_id )),
-				'booking_interval' => $booking_interval,
-				'mode' => $mode,
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'value_active_tab' => $active_tab
+			$data				 = array(
+				'datatable_def'		 => $datatable_def,
+				'form_action'		 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle.save")),
+				'cancel_url'		 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle.index",)),
+				'article'			 => $article,
+				'article_categories' => array('options' => $this->get_category_options($article->article_cat_id)),
+				'unit_list'			 => array('options' => $this->get_unit_list($article->unit)),
+				'booking_interval'	 => $booking_interval,
+				'mode'				 => $mode,
+				'tabs'				 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'value_active_tab'	 => $active_tab,
+				'multi_upload_parans' => "{menuaction:'{$this->currentapp}.uiarticle.build_multi_upload_file', id:'{$id}'}",
+				'multiple_uploader' => true,
 			);
+			self::add_javascript('booking', 'base', 'common');
+			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::load_widget('file-upload-minimum');
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript('bookingfrontend', 'portico', 'validate.js');
-			self::render_template_xsl(array('article', 'datatable_inline'), array($mode => $data));
+			self::add_javascript('booking', 'base', 'article.js');
+			self::render_template_xsl(array('article', 'datatable_inline','files' ,'multi_upload_file_inline'), array($mode => $data));
 		}
 
 		/*

@@ -5346,6 +5346,7 @@
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'article_cat_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'article_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'article_code' => array('type' => 'varchar', 'precision' => '15', 'nullable' => false ),
 				'unit' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false ),
 				'owner_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
@@ -5387,6 +5388,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'name' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false),
+				'active' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '1'),
 				'description' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
@@ -5418,6 +5420,7 @@
 				'article_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'from_' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
 				'prize' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+				'remark' => array('type' => 'varchar', 'precision' => 20, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -5442,6 +5445,13 @@
 			'ix' => array(),
 			'uc' => array()
 		));
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query(
+			"CREATE OR REPLACE VIEW bb_article_view AS " .
+			"SELECT id, name, description, active, 1 AS article_cat_id FROM bb_resource " .
+			"UNION " .
+			"SELECT id, name, description, active, 2 AS article_cat_id  FROM bb_service" , __LINE__, __FILE__
+		);
 
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{

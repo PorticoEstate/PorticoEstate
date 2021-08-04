@@ -42,34 +42,35 @@
 
 		protected
 			$id,
-			$user_id,
-			$active,
+			$article_id,
+			$article_name,
 			$article_cat_id,
 			$article_cat_name,
-			$created,
-			$modified,
+//			$created,
+//			$modified,
+//			,
+//			$name,
+//			$address_2,
+//			$zip_code,
+//			$city,
+//			$organization_number,
+//			$contact_name,
+//			$contact_email,
+//			$contact_phone,
+//			$contact2_name,
+//			$contact2_email,
+//			$contact2_phone,
+//			$number_of_users,
+//			$max_events,
+//			$account_number,
+//			$description,
+//			$grant_non_public,
+//			$remark,
+//			$comments,
+//			$comment;
+			$article_code,
 			$owner_id,
-			$name,
-			$address_1,
-			$address_2,
-			$zip_code,
-			$city,
-			$organization_number,
-			$contact_name,
-			$contact_email,
-			$contact_phone,
-			$contact2_name,
-			$contact2_email,
-			$contact2_phone,
-			$number_of_users,
-			$max_events,
-			$account_number,
-			$description,
-			$grant_non_public,
-			$remark,
-			$comments,
-			$comment;
-
+			$unit;
 		protected $field_of_responsibility_name = '.article';
 
 		public function __construct( int $id = null )
@@ -103,21 +104,25 @@
 			$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
 			$fields = array(
-				'id' => array('action'=> PHPGW_ACL_READ,
+				'id' => array(
+					'action'=> PHPGW_ACL_READ,
 					'type' => 'int',
 					'label' => 'id',
 					'sortable'=> true,
 					'formatter' => 'JqueryPortico.formatLink',
 					'public'	=> true
 					),
-				'owner_id' => array('action'=> PHPGW_ACL_ADD,
+				'owner_id' => array(
+					'action'=> PHPGW_ACL_ADD,
 					'type' => 'int',
 					'required' => false
 					),
-				'article_cat_id' => array('action'=>  PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+				'article_cat_id' => array(
+					'action'=>  PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int'
 					),
-				'article_cat_name' => array('action'=>  PHPGW_ACL_READ,
+				'article_cat_name' => array(
+					'action'=>  PHPGW_ACL_READ,
 						'type' => 'string',
 						'query' => true,
 						'label' => 'category',
@@ -128,9 +133,36 @@
 							'column' => 'name'
 							)
 						),
-
+				'article_id' => array(
+					'action'=>  PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'int'
+					),
+				'article_name' => array(
+					'action'=>  PHPGW_ACL_READ,
+						'type' => 'string',
+						'query' => true,
+						'label' => 'name',
+						'multiple_join' => array(
+							'statement' => ' JOIN bb_article_view ON bb_article_view.id = bb_article.article_id'
+							. ' AND bb_article_view.article_cat_id = bb_article.article_cat_id',
+							'column' => 'bb_article_view.name'
+						),
+					),
+				'article_code' => array(
+					'action'=>  PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => true,
+					'label' => 'article code'
+					),
+				'unit' => array(
+					'action'=>  PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => true,
+					'label' => 'unit'
+					),
 			);
 
+/*
 			if($currentapp == 'booking')
 			{
 				$backend_fields = array(
@@ -145,7 +177,7 @@
 					$fields[$key] = $field_info;
 				}
 			}
-
+*/
 			if($debug)
 			{
 				foreach ($fields as $field => $field_info)
