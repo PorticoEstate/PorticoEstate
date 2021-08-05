@@ -145,6 +145,44 @@
 					);
 
 					break;
+				case 'article_service':
+					$info = array(
+						'table'				 => 'bb_service',
+						'id'				 => array('name' => 'id', 'type' => 'auto'),
+						'fields'			 => array(
+							array(
+								'name'	 => 'name',
+								'descr'	 => lang('name'),
+								'type'	 => 'varchar'
+							),
+							array(
+								'name'	 => 'description',
+								'descr'	 => lang('description'),
+								'type'	 => 'text'
+							),
+							array(
+								'name'		 => 'active',
+								'descr'		 => lang('active'),
+								'type'		 => 'checkbox',
+								'default'	 => 'checked',
+								'filter'	 => true,
+								'sortable'	 => true,
+								'values_def' => array(
+									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
+								)
+							)
+						),
+						'edit_msg'			 => lang('edit'),
+						'add_msg'			 => lang('add'),
+						'name'				 => $GLOBALS['phpgw']->translation->translate('article category', array(), false, 'booking'),
+						'acl_app'			 => 'booking',
+						'acl_location'		 => '.admin',
+						'system_location'	 => '.article',
+						'menu_selection'	 => 'booking::settings::article',
+						'check_grant'		 => false
+					);
+
+					break;
 
 // END BOOKING TABLES
 				default:

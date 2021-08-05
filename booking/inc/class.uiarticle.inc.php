@@ -35,15 +35,15 @@
 	{
 
 		public $public_functions = array(
-			'add' => true,
-			'index' => true,
-			'query' => true,
-			'view' => true,
-			'edit' => true,
-			'save' => true,
-			'get' => true
+			'add'			 => true,
+			'index'			 => true,
+			'query'			 => true,
+			'view'			 => true,
+			'edit'			 => true,
+			'save'			 => true,
+			'get'			 => true,
+			'get_services'	 => true
 		);
-
 		protected
 			$fields,
 			$permissions,
@@ -90,6 +90,12 @@
 				$unit['selected'] = $unit['id'] == $selected ? 1 : 0;
 			}
 			return $unit_list;
+		}
+
+		public function get_services()
+		{
+			$services_list = execMethod('booking.bogeneric.get_list', array('type' => 'article_service'));
+			return $services_list;
 		}
 
 		public function index()
@@ -214,10 +220,12 @@
 			$tabs['prizing'] = array(
 				'label' => lang('prizing'),
 				'link' => '#prizing',
+				'disable' => empty($id) ? true : false
 			);
 			$tabs['files'] = array(
 				'label' => lang('files'),
 				'link' => '#files',
+				'disable' => empty($id) ? true : false
 			);
 
 			$bocommon = CreateObject('property.bocommon');

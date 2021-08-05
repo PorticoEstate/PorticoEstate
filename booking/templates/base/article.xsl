@@ -47,7 +47,7 @@
 									<label>
 										<xsl:value-of select="php:function('lang', 'id')"/>
 									</label>
-									<input type="hidden" id="application_id" name="id" value="{article/id}"/>
+									<input type="hidden" id="article_id" name="id" value="{article/id}"/>
 									<xsl:value-of select="article/id"/>
 								</div>
 							</xsl:if>
@@ -55,49 +55,19 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'category')"/>
 								</label>
-								<select id="field_article_cat_id" name="article_cat_id" class="pure-input-1-2" >
-									<xsl:apply-templates select="article_categories/options"/>
-								</select>
-							</div>
-							<div class="pure-control-group">
-								<label for="field_building_name">
-									<xsl:value-of select="php:function('lang', 'Building')" />
-								</label>
-								<input id="field_building_id" name="building_id" type="hidden">
-									<xsl:attribute name="value">
-										<xsl:value-of select="article/building_id"/>
-									</xsl:attribute>
-								</input>
-								<input id="field_building_name" name="building_name" type="text">
+								<select id="field_article_cat_id" name="article_cat_id" class="pure-input-1-2">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Please enter a building name')" />
-									</xsl:attribute>
-									<xsl:attribute name="value">
-										<xsl:value-of select="article/building_name"/>
-									</xsl:attribute>
-								</input>
-								<div id="building_container"></div>
+									<xsl:apply-templates select="article_categories/options"/>
+								</select>
 							</div>
-							<div class="pure-control-group">
-								<label style="vertical-align:top;">
-									<xsl:value-of select="php:function('lang', 'Resources')" />
-								</label>
-								<div id="resources_container" style="display:inline-block;">
-									<span class="select_first_text">
-										<xsl:value-of select="php:function('lang', 'Select a building first')" />
-									</span>
-								</div>
-							</div>
-					
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'article code')"/>
 								</label>
 								<input type="text" id="article_code" name="article_code" value="{article/article_code}" class="pure-input-1-2" >
-									<xsl:attribute name="required">
+									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
 									<xsl:attribute name="placeholder">
@@ -109,8 +79,8 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'unit')"/>
 								</label>
-								<select id="unit" name="unit" class="pure-input-1-2" >
-									<xsl:attribute name="required">
+								<select id="unit" name="unit" class="pure-input-1-2" required="required">
+									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
 									<option value="">
@@ -119,12 +89,43 @@
 									<xsl:apply-templates select="unit_list/options"/>
 								</select>
 							</div>
+							<div id="resource_selector">
+								<div class="pure-control-group">
+									<label for="field_building_name">
+										<xsl:value-of select="php:function('lang', 'Building')" />
+									</label>
+									<input id="field_building_id" name="building_id" type="hidden">
+										<xsl:attribute name="value">
+											<xsl:value-of select="article/building_id"/>
+										</xsl:attribute>
+									</input>
+									<input id="field_building_name" name="building_name" type="text" class="pure-input-1-2" >
+										<xsl:attribute name="value">
+											<xsl:value-of select="article/building_name"/>
+										</xsl:attribute>
+									</input>
+									<div id="building_container"></div>
+								</div>
+								<div class="pure-control-group">
+									<label style="vertical-align:top;">
+										<xsl:value-of select="php:function('lang', 'Resources')" />
+									</label>
+									<div id="resources_container" style="display:inline-block;">
+										<span class="select_first_text">
+											<xsl:value-of select="php:function('lang', 'Select a building first')" />
+										</span>
+									</div>
+								</div>
+							</div>
+					
 							<div id="service_container" class="pure-control-group" style="display:none;">
 								<label>
 									<xsl:value-of select="php:function('lang', 'service')"/>
 								</label>
 								<select id="field_service_id" name="service_id" class="pure-input-1-2" >
-									<xsl:apply-templates select="article_categories/options"/>
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
 								</select>
 							</div>
 
