@@ -18,10 +18,11 @@
 
 <!-- add / edit  -->
 <xsl:template xmlns:php="http://php.net/xsl" match="edit">
+	<xsl:variable name="date_format">
+		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
+	</xsl:variable>
+
 	<div class="content">
-		<xsl:variable name="date_format">
-			<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
-		</xsl:variable>
 
 		<div id='receipt'></div>
 		<div>
@@ -31,11 +32,13 @@
 
 			<script type="text/javascript">
 				var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required', 'next', 'save', 'Name', 'Resource Type', 'Select')"/>;
+				var initialSelection = <xsl:value-of select="resources_json"/>;
+
 			</script>
 			<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 				<div id="tab-content">
 					<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-					
+
 					<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 					<div id="first_tab">
 						<fieldset>
@@ -47,15 +50,24 @@
 									<label>
 										<xsl:value-of select="php:function('lang', 'id')"/>
 									</label>
-									<input type="hidden" id="article_id" name="id" value="{article/id}"/>
 									<xsl:value-of select="article/id"/>
 								</div>
 							</xsl:if>
+							<input type="hidden" id="id" name="id" value="{article/id}"/>
+							<input type="hidden" id="article_id" name="article_id" value="{article/article_id}"/>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'category')"/>
 								</label>
 								<select id="field_article_cat_id" name="article_cat_id" class="pure-input-1-2">
+									<xsl:if test="article/id > 0">
+										<xsl:attribute name="readonly">
+											<xsl:text>readonly</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="style">
+											<xsl:text>pointer-events: none;</xsl:text>
+										</xsl:attribute>
+									</xsl:if>
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
@@ -89,7 +101,7 @@
 									<xsl:apply-templates select="unit_list/options"/>
 								</select>
 							</div>
-							<div id="resource_selector">
+							<div id="resource_selector" style="display:none;">
 								<div class="pure-control-group">
 									<label for="field_building_name">
 										<xsl:value-of select="php:function('lang', 'Building')" />
@@ -117,7 +129,7 @@
 									</div>
 								</div>
 							</div>
-					
+
 							<div id="service_container" class="pure-control-group" style="display:none;">
 								<label>
 									<xsl:value-of select="php:function('lang', 'service')"/>
@@ -126,6 +138,7 @@
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
+									<xsl:apply-templates select="service_list/options"/>
 								</select>
 							</div>
 
@@ -134,234 +147,61 @@
 					<div id="prizing">
 						<fieldset>
 							<legend>
-								<xsl:value-of select="php:function('lang', 'arena requirement')"/>
+								<xsl:value-of select="php:function('lang', 'prizing')"/>
 							</legend>
 
 							<div class="pure-control-group">
+								<xsl:variable name="lang_date_from">
+									<xsl:value-of select="php:function('lang', 'date from')"/>
+								</xsl:variable>
 								<label>
-									<xsl:value-of select="php:function('lang', 'size of stage')"/>
+									<xsl:value-of select="$lang_date_from"/>
 								</label>
-								<input type="text" id="stage_width" name="stage_width" value="{article/stage_width}" size="2">
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'width')"/>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation">
-										<xsl:text>number</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-optional">
-										<xsl:text>true</xsl:text>
-									</xsl:attribute>
-								</input>
-								<xsl:text> X </xsl:text>
-								<input type="text" id="stage_depth" name="stage_depth" value="{article/stage_depth}" size="2">
-									<xsl:attribute name="data-validation">
-										<xsl:text>number</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'depth')"/>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-optional">
-										<xsl:text>true</xsl:text>
-									</xsl:attribute>
-								</input>
-								<xsl:text> M </xsl:text>
-								<input id="stage_size" type="text" disabled="disabled" size="3"/>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'stage requirement')"/>
-								</label>
-								<textarea cols="47" rows="7" name="stage_requirement" class="pure-input-1-2" >
-									<xsl:value-of select="article/stage_requirement"/>
-								</textarea>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'wardrobe')"/>
-								</label>
-								<input type="checkbox" name="wardrobe" id="wardrobe" value="1">
-									<xsl:if test="article/wardrobe = 1">
-										<xsl:attribute name="checked" value="checked"/>
+								<input type="text" id="date_from" name="article_prizing[date_from]" size="10" readonly="readonly" >
+									<xsl:if test="article_prizing/date_from != 0 and article_prizing/date_from != ''">
+										<xsl:attribute name="value">
+											<xsl:value-of select="php:function('date', $date_format, number(article_prizing/date_from))"/>
+										</xsl:attribute>
 									</xsl:if>
-								</input>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'audience limit')"/>
-								</label>
-								<input type="text" id="audience_limit" name="audience_limit" value="{article/audience_limit}"  size="5">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
 									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'audience limit')"/>
-									</xsl:attribute>
-									<xsl:attribute name="placeholder">
-										<xsl:value-of select="php:function('lang', 'integer')"/>
+										<xsl:value-of select="$lang_date_from"/>
 									</xsl:attribute>
 								</input>
 							</div>
-						</fieldset>
-						<fieldset>
-							<legend>
-								<xsl:value-of select="php:function('lang', 'labour support')"/>
-							</legend>
-
 							<div class="pure-control-group">
 								<label>
+									<xsl:value-of select="php:function('lang', 'prize')"/>
 								</label>
-								<div class="pure-custom">
-									<table class="pure-table pure-table-bordered" border="0" cellspacing="2" cellpadding="2">
-										<thead>
-											<tr>
-												<th></th>
-												<th>
-													<xsl:value-of select="php:function('lang', 'minute')"/>
-												</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>
-													<xsl:value-of select="php:function('lang', 'rig up min before')"/>
-												</td>
-												<td>
-													<input type="text" id="rig_up_min_before" name="rig_up_min_before" value="{article/rig_up_min_before}" size="5">
-														<xsl:attribute name="data-validation">
-															<xsl:text>number</xsl:text>
-														</xsl:attribute>
-														<xsl:attribute name="data-validation-error-msg">
-															<xsl:value-of select="php:function('lang', 'rig up min before')"/>
-														</xsl:attribute>
-														<xsl:attribute name="placeholder">
-															<xsl:value-of select="php:function('lang', 'integer')"/>
-														</xsl:attribute>
-													</input>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<xsl:value-of select="php:function('lang', 'rig down min after')"/>
-												</td>
-												<td>
-													<input type="text" id="rig_down_min_after" name="rig_down_min_after" value="{article/rig_down_min_after}" size="5">
-														<xsl:attribute name="data-validation">
-															<xsl:text>number</xsl:text>
-														</xsl:attribute>
-														<xsl:attribute name="data-validation-error-msg">
-															<xsl:value-of select="php:function('lang', 'rig down min after')"/>
-														</xsl:attribute>
-														<xsl:attribute name="placeholder">
-															<xsl:value-of select="php:function('lang', 'integer')"/>
-														</xsl:attribute>
-													</input>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
+								<input type="text" id="prize" name="article_prizing[prize]" size="10" value="{article_prizing/prize}" >
+									<xsl:attribute name="data-validation">
+										<xsl:text>number</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-allowing">
+										<xsl:text>float</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-decimal-separator">
+										<xsl:text>,</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'prize')"/>
+									</xsl:attribute>
+									<xsl:attribute name="placeholder">
+										<xsl:value-of select="php:function('lang', 'float')"/>
+									</xsl:attribute>
+
+								</input>
 							</div>
-						</fieldset>
-						<fieldset>
-							<legend>
-								<xsl:value-of select="php:function('lang', 'technical support')"/>
-							</legend>
 							<div class="pure-control-group">
 								<label>
+									<xsl:value-of select="php:function('lang', 'remark')"/>
 								</label>
-								<div class="pure-custom">
-									<table class="pure-table pure-table-bordered" border="0" cellspacing="2" cellpadding="2">
-										<thead>
-											<tr>
-												<th>Hva</th>
-												<th>Ja</th>
-												<th>Fritekst</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>Strøm</td>
-												<td>
-													<input type="checkbox" name="power" id="power" value="1">
-														<xsl:if test="article/power = 1">
-															<xsl:attribute name="checked" value="checked"/>
-														</xsl:if>
-													</input>
-												</td>
-												<td>
-													<input type="text" id="power_remark" name="power_remark" value="{article/power_remark}">
-													</input>
-												</td>
-											</tr>
-											<tr>
-												<td>Lydanlegg</td>
-												<td>
-													<input type="checkbox" name="sound" id="sound" value="1">
-														<xsl:if test="article/sound = 1">
-															<xsl:attribute name="checked" value="checked"/>
-														</xsl:if>
-													</input>
-												</td>
-												<td>
-													<input type="text" id="sound_remark" name="sound_remark" value="{article/sound_remark}">
-													</input>
-												</td>
-											</tr>
-											<tr>
-												<td>Lyssetting/blending</td>
-												<td>
-													<input type="checkbox" name="light" id="light" value="1">
-														<xsl:if test="article/light = 1">
-															<xsl:attribute name="checked" value="checked"/>
-														</xsl:if>
-													</input>
-												</td>
-												<td>
-													<input type="text" id="light_remark" name="light_remark" value="{article/light_remark}">
-													</input>
-												</td>
-											</tr>
-											<tr>
-												<td>Piano</td>
-												<td>
-													<input type="checkbox" name="piano" id="piano" value="1">
-														<xsl:if test="article/piano = 1">
-															<xsl:attribute name="checked" value="checked"/>
-														</xsl:if>
-													</input>
-												</td>
-												<td>
-													<input type="text" id="piano_remark" name="piano_remark" value="{article/piano_remark}">
-													</input>
-												</td>
-
-											</tr>
-											<tr>
-												<td>Anna utstyr (prosjektor, lerret mm)</td>
-												<td>
-												</td>
-												<td>
-													<input type="text" id="equipment_remark" name="equipment_remark" value="{article/equipment_remark}">
-													</input>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
+								<input type="text" id="remark" name="article_prizing[remark]" value="{article_prizing/remark}" class="pure-input-1-2" >
+								</input>
 							</div>
 
-						</fieldset>
-						<fieldset>
-							<legend>
-								<xsl:value-of select="php:function('lang', 'raider')"/>
-							</legend>
-							<div class="pure-control-group">
-								<label>
-								</label>
-								<textarea cols="47" rows="7" name="raider" class="pure-input-1-2" >
-									<xsl:value-of select="article/raider"/>
-								</textarea>
-							</div>
 						</fieldset>
 					</div>
 
@@ -452,8 +292,8 @@
 							</div>
 
 						</fieldset>
-						
-					
+
+
 
 					</div>
 

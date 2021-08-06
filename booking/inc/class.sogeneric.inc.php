@@ -174,7 +174,7 @@
 						),
 						'edit_msg'			 => lang('edit'),
 						'add_msg'			 => lang('add'),
-						'name'				 => $GLOBALS['phpgw']->translation->translate('article category', array(), false, 'booking'),
+						'name'				 => $GLOBALS['phpgw']->translation->translate('article service', array(), false, 'booking'),
 						'acl_app'			 => 'booking',
 						'acl_location'		 => '.admin',
 						'system_location'	 => '.article',

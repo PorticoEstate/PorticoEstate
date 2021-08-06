@@ -26,30 +26,44 @@ $(document).ready(function ()
 		service_id_selected = $(this).val();
 	});
 
-
-//	$("#field_from").change(function ()
-//	{
-//		var temp_field_to = $("#field_to").datetimepicker('getValue');
-//		var temp_field_from = $("#field_from").datetimepicker('getValue');
-//		if (!temp_field_to || (temp_field_to < temp_field_from))
-//		{
-//			$("#field_to").val($("#field_from").val());
-//
-//			$('#field_to').datetimepicker('setOptions', {
-//				startDate: new Date(temp_field_from)
-//			});
-//		}
-//	});
-
 	JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction: 'booking.uibuilding.index'}, true),
 		'field_building_name', 'field_building_id', 'building_container');
 
 });
 
-function set_tab()
+function set_tab(tab)
 {
-
+	$("#active_tab").val(tab);
+	check_button_names();
 }
+
+check_button_names = function ()
+{
+	var tab = $("#active_tab").val();
+	var id = $("#id").val();
+
+	if (tab === 'first_tab')
+	{
+		if (id > 0)
+		{
+			$("#save_button_bottom").val(lang['save']);
+		}
+		else
+		{
+			$("#save_button_bottom").val(lang['next']);
+		}
+		$("#submit_group_bottom").show();
+	}
+	else if(tab === 'prizing')
+	{
+		$("#save_button_bottom").val(lang['save']);
+	}
+	else
+	{
+		$("#save_button").val(lang['save']);
+		$("#submit_group_bottom").hide();
+	}
+};
 
 function get_services()
 {
@@ -99,10 +113,14 @@ $(window).on('load', function ()
 	{
 		$('#service_container').show();
 	}
-
+	else
+	{
+		$('#resource_selector').show();
+		
+	}
 
 	var building_id = $('#field_building_id').val();
-	if (building_id)
+	if (building_id && building_id > 0)
 	{
 		populateTableChkResources(building_id, initialSelection);
 		building_id_selection = building_id;
@@ -194,7 +212,7 @@ validate_submit = function ()
 		}
 	}
 
-	var id = $("#article_id").val();
+	var id = $("#id").val();
 
 	if (id > 0)
 	{
@@ -204,12 +222,14 @@ validate_submit = function ()
 
 	if (active_tab === 'first_tab')
 	{
+		$('#tab-content').responsiveTabs('enable', 1);
 		$('#tab-content').responsiveTabs('activate', 1);
 		$("#save_button_bottom").val(lang['next']);
-		$("#active_tab").val('demands');
+		$("#active_tab").val('prizing');
 	}
 	else if (active_tab === 'prizing')
 	{
+		$('#tab-content').responsiveTabs('enable', 2);
 		$('#tab-content').responsiveTabs('activate', 2);
 		$("#save_button").val(lang['next']);
 		$("#save_button_bottom").val(lang['next']);

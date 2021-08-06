@@ -147,4 +147,15 @@
 			return	$this->db->transaction_commit();
 		}
 
+		function get_mapped_services()
+		{
+			$services = array();
+			$this->db->query( 'SELECT article_id AS service_id FROM bb_article WHERE article_cat_id = 2',__LINE__,__FILE__);
+
+			while($this->db->next_record())
+			{
+				$services[] = $this->db->f('service_id');
+			}
+			return $services;
+		}
 	}

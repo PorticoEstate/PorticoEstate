@@ -101,4 +101,9 @@
 
 			return $values;
 		}
+
+		public function get_mapped_services( )
+		{
+			return booking_soarticle::get_instance()->get_mapped_services();
+		}
 	}

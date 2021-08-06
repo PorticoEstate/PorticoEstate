@@ -92,10 +92,26 @@
 			return $unit_list;
 		}
 
-		public function get_services()
+		public function get_services( $selected = 0)
 		{
 			$services_list = execMethod('booking.bogeneric.get_list', array('type' => 'article_service'));
-			return $services_list;
+
+			$alredy_taken = $this->bo->get_mapped_services();
+
+			foreach ($services_list as $service)
+			{
+				if($selected != $service['id'] && in_array($service['id'], $alredy_taken) )
+				{
+					continue;
+				}
+
+				$service_options[] = array(
+					'id' => $service['id'],
+					'name' => $service['name'],
+					'selected' => $service['id'] == $selected ? 1 : 0
+				);
+			}
+			return $service_options;
 		}
 
 		public function index()
@@ -183,7 +199,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript($this->currentapp, 'base', 'article.index.js');
+			self::add_javascript($this->currentapp, 'base', 'article.index.js', 'text/javascript', true);
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -220,7 +236,7 @@
 			$tabs['prizing'] = array(
 				'label' => lang('prizing'),
 				'link' => '#prizing',
-				'disable' => empty($id) ? true : false
+	//			'disable' => empty($id) ? true : false
 			);
 			$tabs['files'] = array(
 				'label' => lang('files'),
@@ -280,8 +296,7 @@
 				)
 			);
 
-			$config = CreateObject('phpgwapi.config', 'booking')->read();
-			$booking_interval = !empty($config['booking_interval']) ? $config['booking_interval'] : null;
+			$GLOBALS['phpgw']->jqcal->add_listener('date_from', 'date');
 			$data				 = array(
 				'datatable_def'		 => $datatable_def,
 				'form_action'		 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle.save")),
@@ -289,12 +304,13 @@
 				'article'			 => $article,
 				'article_categories' => array('options' => $this->get_category_options($article->article_cat_id)),
 				'unit_list'			 => array('options' => $this->get_unit_list($article->unit)),
-				'booking_interval'	 => $booking_interval,
+				'service_list'		 => ( $id && $article->article_cat_id == 2 )? array('options' => $this->get_services($article->article_id)) : array(),
 				'mode'				 => $mode,
 				'tabs'				 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab'	 => $active_tab,
 				'multi_upload_parans' => "{menuaction:'{$this->currentapp}.uiarticle.build_multi_upload_file', id:'{$id}'}",
 				'multiple_uploader' => true,
+				'resources_json' => ( $id && $article->article_cat_id == 1 ) ? json_encode(array($article->article_id)) : '[]'
 			);
 			self::add_javascript('booking', 'base', 'common');
 			phpgwapi_jquery::load_widget('autocomplete');

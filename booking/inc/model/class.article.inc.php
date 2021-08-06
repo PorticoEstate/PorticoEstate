@@ -43,6 +43,8 @@
 		protected
 			$id,
 			$article_id,
+			$building_id,
+			$building_name,
 			$article_name,
 			$article_cat_id,
 			$article_cat_name,
@@ -120,6 +122,20 @@
 				'article_cat_id' => array(
 					'action'=>  PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int'
+					),
+				'building_id' => array(
+					'action'=>  PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'int'
+					),
+				'building_name' => array(
+					'action'=>  PHPGW_ACL_READ,
+						'type' => 'string',
+						'query' => true,
+						'label' => 'building',
+						'multiple_join' => array(
+							'statement' => ' LEFT JOIN bb_building ON bb_building.id = bb_article.building_id',
+							'column' => 'bb_building.name'
+						),
 					),
 				'article_cat_name' => array(
 					'action'=>  PHPGW_ACL_READ,
@@ -199,11 +215,17 @@
 		{
 			$entity->active = (int)$entity->active;
 
+			if ($entity->article_cat_id == 1)
+			{
+				$entity->article_id = phpgw::get_var('resource_id', 'int', 'POST');
+			}
+			else if ($entity->article_cat_id == 2)
+			{
+				$entity->article_id = phpgw::get_var('service_id', 'int', 'POST');
+			}
 			if(!$entity->get_id())
 			{
-				$entity->status = booking_article::STATUS_REGISTERED;
-				$entity->secret = self::generate_secret();
-				$entity->user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+				$entity->owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 		}
 
