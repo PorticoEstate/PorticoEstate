@@ -101,50 +101,57 @@
 		protected function update( $object )
 		{
 			$this->db->transaction_begin();
-	//		$status_text = booking_article::get_status_list();
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$lang_active = lang('active');
-			$lang_inactive = lang('inactive');
 
-			$original = $this->read_single($object->get_id());//returned as array()
-			foreach ($this->fields as $field => $params)
-			{
-				$new_value = $object->$field;
-				$old_value = $original[$field];
-				if (!empty($params['history']) && ($new_value != $old_value))
-				{
-					$label = !empty($params['label']) ? lang($params['label']) : $field;
-					switch ($field)
-					{
-						case 'status':
-							$old_value = $status_text[$old_value];
-							$new_value = $status_text[$new_value];
-							break;
-						case 'active':
-							$old_value = $old_value ? $lang_active : $lang_inactive;
-							$new_value = $new_value ? $lang_active : $lang_inactive;
-							break;
-						default:
-							break;
-					}
-					$value_set = array
-					(
-						'article_id'	=> $object->get_id(),
-						'time'		=> time(),
-						'author'	=> $GLOBALS['phpgw_info']['user']['fullname'],
-						'comment'	=> $label . ':: ' . lang('old value') . ': ' . $this->db->db_addslashes($old_value) . ', ' .lang('new value') . ': ' . $this->db->db_addslashes($new_value),
-						'type'	=> 'history',
-					);
-
-					$this->db->query( 'INSERT INTO booking_article_comment (' .  implode( ',', array_keys( $value_set ) )   . ') VALUES ('
-					. $this->db->validate_insert( array_values( $value_set ) ) . ')',__LINE__,__FILE__);
-				}
-
-			}
+			$this->set_prizing($object->get_id());
 
 			parent::update($object);
 
 			return	$this->db->transaction_commit();
+		}
+
+		private function set_prizing( $article_id )
+		{
+			$article_prizing = phpgw::get_var('article_prizing');
+
+			if(empty($article_prizing['date_from']))
+			{
+				return;
+			}
+
+			$date_from		 = phpgwapi_datetime::date_to_timestamp($article_prizing['date_from']);
+			$price			 = floatval(str_replace(',', '.', str_replace('.', '', $article_prizing['price'])));
+
+			if ($price && $date_from)
+			{
+				$value_set = array
+				(
+					'article_id' => $article_id,
+					'price'		 => $price,
+					'from_'		 => date('Y-m-d', $date_from),
+					'remark'	 => $article_prizing['remark'],
+				);
+
+				$this->db->query('INSERT INTO bb_article_price (' . implode(',', array_keys($value_set)) . ') VALUES ('
+					. $this->db->validate_insert(array_values($value_set)) . ')', __LINE__, __FILE__);
+			}
+		}
+
+		public function get_pricing( $id )
+		{
+			$pricing = array();
+			$this->db->query( 'SELECT *  FROM bb_article_price WHERE article_id = ' . (int) $id,__LINE__,__FILE__);
+
+			while($this->db->next_record())
+			{
+				$pricing[] = array(
+					'id'		 => $this->db->f('id'),
+					'article_id' => $this->db->f('article_id'),
+					'price'		 => $this->db->f('price'),
+					'from_'		 => $this->db->f('from_'),
+					'remark'	 => $this->db->f('remark', true),
+				);
+			}
+			return $pricing;
 		}
 
 		function get_mapped_services()
@@ -157,5 +164,19 @@
 				$services[] = $this->db->f('service_id');
 			}
 			return $services;
+		}
+
+		public function get_reserved_resources( $building_id )
+		{
+			$resources = array();
+			$this->db->query( 'SELECT article_id AS resource_id FROM bb_article WHERE article_cat_id = 1',__LINE__,__FILE__);
+
+			//join...
+			
+			while($this->db->next_record())
+			{
+				$resources[] = $this->db->f('resource_id');
+			}
+			return $resources;
 		}
 	}

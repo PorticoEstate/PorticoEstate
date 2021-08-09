@@ -35,14 +35,19 @@
 	{
 
 		public $public_functions = array(
-			'add'			 => true,
-			'index'			 => true,
-			'query'			 => true,
-			'view'			 => true,
-			'edit'			 => true,
-			'save'			 => true,
-			'get'			 => true,
-			'get_services'	 => true
+			'add'						 => true,
+			'index'						 => true,
+			'query'						 => true,
+			'view'						 => true,
+			'edit'						 => true,
+			'save'						 => true,
+			'get'						 => true,
+			'get_services'				 => true,
+			'get_reserved_resources'	 => true,
+			'handle_multi_upload_file'	 => true,
+			'_get_files'				 => true,
+			'view_file'					 => true,
+			'update_file_data'			 => true
 		);
 		protected
 			$fields,
@@ -90,6 +95,12 @@
 				$unit['selected'] = $unit['id'] == $selected ? 1 : 0;
 			}
 			return $unit_list;
+		}
+
+		public function get_reserved_resources( )
+		{
+			$building_id = phpgw::get_var('building_id', 'int');
+			return $this->bo->get_reserved_resources($building_id);
 		}
 
 		public function get_services( $selected = 0)
@@ -228,6 +239,8 @@
 				$article = $this->bo->read_single($id);
 			}
 
+			$id = (int) $id;
+
 			$tabs = array();
 			$tabs['first_tab'] = array(
 				'label' => lang('article'),
@@ -244,52 +257,154 @@
 				'disable' => empty($id) ? true : false
 			);
 
-			$bocommon = CreateObject('property.bocommon');
-
-			$comments = (array)$article->comments;
-			foreach ($comments as $key => &$comment)
+			$pricing = $this->bo->get_pricing($id);
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			foreach ($pricing as $key => &$price)
 			{
-				$comment['value_count'] = $key +1;
-				$comment['value_date'] = $GLOBALS['phpgw']->common->show_date($comment['time']);
+				$price['value_date'] = $GLOBALS['phpgw']->common->show_date(strtotime($price['from_']), 'Y-m-d');
 			}
 
-			$comments_def = array(
-				array('key' => 'value_count', 'label' => '#', 'sortable' => true, 'resizeable' => true),
-				array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'author', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'comment', 'label' => lang('Note'), 'sortable' => true, 'resizeable' => true)
+			$pricing_def = array(
+				array('key' => 'id', 'label' => '#', 'sortable' => true, 'resizeable' => true),
+				array('key' => 'article_id', 'label' => lang('article id'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'price', 'label' => lang('price'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'value_date', 'label' => lang('from'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'remark', 'label' => lang('remark'), 'sortable' => true, 'resizeable' => true)
 			);
- 
+
+			$datatable_def = array();
 			$datatable_def[] = array(
 				'container' => 'datatable-container_0',
 				'requestUrl' => "''",
-				'ColumnDefs' => $comments_def,
-				'data' => json_encode($comments),
+				'ColumnDefs' => $pricing_def,
+				'data' => json_encode($pricing),
 				'config' => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
 				)
 			);
 
-			$dates_def = array(
-				array('key' => 'id', 'label' => lang('id'), 'sortable' => true, 'resizeable' => true,'formatter' => 'JqueryPortico.formatLink'),
-				array('key' => 'from_', 'label' => lang('From'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'to_', 'label' => lang('To'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'status', 'label' => lang('status'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'vendor_name', 'label' => lang('vendor'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'location', 'label' => lang('location'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'comment', 'label' => lang('Note'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'application_id', 'hidden' => true),
+			$file_def = array
+			(
+				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,'resizeable' => true),
+				array('key' => 'picture', 'label' => '', 'sortable' => false,'resizeable' => false, 'formatter' => 'JqueryPortico.showPicture'),
+//				array('key' => 'delete_file', 'label' => lang('delete'), 'sortable' => false,'resizeable' => true),
 			);
 
-			$datatable_def[] = array(
+			$requestUrl	 = json_encode(self::link(array(
+				'menuaction' => "{$this->currentapp}.uiarticle.update_file_data",
+				'location_id' => $GLOBALS['phpgw']->locations->get_id('booking', '.article'),
+				'location_item_id' => $id,
+				'phpgw_return_as'	 => 'json')
+				));
+			$requestUrl = str_replace('&amp;', '&', $requestUrl);
+
+			$buttons = array
+			(
+				array(
+					'action' => 'delete_file',
+					'type'	 => 'buttons',
+					'name'	 => 'delete',
+					'label'	 => lang('Delete file'),
+					'funct'	 => 'onActionsClick_files',
+					'classname'	 => '',
+					'value_hidden'	 => "",
+					'confirm_msg'		=> "Vil du slette fil(er)"
+					),
+			);
+
+			$tabletools = array
+			(
+				array('my_name' => 'select_all'),
+				array('my_name' => 'select_none')
+			);
+
+			foreach ($buttons as $entry)
+			{
+				$tabletools[] = array
+				(
+					'my_name'		 => $entry['name'],
+					'text'			 => $entry['label'],
+					'className'		 =>	$entry['classname'],
+					'confirm_msg'	=>	$entry['confirm_msg'],
+					'type'			 => 'custom',
+					'custom_code'	 => "
+						var api = oTable1.api();
+						var selected = api.rows( { selected: true } ).data();
+						var ids = [];
+						for ( var n = 0; n < selected.length; ++n )
+						{
+							var aData = selected[n];
+							ids.push(aData['file_id']);
+						}
+						{$entry['funct']}('{$entry['action']}', ids);
+						"
+				);
+			}
+
+			$code		 = <<<JS
+
+	this.onActionsClick_filter_files=function(action, ids)
+	{
+		var tags = $('select#tags').val();
+		var oArgs = {menuaction: '{$this->currentapp}.uiarticle.update_data',action:'get_files', id: {$id}};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+		$.each(tags, function (k, v)
+		{
+			requestUrl += '&tags[]=' + v;
+		});
+		JqueryPortico.updateinlineTableHelper('datatable-container_1', requestUrl);
+	}
+
+	this.onActionsClick_files=function(action, ids)
+	{
+		var numSelected = 	ids.length;
+console.log(ids);
+		if (numSelected ==0)
+		{
+			alert('None selected');
+			return false;
+		}
+		var tags = $('select#tags').val();
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: {$requestUrl},
+			data:{ids:ids, tags:tags, action:action},
+			success: function(data) {
+				if( data != null)
+				{
+
+				}
+	//			var oArgs = {menuaction: '{$this->currentapp}.uiarticle.update_data',action:'get_files', id: {$id}};
+	//			var strURL = phpGWLink('index.php', oArgs, true);
+
+				JqueryPortico.updateinlineTableHelper('datatable-container_1');
+
+				if(action=='delete_file')
+				{
+		//			refresh_glider(strURL);
+				}
+			},
+			error: function(data) {
+				alert('feil');
+			}
+		});
+	}
+JS;
+			$GLOBALS['phpgw']->js->add_code('', $code);
+
+			$datatable_def[] = array
+				(
 				'container' => 'datatable-container_1',
-				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uibooking.query_relaxed",
-					'filter_article_id' => $id,
-					'filter_active'	=> 1,
+				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uiarticle._get_files",
+					'id' => $id,
+					'section' => 'documents',
 					'phpgw_return_as' => 'json'))),
-				'ColumnDefs' => $dates_def,
+				'ColumnDefs' => $file_def,
 				'data' => json_encode(array()),
+				'tabletools' => $tabletools,
 				'config' => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
@@ -308,7 +423,9 @@
 				'mode'				 => $mode,
 				'tabs'				 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab'	 => $active_tab,
-				'multi_upload_parans' => "{menuaction:'{$this->currentapp}.uiarticle.build_multi_upload_file', id:'{$id}'}",
+				'fileupload' => true,
+				'multi_upload_action' => self::link(array('menuaction' => "{$this->currentapp}.uiarticle.handle_multi_upload_file", 'id' => $id, 'section' => $section)),
+
 				'multiple_uploader' => true,
 				'resources_json' => ( $id && $article->article_cat_id == 1 ) ? json_encode(array($article->article_id)) : '[]'
 			);
@@ -338,6 +455,158 @@
 			unset($article['secret']);
 
 			return $article;
+		}
+
+		public function update_file_data()
+		{
+			if (empty($this->permissions[PHPGW_ACL_ADD]))
+			{
+				return array();
+			}
+
+			$section = phpgw::get_var('section', 'string', 'REQUEST', 'documents');
+			$location_item_id = phpgw::get_var('location_item_id', 'int');
+			$ids = phpgw::get_var('ids', 'int');
+			$action= phpgw::get_var('action', 'string');
+			$tags= phpgw::get_var('tags', 'string');
+
+			$fakebase = '/booking';
+			$bofiles = CreateObject('property.bofiles', $fakebase);
+
+			if ($action == 'delete_file' && $ids && $location_item_id)
+			{
+				$bofiles->delete_file("/article/{$location_item_id}/{$section}/", array('file_action' => $ids));
+			}
+			else if($action == 'set_tag' && $ids)
+			{
+				$bofiles->set_tags($ids, $tags);
+
+			}
+			else if($action == 'remove_tag' && $ids)
+			{
+				$bofiles->remove_tags($ids, $tags);
+
+			}
+
+			return $action;
+
+		}
+
+		function _get_files()
+		{
+			$id = phpgw::get_var('id', 'int');
+			$section = phpgw::get_var('section', 'string', 'REQUEST', 'documents');
+
+			if (empty($this->permissions[PHPGW_ACL_READ]))
+			{
+				return array();
+			}
+
+
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$files = $vfs->ls(array(
+				'string' => "/booking/article/{$id}/$section",
+				'relatives' => array(RELATIVE_NONE)));
+
+			$vfs->override_acl = 0;
+
+			$img_types = array(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
+
+			$content_files = array();
+			$lang_view = lang('click to view file');
+			$lang_delete = lang('Check to delete file');
+
+			$z = 0;
+			foreach ($files as $_entry)
+			{
+				$link_file_data = array
+				(
+					'menuaction' => "{$this->currentapp}.uiarticle.view_file",
+					'file_id'	 => $_entry['file_id']
+				);
+
+
+				$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+
+				$content_files[] = array(
+					'file_id'		 => $_entry['file_id'],
+					'file_name'		 => "<a href='{$link_view_file}' target='_blank' title='{$lang_view}'>{$_entry['name']}</a>",
+					'delete_file'	 => "<input type='checkbox' name='values[file_action][]' value='{$_entry['file_id']}' title='{$lang_delete}'>",
+				);
+				if (in_array($_entry['mime_type'], $img_types))
+				{
+					$content_files[$z]['file_name']		 = $_entry['name'];
+					$content_files[$z]['img_id']		 = $_entry['file_id'];
+					$content_files[$z]['img_url']		 = self::link(array(
+							'menuaction' => "{$this->currentapp}.uiapplication.view_file",
+							'file_id'	 => $_entry['file_id'],
+							'file'		 => $_entry['directory'] . '/' . urlencode($_entry['name'])
+					));
+					$content_files[$z]['thumbnail_flag'] = 'thumb=1';
+				}
+				$z ++;
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				$total_records = count($content_files);
+
+				return array
+				(
+					'data'				 => $content_files,
+					'draw'				 => phpgw::get_var('draw', 'int'),
+					'recordsTotal'		 => $total_records,
+					'recordsFiltered'	 => $total_records
+				);
+			}
+			return $content_files;
+		}
+
+		public function handle_multi_upload_file()
+		{
+			if (empty($this->permissions[PHPGW_ACL_ADD]))
+			{
+				phpgw::no_access();
+			}
+
+			$section = phpgw::get_var('section', 'string', 'REQUEST', 'documents');
+			$id = phpgw::get_var('id', 'int', 'GET');
+
+			phpgw::import_class('property.multiuploader');
+
+			$options['fakebase'] = "/booking";
+			$options['base_dir'] = "article/{$id}/{$section}";
+			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/booking/'.$options['base_dir'].'/';
+			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => "{$this->currentapp}.uiapplication.handle_multi_upload_file", 'id' => $id, 'section' => $section)));
+			$upload_handler = new property_multiuploader($options, false);
+
+			switch ($_SERVER['REQUEST_METHOD']) {
+				case 'OPTIONS':
+				case 'HEAD':
+					$upload_handler->head();
+					break;
+				case 'GET':
+					$upload_handler->get();
+					break;
+				case 'PATCH':
+				case 'PUT':
+				case 'POST':
+					$upload_handler->add_file();
+					break;
+				case 'DELETE':
+					$upload_handler->delete_file();
+					break;
+				default:
+					$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
+			}
+
+			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 
 	}

@@ -54,7 +54,7 @@ check_button_names = function ()
 		}
 		$("#submit_group_bottom").show();
 	}
-	else if(tab === 'prizing')
+	else if (tab === 'prizing')
 	{
 		$("#save_button_bottom").val(lang['save']);
 	}
@@ -105,9 +105,12 @@ function get_services()
 }
 
 
+
+
 $(window).on('load', function ()
 {
 	var article_cat_id = $('#field_article_cat_id').val();
+	resource_id_selection = initialSelection[0];
 
 	if (article_cat_id == 2) //service
 	{
@@ -116,13 +119,13 @@ $(window).on('load', function ()
 	else
 	{
 		$('#resource_selector').show();
-		
+
 	}
 
 	var building_id = $('#field_building_id').val();
 	if (building_id && building_id > 0)
 	{
-		populateTableChkResources(building_id, initialSelection);
+		populateTableChkResources_init(callback_reserved, building_id, initialSelection);
 		building_id_selection = building_id;
 	}
 	$("#field_building_name").on("autocompleteselect", function (event, ui)
@@ -136,7 +139,7 @@ $(window).on('load', function ()
 			{
 				selection.push(resource_id_selection);
 			}
-			populateTableChkResources(building_id, selection);
+			populateTableChkResources_init(callback_reserved, building_id, selection);
 			building_id_selection = building_id;
 		}
 	});
@@ -151,8 +154,44 @@ $(window).on('load', function ()
 
 });
 
-function populateTableChkResources(building_id, selection)
+var callback_reserved = function (building_id, selection, data)
 {
+	var disabled = [];
+	if (data != null)
+	{
+		$.each(data, function (i)
+		{
+			disabled.push(data[i]);
+		});
+
+	}
+	populateTableChkResources(building_id, selection, disabled)
+}
+
+
+function populateTableChkResources_init(callback, building_id, selection)
+{
+	var oArgs = {menuaction: 'booking.uiarticle.get_reserved_resources', building_id: building_id};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: requestUrl,
+		success: function (result)
+		{
+			callback(building_id, selection, result);
+		}
+	});
+
+}
+
+
+function populateTableChkResources(building_id, selection, disabled)
+{
+	console.log(building_id);
+	console.log(selection);
+	console.log(disabled);
 	var url = phpGWLink('index.php', {menuaction: 'booking.uiresource.index', sort: 'name', filter_building_id: building_id, length: -1}, true);
 	var container = 'resources_container';
 	var colDefsResources = [
@@ -168,7 +207,8 @@ function populateTableChkResources(building_id, selection)
 				}
 			],
 			value: 'id',
-			checked: selection
+			checked: selection,
+			disabled: disabled
 		},
 		{key: 'name', label: lang['Name']},
 		{key: 'rescategory_name', label: lang['Resource Type']}
@@ -203,9 +243,9 @@ validate_submit = function ()
 	}
 
 
-	if($("#field_article_cat_id").val() == 1) //resource
+	if ($("#field_article_cat_id").val() == 1) //resource
 	{
-		if(!resource_id_selection)
+		if (!resource_id_selection)
 		{
 			alert('Velg bygg - så ressurs');
 			return;
@@ -240,4 +280,9 @@ validate_submit = function ()
 	{
 		document.form.submit();
 	}
+};
+
+this.refresh_files = function ()
+{
+	JqueryPortico.updateinlineTableHelper(oTable1);
 };

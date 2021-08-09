@@ -5,13 +5,6 @@
 		<xsl:when test="edit">
 			<xsl:apply-templates select="edit" />
 		</xsl:when>
-		<xsl:when test="view">
-			<xsl:apply-templates select="view" />
-		</xsl:when>
-		<xsl:when test="adjustment_price">
-			<xsl:apply-templates select="adjustment_price" />
-
-		</xsl:when>
 	</xsl:choose>
 
 </xsl:template>
@@ -173,9 +166,9 @@
 							</div>
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="php:function('lang', 'prize')"/>
+									<xsl:value-of select="php:function('lang', 'price')"/>
 								</label>
-								<input type="text" id="prize" name="article_prizing[prize]" size="10" value="{article_prizing/prize}" >
+								<input type="text" id="price" name="article_prizing[price]" size="10" value="{article_prizing/price}" >
 									<xsl:attribute name="data-validation">
 										<xsl:text>number</xsl:text>
 									</xsl:attribute>
@@ -186,7 +179,7 @@
 										<xsl:text>,</xsl:text>
 									</xsl:attribute>
 									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'prize')"/>
+										<xsl:value-of select="php:function('lang', 'price')"/>
 									</xsl:attribute>
 									<xsl:attribute name="placeholder">
 										<xsl:value-of select="php:function('lang', 'float')"/>
@@ -202,41 +195,13 @@
 								</input>
 							</div>
 
-						</fieldset>
-					</div>
-
-					<div id='files'>
-						<script type="text/javascript">
-							var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
-						</script>
-						<xsl:value-of disable-output-escaping="yes" select="application_condition"/>
-						<fieldset>
-							<legend>
-								<xsl:text>Curriculum vitae</xsl:text>
-							</legend>
-
-							<!--
-							<xsl:call-template name="file_upload">
-								<xsl:with-param name="section">cv</xsl:with-param>
-							</xsl:call-template>
-							-->
-
-							<xsl:call-template name="multi_upload_file_inline">
-								<xsl:with-param name="class">pure-input-3-4 pure-custom</xsl:with-param>
-								<xsl:with-param name="multi_upload_action">
-									<xsl:value-of select="multi_upload_action_cv"/>
-								</xsl:with-param>
-								<xsl:with-param name="section">cv</xsl:with-param>
-							</xsl:call-template>
-
-
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="php:function('lang', 'files')"/>
+									<xsl:value-of select="php:function('lang', 'history')"/>
 								</label>
-								<div class="pure-custom pure-input-3-4">
+								<div class="pure-custom">
 									<xsl:for-each select="datatable_def">
-										<xsl:if test="container = 'datatable-container_2'">
+										<xsl:if test="container = 'datatable-container_0'">
 											<xsl:call-template name="table_setup">
 												<xsl:with-param name="container" select ='container'/>
 												<xsl:with-param name="requestUrl" select ='requestUrl'/>
@@ -249,28 +214,33 @@
 								</div>
 							</div>
 
-
-
 						</fieldset>
+					</div>
 
+					<div id='files'>
 						<fieldset>
 							<legend>
 								<xsl:value-of select="php:function('lang', 'documents')"/>
 							</legend>
-							<!--
-							<xsl:call-template name="file_upload">
-								<xsl:with-param name="section">documents</xsl:with-param>
-							</xsl:call-template>
-							-->
 
-							<xsl:call-template name="multi_upload_file_inline">
-								<xsl:with-param name="class">pure-input-3-4 pure-custom</xsl:with-param>
-								<xsl:with-param name="multi_upload_action">
-									<xsl:value-of select="multi_upload_action_documents"/>
-								</xsl:with-param>
-								<xsl:with-param name="section">documents</xsl:with-param>
-							</xsl:call-template>
+							<xsl:choose>
+								<xsl:when test="fileupload = 1">
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'upload files')"/>
+										</label>
 
+										<xsl:call-template name="multi_upload_file_inline">
+											<xsl:with-param name="class">pure-input-3-4 pure-custom</xsl:with-param>
+											<xsl:with-param name="multi_upload_action">
+												<xsl:value-of select="multi_upload_action"/>
+											</xsl:with-param>
+											<xsl:with-param name="section">documents</xsl:with-param>
+										</xsl:call-template>
+									</div>
+
+								</xsl:when>
+							</xsl:choose>
 
 							<div class="pure-control-group">
 								<label>
@@ -278,11 +248,12 @@
 								</label>
 								<div class="pure-custom pure-input-3-4">
 									<xsl:for-each select="datatable_def">
-										<xsl:if test="container = 'datatable-container_3'">
+										<xsl:if test="container = 'datatable-container_1'">
 											<xsl:call-template name="table_setup">
 												<xsl:with-param name="container" select ='container'/>
 												<xsl:with-param name="requestUrl" select ='requestUrl'/>
 												<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+												<xsl:with-param name="tabletools" select ='tabletools' />
 												<xsl:with-param name="data" select ='data'/>
 												<xsl:with-param name="config" select ='config'/>
 											</xsl:call-template>
@@ -336,20 +307,3 @@
 </xsl:template>
 
 
-<xsl:template xmlns:php="http://php.net/xsl" match="view">
-	<div>
-		<form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
-			<div id="tab-content">
-				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-				<div id="showing">
-				</div>
-			</div>
-			<div class="proplist-col">
-				<xsl:variable name="cancel_url">
-					<xsl:value-of select="cancel_url"/>
-				</xsl:variable>
-				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
-			</div>
-		</form>
-	</div>
-</xsl:template>

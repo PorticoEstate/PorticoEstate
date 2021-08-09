@@ -1183,6 +1183,32 @@ function createTable(d, u, c, r, cl, l)
 									}
 								});
 							}
+							if ((vc['disabled']))
+							{
+								vcd = vc['disabled'];
+								$.each(array_attr, function (i, v)
+								{
+									if (v['name'] == 'value')
+									{
+										if (typeof (vcd) == 'string')
+										{
+											if (vcd == v['value'])
+											{
+												array_attr.push({name: 'disabled', value: 'disabled'});
+												array_attr.push({name: 'style', value: 'display:none;'});
+											}
+										}
+										else
+										{
+											if ((jQuery.inArray(v['value'], vcd) != -1) || (jQuery.inArray(v['value'].toString(), vcd) != -1) || (jQuery.inArray(parseInt(v['value']), vcd) != -1))
+											{
+												array_attr.push({name: 'disabled', value: 'disabled'});
+												array_attr.push({name: 'style', value: 'display:none;'});
+											}
+										}
+									}
+								});
+							}
 							objects.push({type: vo['type'], attrs: array_attr});
 						});
 						var object = createObject(objects);
