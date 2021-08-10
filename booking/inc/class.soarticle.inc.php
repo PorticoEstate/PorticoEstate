@@ -36,7 +36,7 @@
 
 		public function __construct()
 		{
-			parent::__construct('bb_article', booking_article::get_fields());
+			parent::__construct('bb_article_mapping', booking_article::get_fields());
 			$this->acl_location = booking_article::acl_location;
 			$this->use_acl = true;
 		}
@@ -157,7 +157,7 @@
 		function get_mapped_services()
 		{
 			$services = array();
-			$this->db->query( 'SELECT article_id AS service_id FROM bb_article WHERE article_cat_id = 2',__LINE__,__FILE__);
+			$this->db->query( 'SELECT article_id AS service_id FROM bb_article_mapping WHERE article_cat_id = 2',__LINE__,__FILE__);
 
 			while($this->db->next_record())
 			{
@@ -169,7 +169,7 @@
 		public function get_reserved_resources( $building_id )
 		{
 			$resources = array();
-			$this->db->query( 'SELECT article_id AS resource_id FROM bb_article WHERE article_cat_id = 1',__LINE__,__FILE__);
+			$this->db->query( 'SELECT article_id AS resource_id FROM bb_article_mapping WHERE article_cat_id = 1',__LINE__,__FILE__);
 
 			//join...
 			

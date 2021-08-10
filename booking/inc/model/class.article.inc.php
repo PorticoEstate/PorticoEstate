@@ -133,7 +133,7 @@
 						'query' => true,
 						'label' => 'building',
 						'multiple_join' => array(
-							'statement' => ' LEFT JOIN bb_building ON bb_building.id = bb_article.building_id',
+							'statement' => ' LEFT JOIN bb_building ON bb_building.id = bb_article_mapping.building_id',
 							'column' => 'bb_building.name'
 						),
 					),
@@ -159,8 +159,8 @@
 						'query' => true,
 						'label' => 'name',
 						'multiple_join' => array(
-							'statement' => ' JOIN bb_article_view ON bb_article_view.id = bb_article.article_id'
-							. ' AND bb_article_view.article_cat_id = bb_article.article_cat_id',
+							'statement' => ' JOIN bb_article_view ON bb_article_view.id = bb_article_mapping.article_id'
+							. ' AND bb_article_view.article_cat_id = bb_article_mapping.article_cat_id',
 							'column' => 'bb_article_view.name'
 						),
 					),

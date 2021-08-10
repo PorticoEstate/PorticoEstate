@@ -5281,7 +5281,7 @@
 		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_resource_service');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_service');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_order_lines');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_mapping');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_category');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_order');
 		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_customer');
@@ -5341,7 +5341,7 @@
 				. " VALUES (2, 'service')", __LINE__, __FILE__);
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
-		'bb_article', array(
+		'bb_article_mapping', array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'article_cat_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
@@ -5378,7 +5378,7 @@
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_order' => array('order_id' => 'id'),
-				'bb_article' => array('article_id' => 'id'),
+				'bb_article_mapping' => array('article_id' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()
@@ -5425,7 +5425,7 @@
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'bb_article' => array('article_id' => 'id'),
+				'bb_article_mapping' => array('article_id' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()
@@ -5441,7 +5441,7 @@
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'bb_article' => array('article_id' => 'id'),
+				'bb_article_mapping' => array('article_id' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()

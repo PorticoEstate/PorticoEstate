@@ -75,7 +75,7 @@
 		'bb_participant_limit',
 		'bb_customer',
 		'bb_article_category',
-		'bb_article',
+		'bb_article_mapping',
 		'bb_service',
 		'bb_resource_service',
 		'bb_article_price',
