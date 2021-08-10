@@ -78,11 +78,11 @@
 
 			if($acl_condition)
 			{
-				return '(' . $acl_condition . ' OR booking_article.id IN (' . implode(',', $object_ids) . '))';
+				return '(' . $acl_condition . ' OR bb_article_mapping.id IN (' . implode(',', $object_ids) . '))';
 			}
 			else
 			{
-				return 'booking_article.id IN (' . implode(',', $object_ids) . ')';
+				return 'bb_article_mapping.id IN (' . implode(',', $object_ids) . ')';
 			}
 */
 		}

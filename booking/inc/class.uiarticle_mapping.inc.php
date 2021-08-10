@@ -210,7 +210,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript($this->currentapp, 'base', 'article.index.js', 'text/javascript', true);
+			self::add_javascript($this->currentapp, 'base', 'article_mapping.index.js', 'text/javascript', true);
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -249,7 +249,7 @@
 			$tabs['prizing'] = array(
 				'label' => lang('prizing'),
 				'link' => '#prizing',
-	//			'disable' => empty($id) ? true : false
+				'disable' => empty($id) ? true : false
 			);
 			$tabs['files'] = array(
 				'label' => lang('files'),
@@ -288,7 +288,6 @@
 			(
 				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,'resizeable' => true),
 				array('key' => 'picture', 'label' => '', 'sortable' => false,'resizeable' => false, 'formatter' => 'JqueryPortico.showPicture'),
-//				array('key' => 'delete_file', 'label' => lang('delete'), 'sortable' => false,'resizeable' => true),
 			);
 
 			$requestUrl	 = json_encode(self::link(array(
@@ -433,7 +432,7 @@ JS;
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript('booking', 'base', 'article.js');
+			self::add_javascript('booking', 'base', 'article_mapping.js');
 			self::render_template_xsl(array('article_mapping', 'datatable_inline','files' ,'multi_upload_file_inline'), array($mode => $data));
 		}
 
@@ -544,7 +543,7 @@ JS;
 					$content_files[$z]['file_name']		 = $_entry['name'];
 					$content_files[$z]['img_id']		 = $_entry['file_id'];
 					$content_files[$z]['img_url']		 = self::link(array(
-							'menuaction' => "{$this->currentapp}.uiapplication.view_file",
+							'menuaction' => "{$this->currentapp}.uiarticle_mapping.view_file",
 							'file_id'	 => $_entry['file_id'],
 							'file'		 => $_entry['directory'] . '/' . urlencode($_entry['name'])
 					));
@@ -583,7 +582,7 @@ JS;
 			$options['fakebase'] = "/booking";
 			$options['base_dir'] = "article/{$id}/{$section}";
 			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/booking/'.$options['base_dir'].'/';
-			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => "{$this->currentapp}.uiapplication.handle_multi_upload_file", 'id' => $id, 'section' => $section)));
+			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.handle_multi_upload_file", 'id' => $id, 'section' => $section)));
 			$upload_handler = new property_multiuploader($options, false);
 
 			switch ($_SERVER['REQUEST_METHOD']) {

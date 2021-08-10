@@ -161,12 +161,14 @@ var callback_reserved = function (building_id, selection, data)
 	{
 		$.each(data, function (i)
 		{
-			disabled.push(data[i]);
+			if(! selection.includes(data[i]) )
+			{
+				disabled.push(data[i]);
+			}
 		});
-
 	}
-	populateTableChkResources(building_id, selection, disabled)
-}
+	populateTableChkResources(building_id, selection, disabled);
+};
 
 
 function populateTableChkResources_init(callback, building_id, selection)
@@ -201,7 +203,7 @@ function populateTableChkResources(building_id, selection, disabled)
 						{name: 'name', value: 'resource_id'},
 						{name: 'data-validation', value: 'required'},
 						{name: 'data-validation-qty', value: 'min1'},
-						{name: 'data-validation-error-msg', value: 'Please choose at least 1 resource'},
+						{name: 'data-validation-error-msg', value: 'Please choose a resource'},
 						{name: 'class', value: 'chkRegulations'}
 					]
 				}
@@ -266,6 +268,7 @@ validate_submit = function ()
 		$('#tab-content').responsiveTabs('activate', 1);
 		$("#save_button_bottom").val(lang['next']);
 		$("#active_tab").val('prizing');
+		document.form.submit();
 	}
 	else if (active_tab === 'prizing')
 	{
