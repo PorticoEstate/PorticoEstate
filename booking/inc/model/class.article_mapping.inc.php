@@ -31,7 +31,7 @@
 
 	include_class('phpgwapi', 'model', 'inc/model/');
 
-	class booking_article extends phpgwapi_model
+	class booking_article_mapping extends phpgwapi_model
 	{
 
 		const STATUS_REGISTERED = 1;
@@ -88,7 +88,7 @@
 		 */
 		public static function get_instance()
 		{
-			return new booking_article();
+			return new booking_article_mapping();
 		}
 
 		public static function get_status_list()
@@ -198,7 +198,7 @@
 			{
 				foreach ($fields as $field => $field_info)
 				{
-					if(!property_exists('booking_article', $field))
+					if(!property_exists('booking_article_mapping', $field))
 					{
 					   phpgwapi_cache::message_set('$'."{$field},", 'error');
 					}

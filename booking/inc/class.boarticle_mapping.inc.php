@@ -40,8 +40,8 @@
 
 		public function __construct()
 		{
-			$this->fields = booking_article::get_fields();
-			$this->acl_location = booking_article::acl_location;
+			$this->fields = booking_article_mapping::get_fields();
+			$this->acl_location = booking_article_mapping::acl_location;
 		}
 
 		/**
@@ -77,7 +77,7 @@
 				unset($params['filters']['active']);
 			}
 			$values =  booking_soarticle_mapping::get_instance()->read($params);
-	//		$status_text = booking_article::get_status_list();
+	//		$status_text = booking_article_mapping::get_status_list();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($values['results'] as &$entry)
 			{
@@ -96,7 +96,7 @@
 			}
 			else
 			{
-				$values = new booking_article();
+				$values = new booking_article_mapping();
 			}
 
 			return $values;

@@ -36,8 +36,8 @@
 
 		public function __construct()
 		{
-			parent::__construct('bb_article_mapping', booking_article::get_fields());
-			$this->acl_location = booking_article::acl_location;
+			parent::__construct('bb_article_mapping', booking_article_mapping::get_fields());
+			$this->acl_location = booking_article_mapping::acl_location;
 			$this->use_acl = true;
 		}
 
@@ -89,7 +89,7 @@
 
 		protected function populate( array $data )
 		{
-			$object = new booking_article();
+			$object = new booking_article_mapping();
 			foreach ($this->fields as $field => $field_info)
 			{
 				$object->set_field($field, $data[$field]);
