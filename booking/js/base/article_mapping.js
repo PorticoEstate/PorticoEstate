@@ -67,7 +67,7 @@ check_button_names = function ()
 
 function get_services()
 {
-	var oArgs = {menuaction: 'booking.uiarticle.get_services'};
+	var oArgs = {menuaction: 'booking.uiarticle_mapping.get_services'};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
 	var htmlString = "";
@@ -171,7 +171,7 @@ var callback_reserved = function (building_id, selection, data)
 
 function populateTableChkResources_init(callback, building_id, selection)
 {
-	var oArgs = {menuaction: 'booking.uiarticle.get_reserved_resources', building_id: building_id};
+	var oArgs = {menuaction: 'booking.uiarticle_mapping.get_reserved_resources', building_id: building_id};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
 	$.ajax({

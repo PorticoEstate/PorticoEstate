@@ -27,9 +27,9 @@
 	 * @version $Id: $
 	 */
 	phpgw::import_class('phpgwapi.socommon');
-	include_class('booking', 'article', 'inc/model/');
+	include_class('booking', 'article_mapping', 'inc/model/');
 
-	class booking_soarticle extends phpgwapi_socommon
+	class booking_soarticle_mapping extends phpgwapi_socommon
 	{
 
 		protected static $so;
@@ -50,7 +50,7 @@
 		{
 			if (self::$so == null)
 			{
-				self::$so = CreateObject('booking.soarticle');
+				self::$so = CreateObject('booking.soarticle_mapping');
 			}
 			return self::$so;
 		}

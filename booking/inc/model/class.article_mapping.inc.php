@@ -27,7 +27,7 @@
 	 * @version $Id: $
 	 */
 
-	phpgw::import_class('booking.boarticle');
+	phpgw::import_class('booking.boarticle_mapping');
 
 	include_class('phpgwapi', 'model', 'inc/model/');
 
@@ -236,11 +236,11 @@
 
 		public function store()
 		{
-			return booking_boarticle::get_instance()->store($this);
+			return booking_boarticle_mapping::get_instance()->store($this);
 		}
 
 		public function read_single($id)
 		{
-			return booking_boarticle::get_instance()->read_single($id, true);
+			return booking_boarticle_mapping::get_instance()->read_single($id, true);
 		}
 	}

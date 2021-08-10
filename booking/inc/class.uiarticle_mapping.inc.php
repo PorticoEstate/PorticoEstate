@@ -29,9 +29,9 @@
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('phpgwapi.datetime');
 
-	include_class('booking', 'article', 'inc/model/');
+	include_class('booking', 'article_mapping', 'inc/model/');
 
-	class booking_uiarticle extends phpgwapi_uicommon
+	class booking_uiarticle_mapping extends phpgwapi_uicommon
 	{
 
 		public $public_functions = array(
@@ -57,10 +57,10 @@
 		public function __construct()
 		{
 			parent::__construct();
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('article');
-			$this->bo = createObject('booking.boarticle');
-			$this->fields = booking_article::get_fields();
-			$this->permissions = booking_article::get_instance()->get_permission_array();
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('article mapping');
+			$this->bo = createObject('booking.boarticle_mapping');
+			$this->fields = booking_article_mapping::get_fields();
+			$this->permissions = booking_article_mapping::get_instance()->get_permission_array();
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			self::set_active_menu("{$this->currentapp}::article");
 		}
@@ -169,11 +169,11 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-						'menuaction' => "{$this->currentapp}.uiarticle.index",
+						'menuaction' => "{$this->currentapp}.uiarticle_mapping.index",
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
-					'new_item' => self::link(array('menuaction' => "{$this->currentapp}.uiarticle.add")),
+					'new_item' => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.add")),
 					'editor_action' => '',
 					'field' => parent::_get_fields()
 				)
@@ -194,7 +194,7 @@
 				'text' => lang('show'),
 				'action' => self::link(array
 					(
-					'menuaction' => "{$this->currentapp}.uiarticle.view"
+					'menuaction' => "{$this->currentapp}.uiarticle_mapping.view"
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -205,7 +205,7 @@
 				'text' => lang('edit'),
 				'action' => self::link(array
 					(
-					'menuaction' => "{$this->currentapp}.uiarticle.edit"
+					'menuaction' => "{$this->currentapp}.uiarticle_mapping.edit"
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -292,7 +292,7 @@
 			);
 
 			$requestUrl	 = json_encode(self::link(array(
-				'menuaction' => "{$this->currentapp}.uiarticle.update_file_data",
+				'menuaction' => "{$this->currentapp}.uiarticle_mapping.update_file_data",
 				'location_id' => $GLOBALS['phpgw']->locations->get_id('booking', '.article'),
 				'location_item_id' => $id,
 				'phpgw_return_as'	 => 'json')
@@ -347,7 +347,7 @@
 	this.onActionsClick_filter_files=function(action, ids)
 	{
 		var tags = $('select#tags').val();
-		var oArgs = {menuaction: '{$this->currentapp}.uiarticle.update_data',action:'get_files', id: {$id}};
+		var oArgs = {menuaction: '{$this->currentapp}.uiarticle_mapping.update_data',action:'get_files', id: {$id}};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		$.each(tags, function (k, v)
 		{
@@ -377,7 +377,7 @@ console.log(ids);
 				{
 
 				}
-	//			var oArgs = {menuaction: '{$this->currentapp}.uiarticle.update_data',action:'get_files', id: {$id}};
+	//			var oArgs = {menuaction: '{$this->currentapp}.uiarticle_mapping.update_data',action:'get_files', id: {$id}};
 	//			var strURL = phpGWLink('index.php', oArgs, true);
 
 				JqueryPortico.updateinlineTableHelper('datatable-container_1');
@@ -398,7 +398,7 @@ JS;
 			$datatable_def[] = array
 				(
 				'container' => 'datatable-container_1',
-				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uiarticle._get_files",
+				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping._get_files",
 					'id' => $id,
 					'section' => 'documents',
 					'phpgw_return_as' => 'json'))),
@@ -414,8 +414,8 @@ JS;
 			$GLOBALS['phpgw']->jqcal->add_listener('date_from', 'date');
 			$data				 = array(
 				'datatable_def'		 => $datatable_def,
-				'form_action'		 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle.save")),
-				'cancel_url'		 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle.index",)),
+				'form_action'		 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.save")),
+				'cancel_url'		 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.index",)),
 				'article'			 => $article,
 				'article_categories' => array('options' => $this->get_category_options($article->article_cat_id)),
 				'unit_list'			 => array('options' => $this->get_unit_list($article->unit)),
@@ -424,7 +424,7 @@ JS;
 				'tabs'				 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab'	 => $active_tab,
 				'fileupload' => true,
-				'multi_upload_action' => self::link(array('menuaction' => "{$this->currentapp}.uiarticle.handle_multi_upload_file", 'id' => $id, 'section' => $section)),
+				'multi_upload_action' => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.handle_multi_upload_file", 'id' => $id, 'section' => $section)),
 
 				'multiple_uploader' => true,
 				'resources_json' => ( $id && $article->article_cat_id == 1 ) ? json_encode(array($article->article_id)) : '[]'
@@ -434,7 +434,7 @@ JS;
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 			phpgwapi_jquery::formvalidator_generate(array());
 			self::add_javascript('booking', 'base', 'article.js');
-			self::render_template_xsl(array('article', 'datatable_inline','files' ,'multi_upload_file_inline'), array($mode => $data));
+			self::render_template_xsl(array('article_mapping', 'datatable_inline','files' ,'multi_upload_file_inline'), array($mode => $data));
 		}
 
 		/*
@@ -527,7 +527,7 @@ JS;
 			{
 				$link_file_data = array
 				(
-					'menuaction' => "{$this->currentapp}.uiarticle.view_file",
+					'menuaction' => "{$this->currentapp}.uiarticle_mapping.view_file",
 					'file_id'	 => $_entry['file_id']
 				);
 

@@ -27,11 +27,11 @@
 	 */
 
 	phpgw::import_class('phpgwapi.bocommon');
-	phpgw::import_class('booking.soarticle');
+	phpgw::import_class('booking.soarticle_mapping');
 
-	include_class('booking', 'article', 'inc/model/');
+	include_class('booking', 'article_mapping', 'inc/model/');
 
-	class booking_boarticle extends phpgwapi_bocommon
+	class booking_boarticle_mapping extends phpgwapi_bocommon
 	{
 		protected static
 			$bo,
@@ -53,7 +53,7 @@
 		{
 			if (self::$bo == null)
 			{
-				self::$bo = new booking_boarticle();
+				self::$bo = new booking_boarticle_mapping();
 			}
 			return self::$bo;
 		}
@@ -61,7 +61,7 @@
 		public function store($object)
 		{
 			$this->store_pre_commit($object);
-			$ret = booking_soarticle::get_instance()->store($object);
+			$ret = booking_soarticle_mapping::get_instance()->store($object);
 			$this->store_post_commit($object);
 			return $ret;
 		}
@@ -76,7 +76,7 @@
 			{
 				unset($params['filters']['active']);
 			}
-			$values =  booking_soarticle::get_instance()->read($params);
+			$values =  booking_soarticle_mapping::get_instance()->read($params);
 	//		$status_text = booking_article::get_status_list();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($values['results'] as &$entry)
@@ -92,7 +92,7 @@
 		{
 			if ($id)
 			{
-				$values = booking_soarticle::get_instance()->read_single($id, $return_object, $relaxe_acl);
+				$values = booking_soarticle_mapping::get_instance()->read_single($id, $return_object, $relaxe_acl);
 			}
 			else
 			{
@@ -104,17 +104,17 @@
 
 		public function get_mapped_services( )
 		{
-			return booking_soarticle::get_instance()->get_mapped_services();
+			return booking_soarticle_mapping::get_instance()->get_mapped_services();
 		}
 
 		public function get_pricing( $id )
 		{
-			return booking_soarticle::get_instance()->get_pricing($id);
+			return booking_soarticle_mapping::get_instance()->get_pricing($id);
 		}
 
 		public function get_reserved_resources( $building_id )
 		{
-			return booking_soarticle::get_instance()->get_reserved_resources($building_id);
+			return booking_soarticle_mapping::get_instance()->get_reserved_resources($building_id);
 		}
 
 	}
