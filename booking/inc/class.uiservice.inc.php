@@ -29,9 +29,9 @@
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('phpgwapi.datetime');
 
-	include_class('booking', 'article_mapping', 'inc/model/');
+	include_class('booking', 'service', 'inc/model/');
 
-	class booking_uiarticle_mapping extends phpgwapi_uicommon
+	class booking_uiservice extends phpgwapi_uicommon
 	{
 
 		public $public_functions = array(
@@ -58,28 +58,29 @@
 		{
 			parent::__construct();
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('article mapping');
-			$this->bo = createObject('booking.boarticle_mapping');
-			$this->fields = booking_article_mapping::get_fields();
-			$this->permissions = booking_article_mapping::get_instance()->get_permission_array();
+			$this->bo = createObject('booking.boservice');
+			$this->fields = booking_service::get_fields();
+			$this->permissions = booking_service::get_instance()->get_permission_array();
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			self::set_active_menu("{$this->currentapp}::commerce::article");
+			self::set_active_menu("{$this->currentapp}::commerce::service2");
 		}
 
-		private function get_category_options( $selected = 1 )
+		private function get_status_options( $selected = 1 )
 		{
-			$category_options = array();
-			$category_list = execMethod('booking.bogeneric.get_list', array('type' => 'article_category'));
+			$status_options = array();
+			$status_list = booking_service::get_status_list();
 
+			array_unshift($status_list, array(0 => lang('select')));
 
-			foreach ($category_list as $category)
+			foreach ($status_list as $status_id => $status_name)
 			{
-				$category_options[] = array(
-					'id' => $category['id'],
-					'name' => $category['name'],
-					'selected' => $category['id'] == $selected ? 1 : 0
+				$status_options[] = array(
+					'id' => $status_id,
+					'name' => $status_name,
+					'selected' => $status_id == $selected ? 1 : 0
 				);
 			}
-			return $category_options;
+			return $status_options;
 		}
 
 		private function get_unit_list( $selected = 0 )
@@ -153,9 +154,9 @@
 						'item' => array(
 							array(
 								'type' => 'filter',
-								'name' => 'filter_article_cat_id',
-								'text' => lang('category'),
-								'list' =>  $this->get_category_options()
+								'name' => 'filter_active',
+								'text' => lang('status'),
+								'list' =>  $this->get_status_options()
 							),
 //							array(
 //								'type' =>  $this->currentapp == 'booking' ? 'checkbox' : 'hidden',
@@ -169,11 +170,11 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-						'menuaction' => "{$this->currentapp}.uiarticle_mapping.index",
+						'menuaction' => "{$this->currentapp}.uiservice.index",
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
-					'new_item' => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.add")),
+					'new_item' => self::link(array('menuaction' => "{$this->currentapp}.uiservice.add")),
 					'editor_action' => '',
 					'field' => parent::_get_fields()
 				)
@@ -188,29 +189,29 @@
 				)
 			);
 
-/*			$data['datatable']['actions'][] = array
+			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'view',
 				'text' => lang('show'),
 				'action' => self::link(array
 					(
-					'menuaction' => "{$this->currentapp}.uiarticle_mapping.view"
+					'menuaction' => "{$this->currentapp}.uiservice.view"
 				)),
 				'parameters' => json_encode($parameters)
 			);
-*/
+
 			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'edit',
 				'text' => lang('edit'),
 				'action' => self::link(array
 					(
-					'menuaction' => "{$this->currentapp}.uiarticle_mapping.edit"
+					'menuaction' => "{$this->currentapp}.uiservice.edit"
 				)),
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript($this->currentapp, 'base', 'article_mapping.index.js', 'text/javascript', true);
+			self::add_javascript($this->currentapp, 'base', 'service.index.js', 'text/javascript', true);
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -231,209 +232,44 @@
 
 			if (!empty($values['object']))
 			{
-				$article = $values['object'];
+				$service = $values['object'];
 			}
 			else
 			{
 				$id = !empty($values['id']) ? $values['id'] : phpgw::get_var('id', 'int');
-				$article = $this->bo->read_single($id);
+				$service = $this->bo->read_single($id);
 			}
 
 			$id = (int) $id;
 
 			$tabs = array();
 			$tabs['first_tab'] = array(
-				'label' => lang('article'),
+				'label' => lang('service'),
 				'link' => '#first_tab',
 			);
 			$tabs['prizing'] = array(
-				'label' => lang('prizing'),
-				'link' => '#prizing',
-				'disable' => empty($id) ? true : false
-			);
-			$tabs['files'] = array(
-				'label' => lang('files'),
-				'link' => '#files',
+				'label' => lang('mapping'),
+				'link' => '#mapping',
 				'disable' => empty($id) ? true : false
 			);
 
-			$pricing = $this->bo->get_pricing($id);
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			foreach ($pricing as $key => &$price)
-			{
-				$price['value_date'] = $GLOBALS['phpgw']->common->show_date(strtotime($price['from_']), 'Y-m-d');
-			}
 
-			$pricing_def = array(
-				array('key' => 'id', 'label' => '#', 'sortable' => true, 'resizeable' => true),
-				array('key' => 'article_id', 'label' => lang('article id'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'price', 'label' => lang('price'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'value_date', 'label' => lang('from'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'remark', 'label' => lang('remark'), 'sortable' => true, 'resizeable' => true)
-			);
-
-			$datatable_def = array();
-			$datatable_def[] = array(
-				'container' => 'datatable-container_0',
-				'requestUrl' => "''",
-				'ColumnDefs' => $pricing_def,
-				'data' => json_encode($pricing),
-				'config' => array(
-					array('disableFilter' => true),
-					array('disablePagination' => true)
-				)
-			);
-
-			$file_def = array
-			(
-				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,'resizeable' => true),
-				array('key' => 'picture', 'label' => '', 'sortable' => false,'resizeable' => false, 'formatter' => 'JqueryPortico.showPicture'),
-			);
-
-			$requestUrl	 = json_encode(self::link(array(
-				'menuaction' => "{$this->currentapp}.uiarticle_mapping.update_file_data",
-				'location_id' => $GLOBALS['phpgw']->locations->get_id('booking', '.article'),
-				'location_item_id' => $id,
-				'phpgw_return_as'	 => 'json')
-				));
-			$requestUrl = str_replace('&amp;', '&', $requestUrl);
-
-			$buttons = array
-			(
-				array(
-					'action' => 'delete_file',
-					'type'	 => 'buttons',
-					'name'	 => 'delete',
-					'label'	 => lang('Delete file'),
-					'funct'	 => 'onActionsClick_files',
-					'classname'	 => '',
-					'value_hidden'	 => "",
-					'confirm_msg'		=> "Vil du slette fil(er)"
-					),
-			);
-
-			$tabletools = array
-			(
-				array('my_name' => 'select_all'),
-				array('my_name' => 'select_none')
-			);
-
-			foreach ($buttons as $entry)
-			{
-				$tabletools[] = array
-				(
-					'my_name'		 => $entry['name'],
-					'text'			 => $entry['label'],
-					'className'		 =>	$entry['classname'],
-					'confirm_msg'	=>	$entry['confirm_msg'],
-					'type'			 => 'custom',
-					'custom_code'	 => "
-						var api = oTable1.api();
-						var selected = api.rows( { selected: true } ).data();
-						var ids = [];
-						for ( var n = 0; n < selected.length; ++n )
-						{
-							var aData = selected[n];
-							ids.push(aData['file_id']);
-						}
-						{$entry['funct']}('{$entry['action']}', ids);
-						"
-				);
-			}
-
-			$code		 = <<<JS
-
-	this.onActionsClick_filter_files=function(action, ids)
-	{
-		var tags = $('select#tags').val();
-		var oArgs = {menuaction: '{$this->currentapp}.uiarticle_mapping.update_data',action:'get_files', id: {$id}};
-		var requestUrl = phpGWLink('index.php', oArgs, true);
-		$.each(tags, function (k, v)
-		{
-			requestUrl += '&tags[]=' + v;
-		});
-		JqueryPortico.updateinlineTableHelper('datatable-container_1', requestUrl);
-	}
-
-	this.onActionsClick_files=function(action, ids)
-	{
-		var numSelected = 	ids.length;
-console.log(ids);
-		if (numSelected ==0)
-		{
-			alert('None selected');
-			return false;
-		}
-		var tags = $('select#tags').val();
-
-		$.ajax({
-			type: 'POST',
-			dataType: 'json',
-			url: {$requestUrl},
-			data:{ids:ids, tags:tags, action:action},
-			success: function(data) {
-				if( data != null)
-				{
-
-				}
-	//			var oArgs = {menuaction: '{$this->currentapp}.uiarticle_mapping.update_data',action:'get_files', id: {$id}};
-	//			var strURL = phpGWLink('index.php', oArgs, true);
-
-				JqueryPortico.updateinlineTableHelper('datatable-container_1');
-
-				if(action=='delete_file')
-				{
-		//			refresh_glider(strURL);
-				}
-			},
-			error: function(data) {
-				alert('feil');
-			}
-		});
-	}
-JS;
-			$GLOBALS['phpgw']->js->add_code('', $code);
-
-			$datatable_def[] = array
-				(
-				'container' => 'datatable-container_1',
-				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping._get_files",
-					'id' => $id,
-					'section' => 'documents',
-					'phpgw_return_as' => 'json'))),
-				'ColumnDefs' => $file_def,
-				'data' => json_encode(array()),
-				'tabletools' => $tabletools,
-				'config' => array(
-					array('disableFilter' => true),
-					array('disablePagination' => true)
-				)
-			);
-
-			$GLOBALS['phpgw']->jqcal->add_listener('date_from', 'date');
 			$data				 = array(
 				'datatable_def'		 => $datatable_def,
-				'form_action'		 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.save")),
-				'cancel_url'		 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.index",)),
-				'article'			 => $article,
-				'article_categories' => array('options' => $this->get_category_options($article->article_cat_id)),
-				'unit_list'			 => array('options' => $this->get_unit_list($article->unit)),
-				'service_list'		 => ( $id && $article->article_cat_id == 2 )? array('options' => $this->get_services($article->article_id)) : array(),
+				'form_action'		 => self::link(array('menuaction' => "{$this->currentapp}.uiservice.save")),
+				'cancel_url'		 => self::link(array('menuaction' => "{$this->currentapp}.uiservice.index",)),
+				'service'			 => $service,
+				'service_categories' => array('options' => $this->get_status_options($service->service_cat_id)),
 				'mode'				 => $mode,
 				'tabs'				 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab'	 => $active_tab,
-				'fileupload' => true,
-				'multi_upload_action' => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.handle_multi_upload_file", 'id' => $id, 'section' => $section)),
-
-				'multiple_uploader' => true,
-				'resources_json' => ( $id && $article->article_cat_id == 1 ) ? json_encode(array($article->article_id)) : '[]'
 			);
-			self::add_javascript('booking', 'base', 'common');
+			self::rich_text_editor('field_description');
+//			self::add_javascript('booking', 'base', 'common');
 			phpgwapi_jquery::load_widget('autocomplete');
-			phpgwapi_jquery::load_widget('file-upload-minimum');
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript('booking', 'base', 'article_mapping.js');
-			self::render_template_xsl(array('article_mapping', 'datatable_inline','files' ,'multi_upload_file_inline'), array($mode => $data));
+			self::add_javascript('booking', 'base', 'service.js');
+			self::render_template_xsl(array('service'), array($mode => $data));
 		}
 
 		/*
@@ -526,7 +362,7 @@ JS;
 			{
 				$link_file_data = array
 				(
-					'menuaction' => "{$this->currentapp}.uiarticle_mapping.view_file",
+					'menuaction' => "{$this->currentapp}.uiservice.view_file",
 					'file_id'	 => $_entry['file_id']
 				);
 
@@ -543,7 +379,7 @@ JS;
 					$content_files[$z]['file_name']		 = $_entry['name'];
 					$content_files[$z]['img_id']		 = $_entry['file_id'];
 					$content_files[$z]['img_url']		 = self::link(array(
-							'menuaction' => "{$this->currentapp}.uiarticle_mapping.view_file",
+							'menuaction' => "{$this->currentapp}.uiservice.view_file",
 							'file_id'	 => $_entry['file_id'],
 							'file'		 => $_entry['directory'] . '/' . urlencode($_entry['name'])
 					));
@@ -582,7 +418,7 @@ JS;
 			$options['fakebase'] = "/booking";
 			$options['base_dir'] = "article/{$id}/{$section}";
 			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/booking/'.$options['base_dir'].'/';
-			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.handle_multi_upload_file", 'id' => $id, 'section' => $section)));
+			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => "{$this->currentapp}.uiservice.handle_multi_upload_file", 'id' => $id, 'section' => $section)));
 			$upload_handler = new property_multiuploader($options, false);
 
 			switch ($_SERVER['REQUEST_METHOD']) {

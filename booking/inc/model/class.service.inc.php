@@ -27,30 +27,21 @@
 	 * @version $Id: $
 	 */
 
-	phpgw::import_class('booking.boarticle_mapping');
+	phpgw::import_class('booking.boservice');
 
 	include_class('phpgwapi', 'model', 'inc/model/');
 
-	class booking_article_mapping extends phpgwapi_model
+	class booking_service extends phpgwapi_model
 	{
-
-		const STATUS_REGISTERED = 1;
-		const STATUS_PENDING = 2;
-		const STATUS_REJECTED = 3;
-		const STATUS_APPROVED = 4;
+		const STATUS_ACTIVE = 1;
 		const acl_location = '.article';
 
 		protected
 			$id,
-			$article_id,
-			$building_id,
-			$building_name,
-			$article_name,
-			$article_cat_id,
-			$article_cat_name,
-			$article_code,
-			$owner_id,
-			$unit;
+			$name,
+			$active,
+			$description,
+			$owner_id;
 		protected $field_of_responsibility_name = '.article';
 
 		public function __construct( int $id = null )
@@ -66,16 +57,13 @@
 		 */
 		public static function get_instance()
 		{
-			return new booking_article_mapping();
+			return new booking_service();
 		}
 
 		public static function get_status_list()
 		{
 			return array(
-				self::STATUS_REGISTERED => lang('registered'),
-				self::STATUS_PENDING	=> lang('pending'),
-				self::STATUS_REJECTED => lang('rejected'),
-				self::STATUS_APPROVED	=> lang('approved')
+				self::STATUS_ACTIVE	=> lang('active'),
 			);
 		}
 
@@ -92,67 +80,26 @@
 					'formatter' => 'JqueryPortico.formatLink',
 					'public'	=> true
 					),
+				'name' => array(
+					'action'=>  PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => true,
+					'label' => 'name'
+					),
+				'active' => array(
+					'action'=>   PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'int'
+					),
+				'description' => array(
+					'action'=>  PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'html',
+					'required' => true,
+					'label' => 'description'
+					),
 				'owner_id' => array(
 					'action'=> PHPGW_ACL_ADD,
 					'type' => 'int',
 					'required' => false
-					),
-				'article_cat_id' => array(
-					'action'=>  PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'int'
-					),
-				'building_id' => array(
-					'action'=>  PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'int'
-					),
-				'building_name' => array(
-					'action'=>  PHPGW_ACL_READ,
-						'type' => 'string',
-						'query' => true,
-						'label' => 'building',
-						'multiple_join' => array(
-							'statement' => ' LEFT JOIN bb_building ON bb_building.id = bb_article_mapping.building_id',
-							'column' => 'bb_building.name'
-						),
-					),
-				'article_cat_name' => array(
-					'action'=>  PHPGW_ACL_READ,
-						'type' => 'string',
-						'query' => true,
-						'label' => 'category',
-						'join' => array(
-							'table' => 'bb_article_category',
-							'fkey' => 'article_cat_id',
-							'key' => 'id',
-							'column' => 'name'
-							)
-						),
-				'article_id' => array(
-					'action'=>  PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'int'
-					),
-				'article_name' => array(
-					'action'=>  PHPGW_ACL_READ,
-						'type' => 'string',
-						'query' => true,
-						'label' => 'name',
-						'multiple_join' => array(
-							'statement' => ' JOIN bb_article_view ON bb_article_view.id = bb_article_mapping.article_id'
-							. ' AND bb_article_view.article_cat_id = bb_article_mapping.article_cat_id',
-							'column' => 'bb_article_view.name'
-						),
-					),
-				'article_code' => array(
-					'action'=>  PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => true,
-					'label' => 'article code'
-					),
-				'unit' => array(
-					'action'=>  PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => true,
-					'label' => 'unit'
 					),
 			);
 
@@ -176,7 +123,7 @@
 			{
 				foreach ($fields as $field => $field_info)
 				{
-					if(!property_exists('booking_article_mapping', $field))
+					if(!property_exists('booking_service', $field))
 					{
 					   phpgwapi_cache::message_set('$'."{$field},", 'error');
 					}
@@ -193,14 +140,6 @@
 		{
 			$entity->active = (int)$entity->active;
 
-			if ($entity->article_cat_id == 1)
-			{
-				$entity->article_id = phpgw::get_var('resource_id', 'int', 'POST');
-			}
-			else if ($entity->article_cat_id == 2)
-			{
-				$entity->article_id = phpgw::get_var('service_id', 'int', 'POST');
-			}
 			if(!$entity->get_id())
 			{
 				$entity->owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
@@ -214,11 +153,11 @@
 
 		public function store()
 		{
-			return booking_boarticle_mapping::get_instance()->store($this);
+			return booking_boservice::get_instance()->store($this);
 		}
 
 		public function read_single($id)
 		{
-			return booking_boarticle_mapping::get_instance()->read_single($id, true);
+			return booking_boservice::get_instance()->read_single($id, true);
 		}
 	}

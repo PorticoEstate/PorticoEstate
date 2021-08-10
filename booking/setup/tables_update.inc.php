@@ -5390,6 +5390,7 @@
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'name' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false),
 				'active' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => '1'),
+				'owner_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'description' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),

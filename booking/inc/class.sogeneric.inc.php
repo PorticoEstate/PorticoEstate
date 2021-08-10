@@ -178,7 +178,7 @@
 						'acl_app'			 => 'booking',
 						'acl_location'		 => '.admin',
 						'system_location'	 => '.article',
-						'menu_selection'	 => 'booking::settings::article',
+						'menu_selection'	 => 'booking::commerce::service',
 						'check_grant'		 => false
 					);
 
