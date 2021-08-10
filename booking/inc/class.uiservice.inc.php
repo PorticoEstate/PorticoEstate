@@ -253,6 +253,34 @@
 				'disable' => empty($id) ? true : false
 			);
 
+			$collapse_links = array(
+				'show_inactive' => self::link(array('menuaction' => "{$this->currentapp}.uiservice.edit",
+					'show_all' => 'true', 'id' => $id, 'active_tab' => $active_tab)),
+				'hide_inactive' => self::link(array('menuaction' => "{$this->currentapp}.uiservice.edit",
+					'show_all' => '', 'id' => $id, 'active_tab' => $active_tab))
+			);
+
+//			$show_all = phpgw::get_var('show_all') || false;
+//
+//			$this->building_so = CreateObject('booking.sobuilding');
+//			$this->resource_so = CreateObject('booking.soresource');
+//
+//			$buildings = $this->building_so->read(array('filters' => array(),'sort' => 'name', 'dir' => 'ASC', 'results' => -1));
+//			$children = array();
+//
+//			$building_ids = array();
+//			foreach ($buildings['results'] as $building)
+//			{
+//				$resources = $this->resource_so->read(array('filters' => array('building_id' => $building['id'], 'active' => 1), 'results' => -1));
+//				if (!array_key_exists($building['id'], $children))
+//				{
+//					$children[$building['id']] = array();
+//				}
+//				$children[$building['id']] = $resources['results'];
+//
+//			}
+//			$treedata = json_encode($this->treeitem($children, null, $show_all));
+//
 
 			$data				 = array(
 				'datatable_def'		 => $datatable_def,
@@ -263,14 +291,59 @@
 				'mode'				 => $mode,
 				'tabs'				 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab'	 => $active_tab,
+				'collapse_links'	=> $collapse_links
 			);
+
 			self::rich_text_editor('field_description');
-//			self::add_javascript('booking', 'base', 'common');
-			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::load_widget('treeview');
 			phpgwapi_jquery::formvalidator_generate(array());
 			self::add_javascript('booking', 'base', 'service.js');
 			self::render_template_xsl(array('service'), array($mode => $data));
 		}
+
+		function treeitem( $children, $parent_id, $show_all )
+		{
+			$nodes = array();
+			if (is_array($children[$parent_id]))
+			{
+				foreach ($children[$parent_id] as $item)
+				{
+					if ($item['active'] == false && $show_all == false)
+					{
+						continue;
+					}
+					$node = array(
+						"type" => "text",
+						"href" => self::link(array('menuaction' => 'booking.uiactivity.edit',
+							'id' => $item['id'])), 'target' => '_self',
+						'label' => $item['name'],
+						'text' => $item['name'],
+						'children' => $this->treeitem($children, $item['id'], $show_all)
+					);
+
+					try
+					{
+						if (!$this->bo->allow_write($item))
+						{
+							unset($node['href']);
+						}
+					}
+					catch (booking_unauthorized_exception $exc)
+					{
+						unset($node['href']);
+					}
+
+//					if (!$this->bo->allow_write($item))
+//					{
+//						unset($node['href']);
+//					}
+
+					$nodes[] = $node;
+				}
+			}
+			return $nodes;
+		}
+
 
 		/*
 		 * Get the article with the id given in the http variable 'id'
