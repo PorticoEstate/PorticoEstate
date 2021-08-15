@@ -5276,15 +5276,20 @@
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
 		# BEGIN Evil
-		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_price_reduction');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_price');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_resource_service');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_service');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_order_lines');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_mapping');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_category');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_order');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_customer');
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('bb_article_price_reduction');
+		if(isset($metadata['id']))
+		{
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_price_reduction');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_price');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_resource_service');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_service');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_order_lines');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_mapping');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_category');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_order');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_customer');
+		}
+
 		# END Evil
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
