@@ -55,7 +55,9 @@ JS;
 
 
 	$stylesheets[]	 = "/phpgwapi/js/bootstrap/css/bootstrap.min.css";
-	$stylesheets[]	 = "/phpgwapi/templates/aalesund/css/fontawesome.all.css";
+//	$stylesheets[]	 = "/phpgwapi/templates/aalesund/css/fontawesome.all.css";
+	$stylesheets[]	 = "/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
+
 	$stylesheets[]	 = "/phpgwapi/templates/aalesund/css/jquery.autocompleter.css";
 	$stylesheets[]	 = "https://fonts.googleapis.com/css?family=Work+Sans";
 	$stylesheets[]	 = "/phpgwapi/templates/aalesund/css/custom.css";

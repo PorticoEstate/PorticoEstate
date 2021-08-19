@@ -373,9 +373,9 @@
 
 			if (isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 			{
-				$janitor_list			 = $this->bo->get_dimb_role_user(1, '', $janitor);
-				$supervisor_list		 = $this->bo->get_dimb_role_user(2, '', $supervisor);
-				$budget_responsible_list = $this->bo->get_dimb_role_user(3, '', $budget_responsible);
+				$janitor_list			 = $this->bo->get_dimb_role_user(1);
+				$supervisor_list		 = $this->bo->get_dimb_role_user(2);
+				$budget_responsible_list = $this->bo->get_dimb_role_user(3);
 			}
 			else
 			{

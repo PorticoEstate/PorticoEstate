@@ -1359,7 +1359,9 @@
 
 			$sql = "SELECT DISTINCT account_lid,account_lastname, account_firstname FROM fm_ecodimb_role_user"
 				. " {$this->db->join} phpgw_accounts ON fm_ecodimb_role_user.user_id = phpgw_accounts.account_id"
-				. " WHERE {$role_filter} {$filter_dimb} AND expired_on IS NULL"
+				. " WHERE {$role_filter} {$filter_dimb}"
+				. " AND expired_on IS NULL"
+				. " AND account_status = 'A'"
 				. ' AND active_from < ' . time()
 				. ' AND (active_to > ' . time() . ' OR active_to = 0)'
 				. " ORDER BY account_lastname ASC, account_firstname ASC";
@@ -2906,7 +2908,7 @@
 			$amount = 0;
 			foreach ($voucher as $entry)
 			{
-				$amount += $entry['amount'];
+				$amount += (float)$entry['amount'];
 				phpgwapi_cache::system_clear('property', "budget_order_{$entry['order_id']}");
 			}
 			unset($entry);
@@ -2930,7 +2932,7 @@
 			}
 			unset($entry);
 
-			if ($split_amount != $amount)
+			if (round($split_amount, 2) != round($amount,2))
 			{
 				throw new Exception('soinvoice::perform_bulk_split() - amount does not add up');
 			}

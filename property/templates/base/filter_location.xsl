@@ -39,7 +39,17 @@
 				placeholder: "<xsl:value-of select="lang_location_statustext"/>",
 				width: 'element'
 			});
-			
+
+			$('#<xsl:value-of select="$select_name_location"/>').on('select2:open', function (e) {
+				$(".select2-search__field").each(function()
+				{
+					if ($(this).attr("aria-controls") == 'select2-<xsl:value-of select="$select_name_location"/>-results')
+					{
+						$(this)[0].focus();
+					}
+				});
+			});
+
 		</script>
 </xsl:template>
 
