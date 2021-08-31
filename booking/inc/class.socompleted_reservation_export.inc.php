@@ -1396,11 +1396,6 @@
 					{
 						$fakturalinje['AnsvarDim'] = strtoupper(substr($account_codes['responsible_code'], 0, 8));	//char(8)
 					}
-					//Tjeneste, eks. 38010 drift av idrettsbygg.  Kan ligge på artikkel i Agresso. Blank eller tjenestenr. (eks.38010) vi ikke legger det i artikkel
-					if (isset($this->config_data['dim_2']))
-					{
-						$item['dim_2'] = strtoupper(substr($account_codes['service'], 0, 8));
-					}
 
 					$fakturalinje['antall']	 = 1;	//Desimal
 					$fakturalinje['ArtDim']	 = '';  //char(8)
@@ -1424,6 +1419,13 @@
 //					$fakturalinje['Linjefeilmelding']	 = '';  //string
 					$fakturalinje['Linjenr']	 = $line_no;  //
 //					$fakturalinje['mvakode']	 = '';  //char(1)
+
+					//Formål. eks.
+					if ($type == 'internal' && isset($this->config_data['dim_2']))
+					{
+						$fakturalinje['FormalDim'] = strtoupper(substr($account_codes['service'], 0, 8));
+					}
+
 					//Objektnr. vil være knyttet til hvert hus (FDVU)
 					if (isset($this->config_data['dim_3']))
 					{
@@ -1481,10 +1483,10 @@
 //					}
 //
 //					//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt
-//					if (isset($this->config_data['dim_5']))
-//					{
-//						$item['dim_5'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
-//					}
+					if (isset($this->config_data['dim_5']))
+					{
+						$fakturalinje['orgkode'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
+					}
 //					if (isset($this->config_data['dim_6']))
 //					{
 //						$item['dim_6'] = str_pad(substr($account_codes['dim_6'], 0, 4), 4, ' ');
@@ -1534,11 +1536,6 @@
 					{
 						$fakturalinje['AnsvarDim'] = strtoupper(substr($account_codes['responsible_code'], 0, 8));	//char(8)
 					}
-					//Tjeneste, eks. 38010 drift av idrettsbygg.  Kan ligge på artikkel i Agresso. Blank eller tjenestenr. (eks.38010) vi ikke legger det i artikkel
-					if (isset($this->config_data['dim_2']))
-					{
-						$item['dim_2'] = str_pad(strtoupper(substr($account_codes['service'], 0, 8)), 8, ' ');
-					}
 
 					$fakturalinje['antall']				 = 1; //Desimal
 					$fakturalinje['ArtDim']				 = '';  //char(8)
@@ -1552,11 +1549,25 @@
 					$fakturalinje['fradato']			 = $from_date->format('d.m.Y');  //dato
 
 					$fakturalinje['Linjenr'] = $line_no;  //
+
+					//Formål. Eks Idrett
+					if ($type == 'internal' && isset($this->config_data['dim_2']))
+					{
+						$fakturalinje['FormalDim'] = str_pad(strtoupper(substr($account_codes['service'], 0, 8)), 8, ' ');
+					}
+
 					//Objektnr. vil være knyttet til hvert hus (FDVU)
 					if (isset($this->config_data['dim_3']))
 					{
 						$fakturalinje['ObjektDim'] = strtoupper(substr($account_codes['object_number'], 0, 8));//char(8)
 					}
+
+					$fakturalinje['orgkode']	 = '';  //char(8)
+					if (isset($this->config_data['dim_5']))
+					{
+						$fakturalinje['orgkode'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
+					}
+
 
 					$fakturalinje['SumPrisUtenAvgift'] = $reservation['cost'];  //Beløp
 
