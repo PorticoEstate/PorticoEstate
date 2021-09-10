@@ -252,7 +252,7 @@
 			{
 				$document_properties = $this->get_type_and_id($document);
 				$mime_magic	 = createObject('phpgwapi.mime_magic');
-				$file_name = str_replace(array('"', "'", ' ', ','), '_', $$document->get_name());
+				$file_name = str_replace(array('"', "'", ' ', ','), '_', $document->get_name());
 				$mime_type = $mime_magic->filename2mime($file_name);
 				header('Content-Disposition: attachment; filename="'.$file_name.'"');
 				header("Content-Type: $mime_type", true);
