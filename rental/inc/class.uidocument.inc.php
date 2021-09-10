@@ -252,9 +252,10 @@
 			{
 				$document_properties = $this->get_type_and_id($document);
 				$mime_magic	 = createObject('phpgwapi.mime_magic');
-				$mime_type = $mime_magic->filename2mime($document->get_name());
-				header("Content-Disposition: attachment; filename={$document->get_name()}", true);
-				header("Content-Type: $mime_type");
+				$file_name = str_replace(array('"', "'", ' ', ','), '_', $$document->get_name());
+				$mime_type = $mime_magic->filename2mime($file_name);
+				header('Content-Disposition: attachment; filename="'.$file_name.'"');
+				header("Content-Type: $mime_type", true);
 				header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 
 				echo rental_sodocument::get_instance()->read_document_from_vfs
