@@ -247,7 +247,7 @@
 				'label' => lang('service'),
 				'link' => '#first_tab',
 			);
-			$tabs['prizing'] = array(
+			$tabs['mapping'] = array(
 				'label' => lang('mapping'),
 				'link' => '#mapping',
 				'disable' => empty($id) ? true : false
