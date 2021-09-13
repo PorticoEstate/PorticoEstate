@@ -193,7 +193,7 @@
 				else
 				{
 					xmlwriter_write_element($memory, 'Fodselsnummer', $identifier);
-					xmlwriter_write_element($memory, 'Fornavn', $entry['name']);
+//					xmlwriter_write_element($memory, 'Fornavn', $entry['name']);
 				}
 				xmlwriter_write_element($memory, 'Navn', $entry['name']);
 				xmlwriter_write_element($memory, 'AdresseLinje1', $entry['street']);
