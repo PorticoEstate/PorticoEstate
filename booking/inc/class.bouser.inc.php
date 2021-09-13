@@ -189,16 +189,17 @@
 				if($customer_type == 'O')
 				{
 					xmlwriter_write_element($memory, 'Foretaksnummer', $identifier);
+					xmlwriter_write_element($memory, 'Fagsystemkundeid', $entry['organization_number']);
 				}
 				else
 				{
 					xmlwriter_write_element($memory, 'Fodselsnummer', $identifier);
 					xmlwriter_write_element($memory, 'Fornavn', $entry['name']);
+					xmlwriter_write_element($memory, 'Fagsystemkundeid', $entry['customer_ssn']);
 				}
 				xmlwriter_write_element($memory, 'Navn', $entry['name']);
 				xmlwriter_write_element($memory, 'AdresseLinje1', $entry['street']);
 				xmlwriter_write_element($memory, 'Adressetype', 'O'); //Offentlig = O,Midlertidig = M, OffentligReg = R, Utenlands = U, UtenlandsMidlertidig = X
-				xmlwriter_write_element($memory, 'Fagsystemkundeid', $entry['id']);
 				xmlwriter_write_element($memory, 'Poststed', $entry['city']);
 				xmlwriter_write_element($memory, 'TelefonMobil', $entry['phone']);
 				xmlwriter_write_element($memory, 'Epost', $entry['email']);

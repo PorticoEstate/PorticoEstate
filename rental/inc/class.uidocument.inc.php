@@ -251,9 +251,11 @@
 			if ($document->has_permission(PHPGW_ACL_READ))
 			{
 				$document_properties = $this->get_type_and_id($document);
-
-				header("Content-Disposition: attachment; filename={$document->get_name()}");
-				header("Content-Type: $file_type");
+				$mime_magic	 = createObject('phpgwapi.mime_magic');
+				$file_name = str_replace(array('"', "'", ' ', ','), '_', $document->get_name());
+				$mime_type = $mime_magic->filename2mime($file_name);
+				header('Content-Disposition: attachment; filename="'.$file_name.'"');
+				header("Content-Type: $mime_type", true);
 				header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 
 				echo rental_sodocument::get_instance()->read_document_from_vfs
@@ -404,8 +406,8 @@
 		 */
 		private function get_type_and_id( $document )
 		{
-			$document_type;
-			$id;
+			$document_type = '';
+			$id = '';
 			$contract_id = $document->get_contract_id();
 			$party_id = $document->get_party_id();
 			if (isset($contract_id) && $contract_id > 0)
