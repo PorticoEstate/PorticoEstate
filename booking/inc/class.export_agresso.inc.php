@@ -173,7 +173,12 @@
 			{
 				$newfile = basename($filnavn);
 			}
-			$host = $this->config->config_data['invoice_ftp_host'];
+			$host_info		 = explode(':', $this->config->config_data['invoice_ftp_host']);
+
+			$host	 = $host_info[0];
+			$port	 = isset($host_info[1]) && $host_info[1] ? $host_info[1] : 22;
+
+//			$host = $this->config->config_data['invoice_ftp_host'];
 			$user = $this->config->config_data['invoice_ftp_user'];
 			$pass = $this->config->config_data['invoice_ftp_password'];
 
@@ -184,7 +189,7 @@
 					$pass, // password (optional, default: null) set to null if privateKey is used
 					null, // private key (optional, default: null) can be used instead of password, set to null if password is set
 					null, // passphrase (optional, default: null), set to null if privateKey is not used or has no passphrase
-					22, // port (optional, default: 22)
+					$port, // port (optional, default: 22)
 					false, // use agent (optional, default: false)
 					10, // timeout (optional, default: 10)
 					40, // max tries (optional, default: 4)
