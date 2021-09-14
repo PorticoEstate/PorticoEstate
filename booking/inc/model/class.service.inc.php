@@ -148,7 +148,7 @@
 
 		public function serialize()
 		{
-			return self::toArray();
+			return $this->toArray();
 		}
 
 		public function store()

@@ -57,7 +57,7 @@
 		public function __construct()
 		{
 			parent::__construct();
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('article mapping');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('Service');
 			$this->bo = createObject('booking.boservice');
 			$this->fields = booking_service::get_fields();
 			$this->permissions = booking_service::get_instance()->get_permission_array();
@@ -260,33 +260,35 @@
 					'show_all' => '', 'id' => $id, 'active_tab' => $active_tab))
 			);
 
-//			$show_all = phpgw::get_var('show_all') || false;
-//
-//			$this->building_so = CreateObject('booking.sobuilding');
-//			$this->resource_so = CreateObject('booking.soresource');
-//
-//			$buildings = $this->building_so->read(array('filters' => array(),'sort' => 'name', 'dir' => 'ASC', 'results' => -1));
-//			$children = array();
-//
-//			$building_ids = array();
-//			foreach ($buildings['results'] as $building)
-//			{
-//				$resources = $this->resource_so->read(array('filters' => array('building_id' => $building['id'], 'active' => 1), 'results' => -1));
-//				if (!array_key_exists($building['id'], $children))
-//				{
-//					$children[$building['id']] = array();
-//				}
-//				$children[$building['id']] = $resources['results'];
-//
-//			}
-//			$treedata = json_encode($this->treeitem($children, null, $show_all));
-//
+			$show_all = phpgw::get_var('show_all') || false;
+
+			$this->building_so = CreateObject('booking.sobuilding');
+			$this->resource_so = CreateObject('booking.soresource');
+
+			$buildings = $this->building_so->read(array('filters' => array(),'sort' => 'name', 'dir' => 'ASC', 'results' => -1));
+			$children = array();
+
+			$building_ids = array();
+			foreach ($buildings['results'] as $building)
+			{
+				$resources = $this->resource_so->read(array('filters' => array('building_id' => $building['id'], 'active' => 1), 'results' => -1));
+				if (!array_key_exists($building['id'], $children))
+				{
+		//			$children[$building['id']] = array();
+				}
+				$children[null][] =  $building;
+				$children[$building['id']] = $resources['results'];
+
+			}
+			$treedata = json_encode($this->treeitem($children, null, $show_all));
+
 
 			$data				 = array(
-				'datatable_def'		 => $datatable_def,
+//				'datatable_def'		 => $datatable_def,
 				'form_action'		 => self::link(array('menuaction' => "{$this->currentapp}.uiservice.save")),
 				'cancel_url'		 => self::link(array('menuaction' => "{$this->currentapp}.uiservice.index",)),
 				'service'			 => $service,
+				'treedata'			 => $treedata,
 				'service_categories' => array('options' => $this->get_status_options($service->service_cat_id)),
 				'mode'				 => $mode,
 				'tabs'				 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
@@ -303,11 +305,20 @@
 
 		function treeitem( $children, $parent_id, $show_all )
 		{
+			static $item_ids = array();
 			$nodes = array();
 			if (is_array($children[$parent_id]))
 			{
 				foreach ($children[$parent_id] as $item)
 				{
+
+					if (in_array($item['id'], $item_ids))
+					{
+						continue;
+					}
+
+					$item_ids[] = $item['id'];
+
 					if ($item['active'] == false && $show_all == false)
 					{
 						continue;
@@ -320,23 +331,6 @@
 						'text' => $item['name'],
 						'children' => $this->treeitem($children, $item['id'], $show_all)
 					);
-
-					try
-					{
-						if (!$this->bo->allow_write($item))
-						{
-							unset($node['href']);
-						}
-					}
-					catch (booking_unauthorized_exception $exc)
-					{
-						unset($node['href']);
-					}
-
-//					if (!$this->bo->allow_write($item))
-//					{
-//						unset($node['href']);
-//					}
 
 					$nodes[] = $node;
 				}

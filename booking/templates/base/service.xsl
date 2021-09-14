@@ -88,6 +88,26 @@
 								<xsl:value-of select="php:function('lang', 'mapping')"/>
 							</legend>
 
+							<div id="tree_container">
+								<script type="text/javascript">
+									var treedata = null;
+									<xsl:if test="treedata != ''">
+										treedata = <xsl:value-of select="treedata"/>;
+									</xsl:if>
+								</script>
+								<!-- markup for expand/contract links -->
+								<div id="treecontrol">
+									<a id="collapse" title="Collapse the entire tree below" href="#">
+										<xsl:value-of select="php:function('lang', 'collapse all')"/>
+									</a>
+									<xsl:text> | </xsl:text>
+									<a id="expand" title="Expand the entire tree below" href="#">
+										<xsl:value-of select="php:function('lang', 'expand all')"/>
+									</a>
+								</div>
+								<div id="treeDiv"></div>
+							</div>
+
 						</fieldset>
 					</div>
 
