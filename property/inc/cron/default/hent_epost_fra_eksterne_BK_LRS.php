@@ -145,7 +145,6 @@
 			$IsEqualTo_isread->FieldURIOrConstant->Constant			 = new ConstantValueType();
 			$IsEqualTo_isread->FieldURIOrConstant->Constant->Value	 = "false";
 
-
 			/**
 			 * Regelsett 1
 			 */
@@ -258,6 +257,12 @@
 					'group_id'		 => 4253, //LRS-Drift_Regnskap
 					'subject'		 => ''
 				),
+				'Nye leverandører'					 => array
+					(
+					'message_cat_id' => 378, // 31 Opprettelse av ny leverandør
+					'group_id'		 => 4253, //LRS-Drift_Regnskap
+					'subject'		 => 'Nye leverandører'
+				),
 			);
 
 			foreach ($folder_list as $folder_name => $folder_rules)
@@ -331,7 +336,6 @@
 						// Iterate over the results, printing any error messages or receiving
 						// attachments.
 						$response_messages2 = $response2->ResponseMessages->GetItemResponseMessage;
-
 
 						foreach ($response_messages2 as $response_message2)
 						{
@@ -1345,7 +1349,7 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
-			else if(preg_match("/Salgsordre med Kostra art 1790 fordelte utgifte/i" , $subject ))
+			else if (preg_match("/Salgsordre med Kostra art 1790 fordelte utgifte/i", $subject))
 			{
 				$message_cat_id	 = 281; // LRS-DRIFT_Regnskap - underkategori: 20 Fakturering til kunde
 				$group_id		 = 4253; //LRS-DRIFT_Regnskap
@@ -1446,7 +1450,6 @@
 		{
 			$ticket_id	 = (int)$identificator_arr[1];
 			$msg_id		 = (int)$identificator_arr[2];
-
 
 			if (!$msg_id)
 			{
