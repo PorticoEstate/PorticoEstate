@@ -1,5 +1,5 @@
 
-/* global lang */
+/* global lang, treedata */
 
 var service_id_selected = "";
 
@@ -83,27 +83,44 @@ $(document).ready(function ()
 {
 	$("#treeDiv").jstree({
 		"core": {
-			"multiple": false,
-			"themes": { "stripes": true },
+			"multiple": true,
+			"themes": {"stripes": true},
 			"data": treedata,
 		},
-		"plugins": ["themes", "html_data", "ui", "state"]
+		"checkbox": {
+			"keep_selected_style": false
+		},
+		"plugins": ["themes", "html_data", "ui", "checkbox"]
+			//	"plugins": ["themes", "html_data", "ui", "state", "checkbox"]
 	});
 
 	var count1 = 0;
-	$("#treeDiv").bind("select_node.jstree", function (event, data) {
+	$("#treeDiv").bind("select_node.jstree", function (event, data)
+	{
+//		console.log(data);
 		count1 += 1;
 		var divd = data.instance.get_node(data.selected[0]).original['href'];
-		if (count1 > 1) {
-			window.location.href = divd;
+		if (count1 > 1)
+		{
+//			window.location.href = divd;
 		}
 	});
 
-	$('#collapse').on('click', function () {
+	$(function ()
+	{
+		$('#treeDiv').on('changed.jstree', function (e, data)
+		{
+			console.log(data.selected);
+		});
+	});
+
+	$('#collapse').on('click', function ()
+	{
 		$(this).attr('href', 'javascript:;');
 		$('#treeDiv').jstree('close_all');
 	})
-	$('#expand').on('click', function () {
+	$('#expand').on('click', function ()
+	{
 		$(this).attr('href', 'javascript:;');
 		$('#treeDiv').jstree('open_all');
 	});
