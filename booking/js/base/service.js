@@ -110,7 +110,40 @@ $(document).ready(function ()
 	{
 		$('#treeDiv').on('changed.jstree', function (e, data)
 		{
-			console.log(data.selected);
+			var selected_resources = data.selected;
+			var service_id = $("#id").val();
+			console.log(service_id);
+			console.log(selected_resources);
+
+			oArgs = {menuaction: 'booking.uiservice.set_mapping'};
+			var requestUrl = phpGWLink('index.php', oArgs, true);
+	
+			$.ajax({
+				type: 'POST',
+				data: {selected_resources: selected_resources, service_id: service_id},
+				dataType: 'json',
+				url: requestUrl,
+				success: function (data)
+				{
+					if (data != null)
+					{
+						var message = data.message;
+						var variable_horizontal = data.variable_horizontal;
+						var variable_vertical = data.variable_vertical;
+	
+						htmlString = "";
+						var msg_class = "msg_good";
+						if (data.status == 'error')
+						{
+							msg_class = "error";
+						}
+						htmlString += "<div class=\"" + msg_class + "\">";
+						htmlString += message;
+						htmlString += '</div>';
+						$("#receipt").html(htmlString);
+					}
+				}
+			});
 		});
 	});
 

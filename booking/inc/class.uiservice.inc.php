@@ -47,7 +47,8 @@
 			'handle_multi_upload_file'	 => true,
 			'_get_files'				 => true,
 			'view_file'					 => true,
-			'update_file_data'			 => true
+			'update_file_data'			 => true,
+			'set_mapping'				 => true
 		);
 		protected
 			$fields,
@@ -126,6 +127,23 @@
 			return $service_options;
 		}
 
+		public function set_mapping()
+		{
+			if (empty($this->permissions[PHPGW_ACL_EDIT]))
+			{
+				phpgw::no_access();
+			}
+			$service_id = phpgw::get_var('service_id', 'int','POST');
+			$selected_resources = phpgw::get_var('selected_resources', 'int','POST');
+
+			$ret = $this->bo->set_mapping($service_id, $selected_resources);
+			return array(
+				'message' => $ret ? lang('mapping updated') : lang('transactio failed'),
+				'status'  => $ret ? 'Ok' : 'error'
+			);
+
+		}
+		
 		public function index()
 		{
 			if (empty($this->permissions[PHPGW_ACL_READ]))

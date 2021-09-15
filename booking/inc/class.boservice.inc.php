@@ -109,4 +109,11 @@
 			return booking_soservice::get_instance()->get_reserved_resources($building_id);
 		}
 
+		public function set_mapping($service_id, $selected_resources)
+		{
+
+			return booking_soservice::get_instance()->set_mapping($service_id, $selected_resources);
+		}
+
+
 	}

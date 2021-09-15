@@ -179,4 +179,54 @@
 			}
 			return $resources;
 		}
+
+		public function set_mapping($service_id, $selected_resources)
+		{
+			$this->db->transaction_begin();
+			$delete_sql = "DELETE FROM bb_resource_service WHERE service_id = ?";
+			$delete = array();
+			$delete[] = array
+			(
+				1	=> array
+				(
+					'value'	=> $service_id,
+					'type'	=> PDO::PARAM_INT
+				)
+			);
+
+			$this->db->delete($delete_sql, $delete, __LINE__, __FILE__);
+
+
+			if($selected_resources)
+			{
+				$add_sql = "INSERT INTO bb_resource_service (service_id, resource_id)"
+					. " VALUES (?, ?)";
+
+				$insert_update = array();
+				foreach ($selected_resources as $resource_id)
+				{
+					if($resource_id > 0)
+					{
+						$insert_update[] = array
+						(
+							1	=> array
+							(
+								'value'	=> $service_id,
+								'type'	=> PDO::PARAM_INT
+							),
+							2	=> array
+							(
+								'value'	=> $resource_id,
+								'type'	=> PDO::PARAM_INT
+							),
+						);
+					}
+				}
+				$this->db->insert($add_sql, $insert_update, __LINE__, __FILE__);
+			}
+			return	$this->db->transaction_commit();
+
+		}
+
+
 	}
