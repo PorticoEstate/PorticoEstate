@@ -128,8 +128,6 @@ $(document).ready(function ()
 					if (data != null)
 					{
 						var message = data.message;
-						var variable_horizontal = data.variable_horizontal;
-						var variable_vertical = data.variable_vertical;
 	
 						htmlString = "";
 						var msg_class = "msg_good";
