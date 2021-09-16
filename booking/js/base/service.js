@@ -94,26 +94,29 @@ $(document).ready(function ()
 			//	"plugins": ["themes", "html_data", "ui", "state", "checkbox"]
 	});
 
-	var count1 = 0;
 	$("#treeDiv").bind("select_node.jstree", function (event, data)
 	{
-//		console.log(data);
-		count1 += 1;
-		var divd = data.instance.get_node(data.selected[0]).original['href'];
-		if (count1 > 1)
-		{
-//			window.location.href = divd;
-		}
+		data.instance.toggle_node(data.node);
+		update_mapping(); 
 	});
 
-	$(function ()
+	$("#treeDiv").bind("deselect_node.jstree", function (event, data)
 	{
-		$('#treeDiv').on('changed.jstree', function (e, data)
-		{
-			var selected_resources = data.selected;
+			update_mapping(); 
+	});
+
+	update_mapping = function ()
+	{
+			var selected_resources = $("#treeDiv").jstree("get_checked",null);
 			var service_id = $("#id").val();
-			console.log(service_id);
-			console.log(selected_resources);
+//			console.log(service_id);
+//			console.log(selected_resources);
+
+			r = confirm("Oppdatere mapping av tjenesten til valgte ressurser?");
+			if (r !== true)
+			{
+				return;
+			}
 
 			oArgs = {menuaction: 'booking.uiservice.set_mapping'};
 			var requestUrl = phpGWLink('index.php', oArgs, true);
@@ -142,8 +145,7 @@ $(document).ready(function ()
 					}
 				}
 			});
-		});
-	});
+	};
 
 	$('#collapse').on('click', function ()
 	{

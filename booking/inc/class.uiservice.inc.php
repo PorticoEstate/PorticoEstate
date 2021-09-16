@@ -294,11 +294,13 @@
 				$children[$building['id']]	 = $resources['results'];
 			}
 
+			$mapped_resources = $this->bo->get_mapping($id);
+
 			$treedata = json_encode(array(
 				"type"		 => "text",
 				'label'		 => 'Top',
 				'text'		 => lang('buildings'),
-				'children'	 => $this->treeitem($children, 0, $show_all)
+				'children'	 => $this->treeitem($children, 0, $show_all, $mapped_resources)
 			));
 
 			$data = array(
@@ -321,7 +323,7 @@
 			self::render_template_xsl(array('service'), array($mode => $data));
 		}
 
-		function treeitem( $children, $parent_id, $show_all )
+		function treeitem( $children, $parent_id, $show_all,$mapped_resources)
 		{
 			static $item_ids = array();
 			$nodes			 = array();
@@ -350,6 +352,9 @@
 						$href = self::link(array('menuaction' => 'booking.uiresource.edit',
 								'id'		 => $item['id']));
 					}
+
+					$is_mapped = in_array($item['id'], $mapped_resources);
+
 					$node = array(
 						'id'		 => $item['id'],
 						"type"		 => "text",
@@ -357,7 +362,13 @@
 						'target'	 => '_self',
 						'label'		 => $item['name'],
 						'text'		 => $item['name'],
-						'children'	 => $this->treeitem($children, $item['id'], $show_all)
+						'state'      => array(
+							'opened'    => $is_mapped,  // is the node open
+							'disabled'  => false,  // is the node disabled
+							'selected'  => $is_mapped,  // is the node selected
+						),
+						
+						'children'	 => $this->treeitem($children, $item['id'], $show_all, $mapped_resources)
 					);
 
 					$nodes[] = $node;

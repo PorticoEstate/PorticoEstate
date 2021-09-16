@@ -180,6 +180,27 @@
 			return $resources;
 		}
 
+		/**
+		 * Get resources enabled for the service
+		 */
+		public function get_mapping($service_id)
+		{
+			$sql =  "SELECT resource_id FROM bb_resource_service WHERE service_id = ?";
+			$condition =  array((int)$service_id);
+
+			$this->db->select($sql, $condition, __LINE__, __FILE__);
+
+			$mapping = array();
+			while($this->db->next_record())
+			{
+				$mapping[] =  $this->db->f('resource_id');
+			}
+			return $mapping;
+		}
+
+		/**
+		 * Set enabled resourses for a given service
+		 */
 		public function set_mapping($service_id, $selected_resources)
 		{
 			$this->db->transaction_begin();
