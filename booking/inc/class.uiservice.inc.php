@@ -63,7 +63,7 @@
 			$this->fields									 = booking_service::get_fields();
 			$this->permissions								 = booking_service::get_instance()->get_permission_array();
 			$this->currentapp								 = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			self::set_active_menu("{$this->currentapp}::commerce::service2");
+			self::set_active_menu("{$this->currentapp}::commerce::service");
 		}
 
 		private function get_status_options( $selected = 1 )
@@ -300,7 +300,10 @@
 				"type"		 => "text",
 				'label'		 => 'Top',
 				'text'		 => lang('buildings'),
-				'children'	 => $this->treeitem($children, 0, $show_all, $mapped_resources)
+				'state'      => array(
+					'disabled'  => $mode == 'edit' ? false : true,  // is the node disabled
+				),
+				'children'	 => $this->treeitem($children, 0, $show_all, $mapped_resources, $mode)
 			));
 
 			$data = array(
@@ -310,7 +313,6 @@
 				'service'			 => $service,
 				'treedata'			 => $treedata,
 				'service_categories' => array('options' => $this->get_status_options($service->service_cat_id)),
-				'mode'				 => $mode,
 				'tabs'				 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab'	 => $active_tab,
 				'collapse_links'	 => $collapse_links
@@ -323,7 +325,7 @@
 			self::render_template_xsl(array('service'), array($mode => $data));
 		}
 
-		function treeitem( $children, $parent_id, $show_all,$mapped_resources)
+		function treeitem( $children, $parent_id, $show_all,$mapped_resources, $mode)
 		{
 			static $item_ids = array();
 			$nodes			 = array();
@@ -364,11 +366,11 @@
 						'text'		 => $item['name'],
 						'state'      => array(
 							'opened'    => $is_mapped,  // is the node open
-							'disabled'  => false,  // is the node disabled
+							'disabled'  => $mode == 'edit' ? false : true,  // is the node disabled
 							'selected'  => $is_mapped,  // is the node selected
 						),
 						
-						'children'	 => $this->treeitem($children, $item['id'], $show_all, $mapped_resources)
+						'children'	 => $this->treeitem($children, $item['id'], $show_all, $mapped_resources, $mode)
 					);
 
 					$nodes[] = $node;

@@ -96,7 +96,7 @@ function get_services()
 			}
 			else
 			{
-				htmlString += "<option>Ingen kontroller</option>"
+				htmlString += "<option>Velg</option>"
 			}
 
 			$("#field_service_id").html(htmlString);

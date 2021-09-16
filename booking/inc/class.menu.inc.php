@@ -241,13 +241,6 @@
 						'service' => array
 						(
 							'text'	=> lang('service'),
-									'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uigeneric.index',
-										'type' => 'article_service')),
-									'image'	=> array('property', 'service'),
-						),
-						'service2' => array
-						(
-							'text'	=> lang('service2'),
 									'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiservice.index')),
 									'image'	=> array('property', 'service'),
 						),

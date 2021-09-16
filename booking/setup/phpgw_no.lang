@@ -858,3 +858,6 @@ enable upload attachment	booking	no	Aktiver opplasting av vedlegg
 minutes	booking	no	Minutter
 limit number	booking	no	Begrensning på antall
 limit number horizont	booking	no	Begrensningshorisont (dager)
+update service-resource-mapping?	booking	no	Oppdatere kopling av tjenesten til valgte ressurser?
+mapping updated	booking	no	Kopling er oppdatert
+mapping	booking	no	Kopling

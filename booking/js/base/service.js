@@ -52,12 +52,6 @@ validate_submit = function ()
 
 	var id = $("#id").val();
 
-	if (id > 0)
-	{
-		document.form.submit();
-		return;
-	}
-
 	if (active_tab === 'first_tab')
 	{
 		$('#tab-content').responsiveTabs('enable', 1);
@@ -66,11 +60,12 @@ validate_submit = function ()
 		$("#active_tab").val('mapping');
 		document.form.submit();
 	}
-	else if (active_tab === 'mapping')
+	else if (active_tab === 'mapping' && id > 0)
 	{
 		$("#save_button_bottom").val(lang['save']);
-		$("#active_tab").val('files');
-		document.form.submit();
+		update_mapping();
+		$("html, body").animate({scrollTop: 0}, "slow");
+
 	}
 	else
 	{
@@ -90,61 +85,77 @@ $(document).ready(function ()
 		"checkbox": {
 			"keep_selected_style": false
 		},
-		"plugins": ["themes", "html_data", "ui", "checkbox"]
+		"contextmenu": {
+			items: function ($node)
+			{
+				return {
+					"href": {
+						"label": '<span>Goto <i class="fas fa-shipping-fast"></i></span>',
+						"icon": 'fas fa-thumbtack',
+						"action": function (obj)
+						{
+							window.open($node.original.href, '_blank').focus();
+						},
+					},
+				}
+			},
+		},
+		"plugins": ["themes", "html_data", "ui", "checkbox", "contextmenu"]
 			//	"plugins": ["themes", "html_data", "ui", "state", "checkbox"]
 	});
 
 	$("#treeDiv").bind("select_node.jstree", function (event, data)
 	{
-		data.instance.toggle_node(data.node);
-		update_mapping(); 
+		data.instance.open_all(data.node);
+//		update_mapping();
 	});
 
 	$("#treeDiv").bind("deselect_node.jstree", function (event, data)
 	{
-			update_mapping(); 
+//			update_mapping();
 	});
 
 	update_mapping = function ()
 	{
-			var selected_resources = $("#treeDiv").jstree("get_checked",null);
-			var service_id = $("#id").val();
+		var selected_resources = $("#treeDiv").jstree("get_checked", null);
+		var service_id = $("#id").val();
 //			console.log(service_id);
 //			console.log(selected_resources);
 
-			r = confirm("Oppdatere mapping av tjenesten til valgte ressurser?");
-			if (r !== true)
-			{
-				return;
-			}
+		r = confirm(lang['update service-resource-mapping?']);
 
-			oArgs = {menuaction: 'booking.uiservice.set_mapping'};
-			var requestUrl = phpGWLink('index.php', oArgs, true);
-	
-			$.ajax({
-				type: 'POST',
-				data: {selected_resources: selected_resources, service_id: service_id},
-				dataType: 'json',
-				url: requestUrl,
-				success: function (data)
+		if (r !== true)
+		{
+			return;
+		}
+
+		oArgs = {menuaction: 'booking.uiservice.set_mapping'};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			data: {selected_resources: selected_resources, service_id: service_id},
+			dataType: 'json',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data != null)
 				{
-					if (data != null)
+					var message = data.message;
+
+					htmlString = "";
+					var msg_class = "msg_good";
+					if (data.status == 'error')
 					{
-						var message = data.message;
-	
-						htmlString = "";
-						var msg_class = "msg_good";
-						if (data.status == 'error')
-						{
-							msg_class = "error";
-						}
-						htmlString += "<div class=\"" + msg_class + "\">";
-						htmlString += message;
-						htmlString += '</div>';
-						$("#receipt").html(htmlString);
+						msg_class = "error";
 					}
+					htmlString += "<div class=\"" + msg_class + "\">";
+					htmlString += message;
+					htmlString += '</div>';
+					$("#receipt").html(htmlString);
 				}
-			});
+			}
+		});
 	};
 
 	$('#collapse').on('click', function ()
