@@ -474,7 +474,7 @@
 
 		function delete()
 		{
-			if ($this->acl_delete)
+			if (!$this->acl_delete)
 			{
 				phpgw::no_access();
 			}

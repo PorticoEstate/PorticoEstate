@@ -194,7 +194,7 @@
 				else
 				{
 					xmlwriter_write_element($memory, 'Fodselsnummer', $identifier);
-					xmlwriter_write_element($memory, 'Fornavn', $entry['name']);
+//					xmlwriter_write_element($memory, 'Fornavn', $entry['name']);
 					xmlwriter_write_element($memory, 'Fagsystemkundeid', $entry['customer_ssn']);
 				}
 				xmlwriter_write_element($memory, 'Navn', $entry['name']);

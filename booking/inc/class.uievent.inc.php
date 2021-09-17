@@ -896,7 +896,7 @@
 							if (phpgw::get_var('sendtocontact', 'bool', 'POST'))
 							{
 								$subject = $config->config_data['event_change_mail_subject'];
-								$body = "<p>" . $config->config_data['event_change_mail'] . "\n<br /Melding:" . phpgw::get_var('mail','html', 'POST');
+								$body = "<p>" . $config->config_data['event_change_mail'] . "\n<br/>Melding: " . phpgw::get_var('mail','html', 'POST');
 								$body .= '<br /><a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . '</a></p>';
 								$this->send_mailnotification($event['contact_email'], $subject, $body);
 								$comment = $comment_text_log . '<br />Denne er sendt til ' . $event['contact_email'] . ':<br />';
