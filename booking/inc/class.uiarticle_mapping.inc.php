@@ -410,7 +410,7 @@ JS;
 				)
 			);
 
-			$GLOBALS['phpgw']->jqcal->add_listener('date_from', 'date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('date_from', 'date');
 			$data				 = array(
 				'datatable_def'		 => $datatable_def,
 				'form_action'		 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.save")),

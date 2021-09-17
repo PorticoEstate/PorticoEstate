@@ -210,7 +210,7 @@
 			$data['datatable']['actions'][] = array
 				(
 				'my_name'	 => 'view',
-				'text'		 => lang('show'),
+				'text'		 => lang('view'),
 				'action'	 => self::link(array
 					(
 					'menuaction' => "{$this->currentapp}.uiservice.view"
