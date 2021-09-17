@@ -99,6 +99,12 @@
 					{
 						booking_bocommon_authorized::disable_authorization();
 						$document_receipt = $document_application->bo->add($document);
+
+						$comment = "Det er lagt til et vedlegg: " . $files['name']['name'];
+						$this->bo->send_admin_notification($application, $comment);
+						$this->set_display_in_dashboard($application, true, array('force' => true));
+						$this->add_comment($application, $comment);
+
 					}
 					catch (booking_unauthorized_exception $e)
 					{
