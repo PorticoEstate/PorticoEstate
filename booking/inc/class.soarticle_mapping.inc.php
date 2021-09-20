@@ -179,4 +179,33 @@
 			}
 			return $resources;
 		}
+
+		public function get_articles($resources)
+		{
+			$filter = '';
+
+			$filter = 'AND article_id IN (' . implode(',' , $resources) . ')';
+			
+			$articles = array();
+			$sql = 	"SELECT bb_article_mapping.id AS mapping_id, concat( article_cat_id || '_' || article_id ) AS article_id,
+			bb_resource.name as name 
+			FROM bb_article_mapping
+			JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id)
+			WHERE article_cat_id = 1 {$filter}";
+			$this->db->query( $sql, __LINE__,__FILE__);
+
+			//join...
+			
+			while($this->db->next_record())
+			{
+
+				$articles[] = array(
+					'id' => $this->db->f('mapping_id'),
+					'article_id' => $this->db->f('article_id'),
+					'name'		 => $this->db->f('name', true),
+				);
+			}
+			return array('data' => $articles);
+		}
+
 	}

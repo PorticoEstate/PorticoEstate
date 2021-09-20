@@ -47,7 +47,8 @@
 			'handle_multi_upload_file'	 => true,
 			'_get_files'				 => true,
 			'view_file'					 => true,
-			'update_file_data'			 => true
+			'update_file_data'			 => true,
+			'get_articles'				 => true
 		);
 		protected
 			$fields,
@@ -123,6 +124,12 @@
 				);
 			}
 			return $service_options;
+		}
+
+		public function get_articles()
+		{
+			$resources = phpgw::get_var('resources', 'int','GET');
+			return $this->bo->get_articles($resources);
 		}
 
 		public function index()

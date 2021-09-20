@@ -123,6 +123,8 @@ $(window).on('load', function ()
 		});
 		var selection = [];
 		populateTableChkRegulations(building_id_selection, selection, resources);
+		populateTableChkArticles(building_id_selection, selection, resources);
+		
 	});
 	$("#field_org_name").on("autocompleteselect", function (event, ui)
 	{
@@ -357,6 +359,38 @@ function populateTableChkResources(building_id, selection)
 	populateTableResources(url, container, colDefsResources);
 }
 
+function populateTableChkArticles(building_id, selection, resources)
+{
+	var oArgs = {
+		menuaction: 'booking.uiarticle_mapping.get_articles',
+		sort: 'name',
+	};
+	var url = phpGWLink('index.php', oArgs, true);
+
+	for (var r in resources)
+	{
+		url += '&resources[]=' + resources[r];
+	}
+
+	var container = 'articles_container';
+	var colDefsRegulations = [
+		{label: lang['Select'], object: [
+				{type: 'input', attrs: [
+						{name: 'type', value: 'checkbox'},
+						{name: 'name', value: 'article[]'}
+					]
+				}
+			], value: 'id', checked: selection},
+			{key: 'name', label: lang['article'], formatter: genericLink},
+			{key: 'unit', label: lang['unit']},
+			{key: 'price', label: lang['price']},
+
+	];
+
+	populateTableArticles(url, container, colDefsRegulations);
+
+}
+
 function populateTableChkRegulations(building_id, selection, resources)
 {
 	var oArgs = {
@@ -410,3 +444,9 @@ function populateTableRegulations(url, container, colDefs)
 	}
 
 }
+function populateTableArticles(url, container, colDefs)
+{
+	createTable(container, url, colDefs, '', 'pure-table pure-table-bordered');
+}
+
+

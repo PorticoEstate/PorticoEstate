@@ -116,5 +116,9 @@
 		{
 			return booking_soarticle_mapping::get_instance()->get_reserved_resources($building_id);
 		}
+		public function get_articles($resources)
+		{
+			return booking_soarticle_mapping::get_instance()->get_articles($resources);
+		}
 
 	}
