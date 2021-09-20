@@ -382,8 +382,9 @@ function populateTableChkArticles(building_id, selection, resources)
 				}
 			], value: 'id', checked: selection},
 			{key: 'name', label: lang['article'], formatter: genericLink},
-			{key: 'unit', label: lang['unit']},
 			{key: 'price', label: lang['price']},
+			{key: 'unit', label: lang['unit']},
+			{key: 'quantity', label: lang['quantity']}
 
 	];
 
