@@ -100,6 +100,8 @@ $(window).on('load', function ()
 	{
 		populateTableChkResources(building_id, initialSelection);
 		populateTableChkRegulations(building_id, initialDocumentSelection, resources);
+		populateTableChkArticles( [], resources);
+
 		building_id_selection = building_id;
 	}
 	$("#field_building_name").on("autocompleteselect", function (event, ui)
@@ -123,7 +125,7 @@ $(window).on('load', function ()
 		});
 		var selection = [];
 		populateTableChkRegulations(building_id_selection, selection, resources);
-		populateTableChkArticles(building_id_selection, selection, resources);
+		populateTableChkArticles( selection, resources);
 		
 	});
 	$("#field_org_name").on("autocompleteselect", function (event, ui)
@@ -359,7 +361,7 @@ function populateTableChkResources(building_id, selection)
 	populateTableResources(url, container, colDefsResources);
 }
 
-function populateTableChkArticles(building_id, selection, resources)
+function populateTableChkArticles(selection, resources)
 {
 	var oArgs = {
 		menuaction: 'booking.uiarticle_mapping.get_articles',
@@ -381,10 +383,17 @@ function populateTableChkArticles(building_id, selection, resources)
 					]
 				}
 			], value: 'id', checked: selection},
-			{key: 'name', label: lang['article'], formatter: genericLink},
-			{key: 'price', label: lang['price']},
-			{key: 'unit', label: lang['unit']},
-			{key: 'quantity', label: lang['quantity']}
+		{key: 'name', label: lang['article']},
+		{key: 'price', label: lang['price']},
+		{key: 'unit', label: lang['unit']},
+		{key: 'quantity', label: lang['quantity'], object: [
+				{type: 'input', attrs: [
+						{name: 'type', value: 'number'},
+						{name: 'min', value: '0'},
+						{name: 'name', value: 'quantity[]'}
+					]
+				}
+			]}
 
 	];
 

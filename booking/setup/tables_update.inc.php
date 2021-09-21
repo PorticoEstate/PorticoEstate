@@ -5424,14 +5424,14 @@
 		'bb_article_price', array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
-				'article_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'article_mapping_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'from_' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
 				'price' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
 				'remark' => array('type' => 'varchar', 'precision' => 100, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'bb_article_mapping' => array('article_id' => 'id'),
+				'bb_article_mapping' => array('article_mapping_id' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()
@@ -5441,13 +5441,13 @@
 		'bb_article_price_reduction',  array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
-				'article_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'article_mapping_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'from_' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
 				'percent' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'bb_article_mapping' => array('article_id' => 'id'),
+				'bb_article_mapping' => array('article_mapping_id' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()

@@ -37,8 +37,8 @@
 		public function __construct()
 		{
 			parent::__construct('bb_article_mapping', booking_article_mapping::get_fields());
-			$this->acl_location = booking_article_mapping::acl_location;
-			$this->use_acl = true;
+			$this->acl_location	 = booking_article_mapping::acl_location;
+			$this->use_acl		 = true;
 		}
 
 		/**
@@ -55,36 +55,36 @@
 			return self::$so;
 		}
 
-		function get_acl_condition( )
+		function get_acl_condition()
 		{
 			$acl_condition = parent::get_acl_condition();
 
-			if($this->relaxe_acl)
+			if ($this->relaxe_acl)
 			{
 				return $acl_condition;
 			}
-/*
-			$sql = "SELECT object_id, permission FROM booking_permission WHERE subject_id = {$this->account}";
-			$this->db->query($sql,__LINE__,__FILE__);
-			$object_ids = array(-1);
-			while ($this->db->next_record())
-			{
-				$permission = $this->db->f('permission');
-				if($permission & PHPGW_ACL_READ)
-				{
-					$object_ids[] = $this->db->f('object_id');
-				}
-			}
+			/*
+			  $sql = "SELECT object_id, permission FROM booking_permission WHERE subject_id = {$this->account}";
+			  $this->db->query($sql,__LINE__,__FILE__);
+			  $object_ids = array(-1);
+			  while ($this->db->next_record())
+			  {
+			  $permission = $this->db->f('permission');
+			  if($permission & PHPGW_ACL_READ)
+			  {
+			  $object_ids[] = $this->db->f('object_id');
+			  }
+			  }
 
-			if($acl_condition)
-			{
-				return '(' . $acl_condition . ' OR bb_article_mapping.id IN (' . implode(',', $object_ids) . '))';
-			}
-			else
-			{
-				return 'bb_article_mapping.id IN (' . implode(',', $object_ids) . ')';
-			}
-*/
+			  if($acl_condition)
+			  {
+			  return '(' . $acl_condition . ' OR bb_article_mapping.id IN (' . implode(',', $object_ids) . '))';
+			  }
+			  else
+			  {
+			  return 'bb_article_mapping.id IN (' . implode(',', $object_ids) . ')';
+			  }
+			 */
 		}
 
 		protected function populate( array $data )
@@ -106,25 +106,25 @@
 
 			parent::update($object);
 
-			return	$this->db->transaction_commit();
+			return $this->db->transaction_commit();
 		}
 
 		private function set_prizing( $article_id )
 		{
 			$article_prizing = phpgw::get_var('article_prizing');
 
-			if(empty($article_prizing['date_from']))
+			if (empty($article_prizing['date_from']))
 			{
 				return;
 			}
 
-			$date_from		 = phpgwapi_datetime::date_to_timestamp($article_prizing['date_from']);
-			$price			 = floatval(str_replace(',', '.', str_replace('.', '', $article_prizing['price'])));
+			$date_from	 = phpgwapi_datetime::date_to_timestamp($article_prizing['date_from']);
+			$price		 = floatval(str_replace(',', '.', str_replace('.', '', $article_prizing['price'])));
 
 			if ($price && $date_from)
 			{
 				$value_set = array
-				(
+					(
 					'article_id' => $article_id,
 					'price'		 => $price,
 					'from_'		 => date('Y-m-d', $date_from),
@@ -139,9 +139,9 @@
 		public function get_pricing( $id )
 		{
 			$pricing = array();
-			$this->db->query( 'SELECT *  FROM bb_article_price WHERE article_id = ' . (int) $id,__LINE__,__FILE__);
+			$this->db->query('SELECT *  FROM bb_article_price WHERE article_id = ' . (int)$id, __LINE__, __FILE__);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$pricing[] = array(
 					'id'		 => $this->db->f('id'),
@@ -157,9 +157,9 @@
 		function get_mapped_services()
 		{
 			$services = array();
-			$this->db->query( 'SELECT article_id AS service_id FROM bb_article_mapping WHERE article_cat_id = 2',__LINE__,__FILE__);
+			$this->db->query('SELECT article_id AS service_id FROM bb_article_mapping WHERE article_cat_id = 2', __LINE__, __FILE__);
 
-			while($this->db->next_record())
+			while ($this->db->next_record())
 			{
 				$services[] = $this->db->f('service_id');
 			}
@@ -169,43 +169,85 @@
 		public function get_reserved_resources( $building_id )
 		{
 			$resources = array();
-			$this->db->query( 'SELECT article_id AS resource_id FROM bb_article_mapping WHERE article_cat_id = 1',__LINE__,__FILE__);
+			$this->db->query('SELECT article_id AS resource_id FROM bb_article_mapping WHERE article_cat_id = 1', __LINE__, __FILE__);
 
 			//join...
-			
-			while($this->db->next_record())
+
+			while ($this->db->next_record())
 			{
 				$resources[] = $this->db->f('resource_id');
 			}
 			return $resources;
 		}
 
-		public function get_articles($resources)
+		public function get_articles( $resources )
 		{
 			$filter = '';
 
-			$filter = 'AND article_id IN (' . implode(',' , $resources) . ')';
-			
-			$articles = array();
-			$sql = 	"SELECT bb_article_mapping.id AS mapping_id, concat( article_cat_id || '_' || article_id ) AS article_id,
-			bb_resource.name as name 
+			$_resources	 = array_merge(array(-1), (array)$resources);
+			$filter		 = 'AND article_id IN (' . implode(',', $_resources) . ')';
+
+			$articles	 = array();
+			$_articles	 = array();
+			/**
+			 * Resources
+			 */
+			$sql		 = "SELECT bb_article_mapping.id AS mapping_id, concat( article_cat_id || '_' || article_id ) AS article_id,
+			bb_resource.name as name ,article_id AS resource_id, unit
 			FROM bb_article_mapping
 			JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id)
-			WHERE article_cat_id = 1 {$filter}";
-			$this->db->query( $sql, __LINE__,__FILE__);
+			WHERE article_cat_id = 1 AND bb_resource.active = 1 {$filter}";
+			$this->db->query($sql, __LINE__, __FILE__);
 
-			//join...
-			
-			while($this->db->next_record())
+			$found_resources = array();
+			while ($this->db->next_record())
 			{
-
-				$articles[] = array(
-					'id' => $this->db->f('mapping_id'),
-					'article_id' => $this->db->f('article_id'),
-					'name'		 => $this->db->f('name', true),
+				$_articles[] = array(
+					'id'			 => $this->db->f('mapping_id'),
+					'resource_id'	 => $this->db->f('resource_id'),
+					'article_id'	 => $this->db->f('article_id'),
+					'name'			 => $this->db->f('name', true),
+					'unit'			 => $this->db->f('unit', true),
 				);
 			}
+
+
+			foreach ($_articles as $_article)
+			{
+				$articles[]	 = $_article;
+				/**
+				 * Services
+				 */
+				$filter		 = 'AND bb_resource_service.resource_id =' . $_article['resource_id'];
+
+				$sql = "SELECT bb_article_mapping.id AS mapping_id, concat( article_cat_id || '_' || article_id ) AS article_id,"
+					. " bb_service.name as name, bb_resource_service.resource_id, unit"
+					. " FROM bb_article_mapping JOIN bb_service ON (bb_article_mapping.article_id = bb_service.id)"
+					. " JOIN bb_resource_service ON (bb_service.id = bb_resource_service.service_id)"
+					. " WHERE article_cat_id = 2 {$filter}"
+					. " ORDER BY bb_resource_service.resource_id, bb_service.name";
+				$this->db->query($sql, __LINE__, __FILE__);
+
+				while ($this->db->next_record())
+				{
+					$articles[] = array(
+						'id'		 => $this->db->f('mapping_id'),
+						'article_id' => $this->db->f('article_id'),
+						'name'		 => "[{$_article['name']}] " . $this->db->f('name', true),
+						'unit'		 => $this->db->f('unit', true),
+					);
+				}
+			}
+
+			foreach ($articles as &$article)
+			{
+				$sql				 = "SELECT price, remark FROM bb_article_price WHERE article_mapping_id = {$article['id']}";
+				$this->db->query($sql, __LINE__, __FILE__);
+				$this->db->next_record();
+				$article['price']	 = $this->db->f('price');
+			}
+
+
 			return array('data' => $articles);
 		}
-
 	}
