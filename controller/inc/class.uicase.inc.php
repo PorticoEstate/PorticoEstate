@@ -121,7 +121,7 @@
 			$GLOBALS['phpgw']->js->validate_file('alertify', 'alertify.min', 'phpgwapi');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
-
+			phpgwapi_jquery::load_widget('select2');
 		}
 
 		function add_regulation_option()

@@ -1,5 +1,22 @@
 $(document).ready(function ()
 {
+	$("#choose-child-on-component").select2({
+		placeholder: lang['Select'],
+		language: "no",
+		width: '75%'
+	});
+
+	$('#choose-child-on-component').on('select2:open', function (e) {
+
+		$(".select2-search__field").each(function()
+		{
+			if ($(this).attr("aria-controls") == 'select2-choose-child-on-component-results')
+			{
+				$(this)[0].focus();
+			}
+		});
+	});
+
 
 	// Display submit button on click
 	$(".inspectors").on("click", function (e)
