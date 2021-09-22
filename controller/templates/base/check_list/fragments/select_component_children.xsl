@@ -109,5 +109,9 @@
 	<div id = "form_new_component_2">
 
 	</div>
+	<script type="text/javascript">
+			var lang = <xsl:value-of select="php:function('js_lang', 'Select')"/>;
+	</script>
+
 
 </xsl:template>

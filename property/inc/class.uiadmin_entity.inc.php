@@ -2001,10 +2001,20 @@
 			$id = $this->bo->add_choice_value($location_id, $attribute_id, $new_value);
 
 
-			$receipt = array(
-				'status' => 'ok',
-				'choice_id' => $id
-			);
+			if($id)
+			{
+				$receipt = array(
+					'status' => 'ok',
+					'choice_id' => $id
+				);
+			}
+			else
+			{
+				$receipt = array(
+					'status' => 'error',
+					'choice_id' => null
+				);
+			}
 
 			return $receipt;
 

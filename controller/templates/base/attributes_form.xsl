@@ -176,6 +176,25 @@
 								</option>
 							</xsl:for-each>
 						</select>
+						<script type="text/javascript">
+							$("#id_<xsl:value-of select="name"/>").select2({
+								placeholder: "<xsl:value-of select="php:function('lang', 'select')"/>",
+								language: "no",
+								width: '75%'
+							});
+							$('#id_<xsl:value-of select="name"/>').on('select2:open', function (e) {
+
+								$(".select2-search__field").each(function()
+								{
+									if ($(this).attr("aria-controls") == 'select2-id_<xsl:value-of select="name"/>-results')
+									{
+										$(this)[0].focus();
+									}
+								});
+							});
+
+						</script>
+
 						<br/>
 						<a id="add_new_value_{name}" href="#" onClick="addNewValueToCustomAttribute('id_{name}', {location_id}, {id}, '{input_text}', '{lang_new_value}');">
 							<img src="{add_img}" width="23"/>

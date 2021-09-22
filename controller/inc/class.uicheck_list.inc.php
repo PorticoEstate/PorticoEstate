@@ -799,6 +799,7 @@
 			self::add_javascript('controller', 'base', 'check_list.js');
 			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
+			phpgwapi_jquery::load_widget('select2');
 
 			self::render_template_xsl(array(
 				'check_list/fragments/check_list_menu',
