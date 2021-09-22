@@ -2110,7 +2110,8 @@
 			$sql = "SELECT * FROM phpgw_cust_choice "
 				. " WHERE location_id = {$location_id}"
 					. " AND attrib_id = {$attrib_id}"
-				. " ORDER BY choice_sort ASC, value";
+//				. " ORDER BY choice_sort ASC, value";
+				. " ORDER BY value";
 			$this->_db->query($sql,__LINE__,__FILE__);
 
 			$choices = array();
