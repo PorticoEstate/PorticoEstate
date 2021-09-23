@@ -68,6 +68,7 @@
 		// Array that contains error messages. Is populted in function validate
 		protected $error_msg_array = array();
 		protected $control;
+		protected $cat_id;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -90,6 +91,15 @@
 		public function get_id()
 		{
 			return $this->id;
+		}
+		public function set_cat_id( $cat_id )
+		{
+			$this->cat_id = $cat_id;
+		}
+
+		public function get_cat_id()
+		{
+			return $this->cat_id;
 		}
 
 		public function set_title( $title )
@@ -356,6 +366,7 @@
 		{
 			return array(
 				'id' => $this->get_id(),
+				'cat_id' => $this->get_cat_id(),
 				'title' => $this->get_title(),
 				'description' => $this->get_description(),
 				'control_id' => $this->get_control_id(),

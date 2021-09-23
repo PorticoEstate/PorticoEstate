@@ -80,6 +80,7 @@
 			'undo_completed_item'	=> true,
 			'add_billable_hours'	=> true,
 			'set_inspector'			=> true,
+			'set_category'			=> true,
 			'view_image'			=> true
 		);
 
@@ -527,6 +528,20 @@
 
 		}
 
+		function set_category()
+		{
+			$check_list_id = phpgw::get_var('check_list_id', 'int');
+			$cat_id = phpgw::get_var('cat_id', 'int');
+
+			if($this->edit)
+			{
+				$ok = $this->so->set_category($check_list_id, $cat_id);
+			}
+			return array(
+				'status' => $ok ? 'ok' : 'error'
+			);
+		}
+
 		/**
 		 * Public function for displaying the edit check list form
 		 *
@@ -754,7 +769,8 @@
 			}
 
 			$data = array
-				(
+			(
+				'categories' => createObject('controller.bogeneric')->get_list(array('type' => 'control_category', 'selected' => $check_list->get_cat_id())),
 				'inspectors' => createObject('controller.sosettings')->get_inspectors($check_list->get_id()),
 				'administrator_list' => implode('; ', $administrator_arr),
 				'supervisor_name' => implode('; ', $supervisor_arr),
