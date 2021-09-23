@@ -52,6 +52,36 @@ $(document).ready(function ()
 
 	});
 
+	$("#categories").change(function ()
+	{
+		var check_list_id = $("#check_list_id").val();
+		var cat_id = $(this).val();
+
+		var oArgs = {
+			menuaction: 'controller.uicheck_list.set_category',
+			check_list_id: check_list_id,
+			cat_id: cat_id,
+		};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data)
+				{
+					var status = data.status;
+					if (status === 'ok')
+					{
+//						alert('ok');
+					}
+				}
+			}
+		});
+
+	});
+
 
 
 
