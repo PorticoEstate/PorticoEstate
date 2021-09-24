@@ -1,3 +1,5 @@
+/* global lang, genericLink */
+
 var building_id_selection = "";
 var regulations_select_all = "";
 
@@ -7,7 +9,7 @@ $(document).ready(function ()
 	{
 		var temp_end_date = $("#end_date").datetimepicker('getValue');
 		var temp_start_date = $("#start_date").datetimepicker('getValue');
-		if(!temp_end_date || (temp_end_date < temp_start_date))
+		if (!temp_end_date || (temp_end_date < temp_start_date))
 		{
 			$("#end_date").val($("#start_date").val());
 
@@ -100,7 +102,7 @@ $(window).on('load', function ()
 	{
 		populateTableChkResources(building_id, initialSelection);
 		populateTableChkRegulations(building_id, initialDocumentSelection, resources);
-		populateTableChkArticles( [], resources);
+		populateTableChkArticles([], resources);
 
 		building_id_selection = building_id;
 	}
@@ -125,9 +127,25 @@ $(window).on('load', function ()
 		});
 		var selection = [];
 		populateTableChkRegulations(building_id_selection, selection, resources);
-		populateTableChkArticles( selection, resources);
-		
+		populateTableChkArticles(selection, resources);
+
 	});
+
+	$('#articles_container').on('change', '.quantity', function ()
+	{
+		var quantity = $(this).val();
+		var button = $(this).parents('tr').find("input[type=button]");
+
+		if (quantity > 0)
+		{
+			button.prop('disabled', false);
+		}
+		else
+		{
+			button.prop('disabled', true);
+		}
+	});
+
 	$("#field_org_name").on("autocompleteselect", function (event, ui)
 	{
 		var organization_id = ui.item.value;
@@ -376,21 +394,34 @@ function populateTableChkArticles(selection, resources)
 
 	var container = 'articles_container';
 	var colDefsRegulations = [
-		{label: lang['Select'], object: [
+		{label: lang['Select'],
+			object: [
 				{type: 'input', attrs: [
-						{name: 'type', value: 'checkbox'},
-						{name: 'name', value: 'article[]'}
+						{name: 'type', value: 'button'},
+						{name: 'value', value: 'Legg til'},
+						{name: 'disabled', value: true},
+						{name: 'onClick', value: 'add_to_bastet(this);'}
 					]
 				}
-			], value: 'id', checked: selection},
+			]
+		},
+		{hidden: true,
+			attrs: [{name: 'style', value: "display:none;"}],
+			object: [
+				{type: 'input', attrs: [
+						{name: 'type', value: 'hidden'}
+					]
+				}
+			], value: 'id'},
 		{key: 'name', label: lang['article']},
 		{key: 'price', label: lang['price']},
 		{key: 'unit', label: lang['unit']},
 		{key: 'quantity', label: lang['quantity'], object: [
 				{type: 'input', attrs: [
 						{name: 'type', value: 'number'},
-						{name: 'min', value: '0'},
-						{name: 'name', value: 'quantity[]'}
+						{name: 'min', value: 0},
+						{name: 'value', value: 0},
+						{name: 'class', value: 'quantity'},
 					]
 				}
 			]}
@@ -401,6 +432,13 @@ function populateTableChkArticles(selection, resources)
 
 }
 
+function add_to_bastet(element)
+{
+	var id = element.parentNode.parentNode.childNodes[1].childNodes[0].value;
+	var quantity = element.parentNode.parentNode.childNodes[5].childNodes[0].value;
+	console.log([id, quantity]);
+
+}
 function populateTableChkRegulations(building_id, selection, resources)
 {
 	var oArgs = {
