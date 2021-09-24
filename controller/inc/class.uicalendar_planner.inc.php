@@ -1888,6 +1888,7 @@ HTML;
 			self::set_active_menu('controller::ad_hoc');
 			$month	 = phpgw::get_var('month', 'int', 'REQUEST', date("m", time()));
 			$year	 = phpgw::get_var('year', 'int', 'REQUEST', date("Y", time()));
+			$query		= phpgw::get_var('query', 'string');
 
 			if (13 == $month)
 			{
@@ -1987,7 +1988,17 @@ HTML;
 			}
 			unset($part_of_town);
 
-			$scheduled_controls = $this->get_scheduled_controls( $selected_part_of_towns, $month, $year, $control_id );
+			$_scheduled_controls = $this->get_scheduled_controls( $selected_part_of_towns, $month, $year, $control_id );
+
+			$scheduled_controls = array();
+			foreach ($_scheduled_controls as $_scheduled_control)
+			{
+				if($query && !preg_match("/{$query}/i", $_scheduled_control['name']))
+				{
+					continue;
+				}
+				$scheduled_controls[] = $_scheduled_control;
+			}
 
 			$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info	 = true;
@@ -2011,6 +2022,7 @@ HTML;
 
 			$data = array
 			(
+				'query'	=> $query,
 				'current_month'	 => lang(date('F', mktime(0, 0, 0, $month, 1))),
 				'current_year'	 => $year,
 				'next_month_url' => self::link(array('menuaction' => 'controller.uicalendar_planner.ad_hoc',
