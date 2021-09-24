@@ -3773,7 +3773,13 @@ HTML;
 
 				if(!empty($completed_items[$component_child['location_id']][$component_child['id']]))
 				{
-					$controlled_text = 'kontrollert: ' .$GLOBALS['phpgw']->common->show_date( $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'], $this->dateFormat);
+					$_completed_date = $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'];
+					if(!$_completed_date)
+					{
+						$_completed_date = $report_info['check_list']->get_completed_date();
+					}
+
+					$controlled_text = 'kontrollert: ' .$GLOBALS['phpgw']->common->show_date($_completed_date , $this->dateFormat);
 				}
 
 				$entry = array
