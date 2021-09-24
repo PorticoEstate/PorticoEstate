@@ -1035,7 +1035,8 @@
 			$sql = "SELECT
                     bb_event.id AS id,
                     bb_event.building_name as building_name,
-                    bb_event.description as description,
+					bb_event.name as name,
+					bb_event.description as description,
                     bb_event.from_ AS from_,
                     bb_event.to_ AS to_,
                     bb_resource.sort AS sort,
@@ -1067,6 +1068,7 @@
 					'building_name' => $this->db->f('building_name', true),
 					'resource_id' => $this->db->f('resource_id', false),
 					'resource_name' => $this->db->f('resource_name', true),
+					'name' => $this->db->f('name', true),
 					'description' => $this->db->f('description', true),
 					'from_' => $this->db->f('from_', false),
 					'to_' => $this->db->f('to_', false),
