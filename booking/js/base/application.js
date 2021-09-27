@@ -134,7 +134,7 @@ $(window).on('load', function ()
 	$('#articles_container').on('change', '.quantity', function ()
 	{
 		var quantity = $(this).val();
-		var button = $(this).parents('tr').find("input[type=button]");
+		var button = $(this).parents('tr').find("button");
 
 		if (quantity > 0)
 		{
@@ -363,13 +363,13 @@ else
 function populateTableChkResources(building_id, selection)
 {
 	var oArgs = {
-		menuaction: 'bookingfrontend.uiresource.index_json',
+		menuaction: 'booking.uiresource.index',
 		sort: 'name',
 //		sub_activity_id: $("#field_activity").val(),
 		filter_building_id: building_id,
 		length: -1
 	};
-	var url = phpGWLink('bookingfrontend/', oArgs, true);
+	var url = phpGWLink('index.php', oArgs, true);
 	var container = 'resources_container';
 	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [
 						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}, {name: 'class', value: 'chkRegulations'}
@@ -396,16 +396,22 @@ function populateTableChkArticles(selection, resources)
 	var colDefsRegulations = [
 		{label: lang['Select'],
 			object: [
-				{type: 'input', attrs: [
+				{
+					type: 'button',
+					attrs: [
 						{name: 'type', value: 'button'},
-						{name: 'value', value: 'Legg til'},
 						{name: 'disabled', value: true},
-						{name: 'onClick', value: 'add_to_bastet(this);'}
+						{name: 'class', value: 'btn btn-success'},
+						{name: 'onClick', value: 'add_to_bastet(this);'},
+						{name: 'innerHTML', value: 'Legg til <i class="fas fa-shopping-basket"></i>'},
 					]
 				}
 			]
 		},
-		{hidden: true,
+		{
+			/**
+			 * Hidden field for holding article id
+			 */
 			attrs: [{name: 'style', value: "display:none;"}],
 			object: [
 				{type: 'input', attrs: [
@@ -421,10 +427,33 @@ function populateTableChkArticles(selection, resources)
 						{name: 'type', value: 'number'},
 						{name: 'min', value: 0},
 						{name: 'value', value: 0},
+						{name: 'size', value: 3},
 						{name: 'class', value: 'quantity'},
 					]
 				}
-			]}
+			]},
+		{label: lang['Selected'],
+			object: [
+				{type: 'input', attrs: [
+						{name: 'type', value: 'hidden'},
+						{name: 'name', value: 'selected_articles[]'}
+					]
+				}
+			]},
+		{label: lang['Delete'],
+			object: [
+				{
+					type: 'button',
+					attrs: [
+						{name: 'type', value: 'button'},
+						{name: 'disabled', value: true},
+						{name: 'class', value: 'btn btn-danger'},
+						{name: 'onClick', value: 'empty_from_bastet(this);'},
+						{name: 'innerHTML', value: 'Slett <i class="far fa-trash-alt"></i>'},
+					]
+				}
+			]
+		}
 
 	];
 
@@ -436,7 +465,70 @@ function add_to_bastet(element)
 {
 	var id = element.parentNode.parentNode.childNodes[1].childNodes[0].value;
 	var quantity = element.parentNode.parentNode.childNodes[5].childNodes[0].value;
-	console.log([id, quantity]);
+
+	/**
+	 * set selected items
+	 */
+	var temp = element.parentNode.parentNode.childNodes[6].childNodes[0].value;
+
+	var selected_quantity = 0;
+
+	if (temp)
+	{
+		selected_quantity = parseInt(temp.split("_")[1]);
+	}
+
+	selected_quantity = selected_quantity + parseInt(quantity);
+
+	/**
+	 * Reset quantity
+	 */
+	element.parentNode.parentNode.childNodes[5].childNodes[0].value = 0;
+	/**
+	 * Reset button to disabled
+	 */
+	element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
+
+	var target = element.parentNode.parentNode.childNodes[6].childNodes[0];
+	target.value = id + '_' + selected_quantity;
+
+	var div = document.getElementById('selected_quantity_' + id);
+	if (div)
+	{
+		div.parentNode.removeChild(div);
+	}
+
+// create a new element
+	var elem = document.createElement('div');
+	elem.id = 'selected_quantity_' + id;
+
+// add text
+    elem.innerText = selected_quantity;
+
+// insert the element after target element
+	target.parentNode.insertBefore(elem, target.nextSibling);
+
+}
+
+function empty_from_bastet(element)
+{
+	/**
+	 * Reset quantity
+	 */
+	var id = element.parentNode.parentNode.childNodes[1].childNodes[0].value;
+	var div = document.getElementById('selected_quantity_' + id);
+	if (div)
+	{
+		div.parentNode.removeChild(div);
+	}
+
+	element.parentNode.parentNode.childNodes[5].childNodes[0].value = 0;
+	element.parentNode.parentNode.childNodes[6].childNodes[0].value = '';
+	/**
+	 * Reset button to disabled
+	 */
+	element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
+	element.parentNode.parentNode.childNodes[7].childNodes[0].setAttribute('disabled', true);
 
 }
 function populateTableChkRegulations(building_id, selection, resources)
@@ -472,11 +564,11 @@ function populateTableResources(url, container, colDefs)
 {
 	if (typeof tableClass !== 'undefined')
 	{
-		createTable(container, url, colDefs, 'results', tableClass);
+		createTable(container, url, colDefs, 'data', tableClass);
 	}
 	else
 	{
-		createTable(container, url, colDefs, 'results', 'pure-table pure-table-bordered');
+		createTable(container, url, colDefs, 'data', 'pure-table pure-table-bordered');
 	}
 }
 

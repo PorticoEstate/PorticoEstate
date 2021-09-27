@@ -1325,6 +1325,10 @@ function createObject(object)
 				objs.push('&nbsp;');
 			}
 
+			if (element.getAttribute('type') === 'button' && element.getAttribute('innerHTML') !== 'undefined')
+			{
+				element.innerHTML = element.getAttribute('innerHTML');
+			}
 			if (element.getAttribute('type') == 'radio')
 			{
 				element.onclick = function (e)
