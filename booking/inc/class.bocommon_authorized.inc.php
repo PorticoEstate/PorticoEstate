@@ -798,10 +798,10 @@
 			return parent::set_active($object['id'], $object['active']);
 		}
 
-		function read()
+		function read($params = array())
 		{
 			$this->authorize_read();
-			return parent::read();
+			return parent::read($params);
 		}
 
 		function read_single( $id )
