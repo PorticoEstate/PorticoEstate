@@ -15,8 +15,8 @@
 				'object_number' => array('type' => 'string', 'required' => False, 'nullable' => True), //dim_3::c8 A
 				'responsible_code' => array('type' => 'string', 'required' => False, 'nullable' => True), //dim_1::c8 A
 				'article' => array('type' => 'string', 'required' => True, 'nullable' => False), //article::c15 A
-				'service' => array('type' => 'string', 'required' => True, 'nullable' => False), //dim_2::c8 A
-				'project_number' => array('type' => 'string', 'required' => True, 'nullable' => False), //dim_5::c12 A, default 9
+				'service' => array('type' => 'string', 'required' => True, 'nullable' => true), //dim_2::c8 A
+				'project_number' => array('type' => 'string', 'required' => True, 'nullable' => true), //dim_5::c12 A, default 9
 				'unit_number' => array('type' => 'string', 'required' => True, 'nullable' => False), //dim_value_1::c12 A
 				'unit_prefix' => array('type' => 'string', 'required' => True, 'nullable' => False), //c1 A (used for batch_id)
 				'dim_4' => array('type' => 'string', 'required' => False, 'nullable' => True), //dim_4::c8 A
