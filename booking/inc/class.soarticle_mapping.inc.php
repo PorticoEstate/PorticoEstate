@@ -109,7 +109,7 @@
 			return $this->db->transaction_commit();
 		}
 
-		private function set_prizing( $article_id )
+		private function set_prizing( $article_mapping_id )
 		{
 			$article_prizing = phpgw::get_var('article_prizing');
 
@@ -125,7 +125,7 @@
 			{
 				$value_set = array
 					(
-					'article_id' => $article_id,
+					'article_mapping_id' => $article_mapping_id,
 					'price'		 => $price,
 					'from_'		 => date('Y-m-d', $date_from),
 					'remark'	 => $article_prizing['remark'],
@@ -136,19 +136,19 @@
 			}
 		}
 
-		public function get_pricing( $id )
+		public function get_pricing( $article_mapping_id )
 		{
 			$pricing = array();
-			$this->db->query('SELECT *  FROM bb_article_price WHERE article_id = ' . (int)$id, __LINE__, __FILE__);
+			$this->db->query('SELECT *  FROM bb_article_price WHERE article_mapping_id = ' . (int)$article_mapping_id, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
 				$pricing[] = array(
-					'id'		 => $this->db->f('id'),
-					'article_id' => $this->db->f('article_id'),
-					'price'		 => $this->db->f('price'),
-					'from_'		 => $this->db->f('from_'),
-					'remark'	 => $this->db->f('remark', true),
+					'id'				 => $this->db->f('id'),
+					'article_mapping_id' => $this->db->f('article_mapping_id'),
+					'price'				 => $this->db->f('price'),
+					'from_'				 => $this->db->f('from_'),
+					'remark'			 => $this->db->f('remark', true),
 				);
 			}
 			return $pricing;

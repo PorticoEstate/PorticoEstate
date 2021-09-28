@@ -273,7 +273,7 @@ function PopulatePostedDate()
 			EndTime = new Date(to_);
 		}
 
-		if(initialDates.length > 0)
+		if (initialDates.length > 0)
 		{
 			time_default_start = StartTime.getHours();
 			time_default_end = EndTime.getHours();
@@ -340,21 +340,21 @@ function PopulatePostedDate()
 		getFreetime();
 
 		var parameter = {
-				menuaction: "bookingfrontend.uiapplication.set_block",
-				resource_id: $("#resource_id").val(),
-				from_:StartTime.toJSON(),
-				to_:EndTime.toJSON()
-			};
+			menuaction: "bookingfrontend.uiapplication.set_block",
+			resource_id: $("#resource_id").val(),
+			from_: StartTime.toJSON(),
+			to_: EndTime.toJSON()
+		};
 
 		$.getJSON(phpGWLink('bookingfrontend/', parameter, true), function (result)
 		{
-			if(result.status == 'reserved')
+			if (result.status == 'reserved')
 			{
 				alert('Opptatt');
 				window.location.replace(phpGWLink('bookingfrontend/',
 				{
 					menuaction: "bookingfrontend.uiresource.show",
-					building_id:urlParams['building_id'],
+					building_id: urlParams['building_id'],
 					id: $("#resource_id").val()}
 				));
 			}
@@ -461,8 +461,186 @@ $('#start_date').datetimepicker({onSelectDate: function (ct, $i)
 	}});
 
 
+function populateTableArticles(url, container, colDefs)
+{
+	createTable(container, url, colDefs, '', 'pure-table pure-table-bordered');
+}
+function add_to_bastet(element)
+{
+	var id = element.parentNode.parentNode.childNodes[1].childNodes[0].value;
+	var quantity = element.parentNode.parentNode.childNodes[5].childNodes[0].value;
+
+	/**
+	 * set selected items
+	 */
+	var temp = element.parentNode.parentNode.childNodes[6].childNodes[0].value;
+
+	var selected_quantity = 0;
+
+	if (temp)
+	{
+		selected_quantity = parseInt(temp.split("_")[1]);
+	}
+
+	selected_quantity = selected_quantity + parseInt(quantity);
+
+	/**
+	 * Reset quantity
+	 */
+	element.parentNode.parentNode.childNodes[5].childNodes[0].value = 0;
+	/**
+	 * Reset button to disabled
+	 */
+	element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
+
+	var target = element.parentNode.parentNode.childNodes[6].childNodes[0];
+	target.value = id + '_' + selected_quantity;
+
+	var div = document.getElementById('selected_quantity_' + id);
+	if (div)
+	{
+		div.parentNode.removeChild(div);
+	}
+
+// create a new element
+	var elem = document.createElement('div');
+	elem.id = 'selected_quantity_' + id;
+
+// add text
+    elem.innerText = selected_quantity;
+
+// insert the element after target element
+	target.parentNode.insertBefore(elem, target.nextSibling);
+
+}
+
+function empty_from_bastet(element)
+{
+	/**
+	 * Reset quantity
+	 */
+	var id = element.parentNode.parentNode.childNodes[1].childNodes[0].value;
+	var div = document.getElementById('selected_quantity_' + id);
+	if (div)
+	{
+		div.parentNode.removeChild(div);
+	}
+
+	element.parentNode.parentNode.childNodes[5].childNodes[0].value = 0;
+	element.parentNode.parentNode.childNodes[6].childNodes[0].value = '';
+	/**
+	 * Reset button to disabled
+	 */
+	element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
+	element.parentNode.parentNode.childNodes[7].childNodes[0].setAttribute('disabled', true);
+
+}
+
 $(document).ready(function ()
 {
+	$('#articles_container').on('change', '.quantity', function ()
+	{
+		var quantity = $(this).val();
+		var button = $(this).parents('tr').find("button");
+
+		if (quantity > 0)
+		{
+			button.prop('disabled', false);
+		}
+		else
+		{
+			button.prop('disabled', true);
+		}
+	});
+
+	var resource_id = $("#resource_id").val();
+	var resources = [resource_id];
+	var selection = [resource_id];
+	populateTableChkArticles(selection, resources);
+
+	function populateTableChkArticles(selection, resources)
+	{
+		var oArgs = {
+			menuaction: 'bookingfrontend.uiarticle_mapping.get_articles',
+			sort: 'name',
+		};
+		var url = phpGWLink('bookingfrontend/', oArgs, true);
+
+		for (var r in resources)
+		{
+			url += '&resources[]=' + resources[r];
+		}
+
+		var container = 'articles_container';
+		var colDefsRegulations = [
+			{label: lang['Select'],
+				object: [
+					{
+						type: 'button',
+						attrs: [
+							{name: 'type', value: 'button'},
+							{name: 'disabled', value: true},
+							{name: 'class', value: 'btn btn-success'},
+							{name: 'onClick', value: 'add_to_bastet(this);'},
+							{name: 'innerHTML', value: 'Legg til <i class="fas fa-shopping-basket"></i>'},
+						]
+					}
+				]
+			},
+			{
+				/**
+				 * Hidden field for holding article id
+				 */
+				attrs: [{name: 'style', value: "display:none;"}],
+				object: [
+					{type: 'input', attrs: [
+							{name: 'type', value: 'hidden'}
+						]
+					}
+				], value: 'id'},
+			{key: 'name', label: lang['article']},
+			{key: 'price', label: lang['price']},
+			{key: 'unit', label: lang['unit']},
+			{key: 'quantity', label: lang['quantity'], object: [
+					{type: 'input', attrs: [
+							{name: 'type', value: 'number'},
+							{name: 'min', value: 0},
+							{name: 'value', value: 0},
+							{name: 'size', value: 3},
+							{name: 'class', value: 'quantity'},
+						]
+					}
+				]},
+			{label: lang['Selected'],
+				object: [
+					{type: 'input', attrs: [
+							{name: 'type', value: 'hidden'},
+							{name: 'name', value: 'selected_articles[]'}
+						]
+					}
+				]},
+			{label: lang['Delete'],
+				object: [
+					{
+						type: 'button',
+						attrs: [
+							{name: 'type', value: 'button'},
+							{name: 'disabled', value: true},
+							{name: 'class', value: 'btn btn-danger'},
+							{name: 'onClick', value: 'empty_from_bastet(this);'},
+							{name: 'innerHTML', value: 'Slett <i class="far fa-trash-alt"></i>'},
+						]
+					}
+				]
+			}
+
+		];
+
+		populateTableArticles(url, container, colDefsRegulations);
+
+	}
+
+
 	$("#resource_id").change(function ()
 	{
 
@@ -511,9 +689,9 @@ $(document).ready(function ()
 					time_default_start = resource.booking_time_default_start;
 				}
 
-				if(Number(resource.booking_month_horizon) > (booking_month_horizon +1))
+				if (Number(resource.booking_month_horizon) > (booking_month_horizon + 1))
 				{
-					booking_month_horizon = Number(resource.booking_month_horizon) +1;
+					booking_month_horizon = Number(resource.booking_month_horizon) + 1;
 				}
 
 //				set_conditional_translation(resource.type);

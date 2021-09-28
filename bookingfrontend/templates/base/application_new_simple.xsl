@@ -56,6 +56,21 @@
 							<xsl:apply-templates select="resource_list/options"/>
 						</select>
 					</div>
+					<div class="form-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Articles')" />
+						</label>
+						<input type="hidden" data-validation="application_articles">
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please choose at least 1 Article')" />
+							</xsl:attribute>
+						</input>
+						<div id="articles_container" style="display:inline-block;">
+							<span class="select_first_text">
+								<xsl:value-of select="php:function('lang', 'Select a resource first')" />
+							</span>
+						</div>
+					</div>
 
 					<div class="form-group">
 						<div class="col-12 mt-4" id="item-description">
@@ -192,6 +207,7 @@
 		var initialAcceptedDocs = <xsl:value-of select="application/accepted_documents_json"/>;
 		var errorAcceptedDocs = '<xsl:value-of select="config/application_terms2"/>';
 		var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
+		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.', 'article', 'Select', 'price', 'unit', 'quantity', 'Selected', 'Delete')"/>;
 	</script>
 </xsl:template>
 

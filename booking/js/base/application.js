@@ -1,4 +1,4 @@
-/* global lang, genericLink */
+/* global lang, genericLink, initialSelection */
 
 var building_id_selection = "";
 var regulations_select_all = "";
