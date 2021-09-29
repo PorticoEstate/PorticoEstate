@@ -1,3 +1,5 @@
+/* global lang */
+
 var booking_month_horizon = 3;
 var GlobalStartTime;
 var day_default_lenght = 0;
@@ -463,17 +465,27 @@ $('#start_date').datetimepicker({onSelectDate: function (ct, $i)
 
 function populateTableArticles(url, container, colDefs)
 {
-	createTable(container, url, colDefs, '', 'pure-table pure-table-bordered');
+	createTable(container, url, colDefs, '', 'table table-bordered table-hover table-sm table-responsive');
 }
+
 function add_to_bastet(element)
 {
+	var tr = element.parentNode.parentNode;
+	if (tr.rowIndex == 1)
+	{
+		return;
+	}
+
+	tr.classList.add("table-success");
+
 	var id = element.parentNode.parentNode.childNodes[1].childNodes[0].value;
 	var quantity = element.parentNode.parentNode.childNodes[5].childNodes[0].value;
+	var price = element.parentNode.parentNode.childNodes[4].innerText;
 
 	/**
 	 * set selected items
 	 */
-	var temp = element.parentNode.parentNode.childNodes[6].childNodes[0].value;
+	var temp = element.parentNode.parentNode.childNodes[7].childNodes[0].value;
 
 	var selected_quantity = 0;
 
@@ -493,46 +505,91 @@ function add_to_bastet(element)
 	 */
 	element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
 
-	var target = element.parentNode.parentNode.childNodes[6].childNodes[0];
+	var target = element.parentNode.parentNode.childNodes[7].childNodes[0];
 	target.value = id + '_' + selected_quantity;
 
-	var div = document.getElementById('selected_quantity_' + id);
-	if (div)
-	{
-		div.parentNode.removeChild(div);
-	}
-
-// create a new element
-	var elem = document.createElement('div');
-	elem.id = 'selected_quantity_' + id;
+	var elem = element.parentNode.parentNode.childNodes[6];
 
 // add text
-    elem.innerText = selected_quantity;
+	elem.innerText = selected_quantity;
 
-// insert the element after target element
-	target.parentNode.insertBefore(elem, target.nextSibling);
+	var sum_cell = element.parentNode.parentNode.childNodes[8]
+	sum_cell.innerText = (selected_quantity * parseFloat(price)).toFixed(2);
+
+	var xTableBody = element.parentNode.parentNode.parentNode;
+	var selected_sum = xTableBody.getElementsByClassName('selected_sum');
+
+	var temp_total_sum = 0;
+	for (var i = 0; i < selected_sum.length; i++)
+	{
+		if (selected_sum[i].innerHTML)
+		{
+			temp_total_sum = parseFloat(temp_total_sum) + parseFloat(selected_sum[i].innerHTML);
+		}
+	}
+
+	var tableFooter;
+	tableFooter = document.getElementById('tfoot');
+	if (tableFooter)
+	{
+		tableFooter.parentNode.removeChild(tableFooter);
+	}
+	var xTable = element.parentNode.parentNode.parentNode.parentNode;
+	tableFooter = document.createElement('tfoot');
+	tableFooter.id = 'tfoot'
+	var tableFooterTr = document.createElement('tr');
+	var tableFooterTrTd = document.createElement('td');
+
+	tableFooterTrTd.setAttribute('colspan', 6);
+	tableFooterTrTd.innerHTML = "Sum:";
+	tableFooterTr.appendChild(tableFooterTrTd);
+	var tableFooterTrTd2 = document.createElement('td');
+	tableFooterTrTd2.setAttribute('id', 'sum_price_table');
+	tableFooterTrTd2.classList.add("text-right");
+
+	tableFooterTrTd2.innerHTML = temp_total_sum.toFixed(2);
+
+
+	tableFooterTr.appendChild(tableFooterTrTd2);
+
+	tableFooter.appendChild(tableFooterTr);
+	xTable.appendChild(tableFooter);
 
 }
 
 function empty_from_bastet(element)
 {
+	var tr = element.parentNode.parentNode;
+	tr.classList.remove("table-success");
+
 	/**
 	 * Reset quantity
 	 */
-	var id = element.parentNode.parentNode.childNodes[1].childNodes[0].value;
-	var div = document.getElementById('selected_quantity_' + id);
-	if (div)
-	{
-		div.parentNode.removeChild(div);
-	}
-
+	element.parentNode.parentNode.childNodes[6].innerText = '';
 	element.parentNode.parentNode.childNodes[5].childNodes[0].value = 0;
-	element.parentNode.parentNode.childNodes[6].childNodes[0].value = '';
+	element.parentNode.parentNode.childNodes[8].innerText = '';
+	element.parentNode.parentNode.childNodes[7].childNodes[0].value = '';
+
 	/**
 	 * Reset button to disabled
 	 */
 	element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
-	element.parentNode.parentNode.childNodes[7].childNodes[0].setAttribute('disabled', true);
+	element.parentNode.parentNode.childNodes[9].childNodes[0].setAttribute('disabled', true);
+
+	var xTableBody = element.parentNode.parentNode.parentNode;
+	var selected_sum = xTableBody.getElementsByClassName('selected_sum');
+
+	var temp_total_sum = 0;
+	for (var i = 0; i < selected_sum.length; i++)
+	{
+		if (selected_sum[i].innerHTML)
+		{
+			temp_total_sum = parseFloat(temp_total_sum) + parseFloat(selected_sum[i].innerHTML);
+		}
+	}
+
+	$('#sum_price_table').html(temp_total_sum.toFixed(2));
+
 
 }
 
@@ -540,6 +597,13 @@ $(document).ready(function ()
 {
 	$('#articles_container').on('change', '.quantity', function ()
 	{
+		var tr = $(this).parents('tr')[0];
+		if (tr.rowIndex == 1)
+		{
+			$(this).val(0);
+			tr.classList.add("table-success");
+			return;
+		}
 		var quantity = $(this).val();
 		var button = $(this).parents('tr').find("button");
 
@@ -573,7 +637,9 @@ $(document).ready(function ()
 
 		var container = 'articles_container';
 		var colDefsRegulations = [
-			{label: lang['Select'],
+			{
+				label: lang['Select'],
+				attrs: [{name: 'class', value: "align-middle"}],
 				object: [
 					{
 						type: 'button',
@@ -598,10 +664,26 @@ $(document).ready(function ()
 						]
 					}
 				], value: 'id'},
-			{key: 'name', label: lang['article']},
-			{key: 'price', label: lang['price']},
-			{key: 'unit', label: lang['unit']},
-			{key: 'quantity', label: lang['quantity'], object: [
+			{
+				key: 'name',
+				label: lang['article'],
+				attrs: [{name: 'class', value: "align-middle"}],
+			},
+			{
+				key: 'unit',
+				label: lang['unit'],
+				attrs: [{name: 'class', value: "align-middle"}],
+			},
+			{
+				key: 'price',
+				label: lang['price'],
+				attrs: [{name: 'class', value: "align-middle"}],
+			},
+			{
+				key: 'quantity',
+				label: lang['quantity'],
+				attrs: [{name: 'class', value: "align-middle"}],
+				object: [
 					{type: 'input', attrs: [
 							{name: 'type', value: 'number'},
 							{name: 'min', value: 0},
@@ -611,15 +693,32 @@ $(document).ready(function ()
 						]
 					}
 				]},
-			{label: lang['Selected'],
+			{
+				key: 'selected_quantity',
+				label: lang['Selected'],
+				attrs: [{name: 'class', value: "text-right align-middle"}]
+			},
+			{
+				label: 'hidden',
+				attrs: [{name: 'style', value: "display:none;"}],
 				object: [
 					{type: 'input', attrs: [
-							{name: 'type', value: 'hidden'},
+							{name: 'type', value: 'text'},
 							{name: 'name', value: 'selected_articles[]'}
 						]
 					}
-				]},
-			{label: lang['Delete'],
+				], value: 'selected_article_quantity'
+			},
+			{
+				key: 'selected_sum',
+				label: lang['Sum'],
+				attrs: [
+					{name: 'class', value: "text-right align-middle selected_sum"}
+				]
+			},
+			{
+				label: lang['Delete'],
+				attrs: [{name: 'class', value: "align-middle"}],
 				object: [
 					{
 						type: 'button',

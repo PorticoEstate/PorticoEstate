@@ -233,7 +233,7 @@
 					$articles[] = array(
 						'id'		 => $this->db->f('mapping_id'),
 						'article_id' => $this->db->f('article_id'),
-						'name'		 => "[{$_article['name']}] " . $this->db->f('name', true),
+						'name'		 => "- " . $this->db->f('name', true),
 						'unit'		 => $this->db->f('unit', true),
 					);
 				}

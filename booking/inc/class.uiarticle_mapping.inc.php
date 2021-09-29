@@ -129,7 +129,17 @@
 		public function get_articles()
 		{
 			$resources = phpgw::get_var('resources', 'int','GET');
-			return $this->bo->get_articles($resources);
+			$articles = $this->bo->get_articles($resources);
+
+			foreach ($articles['data'] as &$article)
+			{
+				$article['selected_quantity'] = isset($article['resource_id']) ? 1 : '';
+				$article['selected_article_quantity'] = isset($article['resource_id']) ? "{$article['id']}_1" : '';
+				$article['selected_sum'] = isset($article['resource_id']) ? $article['price'] : '';
+
+			}
+			
+			return $articles;
 		}
 
 		public function index()

@@ -4,7 +4,7 @@
 			<div class="row">
 
 				<div class="col-md-8 offset-md-2">
-			
+
 					<a class="exitBtn float-right">
 						<xsl:attribute name="href">
 							<xsl:value-of select="application/frontpage_link"/>
@@ -12,8 +12,8 @@
 						<i class="fas fa-times" />
 						<xsl:value-of select="php:function('lang', 'Exit to homepage')"/>
 					</a>
-				
-					
+
+
 					<h1 class="font-weight-bold">
 						<xsl:value-of select="php:function('lang', 'New application')"/>
 					</h1>
@@ -56,6 +56,11 @@
 							<xsl:apply-templates select="resource_list/options"/>
 						</select>
 					</div>
+
+					<div class="form-group">
+						<div class="col-12 mt-4" id="item-description">
+						</div>
+					</div>
 					<div class="form-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Articles')" />
@@ -70,12 +75,6 @@
 								<xsl:value-of select="php:function('lang', 'Select a resource first')" />
 							</span>
 						</div>
-					</div>
-
-					<div class="form-group">
-						<div class="col-12 mt-4" id="item-description">
-						</div>
-
 					</div>
 
 					<!-- Select Time and Date Section -->
@@ -149,7 +148,7 @@
 							</div>
 						</div>
 					</div>
-					
+
 					<!-- Target Audience Section-->
 					<input id="inputTargetAudience" required="true" type="hidden"  name="audience[]"/>
 
@@ -172,7 +171,7 @@
 							<div>
 								<label class="check-box-label d-inline">
 									<input id="termsInput" class="form-check-input" type="checkbox" data-bind="checked: checkedStatus"/>
-									<span class="label-text" data-bind=""></span>		
+									<span class="label-text" data-bind=""></span>
 								</label>
 								<a class="d-inline termAcceptDocsUrl" target="_blank" data-bind=""></a>
 								<i class="fas fa-external-link-alt"></i>
@@ -189,7 +188,7 @@
 						</button>
 						<div id="submit-error" style="display: none">Vennligst fyll inn alle feltene!</div>
 					</div>
-				
+
 				</div>
 			</div>
 		</form>
@@ -207,7 +206,7 @@
 		var initialAcceptedDocs = <xsl:value-of select="application/accepted_documents_json"/>;
 		var errorAcceptedDocs = '<xsl:value-of select="config/application_terms2"/>';
 		var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
-		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.', 'article', 'Select', 'price', 'unit', 'quantity', 'Selected', 'Delete')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.', 'article', 'Select', 'price', 'unit', 'quantity', 'Selected', 'Delete', 'Sum')"/>;
 	</script>
 </xsl:template>
 

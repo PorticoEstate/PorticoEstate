@@ -32,19 +32,6 @@
 	{
 
 		public $public_functions = array(
-//			'add'						 => true,
-//			'index'						 => true,
-//			'query'						 => true,
-//			'view'						 => true,
-//			'edit'						 => true,
-//			'save'						 => true,
-//			'get'						 => true,
-//			'get_services'				 => true,
-//			'get_reserved_resources'	 => true,
-//			'handle_multi_upload_file'	 => true,
-//			'_get_files'				 => true,
-//			'view_file'					 => true,
-//			'update_file_data'			 => true,
 			'get_articles'				 => true
 		);
 
