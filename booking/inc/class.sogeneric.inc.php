@@ -139,14 +139,14 @@
 						'system_location'	 => '.article',
 						'menu_selection'	 => 'booking::settings::article',
 						'default'			 => array(
-							'owner_id'		 => array('add' => '$this->account'),
+							'owner_id' => array('add' => '$this->account'),
 						),
 						'check_grant'		 => false
 					);
 
 					break;
 				case 'article_service':
-					$info = array(
+					$info	 = array(
 						'table'				 => 'bb_service',
 						'id'				 => array('name' => 'id', 'type' => 'auto'),
 						'fields'			 => array(
@@ -181,7 +181,30 @@
 						'menu_selection'	 => 'booking::commerce::service',
 						'check_grant'		 => false
 					);
-
+					break;
+				case 'tax':
+					$info	 = array(
+						'table'			 => 'fm_ecomva',
+						'id'			 => array('name' => 'id', 'type' => 'int'),
+						'fields'		 => array(
+							array(
+								'name'	 => 'percent',
+								'descr'	 => lang('percent'),
+								'type'	 => 'int'
+							),
+							array(
+								'name'	 => 'descr',
+								'descr'	 => lang('descr'),
+								'type'	 => 'varchar'
+							)
+						),
+						'edit_msg'		 => lang('edit'),
+						'add_msg'		 => lang('add'),
+						'name'			 => lang('tax code'),
+						'acl_app'		 => 'booking',
+						'acl_location'	 => '.admin',
+						'menu_selection' => 'booking::commerce::accounting_tax'
+					);
 					break;
 
 // END BOOKING TABLES

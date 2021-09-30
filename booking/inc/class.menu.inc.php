@@ -244,6 +244,12 @@
 									'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiservice.index')),
 									'image'	=> array('property', 'service'),
 						),
+						'accounting_tax'		 => array
+							(
+							'text'	 => lang('Accounting tax'),
+							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uigeneric.index',
+								'type'		 => 'tax'))
+						),
 
 					)
 				),

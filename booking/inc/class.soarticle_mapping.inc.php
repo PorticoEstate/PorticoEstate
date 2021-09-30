@@ -126,9 +126,9 @@
 				$value_set = array
 					(
 					'article_mapping_id' => $article_mapping_id,
-					'price'		 => $price,
-					'from_'		 => date('Y-m-d', $date_from),
-					'remark'	 => $article_prizing['remark'],
+					'price'				 => $price,
+					'from_'				 => date('Y-m-d', $date_from),
+					'remark'			 => $article_prizing['remark'],
 				);
 
 				$this->db->query('INSERT INTO bb_article_price (' . implode(',', array_keys($value_set)) . ') VALUES ('
@@ -192,11 +192,14 @@
 			/**
 			 * Resources
 			 */
-			$sql		 = "SELECT bb_article_mapping.id AS mapping_id, concat( article_cat_id || '_' || article_id ) AS article_id,
-			bb_resource.name as name ,article_id AS resource_id, unit
-			FROM bb_article_mapping
-			JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id)
-			WHERE article_cat_id = 1 AND bb_resource.active = 1 {$filter}";
+			$sql		 = "SELECT bb_article_mapping.id AS mapping_id,"
+				. " concat( article_cat_id || '_' || article_id ) AS article_id,"
+				. " bb_resource.name as name ,article_id AS resource_id, unit, percent AS tax_percent"
+				. " FROM bb_article_mapping"
+				. " JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id)"
+				. " JOIN fm_ecomva ON (bb_article_mapping.tax_code = fm_ecomva.id)"
+				. " WHERE article_cat_id = 1 AND bb_resource.active = 1 {$filter}";
+
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$found_resources = array();
@@ -208,9 +211,9 @@
 					'article_id'	 => $this->db->f('article_id'),
 					'name'			 => $this->db->f('name', true),
 					'unit'			 => $this->db->f('unit', true),
+					'tax_percent'	 => $this->db->f('tax_percent'),
 				);
 			}
-
 
 			foreach ($_articles as $_article)
 			{
@@ -221,9 +224,10 @@
 				$filter		 = 'AND bb_resource_service.resource_id =' . $_article['resource_id'];
 
 				$sql = "SELECT bb_article_mapping.id AS mapping_id, concat( article_cat_id || '_' || article_id ) AS article_id,"
-					. " bb_service.name as name, bb_resource_service.resource_id, unit"
+					. " bb_service.name as name, bb_resource_service.resource_id, unit, percent AS tax_percent"
 					. " FROM bb_article_mapping JOIN bb_service ON (bb_article_mapping.article_id = bb_service.id)"
 					. " JOIN bb_resource_service ON (bb_service.id = bb_resource_service.service_id)"
+					. " JOIN fm_ecomva ON (bb_article_mapping.tax_code = fm_ecomva.id)"
 					. " WHERE article_cat_id = 2 {$filter}"
 					. " ORDER BY bb_resource_service.resource_id, bb_service.name";
 				$this->db->query($sql, __LINE__, __FILE__);
@@ -231,23 +235,25 @@
 				while ($this->db->next_record())
 				{
 					$articles[] = array(
-						'id'		 => $this->db->f('mapping_id'),
-						'article_id' => $this->db->f('article_id'),
-						'name'		 => "- " . $this->db->f('name', true),
-						'unit'		 => $this->db->f('unit', true),
+						'id'			 => $this->db->f('mapping_id'),
+						'article_id'	 => $this->db->f('article_id'),
+						'name'			 => "- " . $this->db->f('name', true),
+						'unit'			 => $this->db->f('unit', true),
+						'tax_percent'	 => (int)$this->db->f('tax_percent'),
 					);
 				}
 			}
 
 			foreach ($articles as &$article)
 			{
-				$sql				 = "SELECT price, remark FROM bb_article_price WHERE article_mapping_id = {$article['id']}";
+				$sql					 = "SELECT price, remark FROM bb_article_price WHERE article_mapping_id = {$article['id']}";
 				$this->db->query($sql, __LINE__, __FILE__);
 				$this->db->next_record();
-				$article['price']	 = $this->db->f('price');
+				$article['ex_tax_price'] = (float)$this->db->f('price');
+				$article['price']		 = $article['ex_tax_price'] * (1 + ($article['tax_percent'] / 100));
 			}
 
 
-			return array('data' => $articles);
+			return $articles;
 		}
 	}

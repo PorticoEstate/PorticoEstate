@@ -5354,11 +5354,13 @@
 				'building_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'article_code' => array('type' => 'varchar', 'precision' => '15', 'nullable' => false ),
 				'unit' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false ),
+				'tax_code' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				'owner_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_article_category' => array('article_cat_id' => 'id'),
+				'fm_ecomva' => array('tax_code' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array('article_cat_id', 'article_id')

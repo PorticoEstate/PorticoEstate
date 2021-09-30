@@ -462,10 +462,29 @@ $('#start_date').datetimepicker({onSelectDate: function (ct, $i)
 
 	}});
 
+var post_handle_table = function()
+{
+
+	var tr = $('#articles_container').find('tr')[1];
+
+	if(!tr || typeof(tr) == 'undefined')
+	{
+		return;
+	}
+
+	tr.classList.add("table-success");
+	tr.childNodes[0].childNodes[0].setAttribute('style', 'display:none;');
+	tr.childNodes[5].childNodes[0].setAttribute('style', 'display:none;');
+	tr.childNodes[9].childNodes[0].setAttribute('style', 'display:none;');
+
+	var xTable = tr.parentNode.parentNode;
+
+	set_sum(xTable);
+};
 
 function populateTableArticles(url, container, colDefs)
 {
-	createTable(container, url, colDefs, '', 'table table-bordered table-hover table-sm table-responsive');
+	createTable(container, url, colDefs, '', 'table table-bordered table-hover table-sm table-responsive', null, post_handle_table);
 }
 
 function add_to_bastet(element)
@@ -516,7 +535,19 @@ function add_to_bastet(element)
 	var sum_cell = element.parentNode.parentNode.childNodes[8]
 	sum_cell.innerText = (selected_quantity * parseFloat(price)).toFixed(2);
 
-	var xTableBody = element.parentNode.parentNode.parentNode;
+	var tableFooter = document.getElementById('tfoot');
+	if (tableFooter)
+	{
+		tableFooter.parentNode.removeChild(tableFooter);
+	}
+	var xTable = element.parentNode.parentNode.parentNode.parentNode;
+
+	set_sum(xTable);
+}
+
+function set_sum(xTable)
+{
+	var xTableBody = xTable.childNodes[1];
 	var selected_sum = xTableBody.getElementsByClassName('selected_sum');
 
 	var temp_total_sum = 0;
@@ -528,14 +559,7 @@ function add_to_bastet(element)
 		}
 	}
 
-	var tableFooter;
-	tableFooter = document.getElementById('tfoot');
-	if (tableFooter)
-	{
-		tableFooter.parentNode.removeChild(tableFooter);
-	}
-	var xTable = element.parentNode.parentNode.parentNode.parentNode;
-	tableFooter = document.createElement('tfoot');
+	var tableFooter = document.createElement('tfoot');
 	tableFooter.id = 'tfoot'
 	var tableFooterTr = document.createElement('tr');
 	var tableFooterTrTd = document.createElement('td');
@@ -548,7 +572,6 @@ function add_to_bastet(element)
 	tableFooterTrTd2.classList.add("text-right");
 
 	tableFooterTrTd2.innerHTML = temp_total_sum.toFixed(2);
-
 
 	tableFooterTr.appendChild(tableFooterTrTd2);
 
