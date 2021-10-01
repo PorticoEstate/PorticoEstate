@@ -1496,7 +1496,7 @@
 //					}
 //
 //
-					$fakturalinjer[$check_customer_identifier][] = $fakturalinje;
+					$fakturalinjer[$check_customer_identifier][] = array('BkPffFakturagrunnlaglinje' => $fakturalinje);
 
 					$headers[$check_customer_identifier] = $header;
 
@@ -1578,7 +1578,7 @@
 //					$fakturalinje['Kundenr']			 = $stored_header['kundenr'];
 //					$fakturalinje['Systemid']	 = $client_id;  //
 
-					$fakturalinjer[$check_customer_identifier][] = $fakturalinje;
+					$fakturalinjer[$check_customer_identifier][] = array('BkPffFakturagrunnlaglinje' => $fakturalinje);
 
 					$log_buidling			 = $reservation['building_name'];
 					$log_cost				 = $reservation['cost'];
@@ -1601,10 +1601,10 @@
 			}
 
 			$invoice = array();
-			foreach ($fakturalinjer as $key => $_fakturalinje)
+			foreach ($fakturalinjer as $key => $_fakturalinjer)
 			{
 				$fakturagrunnlag = $headers[$key];
-				$fakturagrunnlag['Fakturalinjer'] = $_fakturalinje;
+				$fakturagrunnlag['Fakturalinjer'] = $_fakturalinjer;
 				$fakturagrunnlag['Systemid']	 = $client_id;  //
 
 				$invoice['BkPffFakturagrunnlag'][] = $fakturagrunnlag;
