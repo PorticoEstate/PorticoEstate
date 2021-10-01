@@ -833,6 +833,11 @@
 					$application['responsible_zip_code'] = '0000';
 					$application['customer_identifier_type'] = 'organization_number';
 					$application['customer_organization_number'] = '';
+
+					/**
+					 * Start dealing with the purchase_order..
+					 */
+					$purchase_order = array();
 				}
 				else if(isset($application['formstage']) && $application['formstage'] == 'legacy')
 				{

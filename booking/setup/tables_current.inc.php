@@ -1184,7 +1184,7 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'bb_order' => array(
+		'bb_purchase_order' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'parent_id' => array('type' => 'int', 'nullable' => true, 'precision' => '4'),
@@ -1232,7 +1232,7 @@
 			'ix' => array(),
 			'uc' => array('article_cat_id', 'article_id')
 		),
-		'bb_order_lines' => array(
+		'bb_purchase_order_lines' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'order_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
@@ -1249,7 +1249,7 @@
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'bb_order' => array('order_id' => 'id'),
+				'bb_purchase_order' => array('order_id' => 'id'),
 				'bb_article_mapping' => array('article_id' => 'id'),
 			),
 			'ix' => array(),
