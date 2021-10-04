@@ -858,7 +858,19 @@
 					/**
 					 * Start dealing with the purchase_order..
 					 */
-					$purchase_order = array();
+					$purchase_order = array('status' => 0, 'customer_id' => -1, 'lines' => array());
+					$selected_articles = (array)phpgw::get_var('selected_articles');
+
+					foreach ($selected_articles as $selected_article)
+					{
+						$_article_info = explode('_', $selected_article);
+						$article_mapping_id =
+
+						$purchase_order['lines'][] = array(
+							'article_id'	=> $_article_info[0],
+							'quantity'		=> $_article_info[1],
+						);
+					}
 				}
 				else if(isset($application['formstage']) && $application['formstage'] == 'legacy')
 				{
@@ -991,6 +1003,12 @@
 
 					$receipt = $this->bo->add($application);
 					$application['id'] = $receipt['id'];
+
+					if($purchase_order)
+					{
+						$purchase_order['application_id'] = $application['id'];
+						$this->bo->add_purchase_order($purchase_order);
+					}
 
 
 					if( isset($_FILES['name']['name']) && $_FILES['name']['name'] )

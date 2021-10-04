@@ -154,6 +154,31 @@
 			return $pricing;
 		}
 
+		/**
+		 * FIXME: group by relevant current price...
+		 * @param array $article_mapping_ids
+		 * @return type
+		 */
+		public function get_current_pricing(array $article_mapping_ids )
+		{
+			$pricing = array();
+			$this->db->query('SELECT *  FROM bb_article'
+				. ' JOIN bb_article_price ON bb_article_price.article_mapping_id = bb_article_mapping.id'
+				. ' WHERE article_mapping_id IN ( ' . implode (',',$article_mapping_ids) . ')', __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$pricing[] = array(
+					'id'				 => $this->db->f('id'),
+					'article_mapping_id' => $this->db->f('article_mapping_id'),
+					'price'				 => $this->db->f('price'),
+					'from_'				 => $this->db->f('from_'),
+					'remark'			 => $this->db->f('remark', true),
+				);
+			}
+			return $pricing;
+		}
+
 		function get_mapped_services()
 		{
 			$services = array();
