@@ -15,18 +15,17 @@
 		const COMMENT_TYPE_OWNERSHIP = 'ownership';
 		const ORGNR_SESSION_KEY = 'orgnr';
 
-		public $public_functions = array
-			(
-			'index' => true,
-			'query' => true,
-			'add' => true,
-            'confirm' => true,
-			'show' => true,
-			'edit' => true,
-			'associated' => true,
-			'toggle_show_inactive' => true,
-			'custom_fields_example' => true,
-			'export_pdf'			=> true,
+		public $public_functions	 = array(
+			'index'						 => true,
+			'query'						 => true,
+			'add'						 => true,
+			'confirm'					 => true,
+			'show'						 => true,
+			'edit'						 => true,
+			'associated'				 => true,
+			'toggle_show_inactive'		 => true,
+			'custom_fields_example'		 => true,
+			'export_pdf'				 => true,
 			'add_comment_to_application' => true,
 		);
 		protected $customer_id,
@@ -636,6 +635,28 @@
 			return $comment_text;
 		}
 
+		public function cancel_block()
+		{
+			$resource_id = phpgw::get_var('resource_id', 'int' ,'REQUEST');
+			$building_id = phpgw::get_var('building_id', 'int' ,'REQUEST');
+
+			$from_ = date('Y-m-d H:i:s', phpgwapi_datetime::date_to_timestamp(phpgw::get_var('from_', 'string', 'GET')));
+			$to_ = date('Y-m-d H:i:s', phpgwapi_datetime::date_to_timestamp( phpgw::get_var('to_', 'string', 'GET')));
+
+			$bo_block = createObject('booking.boblock');
+
+			$session_id = $GLOBALS['phpgw']->session->get_session_id();
+
+			if (!empty($session_id) && $resource_id)
+			{
+				$bo_block = createObject('booking.boblock');
+				$bo_block->cancel_block($session_id, array(array('from_' =>  $from_, 'to_' =>  $to_)),array($resource_id));
+			}
+
+			self::redirect(array('menuaction' => 'bookingfrontend.uiresource.show', 'id' => $resource_id, 'building_id' => $building_id));
+			//self::redirect(array());
+
+		}
 		public function set_block()
 		{
 			$resource_id = phpgw::get_var('resource_id', 'int' ,'REQUEST', -1 );
@@ -2610,12 +2631,13 @@ JS;
 
 				$GLOBALS['phpgw']->db->transaction_begin();
 
+				$bo_block = createObject('booking.boblock');
+
 				$exists = false;
 				foreach ($partials as $partial)
 				{
 					if ($partial['id'] == $id)
 					{
-						$bo_block = createObject('booking.boblock');
 						$bo_block->cancel_block($session_id, $partial['dates'],$partial['resources']);
 						$exists = true;
 						break;

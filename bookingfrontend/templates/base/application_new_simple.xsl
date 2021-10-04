@@ -5,14 +5,11 @@
 
 				<div class="col-md-8 offset-md-2">
 
-					<a class="exitBtn float-right">
-						<xsl:attribute name="href">
-							<xsl:value-of select="application/frontpage_link"/>
-						</xsl:attribute>
-						<i class="fas fa-times" />
-						<xsl:value-of select="php:function('lang', 'Exit to homepage')"/>
-					</a>
-
+					<div class="form-group float-right text-center">
+						<button id="cancelBtn" class="btn btn-light" type="button" onClick="cancel_block();">
+							<xsl:value-of select="php:function('lang', 'cancel')" />
+						</button>
+					</div>
 
 					<h1 class="font-weight-bold">
 						<xsl:value-of select="php:function('lang', 'New application')"/>

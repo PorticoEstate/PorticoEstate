@@ -6,17 +6,17 @@
 	class bookingfrontend_uiapplication extends booking_uiapplication
 	{
 
-		public $public_functions = array
-			(
-			'add' => true,
-			'add_contact' => true,
-            'confirm' => true,
-			'delete_partial' => true,
-			'edit' => true,
-			'show' => true,
-			'get_activity_data' => true,
-			'get_partials' => true,
-			'set_block'		=> true
+		public $public_functions = array(
+			'add'				 => true,
+			'add_contact'		 => true,
+			'confirm'			 => true,
+			'delete_partial'	 => true,
+			'edit'				 => true,
+			'show'				 => true,
+			'get_activity_data'	 => true,
+			'get_partials'		 => true,
+			'set_block'			 => true,
+			'cancel_block'		 => true
 		);
 
 		function get_activity_data()

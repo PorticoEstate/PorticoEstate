@@ -364,6 +364,20 @@ function PopulatePostedDate()
 	}
 }
 
+function cancel_block()
+{
+		var parameter = {
+			menuaction: "bookingfrontend.uiapplication.cancel_block",
+			resource_id: $("#resource_id").val(),
+			building_id: urlParams['building_id'],
+			from_: $('#from_').val(),
+			to_: $('#to_').val()
+		};
+
+		window.location.replace(phpGWLink('bookingfrontend/', parameter));
+
+}
+
 function getFreetime()
 {
 	var checkDate = new Date();
