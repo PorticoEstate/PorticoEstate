@@ -867,8 +867,8 @@
 						$article_mapping_id =
 
 						$purchase_order['lines'][] = array(
-							'article_id'	=> $_article_info[0],
-							'quantity'		=> $_article_info[1],
+							'article_mapping_id'	=> $_article_info[0],
+							'quantity'				=> $_article_info[1],
 						);
 					}
 				}

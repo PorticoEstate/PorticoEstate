@@ -5283,7 +5283,7 @@
 			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_price');
 			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_resource_service');
 			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_service');
-			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_order_lines');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_purchase_order_line');
 			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_mapping');
 			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_category');
 			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_order');
@@ -5298,7 +5298,7 @@
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 				'customer_type' => array('type' => 'varchar', 'precision' => '12', 'nullable' => False, 'default' => 'person'),
-				'customer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'customer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -5367,12 +5367,12 @@
 		));
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
-		'bb_purchase_order_lines',  array(
+		'bb_purchase_order_line',  array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'order_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
-				'article_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'article_mapping_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'unit_price' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
 				'overridden_unit_price' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
 				'currency' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),
@@ -5385,7 +5385,7 @@
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_purchase_order' => array('order_id' => 'id'),
-				'bb_article_mapping' => array('article_id' => 'id'),
+				'bb_article_mapping' => array('article_mapping_id' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()

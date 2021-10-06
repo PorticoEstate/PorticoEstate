@@ -161,19 +161,48 @@
 		 */
 		public function get_current_pricing(array $article_mapping_ids )
 		{
+
+			$now = date('Y-m-d');
 			$pricing = array();
-			$this->db->query('SELECT *  FROM bb_article'
-				. ' JOIN bb_article_price ON bb_article_price.article_mapping_id = bb_article_mapping.id'
-				. ' WHERE article_mapping_id IN ( ' . implode (',',$article_mapping_ids) . ')', __LINE__, __FILE__);
+
+			$sql = "SELECT id, article_mapping_id FROM bb_article_price"
+				. " WHERE article_mapping_id IN ( " . implode (',',$article_mapping_ids) . ")"
+				. " AND from_ < '{$now}'"
+				. " ORDER BY from_ DESC";
+
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$mapping_ids = array();
+			$pricing_ids = array(-1);
+			while ($this->db->next_record())
+			{
+				$article_mapping_id = $this->db->f('article_mapping_id');
+
+				if(in_array($article_mapping_id, $mapping_ids))
+				{
+					continue;
+				}
+				$mapping_ids[] = $article_mapping_id;
+				$pricing_ids[]	= (int) $this->db->f('id');
+			}
+
+			$this->db->query("SELECT bb_article_price.* , bb_article_mapping.tax_code, fm_ecomva.percent"
+				. " FROM bb_article_mapping"
+				. " JOIN bb_article_price ON bb_article_price.article_mapping_id = bb_article_mapping.id"
+				. " JOIN fm_ecomva ON bb_article_mapping.tax_code = fm_ecomva.id"
+				. " WHERE bb_article_price.id IN ( " . implode (',',$pricing_ids) . ")", __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
-				$pricing[] = array(
+				$article_mapping_id = $this->db->f('article_mapping_id');
+				$pricing[$article_mapping_id] = array(
 					'id'				 => $this->db->f('id'),
-					'article_mapping_id' => $this->db->f('article_mapping_id'),
+					'article_mapping_id' => $article_mapping_id,
 					'price'				 => $this->db->f('price'),
 					'from_'				 => $this->db->f('from_'),
 					'remark'			 => $this->db->f('remark', true),
+					'tax_code'			 => $this->db->f('tax_code'),
+					'percent'			 => $this->db->f('percent')
 				);
 			}
 			return $pricing;
@@ -212,18 +241,21 @@
 			$_resources	 = array_merge(array(-1), (array)$resources);
 			$filter		 = 'AND article_id IN (' . implode(',', $_resources) . ')';
 
+
+
 			$articles	 = array();
 			$_articles	 = array();
 			/**
 			 * Resources
 			 */
-			$sql		 = "SELECT bb_article_mapping.id AS mapping_id,"
+			$sql = "SELECT bb_article_mapping.id AS mapping_id,"
 				. " concat( article_cat_id || '_' || article_id ) AS article_id,"
 				. " bb_resource.name as name ,article_id AS resource_id, unit, percent AS tax_percent"
 				. " FROM bb_article_mapping"
 				. " JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id)"
 				. " JOIN fm_ecomva ON (bb_article_mapping.tax_code = fm_ecomva.id)"
-				. " WHERE article_cat_id = 1 AND bb_resource.active = 1 {$filter}";
+				. " WHERE article_cat_id = 1"
+				. " AND bb_resource.active = 1 {$filter}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -269,9 +301,12 @@
 				}
 			}
 
+			$now = date('Y-m-d');
+
 			foreach ($articles as &$article)
 			{
-				$sql					 = "SELECT price, remark FROM bb_article_price WHERE article_mapping_id = {$article['id']}";
+				$sql = "SELECT price, remark FROM bb_article_price WHERE article_mapping_id = {$article['id']}"
+				. " AND from_ < '$now' ORDER BY from_ DESC";
 				$this->db->query($sql, __LINE__, __FILE__);
 				$this->db->next_record();
 				$article['ex_tax_price'] = (float)$this->db->f('price');

@@ -531,7 +531,7 @@
 			$value_set = array(
 				'application_id' => (int)$purchase_order['application_id'],
 				'status'		 => 0,
-//				'customer_id'	 => -1
+				'customer_id'	 => null
 			);
 
 			if ($this->db->get_transaction())
@@ -553,33 +553,37 @@
 				$article_ids = array();
 				foreach ($purchase_order['lines'] as $line)
 				{
-					$article_ids[] = $line['article_id'];
+					$article_mapping_ids[] = $line['article_mapping_id'];
 				}
 
 
 				/**
 				 * FIXME
 				 */
-				$current_pricing = createObject('booking.soarticle_mapping')->get_current_pricing($article_ids);
+				$current_pricing = createObject('booking.soarticle_mapping')->get_current_pricing($article_mapping_ids);
 
 
 				$add_sql = "INSERT INTO bb_purchase_order_line ("
-					. " order_id, status, article_id, quantity, unit_price,"
+					. " order_id, status, article_mapping_id, quantity, unit_price,"
 					. " overridden_unit_price, currency,  amount, tax_code, tax)"
 					. " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 				$insert_update = array();
 				foreach ($purchase_order['lines'] as $line)
 				{
-					$unit_price = 0;
+					$current_price_info = $current_pricing[$line['article_mapping_id']];
+
+					$unit_price = $current_price_info['price'];
 
 					$overridden_unit_price = $unit_price;
 					$currency = 'NOK';
 
 					$amount = $overridden_unit_price * (float)$line['quantity'];
 
-					$tax_code;
-					$tax;
+					$tax_code = $current_price_info['tax_code'];
+					$percent = $current_price_info['percent'];
+
+					$tax = $amount * $percent / 100;
 
 					$insert_update[] = array(
 						1	 => array(
@@ -591,7 +595,7 @@
 							'type'	 => PDO::PARAM_INT
 						),
 						3	 => array(
-							'value'	 => $line['article_id'],
+							'value'	 => $line['article_mapping_id'],
 							'type'	 => PDO::PARAM_INT
 						),
 						4	 => array(
@@ -619,7 +623,7 @@
 							'type'	 => PDO::PARAM_INT
 						),
 						10	 => array(
-							'value'	 => $tax,
+							'value'	 => (float)$tax,
 							'type'	 => PDO::PARAM_STR
 						),
 

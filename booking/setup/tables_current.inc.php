@@ -1190,7 +1190,7 @@
 				'parent_id' => array('type' => 'int', 'nullable' => true, 'precision' => '4'),
 				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 				'application_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'customer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'customer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'timestamp' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
 
 			),
@@ -1232,12 +1232,12 @@
 			'ix' => array(),
 			'uc' => array('article_cat_id', 'article_id')
 		),
-		'bb_purchase_order_lines' => array(
+		'bb_purchase_order_line' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'order_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
-				'article_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'article_mapping_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'unit_price' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
 				'overridden_unit_price' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
 				'currency' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),
@@ -1250,7 +1250,7 @@
 			'pk' => array('id'),
 			'fk' => array(
 				'bb_purchase_order' => array('order_id' => 'id'),
-				'bb_article_mapping' => array('article_id' => 'id'),
+				'bb_article_mapping' => array('article_mapping_id' => 'id'),
 			),
 			'ix' => array(),
 			'uc' => array()
