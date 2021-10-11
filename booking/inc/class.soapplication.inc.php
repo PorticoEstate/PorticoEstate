@@ -521,6 +521,52 @@
 			return $limit_reached;
 		}
 
+		function get_purchase_order( &$applications )
+		{
+			if (!$applications['results'])
+			{
+				return;
+			}
+
+			$application_ids = array(-1);
+			foreach ($applications['results'] as $application)
+			{
+				$application_ids[] = $application['id'];
+			}
+
+			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id "
+				. " FROM bb_purchase_order JOIN bb_purchase_order_line ON bb_purchase_order.id = bb_purchase_order_line.order_id"
+				. " WHERE bb_purchase_order.application_id IN (" . implode(',', $application_ids) . ")";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$orders = array();
+			while ($this->db->next_record())
+			{
+				$application_id = (int)$this->db->f('application_id');
+				$order_id = (int)$this->db->f('order_id');
+
+				$orders[$application_id][$order_id]['lines'][] = array(
+					'order_id'				 => $order_id,
+					'status'				 => (int)$this->db->f('status'),
+					'article_mapping_id'	 => (int)$this->db->f('article_mapping_id'),
+					'quantity'				 => (float)$this->db->f('quantity'),
+					'unit_price'			 => (float)$this->db->f('unit_price'),
+					'overridden_unit_price'	 => (float)$this->db->f('overridden_unit_price'),
+					'currency'				 => $this->db->f('currency'),
+					'amount'				 => (float)$this->db->f('amount'),
+					'tax_code'				 => (int)$this->db->f('tax_code'),
+					'tax'					 => (float)$this->db->f('tax'),
+				);
+			}
+
+			foreach ($applications['results'] as &$application)
+			{
+				$application['orders'] = array_values($orders[$application['id']]);
+			}
+
+		}
+
 		function add_purchase_order( $purchase_order )
 		{
 			if (empty($purchase_order['application_id']))
@@ -562,7 +608,6 @@
 				 */
 				$current_pricing = createObject('booking.soarticle_mapping')->get_current_pricing($article_mapping_ids);
 
-
 				$add_sql = "INSERT INTO bb_purchase_order_line ("
 					. " order_id, status, article_mapping_id, quantity, unit_price,"
 					. " overridden_unit_price, currency,  amount, tax_code, tax)"
@@ -575,13 +620,13 @@
 
 					$unit_price = $current_price_info['price'];
 
-					$overridden_unit_price = $unit_price;
-					$currency = 'NOK';
+					$overridden_unit_price	 = $unit_price;
+					$currency				 = 'NOK';
 
 					$amount = $overridden_unit_price * (float)$line['quantity'];
 
-					$tax_code = $current_price_info['tax_code'];
-					$percent = $current_price_info['percent'];
+					$tax_code	 = $current_price_info['tax_code'];
+					$percent	 = $current_price_info['percent'];
 
 					$tax = $amount * $percent / 100;
 
@@ -626,7 +671,6 @@
 							'value'	 => (float)$tax,
 							'type'	 => PDO::PARAM_STR
 						),
-
 					);
 				}
 				$this->db->insert($add_sql, $insert_update, __LINE__, __FILE__);

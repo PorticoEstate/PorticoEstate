@@ -54,6 +54,20 @@
 									<span class="col-5" data-bind="text: date"></span>
 									<span class="col-6" data-bind="text: periode"></span>
 								</div>
+								<table class='table' data-bind="foreach: orders">
+									<tr>
+										<th>unit price</th>
+										<th>quantity</th>
+										<th>amount</th>
+										<th>tax</th>
+									</tr>
+									<tr data-bind="foreach: lines">
+										<td data-bind="text: unit_price"></td>
+										<td data-bind="text: quantity"></td>
+										<td data-bind="text: amount"></td>
+										<td data-bind="text: tax"></td>
+									</tr>
+								</table>
 							</div>
 						</div>
 						<hr class="mt-5 mb-5"></hr>
@@ -117,15 +131,15 @@
 								<div class="invalid-feedback">
 									Vennligst velg en organisasjon.
 								</div>
-<!--
-								<label>
-									<a id="add_new_value" href="#" data-toggle="modal" data-target="#new_organization">
-										<img src="{add_img}" width="23"/>
-										<xsl:text> </xsl:text>
-										<xsl:value-of select="php:function('lang', 'new organization')"/>
-									</a>
-								</label>
--->
+								<!--
+																<label>
+																	<a id="add_new_value" href="#" data-toggle="modal" data-target="#new_organization">
+																		<img src="{add_img}" width="23"/>
+																		<xsl:text> </xsl:text>
+																		<xsl:value-of select="php:function('lang', 'new organization')"/>
+																	</a>
+																</label>
+								-->
 							</div>
 						</xsl:if>
 
@@ -274,13 +288,13 @@
 
 		$('#new_organization').on('show.bs.modal', function (e)
 		{
-			var src_organization = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiorganization.add', nonavbar: true} );
-			$("#iframeorganization").attr("src", src_organization);
+		var src_organization = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiorganization.add', nonavbar: true} );
+		$("#iframeorganization").attr("src", src_organization);
 		});
 
 		$('#new_organization').on('hidden.bs.modal', function (e)
 		{
-			location.reload();
+		location.reload();
 		});
 		
 	</script>

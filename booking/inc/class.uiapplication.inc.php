@@ -2614,7 +2614,7 @@ JS;
 				$partials = $this->bo->get_partials_list($session_id);
 				foreach ($partials['results'] as $partial)
 				{
-					$item = array();
+					$item = array('orders' => $partial['orders']);
 					$item['id']            = $partial['id'];
 					$item['building_name'] = $partial['building_name'];
 					$item['dates']         = $partial['dates'];

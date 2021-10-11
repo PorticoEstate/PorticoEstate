@@ -100,7 +100,15 @@ function GetApplicationsCartItems(bc)
 					resources.push({name: result[i].resources[k].name, id: result[i].resources[k].id});
 					joinedResources.push(result[i].resources[k].name);
 				}
-				bc.applicationCartItems.push({id: result[i].id, building_name: result[i].building_name, dates: dates, resources: ko.observableArray(resources), joinedResources: joinedResources.join(", ")});
+				bc.applicationCartItems.push(
+				{
+					id: result[i].id,
+					building_name: result[i].building_name,
+					dates: dates,
+					orders:  result[i].orders,
+					resources: ko.observableArray(resources),
+					joinedResources: joinedResources.join(", ")
+				});
 			}
 		}
 	});
@@ -122,11 +130,11 @@ Date.prototype.getWeek = function ()
 //	var onejan = new Date(this.getFullYear(), 0, 1);
 //	return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
 // https://stackoverflow.com/questions/6117814/get-week-of-year-in-javascript-like-in-php
-  var d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate()));
-  var dayNum = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-  var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
-  return Math.ceil((((d - yearStart) / 86400000) + 1)/7)
+	var d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate()));
+	var dayNum = d.getUTCDay() || 7;
+	d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+	var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+	return Math.ceil((((d - yearStart) / 86400000) + 1) / 7)
 
 
 };
@@ -356,8 +364,10 @@ function AddBookableResourceDataWithinBooking(building_id, initialSelection, boo
 	{
 		for (let i = 0; i < result.results.length; i++)
 		{
-			if (result.results[i].building_id === building_id) {
-				if ($.inArray(result.results[i].id, initialSelection) !== -1) {
+			if (result.results[i].building_id === building_id)
+			{
+				if ($.inArray(result.results[i].id, initialSelection) !== -1)
+				{
 					bookableresource.push({id: result.results[i].id, name: result.results[i].name, selected: ko.observable(true)});
 				}
 			}
