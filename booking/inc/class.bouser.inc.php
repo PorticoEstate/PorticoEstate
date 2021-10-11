@@ -171,6 +171,11 @@
 					continue;
 				}
 
+				if($entry['customer_internal'] == 1)
+				{
+					continue;
+				}
+
 				$country_code = 'NO';
 				// TODO: Which standard for the country codes does Agresso follow?
 				if ($country_code != 'NO' && $country_code != 'SV' && $country_code != 'IS') // Shouldn't get postal place for Norway, Sweden and Iceland

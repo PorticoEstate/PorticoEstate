@@ -449,10 +449,12 @@
 					'street' => $this->db->f('street', true),
 					'zip_code' => $this->db->f('zip_code'),
 					'city' => $this->db->f('city', true),
+					'customer_internal' => 0
 				);
 			}
 
-			$sql = "SELECT DISTINCT customer_organization_number,customer_ssn, name, phone, email, street, zip_code, city"
+			$sql = "SELECT DISTINCT customer_organization_number,customer_ssn,"
+				. " name, phone, email, street, zip_code, city, customer_internal"
 				. " FROM bb_organization WHERE length(bb_organization.customer_organization_number) = 9"
 				. " AND active = 1";
 
@@ -470,7 +472,6 @@
 					continue;
 				}
 
-
 				$values[] = array(
 					'organization_number' => $organization_number,
 					'customer_ssn' => $this->db->f('customer_ssn'),
@@ -480,6 +481,7 @@
 					'street' => $this->db->f('street', true),
 					'zip_code' => $this->db->f('zip_code'),
 					'city' => $this->db->f('city', true),
+					'customer_internal' => (int) $this->db->f('customer_internal'),
 				);
 			}
 			
