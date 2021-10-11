@@ -856,7 +856,15 @@
 							</xsl:attribute>
 							<xsl:apply-templates select="part_of_town_list/options"/>
 						</select>
-
+						<div class="form-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'search')"/>
+							</label>
+							<input class="form-control" type="text" name="query" value="{query}" placeholder="Fritekstsøk..."/>
+						</div>
+						<button class="btn btn-primary ml-2" type="submit">
+							<xsl:value-of select="php:function('lang', 'search')"/>
+						</button>
 					</fieldset>
 				</div>
 			</div>

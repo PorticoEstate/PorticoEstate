@@ -121,7 +121,7 @@
 			$GLOBALS['phpgw']->js->validate_file('alertify', 'alertify.min', 'phpgwapi');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
-
+			phpgwapi_jquery::load_widget('select2');
 		}
 
 		function add_regulation_option()
@@ -1086,6 +1086,7 @@
 //			_debug_array($component_children);
 			$data = array
 			(
+				'categories' => createObject('controller.bogeneric')->get_list(array('type' => 'control_category', 'selected' => $check_list->get_cat_id())),
 				'inspectors' => $inspectors,
 				'administrator_list' => implode('; ', $administrator_arr),
 				'supervisor_name' => implode('; ', $supervisor_arr),
@@ -1498,7 +1499,7 @@ JS;
 				'consequence_list' => array('options' => createObject('property.borequest')->select_consequence_list())
 			);
 //			_debug_array($check_items_and_cases);die();
-			if (count($buildings_array) > 0)
+			if (count((array)$buildings_array) > 0)
 			{
 				$data['buildings_array'] = $buildings_array;
 			}

@@ -285,8 +285,12 @@
 					'text' => lang('custom functions'),
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function',
 						'appname' => 'controller', 'location' => '.checklist', 'menu_selection' => 'admin::controller::custom_functions'))
-				),
-
+					),
+					'control_category' => array
+					(
+						'text' => lang('category'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uigeneric.index',	'type' => 'control_category'))
+					),
 				);
 			}
 

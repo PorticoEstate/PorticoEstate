@@ -55,7 +55,9 @@ HTML;
 					$to_array[] = $head_of_school['email'];
 					$to = implode(';', $to_array);
 
-					$cc_array = array('Luis.Brunet@bergen.kommune.no', 'Sigurd Nes <Sigurd.Nes@bergen.kommune.no>');
+					$cc_array = array(
+//						'Luis.Brunet@bergen.kommune.no',
+						'Sigurd Nes <Sigurd.Nes@bergen.kommune.no>');
 					$cc = implode(';', $cc_array);
 
 					$bcc = $from_email;

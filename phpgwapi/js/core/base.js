@@ -352,7 +352,7 @@ function addNewValueToCustomAttribute(id, location_id, attribute_id, input_text,
 								}
 								else
 								{
-									alertify.error('Error');
+									alertify.error('Error, duplicate?');
 								}
 							}
 						};

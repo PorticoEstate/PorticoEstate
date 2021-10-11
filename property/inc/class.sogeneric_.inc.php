@@ -400,7 +400,11 @@
 				$this->get_location_info($data['type']);
 			}
 			$values = $this->read_single($data);
-			return isset($values[$mapping['name']]) ? $values[$mapping['name']] : $values['descr'];
+
+			$ret = isset($values[$mapping['name']]) ? $values[$mapping['name']] : $values['title'];
+			$ret = $ret ? $ret : $values['descr'];
+
+			return $ret;
 		}
 
 		function read_single( $data, $values = array() )
@@ -531,7 +535,13 @@
 			{
 				$_extra	 = $this->_db->f($id_in_name, true);
 				$id		 = $this->_db->f('id');
-				if (!$name	 = $this->_db->f($mapping['name'], true))
+
+				$name	 = $this->_db->f($mapping['name'], true);
+				if (!$name)
+				{
+					$name = $this->_db->f('title', true);
+				}
+				if (!$name)
 				{
 					$name = $this->_db->f('descr', true);
 				}

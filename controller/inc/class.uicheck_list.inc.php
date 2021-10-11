@@ -80,6 +80,7 @@
 			'undo_completed_item'	=> true,
 			'add_billable_hours'	=> true,
 			'set_inspector'			=> true,
+			'set_category'			=> true,
 			'view_image'			=> true
 		);
 
@@ -527,6 +528,20 @@
 
 		}
 
+		function set_category()
+		{
+			$check_list_id = phpgw::get_var('check_list_id', 'int');
+			$cat_id = phpgw::get_var('cat_id', 'int');
+
+			if($this->edit)
+			{
+				$ok = $this->so->set_category($check_list_id, $cat_id);
+			}
+			return array(
+				'status' => $ok ? 'ok' : 'error'
+			);
+		}
+
 		/**
 		 * Public function for displaying the edit check list form
 		 *
@@ -754,7 +769,8 @@
 			}
 
 			$data = array
-				(
+			(
+				'categories' => createObject('controller.bogeneric')->get_list(array('type' => 'control_category', 'selected' => $check_list->get_cat_id())),
 				'inspectors' => createObject('controller.sosettings')->get_inspectors($check_list->get_id()),
 				'administrator_list' => implode('; ', $administrator_arr),
 				'supervisor_name' => implode('; ', $supervisor_arr),
@@ -799,6 +815,7 @@
 			self::add_javascript('controller', 'base', 'check_list.js');
 			self::add_javascript('controller', 'base', 'check_list_update_status.js');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
+			phpgwapi_jquery::load_widget('select2');
 
 			self::render_template_xsl(array(
 				'check_list/fragments/check_list_menu',
@@ -1873,7 +1890,7 @@
 		public function get_check_list_info()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
-			$check_list = $this->so_check_list->get_single_with_check_items($check_list_id, "open");
+			$check_list = $this->so->get_single_with_check_items($check_list_id, "open");
 
 			return json_encode($check_list);
 		}
@@ -2256,6 +2273,13 @@ HTML;
 			$control = $this->so_control->get_single($control_id);
 			$ticket_cat_id = $control->get_ticket_cat_id();
 			$message_title = $control->get_title();
+
+			$check_list = $this->so->get_single($check_list_id);
+			$category = createObject('controller.sogeneric')->get_name(array('type' => 'control_category', 'id' => $check_list->get_cat_id()));
+			if($category)
+			{
+				$message_title .= " [{$category}]";
+			}
 
 			$uicase = createObject('controller.uicase');
 			$message_ticket_id = $uicase->send_case_message_step_2($check_list_id,$location_code, $message_title, $ticket_cat_id, $case_ids );
@@ -3749,7 +3773,13 @@ HTML;
 
 				if(!empty($completed_items[$component_child['location_id']][$component_child['id']]))
 				{
-					$controlled_text = 'kontrollert: ' .$GLOBALS['phpgw']->common->show_date( $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'], $this->dateFormat);
+					$_completed_date = $completed_items[$component_child['location_id']][$component_child['id']]['completed_ts'];
+					if(!$_completed_date)
+					{
+						$_completed_date = $report_info['check_list']->get_completed_date();
+					}
+
+					$controlled_text = 'kontrollert: ' .$GLOBALS['phpgw']->common->show_date($_completed_date , $this->dateFormat);
 				}
 
 				$entry = array
@@ -3996,9 +4026,16 @@ HTML;
 		{
 			$uicase = createObject('controller.uicase');
 			$check_list = $this->so->get_single($check_list_id);
-
+			$category = createObject('controller.sogeneric')->get_name(array('type' => 'control_category', 'id' => $check_list->get_cat_id()));
+			$serie = $this->so_control->get_serie($check_list->get_serie_id());
 			$repeat_descr = '';
-			if ($serie = $this->so_control->get_serie($check_list->get_serie_id()));
+
+			if($category)
+			{
+				$repeat_descr = $category;
+			}
+
+			if (!$repeat_descr && $serie)
 			{
 				$repeat_type_array = array
 					(
