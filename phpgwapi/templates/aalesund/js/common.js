@@ -33,12 +33,12 @@ function phpGWLink(strURL, oArgs, bAsJSON)
 }
 
 
-
 function ApplicationsCartModel()
 {
 	var self = this;
 	self.applicationCartItems = ko.observableArray([]);
 	self.applicationCartItemsEmpty = ko.observable();
+
 	self.deleteItem = function (e)
 	{
 		requestUrl = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.delete_partial"}, true);
@@ -60,8 +60,12 @@ function GetApplicationsCartItems(bc)
 	bc.applicationCartItems.removeAll();
 
 	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.get_partials", phpgw_return_as: "json"}, true);
-	$.getJSON(getJsonURL, function (result)
+	$.getJSON(getJsonURL, function (data)
 	{
+		var result = data.list;
+		var total_sum = data.total_sum;
+		$("#total_sum").html(total_sum.toFixed(2));
+
 		if (result.length < 1)
 		{
 			bc.applicationCartItemsEmpty(true);

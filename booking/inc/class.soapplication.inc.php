@@ -521,6 +521,37 @@
 			return $limit_reached;
 		}
 
+		function delete_purchase_order( $application_id )
+		{
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
+			$sql = "SELECT id AS order_id FROM bb_purchase_order WHERE application_id =" . (int)$application_id;
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$order_ids = array(-1);
+			while ($this->db->next_record())
+			{
+				$order_ids[] = (int)$this->db->f('order_id');
+			}
+
+			$sql = "DELETE FROM bb_purchase_order_line WHERE order_id IN (" . implode(',', $order_ids) . ")";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$sql = "DELETE FROM bb_purchase_order WHERE id IN (" . implode(',', $order_ids) . ")";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			if (!$this->global_lock)
+			{
+				return $this->db->transaction_commit();
+			}
+		}
+
 		function get_purchase_order( &$applications )
 		{
 			if (!$applications['results'])
@@ -534,17 +565,35 @@
 				$application_ids[] = $application['id'];
 			}
 
-			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id "
+			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id,"
+				. "CASE WHEN
+					(
+						bb_resource.name IS NULL
+					)"
+				. " THEN bb_service.name ELSE bb_resource.name END AS name"
 				. " FROM bb_purchase_order JOIN bb_purchase_order_line ON bb_purchase_order.id = bb_purchase_order_line.order_id"
+				. " JOIN bb_article_mapping ON bb_purchase_order_line.article_mapping_id = bb_article_mapping.id"
+				. " LEFT JOIN bb_service ON (bb_article_mapping.article_id = bb_service.id AND bb_article_mapping.article_cat_id = 2)"
+				. " LEFT JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id AND bb_article_mapping.article_cat_id = 1)"
 				. " WHERE bb_purchase_order.application_id IN (" . implode(',', $application_ids) . ")";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			$orders = array();
+			$orders	 = array();
+			$sum	 = array();
+			$total_sum	 = 0;
 			while ($this->db->next_record())
 			{
-				$application_id = (int)$this->db->f('application_id');
-				$order_id = (int)$this->db->f('order_id');
+				$application_id	 = (int)$this->db->f('application_id');
+				$order_id		 = (int)$this->db->f('order_id');
+				if (!isset($sum[$order_id]))
+				{
+					$sum[$order_id] = 0;
+				}
+
+				$_sum			 = (float)$this->db->f('amount') + (float)$this->db->f('tax');
+				$sum[$order_id]	 = (float)$sum[$order_id] + $_sum;
+				$total_sum += $_sum;
 
 				$orders[$application_id][$order_id]['lines'][] = array(
 					'order_id'				 => $order_id,
@@ -557,14 +606,22 @@
 					'amount'				 => (float)$this->db->f('amount'),
 					'tax_code'				 => (int)$this->db->f('tax_code'),
 					'tax'					 => (float)$this->db->f('tax'),
+					'name'					 => $this->db->f('name', true),
 				);
+
+				$orders[$application_id][$order_id]['sum'] = $sum[$order_id];
 			}
 
 			foreach ($applications['results'] as &$application)
 			{
+				if(empty($orders[$application['id']]))
+				{
+					continue;
+				}
 				$application['orders'] = array_values($orders[$application['id']]);
 			}
 
+			$applications['total_sum'] = $total_sum;
 		}
 
 		function add_purchase_order( $purchase_order )

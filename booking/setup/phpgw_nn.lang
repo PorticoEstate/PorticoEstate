@@ -862,3 +862,9 @@ limit number horizont	booking	no	Begrensningshorisont (dager)
 update service-resource-mapping?	booking	nn	Oppdatere kopling av tenesten til valde ressursar?
 mapping updated	booking	nn	Kobling er oppdatert
 mapping	booking	nn	Kopling
+unit price	booking	no	Einingspris
+quantity	booking	no	Mengde
+amount	booking	no	Beløp
+tax	booking	no	Mva
+sum	booking	no	Sum
+details	booking	no	Detaljar

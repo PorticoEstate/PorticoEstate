@@ -864,7 +864,11 @@
 					foreach ($selected_articles as $selected_article)
 					{
 						$_article_info = explode('_', $selected_article);
-						$article_mapping_id =
+
+						if(empty($_article_info[0]))
+						{
+							continue;
+						}
 
 						$purchase_order['lines'][] = array(
 							'article_mapping_id'	=> $_article_info[0],
@@ -2607,36 +2611,41 @@ JS;
 		// Returns a list of basic data for the partial applications for the current session ID
 		function get_partials()
 		{
-			$list = array();
-			$session_id = $GLOBALS['phpgw']->session->get_session_id();
+			$ret		 = array();
+			$list		 = array();
+			$session_id	 = $GLOBALS['phpgw']->session->get_session_id();
 			if (!empty($session_id))
 			{
 				$partials = $this->bo->get_partials_list($session_id);
 				foreach ($partials['results'] as $partial)
 				{
-					$item = array('orders' => $partial['orders']);
-					$item['id']            = $partial['id'];
-					$item['building_name'] = $partial['building_name'];
-					$item['dates']         = $partial['dates'];
-					$resources = $this->resource_bo->so->read(array(
-							'sort'    => 'sort',
-							'results' =>'all',
-							'filters' => array('id' => $partial['resources']), 'results' =>'all'
-						));
+					$item					 = array('orders' => $partial['orders']);
+					$item['id']				 = $partial['id'];
+					$item['building_name']	 = $partial['building_name'];
+					$item['dates']			 = $partial['dates'];
+					$resources				 = $this->resource_bo->so->read(array(
+						'sort'		 => 'sort',
+						'results'	 => 'all',
+						'filters'	 => array('id' => $partial['resources']), 'results'	 => 'all'
+					));
 					foreach ($resources['results'] as $resource)
 					{
-						$res = array(
-							'id'   => $resource['id'],
-							'name' => $resource['name'],
+						$res				 = array(
+							'id'	 => $resource['id'],
+							'name'	 => $resource['name'],
 						);
 						$item['resources'][] = $res;
 					}
 					$list[] = $item;
 				}
-			}
-			return $list;
-		}
 
+				$ret = array(
+					'list'		 => $list,
+					'total_sum'	 => $partials['total_sum'],
+				);
+			}
+			return $ret;
+		}
 
 		function delete_partial()
 		{
@@ -2652,7 +2661,7 @@ JS;
 				$bo_block = createObject('booking.boblock');
 
 				$exists = false;
-				foreach ($partials as $partial)
+				foreach ($partials['list'] as $partial)
 				{
 					if ($partial['id'] == $id)
 					{
@@ -2663,6 +2672,8 @@ JS;
 				}
 				if ($exists)
 				{
+					$application_id = $id;
+					$this->bo->delete_purchase_order($application_id);
 					$this->bo->delete_application($id);
 					$status['deleted'] = true;
 				}

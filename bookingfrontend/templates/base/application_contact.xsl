@@ -1,4 +1,26 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<xsl:variable name="lang_details">
+		<xsl:value-of select="php:function('lang', 'details')" />
+	</xsl:variable>
+	<xsl:variable name="lang_name">
+		<xsl:value-of select="php:function('lang', 'name')" />
+	</xsl:variable>
+	<xsl:variable name="lang_unit_price">
+		<xsl:value-of select="php:function('lang', 'unit price')" />
+	</xsl:variable>
+	<xsl:variable name="lang_quantity">
+		<xsl:value-of select="php:function('lang', 'quantity')" />
+	</xsl:variable>
+	<xsl:variable name="lang_amount">
+		<xsl:value-of select="php:function('lang', 'amount')" />
+	</xsl:variable>
+	<xsl:variable name="lang_tax">
+		<xsl:value-of select="php:function('lang', 'tax')" />
+	</xsl:variable>
+	<xsl:variable name="lang_sum">
+		<xsl:value-of select="php:function('lang', 'Sum')" />
+	</xsl:variable>
+
 	<style>
 		.modal-dialog,
 		.modal-content {
@@ -54,22 +76,67 @@
 									<span class="col-5" data-bind="text: date"></span>
 									<span class="col-6" data-bind="text: periode"></span>
 								</div>
+
+
 								<table class='table' data-bind="foreach: orders">
+									<caption  style="caption-side:top">
+										<xsl:value-of select="$lang_details" />
+									</caption>
 									<tr>
-										<th>unit price</th>
-										<th>quantity</th>
-										<th>amount</th>
-										<th>tax</th>
+										<th>
+											<xsl:value-of select="$lang_name" />
+										</th>
+										<th>
+											<xsl:value-of select="$lang_unit_price" />
+										</th>
+										<th>
+											<xsl:value-of select="$lang_quantity" />
+										</th>
+										<th>
+											<xsl:value-of select="$lang_amount" />
+										</th>
+										<th>
+											<xsl:value-of select="$lang_tax" />
+										</th>
+										<th>
+											<xsl:value-of select="$lang_sum" />
+										</th>
 									</tr>
-									<tr data-bind="foreach: lines">
+									<tbody data-bind="foreach: lines">
+										<td data-bind="text: name"></td>
 										<td data-bind="text: unit_price"></td>
 										<td data-bind="text: quantity"></td>
 										<td data-bind="text: amount"></td>
-										<td data-bind="text: tax"></td>
-									</tr>
+										<td data-bind="text: tax.toFixed(2)"></td>
+										<td data-bind="text: (tax + amount).toFixed(2)"></td>
+									</tbody>
+									<tfoot>
+										<tr>
+											<td>
+												<xsl:value-of select="$lang_sum" />
+											</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td data-bind="text: sum.toFixed(2)"></td>
+										</tr>
+									</tfoot>
 								</table>
 							</div>
 						</div>
+						<div class="applications p-4 mb-2">
+							<table class='table' >
+								<tr>
+									<th>
+										Total sum
+									</th>
+									<th id ="total_sum">
+									</th>
+								</tr>
+							</table>
+						</div>
+
 						<hr class="mt-5 mb-5"></hr>
 						<div class="form-group">
 							<label>
