@@ -125,7 +125,7 @@
 								</table>
 							</div>
 						</div>
-						<div class="applications p-4 mb-2">
+						<div id="total_sum_block" class="applications p-4 mb-2" style="display:none;">
 							<table class='table' >
 								<tr>
 									<th>
@@ -307,9 +307,18 @@
 							</div>
 						</div>
 						<hr class="mt-5"></hr>
-						<button class="btn btn-light mb-5" type="submit" id="btnSubmit">
-							<xsl:value-of select="php:function('lang', 'send')" />
+						<button class="btn btn-light mb-5" type="button" id="btnValidate">
+							<xsl:value-of select="php:function('lang', 'validate')" />
 						</button>
+						<hr class="mt-5"></hr>
+						<div class="btn-group" style="display:none;" id="btnSubmitGroup">
+							<button type="button" class="btn btn-primary">
+								Etterfakturering
+							</button>
+							<button type="button" class="btn btn-primary ml-4">
+								Vipps
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>

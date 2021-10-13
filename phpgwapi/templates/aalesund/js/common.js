@@ -64,7 +64,11 @@ function GetApplicationsCartItems(bc)
 	{
 		var result = data.list;
 		var total_sum = data.total_sum;
-		$("#total_sum").html(total_sum.toFixed(2));
+		if(total_sum)
+		{
+			$("#total_sum_block").show();
+			$("#total_sum").html(total_sum.toFixed(2));
+		}
 
 		if (result.length < 1)
 		{

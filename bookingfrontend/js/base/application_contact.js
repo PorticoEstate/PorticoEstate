@@ -75,13 +75,14 @@ $(document).ready(function ()
 
 $(function ()
 {
-	$("#btnSubmit").on("click", function (e)
+	$("#btnValidate").on("click", function (e)
 	{
 		var error = false;
 		var form = $("#application_form")[0];
 		var isValid = form.checkValidity();
 		if (!isValid)
 		{
+			error = true;
 			e.preventDefault();
 			e.stopPropagation();
 		}
@@ -99,10 +100,13 @@ $(function ()
 
 		if (error)
 		{
+			$("#btnSubmitGroup").hide();
+			alert('Fyll ut alle obligatoriske felt');
 			return false;
 		}
 		else
 		{
+			$("#btnSubmitGroup").show();
 			return true;
 		}
 	});
