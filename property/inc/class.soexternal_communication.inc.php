@@ -34,7 +34,7 @@
 	class property_soexternal_communication
 	{
 
-		var $fields_updated = array();
+		var $fields_updated	 = array();
 		var $historylog;
 		private $db, $like, $join, $left_join, $account, $currentapp;
 		protected $global_lock	 = false;
@@ -51,42 +51,41 @@
 			$this->account		 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
-		
 		function read( $params )
 		{
-			$start = isset($params['start']) && $params['start'] ? (int)$params['start'] : 0;
+			$start	 = isset($params['start']) && $params['start'] ? (int)$params['start'] : 0;
 			$results = isset($params['results']) && $params['results'] ? (int)$params['results'] : null;
-			$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
-			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'asc';
-			$query = isset($params['query']) && $params['query'] ? $this->db->db_addslashes($params['query']) : null;
+			$sort	 = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
+			$dir	 = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'asc';
+			$query	 = isset($params['query']) && $params['query'] ? $this->db->db_addslashes($params['query']) : null;
 			$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
-	
-			$fields	 = $this->get_fields();
-			
-			$or_conditions = array();
-			$and_conditions = array();
-			$joins = '';
-			$cols = '';
+
+			$fields = $this->get_fields();
+
+			$or_conditions	 = array();
+			$and_conditions	 = array();
+			$joins			 = '';
+			$cols			 = '';
 
 			switch ($this->currentapp)
 			{
 				case 'property':
 					$table	 = 'fm_tts_external_communication';
-					$joins = " {$this->join} fm_tts_tickets ON {$table}.ticket_id = fm_tts_tickets.id";
-	//				$joins .= " {$this->left_join} fm_tts_external_communication_msg ON fm_tts_external_communication_msg.excom_id = fm_tts_external_communication.id";
-	//				$cols = ",fm_tts_external_communication_msg.message";
-					if($query)
+					$joins	 = " {$this->join} fm_tts_tickets ON {$table}.ticket_id = fm_tts_tickets.id";
+					//				$joins .= " {$this->left_join} fm_tts_external_communication_msg ON fm_tts_external_communication_msg.excom_id = fm_tts_external_communication.id";
+					//				$cols = ",fm_tts_external_communication_msg.message";
+					if ($query)
 					{
 						$or_conditions[] = " location_code {$this->like} '{$query}%'";
 						$or_conditions[] = " fm_tts_tickets.subject {$this->like} '%{$query}%'";
 						$or_conditions[] = " {$table}.mail_recipients {$this->like} '%{$query}%'";
-						$or_conditions[] = " {$table}.id =" . (int) $query;
+						$or_conditions[] = " {$table}.id =" . (int)$query;
 					}
 					foreach ($filters as $key => $val)
 					{
-						if($fields[$key]['type'] = 'int')
+						if ($fields[$key]['type'] = 'int')
 						{
-							$and_conditions[] = " $key = " . (int) $val;
+							$and_conditions[] = " $key = " . (int)$val;
 						}
 						else
 						{
@@ -97,7 +96,7 @@
 
 					break;
 				case 'helpdesk':
-					$table	 = 'phpgw_helpdesk_external_communication';
+					$table = 'phpgw_helpdesk_external_communication';
 					break;
 				default:
 					throw new Exception("External communication for {$this->currentapp} is not supported");
@@ -120,22 +119,22 @@
 			}
 
 			$filtermethod = 'WHERE 1=1';
-			
-			if($or_conditions)
-			{		
-				$filtermethod .=  ' AND (' . implode(' OR ', $or_conditions) . ')';
+
+			if ($or_conditions)
+			{
+				$filtermethod .= ' AND (' . implode(' OR ', $or_conditions) . ')';
 			}
-			if($and_conditions)
-			{		
-				$filtermethod .=  ' AND (' . implode(' AND ', $and_conditions) . ')';
+			if ($and_conditions)
+			{
+				$filtermethod .= ' AND (' . implode(' AND ', $and_conditions) . ')';
 			}
-			
-			
+
+
 			$this->db->query("SELECT count(1) AS count FROM {$table} {$joins} {$filtermethod}", __LINE__, __FILE__);
 			$this->db->next_record();
 			$total_records = (int)$this->db->f('count');
 
-			$sql	 = "SELECT {$table}.* {$cols} FROM {$table} {$joins} {$filtermethod} {$order}";
+			$sql = "SELECT {$table}.* {$cols} FROM {$table} {$joins} {$filtermethod} {$order}";
 			if ($results > -1)
 			{
 				$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results);
@@ -146,7 +145,7 @@
 			}
 
 
-			$values	 = array();
+			$values = array();
 
 			while ($this->db->next_record())
 			{
@@ -165,18 +164,18 @@
 				$values[]				 = $row;
 			}
 			return array(
-				'total_records' => $total_records,
-				'results' => $values,
-				'start' => $start,
-				'sort' => is_array($sort) ? $sort[0] : $sort,
-				'dir' => $dir
+				'total_records'	 => $total_records,
+				'results'		 => $values,
+				'start'			 => $start,
+				'sort'			 => is_array($sort) ? $sort[0] : $sort,
+				'dir'			 => $dir
 			);
 		}
-		
+
 		function add( $values )
 		{
-			$sender = !empty($values['sender']) ? $values['sender'] : '';
-			$fields = $this->get_fields();
+			$sender	 = !empty($values['sender']) ? $values['sender'] : '';
+			$fields	 = $this->get_fields();
 
 			$value_set = array();
 
@@ -207,7 +206,7 @@
 			 */
 			unset($value_set['message']);
 
-			$cols	 = implode(',', array_keys($value_set));
+			$cols			 = implode(',', array_keys($value_set));
 			$values_insert	 = $this->db->validate_insert(array_values($value_set));
 
 			if ($this->db->get_transaction())
@@ -552,8 +551,8 @@
 
 			foreach ($fields as $field => $field_info)
 			{
-				$stripslashes = !in_array($field_info['type'], array('int'));
-				$values[$field] = $this->db->f($field, $stripslashes);
+				$stripslashes	 = !in_array($field_info['type'], array('int'));
+				$values[$field]	 = $this->db->f($field, $stripslashes);
 			}
 			$mail_recipients			 = trim($values['mail_recipients'], ',');
 			$values['mail_recipients']	 = $mail_recipients ? explode(',', $mail_recipients) : array();
@@ -632,7 +631,7 @@
 					'public'	 => true,
 					'required'	 => false,
 				),
-				'cat_id'	 => array('action'	 => null,
+				'cat_id'			 => array('action'	 => null,
 					'type'		 => 'int',
 					'label'		 => 'category',
 					'sortable'	 => false,
@@ -643,5 +642,29 @@
 			);
 
 			return $fields;
+		}
+
+		public function get_sms_recipients( $location_code )
+		{
+			$sms_recipients = array();
+			if ($location_code)
+			{
+				$sql = "SELECT contact_phone, concat(first_name || ' ' || last_name) AS name, etasje"
+					. " FROM fm_location4 JOIN fm_tenant ON fm_location4.tenant_id = fm_tenant.id"
+					. " WHERE location_code {$this->like} '$location_code%'"
+					. " AND contact_phone IS NOT NULL";
+
+				$this->db->query($sql, __LINE__, __FILE__);
+
+				while ($this->db->next_record())
+				{
+					$sms_recipients[] = array(
+						'name'			 => $this->db->f('name', true) . " [" . $this->db->f('etasje', true) . "]",
+						'contact_phone'	 => $this->db->f('contact_phone', true),
+					);
+				}
+			}
+
+			return $sms_recipients;
 		}
 	}

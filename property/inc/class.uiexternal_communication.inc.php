@@ -46,7 +46,9 @@
 			'save'					 => true,
 			'delete'				 => true,
 			'add_deviation'			 => true,
-			'get_other_deviations'	 => true
+			'get_other_deviations'	 => true,
+			'send_sms'				 => true,
+			'get_sms_recipients'	 => true
 		);
 		var $acl, $historylog, $bo;
 		private $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete,
@@ -1268,4 +1270,178 @@ JS;
 
 			return $values;
 		}
+
+		public function get_sms_recipients()
+		{
+			$location_code = phpgw::get_var('location_code', 'string');
+
+			$sms_recipients = $this->bo->get_sms_recipients($location_code);
+
+			return $sms_recipients;
+		}
+
+		public function send_sms()
+		{
+			if (!$this->acl_add)
+			{
+				phpgw::no_access();
+			}
+
+			self::set_active_menu("property::helpdesk::deviation::send_sms");
+
+			/**
+			 * Save first, then preview - first pass
+			 */
+			$init_preview = phpgw::get_var('init_preview', 'bool');
+
+			if (!$error && (phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool') || $init_preview))
+			{
+				$receipt = $this->save_ticket();
+				if($init_preview)
+				{
+					self::redirect(array('menuaction'	 => "{$this->currentapp}.uiexternal_communication.edit",
+						'id'			 => $receipt['id'],
+						'ticket_id'		 => $receipt['ticket_id'],
+						'type_id'		 => $receipt['type_id'],
+						'init_preview2'	 => $init_preview)
+					);
+				}
+				else if (phpgw::get_var('send', 'bool') && !empty($receipt['id']))
+				{
+					$this->_send($receipt['id']);
+				}
+
+				self::redirect(array('menuaction'	 => "{$this->currentapp}.uiexternal_communication.add_deviation"));
+			}
+
+			$vendor_data = $this->bocommon->initiate_ui_vendorlookup(array(
+				'vendor_id'		 => $receipt['vendor_id'],
+				'vendor_name'	 => $receipt['vendor_name'],
+				'type'			 => 'form'
+			));
+
+			$contact_data = $this->bo->get_contact_data($ticket);
+
+			$content_email = $this->bocommon->get_vendor_email(isset($ticket['vendor_id']) ? $ticket['vendor_id'] : 0, 'mail_recipients');
+
+			if (isset($values['mail_recipients']) && is_array($values['mail_recipients']))
+			{
+				$_recipients_found = array();
+				foreach ($content_email as &$vendor_email)
+				{
+					if (in_array($vendor_email['value_email'], $values['mail_recipients']))
+					{
+						$vendor_email['value_select']	 = str_replace("type='checkbox'", "type='checkbox' checked='checked'", $vendor_email['value_select']);
+						$_recipients_found[]			 = $vendor_email['value_email'];
+					}
+				}
+				$value_extra_mail_address = implode(', ', array_diff($values['mail_recipients'], $_recipients_found));
+			}
+
+			$datatable_def = array();
+
+			$datatable_def[] = array
+				(
+				'container'	 => 'datatable-container_1',
+				'requestUrl' => "''",
+				'ColumnDefs' => array(array('key'		 => 'value_email', 'label'		 => lang('email'),
+						'sortable'	 => true, 'resizeable' => true),
+					array('key'		 => 'value_select', 'label'		 => lang('select'), 'sortable'	 => false,
+						'resizeable' => true)),
+				'data' => htmlspecialchars(json_encode($content_email), ENT_QUOTES, 'UTF-8'),
+				'config'	 => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+
+			$other_orders_def	 = array
+				(
+				array('key' => 'url', 'label' => lang('id'), 'sortable' => true),
+				array('key' => 'location_code', 'label' => lang('location'), 'sortable' => true),
+				array('key' => 'name', 'label' => lang('name'), 'sortable' => false),
+				array('key' => 'start_date', 'label' => lang('start date'), 'sortable' => false),
+				array('key' => 'coordinator', 'label' => lang('coordinator'), 'sortable' => true),
+				array('key' => 'status', 'label' => lang('status'), 'sortable' => true),
+				array('key' => 'select', 'label' => lang('select'), 'sortable' => false, 'formatter'	 => 'JqueryPortico.FormatterCenter'),
+			);
+
+			$datatable_def[] = array
+				(
+				'container'	 => 'datatable-container_2',
+				'requestUrl' => "''",
+				'data'		 => json_encode(array()),
+				'ColumnDefs' => $other_orders_def,
+				'config'	 => array(
+				//	array('disableFilter' => true),
+				//	array('disablePagination' => true),
+					array('singleSelect' => true),
+				//	array('order' => json_encode(array(1, 'desc')))
+				)
+			);
+
+
+			$other_deviations_def	 = array
+				(
+				array('key' => 'url', 'label' => lang('id'), 'sortable' => true),
+				array('key' => 'location_code', 'label' => lang('location'), 'sortable' => true),
+				array('key' => 'subject', 'label' => lang('subject'), 'sortable' => false),
+				array('key' => 'entry_date', 'label' => lang('entry date'), 'sortable' => false),
+				array('key' => 'user', 'label' => lang('user'), 'sortable' => true),
+				array('key' => 'status', 'label' => lang('status'), 'sortable' => true),
+			);
+
+			$datatable_def[] = array
+				(
+				'container'	 => 'datatable-container_3',
+				'requestUrl' => "''",
+				'data'		 => json_encode(array()),
+				'ColumnDefs' => $other_deviations_def,
+				'config'	 => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true),
+					array('singleSelect' => true),
+				//	array('order' => json_encode(array(0, 'desc')))
+				)
+			);
+
+			$tabs			 = array();
+			$tabs['main']	 = array(
+				'label'	 => lang('SMS'),
+				'link'	 => '#main'
+			);
+
+			$type_list	 = array();
+			$type_list	 = execMethod("{$this->currentapp}.bogeneric.get_list", array('type'		 => 'external_com_type',
+				'selected'	 => (int)$values['type_id']));
+
+			if (count($type_list) > 1)
+			{
+				array_unshift($type_list, array('id' => '', 'name' => lang('select')));
+			}
+
+
+			$data = array(
+				'type_list'					 => array('options' => $type_list),
+				'datatable_def'				 => $datatable_def,
+				'form_action'				 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.send_sms")),
+				'cancel_url'				 => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
+				'vendor_data'				 => $vendor_data,
+				'contact_data'				 => $contact_data,
+				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, 0),
+				'value_active_tab'			 => 0,
+				'base_java_url'				 => "{menuaction:'{$this->currentapp}.uitts.update_data'}"
+			);
+			$GLOBALS['phpgw_info']['flags']['app_header']	 .= '::' . lang('sms');
+
+			phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::load_widget('select2');
+			phpgwapi_jquery::formvalidator_generate(array());
+			self::add_javascript($this->currentapp, 'portico', 'external_communication.send_sms.js');
+			self::render_template_xsl(array('external_communication', 'datatable_inline'), array(
+				'send_sms' => $data));
+
+		}
+
 	}
