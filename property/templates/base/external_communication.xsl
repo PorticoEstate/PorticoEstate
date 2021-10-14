@@ -46,7 +46,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'recipients')"/>
 							</label>
-							<select id="sms_recipients" name="sms_recipients" class="pure-input-3-4">
+							<select id="sms_recipients" name="sms_recipients[]" multiple="true" class="pure-input-3-4">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -60,7 +60,7 @@
 								<xsl:value-of select="php:function('lang', 'extra sms address')"/>
 							</label>
 
-							<input type="text" name="extra_sms_recipients[]" value="{value_extra_sms_address}" class="pure-input-3-4" >
+							<input type="text" name="extra_sms_recipients" value="{value_extra_sms_address}" class="pure-input-3-4" >
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'comma separated list')"/>
 								</xsl:attribute>
@@ -75,7 +75,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'message')"/>
 								</label>
-								<textarea id ="sms_content" class="pure-input-3-4" rows="10" name="sms_content">
+								<textarea id ="sms_content" class="pure-input-3-4" rows="10" name="sms_content" onKeyUp="javascript: SmsCountKeyUp(804);" onKeyDown="javascript: SmsCountKeyDown(804);">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'message')"/>
 									</xsl:attribute>

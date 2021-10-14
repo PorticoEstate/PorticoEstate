@@ -1,11 +1,11 @@
 var location_code_selection = "";
+var charNumberLeftOutput = 804;
 
 this.get_sms_recipients = function (location_code)
 {
 
 	var oArgs = {menuaction: 'property.uiexternal_communication.get_sms_recipients', location_code: location_code};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
-	var htmlString = "";
 
 	$.ajax({
 		type: 'POST',
@@ -25,15 +25,26 @@ this.get_sms_recipients = function (location_code)
 
 				$.each(obj, function (i)
 				{
-					htmlString += "<option value='" + obj[i].contact_phone + "'>" + obj[i].name + "::" +obj[i].contact_phone +"</option>";
+					$('#sms_recipients').append($('<option/>', {
+						value: obj[i].contact_phone,
+						text: obj[i].name + " [" + location_code + " - " + obj[i].floor + "]::" + obj[i].contact_phone
+					}));
+
 				});
 
-				$("#sms_recipients").html(htmlString);
 			}
 		}
+	}).done(function ()
+	{
+		$('#sms_recipients').multiselect('rebuild');
+
+		setTimeout(function ()
+		{
+			$('#sms_recipients').parent().find("button.multiselect").click();
+			$('#sms_recipients').parent().find("input[type='search'].multiselect-search").focus();
+
+		}, 100);
 	});
-
-
 };
 
 
@@ -60,26 +71,69 @@ $(window).on('load', function ()
 
 $(document).ready(function ()
 {
-
-	$("#sms_recipients").select2({
-		placeholder: lang["select user"],
-		language: "no",
-		width: '75%'
-	});
-	$('#sms_recipients').on('select2:open', function (e)
-	{
-
-		$(".select2-search__field").each(function ()
-		{
-			if ($(this).attr("aria-controls") == 'select2-user_id-results')
-			{
-				$(this)[0].focus();
-			}
-		});
-	});
-
-
-
+	init_multiselect();
 
 });
+
+init_multiselect = function ()
+{
+	$("#sms_recipients").multiselect({
+		//	buttonWidth: 250,
+		includeSelectAllOption: true,
+		enableFiltering: true,
+		enableCaseInsensitiveFiltering: true,
+		buttonClass: 'form-control',
+		onChange: function (option)
+		{
+			// Check if the filter was used.
+			var query = $("#sms_recipients").find('li.multiselect-filter input').val();
+
+			if (query)
+			{
+				$("#sms_recipients").find('li.multiselect-filter input').val('').trigger('keydown');
+			}
+		},
+		onDropdownHidden: function (event)
+		{
+			console.log(event);
+
+		}
+	});
+
+	$(".btn-group").addClass('w-75');
+	$(".multiselect-container").addClass('w-100');
+
+};
+
+function SmsCountKeyUp(maxChar)
+{
+	var msg = document.getElementById("sms_content");
+	var smsLenLeft = maxChar - msg.value.length;
+	if (smsLenLeft >= 0)
+	{
+		charNumberLeftOutput = smsLenLeft;
+	}
+	else
+	{
+		var msgMaxLen = maxChar;
+		charNumberLeftOutput = 0;
+		msg.value = msg.value.substring(0, msgMaxLen);
+	}
+}
+
+function SmsCountKeyDown(maxChar)
+{
+	var msg = document.getElementById("sms_content");
+	var smsLenLeft = maxChar - msg.value.length;
+	if (smsLenLeft >= 0)
+	{
+		charNumberLeftOutput = smsLenLeft;
+	}
+	else
+	{
+		var msgMaxLen = maxChar;
+		charNumberLeftOutput = 0;
+		msg.value = msg.value.substring(0, msgMaxLen);
+	}
+}
 

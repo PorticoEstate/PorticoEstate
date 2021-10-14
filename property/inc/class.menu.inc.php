@@ -1055,13 +1055,13 @@
 								'text'	 => lang('add'),
 								'image'	 => array('property', 'helpdesk'),
 							),
-							'send_sms' => array
-							(
-								'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiexternal_communication.send_sms')),
-								'text'	 => lang('send sms'),
-								'image'	 => array('property', 'helpdesk'),
-							)
 						)
+					),
+					'send_sms' => array
+					(
+						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiexternal_communication.send_sms')),
+						'text'	 => lang('send sms'),
+						'image'	 => array('property', 'helpdesk'),
 					),
 					'report'	 => array
 						(
