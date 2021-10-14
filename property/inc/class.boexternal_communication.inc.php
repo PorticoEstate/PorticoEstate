@@ -688,4 +688,10 @@ HTML;
 				'contact_phone2' => $contact_phone2
 			);
 		}
+
+		public function get_sms_recipients($location_code)
+		{
+			return $this->so->get_sms_recipients($location_code);
+		}
+
 	}
