@@ -1057,12 +1057,6 @@
 							),
 						)
 					),
-					'send_sms' => array
-					(
-						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiexternal_communication.send_sms')),
-						'text'	 => lang('send sms'),
-						'image'	 => array('property', 'helpdesk'),
-					),
 					'report'	 => array
 						(
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.report')),
@@ -1071,6 +1065,16 @@
 					)
 				);
 			}
+
+			if ($acl->check('run', PHPGW_ACL_READ, 'sms'))
+			{
+				$menus['navigation']['helpdesk']['children']['send_sms'] = array(
+						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiexternal_communication.send_sms')),
+						'text'	 => lang('send sms'),
+						'image'	 => array('property', 'helpdesk'),
+					);
+			}
+
 
 			if ($acl->check('.report', PHPGW_ACL_READ, 'property'))
 			{
