@@ -1049,21 +1049,21 @@
 					$this->bo->so->update_id_string();
 					if ($is_partial1)
 					{
-						phpgwapi_cache::message_set(
-							lang("Complete application text booking") .
-							'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
-							lang("Complete applications") .
-							'</button><button onclick="window.location.href = phpGWLink(\'bookingfrontend/\', {})" class="ml-2 btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
-							lang("new application") .
-							'</button>'
-						);
 						// Redirect to same URL so as to present a new, empty form
 						if($simple)
 						{
-							self::redirect(array('menuaction' => $this->module . '.uiresource.show',  'id' => phpgw::get_var('resource_id', 'int'), 'building_id' => $building_id ));
+							self::redirect(array('menuaction' => $this->url_prefix . '.add_contact',  'id' => phpgw::get_var('resource_id', 'int'), 'building_id' => $building_id ));
 						}
 						else
 						{
+							phpgwapi_cache::message_set(
+								lang("Complete application text booking") .
+								'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
+								lang("Complete applications") .
+								'</button><button onclick="window.location.href = phpGWLink(\'bookingfrontend/\', {})" class="ml-2 btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
+								lang("new application") .
+								'</button>'
+							);
 							self::redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
 						}
 					}
