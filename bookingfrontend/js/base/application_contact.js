@@ -8,6 +8,10 @@ CreateUrlParams(window.location.search);
 
 ko.validation.locale('nb-NO');
 
+function initiate_vipps()
+{
+	alert('Vipps...');
+}
 
 function applicationModel()
 {

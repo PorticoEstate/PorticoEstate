@@ -1799,9 +1799,24 @@
 			 */
 			self::add_javascript('bookingfrontend', 'base', 'application_contact.js', 'text/javascript', true);
 
+			$vipps_logo = 'continue_with_vipps_rect_210';
+
+			switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'])
+			{
+				case 'no':
+				case 'nn':
+					$vipps_logo .="_NO";
+					break;
+
+				default:
+					$vipps_logo .="_EN";
+					break;
+			}
+
 			self::render_template_xsl('application_contact', array(
 				'application'			 => $partial2,
 				'delegate_data'			 => $filtered_delegate_data,
+				'vipps_logo'			 => $GLOBALS['phpgw']->common->image('bookingfrontend', $vipps_logo),
 				'add_img'				 => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
 				'config'				 => CreateObject('phpgwapi.config', 'booking')->read()
 				)

@@ -315,9 +315,8 @@
 							<button type="button" class="btn btn-primary">
 								Etterfakturering
 							</button>
-							<button type="button" class="btn btn-primary ml-4">
-								Vipps
-							</button>
+							<img src="{vipps_logo}" class="ml-5" OnClick="initiate_vipps();">
+							</img>
 						</div>
 					</div>
 				</div>
