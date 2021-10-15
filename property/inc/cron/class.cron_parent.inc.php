@@ -41,7 +41,8 @@
 		protected $function_msg	 = 'function_msg';
 		protected $cron			 = false;
 		protected $db;
-					function __construct()
+
+		function __construct()
 		{
 			$this->db		 = & $GLOBALS['phpgw']->db;
 			$this->join		 = & $this->db->join;
@@ -60,7 +61,7 @@
 			}
 			else
 			{
-				$cron		 = false;
+				$cron	 = false;
 				$confirm = phpgw::get_var('confirm', 'bool', 'POST');
 				$execute = phpgw::get_var('execute', 'bool', 'GET');
 			}
@@ -98,7 +99,6 @@
 				'function'	 => $this->function_name,
 				'execute'	 => $execute
 			);
-
 
 			if (!$execute)
 			{
