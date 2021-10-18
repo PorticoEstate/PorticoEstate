@@ -226,14 +226,15 @@ SQL;
 			$order_type = $this->bocommon->socommon->get_order_type($valueset['order_id']);
 
 			$received_amount = (float)$valueset['amount'];
+			$external_voucher_id = $valueset['voucher_no'];
 
 			switch ($order_type['type'])
 			{
 				case 'workorder':
-					$this->boworkorder->receive_order($valueset['order_id'], $received_amount);
+					$this->boworkorder->receive_order($valueset['order_id'], $received_amount, $external_voucher_id);
 					break;
 				case 'ticket':
-					$this->botts->receive_order($valueset['order_id'], $received_amount);
+					$this->botts->receive_order($valueset['order_id'], $received_amount, $external_voucher_id);
 					break;
 				default:
 					throw new Exception('Order type not supported');
