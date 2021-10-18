@@ -2187,13 +2187,13 @@
 			}
 
 			$GLOBALS['phpgw']->jqcal->add_listener('values_start_date', 'date', '', array(
-					'min_date' => date('F j, Y, g:i a', phpgwapi_datetime::date_to_timestamp($values['start_date'])),
+					'min_date' => date('F j, Y, g:i a', phpgwapi_datetime::date_to_timestamp($project['start_date'])),
 		//			'max_date' => date('F j, Y, g:i a', phpgwapi_datetime::date_to_timestamp($project['end_date'])),
 				)
 			);
 
 			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date', 'date', '', array(
-					'min_date' => date("F j, Y, g:i a", phpgwapi_datetime::date_to_timestamp($values['start_date'])),
+					'min_date' => date("F j, Y, g:i a", phpgwapi_datetime::date_to_timestamp($project['start_date'])),
 		//			'max_date' => date("F j, Y, g:i a", phpgwapi_datetime::date_to_timestamp($project['end_date'])),
 				)
 			);

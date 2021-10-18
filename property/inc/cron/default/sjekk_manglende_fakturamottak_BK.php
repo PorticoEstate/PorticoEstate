@@ -41,15 +41,21 @@
 			$soap_url,
 			$soap_username,
 			$soap_password,
-			$config_invoice;
+			$config_invoice,
+			$bocommon,
+			$boworkorder,
+			$botts;
 
 		public function __construct()
 		{
 			parent::__construct();
+			$this->bocommon		 = CreateObject('property.bocommon');
+			$this->boworkorder	 = CreateObject('property.boworkorder');
+			$this->botts		 = CreateObject('property.botts');
 
-			$this->function_name = get_class($this);
-			$this->sub_location	 = lang('property');
-			$this->function_msg	 = 'Manglende fakturamottak i Agresso';
+			$this->function_name	 = get_class($this);
+			$this->sub_location		 = lang('property');
+			$this->function_msg		 = 'Manglende fakturamottak i Agresso';
 			$this->soap_url			 = 'https://agrpweb.adm.bgo/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101';
 			$this->config_invoice	 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			require_once PHPGW_SERVER_ROOT . '/property/inc/soap_client/agresso/autoload.php';
@@ -152,24 +158,24 @@
 
 			foreach ($data as &$valueset)
 			{
-				if(empty($valueset['voucher_no']))
+				if (empty($valueset['voucher_no']))
 				{
 					continue;
 				}
-/*
-           [tab] => A
-            [account] => 123015
-            [voucher_no] => 921097628
-            [order_id] => 45045416
-            [ext_inv_ref] => 100296
-            [amount] => 545.03
-            [step] => Forsinkelse til varer er mottatt
-            [xwf_state] => Arbeidsflyt pågår
-            [apar_id] => 100497
-            [xapar_id] => BERGEN ELEKTROSERVICE AS
-            [voucher_date] => 2021-03-17T00:00:00+01:00
-            [due_date] => 2021-04-30T00:00:00+02:00
-*/
+				/*
+				  [tab] => A
+				  [account] => 123015
+				  [voucher_no] => 921097628
+				  [order_id] => 45045416
+				  [ext_inv_ref] => 100296
+				  [amount] => 545.03
+				  [step] => Forsinkelse til varer er mottatt
+				  [xwf_state] => Arbeidsflyt pågår
+				  [apar_id] => 100497
+				  [xapar_id] => BERGEN ELEKTROSERVICE AS
+				  [voucher_date] => 2021-03-17T00:00:00+01:00
+				  [due_date] => 2021-04-30T00:00:00+02:00
+				 */
 
 
 
@@ -188,31 +194,54 @@ SQL;
 
 				$valueset['Mottatt_fra_Agresso'] = $regtid ? $regtid : 'Ikke mottatt';
 
-
-				if($regtid)
+				if ($regtid)
 				{
-					$date	 = new DateTime($regtid);
-					if( (time() - $date->getTimestamp() ) > (24*3600))
+					$date = new DateTime($regtid);
+					if ((time() - $date->getTimestamp() ) > (24 * 3600))
 					{
 						$fil_katalog = $this->config_invoice->config_data['export']['path'];
-						
+
 						$filename = "{$fil_katalog}/V3_varemottak_{$valueset['order_id']}_{$valueset['voucher_no']}.xml";
 
 						//Sjekk om filen eksisterer
 						if (file_exists($filename))
 						{
-							if($this->transfer($filename))
+							if ($this->transfer($filename))
 							{
-								$valueset['Filnavn'] = $filename;
-								$valueset['overført på nytt'] = date('Y-m-d H:i:s', time() + phpgwapi_datetime::user_timezone());
+								$valueset['Filnavn']			 = $filename;
+								$valueset['overført på nytt']	 = date('Y-m-d H:i:s', time() + phpgwapi_datetime::user_timezone());
 							}
+						}
+						else
+						{
+							$this->receive_order($valueset);
 						}
 					}
 				}
 			}
 		}
 
-		function transfer($filename)
+		function receive_order( $valueset )
+		{
+			$order_type = $this->bocommon->socommon->get_order_type($valueset['order_id']);
+
+			$received_amount = (float)$valueset['amount'];
+			$external_voucher_id = $valueset['voucher_no'];
+
+			switch ($order_type['type'])
+			{
+				case 'workorder':
+					$this->boworkorder->receive_order($valueset['order_id'], $received_amount, $external_voucher_id);
+					break;
+				case 'ticket':
+					$this->botts->receive_order($valueset['order_id'], $received_amount, $external_voucher_id);
+					break;
+				default:
+					throw new Exception('Order type not supported');
+			}
+		}
+
+		function transfer( $filename )
 		{
 			$content = file_get_contents($filename);
 
@@ -308,11 +337,11 @@ SQL;
 		{
 			$this->debug = false;
 
-			$username				 = 'WEBSER';
-			$password				 = 'wser10';
-			$client					 = 'BY';
+			$username	 = 'WEBSER';
+			$password	 = 'wser10';
+			$client		 = 'BY';
 
-			$TemplateId				 = '12770'; //Spørring på varemottak
+			$TemplateId = '12770'; //Spørring på varemottak
 
 			$context = stream_context_create([
 				'ssl' => [
@@ -324,11 +353,11 @@ SQL;
 			]);
 
 			$service	 = new \QueryEngineV201101(array(
-				'trace' => 1,
-				'location' => $this->soap_url,
-				'uri'		=> 'http://services.agresso.com/QueryEngineService/QueryEngineV201101',
+				'trace'			 => 1,
+				'location'		 => $this->soap_url,
+				'uri'			 => 'http://services.agresso.com/QueryEngineService/QueryEngineV201101',
 				'stream_context' => $context
-				),$this->soap_url);
+				), $this->soap_url);
 			$Credentials = new \WSCredentials();
 			$Credentials->setUsername($username);
 			$Credentials->setPassword($password);
@@ -357,8 +386,8 @@ SQL;
 			//Kriterier
 			//		_debug_array($searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties());
 
-			$input									 = new InputForTemplateResult($TemplateId);
-			$options								 = $service->GetTemplateResultOptions(new \GetTemplateResultOptions($Credentials));
+			$input	 = new InputForTemplateResult($TemplateId);
+			$options = $service->GetTemplateResultOptions(new \GetTemplateResultOptions($Credentials));
 
 //			_debug_array($options);
 			$options->RemoveHiddenColumns			 = true;

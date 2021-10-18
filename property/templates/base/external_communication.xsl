@@ -4,10 +4,117 @@
 		<xsl:when test="add_deviation">
 			<xsl:apply-templates select="add_deviation" />
 		</xsl:when>
+		<xsl:when test="send_sms">
+			<xsl:apply-templates select="send_sms" />
+		</xsl:when>
 		<xsl:when test="edit">
 			<xsl:apply-templates select="edit" />
 		</xsl:when>
 	</xsl:choose>
+</xsl:template>
+
+<xsl:template xmlns:php="http://php.net/xsl" match="send_sms">
+	<script type="text/javascript">
+		self.name="first_Window";
+		var base_java_url = <xsl:value-of select="base_java_url"/>;
+		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address', 'select user')"/>
+	</script>
+
+	<div class="content">
+		<div>
+			<xsl:variable name="form_action">
+				<xsl:value-of select="form_action"/>
+			</xsl:variable>
+
+			<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned" enctype="multipart/form-data">
+				<div id="tab-content">
+					<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+
+					<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
+
+					<div id="main">
+
+						<div class="pure-control-group">
+							<label for='location_name'>
+								<xsl:value-of select="php:function('lang', 'location')"/>
+							</label>
+							<input type="hidden" id="location_code" name="location_code" />
+							<input type="text" id="location_name" name="location_name" class="pure-input-3-4"/>
+							<div id="location_container"/>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'recipients')"/>
+							</label>
+							<select id="sms_recipients" name="sms_recipients[]" multiple="true" class="pure-input-3-4">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:apply-templates select="recipient_list/options"/>
+							</select>
+						</div>
+
+
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'extra sms address')"/>
+							</label>
+
+							<input type="text" name="extra_sms_recipients" value="{value_extra_sms_address}" class="pure-input-3-4" >
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'comma separated list')"/>
+								</xsl:attribute>
+							</input>
+						</div>
+						<fieldset>
+							<legend>
+								<xsl:value-of select="php:function('lang', 'sms')"/>
+							</legend>
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'message')"/>
+								</label>
+								<textarea id ="sms_content" class="pure-input-3-4" rows="10" name="sms_content" onKeyUp="javascript: SmsCountKeyUp(804);" onKeyDown="javascript: SmsCountKeyDown(804);">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'message')"/>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+								</textarea>
+							</div>
+
+						</fieldset>
+					</div>
+				</div>
+				<div id="submit_group_bottom" class="proplist-col">
+					<xsl:variable name="lang_save">
+						<xsl:value-of select="php:function('lang', 'save')"/>
+					</xsl:variable>
+					<xsl:variable name="lang_send">
+						<xsl:value-of select="php:function('lang', 'send')"/>
+					</xsl:variable>
+					<input type="submit" class="pure-button pure-button-primary" name="send">
+						<xsl:attribute name="value">
+							<xsl:value-of select="$lang_send"/>
+						</xsl:attribute>
+						<xsl:attribute name="title">
+							<xsl:value-of select="$lang_send"/>
+						</xsl:attribute>
+					</input>
+					<xsl:variable name="cancel_url">
+						<xsl:value-of select="cancel_url"/>
+					</xsl:variable>
+					<input type="button" class="pure-button pure-button-primary" name="cancel" onClick="window.location = '{cancel_url}';">
+						<xsl:attribute name="value">
+							<xsl:value-of select="php:function('lang', 'cancel')"/>
+						</xsl:attribute>
+					</input>
+				</div>
+			</form>
+		</div>
+	</div>
 </xsl:template>
 
 <xsl:template xmlns:php="http://php.net/xsl" match="add_deviation">
