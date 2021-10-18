@@ -8,9 +8,21 @@ CreateUrlParams(window.location.search);
 
 ko.validation.locale('nb-NO');
 
-function initiate_vipps()
+function initiate_vipps(order_id)
 {
 	alert('Vipps...');
+
+	var parameter = {
+		menuaction: "bookingfrontend.vipps_helper.initiate",
+		order_id: order_id
+	};
+
+	var getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
+
+	$.getJSON(getJsonURL, function (result)
+	{
+//		setDoc(result.data);
+	});
 }
 
 function applicationModel()
