@@ -280,6 +280,7 @@
 					break;
 			}
 
+			$file_name_part .= "{$type}_";
 			$file_name_part .= substr($file_type_arr[2], 0, -4);
 
 			$content = file_get_contents($file->get_system_identifier(), false);
