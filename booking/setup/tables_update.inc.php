@@ -5275,6 +5275,84 @@
 
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+
+		$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('booking', 'run'));
+
+		$receipt_section_common = $custom_config->add_section(array
+			(
+				'name' => 'payment',
+				'descr' => 'payment method config'
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'method',
+				'descr'			=> 'Payment method',
+				'choice'		=> array('Vipps'),
+			)
+		);
+
+		$receipt_section_vipps = $custom_config->add_section(array
+			(
+				'name' => 'Vipps',
+				'descr' => 'Vipps config'
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_vipps['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'base_url',
+				'descr'			=> 'base_url',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_vipps['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'client_id',
+				'descr'			=> 'client_id',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_vipps['section_id'],
+				'input_type'	=> 'password',
+				'name'			=> 'client_secret',
+				'descr'			=> 'client_secret',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_vipps['section_id'],
+				'input_type'	=> 'password',
+				'name'			=> 'subscription_key',
+				'descr'			=> 'subscription_key',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_vipps['section_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'debug',
+				'descr'			=> 'debug',
+				'choice'		=> array(1),
+			)
+		);
+
+
 		# BEGIN Evil
 		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('bb_article_price_reduction');
 		if(isset($metadata['id']))
