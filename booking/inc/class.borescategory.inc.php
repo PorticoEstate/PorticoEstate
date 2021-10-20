@@ -16,6 +16,7 @@
 		{
 			$_params = $params;
 			$_params['length'] = -1;
+			$_params['start'] = 0;
 			$rescategories = $this->so->read($_params);
 			$activities = $this->list_id_name($this->activity_bo->get_top_level());
 
