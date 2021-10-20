@@ -117,41 +117,25 @@
 			$session_id = $GLOBALS['phpgw']->session->get_session_id();
 
 			$request_body = [
-				"customerInfo"	 => [
-					"mobileNumber" => 90665164
-				],
+//				"customerInfo"	 => [
+//					"mobileNumber" => 90665164
+//				],
 				"merchantInfo"	 => [
 					"authToken"				 => $session_id,
 					"callbackPrefix"		 => "https://example.com/vipps/callbacks-for-payment-updates",
 					"consentRemovalPrefix"	 => "https://example.com/vipps/consent-removal",
-					"fallBack"				 => "https://example.com/vipps/fallback-order-result-page/acme-shop-123-order123abc",
+					"fallBack"				 => "https://example.com/vipps/fallback-order-result-page/Ak-shop-123-order123abc",
 					"isApp"					 => false,
-					"merchantSerialNumber"	 => "123456",
-					"paymentType"			 => "eComm Regular Payment",
-					"shippingDetailsPrefix"	 => "https://example.com/vipps/shipping",
-					"staticShippingDetails"	 => [
-						[
-							"isDefault"			 => "Y",
-							"priority"			 => 0,
-							"shippingCost"		 => 1,
-							"shippingMethod"	 => "Posten Servicepakke",
-							"shippingMethodId"	 => "posten-servicepakke"
-						]
-					]
+					"merchantSerialNumber"	 => "682643", // Stavanger
+					"paymentType"			 => "eComm Express Payment",
+	//				"paymentType"			 => "eComm Regular Payment"
 				],
 				"transaction"	 => [
 					"amount"					 => 1,
-					"orderId"					 => "acme-shop-123-order123abc",
+					"orderId"					 => "Ak-shop-123-order123abc",
 					"transactionText"			 => "One pair of Vipps socks",
 					"skipLandingPage"			 => false,
 					"scope"						 => "name address email",
-					"additionalData"			 => [
-						"passengerName"			 => "FLYER / MARY MS.",
-						"airlineCode"			 => "074",
-						"airlineDesignatorCode"	 => "KL",
-						"ticketNumber"			 => "string",
-						"agencyInvoiceNumber"	 => "string"
-					],
 					"useExplicitCheckoutFlow"	 => true
 				]
 			];
