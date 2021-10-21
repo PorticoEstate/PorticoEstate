@@ -42,10 +42,9 @@
 
 		public function initiate()
 		{
-			$order_id			 = phpgw::get_var('order_id');
+			$order_id			 = 123457; //phpgw::get_var('order_id');
 			$this->accesstoken	 = $this->get_accesstoken();
-			$this->initiate_payment($order_id);
-//			return $this->accesstoken;
+			return $this->initiate_payment($order_id);
 		}
 
 		/**
@@ -92,7 +91,7 @@
 			return !empty($ret['access_token']) ? $ret['access_token'] : null;
 		}
 
-		private function initiate_payment( $param )
+		private function initiate_payment( $order_id )
 		{
 			$path	 = '/ecomm/v2/payments';
 			$url	 = "{$this->base_url}{$path}";
@@ -118,22 +117,23 @@
 			$session_id = $GLOBALS['phpgw']->session->get_session_id();
 
 			$request_body = [
-//				"customerInfo"	 => [
-//					"mobileNumber" => 90665164
-//				],
+				"customerInfo"	 => [
+					"mobileNumber" => 90665164
+				],
 				"merchantInfo"	 => [
 					"authToken"				 => $session_id,
 					"callbackPrefix"		 => "https://example.com/vipps/callbacks-for-payment-updates",
 					"consentRemovalPrefix"	 => "https://example.com/vipps/consent-removal",
-					"fallBack"				 => "https://example.com/vipps/fallback-order-result-page/Ak-shop-123-order123abc",
+//					"fallBack"				 => "https://example.com/vipps/fallback-order-result-page/Ak-shop-{$order_id}-order{$order_id}abc",
+					"fallBack"				 => "http://127.0.0.1/~hc483/github_trunk/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add_contact&id=764&building_id=153",
 					"isApp"					 => false,
 					"merchantSerialNumber"	 => $this->msn,
-					"paymentType"			 => "eComm Express Payment",
-	//				"paymentType"			 => "eComm Regular Payment"
+	//				"paymentType"			 => "eComm Express Payment",
+					"paymentType"			 => "eComm Regular Payment"
 				],
 				"transaction"	 => [
-					"amount"					 => 1,
-					"orderId"					 => "Ak-shop-123-order123abc",
+					"amount"					 => 100,
+					"orderId"					 => "Ak-shop-{$order_id}-order{$order_id}abc",
 					"transactionText"			 => "One pair of Vipps socks",
 					"skipLandingPage"			 => false,
 					"scope"						 => "name address email",
@@ -147,13 +147,14 @@
 			{
 				$response	 = $client->request('POST', $url, $request);
 				$ret		 = json_decode($response->getBody()->getContents(), true);
-				echo $ret;
 			}
 			catch (\GuzzleHttp\Exception\BadResponseException $e)
 			{
 				// handle exception or api errors.
 				print_r($e->getMessage());
 			}
+
+			return $ret;
 		}
 
 		private function capture_payment( $param )

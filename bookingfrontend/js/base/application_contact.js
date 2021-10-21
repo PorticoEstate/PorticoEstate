@@ -22,6 +22,8 @@ function initiate_vipps(order_id)
 	$.getJSON(getJsonURL, function (result)
 	{
 		console.log(result);
+		var url = result.url;
+		window.location.replace(url);
 	});
 }
 
