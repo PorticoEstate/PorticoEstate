@@ -33,6 +33,7 @@
 			$this->client_id		 = !empty($custom_config_data['client_id']) ? $custom_config_data['client_id'] : '';
 			$this->client_secret	 = !empty($custom_config_data['client_secret']) ? $custom_config_data['client_secret'] : '';
 			$this->subscription_key	 = !empty($custom_config_data['subscription_key']) ? $custom_config_data['subscription_key'] : '';
+			$this->msn	 = !empty($custom_config_data['msn']) ? $custom_config_data['msn'] : '';
 			$this->proxy			 = !empty($config['proxy']) ? $config['proxy'] : '';
 
 //			$this->guzzle = CreateObject('phpgwapi.guzzle');
@@ -126,7 +127,7 @@
 					"consentRemovalPrefix"	 => "https://example.com/vipps/consent-removal",
 					"fallBack"				 => "https://example.com/vipps/fallback-order-result-page/Ak-shop-123-order123abc",
 					"isApp"					 => false,
-					"merchantSerialNumber"	 => "682643", // Stavanger
+					"merchantSerialNumber"	 => $this->msn,
 					"paymentType"			 => "eComm Express Payment",
 	//				"paymentType"			 => "eComm Regular Payment"
 				],

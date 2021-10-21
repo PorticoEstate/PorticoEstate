@@ -5345,6 +5345,16 @@
 		$receipt = $custom_config->add_attrib(array
 			(
 				'section_id'	=> $receipt_section_vipps['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'msn',
+				'descr'			=> 'Merchant Serial Number',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_vipps['section_id'],
 				'input_type'	=> 'listbox',
 				'name'			=> 'debug',
 				'descr'			=> 'debug',
