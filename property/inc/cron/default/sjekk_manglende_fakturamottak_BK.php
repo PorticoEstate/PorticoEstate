@@ -214,6 +214,7 @@ SQL;
 						}
 						else
 						{
+							$valueset['overfører første gang']	 = date('Y-m-d H:i:s', time() + phpgwapi_datetime::user_timezone());
 							$this->receive_order($valueset);
 						}
 					}

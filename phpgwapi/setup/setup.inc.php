@@ -78,6 +78,7 @@
 	(
 		'menu'	=> 'phpgwapi.menu_apps.get_menu',
 		'login'	=> 'phpgwapi.menu.clear',
+		'set_cookie_domain' => 'phpgwapi.hook_helper.set_cookie_domain',
 	);
 
 	// Basic information about this app
