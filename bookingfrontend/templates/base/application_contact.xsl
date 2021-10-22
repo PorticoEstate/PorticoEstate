@@ -63,6 +63,8 @@
 					<div data-bind="visible: applicationCartItems().length != 0">
 						<div data-bind="foreach: applicationCartItems">
 							<div class="applications p-4 mb-2">
+								<input type="hidden" data-bind="value:id" name="application_id[]" class="application_id"/>
+
 								<div class="row">
 									<span class="col-5" data-bind="text: building_name"></span>
 									<div data-bind="" class="col-5">

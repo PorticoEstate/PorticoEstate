@@ -609,6 +609,7 @@
 					'name'					 => $this->db->f('name', true),
 				);
 
+				$orders[$application_id][$order_id]['order_id'] = $order_id;
 				$orders[$application_id][$order_id]['sum'] = $sum[$order_id];
 			}
 
@@ -622,6 +623,7 @@
 			}
 
 			$applications['total_sum'] = $total_sum;
+			return $orders;
 		}
 
 		function add_purchase_order( $purchase_order )

@@ -33,7 +33,7 @@
 			$this->client_id		 = !empty($custom_config_data['client_id']) ? $custom_config_data['client_id'] : '';
 			$this->client_secret	 = !empty($custom_config_data['client_secret']) ? $custom_config_data['client_secret'] : '';
 			$this->subscription_key	 = !empty($custom_config_data['subscription_key']) ? $custom_config_data['subscription_key'] : '';
-			$this->msn	 = !empty($custom_config_data['msn']) ? $custom_config_data['msn'] : '';
+			$this->msn				 = !empty($custom_config_data['msn']) ? $custom_config_data['msn'] : '';
 			$this->proxy			 = !empty($config['proxy']) ? $config['proxy'] : '';
 
 //			$this->guzzle = CreateObject('phpgwapi.guzzle');
@@ -42,9 +42,9 @@
 
 		public function initiate()
 		{
-			$order_id			 = 123457; //phpgw::get_var('order_id');
+			$application_ids	 = phpgw::get_var('application_id');
 			$this->accesstoken	 = $this->get_accesstoken();
-			return $this->initiate_payment($order_id);
+			return $this->initiate_payment($application_ids);
 		}
 
 		/**
@@ -91,8 +91,50 @@
 			return !empty($ret['access_token']) ? $ret['access_token'] : null;
 		}
 
-		private function initiate_payment( $order_id )
+		function get_item_name( $line )
 		{
+			return $line['name'];
+		}
+
+		function get_date_range( $dates )
+		{
+			return "{$dates['from_']} - {$dates['to_']}";
+		}
+
+		private function initiate_payment( $application_ids )
+		{
+
+			$soapplication = CreateObject('booking.soapplication');
+			$filters		 = array('id' => $application_ids);
+			$params			 = array('filters' => $filters, 'results' => 'all');
+			$applications	 = $soapplication->read($params);
+
+			$purchase_orders = $soapplication->get_purchase_order($applications);
+
+			foreach ($applications['results'] as $application)
+			{
+				$dates = implode(', ', array_map(array($this, 'get_date_range'), $application['dates']));
+
+				foreach ($application['orders'] as $_order_id => $order)
+				{
+					$orderId				 = "Ak-shop-{$_order_id}-order{$_order_id}abc";
+					if (empty($order['paid']))
+					{
+						$transaction = [
+							"amount"					 => (float)$order['sum'] * 100,
+							"orderId"					 => $orderId,
+							"transactionText"			 => implode(', ', array_map(array($this, 'get_item_name'), $order['lines'])) . ' ('. $dates . ')',
+							"skipLandingPage"			 => false,
+							"scope"						 => "name address email",
+							"useExplicitCheckoutFlow"	 => true
+						];
+						break 2;
+					}
+				}
+			}
+
+//			$this->cancel_payment($orderId);
+
 			$path	 = '/ecomm/v2/payments';
 			$url	 = "{$this->base_url}{$path}";
 
@@ -131,14 +173,7 @@
 	//				"paymentType"			 => "eComm Express Payment",
 					"paymentType"			 => "eComm Regular Payment"
 				],
-				"transaction"	 => [
-					"amount"					 => 100,
-					"orderId"					 => "Ak-shop-{$order_id}-order{$order_id}abc",
-					"transactionText"			 => "One pair of Vipps socks",
-					"skipLandingPage"			 => false,
-					"scope"						 => "name address email",
-					"useExplicitCheckoutFlow"	 => true
-				]
+				"transaction"	 => $transaction
 			];
 
 			$request['json'] = $request_body;

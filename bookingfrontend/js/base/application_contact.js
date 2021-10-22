@@ -8,16 +8,20 @@ CreateUrlParams(window.location.search);
 
 ko.validation.locale('nb-NO');
 
-function initiate_vipps(order_id)
+function initiate_vipps()
 {
 	alert('Vipps...');
 
 	var parameter = {
-		menuaction: "bookingfrontend.vipps_helper.initiate",
-		order_id: order_id
+		menuaction: "bookingfrontend.vipps_helper.initiate"
 	};
 
 	var getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
+
+	$(".application_id").each(function (index)
+	{
+		getJsonURL += '&application_id[]=' + $(this).val();
+	});
 
 	$.getJSON(getJsonURL, function (result)
 	{
