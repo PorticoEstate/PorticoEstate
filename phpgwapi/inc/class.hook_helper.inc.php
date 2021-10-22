@@ -56,9 +56,29 @@
 
 			$ip_address = phpgw::get_ip_address();
 
-			if (!empty($config['alternative_domain']) && in_array($ip_address, $config['alternative_domain_ip']))
+//			if (!empty($config['alternative_domain']) && in_array($ip_address, $config['alternative_domain_ip']))
+			if($this->is_external_login())
 			{
 				$GLOBALS['phpgw_info']['server']['cookie_domain'] = $config['alternative_domain'];
 			}
 		}
+
+		private function is_external_login()
+		{
+			$ssn = (string)$_SERVER['HTTP_UID'];
+			try
+			{
+				$sf_validator = createObject('booking.sfValidatorNorwegianSSN', array(), array(
+				'invalid' => 'ssn is invalid'));
+				$sf_validator->setOption('required', true);
+				$sf_validator->clean($ssn);
+			}
+			catch (sfValidatorError $e)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
 	}
