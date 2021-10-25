@@ -62,6 +62,17 @@
 				 </td>
 			-->
 		</tr>
+		<tr class="row_on">
+			<td>{lang_alternative_cookie_domain_for_sessions_}</td>
+			<td><input name="newsettings[alternative_cookie_domain]" value="{value_alternative_cookie_domain}"></td>
+			<!--
+				 <td>
+				   <select name="newsettings[cookie_domain]">
+					 {hook_cookie_domain}
+				   </select>
+				 </td>
+			-->
+		</tr>
 
 		<tr class="row_off">
 			<td>{lang_Enter_your_default_FTP_server}:</td>
