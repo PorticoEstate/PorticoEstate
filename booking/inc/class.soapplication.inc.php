@@ -505,7 +505,7 @@
 				. " JOIN bb_application_date ON bb_application.id = bb_application_date.application_id"
 				. " JOIN bb_application_resource"
 				. " ON bb_application.id = bb_application_resource.application_id AND bb_application_resource.resource_id = {$resource_id}"
-				. " WHERE (customer_ssn = '{$ssn}' OR (status != 'REJECTED' AND session_id = '$session_id'))"
+				. " WHERE (customer_ssn = '{$ssn}' AND status != 'REJECTED' OR (status = 'NEWPARTIAL1' AND session_id = '$session_id'))"
 				. " AND ((to_ > '{$history_limit_date_half}' AND from_ < '$future_limit_date_half')"
 				. " OR to_ > '{$history_limit_date_full}'"
 				. " OR from_ < '$future_limit_date_full')) as t";
