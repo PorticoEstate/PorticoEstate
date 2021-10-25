@@ -123,7 +123,8 @@
 						$transaction = [
 							"amount"					 => (float)$order['sum'] * 100,
 							"orderId"					 => $orderId,
-							"transactionText"			 => implode(', ', array_map(array($this, 'get_item_name'), $order['lines'])) . ' ('. $dates . ')',
+//							"transactionText"			 => implode(', ', array_map(array($this, 'get_item_name'), $order['lines'])) . ' ('. $dates . ')',
+							"transactionText"			 => 'Aktiv kommune, booking dato: ' . $dates,
 							"skipLandingPage"			 => false,
 							"scope"						 => "name address email",
 							"useExplicitCheckoutFlow"	 => true
@@ -167,7 +168,7 @@
 					"callbackPrefix"		 => "https://example.com/vipps/callbacks-for-payment-updates",
 					"consentRemovalPrefix"	 => "https://example.com/vipps/consent-removal",
 //					"fallBack"				 => "https://example.com/vipps/fallback-order-result-page/Ak-shop-{$order_id}-order{$order_id}abc",
-					"fallBack"				 => "http://127.0.0.1/~hc483/github_trunk/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add_contact&id=764&building_id=153",
+					"fallBack"				 => "http://127.0.0.1/~hc483/github_trunk/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add_contact&id=" . $application_ids[0],
 					"isApp"					 => false,
 					"merchantSerialNumber"	 => $this->msn,
 	//				"paymentType"			 => "eComm Express Payment",
