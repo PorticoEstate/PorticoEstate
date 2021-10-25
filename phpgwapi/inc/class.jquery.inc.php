@@ -132,7 +132,7 @@
 					$load = array
 						(
 						"js/{$_jquery_core}{$_type}",
-						//	"tabs/jquery.responsiveTabs{$_type}",
+						//	"tabs/jquery.responsiveTabs",
 						"tabs/jquery.responsiveTabs{$_type}",
 						'common'
 					);
