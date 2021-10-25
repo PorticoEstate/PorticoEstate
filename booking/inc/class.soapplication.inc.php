@@ -397,7 +397,8 @@
                       UNION
 					  SELECT ba.id
                       FROM bb_allocation ba, bb_allocation_resource bar
-                      WHERE ba.id = bar.allocation_id
+                      WHERE active = 1
+                      AND ba.id = bar.allocation_id
                       AND bar.resource_id in ($rids)
                       AND ((ba.from_ <= '$from_' AND ba.to_ > '$from_')
                       OR (ba.from_ >= '$from_' AND ba.to_ <= '$to_')
