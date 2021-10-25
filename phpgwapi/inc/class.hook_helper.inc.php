@@ -49,27 +49,23 @@
 				return;
 			}
 
-			$config = array(
-				'alternative_domain_ip'	 => array('10.120.67.11', '10.120.67.12', '10.120.67.13'), //hardcoded for now
-				'alternative_domain'	 => 'bergen.kommune.no'
-			);
-
-			$ip_address = phpgw::get_ip_address();
-
-//			if (!empty($config['alternative_domain']) && in_array($ip_address, $config['alternative_domain_ip']))
-			if($this->is_external_login())
+			if ($this->is_external_login() && !empty($GLOBALS['phpgw_info']['server']['alternative_cookie_domain']))
 			{
-				$GLOBALS['phpgw_info']['server']['cookie_domain'] = $config['alternative_domain'];
+				$GLOBALS['phpgw_info']['server']['cookie_domain'] = $GLOBALS['phpgw_info']['server']['alternative_cookie_domain'];
 			}
 		}
 
+		/**
+		 * This one is a temporary hack to get around a poorly configured reverse proxy 
+		 * @return boolean
+		 */
 		private function is_external_login()
 		{
 			$ssn = (string)$_SERVER['HTTP_UID'];
 			try
 			{
 				$sf_validator = createObject('booking.sfValidatorNorwegianSSN', array(), array(
-				'invalid' => 'ssn is invalid'));
+					'invalid' => 'ssn is invalid'));
 				$sf_validator->setOption('required', true);
 				$sf_validator->clean($ssn);
 			}
@@ -80,5 +76,4 @@
 
 			return true;
 		}
-
 	}
