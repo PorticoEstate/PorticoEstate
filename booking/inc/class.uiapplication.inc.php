@@ -15,18 +15,17 @@
 		const COMMENT_TYPE_OWNERSHIP = 'ownership';
 		const ORGNR_SESSION_KEY = 'orgnr';
 
-		public $public_functions = array
-			(
-			'index' => true,
-			'query' => true,
-			'add' => true,
-            'confirm' => true,
-			'show' => true,
-			'edit' => true,
-			'associated' => true,
-			'toggle_show_inactive' => true,
-			'custom_fields_example' => true,
-			'export_pdf'			=> true,
+		public $public_functions	 = array(
+			'index'						 => true,
+			'query'						 => true,
+			'add'						 => true,
+			'confirm'					 => true,
+			'show'						 => true,
+			'edit'						 => true,
+			'associated'				 => true,
+			'toggle_show_inactive'		 => true,
+			'custom_fields_example'		 => true,
+			'export_pdf'				 => true,
 			'add_comment_to_application' => true,
 		);
 		protected $customer_id,
@@ -636,6 +635,28 @@
 			return $comment_text;
 		}
 
+		public function cancel_block()
+		{
+			$resource_id = phpgw::get_var('resource_id', 'int' ,'REQUEST');
+			$building_id = phpgw::get_var('building_id', 'int' ,'REQUEST');
+
+			$from_ = date('Y-m-d H:i:s', phpgwapi_datetime::date_to_timestamp(phpgw::get_var('from_', 'string', 'GET')));
+			$to_ = date('Y-m-d H:i:s', phpgwapi_datetime::date_to_timestamp( phpgw::get_var('to_', 'string', 'GET')));
+
+			$bo_block = createObject('booking.boblock');
+
+			$session_id = $GLOBALS['phpgw']->session->get_session_id();
+
+			if (!empty($session_id) && $resource_id)
+			{
+				$bo_block = createObject('booking.boblock');
+				$bo_block->cancel_block($session_id, array(array('from_' =>  $from_, 'to_' =>  $to_)),array($resource_id));
+			}
+
+			self::redirect(array('menuaction' => 'bookingfrontend.uiresource.show', 'id' => $resource_id, 'building_id' => $building_id));
+			//self::redirect(array());
+
+		}
 		public function set_block()
 		{
 			$resource_id = phpgw::get_var('resource_id', 'int' ,'REQUEST', -1 );
@@ -833,6 +854,27 @@
 					$application['responsible_zip_code'] = '0000';
 					$application['customer_identifier_type'] = 'organization_number';
 					$application['customer_organization_number'] = '';
+
+					/**
+					 * Start dealing with the purchase_order..
+					 */
+					$purchase_order = array('status' => 0, 'customer_id' => -1, 'lines' => array());
+					$selected_articles = (array)phpgw::get_var('selected_articles');
+
+					foreach ($selected_articles as $selected_article)
+					{
+						$_article_info = explode('_', $selected_article);
+
+						if(empty($_article_info[0]))
+						{
+							continue;
+						}
+
+						$purchase_order['lines'][] = array(
+							'article_mapping_id'	=> $_article_info[0],
+							'quantity'				=> $_article_info[1],
+						);
+					}
 				}
 				else if(isset($application['formstage']) && $application['formstage'] == 'legacy')
 				{
@@ -966,6 +1008,12 @@
 					$receipt = $this->bo->add($application);
 					$application['id'] = $receipt['id'];
 
+					if($purchase_order)
+					{
+						$purchase_order['application_id'] = $application['id'];
+						$this->bo->add_purchase_order($purchase_order);
+					}
+
 
 					if( isset($_FILES['name']['name']) && $_FILES['name']['name'] )
 					{
@@ -1001,21 +1049,21 @@
 					$this->bo->so->update_id_string();
 					if ($is_partial1)
 					{
-						phpgwapi_cache::message_set(
-							lang("Complete application text booking") .
-							'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
-							lang("Complete applications") .
-							'</button><button onclick="window.location.href = phpGWLink(\'bookingfrontend/\', {})" class="ml-2 btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
-							lang("new application") .
-							'</button>'
-						);
 						// Redirect to same URL so as to present a new, empty form
 						if($simple)
 						{
-							self::redirect(array('menuaction' => $this->module . '.uiresource.show',  'id' => phpgw::get_var('resource_id', 'int'), 'building_id' => $building_id ));
+							self::redirect(array('menuaction' => $this->url_prefix . '.add_contact',  'id' => phpgw::get_var('resource_id', 'int'), 'building_id' => $building_id ));
 						}
 						else
 						{
+							phpgwapi_cache::message_set(
+								lang("Complete application text booking") .
+								'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
+								lang("Complete applications") .
+								'</button><button onclick="window.location.href = phpGWLink(\'bookingfrontend/\', {})" class="ml-2 btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
+								lang("new application") .
+								'</button>'
+							);
 							self::redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
 						}
 					}
@@ -1782,9 +1830,24 @@
 			 */
 			self::add_javascript('bookingfrontend', 'base', 'application_contact.js', 'text/javascript', true);
 
+			$vipps_logo = 'continue_with_vipps_rect_210';
+
+			switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'])
+			{
+				case 'no':
+				case 'nn':
+					$vipps_logo .="_NO";
+					break;
+
+				default:
+					$vipps_logo .="_EN";
+					break;
+			}
+
 			self::render_template_xsl('application_contact', array(
 				'application'			 => $partial2,
 				'delegate_data'			 => $filtered_delegate_data,
+				'vipps_logo'			 => $GLOBALS['phpgw']->common->image('bookingfrontend', $vipps_logo),
 				'add_img'				 => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
 				'config'				 => CreateObject('phpgwapi.config', 'booking')->read()
 				)
@@ -2594,36 +2657,41 @@ JS;
 		// Returns a list of basic data for the partial applications for the current session ID
 		function get_partials()
 		{
-			$list = array();
-			$session_id = $GLOBALS['phpgw']->session->get_session_id();
+			$ret		 = array();
+			$list		 = array();
+			$session_id	 = $GLOBALS['phpgw']->session->get_session_id();
 			if (!empty($session_id))
 			{
 				$partials = $this->bo->get_partials_list($session_id);
 				foreach ($partials['results'] as $partial)
 				{
-					$item = array();
-					$item['id']            = $partial['id'];
-					$item['building_name'] = $partial['building_name'];
-					$item['dates']         = $partial['dates'];
-					$resources = $this->resource_bo->so->read(array(
-							'sort'    => 'sort',
-							'results' =>'all',
-							'filters' => array('id' => $partial['resources']), 'results' =>'all'
-						));
+					$item					 = array('orders' => $partial['orders']);
+					$item['id']				 = $partial['id'];
+					$item['building_name']	 = $partial['building_name'];
+					$item['dates']			 = $partial['dates'];
+					$resources				 = $this->resource_bo->so->read(array(
+						'sort'		 => 'sort',
+						'results'	 => 'all',
+						'filters'	 => array('id' => $partial['resources']), 'results'	 => 'all'
+					));
 					foreach ($resources['results'] as $resource)
 					{
-						$res = array(
-							'id'   => $resource['id'],
-							'name' => $resource['name'],
+						$res				 = array(
+							'id'	 => $resource['id'],
+							'name'	 => $resource['name'],
 						);
 						$item['resources'][] = $res;
 					}
 					$list[] = $item;
 				}
-			}
-			return $list;
-		}
 
+				$ret = array(
+					'list'		 => $list,
+					'total_sum'	 => $partials['total_sum'],
+				);
+			}
+			return $ret;
+		}
 
 		function delete_partial()
 		{
@@ -2636,12 +2704,13 @@ JS;
 
 				$GLOBALS['phpgw']->db->transaction_begin();
 
+				$bo_block = createObject('booking.boblock');
+
 				$exists = false;
-				foreach ($partials as $partial)
+				foreach ($partials['list'] as $partial)
 				{
 					if ($partial['id'] == $id)
 					{
-						$bo_block = createObject('booking.boblock');
 						$bo_block->cancel_block($session_id, $partial['dates'],$partial['resources']);
 						$exists = true;
 						break;
@@ -2649,6 +2718,8 @@ JS;
 				}
 				if ($exists)
 				{
+					$application_id = $id;
+					$this->bo->delete_purchase_order($application_id);
 					$this->bo->delete_application($id);
 					$status['deleted'] = true;
 				}

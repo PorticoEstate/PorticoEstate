@@ -4871,7 +4871,7 @@
 
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT MAX(id)+1  as next_id FROM bb_rescategory", __LINE__, __FILE__);
 		$GLOBALS['phpgw_setup']->oProc->next_record();
-		
+
 		$next_id = (int)$GLOBALS['phpgw_setup']->oProc->f('next_id');
 		$next_id_2 = $next_id +1;
 
@@ -5259,6 +5259,300 @@
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.73';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.73 to 0.2.74
+	 *
+	 */
+	$test[] = '0.2.73';
+	function booking_upgrade0_2_73()
+	{
+
+		$GLOBALS['phpgw']->locations->add('.article', 'article', 'booking');
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('booking', 'run'));
+
+		$receipt_section_common = $custom_config->add_section(array
+			(
+				'name' => 'payment',
+				'descr' => 'payment method config'
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_common['section_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'method',
+				'descr'			=> 'Payment method',
+				'choice'		=> array('Vipps'),
+			)
+		);
+
+		$receipt_section_vipps = $custom_config->add_section(array
+			(
+				'name' => 'Vipps',
+				'descr' => 'Vipps config'
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_vipps['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'base_url',
+				'descr'			=> 'base_url',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_vipps['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'client_id',
+				'descr'			=> 'client_id',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_vipps['section_id'],
+				'input_type'	=> 'password',
+				'name'			=> 'client_secret',
+				'descr'			=> 'client_secret',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_vipps['section_id'],
+				'input_type'	=> 'password',
+				'name'			=> 'subscription_key',
+				'descr'			=> 'subscription_key',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_vipps['section_id'],
+				'input_type'	=> 'text',
+				'name'			=> 'msn',
+				'descr'			=> 'Merchant Serial Number',
+				'value'			=> '',
+			)
+		);
+
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_vipps['section_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'debug',
+				'descr'			=> 'debug',
+				'choice'		=> array(1),
+			)
+		);
+
+
+		# BEGIN Evil
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('bb_article_price_reduction');
+		if(isset($metadata['id']))
+		{
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_price_reduction');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_price');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_resource_service');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_service');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_purchase_order_line');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_mapping');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_category');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_order');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_customer');
+		}
+
+		# END Evil
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_customer',  array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+				'customer_type' => array('type' => 'varchar', 'precision' => '12', 'nullable' => False, 'default' => 'person'),
+				'customer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		)
+			);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_purchase_order',  array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'parent_id' => array('type' => 'int', 'nullable' => true, 'precision' => '4'),
+				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+				'application_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'customer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'timestamp' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
+
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_application' => array('application_id' => 'id'),
+				'bb_customer' => array('customer_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_article_category', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO bb_article_category ( id, name)"
+				. " VALUES (1, 'resource')", __LINE__, __FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO bb_article_category ( id, name)"
+				. " VALUES (2, 'service')", __LINE__, __FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_article_mapping', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'article_cat_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'article_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'building_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'article_code' => array('type' => 'varchar', 'precision' => '15', 'nullable' => false ),
+				'unit' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false ),
+				'tax_code' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				'owner_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_article_category' => array('article_cat_id' => 'id'),
+				'fm_ecomva' => array('tax_code' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array('article_cat_id', 'article_id')
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_purchase_order_line',  array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'order_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+				'article_mapping_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'unit_price' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+				'overridden_unit_price' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+				'currency' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),
+				'quantity' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+				'amount' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+				'tax_code' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'tax' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_purchase_order' => array('order_id' => 'id'),
+				'bb_article_mapping' => array('article_mapping_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_service', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false),
+				'active' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => '1'),
+				'owner_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'description' => array('type' => 'text', 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+			),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_resource_service', array(
+			'fd' => array(
+				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'service_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('resource_id', 'service_id'),
+			'fk' => array(
+				'bb_resource' => array('resource_id' => 'id'),
+				'bb_service' => array('service_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_article_price', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'article_mapping_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'from_' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
+				'price' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+				'remark' => array('type' => 'varchar', 'precision' => 100, 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_article_mapping' => array('article_mapping_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'bb_article_price_reduction',  array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'article_mapping_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'from_' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
+				'percent' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_article_mapping' => array('article_mapping_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query(
+			"CREATE OR REPLACE VIEW bb_article_view AS " .
+			"SELECT id, name, description, active, 1 AS article_cat_id FROM bb_resource " .
+			"UNION " .
+			"SELECT id, name, description, active, 2 AS article_cat_id  FROM bb_service" , __LINE__, __FILE__
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.74';
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}

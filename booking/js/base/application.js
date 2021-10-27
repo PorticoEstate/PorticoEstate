@@ -1,3 +1,5 @@
+/* global lang, genericLink, initialSelection */
+
 var building_id_selection = "";
 var regulations_select_all = "";
 
@@ -7,7 +9,7 @@ $(document).ready(function ()
 	{
 		var temp_end_date = $("#end_date").datetimepicker('getValue');
 		var temp_start_date = $("#start_date").datetimepicker('getValue');
-		if(!temp_end_date || (temp_end_date < temp_start_date))
+		if (!temp_end_date || (temp_end_date < temp_start_date))
 		{
 			$("#end_date").val($("#start_date").val());
 
@@ -100,6 +102,8 @@ $(window).on('load', function ()
 	{
 		populateTableChkResources(building_id, initialSelection);
 		populateTableChkRegulations(building_id, initialDocumentSelection, resources);
+		populateTableChkArticles([], resources);
+
 		building_id_selection = building_id;
 	}
 	$("#field_building_name").on("autocompleteselect", function (event, ui)
@@ -123,7 +127,25 @@ $(window).on('load', function ()
 		});
 		var selection = [];
 		populateTableChkRegulations(building_id_selection, selection, resources);
+		populateTableChkArticles(selection, resources);
+
 	});
+
+	$('#articles_container').on('change', '.quantity', function ()
+	{
+		var quantity = $(this).val();
+		var button = $(this).parents('tr').find("button");
+
+		if (quantity > 0)
+		{
+			button.prop('disabled', false);
+		}
+		else
+		{
+			button.prop('disabled', true);
+		}
+	});
+
 	$("#field_org_name").on("autocompleteselect", function (event, ui)
 	{
 		var organization_id = ui.item.value;
@@ -341,13 +363,13 @@ else
 function populateTableChkResources(building_id, selection)
 {
 	var oArgs = {
-		menuaction: 'bookingfrontend.uiresource.index_json',
+		menuaction: 'booking.uiresource.index',
 		sort: 'name',
 //		sub_activity_id: $("#field_activity").val(),
 		filter_building_id: building_id,
 		length: -1
 	};
-	var url = phpGWLink('bookingfrontend/', oArgs, true);
+	var url = phpGWLink('index.php', oArgs, true);
 	var container = 'resources_container';
 	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [
 						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}, {name: 'class', value: 'chkRegulations'}
@@ -357,6 +379,158 @@ function populateTableChkResources(building_id, selection)
 	populateTableResources(url, container, colDefsResources);
 }
 
+function populateTableChkArticles(selection, resources)
+{
+	var oArgs = {
+		menuaction: 'booking.uiarticle_mapping.get_articles',
+		sort: 'name',
+	};
+	var url = phpGWLink('index.php', oArgs, true);
+
+	for (var r in resources)
+	{
+		url += '&resources[]=' + resources[r];
+	}
+
+	var container = 'articles_container';
+	var colDefsRegulations = [
+		{label: lang['Select'],
+			object: [
+				{
+					type: 'button',
+					attrs: [
+						{name: 'type', value: 'button'},
+						{name: 'disabled', value: true},
+						{name: 'class', value: 'btn btn-success'},
+						{name: 'onClick', value: 'add_to_bastet(this);'},
+						{name: 'innerHTML', value: 'Legg til <i class="fas fa-shopping-basket"></i>'},
+					]
+				}
+			]
+		},
+		{
+			/**
+			 * Hidden field for holding article id
+			 */
+			attrs: [{name: 'style', value: "display:none;"}],
+			object: [
+				{type: 'input', attrs: [
+						{name: 'type', value: 'hidden'}
+					]
+				}
+			], value: 'id'},
+		{key: 'name', label: lang['article']},
+		{key: 'price', label: lang['price']},
+		{key: 'unit', label: lang['unit']},
+		{key: 'quantity', label: lang['quantity'], object: [
+				{type: 'input', attrs: [
+						{name: 'type', value: 'number'},
+						{name: 'min', value: 0},
+						{name: 'value', value: 0},
+						{name: 'size', value: 3},
+						{name: 'class', value: 'quantity'},
+					]
+				}
+			]},
+		{label: lang['Selected'],
+			object: [
+				{type: 'input', attrs: [
+						{name: 'type', value: 'hidden'},
+						{name: 'name', value: 'selected_articles[]'}
+					]
+				}
+			]},
+		{label: lang['Delete'],
+			object: [
+				{
+					type: 'button',
+					attrs: [
+						{name: 'type', value: 'button'},
+						{name: 'disabled', value: true},
+						{name: 'class', value: 'btn btn-danger'},
+						{name: 'onClick', value: 'empty_from_bastet(this);'},
+						{name: 'innerHTML', value: 'Slett <i class="far fa-trash-alt"></i>'},
+					]
+				}
+			]
+		}
+
+	];
+
+	populateTableArticles(url, container, colDefsRegulations);
+
+}
+
+function add_to_bastet(element)
+{
+	var id = element.parentNode.parentNode.childNodes[1].childNodes[0].value;
+	var quantity = element.parentNode.parentNode.childNodes[5].childNodes[0].value;
+
+	/**
+	 * set selected items
+	 */
+	var temp = element.parentNode.parentNode.childNodes[6].childNodes[0].value;
+
+	var selected_quantity = 0;
+
+	if (temp)
+	{
+		selected_quantity = parseInt(temp.split("_")[1]);
+	}
+
+	selected_quantity = selected_quantity + parseInt(quantity);
+
+	/**
+	 * Reset quantity
+	 */
+	element.parentNode.parentNode.childNodes[5].childNodes[0].value = 0;
+	/**
+	 * Reset button to disabled
+	 */
+	element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
+
+	var target = element.parentNode.parentNode.childNodes[6].childNodes[0];
+	target.value = id + '_' + selected_quantity;
+
+	var div = document.getElementById('selected_quantity_' + id);
+	if (div)
+	{
+		div.parentNode.removeChild(div);
+	}
+
+// create a new element
+	var elem = document.createElement('div');
+	elem.id = 'selected_quantity_' + id;
+
+// add text
+    elem.innerText = selected_quantity;
+
+// insert the element after target element
+	target.parentNode.insertBefore(elem, target.nextSibling);
+
+}
+
+function empty_from_bastet(element)
+{
+	/**
+	 * Reset quantity
+	 */
+	var id = element.parentNode.parentNode.childNodes[1].childNodes[0].value;
+	var div = document.getElementById('selected_quantity_' + id);
+	if (div)
+	{
+		div.parentNode.removeChild(div);
+	}
+
+	element.parentNode.parentNode.childNodes[5].childNodes[0].value = 0;
+	element.parentNode.parentNode.childNodes[6].childNodes[0].value = '';
+	/**
+	 * Reset button to disabled
+	 */
+	element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
+	element.parentNode.parentNode.childNodes[7].childNodes[0].setAttribute('disabled', true);
+
+}
 function populateTableChkRegulations(building_id, selection, resources)
 {
 	var oArgs = {
@@ -390,11 +564,11 @@ function populateTableResources(url, container, colDefs)
 {
 	if (typeof tableClass !== 'undefined')
 	{
-		createTable(container, url, colDefs, 'results', tableClass);
+		createTable(container, url, colDefs, 'data', tableClass);
 	}
 	else
 	{
-		createTable(container, url, colDefs, 'results', 'pure-table pure-table-bordered');
+		createTable(container, url, colDefs, 'data', 'pure-table pure-table-bordered');
 	}
 }
 
@@ -410,3 +584,9 @@ function populateTableRegulations(url, container, colDefs)
 	}
 
 }
+function populateTableArticles(url, container, colDefs)
+{
+	createTable(container, url, colDefs, '', 'pure-table pure-table-bordered');
+}
+
+

@@ -37,6 +37,10 @@
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
 
+		<xsl:variable name="value_id">
+			<xsl:value-of select="value_id"/>
+		</xsl:variable>
+
 		<xsl:value-of select="validator"/>
 
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
@@ -223,6 +227,12 @@
 													<xsl:attribute name="title">
 														<xsl:value-of select="$descr"/>
 													</xsl:attribute>
+													<xsl:choose>
+														<xsl:when test="$value_id = '' and default = 'checked'">
+																<xsl:attribute name="checked" value="checked"/>
+														</xsl:when>
+													</xsl:choose>
+
 												</input>
 											</xsl:otherwise>
 										</xsl:choose>
