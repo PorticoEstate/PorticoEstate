@@ -12,7 +12,9 @@
 				if (is_array($value) || $value instanceof ArrayAccess)
 				{
 					foreach ($value as $msg)
+					{
 						$flash_msgs[$msg] = false;
+					}
 				}
 				else
 				{
