@@ -398,10 +398,17 @@ class Bra5StructDocument extends Bra5WsdlClass
      * @param array $_array the exported values
      * @return Bra5StructDocument
      */
-    public static function __set_state(array $_array,$_className = __CLASS__)
+    public static function __set_state(array $_array)
     {
-        return parent::__set_state($_array,$_className);
+        $_className = __CLASS__;
+		return parent::set_state_compatible($_array,$_className);
     }
+
+	public static function set_state_compatible(array $_array,$_className = __CLASS__)
+    {
+ 		return parent::set_state_compatible($_array,$_className);
+    }
+
     /**
      * Method returning the class name
      * @return string __CLASS__
