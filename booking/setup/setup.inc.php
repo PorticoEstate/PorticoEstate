@@ -80,8 +80,8 @@
 		'bb_resource_service',
 		'bb_article_price',
 		'bb_article_price_reduction',
-		'bb_order',
-		'bb_order_lines',
+		'bb_purchase_order',
+		'bb_purchase_order_line',
 	);
 
 	$setup_info['booking']['description'] = 'Bergen kommune booking';

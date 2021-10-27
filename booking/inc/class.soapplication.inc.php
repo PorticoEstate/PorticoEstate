@@ -478,26 +478,14 @@
 
 			}
 
-
-			$limit_number_horizont_days	 = floor($booking_limit_number_horizont / 2);
-			$limit_number_horizont_hours = floor((($booking_limit_number_horizont / 2) - $limit_number_horizont_days) * 10) * 24;
-
-			$future_limit_half	 = clone ($now);
 			$future_limit_full	 = clone ($now);
 			$future_limit_full->modify("+{$booking_limit_number_horizont} days");
 
-			$future_limit_half->modify("+{$limit_number_horizont_days} days");
-			$future_limit_half->modify("+{$limit_number_horizont_hours} hours");
-			$future_limit_date_full	 = $future_limit_full->format('Y-m-d H:i');
-			$future_limit_date_half	 = $future_limit_half->format('Y-m-d H:i');
-
-			$history_limit_half		 = clone ($now);
-			$history_limit_full		 = clone ($now);
+			$history_limit_full	 = clone ($now);
 			$history_limit_full->modify("-{$booking_limit_number_horizont} days");
-			$history_limit_half->modify("-{$limit_number_horizont_days} days");
-			$history_limit_half->modify("-{$limit_number_horizont_hours} hours");
-			$history_limit_date_full = $history_limit_full->format('Y-m-d H:i');
-			$history_limit_date_half = $history_limit_half->format('Y-m-d H:i');
+
+			$timestamp_history = $history_limit_full->getTimestamp();
+			$timestamp_future = $future_limit_full->getTimestamp();
 
 			$sql = "SELECT count(*) as cnt FROM"
 				. " (SELECT bb_application.id FROM bb_application"
@@ -505,10 +493,9 @@
 				. " JOIN bb_application_resource"
 				. " ON bb_application.id = bb_application_resource.application_id AND bb_application_resource.resource_id = " .(int) $resource_id
 				. " WHERE "
-				. "("
-				. " customer_ssn = '{$ssn}' AND status != 'REJECTED' "
-				. "	AND ((to_ > '{$history_limit_date_half}' AND from_ < '$future_limit_date_half')"
-				. " OR (to_ > '{$history_limit_date_full}' AND from_ < '$future_limit_date_full'))"
+				. "( customer_ssn = '{$ssn}' AND status != 'REJECTED' "
+				. " AND ((EXTRACT(EPOCH from (to_- current_date))) > -$timestamp_history"
+				. " OR (EXTRACT(EPOCH from (current_date - from_))) < $timestamp_future)"
 				. ")"
 				. " OR (status = 'NEWPARTIAL1' AND session_id = '$session_id')"
 				. " ) as t";
