@@ -145,7 +145,7 @@
 					$contract->check_consistency();
 
 					$this->get_pdf_templates();
-					$template_file = 'pdf/' . $this->pdf_templates[$_GET[pdf_template]][1];
+					$template_file = 'pdf/' . $this->pdf_templates[$_GET['pdf_template']][1];
 					$this->render($template_file, $data);
 				}
 			}
