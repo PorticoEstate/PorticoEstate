@@ -133,8 +133,6 @@
 				}
 			}
 
-			$this->cancel_payment($orderId);
-
 			$path	 = '/ecomm/v2/payments';
 			$url	 = "{$this->base_url}{$path}";
 
@@ -192,17 +190,10 @@
 			return $ret;
 		}
 
-		private function capture_payment( $param )
+		private function capture_payment( $order_id )
 		{
-			
-		}
-
-		private function cancel_payment( $order_id )
-		{
-			$path	 = "/ecomm/v2/payments/{$order_id}/cancel";
+			$path	 = "/ecomm/v2/payments/{$order_id}/capture";
 			$url	 = "{$this->base_url}{$path}";
-
-			$soapplication	 = CreateObject('booking.soapplication');
 
 			$client = new GuzzleHttp\Client();
 
@@ -223,7 +214,58 @@
 			}
 
 			$transaction = [
-				"transactionText" => 'Aktiv kommune, bookingdato: ' . $dates,
+				"amount"			 => 20000,
+				"transactionText"	 => 'Booking i Aktiv kommune',
+			];
+
+			$request_body = [
+				"merchantInfo"	 => [
+					"merchantSerialNumber" => $this->msn,
+				],
+				"transaction"	 => $transaction
+			];
+
+			$request['json'] = $request_body;
+
+			try
+			{
+				$response	 = $client->request('POST', $url, $request);
+				$ret		 = json_decode($response->getBody()->getContents(), true);
+			}
+			catch (\GuzzleHttp\Exception\BadResponseException $e)
+			{
+				// handle exception or api errors.
+				print_r($e->getMessage());
+			}
+		}
+
+		private function cancel_payment( $order_id )
+		{
+			$path	 = "/ecomm/v2/payments/{$order_id}/cancel";
+			$url	 = "{$this->base_url}{$path}";
+
+			$soapplication = CreateObject('booking.soapplication');
+
+			$client = new GuzzleHttp\Client();
+
+			$request = array();
+
+			$request['headers'] = array(
+				'Accept'					 => 'application/json;charset=UTF-8',
+				'Authorization'				 => $this->accesstoken,
+				'Ocp-Apim-Subscription-Key'	 => $this->subscription_key,
+			);
+
+			if ($this->proxy)
+			{
+				$request['proxy'] = array(
+					'http'	 => $this->proxy,
+					'https'	 => $this->proxy
+				);
+			}
+
+			$transaction = [
+				"transactionText" => 'Booking i Aktiv kommune',
 			];
 
 			$request_body = [
@@ -245,8 +287,6 @@
 				// handle exception or api errors.
 				print_r($e->getMessage());
 			}
-
-			return !empty($ret['access_token']) ? $ret['access_token'] : null;
 		}
 
 		private function authorize_payment( $param )
