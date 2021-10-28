@@ -2954,9 +2954,9 @@
 			{
 				$start_date			 = $this->db->f('start_date');
 				$periodization_id	 = (int)$this->db->f('periodization_id');
-				$budget				 = $this->db->f('budget');
-				$contract_sum		 = $this->db->f('contract_sum');
-				$combined_cost		 = $this->db->f('combined_cost');
+				$budget				 = (float)$this->db->f('budget');
+				$contract_sum		 = (float)$this->db->f('contract_sum');
+				$combined_cost		 = (float)$this->db->f('combined_cost');
 				$this->_update_order_budget($order_id, date('Y', $start_date), $periodization_id, $budget, $contract_sum, $combined_cost);
 			}
 		}
@@ -3050,10 +3050,10 @@
 				{
 					$periodization_outline[] = array
 						(
-						'month'		 => $this->db->f('month'),
-						'value'		 => $this->db->f('value'),
-						'dividend'	 => $this->db->f('dividend'),
-						'divisor'	 => $this->db->f('divisor')
+						'month'		 => (int)$this->db->f('month'),
+						'value'		 => (float)$this->db->f('value'),
+						'dividend'	 => (int)$this->db->f('dividend'),
+						'divisor'	 => (int)$this->db->f('divisor')
 					);
 				}
 			}
