@@ -464,28 +464,34 @@
 			{
 				return false;
 			}
-			$timezone = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
 
-			$now = new DateTime();
+//			$timezone = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+//
+//			$now = new DateTime();
+//
+//			try
+//			{
+//				$DateTimeZone = new DateTimeZone($timezone);
+//				$now->setTimezone($DateTimeZone);
+//			}
+//			catch (Exception $ex)
+//			{
+//
+//			}
+//
+//			$future_limit_full	 = clone ($now);
+//			$future_limit_full->modify("+{$booking_limit_number_horizont} days");
+//
+//			$history_limit_full	 = clone ($now);
+//			$history_limit_full->modify("-{$booking_limit_number_horizont} days");
+//
+//			$timestamp_history = $history_limit_full->getTimestamp();
+//			$timestamp_future = $future_limit_full->getTimestamp();
+//
+//			$interval_history = abs($timestamp_history - time());
+//			$interval_future = $timestamp_future - time();
 
-			try
-			{
-				$DateTimeZone = new DateTimeZone($timezone);
-				$now->setTimezone($DateTimeZone);
-			}
-			catch (Exception $ex)
-			{
-
-			}
-
-			$future_limit_full	 = clone ($now);
-			$future_limit_full->modify("+{$booking_limit_number_horizont} days");
-
-			$history_limit_full	 = clone ($now);
-			$history_limit_full->modify("-{$booking_limit_number_horizont} days");
-
-			$timestamp_history = $history_limit_full->getTimestamp();
-			$timestamp_future = $future_limit_full->getTimestamp();
+			$booking_horizont_seconds = (int)$booking_limit_number_horizont * 3600 * 24;
 
 			$sql = "SELECT count(*) as cnt FROM"
 				. " (SELECT bb_application.id FROM bb_application"
@@ -494,8 +500,8 @@
 				. " ON bb_application.id = bb_application_resource.application_id AND bb_application_resource.resource_id = " .(int) $resource_id
 				. " WHERE "
 				. "( customer_ssn = '{$ssn}' AND status != 'REJECTED' "
-				. " AND ((EXTRACT(EPOCH from (to_- current_date))) > -$timestamp_history"
-				. " OR (EXTRACT(EPOCH from (current_date - from_))) < $timestamp_future)"
+				. " AND ((EXTRACT(EPOCH from (to_- current_date))) > -$booking_horizont_seconds"
+				. " OR (EXTRACT(EPOCH from (current_date - from_))) < $booking_horizont_seconds)"
 				. ")"
 				. " OR (status = 'NEWPARTIAL1' AND session_id = '$session_id')"
 				. " ) as t";

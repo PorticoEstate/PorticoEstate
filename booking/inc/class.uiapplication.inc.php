@@ -728,6 +728,29 @@
 			);
 		}
 
+		private function validate_limit_number($resource_id, $ssn, &$errors )
+		{
+			$resource = $this->resource_bo->so->read_single($resource_id);
+			if($resource['booking_limit_number_horizont'] > 0 && $resource['booking_limit_number'] > 0)
+			{
+				$limit_reached = $this->bo->so->check_booking_limit(
+					$GLOBALS['phpgw']->session->get_session_id(),
+					$resource_id,
+					$ssn,
+					$resource['booking_limit_number_horizont'],
+					$resource['booking_limit_number'] );
+
+				if($limit_reached)
+				{
+					$errors['error_message'] = lang('quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days',
+						$limit_reached,
+						$resource['name'],
+						$resource['booking_limit_number'],
+						$resource['booking_limit_number_horizont']);
+				}
+			}
+		}
+
 		public function add()
 		{
 			$organization_number = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
@@ -737,6 +760,12 @@
 			$bouser = CreateObject('bookingfrontend.bouser');
 
 			$errors = array();
+			$user_data = phpgwapi_cache::session_get($bouser->get_module(), $bouser::USERARRAY_SESSION_KEY);
+			if($user_data['ssn'])
+			{
+				$this->validate_limit_number(phpgw::get_var('resource_id', 'int' ),$user_data['ssn'],$errors);
+			}
+
 			$application_id = phpgw::get_var('application_id', 'int');
 			if (isset($application_id))
 			{
@@ -926,25 +955,7 @@
 
 					foreach ($resources['results'] as $resource)
 					{
-						if($resource['booking_limit_number_horizont'] > 0 && $resource['booking_limit_number'] > 0)
-						{
-							$limit_reached = $this->bo->so->check_booking_limit(
-								$GLOBALS['phpgw']->session->get_session_id(),
-								$resource['id'],
-								$user_data['ssn'],
-								$resource['booking_limit_number_horizont'],
-								$resource['booking_limit_number'] );
-
-							if($limit_reached)
-							{
-								$errors['error_message'] = lang('quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days',
-									$limit_reached,
-									$resource['name'],
-									$resource['booking_limit_number'],
-									$resource['booking_limit_number_horizont']);
-							}
-						}
-
+						$this->validate_limit_number($resource['id'], $user_data['ssn'], $errors );
 					}
 					unset($resources);
 					unset($resource);
