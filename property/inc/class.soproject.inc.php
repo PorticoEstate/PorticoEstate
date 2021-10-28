@@ -1977,8 +1977,8 @@
 					(
 					'buffer_project_id'	 => $this->db->f('buffer_project_id'),
 					'year'				 => $this->db->f('year'),
-					'amount_in'			 => $this->db->f('amount_in'),
-					'amount_out'		 => $this->db->f('amount_out'),
+					'amount_in'			 => (float)$this->db->f('amount_in'),
+					'amount_out'		 => (float)$this->db->f('amount_out'),
 					'from_project'		 => $this->db->f('from_project'),
 					'to_project'		 => $this->db->f('to_project'),
 					'user_id'			 => $this->db->f('user_id'),
