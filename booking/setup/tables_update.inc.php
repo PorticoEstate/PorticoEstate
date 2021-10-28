@@ -5402,7 +5402,7 @@
 				'parent_id' => array('type' => 'int', 'nullable' => true, 'precision' => '4'),
 				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 				'application_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'customer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'customer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'timestamp' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
 
 			),

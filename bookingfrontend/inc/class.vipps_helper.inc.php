@@ -104,12 +104,12 @@
 		private function initiate_payment( $application_ids )
 		{
 
-			$soapplication = CreateObject('booking.soapplication');
+			$soapplication	 = CreateObject('booking.soapplication');
 			$filters		 = array('id' => $application_ids);
 			$params			 = array('filters' => $filters, 'results' => 'all');
 			$applications	 = $soapplication->read($params);
 
-			$purchase_orders = $soapplication->get_purchase_order($applications);
+			$soapplication->get_purchase_order($applications);
 
 			foreach ($applications['results'] as $application)
 			{
@@ -117,14 +117,13 @@
 
 				foreach ($application['orders'] as $_order_id => $order)
 				{
-					$orderId				 = "Ak-shop-{$_order_id}-order{$_order_id}abc";
+					$orderId = "Ak-shop-{$_order_id}-order{$_order_id}abc";
 					if (empty($order['paid']))
 					{
 						$transaction = [
 							"amount"					 => (float)$order['sum'] * 100,
 							"orderId"					 => $orderId,
-//							"transactionText"			 => implode(', ', array_map(array($this, 'get_item_name'), $order['lines'])) . ' ('. $dates . ')',
-							"transactionText"			 => 'Aktiv kommune, booking dato: ' . $dates,
+							"transactionText"			 => 'Aktiv kommune, bookingdato: ' . $dates,
 							"skipLandingPage"			 => false,
 							"scope"						 => "name address email",
 							"useExplicitCheckoutFlow"	 => true
@@ -134,7 +133,7 @@
 				}
 			}
 
-//			$this->cancel_payment($orderId);
+			$this->cancel_payment($orderId);
 
 			$path	 = '/ecomm/v2/payments';
 			$url	 = "{$this->base_url}{$path}";
@@ -171,7 +170,7 @@
 					"fallBack"				 => "http://127.0.0.1/~hc483/github_trunk/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add_contact&id=" . $application_ids[0],
 					"isApp"					 => false,
 					"merchantSerialNumber"	 => $this->msn,
-	//				"paymentType"			 => "eComm Express Payment",
+					//				"paymentType"			 => "eComm Express Payment",
 					"paymentType"			 => "eComm Regular Payment"
 				],
 				"transaction"	 => $transaction
@@ -198,9 +197,56 @@
 			
 		}
 
-		private function cancel_payment( $param )
+		private function cancel_payment( $order_id )
 		{
+			$path	 = "/ecomm/v2/payments/{$order_id}/cancel";
+			$url	 = "{$this->base_url}{$path}";
 
+			$soapplication	 = CreateObject('booking.soapplication');
+
+			$client = new GuzzleHttp\Client();
+
+			$request = array();
+
+			$request['headers'] = array(
+				'Accept'					 => 'application/json;charset=UTF-8',
+				'Authorization'				 => $this->accesstoken,
+				'Ocp-Apim-Subscription-Key'	 => $this->subscription_key,
+			);
+
+			if ($this->proxy)
+			{
+				$request['proxy'] = array(
+					'http'	 => $this->proxy,
+					'https'	 => $this->proxy
+				);
+			}
+
+			$transaction = [
+				"transactionText" => 'Aktiv kommune, bookingdato: ' . $dates,
+			];
+
+			$request_body = [
+				"merchantInfo"	 => [
+					"merchantSerialNumber" => $this->msn,
+				],
+				"transaction"	 => $transaction
+			];
+
+			$request['json'] = $request_body;
+
+			try
+			{
+				$response	 = $client->request('PUT', $url, $request);
+				$ret		 = json_decode($response->getBody()->getContents(), true);
+			}
+			catch (\GuzzleHttp\Exception\BadResponseException $e)
+			{
+				// handle exception or api errors.
+				print_r($e->getMessage());
+			}
+
+			return !empty($ret['access_token']) ? $ret['access_token'] : null;
 		}
 
 		private function authorize_payment( $param )
