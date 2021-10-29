@@ -67,11 +67,11 @@
 		 */
 		public function download()
 		{
-			$list = $this->query();
+			$list = (array)$this->query();
 
 			$keys = array();
 
-			if (count($list[0]) > 0)
+			if (isset($list[0]) && count($list[0]) > 0)
 			{
 				foreach ($list[0] as $key => $value)
 				{
