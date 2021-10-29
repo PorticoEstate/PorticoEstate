@@ -1460,10 +1460,10 @@
 
 			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['currency']))
 			{
-				$workorder['contract_sum'] = str_ireplace($GLOBALS['phpgw_info']['user']['preferences']['common']['currency'], '', $workorder['contract_sum']);
+				$workorder['contract_sum'] = str_ireplace($GLOBALS['phpgw_info']['user']['preferences']['common']['currency'], '', (float)$workorder['contract_sum']);
 			}
 
-			$workorder['contract_sum'] = str_replace(array(' ', ','), array('', '.'), $workorder['contract_sum']);
+			$workorder['contract_sum'] = (float)str_replace(array(' ', ','), array('', '.'), $workorder['contract_sum']);
 
 			if (abs((int)$workorder['contract_sum']) > 0)
 			{
@@ -1627,13 +1627,13 @@
 			{
 				$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE order_id = '{$workorder['id']}'", __LINE__, __FILE__);
 				$this->db->next_record();
-				$old_budget = $this->db->f('budget');
+				$old_budget = (float)$this->db->f('budget');
 
 				$this->delete_period_from_budget($workorder['id'], $workorder['delete_b_period']);
 
 				$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE order_id = '{$workorder['id']}'", __LINE__, __FILE__);
 				$this->db->next_record();
-				$new_budget = $this->db->f('budget');
+				$new_budget = (float)$this->db->f('budget');
 
 				$historylog->add('B', $workorder['id'], $new_budget, $old_budget);
 			}
@@ -1643,13 +1643,13 @@
 			{
 				$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE order_id = '{$workorder['id']}'", __LINE__, __FILE__);
 				$this->db->next_record();
-				$old_budget = $this->db->f('budget');
+				$old_budget = (float)$this->db->f('budget');
 
-				$this->_update_order_budget($workorder['id'], $workorder['budget_year'], $periodization_id, $workorder['budget'], $workorder['contract_sum'], $combined_cost);
+				$this->_update_order_budget($workorder['id'], $workorder['budget_year'], $periodization_id, (float)$workorder['budget'], (float)$workorder['contract_sum'], (float)$combined_cost);
 
 				$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE order_id = '{$workorder['id']}'", __LINE__, __FILE__);
 				$this->db->next_record();
-				$new_budget = $this->db->f('budget');
+				$new_budget = (float)$this->db->f('budget');
 
 				$historylog->add('B', $workorder['id'], $new_budget, $old_budget);
 			}
