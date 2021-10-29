@@ -1377,7 +1377,7 @@
 			);
 		}
 
-		function check_booking_limit($session_id, $ssn, $resources )
+		public function check_booking_limit($session_id, $ssn, $resources )
 		{
 			$_limit_reached = 0;
 			foreach ($resources['results'] as $resource)

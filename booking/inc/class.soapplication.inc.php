@@ -457,7 +457,6 @@
 			return $this->db->query("UPDATE bb_application SET external_archive_key = '{$external_archive_key}' WHERE id =" . (int)$id, __LINE__, __FILE__);
 		}
 
-
 		function check_booking_limit( $session_id, $resource_id, $ssn, $booking_limit_number_horizont, $booking_limit_number )
 		{
 			if (!$ssn || !$booking_limit_number_horizont || !$booking_limit_number)
@@ -497,7 +496,7 @@
 				. " (SELECT bb_application.id FROM bb_application"
 				. " JOIN bb_application_date ON bb_application.id = bb_application_date.application_id"
 				. " JOIN bb_application_resource"
-				. " ON bb_application.id = bb_application_resource.application_id AND bb_application_resource.resource_id = " .(int) $resource_id
+				. " ON bb_application.id = bb_application_resource.application_id AND bb_application_resource.resource_id = " . (int)$resource_id
 				. " WHERE "
 				. "( customer_ssn = '{$ssn}' AND status != 'REJECTED' "
 				. " AND ((EXTRACT(EPOCH from (to_- current_date))) > -$booking_horizont_seconds"
@@ -576,8 +575,8 @@
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			$orders	 = array();
-			$sum	 = array();
+			$orders		 = array();
+			$sum		 = array();
 			$total_sum	 = 0;
 			while ($this->db->next_record())
 			{
@@ -590,7 +589,7 @@
 
 				$_sum			 = (float)$this->db->f('amount') + (float)$this->db->f('tax');
 				$sum[$order_id]	 = (float)$sum[$order_id] + $_sum;
-				$total_sum += $_sum;
+				$total_sum		 += $_sum;
 
 				$orders[$application_id][$order_id]['lines'][] = array(
 					'order_id'				 => $order_id,
@@ -606,13 +605,13 @@
 					'name'					 => $this->db->f('name', true),
 				);
 
-				$orders[$application_id][$order_id]['order_id'] = $order_id;
-				$orders[$application_id][$order_id]['sum'] = $sum[$order_id];
+				$orders[$application_id][$order_id]['order_id']	 = $order_id;
+				$orders[$application_id][$order_id]['sum']		 = $sum[$order_id];
 			}
 
 			foreach ($applications['results'] as &$application)
 			{
-				if(empty($orders[$application['id']]))
+				if (empty($orders[$application['id']]))
 				{
 					continue;
 				}
@@ -737,6 +736,74 @@
 			{
 				return $this->db->transaction_commit();
 			}
+		}
+
+		function get_single_purchase_order( $order_id )
+		{
+			if (!$order_id)
+			{
+				return;
+			}
+
+			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id,"
+				. "CASE WHEN
+					(
+						bb_resource.name IS NULL
+					)"
+				. " THEN bb_service.name ELSE bb_resource.name END AS name"
+				. " FROM bb_purchase_order JOIN bb_purchase_order_line ON bb_purchase_order.id = bb_purchase_order_line.order_id"
+				. " JOIN bb_article_mapping ON bb_purchase_order_line.article_mapping_id = bb_article_mapping.id"
+				. " LEFT JOIN bb_service ON (bb_article_mapping.article_id = bb_service.id AND bb_article_mapping.article_cat_id = 2)"
+				. " LEFT JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id AND bb_article_mapping.article_cat_id = 1)"
+				. " WHERE bb_purchase_order.id = " . (int)$order_id;
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$order		 = array();
+			$sum		 = 0;
+			$total_sum	 = 0;
+			while ($this->db->next_record())
+			{
+				$application_id	 = (int)$this->db->f('application_id');
+				$order_id		 = (int)$this->db->f('order_id');
+
+				$_sum		 = (float)$this->db->f('amount') + (float)$this->db->f('tax');
+				$sum		 = (float)$sum + $_sum;
+				$total_sum	 += $_sum;
+
+				$order['lines'][] = array(
+					'application_id'		 => $application_id,
+					'order_id'				 => $order_id,
+					'status'				 => (int)$this->db->f('status'),
+					'article_mapping_id'	 => (int)$this->db->f('article_mapping_id'),
+					'quantity'				 => (float)$this->db->f('quantity'),
+					'unit_price'			 => (float)$this->db->f('unit_price'),
+					'overridden_unit_price'	 => (float)$this->db->f('overridden_unit_price'),
+					'currency'				 => $this->db->f('currency'),
+					'amount'				 => (float)$this->db->f('amount'),
+					'tax_code'				 => (int)$this->db->f('tax_code'),
+					'tax'					 => (float)$this->db->f('tax'),
+					'name'					 => $this->db->f('name', true),
+				);
+
+				$order['order_id']	 = $order_id;
+				$order['sum']		 = $sum;
+			}
+			return $order;
+		}
+
+		function add_payment( $order_id )
+		{
+			$order = $this->get_single_purchase_order($order_id);
+
+			$value_set = array(
+				'application_id' => (int)$purchase_order['application_id'],
+				'status'		 => 0,
+				'customer_id'	 => null
+			);
+
+			$this->db->query('INSERT INTO bb_payment (' . implode(',', array_keys($value_set)) . ') VALUES ('
+				. $this->db->validate_insert(array_values($value_set)) . ')', __LINE__, __FILE__);
 		}
 	}
 

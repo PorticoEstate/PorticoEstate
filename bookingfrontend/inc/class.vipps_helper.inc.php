@@ -104,6 +104,7 @@
 		private function initiate_payment( $application_ids )
 		{
 
+			$payment_attempt = 2;
 			$soapplication	 = CreateObject('booking.soapplication');
 			$filters		 = array('id' => $application_ids);
 			$params			 = array('filters' => $filters, 'results' => 'all');
@@ -115,9 +116,9 @@
 			{
 				$dates = implode(', ', array_map(array($this, 'get_date_range'), $application['dates']));
 
-				foreach ($application['orders'] as $_order_id => $order)
+				foreach ($application['orders'] as  $order)
 				{
-					$orderId = "Ak-shop-{$_order_id}-order{$_order_id}abc";
+					$orderId = "{$this->msn}-{$order['order_id']}-order-{$order['order_id']}-{$payment_attempt}";
 					if (empty($order['paid']))
 					{
 						$transaction = [
@@ -128,6 +129,7 @@
 							"scope"						 => "name address email",
 							"useExplicitCheckoutFlow"	 => true
 						];
+						$soapplication->add_payment($order['order_id']);
 						break 2;
 					}
 				}
@@ -165,7 +167,7 @@
 					"callbackPrefix"		 => "https://example.com/vipps/callbacks-for-payment-updates",
 					"consentRemovalPrefix"	 => "https://example.com/vipps/consent-removal",
 //					"fallBack"				 => "https://example.com/vipps/fallback-order-result-page/Ak-shop-{$order_id}-order{$order_id}abc",
-					"fallBack"				 => "http://127.0.0.1/~hc483/github_trunk/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add_contact&id=" . $application_ids[0],
+					"fallBack"				 => "http://127.0.0.1/~hc483/github_trunk/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add_contact&order_id={$order['order_id']}",
 					"isApp"					 => false,
 					"merchantSerialNumber"	 => $this->msn,
 					//				"paymentType"			 => "eComm Express Payment",
