@@ -753,7 +753,7 @@
 			if (is_array($data))
 			{
 				$id			 = (isset($data['workorder_id']) ? $data['workorder_id'] : 0);
-				$calculation = (isset($data['calculation']) ? $data['calculation'] : 0);
+				$calculation = (isset($data['calculation']) ? (float)$data['calculation'] : 0);
 			}
 
 			$this->db->transaction_begin();
@@ -771,8 +771,8 @@
 
 				$this->db->query("SELECT sum(budget) AS budget, sum(contract_sum) as contract_sum FROM fm_workorder_budget WHERE order_id = '{$id}'", __LINE__, __FILE__);
 				$this->db->next_record();
-				$budget			 = $this->db->f('budget');
-				$contract_sum	 = $this->db->f('contract_sum');
+				$budget			 = (float)$this->db->f('budget');
+				$contract_sum	 = (float)$this->db->f('contract_sum');
 
 				$this->db->query("SELECT periodization_id, contract_sum"
 					. " FROM fm_workorder {$this->join} fm_project ON (fm_workorder.project_id = fm_project.id)"
@@ -781,7 +781,7 @@
 				$this->db->next_record();
 
 				$periodization_id	 = $this->db->f('periodization_id');
-				$contract_sum		 = $this->db->f('contract_sum');
+//				$contract_sum		 = (float)$this->db->f('contract_sum');
 				if (!abs($contract_sum) > 0)
 				{
 					$soworkorder->_update_order_budget($id, date('Y'), $periodization_id, $budget, $contract_sum, $calculation);
