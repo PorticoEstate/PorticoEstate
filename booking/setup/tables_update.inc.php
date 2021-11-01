@@ -5275,7 +5275,6 @@
 
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-
 		$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('booking', 'run'));
 
 		$receipt_section_common = $custom_config->add_section(array
@@ -5374,8 +5373,11 @@
 			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_purchase_order_line');
 			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_mapping');
 			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_category');
-			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_order');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_purchase_order');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_purchase_order_line');
 			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_customer');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_payment_method');
+			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_payment');
 		}
 
 		# END Evil
@@ -5548,6 +5550,54 @@
 			"SELECT id, name, description, active, 1 AS article_cat_id FROM bb_resource " .
 			"UNION " .
 			"SELECT id, name, description, active, 2 AS article_cat_id  FROM bb_service" , __LINE__, __FILE__
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_payment_method', array(
+			'fd' => array(
+				'id'					 => array('type' => 'auto', 'nullable' => false),
+				'payment_gateway_name'	 => array('type' => 'varchar', 'precision' => '50', 'nullable' => false), //test and live.
+				'payment_gateway_mode'	 => array('type' => 'varchar', 'precision' => '6', 'nullable' => false), //test and live.
+				'is_default'			 => array('type' => 'int', 'precision' => '2', 'nullable' => true),
+				'expires'				 => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'created'				 => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'changed'				 => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_payment', array(
+			'fd' => array(
+				'id'						 => array('type' => 'auto', 'nullable' => false),
+				'order_id'					 => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'payment_method_id'			 => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'payment_gateway_mode'		 => array('type' => 'varchar', 'precision' => '6', 'nullable' => false), //test and live.
+				'remote_id'					 => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+				'remote_state'				 => array('type' => 'varchar', 'precision' => 20, 'nullable' => True),
+				'amount'					 => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => true, 'default' => '0.0'),
+				'currency'					 => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),
+				'refunded_amount'			 => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => true, 'default' => '0.0'),
+				'refunded_currency'			 => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),
+				'status'					 => array('type' => 'varchar', 'precision' => '6', 'nullable' => true), //new, pending, completed, voided, partially_refunded, refunded
+				'autorized'					 => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'expires'					 => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'completet'					 => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'captured'					 => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'avs_response_code'			 => array('type' => 'varchar', 'precision' => '15', 'nullable' => true),
+				'avs_response_code_label'	 => array('type' => 'varchar', 'precision' => '35', 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_purchase_order'	 => array('order_id' => 'id'),
+				'bb_payment_method'	 => array('payment_method_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+			)
 		);
 
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())

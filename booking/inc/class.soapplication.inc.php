@@ -796,10 +796,24 @@
 		{
 			$order = $this->get_single_purchase_order($order_id);
 
+
 			$value_set = array(
-				'application_id' => (int)$purchase_order['application_id'],
-				'status'		 => 0,
-				'customer_id'	 => null
+				'order_id' => $order_id,
+				'payment_method_id'	 => 0,
+				'payment_gateway_mode' => 'test',//test and live.
+				'remote_id' => null,
+				'remote_state' => null,
+				'amount' => '0.0',
+				'currency' => 'NOK',
+				'refunded_amount' => '0.0',
+				'refunded_currency' => 'NOK',
+				'status' => 'new',// pending, completed, voided, partially_refunded, refunded
+				'autorized' => null,
+				'expires' => null,
+				'completet' => null,
+				'captured' => null,
+	//			'avs_response_code' => array('type' => 'varchar', 'precision' => '15', 'nullable' => true),
+	//			'avs_response_code_label' => array('type' => 'varchar', 'precision' => '35', 'nullable' => true),
 			);
 
 			$this->db->query('INSERT INTO bb_payment (' . implode(',', array_keys($value_set)) . ') VALUES ('

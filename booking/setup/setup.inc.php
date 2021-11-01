@@ -7,7 +7,7 @@
 
 
 	$setup_info['booking']['tables'] = array
-		(
+	(
 		'bb_activity',
 		'bb_building',
 		'bb_targetaudience',
@@ -82,6 +82,8 @@
 		'bb_article_price_reduction',
 		'bb_purchase_order',
 		'bb_purchase_order_line',
+		'bb_payment_method',
+		'bb_payment'
 	);
 
 	$setup_info['booking']['description'] = 'Bergen kommune booking';

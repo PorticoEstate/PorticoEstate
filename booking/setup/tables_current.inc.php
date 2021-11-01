@@ -1310,7 +1310,48 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-//'bb_payment'
-//'bb_payment_method'
-
+		//https://docs.drupalcommerce.org/commerce2/developer-guide/payments/payments-information-structure
+		'bb_payment' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'order_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'payment_method_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'payment_gateway_mode' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),//test and live.
+				'remote_id' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+				'remote_state' => array('type' => 'varchar', 'precision' => 20, 'nullable' => True),
+				'amount' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => true,'default' => '0.0'),
+				'currency' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),
+				'refunded_amount' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => true,'default' => '0.0'),
+				'refunded_currency' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),
+				'status' => array('type' => 'varchar', 'precision' => '6', 'nullable' => true),//new, pending, completed, voided, partially_refunded, refunded
+				'autorized' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'expires' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'completet' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'captured' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'avs_response_code' => array('type' => 'varchar', 'precision' => '15', 'nullable' => true),
+				'avs_response_code_label' => array('type' => 'varchar', 'precision' => '35', 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_purchase_order' => array('order_id' => 'id'),
+				'bb_payment_method' => array('payment_method_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_payment_method' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'payment_gateway_name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false),//test and live.
+				'payment_gateway_mode' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),//test and live.
+				'is_default' => array('type' => 'int', 'precision' => '2', 'nullable' => true),
+				'expires' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'created' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'changed' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 	);
