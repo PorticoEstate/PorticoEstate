@@ -356,10 +356,10 @@
 						}
 					}
 
-					if ($tickets)
-					{
-						$this->alert_external($workorder['id'], $tickets, $vendor['name'], $workorder['end_date']);
-					}
+//					if ($tickets)
+//					{
+//						$this->alert_external($workorder['id'], $tickets, $vendor['name'], $workorder['end_date']);
+//					}
 				}
 				else
 				{
