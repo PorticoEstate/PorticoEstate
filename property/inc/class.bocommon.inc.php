@@ -1605,8 +1605,11 @@
 				{
 					foreach ($entry as $col => &$value)
 					{
-						$html2text->setHTML($value);
-						$value = trim($html2text->getText());
+						if(!is_array($value))
+						{
+							$html2text->setHTML($value);
+							$value = trim($html2text->getText());
+						}
 					}
 				}
 			}
