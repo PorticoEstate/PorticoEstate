@@ -1189,10 +1189,10 @@
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'parent_id' => array('type' => 'int', 'nullable' => true, 'precision' => '4'),
 				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
-				'application_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'application_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'customer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'timestamp' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
-
+				'cancelled' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -1315,7 +1315,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'order_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'payment_method_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'payment_method_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'payment_gateway_mode' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),//test and live.
 				'remote_id' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'remote_state' => array('type' => 'varchar', 'precision' => 20, 'nullable' => True),
@@ -1324,6 +1324,7 @@
 				'refunded_amount' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => true,'default' => '0.0'),
 				'refunded_currency' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),
 				'status' => array('type' => 'varchar', 'precision' => '6', 'nullable' => true),//new, pending, completed, voided, partially_refunded, refunded
+				'created' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'autorized' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'expires' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'completet' => array('type' => 'int', 'precision' => '8', 'nullable' => true),

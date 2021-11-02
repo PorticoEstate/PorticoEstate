@@ -536,10 +536,12 @@
 			{
 				$order_ids[] = (int)$this->db->f('order_id');
 			}
+			$now = time();
 
-			$sql = "DELETE FROM bb_purchase_order_line WHERE order_id IN (" . implode(',', $order_ids) . ")";
-			$this->db->query($sql, __LINE__, __FILE__);
-			$sql = "DELETE FROM bb_purchase_order WHERE id IN (" . implode(',', $order_ids) . ")";
+//			$sql = "DELETE FROM bb_purchase_order_line WHERE order_id IN (" . implode(',', $order_ids) . ")";
+//			$this->db->query($sql, __LINE__, __FILE__);
+//			$sql = "DELETE FROM bb_purchase_order WHERE id IN (" . implode(',', $order_ids) . ")";
+			$sql = "UPDATE bb_purchase_order SET cancelled = $now, application_id = NULL WHERE id IN (" . implode(',', $order_ids) . ")";
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			if (!$this->global_lock)
@@ -571,7 +573,7 @@
 				. " JOIN bb_article_mapping ON bb_purchase_order_line.article_mapping_id = bb_article_mapping.id"
 				. " LEFT JOIN bb_service ON (bb_article_mapping.article_id = bb_service.id AND bb_article_mapping.article_cat_id = 2)"
 				. " LEFT JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id AND bb_article_mapping.article_cat_id = 1)"
-				. " WHERE bb_purchase_order.application_id IN (" . implode(',', $application_ids) . ")";
+				. " WHERE bb_purchase_order.cancelled IS NULL AND bb_purchase_order.application_id IN (" . implode(',', $application_ids) . ")";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -792,22 +794,32 @@
 			return $order;
 		}
 
-		function add_payment( $order_id )
+		function add_payment( $order_id, $msn )
 		{
+
+			$sql = "SELECT count(id) AS cnt FROM bb_payment WHERE order_id =" . (int)$order_id;
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$cnt		 = (int)$this->db->f('cnt');
+			$payment_attempt = $cnt +1;
+			$remote_id	 = "{$msn}-{$order_id}-order-{$order_id}-{$payment_attempt}";
+
 			$order = $this->get_single_purchase_order($order_id);
 
 
 			$value_set = array(
 				'order_id' => $order_id,
-				'payment_method_id'	 => 0,
+				'payment_method_id'	 => null,
 				'payment_gateway_mode' => 'test',//test and live.
-				'remote_id' => null,
+				'remote_id' => $remote_id,
 				'remote_state' => null,
-				'amount' => '0.0',
+				'amount' => $order['sum'],
 				'currency' => 'NOK',
 				'refunded_amount' => '0.0',
 				'refunded_currency' => 'NOK',
 				'status' => 'new',// pending, completed, voided, partially_refunded, refunded
+				'created' => time(),
 				'autorized' => null,
 				'expires' => null,
 				'completet' => null,
@@ -818,6 +830,7 @@
 
 			$this->db->query('INSERT INTO bb_payment (' . implode(',', array_keys($value_set)) . ') VALUES ('
 				. $this->db->validate_insert(array_values($value_set)) . ')', __LINE__, __FILE__);
+			return $remote_id;
 		}
 	}
 

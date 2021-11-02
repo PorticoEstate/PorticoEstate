@@ -104,7 +104,8 @@
 		private function initiate_payment( $application_ids )
 		{
 
-			$payment_attempt = 2;
+			$orderId = null;
+			$payment_attempt = 1;
 			$soapplication	 = CreateObject('booking.soapplication');
 			$filters		 = array('id' => $application_ids);
 			$params			 = array('filters' => $filters, 'results' => 'all');
@@ -116,12 +117,12 @@
 			{
 				$dates = implode(', ', array_map(array($this, 'get_date_range'), $application['dates']));
 
-				foreach ($application['orders'] as  $order)
+				foreach ($application['orders'] as $order)
 				{
-					$orderId = "{$this->msn}-{$order['order_id']}-order-{$order['order_id']}-{$payment_attempt}";
 					if (empty($order['paid']))
 					{
-						$transaction = [
+						$orderId = $soapplication->add_payment($order['order_id'], $this->msn);
+						$transaction	 = [
 							"amount"					 => (float)$order['sum'] * 100,
 							"orderId"					 => $orderId,
 							"transactionText"			 => 'Aktiv kommune, bookingdato: ' . $dates,
@@ -129,7 +130,6 @@
 							"scope"						 => "name address email",
 							"useExplicitCheckoutFlow"	 => true
 						];
-						$soapplication->add_payment($order['order_id']);
 						break 2;
 					}
 				}
@@ -167,7 +167,7 @@
 					"callbackPrefix"		 => "https://example.com/vipps/callbacks-for-payment-updates",
 					"consentRemovalPrefix"	 => "https://example.com/vipps/consent-removal",
 //					"fallBack"				 => "https://example.com/vipps/fallback-order-result-page/Ak-shop-{$order_id}-order{$order_id}abc",
-					"fallBack"				 => "http://127.0.0.1/~hc483/github_trunk/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add_contact&order_id={$order['order_id']}",
+					"fallBack"				 => "http://127.0.0.1/~hc483/github_trunk/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add_contact&orderId={$orderId}",
 					"isApp"					 => false,
 					"merchantSerialNumber"	 => $this->msn,
 					//				"paymentType"			 => "eComm Express Payment",
@@ -306,8 +306,45 @@
 			
 		}
 
-		private function get_payment_details( $param )
+		private function get_payment_details( $orderId )
 		{
+			$path	 = "/ecomm/v2/payments/{$order_id}/details";
+			$url	 = "{$this->base_url}{$path}";
+			$client = new GuzzleHttp\Client();
+
+			$request = array();
+
+			$request['headers'] = array(
+				'Accept'					 => 'application/json;charset=UTF-8',
+				'Authorization'				 => $this->accesstoken,
+				'Ocp-Apim-Subscription-Key'	 => $this->subscription_key,
+			);
+
+			if ($this->proxy)
+			{
+				$request['proxy'] = array(
+					'http'	 => $this->proxy,
+					'https'	 => $this->proxy
+				);
+			}
+
+
+			$request_body = array();
+
+			$request['json'] = $request_body;
+
+			try
+			{
+				$response	 = $client->request('GET', $url, $request);
+				$ret		 = json_decode($response->getBody()->getContents(), true);
+			}
+			catch (\GuzzleHttp\Exception\BadResponseException $e)
+			{
+				// handle exception or api errors.
+				print_r($e->getMessage());
+			}
+
+			return $ret;
 
 		}
 	}
