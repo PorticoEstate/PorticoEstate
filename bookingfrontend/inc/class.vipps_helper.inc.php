@@ -7,7 +7,8 @@
 	{
 
 		public $public_functions = array(
-			'initiate' => true,
+			'initiate'				 => true,
+			'get_payment_details'	 => true
 		);
 		private $client_id,
 			$client_secret,
@@ -36,14 +37,14 @@
 			$this->msn				 = !empty($custom_config_data['msn']) ? $custom_config_data['msn'] : '';
 			$this->proxy			 = !empty($config['proxy']) ? $config['proxy'] : '';
 
-//			$this->guzzle = CreateObject('phpgwapi.guzzle');
 			require_once PHPGW_API_INC . '/guzzle/vendor/autoload.php';
+
+			$this->accesstoken = $this->get_accesstoken();
 		}
 
 		public function initiate()
 		{
-			$application_ids	 = phpgw::get_var('application_id');
-			$this->accesstoken	 = $this->get_accesstoken();
+			$application_ids = phpgw::get_var('application_id');
 			return $this->initiate_payment($application_ids);
 		}
 
@@ -104,7 +105,7 @@
 		private function initiate_payment( $application_ids )
 		{
 
-			$orderId = null;
+			$orderId		 = null;
 			$payment_attempt = 1;
 			$soapplication	 = CreateObject('booking.soapplication');
 			$filters		 = array('id' => $application_ids);
@@ -121,8 +122,8 @@
 				{
 					if (empty($order['paid']))
 					{
-						$orderId = $soapplication->add_payment($order['order_id'], $this->msn);
-						$transaction	 = [
+						$orderId	 = $soapplication->add_payment($order['order_id'], $this->msn);
+						$transaction = [
 							"amount"					 => (float)$order['sum'] * 100,
 							"orderId"					 => $orderId,
 							"transactionText"			 => 'Aktiv kommune, bookingdato: ' . $dates,
@@ -167,7 +168,7 @@
 					"callbackPrefix"		 => "https://example.com/vipps/callbacks-for-payment-updates",
 					"consentRemovalPrefix"	 => "https://example.com/vipps/consent-removal",
 //					"fallBack"				 => "https://example.com/vipps/fallback-order-result-page/Ak-shop-{$order_id}-order{$order_id}abc",
-					"fallBack"				 => "http://127.0.0.1/~hc483/github_trunk/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add_contact&orderId={$orderId}",
+					"fallBack"				 => "http://127.0.0.1/~hc483/github_trunk/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add_contact&payment_order_id={$orderId}",
 					"isApp"					 => false,
 					"merchantSerialNumber"	 => $this->msn,
 					//				"paymentType"			 => "eComm Express Payment",
@@ -306,11 +307,16 @@
 			
 		}
 
-		private function get_payment_details( $orderId )
+		public function get_payment_details( $payment_order_id = '' )
 		{
-			$path	 = "/ecomm/v2/payments/{$order_id}/details";
+			if (!$payment_order_id)
+			{
+				$payment_order_id = phpgw::get_var('payment_order_id');
+			}
+
+			$path	 = "/ecomm/v2/payments/{$payment_order_id}/details";
 			$url	 = "{$this->base_url}{$path}";
-			$client = new GuzzleHttp\Client();
+			$client	 = new GuzzleHttp\Client();
 
 			$request = array();
 
@@ -345,6 +351,5 @@
 			}
 
 			return $ret;
-
 		}
 	}

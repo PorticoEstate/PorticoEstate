@@ -319,6 +319,7 @@
 							</button>
 							<img src="{vipps_logo}" class="ml-5" OnClick="initiate_vipps();">
 							</img>
+							<input type="text" id= "payment_order_id" value="{payment_order_id}"></input>
 						</div>
 					</div>
 				</div>

@@ -1409,6 +1409,12 @@
 
 		function add_contact()
 		{
+			
+			/**
+			 * When returning from vipps
+			 */
+			$payment_order_id = phpgw::get_var('payment_order_id', 'string', 'GET');
+
 			/**
 			 * check external login - and return here
 			 */
@@ -1860,7 +1866,8 @@
 				'delegate_data'			 => $filtered_delegate_data,
 				'vipps_logo'			 => $GLOBALS['phpgw']->common->image('bookingfrontend', $vipps_logo),
 				'add_img'				 => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
-				'config'				 => CreateObject('phpgwapi.config', 'booking')->read()
+				'config'				 => CreateObject('phpgwapi.config', 'booking')->read(),
+				'payment_order_id'		 => $payment_order_id
 				)
 			);
 		}

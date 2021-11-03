@@ -31,6 +31,30 @@ function initiate_vipps()
 	});
 }
 
+function get_payment_details()
+{
+
+	var payment_order_id = $("#payment_order_id").val();
+
+	if(!payment_order_id)
+	{
+		return;
+	}
+
+	var parameter = {
+		menuaction: "bookingfrontend.vipps_helper.get_payment_details",
+		payment_order_id:payment_order_id
+	};
+
+	var getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
+
+	$.getJSON(getJsonURL, function (result)
+	{
+		console.log(result);
+
+	});
+
+}
 function applicationModel()
 {
 	var self = this;
@@ -90,6 +114,8 @@ $(document).ready(function ()
 			$("input[name='customer_organization_name']").prop('required', false);
 		}
 	});
+
+	get_payment_details();
 });
 
 
