@@ -1691,7 +1691,7 @@
 
 			if ($this->current_app() == 'bookingfrontend')
 			{
-				$bookings	 = $this->_remove_event_conflicts2($bookings, $events);
+				$bookings	 = $this->_remove_event_conflicts($bookings, $events);
 			}
 			else
 			{
