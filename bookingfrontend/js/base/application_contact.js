@@ -31,7 +31,7 @@ function initiate_vipps()
 	});
 }
 
-function get_payment_details()
+function check_payment_status()
 {
 
 	var payment_order_id = $("#payment_order_id").val();
@@ -42,7 +42,7 @@ function get_payment_details()
 	}
 
 	var parameter = {
-		menuaction: "bookingfrontend.vipps_helper.get_payment_details",
+		menuaction: "bookingfrontend.vipps_helper.check_payment_status",
 		payment_order_id:payment_order_id
 	};
 
@@ -51,6 +51,12 @@ function get_payment_details()
 	$.getJSON(getJsonURL, function (result)
 	{
 		console.log(result);
+		var last_transaction = result.transactionLogHistory[0];
+		if(last_transaction.operation ==='CANCEL')
+		{
+			alert('CANCEL');
+			
+		}
 
 	});
 
@@ -115,7 +121,7 @@ $(document).ready(function ()
 		}
 	});
 
-	get_payment_details();
+	check_payment_status();
 });
 
 

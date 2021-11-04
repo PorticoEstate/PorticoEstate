@@ -8,7 +8,9 @@
 
 		public $public_functions = array(
 			'initiate'				 => true,
-			'get_payment_details'	 => true
+			'get_payment_details'	 => true,
+			'check_payment_status'	 => true,
+			'cancel_order'			 => true,
 		);
 		private $client_id,
 			$client_secret,
@@ -242,6 +244,47 @@
 			}
 		}
 
+		public function cancel_order()
+		{
+			$payment_order_id = phpgw::get_var('payment_order_id');
+			$soapplication = CreateObject('booking.soapplication');
+			$id = $soapplication->get_application_from_payment_order($payment_order_id);
+			$status = array('deleted' => false);
+			$session_id = $GLOBALS['phpgw']->session->get_session_id();
+			if (!empty($session_id) && $id > 0)
+			{
+				$partials = $this->get_partials($session_id);
+
+				$GLOBALS['phpgw']->db->transaction_begin();
+
+				$bo_block = createObject('booking.boblock');
+
+				$exists = false;
+				foreach ($partials['list'] as $partial)
+				{
+					if ($partial['id'] == $id)
+					{
+						$bo_block->cancel_block($session_id, $partial['dates'],$partial['resources']);
+						$exists = true;
+						break;
+					}
+				}
+				if ($exists)
+				{
+					$application_id = $id;
+					$this->bo->delete_purchase_order($application_id);
+					$this->bo->delete_application($id);
+					$status['deleted'] = true;
+				}
+
+				$GLOBALS['phpgw']->db->transaction_commit();
+
+			}
+			return $status;
+
+		}
+
+
 		private function cancel_payment( $order_id )
 		{
 			$path	 = "/ecomm/v2/payments/{$order_id}/cancel";
@@ -294,21 +337,62 @@
 
 		private function authorize_payment( $param )
 		{
-			
+
 		}
 
 		private function refund_payment( $param )
 		{
-			
+
 		}
 
 		private function force_approve_payment( $param )
 		{
-			
+
+		}
+
+		public function check_payment_status( $payment_order_id = '' )
+		{
+			if (!$payment_order_id)
+			{
+				$payment_order_id = phpgw::get_var('payment_order_id');
+			}
+
+			static $attempts = 0;
+
+//		    Start after 5 seconds
+//		    Check every 2 seconds
+
+			while ($attempts < 6)
+			{
+				if (!$attempts)
+				{
+					sleep(5);
+				}
+				else
+				{
+					sleep(2);
+				}
+
+				$data = $this->get_payment_details($payment_order_id);
+
+				if($data)
+				{
+					return $data;
+				}
+
+				$attempts++;
+			}
+
+			return array(
+				'status' => 'error',
+				'message' => 'not found'
+				);
+
 		}
 
 		public function get_payment_details( $payment_order_id = '' )
 		{
+
 			if (!$payment_order_id)
 			{
 				$payment_order_id = phpgw::get_var('payment_order_id');
@@ -347,7 +431,7 @@
 			catch (\GuzzleHttp\Exception\BadResponseException $e)
 			{
 				// handle exception or api errors.
-				print_r($e->getMessage());
+//				print_r($e->getMessage());
 			}
 
 			return $ret;

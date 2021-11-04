@@ -832,6 +832,18 @@
 				. $this->db->validate_insert(array_values($value_set)) . ')', __LINE__, __FILE__);
 			return $remote_id;
 		}
+
+		function get_application_from_payment_order( $payment_order_id )
+		{
+			$remote_id	 = $this->db->db_addslashes($payment_order_id);
+			$sql		 = "SELECT application_id FROM bb_payment
+				JOIN bb_purchase_order ON bb_payment.order_id  = bb_purchase_order.id
+				WHERE remote_id' = '{$remote_id}'";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			return $this->db->f('application_id');
+		}
 	}
 
 	class booking_soapplication_association extends booking_socommon
