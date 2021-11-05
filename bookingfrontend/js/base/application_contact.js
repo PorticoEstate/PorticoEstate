@@ -43,15 +43,11 @@ function check_payment_status()
 
 	var form = document.getElementById('new-application-partialtwo');
 	form.style.display = 'none';
-	$('<div id="spinner" class="d-flex align-items-center">')
-		.append($('<strong>').text('Checking...'))
-		.append($('<div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>'))
-		.insertAfter(form);
 
-//					$('<div id="spinner" class="text-center mt-2  ml-2">')
-//						.append($('<div class="spinner-border" role="status">')
-//							.append($('<span class="sr-only">Checking...</span>')))
-//						.insertAfter(form);
+	$('<div id="spinner" class="text-center mt-2  ml-2">')
+		.append($('<div class="spinner-border" role="status">')
+			.append($('<span class="sr-only">Checking...</span>')))
+		.insertAfter(form);
 
 	var parameter = {
 		menuaction: "bookingfrontend.vipps_helper.check_payment_status",
@@ -70,7 +66,7 @@ function check_payment_status()
 
 		console.log(result);
 		var last_transaction = result.transactionLogHistory[0];
-		if (last_transaction.operation === 'CANCEL')
+		if (last_transaction.operation === 'CANCEL' || last_transaction.operation === 'VOID' || last_transaction.operation === 'FAILED' || last_transaction.operation === 'REJECTED')
 		{
 			window.location.href = phpGWLink('bookingfrontend/',
 			{

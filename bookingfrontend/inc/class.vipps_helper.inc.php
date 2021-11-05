@@ -244,9 +244,12 @@
 			}
 		}
 
-		public function cancel_order()
+		public function cancel_order($payment_order_id = '')
 		{
-			$payment_order_id = phpgw::get_var('payment_order_id');
+			if (!$payment_order_id)
+			{
+				$payment_order_id = phpgw::get_var('payment_order_id');
+			}
 			$soapplication = CreateObject('booking.soapplication');
 			$id = $soapplication->get_application_from_payment_order($payment_order_id);
 			$status = array('deleted' => false);
@@ -282,9 +285,11 @@
 
 			}
 
-			phpgwapi_cache::message_set('cancelled');
-
-			$GLOBALS['phpgw']->redirect_link('/bookingfrontend/',array('menuaction' => 'bookingfrontend.uiapplication.add_contact'));
+			if (phpgw::get_var('phpgw_return_as') !== 'json')
+			{
+				phpgwapi_cache::message_set('cancelled');
+				$GLOBALS['phpgw']->redirect_link('/bookingfrontend/',array('menuaction' => 'bookingfrontend.uiapplication.add_contact'));
+			}
 
 		}
 
@@ -365,6 +370,7 @@
 
 //		    Start after 5 seconds
 //		    Check every 2 seconds
+			$cancel_array = array('CANCEL', 'VOID','FAILED', 'REJECTED' );
 
 			while ($attempts < 6)
 			{
@@ -381,6 +387,10 @@
 
 				if($data)
 				{
+					if(isset($data['transactionLogHistory'][0]['operation']) && in_array($data['transactionLogHistory'][0]['operation'], $cancel_array))
+					{
+						$this->cancel_order($payment_order_id);
+					}
 					return $data;
 				}
 
