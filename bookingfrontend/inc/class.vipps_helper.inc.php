@@ -253,7 +253,7 @@
 			$session_id = $GLOBALS['phpgw']->session->get_session_id();
 			if (!empty($session_id) && $id > 0)
 			{
-				$partials = $this->get_partials($session_id);
+				$partials = CreateObject('booking.uiapplication')->get_partials($session_id);
 
 				$GLOBALS['phpgw']->db->transaction_begin();
 
@@ -272,15 +272,19 @@
 				if ($exists)
 				{
 					$application_id = $id;
-					$this->bo->delete_purchase_order($application_id);
-					$this->bo->delete_application($id);
+					$soapplication->delete_purchase_order($application_id);
+					$soapplication->update_payment_status($payment_order_id, 'voided');
+					$soapplication->delete_application($application_id);
 					$status['deleted'] = true;
 				}
 
 				$GLOBALS['phpgw']->db->transaction_commit();
 
 			}
-			return $status;
+
+			phpgwapi_cache::message_set('cancelled');
+
+			$GLOBALS['phpgw']->redirect_link('/bookingfrontend/',array('menuaction' => 'bookingfrontend.uiapplication.add_contact'));
 
 		}
 
@@ -366,7 +370,7 @@
 			{
 				if (!$attempts)
 				{
-					sleep(5);
+					sleep(3);
 				}
 				else
 				{

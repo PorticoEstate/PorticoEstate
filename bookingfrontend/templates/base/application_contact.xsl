@@ -319,7 +319,6 @@
 							</button>
 							<img src="{vipps_logo}" class="ml-5" OnClick="initiate_vipps();">
 							</img>
-							<input type="text" id= "payment_order_id" value="{payment_order_id}"></input>
 						</div>
 					</div>
 				</div>
@@ -362,6 +361,8 @@
 		var initialAcceptAllTerms = true;
 		var initialSelection = [];
 		var lang = <xsl:value-of select="php:function('js_lang', 'Do you want to delete application?')" />;
+		var payment_order_id = '<xsl:value-of select="payment_order_id" />';
+
 		<!-- Modal JQUERY logic -->
 
 		$('#new_organization').on('show.bs.modal', function (e)

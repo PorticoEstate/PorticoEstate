@@ -541,13 +541,24 @@
 //			$sql = "DELETE FROM bb_purchase_order_line WHERE order_id IN (" . implode(',', $order_ids) . ")";
 //			$this->db->query($sql, __LINE__, __FILE__);
 //			$sql = "DELETE FROM bb_purchase_order WHERE id IN (" . implode(',', $order_ids) . ")";
-			$sql = "UPDATE bb_purchase_order SET cancelled = $now, application_id = NULL WHERE id IN (" . implode(',', $order_ids) . ")";
+			$sql = "UPDATE bb_purchase_order SET status = 0,  cancelled = $now, application_id = NULL WHERE id IN (" . implode(',', $order_ids) . ")";
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			if (!$this->global_lock)
 			{
 				return $this->db->transaction_commit();
 			}
+		}
+
+		function update_payment_status( $payment_order_id, $status)
+		{
+			$remote_id	 = $this->db->db_addslashes($payment_order_id);
+			$status	 = $this->db->db_addslashes($status);
+			$sql = "UPDATE bb_payment SET status = '{$status}'"
+				. "	WHERE remote_id = '{$remote_id}'";
+
+			return $this->db->query($sql, __LINE__, __FILE__);
+
 		}
 
 		function get_purchase_order( &$applications )
@@ -836,9 +847,9 @@
 		function get_application_from_payment_order( $payment_order_id )
 		{
 			$remote_id	 = $this->db->db_addslashes($payment_order_id);
-			$sql		 = "SELECT application_id FROM bb_payment
-				JOIN bb_purchase_order ON bb_payment.order_id  = bb_purchase_order.id
-				WHERE remote_id' = '{$remote_id}'";
+			$sql = "SELECT application_id FROM bb_payment"
+				. " JOIN bb_purchase_order ON bb_payment.order_id = bb_purchase_order.id"
+				. "	WHERE remote_id = '{$remote_id}'";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();

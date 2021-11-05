@@ -1,4 +1,4 @@
-/* global bc, ko */
+/* global bc, ko, payment_order_id */
 
 $(".navbar-search").removeClass("d-none");
 $(".termAcceptDocsUrl").attr('data-bind', "text: docName, attr: {'href': itemLink }");
@@ -34,28 +34,49 @@ function initiate_vipps()
 function check_payment_status()
 {
 
-	var payment_order_id = $("#payment_order_id").val();
+//	var payment_order_id = $("#payment_order_id").val();
 
-	if(!payment_order_id)
+	if (!payment_order_id)
 	{
 		return;
 	}
 
+	var form = document.getElementById('new-application-partialtwo');
+	form.style.display = 'none';
+	$('<div id="spinner" class="d-flex align-items-center">')
+		.append($('<strong>').text('Checking...'))
+		.append($('<div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>'))
+		.insertAfter(form);
+
+//					$('<div id="spinner" class="text-center mt-2  ml-2">')
+//						.append($('<div class="spinner-border" role="status">')
+//							.append($('<span class="sr-only">Checking...</span>')))
+//						.insertAfter(form);
+
 	var parameter = {
 		menuaction: "bookingfrontend.vipps_helper.check_payment_status",
-		payment_order_id:payment_order_id
+		payment_order_id: payment_order_id
 	};
 
 	var getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
 
 	$.getJSON(getJsonURL, function (result)
 	{
+		var element = document.getElementById('spinner');
+		if (element)
+		{
+			element.parentNode.removeChild(element);
+		}
+
 		console.log(result);
 		var last_transaction = result.transactionLogHistory[0];
-		if(last_transaction.operation ==='CANCEL')
+		if (last_transaction.operation === 'CANCEL')
 		{
-			alert('CANCEL');
-			
+			window.location.href = phpGWLink('bookingfrontend/',
+			{
+				menuaction: "bookingfrontend.vipps_helper.cancel_order",
+				payment_order_id: payment_order_id
+			}, false);
 		}
 
 	});

@@ -1323,7 +1323,7 @@
 				'currency' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),
 				'refunded_amount' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => true,'default' => '0.0'),
 				'refunded_currency' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),
-				'status' => array('type' => 'varchar', 'precision' => '6', 'nullable' => true),//new, pending, completed, voided, partially_refunded, refunded
+				'status' => array('type' => 'varchar', 'precision' => '20', 'nullable' => true),//new, pending, completed, voided, partially_refunded, refunded
 				'created' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'autorized' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'expires' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
