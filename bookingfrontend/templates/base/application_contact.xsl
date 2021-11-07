@@ -314,8 +314,8 @@
 						</button>
 						<hr class="mt-5"></hr>
 						<div class="btn-group" style="display:none;" id="btnSubmitGroup">
-							<button type="button" class="btn btn-primary">
-								Etterfakturering
+							<button type="button" class="btn btn-primary" id="btnSubmit">
+								Fakturering
 							</button>
 							<img src="{vipps_logo}" class="ml-5" OnClick="initiate_vipps();">
 							</img>

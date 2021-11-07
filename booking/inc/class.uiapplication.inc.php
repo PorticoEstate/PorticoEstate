@@ -1407,6 +1407,160 @@
 			return $_limit_reached;
 		}
 
+		function update_contact_informtation()
+		{
+			/**
+			 * check external login - and return here
+			 */
+			$bouser = CreateObject('bookingfrontend.bouser');
+
+			$external_login_info = $bouser->validate_ssn_login( array(), true);
+
+			if(!$organization_number = phpgw::get_var('session_org_id', 'string', 'GET'))
+			{
+				$organization_number = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
+			}
+
+			$errors = array();
+
+			$partial2 = array();
+			$partial2['frontpage_url'] = self::link(array('menuaction' => 'bookingfrontend.uisearch.index'));
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			{
+				$partial2 = $this->extract_form_data();
+
+				$customer_organization_number_fallback		 = phpgw::get_var('customer_organization_number_fallback');
+				$customer_organization_number_arr			 = explode('_', phpgw::get_var('customer_organization_number'));
+				if (!empty($customer_organization_number_arr[0]))
+				{
+					$partial2['customer_organization_id']		 = $customer_organization_number_arr[0];
+					$partial2['customer_organization_number']	 = $customer_organization_number_arr[1];
+					$organization								 = $this->organization_bo->read_single(intval($customer_organization_number_arr[0]));
+					$partial2['customer_organization_name']		 = $organization['name'];
+
+					$update_org = false;
+					if(!$organization['customer_identifier_type'] == 'organization_number')
+					{
+						$organization['customer_identifier_type'] = 'organization_number';
+						$update_org = true;
+					}
+
+					if(!empty($customer_organization_number_arr[1]) && empty($organization['customer_organization_number']))
+					{
+						$organization['customer_organization_number'] = $customer_organization_number_arr[1];
+						$update_org = true;
+					}
+
+					if($update_org && !$this->organization_bo->validate($organization))
+					{
+						$this->organization_bo->update($organization);
+					}
+				}
+				else if($customer_organization_number_fallback)
+				{
+					$partial2['customer_organization_number']	 = str_replace(" ", "", $customer_organization_number_fallback);
+					$partial2['customer_identifier_type']	 = 'organization_number';
+					$organization_info = $this->organization_bo->get_organization_info($partial2['customer_organization_number']);
+					if(!empty($organization_info['id']))
+					{
+						$partial2['customer_organization_id']		 = $organization_info['id'];
+					}
+					else
+					{
+						$organization_info = $this->add_organization($partial2['customer_organization_number'], $external_login_info['ssn']);
+						if(!empty($organization_info['id']))
+						{
+							$partial2['customer_organization_id']		 = $organization_info['id'];
+							$partial2['customer_organization_name']		 = $organization_info['name'];
+
+							/**
+							 * Do something clever later on, as redirect to organization details - or something
+							 */
+							$organization_created = true;
+						}
+					}
+				}
+
+				// Application contains only contact details. Use dummy values for event fields
+				$dummyfields_string = array('building_name','name','organizer','secret','status');
+				foreach ($dummyfields_string as $field)
+				{
+					$partial2[$field] = 'dummy';
+				}
+				$dummyfields_int = array('activity_id','owner_id');
+				foreach ($dummyfields_int as $field)
+				{
+					$partial2[$field] = 1;
+				}
+				$partial2['agegroups'] = array(array('agegroup_id' => 1, 'male' => 1, 'female' => 1));
+				$partial2['audience']  = array(1);
+				$partial2['dates']     = array(array('from_' => '2018-01-01 00:00:00', 'to_' => '2018-01-01 01:00:00'));
+				$partial2['resources'] = array(-1);
+
+				$errors = $this->validate($partial2);
+
+				$session_id = $GLOBALS['phpgw']->session->get_session_id();
+				if (empty($session_id))
+				{
+					$errors['session_id'] = lang('No session ID found, application aborted');
+				}
+
+				if ($_POST['contact_email'] != $_POST['contact_email2'])
+				{
+					$errors['email'] = lang('The e-mail addresses you entered do not match');
+				}
+				$partial2['contact_email2'] = phpgw::get_var('contact_email2', 'string', 'POST');
+
+				if (!$errors)
+				{
+					// Get data on prior partial applications for this session ID
+					$partials = $this->bo->get_partials_list($session_id);
+					if ($partials['total_records'] == 0)
+					{
+						$errors['records'] = lang("No partial applications exist for this session, contact details are not saved");
+						// Redirect to the front page
+						self::redirect(array());
+					}
+					else
+					{
+						$partial2_fields = array('contact_email','contact_name','contact_phone',
+							'customer_identifier_type','customer_organization_number','customer_organization_id',
+							'customer_organization_name','customer_ssn',
+							'responsible_city','responsible_street','responsible_zip_code', 'audience');
+						foreach ($partials['results'] as &$application)
+						{
+							// Remove certain unused fields from the update
+							unset($application['frontend_modified']);
+							// Add the contact data from partial2
+							foreach ($partial2_fields as $field)
+							{
+								$application[$field] = $partial2[$field];
+							}
+							// Update status fields
+//							$application['status'] = 'NEW';
+							$application['created'] = 'now';
+							$application['modified'] = 'now';
+//							$application['session_id'] = null;
+
+							if(empty($application['customer_ssn']))
+							{
+								$application['customer_ssn'] = phpgw::get_var('customer_ssn', 'string', 'POST');
+							}
+
+							$receipt = $this->bo->update($application);
+
+							$this->update_user_info($application, $external_login_info);
+						}
+					}
+				}
+			}
+			
+			return array(
+				'status' => $errors ? 'error' : 'saved'
+			);
+			
+		}
+
 		function add_contact()
 		{
 			
@@ -1584,27 +1738,6 @@
 
 							foreach ($resources['results'] as $resource)
 							{
-//								if($resource['booking_limit_number_horizont'] > 0 && $resource['booking_limit_number'] > 0)
-//								{
-//									$limit_reached = $this->bo->so->check_booking_limit(
-//										$session_id,
-//										$resource['id'],
-//										$external_login_info['ssn'],
-//										$resource['booking_limit_number_horizont'],
-//										$resource['booking_limit_number'] );
-//
-//									if($limit_reached)
-//									{
-//										$error_message = lang('quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days',
-//											$limit_reached,
-//											$resource['name'],
-//											$resource['booking_limit_number'],
-//											$resource['booking_limit_number_horizont']);
-//
-//										phpgwapi_cache::message_set( $error_message, 'error');
-//									}
-//								}
-
 								$max_date = max($from_dates);
 
 								if($resource['direct_booking'] && $resource['direct_booking'] < $max_date)

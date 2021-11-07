@@ -139,46 +139,108 @@ $(document).ready(function ()
 	});
 
 	check_payment_status();
-});
 
-
-
-
-$(function ()
-{
-	$("#btnValidate").on("click", function (e)
+	function update_contact_informtation()
 	{
-		var error = false;
-		var form = $("#application_form")[0];
-		var isValid = form.checkValidity();
-		if (!isValid)
-		{
-			error = true;
-			e.preventDefault();
-			e.stopPropagation();
-		}
-		if (document.getElementById('contact_email2').value !== document.getElementById('contact_email').value)
-		{
-			document.getElementById('contact_email2').classList.replace('valid', 'invalid');
-			error = true;
-			alert('Epostadressen er ikke den samme i begge feltene');
-		}
-		else
-		{
-			document.getElementById('contact_email2').classList.replace('invalid', 'valid');
-		}
-		form.classList.add('was-validated');
+		var thisForm = $("#application_form");
 
-		if (error)
+		$('<div id="spinner" class="text-center mt-2  ml-2">')
+			.append($('<div class="spinner-border" role="status">')
+				.append($('<span class="sr-only">Processing...</span>')))
+			.insertAfter(thisForm);
+
+		var oArgs = {menuaction: 'bookingfrontend.uiapplication.update_contact_informtation'};
+		var requestUrl = phpGWLink('bookingfrontend/', oArgs, true);
+
+		var formdata = thisForm.serializeArray();
+		console.log(formdata);
+
+		$.ajax({
+			cache: false,
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			data: formdata,//thisForm.serialize(),
+			success: function (data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					if (data.status !== "saved")
+					{
+						alert(data.message);
+						$("#btnSubmitGroup").hide();
+					}
+					else
+					{
+						$("#btnSubmitGroup").show();
+					}
+					var element = document.getElementById('spinner');
+					if (element)
+					{
+						element.parentNode.removeChild(element);
+					}
+				}
+			}
+		});
+	}
+	$(function ()
+	{
+		$("#btnValidate").on("click", function (e)
 		{
-			$("#btnSubmitGroup").hide();
-			alert('Fyll ut alle obligatoriske felt');
-			return false;
-		}
-		else
+			var validated = validate_form(e);
+			if (validated)
+			{
+				update_contact_informtation();
+			}
+		});
+
+		$("#btnSubmit").on("click", function (e)
 		{
-			$("#btnSubmitGroup").show();
-			return true;
-		}
+			var validated = validate_form(e);
+			alert(validated);
+		});
+
 	});
+
+
 });
+
+
+
+
+
+
+function validate_form(e)
+{
+	var error = false;
+	var form = $("#application_form")[0];
+	var isValid = form.checkValidity();
+	if (!isValid)
+	{
+		error = true;
+		e.preventDefault();
+		e.stopPropagation();
+	}
+	if (document.getElementById('contact_email2').value !== document.getElementById('contact_email').value)
+	{
+		document.getElementById('contact_email2').classList.replace('valid', 'invalid');
+		error = true;
+		alert('Epostadressen er ikke den samme i begge feltene');
+	}
+	else
+	{
+		document.getElementById('contact_email2').classList.replace('invalid', 'valid');
+	}
+	form.classList.add('was-validated');
+
+	if (error)
+	{
+		alert('Fyll ut alle obligatoriske felt');
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+
+}
