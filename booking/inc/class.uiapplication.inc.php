@@ -935,7 +935,7 @@
 
 				if($is_partial1 && !$audval_present)
 				{
-					$application['audience'] = -1; // Dummy
+					$application['audience'] = array(1); // Dummy
 				}
 				else if (!$audval_present)
 				{
