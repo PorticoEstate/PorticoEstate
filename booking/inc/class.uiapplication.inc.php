@@ -1478,10 +1478,7 @@
 							// Add the contact data from partial2
 							foreach ($partial2_fields as $field)
 							{
-								if(empty($application[$field]))
-								{
 									$application[$field] = $partial2[$field];
-								}
 							}
 							// Update status fields
 							$application['status'] = 'NEW';
