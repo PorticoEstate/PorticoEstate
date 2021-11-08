@@ -169,6 +169,7 @@ $(document).ready(function ()
 					{
 						alert(data.message);
 						$("#btnSubmitGroup").hide();
+						window.location.reload();
 					}
 					else
 					{
@@ -197,7 +198,10 @@ $(document).ready(function ()
 		$("#btnSubmit").on("click", function (e)
 		{
 			var validated = validate_form(e);
-			alert(validated);
+			if(validated)
+			{
+				$("#application_form").submit();
+			}
 		});
 
 	});
