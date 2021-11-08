@@ -1470,7 +1470,7 @@
 						$partial2_fields = array('contact_email','contact_name','contact_phone',
 							'customer_identifier_type','customer_organization_number','customer_organization_id',
 							'customer_organization_name','customer_ssn',
-							'responsible_city','responsible_street','responsible_zip_code', 'audience');
+							'responsible_city','responsible_street','responsible_zip_code');
 						foreach ($partials['results'] as &$application)
 						{
 							// Remove certain unused fields from the update

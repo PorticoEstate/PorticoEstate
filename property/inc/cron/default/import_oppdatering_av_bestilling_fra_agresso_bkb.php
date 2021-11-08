@@ -432,9 +432,9 @@
 
 			$subject = 'Feil ved oppdatering av meldinger(bestillinger) fra Agresso';
 			$from	 = "Ikke svar<IkkeSvar@Bergen.kommune.no>";
-			$to		 = "Lene.Christensen@bergen.kommune.no";
-			$cc		 = "Erik.Holm-Larsen@bergen.kommune.no";
-			$bcc	 = "Sigurd.Nes@bergen.kommune.no";
+			$to		 = "Erik.Holm-Larsen@bergen.kommune.no";
+			$cc		 = "Lene.Christensen@bergen.kommune.no";
+			$bcc	 = '';//"Sigurd.Nes@bergen.kommune.no";
 			if ($this->receipt['error'])
 			{
 				$errors = array();
