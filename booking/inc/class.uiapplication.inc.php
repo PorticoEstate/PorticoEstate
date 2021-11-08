@@ -988,7 +988,7 @@
 
 				if($is_partial1 && !$audval_present)
 				{
-					$application['audience'] = -1; // Dummy
+					$application['audience'] = array(1); // Dummy
 				}
 				else if (!$audval_present)
 				{
@@ -1577,7 +1577,7 @@
 								}
 							}
 
-							$limit_reached = 4;//$this->check_booking_limit($session_id, $external_login_info['ssn'], $resources);
+							$limit_reached = $this->check_booking_limit($session_id, $external_login_info['ssn'], $resources);
 
 							if($limit_reached)
 							{
@@ -1592,10 +1592,12 @@
 								CreateObject('booking.souser')->collect_users($application['customer_ssn']);
 								$bo_block = createObject('booking.boblock');
 								$bo_block->cancel_block($session_id, $application['dates'],$application['resources']);
+								$this->bo->delete_purchase_order($application['id']);
 								$this->bo->delete_application($application['id']);
 								$GLOBALS['phpgw']->db->transaction_commit();
 								if(!phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
 								{
+									phpgwapi_cache::message_set(implode("<br/>", array_values($errors) ));
 									self::redirect(array());
 								}
 							}
@@ -1606,7 +1608,7 @@
 			
 			return array(
 				'status' => $errors ? 'error' : 'saved',
-				'message' => implode(', ', array_values($errors))
+				'message' => preg_replace('/\<br(\s*)?\/?\>/i', PHP_EOL, implode(', ', array_values($errors)))
 			);
 			
 		}
@@ -1701,7 +1703,7 @@
 								}
 							}
 
-							$limit_reached = $this->check_booking_limit($session_id, $external_login_info['ssn'], $resources);
+/*							$limit_reached = $this->check_booking_limit($session_id, $external_login_info['ssn'], $resources);
 
 							if($limit_reached)
 							{
@@ -1712,7 +1714,7 @@
 								$GLOBALS['phpgw']->db->transaction_commit();
 								self::redirect(array());
 							}
-
+*/
 							if($resources['results'] && count($resources['results']) == $check_direct_booking)
 							{
 								$collision_dates = array();
@@ -1786,8 +1788,11 @@
 								}
 								else
 								{
-									$this->flash_form_errors($errors);
 									$GLOBALS['phpgw']->db->transaction_abort();
+									foreach ($errors as $key => $error_values)
+									{
+										phpgwapi_cache::message_set($error_values, 'error');
+									}
 								}
 							}
 							/**
@@ -1802,42 +1807,45 @@
 
 						}
 
-						if($direct_booking)
+						if(!$errors)
 						{
-							$messages = array(
-								'one' => array(
-									'registered' => "Your application has now been processed and a confirmation email has been sent to you.",
-									'review' => ""),
-								'multiple' => array(
-									'registered' => "Your applications have now been processed and confirmation emails have been sent to you.",
-									'review' => "")
-								);
+							if($direct_booking)
+							{
+								$messages = array(
+									'one' => array(
+										'registered' => "Your application has now been processed and a confirmation email has been sent to you.",
+										'review' => ""),
+									'multiple' => array(
+										'registered' => "Your applications have now been processed and confirmation emails have been sent to you.",
+										'review' => "")
+									);
+							}
+							else
+							{
+								$messages = array(
+									'one' => array(
+										'registered' => "Your application has now been registered and a confirmation email has been sent to you.",
+										'review' => "A Case officer will review your application as soon as possible."),
+									'multiple' => array(
+										'registered' => "Your applications have now been registered and confirmation emails have been sent to you.",
+										'review' => "A Case officer will review your applications as soon as possible.")
+									);
+
+							}
+
+							$msgset = $partials['total_records'] > 1 ? 'multiple' : 'one';
+
+							$message_arr = array();
+
+							$message_arr[] = lang($messages[$msgset]['registered']);
+							if($messages[$msgset]['review'])
+							{
+								$message_arr[] = lang($messages[$msgset]['review']);
+							}
+							$message_arr[] = lang("Please check your Spam Filter if you are missing mail.");
+
+							phpgwapi_cache::message_set(implode("<br/>", $message_arr ));
 						}
-						else
-						{
-							$messages = array(
-								'one' => array(
-									'registered' => "Your application has now been registered and a confirmation email has been sent to you.",
-									'review' => "A Case officer will review your application as soon as possible."),
-								'multiple' => array(
-									'registered' => "Your applications have now been registered and confirmation emails have been sent to you.",
-									'review' => "A Case officer will review your applications as soon as possible.")
-								);
-
-						}
-
-						$msgset = $partials['total_records'] > 1 ? 'multiple' : 'one';
-
-						$message_arr = array();
-
-						$message_arr[] = lang($messages[$msgset]['registered']);
-						if($messages[$msgset]['review'])
-						{
-							$message_arr[] = lang($messages[$msgset]['review']);
-						}
-						$message_arr[] = lang("Please check your Spam Filter if you are missing mail.");
-
-						phpgwapi_cache::message_set(implode("<br/>", $message_arr ));
 						// Redirect to the front page
 						self::redirect(array());
 					}
