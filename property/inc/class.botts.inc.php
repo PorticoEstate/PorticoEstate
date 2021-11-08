@@ -1335,8 +1335,9 @@
 			{
 				$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
 			}
-			$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
-					'id'		 => $id), false, true) . '">' . lang('Ticket') . ' #' . $id . '</a>' . "\n";
+
+			$body = 'Vennligst følg opp ved å trykke på linken <a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
+					'id'		 => $id), false, true) . '">' . lang('Ticket') . ' #' . $id . '</a>' . " (ikke svar på e-post)\n";
 
 			$body	 .= "<table>";
 			$body	 .= '<tr><td>' . lang('Date Opened') . '</td><td>:&nbsp;' . $entry_date . "</td></tr>";

@@ -574,7 +574,7 @@ HTML;
 		{
 			self::set_active_menu('booking::reportcenter::participants');
 			$errors = array();
-			$buildings = $this->building_bo->read();
+			$buildings = $this->building_bo->read(array('sort' => 'name', 'results' => -1));
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -639,7 +639,7 @@ HTML;
 		{
 			self::set_active_menu('booking::reportcenter::free_time');
 			$errors = array();
-			$buildings = $this->building_bo->read();
+			$buildings = $this->building_bo->read(array('sort' => 'name', 'results' => -1));
 
 			$show = '';
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')

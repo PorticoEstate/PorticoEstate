@@ -335,7 +335,7 @@
 					{
 						$allocation[] = $r['id'];
 					}
-					$errors['allocation'] = $allocation;
+					$errors['allocation'] = lang('Overlaps with existing allocation') . " #" . implode(', #',$allocation);
 				}
 
 				// Check if we overlap with any existing booking
@@ -351,7 +351,7 @@
 					{
 						$booking[] = $r['id'];
 					}
-					$errors['booking'] = $booking;
+					$errors['booking'] = lang('Overlaps with existing booking') . " #" . implode(', #',$booking);
 				}
 			}
 		}

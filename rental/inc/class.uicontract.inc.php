@@ -2554,7 +2554,7 @@ JS;
 					if ($success)
 					{
 						$db_contract->transaction_commit();
-						$message = lang(messages_new_contract_copied) . ' ' . $old_contract_old_id;
+						$message = lang('messages_new_contract_copied') . ' ' . $old_contract_old_id;
 						phpgwapi_cache::message_set($message, 'message');
 						//$this->edit(array('contract_id'=>$contract->get_id(), 'adjustment_id' => $adjustment_id));
 						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit',

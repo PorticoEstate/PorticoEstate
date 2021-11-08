@@ -397,7 +397,8 @@
                       UNION
 					  SELECT ba.id
                       FROM bb_allocation ba, bb_allocation_resource bar
-                      WHERE ba.id = bar.allocation_id
+                      WHERE active = 1
+                      AND ba.id = bar.allocation_id
                       AND bar.resource_id in ($rids)
                       AND ((ba.from_ <= '$from_' AND ba.to_ > '$from_')
                       OR (ba.from_ >= '$from_' AND ba.to_ <= '$to_')
@@ -457,6 +458,7 @@
 			$external_archive_key = $this->db->db_addslashes($external_archive_key);
 			return $this->db->query("UPDATE bb_application SET external_archive_key = '{$external_archive_key}' WHERE id =" . (int)$id, __LINE__, __FILE__);
 		}
+
 		function check_booking_limit($session_id, $resource_id, $ssn, $booking_limit_number_horizont,$booking_limit_number )
 		{
 			if(!$ssn || !$booking_limit_number_horizont || ! $booking_limit_number)
@@ -494,20 +496,23 @@
 			$history_limit_full->modify("-{$booking_limit_number_horizont} days");
 			$history_limit_half->modify("-{$limit_number_horizont_days} days");
 			$history_limit_half->modify("-{$limit_number_horizont_hours} hours");
-			$history_limit_date_full = $history_limit_half->format('Y-m-d H:i');
+			$history_limit_date_full = $history_limit_full->format('Y-m-d H:i');
 			$history_limit_date_half = $history_limit_half->format('Y-m-d H:i');
 
-			$resource_id = (int) $resource_id;
 
 			$sql = "SELECT count(*) as cnt FROM"
 				. " (SELECT bb_application.id FROM bb_application"
 				. " JOIN bb_application_date ON bb_application.id = bb_application_date.application_id"
 				. " JOIN bb_application_resource"
-				. " ON bb_application.id = bb_application_resource.application_id AND bb_application_resource.resource_id = {$resource_id}"
-				. " WHERE (customer_ssn = '{$ssn}' OR (status = 'NEWPARTIAL1' AND session_id = '$session_id'))"
-				. " AND ((to_ > '{$history_limit_date_half}' AND from_ < '$future_limit_date_half')"
-				. " OR to_ > '{$history_limit_date_full}'"
-				. " OR from_ < '$future_limit_date_full')) as t";
+				. " ON bb_application.id = bb_application_resource.application_id AND bb_application_resource.resource_id = " .(int) $resource_id
+				. " WHERE "
+				. "("
+				. " customer_ssn = '{$ssn}' AND status != 'REJECTED' "
+				. "	AND ((to_ > '{$history_limit_date_half}' AND from_ < '$future_limit_date_half')"
+				. " OR (to_ > '{$history_limit_date_full}' AND from_ < '$future_limit_date_full'))"
+				. ")"
+				. " OR (status = 'NEWPARTIAL1' AND session_id = '$session_id')"
+				. " ) as t";
 
 			$this->db->query($sql,__LINE__, __FILE__);
 			$this->db->next_record();

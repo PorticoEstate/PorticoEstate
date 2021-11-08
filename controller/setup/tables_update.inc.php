@@ -1586,6 +1586,39 @@
 		}
 	}
 
+	$test[] = '0.1.70';
+	function controller_upgrade0_1_70()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'controller_control_category',  array(
+				'fd' => array(
+					'id'	=> array('type' => 'auto', 'precision' =>  4, 'nullable' => false),
+					'control_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'name' => array('type' => 'varchar','precision' => '255', 'nullable' => False),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('controller_check_list','cat_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.71';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+
 
 
 

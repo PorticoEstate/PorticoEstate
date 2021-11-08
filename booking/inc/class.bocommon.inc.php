@@ -39,9 +39,10 @@
 				return $GLOBALS['phpgw']->link('/index.php', $data);
 		}
 
-		function read()
+		function read($params = array())
 		{
-			return $this->so->read($this->build_default_read_params());
+			$default_read_params = $this->build_default_read_params();
+			return $this->so->read(array_replace($default_read_params, $params));
 		}
 
 		/**

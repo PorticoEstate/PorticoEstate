@@ -1347,18 +1347,16 @@
 					//Nøkkelfelt, kundens personnr/orgnr. - men differensiert for undergrupper innenfor samme orgnr
 					$stored_header['tekst2'] = $check_customer_identifier;
 
-					if ($type == 'internal')
+//					if ($type == 'internal')
+//					{
+//						$ext_ord_ref = substr($this->get_customer_identifier_value_for($reservation), 0, 30);
+//					}
+//					else
 					{
-//						$header['tekst2'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
-						$ext_ord_ref = substr($this->get_customer_identifier_value_for($reservation), 0, 30);
-					}
-					else
-					{
-//						$header['tekst2'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
-						$ext_ord_ref = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $customer_number), 0, 30);
+						$ext_ord_ref = iconv("utf-8", "ISO-8859-1//TRANSLIT", $customer_number);
 					}
 
-					$kundenr = substr($this->get_customer_identifier_value_for($reservation), 0, 11);
+					$kundenr = trim($this->get_customer_identifier_value_for($reservation));
 					$stored_header['kundenr'] = $kundenr;
 
 					$stored_header['order_id'] = $order_id;
@@ -1401,9 +1399,10 @@
 					$fakturalinje['ArtDim']	 = '';  //char(8)
 					$fakturalinje['Avgift']	 = '';  //Beløp
 					$fakturalinje['BalanseDim']	 = '';  //char(8)
+					$fakturalinje['Grunnlagstype']	 = 'KRV';  //char(8)
 					$fakturalinje['enhetspris']	 = $reservation['cost'];  //Beløp
 					$fakturalinje['Fagsystemkontoid']	 = '';  //char(30) ???
-					$fakturalinje['Fagsystemvareid']	 = '';  //char(30)
+//					$fakturalinje['Fagsystemvareid']	 = '';  //char(30)
 					$fakturalinje['FeiletLinjeFelt']	 = '';  //Char
 					$fakturalinje['FormalDim']	 = '';  //char(8)
 					$fakturalinje['fradato']	 = $from_date->format('d.m.Y');  //dato
@@ -1469,7 +1468,7 @@
 //					$fakturalinje['RegningsmottakerFagsystemkundeid']	 = '';  //char(128)
 //					$fakturalinje['Regningsmottakerkundenr']	 = '';  //Int
 //					$fakturalinje['Samlefakturasortering']	 = '';  //
-					$fakturalinje['Systemid']	 = $client_id;  //
+//					$fakturalinje['Systemid']	 = $client_id;  //
 //					$fakturalinje['tidendr']	 = '';  //tid
 //					$fakturalinje['VaremottakerFagsystemkundeid']	 = '';  //char(128)
 //					$fakturalinje['Varemottakerkundenr']	 = '';  //int
@@ -1479,25 +1478,25 @@
 
 //					if (isset($this->config_data['dim_4']))
 //					{
-//						$item['dim_4'] = str_pad(substr($account_codes['dim_4'], 0, 8), 8, ' ');
+//						$item['dim_4'] = trim(substr($account_codes['dim_4'], 0, 8));
 //					}
 //
 //					//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt
 					if (isset($this->config_data['dim_5']))
 					{
-						$fakturalinje['orgkode'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
+						$fakturalinje['orgkode'] = trim(strtoupper($account_codes['project_number']));
 					}
 //					if (isset($this->config_data['dim_6']))
 //					{
-//						$item['dim_6'] = str_pad(substr($account_codes['dim_6'], 0, 4), 4, ' ');
+//						$item['dim_6'] = trim(substr($account_codes['dim_6'], 0, 4));
 //					}
 //					if (isset($this->config_data['dim_7']))
 //					{
-//						$item['dim_7'] = str_pad(substr($account_codes['dim_7'], 0, 4), 4, ' ');
+//						$item['dim_7'] = trim(substr($account_codes['dim_7'], 0, 4));
 //					}
 //
 //
-					$fakturalinjer[$check_customer_identifier][] = $fakturalinje;
+					$fakturalinjer[$check_customer_identifier][] = array('BkPffFakturagrunnlaglinje' => $fakturalinje);
 
 					$headers[$check_customer_identifier] = $header;
 
@@ -1534,16 +1533,17 @@
 					//Ansvarssted for inntektsføring for varelinjen avleveres i feltet (ANSVAR - f.eks 724300). ansvarsted (6 siffer) knyttet mot bygg /sesong
 					if (isset($this->config_data['dim_1']))
 					{
-						$fakturalinje['AnsvarDim'] = strtoupper(substr($account_codes['responsible_code'], 0, 8));	//char(8)
+						$fakturalinje['AnsvarDim'] = strtoupper(trim($account_codes['responsible_code']));	//char(8)
 					}
 
 					$fakturalinje['antall']				 = 1; //Desimal
 					$fakturalinje['ArtDim']				 = '';  //char(8)
 					$fakturalinje['Avgift']				 = '';  //Beløp
 					$fakturalinje['BalanseDim']			 = '';  //char(8)
+					$fakturalinje['Grunnlagstype']	 = 'KRV';  //char(8)
 					$fakturalinje['enhetspris']			 = $reservation['cost'];  //Beløp
 					$fakturalinje['Fagsystemkontoid']	 = '';  //char(30)
-					$fakturalinje['Fagsystemvareid']	 = '';  //char(30)
+//					$fakturalinje['Fagsystemvareid']	 = '';  //char(30)
 					$fakturalinje['FeiletLinjeFelt']	 = '';  //Char
 					$fakturalinje['FormalDim']			 = '';  //char(8)
 					$fakturalinje['fradato']			 = $from_date->format('d.m.Y');  //dato
@@ -1553,19 +1553,19 @@
 					//Formål. Eks Idrett
 					if ($type == 'internal' && isset($this->config_data['dim_2']))
 					{
-						$fakturalinje['FormalDim'] = str_pad(strtoupper(substr($account_codes['service'], 0, 8)), 8, ' ');
+						$fakturalinje['FormalDim'] = trim(strtoupper($account_codes['service']));
 					}
 
 					//Objektnr. vil være knyttet til hvert hus (FDVU)
 					if (isset($this->config_data['dim_3']))
 					{
-						$fakturalinje['ObjektDim'] = strtoupper(substr($account_codes['object_number'], 0, 8));//char(8)
+						$fakturalinje['ObjektDim'] = strtoupper(trim($account_codes['object_number']));//char(8)
 					}
 
 					$fakturalinje['orgkode']	 = '';  //char(8)
 					if (isset($this->config_data['dim_5']))
 					{
-						$fakturalinje['orgkode'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
+						$fakturalinje['orgkode'] = trim(strtoupper($account_codes['project_number']));
 					}
 
 
@@ -1576,9 +1576,9 @@
 					$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
 					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
 //					$fakturalinje['Kundenr']			 = $stored_header['kundenr'];
-					$fakturalinje['Systemid']	 = $client_id;  //
+//					$fakturalinje['Systemid']	 = $client_id;  //
 
-					$fakturalinjer[$check_customer_identifier][] = $fakturalinje;
+					$fakturalinjer[$check_customer_identifier][] = array('BkPffFakturagrunnlaglinje' => $fakturalinje);
 
 					$log_buidling			 = $reservation['building_name'];
 					$log_cost				 = $reservation['cost'];
@@ -1605,6 +1605,8 @@
 			{
 				$fakturagrunnlag = $headers[$key];
 				$fakturagrunnlag['Fakturalinjer'] = $_fakturalinjer;
+				$fakturagrunnlag['Systemid']	 = $client_id;  //
+
 				$invoice['BkPffFakturagrunnlag'][] = $fakturagrunnlag;
 			}
 

@@ -1626,6 +1626,8 @@ JS;
 				'my_name'	 => 'download',
 				'download'	 => self::link(array(
 					'menuaction' => 'property.uiinvoice.download_sub',
+					'paid'		 => $paid,
+					'voucher_id' => $voucher_id,
 					'export'	 => true,
 					'allrows'	 => true
 				))
@@ -1703,31 +1705,42 @@ JS;
 			$columns	 = phpgw::get_var('columns');
 			$order_field = '';
 
-			switch ($columns[$order[0]['column']]['data'])
+			if(!empty($columns))
 			{
-				case 'workorder':
-					$order_field = 'pmwrkord_code';
-					break;
-				case 'budget_Account':
-					$order_field = 'spbudact_code';
-					break;
-				case 'sum':
-					$order_field = 'belop';
-					break;
-				case 'dim_A':
-					$order_field = 'dima';
-					break;
-				default:
-					$order_field = $columns[$order[0]['column']]['data'];
+				$query	= $search['value'];
+				$sort	 = $order[0]['dir'];
+				switch ($columns[$order[0]['column']]['data'])
+				{
+					case 'workorder':
+						$order_field = 'pmwrkord_code';
+						break;
+					case 'budget_Account':
+						$order_field = 'spbudact_code';
+						break;
+					case 'sum':
+						$order_field = 'belop';
+						break;
+					case 'dim_A':
+						$order_field = 'dima';
+						break;
+					default:
+						$order_field = $columns[$order[0]['column']]['data'];
+				}
+			}
+			else
+			{
+				$order_field = 'pmwrkord_code';
+				$query = '';
+				$sort	 = 'ASC';
 			}
 
 			$params = array
 				(
 				'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query'		 => $search['value'],
+				'query'		 => $query,
 				'order'		 => $order_field,
-				'sort'		 => $order[0]['dir'],
+				'sort'		 => $sort,
 				'allrows'	 => 1,
 				'paid'		 => $paid ? $paid : false,
 				'voucher_id' => $voucher_id,

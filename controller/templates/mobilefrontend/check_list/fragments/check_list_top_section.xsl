@@ -14,6 +14,25 @@
 		<xsl:value-of select="last_completed_checklist_date"/>
 	</xsl:if>
 
+	<xsl:if test="categories != ''">
+		<br/>
+		<xsl:value-of select="php:function('lang', 'category')" />
+		<xsl:text>: </xsl:text>
+		<select id ="categories" class="pure-form pure-form-stacked pure-input-1">
+			<option>
+				<xsl:value-of select="php:function('lang', 'select')"/>
+			</option>
+			<xsl:for-each select="categories">
+				<option value="{id}">
+					<xsl:if test="selected = 1">
+						<xsl:attribute name="selected">selected</xsl:attribute>
+					</xsl:if>
+					<xsl:value-of select="name"/>
+				</option>
+			</xsl:for-each>
+		</select>
+	</xsl:if>
+
 	<xsl:if test="inspectors != ''">
 		<br/>
 		<xsl:value-of select="php:function('lang', 'performed by')" />

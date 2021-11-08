@@ -31,12 +31,17 @@
 
 		}
 
-		private function _filesize($filename)
+		private function _filesize( $filename )
 		{
+			$filesize = 0;
+
 			$a = fopen($filename, 'r');
-			fseek($a, 0, SEEK_END);
-			$filesize = ftell($a);
-			fclose($a);
+			if ($a)
+			{
+				fseek($a, 0, SEEK_END);
+				$filesize = ftell($a);
+				fclose($a);
+			}
 			return $filesize;
 		}
 

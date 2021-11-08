@@ -236,12 +236,16 @@
 				}
 
 				// Obtain a list of columns
+				$id = array();
 				foreach ($location_filter as $key => $row)
 				{
 					$id[$key] = $row['sort_key'];
 				}
 
-				array_multisort($id, SORT_ASC, SORT_STRING, $location_filter);
+				if($id)
+				{
+					array_multisort($id, SORT_ASC, SORT_STRING, $location_filter);
+				}
 				phpgwapi_cache::session_set('controller', "location_filter_{$entity_group_id}", $location_filter);
 			}
 
@@ -1641,7 +1645,7 @@
 				return '';
 			}
 
-			$time = $param['info']['service_time'] + $param['info']['controle_time'];
+			$time = (float)$param['info']['service_time'] + (float)$param['info']['controle_time'];
 			$time = $time ? $time : '&nbsp;';
 			$billable_hours = (float)$param['info']['billable_hours'];
 			$time .= " / {$billable_hours}";

@@ -487,7 +487,7 @@
 		{
 //			$download = 'on';
 //			$download = False;
-//			$this->debug=True;
+			$this->debug=True;
 			//Generer batch ID
 			$batchid = $this->soXport->next_batchid();
 			if ($download == 'on')
@@ -736,6 +736,10 @@
 				if ($get_bilagsnr_ut)
 				{
 					$bilagsnr_ut = $this->increment_voucher_id();
+					if($this->debug)
+					{
+						_debug_array($bilagsnr_ut);
+					}
 				}
 			}
 
@@ -824,7 +828,7 @@
 					//Oppdater beløp på arbeidsordre
 					if ($download == 'on')
 					{
-						if ($line['dimd'] % 2 == 0)
+						if ((int)$line['dimd'] % 2 == 0)
 						{
 							$actual_cost_field = 'act_mtrl_cost';
 						}
@@ -960,9 +964,9 @@
 					'POLINENUMBER'		 => '',
 					'RECEIVER.FULLNAME'	 => '',
 					'STATUS'			 => 5,
-					'SUBACCOUNT'		 => $periode, //200905 Accounting period YYYYMM
-					'ALLOCATION.KEY'	 => $periodization, //0
-					'ALLOCATION.PERIOD'	 => $periodization_start //dummy
+					'SUBACCOUNT'		 => '', //$periode, //200905 Accounting period YYYYMM
+					'ALLOCATION.KEY'	 => '', //$periodization, //0
+					'ALLOCATION.PERIOD'	 => '', //$periodization_start //dummy
 				);
 			}
 
@@ -1065,7 +1069,7 @@
 			}
 			else
 			{
-				$message = $buffer;
+				$message = htmlentities($buffer);
 				$this->db->transaction_abort();
 			}
 

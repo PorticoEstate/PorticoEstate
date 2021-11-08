@@ -63,7 +63,7 @@
 		{
 			$check_list_id = (int)$check_list_id;
 			$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, original_deadline, planned_date,assigned_to, billable_hours, ";
-			$sql .= "completed_date, location_code, component_id, num_open_cases, num_pending_cases,num_corrected_cases, location_id, ci.id as ci_id, control_item_id,serie_id ";
+			$sql .= "completed_date, location_code, component_id, num_open_cases, num_pending_cases,num_corrected_cases, location_id, cat_id, ci.id as ci_id, control_item_id,serie_id ";
 			$sql .= "FROM controller_check_list cl ";
 			$sql .= "LEFT JOIN controller_check_item as ci ON cl.id = ci.check_list_id ";
 			$sql .= "WHERE cl.id = {$check_list_id}";
@@ -88,6 +88,7 @@
 			$check_list->set_assigned_to($this->unmarshal($this->db->f('assigned_to'), 'int'));
 			$check_list->set_billable_hours($this->db->f('billable_hours'));
 			$check_list->set_serie_id($this->db->f('serie_id'));
+			$check_list->set_cat_id($this->db->f('cat_id'));
 
 
 			if ($check_list != null)
@@ -1136,6 +1137,13 @@
 
 			return $ok;
 
+		}
+
+		function set_category($check_list_id, $cat_id)
+		{
+			$sql = "UPDATE controller_check_list SET cat_id = $cat_id WHERE id = $check_list_id";
+			$ok = $this->db->query($sql, __LINE__, __FILE__);
+			return $ok;
 		}
 
 		function get_findings_summary( $check_list_id )

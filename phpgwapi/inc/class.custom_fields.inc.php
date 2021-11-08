@@ -1014,6 +1014,18 @@
 			if(!$choice_id)
 			{
 				/**
+				 * Find duplicate
+				 */
+				$sql = "SELECT id as choice_id FROM phpgw_cust_choice WHERE location_id = {$location_id} AND attrib_id = {$attrib_id}"
+					. " AND value = '" . $this->_db->db_addslashes($value) ."'";
+
+				$this->_db->query($sql,__LINE__,__FILE__);
+				if($this->_db->next_record())
+				{
+					return false;
+				}
+
+				/**
 				 * Find first candidate below 90.
 				 */
 				$sql = "SELECT s.i AS choice_id FROM generate_series(1,89) s(i)"
@@ -2098,7 +2110,8 @@
 			$sql = "SELECT * FROM phpgw_cust_choice "
 				. " WHERE location_id = {$location_id}"
 					. " AND attrib_id = {$attrib_id}"
-				. " ORDER BY choice_sort ASC, value";
+//				. " ORDER BY choice_sort ASC, value";
+				. " ORDER BY value";
 			$this->_db->query($sql,__LINE__,__FILE__);
 
 			$choices = array();

@@ -131,7 +131,7 @@
 								<xsl:value-of select="modified_date_text" />
 							</td>
 							<td>
-								<xsl:value-of disable-output-escaping="yes" select="proposed_counter_measure" />
+								<xsl:value-of disable-output-escaping="yes" select="descr" />
 							</td>
 							<td>
 								<a href="{open_case_url}" target="_blank">

@@ -1,5 +1,22 @@
 $(document).ready(function ()
 {
+	$("#choose-child-on-component").select2({
+		placeholder: lang['Select'],
+		language: "no",
+		width: '75%'
+	});
+
+	$('#choose-child-on-component').on('select2:open', function (e) {
+
+		$(".select2-search__field").each(function()
+		{
+			if ($(this).attr("aria-controls") == 'select2-choose-child-on-component-results')
+			{
+				$(this)[0].focus();
+			}
+		});
+	});
+
 
 	// Display submit button on click
 	$(".inspectors").on("click", function (e)
@@ -14,6 +31,36 @@ $(document).ready(function ()
 			check_list_id: check_list_id,
 			checked: checked == true ? 1 : 0,
 			user_id: user_id,
+		};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data)
+				{
+					var status = data.status;
+					if (status === 'ok')
+					{
+//						alert('ok');
+					}
+				}
+			}
+		});
+
+	});
+
+	$("#categories").change(function ()
+	{
+		var check_list_id = $("#check_list_id").val();
+		var cat_id = $(this).val();
+
+		var oArgs = {
+			menuaction: 'controller.uicheck_list.set_category',
+			check_list_id: check_list_id,
+			cat_id: cat_id,
 		};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 

@@ -166,16 +166,24 @@
         $('li', $ul).each(function() {
             var $tab = $(this);
             var isExcluded = $tab.hasClass(_this.options.classes.stateExcluded);
-            var $anchor, $panel, $accordionTab, $accordionAnchor, panelSelector;
+            var $anchor, $panel, $accordionTab, $accordionAnchor, panelSelector, panelOnclick, panelHref;
 
             // Check if the tab should be excluded
             if(!isExcluded) {
 
                 $anchor = $('a', $tab);
                 panelSelector = $anchor.attr('href');
+                panelOnclick = $anchor.attr('onclick');
                 $panel = $(panelSelector);
                 $accordionTab = $(_this.options.accordionTabElement).insertBefore($panel);
-                $accordionAnchor = $('<a></a>').attr('href', panelSelector).html($anchor.html()).appendTo($accordionTab);
+
+				panelHref = $('<a></a>').attr('href', panelSelector);
+				if(panelOnclick !== 'undefined')
+				{
+					panelHref.attr('onclick', panelOnclick);
+				}
+
+				$accordionAnchor = panelHref.html($anchor.html()).appendTo($accordionTab);
 
                 var oTab = {
                     _ignoreHashChange: false,

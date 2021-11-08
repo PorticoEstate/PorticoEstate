@@ -1318,6 +1318,35 @@
 			);
 		}
 
+		function check_booking_limit($session_id, $ssn, $resources )
+		{
+			$_limit_reached = 0;
+			foreach ($resources['results'] as $resource)
+			{
+				if ($resource['booking_limit_number_horizont'] > 0 && $resource['booking_limit_number'] > 0)
+				{
+					$limit_reached = $this->bo->so->check_booking_limit(
+						$session_id,
+						$resource['id'],
+						$ssn,
+						$resource['booking_limit_number_horizont'],
+						$resource['booking_limit_number']);
+
+					if ($limit_reached)
+					{
+						$_limit_reached += $limit_reached;
+						$error_message = lang('quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days',
+							$limit_reached,
+							$resource['name'],
+							$resource['booking_limit_number'],
+							$resource['booking_limit_number_horizont']);
+
+						phpgwapi_cache::message_set($error_message, 'error');
+					}
+				}
+			}
+			return $_limit_reached;
+		}
 
 		function add_contact()
 		{
@@ -1441,7 +1470,7 @@
 						$partial2_fields = array('contact_email','contact_name','contact_phone',
 							'customer_identifier_type','customer_organization_number','customer_organization_id',
 							'customer_organization_name','customer_ssn',
-							'responsible_city','responsible_street','responsible_zip_code', 'audience');
+							'responsible_city','responsible_street','responsible_zip_code');
 						foreach ($partials['results'] as &$application)
 						{
 							// Remove certain unused fields from the update
@@ -1449,7 +1478,7 @@
 							// Add the contact data from partial2
 							foreach ($partial2_fields as $field)
 							{
-								$application[$field] = $partial2[$field];
+									$application[$field] = $partial2[$field];
 							}
 							// Update status fields
 							$application['status'] = 'NEW';
@@ -1490,26 +1519,26 @@
 
 							foreach ($resources['results'] as $resource)
 							{
-								if($resource['booking_limit_number_horizont'] > 0 && $resource['booking_limit_number'] > 0)
-								{
-									$limit_reached = $this->bo->so->check_booking_limit(
-										$session_id,
-										$resource['id'],
-										$external_login_info['ssn'],
-										$resource['booking_limit_number_horizont'],
-										$resource['booking_limit_number'] );
-
-									if($limit_reached)
-									{
-										$error_message = lang('quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days',
-											$limit_reached,
-											$resource['name'],
-											$resource['booking_limit_number'],
-											$resource['booking_limit_number_horizont']);
-
-										phpgwapi_cache::message_set( $error_message, 'error');
-									}
-								}
+//								if($resource['booking_limit_number_horizont'] > 0 && $resource['booking_limit_number'] > 0)
+//								{
+//									$limit_reached = $this->bo->so->check_booking_limit(
+//										$session_id,
+//										$resource['id'],
+//										$external_login_info['ssn'],
+//										$resource['booking_limit_number_horizont'],
+//										$resource['booking_limit_number'] );
+//
+//									if($limit_reached)
+//									{
+//										$error_message = lang('quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days',
+//											$limit_reached,
+//											$resource['name'],
+//											$resource['booking_limit_number'],
+//											$resource['booking_limit_number_horizont']);
+//
+//										phpgwapi_cache::message_set( $error_message, 'error');
+//									}
+//								}
 
 								$max_date = max($from_dates);
 
@@ -1518,6 +1547,8 @@
 									$check_direct_booking ++;
 								}
 							}
+
+							$limit_reached = $this->check_booking_limit($session_id, $external_login_info['ssn'], $resources);
 
 							if($limit_reached)
 							{

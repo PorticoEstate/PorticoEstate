@@ -1977,8 +1977,8 @@
 					(
 					'buffer_project_id'	 => $this->db->f('buffer_project_id'),
 					'year'				 => $this->db->f('year'),
-					'amount_in'			 => $this->db->f('amount_in'),
-					'amount_out'		 => $this->db->f('amount_out'),
+					'amount_in'			 => (float)$this->db->f('amount_in'),
+					'amount_out'		 => (float)$this->db->f('amount_out'),
 					'from_project'		 => $this->db->f('from_project'),
 					'to_project'		 => $this->db->f('to_project'),
 					'user_id'			 => $this->db->f('user_id'),
@@ -3057,7 +3057,7 @@
 					'start_date'		 => $GLOBALS['phpgw']->common->show_date($this->db->f('start_date'), $dateformat),
 					'num_open'			 => (int)$this->db->f('num_open'),
 					'project_type_id'	 => $this->db->f('project_type_id'),
-					'continuous'		 => $this->db->f('continuous') ? X : '',
+					'continuous'		 => $this->db->f('continuous') ? 'X' : '',
 					'project_type'		 => $project_types[$this->db->f('project_type_id')],
 					'b_account_id'		 => $this->db->f('account_id')// only applies to workorders
 				);
@@ -3077,7 +3077,7 @@
 				{
 					$_year	 = $this->db->f('year');
 					$_amount = $this->db->f('amount');
-					$_active = $this->db->f('active') ? X : 0;
+					$_active = $this->db->f('active') ? 'X' : 0;
 					if ($_active)
 					{
 						$_active_amount[$_year] += $_amount;
