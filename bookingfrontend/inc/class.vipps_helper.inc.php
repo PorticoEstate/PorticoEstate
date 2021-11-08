@@ -372,6 +372,8 @@
 //		    Check every 2 seconds
 			$cancel_array = array('CANCEL', 'VOID','FAILED', 'REJECTED' );
 
+			$approved_array = array('RESERVE');
+
 			while ($attempts < 6)
 			{
 				if (!$attempts)
@@ -385,9 +387,9 @@
 
 				$data = $this->get_payment_details($payment_order_id);
 
-				if($data)
+				if(isset($data['transactionLogHistory'][0]['operation']))
 				{
-					if(isset($data['transactionLogHistory'][0]['operation']) && in_array($data['transactionLogHistory'][0]['operation'], $cancel_array))
+					if( in_array($data['transactionLogHistory'][0]['operation'], $cancel_array))
 					{
 						$this->cancel_order($payment_order_id);
 					}
