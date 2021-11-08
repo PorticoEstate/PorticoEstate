@@ -394,7 +394,7 @@ JS;
 					$value = (int) $value;
 					break;
 				case 'price':
-					$value = trim(str_replace(array($this->currency_suffix, " "), '', $value));
+					$value = (float)trim(str_replace(array($this->currency_suffix, " ", ','), array('','','.'), $value));
 					break;
 				case 'date_start':
 				case 'date_end':
