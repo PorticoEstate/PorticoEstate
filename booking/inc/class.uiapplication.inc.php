@@ -27,6 +27,7 @@
 			'custom_fields_example'		 => true,
 			'export_pdf'				 => true,
 			'add_comment_to_application' => true,
+			'payments'					 => true
 		);
 		protected $customer_id,
 			$default_module = 'bookingfrontend',
@@ -548,6 +549,23 @@
 				$association['type'] = lang($association['type']);
 			}
 			return $associations;
+		}
+
+		public function payments( )
+		{
+			$application_id = phpgw::get_var('application_id', 'int');
+			$payments = $this->bo->so->read_payments($application_id);
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			foreach ($payments['data'] as &$payment)
+			{
+				$payment['created_value'] = $GLOBALS['phpgw']->common->show_date($payment['created']);
+				if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+				{
+//					unset($association['cost']);
+				}
+			}
+			return $payments;
+
 		}
 
 		private function _combine_dates( $from_, $to_ )

@@ -10,8 +10,6 @@ ko.validation.locale('nb-NO');
 
 function initiate_vipps()
 {
-	alert('Vipps...');
-
 	var parameter = {
 		menuaction: "bookingfrontend.vipps_helper.initiate"
 	};
@@ -33,8 +31,6 @@ function initiate_vipps()
 
 function check_payment_status()
 {
-
-//	var payment_order_id = $("#payment_order_id").val();
 
 	if (!payment_order_id)
 	{
@@ -66,13 +62,9 @@ function check_payment_status()
 
 		console.log(result);
 		var last_transaction = result.transactionLogHistory[0];
-		if (last_transaction.operation === 'CANCEL' || last_transaction.operation === 'VOID' || last_transaction.operation === 'FAILED' || last_transaction.operation === 'REJECTED')
+		if (last_transaction.operationSuccess === true)
 		{
-			window.location.href = phpGWLink('bookingfrontend/',
-			{
-				menuaction: "bookingfrontend.vipps_helper.cancel_order",
-				payment_order_id: payment_order_id
-			}, false);
+			window.location.href = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiapplication.add_contact'}, false);
 		}
 
 	});

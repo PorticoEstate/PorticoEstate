@@ -550,6 +550,37 @@
 			}
 		}
 
+		function read_payments( $application_id )
+		{
+			$data = array();
+			$sql = "SELECT bb_payment.* FROM bb_payment"
+				. " JOIN bb_purchase_order ON bb_payment.order_id = bb_purchase_order.id";
+		//		. " WHERE application_id = " . (int)$application_id;
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$data[] = array(
+					'id' => (int)$this->db->f('id'),
+					'remote_state' => $this->db->f('remote_state'),
+					'amount' => (float)$this->db->f('amount'),
+					'currency' => $this->db->f('currency'),
+					'status' => $this->db->f('status'),
+					'order_id' => (int)$this->db->f('order_id'),
+					'payment_method' => 'vipps',
+					'created' => $this->db->f('created'),
+				);
+			}
+
+			return array('data' => $data);
+		}
+		/**
+		 * 
+		 * @param string $payment_order_id
+		 * @param string $status: new, pending, completed, voided, partially_refunded, refunded
+		 * @return bool
+		 */
 		function update_payment_status( $payment_order_id, $status)
 		{
 			$remote_id	 = $this->db->db_addslashes($payment_order_id);

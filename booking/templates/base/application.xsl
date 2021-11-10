@@ -579,6 +579,18 @@
 									<div id="associated_container"/>
 								</div>
 							</div>
+							<div class="pure-u-1">
+								<div class="heading">
+									<legend>
+										<h3>
+											<xsl:value-of select="php:function('lang', 'payments')" />
+										</h3>
+									</legend>
+								</div>
+								<div class="pure-control-group">
+									<div id="payments_container"/>
+								</div>
+							</div>
 						</div>
 					</xsl:if>
 					<xsl:if test="application/edit_link">
@@ -728,6 +740,7 @@
 			var documentsURL = phpGWLink('index.php', {menuaction:'booking.uidocument_view.regulations', sort:'name', length:-1}, true) +'&owner[]=building::' + building_id;
 				documentsURL += '&owner[]=resource::'+ resources;
 			var attachmentsResourceURL = phpGWLink('index.php', {menuaction:'booking.uidocument_application.index', sort:'name', no_images:1, filter_owner_id:app_id, length:-1}, true);
+			var paymentURL = phpGWLink('index.php', {menuaction:'booking.uiapplication.payments', sort:'from_',dir:'asc',application_id:app_id, length:-1}, true);
 
 		]]>
 
@@ -759,6 +772,17 @@
 
 		var colDefsAttachmentsResource = [{key: 'name', label: lang['Name'], formatter: genericLink}];
 		createTable('attachments_container', attachmentsResourceURL, colDefsAttachmentsResource, '', 'pure-table pure-table-bordered');
+
+		var colDefsPayment = [
+		{key: 'id', label: lang['ID'], formatter: genericLink},
+		{key: 'order_id', label: lang['order_id']},
+		{key: 'amount', label: lang['Amount']},
+		{key: 'currency', label: lang['currency']},
+		{key: 'status', label: lang['status']},
+		{key: 'payment_method', label: lang['payment_method']}
+		];
+
+		createTable('payments_container', paymentURL, colDefsPayment,'', 'pure-table pure-table-bordered');
 
 	</script>
 </xsl:template>
