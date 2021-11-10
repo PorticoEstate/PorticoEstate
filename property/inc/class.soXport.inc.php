@@ -746,7 +746,7 @@
 				{
 					$amount = $line['godkjentbelop'] * 100;
 					//Oppdater beløp på bestilling
-					if ($line['dimd'] % 2 == 0)
+					if ((int)$line['dimd'] % 2 == 0)
 					{
 						$actual_cost_field = 'act_mtrl_cost';
 					}

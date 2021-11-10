@@ -547,10 +547,12 @@
 			$soXport					 = CreateObject('property.soXport');
 			$soXport->supertransaction	 = $this->supertransaction;
 			$soXport->debug				 = $this->debug;
-			if ($values['loc1']				 = $values['location']['loc1'])
+
+			if (isset($values['location']['loc1']))
 			{
+				$values['loc1']			 = $values['location']['loc1'];
 				$values['dima']			 = implode('', $values['location']);
-				$values['location_code'] = explode('-', $values['location']);
+				$values['location_code'] = implode('-', $values['location']);
 			}
 			$values['spbudact_code'] = $values['b_account_id'];
 			$values['fakturanr']	 = $values['invoice_id'];
