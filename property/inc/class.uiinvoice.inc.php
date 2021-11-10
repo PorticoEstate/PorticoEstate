@@ -1349,7 +1349,7 @@ JS;
 								}
 								else //if($paid)
 								{
-									$data[$j]['column'][$i]['value2'] = $invoices['transfer_date'] . " - " . $invoices['transfer_id'];
+									$data[$j]['column'][$i]['value2'] = $invoices['transfer_date'];
 								}
 							}
 							else //for input controls
