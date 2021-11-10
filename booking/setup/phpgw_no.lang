@@ -870,3 +870,4 @@ details	booking	no	Detaljer
 currency	booking	no	Valuta
 payment method	booking	no	Betalingsmetode
 refund	booking	no	Refundér
+payments	booking	no	Betalinger

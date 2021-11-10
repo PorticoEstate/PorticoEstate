@@ -88,7 +88,7 @@
 			catch (\GuzzleHttp\Exception\BadResponseException $e)
 			{
 				// handle exception or api errors.
-				if($this->debug)
+				if ($this->debug)
 				{
 					print_r($e->getMessage());
 				}
@@ -121,8 +121,8 @@
 
 			foreach ($applications['results'] as $application)
 			{
-				$dates = implode(', ', array_map(array($this, 'get_date_range'), $application['dates']));
-				$contact_phone = $application['contact_phone'];
+				$dates			 = implode(', ', array_map(array($this, 'get_date_range'), $application['dates']));
+				$contact_phone	 = $application['contact_phone'];
 
 				foreach ($application['orders'] as $order)
 				{
@@ -194,7 +194,7 @@
 			catch (\GuzzleHttp\Exception\BadResponseException $e)
 			{
 				// handle exception or api errors.
-				if($this->debug)
+				if ($this->debug)
 				{
 					print_r($e->getMessage());
 				}
@@ -245,12 +245,12 @@
 				$response	 = $client->request('POST', $url, $request);
 				$status_code = $response->getStatusCode(); // 200
 
-				$ret		 = json_decode($response->getBody()->getContents(), true);
+				$ret = json_decode($response->getBody()->getContents(), true);
 			}
 			catch (\GuzzleHttp\Exception\BadResponseException $e)
 			{
 				// handle exception or api errors.
-				if($this->debug)
+				if ($this->debug)
 				{
 					print_r($e->getMessage());
 				}
@@ -258,10 +258,10 @@
 			return $ret;
 		}
 
-		private function cancel_order( $payment_order_id, $remote_state )
+		private function cancel_order( $remote_order_id, $remote_state )
 		{
 			$soapplication	 = CreateObject('booking.soapplication');
-			$id				 = $soapplication->get_application_from_payment_order($payment_order_id);
+			$id				 = $soapplication->get_application_from_payment_order($remote_order_id);
 			$status			 = array('deleted' => false);
 			$session_id		 = $GLOBALS['phpgw']->session->get_session_id();
 			if (!empty($session_id) && $id > 0)
@@ -286,7 +286,7 @@
 				{
 					$application_id		 = $id;
 					$soapplication->delete_purchase_order($application_id);
-					$soapplication->update_payment_status($payment_order_id, 'voided', $remote_state);
+					$soapplication->update_payment_status($remote_order_id, 'voided', $remote_state);
 					$soapplication->delete_application($application_id);
 					$status['deleted']	 = true;
 				}
@@ -297,9 +297,36 @@
 			phpgwapi_cache::message_set('cancelled');
 		}
 
-		private function cancel_payment( $order_id )
+		public function cancel_payment( $payment_id )
 		{
-			$path	 = "/ecomm/v2/payments/{$order_id}/cancel";
+			$soapplication	 = CreateObject('booking.soapplication');
+			$payment		 = $soapplication->get_payment($payment_id);
+			$remote_order_id = $payment['remote_id'];
+
+			$cancel_array = array('CANCEL', 'VOID', 'FAILED', 'REJECTED');
+
+			$approved_array = array('RESERVE', 'RESERVED');
+
+			$data = $this->get_payment_details($remote_order_id);
+
+			/**
+			 * Sync with external data
+			 */
+			if (isset($data['transactionLogHistory'][0]['operation']) && in_array($data['transactionLogHistory'][0]['operation'], $cancel_array))
+			{
+				$this->cancel_order($remote_order_id, $data['transactionLogHistory'][0]['operation']);
+				$soapplication->update_payment_status($remote_order_id, 'voided', $data['transactionLogHistory'][0]['operation']);
+				return;
+			}
+
+			if (isset($data['transactionLogHistory'][0]['operation']) && $data['transactionLogHistory'][0]['operation'] == 'CAPTURE')
+			{
+				$soapplication->update_payment_status($remote_order_id, 'completed', 'CAPTURE');
+				return;
+			}
+
+
+			$path	 = "/ecomm/v2/payments/{$remote_order_id}/cancel";
 			$url	 = "{$this->base_url}{$path}";
 
 			$soapplication = CreateObject('booking.soapplication');
@@ -334,7 +361,6 @@
 			];
 
 			$request['json'] = $request_body;
-
 			try
 			{
 				$response	 = $client->request('PUT', $url, $request);
@@ -344,11 +370,17 @@
 			catch (\GuzzleHttp\Exception\BadResponseException $e)
 			{
 				// handle exception or api errors.
-				if($this->debug)
+				if ($this->debug)
 				{
-					print_r($e->getMessage());
+					_debug_array($e->getMessage());
+					die();
 				}
 			}
+			if ($status_code == 200)
+			{
+				$soapplication->update_payment_status($remote_order_id, 'voided', 'Cancelled');
+			}
+			return $response;
 		}
 
 		private function authorize_payment( $param )
@@ -366,13 +398,13 @@
 
 		}
 
-		public function check_payment_status( $payment_order_id = '' )
+		public function check_payment_status( $remote_order_id = '' )
 		{
 			$boapplication	 = CreateObject('booking.boapplication');
 			$soapplication	 = CreateObject('booking.soapplication');
-			if (!$payment_order_id)
+			if (!$remote_order_id)
 			{
-				$payment_order_id = phpgw::get_var('payment_order_id');
+				$remote_order_id = phpgw::get_var('payment_order_id');
 			}
 
 			static $attempts = 0;
@@ -394,24 +426,24 @@
 					sleep(2);
 				}
 
-				$data = $this->get_payment_details($payment_order_id);
+				$data = $this->get_payment_details($remote_order_id);
 
 				if (isset($data['transactionLogHistory'][0]['operation']))
 				{
 					if ($data['transactionLogHistory'][0]['operationSuccess'] && in_array($data['transactionLogHistory'][0]['operation'], $cancel_array))
 					{
-						$this->cancel_order($payment_order_id, $data['transactionLogHistory'][0]['operation']);
+						$this->cancel_order($remote_order_id, $data['transactionLogHistory'][0]['operation']);
 					}
 					if ($data['transactionLogHistory'][0]['operationSuccess'] && in_array($data['transactionLogHistory'][0]['operation'], $approved_array))
 					{
-						$soapplication->update_payment_status($payment_order_id, 'pending', $data['transactionLogHistory'][0]['operation']);
+						$soapplication->update_payment_status($remote_order_id, 'pending', $data['transactionLogHistory'][0]['operation']);
 
-						$capture = $this->capture_payment($payment_order_id, (int)$data['transactionLogHistory'][0]['amount']);
+						$capture = $this->capture_payment($remote_order_id, (int)$data['transactionLogHistory'][0]['amount']);
 						if ($capture['transactionInfo']['status'] == 'Captured')
 						{
 							$GLOBALS['phpgw']->db->transaction_begin();
-							$soapplication->update_payment_status($payment_order_id, 'completed', $capture['transactionInfo']['status']);
-							$this->approve_application($payment_order_id);
+							$soapplication->update_payment_status($remote_order_id, 'completed', $capture['transactionInfo']['status']);
+							$this->approve_application($remote_order_id);
 							$GLOBALS['phpgw']->db->transaction_commit();
 						}
 					}
@@ -429,15 +461,15 @@
 		}
 
 		/**
-		 * 
-		 * @param string $payment_order_id
+		 *
+		 * @param string $remote_order_id
 		 * @return boolean
 		 */
-		private function approve_application( $payment_order_id )
+		private function approve_application( $remote_order_id )
 		{
 			$boapplication = CreateObject('booking.boapplication');
 
-			$application_id				 = $boapplication->so->get_application_from_payment_order($payment_order_id);
+			$application_id				 = $boapplication->so->get_application_from_payment_order($remote_order_id);
 			$application				 = $boapplication->so->read_single($application_id);
 			$application['status']		 = 'ACCEPTED';
 			$receipt					 = $boapplication->update($application);
@@ -496,19 +528,19 @@
 		}
 
 		/**
-		 * 
-		 * @param string $payment_order_id
+		 *
+		 * @param string $remote_order_id
 		 * @return type
 		 */
-		public function get_payment_details( $payment_order_id = '' )
+		public function get_payment_details( $remote_order_id = '' )
 		{
 
-			if (!$payment_order_id)
+			if (!$remote_order_id)
 			{
-				$payment_order_id = phpgw::get_var('payment_order_id');
+				$remote_order_id = phpgw::get_var('payment_order_id');
 			}
 
-			$path	 = "/ecomm/v2/payments/{$payment_order_id}/details";
+			$path	 = "/ecomm/v2/payments/{$remote_order_id}/details";
 			$url	 = "{$this->base_url}{$path}";
 			$client	 = new GuzzleHttp\Client();
 
@@ -542,7 +574,7 @@
 			catch (\GuzzleHttp\Exception\BadResponseException $e)
 			{
 				// handle exception or api errors.
-				if($this->debug)
+				if ($this->debug)
 				{
 					print_r($e->getMessage());
 				}

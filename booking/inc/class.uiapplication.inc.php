@@ -27,7 +27,8 @@
 			'custom_fields_example'		 => true,
 			'export_pdf'				 => true,
 			'add_comment_to_application' => true,
-			'payments'					 => true
+			'payments'					 => true,
+			'cancel_payment'			 => true,
 		);
 		protected $customer_id,
 			$default_module = 'bookingfrontend',
@@ -567,14 +568,18 @@
 				{
 					if ($payment['status'] == 'completed')
 					{
-						$payment['option_edit']		 = self::link(array('menuaction' => 'booking.uiapplication.refund',
-								'id'		 => $payment['id']));
+						$payment['option_edit']		 = self::link(array(
+								'menuaction'	 => 'booking.uiapplication.refund',
+								'id'			 => $payment['id'],
+								'application_id' => $application_id));
 						$payment['option_delete']	 = false;
 					}
 					else if ($payment['status'] == 'pending')
 					{
-						$payment['option_delete']	 = self::link(array('menuaction' => 'booking.uiapplication.cancel_payment',
-								'id'		 => $payment['id']));
+						$payment['option_delete']	 = self::link(array(
+								'menuaction'	 => 'booking.uiapplication.cancel_payment',
+								'id'			 => $payment['id'],
+								'application_id' => $application_id));
 						$payment['option_edit']		 = false;
 					}
 					else
@@ -587,6 +592,16 @@
 			return $payments;
 		}
 
+		function cancel_payment()
+		{
+			$payment_id = phpgw::get_var('id', 'int');
+			$application_id = phpgw::get_var('application_id', 'int');
+
+			$payment_helper = createObject('bookingfrontend.vipps_helper');
+			$payment_helper->cancel_payment($payment_id);
+			self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application_id));
+
+		}
 		private function _combine_dates( $from_, $to_ )
 		{
 			return array('from_' => $from_, 'to_' => $to_);

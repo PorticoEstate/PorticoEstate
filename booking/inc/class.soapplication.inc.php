@@ -836,6 +836,35 @@
 			return $order;
 		}
 
+		function get_payment( $payment_id )
+		{
+			$sql	 = "SELECT * FROM bb_payment WHERE id =" . (int)$payment_id;
+			$this->db->query($sql, __LINE__, __FILE__);
+			$payment = array();
+			if ($this->db->next_record())
+			{
+				$payment = array(
+					'id'					 => $payment_id,
+					'order_id'				 => $this->db->f('order_id'),
+					'payment_method_id'		 => $this->db->f('payment_method_id'),
+					'payment_gateway_mode'	 => $this->db->f('payment_gateway_mode'),
+					'remote_id'				 => $this->db->f('remote_id'),
+					'remote_state'			 => $this->db->f('remote_state'),
+					'amount'				 => (float)$this->db->f('amount'),
+					'currency'				 => $this->db->f('currency'),
+					'refunded_amount'		 => (float)$this->db->f('refunded_amount'),
+					'refunded_currency'		 => $this->db->f('refunded_currency'),
+					'status'				 => $this->db->f('status'),//'new', pending, completed, voided, partially_refunded, refunded
+					'created'				 => $this->db->f('created'),
+					'autorized'				 => $this->db->f('autorized'),
+					'expires'				 => $this->db->f('expires'),
+					'completet'				 => $this->db->f('completet'),
+					'captured'				 => $this->db->f('captured'),
+				);
+			}
+			return $payment;
+		}
+
 		function add_payment( $order_id, $msn )
 		{
 
