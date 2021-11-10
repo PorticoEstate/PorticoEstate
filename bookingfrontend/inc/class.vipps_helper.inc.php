@@ -82,12 +82,16 @@
 			try
 			{
 				$response	 = $client->request('POST', $url, $request);
+				$status_code = $response->getStatusCode(); // 200
 				$ret		 = json_decode($response->getBody()->getContents(), true);
 			}
 			catch (\GuzzleHttp\Exception\BadResponseException $e)
 			{
 				// handle exception or api errors.
-				print_r($e->getMessage());
+				if($this->debug)
+				{
+					print_r($e->getMessage());
+				}
 			}
 
 			return !empty($ret['access_token']) ? $ret['access_token'] : null;
@@ -118,6 +122,7 @@
 			foreach ($applications['results'] as $application)
 			{
 				$dates = implode(', ', array_map(array($this, 'get_date_range'), $application['dates']));
+				$contact_phone = $application['contact_phone'];
 
 				foreach ($application['orders'] as $order)
 				{
@@ -162,7 +167,7 @@
 
 			$request_body = [
 				"customerInfo"	 => [
-					"mobileNumber" => 90665164
+					"mobileNumber" => $contact_phone
 				],
 				"merchantInfo"	 => [
 					"authToken"				 => $session_id,
@@ -183,12 +188,16 @@
 			try
 			{
 				$response	 = $client->request('POST', $url, $request);
+				$status_code = $response->getStatusCode(); // 200
 				$ret		 = json_decode($response->getBody()->getContents(), true);
 			}
 			catch (\GuzzleHttp\Exception\BadResponseException $e)
 			{
 				// handle exception or api errors.
-				print_r($e->getMessage());
+				if($this->debug)
+				{
+					print_r($e->getMessage());
+				}
 			}
 
 			return $ret;
@@ -234,16 +243,22 @@
 			try
 			{
 				$response	 = $client->request('POST', $url, $request);
+				$status_code = $response->getStatusCode(); // 200
+
 				$ret		 = json_decode($response->getBody()->getContents(), true);
 			}
 			catch (\GuzzleHttp\Exception\BadResponseException $e)
 			{
 				// handle exception or api errors.
-				print_r($e->getMessage());
+				if($this->debug)
+				{
+					print_r($e->getMessage());
+				}
 			}
+			return $ret;
 		}
 
-		private function cancel_order( $payment_order_id )
+		private function cancel_order( $payment_order_id, $remote_state )
 		{
 			$soapplication	 = CreateObject('booking.soapplication');
 			$id				 = $soapplication->get_application_from_payment_order($payment_order_id);
@@ -271,7 +286,7 @@
 				{
 					$application_id		 = $id;
 					$soapplication->delete_purchase_order($application_id);
-					$soapplication->update_payment_status($payment_order_id, 'voided');
+					$soapplication->update_payment_status($payment_order_id, 'voided', $remote_state);
 					$soapplication->delete_application($application_id);
 					$status['deleted']	 = true;
 				}
@@ -323,12 +338,16 @@
 			try
 			{
 				$response	 = $client->request('PUT', $url, $request);
+				$status_code = $response->getStatusCode(); // 200
 				$ret		 = json_decode($response->getBody()->getContents(), true);
 			}
 			catch (\GuzzleHttp\Exception\BadResponseException $e)
 			{
 				// handle exception or api errors.
-				print_r($e->getMessage());
+				if($this->debug)
+				{
+					print_r($e->getMessage());
+				}
 			}
 		}
 
@@ -381,17 +400,17 @@
 				{
 					if ($data['transactionLogHistory'][0]['operationSuccess'] && in_array($data['transactionLogHistory'][0]['operation'], $cancel_array))
 					{
-						$this->cancel_order($payment_order_id);
+						$this->cancel_order($payment_order_id, $data['transactionLogHistory'][0]['operation']);
 					}
 					if ($data['transactionLogHistory'][0]['operationSuccess'] && in_array($data['transactionLogHistory'][0]['operation'], $approved_array))
 					{
-						$soapplication->update_payment_status($payment_order_id, 'pending');
+						$soapplication->update_payment_status($payment_order_id, 'pending', $data['transactionLogHistory'][0]['operation']);
 
 						$capture = $this->capture_payment($payment_order_id, (int)$data['transactionLogHistory'][0]['amount']);
 						if ($capture['transactionInfo']['status'] == 'Captured')
 						{
 							$GLOBALS['phpgw']->db->transaction_begin();
-							$soapplication->update_payment_status($payment_order_id, 'completed');
+							$soapplication->update_payment_status($payment_order_id, 'completed', $capture['transactionInfo']['status']);
 							$this->approve_application($payment_order_id);
 							$GLOBALS['phpgw']->db->transaction_commit();
 						}
@@ -416,7 +435,7 @@
 		 */
 		private function approve_application( $payment_order_id )
 		{
-			$boapplication = CreateObject('booking.soapplication');
+			$boapplication = CreateObject('booking.boapplication');
 
 			$application_id				 = $boapplication->so->get_application_from_payment_order($payment_order_id);
 			$application				 = $boapplication->so->read_single($application_id);
@@ -517,12 +536,16 @@
 			try
 			{
 				$response	 = $client->request('GET', $url, $request);
+				$status_code = $response->getStatusCode(); // 200
 				$ret		 = json_decode($response->getBody()->getContents(), true);
 			}
 			catch (\GuzzleHttp\Exception\BadResponseException $e)
 			{
 				// handle exception or api errors.
-//				print_r($e->getMessage());
+				if($this->debug)
+				{
+					print_r($e->getMessage());
+				}
 			}
 
 			return $ret;

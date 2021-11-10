@@ -554,8 +554,8 @@
 		{
 			$data = array();
 			$sql = "SELECT bb_payment.* FROM bb_payment"
-				. " JOIN bb_purchase_order ON bb_payment.order_id = bb_purchase_order.id";
-		//		. " WHERE application_id = " . (int)$application_id;
+				. " JOIN bb_purchase_order ON bb_payment.order_id = bb_purchase_order.id"
+				. " WHERE application_id = " . (int)$application_id;
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -581,11 +581,11 @@
 		 * @param string $status: new, pending, completed, voided, partially_refunded, refunded
 		 * @return bool
 		 */
-		function update_payment_status( $payment_order_id, $status)
+		function update_payment_status( $payment_order_id, $status, $remote_state)
 		{
 			$remote_id	 = $this->db->db_addslashes($payment_order_id);
 			$status	 = $this->db->db_addslashes($status);
-			$sql = "UPDATE bb_payment SET status = '{$status}'"
+			$sql = "UPDATE bb_payment SET status = '{$status}', remote_state = '{$remote_state}'"
 				. "	WHERE remote_id = '{$remote_id}'";
 
 			return $this->db->query($sql, __LINE__, __FILE__);

@@ -2269,7 +2269,11 @@ function genericLink2()
 
 function formatGenericLink(name, link)
 {
-	if (!name || !link)
+	if (link === false)
+	{
+		return '';
+	}
+	else if (!name || !link)
 	{
 		return name;
 	}

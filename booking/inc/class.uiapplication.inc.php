@@ -551,21 +551,40 @@
 			return $associations;
 		}
 
-		public function payments( )
+		public function payments()
 		{
-			$application_id = phpgw::get_var('application_id', 'int');
-			$payments = $this->bo->so->read_payments($application_id);
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$application_id	 = phpgw::get_var('application_id', 'int');
+			$payments		 = $this->bo->so->read_payments($application_id);
+			$dateformat		 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($payments['data'] as &$payment)
 			{
 				$payment['created_value'] = $GLOBALS['phpgw']->common->show_date($payment['created']);
 				if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 				{
-//					unset($association['cost']);
+
+				}
+				else
+				{
+					if ($payment['status'] == 'completed')
+					{
+						$payment['option_edit']		 = self::link(array('menuaction' => 'booking.uiapplication.refund',
+								'id'		 => $payment['id']));
+						$payment['option_delete']	 = false;
+					}
+					else if ($payment['status'] == 'pending')
+					{
+						$payment['option_delete']	 = self::link(array('menuaction' => 'booking.uiapplication.cancel_payment',
+								'id'		 => $payment['id']));
+						$payment['option_edit']		 = false;
+					}
+					else
+					{
+						$payment['option_edit']		 = false;
+						$payment['option_delete']	 = false;
+					}
 				}
 			}
 			return $payments;
-
 		}
 
 		private function _combine_dates( $from_, $to_ )
@@ -2077,6 +2096,11 @@
 				$user	 = $bo_user->read_single($user_id);
 
 				$update_user = false;
+				if((empty($user['phone']) && $application['contact_phone']) || $user['phone'] != $application['contact_phone'])
+				{
+					$update_user = true;
+					$user['phone'] = $application['contact_phone'];
+				}
 				if(empty($user['email']) && $application['contact_email'])
 				{
 					$update_user = true;

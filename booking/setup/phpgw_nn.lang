@@ -868,3 +868,5 @@ amount	booking	no	Beløp
 tax	booking	no	Mva
 sum	booking	no	Sum
 details	booking	no	Detaljar
+currency	booking	nn	Valuta
+payment method	booking	nn	Refundér
