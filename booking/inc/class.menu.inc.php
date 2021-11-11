@@ -268,7 +268,7 @@
 						(
 						'completed_reservations' => array
 							(
-							'text' => lang('Completed'),
+							'text' => lang('completed reservations'),
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uicompleted_reservation.index')),
 							'image' => array('property', 'invoice'),
 						),

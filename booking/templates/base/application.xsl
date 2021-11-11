@@ -729,7 +729,7 @@
 		if (!resourceIds || resourceIds == "") {
 		resourceIds = false;
 		}
-		var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'No records found', 'ID', 'Type', 'From', 'To', 'Document', 'Active' ,'Delete', 'del', 'Name', 'Cost', 'order id', 'Amount', 'currency', 'status', 'payment method', 'refund', 'Actions', 'cancel')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'No records found', 'ID', 'Type', 'From', 'To', 'Document', 'Active' ,'Delete', 'del', 'Name', 'Cost', 'order id', 'Amount', 'currency', 'status', 'payment method', 'refund','refunded', 'Actions', 'cancel', 'created')"/>;
 		var app_id = <xsl:value-of select="application/id"/>;
 		var building_id = <xsl:value-of select="application/building_id"/>;
 		var resources = <xsl:value-of select="application/resources"/>;
@@ -775,9 +775,11 @@
 
 		var colDefsPayment = [
 		{key: 'order_id', label: lang['order id']},
+		{key: 'created_value', label: lang['created']},
 		{key: 'amount', label: lang['Amount']},
+		{key: 'refunded_amount', label: lang['refunded']},
 		{key: 'currency', label: lang['currency']},
-		{key: 'status', label: lang['status']},
+		{key: 'status_text', label: lang['status']},
 		{key: 'payment_method', label: lang['payment method']},
 		{key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label:lang['refund']},{name: 'delete', label:lang['cancel']})}
 		];

@@ -24,8 +24,11 @@ function initiate_vipps()
 	$.getJSON(getJsonURL, function (result)
 	{
 		console.log(result);
-		var url = result.url;
-		window.location.replace(url);
+		if(typeof(result.url) !== 'undefined')
+		{
+			var url = result.url;
+			window.location.replace(url);
+		}
 	});
 }
 

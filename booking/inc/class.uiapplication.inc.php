@@ -29,6 +29,7 @@
 			'add_comment_to_application' => true,
 			'payments'					 => true,
 			'cancel_payment'			 => true,
+			'refund_payment'			 => true,
 		);
 		protected $customer_id,
 			$default_module = 'bookingfrontend',
@@ -556,49 +557,76 @@
 		{
 			$application_id	 = phpgw::get_var('application_id', 'int');
 			$payments		 = $this->bo->so->read_payments($application_id);
-			$dateformat		 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+			$status_text = array(
+				'completed'			 => lang('completed'),
+				'new'				 => lang('new'),
+				'pending'			 => lang('pending'),
+				'voided'			 => lang('interrupted'),
+				'refunded'			 => lang('refunded'),
+				'partially_refunded' => lang('partially refunded'),
+			);
+
 			foreach ($payments['data'] as &$payment)
 			{
 				$payment['created_value'] = $GLOBALS['phpgw']->common->show_date($payment['created']);
+				$payment['status_text'] = $status_text[$payment['status']];
 				if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 				{
 
 				}
 				else
 				{
-					if ($payment['status'] == 'completed')
+					switch ($payment['status'])
 					{
-						$payment['option_edit']		 = self::link(array(
-								'menuaction'	 => 'booking.uiapplication.refund',
-								'id'			 => $payment['id'],
-								'application_id' => $application_id));
-						$payment['option_delete']	 = false;
-					}
-					else if ($payment['status'] == 'pending')
-					{
-						$payment['option_delete']	 = self::link(array(
-								'menuaction'	 => 'booking.uiapplication.cancel_payment',
-								'id'			 => $payment['id'],
-								'application_id' => $application_id));
-						$payment['option_edit']		 = false;
-					}
-					else
-					{
-						$payment['option_edit']		 = false;
-						$payment['option_delete']	 = false;
+						case 'completed':
+							$payment['option_edit']		 = self::link(array(
+									'menuaction'	 => 'booking.uiapplication.refund_payment',
+									'id'			 => $payment['id'],
+									'application_id' => $application_id));
+							$payment['option_delete']	 = false;
+							break;
+						case 'pending':
+						case 'new':
+							$payment['option_delete']	 = self::link(array(
+									'menuaction'	 => 'booking.uiapplication.cancel_payment',
+									'id'			 => $payment['id'],
+									'application_id' => $application_id));
+							$payment['option_edit']		 = false;
+							break;
+						default:
+							$payment['option_edit']		 = false;
+							$payment['option_delete']	 = false;
+							break;
 					}
 				}
 			}
 			return $payments;
 		}
 
+		function refund_payment()
+		{
+			$payment_id = phpgw::get_var('id', 'int');
+			$application_id = phpgw::get_var('application_id', 'int');
+			$payment		 = $this->bo->so->get_payment($payment_id);
+			$payment_method = $payment['payment_method'];
+			$remote_order_id = $payment['remote_id'];
+			$amount = $payment['amount'] * 100;
+			$payment_helper = createObject("bookingfrontend.{$payment_method}_helper");
+			$payment_helper->refund_payment($remote_order_id, $amount);
+			self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application_id));
+
+		}
+
 		function cancel_payment()
 		{
 			$payment_id = phpgw::get_var('id', 'int');
 			$application_id = phpgw::get_var('application_id', 'int');
-
-			$payment_helper = createObject('bookingfrontend.vipps_helper');
-			$payment_helper->cancel_payment($payment_id);
+			$payment		 = $this->bo->so->get_payment($payment_id);
+			$payment_method = $payment['payment_method'];
+			$remote_order_id = $payment['remote_id'];
+			$payment_helper = createObject("bookingfrontend.{$payment_method}_helper");
+			$payment_helper->cancel_payment($remote_order_id);
 			self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application_id));
 
 		}

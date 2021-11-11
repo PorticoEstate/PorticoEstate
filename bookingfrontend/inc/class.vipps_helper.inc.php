@@ -2,6 +2,7 @@
 
 	/**
 	 * https://vippsas.github.io/vipps-ecom-api/shins/index.html?php#vipps-ecommerce-api
+	 * https://github.com/vippsas/vipps-ecom-api/blob/master/vipps-ecom-api.md
 	 */
 	class bookingfrontend_vipps_helper
 	{
@@ -17,7 +18,8 @@
 			$headers		 = array(),
 			$proxy,
 			$accesstoken,
-			$debug;
+			$debug,
+			$client;
 
 		public function __construct()
 		{
@@ -39,6 +41,7 @@
 			$this->proxy			 = !empty($config['proxy']) ? $config['proxy'] : '';
 
 			require_once PHPGW_API_INC . '/guzzle/vendor/autoload.php';
+			$this->client = new GuzzleHttp\Client();
 
 			$this->accesstoken = $this->get_accesstoken();
 		}
@@ -57,10 +60,7 @@
 			$path	 = '/accesstoken/get';
 			$url	 = "{$this->base_url}{$path}";
 
-			$client = new GuzzleHttp\Client();
-
-			$request		 = array();
-			$request_body	 = array();
+			$request = array();
 
 			$request['headers'] = array(
 				'Accept'					 => 'application/json;charset=UTF-8',
@@ -77,11 +77,12 @@
 				);
 			}
 
+			$request_body	 = array();
 			$request['json'] = $request_body;
 
 			try
 			{
-				$response	 = $client->request('POST', $url, $request);
+				$response	 = $this->client->request('POST', $url, $request);
 				$status_code = $response->getStatusCode(); // 200
 				$ret		 = json_decode($response->getBody()->getContents(), true);
 			}
@@ -110,8 +111,7 @@
 		private function initiate_payment( $application_ids )
 		{
 
-			$orderId		 = null;
-			$payment_attempt = 1;
+			$remote_order_id = null;
 			$soapplication	 = CreateObject('booking.soapplication');
 			$filters		 = array('id' => $application_ids);
 			$params			 = array('filters' => $filters, 'results' => 'all');
@@ -128,10 +128,10 @@
 				{
 					if (empty($order['paid']))
 					{
-						$orderId	 = $soapplication->add_payment($order['order_id'], $this->msn);
-						$transaction = [
+						$remote_order_id = $soapplication->add_payment($order['order_id'], $this->msn);
+						$transaction	 = [
 							"amount"					 => (float)$order['sum'] * 100,
-							"orderId"					 => $orderId,
+							"orderId"					 => $remote_order_id,
 							"transactionText"			 => 'Aktiv kommune, bookingdato: ' . $dates,
 							"skipLandingPage"			 => false,
 							"scope"						 => "name address email",
@@ -145,25 +145,16 @@
 			$path	 = '/ecomm/v2/payments';
 			$url	 = "{$this->base_url}{$path}";
 
-			$client = new GuzzleHttp\Client();
-
 			$request = array();
-
-			$request['headers'] = array(
-				'Accept'					 => 'application/json;charset=UTF-8',
-				'Authorization'				 => $this->accesstoken,
-				'Ocp-Apim-Subscription-Key'	 => $this->subscription_key,
-			);
-
-			if ($this->proxy)
-			{
-				$request['proxy'] = array(
-					'http'	 => $this->proxy,
-					'https'	 => $this->proxy
-				);
-			}
+			$this->get_header($request);
 
 			$session_id = $GLOBALS['phpgw']->session->get_session_id();
+
+			$fall_back_url = $GLOBALS['phpgw']->link('/bookingfrontend/',
+											array('menuaction' => 'bookingfrontend.uiapplication.add_contact', 'payment_order_id' => $remote_order_id),
+											false,
+											true
+			);
 
 			$request_body = [
 				"customerInfo"	 => [
@@ -173,11 +164,9 @@
 					"authToken"				 => $session_id,
 					"callbackPrefix"		 => "https://example.com/vipps/callbacks-for-payment-updates",
 					"consentRemovalPrefix"	 => "https://example.com/vipps/consent-removal",
-//					"fallBack"				 => "https://example.com/vipps/fallback-order-result-page/Ak-shop-{$order_id}-order{$order_id}abc",
-					"fallBack"				 => "http://127.0.0.1/~hc483/github_trunk/bookingfrontend/?menuaction=bookingfrontend.uiapplication.add_contact&payment_order_id={$orderId}",
+					"fallBack"				 => str_replace('&amp;', '&', $fall_back_url),
 					"isApp"					 => false,
 					"merchantSerialNumber"	 => $this->msn,
-					//				"paymentType"			 => "eComm Express Payment",
 					"paymentType"			 => "eComm Regular Payment"
 				],
 				"transaction"	 => $transaction
@@ -187,44 +176,31 @@
 
 			try
 			{
-				$response	 = $client->request('POST', $url, $request);
+				$response	 = $this->client->request('POST', $url, $request);
 				$status_code = $response->getStatusCode(); // 200
 				$ret		 = json_decode($response->getBody()->getContents(), true);
 			}
 			catch (\GuzzleHttp\Exception\BadResponseException $e)
 			{
-				// handle exception or api errors.
-				if ($this->debug)
-				{
-					print_r($e->getMessage());
-				}
+				/**
+				 * Init failed - clean up
+				 */
+				$soapplication->delete_payment($remote_order_id);
+
+				$ret = $e->getMessage();
+
 			}
 
 			return $ret;
 		}
 
-		private function capture_payment( $order_id, $amount )
+		private function capture_payment( $remote_order_id, $amount )
 		{
-			$path	 = "/ecomm/v2/payments/{$order_id}/capture";
+			$path	 = "/ecomm/v2/payments/{$remote_order_id}/capture";
 			$url	 = "{$this->base_url}{$path}";
 
-			$client = new GuzzleHttp\Client();
-
 			$request = array();
-
-			$request['headers'] = array(
-				'Accept'					 => 'application/json;charset=UTF-8',
-				'Authorization'				 => $this->accesstoken,
-				'Ocp-Apim-Subscription-Key'	 => $this->subscription_key,
-			);
-
-			if ($this->proxy)
-			{
-				$request['proxy'] = array(
-					'http'	 => $this->proxy,
-					'https'	 => $this->proxy
-				);
-			}
+			$this->get_header($request);
 
 			$transaction = [
 				"amount"			 => $amount,
@@ -242,7 +218,7 @@
 
 			try
 			{
-				$response	 = $client->request('POST', $url, $request);
+				$response	 = $this->client->request('POST', $url, $request);
 				$status_code = $response->getStatusCode(); // 200
 
 				$ret = json_decode($response->getBody()->getContents(), true);
@@ -297,11 +273,9 @@
 			phpgwapi_cache::message_set('cancelled');
 		}
 
-		public function cancel_payment( $payment_id )
+		public function cancel_payment( $remote_order_id )
 		{
-			$soapplication	 = CreateObject('booking.soapplication');
-			$payment		 = $soapplication->get_payment($payment_id);
-			$remote_order_id = $payment['remote_id'];
+			$soapplication = CreateObject('booking.soapplication');
 
 			$cancel_array = array('CANCEL', 'VOID', 'FAILED', 'REJECTED');
 
@@ -325,29 +299,11 @@
 				return;
 			}
 
-
 			$path	 = "/ecomm/v2/payments/{$remote_order_id}/cancel";
 			$url	 = "{$this->base_url}{$path}";
 
-			$soapplication = CreateObject('booking.soapplication');
-
-			$client = new GuzzleHttp\Client();
-
 			$request = array();
-
-			$request['headers'] = array(
-				'Accept'					 => 'application/json;charset=UTF-8',
-				'Authorization'				 => $this->accesstoken,
-				'Ocp-Apim-Subscription-Key'	 => $this->subscription_key,
-			);
-
-			if ($this->proxy)
-			{
-				$request['proxy'] = array(
-					'http'	 => $this->proxy,
-					'https'	 => $this->proxy
-				);
-			}
+			$this->get_header($request);
 
 			$transaction = [
 				"transactionText" => 'Booking i Aktiv kommune',
@@ -363,24 +319,42 @@
 			$request['json'] = $request_body;
 			try
 			{
-				$response	 = $client->request('PUT', $url, $request);
+				$response	 = $this->client->request('PUT', $url, $request);
 				$status_code = $response->getStatusCode(); // 200
 				$ret		 = json_decode($response->getBody()->getContents(), true);
 			}
 			catch (\GuzzleHttp\Exception\BadResponseException $e)
 			{
 				// handle exception or api errors.
+				phpgwapi_cache::message_set($e->getMessage(), 'error');
+
 				if ($this->debug)
 				{
 					_debug_array($e->getMessage());
-					die();
 				}
 			}
 			if ($status_code == 200)
 			{
-				$soapplication->update_payment_status($remote_order_id, 'voided', 'Cancelled');
+				$soapplication->update_payment_status($remote_order_id, 'voided', 'CANCEL');
 			}
 			return $response;
+		}
+
+		private function get_header( &$request )
+		{
+			$request['headers'] = array(
+				'Accept'					 => 'application/json;charset=UTF-8',
+				'Authorization'				 => $this->accesstoken,
+				'Ocp-Apim-Subscription-Key'	 => $this->subscription_key,
+			);
+
+			if ($this->proxy)
+			{
+				$request['proxy'] = array(
+					'http'	 => $this->proxy,
+					'https'	 => $this->proxy
+				);
+			}
 		}
 
 		private function authorize_payment( $param )
@@ -388,9 +362,69 @@
 
 		}
 
-		private function refund_payment( $param )
+		public function refund_payment( $remote_order_id, $amount )
 		{
+			$soapplication = CreateObject('booking.soapplication');
 
+			$cancel_array = array('CANCEL', 'VOID', 'FAILED', 'REJECTED');
+
+			$data = $this->get_payment_details($remote_order_id);
+
+			/**
+			 * Sync with external data
+			 */
+			if (isset($data['transactionLogHistory'][0]['operation']) && in_array($data['transactionLogHistory'][0]['operation'], $cancel_array))
+			{
+				$this->cancel_order($remote_order_id, $data['transactionLogHistory'][0]['operation']);
+				$soapplication->update_payment_status($remote_order_id, 'voided', $data['transactionLogHistory'][0]['operation']);
+				return;
+			}
+
+			if (isset($data['transactionLogHistory'][0]['operation']) && $data['transactionLogHistory'][0]['operation'] == 'CAPTURE')
+			{
+				$soapplication->update_payment_status($remote_order_id, 'completed', 'CAPTURE');
+			}
+
+			$path	 = "/ecomm/v2/payments/{$remote_order_id}/refund";
+			$url	 = "{$this->base_url}{$path}";
+
+			$request = array();
+			$this->get_header($request);
+
+			$transaction = [
+				"transactionText" => 'Booking i Aktiv kommune',
+			];
+
+			$request_body = [
+				"merchantInfo"	 => [
+					"amount"				 => $amount,
+					"merchantSerialNumber"	 => $this->msn,
+				],
+				"transaction"	 => $transaction
+			];
+
+			$request['json'] = $request_body;
+			try
+			{
+				$response	 = $this->client->request('POST', $url, $request);
+				$status_code = $response->getStatusCode(); // 200
+				$ret		 = json_decode($response->getBody()->getContents(), true);
+			}
+			catch (\GuzzleHttp\Exception\BadResponseException $e)
+			{
+				// handle exception or api errors.
+				phpgwapi_cache::message_set($e->getMessage(), 'error');
+
+				if ($this->debug)
+				{
+					_debug_array($e->getMessage());
+				}
+			}
+			if ($status_code == 200)
+			{
+				$soapplication->update_payment_status($remote_order_id, 'refunded', 'REFUND', $amount / 100);
+			}
+			return $ret;
 		}
 
 		private function force_approve_payment( $param )
@@ -400,8 +434,7 @@
 
 		public function check_payment_status( $remote_order_id = '' )
 		{
-			$boapplication	 = CreateObject('booking.boapplication');
-			$soapplication	 = CreateObject('booking.soapplication');
+			$soapplication = CreateObject('booking.soapplication');
 			if (!$remote_order_id)
 			{
 				$remote_order_id = phpgw::get_var('payment_order_id');
@@ -442,7 +475,7 @@
 						if ($capture['transactionInfo']['status'] == 'Captured')
 						{
 							$GLOBALS['phpgw']->db->transaction_begin();
-							$soapplication->update_payment_status($remote_order_id, 'completed', $capture['transactionInfo']['status']);
+							$soapplication->update_payment_status($remote_order_id, 'completed', 'CAPTURE');
 							$this->approve_application($remote_order_id);
 							$GLOBALS['phpgw']->db->transaction_commit();
 						}
@@ -542,24 +575,8 @@
 
 			$path	 = "/ecomm/v2/payments/{$remote_order_id}/details";
 			$url	 = "{$this->base_url}{$path}";
-			$client	 = new GuzzleHttp\Client();
-
 			$request = array();
-
-			$request['headers'] = array(
-				'Accept'					 => 'application/json;charset=UTF-8',
-				'Authorization'				 => $this->accesstoken,
-				'Ocp-Apim-Subscription-Key'	 => $this->subscription_key,
-			);
-
-			if ($this->proxy)
-			{
-				$request['proxy'] = array(
-					'http'	 => $this->proxy,
-					'https'	 => $this->proxy
-				);
-			}
-
+			$this->get_header($request);
 
 			$request_body = array();
 
@@ -567,7 +584,7 @@
 
 			try
 			{
-				$response	 = $client->request('GET', $url, $request);
+				$response	 = $this->client->request('GET', $url, $request);
 				$status_code = $response->getStatusCode(); // 200
 				$ret		 = json_decode($response->getBody()->getContents(), true);
 			}

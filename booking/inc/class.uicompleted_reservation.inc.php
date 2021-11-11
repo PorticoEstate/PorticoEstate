@@ -38,7 +38,7 @@
 			$this->url_prefix = 'booking.uicompleted_reservation';
 			$this->restore_export_filters();
 
-			$this->display_name = lang('Completed');
+			$this->display_name = lang('completed reservations');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
 

@@ -552,24 +552,26 @@
 
 		function read_payments( $application_id )
 		{
-			$data = array();
-			$sql = "SELECT bb_payment.* FROM bb_payment"
+			$data	 = array();
+			$sql	 = "SELECT bb_payment.* FROM bb_payment"
 				. " JOIN bb_purchase_order ON bb_payment.order_id = bb_purchase_order.id"
-				. " WHERE application_id = " . (int)$application_id;
+				. " WHERE application_id = " . (int)$application_id
+				. " ORDER BY id";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
 				$data[] = array(
-					'id' => (int)$this->db->f('id'),
-					'remote_state' => $this->db->f('remote_state'),
-					'amount' => (float)$this->db->f('amount'),
-					'currency' => $this->db->f('currency'),
-					'status' => $this->db->f('status'),
-					'order_id' => (int)$this->db->f('order_id'),
-					'payment_method' => 'vipps',
-					'created' => $this->db->f('created'),
+					'id'				 => (int)$this->db->f('id'),
+					'remote_state'		 => $this->db->f('remote_state'),
+					'amount'			 => (float)$this->db->f('amount'),
+					'refunded_amount'	 => (float)$this->db->f('refunded_amount'),
+					'currency'			 => $this->db->f('currency'),
+					'status'			 => $this->db->f('status'),
+					'order_id'			 => (int)$this->db->f('order_id'),
+					'payment_method'	 => 'vipps',
+					'created'			 => $this->db->f('created'),
 				);
 			}
 
@@ -581,12 +583,23 @@
 		 * @param string $status: new, pending, completed, voided, partially_refunded, refunded
 		 * @return bool
 		 */
-		function update_payment_status( $payment_order_id, $status, $remote_state)
+		function update_payment_status( $payment_order_id, $status, $remote_state, $refunded_amount = 0)
 		{
 			$remote_id	 = $this->db->db_addslashes($payment_order_id);
-			$status	 = $this->db->db_addslashes($status);
-			$sql = "UPDATE bb_payment SET status = '{$status}', remote_state = '{$remote_state}'"
-				. "	WHERE remote_id = '{$remote_id}'";
+
+			$value_set = array(
+				'status'		 => $this->db->db_addslashes($status),
+				'remote_state'	 => $remote_state
+			);
+
+			if ($refunded_amount && $status == 'refunded')
+			{
+				$value_set['refunded_amount'] = $refunded_amount;
+			}
+
+			$value_set = $this->db->validate_update($value_set);
+
+			$sql = "UPDATE bb_payment SET {$value_set} WHERE remote_id= '{$remote_id}'";
 
 			return $this->db->query($sql, __LINE__, __FILE__);
 
@@ -846,7 +859,7 @@
 				$payment = array(
 					'id'					 => $payment_id,
 					'order_id'				 => $this->db->f('order_id'),
-					'payment_method_id'		 => $this->db->f('payment_method_id'),
+					'payment_method'		 => 'vipps', //Hardcoded for now
 					'payment_gateway_mode'	 => $this->db->f('payment_gateway_mode'),
 					'remote_id'				 => $this->db->f('remote_id'),
 					'remote_state'			 => $this->db->f('remote_state'),
@@ -863,6 +876,12 @@
 				);
 			}
 			return $payment;
+		}
+
+		function delete_payment( $remote_order_id )
+		{
+			$remote_id = $this->db->db_addslashes($remote_order_id);
+			$this->db->query("SELECT * FROM bb_payment WHERE remote_id ='{$remote_id}'", __LINE__, __FILE__);
 		}
 
 		function add_payment( $order_id, $msn )

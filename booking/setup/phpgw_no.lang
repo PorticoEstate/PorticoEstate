@@ -246,7 +246,7 @@ External	booking	no	Ekstern
 Start date must be after %1	booking	no	Fradato må være etter %1
 To date must be before %1	booking	no	Tildato må være før %1
 Add Activity	booking	no	Ny Aktivitet
-Completed	booking	no	Klar for fakturering
+completed reservations	booking	no	Klar for fakturering
 1 day	booking	no	1 dag
 1 week	booking	no	1 uke
 2 weeks	booking	no	2 uker
@@ -870,4 +870,8 @@ details	booking	no	Detaljer
 currency	booking	no	Valuta
 payment method	booking	no	Betalingsmetode
 refund	booking	no	Refundér
+refunded	booking	no	Refundert
 payments	booking	no	Betalinger
+interrupted	booking	no	Avbrutt
+completed	booking	no	Fullført
+partially refunded	booking	no	Delvis refundert
