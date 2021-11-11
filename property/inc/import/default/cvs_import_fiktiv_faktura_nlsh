@@ -23,7 +23,7 @@
 			 */
 			if ($get_template)
 			{
-				$this->filename_template = "DTDRIFT rapport til Portico";// 201401"
+				$this->filename_template = "DTDRIFT rapport til Portico " . date('Ym');// 201401"
 				return;
 			}
 			set_time_limit(10000); //Set the time limit for this request
