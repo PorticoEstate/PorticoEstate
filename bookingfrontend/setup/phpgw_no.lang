@@ -552,3 +552,7 @@ calendar view	bookingfrontend	no	Dags-/ukesvisning
 Show more results	bookingfrontend	no	Last inn flere resultater
 quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days	bookingfrontend	no	Antallsbegrensning (%1) overskredet for %2:<br/> maks %3 ganger innenfor en periode på %4 dager
 validate	bookingfrontend	no	Kontrollér
+unit	bookingfrontend	no	Enhet
+price	bookingfrontend	no	Pris
+selected	bookingfrontend	no	Valgt
+unit cost	bookingfrontend	no	Enhetspris

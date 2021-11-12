@@ -713,7 +713,7 @@ $(document).ready(function ()
 			},
 			{
 				key: 'price',
-				label: lang['price'],
+				label: lang['unit cost'],
 				attrs: [{name: 'class', value: "align-middle"}],
 			},
 			{

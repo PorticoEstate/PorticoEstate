@@ -1275,6 +1275,7 @@ function createTable(d, u, c, r, cl, l, callback)
 							if (vcft == 'genericLink2')
 							{
 								link = (vd['dellink']) ? formatGenericLink2('slett', vd[k]) : link;
+								link = (vd['option_delete']) ? formatGenericLink2('slett', vd[k]) : link;
 							}
 							else
 							{
@@ -1342,29 +1343,32 @@ function createObject(object)
 			}
 			if (element.getAttribute('type') == 'radio')
 			{
-				element.onclick = function (e)
+				if (!element.getAttribute('onclick'))
 				{
-					var previousValue = $(this).attr('previousValue');
-					if (previousValue == 'true')
+					element.onclick = function (e)
 					{
-						this.checked = false;
-						$(this).attr('previousValue', this.checked);
-					}
-					else
-					{
-						this.checked = true;
-						$(this).attr('previousValue', this.checked);
+						var previousValue = $(this).attr('previousValue');
+						if (previousValue == 'true')
+						{
+							this.checked = false;
+							$(this).attr('previousValue', this.checked);
+						}
+						else
+						{
+							this.checked = true;
+							$(this).attr('previousValue', this.checked);
 
-						try
-						{
-							local_custom_radio_action(this);
+							try
+							{
+								local_custom_radio_action(this);
+							}
+							catch (err)
+							{
+								console.log(err);
+							}
 						}
-						catch (err)
-						{
-							console.log(err);
-						}
-					}
-				};
+					};
+				}
 			}
 
 			objs.push(element);
@@ -2285,7 +2289,11 @@ function formatGenericLink(name, link)
 
 function formatGenericLink2(name, link)
 {
-	if (!name || !link)
+	if (link === false)
+	{
+		return '';
+	}
+	else if (!name || !link)
 	{
 		return name;
 	}

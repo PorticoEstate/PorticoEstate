@@ -30,6 +30,7 @@
 			'payments'					 => true,
 			'cancel_payment'			 => true,
 			'refund_payment'			 => true,
+			'get_purchase_order'		 => true
 		);
 		protected $customer_id,
 			$default_module = 'bookingfrontend',
@@ -580,23 +581,23 @@
 					switch ($payment['status'])
 					{
 						case 'completed':
-							$payment['option_edit']		 = self::link(array(
+							$payment['option_delete']	 = self::link(array(
 									'menuaction'	 => 'booking.uiapplication.refund_payment',
 									'id'			 => $payment['id'],
 									'application_id' => $application_id));
-							$payment['option_delete']	 = false;
+							$payment['option_edit']		 = false;
 							break;
 						case 'pending':
 						case 'new':
-							$payment['option_delete']	 = self::link(array(
+							$payment['option_edit']		 = self::link(array(
 									'menuaction'	 => 'booking.uiapplication.cancel_payment',
 									'id'			 => $payment['id'],
 									'application_id' => $application_id));
-							$payment['option_edit']		 = false;
+							$payment['option_delete']	 = false;
 							break;
 						default:
-							$payment['option_edit']		 = false;
 							$payment['option_delete']	 = false;
+							$payment['option_edit']		 = false;
 							break;
 					}
 				}
@@ -629,6 +630,23 @@
 			$payment_helper->cancel_payment($remote_order_id);
 			self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application_id));
 
+		}
+
+		function get_purchase_order()
+		{
+			$order_id = phpgw::get_var('id', 'int');
+			$purchase_order = $this->bo->so->get_single_purchase_order($order_id);
+
+			if(!empty($purchase_order['lines']))
+			{
+				foreach ($purchase_order['lines'] as &$line)
+				{
+					$line['sum'] = $line['amount'] + $line['tax'];
+				}
+			}
+
+
+			return $purchase_order;
 		}
 		private function _combine_dates( $from_, $to_ )
 		{
@@ -2835,6 +2853,9 @@
 JS;
 				$GLOBALS['phpgw']->js->add_code('', $js);
 			}
+
+			self::add_javascript('booking', 'base', 'application.show.js');
+
 			self::render_template_xsl('application', array(
 				'application'		 => $application,
 				'audience'			 => $audience,
