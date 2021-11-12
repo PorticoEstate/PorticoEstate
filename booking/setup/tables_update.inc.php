@@ -5361,6 +5361,16 @@
 			)
 		);
 
+		$receipt = $custom_config->add_attrib(array
+			(
+				'section_id'	=> $receipt_section_vipps['section_id'],
+				'input_type'	=> 'listbox',
+				'name'			=> 'active',
+				'descr'			=> 'Aktiv',
+				'choice'		=> array('active'),
+			)
+		);
+
 
 		# BEGIN Evil
 		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('bb_article_price_reduction');

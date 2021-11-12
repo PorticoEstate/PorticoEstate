@@ -317,8 +317,10 @@
 							<button type="button" class="btn btn-primary" id="btnSubmit">
 								Fakturering
 							</button>
-							<img src="{vipps_logo}" class="ml-5" OnClick="initiate_vipps();">
-							</img>
+							<xsl:if test="vipps_logo != ''">
+								<img src="{vipps_logo}" class="ml-5" OnClick="initiate_payment('vipps');">
+								</img>
+							</xsl:if>
 						</div>
 					</div>
 				</div>
@@ -362,6 +364,7 @@
 		var initialSelection = [];
 		var lang = <xsl:value-of select="php:function('js_lang', 'Do you want to delete application?')" />;
 		var payment_order_id = '<xsl:value-of select="payment_order_id" />';
+		var selected_payment_method = '<xsl:value-of select="selected_payment_method" />';
 
 		<!-- Modal JQUERY logic -->
 

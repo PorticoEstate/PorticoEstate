@@ -23,6 +23,8 @@
 
 		public function __construct()
 		{
+			phpgwapi_cache::session_set('bookingfrontend', 'payment_method', 'vipps');
+
 			$location_id		 = $GLOBALS['phpgw']->locations->get_id('booking', 'run');
 			$custom_config		 = CreateObject('admin.soconfig', $location_id);
 			$custom_config_data	 = $custom_config->config_data['Vipps'];

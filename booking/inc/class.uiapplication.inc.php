@@ -2022,24 +2022,37 @@
 			 */
 			self::add_javascript('bookingfrontend', 'base', 'application_contact.js', 'text/javascript', true);
 
-			$vipps_logo = 'continue_with_vipps_rect_210';
+			$location_id		 = $GLOBALS['phpgw']->locations->get_id('booking', 'run');
+			$custom_config		 = CreateObject('admin.soconfig', $location_id)->read();
 
-			switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'])
+			$payment_methods = array();
+			if(!empty($custom_config['payment']['method']) && !empty($custom_config['Vipps']['active']))
 			{
-				case 'no':
-				case 'nn':
-					$vipps_logo .="_NO";
-					break;
+				$payment_methods[] = 'vipps';
 
-				default:
-					$vipps_logo .="_EN";
-					break;
+				$vipps_logo = 'continue_with_vipps_rect_210';
+
+				switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'])
+				{
+					case 'no':
+					case 'nn':
+						$vipps_logo .="_NO";
+						break;
+
+					default:
+						$vipps_logo .="_EN";
+						break;
+				}
 			}
+
+			$selected_payment_method =  phpgwapi_cache::session_get('bookingfrontend', 'payment_method');
 
 			self::render_template_xsl('application_contact', array(
 				'application'			 => $partial2,
 				'delegate_data'			 => $filtered_delegate_data,
-				'vipps_logo'			 => $GLOBALS['phpgw']->common->image('bookingfrontend', $vipps_logo),
+				'payment_methods'		 => $payment_methods,
+				'selected_payment_method'=> $selected_payment_method,
+				'vipps_logo'			 => $vipps_logo ? $GLOBALS['phpgw']->common->image('bookingfrontend', $vipps_logo) : '',
 				'add_img'				 => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
 				'config'				 => CreateObject('phpgwapi.config', 'booking')->read(),
 				'payment_order_id'		 => $payment_order_id

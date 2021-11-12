@@ -1,4 +1,4 @@
-/* global bc, ko, payment_order_id */
+/* global bc, ko, payment_order_id, selected_payment_method */
 
 $(".navbar-search").removeClass("d-none");
 $(".termAcceptDocsUrl").attr('data-bind', "text: docName, attr: {'href': itemLink }");
@@ -8,10 +8,10 @@ CreateUrlParams(window.location.search);
 
 ko.validation.locale('nb-NO');
 
-function initiate_vipps()
+function initiate_payment(method)
 {
 	var parameter = {
-		menuaction: "bookingfrontend.vipps_helper.initiate"
+		menuaction: "bookingfrontend." + method + "_helper.initiate"
 	};
 
 	var getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
@@ -40,6 +40,8 @@ function check_payment_status()
 		return;
 	}
 
+	var payment_method = selected_payment_method;
+
 	var form = document.getElementById('new-application-partialtwo');
 	form.style.display = 'none';
 
@@ -49,7 +51,7 @@ function check_payment_status()
 		.insertAfter(form);
 
 	var parameter = {
-		menuaction: "bookingfrontend.vipps_helper.check_payment_status",
+		menuaction: "bookingfrontend." + payment_method + "_helper.check_payment_status",
 		payment_order_id: payment_order_id
 	};
 
