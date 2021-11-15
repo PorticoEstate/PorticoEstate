@@ -190,7 +190,6 @@
 				$soapplication->delete_payment($remote_order_id);
 
 				$ret = $e->getMessage();
-
 			}
 
 			return $ret;
@@ -518,6 +517,7 @@
 			$event['reminder']			 = 0;
 			$event['customer_internal']	 = 0;
 			$event['cost']				 = 0;
+			$event['completed']			 = 1;//paid !
 
 			$building_info			 = $boapplication->so->get_building_info($application['id']);
 			$event['building_id']	 = $building_info['id'];
