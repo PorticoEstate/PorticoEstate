@@ -315,7 +315,14 @@
 						<hr class="mt-5"></hr>
 						<div class="btn-group" style="display:none;" id="btnSubmitGroup">
 							<button type="button" class="btn btn-primary" id="btnSubmit">
-								Fakturering
+								<xsl:choose>
+									<xsl:when test="vipps_logo != ''">
+										Fakturering
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="php:function('lang', 'send')" />
+									</xsl:otherwise>
+								</xsl:choose>
 							</button>
 							<xsl:if test="vipps_logo != ''">
 								<img src="{vipps_logo}" class="ml-5" OnClick="initiate_payment('vipps');">
@@ -378,6 +385,6 @@
 		{
 		location.reload();
 		});
-		
+
 	</script>
 </xsl:template>

@@ -153,7 +153,7 @@
 			$session_id = $GLOBALS['phpgw']->session->get_session_id();
 
 			$fall_back_url = $GLOBALS['phpgw']->link('/bookingfrontend/',
-											array('menuaction' => 'bookingfrontend.uiapplication.add_contact', 'payment_order_id' => $remote_order_id),
+											array('menuaction' => 'bookingfrontend.uiapplication.add_contact', 'payment_order_id' => $remote_order_id, session_name() => $session_id),
 											false,
 											true
 			);
