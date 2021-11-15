@@ -942,10 +942,28 @@
 				$this->db->next_record();
 				$_vendor_category = $this->db->f('category');
 
+				$accountlink_code = 2460;
+				switch ($_vendor_category)
+				{
+					case '1':
+						$accountlink_code = 2400;
+						break;
+					case '2':
+						$accountlink_code = 2460;
+						break;
+					case '3':
+						$accountlink_code = 2401;
+						break;
+
+					default:
+						$accountlink_code = 2460;
+						break;
+				}
+
 				$accountline[] = array
 					(
 					'TRANSACTIONTYPE'	 => 'R114',
-					'ACCOUNTLINK.CODE'	 => $_vendor_category == 1 ? 2400 : 2460,
+					'ACCOUNTLINK.CODE'	 => $accountlink_code,//$_vendor_category == 1 ? 2400 : 2460,
 					'CURRENCY'			 => $oRsBilag[0]['currency'],
 					'AMOUNT'			 => (-1 * $sum_amount),
 					'TAXCODE'			 => $oRsBilag[0]['mvakode'],
