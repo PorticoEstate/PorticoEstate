@@ -684,6 +684,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$event = $this->bo->read_single($id);
+			if(!$event)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 
 			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($event['resources'], true);
 			$resource_paricipant_limit = 0;

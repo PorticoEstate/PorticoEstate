@@ -217,6 +217,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$season = $this->bo->read_single($id);
+			if(!$season)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$season['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$season['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
 					'id' => $season['building_id']));
@@ -286,6 +290,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$season = $this->bo->read_single($id);
+			if(!$season)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.index'));
 			$season['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$season['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',

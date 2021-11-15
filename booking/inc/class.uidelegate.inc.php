@@ -352,6 +352,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$delegate = $this->bo->read_single($id);
+			if(!$delegate)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$delegate['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
 			$delegate['organization_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show',
 					'id' => $delegate['organization_id']));

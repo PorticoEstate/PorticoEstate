@@ -245,10 +245,16 @@
 			$GLOBALS['phpgw_info']['flags']['allow_html_image']	 = true;
 			$GLOBALS['phpgw_info']['flags']['allow_html_iframe'] = true;
 			$id = phpgw::get_var('id', 'int');
-			$resource = $this->bo->read_single($id);
 			if (!$id)
 			{
 				phpgw::no_access('booking', lang('missing id'));
+			}
+
+			$resource = $this->bo->read_single($id);
+
+			if(!$resource)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
 			}
 			$resource['id'] = $id;
 			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
@@ -785,6 +791,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$resource = $this->bo->read_single($id);
+			if(!$resource)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$array_resource = array(&$resource);
 			$this->bo->add_activity_facility_data($array_resource);
 
