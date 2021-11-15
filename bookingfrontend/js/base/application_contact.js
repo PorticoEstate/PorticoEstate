@@ -1,4 +1,4 @@
-/* global bc, ko */
+/* global bc, ko, payment_order_id, selected_payment_method */
 
 $(".navbar-search").removeClass("d-none");
 $(".termAcceptDocsUrl").attr('data-bind', "text: docName, attr: {'href': itemLink }");
@@ -8,7 +8,73 @@ CreateUrlParams(window.location.search);
 
 ko.validation.locale('nb-NO');
 
+function initiate_payment(method)
+{
+	var parameter = {
+		menuaction: "bookingfrontend." + method + "_helper.initiate"
+	};
 
+	var getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
+
+	$(".application_id").each(function (index)
+	{
+		getJsonURL += '&application_id[]=' + $(this).val();
+	});
+
+	$.getJSON(getJsonURL, function (result)
+	{
+		console.log(result);
+		if(typeof(result.url) !== 'undefined')
+		{
+			var url = result.url;
+			window.location.replace(url);
+		}
+	});
+}
+
+function check_payment_status()
+{
+
+	if (!payment_order_id)
+	{
+		return;
+	}
+
+	var payment_method = selected_payment_method;
+
+	var form = document.getElementById('new-application-partialtwo');
+	form.style.display = 'none';
+
+	$('<div id="spinner" class="text-center mt-2  ml-2">')
+		.append($('<div class="spinner-border" role="status">')
+			.append($('<span class="sr-only">Checking...</span>')))
+		.insertAfter(form);
+
+	var parameter = {
+		menuaction: "bookingfrontend." + payment_method + "_helper.check_payment_status",
+		payment_order_id: payment_order_id
+	};
+
+	var getJsonURL = phpGWLink('bookingfrontend/', parameter, true);
+
+	$.getJSON(getJsonURL, function (result)
+	{
+		var element = document.getElementById('spinner');
+		if (element)
+		{
+			element.parentNode.removeChild(element);
+		}
+
+		console.log(result);
+		var last_transaction = result.transactionLogHistory[0];
+		if (last_transaction.operationSuccess === true)
+		{
+			window.location.href = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiapplication.add_contact'}, false);
+		}
+
+	});
+
+}
 function applicationModel()
 {
 	var self = this;
@@ -68,42 +134,114 @@ $(document).ready(function ()
 			$("input[name='customer_organization_name']").prop('required', false);
 		}
 	});
-});
 
+	check_payment_status();
 
-
-
-$(function ()
-{
-	$("#btnSubmit").on("click", function (e)
+	function update_contact_informtation()
 	{
-		var error = false;
-		var form = $("#application_form")[0];
-		var isValid = form.checkValidity();
-		if (!isValid)
-		{
-			e.preventDefault();
-			e.stopPropagation();
-		}
-		if (document.getElementById('contact_email2').value !== document.getElementById('contact_email').value)
-		{
-			document.getElementById('contact_email2').classList.replace('valid', 'invalid');
-			error = true;
-			alert('Epostadressen er ikke den samme i begge feltene');
-		}
-		else
-		{
-			document.getElementById('contact_email2').classList.replace('invalid', 'valid');
-		}
-		form.classList.add('was-validated');
+		var thisForm = $("#application_form");
 
-		if (error)
+		$('<div id="spinner" class="text-center mt-2  ml-2">')
+			.append($('<div class="spinner-border" role="status">')
+				.append($('<span class="sr-only">Processing...</span>')))
+			.insertAfter(thisForm);
+
+		var oArgs = {menuaction: 'bookingfrontend.uiapplication.update_contact_informtation'};
+		var requestUrl = phpGWLink('bookingfrontend/', oArgs, true);
+
+		var formdata = thisForm.serializeArray();
+		console.log(formdata);
+
+		$.ajax({
+			cache: false,
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			data: formdata,//thisForm.serialize(),
+			success: function (data, textStatus, jqXHR)
+			{
+				if (data)
+				{
+					if (data.status !== "saved")
+					{
+						alert(data.message);
+						$("#btnSubmitGroup").hide();
+						window.location.reload();
+					}
+					else
+					{
+						$("#btnSubmitGroup").show();
+					}
+					var element = document.getElementById('spinner');
+					if (element)
+					{
+						element.parentNode.removeChild(element);
+					}
+				}
+			}
+		});
+	}
+	$(function ()
+	{
+		$("#btnValidate").on("click", function (e)
 		{
-			return false;
-		}
-		else
+			var validated = validate_form(e);
+			if (validated)
+			{
+				update_contact_informtation();
+			}
+		});
+
+		$("#btnSubmit").on("click", function (e)
 		{
-			return true;
-		}
+			var validated = validate_form(e);
+			if(validated)
+			{
+				$("#application_form").submit();
+			}
+		});
+
 	});
+
+
 });
+
+
+
+
+
+
+function validate_form(e)
+{
+	var error = false;
+	var form = $("#application_form")[0];
+	var isValid = form.checkValidity();
+	if (!isValid)
+	{
+		error = true;
+		e.preventDefault();
+		e.stopPropagation();
+	}
+	if (document.getElementById('contact_email2').value !== document.getElementById('contact_email').value)
+	{
+		document.getElementById('contact_email2').classList.replace('valid', 'invalid');
+		error = true;
+		alert('Epostadressen er ikke den samme i begge feltene');
+	}
+	else
+	{
+		document.getElementById('contact_email2').classList.replace('invalid', 'valid');
+	}
+	form.classList.add('was-validated');
+
+	if (error)
+	{
+		alert('Fyll ut alle obligatoriske felt');
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+
+}

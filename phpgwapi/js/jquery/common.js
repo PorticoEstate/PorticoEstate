@@ -165,7 +165,7 @@ JqueryPortico.move_record = function (sUrl)
 
 JqueryPortico.searchLink = function (key, oData)
 {
-	if(typeof(oData[key]) == 'undefined')
+	if (typeof (oData[key]) == 'undefined')
 	{
 		return;
 	}
@@ -238,7 +238,7 @@ JqueryPortico.showPicture = function (key, oData)
 		var img_id = oData['img_id'];
 		var img_url = oData['img_url'];
 		var thumbnail_flag = oData['thumbnail_flag'];
-		link = '<img onclick="JqueryPortico.show_picture_popup(\'' + img_url+ '\');" ' + "src='" + img_url + "&" + thumbnail_flag + "' alt='" + img_name + "' />";
+		link = '<img onclick="JqueryPortico.show_picture_popup(\'' + img_url + '\');" ' + "src='" + img_url + "&" + thumbnail_flag + "' alt='" + img_name + "' />";
 	}
 	return link;
 };
@@ -246,11 +246,11 @@ JqueryPortico.showPicture = function (key, oData)
 
 JqueryPortico.show_picture_popup = function (img_url)
 {
-	var width = Math.round($(window).width()*0.9);
+	var width = Math.round($(window).width() * 0.9);
 
-	var html =  "<h4 style='text-align: center;'><a href='" + img_url +  "'>Download</a></h4>";
-		html += "<img src='" + img_url + "' style ='display: block; margin-left: auto; margin-right: auto; width: "+ width + "px;'/>";
-	TINY.box.show({html:html, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+	var html = "<h4 style='text-align: center;'><a href='" + img_url + "'>Download</a></h4>";
+	html += "<img src='" + img_url + "' style ='display: block; margin-left: auto; margin-right: auto; width: " + width + "px;'/>";
+	TINY.box.show({html: html, boxid: "frameless", width: Math.round($(window).width() * 0.9), height: Math.round($(window).height() * 0.9), fixed: false, maskid: "darkmask", maskopacity: 40, mask: true, animate: true, close: true});
 };
 
 JqueryPortico.formatJsonArray = function (key, oData)
@@ -452,7 +452,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		responsive: responsive_def,
 		deferRender: true,
 		select: select,
- 		data: data,
+		data: data,
 		ajax: ajax_def,
 		fnServerParams: function (aoData)
 		{
@@ -1010,7 +1010,7 @@ function createPaginatorTable(c, p)
 //r  => respuesta
 //cl => clase
 //l  => limit
-function createTable(d, u, c, r, cl, l)
+function createTable(d, u, c, r, cl, l, callback)
 {
 	var container = document.getElementById(d);
 	var xTable = document.createElement('table');
@@ -1183,6 +1183,32 @@ function createTable(d, u, c, r, cl, l)
 									}
 								});
 							}
+							if ((vc['disabled']))
+							{
+								vcd = vc['disabled'];
+								$.each(array_attr, function (i, v)
+								{
+									if (v['name'] == 'value')
+									{
+										if (typeof (vcd) == 'string')
+										{
+											if (vcd == v['value'])
+											{
+												array_attr.push({name: 'disabled', value: 'disabled'});
+												array_attr.push({name: 'style', value: 'display:none;'});
+											}
+										}
+										else
+										{
+											if ((jQuery.inArray(v['value'], vcd) != -1) || (jQuery.inArray(v['value'].toString(), vcd) != -1) || (jQuery.inArray(parseInt(v['value']), vcd) != -1))
+											{
+												array_attr.push({name: 'disabled', value: 'disabled'});
+												array_attr.push({name: 'style', value: 'display:none;'});
+											}
+										}
+									}
+								});
+							}
 							objects.push({type: vo['type'], attrs: array_attr});
 						});
 						var object = createObject(objects);
@@ -1249,6 +1275,7 @@ function createTable(d, u, c, r, cl, l)
 							if (vcft == 'genericLink2')
 							{
 								link = (vd['dellink']) ? formatGenericLink2('slett', vd[k]) : link;
+								link = (vd['option_delete']) ? formatGenericLink2('slett', vd[k]) : link;
 							}
 							else
 							{
@@ -1276,6 +1303,17 @@ function createTable(d, u, c, r, cl, l)
 				tableBody.appendChild(tableBodyTr);
 			});
 		}
+	}).done(function ()
+	{
+		try
+		{
+			callback();
+		}
+		catch (err)
+		{
+
+		}
+
 	});
 }
 
@@ -1299,31 +1337,38 @@ function createObject(object)
 				objs.push('&nbsp;');
 			}
 
+			if (element.getAttribute('type') === 'button' && element.getAttribute('innerHTML') !== 'undefined')
+			{
+				element.innerHTML = element.getAttribute('innerHTML');
+			}
 			if (element.getAttribute('type') == 'radio')
 			{
-				element.onclick = function (e)
+				if (!element.getAttribute('onclick'))
 				{
-					var previousValue = $(this).attr('previousValue');
-					if (previousValue == 'true')
+					element.onclick = function (e)
 					{
-						this.checked = false;
-						$(this).attr('previousValue', this.checked);
-					}
-					else
-					{
-						this.checked = true;
-						$(this).attr('previousValue', this.checked);
+						var previousValue = $(this).attr('previousValue');
+						if (previousValue == 'true')
+						{
+							this.checked = false;
+							$(this).attr('previousValue', this.checked);
+						}
+						else
+						{
+							this.checked = true;
+							$(this).attr('previousValue', this.checked);
 
-						try
-						{
-							local_custom_radio_action(this);
+							try
+							{
+								local_custom_radio_action(this);
+							}
+							catch (err)
+							{
+								console.log(err);
+							}
 						}
-						catch (err)
-						{
-							console.log(err);
-						}
-					}
-				};
+					};
+				}
 			}
 
 			objs.push(element);
@@ -2228,7 +2273,11 @@ function genericLink2()
 
 function formatGenericLink(name, link)
 {
-	if (!name || !link)
+	if (link === false)
+	{
+		return '';
+	}
+	else if (!name || !link)
 	{
 		return name;
 	}
@@ -2240,7 +2289,11 @@ function formatGenericLink(name, link)
 
 function formatGenericLink2(name, link)
 {
-	if (!name || !link)
+	if (link === false)
+	{
+		return '';
+	}
+	else if (!name || !link)
 	{
 		return name;
 	}

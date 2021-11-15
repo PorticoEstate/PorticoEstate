@@ -222,7 +222,7 @@
 			$this->relaxe_acl = false;
 
 			// Calculate total number of records
-			$this->db->query("SELECT count(1) AS count FROM $this->table_name $joins WHERE $condition", __LINE__, __FILE__);
+			$this->db->query("SELECT count(*) AS count FROM ( SELECT DISTINCT $cols FROM $this->table_name $joins WHERE $condition) AS t", __LINE__, __FILE__);
 			$this->db->next_record();
 			$total_records = (int)$this->db->f('count');
 

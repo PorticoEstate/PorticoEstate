@@ -1,13 +1,13 @@
 <?php
 	$setup_info['booking']['name'] = 'booking';
-	$setup_info['booking']['version'] = '0.2.73';
+	$setup_info['booking']['version'] = '0.2.74';
 	$setup_info['booking']['app_order'] = 9;
 	$setup_info['booking']['enable'] = 1;
 	$setup_info['booking']['app_group'] = 'office';
 
 
 	$setup_info['booking']['tables'] = array
-		(
+	(
 		'bb_activity',
 		'bb_building',
 		'bb_targetaudience',
@@ -72,7 +72,18 @@
 		'bb_rescategory_activity',
 		'bb_facility',
 		'bb_participant',
-		'bb_participant_limit'
+		'bb_participant_limit',
+		'bb_customer',
+		'bb_article_category',
+		'bb_article_mapping',
+		'bb_service',
+		'bb_resource_service',
+		'bb_article_price',
+		'bb_article_price_reduction',
+		'bb_purchase_order',
+		'bb_purchase_order_line',
+		'bb_payment_method',
+		'bb_payment'
 	);
 
 	$setup_info['booking']['description'] = 'Bergen kommune booking';

@@ -498,12 +498,14 @@
 			unset($f_temp_primary);
 			unset($f_temp_foreign);
 
-
 			$metaindexes = $sdc->metaindexes($sTableName);
 
-			//FIXME: looks like unique is reported as index
 			foreach($metaindexes as $key => $index)
 			{
+				if($index['unique'] == true)
+				{
+					continue;
+				}
 				if(count($index['columns']) > 1)
 				{
 					$this->ix[] = $index['columns'];

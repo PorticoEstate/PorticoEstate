@@ -1535,7 +1535,8 @@
                       || ($event_start < $endTime AND $event_end >= $endTime)
 					)
 					{
-						$overlap = $event['type'] == 'block' ? 2 : 1;
+						
+						$overlap = ($event['type'] == 'block' ||  $event['status'] == 'NEWPARTIAL1') ? 2 : 1;
 						break;
 					}
 				}
