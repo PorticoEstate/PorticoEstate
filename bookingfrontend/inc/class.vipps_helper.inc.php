@@ -477,7 +477,7 @@
 						{
 							$GLOBALS['phpgw']->db->transaction_begin();
 							$soapplication->update_payment_status($remote_order_id, 'completed', 'CAPTURE');
-							$this->approve_application($remote_order_id);
+							$this->approve_application($remote_order_id, (int)$data['transactionLogHistory'][0]['amount']);
 							$GLOBALS['phpgw']->db->transaction_commit();
 						}
 					}
@@ -499,7 +499,7 @@
 		 * @param string $remote_order_id
 		 * @return boolean
 		 */
-		private function approve_application( $remote_order_id )
+		private function approve_application( $remote_order_id, $amount )
 		{
 			$boapplication = CreateObject('booking.boapplication');
 
@@ -511,12 +511,11 @@
 			unset($event['id']);
 			unset($event['id_string']);
 			$event['application_id']	 = $application['id'];
-			$event['completed']			 = '0';
 			$event['is_public']			 = 0;
 			$event['include_in_list']	 = 0;
 			$event['reminder']			 = 0;
 			$event['customer_internal']	 = 0;
-			$event['cost']				 = 0;
+			$event['cost']				 = ($amount/100);
 			$event['completed']			 = 1;//paid !
 
 			$building_info			 = $boapplication->so->get_building_info($application['id']);
