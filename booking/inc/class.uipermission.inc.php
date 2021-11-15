@@ -291,6 +291,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$permission = $this->bo->read_single($id);
+			if(!$permission)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$this->add_default_display_data($permission);
 			self::render_template_xsl('permission', array('permission' => $permission));
 		}
@@ -351,6 +355,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$permission = $this->bo->read_single($id);
+			if(!$permission)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 
 			$errors = array();
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')

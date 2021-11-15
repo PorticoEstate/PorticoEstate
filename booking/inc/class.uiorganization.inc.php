@@ -395,6 +395,11 @@
 
 			$organization = $this->bo->read_single($id);
 
+			if(!$organization)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
+
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Organization'), 'link' => '#organization');
 			$active_tab = 'generic';

@@ -107,6 +107,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$person = $this->bo->read_single($id);
+			if(!$person)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$person['contactpersons_link'] = self::link(array('menuaction' => 'booking.uicontactperson.index'));
 			$person['edit_link'] = self::link(array('menuaction' => 'booking.uicontactperson.edit',
 					'id' => $person['id']));

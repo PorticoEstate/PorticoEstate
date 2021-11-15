@@ -618,6 +618,12 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$allocation = $this->bo->read_single($id);
+
+			if(!$allocation)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
+
 			$allocation['building'] = $this->building_bo->so->read_single($allocation['building_id']);
 			$allocation['building_name'] = $allocation['building']['name'];
 			$errors = array();
@@ -829,6 +835,12 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$allocation = $this->bo->read_single($id);
+
+			if(!$allocation)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
+
 			$allocation['allocations_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
 			$allocation['delete_link'] = self::link(array('menuaction' => 'booking.uiallocation.delete',
 					'allocation_id' => $allocation['id'], 'from_' => $allocation['from_'], 'to_' => $allocation['to_'],

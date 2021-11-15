@@ -162,6 +162,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$activity = $this->bo->read_single($id);
+			if(!$activity)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$parent_activity = $this->bo->read_single($activity['parent_id']);
 			$activities = $this->bo->fetch_activities();
 			$activities = $activities['results'];

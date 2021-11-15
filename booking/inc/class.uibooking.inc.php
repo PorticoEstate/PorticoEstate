@@ -763,6 +763,11 @@
 			}
 			$booking = $this->bo->read_single($id);
 
+			if(!$booking)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
+
 			$activity_path = $this->activity_bo->get_path($booking['activity_id']);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
 
@@ -1024,6 +1029,11 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$booking = $this->bo->read_single($id);
+
+			if(!$booking)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 
 			$activity_path = $this->activity_bo->get_path($booking['activity_id']);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
