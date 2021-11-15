@@ -875,3 +875,4 @@ payments	booking	no	Betalinger
 interrupted	booking	no	Avbrutt
 completed	booking	no	Fullført
 partially refunded	booking	no	Delvis refundert
+articles	booking	no	Artikler

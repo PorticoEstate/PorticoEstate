@@ -1463,6 +1463,16 @@
 				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
 			}
 
+			$location_id		 = $GLOBALS['phpgw']->locations->get_id('booking', 'run');
+			$custom_config		 = CreateObject('admin.soconfig', $location_id)->read();
+
+			$payment_methods = array();
+			if(!empty($custom_config['payment']['method']) && !empty($custom_config['Vipps']['active']))
+			{
+				$payment_methods[] = 'vipps';
+
+			}
+
 			self::render_template_xsl($template, array(
 				'application' => $application,
 				'activities' => $activities,
@@ -1470,7 +1480,8 @@
 				'audience' => $audience,
 				'resource_list'	=> array('options' => $resources),
 				'direct_booking' => $direct_booking,
-				'config' => CreateObject('phpgwapi.config', 'booking')->read()
+				'config' => CreateObject('phpgwapi.config', 'booking')->read(),
+				'payment_methods' => $payment_methods
 				)
 			);
 		}

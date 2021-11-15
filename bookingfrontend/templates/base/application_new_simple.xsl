@@ -58,21 +58,24 @@
 						<div class="col-12 mt-4" id="item-description">
 						</div>
 					</div>
-					<div class="form-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'Articles')" />
-						</label>
-						<input type="hidden" data-validation="application_articles">
-							<xsl:attribute name="data-validation-error-msg">
-								<xsl:value-of select="php:function('lang', 'Please choose at least 1 Article')" />
-							</xsl:attribute>
-						</input>
-						<div id="articles_container" style="display:inline-block;">
-							<span class="select_first_text">
-								<xsl:value-of select="php:function('lang', 'Select a resource first')" />
-							</span>
+					<xsl:if test="count(payment_methods) >  0">
+
+						<div class="form-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'Articles')" />
+							</label>
+							<input type="hidden" data-validation="application_articles">
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'Please choose at least 1 Article')" />
+								</xsl:attribute>
+							</input>
+							<div id="articles_container" style="display:inline-block;">
+								<span class="select_first_text">
+									<xsl:value-of select="php:function('lang', 'Select a resource first')" />
+								</span>
+							</div>
 						</div>
-					</div>
+					</xsl:if>
 
 					<!-- Select Time and Date Section -->
 					<div class="form-group">
