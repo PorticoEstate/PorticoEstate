@@ -69,6 +69,19 @@ function check_payment_status()
 		var last_transaction = result.transactionLogHistory[0];
 		if (last_transaction.operationSuccess === true)
 		{
+			if(last_transaction.operation == 'RESERVE' || last_transaction.operation == 'RESERVED')
+			{
+				alert('Transaksjonen er fullført, du får en kvittering på epost');
+			}
+			else if(last_transaction.operation == 'CANCEL')
+			{
+				alert('Transaksjonen er kansellert');
+			}
+			else
+			{
+				alert('Noe gikk skeis...');
+			}
+
 			window.location.href = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiapplication.add_contact'}, false);
 		}
 

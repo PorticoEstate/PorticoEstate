@@ -564,3 +564,5 @@ unit	bookingfrontend	nn	Eining
 price	bookingfrontend	nn	Pris
 selected	bookingfrontend	nn	Valgt
 unit cost	bookingfrontend	nn	Einingspris
+cost is set	booking	nn	Ny pris er definert
+Event was created	booking	nn	Arrangementet vart oppretta

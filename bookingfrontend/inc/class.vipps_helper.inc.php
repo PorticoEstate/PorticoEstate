@@ -494,6 +494,29 @@
 			);
 		}
 
+		protected function add_comment( &$event, $comment, $type = 'comment' )
+		{
+			$event['comments'][] = array(
+				'time' => 'now',
+				'author' => 'Vipps',
+				'comment' => $comment,
+				'type' => $type
+			);
+		}
+		protected function add_cost_history( &$event, $comment = '', $cost = '0.00' )
+		{
+			if (!$comment)
+			{
+				$comment = lang('cost is set');
+			}
+
+			$event['costs'][] = array(
+				'time' => 'now',
+				'author' => 'Vipps',
+				'comment' => $comment,
+				'cost' => $cost
+			);
+		}
 		/**
 		 *
 		 * @param string $remote_order_id
@@ -501,6 +524,7 @@
 		 */
 		private function approve_application( $remote_order_id, $amount )
 		{
+			$_amount = ($amount/100);
 			$boapplication = CreateObject('booking.boapplication');
 
 			$application_id				 = $boapplication->so->get_application_from_payment_order($remote_order_id);
@@ -515,11 +539,14 @@
 			$event['include_in_list']	 = 0;
 			$event['reminder']			 = 0;
 			$event['customer_internal']	 = 0;
-			$event['cost']				 = ($amount/100);
+			$event['cost']				 = $_amount;
 			$event['completed']			 = 1;//paid !
 
 			$building_info			 = $boapplication->so->get_building_info($application['id']);
 			$event['building_id']	 = $building_info['id'];
+			$this->add_comment($event, lang('Event was created'));
+			$this->add_cost_history($event, lang('cost is set'), $_amount);
+
 			$booking_boevent		 = createObject('booking.boevent');
 			$errors					 = array();
 

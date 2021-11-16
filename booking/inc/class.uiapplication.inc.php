@@ -1856,7 +1856,7 @@
 								$event['include_in_list'] = 0;
 								$event['reminder'] = 0;
 								$event['customer_internal'] = 0;
-								$event['cost'] = 0;
+								$this->get_event_cost($event);
 
 								$building_info = $this->bo->so->get_building_info($application['id']);
 								$event['building_id'] = $building_info['id'];
@@ -2971,6 +2971,28 @@ JS;
 
 			}
 			return $status;
+		}
+
+		function get_event_cost(&$event)
+		{
+			$filters		 = array('id' => $event['application_id']);
+			$params			 = array('filters' => $filters, 'results' => 'all');
+
+			$applications	 = $this->bo->so->read($params);
+
+			$this->bo->so->get_purchase_order($applications);
+
+			$event['cost'] = 0;
+			foreach ($applications['results'] as $application)
+			{
+				foreach ($application['orders'] as $order)
+				{
+					if (empty($order['paid']))
+					{
+						$event['cost'] += (float)$order['sum'];
+					}
+				}
+			}
 		}
 
 	}
