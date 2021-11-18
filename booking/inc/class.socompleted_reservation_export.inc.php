@@ -1368,21 +1368,10 @@
 
 					$header = array();
 					
-//					$header['AntallDagerForfall'] = 30; //int
-//					$header['Avtalenr'] = ''; //int
-//					$header['AvtaltForfallFast'] = ''; //int
-//					$header['AvtaltForfallTilfeldig'] = 30; //int
-//					$header['Beregningsmodus'] = 'B';//char(3)
-//					$header['Bestillingsnr'] = '';
-//					$header['Blankettbehandling'] = '';//char(3)
-//					$header['Blankettekstnr'] = ''; //int
 					$header['Blanketttype'] = 'F';//char(1) F = Faktura
 					$header['datoendr'] = date('d.m.Y');//dato 31.01.1997
 					$header['Deresref'] = $ext_ord_ref;//char(30)
 					$header['Fagsystemkundeid'] = $kundenr;
-//					$header['Fakturadato'] = date('d.m.Y');
-//					$header['Fakturahyppighet'] = 'MND';//char(3)
-
 
 					$line_no = 1;
 
@@ -1402,22 +1391,11 @@
 					$fakturalinje['Grunnlagstype']	 = 'KRV';  //char(8)
 					$fakturalinje['enhetspris']	 = $reservation['cost'];  //Beløp
 					$fakturalinje['Fagsystemkontoid']	 = '';  //char(30) ???
-//					$fakturalinje['Fagsystemvareid']	 = '';  //char(30)
 					$fakturalinje['FeiletLinjeFelt']	 = '';  //Char
 					$fakturalinje['FormalDim']	 = '';  //char(8)
 					$fakturalinje['fradato']	 = $from_date->format('d.m.Y');  //dato
 
-//					$fakturalinje['FremmedrefGUID']	 = '';  //char(38)
-//					$fakturalinje['Fremmedrefnr']	 = '';  //char(60)
-//					$fakturalinje['GjelderFakturalinjeGuid']	 = '';  //
-//					$fakturalinje['GjelderFakturalinjenr']	 = '';  //
-//					$fakturalinje['GjelderFakturanr']	 = '';  //int
-//					$fakturalinje['Gjenstandident']	 = '';  //
-//					$fakturalinje['GrunnlaglinjeGUID']	 = '';  //char(38)
-//					$fakturalinje['Grunnlagtype']	 = '';  //
-//					$fakturalinje['Linjefeilmelding']	 = '';  //string
 					$fakturalinje['Linjenr']	 = $line_no;  //
-//					$fakturalinje['mvakode']	 = '';  //char(1)
 
 					//Formål. eks.
 					if ($type == 'internal' && isset($this->config_data['dim_2']))
@@ -1430,72 +1408,28 @@
 					{
 						$fakturalinje['ObjektDim'] = strtoupper(substr($account_codes['object_number'], 0, 8));//char(8)
 					}
-//					$fakturalinje['Oppdateringsresultat']	 = '';  //string
+
 					$fakturalinje['orgkode']	 = '';  //char(8)
-//					$fakturalinje['OrgvareGUID']	 = '';  //
-//					$fakturalinje['PrisGUID']	 = '';  //
-//					$fakturalinje['rabatt']	 = '';  //Desimal
-//					$fakturalinje['Regnskapstype']	 = '';  //Char(2)
 
 					$fakturalinje['SumPrisUtenAvgift']	 =$reservation['cost'];  //Beløp
 
 					$fakturalinje['tildato']	 = $to_date->format('d.m.Y');  //Dato
-//					$fakturalinje['Tilleggstekst']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description']), 0, 225);  //char(255)
+
 					$fakturalinje['Tilleggstekst'] = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description'] . ' - ' . $reservation['description']), 0, 225);
 
-//					$fakturalinje['VareGuid']	 = '';  //
 					$fakturalinje['Varekode']	 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
 
 					$fakturalinje['Fakturaorgkode']	 = '';  //
 
 					//Topptekst til faktura, knyttet mot fagavdeling
 					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
-//					$fakturalinje['Faktureringsmetode']	 = 'T';  //
-//					$fakturalinje['FeiletFelt']	 = '';  //
-//					$fakturalinje['Feilmelding']	 = '';  //
-//					$fakturalinje['Forfallsdato']	 = '';  //Dato
-//					$fakturalinje['FremmedRefnr']	 = '';  //char(60)
-//					$fakturalinje['GjelderFakturanr']	 = '';  //
-//					$fakturalinje['GjelderKravGUID']	 = '';  //
-//					$fakturalinje['GrunnlagGUID']	 = '';  //
-//					$fakturalinje['Grunnlagid']	 = '';  //
-//					$fakturalinje['Importkjorenr']	 = '';  //
-//					$fakturalinje['InitEndr']	 = '';  //
-//					$fakturalinje['Kontaktpersoner']	 = '';  //
 
-//					$fakturalinje['Kundenr']	 = $stored_header['kundenr'];  //
-//					$fakturalinje['Oppdateringsresultat']	 = '';  //
-//					$fakturalinje['RegningsmottakerFagsystemkundeid']	 = '';  //char(128)
-//					$fakturalinje['Regningsmottakerkundenr']	 = '';  //Int
-//					$fakturalinje['Samlefakturasortering']	 = '';  //
-//					$fakturalinje['Systemid']	 = $client_id;  //
-//					$fakturalinje['tidendr']	 = '';  //tid
-//					$fakturalinje['VaremottakerFagsystemkundeid']	 = '';  //char(128)
-//					$fakturalinje['Varemottakerkundenr']	 = '';  //int
-//					$fakturalinje['VarRef']	 = '';  //char(30)
-
-
-
-//					if (isset($this->config_data['dim_4']))
-//					{
-//						$item['dim_4'] = trim(substr($account_codes['dim_4'], 0, 8));
-//					}
 //
 //					//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt
 					if (isset($this->config_data['dim_5']))
 					{
 						$fakturalinje['orgkode'] = trim(strtoupper($account_codes['project_number']));
 					}
-//					if (isset($this->config_data['dim_6']))
-//					{
-//						$item['dim_6'] = trim(substr($account_codes['dim_6'], 0, 4));
-//					}
-//					if (isset($this->config_data['dim_7']))
-//					{
-//						$item['dim_7'] = trim(substr($account_codes['dim_7'], 0, 4));
-//					}
-//
-//
 					$fakturalinjer[$check_customer_identifier][] = array('BkPffFakturagrunnlaglinje' => $fakturalinje);
 
 					$headers[$check_customer_identifier] = $header;
@@ -1575,8 +1509,6 @@
 					$fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description'] . ' - ' . $reservation['description']), 0, 225);
 					$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
 					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
-//					$fakturalinje['Kundenr']			 = $stored_header['kundenr'];
-//					$fakturalinje['Systemid']	 = $client_id;  //
 
 					$fakturalinjer[$check_customer_identifier][] = array('BkPffFakturagrunnlaglinje' => $fakturalinje);
 
