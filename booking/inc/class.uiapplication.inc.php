@@ -572,11 +572,7 @@
 			{
 				$payment['created_value'] = $GLOBALS['phpgw']->common->show_date($payment['created']);
 				$payment['status_text'] = $status_text[$payment['status']];
-				if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
-				{
-
-				}
-				else
+				if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'booking')
 				{
 					switch ($payment['status'])
 					{
@@ -609,12 +605,25 @@
 		{
 			$payment_id = phpgw::get_var('id', 'int');
 			$application_id = phpgw::get_var('application_id', 'int');
-			$payment		 = $this->bo->so->get_payment($payment_id);
-			$payment_method = $payment['payment_method'];
-			$remote_order_id = $payment['remote_id'];
-			$amount = $payment['amount'] * 100;
-			$payment_helper = createObject("bookingfrontend.{$payment_method}_helper");
-			$payment_helper->refund_payment($remote_order_id, $amount);
+			$application = $this->bo->read_single($application_id);
+
+			if($this->is_assigned_to_current_user($application))
+			{
+				$payment		 = $this->bo->so->get_payment($payment_id);
+				$payment_method = $payment['payment_method'];
+				$remote_order_id = $payment['remote_id'];
+				$amount = $payment['amount'] * 100;
+				$payment_helper = createObject("bookingfrontend.{$payment_method}_helper");
+				$payment_helper->refund_payment($remote_order_id, $amount);
+				$comment_text = "Refund: {$payment['amount']}";
+				$this->add_comment($application, $comment_text);
+				$this->bo->update($application);
+			}
+			else
+			{
+				phpgwapi_cache::message_set('current user is not assigned to application', 'error');
+			}
+
 			self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application_id));
 
 		}
@@ -623,11 +632,22 @@
 		{
 			$payment_id = phpgw::get_var('id', 'int');
 			$application_id = phpgw::get_var('application_id', 'int');
-			$payment		 = $this->bo->so->get_payment($payment_id);
-			$payment_method = $payment['payment_method'];
-			$remote_order_id = $payment['remote_id'];
-			$payment_helper = createObject("bookingfrontend.{$payment_method}_helper");
-			$payment_helper->cancel_payment($remote_order_id);
+			$application = $this->bo->read_single($application_id);
+			if($this->is_assigned_to_current_user($application))
+			{
+				$payment		 = $this->bo->so->get_payment($payment_id);
+				$payment_method = $payment['payment_method'];
+				$remote_order_id = $payment['remote_id'];
+				$payment_helper = createObject("bookingfrontend.{$payment_method}_helper");
+				$payment_helper->cancel_payment($remote_order_id);
+				$comment_text = "Cancel: {$payment['amount']}";
+				$this->add_comment($application, $comment_text);
+				$this->bo->update($application);
+			}
+			else
+			{
+				phpgwapi_cache::message_set('current user is not assigned to application', 'error');
+			}
 			self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application_id));
 
 		}
@@ -1370,6 +1390,7 @@
 			$_resources = $this->resource_bo->so->read(array('filters' => $resource_filters, 'sort' => 'sort', 'results' => -1));
 
 			$resource_id = phpgw::get_var('resource_id', 'int');
+			$resource_ids = array();
 			$resources = array();
 			$direct_booking = false;
 
@@ -1382,6 +1403,7 @@
 					{
 						$_resource['name'] .= ' *';
 						$direct_booking = true;
+						$resource_ids[] = $_resource['id'];
 					}
 
 					if($_resource['simple_booking'] == 1)
@@ -1467,10 +1489,11 @@
 			$custom_config		 = CreateObject('admin.soconfig', $location_id)->read();
 
 			$payment_methods = array();
-			if(!empty($custom_config['payment']['method']) && !empty($custom_config['Vipps']['active']))
+
+			$articles = CreateObject('booking.soarticle_mapping')->get_articles($resource_ids);
+			if($articles && $direct_booking && !empty($custom_config['payment']['method']) && !empty($custom_config['Vipps']['active']))
 			{
 				$payment_methods[] = 'vipps';
-
 			}
 
 			self::render_template_xsl($template, array(
@@ -2074,6 +2097,9 @@
 				}
 			}
 
+			/**
+			 * Check on return from external payment operator
+			 */
 			$selected_payment_method =  phpgwapi_cache::session_get('bookingfrontend', 'payment_method');
 
 			self::render_template_xsl('application_contact', array(

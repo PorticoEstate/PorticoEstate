@@ -133,7 +133,7 @@
 									<th>
 										Total sum
 									</th>
-									<th id ="total_sum">
+									<th id="total_sum">
 									</th>
 								</tr>
 							</table>
@@ -324,10 +324,12 @@
 									</xsl:otherwise>
 								</xsl:choose>
 							</button>
-							<xsl:if test="vipps_logo != ''">
-								<img src="{vipps_logo}" class="ml-5" OnClick="initiate_payment('vipps');">
-								</img>
-							</xsl:if>
+							<div id="external_payment_method">
+								<xsl:if test="vipps_logo != ''">
+									<img src="{vipps_logo}" class="ml-5" OnClick="initiate_payment('vipps');">
+									</img>
+								</xsl:if>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -369,7 +371,7 @@
 	<script>
 		var initialAcceptAllTerms = true;
 		var initialSelection = [];
-		var lang = <xsl:value-of select="php:function('js_lang', 'Do you want to delete application?')" />;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Do you want to delete application?', 'Send')" />;
 		var payment_order_id = '<xsl:value-of select="payment_order_id" />';
 		var selected_payment_method = '<xsl:value-of select="selected_payment_method" />';
 

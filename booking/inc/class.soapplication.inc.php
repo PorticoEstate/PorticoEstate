@@ -884,7 +884,7 @@
 			$this->db->query("SELECT * FROM bb_payment WHERE remote_id ='{$remote_id}'", __LINE__, __FILE__);
 		}
 
-		function add_payment( $order_id, $msn )
+		function add_payment( $order_id, $msn, $mode = 'live' )
 		{
 
 			$sql = "SELECT count(id) AS cnt FROM bb_payment WHERE order_id =" . (int)$order_id;
@@ -901,7 +901,7 @@
 			$value_set = array(
 				'order_id' => $order_id,
 				'payment_method_id'	 => null,
-				'payment_gateway_mode' => 'test',//test and live.
+				'payment_gateway_mode' => $mode,//test and live.
 				'remote_id' => $remote_id,
 				'remote_state' => null,
 				'amount' => $order['sum'],

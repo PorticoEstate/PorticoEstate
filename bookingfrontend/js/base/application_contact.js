@@ -1,4 +1,4 @@
-/* global bc, ko, payment_order_id, selected_payment_method */
+/* global bc, ko, payment_order_id, selected_payment_method, lang */
 
 $(".navbar-search").removeClass("d-none");
 $(".termAcceptDocsUrl").attr('data-bind', "text: docName, attr: {'href': itemLink }");
@@ -163,14 +163,13 @@ $(document).ready(function ()
 		var requestUrl = phpGWLink('bookingfrontend/', oArgs, true);
 
 		var formdata = thisForm.serializeArray();
-		console.log(formdata);
 
 		$.ajax({
 			cache: false,
 			type: 'POST',
 			dataType: 'json',
 			url: requestUrl,
-			data: formdata,//thisForm.serialize(),
+			data: formdata,
 			success: function (data, textStatus, jqXHR)
 			{
 				if (data)
@@ -183,6 +182,15 @@ $(document).ready(function ()
 					}
 					else
 					{
+						var total_sum =  $("#total_sum").text();
+						/**
+						 * Hide external paymentmetod if nothing to pay
+						 */
+						if(total_sum === "")
+						{
+							$("#external_payment_method").hide();
+							$("#btnSubmit").text(lang['Send']);
+						}
 						$("#btnSubmitGroup").show();
 					}
 					var element = document.getElementById('spinner');
