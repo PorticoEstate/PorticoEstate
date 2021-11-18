@@ -1430,7 +1430,7 @@
 					{
 						$fakturalinje['orgkode'] = trim(strtoupper($account_codes['project_number']));
 					}
-					$fakturalinjer[$check_customer_identifier][] = array('BkPffFakturagrunnlaglinje' => $fakturalinje);
+					$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
 
 					$headers[$check_customer_identifier] = $header;
 
@@ -1510,7 +1510,8 @@
 					$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
 					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
 
-					$fakturalinjer[$check_customer_identifier][] = array('BkPffFakturagrunnlaglinje' => $fakturalinje);
+//					$fakturalinjer[$check_customer_identifier][] = array('BkPffFakturagrunnlaglinje' => $fakturalinje);
+					$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
 
 					$log_buidling			 = $reservation['building_name'];
 					$log_cost				 = $reservation['cost'];
