@@ -293,7 +293,17 @@
 			$pre_transfer		 = $data['pre_transfer'];
 			$force_period_year	 = $data['force_period_year'];
 
-			include(PHPGW_SERVER_ROOT . "/property/inc/export/{$GLOBALS['phpgw_info']['user']['domain']}/{$conv_type}");
+			$file_name = PHPGW_SERVER_ROOT . "/property/inc/export/{$GLOBALS['phpgw_info']['user']['domain']}/{$conv_type}";
+
+			if(is_file("{$file_name}.php"))
+			{
+				require_once "{$file_name}.php";
+			}
+			else
+			{
+				require_once $file_name;
+			}
+
 			$invoice = new export_conv;
 
 			$buffer = $invoice->overfor($download, $pre_transfer, $force_period_year);
@@ -303,7 +313,15 @@
 
 		function rollback( $conv_type, $role_back_date, $rollback_file, $rollback_voucher, $voucher_id_intern )
 		{
-			include (PHPGW_SERVER_ROOT . "/property/inc/export/{$GLOBALS['phpgw_info']['user']['domain']}/{$conv_type}");
+			$file_name = PHPGW_SERVER_ROOT . "/property/inc/export/{$GLOBALS['phpgw_info']['user']['domain']}/{$conv_type}";
+			if(is_file("{$file_name}.php"))
+			{
+				require_once "{$file_name}.php";
+			}
+			else
+			{
+				require_once $file_name;
+			}
 			$invoice = new export_conv;
 			$buffer	 = $invoice->RullTilbake($role_back_date, $rollback_file, $rollback_voucher, $voucher_id_intern);
 			return $buffer;
@@ -316,8 +334,9 @@
 				$data	 = unserialize(urldecode(phpgw::get_var('data')));
 				$data	 = phpgw::clean_value($data);
 			}
-			_debug_array($data);
+
 			$receipt = $this->export($data);
+			if(!empty($receipt))
 			{
 				_debug_array($receipt);
 			}
