@@ -226,6 +226,33 @@
 						),
 					)
 				),
+				'commerce' => array
+				(
+					'text'	=> lang('commerce'),
+				 	'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiarticle_mapping.index') ),
+				                     'image'	=> array('property', 'article'),
+					'children'	=> array(
+						'article' => array
+						(
+							'text'	=> lang('article'),
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'booking.uiarticle_mapping.index') ),
+											 'image'	=> array('property', 'article'),
+						),
+						'service' => array
+						(
+							'text'	=> lang('service'),
+									'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiservice.index')),
+									'image'	=> array('property', 'service'),
+						),
+						'accounting_tax'		 => array
+							(
+							'text'	 => lang('Accounting tax'),
+							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uigeneric.index',
+								'type'		 => 'tax'))
+						),
+
+					)
+				),
 				// 'costs' => array
 				// (
 				// 	'text'	=> lang('Costs'),
@@ -241,7 +268,7 @@
 						(
 						'completed_reservations' => array
 							(
-							'text' => lang('Completed'),
+							'text' => lang('completed reservations'),
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uicompleted_reservation.index')),
 							'image' => array('property', 'invoice'),
 						),

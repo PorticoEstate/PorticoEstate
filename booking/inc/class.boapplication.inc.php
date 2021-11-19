@@ -628,6 +628,7 @@ HTML;
 				$filters = array('status' => 'NEWPARTIAL1', 'session_id' => $session_id);
 				$params = array('filters' => $filters, 'results' =>'all');
 				$applications = $this->so->read($params);
+				$this->so->get_purchase_order($applications);
 				$list = $applications;
 			}
 			return $list;

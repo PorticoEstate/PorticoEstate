@@ -15,19 +15,22 @@
 		const COMMENT_TYPE_OWNERSHIP = 'ownership';
 		const ORGNR_SESSION_KEY = 'orgnr';
 
-		public $public_functions = array
-			(
-			'index' => true,
-			'query' => true,
-			'add' => true,
-            'confirm' => true,
-			'show' => true,
-			'edit' => true,
-			'associated' => true,
-			'toggle_show_inactive' => true,
-			'custom_fields_example' => true,
-			'export_pdf'			=> true,
+		public $public_functions	 = array(
+			'index'						 => true,
+			'query'						 => true,
+			'add'						 => true,
+			'confirm'					 => true,
+			'show'						 => true,
+			'edit'						 => true,
+			'associated'				 => true,
+			'toggle_show_inactive'		 => true,
+			'custom_fields_example'		 => true,
+			'export_pdf'				 => true,
 			'add_comment_to_application' => true,
+			'payments'					 => true,
+			'cancel_payment'			 => true,
+			'refund_payment'			 => true,
+			'get_purchase_order'		 => true
 		);
 		protected $customer_id,
 			$default_module = 'bookingfrontend',
@@ -551,6 +554,120 @@
 			return $associations;
 		}
 
+		public function payments()
+		{
+			$application_id	 = phpgw::get_var('application_id', 'int');
+			$payments		 = $this->bo->so->read_payments($application_id);
+
+			$status_text = array(
+				'completed'			 => lang('completed'),
+				'new'				 => lang('new'),
+				'pending'			 => lang('pending'),
+				'voided'			 => lang('interrupted'),
+				'refunded'			 => lang('refunded'),
+				'partially_refunded' => lang('partially refunded'),
+			);
+
+			foreach ($payments['data'] as &$payment)
+			{
+				$payment['created_value'] = $GLOBALS['phpgw']->common->show_date($payment['created']);
+				$payment['status_text'] = $status_text[$payment['status']];
+				if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'booking')
+				{
+					switch ($payment['status'])
+					{
+						case 'completed':
+							$payment['option_delete']	 = self::link(array(
+									'menuaction'	 => 'booking.uiapplication.refund_payment',
+									'id'			 => $payment['id'],
+									'application_id' => $application_id));
+							$payment['option_edit']		 = false;
+							break;
+						case 'pending':
+						case 'new':
+							$payment['option_edit']		 = self::link(array(
+									'menuaction'	 => 'booking.uiapplication.cancel_payment',
+									'id'			 => $payment['id'],
+									'application_id' => $application_id));
+							$payment['option_delete']	 = false;
+							break;
+						default:
+							$payment['option_delete']	 = false;
+							$payment['option_edit']		 = false;
+							break;
+					}
+				}
+			}
+			return $payments;
+		}
+
+		function refund_payment()
+		{
+			$payment_id = phpgw::get_var('id', 'int');
+			$application_id = phpgw::get_var('application_id', 'int');
+			$application = $this->bo->read_single($application_id);
+
+			if($this->is_assigned_to_current_user($application))
+			{
+				$payment		 = $this->bo->so->get_payment($payment_id);
+				$payment_method = $payment['payment_method'];
+				$remote_order_id = $payment['remote_id'];
+				$amount = $payment['amount'] * 100;
+				$payment_helper = createObject("bookingfrontend.{$payment_method}_helper");
+				$payment_helper->refund_payment($remote_order_id, $amount);
+				$comment_text = "Refund: {$payment['amount']}";
+				$this->add_comment($application, $comment_text);
+				$this->bo->update($application);
+			}
+			else
+			{
+				phpgwapi_cache::message_set('current user is not assigned to application', 'error');
+			}
+
+			self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application_id));
+
+		}
+
+		function cancel_payment()
+		{
+			$payment_id = phpgw::get_var('id', 'int');
+			$application_id = phpgw::get_var('application_id', 'int');
+			$application = $this->bo->read_single($application_id);
+			if($this->is_assigned_to_current_user($application))
+			{
+				$payment		 = $this->bo->so->get_payment($payment_id);
+				$payment_method = $payment['payment_method'];
+				$remote_order_id = $payment['remote_id'];
+				$payment_helper = createObject("bookingfrontend.{$payment_method}_helper");
+				$payment_helper->cancel_payment($remote_order_id);
+				$comment_text = "Cancel: {$payment['amount']}";
+				$this->add_comment($application, $comment_text);
+				$this->bo->update($application);
+			}
+			else
+			{
+				phpgwapi_cache::message_set('current user is not assigned to application', 'error');
+			}
+			self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application_id));
+
+		}
+
+		function get_purchase_order()
+		{
+			$order_id = phpgw::get_var('id', 'int');
+			$purchase_order = $this->bo->so->get_single_purchase_order($order_id);
+
+			if(!empty($purchase_order['lines']))
+			{
+				foreach ($purchase_order['lines'] as &$line)
+				{
+					$line['sum'] = $line['amount'] + $line['tax'];
+				}
+			}
+
+
+			return $purchase_order;
+		}
 		private function _combine_dates( $from_, $to_ )
 		{
 			return array('from_' => $from_, 'to_' => $to_);
@@ -636,6 +753,28 @@
 			return $comment_text;
 		}
 
+		public function cancel_block()
+		{
+			$resource_id = phpgw::get_var('resource_id', 'int' ,'REQUEST');
+			$building_id = phpgw::get_var('building_id', 'int' ,'REQUEST');
+
+			$from_ = date('Y-m-d H:i:s', phpgwapi_datetime::date_to_timestamp(phpgw::get_var('from_', 'string', 'GET')));
+			$to_ = date('Y-m-d H:i:s', phpgwapi_datetime::date_to_timestamp( phpgw::get_var('to_', 'string', 'GET')));
+
+			$bo_block = createObject('booking.boblock');
+
+			$session_id = $GLOBALS['phpgw']->session->get_session_id();
+
+			if (!empty($session_id) && $resource_id)
+			{
+				$bo_block = createObject('booking.boblock');
+				$bo_block->cancel_block($session_id, array(array('from_' =>  $from_, 'to_' =>  $to_)),array($resource_id));
+			}
+
+			self::redirect(array('menuaction' => 'bookingfrontend.uiresource.show', 'id' => $resource_id, 'building_id' => $building_id));
+			//self::redirect(array());
+
+		}
 		public function set_block()
 		{
 			$resource_id = phpgw::get_var('resource_id', 'int' ,'REQUEST', -1 );
@@ -707,6 +846,29 @@
 			);
 		}
 
+		private function validate_limit_number($resource_id, $ssn, &$errors )
+		{
+			$resource = $this->resource_bo->so->read_single($resource_id);
+			if($resource['booking_limit_number_horizont'] > 0 && $resource['booking_limit_number'] > 0)
+			{
+				$limit_reached = $this->bo->so->check_booking_limit(
+					$GLOBALS['phpgw']->session->get_session_id(),
+					$resource_id,
+					$ssn,
+					$resource['booking_limit_number_horizont'],
+					$resource['booking_limit_number'] );
+
+				if($limit_reached)
+				{
+					$errors['error_message'] = lang('quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days',
+						$limit_reached,
+						$resource['name'],
+						$resource['booking_limit_number'],
+						$resource['booking_limit_number_horizont']);
+				}
+			}
+		}
+
 		public function add()
 		{
 			$organization_number = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
@@ -716,6 +878,12 @@
 			$bouser = CreateObject('bookingfrontend.bouser');
 
 			$errors = array();
+			$user_data = phpgwapi_cache::session_get($bouser->get_module(), $bouser::USERARRAY_SESSION_KEY);
+			if($user_data['ssn'])
+			{
+				$this->validate_limit_number(phpgw::get_var('resource_id', 'int' ),$user_data['ssn'],$errors);
+			}
+
 			$application_id = phpgw::get_var('application_id', 'int');
 			if (isset($application_id))
 			{
@@ -833,6 +1001,27 @@
 					$application['responsible_zip_code'] = '0000';
 					$application['customer_identifier_type'] = 'organization_number';
 					$application['customer_organization_number'] = '';
+
+					/**
+					 * Start dealing with the purchase_order..
+					 */
+					$purchase_order = array('status' => 0, 'customer_id' => -1, 'lines' => array());
+					$selected_articles = (array)phpgw::get_var('selected_articles');
+
+					foreach ($selected_articles as $selected_article)
+					{
+						$_article_info = explode('_', $selected_article);
+
+						if(empty($_article_info[0]))
+						{
+							continue;
+						}
+
+						$purchase_order['lines'][] = array(
+							'article_mapping_id'	=> $_article_info[0],
+							'quantity'				=> $_article_info[1],
+						);
+					}
 				}
 				else if(isset($application['formstage']) && $application['formstage'] == 'legacy')
 				{
@@ -884,25 +1073,7 @@
 
 					foreach ($resources['results'] as $resource)
 					{
-						if($resource['booking_limit_number_horizont'] > 0 && $resource['booking_limit_number'] > 0)
-						{
-							$limit_reached = $this->bo->so->check_booking_limit(
-								$GLOBALS['phpgw']->session->get_session_id(),
-								$resource['id'],
-								$user_data['ssn'],
-								$resource['booking_limit_number_horizont'],
-								$resource['booking_limit_number'] );
-
-							if($limit_reached)
-							{
-								$errors['error_message'] = lang('quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days',
-									$limit_reached,
-									$resource['name'],
-									$resource['booking_limit_number'],
-									$resource['booking_limit_number_horizont']);
-							}
-						}
-
+						$this->validate_limit_number($resource['id'], $user_data['ssn'], $errors );
 					}
 					unset($resources);
 					unset($resource);
@@ -966,6 +1137,12 @@
 					$receipt = $this->bo->add($application);
 					$application['id'] = $receipt['id'];
 
+					if($purchase_order)
+					{
+						$purchase_order['application_id'] = $application['id'];
+						$this->bo->add_purchase_order($purchase_order);
+					}
+
 
 					if( isset($_FILES['name']['name']) && $_FILES['name']['name'] )
 					{
@@ -1001,21 +1178,21 @@
 					$this->bo->so->update_id_string();
 					if ($is_partial1)
 					{
-						phpgwapi_cache::message_set(
-							lang("Complete application text booking") .
-							'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
-							lang("Complete applications") .
-							'</button><button onclick="window.location.href = phpGWLink(\'bookingfrontend/\', {})" class="ml-2 btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
-							lang("new application") .
-							'</button>'
-						);
 						// Redirect to same URL so as to present a new, empty form
 						if($simple)
 						{
-							self::redirect(array('menuaction' => $this->module . '.uiresource.show',  'id' => phpgw::get_var('resource_id', 'int'), 'building_id' => $building_id ));
+							self::redirect(array('menuaction' => $this->url_prefix . '.add_contact',  'id' => phpgw::get_var('resource_id', 'int'), 'building_id' => $building_id ));
 						}
 						else
 						{
+							phpgwapi_cache::message_set(
+								lang("Complete application text booking") .
+								'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
+								lang("Complete applications") .
+								'</button><button onclick="window.location.href = phpGWLink(\'bookingfrontend/\', {})" class="ml-2 btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
+								lang("new application") .
+								'</button>'
+							);
 							self::redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
 						}
 					}
@@ -1213,6 +1390,7 @@
 			$_resources = $this->resource_bo->so->read(array('filters' => $resource_filters, 'sort' => 'sort', 'results' => -1));
 
 			$resource_id = phpgw::get_var('resource_id', 'int');
+			$resource_ids = array();
 			$resources = array();
 			$direct_booking = false;
 
@@ -1225,6 +1403,7 @@
 					{
 						$_resource['name'] .= ' *';
 						$direct_booking = true;
+						$resource_ids[] = $_resource['id'];
 					}
 
 					if($_resource['simple_booking'] == 1)
@@ -1306,6 +1485,17 @@
 				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
 			}
 
+			$location_id		 = $GLOBALS['phpgw']->locations->get_id('booking', 'run');
+			$custom_config		 = CreateObject('admin.soconfig', $location_id)->read();
+
+			$payment_methods = array();
+
+			$articles = CreateObject('booking.soarticle_mapping')->get_articles($resource_ids);
+			if($articles && $direct_booking && !empty($custom_config['payment']['method']) && !empty($custom_config['Vipps']['active']))
+			{
+				$payment_methods[] = 'vipps';
+			}
+
 			self::render_template_xsl($template, array(
 				'application' => $application,
 				'activities' => $activities,
@@ -1313,12 +1503,13 @@
 				'audience' => $audience,
 				'resource_list'	=> array('options' => $resources),
 				'direct_booking' => $direct_booking,
-				'config' => CreateObject('phpgwapi.config', 'booking')->read()
+				'config' => CreateObject('phpgwapi.config', 'booking')->read(),
+				'payment_methods' => $payment_methods
 				)
 			);
 		}
 
-		function check_booking_limit($session_id, $ssn, $resources )
+		public function check_booking_limit($session_id, $ssn, $resources )
 		{
 			$_limit_reached = 0;
 			foreach ($resources['results'] as $resource)
@@ -1348,17 +1539,14 @@
 			return $_limit_reached;
 		}
 
-		function add_contact()
+		function update_contact_informtation(&$partial2 = array())
 		{
 			/**
 			 * check external login - and return here
 			 */
 			$bouser = CreateObject('bookingfrontend.bouser');
 
-			$external_login_info = $bouser->validate_ssn_login( array
-			(
-				'menuaction' => 'bookingfrontend.uiapplication.add_contact'
-			));
+			$external_login_info = $bouser->validate_ssn_login( array(), true);
 
 			if(!$organization_number = phpgw::get_var('session_org_id', 'string', 'GET'))
 			{
@@ -1367,8 +1555,6 @@
 
 			$errors = array();
 
-			$partial2 = array();
-			$partial2['frontpage_url'] = self::link(array('menuaction' => 'bookingfrontend.uisearch.index'));
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$partial2 = $this->extract_form_data();
@@ -1481,21 +1667,143 @@
 									$application[$field] = $partial2[$field];
 							}
 							// Update status fields
-							$application['status'] = 'NEW';
 							$application['created'] = 'now';
 							$application['modified'] = 'now';
-							$application['session_id'] = null;
 
 							if(empty($application['customer_ssn']))
 							{
 								$application['customer_ssn'] = phpgw::get_var('customer_ssn', 'string', 'POST');
 							}
 
-							$GLOBALS['phpgw']->db->transaction_begin();
-
 							$receipt = $this->bo->update($application);
 
 							$this->update_user_info($application, $external_login_info);
+
+
+							/**
+							 * Handle limit
+							 */
+							$resources = $this->resource_bo->so->read(array(
+									'sort'    => 'sort',
+									'results' =>'all',
+									'filters' => array('id' => $application['resources']), 'results' =>'all'
+								));
+
+							$direct_booking = false;
+							$check_direct_booking = 0;
+
+							$from_dates = array();
+							foreach ($application['dates'] as $date)
+							{
+								$from_dates[] = strtotime( $date['from_']);
+							}
+							unset($date);
+
+							foreach ($resources['results'] as $resource)
+							{
+								$max_date = max($from_dates);
+
+								if($resource['direct_booking'] && $resource['direct_booking'] < $max_date)
+								{
+									$check_direct_booking ++;
+								}
+							}
+
+							$limit_reached = $this->check_booking_limit($session_id, $external_login_info['ssn'], $resources);
+
+							if($limit_reached)
+							{
+								$errors['error_message'] = lang('quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days',
+									$limit_reached,
+									$resource['name'],
+									$resource['booking_limit_number'],
+									$resource['booking_limit_number_horizont']);
+
+
+								$GLOBALS['phpgw']->db->transaction_begin();
+								CreateObject('booking.souser')->collect_users($application['customer_ssn']);
+								$bo_block = createObject('booking.boblock');
+								$bo_block->cancel_block($session_id, $application['dates'],$application['resources']);
+								$this->bo->delete_purchase_order($application['id']);
+								$this->bo->delete_application($application['id']);
+								$GLOBALS['phpgw']->db->transaction_commit();
+								if(!phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
+								{
+									phpgwapi_cache::message_set(implode("<br/>", array_values($errors) ));
+									self::redirect(array());
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			return array(
+				'status' => $errors ? 'error' : 'saved',
+				'message' => preg_replace('/\<br(\s*)?\/?\>/i', PHP_EOL, implode(', ', array_values($errors)))
+			);
+			
+		}
+
+		function add_contact()
+		{
+			
+			/**
+			 * When returning from vipps
+			 */
+			$payment_order_id = phpgw::get_var('payment_order_id', 'string', 'GET');
+
+			/**
+			 * check external login - and return here
+			 */
+			$bouser = CreateObject('bookingfrontend.bouser');
+
+			$external_login_info = $bouser->validate_ssn_login( array
+			(
+				'menuaction' => 'bookingfrontend.uiapplication.add_contact'
+			));
+
+			if(!$organization_number = phpgw::get_var('session_org_id', 'string', 'GET'))
+			{
+				$organization_number = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
+			}
+
+			$errors = array();
+
+			$partial2 = array();
+			$partial2['frontpage_url'] = self::link(array('menuaction' => 'bookingfrontend.uisearch.index'));
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			{
+				$this->update_contact_informtation($partial2);
+
+				if (!$errors)
+				{
+					// Get data on prior partial applications for this session ID
+					$session_id = $GLOBALS['phpgw']->session->get_session_id();
+					$partials = $this->bo->get_partials_list($session_id);
+					if ($partials['total_records'] == 0)
+					{
+						$errors['records'] = lang("No partial applications exist for this session, contact details are not saved");
+						// Redirect to the front page
+						self::redirect(array());
+					}
+					else
+					{
+						foreach ($partials['results'] as &$application)
+						{
+							// Remove certain unused fields from the update
+							unset($application['frontend_modified']);
+							// Add the contact data from partial2
+							// Update status fields
+							$application['status'] = 'NEW';
+							$application['created'] = 'now';
+							$application['modified'] = 'now';
+							$application['session_id'] = null;
+
+
+							$GLOBALS['phpgw']->db->transaction_begin();
+
+							$receipt = $this->bo->update($application);
 
 							/**
 							 * Start direct booking
@@ -1519,27 +1827,6 @@
 
 							foreach ($resources['results'] as $resource)
 							{
-//								if($resource['booking_limit_number_horizont'] > 0 && $resource['booking_limit_number'] > 0)
-//								{
-//									$limit_reached = $this->bo->so->check_booking_limit(
-//										$session_id,
-//										$resource['id'],
-//										$external_login_info['ssn'],
-//										$resource['booking_limit_number_horizont'],
-//										$resource['booking_limit_number'] );
-//
-//									if($limit_reached)
-//									{
-//										$error_message = lang('quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days',
-//											$limit_reached,
-//											$resource['name'],
-//											$resource['booking_limit_number'],
-//											$resource['booking_limit_number_horizont']);
-//
-//										phpgwapi_cache::message_set( $error_message, 'error');
-//									}
-//								}
-
 								$max_date = max($from_dates);
 
 								if($resource['direct_booking'] && $resource['direct_booking'] < $max_date)
@@ -1548,7 +1835,7 @@
 								}
 							}
 
-							$limit_reached = $this->check_booking_limit($session_id, $external_login_info['ssn'], $resources);
+/*							$limit_reached = $this->check_booking_limit($session_id, $external_login_info['ssn'], $resources);
 
 							if($limit_reached)
 							{
@@ -1559,7 +1846,7 @@
 								$GLOBALS['phpgw']->db->transaction_commit();
 								self::redirect(array());
 							}
-
+*/
 							if($resources['results'] && count($resources['results']) == $check_direct_booking)
 							{
 								$collision_dates = array();
@@ -1578,7 +1865,6 @@
 								}
 							}
 
-
 							if($direct_booking)
 							{
 								$application['status'] = 'ACCEPTED';
@@ -1593,7 +1879,7 @@
 								$event['include_in_list'] = 0;
 								$event['reminder'] = 0;
 								$event['customer_internal'] = 0;
-								$event['cost'] = 0;
+								$this->get_event_cost($event);
 
 								$building_info = $this->bo->so->get_building_info($application['id']);
 								$event['building_id'] = $building_info['id'];
@@ -1634,8 +1920,11 @@
 								}
 								else
 								{
-									$this->flash_form_errors($errors);
 									$GLOBALS['phpgw']->db->transaction_abort();
+									foreach ($errors as $key => $error_values)
+									{
+										phpgwapi_cache::message_set($error_values, 'error');
+									}
 								}
 							}
 							/**
@@ -1650,42 +1939,45 @@
 
 						}
 
-						if($direct_booking)
+						if(!$errors)
 						{
-							$messages = array(
-								'one' => array(
-									'registered' => "Your application has now been processed and a confirmation email has been sent to you.",
-									'review' => ""),
-								'multiple' => array(
-									'registered' => "Your applications have now been processed and confirmation emails have been sent to you.",
-									'review' => "")
-								);
+							if($direct_booking)
+							{
+								$messages = array(
+									'one' => array(
+										'registered' => "Your application has now been processed and a confirmation email has been sent to you.",
+										'review' => ""),
+									'multiple' => array(
+										'registered' => "Your applications have now been processed and confirmation emails have been sent to you.",
+										'review' => "")
+									);
+							}
+							else
+							{
+								$messages = array(
+									'one' => array(
+										'registered' => "Your application has now been registered and a confirmation email has been sent to you.",
+										'review' => "A Case officer will review your application as soon as possible."),
+									'multiple' => array(
+										'registered' => "Your applications have now been registered and confirmation emails have been sent to you.",
+										'review' => "A Case officer will review your applications as soon as possible.")
+									);
+
+							}
+
+							$msgset = $partials['total_records'] > 1 ? 'multiple' : 'one';
+
+							$message_arr = array();
+
+							$message_arr[] = lang($messages[$msgset]['registered']);
+							if($messages[$msgset]['review'])
+							{
+								$message_arr[] = lang($messages[$msgset]['review']);
+							}
+							$message_arr[] = lang("Please check your Spam Filter if you are missing mail.");
+
+							phpgwapi_cache::message_set(implode("<br/>", $message_arr ));
 						}
-						else
-						{
-							$messages = array(
-								'one' => array(
-									'registered' => "Your application has now been registered and a confirmation email has been sent to you.",
-									'review' => "A Case officer will review your application as soon as possible."),
-								'multiple' => array(
-									'registered' => "Your applications have now been registered and confirmation emails have been sent to you.",
-									'review' => "A Case officer will review your applications as soon as possible.")
-								);
-
-						}
-
-						$msgset = $partials['total_records'] > 1 ? 'multiple' : 'one';
-
-						$message_arr = array();
-
-						$message_arr[] = lang($messages[$msgset]['registered']);
-						if($messages[$msgset]['review'])
-						{
-							$message_arr[] = lang($messages[$msgset]['review']);
-						}
-						$message_arr[] = lang("Please check your Spam Filter if you are missing mail.");
-
-						phpgwapi_cache::message_set(implode("<br/>", $message_arr ));
 						// Redirect to the front page
 						self::redirect(array());
 					}
@@ -1782,11 +2074,43 @@
 			 */
 			self::add_javascript('bookingfrontend', 'base', 'application_contact.js', 'text/javascript', true);
 
+			$location_id		 = $GLOBALS['phpgw']->locations->get_id('booking', 'run');
+			$custom_config		 = CreateObject('admin.soconfig', $location_id)->read();
+
+			$payment_methods = array();
+			if(!empty($custom_config['payment']['method']) && !empty($custom_config['Vipps']['active']))
+			{
+				$payment_methods[] = 'vipps';
+
+				$vipps_logo = 'continue_with_vipps_rect_210';
+
+				switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'])
+				{
+					case 'no':
+					case 'nn':
+						$vipps_logo .="_NO";
+						break;
+
+					default:
+						$vipps_logo .="_EN";
+						break;
+				}
+			}
+
+			/**
+			 * Check on return from external payment operator
+			 */
+			$selected_payment_method =  phpgwapi_cache::session_get('bookingfrontend', 'payment_method');
+
 			self::render_template_xsl('application_contact', array(
 				'application'			 => $partial2,
 				'delegate_data'			 => $filtered_delegate_data,
+				'payment_methods'		 => $payment_methods,
+				'selected_payment_method'=> $selected_payment_method,
+				'vipps_logo'			 => $vipps_logo ? $GLOBALS['phpgw']->common->image('bookingfrontend', $vipps_logo) : '',
 				'add_img'				 => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
-				'config'				 => CreateObject('phpgwapi.config', 'booking')->read()
+				'config'				 => CreateObject('phpgwapi.config', 'booking')->read(),
+				'payment_order_id'		 => $payment_order_id
 				)
 			);
 		}
@@ -1883,6 +2207,11 @@
 				$user	 = $bo_user->read_single($user_id);
 
 				$update_user = false;
+				if((empty($user['phone']) && $application['contact_phone']) || $user['phone'] != $application['contact_phone'])
+				{
+					$update_user = true;
+					$user['phone'] = $application['contact_phone'];
+				}
 				if(empty($user['email']) && $application['contact_email'])
 				{
 					$update_user = true;
@@ -2572,6 +2901,9 @@
 JS;
 				$GLOBALS['phpgw']->js->add_code('', $js);
 			}
+
+			self::add_javascript('booking', 'base', 'application.show.js');
+
 			self::render_template_xsl('application', array(
 				'application'		 => $application,
 				'audience'			 => $audience,
@@ -2605,36 +2937,41 @@ JS;
 		// Returns a list of basic data for the partial applications for the current session ID
 		function get_partials()
 		{
-			$list = array();
-			$session_id = $GLOBALS['phpgw']->session->get_session_id();
+			$ret		 = array();
+			$list		 = array();
+			$session_id	 = $GLOBALS['phpgw']->session->get_session_id();
 			if (!empty($session_id))
 			{
 				$partials = $this->bo->get_partials_list($session_id);
 				foreach ($partials['results'] as $partial)
 				{
-					$item = array();
-					$item['id']            = $partial['id'];
-					$item['building_name'] = $partial['building_name'];
-					$item['dates']         = $partial['dates'];
-					$resources = $this->resource_bo->so->read(array(
-							'sort'    => 'sort',
-							'results' =>'all',
-							'filters' => array('id' => $partial['resources']), 'results' =>'all'
-						));
+					$item					 = array('orders' => $partial['orders']);
+					$item['id']				 = $partial['id'];
+					$item['building_name']	 = $partial['building_name'];
+					$item['dates']			 = $partial['dates'];
+					$resources				 = $this->resource_bo->so->read(array(
+						'sort'		 => 'sort',
+						'results'	 => 'all',
+						'filters'	 => array('id' => $partial['resources']), 'results'	 => 'all'
+					));
 					foreach ($resources['results'] as $resource)
 					{
-						$res = array(
-							'id'   => $resource['id'],
-							'name' => $resource['name'],
+						$res				 = array(
+							'id'	 => $resource['id'],
+							'name'	 => $resource['name'],
 						);
 						$item['resources'][] = $res;
 					}
 					$list[] = $item;
 				}
-			}
-			return $list;
-		}
 
+				$ret = array(
+					'list'		 => $list,
+					'total_sum'	 => $partials['total_sum'],
+				);
+			}
+			return $ret;
+		}
 
 		function delete_partial()
 		{
@@ -2647,12 +2984,13 @@ JS;
 
 				$GLOBALS['phpgw']->db->transaction_begin();
 
+				$bo_block = createObject('booking.boblock');
+
 				$exists = false;
-				foreach ($partials as $partial)
+				foreach ($partials['list'] as $partial)
 				{
 					if ($partial['id'] == $id)
 					{
-						$bo_block = createObject('booking.boblock');
 						$bo_block->cancel_block($session_id, $partial['dates'],$partial['resources']);
 						$exists = true;
 						break;
@@ -2660,6 +2998,8 @@ JS;
 				}
 				if ($exists)
 				{
+					$application_id = $id;
+					$this->bo->delete_purchase_order($application_id);
 					$this->bo->delete_application($id);
 					$status['deleted'] = true;
 				}
@@ -2668,6 +3008,28 @@ JS;
 
 			}
 			return $status;
+		}
+
+		function get_event_cost(&$event)
+		{
+			$filters		 = array('id' => $event['application_id']);
+			$params			 = array('filters' => $filters, 'results' => 'all');
+
+			$applications	 = $this->bo->so->read($params);
+
+			$this->bo->so->get_purchase_order($applications);
+
+			$event['cost'] = 0;
+			foreach ($applications['results'] as $application)
+			{
+				foreach ($application['orders'] as $order)
+				{
+					if (empty($order['paid']))
+					{
+						$event['cost'] += (float)$order['sum'];
+					}
+				}
+			}
 		}
 
 	}

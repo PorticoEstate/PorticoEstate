@@ -181,6 +181,23 @@
 									</span>
 								</div>
 							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Articles')" />
+								</label>
+								<input type="hidden" data-validation="application_articles">
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Please choose at least 1 Article')" />
+									</xsl:attribute>
+								</input>
+								<div id="articles_container" style="display:inline-block;">
+									<span class="select_first_text">
+										<xsl:value-of select="php:function('lang', 'Select a resource first')" />
+									</span>
+								</div>
+							</div>
+
+							
 						</div>
 						<div class="pure-u-1">
 							<div class="heading">
@@ -564,7 +581,7 @@
 	</form>
 	<script type="text/javascript">
 		$('#field_customer_identifier_type,#field_customer_ssn,#field_customer_organization_number').removeClass('pure-input-1').addClass('pure-u-1 pure-u-sm-1-2 pure-u-md-1');
-		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.', 'article', 'Select', 'price', 'unit', 'quantity', 'Selected', 'Delete')"/>;
 		var initialDocumentSelection = <xsl:value-of select="application/accepted_documents_json"/>;
 		var initialAcceptAllTerms = true;
 		var initialSelection = <xsl:value-of select="application/resources_json"/>;

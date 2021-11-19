@@ -278,7 +278,7 @@
 					array_unshift($values_combo_box[$i], $default_value);
 
 					$combos[$i] = array('type'	 => 'filter',
-						'name'	 => $field['name'],
+						'name'	 => "filter_{$field['name']}",
 						'text'	 => $field['descr'] . ':',
 						'list'	 => $values_combo_box[$i]
 					);
@@ -550,7 +550,7 @@
 			{
 				if (isset($field['filter']) && $field['filter'])
 				{
-					$params['filter'][$field['name']] = phpgw::get_var($field['name']);
+					$params['filter'][$field['name']] = phpgw::get_var("filter_{$field['name']}");
 				}
 			}
 

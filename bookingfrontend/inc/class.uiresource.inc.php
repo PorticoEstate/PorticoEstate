@@ -84,6 +84,16 @@
 				}
 				$buildinginfo['link'] = $building_link;
 			}
+
+			$bouser = CreateObject('bookingfrontend.bouser');
+			$user_data = phpgwapi_cache::session_get($bouser->get_module(), $bouser::USERARRAY_SESSION_KEY);
+			if($user_data['ssn'])
+			{
+				CreateObject('booking.uiapplication')->check_booking_limit(
+					$GLOBALS['phpgw']->session->get_session_id(),
+					$user_data['ssn'],	array('results' => array($resource)));
+			}
+
 			if (empty($resource['opening_hours']))
 			{
 				$resource['opening_hours'] = $buildinginfo['opening_hours'];

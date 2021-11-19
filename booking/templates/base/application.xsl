@@ -579,6 +579,30 @@
 									<div id="associated_container"/>
 								</div>
 							</div>
+							<div class="pure-u-1">
+								<div class="heading">
+									<legend>
+										<h3>
+											<xsl:value-of select="php:function('lang', 'payments')" />
+										</h3>
+									</legend>
+								</div>
+								<div class="pure-control-group">
+									<div id="payments_container"/>
+								</div>
+							</div>
+							<div id="order_details" class="pure-u-1" style="display:none;">
+								<div class="heading">
+									<legend>
+										<h3>
+											<xsl:value-of select="php:function('lang', 'details')" />
+										</h3>
+									</legend>
+								</div>
+								<div class="pure-control-group">
+									<div id="order_container"/>
+								</div>
+							</div>
 						</div>
 					</xsl:if>
 					<xsl:if test="application/edit_link">
@@ -717,7 +741,7 @@
 		if (!resourceIds || resourceIds == "") {
 		resourceIds = false;
 		}
-		var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'No records found', 'ID', 'Type', 'From', 'To', 'Document', 'Active' ,'Delete', 'del', 'Name', 'Cost')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'No records found', 'ID', 'Type', 'From', 'To', 'Document', 'Active' ,'Delete', 'del', 'Name', 'Cost', 'order id', 'Amount', 'currency', 'status', 'payment method', 'refund','refunded', 'Actions', 'cancel', 'created', 'article', 'Select', 'cost', 'unit', 'quantity', 'Selected', 'Delete', 'Sum', 'tax')"/>;
 		var app_id = <xsl:value-of select="application/id"/>;
 		var building_id = <xsl:value-of select="application/building_id"/>;
 		var resources = <xsl:value-of select="application/resources"/>;
@@ -728,6 +752,7 @@
 			var documentsURL = phpGWLink('index.php', {menuaction:'booking.uidocument_view.regulations', sort:'name', length:-1}, true) +'&owner[]=building::' + building_id;
 				documentsURL += '&owner[]=resource::'+ resources;
 			var attachmentsResourceURL = phpGWLink('index.php', {menuaction:'booking.uidocument_application.index', sort:'name', no_images:1, filter_owner_id:app_id, length:-1}, true);
+			var paymentURL = phpGWLink('index.php', {menuaction:'booking.uiapplication.payments', sort:'from_',dir:'asc',application_id:app_id, length:-1}, true);
 
 		]]>
 
@@ -759,6 +784,32 @@
 
 		var colDefsAttachmentsResource = [{key: 'name', label: lang['Name'], formatter: genericLink}];
 		createTable('attachments_container', attachmentsResourceURL, colDefsAttachmentsResource, '', 'pure-table pure-table-bordered');
+
+		var colDefsPayment = [
+		{
+		label: lang['Select'],
+		attrs: [{name: 'class', value: "align-middle"}],
+		object: [
+		{
+		type: 'input',
+		attrs: [
+		{name: 'type', value: 'radio'},
+		{name: 'onClick', value: 'show_order(this);'}
+		]
+		}
+		], value: 'order_id'
+		},
+		{key: 'order_id', label: lang['order id']},
+		{key: 'created_value', label: lang['created']},
+		{key: 'amount', label: lang['Amount']},
+		{key: 'refunded_amount', label: lang['refunded']},
+		{key: 'currency', label: lang['currency']},
+		{key: 'status_text', label: lang['status']},
+		{key: 'payment_method', label: lang['payment method']},
+		{key: 'actions', label: lang['Actions'], formatter: genericLink2({name: 'delete', label:lang['refund']},{name: 'edit', label:lang['cancel']})}
+		];
+
+		createTable('payments_container', paymentURL, colDefsPayment,'', 'pure-table pure-table-bordered');
 
 	</script>
 </xsl:template>

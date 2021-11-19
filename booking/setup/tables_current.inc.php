@@ -1169,4 +1169,190 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		/**
+		 * New order / payment scheme
+		 */
+		'bb_customer' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+				'customer_type' => array('type' => 'varchar', 'precision' => '12', 'nullable' => False, 'default' => 'person'),
+				'customer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_purchase_order' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'parent_id' => array('type' => 'int', 'nullable' => true, 'precision' => '4'),
+				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+				'application_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'customer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'timestamp' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
+				'cancelled' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_application' => array('application_id' => 'id'),
+				'bb_customer' => array('customer_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_article_category' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+
+		'bb_article_mapping' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'article_cat_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'article_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'building_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'article_code' => array('type' => 'varchar', 'precision' => '15', 'nullable' => false ),
+				'unit' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false ),
+				'tax_code' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				'owner_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_article_category' => array('article_cat_id' => 'id'),
+				'fm_ecomva' => array('tax_code' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array('article_cat_id', 'article_id')
+		),
+		'bb_purchase_order_line' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'order_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+				'article_mapping_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'unit_price' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+				'overridden_unit_price' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+				'currency' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),
+				'quantity' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+				'amount' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+				'tax_code' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'tax' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_purchase_order' => array('order_id' => 'id'),
+				'bb_article_mapping' => array('article_mapping_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_service' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false),
+				'active' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => '1'),
+				'owner_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'description' => array('type' => 'text', 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_resource_service' => array(
+			'fd' => array(
+				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'service_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('resource_id', 'service_id'),
+			'fk' => array(
+				'bb_resource' => array('resource_id' => 'id'),
+				'bb_service' => array('service_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_article_price' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'article_mapping_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'from_' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
+				'price' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+				'remark' => array('type' => 'varchar', 'precision' => 100, 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_article_mapping' => array('article_mapping_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_article_price_reduction' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'article_mapping_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'from_' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
+				'percent' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_article_mapping' => array('article_mapping_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		//https://docs.drupalcommerce.org/commerce2/developer-guide/payments/payments-information-structure
+		'bb_payment' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'order_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'payment_method_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'payment_gateway_mode' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),//test and live.
+				'remote_id' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+				'remote_state' => array('type' => 'varchar', 'precision' => 20, 'nullable' => True),
+				'amount' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => true,'default' => '0.0'),
+				'currency' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),
+				'refunded_amount' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => true,'default' => '0.0'),
+				'refunded_currency' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),
+				'status' => array('type' => 'varchar', 'precision' => '20', 'nullable' => true),//new, pending, completed, voided, partially_refunded, refunded
+				'created' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'autorized' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'expires' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'completet' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'captured' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'avs_response_code' => array('type' => 'varchar', 'precision' => '15', 'nullable' => true),
+				'avs_response_code_label' => array('type' => 'varchar', 'precision' => '35', 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'bb_purchase_order' => array('order_id' => 'id'),
+				'bb_payment_method' => array('payment_method_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'bb_payment_method' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'payment_gateway_name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false),//test and live.
+				'payment_gateway_mode' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),//test and live.
+				'is_default' => array('type' => 'int', 'precision' => '2', 'nullable' => true),
+				'expires' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'created' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'changed' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 	);
