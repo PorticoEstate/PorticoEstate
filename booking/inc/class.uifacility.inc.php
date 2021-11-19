@@ -139,6 +139,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$facility = $this->bo->read_single($id);
+			if(!$facility)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$errors = array();
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('edit facility'), 'link' => '#facility_edit');

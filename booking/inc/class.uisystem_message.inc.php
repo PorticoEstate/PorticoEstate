@@ -335,7 +335,12 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 
-			$system_message = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$system_message = $this->bo->read_single($id);
+
+			if(!$system_message)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$system_message['system_messages_link'] = self::link(array('menuaction' => $this->module . '.uisystem_message.index'));
 			$system_message['system_message_link'] = self::link(array('menuaction' => $this->module . '.uisystem_message.show',
 					'id' => $system_message['system_message_id']));

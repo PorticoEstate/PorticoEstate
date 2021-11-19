@@ -1163,7 +1163,10 @@
 
 			foreach ($result as &$entry)
 			{
-				$entry['percent'] = round((($entry['actual_cost'] + $entry['obligation']) / $entry['budget_cost']) * 100, 1);
+				if($entry['budget_cost'])
+				{
+					$entry['percent'] = round((($entry['actual_cost'] + $entry['obligation']) / $entry['budget_cost']) * 100, 1);
+				}
 			}
 			$this->total_records = count($result);
 

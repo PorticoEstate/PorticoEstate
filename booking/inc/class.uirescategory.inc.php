@@ -151,6 +151,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$rescategory = $this->bo->read_single($id);
+			if(!$rescategory)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$errors = array();
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('edit resource category'), 'link' => '#rescategory_edit');

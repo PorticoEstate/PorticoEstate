@@ -1664,7 +1664,7 @@
 							// Add the contact data from partial2
 							foreach ($partial2_fields as $field)
 							{
-								$application[$field] = $partial2[$field];
+									$application[$field] = $partial2[$field];
 							}
 							// Update status fields
 							$application['created'] = 'now';
@@ -2252,6 +2252,11 @@
 			}
 			$application = $this->bo->read_single($id);
 
+			if(!$application)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
+
 			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($application['resources'], true);
 			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
 			{
@@ -2628,6 +2633,12 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$application = $this->bo->read_single($id);
+
+			if(!$application)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
+
 			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($application['resources'], true);
 			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
 			{

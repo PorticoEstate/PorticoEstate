@@ -556,6 +556,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$reservation = $this->bo->read_single($id);
+			if(!$reservation)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$this->add_default_display_data($reservation);
 			$this->install_customer_identifier_ui($reservation);
 			$show_edit_button = false;

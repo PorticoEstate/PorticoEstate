@@ -1201,6 +1201,7 @@
 			}
 
 			$invoicehandler = isset($config['invoicehandler']) && $config['invoicehandler'] == 2 ? 'uiinvoice2' : 'uiinvoice';
+			$invoice = array();
 
 			if ($acl->check('.invoice', PHPGW_ACL_READ, 'property'))
 			{

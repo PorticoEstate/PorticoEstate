@@ -876,3 +876,4 @@ interrupted	booking	nn	Kansellert
 completed	booking	nn	Fullført
 partially refunded	booking	nn	Delvis refundert
 articles	booking	nn	Artiklar
+missing entry. Id %1 is invalid	booking	nn	Denne posten finst ikkje. Id %1 er ugyldig
