@@ -1219,7 +1219,7 @@
 				'article_cat_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'article_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'building_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'article_code' => array('type' => 'varchar', 'precision' => '15', 'nullable' => false ),
+				'article_code' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false ),
 				'unit' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false ),
 				'tax_code' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				'owner_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
@@ -1258,7 +1258,7 @@
 		'bb_service' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
-				'name' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false),
 				'active' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => '1'),
 				'owner_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'description' => array('type' => 'text', 'nullable' => True),
