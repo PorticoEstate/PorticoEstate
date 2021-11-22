@@ -2,32 +2,31 @@
 /**
  * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
  *
- * copyright (c) 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * Link      https://kigkonsult.se
- * Package   iCalcreator
- * Version   2.30
- * License   Subject matter of licence is the software iCalcreator.
- *           The above copyright, link, package and version notices,
- *           this licence notice and the invariant [rfc5545] PRODID result use
- *           as implemented and invoked in iCalcreator shall be included in
- *           all copies or substantial portions of the iCalcreator.
- *
- *           iCalcreator is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
- *
- *           iCalcreator is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
- *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
- *
  * This file is a part of iCalcreator.
-*/
-
+ *
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software iCalcreator.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice and the invariant [rfc5545] PRODID result use
+ *            as implemented and invoked in iCalcreator shall be included in
+ *            all copies or substantial portions of the iCalcreator.
+ *
+ *            iCalcreator is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as
+ *            published by the Free Software Foundation, either version 3 of
+ *            the License, or (at your option) any later version.
+ *
+ *            iCalcreator is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
+ *
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ */
+declare( strict_types = 1 );
 namespace Kigkonsult\Icalcreator\Traits;
 
 use InvalidArgumentException;
@@ -37,7 +36,6 @@ use Kigkonsult\Icalcreator\Util\Util;
 
 use function bin2hex;
 use function chr;
-use function openssl_random_pseudo_bytes;
 use function ord;
 use function str_split;
 use function vsprintf;
@@ -45,15 +43,14 @@ use function vsprintf;
 /**
  * UID property functions
  *
- * @author Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
  * @since 2.29.14 2019-09-03
  */
 trait UIDrfc7986trait
 {
     /**
-     * @var array component property UID value
+     * @var null|array component property UID value
      */
-    protected $uid = null;
+    protected ?array $uid = null;
 
     /**
      * Return formatted output for calendar component property uid
@@ -62,10 +59,9 @@ trait UIDrfc7986trait
      * @return string
      * @since 2.29.5 2019-06-17
      */
-    public function createUid()
+    public function createUid() : string
     {
-        if( self::isUidEmpty( $this->uid ))
-        {
+        if( self::isUidEmpty( $this->uid )) {
             $this->uid = self::makeUid();
         }
         return StringFactory::createElement(
@@ -81,7 +77,7 @@ trait UIDrfc7986trait
      * @return bool
      * @since 2.29.5 2019-06-17
      */
-    public function deleteUid()
+    public function deleteUid() : bool
     {
         $this->uid = null;
         return true;
@@ -90,11 +86,11 @@ trait UIDrfc7986trait
     /**
      * Get calendar component property uid
      *
-     * @param bool   $inclParam
-     * @return bool|array
+     * @param null|bool   $inclParam
+     * @return string|array
      * @since 2.29.5 2019-06-17
      */
-    public function getUid( $inclParam = false )
+    public function getUid( ?bool $inclParam = false ) : array | string
     {
         if( self::isUidEmpty( $this->uid )) {
             $this->uid = self::makeUid();
@@ -105,42 +101,33 @@ trait UIDrfc7986trait
     /**
      * Return bool true if uid is empty
      *
-     * @param array  $array
+     * @param null|string[]  $array
      * @return bool
-     * @static
      * @since 2.29.5 2019-06-17
      */
-    private static function isUidEmpty( array $array = null )
+    private static function isUidEmpty( ? array $array ) : bool
     {
         if( empty( $array )) {
             return true;
         }
         if( empty( $array[Util::$LCvalue] ) &&
-            ( Util::$ZERO != $array[Util::$LCvalue] )) {
+            ( Util::$ZERO !== $array[Util::$LCvalue] )) {
             return true;
         }
         return false;
     }
 
     /**
-     * Return an unique id for a calendar component object instance
+     * Return an unique id for a calendar/component object instance
      *
      * @return array
-     * @static
      * @see https://www.php.net/manual/en/function.com-create-guid.php#117893
      * @since 2.29.5 2019-06-17
      */
-    private static function makeUid()
+    private static function makeUid() : array
     {
         static $FMT = '%s%s-%s-%s-%s-%s%s%s';
-        static $MAX = 10;
-        $cnt = 0;
-        do {
-            do {
-                $bytes = openssl_random_pseudo_bytes( 16, $cStrong );
-            } while ( false === $bytes );
-            $cnt += 1;
-        } while(( $MAX > $cnt ) && ( false === $cStrong ));
+        $bytes    = StringFactory::getRandChars( 32 ); // i.e. 16
         $bytes[6] = chr(ord( $bytes[6] ) & 0x0f | 0x40 ); // set version to 0100
         $bytes[8] = chr(ord( $bytes[8] ) & 0x3f | 0x80 ); // set bits 6-7 to 10
         $uid      = vsprintf( $FMT, str_split( bin2hex( $bytes ), 4 ));
@@ -154,22 +141,22 @@ trait UIDrfc7986trait
      * Set calendar component property uid
      *
      * If empty input, male one
-     * @param string $value
-     * @param array  $params
+     * @param null|int|string $value
+     * @param null|string[]  $params
      * @return static
      * @throws InvalidArgumentException
      * @since 2.29.14 2019-09-03
      */
-    public function setUid( $value = null, $params = [] )
+    public function setUid( null|int|string $value = null, ? array $params = [] ) : static
     {
-        if( empty( $value ) && ( Util::$ZERO != $value )) {
+        if( empty( $value ) && ( Util::$ZERO !== (string) $value )) {
             $this->uid = self::makeUid();
             return $this;
         } // no allowEmpty check here !!!!
-        Util::assertString( $value, self::UID );
+        $value = Util::assertString( $value, self::UID );
         $this->uid = [
             Util::$LCvalue  => StringFactory::trimTrailNL( $value ),
-            Util::$LCparams => ParameterFactory::setParams( $params ),
+            Util::$LCparams => ParameterFactory::setParams( $params ?? [] ),
         ];
         return $this;
     }

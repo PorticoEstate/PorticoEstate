@@ -2,32 +2,31 @@
 /**
  * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
  *
- * copyright (c) 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * Link      https://kigkonsult.se
- * Package   iCalcreator
- * Version   2.30
- * License   Subject matter of licence is the software iCalcreator.
- *           The above copyright, link, package and version notices,
- *           this licence notice and the invariant [rfc5545] PRODID result use
- *           as implemented and invoked in iCalcreator shall be included in
- *           all copies or substantial portions of the iCalcreator.
- *
- *           iCalcreator is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
- *
- *           iCalcreator is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
- *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
- *
  * This file is a part of iCalcreator.
-*/
-
+ *
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software iCalcreator.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice and the invariant [rfc5545] PRODID result use
+ *            as implemented and invoked in iCalcreator shall be included in
+ *            all copies or substantial portions of the iCalcreator.
+ *
+ *            iCalcreator is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as
+ *            published by the Free Software Foundation, either version 3 of
+ *            the License, or (at your option) any later version.
+ *
+ *            iCalcreator is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
+ *
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ */
+declare( strict_types = 1 );
 namespace Kigkonsult\Icalcreator\Traits;
 
 use DateTime;
@@ -42,15 +41,14 @@ use Kigkonsult\Icalcreator\Util\Util;
 /**
  * DTEND property functions
  *
- * @author Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
  * @since 2.29.16 2020-01-24
  */
 trait DTENDtrait
 {
     /**
-     * @var array component property DTEND value
+     * @var null|array component property DTEND value
      */
-    protected $dtend = null;
+    protected ?array $dtend = null;
 
     /**
      * Return formatted output for calendar component property dtend
@@ -61,15 +59,15 @@ trait DTENDtrait
      * @throws InvalidArgumentException
      * @since 2.29.1 2019-06-24
      */
-    public function createDtend()
+    public function createDtend() : string
     {
         if( empty( $this->dtend )) {
-            return null;
+            return Util::$SP0;
         }
         if( empty( $this->dtend[Util::$LCvalue] )) {
             return $this->getConfig( self::ALLOWEMPTY )
                 ? StringFactory::createElement( self::DTEND )
-                : null;
+                : Util::$SP0;
         }
         $isDATE = ( ! empty( $this->dtstart ))
             ? ParameterFactory::isParamsValueSet( $this->dtstart, self::DATE )
@@ -92,7 +90,7 @@ trait DTENDtrait
      * @return bool
      * @since  2.27.1 - 2018-12-15
      */
-    public function deleteDtend()
+    public function deleteDtend() : bool
     {
         $this->dtend = null;
         return true;
@@ -101,11 +99,11 @@ trait DTENDtrait
     /**
      * Return calendar component property dtend
      *
-     * @param bool   $inclParam
-     * @return bool|DateTime|array
+     * @param null|bool   $inclParam
+     * @return bool|string|DateTime|array
      * @since  2.27.1 - 2018-12-12
      */
-    public function getDtend( $inclParam = false )
+    public function getDtend( ? bool $inclParam = false ) : DateTime | bool | string | array
     {
         if( empty( $this->dtend )) {
             return false;
@@ -116,14 +114,14 @@ trait DTENDtrait
     /**
      * Set calendar component property dtend
      *
-     * @param string|DateTimeInterface $value
-     * @param array           $params
+     * @param null|string|DateTimeInterface $value
+     * @param null|string[]                 $params
      * @return static
      * @throws Exception
      * @throws InvalidArgumentException
      * @since 2.29.16 2020-01-24
      */
-    public function setDtend( $value = null, $params = [] )
+    public function setDtend( null|string|DateTimeInterface $value = null, ? array $params = [] ) : static
     {
         if( empty( $value )) {
             $this->assertEmptyValue( $value, self::DTEND );
@@ -133,7 +131,7 @@ trait DTENDtrait
             ];
             return $this;
         }
-        $dtstart = $this->getDtstart( true );
+        $dtstart = (array) $this->getDtstart( true );
         if( isset( $dtstart[Util::$LCparams][self::VALUE] )) {
             $params[self::VALUE] = $dtstart[Util::$LCparams][self::VALUE];
         }
@@ -143,7 +141,7 @@ trait DTENDtrait
         $this->dtend = DateTimeFactory::setDate(
             $value,
             ParameterFactory::setParams(
-                $params,
+                ( $params ?? [] ),
                 DateTimeFactory::$DEFAULTVALUEDATETIME
             )
         );

@@ -2,32 +2,31 @@
 /**
  * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
  *
- * copyright (c) 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * Link      https://kigkonsult.se
- * Package   iCalcreator
- * Version   2.30
- * License   Subject matter of licence is the software iCalcreator.
- *           The above copyright, link, package and version notices,
- *           this licence notice and the invariant [rfc5545] PRODID result use
- *           as implemented and invoked in iCalcreator shall be included in
- *           all copies or substantial portions of the iCalcreator.
- *
- *           iCalcreator is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
- *
- *           iCalcreator is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
- *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
- *
  * This file is a part of iCalcreator.
-*/
-
+ *
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software iCalcreator.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice and the invariant [rfc5545] PRODID result use
+ *            as implemented and invoked in iCalcreator shall be included in
+ *            all copies or substantial portions of the iCalcreator.
+ *
+ *            iCalcreator is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as
+ *            published by the Free Software Foundation, either version 3 of
+ *            the License, or (at your option) any later version.
+ *
+ *            iCalcreator is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
+ *
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ */
+declare( strict_types = 1 );
 namespace Kigkonsult\Icalcreator\Traits;
 
 use Kigkonsult\Icalcreator\Util\StringFactory;
@@ -46,29 +45,26 @@ use function strtoupper;
 /**
  * X-property functions
  *
- * @author Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
  * @since 2.29.14 2019-09-03
  */
 trait X_PROPtrait
 {
     /**
-     * @var array component property X-property value
-     * @access protected
+     * @var null|array component property X-property value
      */
-    protected $xprop = null;
+    protected ?array $xprop = null;
 
     /**
      * Return formatted output for calendar/component property x-prop
      *
      * @return string
      */
-    public function createXprop()
+    public function createXprop() : string
     {
-        if( empty( $this->xprop ) || ! is_array( $this->xprop ))
-        {
-            return null;
+        if( empty( $this->xprop ) || ! is_array( $this->xprop )) {
+            return Util::$SP0;
         }
-        $output = null;
+        $output = Util::$SP0;
         $lang   = $this->getConfig( self::LANGUAGE );
         foreach( $this->xprop as $xpropName => $xpropPart ) {
             if( ! isset( $xpropPart[Util::$LCvalue] ) ||
@@ -107,18 +103,18 @@ trait X_PROPtrait
     /**
      * Delete component property X-prop value
      *
-     * @param string $propName
-     * @param int    $propDelIx removal counter
+     * @param null|string $propName
+     * @param null|int    $propDelIx removal counter
      * @return bool
      * @since  2.27.1 - 2018-12-15
      */
-    public function deleteXprop( $propName, $propDelIx=null )
+    public function deleteXprop( ? string $propName = null, ? int $propDelIx = null ) : bool
     {
         $propName = ( $propName ) ? strtoupper( $propName ) : self::X_PROP;
         if( empty( $this->xprop )) {
-            foreach( $this->propDelIx as $propName => $v ) {
-                if( StringFactory::isXprefixed( $propName )) {
-                    unset( $this->propDelIx[$propName] );
+            foreach( $this->propDelIx as $propName2 => $v ) {
+                if( StringFactory::isXprefixed( $propName2 )) {
+                    unset( $this->propDelIx[$propName2] );
                 }
             }
             return false;
@@ -126,20 +122,20 @@ trait X_PROPtrait
         if( is_null( $propDelIx )) {
             $propDelIx = (
                 isset( $this->propDelIx[$propName] ) &&
-                ( self::X_PROP != $propName )
+                ( self::X_PROP !== $propName )
             )
                 ? $this->propDelIx[$propName] + 2
                 : 1;
         }
         $this->propDelIx[$propName] = --$propDelIx;
         $reduced = [];
-        if( $propName != self::X_PROP ) {
+        if( $propName !== self::X_PROP ) {
             if( ! isset( $this->xprop[$propName] )) {
                 unset( $this->propDelIx[$propName] );
                 return false;
             }
             foreach( $this->xprop as $k => $xValue ) {
-                if(( $k != $propName ) && ! empty( $xValue )) {
+                if(( $k !== $propName ) && ! empty( $xValue )) {
                     $reduced[$k] = $xValue;
                 }
             }
@@ -151,7 +147,7 @@ trait X_PROPtrait
             }
             $xpropNo = 0;
             foreach( $this->xprop as $xpropKey => $xpropValue ) {
-                if( $propDelIx != $xpropNo ) {
+                if( $propDelIx !== $xpropNo ) {
                     $reduced[$xpropKey] = $xpropValue;
                 }
                 $xpropNo++;
@@ -169,24 +165,24 @@ trait X_PROPtrait
     /**
      * Get calendar component property x-prop
      *
-     * @param string $propName
-     * @param int    $propIx    specific property in case of multiply occurrence
-     * @param bool   $inclParam
-     * @return bool|array
+     * @param null|string $propName
+     * @param null|int    $propIx    specific property in case of multiply occurrence
+     * @param null|bool   $inclParam
+     * @return bool|string|array
      * @since  2.27.11 - 2019-01-02
      */
-    public function getXprop( $propName = null, $propIx = null, $inclParam = false )
+    public function getXprop( ? string $propName = null, ? int $propIx = null, ? bool $inclParam = false ) : bool | string | array
     {
         if( empty( $this->xprop )) {
-            foreach( $this->propIx as $propName => $v ) {
-                if( StringFactory::isXprefixed( $propName )) {
-                    unset( $this->propIx[$propName] );
+            foreach( $this->propIx as $propName2 => $v ) {
+                if( StringFactory::isXprefixed( $propName2 )) {
+                    unset( $this->propIx[$propName2] );
                 }
             }
             return false;
         }
         $propName = ( $propName ) ? strtoupper( $propName ) : self::X_PROP;
-        if( $propName != self::X_PROP ) {
+        if( $propName !== self::X_PROP ) {
             if( ! isset( $this->xprop[$propName] )) {
                 return false;
             }
@@ -194,25 +190,21 @@ trait X_PROPtrait
                 ? [ $propName, $this->xprop[$propName], ]
                 : [ $propName, $this->xprop[$propName][Util::$LCvalue], ];
         }
-        if( empty( $propIx )) {
+        //  $propName == self::X_PROP i.e. any
+        if( $propIx === null ) {
             $propIx = ( isset( $this->propIx[$propName] ))
                 ? $this->propIx[$propName] + 2
                 : 1;
         }
         $this->propIx[$propName] = --$propIx;
-        $class = get_class( $this );
-        $class::recountMvalPropix( $this->xprop, $propIx );
-        $this->propIx[$propName] = $propIx;
         $xpropNo = 0;
         foreach( $this->xprop as $xpropKey => $xpropValue ) {
-            if( $propIx == $xpropNo ) {
+            if( $propIx === $xpropNo ) {
                 return ( $inclParam )
                     ? [ $xpropKey, $this->xprop[$xpropKey], ]
                     : [ $xpropKey, $this->xprop[$xpropKey][Util::$LCvalue], ];
             }
-            else {
-                $xpropNo++;
-            }
+            $xpropNo++;
         } // end foreach
         return false; // not found ??
     }
@@ -220,35 +212,39 @@ trait X_PROPtrait
     /**
      * Set calendar property x-prop
      *
-     * @param string $xPropName
-     * @param string $value
-     * @param array  $params   optional
+     * @param string   $xPropName
+     * @param null|int|float|string  $value
+     * @param null|string[] $params     optional
      * @return static
      * @throws InvalidArgumentException
      * @since 2.29.14 2019-09-03
      * @todo more value typed asserts ??
      */
-    public function setXprop( $xPropName, $value=null, $params = [] )
+    public function setXprop(
+        string $xPropName,
+        null|int|float|string $value = null,
+        ? array $params = []
+    ) : static
     {
         static $MSG = 'Invalid X-property name : \'%s\'';
         if( empty( $xPropName ) || ! StringFactory::isXprefixed( $xPropName )) {
             throw new InvalidArgumentException( sprintf( $MSG, $xPropName ));
         }
         $xPropName = strtoupper( $xPropName );
-        $params    = array_change_key_case( $params, CASE_UPPER );
-        if( empty( $value )) {
+        $params    = array_change_key_case( $params ?? [], CASE_UPPER );
+        if( null === $value ) {
             $this->assertEmptyValue( $value, $xPropName );
             $value  = Util::$SP0;
             $params = [];
         }
-        elseif( ! isset( $params[self::VALUE] ) ||
-                ( self::TEXT === $params[self::VALUE] )) {
-            Util::assertString( $value, $xPropName );
+        if( ! isset( $params[self::VALUE] ) ||
+            ( self::TEXT === $params[self::VALUE] )) {
+            $value = Util::assertString( $value, $xPropName );
             $value = StringFactory::trimTrailNL( $value );
         }
         $xprop = [
-            Util::$LCvalue  => $value,
-            Util::$LCparams => ParameterFactory::setParams( $params )
+            Util::$LCvalue  => (string) $value,
+            Util::$LCparams => ParameterFactory::setParams( $params ?? [] )
         ];
         if( ! is_array( $this->xprop )) {
             $this->xprop = [];

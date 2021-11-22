@@ -57,6 +57,13 @@ class XLSXWriter
 	{
 		$tempdir = !empty($this->tempdir) ? $this->tempdir : sys_get_temp_dir();
 		$filename = tempnam($tempdir, "xlsx_writer_");
+		if (!$filename) {
+			// If you are seeing this error, it's possible you may have too many open
+			// file handles. If you're creating a spreadsheet with many small inserts,
+			// it is possible to exceed the default 1024 open file handles. Run 'ulimit -a'
+			// and try increasing the 'open files' number with 'ulimit -n 8192'
+			throw new \Exception("Unable to create tempfile - check file handle limits?");
+		}
 		$this->temp_files[] = $filename;
 		return $filename;
 	}
@@ -260,7 +267,7 @@ class XLSXWriter
 			$customHt = isset($row_options['height']) ? true : false;
 			$hidden = isset($row_options['hidden']) ? (bool)($row_options['hidden']) : false;
 			$collapsed = isset($row_options['collapsed']) ? (bool)($row_options['collapsed']) : false;
-			$sheet->file_writer->write('<row collapsed="'.($collapsed).'" customFormat="false" customHeight="'.($customHt).'" hidden="'.($hidden).'" ht="'.($ht).'" outlineLevel="0" r="' . ($sheet->row_count + 1) . '">');
+			$sheet->file_writer->write('<row collapsed="'.($collapsed ? 'true' : 'false').'" customFormat="false" customHeight="'.($customHt ? 'true' : 'false').'" hidden="'.($hidden ? 'true' : 'false').'" ht="'.($ht).'" outlineLevel="0" r="' . ($sheet->row_count + 1) . '">');
 		}
 		else
 		{

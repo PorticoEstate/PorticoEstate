@@ -257,6 +257,10 @@ class SftpAdapter implements FilesystemAdapter
         $location = $this->prefixer->prefixPath(rtrim($path, '/')) . '/';
         $listing = $connection->rawlist($location, false);
 
+        if ($listing === false) {
+            return;
+        }
+
         foreach ($listing as $filename => $attributes) {
             if ($filename === '.' || $filename === '..') {
                 continue;
@@ -304,7 +308,7 @@ class SftpAdapter implements FilesystemAdapter
         $connection = $this->connectionProvider->provideConnection();
 
         try {
-            $this->ensureParentDirectoryExists($destinationLocation, $config);
+            $this->ensureParentDirectoryExists($destination, $config);
         } catch (Throwable $exception) {
             throw UnableToMoveFile::fromLocationTo($source, $destination, $exception);
         }
