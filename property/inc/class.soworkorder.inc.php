@@ -1819,11 +1819,16 @@
 		 */
 		public function check_project_status( $order_id )
 		{
+			static $project_status_on_last_order_closed = null;
 			$ret	 = false;
-			$config	 = CreateObject('phpgwapi.config', 'property');
-			$config->read_repository();
 
-			$project_status_on_last_order_closed = isset($config->config_data['project_status_on_last_order_closed']) && $config->config_data['project_status_on_last_order_closed'] ? $config->config_data['project_status_on_last_order_closed'] : '';
+			if(!$project_status_on_last_order_closed)
+			{
+				$config	 = CreateObject('phpgwapi.config', 'property');
+				$config->read_repository();
+
+				$project_status_on_last_order_closed = isset($config->config_data['project_status_on_last_order_closed']) && $config->config_data['project_status_on_last_order_closed'] ? $config->config_data['project_status_on_last_order_closed'] : '';
+			}
 
 			if ($project_status_on_last_order_closed)
 			{
@@ -3146,6 +3151,7 @@
 				$historylog->add('S', $order_id, $status, $old_status);
 				$check_pending_action = true;
 				$this->db->query("UPDATE fm_workorder SET status = '{$status}' WHERE id = '{$order_id}'", __LINE__, __FILE__);
+				$this->check_project_status($order_id);
 			}
 
 			if ($check_pending_action)
