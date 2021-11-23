@@ -873,7 +873,7 @@
 			$this->uicols = $uicols;
 
 
-			if ($order && !$order == 'fm_location1.loc1')
+			if ($order && $order !== 'fm_location1.loc1')
 			{
 				$ordermethod = " ORDER BY {$order} {$sort}";
 			}
