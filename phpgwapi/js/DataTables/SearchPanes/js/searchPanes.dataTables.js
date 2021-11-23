@@ -1,3 +1,6 @@
+/*! Bootstrap integration for DataTables' SearchPanes
+ * ©2016 SpryMedia Ltd - datatables.net/license
+ */
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD
@@ -12,9 +15,11 @@
                 root = window;
             }
             if (!$ || !$.fn.dataTable) {
+                // eslint-disable-next-line @typescript-eslint/no-var-requires
                 $ = require('datatables.net-dt')(root, $).$;
             }
             if (!$.fn.dataTable.SearchPanes) {
+                // eslint-disable-next-line @typescript-eslint/no-var-requires
                 require('datatables.net-searchpanes')(root, $);
             }
             return factory($, root, root.document);
@@ -26,6 +31,6 @@
     }
 }(function ($, window, document) {
     'use strict';
-    var DataTable = $.fn.dataTable;
-    return DataTable.searchPanes;
+    var dataTable = $.fn.dataTable;
+    return dataTable.searchPanes;
 }));

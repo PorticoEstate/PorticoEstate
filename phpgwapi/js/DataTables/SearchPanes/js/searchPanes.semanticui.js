@@ -1,3 +1,6 @@
+/*! semantic ui integration for DataTables' SearchPanes
+ * ©2016 SpryMedia Ltd - datatables.net/license
+ */
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD
@@ -12,9 +15,11 @@
                 root = window;
             }
             if (!$ || !$.fn.dataTable) {
+                // eslint-disable-next-line @typescript-eslint/no-var-requires
                 $ = require('datatables.net-se')(root, $).$;
             }
             if (!$.fn.dataTable.SearchPanes) {
+                // eslint-disable-next-line @typescript-eslint/no-var-requires
                 require('datatables.net-searchpanes')(root, $);
             }
             return factory($, root, root.document);
@@ -26,25 +31,25 @@
     }
 }(function ($, window, document) {
     'use strict';
-    var DataTable = $.fn.dataTable;
-    $.extend(true, DataTable.SearchPane.classes, {
+    var dataTable = $.fn.dataTable;
+    $.extend(true, dataTable.SearchPane.classes, {
         buttonGroup: 'right floated ui buttons column',
-        container: 'dtsp-searchPane column ui grid',
-        dull: 'disabled',
+        disabledButton: 'disabled',
         narrowSearch: 'dtsp-narrowSearch',
         narrowSub: 'dtsp-narrow',
         paneButton: 'ui button',
         paneInputButton: 'circular search link icon',
-        searchCont: 'ui icon input eight wide column',
         topRow: 'row dtsp-topRow'
     });
-    $.extend(true, DataTable.SearchPanes.classes, {
+    $.extend(true, dataTable.SearchPanes.classes, {
         clearAll: 'dtsp-clearAll ui button',
-        container: 'dtsp-searchPanes ui grid'
+        collapseAll: 'dtsp-collapseAll ui button',
+        disabledButton: 'disabled',
+        showAll: 'dtsp-showAll ui button'
     });
     // This override is required for the integrated search Icon in sematic ui
-    DataTable.SearchPane.prototype._searchContSetup = function () {
+    dataTable.SearchPane.prototype._searchContSetup = function () {
         $('<i class="' + this.classes.paneInputButton + '"></i>').appendTo(this.dom.searchCont);
     };
-    return DataTable.searchPanes;
+    return dataTable.searchPanes;
 }));

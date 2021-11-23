@@ -1,5 +1,5 @@
-/*! SearchBuilder 1.0.1
- * ©2020 SpryMedia Ltd - datatables.net/license/mit
+/*! SearchBuilder 1.3.0
+ * ©SpryMedia Ltd - datatables.net/license/mit
  */
 (function () {
     'use strict';
@@ -8,7 +8,7 @@
         if (typeof define === 'function' && define.amd) {
             // AMD
             define(['jquery', 'datatables.net-bs4', 'datatables.net-searchbuilder'], function ($) {
-                return factory($, window, document);
+                return factory($);
             });
         }
         else if (typeof exports === 'object') {
@@ -18,29 +18,31 @@
                     root = window;
                 }
                 if (!$ || !$.fn.dataTable) {
+                    // eslint-disable-next-line @typescript-eslint/no-var-requires
                     $ = require('datatables.net-bs4')(root, $).$;
                 }
                 if (!$.fn.dataTable.searchBuilder) {
+                    // eslint-disable-next-line @typescript-eslint/no-var-requires
                     require('datatables.net-searchbuilder')(root, $);
                 }
-                return factory($, root, root.document);
+                return factory($);
             };
         }
         else {
             // Browser
-            factory(jQuery, window, document);
+            factory(jQuery);
         }
-    }(function ($, window, document) {
-        var DataTable = $.fn.dataTable;
-        $.extend(true, DataTable.SearchBuilder.classes, {
+    }(function ($) {
+        var dataTable = $.fn.dataTable;
+        $.extend(true, dataTable.SearchBuilder.classes, {
             clearAll: 'btn btn-light dtsb-clearAll'
         });
-        $.extend(true, DataTable.Group.classes, {
+        $.extend(true, dataTable.Group.classes, {
             add: 'btn btn-light dtsb-add',
             clearGroup: 'btn btn-light dtsb-clearGroup',
             logic: 'btn btn-light dtsb-logic'
         });
-        $.extend(true, DataTable.Criteria.classes, {
+        $.extend(true, dataTable.Criteria.classes, {
             condition: 'form-control dtsb-condition',
             data: 'form-control dtsb-data',
             "delete": 'btn btn-light dtsb-delete',
@@ -48,7 +50,7 @@
             right: 'btn btn-light dtsb-right',
             value: 'form-control dtsb-value'
         });
-        return DataTable.searchPanes;
+        return dataTable.searchPanes;
     }));
 
 }());
