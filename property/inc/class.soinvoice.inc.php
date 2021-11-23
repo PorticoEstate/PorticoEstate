@@ -161,6 +161,7 @@
 			if ($paid)
 			{
 				$table = 'fm_ecobilagoverf';
+				$_transfer_field = ',overftid';
 
 				if ($b_account_class)
 				{
@@ -181,6 +182,7 @@
 			else
 			{
 				$table = 'fm_ecobilag';
+				$_transfer_field = null;
 			}
 
 			$no_q = false;
@@ -272,11 +274,11 @@
 					$voucher_id = $invoice_temp['voucher_id'];
 
 					$sql = "SELECT pmwrkord_code,spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
-						. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,overftid,fakturadato,org_name,"
+						. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato {$_transfer_field},fakturadato,org_name,"
 						. " forfallsdato,periode,periodization,periodization_start,artid,kidnr,kreditnota,currency "
 						. " FROM {$table} {$this->join} fm_vendor ON fm_vendor.id = {$table}.spvend_code WHERE bilagsnr = {$voucher_id} "
 						. " GROUP BY bilagsnr,pmwrkord_code,spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
-						. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,overftid,fakturadato,org_name,"
+						. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato {$_transfer_field},fakturadato,org_name,"
 						. " forfallsdato,periode,periodization,periodization_start,artid,kidnr,kreditnota,currency";
 
 					$this->db->query($sql, __LINE__, __FILE__);
