@@ -43,7 +43,7 @@
 
 
 			$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
-			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/templates/aalesund/css/rubik-font.css");
+			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/templates/base/css/rubik-font.css");
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 			$searchterm = trim(phpgw::get_var('searchterm', 'string', 'REQUEST', null));

@@ -203,6 +203,12 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$audience = $this->bo->read_single($id);
+
+			if(!$audience)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
+
 			$activities = $this->activity_bo->get_top_level($audience['activity_id']);
 
 			$audience['id'] = $id;
@@ -245,6 +251,12 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$resource = $this->bo->read_single($id);
+
+			if(!$resource)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
+
 			$lang['title'] = lang('New audience');
 			$lang['name'] = lang('Name');
 			$lang['description'] = lang('Description');

@@ -988,7 +988,7 @@
 					'charge_tenant'				 => $this->db->f('charge_tenant'),
 					'descr'						 => $this->db->f('descr', true),
 					'status'					 => $this->db->f('status'),
-					'calculation'				 => $this->db->f('calculation'),
+					'calculation'				 => (float)$this->db->f('calculation'),
 					'b_account_id'				 => $this->db->f('account_id', true),
 					'addition_percentage'		 => (int)$this->db->f('addition'),
 					'addition_rs'				 => (int)$this->db->f('rig_addition'),
@@ -1017,7 +1017,7 @@
 					'billable_hours'			 => $this->db->f('billable_hours'),
 					'approved'					 => $this->db->f('approved'),
 					'mail_recipients'			 => explode(',', trim($this->db->f('mail_recipients'), ',')),
-					'actual_cost'				 => $this->db->f('actual_cost'),
+					'actual_cost'				 => (float)$this->db->f('actual_cost'),
 					'continuous'				 => $this->db->f('continuous'),
 					'fictive_periodization'		 => $this->db->f('fictive_periodization'),
 					'contract_id'				 => $this->db->f('contract_id'),
@@ -1028,7 +1028,7 @@
 					'order_dim1'				 => $this->db->f('order_dim1'),
 					'order_sent'				 => $this->db->f('order_sent'),
 					'order_received'			 => $this->db->f('order_received'),
-					'order_received_amount'		 => $this->db->f('order_received_amount'),
+					'order_received_amount'		 => (float)$this->db->f('order_received_amount'),
 					'delivery_address'			 => $this->db->f('delivery_address', true),
 				);
 
@@ -1044,8 +1044,8 @@
 
 				$this->db->query($sql, __LINE__, __FILE__);
 				$this->db->next_record();
-				$workorder['budget']		 = (int)$this->db->f('budget');
-				$workorder['contract_sum']	 = $this->db->f('contract_sum');
+				$workorder['budget']		 = (int) $this->db->f('budget');
+				$workorder['contract_sum']	 = (float) $this->db->f('contract_sum');
 			}
 
 			//_debug_array($workorder);
@@ -1819,11 +1819,16 @@
 		 */
 		public function check_project_status( $order_id )
 		{
+			static $project_status_on_last_order_closed = null;
 			$ret	 = false;
-			$config	 = CreateObject('phpgwapi.config', 'property');
-			$config->read_repository();
 
-			$project_status_on_last_order_closed = isset($config->config_data['project_status_on_last_order_closed']) && $config->config_data['project_status_on_last_order_closed'] ? $config->config_data['project_status_on_last_order_closed'] : '';
+			if(!$project_status_on_last_order_closed)
+			{
+				$config	 = CreateObject('phpgwapi.config', 'property');
+				$config->read_repository();
+
+				$project_status_on_last_order_closed = isset($config->config_data['project_status_on_last_order_closed']) && $config->config_data['project_status_on_last_order_closed'] ? $config->config_data['project_status_on_last_order_closed'] : '';
+			}
 
 			if ($project_status_on_last_order_closed)
 			{
@@ -3146,6 +3151,7 @@
 				$historylog->add('S', $order_id, $status, $old_status);
 				$check_pending_action = true;
 				$this->db->query("UPDATE fm_workorder SET status = '{$status}' WHERE id = '{$order_id}'", __LINE__, __FILE__);
+				$this->check_project_status($order_id);
 			}
 
 			if ($check_pending_action)

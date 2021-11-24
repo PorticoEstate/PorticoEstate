@@ -101,7 +101,7 @@ go back to the template week	booking	nn	Gå attende til vekeplan
 group	booking	nn	Gruppe/Lag
 history and comments (%1)	booking	nn	Historikk (%1)
 History of Cost (%1)	booking	nn	Prishistorikk (%1)
-cost is set	booking	nn	Ny pris er angitt
+cost is set	booking	nn	Ny pris er definert
 cost comment	booking	nn	Kommentar til ny pris
 hms document	booking	nn	HMS dokument
 homepage	booking	nn	Heimeside
@@ -245,7 +245,7 @@ New Account Codes	booking	nn	Ny konteringsstreng
 Create allocation	booking	nn	Lag tildeling
 Create booking	booking	nn	Lag interntildeling
 Create event	booking	nn	Lag arrangement
-Event was created	booking	nn	Arrangementet ble opprettet
+Event was created	booking	nn	Arrangementet vart oppretta
 Loading...	booking	nn	Lastar ned...
 Back to season	booking	nn	Gå attende til sesong
 Field %1 is required	booking	nn	Feltet '%1' må fyllast ut
@@ -876,3 +876,4 @@ interrupted	booking	nn	Kansellert
 completed	booking	nn	Fullført
 partially refunded	booking	nn	Delvis refundert
 articles	booking	nn	Artiklar
+missing entry. Id %1 is invalid	booking	nn	Denne posten finst ikkje. Id %1 er ugyldig

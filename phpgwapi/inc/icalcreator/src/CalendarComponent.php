@@ -1,37 +1,37 @@
 <?php
 /**
-  * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
- *
- * copyright (c) 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * Link      https://kigkonsult.se
- * Package   iCalcreator
- * Version   2.30
- * License   Subject matter of licence is the software iCalcreator.
- *           The above copyright, link, package and version notices,
- *           this licence notice and the invariant [rfc5545] PRODID result use
- *           as implemented and invoked in iCalcreator shall be included in
- *           all copies or substantial portions of the iCalcreator.
- *
- *           iCalcreator is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
- *
- *           iCalcreator is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
- *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
  *
  * This file is a part of iCalcreator.
-*/
-
+ *
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software iCalcreator.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice and the invariant [rfc5545] PRODID result use
+ *            as implemented and invoked in iCalcreator shall be included in
+ *            all copies or substantial portions of the iCalcreator.
+ *
+ *            iCalcreator is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as
+ *            published by the Free Software Foundation, either version 3 of
+ *            the License, or (at your option) any later version.
+ *
+ *            iCalcreator is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
+ *
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ */
+declare( strict_types = 1 );
 namespace Kigkonsult\Icalcreator;
 
 use Exception;
 use Kigkonsult\Icalcreator\Util\CalAddressFactory;
+use Kigkonsult\Icalcreator\Util\ParameterFactory;
 use Kigkonsult\Icalcreator\Util\RecurFactory;
 use Kigkonsult\Icalcreator\Util\RexdateFactory;
 use Kigkonsult\Icalcreator\Util\StringFactory;
@@ -46,14 +46,14 @@ use function explode;
 use function get_class;
 use function implode;
 use function is_array;
-use function is_null;
 use function ksort;
 use function method_exists;
 use function property_exists;
 use function sprintf;
 use function strcasecmp;
 use function stripos;
-use function strpos;
+use function str_contains;
+use function str_starts_with;
 use function strtolower;
 use function strtoupper;
 use function substr;
@@ -63,47 +63,50 @@ use function ucfirst;
 /**
  *  Parent class for calendar components
  *
- * @author Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @since  2.29.17 - 2020-01-25
+ * @since  2.30.3 - 2021-02-15
  */
 abstract class CalendarComponent extends IcalBase
 {
     /**
-     * @var array  compoment sort params
+     * @var array  component sort params
      */
-    public $srtk = null;
+    public array $srtk = [];
 
     /**
      * @var string component number
      */
-    public $cno = 0;
-
-    /**
-     * @var string  misc. values
-     */
-    protected static $FMTBEGIN      = "BEGIN:%s\r\n";
-    protected static $FMTEND        = "END:%s\r\n";
+    public string $cno = '';
 
     /**
      * @var string
      */
-    protected static $compSgn = 'xx';
+    protected static string $FMTBEGIN      = "BEGIN:%s\r\n";
+
+    /**
+     * @var string
+     */
+    protected static string $FMTEND        = "END:%s\r\n";
+
+    /**
+     * @var string
+     */
+    protected static string $compSgn = 'xx';
 
     /**
      * Constructor for calendar component
      *
-     * @param array $config
+     * @param null|array $config
      * @since  2.27.14 - 2019-07-03
      */
-    public function __construct( $config = [] )
+    public function __construct( ? array $config = [] )
     {
         static $objectNo = 0;
-        $class           = get_class( $this );
+        $class           = static::class;
         $this->compType  = ucfirst(
             strtolower( StringFactory::afterLast( StringFactory::$BS2, $class  ))
         );
         $this->cno       = $class::$compSgn . ++$objectNo;
-        $this->setConfig( $config );
+        $this->setConfig( $config ?? [] );
     }
 
     /**
@@ -113,10 +116,11 @@ abstract class CalendarComponent extends IcalBase
      * and for each, number of occurrence (values)
      *
      * @param string $propName
-     * @param array  $output incremented result array
+     * @param array $output incremented result array
+     * @return void
      * @since  2.29.17 - 2020-01-25
      */
-    public function getProperties( $propName, & $output )
+    public function getProperties( string $propName, array & $output ) : void
     {
         if( empty( $output )) {
             $output = [];
@@ -124,7 +128,7 @@ abstract class CalendarComponent extends IcalBase
         if( ! Util::isPropInList( $propName, self::$MPROPS1 )) {
             return;
         }
-        $method = parent::getGetMethodName( $propName );
+        $method = StringFactory::getGetMethodName( $propName );
         if( ! method_exists( $this, $method )) {
             return;
         }
@@ -134,7 +138,7 @@ abstract class CalendarComponent extends IcalBase
             }
             if( is_array( $content )) {
                 foreach( $content as $part ) {
-                    if( false !== strpos( $part, Util::$COMMA )) {
+                    if( str_contains( $part, Util::$COMMA ) ) {
                         $part = explode( Util::$COMMA, $part );
                         foreach( $part as $contentPart ) {
                             $contentPart = trim( $contentPart );
@@ -143,7 +147,7 @@ abstract class CalendarComponent extends IcalBase
                                     $output[$contentPart] = 1;
                                 }
                                 else {
-                                    $output[$contentPart] += 1;
+                                    ++$output[$contentPart];
                                 }
                             }
                         } // end foreach
@@ -154,12 +158,12 @@ abstract class CalendarComponent extends IcalBase
                             $output[$part] = 1;
                         }
                         else {
-                            $output[$part] += 1;
+                            ++$output[$part];
                         }
                     }
                 } // end foreach
             } // end if( is_array( $content ))
-            elseif( false !== strpos( $content, Util::$COMMA )) {
+            elseif( str_contains( $content, Util::$COMMA ) ) {
                 $content = explode( Util::$COMMA, $content );
                 foreach( $content as $contentPart ) {
                     $contentPart = trim( $contentPart );
@@ -168,7 +172,7 @@ abstract class CalendarComponent extends IcalBase
                             $output[$contentPart] = 1;
                         }
                         else {
-                            $output[$contentPart] += 1;
+                            ++$output[$contentPart];
                         }
                     }
                 } // end foreach
@@ -180,7 +184,7 @@ abstract class CalendarComponent extends IcalBase
                         $output[$content] = 1;
                     }
                     else {
-                        $output[$content] += 1;
+                        ++$output[$content];
                     }
                 }
             }
@@ -191,20 +195,24 @@ abstract class CalendarComponent extends IcalBase
     /*
      * @var string
      */
-    protected static $NLCHARS = '\n';
-    protected static $BEGIN   = 'BEGIN:';
+    protected static string $NLCHARS = '\n';
+
+    /*
+     * @var string
+     */
+    protected static string $BEGIN   = 'BEGIN:';
 
     /**
      * Parse data into component properties
      *
-     * @param string|array $unParsedText strict rfc2445 formatted, single property string or array of strings
+     * @param null|string|string[] $unParsedText strict rfc2445 formatted, single property string or array of strings
      * @return static
      * @throws Exception
      * @throws UnexpectedValueException;
      * @since  2.29.3 - 2019-06-20
      * @// todo report invalid properties, Exception.. ??
      */
-    public function parse( $unParsedText = null )
+    public function parse( null|string|array $unParsedText = null ) : static
     {
         $rows = $this->parse1prepInput( $unParsedText );
         $this->parse2intoComps( $rows );
@@ -216,16 +224,16 @@ abstract class CalendarComponent extends IcalBase
     /**
      * Return rows to parse
      *
-     * @param string|array $unParsedText strict rfc2445 formatted, single property string or array of strings
-     * @return array
+     * @param null|string|string[] $unParsedText strict rfc2445 formatted, single property string or array of strings
+     * @return string[]
      * @since  2.29.3 - 2019-06-20
      */
-    private function parse1prepInput( $unParsedText = null )
+    private function parse1prepInput( null|string|array $unParsedText = null ) : array
     {
         switch( true ) {
             case ( ! empty( $unParsedText )) :
                 $arrParse = false;
-                if( is_array( $unParsedText ) ) {
+                if( is_array( $unParsedText )) {
                     $unParsedText = implode(
                         self::$NLCHARS . Util::$CRLF,
                         $unParsedText
@@ -253,7 +261,7 @@ abstract class CalendarComponent extends IcalBase
                 break;
             }
             $tst = trim( $row );
-            if(( self::$NLCHARS == $tst ) || empty( $tst )) {
+            if(( self::$NLCHARS === $tst ) || empty( $tst )) {
                 unset( $rows[$lix] );
             }
         } // end foreach
@@ -263,10 +271,11 @@ abstract class CalendarComponent extends IcalBase
     /**
      * Parse into this and sub-components data
      *
-     * @param array $rows
+     * @param string[] $rows
+     * @return void
      * @since  2.29.3 - 2019-08-26
      */
-    private function parse2intoComps( array $rows )
+    private function parse2intoComps( array $rows ) : void
     {
         static $ENDALARM        = 'END:VALARM';
         static $ENDDAYLIGHT     = 'END:DAYLIGHT';
@@ -280,38 +289,38 @@ abstract class CalendarComponent extends IcalBase
         $compSync       = $subSync = 0;
         foreach( $rows as $lix => $row ) {
             switch( true ) {
-                case ( StringFactory::startsWith( $row, $ENDALARM ) ||
-                       StringFactory::startsWith( $row, $ENDDAYLIGHT ) ||
-                       StringFactory::startsWith( $row, $ENDSTANDARD )) :
-                    if( 1 != $subSync ) {
+                case ( str_starts_with( $row, $ENDALARM ) ||
+                       str_starts_with( $row, $ENDDAYLIGHT ) ||
+                       str_starts_with( $row, $ENDSTANDARD )) :
+                    if( 1 !== $subSync ) {
                         throw new UnexpectedValueException(
                             self::getErrorMsg( $rows, $lix )
                         );
                     }
-                    $subSync -= 1;
+                    --$subSync;
                     break;
-                case StringFactory::startsWith( $row, $END ) :
-                    if( 1 != $compSync ) { // end:<component>
+                case str_starts_with( $row, $END ) :
+                    if( 1 !== $compSync ) { // end:<component>
                         throw new UnexpectedValueException(
                             self::getErrorMsg( $rows, $lix )
                         );
                     }
-                    $compSync -= 1;
+                    --$compSync;
                     break 2;  /* skip trailing empty lines.. */
-                case StringFactory::startsWith( $row, $BEGINVALARM ) :
+                case str_starts_with( $row, $BEGINVALARM ) :
                     $comp     = $this->newValarm();
-                    $subSync += 1;
+                    ++$subSync;
                     break;
-                case StringFactory::startsWith( $row, $BEGINSTANDARD ) :
+                case str_starts_with( $row, $BEGINSTANDARD ) :
                     $comp     = $this->newStandard();
-                    $subSync += 1;
+                    ++$subSync;
                     break;
-                case StringFactory::startsWith( $row, $BEGINDAYLIGHT ) :
+                case str_starts_with( $row, $BEGINDAYLIGHT ) :
                     $comp     = $this->newDaylight();
-                    $subSync += 1;
+                    ++$subSync;
                     break;
-                case StringFactory::startsWith( $row, self::$BEGIN ) :
-                    $compSync += 1;         // begin:<component>
+                case str_starts_with( $row, self::$BEGIN ) :
+                    ++$compSync;         // begin:<component>
                     break;
                 default :
                     $comp->unparsed[] = $row;
@@ -323,19 +332,20 @@ abstract class CalendarComponent extends IcalBase
     /**
      * Parse this properties
      *
-     * @since  2.29.14 - 2019-09-03
+     * @return void
+     * @since  2.30.3 - 2021-02-15
      * @todo report invalid properties ??
      */
-    private function parse3thisProperties()
+    private function parse3thisProperties() : void
     {
         /* concatenate property values spread over several lines */
         $this->unparsed = StringFactory::concatRows( $this->unparsed );
         /* parse each property 'line' */
-        foreach( $this->unparsed as $lix => $row ) {
+        foreach( $this->unparsed as $row ) {
             /* get propname  +  split property name  and  opt.params and value */
-            list( $propName, $row ) = StringFactory::getPropName( $row );
+            [ $propName, $row ] = StringFactory::getPropName( $row );
             if( StringFactory::isXprefixed( $propName )) {
-                list( $value, $propAttr ) = StringFactory::splitContent( $row );
+                [ $value, $propAttr ] = StringFactory::splitContent( $row );
                 $this->setXprop(
                     $propName,
                     StringFactory::strunrep( $value ),
@@ -343,21 +353,21 @@ abstract class CalendarComponent extends IcalBase
                 );
                 continue;
             }
-            if( ! property_exists( $this, parent::getInternalPropName( $propName ))) {
+            if( ! property_exists( $this, StringFactory::getInternalPropName( $propName ))) {
                 continue; // todo report invalid properties ??
             } // skip property names not in comp
             /* separate attributes from value */
-            list( $value, $propAttr ) = StringFactory::splitContent( $row );
-            if(( self::$NLCHARS == strtolower( substr( $value, -2 ))) &&
-                ! Util::isPropInList( $propName, self::$TEXTPROPS ) &&
-                ( ! StringFactory::isXprefixed( $propName ))) {
+            [ $value, $propAttr ] = StringFactory::splitContent( $row, $propName );
+            if( ! Util::isPropInList( $propName, self::$TEXTPROPS ) &&
+                ( ! StringFactory::isXprefixed( $propName )) &&
+                ( self::$NLCHARS === strtolower( substr( $value, -2 )))) {
                 $value = StringFactory::trimTrailNL( $value );
             }
             /* call set<Propname>(.. . */
-            $method = parent::getSetMethodName( $propName );
+            $method = StringFactory::getSetMethodName( $propName );
             switch( strtoupper( $propName )) {
                 case self::ATTENDEE :
-                    list( $value, $propAttr ) =
+                    [ $value, $propAttr ] =
                         CalAddressFactory::parseAttendee( $value, $propAttr );
                     $this->{$method}( $value, $propAttr );
                     break;
@@ -386,7 +396,7 @@ abstract class CalendarComponent extends IcalBase
                     break;
                 case self::FREEBUSY :
                     $class = get_class( $this );
-                    list( $fbtype, $values, $propAttr ) =
+                    [ $fbtype, $values, $propAttr ] =
                         $class::parseFreebusy( $value, $propAttr );
                     $this->{$method}( $fbtype, $values, $propAttr );
                     break;
@@ -404,7 +414,7 @@ abstract class CalendarComponent extends IcalBase
                     $this->{$method}( $values, $propAttr );
                     break;
                 case self::RDATE :
-                    list( $values, $propAttr ) =
+                    [ $values, $propAttr ] =
                         RexdateFactory::parseRexdate( $value, $propAttr );
                     $this->{$method}( $values, $propAttr );
                     break;
@@ -433,9 +443,10 @@ abstract class CalendarComponent extends IcalBase
     /**
      * Parse sub-components
      *
+     * @return void
      * @since  2.29.3 - 2019-06-20
      */
-    private function parse4subComps()
+    private function parse4subComps() : void
     {
         if( empty( $this->countComponents())) {
             return;
@@ -451,12 +462,12 @@ abstract class CalendarComponent extends IcalBase
     /**
      * Return error message
      *
-     * @param array $rows
+     * @param string[] $rows
      * @param int $lix
      * @return string
      * @since  2.26.3 - 2018-12-28
      */
-    private static function getErrorMsg( array $rows, $lix )
+    private static function getErrorMsg( array $rows, int $lix ) : string
     {
         static $ERR = 'Calendar component content not in sync (row %d)%s%s';
         return sprintf( $ERR, $lix, PHP_EOL, implode( PHP_EOL, $rows ));
@@ -465,20 +476,20 @@ abstract class CalendarComponent extends IcalBase
     /**
      * Return calendar component subcomponent from component container
      *
-     * @param mixed $arg1 ordno/component type/ component uid
-     * @param mixed $arg2 ordno if arg1 = component type
+     * @param null|int|string $arg1 ordno/component type/ component uid
+     * @param null|int $arg2 ordno if arg1 = component type
      * @return mixed CalendarComponent|bool
      * @since  2.26.1 - 2018-11-17
      * @todo throw InvalidArgumentException on unknown component
      */
-    public function getComponent( $arg1 = null, $arg2 = null )
+    public function getComponent( null|int|string $arg1 = null, null|int $arg2 = null ) : mixed
     {
         if( empty( $this->components )) {
             return false;
         }
         $index = $argType = null;
         switch( true ) {
-            case ( is_null( $arg1 )) :
+            case ( null === $arg1 ) :
                 $argType = self::$INDEX;
                 $this->compix[self::$INDEX] = ( isset( $this->compix[self::$INDEX] ))
                     ? $this->compix[self::$INDEX] + 1 : 1;
@@ -492,18 +503,14 @@ abstract class CalendarComponent extends IcalBase
             case ( Util::isCompInList( $arg1, self::$SUBCOMPS )) : // class name
                 unset( $this->compix[self::$INDEX] );
                 $argType = strtolower( $arg1 );
-                if( is_null( $arg2 )) {
-                    $index = $this->compix[$argType] =
+                $index = $arg2 ?? ( $this->compix[$argType] =
                         ( isset( $this->compix[$argType] ))
                             ? $this->compix[$argType] + 1
-                            : 1;
-                }
-                else {
-                    $index = (int) $arg2;
-                }
+                            : 1
+                    );
                 break;
         } // end switch
-        $index -= 1;
+        --$index;
         $ckeys = array_keys( $this->components );
         if( ! empty( $index ) && ( $index > end( $ckeys ))) {
             return false;
@@ -513,14 +520,15 @@ abstract class CalendarComponent extends IcalBase
             if( empty( $this->components[$cix] )) {
                 continue;
             }
-            if(( self::$INDEX == $argType ) && ( $index == $cix )) {
+            if(( self::$INDEX === $argType ) && ( $index === $cix )) {
                 return clone $this->components[$cix];
             }
-            elseif( 0 == strcasecmp(
+            if( 0 === strcasecmp(
                 $this->components[$cix]->getCompType(),
-                $argType
-                )) {
-                if( $index == $cix2gC ) {
+                    (string) $argType
+                )
+            ) {
+                if( $index === $cix2gC ) {
                     return clone $this->components[$cix];
                 }
                 $cix2gC++;
@@ -538,7 +546,7 @@ abstract class CalendarComponent extends IcalBase
      * @return static
      * @since  1.x.x - 2007-04-24
      */
-    public function addSubComponent( CalendarComponent $component )
+    public function addSubComponent( CalendarComponent $component ) : static
     {
         $this->setComponent( $component );
         return $this;
@@ -551,10 +559,10 @@ abstract class CalendarComponent extends IcalBase
      * @since  2.27.2 - 2018-12-21
      * @throws Exception  (on Valarm/Standard/Daylight) err)
      */
-    public function createSubComponent()
+    public function createSubComponent() : string
     {
         $config = $this->getConfig();
-        $output = null;
+        $output = Util::$SP0;
         foreach( array_keys( $this->components ) as $cix ) {
             if( ! empty( $this->components[$cix] )) {
                 $this->components[$cix]->setConfig( $config, false, true );
@@ -562,5 +570,174 @@ abstract class CalendarComponent extends IcalBase
             }
         }
         return $output;
+    }
+
+    /**
+     * Component multi-prop methods
+     */
+
+    /**
+     * Check index and set (an indexed) content in a multiple value array
+     *
+     * @param null|array    $valueArr
+     * @param null|mixed    $value  whatever...
+     * @param null|string[] $params
+     * @param null|string[] $defaults
+     * @param null|int      $index
+     * @return void
+     * @since  2.22.23 - 2017-04-08
+     */
+    public static function setMval(
+        ? array & $valueArr = [],
+        mixed $value = null,
+        ? array $params = [],
+        ? array $defaults = [],
+        ? int $index = null
+    ) : void
+    {
+        if( empty( $valueArr )) {
+            $valueArr = [];
+        }
+        $params2 = ParameterFactory::setParams(
+            $params,
+            $defaults
+        );
+        if( null === $index ) { // i.e. next
+            $valueArr[] = [
+                Util::$LCvalue  => $value,
+                Util::$LCparams => $params2,
+            ];
+            return;
+        }
+        --$index;
+        if( isset( $valueArr[$index] )) { // replace
+            $valueArr[$index] = [
+                Util::$LCvalue  => $value,
+                Util::$LCparams => $params2,
+            ];
+            return;
+        }
+        $valueArr[$index] = [
+            Util::$LCvalue  => $value,
+            Util::$LCparams => $params2,
+        ];
+        ksort( $valueArr ); // order
+    }
+
+    /**
+     * Recount property propIx, used at consecutive getProperty calls
+     *
+     * @param string[] $propArr   component (multi-)property
+     * @param int   $propIx getter counter
+     * @return bool
+     * @since  2.27.1 - 2018-12-15
+     */
+    public static function recountMvalPropix( array $propArr, int & $propIx ) : bool
+    {
+        if( empty( $propArr )) {
+            return false;
+        }
+        $last = key( array_slice( $propArr, -1, 1, true ));
+        while( ! isset( $propArr[$propIx] ) && ( $last > $propIx )) {
+            $propIx++;
+        }
+        return true;
+    }
+
+    /**
+     * Return propName index
+     *
+     * @param array $indexArr
+     * @param string $propName
+     * @param int|null $index
+     * @return int
+     * @since  2.27.1 - 2018-12-15
+     */
+    protected static function getIndex(
+        array & $indexArr,
+        string $propName,
+        ? int $index = null
+    ) : int
+    {
+        if( null === $index ) {
+            $index = ( isset( $indexArr[$propName] )) ? $indexArr[$propName] + 2 : 1;
+        }
+        --$index;
+        $indexArr[$propName] = $index;
+        return $index;
+    }
+
+    /**
+     * Get calendar component multpProp property
+     *
+     * @param array $multiProp component (multi-)property
+     * @param string   $propName
+     * @param IcalBase $instance
+     * @param null|int $propIx    specific property in case of multiply occurrence
+     * @param bool     $inclParam
+     * @return bool|string|array
+     * @since  2.27.1 - 2018-12-15
+     */
+    public static function getPropertyM(
+        array $multiProp,
+        string $propName,
+        IcalBase $instance,
+        ? int $propIx = null,
+        ? bool $inclParam = false
+    ) : bool | string | array
+    {
+        if( empty( $multiProp )) {
+            unset( $instance->propIx[$propName] );
+            return false;
+        }
+        $propIx = self::getIndex( $instance->propIx, $propName, $propIx );
+        if( ! self::recountMvalPropix( $multiProp, $propIx )) {
+            unset( $instance->propIx[$propName] );
+            return false;
+        }
+        $instance->propIx[$propName] = $propIx;
+        if( ! isset( $multiProp[$propIx] )) {
+            unset( $instance->propIx[$propName] );
+            return false;
+        }
+        return ( $inclParam )
+            ? $multiProp[$propIx]
+            : $multiProp[$propIx][Util::$LCvalue];
+    }
+
+    /**
+     * Delete calendar component multiProp property[ix]
+     *
+     * @param array $multiProp component (multi-)property
+     * @param string    $propName
+     * @param IcalBase  $instance
+     * @param null|int  $propDelIx specific property in case of multiply occurrence
+     * @return bool   true on success
+     * @since  2.27.1 - 2018-12-15
+     */
+    public static function deletePropertyM(
+        array & $multiProp,
+        string $propName,
+        IcalBase $instance,
+        ? int $propDelIx = null
+    ) : bool
+    {
+        if( empty( $multiProp ) ) {
+            unset( $instance->propDelIx[$propName] );
+            return false;
+        }
+        if( $propDelIx === null ) {
+            $propDelIx = null; // tidy up, altered default value
+        }
+        $propDelIx = self::getIndex( $instance->propDelIx, $propName, $propDelIx );
+        if( isset( $multiProp[$propDelIx] ) ) {
+            unset( $multiProp[$propDelIx] );
+        }
+        if( empty( $multiProp ) ) {
+            $multiProp = [];
+            unset( $instance->propDelIx[$propName] );
+            return false;
+        }
+        return true;
     }
 }

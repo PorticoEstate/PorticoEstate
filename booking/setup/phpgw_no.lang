@@ -876,3 +876,4 @@ interrupted	booking	no	Avbrutt
 completed	booking	no	Fullført
 partially refunded	booking	no	Delvis refundert
 articles	booking	no	Artikler
+missing entry. Id %1 is invalid	booking	no	Denne posten finnes ikke. Id %1 er ugyldig

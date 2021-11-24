@@ -1,15 +1,15 @@
-/*! ColReorder 1.5.3
- * ©2010-2020 SpryMedia Ltd - datatables.net/license
+/*! ColReorder 1.5.5
+ * ©2010-2021 SpryMedia Ltd - datatables.net/license
  */
 
 /**
  * @summary     ColReorder
  * @description Provide the ability to reorder columns in a DataTable
- * @version     1.5.3
+ * @version     1.5.5
  * @file        dataTables.colReorder.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
- * @copyright   Copyright 2010-2020 SpryMedia Ltd.
+ * @copyright   Copyright 2010-2021 SpryMedia Ltd.
  *
  * This source file is free software, available under the following license:
  *   MIT license - http://datatables.net/license/mit
@@ -723,6 +723,10 @@ $.extend( ColReorder.prototype, {
 			that._fnStateSave.call( that, oData );
 		}, "ColReorder_State" );
 
+		this.s.dt.oApi._fnCallbackReg(this.s.dt, 'aoStateLoadParams', function(oS, oData) {
+			that.s.dt._colReorder.fnOrder(oData.ColReorder, true);
+		})
+
 		/* An initial column order has been specified */
 		var aiOrder = null;
 		if ( this.s.init.aiOrder )
@@ -849,6 +853,9 @@ $.extend( ColReorder.prototype, {
 	 */
 	"_fnStateSave": function ( oState )
 	{
+		if(this.s === null) {
+			return;
+		}
 		var i, iLen, aCopy, iOrigColumn;
 		var oSettings = this.s.dt;
 		var columns = oSettings.aoColumns;
@@ -1248,10 +1255,10 @@ $.extend( ColReorder.prototype, {
 			.css( {
 				position: 'absolute',
 				top: scrolling ?
-					$('div.dataTables_scroll', this.s.dt.nTableWrapper).offset().top :
+					$($(this.s.dt.nScrollBody).parent()).offset().top :
 					$(this.s.dt.nTable).offset().top,
 				height : scrolling ?
-					$('div.dataTables_scroll', this.s.dt.nTableWrapper).height() :
+					$($(this.s.dt.nScrollBody).parent()).height() :
 					$(this.s.dt.nTable).height()
 			} )
 			.appendTo( 'body' );
@@ -1374,7 +1381,7 @@ ColReorder.defaults = {
  *  @type      String
  *  @default   As code
  */
-ColReorder.version = "1.5.3";
+ColReorder.version = "1.5.5";
 
 
 

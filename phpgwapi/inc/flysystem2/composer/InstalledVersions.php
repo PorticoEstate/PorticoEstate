@@ -46,39 +46,39 @@ private static $installed = array (
     ),
     'league/flysystem' => 
     array (
-      'pretty_version' => '2.0.4',
-      'version' => '2.0.4.0',
+      'pretty_version' => '2.3.1',
+      'version' => '2.3.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '7cbbb7222e8d8a34e71273d243dfcf383ed6779f',
+      'reference' => '8f037e8f3321d5fd4178dcd4d91498220cebd688',
     ),
     'league/flysystem-sftp' => 
     array (
-      'pretty_version' => '2.0.4',
-      'version' => '2.0.4.0',
+      'pretty_version' => '2.2.1',
+      'version' => '2.2.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'dcd572ecd536d863498671dab18c5014ac26905f',
+      'reference' => '321f3ef9cd728b575cb661ebfb072758a8d2f062',
     ),
     'league/mime-type-detection' => 
     array (
-      'pretty_version' => '1.7.0',
-      'version' => '1.7.0.0',
+      'pretty_version' => '1.8.0',
+      'version' => '1.8.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '3b9dff8aaf7323590c1d2e443db701eb1f9aa0d3',
+      'reference' => 'b38b25d7b372e9fddb00335400467b223349fd7e',
     ),
     'phpseclib/phpseclib' => 
     array (
-      'pretty_version' => '2.0.30',
-      'version' => '2.0.30.0',
+      'pretty_version' => '2.0.34',
+      'version' => '2.0.34.0',
       'aliases' => 
       array (
       ),
-      'reference' => '136b9ca7eebef78be14abf90d65c5e57b6bc5d36',
+      'reference' => '98a6fe587f3481aea319eef7e656d02cfe1675ec',
     ),
   ),
 );

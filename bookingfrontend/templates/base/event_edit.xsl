@@ -1,4 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css"/>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"/>
 	<div id="event-edit-page-content" class="margin-top-content">
 		<div class="container wrapper">
 			<div class="location">
@@ -378,7 +380,7 @@
 	</div>
 	<div class="push"></div>
 	<script>
-		var initialSelection = <xsl:value-of select="event/resources_json" />;
+		var initialSelection = <xsl:value-of select="event/resource_ids_json" />;
 		var initialSelectionAudience = <xsl:value-of select="event/audiences_json" />;
 		var initialSelectionAgegroup = <xsl:value-of select="event/agegroups_json" />;
 		var building_id = <xsl:value-of select="event/building_id"/>;
@@ -391,29 +393,9 @@
 		eem = new EventEditModel();
         ko.applyBindings(eem, document.getElementById("event-edit-page-content"));
 
-		AddBookableResourceData(building_id, initialSelection, eem.bookableresource);
+		AddBookableResourceDataWithinBooking(building_id, initialSelection, eem.bookableresource);
 		AddAudiencesAndAgegroupData(building_id, eem.agegroup, initialSelectionAgegroup, eem.audiences, initialSelectionAudience);
 		eem.audienceSelectedValue(<xsl:value-of select="event/audience" />);
 		eem.typeApplicationRadio($("#customer_identifier_type_hidden_field").val());
-		YUI({ lang: 'nb-no' }).use(
-			'aui-timepicker',
-			function(Y) {
-			new Y.TimePicker(
-				{
-				trigger: '.to_, .from_',
-				popover: {
-					zIndex: 99999
-				},
-				mask: '%H:%M',
-				on: {
-					selectionChange: function(event) {
-						new Date(event.newSelection);
-						$(this).val(event.newSelection);
-					}
-				}
-				}
-			);
-			}
-		);
 	</script>
 </xsl:template>

@@ -151,6 +151,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$document = $this->bo->read_single($id);
+			if(!$document)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$this->add_default_display_data($document);
 			self::render_template_xsl('documentation', array('document' => $document));
 		}

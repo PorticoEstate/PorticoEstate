@@ -245,6 +245,12 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$building = $this->bo->read_single($id);
+
+			if(!$building)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
+
 			$building['id'] = $id;
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
@@ -305,6 +311,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$building = $this->bo->read_single($id);
+			if(!$building)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['edit_link'] = self::link(array('menuaction' => 'booking.uibuilding.edit',
 					'id' => $building['id']));

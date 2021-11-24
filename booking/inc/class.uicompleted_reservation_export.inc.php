@@ -360,6 +360,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$export = $this->bo->read_single($id);
+			if(!$export)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$this->add_default_display_data($export);
 			self::add_template_file('helpers');
 			$export['cancel_link'] = self::link(array('menuaction' => 'booking.uicompleted_reservation_export.index'));

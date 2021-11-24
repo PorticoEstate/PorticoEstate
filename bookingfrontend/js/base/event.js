@@ -1,6 +1,8 @@
 var building_id_selection = "";
 $(document).ready(function ()
 {
+	setTimePicker();
+
 	JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uibuilding.index'}, true), 'field_building_name', 'field_building_id', 'building_container');
 	JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiorganization.index'}, true), 'field_org_name', 'field_org_id', 'org_container');
 
@@ -186,6 +188,23 @@ if ($.formUtils)
 		},
 		errorMessage: 'Invalid date',
 		errorMessageKey: ''
+	});
+}
+
+function setTimePicker() {
+	$('input[name="from_"]').timepicker({
+		dynamic: false,
+		dropdown: true,
+		scrollbar: true,
+		startTime: '07:00',
+		timeFormat: 'HH:mm'
+	});
+	$('input[name="to_"]').timepicker({
+		dynamic: false,
+		dropdown: true,
+		scrollbar: true,
+		startTime: '07:00',
+		timeFormat: 'HH:mm'
 	});
 }
 

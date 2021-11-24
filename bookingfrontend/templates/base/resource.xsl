@@ -175,7 +175,6 @@
 												</span>
 											</li>
 										</div>
-
 										<div data-bind="if: overlap == 2">
 											<li class="list-group-item">
 												<i class="far fa-clock mr-2 pt-1" style="color: #ffc107;"></i>

@@ -304,6 +304,11 @@
 			}
 
 			$user = $this->bo->read_single($id);
+			if(!$user)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
+
 			$user['id'] = $id;
 			$user['users_link'] = self::link(array('menuaction' => 'booking.uiuser.index'));
 
@@ -367,6 +372,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$user = $this->bo->read_single($id);
+			if(!$user)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('user'), 'link' => '#user');

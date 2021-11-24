@@ -1,6 +1,6 @@
 <?php
 	$setup_info['bookingfrontend']['name'] = 'bookingfrontend';
-	$setup_info['bookingfrontend']['version'] = '1.0';
+	$setup_info['bookingfrontend']['version'] = '1.1';
 	$setup_info['bookingfrontend']['app_order'] = 9;
 	$setup_info['bookingfrontend']['enable'] = 1;
 	$setup_info['bookingfrontend']['app_group'] = 'office';
@@ -22,7 +22,7 @@
 	$setup_info['bookingfrontend']['depends'][] = array(
 		'appname' => 'booking',
 		'versions' => array(
-			'0.2.57', '0.2.58','0.2.59','0.2.60','0.2.61','0.2.62','0.2.63','0.2.64','0.2.65','0.2.66','0.2.67')
+			'0.2.72','0.2.73', '0.2.74')
 	);
 
 	$setup_info['bookingfrontend']['depends'][] = array(

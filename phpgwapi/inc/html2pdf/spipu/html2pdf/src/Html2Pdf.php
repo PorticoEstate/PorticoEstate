@@ -242,7 +242,7 @@ class Html2Pdf
         return array(
             'major'     => 5,
             'minor'     => 2,
-            'revision'  => 2
+            'revision'  => 3
         );
     }
 
@@ -1036,7 +1036,7 @@ class Html2Pdf
         if ($curr !== null && $sub->parsingHtml->code[$this->_parsePos]->getName() === 'write') {
             $txt = $sub->parsingHtml->code[$this->_parsePos]->getParam('txt');
             $txt = str_replace('[[page_cu]]', $sub->pdf->getMyNumPage($this->_page), $txt);
-            $sub->parsingHtml->code[$this->_parsePos]->setParam('txt', substr($txt, $curr + 1));
+            $sub->parsingHtml->code[$this->_parsePos]->setParam('txt', mb_substr($txt, $curr + 1, null, $this->_encoding));
         } else {
             $sub->_parsePos++;
         }
@@ -2671,7 +2671,13 @@ class Html2Pdf
                 if ($background['img']) {
                     // get the size of the image
                     // WARNING : if URL, "allow_url_fopen" must turned to "on" in php.ini
-                    $infos=@getimagesize($background['img']);
+                    if( strpos($background['img'],'data:') === 0 ) {
+                        $src = base64_decode( preg_replace('#^data:image/[^;]+;base64,#', '', $background['img']) );
+                        $infos = @getimagesizefromstring($src);
+                        $background['img'] = "@{$src}";
+                    }else{
+                        $infos = @getimagesize($background['img']);
+                    }
                     if (is_array($infos) && count($infos)>1) {
                         $background['img'] = [
                             'file'   => $background['img'],
