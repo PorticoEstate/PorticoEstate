@@ -1572,6 +1572,20 @@
 											)
 			);
 
+			/**
+			 * Fetch current value if missing from meta.
+			 */
+			if(empty($attrib['column_info']['precision']))
+			{
+				$column_name = $attrib['column_name'];
+				$attrib_table = $GLOBALS['phpgw']->locations->get_attrib_table($appname, $location);
+				if($attrib_table)
+				{
+					$metadata = $this->_db->metadata($attrib_table);
+					$attrib['column_info']['precision'] = $metadata[$column_name]->max_length;
+				}
+			}
+
 			if ( $inc_choices )
 			{
 				switch ( $this->_db->f('datatype') )
