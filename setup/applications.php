@@ -246,7 +246,7 @@
 				$terror[] = $setup_info[$appname];
 
 				$GLOBALS['phpgw_setup']->process->upgrade($terror,$DEBUG);
-				if ($setup_info[$appname]['tables'])
+				if (isset($setup_info[$appname]['tables']))
 				{
 					echo '<li>' . lang('%1 tables upgraded', lang($appname)) . ".</li>";
 					// The process_upgrade() function also handles registration

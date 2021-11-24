@@ -1,5 +1,8 @@
 $(document).ready(function ()
 {
+	setDateTimePicker();
+
+
 	$("#field_activity").change(function ()
 	{
 		var oArgs = {menuaction: 'bookingfrontend.uiapplication.get_activity_data', activity_id: $(this).val()};
@@ -141,6 +144,63 @@ if ($.formUtils)
 	});
 }
 
+function setDateTimePicker() {
+	moment.locale('nb');
+	$('input[name="from_"]').daterangepicker({
+		singleDatePicker: true,
+		timePicker: true,
+		timePicker24Hour: true,
+		timePickerIncrement: 15,
+		locale: {
+			format: 'DD/MM/YYYY HH:mm',
+			applyLabel: "Ferdig",
+			cancelLabel: "Avbryt",
+			firstDay: 1
+		}
+	});
+
+	$('input[name="to_"]').daterangepicker({
+		singleDatePicker: true,
+		timePicker: true,
+		timePicker24Hour: true,
+		timePickerIncrement: 15,
+		locale: {
+			format: 'DD/MM/YYYY HH:mm',
+			cancelLabel: 'Clear',
+			firstDay: 1
+		}
+	});
+
+	$('input[name="repeat_until"]').daterangepicker({
+		singleDatePicker: true,
+		autoUpdateInput: false,
+		startDate: $('#from_date').val(),
+		autoApply: true,
+		locale: {
+			cancelLabel: 'Clear',
+			firstDay: 1
+		}
+	});
+
+	$('#from_date').on('apply.daterangepicker', function(ev, picker) {
+		const date = picker.startDate.format('DD/MM/YYYY HH:mm');
+
+		$('#from_date').val(date);
+	});
+
+	$('#to_date').on('apply.daterangepicker', function(ev, picker) {
+		const date = picker.startDate.format('DD/MM/YYYY HH:mm');
+
+		$('#to_date').val(date);
+	});
+
+	$('#repeat_date').on('apply.daterangepicker', function(ev, picker) {
+		const date = picker.startDate.format('DD/MM/YYYY');
+
+		$('#repeat_date').val(date);
+	});
+}
+
 function populateTableChk(url, container, colDefs)
 {
 	createTable(container, url, colDefs, 'results');
@@ -153,7 +213,7 @@ function populateTableChkResources(building_id, selection)
 	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [
 						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}
 					]}
-			], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}, {key: 'rescategory_name', label: lang['Resource Type']}
+			], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}, {key: 'type', label: lang['Resource Type']}
 	];
 	populateTableChk(url, container, colDefsResources);
 }

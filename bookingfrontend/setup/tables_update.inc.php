@@ -31,3 +31,18 @@
 		return $GLOBALS['setup_info']['bookingfrontend']['currentver'];
 	}
 
+	/**
+	 * Update Bookingfrontend from v 1.0 to 1.1
+	 */
+
+	$test[] = '1.0';
+	function bookingfrontend_upgrade1_0()
+	{
+		$sql = "UPDATE phpgw_preferences SET preference_json=jsonb_set(preference_json, '{template_set}', '\"bookingfrontend\"', true)"
+			. " WHERE preference_json->>'template_set' = 'aalesund'";
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+
+		$GLOBALS['setup_info']['bookingfrontend']['currentver'] = '1.1';
+		return $GLOBALS['setup_info']['bookingfrontend']['currentver'];
+	}
+

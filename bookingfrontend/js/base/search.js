@@ -1,292 +1,460 @@
 var selectedAutocompleteValue = false;
-$(".upcomming-event-href").attr('data-bind', "attr: {'href': homepage }");
-$(".event_datetime_day").attr('data-bind', "attr: {'font-size': event_fontsize }, text: datetime_day");
-$(".custom-card-link-href").attr('data-bind', "attr: {'href': itemLink }");
-$(".filterboxFirst").attr('data-bind', "attr: {'id': rescategory_id }");
-$(".filtersearch-bookBtn").attr('data-bind', "attr: {'href': forwardToApplicationPage }");
-
+var selectedTown = false;
+var autoUpdate = true;
+var viewmodel;
+var months;
 var urlParams = [];
+var autocompleteData = [];
+var towns = [];
+var limit = 50;
+
+var monthList = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+var searchResults = [];
+
 CreateUrlParams(window.location.search);
-var results = ko.observableArray();
-var tags = ko.observableArray();
+
 //var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 var baseURL = strBaseURL.split('?')[0] + "bookingfrontend/";
-var ViewModel = function (data)
+
+function ViewModel()
 {
-	var self = this;
+	let self = this;
 
-	self.items = (results);
-	self.upcommingevents = ko.observableArray([]);
-	self.notFilterSearch = ko.observable(false);
-	self.filterboxes = ko.observableArray();
-	self.filterbox = ko.observableArray();
-	self.selectedFilterbox = ko.observable(false);
-	self.filterboxCaption = ko.observable();
-	self.selectedFilterboxValue = ko.observable("");
-	self.selectedFacilities = ko.observableArray("");
-	self.selectedActivity = ko.observableArray("");
-	self.selectedTowns = ko.observableArray("");
-	self.selectedTags = ko.observableArray();
-	self.clearTag = function (e)
-	{
+	self.goToBuilding = function (event) { window.open(event.building_url(), '_blank'); };
+	self.goToOrganization = function (event) { if (event.org_id() !== '' && event.org_id !== 0) {window.open(event.org_url(), '_blank');} }
+	self.goToResource = function (event) { window.open(event.resource_url, '_blank'); }
+	self.goToApplication = function (event) {
+		window.open(event.application_url + `&fromDate=${event.fromDateParam}&fromTime=${event.fromTimeParam}&toTime=${event.toTimeParam}`, '_blank');}
+	self.goToEvents = function (event) { window.location = baseURL + '?menuaction=bookingfrontend.uieventsearch.show'; }
 
-		if (e.type == "main_filterbox")
-		{
-			self.selectedActivity("");
-			self.selectedFacilities.removeAll();
-			self.selectedTowns.removeAll();
-			self.selectedTags.removeAll();
-			self.selectedFilterbox(false);
-			self.notFilterSearch(true);
-		}
-		if (e.type == "activity")
-		{
-			self.selectedActivity("");
-		}
-		self.selectedTags.remove(function (item)
-		{
-			return item.value == e.value && item.type == e.type;
-		});
-		self.selectedFacilities.remove(function (item)
-		{
-			return item == e.id;
-		});
-		self.selectedTowns.remove(function (item)
-		{
-			return item == e.id;
-		});
-		DoFilterSearch();
+	self.toggleTown = function (event) {
+		event.showTown(!event.showTown());
 	};
-	self.filterboxSelected = function (e)
-	{
-		self.selectedActivity("");
-		self.selectedFacilities.removeAll();
-		self.selectedTowns.removeAll();
-		self.selectedFilterboxValue(e.filterboxOptionId);
-		self.selectedTags.removeAll();
-		self.selectedFilterbox(true);
-		self.notFilterSearch(false);
-		self.selectedTags.push({id: e.filterboxOptionId, type: "main_filterbox", value: e.filterboxOption});
-		DoFilterSearch(e.filterboxOptionId);
+	self.toggleFacility = function (event) {
+		event.showFacility(!event.showFacility());
 	};
-	self.facilities = ko.observableArray();
-	self.activities = ko.observableArray();
+	self.toggleActivity = function (event) {
+		event.showActivity(!event.showActivity());
+	};
+	self.toggleGear = function (event) {
+		event.showGear(!event.showGear());
+	};
+	self.toggleCapacity = function (event) {
+		event.showCapacity(!event.showCapacity());
+	};
+
+	self.items = ko.observableArray();
+	self.events = ko.observableArray([]);
+	self.resources = ko.observableArray([]);
 	self.towns = ko.observableArray();
-	self.filterSearchItems = ko.observableArray();
+	self.facilities = ko.observableArray([]);
+	self.activities = ko.observableArray([]);
+	self.gear = ko.observableArray([]);
+	self.capacities = ko.observableArray([]);
 
-	self.facilitySelected = function (e)
-	{
-		var exists = ko.utils.arrayFirst(self.selectedFacilities(), function (current)
-		{
-			return current == e.facilityOptionId; // <-- is this the desired seat?
-		});
-		if (!exists)
-		{
-			self.selectedFacilities.push(e.facilityOptionId);
-			self.selectedTags.push({id: e.facilityOptionId, type: "facility", value: e.facilityOption});
-		}
-		else
-		{
-			self.selectedFacilities.remove(function (item)
-			{
-				return item == e.facilityOptionId;
-			});
-			self.selectedTags.remove(function (item)
-			{
-				return item.id == e.facilityOptionId && item.type == "facility";
-			});
-		}
-		DoFilterSearch();
-	};
-	self.activitySelected = function (e)
-	{
-		self.selectedTags.remove(function (current)
-		{
-			return current.type == "activity";
-		});
-		self.selectedTags.push({id: e.activityOptionId, type: "activity", value: e.activityOption});
+	self.showEvents = ko.observable(true);
+	self.showResults = ko.observable(false);
+	self.showSearchText = ko.observable(false);
+	self.showTown = ko.observable(true);
+	self.showFacility = ko.observable(true);
+	self.showActivity = ko.observable(false);
+	self.showGear = ko.observable(false);
+	self.showCapacity = ko.observable(false);
 
-		self.selectedActivity(e.activityOptionId);
-		DoFilterSearch();
-	};
-	self.townSelected = function (e)
-	{
 
-		var exists = ko.utils.arrayFirst(self.selectedTowns(), function (current)
-		{
-			return current == e.townOptionId;
+	self.selectedTown = ko.observable() // Nothing selected by default
+
+	self.selectedTowns = ko.observableArray([]);
+	self.selectedTownIds = ko.observableArray([]);
+	self.selectedFacilities = ko.observableArray([]);
+	self.selectedFacilityIds = ko.observableArray([]);
+	self.selectedActivities = ko.observableArray([]);
+	self.selectedActivityIds = ko.observableArray([]);
+	self.selectedGear = ko.observableArray([]);
+	self.selectedGearIds = ko.observableArray([]);
+	self.selectedCapacities = ko.observableArray([]);
+	self.selectedCapacityIds = ko.observableArray([]);
+
+	self.dateFilter = ko.observable('');
+
+	self.townArrowIcon = ko.pureComputed(function() {
+		return this.showTown() ? "openArrowIcon" : "closedArrowIcon";
+	}, self);
+
+	self.facilityArrowIcon = ko.pureComputed(function() {
+		return this.showFacility() ? "openArrowIcon" : "closedArrowIcon";
+	}, self);
+
+	self.activityArrowIcon = ko.pureComputed(function() {
+		return this.showActivity() ? "openArrowIcon" : "closedArrowIcon";
+	}, self);
+
+	self.gearArrowIcon = ko.pureComputed(function() {
+		return this.showGear() ? "openArrowIcon" : "closedArrowIcon";
+	}, self);
+
+	self.capacityArrowIcon = ko.pureComputed(function() {
+		return this.showCapacity() ? "openArrowIcon" : "closedArrowIcon";
+	}, self);
+
+	self.selectedTownIds.subscribe(function(newValue) {
+		let newSelectedTownIds = newValue;
+		let newSelectedTowns = [];
+		ko.utils.arrayForEach(newSelectedTownIds, function(townId) {
+			var selectedTown = ko.utils.arrayFirst(self.towns(), function(town) {
+				return (town.id === townId);
+			});
+			newSelectedTowns.push(selectedTown.id);
 		});
-		if (!exists)
-		{
-			self.selectedTowns.push(e.townOptionId);
-			self.selectedTags.push({id: e.townOptionId, type: "town", value: e.townOption});
+		self.selectedTowns(newSelectedTowns);
+
+		if (viewmodel.showResults()) {
+			findSearchMethod();
 		}
-		else
-		{
-			self.selectedTowns.remove(function (item)
-			{
-				return item == e.townOptionId;
+	});
+
+	self.selectedFacilityIds.subscribe(function(newValue) {
+		let newSelectedFacilityIds = newValue;
+		let newSelectedFacilities = [];
+		ko.utils.arrayForEach(newSelectedFacilityIds, function(facilityId) {
+			var selectedFacility = ko.utils.arrayFirst(self.facilities(), function(facility) {
+				return (facility.id === facilityId);
 			});
-			self.selectedTags.remove(function (item)
-			{
-				return item.id == e.townOptionId && item.type == "town";
-			});
+			newSelectedFacilities.push(selectedFacility.id);
+		});
+		self.selectedFacilities(newSelectedFacilities);
+
+		if (autoUpdate) {
+			updateResults();
 		}
-		DoFilterSearch();
+	});
+
+	self.selectedActivityIds.subscribe(function(newValue) {
+		let newSelectedActivityIds = newValue;
+		let newSelectedActivities = [];
+		ko.utils.arrayForEach(newSelectedActivityIds, function(activityId) {
+			let selectedActivity = ko.utils.arrayFirst(self.activities(), function(activity) {
+				return (activity.id === activityId);
+			});
+			newSelectedActivities.push(selectedActivity.id);
+		});
+		self.selectedActivities(newSelectedActivities);
+
+		if (autoUpdate) {
+			updateResults();
+		}
+	});
+
+	self.selectedGearIds.subscribe(function(newValue) {
+		let newSelectedGearIds = newValue;
+		let newSelectedGear = [];
+		ko.utils.arrayForEach(newSelectedGearIds, function(gearId) {
+			let selectedGear = ko.utils.arrayFirst(self.gear(), function(gear) {
+				return (gear.id === gearId);
+			});
+			newSelectedGear.push(selectedGear);
+		});
+		self.selectedGear(newSelectedGear);
+	});
+
+	self.selectedCapacityIds.subscribe(function(newValue) {
+		let newSelectedCapacityIds = newValue;
+		let newSelectedCapacities = [];
+		ko.utils.arrayForEach(newSelectedCapacityIds, function(capacityId) {
+			let selectedCapacity = ko.utils.arrayFirst(self.capacities(), function(capacities) {
+				return (capacities.id === capacityId);
+			});
+			newSelectedCapacities.push(selectedCapacity);
+		});
+		self.selectedCapacities(newSelectedCapacities);
+	});
+}
+
+function updateResults() {
+
+	let matchingResources = [];
+	let matchingFacilities = new Set();
+	let matchingActivities = new Set();
+
+	for(let i = 0; i < searchResults.length; i++) {
+		if (viewmodel.selectedFacilities().every(r=>searchResults[i].facilities.includes(r)) && viewmodel.selectedActivities().every(r=>searchResults[i].activities.includes(r))) {
+			matchingResources.push(searchResults[i]);
+			matchingFacilities = new Set([... matchingFacilities, ...searchResults[i].facilities]);
+			matchingActivities = new Set([... matchingActivities, ...searchResults[i].activities]);
+		}
 	}
-};
 
-var initialData = {
-	items: []
-};
+	matchingFacilities = Array.from(matchingFacilities);
+	matchingActivities = Array.from(matchingActivities);
 
-var searchViewModel = new ViewModel(initialData);
-
-ko.applyBindings(searchViewModel, document.getElementById("search-page-content"));
-
-$(document).ready(function ()
-{
-
-	$(".overlay").show();
-	if (urlParams['searchterm'] != "" && typeof urlParams['searchterm'] !== "undefined")
-	{
-		searchViewModel.notFilterSearch(true);
-		doSearch(decodeURI(urlParams['searchterm']));
-	}
-
-	$(".searchBtn").click(function ()
-	{
-		if ($('#mainSearchInput').val() === '')
-		{
-			return false;
-		}
-		else
-		{
-			doSearch();
-			searchViewModel.notFilterSearch(true);
-		}
-	});
-
-	$('#mainSearchInput').bind("enterKey", function (e)
-	{
-		if ($('#mainSearchInput').val() === '')
-		{
-			return false;
-		}
-		else
-		{
-			doSearch();
-			searchViewModel.notFilterSearch(true);
-		}
-	});
-
-	$('#mainSearchInput').keyup(function (e)
-	{
-		if (e.keyCode == 13 && selectedAutocompleteValue == false)
-		{
-			$(this).trigger("enterKey");
-		}
-	});
-	// Event show all
-	// Event hide all, except index 0
-	$(document).on('click', '.filterSearchToggle', function ()
-	{
-		var items = (($(this).prev('div').find(".custom-subcard")));
-		var element = this;
-		$(this).prev('div').find(".custom-subcard").each(function (e)
-		{
-			if (!$(this).is(':visible'))
-			{
-				items[e].style.display = "";
-				$(element).html('<i class="fas fa-angle-up">')
+	let keepFilterVals = [];
+	ko.utils.arrayForEach(viewmodel.facilities(), function(facility) {
+		if (matchingFacilities.includes(facility.id)) {
+			facility.enabled = true;
+		} else {
+			if (viewmodel.selectedFacilityIds().includes(facility.id)) {
+				console.log("checked but should be unchecked");
+				keepFilterVals.push(facility.id);
 			}
-			else
-			{
-				if (e != 1 && e != 0)
-				{
-					items[e].style.display = "none";
-					$(element).html('<i class="fas fa-angle-down">');
-				}
+			facility.enabled = false;
+		}
+	});
+
+	keepFilterVals = [];
+	ko.utils.arrayForEach(viewmodel.activities(), function(activity) {
+		if (matchingActivities.includes(activity.id)) {
+			activity.enabled = true;
+		} else {
+			if (viewmodel.selectedActivityIds().includes(activity.id)) {
+				console.log("checked but should be unchecked");
+				keepFilterVals.push(activity.id);
+			}
+			activity.enabled = false;
+		}
+	});
+
+	viewmodel.resources(matchingResources);
+	viewmodel.toggleFacility(viewmodel);
+	viewmodel.toggleFacility(viewmodel);
+	viewmodel.toggleActivity(viewmodel);
+	viewmodel.toggleActivity(viewmodel);
+}
+
+function validateFilters() {
+	if (viewmodel.facilities().length === 0) {
+		viewmodel.selectedFacilityIds.removeAll();
+	} else {
+		let keepFilterVals = [];
+		ko.utils.arrayForEach(viewmodel.selectedFacilityIds(), function(facilityId) {
+			if (viewmodel.facilities().filter(function(e) {return e.id === facilityId; }).length !== 0) {
+				keepFilterVals.push(facilityId);
 			}
 		});
+
+		viewmodel.selectedFacilityIds(keepFilterVals);
+	}
+
+	if (viewmodel.activities().length === 0) {
+		viewmodel.selectedActivityIds.removeAll();
+	} else {
+	let keepFilterVals = [];
+	ko.utils.arrayForEach(viewmodel.selectedActivityIds(), function(activityId) {
+		if (viewmodel.activities().filter(function(e) {return e.id === activityId; }).length !== 0) {
+			keepFilterVals.push(activityId);
+		}
 	});
-	GetUpcommingEvents();
-	GetFilterBoxData();
+	viewmodel.selectedActivityIds(keepFilterVals);
+	}
+}
+
+$(document).ready(function () {
+	$('.overlay').show();
+
+	viewmodel = new ViewModel();
+	ko.applyBindings(viewmodel, document.getElementById("search-page-content"));
+
+	setSearchListener();
+	setTownListener();
+	getAutocompleteData();
+	setTowns();
+	setDateTimePicker();
+	getUpcomingEvents();
+	$("#searchResults").hide();
 });
 
-function GetUpcommingEvents()
-{
-	var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.events"}, true);
-	$.getJSON(requestURL, function (result)
-	{
-		$(".upcomingevents-header").html(result.header);
-		for (var i = 0; i < result.results.length; i++)
+function searchtermSearch() {
+	const requestUrl = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.query_available_resources", length: -1}, true);
+	let params = {searchterm: $("#mainSearchInput").val(), filter_search_type: 'resource'};
+
+	doSearch(requestUrl, params)
+}
+
+function filterSearch(resCategory) {
+	const requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.resquery_available_resources", length: -1}, true);
+
+	let params = {
+		rescategory_id: resCategory.id,
+	};
+
+	doSearch(requestURL, params);
+}
+
+function doSearch(url, params) {
+	$(".overlay").show();
+	viewmodel.showEvents(false);
+	viewmodel.showSearchText(true);
+	$("#mainSearchInput").blur();
+
+	let dates = findDate();
+	let time = findTime()
+
+	let data = {
+		part_of_town_id: viewmodel.selectedTowns,
+		from_date: dates[0] + ' 00:00:00',
+		to_date: dates[1] + ' 23:59:00',
+		from_time: time[0],
+		to_time: time[1],
+		limit: limit
+	};
+
+	Object.assign(data, params);
+
+	$.ajax({
+		url: url,
+		type: "get",
+		contentType: 'text/plain',
+		data: data,
+		success: function (response)
 		{
-			var datetime_day = result.results[i].datetime_day;
-			var month = result.results[i].datetime_month;
-			var fontsize = "40px";
-			if (month.indexOf("-") != -1)
-			{
-				var months = month.split("-");
-				month = months[0].substr(0, 3) + "-" + months[1].substr(0, 3);
+			$("#mainSearchInput").blur();
+			$("#locationFilter").hide();
+			$("#dateFilter").hide();
+			$("#searchResults").show();
+			viewmodel.showResults(true);
+			viewmodel.showEvents(false);
+			viewmodel.resources.removeAll();
+			viewmodel.facilities.removeAll();
+			viewmodel.activities.removeAll();
+			viewmodel.gear.removeAll();
+			viewmodel.capacities.removeAll();
+			toggleMargin();
+
+			setResources(response.available_resources);
+			setFacilityData(response.facilities);
+			setActivityData(response.activities);
+
+			if (viewmodel.selectedFacilityIds().length > 0 || viewmodel.selectedActivityIds().length > 0) {
+				autoUpdate = false;
+				validateFilters();
+				updateResults();
+				autoUpdate = true;
 			}
-			else
-			{
-				month = month.substr(0, 3);
-			}
-			if (datetime_day.indexOf("-") != -1)
-			{
-				fontsize = "23px";
-			}
-			searchViewModel.upcommingevents.push({
-				name: result.results[i].name,
-				organizer: result.results[i].organizer,
-				event_fontsize: fontsize,
-				datetime_day: datetime_day,
-				datetime_month: month,
-				building_name: result.results[i].building_name,
-				datetime_time: result.results[i].datetime_time,
-				homepage: result.results[i].homepage
-			});
+
+			setTimeout(function () {
+				$('html, body').animate({
+					scrollTop: $("#searchResults").offset().top - 100
+				}, 1000);
+			}, 800);
+
+			$('.overlay').hide();
+		},
+		error: function (e) {
+			console.log(e);
+			$('.overlay').hide();
 		}
-	}).done(function ()
-	{
 	});
 }
 
-function GetFilterBoxData()
-{
-	var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.get_filterboxdata"}, true);
-	$.getJSON(requestURL, function (result)
-	{
-		var boxes = [];
-		for (var i = 0; i < result.length; i++)
-		{
-			var caption = result[i].text;
-			var options = [];
-			for (var k = 0; k < result[i].rescategories.length; k++)
-			{
-				options.push({
-					filterboxOption: result[i].rescategories[k].name,
-					filterboxOptionId: result[i].rescategories[k].id,
-					filterboxSelected: "filterboxSelected"});
-			}
-			boxes.push({filterboxCaption: caption, filterbox: options});
-		}
-		searchViewModel.filterboxes(boxes);
+function findSearchMethod() {
+	let foundResCategory = false;
+	let autocompleteResObj = '';
 
-	}).done(function ()
-	{
-		GetAutocompleteData();
-	});
+	let inputValue = $('#mainSearchInput').val();
+
+	if (inputValue !== '') {
+		for(let i = 0; i < autocompleteData.length && !foundResCategory ; i++) {
+			if (autocompleteData[i].label.toLowerCase() === inputValue.toLowerCase()) {
+
+				if (autocompleteData[i].type === 'lokale') {
+					foundResCategory = true;
+					autocompleteResObj = autocompleteData[i];
+				} else {
+					window.location = phpGWLink('bookingfrontend/', {menuaction: autocompleteData[i].menuaction, id: autocompleteData[i].id}, false);
+				}
+			}
+		}
+		if (foundResCategory) {
+			filterSearch(autocompleteResObj);
+		} else {
+			searchtermSearch();
+		}
+	}
 }
 
-function GetAutocompleteData()
-{
+function resetFilters() {
+	viewmodel.selectedFacilityIds.removeAll();
+	viewmodel.selectedActivityIds.removeAll();
+	viewmodel.selectedFacilities.removeAll();
+	viewmodel.selectedActivities.removeAll();
+	viewmodel.dateFilter('');
+	$('#fromTime').val('');
+	$('#toTime').val('');
+	viewmodel.selectedTownIds.removeAll();
+	viewmodel.selectedTowns.removeAll();
+}
 
-	var autocompleteData = [];
-//  var requestURL = baseURL + "?menuaction=bookingfrontend.uisearch.autocomplete&phpgw_return_as=json";
-	var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.autocomplete"}, true);
+function clearSearch() {
+	viewmodel.selectedFacilityIds.removeAll();
+	viewmodel.selectedActivityIds.removeAll();
+	viewmodel.selectedFacilities.removeAll();
+	viewmodel.selectedActivities.removeAll();
+	viewmodel.dateFilter('');
+	$('#fromTime').val('');
+	$('#toTime').val('');
+	$('#mainSearchInput').val('');
+
+	$("#locationFilter").show();
+	$("#dateFilter").show();
+	$("#searchResults").hide();
+	viewmodel.showResults(false);
+	toggleMargin();
+	viewmodel.selectedTownIds.removeAll();
+	viewmodel.selectedTowns.removeAll();
+	viewmodel.showEvents(true);
+
+}
+
+function findDate() {
+	let fromDate = '';
+	let toDate = '';
+
+	if (viewmodel.dateFilter() !== '' && typeof viewmodel.dateFilter() !== 'undefined' && !(/[a-zA-Z]/g).test(viewmodel.dateFilter())) {
+		let date = viewmodel.dateFilter();
+
+		fromDate = date.substr(0,10)
+
+		if (date.includes("-")) {
+			toDate = date.substr(13, 18);
+		} else {
+			toDate = fromDate
+		}
+	} else {
+		let d = new Date();
+		const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d);
+		const mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d);
+		const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
+		fromDate = `${da}.${mo}.${ye}`;
+		viewmodel.dateFilter(fromDate);
+		toDate = fromDate;
+	}
+
+	return [fromDate, toDate];
+}
+
+function findTime() {
+	let fromTime =  $("#fromTime").val() === 'undefined' || (/[a-zA-Z]/g).test($("#fromTime").val()) ? '' : $("#fromTime").val();
+	let toTime =  $("#toTime").val() === 'undefined' || (/[a-zA-Z]/g).test($("#toTime").val()) ? '' : $("#toTime").val();
+
+
+	if (fromTime !== '' && toTime === '') {
+		toTime = '23:30';
+	}
+
+	if (fromTime !== '' && toTime !== '') {
+		var startTime = moment(fromTime, "HH:mm");
+		var endTime = moment(toTime, "HH:mm");
+
+		if (startTime.isAfter(endTime)){
+			toTime = '23:30';
+			$("#toTime").val('');
+		}
+	}
+	return [fromTime, toTime];
+}
+
+function getAutocompleteData() {
+	var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.autocomplete_resource_and_building"}, true);
 
 	$.getJSON(requestURL, function (result)
 	{
@@ -295,8 +463,7 @@ function GetAutocompleteData()
 		//end hack
 		$.each(result, function (i, field)
 		{
-			autocompleteData.push({value: i, label: field.name, type: field.type, menuaction: field.menuaction, id: field.id
-			});
+			autocompleteData.push({value: i, label: field.name, type: field.type, menuaction: field.menuaction, id: field.id});
 		});
 	}).done(function ()
 	{
@@ -305,224 +472,313 @@ function GetAutocompleteData()
 			source: autocompleteData,
 			minLength: 1,
 			highlightMatches: true,
-			template: '<span>{{ label }}</span>', //<span>{{ type }}</span>
+			template: '<span>{{ label }}</span>',
 			callback: function (value, index, object, event)
 			{
-				selectedAutocompleteValue = true;
-				$('#mainSearchInput').val(autocompleteData[value].label);
-				//  window.location.href = baseURL + "?menuaction=" + autocompleteData[value].menuaction + "&id=" + autocompleteData[value].id;
-				window.location.href = phpGWLink('bookingfrontend/', {menuaction: autocompleteData[value].menuaction, id: autocompleteData[value].id}, false);
-				return;
+				if (value !== 'hiddenText') {
+					selectedAutocompleteValue = true;
+					$('#mainSearchInput').val(autocompleteData[value].label);
+
+					if (autocompleteData[value].type !== 'lokale') {
+						window.location.href = phpGWLink('bookingfrontend/', {menuaction: autocompleteData[value].menuaction, id: autocompleteData[value].id}, false);
+					}
+				} else {
+					$('#mainSearchInput').val('');
+				}
 			}
 		});
-		$(".overlay").hide();
 	});
 }
 
+function getUpcomingEvents() {
+	let requestURL;
+	let reqObject = {
+		menuaction: "bookingfrontend.uieventsearch.upcoming_events",
+		orgID: '',
+		fromDate: Util.Format.FormatDateForBackend(new Date()),
+		toDate: '',
+		buildingID: '',
+		facilityTypeID: '',
+		loggedInOrgs: '',
+		start: 0,
+		end: 4
+	}
 
-function doSearch(searchterm_value)
-{
-	$(".overlay").show();
-	$("#mainSearchInput").blur();
-	$("#welcomeResult").hide();
-	searchViewModel.filterSearchItems.removeAll();
-	searchViewModel.selectedFacilities.removeAll();
-	searchViewModel.selectedFilterboxValue("");
-	searchViewModel.selectedActivity("");
-	searchViewModel.selectedTowns.removeAll();
-	searchViewModel.selectedFilterbox(false);
-	//   var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
-	searchViewModel.selectedTags.removeAll();
-	var requestUrl = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.query", length: -1}, true);
-	var searchTerm;
-	if (searchterm_value != "" && typeof searchterm_value !== "undefined")
-	{
-		searchTerm = searchterm_value;
-	}
-	else
-	{
-		searchTerm = $("#mainSearchInput").val();
-	}
+	requestURL = phpGWLink('bookingfrontend/', reqObject, true);
 
 	$.ajax({
-		url: requestUrl,
-		type: "get",
-		contentType: 'text/plain',
-		data: {searchterm: searchTerm},
-		success: function (response)
-		{
-			results.removeAll();
-			for (var i = 0; i < response.results.results.length; i++)
-			{
-				var url = "";
-				if (response.results.results[i].type == "building")
-				{
-					url = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibuilding.show", id: response.results.results[i].id}, false);
-
-				}
-				else if (response.results.results[i].type == "resource")
-				{
-					if (response.results.results[i].simple_booking == 1)
-					{
-						url = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.add", resource_id: response.results.results[i].id,
-							building_id: response.results.results[i].building_id, simple: 1}, false);
-					}
-					else
-					{
-						url = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiresource.show", id: response.results.results[i].id,
-							building_id: response.results.results[i].building_id}, false);
-					}
-				}
-				else if (response.results.results[i].type == "organization")
-				{
-					url = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiorganization.show", id: response.results.results[i].id}, false);
-				}
-				results.push({name: response.results.results[i].name,
-					street: typeof response.results.results[i].street === "undefined" ? "" : response.results.results[i].street,
-					postcode: (typeof response.results.results[i].zip_code === "undefined" ? "" : response.results.results[i].zip_code) + " " +
-						typeof response.results.results[i].city === "undefined" ? "" : response.results.results[i].city,
-					activity_name: response.results.results[i].activity_name,
-					itemLink: url,
-					resultType: GetTypeName(response.results.results[i].type).toUpperCase(),
-					type: response.results.results[i].type,
-					tagItems: []
-				});
-			}
-			setTimeout(function ()
-			{
-				$('html, body').animate({
-					scrollTop: $("#searchResult").offset().top - 100
-				}, 1000);
-			}, 800);
-
-			$(".overlay").hide();
-
+		url: requestURL,
+		dataType : 'json',
+		success: function (result) {
+			setEventData(result);
 		},
-		error: function (xhr)
-		{
+		error: function (error) {
+			console.log(error);
 		}
 	});
 }
 
-function DoFilterSearch()
-{
-	$("#mainSearchInput").blur();
-	$("#welcomeResult").hide();
-	results.removeAll();
-	var requestURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.resquery", rescategory_id: searchViewModel.selectedFilterboxValue(), facility_id: searchViewModel.selectedFacilities(), part_of_town_id: searchViewModel.selectedTowns(), activity_id: searchViewModel.selectedActivity(), length: -1}, true);
+function showMore() {
+	limit += 20;
+	findSearchMethod();
+}
 
-	searchViewModel.facilities.removeAll();
-	searchViewModel.activities.removeAll();
-	searchViewModel.towns.removeAll();
+function setSearchListener() {
 
-	$.getJSON(requestURL, function (result)
+	$('#mainSearchInput').keyup(function (e)
 	{
-		for (var i = 0; i < result.facilities.length; i++)
-		{
-			var selectedFacilities = false;
-			var alreadySelected = ko.utils.arrayFirst(searchViewModel.selectedFacilities(), function (current)
-			{
-				return current == result.facilities[i].id;
-			});
-			if (alreadySelected)
-			{
-				selectedFacilities = true;
+		if (e.key === "Enter") {
+			let inputValue = $('#mainSearchInput').val();
+
+			$('#autocompleter-1').attr('class', 'autocompleter autocompleter-closed');
+
+			if (inputValue === '') {
+				viewmodel.showSearchText(false);
+				viewmodel.showEvents(true);
+				$("#locationFilter").show();
+				$("#dateFilter").show();
+				$("#searchResults").hide();
+				viewmodel.showResults(false);
+				toggleMargin();
+				resetFilters();
+				viewmodel.selectedTownIds.removeAll();
+				viewmodel.selectedTowns.removeAll();
 			}
-			searchViewModel.facilities.push(ko.observable({index: i, facilityOption: result.facilities[i].name,
-				facilityOptionId: result.facilities[i].id,
-				facilitySelected: "facilitySelected",
-				selected: ko.observable(selectedFacilities)}));
 		}
+	});
 
-		for (var i = 0; i < result.activities.length; i++)
-		{
-			searchViewModel.activities.push({activityOption: result.activities[i].name,
-				activityOptionId: result.activities[i].id,
-				activitySelected: "activitySelected"});
-		}
-
-		for (var i = 0; i < result.partoftowns.length; i++)
-		{
-			var selectedTown = false;
-			var alreadySelected = ko.utils.arrayFirst(searchViewModel.selectedTowns(), function (current)
-			{
-				return current == result.partoftowns[i].id;
-			});
-			if (alreadySelected)
-			{
-				selectedTown = true;
-			}
-
-			searchViewModel.towns.push({townOption: result.partoftowns[i].name,
-				townOptionId: result.partoftowns[i].id,
-				townSelected: "townSelected",
-				selected: ko.observable(selectedTown)});
-		}
-
-		var items = [];
-		for (var i = 0; i < result.buildings.length; i++)
-		{
-			var resources = [];
-			for (var k = 0; k < result.buildings[i].resources.length; k++)
-			{
-				var bookBtnURL;
-				if (result.buildings[i].resources[k].simple_booking == 1)
-				{
-					bookBtnURL = phpGWLink('bookingfrontend/', {
-						menuaction: "bookingfrontend.uiapplication.add",
-						resource_id: result.buildings[i].resources[k].id,
-						building_id: result.buildings[i].id,
-						simple: 1
-					}, false);
-
-				}
-				else
-				{
-					bookBtnURL = phpGWLink('bookingfrontend/', {
-						menuaction: "bookingfrontend.uiresource.show",
-						id: result.buildings[i].resources[k].id,
-						building_id: result.buildings[i].id
-					}, false);
-				}
-
-				var facilities = [];
-				var activities = [];
-				for (var f = 0; f < result.buildings[i].resources[k].facilities_list.length; f++)
-				{
-					facilities.push({name: result.buildings[i].resources[k].facilities_list[f].name});
-				}
-				for (var f = 0; f < result.buildings[i].resources[k].activities_list.length; f++)
-				{
-					activities.push({name: result.buildings[i].resources[k].activities_list[f].name});
-				}
-				resources.push({name: result.buildings[i].resources[k].name, forwardToApplicationPage: bookBtnURL, id: result.buildings[i].resources[k].id, facilities: facilities, activities: activities, limit: result.buildings[i].resources.length > 1 ? true : false});
-
-			}
-			items.push({resultType: GetTypeName("building").toUpperCase(),
-				name: result.buildings[i].name,
-				street: result.buildings[i].street,
-				postcode: result.buildings[i].zip_code + " " + result.buildings[i].city,
-				filterSearchItemsResources: ko.observableArray(resources),
-				itemLink: phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibuilding.show", id: result.buildings[i].id}, false)});
-		}
-		searchViewModel.filterSearchItems(items);
-
-
+	$("#searchBtn").click(function () {
+		findSearchMethod();
 	});
 }
 
-function GetTypeName(type)
-{
-	if (type.toLowerCase() == "building")
-	{
-		return "anlegg";
+function setTownListener() {
+	$("#locationFilter").change(function (value) {
+		if (typeof viewmodel.selectedTown() !== 'undefined') {
+			viewmodel.selectedTownIds.removeAll();
+			viewmodel.selectedTownIds.push(viewmodel.selectedTown().id);
+		}
+		else {
+			viewmodel.selectedTownIds.removeAll();
+		}
+	});
+}
+
+function setTowns() {
+	let requestURL;
+	let reqObject = {
+		menuaction: "bookingfrontend.uisearch.get_all_towns"
 	}
-	else if (type.toLowerCase() == "resource")
-	{
-		return "lokale";
+
+	requestURL = phpGWLink('bookingfrontend/', reqObject, true);
+
+	$.ajax({
+		url: requestURL,
+		dataType : 'json',
+		success: function (result) {
+			setTownData(result);
+		},
+		error: function (error) {
+			console.log(error);
+		}
+	});
+}
+
+function timeListener() {
+	if (typeof($('#fromTime').val()) === 'undefined' || $('#fromTime').val() === '' || (/[a-zA-Z]/g).test($('#fromTime').val())) {
+		$('#toTime').prop("disabled", true);
+	} else {
+		$('#toTime').prop("disabled", false);
+		$('#toTime').timepicker('option', 'minTime', $('#fromTime').val());
+		findSearchMethod();
 	}
-	else if (type.toLowerCase() == "organization")
-	{
-		return "org";
+}
+
+function setDateTimePicker() {
+	moment.locale('nb');
+	$('input[name="datefilter"]').daterangepicker({
+		singleDatePicker: true,
+		autoUpdateInput: false,
+		autoApply: true,
+		locale: {
+			cancelLabel: 'Clear',
+			firstDay: 1
+		}
+	});
+
+	$('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+		const startDate = picker.startDate.format('DD.MM.YYYY');
+		const endDate = picker.endDate.format('DD.MM.YYYY');
+
+		if(startDate === endDate) {
+			viewmodel.dateFilter(startDate);
+		} else {
+			viewmodel.dateFilter(startDate + ' - ' + endDate);
+		}
+
+		if($('.dateFilterResult').val() !== '' && viewmodel.showResults()) {
+			findSearchMethod();
+		}
+	});
+
+	$('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+		viewmodel.dateFilter('');
+	});
+
+	$('#fromTime').timepicker({
+		timeFormat: 'HH:mm',
+		interval: 30,
+		minTime: '00:00',
+		maxTime: '23:30',
+		dynamic: false,
+		dropdown: true,
+		scrollbar: true,
+		change: timeListener});
+
+	$('#toTime').timepicker({
+		timeFormat: 'HH:mm',
+		interval: 30,
+		minTime: '00:00',
+		maxTime: '23:30',
+		dynamic: false,
+		dropdown: true,
+		scrollbar: true,
+		change: timeListener});
+	$('#toTime').prop("disabled", true);
+
+}
+
+function setEventData(result) {
+	for (let i = 0; i < result.length; i++) {
+
+		result[i].building_url = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibuilding.show", id: result[i].building_id}, false);
+		result[i].org_url = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiorganization.show", id: result[i].org_id}, false);
+
+		var formattedDateAndMonthArr = Util.Format.GetDateFormat(result[i].from, result[i].to);
+		var eventTime = Util.Format.GetTimeFormat(result[i].from, result[i].to);
+
+		viewmodel.events.push({
+			org_id: ko.observable(result[i].org_id),
+			event_name: ko.observable(result[i].event_name),
+			formattedDate: ko.observable(formattedDateAndMonthArr[0]),
+			monthText: ko.observable(formattedDateAndMonthArr[1]),
+			event_time: ko.observable(eventTime),
+			org_name: ko.observable(result[i].org_name),
+			location_name: ko.observable(result[i].location_name),
+			building_url: ko.observable(result[i].building_url),
+			org_url: ko.observable(result[i].org_url),
+			event_id: ko.observable(result[i].event_id)
+		});
 	}
+	$('.overlay').hide();
+}
+
+function setResources(resources) {
+	searchResults = [];
+		for (let i = 0; i < resources.length; i++) {
+			let dates = splitDateIntoDateAndTime(resources[i].from, resources[i].to);
+
+			searchResults.push({
+				name: resources[i].resource_name,
+				id: resources[i].resource_id,
+				location: resources[i].building_name,
+				date: dates['date'],
+				month: dates['month'],
+				time: dates['time'],
+				fromDateParam: dates['fromDateParam'],
+				fromTimeParam: dates['fromTimeParam'],
+				toTimeParam: dates['toTimeParam'],
+				resource_url: phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiresource.show", id: resources[i].resource_id, building_id: resources[i].building_id}, false),
+				building_url: phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uibuilding.show", id: resources[i].building_id}, false),
+				application_url: phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.add", building_id: resources[i].building_id, resource_id: resources[i].resource_id}, false),
+				activities: resources[i].activities,
+				facilities: resources[i].facilities,
+				town_id: resources[i].part_of_town_id
+			});
+		}
+	viewmodel.resources(searchResults);
+}
+
+function splitDateIntoDateAndTime(from, to) {
+	let fromDay = from.substr(0,2);
+	let fromMonth = from.substr(3,2);
+	let fromYear = from.substr(6, 4);
+
+	let fromDateParam =`${fromMonth}/${fromDay}/${fromYear}`;
+
+	let date = (from.substr(0,10) === to.substr(0,10)) ? from.substr(0,3) : from.substr(0,3) + '-' + to.substr(0,3);
+	let month = (monthList[parseInt(from.substr(3,2))-1]);
+	let time = from.substr(11, 5) + ' - ' + to.substr(11, 5);
+
+	return {
+		'date': date,
+		'month': months[month],
+		'time': time,
+		'fromDateParam': fromDateParam,
+		'fromTimeParam': from.substr(11, 5),
+		'toTimeParam': to.substr(11, 5)
+	}
+
+}
+
+function setTownData(towns) {
+	if (towns.length !== 0) {
+		towns.sort(compare);
+		for (let i = 0; i < towns.length; i++) {
+			let lower = towns[i].name.toLowerCase();
+
+			viewmodel.towns.push({
+				name: towns[i].name.charAt(0) + lower.slice(1),
+				id:  towns[i].id,
+			});
+		}
+	} else {
+		viewmodel.showTown(false);
+	}
+}
+
+function setFacilityData(facilities) {
+	if (facilities.length !== 0) {
+		for (let i = 0; i < facilities.length; i++) {
+			viewmodel.facilities.push({
+				name: facilities[i].name,
+				id: facilities[i].id,
+				enabled: true
+			});
+		}
+	} else {
+		viewmodel.showFacility(false);
+	}
+}
+
+function setActivityData(activities) {
+	if (activities.length !== 0) {
+		for (let i = 0; i < activities.length; i++) {
+			viewmodel.activities.push({
+				name: activities[i].name,
+				id: activities[i].id,
+				enabled: true
+			});
+		}
+	} else {
+		viewmodel.showActivity(false);
+	}
+}
+
+function toggleMargin() {
+	if (viewmodel.showResults()) {
+		$('.mainSearchInput').css('margin-bottom', '0px');
+	} else {
+		$('.mainSearchInput').css('margin-bottom', '20px');
+	}
+}
+
+function compare( a, b ) {
+	if ( a.name < b.name ){
+		return -1;
+	}
+	if ( a.name > b.name ){
+		return 1;
+	}
+	return 0;
 }
