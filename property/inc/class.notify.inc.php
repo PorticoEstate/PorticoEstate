@@ -315,10 +315,9 @@ JS;
 
 			$update	 = false;
 			$type	 = phpgw::get_var('type');
-			if ($notify	 = phpgw::get_var('notify'))
+			if ($notify	 = phpgw::get_var('notify', 'bool'))
 			{
-				$ids = $notify['ids'];
-				$ids = phpgw::get_var('ids');
+				$ids = phpgw::get_var('ids', 'int');
 //				_debug_array($ids);
 				if ($ids)
 				{
