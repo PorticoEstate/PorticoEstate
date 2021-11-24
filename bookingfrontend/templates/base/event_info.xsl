@@ -78,17 +78,22 @@
 
 	<xsl:if test="event/edit_link">
 		<div class="actions">
-			<a  href="{event/edit_link}" target="_blank" class="btn btn-light mt-4">
+			<a  href="{event/edit_link}" class="btn btn-light mt-4">
 				<xsl:value-of select="php:function('lang', 'Edit event')"/>
 			</a>
 			<xsl:if test="user_can_delete_events = 1">
-				<a href="{event/cancel_link}" target="_blank" class="btn btn-light mt-4">
+				<a href="{event/cancel_link}" class="btn btn-light mt-4">
 					<xsl:value-of select="php:function('lang', 'Cancel event')"/>
 				</a>
 			</xsl:if>
 		</div>
 	</xsl:if>
 	<xsl:if test="event/ical_link">
+		<xsl:if test="event/copy_link">
+			<a href="{event/copy_link}" target="_blank" class="btn btn-light mt-4">
+				<xsl:value-of select="php:function('lang', 'Copy application')"/>
+			</a>
+		</xsl:if>
 		<div class="actions">
 			<a class="btn btn-light mt-4" href="{event/ical_link}" target="_blank">
 				iCal
