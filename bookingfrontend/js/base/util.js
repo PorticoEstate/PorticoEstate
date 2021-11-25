@@ -21,8 +21,10 @@ var Util = function ()
 		var getDateFormat = function (from, to)
 		{
 			let ret = [];
-			let fromDate = new Date(from);
-			let toDate = new Date(to);
+			let fromDate = new Date(from.replace(" ", "T"));
+			let toDate = new Date(to.replace(" ", "T"));
+//			let fromDate = new Date(from);
+//			let toDate = new Date(to);
 
 			if (fromDate.getDate() === toDate.getDate())
 			{
@@ -42,8 +44,10 @@ var Util = function ()
 
 		var getTimeFormat = function (from, to)
 		{
-			let fromDate = new Date(from);
-			let toDate = new Date(to);
+			let fromDate = new Date(from.replace(" ", "T"));
+			let toDate = new Date(to.replace(" ", "T"));
+//			let fromDate = new Date(from);
+//			let toDate = new Date(to);
 			let ret;
 
 			ret = (fromDate.getHours() < 10 ? '0' + fromDate.getHours() : fromDate.getHours()) + ":"
