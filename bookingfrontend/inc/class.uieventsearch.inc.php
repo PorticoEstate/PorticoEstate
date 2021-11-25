@@ -117,10 +117,6 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 
 		foreach ($events as &$event)
 		{
-
-			//Needed for initate date object in safari-browser
-			$event['from'] = str_replace(" ", "T", $event['from']);
-			$event['to'] = str_replace(" ", "T", $event['to']);
 			if(isset($organizations[$event['org_num']]))
 			{
 				$organization_info = $organizations[$event['org_num']];
