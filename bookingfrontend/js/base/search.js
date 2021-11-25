@@ -1,3 +1,4 @@
+var check_recursive_call = false;
 var selectedAutocompleteValue = false;
 var selectedTown = false;
 var autoUpdate = true;
@@ -715,14 +716,22 @@ function setTowns()
 
 function timeListener()
 {
+	if(check_recursive_call)
+	{
+		return;
+	}
 	if (typeof ($('#fromTime').val()) === 'undefined' || $('#fromTime').val() === '' || (/[a-zA-Z]/g).test($('#fromTime').val()))
 	{
+		check_recursive_call = true
 		$('#toTime').prop("disabled", true);
+		check_recursive_call = false
 	}
 	else
 	{
+		check_recursive_call = true
 		$('#toTime').prop("disabled", false);
 		$('#toTime').timepicker('option', 'minTime', $('#fromTime').val());
+		check_recursive_call = false
 		findSearchMethod();
 	}
 }
