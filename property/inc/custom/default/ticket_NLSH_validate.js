@@ -27,8 +27,8 @@ function show_feiltyper()
 		case '176': // title="Periodisk vedlikehold
 			if (my_groups[15]) // forvalter
 			{
-				document.getElementById('label_feiltyper').style.display = 'block';
-				document.getElementById('id_feiltyper').style.display = 'block';
+				document.getElementById('label_feiltyper').style.display = 'inline-block';
+				document.getElementById('id_feiltyper').style.display = 'inline-block';
 				document.getElementById('add_new_value_feiltyper').style.display = 'block';
 				document.getElementById('delete_value_feiltyper').style.display = 'block';
 			}
