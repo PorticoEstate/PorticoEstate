@@ -1,3 +1,5 @@
+/* global ko, Intl, moment, Util */
+
 var check_recursive_call = false;
 var selectedAutocompleteValue = false;
 var selectedTown = false;
@@ -34,19 +36,19 @@ function ViewModel()
 		{
 			window.open(event.org_url(), '_blank');
 		}
-	}
+	};
 	self.goToResource = function (event)
 	{
 		window.open(event.resource_url, '_blank');
-	}
+	};
 	self.goToApplication = function (event)
 	{
 		window.open(event.application_url + `&fromDate=${event.fromDateParam}&fromTime=${event.fromTimeParam}&toTime=${event.toTimeParam}`, '_blank');
-	}
+	};
 	self.goToEvents = function (event)
 	{
 		window.location = baseURL + '?menuaction=bookingfrontend.uieventsearch.show';
-	}
+	};
 
 	self.toggleTown = function (event)
 	{
@@ -88,7 +90,7 @@ function ViewModel()
 	self.showCapacity = ko.observable(false);
 
 
-	self.selectedTown = ko.observable() // Nothing selected by default
+	self.selectedTown = ko.observable(); // Nothing selected by default
 
 	self.selectedTowns = ko.observableArray([]);
 	self.selectedTownIds = ko.observableArray([]);
@@ -349,7 +351,7 @@ function searchtermSearch()
 	const requestUrl = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uisearch.query_available_resources", length: -1}, true);
 	let params = {searchterm: $("#mainSearchInput").val(), filter_search_type: 'resource'};
 
-	doSearch(requestUrl, params)
+	doSearch(requestUrl, params);
 }
 
 function filterSearch(resCategory)
@@ -371,7 +373,7 @@ function doSearch(url, params)
 	$("#mainSearchInput").blur();
 
 	let dates = findDate();
-	let time = findTime()
+	let time = findTime();
 
 	let data = {
 		part_of_town_id: viewmodel.selectedTowns,
@@ -513,7 +515,7 @@ function findDate()
 	{
 		let date = viewmodel.dateFilter();
 
-		fromDate = date.substr(0, 10)
+		fromDate = date.substr(0, 10);
 
 		if (date.includes("-"))
 		{
@@ -521,7 +523,7 @@ function findDate()
 		}
 		else
 		{
-			toDate = fromDate
+			toDate = fromDate;
 		}
 	}
 	else
@@ -618,7 +620,7 @@ function getUpcomingEvents()
 		loggedInOrgs: '',
 		start: 0,
 		end: 4
-	}
+	};
 
 	requestURL = phpGWLink('bookingfrontend/', reqObject, true);
 
@@ -696,7 +698,7 @@ function setTowns()
 	let requestURL;
 	let reqObject = {
 		menuaction: "bookingfrontend.uisearch.get_all_towns"
-	}
+	};
 
 	requestURL = phpGWLink('bookingfrontend/', reqObject, true);
 
@@ -722,16 +724,16 @@ function timeListener()
 	}
 	if (typeof ($('#fromTime').val()) === 'undefined' || $('#fromTime').val() === '' || (/[a-zA-Z]/g).test($('#fromTime').val()))
 	{
-		check_recursive_call = true
+		check_recursive_call = true;
 		$('#toTime').prop("disabled", true);
-		check_recursive_call = false
+		check_recursive_call = false;
 	}
 	else
 	{
-		check_recursive_call = true
+		check_recursive_call = true;
 		$('#toTime').prop("disabled", false);
 		$('#toTime').timepicker('option', 'minTime', $('#fromTime').val());
-		check_recursive_call = false
+		check_recursive_call = false;
 		findSearchMethod();
 	}
 }
@@ -871,7 +873,7 @@ function splitDateIntoDateAndTime(from, to)
 		'fromDateParam': fromDateParam,
 		'fromTimeParam': from.substr(11, 5),
 		'toTimeParam': to.substr(11, 5)
-	}
+	};
 
 }
 
@@ -886,7 +888,7 @@ function setTownData(towns)
 
 			viewmodel.towns.push({
 				name: towns[i].name.charAt(0) + lower.slice(1),
-				id: towns[i].id,
+				id: towns[i].id
 			});
 		}
 	}
