@@ -1090,14 +1090,17 @@
 //						self::redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$event['id']));
 						}
 					}
-					$receipt = $this->bo->update($event);
-					if(empty($event['application_id']))
+					if(!$errors)
 					{
-						self::redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $event['id']));
-					}
-					else
-					{
-						self::redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $event['application_id']));
+						$receipt = $this->bo->update($event);
+						if(empty($event['application_id']))
+						{
+							self::redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $event['id']));
+						}
+						else
+						{
+							self::redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $event['application_id']));
+						}
 					}
 				}
 			}
