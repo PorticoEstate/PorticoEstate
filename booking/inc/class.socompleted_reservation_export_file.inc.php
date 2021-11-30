@@ -123,6 +123,7 @@
 			$export_configurations = array_fill_keys($export_types, array());
 			$total_items = array_fill_keys($export_types, 0);
 			$total_cost = array_fill_keys($export_types, 0.0);
+			$export_log = "";
 
 			$entity_export_files = array();
 			$export_files = array();
