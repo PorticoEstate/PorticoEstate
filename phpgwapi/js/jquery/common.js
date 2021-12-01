@@ -499,11 +499,11 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 			if (typeof (oTable) != 'undefined')
 			{
 				var api = oTable.api();
-				window.setTimeout(function ()
-				{
-					api.columns.adjust()
-						.fixedColumns().relayout();
-				}, 50);
+//				window.setTimeout(function ()
+//				{
+//					api.columns.adjust()
+//						.fixedColumns().relayout();
+//				}, 50);
 
 				api.buttons('.record').enable(false);
 				oTable.makeEditable({

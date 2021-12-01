@@ -312,7 +312,9 @@
 					$end = $to_->format('H:i');
 
 					if ($start == $end)
+					{
 						continue;
+					}
 
 					$resource = $this->bo->so->get_resource_info($res);
 					$_mymail = $this->bo->so->get_contact_mail($e, 'allocation');
@@ -358,7 +360,9 @@
 					$end = $to_->format('H:i');
 
 					if ($start == $end)
+					{
 						continue;
+					}
 
 					$resource = $this->bo->so->get_resource_info($res);
 					$_mymail = $this->bo->so->get_contact_mail($e, 'booking');
@@ -845,19 +849,6 @@
 
 							if (phpgw::get_var('sendtocollision', 'bool', 'POST'))
 							{
-								$comment_text_log = "<span style='color: green;'>" . lang('Message sent about the changes in the reservations') . ':</span><br />';
-								$res = array();
-								$resname = '';
-								foreach ($event['resources'] as $resid)
-								{
-									$res = $this->bo->so->get_resource_info($resid);
-									$resname .= $res['name'] . ', ';
-								}
-								$comment_text_log .= $event['building_name'] . " (" . substr($resname, 0, -2) . ") " . pretty_timestamp($event['from_']) . " - " . pretty_timestamp($event['to_']);
-								$this->add_comment($event, $comment_text_log);
-							}
-							if (phpgw::get_var('sendtocollision', 'bool', 'POST'))
-							{
 
 								$subject = $config->config_data['event_conflict_mail_subject'];
 								$body = "<p>" . $config->config_data['event_mail_conflict_contact_active_collision'] . "<br />\n" . phpgw::get_var('mail','html', 'POST') . "\n";
@@ -893,8 +884,24 @@
 								}
 								if ($sendt)
 								{
+									/**start log comment**/
+									$comment_text_log = "<span style='color: green;'>" . lang('Message sent about the changes in the reservations') . ':</span><br />';
+									$res = array();
+									$resname = '';
+									foreach ($event['resources'] as $resid)
+									{
+										$res = $this->bo->so->get_resource_info($resid);
+										$resname .= $res['name'] . ', ';
+									}
+									$comment_text_log .= $event['building_name'] . " (" . substr($resname, 0, -2) . ") " . pretty_timestamp($event['from_']) . " - " . pretty_timestamp($event['to_']);
+									$this->add_comment($event, $comment_text_log);
+									/**End log comment**/
+
+									/**start log comment**/
+
 									$comment = "<p>Melding om konflikt er sendt til" . implode(', ', $mail_sendt_to) . "<br />\n" . phpgw::get_var('mail','html', 'POST') . "</p>";
 									$this->add_comment($event, $comment);
+									/**End log comment**/
 								}
 							}
 							if (phpgw::get_var('sendtocontact', 'bool', 'POST'))
@@ -1090,25 +1097,41 @@
 //						self::redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$event['id']));
 						}
 					}
-					$receipt = $this->bo->update($event);
-					if(empty($event['application_id']))
+					
+					/**
+					 * Tolerate overlap 
+					 */
+					$_errors = $errors;
+					unset($_errors['allocation']);
+					unset($_errors['booking']);
+					if(!$_errors)
 					{
-						self::redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $event['id']));
-					}
-					else
-					{
-						self::redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $event['application_id']));
+						$receipt = $this->bo->update($event);
+						if(!$errors)
+						{
+							if(empty($event['application_id']))
+							{
+								self::redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $event['id']));
+							}
+							else
+							{
+								self::redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $event['application_id']));
+							}
+						}
 					}
 				}
 			}
 
+			/**
+			 * Translate into text
+			 */
 			if ($errors['allocation'])
 			{
-				$errors['allocation'] = lang('Event created, Overlaps with existing allocation, Remember to send a notification');
+				$errors['allocation'] = lang('Overlaps with existing allocation %1. Remember to send a notification', " #" . implode(', #',$errors['allocation'][0])) ;
 			}
 			elseif ($errors['booking'])
 			{
-				$errors['booking'] = lang('Event created, Overlaps with existing booking, Remember to send a notification');
+				$errors['booking'] = lang('Overlaps with existing booking %1. Remember to send a notification', " #" . implode(', #',$errors['booking'][0])) ;
 			}
 			$this->flash_form_errors($errors);
 			if ($customer['customer_identifier_type'])

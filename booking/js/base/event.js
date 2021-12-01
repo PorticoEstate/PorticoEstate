@@ -1,16 +1,37 @@
 var building_id_selection = "";
 $(document).ready(function ()
 {
+	//FIXME
+	//add
 	$("#start_date").change(function ()
 	{
 		var temp_end_date = $("#end_date").datetimepicker('getValue');
 		var temp_start_date = $("#start_date").datetimepicker('getValue');
-		if(!temp_end_date || (temp_end_date < temp_start_date))
+		if (!temp_end_date || (temp_end_date < temp_start_date))
 		{
-			$("#end_date").val($("#start_date").val());
+			$("#end_date").val('');
 
+			var minutesToAdd = 15;
+			var new_end_date = new Date(temp_start_date.getTime() + minutesToAdd * 60000);
 			$('#end_date').datetimepicker('setOptions', {
-				startDate: new Date(temp_start_date)
+				startDate: new Date(new_end_date)
+			});
+		}
+	});
+
+	//edit
+	$("#from_").change(function ()
+	{
+		var temp_end_date = $("#to_").datetimepicker('getValue');
+		var temp_start_date = $("#from_").datetimepicker('getValue');
+		if (!temp_end_date || (temp_end_date < temp_start_date))
+		{
+			$("#to_").val('');
+
+			var minutesToAdd = 15;
+			var new_end_date = new Date(temp_start_date.getTime() + minutesToAdd * 60000);
+			$('#to_').datetimepicker('setOptions', {
+				startDate: new Date(new_end_date)
 			});
 		}
 	});
@@ -82,7 +103,7 @@ $(document).ready(function ()
 	});
 });
 
-$(window).on('load', function()
+$(window).on('load', function ()
 {
 	var building_id = $('#field_building_id').val();
 	if (building_id)

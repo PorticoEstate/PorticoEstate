@@ -597,7 +597,17 @@
 		}
 		protected function combine_factum_export_data( array &$combined_data, $export )
 		{
-			$combined_data = array_merge($combined_data, $export['data']);
+			if(isset($combined_data['BkPffFakturagrunnlag']) && $export['data']['BkPffFakturagrunnlag'] && is_array($export['data']['BkPffFakturagrunnlag']))
+			{
+				foreach ($export['data']['BkPffFakturagrunnlag'] as $BkPffFakturagrunnlag)
+				{
+					$combined_data['BkPffFakturagrunnlag'][] = $BkPffFakturagrunnlag;
+				}
+			}
+			else
+			{
+				$combined_data = array_merge($combined_data, $export['data']);				
+			}
 		}
 
 		protected function &combine_csv_export_data( array &$combined_data, $export )
@@ -1340,7 +1350,6 @@
 					$export_info[] = $this->create_export_item_info($reservation, $order_id);
 					$header_count += 1;
 					//header level
-					$header = array();
 
 					$stored_header['client'] = $client_id;
 
@@ -1529,6 +1538,8 @@
 					$line_field[] = "\"{$log_cost}\"";
 
 					$log[] = implode(';',  $line_field);
+
+					$header_count += 1;
 
 				}
 			}
