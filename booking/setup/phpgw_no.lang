@@ -441,8 +441,8 @@ Send to contact for overlaping allocations/bookings	booking	no	Send melding til 
 Message sent about the changes in the reservations	booking	no	Melding sendt om endringer på reserverasjoner
 There are changes to your reservations	booking	no	Det er blitt endring på din reserverasjon
 Multiple Events was created	booking	no	Flere arrangementer har blitt opprettet
-Event created, Overlaps with existing allocation, Remember to send a notification	booking	no	Arrangement opprettet. Overlapper en eksisterende tildeling. Husk å sende varsel
-Event created, Overlaps with existing booking, Remember to send a notification	booking	no	Arrangement opprettet. Overlapper en eksisterende booking. Husk å sende varsel
+Overlaps with existing allocation %1. Remember to send a notification	booking	no	Overlapper en eksisterende tildeling %1. Husk å sende varsel
+Overlaps with existing booking %1. Remember to send a notification	booking	no	Overlapper en eksisterende interntildeling %1. Husk å sende varsel
 Print as PDF	booking	no	Skriv ut som PDF
 Pending	booking	no	UNDER BEHANDLING
 This booking is not connected to a season	booking	no	Denne bookingen er ikke koblet mot en sesong

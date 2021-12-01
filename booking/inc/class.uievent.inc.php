@@ -312,7 +312,9 @@
 					$end = $to_->format('H:i');
 
 					if ($start == $end)
+					{
 						continue;
+					}
 
 					$resource = $this->bo->so->get_resource_info($res);
 					$_mymail = $this->bo->so->get_contact_mail($e, 'allocation');
@@ -358,7 +360,9 @@
 					$end = $to_->format('H:i');
 
 					if ($start == $end)
+					{
 						continue;
+					}
 
 					$resource = $this->bo->so->get_resource_info($res);
 					$_mymail = $this->bo->so->get_contact_mail($e, 'booking');
@@ -1093,28 +1097,41 @@
 //						self::redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$event['id']));
 						}
 					}
-					if(!$errors)
+					
+					/**
+					 * Tolerate overlap 
+					 */
+					$_errors = $errors;
+					unset($_errors['allocation']);
+					unset($_errors['booking']);
+					if(!$_errors)
 					{
 						$receipt = $this->bo->update($event);
-						if(empty($event['application_id']))
+						if(!$errors)
 						{
-							self::redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $event['id']));
-						}
-						else
-						{
-							self::redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $event['application_id']));
+							if(empty($event['application_id']))
+							{
+								self::redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $event['id']));
+							}
+							else
+							{
+								self::redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $event['application_id']));
+							}
 						}
 					}
 				}
 			}
 
+			/**
+			 * Translate into text
+			 */
 			if ($errors['allocation'])
 			{
-				$errors['allocation'] = lang('Event created, Overlaps with existing allocation, Remember to send a notification');
+				$errors['allocation'] = lang('Overlaps with existing allocation %1. Remember to send a notification', " #" . implode(', #',$errors['allocation'][0])) ;
 			}
 			elseif ($errors['booking'])
 			{
-				$errors['booking'] = lang('Event created, Overlaps with existing booking, Remember to send a notification');
+				$errors['booking'] = lang('Overlaps with existing booking %1. Remember to send a notification', " #" . implode(', #',$errors['booking'][0])) ;
 			}
 			$this->flash_form_errors($errors);
 			if ($customer['customer_identifier_type'])

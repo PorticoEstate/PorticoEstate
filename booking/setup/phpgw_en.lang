@@ -441,8 +441,8 @@ Send to contact for overlaping allocations/bookings	booking	en	Send to contact f
 Message sent about the changes in the reservations	booking	en	Message sent about the changes in the reservations
 There are changes to your reservations	booking	en	There are changes to your reservations
 Multiple Events was created	booking	en	Multiple events was created
-Event created, Overlaps with existing allocation, Remember to send a notification	booking	en	Event created, overlaps with existing allocation, remember to send a notification
-Event created, Overlaps with existing booking, Remember to send a notification	booking	en	Event created, overlaps with existing booking, remember to send a notification
+Overlaps with existing allocation %1. Remember to send a notification	booking	no	Overlaps with existing allocation %1. Remember to send a notification
+Overlaps with existing booking %1. Remember to send a notification	booking	no	Overlaps with existing booking %1. Remember to send a notification
 Print as PDF	booking	en	Print as pdf
 Pending	booking	en	Pending
 This booking is not connected to a season	booking	en	This booking is not connected to a season
