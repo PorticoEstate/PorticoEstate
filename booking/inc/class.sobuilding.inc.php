@@ -169,6 +169,53 @@
 			return $buildings;
 		}
 
+		function get_user_list()
+		{
+			$sql	 = "SELECT DISTINCT account_id, account_lastname,  account_firstname FROM bb_permission "
+				. "JOIN phpgw_accounts ON bb_permission.subject_id = phpgw_accounts.account_id WHERE object_type = 'building'";
+			$this->db->query($sql);
+			$users	 = array();
+			while ($this->db->next_record())
+			{
+				$users[] = array(
+					'id' => $this->db->f('account_id'),
+					'name' => $this->db->f('account_lastname', true) . ', ' . $this->db->f('account_firstname', true),
+				);
+			}
+
+			return $users;
+		}
+		function _get_conditions( $query, $filters )
+		{
+			$conditions = parent::_get_conditions($query, $filters);
+
+			$filter_user_id = phpgw::get_var('filter_user_id', 'int');
+
+			if($filter_user_id)
+			{
+
+				if(is_array($filter_user_id))
+				{
+					$filter_user_ids = array_map('abs', $filter_user_id);
+				}
+				else
+				{
+					$filter_user_ids = array(abs($filter_user_id));
+				}
+
+				$sql = "SELECT object_id FROM bb_permission WHERE object_type = 'building' AND subject_id IN (" .implode(',', $filter_user_ids) .")";
+				$this->db->query($sql );
+				$building_ids = array(-1);
+				while ($this->db->next_record())
+				{
+					$building_ids[] = $this->db->f('object_id');
+				}
+				$conditions .= ' AND bb_building.id IN (' . implode(',', $building_ids) . ')';
+			}
+			return $conditions;
+
+		}
+
 		protected function doValidate( $entity, booking_errorstack $errors )
 		{
 

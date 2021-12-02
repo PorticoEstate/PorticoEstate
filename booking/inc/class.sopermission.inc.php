@@ -69,6 +69,24 @@
 			);
 		}
 
+		function get_user_list()
+		{
+			$object_type = $this->get_object_type();
+			$sql	 = "SELECT DISTINCT account_id, account_lastname,  account_firstname FROM bb_permission "
+				. "JOIN phpgw_accounts ON bb_permission.subject_id = phpgw_accounts.account_id WHERE object_type = '{$object_type}'";
+			$this->db->query($sql);
+			$users	 = array();
+			while ($this->db->next_record())
+			{
+				$users[] = array(
+					'id' => $this->db->f('account_id'),
+					'name' => $this->db->f('account_lastname', true) . ', ' . $this->db->f('account_firstname', true),
+				);
+			}
+
+			return $users;
+		}
+
 		function read( $params )
 		{
 			$params['filters']['object_type'] = $this->get_object_type();
