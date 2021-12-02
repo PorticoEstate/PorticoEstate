@@ -588,7 +588,9 @@ HTML;
 			$params = $this->build_default_read_params();
 
 			if (!isset($params['filters']))
+			{
 				$params['filters'] = array();
+			}
 			$where_clauses = !isset($params['filters']['where']) ? array() : (array)$params['filters']['where'];
 
 			if (!is_null($for_case_officer_id[0]))

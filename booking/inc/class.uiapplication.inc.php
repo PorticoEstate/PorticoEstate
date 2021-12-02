@@ -301,6 +301,16 @@
 			$application['comments'] = $filtered_comments;
 		}
 
+		function _get_user_list()
+		{
+
+			$user_list = createObject('booking.sopermission_building')->get_user_list();
+
+//			array_unshift($user_list, array('id' => '','name' => lang('select')));
+
+			return $user_list;
+		}
+
 		public function index()
 		{
 			if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -308,6 +318,7 @@
 				return $this->query();
 			}
 			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 
 			$data = array(
 				'datatable_name' => $this->display_name,
@@ -364,6 +375,13 @@
 								'text' => lang('Activity') . ':',
 								'list' => $this->bo->so->get_activities_main_level(),
 							),
+							array('type' => 'filter',
+								'multiple'	=> true,
+								'name' => 'filter_case_officer_id',
+								'text' => lang('case officer') . ':',
+								'list' => $this->_get_user_list(),
+							),
+
 						/*	array(
 								'type' => 'link',
 								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
@@ -433,7 +451,11 @@
 
 		public function query()
 		{
+			$filters = array();
 			$building_id = phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
+			$case_officer_id = phpgw::get_var('filter_case_officer_id', 'int');
+
+			$filters['case_officer_id'] = $case_officer_id;
 			// users with the booking role admin should have access to all buildings
 			// admin users should have access to all buildings
 			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && !$this->bo->has_role(booking_sopermission::ROLE_MANAGER))

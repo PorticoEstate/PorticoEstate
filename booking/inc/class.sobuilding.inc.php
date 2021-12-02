@@ -193,7 +193,17 @@
 
 			if($filter_user_id)
 			{
-				$sql = "SELECT object_id FROM bb_permission WHERE object_type = 'building' AND subject_id = {$filter_user_id}";
+
+				if(is_array($filter_user_id))
+				{
+					$filter_user_ids = array_map('abs', $filter_user_id);
+				}
+				else
+				{
+					$filter_user_ids = array(abs($filter_user_id));
+				}
+
+				$sql = "SELECT object_id FROM bb_permission WHERE object_type = 'building' AND subject_id IN (" .implode(',', $filter_user_ids) .")";
 				$this->db->query($sql );
 				$building_ids = array(-1);
 				while ($this->db->next_record())

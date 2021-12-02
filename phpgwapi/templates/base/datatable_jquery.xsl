@@ -1167,7 +1167,7 @@
 													onDropdownShown : function(event) {
 														setTimeout(function(){
 															oControl.parent().find("button.multiselect-clear-filter").click();
-															oControl.parent().find("input[type='text'].multiselect-search").focus();
+															oControl.parent().find("input[type='search'].multiselect-search").focus();
 														}, 100);
 													},
 

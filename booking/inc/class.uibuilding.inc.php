@@ -109,6 +109,7 @@
 			{
 				return $this->query();
 			}
+			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 
 			$data = array(
 				'datatable_name' => $this->display_name,
@@ -192,7 +193,9 @@
 		private function _get_user_list( $selected )
 		{
 			$selected = abs($selected);
-			$users = $this->bo->so->get_user_list();
+//			$users = $this->bo->so->get_user_list();
+			$users = createObject('booking.sopermission_building')->get_user_list();
+
 			$user_list		 = array();
 			$selected_found	 = false;
 			foreach ($users as $user)
@@ -234,12 +237,14 @@
 				'name'		 => lang('my assigned buildings'),
 				'selected'	 => ((int)$this->user_id < 0 || (int)$filter_tts_assigned_to_me == 1) ? 1 : 0));
 
-			array_unshift($values_combo_box[0], array('id' => '', 'name' => lang('assigned to')));
-			$combos[] = array('type'	 => 'filter',
-				'name'	 => 'filter_user_id',
-				'extra'	 => '',
-				'text'	 => lang('assigned to'),
-				'list'	 => $values_combo_box[0]
+//			array_unshift($values_combo_box[0], array('id' => '', 'name' => lang('assigned to')));
+			$combos[] = array(
+				'type'		 => 'filter',
+				'multiple'	 => 'true',
+				'name'		 => 'filter_user_id',
+				'extra'		 => '',
+				'text'		 => lang('case officer'),
+				'list'		 => $values_combo_box[0]
 			);
 
 			return $combos;
