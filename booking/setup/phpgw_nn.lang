@@ -878,3 +878,4 @@ partially refunded	booking	nn	Delvis refundert
 articles	booking	nn	Artiklar
 missing entry. Id %1 is invalid	booking	nn	Denne posten finst ikkje. Id %1 er ugyldig
 my assigned buildings	booking	nn	*Mine bygningar
+my assigned applications	booking	nn	*Mine søknader
