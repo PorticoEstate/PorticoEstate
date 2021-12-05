@@ -304,9 +304,9 @@
 		function _get_user_list()
 		{
 
-			$user_list = createObject('booking.sopermission_building')->get_user_list();
+			$user_list = $this->bo->so->get_user_list();
 
-//			array_unshift($user_list, array('id' => '','name' => lang('select')));
+			array_unshift($user_list, array('id' => $this->current_account_id(),'name' => lang('My assigned applications')));
 
 			return $user_list;
 		}
@@ -435,6 +435,12 @@
 							'label' => lang('Contact')
 						),
 						array(
+							'key' => 'case_officer_name',
+							'label' => lang('case officer'),
+							'sortable' => false
+						),
+						
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -455,7 +461,10 @@
 			$building_id = phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
 			$case_officer_id = phpgw::get_var('filter_case_officer_id', 'int');
 
-			$filters['case_officer_id'] = $case_officer_id;
+			if($case_officer_id)
+			{
+				$filters['case_officer_id'] = $case_officer_id;
+			}
 			// users with the booking role admin should have access to all buildings
 			// admin users should have access to all buildings
 			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && !$this->bo->has_role(booking_sopermission::ROLE_MANAGER))
@@ -523,6 +532,11 @@
 						'%C3%A6');
 					$replace = array(',', 'Å', 'å', 'Ø', 'ø', 'Æ', 'æ');
 					$application['building_name'] = str_replace($search, $replace, $application['building_name']);
+				}
+
+				if($application['case_officer_id'])
+				{
+					$application['case_officer_name'] = $GLOBALS['phpgw']->accounts->get($application['case_officer_id'])->__toString();
 				}
 
 				$dates = array();

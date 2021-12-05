@@ -164,6 +164,23 @@
 			}
 		}
 
+		function get_user_list()
+		{
+			$sql = "SELECT DISTINCT account_id, account_lastname, account_firstname FROM phpgw_accounts 
+			JOIN bb_application ON bb_application.case_officer_id = phpgw_accounts.account_id";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$user_list = array();
+			while($this->db->next_record())
+			{
+				$user_list[] = array(
+					'id' =>  $this->db->f('account_id'),
+					'name' =>  $this->db->f('account_lastname', true) . ', ' . $this->db->f('account_firstname', true),
+				);
+			}
+			return $user_list;
+
+		}
+		
 		function get_building_info( $id )
 		{
 			$id	 = (int)$id;
