@@ -374,6 +374,8 @@
 				$this->db->transaction_begin();
 			}
 
+			$this->delete_purchase_order($id);
+
 			$sql = "DELETE FROM bb_document_application WHERE owner_id=" . (int)$id;
 			$this->db->query($sql, __LINE__, __FILE__);
 
