@@ -555,22 +555,24 @@ HTML;
 
 			$filtermethod[] = '1=1';
 
+			$sql = "SELECT DISTINCT ap.id"
+				. " FROM bb_application ap"
+				. " INNER JOIN bb_application_resource ar ON ar.application_id = ap.id"
+				. " INNER JOIN bb_building_resource br ON br.resource_id = ar.resource_id"
+				. " INNER JOIN bb_building bu ON bu.id = br.building_id";
+
 			if($user_id)
 			{
 				$filtermethod[] = "pe.subject_id = {$user_id}";
+				$sql.= " INNER JOIN bb_permission pe ON pe.object_id = bu.id and pe.object_type = 'building'";
+
 			}
 			if($building_id)
 			{
 				$filtermethod[] = "bu.id = {$building_id}";
 			}
 
-			$sql = "SELECT DISTINCT ap.id"
-				. " FROM bb_application ap"
-				. " INNER JOIN bb_application_resource ar ON ar.application_id = ap.id"
-				. " INNER JOIN bb_building_resource br ON br.resource_id = ar.resource_id"
-				. " INNER JOIN bb_building bu ON bu.id = br.building_id"
-				. " INNER JOIN bb_permission pe ON pe.object_id = bu.id and pe.object_type = 'building'"
-				. " WHERE " . implode(' AND ', $filtermethod);
+			$sql.=  " WHERE " . implode(' AND ', $filtermethod);
 
 			$this->db->query($sql);
 			$result = $this->db->resultSet;
