@@ -306,7 +306,7 @@
 
 			$user_list = $this->bo->so->get_user_list();
 
-			array_unshift($user_list, array('id' => $this->current_account_id(),'name' => lang('My assigned applications')));
+			array_unshift($user_list, array('id' => -1 * $this->current_account_id(),'name' => lang('My assigned applications')));
 
 			return $user_list;
 		}
@@ -463,7 +463,7 @@
 
 			if($case_officer_id)
 			{
-				$filters['case_officer_id'] = $case_officer_id;
+				$filters['case_officer_id'] = array_map('abs', $case_officer_id);
 			}
 			// users with the booking role admin should have access to all buildings
 			// admin users should have access to all buildings
