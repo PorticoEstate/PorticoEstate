@@ -990,7 +990,6 @@
 			{
 				try
 				{
-					oControl.multiselect("destroy");
 					oControl.multiselect({
 						buttonWidth: 250,
 						includeSelectAllOption: true,
@@ -1002,15 +1001,6 @@
 								oControl.parent().find("button.multiselect-clear-filter").click();
 								oControl.parent().find("input[type='search'].multiselect-search").focus();
 							}, 100);
-						},
-
-						onChange: function($option) {
-							// Check if the filter was used.
-							var query = $(oControl).find('li.multiselect-filter input').val();
-
-							if (query) {
-								$(oControl).find('li.multiselect-filter input').val('').trigger('keydown');
-							}
 						}
 					});
 
@@ -1327,6 +1317,7 @@
 				fnInitComplete: function (oSettings, json)
 				{
 					$(".btn-group").addClass('w-100');
+					$(".dropdown-menu").addClass('w-100');
 					$(".multiselect ").addClass('form-control');
 					$(".multiselect").removeClass('btn');
 					$(".multiselect").removeClass('btn-default');
