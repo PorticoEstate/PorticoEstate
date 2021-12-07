@@ -563,10 +563,19 @@ HTML;
 
 			if($user_id)
 			{
-				$filtermethod[] = "pe.subject_id = {$user_id}";
+				if(is_array($user_id))
+				{
+					$users = $user_id;
+				}
+				else
+				{
+					$users = array($user_id);
+				}
+				$filtermethod[] = "((pe.subject_id IN ( " . implode(',', $users) . ")"
+					. " AND ap.case_officer_id IS NULL) OR  ap.case_officer_id IN ( " . implode(',', $users) . "))";
 				$sql.= " INNER JOIN bb_permission pe ON pe.object_id = bu.id and pe.object_type = 'building'";
-
 			}
+
 			if($building_id)
 			{
 				$filtermethod[] = "bu.id = {$building_id}";

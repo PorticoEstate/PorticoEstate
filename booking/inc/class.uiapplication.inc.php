@@ -311,6 +311,65 @@
 			return $user_list;
 		}
 
+		private function _get_filters()
+		{
+			$filters = array();
+
+			$filters[]	 = array(
+				'type'	 => 'filter',
+				'name'	 => 'status',
+				'text'	 => lang('Status') . ':',
+				'list'	 => array(
+					array(
+						'id'	 => 'none',
+						'name'	 => lang('Not selected')
+					),
+					array(
+						'id'		 => 'NEW',
+						'name'		 => lang('NEW'),
+						'selected'	 => 1
+					),
+					array(
+						'id'	 => 'PENDING',
+						'name'	 => lang('PENDING')
+					),
+					array(
+						'id'	 => 'REJECTED',
+						'name'	 => lang('REJECTED')
+					),
+					array(
+						'id'	 => 'ACCEPTED',
+						'name'	 => lang('ACCEPTED')
+					)
+				)
+			);
+			$filters[]	 = array(
+				'type'				 => 'autocomplete',
+				'name'				 => 'building',
+				'ui'				 => 'building',
+				'text'				 => lang('Building') . ':',
+				'onItemSelect'		 => 'updateBuildingFilter',
+				'onClearSelection'	 => 'clearBuildingFilter'
+			);
+			$filters[]	 = array(
+				'type'	 => 'filter',
+				'name'	 => 'activities',
+				'text'	 => lang('Activity') . ':',
+				'list'	 => $this->bo->so->get_activities_main_level(),
+			);
+//			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && !$this->bo->has_role(booking_sopermission::ROLE_MANAGER))
+			{
+				$filters[] = array(
+					'type'		 => 'filter',
+					'multiple'	 => true,
+					'name'		 => 'filter_case_officer_id',
+					'text'		 => lang('case officer') . ':',
+					'list'		 => $this->_get_user_list(),
+				);
+			}
+			return $filters;
+		}
+
 		public function index()
 		{
 			if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -324,70 +383,7 @@
 				'datatable_name' => $this->display_name,
 				'form' => array(
 					'toolbar' => array(
-						'item' => array(
-							array(
-								'type' => 'filter',
-								'name' => 'status',
-								'text' => lang('Status') . ':',
-								'list' => array(
-									array(
-										'id' => 'none',
-										'name' => lang('Not selected')
-									),
-									array(
-										'id' => 'NEW',
-										'name' => lang('NEW'),
-										'selected' => 1
-									),
-									array(
-										'id' => 'PENDING',
-										'name' => lang('PENDING')
-									),
-									array(
-										'id' => 'REJECTED',
-										'name' => lang('REJECTED')
-									),
-									array(
-										'id' => 'ACCEPTED',
-										'name' => lang('ACCEPTED')
-									),
-									array(
-										'id' => 'NEWPARTIAL1',
-										'name' => lang('not completed')
-									)
-								)
-							),
-/*							array('type' => 'filter',
-								'name' => 'buildings',
-								'text' => lang('Building') . ':',
-								'list' => $this->bo->so->get_buildings(),
-							),
-*/
-							array('type' => 'autocomplete',
-								'name' => 'building',
-								'ui' => 'building',
-								'text' => lang('Building') . ':',
-								'onItemSelect' => 'updateBuildingFilter',
-								'onClearSelection' => 'clearBuildingFilter'
-							),
-							array('type' => 'filter',
-								'name' => 'activities',
-								'text' => lang('Activity') . ':',
-								'list' => $this->bo->so->get_activities_main_level(),
-							),
-							array('type' => 'filter',
-								'multiple'	=> true,
-								'name' => 'filter_case_officer_id',
-								'text' => lang('case officer') . ':',
-								'list' => $this->_get_user_list(),
-							),
-
-						/*	array(
-								'type' => 'link',
-								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
-							),*/
-						),
+						'item' => array(),
 					),
 				),
 				'datatable' => array(
@@ -448,6 +444,12 @@
 				),
 			);
 
+			$filters = $this->_get_filters();
+
+			foreach ($filters as $filter)
+			{
+				$data['form']['toolbar']['item'][] = $filter;
+			}
 
 			$data['datatable']['new_item'] = self::link(array('menuaction' => 'booking.uiapplication.add'));
 			$data['datatable']['actions'][] = array();
@@ -461,19 +463,15 @@
 			$building_id = phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
 			$case_officer_id = phpgw::get_var('filter_case_officer_id', 'int');
 
-			if($case_officer_id)
-			{
-				$filters['case_officer_id'] = array_map('abs', $case_officer_id);
-			}
 			// users with the booking role admin should have access to all buildings
 			// admin users should have access to all buildings
-			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && !$this->bo->has_role(booking_sopermission::ROLE_MANAGER))
+//			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && !$this->bo->has_role(booking_sopermission::ROLE_MANAGER))
+//			{
+//				$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id'], $building_id);
+//			}
+//			else
 			{
-				$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id'], $building_id);
-			}
-			else if($building_id)
-			{
-				$filters['id'] = $this->bo->accessable_applications(null, $building_id);
+				$filters['id'] = $this->bo->accessable_applications(!empty($case_officer_id) ? array_map('abs', $case_officer_id) : null, $building_id);
 			}
 
 			$activity_id = phpgw::get_var('activities', 'int', 'REQUEST', null);
@@ -486,26 +484,21 @@
 				unset($filters['activity_id']);
 			}
 			$filters['status'] = 'NEW';
-//			if (isset($_SESSION['showall']))
-//			{
-//				$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
-//			}
-//			else
+
+			$test = phpgw::get_var('status', 'string', 'REQUEST', null);
+			if (phpgw::get_var('status') == 'none')
 			{
-				$test = phpgw::get_var('status', 'string', 'REQUEST', null);
-				if (phpgw::get_var('status') == 'none')
-				{
-					$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
-				}
-				elseif (isset($test))
-				{
-					$filters['status'] = $test;
-				}
-				else
-				{
-					$filters['status'] = 'NEW';
-				}
+				$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
 			}
+			elseif (isset($test))
+			{
+				$filters['status'] = $test;
+			}
+			else
+			{
+				$filters['status'] = 'NEW';
+			}
+			
 
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
