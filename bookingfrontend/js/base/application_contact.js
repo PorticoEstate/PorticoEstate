@@ -1,5 +1,7 @@
 /* global bc, ko, payment_order_id, selected_payment_method, lang */
 
+var payment_initated = false;
+
 $(".navbar-search").removeClass("d-none");
 $(".termAcceptDocsUrl").attr('data-bind', "text: docName, attr: {'href': itemLink }");
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
@@ -10,6 +12,12 @@ ko.validation.locale('nb-NO');
 
 function initiate_payment(method)
 {
+	if(payment_initated)
+	{
+		alert('payment_initated');
+		return;
+	}
+	
 	var parameter = {
 		menuaction: "bookingfrontend." + method + "_helper.initiate"
 	};
@@ -29,7 +37,12 @@ function initiate_payment(method)
 			var url = result.url;
 			window.location.replace(url);
 		}
+		else
+		{
+			alert('Funkar inte');
+		}
 	});
+	payment_initated = true;
 }
 
 function check_payment_status()
