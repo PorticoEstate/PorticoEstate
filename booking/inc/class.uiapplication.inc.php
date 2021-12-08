@@ -810,6 +810,7 @@
 			$from_ = (new DateTime(phpgw::get_var('from_')));
 			$to_ = (new DateTime(phpgw::get_var('to_')));
 
+/*
 			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
 
 			try
@@ -823,7 +824,7 @@
 
 			$from_->setTimezone($DateTimeZone);
 			$to_->setTimezone($DateTimeZone);
-
+*/
 			$bo_block = createObject('booking.boblock');
 
 			$session_id = $GLOBALS['phpgw']->session->get_session_id();
