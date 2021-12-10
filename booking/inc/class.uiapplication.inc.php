@@ -807,10 +807,6 @@
 		public function set_block()
 		{
 			$resource_id = phpgw::get_var('resource_id', 'int' ,'REQUEST', -1 );
-			$from_ = (new DateTime(phpgw::get_var('from_')));
-			$to_ = (new DateTime(phpgw::get_var('to_')));
-
-/*
 			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
 
 			try
@@ -822,9 +818,12 @@
 				throw $ex;
 			}
 
-			$from_->setTimezone($DateTimeZone);
-			$to_->setTimezone($DateTimeZone);
-*/
+			$from_ = (new DateTime(phpgw::get_var('from_'), $DateTimeZone));
+			$to_ = (new DateTime(phpgw::get_var('to_'), $DateTimeZone));
+
+//			$from_->setTimezone(new DateTimeZone('UTC'));
+//			$to_->setTimezone(new DateTimeZone('UTC'));
+
 			$bo_block = createObject('booking.boblock');
 
 			$session_id = $GLOBALS['phpgw']->session->get_session_id();

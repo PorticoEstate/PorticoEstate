@@ -344,8 +344,8 @@ function PopulatePostedDate()
 		var parameter = {
 			menuaction: "bookingfrontend.uiapplication.set_block",
 			resource_id: $("#resource_id").val(),
-			from_: from_,//StartTime.toJSON(),
-			to_: to_//EndTime.toJSON()
+			from_: dateFormat(StartTime, 'yyyy-mm-dd' + " HH:MM"),
+			to_: dateFormat(EndTime, 'yyyy-mm-dd' + " HH:MM")
 		};
 
 		$.getJSON(phpGWLink('bookingfrontend/', parameter, true), function (result)
