@@ -776,6 +776,11 @@
 			return $this->Transaction;
 		}
 
+		final public function set_transaction( $in_transaction = true)
+		{
+			$this->Transaction = $in_transaction;
+		}
+
 		final public function sanitize($sql)
 		{
 //			return;

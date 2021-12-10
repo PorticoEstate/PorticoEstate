@@ -363,10 +363,14 @@
 			$db->query($sql, __LINE__, __FILE__);
 		}
 
-		public function delete_application( $id )
+		public function delete_application( $id, $in_transaction = false )
 		{
-			if ($this->db->get_transaction())
+			/**
+			 * Hack...
+			 */
+			if ($this->db->get_transaction() || $in_transaction)
 			{
+				$this->db->set_transaction(true);
 				$this->global_lock = true;
 			}
 			else

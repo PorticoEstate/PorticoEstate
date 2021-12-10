@@ -83,7 +83,7 @@
 			return "({$table_name}.active != 0 AND {$table_name}.entry_time < '{$now}')";
 		}
 
-		public function delete_expired()
+		public function delete_expired($in_transaction = false)
 		{
 			$expired = $this->find_expired();
 			$table_name = $this->table_name;
@@ -111,7 +111,7 @@
 			$soapplication = createObject('booking.soapplication');
 			foreach ($applications as $application_id)
 			{
-				$soapplication->delete_application($application_id);
+				$soapplication->delete_application($application_id, $in_transaction);
 			}
 		}
 	}
