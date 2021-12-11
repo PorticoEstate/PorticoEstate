@@ -1513,7 +1513,7 @@
 			$filters = array('active' => 1, 'resource_id' => $resource_ids);
 			$params = array('filters' => $filters, 'results' =>'all');
 			$blocks = CreateObject('booking.soblock')->read($params);
-			$_blocks = array();
+
 			if($blocks['results'])
 			{
 				foreach ($blocks['results'] as & $block)
