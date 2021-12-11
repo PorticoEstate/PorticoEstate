@@ -254,6 +254,7 @@ function set_conditional_translation(type)
 		$('#lang_checkout').text('Utsjekk');
 	}
 }
+
 function PopulatePostedDate()
 {
 	var StartTime, EndTime;
@@ -341,27 +342,35 @@ function PopulatePostedDate()
 	{
 		getFreetime();
 
-		var parameter = {
-			menuaction: "bookingfrontend.uiapplication.set_block",
-			resource_id: $("#resource_id").val(),
-			from_: dateFormat(StartTime, 'yyyy-mm-dd' + " HH:MM"),
-			to_: dateFormat(EndTime, 'yyyy-mm-dd' + " HH:MM")
-		};
-
-		$.getJSON(phpGWLink('bookingfrontend/', parameter, true), function (result)
+		if( typeof(StartTime)!=='undefined')
 		{
-			if (result.status == 'reserved')
-			{
-				alert('Opptatt');
-				window.location.replace(phpGWLink('bookingfrontend/',
-				{
-					menuaction: "bookingfrontend.uiresource.show",
-					building_id: urlParams['building_id'],
-					id: $("#resource_id").val()}
-				));
-			}
-		});
+			set_block(StartTime, EndTime);
+		}
 	}
+}
+
+function set_block(StartTime, EndTime)
+{
+	var parameter = {
+		menuaction: "bookingfrontend.uiapplication.set_block",
+		resource_id: $("#resource_id").val(),
+		from_: dateFormat(StartTime, 'yyyy-mm-dd' + " HH:MM"),
+		to_: dateFormat(EndTime, 'yyyy-mm-dd' + " HH:MM")
+	};
+
+	$.getJSON(phpGWLink('bookingfrontend/', parameter, true), function (result)
+	{
+		if (result.status == 'reserved')
+		{
+			alert('Opptatt');
+			window.location.replace(phpGWLink('bookingfrontend/',
+			{
+				menuaction: "bookingfrontend.uiresource.show",
+				building_id: urlParams['building_id'],
+				id: $("#resource_id").val()}
+			));
+		}
+	});	
 }
 
 function cancel_block()
@@ -473,6 +482,8 @@ $('#start_date').datetimepicker({onSelectDate: function (ct, $i)
 		{
 			alert("Starttid må være tidligere enn sluttid");
 		}
+
+		set_block(StartTime,EndTime);
 
 	}});
 

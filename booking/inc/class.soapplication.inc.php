@@ -409,14 +409,14 @@
 			}
 
 			$rids	 = join(',', array_map("intval", $resources));
-			$sql	 = "SELECT bb_block.id
+			$sql	 = "SELECT bb_block.id, 'block' as type
                       FROM bb_block
                       WHERE  bb_block.resource_id in ($rids)
                       AND ((bb_block.from_ <= '$from_' AND bb_block.to_ > '$from_')
                       OR (bb_block.from_ >= '$from_' AND bb_block.to_ <= '$to_')
                       OR (bb_block.from_ < '$to_' AND bb_block.to_ >= '$to_')) AND active = 1 {$filter_block}
                       UNION
-					  SELECT ba.id
+					  SELECT ba.id, 'allocation' as type
                       FROM bb_allocation ba, bb_allocation_resource bar
                       WHERE active = 1
                       AND ba.id = bar.allocation_id
@@ -425,7 +425,7 @@
                       OR (ba.from_ >= '$from_' AND ba.to_ <= '$to_')
                       OR (ba.from_ < '$to_' AND ba.to_ >= '$to_'))
                       UNION
-                      SELECT be.id
+                      SELECT be.id, 'event' as type
                       FROM bb_event be, bb_event_resource ber, bb_event_date bed
                       WHERE active = 1
 					  AND be.id = ber.event_id
