@@ -820,6 +820,8 @@
 
 			$from_ = (new DateTime(phpgw::get_var('from_'), $DateTimeZone));
 			$to_ = (new DateTime(phpgw::get_var('to_'), $DateTimeZone));
+			$from_ = phpgw::get_var('from_');
+			$to_ = phpgw::get_var('to_');
 
 //			$from_->setTimezone(new DateTimeZone('UTC'));
 //			$to_->setTimezone(new DateTimeZone('UTC'));
@@ -827,8 +829,11 @@
 			$bo_block = createObject('booking.boblock');
 
 			$session_id = $GLOBALS['phpgw']->session->get_session_id();
-			$collision = $this->bo->so->check_collision(array($resource_id), $from_->format('Y-m-d H:i:s'), $to_->format('Y-m-d H:i:s'), $session_id);
+//			$collision = $this->bo->so->check_collision(array($resource_id), $from_->format('Y-m-d H:i:s'), $to_->format('Y-m-d H:i:s'), $session_id);
+			$collision = $this->bo->so->check_collision(array($resource_id), $from_, $to_, $session_id);
 
+			$status = '';
+			$message = '';
 			if ($collision)
 			{
 				$status = 'reserved';
@@ -842,13 +847,13 @@
 				'filters' => array('where' =>  "(bb_block.active = 1"
 					. " AND bb_block.session_id = '{$session_id}'"
 					. " AND bb_block.resource_id = {$resource_id}"
-					. " AND bb_block.from_ = '" . $from_->format('Y-m-d H:i:s') . "'"
-					. " AND bb_block.to_ = '" . $to_->format('Y-m-d H:i:s') . "')"),
+//					. " AND bb_block.from_ = '" . $from_->format('Y-m-d H:i:s') . "'"
+//					. " AND bb_block.to_ = '" . $to_->format('Y-m-d H:i:s') . "')"),
+					. " AND bb_block.from_ = '{$from_}'"
+					. " AND bb_block.to_ = '{$to_}')"),
 				'results' => 1));
 
 
-			$status = '';
-			$message = '';
 			if($previous_block['total_records'] > 0)
 			{
 				$status = 'registered';
@@ -858,8 +863,10 @@
 				$block = array(
 					'session_id'	=> $session_id,
 					'resource_id'	=> $resource_id,
-					'from_'			=> $from_->format('Y-m-d H:i:s'),
-					'to_'			=> $to_->format('Y-m-d H:i:s')
+//					'from_'			=> $from_->format('Y-m-d H:i:s'),
+//					'to_'			=> $to_->format('Y-m-d H:i:s')
+					'from_'			=> $from_,
+					'to_'			=> $to_
 					);
 				$receipt = $bo_block->add($block);
 				if($receipt['id'])
