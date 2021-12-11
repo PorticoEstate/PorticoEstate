@@ -107,11 +107,11 @@
 
 				if($return_object)
 				{
-					$values->attributes = $_values[attributes];
+					$values->attributes = $_values['attributes'];
 				}
 				else
 				{
-					$values['attributes'] = $_values[attributes];
+					$values['attributes'] = $_values['attributes'];
 				}
 			}
 
