@@ -830,10 +830,70 @@
 		public function show()
 		{
 			$id = phpgw::get_var('id', 'int');
+
+			$send_sms = phpgw::get_var('send_sms', 'bool');
+			$sms_content = phpgw::get_var('sms_content', 'string');
+
 			if (!$id)
 			{
 				phpgw::no_access('booking', lang('missing id'));
 			}
+
+			if($send_sms && $sms_content)
+			{
+				$soparticipant = createObject('booking.soparticipant');
+				$params = array(
+					'results' => -1,
+					'filters' => array(
+						'reservation_id' => $id,
+						'reservation_type' => 'allocation'
+						)
+				);
+
+				$participants = $soparticipant->read($params);
+
+				$sms_service = CreateObject('sms.sms');
+				$sms_recipients = array();
+				foreach ($participants['results'] as $participant)
+				{
+					$sms_recipients[] = $participant['phone'];
+				}
+				$final_recipients = array_unique($sms_recipients);
+
+				$account_id = $this->current_account_id();
+				$log_success = array();
+				$log_error = array();
+				foreach ($final_recipients as $final_recipient)
+				{
+					try
+					{
+						$sms_res = $sms_service->websend2pv($account_id, $final_recipient, $sms_content);
+						if (empty($sms_res[0][0]))
+						{
+							$error_message = 'SMS-melding feilet til ' . $final_recipient;
+							phpgwapi_cache::message_set($error_message, 'error');
+							$log_error[] = $final_recipient;
+						}
+						else
+						{
+							$comment = 'SMS-melding er sendt til ' . $final_recipient;
+							phpgwapi_cache::message_set($comment, 'message');
+							$log_success[] = $final_recipient;
+
+						}
+					}
+					catch (Exception $ex)
+					{
+						$error_message = 'SMS-melding feilet til ' . $final_recipient;
+						phpgwapi_cache::message_set($error_message, 'error');
+						$log_error[] = $final_recipient;
+					}
+
+				}
+
+				self::redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $id));
+			}
+
 			$allocation = $this->bo->read_single($id);
 
 			if(!$allocation)
