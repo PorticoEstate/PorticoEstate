@@ -11,10 +11,6 @@
 
 		public function run( $options = array() )
 		{
-			/**
-			 * Transaction started in asyncservice
-			 */
-			$in_transaction = true;
-			CreateObject('booking.soblock')->delete_expired($in_transaction);
+			CreateObject('booking.soblock')->delete_expired();
 		}
 	}
