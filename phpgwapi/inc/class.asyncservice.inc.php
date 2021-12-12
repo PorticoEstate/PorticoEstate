@@ -359,7 +359,7 @@
 			//echo "<p>last_check_run(semaphore=".($semaphore?'True':'False').",release=".($release?'True':'False').")</p>\n";
 			if ($semaphore)
 			{
-				$this->db->lock($this->db_table,'write');	// this will block til we get exclusive access to the table
+				$this->db->transaction_begin();	// this will block til we get exclusive access to the table
 
 				@set_time_limit(0);		// dont stop for an execution-time-limit
 				ignore_user_abort(true);
@@ -396,7 +396,7 @@
 			{
 				// already one instance running (started not more then 10min ago, else we ignore it)
 
-				$this->db->unlock();	// unlock the table again
+				$this->db->transaction_abort();	// unlock the table again
 
 				//echo "<p>An other instance is running !!!</p>\n";
 				return false;
@@ -425,7 +425,7 @@
 			}
 			//echo "last_run=<pre>"; print_r($last_run); echo "</pre>\n";
 			$this->write($last_run, true);
-			$this->db->unlock();
+			$this->db->transaction_commit();
 			return true;
 		}
 
