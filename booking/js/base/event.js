@@ -1,3 +1,5 @@
+/* global lang, event_id */
+
 var building_id_selection = "";
 $(document).ready(function ()
 {
@@ -101,6 +103,50 @@ $(document).ready(function ()
 			}
 		});
 	});
+
+	SendSms = function ()
+	{
+		r = confirm(lang['send sms'] + '?');
+
+		if (r !== true)
+		{
+			return;
+		}
+
+		oArgs = {menuaction: 'booking.uievent.send_sms_participants', id: event_id};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			data: {sms_content: $('#field_sms_content').val(), send_sms: true},
+			dataType: 'json',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data != null)
+				{
+					var message = data.message;
+
+					htmlString = "";
+					var msg_class = "msg_good";
+					if (data.status == 'error')
+					{
+						msg_class = "error";
+					}
+					htmlString += "<div class=\"" + msg_class + "\">";
+					htmlString += message;
+					htmlString += '</div>';
+					$("#sms_receipt").html(htmlString);
+					if (data.status == 'error')
+					{
+						setTimeout(function(){ $("#sms_receipt").html(''); }, 1000);
+					}
+				}
+			}
+		});
+
+	};
+
 });
 
 $(window).on('load', function ()
@@ -286,4 +332,3 @@ function populateTableChk(url, container, colDefs)
 {
 	createTable(container, url, colDefs, '', 'pure-table pure-table-bordered');
 }
-
