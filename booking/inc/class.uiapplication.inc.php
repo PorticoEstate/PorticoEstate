@@ -973,6 +973,7 @@
 				}
 
 				$application['dates'] = array_map(array($this, '_combine_dates'), $_POST['from_'], $_POST['to_']);
+				$application['dates'] = array_map("unserialize", array_unique(array_map("serialize", $application['dates'])));
 				$application['active'] = '1';
 				$application['status'] = 'NEW';
 				$application['created'] = 'now';
