@@ -716,8 +716,6 @@
 				}
 				$final_recipients = array_unique($sms_recipients);
 
-				$final_recipients = array('90665164', '90665164','123');
-
 				$account_id = $this->current_account_id();
 				$log_success = array();
 				$log_error = array();
