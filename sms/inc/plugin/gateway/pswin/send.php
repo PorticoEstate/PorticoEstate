@@ -97,7 +97,7 @@
 			{
 				$this->setsmsdeliverystatus($smslog_id, $uid, 2);
 				$ret = false;
-//				throw new Exception($var_result['INFO']);
+				throw new Exception($var_result['INFO']);
 			}
 
 			if($debug)
