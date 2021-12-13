@@ -827,17 +827,10 @@
 			}
 		}
 
-		public function show()
+		private function send_sms_participants($id, $type = 'allocation')
 		{
-			$id = phpgw::get_var('id', 'int');
-
 			$send_sms = phpgw::get_var('send_sms', 'bool');
 			$sms_content = phpgw::get_var('sms_content', 'string');
-
-			if (!$id)
-			{
-				phpgw::no_access('booking', lang('missing id'));
-			}
 
 			if($send_sms && $sms_content)
 			{
@@ -846,11 +839,15 @@
 					'results' => -1,
 					'filters' => array(
 						'reservation_id' => $id,
-						'reservation_type' => 'allocation'
+						'reservation_type' => $type
 						)
 				);
 
 				$participants = $soparticipant->read($params);
+				if(!$participants['results'])
+				{
+					phpgwapi_cache::message_set(lang('no records found.'), 'error');
+				}
 
 				$sms_service = CreateObject('sms.sms');
 				$sms_recipients = array();
@@ -891,8 +888,20 @@
 
 				}
 
-				self::redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $id));
+				self::redirect(array('menuaction' => "booking.ui{$type}.show", 'id' => $id));
 			}
+		}
+
+		public function show()
+		{
+			$id = phpgw::get_var('id', 'int');
+
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+
+			$this->send_sms_participants($id, 'allocation');
 
 			$allocation = $this->bo->read_single($id);
 

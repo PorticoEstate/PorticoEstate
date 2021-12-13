@@ -229,9 +229,20 @@
 				$ok[$i] = 0;
 				if ($smslog_id)
 				{
-					if ($this->gw_send_sms($mobile_sender, $sms_sender, $c_sms_to, $sms_msg, $gp_code, $uid, $smslog_id, $sms_type, $unicode))
+					try
 					{
-						$ok[$i] = $smslog_id;
+						if ($this->gw_send_sms($mobile_sender, $sms_sender, $c_sms_to, $sms_msg, $gp_code, $uid, $smslog_id, $sms_type, $unicode))
+						{
+							$ok[$i] = $smslog_id;
+						}
+					}
+					catch(Exception $ex)
+					{
+						if (!$this->global_lock)
+						{
+							$GLOBALS['phpgw']->db->transaction_abort();
+						}
+						throw $ex;
 					}
 				}
 

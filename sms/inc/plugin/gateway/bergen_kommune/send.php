@@ -57,7 +57,14 @@
 			$sendMelding->UserContext = $UserContext;
 			$sendMelding->melding = $Melding;
 
-			$ReturnValue = $service->sendMelding($sendMelding);
+			try
+			{
+				$ReturnValue = $service->sendMelding($sendMelding);
+			}
+			catch(Exception $ex)
+			{
+				throw $ex;
+			}
 
 			$result['statuscode'] = $ReturnValue->return->status;
 			$result['messageid'] = $ReturnValue->return->id;

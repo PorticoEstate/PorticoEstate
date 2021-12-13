@@ -71,6 +71,22 @@
 						</label>
 						<div id="participant_container" style="display:inline-block;"></div>
 					</div>
+					<div class="pure-control-group">
+						<label for="field_sms_content">
+							<xsl:value-of select="php:function('lang', 'SMS')" />
+						</label>
+						<textarea rows="5" id="field_sms_content" name="sms_content" class="pure-input-1-2" >
+						</textarea>
+					</div>
+					<div class="pure-controls">
+						<label for="send_sms" class="pure-checkbox">
+							<input type="checkbox" id="send_sms" name="send_sms" value="1"/>
+							<xsl:value-of select="php:function('lang', 'send SMS')" />
+						</label>
+						<button type="submit" class="pure-button pure-button-primary">
+							<xsl:value-of select="php:function('lang', 'send SMS')" />
+						</button>
+					</div>
 
 				</fieldset>
 			</div>

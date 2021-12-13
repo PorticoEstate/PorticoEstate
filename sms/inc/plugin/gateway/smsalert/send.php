@@ -91,6 +91,7 @@
 			{
 				$this->setsmsdeliverystatus($smslog_id, $uid, 2);
 				$ret = false;
+				throw new Exception('SMSgateway:General error');
 			}
 
 			if($debug)

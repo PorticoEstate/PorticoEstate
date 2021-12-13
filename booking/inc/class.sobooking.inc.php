@@ -11,7 +11,7 @@
 			$this->organization_so = new booking_soorganization();
 
 			parent::__construct('bb_booking', array(
-				'id' => array('type' => 'int'),
+				'id' => array('type' => 'int', 'query' => true),
 				'active' => array('type' => 'int', 'required' => true),
 				'allocation_id' => array('type' => 'int', 'required' => false),
 				'application_id' => array('type' => 'int', 'required' => false),
