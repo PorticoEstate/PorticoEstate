@@ -48,7 +48,7 @@
 							</label>
 							<select id="sms_recipients" name="sms_recipients[]" multiple="true" class="pure-input-3-4">
 								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
+									<xsl:text>sms_recipients</xsl:text>
 								</xsl:attribute>
 								<xsl:apply-templates select="recipient_list/options"/>
 							</select>
@@ -82,6 +82,7 @@
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
+									<xsl:value-of disable-output-escaping="yes" select="default_message"/>
 								</textarea>
 							</div>
 

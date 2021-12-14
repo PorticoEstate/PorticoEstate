@@ -137,3 +137,23 @@ function SmsCountKeyDown(maxChar)
 	}
 }
 
+$.formUtils.addValidator({
+	name: 'sms_recipients',
+	validatorFunction: function (value, $el, config, language, $form)
+	{
+		var v = false;
+		var sms_recipients = $('#sms_recipients option:selected');
+		if (sms_recipients.length > 0)
+		{
+			v = true;
+			$(".multiselect").removeClass('btn-danger');
+		}
+		else
+		{
+			$(".multiselect").addClass('btn-danger');
+		}
+		return v;
+	},
+	errorMessage: 'select at least one recipient',
+	errorMessageKey: 'select_at_least_one_recipient'
+});
