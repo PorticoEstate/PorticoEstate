@@ -1358,11 +1358,13 @@ JS;
 				'link'	 => '#main'
 			);
 
-			$data											 = array(
+			$default_message = "\n\n(Denne meldingen kan ikke besvares)";
+			$data= array(
 				'form_action'		 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.send_sms")),
 				'cancel_url'		 => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
 				'tabs'				 => phpgwapi_jquery::tabview_generate($tabs, 0),
 				'value_active_tab'	 => 0,
+				'default_message'	 => $default_message
 			);
 			$GLOBALS['phpgw_info']['flags']['app_header']	 .= '::' . lang('sms');
 
