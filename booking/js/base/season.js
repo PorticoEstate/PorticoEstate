@@ -6,7 +6,7 @@ $(document).ready(function ()
 	JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction: 'booking.uipermission_root.index_accounts'}, true),
 		'field_officer_name', 'field_officer_id', 'officer_container');
 	JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction: 'booking.uibuilding.index'}, true),
-		'field_building_name', 'field_building_id', 'building_container');
+		'field_building_name', 'field_building_id', 'building_container');		
 });
 
 $(window).on('load', function()
@@ -66,4 +66,14 @@ function populateTableChkResources(building_id, selection)
 function populateTableChk(url, container, colDefs)
 {
 	createTable(container, url, colDefs, '', 'pure-table pure-table-bordered');
+}
+
+function copy_season(id)
+{
+	r = confirm("kopiere sesong inkludert ukeplan, rammetider og rettigheter?");
+	if (r == true)
+	{
+		var requesturl = phpGWLink('index.php', {menuaction: 'booking.uiseason.copy_season', 'id': id});
+		window.location.href = requesturl;
+	}
 }

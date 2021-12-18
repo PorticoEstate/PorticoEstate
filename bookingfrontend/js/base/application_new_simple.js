@@ -254,6 +254,7 @@ function set_conditional_translation(type)
 		$('#lang_checkout').text('Utsjekk');
 	}
 }
+
 function PopulatePostedDate()
 {
 	var StartTime, EndTime;
@@ -269,8 +270,8 @@ function PopulatePostedDate()
 	{
 		for (var i = 0; i < initialDates.length; i++)
 		{
-			var from_ = (initialDates[i].from_).replace(" ", "T");
-			var to_ = (initialDates[i].to_).replace(" ", "T");
+			var from_ = (initialDates[i].from_).replace(" ", "T") +'Z';
+			var to_ = (initialDates[i].to_).replace(" ", "T") +'Z';
 			StartTime = new Date(from_);
 			EndTime = new Date(to_);
 		}
@@ -341,27 +342,35 @@ function PopulatePostedDate()
 	{
 		getFreetime();
 
-		var parameter = {
-			menuaction: "bookingfrontend.uiapplication.set_block",
-			resource_id: $("#resource_id").val(),
-			from_: StartTime.toJSON(),
-			to_: EndTime.toJSON()
-		};
-
-		$.getJSON(phpGWLink('bookingfrontend/', parameter, true), function (result)
+		if( typeof(StartTime)!=='undefined')
 		{
-			if (result.status == 'reserved')
-			{
-				alert('Opptatt');
-				window.location.replace(phpGWLink('bookingfrontend/',
-				{
-					menuaction: "bookingfrontend.uiresource.show",
-					building_id: urlParams['building_id'],
-					id: $("#resource_id").val()}
-				));
-			}
-		});
+			set_block(StartTime, EndTime);
+		}
 	}
+}
+
+function set_block(StartTime, EndTime)
+{
+	var parameter = {
+		menuaction: "bookingfrontend.uiapplication.set_block",
+		resource_id: $("#resource_id").val(),
+		from_: dateFormat(StartTime, 'yyyy-mm-dd' + " HH:MM"),
+		to_: dateFormat(EndTime, 'yyyy-mm-dd' + " HH:MM")
+	};
+
+	$.getJSON(phpGWLink('bookingfrontend/', parameter, true), function (result)
+	{
+		if (result.status == 'reserved')
+		{
+			alert('Opptatt');
+			window.location.replace(phpGWLink('bookingfrontend/',
+			{
+				menuaction: "bookingfrontend.uiresource.show",
+				building_id: urlParams['building_id'],
+				id: $("#resource_id").val()}
+			));
+		}
+	});	
 }
 
 function cancel_block()
@@ -474,6 +483,8 @@ $('#start_date').datetimepicker({onSelectDate: function (ct, $i)
 			alert("Starttid må være tidligere enn sluttid");
 		}
 
+		set_block(StartTime,EndTime);
+
 	}});
 
 var post_handle_table = function()
@@ -532,11 +543,12 @@ function add_to_bastet(element)
 	/**
 	 * Reset quantity
 	 */
-	element.parentNode.parentNode.childNodes[5].childNodes[0].value = 0;
+	element.parentNode.parentNode.childNodes[5].childNodes[0].value = 1;
 	/**
 	 * Reset button to disabled
 	 */
-	element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
+	//element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
+	element.parentNode.parentNode.childNodes[9].childNodes[0].removeAttribute('disabled');
 
 	var target = element.parentNode.parentNode.childNodes[7].childNodes[0];
 	target.value = id + '_' + selected_quantity;
@@ -603,14 +615,14 @@ function empty_from_bastet(element)
 	 * Reset quantity
 	 */
 	element.parentNode.parentNode.childNodes[6].innerText = '';
-	element.parentNode.parentNode.childNodes[5].childNodes[0].value = 0;
+	element.parentNode.parentNode.childNodes[5].childNodes[0].value = 1;
 	element.parentNode.parentNode.childNodes[8].innerText = '';
 	element.parentNode.parentNode.childNodes[7].childNodes[0].value = '';
 
 	/**
 	 * Reset button to disabled
 	 */
-	element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
+//	element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
 	element.parentNode.parentNode.childNodes[9].childNodes[0].setAttribute('disabled', true);
 
 	var xTableBody = element.parentNode.parentNode.parentNode;
@@ -682,7 +694,7 @@ $(document).ready(function ()
 						type: 'button',
 						attrs: [
 							{name: 'type', value: 'button'},
-							{name: 'disabled', value: true},
+					//		{name: 'disabled', value: true},
 							{name: 'class', value: 'btn btn-success'},
 							{name: 'onClick', value: 'add_to_bastet(this);'},
 							{name: 'innerHTML', value: 'Legg til <i class="fas fa-shopping-basket"></i>'},
@@ -723,10 +735,10 @@ $(document).ready(function ()
 				object: [
 					{type: 'input', attrs: [
 							{name: 'type', value: 'number'},
-							{name: 'min', value: 0},
-							{name: 'value', value: 0},
+							{name: 'min', value: 1},
+							{name: 'value', value: 1},
 							{name: 'size', value: 3},
-							{name: 'class', value: 'quantity'},
+							{name: 'class', value: 'quantity form-control'},
 						]
 					}
 				]},

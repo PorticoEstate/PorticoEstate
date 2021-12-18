@@ -3219,8 +3219,8 @@ JS;
 		function debug( $values )
 		{
 			//			_debug_array($values);
-			$GLOBALS['phpgw_info']['flags'][noheader]		 = true;
-			$GLOBALS['phpgw_info']['flags'][nofooter]		 = true;
+			$GLOBALS['phpgw_info']['flags']['noheader']		 = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter']		 = true;
 			$GLOBALS['phpgw_info']['flags']['noframework']	 = true;
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('invoice', 'table_header'));

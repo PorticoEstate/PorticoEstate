@@ -161,7 +161,7 @@
 			foreach ($custom_fields as $attrib_id => $attrtib)
 			{
 				$fields[$attrtib['name']] = array(
-						'action'=> $attrtib['list'],
+						'action'=> (int)$attrtib['list'],
 						'type' => $attrtib['datatype'] == 'D' || $attrtib['datatype'] == 'DT' ? 'datestring' : 'string',
 						'label' => $attrtib['input_text'],
 						'translated_label' => $attrtib['input_text'],

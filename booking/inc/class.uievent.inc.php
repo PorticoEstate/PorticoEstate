@@ -12,13 +12,14 @@
 
 		public $public_functions = array
 			(
-			'index' => true,
-			'query' => true,
-			'add' => true,
-			'edit' => true,
-			'delete' => true,
-			'info' => true,
-			'toggle_show_inactive' => true,
+			'index'					 => true,
+			'query'					 => true,
+			'add'					 => true,
+			'edit'					 => true,
+			'delete'				 => true,
+			'info'					 => true,
+			'toggle_show_inactive'	 => true,
+			'send_sms_participants'	 => true
 		);
 		protected $customer_id,
 			$account;
@@ -678,6 +679,86 @@
 					// TODO: Inform user if something goes wrong
 				}
 			}
+		}
+
+		public function send_sms_participants()
+		{
+			$type = 'event';;
+			$id = phpgw::get_var('id', 'int');
+			$send_sms = phpgw::get_var('send_sms', 'bool');
+			$sms_content = phpgw::get_var('sms_content', 'string');
+
+			$status = 'error';
+			$message = 'Nothing...';
+			if($send_sms && $sms_content)
+			{
+				$message = '';
+				$soparticipant = createObject('booking.soparticipant');
+				$params = array(
+					'results' => -1,
+					'filters' => array(
+						'reservation_id' => $id,
+						'reservation_type' => $type
+						)
+				);
+
+				$participants = $soparticipant->read($params);
+				if(!$participants['results'])
+				{
+					$message = lang('no records found.');
+				}
+
+				$sms_service = CreateObject('sms.sms');
+				$sms_recipients = array();
+				foreach ($participants['results'] as $participant)
+				{
+					$sms_recipients[] = $participant['phone'];
+				}
+				$final_recipients = array_unique($sms_recipients);
+
+				$account_id = $this->current_account_id();
+				$log_success = array();
+				$log_error = array();
+				foreach ($final_recipients as $final_recipient)
+				{
+					try
+					{
+						$sms_res = $sms_service->websend2pv($account_id, $final_recipient, $sms_content);
+						if (empty($sms_res[0][0]))
+						{
+							$log_error[] = $final_recipient;
+						}
+						else
+						{
+							$log_success[] = $final_recipient;
+
+						}
+					}
+					catch (Exception $ex)
+					{
+						$log_error[] = $final_recipient;
+					}
+
+				}
+
+				if($log_success)
+				{
+					$status = 'ok';
+					$message .= 'SMS sendt til: ' . implode(',', $log_success);
+					$event = $this->bo->read_single($id);
+				}
+				if($log_error)
+				{
+					$message .= "<br/>SMS feilet for: " . implode(',', $log_error);
+				}
+				$this->add_comment($event, "SMS: $message");
+				$this->bo->update($event);
+
+			}
+			return array(
+				'status' => $status,
+				'message' => $message
+			);
 		}
 
 		public function edit()

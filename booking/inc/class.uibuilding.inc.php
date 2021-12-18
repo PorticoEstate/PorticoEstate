@@ -10,15 +10,15 @@
 
 		public $public_functions = array
 			(
-			'index' => true,
-			'query' => true,
-			'active' => true,
-			'add' => true,
-			'show' => true,
-			'edit' => true,
-			'schedule' => true,
-			'properties' => true,
-			'toggle_show_inactive' => true,
+			'index'					 => true,
+			'query'					 => true,
+			'active'				 => true,
+			'add'					 => true,
+			'show'					 => true,
+			'edit'					 => true,
+			'schedule'				 => true,
+			'properties'			 => true,
+			'toggle_show_inactive'	 => true,
 			'find_buildings_used_by' => true,
 		);
 		protected $module;
@@ -28,50 +28,50 @@
 			parent::__construct();
 
 			//self::process_booking_unauthorized_exceptions();
+			$this->user_id			 = phpgw::get_var('user_id', 'int');
 
-			$this->bo = CreateObject('booking.bobuilding');
-			$this->bo_booking = CreateObject('booking.bobooking');
-			$this->activity_bo = CreateObject('booking.boactivity');
+			$this->bo										 = CreateObject('booking.bobuilding');
+			$this->bo_booking								 = CreateObject('booking.bobooking');
+			$this->activity_bo								 = CreateObject('booking.boactivity');
 			self::set_active_menu('booking::buildings::buildings');
-			$this->fields = array
+			$this->fields									 = array
 				(
-				'name' => 'string',
-				'homepage' => 'url',
-				'description' => 'html',
-				'opening_hours' => 'html',
-				'email' => 'email',
-				'tilsyn_name' => 'string',
-				'tilsyn_email' => 'email',
-				'tilsyn_phone' => 'string',
-				'tilsyn_name2' => 'string',
-				'tilsyn_email2' => 'email',
-				'tilsyn_phone2' => 'string',
-				'street' => 'string',
-				'zip_code' => 'string',
-				'city' => 'string',
-				'district' => 'string',
-				'phone' => 'string',
-				'active' => 'int',
-				'location_code' => 'string',
+				'name'					 => 'string',
+				'homepage'				 => 'url',
+				'description'			 => 'html',
+				'opening_hours'			 => 'html',
+				'email'					 => 'email',
+				'tilsyn_name'			 => 'string',
+				'tilsyn_email'			 => 'email',
+				'tilsyn_phone'			 => 'string',
+				'tilsyn_name2'			 => 'string',
+				'tilsyn_email2'			 => 'email',
+				'tilsyn_phone2'			 => 'string',
+				'street'				 => 'string',
+				'zip_code'				 => 'string',
+				'city'					 => 'string',
+				'district'				 => 'string',
+				'phone'					 => 'string',
+				'active'				 => 'int',
+				'location_code'			 => 'string',
 				'deactivate_application' => 'int',
-				'deactivate_calendar' => 'int',
+				'deactivate_calendar'	 => 'int',
 				'deactivate_sendmessage' => 'int',
-				'extra_kalendar' => 'string',
-				'calendar_text' => 'string',
-				'activity_id' => 'int',
+				'extra_kalendar'		 => 'string',
+				'calendar_text'			 => 'string',
+				'activity_id'			 => 'int',
 			);
-			$this->module = "booking";
-			$this->display_name = lang('building');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
-
+			$this->module									 = "booking";
+			$this->display_name								 = lang('building');
+			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('booking') . "::{$this->display_name}";
 		}
 
 		public function properties()
 		{
-			$q = phpgw::get_var('query', 'string', 'REQUEST', null);
+			$q		 = phpgw::get_var('query', 'string', 'REQUEST', null);
 			$type_id = count(explode('-', $q));
-			$so = CreateObject('property.solocation');
-			$ret = $so->read(array('type_id' => $type_id, 'query' => $q));
+			$so		 = CreateObject('property.solocation');
+			$ret	 = $so->read(array('type_id' => $type_id, 'query' => $q));
 			foreach ($ret as &$r)
 			{
 				$name = array();
@@ -79,8 +79,8 @@
 				{
 					$name[] = $r['loc' . $i . '_name'];
 				}
-				$r['name'] = $r['location_code'] . ' (' . join(', ', $name) . ')';
-				$r['id'] = $r['location_code'];
+				$r['name']	 = $r['location_code'] . ' (' . join(', ', $name) . ')';
+				$r['id']	 = $r['location_code'];
 			}
 			$locations = array('results' => $ret, 'total_results' => count($ret));
 			return $this->yui_results($locations);
@@ -109,64 +109,65 @@
 			{
 				return $this->query();
 			}
+			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 
 			$data = array(
 				'datatable_name' => $this->display_name,
-				'form' => array(
+				'form'			 => array(
 					'toolbar' => array(
 						'item' => array(
 							array(
-								'label' => lang('toggle show inactive'),
-								'type' => 'link',
-								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
+								'label'	 => lang('toggle show inactive'),
+								'type'	 => 'link',
+								'value'	 => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+								'href'	 => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
 							),
 						)
 					),
 				),
-				'datatable' => array(
-					'source' => self::link(array('menuaction' => $this->module . '.uibuilding.index',
-						'phpgw_return_as' => 'json')),
-					'field' => array(
+				'datatable'		 => array(
+					'source' => self::link(array('menuaction'		 => $this->module . '.uibuilding.index',
+						'phpgw_return_as'	 => 'json')),
+					'field'	 => array(
 						array(
-							'key' => 'id',
-							'label' => lang('id'),
+							'key'	 => 'id',
+							'label'	 => lang('id'),
 						),
 						array(
-							'key' => 'name',
-							'label' => lang('Building'),
-							'formatter' => 'JqueryPortico.formatLink'
+							'key'		 => 'name',
+							'label'		 => lang('Building'),
+							'formatter'	 => 'JqueryPortico.formatLink'
 						),
 						array(
-							'key' => 'activity_name',
-							'label' => lang('Activity')
+							'key'	 => 'activity_name',
+							'label'	 => lang('Activity')
 						),
 						array(
-							'key' => 'street',
-							'label' => lang('Street'),
+							'key'	 => 'street',
+							'label'	 => lang('Street'),
 						),
 						array(
-							'key' => 'zip_code',
-							'label' => lang('Zip code'),
+							'key'	 => 'zip_code',
+							'label'	 => lang('Zip code'),
 						),
 						array(
-							'key' => 'city',
-							'label' => lang('Postal City'),
+							'key'	 => 'city',
+							'label'	 => lang('Postal City'),
 						),
 						array(
-							'key' => 'location_code',
-							'label' => lang('location code'),
+							'key'	 => 'location_code',
+							'label'	 => lang('location code'),
 						),
 						array(
-							'key' => 'district',
-							'label' => lang('District'),
+							'key'	 => 'district',
+							'label'	 => lang('District'),
 						),
 						array(
-							'key' => 'active',
-							'label' => lang('Active'),
+							'key'	 => 'active',
+							'label'	 => lang('Active'),
 						),
 						array(
-							'key' => 'link',
+							'key'	 => 'link',
 							'hidden' => true
 						)
 					)
@@ -179,7 +180,74 @@
 				$data['datatable']['new_item'] = self::link(array('menuaction' => $this->module . '.uibuilding.add'));
 			}
 
+			$filters = $this->_get_filters();
+
+			foreach ($filters as $filter)
+			{
+				$data['form']['toolbar']['item'][] = $filter;
+			}
+
 			self::render_template_xsl('datatable_jquery', $data);
+		}
+
+		private function _get_user_list( $selected )
+		{
+			$selected = abs($selected);
+//			$users = $this->bo->so->get_user_list();
+			$users = createObject('booking.sopermission_building')->get_user_list();
+
+			$user_list		 = array();
+			$selected_found	 = false;
+			foreach ($users as $user)
+			{
+				$user_list[] = array(
+					'id'		 => $user['id'],
+					'name'		 => $user['name'],
+					'selected'	 => $user['id'] == $selected ? 1 : 0
+				);
+
+				if (!$selected_found)
+				{
+					$selected_found = $user['id'] == $selected ? true : false;
+				}
+			}
+			if ($selected && !$selected_found)
+			{
+				$user_list[] = array
+					(
+					'id'		 => $selected,
+					'name'		 => $GLOBALS['phpgw']->accounts->get($selected)->__toString(),
+					'selected'	 => 1
+				);
+			}
+			return $user_list;
+		}
+
+		private function _get_filters()
+		{
+			$values_combo_box	 = array();
+			$combos				 = array();
+
+
+			$filter_tts_assigned_to_me = true;
+
+			$values_combo_box[0] = $this->_get_user_list($this->user_id);
+			array_unshift($values_combo_box[0], array(
+				'id'		 => -1 * $GLOBALS['phpgw_info']['user']['account_id'],
+				'name'		 => lang('my assigned buildings'),
+				'selected'	 => ((int)$this->user_id < 0 || (int)$filter_tts_assigned_to_me == 1) ? 1 : 0));
+
+//			array_unshift($values_combo_box[0], array('id' => '', 'name' => lang('assigned to')));
+			$combos[] = array(
+				'type'		 => 'filter',
+				'multiple'	 => 'true',
+				'name'		 => 'filter_user_id',
+				'extra'		 => '',
+				'text'		 => lang('case officer'),
+				'list'		 => $values_combo_box[0]
+			);
+
+			return $combos;
 		}
 
 		public function query()
@@ -194,7 +262,7 @@
 			foreach ($buildings['results'] as &$building)
 			{
 				$building['link'] = $this->link(array('menuaction' => $this->module . '.uibuilding.show',
-					'id' => $building['id']));
+					'id'		 => $building['id']));
 #				$building['active'] = $building['active'] ? lang('Active') : lang('Inactive');
 			}
 			return $this->jquery_results($buildings);
@@ -205,9 +273,9 @@
 			$errors = array();
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$building = extract_values($_POST, $this->fields);
-				$building['active'] = '1';
-				$errors = $this->bo->validate($building);
+				$building			 = extract_values($_POST, $this->fields);
+				$building['active']	 = '1';
+				$errors				 = $this->bo->validate($building);
 				if (!$errors)
 				{
 					$receipt = $this->bo->add($building);
@@ -215,48 +283,48 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
-			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
-			$activity_data = $this->activity_bo->get_top_level();
+			$building['buildings_link']	 = self::link(array('menuaction' => 'booking.uibuilding.index'));
+			$building['cancel_link']	 = self::link(array('menuaction' => 'booking.uibuilding.index'));
+			$activity_data				 = $this->activity_bo->get_top_level();
 
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::rich_text_editor(array('field_description', 'field_opening_hours'));
 
-			$tabs = array();
+			$tabs			 = array();
 			$tabs['generic'] = array('label' => lang('new building'), 'link' => '#building_form');
-			$active_tab = 'generic';
+			$active_tab		 = 'generic';
 
-			$building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			$building['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
+			$building['tabs']		 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$building['validator']	 = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));
 
 			self::add_javascript('booking', 'base', 'building.add.js');
-			self::render_template_xsl('building_form', array('building' => $building, 'activitydata' => $activity_data,
-				'new_form' => true));
+			self::render_template_xsl('building_form', array('building'		 => $building, 'activitydata'	 => $activity_data,
+				'new_form'		 => true));
 		}
 
 		public function edit()
 		{
 			$GLOBALS['phpgw_info']['flags']['allow_html_image']	 = true;
 			$GLOBALS['phpgw_info']['flags']['allow_html_iframe'] = true;
-			$id = phpgw::get_var('id', 'int');
+			$id													 = phpgw::get_var('id', 'int');
 			if (!$id)
 			{
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$building = $this->bo->read_single($id);
 
-			if(!$building)
+			if (!$building)
 			{
 				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
 			}
 
-			$building['id'] = $id;
-			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
-			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
-					'id' => $building['id']));
-			$building['top-nav-bar-buildings'] = lang('Buildings');
-			$config = CreateObject('phpgwapi.config', 'booking');
+			$building['id']						 = $id;
+			$building['buildings_link']			 = self::link(array('menuaction' => 'booking.uibuilding.index'));
+			$building['cancel_link']			 = self::link(array('menuaction' => 'booking.uibuilding.show',
+					'id'		 => $building['id']));
+			$building['top-nav-bar-buildings']	 = lang('Buildings');
+			$config								 = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 
 			if ($config->config_data['extra_schedule'] == 'yes')
@@ -291,12 +359,12 @@
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::rich_text_editor(array('field_description', 'field_opening_hours'));
 
-			$tabs = array();
+			$tabs			 = array();
 			$tabs['generic'] = array('label' => lang('Building Edit'), 'link' => '#building_form');
-			$active_tab = 'generic';
+			$active_tab		 = 'generic';
 
-			$building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			$building['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
+			$building['tabs']		 = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$building['validator']	 = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));
 
 			self::add_javascript('booking', 'base', 'building.add.js');
@@ -311,30 +379,30 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$building = $this->bo->read_single($id);
-			if(!$building)
+			if (!$building)
 			{
 				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
 			}
-			$building['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
-			$building['edit_link'] = self::link(array('menuaction' => 'booking.uibuilding.edit',
-					'id' => $building['id']));
-			$building['schedule_link'] = self::link(array('menuaction' => 'booking.uibuilding.schedule',
-					'id' => $building['id']));
-			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
-			$building['message_link'] = self::link(array('menuaction' => 'booking.uisystem_message.edit',
-					'building_id' => $building['id']));
-			$building['add_document_link'] = booking_uidocument::generate_inline_link('building', $building['id'], 'add');
+			$building['buildings_link']		 = self::link(array('menuaction' => 'booking.uibuilding.index'));
+			$building['edit_link']			 = self::link(array('menuaction' => 'booking.uibuilding.edit',
+					'id'		 => $building['id']));
+			$building['schedule_link']		 = self::link(array('menuaction' => 'booking.uibuilding.schedule',
+					'id'		 => $building['id']));
+			$building['cancel_link']		 = self::link(array('menuaction' => 'booking.uibuilding.index'));
+			$building['message_link']		 = self::link(array('menuaction'	 => 'booking.uisystem_message.edit',
+					'building_id'	 => $building['id']));
+			$building['add_document_link']	 = booking_uidocument::generate_inline_link('building', $building['id'], 'add');
 			$building['add_permission_link'] = booking_uipermission::generate_inline_link('building', $building['id'], 'add');
-			$building['location_link'] = self::link(array('menuaction' => 'property.uilocation.view',
-					'location_code' => $building['location_code']));
+			$building['location_link']		 = self::link(array('menuaction'	 => 'property.uilocation.view',
+					'location_code'	 => $building['location_code']));
 			if (trim($building['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($building['homepage'])))
 			{
 				$building['homepage'] = 'http://' . $building['homepage'];
 			}
 
-			$tabs = array();
+			$tabs			 = array();
 			$tabs['generic'] = array('label' => lang('Building Show'), 'link' => '#building_show');
-			$active_tab = 'generic';
+			$active_tab		 = 'generic';
 
 			$building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
@@ -347,21 +415,21 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$building['name']}";
 
-			$building['cancel_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
-					'id' => $building['id']));
-			$building['datasource_url'] = self::link(array(
-					'menuaction' => 'booking.uibooking.building_schedule',
-					'building_id' => $building['id'],
-					'phpgw_return_as' => 'json',
+			$building['cancel_link']	 = self::link(array('menuaction' => 'booking.uibuilding.show',
+					'id'		 => $building['id']));
+			$building['datasource_url']	 = self::link(array(
+					'menuaction'		 => 'booking.uibooking.building_schedule',
+					'building_id'		 => $building['id'],
+					'phpgw_return_as'	 => 'json',
 			));
 			self::add_javascript('booking', 'base', 'schedule.js');
 			phpgwapi_jquery::load_widget("datepicker");
 
 			$building['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
 
-			$tabs = array();
+			$tabs			 = array();
 			$tabs['generic'] = array('label' => lang('Building Schedule'), 'link' => '#building_schedule');
-			$active_tab = 'generic';
+			$active_tab		 = 'generic';
 
 			$building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 

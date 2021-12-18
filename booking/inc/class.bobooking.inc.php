@@ -1443,6 +1443,15 @@
 
 						$overlap = $this->check_if_resurce_is_taken($resource['id'], $StartTime, $endTime, $events);
 
+						$DateTimeZone_utc	 = new DateTimeZone('UTC');
+
+						// Transported to the client to be handled by javascript
+						$from_utc = clone $StartTime;
+						$to_utc = clone $endTime;
+						$from_utc->setTimezone($DateTimeZone_utc);
+						$to_utc->setTimezone($DateTimeZone_utc);
+			
+									
 						if($within_season)
 					//	if ($within_season && (($booking_lenght > 1 && $overlap) || !$overlap))
 						{
@@ -1455,8 +1464,8 @@
 									'menuaction'	 => 'bookingfrontend.uiapplication.add',
 									'resource_id'	 => $resource['id'],
 									'building_id'	 => $building_id,
-									'from_[]'		 => $StartTime->format('Y-m-d H:i:s'),
-									'to_[]'			 => $endTime->format('Y-m-d H:i:s'),
+									'from_[]'		 => $from_utc->format('Y-m-d H:i:s'),
+									'to_[]'			 => $to_utc->format('Y-m-d H:i:s'),
 									'simple'		 => true
 								]
 							];
@@ -1504,14 +1513,19 @@
 			$filters = array('active' => 1, 'resource_id' => $resource_ids);
 			$params = array('filters' => $filters, 'results' =>'all');
 			$blocks = CreateObject('booking.soblock')->read($params);
+
 			if($blocks['results'])
 			{
 				foreach ($blocks['results'] as & $block)
 				{
-				  $block['resources'] = array( $block['resource_id']);
-				  $block['type'] = 'block';
+					if($block['session_id'] === $session_id)
+					{
+						continue;
+					}
+					$block['resources'] = array( $block['resource_id']);
+					$block['type'] = 'block';
+					$events['results'][] = $block;
 				}
-				$events['results'] = array_merge((array)$events['results'],$blocks['results']);
 			}
 		}
 

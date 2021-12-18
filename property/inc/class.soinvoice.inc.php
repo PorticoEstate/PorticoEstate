@@ -2652,9 +2652,16 @@
 
 			if ($data['janitor_lid'])
 			{
-				$data['janitor_lid'] = ltrim($data['janitor_lid'], '*');
-				$filtermethod	 .= " {$where} (oppsynsigndato IS NULL AND saksbehandlerid != '{$data['janitor_lid']}'";
-				$filtermethod	 .= " AND oppsynsmannid = '{$data['janitor_lid']}')";
+				if (stripos($data['janitor_lid'], '*') === 0)
+				{
+					$data['janitor_lid'] = ltrim($data['janitor_lid'], '*');
+					$filtermethod	 .= " {$where} (oppsynsigndato IS NULL AND (saksbehandlerid != '{$data['janitor_lid']}' OR saksbehandlerid IS NULL)";
+					$filtermethod	 .= " AND oppsynsmannid = '{$data['janitor_lid']}')";
+				}
+				else
+				{
+					$filtermethod	 .= " {$where} oppsynsmannid = '{$data['janitor_lid']}'";
+				}
 				$where			 = 'OR';
 			}
 

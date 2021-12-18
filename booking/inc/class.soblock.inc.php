@@ -67,42 +67,27 @@
 			}
 		}
 
-
-		public function find_expired()
-		{
-			$table_name = $this->table_name;
-			$db = $this->db;
-			$expired_conditions = $this->find_expired_sql_conditions();
-			return $this->read(array('filters' => array('where' => $expired_conditions), 'results' => 1000));
-		}
-
-		protected function find_expired_sql_conditions()
-		{
-			$table_name = $this->table_name;
-			$now = date('Y-m-d H:i:s', time() - 10 * 60);
-			return "({$table_name}.active != 0 AND {$table_name}.entry_time < '{$now}')";
-		}
-
 		public function delete_expired()
 		{
 			$expired = $this->find_expired();
 			$table_name = $this->table_name;
-			$db = $this->db;
+			$this->db->transaction_begin();
+
 			$ids = join(', ', array_map(array($this, 'select_id'), $expired['results']));
 			if($ids)
 			{
 				$sql = "UPDATE {$table_name} SET active = 0 WHERE {$table_name}.id IN ($ids);";
-				$db->query($sql, __LINE__, __FILE__);
+				$this->db->query($sql, __LINE__, __FILE__);
 			}
 
 			/**
 			 * Delete old partial applications as well
 			 */
-			$yesterday = date('Y-m-d H:i:s', time() -  24 * 3600);
+			$yesterday = date('Y-m-d H:i:s', time() -  4 * 3600);
 
 			$sql = "SELECT id FROM bb_application WHERE status = 'NEWPARTIAL1' AND created < '$yesterday'";
-			$db->query($sql, __LINE__, __FILE__);
-			$applications = array();
+			$this->db->query($sql, __LINE__, __FILE__);
+			$applications = array(-1,-2,-3);
 			while($this->db->next_record())
 			{
 				$applications[] = $this->db->f('id');
@@ -113,5 +98,27 @@
 			{
 				$soapplication->delete_application($application_id);
 			}
+			$this->db->transaction_commit();
+
 		}
+
+		public function find_expired()
+		{
+			$table_name = $this->table_name;
+			$db = $this->db;
+			$expired_conditions = $this->find_expired_sql_conditions();
+			return $this->read(array('filters' => array('where' => $expired_conditions), 'results' => 1000));
+		}
+
+		/**
+		 * 10 minutes old
+		 * @return string condition
+		 */
+		protected function find_expired_sql_conditions()
+		{
+			$table_name = $this->table_name;
+			$now = date('Y-m-d H:i:s', time() - 10 * 60);
+			return "({$table_name}.active != 0 AND {$table_name}.entry_time < '{$now}')";
+		}
+
 	}

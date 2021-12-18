@@ -301,6 +301,75 @@
 			$application['comments'] = $filtered_comments;
 		}
 
+		function _get_user_list()
+		{
+
+			$user_list = $this->bo->so->get_user_list();
+
+			array_unshift($user_list, array('id' => -1 * $this->current_account_id(),'name' => lang('My assigned applications')));
+
+			return $user_list;
+		}
+
+		private function _get_filters()
+		{
+			$filters = array();
+
+			$filters[]	 = array(
+				'type'	 => 'filter',
+				'name'	 => 'status',
+				'text'	 => lang('Status') . ':',
+				'list'	 => array(
+					array(
+						'id'	 => 'none',
+						'name'	 => lang('Not selected')
+					),
+					array(
+						'id'		 => 'NEW',
+						'name'		 => lang('NEW'),
+						'selected'	 => 1
+					),
+					array(
+						'id'	 => 'PENDING',
+						'name'	 => lang('PENDING')
+					),
+					array(
+						'id'	 => 'REJECTED',
+						'name'	 => lang('REJECTED')
+					),
+					array(
+						'id'	 => 'ACCEPTED',
+						'name'	 => lang('ACCEPTED')
+					)
+				)
+			);
+			$filters[]	 = array(
+				'type'				 => 'autocomplete',
+				'name'				 => 'building',
+				'ui'				 => 'building',
+				'text'				 => lang('Building') . ':',
+				'onItemSelect'		 => 'updateBuildingFilter',
+				'onClearSelection'	 => 'clearBuildingFilter'
+			);
+			$filters[]	 = array(
+				'type'	 => 'filter',
+				'name'	 => 'activities',
+				'text'	 => lang('Activity') . ':',
+				'list'	 => $this->bo->so->get_activities_main_level(),
+			);
+//			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && !$this->bo->has_role(booking_sopermission::ROLE_MANAGER))
+			{
+				$filters[] = array(
+					'type'		 => 'filter',
+					'multiple'	 => true,
+					'name'		 => 'filter_case_officer_id',
+					'text'		 => lang('case officer') . ':',
+					'list'		 => $this->_get_user_list(),
+				);
+			}
+			return $filters;
+		}
+
 		public function index()
 		{
 			if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -308,68 +377,13 @@
 				return $this->query();
 			}
 			phpgwapi_jquery::load_widget('autocomplete');
+			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 
 			$data = array(
 				'datatable_name' => $this->display_name,
 				'form' => array(
 					'toolbar' => array(
-						'item' => array(
-							array(
-								'type' => 'filter',
-								'name' => 'status',
-								'text' => lang('Status') . ':',
-								'list' => array(
-									array(
-										'id' => 'none',
-										'name' => lang('Not selected')
-									),
-									array(
-										'id' => 'NEW',
-										'name' => lang('NEW'),
-										'selected' => 1
-									),
-									array(
-										'id' => 'PENDING',
-										'name' => lang('PENDING')
-									),
-									array(
-										'id' => 'REJECTED',
-										'name' => lang('REJECTED')
-									),
-									array(
-										'id' => 'ACCEPTED',
-										'name' => lang('ACCEPTED')
-									),
-									array(
-										'id' => 'NEWPARTIAL1',
-										'name' => lang('not completed')
-									)
-								)
-							),
-/*							array('type' => 'filter',
-								'name' => 'buildings',
-								'text' => lang('Building') . ':',
-								'list' => $this->bo->so->get_buildings(),
-							),
-*/
-							array('type' => 'autocomplete',
-								'name' => 'building',
-								'ui' => 'building',
-								'text' => lang('Building') . ':',
-								'onItemSelect' => 'updateBuildingFilter',
-								'onClearSelection' => 'clearBuildingFilter'
-							),
-							array('type' => 'filter',
-								'name' => 'activities',
-								'text' => lang('Activity') . ':',
-								'list' => $this->bo->so->get_activities_main_level(),
-							),
-						/*	array(
-								'type' => 'link',
-								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
-							),*/
-						),
+						'item' => array(),
 					),
 				),
 				'datatable' => array(
@@ -417,6 +431,12 @@
 							'label' => lang('Contact')
 						),
 						array(
+							'key' => 'case_officer_name',
+							'label' => lang('case officer'),
+							'sortable' => false
+						),
+						
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -424,6 +444,12 @@
 				),
 			);
 
+			$filters = $this->_get_filters();
+
+			foreach ($filters as $filter)
+			{
+				$data['form']['toolbar']['item'][] = $filter;
+			}
 
 			$data['datatable']['new_item'] = self::link(array('menuaction' => 'booking.uiapplication.add'));
 			$data['datatable']['actions'][] = array();
@@ -433,16 +459,19 @@
 
 		public function query()
 		{
+			$filters = array();
 			$building_id = phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
+			$case_officer_id = phpgw::get_var('filter_case_officer_id', 'int');
+
 			// users with the booking role admin should have access to all buildings
 			// admin users should have access to all buildings
-			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && !$this->bo->has_role(booking_sopermission::ROLE_MANAGER))
+//			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && !$this->bo->has_role(booking_sopermission::ROLE_MANAGER))
+//			{
+//				$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id'], $building_id);
+//			}
+//			else
 			{
-				$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id'], $building_id);
-			}
-			else if($building_id)
-			{
-				$filters['id'] = $this->bo->accessable_applications(null, $building_id);
+				$filters['id'] = $this->bo->accessable_applications(!empty($case_officer_id) ? array_map('abs', $case_officer_id) : null, $building_id);
 			}
 
 			$activity_id = phpgw::get_var('activities', 'int', 'REQUEST', null);
@@ -455,26 +484,21 @@
 				unset($filters['activity_id']);
 			}
 			$filters['status'] = 'NEW';
-//			if (isset($_SESSION['showall']))
-//			{
-//				$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
-//			}
-//			else
+
+			$test = phpgw::get_var('status', 'string', 'REQUEST', null);
+			if (phpgw::get_var('status') == 'none')
 			{
-				$test = phpgw::get_var('status', 'string', 'REQUEST', null);
-				if (phpgw::get_var('status') == 'none')
-				{
-					$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
-				}
-				elseif (isset($test))
-				{
-					$filters['status'] = $test;
-				}
-				else
-				{
-					$filters['status'] = 'NEW';
-				}
+				$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
 			}
+			elseif (isset($test))
+			{
+				$filters['status'] = $test;
+			}
+			else
+			{
+				$filters['status'] = 'NEW';
+			}
+			
 
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
@@ -501,6 +525,11 @@
 						'%C3%A6');
 					$replace = array(',', 'Å', 'å', 'Ø', 'ø', 'Æ', 'æ');
 					$application['building_name'] = str_replace($search, $replace, $application['building_name']);
+				}
+
+				if($application['case_officer_id'])
+				{
+					$application['case_officer_name'] = $GLOBALS['phpgw']->accounts->get($application['case_officer_id'])->__toString();
 				}
 
 				$dates = array();
@@ -778,9 +807,6 @@
 		public function set_block()
 		{
 			$resource_id = phpgw::get_var('resource_id', 'int' ,'REQUEST', -1 );
-			$from_ = (new DateTime(phpgw::get_var('from_')));
-			$to_ = (new DateTime(phpgw::get_var('to_')));
-
 			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
 
 			try
@@ -792,14 +818,22 @@
 				throw $ex;
 			}
 
-			$from_->setTimezone($DateTimeZone);
-			$to_->setTimezone($DateTimeZone);
+			$from_ = (new DateTime(phpgw::get_var('from_'), $DateTimeZone));
+			$to_ = (new DateTime(phpgw::get_var('to_'), $DateTimeZone));
+			$from_ = phpgw::get_var('from_');
+			$to_ = phpgw::get_var('to_');
+
+//			$from_->setTimezone(new DateTimeZone('UTC'));
+//			$to_->setTimezone(new DateTimeZone('UTC'));
 
 			$bo_block = createObject('booking.boblock');
 
 			$session_id = $GLOBALS['phpgw']->session->get_session_id();
-			$collision = $this->bo->so->check_collision(array($resource_id), $from_->format('Y-m-d H:i:s'), $to_->format('Y-m-d H:i:s'), $session_id);
+//			$collision = $this->bo->so->check_collision(array($resource_id), $from_->format('Y-m-d H:i:s'), $to_->format('Y-m-d H:i:s'), $session_id);
+			$collision = $this->bo->so->check_collision(array($resource_id), $from_, $to_, $session_id);
 
+			$status = '';
+			$message = '';
 			if ($collision)
 			{
 				$status = 'reserved';
@@ -813,13 +847,13 @@
 				'filters' => array('where' =>  "(bb_block.active = 1"
 					. " AND bb_block.session_id = '{$session_id}'"
 					. " AND bb_block.resource_id = {$resource_id}"
-					. " AND bb_block.from_ = '" . $from_->format('Y-m-d H:i:s') . "'"
-					. " AND bb_block.to_ = '" . $to_->format('Y-m-d H:i:s') . "')"),
+//					. " AND bb_block.from_ = '" . $from_->format('Y-m-d H:i:s') . "'"
+//					. " AND bb_block.to_ = '" . $to_->format('Y-m-d H:i:s') . "')"),
+					. " AND bb_block.from_ = '{$from_}'"
+					. " AND bb_block.to_ = '{$to_}')"),
 				'results' => 1));
 
 
-			$status = '';
-			$message = '';
 			if($previous_block['total_records'] > 0)
 			{
 				$status = 'registered';
@@ -829,8 +863,10 @@
 				$block = array(
 					'session_id'	=> $session_id,
 					'resource_id'	=> $resource_id,
-					'from_'			=> $from_->format('Y-m-d H:i:s'),
-					'to_'			=> $to_->format('Y-m-d H:i:s')
+//					'from_'			=> $from_->format('Y-m-d H:i:s'),
+//					'to_'			=> $to_->format('Y-m-d H:i:s')
+					'from_'			=> $from_,
+					'to_'			=> $to_
 					);
 				$receipt = $bo_block->add($block);
 				if($receipt['id'])
@@ -937,6 +973,7 @@
 				}
 
 				$application['dates'] = array_map(array($this, '_combine_dates'), $_POST['from_'], $_POST['to_']);
+				$application['dates'] = array_map("unserialize", array_unique(array_map("serialize", $application['dates'])));
 				$application['active'] = '1';
 				$application['status'] = 'NEW';
 				$application['created'] = 'now';

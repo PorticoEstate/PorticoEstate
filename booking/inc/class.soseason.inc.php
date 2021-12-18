@@ -289,6 +289,64 @@
 			return $errors;
 		}
 
+		function copy_boundaries($from_id, $to_id)
+		{
+
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
+			$sql = "SELECT * FROM bb_season_boundary WHERE season_id = " . (int) $from_id;
+			$this->db->query($sql, __LINE__, __FILE__);
+
+
+			$valueset = array();
+
+			while($this->db->next_record())
+			{
+				$valueset[]	 = array(
+					1	 => array
+						(
+						'value'	 => (int) $to_id,
+						'type'	 => PDO::PARAM_INT
+					),
+					2	 => array
+						(
+						'value'	 => (int) $this->db->f('wday'),
+						'type'	 => PDO::PARAM_INT
+					),
+					3	 => array
+						(
+						'value'	 =>$this->db->f('from_'),
+						'type'	 => PDO::PARAM_STR
+					),
+					4	 => array
+						(
+						'value'	 =>$this->db->f('to_'),
+						'type'	 => PDO::PARAM_STR
+					),
+				);
+			}
+
+			$sql_insert = 'INSERT INTO bb_season_boundary (season_id, wday, from_, to_) VALUES (?, ?, ?, ?)';
+
+			if ($valueset)
+			{
+				$this->db->insert($sql_insert, $valueset, __LINE__, __FILE__);
+			}
+
+			if (!$this->global_lock)
+			{
+				return $this->db->transaction_commit();
+			}
+		}
+
+
 		/**
 		 * @param type $season_id
 		 * @return type
@@ -456,5 +514,89 @@ EOT;
 			$this->db->query("DELETE FROM bb_wtemplate_alloc_resource WHERE allocation_id=" . intval($id), __LINE__, __FILE__);
 			$this->db->query("DELETE FROM bb_wtemplate_alloc WHERE id=" . intval($id), __LINE__, __FILE__);
 			return	$this->db->transaction_commit();
+		}
+
+		function copy_wtemplate($from_id, $to_id)
+		{
+
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
+			$sql = "SELECT * FROM bb_wtemplate_alloc WHERE season_id = " . (int) $from_id;
+			$this->db->query($sql, __LINE__, __FILE__);
+
+
+			$valuesets = array();
+
+			while($this->db->next_record())
+			{
+				$id = (int) $this->db->f('id');
+				$valuesets[$id] = array(
+					'season_id'			 => $to_id,
+					'organization_id'	 => (int) $this->db->f('organization_id'),
+					'wday'				 => (int) $this->db->f('wday'),
+					'cost'				 => $this->db->f('cost'),
+					'from_'				 => $this->db->f('from_'),
+					'to_'				 => $this->db->f('to_'),
+				);
+			}
+
+			foreach ($valuesets as $old_id => $valueset)
+			{
+				$insert_fields	 = implode(',', array_keys($valueset));
+				$insert_values	 = $this->db->validate_insert(array_values($valueset));
+				$this->db->query("INSERT INTO bb_wtemplate_alloc ({$insert_fields}) VALUES ({$insert_values})", __LINE__, __FILE__);
+
+				$new_id = $this->db->get_last_insert_id('bb_wtemplate_alloc', 'id');
+				$this->copy_wtemplate_resources($old_id, $new_id);
+
+			}
+
+			if ($valueset)
+			{
+				$this->db->insert($sql, $valueset, __LINE__, __FILE__);
+			}
+
+			if (!$this->global_lock)
+			{
+				return $this->db->transaction_commit();
+			}
+		}
+
+		function copy_wtemplate_resources($from_id, $to_id)
+		{
+			$sql = "SELECT * FROM bb_wtemplate_alloc_resource WHERE allocation_id = " . (int) $from_id;
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$valueset = array();
+
+			while($this->db->next_record())
+			{
+				$valueset[]	 = array(
+					1	 => array
+						(
+						'value'	 => (int) $to_id,
+						'type'	 => PDO::PARAM_INT
+					),
+					2	 => array
+						(
+						'value'	 => (int) $this->db->f('resource_id'),
+						'type'	 => PDO::PARAM_INT
+					)
+				);
+			}
+
+			$sql_insert = 'INSERT INTO bb_wtemplate_alloc_resource (allocation_id, resource_id) VALUES (?, ?)';
+
+			if ($valueset)
+			{
+				$this->db->insert($sql_insert, $valueset, __LINE__, __FILE__);
+			}
 		}
 	}

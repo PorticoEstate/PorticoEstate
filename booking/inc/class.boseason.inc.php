@@ -17,6 +17,23 @@
 			$this->so_wtemplate_alloc = new booking_sowtemplate_alloc();
 		}
 
+		
+		function copy_permissions($from_id, $to_id)
+		{
+			$so_permission = CreateObject('booking.sopermission_season');
+			return $so_permission->copy_permissions($from_id, $to_id);
+		}
+
+		function copy_boundaries($from_id, $to_id)
+		{
+			return $this->so_boundary->copy_boundaries($from_id, $to_id);
+		}
+
+		function copy_wtemplate($from_id, $to_id)
+		{
+			return $this->so_wtemplate_alloc->copy_wtemplate($from_id, $to_id);
+		}
+
 		/**
 		 * @see bocommon_authorized
 		 */

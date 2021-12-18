@@ -164,6 +164,23 @@
 			}
 		}
 
+		function get_user_list()
+		{
+			$sql = "SELECT DISTINCT account_id, account_lastname, account_firstname FROM phpgw_accounts 
+			JOIN bb_application ON bb_application.case_officer_id = phpgw_accounts.account_id";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$user_list = array();
+			while($this->db->next_record())
+			{
+				$user_list[] = array(
+					'id' =>  $this->db->f('account_id'),
+					'name' =>  $this->db->f('account_lastname', true) . ', ' . $this->db->f('account_firstname', true),
+				);
+			}
+			return $user_list;
+
+		}
+		
 		function get_building_info( $id )
 		{
 			$id	 = (int)$id;
@@ -357,6 +374,8 @@
 				$this->db->transaction_begin();
 			}
 
+			$this->delete_purchase_order($id);
+
 			$sql = "DELETE FROM bb_document_application WHERE owner_id=" . (int)$id;
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -386,14 +405,14 @@
 			}
 
 			$rids	 = join(',', array_map("intval", $resources));
-			$sql	 = "SELECT bb_block.id
+			$sql	 = "SELECT bb_block.id, 'block' as type
                       FROM bb_block
                       WHERE  bb_block.resource_id in ($rids)
                       AND ((bb_block.from_ <= '$from_' AND bb_block.to_ > '$from_')
                       OR (bb_block.from_ >= '$from_' AND bb_block.to_ <= '$to_')
                       OR (bb_block.from_ < '$to_' AND bb_block.to_ >= '$to_')) AND active = 1 {$filter_block}
                       UNION
-					  SELECT ba.id
+					  SELECT ba.id, 'allocation' as type
                       FROM bb_allocation ba, bb_allocation_resource bar
                       WHERE active = 1
                       AND ba.id = bar.allocation_id
@@ -402,7 +421,7 @@
                       OR (ba.from_ >= '$from_' AND ba.to_ <= '$to_')
                       OR (ba.from_ < '$to_' AND ba.to_ >= '$to_'))
                       UNION
-                      SELECT be.id
+                      SELECT be.id, 'event' as type
                       FROM bb_event be, bb_event_resource ber, bb_event_date bed
                       WHERE active = 1
 					  AND be.id = ber.event_id

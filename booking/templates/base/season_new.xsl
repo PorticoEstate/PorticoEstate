@@ -5,6 +5,14 @@
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="season/tabs"/>
 			<div id="season_new" class="booking-container">
+				<xsl:if test="season/id !=''">
+					<div class="pure-control-group">
+						<label for="field_id">
+							<xsl:value-of select="php:function('lang', 'id')" />
+						</label>
+						<xsl:value-of select="season/id"/>
+					</div>
+				</xsl:if>
 				<div class="pure-control-group">
 					<label for="field_name">
 						<xsl:value-of select="php:function('lang', 'Name')" />
@@ -147,6 +155,11 @@
 			<input type="submit" class="pure-button pure-button-primary">
 				<xsl:attribute name="value">
 					<xsl:value-of select="php:function('lang', 'Save')" />
+				</xsl:attribute>
+			</input>
+			<input type="button" class="pure-button pure-button-primary" name="copy" onclick="copy_season({season/id});">
+				<xsl:attribute name="value">
+					<xsl:value-of select="php:function('lang', 'copy')" />
 				</xsl:attribute>
 			</input>
 			<input type="button" class="pure-button pure-button-primary" name="cancel">
