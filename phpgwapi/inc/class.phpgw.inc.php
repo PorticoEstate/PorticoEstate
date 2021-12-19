@@ -499,9 +499,7 @@
 					case 'string':
 					default:
 						$value = str_replace(array(';','(', ')', '=', '--'),array('&#59;','&#40;', '&#41;', '&#61;','&#8722;&#8722;'), $value); // prevent SQL-injection
-						$value = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 						$value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8', true);
-					//	$value = htmlentities($value, ENT_QUOTES, 'UTF-8', true);
 						break;
 
 					case 'boolean':
