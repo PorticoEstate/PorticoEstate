@@ -590,9 +590,13 @@
 		{
 			$from = "'" . $booking['from_'] . "'";
 			$to = "'" . $booking['to_'] . "'";
-			$gid = $booking['group_id'];
-			$season_id = $booking['season_id'];
+			$gid = (int)$booking['group_id'];
+			$season_id = (int)$booking['season_id'];
 			$resources = implode(",", $booking['resources']);
+			if(empty($booking['resources']))
+			{
+				return False;
+			}
 
 			$sql = "SELECT id FROM bb_allocation ba2 WHERE ba2.from_ = ($from) AND ba2.to_ = ($to) AND ba2.organization_id = (SELECT organization_id FROM bb_group WHERE id = ($gid)) AND ba2.season_id = ($season_id) AND EXISTS ( SELECT 1 FROM bb_allocation  a,bb_allocation_resource b WHERE a.id = b.allocation_id AND b.resource_id IN ($resources)) AND NOT EXISTS (SELECT 1 FROM bb_booking bb WHERE ba2.id = bb.allocation_id)";
 
