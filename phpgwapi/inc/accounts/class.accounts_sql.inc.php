@@ -387,6 +387,10 @@
 
 				phpgwapi_cache::system_set('phpgwapi', "account_{$id}", $account);
 			}
+			else
+			{
+				$account = new phpgwapi_user();
+			}
 			$cache[$id] = $account;
 			return $account;
 		}

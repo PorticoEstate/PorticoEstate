@@ -606,6 +606,11 @@
 		 */
 		public function __toString()
 		{
+			if(empty($this->_data['lastname']) && empty($this->_data['firstname']))
+			{
+				return false;
+			}
+
 			$display = 'firstname';
 			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['common']['account_display']) )
 			{
