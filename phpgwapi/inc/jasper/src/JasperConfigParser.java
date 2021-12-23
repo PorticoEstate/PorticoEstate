@@ -1,3 +1,4 @@
+
 import java.util.HashMap;
 
 import org.xml.sax.Attributes;
@@ -12,27 +13,32 @@ class JasperConfigParser extends DefaultHandler {
 
 		this.reportsHash = new HashMap<String, CustomJasperReport>();
 		this.parametersHash = new HashMap<String, String>();
+	//	System.err.println("JasperConfigParser");
 
 	}
 
-	public void startElement(String uri, String localName, String qName,
+  
+	@Override
+	public void startElement(
+			String uri,
+			String localName,
+			String qName,
 			Attributes attributes) {
+   
+//		System.out.printf("Start Element : %s%n", qName);
 
-		if (localName.equals("Report")) {
+		if (qName.equals("Report")) {
 			// the Connections section
 			// should *always* come
 			// before the Reports
 			// section.
-
 			this.reportsHash.put(attributes.getValue("name"),
 					new CustomJasperReport(attributes.getValue("name"),
 							attributes.getValue("source")));
 
-		} else if (localName.equals("StaticData")) {
+		} else if (qName.equals("StaticData")) {
 
-			this.parametersHash.put(attributes.getValue("key"), attributes
-					.getValue("value"));
-
+			this.parametersHash.put(attributes.getValue("key"), attributes.getValue("value"));
 		}
 
 	}

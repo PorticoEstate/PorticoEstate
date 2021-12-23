@@ -2,10 +2,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.parsers.SAXParser;
+//import org.xml.sax.helpers.XMLReaderFactory;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 class JasperEngine {
 
@@ -13,18 +17,16 @@ class JasperEngine {
 
 		File file = new File(args[args.length - 1]);
 		InputSource source = null;
-		
+
 		try {
 			source = new InputSource(new FileInputStream(file));
 		} catch (Exception ex) {
-			//System.err.println("Missing configuration file");
+			// System.err.println("Missing configuration file");
 			System.exit(214);
 		}
-		
-		HashMap<String, CustomJasperReport> reports;
-		HashMap<String, String> parameters = null;
 
-		JasperConfigParser jcp = new JasperConfigParser();
+		HashMap<String, CustomJasperReport> reports;
+		HashMap<String, Object> parameters = null;
 
 		JasperMacros jm = new JasperMacros();
 
@@ -67,30 +69,37 @@ class JasperEngine {
 		}
 
 		if (report_name == null) {
-			//System.err.println("Missing report-name");
+			// System.err.println("Missing report-name");
 			System.exit(212);
 		}
 
 		if (connection_string == null) {
-			//System.err.println("Missing connection string");
+			// System.err.println("Missing connection string");
 			System.exit(215);
 		}
-		
+
 		if (db_username == null) {
 			System.exit(216);
 		}
-		
+
 		if (db_password == null) {
 			System.exit(217);
 		}
-		
+
 		parameters = jm.getMacros();
 
+		JasperConfigParser jcp = new JasperConfigParser();
+
 		try {
-			XMLReader reader = XMLReaderFactory
-					.createXMLReader("org.apache.xerces.parsers.SAXParser");
-			reader.setContentHandler(jcp);
-			reader.parse(source);
+
+
+			SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+			SAXParser parser = parserFactory.newSAXParser();
+//			XMLReader reader = parser.getXMLReader();
+            parser.parse(source, jcp);
+//			reader.setContentHandler(jcp);
+//			reader.parse(source);
+
 		} catch (Exception ex) {
 			// System.err.println("Unable to parse configuration: "
 			// + ex.getMessage());
@@ -105,39 +114,40 @@ class JasperEngine {
 		CustomJasperReport report = reports.get(report_name);
 
 		if (report == null) {
-			//System.err.println("Invalid report-name");
+			// System.err.println("Invalid report-name");
+			// System.err.println(report_name);
 			System.exit(213);
 		}
-		
+
 		JasperConnection jc = new JasperConnection(connection_string, db_username, db_password);
-		
+
 		// System.out.println(report.getName());
 		report.generateReport(parameters, jc);
 
 		switch (output_type) {
 
-		case 0:
-			report.generatePdf();
-			break;
+			case 0:
+				report.generatePdf();
+				break;
 
-		case 1:
-			report.generateCSV();
-			break;
+			case 1:
+				report.generateCSV();
+				break;
 
-		case 2:
-			report.generateJRXls();
-			// report.generateJExcel();
-			break;
+			case 2:
+				report.generateJRXls();
+				// report.generateJExcel();
+				break;
 
-		case 3:
-			report.generateXhtml();
-			// report.generateJExcel();
-			break;
+			case 3:
+				report.generateXhtml();
+				// report.generateJExcel();
+				break;
 
-		case 4:
-			report.generateDocx();
-			// report.generateJExcel();
-			break;
+			case 4:
+				report.generateDocx();
+				// report.generateJExcel();
+				break;
 
 		}
 
@@ -147,7 +157,8 @@ class JasperEngine {
 
 	private static void printHelp() {
 		System.out
-				.println("USAGE: JasperEngine [-p <parameter1|value1;parameter2|value2;..parameterX|valueX] [-t <type>] [-h] <-n <report name>> < -d <connection_string>> < -u <db_username> > < -P <db_password> > < <config>\n");
+				.println(
+						"USAGE: JasperEngine [-p <parameter1|value1;parameter2|value2;..parameterX|valueX] [-t <type>] [-h] <-n <report name>> < -d <connection_string>> < -u <db_username> > < -P <db_password> > < <config>\n");
 		System.out
 				.println("-t <type>  - The type of output, where type may be: PDF, CSV, XLS");
 	}
