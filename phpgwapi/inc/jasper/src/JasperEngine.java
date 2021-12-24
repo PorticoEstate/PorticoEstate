@@ -2,14 +2,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.xml.parsers.SAXParser;
-//import org.xml.sax.helpers.XMLReaderFactory;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
 
 class JasperEngine {
 
@@ -92,13 +89,9 @@ class JasperEngine {
 
 		try {
 
-
 			SAXParserFactory parserFactory = SAXParserFactory.newInstance();
 			SAXParser parser = parserFactory.newSAXParser();
-//			XMLReader reader = parser.getXMLReader();
-            parser.parse(source, jcp);
-//			reader.setContentHandler(jcp);
-//			reader.parse(source);
+			parser.parse(source, jcp);
 
 		} catch (Exception ex) {
 			// System.err.println("Unable to parse configuration: "

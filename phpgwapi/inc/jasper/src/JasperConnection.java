@@ -1,8 +1,5 @@
 import java.sql.DriverManager;
 
-//import java.sql.SQLException;
-//import com.mysql.jdbc.Connection;
-
 class JasperConnection {
 
 	private String connection_string;

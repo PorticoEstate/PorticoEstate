@@ -13,7 +13,6 @@ class JasperConfigParser extends DefaultHandler {
 
 		this.reportsHash = new HashMap<String, CustomJasperReport>();
 		this.parametersHash = new HashMap<String, String>();
-	//	System.err.println("JasperConfigParser");
 
 	}
 
@@ -25,8 +24,6 @@ class JasperConfigParser extends DefaultHandler {
 			String qName,
 			Attributes attributes) {
    
-//		System.out.printf("Start Element : %s%n", qName);
-
 		if (qName.equals("Report")) {
 			// the Connections section
 			// should *always* come
