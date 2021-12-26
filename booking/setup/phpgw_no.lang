@@ -880,3 +880,5 @@ missing entry. Id %1 is invalid	booking	no	Denne posten finnes ikke. Id %1 er ug
 my assigned buildings	booking	no	*Mine bygninger
 my assigned applications	booking	no	*Mine søknader
 send sms	booking	no	send SMS
+season %1 copied to %2	booking	no	Sesong %1 kopiert til %2
+copied from %1	booking	no	kopiert fra %1

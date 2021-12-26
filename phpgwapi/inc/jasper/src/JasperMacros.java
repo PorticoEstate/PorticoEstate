@@ -4,13 +4,13 @@ import java.util.StringTokenizer;
 // This class contains static method(s) for generating JasperMacros in real-time.
 class JasperMacros {
 
-	private HashMap<String, String> macros;
+	private HashMap<String, Object> macros;
 
 	public JasperMacros() {
-		this.macros = new HashMap<String, String>();
+		this.macros = new HashMap<String, Object>();
 	}
 
-	public HashMap<String, String> getMacros() {
+	public HashMap<String, Object> getMacros() {
 		return this.macros;
 	}
 
