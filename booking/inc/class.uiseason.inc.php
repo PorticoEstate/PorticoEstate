@@ -240,6 +240,7 @@
 
 			unset($season['id']);
 			$season['status'] = 'PLANNING';
+			$season['name'] = lang('copied from %1', $id) . ': ' . $season['name'];
 			$errors = $this->bo->validate($season);
 
 			if (!$errors)

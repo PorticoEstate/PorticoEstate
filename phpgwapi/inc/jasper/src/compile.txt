@@ -1,1 +1,2 @@
 javac -classpath "$(printf ':%s' ../lib/*.jar | cut -b2-)" *.java
+mv *.class ../bin/

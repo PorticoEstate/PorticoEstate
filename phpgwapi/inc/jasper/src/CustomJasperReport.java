@@ -2,22 +2,24 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.export.JExcelApiExporter;
-import net.sf.jasperreports.engine.export.JExcelApiExporterParameter;
+import net.sf.jasperreports.engine.export.HtmlExporter;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.JRXlsAbstractExporterParameter;
-import net.sf.jasperreports.engine.export.JRXhtmlExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleHtmlExporterOutput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleWriterExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsReportConfiguration;
+import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 
 class CustomJasperReport {
 
@@ -27,17 +29,15 @@ class CustomJasperReport {
 	private JasperPrint jasperPrint;
 
 	public CustomJasperReport(String name, String source) {
-
 		this.name = name;
 		this.source = source;
 		this.jasperPrint = null;
 
 	}
 
-	public void generateReport(HashMap<String, String> parameters, JasperConnection jc) {
+	public void generateReport(HashMap<String, Object> parameters, JasperConnection jc) {
 
 		JasperReport jasperReport = null;
-		// Map parameters = new HashMap();
 
 		try {
 			jasperReport = JasperCompileManager.compileReport(this.source);
@@ -52,11 +52,17 @@ class CustomJasperReport {
 		try {
 
 			if (connection != null) {
-				this.jasperPrint = JasperFillManager.fillReport(jasperReport,
-						parameters, connection);
+				this.jasperPrint = JasperFillManager.fillReport(
+					jasperReport,
+					parameters, 
+					connection
+				);
 			} else {
-				this.jasperPrint = JasperFillManager.fillReport(jasperReport,
-						null, new JREmptyDataSource(50));
+				this.jasperPrint = JasperFillManager.fillReport(
+					jasperReport,
+						null,
+					 new JREmptyDataSource(50)
+				 );
 			}
 
 		} catch (JRException e1) {
@@ -83,8 +89,8 @@ class CustomJasperReport {
 		}
 
 		JRPdfExporter pdfexp = new JRPdfExporter();
-		pdfexp.setParameter(JRExporterParameter.JASPER_PRINT, this.jasperPrint);
-		pdfexp.setParameter(JRExporterParameter.OUTPUT_STREAM, System.out);
+		pdfexp.setExporterInput(new SimpleExporterInput(this.jasperPrint));
+		pdfexp.setExporterOutput(new SimpleOutputStreamExporterOutput(System.out));
 		
 		try {
 			pdfexp.exportReport();
@@ -103,8 +109,8 @@ class CustomJasperReport {
 		}
 
 		JRCsvExporter csvexp = new JRCsvExporter();
-		csvexp.setParameter(JRExporterParameter.JASPER_PRINT, this.jasperPrint);
-		csvexp.setParameter(JRExporterParameter.OUTPUT_STREAM, System.out);
+		csvexp.setExporterInput(new SimpleExporterInput(this.jasperPrint));
+		csvexp.setExporterOutput(new SimpleWriterExporterOutput(System.out));
 		
 		
 		try {
@@ -124,10 +130,15 @@ class CustomJasperReport {
 
 		JRXlsExporter jrxls = new JRXlsExporter();
 
-		jrxls.setParameter(JRExporterParameter.JASPER_PRINT, this.jasperPrint);
-		jrxls.setParameter(JRExporterParameter.OUTPUT_STREAM, System.out);
-		jrxls.setParameter(JRXlsAbstractExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
-		
+		jrxls.setExporterInput(new SimpleExporterInput(this.jasperPrint));
+		jrxls.setExporterOutput(new SimpleOutputStreamExporterOutput(System.out));
+		SimpleXlsReportConfiguration configuration = new SimpleXlsReportConfiguration();
+		configuration.setOnePagePerSheet(true);
+		configuration.setDetectCellType(true);
+		configuration.setCollapseRowSpan(false);
+//		configuration.isRemoveEmptySpaceBetweenRows(true);
+		jrxls.setConfiguration(configuration);
+
 		try {
 			jrxls.exportReport();
 		} catch (JRException e) {
@@ -143,10 +154,16 @@ class CustomJasperReport {
 			System.exit(203);
 		}
 
-		JExcelApiExporter jexcel = new JExcelApiExporter();
-		jexcel.setParameter(JRExporterParameter.JASPER_PRINT, this.jasperPrint);
-		jexcel.setParameter(JRExporterParameter.OUTPUT_STREAM, System.out);
-		jexcel.setParameter(JExcelApiExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.TRUE);
+		JRXlsxExporter jexcel = new JRXlsxExporter();
+		
+		jexcel.setExporterInput(new SimpleExporterInput(this.jasperPrint));
+		jexcel.setExporterOutput(new SimpleOutputStreamExporterOutput(System.out));
+		SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
+		configuration.setOnePagePerSheet(true);
+		configuration.setDetectCellType(true);
+		configuration.setCollapseRowSpan(false);
+		jexcel.setConfiguration(configuration);
+
 		
 		try{
 			jexcel.exportReport();
@@ -163,10 +180,11 @@ class CustomJasperReport {
 			System.exit(203);
 		}
 
-		JRXhtmlExporter xhtmlexp = new JRXhtmlExporter();
-		xhtmlexp.setParameter(JRExporterParameter.JASPER_PRINT, this.jasperPrint);
-		xhtmlexp.setParameter(JRExporterParameter.OUTPUT_STREAM, System.out);
-		
+		HtmlExporter xhtmlexp = new HtmlExporter();
+
+		xhtmlexp.setExporterInput(new SimpleExporterInput(this.jasperPrint));
+		xhtmlexp.setExporterOutput(new SimpleHtmlExporterOutput(System.out));
+			
 		try {
 			xhtmlexp.exportReport();
 		} catch (JRException e) {
@@ -183,8 +201,8 @@ class CustomJasperReport {
 		}
 
 		JRDocxExporter docxexp = new JRDocxExporter();
-		docxexp.setParameter(JRExporterParameter.JASPER_PRINT, this.jasperPrint);
-		docxexp.setParameter(JRExporterParameter.OUTPUT_STREAM, System.out);
+		docxexp.setExporterInput(new SimpleExporterInput(this.jasperPrint));
+		docxexp.setExporterOutput(new SimpleOutputStreamExporterOutput(System.out));
 		
 		try {
 			docxexp.exportReport();

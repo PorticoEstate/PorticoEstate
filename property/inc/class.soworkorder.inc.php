@@ -2857,7 +2857,7 @@
 					. " {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
 					. " WHERE periode > {$latest_year}00 AND periode < {$latest_year}13 AND fm_workorder.id = {$id}", __LINE__, __FILE__);
 				$this->db->next_record();
-				$paid_last_year = $this->db->f('paid');
+				$paid_last_year = (float)$this->db->f('paid');
 
 				$transferred = $this->_update_order_budget($id, $latest_year, $periodization_id, $paid_last_year, $paid_last_year, $paid_last_year, $action		 = 'update', $activate	 = 0);
 
@@ -2877,7 +2877,7 @@
 				// total budget
 				$this->db->query("SELECT sum(combined_cost) AS budget FROM fm_workorder_budget WHERE order_id = {$id} AND year = {$latest_year}", __LINE__, __FILE__);
 				$this->db->next_record();
-				$last_budget = $this->db->f('budget');
+				$last_budget = (float) $this->db->f('budget');
 				if (!abs($last_budget) > 0)
 				{
 					$this->_update_order_budget($id, $year, $periodization_id, 0, 0, 0, 'update', true);
@@ -2895,7 +2895,7 @@
 					. " {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
 					. " WHERE periode > {$latest_year}00 AND periode < {$latest_year}13 AND fm_workorder.id = {$id}", __LINE__, __FILE__);
 				$this->db->next_record();
-				$paid_last_year = $this->db->f('paid');
+				$paid_last_year = (float)$this->db->f('paid');
 
 				$subtract = $last_budget - $paid_last_year;
 

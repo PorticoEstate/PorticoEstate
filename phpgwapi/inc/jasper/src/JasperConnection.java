@@ -1,8 +1,5 @@
 import java.sql.DriverManager;
 
-//import java.sql.SQLException;
-//import com.mysql.jdbc.Connection;
-
 class JasperConnection {
 
 	private String connection_string;
@@ -40,7 +37,7 @@ class JasperConnection {
 		if (this.db_type == MYSQLCONNECTION) {
 
 			try {
-				Class.forName("com.mysql.jdbc.Driver").newInstance();
+				Class.forName("com.mysql.jdbc.Driver").getDeclaredConstructor().newInstance();
 			} catch (Exception ex) {
 
 //				System.err.println("Unable to load MySQL driver: "
@@ -64,7 +61,7 @@ class JasperConnection {
 		} else if (this.db_type == POSTGRESQLCONNECTION) { // postgresql
 
 			try {
-				Class.forName("org.postgresql.Driver").newInstance();
+				Class.forName("org.postgresql.Driver").getDeclaredConstructor().newInstance();
 			} catch (Exception ex) {
 
 //				System.err.println("Unable to load PostgreSQL driver: "
