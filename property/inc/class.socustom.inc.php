@@ -385,7 +385,7 @@
 
 			if(isset($sql_arr[1]))
 			{
-				$ordermethod .= " ORDER {$sql_arr[1]}";
+				$ordermethod .= " ORDER BY {$sql_arr[1]}";
 			}
 
 			if($update)
