@@ -674,7 +674,7 @@
 
 		function view()
 		{
-			$jasper_id			 = phpgw::get_var('jasper_id');
+			$jasper_id			 = phpgw::get_var('jasper_id', 'int');
 			$values				 = $this->bo->read_single($jasper_id);
 			$values_attribute	 = phpgw::get_var('values_attribute');
 			$sel_format			 = phpgw::get_var('sel_format');
@@ -802,7 +802,7 @@
 				$values['attributes']	 = $values['input'];
 				unset($values['input']);
 
-				$values = $custom_fields->prepare($values);
+				$values = $custom_fields->prepare($values,'property', $this->acl_location);
 
 				$receipt['error'][] = array('msg' => lang('enter input'));
 
