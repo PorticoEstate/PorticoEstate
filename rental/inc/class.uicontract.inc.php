@@ -2840,9 +2840,9 @@ JS;
 
 		public function add_notification()
 		{
-			$contract_id = (int)phpgw::get_var('contract_id');
-			$account_id = phpgw::get_var('notification_target');
-			$location_id = phpgw::get_var('notification_location');
+			$contract_id = phpgw::get_var('contract_id', 'int');
+			$account_id = phpgw::get_var('notification_target', 'int');
+			$location_id = phpgw::get_var('notification_location', 'int');
 			$date = phpgw::get_var('date_notification');
 
 			$so_contract = rental_socontract::get_instance();
