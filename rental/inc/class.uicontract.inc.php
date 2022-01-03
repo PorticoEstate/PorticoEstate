@@ -1395,7 +1395,7 @@ JS;
 				{
 					$contract->set_location_id($location_id); // only present when new contract
 				}
-				$contract->set_term_id(phpgw::get_var('billing_term'));
+				$contract->set_term_id(phpgw::get_var('billing_term', 'int'));
 				$contract->set_billing_start_date(phpgwapi_datetime::date_to_timestamp(phpgw::get_var('billing_start_date')));
 				$contract->set_billing_end_date(phpgwapi_datetime::date_to_timestamp(phpgw::get_var('billing_end_date')));
 				$contract->set_service_id(phpgw::get_var('service_id'));
@@ -2446,7 +2446,7 @@ JS;
 
 			/* $config	= CreateObject('phpgwapi.config','rental');
 			  $config->read(); */
-			$default_billing_term = $this->config->config_data['default_billing_term'];
+			$default_billing_term = (int)$this->config->config_data['default_billing_term'];
 
 			$contract->set_term_id($default_billing_term);
 
