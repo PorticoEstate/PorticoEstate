@@ -721,7 +721,7 @@
 			$bofiles = CreateObject('property.bofiles');
 			foreach ($saved_attachments as $saved_attachment)
 			{
-				$file_name = str_replace(array(' ', '..'), array('_', '.'), $saved_attachment['name']);
+				$file_name = str_replace(array('/', ' ', '..'), array('_','_', '.'), $saved_attachment['name']);
 
 				if ($file_name && $target['id'])
 				{
