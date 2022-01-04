@@ -82,6 +82,40 @@
 		}
 
 		/**
+		 * Get related active seasons for a resource
+		 *
+		 * @staticvar array $seasons
+		 * @param int $resource_id
+		 * @return array
+		 */
+		public function get_resource_seasons( $resource_id )
+		{
+			static $seasons = array();
+
+			if($seasons)
+			{
+				return $seasons;
+			}
+
+			$now = date('Y-m-d');
+
+			$sql = "SELECT season_id FROM bb_season_resource"
+				. " JOIN bb_season ON bb_season.id = bb_season_resource.season_id"
+				. " WHERE status = 'PUBLISHED'"
+				. " AND from_ <= '{$now}'"
+				. " AND to_ >= '{$now}'"
+				. " AND resource_id=" . (int) $resource_id;
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record())
+			{
+				$seasons[] = (int)$this->db->f('season_id');
+			}
+
+			return $seasons;
+		}
+
+		/**
 		 * Checks if a specific timespan falls within the timespan of a season
 		 *
 		 * @param string|int $season_id The id of the season

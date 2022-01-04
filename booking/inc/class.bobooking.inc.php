@@ -1392,6 +1392,8 @@
 					$test	 = $limitDate->format('Y-m-d');
 					$test	 = $checkDate->format('Y-m-d');
 
+					$active_seasons = $soseason->get_resource_seasons($resource['id']);
+
 					do
 					{
 						$StartTime = clone ($checkDate);
@@ -1439,9 +1441,15 @@
 
 						$checkDate = clone ($endTime);
 
-						$within_season = $soseason->timespan_within_season($resource['direct_booking_season_id'], $StartTime, $endTime);
-
-						$overlap = $this->check_if_resurce_is_taken($resource['id'], $StartTime, $endTime, $events);
+						$within_season = false;
+						foreach ($active_seasons as $season_id)
+						{
+							$within_season = $soseason->timespan_within_season($season_id, $StartTime, $endTime);
+							if($within_season)
+							{
+								break;
+							}
+						}
 
 						$DateTimeZone_utc	 = new DateTimeZone('UTC');
 
@@ -1453,8 +1461,8 @@
 			
 									
 						if($within_season)
-					//	if ($within_season && (($booking_lenght > 1 && $overlap) || !$overlap))
 						{
+							$overlap = $this->check_if_resurce_is_taken($resource['id'], $StartTime, $endTime, $events);
 							$availlableTimeSlots[$resource['id']][] = [
 								'when'				 => $StartTime->format($datetimeformat) . ' - ' . $endTime->format($datetimeformat),
 								'start'				 => $StartTime->getTimestamp() . '000',
