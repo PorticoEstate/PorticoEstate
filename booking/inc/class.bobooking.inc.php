@@ -1609,8 +1609,6 @@
 			$to->modify("+7 days");
 			$resource	 = $this->resource_so->read_single($resource_id);
 
-			//		$bounderies = CreateObject('booking.soseason')->get_bounderies($resource_id, $resource['direct_booking_season_id'], clone $from);
-			//		$bounderies = CreateObject('booking.soseason')->get_bounderies($resource_id, 695, clone $from);
 			$allocation_ids	 = $this->so->allocation_ids_for_resource($resource_id, $from, $to);
 			$allocations	 = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids),
 				'results' => -1));
@@ -1667,11 +1665,6 @@
 				unset($booking['audience']);
 			}
 
-			/**
-			 * To be implemented
-			 */
-//			$bookings = array_merge($bounderies, $bookings);
-//			_debug_array($bookings);
 			$allocations = $this->split_allocations($allocations, $bookings);
 
 			$event_ids	 = $this->so->event_ids_for_resource($resource_id, $from, $to);
