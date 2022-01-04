@@ -764,13 +764,14 @@
 				$this->botts	 = CreateObject('property.botts', true);
 				$project_values = $this->botts->read_single($values['ticket_id'], array(), true);
 
-				$project_values['workorder_budget'] = array(
+				$project_values['workorder_budget']	 = array(
 					array(
-						'workorder_id' => $values['ticket_id'],
-						'budget' => $project_values['budget'],
-						'charge_tenant' => $project_values['charge_tenant'],
-						'selected' => 1,
-					));
+						'workorder_id'	 => $values['ticket_id'],
+						'order_id'		 => $project_values['order_id'],
+						'budget'		 => $project_values['budget'],
+						'charge_tenant'	 => $project_values['charge_tenant'],
+						'selected'		 => 1,
+				));
 				$project_values['name'] = $project_values['subject'];
 				$project_values['descr'] = $project_values['order_descr'];
 				
@@ -782,30 +783,36 @@
 			}
 
 			//_debug_array($project_values);die();
-			$soinvoice							 = CreateObject('property.soinvoice');
+			$soinvoice	 = CreateObject('property.soinvoice');
 
 			foreach ($project_values['workorder_budget'] as &$workorder)
 			{
 				$_vouchers	 = array();
-				$vouchers	 = $soinvoice->read_invoice(array('paid'			 => '1', 'workorder_id'	 => $workorder['workorder_id'],
-					'user_lid'		 => 'all'));
+				$vouchers			 = $soinvoice->read_invoice(array(
+					'paid'			 => '1',
+					'workorder_id'	 => $workorder['order_id'] ? $workorder['order_id'] : $workorder['workorder_id'],
+					'user_lid'		 => 'all')
+				);
 				$_add_actual_cost = false;
-				if(!isset($workorder['actual_cost']))
+				if (!isset($workorder['actual_cost']))
 				{
-					$workorder['actual_cost'] = 0;
-					$_add_actual_cost = true;
+					$workorder['actual_cost']	 = 0;
+					$_add_actual_cost			 = true;
 				}
 				foreach ($vouchers as $entry)
 				{
 					$_vouchers[] = $entry['voucher_id'];
-					if($_add_actual_cost)
+					if ($_add_actual_cost)
 					{
 						$workorder['actual_cost'] += $entry['amount'];
 					}
 				}
-				$vouchers = $soinvoice->read_invoice(array('workorder_id'	 => $workorder['workorder_id'],
-					'user_lid'		 => 'all'));
+				$vouchers = $soinvoice->read_invoice(array(
+					'workorder_id'	 => $workorder['order_id'] ? $workorder['order_id'] : $workorder['workorder_id'],
+					'user_lid'		 => 'all')
+				);
 				unset($entry);
+
 				foreach ($vouchers as $entry)
 				{
 					$_vouchers[] = $entry['voucher_id'];
