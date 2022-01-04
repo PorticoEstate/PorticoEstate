@@ -799,7 +799,16 @@
 			{
 				$set_notify_id = $GLOBALS['phpgw']->accounts->name2id($ticket['set_notify_lid']);
 				$person_id = $GLOBALS['phpgw']->accounts->get($set_notify_id)->person_id;
-				$values_insert = array
+
+				if(empty($person_id))
+				{
+						$GLOBALS['phpgw']->log->write(array('text'	 => 'I-Notification, missing person_id for user %1',
+							'p1'	 => $ticket['set_notify_lid']));
+
+				}
+				else
+				{
+					$values_insert = array
 					(
 					'location_id'			 => $location_id,
 					'location_item_id'		 => $id,
@@ -813,6 +822,7 @@
 				$this->db->query("INSERT INTO phpgw_notification (" . implode(',', array_keys($values_insert)) . ') VALUES ('
 					. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
 
+				}
 			}
 
 			if (!empty($ticket['origin_id']) && $ticket['origin_id'])
