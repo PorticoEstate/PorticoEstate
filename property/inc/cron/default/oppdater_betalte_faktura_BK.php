@@ -270,6 +270,7 @@
 									'status' => 'X' //Avsluttet
 								);
 								$ok		 = $sotts->update_status($ticket, $ticket_id);
+								$this->update_tenant_claim($ticket_id, $voucher, 'ticket');
 							}
 							else
 							{
@@ -315,12 +316,27 @@
 			}
 		}
 
+		function update_tenant_claim($id, $voucher, $type = 'ticket' )
+		{
+			if($type !== 'ticket')
+			{
+				return;
+			}
+
+			$this->db->query("SELECT sum(godkjentbelop) AS sum_amount FROM fm_ecobilag WHERE external_voucher_id= '{$voucher['voucher_id']}'", __LINE__, __FILE__);
+			$this->db->next_record();
+			$amount = $this->db->f('sum_amount');
+
+			$ticket_id = (int)$id;
+			$this->db->query("UPDATE fm_tenant_claim SET amount= '{$amount}', status = 'ready', cat_id = 3 WHERE ticket_id= $ticket_id", __LINE__, __FILE__);
+
+		}
+
 		/**
 		 * @param type $voucher_id
 		 * @return type
 		 * @throws Exception
 		 */
-
 		function check_payment( $voucher_id )
 		{
 			//curl -s -u portico:******** http://tjenester.usrv.ubergenkom.no/api/agresso/utlignetfaktura?bilagsNr=917039148

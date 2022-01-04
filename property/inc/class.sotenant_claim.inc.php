@@ -264,19 +264,22 @@
 			$id = (int)$id;
 			$this->db->query("SELECT * FROM fm_tenant_claim WHERE id={$id}", __LINE__, __FILE__);
 
+			$claim = array();
 			if ($this->db->next_record())
 			{
-				$claim['id']			 = $id;
-				$claim['project_id']	 = $this->db->f('project_id');
-				$claim['ticket_id']		 = $this->db->f('ticket_id');
-				$claim['tenant_id']		 = $this->db->f('tenant_id');
-				$claim['remark']		 = $this->db->f('remark', true);
-				$claim['entry_date']	 = $this->db->f('entry_date');
-				$claim['cat_id']		 = (int)$this->db->f('category');
-				$claim['amount']		 = $this->db->f('amount');
-				$claim['b_account_id']	 = $this->db->f('b_account_id');
-				$claim['cat_id']		 = (int)$this->db->f('category');
-				$claim['status']		 = $this->db->f('status');
+				$claim = array(
+					'id'			 => $id,
+					'project_id'	 => $this->db->f('project_id'),
+					'ticket_id'		 => $this->db->f('ticket_id'),
+					'tenant_id'		 => $this->db->f('tenant_id'),
+					'remark'		 => $this->db->f('remark', true),
+					'entry_date'	 => $this->db->f('entry_date'),
+					'cat_id'		 => (int)$this->db->f('category'),
+					'amount'		 => $this->db->f('amount'),
+					'b_account_id'	 => $this->db->f('b_account_id'),
+					'cat_id'		 => (int)$this->db->f('category'),
+					'status'		 => $this->db->f('status')
+				);
 			}
 
 			$targets = $this->interlink->get_specific_relation('property', '.project.workorder', '.tenant_claim', $id, 'origin');
