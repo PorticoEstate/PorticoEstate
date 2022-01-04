@@ -175,7 +175,7 @@
 			array_unshift($values_combo_box[0], array('id' => '', 'name' => lang('no category')));
 			$combos[]			 = array('type'	 => 'filter',
 				'name'	 => 'cat_id',
-				'text'	 => lang('no category'),
+				'text'	 => lang('category'),
 				'list'	 => $values_combo_box[0]
 			);
 
@@ -183,7 +183,7 @@
 			array_unshift($values_combo_box[1], array('id' => '', 'name' => lang('no district')));
 			$combos[]			 = array('type'	 => 'filter',
 				'name'	 => 'district_id',
-				'text'	 => lang('no district'),
+				'text'	 => lang('district'),
 				'list'	 => $values_combo_box[1]
 			);
 
@@ -192,7 +192,7 @@
 			array_unshift($values_combo_box[2], array('id' => '', 'name' => lang('open')));
 			$combos[]			 = array('type'	 => 'filter',
 				'name'	 => 'status',
-				'text'	 => lang('open'),
+				'text'	 => lang('status'),
 				'list'	 => $values_combo_box[2]
 			);
 
