@@ -328,7 +328,7 @@
 			$amount = $this->db->f('sum_amount');
 
 			$ticket_id = (int)$id;
-			$this->db->query("UPDATE fm_tenant_claim SET amount= '{$amount}', status = 'ready', cat_id = 3 WHERE ticket_id= $ticket_id", __LINE__, __FILE__);
+			$this->db->query("UPDATE fm_tenant_claim SET amount= '{$amount}', status = 'ready', cat_id = 3 WHERE ticket_id= $ticket_id AND status = 'open'", __LINE__, __FILE__);
 
 		}
 
