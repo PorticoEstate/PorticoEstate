@@ -52,7 +52,7 @@
 				'Documents'	=> 'Dokumenter',
 				'Drawing'	=> 'Tegning',
 				'Budget account'=> 'Budsjettkonto(art)',
-				'Tenant claim'	=> 'Leietaker krav',
+				'Tenant claim'	=> 'Leietakerkrav',
 				'Budget'		=> 'Budsjett',
 				'Obligations'	=> 'Forpliktelser',
 				'Basis for high level lazy budgeting'=> 'basis for forenklet budsjettering',

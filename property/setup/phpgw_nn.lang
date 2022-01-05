@@ -1763,8 +1763,8 @@ template id	property	nn	Mal-id
 tenant	property	nn	Leietaker
 tenant attributes	property	nn	Leietaker egenskaper
 tenant categories	property	nn	Leietaker kategorier
-.tenant_claim	property	nn	Leietaker krav
-tenant claim	property	nn	Leietaker krav
+.tenant_claim	property	nn	Leietakerkrav
+tenant claim	property	nn	Leietakerkrav
 tenant claim categories	property	nn	Leietaker kategorier klager
 tenant claim is not issued for project in voucher %1	property	nn	Krav mot leietaker er ikke registert for prosjekt i bilag %1
 tenant global categories	property	nn	Leietaker globale kategorier
@@ -2241,7 +2241,7 @@ condition survey location level	property	nn	Tilstandsanalyse lokasjonsnivå
 condition survey import category	property	nn	Tilstandsanalyse importkategori
 show overdue projects on main screen	property	nn	Vis prosjekter over tiden på hovedskjermen
 link to projects you are assigned to	property	nn	Knytt til prosjekter du er tildelt
-show open tenant claims on main screen	property	nn	Vis åpne leietaker krav på hovedskjermen
+show open tenant claims on main screen	property	nn	Vis åpne leietakerkrav på hovedskjermen
 link to claims you are assigned to	property	nn	Knytt til krav du er tildelt
 the default group to assign a ticket in helpdesk-submodule	property	nn	Standardgruppen for å tildele en billett i helpdesk-submodule
 budget account as listbox	property	nn	Budsjettkonto som listeboks

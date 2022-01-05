@@ -1421,7 +1421,7 @@ template	property	no	Mal
 template %1 is added	property	no	mal %1 er lagt til
 Template ID	property	no	Mal ID
 Tenant	property	no	Leieboer
-Tenant claim	property	no	Leietaker krav
+Tenant claim	property	no	Leietakerkrav
 Tenant claim is not issued for project in voucher %1	property	no	Krav mot leietaker er ikke registert for reklamasjonssak i bilag %1
 Tenant phone	property	no	Leieboer tlf
 termination date	property	no	oppsigelse dato
