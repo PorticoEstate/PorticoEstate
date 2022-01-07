@@ -55,8 +55,12 @@
 		var $indentstring = "\t";
 
 		/* start the class as either a root or a node */
-		public function __construct($node_type = 'root', $name='', $indentstring="\t")
+		public function __construct($node_type = 'root', $name='', $indentstring="\t", $encoding = '')
 		{
+			if($encoding)
+			{
+				$this->set_encoding( $encoding );
+			}
 			$this->node_type = $node_type;
 			$this->indentstring = $indentstring;
 			if ($this->node_type == 'node')
@@ -203,7 +207,7 @@
 
 		public function import_var($name, $value, $is_root = false, $export_xml = false)
 		{
-			$node = new xmltool('node', $name, $this->indentstring);
+			$node = new xmltool('node', $name, $this->indentstring, $this->_encoding);
 			switch ( gettype($value) )
 			{
 				case 'string':
@@ -256,13 +260,13 @@
 							case 'integer':
 							case 'double':
 							case 'null':
-								$subnode = new xmltool('node', $nextkey,$this->indentstring);
+								$subnode = new xmltool('node', $nextkey,$this->indentstring, $this->_encoding);
 								$subnode->set_value($val);
 								$node->add_node($subnode);
 								break;
 
 							case 'boolean':
-								$subnode = new xmltool('node', $nextkey,$this->indentstring);
+								$subnode = new xmltool('node', $nextkey,$this->indentstring, $this->_encoding);
 								$subnode->set_value((int) $val);
 								$node->add_node($subnode);
 								break;
@@ -284,7 +288,7 @@
 								}
 								break;
 							case 'object':
-								$subnode = new xmltool('node', $nextkey,$this->indentstring);
+								$subnode = new xmltool('node', $nextkey,$this->indentstring, $this->_encoding);
 								$subnode->set_value((string) $val);
 								$node->add_node($subnode);
 								break;
@@ -416,7 +420,7 @@
 				{
 					case 'cdata':
 					case 'complete':
-						$node = new xmltool('node',$data[$i]['tag'],$this->indentstring);
+						$node = new xmltool('node',$data[$i]['tag'],$this->indentstring, $this->_encoding);
 						if(is_array($data[$i]['attributes']) && count($data[$i]['attributes']) > 0)
 						{
 							foreach ( $data[$i]['attributes'] as $k => $v )
@@ -429,7 +433,7 @@
 						break;
 
 					case 'open':
-						$node = new xmltool('node',$data[$i]['tag'],$this->indentstring);
+						$node = new xmltool('node',$data[$i]['tag'],$this->indentstring, $this->_encoding);
 						if(is_array($data[$i]['attributes']) && count($data[$i]['attributes']) > 0)
 						{
 							foreach ( $data[$i]['attributes'] as $k => $v )
@@ -456,7 +460,7 @@
 			xml_parse_into_struct($parser, $xmldata, $vals, $index);
 			xml_parser_free($parser);
 			unset($index);
-			$node = new xmltool('node',$vals[0]['tag'],$this->indentstring);
+			$node = new xmltool('node',$vals[0]['tag'],$this->indentstring, $this->_encoding);
 			if ( isset($vals[0]['attributes']) )
 			{
 				foreach ( $vals[0]['attributes'] as $key => $value )
