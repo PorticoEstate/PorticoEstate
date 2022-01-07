@@ -188,7 +188,7 @@
 			$no_q = false;
 			if ($voucher_id)
 			{
-				$filtermethod	 = " WHERE bilagsnr = " . (int)$voucher_id . " OR bilagsnr_ut = '{$voucher_id}'";// OR spvend_code = ". (int)$query;
+				$filtermethod	 = " WHERE (bilagsnr = " . (int)$voucher_id . " OR bilagsnr_ut = '{$voucher_id}' OR external_voucher_id = " . (int)$voucher_id . " )";
 				$no_q			 = true;
 			}
 
