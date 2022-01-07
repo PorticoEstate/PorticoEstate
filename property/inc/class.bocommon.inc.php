@@ -965,10 +965,6 @@
 			);
 
 			$alarm['values'] = $boalarm->read_alarms($data['alarm_type'], $data['id'], $data['text']);
-			if (!count($alarm['values']) > 0)
-			{
-				unset($alarm['values']);
-			}
 
 			if ($data['type'] == 'form')
 			{

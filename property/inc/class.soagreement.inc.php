@@ -256,6 +256,7 @@
 				$_querymethod[]	 = "fm_vendor.org_name {$this->like} '%{$query}%'";
 				$_querymethod[]	 = "fm_branch.descr {$this->like} '%{$query}%'";
 				$_querymethod[]	 = "{$entity_table}.name {$this->like} '%{$query}%'";
+				$_querymethod[]	 = "{$entity_table}.contract_id {$this->like} '%{$query}%'";
 
 				$this->db->query("SELECT * FROM $attribute_table WHERE search='1' AND $attribute_filter ");
 
