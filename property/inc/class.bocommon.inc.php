@@ -2537,7 +2537,7 @@
 				$vendor_id = phpgw::get_var('vendor_id', 'int');
 			}
 
-			$contract_list = ExecMethod('property.soagreement.get_vendor_contract', $vendor_id);
+			$contract_list = createObject('property.soagreement')->get_vendor_contract($vendor_id, $selected);
 			if ($selected)
 			{
 				foreach ($contract_list as &$contract)
