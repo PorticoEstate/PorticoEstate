@@ -6,9 +6,10 @@
 
 		public $public_functions = array
 			(
-			'index' => true,
-			'remove_delegate' => true,
-			'query' => true
+			'index'				 => true,
+			'remove_delegate'	 => true,
+			'query'				 => true,
+			'search_user'		 => true
 		);
 
 		public function __construct()
@@ -17,51 +18,100 @@
 			parent::__construct();
 		}
 
+		public function search_user()
+		{
+			$config = CreateObject('phpgwapi.config', 'rental')->read();
+			$use_fellesdata = $config['use_fellesdata'];
+			$username = phpgw::get_var('username');
+			$result = array();
+			if (!isset($username))
+			{
+				$result['error']['msg'] = lang('lacking_username');
+			}
+			else
+			{
+				$account_id = frontend_bofrontend::delegate_exist($username);
+				if ($account_id)
+				{
+					$search_result = frontend_bofrontend::get_account_info($account_id);
+					$msg = lang('user_found_in_PE');
+				}
+				else if($use_fellesdata)
+				{
+					$search_result = frontend_bofellesdata::get_instance()->get_user($username);
+					$msg = lang('user_found_in_Fellesdata');
+				}
+
+				if ($search_result)
+				{
+					if ($search_result['username'] == $GLOBALS['phpgw_info']['user']['account_lid'])
+					{
+						$result['error']['msg'] = lang('searching_for_self');
+						$search_result['firstname'] = '';
+						$search_result['lastname'] = '';
+						$search_result['email'] = '';
+						$search_result['account_id'] = '';
+					}
+					else
+					{
+						$result['message']['msg'] = $msg;
+					}
+					$result['data'] = $search_result;
+				}
+				else
+				{
+					$result['error']['msg'] = lang('no_hits');
+				}
+			}
+
+			return $result;
+		}
 		public function index()
 		{
 			$config = CreateObject('phpgwapi.config', 'rental');
 			$config->read();
 			$use_fellesdata = $config->config_data['use_fellesdata'];
-			if (isset($_POST['search']))
-			{
-				$username = phpgw::get_var('username');
-				if (empty($username))
-				{
-					$msglog['error'][] = array('msg' => lang('lacking_username'));
-				}
-				else if ($username == $GLOBALS['phpgw_info']['user']['account_lid'])
-				{
-					$msglog['error'][] = array('msg' => lang('searching_for_self'));
-				}
-				else
-				{
-					$account_id = frontend_bofrontend::delegate_exist($username);
-					if ($account_id)
-					{
-						$search = frontend_bofrontend::get_account_info($account_id);
-						$msglog['message'][] = array('msg' => lang('user_found_in_PE'));
-					}
-					else
-					{
-						$msglog['error'][] = array('msg' => lang('user_not_found_in_PE'));
-						if ($use_fellesdata)
-						{
-							$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($username);
-
-							if ($fellesdata_user)
-							{
-								$search = $fellesdata_user;
-								$msglog['message'][] = array('msg' => lang('user_found_in_Fellesdata'));
-							}
-						}
-						else
-						{
-							$msglog['error'][] = array('msg' => lang('no_hits'));
-						}
-					}
-				}
-			}
-			else if (isset($_POST['add']))
+//			if (isset($_POST['search']))
+//			{
+//				$username = phpgw::get_var('username');
+//				if (empty($username))
+//				{
+//					$msglog['error'][] = array('msg' => lang('lacking_username'));
+//				}
+//				else if ($username == $GLOBALS['phpgw_info']['user']['account_lid'])
+//				{
+//					$msglog['error'][] = array('msg' => lang('searching_for_self'));
+//				}
+//				else
+//				{
+//					$account_id = frontend_bofrontend::delegate_exist($username);
+//					if ($account_id)
+//					{
+//						$search = frontend_bofrontend::get_account_info($account_id);
+//						$msglog['message'][] = array('msg' => lang('user_found_in_PE'));
+//					}
+//					else
+//					{
+//						$msglog['error'][] = array('msg' => lang('user_not_found_in_PE'));
+//						if ($use_fellesdata)
+//						{
+//							$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($username);
+//
+//							if ($fellesdata_user)
+//							{
+//								$search = $fellesdata_user;
+//								$msglog['message'][] = array('msg' => lang('user_found_in_Fellesdata'));
+//							}
+//						}
+//						else
+//						{
+//							$msglog['error'][] = array('msg' => lang('no_hits'));
+//						}
+//					}
+//				}
+//			}
+//			else
+			if (isset($_POST['add']))
 			{
 				$account_id = phpgw::get_var('account_id');
 				$success = false;
@@ -188,6 +238,7 @@
 
 			//$msglog = phpgwapi_cache::session_get('frontend','msgbox');
 			phpgwapi_cache::session_clear('frontend', 'msgbox');
+			self::add_javascript('frontend', 'jquery', 'resultunit.edit.js');
 
 			$data = array(
 				'header' => $this->header_state,

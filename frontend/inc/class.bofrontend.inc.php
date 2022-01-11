@@ -110,11 +110,14 @@
 		public static function get_account_info( int $account_id )
 		{
 			$account = $GLOBALS['phpgw']->accounts->get($account_id);
+			$prefs = createObject('phpgwapi.preferences', $account_id)->read();
+
 			return array(
 				'account_id' => $account->__get('id'),
 				'username' => $account->__get('lid'),
 				'firstname' => $account->__get('firstname'),
-				'lastname' => $account->__get('lastname')
+				'lastname' => $account->__get('lastname'),
+				'email' => $prefs['common']['email']
 			);
 		}
 
@@ -187,6 +190,10 @@
 
 						$preferences = createObject('phpgwapi.preferences', $result);
 						$preferences->add('common', 'default_app', 'frontend');
+						if(!empty($email))
+						{
+							$preferences->add('common', 'email', $email);
+						}
 						$preferences->save_repository();
 
 						$GLOBALS['phpgw']->log->write(array('text' => 'I-Notification, user created %1',
