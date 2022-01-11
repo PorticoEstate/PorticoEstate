@@ -256,6 +256,7 @@
 				$_querymethod[]	 = "fm_vendor.org_name {$this->like} '%{$query}%'";
 				$_querymethod[]	 = "fm_branch.descr {$this->like} '%{$query}%'";
 				$_querymethod[]	 = "{$entity_table}.name {$this->like} '%{$query}%'";
+				$_querymethod[]	 = "{$entity_table}.contract_id {$this->like} '%{$query}%'";
 
 				$this->db->query("SELECT * FROM $attribute_table WHERE search='1' AND $attribute_filter ");
 
@@ -1216,14 +1217,21 @@
 			return $this->db->f('descr', true);
 		}
 
-		function get_vendor_contract( $vendor_id = 0 )
+		function get_vendor_contract( $vendor_id = 0 , $selceted = '')
 		{
 			$vendor_id = (int)$vendor_id;
 			if (!$vendor_id)
 			{
 				return array();
 			}
-			$this->db->query("SELECT contract_id, name FROM fm_agreement WHERE status = 'active' AND contract_id IS NOT NULL AND vendor_id = {$vendor_id}", __LINE__, __FILE__);
+
+			$filter_status = "status = 'active'";
+			if($selceted)
+			{
+				$filter_status = "(status = 'active' OR contract_id = '{$selceted}')";
+			}
+
+			$this->db->query("SELECT contract_id, name FROM fm_agreement WHERE {$filter_status} AND contract_id IS NOT NULL AND vendor_id = {$vendor_id}", __LINE__, __FILE__);
 			$values = array();
 			while ($this->db->next_record())
 			{
