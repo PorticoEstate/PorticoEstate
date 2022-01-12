@@ -217,7 +217,10 @@ class odt2xhtml
 	private function _analyze_attribute($attribute) {
 		
 		if(preg_match('/cm/i',$attribute)) {
-			if(preg_match('/ /',$attribute)) $xploz = explode(' ',$attribute);
+			if(preg_match('/ /',$attribute))
+			{
+			 $xploz = explode(' ',$attribute);
+			}
 			
 			if(!empty($xploz) && is_array($xploz)) {
 				foreach($xploz as $k => $v) {
@@ -559,7 +562,7 @@ class odt2xhtml
 			case 'analyze_attribute' :
 				$this->exec=1;
 				$this->search = '/="(.*?)"/s';
-				$this->replace = "odt2xhtml::_analyze_attribute('$1')";
+				$this->replace = "self::_analyze_attribute";
 				$this->subject = $this->content;
 				$callback = true;
 			break;
@@ -572,21 +575,21 @@ class odt2xhtml
 			case 'img_odt' :
 				$this->exec=1;
 				$this->search = '#xlink:href="Pictures/([.a-zA-Z_0-9]*)"#s';
-				$this->replace = "odt2xhtml::_make_image('$1')";
+				$this->replace = "self::_make_image";
 				$this->subject = $this->content;
 				$callback = true;
 			break;
 			case 'img_sxw' :
 				$this->exec=1;
 				$this->search = '!xlink:href="\#Pictures/([.a-zA-Z_0-9]*)"!s';
-				$this->replace = "odt2xhtml::_make_image('$1')";
+				$this->replace = "self::_make_image";
 				$this->subject = $this->content;
 				$callback = true;
 			break;
 			case 'link_css' :
 				$this->exec=1;
 				$this->search = '/<style type="text\/css">(.*)<\/style>/s';
-				$this->replace = "odt2xhtml::_modify_css()";
+				$this->replace = "self::_modify_css";
 				$this->subject = $this->file['tmp'];
 				$callback = true;
 			break;
@@ -605,7 +608,7 @@ class odt2xhtml
 			case 'title' :
 				$this->exec=1;
 				$this->search = '/<head>/s';
-				$this->replace = "odt2xhtml::_modify_title";
+				$this->replace = "self::_modify_title";
 				$this->subject = $this->file['tmp'];
 				$callback = true;
 			break;
