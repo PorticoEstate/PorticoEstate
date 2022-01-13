@@ -3031,7 +3031,7 @@ JS;
 
 			$data = array
 				(
-				'base_java_url'	 => json_encode(array(menuaction => "property.uientity.attrib_history")),
+				'base_java_url'	 => json_encode(array('menuaction' => "property.uientity.attrib_history")),
 				'datatable_def'	 => $datatable_def,
 				'link_url'		 => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'img_path'		 => $GLOBALS['phpgw']->common->get_image_path('phpgwapi', 'default')

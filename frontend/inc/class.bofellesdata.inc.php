@@ -105,7 +105,7 @@
 
 			if (!$db = $this->get_db())
 			{
-				return;
+				return array();
 			}
 
 			$result_units = array();
@@ -173,7 +173,7 @@
 
 			if (!$db = $this->get_db())
 			{
-				return;
+				return array();
 			}
 
 			$db1 = clone($db);
