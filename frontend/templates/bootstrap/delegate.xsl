@@ -7,8 +7,8 @@
 	</xsl:choose>
 	
 	<xsl:variable name="unit_leader" select="//header/org_unit[ORG_UNIT_ID = //selected_org_unit]/LEADER"></xsl:variable>
-	<!--xsl:choose>
-		<xsl:when test="//selected_org_unit = 'all' or $unit_leader = '1'"-->
+	<xsl:choose>
+		<xsl:when test="//selected_org_unit = 'all' or $unit_leader = '1'">
 			<div id="accordion">
 				<div class="card mt-1">
 					<div class="card-header" id="headingDelegat">
@@ -82,8 +82,8 @@
 					</div>
 				</div>
 			</div>
-		<!--/xsl:when>
-	</xsl:choose-->
+		</xsl:when>
+	</xsl:choose>
 	<div class="row mt-3">
 		
 		<xsl:choose>
