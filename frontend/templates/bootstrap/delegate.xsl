@@ -35,36 +35,39 @@
 												<xsl:value-of select="php:function('lang', 'btn_search')"/>
 											</xsl:variable>
 											<form ENCTYPE="multipart/form-data" name="form" method="post" action="{form_action}">
-												<input type="hidden" name="account_id" value="{search/account_id}"/>
+												<input type="hidden" id="account_id" name="account_id" value="{search/account_id}"/>
 												<dl>
 													<dt>
 														<xsl:value-of select="php:function('lang', 'username')"/>
 													</dt>
 													<dd>
-														<input type="text" name="username" value="{search/username}"/>
-														<input type="submit" class="pure-button pure-button-active" name="search" value="{$btn_search}"/>
+														<input type="text" id="username" name="username" value="{search/username}"/>
+														<input type="button" class="pure-button pure-button-active" name="search" value="{$btn_search}" onclick="searchUser()"/>
+														<div class="loading"></div>
+														<div id='custom_message' class='custom-message'/>
+
 													</dd>
 													<dt>
 														<xsl:value-of select="php:function('lang', 'firstname')"/>
 													</dt>
 													<dd>
-														<input type="text" name="firstname" readonly="" value="{search/firstname}" style="background-color: #CCCCCC;"/>
+														<input type="text" id="firstname" name="firstname" readonly="" value="{search/firstname}" style="background-color: #CCCCCC;"/>
 													</dd>
 													<dt>
 														<xsl:value-of select="php:function('lang', 'lastname')"/>
 													</dt>
 													<dd>
-														<input type="text" name="lastname" readonly="" value="{search/lastname}" style="background-color: #CCCCCC;"/>
+														<input type="text" id="lastname" name="lastname" readonly="" value="{search/lastname}" style="background-color: #CCCCCC;"/>
 													</dd>
 													<dt>
 														<xsl:value-of select="php:function('lang', 'email')"/>
 													</dt>
 													<dd>
-														<input type="text" name="email" readonly="" value="{search/email}" style="background-color: #CCCCCC;"/>
+														<input type="text" id="email" name="email" readonly="" value="{search/email}" style="background-color: #CCCCCC;"/>
 													</dd>
 													<dt></dt>
 													<dd>
-														<input type="submit" class="btn btn-info" name="add" value="{$btn_add}"/>
+														<input type="submit" class="btn btn-info" name="add" id="add" value="{$btn_add}" style="display: none;"/>
 													</dd>
 												</dl>
 											</form>

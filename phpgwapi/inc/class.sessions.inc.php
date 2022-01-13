@@ -744,7 +744,7 @@
 
 			if ( is_array($extravars) ) //we have something to append
 			{
-				$url .= '?' . http_build_query($extravars, null, $term);
+				$url .= '?' . http_build_query($extravars, '', $term);
 			}
 			return $url;
 		}

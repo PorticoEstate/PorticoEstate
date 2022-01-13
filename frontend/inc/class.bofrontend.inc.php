@@ -88,6 +88,7 @@
 
 		public static function get_delegations( int $account_id )
 		{
+			$org_ids = array();
 			if (isset($account_id))
 			{
 				//$sql = "SELECT pa.account_lid FROM phpgw_account_delegates pad LEFT JOIN phpgw_accounts pa ON (pa.account_id = pad.owner_id) WHERE pad.account_id = {$account_id}";
@@ -97,24 +98,25 @@
 				$db = clone $GLOBALS['phpgw']->db;
 				$db->query($sql, __LINE__, __FILE__);
 
-
-				$org_ids = array();
 				while ($db->next_record())
 				{
 					$org_ids[] = $db->f('data', true);
 				}
-				return $org_ids;
 			}
+			return $org_ids;
 		}
 
 		public static function get_account_info( int $account_id )
 		{
 			$account = $GLOBALS['phpgw']->accounts->get($account_id);
+			$prefs = createObject('phpgwapi.preferences', $account_id)->read();
+
 			return array(
 				'account_id' => $account->__get('id'),
 				'username' => $account->__get('lid'),
 				'firstname' => $account->__get('firstname'),
-				'lastname' => $account->__get('lastname')
+				'lastname' => $account->__get('lastname'),
+				'email' => $prefs['common']['email']
 			);
 		}
 
@@ -187,6 +189,10 @@
 
 						$preferences = createObject('phpgwapi.preferences', $result);
 						$preferences->add('common', 'default_app', 'frontend');
+						if(!empty($email))
+						{
+							$preferences->add('common', 'email', $email);
+						}
 						$preferences->save_repository();
 
 						$GLOBALS['phpgw']->log->write(array('text' => 'I-Notification, user created %1',
