@@ -356,7 +356,8 @@ ICAL;
 					{
 						case 'register_pre':
 							$sms_text = "Du er forhåndspåmeldt med {$participant['quantity']} deltaker(e) for {$lang_reservation_type} '{$reservation['name']}' som avholdes i tidsrommet {$when}.\n"
-								. "Du må registrere fremmøte når du møter ved arrangementet\n";
+							. "Du må fremvise denne meldingen når du møter ved arrangementet\n";
+//							. "Du må registrere fremmøte når du møter ved arrangementet\n";
 							break;
 						case 'register_in':
 							$sms_text = "Du har registrert fremmøte for {$participant['quantity']} deltaker(e) for {$lang_reservation_type} '{$reservation['name']}' som avholdes i tidsrommet {$when}.\n";
