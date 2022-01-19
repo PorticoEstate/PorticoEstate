@@ -210,7 +210,7 @@
 				. " WHERE location_id ='{$values['location_id']}'";
 			$this->_db->query($sql, __LINE__, __FILE__);
 			$this->_db->next_record();
-			$values['id']	= $this->_db->f('current_id') + 1;
+			$values['id']	= (int) $this->_db->f('current_id') + 1;
 
 			$sql = 'SELECT MAX(group_sort) AS max_sort'
 				. ' FROM phpgw_cust_attribute_group '
@@ -218,7 +218,7 @@
 
 			$this->_db->query($sql, __LINE__, __FILE__);
 			$this->_db->next_record();
-			$values['group_sort']	= $this->_db->f('max_sort') + 1;
+			$values['group_sort']	= (int) $this->_db->f('max_sort') + 1;
 
 			$cols = implode(', ', array_keys($values));
 			$vals = $this->_db->validate_insert($values);
@@ -620,13 +620,13 @@
 					. " WHERE location_id = {$loc_id} AND id = {$attrib_id} AND group_id = {$group_id}";
 				$this->_db->query($sql,__LINE__,__FILE__);
 				$this->_db->next_record();
-				$attrib_sort	= $this->_db->f('attrib_sort');
+				$attrib_sort	= (int) $this->_db->f('attrib_sort');
 
 				$sql = "SELECT MAX(attrib_sort) AS max_sort"
 					. " FROM phpgw_cust_attribute WHERE location_id = {$loc_id} AND group_id = {$group_id}";
 				$this->_db->query($sql, __LINE__, __FILE__);
 				$this->_db->next_record();
-				$max_sort	= $this->_db->f('max_sort');
+				$max_sort	= (int) $this->_db->f('max_sort');
 
 				if ( $max_sort > $attrib_sort )
 				{
@@ -788,7 +788,7 @@
 						. " WHERE location_id = {$location_id} AND group_id = {$attrib['group_id']}";
 					$this->_db->query($sql,__LINE__,__FILE__);
 					$this->_db->next_record();
-					$max_sort	= $this->_db->f('max_sort');
+					$max_sort	= (int)$this->_db->f('max_sort');
 
 					$value_set['attrib_sort'] = $max_sort + 1;
 
@@ -797,7 +797,7 @@
 						. " WHERE location_id = {$location_id} AND id = {$attrib_id} AND group_id = {$OldGroup}";
 					$this->_db->query($sql,__LINE__,__FILE__);
 					$this->_db->next_record();
-					$attrib_sort	= $this->_db->f('attrib_sort');
+					$attrib_sort	= (int) $this->_db->f('attrib_sort');
 
 					$sql = "SELECT MAX(attrib_sort) AS max_sort"
 						. " FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND group_id = {$OldGroup}";
@@ -1959,8 +1959,8 @@
 				. " WHERE location_id = {$location_id} AND id = {$id}";
 			$this->_db->query($sql, __LINE__, __FILE__);
 			$this->_db->next_record();
-			$attrib_sort	= $this->_db->f('group_sort');
-			$parent_id		= (int)$this->_db->f('parent_id');
+			$attrib_sort	= (int) $this->_db->f('group_sort');
+			$parent_id		= (int) $this->_db->f('parent_id');
 			if($parent_id)
 			{
 				$filter_parent = "AND parent_id = {$parent_id}";
@@ -1975,7 +1975,7 @@
 
 			$this->_db->query($sql,__LINE__,__FILE__);
 			$this->_db->next_record();
-			$max_sort	= $this->_db->f('max_sort');
+			$max_sort	= (int) $this->_db->f('max_sort');
 
 			$update = false;
 			switch($resort)
@@ -2048,13 +2048,13 @@
 				. " WHERE location_id = {$location_id} AND id = {$id} AND group_id = {$group_id}";
 			$this->_db->query($sql, __LINE__, __FILE__);
 			$this->_db->next_record();
-			$attrib_sort	= $this->_db->f('attrib_sort');
+			$attrib_sort	= (int) $this->_db->f('attrib_sort');
 
 			$sql = "SELECT MAX(attrib_sort) AS max_sort FROM phpgw_cust_attribute "
 				. " WHERE location_id = {$location_id} AND group_id = {$group_id}";
 			$this->_db->query($sql,__LINE__,__FILE__);
 			$this->_db->next_record();
-			$max_sort	= $this->_db->f('max_sort');
+			$max_sort	= (int) $this->_db->f('max_sort');
 
 			$update = false;
 			switch($resort)
