@@ -216,11 +216,11 @@
 			 * update price book elements according to type if interval=1
 			 */
 
-			$prev_day = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
-			$next_day = mktime(0, 0, 0, date('m'), date('d') + 1, date('Y'));
+			$prev_day = mktime(13, 0, 0, date('m'), date('d'), date('Y'));
+			$next_day = mktime(13, 0, 0, date('m'), date('d') + 1, date('Y'));
 
 			//get incomplete adjustments for today
-			$adjustments_query = "SELECT * FROM rental_adjustment WHERE NOT is_executed AND (adjustment_date < {$next_day} AND adjustment_date >= {$prev_day})";
+			$adjustments_query = "SELECT * FROM rental_adjustment WHERE NOT is_executed AND (adjustment_date <= {$next_day} AND adjustment_date >= {$prev_day})";
 			//var_dump($adjustments_query);
 			$result = $this->db->query($adjustments_query);
 			//var_dump("etter spr");
@@ -274,6 +274,7 @@
 			 * update price book elements according to type if interval=1
 			 */
 			$current_year = (int)date('Y');
+			$now = time();
 
 			//var_dump("innicontr");
 			foreach ($adjustments as $adjustment)
@@ -292,22 +293,37 @@
 				}
 				$adjustable_contracts .= "(adjustment_year IS NULL OR adjustment_year = 0)";
 				$adjustable_contracts .= "))";
+				$adjustable_contracts .= " AND (date_end > {$now}  OR date_end IS NULL)";
+				$adjustable_contracts .= " ORDER BY id ASC";
 				//var_dump($adjustable_contracts);
 				//die();
 				$result = $this->db->query($adjustable_contracts);
 				while ($this->db->next_record())
 				{
-					$contract_id = $this->unmarshal($this->db->f('id', true), 'int');
-					$adjustment_share = $this->unmarshal($this->db->f('adjustment_share', true), 'int');
-					$date_start = $this->unmarshal($this->db->f('date_start', true), 'int');
-					$adj_year = $this->unmarshal($this->db->f('adjustment_year', true), 'int');
-					$start_year = date('Y', $date_start);
+					$contract_id = (int) $this->db->f('id');
+					$adjustment_share = (int) $this->db->f('adjustment_share');
+//					$date_start = $this->unmarshal($this->db->f('date_start'), 'int');
+					$adj_year = (int) $this->db->f('adjustment_year');
+//					$start_year = date('Y', $date_start);
 
 					$contract = rental_socontract::get_instance()->get_single($contract_id);
+					$override_adjustment_start = (int)$contract->get_override_adjustment_start();
+
+					$adj_year = max($override_adjustment_start, $adj_year);
 
 					$firstJanAdjYear = mktime(0, 0, 0, 1, 1, $adjustment->get_year());
-					if ($contract->is_active($firstJanAdjYear) && (($adj_year != null && $adj_year > 0) || (($adj_year == null || $adj_year == 0) && ($start_year + $adjustment->get_interval() <= $adjustment->get_year()))))
+					if (
+						$contract->is_active($firstJanAdjYear)
+						&& (
+								empty($adj_year)
+								|| (
+									!empty($adj_year)
+									 && ($adj_year + $adjustment->get_interval() <= $adjustment->get_year())
+									)
+							)
+					)
 					{
+//						_debug_array($contract->get_old_contract_id());
 						//update adjustment_year on contract
 						rental_socontract::get_instance()->update_adjustment_year($contract_id, $adjustment->get_year());
 						//gather price items to be adjusted
@@ -404,9 +420,9 @@
 			$columns = "id";
 			$table = "rental_adjustment";
 			$conditions = "is_executed='true'" .
-				"AND adjustment_date > {$adjustment->get_adjustment_date()}" .
-				"AND adjustment_interval={$adjustment->get_interval()}" .
-				"AND responsibility_id={$adjustment->get_responsibility_id()}";
+				" AND adjustment_date > {$adjustment->get_adjustment_date()}" .
+				" AND adjustment_interval={$adjustment->get_interval()}" .
+				" AND responsibility_id={$adjustment->get_responsibility_id()}";
 			$sql = "Select $columns from $table where $conditions";
 
 			$result = $this->db->query($sql);
