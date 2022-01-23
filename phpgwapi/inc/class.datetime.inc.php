@@ -840,6 +840,17 @@
 		*/
 		public static function date_array($datestr)
 		{
+
+			if($test = strtotime($datestr))
+			{
+				return array
+				(
+					'year'  => date('Y', $test),
+					'month' => date('m', $test),
+					'day'   => date('d',$test)
+				);
+			}
+
 			$dateformat =& $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$pattern = '/[\.\/\-]/';
