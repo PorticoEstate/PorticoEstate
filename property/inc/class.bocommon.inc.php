@@ -2226,7 +2226,7 @@
 				$values['location'] = array();
 				for ($i = 1; $i <= count(explode('-', $values['location_code'])); $i++)
 				{
-					$values['location'][] = $values['location_data']["loc{$i}"];
+					$values['location']["loc{$i}"] = $values['location_data']["loc{$i}"];
 				}
 			}
 
