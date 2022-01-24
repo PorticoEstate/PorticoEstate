@@ -542,7 +542,7 @@
 			$history		= phpgwapi_cache::session_get('phpgwapi', 'history');
 			$click_history	= phpgw::get_var('click_history', 'string', 'GET');
 
-			if ( isset($history[$click_history]) )
+			if ( $click_history && isset($history[$click_history]) )
 			{
 				if($display_error)
 				{

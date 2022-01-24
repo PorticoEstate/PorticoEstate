@@ -583,6 +583,23 @@ JS;
 			return $entity;
 		}
 
+		function get_attribute_information(& $values_attribute)
+		{
+			$_attributes = $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}", 0, '', 'ASC', 'attrib_sort', true, true);
+
+			foreach ($values_attribute as $attrib_id => & $attribute)
+			{
+				foreach ($_attributes as $_key =>  $_attribute)
+				{
+					if($attrib_id == $_attribute['id'])
+					{
+						$attribute = array_merge($_attribute, $attribute);
+					}
+				}
+			}
+
+		}
+
 		function read_single( $data, $values = array() )
 		{
 			$values['attributes'] = $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", 0, '', 'ASC', 'attrib_sort', true, true);
@@ -723,8 +740,12 @@ JS;
 				}
 			}
 
-			$values['location_code'] = !empty($location) ? implode('-', $location) : '';
+			if(empty($values['location_code']))
+			{
+				$values['location_code'] = !empty($location) ? implode('-', $location) : '';
+			}
 
+			//FIXME
 			$values['date'] = $this->bocommon->date_to_timestamp($values['date']);
 
 			if (is_array($values_attribute))

@@ -1160,13 +1160,13 @@
 				// If contract has start date AND (today is before start date OR empty start date)
 				return lang("under_planning");  // CONTRACT UNDER PLANNING
 			}
-			else if (isset($date_start) && $ts >= $date_start && (!isset($date_end) || $ts <= $date_end))
+			else if (isset($date_start) && $ts >= $date_start && (empty($date_end) || $ts <= $date_end))
 			{
 				// else ... if contract has start date AND start date is today or in the past AND
 				// (contract has end date OR end date is in the future)
 				return lang("active_single");  // ACTIVE CONTRACT
 			}
-			else if (isset($date_end) && $ts > $date_end)
+			else if (!empty($date_end) && $ts > $date_end)
 			{
 				//else ... if contract has end date AND end date is in the past
 				return lang("ended");  // ENDED CONTRACT
@@ -1189,7 +1189,7 @@
 			$date_start = $this->get_contract_date()->get_start_date();
 			$date_end = $this->get_contract_date()->get_end_date();
 
-			if (isset($date_start) && $ts >= $date_start && (!isset($date_end) || $ts <= $date_end))
+			if (isset($date_start) && $ts >= $date_start && (empty($date_end) || $ts <= $date_end))
 			{
 				return true; // ACTIVE CONTRACT
 			}
