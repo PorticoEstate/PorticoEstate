@@ -295,21 +295,25 @@
 				$adjustable_contracts .= "))";
 				$adjustable_contracts .= " AND (date_end > {$now}  OR date_end IS NULL)";
 				$adjustable_contracts .= " ORDER BY id ASC";
-				//var_dump($adjustable_contracts);
-				//die();
+//				var_dump($adjustable_contracts);
+//				die();
 				$result = $this->db->query($adjustable_contracts);
 				while ($this->db->next_record())
 				{
 					$contract_id = (int) $this->db->f('id');
 					$adjustment_share = (int) $this->db->f('adjustment_share');
-//					$date_start = $this->unmarshal($this->db->f('date_start'), 'int');
+					$date_start = (int) $this->db->f('date_start');
+					$start_year = date('Y', $date_start);
 					$adj_year = (int) $this->db->f('adjustment_year');
-//					$start_year = date('Y', $date_start);
 
 					$contract = rental_socontract::get_instance()->get_single($contract_id);
 					$override_adjustment_start = (int)$contract->get_override_adjustment_start();
 
 					$adj_year = max($override_adjustment_start, $adj_year);
+					if(!$adj_year)
+					{
+						$adj_year = $start_year;
+					}
 
 					$firstJanAdjYear = mktime(0, 0, 0, 1, 1, $adjustment->get_year());
 					if (
@@ -402,11 +406,11 @@
 					{
 
 						$notification = new rental_notification
-							(
+						(
 							0, // No notification identifier
-	   $account_id, 0, // No location identifier
-	   null, // No contract id
-	   $ts_today, $location_label . '_' . $adj_interval, null, null, null, null
+							$account_id, 0, // No location identifier
+							null, // No contract id
+							$ts_today, $location_label . '_' . $adj_interval, null, null, null, null
 						);
 						rental_soworkbench_notification::get_instance()->store($notification);
 					}
