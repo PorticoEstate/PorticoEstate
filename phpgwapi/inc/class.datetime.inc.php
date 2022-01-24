@@ -841,6 +841,7 @@
 		public static function date_array($datestr)
 		{
 
+/*
 			if($test = strtotime($datestr))
 			{
 				return array
@@ -850,7 +851,7 @@
 					'day'   => date('d',$test)
 				);
 			}
-
+*/
 			$dateformat =& $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$pattern = '/[\.\/\-]/';
