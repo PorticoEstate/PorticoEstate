@@ -269,8 +269,8 @@
 								$ticket	 = array(
 									'status' => 'X' //Avsluttet
 								);
-								$ok		 = $sotts->update_status($ticket, $ticket_id);
-								$this->update_tenant_claim($ticket_id, $voucher, 'ticket');
+								$sotts->update_status($ticket, $ticket_id);
+								$ok = $this->update_tenant_claim($ticket_id, $voucher, 'ticket');
 							}
 							else
 							{
@@ -328,7 +328,7 @@
 			$amount = $this->db->f('sum_amount');
 
 			$ticket_id = (int)$id;
-			$this->db->query("UPDATE fm_tenant_claim SET amount= '{$amount}', status = 'ready', category = 3 WHERE ticket_id= $ticket_id AND status = 'open'", __LINE__, __FILE__);
+			return $this->db->query("UPDATE fm_tenant_claim SET amount= '{$amount}', status = 'ready', category = 3 WHERE ticket_id= $ticket_id AND status = 'open'", __LINE__, __FILE__);
 
 		}
 
