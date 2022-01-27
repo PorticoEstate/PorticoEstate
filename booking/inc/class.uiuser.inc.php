@@ -103,7 +103,7 @@
 				'lang_no'				 => lang('no')
 			);
 
-			$function_msg									 = lang('export customer');
+			$function_msg									 = lang('users');
 			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('booking') . ':: ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('confirm' => $data));
 
