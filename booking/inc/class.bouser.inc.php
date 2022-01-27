@@ -125,6 +125,7 @@
 
 		function update_user_address()
 		{
+			set_time_limit(400);
 			$configfrontend	= CreateObject('phpgwapi.config','bookingfrontend')->read();
 			$get_name_from_external = isset($configfrontend['get_name_from_external']) && $configfrontend['get_name_from_external'] ? $configfrontend['get_name_from_external'] : '';
 
