@@ -269,8 +269,8 @@
 								$ticket	 = array(
 									'status' => 'X' //Avsluttet
 								);
-								$ok		 = $sotts->update_status($ticket, $ticket_id);
-								$this->update_tenant_claim($ticket_id, $voucher, 'ticket');
+								$sotts->update_status($ticket, $ticket_id);
+								$ok = $this->update_tenant_claim($ticket_id, $voucher, 'ticket');
 							}
 							else
 							{
@@ -328,7 +328,7 @@
 			$amount = $this->db->f('sum_amount');
 
 			$ticket_id = (int)$id;
-			$this->db->query("UPDATE fm_tenant_claim SET amount= '{$amount}', status = 'ready', cat_id = 3 WHERE ticket_id= $ticket_id AND status = 'open'", __LINE__, __FILE__);
+			return $this->db->query("UPDATE fm_tenant_claim SET amount= '{$amount}', status = 'ready', category = 3 WHERE ticket_id= $ticket_id AND status = 'open'", __LINE__, __FILE__);
 
 		}
 
@@ -368,25 +368,43 @@
 
 		function get_payment_old( $bilagsnr )
 		{
+			require_once PHPGW_SERVER_ROOT . '/property/inc/soap_client/agresso/autoload.php';
 			static $first_connect	 = false;
 			$username				 = 'WEBSER';
 			$password				 = 'wser10';
 			$client					 = 'BY';
 			$TemplateId				 = '11176'; //Spørring bilag_Portico ordrer
+			$periode_end			 = date('Y') . '12';
 
-			$service	 = new \QueryEngineV201101(array('trace' => 1));
+			$context = stream_context_create([
+				'ssl' => [
+					// set some SSL/TLS specific options
+					'verify_peer' => false,
+					'verify_peer_name' => false,
+					'allow_self_signed' => true
+				]
+			]);
+
+			$options = array(
+				'location' => 'https://agrpweb.adm.bgo/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101',
+				'trace' => 1,
+				'stream_context' => $context
+				);
+
+			$service	 = new \QueryEngineV201101($options);
+
 			$Credentials = new \WSCredentials();
 			$Credentials->setUsername($username);
 			$Credentials->setPassword($password);
 			$Credentials->setClient($client);
 
-			echo "tester bilag {$bilagsnr}" . PHP_EOL;
+//			echo "tester bilag {$bilagsnr}" . PHP_EOL;
 
 			// Get the default settings for a template (templateId)
 			try
 			{
 				$searchProp = $service->GetSearchCriteria(new \GetSearchCriteria($TemplateId, true, $Credentials));
-				if (!$first_connect)
+				if (!$first_connect && $this->debug)
 				{
 					echo "SOAP HEADERS:\n" . $service->__getLastRequestHeaders() . PHP_EOL;
 					echo "SOAP REQUEST:\n" . $service->__getLastRequest() . PHP_EOL;
@@ -401,8 +419,9 @@
 			}
 
 			$searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties()[0]->setFromValue($bilagsnr)->setToValue($bilagsnr);
-			$searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties()[2]->setFromValue('201701')->setToValue('201812');
+			$searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties()[2]->setFromValue('201701')->setToValue($periode_end);
 
+//			_debug_array($searchProp);
 			// Create the InputForTemplateResult class and set values
 			$input									 = new InputForTemplateResult($TemplateId);
 			$options								 = $service->GetTemplateResultOptions(new \GetTemplateResultOptions($Credentials));
@@ -423,27 +442,39 @@
 			$result = $service->GetTemplateResultAsDataSet(new \GetTemplateResultAsDataSet($input, $Credentials));
 
 			$data = $result->getGetTemplateResultAsDataSetResult()->getTemplateResult()->getAny();
-
-			$xmlparse	 = CreateObject('property.XmlToArray');
-			$xmlparse->setEncoding('utf-8');
-			$xmlparse->setDecodesUTF8Automaticly(false);
-			$var_result	 = $xmlparse->parse($data);
-
-			if ($var_result)
+			if($this->debug)
 			{
-				//		if($this->debug)
+				echo "SOAP HEADERS:\n" . $service->__getLastRequestHeaders() . PHP_EOL;
+				echo "SOAP REQUEST:\n" . $service->__getLastRequest() . PHP_EOL;
+			}
+
+//			echo "data: ". $data;
+//			die();
+			$ret = array();
+			try
+			{
+				$sxe = new SimpleXMLElement($data);
+
+				$sxe->registerXPathNamespace('diffgr', 'urn:schemas-microsoft-com:xml-diffgram-v1');
+				$ret = $sxe->xpath('//diffgr:diffgram/Agresso/AgressoQE');
+
+			}
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
+
+			if ($ret)
+			{
+				if($this->debug)
 				{
-					_debug_array("Bilag {$bilagsnr} ER betalt" . PHP_EOL);
+					_debug_array($ret);
 				}
-				$ret = $var_result['Agresso'][0]['AgressoQE'];
+				_debug_array("Bilag {$bilagsnr} ER betalt" . PHP_EOL);
 			}
 			else
 			{
-				//		if($this->debug)
-				{
-					_debug_array("Bilag {$bilagsnr} er IKKE betalt" . PHP_EOL);
-				}
-				$ret = array();
+				_debug_array("Bilag {$bilagsnr} er IKKE betalt" . PHP_EOL);
 			}
 
 			return $ret;
@@ -455,8 +486,8 @@
 			$soapUser		 = "WEBSER";  //  username
 			$soapPassword	 = "wser10"; // password
 			$CLIENT			 = 'BY';
+			$periode_end			 = date('Y') . '12';
 
-			// xml post structure
 			$soap_request = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://services.agresso.com/QueryEngineService/QueryEngineV201101">
@@ -510,9 +541,9 @@
 					<ns1:SearchCriteriaProperties>
 						<ns1:ColumnName>period</ns1:ColumnName>
 						<ns1:Description>Periode</ns1:Description>
-						<ns1:RestrictionType>&lt;&gt;</ns1:RestrictionType>
+						<ns1:RestrictionType>&gt;=</ns1:RestrictionType>
 						<ns1:FromValue>201701</ns1:FromValue>
-						<ns1:ToValue>201812</ns1:ToValue>
+						<ns1:ToValue>{$periode_end}</ns1:ToValue>
 						<ns1:DataType>3</ns1:DataType>
 						<ns1:DataLength>6</ns1:DataLength>
 						<ns1:DataCase>2</ns1:DataCase>
@@ -527,7 +558,7 @@
 						<ns1:ColumnName>client</ns1:ColumnName>
 						<ns1:Description>Firma</ns1:Description>
 						<ns1:RestrictionType>=</ns1:RestrictionType>
-						<ns1:FromValue>$CLIENT</ns1:FromValue>
+						<ns1:FromValue>{$CLIENT}</ns1:FromValue>
 						<ns1:ToValue></ns1:ToValue>
 						<ns1:DataType>10</ns1:DataType>
 						<ns1:DataLength>25</ns1:DataLength>
@@ -596,7 +627,6 @@ XML;
 
 			if ($result)
 			{
-				$count	 = count($result);
 				//	if($this->debug)
 				{
 					_debug_array("Bilag {$bilagsnr} ER betalt" . PHP_EOL);

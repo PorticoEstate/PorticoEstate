@@ -65,7 +65,8 @@
 			'save'					 => true,
 			'delete'				 => true,
 			'add_control'			 => true,
-			'update_control_serie'	 => true
+			'update_control_serie'	 => true,
+			'get_attributes'		 => true
 		);
 		var $type_app				 = array();
 		var $type;
@@ -583,9 +584,14 @@ JS;
 			return $entity;
 		}
 
+		function get_attributes()
+		{
+			return $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}", 0, '', 'ASC', 'attrib_sort', true, true);
+		}
+
 		function get_attribute_information(& $values_attribute)
 		{
-			$_attributes = $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}", 0, '', 'ASC', 'attrib_sort', true, true);
+			$_attributes = $this->get_attributes();
 
 			foreach ($values_attribute as $attrib_id => & $attribute)
 			{
@@ -597,7 +603,6 @@ JS;
 					}
 				}
 			}
-
 		}
 
 		function read_single( $data, $values = array() )
