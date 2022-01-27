@@ -122,6 +122,63 @@
 			return $this->so->find_building_users($building_id, $this->build_default_read_params(), $split, $activities);
 		}
 
+
+		function update_user_address()
+		{
+			$configfrontend	= CreateObject('phpgwapi.config','bookingfrontend')->read();
+			$get_name_from_external = isset($configfrontend['get_name_from_external']) && $configfrontend['get_name_from_external'] ? $configfrontend['get_name_from_external'] : '';
+
+			$file = PHPGW_SERVER_ROOT . "/bookingfrontend/inc/custom/default/{$get_name_from_external}";
+
+			if (is_file($file))
+			{
+				phpgw::import_class('bookingfrontend.bouser');
+				require_once $file;
+				$external_user = new bookingfrontend_external_user_name();
+			}
+			else
+			{
+				throw new Exception('Kopling til folkergister er ikke konfigurert');
+			}
+
+			$get_persons_only = true;
+			$customers	 = $this->so->get_customer_list(true);
+
+			$i = 0;
+			foreach ($customers as  & $customer)
+			{
+				$user_id = $this->so->get_user_id( $customer['customer_ssn']);
+				$user	 = $this->read_single($user_id);
+
+				$data = array('ssn' => $customer['customer_ssn']);
+				try
+				{
+					$external_user->get_name_from_external_service( $data );
+				}
+				catch (Exception $exc)
+				{
+				}
+
+				$user['name'] = "{$data['last_name']} {$data['first_name']}";
+				$user['street'] = $data['street'];
+				$user['zip_code'] = $data['zip_code'];
+				$user['city'] = $data['city'];
+				if(!$this->validate($user))
+				{
+					$this->update($user);
+					$i++;
+				}
+				else
+				{
+					phpgwapi_cache::message_set("{$customer['name']} validerer ikke, manlger komplett datasett", 'error');
+				}
+			}
+
+			$receipt = array();
+			return $receipt['message'][] = array('msg' => lang('updated %1 users', $i));
+
+		}
+
 		function collect_users()
 		{
 			return $this->so->collect_users();
@@ -153,7 +210,7 @@
 		{
 			$this->client = !empty($config['voucher_client']) ? $config['voucher_client'] : 'BY';
 			$this->apar_gr_id = !empty($config['apar_gr_id']) ? $config['apar_gr_id'] : '10';
-			$this->pay_method = !empty($config['pay_method']) ? $config['pay_method'] : 'IP';//'BG';//'IP' 
+			$this->pay_method = !empty($config['pay_method']) ? $config['pay_method'] : 'IP';//'BG';//'IP'
 		}
 
 		public function get_customer_list( $customers )
