@@ -174,7 +174,7 @@
 
 			$subject = "Måleroverføring: {$address}";
 
-			$toarray = array('support.norway@entelios.com');
+			$toarray = array('kundepost@bkk.no');
 //			$toarray = array('hc483@bergen.kommune.no' );
 			$to		 = implode(';', $toarray);
 
