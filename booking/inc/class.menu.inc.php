@@ -212,10 +212,16 @@
 					'image' => array('property', 'location_tenant'),
 					'children' => array
 						(
-						'collect_users' => array
+							'collect_users' => array
 							(
 							'text' => lang('collect users'),
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiuser.collect_users')),
+							'image' => array('property', 'location_tenant'),
+						),
+						'update_user_address' => array
+							(
+							'text' => lang('update user address'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiuser.update_user_address')),
 							'image' => array('property', 'location_tenant'),
 						),
 						'export_customer' => array
