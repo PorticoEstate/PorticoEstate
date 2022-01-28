@@ -2273,7 +2273,7 @@
 				if($external_login_info['last_name'])
 				{
 					$update_user = true;
-					$user['name'] = "{$external_login_info['last_name']} {$external_login_info['first_name']}";
+					$user['name'] = empty($external_login_info['middle_name']) ? "{$external_login_info['last_name']} {$external_login_info['first_name']}" :  "{$external_login_info['last_name']} {$external_login_info['first_name']} {$external_login_info['middle_name']}";
 				}
 
 				if($update_user && !$bo_user->validate($user))
