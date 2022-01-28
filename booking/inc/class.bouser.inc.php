@@ -160,7 +160,8 @@
 				{
 				}
 
-				$user['name'] = "{$data['last_name']} {$data['first_name']}";
+				$user['name'] = empty($data['middle_name']) ? "{$data['last_name']} {$data['first_name']}" :  "{$data['last_name']} {$data['first_name']} {$data['middle_name']}";
+
 				$user['street'] = $data['street'];
 				$user['zip_code'] = $data['zip_code'];
 				$user['city'] = $data['city'];
