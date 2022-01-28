@@ -109,6 +109,7 @@
 //Array
 //(
 //    [fornavn] => NETT
+//    [mellomnavn] => ''
 //    [etternavn] => OSTEKAKENOVEMBER
 //    [postadresse] => Array
 //        (
@@ -118,12 +119,13 @@
 //        )
 //)
 //
-	
+
 			$poststed = explode(' ', $ret['postadresse'][1]);
 
 			$data['first_name']		 = $ret['fornavn'];
+			$data['middle_name']	 = $ret['mellomnavn'];
 			$data['last_name']		 = $ret['etternavn'];
-			$data['name']			 = "{$ret['fornavn']} {$ret['etternavn']}";
+			$data['name']			 = empty($ret['mellomnavn']) ? "{$ret['fornavn']} {$ret['etternavn']}" : "{$ret['fornavn']} {$ret['mellomnavn']} {$ret['etternavn']}";
 			$data['street']			 = $ret['postadresse'][0];
 			$data['zip_code']		 = $poststed[0];
 			$data['city']			 = $poststed[1];
