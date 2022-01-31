@@ -20,6 +20,9 @@
 		var $m_sStatementTerminator;
 		var $m_sSequencePrefix;
 		var $m_sIndexPrefix;
+		var $indexcount;
+		var $indexes_sql = array();
+		var $check_contstaints = array();
 
 		/* Following added to convert sql to array */
 		var $sCol = array();
@@ -36,7 +39,7 @@
 		}
 
 		/* Return a type suitable for DDL */
-		function TranslateType($sType, $iPrecision = 0, $iScale = 0)
+		function TranslateType($sType, $iPrecision = 0, $iScale = 0, $sTableName='', $sFieldName='')
 		{
 			$sTranslated = '';
 			switch($sType)
@@ -77,7 +80,18 @@
 				case 'timestamp':
 					$sTranslated = 'timestamp';
 					break;
-			}
+				case 'bool':
+					$sTranslated = 'number(1)';
+					break;
+					case 'xml':
+						$sTranslated = 'sys.xmltype';
+						break;
+				case 'json':
+				case 'jsonb':
+					$sTranslated = 'varchar2(4000)';
+					$this->check_contstaints[] = "CONSTRAINT ensure_json_{$sTableName}_" . trim($sFieldName,'"') . " CHECK ({$sFieldName} IS JSON)";
+					break;
+				}
 			return $sTranslated;
 		}
 
@@ -178,6 +192,15 @@
 				case 'date':
 					$sTranslated = "'type' => '$sType'";
 					break;
+				case 'bool':
+					$sTranslated =  "'type' => 'number', 'precision' => 1";
+					break;
+				case 'xml':
+					$sTranslated =  "'type' => 'sys.xmltype'";
+					break;
+				case 'json':
+				case 'jsonb':
+					$sTranslated =  "'type' => 'varchar2', 'precision' => 4000";						
 			}
 			return $sTranslated;
 		}
@@ -416,7 +439,7 @@
 		function CreateTable($oProc, $aTables, $sTableName, $aTableDef, $bCreateSequence = true)
 		{
 			global $DEBUG;
-			unset($this->indexes_sql);
+			$this->indexes_sql= array();
 			$this->indexcount = 0;
 			$sSequenceSQL = '';
 			$sTriggerSQL = '';

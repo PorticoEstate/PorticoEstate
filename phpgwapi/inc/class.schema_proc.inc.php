@@ -339,11 +339,16 @@
 			{
 				foreach($aTableDef['fd'] as $sFieldName => $aFieldAttr)
 				{
+					if($this->dbms == 'oracle')
+					{
+						$sFieldName = strtoupper("\"{$sFieldName}\"");
+					}
+					
 					$sFieldSQL = '';
 
 					try
 					{
-						$this->_GetFieldSQL($aFieldAttr, $sFieldSQL);
+						$this->_GetFieldSQL($aFieldAttr, $sFieldSQL, $sTableName, $sFieldName);
 					}
 					catch(Exception $e)
 					{
@@ -446,10 +451,18 @@
 				$sTableSQL .= ",\n" . $sUCSQL;
 			}
 
-					   if($sFKSQL != '')
-					   {
-						 $sTableSQL .= ",\n" . $sFKSQL;
-					   }
+			if($sFKSQL != '')
+			{
+				$sTableSQL .= ",\n" . $sFKSQL;
+			}
+
+			//oracle...
+			if($this->dbms == 'oracle' && !empty($this->m_oTranslator->check_contstaints))
+			{
+				$sTableSQL .= ",\n" . implode(",\n", $this->m_oTranslator->check_contstaints);
+				//reset for each table
+				$this->m_oTranslator->check_contstaints = array();
+			}
 
 			if (count($sbufTriggerFD) > 0)
 			{
@@ -460,7 +473,7 @@
 		}
 
 		// Get field DDL
-		function _GetFieldSQL($aField, &$sFieldSQL)
+		function _GetFieldSQL($aField, &$sFieldSQL, $sTableName, $sFieldName)
 		{
 			global $DEBUG;
 			if($DEBUG) { echo '<br>_GetFieldSQL(): Incoming ARRAY: '; var_dump($aField); }
@@ -505,7 +518,7 @@
 			$sBufNullable = '';
 			$sBufDefault = '';
 
-			if($sFieldSQL = $this->m_oTranslator->TranslateType($sType, $iPrecision, $iScale))
+			if($sFieldSQL = $this->m_oTranslator->TranslateType($sType, $iPrecision, $iScale, $sTableName, $sFieldName))
 			{
 				if($bNullable === false || $bNullable === 'False')
 				{
@@ -569,6 +582,11 @@
 			//while(list($key, $sField) = each($aFields))
 			foreach($aFields as $key => $sField)
 			{
+				if($this->dbms == 'oracle')
+				{
+					$sField = strtoupper("\"{$sField}\"");
+				}
+
 				if($sFields != '')
 				{
 					$sFields .= ',';
@@ -593,6 +611,10 @@
 			reset($aFields);
 			foreach($aFields as $key => $sField)
 			{
+				if($this->dbms == 'oracle')
+				{
+					$sField = strtoupper("\"{$sField}\"");
+				}
 				if($sFields != '')
 				{
 					$sFields .= ',';
@@ -627,11 +649,22 @@
 			{
 				if(@is_array($sField))
 				{
+					if($this->dbms == 'oracle')
+					{
+						foreach($sField as & $_sField)
+						{
+							$_sField = strtoupper("\"{$_sField}\"");							
+						}
+					}
 					$sIXSQL .= $this->m_oTranslator->GetIXSQL(implode(',', $sField));
 				}
 				else
 				{
 					$field_type = $fd[$sField]['type'];
+					if($this->dbms == 'oracle')
+					{
+						$sField = strtoupper("\"{$sField}\"");
+					}
 					$sIXSQL .= $this->m_oTranslator->GetIXSQL($sField, $field_type);
 				}
 
@@ -657,6 +690,22 @@
 			reset($aFields);
 			foreach($aFields as $reftable => $sField)
 			{
+				if($this->dbms == 'oracle')
+				{
+					if(is_array($sField))
+					{
+						foreach($sField as & $_sField)
+						{
+							$_sField = strtoupper("\"{$_sField}\"");							
+						}
+
+					}
+					else
+					{
+						$sField = strtoupper("\"{$sField}\"");
+					}
+				}
+
 				$sFKSQLarr[] = $this->m_oTranslator->GetFKSQL($reftable, $sField);
 			}
 			if(isset($sFKSQLarr[0]) && $sFKSQLarr[0])
@@ -691,10 +740,21 @@
 
 				if(@is_array($sField))
 				{
+					if($this->dbms == 'oracle')
+					{
+						foreach($sField as & $_sField)
+						{
+							$_sField = strtoupper("\"{$_sField}\"");							
+						}
+					}
 					$sIXSQL .= $this->m_oTranslator->GetIXSQL(implode(',', $sField),$sTableName);
 				}
 				else
 				{
+					if($this->dbms == 'oracle')
+					{
+						$sField = strtoupper("\"{$sField}\"");
+					}
 					$sIXSQL .= $this->m_oTranslator->GetIXSQL($sField,$sTableName);
 
 				}
