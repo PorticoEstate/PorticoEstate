@@ -27,7 +27,7 @@
 				'app_name' => array('type' => 'varchar','precision' => 25,'nullable' => False),
 				'app_enabled' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'app_order' => array('type' => 'int','precision' => 4,'nullable' => False),
-				'app_tables' => array('type' => 'text','nullable' => False),
+				'app_tables' => array('type' => 'text','nullable' => true),
 				'app_version' => array('type' => 'varchar','precision' => 20,'nullable' => False,'default' => '0.0')
 			),
 			'pk' => array('app_id'),
