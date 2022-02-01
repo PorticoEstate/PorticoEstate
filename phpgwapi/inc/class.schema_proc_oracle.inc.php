@@ -83,9 +83,9 @@
 				case 'bool':
 					$sTranslated = 'number(1)';
 					break;
-					case 'xml':
-						$sTranslated = 'sys.xmltype';
-						break;
+				case 'xml':
+					$sTranslated = 'sys.xmltype';
+					break;
 				case 'json':
 				case 'jsonb':
 					$sTranslated = 'varchar2(4000)';
