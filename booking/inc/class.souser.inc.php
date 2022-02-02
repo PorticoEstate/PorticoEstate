@@ -21,7 +21,7 @@
 				'city'				 => array('type' => 'string'),
 				'customer_number'	 => array('type' => 'string', 'required' => False),
 				'customer_ssn'		 => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN'),
-					'required'		 => true)
+					'required'		 => true, 'query' => True)
 			);
 
 			parent::__construct('bb_user', $fields);
