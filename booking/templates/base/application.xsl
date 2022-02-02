@@ -136,9 +136,9 @@
 										<xsl:value-of select="php:function('lang', 'Comment')" />
 									</th>
 								</tr>
-                                                            
+
 								<xsl:for-each select="application/comments[author]">
-								
+
 									<tr>
 										<td>
 											<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
@@ -156,10 +156,10 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</tr>
-                                                   
-                                                                
+
+
 								</xsl:for-each>
-                                                       
+
 							</table>
 						</div>
 					</div>
@@ -292,6 +292,13 @@
 									<h3>4. <xsl:value-of select="php:function('lang', 'When?')" /></h3>
 								</legend>
 							</div>
+							<p>
+								<small>
+									<xsl:value-of select="php:function('lang', 'date format')" />:
+									<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
+								</small>
+							</p>
+
 							<script type="text/javascript">
 								var allocationParams = {};
 								var bookingParams = {};
@@ -745,7 +752,7 @@
 		var app_id = <xsl:value-of select="application/id"/>;
 		var building_id = <xsl:value-of select="application/building_id"/>;
 		var resources = <xsl:value-of select="application/resources"/>;
-	
+
 	    <![CDATA[
 			var resourcesURL = phpGWLink('index.php', {menuaction:'booking.uiresource.index', sort:'name', length:-1}, true) +'&' + resourceIds;
 			var associatedURL = phpGWLink('index.php', {menuaction:'booking.uiapplication.associated', sort:'from_',dir:'asc',filter_application_id:app_id, length:-1}, true);

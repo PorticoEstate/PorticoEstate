@@ -1,6 +1,6 @@
 change your password	preferences	no	Endre passord
 change your settings	preferences	no	Endre innstillinger
-date format	preferences	no	Dato format
+date format	common	no	Datoformat
 email signature	preferences	no	E-Post signatur
 enter your new password	preferences	no	Skriv inn ditt nye passord
 language	preferences	no	Språk
@@ -23,7 +23,7 @@ show new messages on main screen	preferences	no	Vis nye meldinger på hovedskjer
 show text on navigation icons	preferences	no	Vis tekst på navigasjons ikoner
 the two passwords are not the same	preferences	no	Passordene stemmer ikke overens
 this server is located in the %1 timezone	preferences	no	 tids-sonen
-time format	preferences	no	Tids format
+time format	common	no	Tidsformat
 time zone offset	preferences	no	Tids-sone offset
 weekday starts on	preferences	no	Ukedag begynner på
 work day ends on	preferences	no	Arbeidsdag slutter på
