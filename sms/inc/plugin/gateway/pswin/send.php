@@ -1,5 +1,8 @@
 <?php
 
+	/**
+	 * https://wiki.pswin.com/Gateway%20XML%20API.ashx
+	 */
 	phpgw::import_class('phpgwapi.xmlhelper');
 
 	class sms_sms extends sms_sms_
@@ -33,8 +36,6 @@
 			$debug = empty($this->pswin_param['debug']) ? false : true;
 
 			$result = array();
-//			$sms_msg = utf8_decode($sms_msg);
-
 			$sms_to = ltrim($sms_to, '+');
 
 			if (strlen($sms_to) < 9)
@@ -52,13 +53,13 @@
 					(
 						'ID'	=> $smslog_id,
 						'TEXT'	=> $sms_msg,
-						'SND'	=> $this->pswin_param['originator'],
+						'SND'	=> (string)$GLOBALS['phpgw_info']['sms_config']['common']['gateway_number'],
 						'RCV'	=> $sms_to
 					)
 				)
 			);
 
-			$xmldata = utf8_decode(phpgwapi_xmlhelper::toXML($data, 'SESSION'));
+			$xmldata = utf8_decode(str_replace(" encoding='utf-8'", '', phpgwapi_xmlhelper::toXML($data, 'SESSION')));
 
 			$url = $this->pswin_param['send_url'];
 
@@ -69,7 +70,8 @@
 				curl_setopt($ch, CURLOPT_PROXY, "{$this->pswin_param['proxy_host']}:{$this->pswin_param['proxy_port']}");
 			}
 
-			curl_setopt($ch, CURLOPT_MUTE, 1);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 			curl_setopt($ch, CURLOPT_POST, true);
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
 			curl_setopt($ch, CURLOPT_POSTFIELDS, "$xmldata");
@@ -87,6 +89,14 @@
 			// OK = delivered
 			// FAIL = failed
 
+			if($debug)
+			{
+				echo "data: </br>";
+				_debug_array($data);
+				echo "httpCode: $httpCode </br>";
+				echo "response: </br>";
+				_debug_array($var_result);
+			}
 
 			if ($var_result['LOGON'] == 'OK')
 			{
@@ -102,12 +112,6 @@
 
 			if($debug)
 			{
-				echo "data: </br>";
-				_debug_array($data);
-				echo "httpCode: $httpCode </br>";
-				echo "response: </br>";
-				_debug_array($var_result);
-
 				$url_outbox = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uisms.outbox'));
 
 				echo "<a href='{$url_outbox}'>Outbox</a>";
