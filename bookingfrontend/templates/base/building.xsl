@@ -200,7 +200,7 @@
 									<div data-bind="if: resourceItemLink != false">
 										<a class="bookable-resource-link-href" href="" data-bind="">
 
-											<span data-bind="html: name"></span>
+											<b><span data-bind="html: name"></span></b>
 											<div data-bind="foreach: activitiesList">
 												<span class="tagTitle" data-bind="if: $index() == 0">
 													<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>:
@@ -260,6 +260,9 @@
 										</ul>
 									</div>
 								</div>
+							</div>
+							<div>
+							*) Forenklet booking uten manuell saksbehandling
 							</div>
 						</div>
 					</xsl:if>
