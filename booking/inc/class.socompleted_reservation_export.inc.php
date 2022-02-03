@@ -63,7 +63,7 @@
 					)),
 				)
 			);
-			
+
 			$this->config_data = CreateObject('phpgwapi.config', 'booking')->read();
 		}
 
@@ -606,7 +606,7 @@
 			}
 			else
 			{
-				$combined_data = array_merge($combined_data, $export['data']);				
+				$combined_data = array_merge($combined_data, $export['data']);
 			}
 		}
 
@@ -1355,6 +1355,7 @@
 
 					//Nøkkelfelt, kundens personnr/orgnr. - men differensiert for undergrupper innenfor samme orgnr
 					$stored_header['tekst2'] = $check_customer_identifier;
+					$stored_header['tekst3'] = $check_customer_identifier;
 
 //					if ($type == 'internal')
 //					{
@@ -1376,7 +1377,7 @@
 
 
 					$header = array();
-					
+
 					$header['Blanketttype'] = 'F';//char(1) F = Faktura
 					$header['datoendr'] = date('d.m.Y');//dato 31.01.1997
 					$header['Deresref'] = $ext_ord_ref;//char(30)
@@ -1812,15 +1813,18 @@
 
 					//Nøkkelfelt, kundens personnr/orgnr. - men differensiert for undergrupper innenfor samme orgnr
 					$stored_header['tekst2'] = $check_customer_identifier;
+					$stored_header['tekst3'] = $check_customer_identifier;
 
 					if ($type == 'internal')
 					{
 						$header['tekst2'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
+						$header['tekst3'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
 						$header['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
 					}
 					else
 					{
 						$header['tekst2'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
+						$header['tekst3'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
 						$header['ext_ord_ref'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $customer_number), 0, 15), 15, ' ');
 					}
 
@@ -1936,11 +1940,13 @@
 
 					if ($type == 'internal')
 					{
-						$log_customer_nr = $header['tekst2'] . ' ' . $header['ext_ord_ref'];
+//						$log_customer_nr = $header['tekst2'] . ' ' . $header['ext_ord_ref'];
+						$log_customer_nr = $header['tekst3'] . ' ' . $header['ext_ord_ref'];
 					}
 					else
 					{
-						$log_customer_nr = $header['tekst2'];
+//						$log_customer_nr = $header['tekst2'];
+						$log_customer_nr = $header['tekst3'];
 					}
 
 
