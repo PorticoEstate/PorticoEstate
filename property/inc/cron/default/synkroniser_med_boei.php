@@ -99,6 +99,7 @@
 			$this->oppdater_oppsagtdato();
 			$this->slett_feil_telefon();
 			$this->update_tenant_name();
+			$this->update_tenant_phone();
 			$this->update_tenant_termination_date();
 			$this->update_obskode();
 			$this->update_hemmelig_adresse();
@@ -718,6 +719,7 @@ SQL;
 					namssakstatusokonomi_id smallint,
 					hemmeligadresse smallint,
 					obskode character varying(12),
+					telefon character varying(12),
 					CONSTRAINT boei_leietaker_pkey PRIMARY KEY (leietaker_id)
 				);
 SQL;
@@ -726,13 +728,13 @@ SQL;
 			$this->db->query('DELETE FROM boei_leietaker', __LINE__, __FILE__);
 
 			$sql_boei	 = 'SELECT TOP 100 PERCENT Leietaker_ID, CAST(Fornavn as TEXT) AS Fornavn, CAST(Etternavn as TEXT) AS Etternavn, Kjonn_Juridisk,'
-				. ' OppsagtDato, NamssakStatusDrift_ID, NamssakStatusOkonomi_ID, hemmeligAdresse, OBSKode'
+				. ' OppsagtDato, NamssakStatusDrift_ID, NamssakStatusOkonomi_ID, hemmeligAdresse, OBSKode, Telefon1'
 				. ' FROM Leietaker';
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
 			$sql		 = 'INSERT INTO boei_leietaker (leietaker_id, fornavn, etternavn, kjonn_juridisk,'
-				. ' oppsagtdato,namssakstatusdrift_id,namssakstatusokonomi_id,hemmeligadresse,obskode)'
-				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)';
+				. ' oppsagtdato,namssakstatusdrift_id,namssakstatusokonomi_id,hemmeligadresse,obskode,telefon)'
+				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 			$valueset	 = array();
 
 			while ($this->db_boei->next_record())
@@ -782,6 +784,11 @@ SQL;
 					9	 => array
 						(
 						'value'	 => ($this->db_boei->f('OBSKode')),
+						'type'	 => PDO::PARAM_STR
+					),
+					10	 => array
+						(
+						'value'	 => ($this->db_boei->f('Telefon1')),
 						'type'	 => PDO::PARAM_STR
 					)
 				);
@@ -1244,6 +1251,7 @@ SQL;
 					'status_eco'	 => $this->db->f('namssakstatusokonomi_id'),
 					'status_drift'	 => $this->db->f('namssakstatusdrift_id'),
 					'obskode'		 => $this->db->f('obskode'),
+					'contact_phone'	 => $this->db->f('telefon'),
 					'entry_date'	 => time(),
 					'owner_id'		 => 6
 				);
@@ -1253,7 +1261,7 @@ SQL;
 
 			foreach ($leietakere as $leietaker)
 			{
-				$sql2 = "INSERT INTO fm_tenant (id, first_name, last_name, category, status_eco, status_drift, obskode, entry_date,owner_id)"
+				$sql2 = "INSERT INTO fm_tenant (id, first_name, last_name, category, status_eco, status_drift, obskode, contact_phone, entry_date,owner_id)"
 					. "VALUES (" . $this->db->validate_insert($leietaker) . ")";
 
 				$this->db->query($sql2, __LINE__, __FILE__);
@@ -1287,7 +1295,29 @@ SQL;
 				$i++;
 			}
 
-			$msg						 = $i . ' Leietakere er oppdatert';
+			$msg						 = $i . ' Leietakere er oppdatert med navn';
+			$this->receipt['message'][]	 = array('msg' => $msg);
+			$this->cron_log($msg);
+		}
+
+		function update_tenant_phone()
+		{
+			$sql = "SELECT leietaker_id, telefon FROM boei_leietaker"
+				. " JOIN fm_tenant on boei_leietaker.leietaker_id = fm_tenant.id"
+				. " WHERE contact_phone IS NULL AND boei_leietaker.telefon IS NOT NULL";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$i = 0;
+			while ($this->db->next_record())
+			{
+				$sql2 = "UPDATE fm_tenant SET"
+					. " contact_phone = '" . $this->db->f('telefon') . "'"
+					. " WHERE id = " . (int)$this->db->f('leietaker_id');
+//_debug_array($sql2);
+				$this->db2->query($sql2, __LINE__, __FILE__);
+				$i++;
+			}
+
+			$msg						 = $i . ' Leietakere er oppdatert med telefon';
 			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
