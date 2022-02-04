@@ -788,7 +788,7 @@ SQL;
 					),
 					10	 => array
 						(
-						'value'	 => ($this->db_boei->f('Telefon1')),
+						'value'	 => ctype_digit((string)$this->db_boei->f('Telefon1')) ? $this->db_boei->f('Telefon1') : null,
 						'type'	 => PDO::PARAM_STR
 					)
 				);
