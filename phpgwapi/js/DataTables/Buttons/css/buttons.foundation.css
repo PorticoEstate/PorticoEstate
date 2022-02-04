@@ -52,6 +52,10 @@ div.dt-button-info > div {
   padding: 1em;
 }
 
+button.dtb-hide-drop {
+  display: none !important;
+}
+
 div.dt-button-collection-title {
   text-align: center;
   padding: 0.3em 0 0.5em;
@@ -145,6 +149,14 @@ div.dt-button-collection.fixed {
 }
 div.dt-button-collection.fixed:before, div.dt-button-collection.fixed:after {
   display: none;
+}
+div.dt-button-collection div.dt-btn-split-wrapper a.button {
+  flex-grow: 1;
+}
+div.dt-button-collection div.dt-btn-split-wrapper a.button,
+div.dt-button-collection div.dt-btn-split-wrapper button.button {
+  height: 40px;
+  flex-basis: auto;
 }
 
 div.dt-button-background {

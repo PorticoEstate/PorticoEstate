@@ -188,8 +188,8 @@
 
 		function download()
 		{
-			$GLOBALS['phpgw_info']['flags'][noheader] = true;
-			$GLOBALS['phpgw_info']['flags'][nofooter] = true;
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 			//$start_date 	= urldecode($this->start_date);

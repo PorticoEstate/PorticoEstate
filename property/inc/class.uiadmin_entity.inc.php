@@ -1210,8 +1210,10 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
+			$category	 									 = $this->bo->read_single_category($entity_id, $cat_id);
 			$appname										 = lang('attribute group');
 			$function_msg									 = lang('list entity attribute group');
+			$function_msg 									.= " ({$category['name']})";
 			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$data = array(
@@ -1442,6 +1444,8 @@
 
 			$appname										 = lang('attribute');
 			$function_msg									 = lang('list entity attribute');
+			$function_msg .= " ({$category['name']})";
+
 			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			$data = array(
@@ -1931,6 +1935,8 @@
 			$entity		 = $this->bo->read_single($entity_id, false);
 			$category	 = $this->bo->read_single_category($entity_id, $cat_id);
 
+			$function_msg .= " ({$category['name']})";
+
 			$msgbox_data = (isset($receipt) ? $this->bocommon->msgbox_data($receipt) : '');
 
 			$data = array
@@ -1939,7 +1945,7 @@
 				'category_name'						 => $category['name'],
 				'multiple_choice'					 => $multiple_choice,
 				'value_table_filter'				 => $values['table_filter'],
-				'value_choice'						 => (isset($values['choice']) ? $values['choice'] : ''),
+				'value_choice'						 => (isset($values['choice']) ? $values['choice'] : array()),
 				'custom_get_list'					 => $custom_get_list,
 				'custom_get_single'					 => $custom_get_single,
 				'msgbox_data'						 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -2001,10 +2007,20 @@
 			$id = $this->bo->add_choice_value($location_id, $attribute_id, $new_value);
 
 
-			$receipt = array(
-				'status' => 'ok',
-				'choice_id' => $id
-			);
+			if($id)
+			{
+				$receipt = array(
+					'status' => 'ok',
+					'choice_id' => $id
+				);
+			}
+			else
+			{
+				$receipt = array(
+					'status' => 'error',
+					'choice_id' => null
+				);
+			}
 
 			return $receipt;
 

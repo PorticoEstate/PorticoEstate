@@ -1,3 +1,14 @@
+Utgående:
+https://wiki.pswin.com/Gateway%20XML%20API.ashx
+
+For Inngående SMS – har vi avtale med pswincom på nummeret xxxxxxxx som leverer sms til vårt mottak (endpoint):
+Intern-adresse:
+https://porticoebf.srv.bergenkom.no/porticoebf/sms/inc/plugin/gateway/pswin/soap.php?domain=default
+
+Fra internet:
+https://www.bergen.kommune.no/<tralala>
+
+
 PlaySMS gateway module for pswin
 
 Need a config-section named 'pswin' with values:

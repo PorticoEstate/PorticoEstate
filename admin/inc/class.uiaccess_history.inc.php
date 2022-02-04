@@ -126,6 +126,16 @@
 						  language: "no",
 						  allowClear: true
 						});
+
+						$('#account_id').on('select2:open', function (e) {
+							$(".select2-search__field").each(function()
+							{
+								if ($(this).attr("aria-controls") == 'select2-account_id-results')
+								{
+									$(this)[0].focus();
+								}
+							});
+						});
 					</script>
 HTML;
 

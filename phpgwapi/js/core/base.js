@@ -260,6 +260,7 @@ function deleteValueFromCustomAttribute(select_id, location_id, attribute_id)
 	if(!choice_id)
 	{
 		alert('None selected');
+		return;
 	}
 
 	var oArgs = {
@@ -352,7 +353,7 @@ function addNewValueToCustomAttribute(id, location_id, attribute_id, input_text,
 								}
 								else
 								{
-									alertify.error('Error');
+									alertify.error('Error, duplicate?');
 								}
 							}
 						};

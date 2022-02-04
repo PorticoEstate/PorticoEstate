@@ -335,6 +335,7 @@
 					{
 						$allocation[] = $r['id'];
 					}
+					/** Need the id's. text for ui is added later on **/
 					$errors['allocation'] = $allocation;
 				}
 
@@ -351,6 +352,7 @@
 					{
 						$booking[] = $r['id'];
 					}
+					/** Need the id's. text for ui is added later on **/
 					$errors['booking'] = $booking;
 				}
 			}

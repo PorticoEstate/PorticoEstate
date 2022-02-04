@@ -1395,7 +1395,7 @@ JS;
 				{
 					$contract->set_location_id($location_id); // only present when new contract
 				}
-				$contract->set_term_id(phpgw::get_var('billing_term'));
+				$contract->set_term_id(phpgw::get_var('billing_term', 'int'));
 				$contract->set_billing_start_date(phpgwapi_datetime::date_to_timestamp(phpgw::get_var('billing_start_date')));
 				$contract->set_billing_end_date(phpgwapi_datetime::date_to_timestamp(phpgw::get_var('billing_end_date')));
 				$contract->set_service_id(phpgw::get_var('service_id'));
@@ -2446,7 +2446,7 @@ JS;
 
 			/* $config	= CreateObject('phpgwapi.config','rental');
 			  $config->read(); */
-			$default_billing_term = $this->config->config_data['default_billing_term'];
+			$default_billing_term = (int)$this->config->config_data['default_billing_term'];
 
 			$contract->set_term_id($default_billing_term);
 
@@ -2554,7 +2554,7 @@ JS;
 					if ($success)
 					{
 						$db_contract->transaction_commit();
-						$message = lang(messages_new_contract_copied) . ' ' . $old_contract_old_id;
+						$message = lang('messages_new_contract_copied') . ' ' . $old_contract_old_id;
 						phpgwapi_cache::message_set($message, 'message');
 						//$this->edit(array('contract_id'=>$contract->get_id(), 'adjustment_id' => $adjustment_id));
 						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit',
@@ -2840,9 +2840,9 @@ JS;
 
 		public function add_notification()
 		{
-			$contract_id = (int)phpgw::get_var('contract_id');
-			$account_id = phpgw::get_var('notification_target');
-			$location_id = phpgw::get_var('notification_location');
+			$contract_id = phpgw::get_var('contract_id', 'int');
+			$account_id = phpgw::get_var('notification_target', 'int');
+			$location_id = phpgw::get_var('notification_location', 'int');
 			$date = phpgw::get_var('date_notification');
 
 			$so_contract = rental_socontract::get_instance();

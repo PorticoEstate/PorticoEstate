@@ -973,7 +973,8 @@
 							$sql = "SELECT * FROM controller_control_serie"
 								. " WHERE control_relation_id = {$relation_id}"
 								. " AND repeat_type = {$repeat_type}"
-								. " AND repeat_interval = {$repeat_interval}";
+								. " AND repeat_interval = {$repeat_interval}"
+								. " AND enabled = 1";
 							$this->db->query($sql, __LINE__, __FILE__);
 							$this->db->next_record();
 							$serie_id = $this->db->f('id');
@@ -993,8 +994,24 @@
 									'ids' => array($serie_id),
 									'action' => 'enable',
 								));
-								continue;
 							}
+							else
+							{
+								$values_insert = array(
+								'control_relation_id' => $relation_id,
+								'control_relation_type' => 'component',
+								'assigned_to' => $assigned_to,
+								'start_date' => $start_date,
+								'repeat_type' => $repeat_type,
+								'repeat_interval' => $repeat_interval,
+								'controle_time' => $controle_time,
+								'service_time' => $service_time,
+								);
+	
+								$this->db->query("INSERT INTO controller_control_serie (" . implode(',', array_keys($values_insert)) . ') VALUES ('
+									. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);	
+							}
+							continue;
 						}
 
 						$values_insert = array

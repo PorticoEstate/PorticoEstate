@@ -1,16 +1,39 @@
+/* global lang, event_id */
+
 var building_id_selection = "";
 $(document).ready(function ()
 {
+	//FIXME
+	//add
 	$("#start_date").change(function ()
 	{
 		var temp_end_date = $("#end_date").datetimepicker('getValue');
 		var temp_start_date = $("#start_date").datetimepicker('getValue');
-		if(!temp_end_date || (temp_end_date < temp_start_date))
+		if (!temp_end_date || (temp_end_date < temp_start_date))
 		{
-			$("#end_date").val($("#start_date").val());
+			$("#end_date").val('');
 
+			var minutesToAdd = 15;
+			var new_end_date = new Date(temp_start_date.getTime() + minutesToAdd * 60000);
 			$('#end_date').datetimepicker('setOptions', {
-				startDate: new Date(temp_start_date)
+				startDate: new Date(new_end_date)
+			});
+		}
+	});
+
+	//edit
+	$("#from_").change(function ()
+	{
+		var temp_end_date = $("#to_").datetimepicker('getValue');
+		var temp_start_date = $("#from_").datetimepicker('getValue');
+		if (!temp_end_date || (temp_end_date < temp_start_date))
+		{
+			$("#to_").val('');
+
+			var minutesToAdd = 15;
+			var new_end_date = new Date(temp_start_date.getTime() + minutesToAdd * 60000);
+			$('#to_').datetimepicker('setOptions', {
+				startDate: new Date(new_end_date)
 			});
 		}
 	});
@@ -80,9 +103,53 @@ $(document).ready(function ()
 			}
 		});
 	});
+
+	SendSms = function ()
+	{
+		r = confirm(lang['send sms'] + '?');
+
+		if (r !== true)
+		{
+			return;
+		}
+
+		oArgs = {menuaction: 'booking.uievent.send_sms_participants', id: event_id};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			data: {sms_content: $('#field_sms_content').val(), send_sms: true},
+			dataType: 'json',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data != null)
+				{
+					var message = data.message;
+
+					htmlString = "";
+					var msg_class = "msg_good";
+					if (data.status == 'error')
+					{
+						msg_class = "error";
+					}
+					htmlString += "<div class=\"" + msg_class + "\">";
+					htmlString += message;
+					htmlString += '</div>';
+					$("#sms_receipt").html(htmlString);
+					if (data.status == 'error')
+					{
+						setTimeout(function(){ $("#sms_receipt").html(''); }, 1000);
+					}
+				}
+			}
+		});
+
+	};
+
 });
 
-$(window).on('load', function()
+$(window).on('load', function ()
 {
 	var building_id = $('#field_building_id').val();
 	if (building_id)
@@ -265,4 +332,3 @@ function populateTableChk(url, container, colDefs)
 {
 	createTable(container, url, colDefs, '', 'pure-table pure-table-bordered');
 }
-

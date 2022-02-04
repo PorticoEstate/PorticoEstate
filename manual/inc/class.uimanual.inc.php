@@ -64,6 +64,58 @@
 //			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('help' => $GLOBALS['phpgw']->help->output));
 		}
 
+		
+		function help_file_exist()
+		{
+			$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$section = isset($GLOBALS['phpgw_info']['apps']['manual']['section']) ? $GLOBALS['phpgw_info']['apps']['manual']['section'] : '';
+			$referer = phpgw::get_var('menuaction');
+
+			if (!$section)
+			{
+				$menuaction = $referer;
+				if ($menuaction)
+				{
+					list($app_from_referer, $class, $method) = explode('.', $menuaction);
+					if (strpos($class, 'ui') === 0)
+					{
+						$class = ltrim($class, 'ui');
+					}
+					$section = "{$class}.{$method}";
+				}
+			}
+
+			if (!$app)
+			{
+				$app = isset($app_from_referer) && $app_from_referer ? $app_from_referer : 'manual';
+			}
+
+			$section = $section ? $section : 'overview';
+			$lang = strtoupper(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] : 'en');
+
+			$pdffile = PHPGW_SERVER_ROOT . "/{$app}/help/{$lang}/{$section}.pdf";
+
+			$file_exist = false;
+			if(is_file($pdffile))
+			{
+				$file_exist = true;
+			}
+			$odtfile = PHPGW_SERVER_ROOT . "/{$app}/help/{$lang}/{$section}.odt";
+
+
+			if (is_file($odtfile))
+			{
+				$file_exist = true;
+			}
+
+			return array(
+				'app' => $app,
+				'section' => $section,
+				'referer' => $referer,
+				'file_exist' => $file_exist
+			);
+		}
+		
 		function help()
 		{
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;

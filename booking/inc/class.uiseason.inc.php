@@ -16,6 +16,7 @@
 			'add' => true,
 			'show' => true,
 			'edit' => true,
+			'copy_season' => true,
 			'boundaries' => true,
 			'delete_boundary' => true,
 			'delete_wtemplate_alloc' => true,
@@ -69,6 +70,11 @@
 					'sorted_by' => array('key' => 5, 'dir' => 'desc'),//to_
 					'field' => array(
 						array(
+							'key' => 'id',
+							'label' => lang('id'),
+							'formatter' => 'JqueryPortico.formatLink'
+						),
+						array(
 							'key' => 'name',
 							'label' => lang('Season Name'),
 							'formatter' => 'JqueryPortico.formatLink'
@@ -102,6 +108,12 @@
 							'key' => 'status',
 							'label' => lang('Status')
 						),
+						array(
+							'key' => 'week_template',
+							'label' => lang('Week template')
+						),
+
+						
 					)
 				)
 			);
@@ -119,6 +131,8 @@
 		{
 			$seasons = $this->bo->read();
 			array_walk($seasons["results"], array($this, "_add_links"), "booking.uiseason.show");
+
+			$lang_week_template = lang('week template');
 
 			foreach ($seasons['results'] as &$season)
 			{
@@ -139,6 +153,8 @@
 					}
 					$season['resource_list'] = implode(', ', $temparray);
 				}
+
+				$season['week_template'] = "<a href = '" . self::link(array('menuaction' => 'booking.uiseason.wtemplate', 'id' => $season['id'])) . "'>{$lang_week_template}</a>";
 
 				$account_id = $GLOBALS['phpgw']->accounts->name2id($season['officer_name']);
 				if($account_id)
@@ -209,6 +225,44 @@
 			self::render_template_xsl('season_new', array('season' => $season, 'lang' => $lang));
 		}
 
+		public function copy_season()
+		{
+			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+			$season = $this->bo->read_single($id);
+			if(!$season)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
+
+			unset($season['id']);
+			$season['status'] = 'PLANNING';
+			$season['name'] = lang('copied from %1', $id) . ': ' . $season['name'];
+			$errors = $this->bo->validate($season);
+
+			if (!$errors)
+			{
+				try
+				{
+					$GLOBALS['phpgw']->db->transaction_begin();
+					$receipt = $this->bo->add($season);
+					$this->bo->copy_permissions($id, $receipt['id']);
+					$this->bo->copy_boundaries($id, $receipt['id']);
+					$this->bo->copy_wtemplate($id, $receipt['id']);
+					$GLOBALS['phpgw']->db->transaction_commit();
+					phpgwapi_cache::message_set(lang('season %1 copied to %2', $id, $receipt['id']));
+					self::redirect(array('menuaction' => 'booking.uiseason.edit', 'id' => $receipt['id']));
+				}
+				catch (booking_unauthorized_exception $e)
+				{
+					$errors['global'] = lang('Could not add object due to insufficient permissions');
+				}
+			}
+		}
+		
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
@@ -217,6 +271,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$season = $this->bo->read_single($id);
+			if(!$season)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$season['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$season['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
 					'id' => $season['building_id']));
@@ -286,6 +344,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$season = $this->bo->read_single($id);
+			if(!$season)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.index'));
 			$season['buildings_link'] = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$season['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',

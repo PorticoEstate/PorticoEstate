@@ -86,8 +86,7 @@
 		'd/m-Y' => 'd/m-Y',
 		'd/m/Y' => 'd/m/Y',
 		'd-m-Y' => 'd-m-Y',
-		'd.m.Y' => 'd.m.Y',
-		'd-M-Y' => 'd-M-Y'
+		'd.m.Y' => 'd.m.Y'
 	);
 	create_select_box('Date format','dateformat',$date_formats,
 		'How should phpGroupWare display dates for you.');
@@ -101,7 +100,7 @@
 
 	create_select_box('Country','country', phpgwapi_country::get_translated_list(),
 		'In which country are you. This is used to set certain defaults for you.');
-	
+
 	$langs = $GLOBALS['phpgw']->translation->get_installed_langs();
 	foreach ($langs as $key => $name)	// if we have a translation use it
 	{
@@ -110,10 +109,10 @@
 		{
 			$langs[$key] = $trans;
 		}
-	} 
+	}
 	create_select_box('Language','lang',$langs,
 		'Select the language of texts and messages within phpGroupWare.<br>Some languages may not contain all messages, in that case you will see an english message.');
-	
+
 	// preference.php handles this function
 	if (is_admin())
 	{
@@ -138,7 +137,7 @@
 
 	create_input_box('Currency','currency',
 		'Which currency symbol or name should be used in phpGroupWare.');
-		
+
 	$account_sels = array(
 		'selectbox' => lang('Selectbox'),
 		'popup'     => lang('Popup with search')
@@ -153,7 +152,7 @@
 	create_select_box('How do you like to display accounts','account_display',$account_display,
 		'Set this to your convenience. For security reasons, you might not want to show your Loginname in public.');
 
-	
+
 	$rteditors = array
 	(
 		'none'		=> lang('none'),

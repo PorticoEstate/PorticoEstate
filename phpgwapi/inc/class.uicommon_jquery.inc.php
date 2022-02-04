@@ -599,7 +599,7 @@
 		 * Initiate rich text editor for selected targets
 		 * @param array $targets
 		 */
-		public function rich_text_editor( $targets )
+		public static function rich_text_editor( $targets )
 		{
 			if (empty($GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor']))
 			{

@@ -10,3 +10,4 @@
 /vendor
 /phpgwapi/test/_output
 .vscode/launch.json
+/property/test_ad_bruker.php

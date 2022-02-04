@@ -65,12 +65,10 @@ class bookingfrontend_uieventsearch extends booking_uicommon
 		$config->read();
 		phpgwapi_jquery::load_widget("core");
 		phpgwapi_jquery::load_widget('daterangepicker');
-		$GLOBALS['phpgw']->css->add_external_file("phpgwapi/templates/aalesund/css/rubik-font.css");
+		$GLOBALS['phpgw']->css->add_external_file("phpgwapi/templates/base/css/rubik-font.css");
 
-
-
-		self::add_javascript('bookingfrontend', 'aalesund', 'event_search.js', 'text/javascript', true);
-		self::add_javascript('bookingfrontend', 'aalesund', 'util.js', 'text/javascript', true);
+		self::add_javascript('bookingfrontend', 'base', 'event_search.js', 'text/javascript', true);
+		self::add_javascript('bookingfrontend', 'base', 'util.js', 'text/javascript', true);
 		self::render_template_xsl('event_search', array('event_search' => $event_search));
 
 	}

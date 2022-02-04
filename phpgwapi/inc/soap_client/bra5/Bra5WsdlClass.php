@@ -211,10 +211,23 @@ class Bra5WsdlClass extends stdClass implements ArrayAccess,Iterator,Countable
      * It allows to return an object instantiated with the values
      * @uses Bra5WsdlClass::_set()
      * @param array $_array the exported values
+     * @return Bra5WsdlClass|null
+     */
+    public static function __set_state(array $_array)
+    {
+        return self::set_state_compatible($_array);
+    }
+
+    /**
+     * Generic method called when an object has been exported with var_export() functions
+     * It allows to return an object instantiated with the values
+	 * workarund to allow php8
+     * @uses Bra5WsdlClass::_set()
+     * @param array $_array the exported values
      * @param string $_className optional (used by inherited classes in order to always call this method)
      * @return Bra5WsdlClass|null
      */
-    public static function __set_state(array $_array,$_className = __CLASS__)
+	public static function set_state_compatible(array $_array,$_className = __CLASS__)
     {
         if(class_exists($_className))
         {

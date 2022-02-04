@@ -1,4 +1,26 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<xsl:variable name="lang_details">
+		<xsl:value-of select="php:function('lang', 'details')" />
+	</xsl:variable>
+	<xsl:variable name="lang_name">
+		<xsl:value-of select="php:function('lang', 'name')" />
+	</xsl:variable>
+	<xsl:variable name="lang_unit_price">
+		<xsl:value-of select="php:function('lang', 'unit price')" />
+	</xsl:variable>
+	<xsl:variable name="lang_quantity">
+		<xsl:value-of select="php:function('lang', 'quantity')" />
+	</xsl:variable>
+	<xsl:variable name="lang_amount">
+		<xsl:value-of select="php:function('lang', 'amount')" />
+	</xsl:variable>
+	<xsl:variable name="lang_tax">
+		<xsl:value-of select="php:function('lang', 'tax')" />
+	</xsl:variable>
+	<xsl:variable name="lang_sum">
+		<xsl:value-of select="php:function('lang', 'Sum')" />
+	</xsl:variable>
+
 	<style>
 		.modal-dialog,
 		.modal-content {
@@ -41,6 +63,8 @@
 					<div data-bind="visible: applicationCartItems().length != 0">
 						<div data-bind="foreach: applicationCartItems">
 							<div class="applications p-4 mb-2">
+								<input type="hidden" data-bind="value:id" name="application_id[]" class="application_id"/>
+
 								<div class="row">
 									<span class="col-5" data-bind="text: building_name"></span>
 									<div data-bind="" class="col-5">
@@ -54,8 +78,67 @@
 									<span class="col-5" data-bind="text: date"></span>
 									<span class="col-6" data-bind="text: periode"></span>
 								</div>
+
+
+								<table class='table' data-bind="foreach: orders">
+									<caption  style="caption-side:top">
+										<xsl:value-of select="$lang_details" />
+									</caption>
+									<tr>
+										<th>
+											<xsl:value-of select="$lang_name" />
+										</th>
+										<th>
+											<xsl:value-of select="$lang_unit_price" />
+										</th>
+										<th>
+											<xsl:value-of select="$lang_quantity" />
+										</th>
+										<th>
+											<xsl:value-of select="$lang_amount" />
+										</th>
+										<th>
+											<xsl:value-of select="$lang_tax" />
+										</th>
+										<th>
+											<xsl:value-of select="$lang_sum" />
+										</th>
+									</tr>
+									<tbody data-bind="foreach: lines">
+										<td data-bind="text: name"></td>
+										<td data-bind="text: unit_price"></td>
+										<td data-bind="text: quantity"></td>
+										<td data-bind="text: amount"></td>
+										<td data-bind="text: tax.toFixed(2)"></td>
+										<td data-bind="text: (tax + amount).toFixed(2)"></td>
+									</tbody>
+									<tfoot>
+										<tr>
+											<td>
+												<xsl:value-of select="$lang_sum" />
+											</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td data-bind="text: sum.toFixed(2)"></td>
+										</tr>
+									</tfoot>
+								</table>
 							</div>
 						</div>
+						<div id="total_sum_block" class="applications p-4 mb-2" style="display:none;">
+							<table class='table' >
+								<tr>
+									<th>
+										Total sum
+									</th>
+									<th id="total_sum">
+									</th>
+								</tr>
+							</table>
+						</div>
+
 						<hr class="mt-5 mb-5"></hr>
 						<div class="form-group">
 							<label>
@@ -117,15 +200,15 @@
 								<div class="invalid-feedback">
 									Vennligst velg en organisasjon.
 								</div>
-<!--
-								<label>
-									<a id="add_new_value" href="#" data-toggle="modal" data-target="#new_organization">
-										<img src="{add_img}" width="23"/>
-										<xsl:text> </xsl:text>
-										<xsl:value-of select="php:function('lang', 'new organization')"/>
-									</a>
-								</label>
--->
+								<!--
+																<label>
+																	<a id="add_new_value" href="#" data-toggle="modal" data-target="#new_organization">
+																		<img src="{add_img}" width="23"/>
+																		<xsl:text> </xsl:text>
+																		<xsl:value-of select="php:function('lang', 'new organization')"/>
+																	</a>
+																</label>
+								-->
 							</div>
 						</xsl:if>
 
@@ -226,9 +309,28 @@
 							</div>
 						</div>
 						<hr class="mt-5"></hr>
-						<button class="btn btn-light mb-5" type="submit" id="btnSubmit">
-							<xsl:value-of select="php:function('lang', 'send')" />
+						<button class="btn btn-light mb-5" type="button" id="btnValidate">
+							<xsl:value-of select="php:function('lang', 'validate')" />
 						</button>
+						<hr class="mt-5"></hr>
+						<div class="btn-group" style="display:none;" id="btnSubmitGroup">
+							<button type="button" class="btn btn-primary" id="btnSubmit">
+								<xsl:choose>
+									<xsl:when test="vipps_logo != ''">
+										Fakturering
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="php:function('lang', 'send')" />
+									</xsl:otherwise>
+								</xsl:choose>
+							</button>
+							<div id="external_payment_method">
+								<xsl:if test="vipps_logo != ''">
+									<img src="{vipps_logo}" class="ml-5" OnClick="initiate_payment('vipps');">
+									</img>
+								</xsl:if>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -269,19 +371,22 @@
 	<script>
 		var initialAcceptAllTerms = true;
 		var initialSelection = [];
-		var lang = <xsl:value-of select="php:function('js_lang', 'Do you want to delete application?')" />;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Do you want to delete application?', 'Send')" />;
+		var payment_order_id = '<xsl:value-of select="payment_order_id" />';
+		var selected_payment_method = '<xsl:value-of select="selected_payment_method" />';
+
 		<!-- Modal JQUERY logic -->
 
 		$('#new_organization').on('show.bs.modal', function (e)
 		{
-			var src_organization = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiorganization.add', nonavbar: true} );
-			$("#iframeorganization").attr("src", src_organization);
+		var src_organization = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiorganization.add', nonavbar: true} );
+		$("#iframeorganization").attr("src", src_organization);
 		});
 
 		$('#new_organization').on('hidden.bs.modal', function (e)
 		{
-			location.reload();
+		location.reload();
 		});
-		
+
 	</script>
 </xsl:template>

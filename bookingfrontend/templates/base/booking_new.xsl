@@ -129,7 +129,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'From')"/>
 						</label>
-						<input class="form-control datetime" id="field_from" type="text" name="from_">
+						<input class="form-control" id="from_date" type="text" name="from_">
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
@@ -145,7 +145,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'To')"/>
 						</label>
-						<input class="form-control" id="field_to" type="text" name="to_">
+						<input class="form-control" id="to_date" type="text" name="to_">
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
@@ -177,7 +177,10 @@
 							</input>
 							<xsl:value-of select="php:function('lang', 'Repeat until')" />
 						</div>
-						<input class="form-control" id="field_repeat_until" name="repeat_until" type="text">
+						<input class="form-control" id="repeat_date" name="repeat_until" type="text" autocomplete="off">
+							<xsl:attribute name="placeholder">
+								<xsl:value-of select="php:function('lang', 'Choose date')"/>
+							</xsl:attribute>
 							<xsl:attribute name="value">
 								<xsl:value-of select="repeat_until" />
 							</xsl:attribute>
@@ -280,11 +283,12 @@
 	</div>
 	<div class="push"></div>
 	<script>
-		var initialSelection = <xsl:value-of select="booking/resources_json" />;
+		var initialSelection = <xsl:value-of select="booking/resource_ids_json" />;
 		var initialAudience = <xsl:value-of select="booking/audience_json" />;
 		var initialSelectionAgegroup = <xsl:value-of select="booking/agegroups_json" />;
 		var building_id = <xsl:value-of select="booking/building_id"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resources Type')" />;
+
 
 		$(".maleInput").attr('data-bind', "textInput: inputCountMale, attr: {'name': malename }");
 		$(".femaleInput").attr('data-bind', "textInput: inputCountFemale, attr: {'name': femalename }");
@@ -293,7 +297,7 @@
 		bnm = new BookingNewModel();
 		ko.applyBindings(bnm, document.getElementById("booking-new-page-content"));
 
-		AddBookableResourceData(building_id, initialSelection, bnm.bookableresource);
+		AddBookableResourceDataWithinBooking(building_id, initialSelection, bnm.bookableresource);
 		AddAudiencesAndAgegroupData(building_id, bnm.agegroup, initialSelectionAgegroup, bnm.audiences, initialAudience);
 		bnm.audienceSelectedValue(<xsl:value-of select="booking/audience" />);
 	</script>

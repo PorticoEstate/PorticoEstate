@@ -22,7 +22,7 @@
 	* is stored in the array $send->err (see ../inc/email/global.inc.php for
 	* details on this variable).
 	*/
-	class send
+	class phpgwapi_send
 	{
 		var $err    = array('code','msg','desc');
 		var $to_res = array();

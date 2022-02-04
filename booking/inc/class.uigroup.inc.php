@@ -397,6 +397,12 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$group = $this->bo->read_single($id);
+
+			if(!$group)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
+
 			$group['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
 			$group['organization_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show',
 					'id' => $group['organization_id']));

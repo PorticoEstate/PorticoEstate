@@ -84,7 +84,8 @@
 		$GLOBALS['setup_tpl']->set_var('table', $table);
 		$GLOBALS['setup_tpl']->set_var('term',$term);
 
-		list($arr,$pk,$fk,$ix,$uc) = $GLOBALS['phpgw_setup']->process->sql_to_array($table);
+		$table_info = $GLOBALS['phpgw_setup']->process->sql_to_array($table);
+		list($arr,$pk,$fk,$ix,$uc) = $table_info;
 		$GLOBALS['setup_tpl']->set_var('arr',$arr);
 		if (count($pk) > 1)
 		{
@@ -111,11 +112,11 @@
 		{
 			$GLOBALS['setup_tpl']->set_var('fks','');
 		}
-		if (count($ix) > 1)
+		if (is_array($ix) && count($ix) > 0 )
 		{
 			foreach($ix as $entry)
 			{
-				if(count($entry) > 1)
+				if(is_array($entry) &&  count($entry) > 1)
 				{
 					$ix_temp[] = "array('" . implode("','",$entry) . "')";
 				}
@@ -124,6 +125,7 @@
 					$ix_temp[] = "array('{$entry}')";
 				}
 			}
+			unset($entry);
 			$GLOBALS['setup_tpl']->set_var('ixs', implode(",",$ix_temp));
 		}
 		elseif($ix && !empty($ix))

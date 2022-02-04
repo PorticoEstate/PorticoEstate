@@ -1,5 +1,5 @@
 /*!
- * Chart.js v3.2.1
+ * Chart.js v3.6.0
  * https://www.chartjs.org
  * (c) 2021 Chart.js Contributors
  * Released under the MIT License
@@ -32,19 +32,22 @@ function throttled(fn, thisArg, updateFn) {
 }
 function debounce(fn, delay) {
   let timeout;
-  return function() {
+  return function(...args) {
     if (delay) {
       clearTimeout(timeout);
-      timeout = setTimeout(fn, delay);
+      timeout = setTimeout(fn, delay, args);
     } else {
-      fn();
+      fn.apply(this, args);
     }
     return delay;
   };
 }
 const _toLeftRightCenter = (align) => align === 'start' ? 'left' : align === 'end' ? 'right' : 'center';
 const _alignStartEnd = (align, start, end) => align === 'start' ? start : align === 'end' ? end : (start + end) / 2;
-const _textX = (align, left, right) => align === 'right' ? right : align === 'center' ? (left + right) / 2 : left;
+const _textX = (align, left, right, rtl) => {
+  const check = rtl ? 'left' : 'right';
+  return align === check ? right : align === 'center' ? (left + right) / 2 : left;
+};
 
 function noop() {}
 const uid = (function() {
@@ -243,6 +246,8 @@ const TWO_THIRDS_PI = PI * 2 / 3;
 const log10 = Math.log10;
 const sign = Math.sign;
 function niceNum(range) {
+  const roundedRange = Math.round(range);
+  range = almostEquals(range, roundedRange, range / 1000) ? roundedRange : range;
   const niceRange = Math.pow(10, Math.floor(log10(range)));
   const fraction = range / niceRange;
   const niceFraction = fraction <= 1 ? 1 : fraction <= 2 ? 2 : fraction <= 5 ? 5 : 10;
@@ -324,7 +329,7 @@ function _angleDiff(a, b) {
 function _normalizeAngle(a) {
   return (a % TAU + TAU) % TAU;
 }
-function _angleBetween(angle, start, end) {
+function _angleBetween(angle, start, end, sameAngleIsFullCircle) {
   const a = _normalizeAngle(angle);
   const s = _normalizeAngle(start);
   const e = _normalizeAngle(end);
@@ -332,7 +337,8 @@ function _angleBetween(angle, start, end) {
   const angleToEnd = _normalizeAngle(e - a);
   const startToAngle = _normalizeAngle(a - s);
   const endToAngle = _normalizeAngle(a - e);
-  return a === s || a === e || (angleToStart > angleToEnd && startToAngle < endToAngle);
+  return a === s || a === e || (sameAngleIsFullCircle && s === e)
+    || (angleToStart > angleToEnd && startToAngle < endToAngle);
 }
 function _limitValue(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -1274,8 +1280,8 @@ function drawPoint(ctx, options, x, y) {
 }
 function _isPointInArea(point, area, margin) {
   margin = margin || 0.5;
-  return point && point.x > area.left - margin && point.x < area.right + margin &&
-		point.y > area.top - margin && point.y < area.bottom + margin;
+  return !area || (point && point.x > area.left - margin && point.x < area.right + margin &&
+		point.y > area.top - margin && point.y < area.bottom + margin);
 }
 function clipArea(ctx, area) {
   ctx.save();
@@ -1318,22 +1324,8 @@ function renderText(ctx, text, x, y, font, opts = {}) {
   const stroke = opts.strokeWidth > 0 && opts.strokeColor !== '';
   let i, line;
   ctx.save();
-  if (opts.translation) {
-    ctx.translate(opts.translation[0], opts.translation[1]);
-  }
-  if (!isNullOrUndef(opts.rotation)) {
-    ctx.rotate(opts.rotation);
-  }
   ctx.font = font.string;
-  if (opts.color) {
-    ctx.fillStyle = opts.color;
-  }
-  if (opts.textAlign) {
-    ctx.textAlign = opts.textAlign;
-  }
-  if (opts.textBaseline) {
-    ctx.textBaseline = opts.textBaseline;
-  }
+  setRenderOpts(ctx, opts);
   for (i = 0; i < lines.length; ++i) {
     line = lines[i];
     if (stroke) {
@@ -1346,23 +1338,43 @@ function renderText(ctx, text, x, y, font, opts = {}) {
       ctx.strokeText(line, x, y, opts.maxWidth);
     }
     ctx.fillText(line, x, y, opts.maxWidth);
-    if (opts.strikethrough || opts.underline) {
-      const metrics = ctx.measureText(line);
-      const left = x - metrics.actualBoundingBoxLeft;
-      const right = x + metrics.actualBoundingBoxRight;
-      const top = y - metrics.actualBoundingBoxAscent;
-      const bottom = y + metrics.actualBoundingBoxDescent;
-      const yDecoration = opts.strikethrough ? (top + bottom) / 2 : bottom;
-      ctx.strokeStyle = ctx.fillStyle;
-      ctx.beginPath();
-      ctx.lineWidth = opts.decorationWidth || 2;
-      ctx.moveTo(left, yDecoration);
-      ctx.lineTo(right, yDecoration);
-      ctx.stroke();
-    }
+    decorateText(ctx, x, y, line, opts);
     y += font.lineHeight;
   }
   ctx.restore();
+}
+function setRenderOpts(ctx, opts) {
+  if (opts.translation) {
+    ctx.translate(opts.translation[0], opts.translation[1]);
+  }
+  if (!isNullOrUndef(opts.rotation)) {
+    ctx.rotate(opts.rotation);
+  }
+  if (opts.color) {
+    ctx.fillStyle = opts.color;
+  }
+  if (opts.textAlign) {
+    ctx.textAlign = opts.textAlign;
+  }
+  if (opts.textBaseline) {
+    ctx.textBaseline = opts.textBaseline;
+  }
+}
+function decorateText(ctx, x, y, line, opts) {
+  if (opts.strikethrough || opts.underline) {
+    const metrics = ctx.measureText(line);
+    const left = x - metrics.actualBoundingBoxLeft;
+    const right = x + metrics.actualBoundingBoxRight;
+    const top = y - metrics.actualBoundingBoxAscent;
+    const bottom = y + metrics.actualBoundingBoxDescent;
+    const yDecoration = opts.strikethrough ? (top + bottom) / 2 : bottom;
+    ctx.strokeStyle = ctx.fillStyle;
+    ctx.beginPath();
+    ctx.lineWidth = opts.decorationWidth || 2;
+    ctx.moveTo(left, yDecoration);
+    ctx.lineTo(right, yDecoration);
+    ctx.stroke();
+  }
 }
 function addRoundedRectPath(ctx, rect) {
   const {x, y, w, h, radius} = rect;
@@ -1467,12 +1479,17 @@ function resolve(inputs, context, index, info) {
     }
   }
 }
-function _addGrace(minmax, grace) {
+function _addGrace(minmax, grace, beginAtZero) {
   const {min, max} = minmax;
+  const change = toDimension(grace, (max - min) / 2);
+  const keepZero = (value, add) => beginAtZero && value === 0 ? 0 : value + add;
   return {
-    min: min - Math.abs(toDimension(grace, min)),
-    max: max + toDimension(grace, max)
+    min: keepZero(min, -Math.abs(change)),
+    max: keepZero(max, change)
   };
+}
+function createContext(parentContext, context) {
+  return Object.assign(Object.create(parentContext), context);
 }
 
 function _lookup(table, value, cmp) {
@@ -1565,11 +1582,7 @@ function _arrayUnique(items) {
   if (set.size === ilen) {
     return items;
   }
-  const result = [];
-  set.forEach(item => {
-    result.push(item);
-  });
-  return result;
+  return Array.from(set);
 }
 
 function _createResolver(scopes, prefixes = [''], rootScopes = scopes, fallback, getTarget = () => scopes[0]) {
@@ -1672,14 +1685,11 @@ function _descriptors(proxy, defaults = {scriptable: true, indexable: true}) {
 const readKey = (prefix, name) => prefix ? prefix + _capitalize(name) : name;
 const needsSubResolver = (prop, value) => isObject(value) && prop !== 'adapters';
 function _cached(target, prop, resolve) {
-  let value = target[prop];
-  if (defined(value)) {
-    return value;
+  if (Object.prototype.hasOwnProperty.call(target, prop)) {
+    return target[prop];
   }
-  value = resolve();
-  if (defined(value)) {
-    target[prop] = value;
-  }
+  const value = resolve();
+  target[prop] = value;
   return value;
 }
 function _resolveWithContext(target, prop, receiver) {
@@ -1699,7 +1709,7 @@ function _resolveWithContext(target, prop, receiver) {
 function _resolveScriptable(prop, value, target, receiver) {
   const {_proxy, _context, _subProxy, _stack} = target;
   if (_stack.has(prop)) {
-    throw new Error('Recursion detected: ' + [..._stack].join('->') + '->' + prop);
+    throw new Error('Recursion detected: ' + Array.from(_stack).join('->') + '->' + prop);
   }
   _stack.add(prop);
   value = value(_context, _subProxy || receiver);
@@ -1760,19 +1770,25 @@ function createSubResolver(parentScopes, resolver, prop, value) {
       return false;
     }
   }
-  return _createResolver([...set], [''], rootScopes, fallback, () => {
-    const parent = resolver._getTarget();
-    if (!(prop in parent)) {
-      parent[prop] = {};
-    }
-    return parent[prop];
-  });
+  return _createResolver(Array.from(set), [''], rootScopes, fallback,
+    () => subGetTarget(resolver, prop, value));
 }
 function addScopesFromKey(set, allScopes, key, fallback) {
   while (key) {
     key = addScopes(set, allScopes, key, fallback);
   }
   return key;
+}
+function subGetTarget(resolver, prop, value) {
+  const parent = resolver._getTarget();
+  if (!(prop in parent)) {
+    parent[prop] = {};
+  }
+  const target = parent[prop];
+  if (isArray(target) && isObject(value)) {
+    return value;
+  }
+  return target;
 }
 function _resolveWithPrefixes(prop, prefixes, scopes, proxy) {
   let value;
@@ -1810,11 +1826,12 @@ function resolveKeysFromAllScopes(scopes) {
       set.add(key);
     }
   }
-  return [...set];
+  return Array.from(set);
 }
 
 const EPSILON = Number.EPSILON || 1e-14;
 const getPoint = (points, i) => i < points.length && !points[i].skip && points[i];
+const getValueAxis = (indexAxis) => indexAxis === 'x' ? 'y' : 'x';
 function splineCurve(firstPoint, middlePoint, afterPoint, t) {
   const previous = firstPoint.skip ? middlePoint : firstPoint;
   const current = middlePoint;
@@ -1863,9 +1880,10 @@ function monotoneAdjust(points, deltaK, mK) {
     mK[i + 1] = betaK * tauK * deltaK[i];
   }
 }
-function monotoneCompute(points, mK) {
+function monotoneCompute(points, mK, indexAxis = 'x') {
+  const valueAxis = getValueAxis(indexAxis);
   const pointsLen = points.length;
-  let deltaX, pointBefore, pointCurrent;
+  let delta, pointBefore, pointCurrent;
   let pointAfter = getPoint(points, 0);
   for (let i = 0; i < pointsLen; ++i) {
     pointBefore = pointCurrent;
@@ -1874,20 +1892,22 @@ function monotoneCompute(points, mK) {
     if (!pointCurrent) {
       continue;
     }
-    const {x, y} = pointCurrent;
+    const iPixel = pointCurrent[indexAxis];
+    const vPixel = pointCurrent[valueAxis];
     if (pointBefore) {
-      deltaX = (x - pointBefore.x) / 3;
-      pointCurrent.cp1x = x - deltaX;
-      pointCurrent.cp1y = y - deltaX * mK[i];
+      delta = (iPixel - pointBefore[indexAxis]) / 3;
+      pointCurrent[`cp1${indexAxis}`] = iPixel - delta;
+      pointCurrent[`cp1${valueAxis}`] = vPixel - delta * mK[i];
     }
     if (pointAfter) {
-      deltaX = (pointAfter.x - x) / 3;
-      pointCurrent.cp2x = x + deltaX;
-      pointCurrent.cp2y = y + deltaX * mK[i];
+      delta = (pointAfter[indexAxis] - iPixel) / 3;
+      pointCurrent[`cp2${indexAxis}`] = iPixel + delta;
+      pointCurrent[`cp2${valueAxis}`] = vPixel + delta * mK[i];
     }
   }
 }
-function splineCurveMonotone(points) {
+function splineCurveMonotone(points, indexAxis = 'x') {
+  const valueAxis = getValueAxis(indexAxis);
   const pointsLen = points.length;
   const deltaK = Array(pointsLen).fill(0);
   const mK = Array(pointsLen);
@@ -1901,8 +1921,8 @@ function splineCurveMonotone(points) {
       continue;
     }
     if (pointAfter) {
-      const slopeDeltaX = (pointAfter.x - pointCurrent.x);
-      deltaK[i] = slopeDeltaX !== 0 ? (pointAfter.y - pointCurrent.y) / slopeDeltaX : 0;
+      const slopeDelta = pointAfter[indexAxis] - pointCurrent[indexAxis];
+      deltaK[i] = slopeDelta !== 0 ? (pointAfter[valueAxis] - pointCurrent[valueAxis]) / slopeDelta : 0;
     }
     mK[i] = !pointBefore ? deltaK[i]
       : !pointAfter ? deltaK[i - 1]
@@ -1910,7 +1930,7 @@ function splineCurveMonotone(points) {
       : (deltaK[i - 1] + deltaK[i]) / 2;
   }
   monotoneAdjust(points, deltaK, mK);
-  monotoneCompute(points, mK);
+  monotoneCompute(points, mK, indexAxis);
 }
 function capControlPoint(pt, min, max) {
   return Math.max(Math.min(pt, max), min);
@@ -1936,13 +1956,13 @@ function capBezierPoints(points, area) {
     }
   }
 }
-function _updateBezierControlPoints(points, options, area, loop) {
+function _updateBezierControlPoints(points, options, area, loop, indexAxis) {
   let i, ilen, point, controlPoints;
   if (options.spanGaps) {
     points = points.filter((pt) => !pt.skip);
   }
   if (options.cubicInterpolationMode === 'monotone') {
-    splineCurveMonotone(points);
+    splineCurveMonotone(points, indexAxis);
   } else {
     let prev = loop ? points[points.length - 1] : points[0];
     for (i = 0, ilen = points.length; i < ilen; ++i) {
@@ -1965,6 +1985,9 @@ function _updateBezierControlPoints(points, options, area, loop) {
   }
 }
 
+function _isDomSupported() {
+  return typeof window !== 'undefined' && typeof document !== 'undefined';
+}
 function _getParentNode(domNode) {
   let parent = domNode.parentNode;
   if (parent && parent.toString() === '[object ShadowRoot]') {
@@ -2090,15 +2113,26 @@ function getMaximumSize(canvas, bbWidth, bbHeight, aspectRatio) {
   };
 }
 function retinaScale(chart, forceRatio, forceStyle) {
-  const pixelRatio = chart.currentDevicePixelRatio = forceRatio || 1;
-  const {canvas, width, height} = chart;
-  canvas.height = height * pixelRatio;
-  canvas.width = width * pixelRatio;
-  chart.ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+  const pixelRatio = forceRatio || 1;
+  const deviceHeight = Math.floor(chart.height * pixelRatio);
+  const deviceWidth = Math.floor(chart.width * pixelRatio);
+  chart.height = deviceHeight / pixelRatio;
+  chart.width = deviceWidth / pixelRatio;
+  const canvas = chart.canvas;
   if (canvas.style && (forceStyle || (!canvas.style.height && !canvas.style.width))) {
-    canvas.style.height = height + 'px';
-    canvas.style.width = width + 'px';
+    canvas.style.height = `${chart.height}px`;
+    canvas.style.width = `${chart.width}px`;
   }
+  if (chart.currentDevicePixelRatio !== pixelRatio
+      || canvas.height !== deviceHeight
+      || canvas.width !== deviceWidth) {
+    chart.currentDevicePixelRatio = pixelRatio;
+    canvas.height = deviceHeight;
+    canvas.width = deviceWidth;
+    chart.ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    return true;
+  }
+  return false;
 }
 const supportsEventListenerOptions = (function() {
   let passiveSupported = false;
@@ -2291,6 +2325,9 @@ function _boundSegment(segment, points, bounds) {
       continue;
     }
     value = normalize(point[property]);
+    if (value === prevValue) {
+      continue;
+    }
     inside = between(value, startBound, endBound);
     if (subStart === null && shouldStart()) {
       subStart = compare(value, startBound) === 0 ? i : prev;
@@ -2376,40 +2413,67 @@ function _computeSegments(line, segmentOptions) {
   const loop = !!line._loop;
   const {start, end} = findStartAndEnd(points, count, loop, spanGaps);
   if (spanGaps === true) {
-    return splitByStyles([{start, end, loop}], points, segmentOptions);
+    return splitByStyles(line, [{start, end, loop}], points, segmentOptions);
   }
   const max = end < start ? end + count : end;
   const completeLoop = !!line._fullLoop && start === 0 && end === count - 1;
-  return splitByStyles(solidSegments(points, start, max, completeLoop), points, segmentOptions);
+  return splitByStyles(line, solidSegments(points, start, max, completeLoop), points, segmentOptions);
 }
-function splitByStyles(segments, points, segmentOptions) {
+function splitByStyles(line, segments, points, segmentOptions) {
   if (!segmentOptions || !segmentOptions.setContext || !points) {
     return segments;
   }
-  return doSplitByStyles(segments, points, segmentOptions);
+  return doSplitByStyles(line, segments, points, segmentOptions);
 }
-function doSplitByStyles(segments, points, segmentOptions) {
+function doSplitByStyles(line, segments, points, segmentOptions) {
+  const chartContext = line._chart.getContext();
+  const baseStyle = readStyle(line.options);
+  const {_datasetIndex: datasetIndex, options: {spanGaps}} = line;
   const count = points.length;
   const result = [];
+  let prevStyle = baseStyle;
   let start = segments[0].start;
   let i = start;
+  function addStyle(s, e, l, st) {
+    const dir = spanGaps ? -1 : 1;
+    if (s === e) {
+      return;
+    }
+    s += count;
+    while (points[s % count].skip) {
+      s -= dir;
+    }
+    while (points[e % count].skip) {
+      e += dir;
+    }
+    if (s % count !== e % count) {
+      result.push({start: s % count, end: e % count, loop: l, style: st});
+      prevStyle = st;
+      start = e % count;
+    }
+  }
   for (const segment of segments) {
-    let prevStyle, style;
+    start = spanGaps ? start : segment.start;
     let prev = points[start % count];
+    let style;
     for (i = start + 1; i <= segment.end; i++) {
       const pt = points[i % count];
-      style = readStyle(segmentOptions.setContext({type: 'segment', p0: prev, p1: pt}));
+      style = readStyle(segmentOptions.setContext(createContext(chartContext, {
+        type: 'segment',
+        p0: prev,
+        p1: pt,
+        p0DataIndex: (i - 1) % count,
+        p1DataIndex: i % count,
+        datasetIndex
+      })));
       if (styleChanged(style, prevStyle)) {
-        result.push({start: start, end: i - 1, loop: segment.loop, style: prevStyle});
-        prevStyle = style;
-        start = i - 1;
+        addStyle(start, i - 1, segment.loop, prevStyle);
       }
       prev = pt;
       prevStyle = style;
     }
     if (start < i - 1) {
-      result.push({start, end: i - 1, loop: segment.loop, style});
-      start = i - 1;
+      addStyle(start, i - 1, segment.loop, prevStyle);
     }
   }
   return result;
@@ -2429,4 +2493,4 @@ function styleChanged(style, prevStyle) {
   return prevStyle && JSON.stringify(style) !== JSON.stringify(prevStyle);
 }
 
-export { merge as $, _isPointInArea as A, _rlookupByKey as B, toPadding as C, each as D, getMaximumSize as E, _getParentNode as F, readUsedSize as G, HALF_PI as H, throttled as I, supportsEventListenerOptions as J, log10 as K, _factorize as L, finiteOrDefault as M, callback as N, _addGrace as O, PI as P, toDegrees as Q, _measureText as R, _int16Range as S, TAU as T, _alignPixel as U, renderText as V, toFont as W, _toLeftRightCenter as X, _alignStartEnd as Y, overrides as Z, _arrayUnique as _, resolve as a, _capitalize as a0, descriptors as a1, isFunction as a2, _attachContext as a3, _createResolver as a4, _descriptors as a5, mergeIf as a6, uid as a7, debounce as a8, retinaScale as a9, niceNum as aA, almostWhole as aB, almostEquals as aC, _decimalPlaces as aD, _longestText as aE, _filterBetween as aF, _lookup as aG, getHoverColor as aH, clone$1 as aI, _merger as aJ, _mergerIf as aK, _deprecated as aL, toFontString as aM, splineCurve as aN, splineCurveMonotone as aO, getStyle as aP, fontString as aQ, toLineHeight as aR, PITAU as aS, INFINITY as aT, RAD_PER_DEG as aU, QUARTER_PI as aV, TWO_THIRDS_PI as aW, _angleDiff as aX, clearCanvas as aa, setsEqual as ab, _elementsEqual as ac, getAngleFromPoint as ad, _readValueToProps as ae, _updateBezierControlPoints as af, _computeSegments as ag, _boundSegments as ah, _steppedInterpolation as ai, _bezierInterpolation as aj, _pointInLine as ak, _steppedLineTo as al, _bezierCurveTo as am, drawPoint as an, addRoundedRectPath as ao, toTRBL as ap, toTRBLCorners as aq, _boundSegment as ar, _normalizeAngle as as, getRtlAdapter as at, overrideTextDirection as au, _textX as av, restoreTextDirection as aw, noop as ax, distanceBetweenPoints as ay, _setMinAndMaxByKey as az, isArray as b, color as c, defaults as d, effects as e, resolveObjectKey as f, isNumberFinite as g, defined as h, isObject as i, isNullOrUndef as j, clipArea as k, listenArrayEvents as l, unclipArea as m, toPercentage as n, toDimension as o, formatNumber as p, _angleBetween as q, requestAnimFrame as r, sign as s, toRadians as t, unlistenArrayEvents as u, valueOrDefault as v, isNumber as w, _limitValue as x, _lookupByKey as y, getRelativePosition as z };
+export { _alignStartEnd as $, _rlookupByKey as A, toPadding as B, each as C, getMaximumSize as D, _getParentNode as E, readUsedSize as F, throttled as G, HALF_PI as H, supportsEventListenerOptions as I, _isDomSupported as J, log10 as K, _factorize as L, finiteOrDefault as M, callback as N, _addGrace as O, PI as P, toDegrees as Q, _measureText as R, _int16Range as S, TAU as T, _alignPixel as U, clipArea as V, renderText as W, unclipArea as X, toFont as Y, _toLeftRightCenter as Z, _arrayUnique as _, resolve as a, overrides as a0, merge as a1, _capitalize as a2, descriptors as a3, isFunction as a4, _attachContext as a5, _createResolver as a6, _descriptors as a7, mergeIf as a8, uid as a9, distanceBetweenPoints as aA, _setMinAndMaxByKey as aB, niceNum as aC, almostWhole as aD, almostEquals as aE, _decimalPlaces as aF, _longestText as aG, _filterBetween as aH, _lookup as aI, getHoverColor as aJ, clone$1 as aK, _merger as aL, _mergerIf as aM, _deprecated as aN, toFontString as aO, splineCurve as aP, splineCurveMonotone as aQ, getStyle as aR, fontString as aS, toLineHeight as aT, PITAU as aU, INFINITY as aV, RAD_PER_DEG as aW, QUARTER_PI as aX, TWO_THIRDS_PI as aY, _angleDiff as aZ, debounce as aa, retinaScale as ab, clearCanvas as ac, setsEqual as ad, _elementsEqual as ae, getAngleFromPoint as af, _readValueToProps as ag, _updateBezierControlPoints as ah, _computeSegments as ai, _boundSegments as aj, _steppedInterpolation as ak, _bezierInterpolation as al, _pointInLine as am, _steppedLineTo as an, _bezierCurveTo as ao, drawPoint as ap, addRoundedRectPath as aq, toTRBL as ar, toTRBLCorners as as, _boundSegment as at, _normalizeAngle as au, getRtlAdapter as av, overrideTextDirection as aw, _textX as ax, restoreTextDirection as ay, noop as az, isArray as b, color as c, defaults as d, effects as e, resolveObjectKey as f, isNumberFinite as g, createContext as h, isObject as i, defined as j, isNullOrUndef as k, listenArrayEvents as l, toPercentage as m, toDimension as n, formatNumber as o, _angleBetween as p, isNumber as q, requestAnimFrame as r, sign as s, toRadians as t, unlistenArrayEvents as u, valueOrDefault as v, _limitValue as w, _lookupByKey as x, getRelativePosition as y, _isPointInArea as z };

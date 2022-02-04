@@ -309,7 +309,7 @@
 		 * Validate external safe login - and return to me
 		 * @param array $redirect
 		 */
-		public function validate_ssn_login( $redirect = array())
+		public function validate_ssn_login( $redirect = array(), $skip_redirect = false)
 		{
 			static $user_data = array();
 			if(!$user_data)
@@ -358,6 +358,11 @@
 			}
 			catch (sfValidatorError $e)
 			{
+				if($skip_redirect)
+				{
+					return array();
+				}
+
 				if(phpgw::get_var('second_redirect', 'bool'))
 				{
 					phpgw::no_access($this->current_app(), 'Du må logge inn via ID-porten');

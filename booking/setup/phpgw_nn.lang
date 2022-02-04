@@ -101,7 +101,7 @@ go back to the template week	booking	nn	Gå attende til vekeplan
 group	booking	nn	Gruppe/Lag
 history and comments (%1)	booking	nn	Historikk (%1)
 History of Cost (%1)	booking	nn	Prishistorikk (%1)
-cost is set	booking	nn	Ny pris er angitt
+cost is set	booking	nn	Ny pris er definert
 cost comment	booking	nn	Kommentar til ny pris
 hms document	booking	nn	HMS dokument
 homepage	booking	nn	Heimeside
@@ -245,7 +245,7 @@ New Account Codes	booking	nn	Ny konteringsstreng
 Create allocation	booking	nn	Lag tildeling
 Create booking	booking	nn	Lag interntildeling
 Create event	booking	nn	Lag arrangement
-Event was created	booking	nn	Arrangementet ble opprettet
+Event was created	booking	nn	Arrangementet vart oppretta
 Loading...	booking	nn	Lastar ned...
 Back to season	booking	nn	Gå attende til sesong
 Field %1 is required	booking	nn	Feltet '%1' må fyllast ut
@@ -256,7 +256,7 @@ External	booking	nn	Ekstern
 Start date must be after %1	booking	nn	Frådato må vere etter %1
 To date must be before %1	booking	nn	Tildato må vere før %1
 Add Activity	booking	nn	Ny Aktivitet
-Completed	booking	nn	Klar for fakturering
+completed reservations	booking	nn	Klar for fakturering
 1 day	booking	nn	1 dag
 1 week	booking	nn	1 veke
 2 weeks	booking	nn	2 veker
@@ -451,8 +451,8 @@ Send to contact for overlaping allocations/bookings	booking	nn	Send melding til 
 Message sent about the changes in the reservations	booking	nn	Melding sendt om endringar på reserverasjoner
 There are changes to your reservations	booking	nn	Din reserverasjon har vorte endra
 Multiple Events was created	booking	nn	Fleire arrangementer er oppretta
-Event created, Overlaps with existing allocation, Remember to send a notification	booking	nn	Arrangement oppretta. Overlapper ein eksisterande tildeling. Hugs å sende varsel
-Event created, Overlaps with existing booking, Remember to send a notification	booking	nn	Arrangement oppretta. Overlapper ein eksisterende booking. Hugs å sende varsel
+Overlaps with existing allocation %1. Remember to send a notification	booking	nn	Overlapper en eksisterende tildeling %1. Husk å sende varsel
+Overlaps with existing booking %1. Remember to send a notification	booking	nn	Overlapper en eksisterende interntildeling %1. Husk å sende varsel
 Print as PDF	booking	nn	Skriv ut som PDF
 Pending	booking	nn	UNDER HANDSAMING
 This booking is not connected to a season	booking	nn	Denne bookingen er ikkje kobla mot sesong
@@ -859,3 +859,27 @@ enable upload attachment	booking nn	Aktiver opplasting av vedlegg
 minutes	booking	no	Minutt
 limit number	booking	no	Begrensning på antall
 limit number horizont	booking	no	Begrensningshorisont (dager)
+update service-resource-mapping?	booking	nn	Oppdatere kopling av tenesten til valde ressursar?
+mapping updated	booking	nn	Kobling er oppdatert
+mapping	booking	nn	Kopling
+unit price	booking	no	Einingspris
+quantity	booking	no	Mengde
+amount	booking	no	Beløp
+tax	booking	no	Mva
+sum	booking	no	Sum
+details	booking	no	Detaljar
+currency	booking	nn	Valuta
+payment method	booking	nn	Refundér
+refunded	booking	nn	Refundert
+payments	booking	nn	Betalingar
+interrupted	booking	nn	Kansellert
+completed	booking	nn	Fullført
+partially refunded	booking	nn	Delvis refundert
+articles	booking	nn	Artiklar
+missing entry. Id %1 is invalid	booking	nn	Denne posten finst ikkje. Id %1 er ugyldig
+my assigned buildings	booking	nn	*Mine bygningar
+my assigned applications	booking	nn	*Mine søknader
+send sms	booking	nn	send SMS
+season %1 copied to %2	booking	nn	Sesong %1 kopiert til %2
+copied from %1	booking	nn	kopiert frå %1
+update user address	booking	nn	Oppdater kundeadresser

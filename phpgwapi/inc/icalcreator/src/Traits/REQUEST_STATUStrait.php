@@ -2,32 +2,31 @@
 /**
  * iCalcreator, the PHP class package managing iCal (rfc2445/rfc5445) calendar information.
  *
- * copyright (c) 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
- * Link      https://kigkonsult.se
- * Package   iCalcreator
- * Version   2.30
- * License   Subject matter of licence is the software iCalcreator.
- *           The above copyright, link, package and version notices,
- *           this licence notice and the invariant [rfc5545] PRODID result use
- *           as implemented and invoked in iCalcreator shall be included in
- *           all copies or substantial portions of the iCalcreator.
- *
- *           iCalcreator is free software: you can redistribute it and/or modify
- *           it under the terms of the GNU Lesser General Public License as published
- *           by the Free Software Foundation, either version 3 of the License,
- *           or (at your option) any later version.
- *
- *           iCalcreator is distributed in the hope that it will be useful,
- *           but WITHOUT ANY WARRANTY; without even the implied warranty of
- *           MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *           GNU Lesser General Public License for more details.
- *
- *           You should have received a copy of the GNU Lesser General Public License
- *           along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
- *
  * This file is a part of iCalcreator.
-*/
-
+ *
+ * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @link      https://kigkonsult.se
+ * @license   Subject matter of licence is the software iCalcreator.
+ *            The above copyright, link, package and version notices,
+ *            this licence notice and the invariant [rfc5545] PRODID result use
+ *            as implemented and invoked in iCalcreator shall be included in
+ *            all copies or substantial portions of the iCalcreator.
+ *
+ *            iCalcreator is free software: you can redistribute it and/or modify
+ *            it under the terms of the GNU Lesser General Public License as
+ *            published by the Free Software Foundation, either version 3 of
+ *            the License, or (at your option) any later version.
+ *
+ *            iCalcreator is distributed in the hope that it will be useful,
+ *            but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *            GNU Lesser General Public License for more details.
+ *
+ *            You should have received a copy of the GNU Lesser General Public License
+ *            along with iCalcreator. If not, see <https://www.gnu.org/licenses/>.
+ */
+declare( strict_types = 1 );
 namespace Kigkonsult\Icalcreator\Traits;
 
 use Kigkonsult\Icalcreator\Util\StringFactory;
@@ -43,15 +42,14 @@ use function var_export;
 /**
  * REQUEST-STATUS property functions
  *
- * @author Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
  * @since 2.29.14 2019-09-03
  */
 trait REQUEST_STATUStrait
 {
     /**
-     * @var array component property REQUEST-STATUS value
+     * @var null|array component property REQUEST-STATUS value
      */
-    protected $requeststatus = null;
+    protected ?array $requeststatus = null;
 
     /**
      * Return formatted output for calendar component property request-status
@@ -59,14 +57,14 @@ trait REQUEST_STATUStrait
      * @return string
      * @since 2.29.9 2019-08-05
      */
-    public function createRequeststatus()
+    public function createRequeststatus() : string
     {
         if( empty( $this->requeststatus )) {
-            return null;
+            return Util::$SP0;
         }
-        $output = null;
+        $output = Util::$SP0;
         $lang   = $this->getConfig( self::LANGUAGE );
-        foreach( $this->requeststatus as $rx => $rStat ) {
+        foreach( $this->requeststatus as $rStat ) {
             if( empty( $rStat[Util::$LCvalue][self::STATCODE] )) {
                 if( $this->getConfig( self::ALLOWEMPTY )) {
                     $output .= StringFactory::createElement( self::REQUEST_STATUS );
@@ -97,19 +95,20 @@ trait REQUEST_STATUStrait
     /**
      * Delete calendar component property request-status
      *
-     * @param int   $propDelIx   specific property in case of multiply occurrence
+     * @param null|int   $propDelIx   specific property in case of multiply occurrence
      * @return bool
      * @since  2.27.1 - 2018-12-15
      */
-    public function deleteRequeststatus( $propDelIx = null )
+    public function deleteRequeststatus( ? int $propDelIx = null ) : bool
     {
         if( empty( $this->requeststatus )) {
             unset( $this->propDelIx[self::REQUEST_STATUS] );
             return false;
         }
-        return $this->deletePropertyM(
+        return  self::deletePropertyM(
             $this->requeststatus,
             self::REQUEST_STATUS,
+            $this,
             $propDelIx
         );
     }
@@ -117,20 +116,21 @@ trait REQUEST_STATUStrait
     /**
      * Get calendar component property request-status
      *
-     * @param int    $propIx specific property in case of multiply occurrence
-     * @param bool   $inclParam
-     * @return bool|array
+     * @param null|int    $propIx specific property in case of multiply occurrence
+     * @param null|bool   $inclParam
+     * @return string|array|bool
      * @since 2.29.9 2019-08-05
      */
-    public function getRequeststatus( $propIx = null, $inclParam = false )
+    public function getRequeststatus( ?int $propIx = null, ?bool $inclParam = false ) : bool | string | array
     {
         if( empty( $this->requeststatus )) {
             unset( $this->propIx[self::REQUEST_STATUS] );
             return false;
         }
-        return $this->getPropertyM(
+        return  self::getPropertyM(
             $this->requeststatus,
             self::REQUEST_STATUS,
+            $this,
             $propIx,
             $inclParam
         );
@@ -139,30 +139,32 @@ trait REQUEST_STATUStrait
     /**
      * Set calendar component property request-status
      *
-     * @param array|float $statCode 1*DIGIT 1*2("." 1*DIGIT)
-     * @param string      $text
-     * @param string      $extData
-     * @param array       $params
-     * @param integer     $index
+     * @param null|int|float|string $statCode 1*DIGIT 1*2("." 1*DIGIT)
+     * @param null|string      $text
+     * @param null|string      $extData
+     * @param null|string[]    $params
+     * @param null|integer     $index
      * @return static
      * @throws InvalidArgumentException
      * @since 2.29.14 2019-09-03
      */
     public function setRequeststatus(
-        $statCode = null,
-        $text     = null,
-        $extData  = null,
-        $params   = null,
-        $index    = null
-    ) {
+        null|int|float|string $statCode = null,
+        ? string $text = null,
+        ? string $extData = null,
+        ? array $params = [],
+        ? int $index = null
+    ) : static
+    {
         static $ERR = 'Invalid %s status code value %s';
         if( empty( $statCode ) || empty( $text )) {
             $this->assertEmptyValue( Util::$SP0, self::REQUEST_STATUS );
-            $statCode = $text = Util::$SP0;
+            $statCode = null;
+            $text     = Util::$SP0;
             $params = [];
         }
         else {
-            if( false === ( $cmp = filter_var( $statCode, FILTER_VALIDATE_FLOAT ))) {
+            if( false === filter_var( $statCode, FILTER_VALIDATE_FLOAT )) {
                 throw new InvalidArgumentException(
                     sprintf( $ERR, self::REQUEST_STATUS, var_export( $statCode, true ) )
                 );
@@ -170,14 +172,14 @@ trait REQUEST_STATUStrait
             Util::assertString( $text, self::REQUEST_STATUS );
         }
         $input = [
-            self::STATCODE => number_format( (float) $statCode, 2, Util::$DOT, null ),
+            self::STATCODE => number_format((float) $statCode, 2, Util::$DOT, null ),
             self::STATDESC => StringFactory::trimTrailNL( $text ),
         ];
         if( ! empty( $extData )) {
             Util::assertString( $extData, self::REQUEST_STATUS );
             $input[self::EXTDATA] = StringFactory::trimTrailNL( $extData );
         }
-        $this->setMval( $this->requeststatus, $input, $params, null, $index );
+        self::setMval( $this->requeststatus, $input, ( $params ?? [] ), null, $index );
         return $this;
     }
 }

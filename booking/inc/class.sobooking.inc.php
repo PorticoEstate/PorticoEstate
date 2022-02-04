@@ -11,7 +11,7 @@
 			$this->organization_so = new booking_soorganization();
 
 			parent::__construct('bb_booking', array(
-				'id' => array('type' => 'int'),
+				'id' => array('type' => 'int', 'query' => true),
 				'active' => array('type' => 'int', 'required' => true),
 				'allocation_id' => array('type' => 'int', 'required' => false),
 				'application_id' => array('type' => 'int', 'required' => false),
@@ -590,9 +590,13 @@
 		{
 			$from = "'" . $booking['from_'] . "'";
 			$to = "'" . $booking['to_'] . "'";
-			$gid = $booking['group_id'];
-			$season_id = $booking['season_id'];
+			$gid = (int)$booking['group_id'];
+			$season_id = (int)$booking['season_id'];
 			$resources = implode(",", $booking['resources']);
+			if(empty($booking['resources']))
+			{
+				return False;
+			}
 
 			$sql = "SELECT id FROM bb_allocation ba2 WHERE ba2.from_ = ($from) AND ba2.to_ = ($to) AND ba2.organization_id = (SELECT organization_id FROM bb_group WHERE id = ($gid)) AND ba2.season_id = ($season_id) AND EXISTS ( SELECT 1 FROM bb_allocation  a,bb_allocation_resource b WHERE a.id = b.allocation_id AND b.resource_id IN ($resources)) AND NOT EXISTS (SELECT 1 FROM bb_booking bb WHERE ba2.id = bb.allocation_id)";
 
@@ -1035,7 +1039,8 @@
 			$sql = "SELECT
                     bb_event.id AS id,
                     bb_event.building_name as building_name,
-                    bb_event.description as description,
+					bb_event.name as name,
+					bb_event.description as description,
                     bb_event.from_ AS from_,
                     bb_event.to_ AS to_,
                     bb_resource.sort AS sort,
@@ -1067,6 +1072,7 @@
 					'building_name' => $this->db->f('building_name', true),
 					'resource_id' => $this->db->f('resource_id', false),
 					'resource_name' => $this->db->f('resource_name', true),
+					'name' => $this->db->f('name', true),
 					'description' => $this->db->f('description', true),
 					'from_' => $this->db->f('from_', false),
 					'to_' => $this->db->f('to_', false),

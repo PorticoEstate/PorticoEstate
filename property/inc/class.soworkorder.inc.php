@@ -988,7 +988,7 @@
 					'charge_tenant'				 => $this->db->f('charge_tenant'),
 					'descr'						 => $this->db->f('descr', true),
 					'status'					 => $this->db->f('status'),
-					'calculation'				 => $this->db->f('calculation'),
+					'calculation'				 => (float)$this->db->f('calculation'),
 					'b_account_id'				 => $this->db->f('account_id', true),
 					'addition_percentage'		 => (int)$this->db->f('addition'),
 					'addition_rs'				 => (int)$this->db->f('rig_addition'),
@@ -1017,7 +1017,7 @@
 					'billable_hours'			 => $this->db->f('billable_hours'),
 					'approved'					 => $this->db->f('approved'),
 					'mail_recipients'			 => explode(',', trim($this->db->f('mail_recipients'), ',')),
-					'actual_cost'				 => $this->db->f('actual_cost'),
+					'actual_cost'				 => (float)$this->db->f('actual_cost'),
 					'continuous'				 => $this->db->f('continuous'),
 					'fictive_periodization'		 => $this->db->f('fictive_periodization'),
 					'contract_id'				 => $this->db->f('contract_id'),
@@ -1028,7 +1028,7 @@
 					'order_dim1'				 => $this->db->f('order_dim1'),
 					'order_sent'				 => $this->db->f('order_sent'),
 					'order_received'			 => $this->db->f('order_received'),
-					'order_received_amount'		 => $this->db->f('order_received_amount'),
+					'order_received_amount'		 => (float)$this->db->f('order_received_amount'),
 					'delivery_address'			 => $this->db->f('delivery_address', true),
 				);
 
@@ -1044,8 +1044,8 @@
 
 				$this->db->query($sql, __LINE__, __FILE__);
 				$this->db->next_record();
-				$workorder['budget']		 = (int)$this->db->f('budget');
-				$workorder['contract_sum']	 = $this->db->f('contract_sum');
+				$workorder['budget']		 = (int) $this->db->f('budget');
+				$workorder['contract_sum']	 = (float) $this->db->f('contract_sum');
 			}
 
 			//_debug_array($workorder);
@@ -1460,10 +1460,10 @@
 
 			if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['currency']))
 			{
-				$workorder['contract_sum'] = str_ireplace($GLOBALS['phpgw_info']['user']['preferences']['common']['currency'], '', $workorder['contract_sum']);
+				$workorder['contract_sum'] = str_ireplace($GLOBALS['phpgw_info']['user']['preferences']['common']['currency'], '', (float)$workorder['contract_sum']);
 			}
 
-			$workorder['contract_sum'] = str_replace(array(' ', ','), array('', '.'), $workorder['contract_sum']);
+			$workorder['contract_sum'] = (float)str_replace(array(' ', ','), array('', '.'), $workorder['contract_sum']);
 
 			if (abs((int)$workorder['contract_sum']) > 0)
 			{
@@ -1627,13 +1627,13 @@
 			{
 				$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE order_id = '{$workorder['id']}'", __LINE__, __FILE__);
 				$this->db->next_record();
-				$old_budget = $this->db->f('budget');
+				$old_budget = (float)$this->db->f('budget');
 
 				$this->delete_period_from_budget($workorder['id'], $workorder['delete_b_period']);
 
 				$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE order_id = '{$workorder['id']}'", __LINE__, __FILE__);
 				$this->db->next_record();
-				$new_budget = $this->db->f('budget');
+				$new_budget = (float)$this->db->f('budget');
 
 				$historylog->add('B', $workorder['id'], $new_budget, $old_budget);
 			}
@@ -1643,13 +1643,13 @@
 			{
 				$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE order_id = '{$workorder['id']}'", __LINE__, __FILE__);
 				$this->db->next_record();
-				$old_budget = $this->db->f('budget');
+				$old_budget = (float)$this->db->f('budget');
 
-				$this->_update_order_budget($workorder['id'], $workorder['budget_year'], $periodization_id, $workorder['budget'], $workorder['contract_sum'], $combined_cost);
+				$this->_update_order_budget($workorder['id'], $workorder['budget_year'], $periodization_id, (float)$workorder['budget'], (float)$workorder['contract_sum'], (float)$combined_cost);
 
 				$this->db->query("SELECT sum(budget) AS budget FROM fm_workorder_budget WHERE order_id = '{$workorder['id']}'", __LINE__, __FILE__);
 				$this->db->next_record();
-				$new_budget = $this->db->f('budget');
+				$new_budget = (float)$this->db->f('budget');
 
 				$historylog->add('B', $workorder['id'], $new_budget, $old_budget);
 			}
@@ -1819,11 +1819,16 @@
 		 */
 		public function check_project_status( $order_id )
 		{
+			static $project_status_on_last_order_closed = null;
 			$ret	 = false;
-			$config	 = CreateObject('phpgwapi.config', 'property');
-			$config->read_repository();
 
-			$project_status_on_last_order_closed = isset($config->config_data['project_status_on_last_order_closed']) && $config->config_data['project_status_on_last_order_closed'] ? $config->config_data['project_status_on_last_order_closed'] : '';
+			if(!$project_status_on_last_order_closed)
+			{
+				$config	 = CreateObject('phpgwapi.config', 'property');
+				$config->read_repository();
+
+				$project_status_on_last_order_closed = isset($config->config_data['project_status_on_last_order_closed']) && $config->config_data['project_status_on_last_order_closed'] ? $config->config_data['project_status_on_last_order_closed'] : '';
+			}
 
 			if ($project_status_on_last_order_closed)
 			{
@@ -2852,7 +2857,7 @@
 					. " {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
 					. " WHERE periode > {$latest_year}00 AND periode < {$latest_year}13 AND fm_workorder.id = {$id}", __LINE__, __FILE__);
 				$this->db->next_record();
-				$paid_last_year = $this->db->f('paid');
+				$paid_last_year = (float)$this->db->f('paid');
 
 				$transferred = $this->_update_order_budget($id, $latest_year, $periodization_id, $paid_last_year, $paid_last_year, $paid_last_year, $action		 = 'update', $activate	 = 0);
 
@@ -2872,7 +2877,7 @@
 				// total budget
 				$this->db->query("SELECT sum(combined_cost) AS budget FROM fm_workorder_budget WHERE order_id = {$id} AND year = {$latest_year}", __LINE__, __FILE__);
 				$this->db->next_record();
-				$last_budget = $this->db->f('budget');
+				$last_budget = (float) $this->db->f('budget');
 				if (!abs($last_budget) > 0)
 				{
 					$this->_update_order_budget($id, $year, $periodization_id, 0, 0, 0, 'update', true);
@@ -2890,7 +2895,7 @@
 					. " {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
 					. " WHERE periode > {$latest_year}00 AND periode < {$latest_year}13 AND fm_workorder.id = {$id}", __LINE__, __FILE__);
 				$this->db->next_record();
-				$paid_last_year = $this->db->f('paid');
+				$paid_last_year = (float)$this->db->f('paid');
 
 				$subtract = $last_budget - $paid_last_year;
 
@@ -2954,9 +2959,9 @@
 			{
 				$start_date			 = $this->db->f('start_date');
 				$periodization_id	 = (int)$this->db->f('periodization_id');
-				$budget				 = $this->db->f('budget');
-				$contract_sum		 = $this->db->f('contract_sum');
-				$combined_cost		 = $this->db->f('combined_cost');
+				$budget				 = (float)$this->db->f('budget');
+				$contract_sum		 = (float)$this->db->f('contract_sum');
+				$combined_cost		 = (float)$this->db->f('combined_cost');
 				$this->_update_order_budget($order_id, date('Y', $start_date), $periodization_id, $budget, $contract_sum, $combined_cost);
 			}
 		}
@@ -3050,10 +3055,10 @@
 				{
 					$periodization_outline[] = array
 						(
-						'month'		 => $this->db->f('month'),
-						'value'		 => $this->db->f('value'),
-						'dividend'	 => $this->db->f('dividend'),
-						'divisor'	 => $this->db->f('divisor')
+						'month'		 => (int)$this->db->f('month'),
+						'value'		 => (float)$this->db->f('value'),
+						'dividend'	 => (int)$this->db->f('dividend'),
+						'divisor'	 => (int)$this->db->f('divisor')
 					);
 				}
 			}
@@ -3146,6 +3151,7 @@
 				$historylog->add('S', $order_id, $status, $old_status);
 				$check_pending_action = true;
 				$this->db->query("UPDATE fm_workorder SET status = '{$status}' WHERE id = '{$order_id}'", __LINE__, __FILE__);
+				$this->check_project_status($order_id);
 			}
 
 			if ($check_pending_action)

@@ -1,5 +1,5 @@
 /* global direct_booking */
-
+var application;
 $(".navbar-search").removeClass("d-none");
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 $(".maleInput").attr('data-bind', "textInput: inputCountMale, attr: {'name': malename }");
@@ -15,12 +15,40 @@ ko.validation.locale('nb-NO');
 var am;
 
 var timepickerValues = [];
-for (hour = 0; hour < 24; hour++)
-{
-	for (minute = 0; minute < 60; minute += 15)
+setTimePickerValues();
+
+
+function setTimePickerValues() {
+	let fromHour = (typeof urlParams['fromTime'] !== "undefined") ? parseInt(urlParams['fromTime'].substr(0, 2)) : 0;
+	let fromMinute = (typeof urlParams['fromTime'] !== "undefined") ? parseInt(urlParams['fromTime'].substr(3, 2)) : 0;
+
+	let toHour = (typeof urlParams['toTime'] !== "undefined") ? parseInt(urlParams['toTime'].substr(0, 2)) : 23;
+	let toMinute = (typeof urlParams['toTime'] !== "undefined") ? parseInt(urlParams['toTime'].substr(3, 2)) : 45;
+
+	if (toMinute === 59) {
+		toMinute = 45;
+	}
+
+	let configurableFromMinute = 0;
+	let configurableToMinute = 60;
+	let firstIteration = true;
+	for (let hour = fromHour; hour <= toHour; hour++)
 	{
-		var value = ("00" + hour).substr(-2) + ":" + ("00" + minute).substr(-2);
-		timepickerValues.push(value);
+		if (firstIteration) {
+			configurableFromMinute = fromMinute;
+		} else {
+			configurableFromMinute = 0;
+		}
+
+		if (hour === toHour) {
+			configurableToMinute = toMinute + 15;
+		}
+
+		for (minute = configurableFromMinute; minute < configurableToMinute; minute += 15)
+		{
+			var value = ("00" + hour).substr(-2) + ":" + ("00" + minute).substr(-2);
+			timepickerValues.push(value);
+		}
 	}
 }
 
@@ -32,6 +60,9 @@ function applicationModel()
 	{
 		return bc.applicationCartItems();
 	});
+
+	console.log(urlParams);
+
 	self.bookingDate = ko.observable("");
 	self.bookingStartTime = ko.observable("");
 	self.bookingEndTime = ko.observable("");
@@ -141,10 +172,13 @@ function applicationModel()
 	self.attachment = ko.observable();
 }
 
-
 $(document).ready(function ()
 {
 	var activityId;
+
+	if (typeof urlParams['building_id'] === 'undefined') {
+		urlParams['building_id'] = building_id;
+	}
 
 	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.add", building_id: urlParams['building_id'], phpgw_return_as: "json"}, true);
 	$.getJSON(getJsonURL, function (result)
@@ -245,6 +279,7 @@ $(document).ready(function ()
 		am.activityId(activityId);
 		ko.applyBindings(am, document.getElementById("new-application-page"));
 		PopulatePostedDate();
+		populateApplicationDate();
 		if (typeof initialAudience !== "undefined")
 		{
 			am.audienceSelectedValue(initialAudience);
@@ -351,6 +386,18 @@ function PopulatePostedDate()
 				am.date.push({from_: formatSingleDate(new Date(parseInt(urlParams['start']))), to_: formatSingleDate(new Date(parseInt(urlParams['end']))), /*repeat: false,*/ formatedPeriode: formatDate(new Date(parseInt(urlParams['start'])), new Date(parseInt(urlParams['end'])))});
 			}
 		}
+	}
+}
+
+function populateApplicationDate() {
+	if (typeof urlParams['fromDate'] !== "undefined") {
+		let date = new Date(urlParams['fromDate']);
+		am.bookingDate(date);
+
+		let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(date);
+		let mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(date);
+		let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date);
+		$(".datepicker-btn").val(`${da}/${mo}/${ye}`);
 	}
 }
 
@@ -602,7 +649,6 @@ if(attInput)
 			attRemove.style.display = "none";
 		}
 	};
-
 	// Removes attachment when clicked
 	attRemove.addEventListener("click", function ()
 	{
@@ -618,8 +664,8 @@ if(attInput)
 			attRemove.style.display = "none";
 		}
 	})
-
 }
+
 
 
 

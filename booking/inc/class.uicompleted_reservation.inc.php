@@ -38,7 +38,7 @@
 			$this->url_prefix = 'booking.uicompleted_reservation';
 			$this->restore_export_filters();
 
-			$this->display_name = lang('Completed');
+			$this->display_name = lang('completed reservations');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
 
@@ -556,6 +556,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$reservation = $this->bo->read_single($id);
+			if(!$reservation)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$this->add_default_display_data($reservation);
 			$this->install_customer_identifier_ui($reservation);
 			$show_edit_button = false;

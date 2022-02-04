@@ -509,8 +509,8 @@
 						'force_period_year'	 => $values['force_period_year']));
 					if (!$values['download'])
 					{
-						$GLOBALS['phpgw_info']['flags'][noheader]		 = true;
-						$GLOBALS['phpgw_info']['flags'][nofooter]		 = true;
+						$GLOBALS['phpgw_info']['flags']['noheader']		 = true;
+						$GLOBALS['phpgw_info']['flags']['nofooter']		 = true;
 						$GLOBALS['phpgw_info']['flags']['xslt_app']		 = false;
 						$GLOBALS['phpgw_info']['flags']['noframework']	 = true;
 						echo '<pre>' . $receipt['message'][0]['msg'] . '</pre>';

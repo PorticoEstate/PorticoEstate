@@ -1276,7 +1276,7 @@
 						);
 					}
 				}
-				
+
 				$zip_info = $solocation->get_zip_info($location_code);
 				if($zip_info)
 				{
@@ -1335,8 +1335,9 @@
 			{
 				$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
 			}
-			$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
-					'id'		 => $id), false, true) . '">' . lang('Ticket') . ' #' . $id . '</a>' . "\n";
+
+			$body = 'Vennligst følg opp ved å trykke på linken <a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
+					'id'		 => $id), false, true) . '">' . lang('Ticket') . ' #' . $id . '</a>' . " (ikke svar på e-post)\n";
 
 			$body	 .= "<table>";
 			$body	 .= '<tr><td>' . lang('Date Opened') . '</td><td>:&nbsp;' . $entry_date . "</td></tr>";
@@ -1587,6 +1588,8 @@ HTML;
 			if ($toarray)
 			{
 				$to = implode(';', $toarray);
+				$cc='';
+				$bcc='';
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 				{
 					try
@@ -1943,7 +1946,7 @@ HTML;
 			$budgets = $this->so->get_budgets($id);
 			foreach ($budgets as &$budget)
 			{
-				$budget['created_on_date'] = $GLOBALS['phpgw']->common->show_date($payment['created_on'], $this->dateformat);
+				$budget['created_on_date'] = $GLOBALS['phpgw']->common->show_date($budget['created_on'], $this->dateformat);
 			}
 			return $budgets;
 		}
@@ -2283,7 +2286,7 @@ HTML;
 				$project_id = $order_info['project_id'];
 				$amount = CreateObject('property.boworkorder')->get_accumulated_budget_amount($project_id);
 			}
-			
+
 			if($approval_level == 'project' && $project_id)
 			{
 				$location			 = '.project';
@@ -2460,7 +2463,7 @@ HTML;
 				'id' => $id,
 			);
 
-			$url .= '?' . http_build_query($extravars, null, '&');
+			$url .= '?' . http_build_query($extravars, '', '&');
 
 			$post_data = array();
 

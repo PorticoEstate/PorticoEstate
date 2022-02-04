@@ -1,3 +1,6 @@
+/*! Bootstrap integration for DataTables' SearchPanes
+ * ©2016 SpryMedia Ltd - datatables.net/license
+ */
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD
@@ -12,9 +15,11 @@
                 root = window;
             }
             if (!$ || !$.fn.dataTable) {
+                // eslint-disable-next-line @typescript-eslint/no-var-requires
                 $ = require('datatables.net-zf')(root, $).$;
             }
             if (!$.fn.dataTable.SearchPanes) {
+                // eslint-disable-next-line @typescript-eslint/no-var-requires
                 require('datatables.net-searchpanes')(root, $);
             }
             return factory($, root, root.document);
@@ -26,11 +31,10 @@
     }
 }(function ($, window, document) {
     'use strict';
-    var DataTable = $.fn.dataTable;
-    $.extend(true, DataTable.SearchPane.classes, {
+    var dataTable = $.fn.dataTable;
+    $.extend(true, dataTable.SearchPane.classes, {
         buttonGroup: 'secondary button-group',
         disabledButton: 'disabled',
-        dull: 'disabled',
         narrow: 'dtsp-narrow',
         narrowButton: 'dtsp-narrowButton',
         narrowSearch: 'dtsp-narrowSearch',
@@ -41,10 +45,13 @@
         show: 'col',
         table: 'unstriped'
     });
-    $.extend(true, DataTable.SearchPanes.classes, {
+    $.extend(true, dataTable.SearchPanes.classes, {
         clearAll: 'dtsp-clearAll button secondary',
+        collapseAll: 'dtsp-collapseAll button secondary',
+        disabledButton: 'disabled',
         panes: 'panes dtsp-panesContainer',
+        showAll: 'dtsp-showAll button secondary',
         title: 'dtsp-title'
     });
-    return DataTable.searchPanes;
+    return dataTable.searchPanes;
 }));

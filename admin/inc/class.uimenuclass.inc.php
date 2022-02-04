@@ -1,39 +1,40 @@
 <?php
-  /**************************************************************************\
-  * phpGroupWare - Administration                                            *
-  * http://www.phpgroupware.org                                              *
-  * --------------------------------------------                             *
-  *  This program is free software; you can redistribute it and/or modify it *
-  *  under the terms of the GNU General Public License as published by the   *
-  *  Free Software Foundation; either version 2 of the License, or (at your  *
-  *  option) any later version.                                              *
-  \**************************************************************************/
- 
-  /* $Id$ */
+	/*	 * ************************************************************************\
+	 * phpGroupWare - Administration                                            *
+	 * http://www.phpgroupware.org                                              *
+	 * --------------------------------------------                             *
+	 *  This program is free software; you can redistribute it and/or modify it *
+	 *  under the terms of the GNU General Public License as published by the   *
+	 *  Free Software Foundation; either version 2 of the License, or (at your  *
+	 *  option) any later version.                                              *
+	  \************************************************************************* */
+
+	/* $Id$ */
 
 	class uimenuclass
 	{
+
 		var $t;
 		var $rowColor = Array();
-		
+
 		function __construct()
 		{
-			$this->t = CreateObject('phpgwapi.template',$GLOBALS['phpgw']->common->get_tpl_dir('admin'));
+			$this->t = CreateObject('phpgwapi.template', $GLOBALS['phpgw']->common->get_tpl_dir('admin'));
 
 			$this->t->set_file(array('menurow' => 'menurow.tpl'));
-			$this->t->set_block('menurow','menu_links','menu_links');
-			$this->t->set_block('menurow','link_row','link_row');
+			$this->t->set_block('menurow', 'menu_links', 'menu_links');
+			$this->t->set_block('menurow', 'link_row', 'link_row');
 
-			$this->rowColor[0] = $GLOBALS['phpgw_info']['theme']['row_on'];
-			$this->rowColor[1] = $GLOBALS['phpgw_info']['theme']['row_off'];
+			$this->rowColor[0]	 = $GLOBALS['phpgw_info']['theme']['row_on'];
+			$this->rowColor[1]	 = $GLOBALS['phpgw_info']['theme']['row_off'];
 		}
 
-		function section_item($pref_link='',$pref_text='', $bgcolor)
+		function section_item( $pref_link = '', $pref_text = '', $bgcolor )
 		{
-			$this->t->set_var('row_link',$pref_link);
-			$this->t->set_var('row_text',$pref_text);
-			$this->t->set_var('tr_color',$bgcolor);
-			$this->t->parse('all_rows','link_row',True);
+			$this->t->set_var('row_link', $pref_link);
+			$this->t->set_var('row_text', $pref_text);
+			$this->t->set_var('tr_color', $bgcolor);
+			$this->t->parse('all_rows', 'link_row', True);
 		}
 
 		// $file must be in the following format:
@@ -41,31 +42,31 @@
 		//  'Login History' => array('/index.php','menuaction=admin.uiaccess_history.list')
 		// );
 		// This allows extra data to be sent along
-		function display_section($_menuData)
+		function display_section( $_menuData )
 		{
-			$i=0;
+			$i = 0;
 
 			//while(list($key,$value) = each($_menuData))
-                        if (is_array($_menuData))
-                        {
-                            foreach($_menuData as $key => $value)
+			if (is_array($_menuData))
 			{
-				if (!empty($value['extradata']))
+				foreach ($_menuData as $key => $value)
 				{
-					$link = $GLOBALS['phpgw']->link($value['url'],'account_id=' . $GLOBALS['account_id'] . '&' . $value['extradata']);
+					if (!empty($value['extradata']))
+					{
+						$link = $GLOBALS['phpgw']->link($value['url'], 'account_id=' . $GLOBALS['account_id'] . '&' . $value['extradata']);
+					}
+					else
+					{
+						$link = $GLOBALS['phpgw']->link($value['url'], 'account_id=' . $GLOBALS['account_id']);
+					}
+					$this->section_item($link, lang($value['description']), $this->rowColor[($i % 2)]);
+					$i++;
 				}
-				else
-				{
-					$link = $GLOBALS['phpgw']->link($value['url'],'account_id=' . $GLOBALS['account_id']);
-				}
-				$this->section_item($link,lang($value['description']),$this->rowColor[($i % 2)]);
-				$i++;
 			}
-                        }
 
-			$this->t->set_var('th_bg',$GLOBALS['phpgw_info']['theme']['th_bg']);
+			$this->t->set_var('th_bg', $GLOBALS['phpgw_info']['theme']['th_bg']);
 
-			if(strpos($_menuData[0]['extradata'],'user'))
+			if (strpos($_menuData[0]['extradata'], 'user'))
 			{
 				$destination = 'users';
 			}
@@ -73,56 +74,57 @@
 			{
 				$destination = 'groups';
 			}
-			$this->t->set_var('link_done',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.list_').$destination));
-			$this->t->set_var('lang_done',lang('Back'));
+			$this->t->set_var('link_done', $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiaccounts.list_') . $destination));
+			$this->t->set_var('lang_done', lang('Back'));
 
-			$this->t->set_var('row_on',$this->rowColor[0]);
+			$this->t->set_var('row_on', $this->rowColor[0]);
 
-			$this->t->parse('out','menu_links');
-			
-			return $this->t->get('out','menu_links');
+			$this->t->parse('out', 'menu_links');
+
+			return $this->t->get('out', 'menu_links');
 		}
 
 		// create the html code for the menu
-		function createHTMLCode($_hookname)
+		function createHTMLCode( $_hookname )
 		{
+			$GLOBALS['menuData'] = array();
 			switch ($_hookname)
 			{
 				case 'edit_user':
-					$GLOBALS['menuData'][] = array(
-						'description' => 'User Data',
-						'url'         => '/index.php',
-						'extradata'   => 'menuaction=admin.uiaccounts.edit_user'
+					$GLOBALS['menuData'][]	 = array(
+						'description'	 => 'User Data',
+						'url'			 => '/index.php',
+						'extradata'		 => 'menuaction=admin.uiaccounts.edit_user'
 					);
 					break;
 				case 'view_user':
-					$GLOBALS['menuData'][] = array(
-						'description' => 'User Data',
-						'url'         => '/index.php',
-						'extradata'   => 'menuaction=admin.uiaccounts.view_user'
+					$GLOBALS['menuData'][]	 = array(
+						'description'	 => 'User Data',
+						'url'			 => '/index.php',
+						'extradata'		 => 'menuaction=admin.uiaccounts.view_user'
 					);
 					break;
 				case 'edit_group':
-					$GLOBALS['menuData'][] = array(
-						'description' => 'Edit Group',
-						'url'         => '/index.php',
-						'extradata'   => 'menuaction=admin.uiaccounts.edit_group'
+					$GLOBALS['menuData'][]	 = array(
+						'description'	 => 'Edit Group',
+						'url'			 => '/index.php',
+						'extradata'		 => 'menuaction=admin.uiaccounts.edit_group'
 					);
 					break;
 				case 'group_manager':
-					$GLOBALS['menuData'][] = array(
-						'description' => 'Group Manager',
-						'url'         => '/index.php',
-						'extradata'   => 'menuaction=admin.uiaccounts.group_manager'
+					$GLOBALS['menuData'][]	 = array(
+						'description'	 => 'Group Manager',
+						'url'			 => '/index.php',
+						'extradata'		 => 'menuaction=admin.uiaccounts.group_manager'
 					);
 					break;
 			}
 
 			$GLOBALS['phpgw']->hooks->process($_hookname);
 
-			if (count($GLOBALS['menuData']) >= 1) 
+			if (count($GLOBALS['menuData']) >= 1)
 			{
-				$result = $this->display_section($GLOBALS['menuData']);
+				$result				 = $this->display_section($GLOBALS['menuData']);
 				//clear $menuData
 				$GLOBALS['menuData'] = '';
 				return $result;

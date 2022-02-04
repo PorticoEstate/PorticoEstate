@@ -181,6 +181,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$resource = $this->bo->read_single($id);
+			if(!$resource)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 			$activities = $this->activity_bo->get_top_level($resource['activity_id']);
 
 			$resource['id'] = $id;

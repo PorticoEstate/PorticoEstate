@@ -763,6 +763,11 @@
 			}
 			$booking = $this->bo->read_single($id);
 
+			if(!$booking)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
+
 			$activity_path = $this->activity_bo->get_path($booking['activity_id']);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
 
@@ -1016,6 +1021,71 @@
 			}
 		}
 
+		private function send_sms_participants($id, $type = 'booking')
+		{
+			$send_sms = phpgw::get_var('send_sms', 'bool');
+			$sms_content = phpgw::get_var('sms_content', 'string');
+
+			if($send_sms && $sms_content)
+			{
+				$soparticipant = createObject('booking.soparticipant');
+				$params = array(
+					'results' => -1,
+					'filters' => array(
+						'reservation_id' => $id,
+						'reservation_type' => $type
+						)
+				);
+
+				$participants = $soparticipant->read($params);
+				if(!$participants['results'])
+				{
+					phpgwapi_cache::message_set(lang('no records found.'), 'error');
+				}
+
+				$sms_service = CreateObject('sms.sms');
+				$sms_recipients = array();
+				foreach ($participants['results'] as $participant)
+				{
+					$sms_recipients[] = $participant['phone'];
+				}
+				$final_recipients = array_unique($sms_recipients);
+
+				$account_id = $this->current_account_id();
+				$log_success = array();
+				$log_error = array();
+				foreach ($final_recipients as $final_recipient)
+				{
+					try
+					{
+						$sms_res = $sms_service->websend2pv($account_id, $final_recipient, $sms_content);
+						if (empty($sms_res[0][0]))
+						{
+							$error_message = 'SMS-melding feilet til ' . $final_recipient;
+							phpgwapi_cache::message_set($error_message, 'error');
+							$log_error[] = $final_recipient;
+						}
+						else
+						{
+							$comment = 'SMS-melding er sendt til ' . $final_recipient;
+							phpgwapi_cache::message_set($comment, 'message');
+							$log_success[] = $final_recipient;
+
+						}
+					}
+					catch (Exception $ex)
+					{
+						$error_message = 'SMS-melding feilet til ' . $final_recipient;
+						phpgwapi_cache::message_set($error_message, 'error');
+						$log_error[] = $final_recipient;
+					}
+
+				}
+
+				self::redirect(array('menuaction' => "booking.ui{$type}.show", 'id' => $id));
+			}
+		}
+
 		public function show()
 		{
 			$id = phpgw::get_var('id', 'int');
@@ -1023,7 +1093,15 @@
 			{
 				phpgw::no_access('booking', lang('missing id'));
 			}
+
+			$this->send_sms_participants($id, 'booking');
+
 			$booking = $this->bo->read_single($id);
+
+			if(!$booking)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 
 			$activity_path = $this->activity_bo->get_path($booking['activity_id']);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;

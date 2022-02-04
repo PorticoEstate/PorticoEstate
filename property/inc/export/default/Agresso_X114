@@ -487,7 +487,7 @@
 		{
 //			$download = 'on';
 //			$download = False;
-//			$this->debug=True;
+			$this->debug=True;
 			//Generer batch ID
 			$batchid = $this->soXport->next_batchid();
 			if ($download == 'on')
@@ -580,7 +580,7 @@
 
 					$Belop = sprintf("%01.2f", $line['ordrebelop']) * 100;
 
-					if ($line['dimd'] % 2 == 0)
+					if ((int)$line['dimd'] % 2 == 0)
 					{
 						$actual_cost_field = 'act_mtrl_cost';
 					}
@@ -736,6 +736,10 @@
 				if ($get_bilagsnr_ut)
 				{
 					$bilagsnr_ut = $this->increment_voucher_id();
+					if($this->debug)
+					{
+						_debug_array($bilagsnr_ut);
+					}
 				}
 			}
 
@@ -824,7 +828,7 @@
 					//Oppdater beløp på arbeidsordre
 					if ($download == 'on')
 					{
-						if ($line['dimd'] % 2 == 0)
+						if ((int)$line['dimd'] % 2 == 0)
 						{
 							$actual_cost_field = 'act_mtrl_cost';
 						}
@@ -938,10 +942,28 @@
 				$this->db->next_record();
 				$_vendor_category = $this->db->f('category');
 
+				$accountlink_code = 2460;
+				switch ($_vendor_category)
+				{
+					case '1':
+						$accountlink_code = 2400;
+						break;
+					case '2':
+						$accountlink_code = 2460;
+						break;
+					case '3':
+						$accountlink_code = 2401;
+						break;
+
+					default:
+						$accountlink_code = 2460;
+						break;
+				}
+
 				$accountline[] = array
 					(
 					'TRANSACTIONTYPE'	 => 'R114',
-					'ACCOUNTLINK.CODE'	 => $_vendor_category == 1 ? 2400 : 2460,
+					'ACCOUNTLINK.CODE'	 => $accountlink_code,//$_vendor_category == 1 ? 2400 : 2460,
 					'CURRENCY'			 => $oRsBilag[0]['currency'],
 					'AMOUNT'			 => (-1 * $sum_amount),
 					'TAXCODE'			 => $oRsBilag[0]['mvakode'],
@@ -960,9 +982,9 @@
 					'POLINENUMBER'		 => '',
 					'RECEIVER.FULLNAME'	 => '',
 					'STATUS'			 => 5,
-					'SUBACCOUNT'		 => $periode, //200905 Accounting period YYYYMM
-					'ALLOCATION.KEY'	 => $periodization, //0
-					'ALLOCATION.PERIOD'	 => $periodization_start //dummy
+					'SUBACCOUNT'		 => '', //$periode, //200905 Accounting period YYYYMM
+					'ALLOCATION.KEY'	 => '', //$periodization, //0
+					'ALLOCATION.PERIOD'	 => '', //$periodization_start //dummy
 				);
 			}
 
@@ -1065,7 +1087,7 @@
 			}
 			else
 			{
-				$message = $buffer;
+				$message = htmlentities($buffer);
 				$this->db->transaction_abort();
 			}
 

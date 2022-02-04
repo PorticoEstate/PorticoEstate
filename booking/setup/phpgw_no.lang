@@ -246,7 +246,7 @@ External	booking	no	Ekstern
 Start date must be after %1	booking	no	Fradato må være etter %1
 To date must be before %1	booking	no	Tildato må være før %1
 Add Activity	booking	no	Ny Aktivitet
-Completed	booking	no	Klar for fakturering
+completed reservations	booking	no	Klar for fakturering
 1 day	booking	no	1 dag
 1 week	booking	no	1 uke
 2 weeks	booking	no	2 uker
@@ -441,8 +441,8 @@ Send to contact for overlaping allocations/bookings	booking	no	Send melding til 
 Message sent about the changes in the reservations	booking	no	Melding sendt om endringer på reserverasjoner
 There are changes to your reservations	booking	no	Det er blitt endring på din reserverasjon
 Multiple Events was created	booking	no	Flere arrangementer har blitt opprettet
-Event created, Overlaps with existing allocation, Remember to send a notification	booking	no	Arrangement opprettet. Overlapper en eksisterende tildeling. Husk å sende varsel
-Event created, Overlaps with existing booking, Remember to send a notification	booking	no	Arrangement opprettet. Overlapper en eksisterende booking. Husk å sende varsel
+Overlaps with existing allocation %1. Remember to send a notification	booking	no	Overlapper en eksisterende tildeling %1. Husk å sende varsel
+Overlaps with existing booking %1. Remember to send a notification	booking	no	Overlapper en eksisterende interntildeling %1. Husk å sende varsel
 Print as PDF	booking	no	Skriv ut som PDF
 Pending	booking	no	UNDER BEHANDLING
 This booking is not connected to a season	booking	no	Denne bookingen er ikke koblet mot en sesong
@@ -858,3 +858,28 @@ enable upload attachment	booking	no	Aktiver opplasting av vedlegg
 minutes	booking	no	Minutter
 limit number	booking	no	Begrensning på antall
 limit number horizont	booking	no	Begrensningshorisont (dager)
+update service-resource-mapping?	booking	no	Oppdatere kopling av tjenesten til valgte ressurser?
+mapping updated	booking	no	Kopling er oppdatert
+mapping	booking	no	Kopling
+unit price	booking	no	Enhetspris
+quantity	booking	no	Mengde
+amount	booking	no	Beløp
+tax	booking	no	Mva
+sum	booking	no	Sum
+details	booking	no	Detaljer
+currency	booking	no	Valuta
+payment method	booking	no	Betalingsmetode
+refund	booking	no	Refundér
+refunded	booking	no	Refundert
+payments	booking	no	Betalinger
+interrupted	booking	no	Avbrutt
+completed	booking	no	Fullført
+partially refunded	booking	no	Delvis refundert
+articles	booking	no	Artikler
+missing entry. Id %1 is invalid	booking	no	Denne posten finnes ikke. Id %1 er ugyldig
+my assigned buildings	booking	no	*Mine bygninger
+my assigned applications	booking	no	*Mine søknader
+send sms	booking	no	send SMS
+season %1 copied to %2	booking	no	Sesong %1 kopiert til %2
+copied from %1	booking	no	kopiert fra %1
+update user address	booking	no	Oppdater kundeadresser

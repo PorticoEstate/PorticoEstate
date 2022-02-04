@@ -256,6 +256,7 @@
 					</xsl:for-each>
 				</select>
 				<br/>
+				<br/>
 				<a id="add_new_value_{name}" href="#" onClick="addNewValueToCustomAttribute('id_{name}', {location_id}, {id}, '{input_text}', '{lang_new_value}');">
 					<img src="{add_img}" width="23"/>
 					<xsl:text> </xsl:text>
@@ -264,7 +265,6 @@
 					<xsl:value-of select="input_text"/>
 					<xsl:text>)</xsl:text>
 				</a>
-				<br/>
 				<a id="delete_value_{name}" href="#" onClick="deleteValueFromCustomAttribute('id_{name}', {location_id}, {id});">
 					<img src="{delete_img}" width="23"/>
 					<xsl:text> </xsl:text>

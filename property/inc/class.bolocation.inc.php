@@ -1168,9 +1168,10 @@ JS;
 		public function get_locations()
 		{
 			$location_code = phpgw::get_var('query');
+			$level = phpgw::get_var('level', 'int');
 
-			$values = $this->so->get_locations($location_code);
-			if ($values)
+			$values = $this->so->get_locations($location_code, $level);
+			if ($values && !$level)
 			{
 				$part			 = explode('-', $values[0]['id']);
 				$parent_level	 = count($part);

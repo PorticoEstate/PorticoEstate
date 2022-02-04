@@ -1,30 +1,30 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<style>
-.modal-dialog,
-.modal-content {
-    /* 80% of window height */
-    height: 80%;
-}
+		.modal-dialog,
+		.modal-content {
+			/* 80% of window height */
+			height: 80%;
+			}
 
-.modal-body {
-    /* 100% = dialog height, 120px = header + footer */
-    max-height: calc(100vh - 210px);
-	overflow-y: auto;
-}
-/*
-.modal {
-  max-height: 100vh;
-  .modal-dialog {
-    .modal-content {
-      .modal-body {
-        max-height: calc(80vh - 140px);
-        overflow-y: auto;
-      }
-    }
-  }
-}
+		.modal-body {
+			/* 100% = dialog height, 120px = header + footer */
+			max-height: calc(100vh - 210px);
+			overflow-y: auto;
+		}
+		/*
+		.modal {
+			max-height: 100vh;
+			.modal-dialog {
+				.modal-content {
+					.modal-body {
+						max-height: calc(80vh - 140px);
+						overflow-y: auto;
+					}
+				}
+			}
+		}
 
-*/
+		*/
 	</style>
 	<div id="building-page-content">
 		<div class="info-content">
@@ -200,7 +200,7 @@
 									<div data-bind="if: resourceItemLink != false">
 										<a class="bookable-resource-link-href" href="" data-bind="">
 
-											<span data-bind="html: name"></span>
+											<b><span data-bind="html: name"></span></b>
 											<div data-bind="foreach: activitiesList">
 												<span class="tagTitle" data-bind="if: $index() == 0">
 													<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>:
@@ -260,6 +260,9 @@
 										</ul>
 									</div>
 								</div>
+							</div>
+							<div>
+							*) Forenklet booking uten manuell saksbehandling
 							</div>
 						</div>
 					</xsl:if>

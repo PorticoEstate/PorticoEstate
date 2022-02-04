@@ -240,6 +240,12 @@
 
 				if (isset($values_attribute) && is_array($values_attribute))
 				{
+					if(empty($values_attribute[0]['datatype']))
+					{
+
+						$this->bo->get_attribute_information($values_attribute);
+					}
+
 					foreach ($values_attribute as $attribute)
 					{
 						if ($attribute['nullable'] != 1 && (!$attribute['value'] && !$values['extra'][$attribute['name']]))
@@ -821,7 +827,17 @@
 
 			if ($this->receipt['error'])
 			{
-				$this->edit($values);
+				if (phpgw::get_var('phpgw_return_as') == 'json')
+				{
+					return array(
+						'status' => 'error',
+						'receipt'	=> $this->receipt
+					);
+				}
+				else
+				{
+					$this->edit($values);
+				}
 			}
 			else
 			{
@@ -830,11 +846,28 @@
 					$receipt		 = $this->bo->save($values, $attributes, $action, $this->entity_id, $this->cat_id);
 					$values['id']	 = $receipt['id'];
 					$this->receipt	 = $receipt;
+					if (phpgw::get_var('phpgw_return_as') == 'json')
+					{
+						return array(
+							'status' 	=> 'saved',
+							'id'		=> $receipt['id'],
+							'receipt'	=> $this->receipt,
+						);
+					}
 				}
 				catch (Exception $e)
 				{
 					if ($e)
 					{
+
+						if (phpgw::get_var('phpgw_return_as') == 'json')
+						{
+							return array(
+								'status' => 'error',
+								'receipt'	=> $this->receipt
+							);
+						}
+
 						phpgwapi_cache::message_set($e->getMessage(), 'error');
 						$this->edit($values);
 						return;
@@ -885,8 +918,8 @@
 
 		function download()
 		{
-			$GLOBALS['phpgw_info']['flags'][noheader]	 = true;
-			$GLOBALS['phpgw_info']['flags'][nofooter]	 = true;
+			$GLOBALS['phpgw_info']['flags']['noheader']	 = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter']	 = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app']	 = false;
 
 			//$start_date 	= urldecode($this->start_date);
@@ -3031,7 +3064,7 @@ JS;
 
 			$data = array
 				(
-				'base_java_url'	 => json_encode(array(menuaction => "property.uientity.attrib_history")),
+				'base_java_url'	 => json_encode(array('menuaction' => "property.uientity.attrib_history")),
 				'datatable_def'	 => $datatable_def,
 				'link_url'		 => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'img_path'		 => $GLOBALS['phpgw']->common->get_image_path('phpgwapi', 'default')

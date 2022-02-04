@@ -124,13 +124,17 @@ HTML;
 
 	$template_set = phpgw::get_var('template_set','string', 'COOKIE');
 
+	/**
+	 * we want the "bookingfrontend" for now
+	 */
 	switch ($template_set)
 	{
 		case 'aalesund':
 		case 'bookingfrontend':
-			$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] = $template_set;
+			$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] = 'bookingfrontend';
 			break;
 		default:
+			$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] = 'bookingfrontend';
 			break;
 	}
 

@@ -1146,8 +1146,8 @@ JS;
 					'perm'			 => 16, 'acl_location'	 => $this->acl_location));
 			}
 
-			$GLOBALS['phpgw_info']['flags'][noheader]		 = true;
-			$GLOBALS['phpgw_info']['flags'][nofooter]		 = true;
+			$GLOBALS['phpgw_info']['flags']['noheader']		 = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter']		 = true;
 			$GLOBALS['phpgw_info']['flags']['noframework']	 = true;
 			$values											 = phpgw::get_var('values');
 

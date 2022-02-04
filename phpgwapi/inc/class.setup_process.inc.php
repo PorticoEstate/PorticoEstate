@@ -679,7 +679,7 @@
 					// This is because we are not keeping up with table changes, so a table in baseline
 					// either does not exist anymore, or the baseline is being lost.
 */
-					if($setup_info[$key]['tables'] && file_exists($appdir.'tables_baseline.inc.php'))
+					if(isset($setup_info[$key]['tables']) && file_exists($appdir.'tables_baseline.inc.php'))
 					{
 						if($DEBUG)
 						{

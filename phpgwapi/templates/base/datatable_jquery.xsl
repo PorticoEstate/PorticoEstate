@@ -996,6 +996,29 @@
 			{
 				var sDom_def = '<"clear">lfrtip';
 			}
+			init_multiselect = function(oControl)
+			{
+				try
+				{
+					oControl.multiselect({
+						buttonWidth: 250,
+						includeSelectAllOption: true,
+						enableFiltering: true,
+						enableCaseInsensitiveFiltering: true,
+
+						onDropdownShown : function(event) {
+							setTimeout(function(){
+								oControl.parent().find("button.multiselect-clear-filter").click();
+								oControl.parent().find("input[type='search'].multiselect-search").focus();
+							}, 100);
+						}
+					});
+
+				}
+				catch(err)
+				{
+				}
+			}
 
 			/*
 			 * Find and assign actions to filters
@@ -1155,28 +1178,7 @@
 												 oControl.find("option[value="+e+"]").prop("selected", "selected");
 											});
 
-											try
-											{
-												oControl.multiselect("destroy");
-												oControl.multiselect({
-													buttonWidth: 250,
-													includeSelectAllOption: true,
-													enableFiltering: true,
-													enableCaseInsensitiveFiltering: true,
-													onChange: function($option) {
-														// Check if the filter was used.
-														var query = $(oControl).find('li.multiselect-filter input').val();
-
-														if (query) {
-															$(oControl).find('li.multiselect-filter input').val('').trigger('keydown');
-														}
-													}
-												});
-
-											}
-											catch(err)
-											{
-											}
+//											init_multiselect(oControl);
 										}
 										else
 										{
@@ -1252,6 +1254,8 @@
 							{
 								active_filters_html.push($(this).attr('title'));
 							}
+							init_multiselect($(this));
+
 						}
 
 					});

@@ -1,5 +1,16 @@
 <?php
 	$phpgw_baseline = array(
+		'controller_control_category' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
+				'control_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'name' => array('type' => 'varchar','precision' => '255', 'nullable' => False),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'controller_control' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto','precision' => 4,'nullable' => False),
@@ -89,6 +100,7 @@
 				'num_corrected_cases' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'assigned_to' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'billable_hours' => array('type' => 'decimal','precision' => '20','scale' => '2','nullable' => True),
+				'cat_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),

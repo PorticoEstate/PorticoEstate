@@ -533,3 +533,15 @@
 	);
 
 
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO bb_article_category ( id, name)"
+			. " VALUES (1, 'resource')", __LINE__, __FILE__);
+
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO bb_article_category ( id, name)"
+			. " VALUES (2, 'service')", __LINE__, __FILE__);
+
+	$GLOBALS['phpgw_setup']->oProc->m_odb->query(
+			"CREATE OR REPLACE VIEW bb_article_view AS " .
+			"SELECT id, name, description, active, 1 AS article_cat_id FROM bb_resource " .
+			"UNION " .
+			"SELECT id, name, description, active, 2 AS article_cat_id  FROM bb_service" , __LINE__, __FILE__
+		);

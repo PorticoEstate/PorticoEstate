@@ -1392,6 +1392,8 @@
 					$test	 = $limitDate->format('Y-m-d');
 					$test	 = $checkDate->format('Y-m-d');
 
+					$active_seasons = $soseason->get_resource_seasons($resource['id']);
+
 					do
 					{
 						$StartTime = clone ($checkDate);
@@ -1439,13 +1441,28 @@
 
 						$checkDate = clone ($endTime);
 
-						$within_season = $soseason->timespan_within_season($resource['direct_booking_season_id'], $StartTime, $endTime);
-
-						$overlap = $this->check_if_resurce_is_taken($resource['id'], $StartTime, $endTime, $events);
-
-						if($within_season)
-					//	if ($within_season && (($booking_lenght > 1 && $overlap) || !$overlap))
+						$within_season = false;
+						foreach ($active_seasons as $season_id)
 						{
+							$within_season = $soseason->timespan_within_season($season_id, $StartTime, $endTime);
+							if($within_season)
+							{
+								break;
+							}
+						}
+
+						$DateTimeZone_utc	 = new DateTimeZone('UTC');
+
+						// Transported to the client to be handled by javascript
+						$from_utc = clone $StartTime;
+						$to_utc = clone $endTime;
+						$from_utc->setTimezone($DateTimeZone_utc);
+						$to_utc->setTimezone($DateTimeZone_utc);
+			
+									
+						if($within_season)
+						{
+							$overlap = $this->check_if_resurce_is_taken($resource['id'], $StartTime, $endTime, $events);
 							$availlableTimeSlots[$resource['id']][] = [
 								'when'				 => $StartTime->format($datetimeformat) . ' - ' . $endTime->format($datetimeformat),
 								'start'				 => $StartTime->getTimestamp() . '000',
@@ -1455,8 +1472,8 @@
 									'menuaction'	 => 'bookingfrontend.uiapplication.add',
 									'resource_id'	 => $resource['id'],
 									'building_id'	 => $building_id,
-									'from_[]'		 => $StartTime->format('Y-m-d H:i:s'),
-									'to_[]'			 => $endTime->format('Y-m-d H:i:s'),
+									'from_[]'		 => $from_utc->format('Y-m-d H:i:s'),
+									'to_[]'			 => $to_utc->format('Y-m-d H:i:s'),
 									'simple'		 => true
 								]
 							];
@@ -1504,14 +1521,19 @@
 			$filters = array('active' => 1, 'resource_id' => $resource_ids);
 			$params = array('filters' => $filters, 'results' =>'all');
 			$blocks = CreateObject('booking.soblock')->read($params);
+
 			if($blocks['results'])
 			{
 				foreach ($blocks['results'] as & $block)
 				{
-				  $block['resources'] = array( $block['resource_id']);
-				  $block['type'] = 'block';
+					if($block['session_id'] === $session_id)
+					{
+						continue;
+					}
+					$block['resources'] = array( $block['resource_id']);
+					$block['type'] = 'block';
+					$events['results'][] = $block;
 				}
-				$events['results'] = array_merge((array)$events['results'],$blocks['results']);
 			}
 		}
 
@@ -1535,7 +1557,8 @@
                       || ($event_start < $endTime AND $event_end >= $endTime)
 					)
 					{
-						$overlap = $event['type'] == 'block' ? 2 : 1;
+						
+						$overlap = ($event['type'] == 'block' ||  $event['status'] == 'NEWPARTIAL1') ? 2 : 1;
 						break;
 					}
 				}
@@ -1586,8 +1609,6 @@
 			$to->modify("+7 days");
 			$resource	 = $this->resource_so->read_single($resource_id);
 
-			//		$bounderies = CreateObject('booking.soseason')->get_bounderies($resource_id, $resource['direct_booking_season_id'], clone $from);
-			//		$bounderies = CreateObject('booking.soseason')->get_bounderies($resource_id, 695, clone $from);
 			$allocation_ids	 = $this->so->allocation_ids_for_resource($resource_id, $from, $to);
 			$allocations	 = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids),
 				'results' => -1));
@@ -1644,11 +1665,6 @@
 				unset($booking['audience']);
 			}
 
-			/**
-			 * To be implemented
-			 */
-//			$bookings = array_merge($bounderies, $bookings);
-//			_debug_array($bookings);
 			$allocations = $this->split_allocations($allocations, $bookings);
 
 			$event_ids	 = $this->so->event_ids_for_resource($resource_id, $from, $to);
@@ -1691,7 +1707,7 @@
 
 			if ($this->current_app() == 'bookingfrontend')
 			{
-				$bookings	 = $this->_remove_event_conflicts2($bookings, $events);
+				$bookings	 = $this->_remove_event_conflicts($bookings, $events);
 			}
 			else
 			{

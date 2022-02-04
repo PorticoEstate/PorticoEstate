@@ -12,6 +12,9 @@
 			$this->so = CreateObject('booking.soapplication');
 		}
 
+		/*
+		 * Used for external archive
+		 */
 		function get_export_text( $application )
 		{
 
@@ -177,6 +180,18 @@
 				}
 
 				$body = "<p>Din søknad i " . $config->config_data['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name']. " er " . lang($application['status']) . '</p>';
+
+				if ($adates)
+				{
+					$body .= "<pre>Godkjent tid:\n" . $adates . "</pre>";
+					$body .= "<br />";
+				}
+				if ($rdates)
+				{
+					$body .= "<pre>Avvist: " . $rdates . "</pre>";
+					$body .= "<br />";
+				}
+
 				if ($application['agreement_requirements'] != '')
 				{
 					$lang_additional_requirements = lang('additional requirements');
@@ -187,14 +202,6 @@
 					$body .= "<p>Kommentar fra saksbehandler:<br />" . nl2br($application['comment']) . "</p>";
 				}
 				$body .= '<pre>' . $config->config_data['application_mail_accepted'] . '<br /><a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . ': søknad #' . $application['id'] . '</a></pre>';
-				if ($adates)
-				{
-					$body .= "<pre>Godkjent:\n" . $adates . "</pre>";
-				}
-				if ($rdates)
-				{
-					$body .= "<pre>Avvist: " . $rdates . "</pre>";
-				}
 
 				$attachments = $this->get_related_files($application);
 
@@ -555,22 +562,33 @@ HTML;
 
 			$filtermethod[] = '1=1';
 
+			$sql = "SELECT DISTINCT ap.id"
+				. " FROM bb_application ap"
+				. " INNER JOIN bb_application_resource ar ON ar.application_id = ap.id"
+				. " INNER JOIN bb_building_resource br ON br.resource_id = ar.resource_id"
+				. " INNER JOIN bb_building bu ON bu.id = br.building_id";
+
 			if($user_id)
 			{
-				$filtermethod[] = "pe.subject_id = {$user_id}";
+				if(is_array($user_id))
+				{
+					$users = $user_id;
+				}
+				else
+				{
+					$users = array($user_id);
+				}
+				$filtermethod[] = "((pe.subject_id IN ( " . implode(',', $users) . ")"
+					. " AND ap.case_officer_id IS NULL) OR  ap.case_officer_id IN ( " . implode(',', $users) . "))";
+				$sql.= " INNER JOIN bb_permission pe ON pe.object_id = bu.id and pe.object_type = 'building'";
 			}
+
 			if($building_id)
 			{
 				$filtermethod[] = "bu.id = {$building_id}";
 			}
 
-			$sql = "SELECT DISTINCT ap.id"
-				. " FROM bb_application ap"
-				. " INNER JOIN bb_application_resource ar ON ar.application_id = ap.id"
-				. " INNER JOIN bb_building_resource br ON br.resource_id = ar.resource_id"
-				. " INNER JOIN bb_building bu ON bu.id = br.building_id"
-				. " INNER JOIN bb_permission pe ON pe.object_id = bu.id and pe.object_type = 'building'"
-				. " WHERE " . implode(' AND ', $filtermethod);
+			$sql.=  " WHERE " . implode(' AND ', $filtermethod);
 
 			$this->db->query($sql);
 			$result = $this->db->resultSet;
@@ -588,7 +606,9 @@ HTML;
 			$params = $this->build_default_read_params();
 
 			if (!isset($params['filters']))
+			{
 				$params['filters'] = array();
+			}
 			$where_clauses = !isset($params['filters']['where']) ? array() : (array)$params['filters']['where'];
 
 			if (!is_null($for_case_officer_id[0]))
@@ -628,6 +648,7 @@ HTML;
 				$filters = array('status' => 'NEWPARTIAL1', 'session_id' => $session_id);
 				$params = array('filters' => $filters, 'results' =>'all');
 				$applications = $this->so->read($params);
+				$this->so->get_purchase_order($applications);
 				$list = $applications;
 			}
 			return $list;

@@ -1,12 +1,12 @@
-/*! DateTime picker for DataTables.net v1.0.3
+/*! DateTime picker for DataTables.net v1.1.1
  *
- * ©2020 SpryMedia Ltd, all rights reserved.
+ * © SpryMedia Ltd, all rights reserved.
  * License: MIT datatables.net/license/mit
  */
 
 /**
  * @summary     DateTime picker for DataTables.net
- * @version     1.0.3
+ * @version     1.1.1
  * @file        dataTables.dateTime.js
  * @author      SpryMedia Ltd
  * @contact     www.datatables.net/contact
@@ -35,14 +35,11 @@
 }(function( $, window, document, undefined ) {
 'use strict';
 
-// Support libraries which support a Moment like API
-var dateLib = window.moment
-	? window.moment
-	: window.dayjs
-		? window.dayjs
-		: window.luxon
-			? window.luxon
-			: null;
+// Supported formatting and parsing libraries:
+// * Moment
+// * Luxon
+// * DayJS
+var dateLib;
 
 /*
  * This file provides a DateTime GUI picker (calendar and time input). Only the
@@ -61,6 +58,18 @@ var dateLib = window.moment
  * options based on the `DateTime.defaults` object.
  */
 var DateTime = function ( input, opts ) {
+	// Attempt to auto detect the formatting library (if there is one). Having it in
+	// the constructor allows load order independence.
+	if (typeof dateLib === 'undefined') {
+		dateLib = window.moment
+			? window.moment
+			: window.dayjs
+				? window.dayjs
+				: window.luxon
+					? window.luxon
+					: null;
+	}
+
 	this.c = $.extend( true, {}, DateTime.defaults, opts );
 	var classPrefix = this.c.classPrefix;
 	var i18n = this.c.i18n;
@@ -107,6 +116,10 @@ var DateTime = function ( input, opts ) {
 						'<select class="'+classPrefix+'-year"></select>'+
 					'</div>'+
 				'</div>'+
+				'<div class="'+classPrefix+'-buttons">'+
+					'<a class="'+classPrefix+'-clear">'+i18n.clear+'</a>'+
+					'<a class="'+classPrefix+'-today">'+i18n.today+'</a>'+
+				'</div>'+
 				'<div class="'+classPrefix+'-calendar"></div>'+
 			'</div>'+
 			'<div class="'+classPrefix+'-time">'+
@@ -125,6 +138,9 @@ var DateTime = function ( input, opts ) {
 		calendar:  structure.find( '.'+classPrefix+'-calendar' ),
 		time:      structure.find( '.'+classPrefix+'-time' ),
 		error:     structure.find( '.'+classPrefix+'-error' ),
+		buttons:     structure.find( '.'+classPrefix+'-buttons' ),
+		clear:     structure.find( '.'+classPrefix+'-clear' ),
+		today:     structure.find( '.'+classPrefix+'-today' ),
 		input:     $(input)
 	};
 
@@ -160,6 +176,7 @@ var DateTime = function ( input, opts ) {
 
 	this.dom.date
 		.append( this.dom.title )
+		.append( this.dom.buttons )
 		.append( this.dom.calendar );
 
 	this._constructor();
@@ -285,12 +302,10 @@ $.extend( DateTime.prototype, {
 			}
 		}
 
-		// We need a date to be able to display the calendar at all
-		if ( ! this.s.d ) {
-			this.s.d = this._dateToUtc( new Date() );
-		}
-
-		this.s.display = new Date( this.s.d.toString() );
+		// Need something to display
+		this.s.display = this.s.d
+			? new Date( this.s.d.toString() )
+			: new Date();
 
 		// Set the day of the month to be 1 so changing between months doesn't
         // run into issues when going from day 31 to 28 (for example)
@@ -341,13 +356,21 @@ $.extend( DateTime.prototype, {
 			this.dom.time.children('span').eq(1).remove();
 		}
 
+		if ( ! this.c.buttons.clear ) {
+			this.dom.clear.css( 'display', 'none' );
+		}
+
+		if ( ! this.c.buttons.today ) {
+			this.dom.today.css( 'display', 'none' );
+		}
+
 		// Render the options
 		this._optionsTitle();
 
 		$(document).on('i18n.dt', function (e, settings) {
 			if (settings.oLanguage.datetime) {
 				$.extend(true, that.c.i18n, settings.oLanguage.datetime);
-				this._optionsTitle();
+				that._optionsTitle();
 			}
 		});
 
@@ -463,6 +486,28 @@ $.extend( DateTime.prototype, {
 
 				e.stopPropagation();
 
+				if ( nodeName === 'a' ) {
+					e.preventDefault();
+
+					if ($(target).hasClass(classPrefix+'-clear')) {
+						// Clear the value and don't change the display
+						that.s.d = null;
+						that.dom.input.val('');
+						that._writeOutput();
+						that._setCalander();
+						that._setTime();
+
+						onChange();
+					}
+					else if ($(target).hasClass(classPrefix+'-today')) {
+						// Don't change the value, but jump to the month
+						// containing today
+						that.s.display = new Date();
+
+						that._setTitle();
+						that._setCalander();
+					}
+				}
 				if ( nodeName === 'button' ) {
 					var button = $(target);
 					var parent = button.parent();
@@ -491,6 +536,8 @@ $.extend( DateTime.prototype, {
 					else if ( button.parents('.'+classPrefix+'-time').length ) {
 						var val = button.data('value');
 						var unit = button.data('unit');
+
+						d = that._needValue();
 
 						if ( unit === 'minutes' ) {
 							if ( parent.hasClass('disabled') && parent.hasClass('range') ) {
@@ -545,9 +592,7 @@ $.extend( DateTime.prototype, {
 					}
 					else {
 						// Calendar click
-						if ( ! d ) {
-							d = that._dateToUtc( new Date() );
-						}
+						d = that._needValue();
 
 						// Can't be certain that the current day will exist in
 						// the new month, and likewise don't know that the
@@ -926,6 +971,20 @@ $.extend( DateTime.prototype, {
 		var weekNum = Math.ceil( ( ( (date - oneJan) / 86400000) + 1)/7 );
 
 		return '<td class="'+this.c.classPrefix+'-week">' + weekNum + '</td>';
+	},
+
+	/**
+	 * Check if the instance has a date object value - it might be null.
+	 * If is doesn't set one to now.
+	 * @returns A Date object
+	 * @private
+	 */
+	_needValue: function () {
+		if ( ! this.s.d ) {
+			this.s.d = this._dateToUtc( new Date() );
+		}
+
+		return this.s.d;
 	},
 
 	/**
@@ -1366,21 +1425,24 @@ $.extend( DateTime.prototype, {
 	 */
 	_writeOutput: function ( focus ) {
 		var date = this.s.d;
+		var out = '';
 
 		// Use moment, dayjs or luxon if possible - otherwise it must be ISO8601 (or the
 		// constructor would have thrown an error)
 		// luxon uses different method names so need to be able to call them.
-		var out = dateLib && dateLib == window.luxon
+		if (date) {
+			out = dateLib && dateLib == window.luxon
 			? dateLib.DateTime.fromJSDate(this.s.d).toFormat(this.c.format)
 			: dateLib ?
 				dateLib.utc( date, undefined, this.c.locale, this.c.strict ).format( this.c.format ) :
 				date.getUTCFullYear() +'-'+
 					this._pad(date.getUTCMonth() + 1) +'-'+
 					this._pad(date.getUTCDate());
+		}
 
-			this.dom.input
-				.val( out )
-				.trigger('change', {write: date});
+		this.dom.input
+			.val( out )
+			.trigger('change', {write: date});
 		
 		if ( this.dom.input.attr('type') === 'hidden' ) {
 			this.val(out, false);
@@ -1415,6 +1477,11 @@ DateTime._instance = 0;
 DateTime.defaults = {
 	attachTo: 'body',
 
+	buttons: {
+		clear: false,
+		today: false
+	},
+
 	// Not documented - could be an internal property
 	classPrefix: 'dt-datetime',
 
@@ -1429,6 +1496,7 @@ DateTime.defaults = {
 	hoursAvailable: null,
 
 	i18n: {
+		clear:    'Clear',
 		previous: 'Previous',
 		next:     'Next',
 		months:   [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],
@@ -1437,7 +1505,8 @@ DateTime.defaults = {
 		hours:    'Hour',
 		minutes:  'Minute',
 		seconds:  'Second',
-		unknown:  '-'
+		unknown:  '-',
+		today:    'Today'
 	},
 
 	maxDate: null,
@@ -1465,7 +1534,7 @@ DateTime.defaults = {
 	yearRange: 25
 };
 
-DateTime.version = '1.0.3';
+DateTime.version = '1.1.1';
 
 // Global export - if no conflicts
 if (! window.DateTime) {

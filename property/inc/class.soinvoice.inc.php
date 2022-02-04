@@ -161,6 +161,7 @@
 			if ($paid)
 			{
 				$table = 'fm_ecobilagoverf';
+				$_transfer_field = ',overftid';
 
 				if ($b_account_class)
 				{
@@ -181,12 +182,13 @@
 			else
 			{
 				$table = 'fm_ecobilag';
+				$_transfer_field = null;
 			}
 
 			$no_q = false;
 			if ($voucher_id)
 			{
-				$filtermethod	 = " WHERE bilagsnr = " . (int)$voucher_id . " OR bilagsnr_ut = '{$voucher_id}'";// OR spvend_code = ". (int)$query;
+				$filtermethod	 = " WHERE (bilagsnr = " . (int)$voucher_id . " OR bilagsnr_ut = '{$voucher_id}' OR external_voucher_id = " . (int)$voucher_id . " )";
 				$no_q			 = true;
 			}
 
@@ -272,11 +274,11 @@
 					$voucher_id = $invoice_temp['voucher_id'];
 
 					$sql = "SELECT pmwrkord_code,spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
-						. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,fakturadato,org_name,"
+						. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato {$_transfer_field},fakturadato,org_name,"
 						. " forfallsdato,periode,periodization,periodization_start,artid,kidnr,kreditnota,currency "
 						. " FROM {$table} {$this->join} fm_vendor ON fm_vendor.id = {$table}.spvend_code WHERE bilagsnr = {$voucher_id} "
 						. " GROUP BY bilagsnr,pmwrkord_code,spvend_code,oppsynsmannid,saksbehandlerid,budsjettansvarligid,"
-						. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato,utbetalingsigndato,fakturadato,org_name,"
+						. " utbetalingid,oppsynsigndato,saksigndato,budsjettsigndato {$_transfer_field},fakturadato,org_name,"
 						. " forfallsdato,periode,periodization,periodization_start,artid,kidnr,kreditnota,currency";
 
 					$this->db->query($sql, __LINE__, __FILE__);
@@ -312,9 +314,11 @@
 						$invoice[$i]['budget_date'] = '';
 					}
 
-					if ($this->db->f('utbetalingid') && $this->db->f('utbetalingsigndato'))
+//					if ($this->db->f('utbetalingid') && $this->db->f('utbetalingsigndato'))
+					if ($this->db->f('overftid'))
+
 					{
-						$invoice[$i]['transfer_date'] = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->db->f('utbetalingsigndato')));
+						$invoice[$i]['transfer_date'] = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($this->db->f('overftid')));
 					}
 					else
 					{
@@ -1359,7 +1363,9 @@
 
 			$sql = "SELECT DISTINCT account_lid,account_lastname, account_firstname FROM fm_ecodimb_role_user"
 				. " {$this->db->join} phpgw_accounts ON fm_ecodimb_role_user.user_id = phpgw_accounts.account_id"
-				. " WHERE {$role_filter} {$filter_dimb} AND expired_on IS NULL"
+				. " WHERE {$role_filter} {$filter_dimb}"
+				. " AND expired_on IS NULL"
+				. " AND account_status = 'A'"
 				. ' AND active_from < ' . time()
 				. ' AND (active_to > ' . time() . ' OR active_to = 0)'
 				. " ORDER BY account_lastname ASC, account_firstname ASC";
@@ -2646,9 +2652,16 @@
 
 			if ($data['janitor_lid'])
 			{
-				$data['janitor_lid'] = ltrim($data['janitor_lid'], '*');
-				$filtermethod	 .= " {$where} (oppsynsigndato IS NULL AND saksbehandlerid != '{$data['janitor_lid']}'";
-				$filtermethod	 .= " AND oppsynsmannid = '{$data['janitor_lid']}')";
+				if (stripos($data['janitor_lid'], '*') === 0)
+				{
+					$data['janitor_lid'] = ltrim($data['janitor_lid'], '*');
+					$filtermethod	 .= " {$where} (oppsynsigndato IS NULL AND (saksbehandlerid != '{$data['janitor_lid']}' OR saksbehandlerid IS NULL)";
+					$filtermethod	 .= " AND oppsynsmannid = '{$data['janitor_lid']}')";
+				}
+				else
+				{
+					$filtermethod	 .= " {$where} oppsynsmannid = '{$data['janitor_lid']}'";
+				}
 				$where			 = 'OR';
 			}
 
@@ -2658,7 +2671,11 @@
 				{
 					$data['supervisor_lid']	 = ltrim($data['supervisor_lid'], '*');
 
-					$filtermethod 	 .= " {$where} (saksbehandlerid = '{$data['supervisor_lid']}' AND saksigndato IS NULL)";
+//					$filtermethod 	 .= " {$where} (saksbehandlerid = '{$data['supervisor_lid']}' AND saksigndato IS NULL)";
+//					$filtermethod 	 .= " {$where} (saksbehandlerid = '{$data['supervisor_lid']}' AND saksigndato IS NULL AND oppsynsigndato IS NOT NULL)";
+					$filtermethod 	 .= " {$where} (saksbehandlerid = '{$data['supervisor_lid']}'"
+						. " AND saksigndato IS NULL "
+						. "AND (oppsynsigndato IS NOT NULL OR oppsynsmannid = '{$data['supervisor_lid']}' OR oppsynsmannid IS NULL))";
 //					$filtermethod 	 .= " {$where} (( saksbehandlerid = '{$data['supervisor_lid']}' AND oppsynsigndato IS NOT NULL	AND saksigndato IS NULL )
 //					OR (saksbehandlerid = '{$data['supervisor_lid']}' AND oppsynsigndato IS NULL AND saksigndato IS NULL)
 //					OR (oppsynsmannid = '{$data['supervisor_lid']}' AND saksbehandlerid = '{$data['supervisor_lid']}' AND oppsynsigndato IS NULL AND saksigndato IS NULL ))";
@@ -2906,7 +2923,7 @@
 			$amount = 0;
 			foreach ($voucher as $entry)
 			{
-				$amount += $entry['amount'];
+				$amount += (float)$entry['amount'];
 				phpgwapi_cache::system_clear('property', "budget_order_{$entry['order_id']}");
 			}
 			unset($entry);
@@ -2930,7 +2947,7 @@
 			}
 			unset($entry);
 
-			if ($split_amount != $amount)
+			if (round($split_amount, 2) != round($amount,2))
 			{
 				throw new Exception('soinvoice::perform_bulk_split() - amount does not add up');
 			}

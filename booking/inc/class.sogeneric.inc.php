@@ -120,6 +120,93 @@
 					);
 
 					break;
+				case 'article_category':
+					$info = array(
+						'table'				 => 'bb_article_category',
+						'id'				 => array('name' => 'id', 'type' => 'auto'),
+						'fields'			 => array(
+							array(
+								'name'	 => 'name',
+								'descr'	 => lang('name'),
+								'type'	 => 'varchar'
+							),
+						),
+						'edit_msg'			 => lang('edit'),
+						'add_msg'			 => lang('add'),
+						'name'				 => $GLOBALS['phpgw']->translation->translate('article category', array(), false, 'booking'),
+						'acl_app'			 => 'booking',
+						'acl_location'		 => '.admin',
+						'system_location'	 => '.article',
+						'menu_selection'	 => 'booking::settings::article',
+						'default'			 => array(
+							'owner_id' => array('add' => '$this->account'),
+						),
+						'check_grant'		 => false
+					);
+
+					break;
+				case 'article_service':
+					$info	 = array(
+						'table'				 => 'bb_service',
+						'id'				 => array('name' => 'id', 'type' => 'auto'),
+						'fields'			 => array(
+							array(
+								'name'	 => 'name',
+								'descr'	 => lang('name'),
+								'type'	 => 'varchar'
+							),
+							array(
+								'name'	 => 'description',
+								'descr'	 => lang('description'),
+								'type'	 => 'text'
+							),
+							array(
+								'name'		 => 'active',
+								'descr'		 => lang('active'),
+								'type'		 => 'checkbox',
+								'default'	 => 'checked',
+								'filter'	 => true,
+								'sortable'	 => true,
+								'values_def' => array(
+									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
+								)
+							)
+						),
+						'edit_msg'			 => lang('edit'),
+						'add_msg'			 => lang('add'),
+						'name'				 => $GLOBALS['phpgw']->translation->translate('article service', array(), false, 'booking'),
+						'acl_app'			 => 'booking',
+						'acl_location'		 => '.admin',
+						'system_location'	 => '.article',
+						'menu_selection'	 => 'booking::commerce::service',
+						'check_grant'		 => false
+					);
+					break;
+				case 'tax':
+					$info	 = array(
+						'table'			 => 'fm_ecomva',
+						'id'			 => array('name' => 'id', 'type' => 'int'),
+						'fields'		 => array(
+							array(
+								'name'	 => 'percent',
+								'descr'	 => lang('percent'),
+								'type'	 => 'int'
+							),
+							array(
+								'name'	 => 'descr',
+								'descr'	 => lang('descr'),
+								'type'	 => 'varchar'
+							)
+						),
+						'edit_msg'		 => lang('edit'),
+						'add_msg'		 => lang('add'),
+						'name'			 => lang('tax code'),
+						'acl_app'		 => 'booking',
+						'acl_location'	 => '.admin',
+						'menu_selection' => 'booking::commerce::accounting_tax'
+					);
+					break;
+
 // END BOOKING TABLES
 				default:
 					$message = lang('ERROR: illegal type %1', $type);

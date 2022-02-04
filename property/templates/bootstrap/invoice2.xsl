@@ -134,9 +134,9 @@
 				</div>
 
 				<div class='row'>
-					<div class='col-sm-9'>
+					<div class='col'>
 			
-						<table class="pure-table">
+						<table class="table">
 							<tr>
 								<td valign="top" height="30">
 									<div id = 'split_text'>

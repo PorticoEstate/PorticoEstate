@@ -791,7 +791,7 @@
 						'id'			 => $this->db->f('id')
 					);
 				}
-			
+
 
 
 			$locations			 = $this->soadmin_location->select_location_type();
@@ -873,7 +873,7 @@
 			$this->uicols = $uicols;
 
 
-			if ($order && !$order == 'fm_location1.loc1')
+			if ($order && $order !== 'fm_location1.loc1')
 			{
 				$ordermethod = " ORDER BY {$order} {$sort}";
 			}
@@ -2448,7 +2448,7 @@
 		 *
 		 * @return array array of hits
 		 */
-		public function get_locations( $location_code )
+		public function get_locations( $location_code, $level = null )
 		{
 
 			$config = $this->soadmin_location->read_config('');
@@ -2460,10 +2460,10 @@
 				$__config[$_config['column_name']] = $_config['location_type'];
 			}
 
-			$location_levels = count($location_types);
+			$location_levels = $level ? 1 : count($location_types);
 
 			$location_arr	 = explode('-', $location_code);
-			$current_level	 = count($location_arr);
+			$current_level	 = $level ? $level : count($location_arr);
 			$next_level		 = $current_level + 1;
 
 			$filtermethod1	 = '';
@@ -2479,9 +2479,8 @@
 			{
 				$limit_search	 = 100;
 				$text_search	 = true;
-				$current_level	 = 1;
-				$next_level		 = 2;
-				$last_level		 = 4;
+				$current_level	 = $level ? $level :1;
+				$next_level		 = $current_level + 1;
 				$query			 = $this->db->db_addslashes($location_arr[0]);
 				$filtermethod1	 = "WHERE loc{$current_level}_name {$this->like} '%{$query}%' AND category !='99'";
 				$filtermethod2	 = "WHERE loc{$next_level}_name {$this->like} '%{$query}%' AND category !='99'";
@@ -2536,8 +2535,8 @@
 			else if ($text_search)
 			{
 				$_sql = array();
-				$j = 1;
-				for ($i = 0; $i < $location_levels; $i++)
+				$j = $level ? $level : 1;
+				for ($i = 0; $i < $location_levels ; $i++)
 				{
 					$metadata = $this->db->metadata("fm_location{$j}");
 
@@ -2545,7 +2544,7 @@
 
 					if($__config['street_id'] == $j)
 					{
-						$name_field = "fm_streetaddress.descr || ' ' || fm_location{$j}.street_number  || ' (' || fm_location{$j}.loc{$j}_name ||')'";
+						$name_field = "fm_streetaddress.descr || ' ' || fm_location{$j}.street_number";
 						if(isset($metadata['etasje']))
 						{
 							$name_field .= " || ' Etasje:' || fm_location{$j}.etasje";
@@ -2561,7 +2560,7 @@
 								. " FROM fm_location{$j}"
 								. " WHERE {$name_field} {$this->like} '%{$query}%' AND category !='99'";
 					}
-	
+
 					$j++;
 				}
 				$sql = implode(" UNION ", $_sql);

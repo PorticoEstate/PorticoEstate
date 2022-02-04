@@ -105,7 +105,7 @@
 
 			if (!$db = $this->get_db())
 			{
-				return;
+				return array();
 			}
 
 			$result_units = array();
@@ -173,7 +173,7 @@
 
 			if (!$db = $this->get_db())
 			{
-				return;
+				return array();
 			}
 
 			$db1 = clone($db);
@@ -376,7 +376,8 @@
 		{
 			$this->log(__class__, __function__);
 
-			$sql = "SELECT BRUKERNAVN, FORNAVN, ETTERNAVN, EPOST FROM V_AD_BRUKERE WHERE BRUKERNAVN = '{$username}'";
+			$sql = "SELECT BRUKERNAVN, FORNAVN, ETTERNAVN, EPOST, RESSURSNR FROM FELLESDATA.V_PORTICO_ANSATT WHERE BRUKERNAVN = '{$username}'";
+
 			if (!$db = $this->get_db())
 			{
 				return;
@@ -396,7 +397,8 @@
 						'username' => $db->f('brukernavn', true),
 						'firstname' => $db->f('fornavn', true),
 						'lastname' => $db->f('etternavn', true),
-						'email' => $db->f('epost', true)
+						'email' => $db->f('epost', true),
+						'ressursnr' => $db->f('ressursnr', true)
 					);
 				}
 				else
@@ -405,7 +407,8 @@
 						'username' => $db->f('BRUKERNAVN', true),
 						'firstname' => $db->f('FORNAVN', true),
 						'lastname' => $db->f('ETTERNAVN', true),
-						'email' => $db->f('EPOST', true)
+						'email' => $db->f('EPOST', true),
+						'ressursnr' => $db->f('RESSURSNR'),
 					);
 				}
 			}

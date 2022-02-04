@@ -45,11 +45,11 @@
 
 	<xsl:if test="booking/edit_link">
 		<div class="actions">
-			<a class="btn btn-light mt-4" href="{booking/edit_link}" target="_blank">
+			<a class="btn btn-light mt-4" href="{booking/edit_link}">
 				<xsl:value-of select="php:function('lang', 'Edit booking')"/>
 			</a>
 			<xsl:if test="user_can_delete_bookings = 1">
-				<a class="btn btn-light mt-4" href="{booking/cancel_link}" target="_blank">
+				<a class="btn btn-light mt-4" href="{booking/cancel_link}">
 					<xsl:value-of select="php:function('lang', 'Cancel booking')"/>
 				</a>
 			</xsl:if>
@@ -57,6 +57,11 @@
 	</xsl:if>
 	<xsl:if test="booking/ical_link">
 		<div class="actions">
+			<xsl:if test="booking/copy_link">
+				<a href="{booking/copy_link}" target="_blank" class="btn btn-light mt-4">
+					<xsl:value-of select="php:function('lang', 'Copy application')"/>
+				</a>
+			</xsl:if>
 			<a class="btn btn-light mt-4" href="{booking/ical_link}" target="_blank">
 				iCal
 			</a>

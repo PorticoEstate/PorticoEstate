@@ -42,7 +42,7 @@
 		{
 			$this->table_name = $table_name;
 			$this->fields = $fields;
-			$this->db = $GLOBALS['phpgw']->db;
+			$this->db = & $GLOBALS['phpgw']->db;
 			$this->db2 = clone($GLOBALS['phpgw']->db);
 			$this->join = & $this->db->join;
 			$this->like = & $this->db->like;
@@ -181,7 +181,8 @@
 				}
 				else if (isset($params['join']) && $params['join'])
 				{
-					if ((isset($params['join_type']) && $params['join_type'] == 'manytomany') && ( !isset($filters[$field]) && empty($query) ) )
+//					if ((isset($params['join_type']) && $params['join_type'] == 'manytomany') && ( !isset($filters[$field]) && empty($query) ) )
+					if ((isset($params['join_type']) && $params['join_type'] == 'manytomany') && ( !array_key_exists($field, $filters) ) )
 					{
 						continue;
 					}

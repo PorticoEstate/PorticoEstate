@@ -6,17 +6,18 @@
 	class bookingfrontend_uiapplication extends booking_uiapplication
 	{
 
-		public $public_functions = array
-			(
-			'add' => true,
-			'add_contact' => true,
-            'confirm' => true,
-			'delete_partial' => true,
-			'edit' => true,
-			'show' => true,
-			'get_activity_data' => true,
-			'get_partials' => true,
-			'set_block'		=> true
+		public $public_functions = array(
+			'add'							 => true,
+			'add_contact'					 => true,
+			'confirm'						 => true,
+			'delete_partial'				 => true,
+			'edit'							 => true,
+			'show'							 => true,
+			'get_activity_data'				 => true,
+			'get_partials'					 => true,
+			'set_block'						 => true,
+			'cancel_block'					 => true,
+			'update_contact_informtation'	 => true
 		);
 
 		function get_activity_data()
@@ -99,6 +100,12 @@
 					{
 						booking_bocommon_authorized::disable_authorization();
 						$document_receipt = $document_application->bo->add($document);
+
+						$comment = "Det er lagt til et vedlegg: " . $files['name']['name'];
+						$this->bo->send_admin_notification($application, $comment);
+						$this->set_display_in_dashboard($application, true, array('force' => true));
+						$this->add_comment($application, $comment);
+
 					}
 					catch (booking_unauthorized_exception $e)
 					{

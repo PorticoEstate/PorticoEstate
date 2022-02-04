@@ -69,7 +69,7 @@ clear	common	nn	Clear
 clear form	common	nn	Tøm skjema
 configure access permissions	common	nn	Tilgangskontroll
 configuration	common	nn	Konfigurasjon
-copy	common	nn	Kopier
+copy	common	nn	Kopiér
 create	common	nn	Lag
 created by	common	nn	Laget av
 current users	common	nn	Current brukere

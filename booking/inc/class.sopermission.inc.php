@@ -69,6 +69,71 @@
 			);
 		}
 
+		function get_user_list()
+		{
+			$object_type = $this->get_object_type();
+			$sql	 = "SELECT DISTINCT account_id, account_lastname,  account_firstname FROM bb_permission "
+				. "JOIN phpgw_accounts ON bb_permission.subject_id = phpgw_accounts.account_id WHERE object_type = '{$object_type}'";
+			$this->db->query($sql);
+			$users	 = array();
+			while ($this->db->next_record())
+			{
+				$users[] = array(
+					'id' => $this->db->f('account_id'),
+					'name' => $this->db->f('account_lastname', true) . ', ' . $this->db->f('account_firstname', true),
+				);
+			}
+
+			return $users;
+		}
+
+		function copy_permissions($from_id, $to_id)
+		{
+			$object_type = $this->get_object_type();
+
+			$this->db->query("DELETE FROM bb_permission WHERE object_type = '{$object_type}' AND bb_permission.object_id = " . (int) $to_id);
+
+			$sql = "SELECT * FROM bb_permission WHERE object_type = '{$object_type}' AND object_id = " . (int) $from_id;
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$valueset = array();
+		 
+			while($this->db->next_record())
+			{
+				$valueset[]	 = array(
+					1	 => array
+						(
+						'value'	 => (int) $this->db->f('subject_id'),
+						'type'	 => PDO::PARAM_INT
+					),
+					2	 => array
+						(
+						'value'	 => (int) $to_id,
+						'type'	 => PDO::PARAM_INT
+						),
+					3	 => array
+						(
+						'value'	 =>$this->db->f('object_type'),
+						'type'	 => PDO::PARAM_STR
+					),
+					4	 => array
+						(
+						'value'	 =>$this->db->f('role'),
+						'type'	 => PDO::PARAM_STR
+					),
+
+				);
+			}
+
+			$sql_insert = 'INSERT INTO bb_permission (subject_id, object_id, object_type, role) VALUES (?, ?, ?, ?)';
+
+			if ($valueset)
+			{
+				$this->db->insert($sql_insert, $valueset, __LINE__, __FILE__);
+			}
+
+		}
+
 		function read( $params )
 		{
 			$params['filters']['object_type'] = $this->get_object_type();

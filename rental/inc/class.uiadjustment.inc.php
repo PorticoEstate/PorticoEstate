@@ -88,6 +88,13 @@
 					'editor_action' => '',
 					'field' => array(
 						array(
+							'key' => 'id',
+							'label' => lang('id'),
+							'className' => '',
+							'sortable' => true,
+							'hidden' => false
+						),
+						array(
 							'key' => 'year',
 							'label' => lang('year'),
 							'className' => '',
@@ -335,7 +342,7 @@ JS;
 				}
 
 				$adjustment->set_new_price(0);
-				$adjustment->set_percent(phpgw::get_var('percent'));
+				$adjustment->set_percent(phpgw::get_var('percent', 'float'));
 				$adjustment->set_interval(phpgw::get_var('interval'));
 				$adjustment->set_adjustment_type(phpgw::get_var('adjustment_type'));
 				$adjustment->set_extra_adjustment(phpgw::get_var('extra_adjustment') == 'on' ? true : false);
@@ -631,18 +638,18 @@ JS;
 				var decimalPlaces = '$this->decimalPlaces';
 				var currency_suffix = '$this->currency_suffix';
 				var area_suffix = 'kvm';
-				
-				function formatPrice (key, oData) 
+
+				function formatPrice (key, oData)
 				{
 					var amount = $.number( oData[key], decimalPlaces, decimalSeparator, thousandsSeparator ) + ' ' + currency_suffix;
 					return amount;
 				}
 
-				function formatArea (key, oData) 
+				function formatArea (key, oData)
 				{
 					var interval = oData[key]+ ' ' + area_suffix;
 					return interval;
-				}				
+				}
 JS;
 
 			$GLOBALS['phpgw']->js->add_code('', $code);

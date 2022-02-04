@@ -55,12 +55,13 @@
 			$table = 'fm_s_agreement';
 			$this->db->query("SELECT vendor_id,org_name FROM $table $this->join fm_vendor on fm_s_agreement.vendor_id=fm_vendor.id GROUP BY org_name,vendor_id ");
 
-			$i = 0;
+			$vendor = array();
 			while ($this->db->next_record())
 			{
-				$vendor[$i]['id']	 = $this->db->f('vendor_id');
-				$vendor[$i]['name']	 = stripslashes($this->db->f('org_name'));
-				$i++;
+				$vendor[] = array(
+					'id'	 => $this->db->f('vendor_id'),
+					'name'	 => $this->db->f('org_name', true)
+				);
 			}
 			return $vendor;
 		}

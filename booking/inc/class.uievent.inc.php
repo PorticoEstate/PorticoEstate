@@ -12,13 +12,14 @@
 
 		public $public_functions = array
 			(
-			'index' => true,
-			'query' => true,
-			'add' => true,
-			'edit' => true,
-			'delete' => true,
-			'info' => true,
-			'toggle_show_inactive' => true,
+			'index'					 => true,
+			'query'					 => true,
+			'add'					 => true,
+			'edit'					 => true,
+			'delete'				 => true,
+			'info'					 => true,
+			'toggle_show_inactive'	 => true,
+			'send_sms_participants'	 => true
 		);
 		protected $customer_id,
 			$account;
@@ -312,7 +313,9 @@
 					$end = $to_->format('H:i');
 
 					if ($start == $end)
+					{
 						continue;
+					}
 
 					$resource = $this->bo->so->get_resource_info($res);
 					$_mymail = $this->bo->so->get_contact_mail($e, 'allocation');
@@ -358,7 +361,9 @@
 					$end = $to_->format('H:i');
 
 					if ($start == $end)
+					{
 						continue;
+					}
 
 					$resource = $this->bo->so->get_resource_info($res);
 					$_mymail = $this->bo->so->get_contact_mail($e, 'booking');
@@ -676,6 +681,86 @@
 			}
 		}
 
+		public function send_sms_participants()
+		{
+			$type = 'event';;
+			$id = phpgw::get_var('id', 'int');
+			$send_sms = phpgw::get_var('send_sms', 'bool');
+			$sms_content = phpgw::get_var('sms_content', 'string');
+
+			$status = 'error';
+			$message = 'Nothing...';
+			if($send_sms && $sms_content)
+			{
+				$message = '';
+				$soparticipant = createObject('booking.soparticipant');
+				$params = array(
+					'results' => -1,
+					'filters' => array(
+						'reservation_id' => $id,
+						'reservation_type' => $type
+						)
+				);
+
+				$participants = $soparticipant->read($params);
+				if(!$participants['results'])
+				{
+					$message = lang('no records found.');
+				}
+
+				$sms_service = CreateObject('sms.sms');
+				$sms_recipients = array();
+				foreach ($participants['results'] as $participant)
+				{
+					$sms_recipients[] = $participant['phone'];
+				}
+				$final_recipients = array_unique($sms_recipients);
+
+				$account_id = $this->current_account_id();
+				$log_success = array();
+				$log_error = array();
+				foreach ($final_recipients as $final_recipient)
+				{
+					try
+					{
+						$sms_res = $sms_service->websend2pv($account_id, $final_recipient, $sms_content);
+						if (empty($sms_res[0][0]))
+						{
+							$log_error[] = $final_recipient;
+						}
+						else
+						{
+							$log_success[] = $final_recipient;
+
+						}
+					}
+					catch (Exception $ex)
+					{
+						$log_error[] = $final_recipient;
+					}
+
+				}
+
+				if($log_success)
+				{
+					$status = 'ok';
+					$message .= 'SMS sendt til: ' . implode(',', $log_success);
+					$event = $this->bo->read_single($id);
+				}
+				if($log_error)
+				{
+					$message .= "<br/>SMS feilet for: " . implode(',', $log_error);
+				}
+				$this->add_comment($event, "SMS: $message");
+				$this->bo->update($event);
+
+			}
+			return array(
+				'status' => $status,
+				'message' => $message
+			);
+		}
+
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
@@ -684,6 +769,10 @@
 				phpgw::no_access('booking', lang('missing id'));
 			}
 			$event = $this->bo->read_single($id);
+			if(!$event)
+			{
+				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
+			}
 
 			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($event['resources'], true);
 			$resource_paricipant_limit = 0;
@@ -832,27 +921,14 @@
 
 				if (!$errors['event'] and ! $errors['resource_number'] and ! $errors['organization_number'] and ! $errors['invoice_data'] && !$errors['contact_name'] && !$errors['cost'])
 				{
-					if ( phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtocollision', 'POST') ||  phpgw::get_var('sendsmstocontact', 'POST'))
+		//			if ( phpgw::get_var('sendtorbuilding', 'bool', 'POST') || phpgw::get_var('sendtocontact', 'bool', 'POST') || phpgw::get_var('sendtocollision', 'bool', 'POST') ||  phpgw::get_var('sendsmstocontact', 'bool', 'POST') || phpgw::get_var('sendtorbuilding_email1', 'bool', 'POST') || phpgw::get_var('sendtorbuilding_email2', 'bool', 'POST'))
 					{
 
-						if ((phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendsmstocontact', 'POST')) && phpgw::get_var('active', 'POST'))
+						if ((phpgw::get_var('sendtocollision', 'bool', 'POST') || phpgw::get_var('sendtocontact', 'bool', 'POST') || phpgw::get_var('sendtorbuilding', 'bool', 'POST') || phpgw::get_var('sendsmstocontact', 'bool', 'POST')  || phpgw::get_var('sendtorbuilding_email1', 'bool', 'POST') || phpgw::get_var('sendtorbuilding_email2', 'bool', 'POST')) && phpgw::get_var('active', 'bool', 'POST'))
 						{
 							$maildata = $this->create_sendt_mail_notification_comment_text($event, $errors);
 
-							if (phpgw::get_var('sendtocollision', 'POST'))
-							{
-								$comment_text_log = "<span style='color: green;'>" . lang('Message sent about the changes in the reservations') . ':</span><br />';
-								$res = array();
-								$resname = '';
-								foreach ($event['resources'] as $resid)
-								{
-									$res = $this->bo->so->get_resource_info($resid);
-									$resname .= $res['name'] . ', ';
-								}
-								$comment_text_log .= $event['building_name'] . " (" . substr($resname, 0, -2) . ") " . pretty_timestamp($event['from_']) . " - " . pretty_timestamp($event['to_']);
-								$this->add_comment($event, $comment_text_log);
-							}
-							if (phpgw::get_var('sendtocollision', 'POST'))
+							if (phpgw::get_var('sendtocollision', 'bool', 'POST'))
 							{
 
 								$subject = $config->config_data['event_conflict_mail_subject'];
@@ -889,14 +965,30 @@
 								}
 								if ($sendt)
 								{
+									/**start log comment**/
+									$comment_text_log = "<span style='color: green;'>" . lang('Message sent about the changes in the reservations') . ':</span><br />';
+									$res = array();
+									$resname = '';
+									foreach ($event['resources'] as $resid)
+									{
+										$res = $this->bo->so->get_resource_info($resid);
+										$resname .= $res['name'] . ', ';
+									}
+									$comment_text_log .= $event['building_name'] . " (" . substr($resname, 0, -2) . ") " . pretty_timestamp($event['from_']) . " - " . pretty_timestamp($event['to_']);
+									$this->add_comment($event, $comment_text_log);
+									/**End log comment**/
+
+									/**start log comment**/
+
 									$comment = "<p>Melding om konflikt er sendt til" . implode(', ', $mail_sendt_to) . "<br />\n" . phpgw::get_var('mail','html', 'POST') . "</p>";
 									$this->add_comment($event, $comment);
+									/**End log comment**/
 								}
 							}
-							if (phpgw::get_var('sendtocontact', 'POST'))
+							if (phpgw::get_var('sendtocontact', 'bool', 'POST'))
 							{
 								$subject = $config->config_data['event_change_mail_subject'];
-								$body = "<p>" . $config->config_data['event_change_mail'] . "\n<br /Melding:" . phpgw::get_var('mail','html', 'POST');
+								$body = "<p>" . $config->config_data['event_change_mail'] . "\n<br/>Melding: " . phpgw::get_var('mail','html', 'POST');
 								$body .= '<br /><a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . '</a></p>';
 								$this->send_mailnotification($event['contact_email'], $subject, $body);
 								$comment = $comment_text_log . '<br />Denne er sendt til ' . $event['contact_email'] . ':<br />';
@@ -904,7 +996,7 @@
 								$this->add_comment($event, $comment);
 							}
 							//sms
-                            if (phpgw::get_var('sendsmstocontact', 'POST'))
+                            if (phpgw::get_var('sendsmstocontact', 'bool', 'POST'))
 							{
                                 $rool = phpgw::get_var('mail','html', 'POST');
                                 $phone_number = phpgw::get_var('contact_phone', 'string', 'POST');
@@ -931,7 +1023,7 @@
 								}
 							}
 
-							if (phpgw::get_var('sendtorbuilding', 'POST'))
+							if (phpgw::get_var('sendtorbuilding', 'bool', 'POST') || phpgw::get_var('sendtorbuilding_email1', 'bool', 'POST') || phpgw::get_var('sendtorbuilding_email2', 'bool', 'POST'))
 							{
 
 								$subject = $config->config_data['event_mail_building_subject'];
@@ -961,37 +1053,39 @@
 
 								$sendt = 0;
 								$mail_sendt_to = [];
+/*
 								if ($event['contact_email'])
 								{
 									$sendt++;
 									$mail_sendt_to[] = $event['contact_email'];
 									$this->send_mailnotification($event['contact_email'], $subject, $body);
 								}
-								if ($building_info['email'])
+*/
+								if (phpgw::get_var('sendtorbuilding', 'bool', 'POST') && $building_info['email'])
 								{
 									$sendt++;
 									$mail_sendt_to[] = $building_info['email'];
 									$this->send_mailnotification($building_info['email'], $subject, $body);
 								}
-								if ($building_info['tilsyn_email'])
+								if (phpgw::get_var('sendtorbuilding', 'bool', 'POST') && $building_info['tilsyn_email'])
 								{
 									$sendt++;
 									$mail_sendt_to[] = $building_info['tilsyn_email'];
 									$this->send_mailnotification($building_info['tilsyn_email'], $subject, $body);
 								}
-								if ($building_info['tilsyn_email2'])
+								if (phpgw::get_var('sendtorbuilding', 'bool', 'POST') && $building_info['tilsyn_email2'])
 								{
 									$sendt++;
 									$mail_sendt_to[] = $building_info['tilsyn_email2'];
 									$this->send_mailnotification($building_info['tilsyn_email2'], $subject, $body);
 								}
-								if ($_POST['sendtorbuilding_email1'])
+								if (phpgw::get_var('sendtorbuilding_email1', 'bool', 'POST'))
 								{
 									$sendt++;
 									$mail_sendt_to[] = $_POST['sendtorbuilding_email1'];
 									$this->send_mailnotification($_POST['sendtorbuilding_email1'], $subject, $body);
 								}
-								if ($_POST['sendtorbuilding_email2'])
+								if (phpgw::get_var('sendtorbuilding_email2', 'bool', 'POST'))
 								{
 									$sendt++;
 									$mail_sendt_to[] = $_POST['sendtorbuilding_email2'];
@@ -1009,7 +1103,7 @@
 								}
 							}
 						}
-						if (!phpgw::get_var('active', 'POST') && phpgw::get_var('sendtorbuilding', 'POST'))
+						if (!phpgw::get_var('active', 'bool', 'POST') && phpgw::get_var('sendtorbuilding', 'bool', 'POST'))
 						{
 
 							$subject = $config->config_data['event_canceled_mail_subject'];
@@ -1084,25 +1178,41 @@
 //						self::redirect(array('menuaction' => 'booking.uievent.edit', 'id'=>$event['id']));
 						}
 					}
-					$receipt = $this->bo->update($event);
-					if(empty($event['application_id']))
+					
+					/**
+					 * Tolerate overlap 
+					 */
+					$_errors = $errors;
+					unset($_errors['allocation']);
+					unset($_errors['booking']);
+					if(!$_errors)
 					{
-						self::redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $event['id']));
-					}
-					else
-					{
-						self::redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $event['application_id']));
+						$receipt = $this->bo->update($event);
+						if(!$errors)
+						{
+							if(empty($event['application_id']))
+							{
+								self::redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $event['id']));
+							}
+							else
+							{
+								self::redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $event['application_id']));
+							}
+						}
 					}
 				}
 			}
 
+			/**
+			 * Translate into text
+			 */
 			if ($errors['allocation'])
 			{
-				$errors['allocation'] = lang('Event created, Overlaps with existing allocation, Remember to send a notification');
+				$errors['allocation'] = lang('Overlaps with existing allocation %1. Remember to send a notification', " #" . implode(', #',$errors['allocation'][0])) ;
 			}
 			elseif ($errors['booking'])
 			{
-				$errors['booking'] = lang('Event created, Overlaps with existing booking, Remember to send a notification');
+				$errors['booking'] = lang('Overlaps with existing booking %1. Remember to send a notification', " #" . implode(', #',$errors['booking'][0])) ;
 			}
 			$this->flash_form_errors($errors);
 			if ($customer['customer_identifier_type'])
