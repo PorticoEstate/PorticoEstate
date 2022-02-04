@@ -183,11 +183,13 @@
 
 				if ($adates)
 				{
-					$body .= "<pre>Godkjent:\n" . $adates . "</pre>";
+					$body .= "<pre>Godkjent tid:\n" . $adates . "</pre>";
+					$body .= "<br />";
 				}
 				if ($rdates)
 				{
 					$body .= "<pre>Avvist: " . $rdates . "</pre>";
+					$body .= "<br />";
 				}
 
 				if ($application['agreement_requirements'] != '')
