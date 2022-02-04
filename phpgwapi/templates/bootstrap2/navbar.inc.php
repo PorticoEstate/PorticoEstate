@@ -183,22 +183,26 @@ HTML;
 		$manual_option = '';
 		if ( isset($GLOBALS['phpgw_info']['user']['apps']['manual']) )
 		{
-			$help_url= "javascript:openwindow('"
-			 . $GLOBALS['phpgw']->link('/index.php', array
-			 (
-			 	'menuaction'=> 'manual.uimanual.help',
-			 	'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
-			 	'section' => isset($GLOBALS['phpgw_info']['apps']['manual']['section']) ? $GLOBALS['phpgw_info']['apps']['manual']['section'] : '',
-			 	'referer' => phpgw::get_var('menuaction')
-			 )) . "','700','600')";
+			$help_file = execMethod('manual.uimanual.help_file_exist');
+			if($help_file['file_exist'])
+			{
+				$help_url= "javascript:openwindow('"
+				. $GLOBALS['phpgw']->link('/index.php', array
+				(
+					'menuaction'=> 'manual.uimanual.help',
+					'app' => $help_file['app'],
+					'section' => $help_file['section'],
+					'referer' => $help_file['referer'],
+				)) . "','700','600')";
 
-			$help_text = lang('help');
-			$manual_option .= <<<HTML
-			<li class="nav-item">
-				<a href="{$help_url}" class="nav-link">{$help_text}</a>
-			</li>
+				$help_text = lang('help');
+				$manual_option .= <<<HTML
+				<li class="nav-item">
+					<a href="{$help_url}" class="nav-link">{$help_text}</a>
+				</li>
 HTML;
 			}
+		}
 
 
 		$support_option = '';
