@@ -739,6 +739,7 @@ SQL;
 
 			while ($this->db_boei->next_record())
 			{
+				$telefon = $this->db_boei->f('Telefon1');
 				$valueset[] = array
 					(
 					1	 => array
@@ -788,7 +789,7 @@ SQL;
 					),
 					10	 => array
 						(
-						'value'	 => ctype_digit((string)$this->db_boei->f('Telefon1')) ? $this->db_boei->f('Telefon1') : null,
+						'value'	 => ctype_digit($telefon) && strlen($telefon) == 8 ? $telefon : null,
 						'type'	 => PDO::PARAM_STR
 					)
 				);
