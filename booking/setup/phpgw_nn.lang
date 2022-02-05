@@ -882,3 +882,4 @@ my assigned applications	booking	nn	*Mine søknader
 send sms	booking	nn	send SMS
 season %1 copied to %2	booking	nn	Sesong %1 kopiert til %2
 copied from %1	booking	nn	kopiert frå %1
+update user address	booking	nn	Oppdater kundeadresser

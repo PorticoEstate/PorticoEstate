@@ -18,6 +18,7 @@
 			'delete' => true,
 			'datatable' => true,
 			'toggle_show_inactive' => true,
+			'update_user_address' => true
 		);
 		protected $module;
 		protected $customer_id;
@@ -65,6 +66,48 @@
 		}
 
 
+		public function update_user_address()
+		{
+			self::set_active_menu('booking::users::update_user_address');
+
+			if (!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') && !$GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
+			{
+				phpgw::no_access();
+			}
+
+			if (phpgw::get_var('confirm', 'bool', 'POST'))
+			{
+				$receipt			 = $this->bo->update_user_address();
+				$lang_confirm_msg	 = lang('update user address');
+				$lang_yes			 = lang('again');
+			}
+			else
+			{
+				$lang_confirm_msg	 = lang('update user address');
+				$lang_yes			 = lang('yes');
+			}
+			$GLOBALS['phpgw']->xslttpl->add_file(array('confirm'));
+
+			$msgbox_data = createObject('property.bocommon')->msgbox_data($receipt);
+
+			$data = array
+				(
+				'msgbox_data'			 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'done_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiuser.index')),
+				'update_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiuser.update_user_address')),
+				'message'				 => $receipt['message'],
+				'lang_confirm_msg'		 => $lang_confirm_msg,
+				'lang_yes'				 => $lang_yes,
+				'lang_yes_statustext'	 => lang('export customer'),
+				'lang_no_statustext'	 => lang('Back to user list'),
+				'lang_no'				 => lang('no')
+			);
+
+			$function_msg									 = lang('users');
+			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('booking') . ':: ' . $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('confirm' => $data));
+
+		}
 
 		public function export_customer()
 		{

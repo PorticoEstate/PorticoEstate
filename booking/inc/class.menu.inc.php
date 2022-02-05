@@ -64,6 +64,7 @@
 							'text' => lang('Applications'),
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiapplication.index')),
 							'image' => array('property', 'project_request'),
+							'icon' => 'fas fa-2x fa-file-alt'
 						),
 						'allocations' => array
 							(
@@ -103,6 +104,7 @@
 							'text' => lang('Buildings'),
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uibuilding.index')),
 							'image' => array('property', 'location_1'),
+							'icon' => 'fa fa-2x fa-building'
 						),
 						'documents' => array
 							(
@@ -184,6 +186,7 @@
 							'text' => lang('Organizations'),
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiorganization.index')),
 							'image' => array('property', 'location_tenant'),
+							'icon' => 'fa fa-2x fa-sitemap'
 						),
 						'documents' => array
 							(
@@ -210,12 +213,19 @@
 					'text' => lang('users'),
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiuser.index')),
 					'image' => array('property', 'location_tenant'),
+					'icon' => 'fas fa-2x fa-address-card',
 					'children' => array
 						(
-						'collect_users' => array
+							'collect_users' => array
 							(
 							'text' => lang('collect users'),
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiuser.collect_users')),
+							'image' => array('property', 'location_tenant'),
+						),
+						'update_user_address' => array
+							(
+							'text' => lang('update user address'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiuser.update_user_address')),
 							'image' => array('property', 'location_tenant'),
 						),
 						'export_customer' => array

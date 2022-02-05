@@ -1432,10 +1432,14 @@
 
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
 
-			for ($z = 0; $z < count($agreement['files']); $z++)
+			if(!empty($agreement['files']))
 			{
-				$content_files[$z]['file_name']		 = '<a href="' . $link_view_file . '&amp;file_id=' . $agreement['files'][$z]['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $agreement['files'][$z]['name'] . '</a>';
-				$content_files[$z]['delete_file']	 = '<input type="checkbox" name="values[file_action][]" value="' . $agreement['files'][$z]['file_id'] . '" title="' . lang('Check to delete file') . '">';
+				for ($z = 0; $z < count($agreement['files']); $z++)
+				{
+					$content_files[$z]['file_name']		 = '<a href="' . $link_view_file . '&amp;file_id=' . $agreement['files'][$z]['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $agreement['files'][$z]['name'] . '</a>';
+					$content_files[$z]['delete_file']	 = '<input type="checkbox" name="values[file_action][]" value="' . $agreement['files'][$z]['file_id'] . '" title="' . lang('Check to delete file') . '">';
+				}
+	
 			}
 
 			$myColumnDefs2 = array
@@ -1467,8 +1471,8 @@
 			$data = array
 				(
 				'datatable_def'						 => $datatable_def,
-				'base_java_url'						 => json_encode(array(menuaction	 => "property.uiagreement.edit",
-					id			 => $id)),
+				'base_java_url'						 => json_encode(array('menuaction'	 => "property.uiagreement.edit",
+					'id'			 => $id)),
 				'allow_allrows'						 => true,
 				'allrows'							 => $this->allrows,
 				'start_record'						 => $this->start,

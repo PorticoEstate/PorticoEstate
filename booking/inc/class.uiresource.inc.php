@@ -59,7 +59,6 @@
 				'activities' => 'int',
 				'facilities' => 'int',
 				'direct_booking' => 'string',
-				'direct_booking_season_id' => 'int',
 				'simple_booking' => 'int',
 				'booking_day_default_lenght' => 'int',
 				'booking_dow_default_start' => 'int',

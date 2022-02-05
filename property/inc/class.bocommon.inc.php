@@ -69,7 +69,7 @@
 			$this->like		 = $this->socommon->like;
 
 			$template_set = isset($GLOBALS['phpgw_info']['server']['template_set']) ? $GLOBALS['phpgw_info']['server']['template_set'] : 'base';
-			$this->xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/{$template_set}"; 
+			$this->xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/{$template_set}";
 		}
 
 		function check_perms( $rights, $required )
@@ -965,10 +965,6 @@
 			);
 
 			$alarm['values'] = $boalarm->read_alarms($data['alarm_type'], $data['id'], $data['text']);
-			if (!count($alarm['values']) > 0)
-			{
-				unset($alarm['values']);
-			}
 
 			if ($data['type'] == 'form')
 			{
@@ -2221,7 +2217,17 @@
 			{
 				$bolocation				 = CreateObject('property.bolocation');
 				$values['location_data'] = $bolocation->read_single($values['location_code'], array_merge($values['extra'], array(
-					'view' => true)));
+					'view' => true,
+					'noattrib' => true
+				)));
+			}
+			if(empty($values['location']) && !empty($values['location_code']) && !empty($values['location_data']))
+			{
+				$values['location'] = array();
+				for ($i = 1; $i <= count(explode('-', $values['location_code'])); $i++)
+				{
+					$values['location']["loc{$i}"] = $values['location_data']["loc{$i}"];
+				}
 			}
 
 			$origin		 = isset($values['origin']) && $values['origin'] ? $values['origin'] : false;
@@ -2541,7 +2547,7 @@
 				$vendor_id = phpgw::get_var('vendor_id', 'int');
 			}
 
-			$contract_list = ExecMethod('property.soagreement.get_vendor_contract', $vendor_id);
+			$contract_list = createObject('property.soagreement')->get_vendor_contract($vendor_id, $selected);
 			if ($selected)
 			{
 				foreach ($contract_list as &$contract)
@@ -2696,22 +2702,22 @@
 
 			$order_info = $this->socommon->get_order_type($id);
 			$secret = $order_info['secret'];
-			
+
 			$config_frontend = createobject('phpgwapi.config', 'mobilefrontend')->read();
-			
+
 			$documentation_url = !empty($config_frontend['external_site_address'])  ? rtrim($config_frontend['external_site_address'], '/') : rtrim($GLOBALS['phpgw_info']['server']['webserver_url'], '/');
-			
+
 			$documentation_url .= '/mobilefrontend/';
-			
+
 			$documentation_url .= '?' . http_build_query(array(
 				'menuaction' => 'property.uiimport_documents.step_1_import',
 				'id'		 => $id,
 				'secret'	 => $secret,
 				'domain'	 => $GLOBALS['phpgw_info']['user']['domain']
 				), null);
-	
+
 			return $documentation_url;
-			
+
 		}
 
 	}

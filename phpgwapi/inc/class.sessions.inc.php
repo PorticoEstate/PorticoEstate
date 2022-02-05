@@ -542,7 +542,7 @@
 			$history		= phpgwapi_cache::session_get('phpgwapi', 'history');
 			$click_history	= phpgw::get_var('click_history', 'string', 'GET');
 
-			if ( isset($history[$click_history]) )
+			if ( $click_history && isset($history[$click_history]) )
 			{
 				if($display_error)
 				{
@@ -744,7 +744,7 @@
 
 			if ( is_array($extravars) ) //we have something to append
 			{
-				$url .= '?' . http_build_query($extravars, null, $term);
+				$url .= '?' . http_build_query($extravars, '', $term);
 			}
 			return $url;
 		}

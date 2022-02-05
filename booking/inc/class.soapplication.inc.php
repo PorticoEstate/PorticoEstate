@@ -136,29 +136,15 @@
 				{
 					continue;
 				}
-				$this->db->query("SELECT direct_booking, direct_booking_season_id FROM bb_resource WHERE id = " . (int)$esource_id, __LINE__, __FILE__);
+				$this->db->query("SELECT direct_booking FROM bb_resource WHERE id = " . (int)$esource_id, __LINE__, __FILE__);
 				$this->db->next_record();
 				$direct_booking = $this->db->f('direct_booking');
 
 				if ($direct_booking && $direct_booking < time())
 				{
-					$direct_booking_season_id = $this->db->f('direct_booking_season_id');
-					if (!$direct_booking_season_id)
+					if (!CreateObject('booking.soseason')->get_resource_seasons((int)$esource_id))
 					{
-						$errors['season_boundary'] = lang("This resource is not related to a direct booking season");
-					}
-					else
-					{
-						foreach ($entity['dates'] as $date)
-						{
-							$from_	 = new DateTime($date['from_']);
-							$to_	 = new DateTime($date['to_']);
-
-							if (!CreateObject('booking.soseason')->timespan_within_season($direct_booking_season_id, $from_, $to_))
-							{
-								$errors['season_boundary'] = lang("This application is not within the selected season");
-							}
-						}
+						$errors['season_boundary'] = lang("This application is not within a valid season");
 					}
 				}
 			}

@@ -45,11 +45,18 @@
 		{
 			case 'portico':
 				$selecte_portico = ' selected = "selected"';
-				$selecte_pure = '';
+				$selecte_bootstrap = '';
+				$selecte_bootstrap2 = '';
 				break;
 			case 'bootstrap':
 				$selecte_portico = '';
 				$selecte_bootstrap = ' selected = "selected"';
+				$selecte_bootstrap2 = '';
+				break;
+			case 'bootstrap2':
+				$selecte_portico = '';
+				$selecte_bootstrap = '';
+				$selecte_bootstrap2 = ' selected = "selected"';
 				break;
 		}
 
@@ -57,6 +64,7 @@
 
 	   <select id = "template_selector" class="btn btn-link btn-sm nav-link dropdown-toggle" style="padding-top: .315rem;-webkit-appearance: none;-moz-appearance: none;">
 		<option class="nav-link" value="bootstrap"{$selecte_bootstrap}>Bootstrap</option>
+		<option value="bootstrap2"{$selecte_bootstrap2}>bootstrap2</option>
 		<option value="portico"{$selecte_portico}>Portico</option>
 	   </select>
 HTML;
@@ -90,22 +98,26 @@ HTML;
 
 		if ( isset($GLOBALS['phpgw_info']['user']['apps']['manual']) )
 		{
-			$help_url= "javascript:openwindow('"
-			 . $GLOBALS['phpgw']->link('/index.php', array
-			 (
-			 	'menuaction'=> 'manual.uimanual.help',
-			 	'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
-			 	'section' => isset($GLOBALS['phpgw_info']['apps']['manual']['section']) ? $GLOBALS['phpgw_info']['apps']['manual']['section'] : '',
-			 	'referer' => phpgw::get_var('menuaction')
-			 )) . "','700','600')";
+			$help_file = execMethod('manual.uimanual.help_file_exist');
+			if($help_file['file_exist'])
+			{
+				$help_url= "javascript:openwindow('"
+				. $GLOBALS['phpgw']->link('/index.php', array
+				(
+					'menuaction'=> 'manual.uimanual.help',
+					'app' => $help_file['app'],
+					'section' => $help_file['section'],
+					'referer' => $help_file['referer'],
+				)) . "','700','600')";
 
-			$help_text = lang('help');
-			$var['topmenu'] .= <<<HTML
-			<li class="nav-item">
-				<a href="{$help_url}" class="nav-link">{$help_text}</a>
-			</li>
+				$help_text = lang('help');
+				$var['topmenu'] .= <<<HTML
+				<li class="nav-item">
+					<a href="{$help_url}" class="nav-link">{$help_text}</a>
+				</li>
 HTML;
 			}
+		}
 
 
 		if(isset($GLOBALS['phpgw_info']['server']['support_address']) && $GLOBALS['phpgw_info']['server']['support_address'])
@@ -253,6 +265,7 @@ HTML;
 					foreach($collected_bm as $entry)
 					{
 						$seleced_bm = 'nav-item';
+						$icon = !empty($entry['icon']) ? "<i class='{$entry['icon']}'></i>": '';
 						if( isset($entry['selected']) && $entry['selected'])
 						{
 							$seleced_bm .= ' active';
@@ -261,7 +274,7 @@ HTML;
 						$var['topmenu'] .= <<<HTML
 
 						<li class="{$seleced_bm}">
-							<a href="{$entry['url']}" class="nav-link context-menu-nav" id="bookmark_{$entry['bookmark_id']}">{$entry['text']}</a>
+							<a href="{$entry['url']}" class="nav-link context-menu-nav" id="bookmark_{$entry['bookmark_id']}">{$icon} {$entry['text']}</a>
 						</li>
 
 HTML;
@@ -361,7 +374,7 @@ HTML;
 		$selected_node = false;
 		$current_class = 'nav-item';
 
-		if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" 
+		if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}"
 		|| ( !empty($item['location_id']) && $item['location_id'] == $GLOBALS['phpgw_info']['flags']['menu_selection'] ))
 		{
 			$current_class .= ' active';
@@ -446,7 +459,8 @@ HTML;
 							(
 								'text'	=> $item['text'],
 								'url'	=> $item['url'],
-								'image'	=> isset($item['image']) ? $item['image'] : null
+								'image'	=> isset($item['image']) ? $item['image'] : null,
+								'icon'	=> isset($item['icon']) ? $item['icon'] : null
 							)
 						)	+ $item['children'];
 				}

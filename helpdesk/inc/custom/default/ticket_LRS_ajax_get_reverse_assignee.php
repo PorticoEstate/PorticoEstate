@@ -92,6 +92,16 @@
 				$contact_id = $GLOBALS['phpgw']->accounts->get($set_notify_id)->person_id;
 				$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
 
+				if(!$contact_id)
+				{
+					$GLOBALS['phpgw']->log->write(array(
+						'text'	 => 'I-Notification, missing person_id for user %1',
+						'p1'	 => $account_lid)
+					);
+
+					return false;
+				}
+
 				$values_insert = array
 					(
 					'location_id'			 => $location_id,

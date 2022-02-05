@@ -12,6 +12,9 @@
 			$this->so = CreateObject('booking.soapplication');
 		}
 
+		/*
+		 * Used for external archive
+		 */
 		function get_export_text( $application )
 		{
 
@@ -177,6 +180,18 @@
 				}
 
 				$body = "<p>Din søknad i " . $config->config_data['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name']. " er " . lang($application['status']) . '</p>';
+
+				if ($adates)
+				{
+					$body .= "<pre>Godkjent tid:\n" . $adates . "</pre>";
+					$body .= "<br />";
+				}
+				if ($rdates)
+				{
+					$body .= "<pre>Avvist: " . $rdates . "</pre>";
+					$body .= "<br />";
+				}
+
 				if ($application['agreement_requirements'] != '')
 				{
 					$lang_additional_requirements = lang('additional requirements');
@@ -187,14 +202,6 @@
 					$body .= "<p>Kommentar fra saksbehandler:<br />" . nl2br($application['comment']) . "</p>";
 				}
 				$body .= '<pre>' . $config->config_data['application_mail_accepted'] . '<br /><a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . ': søknad #' . $application['id'] . '</a></pre>';
-				if ($adates)
-				{
-					$body .= "<pre>Godkjent:\n" . $adates . "</pre>";
-				}
-				if ($rdates)
-				{
-					$body .= "<pre>Avvist: " . $rdates . "</pre>";
-				}
 
 				$attachments = $this->get_related_files($application);
 

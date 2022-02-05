@@ -23,7 +23,6 @@
 				'json_representation' => array('type' => 'json'),
 				'rescategory_id' => array('type' => 'int', 'required' => false),
 				'direct_booking' => array('type' => 'int', 'required' => false),
-				'direct_booking_season_id' => array('type' => 'int', 'required' => false),
 				'simple_booking' => array('type' => 'int', 'required' => false),
 				'simple_booking_start_date' => array('type' => 'int', 'required' => false),
 				'simple_booking_end_date' => array('type' => 'int', 'required' => false),
@@ -91,13 +90,6 @@
 					'join' => array(
 						'table' => 'bb_rescategory',
 						'fkey' => 'rescategory_id',
-						'key' => 'id',
-						'column' => 'name',
-					)),
-				'direct_booking_season_name' => array('type' => 'string', 'query' => false,
-					'join' => array(
-						'table' => 'bb_season',
-						'fkey' => 'direct_booking_season_id',
 						'key' => 'id',
 						'column' => 'name',
 					)),

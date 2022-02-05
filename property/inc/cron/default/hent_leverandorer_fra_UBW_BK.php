@@ -327,17 +327,30 @@ SQL;
 			$GLOBALS['phpgw']->db->transaction_commit();
 		}
 
-		function get_vendors_old()
+		function get_vendors()
 		{
-			$this->debug = true;
-
 			static $first_connect	 = false;
 			$username				 = 'WEBSER';
 			$password				 = 'wser10';
 			$client					 = 'BY';
 			$TemplateId				 = '6039'; //Spørring på leverandører
 
-			$service	 = new \QueryEngineV201101(array('trace' => 1));
+			$context = stream_context_create([
+				'ssl' => [
+					// set some SSL/TLS specific options
+					'verify_peer' => false,
+					'verify_peer_name' => false,
+					'allow_self_signed' => true
+				]
+			]);
+
+			$options = array(
+				'location' => 'https://agrpweb.adm.bgo/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101',
+				'trace' => 1,
+				'stream_context' => $context
+				);
+
+			$service	 = new \QueryEngineV201101($options);
 			$Credentials = new \WSCredentials();
 			$Credentials->setUsername($username);
 			$Credentials->setPassword($password);
@@ -347,10 +360,10 @@ SQL;
 			try
 			{
 				$searchProp = $service->GetSearchCriteria(new \GetSearchCriteria($TemplateId, true, $Credentials));
-				if (!$first_connect)
+				if (!$first_connect && $this->debug)
 				{
-//					echo "SOAP HEADERS:\n" . $service->__getLastRequestHeaders() . PHP_EOL;
-//					echo "SOAP REQUEST:\n" . $service->__getLastRequest() . PHP_EOL;
+					echo "SOAP HEADERS:\n" . $service->__getLastRequestHeaders() . PHP_EOL;
+					echo "SOAP REQUEST:\n" . $service->__getLastRequest() . PHP_EOL;
 				}
 				$first_connect = true;
 			}
@@ -362,13 +375,16 @@ SQL;
 			}
 
 			//Kriterier
-			//		_debug_array($searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties());
+			//apar_id
+			$searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties()[3]->setRestrictionType("!=");
+			$searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties()[3]->setFromValue(1017011)->setToValue(1017011);
 
-			/**
-			 * Funkar inte
-			 */
-			//$searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties()[1]->setFromValue($vendor_id)->setToValue($vendor_id);
-			//$searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties()[2]->setFromValue($vendor_id)->setToValue($vendor_id);
+			//apar_gr_id
+//			$searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties()[1]->setRestrictionType("=");
+//			$searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties()[1]->setFromValue(1)->setToValue(1);
+
+//			_debug_array($searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties());
+
 			// Create the InputForTemplateResult class and set values
 			$input									 = new InputForTemplateResult($TemplateId);
 			$options								 = $service->GetTemplateResultOptions(new \GetTemplateResultOptions($Credentials));
@@ -389,36 +405,44 @@ SQL;
 			$result = $service->GetTemplateResultAsDataSet(new \GetTemplateResultAsDataSet($input, $Credentials));
 
 			$data = $result->getGetTemplateResultAsDataSetResult()->getTemplateResult()->getAny();
-			echo "SOAP HEADERS:\n" . $service->__getLastRequestHeaders() . PHP_EOL;
-			echo "SOAP REQUEST:\n" . $service->__getLastRequest() . PHP_EOL;
-
-			$xmlparse	 = CreateObject('property.XmlToArray');
-			$xmlparse->setEncoding('utf-8');
-			$xmlparse->setDecodesUTF8Automaticly(false);
-			$var_result	 = $xmlparse->parse($data);
-
-			if ($var_result)
+			if($this->debug)
 			{
-				$count = count($var_result['Agresso'][0]['AgressoQE']);
-				//		if($this->debug)
+				echo "SOAP HEADERS:\n" . $service->__getLastRequestHeaders() . PHP_EOL;
+				echo "SOAP REQUEST:\n" . $service->__getLastRequest() . PHP_EOL;
+			}
+
+			$ret = array();
+			try
+			{
+				$sxe = new SimpleXMLElement($data);
+
+				$sxe->registerXPathNamespace('diffgr', 'urn:schemas-microsoft-com:xml-diffgram-v1');
+				$ret = $sxe->xpath('//diffgr:diffgram/Agresso/AgressoQE');
+
+			}
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
+
+			if ($ret)
+			{
+				$count	 = count($ret);
+				if($this->debug)
 				{
-					_debug_array("{$count} leverandører funnet" . PHP_EOL);
+					_debug_array($ret);
 				}
-				$ret = $var_result['Agresso'][0]['AgressoQE'];
+				_debug_array("{$count} leverandører funnet" . PHP_EOL);
 			}
 			else
 			{
-				//		if($this->debug)
-				{
-					_debug_array("Leverandører IKKE funnet" . PHP_EOL);
-				}
-				$ret = array();
+				_debug_array("Leverandører IKKE funnet" . PHP_EOL);
 			}
 
 			return $ret;
 		}
 
-		function get_vendors()
+		function get_vendors_ny()
 		{
 			//Data, connection, auth
 			$soapUser		 = "WEBSER";  //  username
@@ -587,7 +611,7 @@ XML;
 
 			$headers = array(
 				"POST /UBW-webservices/service.svc HTTP/1.1",
-				"Host: agrweb04a.adm.bgo",
+				"Host: agrpweb.adm.bgo",
 				"Accept: text/xml",
 				"Cache-Control: no-cache",
 				"User-Agent: PHP-SOAP/7.1.15-1+ubuntu16.04.1+deb.sury.org+2",
@@ -596,7 +620,7 @@ XML;
 				"Content-length: " . strlen($soap_request)
 			);
 
-//			$soapUrl = "http://10.19.14.242/agresso-webservices/service.svc?QueryEngineService/QueryEngineV201101"; // asmx URL of WSDL
+//			$soapUrl = "https://10.19.14.242/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101"; // asmx URL of WSDL
 			$soapUrl = "https://agrpweb.adm.bgo/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101";
 
 			$ch = curl_init($soapUrl);

@@ -134,7 +134,7 @@
 											<xsl:value-of select="name"/>
 										</xsl:variable>
 
-										<select id="{$name}" name="{$name}">
+										<select id="{$name}" name="{$name}" class="pure-u-24-24">
 											<xsl:for-each select="list">
 												<xsl:variable name="id">
 													<xsl:value-of select="id"/>
@@ -159,7 +159,7 @@
 											<xsl:value-of select="name"/>
 										</xsl:variable>
 
-										<select id="{$name}" name="{$name}" onchange="filterByCategory()">
+										<select id="{$name}" name="{$name}" class="pure-u-24-24" onchange="filterByCategory()">
 											<xsl:for-each select="list">
 												<xsl:variable name="id">
 													<xsl:value-of select="id"/>

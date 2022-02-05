@@ -1260,6 +1260,7 @@
 			}
 
 			$values = array();
+			$_choose_master = 0;
 			foreach ($components_with_calendar_array as $dummy => $entry)
 			{
 				$type_array = explode('_', $dummy);
@@ -1303,6 +1304,21 @@
 				$data['component_id'] = $item_id;
 				$data['location_id'] = $location_id;
 				$data['location_code'] = $_location_code;
+				
+				$data['missing_control'] = true;
+				foreach ($entry as $dataset)
+				{
+					if($dataset['component']['control_relation']['serie_enabled'])
+					{
+						$data['missing_control'] = false;
+					}
+
+				}
+				unset($dataset);
+				if($data['missing_control'])
+				{
+					$_choose_master ++;
+				}
 
 
 				$max_interval_length = 0; //number of months
@@ -1399,7 +1415,8 @@
 				);
 			}
 
-			$choose_master = false;
+//			$choose_master = false;
+			$choose_master = !!$_choose_master && $all_items; 
 			if ($all_components && count($all_components))
 			{
 				$choose_master = $all_items ? true : false;
@@ -1458,7 +1475,7 @@
 				$row['year'] = '';
 				$row['descr'] = '';
 
-				if (!isset($entry['missing_control']))
+				if (empty($entry['missing_control']))
 				{
 					if ($filter_component_str)
 					{

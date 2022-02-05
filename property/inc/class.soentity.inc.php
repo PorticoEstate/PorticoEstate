@@ -1071,7 +1071,7 @@
 				$sql			 .= $group_method;
 			}
 
-			$sql_pre_run = str_replace("SELECT fm_bim_item.*", "SELECT DISTINCT fm_bim_item.id,fm_bim_item.type {$sql_custom_field}", $sql);
+			$sql_pre_run = str_replace("SELECT fm_bim_item.*", "SELECT DISTINCT fm_bim_item.id,fm_bim_item.type ", $sql);
 //			_debug_array($sql_pre_run);
 			if (!$allrows)
 			{
@@ -2355,10 +2355,10 @@
 			$values_insert = array();
 
 			$address = array();
-			if (isset($values['street_name']) && $values['street_name'])
+			if (!empty($values['street_name']) || !empty($values['location_data']['street_name']))
 			{
-				$address[]	 = $values['street_name'];
-				$address[]	 = $values['street_number'];
+				$address[]	 = $values['street_name'] ? $values['street_name'] : $values['location_data']['street_name'];
+				$address[]	 = $values['street_number'] ?  $values['street_number'] : $values['location_data']['street_number'];;
 			}
 
 			if (!$address && !empty($values['location_name']))

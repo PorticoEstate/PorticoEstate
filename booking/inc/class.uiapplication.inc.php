@@ -435,7 +435,7 @@
 							'label' => lang('case officer'),
 							'sortable' => false
 						),
-						
+
 						array(
 							'key' => 'link',
 							'hidden' => true
@@ -498,7 +498,7 @@
 			{
 				$filters['status'] = 'NEW';
 			}
-			
+
 
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
@@ -1774,17 +1774,17 @@
 					}
 				}
 			}
-			
+
 			return array(
 				'status' => $errors ? 'error' : 'saved',
 				'message' => preg_replace('/\<br(\s*)?\/?\>/i', PHP_EOL, implode(', ', array_values($errors)))
 			);
-			
+
 		}
 
 		function add_contact()
 		{
-			
+
 			/**
 			 * When returning from vipps
 			 */
@@ -2254,20 +2254,26 @@
 					$update_user = true;
 					$user['email'] = $application['contact_email'];
 				}
-				if(empty($user['street']) && $application['responsible_street'])
+				if($external_login_info['street'])
 				{
 					$update_user = true;
-					$user['street'] = $application['responsible_street'];
+					$user['street'] = $external_login_info['street'];
 				}
-				if(empty($user['zip_code']) && $application['responsible_street'])
+				if($external_login_info['zip_code'])
 				{
 					$update_user = true;
-					$user['zip_code'] = $application['responsible_zip_code'];
+					$user['zip_code'] = $external_login_info['zip_code'];
 				}
-				if(empty($user['city']) && $application['responsible_city'])
+				if($external_login_info['city'])
 				{
 					$update_user = true;
-					$user['city'] = $application['responsible_city'];
+					$user['city'] = $external_login_info['city'];
+				}
+
+				if($external_login_info['last_name'])
+				{
+					$update_user = true;
+					$user['name'] = empty($external_login_info['middle_name']) ? "{$external_login_info['last_name']} {$external_login_info['first_name']}" :  "{$external_login_info['last_name']} {$external_login_info['first_name']} {$external_login_info['middle_name']}";
 				}
 
 				if($update_user && !$bo_user->validate($user))

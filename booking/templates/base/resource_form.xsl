@@ -226,30 +226,6 @@
 				</div>
 				<div class="pure-control-group">
 					<label>
-						<xsl:value-of select="php:function('lang', 'season')"/>
-					</label>
-					<select id="field_direct_booking_season_id" name="direct_booking_season_id" class="pure-input-3-4">
-						<xsl:attribute name="data-validation">
-							<xsl:text>required_season</xsl:text>
-						</xsl:attribute>
-						<xsl:attribute name="data-validation-error-msg">
-							<xsl:value-of select="php:function('lang', 'Please select a season')" />
-						</xsl:attribute>
-						<option value=''>
-							<xsl:value-of select="php:function('lang', 'Select')" />
-						</option>
-						<xsl:for-each select="seasons">
-							<option value="{id}">
-								<xsl:if test="id=../resource/direct_booking_season_id">
-									<xsl:attribute name="selected">selected</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of disable-output-escaping="yes" select="name" />
-							</option>
-						</xsl:for-each>
-					</select>
-				</div>
-				<div class="pure-control-group">
-					<label>
 						<xsl:value-of select="php:function('lang', 'simple booking')"/>
 					</label>
 					<input type="checkbox" id="simple_booking" name="simple_booking" value="1">

@@ -23,7 +23,7 @@ services:
     environment:
       XDEBUG_CONFIG: client_host=$XDEBUG_IP_ADDRESS
     volumes:
-      - ./:/var/www/html/
+      - ./:/var/www/html/portico/
     restart: always
     depends_on:
       - db

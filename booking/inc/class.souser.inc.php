@@ -21,7 +21,7 @@
 				'city'				 => array('type' => 'string'),
 				'customer_number'	 => array('type' => 'string', 'required' => False),
 				'customer_ssn'		 => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianSSN'),
-					'required'		 => true)
+					'required'		 => true, 'query' => True)
 			);
 
 			parent::__construct('bb_user', $fields);
@@ -120,7 +120,7 @@
 			}
 
 			$filter_organization_number = "1=2";
-			
+
 			if($organization_number)
 			{
 				if(is_array($organization_number))
@@ -131,7 +131,7 @@
 				}
 				else if($organization_number !== '000000000')
 				{
-					$filter_organization_number= "organization_number = '$organization_number'";				
+					$filter_organization_number= "organization_number = '$organization_number'";
 				}
 			}
 
@@ -427,7 +427,7 @@
 			$this->db->transaction_commit();
 		}
 
-		public function get_customer_list( )
+		public function get_customer_list( $get_persons_only = false)
 		{
 
 			$sf_validator = createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array(
@@ -451,6 +451,11 @@
 					'city' => $this->db->f('city', true),
 					'customer_internal' => 0
 				);
+			}
+
+			if( $get_persons_only)
+			{
+				return $values;
 			}
 
 			$sql = "SELECT DISTINCT customer_organization_number,customer_ssn,"
@@ -484,7 +489,7 @@
 					'customer_internal' => (int) $this->db->f('customer_internal'),
 				);
 			}
-			
+
 			return $values;
 		}
 	}
