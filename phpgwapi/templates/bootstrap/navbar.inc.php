@@ -265,6 +265,7 @@ HTML;
 					foreach($collected_bm as $entry)
 					{
 						$seleced_bm = 'nav-item';
+						$icon = !empty($entry['icon']) ? "<i class='{$entry['icon']}'></i>": '';
 						if( isset($entry['selected']) && $entry['selected'])
 						{
 							$seleced_bm .= ' active';
@@ -273,7 +274,7 @@ HTML;
 						$var['topmenu'] .= <<<HTML
 
 						<li class="{$seleced_bm}">
-							<a href="{$entry['url']}" class="nav-link context-menu-nav" id="bookmark_{$entry['bookmark_id']}">{$entry['text']}</a>
+							<a href="{$entry['url']}" class="nav-link context-menu-nav" id="bookmark_{$entry['bookmark_id']}">{$icon} {$entry['text']}</a>
 						</li>
 
 HTML;
@@ -373,7 +374,7 @@ HTML;
 		$selected_node = false;
 		$current_class = 'nav-item';
 
-		if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}" 
+		if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}"
 		|| ( !empty($item['location_id']) && $item['location_id'] == $GLOBALS['phpgw_info']['flags']['menu_selection'] ))
 		{
 			$current_class .= ' active';
@@ -458,7 +459,8 @@ HTML;
 							(
 								'text'	=> $item['text'],
 								'url'	=> $item['url'],
-								'image'	=> isset($item['image']) ? $item['image'] : null
+								'image'	=> isset($item['image']) ? $item['image'] : null,
+								'icon'	=> isset($item['icon']) ? $item['icon'] : null
 							)
 						)	+ $item['children'];
 				}

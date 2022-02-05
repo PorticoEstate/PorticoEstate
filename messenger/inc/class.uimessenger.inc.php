@@ -246,6 +246,10 @@ JS;
 
 			global $message;
 
+			$appname = lang('messenger');
+			$function_msg = lang('compose global');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = "{$appname}::{$function_msg}";
 			$this->_display_headers();
 			$this->_set_compose_read_blocks();
 
@@ -401,7 +405,7 @@ JS;
 						array(
 							'key' => 'from',
 							'label' => lang('from'),
-							'sortable' => trure
+							'sortable' => true
 						),
 						array(
 							'key' => 'subject',
