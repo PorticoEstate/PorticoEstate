@@ -1,33 +1,37 @@
-<footer class="page-footer font-small text-center fixed-bottom bg-light text-gray border-top border-gray-light">
 
-		<p>{powered_by}</p>
-</footer>
-</div>
+			</div>
+		</div>
 
-<div id="popupBox"></div>	
-<div id="curtain"></div>
-{javascript_end}
-<script>
+		<footer class="page-footer font-small text-center fixed-bottom bg-light text-gray border-top border-gray-light">
 
-	/**
-	 * Disable doubleklick on links
-	 */
-	$("a").click(function (event)
-	{
-		if ($(this).hasClass("disabledouble"))
+				<p>{powered_by}</p>
+		</footer>
+	</div>
+
+	<div id="popupBox"></div>	
+	<div id="curtain"></div>
+	{javascript_end}
+	<script>
+
+		/**
+		* Disable doubleklick on links
+		*/
+		$("a").click(function (event)
 		{
-			event.preventDefault();
-			var link = $(this);
-			window.setTimeout(function ()
+			if ($(this).hasClass("disabledouble"))
 			{
-				$(link).removeClass("disabledouble");
-			}, 500);
-		}
+				event.preventDefault();
+				var link = $(this);
+				window.setTimeout(function ()
+				{
+					$(link).removeClass("disabledouble");
+				}, 500);
+			}
 
-		$(this).addClass("disabledouble");
-	});
+			$(this).addClass("disabledouble");
+		});
 
-</script>
+	</script>
 
 </body>
 </html>

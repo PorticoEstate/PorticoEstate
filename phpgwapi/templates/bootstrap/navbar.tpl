@@ -37,4 +37,7 @@
 			</nav>
 			{breadcrumb}
 
-			<h1 id="top">{current_app_title}</h1>
+			<div class="card shadow mb-4">
+				<div class="card-body">
+					<h1 class="card-title">{current_app_title}</h1>
+
