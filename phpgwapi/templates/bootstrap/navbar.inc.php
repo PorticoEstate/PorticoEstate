@@ -63,14 +63,12 @@
 
 		$template_selector = <<<HTML
 
-	   <select id = "template_selector" class="btn btn-link btn-sm nav-link dropdown-toggle" style="padding-top: .315rem;-webkit-appearance: none;-moz-appearance: none;">
+	   <select id = "template_selector" class="btn btn-link btn-sm nav-item dropdown no-arrow nav-link dropdown-toggle" style="height:2rem;">
 		<option class="nav-link" value="bootstrap"{$selecte_bootstrap}>Bootstrap</option>
 		<option value="bootstrap2"{$selecte_bootstrap2}>bootstrap2</option>
 		<option value="portico"{$selecte_portico}>Portico</option>
 	   </select>
 HTML;
-
-
 
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('navbar', 'navbar.tpl');
@@ -408,7 +406,7 @@ HTML;
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600">$user_fullname</span>
-                                <img class="img-profile rounded-circle"
+                                <img class="img-profile rounded-circle" style="height:2rem; width: 2rem;"
                                     src="{$undraw_profile}">
                             </a>
                             <!-- Dropdown - User Information -->
