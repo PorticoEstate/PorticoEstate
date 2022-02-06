@@ -80,7 +80,7 @@
 	<script type="text/javascript">
 	$('#_bookmark').children().each(function ()
 	{
-		var a = $(this).find('a');
+		var a = $(this);
 		var href = a.attr('href');
 		var icon = a.find('i').attr('class');
 

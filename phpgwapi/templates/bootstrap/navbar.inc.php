@@ -35,11 +35,12 @@
 		$home_icon		= 'icon icon-home';
 		$about_url	= $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp']) );
 		$about_text	= lang('about');
-		$logout_url	= $GLOBALS['phpgw']->link('/logout.php');
-		$logout_text	= lang('logout');
+		$var['logout_url']	= $GLOBALS['phpgw']->link('/logout.php');
+		$var['logout_text']	= lang('logout');
 		$var['user_fullname'] = $user_fullname;
 		$preferences_url = $GLOBALS['phpgw']->link('/preferences/index.php');
 		$preferences_text = lang('preferences');
+		$undraw_profile = $GLOBALS['phpgw']->common->find_image('phpgwapi', 'undraw_profile.svg');
 
 		switch($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
 		{
@@ -69,103 +70,6 @@
 	   </select>
 HTML;
 
-		$var['topmenu'] = <<<HTML
-			<ul class="nav navbar-nav ml-auto">
-				<li class="nav-item">
-					<a data-toggle="collapse" aria-expanded="false" class="nav-link dropdown-toggle" href="#_preferencse">{$user_fullname}</a>
-					<ul class="collapse list-unstyled" id = "_preferencse">
-						<li class="nav-item">
-							<a href="{$preferences_url}" class="nav-link">{$preferences_text}</a>
-						</li>
-						<li class="nav-item">
-							<a href="{$logout_url}" class="nav-link">{$logout_text}</a>
-						</li>
-					</ul>
-				</li>
-				<li class="nav-item">
-					{$template_selector}
-				</li>
-				<!--li class="nav-item">
-					<a href="{$print_url}"  target="_blank" class="nav-link">{$print_text}</a>
-				</li-->
-				<li class="nav-item">
-					<a href="{$home_url}" class="nav-link">{$home_text}</a>
-				</li>
-				<!--li class="nav-item">
-					<a href="{$about_url}" class="nav-link">{$about_text}</a>
-				</li-->
-HTML;
-
-		if ( isset($GLOBALS['phpgw_info']['user']['apps']['manual']) )
-		{
-			$help_file = execMethod('manual.uimanual.help_file_exist');
-			if($help_file['file_exist'])
-			{
-				$help_url= "javascript:openwindow('"
-				. $GLOBALS['phpgw']->link('/index.php', array
-				(
-					'menuaction'=> 'manual.uimanual.help',
-					'app' => $help_file['app'],
-					'section' => $help_file['section'],
-					'referer' => $help_file['referer'],
-				)) . "','700','600')";
-
-				$help_text = lang('help');
-				$var['topmenu'] .= <<<HTML
-				<li class="nav-item">
-					<a href="{$help_url}" class="nav-link">{$help_text}</a>
-				</li>
-HTML;
-			}
-		}
-
-
-		if(isset($GLOBALS['phpgw_info']['server']['support_address']) && $GLOBALS['phpgw_info']['server']['support_address'])
-		{
-
-			$support_js = <<<JS
-
-			support_request = function()
-			{
-				var oArgs = {menuaction:'manual.uisupport.send',app:'{$GLOBALS['phpgw_info']['flags']['currentapp']}', form_type:'stacked'};
-				var strURL = phpGWLink('index.php', oArgs);
-				TINY.box.show({iframe:strURL, boxid:"frameless",width:700,height:500,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
-			}
-JS;
-
-			$var['support_request'] = $support_js;
-
-			$support_text = lang('support');
-
-			$var['topmenu'] .= <<<HTML
-			<li class="nav-item">
-				<a href="javascript:support_request();" class="nav-link">{$support_text}</a>
-			</li>
-HTML;
-		}
-
-		if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
-		{
-			$debug_url = "javascript:openwindow('"
-			 . $GLOBALS['phpgw']->link('/index.php', array
-			 (
-			 	'menuaction'=> 'property.uidebug_json.index',
-			 	'app'		=> $GLOBALS['phpgw_info']['flags']['currentapp']
-			 )) . "','','')";
-
-			$debug_text = lang('debug');
-			$var['topmenu'] .= <<<HTML
-			<li class="nav-item">
-				<a href="{$debug_url}" class="nav-link">{$debug_text}</a>
-			</li>
-HTML;
-		}
-
-		$var['topmenu'] .= <<<HTML
-			<li class="nav-item">
-				<a href="{$logout_url}" class="nav-link">{$logout_text}</a>
-			</li>
-HTML;
 
 
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
@@ -237,13 +141,14 @@ HTML;
 
 			<ul id="menutree" class="list-unstyled components">
 HTML;
+			$preferences_option = '';
 			if ( $GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, 'preferences') )
 			{
-				$var['treemenu'] .= <<<HTML
-
-				<li class="nav-item">
-					<a href="{$preferences_url}">{$preferences_text}</a>
-				</li>
+				$preferences_option .= <<<HTML
+				<a class="dropdown-item" href="{$preferences_url}">
+					<i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+					{$preferences_text}
+				</a>
 HTML;
 			}
 			$var['treemenu'] .= <<<HTML
@@ -251,51 +156,6 @@ HTML;
 			</ul>
 HTML;
 
-
-			$collected_bm = set_get_bookmarks();
-			if($collected_bm)
-			{
-				$var['topmenu'] .= <<<HTML
-
-				<li class="nav-item ">
-					<a href="#_bookmark" data-toggle="collapse" aria-expanded="false" class="nav-link dropdown-toggle">{$lang_bookmarks}</a>
-					<ul class="collapse list-unstyled" id="_bookmark">
-HTML;
-
-					foreach($collected_bm as $entry)
-					{
-						$seleced_bm = 'nav-item';
-						$icon = !empty($entry['icon']) ? "<i class='{$entry['icon']}'></i>": '';
-						if( isset($entry['selected']) && $entry['selected'])
-						{
-							$seleced_bm .= ' active';
-						}
-
-						$var['topmenu'] .= <<<HTML
-
-						<li class="{$seleced_bm}">
-							<a href="{$entry['url']}" class="nav-link context-menu-nav" id="bookmark_{$entry['bookmark_id']}">{$icon} {$entry['text']}</a>
-						</li>
-
-HTML;
-
-					}
-					$var['topmenu'] .= '</ul>';
-			}
-			else
-			{
-				$var['topmenu'] .= <<<HTML
-
-				<li class="nav-item disabled">
-					<a href="#" class="nav-link">{$lang_bookmarks}</a>
-HTML;
-
-			}
-		$var['topmenu'] .= <<<HTML
-
-			</li>
-		</ul>
-HTML;
 
 
 
@@ -330,6 +190,251 @@ HTML;
 
 		$var['breadcrumb'] = $breadcrumb_html;
 
+		$manual_option = '';
+
+		if ( isset($GLOBALS['phpgw_info']['user']['apps']['manual']) )
+		{
+			$help_file = execMethod('manual.uimanual.help_file_exist');
+			if($help_file['file_exist'])
+			{
+				$help_url= "javascript:openwindow('"
+				. $GLOBALS['phpgw']->link('/index.php', array
+				(
+					'menuaction'=> 'manual.uimanual.help',
+					'app' => $help_file['app'],
+					'section' => $help_file['section'],
+					'referer' => $help_file['referer'],
+				)) . "','700','600')";
+
+				$help_text = lang('help');
+				$manual_option .= <<<HTML
+				<li class="nav-item">
+					<a href="{$help_url}" class="nav-link">{$help_text}</a>
+				</li>
+HTML;
+			}
+		}
+
+		$support_option = '';
+		if(isset($GLOBALS['phpgw_info']['server']['support_address']) && $GLOBALS['phpgw_info']['server']['support_address'])
+		{
+
+			$support_js = <<<JS
+
+			support_request = function()
+			{
+				var oArgs = {menuaction:'manual.uisupport.send',app:'{$GLOBALS['phpgw_info']['flags']['currentapp']}', form_type:'stacked'};
+				var strURL = phpGWLink('index.php', oArgs);
+				TINY.box.show({iframe:strURL, boxid:"frameless",width:700,height:500,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+			}
+JS;
+
+			$var['support_request'] = $support_js;
+
+			$support_text = lang('support');
+
+			$support_option = <<<HTML
+			<li class="nav-item">
+				<a href="javascript:support_request();" class="nav-link">{$support_text}</a>
+			</li>
+HTML;
+		}
+
+		$debug_option = '';
+		if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
+		{
+			$debug_url = "javascript:openwindow('"
+			 . $GLOBALS['phpgw']->link('/index.php', array
+			 (
+			 	'menuaction'=> 'property.uidebug_json.index',
+			 	'app'		=> $GLOBALS['phpgw_info']['flags']['currentapp']
+			 )) . "','','')";
+
+			$debug_text = lang('debug');
+			$debug_option = <<<HTML
+			<li class="nav-item">
+				<a href="{$debug_url}" class="nav-link">{$debug_text}</a>
+			</li>
+HTML;
+		}
+
+
+		$bookmark_option = '';
+		$collected_bm = set_get_bookmarks();
+		if($collected_bm)
+		{
+			$bookmark_option .= <<<HTML
+
+			<li class="nav-item dropdown no-arrow">
+				<a class="nav-link dropdown-toggle" href="#" id="bookmarkDropdown" role="button"
+					data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<span class="mr-2 d-none d-lg-inline">{$lang_bookmarks}</span>
+				</a>
+				<!-- Dropdown - bookmarks -->
+				<div id="_bookmark" class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+				aria-labelledby="bookmarkDropdown">
+HTML;
+
+				foreach($collected_bm as $entry)
+				{
+					$seleced_bm = 'dropdown-item';
+					$icon = !empty($entry['icon']) ? "<i class='{$entry['icon']} mr-2 text-gray-400'></i>": '<i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>';
+					if( isset($entry['selected']) && $entry['selected'])
+					{
+						$seleced_bm .= ' active';
+					}
+
+					$bookmark_option .= <<<HTML
+					<a class="$seleced_bm" href="{$entry['url']}" id="bookmark_{$entry['bookmark_id']}">
+						{$icon}
+						{$entry['text']}
+					</a>
+HTML;
+
+				}
+				$bookmark_option .= '</div></li>';
+		}
+		else
+		{
+			$bookmark_option .= <<<HTML
+
+			<li class="nav-item disabled">
+				<a href="#" class="nav-link">{$lang_bookmarks}</a>
+			</li>
+HTML;
+
+		}
+
+		if ( isset($GLOBALS['phpgw_info']['user']['apps']['messenger']) )
+		{
+			$bomessenger	 = CreateObject('messenger.bomessenger');
+			$total_messages	 = $bomessenger->total_messages(" AND message_status = 'N'");
+			if ($total_messages > 0)
+			{
+				$new_messages		 = $total_messages;
+				$new_messages_alert	 = "<span class='badge badge-danger badge-counter'>{$new_messages}</span>";
+			}
+			else
+			{
+				$new_messages		 = 0;
+				$new_messages_alert	 = '';
+			}
+			$total_messages = $total_messages;
+		}
+		$link_messages = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'messenger.uimessenger.index' ));
+		$var['topmenu'] = <<<HTML
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+					<li class="nav-item">
+						<a href="{$home_url}" class="nav-link">{$home_text}</a>
+					</li>
+						{$template_selector}
+ 						{$manual_option}
+						{$debug_option}
+						{$support_option}
+						{$bookmark_option}
+                        <!-- Nav Item - Alerts -->
+                        <!--li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bell fa-fw"></i>
+                                <span class="badge badge-danger badge-counter">3+</span>
+                            </a>
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="alertsDropdown">
+                                <h6 class="dropdown-header">
+                                    Alerts Center
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-primary">
+                                            <i class="fas fa-file-alt text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 12, 2019</div>
+                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-success">
+                                            <i class="fas fa-donate text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 7, 2019</div>
+                                        $290.29 has been deposited into your account!
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-warning">
+                                            <i class="fas fa-exclamation-triangle text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">December 2, 2019</div>
+                                        Spending Alert: We've noticed unusually high spending for your account.
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                            </div>
+                        </li-->
+
+                        <!-- Nav Item - Messages -->
+                        <li class="nav-item dropdown no-arrow mx-1" onClick="get_messages();">
+                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-envelope fa-fw"></i>
+                                <!-- Counter - Messages -->
+								{$new_messages_alert}
+                            </a>
+                            <!-- Dropdown - Messages -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+                                <h6 class="dropdown-header">
+                                    Message Center
+                                </h6>
+								<div id="messages"></div>
+                                <a class="dropdown-item text-center small text-gray-500" href="{$link_messages}">Read More Messages</a>
+                            </div>
+                        </li>
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600">$user_fullname</span>
+                                <img class="img-profile rounded-circle"
+                                    src="{$undraw_profile}">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <!--a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a-->
+								{$preferences_option}
+                                <!--a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a-->
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    {$var['logout_text']}
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+
+HTML;
 
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar');
