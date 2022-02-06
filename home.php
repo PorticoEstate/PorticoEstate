@@ -88,7 +88,7 @@
 		{
 			icon = 'fas fa-2x fa-file-alt';
 		}
-		var templateString = '<div class="col-4 mb-3"><a href="' + href + '" class="stretched-link text-secondary"><div class="card h-100 mb-2">';
+		var templateString = '<div class="col-4 mb-3"><a href="' + href + '" class="stretched-link text-secondary"><div class="card shadow h-100 mb-2">';
 		templateString += '<div class="card-block text-center"><h1 class="p-3"><i class="' + icon + '"></i></h1></div>';
 		templateString += '<div class="card-footer text-center">' + a.text() + '</div>';
 		templateString += '</div></a></div>';
