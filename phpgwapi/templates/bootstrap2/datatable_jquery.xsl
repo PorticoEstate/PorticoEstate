@@ -989,6 +989,29 @@
 			{
 				var sDom_def = '<"clear">lfrtip';
 			}
+			init_multiselect = function(oControl)
+			{
+				try
+				{
+					oControl.multiselect({
+						buttonWidth: 250,
+						includeSelectAllOption: true,
+						enableFiltering: true,
+						enableCaseInsensitiveFiltering: true,
+
+						onDropdownShown : function(event) {
+							setTimeout(function(){
+								oControl.parent().find("button.multiselect-clear-filter").click();
+								oControl.parent().find("input[type='search'].multiselect-search").focus();
+							}, 100);
+						}
+					});
+
+				}
+				catch(err)
+				{
+				}
+			}
 
 			/*
 			 * Find and assign actions to filters
@@ -1035,6 +1058,32 @@
 				menuaction += '_type_' + table_url.searchObject.type;
 			}
 
+			//https://datatables.net/forums/discussion/33028/searchdelay-for-server-side-issue
+			$.fn.dataTable.Debounce = function ( table, options ) {
+
+				var tableId = table.api().settings()[0].sTableId;
+				$('.dataTables_filter input[aria-controls="' + tableId + '"]') // select the correct input field
+					.unbind() // Unbind previous default bindings
+					.bind('input', (delay(function (e) { // Bind our desired behavior
+						table.api().search($(this).val()).draw();
+						return;
+					}, 1200))); // Set delay in milliseconds
+			}
+
+			function delay(callback, ms) {
+
+				var timer = 0;
+				return function () {
+					var context = this, args = arguments;
+					clearTimeout(timer);
+					timer = setTimeout(function () {
+						callback.apply(context, args);
+					}, ms || 0);
+				};
+			}
+
+			init_table = function()
+			{
 			oTable = $('#datatable-container').dataTable({
 				paginate:		disablePagination ? false : true,
 				pagingType:		"input",
@@ -1123,28 +1172,7 @@
 												 oControl.find("option[value="+e+"]").prop("selected", "selected");
 											});
 
-											try
-											{
-												oControl.multiselect("destroy");
-												oControl.multiselect({
-													buttonWidth: 250,
-													includeSelectAllOption: true,
-													enableFiltering: true,
-													enableCaseInsensitiveFiltering: true,
-													onChange: function($option) {
-														// Check if the filter was used.
-														var query = $(oControl).find('li.multiselect-filter input').val();
-
-														if (query) {
-															$(oControl).find('li.multiselect-filter input').val('').trigger('keydown');
-														}
-													}
-												});
-
-											}
-											catch(err)
-											{
-											}
+//											init_multiselect(oControl);
 										}
 										else
 										{
@@ -1191,38 +1219,49 @@
 						var select_name = select.prop("name");
 						var select_value = select.val();
 						aoData[select_name] = select_value;
-
-						if(select_value && select_value !=0 )
-						{
-							active_filters_html.push(i);
-						}
 					}
-//					console.log(oControls);
+
 					oControls.each(function()
 					{
+						oControl = $(this);
 						var test = $(this).val();
-//						console.log(test);
 //						console.log(test.constructor);
 						if ( $(this).attr('name') && test != null && test.constructor !== Array)
 						{
 							value = $(this).val().replace('"', '"');
 							aoData[ $(this).attr('name') ] = value;
+							if(value && value !=0 )
+							{
+								active_filters_html.push($(this).attr('title'));
+							}
 						}
 						if ( $(this).attr('name') && test != null && test.constructor === Array)
 						{
 							value = $(this).val();
 							aoData[ $(this).attr('name') ] = value;
+
+							if(value.length > 0 )
+							{
+								active_filters_html.push($(this).attr('title'));
+							}
+							init_multiselect(oControl);
 						}
 
-//						if(value && value !=0 )
-//						{
-//							active_filters_html.push($(this).attr('name'));
-//						}
 					});
 
-					if(active_filters_html.length > 0)
+					if(active_filters_html.length > 0 )
 					{
 						$('#active_filters').html("Aktive filter: " + active_filters_html.join(', '));
+					}
+					var search_value = $('.dataTables_filter input[aria-controls="datatable-container"]').val();
+
+					if(active_filters_html.length > 0 || search_value)
+					{
+						$('#reset_filter').show();
+					}
+					else
+					{
+						$('#reset_filter').hide();
 					}
 
 				 },
@@ -1281,6 +1320,7 @@
 				fnInitComplete: function (oSettings, json)
 				{
 					$(".btn-group").addClass('w-100');
+					$(".dropdown-menu").addClass('w-100');
 					$(".multiselect ").addClass('form-control');
 					$(".multiselect").removeClass('btn');
 					$(".multiselect").removeClass('btn-default');
@@ -1289,6 +1329,8 @@
 					{
 						initCompleteDatatable(oSettings, json, oTable);
 					}
+
+					var debounce = new $.fn.dataTable.Debounce(oTable);
 				},
 				lengthMenu:		JqueryPortico.i18n.lengthmenu(),
 				language:		JqueryPortico.i18n.datatable(),
@@ -1301,6 +1343,10 @@
 				"order": order_def,
 				buttons: JqueryPortico.buttons
 			});
+			};
+
+			init_table();
+
 
 			$('#datatable-container tbody').on( 'click', 'tr', function () {
 					$(this).toggleClass('selected');
@@ -1338,8 +1384,9 @@
 				$('#democollapseBtn').addClass("show");
 			}
 
-			$('div.dataTables_filter input').focus();
+			$('div.dataTables_filter input').focus();	
 		});
+
 	]]>
 
 		/**

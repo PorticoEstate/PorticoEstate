@@ -85,7 +85,7 @@
 			/**
 			 * If we want to use boostrap - styling
 			 */
-			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' 
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend'
 				|| ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap' && $GLOBALS['phpgw_info']['flags']['currentapp'] == 'frontend')
 				|| $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap2')
 			{
@@ -497,7 +497,7 @@
 			}
 			else
 			{
-				$data['browser_support'] = 'modern';				
+				$data['browser_support'] = 'modern';
 			}
 
 			if (phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
