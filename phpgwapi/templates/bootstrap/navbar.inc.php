@@ -216,24 +216,18 @@ HTML;
 		$support_option = '';
 		if(isset($GLOBALS['phpgw_info']['server']['support_address']) && $GLOBALS['phpgw_info']['server']['support_address'])
 		{
-
-			$support_js = <<<JS
-
-			support_request = function()
-			{
-				var oArgs = {menuaction:'manual.uisupport.send',app:'{$GLOBALS['phpgw_info']['flags']['currentapp']}', form_type:'stacked'};
-				var strURL = phpGWLink('index.php', oArgs);
-				TINY.box.show({iframe:strURL, boxid:"frameless",width:700,height:500,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
-			}
-JS;
-
-			$var['support_request'] = $support_js;
-
 			$support_text = lang('support');
-
+			$support_link = $GLOBALS['phpgw']->link('/index.php', array
+				(
+					'menuaction'=> 'manual.uisupport.send',
+					'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
+					'form_type' => 'stacked',
+					'width' => 700,
+					'height' => 540
+				));
 			$support_option = <<<HTML
 			<li class="nav-item">
-				<a href="javascript:support_request();" class="nav-link">{$support_text}</a>
+				<a href="$support_link" class="nav-link" data-toggle="modal" data-target="#popupModal">{$support_text}</a>
 			</li>
 HTML;
 		}
