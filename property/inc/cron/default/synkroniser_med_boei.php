@@ -1281,7 +1281,7 @@ SQL;
 		{
 			$sql = "SELECT boei_leietaker.leietaker_id, boei_leietaker.fornavn, boei_leietaker.etternavn FROM boei_leietaker"
 				. " JOIN fm_tenant ON boei_leietaker.leietaker_id = fm_tenant.id"
-				. " WHERE first_name != fornavn OR last_name != etternavn";
+				. " WHERE hemmeligadresse is null AND (first_name != fornavn OR last_name != etternavn )";
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$i = 0;
