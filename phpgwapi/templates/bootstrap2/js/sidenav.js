@@ -79,16 +79,6 @@ function get_messages()
 	var profile_img = phpGWLink('phpgwapi/templates/bootstrap2/images/undraw_profile.svg', {}, false);
 
 	var htmlString = '';
-	htmlString = '<a class="dropdown-item d-flex align-items-center" href="#">';
-	htmlString += '		<div class="dropdown-list-image mr-3">';
-	htmlString += '			<img class="rounded-circle" src="' + profile_img + '" alt="">';
-	htmlString += '			<div class="status-indicator bg-success"></div>';
-	htmlString += '		</div>';
-	htmlString += '		<div class="font-weight-bold">';
-	htmlString += '			<div class="text-truncate">Hi there! I am wondering if you can help me with a   problem I\'ve been having.</div>';
-	htmlString += '			<div class="small text-gray-500">Emily Fowler · 58m</div>';
-	htmlString += '		</div>';
-	htmlString += '</a>';
 
 	var oArgs = {menuaction: 'messenger.uimessenger.index'};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
