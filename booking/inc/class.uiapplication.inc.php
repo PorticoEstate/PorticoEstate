@@ -246,6 +246,14 @@
 			return true;
 		}
 
+		protected function is_assigned_to(&$application)
+		{
+			if(!empty($application['case_officer_id']))
+			{
+				$application['case_officer_full_name'] = $GLOBALS['phpgw']->accounts->get($application['case_officer_id'])->__toString();
+			}
+		}
+
 		function add_comment_to_application($application_id, $comment, $changeStatus)
 		{
 			$application = $this->application_bo->read_single($application_id);
@@ -2944,6 +2952,9 @@
 JS;
 				$GLOBALS['phpgw']->js->add_code('', $js);
 			}
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('application') . ' # ' . $application['id'] . ' - ' . $application['building_name'];
+
+			$this->is_assigned_to($application);
 
 			self::add_javascript('booking', 'base', 'application.show.js');
 
