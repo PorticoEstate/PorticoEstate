@@ -134,7 +134,7 @@
 
 			if (phpgw::get_var('nonavbar'))
 			{
-				//	$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
+				$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 				//	$GLOBALS['phpgw_info']['flags']['headonly']=true;
 			}
