@@ -56,17 +56,13 @@
 			{
 				$this->_no_access('compose');
 			}
+
+			$query = phpgw::get_var('query');
 			phpgwapi_jquery::load_widget('select2');
 			$lang_to = lang('to');
 			$code		 = <<<JS
 $(document).ready(function ()
 {
-
-//	$("#recipient").select2({
-//		placeholder: "{$lang_to}",
-//		language: "no",
-//		width: '100%'
-//	});
 
 
 	$("#recipient").select2({
@@ -89,7 +85,30 @@ $(document).ready(function ()
 	  allowClear: true
 	});
 
+	// Fetch the preselected item, and add to the control
+	var studentSelect = $('#recipient');
+	$.ajax({
+		type: 'GET',
+		url: phpGWLink('index.php', {menuaction: 'preferences.boadmin_acl.get_users', query: '{$query}'}, true),
 
+	}).then(function (data) {
+		// create the option and append to Select2
+		
+		if(typeof(data.results[0]) !== undefined)
+		{
+			var user = data.results[0];
+			var option = new Option(user.text, data.id, true, true);
+			studentSelect.append(option).trigger('change');
+
+			// manually trigger the `select2:select` event
+			studentSelect.trigger({
+				type: 'select2:select',
+				params: {
+					data: user
+				}
+			});
+		}
+	});
 });
 
 JS;
