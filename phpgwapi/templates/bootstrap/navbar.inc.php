@@ -9,7 +9,7 @@
 		}
 
 		$navbar = array();
-		if(!isset($GLOBALS['phpgw_info']['flags']['nonavbar']) || !$GLOBALS['phpgw_info']['flags']['nonavbar'])
+		if(!$nonavbar)
 		{
 			$navbar = execMethod('phpgwapi.menu.get', 'navbar');
 		}
@@ -125,17 +125,17 @@ HTML;
 			$lang_bookmarks = lang('bookmarks');
 
 			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
-			$treemenu = '';
+			$_treemenu = '';
 			foreach($navbar as $app => $app_data)
 			{
 				if(!in_array($app, array('logout', 'about', 'preferences')))
 				{
 					$submenu = isset($navigation[$app]) ? render_submenu($app, $navigation[$app], $bookmarks, $app_data['text']) : '';
 					$node = render_item($app_data, "navbar::{$app}", $submenu, $bookmarks);
-					$treemenu .= $node['node'];
+					$_treemenu .= $node['node'];
 				}
 			}
-			$var['treemenu'] = <<<HTML
+			$treemenu = <<<HTML
 
 			<ul id="menutree" class="list-unstyled components">
 HTML;
@@ -149,8 +149,8 @@ HTML;
 				</a>
 HTML;
 			}
-			$var['treemenu'] .= <<<HTML
-			{$treemenu}
+			$treemenu .= <<<HTML
+			{$_treemenu}
 			</ul>
 HTML;
 
@@ -160,7 +160,7 @@ HTML;
 		}
 		$breadcrumb_html = "";
 
-		if(phpgw::get_var('phpgw_return_as') != 'json' && $breadcrumbs && is_array($breadcrumbs))// && isset($GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs'])
+		if((phpgw::get_var('phpgw_return_as') != 'json'  && $breadcrumbs && is_array($breadcrumbs)) && !$nonavbar)// && isset($GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs'])
 		{
 			$breadcrumb_html = <<<HTML
 				<nav aria-label="breadcrumb">
@@ -314,7 +314,7 @@ HTML;
 			$total_messages = $total_messages;
 		}
 		$link_messages = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'messenger.uimessenger.index' ));
-		$var['topmenu'] = <<<HTML
+		$topmenu = <<<HTML
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -427,6 +427,50 @@ HTML;
 
 
 HTML;
+
+		if($nonavbar)
+		{
+			$var['sidebar'] = '';
+			$var['top_panel'] = '';
+		}
+		else
+		{
+
+			$var['sidebar'] = <<<HTML
+				<nav id="sidebar" class="{menu_state}">
+					<div class="sidebar-header">
+						<h1>{$user_fullname}</h1>
+					</div>
+					<div class="sidebar-sticky">
+						{$treemenu}
+					</div>
+				</nav>
+HTML;
+
+			$var['top_panel'] = <<<HTML
+				<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+
+					<div class="container-fluid">
+
+						<button type="button" id="sidebarCollapse" class="btn btn-info">
+							<i class="fas fa-align-left"></i>
+							<span>Sidemeny</span>
+						</button>
+						<button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+							<i class="fas fa-align-justify"></i>
+						</button>
+
+						<!-- Brand -->
+						<a class="navbar-brand" href="#">{$GLOBALS['phpgw_info']['server']['site_title']}</a>
+
+						<div class="collapse navbar-collapse" id="navbarSupportedContent">
+							{$topmenu}
+						</div>
+					</div>
+				</nav>
+
+HTML;
+		}
 
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar');

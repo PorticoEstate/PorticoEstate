@@ -124,34 +124,8 @@
 	<!-- Begin Page Content -->
 	<div class="container-fluid">
 		<div class="row pl-3 pr-3 mt-4">
+
 			<div class="col-6">
-				<ul class="nav nav-pills justify-content-left">
-					<li class="nav-item mr-2">
-						<a class="nav-link active border" data-toggle="tab" href="#booking">
-							<i class="fas fa-calendar-alt fa-2x" aria-hidden="true" title="Søknad"></i>
-						</a>
-
-					</li>
-					<!--					<li class="nav-item mr-2">
-						<a class="nav-link border" data-toggle="tab" href="#dialogue">
-							<i class="far fa-comments fa-3x" aria-hidden="true" title="Dialog"></i>
-						</a>
-
-					</li>
-					<li class="nav-item mr-2">
-						<a class="nav-link border" data-toggle="tab" href="#checklist">
-							<i class="fas fa-clipboard-list fa-3x" aria-hidden="true" title="Sjekkliste"></i>
-						</a>
-					</li>-->
-					<li class="nav-item mr-2">
-						<a class="nav-link border" data-toggle="tab" href="#history">
-							<i class="fas fa-history fa-2x" aria-hidden="true" title="Historikk"></i>
-						</a>
-					</li>
-				</ul>
-			</div>
-
-			<div class="col-6 text-right">
 				<!-- BUTTONS -->
 				<ul class="list-inline">
 					<li class="list-inline-item mb-2">
@@ -163,9 +137,9 @@
 								<a class="dropdown-item" href="#" data-toggle="modal" data-target="#commentModal">
 									<i class="fas fa-reply mr-1 text-success"></i>Send svar til innsender
 								</a>
-								<a class="dropdown-item" href="#">
+								<!--a class="dropdown-item" href="#">
 									<i class="far fa-sticky-note mr-1 text-warning"></i>Opprett internt notat
-								</a>
+								</a-->
 
 								<a  class="dropdown-item" data-toggle="modal" data-target="#popupModal">
 									<xsl:attribute name="href">
@@ -312,6 +286,33 @@
 					</li>
 				</ul>
 			</div>
+			<div class="col-6">
+				<ul class="nav nav-pills nav-justified float-right">
+					<li class="nav-item mr-2">
+						<a class="nav-link active border" data-toggle="tab" href="#booking">
+							<i class="fas fa-calendar-alt fa-2x" aria-hidden="true" title="Søknad"></i>
+						</a>
+
+					</li>
+					<!--					<li class="nav-item mr-2">
+						<a class="nav-link border" data-toggle="tab" href="#dialogue">
+							<i class="far fa-comments fa-3x" aria-hidden="true" title="Dialog"></i>
+						</a>
+
+					</li>
+					<li class="nav-item mr-2">
+						<a class="nav-link border" data-toggle="tab" href="#checklist">
+							<i class="fas fa-clipboard-list fa-3x" aria-hidden="true" title="Sjekkliste"></i>
+						</a>
+					</li>-->
+					<li class="nav-item mr-2">
+						<a class="nav-link border" data-toggle="tab" href="#history">
+							<i class="fas fa-history fa-2x" aria-hidden="true" title="Historikk"></i>
+						</a>
+					</li>
+				</ul>
+			</div>
+
 		</div>
 
 
@@ -368,7 +369,7 @@
 						<span>
 							<xsl:choose>
 								<xsl:when test="not(application/case_officer)">
-								
+									<br/>
 									<xsl:value-of select="php:function('lang', 'In order to work with this application, you must first')"/>
 									<xsl:text> </xsl:text>
 									<xsl:value-of select="php:function('lang', 'assign yourself')"/>
@@ -376,7 +377,7 @@
 									<xsl:value-of select="php:function('lang', 'as the case officer responsible for this application.')"/>
 								</xsl:when>
 								<xsl:when test="application/case_officer and not(application/case_officer/is_current_user)">
-								
+									<br/>
 									<xsl:value-of select="php:function('lang', 'The user currently assigned as the responsible case officer for this application is')"/>
 									<xsl:text> </xsl:text>'<xsl:value-of select="application/case_officer/name"/>'.
 									<br/>

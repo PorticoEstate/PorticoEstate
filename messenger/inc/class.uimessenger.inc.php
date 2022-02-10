@@ -57,7 +57,7 @@
 				$this->_no_access('compose');
 			}
 
-			$query = phpgw::get_var('query');
+			$query = phpgw::get_var('query', 'string', 'REQUEST', '###');
 			phpgwapi_jquery::load_widget('select2');
 			$lang_to = lang('to');
 			$code		 = <<<JS
