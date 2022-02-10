@@ -159,8 +159,9 @@
 								<i class="fas fa-arrow-right" aria-hidden="true" title="Videresend sak"></i>
 							</button>
 							<div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-								<a class="dropdown-item" href="#">
-									<i class="fas fa-arrow-right mr-1 text-warning"></i>Sett sak til en annen saksbehandler</a>
+								<a class="dropdown-item" href="#" data-toggle="modal" data-target="#change_userModal">
+									<i class="fas fa-arrow-right mr-1 text-warning"></i>Sett sak til en annen saksbehandler
+								</a>
 							</div>
 						</div>
 					</li>
@@ -1187,6 +1188,45 @@
 								<div class="pure-control-group">
 									<label>&nbsp;</label>
 									<input type="submit" value="{php:function('lang', 'Add comment')}" class="pure-button pure-button-primary" />
+								</div>
+							</form>
+							<br/>
+						</div>
+					</xsl:if>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+
+	<div class="modal fade" id="change_userModal" tabindex="-1" role="dialog" aria-labelledby="change_userModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="change_userModalLabel">
+						<xsl:value-of select="php:function('lang', 'case officer')" />
+					</h5>
+					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">x</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<xsl:if test="application/edit_link">
+						<div class="pure-u-1">
+							<form method="POST">
+								<div class="pure-control-group">
+									<label for="new_case_officer">
+									</label>
+
+									<select name="new_case_officer" id="new_case_officer" required="required">
+
+									</select>
+									<br/>
+								</div>
+								<div class="pure-control-group">
+									<label>&nbsp;</label>
+									<input type="submit" value="{php:function('lang', 'set case officer')}" class="pure-button pure-button-primary" />
 								</div>
 							</form>
 							<br/>
