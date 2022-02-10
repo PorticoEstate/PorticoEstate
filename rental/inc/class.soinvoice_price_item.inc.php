@@ -80,7 +80,7 @@
 					0 // price_type_id
 				);
 	
-				$price_item->set_total_price($this->db->f('total_price', true));
+				$price_item->set_total_price((float)$this->db->f('total_price'));
 				$price_item->set_is_one_time((bool)$this->db->f('is_one_time'));
 			}
 			return $price_item;
