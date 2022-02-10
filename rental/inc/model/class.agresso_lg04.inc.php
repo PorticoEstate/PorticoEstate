@@ -228,7 +228,7 @@
 				$agresso_id = $db->f('agresso_id');
 
 				$entry = array(
-					'price'	=> $db->f('price'),
+					'price'	=> (float)$db->f('price'),
 					'type'	=> $db->f('type'),
 				);
 				$this->prizebook[$agresso_id] = $entry;
@@ -785,14 +785,14 @@
 
 		protected function get_formatted_amount_excel( $amount )
 		{
-//            var_dump($amount);
-//            var_dump($belop);
-			$amount = round($amount, 2) * 100;
-			$belop = substr($amount, 0, strlen($amount) - 2) . ',' . substr($amount, -2);
-			if ($amount < 0) // Negative number
-			{
-				return '-' . sprintf("%016.16s", abs($belop)); // We have to have the sign at the start of the string
-			}
-			return sprintf("%017.17s", $belop);
+			return $amount;
+
+//			$amount = round($amount, 2) * 100;
+//			$belop = substr($amount, 0, strlen($amount) - 2) . ',' . substr($amount, -2);
+//			if ($amount < 0) // Negative number
+//			{
+//				return '-' . sprintf("%016.16s", abs((float)$belop)); // We have to have the sign at the start of the string
+//			}
+//			return sprintf("%017.17s", $belop);
 		}
 	}
