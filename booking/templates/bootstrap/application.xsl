@@ -138,18 +138,27 @@
 							</button>
 							<div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
 								<button class="dropdown-item" href="#" data-toggle="modal" data-target="#commentModal">
-									<xsl:if test="not(application/case_officer)">
-										<xsl:attribute name="disabled">disabled</xsl:attribute>
-									</xsl:if>
-									<i class="fas fa-reply mr-1 text-success"></i>
+									<xsl:choose>
+										<xsl:when test="not(application/case_officer/is_current_user)">
+											<xsl:attribute name="disabled">disabled</xsl:attribute>
+											<i class="fas fa-reply mr-1 text-secondary"></i>
+										</xsl:when>
+										<xsl:otherwise>
+											<i class="fas fa-reply mr-1 text-success"></i>
+										</xsl:otherwise>
+									</xsl:choose>
 									Send svar til innsender
 								</button>
-
 								<button class="dropdown-item" href="#" data-toggle="modal" data-target="#messengerModal">
-									<xsl:if test="not($messenger_enabled) or not(application/case_officer)">
-										<xsl:attribute name="disabled">disabled</xsl:attribute>
-									</xsl:if>
-									<i class="fas fa-reply mr-1 text-success"></i>
+									<xsl:choose>
+										<xsl:when test="not($messenger_enabled) or application/case_officer/is_current_user">
+											<xsl:attribute name="disabled">disabled</xsl:attribute>
+											<i class="fas fa-reply mr-1 text-secondary"></i>
+										</xsl:when>
+										<xsl:otherwise>
+											<i class="fas fa-reply mr-1 text-success"></i>
+										</xsl:otherwise>
+									</xsl:choose>
 									Send melding til saksbehandler
 								</button>
 							</div>
@@ -197,11 +206,6 @@
 											<i class="fas fa-flag mr-1 text-primary"></i>
 											<xsl:value-of select="php:function('lang', phpgw:conditional(application/case_officer, 'Re-assign to me', 'Assign to me'))"/>
 										</button>
-										<xsl:if test="application/case_officer">
-											<xsl:value-of select="php:function('lang', 'Currently assigned to user:')"/>
-											<xsl:text> </xsl:text>
-											<xsl:value-of select="application/case_officer/name"/>
-										</xsl:if>
 									</form>
 								</xsl:if>
 
@@ -209,28 +213,42 @@
 									<form method="POST">
 										<input type="hidden" name="status" value="REJECTED"/>
 										<button onclick="return confirm('{php:function('lang', 'Are you sure you want to delete?')}')" type="submit" class="dropdown-item" >
-											<xsl:if test="not(application/case_officer)">
-												<xsl:attribute name="disabled">disabled</xsl:attribute>
-											</xsl:if>
-											<i class="fas fa-flag mr-1 text-primary"></i>
+											<xsl:choose>
+												<!--xsl:when test="not(application/case_officer)"-->
+												<xsl:when test="not(application/case_officer/is_current_user)">
+													<xsl:attribute name="disabled">disabled</xsl:attribute>
+													<i class="fas fa-flag mr-1 text-secondary"></i>
+												</xsl:when>
+												<xsl:otherwise>
+													<i class="fas fa-flag mr-1 text-primary"></i>
+												</xsl:otherwise>
+											</xsl:choose>
 											<xsl:value-of select="php:function('lang', 'Reject application')" />
 										</button>
 									</form>
 								</xsl:if>
 								<xsl:if test="application/status='PENDING'">
 									<xsl:if test="num_associations='0'">
-										<button type="submit" disabled="" value="{php:function('lang', 'Accept application')}" class="dropdown-item" />
-										<xsl:value-of select="php:function('lang', 'One or more bookings, allocations or events needs to be created before an application can be Accepted')"/>
+										<button type="submit" disabled="" value="{php:function('lang', 'Accept application')}" class="dropdown-item" >
+											<i class="fas fa-flag mr-1 text-secondary"></i>
+											<xsl:value-of select="php:function('lang', 'One or more bookings, allocations or events needs to be created before an application can be Accepted')"/>
+										</button>
 									</xsl:if>
 									<xsl:if test="num_associations!='0'">
 										<div>
 											<form method="POST">
 												<input type="hidden" name="status" value="ACCEPTED"/>
 												<button type="submit" class="dropdown-item" >
-													<xsl:if test="not(application/case_officer)">
-														<xsl:attribute name="disabled">disabled</xsl:attribute>
-													</xsl:if>
-													<i class="fas fa-flag mr-1 text-primary"></i>
+													<xsl:choose>
+														<!--xsl:when test="not(application/case_officer)"-->
+														<xsl:when test="not(application/case_officer/is_current_user)">
+															<xsl:attribute name="disabled">disabled</xsl:attribute>
+															<i class="fas fa-flag mr-1 text-secondary"></i>
+														</xsl:when>
+														<xsl:otherwise>
+															<i class="fas fa-flag mr-1 text-primary"></i>
+														</xsl:otherwise>
+													</xsl:choose>
 													<xsl:value-of select="php:function('lang', 'Accept application')" />
 												</button>
 											</form>
@@ -270,19 +288,28 @@
 
 								<xsl:if test="application/edit_link">
 									<button class="dropdown-item">
-										<xsl:if test="application/case_officer/is_current_user">
-											<xsl:attribute name="onclick">window.location.href='<xsl:value-of select="application/edit_link"/>'</xsl:attribute>
-										</xsl:if>
-										<xsl:if test="not(application/case_officer/is_current_user)">
-											<xsl:attribute name="disabled">disabled</xsl:attribute>
-										</xsl:if>
-										<i class="fas fa-flag mr-1 text-primary"></i>
+										<xsl:choose>
+											<xsl:when test="not(application/case_officer/is_current_user)">
+												<xsl:attribute name="disabled">disabled</xsl:attribute>
+												<i class="fas fa-flag mr-1 text-secondary"></i>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:attribute name="onclick">window.location.href='<xsl:value-of select="application/edit_link"/>'</xsl:attribute>
+												<i class="fas fa-flag mr-1 text-primary"></i>
+											</xsl:otherwise>
+										</xsl:choose>
 										<xsl:value-of select="php:function('lang', 'Edit')" />
 									</button>
 								</xsl:if>
 								<a class="dropdown-item" href="{application/dashboard_link}">
 									<i class="fas fa-flag mr-1 text-primary"></i>
 									<xsl:value-of select="php:function('lang', 'Back to Dashboard')" />
+								</a>
+								<a class="dropdown-item">
+									<xsl:attribute name="href">
+										<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:booking.uiapplication.index')" />
+									</xsl:attribute>
+									<i class="fas fa-flag mr-1 text-primary"></i>Tilbake til hovedoversikt
 								</a>
 							</div>
 						</div>
@@ -1225,11 +1252,20 @@
 									<xsl:value-of select="php:function('lang', 'Subject')" />
 								</label>
 								<input type="hidden" name="message_recipient" value="{application/case_officer_id}"/>
-								<input type="text" name="message_subject" id="message_subject" required="required" class="form-control"/>
+								<input type="text" name="message_subject" id="message_subject" required="required" class="form-control">
+									<xsl:attribute name='value'>
+										<xsl:value-of select="php:function('lang', 'application')" />
+										<xsl:text> #</xsl:text>
+										<xsl:value-of select="application/id" />
+										<xsl:text> - </xsl:text>
+										<xsl:value-of select="application/building_name" />
+									</xsl:attribute>
+								</input>
 								<label for="message_content">
 									<xsl:value-of select="php:function('lang', 'content')" />
 								</label>
-								<textarea name="message_content" id="message_content" required="required" class="form-control"/>
+								<textarea name="message_content" id="message_content" required="required" class="form-control">
+								</textarea>
 							</div>
 						</xsl:if>
 					</div>
@@ -1259,11 +1295,11 @@
 						<span aria-hidden="true">x</span>
 					</button>
 				</div>
-				<div class="modal-body">
-					<xsl:if test="application/edit_link">
-						<form method="POST">
+				<form method="POST">
+					<div class="modal-body">
+						<xsl:if test="application/edit_link">
 							<div class="form-group">
-								<select name="assign_to_user" id="new_case_officer" required="required" class="form-control" aria-describedby="case_officer_help">
+								<select name="assign_to_new_user" id="new_case_officer" required="required" class="form-control" aria-describedby="case_officer_help">
 									<option value="0">
 										<xsl:value-of select="php:function('lang', 'select')" />
 									</option>
@@ -1271,13 +1307,18 @@
 								</select>
 								<small id="case_officer_help" class="form-text text-muted">velg ny saksbehandler</small>
 							</div>
-							<div class="pure-control-group">
-								<label>&nbsp;</label>
-								<input type="submit" value="{php:function('lang', 'set case officer')}" class="pure-button pure-button-primary" />
-							</div>
-						</form>
-					</xsl:if>
-				</div>
+						</xsl:if>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary">
+							<xsl:value-of select="php:function('lang', 'save')" />
+						</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">
+							<xsl:value-of select="php:function('lang', 'cancel')" />
+						</button>
+					</div>
+
+				</form>
 			</div>
 			<!-- /.modal-content -->
 		</div>
