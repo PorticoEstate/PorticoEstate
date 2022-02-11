@@ -225,6 +225,20 @@
 			return false;
 		}
 
+		protected function assign_to_new_user( &$application, $account_id )
+		{
+			if (!empty($account_id) && is_array($application) &&
+				!isset($application['case_officer_id']) || $application['case_officer_id'] != $account_id)
+			{
+				$application['case_officer_id'] = $account_id;
+				$case_officer_full_name = $GLOBALS['phpgw']->accounts->get($application['case_officer_id'])->__toString();
+				$this->add_ownership_change_comment($application, sprintf(lang("User '%s' was assigned"), $case_officer_full_name));
+				return true;
+			}
+
+			return false;
+		}
+
 		protected function set_display_in_dashboard( &$application, $bool, $options = array() )
 		{
 			if (!is_bool($bool) || $application['display_in_dashboard'] === $bool)
@@ -2733,8 +2747,17 @@
 						'content' => $message_content));
 					self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'], 'return_after_action' => true));
 				}
-
-				if (array_key_exists('assign_to_user', $_POST))
+				
+				if (array_key_exists('assign_to_new_user', $_POST))
+				{
+					$update = $this->assign_to_new_user($application, phpgw::get_var('assign_to_new_user', 'int'));
+					if ($application['status'] == 'NEW')
+					{
+						$application['status'] = 'PENDING';
+					}
+					$return_after_action = true;
+				}
+				else if (array_key_exists('assign_to_user', $_POST))
 				{
 					$update = $this->assign_to_current_user($application);
 					if ($application['status'] == 'NEW')
