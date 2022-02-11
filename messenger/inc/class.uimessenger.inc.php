@@ -316,7 +316,8 @@ JS;
 				'order' => $columns[$order[0]['column']]['data'],
 				'allrows' => phpgw::get_var('length', 'int') == -1,
 				'entity_id' => $entity_id,
-				'cat_id' => $cat_id
+				'cat_id' => $cat_id,
+				'status' => phpgw::get_var('status')
 			);
 
 			switch ($columns[$order[0]['column']]['data'])

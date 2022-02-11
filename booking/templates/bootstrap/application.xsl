@@ -119,6 +119,9 @@
 
 		.pure-form-contentTable {display: inline-block;}
 	</style>
+	<xsl:variable name="messenger_enabled">
+		<xsl:value-of select="php:function('get_phpgw_info', 'user|apps|messenger|enabled')" />
+	</xsl:variable>
 
 	<xsl:call-template name="msgbox"/>
 	<!-- Begin Page Content -->
@@ -134,22 +137,21 @@
 								<i class="fas fa-reply" aria-hidden="true" title="Send svar eller opprett notat i saken"></i>
 							</button>
 							<div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-								<a class="dropdown-item" href="#" data-toggle="modal" data-target="#commentModal">
-									<i class="fas fa-reply mr-1 text-success"></i>Send svar til innsender
-								</a>
-								<!--a class="dropdown-item" href="#">
-									<i class="far fa-sticky-note mr-1 text-warning"></i>Opprett internt notat
-								</a-->
+								<button class="dropdown-item" href="#" data-toggle="modal" data-target="#commentModal">
+									<xsl:if test="not(application/case_officer)">
+										<xsl:attribute name="disabled">disabled</xsl:attribute>
+									</xsl:if>
+									<i class="fas fa-reply mr-1 text-success"></i>
+									Send svar til innsender
+								</button>
 
-								<a  class="dropdown-item" data-toggle="modal" data-target="#popupModal">
-									<xsl:attribute name="href">
-										<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:messenger.uimessenger.compose')" />
-										<xsl:text>&amp;nonavbar=true&amp;query=</xsl:text>
-										<xsl:value-of select="application/case_officer_name"/>
-									</xsl:attribute>
-									<i class="fas fa-reply mr-2 text-primary"></i>
+								<button class="dropdown-item" href="#" data-toggle="modal" data-target="#messengerModal">
+									<xsl:if test="not($messenger_enabled) or not(application/case_officer)">
+										<xsl:attribute name="disabled">disabled</xsl:attribute>
+									</xsl:if>
+									<i class="fas fa-reply mr-1 text-success"></i>
 									Send melding til saksbehandler
-								</a>
+								</button>
 							</div>
 						</div>
 					</li>
@@ -1200,6 +1202,52 @@
 		<!-- /.modal-dialog -->
 	</div>
 
+	<div class="modal fade" id="messengerModal" tabindex="-1" role="dialog" aria-labelledby="messengerModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="messengerModalLabel">
+						<xsl:value-of select="php:function('lang', 'Add message')" />
+						<xsl:text> (</xsl:text>
+						<xsl:value-of select="application/case_officer_full_name"/>
+						<xsl:text>)</xsl:text>
+					</h5>
+
+					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">x</span>
+					</button>
+				</div>
+				<form method="POST">
+					<div class="modal-body">
+						<xsl:if test="application/edit_link">
+							<div class="form-group">
+								<label for="message_subject">
+									<xsl:value-of select="php:function('lang', 'Subject')" />
+								</label>
+								<input type="hidden" name="message_recipient" value="{application/case_officer_id}"/>
+								<input type="text" name="message_subject" id="message_subject" required="required" class="form-control"/>
+								<label for="message_content">
+									<xsl:value-of select="php:function('lang', 'content')" />
+								</label>
+								<textarea name="message_content" id="message_content" required="required" class="form-control"/>
+							</div>
+						</xsl:if>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary">
+							<xsl:value-of select="php:function('lang', 'save')" />
+						</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">
+							<xsl:value-of select="php:function('lang', 'cancel')" />
+						</button>
+					</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+
 	<div class="modal fade" id="change_userModal" tabindex="-1" role="dialog" aria-labelledby="change_userModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
 			<div class="modal-content">
@@ -1213,31 +1261,57 @@
 				</div>
 				<div class="modal-body">
 					<xsl:if test="application/edit_link">
-						<div class="pure-u-1">
-							<form method="POST">
-								<div class="pure-control-group">
-									<label for="new_case_officer">
-									</label>
-
-									<select name="new_case_officer" id="new_case_officer" required="required">
-
-									</select>
-									<br/>
-								</div>
-								<div class="pure-control-group">
-									<label>&nbsp;</label>
-									<input type="submit" value="{php:function('lang', 'set case officer')}" class="pure-button pure-button-primary" />
-								</div>
-							</form>
-							<br/>
-						</div>
+						<form method="POST">
+							<div class="form-group">
+								<select name="assign_to_user" id="new_case_officer" required="required" class="form-control" aria-describedby="case_officer_help">
+									<option value="0">
+										<xsl:value-of select="php:function('lang', 'select')" />
+									</option>
+									<xsl:apply-templates select="user_list/options"/>
+								</select>
+								<small id="case_officer_help" class="form-text text-muted">velg ny saksbehandler</small>
+							</div>
+							<div class="pure-control-group">
+								<label>&nbsp;</label>
+								<input type="submit" value="{php:function('lang', 'set case officer')}" class="pure-button pure-button-primary" />
+							</div>
+						</form>
 					</xsl:if>
 				</div>
 			</div>
 			<!-- /.modal-content -->
 		</div>
 		<!-- /.modal-dialog -->
+
+		<script>
+			$(document).ready(function() {
+			$('#new_case_officer').select2({
+			dropdownParent: $('#change_userModal')
+			});
+
+			$('#new_case_officer').on('select2:open', function (e) {
+
+			$(".select2-search__field").each(function()
+			{
+			if ($(this).attr("aria-controls") == 'select2-new_case_officer-results')
+			{
+			$(this)[0].focus();
+			}
+			});
+			});
+
+			});
+		</script>
 	</div>
 
 
+</xsl:template>
+<!-- New template-->
+<xsl:template match="options">
+	<option value="{id}">
+		<xsl:if test="selected != 0">
+			<xsl:attribute name="selected" value="selected"/>
+		</xsl:if>
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
 </xsl:template>
