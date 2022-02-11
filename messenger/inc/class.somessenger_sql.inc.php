@@ -36,14 +36,19 @@
 		function read_inbox( $params )
 		{
 			$filtermethod = '';
-			if ($params['query'] && $params['query'])
+			if (!empty($params['query']))
 			{
 				$query = $this->db->db_addslashes($params['query']);
 				$filtermethod = " AND (message_subject {$this->like} '%$query%'"
 					. " OR message_content {$this->like} '%$query%')";
 			}
+			if (!empty($params['status']) && in_array($params['status'], array('N', 'O')))
+			{
+				$status = $this->db->db_addslashes(strtoupper($params['status']));
+				$filtermethod .= " AND message_status = '$status'";
+			}
 			$sortmethod = '';
-			if ($params['sort'] && $params['order'])
+			if (!empty($params['sort']) && !empty($params['order']))
 			{
 				$sortmethod = " ORDER BY {$params['order']} {$params['sort']}";
 			}

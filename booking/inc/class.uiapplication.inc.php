@@ -1960,6 +1960,8 @@
 
 									$booking_boevent->so->update_id_string();
 
+									$this->add_payment(array($application['id']));
+
 									$GLOBALS['phpgw']->db->transaction_commit();
 									$this->bo->send_notification($application);
 								}
@@ -2720,6 +2722,18 @@
 					unset($application['frontend_modified']);
 				}
 
+				if (array_key_exists('message_recipient', $_POST))
+				{
+					$message_recipient = phpgw::get_var('message_recipient', 'int');
+					$message_subject = phpgw::get_var('message_subject', 'string');
+					$message_content = phpgw::get_var('message_content', 'string');
+					createobject('messenger.somessenger')->send_message(array(
+						'to' => $message_recipient,
+						'subject' => $message_subject,
+						'content' => $message_content));
+					self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'], 'return_after_action' => true));
+				}
+
 				if (array_key_exists('assign_to_user', $_POST))
 				{
 					$update = $this->assign_to_current_user($application);
@@ -2957,6 +2971,7 @@ JS;
 			$this->is_assigned_to($application);
 
 			self::add_javascript('booking', 'base', 'application.show.js');
+			phpgwapi_jquery::load_widget('select2');
 
 			self::render_template_xsl('application', array(
 				'application'		 => $application,
@@ -2969,7 +2984,9 @@ JS;
 				'simple'			 => $simple,
 				'config'			 => CreateObject('phpgwapi.config', 'booking')->read(),
 				'export_pdf_action'	 => self::link(array('menuaction' => 'booking.uiapplication.export_pdf', 'id' => $application['id'])),
-				'external_archive'	 => $external_archive
+				'external_archive'	 => $external_archive,
+				'user_list'			 => array('options' => createObject('booking.sopermission_building')->get_user_list())
+
 				)
 			);
 		}
@@ -3086,4 +3103,24 @@ JS;
 			}
 		}
 
+		private function add_payment( array $application_ids )
+		{
+			$soapplication	 = CreateObject('booking.soapplication');
+			$filters		 = array('id' => $application_ids);
+			$params			 = array('filters' => $filters, 'results' => 'all');
+			$applications	 = $soapplication->read($params);
+
+			$soapplication->get_purchase_order($applications);
+
+			foreach ($applications['results'] as $application)
+			{
+				foreach ($application['orders'] as $order)
+				{
+					if (empty($order['paid']))
+					{
+						$soapplication->add_payment($order['order_id'], 'local_invoice', 'live', 2);
+					}
+				}
+			}
+		}
 	}

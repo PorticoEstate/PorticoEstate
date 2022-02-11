@@ -81,7 +81,7 @@ function get_messages()
 
 	var htmlString = '';
 
-	var oArgs = {menuaction: 'messenger.uimessenger.index'};
+	var oArgs = {menuaction: 'messenger.uimessenger.index', status: 'N'};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
 	$.ajax({
