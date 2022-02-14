@@ -151,7 +151,7 @@
 								</button>
 								<button class="dropdown-item" href="#" data-toggle="modal" data-target="#messengerModal">
 									<xsl:choose>
-										<xsl:when test="not($messenger_enabled) or application/case_officer/is_current_user">
+										<xsl:when test="not($messenger_enabled) or application/case_officer/is_current_user or application/case_officer_id ='' ">
 											<xsl:attribute name="disabled">disabled</xsl:attribute>
 											<i class="fas fa-reply mr-1 text-secondary"></i>
 										</xsl:when>
@@ -160,6 +160,18 @@
 										</xsl:otherwise>
 									</xsl:choose>
 									Send melding til saksbehandler
+								</button>
+								<button class="dropdown-item" href="#" data-toggle="modal" data-target="#internal_noteModal">
+									<xsl:choose>
+										<xsl:when test="not(application/case_officer/is_current_user)">
+											<xsl:attribute name="disabled">disabled</xsl:attribute>
+											<i class="far fa-sticky-note mr-1 text-secondary"></i>
+										</xsl:when>
+										<xsl:otherwise>
+											<i class="far fa-sticky-note mr-1 text-warning"></i>
+										</xsl:otherwise>
+									</xsl:choose>
+									Opprett internt notat
 								</button>
 							</div>
 						</div>
@@ -324,13 +336,13 @@
 						</a>
 
 					</li>
-					<!--					<li class="nav-item mr-2">
-						<a class="nav-link border" data-toggle="tab" href="#dialogue">
-							<i class="far fa-comments fa-3x" aria-hidden="true" title="Dialog"></i>
+					<li class="nav-item mr-2">
+						<a class="nav-link border" data-toggle="tab" href="#internal_notes">
+							<i class="far fa-sticky-note fa-2x text-warning" aria-hidden="true" title="Interne notat"></i>
 						</a>
 
 					</li>
-					<li class="nav-item mr-2">
+					<!--li class="nav-item mr-2">
 						<a class="nav-link border" data-toggle="tab" href="#checklist">
 							<i class="fas fa-clipboard-list fa-3x" aria-hidden="true" title="Sjekkliste"></i>
 						</a>
@@ -386,7 +398,7 @@
 							<xsl:value-of select="php:function('lang', 'case officer')" />
 						</p>
 					</div>
-					<p>
+					<div class="d-flex w-100">
 						<xsl:choose>
 							<xsl:when test="application/case_officer_full_name !=''">
 								<xsl:value-of select="application/case_officer_full_name"/>
@@ -395,38 +407,39 @@
 								<xsl:value-of select="php:function('lang', 'none')" />
 							</xsl:otherwise>
 						</xsl:choose>
-						<!--<div class="mt-1"> style="border: 3px solid red; padding: 3px 4px 3px 4px"-->
-						<span>
-							<xsl:choose>
-								<xsl:when test="not(application/case_officer)">
-									<br/>
+					</div>
+					<div class="d-flex w-100">
+						<xsl:choose>
+							<xsl:when test="not(application/case_officer)">
+
+								<div class="alert alert-primary" role="alert">
 									<xsl:value-of select="php:function('lang', 'In order to work with this application, you must first')"/>
 									<xsl:text> </xsl:text>
 									<xsl:value-of select="php:function('lang', 'assign yourself')"/>
 									<xsl:text> </xsl:text>
 									<xsl:value-of select="php:function('lang', 'as the case officer responsible for this application.')"/>
-								</xsl:when>
-								<xsl:when test="application/case_officer and not(application/case_officer/is_current_user)">
-									<br/>
+								</div>
+							</xsl:when>
+							<xsl:when test="application/case_officer and not(application/case_officer/is_current_user)">
+								<div class="alert alert-primary" role="alert">
 									<xsl:value-of select="php:function('lang', 'The user currently assigned as the responsible case officer for this application is')"/>
-									<xsl:text> </xsl:text>'<xsl:value-of select="application/case_officer/name"/>'.
+									<xsl:text> </xsl:text>'<xsl:value-of select="application/case_officer_full_name"/>'.
 									<br/>
 									<xsl:value-of select="php:function('lang', 'In order to work with this application, you must therefore first')"/>
 									<xsl:text> </xsl:text>
 									<xsl:value-of select="php:function('lang', 'assign yourself')"/>
 									<xsl:text> </xsl:text>
 									<xsl:value-of select="php:function('lang', 'as the case officer responsible for this application.')"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:attribute name="style">display:none</xsl:attribute>
-								</xsl:otherwise>
-							</xsl:choose>
-						</span>
-						<!--</div>-->
-					</p>
+								</div>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="style">display:none</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
+					</div>
 					
 					<div class="d-flex w-100 justify-content-between">
-						<p class="mb-1">
+						<p class="mb-1 mt-3">
 							<xsl:value-of select="php:function('lang', 'Status')" />
 						</p>
 					</div>
@@ -1074,7 +1087,35 @@
 			</div>
 			<!-- /FIRST PANE END -->
 
-			
+			<!-- SECOND PANE START -->
+			<div class="tab-pane fade" id="internal_notes">
+				<h3>
+					<xsl:value-of select="php:function('lang', 'internal notes')" />
+				</h3>
+				-- ikke implementert enda--
+
+				<!--xsl:for-each select="application/comments[author]">
+					<div class="panel-body">
+						<div class="list-group">
+							<div href="#" class="list-group-item flex-column align-items-start">
+								<div class="d-flex w-100 justify-content-between">
+									<h5 class="mb-1">
+										<xsl:value-of select="php:function('pretty_timestamp', time)"/>
+									</h5>
+									<small class="text-muted">
+										<xsl:value-of select="author"/>
+									</small>
+								</div>
+								<p class="mb-1 font-weight-bold">
+									<xsl:value-of select="comment" disable-output-escaping="yes"/>
+								</p>
+								<small class="text-muted"></small>
+							</div>
+						</div>
+					</div>
+				</xsl:for-each-->
+			</div>
+		
 			<!-- FOURTH PANE START -->
 			<div class="tab-pane fade" id="history">
 				<h3>
@@ -1323,27 +1364,71 @@
 			<!-- /.modal-content -->
 		</div>
 		<!-- /.modal-dialog -->
-
-		<script>
-			$(document).ready(function() {
-			$('#new_case_officer').select2({
-			dropdownParent: $('#change_userModal')
-			});
-
-			$('#new_case_officer').on('select2:open', function (e) {
-
-			$(".select2-search__field").each(function()
-			{
-			if ($(this).attr("aria-controls") == 'select2-new_case_officer-results')
-			{
-			$(this)[0].focus();
-			}
-			});
-			});
-
-			});
-		</script>
 	</div>
+
+	<div class="modal fade" id="internal_noteModal" tabindex="-1" role="dialog" aria-labelledby="internal_noteModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="internal_noteModalLabel">
+						<xsl:value-of select="php:function('lang', 'internal notes')" />
+						--Ikke implementert enda--
+					</h5>
+					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">x</span>
+					</button>
+				</div>
+				<form method="POST">
+					<div class="modal-body">
+						<xsl:if test="application/edit_link">
+							<div class="form-group">
+								<label for="internal_note_subject">
+									<xsl:value-of select="php:function('lang', 'Subject')" />
+								</label>
+								<input type="text" name="internal_note_subject" id="internal_note_subject" required="required" class="form-control">
+								</input>
+								<label for="internal_note_content">
+									<xsl:value-of select="php:function('lang', 'content')" />
+								</label>
+								<textarea name="internal_note_content" id="internal_note_content" required="required" class="form-control">
+								</textarea>
+							</div>
+						</xsl:if>
+					</div>
+					<div class="modal-footer">
+<!--						<button type="submit" class="btn btn-primary">
+							<xsl:value-of select="php:function('lang', 'save')" />
+						</button>-->
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">
+							<xsl:value-of select="php:function('lang', 'cancel')" />
+						</button>
+					</div>
+				</form>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+
+	<script>
+		$(document).ready(function() {
+		$('#new_case_officer').select2({
+		dropdownParent: $('#change_userModal')
+		});
+
+		$('#new_case_officer').on('select2:open', function (e) {
+
+		$(".select2-search__field").each(function()
+		{
+		if ($(this).attr("aria-controls") == 'select2-new_case_officer-results')
+		{
+		$(this)[0].focus();
+		}
+		});
+		});
+
+		});
+	</script>
 
 
 </xsl:template>
