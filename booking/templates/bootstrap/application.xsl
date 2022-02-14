@@ -1084,31 +1084,34 @@
 
 			<!-- SECOND PANE START -->
 			<div class="tab-pane fade" id="internal_notes">
+				<xsl:variable name="date_format">
+					<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
+					<!--<xsl:text> H:i</xsl:text>-->
+				</xsl:variable>
 				<h3>
 					<xsl:value-of select="php:function('lang', 'internal notes')" />
 				</h3>
-				-- ikke implementert enda--
 
-				<!--xsl:for-each select="application/comments[author]">
+ 				<xsl:for-each select="internal_notes">
 					<div class="panel-body">
 						<div class="list-group">
 							<div href="#" class="list-group-item flex-column align-items-start">
 								<div class="d-flex w-100 justify-content-between">
 									<h5 class="mb-1">
-										<xsl:value-of select="php:function('pretty_timestamp', time)"/>
+										<xsl:value-of select="php:function('date', $date_format, number(datetime))"/>
 									</h5>
 									<small class="text-muted">
-										<xsl:value-of select="author"/>
+										<xsl:value-of select="owner"/>
 									</small>
 								</div>
 								<p class="mb-1 font-weight-bold">
-									<xsl:value-of select="comment" disable-output-escaping="yes"/>
+									<xsl:value-of select="new_value" disable-output-escaping="yes"/>
 								</p>
 								<small class="text-muted"></small>
 							</div>
 						</div>
 					</div>
-				</xsl:for-each-->
+				</xsl:for-each>
 			</div>
 		
 			<!-- FOURTH PANE START -->
@@ -1367,7 +1370,6 @@
 				<div class="modal-header">
 					<h5 class="modal-title" id="internal_noteModalLabel">
 						<xsl:value-of select="php:function('lang', 'internal notes')" />
-						--Ikke implementert enda--
 					</h5>
 					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">x</span>
@@ -1377,11 +1379,6 @@
 					<div class="modal-body">
 						<xsl:if test="application/edit_link">
 							<div class="form-group">
-								<label for="internal_note_subject">
-									<xsl:value-of select="php:function('lang', 'Subject')" />
-								</label>
-								<input type="text" name="internal_note_subject" id="internal_note_subject" required="required" class="form-control">
-								</input>
 								<label for="internal_note_content">
 									<xsl:value-of select="php:function('lang', 'content')" />
 								</label>
@@ -1391,9 +1388,9 @@
 						</xsl:if>
 					</div>
 					<div class="modal-footer">
-<!--						<button type="submit" class="btn btn-primary">
+						<button type="submit" class="btn btn-primary">
 							<xsl:value-of select="php:function('lang', 'save')" />
-						</button>-->
+						</button>
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">
 							<xsl:value-of select="php:function('lang', 'cancel')" />
 						</button>

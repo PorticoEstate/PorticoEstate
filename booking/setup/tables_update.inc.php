@@ -5616,3 +5616,20 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+	/**
+	 * Update booking version from 0.2.75 to 0.2.76
+	 *
+	 */
+	$test[] = '0.2.75';
+	function booking_upgrade0_2_75()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.application', 'Application', 'booking');
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.76';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

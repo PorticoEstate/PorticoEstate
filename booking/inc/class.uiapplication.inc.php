@@ -2736,6 +2736,13 @@
 					unset($application['frontend_modified']);
 				}
 
+				if (array_key_exists('internal_note_content', $_POST))
+				{
+					$internal_note_content = phpgw::get_var('internal_note_content', 'string');
+					$this->add_internal_note($application['id'], $internal_note_content);
+					self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'], 'return_after_action' => true));
+				}
+
 				if (array_key_exists('message_recipient', $_POST))
 				{
 					$message_recipient = phpgw::get_var('message_recipient', 'int');
@@ -2993,6 +3000,8 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = $GLOBALS['phpgw_info']['flags']['app_header'];
 			$this->is_assigned_to($application);
 
+			$internal_notes = CreateObject('phpgwapi.historylog','booking', '.application')->return_array(array(),array('C'),'history_timestamp','ASC',$application['id']);
+
 			self::add_javascript('booking', 'base', 'application.show.js');
 			phpgwapi_jquery::load_widget('select2');
 
@@ -3008,8 +3017,8 @@ JS;
 				'config'			 => CreateObject('phpgwapi.config', 'booking')->read(),
 				'export_pdf_action'	 => self::link(array('menuaction' => 'booking.uiapplication.export_pdf', 'id' => $application['id'])),
 				'external_archive'	 => $external_archive,
-				'user_list'			 => array('options' => createObject('booking.sopermission_building')->get_user_list())
-
+				'user_list'			 => array('options' => createObject('booking.sopermission_building')->get_user_list()),
+				'internal_notes'	 => $internal_notes
 				)
 			);
 		}
@@ -3145,5 +3154,11 @@ JS;
 					}
 				}
 			}
+		}
+
+		private function add_internal_note($id, $internal_note_content)
+		{
+			$historylog	= CreateObject('phpgwapi.historylog','booking', '.application');
+			return $historylog->add('C', $id, $internal_note_content);
 		}
 	}
