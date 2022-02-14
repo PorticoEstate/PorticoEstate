@@ -915,7 +915,7 @@
 																</script>
 																<div class="pure-control-group">
 																	<label>&nbsp;</label>
-																	<select name="create" onchange="if(this.selectedIndex==1) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uibooking.add', eventParams[{id}]); if(this.selectedIndex==3) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}]);">
+																	<select name="create" onchange="if(this.selectedIndex==1) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}]);">
 																		<xsl:if test="not(../case_officer/is_current_user)">
 																			<xsl:attribute name="disabled">disabled</xsl:attribute>
 																		</xsl:if>
@@ -926,11 +926,6 @@
 																			<option>
 																				<xsl:value-of select="php:function('lang', 'Create allocation')" />
 																			</option>
-																			<!--
-																			<option>
-																				<xsl:value-of select="php:function('lang', 'Create booking')" />
-																			</option>
-																			-->
 																			<option>
 																				<xsl:value-of select="php:function('lang', 'Create event')" />
 																			</option>
