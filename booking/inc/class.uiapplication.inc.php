@@ -2990,7 +2990,7 @@ JS;
 				$GLOBALS['phpgw']->js->add_code('', $js);
 			}
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('application') . ' # ' . $application['id'] . ' - ' . $application['building_name'];
-
+			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = $GLOBALS['phpgw_info']['flags']['app_header'];
 			$this->is_assigned_to($application);
 
 			self::add_javascript('booking', 'base', 'application.show.js');
