@@ -288,3 +288,7 @@ H5 EM {
 label > input[type="search"] {
 	float:right;
 }
+
+.select2-container {
+  display: inline-block;
+}
