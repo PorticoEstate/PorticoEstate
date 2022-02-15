@@ -108,6 +108,8 @@
 				'shortname' => array('type' => 'varchar', 'precision' => '11', 'nullable' => True),
 				'show_in_portal' => array('type' => 'int', 'nullable' => False, 'precision' => '4',
 					'default' => 0),
+				'in_tax_register' => array('type' => 'int', 'nullable' => False, 'precision' => '2',
+					'default' => 0),
 			),
 			'pk' => array('id'),
 			'fk' => array(

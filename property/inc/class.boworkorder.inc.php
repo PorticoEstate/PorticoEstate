@@ -100,6 +100,10 @@
 			$this->obligation		 = phpgw::get_var('obligation', 'bool');
 		}
 
+		/**
+		 * Sjekker om kategorien er lovlig kombinert med valgt kostnadsart
+		 * @return array
+		 */
 		public function get_category()
 		{
 			$b_account_id = phpgw::get_var('b_account_id', 'int');
