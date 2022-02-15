@@ -886,3 +886,4 @@ update user address	booking	no	Oppdater kundeadresser
 add message	booking	no	Skriv melding
 content	booking	no	Innhold
 internal notes	booking	no	Interne notater
+in tax register	booking	no	Registrert i mva-registeret
