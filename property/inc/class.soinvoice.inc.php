@@ -605,7 +605,7 @@
 
 			if ($year)
 			{
-				$filtermethod	 .= " {$where} ({$table}.periode > {$year}00 AND {$table}.periode < {$year}13 OR {$table}.periode IS NULL)";
+				$filtermethod	 .= " {$where} ({$table}.periode > {$year}00 AND {$table}.periode < {$year}13)";// OR {$table}.periode IS NULL)";
 				$where			 = 'AND';
 			}
 
