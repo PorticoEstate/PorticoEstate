@@ -33,6 +33,7 @@
 				'customer_organization_number' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array(
 						'invalid' => '%field% is invalid'))),
 				'customer_internal' => array('type' => 'int', 'required' => true),
+				'in_tax_register' => array('type' => 'int'),
 				'activity_name' => array('type' => 'string',
 					'query' => true,
 					'join' => array(

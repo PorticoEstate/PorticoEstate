@@ -373,7 +373,7 @@
 			 TODO: This really needs testing - it can affect primary keys, and other table-related objects
 			 like sequences and such
 			*/
-			if ($oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sNewColumnName], $sNewColumnSQL))
+			if ($oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sNewColumnName], $sNewColumnSQL, $sTableName, $sOldColumnName))
 			{
 				return !!($oProc->m_odb->query("ALTER TABLE $sTableName CHANGE $sOldColumnName $sNewColumnName " . $sNewColumnSQL, __LINE__, __FILE__));
 			}
@@ -382,7 +382,7 @@
 
 		function AlterColumn($oProc, &$aTables, $sTableName, $sColumnName, &$aColumnDef, $bCopyData = true)
 		{
-			if ($oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sColumnName], $sNewColumnSQL))
+			if ($oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sColumnName], $sNewColumnSQL, $sTableName, $sColumnName))
 			{
 				return !!($oProc->m_odb->query("ALTER TABLE $sTableName MODIFY $sColumnName " . $sNewColumnSQL, __LINE__, __FILE__));
 				/* return !!($oProc->m_odb->query("ALTER TABLE $sTableName CHANGE $sColumnName $sColumnName " . $sNewColumnSQL)); */
@@ -393,7 +393,7 @@
 
 		function AddColumn($oProc, &$aTables, $sTableName, $sColumnName, &$aColumnDef)
 		{
-			$oProc->_GetFieldSQL($aColumnDef, $sFieldSQL);
+			$oProc->_GetFieldSQL($aColumnDef, $sFieldSQL, $sTableName, $sColumnName);
 			$query = "ALTER TABLE $sTableName ADD COLUMN $sColumnName $sFieldSQL";
 
 			return !!($oProc->m_odb->query($query, __LINE__, __FILE__));

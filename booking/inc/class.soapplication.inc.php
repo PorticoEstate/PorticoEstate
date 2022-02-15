@@ -567,6 +567,9 @@
 
 			while ($this->db->next_record())
 			{
+				$payment_method_id =  $this->db->f('payment_method_id');
+				$payment_method = $payment_method_id == 2 ? 'Etterfakturering' : 'Vipps';
+
 				$data[] = array(
 					'id'				 => (int)$this->db->f('id'),
 					'remote_state'		 => $this->db->f('remote_state'),
@@ -575,7 +578,7 @@
 					'currency'			 => $this->db->f('currency'),
 					'status'			 => $this->db->f('status'),
 					'order_id'			 => (int)$this->db->f('order_id'),
-					'payment_method'	 => 'vipps',
+					'payment_method'	 => $payment_method,
 					'created'			 => $this->db->f('created'),
 				);
 			}
@@ -889,7 +892,7 @@
 			$this->db->query("SELECT * FROM bb_payment WHERE remote_id ='{$remote_id}'", __LINE__, __FILE__);
 		}
 
-		function add_payment( $order_id, $msn, $mode = 'live' )
+		function add_payment( $order_id, $msn, $mode = 'live',  $payment_method_id = 1)
 		{
 
 			$sql = "SELECT count(id) AS cnt FROM bb_payment WHERE order_id =" . (int)$order_id;
@@ -905,7 +908,7 @@
 
 			$value_set = array(
 				'order_id' => $order_id,
-				'payment_method_id'	 => null,
+				'payment_method_id'	 => (int) $payment_method_id,
 				'payment_gateway_mode' => $mode,//test and live.
 				'remote_id' => $remote_id,
 				'remote_state' => null,

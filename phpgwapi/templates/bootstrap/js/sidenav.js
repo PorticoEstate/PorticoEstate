@@ -74,3 +74,48 @@ $(document).ready(function ()
 	});
 
 });
+
+function get_messages()
+{
+	var profile_img = phpGWLink('phpgwapi/templates/bootstrap2/images/undraw_profile.svg', {}, false);
+
+	var htmlString = '';
+
+	var oArgs = {menuaction: 'messenger.uimessenger.index', status: 'N'};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	$.ajax({
+		type: 'GET',
+		url: requestUrl,
+		//	dataType: "json",
+		success: function (data)
+		{
+			if (data)
+			{
+				var obj = data.data;
+				$.each(obj, function (i)
+				{
+					var font_class = '';
+					if (obj[i].status == 'N')
+					{
+						font_class = 'font-weight-bold';
+					}
+					console.log(obj[i]);
+					htmlString += '<a class="dropdown-item d-flex align-items-center" href="' + obj[i].link + '">';
+					htmlString += '		<div class="dropdown-list-image mr-3">';
+					htmlString += '			<img class="rounded-circle" src="' + profile_img + '" alt="">';
+					htmlString += '			<div class="status-indicator bg-success"></div>';
+					htmlString += '		</div>';
+					htmlString += '		<div class="' + font_class + '">';
+					htmlString += '			<div class="text-truncate">' + obj[i].subject_text + '</div>';
+					htmlString += '<div class="small text-gray-500">' + obj[i].from + ' · ' + obj[i].date + '</div>';
+					htmlString += '		</div>';
+					htmlString += '</a>';
+				});
+				$('#messages').html(htmlString);
+
+			}
+		}
+	});
+
+}

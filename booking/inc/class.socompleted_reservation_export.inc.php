@@ -1270,6 +1270,7 @@
 			$log_customer_name = '';
 			$log_customer_nr = '';
 			$log_buidling = '';
+			$tax_code = 0;
 
 			foreach ($reservations as &$reservation)
 			{
@@ -1314,6 +1315,10 @@
 					$org = $this->organization_bo->read_single($reservation['organization_id']);
 					$log_customer_name = $org['name'];
 					$customer_number =  $org['customer_number'];
+					if(!empty($org['in_tax_register']))
+					{
+						$tax_code = 1;
+					}
 				}
 				else
 				{
@@ -1406,6 +1411,7 @@
 					$fakturalinje['fradato']	 = $from_date->format('d.m.Y');  //dato
 
 					$fakturalinje['Linjenr']	 = $line_no;  //
+					$fakturalinje['mvakode']	 = $tax_code;  //char(1)
 
 					//Formål. eks.
 					if ($type == 'internal' && isset($this->config_data['dim_2']))
@@ -1492,7 +1498,8 @@
 					$fakturalinje['FormalDim']			 = '';  //char(8)
 					$fakturalinje['fradato']			 = $from_date->format('d.m.Y');  //dato
 
-					$fakturalinje['Linjenr'] = $line_no;  //
+					$fakturalinje['Linjenr']			 = $line_no;  //
+					$fakturalinje['mvakode']			 = $tax_code;  //char(1)
 
 					//Formål. Eks Idrett
 					if ($type == 'internal' && isset($this->config_data['dim_2']))

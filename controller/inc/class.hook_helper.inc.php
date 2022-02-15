@@ -56,6 +56,7 @@
 		 */
 		public function home_backend()
 		{
+			return;
 			if ($this->home_alternative)
 			{
 				$this->status_componants();

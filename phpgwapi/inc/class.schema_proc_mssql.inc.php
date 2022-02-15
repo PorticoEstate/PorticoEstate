@@ -343,7 +343,7 @@
 			// like sequences and such
 			global $DEBUG;
 			if ($DEBUG) { echo '<br>RenameColumn: calling _GetFieldSQL for ' . $sNewColumnName; }
-			if ($oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sNewColumnName], $sNewColumnSQL))
+			if ($oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sNewColumnName], $sNewColumnSQL, $sTableName, $sOldColumnName))
 			{
 				return !!($oProc->m_odb->query("EXEC sp_rename '$sTableName.$sOldColumnName', '$sNewColumnName'"));
 			}
@@ -354,7 +354,7 @@
 		{
 			global $DEBUG;
 			if ($DEBUG) { echo '<br>AlterColumn: calling _GetFieldSQL for ' . $sNewColumnName; }
-			if ($oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sColumnName], $sNewColumnSQL))
+			if ($oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sColumnName], $sNewColumnSQL, $sTableName, $sColumnName))
 			{
 				return !!($oProc->m_odb->query("ALTER TABLE $sTableName ALTER COLUMN $sColumnName " . $sNewColumnSQL));
 			}
@@ -364,7 +364,7 @@
 
 		function AddColumn($oProc, &$aTables, $sTableName, $sColumnName, &$aColumnDef)
 		{
-			$oProc->_GetFieldSQL($aColumnDef, $sFieldSQL);
+			$oProc->_GetFieldSQL($aColumnDef, $sFieldSQL, $sTableName, $sColumnName);
 			$query = "ALTER TABLE $sTableName ADD $sColumnName $sFieldSQL";
 
 			return !!($oProc->m_odb->query($query));

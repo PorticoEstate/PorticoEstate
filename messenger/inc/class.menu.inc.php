@@ -106,7 +106,7 @@
 				(
 				'inbox' => array
 					(
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'messenger.uimessenger.inbox')),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'messenger.uimessenger.index')),
 					'text' => $GLOBALS['phpgw']->translation->translate('inbox', array(), true),
 					'image' => array('messenger', 'navbar')
 				)

@@ -29,6 +29,14 @@
 					</div>
 					<div class="pure-control-group">
 						<label>
+							<xsl:value-of select="php:function('lang', 'in tax register')"/>
+						</label>
+						<span>
+							<xsl:value-of select="organization/in_tax_register" />
+						</span>
+					</div>
+					<div class="pure-control-group">
+						<label>
 							<xsl:value-of select="php:function('lang', 'Customer number')" />
 						</label>
 						<span>
@@ -96,9 +104,7 @@
 							</ul>
 						</div>
 					</xsl:if>
-					<div class="pure-control-group">
 						<xsl:copy-of select="phpgw:booking_customer_identifier_show(organization)"/>
-					</div>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Street')" />
@@ -202,17 +208,17 @@
 
         ]]>
 		var colDefsGroups = [
-			{key: 'name', label: lang['Name'], formatter: genericLink},
-			{key: 'primary_contact_email', label: lang['email']}
+		{key: 'name', label: lang['Name'], formatter: genericLink},
+		{key: 'primary_contact_email', label: lang['email']}
 		];
 		var colDefsDelegate = [
-			{key: 'name', label: lang['Name'], formatter: genericLink},
-			{key: 'email', label: lang['email']}
+		{key: 'name', label: lang['Name'], formatter: genericLink},
+		{key: 'email', label: lang['email']}
 		];
 		var colDefsDocuments = [
-			{key: 'name', label: lang['Name'], formatter: genericLink},
-			{key: 'category', label: lang['Category']},
-			{key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label:lang['Edit']}, {name: 'delete', label:lang['Delete']})}
+		{key: 'name', label: lang['Name'], formatter: genericLink},
+		{key: 'category', label: lang['Category']},
+		{key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label:lang['Edit']}, {name: 'delete', label:lang['Delete']})}
 		];
 
 		createTable('groups_container', groupURL, colDefsGroups, '', 'pure-table pure-table-bordered');

@@ -205,6 +205,17 @@
 								</xsl:if>
 							</div>
 							<div class="pure-control-group">
+								<label for="field_in_tax_register" class="pure-checkbox">
+									<input type="checkbox" id="field_in_tax_register" name= "in_tax_register" value="1">
+										<xsl:if test="organization/in_tax_register=1">
+											<xsl:attribute name="checked">checked</xsl:attribute>
+										</xsl:if>
+									</input>
+									<xsl:value-of select="php:function('lang', 'in tax register')"/>
+								</label>
+							</div>
+
+							<div class="pure-control-group">
 								<label for="field_show_in_portal">
 									<xsl:value-of select="php:function('lang', 'Show in portal')"/>
 								</label>

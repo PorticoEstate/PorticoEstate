@@ -49,6 +49,7 @@
 				'customer_organization_number' => 'string',
 				'customer_internal' => 'int',
 				'show_in_portal' => 'int',
+				'in_tax_register' => 'int',
 			);
 			$this->display_name = lang('organizations');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
@@ -145,6 +146,11 @@
 							'key' => 'active',
 							'label' => lang('Active')
 						),
+						array(
+							'key' => 'in_tax_register',
+							'label' => lang('in tax register')
+						),
+
 						array(
 							'key' => 'link',
 							'hidden' => true
