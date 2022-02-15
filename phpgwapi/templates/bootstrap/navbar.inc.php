@@ -47,17 +47,10 @@
 			case 'portico':
 				$selecte_portico = ' selected = "selected"';
 				$selecte_bootstrap = '';
-				$selecte_bootstrap2 = '';
 				break;
 			case 'bootstrap':
 				$selecte_portico = '';
 				$selecte_bootstrap = ' selected = "selected"';
-				$selecte_bootstrap2 = '';
-				break;
-			case 'bootstrap2':
-				$selecte_portico = '';
-				$selecte_bootstrap = '';
-				$selecte_bootstrap2 = ' selected = "selected"';
 				break;
 		}
 
@@ -65,7 +58,6 @@
 
 	   <select id = "template_selector" class="btn btn-link btn-sm nav-item dropdown no-arrow nav-link dropdown-toggle" style="height:2rem;">
 		<option class="nav-link" value="bootstrap"{$selecte_bootstrap}>Bootstrap</option>
-		<option value="bootstrap2"{$selecte_bootstrap2}>bootstrap2</option>
 		<option value="portico"{$selecte_portico}>Portico</option>
 	   </select>
 HTML;
