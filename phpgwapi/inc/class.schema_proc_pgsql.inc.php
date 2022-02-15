@@ -746,7 +746,7 @@
 				}
 			}
 
-			$oProc->_GetFieldSQL($aColumnDef, $sFieldSQL);
+			$oProc->_GetFieldSQL($aColumnDef, $sFieldSQL, $sTableName, $sColumnName);
 			$query = "ALTER TABLE $sTableName ADD COLUMN $sColumnName $sFieldSQL";
 
 			return !!$oProc->m_odb->query($query, __LINE__, __FILE__);

@@ -480,7 +480,7 @@
 		 */
 		function AddColumn($oProc, &$aTables, $sTableName, $sColumnName, &$aColumnDef)
 		{
-			$oProc->_GetFieldSQL($aColumnDef, $sFieldSQL);
+			$oProc->_GetFieldSQL($aColumnDef, $sFieldSQL, $sTableName, $sColumnName);
 			return !!($oProc->m_odb->query("ALTER TABLE $sTableName ADD COLUMN $sColumnName $sFieldSQL",__LINE__,__FILE__));
 		}
 
