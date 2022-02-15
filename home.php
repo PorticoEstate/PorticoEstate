@@ -72,6 +72,33 @@
 		echo parse_navbar();
 	}
 
+	echo <<<JS
+
+	<div class="container">
+		<div id="container_bookmark" class="row mt-4"></div>
+	</div>
+	<script type="text/javascript">
+	$('#_bookmark').children().each(function ()
+	{
+		var a = $(this);
+		var href = a.attr('href');
+		var icon = a.find('i').attr('class');
+
+		if (typeof(icon) == 'undefined')
+		{
+			icon = 'fas fa-2x fa-file-alt';
+		}
+		var templateString = '<div class="col-4 mb-3"><a href="' + href + '" class="stretched-link text-secondary"><div class="card shadow h-100 mb-2">';
+		templateString += '<div class="card-block text-center"><h1 class="p-3"><i class="' + icon + '"></i></h1></div>';
+		templateString += '<div class="card-footer text-center">' + a.text() + '</div>';
+		templateString += '</div></a></div>';
+		$('#container_bookmark').append(templateString);
+
+	 });
+	 </script>
+
+JS;
+
 	$GLOBALS['phpgw']->translation->add_app('mainscreen');
 	if (lang('mainscreen_message') != '!mainscreen_message')
 	{
@@ -204,7 +231,7 @@ HTML;
 			'addressbook',
 		);
 	}
-        
+
 	$GLOBALS['phpgw']->hooks->process('home', $sorted_apps);
 
 	if ( isset($GLOBALS['portal_order']) && is_array($GLOBALS['portal_order']) )

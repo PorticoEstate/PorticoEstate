@@ -5372,26 +5372,6 @@
 		);
 
 
-		# BEGIN Evil
-		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('bb_article_price_reduction');
-		if(isset($metadata['id']))
-		{
-			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_price_reduction');
-			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_price');
-			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_resource_service');
-			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_service');
-			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_purchase_order_line');
-			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_mapping');
-			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_article_category');
-			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_purchase_order');
-			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_purchase_order_line');
-			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_customer');
-			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_payment_method');
-			$GLOBALS['phpgw_setup']->oProc->DropTable('bb_payment');
-		}
-
-		# END Evil
-
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 		'bb_customer',  array(
 			'fd' => array(
@@ -5617,3 +5597,67 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.74 to 0.2.75
+	 *
+	 */
+	$test[] = '0.2.74';
+	function booking_upgrade0_2_74()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_payment_method (id, payment_gateway_name, payment_gateway_mode) VALUES(1, 'Vipps', 'live')");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_payment_method (id, payment_gateway_name, payment_gateway_mode, is_default) VALUES(2, 'Etterfakturering', 'live', 1)");
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.75';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.75 to 0.2.76
+	 *
+	 */
+	$test[] = '0.2.75';
+	function booking_upgrade0_2_75()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.application', 'Application', 'booking');
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.76';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.76 to 0.2.77
+	 *
+	 */
+	$test[] = '0.2.76';
+	function booking_upgrade0_2_76()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_organization', 'in_tax_register',
+			array(
+				'type' => 'int',
+				'precision' => 2,
+				'nullable' => True,
+				'default' => 0
+			)
+		);
+
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.77';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+

@@ -450,7 +450,8 @@
 </xsl:template>
 
 <xsl:template name="datasource-definition">
-	<table id="datatable-container" class="display cell-border compact responsive no-wrap" width="100%">
+	<table id="datatable-container" class="display cell-border compact responsive no-wrap" width="99%">
+	<!--table id="datatable-container" class="table table-bordered" width="99%" style="float: left;" cellspacing="0"-->
 		<thead>
 			<xsl:for-each select="//datatable/field">
 				<xsl:choose>

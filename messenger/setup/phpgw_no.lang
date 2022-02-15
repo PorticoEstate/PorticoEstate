@@ -32,3 +32,16 @@ you have %1 new messages	messenger	no	Du har %1 nye meldinger
 you have no messages	messenger	no	Du har ingen meldinger
 you must enter a subject	messenger	no	Du må skrive en tittel
 you must enter the username this message is for	messenger	no	Du må velge en addressat for meldingen
+messenger	messenger	no	Meldinger
+compose	messenger	no	Skriv ny
+compose groups	messenger	no	Skriv ny til grupper
+compose global	messenger	no	Skriv ny til global
+inbox	messenger	no	Innboks
+id	messenger	no	Id
+from	messenger	no	Fra
+Subject	messenger	no	Tittel
+message from	messenger	no	Melding fra
+read message	messenger	no	Les melding
+select	messenger	no	Velg
+content	messenger	no	Melding
+you must select a user to send this message to	messenger	no	Velg en bruker å sende meldingen til

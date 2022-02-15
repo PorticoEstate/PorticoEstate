@@ -14,8 +14,10 @@
 
 	/* $Id$ */
 
-	if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'messenger' &&
-		$GLOBALS['phpgw_info']['flags']['currentapp'] != 'welcome')
+	if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'messenger'
+		&& $GLOBALS['phpgw_info']['flags']['currentapp'] != 'welcome'
+		&& !in_array($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'], array('bootstrap', 'bootstrap2'))
+		)
 	{
 		$GLOBALS['phpgw']->db->query("SELECT COUNT(*) AS msg_cnt FROM phpgw_messenger_messages WHERE message_owner='"
 			. $GLOBALS['phpgw_info']['user']['account_id'] . "' and message_status='N'", __LINE__, __FILE__);

@@ -225,6 +225,20 @@
 			return false;
 		}
 
+		protected function assign_to_new_user( &$application, $account_id )
+		{
+			if (!empty($account_id) && is_array($application) &&
+				!isset($application['case_officer_id']) || $application['case_officer_id'] != $account_id)
+			{
+				$application['case_officer_id'] = $account_id;
+				$case_officer_full_name = $GLOBALS['phpgw']->accounts->get($application['case_officer_id'])->__toString();
+				$this->add_ownership_change_comment($application, sprintf(lang("User '%s' was assigned"), $case_officer_full_name));
+				return true;
+			}
+
+			return false;
+		}
+
 		protected function set_display_in_dashboard( &$application, $bool, $options = array() )
 		{
 			if (!is_bool($bool) || $application['display_in_dashboard'] === $bool)
@@ -244,6 +258,14 @@
 
 			$application['display_in_dashboard'] = ($bool === true ? 1 : 0);
 			return true;
+		}
+
+		protected function is_assigned_to(&$application)
+		{
+			if(!empty($application['case_officer_id']))
+			{
+				$application['case_officer_full_name'] = $GLOBALS['phpgw']->accounts->get($application['case_officer_id'])->__toString();
+			}
 		}
 
 		function add_comment_to_application($application_id, $comment, $changeStatus)
@@ -1952,6 +1974,8 @@
 
 									$booking_boevent->so->update_id_string();
 
+									$this->add_payment(array($application['id']));
+
 									$GLOBALS['phpgw']->db->transaction_commit();
 									$this->bo->send_notification($application);
 								}
@@ -2712,7 +2736,35 @@
 					unset($application['frontend_modified']);
 				}
 
-				if (array_key_exists('assign_to_user', $_POST))
+				if (array_key_exists('internal_note_content', $_POST))
+				{
+					$internal_note_content = phpgw::get_var('internal_note_content', 'string');
+					$this->add_internal_note($application['id'], $internal_note_content);
+					self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'], 'return_after_action' => true));
+				}
+
+				if (array_key_exists('message_recipient', $_POST))
+				{
+					$message_recipient = phpgw::get_var('message_recipient', 'int');
+					$message_subject = phpgw::get_var('message_subject', 'string');
+					$message_content = phpgw::get_var('message_content', 'string');
+					createobject('messenger.somessenger')->send_message(array(
+						'to' => $message_recipient,
+						'subject' => $message_subject,
+						'content' => $message_content));
+					self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'], 'return_after_action' => true));
+				}
+				
+				if (array_key_exists('assign_to_new_user', $_POST))
+				{
+					$update = $this->assign_to_new_user($application, phpgw::get_var('assign_to_new_user', 'int'));
+					if ($application['status'] == 'NEW')
+					{
+						$application['status'] = 'PENDING';
+					}
+					$return_after_action = true;
+				}
+				else if (array_key_exists('assign_to_user', $_POST))
 				{
 					$update = $this->assign_to_current_user($application);
 					if ($application['status'] == 'NEW')
@@ -2944,8 +2996,14 @@
 JS;
 				$GLOBALS['phpgw']->js->add_code('', $js);
 			}
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('application') . ' # ' . $application['id'] . ' - ' . $application['building_name'];
+			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = $GLOBALS['phpgw_info']['flags']['app_header'];
+			$this->is_assigned_to($application);
+
+			$internal_notes = CreateObject('phpgwapi.historylog','booking', '.application')->return_array(array(),array('C'),'history_timestamp','ASC',$application['id']);
 
 			self::add_javascript('booking', 'base', 'application.show.js');
+			phpgwapi_jquery::load_widget('select2');
 
 			self::render_template_xsl('application', array(
 				'application'		 => $application,
@@ -2958,7 +3016,9 @@ JS;
 				'simple'			 => $simple,
 				'config'			 => CreateObject('phpgwapi.config', 'booking')->read(),
 				'export_pdf_action'	 => self::link(array('menuaction' => 'booking.uiapplication.export_pdf', 'id' => $application['id'])),
-				'external_archive'	 => $external_archive
+				'external_archive'	 => $external_archive,
+				'user_list'			 => array('options' => createObject('booking.sopermission_building')->get_user_list()),
+				'internal_notes'	 => $internal_notes
 				)
 			);
 		}
@@ -3075,4 +3135,30 @@ JS;
 			}
 		}
 
+		private function add_payment( array $application_ids )
+		{
+			$soapplication	 = CreateObject('booking.soapplication');
+			$filters		 = array('id' => $application_ids);
+			$params			 = array('filters' => $filters, 'results' => 'all');
+			$applications	 = $soapplication->read($params);
+
+			$soapplication->get_purchase_order($applications);
+
+			foreach ($applications['results'] as $application)
+			{
+				foreach ($application['orders'] as $order)
+				{
+					if (empty($order['paid']))
+					{
+						$soapplication->add_payment($order['order_id'], 'local_invoice', 'live', 2);
+					}
+				}
+			}
+		}
+
+		private function add_internal_note($id, $internal_note_content)
+		{
+			$historylog	= CreateObject('phpgwapi.historylog','booking', '.application');
+			return $historylog->add('C', $id, $internal_note_content);
+		}
 	}
