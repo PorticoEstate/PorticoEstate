@@ -1,34 +1,46 @@
 compose	messenger	nn	Ny melding
-compose global message	admin	en	Ny global melding
+compose global message	admin	nn	Ny global melding
 compose message	messenger	nn	Ny melding
-delete a message.	messenger	nn	slett en melding.
+delete a message.	messenger	nn	slett ei melding.
 delete selected	messenger	nn	Slett valgt
 forward	messenger	nn	Videresend
-forward a message	messenger	nn	Videresend a en melding
-forward a message to another user.	messenger	nn	Videresend a en melding til en anne bruker.
-forwarded	messenger	nn	Videresent
-from	messenger	nn	Fra
+forward a message	messenger	nn	Videresend ei melding
+forward a message to another user.	messenger	nn	Vidaresendt ei melding til ein annan brukar.
+forwarded	messenger	nn	Vidaresendt
+from	messenger	nn	Frå
 global message	messenger	nn	Global Melding
-i can't find the username %1 on the system	messenger	nn	Finner ikke bruker %1 i systemet
+i can't find the username %1 on the system	messenger	nn	Finn ikkje brukar %1 i systemet
 inbox	messenger	nn	Innboks
 message from	messenger	nn	Melding fra
-messenger	common	en	Messenger
 new	messenger	nn	Ny
-read a list of messages.	messenger	nn	Les liste av meldinger.
-read a single message.	messenger	nn	Les en enkelt melding.
+read a list of messages.	messenger	nn	Les liste av meldingar.
+read a single message.	messenger	nn	Les ei enkelt melding.
 read message	messenger	nn	Les melding
 replied	messenger	nn	Svart på
 reply	messenger	nn	Svar
-reply to a message	messenger	nn	Svar på en melding
-reply to a received message.	messenger	nn	Svar på en mottatt melding.
+reply to a message	messenger	nn	Svar på ei melding
+reply to a received message.	messenger	nn	Svar på ei mottatt melding.
 send	messenger	nn	Send
 send a global message.	messenger	nn	Send en global melding.
-send a message to a single recipient.	messenger	nn	Send en melding til en enkelt mottaker.
+send a message to a single recipient.	messenger	nn	Send ei melding til ein enkelt mottaker.
 send message to	messenger	nn	Send melding til
-sorry, %1's account is not currently active	messenger	nn	Beklager, %1's konto er ikke aktiv
+sorry, %1's account is not currently active	messenger	nn	Beklager, %1's konto er ikkje aktiv
 you didn't enter anything for the message	messenger	nn	Meldingen er tom
 you have %1 new message	messenger	nn	Du har %1 ny melding
-you have %1 new messages	messenger	nn	Du har %1 nye meldinger
-you have no messages	messenger	nn	Du har ingen meldinger
-you must enter a subject	messenger	nn	Du må skrive en tittel
-you must enter the username this message is for	messenger	nn	Du må velge en addressat for meldingen
+you have %1 new messages	messenger	nn	Du har %1 nye meldingar
+you have no messages	messenger	nn	Du har ingen meldingar
+you must enter a subject	messenger	nn	Du må skrive ein tittel
+you must enter the username this message is for	messenger	nn	Du må velje ein addressat for meldingen
+messenger	messenger	nn	Meldingar
+compose	messenger	nn	Skriv ny
+compose groups	messenger	nn	Skriv ny til grupper
+compose global	messenger	nn	Skriv ny til global
+inbox	messenger	nn	Innboks
+id	messenger	nn	Id
+from	messenger	nn	Frå
+Subject	messenger	nn	Tittel
+message from	messenger	nn	Melding frå
+read message	messenger	nn	Les melding
+select	messenger	nn	Velg
+content	messenger	nn	Melding
+you must select a user to send this message to	messenger	nn	Vel ein bruker å sende meldingen til
