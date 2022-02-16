@@ -1411,7 +1411,7 @@
 					$fakturalinje['fradato']	 = $from_date->format('d.m.Y');  //dato
 
 					$fakturalinje['Linjenr']	 = $line_no;  //
-					$fakturalinje['mvakode']	 = $tax_code;  //char(1)
+//					$fakturalinje['mvakode']	 = $tax_code;  //char(1)
 
 					//Formål. eks.
 					if ($type == 'internal' && isset($this->config_data['dim_2']))
@@ -1499,7 +1499,7 @@
 					$fakturalinje['fradato']			 = $from_date->format('d.m.Y');  //dato
 
 					$fakturalinje['Linjenr']			 = $line_no;  //
-					$fakturalinje['mvakode']			 = $tax_code;  //char(1)
+//					$fakturalinje['mvakode']			 = $tax_code;  //char(1)
 
 					//Formål. Eks Idrett
 					if ($type == 'internal' && isset($this->config_data['dim_2']))
