@@ -383,3 +383,6 @@ label > input[type="search"] {
 {
 	z-index: 9999 !important;
 }
+.select2-container {
+  display: inline-block;
+}
