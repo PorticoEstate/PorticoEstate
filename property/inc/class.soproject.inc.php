@@ -1131,17 +1131,17 @@
 						continue;
 					}
 
-					if ($_year)
-					{
-						if ($budget['year'] == $_year)
-						{
-							$entry['actual_cost']	 += $budget['actual_cost'];
-							$entry['combined_cost']	 += $budget['sum_orders'];
-							$entry['budget']		 += $budget['budget'];
-							$entry['obligation']	 += $budget['sum_oblications'];
-						}
-					}
-					else
+//					if ($_year)
+//					{
+//						if ($budget['year'] == $_year)
+//						{
+//							$entry['actual_cost']	 += $budget['actual_cost'];
+//							$entry['combined_cost']	 += $budget['sum_orders'];
+//							$entry['budget']		 += $budget['budget'];
+//							$entry['obligation']	 += $budget['sum_oblications'];
+//						}
+//					}
+//					else
 					{
 						$entry['actual_cost'] += $budget['actual_cost'];
 						if ($budget['active'])
