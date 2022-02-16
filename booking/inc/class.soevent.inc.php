@@ -487,6 +487,15 @@
 			$db->query($sql, __LINE__, __FILE__);
 		}
 
+		public function identify_purchase_order($application_id, $event_id)
+		{
+			$this->db->query("UPDATE bb_purchase_order"
+				. " SET reservation_type = 'event', reservation_id = " . (int)$event_id
+				. " WHERE parent_id IS NULL"
+				. " AND application_id =" . (int)$application_id, __LINE__, __FILE__);
+
+		}
+
 		function get_building( $id )
 		{
 			$this->db->limit_query("SELECT name FROM bb_building where id=" . intval($id), 0, __LINE__, __FILE__, 1);
