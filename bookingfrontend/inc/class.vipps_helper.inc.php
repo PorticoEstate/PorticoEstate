@@ -581,6 +581,8 @@
 				}
 
 				$booking_boevent->so->update_id_string();
+				$booking_boevent->so->identify_purchase_order($application['id'], $receipt['id']);
+
 				$boapplication->send_notification($application);
 				$ret = true;
 			}

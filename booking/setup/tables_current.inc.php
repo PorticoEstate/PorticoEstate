@@ -1195,6 +1195,8 @@
 				'customer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'timestamp' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
 				'cancelled' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'reservation_type' => array('type' => 'varchar', 'precision' => '70', 'nullable' => False),
+				'reservation_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 			),
 			'pk' => array('id'),
 			'fk' => array(

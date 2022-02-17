@@ -883,3 +883,7 @@ send sms	booking	nn	send SMS
 season %1 copied to %2	booking	nn	Sesong %1 kopiert til %2
 copied from %1	booking	nn	kopiert frå %1
 update user address	booking	nn	Oppdater kundeadresser
+add message	booking	nn	Skriv melding
+content	booking	nn	Innhold
+internal notes	booking	nn	Interne notater
+in tax register	booking	nn	Registrert i mva-registeret
