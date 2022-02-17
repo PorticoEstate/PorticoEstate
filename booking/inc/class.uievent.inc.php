@@ -586,7 +586,9 @@
 					{
 						$this->add_comment($event, lang('Event was created'));
 						$receipt = $this->bo->add($event);
+						createObject('booking.sopurchase_order')->copy_purchase_order_from_application($event, $receipt['id'], 'event');
 						$this->bo->so->update_id_string();
+
 					}
 					self::redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $receipt['id'],
 						'secret' => $event['secret'], 'warnings' => $errors));

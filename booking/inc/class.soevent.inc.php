@@ -459,6 +459,25 @@
 			$sql = "DELETE FROM $table_name WHERE event_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
 
+			$sql = "SELECT id, parent_id FROM bb_purchase_order WHERE reservation_type = 'event' AND reservation_id = $id";
+
+			$db->query($sql, __LINE__, __FILE__);
+			$db->next_record();
+			$purchase_order_id = (int)$db->f('id');
+			$purchase_parent_order_id = (int)$db->f('parent_id');
+
+			if($purchase_order_id)
+			{
+				if($purchase_parent_order_id)
+				{
+					$db->query("DELETE FROM bb_purchase_order WHERE reservation_type = 'event' AND reservation_id = $id", __LINE__, __FILE__);
+				}
+				else
+				{
+					$db->query("UPDATE bb_purchase_order SET reservation_type = NULL, reservation_id = NULL WHERE reservation_type = 'event' AND reservation_id = $id", __LINE__, __FILE__);
+				}
+			}
+
 			$sql = "SELECT id FROM bb_completed_reservation WHERE reservation_id = $id AND reservation_type = 'event' AND export_file_id IS NULL";
 			$db->query($sql, __LINE__, __FILE__);
 			$db->next_record();
@@ -485,15 +504,6 @@
 			$db = $this->db;
 			$sql = "UPDATE $table_name SET id_string = cast(id AS varchar)";
 			$db->query($sql, __LINE__, __FILE__);
-		}
-
-		public function identify_purchase_order($application_id, $event_id)
-		{
-			$this->db->query("UPDATE bb_purchase_order"
-				. " SET reservation_type = 'event', reservation_id = " . (int)$event_id
-				. " WHERE parent_id IS NULL"
-				. " AND application_id =" . (int)$application_id, __LINE__, __FILE__);
-
 		}
 
 		function get_building( $id )
