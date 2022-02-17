@@ -182,6 +182,7 @@
 			$from_email	 = "{$from_name}<{$GLOBALS['phpgw_info']['user']['preferences']['common']['email']}>";
 
 			$ccarray = array(
+				'tom.wilhelmsen@fjordkraft.no',
 				'Muhammed.Ibrahim@bergen.kommune.no',
 				'Kenneth.Tertnaes@bergen.kommune.no',
 				$from_email
