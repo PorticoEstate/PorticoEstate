@@ -812,7 +812,13 @@
 				{
 					if (isset($_approved_list['user_list']['options']))
 					{
-						array_unshift($_approved_list['user_list']['options'], array('id' => '', 'name' => lang('forward')));
+						$_option_name = lang('forward');
+						if(!empty($_approved_list['initials']))
+						{
+							$_option_name .= " ( original: {$_approved_list['initials']})";
+						}
+
+						array_unshift($_approved_list['user_list']['options'], array('id' => '', 'name' => $_option_name));
 					}
 				}
 
