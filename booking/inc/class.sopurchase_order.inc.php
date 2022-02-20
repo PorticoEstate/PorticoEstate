@@ -68,11 +68,12 @@
 				$this->db->next_record();
 
 				$order_id		 = (int)$this->db->f('id');
+				$customer_id	 = (int)$this->db->f('customer_id');
 				$valueset		 = array(
 					'parent_id'			 => $order_id,
 					'status'			 => (int)$this->db->f('status'),
 					'application_id'	 => $application_id,
-					'customer_id'		 => (int)$this->db->f('customer_id'),
+					'customer_id'		 => $customer_id ? $customer_id : null,
 					'reservation_type'	 => $reservation_type,
 					'reservation_id'	 => $reservation_id,
 				);
