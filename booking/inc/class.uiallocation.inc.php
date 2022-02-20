@@ -411,6 +411,7 @@
 					try
 					{
 						$receipt = $this->bo->add($allocation);
+						createObject('booking.sopurchase_order')->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
 						$this->bo->so->update_id_string();
 						self::redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $receipt['id']));
 					}
@@ -459,6 +460,7 @@
 								try
 								{
 									$receipt = $this->bo->add($allocation);
+									createObject('booking.sopurchase_order')->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
 								}
 								catch (booking_unauthorized_exception $e)
 								{
