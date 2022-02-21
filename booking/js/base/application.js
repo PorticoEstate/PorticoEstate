@@ -384,6 +384,7 @@ function populateTableChkArticles(selection, resources)
 	var oArgs = {
 		menuaction: 'bookingfrontend.uiarticle_mapping.get_articles',
 		sort: 'name',
+		application_id: application_id
 	};
 	var url = phpGWLink('bookingfrontend/', oArgs, true);
 

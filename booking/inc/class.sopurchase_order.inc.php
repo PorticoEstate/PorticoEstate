@@ -16,6 +16,66 @@
 			$this->like = & $this->db->like;
 		}
 
+		function get_purchase_order( $_application_id = 0)
+		{
+			$application_ids = array(-1,  (int) $_application_id);
+
+			if(!$_application_id)
+			{
+				return array();
+			}
+
+			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id,"
+				. "CASE WHEN
+					(
+						bb_resource.name IS NULL
+					)"
+				. " THEN bb_service.name ELSE bb_resource.name END AS name"
+				. " FROM bb_purchase_order JOIN bb_purchase_order_line ON bb_purchase_order.id = bb_purchase_order_line.order_id"
+				. " JOIN bb_article_mapping ON bb_purchase_order_line.article_mapping_id = bb_article_mapping.id"
+				. " LEFT JOIN bb_service ON (bb_article_mapping.article_id = bb_service.id AND bb_article_mapping.article_cat_id = 2)"
+				. " LEFT JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id AND bb_article_mapping.article_cat_id = 1)"
+				. " WHERE bb_purchase_order.cancelled IS NULL"
+				. " AND bb_purchase_order.parent_id IS NULL AND bb_purchase_order.application_id IN (" . implode(',', $application_ids) . ")";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$order		 = array();
+			$sum		 = array();
+			$total_sum	 = 0;
+			while ($this->db->next_record())
+			{
+				$order_id		 = (int)$this->db->f('order_id');
+				if (!isset($sum[$order_id]))
+				{
+					$sum[$order_id] = 0;
+				}
+
+				$_sum			 = (float)$this->db->f('amount') + (float)$this->db->f('tax');
+				$sum[$order_id]	 = (float)$sum[$order_id] + $_sum;
+				$total_sum		 += $_sum;
+
+				$order['lines'][] = array(
+					'order_id'				 => $order_id,
+					'status'				 => (int)$this->db->f('status'),
+					'article_mapping_id'	 => (int)$this->db->f('article_mapping_id'),
+					'quantity'				 => (float)$this->db->f('quantity'),
+					'unit_price'			 => (float)$this->db->f('unit_price'),
+					'overridden_unit_price'	 => (float)$this->db->f('overridden_unit_price'),
+					'currency'				 => $this->db->f('currency'),
+					'amount'				 => (float)$this->db->f('amount'),
+					'tax_code'				 => (int)$this->db->f('tax_code'),
+					'tax'					 => (float)$this->db->f('tax'),
+					'name'					 => $this->db->f('name', true),
+				);
+
+				$order['order_id']	 = $order_id;
+				$order['sum']		 = $sum[$order_id];
+			}
+
+			return $order;
+		}
+
 		public function identify_purchase_order( $application_id, $reservation_id, $reservation_type = 'event' )
 		{
 			if (!$application_id || !$reservation_id)

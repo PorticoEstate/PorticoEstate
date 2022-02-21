@@ -129,14 +129,41 @@
 		{
 			$resources	 = phpgw::get_var('resources', 'int', 'GET');
 			$application_id	 = phpgw::get_var('application_id', 'int', 'GET');
+
+			$purchase_order = createObject('booking.sopurchase_order')->get_purchase_order($application_id);
 			$articles	 = $this->bo->get_articles($resources);
 
 			foreach ($articles as &$article)
 			{
+				if(!empty($purchase_order['lines']))
+				{
+					foreach ($purchase_order['lines'] as $line)
+					{
+						if($line['article_mapping_id'] == $article['id'])
+						{
+							$article['selected_quantity'] = $line['quantity'];
+							$article['selected_sum'] = $line['amount'];
+							$article['selected_article_quantity']	 = "{$article['id']}_{$line['amount']}";
+						}
+					}
+				}
+
 				$article['price'] = number_format($article['price'], 2);
-				$article['selected_quantity']			 = isset($article['resource_id']) ? 1 : '';
-				$article['selected_article_quantity']	 = isset($article['resource_id']) ? "{$article['id']}_1" : '';
-				$article['selected_sum']				 = isset($article['resource_id']) ? $article['price'] : '';
+
+				if(empty($article['selected_quantity']))
+				{
+					$article['selected_quantity']			 = isset($article['resource_id']) ? 1 : '';
+				}
+
+				if(empty($article['selected_article_quantity']))
+				{
+					$article['selected_article_quantity']	 = isset($article['resource_id']) ? "{$article['id']}_1" : '';
+				}
+
+				if(empty($article['selected_sum']))
+				{
+					$article['selected_sum']				 = isset($article['resource_id']) ? $article['price'] : '';
+				}
 			}
 
 			return array('data' => $articles);

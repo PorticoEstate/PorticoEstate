@@ -310,6 +310,7 @@
 				$this->db->query($sql, __LINE__, __FILE__);
 				$this->db->next_record();
 				$article['ex_tax_price'] = (float)$this->db->f('price');
+				$article['tax']			 = $article['ex_tax_price'] * ($article['tax_percent'] / 100);
 				$article['price']		 = $article['ex_tax_price'] * (1 + ($article['tax_percent'] / 100));
 			}
 
