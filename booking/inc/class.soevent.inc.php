@@ -312,22 +312,22 @@
 			{
 				$rids = join(',', array_map("intval", $entity['resources']));
 				// Check if we overlap with any existing event
-				$this->db->query("SELECT e.id FROM bb_event e 
-									WHERE e.active = 1 AND e.id <> $event_id AND 
+				$this->db->query("SELECT e.id FROM bb_event e
+									WHERE e.active = 1 AND e.id <> $event_id AND
 									e.id IN (SELECT event_id FROM bb_event_resource WHERE resource_id IN ($rids)) AND
-									((e.from_ >= '$start' AND e.from_ < '$end') OR 
-						 			 (e.to_ > '$start' AND e.to_ <= '$end') OR 
+									((e.from_ >= '$start' AND e.from_ < '$end') OR
+						 			 (e.to_ > '$start' AND e.to_ <= '$end') OR
 						 			 (e.from_ < '$start' AND e.to_ > '$end'))", __LINE__, __FILE__);
 				if ($this->db->next_record())
 				{
 					$errors['event'] = lang('Overlaps with existing event') . " #" . $this->db->f('id');
 				}
 				// Check if we overlap with any existing allocation
-				$this->db->query("SELECT a.id FROM bb_allocation a 
-									WHERE a.active = 1 AND  
+				$this->db->query("SELECT a.id FROM bb_allocation a
+									WHERE a.active = 1 AND
 									a.id IN (SELECT allocation_id FROM bb_allocation_resource WHERE resource_id IN ($rids)) AND
-									((a.from_ >= '$start' AND a.from_ < '$end') OR 
-						 			 (a.to_ > '$start' AND a.to_ <= '$end') OR 
+									((a.from_ >= '$start' AND a.from_ < '$end') OR
+						 			 (a.to_ > '$start' AND a.to_ <= '$end') OR
 						 			 (a.from_ < '$start' AND a.to_ > '$end'))", __LINE__, __FILE__);
 				if ($result = $this->db->resultSet)
 				{
@@ -340,11 +340,11 @@
 				}
 
 				// Check if we overlap with any existing booking
-				$this->db->query("SELECT b.id FROM bb_booking b 
-									WHERE  b.active = 1 AND  
+				$this->db->query("SELECT b.id FROM bb_booking b
+									WHERE  b.active = 1 AND
 									b.id IN (SELECT booking_id FROM bb_booking_resource WHERE resource_id IN ($rids)) AND
-									((b.from_ >= '$start' AND b.from_ < '$end') OR 
-						 			 (b.to_ > '$start' AND b.to_ <= '$end') OR 
+									((b.from_ >= '$start' AND b.from_ < '$end') OR
+						 			 (b.to_ > '$start' AND b.to_ <= '$end') OR
 						 			 (b.from_ < '$start' AND b.to_ > '$end'))", __LINE__, __FILE__);
 				if ($result = $this->db->resultSet)
 				{
@@ -470,6 +470,7 @@
 			{
 				if($purchase_parent_order_id)
 				{
+					$db->query("DELETE FROM bb_purchase_order_line WHERE order_id = $purchase_order_id", __LINE__, __FILE__);
 					$db->query("DELETE FROM bb_purchase_order WHERE reservation_type = 'event' AND reservation_id = $id", __LINE__, __FILE__);
 				}
 				else
@@ -488,7 +489,7 @@
 				$db->query($sql, __LINE__, __FILE__);
 
 				$sql = "DELETE FROM bb_completed_reservation WHERE id = $completed_reservation_id";
-				$db->query($sql, __LINE__, __FILE__);	
+				$db->query($sql, __LINE__, __FILE__);
 			}
 
 			$table_name = $this->table_name;
@@ -647,7 +648,7 @@
 				SELECT DISTINCT ON (bbe.id, bbe.from_)
 				    bbe.id as event_id,
 			       	bbe.from_,
-			       	bbe.to_, 
+			       	bbe.to_,
 				    bbe.building_id as building_id,
 			       	bbe.building_name as location_name,
 				    bbe.name as event_name,
@@ -663,7 +664,7 @@
 				        bb_resource br on ber.resource_id = br.id
 				    inner join
 				        bb_rescategory bbrc on br.rescategory_id = bbrc.id
-				where 
+				where
 		        	bbe.from_ > current_date
 				  	AND bbe.from_ >= '$from_date' "
 						.$to_date_sql

@@ -1544,16 +1544,7 @@
 				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
 			}
 
-			$location_id		 = $GLOBALS['phpgw']->locations->get_id('booking', 'run');
-			$custom_config		 = CreateObject('admin.soconfig', $location_id)->read();
-
-			$payment_methods = array();
-
 			$articles = CreateObject('booking.soarticle_mapping')->get_articles($resource_ids);
-			if($articles && $direct_booking && !empty($custom_config['payment']['method']) && !empty($custom_config['Vipps']['active']))
-			{
-				$payment_methods[] = 'vipps';
-			}
 
 			self::render_template_xsl($template, array(
 				'application' => $application,
@@ -1563,7 +1554,7 @@
 				'resource_list'	=> array('options' => $resources),
 				'direct_booking' => $direct_booking,
 				'config' => CreateObject('phpgwapi.config', 'booking')->read(),
-				'payment_methods' => $payment_methods
+				'has_articles' => !!$articles
 				)
 			);
 		}
@@ -2755,7 +2746,7 @@
 						'content' => $message_content));
 					self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'], 'return_after_action' => true));
 				}
-				
+
 				if (array_key_exists('assign_to_new_user', $_POST))
 				{
 					$update = $this->assign_to_new_user($application, phpgw::get_var('assign_to_new_user', 'int'));

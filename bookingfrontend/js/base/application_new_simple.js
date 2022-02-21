@@ -370,7 +370,7 @@ function set_block(StartTime, EndTime)
 				id: $("#resource_id").val()}
 			));
 		}
-	});	
+	});
 }
 
 function cancel_block()

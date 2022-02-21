@@ -128,6 +128,7 @@
 		public function get_articles()
 		{
 			$resources	 = phpgw::get_var('resources', 'int', 'GET');
+			$application_id	 = phpgw::get_var('application_id', 'int', 'GET');
 			$articles	 = $this->bo->get_articles($resources);
 
 			foreach ($articles as &$article)

@@ -58,7 +58,7 @@
 						<div class="col-12 mt-4" id="item-description">
 						</div>
 					</div>
-					<xsl:if test="count(payment_methods) >  0">
+					<xsl:if test="has_articles  = 1">
 
 						<div class="form-group">
 							<label>

@@ -54,7 +54,7 @@
 			 */
 			$sql = "SELECT id FROM bb_purchase_order WHERE reservation_type IS NULL AND reservation_id IS NULL AND application_id = {$application_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
-			if (!$this->db->next_record())
+			if ($this->db->next_record())
 			{
 				/**
 				 * Place the order where it belong
