@@ -16,6 +16,137 @@
 			$this->like = & $this->db->like;
 		}
 
+		function add_purchase_order( $purchase_order )
+		{
+			if (empty($purchase_order['application_id']))
+			{
+				return false;
+			}
+
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
+//-------- add or update master-------
+
+			$sql = "SELECT id FROM bb_purchase_order WHERE parent_id IS NULL AND application_id = " . (int)$purchase_order['application_id'];
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$order_id = (int)$this->db->f('id');
+			if($order_id)
+			{
+				$this->db->query("DELETE FROM bb_purchase_order_line WHERE order_id = $order_id", __LINE__, __FILE__);
+			}
+			else
+			{
+				$value_set = array(
+					'application_id' => (int)$purchase_order['application_id'],
+					'status'		 => 0,
+					'customer_id'	 => null
+				);
+
+				$this->db->query('INSERT INTO bb_purchase_order (' . implode(',', array_keys($value_set)) . ') VALUES ('
+				. $this->db->validate_insert(array_values($value_set)) . ')', __LINE__, __FILE__);
+
+				$order_id = $this->db->get_last_insert_id('bb_purchase_order', 'id');
+			}
+
+//------------
+
+			if (!empty($purchase_order['lines']))
+			{
+				$article_ids = array();
+				foreach ($purchase_order['lines'] as $line)
+				{
+					$article_mapping_ids[] = $line['article_mapping_id'];
+				}
+
+				/**
+				 * FIXME
+				 */
+				$current_pricing = createObject('booking.soarticle_mapping')->get_current_pricing($article_mapping_ids);
+
+				$add_sql = "INSERT INTO bb_purchase_order_line ("
+					. " order_id, status, article_mapping_id, quantity, unit_price,"
+					. " overridden_unit_price, currency,  amount, tax_code, tax)"
+					. " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+				$insert_update = array();
+				foreach ($purchase_order['lines'] as $line)
+				{
+					$current_price_info = $current_pricing[$line['article_mapping_id']];
+
+					$unit_price = $current_price_info['price'];
+
+					$overridden_unit_price	 = $unit_price;
+					$currency				 = 'NOK';
+
+					$amount = $overridden_unit_price * (float)$line['quantity'];
+
+					$tax_code	 = $current_price_info['tax_code'];
+					$percent	 = $current_price_info['percent'];
+
+					$tax = $amount * $percent / 100;
+
+					$insert_update[] = array(
+						1	 => array(
+							'value'	 => $order_id,
+							'type'	 => PDO::PARAM_INT
+						),
+						2	 => array(
+							'value'	 => 1,
+							'type'	 => PDO::PARAM_INT
+						),
+						3	 => array(
+							'value'	 => $line['article_mapping_id'],
+							'type'	 => PDO::PARAM_INT
+						),
+						4	 => array(
+							'value'	 => (float)$line['quantity'],
+							'type'	 => PDO::PARAM_STR
+						),
+						5	 => array(
+							'value'	 => (float)$unit_price,
+							'type'	 => PDO::PARAM_STR
+						),
+						6	 => array(
+							'value'	 => (float)$overridden_unit_price,
+							'type'	 => PDO::PARAM_STR
+						),
+						7	 => array(
+							'value'	 => $currency,
+							'type'	 => PDO::PARAM_STR
+						),
+						8	 => array(
+							'value'	 => $amount,
+							'type'	 => PDO::PARAM_STR
+						),
+						9	 => array(
+							'value'	 => $tax_code,
+							'type'	 => PDO::PARAM_INT
+						),
+						10	 => array(
+							'value'	 => (float)$tax,
+							'type'	 => PDO::PARAM_STR
+						),
+					);
+				}
+				$this->db->insert($add_sql, $insert_update, __LINE__, __FILE__);
+			}
+
+
+			if (!$this->global_lock)
+			{
+				return $this->db->transaction_commit();
+			}
+		}
+
 		function get_purchase_order( $_application_id = 0)
 		{
 			$application_ids = array(-1,  (int) $_application_id);

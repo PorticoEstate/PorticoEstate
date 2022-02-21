@@ -712,7 +712,10 @@
 			{
 				foreach ($purchase_order['lines'] as &$line)
 				{
-					$line['sum'] = $line['amount'] + $line['tax'];
+					$line['sum'] = number_format( ($line['amount'] + $line['tax']) , 2, '.', ' ');
+					$line['amount'] = number_format($line['amount'], 2, '.', ' ');
+					$line['tax'] = number_format($line['tax'], 2, '.', ' ');
+					$line['unit_price'] = number_format($line['unit_price'], 2, '.', ' ');
 				}
 			}
 
@@ -1199,7 +1202,7 @@
 					if($purchase_order)
 					{
 						$purchase_order['application_id'] = $application['id'];
-						$this->bo->add_purchase_order($purchase_order);
+						createObject('booking.sopurchase_order')->add_purchase_order($purchase_order);
 					}
 
 
@@ -2364,6 +2367,38 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->update($application);
+					/**
+					 * Start dealing with the purchase_order..
+					 */
+					$purchase_order = array(
+						'application_id' => $id,
+						'status' => 0,
+						'customer_id' => -1,
+						'lines' => array());
+
+					$selected_articles = (array)phpgw::get_var('selected_articles');
+
+					foreach ($selected_articles as $selected_article)
+					{
+						$_article_info = explode('_', $selected_article);
+
+						if(empty($_article_info[0]))
+						{
+							continue;
+						}
+
+						$purchase_order['lines'][] = array(
+							'article_mapping_id'	=> $_article_info[0],
+							'quantity'				=> $_article_info[1],
+						);
+					}
+
+					if(!empty($purchase_order['lines']))
+					{
+						createObject('booking.sopurchase_order')->add_purchase_order($purchase_order);
+					}
+
+
 					$this->bo->send_notification($application);
 					self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id']));
 				}

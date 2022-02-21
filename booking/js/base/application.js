@@ -587,7 +587,11 @@ function set_sum(xTable)
 	{
 		if (selected_sum[i].innerHTML)
 		{
+			var cell = $(selected_sum[i]).parents().children()[9];
+			$(cell).children()[0].removeAttribute('disabled');
+
 			temp_total_sum = parseFloat(temp_total_sum) + parseFloat(selected_sum[i].innerHTML);
+			selected_sum[i].innerHTML = parseFloat(selected_sum[i].innerHTML).toFixed(2);
 		}
 	}
 

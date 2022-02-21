@@ -142,8 +142,8 @@
 						if($line['article_mapping_id'] == $article['id'])
 						{
 							$article['selected_quantity'] = $line['quantity'];
-							$article['selected_sum'] = $line['amount'];
-							$article['selected_article_quantity']	 = "{$article['id']}_{$line['amount']}";
+							$article['selected_sum'] = (float)($line['amount'] + $line['tax']);
+							$article['selected_article_quantity']	 = "{$article['id']}_{$line['quantity']}";
 						}
 					}
 				}
