@@ -129,8 +129,10 @@
 		{
 			$resources	 = phpgw::get_var('resources', 'int', 'GET');
 			$application_id	 = phpgw::get_var('application_id', 'int', 'GET');
+			$reservation_type	 = phpgw::get_var('reservation_type', 'string', 'GET');
+			$reservation_id	 = phpgw::get_var('reservation_id', 'int', 'GET');
 
-			$purchase_order = createObject('booking.sopurchase_order')->get_purchase_order($application_id);
+			$purchase_order = createObject('booking.sopurchase_order')->get_purchase_order($application_id, $reservation_type, $reservation_id);
 			$articles	 = $this->bo->get_articles($resources);
 
 			foreach ($articles as &$article)

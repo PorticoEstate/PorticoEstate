@@ -23,6 +23,12 @@
 				return false;
 			}
 
+			if (!empty($purchase_order['reservation_type']) && empty($purchase_order['reservation_id']))
+			{
+				return false;
+			}
+
+
 			if ($this->db->get_transaction())
 			{
 				$this->global_lock = true;
@@ -32,9 +38,18 @@
 				$this->db->transaction_begin();
 			}
 
-//-------- add or update master-------
+//--------  add or update master -------
 
-			$sql = "SELECT id FROM bb_purchase_order WHERE parent_id IS NULL AND application_id = " . (int)$purchase_order['application_id'];
+			if(empty($purchase_order['reservation_id']))
+			{
+				$sql = "SELECT id FROM bb_purchase_order WHERE parent_id IS NULL AND application_id = " . (int)$purchase_order['application_id'];
+			}
+//--------  or add or update slave -------
+			else
+			{
+				$sql = "SELECT id FROM bb_purchase_order WHERE reservation_type = '{$purchase_order['reservation_type']}' AND reservation_id = " . (int)$purchase_order['reservation_id'];
+			}
+
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
@@ -147,13 +162,28 @@
 			}
 		}
 
-		function get_purchase_order( $_application_id = 0)
+		function get_purchase_order( $application_id = 0, $reservation_type = '', $reservation_id = 0)
 		{
-			$application_ids = array(-1,  (int) $_application_id);
 
-			if(!$_application_id)
+			if(!$application_id && !($reservation_type && $reservation_id))
 			{
 				return array();
+			}
+
+			if ($reservation_type && !in_array($reservation_type, array('event', 'allocation')))
+			{
+				return array();
+			}
+
+			$filtermethod = 'WHERE bb_purchase_order.cancelled IS NULL';
+
+			if($reservation_type && (int) $reservation_id)
+			{
+				$filtermethod .= " AND bb_purchase_order.reservation_type = '{$reservation_type}' AND bb_purchase_order.reservation_id = " . (int) $reservation_id;
+			}
+			else if((int) $application_id)
+			{
+				$filtermethod .= " AND bb_purchase_order.parent_id IS NULL AND bb_purchase_order.application_id = " . (int) $application_id;
 			}
 
 			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id,"
@@ -166,8 +196,7 @@
 				. " JOIN bb_article_mapping ON bb_purchase_order_line.article_mapping_id = bb_article_mapping.id"
 				. " LEFT JOIN bb_service ON (bb_article_mapping.article_id = bb_service.id AND bb_article_mapping.article_cat_id = 2)"
 				. " LEFT JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id AND bb_article_mapping.article_cat_id = 1)"
-				. " WHERE bb_purchase_order.cancelled IS NULL"
-				. " AND bb_purchase_order.parent_id IS NULL AND bb_purchase_order.application_id IN (" . implode(',', $application_ids) . ")";
+				. " {$filtermethod}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 

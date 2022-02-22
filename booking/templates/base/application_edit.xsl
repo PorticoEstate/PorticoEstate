@@ -582,7 +582,7 @@
 	<script type="text/javascript">
 		var application_id = <xsl:value-of select="application/id"/>;
 		$('#field_customer_identifier_type,#field_customer_ssn,#field_customer_organization_number').removeClass('pure-input-1').addClass('pure-u-1 pure-u-sm-1-2 pure-u-md-1');
-		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.', 'article', 'Select', 'price', 'unit', 'quantity', 'Selected', 'Delete')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.', 'article', 'Select', 'price', 'unit', 'tax', 'unit cost', 'quantity', 'Selected', 'Delete', 'Sum')"/>;
 		var initialDocumentSelection = <xsl:value-of select="application/accepted_documents_json"/>;
 		var initialAcceptAllTerms = true;
 		var initialSelection = <xsl:value-of select="application/resources_json"/>;

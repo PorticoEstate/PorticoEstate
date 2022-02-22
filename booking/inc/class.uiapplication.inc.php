@@ -2452,6 +2452,18 @@
 				$tabs['generic'] = array('label' => lang('Application Edit'), 'link' => '#application_edit');
 				$active_tab = 'generic';
 				self::add_javascript('booking', 'base', 'application.js');
+				$associations = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id']),
+				'sort' => 'from_', 'dir' => 'asc', 'results' =>'all'));
+
+				if($associations['total_records'] > 0)
+				{
+					self::add_javascript('booking', 'base', 'purchase_order_show.js');
+				}
+				else
+				{
+					self::add_javascript('booking', 'base', 'purchase_order_edit.js');
+				}
+
 				$application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			}
 			else

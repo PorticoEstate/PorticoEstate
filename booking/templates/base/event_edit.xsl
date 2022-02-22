@@ -579,6 +579,13 @@
 					</div>
 					<div class="pure-g">
 						<div class="pure-u-1">
+							<div class="pure-control-group">
+								<label for="articles_container">
+									<xsl:value-of select="php:function('lang', 'Articles')" />
+								</label>
+								<div id="articles_container" class="pure-custom" style="display:inline-block;"></div>
+							</div>
+
 							<div class="heading">
 								<legend>
 									<h3>
@@ -685,12 +692,15 @@
 	</form>
 	<script type="text/javascript">
 		$('#field_customer_identifier_type,#field_customer_ssn,#field_customer_organization_number').removeClass('pure-input-1').addClass('pure-u-1 pure-u-sm-1-2 pure-u-md-1');
+		var reservation_type = 'event';
+		var reservation_id = '<xsl:value-of select="event/id"/>';
 		var initialSelection = <xsl:value-of select="event/resources_json"/>;
 		var initialAudience = <xsl:value-of select="event/audience_json"/>;
 		$('#field_customer_identifier_type').attr("data-validation","customer_identifier").attr("data-validation-error-msg","<xsl:value-of select="php:function('lang', 'There is set a cost, but no invoice data is filled inn')" />");
 
 		var event_id = <xsl:value-of select="event/id"/>;
-		var lang = <xsl:value-of select="php:function('js_lang','Name', 'phone', 'email', 'Resource Type', 'quantity', 'from', 'to', 'send sms')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang','Name', 'phone', 'email', 'Resource Type', 'quantity', 'from', 'to', 'send sms', 'article', 'Select', 'price', 'unit', 'tax', 'unit cost', 'quantity', 'Selected', 'Delete', 'Sum')"/>;
+
 
     <![CDATA[
 		var participantURL = phpGWLink('index.php', {menuaction:'booking.uiparticipant.index', sort:'phone', filter_reservation_id: event_id, filter_reservation_type: 'event', length:-1}, true);
