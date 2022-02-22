@@ -47,7 +47,7 @@ $(document).ready(function ()
 			});
 		},
 		items: {
-			"edit": {name: "Bookmark", icon: "fa-bookmark"}
+			"edit": {name: "Bookmark", icon: "far fa-bookmark"}
 		}
 	});
 
