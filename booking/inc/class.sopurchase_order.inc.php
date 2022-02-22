@@ -61,9 +61,11 @@
 			else
 			{
 				$value_set = array(
-					'application_id' => (int)$purchase_order['application_id'],
-					'status'		 => 0,
-					'customer_id'	 => null
+					'application_id'	 => (int)$purchase_order['application_id'],
+					'status'			 => 0,
+					'customer_id'		 => null,
+					'reservation_type'	 => !empty($purchase_order['reservation_type']) ? $purchase_order['reservation_type'] : null,
+					'reservation_id'	 => !empty($purchase_order['reservation_id']) ? (int) $purchase_order['reservation_id'] : null
 				);
 
 				$this->db->query('INSERT INTO bb_purchase_order (' . implode(',', array_keys($value_set)) . ') VALUES ('

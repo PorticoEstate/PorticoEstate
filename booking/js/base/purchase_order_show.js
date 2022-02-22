@@ -74,15 +74,15 @@ $(document).ready(function ()
 	{
         if(typeof(application_id)  === 'undefined')
         {
-            application_id  = null;
+            application_id  = '';
         }
         if(typeof(reservation_type) === 'undefined')
         {
-            reservation_type = null;
+            reservation_type = '';
         }
         if(typeof(reservation_id) === 'undefined')
         {
-            reservation_id = null;
+            reservation_id = '';
         }
 
         populateTableChkArticles([], resources, application_id, reservation_type,reservation_id );

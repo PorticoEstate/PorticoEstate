@@ -887,3 +887,7 @@ add message	booking	nn	Skriv melding
 content	booking	nn	Innhold
 internal notes	booking	nn	Interne notater
 in tax register	booking	nn	Registrert i mva-registeret
+unit	booking	nn	Eining
+price	booking	nn	Pris
+selected	booking	nn	Valgt
+unit cost	booking	nn	Einingspris
