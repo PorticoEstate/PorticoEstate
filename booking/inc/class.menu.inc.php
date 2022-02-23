@@ -256,7 +256,7 @@
 						),
 						'accounting_tax'		 => array
 							(
-							'text'	 => lang('Accounting tax'),
+							'text'	 => lang('tax code'),
 							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uigeneric.index',
 								'type'		 => 'tax'))
 						),

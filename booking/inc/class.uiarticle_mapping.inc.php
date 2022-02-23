@@ -150,11 +150,12 @@
 					}
 				}
 
-				$article['price'] = number_format($article['price'], 2);
+				$article['price']		 = number_format($article['price'], 2, '.', '');
+				$article['mandatory']	 = isset($article['resource_id']) ? 1 : '';
 
 				if(empty($article['selected_quantity']))
 				{
-					$article['selected_quantity']			 = isset($article['resource_id']) ? 1 : '';
+					$article['selected_quantity']	 = isset($article['resource_id']) ? 1 : '';
 				}
 
 				if(empty($article['selected_article_quantity']))
@@ -164,7 +165,7 @@
 
 				if(empty($article['selected_sum']))
 				{
-					$article['selected_sum']				 = isset($article['resource_id']) ? $article['price'] : '';
+					$article['selected_sum']		 = isset($article['resource_id']) ? $article['price'] : '';
 				}
 			}
 

@@ -891,3 +891,5 @@ unit	booking	no	Enhet
 price	booking	no	Pris
 selected	booking	no	Valgt
 unit cost	booking	no	Enhetspris
+commerce	booking	no	Varekatalog
+tax code	booking	no	Mva-kode

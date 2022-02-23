@@ -1064,30 +1064,31 @@
 					$application['customer_identifier_type'] = 'organization_number';
 					$application['customer_organization_number'] = '';
 
-					/**
-					 * Start dealing with the purchase_order..
-					 */
-					$purchase_order = array('status' => 0, 'customer_id' => -1, 'lines' => array());
-					$selected_articles = (array)phpgw::get_var('selected_articles');
-
-					foreach ($selected_articles as $selected_article)
-					{
-						$_article_info = explode('_', $selected_article);
-
-						if(empty($_article_info[0]))
-						{
-							continue;
-						}
-
-						$purchase_order['lines'][] = array(
-							'article_mapping_id'	=> $_article_info[0],
-							'quantity'				=> $_article_info[1],
-						);
-					}
 				}
 				else if(isset($application['formstage']) && $application['formstage'] == 'legacy')
 				{
 					$application['name'] = $application['description'] ;
+				}
+
+				/**
+				 * Start dealing with the purchase_order..
+				 */
+				$purchase_order = array('status' => 0, 'customer_id' => -1, 'lines' => array());
+				$selected_articles = (array)phpgw::get_var('selected_articles');
+
+				foreach ($selected_articles as $selected_article)
+				{
+					$_article_info = explode('_', $selected_article);
+
+					if(empty($_article_info[0]))
+					{
+						continue;
+					}
+
+					$purchase_order['lines'][] = array(
+						'article_mapping_id'	=> $_article_info[0],
+						'quantity'				=> $_article_info[1],
+					);
 				}
 
 				/**
@@ -1199,12 +1200,11 @@
 					$receipt = $this->bo->add($application);
 					$application['id'] = $receipt['id'];
 
-					if($purchase_order)
+					if(!empty($purchase_order['lines']))
 					{
 						$purchase_order['application_id'] = $application['id'];
 						createObject('booking.sopurchase_order')->add_purchase_order($purchase_order);
 					}
-
 
 					if( isset($_FILES['name']['name']) && $_FILES['name']['name'] )
 					{
@@ -1341,7 +1341,15 @@
 			array_set_default($application, 'dates', $default_dates);
 
 			$this->flash_form_errors($errors);
-			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
+
+			if(empty($application['resources']))
+			{
+				$application['resources_json'] = json_encode(array(phpgw::get_var('resource_id', 'int')));
+			}
+			else
+			{
+				$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
+			}
 			$application['accepted_documents_json'] = json_encode($application['accepted_documents']);
 			$application['dates_json'] = json_encode($application['dates']);
 			$application['agegroups_json'] = json_encode($application['agegroups']);
@@ -1540,6 +1548,8 @@
 			{
 				$template = 'application_new';
 			}
+
+			self::add_javascript('bookingfrontend', 'base', 'purchase_order_add.js', 'text/javascript', true);
 
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && !$simple)
 			{
@@ -3041,7 +3051,10 @@ JS;
 
 			$internal_notes = CreateObject('phpgwapi.historylog','booking', '.application')->return_array(array(),array('C'),'history_timestamp','ASC',$application['id']);
 
+			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
+
 			self::add_javascript('booking', 'base', 'application.show.js');
+			self::add_javascript('booking', 'base', 'purchase_order_show.js');
 			phpgwapi_jquery::load_widget('select2');
 
 			self::render_template_xsl('application', array(

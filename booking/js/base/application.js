@@ -126,7 +126,21 @@ $(window).on('load', function ()
 		});
 		var selection = [];
 		populateTableChkRegulations(building_id_selection, selection, resources);
-		populateTableChkArticles(selection, resources);
+
+		if (typeof (application_id) === 'undefined')
+		{
+			application_id = '';
+		}
+		if (typeof (reservation_type) === 'undefined')
+		{
+			reservation_type = '';
+		}
+		if (typeof (reservation_id) === 'undefined')
+		{
+			reservation_id = '';
+		}
+
+		populateTableChkArticles([], resources, application_id, reservation_type, reservation_id);
 
 	});
 

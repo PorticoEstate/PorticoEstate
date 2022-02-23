@@ -838,8 +838,19 @@
 														</p>
 													</div>
 												</div>
+
 												<div class="list-group">
-													<div id="resources_container" class="pure-form-contentTable"></div>
+													<div class="list-group-item flex-column align-items-start">
+
+														<div id="resources_container" class="pure-form-contentTable"></div>
+													</div>
+												</div>
+
+												<div class="list-group">
+													<div class="list-group-item flex-column align-items-start">
+														<div id="articles_container" style="display:inline-block;">
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -1092,7 +1103,7 @@
 					<xsl:value-of select="php:function('lang', 'internal notes')" />
 				</h3>
 
- 				<xsl:for-each select="internal_notes">
+				<xsl:for-each select="internal_notes">
 					<div class="panel-body">
 						<div class="list-group">
 							<div href="#" class="list-group-item flex-column align-items-start">
@@ -1153,6 +1164,8 @@
 	</div>-->
 
 	<script type="text/javascript">
+		var initialSelection = <xsl:value-of select="application/resources_json"/>;
+		var application_id = '<xsl:value-of select="application/id"/>';
 		var resourceIds = '<xsl:value-of select="application/resource_ids"/>';
 		var currentuser = '<xsl:value-of select="application/currentuser"/>';
 		if (!resourceIds || resourceIds == "") {

@@ -1,4 +1,31 @@
 
+$(document).ready(function ()
+{
+
+	var resources = initialSelection;
+
+	if (resources.length > 0)
+	{
+		if (typeof (application_id) === 'undefined')
+		{
+			application_id = '';
+		}
+		if (typeof (reservation_type) === 'undefined')
+		{
+			reservation_type = '';
+		}
+		if (typeof (reservation_id) === 'undefined')
+		{
+			reservation_id = '';
+		}
+
+		populateTableChkArticles([
+		], resources, application_id, reservation_type, reservation_id);
+
+	}
+
+});
+
 function populateTableChkArticles(selection, resources, application_id, reservation_type, reservation_id)
 {
 
@@ -44,7 +71,9 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 						{name: 'type', value: 'hidden'}
 					]
 				}
-			], value: 'id'},
+			],
+			value: 'id'
+		},
 		{
 			key: 'name',
 			label: lang['article'],
@@ -58,7 +87,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 		{
 			key: 'price',
 			label: lang['unit cost'],
-			attrs: [{name: 'class', value: "align-middle"}],
+			attrs: [{name: 'class', value: "text-right align-middle"}],
 		},
 		{
 			key: 'quantity',
@@ -132,31 +161,6 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 
 }
 
-$(document).ready(function ()
-{
-	var resources = initialSelection;
-	if (resources.length > 0)
-	{
-		if (typeof (application_id) === 'undefined')
-		{
-			application_id = '';
-		}
-		if (typeof (reservation_type) === 'undefined')
-		{
-			reservation_type = '';
-		}
-		if (typeof (reservation_id) === 'undefined')
-		{
-			reservation_id = '';
-		}
-
-		populateTableChkArticles([
-		], resources, application_id, reservation_type, reservation_id);
-
-	}
-
-});
-
 var post_handle_table = function ()
 {
 
@@ -166,11 +170,6 @@ var post_handle_table = function ()
 	{
 		return;
 	}
-
-	tr.classList.add("table-success");
-	tr.childNodes[0].childNodes[0].setAttribute('style', 'display:none;');
-	tr.childNodes[5].childNodes[0].setAttribute('style', 'display:none;');
-	tr.childNodes[9].childNodes[0].setAttribute('style', 'display:none;');
 
 	var xTable = tr.parentNode.parentNode;
 
@@ -262,15 +261,17 @@ function set_sum(xTable)
 	var selected_sum = xTableBody.getElementsByClassName('selected_sum');
 
 	var temp_total_sum = 0;
+	var partial_sum = 0;
 	for (var i = 0; i < selected_sum.length; i++)
 	{
 		if (selected_sum[i].innerHTML)
 		{
+			partial_sum = selected_sum[i].innerHTML.replaceAll(' ', '');
 			var cell = $(selected_sum[i]).parents().children()[9];
 			$(cell).children()[0].removeAttribute('disabled');
 
-			temp_total_sum = parseFloat(temp_total_sum) + parseFloat(selected_sum[i].innerHTML);
-			selected_sum[i].innerHTML = parseFloat(selected_sum[i].innerHTML).toFixed(2);
+			temp_total_sum = parseFloat(temp_total_sum) + parseFloat(partial_sum);
+			selected_sum[i].innerHTML = parseFloat(partial_sum).toFixed(2);
 		}
 	}
 
@@ -335,7 +336,3 @@ function populateTableArticles(url, container, colDefs)
 {
 	createTable(container, url, colDefs, '', 'table table-bordered table-hover table-sm table-responsive', null, post_handle_table);
 }
-
-$(window).on('load', function ()
-{
-});

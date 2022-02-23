@@ -891,3 +891,5 @@ unit	booking	nn	Eining
 price	booking	nn	Pris
 selected	booking	nn	Valgt
 unit cost	booking	nn	Einingspris
+commerce	booking	nn	Varekatalog
+tax code	booking	nn	Mva-kode

@@ -70,7 +70,7 @@ $(document).ready(function ()
 
     }
 	var resources = initialSelection;
-	if (resources)
+	if (resources.length > 0)
 	{
         if(typeof(application_id)  === 'undefined')
         {
