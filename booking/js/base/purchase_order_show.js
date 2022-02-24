@@ -44,7 +44,9 @@ $(document).ready(function ()
             {
                 key: 'ex_tax_price',
                 label: lang['unit cost'],
-                attrs: [{name: 'class', value: "text-right align-middle"}],
+                attrs: [
+					{name: 'class', value: "text-right align-middle"}
+				]
             },
             {
                 key: 'tax',
@@ -53,7 +55,7 @@ $(document).ready(function ()
             },
             {
                 key: 'selected_quantity',
-                label: lang['Selected'],
+                label: lang['quantity'],
                 attrs: [{name: 'class', value: "text-right align-middle"}]
             },
             {

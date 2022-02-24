@@ -626,7 +626,7 @@
 				$application_ids[] = $application['id'];
 			}
 
-			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id,"
+			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id, bb_article_mapping.unit,"
 				. "CASE WHEN
 					(
 						bb_resource.name IS NULL
@@ -665,6 +665,7 @@
 					'overridden_unit_price'	 => (float)$this->db->f('overridden_unit_price'),
 					'currency'				 => $this->db->f('currency'),
 					'amount'				 => (float)$this->db->f('amount'),
+					'unit'					=>	$this->db->f('unit', true),
 					'tax_code'				 => (int)$this->db->f('tax_code'),
 					'tax'					 => (float)$this->db->f('tax'),
 					'name'					 => $this->db->f('name', true),

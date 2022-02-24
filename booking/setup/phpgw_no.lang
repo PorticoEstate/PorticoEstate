@@ -893,3 +893,11 @@ selected	booking	no	Valgt
 unit cost	booking	no	Enhetspris
 commerce	booking	no	Varekatalog
 tax code	booking	no	Mva-kode
+each	booking	no	Stk
+kg	booking	no	Kg
+m	booking	no	Meter
+m2	booking	no	Kvadratmeter
+meter	booking	no	Meter
+square meter	booking	no	Kvadratmeter
+hour	booking	no	Time
+day	booking	no	Dag
