@@ -185,14 +185,14 @@ function set_mandatory(xTable)
 	var computed_quantity;
 	var quantity;
 	var selected_quantity;
-//	var pattern = '/[\.\/\-]/';
 	var DateHelper = new DateFormatter();
 	var date;
-	var _format = 'd/m/Y H:i';
+	var _format = date_format + ' H:i';
 	var from;
 	var to;
 	var timespan;
 	var sum_hours = 0;
+	var sum_days = 0;
 
 	var datetime = document.getElementsByClassName('datetime');
 	for (var j = 0; j < datetime.length; )
@@ -201,7 +201,8 @@ function set_mandatory(xTable)
 		to = DateHelper.parseDate(datetime[j + 1].value, _format);
 		var timespan = Math.abs(to - from) / 36e5;
 
-		sum_hours += timespan;
+		sum_hours += Math.ceil(timespan);
+		sum_days += Math.floor(sum_hours/24);
 
 		j++;
 		j++;
@@ -231,25 +232,23 @@ function set_mandatory(xTable)
 					tr.classList.remove("table-success");
 					tr.classList.add("table-danger");
 					selected_quantity.innerHTML = sum_hours;
+					set_basket(tr, sum_hours);
 				}
 			}
+			if (unit.innerHTML == 'day')
+			{
+				quantity = tr.getElementsByClassName("quantity")[0];
+				selected_quantity = tr.getElementsByClassName("selected_quantity")[0];
 
+				if (selected_quantity.innerHTML < sum_days)
+				{
+					tr.classList.remove("table-success");
+					tr.classList.add("table-danger");
+					selected_quantity.innerHTML = sum_days;
+					set_basket(tr, sum_days);
+				}
+			}
 		}
-
-//	$(xTableBody).find('tr').each(function ()
-//	{
-//		var cell = $(this).children()[10];
-//		//mandatory
-//		if ($(cell).children().val() == 1)
-//		{
-//			var tr = $(this).get()[0];
-//			tr.classList.add("table-success");
-//			tr.childNodes[0].childNodes[0].setAttribute('style', 'display:none;');
-//			tr.childNodes[5].childNodes[0].setAttribute('style', 'display:none;');
-//			tr.childNodes[9].childNodes[0].setAttribute('style', 'display:none;');
-//		}
-//	});
-
 	}
 }
 
@@ -267,6 +266,25 @@ function stringToDate(_date, _format, _delimiter)
 	return formatedDate;
 }
 
+function set_basket(tr, quantity)
+{
+	var id = tr.childNodes[1].childNodes[0].value;
+	var price = tr.childNodes[4].innerText;
+	var selected_quantity = parseInt(quantity);
+	var target = tr.childNodes[7].childNodes[0];
+	target.value = id + '_' + selected_quantity;
+
+	var elem = tr.childNodes[6];
+
+	elem.innerText = selected_quantity;
+
+	var sum_cell = tr.childNodes[8]
+	sum_cell.innerText = (selected_quantity * parseFloat(price)).toFixed(2);
+
+	var xTable = tr.parentNode.parentNode;
+
+	set_sum(xTable);
+}
 
 function add_to_bastet(element)
 {
@@ -317,11 +335,11 @@ function add_to_bastet(element)
 	var sum_cell = element.parentNode.parentNode.childNodes[8]
 	sum_cell.innerText = (selected_quantity * parseFloat(price)).toFixed(2);
 
-	var tableFooter = document.getElementById('tfoot');
-	if (tableFooter)
-	{
-		tableFooter.parentNode.removeChild(tableFooter);
-	}
+//	var tableFooter = document.getElementById('tfoot');
+//	if (tableFooter)
+//	{
+//		tableFooter.parentNode.removeChild(tableFooter);
+//	}
 	var xTable = element.parentNode.parentNode.parentNode.parentNode;
 
 	set_sum(xTable);
@@ -329,6 +347,12 @@ function add_to_bastet(element)
 
 function set_sum(xTable)
 {
+	var tableFooter = document.getElementById('tfoot');
+	if (tableFooter)
+	{
+		tableFooter.parentNode.removeChild(tableFooter);
+	}
+
 	var xTableBody = xTable.childNodes[1];
 
 	var selected_sum = xTableBody.getElementsByClassName('selected_sum');
