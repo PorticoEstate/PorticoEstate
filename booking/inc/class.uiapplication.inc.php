@@ -1549,7 +1549,14 @@
 				$template = 'application_new';
 			}
 
-			self::add_javascript('bookingfrontend', 'base', 'purchase_order_add.js', 'text/javascript', true);
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			{
+				self::add_javascript('bookingfrontend', 'base', 'purchase_order_add.js', 'text/javascript', true);
+			}
+			else
+			{
+				self::add_javascript('booking', 'base', 'purchase_order_edit.js');
+			}
 
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && !$simple)
 			{
