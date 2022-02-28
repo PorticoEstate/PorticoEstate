@@ -175,6 +175,7 @@ function applicationModel()
 						self.bookingStartTime("");
 						self.bookingEndTime("");
 						$(".applicationSelectedDates").html("");
+						post_handle_order_table();
 					}, 500); //self.repeat(false);
 
 				}
@@ -190,6 +191,10 @@ function applicationModel()
 	self.removeDate = function ()
 	{
 		self.date.remove(this);
+		setTimeout(function ()
+		{
+			post_handle_order_table();
+		}, 500);
 
 	};
 	self.aboutArrangement = ko.observable("");

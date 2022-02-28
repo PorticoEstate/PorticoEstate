@@ -82,7 +82,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 		{
 			key: 'unit',
 			label: lang['unit'],
-			attrs: [{name: 'class', value: "align-middle"}],
+			attrs: [{name: 'class', value: "unit align-middle"}],
 		},
 		{
 			key: 'price',
@@ -106,7 +106,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 		{
 			key: 'selected_quantity',
 			label: lang['Selected'],
-			attrs: [{name: 'class', value: "text-right align-middle"}]
+			attrs: [{name: 'class', value: "selected_quantity text-right align-middle"}]
 		},
 		{
 			label: 'hidden',
@@ -149,7 +149,8 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 			attrs: [{name: 'style', value: "display:none;"}],
 			object: [
 				{type: 'input', attrs: [
-						{name: 'type', value: 'hidden'}
+						{name: 'type', value: 'hidden'},
+						{name: 'class', value: "mandatory"}
 					]
 				}
 			],
@@ -161,7 +162,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 
 }
 
-var post_handle_table = function ()
+var post_handle_order_table = function ()
 {
 
 	var tr = $('#articles_container').find('tr')[1];
@@ -177,23 +178,117 @@ var post_handle_table = function ()
 	set_sum(xTable);
 };
 
+
 function set_mandatory(xTable)
 {
 	var xTableBody = xTable.childNodes[1];
-	$(xTableBody).find('tr').each(function ()
+	var mandatory = xTableBody.getElementsByClassName('mandatory');
+	var tr;
+	var unit;
+	var computed_quantity;
+	var quantity;
+	var selected_quantity;
+	var DateHelper = new DateFormatter();
+	var date;
+	var _format = date_format + ' H:i';
+	var from;
+	var to;
+	var timespan;
+	var sum_hours = 0;
+	var sum_days = 0;
+
+//	var datetime = $("#dates-container").find(".datetime");
+	var datetime = document.getElementsByClassName('datetime');
+
+	for (var j = 0; j < datetime.length; )
 	{
-		var cell = $(this).children()[10];
-		//mandatory
-		if ($(cell).children().val() == 1)
+		if(!datetime[j + 1].value)
 		{
-			var tr = $(this).get()[0];
+			j++;
+			j++;
+			continue;
+		}
+
+		from = DateHelper.parseDate(datetime[j].value, _format);
+		to = DateHelper.parseDate(datetime[j + 1].value, _format);
+		var timespan = Math.abs(to - from) / 36e5;
+
+		sum_hours += Math.ceil(timespan);
+		sum_days += Math.floor(sum_hours/24);
+
+		j++;
+		j++;
+	}
+
+	console.log(sum_hours);
+
+	for (var i = 0; i < mandatory.length; i++)
+	{
+		if (mandatory[i].value)
+		{
+			tr = mandatory[i].parentNode.parentNode;
 			tr.classList.add("table-success");
 			tr.childNodes[0].childNodes[0].setAttribute('style', 'display:none;');
 			tr.childNodes[5].childNodes[0].setAttribute('style', 'display:none;');
 			tr.childNodes[9].childNodes[0].setAttribute('style', 'display:none;');
-		}
-	});
 
+			unit = tr.getElementsByClassName("unit")[0];
+
+			if (unit.innerHTML == 'hour')
+			{
+				quantity = tr.getElementsByClassName("quantity")[0];
+				selected_quantity = tr.getElementsByClassName("selected_quantity")[0];
+
+				if (selected_quantity.innerHTML !== sum_hours)
+				{
+					tr.classList.remove("table-success");
+					tr.classList.add("table-danger");
+					selected_quantity.innerHTML = sum_hours;
+					set_basket(tr, sum_hours);
+				}
+			}
+			if (unit.innerHTML == 'day')
+			{
+				quantity = tr.getElementsByClassName("quantity")[0];
+				selected_quantity = tr.getElementsByClassName("selected_quantity")[0];
+
+				if (selected_quantity.innerHTML !== sum_days)
+				{
+					tr.classList.remove("table-success");
+					tr.classList.add("table-danger");
+					selected_quantity.innerHTML = sum_days;
+					set_basket(tr, sum_days);
+				}
+			}
+		}
+	}
+}
+
+
+function set_basket(tr, quantity)
+{
+	var id = tr.childNodes[1].childNodes[0].value;
+	var price = tr.childNodes[4].innerText;
+	var selected_quantity = parseInt(quantity);
+	var target = tr.childNodes[7].childNodes[0];
+	target.value = id + '_' + selected_quantity;
+
+	var elem = tr.childNodes[6];
+
+	elem.innerText = selected_quantity;
+
+	var sum_cell = tr.childNodes[8]
+	sum_cell.innerText = (selected_quantity * parseFloat(price)).toFixed(2);
+
+	if(quantity !== 0)
+	{
+		tr.classList.remove("table-danger");
+		tr.classList.add("table-success");
+	}
+
+	var xTable = tr.parentNode.parentNode;
+
+	set_sum(xTable);
 }
 
 function add_to_bastet(element)
@@ -245,11 +340,6 @@ function add_to_bastet(element)
 	var sum_cell = element.parentNode.parentNode.childNodes[8]
 	sum_cell.innerText = (selected_quantity * parseFloat(price)).toFixed(2);
 
-	var tableFooter = document.getElementById('tfoot');
-	if (tableFooter)
-	{
-		tableFooter.parentNode.removeChild(tableFooter);
-	}
 	var xTable = element.parentNode.parentNode.parentNode.parentNode;
 
 	set_sum(xTable);
@@ -257,6 +347,12 @@ function add_to_bastet(element)
 
 function set_sum(xTable)
 {
+	var tableFooter = document.getElementById('tfoot');
+	if (tableFooter)
+	{
+		tableFooter.parentNode.removeChild(tableFooter);
+	}
+
 	var xTableBody = xTable.childNodes[1];
 	var selected_sum = xTableBody.getElementsByClassName('selected_sum');
 
@@ -334,5 +430,5 @@ function empty_from_bastet(element)
 
 function populateTableArticles(url, container, colDefs)
 {
-	createTable(container, url, colDefs, '', 'table table-bordered table-hover table-sm table-responsive', null, post_handle_table);
+	createTable(container, url, colDefs, '', 'table table-bordered table-hover table-sm table-responsive', null, post_handle_order_table);
 }

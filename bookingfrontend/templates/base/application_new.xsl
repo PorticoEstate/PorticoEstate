@@ -99,8 +99,8 @@
 							</span>
 							<div data-bind="foreach: date">
 								<div class="d-block">
-									<input required="true" name="from_[]" hidden="hidden" data-bind="value: from_"/>
-									<input required="true" name="to_[]" hidden="hidden" data-bind="value: to_"/>
+									<input class="datetime" required="true" name="from_[]" hidden="hidden" data-bind="value: from_"/>
+									<input class="datetime" required="true" name="to_[]" hidden="hidden" data-bind="value: to_"/>
 									<span data-bind='text: formatedPeriode'></span>
 									
 									<button class="ml-2" data-bind="click: $parent.removeDate">
@@ -371,6 +371,7 @@
 		<div class="push"></div>
 	</div>
 	<script>
+		var date_format = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />';
 		var initialAcceptAllTerms = false;
 		var initialSelection = [];//<xsl:value-of select="application/resources_json"/>;
 		var initialAudience = <xsl:value-of select="application/audience_json"/>;

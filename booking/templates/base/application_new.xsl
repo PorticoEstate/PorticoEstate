@@ -607,6 +607,7 @@
 		</div>
 	</form>
 	<script type="text/javascript">
+		var date_format = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />';
 		var initialDocumentSelection = <xsl:value-of select="application/accepted_documents_json"/>;
 		var initialAcceptAllTerms = false;
 		var initialSelection = <xsl:value-of select="application/resources_json"/>;

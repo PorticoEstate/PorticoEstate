@@ -93,7 +93,7 @@ $(document).ready(function ()
 
 });
 
-var post_handle_table = function()
+var post_handle_order_table = function()
 {
 
 	var tr = $('#articles_container').find('tr')[1];
@@ -149,5 +149,5 @@ function set_sum(xTable)
 
 function populateTableArticles(url, container, colDefs)
 {
-	createTable(container, url, colDefs, '', 'table table-bordered table-hover table-sm table-responsive', null, post_handle_table);
+	createTable(container, url, colDefs, '', 'table table-bordered table-hover table-sm table-responsive', null, post_handle_order_table);
 }

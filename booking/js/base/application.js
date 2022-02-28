@@ -19,6 +19,31 @@ $(document).ready(function ()
 		}
 	});
 
+	/**
+	 * Update quantity related to time
+	 */
+	$("#dates-container").on("change", ".datetime", function (event)
+	{
+		event.preventDefault();
+		post_handle_order_table();
+
+	});
+
+	/**
+	 * Update quantity related to time
+	 */
+	$("#dates-container").on("click", ".btnclose", function (event)
+	{
+		event.preventDefault();
+
+		/**
+		 * Wait for the time-set to be removed before re-calculate
+		 */
+		setTimeout(function ()
+		{
+			post_handle_order_table();
+		}, 500);
+	});
 
 	JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uibuilding.index'}, true),
 		'field_building_name', 'field_building_id', 'building_container');
@@ -140,7 +165,8 @@ $(window).on('load', function ()
 			reservation_id = '';
 		}
 
-		populateTableChkArticles([], resources, application_id, reservation_type, reservation_id);
+		populateTableChkArticles([
+		], resources, application_id, reservation_type, reservation_id);
 
 	});
 

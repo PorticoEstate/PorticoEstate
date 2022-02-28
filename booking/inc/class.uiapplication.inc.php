@@ -1564,6 +1564,8 @@
 				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
 			}
 
+			self::add_javascript('phpgwapi', 'dateformatter', 'dateformatter.js');
+
 			$articles = CreateObject('booking.soarticle_mapping')->get_articles($resource_ids);
 
 			self::render_template_xsl($template, array(
@@ -2475,6 +2477,8 @@
 				self::add_javascript('booking', 'base', 'application.js');
 				$associations = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id']),
 				'sort' => 'from_', 'dir' => 'asc', 'results' =>'all'));
+
+				self::add_javascript('phpgwapi', 'dateformatter', 'dateformatter.js');
 
 				if($associations['total_records'] > 0)
 				{
