@@ -332,34 +332,38 @@
 						'type'	 => PDO::PARAM_INT
 					),
 					3	 => array(
-						'value'	 => (int)$this->db->f('article_mapping_id'),
+						'value'	 => (int)$this->db->f('parent_mapping_id'),
 						'type'	 => PDO::PARAM_INT
 					),
 					4	 => array(
+						'value'	 => (int)$this->db->f('article_mapping_id'),
+						'type'	 => PDO::PARAM_INT
+					),
+					5	 => array(
 						'value'	 => $this->db->f('unit_price'),
 						'type'	 => PDO::PARAM_STR
 					),
-					5	 => array(
+					6	 => array(
 						'value'	 => $this->db->f('overridden_unit_price'),
 						'type'	 => PDO::PARAM_STR
 					),
-					6	 => array(
+					7	 => array(
 						'value'	 => $this->db->f('currency'),
 						'type'	 => PDO::PARAM_STR
 					),
-					7	 => array(
+					8	 => array(
 						'value'	 => $this->db->f('quantity'),
 						'type'	 => PDO::PARAM_STR
 					),
-					8	 => array(
+					9	 => array(
 						'value'	 => $this->db->f('amount'),
 						'type'	 => PDO::PARAM_STR
 					),
-					9	 => array(
+					10	 => array(
 						'value'	 => (int)$this->db->f('tax_code'),
 						'type'	 => PDO::PARAM_INT
 					),
-					10	 => array(
+					11	 => array(
 						'value'	 => $this->db->f('tax'),
 						'type'	 => PDO::PARAM_STR
 					),
@@ -367,8 +371,8 @@
 			}
 
 			$sql_insert = 'INSERT INTO bb_purchase_order_line'
-				. ' (order_id, status, article_mapping_id, unit_price, overridden_unit_price, currency, quantity, amount, tax_code, tax)'
-				. ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+				. ' (order_id, status, parent_mapping_id, article_mapping_id, unit_price, overridden_unit_price, currency, quantity, amount, tax_code, tax)'
+				. ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
 			if ($valueset)
 			{
