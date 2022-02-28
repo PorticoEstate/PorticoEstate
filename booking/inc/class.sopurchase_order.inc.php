@@ -90,9 +90,9 @@
 				$current_pricing = createObject('booking.soarticle_mapping')->get_current_pricing($article_mapping_ids);
 
 				$add_sql = "INSERT INTO bb_purchase_order_line ("
-					. " order_id, status, article_mapping_id, quantity, unit_price,"
+					. " order_id, status, parent_mapping_id, article_mapping_id, quantity, unit_price,"
 					. " overridden_unit_price, currency,  amount, tax_code, tax)"
-					. " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					. " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 				$insert_update = array();
 				foreach ($purchase_order['lines'] as $line)
@@ -121,34 +121,38 @@
 							'type'	 => PDO::PARAM_INT
 						),
 						3	 => array(
-							'value'	 => $line['article_mapping_id'],
+							'value'	 => (int)$line['parent_mapping_id'],
 							'type'	 => PDO::PARAM_INT
 						),
 						4	 => array(
+							'value'	 => $line['article_mapping_id'],
+							'type'	 => PDO::PARAM_INT
+						),
+						5	 => array(
 							'value'	 => (float)$line['quantity'],
 							'type'	 => PDO::PARAM_STR
 						),
-						5	 => array(
+						6	 => array(
 							'value'	 => (float)$unit_price,
 							'type'	 => PDO::PARAM_STR
 						),
-						6	 => array(
+						7	 => array(
 							'value'	 => (float)$overridden_unit_price,
 							'type'	 => PDO::PARAM_STR
 						),
-						7	 => array(
+						8	 => array(
 							'value'	 => $currency,
 							'type'	 => PDO::PARAM_STR
 						),
-						8	 => array(
+						9	 => array(
 							'value'	 => $amount,
 							'type'	 => PDO::PARAM_STR
 						),
-						9	 => array(
+						10	 => array(
 							'value'	 => $tax_code,
 							'type'	 => PDO::PARAM_INT
 						),
-						10	 => array(
+						11	 => array(
 							'value'	 => (float)$tax,
 							'type'	 => PDO::PARAM_STR
 						),
@@ -220,6 +224,7 @@
 				$order['lines'][] = array(
 					'order_id'				 => $order_id,
 					'status'				 => (int)$this->db->f('status'),
+					'parent_mapping_id'		 => (int)$this->db->f('parent_mapping_id'),
 					'article_mapping_id'	 => (int)$this->db->f('article_mapping_id'),
 					'quantity'				 => (float)$this->db->f('quantity'),
 					'unit_price'			 => (float)$this->db->f('unit_price'),

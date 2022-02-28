@@ -143,11 +143,11 @@
 				{
 					foreach ($purchase_order['lines'] as $line)
 					{
-						if($line['article_mapping_id'] == $article['id'])
+						if($line['article_mapping_id'] == $article['id']  && (int)$line['parent_mapping_id'] == (int)$article['parent_mapping_id'])
 						{
 							$article['selected_quantity'] = $line['quantity'];
 							$article['selected_sum'] = (float)($line['amount'] + $line['tax']);
-							$article['selected_article_quantity']	 = "{$article['id']}_{$line['quantity']}";
+							$article['selected_article_quantity']	 = "{$article['id']}_{$line['quantity']}_{$article['parent_mapping_id']}";
 						}
 					}
 				}

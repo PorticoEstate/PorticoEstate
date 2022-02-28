@@ -129,6 +129,20 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 			],
 			value: 'mandatory'
 		},
+		{
+			/**
+			 * Hidden field for holding information on parent_mapping_id
+			 */
+			attrs: [{name: 'style', value: "display:none;"}],
+			object: [
+				{type: 'input', attrs: [
+						{name: 'type', value: 'hidden'},
+						{name: 'class', value: "parent_mapping_id"}
+					]
+				}
+			],
+			value: 'parent_mapping_id'
+		}
 	];
 
 	populateTableArticles(url, container, colDefsRegulations);
@@ -182,7 +196,6 @@ function set_mandatory(xTable)
 	var mandatory = xTableBody.getElementsByClassName('mandatory');
 	var tr;
 	var unit;
-	var computed_quantity;
 	var quantity;
 	var selected_quantity;
 	var DateHelper = new DateFormatter();
@@ -235,7 +248,7 @@ function set_mandatory(xTable)
 				quantity = tr.getElementsByClassName("quantity")[0];
 				selected_quantity = tr.getElementsByClassName("selected_quantity")[0];
 
-				if (selected_quantity.innerHTML !== sum_hours)
+				if (parseInt(selected_quantity.innerHTML) !== sum_hours)
 				{
 					tr.classList.remove("table-success");
 					tr.classList.add("table-danger");
@@ -248,7 +261,7 @@ function set_mandatory(xTable)
 				quantity = tr.getElementsByClassName("quantity")[0];
 				selected_quantity = tr.getElementsByClassName("selected_quantity")[0];
 
-				if (selected_quantity.innerHTML !== sum_days)
+				if (parseInt(selected_quantity.innerHTML) !== sum_days)
 				{
 					tr.classList.remove("table-success");
 					tr.classList.add("table-danger");
@@ -265,9 +278,14 @@ function set_basket(tr, quantity)
 {
 	var id = tr.childNodes[1].childNodes[0].value;
 	var price = tr.childNodes[4].innerText;
+	var parent_mapping_id = tr.getElementsByClassName('parent_mapping_id')[0].value;
 	var selected_quantity = parseInt(quantity);
+	/**
+	 * target is the value for selected_articles[]
+	 * <mapping_id>_<quantity>_<parent_mapping_id>
+	 */
 	var target = tr.childNodes[7].childNodes[0];
-	target.value = id + '_' + selected_quantity;
+	target.value = id + '_' + selected_quantity + '_' + parent_mapping_id;
 
 	var elem = tr.childNodes[6];
 
@@ -294,6 +312,7 @@ function add_to_bastet(element)
 	var id = element.parentNode.parentNode.childNodes[1].childNodes[0].value;
 	var quantity = element.parentNode.parentNode.childNodes[5].childNodes[0].value;
 	var price = element.parentNode.parentNode.childNodes[4].innerText;
+	var parent_mapping_id = tr.getElementsByClassName('parent_mapping_id')[0].value;
 
 	/**
 	 * set selected items
@@ -319,8 +338,12 @@ function add_to_bastet(element)
 	//element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
 	element.parentNode.parentNode.childNodes[9].childNodes[0].removeAttribute('disabled');
 
+	/**
+	 * the value selected_articles[]
+	 * <mapping_id>_<quantity>_<parent_mapping_id>
+	 */
 	var target = element.parentNode.parentNode.childNodes[7].childNodes[0];
-	target.value = id + '_' + selected_quantity;
+	target.value = id + '_' + selected_quantity + '_' + parent_mapping_id;
 
 	var elem = element.parentNode.parentNode.childNodes[6];
 

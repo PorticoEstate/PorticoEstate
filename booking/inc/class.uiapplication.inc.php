@@ -1088,6 +1088,7 @@
 					$purchase_order['lines'][] = array(
 						'article_mapping_id'	=> $_article_info[0],
 						'quantity'				=> $_article_info[1],
+						'parent_mapping_id'		=> !empty($_article_info[2]) ? $_article_info[2] : null
 					);
 				}
 
@@ -2413,6 +2414,7 @@
 						$purchase_order['lines'][] = array(
 							'article_mapping_id'	=> $_article_info[0],
 							'quantity'				=> $_article_info[1],
+							'parent_mapping_id'		=> !empty($_article_info[2]) ? $_article_info[2] : null
 						);
 					}
 

@@ -263,12 +263,13 @@
 			while ($this->db->next_record())
 			{
 				$_articles[] = array(
-					'id'			 => $this->db->f('mapping_id'),
-					'resource_id'	 => $this->db->f('resource_id'),
-					'article_id'	 => $this->db->f('article_id'),
-					'name'			 => $this->db->f('name', true),
-					'unit'			 => $this->db->f('unit', true),
-					'tax_percent'	 => $this->db->f('tax_percent'),
+					'id'				 => $this->db->f('mapping_id'),
+					'parent_mapping_id'	 => null,
+					'resource_id'		 => $this->db->f('resource_id'),
+					'article_id'		 => $this->db->f('article_id'),
+					'name'				 => $this->db->f('name', true),
+					'unit'				 => $this->db->f('unit', true),
+					'tax_percent'		 => $this->db->f('tax_percent'),
 				);
 			}
 
@@ -292,11 +293,12 @@
 				while ($this->db->next_record())
 				{
 					$articles[] = array(
-						'id'			 => $this->db->f('mapping_id'),
-						'article_id'	 => $this->db->f('article_id'),
-						'name'			 => "- " . $this->db->f('name', true),
-						'unit'			 => $this->db->f('unit', true),
-						'tax_percent'	 => (int)$this->db->f('tax_percent'),
+						'id'				 => $this->db->f('mapping_id'),
+						'parent_mapping_id'	 => $_article['id'],
+						'article_id'		 => $this->db->f('article_id'),
+						'name'				 => "- " . $this->db->f('name', true),
+						'unit'				 => $this->db->f('unit', true),
+						'tax_percent'		 => (int)$this->db->f('tax_percent'),
 					);
 				}
 			}

@@ -1241,6 +1241,7 @@
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'order_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+				'parent_mapping_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'article_mapping_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'unit_price' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
 				'overridden_unit_price' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
