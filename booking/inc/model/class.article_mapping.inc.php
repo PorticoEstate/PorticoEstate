@@ -101,9 +101,10 @@
 				),
 				'article_cat_id'	 => array(
 					'action' => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type'	 => 'int'
+					'type'	 => 'int',
+					'public'	 => true
 				),
-				'building_id'		 => array(
+/*				'building_id'		 => array(
 					'action' => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type'	 => 'int'
 				),
@@ -117,11 +118,12 @@
 						'column'	 => 'bb_building.name'
 					),
 				),
-				'article_cat_name'	 => array(
+*/				'article_cat_name'	 => array(
 					'action' => PHPGW_ACL_READ,
 					'type'	 => 'string',
 					'query'	 => true,
 					'label'	 => 'category',
+					'public'	 => true,
 					'join'	 => array(
 						'table'	 => 'bb_article_category',
 						'fkey'	 => 'article_cat_id',
@@ -138,6 +140,7 @@
 					'type'			 => 'string',
 					'query'			 => true,
 					'label'			 => 'name',
+					'public'		 => true,
 					'multiple_join'	 => array(
 						'statement'	 => ' JOIN bb_article_view ON bb_article_view.id = bb_article_mapping.article_id'
 						. ' AND bb_article_view.article_cat_id = bb_article_mapping.article_cat_id',
@@ -148,24 +151,28 @@
 					'action'	 => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type'		 => 'string',
 					'required'	 => true,
-					'label'		 => 'article code'
+					'label'		 => 'article code',
+					'public'	 => true
 				),
 				'unit'				 => array(
 					'action'	 => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type'		 => 'string',
 					'required'	 => true,
-					'label'		 => 'unit'
+					'label'		 => 'unit',
+					'public'	 => true
 				),
 				'tax_code'			 => array(
 					'action'	 => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type'		 => 'int',
 					'required'	 => true,
+					'public'	 => true
 				),
 				'tax_code_name'		 => array(
 					'action' => PHPGW_ACL_READ,
 					'type'	 => 'string',
 					'query'	 => true,
 					'label'	 => 'tax_code',
+					'public'	 => true,
 					'join'	 => array(
 						'table'	 => 'fm_ecomva',
 						'fkey'	 => 'tax_code',

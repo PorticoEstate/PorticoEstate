@@ -887,3 +887,18 @@ add message	booking	no	Skriv melding
 content	booking	no	Innhold
 internal notes	booking	no	Interne notater
 in tax register	booking	no	Registrert i mva-registeret
+unit	booking	no	Enhet
+price	booking	no	Pris
+selected	booking	no	Valgt
+unit cost	booking	no	Enhetspris
+commerce	booking	no	Varekatalog
+tax code	booking	no	Mva-kode
+each	booking	no	Stk
+kg	booking	no	Kg
+m	booking	no	Meter
+m2	booking	no	Kvadratmeter
+meter	booking	no	Meter
+square meter	booking	no	Kvadratmeter
+hour	booking	no	Time
+day	booking	no	Dag
+%1 resources mapped as articles	booking	no	%1 ressurser er mappet opp som artikler i varekatalogen

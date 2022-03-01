@@ -712,7 +712,10 @@
 			{
 				foreach ($purchase_order['lines'] as &$line)
 				{
-					$line['sum'] = $line['amount'] + $line['tax'];
+					$line['sum'] = number_format( ($line['amount'] + $line['tax']) , 2, '.', ' ');
+					$line['amount'] = number_format($line['amount'], 2, '.', ' ');
+					$line['tax'] = number_format($line['tax'], 2, '.', ' ');
+					$line['unit_price'] = number_format($line['unit_price'], 2, '.', ' ');
 				}
 			}
 
@@ -1061,30 +1064,32 @@
 					$application['customer_identifier_type'] = 'organization_number';
 					$application['customer_organization_number'] = '';
 
-					/**
-					 * Start dealing with the purchase_order..
-					 */
-					$purchase_order = array('status' => 0, 'customer_id' => -1, 'lines' => array());
-					$selected_articles = (array)phpgw::get_var('selected_articles');
-
-					foreach ($selected_articles as $selected_article)
-					{
-						$_article_info = explode('_', $selected_article);
-
-						if(empty($_article_info[0]))
-						{
-							continue;
-						}
-
-						$purchase_order['lines'][] = array(
-							'article_mapping_id'	=> $_article_info[0],
-							'quantity'				=> $_article_info[1],
-						);
-					}
 				}
 				else if(isset($application['formstage']) && $application['formstage'] == 'legacy')
 				{
 					$application['name'] = $application['description'] ;
+				}
+
+				/**
+				 * Start dealing with the purchase_order..
+				 */
+				$purchase_order = array('status' => 0, 'customer_id' => -1, 'lines' => array());
+				$selected_articles = (array)phpgw::get_var('selected_articles');
+
+				foreach ($selected_articles as $selected_article)
+				{
+					$_article_info = explode('_', $selected_article);
+
+					if(empty($_article_info[0]))
+					{
+						continue;
+					}
+
+					$purchase_order['lines'][] = array(
+						'article_mapping_id'	=> $_article_info[0],
+						'quantity'				=> $_article_info[1],
+						'parent_mapping_id'		=> !empty($_article_info[2]) ? $_article_info[2] : null
+					);
 				}
 
 				/**
@@ -1196,12 +1201,11 @@
 					$receipt = $this->bo->add($application);
 					$application['id'] = $receipt['id'];
 
-					if($purchase_order)
+					if(!empty($purchase_order['lines']))
 					{
 						$purchase_order['application_id'] = $application['id'];
-						$this->bo->add_purchase_order($purchase_order);
+						createObject('booking.sopurchase_order')->add_purchase_order($purchase_order);
 					}
-
 
 					if( isset($_FILES['name']['name']) && $_FILES['name']['name'] )
 					{
@@ -1338,7 +1342,15 @@
 			array_set_default($application, 'dates', $default_dates);
 
 			$this->flash_form_errors($errors);
-			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
+
+			if(empty($application['resources']))
+			{
+				$application['resources_json'] = json_encode(array(phpgw::get_var('resource_id', 'int')));
+			}
+			else
+			{
+				$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
+			}
 			$application['accepted_documents_json'] = json_encode($application['accepted_documents']);
 			$application['dates_json'] = json_encode($application['dates']);
 			$application['agegroups_json'] = json_encode($application['agegroups']);
@@ -1538,22 +1550,24 @@
 				$template = 'application_new';
 			}
 
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			{
+				self::add_javascript('bookingfrontend', 'base', 'purchase_order_add.js', 'text/javascript', true);
+			}
+			else
+			{
+				self::add_javascript('booking', 'base', 'purchase_order_edit.js');
+			}
+
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && !$simple)
 			{
 				$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
 				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
 			}
 
-			$location_id		 = $GLOBALS['phpgw']->locations->get_id('booking', 'run');
-			$custom_config		 = CreateObject('admin.soconfig', $location_id)->read();
-
-			$payment_methods = array();
+			self::add_javascript('phpgwapi', 'dateformatter', 'dateformatter.js');
 
 			$articles = CreateObject('booking.soarticle_mapping')->get_articles($resource_ids);
-			if($articles && $direct_booking && !empty($custom_config['payment']['method']) && !empty($custom_config['Vipps']['active']))
-			{
-				$payment_methods[] = 'vipps';
-			}
 
 			self::render_template_xsl($template, array(
 				'application' => $application,
@@ -1563,7 +1577,7 @@
 				'resource_list'	=> array('options' => $resources),
 				'direct_booking' => $direct_booking,
 				'config' => CreateObject('phpgwapi.config', 'booking')->read(),
-				'payment_methods' => $payment_methods
+				'has_articles' => !!$articles
 				)
 			);
 		}
@@ -1767,6 +1781,24 @@
 									$check_direct_booking ++;
 								}
 							}
+							if($resources['results'] && count($resources['results']) == $check_direct_booking)
+							{
+								$collision_dates = array();
+								foreach ($application['dates'] as &$date)
+								{
+									$collision = $this->bo->so->check_collision($application['resources'], $date['from_'], $date['to_'], $session_id);
+									if ($collision)
+									{
+										$collision_dates[] = $date['from_'];
+									}
+								}
+
+								if(!$collision_dates)
+								{
+									$direct_booking = true;
+								}
+							}
+
 
 							$limit_reached = $this->check_booking_limit($session_id, $external_login_info['ssn'], $resources);
 
@@ -1798,10 +1830,10 @@
 			}
 
 			return array(
-				'status' => $errors ? 'error' : 'saved',
-				'message' => preg_replace('/\<br(\s*)?\/?\>/i', PHP_EOL, implode(', ', array_values($errors)))
+				'status'		 => $errors ? 'error' : 'saved',
+				'direct_booking' => $direct_booking,
+				'message'		 => preg_replace('/\<br(\s*)?\/?\>/i', PHP_EOL, implode(', ', array_values($errors)))
 			);
-
 		}
 
 		function add_contact()
@@ -1835,213 +1867,198 @@
 			{
 				$this->update_contact_informtation($partial2);
 
-				if (!$errors)
+				// Get data on prior partial applications for this session ID
+				$session_id = $GLOBALS['phpgw']->session->get_session_id();
+				$partials = $this->bo->get_partials_list($session_id);
+				if ($partials['total_records'] == 0)
 				{
-					// Get data on prior partial applications for this session ID
-					$session_id = $GLOBALS['phpgw']->session->get_session_id();
-					$partials = $this->bo->get_partials_list($session_id);
-					if ($partials['total_records'] == 0)
+					$errors['records'] = lang("No partial applications exist for this session, contact details are not saved");
+					// Redirect to the front page
+					self::redirect(array());
+				}
+				else
+				{
+					foreach ($partials['results'] as &$application)
 					{
-						$errors['records'] = lang("No partial applications exist for this session, contact details are not saved");
-						// Redirect to the front page
-						self::redirect(array());
-					}
-					else
-					{
-						foreach ($partials['results'] as &$application)
+						// Remove certain unused fields from the update
+						unset($application['frontend_modified']);
+						// Add the contact data from partial2
+						// Update status fields
+						$application['status'] = 'NEW';
+						$application['created'] = 'now';
+						$application['modified'] = 'now';
+						$application['session_id'] = null;
+
+
+						$GLOBALS['phpgw']->db->transaction_begin();
+
+						$receipt = $this->bo->update($application);
+
+						/**
+						 * Start direct booking
+						 */
+
+						$resources = $this->resource_bo->so->read(array(
+								'sort'    => 'sort',
+								'results' =>'all',
+								'filters' => array('id' => $application['resources']), 'results' =>'all'
+							));
+
+						$direct_booking = false;
+						$check_direct_booking = 0;
+
+						$from_dates = array();
+						foreach ($application['dates'] as $date)
 						{
-							// Remove certain unused fields from the update
-							unset($application['frontend_modified']);
-							// Add the contact data from partial2
-							// Update status fields
-							$application['status'] = 'NEW';
-							$application['created'] = 'now';
-							$application['modified'] = 'now';
-							$application['session_id'] = null;
+							$from_dates[] = strtotime( $date['from_']);
+						}
+						unset($date);
 
+						foreach ($resources['results'] as $resource)
+						{
+							$max_date = max($from_dates);
 
-							$GLOBALS['phpgw']->db->transaction_begin();
-
-							$receipt = $this->bo->update($application);
-
-							/**
-							 * Start direct booking
-							 */
-
-							$resources = $this->resource_bo->so->read(array(
-									'sort'    => 'sort',
-									'results' =>'all',
-									'filters' => array('id' => $application['resources']), 'results' =>'all'
-								));
-
-							$direct_booking = false;
-							$check_direct_booking = 0;
-
-							$from_dates = array();
-							foreach ($application['dates'] as $date)
+							if($resource['direct_booking'] && $resource['direct_booking'] < $max_date)
 							{
-								$from_dates[] = strtotime( $date['from_']);
+								$check_direct_booking ++;
 							}
-							unset($date);
-
-							foreach ($resources['results'] as $resource)
+						}
+						if($resources['results'] && count($resources['results']) == $check_direct_booking)
+						{
+							$collision_dates = array();
+							foreach ($application['dates'] as &$date)
 							{
-								$max_date = max($from_dates);
-
-								if($resource['direct_booking'] && $resource['direct_booking'] < $max_date)
+								$collision = $this->bo->so->check_collision($application['resources'], $date['from_'], $date['to_'], $session_id);
+								if ($collision)
 								{
-									$check_direct_booking ++;
+									$collision_dates[] = $date['from_'];
 								}
 							}
 
-/*							$limit_reached = $this->check_booking_limit($session_id, $external_login_info['ssn'], $resources);
+							if(!$collision_dates)
+							{
+								$direct_booking = true;
+							}
+						}
 
-							if($limit_reached)
+						if($direct_booking)
+						{
+							$application['status'] = 'ACCEPTED';
+							$receipt = $this->bo->update($application);
+
+							$event = $application;
+							unset($event['id']);
+							unset($event['id_string']);
+							$event['application_id'] = $application['id'];
+							$event['completed'] = '0';
+							$event['is_public'] = 0;
+							$event['include_in_list'] = 0;
+							$event['reminder'] = 0;
+							$event['customer_internal'] = 0;
+							$this->get_event_cost($event);
+
+							$building_info = $this->bo->so->get_building_info($application['id']);
+							$event['building_id'] = $building_info['id'];
+							$booking_boevent = createObject('booking.boevent');
+							$errors = array();
+
+							/**
+							 * Validate timeslots
+							 */
+							foreach ($application['dates'] as $checkdate)
+							{
+								$event['from_'] = $checkdate['from_'];
+								$event['to_'] = $checkdate['to_'];
+								$errors = array_merge($errors, $booking_boevent->validate($event));
+							}
+							unset($checkdate);
+
+							if (!$errors)
 							{
 								CreateObject('booking.souser')->collect_users($application['customer_ssn']);
 								$bo_block = createObject('booking.boblock');
 								$bo_block->cancel_block($session_id, $application['dates'],$application['resources']);
-								$this->bo->delete_application($application['id']);
-								$GLOBALS['phpgw']->db->transaction_commit();
-								self::redirect(array());
-							}
-*/
-							if($resources['results'] && count($resources['results']) == $check_direct_booking)
-							{
-								$collision_dates = array();
-								foreach ($application['dates'] as &$date)
-								{
-									$collision = $this->bo->so->check_collision($application['resources'], $date['from_'], $date['to_'], $session_id);
-									if ($collision)
-									{
-										$collision_dates[] = $date['from_'];
-									}
-								}
-
-								if(!$collision_dates)
-								{
-									$direct_booking = true;
-								}
-							}
-
-							if($direct_booking)
-							{
-								$application['status'] = 'ACCEPTED';
-								$receipt = $this->bo->update($application);
-
-								$event = $application;
-								unset($event['id']);
-								unset($event['id_string']);
-								$event['application_id'] = $application['id'];
-								$event['completed'] = '0';
-								$event['is_public'] = 0;
-								$event['include_in_list'] = 0;
-								$event['reminder'] = 0;
-								$event['customer_internal'] = 0;
-								$this->get_event_cost($event);
-
-								$building_info = $this->bo->so->get_building_info($application['id']);
-								$event['building_id'] = $building_info['id'];
-								$booking_boevent = createObject('booking.boevent');
-								$errors = array();
 
 								/**
-								 * Validate timeslots
+								 * Add event for each timeslot
 								 */
 								foreach ($application['dates'] as $checkdate)
 								{
 									$event['from_'] = $checkdate['from_'];
 									$event['to_'] = $checkdate['to_'];
-									$errors = array_merge($errors, $booking_boevent->validate($event));
+									$receipt = $booking_boevent->so->add($event);
 								}
-								unset($checkdate);
 
-								if (!$errors)
-								{
-									CreateObject('booking.souser')->collect_users($application['customer_ssn']);
-									$bo_block = createObject('booking.boblock');
-									$bo_block->cancel_block($session_id, $application['dates'],$application['resources']);
+								$booking_boevent->so->update_id_string();
+								createObject('booking.sopurchase_order')->identify_purchase_order($application['id'], $receipt['id'], 'event');
 
-									/**
-									 * Add event for each timeslot
-									 */
-									foreach ($application['dates'] as $checkdate)
-									{
-										$event['from_'] = $checkdate['from_'];
-										$event['to_'] = $checkdate['to_'];
-										$receipt = $booking_boevent->so->add($event);
-									}
+								$this->add_payment(array($application['id']));
 
-									$booking_boevent->so->update_id_string();
-
-									$this->add_payment(array($application['id']));
-
-									$GLOBALS['phpgw']->db->transaction_commit();
-									$this->bo->send_notification($application);
-								}
-								else
-								{
-									$GLOBALS['phpgw']->db->transaction_abort();
-									foreach ($errors as $key => $error_values)
-									{
-										phpgwapi_cache::message_set($error_values, 'error');
-									}
-								}
-							}
-							/**
-							 * End Direct booking
-							 */
-							else
-							{
-								CreateObject('booking.souser')->collect_users($application['customer_ssn']);
 								$GLOBALS['phpgw']->db->transaction_commit();
-								$this->bo->send_notification($application, true);
-							}
-
-						}
-
-						if(!$errors)
-						{
-							if($direct_booking)
-							{
-								$messages = array(
-									'one' => array(
-										'registered' => "Your application has now been processed and a confirmation email has been sent to you.",
-										'review' => ""),
-									'multiple' => array(
-										'registered' => "Your applications have now been processed and confirmation emails have been sent to you.",
-										'review' => "")
-									);
+								$this->bo->send_notification($application);
 							}
 							else
 							{
-								$messages = array(
-									'one' => array(
-										'registered' => "Your application has now been registered and a confirmation email has been sent to you.",
-										'review' => "A Case officer will review your application as soon as possible."),
-									'multiple' => array(
-										'registered' => "Your applications have now been registered and confirmation emails have been sent to you.",
-										'review' => "A Case officer will review your applications as soon as possible.")
-									);
-
+								$GLOBALS['phpgw']->db->transaction_abort();
+								foreach ($errors as $key => $error_values)
+								{
+									phpgwapi_cache::message_set($error_values, 'error');
+								}
 							}
-
-							$msgset = $partials['total_records'] > 1 ? 'multiple' : 'one';
-
-							$message_arr = array();
-
-							$message_arr[] = lang($messages[$msgset]['registered']);
-							if($messages[$msgset]['review'])
-							{
-								$message_arr[] = lang($messages[$msgset]['review']);
-							}
-							$message_arr[] = lang("Please check your Spam Filter if you are missing mail.");
-
-							phpgwapi_cache::message_set(implode("<br/>", $message_arr ));
 						}
-						// Redirect to the front page
-						self::redirect(array());
+						/**
+						 * End Direct booking
+						 */
+						else
+						{
+							CreateObject('booking.souser')->collect_users($application['customer_ssn']);
+							$GLOBALS['phpgw']->db->transaction_commit();
+							$this->bo->send_notification($application, true);
+						}
+
 					}
+
+					if(!$errors)
+					{
+						if($direct_booking)
+						{
+							$messages = array(
+								'one' => array(
+									'registered' => "Your application has now been processed and a confirmation email has been sent to you.",
+									'review' => ""),
+								'multiple' => array(
+									'registered' => "Your applications have now been processed and confirmation emails have been sent to you.",
+									'review' => "")
+								);
+						}
+						else
+						{
+							$messages = array(
+								'one' => array(
+									'registered' => "Your application has now been registered and a confirmation email has been sent to you.",
+									'review' => "A Case officer will review your application as soon as possible."),
+								'multiple' => array(
+									'registered' => "Your applications have now been registered and confirmation emails have been sent to you.",
+									'review' => "A Case officer will review your applications as soon as possible.")
+								);
+
+						}
+
+						$msgset = $partials['total_records'] > 1 ? 'multiple' : 'one';
+
+						$message_arr = array();
+
+						$message_arr[] = lang($messages[$msgset]['registered']);
+						if($messages[$msgset]['review'])
+						{
+							$message_arr[] = lang($messages[$msgset]['review']);
+						}
+						$message_arr[] = lang("Please check your Spam Filter if you are missing mail.");
+
+						phpgwapi_cache::message_set(implode("<br/>", $message_arr ));
+					}
+					// Redirect to the front page
+					self::redirect(array());
 				}
 			}
 
@@ -2141,8 +2158,6 @@
 			$payment_methods = array();
 			if(!empty($custom_config['payment']['method']) && !empty($custom_config['Vipps']['active']))
 			{
-				$payment_methods[] = 'vipps';
-
 				$vipps_logo = 'continue_with_vipps_rect_210';
 
 				switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'])
@@ -2156,6 +2171,11 @@
 						$vipps_logo .="_EN";
 						break;
 				}
+				$payment_methods[] = array(
+					'method'	 => 'vipps',
+					'logo'		 => $GLOBALS['phpgw']->common->image('bookingfrontend', $vipps_logo)
+				);
+
 			}
 
 			/**
@@ -2168,7 +2188,6 @@
 				'delegate_data'			 => $filtered_delegate_data,
 				'payment_methods'		 => $payment_methods,
 				'selected_payment_method'=> $selected_payment_method,
-				'vipps_logo'			 => $vipps_logo ? $GLOBALS['phpgw']->common->image('bookingfrontend', $vipps_logo) : '',
 				'add_img'				 => $GLOBALS['phpgw']->common->image('phpgwapi', 'add2'),
 				'config'				 => CreateObject('phpgwapi.config', 'booking')->read(),
 				'payment_order_id'		 => $payment_order_id
@@ -2372,6 +2391,39 @@
 				if (!$errors)
 				{
 					$receipt = $this->bo->update($application);
+					/**
+					 * Start dealing with the purchase_order..
+					 */
+					$purchase_order = array(
+						'application_id' => $id,
+						'status' => 0,
+						'customer_id' => -1,
+						'lines' => array());
+
+					$selected_articles = (array)phpgw::get_var('selected_articles');
+
+					foreach ($selected_articles as $selected_article)
+					{
+						$_article_info = explode('_', $selected_article);
+
+						if(empty($_article_info[0]))
+						{
+							continue;
+						}
+
+						$purchase_order['lines'][] = array(
+							'article_mapping_id'	=> $_article_info[0],
+							'quantity'				=> $_article_info[1],
+							'parent_mapping_id'		=> !empty($_article_info[2]) ? $_article_info[2] : null
+						);
+					}
+
+					if(!empty($purchase_order['lines']))
+					{
+						createObject('booking.sopurchase_order')->add_purchase_order($purchase_order);
+					}
+
+
 					$this->bo->send_notification($application);
 					self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id']));
 				}
@@ -2425,6 +2477,20 @@
 				$tabs['generic'] = array('label' => lang('Application Edit'), 'link' => '#application_edit');
 				$active_tab = 'generic';
 				self::add_javascript('booking', 'base', 'application.js');
+				$associations = $this->assoc_bo->so->read(array('filters' => array('application_id' => $application['id']),
+				'sort' => 'from_', 'dir' => 'asc', 'results' =>'all'));
+
+				self::add_javascript('phpgwapi', 'dateformatter', 'dateformatter.js');
+
+				if($associations['total_records'] > 0)
+				{
+					self::add_javascript('booking', 'base', 'purchase_order_show.js');
+				}
+				else
+				{
+					self::add_javascript('booking', 'base', 'purchase_order_edit.js');
+				}
+
 				$application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			}
 			else
@@ -2754,7 +2820,7 @@
 						'content' => $message_content));
 					self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'], 'return_after_action' => true));
 				}
-				
+
 				if (array_key_exists('assign_to_new_user', $_POST))
 				{
 					$update = $this->assign_to_new_user($application, phpgw::get_var('assign_to_new_user', 'int'));
@@ -3002,7 +3068,10 @@ JS;
 
 			$internal_notes = CreateObject('phpgwapi.historylog','booking', '.application')->return_array(array(),array('C'),'history_timestamp','ASC',$application['id']);
 
+			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
+
 			self::add_javascript('booking', 'base', 'application.show.js');
+			self::add_javascript('booking', 'base', 'purchase_order_show.js');
 			phpgwapi_jquery::load_widget('select2');
 
 			self::render_template_xsl('application', array(

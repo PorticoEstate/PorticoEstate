@@ -5,13 +5,13 @@
 
 				<div class="col-md-8 offset-md-2">
 			
-						<a class="exitBtn float-right">
-							<xsl:attribute name="href">
-								<xsl:value-of select="application/frontpage_link"/>
-							</xsl:attribute>
-							<i class="fas fa-times" />
-							<xsl:value-of select="php:function('lang', 'Exit to homepage')"/>
-						</a>
+					<a class="exitBtn float-right">
+						<xsl:attribute name="href">
+							<xsl:value-of select="application/frontpage_link"/>
+						</xsl:attribute>
+						<i class="fas fa-times" />
+						<xsl:value-of select="php:function('lang', 'Exit to homepage')"/>
+					</a>
 				
 					
 					<h1 class="font-weight-bold">
@@ -46,7 +46,7 @@
 								<xsl:value-of select="php:function('lang', 'Chosen rent object')" />:
 							</span>
 							<div id="bookable-resource" data-bind="foreach: bookableresource">
-							<span class="mr-2" data-bind='html: selected() ? name : "", visible: selected()'></span>
+								<span class="mr-2" data-bind='html: selected() ? name : "", visible: selected()'></span>
 							</div>
 							<span id="chosenResource" data-bind="ifnot: isResourceSelected" class="isSelected validationMessage">
 								<xsl:value-of select="php:function('lang', 'No rent object chosen')" />
@@ -55,23 +55,41 @@
 					
 
 						<div class="">	
-						<div type="input"  class="choseResource form-control text-left dropdown-toggle w-100" data-toggle="dropdown">
-							<xsl:value-of select="php:function('lang', 'choose')" />
-							<span class="caret"></span>
-						</div>
+							<div type="input"  class="choseResource form-control text-left dropdown-toggle w-100" data-toggle="dropdown">
+								<xsl:value-of select="php:function('lang', 'choose')" />
+								<span class="caret"></span>
+							</div>
 
-						<ul class="dropdown-menu px-2" data-bind="foreach: bookableresource">
-							<li>
-								<div class="form-check checkbox checkbox-primary">
-									<label class="check-box-label">
-										<input class="form-check-input choosenResource" type="checkbox" name="resources[]" data-bind="textInput: id, checked: selected" />
-										<span class="label-text" data-bind="html: name"></span>
-									</label>
-								</div>
-							</li>
-						</ul>
+							<ul class="dropdown-menu px-2" data-bind="foreach: bookableresource">
+								<li>
+									<div class="form-check checkbox checkbox-primary">
+										<label class="check-box-label">
+											<input class="form-check-input choosenResource" type="checkbox" name="resources[]" data-bind="textInput: id, checked: selected" />
+											<span class="label-text" data-bind="html: name"></span>
+										</label>
+									</div>
+								</li>
+							</ul>
+						</div>
 					</div>
-					</div>
+					<!--xsl:if test="has_articles  = 1"-->
+
+						<div class="form-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'Articles')" />
+							</label>
+							<input type="hidden" data-validation="application_articles">
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'Please choose at least 1 Article')" />
+								</xsl:attribute>
+							</input>
+							<div id="articles_container" style="display:inline-block;">
+								<span class="select_first_text">
+									<xsl:value-of select="php:function('lang', 'Select a resource first')" />
+								</span>
+							</div>
+						</div>
+					<!--/xsl:if-->
 					<!-- Select Time and Date Section -->
 					<div class="form-group">
 						<!-- Display Time Chosen -->
@@ -81,8 +99,8 @@
 							</span>
 							<div data-bind="foreach: date">
 								<div class="d-block">
-									<input required="true" name="from_[]" hidden="hidden" data-bind="value: from_"/>
-									<input required="true" name="to_[]" hidden="hidden" data-bind="value: to_"/>
+									<input class="datetime" required="true" name="from_[]" hidden="hidden" data-bind="value: from_"/>
+									<input class="datetime" required="true" name="to_[]" hidden="hidden" data-bind="value: to_"/>
 									<span data-bind='text: formatedPeriode'></span>
 									
 									<button class="ml-2" data-bind="click: $parent.removeDate">
@@ -184,9 +202,9 @@
 							<xsl:value-of select="php:function('lang', 'organizer/responsible seeker')" />
 						</label>
 						<input required="true" id="inputOrganizerName" type="text" class="form-control" name="organizer" value="{application/organizer}" placeholder="Navn på arrangør">
-						<xsl:attribute name="placeholder">
-							<xsl:value-of select="php:function('lang', 'organizer/responsible seeker')"/>
-						</xsl:attribute>
+							<xsl:attribute name="placeholder">
+								<xsl:value-of select="php:function('lang', 'organizer/responsible seeker')"/>
+							</xsl:attribute>
 						</input>
 					</div>
 					<!-- Homepage -->
@@ -200,9 +218,9 @@
 							</label>
 						</div>
 						<input placeholder="Hjemmeside for aktiviteten/arrangementet" type="text" class="form-input" name="homepage" value="{application/homepage}">
-						<xsl:attribute name="placeholder">
-							<xsl:value-of select="php:function('lang', 'Event/activity homepage')"/>
-						</xsl:attribute>
+							<xsl:attribute name="placeholder">
+								<xsl:value-of select="php:function('lang', 'Event/activity homepage')"/>
+							</xsl:attribute>
 						</input>
 					</div>
 					<!-- Description -->
@@ -226,16 +244,16 @@
 
 					<xsl:if test="config/application_equipment !=''">
 						<div class="form-group">
-						   <label>
-							   <xsl:value-of select="config/application_equipment"/>
-						   </label>
-						   <textarea style="resize: none;" class="form-input" name="equipment">
-							   <xsl:attribute name="placeholder">
-								   <xsl:value-of select="php:function('lang', 'Extra information for the event')" />
-							   </xsl:attribute>
-							   <xsl:value-of select="application/equipment"/>
-						   </textarea>
-					   </div>
+							<label>
+								<xsl:value-of select="config/application_equipment"/>
+							</label>
+							<textarea style="resize: none;" class="form-input" name="equipment">
+								<xsl:attribute name="placeholder">
+									<xsl:value-of select="php:function('lang', 'Extra information for the event')" />
+								</xsl:attribute>
+								<xsl:value-of select="application/equipment"/>
+							</textarea>
+						</div>
 					</xsl:if>
 					<!-- Estimated Number of Participants -->
 					<div class="form-group">
@@ -321,7 +339,9 @@
 						<button id="submitBtn" class="btn btn-light" type="submit">
 							<xsl:value-of select="php:function('lang', 'Next step')" />
 						</button>
-						<div id="submit-error" style="display: none"><xsl:value-of select="php:function('lang', 'Please fill all fields')"/></div>
+						<div id="submit-error" style="display: none">
+							<xsl:value-of select="php:function('lang', 'Please fill all fields')"/>
+						</div>
 					</div>
 					
 					<!-- Submit error modal -->
@@ -351,8 +371,9 @@
 		<div class="push"></div>
 	</div>
 	<script>
+		var date_format = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />';
 		var initialAcceptAllTerms = false;
-		var initialSelection = <xsl:value-of select="application/resources_json"/>;
+		var initialSelection = [];//<xsl:value-of select="application/resources_json"/>;
 		var initialAudience = <xsl:value-of select="application/audience_json"/>;
 		var initialDates = <xsl:value-of select="application/dates_json"/>;
 		var initialAgegroups = <xsl:value-of select="application/agegroups_json"/>;
@@ -361,5 +382,6 @@
 		var cache_refresh_token = "<xsl:value-of select="php:function('get_phpgw_info', 'server|cache_refresh_token')" />";
 		var direct_booking = '<xsl:value-of select="direct_booking"/>';
 		var building_id = '<xsl:value-of select="application/building_id"/>';
+		var lang = <xsl:value-of select="php:function('js_lang', 'article', 'Select', 'price', 'unit', 'quantity', 'Selected', 'Delete', 'Sum', 'unit cost')"/>;
 	</script>
 </xsl:template>

@@ -152,7 +152,7 @@
 
 		function get_user_list()
 		{
-			$sql = "SELECT DISTINCT account_id, account_lastname, account_firstname FROM phpgw_accounts 
+			$sql = "SELECT DISTINCT account_id, account_lastname, account_firstname FROM phpgw_accounts
 			JOIN bb_application ON bb_application.case_officer_id = phpgw_accounts.account_id";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$user_list = array();
@@ -166,7 +166,7 @@
 			return $user_list;
 
 		}
-		
+
 		function get_building_info( $id )
 		{
 			$id	 = (int)$id;
@@ -586,7 +586,7 @@
 			return array('data' => $data);
 		}
 		/**
-		 * 
+		 *
 		 * @param string $payment_order_id
 		 * @param string $status: new, pending, completed, voided, partially_refunded, refunded
 		 * @return bool
@@ -626,7 +626,7 @@
 				$application_ids[] = $application['id'];
 			}
 
-			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id,"
+			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id, bb_article_mapping.unit,"
 				. "CASE WHEN
 					(
 						bb_resource.name IS NULL
@@ -665,6 +665,7 @@
 					'overridden_unit_price'	 => (float)$this->db->f('overridden_unit_price'),
 					'currency'				 => $this->db->f('currency'),
 					'amount'				 => (float)$this->db->f('amount'),
+					'unit'					=>	$this->db->f('unit', true),
 					'tax_code'				 => (int)$this->db->f('tax_code'),
 					'tax'					 => (float)$this->db->f('tax'),
 					'name'					 => $this->db->f('name', true),
@@ -687,121 +688,6 @@
 			return $orders;
 		}
 
-		function add_purchase_order( $purchase_order )
-		{
-			if (empty($purchase_order['application_id']))
-			{
-				return false;
-			}
-
-			$value_set = array(
-				'application_id' => (int)$purchase_order['application_id'],
-				'status'		 => 0,
-				'customer_id'	 => null
-			);
-
-			if ($this->db->get_transaction())
-			{
-				$this->global_lock = true;
-			}
-			else
-			{
-				$this->db->transaction_begin();
-			}
-
-			$this->db->query('INSERT INTO bb_purchase_order (' . implode(',', array_keys($value_set)) . ') VALUES ('
-				. $this->db->validate_insert(array_values($value_set)) . ')', __LINE__, __FILE__);
-
-			$order_id = $this->db->get_last_insert_id('bb_purchase_order', 'id');
-
-			if (!empty($purchase_order['lines']))
-			{
-				$article_ids = array();
-				foreach ($purchase_order['lines'] as $line)
-				{
-					$article_mapping_ids[] = $line['article_mapping_id'];
-				}
-
-
-				/**
-				 * FIXME
-				 */
-				$current_pricing = createObject('booking.soarticle_mapping')->get_current_pricing($article_mapping_ids);
-
-				$add_sql = "INSERT INTO bb_purchase_order_line ("
-					. " order_id, status, article_mapping_id, quantity, unit_price,"
-					. " overridden_unit_price, currency,  amount, tax_code, tax)"
-					. " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-				$insert_update = array();
-				foreach ($purchase_order['lines'] as $line)
-				{
-					$current_price_info = $current_pricing[$line['article_mapping_id']];
-
-					$unit_price = $current_price_info['price'];
-
-					$overridden_unit_price	 = $unit_price;
-					$currency				 = 'NOK';
-
-					$amount = $overridden_unit_price * (float)$line['quantity'];
-
-					$tax_code	 = $current_price_info['tax_code'];
-					$percent	 = $current_price_info['percent'];
-
-					$tax = $amount * $percent / 100;
-
-					$insert_update[] = array(
-						1	 => array(
-							'value'	 => $order_id,
-							'type'	 => PDO::PARAM_INT
-						),
-						2	 => array(
-							'value'	 => 1,
-							'type'	 => PDO::PARAM_INT
-						),
-						3	 => array(
-							'value'	 => $line['article_mapping_id'],
-							'type'	 => PDO::PARAM_INT
-						),
-						4	 => array(
-							'value'	 => (float)$line['quantity'],
-							'type'	 => PDO::PARAM_STR
-						),
-						5	 => array(
-							'value'	 => (float)$unit_price,
-							'type'	 => PDO::PARAM_STR
-						),
-						6	 => array(
-							'value'	 => (float)$overridden_unit_price,
-							'type'	 => PDO::PARAM_STR
-						),
-						7	 => array(
-							'value'	 => $currency,
-							'type'	 => PDO::PARAM_STR
-						),
-						8	 => array(
-							'value'	 => $amount,
-							'type'	 => PDO::PARAM_STR
-						),
-						9	 => array(
-							'value'	 => $tax_code,
-							'type'	 => PDO::PARAM_INT
-						),
-						10	 => array(
-							'value'	 => (float)$tax,
-							'type'	 => PDO::PARAM_STR
-						),
-					);
-				}
-				$this->db->insert($add_sql, $insert_update, __LINE__, __FILE__);
-			}
-
-
-			if (!$this->global_lock)
-			{
-				return $this->db->transaction_commit();
-			}
-		}
 
 		function get_single_purchase_order( $order_id )
 		{

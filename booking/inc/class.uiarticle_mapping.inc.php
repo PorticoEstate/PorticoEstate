@@ -89,6 +89,8 @@
 			$unit_list[] = array('id' => 'kg', 'name' => lang('kg'));
 			$unit_list[] = array('id' => 'm', 'name' => lang('meter'));
 			$unit_list[] = array('id' => 'm2', 'name' => lang('square meter'));
+			$unit_list[] = array('id' => 'hour', 'name' => lang('hour'));
+			$unit_list[] = array('id' => 'day', 'name' => lang('day'));
 
 			foreach ($unit_list as &$unit)
 			{
@@ -128,14 +130,45 @@
 		public function get_articles()
 		{
 			$resources	 = phpgw::get_var('resources', 'int', 'GET');
+			$application_id	 = phpgw::get_var('application_id', 'int', 'GET');
+			$reservation_type	 = phpgw::get_var('reservation_type', 'string', 'GET');
+			$reservation_id	 = phpgw::get_var('reservation_id', 'int', 'GET');
+
+			$purchase_order = createObject('booking.sopurchase_order')->get_purchase_order($application_id, $reservation_type, $reservation_id);
 			$articles	 = $this->bo->get_articles($resources);
 
 			foreach ($articles as &$article)
 			{
-				$article['price'] = number_format($article['price'], 2);
-				$article['selected_quantity']			 = isset($article['resource_id']) ? 1 : '';
-				$article['selected_article_quantity']	 = isset($article['resource_id']) ? "{$article['id']}_1" : '';
-				$article['selected_sum']				 = isset($article['resource_id']) ? $article['price'] : '';
+				if(!empty($purchase_order['lines']))
+				{
+					foreach ($purchase_order['lines'] as $line)
+					{
+						if($line['article_mapping_id'] == $article['id']  && (int)$line['parent_mapping_id'] == (int)$article['parent_mapping_id'])
+						{
+							$article['selected_quantity'] = $line['quantity'];
+							$article['selected_sum'] = (float)($line['amount'] + $line['tax']);
+							$article['selected_article_quantity']	 = "{$article['id']}_{$line['quantity']}_{$article['parent_mapping_id']}";
+						}
+					}
+				}
+
+				$article['price']		 = number_format($article['price'], 2, '.', '');
+				$article['mandatory']	 = isset($article['resource_id']) ? 1 : '';
+
+				if(empty($article['selected_quantity']))
+				{
+					$article['selected_quantity']	 = isset($article['resource_id']) ? 1 : '';
+				}
+
+				if(empty($article['selected_article_quantity']))
+				{
+					$article['selected_article_quantity']	 = isset($article['resource_id']) ? "{$article['id']}_1" : '';
+				}
+
+				if(empty($article['selected_sum']))
+				{
+					$article['selected_sum']		 = isset($article['resource_id']) ? $article['price'] : '';
+				}
 			}
 
 			return array('data' => $articles);
@@ -155,7 +188,8 @@
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				return $this->query();
+				$relaxe_acl = true;
+				return $this->query($relaxe_acl);
 			}
 
 			phpgwapi_jquery::load_widget('autocomplete');
@@ -238,7 +272,6 @@
 		public function edit( $values = array(), $mode = 'edit' )
 		{
 			$active_tab										 = !empty($values['active_tab']) ? $values['active_tab'] : phpgw::get_var('active_tab', 'string', 'REQUEST', 'first_tab');
-			$GLOBALS['phpgw_info']['flags']['app_header']	 .= '::' . lang('edit');
 			if (empty($this->permissions[PHPGW_ACL_ADD]))
 			{
 				phpgw::no_access();
@@ -251,7 +284,7 @@
 			else
 			{
 				$id		 = !empty($values['id']) ? $values['id'] : phpgw::get_var('id', 'int');
-				$article = $this->bo->read_single($id);
+				$article = $this->bo->read_single($id, true, true);
 			}
 
 			$id = (int)$id;
@@ -423,26 +456,33 @@ JS;
 					array('disablePagination' => true)
 				)
 			);
-			$tax_code_list	 = execMethod('booking.bogeneric.get_list', array('type' => 'tax', 'order' => 'id', 'selected' => 9));
 
 			$GLOBALS['phpgw']->jqcal2->add_listener('date_from', 'date');
 			$data = array(
-				'datatable_def'		 => $datatable_def,
-				'form_action'		 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.save")),
-				'cancel_url'		 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.index",)),
-				'article'			 => $article,
-				'article_categories' => array('options' => $this->get_category_options($article->article_cat_id)),
-				'unit_list'			 => array('options' => $this->get_unit_list($article->unit)),
-				'tax_code_list'		 => array('options' => execMethod('booking.bogeneric.get_list', array('type' => 'tax', 'order' => 'id', 'selected' => $article->tax_code))),
+				'datatable_def'			 => $datatable_def,
+				'form_action'			 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.save")),
+				'cancel_url'			 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.index",)),
+				'article'				 => $article,
+				'article_categories'	 => array('options' => $this->get_category_options($article->article_cat_id)),
+				'unit_list'				 => array('options' => $this->get_unit_list($article->unit)),
+				'tax_code_list'			 => array('options' => execMethod('booking.bogeneric.get_list', array('type' => 'tax', 'order' => 'id', 'selected' => $article->tax_code))),
 				'service_list'			 => ( $id && $article->article_cat_id == 2 ) ? array('options' => $this->get_services($article->article_id)) : array(),
 				'mode'					 => $mode,
 				'tabs'					 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab'		 => $active_tab,
 				'fileupload'			 => true,
 				'multi_upload_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.handle_multi_upload_file", 'id' => $id, 'section' => $section)),
-				'multiple_uploader'	 => true,
-				'resources_json'	 => ( $id && $article->article_cat_id == 1 ) ? json_encode(array($article->article_id)) : '[]'
+				'multiple_uploader'		 => true,
+				'resources_json'		 => ( $id && $article->article_cat_id == 1 ) ? json_encode(array($article->article_id)) : '[]'
 			);
+
+			$GLOBALS['phpgw_info']['flags']['app_header']	 .= '::' . lang('edit');
+
+			if($article->article_name)
+			{
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('edit') . '::' . $article->article_name;
+			}
+
 			self::add_javascript('booking', 'base', 'common');
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('file-upload-minimum');

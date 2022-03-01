@@ -411,6 +411,7 @@
 					try
 					{
 						$receipt = $this->bo->add($allocation);
+						createObject('booking.sopurchase_order')->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
 						$this->bo->so->update_id_string();
 						self::redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $receipt['id']));
 					}
@@ -459,6 +460,7 @@
 								try
 								{
 									$receipt = $this->bo->add($allocation);
+									createObject('booking.sopurchase_order')->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
 								}
 								catch (booking_unauthorized_exception $e)
 								{
@@ -650,6 +652,41 @@
 					try
 					{
 						$receipt = $this->bo->update($allocation);
+						/**
+						 * Start dealing with the purchase_order..
+						 */
+						$purchase_order = array(
+							'application_id' => $allocation['application_id'],
+							'status' => 0,
+							'reservation_type' => 'allocation',
+							'reservation_id' => $id,
+							'customer_id' => -1,
+							'lines' => array());
+
+						$selected_articles = (array)phpgw::get_var('selected_articles');
+
+						foreach ($selected_articles as $selected_article)
+						{
+							$_article_info = explode('_', $selected_article);
+
+							if(empty($_article_info[0]))
+							{
+								continue;
+							}
+
+							$purchase_order['lines'][] = array(
+								'article_mapping_id'	=> $_article_info[0],
+								'quantity'				=> $_article_info[1],
+								'parent_mapping_id'		=> !empty($_article_info[2]) ? $_article_info[2] : null
+							);
+						}
+
+						if(!empty($purchase_order['lines']))
+						{
+							createObject('booking.sopurchase_order')->add_purchase_order($purchase_order);
+						}
+						/** END purchase order */
+
 						$this->bo->so->update_id_string();
 						$this->send_mailnotification_to_organization($organization, lang('Allocation changed'), phpgw::get_var('mail', 'html', 'POST'));
 						self::redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $allocation['id']));
@@ -666,6 +703,7 @@
 
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'base', 'allocation.js');
+			self::add_javascript('booking', 'base', 'purchase_order_edit.js');
 			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.show',
 					'id' => $allocation['id']));
@@ -929,7 +967,9 @@
 				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 			}
 			$allocation['resource_ids'] = $resource_ids;
+			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			self::add_javascript('booking', 'base', 'purchase_order_show.js');
 			self::render_template_xsl('allocation', array('allocation' => $allocation));
 		}
 

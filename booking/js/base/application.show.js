@@ -63,15 +63,34 @@ function populateTableChkorder(order_id)
 	var url = phpGWLink('index.php', oArgs, true);
 
 	var container = 'order_container';
-	var colDefsRegulations = [
+
+	var colDefsPurchase_order = [
 		{key: 'name', label: lang['article']},
-		{key: 'unit_price', label: lang['cost']},
-		{key: 'quantity', label: lang['quantity']},
-		{key: 'amount', label: lang['Sum']},
-		{key: 'tax', label: lang['tax']},
-		{key: 'sum', label: lang['Sum']}
+		{
+			key: 'unit_price',
+			label: lang['cost'],
+			attrs: [
+				{name: 'class', value: "text-right align-middle"}
+			]
+		},
+		{key: 'quantity', label: lang['quantity'],
+		attrs: [
+			{name: 'class', value: "text-right align-middle"}
+		]},
+		{key: 'amount', label: lang['Sum'],
+		attrs: [
+			{name: 'class', value: "text-right align-middle"}
+		]},
+		{key: 'tax', label: lang['tax'],
+		attrs: [
+			{name: 'class', value: "text-right align-middle"}
+		]},
+		{key: 'sum', label: lang['Sum'],
+		attrs: [
+			{name: 'class', value: "text-right align-middle"}
+		]}
 
 	];
 
-	createTable(container, url, colDefsRegulations, 'lines', 'pure-table pure-table-bordered', '', order_sum);
+	createTable(container, url, colDefsPurchase_order, 'lines', 'pure-table pure-table-bordered', '', order_sum);
 }

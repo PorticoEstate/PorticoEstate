@@ -93,6 +93,13 @@
 			if ($id)
 			{
 				$values = booking_soarticle_mapping::get_instance()->read_single($id, $return_object, $relaxe_acl);
+
+				if($values->get_field('article_cat_id') == 1)//Resource
+				{
+					$building = booking_soarticle_mapping::get_instance()->get_building($values->get_field('article_id'));
+					$values->set_field('building_id', $building['id']);
+					$values->set_field('building_name', $building['name']);
+				}
 			}
 			else
 			{

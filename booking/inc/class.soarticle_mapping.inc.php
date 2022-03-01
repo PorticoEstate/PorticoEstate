@@ -263,12 +263,13 @@
 			while ($this->db->next_record())
 			{
 				$_articles[] = array(
-					'id'			 => $this->db->f('mapping_id'),
-					'resource_id'	 => $this->db->f('resource_id'),
-					'article_id'	 => $this->db->f('article_id'),
-					'name'			 => $this->db->f('name', true),
-					'unit'			 => $this->db->f('unit', true),
-					'tax_percent'	 => $this->db->f('tax_percent'),
+					'id'				 => $this->db->f('mapping_id'),
+					'parent_mapping_id'	 => null,
+					'resource_id'		 => $this->db->f('resource_id'),
+					'article_id'		 => $this->db->f('article_id'),
+					'name'				 => $this->db->f('name', true),
+					'unit'				 => $this->db->f('unit', true),
+					'tax_percent'		 => $this->db->f('tax_percent'),
 				);
 			}
 
@@ -292,11 +293,12 @@
 				while ($this->db->next_record())
 				{
 					$articles[] = array(
-						'id'			 => $this->db->f('mapping_id'),
-						'article_id'	 => $this->db->f('article_id'),
-						'name'			 => "- " . $this->db->f('name', true),
-						'unit'			 => $this->db->f('unit', true),
-						'tax_percent'	 => (int)$this->db->f('tax_percent'),
+						'id'				 => $this->db->f('mapping_id'),
+						'parent_mapping_id'	 => $_article['id'],
+						'article_id'		 => $this->db->f('article_id'),
+						'name'				 => "- " . $this->db->f('name', true),
+						'unit'				 => $this->db->f('unit', true),
+						'tax_percent'		 => (int)$this->db->f('tax_percent'),
 					);
 				}
 			}
@@ -310,10 +312,25 @@
 				$this->db->query($sql, __LINE__, __FILE__);
 				$this->db->next_record();
 				$article['ex_tax_price'] = (float)$this->db->f('price');
+				$article['tax']			 = $article['ex_tax_price'] * ($article['tax_percent'] / 100);
 				$article['price']		 = $article['ex_tax_price'] * (1 + ($article['tax_percent'] / 100));
 			}
 
 
 			return $articles;
+		}
+
+		function get_building( $resource_id )
+		{
+			$sql = "SELECT bb_building.id, bb_building.name"
+				. " FROM bb_building"
+				. " JOIN bb_building_resource ON bb_building_resource.building_id = bb_building.id"
+				. " WHERE bb_building_resource.resource_id =" .(int) $resource_id;
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			return array(
+				'id'	 => (int)$this->db->f('id'),
+				'name'	 => $this->db->f('name', true)
+				);
 		}
 	}

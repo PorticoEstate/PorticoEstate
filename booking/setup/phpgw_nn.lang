@@ -883,3 +883,22 @@ send sms	booking	nn	send SMS
 season %1 copied to %2	booking	nn	Sesong %1 kopiert til %2
 copied from %1	booking	nn	kopiert frå %1
 update user address	booking	nn	Oppdater kundeadresser
+add message	booking	nn	Skriv melding
+content	booking	nn	Innhold
+internal notes	booking	nn	Interne notater
+in tax register	booking	nn	Registrert i mva-registeret
+unit	booking	nn	Eining
+price	booking	nn	Pris
+selected	booking	nn	Valgt
+unit cost	booking	nn	Einingspris
+commerce	booking	nn	Varekatalog
+tax code	booking	nn	Mva-kode
+each	booking	nn	Stk
+kg	booking	nn	Kg
+meter	booking	nn	Meter
+square meter	booking	nn	Kvadratmeter
+m	booking	nn	Meter
+m2	booking	nn	Kvadratmeter
+hour	booking	nn	Time
+day	booking	nn	Dag
+%1 resources mapped as articles	booking	nn	%1 ressursar er kopla opp som artiklar i varekatalogen

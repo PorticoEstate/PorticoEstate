@@ -206,6 +206,7 @@
 					try
 					{
 						$receipt = $this->bo->add($resource);
+						$GLOBALS['phpgw']->hooks->single('resource_add', 'booking');
 						self::redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $receipt['id']));
 					}
 					catch (booking_unauthorized_exception $e)

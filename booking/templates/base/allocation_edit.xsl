@@ -133,6 +133,13 @@
 						</input>
 					</div>
 					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Articles')" />
+						</label>
+						<div id="articles_container" class="pure-custom" style="display:inline-block;"></div>
+					</div>
+
+					<div class="pure-control-group">
 						<label for="field_cost">
 							<xsl:value-of select="php:function('lang', 'Cost')" />
 						</label>
@@ -211,8 +218,10 @@
 		</div>
 	</form>
 	<script type="text/javascript">
+		var reservation_type = 'allocation';
+		var reservation_id = '<xsl:value-of select="allocation/id"/>';
 		var season_id = '<xsl:value-of select="allocation/season_id"/>';
 		var initialSelection = <xsl:value-of select="allocation/resources_json"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type', 'article', 'Select', 'price', 'unit', 'tax', 'unit cost', 'quantity', 'Selected', 'Delete', 'Sum')"/>;
 	</script>
 </xsl:template>
