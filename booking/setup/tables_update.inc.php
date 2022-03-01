@@ -5702,12 +5702,93 @@
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_purchase_order_line', 'parent_mapping_id',
-			array(
-				'type' => 'int',
-				'precision' => 4,
-				'nullable' => True
+											array(
+				'type'		 => 'int',
+				'precision'	 => 4,
+				'nullable'	 => True
 			)
 		);
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('bb_article_mapping', array(), 'building_id');
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('SELECT id FROM fm_ecomva WHERE id > 0 ORDER BY id', __LINE__, __FILE__);
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$tax_code	 = $GLOBALS['phpgw_setup']->oProc->f('id');
+
+
+		$sql = "SELECT bb_resource.id FROM bb_resource"
+			. " LEFT JOIN bb_article_mapping ON (bb_resource.id = bb_article_mapping.article_id AND bb_article_mapping.article_cat_id = 1)"
+			. " WHERE bb_article_mapping.id IS NULL";
+
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query($sql, __LINE__, __FILE__);
+		$resources = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$resources[] =  $GLOBALS['phpgw_setup']->oProc->f('id');
+		}
+
+
+		$add_sql = "INSERT INTO bb_article_mapping ("
+			. " article_cat_id, article_id, article_code, unit, tax_code)"
+			. " VALUES (?, ?, ?, ?, ?)";
+
+		$article_cat_id	 = 1;
+		
+		$insert_update	 = array();
+
+		foreach ($resources as $resource_id)
+		{
+			$article_code	 = "resource_{$resource_id}";
+
+			$insert_update[] = array(
+				1	 => array(
+					'value'	 => $article_cat_id,
+					'type'	 => PDO::PARAM_INT
+				),
+				2	 => array(
+					'value'	 => $resource_id,
+					'type'	 => PDO::PARAM_INT
+				),
+				3	 => array(
+					'value'	 => $article_code,
+					'type'	 => PDO::PARAM_STR
+				),
+				4	 => array(
+					'value'	 => 'hour',
+					'type'	 => PDO::PARAM_STR
+				),
+				5	 => array(
+					'value'	 => $tax_code,
+					'type'	 => PDO::PARAM_INT
+				),
+			);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->insert($add_sql, $insert_update, __LINE__, __FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('DROP VIEW public.bb_article_view;', __LINE__, __FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query(
+		"CREATE OR REPLACE VIEW public.bb_article_view
+		 AS
+		 SELECT bb_resource.id,
+			bb_building.name || '::' || bb_resource.name as name,
+			bb_resource.description,
+			bb_resource.active,
+			1 AS article_cat_id
+		   FROM bb_resource
+		   JOIN bb_building_resource ON bb_building_resource.resource_id = bb_resource.id
+		   JOIN bb_building ON bb_building_resource.building_id = bb_building.id
+		UNION
+		 SELECT bb_service.id,
+			bb_service.name,
+			bb_service.description,
+			bb_service.active,
+			2 AS article_cat_id
+		   FROM bb_service" , __LINE__, __FILE__
+		);
+
 
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
@@ -5715,4 +5796,3 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
-

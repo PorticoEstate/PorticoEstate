@@ -188,7 +188,8 @@
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				return $this->query();
+				$relaxe_acl = true;
+				return $this->query($relaxe_acl);
 			}
 
 			phpgwapi_jquery::load_widget('autocomplete');
@@ -271,7 +272,6 @@
 		public function edit( $values = array(), $mode = 'edit' )
 		{
 			$active_tab										 = !empty($values['active_tab']) ? $values['active_tab'] : phpgw::get_var('active_tab', 'string', 'REQUEST', 'first_tab');
-			$GLOBALS['phpgw_info']['flags']['app_header']	 .= '::' . lang('edit');
 			if (empty($this->permissions[PHPGW_ACL_ADD]))
 			{
 				phpgw::no_access();
@@ -284,7 +284,7 @@
 			else
 			{
 				$id		 = !empty($values['id']) ? $values['id'] : phpgw::get_var('id', 'int');
-				$article = $this->bo->read_single($id);
+				$article = $this->bo->read_single($id, true, true);
 			}
 
 			$id = (int)$id;
@@ -456,26 +456,33 @@ JS;
 					array('disablePagination' => true)
 				)
 			);
-			$tax_code_list	 = execMethod('booking.bogeneric.get_list', array('type' => 'tax', 'order' => 'id', 'selected' => 9));
 
 			$GLOBALS['phpgw']->jqcal2->add_listener('date_from', 'date');
 			$data = array(
-				'datatable_def'		 => $datatable_def,
-				'form_action'		 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.save")),
-				'cancel_url'		 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.index",)),
-				'article'			 => $article,
-				'article_categories' => array('options' => $this->get_category_options($article->article_cat_id)),
-				'unit_list'			 => array('options' => $this->get_unit_list($article->unit)),
-				'tax_code_list'		 => array('options' => execMethod('booking.bogeneric.get_list', array('type' => 'tax', 'order' => 'id', 'selected' => $article->tax_code))),
+				'datatable_def'			 => $datatable_def,
+				'form_action'			 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.save")),
+				'cancel_url'			 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.index",)),
+				'article'				 => $article,
+				'article_categories'	 => array('options' => $this->get_category_options($article->article_cat_id)),
+				'unit_list'				 => array('options' => $this->get_unit_list($article->unit)),
+				'tax_code_list'			 => array('options' => execMethod('booking.bogeneric.get_list', array('type' => 'tax', 'order' => 'id', 'selected' => $article->tax_code))),
 				'service_list'			 => ( $id && $article->article_cat_id == 2 ) ? array('options' => $this->get_services($article->article_id)) : array(),
 				'mode'					 => $mode,
 				'tabs'					 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab'		 => $active_tab,
 				'fileupload'			 => true,
 				'multi_upload_action'	 => self::link(array('menuaction' => "{$this->currentapp}.uiarticle_mapping.handle_multi_upload_file", 'id' => $id, 'section' => $section)),
-				'multiple_uploader'	 => true,
-				'resources_json'	 => ( $id && $article->article_cat_id == 1 ) ? json_encode(array($article->article_id)) : '[]'
+				'multiple_uploader'		 => true,
+				'resources_json'		 => ( $id && $article->article_cat_id == 1 ) ? json_encode(array($article->article_id)) : '[]'
 			);
+
+			$GLOBALS['phpgw_info']['flags']['app_header']	 .= '::' . lang('edit');
+
+			if($article->article_name)
+			{
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('edit') . '::' . $article->article_name;
+			}
+
 			self::add_javascript('booking', 'base', 'common');
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('file-upload-minimum');

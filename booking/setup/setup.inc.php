@@ -114,5 +114,6 @@
 		'activity_delete' => 'booking.hook_helper.activity_delete',
 		'activity_edit' => 'booking.hook_helper.activity_edit',
 		'after_navbar'	=> 'booking.hook_helper.after_navbar',
+		'resource_add' => 'booking.hook_helper.resource_add',
 		'config'
 	);

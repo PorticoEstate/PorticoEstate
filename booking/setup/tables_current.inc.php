@@ -1222,7 +1222,6 @@
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'article_cat_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'article_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'building_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'article_code' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false ),
 				'unit' => array('type' => 'varchar', 'precision' => '12', 'nullable' => false ),
 				'tax_code' => array('type' => 'int', 'precision' => 4, 'nullable' => false),

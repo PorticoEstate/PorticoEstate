@@ -319,4 +319,18 @@
 
 			return $articles;
 		}
+
+		function get_building( $resource_id )
+		{
+			$sql = "SELECT bb_building.id, bb_building.name"
+				. " FROM bb_building"
+				. " JOIN bb_building_resource ON bb_building_resource.building_id = bb_building.id"
+				. " WHERE bb_building_resource.resource_id =" .(int) $resource_id;
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			return array(
+				'id'	 => (int)$this->db->f('id'),
+				'name'	 => $this->db->f('name', true)
+				);
+		}
 	}
