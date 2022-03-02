@@ -12,6 +12,7 @@
 			'query' => true
 		);
 		protected $fields = array(
+			'booking_async_task_generate_payment_enabled',
 			'booking_async_task_update_reservation_state_enabled',
 			'booking_async_task_send_reminder_enabled',
 			'booking_async_task_send_access_request_enabled',
@@ -37,6 +38,7 @@
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+				$settings['booking_async_task_generate_payment_enabled'] = phpgw::get_var('booking_async_task_generate_payment_enabled', 'bool', 'POST');
 				$settings['booking_async_task_update_reservation_state_enabled'] = phpgw::get_var('booking_async_task_update_reservation_state_enabled', 'bool', 'POST');
 				$settings['booking_async_task_send_reminder_enabled'] = phpgw::get_var('booking_async_task_send_reminder_enabled', 'bool', 'POST');
 				$settings['booking_async_task_send_access_request_enabled'] = phpgw::get_var('booking_async_task_send_access_request_enabled', 'bool', 'POST');

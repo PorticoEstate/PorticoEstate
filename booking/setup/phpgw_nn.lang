@@ -349,7 +349,8 @@ Total Cost	booking	nn	Totalsum
 Int. invoice file	booking	nn	Intern fakturafil
 Ext. invoice file	booking	nn	Ekstern fakturafil
 Asynchronous Tasks	booking	nn	Systemjobbar
-booking_async_task_update_reservation_state_enabled	booking	nn	Generer fakturagrunnlag
+booking async task generate payment	booking	nn	Generer betalingskrav (ny)
+booking_async_task_update_reservation_state_enabled	booking	nn	Generer fakturagrunnlag (gamal)
 booking_async_task_send_reminder_enabled	booking	nn	Send purremail til kontaktpersonar på tildelingar, interntildelingar og arrangementer
 Update	booking	nn	Oppdater
 Cannot generate files from empty list	booking	nn	Kan ikkje generere filer frå ei tom liste

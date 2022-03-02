@@ -339,6 +339,7 @@ Total Cost	booking	en	Total cost
 Int. invoice file	booking	en	Int. invoice file
 Ext. invoice file	booking	en	Ext. invoice file
 Asynchronous Tasks	booking	en	Asynchronous tasks
+booking async task generate payment	booking	en	Generate payment
 booking_async_task_update_reservation_state_enabled	booking	en	Booking_async_task_update_reservation_state_enabled
 booking_async_task_send_reminder_enabled	booking	en	Booking_async_task_send_reminder_enabled
 Update	booking	en	Update
