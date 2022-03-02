@@ -1,4 +1,6 @@
 
+/* global date_format */
+
 $(document).ready(function ()
 {
 
@@ -199,11 +201,9 @@ function set_mandatory(xTable)
 	var mandatory = xTableBody.getElementsByClassName('mandatory');
 	var tr;
 	var unit;
-	var computed_quantity;
 	var quantity;
 	var selected_quantity;
 	var DateHelper = new DateFormatter();
-	var date;
 	var _format = date_format + ' H:i';
 	var from;
 	var to;
