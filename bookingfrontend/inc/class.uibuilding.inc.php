@@ -426,6 +426,11 @@
 				$building['homepage'] = 'http://' . $building['homepage'];
 			}
 
+			/**
+			 * Hardcoded hack: Disable calendar at this level
+			 */
+			$building['deactivate_calendar'] = 1;
+
 			$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
 			self::add_javascript('bookingfrontend', 'base', 'building.js', 'text/javascript', true);
 
