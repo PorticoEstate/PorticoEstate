@@ -346,7 +346,13 @@
 					$this->add_cost_history($allocation, phpgw::get_var('cost_comment'), phpgw::get_var('cost', 'float'));
 				}
 				$allocation['active'] = '1';
-				$allocation['completed'] = '0';
+
+				/**
+				 * 0 - not completed, old style
+				 * 1 - completed, old style
+				 * 2 - payments handled by relating to purchase-order
+				 */
+				$allocation['completed'] = '2';
 
 				$weekday = phpgw::get_var('weekday', 'string', 'POST');
 

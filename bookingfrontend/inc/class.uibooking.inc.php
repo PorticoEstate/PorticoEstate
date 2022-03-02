@@ -271,7 +271,20 @@
 				$booking['building_id'] = $building['id'];
 				$booking['active'] = '1';
 				$booking['cost'] = 0;
-				$booking['completed'] = '0';
+				/**
+				 * 0 - not completed, old style
+				 * 1 - completed, old style
+				 * 2 - payments handled by relating to purchase-order
+				 */
+				if($allocation['completed'] == 0)
+				{
+					// old style
+					$booking['completed'] = '0';
+				}
+				else
+				{
+					$booking['completed'] = '2';
+				}
 				$booking['reminder'] = '1';
 				$booking['secret'] = $this->generate_secret();
 				array_set_default($booking, 'audience', array());
