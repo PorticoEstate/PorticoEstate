@@ -210,7 +210,7 @@ function set_mandatory(xTable)
 
 	for (var j = 0; j < datetime.length; )
 	{
-		if(!datetime[j + 1].value)
+		if (!datetime[j + 1].value)
 		{
 			j++;
 			j++;
@@ -222,7 +222,7 @@ function set_mandatory(xTable)
 		var timespan = Math.abs(to - from) / 36e5;
 
 		sum_hours += Math.ceil(timespan);
-		sum_days += Math.floor(sum_hours/24);
+		sum_days += Math.floor(sum_hours / 24);
 
 		j++;
 		j++;

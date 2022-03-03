@@ -608,7 +608,13 @@
 		public function payments()
 		{
 			$application_id	 = phpgw::get_var('application_id', 'int');
-			$payments		 = $this->bo->so->read_payments($application_id);
+
+			$params = array(
+				'application_id' => $application_id,
+				'sort' => phpgw::get_var('sort', 'string'),
+				'dir' => phpgw::get_var('dir', 'string')
+			);
+			$payments		 = $this->bo->so->read_payments($params);
 
 			$status_text = array(
 				'completed'			 => lang('completed'),

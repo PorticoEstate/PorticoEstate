@@ -1,6 +1,11 @@
 
 function show_order(element)
 {
+	var table = element.parentNode.parentNode.parentNode;
+	for (var i = 0, row; row = table.rows[i]; i++)
+	{
+		row.classList.remove('table-success');
+	}
 	var tr = element.parentNode.parentNode;
 
 	tr.classList.add("table-success");
@@ -74,21 +79,21 @@ function populateTableChkorder(order_id)
 			]
 		},
 		{key: 'quantity', label: lang['quantity'],
-		attrs: [
-			{name: 'class', value: "text-right align-middle"}
-		]},
+			attrs: [
+				{name: 'class', value: "text-right align-middle"}
+			]},
 		{key: 'amount', label: lang['Sum'],
-		attrs: [
-			{name: 'class', value: "text-right align-middle"}
-		]},
+			attrs: [
+				{name: 'class', value: "text-right align-middle"}
+			]},
 		{key: 'tax', label: lang['tax'],
-		attrs: [
-			{name: 'class', value: "text-right align-middle"}
-		]},
+			attrs: [
+				{name: 'class', value: "text-right align-middle"}
+			]},
 		{key: 'sum', label: lang['Sum'],
-		attrs: [
-			{name: 'class', value: "text-right align-middle"}
-		]}
+			attrs: [
+				{name: 'class', value: "text-right align-middle"}
+			]}
 
 	];
 

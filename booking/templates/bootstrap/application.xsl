@@ -1182,7 +1182,7 @@
 			var documentsURL = phpGWLink('index.php', {menuaction:'booking.uidocument_view.regulations', sort:'name', length:-1}, true) +'&owner[]=building::' + building_id;
 				documentsURL += '&owner[]=resource::'+ resources;
 			var attachmentsResourceURL = phpGWLink('index.php', {menuaction:'booking.uidocument_application.index', sort:'name', no_images:1, filter_owner_id:app_id, length:-1}, true);
-			var paymentURL = phpGWLink('index.php', {menuaction:'booking.uiapplication.payments', sort:'from_',dir:'asc',application_id:app_id, length:-1}, true);
+			var paymentURL = phpGWLink('index.php', {menuaction:'booking.uiapplication.payments', sort:'order_id',dir:'asc',application_id:app_id, length:-1}, true);
 
 		]]>
 
@@ -1215,19 +1215,21 @@
 		var colDefsAttachmentsResource = [{key: 'name', label: lang['Name'], formatter: genericLink}];
 		createTable('attachments_container', attachmentsResourceURL, colDefsAttachmentsResource, '', 'pure-table pure-table-bordered');
 
-		var colDefsPayment = [
+	var colDefsPayment = [
 		{
-		label: lang['Select'],
-		attrs: [{name: 'class', value: "align-middle"}],
-		object: [
-		{
-		type: 'input',
-		attrs: [
-		{name: 'type', value: 'radio'},
-		{name: 'onClick', value: 'show_order(this);'}
-		]
-		}
-		], value: 'order_id'
+			label: lang['Select'],
+			attrs: [{name: 'class', value: "align-middle"}],
+			object: [
+				{
+					type: 'input',
+					attrs: [
+						{name: 'type', value: 'radio'},
+						{name: 'name', value: 'order_selector'},
+						{name: 'class', value: 'order_selector'},
+						{name: 'onClick', value: 'show_order(this);'}
+					]
+				}
+			], value: 'order_id'
 		},
 		{key: 'order_id', label: lang['order id']},
 		{key: 'created_value', label: lang['created']},
@@ -1236,8 +1238,8 @@
 		{key: 'currency', label: lang['currency']},
 		{key: 'status_text', label: lang['status']},
 		{key: 'payment_method', label: lang['payment method']},
-		{key: 'actions', label: lang['Actions'], formatter: genericLink2({name: 'delete', label:lang['refund']},{name: 'edit', label:lang['cancel']})}
-		];
+		{key: 'actions', label: lang['Actions'], formatter: genericLink2({name: 'delete', label: lang['refund']}, {name: 'edit', label: lang['cancel']})}
+	];
 
 		createTable('payments_container', paymentURL, colDefsPayment,'', 'pure-table pure-table-bordered');
 
