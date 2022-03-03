@@ -7,6 +7,7 @@
 
 		public function __construct()
 		{
+			parent::__construct();
 			$this->soapplication	 = CreateObject('booking.soapplication');
 
 		}

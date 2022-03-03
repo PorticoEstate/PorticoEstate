@@ -165,6 +165,30 @@
 			$now = date('Y-m-d');
 			$pricing = array();
 
+			if(empty($article_mapping_ids))
+			{
+				return array();
+			}
+			/**
+			 * Dummy - in case price is not set;
+			 */
+			$sql = "SELECT bb_article_mapping.id, bb_article_mapping.tax_code, fm_ecomva.percent FROM bb_article_mapping"
+				. " JOIN fm_ecomva ON bb_article_mapping.tax_code = fm_ecomva.id"
+				. " WHERE bb_article_mapping.id IN ( " . implode (',',$article_mapping_ids) . ")";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$article_mapping_id = $this->db->f('id');
+				$pricing[$article_mapping_id] = array(
+					'price'				 => 0,
+					'remark'			 => 'Price not set',
+					'tax_code'			 => $this->db->f('tax_code'),
+					'percent'			 => $this->db->f('percent')
+				);
+			}
+
 			$sql = "SELECT id, article_mapping_id FROM bb_article_price"
 				. " WHERE article_mapping_id IN ( " . implode (',',$article_mapping_ids) . ")"
 				. " AND from_ < '{$now}'"
