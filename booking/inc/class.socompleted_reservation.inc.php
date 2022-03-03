@@ -123,6 +123,31 @@
 			return parent::_get_conditions($query, $filters);
 		}
 
+		/**
+		 * Find list of orders related to allocations - without payments
+		 * @return array
+		 */
+		public function find_expired_orders($reservation_type, $reservation_id)
+		{
+			$now = date('Y-m-d');
+			$sql = "SELECT bb_purchase_order.id"
+				. " FROM bb_purchase_order"
+				. " LEFT JOIN bb_payment ON bb_purchase_order.id = bb_payment.order_id"
+				. " JOIN bb_{$reservation_type} ON bb_purchase_order.reservation_type = '{$reservation_type}' AND bb_purchase_order.reservation_id = bb_{$reservation_type}.id"
+				. " WHERE bb_payment.id IS NULL"
+				. " AND bb_{$reservation_type}.to_ < '{$now}'"
+				. " AND bb_purchase_order.reservation_id = {$reservation_id}";
+
+			$orders = array();
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$orders[] = (int)$this->db->f('id');
+			}
+
+			return $orders;
+		}
+
 		public function create_from( $type, $reservation )
 		{
 			if (!array_key_exists('resources', $reservation) || !is_array($reservation['resources']) || count($reservation['resources']) <= 0)
