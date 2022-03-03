@@ -100,37 +100,39 @@
 						</input>
 						<div id="org_container"></div>
 					</div>
-					<div class="pure-control-group">
-						<label for="field_from">
-							<xsl:value-of select="php:function('lang', 'From')" />
-						</label>
-						<input class="datetime" id="field_from" name="from_" type="text">
-							<xsl:attribute name="data-validation">
-								<xsl:text>required</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation-error-msg">
-								<xsl:value-of select="php:function('lang', 'Please enter a from date')" />
-							</xsl:attribute>
-							<xsl:attribute name="value">
-								<xsl:value-of select="allocation/from_"/>
-							</xsl:attribute>
-						</input>
-					</div>
-					<div class="pure-control-group">
-						<label for="field_to">
-							<xsl:value-of select="php:function('lang', 'To')" />
-						</label>
-						<input class="datetime" id="field_to" name="to_" type="text">
-							<xsl:attribute name="data-validation">
-								<xsl:text>required</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation-error-msg">
-								<xsl:value-of select="php:function('lang', 'Please enter an end date')" />
-							</xsl:attribute>
-							<xsl:attribute name="value">
-								<xsl:value-of select="allocation/to_"/>
-							</xsl:attribute>
-						</input>
+					<div id="dates-container">
+						<div class="pure-control-group">
+							<label for="field_from">
+								<xsl:value-of select="php:function('lang', 'From')" />
+							</label>
+							<input class="datetime" id="field_from" name="from_" type="text">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'Please enter a from date')" />
+								</xsl:attribute>
+								<xsl:attribute name="value">
+									<xsl:value-of select="allocation/from_"/>
+								</xsl:attribute>
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label for="field_to">
+								<xsl:value-of select="php:function('lang', 'To')" />
+							</label>
+							<input class="datetime" id="field_to" name="to_" type="text">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'Please enter an end date')" />
+								</xsl:attribute>
+								<xsl:attribute name="value">
+									<xsl:value-of select="allocation/to_"/>
+								</xsl:attribute>
+							</input>
+						</div>
 					</div>
 					<div class="pure-control-group">
 						<label>
@@ -218,6 +220,7 @@
 		</div>
 	</form>
 	<script type="text/javascript">
+		var date_format = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />';
 		var reservation_type = 'allocation';
 		var reservation_id = '<xsl:value-of select="allocation/id"/>';
 		var season_id = '<xsl:value-of select="allocation/season_id"/>';
