@@ -555,13 +555,27 @@
 			}
 		}
 
-		function read_payments( $application_id )
+		function read_payments( $params )
 		{
+			$application_id	 = isset($params['application_id']) && $params['application_id'] ? (int)$params['application_id'] : null;
+			$sort			 = isset($params['sort']) && $params['sort'] ? $params['sort'] : 'id';
+			$dir			 = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'asc';
+
+			if(empty($application_id))
+			{
+				return array();
+			}
+
+			if(!in_array($sort, array('id', 'order_id', 'payment_method', 'amount')))
+			{
+				$sort = 'id';
+			}
+
 			$data	 = array();
 			$sql	 = "SELECT bb_payment.* FROM bb_payment"
 				. " JOIN bb_purchase_order ON bb_payment.order_id = bb_purchase_order.id"
-				. " WHERE application_id = " . (int)$application_id
-				. " ORDER BY id";
+				. " WHERE application_id = {$application_id}"
+				. " ORDER BY {$sort} {$dir}";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -636,7 +650,8 @@
 				. " JOIN bb_article_mapping ON bb_purchase_order_line.article_mapping_id = bb_article_mapping.id"
 				. " LEFT JOIN bb_service ON (bb_article_mapping.article_id = bb_service.id AND bb_article_mapping.article_cat_id = 2)"
 				. " LEFT JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id AND bb_article_mapping.article_cat_id = 1)"
-				. " WHERE bb_purchase_order.cancelled IS NULL AND bb_purchase_order.application_id IN (" . implode(',', $application_ids) . ")";
+				. " WHERE bb_purchase_order.cancelled IS NULL AND bb_purchase_order.application_id IN (" . implode(',', $application_ids) . ")"
+				. " ORDER BY bb_purchase_order_line.id";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -706,7 +721,8 @@
 				. " JOIN bb_article_mapping ON bb_purchase_order_line.article_mapping_id = bb_article_mapping.id"
 				. " LEFT JOIN bb_service ON (bb_article_mapping.article_id = bb_service.id AND bb_article_mapping.article_cat_id = 2)"
 				. " LEFT JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id AND bb_article_mapping.article_cat_id = 1)"
-				. " WHERE bb_purchase_order.id = " . (int)$order_id;
+				. " WHERE bb_purchase_order.id = " . (int)$order_id
+				. " ORDER BY bb_purchase_order_line.id";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
