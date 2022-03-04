@@ -463,12 +463,7 @@
 					$_POST['to_'] = join(" ", $date_to);
 				}
 				$booking['active'] = '1';
-				/**
-				 * 0 - not completed, old style
-				 * 1 - completed, old style
-				 * 2 - payments handled by relating to purchase-order
-				 */
-				$booking['completed'] = '2';
+				$booking['completed'] = '0';
 				$booking['reminder'] = '1';
 				$booking['secret'] = $this->generate_secret();
 				array_set_default($booking, 'audience', array());
@@ -508,12 +503,7 @@
 						$allocation['from_'] = $booking['from_'];
 						$allocation['to_'] = $booking['to_'];
 						$allocation['active'] = '1';
-						/**
-						 * 0 - not completed, old style
-						 * 1 - completed, old style
-						 * 2 - payments handled by relating to purchase-order
-						 */
-						$allocation['completed'] = '2';
+						$allocation['completed'] = '0';
 						$receipt = $this->allocation_bo->add($allocation);
 						$booking['allocation_id'] = $receipt['id'];
 						$booking['secret'] = $this->generate_secret();
@@ -591,12 +581,7 @@
 									$allocation['from_'] = $booking['from_'];
 									$allocation['to_'] = $booking['to_'];
 									$allocation['active'] = '1';
-									/**
-									 * 0 - not completed, old style
-									 * 1 - completed, old style
-									 * 2 - payments handled by relating to purchase-order
-									 */
-									$allocation['completed'] = '2';
+									$allocation['completed'] = '0';
 									$receipt = $this->allocation_bo->add($allocation);
 									$booking['allocation_id'] = $receipt['id'];
 									if ($application_id != '0')

@@ -436,13 +436,7 @@
 
 				array_set_default($_POST, 'resources', array());
 				$event['active'] = '1';
-
-				/**
-				 * 0 - not completed, old style
-				 * 1 - completed, old style
-				 * 2 - payments handled by relating to purchase-order
-				 */
-				$event['completed'] = '2';
+				$event['completed'] = '0';
 
 				array_set_default($event, 'audience', array());
 				array_set_default($event, 'agegroups', array());

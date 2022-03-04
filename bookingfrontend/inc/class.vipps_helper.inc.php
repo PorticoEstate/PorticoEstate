@@ -540,12 +540,7 @@
 			$event['reminder']			 = 0;
 			$event['customer_internal']	 = 0;
 			$event['cost']				 = $_amount;
-			/**
-			 * 0 - not completed, old style
-			 * 1 - completed, old style
-			 * 2 - payments handled by relating to purchase-order
-			 */
-			$event['completed']			 = 2;//paid !
+			$event['completed']			 = 1;//paid !
 
 			$building_info			 = $boapplication->so->get_building_info($application['id']);
 			$event['building_id']	 = $building_info['id'];
