@@ -16,7 +16,7 @@
 			<xsl:value-of disable-output-escaping="yes" select="settings/tabs"/>
 			<div id="async_settings">
 				<table>
-					<tr>
+					<!--tr>
 						<td>
 							<input type='checkbox' value='1' name="booking_async_task_generate_payment_enabled" id="field_booking_async_task_generate_payment_enabled">
 								<xsl:if test="settings/booking_async_task_generate_payment_enabled and settings/booking_async_task_generate_payment_enabled='1'">
@@ -32,7 +32,7 @@
 								<xsl:value-of select="php:function('lang', 'booking async task generate payment')" />
 							</label>
 						</td>
-					</tr>
+					</tr-->
 					<tr>
 						<td>
 							<input type='checkbox' value='1' name="booking_async_task_update_reservation_state_enabled" id="field_booking_async_task_update_reservation_state_enabled">
