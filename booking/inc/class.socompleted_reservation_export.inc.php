@@ -12,7 +12,8 @@
 			$account_code_set_so,
 			$customer_id,
 			$sequential_number_generator_so,
-			$config_data;
+			$config_data,
+			$sopurchase_order;
 
 		function __construct()
 		{
@@ -27,6 +28,7 @@
 			$this->completed_reservation_bo = CreateObject('booking.bocompleted_reservation');
 			$this->account_code_set_so = CreateObject('booking.soaccount_code_set');
 			$this->sequential_number_generator_so = CreateObject('booking.sobilling_sequential_number_generator');
+			$this->sopurchase_order = createObject('booking.sopurchase_order');
 
 			parent::__construct('bb_completed_reservation_export', array(
 				'id' => array('type' => 'int'),
@@ -1302,6 +1304,20 @@
 				if ($this->get_cost_value($reservation['cost']) <= 0)
 				{
 					continue; //Don't export costless rows
+				}
+
+				$purchase_order = $this->sopurchase_order->get_purchase_order(0, $reservation['reservation_type'], $reservation['reservation_id']);
+				/**
+				 * For vipps kan det være flere krav, for etterfakturering vil det være ett
+				 */
+				$payments = $this->sopurchase_order->get_order_payments($purchase_order['order_id']);
+				if(isset($payments[0]))
+				{
+					$payment = $payments[0];
+
+					/**
+					 * sjekk status / opdater status
+					 */
 				}
 
 				$type = $reservation['customer_type'];

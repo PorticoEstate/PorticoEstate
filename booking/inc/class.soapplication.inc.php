@@ -523,7 +523,7 @@
 		}
 
 
-		function read_payments( $params )
+		function get_application_payments( $params )
 		{
 			$application_id	 = isset($params['application_id']) && $params['application_id'] ? (int)$params['application_id'] : null;
 			$sort			 = isset($params['sort']) && $params['sort'] ? $params['sort'] : 'id';
@@ -672,60 +672,6 @@
 		}
 
 
-		function get_single_purchase_order( $order_id )
-		{
-			if (!$order_id)
-			{
-				return;
-			}
-
-			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id,"
-				. "CASE WHEN
-					(
-						bb_resource.name IS NULL
-					)"
-				. " THEN bb_service.name ELSE bb_resource.name END AS name"
-				. " FROM bb_purchase_order JOIN bb_purchase_order_line ON bb_purchase_order.id = bb_purchase_order_line.order_id"
-				. " JOIN bb_article_mapping ON bb_purchase_order_line.article_mapping_id = bb_article_mapping.id"
-				. " LEFT JOIN bb_service ON (bb_article_mapping.article_id = bb_service.id AND bb_article_mapping.article_cat_id = 2)"
-				. " LEFT JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id AND bb_article_mapping.article_cat_id = 1)"
-				. " WHERE bb_purchase_order.id = " . (int)$order_id
-				. " ORDER BY bb_purchase_order_line.id";
-
-			$this->db->query($sql, __LINE__, __FILE__);
-
-			$order		 = array();
-			$sum		 = 0;
-			$total_sum	 = 0;
-			while ($this->db->next_record())
-			{
-				$application_id	 = (int)$this->db->f('application_id');
-				$order_id		 = (int)$this->db->f('order_id');
-
-				$_sum		 = (float)$this->db->f('amount') + (float)$this->db->f('tax');
-				$sum		 = (float)$sum + $_sum;
-				$total_sum	 += $_sum;
-
-				$order['lines'][] = array(
-					'application_id'		 => $application_id,
-					'order_id'				 => $order_id,
-					'status'				 => (int)$this->db->f('status'),
-					'article_mapping_id'	 => (int)$this->db->f('article_mapping_id'),
-					'quantity'				 => (float)$this->db->f('quantity'),
-					'unit_price'			 => (float)$this->db->f('unit_price'),
-					'overridden_unit_price'	 => (float)$this->db->f('overridden_unit_price'),
-					'currency'				 => $this->db->f('currency'),
-					'amount'				 => (float)$this->db->f('amount'),
-					'tax_code'				 => (int)$this->db->f('tax_code'),
-					'tax'					 => (float)$this->db->f('tax'),
-					'name'					 => $this->db->f('name', true),
-				);
-
-				$order['order_id']	 = $order_id;
-				$order['sum']		 = $sum;
-			}
-			return $order;
-		}
 
 		function get_payment( $payment_id )
 		{
@@ -734,10 +680,13 @@
 			$payment = array();
 			if ($this->db->next_record())
 			{
+				$payment_method_id =  $this->db->f('payment_method_id');
+				$payment_method = $payment_method_id == 2 ? 'Etterfakturering' : 'Vipps';
+
 				$payment = array(
-					'id'					 => $payment_id,
+					'id'					 => $this->db->f('id'),
 					'order_id'				 => $this->db->f('order_id'),
-					'payment_method'		 => 'vipps', //Hardcoded for now
+					'payment_method'		 => $payment_method,
 					'payment_gateway_mode'	 => $this->db->f('payment_gateway_mode'),
 					'remote_id'				 => $this->db->f('remote_id'),
 					'remote_state'			 => $this->db->f('remote_state'),
@@ -773,7 +722,8 @@
 			$payment_attempt = $cnt +1;
 			$remote_id	 = "{$msn}-{$order_id}-order-{$order_id}-{$payment_attempt}";
 
-			$order = $this->get_single_purchase_order($order_id);
+//			$order = $this->get_single_purchase_order($order_id);
+			$order = createObject('booking.sopurchase_order')->get_single_purchase_order($order_id);
 
 
 			$value_set = array(

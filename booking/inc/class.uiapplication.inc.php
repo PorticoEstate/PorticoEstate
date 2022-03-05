@@ -614,7 +614,7 @@
 				'sort' => phpgw::get_var('sort', 'string'),
 				'dir' => phpgw::get_var('dir', 'string')
 			);
-			$payments		 = $this->bo->so->read_payments($params);
+			$payments		 = $this->bo->so->get_application_payments($params);
 
 			$status_text = array(
 				'completed'			 => lang('completed'),
@@ -712,7 +712,8 @@
 		function get_purchase_order()
 		{
 			$order_id = phpgw::get_var('id', 'int');
-			$purchase_order = $this->bo->so->get_single_purchase_order($order_id);
+//			$purchase_order = $this->bo->so->get_single_purchase_order($order_id);
+			$purchase_order = createObject('booking.sopurchase_order')->get_single_purchase_order($order_id);
 
 			if(!empty($purchase_order['lines']))
 			{
