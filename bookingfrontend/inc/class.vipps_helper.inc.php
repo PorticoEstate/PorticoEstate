@@ -237,6 +237,7 @@
 
 		private function cancel_order( $remote_order_id, $remote_state )
 		{
+			$sopurchase_order = createObject('booking.sopurchase_order');
 			$soapplication	 = CreateObject('booking.soapplication');
 			$id				 = $soapplication->get_application_from_payment_order($remote_order_id);
 			$status			 = array('deleted' => false);
@@ -262,7 +263,8 @@
 				if ($exists)
 				{
 					$application_id		 = $id;
-					$soapplication->delete_purchase_order($application_id);
+
+					$sopurchase_order->delete_purchase_order($application_id);
 					$soapplication->update_payment_status($remote_order_id, 'voided', $remote_state);
 					$soapplication->delete_application($application_id);
 					$status['deleted']	 = true;

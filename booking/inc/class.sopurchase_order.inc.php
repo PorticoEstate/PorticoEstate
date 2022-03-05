@@ -168,6 +168,39 @@
 			}
 		}
 
+		function delete_purchase_order( $application_id )
+		{
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
+			$sql = "SELECT id AS order_id FROM bb_purchase_order WHERE application_id =" . (int)$application_id;
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$order_ids = array(-1);
+			while ($this->db->next_record())
+			{
+				$order_ids[] = (int)$this->db->f('order_id');
+			}
+			$now = time();
+
+//			$sql = "DELETE FROM bb_purchase_order_line WHERE order_id IN (" . implode(',', $order_ids) . ")";
+//			$this->db->query($sql, __LINE__, __FILE__);
+//			$sql = "DELETE FROM bb_purchase_order WHERE id IN (" . implode(',', $order_ids) . ")";
+			$sql = "UPDATE bb_purchase_order SET status = 0,  cancelled = $now, application_id = NULL WHERE id IN (" . implode(',', $order_ids) . ")";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			if (!$this->global_lock)
+			{
+				return $this->db->transaction_commit();
+			}
+		}
+
 		function get_purchase_order( $application_id = 0, $reservation_type = '', $reservation_id = 0)
 		{
 
