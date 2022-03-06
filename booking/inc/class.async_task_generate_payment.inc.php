@@ -17,8 +17,14 @@
 			return array( 'hour' => '*/1');
 		}
 
+		/**
+		 * 
+		 * disabled...
+		 */
 		public function run( $options = array() )
 		{
+			return;
+
 			$db = & $GLOBALS['phpgw']->db;
 
 			$reservation_types = array(

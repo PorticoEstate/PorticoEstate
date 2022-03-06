@@ -5,6 +5,16 @@
 	class booking_async_task_update_reservation_state extends booking_async_task
 	{
 
+		private $soapplication, $sopurchase_order;
+
+		public function __construct()
+		{
+			parent::__construct();
+			$this->soapplication	 = CreateObject('booking.soapplication');
+			$this->sopurchase_order	 = createObject('booking.sopurchase_order');
+
+		}
+
 		public function get_default_times()
 		{
 			return array( 'hour' => '*/1');
@@ -14,12 +24,12 @@
 		{
 			$db = & $GLOBALS['phpgw']->db;
 
-			$reservation_types = array
-				(
-				'booking',
+			$reservation_types = array(
+//				'booking',
 				'event',
 				'allocation'
 			);
+
 			$completed_so = CreateObject('booking.socompleted_reservation');
 
 			foreach ($reservation_types as $reservation_type)
@@ -40,6 +50,23 @@
 					foreach ($expired['results'] as $reservation)
 					{
 						$completed_so->create_from($reservation_type, $reservation);
+						$orders = $completed_so->find_expired_orders($reservation_type, $reservation['id']);
+
+						/**
+						 * For vipps kan det være flere krav, for etterfakturering vil det være ett
+						 */
+						foreach ($orders as $order_id)
+						{
+							$this->add_payment($order_id);
+							$order = $this->sopurchase_order->get_single_purchase_order($order_id);
+							$_reservation = $bo->read_single($reservation['id']);
+							if((float)$_reservation['cost'] != (float)$order['sum'])
+							{
+								$_reservation['cost'] = $order['sum'];
+								$this->add_cost_history($_reservation, 'update from order', $order['sum']);
+								$bo->update($_reservation);
+							}
+						}
 					}
 
 					$bo->complete_expired($expired['results']);
@@ -48,6 +75,28 @@
 				$db->transaction_commit();
 			}
 		}
+
+		private function add_payment( int $order_id )
+		{
+			$this->soapplication->add_payment($order_id, 'local_invoice', 'live', 2);
+		}
+
+		private function add_cost_history( &$reservation, $comment = '', $cost = '0.00' )
+		{
+			if (!$comment)
+			{
+				$comment = lang('cost is set');
+			}
+
+			$reservation['costs'][] = array(
+				'time' => 'now',
+				'author' => 'Cron-job',
+				'comment' => $comment,
+				'cost' => $cost
+			);
+		}
+
+
 	}
 	/*
 Begreper:

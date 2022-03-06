@@ -237,6 +237,7 @@
 
 		private function cancel_order( $remote_order_id, $remote_state )
 		{
+			$sopurchase_order = createObject('booking.sopurchase_order');
 			$soapplication	 = CreateObject('booking.soapplication');
 			$id				 = $soapplication->get_application_from_payment_order($remote_order_id);
 			$status			 = array('deleted' => false);
@@ -262,7 +263,8 @@
 				if ($exists)
 				{
 					$application_id		 = $id;
-					$soapplication->delete_purchase_order($application_id);
+
+					$sopurchase_order->delete_purchase_order($application_id);
 					$soapplication->update_payment_status($remote_order_id, 'voided', $remote_state);
 					$soapplication->delete_application($application_id);
 					$status['deleted']	 = true;
@@ -540,12 +542,7 @@
 			$event['reminder']			 = 0;
 			$event['customer_internal']	 = 0;
 			$event['cost']				 = $_amount;
-			/**
-			 * 0 - not completed, old style
-			 * 1 - completed, old style
-			 * 2 - payments handled by relating to purchase-order
-			 */
-			$event['completed']			 = 2;//paid !
+			$event['completed']			 = 1;//paid !
 
 			$building_info			 = $boapplication->so->get_building_info($application['id']);
 			$event['building_id']	 = $building_info['id'];

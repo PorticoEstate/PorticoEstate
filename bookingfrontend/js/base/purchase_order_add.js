@@ -228,7 +228,7 @@ function set_mandatory(xTable)
 		var timespan = Math.abs(to - from) / 36e5;
 
 		sum_hours += Math.ceil(timespan);
-		sum_days += Math.floor(sum_hours/24);
+		sum_days += Math.ceil(sum_hours/24);
 
 		j++;
 		j++;

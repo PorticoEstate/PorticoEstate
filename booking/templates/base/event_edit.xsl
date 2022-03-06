@@ -220,7 +220,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+						<div id="dates-container" class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
 								<legend>
 									<h3>
@@ -691,6 +691,7 @@
 		</div>
 	</form>
 	<script type="text/javascript">
+		var date_format = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />';
 		$('#field_customer_identifier_type,#field_customer_ssn,#field_customer_organization_number').removeClass('pure-input-1').addClass('pure-u-1 pure-u-sm-1-2 pure-u-md-1');
 		var reservation_type = 'event';
 		var reservation_id = '<xsl:value-of select="event/id"/>';

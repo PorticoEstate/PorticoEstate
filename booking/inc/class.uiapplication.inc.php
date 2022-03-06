@@ -614,7 +614,7 @@
 				'sort' => phpgw::get_var('sort', 'string'),
 				'dir' => phpgw::get_var('dir', 'string')
 			);
-			$payments		 = $this->bo->so->read_payments($params);
+			$payments		 = $this->bo->so->get_application_payments($params);
 
 			$status_text = array(
 				'completed'			 => lang('completed'),
@@ -712,7 +712,8 @@
 		function get_purchase_order()
 		{
 			$order_id = phpgw::get_var('id', 'int');
-			$purchase_order = $this->bo->so->get_single_purchase_order($order_id);
+//			$purchase_order = $this->bo->so->get_single_purchase_order($order_id);
+			$purchase_order = createObject('booking.sopurchase_order')->get_single_purchase_order($order_id);
 
 			if(!empty($purchase_order['lines']))
 			{
@@ -1821,7 +1822,8 @@
 								CreateObject('booking.souser')->collect_users($application['customer_ssn']);
 								$bo_block = createObject('booking.boblock');
 								$bo_block->cancel_block($session_id, $application['dates'],$application['resources']);
-								$this->bo->delete_purchase_order($application['id']);
+
+								createObject('booking.sopurchase_order')->delete_purchase_order($application['id']);
 								$this->bo->delete_application($application['id']);
 								$GLOBALS['phpgw']->db->transaction_commit();
 								if(!phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
@@ -3177,7 +3179,7 @@ JS;
 				if ($exists)
 				{
 					$application_id = $id;
-					$this->bo->delete_purchase_order($application_id);
+					createObject('booking.sopurchase_order')->delete_purchase_order($application_id);
 					$this->bo->delete_application($id);
 					$status['deleted'] = true;
 				}

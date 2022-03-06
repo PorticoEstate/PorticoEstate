@@ -168,6 +168,94 @@
 			}
 		}
 
+		function delete_purchase_order( $application_id )
+		{
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
+			$sql = "SELECT id AS order_id FROM bb_purchase_order WHERE application_id =" . (int)$application_id;
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$order_ids = array(-1);
+			while ($this->db->next_record())
+			{
+				$order_ids[] = (int)$this->db->f('order_id');
+			}
+			$now = time();
+
+//			$sql = "DELETE FROM bb_purchase_order_line WHERE order_id IN (" . implode(',', $order_ids) . ")";
+//			$this->db->query($sql, __LINE__, __FILE__);
+//			$sql = "DELETE FROM bb_purchase_order WHERE id IN (" . implode(',', $order_ids) . ")";
+			$sql = "UPDATE bb_purchase_order SET status = 0,  cancelled = $now, application_id = NULL WHERE id IN (" . implode(',', $order_ids) . ")";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			if (!$this->global_lock)
+			{
+				return $this->db->transaction_commit();
+			}
+		}
+
+		function get_single_purchase_order( $order_id )
+		{
+			if (!$order_id)
+			{
+				return;
+			}
+
+			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id,"
+				. "CASE WHEN
+					(
+						bb_resource.name IS NULL
+					)"
+				. " THEN bb_service.name ELSE bb_resource.name END AS name"
+				. " FROM bb_purchase_order JOIN bb_purchase_order_line ON bb_purchase_order.id = bb_purchase_order_line.order_id"
+				. " JOIN bb_article_mapping ON bb_purchase_order_line.article_mapping_id = bb_article_mapping.id"
+				. " LEFT JOIN bb_service ON (bb_article_mapping.article_id = bb_service.id AND bb_article_mapping.article_cat_id = 2)"
+				. " LEFT JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id AND bb_article_mapping.article_cat_id = 1)"
+				. " WHERE bb_purchase_order.id = " . (int)$order_id
+				. " ORDER BY bb_purchase_order_line.id";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$order		 = array();
+			$sum		 = 0;
+			$total_sum	 = 0;
+			while ($this->db->next_record())
+			{
+				$application_id	 = (int)$this->db->f('application_id');
+				$order_id		 = (int)$this->db->f('order_id');
+
+				$_sum		 = (float)$this->db->f('amount') + (float)$this->db->f('tax');
+				$sum		 = (float)$sum + $_sum;
+				$total_sum	 += $_sum;
+
+				$order['lines'][] = array(
+					'application_id'		 => $application_id,
+					'order_id'				 => $order_id,
+					'status'				 => (int)$this->db->f('status'),
+					'article_mapping_id'	 => (int)$this->db->f('article_mapping_id'),
+					'quantity'				 => (float)$this->db->f('quantity'),
+					'unit_price'			 => (float)$this->db->f('unit_price'),
+					'overridden_unit_price'	 => (float)$this->db->f('overridden_unit_price'),
+					'currency'				 => $this->db->f('currency'),
+					'amount'				 => (float)$this->db->f('amount'),
+					'tax_code'				 => (int)$this->db->f('tax_code'),
+					'tax'					 => (float)$this->db->f('tax'),
+					'name'					 => $this->db->f('name', true),
+				);
+
+				$order['order_id']	 = $order_id;
+				$order['sum']		 = $sum;
+			}
+			return $order;
+		}
+
 		function get_purchase_order( $application_id = 0, $reservation_type = '', $reservation_id = 0)
 		{
 
@@ -192,7 +280,7 @@
 				$filtermethod .= " AND bb_purchase_order.parent_id IS NULL AND bb_purchase_order.application_id = " . (int) $application_id;
 			}
 
-			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id,"
+			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id, bb_article_mapping.article_code,"
 				. "CASE WHEN
 					(
 						bb_resource.name IS NULL
@@ -232,6 +320,7 @@
 					'currency'				 => $this->db->f('currency'),
 					'amount'				 => (float)$this->db->f('amount'),
 					'tax_code'				 => (int)$this->db->f('tax_code'),
+					'article_code'			 => $this->db->f('article_code',true),
 					'tax'					 => (float)$this->db->f('tax'),
 					'name'					 => $this->db->f('name', true),
 				);
@@ -378,6 +467,47 @@
 			{
 				return $this->db->insert($sql_insert, $valueset, __LINE__, __FILE__);
 			}
+		}
+
+		function get_order_payments( $order_id )
+		{
+			if(empty($order_id))
+			{
+				return array();
+			}
+
+			$data	 = array();
+			$sql	 = "SELECT * FROM bb_payment"
+				. " WHERE order_id = {$order_id}"
+				. " ORDER BY id";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$payment_method_id =  $this->db->f('payment_method_id');
+				$payment_method = $payment_method_id == 2 ? 'Etterfakturering' : 'Vipps';
+
+				$data[] = array(
+					'id'					 => $this->db->f('id'),
+					'order_id'				 => $this->db->f('order_id'),
+					'payment_method'		 => $payment_method,
+					'payment_gateway_mode'	 => $this->db->f('payment_gateway_mode'),
+					'remote_id'				 => $this->db->f('remote_id'),
+					'remote_state'			 => $this->db->f('remote_state'),
+					'amount'				 => (float)$this->db->f('amount'),
+					'currency'				 => $this->db->f('currency'),
+					'refunded_amount'		 => (float)$this->db->f('refunded_amount'),
+					'refunded_currency'		 => $this->db->f('refunded_currency'),
+					'status'				 => $this->db->f('status'),//'new', pending, completed, voided, partially_refunded, refunded
+					'created'				 => $this->db->f('created'),
+					'autorized'				 => $this->db->f('autorized'),
+					'expires'				 => $this->db->f('expires'),
+					'completet'				 => $this->db->f('completet'),
+					'captured'				 => $this->db->f('captured'),
+				);
+			}
+			return $data;
 		}
 
 	}
