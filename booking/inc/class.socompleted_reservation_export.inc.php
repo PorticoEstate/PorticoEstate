@@ -1414,8 +1414,6 @@
 					$header['Deresref'] = $ext_ord_ref;//char(30)
 					$header['Fagsystemkundeid'] = $kundenr;
 
-					$line_no = 1;
-
 					$fakturalinje = array();
 
 					//item level
@@ -1436,7 +1434,6 @@
 					$fakturalinje['FormalDim']	 = '';  //char(8)
 					$fakturalinje['fradato']	 = $from_date->format('d.m.Y');  //dato
 
-					$fakturalinje['Linjenr']	 = $line_no;  //
 //					$fakturalinje['mvakode']	 = $tax_code;  //char(1)
 
 					//Formål. eks.
@@ -1488,20 +1485,33 @@
 					'tax'
 					'name'
 					*/
-					if($purchase_order && isset($purchase_order['lines']))
+					$line_no = 0;
+
+					if($purchase_order && !empty($purchase_order['lines']))
 					{
 
 						foreach ($purchase_order['lines'] as $order_line)
 						{
+							$line_no += 1;
+							$fakturalinje['Linjenr']			 = $line_no;
+							$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['article_code']);
+							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
+							$fakturalinje['Tilleggstekst']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']);
+							$fakturalinje['mvakode']			 = $order_line['tax_code'];
+							$fakturalinje['antall']				 = $order_line['quantity'];
+							$fakturalinje['enhetspris']			 = $order_line['unit_price'];
+							$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
 
 						}
 
 					}
+					else
+					{
+						$line_no += 1;
+						$fakturalinje['Linjenr']			 = $line_no;
+						$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+					}
 
-
-
-
-					$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
 
 					$headers[$check_customer_identifier] = $header;
 
@@ -1530,7 +1540,6 @@
 				else
 				{
 					//item level
-					$line_no += 1;
 
 					$fakturalinje = array();
 
@@ -1553,7 +1562,6 @@
 					$fakturalinje['FormalDim']			 = '';  //char(8)
 					$fakturalinje['fradato']			 = $from_date->format('d.m.Y');  //dato
 
-					$fakturalinje['Linjenr']			 = $line_no;  //
 //					$fakturalinje['mvakode']			 = $tax_code;  //char(1)
 
 					//Formål. Eks Idrett
@@ -1582,8 +1590,32 @@
 					$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
 					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
 
-//					$fakturalinjer[$check_customer_identifier][] = array('BkPffFakturagrunnlaglinje' => $fakturalinje);
-					$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+
+					if($purchase_order && !empty($purchase_order['lines']))
+					{
+
+						foreach ($purchase_order['lines'] as $order_line)
+						{
+							$line_no += 1;
+							$fakturalinje['Linjenr']			 = $line_no;
+							$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT",$order_line['article_code']);
+							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
+							$fakturalinje['Tilleggstekst']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']);
+							$fakturalinje['mvakode']			 = $order_line['tax_code'];
+							$fakturalinje['antall']				 = $order_line['quantity'];
+							$fakturalinje['enhetspris']			 = $order_line['unit_price'];
+							$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+
+						}
+
+					}
+					else
+					{
+						$line_no += 1;
+						$fakturalinje['Linjenr']			 = $line_no;
+						$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+					}
+
 
 					$log_buidling			 = $reservation['building_name'];
 					$log_cost				 = $reservation['cost'];
