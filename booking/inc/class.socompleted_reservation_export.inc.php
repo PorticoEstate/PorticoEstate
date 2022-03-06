@@ -19,6 +19,7 @@
 		{
 			$this->event_so = CreateObject('booking.soevent');
 			$this->application_bo = CreateObject('booking.boapplication');
+			$this->application_so = CreateObject('booking.soapplication');
 			$this->allocation_bo = CreateObject('booking.boallocation');
 			$this->booking_bo = CreateObject('booking.bobooking');
 			$this->event_bo = CreateObject('booking.boevent');
@@ -1315,6 +1316,15 @@
 				{
 					$payment = $payments[0];
 
+					if(in_array($payment['status'], array( 'completed', 'voided', 'refunded')))
+					{
+						continue;
+					}
+
+					//FIXME: move method from soapplication
+					// status: new, pending, completed, voided, partially_refunded, refunded
+					$this->application_so->update_payment_status($payment['remote_id'], 'completed', 'RESERVE');
+
 					/**
 					 * sjekk status / opdater status
 					 */
@@ -1462,6 +1472,35 @@
 					{
 						$fakturalinje['orgkode'] = trim(strtoupper($account_codes['project_number']));
 					}
+
+					/*
+					'order_id'
+					'status'
+					'parent_mapping_id'
+					'article_mapping_id'
+					'quantity'
+					'unit_price'
+					'overridden_unit_price'
+					'currency'
+					'amount'
+					'tax_code'
+					'article_code'
+					'tax'
+					'name'
+					*/
+					if($purchase_order && isset($purchase_order['lines']))
+					{
+
+						foreach ($purchase_order['lines'] as $order_line)
+						{
+
+						}
+
+					}
+
+
+
+
 					$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
 
 					$headers[$check_customer_identifier] = $header;

@@ -280,7 +280,7 @@
 				$filtermethod .= " AND bb_purchase_order.parent_id IS NULL AND bb_purchase_order.application_id = " . (int) $application_id;
 			}
 
-			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id,"
+			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id, bb_article_mapping.article_code,"
 				. "CASE WHEN
 					(
 						bb_resource.name IS NULL
@@ -320,6 +320,7 @@
 					'currency'				 => $this->db->f('currency'),
 					'amount'				 => (float)$this->db->f('amount'),
 					'tax_code'				 => (int)$this->db->f('tax_code'),
+					'article_code'			 => $this->db->f('article_code',true),
 					'tax'					 => (float)$this->db->f('tax'),
 					'name'					 => $this->db->f('name', true),
 				);
