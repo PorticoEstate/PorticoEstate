@@ -60,8 +60,12 @@
 							$this->add_payment($order_id);
 							$order = $this->sopurchase_order->get_single_purchase_order($order_id);
 							$_reservation = $bo->read_single($reservation['id']);
-							$_reservation['cost'] = $order['sum'];
-							$bo->update($_reservation);
+							if((float)$_reservation['cost'] != (float)$order['sum'])
+							{
+								$_reservation['cost'] = $order['sum'];
+								$this->add_cost_history($_reservation, 'update from order', $order['sum']);
+								$bo->update($_reservation);
+							}
 						}
 					}
 
