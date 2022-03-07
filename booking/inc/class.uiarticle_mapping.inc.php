@@ -149,6 +149,7 @@
 							$article['selected_sum'] = (float)($line['amount'] + $line['tax']);
 							$article['selected_article_quantity']	 = "{$article['id']}_{$line['quantity']}_{$article['parent_mapping_id']}";
 						}
+						$article['tax_code']	 = $line['tax_code'];
 					}
 				}
 

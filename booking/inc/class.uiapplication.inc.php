@@ -2509,6 +2509,10 @@
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 				'file'), 'application_form');
 
+			$GLOBALS['phpgw']->js->validate_file('alertify', 'alertify.min', 'phpgwapi');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
+
 			self::render_template_xsl('application_edit', array('application' => $application,
 				'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,
 				'config' => CreateObject('phpgwapi.config', 'booking')->read()));

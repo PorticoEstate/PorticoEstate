@@ -1449,17 +1449,11 @@
 					}
 
 					$fakturalinje['orgkode']	 = '';  //char(8)
-
 					$fakturalinje['SumPrisUtenAvgift']	 =$reservation['cost'];  //Beløp
-
 					$fakturalinje['tildato']	 = $to_date->format('d.m.Y');  //Dato
-
 					$fakturalinje['Tilleggstekst'] = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description'] . ' - ' . $reservation['description']), 0, 225);
-
 					$fakturalinje['Varekode']	 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
-
 					$fakturalinje['Fakturaorgkode']	 = '';  //
-
 					//Topptekst til faktura, knyttet mot fagavdeling
 					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
 
@@ -1497,7 +1491,7 @@
 							$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['article_code']);
 							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
 							$fakturalinje['Tilleggstekst']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']);
-							$fakturalinje['mvakode']			 = $order_line['tax_code'];
+			//				$fakturalinje['mvakode']			 = $order_line['tax_code'];
 							$fakturalinje['antall']				 = $order_line['quantity'];
 							$fakturalinje['enhetspris']			 = $order_line['unit_price'];
 							$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
@@ -1601,7 +1595,7 @@
 							$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT",$order_line['article_code']);
 							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
 							$fakturalinje['Tilleggstekst']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']);
-							$fakturalinje['mvakode']			 = $order_line['tax_code'];
+				//			$fakturalinje['mvakode']			 = $order_line['tax_code'];
 							$fakturalinje['antall']				 = $order_line['quantity'];
 							$fakturalinje['enhetspris']			 = $order_line['unit_price'];
 							$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;

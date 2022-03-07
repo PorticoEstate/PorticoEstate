@@ -213,7 +213,8 @@ function populateTableChkResources(building_id, selection, disabled)
 			disabled: disabled
 		},
 		{key: 'name', label: lang['Name']},
-		{key: 'rescategory_name', label: lang['Resource Type']}
+		{key: 'rescategory_name', label: lang['Resource Type']},
+		{key: 'active', label: lang['Active']}
 	];
 	populateTableChk(url, container, colDefsResources);
 }

@@ -1,4 +1,6 @@
 
+/* global lang, alertify */
+
 function populateTableChkArticles(selection, resources, application_id, reservation_type, reservation_id)
 {
 
@@ -18,7 +20,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 
 	var container = 'articles_container';
 	var colDefsRegulations = [
-		{
+		{//0
 			label: lang['Select'],
 			attrs: [{name: 'class', value: "align-middle"}],
 			object: [
@@ -34,7 +36,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 				}
 			]
 		},
-		{
+		{//1
 			/**
 			 * Hidden field for holding article id
 			 */
@@ -45,22 +47,39 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 					]
 				}
 			], value: 'id'},
-		{
+		{//2
 			key: 'name',
 			label: lang['article'],
 			attrs: [{name: 'class', value: "align-middle"}],
 		},
-		{
+		{//3
 			key: 'unit',
 			label: lang['unit'],
 			attrs: [{name: 'class', value: "unit align-middle"}],
 		},
-		{
-			key: 'price',
-			label: lang['unit cost'],
-			attrs: [{name: 'class', value: "align-middle"}],
+		{//4
+			key: 'tax_code',
+			label: lang['tax code'],
+			attrs: [{name: 'class', value: "text-right align-middle"}],
 		},
-		{
+		{//5
+			key: 'tax_percent',
+			label: lang['percent'],
+			attrs: [{name: 'class', value: "text-right align-middle"}],
+		},
+		{//6
+			key: 'ex_tax_price',
+			label: lang['unit cost'],
+			attrs: [
+				{name: 'class', value: "text-right align-middle"}
+			]
+		},
+		{//7
+			key: 'tax',
+			label: lang['tax'],
+			attrs: [{name: 'class', value: "text-right align-middle"}],
+		},
+		{//8
 			key: 'quantity',
 			label: lang['quantity'],
 			attrs: [{name: 'class', value: "align-middle"}],
@@ -74,14 +93,14 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 					]
 				}
 			]},
-		{
+		{//9
 			key: 'selected_quantity',
 			label: lang['Selected'],
 			attrs: [
 				{name: 'class', value: "selected_quantity text-right align-middle"}
 			]
 		},
-		{
+		{//10
 			label: 'hidden',
 			attrs: [{name: 'style', value: "display:none;"}],
 			object: [
@@ -92,14 +111,14 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 				}
 			], value: 'selected_article_quantity'
 		},
-		{
+		{//11
 			key: 'selected_sum',
 			label: lang['Sum'],
 			attrs: [
 				{name: 'class', value: "text-right align-middle selected_sum"}
 			]
 		},
-		{
+		{//12
 			label: lang['Delete'],
 			attrs: [{name: 'class', value: "align-middle"}],
 			object: [
@@ -115,7 +134,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 				}
 			]
 		},
-		{
+		{//13
 			/**
 			 * Hidden field for holding information on mandatory items
 			 */
@@ -129,7 +148,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 			],
 			value: 'mandatory'
 		},
-		{
+		{//14
 			/**
 			 * Hidden field for holding information on parent_mapping_id
 			 */
@@ -184,11 +203,31 @@ var post_handle_order_table = function ()
 		return;
 	}
 
+
+
 	var xTable = tr.parentNode.parentNode;
 
 	set_mandatory(xTable);
 	set_sum(xTable);
 };
+
+/**
+ * Update resource item
+ */
+$("#articles_container").on("click", ".resource", function (event)
+{
+	event.preventDefault();
+
+	/**
+	 * Wait for the time-set to be removed before re-calculate
+	 */
+	setTimeout(function ()
+	{
+		alert('click');
+//			post_handle_order_table();
+	}, 500);
+});
+
 
 function set_mandatory(xTable)
 {
@@ -230,15 +269,36 @@ function set_mandatory(xTable)
 
 	console.log(sum_hours);
 
+	var tax_code_element;
+	var unit_price_element;
+
 	for (var i = 0; i < mandatory.length; i++)
 	{
+		tr = mandatory[i].parentNode.parentNode;
+		tax_code_element = tr.childNodes[4];
+		unit_price_element = tr.childNodes[6];
+
+		$(tax_code_element).on("click", function (event)
+		{
+			event.preventDefault();
+			//	alertify.genericDialog ($('#tax_code_form')[0]);
+
+			alertify.myAlert($('#tax_code_form')[0]);
+		//	alertify.myAlert(tax_code_element);
+
+		});
+		$(unit_price_element).on("click", function (event)
+		{
+			alert('unit_price_element');
+			event.preventDefault();
+		});
+
 		if (mandatory[i].value)
 		{
-			tr = mandatory[i].parentNode.parentNode;
 			tr.classList.add("table-success");
 			tr.childNodes[0].childNodes[0].setAttribute('style', 'display:none;');
-			tr.childNodes[5].childNodes[0].setAttribute('style', 'display:none;');
-			tr.childNodes[9].childNodes[0].setAttribute('style', 'display:none;');
+			tr.childNodes[8].childNodes[0].setAttribute('style', 'display:none;');//quantity
+			tr.childNodes[12].childNodes[0].setAttribute('style', 'display:none;');
 
 			unit = tr.getElementsByClassName("unit")[0];
 
@@ -276,21 +336,22 @@ function set_mandatory(xTable)
 function set_basket(tr, quantity)
 {
 	var id = tr.childNodes[1].childNodes[0].value;
-	var price = tr.childNodes[4].innerText;
+	var price = parseFloat(tr.childNodes[6].innerText) + parseFloat(tr.childNodes[7].innerText);
+
 	var parent_mapping_id = tr.getElementsByClassName('parent_mapping_id')[0].value;
 	var selected_quantity = parseInt(quantity);
 	/**
 	 * target is the value for selected_articles[]
 	 * <mapping_id>_<quantity>_<parent_mapping_id>
 	 */
-	var target = tr.childNodes[7].childNodes[0];
+	var target = tr.childNodes[10].childNodes[0];
 	target.value = id + '_' + selected_quantity + '_' + parent_mapping_id;
 
-	var elem = tr.childNodes[6];
+	var elem = tr.childNodes[9];
 
 	elem.innerText = selected_quantity;
 
-	var sum_cell = tr.childNodes[8]
+	var sum_cell = tr.childNodes[11]
 	sum_cell.innerText = (selected_quantity * parseFloat(price)).toFixed(2);
 
 	var xTable = tr.parentNode.parentNode;
@@ -309,14 +370,15 @@ function add_to_bastet(element)
 	tr.classList.add("table-success");
 
 	var id = element.parentNode.parentNode.childNodes[1].childNodes[0].value;
-	var quantity = element.parentNode.parentNode.childNodes[5].childNodes[0].value;
-	var price = element.parentNode.parentNode.childNodes[4].innerText;
+	var quantity = element.parentNode.parentNode.childNodes[8].childNodes[0].value;
+	var price = parseFloat(element.parentNode.parentNode.childNodes[6].innerText) + parseFloat(element.parentNode.parentNode.childNodes[7].innerText);
+
 	var parent_mapping_id = tr.getElementsByClassName('parent_mapping_id')[0].value;
 
 	/**
 	 * set selected items
 	 */
-	var temp = element.parentNode.parentNode.childNodes[7].childNodes[0].value;
+	var temp = element.parentNode.parentNode.childNodes[10].childNodes[0].value;
 
 	var selected_quantity = 0;
 
@@ -330,26 +392,26 @@ function add_to_bastet(element)
 	/**
 	 * Reset quantity
 	 */
-	element.parentNode.parentNode.childNodes[5].childNodes[0].value = 1;
+	element.parentNode.parentNode.childNodes[8].childNodes[0].value = 1;
 	/**
 	 * Reset button to disabled
 	 */
 	//element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
-	element.parentNode.parentNode.childNodes[9].childNodes[0].removeAttribute('disabled');
+	element.parentNode.parentNode.childNodes[12].childNodes[0].removeAttribute('disabled');
 
 	/**
 	 * the value selected_articles[]
 	 * <mapping_id>_<quantity>_<parent_mapping_id>
 	 */
-	var target = element.parentNode.parentNode.childNodes[7].childNodes[0];
+	var target = element.parentNode.parentNode.childNodes[10].childNodes[0];
 	target.value = id + '_' + selected_quantity + '_' + parent_mapping_id;
 
-	var elem = element.parentNode.parentNode.childNodes[6];
+	var elem = element.parentNode.parentNode.childNodes[9];
 
 // add text
 	elem.innerText = selected_quantity;
 
-	var sum_cell = element.parentNode.parentNode.childNodes[8]
+	var sum_cell = element.parentNode.parentNode.childNodes[11];
 	sum_cell.innerText = (selected_quantity * parseFloat(price)).toFixed(2);
 
 	var xTable = element.parentNode.parentNode.parentNode.parentNode;
@@ -374,7 +436,7 @@ function set_sum(xTable)
 	{
 		if (selected_sum[i].innerHTML)
 		{
-			var cell = $(selected_sum[i]).parents().children()[9];
+			var cell = $(selected_sum[i]).parents().children()[12];
 			$(cell).children()[0].removeAttribute('disabled');
 
 			temp_total_sum = parseFloat(temp_total_sum) + parseFloat(selected_sum[i].innerHTML);
@@ -387,7 +449,7 @@ function set_sum(xTable)
 	var tableFooterTr = document.createElement('tr');
 	var tableFooterTrTd = document.createElement('td');
 
-	tableFooterTrTd.setAttribute('colspan', 6);
+	tableFooterTrTd.setAttribute('colspan', 9);
 	tableFooterTrTd.innerHTML = "Sum:";
 	tableFooterTr.appendChild(tableFooterTrTd);
 	var tableFooterTrTd2 = document.createElement('td');
@@ -411,16 +473,16 @@ function empty_from_bastet(element)
 	/**
 	 * Reset quantity
 	 */
-	element.parentNode.parentNode.childNodes[6].innerText = '';
-	element.parentNode.parentNode.childNodes[5].childNodes[0].value = 1;
-	element.parentNode.parentNode.childNodes[8].innerText = '';
-	element.parentNode.parentNode.childNodes[7].childNodes[0].value = '';
+	element.parentNode.parentNode.childNodes[8].childNodes[0].value = 1;//quantity
+	element.parentNode.parentNode.childNodes[9].innerText = '';
+	element.parentNode.parentNode.childNodes[10].childNodes[0].value = '';
+	element.parentNode.parentNode.childNodes[11].innerText = '';
 
 	/**
 	 * Reset button to disabled
 	 */
 //	element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
-	element.parentNode.parentNode.childNodes[9].childNodes[0].setAttribute('disabled', true);
+	element.parentNode.parentNode.childNodes[12].childNodes[0].setAttribute('disabled', true);
 
 	var xTableBody = element.parentNode.parentNode.parentNode;
 	var selected_sum = xTableBody.getElementsByClassName('selected_sum');
@@ -442,5 +504,75 @@ function empty_from_bastet(element)
 function populateTableArticles(url, container, colDefs)
 {
 	createTable(container, url, colDefs, '', 'table table-bordered table-hover table-sm table-responsive', null, post_handle_order_table);
+}
+
+
+/**
+ * Dialogs factory
+ *
+ * @name      {string}   Dialog name.
+ * @Factory   {Function} Dialog factory function.
+ * @transient {Boolean}  Indicates whether to create a singleton or transient dialog.
+ * @base      {String}   The name of an existing dialog to inherit from.
+ *
+ * alertify.dialog(name, Factory, transient, base)
+ *
+ */
+
+if (!alertify.myAlert)
+{
+	//define a new dialog
+	alertify.dialog('myAlert', function factory()
+	{
+		return{
+			main: function (tax_code_element)
+			{
+				this.setContent(tax_code_element);
+			},
+			setup: function ()
+			{
+				return {
+					buttons: [
+
+						/*button defintion*/
+						{
+							/* button label */
+							text: 'OK',
+
+							/*bind a keyboard key to the button */
+							key: 27,
+
+							/* indicate if closing the dialog should trigger this button action */
+							invokeOnClose: true,
+
+							/* custom button class name  */
+							className: alertify.defaults.theme.ok,
+
+							/* custom button attributes  */
+							attrs: {attribute: 'value'},
+
+							/* Defines the button scope, either primary (default) or auxiliary */
+							scope: 'auxiliary',
+
+							/* The will conatin the button DOMElement once buttons are created */
+							element: undefined
+						}
+
+					],
+					focus: {element: 0},
+					options:{
+						onclose: function(e)
+						{
+							console.log(e);
+						}
+					}
+				};
+			},
+			prepare: function ()
+			{
+		//		this.setContent(this.message);
+			}
+		}
+	});
 }
 
