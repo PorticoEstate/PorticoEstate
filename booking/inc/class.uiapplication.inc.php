@@ -2513,9 +2513,15 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
 
-			self::render_template_xsl('application_edit', array('application' => $application,
-				'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,
-				'config' => CreateObject('phpgwapi.config', 'booking')->read()));
+			self::render_template_xsl('application_edit', array(
+				'application' => $application,
+				'activities' => $activities,
+				'agegroups' => $agegroups,
+				'audience' => $audience,
+				'config' => CreateObject('phpgwapi.config', 'booking')->read(),
+				'tax_code_list'	=> json_encode(execMethod('booking.bogeneric.get_list', array('type' => 'tax', 'order' => 'id'))),
+
+			));
 		}
 
 		private function check_date_availability( &$allocation )

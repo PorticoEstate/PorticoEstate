@@ -1,5 +1,6 @@
 
 /* global lang, alertify */
+var custom_tax_code;
 
 function populateTableChkArticles(selection, resources, application_id, reservation_type, reservation_id)
 {
@@ -267,7 +268,17 @@ function set_mandatory(xTable)
 		j++;
 	}
 
-	console.log(sum_hours);
+	//Create and append select list
+	var tax_code_select = document.createElement("select");
+	tax_code_select.id = "tax_code_select";
+
+	//Create and append the options
+	for (var i = 0; i < tax_code_list.length; i++) {
+		var option = document.createElement("option");
+		option.value = tax_code_list[i].id;
+		option.text = tax_code_list[i].name;
+		tax_code_select.appendChild(option);
+	}
 
 	var tax_code_element;
 	var unit_price_element;
@@ -276,15 +287,18 @@ function set_mandatory(xTable)
 	{
 		tr = mandatory[i].parentNode.parentNode;
 		tax_code_element = tr.childNodes[4];
+		tax_code_element.id = 'tax_code_element_' + i;
 		unit_price_element = tr.childNodes[6];
 
-		$(tax_code_element).on("click", function (event)
+		$('#tax_code_element_' + i).on("click", function (event)
 		{
-			event.preventDefault();
-			//	alertify.genericDialog ($('#tax_code_form')[0]);
+			var tax_code = this;
+			alertify.myAlert(tax_code_select)
+			.set('onclose', function (closeEvent) {
+				$(tax_code).html($('#tax_code_select').val());
+				alertify.success('Ok');
+		  });
 
-			alertify.myAlert($('#tax_code_form')[0]);
-		//	alertify.myAlert(tax_code_element);
 
 		});
 		$(unit_price_element).on("click", function (event)
@@ -539,11 +553,11 @@ if (!alertify.myAlert)
 							/* button label */
 							text: 'OK',
 
-							/*bind a keyboard key to the button */
-							key: 27,
+							/*bind a keyboard key to the button: Enter */
+							key: 13,
 
 							/* indicate if closing the dialog should trigger this button action */
-							invokeOnClose: true,
+							invokeOnClose: false,
 
 							/* custom button class name  */
 							className: alertify.defaults.theme.ok,
@@ -552,7 +566,7 @@ if (!alertify.myAlert)
 							attrs: {attribute: 'value'},
 
 							/* Defines the button scope, either primary (default) or auxiliary */
-							scope: 'auxiliary',
+							scope: 'primary',
 
 							/* The will conatin the button DOMElement once buttons are created */
 							element: undefined
@@ -561,9 +575,11 @@ if (!alertify.myAlert)
 					],
 					focus: {element: 0},
 					options:{
-						onclose: function(e)
+						onclose: function()
 						{
-							console.log(e);
+//							console.log($('#tax_code_select'));
+
+//							custom_tax_code = $('#tax_code_select').val();
 						}
 					}
 				};
@@ -571,7 +587,20 @@ if (!alertify.myAlert)
 			prepare: function ()
 			{
 		//		this.setContent(this.message);
-			}
+			},
+			hooks:{
+				// triggered when the dialog is shown, this is seperate from user defined onshow
+				onshow: function(){
+				},
+				// triggered when the dialog is closed, this is seperate from user defined onclose
+				onclose: function(){
+//console.log($(this).find('select'));
+				},
+				// triggered when a dialog option gets updated.
+				// IMPORTANT: This will not be triggered for dialog custom settings updates ( use settingUpdated instead).
+				onupdate: function(){
+				}
+			 }
 		}
 	});
 }
