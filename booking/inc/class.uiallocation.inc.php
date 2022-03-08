@@ -673,11 +673,16 @@
 							{
 								continue;
 							}
-
+							/**
+							 * the value selected_articles[]
+							 * <mapping_id>_<quantity>_<tax_code>_<ex_tax_price>_<parent_mapping_id>
+							 */
 							$purchase_order['lines'][] = array(
 								'article_mapping_id'	=> $_article_info[0],
 								'quantity'				=> $_article_info[1],
-								'parent_mapping_id'		=> !empty($_article_info[2]) ? $_article_info[2] : null
+								'tax_code'				=> $_article_info[2],
+								'ex_tax_price'			=> $_article_info[3],
+								'parent_mapping_id'		=> !empty($_article_info[4]) ? $_article_info[4] : null
 							);
 						}
 
@@ -704,6 +709,11 @@
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'base', 'allocation.js');
 			self::add_javascript('booking', 'base', 'purchase_order_edit.js');
+
+			$GLOBALS['phpgw']->js->validate_file('alertify', 'alertify.min', 'phpgwapi');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
+
 			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.show',
 					'id' => $allocation['id']));
@@ -717,8 +727,11 @@
 			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime', phpgwapi_datetime::date_to_timestamp($allocation['from_']));
 			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime', phpgwapi_datetime::date_to_timestamp($allocation['to_']));
 
-			self::render_template_xsl('allocation_edit', array('allocation' => $allocation,
-				'cost_history' => $cost_history));
+			self::render_template_xsl('allocation_edit', array(
+				'allocation' => $allocation,
+				'cost_history' => $cost_history,
+				'tax_code_list'	=> json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
+				));
 		}
 
 		public function delete()

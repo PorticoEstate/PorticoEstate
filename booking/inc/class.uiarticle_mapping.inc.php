@@ -48,7 +48,8 @@
 			'_get_files'				 => true,
 			'view_file'					 => true,
 			'update_file_data'			 => true,
-			'get_articles'				 => true
+			'get_articles'				 => true,
+			'get_pricing'				 => true
 		);
 		protected
 			$fields,
@@ -89,6 +90,7 @@
 			$unit_list[] = array('id' => 'kg', 'name' => lang('kg'));
 			$unit_list[] = array('id' => 'm', 'name' => lang('meter'));
 			$unit_list[] = array('id' => 'm2', 'name' => lang('square meter'));
+			$unit_list[] = array('id' => 'minute', 'name' => lang('minute'));
 			$unit_list[] = array('id' => 'hour', 'name' => lang('hour'));
 			$unit_list[] = array('id' => 'day', 'name' => lang('day'));
 
@@ -149,6 +151,7 @@
 							$article['selected_sum'] = (float)($line['amount'] + $line['tax']);
 							$article['selected_article_quantity']	 = "{$article['id']}_{$line['quantity']}_{$article['parent_mapping_id']}";
 						}
+						$article['tax_code']	 = $line['tax_code'];
 					}
 				}
 
@@ -265,10 +268,16 @@
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
+
+		public function get_pricing()
+		{
+			$id	 = phpgw::get_var('id', 'int');
+			$pricing	 = $this->bo->get_pricing($id);
+			return $pricing;
+		}
 		/*
 		 * Edit the price item with the id given in the http variable 'id'
 		 */
-
 		public function edit( $values = array(), $mode = 'edit' )
 		{
 			$active_tab										 = !empty($values['active_tab']) ? $values['active_tab'] : phpgw::get_var('active_tab', 'string', 'REQUEST', 'first_tab');

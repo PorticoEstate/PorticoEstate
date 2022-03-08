@@ -692,6 +692,7 @@
 	</form>
 	<script type="text/javascript">
 		var date_format = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />';
+		var tax_code_list = <xsl:value-of select="tax_code_list"/>;
 		$('#field_customer_identifier_type,#field_customer_ssn,#field_customer_organization_number').removeClass('pure-input-1').addClass('pure-u-1 pure-u-sm-1-2 pure-u-md-1');
 		var reservation_type = 'event';
 		var reservation_id = '<xsl:value-of select="event/id"/>';
@@ -700,7 +701,7 @@
 		$('#field_customer_identifier_type').attr("data-validation","customer_identifier").attr("data-validation-error-msg","<xsl:value-of select="php:function('lang', 'There is set a cost, but no invoice data is filled inn')" />");
 
 		var event_id = <xsl:value-of select="event/id"/>;
-		var lang = <xsl:value-of select="php:function('js_lang','Name', 'phone', 'email', 'Resource Type', 'quantity', 'from', 'to', 'send sms', 'article', 'Select', 'price', 'unit', 'tax', 'unit cost', 'quantity', 'Selected', 'Delete', 'Sum')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang','Name', 'phone', 'email', 'Resource Type', 'quantity', 'from', 'to', 'send sms', 'article', 'Select', 'price', 'unit', 'tax', 'unit cost', 'quantity', 'Selected', 'Delete', 'Sum', 'tax code', 'percent')"/>;
 
 
     <![CDATA[

@@ -91,6 +91,7 @@
 			$unit_list[] = array('id' => 'kg', 'name' => lang('kg'));
 			$unit_list[] = array('id' => 'm', 'name' => lang('meter'));
 			$unit_list[] = array('id' => 'm2', 'name' => lang('square meter'));
+			$unit_list[] = array('id' => 'minute', 'name' => lang('minute'));
 			$unit_list[] = array('id' => 'hour', 'name' => lang('hour'));
 			$unit_list[] = array('id' => 'day', 'name' => lang('day'));
 

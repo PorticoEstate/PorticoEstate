@@ -1,5 +1,5 @@
 
-/* global date_format */
+/* global date_format, lang */
 
 $(document).ready(function ()
 {
@@ -47,7 +47,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 
 	var container = 'articles_container';
 	var colDefsRegulations = [
-		{
+		{//0
 			label: lang['Select'],
 			attrs: [{name: 'class', value: "align-middle"}],
 			object: [
@@ -63,7 +63,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 				}
 			]
 		},
-		{
+		{//1
 			/**
 			 * Hidden field for holding article id
 			 */
@@ -76,22 +76,22 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 			],
 			value: 'id'
 		},
-		{
+		{//2
 			key: 'name',
 			label: lang['article'],
 			attrs: [{name: 'class', value: "align-middle"}],
 		},
-		{
+		{//3
 			key: 'unit',
 			label: lang['unit'],
 			attrs: [{name: 'class', value: "unit align-middle"}],
 		},
-		{
+		{//4
 			key: 'price',
 			label: lang['unit cost'],
 			attrs: [{name: 'class', value: "text-right align-middle"}],
 		},
-		{
+		{//5
 			key: 'quantity',
 			label: lang['quantity'],
 			attrs: [{name: 'class', value: "align-middle"}],
@@ -105,12 +105,12 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 					]
 				}
 			]},
-		{
+		{//6
 			key: 'selected_quantity',
 			label: lang['Selected'],
 			attrs: [{name: 'class', value: "selected_quantity text-right align-middle"}]
 		},
-		{
+		{//7
 			label: 'hidden',
 			attrs: [{name: 'style', value: "display:none;"}],
 			object: [
@@ -121,14 +121,14 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 				}
 			], value: 'selected_article_quantity'
 		},
-		{
+		{//8
 			key: 'selected_sum',
 			label: lang['Sum'],
 			attrs: [
 				{name: 'class', value: "text-right align-middle selected_sum"}
 			]
 		},
-		{
+		{//9
 			label: lang['Delete'],
 			attrs: [{name: 'class', value: "align-middle"}],
 			object: [
@@ -144,7 +144,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 				}
 			]
 		},
-		{
+		{//10
 			/**
 			 * Hidden field for holding information on mandatory items
 			 */
@@ -158,7 +158,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 			],
 			value: 'mandatory'
 		},
-		{
+		{//11
 			/**
 			 * Hidden field for holding information on parent_mapping_id
 			 */
@@ -208,6 +208,7 @@ function set_mandatory(xTable)
 	var from;
 	var to;
 	var timespan;
+	var sum_minutes;
 	var sum_hours = 0;
 	var sum_days = 0;
 
@@ -227,6 +228,7 @@ function set_mandatory(xTable)
 		to = DateHelper.parseDate(datetime[j + 1].value, _format);
 		var timespan = Math.abs(to - from) / 36e5;
 
+		sum_minutes = timespan * 60;
 		sum_hours += Math.ceil(timespan);
 		sum_days += Math.ceil(sum_hours/24);
 
@@ -234,7 +236,7 @@ function set_mandatory(xTable)
 		j++;
 	}
 
-	console.log(sum_hours);
+//	console.log(sum_hours);
 
 	for (var i = 0; i < mandatory.length; i++)
 	{
@@ -248,6 +250,19 @@ function set_mandatory(xTable)
 
 			unit = tr.getElementsByClassName("unit")[0];
 
+			if (unit.innerHTML === 'minute')
+			{
+				quantity = tr.getElementsByClassName("quantity")[0];
+				selected_quantity = tr.getElementsByClassName("selected_quantity")[0];
+
+				if (parseInt(selected_quantity.innerHTML) !== sum_minutes)
+				{
+					tr.classList.remove("table-success");
+					tr.classList.add("table-danger");
+					selected_quantity.innerHTML = sum_minutes;
+					set_basket(tr, sum_minutes);
+				}
+			}
 			if (unit.innerHTML == 'hour')
 			{
 				quantity = tr.getElementsByClassName("quantity")[0];
@@ -287,10 +302,13 @@ function set_basket(tr, quantity)
 	var selected_quantity = parseInt(quantity);
 	/**
 	 * target is the value for selected_articles[]
-	 * <mapping_id>_<quantity>_<parent_mapping_id>
+	 * <mapping_id>_<quantity>_<tax_code>_<ex_tax_price>_<parent_mapping_id>
 	 */
+
+	var tax_code = 'x';
+	var ex_tax_price = 'x';
 	var target = tr.childNodes[7].childNodes[0];
-	target.value = id + '_' + selected_quantity + '_' + parent_mapping_id;
+	target.value = id + '_' + selected_quantity + '_' + tax_code + '_' + ex_tax_price + '_' + parent_mapping_id;
 
 	var elem = tr.childNodes[6];
 

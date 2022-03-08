@@ -1092,10 +1092,16 @@
 						continue;
 					}
 
+					/**
+					 * the value selected_articles[]
+					 * <mapping_id>_<quantity>_<tax_code>_<ex_tax_price>_<parent_mapping_id>
+					 */
 					$purchase_order['lines'][] = array(
 						'article_mapping_id'	=> $_article_info[0],
 						'quantity'				=> $_article_info[1],
-						'parent_mapping_id'		=> !empty($_article_info[2]) ? $_article_info[2] : null
+						'tax_code'				=> $_article_info[2],
+						'ex_tax_price'			=> $_article_info[3],
+						'parent_mapping_id'		=> !empty($_article_info[4]) ? $_article_info[4] : null
 					);
 				}
 
@@ -1573,6 +1579,9 @@
 			}
 
 			self::add_javascript('phpgwapi', 'dateformatter', 'dateformatter.js');
+			$GLOBALS['phpgw']->js->validate_file('alertify', 'alertify.min', 'phpgwapi');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
 
 			$articles = CreateObject('booking.soarticle_mapping')->get_articles($resource_ids);
 
@@ -1584,7 +1593,8 @@
 				'resource_list'	=> array('options' => $resources),
 				'direct_booking' => $direct_booking,
 				'config' => CreateObject('phpgwapi.config', 'booking')->read(),
-				'has_articles' => !!$articles
+				'has_articles' => !!$articles,
+				'tax_code_list'	=> json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
 				)
 			);
 		}
@@ -2419,10 +2429,16 @@
 							continue;
 						}
 
+						/**
+						 * the value selected_articles[]
+						 * <mapping_id>_<quantity>_<tax_code>_<ex_tax_price>_<parent_mapping_id>
+						 */
 						$purchase_order['lines'][] = array(
 							'article_mapping_id'	=> $_article_info[0],
 							'quantity'				=> $_article_info[1],
-							'parent_mapping_id'		=> !empty($_article_info[2]) ? $_article_info[2] : null
+							'tax_code'				=> $_article_info[2],
+							'ex_tax_price'			=> $_article_info[3],
+							'parent_mapping_id'		=> !empty($_article_info[4]) ? $_article_info[4] : null
 						);
 					}
 
@@ -2509,9 +2525,18 @@
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 				'file'), 'application_form');
 
-			self::render_template_xsl('application_edit', array('application' => $application,
-				'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,
-				'config' => CreateObject('phpgwapi.config', 'booking')->read()));
+			$GLOBALS['phpgw']->js->validate_file('alertify', 'alertify.min', 'phpgwapi');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
+
+			self::render_template_xsl('application_edit', array(
+				'application' => $application,
+				'activities' => $activities,
+				'agegroups' => $agegroups,
+				'audience' => $audience,
+				'config' => CreateObject('phpgwapi.config', 'booking')->read(),
+				'tax_code_list'	=> json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
+			));
 		}
 
 		private function check_date_availability( &$allocation )

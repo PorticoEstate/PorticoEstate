@@ -24,7 +24,7 @@
 			</xsl:variable>
 
 			<script type="text/javascript">
-				var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required', 'next', 'save', 'Name', 'Resource Type', 'Select')"/>;
+				var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required', 'next', 'save', 'Name', 'Resource Type', 'Select', 'Active')"/>;
 				var initialSelection = <xsl:value-of select="resources_json"/>;
 
 			</script>

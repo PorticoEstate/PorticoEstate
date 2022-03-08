@@ -247,9 +247,11 @@
 		public function get_reserved_resources( $building_id )
 		{
 			$resources = array();
-			$this->db->query('SELECT article_id AS resource_id FROM bb_article_mapping WHERE article_cat_id = 1', __LINE__, __FILE__);
+			$sql = "SELECT article_id AS resource_id FROM bb_article_mapping"
+				. " JOIN bb_building_resource ON bb_article_mapping.article_id = bb_building_resource.resource_id AND bb_article_mapping.article_cat_id = 1"
+				. " WHERE bb_building_resource.building_id = " . (int) $building_id;
 
-			//join...
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
@@ -274,7 +276,7 @@
 			 */
 			$sql = "SELECT bb_article_mapping.id AS mapping_id,"
 				. " concat( article_cat_id || '_' || article_id ) AS article_id,"
-				. " bb_resource.name as name ,article_id AS resource_id, unit, percent AS tax_percent"
+				. " bb_resource.name as name ,article_id AS resource_id, unit, percent AS tax_percent, tax_code"
 				. " FROM bb_article_mapping"
 				. " JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id)"
 				. " JOIN fm_ecomva ON (bb_article_mapping.tax_code = fm_ecomva.id)"
@@ -293,6 +295,7 @@
 					'article_id'		 => $this->db->f('article_id'),
 					'name'				 => $this->db->f('name', true),
 					'unit'				 => $this->db->f('unit', true),
+					'tax_code'			 => $this->db->f('tax_code'),
 					'tax_percent'		 => $this->db->f('tax_percent'),
 				);
 			}
@@ -306,7 +309,7 @@
 				$filter		 = 'AND bb_resource_service.resource_id =' . $_article['resource_id'];
 
 				$sql = "SELECT bb_article_mapping.id AS mapping_id, concat( article_cat_id || '_' || article_id ) AS article_id,"
-					. " bb_service.name as name, bb_resource_service.resource_id, unit, percent AS tax_percent"
+					. " bb_service.name as name, bb_resource_service.resource_id, unit, percent AS tax_percent, bb_article_mapping.tax_code"
 					. " FROM bb_article_mapping JOIN bb_service ON (bb_article_mapping.article_id = bb_service.id)"
 					. " JOIN bb_resource_service ON (bb_service.id = bb_resource_service.service_id)"
 					. " JOIN fm_ecomva ON (bb_article_mapping.tax_code = fm_ecomva.id)"
@@ -322,6 +325,7 @@
 						'article_id'		 => $this->db->f('article_id'),
 						'name'				 => "- " . $this->db->f('name', true),
 						'unit'				 => $this->db->f('unit', true),
+						'tax_code'			 => $this->db->f('tax_code'),
 						'tax_percent'		 => (int)$this->db->f('tax_percent'),
 					);
 				}

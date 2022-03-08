@@ -1212,10 +1212,16 @@
 								continue;
 							}
 
+							/**
+							 * the value selected_articles[]
+							 * <mapping_id>_<quantity>_<tax_code>_<ex_tax_price>_<parent_mapping_id>
+							 */
 							$purchase_order['lines'][] = array(
 								'article_mapping_id'	=> $_article_info[0],
 								'quantity'				=> $_article_info[1],
-								'parent_mapping_id'		=> !empty($_article_info[2]) ? $_article_info[2] : null
+								'tax_code'				=> $_article_info[2],
+								'ex_tax_price'			=> $_article_info[3],
+								'parent_mapping_id'		=> !empty($_article_info[4]) ? $_article_info[4] : null
 							);
 						}
 
@@ -1318,11 +1324,21 @@
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 				'file'));
 
+			$GLOBALS['phpgw']->js->validate_file('alertify', 'alertify.min', 'phpgwapi');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
+
 			$event['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 //              echo '<pre>'; print_r($event);echo '</pre>';
-			self::render_template_xsl('event_edit', array('event' => $event, 'activities' => $activities,
-				'agegroups' => $agegroups, 'audience' => $audience, 'comments' => $comments,
-				'cost_history' => $cost_history));
+			self::render_template_xsl('event_edit', array(
+				'event' => $event,
+				'activities' => $activities,
+				'agegroups' => $agegroups,
+				'audience' => $audience,
+				'comments' => $comments,
+				'cost_history' => $cost_history,
+				'tax_code_list'	=> json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
+				));
 		}
 
 		public function delete()
