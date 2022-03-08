@@ -221,10 +221,11 @@
 	</form>
 	<script type="text/javascript">
 		var date_format = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />';
+		var tax_code_list = <xsl:value-of select="tax_code_list"/>;
 		var reservation_type = 'allocation';
 		var reservation_id = '<xsl:value-of select="allocation/id"/>';
 		var season_id = '<xsl:value-of select="allocation/season_id"/>';
 		var initialSelection = <xsl:value-of select="allocation/resources_json"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type', 'article', 'Select', 'price', 'unit', 'tax', 'unit cost', 'quantity', 'Selected', 'Delete', 'Sum')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type', 'article', 'Select', 'price', 'unit', 'tax', 'unit cost', 'quantity', 'Selected', 'Delete', 'Sum', 'tax code', 'percent')"/>;
 	</script>
 </xsl:template>

@@ -78,7 +78,14 @@
 
 			if (!empty($purchase_order['lines']))
 			{
-				$article_ids = array();
+				$tax_codes = array();
+				$sql = "SELECT id, percent FROM fm_ecomva";
+				$this->db->query($sql, __LINE__, __FILE__);
+				while ($this->db->next_record())
+				{
+					$tax_codes[(int)$this->db->f('id')] = (int)$this->db->f('percent');
+				}
+
 				foreach ($purchase_order['lines'] as $line)
 				{
 					$article_mapping_ids[] = $line['article_mapping_id'];
@@ -99,15 +106,33 @@
 				{
 					$current_price_info = $current_pricing[$line['article_mapping_id']];
 
-					$unit_price = $current_price_info['price'];
+					$_ex_tax_price	 = $line['ex_tax_price'];
+
+					if(!empty($_ex_tax_price ) && $_ex_tax_price != 'x')
+					{
+						$unit_price = $_ex_tax_price;
+					}
+					else
+					{
+						$unit_price = $current_price_info['price'];
+					}
 
 					$overridden_unit_price	 = $unit_price;
 					$currency				 = 'NOK';
 
 					$amount = $overridden_unit_price * (float)$line['quantity'];
 
-					$tax_code	 = $current_price_info['tax_code'];
-					$percent	 = $current_price_info['percent'];
+					$_tax_code		 = $line['tax_code'];
+					if(!empty($_tax_code ) && $_tax_code != 'x')
+					{
+						$tax_code = $_tax_code;
+						$percent	 = $tax_codes[$tax_code];
+					}
+					else
+					{
+						$tax_code	 = $current_price_info['tax_code'];
+						$percent	 = $current_price_info['percent'];
+					}
 
 					$tax = $amount * $percent / 100;
 

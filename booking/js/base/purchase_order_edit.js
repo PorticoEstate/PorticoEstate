@@ -1,5 +1,5 @@
 
-/* global lang, alertify */
+/* global lang, alertify, tax_code_list */
 var custom_tax_code;
 
 function populateTableChkArticles(selection, resources, application_id, reservation_type, reservation_id)
@@ -243,6 +243,7 @@ function set_mandatory(xTable)
 	var from;
 	var to;
 	var timespan;
+	var sum_minutes = 0
 	var sum_hours = 0;
 	var sum_days = 0;
 
@@ -259,8 +260,9 @@ function set_mandatory(xTable)
 
 		from = DateHelper.parseDate(datetime[j].value, _format);
 		to = DateHelper.parseDate(datetime[j + 1].value, _format);
-		var timespan = Math.abs(to - from) / 36e5;
+		timespan = Math.abs(to - from) / 36e5;
 
+		sum_minutes = timespan * 60;
 		sum_hours += Math.ceil(timespan);
 		sum_days += Math.ceil(sum_hours / 24);
 
@@ -273,10 +275,11 @@ function set_mandatory(xTable)
 	tax_code_select.id = "tax_code_select";
 
 	//Create and append the options
-	for (var i = 0; i < tax_code_list.length; i++) {
+	for (var i = 0; i < tax_code_list.length; i++)
+	{
 		var option = document.createElement("option");
 		option.value = tax_code_list[i].id;
-		option.text = tax_code_list[i].name;
+		option.text = tax_code_list[i].descr;
 		tax_code_select.appendChild(option);
 	}
 
@@ -288,23 +291,114 @@ function set_mandatory(xTable)
 		tr = mandatory[i].parentNode.parentNode;
 		tax_code_element = tr.childNodes[4];
 		tax_code_element.id = 'tax_code_element_' + i;
-		unit_price_element = tr.childNodes[6];
 
 		$('#tax_code_element_' + i).on("click", function (event)
 		{
-			var tax_code = this;
+			var tax_code_cell = this;
 			alertify.myAlert(tax_code_select)
-			.set('onclose', function (closeEvent) {
-				$(tax_code).html($('#tax_code_select').val());
-				alertify.success('Ok');
-		  });
+				.set('onclose', function (closeEvent)
+				{
+					var tax_code_value = $('#tax_code_select').val();
+					$(tax_code_cell).html(tax_code_value);
 
+					//Find corresponding percentage
+					for (var i = 0; i < tax_code_list.length; i++)
+					{
+						if (tax_code_list[i].id == tax_code_value)
+						{
+							var new_percent = parseInt(tax_code_list[i].percent);
+							if (isNaN(new_percent))
+							{
+								new_percent = 0;
+							}
+						}
+					}
+
+					tax_code_cell.parentNode.childNodes[5].innerHTML = new_percent;
+					var ex_tax_price = tax_code_cell.parentNode.childNodes[6];
+					//tax
+					tax_code_cell.parentNode.childNodes[7].innerHTML = new_percent * parseFloat(ex_tax_price.innerHTML) / 100;
+
+					var selected_quantity = parseFloat(tax_code_cell.parentNode.childNodes[9].innerHTML);
+					if (isNaN(selected_quantity))
+					{
+						selected_quantity = 0;
+					}
+
+					var selected_sum = tax_code_cell.parentNode.childNodes[11];
+					selected_sum.innerHTML = parseFloat(ex_tax_price.innerHTML) * selected_quantity * (1 + (new_percent / 100));
+
+					set_sum(xTable);
+
+					alertify.success('Ok');
+				});
 
 		});
-		$(unit_price_element).on("click", function (event)
+
+		unit_price_element = tr.childNodes[6];
+		unit_price_element.id = 'unit_price_element_' + i;
+
+		$('#unit_price_element_' + i).on("click", function (event)
 		{
-			alert('unit_price_element');
-			event.preventDefault();
+			var unit_price_cell = this;
+			var tr = this.parentNode;
+			var temp = tr.childNodes[10].childNodes[0].value;
+			if (temp)
+			{
+				var mapping_id = parseInt(temp.split("_")[0]);
+			}
+			var requestURL = phpGWLink('index.php', {menuaction: "booking.uiarticle_mapping.get_pricing", id: mapping_id}, true);
+
+			$.getJSON(requestURL, function (result)
+			{
+				if (result !== null && result.length > 0)
+				{
+					//Create and append select list
+					var unit_price_select = document.createElement("select");
+					unit_price_select.id = "unit_price_select";
+
+					//Create and append the options
+					for (var i = 0; i < result.length; i++)
+					{
+						var option = document.createElement("option");
+						option.value = result[i].price;
+						option.text = result[i].price;
+						if (result[i].remark)
+						{
+							option.text += " (" + result[i].remark + ")";
+						}
+						unit_price_select.appendChild(option);
+					}
+
+					alertify.myAlert(unit_price_select)
+						.set('onclose', function (closeEvent)
+						{
+							var unit_price_value = $('#unit_price_select').val();
+							$(unit_price_cell).html(unit_price_value);
+
+							var tax_percent = unit_price_cell.parentNode.childNodes[5].innerHTML;
+							var ex_tax_price = unit_price_cell.parentNode.childNodes[6].innerHTML;
+							var tax = unit_price_cell.parentNode.childNodes[7].innerHTML;
+							tax = tax_percent * parseFloat(ex_tax_price) / 100;
+
+							var selected_quantity = parseFloat(unit_price_cell.parentNode.childNodes[9].innerHTML);
+							if (isNaN(selected_quantity))
+							{
+								selected_quantity = 0;
+							}
+
+							var selected_sum = unit_price_cell.parentNode.childNodes[11];
+							selected_sum.innerHTML = parseFloat(ex_tax_price) * selected_quantity * (1 + (tax_percent / 100));
+
+							set_sum(xTable);
+
+							alertify.success('Ok');
+						});
+
+				}
+
+			});
+
 		});
 
 		if (mandatory[i].value)
@@ -316,7 +410,20 @@ function set_mandatory(xTable)
 
 			unit = tr.getElementsByClassName("unit")[0];
 
-			if (unit.innerHTML == 'hour')
+			if (unit.innerHTML === 'minute')
+			{
+				quantity = tr.getElementsByClassName("quantity")[0];
+				selected_quantity = tr.getElementsByClassName("selected_quantity")[0];
+
+				if (parseInt(selected_quantity.innerHTML) !== sum_minutes)
+				{
+					tr.classList.remove("table-success");
+					tr.classList.add("table-danger");
+					selected_quantity.innerHTML = sum_minutes;
+					set_basket(tr, sum_minutes);
+				}
+			}
+			if (unit.innerHTML === 'hour')
 			{
 				quantity = tr.getElementsByClassName("quantity")[0];
 				selected_quantity = tr.getElementsByClassName("selected_quantity")[0];
@@ -329,7 +436,7 @@ function set_mandatory(xTable)
 					set_basket(tr, sum_hours);
 				}
 			}
-			if (unit.innerHTML == 'day')
+			if (unit.innerHTML === 'day')
 			{
 				quantity = tr.getElementsByClassName("quantity")[0];
 				selected_quantity = tr.getElementsByClassName("selected_quantity")[0];
@@ -354,12 +461,20 @@ function set_basket(tr, quantity)
 
 	var parent_mapping_id = tr.getElementsByClassName('parent_mapping_id')[0].value;
 	var selected_quantity = parseInt(quantity);
+
 	/**
-	 * target is the value for selected_articles[]
-	 * <mapping_id>_<quantity>_<parent_mapping_id>
+	 * the value selected_articles[]
+	 * <mapping_id>_<quantity>_<tax_code>_<ex_tax_price>_<parent_mapping_id>
 	 */
+
+	var tax_code = tr.childNodes[4].innerHTML;
+	if (isNaN(tax_code))
+	{
+		tax_code = 0;
+	}
+	var ex_tax_price =tr.childNodes[6].innerHTML;
 	var target = tr.childNodes[10].childNodes[0];
-	target.value = id + '_' + selected_quantity + '_' + parent_mapping_id;
+	target.value = id + '_' + selected_quantity + '_' + tax_code + '_' + ex_tax_price + '_' + parent_mapping_id;
 
 	var elem = tr.childNodes[9];
 
@@ -415,10 +530,16 @@ function add_to_bastet(element)
 
 	/**
 	 * the value selected_articles[]
-	 * <mapping_id>_<quantity>_<parent_mapping_id>
+	 * <mapping_id>_<quantity>_<tax_code>_<ex_tax_price>_<parent_mapping_id>
 	 */
+	var tax_code = element.parentNode.parentNode.childNodes[4].innerHTML;
+	if (isNaN(tax_code))
+	{
+		tax_code = 0;
+	}
+	var ex_tax_price = element.parentNode.parentNode.childNodes[6].innerHTML;
 	var target = element.parentNode.parentNode.childNodes[10].childNodes[0];
-	target.value = id + '_' + selected_quantity + '_' + parent_mapping_id;
+	target.value = id + '_' + selected_quantity + '_' + tax_code + '_' + ex_tax_price + '_' + parent_mapping_id;
 
 	var elem = element.parentNode.parentNode.childNodes[9];
 
@@ -574,8 +695,8 @@ if (!alertify.myAlert)
 
 					],
 					focus: {element: 0},
-					options:{
-						onclose: function()
+					options: {
+						onclose: function ()
 						{
 //							console.log($('#tax_code_select'));
 
@@ -586,22 +707,25 @@ if (!alertify.myAlert)
 			},
 			prepare: function ()
 			{
-		//		this.setContent(this.message);
+				//		this.setContent(this.message);
 			},
-			hooks:{
+			hooks: {
 				// triggered when the dialog is shown, this is seperate from user defined onshow
-				onshow: function(){
+				onshow: function ()
+				{
 				},
 				// triggered when the dialog is closed, this is seperate from user defined onclose
-				onclose: function(){
+				onclose: function ()
+				{
 //console.log($(this).find('select'));
 				},
 				// triggered when a dialog option gets updated.
 				// IMPORTANT: This will not be triggered for dialog custom settings updates ( use settingUpdated instead).
-				onupdate: function(){
+				onupdate: function ()
+				{
 				}
-			 }
-		}
+			}
+		};
 	});
 }
 
