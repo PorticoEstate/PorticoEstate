@@ -1189,7 +1189,6 @@
 					unset($_errors['booking']);
 					if(!$_errors)
 					{
-						$receipt = $this->bo->update($event);
 						/**
 						 * Start dealing with the purchase_order..
 						 */
@@ -1227,9 +1226,17 @@
 
 						if(!empty($purchase_order['lines']))
 						{
-							createObject('booking.sopurchase_order')->add_purchase_order($purchase_order);
+							$purchase_order_id = createObject('booking.sopurchase_order')->add_purchase_order($purchase_order);
+							$purchase_order_result =  createObject('booking.sopurchase_order')->get_single_purchase_order($purchase_order_id);
+							if($purchase_order_result['sum'] && $purchase_order_result['sum'] != $event['cost'])
+							{
+								$this->add_cost_history($event, lang('cost is set'), $purchase_order_result['sum']);
+								$event['cost'] = $purchase_order_result['sum'];
+							}
 						}
 						/** END purchase order */
+
+						$receipt = $this->bo->update($event);
 
 
 						if(!$errors)

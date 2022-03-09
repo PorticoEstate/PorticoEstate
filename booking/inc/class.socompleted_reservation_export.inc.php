@@ -1491,7 +1491,7 @@
 							$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['article_code']);
 							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
 							$fakturalinje['Tilleggstekst']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']);
-			//				$fakturalinje['mvakode']			 = $order_line['tax_code'];
+							$fakturalinje['mvakode']			 = $order_line['tax_code'];
 							$fakturalinje['antall']				 = $order_line['quantity'];
 							$fakturalinje['enhetspris']			 = $order_line['unit_price'];
 							$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
@@ -1595,7 +1595,7 @@
 							$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT",$order_line['article_code']);
 							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
 							$fakturalinje['Tilleggstekst']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']);
-				//			$fakturalinje['mvakode']			 = $order_line['tax_code'];
+							$fakturalinje['mvakode']			 = $order_line['tax_code'];
 							$fakturalinje['antall']				 = $order_line['quantity'];
 							$fakturalinje['enhetspris']			 = $order_line['unit_price'];
 							$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;

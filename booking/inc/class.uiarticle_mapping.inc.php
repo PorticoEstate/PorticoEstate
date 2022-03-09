@@ -147,11 +147,16 @@
 					{
 						if($line['article_mapping_id'] == $article['id']  && (int)$line['parent_mapping_id'] == (int)$article['parent_mapping_id'])
 						{
-							$article['selected_quantity'] = $line['quantity'];
-							$article['selected_sum'] = (float)($line['amount'] + $line['tax']);
-							$article['selected_article_quantity']	 = "{$article['id']}_{$line['quantity']}_{$article['parent_mapping_id']}";
+							$article['unit_price']					 = $line['unit_price'];
+							$article['ex_tax_price']				 = $line['unit_price'];
+							$article['price']						 = $line['price'];
+							$article['selected_quantity']			 = $line['quantity'];
+							$article['selected_sum']				 = (float)($line['amount'] + $line['tax']);
+							$article['selected_article_quantity']	 = "{$article['id']}_{$line['quantity']}_{$line['tax_code']}_{$line['unit_price']}_{$article['parent_mapping_id']}";
+							$article['tax_code']					 = $line['tax_code'];
+							$article['tax_percent']					 = $line['tax_percent'];
+							$article['tax']							 = $line['unit_price'] * ($line['tax_percent']/100);
 						}
-						$article['tax_code']	 = $line['tax_code'];
 					}
 				}
 
@@ -273,6 +278,15 @@
 		{
 			$id	 = phpgw::get_var('id', 'int');
 			$pricing	 = $this->bo->get_pricing($id);
+
+			$pricing[] =  array(
+					'id'				 => 0,
+					'article_mapping_id' => 0,
+					'price'				 => 0,
+					'from_'				 => 0,
+					'remark'			 => 'Gratis',
+			);
+
 			return $pricing;
 		}
 		/*

@@ -1,5 +1,5 @@
 
-/* global lang, alertify, tax_code_list */
+/* global lang, alertify, tax_code_list, template_set */
 var custom_tax_code;
 
 function populateTableChkArticles(selection, resources, application_id, reservation_type, reservation_id)
@@ -291,6 +291,7 @@ function set_mandatory(xTable)
 		tr = mandatory[i].parentNode.parentNode;
 		tax_code_element = tr.childNodes[4];
 		tax_code_element.id = 'tax_code_element_' + i;
+		tax_code_element.classList.add("bg-light");
 
 		$('#tax_code_element_' + i).on("click", function (event)
 		{
@@ -328,6 +329,8 @@ function set_mandatory(xTable)
 					var selected_sum = tax_code_cell.parentNode.childNodes[11];
 					selected_sum.innerHTML = parseFloat(ex_tax_price.innerHTML) * selected_quantity * (1 + (new_percent / 100));
 
+					var _tr = tax_code_cell.parentNode;
+//					set_basket(_tr);
 					set_sum(xTable);
 
 					alertify.success('Ok');
@@ -337,16 +340,13 @@ function set_mandatory(xTable)
 
 		unit_price_element = tr.childNodes[6];
 		unit_price_element.id = 'unit_price_element_' + i;
+		unit_price_element.classList.add("bg-light");
 
 		$('#unit_price_element_' + i).on("click", function (event)
 		{
 			var unit_price_cell = this;
 			var tr = this.parentNode;
-			var temp = tr.childNodes[10].childNodes[0].value;
-			if (temp)
-			{
-				var mapping_id = parseInt(temp.split("_")[0]);
-			}
+			var mapping_id = tr.childNodes[1].childNodes[0].value;
 			var requestURL = phpGWLink('index.php', {menuaction: "booking.uiarticle_mapping.get_pricing", id: mapping_id}, true);
 
 			$.getJSON(requestURL, function (result)
@@ -380,6 +380,7 @@ function set_mandatory(xTable)
 							var ex_tax_price = unit_price_cell.parentNode.childNodes[6].innerHTML;
 							var tax = unit_price_cell.parentNode.childNodes[7].innerHTML;
 							tax = tax_percent * parseFloat(ex_tax_price) / 100;
+							unit_price_cell.parentNode.childNodes[7].innerHTML = tax;
 
 							var selected_quantity = parseFloat(unit_price_cell.parentNode.childNodes[9].innerHTML);
 							if (isNaN(selected_quantity))
@@ -390,6 +391,8 @@ function set_mandatory(xTable)
 							var selected_sum = unit_price_cell.parentNode.childNodes[11];
 							selected_sum.innerHTML = parseFloat(ex_tax_price) * selected_quantity * (1 + (tax_percent / 100));
 
+							var _tr = unit_price_cell.parentNode;
+//							set_basket(_tr);
 							set_sum(xTable);
 
 							alertify.success('Ok');
@@ -420,7 +423,7 @@ function set_mandatory(xTable)
 					tr.classList.remove("table-success");
 					tr.classList.add("table-danger");
 					selected_quantity.innerHTML = sum_minutes;
-					set_basket(tr, sum_minutes);
+//					set_basket(tr);
 				}
 			}
 			if (unit.innerHTML === 'hour')
@@ -433,7 +436,7 @@ function set_mandatory(xTable)
 					tr.classList.remove("table-success");
 					tr.classList.add("table-danger");
 					selected_quantity.innerHTML = sum_hours;
-					set_basket(tr, sum_hours);
+//					set_basket(tr);
 				}
 			}
 			if (unit.innerHTML === 'day')
@@ -446,7 +449,7 @@ function set_mandatory(xTable)
 					tr.classList.remove("table-success");
 					tr.classList.add("table-danger");
 					selected_quantity.innerHTML = sum_days;
-					set_basket(tr, sum_days);
+//					set_basket(tr);
 				}
 			}
 		}
@@ -454,13 +457,18 @@ function set_mandatory(xTable)
 }
 
 
-function set_basket(tr, quantity)
+function set_basket(tr)
 {
+	var selected_quantity = parseInt(tr.childNodes[9].innerHTML);
+	if (isNaN(selected_quantity))
+	{
+		selected_quantity = 0;
+	}
 	var id = tr.childNodes[1].childNodes[0].value;
 	var price = parseFloat(tr.childNodes[6].innerText) + parseFloat(tr.childNodes[7].innerText);
 
 	var parent_mapping_id = tr.getElementsByClassName('parent_mapping_id')[0].value;
-	var selected_quantity = parseInt(quantity);
+//	var selected_quantity = parseInt(quantity);
 
 	/**
 	 * the value selected_articles[]
@@ -474,7 +482,14 @@ function set_basket(tr, quantity)
 	}
 	var ex_tax_price =tr.childNodes[6].innerHTML;
 	var target = tr.childNodes[10].childNodes[0];
-	target.value = id + '_' + selected_quantity + '_' + tax_code + '_' + ex_tax_price + '_' + parent_mapping_id;
+	if(selected_quantity === 0)
+	{
+		target.value = null;
+	}
+	else
+	{
+		target.value = id + '_' + selected_quantity + '_' + tax_code + '_' + ex_tax_price + '_' + parent_mapping_id;
+	}
 
 	var elem = tr.childNodes[9];
 
@@ -483,9 +498,9 @@ function set_basket(tr, quantity)
 	var sum_cell = tr.childNodes[11]
 	sum_cell.innerText = (selected_quantity * parseFloat(price)).toFixed(2);
 
-	var xTable = tr.parentNode.parentNode;
+//	var xTable = tr.parentNode.parentNode;
 
-	set_sum(xTable);
+//	set_sum(xTable);
 }
 
 function add_to_bastet(element)
@@ -566,11 +581,17 @@ function set_sum(xTable)
 
 	var selected_sum = xTableBody.getElementsByClassName('selected_sum');
 
+	var tr;
+
 	var temp_total_sum = 0;
 	for (var i = 0; i < selected_sum.length; i++)
 	{
-		if (selected_sum[i].innerHTML)
+		tr = selected_sum[i].parentNode;
+		set_basket(tr);
+
+		if (selected_sum[i].innerHTML > 0)
 		{
+			tr.classList.add("table-success");
 			var cell = $(selected_sum[i]).parents().children()[12];
 			$(cell).children()[0].removeAttribute('disabled');
 
@@ -638,7 +659,16 @@ function empty_from_bastet(element)
 
 function populateTableArticles(url, container, colDefs)
 {
-	createTable(container, url, colDefs, '', 'table table-bordered table-hover table-sm table-responsive', null, post_handle_order_table);
+	var table_class = '';
+	if(template_set === 'bootstrap')
+	{
+		table_class = 'table table-bordered table-hover table-sm table-responsive';
+	}
+	else
+	{
+		table_class = 'pure-table pure-table-bordered';
+	}
+	createTable(container, url, colDefs, '', table_class, null, post_handle_order_table);
 }
 
 

@@ -1,4 +1,6 @@
 
+/* global template_set */
+
 $(document).ready(function ()
 {
     function populateTableChkArticles(selection, resources, application_id, reservation_type, reservation_id)
@@ -149,5 +151,15 @@ function set_sum(xTable)
 
 function populateTableArticles(url, container, colDefs)
 {
-	createTable(container, url, colDefs, '', 'table table-bordered table-hover table-sm table-responsive', null, post_handle_order_table);
+	var table_class = '';
+	if(template_set === 'bootstrap')
+	{
+		table_class = 'table table-bordered table-hover table-sm table-responsive';
+	}
+	else
+	{
+		table_class = 'pure-table pure-table-bordered';
+	}
+
+	createTable(container, url, colDefs, '', table_class, null, post_handle_order_table);
 }

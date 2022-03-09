@@ -103,6 +103,7 @@
 		</xsl:if>
 	</div>
 	<script type="text/javascript">
+		var template_set = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|template_set')" />';
 		var resourceIds = '<xsl:value-of select="allocation/resource_ids"/>';
 		var allocation_id = '<xsl:value-of select="allocation/id"/>';
 		var reservation_type = 'allocation';

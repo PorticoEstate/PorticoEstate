@@ -104,10 +104,18 @@
 				$insert_update = array();
 				foreach ($purchase_order['lines'] as $line)
 				{
+					if(empty($line['quantity']) || !(float)$line['quantity'] > 0)
+					{
+						continue;
+					}
+
 					$current_price_info = $current_pricing[$line['article_mapping_id']];
 
 					$_ex_tax_price	 = $line['ex_tax_price'];
 
+					/**
+					 * Overridden price from case officer - else price from database
+					 */
 					if(!empty($_ex_tax_price ) && $_ex_tax_price != 'x')
 					{
 						$unit_price = $_ex_tax_price;
@@ -189,8 +197,9 @@
 
 			if (!$this->global_lock)
 			{
-				return $this->db->transaction_commit();
+				$this->db->transaction_commit();
 			}
+			return $order_id;
 		}
 
 		function delete_purchase_order( $application_id )
@@ -294,6 +303,14 @@
 				return array();
 			}
 
+			$tax_codes = array();
+			$sql = "SELECT id, percent FROM fm_ecomva";
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$tax_codes[(int)$this->db->f('id')] = (int)$this->db->f('percent');
+			}
+
 			$filtermethod = 'WHERE bb_purchase_order.cancelled IS NULL';
 
 			if($reservation_type && (int) $reservation_id)
@@ -334,6 +351,8 @@
 				$sum[$order_id]	 = (float)$sum[$order_id] + $_sum;
 				$total_sum		 += $_sum;
 
+				$tax_code		 = (int)$this->db->f('tax_code');
+
 				$order['lines'][] = array(
 					'order_id'				 => $order_id,
 					'status'				 => (int)$this->db->f('status'),
@@ -348,6 +367,7 @@
 					'article_code'			 => $this->db->f('article_code',true),
 					'tax'					 => (float)$this->db->f('tax'),
 					'name'					 => $this->db->f('name', true),
+					'tax_percent'			 => $tax_codes[$tax_code]
 				);
 
 				$order['order_id']	 = $order_id;
