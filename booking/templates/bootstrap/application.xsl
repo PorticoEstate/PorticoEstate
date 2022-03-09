@@ -1164,6 +1164,8 @@
 	</div>-->
 
 	<script type="text/javascript">
+		var template_set = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|template_set')" />';
+		var date_format = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />';
 		var initialSelection = <xsl:value-of select="application/resources_json"/>;
 		var application_id = '<xsl:value-of select="application/id"/>';
 		var resourceIds = '<xsl:value-of select="application/resource_ids"/>';

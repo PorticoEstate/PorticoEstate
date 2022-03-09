@@ -368,11 +368,14 @@ function add_to_bastet(element)
 	element.parentNode.parentNode.childNodes[9].childNodes[0].removeAttribute('disabled');
 
 	/**
-	 * the value selected_articles[]
-	 * <mapping_id>_<quantity>_<parent_mapping_id>
+	 * target is the value for selected_articles[]
+	 * <mapping_id>_<quantity>_<tax_code>_<ex_tax_price>_<parent_mapping_id>
 	 */
+
+	var tax_code = 'x';//Excluded
+	var ex_tax_price = 'x';//Excluded
 	var target = element.parentNode.parentNode.childNodes[7].childNodes[0];
-	target.value = id + '_' + selected_quantity + '_' + parent_mapping_id;
+	target.value = id + '_' + selected_quantity + '_' + tax_code + '_' + ex_tax_price + '_' + parent_mapping_id;
 
 	var elem = element.parentNode.parentNode.childNodes[6];
 

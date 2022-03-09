@@ -448,7 +448,7 @@
 								</input>
 								<input id="field_cost_orig" name="cost_orig" type="hidden" value= "{event/cost}"/>
 							</div>
-							<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+							<div class="pure-u-1">
 								<div class="heading">
 									<legend>
 										<h3>
@@ -692,6 +692,7 @@
 	</form>
 	<script type="text/javascript">
 		var date_format = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />';
+		var template_set = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|template_set')" />';
 		var tax_code_list = <xsl:value-of select="tax_code_list"/>;
 		$('#field_customer_identifier_type,#field_customer_ssn,#field_customer_organization_number').removeClass('pure-input-1').addClass('pure-u-1 pure-u-sm-1-2 pure-u-md-1');
 		var reservation_type = 'event';
