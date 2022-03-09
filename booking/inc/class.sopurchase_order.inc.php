@@ -116,9 +116,12 @@
 					/**
 					 * Overridden price from case officer - else price from database
 					 */
-					if(!empty($_ex_tax_price ) && $_ex_tax_price != 'x')
+					$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+
+
+					if($currentapp  == 'booking' && !is_null($_ex_tax_price ) && $_ex_tax_price != 'x') // restricted to backend
 					{
-						$unit_price = $_ex_tax_price;
+						$unit_price = (float)$_ex_tax_price;
 					}
 					else
 					{
@@ -131,9 +134,9 @@
 					$amount = $overridden_unit_price * (float)$line['quantity'];
 
 					$_tax_code		 = $line['tax_code'];
-					if(!empty($_tax_code ) && $_tax_code != 'x')
+					if($currentapp  == 'booking' && !is_null($_tax_code ) && $_tax_code != 'x') // restricted to backend
 					{
-						$tax_code = $_tax_code;
+						$tax_code	 = (int)$_tax_code;
 						$percent	 = $tax_codes[$tax_code];
 					}
 					else
