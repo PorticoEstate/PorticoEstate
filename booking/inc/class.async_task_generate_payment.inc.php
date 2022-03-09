@@ -1,17 +1,14 @@
 <?php
 	phpgw::import_class('booking.async_task');
-	phpgw::import_class('booking.socompleted_reservation');
 
-	class booking_async_task_update_reservation_state extends booking_async_task
+	class booking_async_task_generate_payment extends booking_async_task
 	{
-
-		private $soapplication, $sopurchase_order;
+		private $soapplication;
 
 		public function __construct()
 		{
 			parent::__construct();
 			$this->soapplication	 = CreateObject('booking.soapplication');
-			$this->sopurchase_order	 = createObject('booking.sopurchase_order');
 
 		}
 
@@ -20,56 +17,37 @@
 			return array( 'hour' => '*/1');
 		}
 
+		/**
+		 * 
+		 * disabled...
+		 */
 		public function run( $options = array() )
 		{
+			return;
+
 			$db = & $GLOBALS['phpgw']->db;
 
 			$reservation_types = array(
-//				'booking',
 				'event',
 				'allocation'
 			);
 
-			$completed_so = CreateObject('booking.socompleted_reservation');
-
 			foreach ($reservation_types as $reservation_type)
 			{
-				$bo = CreateObject('booking.bo' . $reservation_type);
+				$so = CreateObject('booking.so' . $reservation_type);
 
-				$expired = $bo->find_expired();
+				$orders = $so->find_expired_orders();
 
-				if (!is_array($expired) || !isset($expired['results']))
+				if (empty($orders))
 				{
 					continue;
 				}
 
 				$db->transaction_begin();
 
-				if (count($expired['results']) > 0)
+				foreach ($orders as $order_id)
 				{
-					foreach ($expired['results'] as $reservation)
-					{
-						$completed_so->create_from($reservation_type, $reservation);
-						$orders = $completed_so->find_expired_orders($reservation_type, $reservation['id']);
-
-						/**
-						 * For vipps kan det være flere krav, for etterfakturering vil det være ett
-						 */
-						foreach ($orders as $order_id)
-						{
-							$this->add_payment($order_id);
-							$order = $this->sopurchase_order->get_single_purchase_order($order_id);
-							$_reservation = $bo->read_single($reservation['id']);
-							if((float)$_reservation['cost'] != (float)$order['sum'])
-							{
-								$_reservation['cost'] = $order['sum'];
-								$this->add_cost_history($_reservation, 'update from order', $order['sum']);
-								$bo->update($_reservation);
-							}
-						}
-					}
-
-					$bo->complete_expired($expired['results']);
+					$this->add_payment($order_id);
 				}
 
 				$db->transaction_commit();
@@ -80,22 +58,6 @@
 		{
 			$this->soapplication->add_payment($order_id, 'local_invoice', 'live', 2);
 		}
-
-		private function add_cost_history( &$reservation, $comment = '', $cost = '0.00' )
-		{
-			if (!$comment)
-			{
-				$comment = lang('cost is set');
-			}
-
-			$reservation['costs'][] = array(
-				'time' => 'now',
-				'author' => 'Cron-job',
-				'comment' => $comment,
-				'cost' => $cost
-			);
-		}
-
 
 	}
 	/*

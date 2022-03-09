@@ -84,4 +84,64 @@
 				echo '</div>';
 			}
 		}
+
+		function resource_add()
+		{
+			$GLOBALS['phpgw']->db->query('SELECT id FROM fm_ecomva WHERE id > 0 ORDER BY id', __LINE__, __FILE__);
+			$GLOBALS['phpgw']->db->next_record();
+			$tax_code	 = $GLOBALS['phpgw']->db->f('id');
+
+			$sql = "SELECT bb_resource.id FROM bb_resource"
+				. " LEFT JOIN bb_article_mapping ON (bb_resource.id = bb_article_mapping.article_id AND bb_article_mapping.article_cat_id = 1)"
+				. " WHERE bb_article_mapping.id IS NULL";
+
+			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+			$resources = array();
+			while ($GLOBALS['phpgw']->db->next_record())
+			{
+				$resources[] =  $GLOBALS['phpgw']->db->f('id');
+			}
+
+			$add_sql = "INSERT INTO bb_article_mapping ("
+				. " article_cat_id, article_id, article_code, unit, tax_code)"
+				. " VALUES (?, ?, ?, ?, ?)";
+
+			$article_cat_id	 = 1;
+
+			$insert_update	 = array();
+
+			foreach ($resources as $resource_id)
+			{
+				$article_code	 = "resource_{$resource_id}";
+
+				$insert_update[] = array(
+					1	 => array(
+						'value'	 => $article_cat_id,
+						'type'	 => PDO::PARAM_INT
+					),
+					2	 => array(
+						'value'	 => $resource_id,
+						'type'	 => PDO::PARAM_INT
+					),
+					3	 => array(
+						'value'	 => $article_code,
+						'type'	 => PDO::PARAM_STR
+					),
+					4	 => array(
+						'value'	 => 'hour',
+						'type'	 => PDO::PARAM_STR
+					),
+					5	 => array(
+						'value'	 => $tax_code,
+						'type'	 => PDO::PARAM_INT
+					),
+				);
+			}
+
+			if($insert_update)
+			{
+				$GLOBALS['phpgw']->db->insert($add_sql, $insert_update, __LINE__, __FILE__);
+				phpgwapi_cache::message_set(lang('%1 resources mapped as articles', count($insert_update)));
+			}
+		}
 	}

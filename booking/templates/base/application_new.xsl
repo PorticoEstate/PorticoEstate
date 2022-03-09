@@ -216,6 +216,22 @@
 									</span>
 								</div>
 							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Articles')" />
+								</label>
+								<input type="hidden" data-validation="application_articles">
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Please choose at least 1 Article')" />
+									</xsl:attribute>
+								</input>
+								<div id="articles_container" style="display:inline-block;">
+									<span class="select_first_text">
+										<xsl:value-of select="php:function('lang', 'Select a resource first')" />
+									</span>
+								</div>
+							</div>
+
 						</fieldset>
 					</div>
 					<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
@@ -591,11 +607,14 @@
 		</div>
 	</form>
 	<script type="text/javascript">
+		var template_set = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|template_set')" />';
+		var date_format = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />';
+		var tax_code_list = <xsl:value-of select="tax_code_list"/>;
 		var initialDocumentSelection = <xsl:value-of select="application/accepted_documents_json"/>;
 		var initialAcceptAllTerms = false;
 		var initialSelection = <xsl:value-of select="application/resources_json"/>;
 		var initialAudience = <xsl:value-of select="application/audience_json"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.')"/>
+		var lang = <xsl:value-of select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.', 'article', 'Select', 'price', 'unit', 'tax', 'unit cost', 'quantity', 'Selected', 'Delete', 'Sum', 'tax code', 'percent')"/>;
 		$('#field_customer_identifier_type').attr("data-validation","customer_identifier").attr("data-validation-error-msg", "<xsl:value-of select="php:function('lang', 'Customer identifier type is required')" />");
 	</script>
 </xsl:template>

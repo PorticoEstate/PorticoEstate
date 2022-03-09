@@ -46,6 +46,12 @@
 					<div id="resources_container" style="display:inline-block;"></div>
 				</div>
 				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Articles')" />
+					</label>
+					<div id="articles_container" class="pure-custom" style="display:inline-block;"></div>
+				</div>
+				<div class="pure-control-group">
 					<label style="vertical-align:top;">
 						<xsl:value-of select="php:function('lang', 'participants')" />
 					</label>
@@ -97,9 +103,13 @@
 		</xsl:if>
 	</div>
 	<script type="text/javascript">
+		var template_set = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|template_set')" />';
 		var resourceIds = '<xsl:value-of select="allocation/resource_ids"/>';
 		var allocation_id = '<xsl:value-of select="allocation/id"/>';
-		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type', 'phone', 'email', 'quantity', 'from', 'to')"/>;
+		var reservation_type = 'allocation';
+		var reservation_id = '<xsl:value-of select="allocation/id"/>';
+		var initialSelection = <xsl:value-of select="allocation/resources_json"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type', 'phone', 'email', 'quantity', 'from', 'to', 'tax', 'article', 'unit', 'unit cost', 'Selected', 'Sum')"/>;
     <![CDATA[
 //        var resourcesURL = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
 		var resourcesURL = phpGWLink('index.php', {menuaction:'booking.uiresource.index', sort:'name', length:-1}, true) +'&' + resourceIds;

@@ -199,7 +199,7 @@ $(document).ready(function ()
 						/**
 						 * Hide external paymentmetod if nothing to pay
 						 */
-						if(total_sum === "")
+						if(total_sum === "" || data.direct_booking == false)
 						{
 							$("#external_payment_method").hide();
 							$("#btnSubmit").text(lang['Send']);

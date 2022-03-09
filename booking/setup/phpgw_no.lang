@@ -339,6 +339,7 @@ Total Cost	booking	no	Totalsum
 Int. invoice file	booking	no	Intern fakturafil
 Ext. invoice file	booking	no	Ekstern fakturafil
 Asynchronous Tasks	booking	no	Systemjobber
+booking async task generate payment	booking	no	Generer betalingskrav (ny)
 booking_async_task_update_reservation_state_enabled	booking	no	Generer fakturagrunnlag
 booking_async_task_send_reminder_enabled	booking	no	Send purremail til kontaktpersoner på tildelinger, interntildelinger og arrangementer
 Update	booking	no	Oppdater
@@ -887,3 +888,18 @@ add message	booking	no	Skriv melding
 content	booking	no	Innhold
 internal notes	booking	no	Interne notater
 in tax register	booking	no	Registrert i mva-registeret
+unit	booking	no	Enhet
+price	booking	no	Pris
+selected	booking	no	Valgt
+unit cost	booking	no	Enhetspris
+commerce	booking	no	Varekatalog
+tax code	booking	no	Mva-kode
+each	booking	no	Stk
+kg	booking	no	Kg
+m	booking	no	Meter
+m2	booking	no	Kvadratmeter
+meter	booking	no	Meter
+square meter	booking	no	Kvadratmeter
+hour	booking	no	Time
+day	booking	no	Dag
+%1 resources mapped as articles	booking	no	%1 ressurser er mappet opp som artikler i varekatalogen

@@ -285,6 +285,11 @@
 								<label>&nbsp;</label>
 								<div id="resources_container" class="pure-form-contentTable"></div>
 							</div>
+							<div class="pure-control-group">
+								<label>&nbsp;</label>
+								<div id="articles_container" style="display:inline-block;" class="pure-form-contentTable"></div>
+							</div>
+
 						</div>
 						<div class="pure-u-1">
 							<div class="heading">
@@ -743,6 +748,9 @@
 		</div>
 	</div>
 	<script type="text/javascript">
+		var template_set = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|template_set')" />';
+		var initialSelection = <xsl:value-of select="application/resources_json"/>;
+		var application_id = '<xsl:value-of select="application/id"/>';
 		var resourceIds = '<xsl:value-of select="application/resource_ids"/>';
 		var currentuser = '<xsl:value-of select="application/currentuser"/>';
 		if (!resourceIds || resourceIds == "") {

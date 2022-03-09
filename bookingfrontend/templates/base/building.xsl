@@ -360,7 +360,10 @@
 	<script>
 		var lang = <xsl:value-of select="php:function('js_lang', 'new application', 'Resource (2018)')" />;
 		var deactivate_application = <xsl:value-of select="building/deactivate_application" />;
-		var deactivate_calendar = <xsl:value-of select="building/deactivate_calendar" />;
+		/**
+		* Hardcoded: Disable calendar at this level
+		**/
+		var deactivate_calendar = 1;//<xsl:value-of select="building/deactivate_calendar" />;
 		var active_building = Number(<xsl:value-of select="building/active" />);
 	</script>
 </xsl:template>

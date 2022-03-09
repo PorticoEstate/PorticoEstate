@@ -58,7 +58,7 @@
 						<div class="col-12 mt-4" id="item-description">
 						</div>
 					</div>
-					<xsl:if test="count(payment_methods) >  0">
+					<xsl:if test="has_articles  = 1">
 
 						<div class="form-group">
 							<label>
@@ -85,8 +85,8 @@
 								<xsl:value-of select="php:function('lang', 'choose rent period')" />
 							</span>
 							<span class="selectedItems" id="selected_period"></span>
-							<input id="from_" type="hidden" required="true" name="from_[]" class="form-control"/>
-							<input id="to_" type="hidden" required="true" name="to_[]" class="form-control"/>
+							<input class="datetime" id="from_" type="hidden" required="true" name="from_[]" />
+							<input class="datetime" id="to_" type="hidden" required="true" name="to_[]" />
 						</div>
 						<div class="form-group">
 							<div id="time_select" class="row">
@@ -198,6 +198,7 @@
 		<div class="push"></div>
 	</div>
 	<script>
+		var date_format = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />';
 		var initialAcceptAllTerms = false;
 		var initialSelection = <xsl:value-of select="application/resources_json"/>;
 		var initialAudience = <xsl:value-of select="application/audience_json"/>;

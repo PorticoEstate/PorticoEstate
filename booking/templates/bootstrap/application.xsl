@@ -838,8 +838,19 @@
 														</p>
 													</div>
 												</div>
+
 												<div class="list-group">
-													<div id="resources_container" class="pure-form-contentTable"></div>
+													<div class="list-group-item flex-column align-items-start">
+
+														<div id="resources_container" class="pure-form-contentTable"></div>
+													</div>
+												</div>
+
+												<div class="list-group">
+													<div class="list-group-item flex-column align-items-start">
+														<div id="articles_container" style="display:inline-block;">
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -1092,7 +1103,7 @@
 					<xsl:value-of select="php:function('lang', 'internal notes')" />
 				</h3>
 
- 				<xsl:for-each select="internal_notes">
+				<xsl:for-each select="internal_notes">
 					<div class="panel-body">
 						<div class="list-group">
 							<div href="#" class="list-group-item flex-column align-items-start">
@@ -1153,12 +1164,16 @@
 	</div>-->
 
 	<script type="text/javascript">
+		var template_set = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|template_set')" />';
+		var date_format = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />';
+		var initialSelection = <xsl:value-of select="application/resources_json"/>;
+		var application_id = '<xsl:value-of select="application/id"/>';
 		var resourceIds = '<xsl:value-of select="application/resource_ids"/>';
 		var currentuser = '<xsl:value-of select="application/currentuser"/>';
 		if (!resourceIds || resourceIds == "") {
 		resourceIds = false;
 		}
-		var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'No records found', 'ID', 'Type', 'From', 'To', 'Document', 'Active' ,'Delete', 'del', 'Name', 'Cost', 'order id', 'Amount', 'currency', 'status', 'payment method', 'refund','refunded', 'Actions', 'cancel', 'created', 'article', 'Select', 'cost', 'unit', 'quantity', 'Selected', 'Delete', 'Sum', 'tax')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'No records found', 'ID', 'Type', 'From', 'To', 'Document', 'Active' ,'Delete', 'del', 'Name', 'Cost', 'order id', 'unit cost', 'Amount', 'currency', 'status', 'payment method', 'refund','refunded', 'Actions', 'cancel', 'created', 'article', 'Select', 'cost', 'unit', 'quantity', 'Selected', 'Delete', 'Sum', 'tax')"/>;
 		var app_id = <xsl:value-of select="application/id"/>;
 		var building_id = <xsl:value-of select="application/building_id"/>;
 		var resources = <xsl:value-of select="application/resources"/>;
@@ -1169,7 +1184,7 @@
 			var documentsURL = phpGWLink('index.php', {menuaction:'booking.uidocument_view.regulations', sort:'name', length:-1}, true) +'&owner[]=building::' + building_id;
 				documentsURL += '&owner[]=resource::'+ resources;
 			var attachmentsResourceURL = phpGWLink('index.php', {menuaction:'booking.uidocument_application.index', sort:'name', no_images:1, filter_owner_id:app_id, length:-1}, true);
-			var paymentURL = phpGWLink('index.php', {menuaction:'booking.uiapplication.payments', sort:'from_',dir:'asc',application_id:app_id, length:-1}, true);
+			var paymentURL = phpGWLink('index.php', {menuaction:'booking.uiapplication.payments', sort:'order_id',dir:'asc',application_id:app_id, length:-1}, true);
 
 		]]>
 
@@ -1202,19 +1217,21 @@
 		var colDefsAttachmentsResource = [{key: 'name', label: lang['Name'], formatter: genericLink}];
 		createTable('attachments_container', attachmentsResourceURL, colDefsAttachmentsResource, '', 'pure-table pure-table-bordered');
 
-		var colDefsPayment = [
+	var colDefsPayment = [
 		{
-		label: lang['Select'],
-		attrs: [{name: 'class', value: "align-middle"}],
-		object: [
-		{
-		type: 'input',
-		attrs: [
-		{name: 'type', value: 'radio'},
-		{name: 'onClick', value: 'show_order(this);'}
-		]
-		}
-		], value: 'order_id'
+			label: lang['Select'],
+			attrs: [{name: 'class', value: "align-middle"}],
+			object: [
+				{
+					type: 'input',
+					attrs: [
+						{name: 'type', value: 'radio'},
+						{name: 'name', value: 'order_selector'},
+						{name: 'class', value: 'order_selector'},
+						{name: 'onClick', value: 'show_order(this);'}
+					]
+				}
+			], value: 'order_id'
 		},
 		{key: 'order_id', label: lang['order id']},
 		{key: 'created_value', label: lang['created']},
@@ -1223,8 +1240,8 @@
 		{key: 'currency', label: lang['currency']},
 		{key: 'status_text', label: lang['status']},
 		{key: 'payment_method', label: lang['payment method']},
-		{key: 'actions', label: lang['Actions'], formatter: genericLink2({name: 'delete', label:lang['refund']},{name: 'edit', label:lang['cancel']})}
-		];
+		{key: 'actions', label: lang['Actions'], formatter: genericLink2({name: 'delete', label: lang['refund']}, {name: 'edit', label: lang['cancel']})}
+	];
 
 		createTable('payments_container', paymentURL, colDefsPayment,'', 'pure-table pure-table-bordered');
 

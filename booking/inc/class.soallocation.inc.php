@@ -358,6 +358,28 @@
 			$db->query($sql, __LINE__, __FILE__);
 		}
 
+		/**
+		 * Find list of orders related to allocations - without payments
+		 * @return array
+		 */
+		public function find_expired_orders()
+		{
+			$sql = "SELECT bb_purchase_order.id"
+				. " FROM bb_purchase_order"
+				. " LEFT JOIN bb_payment ON bb_purchase_order.id = bb_payment.order_id"
+				. " JOIN bb_allocation ON bb_purchase_order.reservation_type = 'allocation' AND bb_purchase_order.reservation_id = bb_allocation.id"
+				. " WHERE bb_payment.id IS NULL AND bb_allocation.to_ < now()";
+
+			$orders = array();
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$orders[] = (int)$this->db->f('id');
+			}
+
+			return $orders;
+		}
+
 		public function find_expired()
 		{
 			$table_name = $this->table_name;

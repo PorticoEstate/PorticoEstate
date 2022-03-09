@@ -16,16 +16,18 @@ var am;
 
 var timepickerValues = [];
 setTimePickerValues();
+var lastcheckedResources = [];
 
-
-function setTimePickerValues() {
+function setTimePickerValues()
+{
 	let fromHour = (typeof urlParams['fromTime'] !== "undefined") ? parseInt(urlParams['fromTime'].substr(0, 2)) : 0;
 	let fromMinute = (typeof urlParams['fromTime'] !== "undefined") ? parseInt(urlParams['fromTime'].substr(3, 2)) : 0;
 
 	let toHour = (typeof urlParams['toTime'] !== "undefined") ? parseInt(urlParams['toTime'].substr(0, 2)) : 23;
 	let toMinute = (typeof urlParams['toTime'] !== "undefined") ? parseInt(urlParams['toTime'].substr(3, 2)) : 45;
 
-	if (toMinute === 59) {
+	if (toMinute === 59)
+	{
 		toMinute = 45;
 	}
 
@@ -34,13 +36,17 @@ function setTimePickerValues() {
 	let firstIteration = true;
 	for (let hour = fromHour; hour <= toHour; hour++)
 	{
-		if (firstIteration) {
+		if (firstIteration)
+		{
 			configurableFromMinute = fromMinute;
-		} else {
+		}
+		else
+		{
 			configurableFromMinute = 0;
 		}
 
-		if (hour === toHour) {
+		if (hour === toHour)
+		{
 			configurableToMinute = toMinute + 15;
 		}
 
@@ -61,7 +67,7 @@ function applicationModel()
 		return bc.applicationCartItems();
 	});
 
-	console.log(urlParams);
+//	console.log(urlParams);
 
 	self.bookingDate = ko.observable("");
 	self.bookingStartTime = ko.observable("");
@@ -101,8 +107,28 @@ function applicationModel()
 		}
 		if (k > 0)
 		{
+
+			var array1 = checkedResources;
+			var array2 = lastcheckedResources;
+
+			var is_same = (array1.length == array2.length) && array1.every(function (element, index)
+			{
+				return element === array2[index];
+			});
+
+			if(is_same)
+			{
+				return true;
+			}
+
+			lastcheckedResources = checkedResources;
+//			console.log(checkedResources);
 			$("#regulation_documents").empty();
 			getDoc(checkedResources);
+			/**
+			 * Defined in the file purchase_order_add.js
+			 */
+			populateTableChkArticles([], checkedResources, '', '', '');
 			return true;
 		}
 		return false;
@@ -137,7 +163,7 @@ function applicationModel()
 
 				if (!match)
 				{
-		//			if (direct_booking == 0 || (direct_booking == 1 && self.date().length < 1))
+					//			if (direct_booking == 0 || (direct_booking == 1 && self.date().length < 1))
 					{
 						self.date.push({id: [start, end
 							].join(""), from_: formatSingleDate(start), to_: formatSingleDate(end), formatedPeriode: formatDate(start, end)});  /*repeat: self.repeat(),*/
@@ -149,6 +175,7 @@ function applicationModel()
 						self.bookingStartTime("");
 						self.bookingEndTime("");
 						$(".applicationSelectedDates").html("");
+						post_handle_order_table();
 					}, 500); //self.repeat(false);
 
 				}
@@ -164,6 +191,10 @@ function applicationModel()
 	self.removeDate = function ()
 	{
 		self.date.remove(this);
+		setTimeout(function ()
+		{
+			post_handle_order_table();
+		}, 500);
 
 	};
 	self.aboutArrangement = ko.observable("");
@@ -176,7 +207,8 @@ $(document).ready(function ()
 {
 	var activityId;
 
-	if (typeof urlParams['building_id'] === 'undefined') {
+	if (typeof urlParams['building_id'] === 'undefined')
+	{
 		urlParams['building_id'] = building_id;
 	}
 
@@ -243,7 +275,7 @@ $(document).ready(function ()
 
 					var now = Math.floor(Date.now() / 1000);
 
-					if ( (result.results[i].simple_booking && result.results[i].simple_booking_start_date < now) || result.results[i].deactivate_application == 1)
+					if ((result.results[i].simple_booking && result.results[i].simple_booking_start_date < now) || result.results[i].deactivate_application == 1)
 					{
 						//skip this one
 						resource_name += ' *';
@@ -389,14 +421,16 @@ function PopulatePostedDate()
 	}
 }
 
-function populateApplicationDate() {
-	if (typeof urlParams['fromDate'] !== "undefined") {
+function populateApplicationDate()
+{
+	if (typeof urlParams['fromDate'] !== "undefined")
+	{
 		let date = new Date(urlParams['fromDate']);
 		am.bookingDate(date);
 
-		let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(date);
-		let mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(date);
-		let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date);
+		let ye = new Intl.DateTimeFormat('en', {year: 'numeric'}).format(date);
+		let mo = new Intl.DateTimeFormat('en', {month: '2-digit'}).format(date);
+		let da = new Intl.DateTimeFormat('en', {day: '2-digit'}).format(date);
 		$(".datepicker-btn").val(`${da}/${mo}/${ye}`);
 	}
 }
@@ -431,7 +465,7 @@ YUI({lang: 'nb-no'}).use(
 				selectionChange: function (event)
 				{
 					new Date(event.newSelection);
-					console.log(event.newSelection);
+				//	console.log(event.newSelection);
 					$(".datepicker-btn").val(event.newSelection);
 					am.bookingDate(event.newSelection);
 					return false;
@@ -460,7 +494,7 @@ YUI({lang: 'nb-no'}).use(
 				{
 					new Date(event.newSelection);
 					$(this).val(event.newSelection);
-					console.log(event.newSelection);
+			//		console.log(event.newSelection);
 					am.bookingStartTime(event.newSelection);
 					//am.bookingDate(event.newSelection);
 				}
@@ -602,7 +636,7 @@ function showAlert(message, className)
 }
 
 // Shows remove attachment button when input has text:
-if(attInput)
+if (attInput)
 {
 	attInput.addEventListener("change", function ()
 	{
@@ -628,8 +662,8 @@ if(attInput)
 			$("#field_name_input").empty().append(fileName);
 
 			var suffix = '.' + fileName.split('.').pop();
-			const regex =  new RegExp(suffix);
-			if( !accepted_filetypes.match(regex))
+			const regex = new RegExp(suffix);
+			if (!accepted_filetypes.match(regex))
 			{
 				error = true;
 				showAlert('Ugyldig filtype!', 'alert-danger')
@@ -640,9 +674,10 @@ if(attInput)
 		{
 			error = true;
 			showAlert('Filen er for stor!', 'alert-danger')
-		};
+		}
+		;
 
-		if(error)
+		if (error)
 		{
 			attFileInput.textContent = '';
 			attInput.value = '';

@@ -5,8 +5,8 @@
 	<xsl:variable name="lang_name">
 		<xsl:value-of select="php:function('lang', 'name')" />
 	</xsl:variable>
-	<xsl:variable name="lang_unit_price">
-		<xsl:value-of select="php:function('lang', 'unit price')" />
+	<xsl:variable name="lang_unit">
+		<xsl:value-of select="php:function('lang', 'unit')" />
 	</xsl:variable>
 	<xsl:variable name="lang_quantity">
 		<xsl:value-of select="php:function('lang', 'quantity')" />
@@ -89,10 +89,7 @@
 											<xsl:value-of select="$lang_name" />
 										</th>
 										<th>
-											<xsl:value-of select="$lang_unit_price" />
-										</th>
-										<th>
-											<xsl:value-of select="$lang_quantity" />
+											<xsl:value-of select="$lang_unit" />
 										</th>
 										<th>
 											<xsl:value-of select="$lang_amount" />
@@ -101,16 +98,19 @@
 											<xsl:value-of select="$lang_tax" />
 										</th>
 										<th>
+											<xsl:value-of select="$lang_quantity" />
+										</th>
+										<th>
 											<xsl:value-of select="$lang_sum" />
 										</th>
 									</tr>
 									<tbody data-bind="foreach: lines">
 										<td data-bind="text: name"></td>
-										<td data-bind="text: unit_price"></td>
-										<td data-bind="text: quantity"></td>
-										<td data-bind="text: amount"></td>
-										<td data-bind="text: tax.toFixed(2)"></td>
-										<td data-bind="text: (tax + amount).toFixed(2)"></td>
+										<td data-bind="text: lang[unit]"></td>
+										<td class ="text-right" data-bind="text: amount.toFixed(2)"></td>
+										<td class ="text-right" data-bind="text: tax.toFixed(2)"></td>
+										<td class ="text-right" data-bind="text: quantity"></td>
+										<td class ="text-right" data-bind="text: (tax + amount).toFixed(2)"></td>
 									</tbody>
 									<tfoot>
 										<tr>
@@ -121,7 +121,7 @@
 											<td></td>
 											<td></td>
 											<td></td>
-											<td data-bind="text: sum.toFixed(2)"></td>
+											<td class ="text-right" data-bind="text: sum.toFixed(2)"></td>
 										</tr>
 									</tfoot>
 								</table>
@@ -133,7 +133,7 @@
 									<th>
 										Total sum
 									</th>
-									<th id="total_sum">
+									<th class ="text-right" id="total_sum">
 									</th>
 								</tr>
 							</table>
@@ -316,7 +316,7 @@
 						<div class="btn-group" style="display:none;" id="btnSubmitGroup">
 							<button type="button" class="btn btn-primary" id="btnSubmit">
 								<xsl:choose>
-									<xsl:when test="vipps_logo != ''">
+									<xsl:when test="count(payment_methods) > 0">
 										Fakturering
 									</xsl:when>
 									<xsl:otherwise>
@@ -325,9 +325,11 @@
 								</xsl:choose>
 							</button>
 							<div id="external_payment_method">
-								<xsl:if test="vipps_logo != ''">
-									<img src="{vipps_logo}" class="ml-5" OnClick="initiate_payment('vipps');">
-									</img>
+								<xsl:if test="count(payment_methods) > 0">
+									<xsl:for-each select="payment_methods">
+										<img src="{logo}" class="ml-5" OnClick="initiate_payment('{method}');">
+										</img>
+									</xsl:for-each>
 								</xsl:if>
 							</div>
 						</div>
@@ -371,7 +373,7 @@
 	<script>
 		var initialAcceptAllTerms = true;
 		var initialSelection = [];
-		var lang = <xsl:value-of select="php:function('js_lang', 'Do you want to delete application?', 'Send')" />;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Do you want to delete application?', 'Send', 'each', 'kg', 'm', 'm2', 'hour', 'day')" />;
 		var payment_order_id = '<xsl:value-of select="payment_order_id" />';
 		var selected_payment_method = '<xsl:value-of select="selected_payment_method" />';
 

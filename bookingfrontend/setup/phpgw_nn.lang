@@ -560,9 +560,5 @@ calendar view	bookingfrontend	nn	Dags-/ukesvisning
 Show more results	bookingfrontend	nn	Last inn flere resultater
 quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days	bookingfrontend	nn	Maksimumgrense (%1) overskreden for %2:<br/> maks %3 gonger innanfor ein periode på %4 dagar
 validate	bookingfrontend	nn	Kontrollér
-unit	bookingfrontend	nn	Eining
-price	bookingfrontend	nn	Pris
-selected	bookingfrontend	nn	Valgt
-unit cost	bookingfrontend	nn	Einingspris
 cost is set	booking	nn	Ny pris er definert
 Event was created	booking	nn	Arrangementet vart oppretta

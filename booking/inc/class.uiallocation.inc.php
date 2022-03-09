@@ -651,7 +651,54 @@
 				{
 					try
 					{
+						/**
+						 * Start dealing with the purchase_order..
+						 */
+						$purchase_order = array(
+							'application_id' => $allocation['application_id'],
+							'status' => 0,
+							'reservation_type' => 'allocation',
+							'reservation_id' => $id,
+							'customer_id' => -1,
+							'lines' => array());
+
+						$selected_articles = (array)phpgw::get_var('selected_articles');
+
+						foreach ($selected_articles as $selected_article)
+						{
+							$_article_info = explode('_', $selected_article);
+
+							if(empty($_article_info[0]))
+							{
+								continue;
+							}
+							/**
+							 * the value selected_articles[]
+							 * <mapping_id>_<quantity>_<tax_code>_<ex_tax_price>_<parent_mapping_id>
+							 */
+							$purchase_order['lines'][] = array(
+								'article_mapping_id'	=> $_article_info[0],
+								'quantity'				=> $_article_info[1],
+								'tax_code'				=> $_article_info[2],
+								'ex_tax_price'			=> $_article_info[3],
+								'parent_mapping_id'		=> !empty($_article_info[4]) ? $_article_info[4] : null
+							);
+						}
+
+						if(!empty($purchase_order['lines']))
+						{
+							$purchase_order_id = createObject('booking.sopurchase_order')->add_purchase_order($purchase_order);
+							$purchase_order_result =  createObject('booking.sopurchase_order')->get_single_purchase_order($purchase_order_id);
+							if($purchase_order_result['sum'] && $purchase_order_result['sum'] != $allocation['cost'])
+							{
+								$this->add_cost_history($allocation, lang('cost is set'), $purchase_order_result['sum']);
+								$allocation['cost'] = $purchase_order_result['sum'];
+							}
+						}
+
+						/** END purchase order */
 						$receipt = $this->bo->update($allocation);
+
 						$this->bo->so->update_id_string();
 						$this->send_mailnotification_to_organization($organization, lang('Allocation changed'), phpgw::get_var('mail', 'html', 'POST'));
 						self::redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $allocation['id']));
@@ -668,6 +715,12 @@
 
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'base', 'allocation.js');
+			self::add_javascript('booking', 'base', 'purchase_order_edit.js');
+
+			$GLOBALS['phpgw']->js->validate_file('alertify', 'alertify.min', 'phpgwapi');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
+
 			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.show',
 					'id' => $allocation['id']));
@@ -681,8 +734,11 @@
 			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime', phpgwapi_datetime::date_to_timestamp($allocation['from_']));
 			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime', phpgwapi_datetime::date_to_timestamp($allocation['to_']));
 
-			self::render_template_xsl('allocation_edit', array('allocation' => $allocation,
-				'cost_history' => $cost_history));
+			self::render_template_xsl('allocation_edit', array(
+				'allocation' => $allocation,
+				'cost_history' => $cost_history,
+				'tax_code_list'	=> json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
+				));
 		}
 
 		public function delete()
@@ -931,7 +987,9 @@
 				$resource_ids = $resource_ids . '&filter_id[]=' . $res;
 			}
 			$allocation['resource_ids'] = $resource_ids;
+			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			self::add_javascript('booking', 'base', 'purchase_order_show.js');
 			self::render_template_xsl('allocation', array('allocation' => $allocation));
 		}
 

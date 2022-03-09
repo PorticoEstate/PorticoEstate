@@ -12,12 +12,14 @@
 			$account_code_set_so,
 			$customer_id,
 			$sequential_number_generator_so,
-			$config_data;
+			$config_data,
+			$sopurchase_order;
 
 		function __construct()
 		{
 			$this->event_so = CreateObject('booking.soevent');
 			$this->application_bo = CreateObject('booking.boapplication');
+			$this->application_so = CreateObject('booking.soapplication');
 			$this->allocation_bo = CreateObject('booking.boallocation');
 			$this->booking_bo = CreateObject('booking.bobooking');
 			$this->event_bo = CreateObject('booking.boevent');
@@ -27,6 +29,7 @@
 			$this->completed_reservation_bo = CreateObject('booking.bocompleted_reservation');
 			$this->account_code_set_so = CreateObject('booking.soaccount_code_set');
 			$this->sequential_number_generator_so = CreateObject('booking.sobilling_sequential_number_generator');
+			$this->sopurchase_order = createObject('booking.sopurchase_order');
 
 			parent::__construct('bb_completed_reservation_export', array(
 				'id' => array('type' => 'int'),
@@ -1304,6 +1307,29 @@
 					continue; //Don't export costless rows
 				}
 
+				$purchase_order = $this->sopurchase_order->get_purchase_order(0, $reservation['reservation_type'], $reservation['reservation_id']);
+				/**
+				 * For vipps kan det være flere krav, for etterfakturering vil det være ett
+				 */
+				$payments = $this->sopurchase_order->get_order_payments($purchase_order['order_id']);
+				if(isset($payments[0]))
+				{
+					$payment = $payments[0];
+
+					if(in_array($payment['status'], array( 'completed', 'voided', 'refunded')))
+					{
+						continue;
+					}
+
+					//FIXME: move method from soapplication
+					// status: new, pending, completed, voided, partially_refunded, refunded
+					$this->application_so->update_payment_status($payment['remote_id'], 'completed', 'RESERVE');
+
+					/**
+					 * sjekk status / opdater status
+					 */
+				}
+
 				$type = $reservation['customer_type'];
 
 				$from_date = new DateTime($reservation['from_']);
@@ -1388,8 +1414,6 @@
 					$header['Deresref'] = $ext_ord_ref;//char(30)
 					$header['Fagsystemkundeid'] = $kundenr;
 
-					$line_no = 1;
-
 					$fakturalinje = array();
 
 					//item level
@@ -1410,7 +1434,6 @@
 					$fakturalinje['FormalDim']	 = '';  //char(8)
 					$fakturalinje['fradato']	 = $from_date->format('d.m.Y');  //dato
 
-					$fakturalinje['Linjenr']	 = $line_no;  //
 //					$fakturalinje['mvakode']	 = $tax_code;  //char(1)
 
 					//Formål. eks.
@@ -1426,17 +1449,11 @@
 					}
 
 					$fakturalinje['orgkode']	 = '';  //char(8)
-
 					$fakturalinje['SumPrisUtenAvgift']	 =$reservation['cost'];  //Beløp
-
 					$fakturalinje['tildato']	 = $to_date->format('d.m.Y');  //Dato
-
 					$fakturalinje['Tilleggstekst'] = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description'] . ' - ' . $reservation['description']), 0, 225);
-
 					$fakturalinje['Varekode']	 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
-
 					$fakturalinje['Fakturaorgkode']	 = '';  //
-
 					//Topptekst til faktura, knyttet mot fagavdeling
 					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
 
@@ -1446,7 +1463,49 @@
 					{
 						$fakturalinje['orgkode'] = trim(strtoupper($account_codes['project_number']));
 					}
-					$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+
+					/*
+					'order_id'
+					'status'
+					'parent_mapping_id'
+					'article_mapping_id'
+					'quantity'
+					'unit_price'
+					'overridden_unit_price'
+					'currency'
+					'amount'
+					'tax_code'
+					'article_code'
+					'tax'
+					'name'
+					*/
+					$line_no = 0;
+
+					if($purchase_order && !empty($purchase_order['lines']))
+					{
+
+						foreach ($purchase_order['lines'] as $order_line)
+						{
+							$line_no += 1;
+							$fakturalinje['Linjenr']			 = $line_no;
+							$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['article_code']);
+							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
+							$fakturalinje['Tilleggstekst']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']);
+							$fakturalinje['mvakode']			 = $order_line['tax_code'];
+							$fakturalinje['antall']				 = $order_line['quantity'];
+							$fakturalinje['enhetspris']			 = $order_line['unit_price'];
+							$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+
+						}
+
+					}
+					else
+					{
+						$line_no += 1;
+						$fakturalinje['Linjenr']			 = $line_no;
+						$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+					}
+
 
 					$headers[$check_customer_identifier] = $header;
 
@@ -1475,7 +1534,6 @@
 				else
 				{
 					//item level
-					$line_no += 1;
 
 					$fakturalinje = array();
 
@@ -1498,7 +1556,6 @@
 					$fakturalinje['FormalDim']			 = '';  //char(8)
 					$fakturalinje['fradato']			 = $from_date->format('d.m.Y');  //dato
 
-					$fakturalinje['Linjenr']			 = $line_no;  //
 //					$fakturalinje['mvakode']			 = $tax_code;  //char(1)
 
 					//Formål. Eks Idrett
@@ -1527,8 +1584,32 @@
 					$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
 					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
 
-//					$fakturalinjer[$check_customer_identifier][] = array('BkPffFakturagrunnlaglinje' => $fakturalinje);
-					$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+
+					if($purchase_order && !empty($purchase_order['lines']))
+					{
+
+						foreach ($purchase_order['lines'] as $order_line)
+						{
+							$line_no += 1;
+							$fakturalinje['Linjenr']			 = $line_no;
+							$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT",$order_line['article_code']);
+							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
+							$fakturalinje['Tilleggstekst']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']);
+							$fakturalinje['mvakode']			 = $order_line['tax_code'];
+							$fakturalinje['antall']				 = $order_line['quantity'];
+							$fakturalinje['enhetspris']			 = $order_line['unit_price'];
+							$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+
+						}
+
+					}
+					else
+					{
+						$line_no += 1;
+						$fakturalinje['Linjenr']			 = $line_no;
+						$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+					}
+
 
 					$log_buidling			 = $reservation['building_name'];
 					$log_cost				 = $reservation['cost'];

@@ -525,6 +525,14 @@
 	);
 
 	/**
+	 * Billing 2
+	 */
+	$asyncservice->set_timer(
+		array('hour' => "*/1"), 'booking_async_task_generate_payment_enabled', 'booking.async_task.doRun', array(
+				'task_class' => "booking.async_task_generate_payment_enabled")
+	);
+
+	/**
 	 * Participants
 	 */
 	$asyncservice->set_timer(
@@ -540,8 +548,21 @@
 			. " VALUES (2, 'service')", __LINE__, __FILE__);
 
 	$GLOBALS['phpgw_setup']->oProc->m_odb->query(
-			"CREATE OR REPLACE VIEW bb_article_view AS " .
-			"SELECT id, name, description, active, 1 AS article_cat_id FROM bb_resource " .
-			"UNION " .
-			"SELECT id, name, description, active, 2 AS article_cat_id  FROM bb_service" , __LINE__, __FILE__
+		"CREATE OR REPLACE VIEW public.bb_article_view
+		 AS
+		 SELECT bb_resource.id,
+			bb_building.name || '::' || bb_resource.name as name,
+			bb_resource.description,
+			bb_resource.active,
+			1 AS article_cat_id
+		   FROM bb_resource
+		   JOIN bb_building_resource ON bb_building_resource.resource_id = bb_resource.id
+		   JOIN bb_building ON bb_building_resource.building_id = bb_building.id
+		UNION
+		 SELECT bb_service.id,
+			bb_service.name,
+			bb_service.description,
+			bb_service.active,
+			2 AS article_cat_id
+		   FROM bb_service" , __LINE__, __FILE__
 		);

@@ -19,6 +19,31 @@ $(document).ready(function ()
 		}
 	});
 
+	/**
+	 * Update quantity related to time
+	 */
+	$("#dates-container").on("change", ".datetime", function (event)
+	{
+		event.preventDefault();
+		post_handle_order_table();
+
+	});
+
+	/**
+	 * Update quantity related to time
+	 */
+	$("#dates-container").on("click", ".btnclose", function (event)
+	{
+		event.preventDefault();
+
+		/**
+		 * Wait for the time-set to be removed before re-calculate
+		 */
+		setTimeout(function ()
+		{
+			post_handle_order_table();
+		}, 500);
+	});
 
 	JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uibuilding.index'}, true),
 		'field_building_name', 'field_building_id', 'building_container');
@@ -102,7 +127,6 @@ $(window).on('load', function ()
 	{
 		populateTableChkResources(building_id, initialSelection);
 		populateTableChkRegulations(building_id, initialDocumentSelection, resources);
-		populateTableChkArticles([], resources);
 
 		building_id_selection = building_id;
 	}
@@ -127,7 +151,22 @@ $(window).on('load', function ()
 		});
 		var selection = [];
 		populateTableChkRegulations(building_id_selection, selection, resources);
-		populateTableChkArticles(selection, resources);
+
+		if (typeof (application_id) === 'undefined')
+		{
+			application_id = '';
+		}
+		if (typeof (reservation_type) === 'undefined')
+		{
+			reservation_type = '';
+		}
+		if (typeof (reservation_id) === 'undefined')
+		{
+			reservation_id = '';
+		}
+
+		populateTableChkArticles([
+		], resources, application_id, reservation_type, reservation_id);
 
 	});
 
@@ -379,158 +418,9 @@ function populateTableChkResources(building_id, selection)
 	populateTableResources(url, container, colDefsResources);
 }
 
-function populateTableChkArticles(selection, resources)
-{
-	var oArgs = {
-		menuaction: 'booking.uiarticle_mapping.get_articles',
-		sort: 'name',
-	};
-	var url = phpGWLink('index.php', oArgs, true);
 
-	for (var r in resources)
-	{
-		url += '&resources[]=' + resources[r];
-	}
 
-	var container = 'articles_container';
-	var colDefsRegulations = [
-		{label: lang['Select'],
-			object: [
-				{
-					type: 'button',
-					attrs: [
-						{name: 'type', value: 'button'},
-						{name: 'disabled', value: true},
-						{name: 'class', value: 'btn btn-success'},
-						{name: 'onClick', value: 'add_to_bastet(this);'},
-						{name: 'innerHTML', value: 'Legg til <i class="fas fa-shopping-basket"></i>'},
-					]
-				}
-			]
-		},
-		{
-			/**
-			 * Hidden field for holding article id
-			 */
-			attrs: [{name: 'style', value: "display:none;"}],
-			object: [
-				{type: 'input', attrs: [
-						{name: 'type', value: 'hidden'}
-					]
-				}
-			], value: 'id'},
-		{key: 'name', label: lang['article']},
-		{key: 'price', label: lang['price']},
-		{key: 'unit', label: lang['unit']},
-		{key: 'quantity', label: lang['quantity'], object: [
-				{type: 'input', attrs: [
-						{name: 'type', value: 'number'},
-						{name: 'min', value: 0},
-						{name: 'value', value: 0},
-						{name: 'size', value: 3},
-						{name: 'class', value: 'quantity'},
-					]
-				}
-			]},
-		{label: lang['Selected'],
-			object: [
-				{type: 'input', attrs: [
-						{name: 'type', value: 'hidden'},
-						{name: 'name', value: 'selected_articles[]'}
-					]
-				}
-			]},
-		{label: lang['Delete'],
-			object: [
-				{
-					type: 'button',
-					attrs: [
-						{name: 'type', value: 'button'},
-						{name: 'disabled', value: true},
-						{name: 'class', value: 'btn btn-danger'},
-						{name: 'onClick', value: 'empty_from_bastet(this);'},
-						{name: 'innerHTML', value: 'Slett <i class="far fa-trash-alt"></i>'},
-					]
-				}
-			]
-		}
 
-	];
-
-	populateTableArticles(url, container, colDefsRegulations);
-
-}
-
-function add_to_bastet(element)
-{
-	var id = element.parentNode.parentNode.childNodes[1].childNodes[0].value;
-	var quantity = element.parentNode.parentNode.childNodes[5].childNodes[0].value;
-
-	/**
-	 * set selected items
-	 */
-	var temp = element.parentNode.parentNode.childNodes[6].childNodes[0].value;
-
-	var selected_quantity = 0;
-
-	if (temp)
-	{
-		selected_quantity = parseInt(temp.split("_")[1]);
-	}
-
-	selected_quantity = selected_quantity + parseInt(quantity);
-
-	/**
-	 * Reset quantity
-	 */
-	element.parentNode.parentNode.childNodes[5].childNodes[0].value = 0;
-	/**
-	 * Reset button to disabled
-	 */
-	element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
-
-	var target = element.parentNode.parentNode.childNodes[6].childNodes[0];
-	target.value = id + '_' + selected_quantity;
-
-	var div = document.getElementById('selected_quantity_' + id);
-	if (div)
-	{
-		div.parentNode.removeChild(div);
-	}
-
-// create a new element
-	var elem = document.createElement('div');
-	elem.id = 'selected_quantity_' + id;
-
-// add text
-    elem.innerText = selected_quantity;
-
-// insert the element after target element
-	target.parentNode.insertBefore(elem, target.nextSibling);
-
-}
-
-function empty_from_bastet(element)
-{
-	/**
-	 * Reset quantity
-	 */
-	var id = element.parentNode.parentNode.childNodes[1].childNodes[0].value;
-	var div = document.getElementById('selected_quantity_' + id);
-	if (div)
-	{
-		div.parentNode.removeChild(div);
-	}
-
-	element.parentNode.parentNode.childNodes[5].childNodes[0].value = 0;
-	element.parentNode.parentNode.childNodes[6].childNodes[0].value = '';
-	/**
-	 * Reset button to disabled
-	 */
-	element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
-	element.parentNode.parentNode.childNodes[7].childNodes[0].setAttribute('disabled', true);
-
-}
 function populateTableChkRegulations(building_id, selection, resources)
 {
 	var oArgs = {
@@ -584,9 +474,3 @@ function populateTableRegulations(url, container, colDefs)
 	}
 
 }
-function populateTableArticles(url, container, colDefs)
-{
-	createTable(container, url, colDefs, '', 'pure-table pure-table-bordered');
-}
-
-

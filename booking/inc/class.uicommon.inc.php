@@ -4,7 +4,7 @@
 
 	/**
 	 * Cherry pick selected values into a new array
-	 * 
+	 *
 	 * @param array $array    input array
 	 * @param array $keys     array of keys to pick
 	 *
@@ -105,7 +105,7 @@
 
 	/**
 	 * Reformat an ISO timestamp into norwegian format
-	 * 
+	 *
 	 * @param string $date    date
 	 *
 	 * @return string containg timestamp in norwegian format
@@ -859,25 +859,25 @@ JS;
 				$html = 'var html = "<div class=\'date-container\'>"+
                             "<a class=\'btnclose\' href=\'javascript:void(0);\'>' . $lang_remove . '</a>"+
                             "<div class=\'form-group\'><label for=\'new_start_date_"+this.counter+"\'>' . $lang_from . '</label>"+
-                            "<input class=\'new_datepicker time form-control\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
+                            "<input class=\'new_datepicker datetime form-control\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
                             "</input></div>"+
                             "<div class=\'form-group\'><label for=\'new_end_date_"+this.counter+"\' >' . $lang_to . '</label>"+
-                            "<input class=\'new_datepicker time form-control\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
+                            "<input class=\'new_datepicker datetime form-control\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
                             "</input></div>"+
                         "</div>"';
 			}
 			else
 			{
 				$html = 'var html = "<div class=\'date-container\'>"+
-						"<a class=\'close-btn btnclose\' href=\'javascript:void(0);\'></a>"+
+						"<a href=\"javascript:void(0);\" class=\"close-btn btnclose\">-</a>"+
 						"<div class=\'pure-control-group\'>"+
 							"<label for=\'new_start_date_"+this.counter+"\'><h4>' . $lang_from . '</h4></label>"+
-							"<input class=\'new_datepicker time pure-input-2-3\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
+							"<input class=\'new_datepicker datetime pure-input-2-3\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
 							"</input>"+
 						"</div>"+
 						"<div class=\'pure-control-group\'>"+
 							"<label for=\'new_end_date_"+this.counter+"\' ><h4>' . $lang_to . '</h4></label>"+
-							"<input class=\'new_datepicker time pure-input-2-3\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
+							"<input class=\'new_datepicker datetime pure-input-2-3\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
 							"</input>"+
 						"</div>"+
 				 	"</div>"';
