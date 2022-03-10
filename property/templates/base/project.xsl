@@ -786,7 +786,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					<div class="pure-control-group">
-						<label for="name">
+						<label for="order_time_span">
 							<xsl:value-of select="php:function('lang', 'year')"/>
 						</label>
 						<xsl:choose>
@@ -810,7 +810,6 @@
 						<div class="pure-form-stacked">
 
 							<div class="pure-control-group">
-
 								<div class="pure-input-3-4" style="float: right; width: 90%;">
 									<xsl:for-each select="datatable_def">
 										<xsl:if test="container = 'datatable-container_1'">

@@ -2235,7 +2235,7 @@ JS;
 
 				if ($first_year && $first_year != $_order_entry['year'])
 				{
-					continue;
+//					continue;
 				}
 
 				$_order_entry['send_order'] = '';
@@ -2301,7 +2301,7 @@ JS;
 				'requestUrl' => json_encode(self::link(array(
 						'menuaction'		 => 'property.uiproject.get_vouchers',
 						'project_id'		 => $id,
-						'year'				 => $first_year,
+				//		'year'				 => $first_year,
 						'phpgw_return_as'	 => 'json'))),
 				'data'		 => json_encode(array()),
 				'ColumnDefs' => $invoice_def,

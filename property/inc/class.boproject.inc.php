@@ -1139,8 +1139,7 @@
 
 		public function get_order_time_span( $id, $first_year = 0 )
 		{
-			$values = $this->so->get_order_time_span($id);
-			return $this->bocommon->select_list($first_year, $values);
+			return  $this->so->get_order_time_span($id);
 		}
 
 		public function get_missing_project_budget()
