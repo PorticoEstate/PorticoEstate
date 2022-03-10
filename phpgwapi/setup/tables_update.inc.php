@@ -15,7 +15,7 @@
 	{
 		// 0.9.14.5xx are the development-versions of the 0.9.16 release (based on the 0.9.14 api)
 		// as 0.9.15.xxx are already used in HEAD
-		
+
 		// this is the 0.9.15.003 update, needed for the new filemanager and vfs-classes in the api
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_vfs','content', array ('type' => 'text', 'nullable' => True));
 
@@ -68,7 +68,7 @@
 			'ix' => array(),
 			'uc' => array('app_name')
 		),'app_title');
-		
+
 		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.14.502';
 		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 	}
@@ -96,7 +96,7 @@
 		{
 			$owner = intval($GLOBALS['phpgw_setup']->oProc->f('preference_owner'));
 			$prefs = unserialize($GLOBALS['phpgw_setup']->oProc->f('preference_value'));
-			
+
 			if (is_array($prefs))
 			{
 				foreach ($prefs as $app => $pref)
@@ -202,7 +202,7 @@
 
 	$test[] = '0.9.14.508';
 	function phpgwapi_upgrade0_9_14_508()
-	{	
+	{
 		//global $setup_info,$phpgw_setup;
 		//$db1 =& $GLOBALS['phpgw_setup']->db; $db1->auto_stripslashes = False; $db1->Halt_On_Error = 'yes';
 
@@ -428,42 +428,42 @@
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_type (type) VALUES ('url')");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_comm_type (type) VALUES ('other')");
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT comm_type_id FROM phpgw_contact_comm_type WHERE type='email'"); 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT comm_type_id FROM phpgw_contact_comm_type WHERE type='email'");
 		$GLOBALS['phpgw_setup']->oProc->next_record();
 		$email_type_id = intval($GLOBALS['phpgw_setup']->oProc->f('comm_type_id'));
 
 		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $email_type_id . ",'home email'" . ')');
 		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $email_type_id . ",'work email'" . ')');
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT comm_type_id FROM phpgw_contact_comm_type WHERE type='phone'"); 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT comm_type_id FROM phpgw_contact_comm_type WHERE type='phone'");
 		$GLOBALS['phpgw_setup']->oProc->next_record();
 		$phone_type_id = intval($GLOBALS['phpgw_setup']->oProc->f('comm_type_id'));
 
         $GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $phone_type_id . ",'home phone'" . ')');
 		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $phone_type_id . ",'work phone'" . ')');
-		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $phone_type_id . ",'voice phone'" . ')'); 
-		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $phone_type_id . ",'msg phone'" . ')'); 
-		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $phone_type_id . ",'pager'" . ')'); 
-		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $phone_type_id . ",'bbs'" . ')'); 
-		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $phone_type_id . ",'modem'" . ')'); 
-		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $phone_type_id . ",'isdn'" . ')'); 
-		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $phone_type_id . ",'video'" . ')'); 
+		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $phone_type_id . ",'voice phone'" . ')');
+		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $phone_type_id . ",'msg phone'" . ')');
+		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $phone_type_id . ",'pager'" . ')');
+		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $phone_type_id . ",'bbs'" . ')');
+		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $phone_type_id . ",'modem'" . ')');
+		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $phone_type_id . ",'isdn'" . ')');
+		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $phone_type_id . ",'video'" . ')');
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT comm_type_id FROM phpgw_contact_comm_type WHERE type='fax'"); 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT comm_type_id FROM phpgw_contact_comm_type WHERE type='fax'");
 		$GLOBALS['phpgw_setup']->oProc->next_record();
 		$fax_type_id = intval($GLOBALS['phpgw_setup']->oProc->f('comm_type_id'));
 
 		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $fax_type_id . ",'home fax'" . ')');
 		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $fax_type_id . ",'work fax'" . ')');
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT comm_type_id FROM phpgw_contact_comm_type WHERE type='mobile phone'"); 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT comm_type_id FROM phpgw_contact_comm_type WHERE type='mobile phone'");
 		$GLOBALS['phpgw_setup']->oProc->next_record();
 		$mobile_type_id = intval($GLOBALS['phpgw_setup']->oProc->f('comm_type_id'));
 
 		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $mobile_type_id . ",'mobile (cell) phone'" . ')');
 		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $mobile_type_id . ",'car phone'" . ')');
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT comm_type_id FROM phpgw_contact_comm_type WHERE type='instant messaging'"); 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT comm_type_id FROM phpgw_contact_comm_type WHERE type='instant messaging'");
 		$GLOBALS['phpgw_setup']->oProc->next_record();
 		$instant_type_id = intval($GLOBALS['phpgw_setup']->oProc->f('comm_type_id'));
 
@@ -473,7 +473,7 @@
 		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $instant_type_id . ",'icq'" . ')');
 		$GLOBALS['phpgw_setup']->db->query('INSERT INTO phpgw_contact_comm_descr (comm_type_id,descr) VALUES (' . $instant_type_id . ",'jabber'" . ')');
 
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT comm_type_id FROM phpgw_contact_comm_type WHERE type='url'"); 
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT comm_type_id FROM phpgw_contact_comm_type WHERE type='url'");
 		$GLOBALS['phpgw_setup']->oProc->next_record();
 		$url_type_id = intval($GLOBALS['phpgw_setup']->oProc->f('comm_type_id'));
 
@@ -521,9 +521,9 @@
 			$comm_descr_id[$GLOBALS['phpgw_setup']->oProc->f('descr')] = $GLOBALS['phpgw_setup']->oProc->f('comm_descr_id');
 		}
 
-		// IMPORTANT: Probably you ask why i use an array instand of only use $GLOBALS['phpgw_setup']->oProc well, for some reason for upgrades of many 
+		// IMPORTANT: Probably you ask why i use an array instand of only use $GLOBALS['phpgw_setup']->oProc well, for some reason for upgrades of many
 		// records (more that 18000 in my case) this process is halted, then i have to do of this way.
-		
+
 		// IMPORTANT: This problem is with max_execution_time in php.ini and time_out in http.conf, i set this to 3000 and all works fine, but
 		// i not change this process because i think this way is beter.
 
@@ -534,7 +534,7 @@
 				'value' => $GLOBALS['phpgw_setup']->oProc->f('contact_value'),
 				'owner' => $GLOBALS['phpgw_setup']->oProc->f('contact_owner'));
 		}
-		
+
 		// migrate existing data to phpgw_contact_person
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT id, owner, access, cat_id, n_given, n_family, n_middle, n_prefix, n_suffix, bday, pubkey, title, org_unit, sound, org_name, note, tz, adr_one_street, adr_one_locality, adr_one_region, adr_one_postalcode, adr_one_countryname, adr_two_street, adr_two_locality, adr_two_region, adr_two_postalcode, adr_two_countryname, url, tel_work, tel_home, tel_voice, tel_fax, tel_msg, tel_cell, tel_pager, tel_bbs, tel_modem, tel_car, tel_isdn, tel_video, email, email_home FROM phpgw_addressbook");
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
@@ -602,15 +602,15 @@
 				$time = time();
 				$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact (owner,access,cat_id,contact_type_id,ab_id) VALUES ("
 					    . $data['owner']
-					    . "," . ($data['access']?"'".$data['access']."'":"null") 
+					    . "," . ($data['access']?"'".$data['access']."'":"null")
 					    . "," . ($data['cat_id']?"'".$data['cat_id']."'":"null")
 					    . "," . $contact_type_person
-					    . "," . $key 
+					    . "," . $key
 					    . ')');
-				
+
 				$contact_id++;
 				$person_id = $contact_id;
-				
+
 				$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_person (person_id,first_name,last_name,
 				middle_name,prefix,suffix,birthday,pubkey,title,department,
 				sound,created_by,modified_by,created_on,modified_on,ab_id) VALUES ("
@@ -620,29 +620,29 @@
 					    . ",'" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['n_middle']) . "'"
 					    . ",'" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['n_prefix']) . "'"
 					    . ",'" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['n_suffix']) . "'"
-					    . ",'" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['bday']) . "'" 
+					    . ",'" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['bday']) . "'"
 					    . ",'" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['pubkey']) . "'"
 					    . ",'" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['title']) . "'"
 					    . ",'" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['org_unit']) . "'"
 					    . ",'" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['sound']) . "'"
-					    . "," . $data['owner'] 
-					    . "," . $data['owner'] 
+					    . "," . $data['owner']
+					    . "," . $data['owner']
 					    . "," . $time
 					    . "," . $time
-					    . "," . $key 
-					    . ')' 
+					    . "," . $key
+					    . ')'
 					);
 
 				if($data['org_name'])
 				{
 					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact (owner,access,cat_id,contact_type_id,ab_id) VALUES ("
 						    . $data['owner']
-						    . "," . ($data['access']?"'".$data['access']."'":"null") 
+						    . "," . ($data['access']?"'".$data['access']."'":"null")
 						    . "," . ($data['cat_id']?"'".$data['cat_id']."'":"null")
 						    . "," . $contact_type_org
-						    . "," . $key 
+						    . "," . $key
 						    . ')');
-				
+
 					$contact_id++;
 					$org_id = $contact_id;
 
@@ -651,19 +651,19 @@
 						    . $org_id
 						    . ",'" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['org_name']) . "'"
 						    . "," . $data['owner']
-						    . "," . $data['owner'] 
+						    . "," . $data['owner']
 						    . "," . $time
 						    . "," . $time
-						    . "," . $key 
+						    . "," . $key
 						    .')');
 
 					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_org_person (org_id,person_id, preferred,
-					created_on,created_by) VALUES (" 
-						    . $org_id 
-						    . ", " . $person_id 
-						    . ", 'Y'"	    
+					created_on,created_by) VALUES ("
+						    . $org_id
+						    . ", " . $person_id
+						    . ", 'Y'"
 						    . ", " . $time
-						    . ", " . $time 
+						    . ", " . $time
 						    .  ")");
 				}
 
@@ -672,8 +672,8 @@
 					$addr_preferred = 'Y';
 					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_addr (contact_id,add1,add2,add3,preferred,
 					city, state, postal_code, country, tz, addr_type_id,
-					created_on,created_by,modified_on,modified_by) VALUES (" 
-						    . $person_id 
+					created_on,created_by,modified_on,modified_by) VALUES ("
+						    . $person_id
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['adr_one_street']) ." '"
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($others[$key]['address2']['value']) ." '"
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($others[$key]['address3']['value']) ." '"
@@ -684,8 +684,8 @@
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['adr_one_countryname']) ." '"
 						    . ", " . intval($data['tz'])
 						    . ", " . $addr_work_type
-						    . ", " . $time 
-						    . ", " . $data['owner'] 
+						    . ", " . $time
+						    . ", " . $data['owner']
 						    . ", " . $time
 						    . ", " . $data['owner']
 						    .  ")");
@@ -693,11 +693,11 @@
 
 				if($data['addr_two_stret']!='' || $data['adr_two_locality']!='' || $data['adr_two_region']!='' || $data['adr_two_postalcode']!='' || $data['adr_two_countryname']!='')
 				{
-					$addr_preferred = $addr_preferred=='Y'?'N':'Y';					
+					$addr_preferred = $addr_preferred=='Y'?'N':'Y';
 					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_addr (contact_id,add1,preferred,
 					city, state, postal_code, country, tz, addr_type_id,
-					created_on,created_by,modified_on,modified_by) VALUES (" 
-						    . $person_id 
+					created_on,created_by,modified_on,modified_by) VALUES ("
+						    . $person_id
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['adr_two_street']) ." '"
 						    . ", '" . $addr_preferred . " '"
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['adr_two_locality']) ." '"
@@ -706,21 +706,21 @@
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['adr_two_countryname']) ." '"
 						    . ", " . intval($data['tz'])
 						    . ", " . $addr_home_type
-						    . ", " . $time 
-						    . ", " . $data['owner'] 
+						    . ", " . $time
+						    . ", " . $data['owner']
 						    . ", " . $time
 						    . ", " . $data['owner']
 						    .  ")");
 				}
-				
+
 				if($data['url'])
 				{
-					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm 
-					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES (" 
+					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm
+					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES ("
 						    . $person_id
 						    . ", "  . $comm_descr_id['website']
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['url']) . "'"
-						    . ", "  . $time 
+						    . ", "  . $time
 						    . ", "  . $data['owner']
 						    . ", "  . $time
 						    . ", "  . $data['owner']
@@ -728,12 +728,12 @@
 				}
 				if($data['tel_work'])
 				{
-					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm 
-					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES (" 
+					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm
+					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES ("
 						    . $person_id
 						    . ", "  . $comm_descr_id['work phone']
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['tel_work']) . "'"
-						    . ", "  . $time 
+						    . ", "  . $time
 						    . ", "  . $data['owner']
 						    . ", "  . $time
 						    . ", "  . $data['owner']
@@ -741,12 +741,12 @@
 				}
 				if($data['tel_home'])
 				{
-					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm 
-					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES (" 
+					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm
+					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES ("
 						    . $person_id
 						    . ", "  . $comm_descr_id['home phone']
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['tel_home']) . "'"
-						    . ", "  . $time 
+						    . ", "  . $time
 						    . ", "  . $data['owner']
 						    . ", "  . $time
 						    . ", "  . $data['owner']
@@ -754,12 +754,12 @@
 				}
 				if($data['tel_voice'])
 				{
-					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm 
-					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES (" 
+					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm
+					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES ("
 						    . $person_id
 						    . ", "  . $comm_descr_id['voice phone']
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['tel_voice']) . "'"
-						    . ", "  . $time 
+						    . ", "  . $time
 						    . ", "  . $data['owner']
 						    . ", "  . $time
 						    . ", "  . $data['owner']
@@ -767,12 +767,12 @@
 				}
 				if($data['tel_fax'])
 				{
-					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm 
-					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES (" 
+					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm
+					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES ("
 						    . $person_id
 						    . ", "  . $comm_descr_id['work fax']
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['tel_fax']) . "'"
-						    . ", "  . $time 
+						    . ", "  . $time
 						    . ", "  . $data['owner']
 						    . ", "  . $time
 						    . ", "  . $data['owner']
@@ -780,12 +780,12 @@
 				}
 				if($data['tel_msg'])
 				{
-					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm 
-					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES (" 
+					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm
+					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES ("
 						    . $person_id
 						    . ", "  . $comm_descr_id['msg phone']
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['tel_msg']) . "'"
-						    . ", "  . $time 
+						    . ", "  . $time
 						    . ", "  . $data['owner']
 						    . ", "  . $time
 						    . ", "  . $data['owner']
@@ -793,12 +793,12 @@
 				}
 				if($data['tel_cell'])
 				{
-					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm 
-					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES (" 
+					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm
+					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES ("
 						    . $person_id
 						    . ", "  . $comm_descr_id['mobile (cell) phone']
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['tel_cell']) . "'"
-						    . ", "  . $time 
+						    . ", "  . $time
 						    . ", "  . $data['owner']
 						    . ", "  . $time
 						    . ", "  . $data['owner']
@@ -806,12 +806,12 @@
 				}
 				if($data['tel_pager'])
 				{
-					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm 
-					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES (" 
+					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm
+					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES ("
 						    . $person_id
 						    . ", "  . $comm_descr_id['pager']
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['tel_pager']) . "'"
-						    . ", "  . $time 
+						    . ", "  . $time
 						    . ", "  . $data['owner']
 						    . ", "  . $time
 						    . ", "  . $data['owner']
@@ -819,12 +819,12 @@
 				}
 				if($data['tel_bbs'])
 				{
-					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm 
-					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES (" 
+					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm
+					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES ("
 						    . $person_id
 						    . ", "  . $comm_descr_id['bbs']
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['tel_bbs']) . "'"
-						    . ", "  . $time 
+						    . ", "  . $time
 						    . ", "  . $data['owner']
 						    . ", "  . $time
 						    . ", "  . $data['owner']
@@ -832,12 +832,12 @@
 				}
 				if($data['tel_modem'])
 				{
-					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm 
-					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES (" 
+					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm
+					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES ("
 						    . $person_id
 						    . ", "  . $comm_descr_id['modem']
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['tel_modem']) . "'"
-						    . ", "  . $time 
+						    . ", "  . $time
 						    . ", "  . $data['owner']
 						    . ", "  . $time
 						    . ", "  . $data['owner']
@@ -845,12 +845,12 @@
 				}
 				if($data['tel_car'])
 				{
-					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm 
-					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES (" 
+					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm
+					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES ("
 						    . $person_id
 						    . ", "  . $comm_descr_id['car phone']
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['tel_car']) . "'"
-						    . ", "  . $time 
+						    . ", "  . $time
 						    . ", "  . $data['owner']
 						    . ", "  . $time
 						    . ", "  . $data['owner']
@@ -858,12 +858,12 @@
 				}
 				if($data['tel_isdn'])
 				{
-					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm 
-					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES (" 
+					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm
+					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES ("
 						    . $person_id
 						    . ", "  . $comm_descr_id['isdn']
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['tel_isdn']) . "'"
-						    . ", "  . $time 
+						    . ", "  . $time
 						    . ", "  . $data['owner']
 						    . ", "  . $time
 						    . ", "  . $data['owner']
@@ -871,12 +871,12 @@
 				}
 				if($data['tel_video'])
 				{
-					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm 
-					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES (" 
+					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm
+					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES ("
 						    . $person_id
 						    . ", "  . $comm_descr_id['video']
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['tel_video']) . "'"
-						    . ", "  . $time 
+						    . ", "  . $time
 						    . ", "  . $data['owner']
 						    . ", "  . $time
 						    . ", "  . $data['owner']
@@ -884,12 +884,12 @@
 				}
 				if($data['email'])
 				{
-					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm 
-					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES (" 
+					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm
+					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES ("
 						    . $person_id
 						    . ", "  . $comm_descr_id['work email']
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['email']) . "'"
-						    . ", "  . $time 
+						    . ", "  . $time
 						    . ", "  . $data['owner']
 						    . ", "  . $time
 						    . ", "  . $data['owner']
@@ -897,12 +897,12 @@
 				}
 				if($data['email_home'])
 				{
-					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm 
-					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES (" 
+					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_comm
+					(contact_id,comm_descr_id,comm_data,created_on,created_by,modified_on,modified_by) VALUES ("
 						    . $person_id
 						    . ", "  . $comm_descr_id['home email']
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['email_home']) . "'"
-						    . ", "  . $time 
+						    . ", "  . $time
 						    . ", "  . $data['owner']
 						    . ", "  . $time
 						    . ", "  . $data['owner']
@@ -911,12 +911,12 @@
 
 				if($data['note'])
 				{
-					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_note (contact_id,note_text, 
-					created_on,created_by,modified_on,modified_by) VALUES (" 
+					$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_note (contact_id,note_text,
+					created_on,created_by,modified_on,modified_by) VALUES ("
 						    . $person_id
 						    . ", '" . $GLOBALS['phpgw_setup']->db->db_addslashes($data['note']) . "'"
-						    . ", " . $time 
-						    . ", " . $data['owner'] 
+						    . ", " . $time
+						    . ", " . $data['owner']
 						    . ", " . $time
 						    . ", " . $data['owner']
 						    .  ")");
@@ -936,7 +936,7 @@
 				}
 			}
 		}
-                
+
 		unset($records);
 		unset($others);
 
@@ -944,7 +944,7 @@
 		// when all data migrated, delete phpgw_addressbook and phpgw_addressbook_extra tables
  		//$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_addressbook');
  		//$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_addressbook_extra');
-		
+
 		// remove temporary ab_id field in phpgw_contact, phpgw_contact_person, and phpgw_contact_org
 		//OR NOT! On 512!
 
@@ -986,7 +986,7 @@
 	//Source: http://www.geo-guide.de/info/tools/languagecode.html
 	function phpgwapi_upgrade0_9_14_510()
 	{
-		// Set up the new logging tables	
+		// Set up the new logging tables
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_log_msg');
 		// just drop and re-create.  We don't need to save it and the structure has changed alot
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_log');
@@ -1011,18 +1011,18 @@
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT * FROM phpgw_config WHERE config_name = 'log_levels'");
 		if (!$GLOBALS['phpgw_setup']->oProc->next_record())
 		{
-			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_config (config_app, config_name, config_value) 
-							VALUES ('phpgwapi','log_levels', '" 
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_config (config_app, config_name, config_value)
+							VALUES ('phpgwapi','log_levels', '"
 							. serialize(array( 'global_level' => 'E', 'module' => array(), 'user' => array())) ."')");
 		}
 		else
 		{
 			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_config SET config_app='phpgwapi', "
 							      ."config_name='log_levels', "
-							      ."config_value='". serialize(array('global_level' => 'E', 
-												'module' => array(), 
+							      ."config_value='". serialize(array('global_level' => 'E',
+												'module' => array(),
 												'user' => array())) ."'");
-		}		
+		}
 		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.14.511';
 		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 	}
@@ -1042,7 +1042,7 @@
 		}
 		else
 		{
-			$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_config (config_app, config_name, config_value) 
+			$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_config (config_app, config_name, config_value)
 				VALUES ('phpgwapi','addressmaster','-3')");
 			$addressmaster_id = -3;
 		}
@@ -1064,10 +1064,10 @@
 			/* Insert in phpgw_contact  */
 			$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact (owner, access, contact_type_id) VALUES(-3"
 							   . ", '".'public'. "', ". $contact_type_id.")");
-			
+
 			/* Get the contact_id  */
 			$contact_id++;
-			
+
 			/* Insert in phpgw_contact_person */
 			$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_contact_person (person_id,first_name,last_name,
 				prefix,created_by,modified_by,created_on,modified_on) VALUES ("
@@ -1075,14 +1075,14 @@
 				. ",'" . $GLOBALS['phpgw_setup']->db->db_addslashes($GLOBALS['phpgw_setup']->oProc->f('account_firstname')) . "'"
 				. ",'" . $GLOBALS['phpgw_setup']->db->db_addslashes($GLOBALS['phpgw_setup']->oProc->f('account_lastname')) . "'"
 				. ",'" . $GLOBALS['phpgw_setup']->db->db_addslashes($GLOBALS['phpgw_setup']->oProc->f('account_lid')) . "'"
-				. "," . $addressmaster_id 
-				. "," . $addressmaster_id 
+				. "," . $addressmaster_id
+				. "," . $addressmaster_id
 				. "," . time()
 				. "," . time(). ')');
 
  			$GLOBALS['phpgw_setup']->db->query('UPDATE phpgw_accounts SET person_id=' . $contact_id . ' WHERE account_id='. intval($GLOBALS['phpgw_setup']->oProc->f('account_id')));
 		}
-		
+
 		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.14.512';
 		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 	}
@@ -1099,7 +1099,7 @@
 		$note_type = $GLOBALS['phpgw_setup']->oProc->f('note_type_id');
 
 		$GLOBALS['phpgw_setup']->db->query("UPDATE phpgw_contact_note SET note_type_id=".$note_type);
-		
+
 		$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.14.513';
 		return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 	}
@@ -1313,7 +1313,7 @@
 			'ix' => array('cust_field_value_val','cust_field_id','appname','location','rec_id'),
 			'uc' => array()
 		));
-		
+
 		$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_field_types(cust_field_type_descr) VALUES(\'text\')');
 		$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_field_types(cust_field_type_descr) VALUES(\'number\')');
 		$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_cust_field_types(cust_field_type_descr) VALUES(\'date\')');
@@ -1432,7 +1432,7 @@
 
 		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM phpgw_acl_location WHERE appname = 'tts' AND id = '.'");
 		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_acl_location (appname,id, descr,allow_grant,allow_c_attrib,c_attrib_table) VALUES ('tts', '.', 'Top',1,1,'phpgw_tts_tickets')");
-		
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.503';
@@ -1462,14 +1462,14 @@
 				'uc' => array()
 			)
 		);
-	
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.504';
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
-	
+
 	$test[] = '0.9.17.504';
 	function phpgwapi_upgrade0_9_17_504()
 	{
@@ -1481,7 +1481,7 @@
 			'default' => 'common',
 			'nullable' => False
 		));
-	
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.505';
@@ -1540,9 +1540,9 @@
 	function phpgwapi_upgrade0_9_17_507()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-		
+
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_cust_attribute');
-		
+
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'phpgw_cust_attribute_table', array(
 				'fd' => array(
@@ -1596,9 +1596,9 @@
 	function phpgwapi_upgrade0_9_17_508()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-		
+
 		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_cust_attribute');
-		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_cust_attribute_table');		
+		$GLOBALS['phpgw_setup']->oProc->DropTable('phpgw_cust_attribute_table');
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'phpgw_cust_attribute', array(
@@ -1633,7 +1633,7 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
-	
+
 	$test[] = '0.9.17.509';
 	function phpgwapi_upgrade0_9_17_509()
 	{
@@ -1668,7 +1668,7 @@
 			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.511';
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
-	}	
+	}
 
 
 	$test[] = '0.9.17.511';
@@ -1697,7 +1697,7 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
-	
+
 	$test[] = '0.9.17.512';
 	function phpgwapi_upgrade0_9_17_512()
 	{
@@ -1863,7 +1863,7 @@
 		{
 			$sql = 'INSERT INTO phpgw_acl_location(appname, id, descr)'
 				. " VALUES ('{$app}', 'run', 'app run rights created during 0.9.17.516 migration')";
-			
+
 			$GLOBALS['phpgw_setup']->oProc->m_odb->query($sql, __LINE__, __FILE__);
 		}
 		unset($apps);
@@ -1888,9 +1888,9 @@
 
 		// If they have proper locations already, override the basic location entry for that location
 		$GLOBALS['phpgw_setup']->oProc->query('SELECT phpgw_acl_location.*, phpgw_applications.app_id '
-			. ' FROM phpgw_acl_location' 
-			. " {$GLOBALS['phpgw_setup']->oProc->m_odb->join} phpgw_applications ON phpgw_acl_location.appname = phpgw_applications.app_name" 
-			, __LINE__, __FILE__); 
+			. ' FROM phpgw_acl_location'
+			. " {$GLOBALS['phpgw_setup']->oProc->m_odb->join} phpgw_applications ON phpgw_acl_location.appname = phpgw_applications.app_name"
+			, __LINE__, __FILE__);
 		while ( $GLOBALS['phpgw_setup']->oProc->next_record() )
 		{
 			$location[$GLOBALS['phpgw_setup']->oProc->f('app_id') . '::' . $GLOBALS['phpgw_setup']->oProc->f('id')] = array
@@ -1927,7 +1927,7 @@
 		{
 			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO phpgw_locations(' . implode(',',array_keys($entry)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($entry)) . ')', __LINE__, __FILE__);
 		}
-		
+
 		unset($location);
 
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_acl', 'location_id', array
@@ -1943,7 +1943,7 @@
 			. " {$GLOBALS['phpgw_setup']->oProc->m_odb->join} phpgw_locations ON phpgw_acl.acl_location = phpgw_locations.name"
 			. " {$GLOBALS['phpgw_setup']->oProc->m_odb->join} phpgw_applications ON phpgw_acl.acl_appname = phpgw_applications.app_name"
 			. ' WHERE phpgw_locations.app_id = phpgw_applications.app_id'
-			, __LINE__, __FILE__); 
+			, __LINE__, __FILE__);
 		while ( $GLOBALS['phpgw_setup']->oProc->next_record() )
 		{
 			$locations[] = array
@@ -2062,7 +2062,7 @@
 				unset($lookups[$name]);
 			}
 		}
-		
+
 		foreach ( $lookups as $name => $val )
 		{
 			$sql = "INSERT INTO phpgw_config VALUES('phpgwapi', '{$name}', '{$val}')";
@@ -2159,7 +2159,7 @@
 				 . ' VALUES (' . $db->validate_insert($attrib) . ')';
 			$db->query($sql, __LINE__, __FILE__);
 		}
-		
+
 		unset($attribs);
 
 		$choices = array();
@@ -2585,7 +2585,7 @@
 
 		if($temp_dir && is_dir($temp_dir))
 		{
-			$dir = new DirectoryIterator($temp_dir); 
+			$dir = new DirectoryIterator($temp_dir);
 			if ( is_object($dir) )
 			{
 				foreach ( $dir as $file )
@@ -3061,7 +3061,7 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_categories','active', array('type' => 'int','precision' => '2','default' => '1','nullable' => True));				
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_categories','active', array('type' => 'int','precision' => '2','default' => '1','nullable' => True));
 		$GLOBALS['phpgw_setup']->oProc->query('UPDATE phpgw_categories SET active = 1',__LINE__,__FILE__);
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
@@ -3883,6 +3883,23 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.566';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
+	/**
+	 * Enable icons and colors on categories
+	 */
+	$test[] = '0.9.17.566';
+	function phpgwapi_upgrade0_9_17_566()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('phpgw_history_log', array(), 'app_id');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.567';
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
