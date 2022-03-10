@@ -151,7 +151,7 @@
 								</button>
 								<button class="dropdown-item" href="#" data-toggle="modal" data-target="#messengerModal">
 									<xsl:choose>
-										<xsl:when test="not($messenger_enabled) or application/case_officer/is_current_user or application/case_officer_id ='' ">
+										<xsl:when test="$messenger_enabled !='true' or application/case_officer/is_current_user or application/case_officer_id ='' ">
 											<xsl:attribute name="disabled">disabled</xsl:attribute>
 											<i class="fas fa-reply mr-1 text-secondary"></i>
 										</xsl:when>
@@ -1422,7 +1422,8 @@
 	<script>
 		$(document).ready(function() {
 		$('#new_case_officer').select2({
-		dropdownParent: $('#change_userModal')
+		dropdownParent: $('#change_userModal'),
+		width: '90%'
 		});
 
 		$('#new_case_officer').on('select2:open', function (e) {
