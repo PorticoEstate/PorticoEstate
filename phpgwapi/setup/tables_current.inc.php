@@ -354,13 +354,12 @@
 			'fd' => array(
 				'history_id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'history_record_id' => array('type' => 'int','precision' => 4,'nullable' => False),
-				'app_id' => array('type' => 'varchar','precision' => '64','nullable' => False),
 				'history_owner' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'history_status' => array('type' => 'char','precision' => 2,'nullable' => False),
 				'history_new_value' => array('type' => 'text','nullable' => False),
 				'history_timestamp' => array('type' => 'timestamp','nullable' => False),
 				'history_old_value' => array('type' => 'text','nullable' => true),
-				'location_id'	=> array('type' => 'int', 'precision' => 4, 'nullable' => true)
+				'location_id'	=> array('type' => 'int', 'precision' => 4, 'nullable' => false)
 			),
 			'pk' => array('history_id'),
 			'fk' => array(),
