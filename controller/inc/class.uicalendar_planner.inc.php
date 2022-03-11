@@ -1374,7 +1374,6 @@ HTML;
 			}
 
 			$inspectors_list = createObject('controller.sosettings')->get_all_inspectors($selected_inspectors);
-			_debug_array($inspectors);
 			$link_data = array
 			(
 				'menuaction' => 'controller.uicalendar_planner.inspection_history',
