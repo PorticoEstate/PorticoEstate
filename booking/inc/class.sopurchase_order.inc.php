@@ -20,6 +20,8 @@
 		{
 			if (empty($purchase_order['application_id']))
 			{
+				$msg = 'mangler referanse til søknad for å editere ordre';
+				phpgwapi_cache::message_set($msg,'error');
 				return false;
 			}
 

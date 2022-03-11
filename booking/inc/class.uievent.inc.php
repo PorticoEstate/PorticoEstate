@@ -21,8 +21,17 @@
 			'toggle_show_inactive'	 => true,
 			'send_sms_participants'	 => true
 		);
-		protected $customer_id,
-			$account;
+		protected
+			$account,
+			$bo,
+			$customer_id,
+			$activity_bo,
+			$agegroup_bo,
+			$audience_bo,
+			$organization_bo,
+			$resource_bo,
+			$sopurchase_order,
+			$fields;
 
 		public function __construct()
 		{
@@ -35,6 +44,7 @@
 			$this->audience_bo = CreateObject('booking.boaudience');
 			$this->organization_bo = CreateObject('booking.boorganization');
 			$this->resource_bo = CreateObject('booking.boresource');
+			$this->sopurchase_order = createObject('booking.sopurchase_order');
 			self::set_active_menu('booking::applications::events');
 			$this->fields = array('activity_id', 'name', 'organizer', 'homepage', 'description', 'equipment',
 				'resources', 'cost', 'application_id',
@@ -586,7 +596,7 @@
 					{
 						$this->add_comment($event, lang('Event was created'));
 						$receipt = $this->bo->add($event);
-						createObject('booking.sopurchase_order')->copy_purchase_order_from_application($event, $receipt['id'], 'event');
+						$this->sopurchase_order->copy_purchase_order_from_application($event, $receipt['id'], 'event');
 						$this->bo->so->update_id_string();
 
 					}
@@ -1226,8 +1236,8 @@
 
 						if(!empty($purchase_order['lines']))
 						{
-							$purchase_order_id = createObject('booking.sopurchase_order')->add_purchase_order($purchase_order);
-							$purchase_order_result =  createObject('booking.sopurchase_order')->get_single_purchase_order($purchase_order_id);
+							$purchase_order_id = $this->sopurchase_order->add_purchase_order($purchase_order);
+							$purchase_order_result =  $this->sopurchase_order->get_single_purchase_order($purchase_order_id);
 							if($purchase_order_result['sum'] && $purchase_order_result['sum'] != $event['cost'])
 							{
 								$this->add_cost_history($event, lang('cost is set'), $purchase_order_result['sum']);
@@ -1283,15 +1293,20 @@
 
 
 			self::add_javascript('booking', 'base', 'event.js');
+			$purchase_order_check = $this->sopurchase_order->get_purchase_order(0, 'event', $id);
 
-			if($event['completed'])
+			if($event['application_id'] && $purchase_order_check)
 			{
-				self::add_javascript('booking', 'base', 'purchase_order_show.js');
-			}
-			else
-			{
-				self::add_javascript('booking', 'base', 'purchase_order_edit.js');
+				if($event['completed'])
+				{
+					self::add_javascript('booking', 'base', 'purchase_order_show.js');
+				}
+				else
+				{
+					self::add_javascript('booking', 'base', 'purchase_order_edit.js');
 
+				}
+			
 			}
 
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));

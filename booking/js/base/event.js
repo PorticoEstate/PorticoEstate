@@ -196,6 +196,36 @@ $(window).on('load', function ()
 		});
 	});
 
+	$('#resources_container').on('change', '.chkRegulations', function ()
+	{
+		var resources = new Array();
+		$('#resources_container input[name="resources[]"]:checked').each(function ()
+		{
+			resources.push($(this).val());
+		});
+
+		if (typeof (application_id) === 'undefined')
+		{
+			application_id = '';
+		}
+		if (typeof (reservation_type) === 'undefined')
+		{
+			reservation_type = '';
+		}
+		if (typeof (reservation_id) === 'undefined')
+		{
+			reservation_id = '';
+		}
+
+		if (typeof (populateTableChkArticles) !== 'undefined')
+		{
+
+			populateTableChkArticles([
+			], resources, application_id, reservation_type, reservation_id);
+		}
+	});
+
+
 });
 
 if ($.formUtils)
@@ -321,7 +351,7 @@ function populateTableChkResources(building_id, selection)
 	var url = phpGWLink('index.php', {menuaction: 'booking.uiresource.index', sort: 'name', filter_building_id: building_id, length: -1}, true);
 	var container = 'resources_container';
 	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [
-						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}
+						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}, {name: 'class', value: 'chkRegulations'}
 					]}
 			], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}, {key: 'rescategory_name', label: lang['Resource Type']}
 	];
