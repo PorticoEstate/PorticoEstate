@@ -284,8 +284,6 @@
 						</select>
 					</div>
 					<div class="form-group">
-
-
 						<label for="part_of_town_id">
 							<xsl:value-of select="php:function('lang', 'part of town')"/>
 						</label>
@@ -297,6 +295,20 @@
 								<xsl:value-of select="php:function('lang', 'select part of town')"/>
 							</xsl:attribute>
 							<xsl:apply-templates select="part_of_town_list/options"/>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="inspector_id">
+							<xsl:value-of select="php:function('lang', 'performed by')"/>
+						</label>
+						<select id="inspector_id" name="inspector_id[]" class="form-control">
+							<xsl:attribute name="multiple">
+								<xsl:text>true</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'select')"/>
+							</xsl:attribute>
+							<xsl:apply-templates select="inspectors_list/options"/>
 						</select>
 					</div>
 

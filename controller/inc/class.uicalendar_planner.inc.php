@@ -427,10 +427,10 @@
 			return $controls;
 		}
 
-		private function get_inspection_history( $selected_part_of_town, $control_id , $start = 0, $query = '',$deviation = null, $allrows = null, $limit_date)
+		private function get_inspection_history( $selected_part_of_town, $control_id , $start = 0, $query = '',$deviation = null, $allrows = null, $limit_date = null, $selected_inspectors = null)
 		{
 
-			$historic_check_lists = $this->so->get_historic_check_lists($control_id, $selected_part_of_town, $start, $query,$deviation, $allrows, null, null, $limit_date);
+			$historic_check_lists = $this->so->get_historic_check_lists($control_id, $selected_part_of_town, $start, $query,$deviation, $allrows, null, null, $limit_date, $selected_inspectors);
 
 			return $historic_check_lists;
 		}
@@ -1135,7 +1135,7 @@ HTML;
 
 			$control_id		 = phpgw::get_var('control_id', 'int');
 			$part_of_town_id = (array)phpgw::get_var('part_of_town_id', 'int');
-
+			$selected_inspectors = (array)phpgw::get_var('inspector_id', 'int');
 
 			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
 
@@ -1246,7 +1246,7 @@ HTML;
 			$allrows	= phpgw::get_var('allrows', 'bool');
 			$deviation	= phpgw::get_var('deviation', 'bool');
 
-			$history_content = $this->get_inspection_history($selected_part_of_town, $control_id, $start, $query,$deviation, $allrows, $limit_date);
+			$history_content = $this->get_inspection_history($selected_part_of_town, $control_id, $start, $query,$deviation, $allrows, $limit_date, $selected_inspectors);
 			$total = $this->so->total_records;
 
 
@@ -1373,6 +1373,8 @@ HTML;
 				}
 			}
 
+			$inspectors_list = createObject('controller.sosettings')->get_all_inspectors($selected_inspectors);
+			_debug_array($inspectors);
 			$link_data = array
 			(
 				'menuaction' => 'controller.uicalendar_planner.inspection_history',
@@ -1401,6 +1403,7 @@ HTML;
 				'control_area_list'		 => array('options' => $control_area_list),
 				'entity_group_list'		 => array('options' => $entity_groups),
 				'part_of_town_list'		 => array('options' => $part_of_town_list),
+				'inspectors_list'		 => array('options' => $inspectors_list),
 				'form_action'			 => self::link(array('menuaction' => 'controller.uicalendar_planner.inspection_history')),
 				'control_type_list'		 => array('options' => $control_type_list),
 				'history_content'		 => array('history_rows' => $history_content),

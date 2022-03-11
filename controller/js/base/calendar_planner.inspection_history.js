@@ -65,6 +65,29 @@ $(document).ready(function ()
 		}
 	});
 
+	$("#inspector_id").multiselect({
+		//	buttonWidth: 250,
+		includeSelectAllOption: true,
+		enableFiltering: true,
+		enableCaseInsensitiveFiltering: true,
+		buttonClass: 'form-control',
+		onChange: function ($option)
+		{
+			// Check if the filter was used.
+			var query = $("#inspector_id").find('li.multiselect-filter input').val();
+
+			if (query)
+			{
+				$("#inspector_id").find('li.multiselect-filter input').val('').trigger('keydown');
+			}
+		},
+		onDropdownHidden: function (event)
+		{
+//			console.log(event);
+			$("#form").submit();
+		}
+	});
+
 //	$("#part_of_town_id").change(function ()
 //	{
 //		$("#form").submit();

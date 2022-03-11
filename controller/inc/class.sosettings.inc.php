@@ -401,4 +401,32 @@
 
 			return $inspectors;
 		}
+
+		public function get_all_inspectors($selected = array())
+		{
+			$sql = "SELECT DISTINCT controller_check_list_inspector.user_id"
+				. " FROM controller_check_list_inspector";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$inspectors = array();
+
+			while ($this->db->next_record())
+			{
+				$inspectors[] = array('id' => (int)$this->db->f('user_id'));
+			}
+
+			$sort_names = array();
+			foreach ($inspectors as &$user)
+			{
+				$name = $GLOBALS['phpgw']->accounts->get($user['id'])->__toString();
+				$sort_names[] = $name;
+				$user['name'] = $name;
+				$user['selected'] = in_array($user['id'], $selected);
+			}
+
+			array_multisort($sort_names, SORT_ASC, $inspectors);
+
+			return $inspectors;
+		}
 	}
