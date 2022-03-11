@@ -21,7 +21,8 @@
 			'info' => true,
 			'toggle_show_inactive' => true,
 		);
-
+		protected
+			$bo, $organization_bo, $building_bo, $season_bo, $resource_bo, $sopurchase_order, $fields, $display_name;
 		public function __construct()
 		{
 			parent::__construct();
@@ -30,6 +31,7 @@
 			$this->building_bo = CreateObject('booking.bobuilding');
 			$this->season_bo = CreateObject('booking.boseason');
 			$this->resource_bo = CreateObject('booking.boresource');
+			$this->sopurchase_order = createObject('booking.sopurchase_order');
 			self::set_active_menu('booking::applications::allocations');
 			$this->fields = array('resources', 'cost', 'application_id',
 				'building_id', 'building_name',
@@ -411,7 +413,7 @@
 					try
 					{
 						$receipt = $this->bo->add($allocation);
-						createObject('booking.sopurchase_order')->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
+						$this->sopurchase_order->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
 						$this->bo->so->update_id_string();
 						self::redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $receipt['id']));
 					}
@@ -460,7 +462,7 @@
 								try
 								{
 									$receipt = $this->bo->add($allocation);
-									createObject('booking.sopurchase_order')->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
+									$this->sopurchase_order->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
 								}
 								catch (booking_unauthorized_exception $e)
 								{
@@ -687,8 +689,8 @@
 
 						if(!empty($purchase_order['lines']))
 						{
-							$purchase_order_id = createObject('booking.sopurchase_order')->add_purchase_order($purchase_order);
-							$purchase_order_result =  createObject('booking.sopurchase_order')->get_single_purchase_order($purchase_order_id);
+							$purchase_order_id = $this->sopurchase_order->add_purchase_order($purchase_order);
+							$purchase_order_result =  $this->sopurchase_order->get_single_purchase_order($purchase_order_id);
 							if($purchase_order_result['sum'] && $purchase_order_result['sum'] != $allocation['cost'])
 							{
 								$this->add_cost_history($allocation, lang('cost is set'), $purchase_order_result['sum']);
@@ -715,7 +717,20 @@
 
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'base', 'allocation.js');
-			self::add_javascript('booking', 'base', 'purchase_order_edit.js');
+			$purchase_order_check = $this->sopurchase_order->get_purchase_order(0, 'allocation', $id);
+
+			if($allocation['application_id'] && $purchase_order_check)
+			{
+				if($allocation['completed'])
+				{
+					self::add_javascript('booking', 'base', 'purchase_order_show.js');
+				}
+				else
+				{
+					self::add_javascript('booking', 'base', 'purchase_order_edit.js');
+
+				}
+			}
 
 			$GLOBALS['phpgw']->js->validate_file('alertify', 'alertify.min', 'phpgwapi');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');

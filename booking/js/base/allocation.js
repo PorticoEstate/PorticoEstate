@@ -6,7 +6,7 @@ $(document).ready(function ()
 	{
 		var temp_field_to = $("#field_to").datetimepicker('getValue');
 		var temp_field_from = $("#field_from").datetimepicker('getValue');
-		if(!temp_field_to || (temp_field_to < temp_field_from))
+		if (!temp_field_to || (temp_field_to < temp_field_from))
 		{
 			$("#field_to").val($("#field_from").val());
 
@@ -37,7 +37,7 @@ $(document).ready(function ()
 });
 
 
-$(window).on('load', function()
+$(window).on('load', function ()
 {
 	var building_id = $('#field_building_id').val();
 	if (building_id)
@@ -56,6 +56,36 @@ $(window).on('load', function()
 			building_id_selection = building_id;
 		}
 	});
+
+	$('#resources_container').on('change', '.chkRegulations', function ()
+	{
+		var resources = new Array();
+		$('#resources_container input[name="resources[]"]:checked').each(function ()
+		{
+			resources.push($(this).val());
+		});
+
+		if (typeof (application_id) === 'undefined')
+		{
+			application_id = '';
+		}
+		if (typeof (reservation_type) === 'undefined')
+		{
+			reservation_type = '';
+		}
+		if (typeof (reservation_id) === 'undefined')
+		{
+			reservation_id = '';
+		}
+
+		if (typeof (populateTableChkArticles) !== 'undefined')
+		{
+
+			populateTableChkArticles([
+			], resources, application_id, reservation_type, reservation_id);
+		}
+	});
+
 });
 
 function populateSelectSeason(building_id, selection)
@@ -72,7 +102,7 @@ function populateTableChkResources(building_id, selection)
 	var url = phpGWLink('index.php', {menuaction: 'booking.uiresource.index', sort: 'name', filter_building_id: building_id, length: -1}, true);
 	var container = 'resources_container';
 	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [
-						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}, {name: 'data-validation', value: 'checkbox_group'}, {name: 'data-validation-qty', value: 'min1'}, {name: 'data-validation-error-msg', value: 'Please choose at least 1 resource'}
+						{name: 'type', value: 'checkbox'}, {name: 'name', value: 'resources[]'}, {name: 'class', value: 'chkRegulations'}, {name: 'data-validation', value: 'checkbox_group'}, {name: 'data-validation-qty', value: 'min1'}, {name: 'data-validation-error-msg', value: 'Please choose at least 1 resource'}
 					]}
 			], value: 'id', checked: selection}, {key: 'name', label: lang['Name']}, {key: 'rescategory_name', label: lang['Resource Type']}
 	];
