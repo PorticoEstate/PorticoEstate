@@ -88,7 +88,7 @@
 			return $values;
 		}
 
-		public function read_single($id, $return_object = true, $relaxe_acl = false)
+		public function read_single($id, $return_object = true, $relaxe_acl = true)
 		{
 			if ($id)
 			{
