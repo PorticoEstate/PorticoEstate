@@ -1490,6 +1490,7 @@
 							$fakturalinje['Linjenr']			 = $line_no;
 							$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['article_code']);
 							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
+							$fakturalinje['Avgift']				 = $order_line['tax'];
 							$fakturalinje['Tilleggstekst']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']);
 							$fakturalinje['mvakode']			 = $order_line['tax_code'];
 							$fakturalinje['antall']				 = $order_line['quantity'];
@@ -1594,6 +1595,7 @@
 							$fakturalinje['Linjenr']			 = $line_no;
 							$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT",$order_line['article_code']);
 							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
+							$fakturalinje['Avgift']				 = $order_line['tax'];
 							$fakturalinje['Tilleggstekst']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']);
 							$fakturalinje['mvakode']			 = $order_line['tax_code'];
 							$fakturalinje['antall']				 = $order_line['quantity'];
