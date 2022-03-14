@@ -133,6 +133,7 @@
 					$overridden_unit_price	 = $unit_price;
 					$currency				 = 'NOK';
 
+					// tax excluded
 					$amount = $overridden_unit_price * (float)$line['quantity'];
 
 					$_tax_code		 = $line['tax_code'];
