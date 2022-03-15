@@ -614,6 +614,8 @@ function set_sum(xTable)
 
 	tableFooterTrTd2.innerHTML = temp_total_sum.toFixed(2);
 
+	$('#field_cost').val(temp_total_sum.toFixed(2));
+
 	tableFooterTr.appendChild(tableFooterTrTd2);
 
 	tableFooter.appendChild(tableFooterTr);

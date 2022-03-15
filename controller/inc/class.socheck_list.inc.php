@@ -1185,7 +1185,7 @@
 		}
 
 
-		function get_historic_check_lists( $control_id, $selected_part_of_town, $start = 0, $query = '', $deviation = null, $allrows = null, $location_code = null, $results = null, $limit_date = null)
+		function get_historic_check_lists( $control_id, $selected_part_of_town, $start = 0, $query = '', $deviation = null, $allrows = null, $location_code = null, $results = null, $limit_date = null, $selected_inspectors = null)
 		{
 			$control_id = (int)$control_id;
 			if(!$selected_part_of_town && !$location_code)
@@ -1207,6 +1207,12 @@
 				. " {$this->join} fm_locations ON fm_locations.location_code = cl.location_code"
 				. " {$this->join} fm_location1 ON fm_locations.loc1 = fm_location1.loc1"
 				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id";
+
+				if($selected_inspectors && is_array($selected_inspectors))
+				{
+					$sql .= " {$this->join} controller_check_list_inspector ON cl.id = controller_check_list_inspector.check_list_id";
+				}
+
 			$sql .= " WHERE cl.control_id = {$control_id}"
 				. " AND completed_date IS NOT NULL";
 			
@@ -1235,6 +1241,11 @@
 				$query = $this->db->db_addslashes($query);
 				$sql .= " AND (loc1_name {$this->like} '%{$query}%'"
 				. " OR cl.location_code {$this->like} '{$query}%')";
+			}
+
+			if($selected_inspectors && is_array($selected_inspectors))
+			{
+				$sql .= " AND controller_check_list_inspector.user_id IN (" . implode(',', $selected_inspectors) . ")";
 			}
 
 //			$sql .= " AND completed_date BETWEEN $from_date_ts AND $to_date_ts";
