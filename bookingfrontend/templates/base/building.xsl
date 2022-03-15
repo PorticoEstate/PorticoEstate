@@ -363,7 +363,7 @@
 		/**
 		* Hardcoded: Disable calendar at this level
 		**/
-		var deactivate_calendar = 1;//<xsl:value-of select="building/deactivate_calendar" />;
+		var deactivate_calendar = '<xsl:value-of select="building/deactivate_calendar" />';
 		var active_building = Number(<xsl:value-of select="building/active" />);
 	</script>
 </xsl:template>
