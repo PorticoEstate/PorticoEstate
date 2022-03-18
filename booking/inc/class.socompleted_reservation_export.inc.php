@@ -1486,12 +1486,26 @@
 
 						foreach ($purchase_order['lines'] as $order_line)
 						{
+							if(empty($order_line['amount']))
+							{
+								continue;
+							}
+							
+							if($order_line['parent_mapping_id'] == 0)
+							{
+								$article_name = $order_line['name']  . ' - ' . $reservation['description'];
+							}
+							else
+							{
+								$article_name = $order_line['name'];
+							}
+
 							$line_no += 1;
 							$fakturalinje['Linjenr']			 = $line_no;
 							$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['article_code']);
 							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
 							$fakturalinje['Avgift']				 = $order_line['tax'];
-							$fakturalinje['Tilleggstekst']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']);
+							$fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 255);
 							$fakturalinje['mvakode']			 = $order_line['tax_code'];
 							$fakturalinje['antall']				 = $order_line['quantity'];
 							$fakturalinje['enhetspris']			 = $order_line['unit_price'];
@@ -1591,12 +1605,26 @@
 
 						foreach ($purchase_order['lines'] as $order_line)
 						{
+							if(empty($order_line['amount']))
+							{
+								continue;
+							}
+
+							if($order_line['parent_mapping_id'] == 0)
+							{
+								$article_name = $order_line['name']  . ' - ' . $reservation['description'];
+							}
+							else
+							{
+								$article_name = $order_line['name'];
+							}
+
 							$line_no += 1;
 							$fakturalinje['Linjenr']			 = $line_no;
 							$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT",$order_line['article_code']);
 							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
 							$fakturalinje['Avgift']				 = $order_line['tax'];
-							$fakturalinje['Tilleggstekst']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']);
+							$fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 255);
 							$fakturalinje['mvakode']			 = $order_line['tax_code'];
 							$fakturalinje['antall']				 = $order_line['quantity'];
 							$fakturalinje['enhetspris']			 = $order_line['unit_price'];

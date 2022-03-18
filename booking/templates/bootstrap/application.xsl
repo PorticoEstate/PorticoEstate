@@ -502,7 +502,7 @@
 														<p class="mb-1 font-weight-bold">
 															<xsl:value-of select="application/contact_name"/>
 														</p>
-														<small>Dette er søkers første søknad i Aktiv kommune.</small>
+														<!--<small>Dette er søkers første søknad i Aktiv kommune.</small>-->
 													</div>
 													<div href="#" class="list-group-item flex-column align-items-start">
 														<div class="d-flex w-100 justify-content-between">
