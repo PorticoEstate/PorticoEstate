@@ -582,6 +582,10 @@ JS;
 					$title = $billing_tmp->get_title();
 				}
 
+				$irregular_contracts = array();
+				$array_contracts = array();
+				$not_billed_contracts = array();
+				$removed_contracts = array();
 				$contracts_with_one_time = array();
 				//Check to see if the period har been billed before, not including credits
 				if ($billing_term != 5 && rental_sobilling::get_instance()->has_been_billed($contract_type, $billing_term, $year, $month)) // Checks if period has been billed before
@@ -679,10 +683,6 @@ JS;
 					$first_day_of_selected_month = strtotime($year . '-' . $month . '-01');
 					$bill_from_timestamp = strtotime('-' . ($months - 1) . ' month', $first_day_of_selected_month);
 
-					$irregular_contracts = array();
-					$array_contracts = array();
-					$not_billed_contracts = array();
-					$removed_contracts = array();
 					foreach ($contracts as $id => $contract)
 					{
 						if (isset($contract))
