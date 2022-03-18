@@ -194,7 +194,7 @@ function populateTableChkResources(building_id, selection, disabled)
 	console.log(building_id);
 	console.log(selection);
 	console.log(disabled);
-	var url = phpGWLink('index.php', {menuaction: 'booking.uiresource.index', sort: 'name', filter_building_id: building_id, length: -1}, true);
+	var url = phpGWLink('index.php', {menuaction: 'booking.uiresource.index', sort: 'name', filter_building_id: building_id, length: -1, filter_active: -1}, true);
 	var container = 'resources_container';
 	var colDefsResources = [
 		{label: lang['Select'], object: [
