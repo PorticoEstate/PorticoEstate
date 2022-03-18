@@ -1414,7 +1414,9 @@ SQL;
 			if($locations)
 			{
 				$now = time();
-				$sql = "UPDATE fm_location_exception SET end_date = $now WHERE category_text_id = 4"
+				$sql = "UPDATE fm_location_exception SET end_date = $now"
+					. " WHERE category_text_id = 4"
+					. " AND (end_date IS NULL OR end_date = 0 OR end_date > $now)"
 					. " AND location_code NOT IN('" . implode("','", $locations) . "')";
 
 				$this->db->query($sql, __LINE__, __FILE__);
