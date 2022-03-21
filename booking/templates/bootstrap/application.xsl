@@ -564,7 +564,7 @@
 															<p class="mb-1 font-weight-bold">
 																<xsl:value-of select="application/customer_organization_name"/>
 															</p>
-															<small>Dette er organisasjonens første søknad i Aktiv kommune.</small>
+															<!--<small>Dette er organisasjonens første søknad i Aktiv kommune.</small>-->
 														</div>
 														<xsl:if test="application/customer_identifier_type = 'organization_number'">
 															<div href="#" class="list-group-item flex-column align-items-start">
@@ -631,10 +631,26 @@
 															</p>
 															<small class="text-muted"></small>
 														</div>
+														<div href="#" class="list-group-item flex-column align-items-start">
+															<div class="d-flex w-100 justify-content-between">
+																<h5 class="mb-1">
+																	<xsl:value-of select="php:function('lang', 'in tax register')"/>
+																</h5>
+																<small class="text-muted">Hentet fra brukerinput</small>
+															</div>
+															<p class="mb-1 font-weight-bold">
+																<xsl:choose>
+																	<xsl:when test="organization/in_tax_register = 1">
+																		<xsl:value-of select="php:function('lang', 'yes')"/>
+																	</xsl:when>
+																	<xsl:otherwise>
+																		<xsl:value-of select="php:function('lang', 'no')"/>
+																	</xsl:otherwise>
+																</xsl:choose>
+															</p>
+															<small class="text-muted"></small>
+														</div>
 													</div>
-
-
-
 												</div>
 											</div>
 										</div>
