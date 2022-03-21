@@ -3095,6 +3095,10 @@
 JS;
 				$GLOBALS['phpgw']->js->add_code('', $js);
 			}
+
+			$orgid = $this->organization_bo->so->get_orgid($application['customer_organization_number']);
+			$organization = $this->organization_bo->read_single($orgid); // empty array if not found
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('application') . ' # ' . $application['id'] . ' - ' . $application['building_name'];
 			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = $GLOBALS['phpgw_info']['flags']['app_header'];
 			$this->is_assigned_to($application);
@@ -3109,6 +3113,7 @@ JS;
 
 			self::render_template_xsl('application', array(
 				'application'		 => $application,
+				'organization'		 => $organization,
 				'audience'			 => $audience,
 				'agegroups'			 => $agegroups,
 				'num_associations'	 => $num_associations,
