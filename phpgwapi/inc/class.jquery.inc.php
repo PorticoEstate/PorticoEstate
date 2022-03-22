@@ -64,7 +64,7 @@
 				$_jquery_core = 'jquery-3.6.0';
 			}
 
-			$_jquery_ui	 = 'jquery-ui-1.12.1';
+			$_jquery_ui	 = 'jquery-ui-1.13.1';
 			$_type		 = '.min'; // save some download
 
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
@@ -73,7 +73,7 @@
 			}
 			else
 			{
-				$theme = 'redmond';
+				$theme = 'base';
 			}
 			$load = array();
 			switch ($widget)
@@ -85,10 +85,9 @@
 					break;
 
 				case 'datepicker':
-					$load = array
-						(
+					$load = array(
 						"js/{$_jquery_core}{$_type}",
-						"js/{$_jquery_ui}{$_type}",
+						"ui/{$_jquery_ui}{$_type}",
 						"ui/i18n/datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}",
 					);
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui.min.css");
@@ -121,7 +120,7 @@
 					$load = array
 						(
 						"js/{$_jquery_core}{$_type}",
-						"js/{$_jquery_ui}{$_type}",
+						"ui/{$_jquery_ui}{$_type}",
 					);
 
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui.min.css");
@@ -183,7 +182,7 @@
 					$load = array
 						(
 						"js/{$_jquery_core}{$_type}",
-						"js/{$_jquery_ui}{$_type}",
+						"ui/{$_jquery_ui}{$_type}",
 						'layout' => array("jquery.layout{$_type}", "plugins/jquery.layout.state")
 					);
 					break;
@@ -217,7 +216,7 @@
 					$load = array
 						(
 						"js/{$_jquery_core}{$_type}",
-						"js/{$_jquery_ui}{$_type}",
+						"ui/{$_jquery_ui}{$_type}",
 						"file-upload/js/tmpl{$_type}",
 						"file-upload/js/jquery.fileupload",
 						"file-upload/js/jquery.fileupload-process",
@@ -234,7 +233,7 @@
 					$load = array
 						(
 						"js/{$_jquery_core}{$_type}",
-						"js/{$_jquery_ui}{$_type}",
+						"ui/{$_jquery_ui}{$_type}",
 						//					"file-upload/js/tmpl{$_type}",
 						"file-upload/js/jquery.fileupload",
 						"file-upload/js/jquery.fileupload-process",
