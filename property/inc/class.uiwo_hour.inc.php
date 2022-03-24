@@ -2111,7 +2111,7 @@ HTML;
 
 			$common_data = $this->common_data($workorder_id);
 			$project	 = $this->boproject->read_single($common_data['workorder']['project_id'], array(), true);
-/*
+
 			if (isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 			{
 				$approve_role = execMethod('property.boinvoice.check_role', $project['ecodimb'] ? $project['ecodimb'] : $common_data['workorder']['ecodimb']);
@@ -2161,7 +2161,7 @@ HTML;
 //						'workorder_id' => $workorder_id, 'from' => phpgw::get_var('from')));
 				}
 			}
-*/
+
 			$content = $this->_get_order_details($common_data['content'], $show_cost);
 
 			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
