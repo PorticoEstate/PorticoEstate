@@ -2200,21 +2200,24 @@ HTML;
 
 			$pdf->ezStartPageNumbers(500, 28, 6, 'right', '{PAGENUM} ' . lang('of') . ' {TOTALPAGENUM}', 1);
 
-			$data = array
-				(
-				array('col1'	 => "{$this->config->config_data['org_name']}\n\nOrg.nr: {$this->config->config_data['org_unit_id']}",
-					'col2'	 => lang('Order'), 'col3'	 => lang('order id') . "\n\n{$workorder_id}")
+			$data = array(
+				array(
+					'col1'	 => "{$this->config->config_data['org_name']}\n\nOrg.nr: {$this->config->config_data['org_unit_id']}",
+					'col2'	 => lang('Order'),
+					'col3'	 => lang('order id') . "\n\n{$workorder_id}")
 			);
 
 			$pdf->ezTable($data, array('col1' => '', 'col2' => '', 'col3' => ''), '', array(
-				'showHeadings'	 => 0, 'shaded'		 => 0, 'xPos'			 => 0,
-				'xOrientation'	 => 'right', 'width'			 => 500,
+				'showHeadings'	 => 0,
+				'shaded'		 => 0,
+				'xPos'			 => 'left',
+				'xOrientation'	 => 'right',
+				'width'			 => 500,
 				'gridlines'		 => EZ_GRIDLINE_ALL,
 				//'outerLineThickness'=>1,
 				//'innerLineThickness'=> 1,
 				//	'showLines'	=> 0,
-				'cols'			 => array
-					(
+				'cols'			 => array(
 					'col1'	 => array('width' => 200, 'justification' => 'left'),
 					'col2'	 => array('width' => 100, 'justification' => 'center'),
 					'col3'	 => array('width' => 200, 'justification' => 'right'),
@@ -2274,11 +2277,15 @@ HTML;
 				$from	 .= "\n Ressursnr: {$GLOBALS['phpgw']->preferences->data['property']['ressursnr']}";
 			}
 
-			$data = array
-				(
-				array('col1'	 => lang('vendor') . ":\n{$common_data['workorder']['vendor_name']}",
-					'col2'	 => $delivery_address),
-				array('col1' => $from, 'col2' => $invoice_address)
+			$data = array(
+				array(
+					'col1'	 => lang('vendor') . ":\n{$common_data['workorder']['vendor_name']}",
+					'col2'	 => $delivery_address
+				),
+				array(
+					'col1' => $from,
+					'col2' => $invoice_address
+				)
 			);
 
 			if ($common_data['workorder']['start_date'])
@@ -2301,11 +2308,14 @@ HTML;
 			}
 
 
-			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), ''
-				, array('showHeadings'	 => 0, 'shaded'		 => 0, 'xPos'			 => 0,
-				'xOrientation'	 => 'right', 'width'			 => 500, 'gridlines'		 => EZ_GRIDLINE_ALL,
-				'cols'			 => array
-					(
+			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '',	array(
+				'showHeadings'	 => 0,
+				'shaded'		 => 0,
+				'xPos'			 => 'left',
+				'xOrientation'	 => 'right',
+				'width'			 => 500,
+				'gridlines'		 => EZ_GRIDLINE_ALL,
+				'cols'			 => array(
 					'col1'	 => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
 					'col2'	 => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
 				)
@@ -2321,15 +2331,21 @@ HTML;
 			if ($content)
 			{
 				$pdf->ezSetDy(-20);
-				$pdf->ezTable($content, '', lang('details'), array('xPos'				 => 0, 'xOrientation'		 => 'right',
-					'width'				 => 500, 0, 'shaded'			 => 0, 'fontSize'			 => 8,
+				$pdf->ezTable($content, '', lang('details'), array(
+					'xPos'				 => 'left',
+					'xOrientation'		 => 'right',
+					'width'				 => 500,
+					'shaded'			 => 0,
+					'fontSize'			 => 8,
 					'gridlines'			 => EZ_GRIDLINE_ALL,
-					'titleFontSize'		 => 12, 'outerLineThickness' => 1, 'cols'				 => array(
-						lang('bill per unit')	 => array('justification' => 'right', 'width' => 50)
-						, lang('quantity')		 => array('justification' => 'right', 'width' => 50)
-						, lang('cost')			 => array('justification' => 'right', 'width' => 50)
-						, lang('unit')			 => array('width' => 40)
-						, lang('descr')			 => array('width' => 120))
+					'titleFontSize'		 => 12,
+					'outerLineThickness' => 1,
+					'cols'				 => array(
+						lang('bill per unit')	 => array('justification' => 'right', 'width' => 50),
+						lang('quantity')		 => array('justification' => 'right', 'width' => 50),
+						lang('cost')			 => array('justification' => 'right', 'width' => 50),
+						lang('unit')			 => array('width' => 40),
+						lang('descr')			 => array('width' => 120))
 				));
 			}
 
@@ -2348,12 +2364,14 @@ HTML;
 			);
 
 
-			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array('showHeadings'	 => 0,
-				'shaded'		 => 0, 'xPos'			 => 0,
-				'xOrientation'	 => 'right', 'width'			 => 500,
+			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array(
+				'showHeadings'	 => 0,
+				'shaded'		 => 0,
+				'xPos'			 => 'left',
+				'xOrientation'	 => 'right',
+				'width'			 => 500,
 				'gridlines'		 => EZ_GRIDLINE_ALL,
-				'cols'			 => array
-					(
+				'cols'			 => array(
 					'col1'	 => array('width' => 150, 'justification' => 'left'),
 					'col2'	 => array('width' => 350, 'justification' => 'left'),
 				)
@@ -2472,9 +2490,15 @@ HTML;
 			if ($content)
 			{
 				$pdf->ezNewPage();
-				$pdf->ezTable($content, '', $project['name'], array('xPos'				 => 70, 'xOrientation'		 => 'right',
-					'width'				 => 500, 0, 'shaded'			 => 0, 'fontSize'			 => 8,
-					'gridlines'			 => EZ_GRIDLINE_ALL, 'titleFontSize'		 => 12, 'outerLineThickness' => 2,
+				$pdf->ezTable($content, '', $project['name'], array(
+					'xPos'				 => 'left',
+					'xOrientation'		 => 'right',
+					'width'				 => 500,
+					'shaded'			 => 0,
+					'fontSize'			 => 8,
+					'gridlines'			 => EZ_GRIDLINE_ALL,
+					'titleFontSize'		 => 12,
+					'outerLineThickness' => 2,
 					'cols'				 => array(
 						lang('bill per unit')	 => array('justification' => 'right', 'width' => 50)
 						, lang('quantity')		 => array('justification' => 'right', 'width' => 50)
