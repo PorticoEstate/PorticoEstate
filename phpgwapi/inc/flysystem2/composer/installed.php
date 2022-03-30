@@ -22,39 +22,39 @@
     ),
     'league/flysystem' => 
     array (
-      'pretty_version' => '2.3.1',
-      'version' => '2.3.1.0',
+      'pretty_version' => '2.4.3',
+      'version' => '2.4.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => '8f037e8f3321d5fd4178dcd4d91498220cebd688',
+      'reference' => '4c56e451e10e3d9478f42f44c3d744bc17cdcede',
     ),
     'league/flysystem-sftp' => 
     array (
-      'pretty_version' => '2.2.1',
-      'version' => '2.2.1.0',
+      'pretty_version' => '2.4.1',
+      'version' => '2.4.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '321f3ef9cd728b575cb661ebfb072758a8d2f062',
+      'reference' => 'b200731877767bcac3895524339448c0e7348b71',
     ),
     'league/mime-type-detection' => 
     array (
-      'pretty_version' => '1.8.0',
-      'version' => '1.8.0.0',
+      'pretty_version' => '1.9.0',
+      'version' => '1.9.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'b38b25d7b372e9fddb00335400467b223349fd7e',
+      'reference' => 'aa70e813a6ad3d1558fc927863d47309b4c23e69',
     ),
     'phpseclib/phpseclib' => 
     array (
-      'pretty_version' => '2.0.34',
-      'version' => '2.0.34.0',
+      'pretty_version' => '2.0.36',
+      'version' => '2.0.36.0',
       'aliases' => 
       array (
       ),
-      'reference' => '98a6fe587f3481aea319eef7e656d02cfe1675ec',
+      'reference' => 'a97547126396548c224703a267a30af1592be146',
     ),
   ),
 );

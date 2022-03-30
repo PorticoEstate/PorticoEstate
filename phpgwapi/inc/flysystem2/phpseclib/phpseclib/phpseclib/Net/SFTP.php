@@ -1724,7 +1724,7 @@ class SFTP extends SSH2
     function chgrp($filename, $gid, $recursive = false)
     {
         $attr = $this->version < 4 ?
-            pack('N3', NET_SFTP_ATTR_UIDGID, $gid, -1) :
+            pack('N3', NET_SFTP_ATTR_UIDGID, -1, $gid) :
             pack('NNa*Na*', NET_SFTP_ATTR_OWNERGROUP, 0, '', strlen($gid), $gid);
 
         return $this->_setstat($filename, $attr, $recursive);
@@ -3200,6 +3200,36 @@ class SFTP extends SSH2
         }
         foreach ($this->attributes as $key => $value) {
             switch ($flags & $key) {
+                case NET_SFTP_ATTR_UIDGID:
+                    if ($this->version > 3) {
+                        continue 2;
+                    }
+                    break;
+                case NET_SFTP_ATTR_CREATETIME:
+                case NET_SFTP_ATTR_MODIFYTIME:
+                case NET_SFTP_ATTR_ACL:
+                case NET_SFTP_ATTR_OWNERGROUP:
+                case NET_SFTP_ATTR_SUBSECOND_TIMES:
+                    if ($this->version < 4) {
+                        continue 2;
+                    }
+                    break;
+                case NET_SFTP_ATTR_BITS:
+                    if ($this->version < 5) {
+                        continue 2;
+                    }
+                    break;
+                case NET_SFTP_ATTR_ALLOCATION_SIZE:
+                case NET_SFTP_ATTR_TEXT_HINT:
+                case NET_SFTP_ATTR_MIME_TYPE:
+                case NET_SFTP_ATTR_LINK_COUNT:
+                case NET_SFTP_ATTR_UNTRANSLATED_NAME:
+                case NET_SFTP_ATTR_CTIME:
+                    if ($this->version < 6) {
+                        continue 2;
+                    }
+            }
+            switch ($flags & $key) {
                 case NET_SFTP_ATTR_SIZE:             // 0x00000001
                     // The size attribute is defined as an unsigned 64-bit integer.
                     // The following will use floats on 32-bit platforms, if necessary.
@@ -3697,7 +3727,7 @@ class SFTP extends SSH2
      */
     function getSupportedVersions()
     {
-        if (!($this->bitmap & NET_SSH2_MASK_LOGIN)) {
+        if (!($this->bitmap & SSH2::MASK_LOGIN)) {
             return false;
         }
 
