@@ -201,7 +201,8 @@
 				{
 					$body .= "<p>Kommentar fra saksbehandler:<br />" . $application['comment'] . "</p>";
 				}
-				$body .= '<p>' . $config->config_data['application_mail_accepted'] . '<br /><a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . ': søknad #' . $application['id'] . '</a></p>';
+				$body .= "<p>{$config->config_data['application_mail_accepted']}</p>"
+					. "<br /><a href=\"{$link}\">Link til {$config->config_data['application_mail_systemname']}: søknad #{$application['id']}</a>";
 
 				$attachments = $this->get_related_files($application);
 
