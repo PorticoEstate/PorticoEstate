@@ -13,7 +13,9 @@
 	*/
 
 
-	require_once PHPGW_API_INC . '/icalcreator/autoload.php';
+	require_once PHPGW_API_INC . '/icalcreator/vendor/autoload.php';
+
+
 	use Kigkonsult\Icalcreator\Vcalendar;
 
 	/**

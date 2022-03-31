@@ -1,0 +1,91 @@
+{
+    "packages": [
+        {
+            "name": "kigkonsult/icalcreator",
+            "version": "v2.39.2",
+            "version_normalized": "2.39.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/iCalcreator/iCalcreator.git",
+                "reference": "722e161d1a25c3ceec1692642d64a7f2cf5faee9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/iCalcreator/iCalcreator/zipball/722e161d1a25c3ceec1692642d64a7f2cf5faee9",
+                "reference": "722e161d1a25c3ceec1692642d64a7f2cf5faee9",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*",
+                "ext-simplexml": "*",
+                "ext-zlib": "*",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "phpcompatibility/php-compatibility": ">=9.3.5",
+                "phpstan/phpstan": ">=0.9.3",
+                "phpunit/phpunit": ">=6.5.13",
+                "squizlabs/php_codesniffer": ">=3.5.5"
+            },
+            "time": "2021-06-28T09:19:24+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "autoload.php"
+                ],
+                "psr-4": {
+                    "Kigkonsult\\Icalcreator\\": [
+                        "src/",
+                        "src/Util/",
+                        "src/Traits/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Kjell-Inge Gustafsson",
+                    "email": "ical@kigkonsult.se"
+                }
+            ],
+            "description": "iCalcreator is the PHP implementation of rfc2445/rfc5545, management of calendar information",
+            "keywords": [
+                "alarm",
+                "calendar",
+                "daylight",
+                "event",
+                "management",
+                "rfc2445",
+                "rfc5545",
+                "rfc6321",
+                "rfc7986",
+                "standard",
+                "todo",
+                "vCalendar",
+                "valarm",
+                "vevent",
+                "vfreebusy",
+                "vjournal",
+                "vtimezone",
+                "vtodo"
+            ],
+            "support": {
+                "issues": "https://github.com/iCalcreator/iCalcreator/issues",
+                "source": "https://github.com/iCalcreator/iCalcreator/tree/v2.39.2"
+            },
+            "funding": [
+                {
+                    "url": "https://paypal.me/kigkonsult",
+                    "type": "other"
+                }
+            ],
+            "install-path": "../kigkonsult/icalcreator"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}
