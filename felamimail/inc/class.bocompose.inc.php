@@ -787,7 +787,7 @@
 			} else {
 				$_mailObject->SetLanguage("en", PHPGW_SERVER_ROOT."/phpgwapi/setup/");
 			}
-			$_mailObject->PluginDir = PHPGW_SERVER_ROOT."/phpgwapi/inc/phpmailer/";
+			$_mailObject->PluginDir = PHPGW_SERVER_ROOT."/phpgwapi/inc/phpmailer/vendor/phpmailer/phpmailer/";
 			$activeMailProfile = $this->preferences->getIdentity(0);
 			$_mailObject->IsSMTP();
 			$_mailObject->CharSet	= $this->displayCharset;
