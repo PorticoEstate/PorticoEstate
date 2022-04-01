@@ -211,29 +211,29 @@
 					$buildingemail = $this->so->get_tilsyn_email($application['building_name']);
 					if ($buildingemail['email1'] != '' || $buildingemail['email2'] != '' || $buildingemail['email3'] != '')
 					{
-						$bsubject = $config->config_data['application_mail_subject'] . ": En søknad om leie/lån av " . $resourcename . " på " . $application['building_name'] . " er godkjent";
-						$body = "<p>" . $application['contact_name'] . " sin søknad  om leie/lån av " . $resourcename . " på " . $application['building_name'] . "</p>";
+						$subject_notify_on_accepted = $config->config_data['application_mail_subject'] . ": En søknad om leie/lån av " . $resourcename . " på " . $application['building_name'] . " er godkjent";
+						$body_notify_on_accepted = "<p>" . $application['contact_name'] . " sin søknad  om leie/lån av " . $resourcename . " på " . $application['building_name'] . "</p>";
 
 						if ($adates)
 						{
-							$body .= "<pre>Godkjent:\n" . $adates . "</pre>";
+							$body_notify_on_accepted .= "<pre>Godkjent:\n" . $adates . "</pre>";
 						}
 
 						if($application['equipment'] && $application['equipment'] != 'dummy')
 						{
-							$body .= "<p><b>{$config->config_data['application_equipment']}:</b><br />" . $application['equipment'] . "</p>";
+							$body_notify_on_accepted .= "<p><b>{$config->config_data['application_equipment']}:</b><br />" . $application['equipment'] . "</p>";
 						}
 
-						foreach ($buildingemail as $bemail)
+						foreach ($buildingemail as $email_notify_on_accepted)
 						{
-							if(!$bemail)
+							if(!$email_notify_on_accepted)
 							{
 								continue;
 							}
 
 							try
 							{
-								$send->msg('email', $bemail, $bsubject, $body, '', '', '', $from, 'AktivKommune', 'html', '',array(), false, $reply_to);
+								$send->msg('email', $email_notify_on_accepted, $subject_notify_on_accepted, $body_notify_on_accepted, '', '', '', $from, 'AktivKommune', 'html', '',array(), false, $reply_to);
 							}
 							catch (Exception $e)
 							{
