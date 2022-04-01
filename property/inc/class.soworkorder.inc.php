@@ -556,6 +556,10 @@
 						$order_field = ", phpgw_categories.cat_name";
 						$ordermethod = " ORDER BY phpgw_categories.cat_name {$sort}, fm_workorder.id";
 						break;
+					case 'location_code':
+						$order_field = ", fm_workorder.location_code";
+						$ordermethod = " ORDER BY fm_workorder.location_code {$sort}, fm_workorder.id";
+						break;
 					default:
 						$order_field = ", {$order}";
 				}
