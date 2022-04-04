@@ -240,9 +240,9 @@
 
 				if (isset($values_attribute) && is_array($values_attribute))
 				{
-					if(empty($values_attribute[0]['datatype']))
+					$first_attribute = current($values_attribute);
+					if(empty($first_attribute['datatype']))
 					{
-
 						$this->bo->get_attribute_information($values_attribute);
 					}
 
