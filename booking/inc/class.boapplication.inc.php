@@ -76,7 +76,7 @@
 				{
 					$body .= "<p>Kommentar fra saksbehandler:<br />" . ($application['comment']) . "</p>";
 				}
-				$body .= '<pre>' . $config->config_data['application_mail_accepted'] . '<br /></pre>';
+				$body .= "<p>{$config->config_data['application_mail_accepted']}</p>";
 				if ($adates)
 				{
 					$body .= "<pre>Godkjent:\n" . $adates . "</pre>";

@@ -2694,11 +2694,14 @@
 					'col2'	 => lang('date') . ": {$date}"
 			));
 
-			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array('showHeadings'	 => 0,
-				'shaded'		 => 0, 'xPos'			 => 0,
-				'xOrientation'	 => 'right', 'width'			 => 500, 'gridlines'		 => EZ_GRIDLINE_ALL,
-				'cols'			 => array
-					(
+			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array(
+				'showHeadings'	 => 0,
+				'shaded'		 => 0,
+				'xPos'			 => 'left',
+				'xOrientation'	 => 'right',
+				'width'			 => 500,
+				'gridlines'		 => EZ_GRIDLINE_ALL,
+				'cols'			 => array(
 					'col1'	 => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
 					'col2'	 => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
 				)
@@ -2714,10 +2717,13 @@
 			);
 
 			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array(
-				'showHeadings'	 => 0, 'shaded'		 => 0, 'xPos'			 => 0,
-				'xOrientation'	 => 'right', 'width'			 => 500, 'gridlines'		 => EZ_GRIDLINE_ALL,
-				'cols'			 => array
-					(
+				'showHeadings'	 => 0,
+				'shaded'		 => 0,
+				'xPos'			 => 'left',
+				'xOrientation'	 => 'right',
+				'width'			 => 500,
+				'gridlines'		 => EZ_GRIDLINE_ALL,
+				'cols'			 => array(
 					'col1'	 => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
 					'col2'	 => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
 				)
