@@ -42,9 +42,8 @@
 		protected
 			$id,
 			$article_id,
-			$building_id,
-			$building_name,
 			$article_name,
+			$active,
 			$article_cat_id,
 			$article_cat_name,
 			$article_code,
@@ -104,21 +103,7 @@
 					'type'	 => 'int',
 					'public'	 => true
 				),
-/*				'building_id'		 => array(
-					'action' => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type'	 => 'int'
-				),
-				'building_name'		 => array(
-					'action'		 => PHPGW_ACL_READ,
-					'type'			 => 'string',
-					'query'			 => true,
-					'label'			 => 'building',
-					'multiple_join'	 => array(
-						'statement'	 => ' LEFT JOIN bb_building ON bb_building.id = bb_article_mapping.building_id',
-						'column'	 => 'bb_building.name'
-					),
-				),
-*/				'article_cat_name'	 => array(
+				'article_cat_name'	 => array(
 					'action' => PHPGW_ACL_READ,
 					'type'	 => 'string',
 					'query'	 => true,
@@ -134,6 +119,18 @@
 				'article_id'		 => array(
 					'action' => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type'	 => 'int'
+				),
+				'active'		 => array(
+					'action'		 => PHPGW_ACL_READ,
+					'type'			 => 'int',
+					'query'			 => true,
+					'label'			 => 'active',
+					'public'		 => true,
+					'multiple_join'	 => array(
+						'statement'	 => ' JOIN bb_article_view as bb_article_view_1 ON bb_article_view_1.id = bb_article_mapping.article_id'
+						. ' AND bb_article_view_1.article_cat_id = bb_article_mapping.article_cat_id',
+						'column'	 => 'bb_article_view_1.active'
+					),
 				),
 				'article_name'		 => array(
 					'action'		 => PHPGW_ACL_READ,
@@ -182,22 +179,6 @@
 				),
 			);
 
-			/*
-			  if($currentapp == 'booking')
-			  {
-			  $backend_fields = array(
-			  'active' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-			  'type' => 'int',
-			  'history'	=> false
-			  )
-			  );
-
-			  foreach ($backend_fields as $key => $field_info)
-			  {
-			  $fields[$key] = $field_info;
-			  }
-			  }
-			 */
 			if ($debug)
 			{
 				foreach ($fields as $field => $field_info)
