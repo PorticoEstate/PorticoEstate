@@ -3129,7 +3129,7 @@ JS;
 				'simple'			 => $simple,
 				'config'			 => CreateObject('phpgwapi.config', 'booking')->read(),
 				'export_pdf_action'	 => self::link(array('menuaction' => 'booking.uiapplication.export_pdf', 'id' => $application['id'])),
-				'external_archive'	 => $external_archive,
+				'external_archive'	 => !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['archive_user_id']) ? $external_archive : '',
 				'user_list'			 => array('options' => createObject('booking.sopermission_building')->get_user_list()),
 				'internal_notes'	 => $internal_notes
 				)
