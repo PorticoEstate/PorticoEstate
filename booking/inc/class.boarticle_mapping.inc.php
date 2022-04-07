@@ -68,14 +68,6 @@
 
 		public function read($params)
 		{
-			if(empty($params['filters']['active']))
-			{
-				$params['filters']['active'] = 1;
-			}
-			else
-			{
-				unset($params['filters']['active']);
-			}
 			$values =  booking_soarticle_mapping::get_instance()->read($params);
 	//		$status_text = booking_article_mapping::get_status_list();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];

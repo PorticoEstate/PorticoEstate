@@ -45,7 +45,7 @@
 				$this->debug = true;
 			}
 
-			$this->webservicehost	 = !empty($custom_config_data['webservicehost']) ? $custom_config_data['webservicehost'] : '';
+			$this->webservicehost	 = !empty($custom_config_data['webservicehost']) ? rtrim($custom_config_data['webservicehost'], '/') : '';
 			$this->authkey			 = !empty($custom_config_data['authkey']) ? $custom_config_data['authkey'] : '';
 			$this->proxy			 = !empty($config['proxy']) ? $config['proxy'] : '';
 			$this->archive_user_id	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['archive_user_id'];

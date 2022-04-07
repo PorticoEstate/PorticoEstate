@@ -556,8 +556,15 @@
 					}
 					else
 					{
-						$_column = $this->fields[$key]['join'] ? $this->fields[$key]['join']['column'] : $key;
-						$clauses[] = "{$table}.{$_column}=" . $this->marshal($val, $this->fields[$key]['type']);
+						if(isset($this->fields[$key]['multiple_join']))
+						{
+							$clauses[] = "{$this->fields[$key]['multiple_join']['column']}=" . $this->marshal($val, $this->fields[$key]['type']);
+						}
+						else
+						{
+							$_column = $this->fields[$key]['join'] ? $this->fields[$key]['join']['column'] : $key;
+							$clauses[] = "{$table}.{$_column}=" . $this->marshal($val, $this->fields[$key]['type']);
+						}
 					}
 				}
 				else if ($key == 'where')

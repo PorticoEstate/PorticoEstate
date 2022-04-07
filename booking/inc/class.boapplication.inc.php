@@ -22,7 +22,7 @@
 			$config->read();
 
 			$resourcename = implode(",", $this->get_resource_name($application['resources']));
-			$title = "Forespørsel om leie om leie/lån av {$resourcename}  på  {$application['building_name']} - {$application['contact_name']}";
+			$title = "Forespørsel om leie/lån av {$resourcename}  på  {$application['building_name']} - {$application['contact_name']}";
 
 			if ($application['status'] == 'PENDING')
 			{
@@ -35,6 +35,7 @@
 			}
 			elseif ($application['status'] == 'ACCEPTED')
 			{
+				$title .= " er GODKJENT";
 				$assoc_bo = new booking_boapplication_association();
 				$associations = $assoc_bo->so->read(array('filters' => array('application_id' => $application['id']),
 					'sort' => 'from_', 'dir' => 'asc', 'results' =>'all'));
@@ -76,7 +77,7 @@
 				{
 					$body .= "<p>Kommentar fra saksbehandler:<br />" . ($application['comment']) . "</p>";
 				}
-				$body .= '<pre>' . $config->config_data['application_mail_accepted'] . '<br /></pre>';
+				$body .= "<p>{$config->config_data['application_mail_accepted']}</p>";
 				if ($adates)
 				{
 					$body .= "<pre>Godkjent:\n" . $adates . "</pre>";
@@ -88,6 +89,8 @@
 			}
 			elseif ($application['status'] == 'REJECTED')
 			{
+				$title .= " er AVVIST";
+
 				$body = "<p>" . $application['contact_name'] . " sin søknad i " . $config->config_data['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name'] ." er " . lang($application['status']) . '</p>';
 				if ($application['comment'] != '')
 				{
