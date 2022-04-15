@@ -476,6 +476,7 @@
 		function list_content( $list, $uicols, $edit_item = '', $view_only = '' )
 		{
 			$j = 0;
+			$content = array();
 			//_debug_array($list);
 			if (isset($list) AND is_array($list))
 			{
@@ -1715,7 +1716,7 @@
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$member_of_data = $this->cats->formatted_xslt_list(array('selected'	 => $this->member_id,
-				'globals'	 => true, link_data	 => array()));
+				'globals'	 => true, 'link_data'	 => array()));
 
 			$table_add[] = array
 				(
@@ -1837,8 +1838,8 @@
 			$data = array
 				(
 				'datatable_def'					 => $datatable_def,
-				'base_java_url'					 => json_encode(array(menuaction	 => "property.uiagreement.edit_item",
-					agreement_id => $agreement_id, id			 => $id, role		 => $this->role)),
+				'base_java_url'					 => json_encode(array('menuaction'	 => "property.uiagreement.edit_item",
+					'agreement_id' => $agreement_id, 'id'			 => $id, 'role'		 => $this->role)),
 				'activity_descr'				 => $activity_descr,
 				'lang_descr'					 => lang('Descr'),
 				'msgbox_data'					 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -1993,7 +1994,7 @@
 			$data = array
 				(
 				'datatable_def'			 => $datatable_def,
-				'base_java_url'			 => json_encode(array(menuaction => "property.uiagreement.view_item")),
+				'base_java_url'			 => json_encode(array('menuaction' => "property.uiagreement.view_item")),
 				'datatable'				 => $datavalues,
 				'myColumnDefs'			 => $myColumnDefs,
 				'activity_descr'		 => $activity_descr,
@@ -2102,7 +2103,7 @@
 				$list			 = $this->bo->read_details($agreement_id);
 
 				$uicols			 = $this->bo->uicols;
-				$list			 = $this->list_content($list, $uicols, $edit_item		 = false, $view_only		 = true);
+				$list			 = $this->list_content($list, $uicols, $edit_item = false, $view_only = true);
 				$content		 = $list['content'];
 				$table_header	 = $list['table_header'];
 			}
@@ -2137,7 +2138,7 @@
 			$dateformat = (implode($sep, $dlarr));
 
 			$member_of_data = $this->cats->formatted_xslt_list(array('selected'	 => $this->member_id,
-				'globals'	 => true, link_data	 => array()));
+				'globals'	 => true, 'link_data'	 => array()));
 
 			$link_file_data = array
 				(
@@ -2275,7 +2276,7 @@
 			$data = array
 				(
 				'datatable_def'				 => $datatable_def,
-				'base_java_url'				 => json_encode(array(menuaction => "property.uiagreement.view")),
+				'base_java_url'				 => json_encode(array('menuaction' => "property.uiagreement.view")),
 				'allow_allrows'				 => true,
 				'allrows'					 => $this->allrows,
 				'start_record'				 => $this->start,

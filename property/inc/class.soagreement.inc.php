@@ -465,6 +465,7 @@
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
+			$details = array();
 			while ($this->db->next_record())
 			{
 				$details[] = array
@@ -550,7 +551,7 @@
 
 			$from = " FROM $entity_table ";
 
-			$sql = "SELECT $cols $from $joinmethod";
+			$sql = "SELECT $cols $from";
 
 
 			$this->uicols = $uicols;
@@ -562,7 +563,7 @@
 
 			if ($agreement_id)
 			{
-				$filtermethod	 .= " $where $entity_table.agreement_id=$agreement_id AND activity_id=$activity_id";
+				$filtermethod	 = " $where $entity_table.agreement_id=$agreement_id AND activity_id=$activity_id";
 				$where			 = 'AND';
 			}
 
