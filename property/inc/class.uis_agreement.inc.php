@@ -456,6 +456,7 @@
 		function list_content( $list, $uicols, $edit_item = '', $view_only = '' )
 		{
 			$j = 0;
+			$content = array();
 
 			if (isset($list) AND is_array($list))
 			{
@@ -987,6 +988,7 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('values_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('values_end_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('values_termination_date');
+			$set_column = array();
 
 			if ($id)
 			{
@@ -996,12 +998,16 @@
 				$list			 = $this->list_content($list, $uicols);
 				$content		 = $list['content'];
 				$table_header	 = $list['table_header'];
-				for ($i = 0; $i < count($list['content'][0]['row']); $i++)
+
+				if($content)
 				{
-					$set_column[] = true;
+					for ($i = 0; $i < count($list['content'][0]['row']); $i++)
+					{
+						$set_column[] = true;
+					}
 				}
 
-				if (isset($content) && is_array($content))
+				if ($content)
 				{
 					$GLOBALS['phpgw']->jqcal->add_listener('values_date');
 
@@ -1133,7 +1139,7 @@
 				(
 				array(
 					'my_name'		 => 'enable_alarm',
-					'text'			 => lang($alarm_data[alter_alarm][0][lang_enable]),
+					'text'			 => lang($alarm_data['alter_alarm'][0]['lang_enable']),
 					'type'			 => 'custom',
 					'custom_code'	 => "
 										var api = oTable0.api();
@@ -1155,7 +1161,7 @@
 				),
 				array(
 					'my_name'		 => 'disable_alarm',
-					'text'			 => lang($alarm_data[alter_alarm][0][lang_disable]),
+					'text'			 => lang($alarm_data['alter_alarm'][0]['lang_disable']),
 					'type'			 => 'custom',
 					'custom_code'	 => "
 										var api = oTable0.api();
@@ -1177,7 +1183,7 @@
 				),
 				array(
 					'my_name'		 => 'delete_alarm',
-					'text'			 => lang($alarm_data[alter_alarm][0][lang_delete]),
+					'text'			 => lang($alarm_data['alter_alarm'][0]['lang_delete']),
 					'type'			 => 'custom',
 					'custom_code'	 => "
 										var api = oTable0.api();
@@ -2319,7 +2325,7 @@
 			$dateformat = (implode($sep, $dlarr));
 
 			$member_of_data = $this->cats->formatted_xslt_list(array('selected'	 => $this->member_id,
-				'globals'	 => true, link_data	 => array()));
+				'globals'	 => true, 'link_data'	 => array()));
 
 			$link_file_data = array
 				(
