@@ -27,7 +27,7 @@ this.get_sms_recipients = function (location_code)
 				{
 					$('#sms_recipients').append($('<option/>', {
 						value: obj[i].contact_phone,
-						text: obj[i].name + " [" + location_code + " - " + obj[i].floor + "]::" + obj[i].contact_phone
+						text: obj[i].name + " [" + location_code + " - " + obj[i].address + ", " + obj[i].floor + "]::" + obj[i].contact_phone
 					}));
 
 				});
