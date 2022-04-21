@@ -44,7 +44,7 @@
 		var $uicols_related		 = array();
 		var $start_date;
 		var $end_date;
-		var $fields_updated		 = false;
+		var $fields_updated		 = array();
 		var $status_id;
 		var $user_id;
 		var $group_id;
