@@ -127,18 +127,8 @@
 								}
 								else
 								{
-									if ($values['street_name'])
-									{
-										$address = $this->db->db_addslashes($values['street_name'] . ' ' . $values['street_number']);
-									}
-									else
-									{
-										$address = $this->db->db_addslashes($values['location_name']);
-									}
-
-									$id = $this->br_slokk_app($new_value,$datostempel, $values['location_code'], $address);
+									$id = $this->br_slokk_app($new_value,$datostempel, $values['location_code']);
 									$update_interlink = true;
-
 								}
 
 
@@ -174,12 +164,12 @@
 							break;
 
 						case 'rokvarsler':
-							if ($entry['value'] && in_array($entry['value'], array(2, 3) ) )
+							//1 = "Kontrollert - OK"
+							//2 = "Skiftet batteri"
+							//3 = "Skiftet røykvarsler"
+							if ($entry['value'] && in_array($entry['value'], array(1, 2, 3) ) )
 							{
 								$db_dateformat 		= phpgwapi_db::date_format();
-
-								//2 = "Skiftet batteri"
-								//3 = "Skiftet røykvarsler"
 
 								$location_id_roykvarsler	 = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.23');
 								$new_value					 = date($db_dateformat, time());
@@ -192,8 +182,14 @@
 								$old_batteriskift			 = $this->db->f('batteriskift');
 								$id							 = $this->db->f('id');
 								$update_interlink = false;
+								if (!$id)
+								{
+									$id = $this->add_roykvarsler($values['location_code']);
+								}
+
 								if ($id)
 								{
+									$update_interlink = true;
 									if($entry['value'] == 3) //Skiftet røykvarsler"
 									{
 										$attrib_id = 2;
@@ -206,10 +202,9 @@
 												. " AND location_code='{$values['location_code']}'";
 
 											$this->db->query($sql, __LINE__, __FILE__);
-											$update_interlink = true;
 										}
 									}
-									else // Skiftet batteri
+									else if($entry['value'] == 2) // Skiftet batteri
 									{
 										$attrib_id = 3;
 										if ( date('Y-m-d', strtotime($new_value)) != date('Y-m-d', strtotime($old_batteriskift)) )
@@ -221,24 +216,8 @@
 												. " AND location_code='{$values['location_code']}'";
 
 											$this->db->query($sql, __LINE__, __FILE__);
-											$update_interlink = true;
 										}
 									}
-								}
-								else
-								{
-									if ($values['street_name'])
-									{
-										$address = $this->db->db_addslashes($values['street_name'] . ' ' . $values['street_number']);
-									}
-									else
-									{
-										$address = $this->db->db_addslashes($values['location_name']);
-									}
-
-									$id = $this->add_roykvarsler($new_value, $values['location_code'], $address);
-									$update_interlink = true;
-
 								}
 
 								if($update_interlink)
@@ -254,11 +233,8 @@
 
 									CreateObject('property.interlink')->add($interlink_data, $this->db);
 								}
-
-
 							}
 							break;
- 
  
 						default:
 					}
@@ -301,8 +277,9 @@
 
 		}
 
-		private function br_slokk_app( $date, $datostempel, $location_code, $address )
+		private function br_slokk_app( $date, $datostempel, $location_code )
 		{
+			$address	 = $this->get_address($location_code);
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.10');
 			$location	 = explode('-', $location_code);
 			$value_set	 = array();
@@ -336,8 +313,9 @@
 			return $id;
 		}
 
-		private function add_roykvarsler( $date, $location_code, $address )
+		private function add_roykvarsler( $location_code )
 		{
+			$address = $this->get_address($location_code);
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.23');
 			$location	 = explode('-', $location_code);
 			$value_set	 = array();
@@ -355,7 +333,6 @@
 
 			$value_set['status']		 = 1;
 			$value_set['address']		 = $address;
-			$value_set['skiftet']		 = $date;
 			$value_set['location_code']	 = $location_code;
 			$value_set['entry_date']	 = time();
 			$value_set['user_id']		 = $this->account;
@@ -366,6 +343,18 @@
 			$historylog	 = CreateObject('property.historylog', 'entity_1_23');
 			$historylog->add('SO', $id, $date, false, $attrib_id = 2, time());
 			return $id;
+		}
+
+		private function get_address( $location_code )
+		{
+			$address = '';
+			$solocation		 = CreateObject('property.solocation');
+			$location_data	 = $solocation->read_single($location_code);
+			if($location_data['street_name'])
+			{
+				$address	 = "{$location_data['street_name']} {$location_data['street_number']}";
+			}
+			return $address;
 		}
 	}
 	$vekterinspeksjon = new vekterinspeksjon();
