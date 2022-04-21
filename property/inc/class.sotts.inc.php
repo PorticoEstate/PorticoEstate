@@ -35,7 +35,7 @@
 	class property_sotts
 	{
 
-		var $fields_updated	 = false;
+		var $fields_updated	 = array();
 		var $uicols_related	 = array();
 		var $acl_location	 = '.ticket';
 		public $total_records	 = 0;
@@ -1305,7 +1305,7 @@
 			 * * M - Mail sent to vendor
 			 */
 
-			$this->fields_updated = false;
+			$this->fields_updated = array();
 
 			if ($old_status != $ticket['status'])
 			{
@@ -1313,7 +1313,7 @@
 				$this->db->query("SELECT * from fm_tts_status WHERE id = {$check_old_custom}", __LINE__, __FILE__);
 				$this->db->next_record();
 				$old_closed				 = $this->db->f('closed');
-				$this->fields_updated	 = true;
+				$this->fields_updated[]	 = 'status';
 				if ($old_status == 'X' || $old_closed)
 				{
 					$new_status = $ticket['status'];
@@ -1368,7 +1368,7 @@
 		{
 			$id						 = (int)$id;
 			$receipt				 = array();
-			$this->fields_updated	 = false;
+			$this->fields_updated	 = array();
 
 			$this->db->query("SELECT priority FROM fm_tts_tickets WHERE id={$id}", __LINE__, __FILE__);
 			$this->db->next_record();
@@ -1378,7 +1378,7 @@
 
 			if ($oldpriority != $ticket['priority'])
 			{
-				$this->fields_updated = true;
+				$this->fields_updated[] = 'priority';
 				$this->db->query("UPDATE fm_tts_tickets set priority='" . $ticket['priority']
 					. "' WHERE id={$id}", __LINE__, __FILE__);
 				$this->historylog->add('P', $id, $ticket['priority'], $oldpriority);
