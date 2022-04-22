@@ -910,6 +910,7 @@ SQL;
 				);
 			}
 
+			$owner_msg = array();
 			foreach ($owners as $owner)
 			{
 
@@ -923,7 +924,7 @@ SQL;
 
 			$this->db->transaction_commit();
 
-			$msg						 = count($owners) . ' eier er lagt til: ' . @implode(",", $owner_msg);
+			$msg						 = count($owners) . ' eier er lagt til: ' . implode(",", $owner_msg);
 			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
@@ -948,6 +949,7 @@ SQL;
 			}
 			$this->db->transaction_begin();
 
+			$gate_msg = array();
 			foreach ($gater as $gate)
 			{
 				$sql2 = "INSERT INTO fm_streetaddress (id,descr, nasjonalid)"
@@ -964,7 +966,7 @@ SQL;
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			$msg = count($gate) . ' gateadresser er lagt til: ' . @implode(",", $gate_msg);
+			$msg = count($gater) . ' gateadresser er lagt til: ' . implode(",", $gate_msg);
 
 			$gate = array();
 			while ($this->db->next_record())
@@ -1014,6 +1016,7 @@ SQL;
 
 			$this->db->transaction_begin();
 
+			$obj_msg = array();
 			foreach ($objekt_latin as $objekt)
 			{
 
@@ -1028,7 +1031,7 @@ SQL;
 
 			$this->db->transaction_commit();
 
-			$msg						 = count($objekt_latin) . ' Objekt er lagt til: ' . @implode(",", $obj_msg);
+			$msg						 = count($objekt_latin) . ' Objekt er lagt til: ' . implode(",", $obj_msg);
 			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
@@ -1056,6 +1059,7 @@ SQL;
 
 			$this->db->transaction_begin();
 
+			$bygg_msg = array();
 			foreach ($bygg_latin as $bygg)
 			{
 
@@ -1070,7 +1074,7 @@ SQL;
 
 			$this->db->transaction_commit();
 
-			$msg						 = count($bygg_latin) . ' Bygg er lagt til: ' . @implode(",", $bygg_msg);
+			$msg						 = count($bygg_latin) . ' Bygg er lagt til: ' . implode(",", $bygg_msg);
 			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
@@ -1101,6 +1105,7 @@ SQL;
 
 			$this->db->transaction_begin();
 
+			$seksjon_msg = array();
 			foreach ($seksjon_latin as $seksjon)
 			{
 				$sql2 = "INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, category) "
@@ -1114,7 +1119,7 @@ SQL;
 
 			$this->db->transaction_commit();
 
-			$msg						 = count($seksjon_latin) . ' Seksjon er lagt til: ' . @implode(",", $seksjon_msg);
+			$msg						 = count($seksjon_latin) . ' Seksjon er lagt til: ' . implode(",", $seksjon_msg);
 			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
@@ -1171,6 +1176,7 @@ SQL;
 
 			$this->db->transaction_begin();
 
+			$leieobjekt_msg = array();
 			foreach ($leieobjekt_latin as $leieobjekt)
 			{
 				$sql2 = "INSERT INTO fm_location4 (location_code, loc1, loc4, loc2, loc3, category, street_id, street_number, etasje, antallrom, boareal, livslopsstd, heis, driftsstatus_id,
@@ -1185,7 +1191,7 @@ SQL;
 
 			$this->db->transaction_commit();
 
-			$msg						 = count($leieobjekt_latin) . ' Leieobjekt er lagt til: ' . @implode(",", $leieobjekt_msg);
+			$msg						 = count($leieobjekt_latin) . ' Leieobjekt er lagt til: ' . implode(",", $leieobjekt_msg);
 			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
@@ -1212,6 +1218,7 @@ SQL;
 
 			$this->db->transaction_begin();
 
+			$msg = array();
 			foreach ($zip_codes as $zip_code)
 			{
 				$sql2 = "INSERT INTO fm_zip_code (id, name)"
@@ -1219,12 +1226,12 @@ SQL;
 
 				$this->db->query($sql2, __LINE__, __FILE__);
 
-				$leietaker_msg[] = "[{$zip_code['id']}  '{$zip_code['name']}']";
+				$msg[] = "[{$zip_code['id']}  '{$zip_code['name']}']";
 			}
 
 			$this->db->transaction_commit();
 
-			$msg						 = count($leietakere) . ' Leietaker er lagt til: ' . @implode(",", $leietaker_msg);
+			$msg						 = count($zip_codes) . ' Postnr er lagt til: ' . implode(",", $msg);
 			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
@@ -1260,6 +1267,7 @@ SQL;
 
 			$this->db->transaction_begin();
 
+			$leietaker_msg = array();
 			foreach ($leietakere as $leietaker)
 			{
 				$sql2 = "INSERT INTO fm_tenant (id, first_name, last_name, category, status_eco, status_drift, obskode, contact_phone, entry_date,owner_id)"
@@ -1272,7 +1280,7 @@ SQL;
 
 			$this->db->transaction_commit();
 
-			$msg						 = count($leietakere) . ' Leietaker er lagt til: ' . @implode(",", $leietaker_msg);
+			$msg						 = count($leietakere) . ' Leietaker er lagt til: ' . implode(",", $leietaker_msg);
 			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
@@ -1689,11 +1697,13 @@ SQL;
 
 			$this->db->transaction_begin();
 
+			$leietaker = array();
 			while ($this->db->next_record())
 			{
 				$leietaker[] = (int)$this->db->f('id');
 			}
 
+			$leietaker_oppdatert = array();
 			for ($i = 0; $i < count($leietaker); $i++)
 			{
 				$sql = "SELECT namssakstatusokonomi_id, namssakstatusdrift_id"
