@@ -323,7 +323,9 @@
 				$association['from_'] = DateTime::createFromFormat('Y-m-d H:i:s', $association['from_'])->format('d.m.Y H:i');
 				$association['to_'] = DateTime::createFromFormat('Y-m-d H:i:s', $association['to_'])->format('d.m.Y H:i');
 			}
+			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
 
+			self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
 			phpgwapi_jquery::formvalidator_generate(array('file'), 'file_form');
 
 			self::render_template_xsl('application', array(

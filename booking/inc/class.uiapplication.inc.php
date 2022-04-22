@@ -2508,7 +2508,7 @@
 
 				if($associations['total_records'] > 0)
 				{
-					self::add_javascript('booking', 'base', 'purchase_order_show.js');
+					self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
 				}
 				else
 				{
@@ -3114,7 +3114,7 @@ JS;
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
 
 			self::add_javascript('booking', 'base', 'application.show.js');
-			self::add_javascript('booking', 'base', 'purchase_order_show.js');
+			self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
 			phpgwapi_jquery::load_widget('select2');
 
 			self::render_template_xsl('application', array(
