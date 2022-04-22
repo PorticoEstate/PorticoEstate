@@ -92,9 +92,9 @@
 			$this->so->complete_expired($events);
 		}
 
-		public function find_expired()
+		public function find_expired($update_reservation_time)
 		{
-			return $this->so->find_expired();
+			return $this->so->find_expired($update_reservation_time);
 		}
 
 		public function find_request_access($stage, $time_ahead)

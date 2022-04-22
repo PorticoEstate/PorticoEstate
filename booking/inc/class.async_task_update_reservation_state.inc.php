@@ -1,18 +1,38 @@
 <?php
 	phpgw::import_class('booking.async_task');
 	phpgw::import_class('booking.socompleted_reservation');
+	phpgw::import_class('phpgwapi.datetime');
+
 
 	class booking_async_task_update_reservation_state extends booking_async_task
 	{
 
-		private $soapplication, $sopurchase_order;
+		private $soapplication, $sopurchase_order, $update_reservation_time;
 
 		public function __construct()
 		{
 			parent::__construct();
 			$this->soapplication	 = CreateObject('booking.soapplication');
 			$this->sopurchase_order	 = createObject('booking.sopurchase_order');
+			$config					 = CreateObject('phpgwapi.config', 'booking')->read();
 
+			$billing_delay = !empty($config['billing_delay']) ? (int) $config['billing_delay']  : 0;
+			$this->update_reservation_time = date('Y-m-d');
+
+			if($billing_delay)
+			{
+				$_finnish_datestamp = time();
+				for ($i = 1; $i < 16; $i++)
+				{
+					$finnish_datestamp	 = $_finnish_datestamp + (86400 * $i);
+					$working_days	 = phpgwapi_datetime::get_working_days($_finnish_datestamp, $finnish_datestamp);
+					if ($working_days == $billing_delay)
+					{
+						$this->update_reservation_time = date('Y-m-d', $finnish_datestamp) . ' 10:00:00';
+						break;
+					}
+				}
+			}
 		}
 
 		public function get_default_times()
@@ -36,7 +56,7 @@
 			{
 				$bo = CreateObject('booking.bo' . $reservation_type);
 
-				$expired = $bo->find_expired();
+				$expired = $bo->find_expired($this->update_reservation_time);
 
 				if (!is_array($expired) || !isset($expired['results']))
 				{
@@ -50,7 +70,7 @@
 					foreach ($expired['results'] as $reservation)
 					{
 						$completed_so->create_from($reservation_type, $reservation);
-						$orders = $completed_so->find_expired_orders($reservation_type, $reservation['id']);
+						$orders = $completed_so->find_expired_orders($reservation_type, $reservation['id'], $this->update_reservation_time);
 
 						/**
 						 * For vipps kan det være flere krav, for etterfakturering vil det være ett

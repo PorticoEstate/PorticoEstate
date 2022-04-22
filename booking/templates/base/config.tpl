@@ -99,6 +99,14 @@
 			</td>
 		</tr>
 
+		<tr class="row_off">
+			<td>{lang_billing_delay}:</td>
+			<td>
+				<input type="number" min="0" max="15" name="newsettings[billing_delay]" value="{value_billing_delay}"/>
+			</td>
+		</tr>
+
+
 		<!-- END body -->
 		<!-- BEGIN footer -->
 		<tr class="th">

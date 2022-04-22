@@ -380,19 +380,19 @@
 			return $orders;
 		}
 
-		public function find_expired()
+		public function find_expired($update_reservation_time)
 		{
 			$table_name = $this->table_name;
 			$db = $this->db;
-			$expired_conditions = $this->find_expired_sql_conditions();
+			$expired_conditions = $this->find_expired_sql_conditions($update_reservation_time);
 			return $this->read(array('filters' => array('where' => $expired_conditions), 'results' => 1000));
 		}
 
-		protected function find_expired_sql_conditions()
+		protected function find_expired_sql_conditions($update_reservation_time)
 		{
 			$table_name = $this->table_name;
-			$now = date('Y-m-d');
-			return "({$table_name}.active != 0 AND {$table_name}.completed = 0 AND {$table_name}.to_ < '{$now}')";
+//			$now = date('Y-m-d');
+			return "({$table_name}.active != 0 AND {$table_name}.completed = 0 AND {$table_name}.to_ < '{$update_reservation_time}')";
 		}
 
 		public function complete_expired( &$allocations )

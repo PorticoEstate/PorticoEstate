@@ -296,8 +296,8 @@
 			$this->so->complete_expired($allocations);
 		}
 
-		public function find_expired()
+		public function find_expired($update_reservation_time)
 		{
-			return $this->so->find_expired();
+			return $this->so->find_expired($update_reservation_time);
 		}
 	}

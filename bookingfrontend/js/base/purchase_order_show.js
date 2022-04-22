@@ -1,5 +1,5 @@
 
-/* global template_set */
+/* global template_set, lang, initialSelection */
 
 $(document).ready(function ()
 {
@@ -36,12 +36,12 @@ $(document).ready(function ()
             {
                 key: 'name',
                 label: lang['article'],
-                attrs: [{name: 'class', value: "align-middle"}],
+                attrs: [{name: 'class', value: "align-middle"}]
             },
             {
                 key: 'unit',
                 label: lang['unit'],
-                attrs: [{name: 'class', value: "align-middle"}],
+                attrs: [{name: 'class', value: "align-middle"}]
             },
             {
                 key: 'ex_tax_price',
@@ -53,7 +53,7 @@ $(document).ready(function ()
             {
                 key: 'tax',
                 label: lang['tax'],
-                attrs: [{name: 'class', value: "text-right align-middle"}],
+                attrs: [{name: 'class', value: "text-right align-middle"}]
             },
             {
                 key: 'selected_quantity',
@@ -100,7 +100,7 @@ var post_handle_order_table = function()
 
 	var tr = $('#articles_container').find('tr')[1];
 
-	if(!tr || typeof(tr) == 'undefined')
+	if(!tr || typeof(tr) === 'undefined')
 	{
 		return;
 	}
@@ -128,7 +128,7 @@ function set_sum(xTable)
 	}
 
 	var tableFooter = document.createElement('tfoot');
-	tableFooter.id = 'tfoot'
+	tableFooter.id = 'tfoot';
 	var tableFooterTr = document.createElement('tr');
 	var tableFooterTrTd = document.createElement('td');
 
@@ -155,6 +155,10 @@ function populateTableArticles(url, container, colDefs)
 	if(template_set === 'bootstrap')
 	{
 		table_class = 'table table-bordered table-hover table-sm table-responsive';
+	}
+	else if(template_set === 'bookingfrontend')
+	{
+		table_class = 'table table-striped';
 	}
 	else
 	{

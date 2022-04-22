@@ -127,15 +127,15 @@
 		 * Find list of orders related to allocations - without payments
 		 * @return array
 		 */
-		public function find_expired_orders($reservation_type, $reservation_id)
+		public function find_expired_orders($reservation_type, $reservation_id, $update_reservation_time)
 		{
-			$now = date('Y-m-d');
+//			$now = date('Y-m-d');
 			$sql = "SELECT bb_purchase_order.id"
 				. " FROM bb_purchase_order"
 				. " LEFT JOIN bb_payment ON bb_purchase_order.id = bb_payment.order_id"
 				. " JOIN bb_{$reservation_type} ON bb_purchase_order.reservation_type = '{$reservation_type}' AND bb_purchase_order.reservation_id = bb_{$reservation_type}.id"
 				. " WHERE bb_payment.id IS NULL"
-				. " AND bb_{$reservation_type}.to_ < '{$now}'"
+				. " AND bb_{$reservation_type}.to_ < '{$update_reservation_time}'"
 				. " AND bb_purchase_order.reservation_id = {$reservation_id}";
 
 			$orders = array();
