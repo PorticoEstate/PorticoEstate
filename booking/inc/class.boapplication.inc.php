@@ -99,6 +99,8 @@
 				$body .= '<pre>' . $config->config_data['application_mail_rejected'] . '</pre>';
 			}
 
+				$title .= " ref.nr. {$application['id']}";
+
 			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
 
 			return array
