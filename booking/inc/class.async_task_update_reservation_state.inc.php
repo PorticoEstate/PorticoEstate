@@ -24,8 +24,8 @@
 				$_finnish_datestamp = time();
 				for ($i = 1; $i < 16; $i++)
 				{
-					$finnish_datestamp	 = $_finnish_datestamp + (86400 * $i);
-					$working_days	 = phpgwapi_datetime::get_working_days($_finnish_datestamp, $finnish_datestamp);
+					$finnish_datestamp	 = $_finnish_datestamp - (86400 * $i);
+					$working_days	 = phpgwapi_datetime::get_working_days( $finnish_datestamp, $_finnish_datestamp);
 					if ($working_days == $billing_delay)
 					{
 						$this->update_reservation_time = date('Y-m-d', $finnish_datestamp) . ' 10:00:00';
