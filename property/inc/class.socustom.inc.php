@@ -299,7 +299,7 @@
 
 			$this->db->query("SELECT sql_text FROM fm_custom where id={$custom_id}", __LINE__, __FILE__);
 			$this->db->next_record();
-			$sql = $this->db->f('sql_text', true);
+			$sql = rtrim($this->db->f('sql_text', true),';');
 
 			$uicols			 = $this->read_cols($custom_id);
 			$this->uicols	 = $uicols;
