@@ -211,7 +211,7 @@
 
 		private function get_orgs_from_external_service($fodselsnr)
 		{
-			$apikey = !empty($this->config->config_data['apikey']) ? $this->config->config_data['apikey'] : '45090934oidtgj3Dtgijr3GrtiorthrtpiRTHSRhoRTHrthoijrtgrsSERgerthoijRDTeortigjesrgERHGeihjoietrh';
+			$apikey = !empty($this->config->config_data['apikey']) ? $this->config->config_data['apikey'] : '';
 			$webservicehost = !empty($this->config->config_data['webservicehost']) ? $this->config->config_data['webservicehost'] : '';
 
 			if(!$webservicehost || !$apikey)
