@@ -175,7 +175,7 @@
 					$export_data[$export_type] = $this->combine_export_result_data($export_results[$export_type]);
 				}
 
-				$log = "Reservasjon_Id;Reservasjon_Type;Ordrenr;Kundenavn;Kundenummer;Varelinjer med dato;Bygg;Beløp";
+				$log = "Reservasjon_Id;Reservasjon_Type;Ordrenr;Kundenavn;Kundenummer;Varelinjer med dato;Bygg;Beløp,Beløp2";
 				$log .= $export_log;
 //				$export_log = $log;
 				$export_log = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $log);
