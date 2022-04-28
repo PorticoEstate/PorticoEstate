@@ -1481,6 +1481,9 @@
 					*/
 					$line_no = 0;
 
+					$log_cost = 0;
+					$log_cost2 = 0;
+
 					if($purchase_order && !empty($purchase_order['lines']))
 					{
 
@@ -1510,6 +1513,8 @@
 							$fakturalinje['antall']				 = $order_line['quantity'];
 							$fakturalinje['enhetspris']			 = $order_line['unit_price'];
 							$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+							$log_cost							+= $order_line['amount'];
+							$log_cost2							+= $order_line['tax'];
 
 						}
 
@@ -1519,6 +1524,7 @@
 						$line_no += 1;
 						$fakturalinje['Linjenr']			 = $line_no;
 						$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+						$log_cost							 = $reservation['cost'];
 					}
 
 
@@ -1529,7 +1535,6 @@
 					$log_customer_nr = $stored_header['kundenr'];
 
 					$log_buidling = $reservation['building_name'];
-					$log_cost = $reservation['cost'];
 					$log_varelinjer_med_dato = $reservation['article_description'] . ' - ' . $reservation['description'];
 
 					$line_field = array();
@@ -1542,6 +1547,7 @@
 					$line_field[] = "\"{$log_varelinjer_med_dato}\"";
 					$line_field[] = "\"{$log_buidling}\"";
 					$line_field[] = "\"{$log_cost}\"";
+					$line_field[] = "\"{$log_cost2}\"";
 
 					$log[] = implode(';',  $line_field);
 
@@ -1599,10 +1605,11 @@
 					$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
 					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
 
+					$log_cost = 0;
+					$log_cost2 = 0;
 
 					if($purchase_order && !empty($purchase_order['lines']))
 					{
-
 						foreach ($purchase_order['lines'] as $order_line)
 						{
 							if(empty($order_line['amount']))
@@ -1629,7 +1636,8 @@
 							$fakturalinje['antall']				 = $order_line['quantity'];
 							$fakturalinje['enhetspris']			 = $order_line['unit_price'];
 							$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
-
+							$log_cost							+= $order_line['amount'];
+							$log_cost2							+= $order_line['tax'];
 						}
 
 					}
@@ -1638,11 +1646,11 @@
 						$line_no += 1;
 						$fakturalinje['Linjenr']			 = $line_no;
 						$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+						$log_cost							 = $reservation['cost'];
 					}
 
 
 					$log_buidling			 = $reservation['building_name'];
-					$log_cost				 = $reservation['cost'];
 					$log_varelinjer_med_dato = $reservation['article_description'] . ' - ' . $reservation['description'];
 
 					$line_field = array();
@@ -1655,6 +1663,7 @@
 					$line_field[] = "\"{$log_varelinjer_med_dato}\"";
 					$line_field[] = "\"{$log_buidling}\"";
 					$line_field[] = "\"{$log_cost}\"";
+					$line_field[] = "\"{$log_cost2}\"";
 
 					$log[] = implode(';',  $line_field);
 
