@@ -93,8 +93,8 @@
 			<td>{lang_enable_upload_attachment}:</td>
 			<td>
 				<select name="newsettings[enable_upload_attachment]">
-					<option value="" {selected_enable_upload_attachment_}>NO</option>
-					<option value="1" {selected_enable_upload_attachment_1}>YES</option>
+					<option value="" {selected_enable_upload_attachment_}>{lang_No}</option>
+					<option value="1" {selected_enable_upload_attachment_1}>{lang_Yes}</option>
 				</select>
 			</td>
 		</tr>
@@ -106,6 +106,15 @@
 			</td>
 		</tr>
 
+		<tr class="row_off">
+			<td>{lang_activate_application_articles}:</td>
+			<td>
+				<select name="newsettings[activate_application_articles]">
+					<option value="">{lang_No}</option>
+					<option value="True"{selected_activate_application_articles_True}>{lang_Yes}</option>
+				</select>
+			</td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->

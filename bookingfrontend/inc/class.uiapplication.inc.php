@@ -325,7 +325,10 @@
 			}
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
 
-			self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
+			if(!empty($config['activate_application_articles']))
+			{
+				self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
+			}
 			phpgwapi_jquery::formvalidator_generate(array('file'), 'file_form');
 
 			self::render_template_xsl('application', array(
@@ -335,8 +338,7 @@
 				'frontend'		 => 'true',
 				'simple'		 => $simple,
 				'associations'	 => $associations,
-				'config'		 => CreateObject('phpgwapi.config', 'booking')->read()
-
+				'config'		 => $config
 				)
 			);
 		}
