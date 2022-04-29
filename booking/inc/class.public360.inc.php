@@ -68,7 +68,7 @@
 		}
 
 
-		public function export_data( $_title, $application, $files )
+		public function export_data( $titles, $application, $files )
 		{
 			if(!$this->archive_user_id)
 			{
@@ -76,7 +76,12 @@
 				return;
 			}
 
-			$title = str_replace(array('(', ')'), array('[', ']'), $_title);
+			$title1 = str_replace(array('(', ')'), array('[', ']'), $titles[0]);
+			$title2 = str_replace(array('(', ')'), array('[', ']'), $titles[1]);
+
+			$files1 = array_slice($files, 0, (count($files) -1));
+			$files2 = array(end($files));
+
 			if($application['customer_ssn'])
 			{
 				$person_data = $this->get_person( $application['customer_ssn'] );
@@ -96,22 +101,33 @@
 				}
 			}
 
-			$case_result = $this->create_case($title, $application);
+			$case_result = $this->create_case($title1, $application);
 
-			$document_result = array();
+			$document_result1 = array();
+			$document_result2 = array();
 
 			if($case_result['Successful'])
 			{
-				$document_result = $this->create_document($case_result, $title, $files, $application);
+				$category = 110; // inngående
+				$document_result1 = $this->create_document($case_result, $title1, $files1, $application, $category);
+
+				$this->sign_off_document($document_result1);
+
+				$category = 111; // utgående
+				$document_result2 = $this->create_document($case_result, $title2, $files2, $application, $category);
+				
+				//Close the case
+				$this->update_case($case_result);
+
 			}
 
 			return array(
 				'external_archive_key'	 => $case_result['CaseNumber'],
 				'case_result'			 => $case_result,
-				'document_result'		 => $document_result
+				'document_result1'		 => $document_result1,
+				'document_result2'		 => $document_result2
 			);
 		}
-
 
 		public function get_person( $ssn )
 		{
@@ -339,12 +355,12 @@
 			return $case_data;
 		}
 
-		public function create_document( $case_data, $title, $files, $application )
+		public function create_document( $case_data, $title, $files, $application, $category )
 		{
 			$data = array(
 				'CaseNumber' => $case_data['CaseNumber'],
 				'Title' => $title,
-				'Category' => 110, //Dokument inn
+				'Category' => $category, //110, //Dokument inn
 				'Status'	=> 'J',
 				'Files'		=> array(),
 				'Contacts' => array(),
@@ -387,11 +403,41 @@
 
 			$method = 'DocumentService/CreateDocument';
 			$input = array('parameter' => $data);
-			$cocument_data = $this->transfer_data($method, $input);
-			return $cocument_data;
+			$document_data = $this->transfer_data($method, $input);
+			return $document_data;
 		}
 
-		private function transfer_data( $method, $data )
+		private function sign_off_document($param)
+		{
+			$data = array(
+				'ADContextUser' => $this->archive_user_id,
+				'Document' => $param['DocumentNumber'],
+				'ResponseCode' => 'TO',
+				'NoteTitle' => 'Merknad',
+				'Note' => 'Dokumentet er automatisk avskrevet med TO'
+			);
+			$method = 'DocumentService/SignOffDocument';
+			$input = array('parameter' => $data);
+			$document_data = $this->transfer_data($method, $input);
+			return $document_data;
+
+		}
+
+		private function update_case( $param )
+		{
+			$data = array(
+				'ADContextUser' => $this->archive_user_id,
+				'CaseNumber' => $param['CaseNumber'],
+				'Status' => 'AS',// Avsluttet av saksbehandler
+			);
+
+			$method = 'CaseService/UpdateCase';
+			$input = array('parameter' => $data);
+			$case_data = $this->transfer_data($method, $input, 'PUT');
+			return $case_data;
+		}
+
+		private function transfer_data( $method, $data, $http_method  = 'POST')
 		{
 			$data_json	 = json_encode($data);
 
@@ -412,9 +458,17 @@
 				'Content-Length: ' . strlen($data_json)
 				));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
 
+			if($http_method == 'PUT')
+			{
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+				curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+			}
+			else
+			{
+				curl_setopt($ch, CURLOPT_POST, 1);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+			}
 
 			if($this->debug)
 			{

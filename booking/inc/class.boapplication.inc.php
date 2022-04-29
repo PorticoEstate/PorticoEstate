@@ -38,7 +38,7 @@
 			}
 			if ($adates)
 			{
-				$body .= "<pre>Tidsrom:\n" . $adates . "</pre>";
+				$body .= "<pre>Tidsrom:\n" . $adates . "</pre><br/>";
 			}
 
 			if ($application['comment'] != '')
@@ -56,8 +56,9 @@
 
 			if($file_names)
 			{
-				$body .= "Søker har kvittert for å ha lest vedlagte dokument(er):\n";
+				$body .= "<pre>Søker har kvittert for å ha lest vedlagte dokument(er):\n";
 				$body .=  implode("\n", $file_names);
+				$body .=  "</pre>";
 			}
 
 			return array
