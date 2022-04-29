@@ -2722,7 +2722,7 @@
 
 			$pdf->ezSetDy(-20);
 			$pdf->selectFont('Helvetica-Bold');
-			$pdf->ezText(lang('application') . " #{$application['id']} : " . lang($application['status']), 14);
+			$pdf->ezText(lang('application') . " #{$application['id']}", 14);
 			$pdf->selectFont('Helvetica');
 
 			$html2text	 = createObject('phpgwapi.html2text', $export_text['body']);
@@ -2740,7 +2740,7 @@
 
 			$pdf->ezSetDy(-20);
 			$pdf->selectFont('Helvetica-Bold');
-			$pdf->ezText(lang('application') . " #{$application['id']} : " . lang($application['status']), 14);
+			$pdf->ezText(lang('application') . " #{$application['id']} : " . strtolower(lang($application['status'])), 14);
 			$pdf->selectFont('Helvetica');
 
 			$html2text	 = createObject('phpgwapi.html2text', $export_text['body']);
@@ -2796,7 +2796,13 @@
 
 			if ($preview)
 			{
-				$pdf1->print_pdf($file_data1, "{$lang_application}_{$application['id']}");
+				$pdf1->ezSetDy(-20);
+				$html2text	 = createObject('phpgwapi.html2text', $export_text2['body']);
+				$text		 = trim($html2text->getText());
+
+				$pdf1->ezSetDy(-20);
+				$pdf1->ezText($text, 12);
+				$pdf1->print_pdf($pdf1->ezOutput(), "{$lang_application}_{$application['id']}");
 			}
 			else
 			{
@@ -2809,9 +2815,12 @@
 					$archive = createObject("booking.{$method}");
 
 					$files = array();
-					$files[] = array('file_name' => $file_name1, 'file_data' => $file_data1 );
+					$files[] = array(
+						'file_name' => $file_name1,
+						'file_data' => $file_data1
+						);
 
-					unset($file_data);
+					unset($file_data1);
 
 					$attachments = $this->bo->get_related_files($application);
 
@@ -2826,7 +2835,20 @@
 
 					unset($file_content);
 
-					$result = $archive->export_data($export_text['title'], $application, $files);
+					$files[] = array(
+						'file_name' => $file_name2,
+						'file_data' => $file_data2
+						);
+
+
+					$result = $archive->export_data(
+						array(
+							$export_text1['title'],
+							$export_text2['title']
+						),
+						$application,
+						$files
+					);
 
 					//update application with external_archive_key
 					if (!empty($result['external_archive_key']))
