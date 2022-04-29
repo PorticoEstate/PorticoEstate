@@ -910,6 +910,20 @@
 				!!$cookie_params['secure'],
 				!!$cookie_params['httponly']
 			);
+
+			/**
+			 * Post php 7.3
+			 */
+			/*
+			setcookie($cookiename, $cookievalue, [
+				'expires'	 => $cookietime,
+				'path'		 => $cookie_params['path'],
+				'domain'	 => $cookie_params['domain'],
+				'secure'	 => !!$cookie_params['secure'],
+				'httponly'	 => !!$cookie_params['httponly'],
+				'samesite'	 => 'Lax',
+			]);
+			*/
 		}
 
 
@@ -1676,7 +1690,22 @@
 
 			$webserver_url = '/';
 
+			// Pre php 7.3
 			session_set_cookie_params(0, parse_url($webserver_url, PHP_URL_PATH), $this->_cookie_domain, $secure, false);
+			
+			//Post php 7.3
+/*
+			session_set_cookie_params(
+				array(
+						'lifetime'=> 0,
+						'path' => parse_url($webserver_url, PHP_URL_PATH),
+						'domain' => $this->_cookie_domain,
+						'secure' => $secure,
+						'httponly' => false,
+						'samesite' => 'Lax'
+				)
+			);
+*/
 			return $this->_cookie_domain;
 		}
 

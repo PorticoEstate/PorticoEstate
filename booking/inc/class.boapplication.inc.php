@@ -15,27 +15,78 @@
 		/*
 		 * Used for external archive
 		 */
-		function get_export_text( $application )
+		function get_export_text1( $application, $config)
 		{
+			$resourcename = implode(",", $this->get_resource_name($application['resources']));
+			$title = "Forespørsel om leie/lån av {$resourcename}  på  {$application['building_name']} - {$application['contact_name']}";
+			$title .= " ref.nr. {$application['id']}";
 
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
+			$_adates = array();
+
+			foreach ($application['dates'] as $date)
+			{
+				$_adates[] = "\t{$date['from_']} - {$date['to_']}";
+			}
+
+			$adates = implode("\n", $_adates);
+
+			$body = "<p>" . $application['contact_name'] . " har søkt " . $config['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name'] . '</p>';
+			if ($application['agreement_requirements'] != '')
+			{
+				$lang_additional_requirements = lang('additional requirements');
+				$body .= "{$lang_additional_requirements}:<br />" . $application['agreement_requirements'] . "<br />";
+			}
+			if ($adates)
+			{
+				$body .= "<pre>Tidsrom:\n" . $adates . "</pre>";
+			}
+
+			if ($application['comment'] != '')
+			{
+				$body .= "<p>Kommentar fra saksbehandler:<br />" . ($application['comment']) . "</p>";
+			}
+
+			$attachments = $this->get_related_files($application);
+
+			$file_names = array();
+			foreach ($attachments as $attachment)
+			{
+				$file_names[] =  $attachment['name'];
+			}
+
+			if($file_names)
+			{
+				$body .= "Søker har kvittert for å ha lest vedlagte dokument(er):\n";
+				$body .=  implode("\n", $file_names);
+			}
+
+			return array
+			(
+				'title' => $title,
+				'body'=> $body
+			);
+
+		}
+		/*
+		 * Used for external archive
+		 */
+		function get_export_text2( $application, $config )
+		{
 
 			$resourcename = implode(",", $this->get_resource_name($application['resources']));
 			$title = "Forespørsel om leie/lån av {$resourcename}  på  {$application['building_name']} - {$application['contact_name']}";
 
 			if ($application['status'] == 'PENDING')
 			{
-				$body = "<p>" . $application['contact_name'] . " sin søknad i " . $config->config_data['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name'] ." er " . lang($application['status']) . '</p>';
+				$body = "<p>" . $application['contact_name'] . " sin søknad i " . $config['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name'] ." er " . lang($application['status']) . '</p>';
 				if ($application['comment'] != '')
 				{
 					$body .= '<p>Kommentar fra saksbehandler:<br />' . $application['comment'] . '</p>';
 				}
-				$body .= "<pre>" . $config->config_data['application_mail_pending'] . "</pre>";
+				$body .= "<pre>" . $config['application_mail_pending'] . "</pre>";
 			}
 			elseif ($application['status'] == 'ACCEPTED')
 			{
-				$title .= " er GODKJENT";
 				$assoc_bo = new booking_boapplication_association();
 				$associations = $assoc_bo->so->read(array('filters' => array('application_id' => $application['id']),
 					'sort' => 'from_', 'dir' => 'asc', 'results' =>'all'));
@@ -67,7 +118,7 @@
 					}
 				}
 
-				$body = "<p>" . $application['contact_name'] . " sin søknad i " . $config->config_data['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name'] ." er " . lang($application['status']) . '</p>';
+				$body = "<p>" . $application['contact_name'] . " sin søknad i " . $config['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name'] ." er " . lang($application['status']) . '</p>';
 				if ($application['agreement_requirements'] != '')
 				{
 					$lang_additional_requirements = lang('additional requirements');
@@ -77,7 +128,7 @@
 				{
 					$body .= "<p>Kommentar fra saksbehandler:<br />" . ($application['comment']) . "</p>";
 				}
-				$body .= "<p>{$config->config_data['application_mail_accepted']}</p>";
+				$body .= "<p>{$config['application_mail_accepted']}</p>";
 				if ($adates)
 				{
 					$body .= "<pre>Godkjent:\n" . $adates . "</pre>";
@@ -89,19 +140,19 @@
 			}
 			elseif ($application['status'] == 'REJECTED')
 			{
-				$title .= " er AVVIST";
 
-				$body = "<p>" . $application['contact_name'] . " sin søknad i " . $config->config_data['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name'] ." er " . lang($application['status']) . '</p>';
+				$body = "<p>" . $application['contact_name'] . " sin søknad i " . $config['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name'] ." er " . lang($application['status']) . '</p>';
 				if ($application['comment'] != '')
 				{
 					$body .= '<p>Kommentar fra saksbehandler:<br />' . ($application['comment']) . '</p>';
 				}
-				$body .= '<pre>' . $config->config_data['application_mail_rejected'] . '</pre>';
+				$body .= '<pre>' . $config['application_mail_rejected'] . '</pre>';
 			}
 
-				$title .= " ref.nr. {$application['id']}";
+			$title .= " ref.nr. {$application['id']}";
+			$title .= " er ". strtolower(lang($application['status']));
 
-			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
+			$body .= "<p>" . $config['application_mail_signature'] . "</p>";
 
 			return array
 			(
