@@ -18,8 +18,6 @@
 		function get_export_text1( $application, $config)
 		{
 			$resourcename = implode(",", $this->get_resource_name($application['resources']));
-			$title = "Forespørsel om leie/lån av {$resourcename}  på  {$application['building_name']} - {$application['contact_name']}";
-			$title .= " ref.nr. {$application['id']}";
 
 			$_adates = array();
 
@@ -29,6 +27,13 @@
 			}
 
 			$adates = implode("\n", $_adates);
+
+			$customer_name = !empty($application['customer_organization_name']) ? $application['customer_organization_name'] : $application['contact_name'];
+
+			$start_date = reset($application['dates']);
+			$end_date = end($application['dates']);
+
+			$title = "Forespørsel om leie av {$application['building_name']}/{$resourcename} - {$start_date['from_']} - {$end_date['to_']} - $customer_name";
 
 			$body = "<p>" . $application['contact_name'] . " har søkt " . $config['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name'] . '</p>';
 			if ($application['agreement_requirements'] != '')
@@ -75,11 +80,17 @@
 		{
 
 			$resourcename = implode(",", $this->get_resource_name($application['resources']));
-			$title = "Forespørsel om leie/lån av {$resourcename}  på  {$application['building_name']} - {$application['contact_name']}";
+
+			$customer_name = !empty($application['customer_organization_name']) ? "{$application['customer_organization_name']}/{$application['contact_name']}" : $application['contact_name'];
+
+			$start_date = reset($application['dates']);
+			$end_date = end($application['dates']);
+
+			$title = "Svar på forespørsel om leie av {$application['building_name']}/{$resourcename} - {$start_date['from_']} - {$end_date['to_']}  - $customer_name";
 
 			if ($application['status'] == 'PENDING')
 			{
-				$body = "<p>" . $application['contact_name'] . " sin søknad i " . $config['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name'] ." er " . lang($application['status']) . '</p>';
+				$body = "<p>" . $application['contact_name'] . " sin søknad i " . $config['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name'] ." er " . strtolower(lang($application['status'])) . '</p>';
 				if ($application['comment'] != '')
 				{
 					$body .= '<p>Kommentar fra saksbehandler:<br />' . $application['comment'] . '</p>';
@@ -119,7 +130,7 @@
 					}
 				}
 
-				$body = "<p>" . $application['contact_name'] . " sin søknad i " . $config['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name'] ." er " . lang($application['status']) . '</p>';
+				$body = "<p>" . $application['contact_name'] . " sin søknad i " . $config['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name'] ." er " . strtolower(lang($application['status'])) . '</p>';
 				if ($application['agreement_requirements'] != '')
 				{
 					$lang_additional_requirements = lang('additional requirements');
@@ -142,16 +153,13 @@
 			elseif ($application['status'] == 'REJECTED')
 			{
 
-				$body = "<p>" . $application['contact_name'] . " sin søknad i " . $config['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name'] ." er " . lang($application['status']) . '</p>';
+				$body = "<p>" . $application['contact_name'] . " sin søknad i " . $config['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name'] ." er " . strtolower(lang($application['status'])) . '</p>';
 				if ($application['comment'] != '')
 				{
 					$body .= '<p>Kommentar fra saksbehandler:<br />' . ($application['comment']) . '</p>';
 				}
 				$body .= '<pre>' . $config['application_mail_rejected'] . '</pre>';
 			}
-
-			$title .= " ref.nr. {$application['id']}";
-			$title .= " er ". strtolower(lang($application['status']));
 
 			$body .= "<p>" . $config['application_mail_signature'] . "</p>";
 

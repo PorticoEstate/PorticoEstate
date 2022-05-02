@@ -2722,7 +2722,7 @@
 
 			$pdf->ezSetDy(-20);
 			$pdf->selectFont('Helvetica-Bold');
-			$pdf->ezText(lang('application') . " #{$application['id']}", 14);
+			$pdf->ezText($export_text['title'], 14);
 			$pdf->selectFont('Helvetica');
 
 			$html2text	 = createObject('phpgwapi.html2text', $export_text['body']);
@@ -2740,7 +2740,7 @@
 
 			$pdf->ezSetDy(-20);
 			$pdf->selectFont('Helvetica-Bold');
-			$pdf->ezText(lang('application') . " #{$application['id']} : " . strtolower(lang($application['status'])), 14);
+			$pdf->ezText($export_text['title'], 14);
 			$pdf->selectFont('Helvetica');
 
 			$html2text	 = createObject('phpgwapi.html2text', $export_text['body']);
@@ -2754,8 +2754,7 @@
 
 		public function export_pdf()
 		{
-//			$cases = createObject('booking.public360')->get_cases();
-//
+//			$cases = createObject('booking.public360')->get_cases('2022000052');
 //			_debug_array($cases);
 //			die();
 
@@ -2796,13 +2795,17 @@
 
 			if ($preview)
 			{
-				$pdf1->ezSetDy(-20);
-				$html2text	 = createObject('phpgwapi.html2text', $export_text2['body']);
-				$text		 = trim($html2text->getText());
-
-				$pdf1->ezSetDy(-20);
-				$pdf1->ezText($text, 12);
-				$pdf1->print_pdf($pdf1->ezOutput(), "{$lang_application}_{$application['id']}");
+				$pdf_preview_alternate = phpgwapi_cache::session_get('booking', 'pdf_preview_alternate');
+				if(empty($pdf_preview_alternate))
+				{
+					phpgwapi_cache::session_set('booking', 'pdf_preview_alternate', 1);
+					$pdf1->print_pdf($file_data1, "{$lang_application}_{$application['id']}_1");
+				}
+				else
+				{
+					phpgwapi_cache::session_set('booking', 'pdf_preview_alternate', 0);
+					$pdf1->print_pdf($file_data2, "{$lang_application}_{$application['id']}_2");
+				}
 			}
 			else
 			{
@@ -2840,9 +2843,22 @@
 						'file_data' => $file_data2
 						);
 
+					$resourcename = implode(",", $this->bo->get_resource_name($application['resources']));
+
+					if(!empty($application['customer_organization_name']))
+					{
+						$customer_name = $application['customer_organization_name'];
+					}
+					else
+					{
+						$customer_name = $application['contact_name'];
+					}
+					
+					$case_title = "{$application['building_name']}/{$resourcename} – utleie til arrangement – {$customer_name} - ref.nr. {$application['id']}";
 
 					$result = $archive->export_data(
 						array(
+							$case_title,
 							$export_text1['title'],
 							$export_text2['title']
 						),
