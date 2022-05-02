@@ -2628,11 +2628,18 @@
 			$all = $pdf->openObject();
 			$pdf->saveState();
 
-			if (isset($config['order_logo']) && $config['order_logo'])
+//			if (!empty($GLOBALS['phpgw_info']['server']['logo_url']))
 			{
-				$pdf->addJpegFromFile($config['order_logo'], 40, 800, isset($config['order_logo_width']) && $config['order_logo_width'] ? $config['order_logo_width'] : 80
-				);
+				//cheating...
+				$footerlogoimg = PHPGW_SERVER_ROOT ."/phpgwapi/templates/bookingfrontend/img/logo-kristiansand.png";
+		//		_debug_array($footerlogoimg);die();
+		//		$pdf->addJpegFromFile($footerlogoimg, 40, 800, 80);
+				$pdf->addPngFromFile($footerlogoimg, 45, 780, 80);
+				$pdf->ezSetDy(-20);
+		//		$pdf->ezImage($footerlogoimg,$pad = 0,$width = 60,$resize = '',$just = 'left',$border = '');
 			}
+
+
 			$pdf->setStrokeColor(0, 0, 0, 1);
 			$pdf->line(20, 40, 578, 40);
 			//	$pdf->line(20,820,578,820);

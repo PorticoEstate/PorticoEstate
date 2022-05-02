@@ -362,6 +362,16 @@
 
 		public function create_document( $case_data, $title, $files, $application, $category )
 		{
+
+			if($category == 110)//Dokument inn
+			{
+				$ssn_role = 5;//'Avsender'
+			}
+			else
+			{
+				$ssn_role = 6;// 'Mottaker'
+			}
+
 			$data = array(
 				'CaseNumber' => $case_data['CaseNumber'],
 				'Title' => $title,
@@ -376,7 +386,6 @@
 			$ssn_role = 5;//'Avsender'
 			if($application['customer_organization_number'])
 			{
-				$ssn_role = 1;//'Contact'
 
 				$data['Contacts'][] = 	array(
 						'Role' => 5,//'Avsender',
@@ -386,6 +395,10 @@
 
 			if($application['customer_ssn'])
 			{
+				if($application['customer_organization_number'])
+				{
+					$ssn_role = 1;//'Contact'
+				}
 				$data['Contacts'][] = array(
 						'Role' => $ssn_role,
 						'ExternalId' => $application['customer_ssn'],

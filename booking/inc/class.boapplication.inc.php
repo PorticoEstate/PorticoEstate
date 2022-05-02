@@ -17,13 +17,14 @@
 		 */
 		function get_export_text1( $application, $config)
 		{
+			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$resourcename = implode(",", $this->get_resource_name($application['resources']));
 
 			$_adates = array();
 
 			foreach ($application['dates'] as $date)
 			{
-				$_adates[] = "\t{$date['from_']} - {$date['to_']}";
+				$_adates[] = "\t" . date("$dateformat H:i:s", strtotime($date['from_'])) . " - " . date("$dateformat H:i:s", strtotime($date['to_']));
 			}
 
 			$adates = implode("\n", $_adates);
@@ -31,9 +32,20 @@
 			$customer_name = !empty($application['customer_organization_name']) ? $application['customer_organization_name'] : $application['contact_name'];
 
 			$start_date = reset($application['dates']);
+			$start_date_formatted = date($dateformat, strtotime($start_date['from_']));
 			$end_date = end($application['dates']);
+			$end_date_formatted = date($dateformat, strtotime($end_date['to_']));
 
-			$title = "Forespørsel om leie av {$application['building_name']}/{$resourcename} - {$start_date['from_']} - {$end_date['to_']} - $customer_name";
+			if($start_date_formatted == $end_date_formatted)
+			{
+				$timespan = $start_date_formatted;
+			}
+			else
+			{
+				$timespan = "{$start_date_formatted} - {$end_date_formatted}";
+			}
+
+			$title = "Forespørsel om leie av {$application['building_name']}/{$resourcename} - {$timespan} - $customer_name";
 
 			$body = "<p>" . $application['contact_name'] . " har søkt " . $config['application_mail_systemname'] . " om leie/lån av " . $resourcename . " på " . $application['building_name'] . '</p>';
 			if ($application['agreement_requirements'] != '')
@@ -83,10 +95,22 @@
 
 			$customer_name = !empty($application['customer_organization_name']) ? "{$application['customer_organization_name']}/{$application['contact_name']}" : $application['contact_name'];
 
+			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$start_date = reset($application['dates']);
+			$start_date_formatted = date($dateformat, strtotime($start_date['from_']));
 			$end_date = end($application['dates']);
+			$end_date_formatted = date($dateformat, strtotime($end_date['to_']));
 
-			$title = "Svar på forespørsel om leie av {$application['building_name']}/{$resourcename} - {$start_date['from_']} - {$end_date['to_']}  - $customer_name";
+			if($start_date_formatted == $end_date_formatted)
+			{
+				$timespan = $start_date_formatted;
+			}
+			else
+			{
+				$timespan = "{$start_date_formatted} - {$end_date_formatted}";
+			}
+
+			$title = "Svar på forespørsel om leie av {$application['building_name']}/{$resourcename} - {$timespan}  - $customer_name";
 
 			if ($application['status'] == 'PENDING')
 			{
@@ -108,7 +132,7 @@
 				{
 					if ($assoc['active'])
 					{
-						$_adates[] = "\t{$assoc['from_']} - {$assoc['to_']}";
+						$_adates[] = "\t" . date("$dateformat H:i:s", strtotime($assoc['from_'])) . " - " . date("$dateformat H:i:s", strtotime($assoc['to_']));
 					}
 				}
 
