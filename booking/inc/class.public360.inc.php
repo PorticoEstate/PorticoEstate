@@ -51,13 +51,12 @@
 			$this->archive_user_id	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['archive_user_id'];
 		}
 
-		public function get_cases()
+		public function get_cases($case_number)
 		{
 			$data = array
 			(
 				'parameter' => array(
-					'Recno'=> '201362',
-				//	'CaseNumber' => '2020000693'
+					'CaseNumber' => $case_number
 					)
 			);
 
@@ -76,8 +75,9 @@
 				return;
 			}
 
-			$title1 = str_replace(array('(', ')'), array('[', ']'), $titles[0]);
-			$title2 = str_replace(array('(', ')'), array('[', ']'), $titles[1]);
+			$case_title = str_replace(array('(', ')'), array('[', ']'), $titles[0]);
+			$title1 = str_replace(array('(', ')'), array('[', ']'), $titles[1]);
+			$title2 = str_replace(array('(', ')'), array('[', ']'), $titles[2]);
 
 			$files1 = array_slice($files, 0, (count($files) -1));
 			$files2 = array(end($files));
@@ -101,7 +101,7 @@
 				}
 			}
 
-			$case_result = $this->create_case($title1, $application);
+			$case_result = $this->create_case($case_title, $application);
 
 			$document_result1 = array();
 			$document_result2 = array();
@@ -253,20 +253,6 @@
 				$organization['forretningsadresse']	= $organization['postadresse'];
 			}
 
-			$PostAddress = array();
-			if(!empty($enterprise_data['PostAddress']['StreetAddress']))
-			{
-				$PostAddress = $enterprise_data['PostAddress'];
-			}
-			else
-			{
-				$PostAddress		 = array(
-					'StreetAddress'	 => implode(', ', $organization['postadresse']['adresse']),
-					'ZipCode'		 => $organization['postadresse']['postnummer'],
-					'ZipPlace'		 => $organization['postadresse']['poststed'],
-					'Country'		 => 'NOR',
-				);
-			}
 
 			if (!empty($enterprise_data['OfficeAddress']['StreetAddress']))
 			{
@@ -280,6 +266,25 @@
 					'ZipPlace'		 => $organization['forretningsadresse']['poststed'],
 					'Country'		 => 'NOR',
 				);
+			}
+
+			$PostAddress = array();
+			if(!empty($enterprise_data['PostAddress']['StreetAddress']))
+			{
+				$PostAddress = $enterprise_data['PostAddress'];
+			}
+			else if(!empty($organization['postadresse']['adresse']))
+			{
+				$PostAddress		 = array(
+					'StreetAddress'	 => implode(', ', $organization['postadresse']['adresse']),
+					'ZipCode'		 => $organization['postadresse']['postnummer'],
+					'ZipPlace'		 => $organization['postadresse']['poststed'],
+					'Country'		 => 'NOR',
+				);
+			}
+			else
+			{
+				$PostAddress = $OfficeAddress;
 			}
 
 			$data = array(
@@ -410,7 +415,6 @@
 		private function sign_off_document($param)
 		{
 			$data = array(
-				'ADContextUser' => $this->archive_user_id,
 				'Document' => $param['DocumentNumber'],
 				'ResponseCode' => 'TO',
 				'NoteTitle' => 'Merknad',
@@ -426,7 +430,6 @@
 		private function update_case( $param )
 		{
 			$data = array(
-				'ADContextUser' => $this->archive_user_id,
 				'CaseNumber' => $param['CaseNumber'],
 				'Status' => 'AS',// Avsluttet av saksbehandler
 			);
@@ -452,23 +455,25 @@
 				curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
 			}
 			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-				'accept: application/json',
-				'Content-Type: application/json',
-				'Content-Length: ' . strlen($data_json)
-				));
+
+			$headers = array();
+			$headers[] = 'Accept: application/json';
+			$headers[] = 'Content-Type: application/json';
+
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 			if($http_method == 'PUT')
 			{
 				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-				curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
 			}
 			else
 			{
+				$headers[] = 'Content-length: ' . strlen($data_json);
 				curl_setopt($ch, CURLOPT_POST, 1);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
 			}
+
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 			if($this->debug)
 			{
