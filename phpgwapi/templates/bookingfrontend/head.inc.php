@@ -399,6 +399,7 @@ HTML;
 	$lang_user = lang('My page');
 	$tpl_vars['user_info_view'] = "<span><i class='fas fa-user ml-1 mr-1'></i><a href='{$user_url}'>{$lang_user}</a></span>";
 
+	$user_data = phpgwapi_cache::session_get($bouser->get_module(), $bouser::USERARRAY_SESSION_KEY);
 	if ($bouser->is_logged_in())
 	{
 
@@ -420,6 +421,13 @@ HTML;
 		}
 		$tpl_vars['login_text']	 = $bouser->orgnr . ' :: ' . lang('Logout');
 		$tpl_vars['login_url']	 = 'logout.php';
+	}
+	else if(!empty($user_data['ssn']))
+	{
+			$tpl_vars['login_text_org']	 = '';
+			$tpl_vars['login_text']		 = "{$user_data['first_name']} {$user_data['last_name']} :: " . lang('Logout');
+			$tpl_vars['org_url']		 = '#';
+			$tpl_vars['login_url']	 = 'logout.php';
 	}
 	else
 	{
