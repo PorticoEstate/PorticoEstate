@@ -383,12 +383,12 @@
 				'DocumentDate'			=> date('Y-m-d\TH:i:s', phpgwapi_datetime::user_localtime()),
 			);
 
-			$ssn_role = 5;//'Avsender'
+//			$ssn_role = 5;//'Avsender'
 			if($application['customer_organization_number'])
 			{
 
 				$data['Contacts'][] = 	array(
-						'Role' => 5,//'Avsender',
+						'Role' => $ssn_role,//'Avsender/mottaker',
 						'ReferenceNumber' => $application['customer_organization_number'],
 					);
 			}
