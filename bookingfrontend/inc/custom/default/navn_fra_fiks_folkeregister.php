@@ -121,8 +121,8 @@
 //
 
 			$ret['fornavn']		 = ucwords(strtolower($ret['fornavn']), " -'");
-			$ret['mellomnavn']	 = ucwords(strtolower($ret['fornavn']), " -'");
-			$ret['etternavn']	 = ucwords(strtolower($ret['fornavn']), " -'");
+			$ret['mellomnavn']	 = ucwords(strtolower($ret['mellomnavn']), " -'");
+			$ret['etternavn']	 = ucwords(strtolower($ret['etternavn']), " -'");
 
 			$poststed = explode(' ', $ret['postadresse'][1]);
 
