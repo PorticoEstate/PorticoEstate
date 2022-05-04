@@ -119,10 +119,9 @@
 //        )
 //)
 //
-
-			$ret['fornavn']		 = ucwords(strtolower($ret['fornavn']), " -'");
-			$ret['mellomnavn']	 = ucwords(strtolower($ret['mellomnavn']), " -'");
-			$ret['etternavn']	 = ucwords(strtolower($ret['etternavn']), " -'");
+			$ret['fornavn']			 = ucwords(mb_convert_case($ret['fornavn'],  MB_CASE_TITLE), "'");
+			$ret['mellomnavn']		 = ucwords(mb_convert_case($ret['fornavn'],  MB_CASE_TITLE), "'");
+			$ret['etternavn']		 = ucwords(mb_convert_case($ret['fornavn'],  MB_CASE_TITLE), "'");
 
 			$poststed = explode(' ', $ret['postadresse'][1]);
 
