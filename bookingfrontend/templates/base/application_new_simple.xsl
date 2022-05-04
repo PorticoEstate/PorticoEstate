@@ -58,7 +58,7 @@
 						<div class="col-12 mt-4" id="item-description">
 						</div>
 					</div>
-					<xsl:if test="has_articles  = 1">
+					<xsl:if test="config/activate_application_articles !=''">
 
 						<div class="form-group">
 							<label>
@@ -70,9 +70,6 @@
 								</xsl:attribute>
 							</input>
 							<div id="articles_container" style="display:inline-block;">
-								<span class="select_first_text">
-									<xsl:value-of select="php:function('lang', 'Select a resource first')" />
-								</span>
 							</div>
 						</div>
 					</xsl:if>
