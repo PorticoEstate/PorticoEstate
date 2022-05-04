@@ -128,7 +128,12 @@ function applicationModel()
 			/**
 			 * Defined in the file purchase_order_add.js
 			 */
-			populateTableChkArticles([], checkedResources, '', '', '');
+
+			if( typeof(populateTableChkArticles) === 'function')
+			{
+				populateTableChkArticles([], checkedResources, '', '', '');
+				return true;
+			}
 			return true;
 		}
 		return false;
@@ -175,7 +180,11 @@ function applicationModel()
 						self.bookingStartTime("");
 						self.bookingEndTime("");
 						$(".applicationSelectedDates").html("");
-						post_handle_order_table();
+						if( typeof(post_handle_order_table) === 'function')
+						{
+							post_handle_order_table();
+						}
+
 					}, 500); //self.repeat(false);
 
 				}
@@ -191,11 +200,14 @@ function applicationModel()
 	self.removeDate = function ()
 	{
 		self.date.remove(this);
-		setTimeout(function ()
+		if (typeof (post_handle_order_table) === 'function')
 		{
-			post_handle_order_table();
-		}, 500);
+			setTimeout(function ()
+			{
+				post_handle_order_table();
+			}, 500);
 
+		}
 	};
 	self.aboutArrangement = ko.observable("");
 	self.agegroupList = agegroup;
