@@ -1266,7 +1266,7 @@
 				$voucher_type = 'FK';
 			}
 
-			$stored_header = array();
+			$stored_header = array('tekst2' => false);
 			$line_no = 0;
 			$header_count = 0;
 			$log_order_id = '';
@@ -1386,7 +1386,6 @@
 
 					//Nøkkelfelt, kundens personnr/orgnr. - men differensiert for undergrupper innenfor samme orgnr
 					$stored_header['tekst2'] = $check_customer_identifier;
-					$stored_header['tekst3'] = $check_customer_identifier;
 
 //					if ($type == 'internal')
 //					{
@@ -1773,7 +1772,7 @@
 				$voucher_type = str_pad(substr(strtoupper('FK'), 0, 2), 2, ' ');
 			}
 
-			$stored_header = array();
+			$stored_header = array('tekst4' => false);
 			$line_no = 0;
 			$header_count = 0;
 			$log_order_id = '';
@@ -1859,7 +1858,7 @@
 					$check_customer_identifier = $this->get_customer_identifier_value_for($reservation) . '::' . $customer_number;
 				}
 
-				if ($stored_header == array() || $stored_header['tekst2'] != $check_customer_identifier)
+				if ($stored_header == array() || $stored_header['tekst4'] != $check_customer_identifier)
 				{
 					$order_id = $sequential_number_generator->increment()->get_current();
 					$export_info[] = $this->create_export_item_info($reservation, $order_id);
@@ -1939,19 +1938,22 @@
 					}
 
 					//Nøkkelfelt, kundens personnr/orgnr. - men differensiert for undergrupper innenfor samme orgnr
-					$stored_header['tekst2'] = $check_customer_identifier;
-					$stored_header['tekst3'] = $check_customer_identifier;
+//					$stored_header['tekst2'] = $check_customer_identifier;
+//					$stored_header['tekst3'] = $check_customer_identifier;
+					$stored_header['tekst4'] = $check_customer_identifier;
 
 					if ($type == 'internal')
 					{
-						$header['tekst2'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
-						$header['tekst3'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
+//						$header['tekst2'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
+//						$header['tekst3'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
+						$header['tekst4'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
 						$header['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
 					}
 					else
 					{
-						$header['tekst2'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
-						$header['tekst3'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
+//						$header['tekst2'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
+//						$header['tekst3'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
+						$header['tekst4'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
 						$header['ext_ord_ref'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $customer_number), 0, 15), 15, ' ');
 					}
 
@@ -2068,12 +2070,14 @@
 					if ($type == 'internal')
 					{
 //						$log_customer_nr = $header['tekst2'] . ' ' . $header['ext_ord_ref'];
-						$log_customer_nr = $header['tekst3'] . ' ' . $header['ext_ord_ref'];
+//						$log_customer_nr = $header['tekst3'] . ' ' . $header['ext_ord_ref'];
+						$log_customer_nr = $header['tekst4'] . ' ' . $header['ext_ord_ref'];
 					}
 					else
 					{
 //						$log_customer_nr = $header['tekst2'];
-						$log_customer_nr = $header['tekst3'];
+//						$log_customer_nr = $header['tekst3'];
+						$log_customer_nr = $header['tekst4'];
 					}
 
 
@@ -2251,8 +2255,8 @@
 				'responsible2' => str_repeat(' ', 8), 'sequence_no' => str_repeat(' ', 8), 'sequence_ref' => str_repeat(' ', 8),
 				'serial_no' => str_repeat(' ', 20), 'short_info' => str_repeat(' ', 60), 'status' => str_repeat(' ', 1),
 				'tax_code' => str_repeat(' ', 2), 'tax_system' => str_repeat(' ', 2), 'template_id' => str_repeat(' ', 8),
-				'terms_id' => str_repeat(' ', 2), 'tekx1' => str_repeat(' ', 12), 'tekst2' => str_repeat(' ', 12),
-				'tekst3' => str_repeat(' ', 12), 'text4' => str_repeat(' ', 12), 'trans_type' => str_repeat(' ', 2),
+				'terms_id' => str_repeat(' ', 2), 'tekst1' => str_repeat(' ', 12), 'tekst2' => str_repeat(' ', 12),
+				'tekst3' => str_repeat(' ', 12), 'tekst4' => str_repeat(' ', 12), 'trans_type' => str_repeat(' ', 2),
 				'unit_code' => str_repeat(' ', 3), 'unit_descr' => str_repeat(' ', 50), 'value_1' => str_repeat(' ', 17),
 				'voucher_ref' => str_repeat(' ', 9), 'voucher_type' => str_repeat(' ', 2), 'warehouse' => str_repeat(' ', 4),
 				'zip_code' => str_repeat(' ', 15));
