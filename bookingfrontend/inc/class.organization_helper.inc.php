@@ -76,6 +76,10 @@
 
 			if($ret)
 			{
+				if(!isset($ret['postadresse']))
+				{
+					$ret['postadresse'] = $ret['forretningsadresse'];
+				}
 				return $ret;
 			}
 			else
@@ -108,6 +112,10 @@
 			curl_close($ch);
 
 			$ret = json_decode($result, true);
+			if($ret && !isset($ret['postadresse']))
+			{
+				$ret['postadresse'] = $ret['forretningsadresse'];
+			}
 
 			return $ret;
 		}
