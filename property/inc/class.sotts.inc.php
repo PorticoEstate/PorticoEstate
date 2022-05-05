@@ -2305,7 +2305,7 @@
 			}
 			reset($custom_status);
 
-			$filtermethod	 = ' WHERE assignedto IS NULL';
+			$filtermethod	 = ' WHERE (assignedto IS NULL OR assignedto = 0)';
 			$where			 = 'AND';
 
 			//get variants of closed
@@ -2365,7 +2365,7 @@
 			$sql	 = "SELECT DISTINCT group_id as id , account_lastname, account_firstname FROM fm_tts_tickets"
 				. " $this->join phpgw_accounts ON fm_tts_tickets.group_id = phpgw_accounts.account_id"
 				. " {$filtermethod}"
-				. " ORDER BY account_lastname ASC";
+				. " ORDER BY account_firstname ASC";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -2387,8 +2387,7 @@
 			$values	 = array();
 			$sql	 = "SELECT DISTINCT group_id as id , account_lastname, account_firstname FROM fm_tts_tickets"
 				. " $this->join phpgw_accounts ON fm_tts_tickets.group_id = phpgw_accounts.account_id"
-				. " {$filtermethod}"
-				. " ORDER BY account_lastname ASC";
+				. " ORDER BY account_firstname ASC";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
