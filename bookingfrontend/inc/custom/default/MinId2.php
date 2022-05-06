@@ -154,8 +154,9 @@
 				}
 			}
 
-			$hash = sha1($fodselsnr);
-			$ssn =  '{SHA1}' . base64_encode($hash);
+			$hash	 = sha1($fodselsnr);
+			$ssn	 = '{SHA1}';
+			$ssn	 .= base64_encode($hash);
 
 			$sql = "SELECT DISTINCT * FROM (SELECT bb_organization.customer_ssn, bb_organization.organization_number, bb_organization.name AS organization_name"
 				. " FROM bb_delegate"
