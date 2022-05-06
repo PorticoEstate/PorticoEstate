@@ -296,7 +296,7 @@
 					'name'				 => $this->db->f('name', true),
 					'unit'				 => $this->db->f('unit', true),
 					'tax_code'			 => $this->db->f('tax_code'),
-					'tax_percent'		 => $this->db->f('tax_percent'),
+					'tax_percent'		 => (int)$this->db->f('tax_percent'),
 				);
 			}
 

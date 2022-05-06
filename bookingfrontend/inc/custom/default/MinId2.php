@@ -131,6 +131,10 @@
 			{
 				foreach ($orgs as $org)
 				{
+					if(empty($org['orgnr']))
+					{
+						continue;
+					}
 					$this->db->query("SELECT organization_number"
 						. " FROM bb_organization"
 						. " WHERE active = 1 AND organization_number = '{$org['orgnr']}'", __LINE__, __FILE__);
