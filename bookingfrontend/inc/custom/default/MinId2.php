@@ -163,16 +163,14 @@
 				. " WHERE (customer_ssn = '{$fodselsnr}' AND customer_identifier_type = 'ssn')"
 				. " OR organization_number IN ('". implode("','", $orgs_validate) ."') ) as t";
 
-			$this->db->query($sql, __LINE__, __FILE__);
-
 			$this->log('Delegert_eller_rolle_sql', $sql);
+
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			while($this->db->next_record())
 			{
 				$customer_ssn = $this->db->f('customer_ssn');
 				$organization_number = $this->db->f('organization_number');
-
-				$this->log('Delegert_eller_rolle', $organization_number);
 
 				if($organization_number && in_array($organization_number, $orgs_validate))
 				{
