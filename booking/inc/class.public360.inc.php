@@ -45,19 +45,18 @@
 				$this->debug = true;
 			}
 
-			$this->webservicehost	 = !empty($custom_config_data['webservicehost']) ? $custom_config_data['webservicehost'] : '';
+			$this->webservicehost	 = !empty($custom_config_data['webservicehost']) ? rtrim($custom_config_data['webservicehost'], '/') : '';
 			$this->authkey			 = !empty($custom_config_data['authkey']) ? $custom_config_data['authkey'] : '';
 			$this->proxy			 = !empty($config['proxy']) ? $config['proxy'] : '';
 			$this->archive_user_id	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['archive_user_id'];
 		}
 
-		public function get_cases()
+		public function get_cases($case_number)
 		{
 			$data = array
 			(
 				'parameter' => array(
-					'Recno'=> '201362',
-				//	'CaseNumber' => '2020000693'
+					'CaseNumber' => $case_number
 					)
 			);
 
@@ -68,7 +67,7 @@
 		}
 
 
-		public function export_data( $_title, $application, $files )
+		public function export_data( $titles, $application, $files )
 		{
 			if(!$this->archive_user_id)
 			{
@@ -76,7 +75,13 @@
 				return;
 			}
 
-			$title = str_replace(array('(', ')'), array('[', ']'), $_title);
+			$case_title = str_replace(array('(', ')'), array('[', ']'), $titles[0]);
+			$title1 = str_replace(array('(', ')'), array('[', ']'), $titles[1]);
+			$title2 = str_replace(array('(', ')'), array('[', ']'), $titles[2]);
+
+			$files1 = array_slice($files, 0, (count($files) -1));
+			$files2 = array(end($files));
+
 			if($application['customer_ssn'])
 			{
 				$person_data = $this->get_person( $application['customer_ssn'] );
@@ -96,22 +101,33 @@
 				}
 			}
 
-			$case_result = $this->create_case($title, $application);
+			$case_result = $this->create_case($case_title, $application);
 
-			$document_result = array();
+			$document_result1 = array();
+			$document_result2 = array();
 
 			if($case_result['Successful'])
 			{
-				$document_result = $this->create_document($case_result, $title, $files, $application);
+				$category = 110; // inngående
+				$document_result1 = $this->create_document($case_result, $title1, $files1, $application, $category);
+
+				$this->sign_off_document($document_result1);
+
+				$category = 111; // utgående
+				$document_result2 = $this->create_document($case_result, $title2, $files2, $application, $category);
+				
+				//Close the case
+				$this->update_case($case_result);
+
 			}
 
 			return array(
 				'external_archive_key'	 => $case_result['CaseNumber'],
 				'case_result'			 => $case_result,
-				'document_result'		 => $document_result
+				'document_result1'		 => $document_result1,
+				'document_result2'		 => $document_result2
 			);
 		}
-
 
 		public function get_person( $ssn )
 		{
@@ -237,20 +253,6 @@
 				$organization['forretningsadresse']	= $organization['postadresse'];
 			}
 
-			$PostAddress = array();
-			if(!empty($enterprise_data['PostAddress']['StreetAddress']))
-			{
-				$PostAddress = $enterprise_data['PostAddress'];
-			}
-			else
-			{
-				$PostAddress		 = array(
-					'StreetAddress'	 => implode(', ', $organization['postadresse']['adresse']),
-					'ZipCode'		 => $organization['postadresse']['postnummer'],
-					'ZipPlace'		 => $organization['postadresse']['poststed'],
-					'Country'		 => 'NOR',
-				);
-			}
 
 			if (!empty($enterprise_data['OfficeAddress']['StreetAddress']))
 			{
@@ -264,6 +266,25 @@
 					'ZipPlace'		 => $organization['forretningsadresse']['poststed'],
 					'Country'		 => 'NOR',
 				);
+			}
+
+			$PostAddress = array();
+			if(!empty($enterprise_data['PostAddress']['StreetAddress']))
+			{
+				$PostAddress = $enterprise_data['PostAddress'];
+			}
+			else if(!empty($organization['postadresse']['adresse']))
+			{
+				$PostAddress		 = array(
+					'StreetAddress'	 => implode(', ', $organization['postadresse']['adresse']),
+					'ZipCode'		 => $organization['postadresse']['postnummer'],
+					'ZipPlace'		 => $organization['postadresse']['poststed'],
+					'Country'		 => 'NOR',
+				);
+			}
+			else
+			{
+				$PostAddress = $OfficeAddress;
 			}
 
 			$data = array(
@@ -339,12 +360,22 @@
 			return $case_data;
 		}
 
-		public function create_document( $case_data, $title, $files, $application )
+		public function create_document( $case_data, $title, $files, $application, $category )
 		{
+
+			if($category == 110)//Dokument inn
+			{
+				$ssn_role = 5;//'Avsender'
+			}
+			else
+			{
+				$ssn_role = 6;// 'Mottaker'
+			}
+
 			$data = array(
 				'CaseNumber' => $case_data['CaseNumber'],
 				'Title' => $title,
-				'Category' => 110, //Dokument inn
+				'Category' => $category, //110, //Dokument inn
 				'Status'	=> 'J',
 				'Files'		=> array(),
 				'Contacts' => array(),
@@ -352,19 +383,22 @@
 				'DocumentDate'			=> date('Y-m-d\TH:i:s', phpgwapi_datetime::user_localtime()),
 			);
 
-			$ssn_role = 5;//'Avsender'
+//			$ssn_role = 5;//'Avsender'
 			if($application['customer_organization_number'])
 			{
-				$ssn_role = 1;//'Contact'
 
 				$data['Contacts'][] = 	array(
-						'Role' => 5,//'Avsender',
+						'Role' => $ssn_role,//'Avsender/mottaker',
 						'ReferenceNumber' => $application['customer_organization_number'],
 					);
 			}
 
 			if($application['customer_ssn'])
 			{
+				if($application['customer_organization_number'])
+				{
+					$ssn_role = 1;//'Contact'
+				}
 				$data['Contacts'][] = array(
 						'Role' => $ssn_role,
 						'ExternalId' => $application['customer_ssn'],
@@ -387,11 +421,39 @@
 
 			$method = 'DocumentService/CreateDocument';
 			$input = array('parameter' => $data);
-			$cocument_data = $this->transfer_data($method, $input);
-			return $cocument_data;
+			$document_data = $this->transfer_data($method, $input);
+			return $document_data;
 		}
 
-		private function transfer_data( $method, $data )
+		private function sign_off_document($param)
+		{
+			$data = array(
+				'Document' => $param['DocumentNumber'],
+				'ResponseCode' => 'TO',
+				'NoteTitle' => 'Merknad',
+				'Note' => 'Dokumentet er automatisk avskrevet med TO'
+			);
+			$method = 'DocumentService/SignOffDocument';
+			$input = array('parameter' => $data);
+			$document_data = $this->transfer_data($method, $input);
+			return $document_data;
+
+		}
+
+		private function update_case( $param )
+		{
+			$data = array(
+				'CaseNumber' => $param['CaseNumber'],
+				'Status' => 'AS',// Avsluttet av saksbehandler
+			);
+
+			$method = 'CaseService/UpdateCase';
+			$input = array('parameter' => $data);
+			$case_data = $this->transfer_data($method, $input, 'PUT');
+			return $case_data;
+		}
+
+		private function transfer_data( $method, $data, $http_method  = 'POST')
 		{
 			$data_json	 = json_encode($data);
 
@@ -406,15 +468,25 @@
 				curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
 			}
 			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-				'accept: application/json',
-				'Content-Type: application/json',
-				'Content-Length: ' . strlen($data_json)
-				));
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
 
+			$headers = array();
+			$headers[] = 'Accept: application/json';
+			$headers[] = 'Content-Type: application/json';
+
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+			if($http_method == 'PUT')
+			{
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+			}
+			else
+			{
+				$headers[] = 'Content-length: ' . strlen($data_json);
+				curl_setopt($ch, CURLOPT_POST, 1);
+			}
+
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 			if($this->debug)
 			{

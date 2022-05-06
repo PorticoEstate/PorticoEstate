@@ -33,6 +33,7 @@
 
 	class booking_uiarticle_mapping extends phpgwapi_uicommon
 	{
+		const STATUS_ACTIVE = 1;
 
 		public $public_functions = array(
 			'add'						 => true,
@@ -81,6 +82,25 @@
 				);
 			}
 			return $category_options;
+		}
+
+		private function get_status_options( $selected = 1 )
+		{
+			$status_options	 = array();
+			$status_list	 = array(
+				0					 => lang('all'),
+				self::STATUS_ACTIVE	 => lang('active'),
+			);
+
+			foreach ($status_list as $status_id => $status_name)
+			{
+				$status_options[] = array(
+					'id'		 => $status_id,
+					'name'		 => $status_name,
+					'selected'	 => $status_id == $selected ? 1 : 0
+				);
+			}
+			return $status_options;
 		}
 
 		private function get_unit_list( $selected = 0 )
@@ -214,6 +234,12 @@
 								'name'	 => 'filter_article_cat_id',
 								'text'	 => lang('category'),
 								'list'	 => $this->get_category_options()
+							),
+							array(
+								'type'	 => 'filter',
+								'name'	 => 'filter_active',
+								'text'	 => lang('status'),
+								'list'	 => $this->get_status_options()
 							),
 //							array(
 //								'type' =>  $this->currentapp == 'booking' ? 'checkbox' : 'hidden',

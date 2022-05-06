@@ -484,12 +484,12 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab" id="headingOne">
 											<h4 class="panel-title">
-												<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+												<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="">
 													Søker: <xsl:value-of select="application/contact_name"/>
 												</a>
 											</h4>
 										</div>
-										<div id="collapseOne" class="panel-collapse in collapse" role="tabpanel" aria-labelledby="headingOne" style="">
+										<div id="collapseOne" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingOne" style="">
 											<div class="panel-body">
 												<div class="list-group">
 													<div class="list-group-item flex-column align-items-start">
@@ -502,7 +502,7 @@
 														<p class="mb-1 font-weight-bold">
 															<xsl:value-of select="application/contact_name"/>
 														</p>
-														<small>Dette er søkers første søknad i Aktiv kommune.</small>
+														<!--<small>Dette er søkers første søknad i Aktiv kommune.</small>-->
 													</div>
 													<div href="#" class="list-group-item flex-column align-items-start">
 														<div class="d-flex w-100 justify-content-between">
@@ -545,12 +545,12 @@
 										<div class="panel panel-default">
 											<div class="panel-heading" role="tab" id="headingTwo">
 												<h4 class="panel-title">
-													<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+													<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
 														<xsl:value-of select="php:function('lang', 'Organization')" />: <xsl:value-of select="application/customer_organization_name"/>
 													</a>
 												</h4>
 											</div>
-											<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+											<div id="collapseTwo" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingTwo">
 												<div class="panel-body">
 
 													<div class="list-group">
@@ -564,7 +564,7 @@
 															<p class="mb-1 font-weight-bold">
 																<xsl:value-of select="application/customer_organization_name"/>
 															</p>
-															<small>Dette er organisasjonens første søknad i Aktiv kommune.</small>
+															<!--<small>Dette er organisasjonens første søknad i Aktiv kommune.</small>-->
 														</div>
 														<xsl:if test="application/customer_identifier_type = 'organization_number'">
 															<div href="#" class="list-group-item flex-column align-items-start">
@@ -631,10 +631,26 @@
 															</p>
 															<small class="text-muted"></small>
 														</div>
+														<div href="#" class="list-group-item flex-column align-items-start">
+															<div class="d-flex w-100 justify-content-between">
+																<h5 class="mb-1">
+																	<xsl:value-of select="php:function('lang', 'in tax register')"/>
+																</h5>
+																<small class="text-muted">Hentet fra brukerinput</small>
+															</div>
+															<p class="mb-1 font-weight-bold">
+																<xsl:choose>
+																	<xsl:when test="organization/in_tax_register = 1">
+																		<xsl:value-of select="php:function('lang', 'yes')"/>
+																	</xsl:when>
+																	<xsl:otherwise>
+																		<xsl:value-of select="php:function('lang', 'no')"/>
+																	</xsl:otherwise>
+																</xsl:choose>
+															</p>
+															<small class="text-muted"></small>
+														</div>
 													</div>
-
-
-
 												</div>
 											</div>
 										</div>
@@ -646,12 +662,12 @@
 										<div class="panel panel-default">
 											<div class="panel-heading" role="tab" id="headingThree">
 												<h4 class="panel-title">
-													<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+													<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
 														<xsl:value-of select="php:function('lang', 'Who?')" />
 													</a>
 												</h4>
 											</div>
-											<div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+											<div id="collapseThree" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingThree">
 												<div class="panel-body">
 
 													<div class="list-group">
@@ -730,12 +746,12 @@
 										<div class="panel panel-default">
 											<div class="panel-heading" role="tab" id="headingFour">
 												<h4 class="panel-title">
-													<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+													<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
 														<xsl:value-of select="php:function('lang', 'Why?')" />
 													</a>
 												</h4>
 											</div>
-											<div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+											<div id="collapseFour" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingFour">
 												<div class="panel-body">
 													<div class="list-group">
 														<div class="list-group-item flex-column align-items-start">
@@ -815,13 +831,13 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab" id="headingFive">
 											<h4 class="panel-title">
-												<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+												<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
 													Ønsker ressurs: <i class="fas fa-redo-alt text-primary"></i>
 												</a>
 											</h4>
 										</div>
 
-										<div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+										<div id="collapseFive" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingFive">
 											<div class="panel-body">
 												<div class="list-group">
 													<div class="list-group-item flex-column align-items-start">
@@ -859,13 +875,13 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab" id="headingSix">
 											<h4 class="panel-title">
-												<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+												<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
 													<xsl:value-of select="php:function('lang', 'When?')" />
 												</a>
 											</h4>
 										</div>
 
-										<div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+										<div id="collapseSix" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingSix">
 											<div class="panel-body">
 												<p>
 													<xsl:value-of select="php:function('lang', 'date format')" />:
@@ -961,12 +977,12 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab" id="headingSeven">
 											<h4 class="panel-title">
-												<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+												<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven">
 													<xsl:value-of select="php:function('lang', 'payments')" />
 												</a>
 											</h4>
 										</div>
-										<div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
+										<div id="collapseSeven" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingSeven">
 											<div class="panel-body">
 												<div class="list-group-item flex-column align-items-start">
 													<div id="payments_container"/>
@@ -985,12 +1001,12 @@
 									<!--									<div class="panel panel-default">
 										<div class="panel-heading" role="tab" id="headingEight">
 											<h4 class="panel-title">
-												<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+												<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="true" aria-controls="collapseEight">
 													Booking-konflikter på ressurs: Ingen
 												</a>
 											</h4>
 										</div>
-										<div id="collapseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
+										<div id="collapseEight" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingEight">
 											<div class="panel-body">
 											</div>
 										</div>
@@ -998,12 +1014,12 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab" id="headingNine">
 											<h4 class="panel-title">
-												<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+												<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseNine" aria-expanded="true" aria-controls="collapseNine">
 													<xsl:value-of select="php:function('lang', 'Associated items')" />
 												</a>
 											</h4>
 										</div>
-										<div id="collapseNine" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingNine">
+										<div id="collapseNine" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingNine">
 											<div class="panel-body">
 												<div id="associated_container"/>
 											</div>
@@ -1012,12 +1028,12 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab" id="headingTen">
 											<h4 class="panel-title">
-												<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTen" aria-expanded="false" aria-controls="collapseTen">
+												<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTen" aria-expanded="true" aria-controls="collapseTen">
 													<xsl:value-of select="php:function('lang', 'attachments')" />
 												</a>
 											</h4>
 										</div>
-										<div id="collapseTen" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTen">
+										<div id="collapseTen" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingTen">
 											<div class="panel-body">
 												<div id="attachments_container"/>
 												<br/>
@@ -1049,12 +1065,12 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab" id="headingEleven">
 											<h4 class="panel-title">
-												<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseEleven" aria-expanded="false" aria-controls="collapseEleven">
+												<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseEleven" aria-expanded="true" aria-controls="collapseEleven">
 													<xsl:value-of select="php:function('lang', 'Terms and conditions')" />
 												</a>
 											</h4>
 										</div>
-										<div id="collapseEleven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEleven">
+										<div id="collapseEleven" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingEleven">
 											<div class="panel-body">
 												<div class="pure-control-group">
 													<xsl:if test="config/application_terms">

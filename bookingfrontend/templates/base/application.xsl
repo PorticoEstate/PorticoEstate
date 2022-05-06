@@ -207,6 +207,10 @@
 						</xsl:for-each>
 					</dl>
 				</div>
+
+				<div id="articles_container" style="display:inline-block;">
+				</div>
+
 				<xsl:if test="simple != 1">
 
 					<div class="col-12 mt-4">
@@ -258,7 +262,7 @@
 								<xsl:value-of select="php:function('lang', 'Number of participants')" />
 							</dt>
 							<dd>
-								<table id="agegroup">
+								<table id="agegroup" class="table table-striped">
 									<thead>
 										<tr>
 											<th/>
@@ -381,6 +385,11 @@
 		</div>
 	</div>
 	<script>
+		var template_set = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|template_set')" />';
+		var date_format = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />';
+		var initialSelection = <xsl:value-of select="application/resources_json"/>;
+		var application_id = '<xsl:value-of select="application/id"/>';
+
 		var t = '<xsl:value-of select="application/copy_link" />';
 		console.log(t);
 
@@ -390,7 +399,8 @@
 		{
 		resourceIds = false;
 		}
-		var lang = <xsl:value-of select="php:function('js_lang', 'Resources (2018)', 'Document', 'Name')" />;
+
+		var lang = <xsl:value-of select="php:function('js_lang', 'Resources', 'Resource Type', 'No records found', 'ID', 'Type', 'From', 'To', 'Document', 'Active' ,'Name', 'Cost', 'order id', 'unit cost', 'Amount', 'currency', 'status', 'article', 'cost', 'unit', 'quantity', 'Sum', 'tax')"/>;
 		var app_id = <xsl:value-of select="application/id" />;
 		var building_id = <xsl:value-of select="application/building_id" />;
 		var resources = <xsl:value-of select="application/resources" />;
@@ -403,11 +413,11 @@
 		if (resourceIds)
 		{
 		var colDefsResource = [{key: 'name', label: lang['Resources (2018)'], formatter: genericLink}];
-		createTable('resources_container', resourcesURL, colDefsResource, 'results');
+		createTable('resources_container', resourcesURL, colDefsResource, 'results', 'table table-striped');
 		}
 		var colDefsDocument = [{key: 'name', label: lang['Document'], formatter: genericLink}];
-		createTable('regulation_documents', documentURL, colDefsDocument);
+		createTable('regulation_documents', documentURL, colDefsDocument,'', 'table table-striped');
 		var colDefsAttachmentsResource = [{key: 'name', label: lang['Name'], formatter: genericLink}];
-		createTable('attachments_container', attachmentsResourceURL, colDefsAttachmentsResource);
+		createTable('attachments_container', attachmentsResourceURL, colDefsAttachmentsResource,'', 'table table-striped');
 	</script>
 </xsl:template>

@@ -1,43 +1,1934 @@
-﻿/*
- Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
- For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
-*/
-(function(){function r(){return!1}var n=CKEDITOR.tools,B=CKEDITOR.plugins.pastetools,t=B.filters.common,k=t.styles,C=t.createAttributeStack,z=t.lists.getElementIndentation,D=["o:p","xml","script","meta","link"],E="v:arc v:curve v:line v:oval v:polyline v:rect v:roundrect v:group".split(" "),A={},y=0,q={},g,p;CKEDITOR.plugins.pastetools.filters.word=q;CKEDITOR.plugins.pastefromword=q;q.rules=function(b,a,c){function e(d){(d.attributes["o:gfxdata"]||"v:group"===d.parent.name)&&l.push(d.attributes.id)}
-var f=Boolean(b.match(/mso-list:\s*l\d+\s+level\d+\s+lfo\d+/)),l=[],w={root:function(d){d.filterChildren(c);CKEDITOR.plugins.pastefromword.lists.cleanup(g.createLists(d))},elementNames:[[/^\?xml:namespace$/,""],[/^v:shapetype/,""],[new RegExp(D.join("|")),""]],elements:{a:function(d){if(d.attributes.name){if("_GoBack"==d.attributes.name){delete d.name;return}if(d.attributes.name.match(/^OLE_LINK\d+$/)){delete d.name;return}}if(d.attributes.href&&d.attributes.href.match(/#.+$/)){var a=d.attributes.href.match(/#(.+)$/)[1];
-A[a]=d}d.attributes.name&&A[d.attributes.name]&&(d=A[d.attributes.name],d.attributes.href=d.attributes.href.replace(/.*#(.*)$/,"#$1"))},div:function(d){if(a.plugins.pagebreak&&d.attributes["data-cke-pagebreak"])return d;k.createStyleStack(d,c,a)},img:function(d){if(d.parent&&d.parent.attributes){var a=d.parent.attributes;(a=a.style||a.STYLE)&&a.match(/mso\-list:\s?Ignore/)&&(d.attributes["cke-ignored"]=!0)}k.mapCommonStyles(d);d.attributes.src&&d.attributes.src.match(/^file:\/\//)&&d.attributes.alt&&
-d.attributes.alt.match(/^https?:\/\//)&&(d.attributes.src=d.attributes.alt);d=d.attributes["v:shapes"]?d.attributes["v:shapes"].split(" "):[];a=CKEDITOR.tools.array.every(d,function(a){return-1<l.indexOf(a)});if(d.length&&a)return!1},p:function(d){d.filterChildren(c);if(d.attributes.style&&d.attributes.style.match(/display:\s*none/i))return!1;if(g.thisIsAListItem(a,d))p.isEdgeListItem(a,d)&&p.cleanupEdgeListItem(d),g.convertToFakeListItem(a,d),n.array.reduce(d.children,function(a,d){"p"===d.name&&
-(0<a&&(new CKEDITOR.htmlParser.element("br")).insertBefore(d),d.replaceWithChildren(),a+=1);return a},0);else{var b=d.getAscendant(function(a){return"ul"==a.name||"ol"==a.name}),e=n.parseCssText(d.attributes.style);b&&!b.attributes["cke-list-level"]&&e["mso-list"]&&e["mso-list"].match(/level/)&&(b.attributes["cke-list-level"]=e["mso-list"].match(/level(\d+)/)[1]);a.config.enterMode==CKEDITOR.ENTER_BR&&(delete d.name,d.add(new CKEDITOR.htmlParser.element("br")))}k.createStyleStack(d,c,a)},pre:function(d){g.thisIsAListItem(a,
-d)&&g.convertToFakeListItem(a,d);k.createStyleStack(d,c,a)},h1:function(d){g.thisIsAListItem(a,d)&&g.convertToFakeListItem(a,d);k.createStyleStack(d,c,a)},h2:function(d){g.thisIsAListItem(a,d)&&g.convertToFakeListItem(a,d);k.createStyleStack(d,c,a)},h3:function(d){g.thisIsAListItem(a,d)&&g.convertToFakeListItem(a,d);k.createStyleStack(d,c,a)},h4:function(d){g.thisIsAListItem(a,d)&&g.convertToFakeListItem(a,d);k.createStyleStack(d,c,a)},h5:function(d){g.thisIsAListItem(a,d)&&g.convertToFakeListItem(a,
-d);k.createStyleStack(d,c,a)},h6:function(d){g.thisIsAListItem(a,d)&&g.convertToFakeListItem(a,d);k.createStyleStack(d,c,a)},font:function(d){if(d.getHtml().match(/^\s*$/))return d.parent.type===CKEDITOR.NODE_ELEMENT&&(new CKEDITOR.htmlParser.text(" ")).insertAfter(d),!1;a&&!0===a.config.pasteFromWordRemoveFontStyles&&d.attributes.size&&delete d.attributes.size;CKEDITOR.dtd.tr[d.parent.name]&&CKEDITOR.tools.arrayCompare(CKEDITOR.tools.object.keys(d.attributes),["class","style"])?k.createStyleStack(d,
-c,a):C(d,c)},ul:function(a){if(f)return"li"==a.parent.name&&0===n.indexOf(a.parent.children,a)&&k.setStyle(a.parent,"list-style-type","none"),g.dissolveList(a),!1},li:function(d){p.correctLevelShift(d);f&&(d.attributes.style=k.normalizedStyles(d,a),k.pushStylesLower(d))},ol:function(a){if(f)return"li"==a.parent.name&&0===n.indexOf(a.parent.children,a)&&k.setStyle(a.parent,"list-style-type","none"),g.dissolveList(a),!1},span:function(d){d.filterChildren(c);d.attributes.style=k.normalizedStyles(d,a);
-if(!d.attributes.style||d.attributes.style.match(/^mso\-bookmark:OLE_LINK\d+$/)||d.getHtml().match(/^(\s|&nbsp;)+$/))return t.elements.replaceWithChildren(d),!1;d.attributes.style.match(/FONT-FAMILY:\s*Symbol/i)&&d.forEach(function(a){a.value=a.value.replace(/&nbsp;/g,"")},CKEDITOR.NODE_TEXT,!0);k.createStyleStack(d,c,a)},"v:imagedata":r,"v:shape":function(a){var b=!1;if(null===a.getFirst("v:imagedata"))e(a);else{a.parent.find(function(c){"img"==c.name&&c.attributes&&c.attributes["v:shapes"]==a.attributes.id&&
-(b=!0)},!0);if(b)return!1;var f="";"v:group"===a.parent.name?e(a):(a.forEach(function(a){a.attributes&&a.attributes.src&&(f=a.attributes.src)},CKEDITOR.NODE_ELEMENT,!0),a.filterChildren(c),a.name="img",a.attributes.src=a.attributes.src||f,delete a.attributes.type)}},style:function(){return!1},object:function(a){return!(!a.attributes||!a.attributes.data)},br:function(b){if(a.plugins.pagebreak&&(b=n.parseCssText(b.attributes.style,!0),"always"===b["page-break-before"]||"page"===b["break-before"]))return b=
-CKEDITOR.plugins.pagebreak.createElement(a),CKEDITOR.htmlParser.fragment.fromHtml(b.getOuterHtml()).children[0]}},attributes:{style:function(b,c){return k.normalizedStyles(c,a)||!1},"class":function(a){a=a.replace(/(el\d+)|(font\d+)|msonormal|msolistparagraph\w*/ig,"");return""===a?!1:a},cellspacing:r,cellpadding:r,border:r,"v:shapes":r,"o:spid":r},comment:function(a){a.match(/\[if.* supportFields.*\]/)&&y++;"[endif]"==a&&(y=0<y?y-1:0);return!1},text:function(a,b){if(y)return"";var c=b.parent&&b.parent.parent;
-return c&&c.attributes&&c.attributes.style&&c.attributes.style.match(/mso-list:\s*ignore/i)?a.replace(/&nbsp;/g," "):a}};n.array.forEach(E,function(a){w.elements[a]=e});return w};q.lists={thisIsAListItem:function(b,a){return p.isEdgeListItem(b,a)||a.attributes.style&&a.attributes.style.match(/mso\-list:\s?l\d/)&&"li"!==a.parent.name||a.attributes["cke-dissolved"]||a.getHtml().match(/<!\-\-\[if !supportLists]\-\->/)?!0:!1},convertToFakeListItem:function(b,a){p.isDegenerateListItem(b,a)&&p.assignListLevels(b,
-a);this.getListItemInfo(a);if(!a.attributes["cke-dissolved"]){var c;a.forEach(function(a){!c&&"img"==a.name&&a.attributes["cke-ignored"]&&"*"==a.attributes.alt&&(c="·",a.remove())},CKEDITOR.NODE_ELEMENT);a.forEach(function(a){c||a.value.match(/^ /)||(c=a.value)},CKEDITOR.NODE_TEXT);if("undefined"==typeof c)return;a.attributes["cke-symbol"]=c.replace(/(?: |&nbsp;).*$/,"");g.removeSymbolText(a)}var e=a.attributes&&n.parseCssText(a.attributes.style);if(e["margin-left"]){var f=e["margin-left"],l=a.attributes["cke-list-level"];
-(f=Math.max(CKEDITOR.tools.convertToPx(f)-40*l,0))?e["margin-left"]=f+"px":delete e["margin-left"];a.attributes.style=CKEDITOR.tools.writeCssText(e)}a.name="cke:li"},convertToRealListItems:function(b){var a=[];b.forEach(function(b){"cke:li"==b.name&&(b.name="li",a.push(b))},CKEDITOR.NODE_ELEMENT,!1);return a},removeSymbolText:function(b){var a=b.attributes["cke-symbol"],c=b.findOne(function(b){return b.value&&-1<b.value.indexOf(a)},!0),e;c&&(c.value=c.value.replace(a,""),e=c.parent,e.getHtml().match(/^(\s|&nbsp;)*$/)&&
-e!==b?e.remove():c.value||c.remove())},setListSymbol:function(b,a,c){c=c||1;var e=n.parseCssText(b.attributes.style);if("ol"==b.name){if(b.attributes.type||e["list-style-type"])return;var f={"[ivx]":"lower-roman","[IVX]":"upper-roman","[a-z]":"lower-alpha","[A-Z]":"upper-alpha","\\d":"decimal"},l;for(l in f)if(g.getSubsectionSymbol(a).match(new RegExp(l))){e["list-style-type"]=f[l];break}b.attributes["cke-list-style-type"]=e["list-style-type"]}else f={"·":"disc",o:"circle","§":"square"},!e["list-style-type"]&&
-f[a]&&(e["list-style-type"]=f[a]);g.setListSymbol.removeRedundancies(e,c);(b.attributes.style=CKEDITOR.tools.writeCssText(e))||delete b.attributes.style},setListStart:function(b){for(var a=[],c=0,e=0;e<b.children.length;e++)a.push(b.children[e].attributes["cke-symbol"]||"");a[0]||c++;switch(b.attributes["cke-list-style-type"]){case "lower-roman":case "upper-roman":b.attributes.start=g.toArabic(g.getSubsectionSymbol(a[c]))-c;break;case "lower-alpha":case "upper-alpha":b.attributes.start=g.getSubsectionSymbol(a[c]).replace(/\W/g,
-"").toLowerCase().charCodeAt(0)-96-c;break;case "decimal":b.attributes.start=parseInt(g.getSubsectionSymbol(a[c]),10)-c||1}"1"==b.attributes.start&&delete b.attributes.start;delete b.attributes["cke-list-style-type"]},numbering:{toNumber:function(b,a){function c(a){a=a.toUpperCase();for(var b=1,c=1;0<a.length;c*=26)b+="ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(a.charAt(a.length-1))*c,a=a.substr(0,a.length-1);return b}function e(a){var b=[[1E3,"M"],[900,"CM"],[500,"D"],[400,"CD"],[100,"C"],[90,"XC"],[50,
-"L"],[40,"XL"],[10,"X"],[9,"IX"],[5,"V"],[4,"IV"],[1,"I"]];a=a.toUpperCase();for(var c=b.length,d=0,e=0;e<c;++e)for(var g=b[e],u=g[1].length;a.substr(0,u)==g[1];a=a.substr(u))d+=g[0];return d}return"decimal"==a?Number(b):"upper-roman"==a||"lower-roman"==a?e(b.toUpperCase()):"lower-alpha"==a||"upper-alpha"==a?c(b):1},getStyle:function(b){b=b.slice(0,1);var a={i:"lower-roman",v:"lower-roman",x:"lower-roman",l:"lower-roman",m:"lower-roman",I:"upper-roman",V:"upper-roman",X:"upper-roman",L:"upper-roman",
-M:"upper-roman"}[b];a||(a="decimal",b.match(/[a-z]/)&&(a="lower-alpha"),b.match(/[A-Z]/)&&(a="upper-alpha"));return a}},getSubsectionSymbol:function(b){return(b.match(/([\da-zA-Z]+).?$/)||["placeholder","1"])[1]},setListDir:function(b){var a=0,c=0;b.forEach(function(b){"li"==b.name&&("rtl"==(b.attributes.dir||b.attributes.DIR||"").toLowerCase()?c++:a++)},CKEDITOR.ELEMENT_NODE);c>a&&(b.attributes.dir="rtl")},createList:function(b){return(b.attributes["cke-symbol"].match(/([\da-np-zA-NP-Z]).?/)||[])[1]?
-new CKEDITOR.htmlParser.element("ol"):new CKEDITOR.htmlParser.element("ul")},createLists:function(b){function a(a){return CKEDITOR.tools.array.reduce(a,function(a,b){if(b.attributes&&b.attributes.style)var c=CKEDITOR.tools.parseCssText(b.attributes.style)["margin-left"];return c?a+parseInt(c,10):a},0)}var c,e,f,l=g.convertToRealListItems(b);if(0===l.length)return[];var k=g.groupLists(l);for(b=0;b<k.length;b++){var d=k[b],h=d[0];for(f=0;f<d.length;f++)if(1==d[f].attributes["cke-list-level"]){h=d[f];
-break}var h=[g.createList(h)],m=h[0],u=[h[0]];m.insertBefore(d[0]);for(f=0;f<d.length;f++){c=d[f];for(e=c.attributes["cke-list-level"];e>h.length;){var v=g.createList(c),x=m.children;0<x.length?x[x.length-1].add(v):(x=new CKEDITOR.htmlParser.element("li",{style:"list-style-type:none"}),x.add(v),m.add(x));h.push(v);u.push(v);m=v;e==h.length&&g.setListSymbol(v,c.attributes["cke-symbol"],e)}for(;e<h.length;)h.pop(),m=h[h.length-1],e==h.length&&g.setListSymbol(m,c.attributes["cke-symbol"],e);c.remove();
-m.add(c)}h[0].children.length&&(f=h[0].children[0].attributes["cke-symbol"],!f&&1<h[0].children.length&&(f=h[0].children[1].attributes["cke-symbol"]),f&&g.setListSymbol(h[0],f));for(f=0;f<u.length;f++)g.setListStart(u[f]);for(f=0;f<d.length;f++)this.determineListItemValue(d[f])}CKEDITOR.tools.array.forEach(l,function(b){for(var c=[],d=b.parent;d;)"li"===d.name&&c.push(d),d=d.parent;var c=a(c),e;c&&(b.attributes=b.attributes||{},d=CKEDITOR.tools.parseCssText(b.attributes.style),e=d["margin-left"]||
-0,(e=Math.max(parseInt(e,10)-c,0))?d["margin-left"]=e+"px":delete d["margin-left"],b.attributes.style=CKEDITOR.tools.writeCssText(d))});return l},cleanup:function(b){var a=["cke-list-level","cke-symbol","cke-list-id","cke-indentation","cke-dissolved"],c,e;for(c=0;c<b.length;c++)for(e=0;e<a.length;e++)delete b[c].attributes[a[e]]},determineListItemValue:function(b){if("ol"===b.parent.name){var a=this.calculateValue(b),c=b.attributes["cke-symbol"].match(/[a-z0-9]+/gi),e;c&&(c=c[c.length-1],e=b.parent.attributes["cke-list-style-type"]||
-this.numbering.getStyle(c),c=this.numbering.toNumber(c,e),c!==a&&(b.attributes.value=c))}},calculateValue:function(b){if(!b.parent)return 1;var a=b.parent;b=b.getIndex();var c=null,e,f,g;for(g=b;0<=g&&null===c;g--)f=a.children[g],f.attributes&&void 0!==f.attributes.value&&(e=g,c=parseInt(f.attributes.value,10));null===c&&(c=void 0!==a.attributes.start?parseInt(a.attributes.start,10):1,e=0);return c+(b-e)},dissolveList:function(b){function a(b){return 50<=b?"l"+a(b-50):40<=b?"xl"+a(b-40):10<=b?"x"+
-a(b-10):9==b?"ix":5<=b?"v"+a(b-5):4==b?"iv":1<=b?"i"+a(b-1):""}function c(a,b){function c(b,d){return b&&b.parent?a(b.parent)?c(b.parent,d+1):c(b.parent,d):d}return c(b,0)}var e=function(a){return function(b){return b.name==a}},f=function(a){return e("ul")(a)||e("ol")(a)},g=CKEDITOR.tools.array,w=[],d,h;b.forEach(function(a){w.push(a)},CKEDITOR.NODE_ELEMENT,!1);d=g.filter(w,e("li"));var m=g.filter(w,f);g.forEach(m,function(b){var d=b.attributes.type,h=parseInt(b.attributes.start,10)||1,m=c(f,b)+1;
-d||(d=n.parseCssText(b.attributes.style)["list-style-type"]);g.forEach(g.filter(b.children,e("li")),function(c,e){var f;switch(d){case "disc":f="·";break;case "circle":f="o";break;case "square":f="§";break;case "1":case "decimal":f=h+e+".";break;case "a":case "lower-alpha":f=String.fromCharCode(97+h-1+e)+".";break;case "A":case "upper-alpha":f=String.fromCharCode(65+h-1+e)+".";break;case "i":case "lower-roman":f=a(h+e)+".";break;case "I":case "upper-roman":f=a(h+e).toUpperCase()+".";break;default:f=
-"ul"==b.name?"·":h+e+"."}c.attributes["cke-symbol"]=f;c.attributes["cke-list-level"]=m})});d=g.reduce(d,function(a,b){var c=b.children[0];if(c&&c.name&&c.attributes.style&&c.attributes.style.match(/mso-list:/i)){k.pushStylesLower(b,{"list-style-type":!0,display:!0});var d=n.parseCssText(c.attributes.style,!0);k.setStyle(b,"mso-list",d["mso-list"],!0);k.setStyle(c,"mso-list","");delete b["cke-list-level"];(c=d.display?"display":d.DISPLAY?"DISPLAY":"")&&k.setStyle(b,"display",d[c],!0)}if(1===b.children.length&&
-f(b.children[0]))return a;b.name="p";b.attributes["cke-dissolved"]=!0;a.push(b);return a},[]);for(h=d.length-1;0<=h;h--)d[h].insertAfter(b);for(h=m.length-1;0<=h;h--)delete m[h].name},groupLists:function(b){var a,c,e=[[b[0]]],f=e[0];c=b[0];c.attributes["cke-indentation"]=c.attributes["cke-indentation"]||z(c);for(a=1;a<b.length;a++){c=b[a];var l=b[a-1];c.attributes["cke-indentation"]=c.attributes["cke-indentation"]||z(c);c.previous!==l&&(g.chopDiscontinuousLists(f,e),e.push(f=[]));f.push(c)}g.chopDiscontinuousLists(f,
-e);return e},chopDiscontinuousLists:function(b,a){for(var c={},e=[[]],f,l=0;l<b.length;l++){var k=c[b[l].attributes["cke-list-level"]],d=this.getListItemInfo(b[l]),h,m;k?(m=k.type.match(/alpha/)&&7==k.index?"alpha":m,m="o"==b[l].attributes["cke-symbol"]&&14==k.index?"alpha":m,h=g.getSymbolInfo(b[l].attributes["cke-symbol"],m),d=this.getListItemInfo(b[l]),(k.type!=h.type||f&&d.id!=f.id&&!this.isAListContinuation(b[l]))&&e.push([])):h=g.getSymbolInfo(b[l].attributes["cke-symbol"]);for(f=parseInt(b[l].attributes["cke-list-level"],
-10)+1;20>f;f++)c[f]&&delete c[f];c[b[l].attributes["cke-list-level"]]=h;e[e.length-1].push(b[l]);f=d}[].splice.apply(a,[].concat([n.indexOf(a,b),1],e))},isAListContinuation:function(b){var a=b;do if((a=a.previous)&&a.type===CKEDITOR.NODE_ELEMENT){if(void 0===a.attributes["cke-list-level"])break;if(a.attributes["cke-list-level"]===b.attributes["cke-list-level"])return a.attributes["cke-list-id"]===b.attributes["cke-list-id"]}while(a);return!1},toArabic:function(b){return b.match(/[ivxl]/i)?b.match(/^l/i)?
-50+g.toArabic(b.slice(1)):b.match(/^lx/i)?40+g.toArabic(b.slice(1)):b.match(/^x/i)?10+g.toArabic(b.slice(1)):b.match(/^ix/i)?9+g.toArabic(b.slice(2)):b.match(/^v/i)?5+g.toArabic(b.slice(1)):b.match(/^iv/i)?4+g.toArabic(b.slice(2)):b.match(/^i/i)?1+g.toArabic(b.slice(1)):g.toArabic(b.slice(1)):0},getSymbolInfo:function(b,a){var c=b.toUpperCase()==b?"upper-":"lower-",e={"·":["disc",-1],o:["circle",-2],"§":["square",-3]};if(b in e||a&&a.match(/(disc|circle|square)/))return{index:e[b][1],type:e[b][0]};
-if(b.match(/\d/))return{index:b?parseInt(g.getSubsectionSymbol(b),10):0,type:"decimal"};b=b.replace(/\W/g,"").toLowerCase();return!a&&b.match(/[ivxl]+/i)||a&&"alpha"!=a||"roman"==a?{index:g.toArabic(b),type:c+"roman"}:b.match(/[a-z]/i)?{index:b.charCodeAt(0)-97,type:c+"alpha"}:{index:-1,type:"disc"}},getListItemInfo:function(b){if(void 0!==b.attributes["cke-list-id"])return{id:b.attributes["cke-list-id"],level:b.attributes["cke-list-level"]};var a=n.parseCssText(b.attributes.style)["mso-list"],c=
-{id:"0",level:"1"};a&&(a+=" ",c.level=a.match(/level(.+?)\s+/)[1],c.id=a.match(/l(\d+?)\s+/)[1]);b.attributes["cke-list-level"]=void 0!==b.attributes["cke-list-level"]?b.attributes["cke-list-level"]:c.level;b.attributes["cke-list-id"]=c.id;return c}};g=q.lists;q.images={extractFromRtf:function(b){var a=[],c=/\{\\pict[\s\S]+?\\bliptag\-?\d+(\\blipupi\-?\d+)?(\{\\\*\\blipuid\s?[\da-fA-F]+)?[\s\}]*?/,e;b=b.match(new RegExp("(?:("+c.source+"))([\\da-fA-F\\s]+)\\}","g"));if(!b)return a;for(var f=0;f<b.length;f++)if(c.test(b[f])){if(-1!==
-b[f].indexOf("\\pngblip"))e="image/png";else if(-1!==b[f].indexOf("\\jpegblip"))e="image/jpeg";else continue;a.push({hex:e?b[f].replace(c,"").replace(/[^\da-fA-F]/g,""):null,type:e})}return a},extractTagsFromHtml:function(b){for(var a=/<img[^>]+src="([^"]+)[^>]+/g,c=[],e;e=a.exec(b);)c.push(e[1]);return c}};q.heuristics={isEdgeListItem:function(b,a){if(!CKEDITOR.env.edge||!b.config.pasteFromWord_heuristicsEdgeList)return!1;var c="";a.forEach&&a.forEach(function(a){c+=a.value},CKEDITOR.NODE_TEXT);
-return c.match(/^(?: |&nbsp;)*\(?[a-zA-Z0-9]+?[\.\)](?: |&nbsp;){2,}/)?!0:p.isDegenerateListItem(b,a)},cleanupEdgeListItem:function(b){var a=!1;b.forEach(function(b){a||(b.value=b.value.replace(/^(?:&nbsp;|[\s])+/,""),b.value.length&&(a=!0))},CKEDITOR.NODE_TEXT)},isDegenerateListItem:function(b,a){return!!a.attributes["cke-list-level"]||a.attributes.style&&!a.attributes.style.match(/mso\-list/)&&!!a.find(function(b){if(b.type==CKEDITOR.NODE_ELEMENT&&a.name.match(/h\d/i)&&b.getHtml().match(/^[a-zA-Z0-9]+?[\.\)]$/))return!0;
-var e=n.parseCssText(b.attributes&&b.attributes.style,!0);if(!e)return!1;var f=e["font-family"]||"";return(e.font||e["font-size"]||"").match(/7pt/i)&&!!b.previous||f.match(/symbol/i)},!0).length},assignListLevels:function(b,a){if(!a.attributes||void 0===a.attributes["cke-list-level"]){for(var c=[z(a)],e=[a],f=[],g=CKEDITOR.tools.array,k=g.map;a.next&&a.next.attributes&&!a.next.attributes["cke-list-level"]&&p.isDegenerateListItem(b,a.next);)a=a.next,c.push(z(a)),e.push(a);var d=k(c,function(a,b){return 0===
-b?0:a-c[b-1]}),h=this.guessIndentationStep(g.filter(c,function(a){return 0!==a})),f=k(c,function(a){return Math.round(a/h)});-1!==g.indexOf(f,0)&&(f=k(f,function(a){return a+1}));g.forEach(e,function(a,b){a.attributes["cke-list-level"]=f[b]});return{indents:c,levels:f,diffs:d}}},guessIndentationStep:function(b){return b.length?Math.min.apply(null,b):null},correctLevelShift:function(b){if(this.isShifted(b)){var a=CKEDITOR.tools.array.filter(b.children,function(a){return"ul"==a.name||"ol"==a.name}),
-c=CKEDITOR.tools.array.reduce(a,function(a,b){return(b.children&&1==b.children.length&&p.isShifted(b.children[0])?[b]:b.children).concat(a)},[]);CKEDITOR.tools.array.forEach(a,function(a){a.remove()});CKEDITOR.tools.array.forEach(c,function(a){b.add(a)});delete b.name}},isShifted:function(b){return"li"!==b.name?!1:0===CKEDITOR.tools.array.filter(b.children,function(a){return a.name&&("ul"==a.name||"ol"==a.name||"p"==a.name&&0===a.children.length)?!1:!0}).length}};p=q.heuristics;g.setListSymbol.removeRedundancies=
-function(b,a){(1===a&&"disc"===b["list-style-type"]||"decimal"===b["list-style-type"])&&delete b["list-style-type"]};CKEDITOR.cleanWord=CKEDITOR.pasteFilters.word=B.createFilter({rules:[t.rules,q.rules],additionalTransforms:function(b){CKEDITOR.plugins.clipboard.isCustomDataTypesSupported&&(b=t.styles.inliner.inline(b).getBody().getHtml());return b.replace(/<!\[/g,"\x3c!--[").replace(/\]>/g,"]--\x3e")}});CKEDITOR.config.pasteFromWord_heuristicsEdgeList=!0})();
+/**
+ * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+ */
+
+/* globals CKEDITOR */
+
+( function() {
+	'use strict';
+
+	var tools = CKEDITOR.tools,
+		pastetools = CKEDITOR.plugins.pastetools,
+		commonFilter = pastetools.filters.common,
+		Style = commonFilter.styles,
+		createAttributeStack = commonFilter.createAttributeStack,
+		getElementIndentation = commonFilter.lists.getElementIndentation,
+		invalidTags = [
+			'o:p',
+			'xml',
+			'script',
+			'meta',
+			'link'
+		],
+		shapeTags = [
+			'v:arc',
+			'v:curve',
+			'v:line',
+			'v:oval',
+			'v:polyline',
+			'v:rect',
+			'v:roundrect',
+			'v:group'
+		],
+		links = {},
+		inComment = 0,
+		plug = {},
+		List,
+		Heuristics;
+
+	/**
+	 * Set of Paste from Word plugin helpers.
+	 *
+	 * @since 4.13.0
+	 * @private
+	 * @member CKEDITOR.plugins.pastetools.filters
+	 */
+	CKEDITOR.plugins.pastetools.filters.word = plug;
+
+	/**
+	 * Set of Paste from Word plugin helpers.
+	 *
+	 * See {@link CKEDITOR.plugins.pastetools.filters.word}.
+	 *
+	 * @since 4.6.0
+	 * @deprecated 4.13.0
+	 * @private
+	 * @member CKEDITOR.plugins
+	 */
+	CKEDITOR.plugins.pastefromword = plug;
+
+	/**
+	 * Rules for the Paste from Word filter.
+	 *
+	 * @since 4.13.0
+	 * @private
+	 * @member CKEDITOR.plugins.pastetools.filters.word
+	 */
+	plug.rules = function( html, editor, filter ) {
+		var msoListsDetected = Boolean( html.match( /mso-list:\s*l\d+\s+level\d+\s+lfo\d+/ ) ),
+			shapesIds = [],
+			rules = {
+				root: function( element ) {
+					element.filterChildren( filter );
+
+					CKEDITOR.plugins.pastefromword.lists.cleanup( List.createLists( element ) );
+				},
+				elementNames: [
+					[ ( /^\?xml:namespace$/ ), '' ],
+					[ /^v:shapetype/, '' ],
+					[ new RegExp( invalidTags.join( '|' ) ), '' ] // Remove invalid tags.
+				],
+				elements: {
+					'a': function( element ) {
+						// Redundant anchor created by IE8.
+						if ( element.attributes.name ) {
+							if ( element.attributes.name == '_GoBack' ) {
+								delete element.name;
+								return;
+							}
+
+							// Garbage links that go nowhere.
+							if ( element.attributes.name.match( /^OLE_LINK\d+$/ ) ) {
+								delete element.name;
+								return;
+							}
+						}
+
+						if ( element.attributes.href && element.attributes.href.match( /#.+$/ ) ) {
+							var name = element.attributes.href.match( /#(.+)$/ )[ 1 ];
+							links[ name ] = element;
+						}
+
+						if ( element.attributes.name &&  links[ element.attributes.name ] ) {
+							var link = links[ element.attributes.name ];
+							link.attributes.href = link.attributes.href.replace( /.*#(.*)$/, '#$1' );
+						}
+
+					},
+					'div': function( element ) {
+						// Don't allow to delete page break element (#3220).
+						if ( editor.plugins.pagebreak && element.attributes[ 'data-cke-pagebreak' ] ) {
+							return element;
+						}
+
+						Style.createStyleStack( element, filter, editor );
+					},
+					'img': function( element ) {
+						// If the parent is DocumentFragment it does not have any attributes. (https://dev.ckeditor.com/ticket/16912)
+						if ( element.parent && element.parent.attributes ) {
+							var attrs = element.parent.attributes,
+								style = attrs.style || attrs.STYLE;
+							if ( style && style.match( /mso\-list:\s?Ignore/ ) ) {
+								element.attributes[ 'cke-ignored' ] = true;
+							}
+						}
+
+						Style.mapCommonStyles( element );
+
+						if ( element.attributes.src && element.attributes.src.match( /^file:\/\// ) &&
+							element.attributes.alt && element.attributes.alt.match( /^https?:\/\// ) ) {
+							element.attributes.src = element.attributes.alt;
+						}
+
+						var imgShapesIds = element.attributes[ 'v:shapes' ] ? element.attributes[ 'v:shapes' ].split( ' ' ) : [];
+						// Check whether attribute contains shapes recognised earlier (stored in global list of shapesIds).
+						// If so, add additional data-attribute to img tag.
+						var isShapeFromList = CKEDITOR.tools.array.every( imgShapesIds, function( shapeId ) {
+							return shapesIds.indexOf( shapeId ) > -1;
+						} );
+						if ( imgShapesIds.length && isShapeFromList ) {
+							// As we don't know how to process shapes we can remove them.
+							return false;
+						}
+
+					},
+					'p': function( element ) {
+						element.filterChildren( filter );
+
+						if ( element.attributes.style && element.attributes.style.match( /display:\s*none/i ) ) {
+							return false;
+						}
+
+						if ( List.thisIsAListItem( editor, element ) ) {
+							if ( Heuristics.isEdgeListItem( editor, element ) ) {
+								Heuristics.cleanupEdgeListItem( element );
+							}
+
+							List.convertToFakeListItem( editor, element );
+
+							// IE pastes nested paragraphs in list items, which is different from other browsers. (https://dev.ckeditor.com/ticket/16826)
+							// There's a possibility that list item will contain multiple paragraphs, in that case we want
+							// to split them with BR.
+							tools.array.reduce( element.children, function( paragraphsReplaced, node ) {
+								if ( node.name === 'p' ) {
+									// If there were already paragraphs replaced, put a br before this paragraph, so that
+									// it's inline children are displayed in a next line.
+									if ( paragraphsReplaced > 0 ) {
+										var br = new CKEDITOR.htmlParser.element( 'br' );
+										br.insertBefore( node );
+									}
+
+									node.replaceWithChildren();
+									paragraphsReplaced += 1;
+								}
+
+								return paragraphsReplaced;
+							}, 0 );
+						} else {
+							// In IE list level information is stored in <p> elements inside <li> elements.
+							var container = element.getAscendant( function( element ) {
+									return element.name == 'ul' || element.name == 'ol';
+								} ),
+								style = tools.parseCssText( element.attributes.style );
+							if ( container &&
+								!container.attributes[ 'cke-list-level' ] &&
+								style[ 'mso-list' ] &&
+								style[ 'mso-list' ].match( /level/ ) ) {
+								container.attributes[ 'cke-list-level' ] = style[ 'mso-list' ].match( /level(\d+)/ )[1];
+							}
+
+							// Adapt paragraph formatting to editor's convention according to enter-mode (#423).
+							if ( editor.config.enterMode == CKEDITOR.ENTER_BR ) {
+								// We suffer from attribute/style lost in this situation.
+								delete element.name;
+								element.add( new CKEDITOR.htmlParser.element( 'br' ) );
+							}
+
+						}
+
+						Style.createStyleStack( element, filter, editor );
+					},
+					'pre': function( element ) {
+						if ( List.thisIsAListItem( editor, element ) ) List.convertToFakeListItem( editor, element );
+
+						Style.createStyleStack( element, filter, editor );
+					},
+					'h1': function( element ) {
+						if ( List.thisIsAListItem( editor, element ) ) List.convertToFakeListItem( editor, element );
+
+						Style.createStyleStack( element, filter, editor );
+					},
+					'h2': function( element ) {
+						if ( List.thisIsAListItem( editor, element ) ) List.convertToFakeListItem( editor, element );
+
+						Style.createStyleStack( element, filter, editor );
+					},
+					'h3': function( element ) {
+						if ( List.thisIsAListItem( editor, element ) ) List.convertToFakeListItem( editor, element );
+
+						Style.createStyleStack( element, filter, editor );
+					},
+					'h4': function( element ) {
+						if ( List.thisIsAListItem( editor, element ) ) List.convertToFakeListItem( editor, element );
+
+						Style.createStyleStack( element, filter, editor );
+					},
+					'h5': function( element ) {
+						if ( List.thisIsAListItem( editor, element ) ) List.convertToFakeListItem( editor, element );
+
+						Style.createStyleStack( element, filter, editor );
+					},
+					'h6': function( element ) {
+						if ( List.thisIsAListItem( editor, element ) ) List.convertToFakeListItem( editor, element );
+
+						Style.createStyleStack( element, filter, editor );
+					},
+					'font': function( element ) {
+						if ( element.getHtml().match( /^\s*$/ ) ) {
+							// There might be font tag directly in document fragment, we cannot replace it with a textnode as this generates
+							// superfluous spaces in output. What later might be transformed into empty paragraphs, so just remove such element.
+							if ( element.parent.type === CKEDITOR.NODE_ELEMENT ) {
+								new CKEDITOR.htmlParser.text( ' ' ).insertAfter( element );
+							}
+							return false;
+						}
+
+						if ( editor && editor.config.pasteFromWordRemoveFontStyles === true && element.attributes.size ) {
+							// font[size] are still used by old IEs for font size.
+							delete element.attributes.size;
+						}
+
+						// Create style stack for td/th > font if only class
+						// and style attributes are present. Such markup is produced by Excel.
+						if ( CKEDITOR.dtd.tr[ element.parent.name ] &&
+							CKEDITOR.tools.arrayCompare( CKEDITOR.tools.object.keys( element.attributes ), [ 'class', 'style' ] ) ) {
+
+							Style.createStyleStack( element, filter, editor );
+						} else {
+							createAttributeStack( element, filter );
+						}
+					},
+					'ul': function( element ) {
+						if ( !msoListsDetected ) {
+							// List should only be processed if we're sure we're working with Word. (https://dev.ckeditor.com/ticket/16593)
+							return;
+						}
+
+						// Edge case from 11683 - an unusual way to create a level 2 list.
+						if ( element.parent.name == 'li' && tools.indexOf( element.parent.children, element ) === 0 ) {
+							Style.setStyle( element.parent, 'list-style-type', 'none' );
+						}
+
+						List.dissolveList( element );
+						return false;
+					},
+					'li': function( element ) {
+						Heuristics.correctLevelShift( element );
+
+						if ( !msoListsDetected ) {
+							return;
+						}
+
+						element.attributes.style = Style.normalizedStyles( element, editor );
+
+						Style.pushStylesLower( element );
+					},
+					'ol': function( element ) {
+						if ( !msoListsDetected ) {
+							// List should only be processed if we're sure we're working with Word. (https://dev.ckeditor.com/ticket/16593)
+							return;
+						}
+
+						// Fix edge-case where when a list skips a level in IE11, the <ol> element
+						// is implicitly surrounded by a <li>.
+						if ( element.parent.name == 'li' && tools.indexOf( element.parent.children, element ) === 0 ) {
+							Style.setStyle( element.parent, 'list-style-type', 'none' );
+						}
+
+						List.dissolveList( element );
+						return false;
+					},
+					'span': function( element ) {
+						element.filterChildren( filter );
+
+						element.attributes.style = Style.normalizedStyles( element, editor );
+
+						if ( !element.attributes.style ||
+								// Remove garbage bookmarks that disrupt the content structure.
+							element.attributes.style.match( /^mso\-bookmark:OLE_LINK\d+$/ ) ||
+							element.getHtml().match( /^(\s|&nbsp;)+$/ ) ) {
+
+							commonFilter.elements.replaceWithChildren( element );
+							return false;
+						}
+
+						if ( element.attributes.style.match( /FONT-FAMILY:\s*Symbol/i ) ) {
+							element.forEach( function( node ) {
+								node.value = node.value.replace( /&nbsp;/g, '' );
+							}, CKEDITOR.NODE_TEXT, true );
+						}
+
+						Style.createStyleStack( element, filter, editor );
+					},
+
+					'v:imagedata': remove,
+					// This is how IE8 presents images.
+					'v:shape': function( element ) {
+						// There are 3 paths:
+						// 1. There is regular `v:shape` (no `v:imagedata` inside).
+						// 2. There is a simple situation with `v:shape` with `v:imagedata` inside. We can remove such element and rely on `img` tag found later on.
+						// 3. There is a complicated situation where we cannot find proper `img` tag after `v:shape` or there is some canvas element.
+						// 		a) If shape is a child of v:group, then most probably it belongs to canvas, so we need to treat it as in path 1.
+						// 		b) In other cases, most probably there is no related `img` tag. We need to transform `v:shape` into `img` tag (IE8 integration).
+
+						var duplicate = false,
+							child = element.getFirst( 'v:imagedata' );
+
+						// Path 1:
+						if ( child === null ) {
+							shapeTagging( element );
+							return;
+						}
+
+						// Path 2:
+						// Sometimes a child with proper ID might be nested in other tag.
+						element.parent.find( function( child ) {
+							if ( child.name == 'img' && child.attributes &&
+								child.attributes[ 'v:shapes' ] == element.attributes.id ) {
+
+								duplicate = true;
+							}
+						}, true );
+
+						if ( duplicate ) {
+							return false;
+						} else {
+
+							// Path 3:
+							var src = '';
+
+							// 3.a) Filter out situation when canvas is used. In such scenario there is v:group containing v:shape containing v:imagedata.
+							// We streat such v:shapes as in Path 1.
+							if ( element.parent.name === 'v:group' ) {
+								shapeTagging( element );
+								return;
+							}
+
+							// 3.b) Most probably there is no img tag later on, so we need to transform this v:shape into img. This should only happen on IE8.
+							element.forEach( function( child ) {
+								if ( child.attributes && child.attributes.src ) {
+									src = child.attributes.src;
+								}
+							}, CKEDITOR.NODE_ELEMENT, true );
+
+							element.filterChildren( filter );
+
+							element.name = 'img';
+							element.attributes.src = element.attributes.src || src;
+
+							delete element.attributes.type;
+						}
+
+						return;
+					},
+
+					'style': function() {
+						// We don't want to let any styles in. Firefox tends to add some.
+						return false;
+					},
+
+					'object': function( element ) {
+						// The specs about object `data` attribute:
+						// 		Address of the resource as a valid URL. At least one of data and type must be defined.
+						// If there is not `data`, skip the object element. (https://dev.ckeditor.com/ticket/17001)
+						return !!( element.attributes && element.attributes.data );
+					},
+
+					// Integrate page breaks with `pagebreak` plugin (#2598).
+					'br': function( element ) {
+						if ( !editor.plugins.pagebreak ) {
+							return;
+						}
+
+						var styles = tools.parseCssText( element.attributes.style, true );
+
+						// Safari uses `break-before` instead of `page-break-before` to recognize page breaks.
+						if ( styles[ 'page-break-before' ] === 'always' || styles[ 'break-before' ] === 'page' ) {
+							var pagebreakEl = CKEDITOR.plugins.pagebreak.createElement( editor );
+							return CKEDITOR.htmlParser.fragment.fromHtml( pagebreakEl.getOuterHtml() ).children[ 0 ];
+						}
+					}
+				},
+				attributes: {
+					'style': function( styles, element ) {
+						// Returning false deletes the attribute.
+						return Style.normalizedStyles( element, editor ) || false;
+					},
+					'class': function( classes ) {
+						// The (el\d+)|(font\d+) are default Excel classes for table cells and text.
+						return falseIfEmpty( classes.replace( /(el\d+)|(font\d+)|msonormal|msolistparagraph\w*/ig, '' ) );
+					},
+					'cellspacing': remove,
+					'cellpadding': remove,
+					'border': remove,
+					'v:shapes': remove,
+					'o:spid': remove
+				},
+				comment: function( element ) {
+					if ( element.match( /\[if.* supportFields.*\]/ ) ) {
+						inComment++;
+					}
+					if ( element == '[endif]' ) {
+						inComment = inComment > 0 ? inComment - 1 : 0;
+					}
+					return false;
+				},
+				text: function( content, node ) {
+					if ( inComment ) {
+						return '';
+					}
+
+					var grandparent = node.parent && node.parent.parent;
+
+					if ( grandparent && grandparent.attributes && grandparent.attributes.style && grandparent.attributes.style.match( /mso-list:\s*ignore/i ) ) {
+						return content.replace( /&nbsp;/g, ' ' );
+					}
+
+					return content;
+				}
+			};
+
+		tools.array.forEach( shapeTags, function( shapeTag ) {
+			rules.elements[ shapeTag ] = shapeTagging;
+		} );
+
+		return rules;
+
+		function shapeTagging( element ) {
+			// Check if regular or canvas shape (#1088).
+			if ( element.attributes[ 'o:gfxdata' ] || element.parent.name === 'v:group' ) {
+				shapesIds.push( element.attributes.id );
+			}
+		}
+	};
+
+	/**
+	 * Namespace containing list-oriented helper methods.
+	 *
+	 * @private
+	 * @since 4.13.0
+	 * @member CKEDITOR.plugins.pastetools.filters.word
+	 */
+	plug.lists = {
+		/**
+		 * Checks if a given element is a list item-alike.
+		 *
+		 * @private
+		 * @since 4.13.0
+		 * @param {CKEDITOR.editor} editor
+		 * @param {CKEDITOR.htmlParser.element} element
+		 * @returns {Boolean}
+		 * @member CKEDITOR.plugins.pastetools.filters.word.lists
+		 */
+		thisIsAListItem: function( editor, element ) {
+			if ( Heuristics.isEdgeListItem( editor, element ) ) {
+				return true;
+			}
+
+			/*jshint -W024 */
+			// Normally a style of the sort that looks like "mso-list: l0 level1 lfo1"
+			// indicates a list element, but the same style may appear in a <p> that's within a <li>.
+			if ( ( element.attributes.style && element.attributes.style.match( /mso\-list:\s?l\d/ ) &&
+				element.parent.name !== 'li' ) ||
+				element.attributes[ 'cke-dissolved' ] ||
+				element.getHtml().match( /<!\-\-\[if !supportLists]\-\->/ )
+			) {
+				return true;
+			}
+
+			return false;
+			/*jshint +W024 */
+		},
+
+		/**
+		 * Converts an element to an element with the `cke:li` tag name.
+		 *
+		 * @private
+		 * @since 4.13.0
+		 * @param {CKEDITOR.editor} editor
+		 * @param {CKEDITOR.htmlParser.element} element
+		 * @member CKEDITOR.plugins.pastetools.filters.word.lists
+		 */
+		convertToFakeListItem: function( editor, element ) {
+			if ( Heuristics.isDegenerateListItem( editor, element ) ) {
+				Heuristics.assignListLevels( editor, element );
+			}
+
+			// A dummy call to cache parsed list info inside of cke-list-* attributes.
+			this.getListItemInfo( element );
+
+			if ( !element.attributes[ 'cke-dissolved' ] ) {
+				// The symbol is usually the first text node descendant
+				// of the element that doesn't start with a whitespace character;
+				var symbol;
+
+				element.forEach( function( element ) {
+					// Sometimes there are custom markers represented as images.
+					// They can be recognized by the distinctive alt attribute value.
+					if ( !symbol && element.name == 'img' &&
+						element.attributes[ 'cke-ignored' ] &&
+						element.attributes.alt == '*' ) {
+						symbol = '·';
+						// Remove the "symbol" now, since it's the best opportunity to do so.
+						element.remove();
+					}
+				}, CKEDITOR.NODE_ELEMENT );
+
+				element.forEach( function( element ) {
+					if ( !symbol && !element.value.match( /^ / ) ) {
+						symbol = element.value;
+					}
+				}, CKEDITOR.NODE_TEXT );
+
+				// Without a symbol this isn't really a list item.
+				if ( typeof symbol == 'undefined' ) {
+					return;
+				}
+
+				element.attributes[ 'cke-symbol' ] = symbol.replace( /(?: |&nbsp;).*$/, '' );
+
+				List.removeSymbolText( element );
+			}
+
+			var styles = element.attributes && tools.parseCssText( element.attributes.style );
+
+			// Default list has 40px padding. To correct indentation we need to reduce margin-left by 40px for each list level.
+			// Additionally margin has to be reduced by sum of margins of each parent, however it can't be done until list are structured in a tree (#2870).
+			// Note margin left is absent in IE pasted content.
+			if ( styles[ 'margin-left' ] ) {
+				var margin = styles[ 'margin-left' ],
+					level = element.attributes[ 'cke-list-level' ];
+
+				// Ignore negative margins (#2870).
+				margin = Math.max( CKEDITOR.tools.convertToPx( margin ) - 40 * level, 0 );
+
+				if ( margin ) {
+					styles[ 'margin-left' ] = margin + 'px';
+				} else {
+					delete styles[ 'margin-left' ];
+				}
+
+				element.attributes.style =  CKEDITOR.tools.writeCssText( styles );
+			}
+
+			// Converting to a normal list item would implicitly wrap the element around an <ul>.
+			element.name = 'cke:li';
+		},
+
+		/**
+		 * Converts any fake list items contained within `root` into real `<li>` elements.
+		 *
+		 * @private
+		 * @since 4.13.0
+		 * @param {CKEDITOR.htmlParser.element} root
+		 * @returns {CKEDITOR.htmlParser.element[]} An array of converted elements.
+		 * @member CKEDITOR.plugins.pastetools.filters.word.lists
+		 */
+		convertToRealListItems: function( root ) {
+			var listElements = [];
+			// Select and clean up list elements.
+			root.forEach( function( element ) {
+				if ( element.name == 'cke:li' ) {
+					element.name = 'li';
+
+					listElements.push( element );
+				}
+			}, CKEDITOR.NODE_ELEMENT, false );
+
+			return listElements;
+		},
+
+		removeSymbolText: function( element ) { // ...from a list element.
+			var symbol = element.attributes[ 'cke-symbol' ],
+				// Find the first element which contains symbol to be replaced (#2690).
+				node = element.findOne( function( node ) {
+						// Since symbol may contains special characters we use `indexOf` (instead of RegExp) which is sufficient (#877).
+						return node.value && node.value.indexOf( symbol ) > -1;
+					}, true ),
+				parent;
+
+			if ( node ) {
+				node.value = node.value.replace( symbol, '' );
+				parent = node.parent;
+
+				if ( parent.getHtml().match( /^(\s|&nbsp;)*$/ ) && parent !== element ) {
+					parent.remove();
+				} else if ( !node.value ) {
+					node.remove();
+				}
+			}
+		},
+
+		setListSymbol: function( list, symbol, level ) {
+			level = level || 1;
+
+			var style = tools.parseCssText( list.attributes.style );
+
+			if ( list.name == 'ol' ) {
+				if ( list.attributes.type || style[ 'list-style-type' ] ) return;
+
+				var typeMap = {
+					'[ivx]': 'lower-roman',
+					'[IVX]': 'upper-roman',
+					'[a-z]': 'lower-alpha',
+					'[A-Z]': 'upper-alpha',
+					'\\d': 'decimal'
+				};
+
+				for ( var type in typeMap ) {
+					if ( List.getSubsectionSymbol( symbol ).match( new RegExp( type ) ) ) {
+						style[ 'list-style-type' ] = typeMap[ type ];
+						break;
+					}
+				}
+
+				list.attributes[ 'cke-list-style-type' ] = style[ 'list-style-type' ];
+			} else {
+				var symbolMap = {
+					'·': 'disc',
+					'o': 'circle',
+					'§': 'square' // In Word this is a square.
+				};
+
+				if ( !style[ 'list-style-type' ] && symbolMap[ symbol ] ) {
+					style[ 'list-style-type' ] = symbolMap[ symbol ];
+				}
+
+			}
+
+			List.setListSymbol.removeRedundancies( style, level );
+
+			( list.attributes.style = CKEDITOR.tools.writeCssText( style ) ) || delete list.attributes.style;
+		},
+
+		setListStart: function( list ) {
+			var symbols = [],
+				offset = 0;
+
+			for ( var i = 0; i < list.children.length; i++ ) {
+				symbols.push( list.children[ i ].attributes[ 'cke-symbol' ] || '' );
+			}
+
+			// When a list starts with a sublist, use the next element as a start indicator.
+			if ( !symbols[ 0 ] ) {
+				offset++;
+			}
+
+			// Attribute set in setListSymbol()
+			switch ( list.attributes[ 'cke-list-style-type' ] ) {
+				case 'lower-roman':
+				case 'upper-roman':
+					list.attributes.start = List.toArabic( List.getSubsectionSymbol( symbols[ offset ] ) ) - offset;
+					break;
+				case 'lower-alpha':
+				case 'upper-alpha':
+					list.attributes.start = List.getSubsectionSymbol( symbols[ offset ] ).replace( /\W/g, '' ).toLowerCase().charCodeAt( 0 ) - 96 - offset;
+					break;
+				case 'decimal':
+					list.attributes.start = ( parseInt( List.getSubsectionSymbol( symbols[ offset ] ), 10 ) - offset ) || 1;
+					break;
+			}
+
+			if ( list.attributes.start == '1' ) {
+				delete list.attributes.start;
+			}
+
+			delete list.attributes[ 'cke-list-style-type' ];
+		},
+
+		/**
+		 * Numbering helper.
+		 *
+		 * @since 4.13.0
+		 * @member CKEDITOR.plugins.pastetools.filters.word.lists
+		 */
+		numbering: {
+			/**
+			 * Converts the list marker value into a decimal number.
+			 *
+			 *		 var toNumber = CKEDITOR.plugins.pastefromword.lists.numbering.toNumber;
+			 *
+			 *		 console.log( toNumber( 'XIV', 'upper-roman' ) ); // Logs 14.
+			 *		 console.log( toNumber( 'd', 'lower-alpha' ) ); // Logs 4.
+			 *		 console.log( toNumber( '35', 'decimal' ) ); // Logs 35.
+			 *		 console.log( toNumber( '404', 'foo' ) ); // Logs 1.
+			 *
+			 * @param {String} marker
+			 * @param {String} markerType Marker type according to CSS `list-style-type` values.
+			 * @returns {Number}
+			 * @member CKEDITOR.plugins.pastetools.filters.word.lists.numbering
+			 */
+			toNumber: function( marker, markerType ) {
+				// Functions copied straight from old PFW implementation, no need to reinvent the wheel.
+				function fromAlphabet( str ) {
+					var alpahbets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+					str = str.toUpperCase();
+					var l = alpahbets.length,
+						retVal = 1;
+					for ( var x = 1; str.length > 0; x *= l ) {
+						retVal += alpahbets.indexOf( str.charAt( str.length - 1 ) ) * x;
+						str = str.substr( 0, str.length - 1 );
+					}
+					return retVal;
+				}
+
+				function fromRoman( str ) {
+					var romans = [
+							[ 1000, 'M' ],
+							[ 900, 'CM' ],
+							[ 500, 'D' ],
+							[ 400, 'CD' ],
+							[ 100, 'C' ],
+							[ 90, 'XC' ],
+							[ 50, 'L' ],
+							[ 40, 'XL' ],
+							[ 10, 'X' ],
+							[ 9, 'IX' ],
+							[ 5, 'V' ],
+							[ 4, 'IV' ],
+							[ 1, 'I' ]
+						];
+
+					str = str.toUpperCase();
+					var l = romans.length,
+						retVal = 0;
+					for ( var i = 0; i < l; ++i ) {
+						for ( var j = romans[ i ], k = j[ 1 ].length; str.substr( 0, k ) == j[ 1 ]; str = str.substr( k ) )
+							retVal += j[ 0 ];
+					}
+					return retVal;
+				}
+
+				if ( markerType == 'decimal' ) {
+					return Number( marker );
+				} else if ( markerType == 'upper-roman' || markerType == 'lower-roman' ) {
+					return fromRoman( marker.toUpperCase() );
+				} else if ( markerType == 'lower-alpha' || markerType == 'upper-alpha' ) {
+					return fromAlphabet( marker );
+				} else {
+					return 1;
+				}
+			},
+
+			/**
+			 * Returns a list style based on the Word marker content.
+			 *
+			 *		var getStyle = CKEDITOR.plugins.pastefromword.lists.numbering.getStyle;
+			 *
+			 *		console.log( getStyle( '4' ) ); // Logs: "decimal"
+			 *		console.log( getStyle( 'b' ) ); // Logs: "lower-alpha"
+			 *		console.log( getStyle( 'P' ) ); // Logs: "upper-alpha"
+			 *		console.log( getStyle( 'i' ) ); // Logs: "lower-roman"
+			 *		console.log( getStyle( 'X' ) ); // Logs: "upper-roman"
+			 *
+			 *
+			 * **Implementation note:** Characters `c` and `d` are not converted to roman on purpose. It is 100 and 500 respectively, so
+			 * you rarely go with a list up until this point, while it is common to start with `c` and `d` in alpha.
+			 *
+			 * @param {String} marker Marker content retained from Word, e.g. `1`, `7`, `XI`, `b`.
+			 * @returns {String} Resolved marker type.
+			 * @member CKEDITOR.plugins.pastetools.filters.word.lists.numbering
+			 */
+			getStyle: function( marker ) {
+				var typeMap = {
+						'i': 'lower-roman',
+						'v': 'lower-roman',
+						'x': 'lower-roman',
+						'l': 'lower-roman',
+						'm': 'lower-roman',
+						'I': 'upper-roman',
+						'V': 'upper-roman',
+						'X': 'upper-roman',
+						'L': 'upper-roman',
+						'M': 'upper-roman'
+					},
+					firstCharacter = marker.slice( 0, 1 ),
+					type = typeMap[ firstCharacter ];
+
+				if ( !type ) {
+					type = 'decimal';
+
+					if ( firstCharacter.match( /[a-z]/ ) ) {
+						type = 'lower-alpha';
+					}
+					if ( firstCharacter.match( /[A-Z]/ ) ) {
+						type = 'upper-alpha';
+					}
+				}
+
+				return type;
+			}
+		},
+
+		// Taking into account cases like "1.1.2." etc. - get the last element.
+		getSubsectionSymbol: function( symbol ) {
+			return ( symbol.match( /([\da-zA-Z]+).?$/ ) || [ 'placeholder', '1' ] )[ 1 ];
+		},
+
+		setListDir: function( list ) {
+			var dirs = { ltr: 0, rtl: 0 };
+
+			list.forEach( function( child ) {
+				if ( child.name == 'li' ) {
+					var dir = child.attributes.dir || child.attributes.DIR || '';
+					if ( dir.toLowerCase() == 'rtl' ) {
+						dirs.rtl++;
+					} else {
+						dirs.ltr++;
+					}
+				}
+			}, CKEDITOR.ELEMENT_NODE );
+
+			if ( dirs.rtl > dirs.ltr ) {
+				list.attributes.dir = 'rtl';
+			}
+		},
+
+		createList: function( element ) {
+			// "o" symbolizes a circle in unordered lists.
+			if ( ( element.attributes[ 'cke-symbol' ].match( /([\da-np-zA-NP-Z]).?/ ) || [] )[ 1 ] ) {
+				return new CKEDITOR.htmlParser.element( 'ol' );
+			}
+			return new CKEDITOR.htmlParser.element( 'ul' );
+		},
+
+		/**
+		 * @private
+		 * @since 4.13.0
+		 * @param {CKEDITOR.htmlParser.element} root An element to be looked through for lists.
+		 * @returns {CKEDITOR.htmlParser.element[]} An array of created list items.
+		 * @member CKEDITOR.plugins.pastetools.filters.word.lists
+		 */
+		createLists: function( root ) {
+			var element, level, i, j,
+				listElements = List.convertToRealListItems( root );
+
+			if ( listElements.length === 0 ) {
+				return [];
+			}
+
+			// Chop data into continuous lists.
+			var lists = List.groupLists( listElements );
+
+			// Create nested list structures.
+			for ( i = 0; i < lists.length; i++ ) {
+				var list = lists[ i ],
+					firstLevel1Element = list[ 0 ];
+
+				// To determine the type of the top-level list a level 1 element is needed.
+				for ( j = 0; j < list.length; j++ ) {
+					if ( list[ j ].attributes[ 'cke-list-level' ] == 1 ) {
+						firstLevel1Element = list[ j ];
+						break;
+					}
+				}
+
+				var	containerStack = [ List.createList( firstLevel1Element ) ],
+					// List wrapper (ol/ul).
+					innermostContainer = containerStack[ 0 ],
+					allContainers = [ containerStack[ 0 ] ];
+
+				// Insert first known list item before the list wrapper.
+				innermostContainer.insertBefore( list[ 0 ] );
+
+				for ( j = 0; j < list.length; j++ ) {
+					element = list[ j ];
+
+					level = element.attributes[ 'cke-list-level' ];
+
+					while ( level > containerStack.length ) {
+						var content = List.createList( element );
+
+						var children = innermostContainer.children;
+						if ( children.length > 0 ) {
+							children[ children.length - 1 ].add( content );
+						} else {
+							var container = new CKEDITOR.htmlParser.element( 'li', {
+								style: 'list-style-type:none'
+							} );
+							container.add( content );
+							innermostContainer.add( container );
+						}
+
+						containerStack.push( content );
+						allContainers.push( content );
+						innermostContainer = content;
+
+						if ( level == containerStack.length ) {
+							List.setListSymbol( content, element.attributes[ 'cke-symbol' ], level );
+						}
+					}
+
+					while ( level < containerStack.length ) {
+						containerStack.pop();
+						innermostContainer = containerStack[ containerStack.length - 1 ];
+
+						if ( level == containerStack.length ) {
+							List.setListSymbol( innermostContainer, element.attributes[ 'cke-symbol' ], level );
+						}
+					}
+
+					// For future reference this is where the list elements are actually put into the lists.
+					element.remove();
+					innermostContainer.add( element );
+				}
+
+				// Try to set the symbol for the root (level 1) list.
+				var level1Symbol;
+				if ( containerStack[ 0 ].children.length ) {
+					level1Symbol = containerStack[ 0 ].children[ 0 ].attributes[ 'cke-symbol' ];
+
+					if ( !level1Symbol && containerStack[ 0 ].children.length > 1 ) {
+						level1Symbol = containerStack[0].children[1].attributes[ 'cke-symbol' ];
+					}
+
+					if ( level1Symbol ) {
+						List.setListSymbol( containerStack[ 0 ], level1Symbol );
+					}
+				}
+
+				// This can be done only after all the list elements are where they should be.
+				for ( j = 0; j < allContainers.length; j++ ) {
+					List.setListStart( allContainers[ j ] );
+				}
+
+				// Last but not least apply li[start] if needed, also this needs to be done once ols are final.
+				for ( j = 0; j < list.length; j++ ) {
+					this.determineListItemValue( list[ j ] );
+				}
+			}
+
+			// Adjust left margin based on parents sum of parents left margin (#2870).
+			CKEDITOR.tools.array.forEach( listElements, function( element ) {
+				var listParents = getParentListItems( element ),
+					leftOffset = getTotalMarginLeft( listParents ),
+					styles, marginLeft;
+
+				if ( !leftOffset ) {
+					return;
+				}
+
+				element.attributes = element.attributes || {};
+
+				styles = CKEDITOR.tools.parseCssText( element.attributes.style );
+
+				marginLeft = styles[ 'margin-left' ] || 0;
+				marginLeft = Math.max( parseInt( marginLeft, 10 ) - leftOffset, 0 );
+
+				if ( marginLeft ) {
+					styles[ 'margin-left' ] = marginLeft + 'px';
+				} else {
+					delete styles[ 'margin-left' ];
+				}
+
+				element.attributes.style = CKEDITOR.tools.writeCssText( styles );
+			} );
+
+			return listElements;
+
+			function getParentListItems( element ) {
+				var parents = [],
+					parent = element.parent;
+
+				while ( parent ) {
+					if ( parent.name === 'li' ) {
+						parents.push( parent );
+					}
+					parent = parent.parent;
+				}
+
+				return parents;
+			}
+
+			function getTotalMarginLeft( elements ) {
+				return CKEDITOR.tools.array.reduce( elements, function( total, element ) {
+					if ( element.attributes && element.attributes.style ) {
+						var marginLeft = CKEDITOR.tools.parseCssText( element.attributes.style )[ 'margin-left' ];
+					}
+					return marginLeft ? total + parseInt( marginLeft, 10 ) : total;
+				}, 0 );
+			}
+		},
+
+		/**
+		 * Final cleanup &mdash; removes all `cke-*` helper attributes.
+		 *
+		 * @private
+		 * @since 4.13.0
+		 * @param {CKEDITOR.htmlParser.element[]} listElements
+		 * @member CKEDITOR.plugins.pastetools.filters.word.lists
+		 */
+		cleanup: function( listElements ) {
+			var tempAttributes = [
+					'cke-list-level',
+					'cke-symbol',
+					'cke-list-id',
+					'cke-indentation',
+					'cke-dissolved'
+				],
+				i,
+				j;
+
+			for ( i = 0; i < listElements.length; i++ ) {
+				for ( j = 0; j < tempAttributes.length; j++ ) {
+					delete listElements[ i ].attributes[ tempAttributes[ j ] ];
+				}
+			}
+		},
+
+		/**
+		 * Tries to determine the `li[value]` attribute for a given list item. The `element` given must
+		 * have a parent in order for this function to work properly.
+		 *
+		 * @private
+		 * @since 4.13.0
+		 * @param {CKEDITOR.htmlParser.element} element
+		 * @member CKEDITOR.plugins.pastetools.filters.word.lists
+		 */
+		determineListItemValue: function( element ) {
+			if ( element.parent.name !== 'ol' ) {
+				// li[value] make sense only for list items in ordered list.
+				return;
+			}
+
+			var assumedValue = this.calculateValue(  element ),
+				cleanSymbol = element.attributes[ 'cke-symbol' ].match( /[a-z0-9]+/gi ),
+				computedValue,
+				listType;
+
+			if ( cleanSymbol ) {
+				// Note that we always want to use last match, just because of markers like "1.1.4" "1.A.a.IV" etc.
+				cleanSymbol = cleanSymbol[ cleanSymbol.length - 1 ];
+
+				// We can determine proper value only if we know what type of list is it.
+				// So we need to check list wrapper if it has this information.
+				listType = element.parent.attributes[ 'cke-list-style-type' ] || this.numbering.getStyle( cleanSymbol );
+
+				computedValue = this.numbering.toNumber( cleanSymbol, listType );
+
+				if ( computedValue !== assumedValue ) {
+					element.attributes.value = computedValue;
+				}
+			}
+		},
+
+		/**
+		 * Calculates the value for a given `<li>` element based on preceding list items (e.g. the `value`
+		 * attribute). It could also look at the start attribute of its parent list (`<ol>`).
+		 *
+		 * @private
+		 * @since 4.13.0
+		 * @param {CKEDITOR.htmlParser.element} element The `<li>` element.
+		 * @returns {Number}
+		 * @member CKEDITOR.plugins.pastetools.filters.word.lists
+		 */
+		calculateValue: function( element ) {
+			if ( !element.parent ) {
+				return 1;
+			}
+
+			var list = element.parent,
+				elementIndex = element.getIndex(),
+				valueFound = null,
+				// Index of the element with value attribute.
+				valueElementIndex,
+				curElement,
+				i;
+
+			// Look for any preceding li[value].
+			for	( i = elementIndex; i >= 0 && valueFound === null; i-- ) {
+				curElement = list.children[ i ];
+
+				if ( curElement.attributes && curElement.attributes.value !== undefined ) {
+					valueElementIndex = i;
+					valueFound = parseInt( curElement.attributes.value, 10 );
+				}
+			}
+
+			// Still if no li[value] was found, we'll check the list.
+			if ( valueFound === null ) {
+				valueFound = list.attributes.start !== undefined ? parseInt( list.attributes.start, 10 ) : 1;
+				valueElementIndex = 0;
+			}
+
+			return valueFound + ( elementIndex - valueElementIndex );
+		},
+
+		/**
+		 * @private
+		 * @since 4.13.0
+		 * @param {CKEDITOR.htmlParser.element} element
+		 * @member CKEDITOR.plugins.pastetools.filters.word.lists
+		 */
+		dissolveList: function( element ) {
+			var nameIs = function( name ) {
+					return function( element ) {
+						return element.name == name;
+					};
+				},
+				isList = function( element ) {
+					return nameIs( 'ul' )( element ) || nameIs( 'ol' )( element );
+				},
+				arrayTools = CKEDITOR.tools.array,
+				elements = [],
+				children,
+				i;
+
+			element.forEach( function( child ) {
+				elements.push( child );
+			}, CKEDITOR.NODE_ELEMENT, false );
+
+			var items = arrayTools.filter( elements, nameIs( 'li' ) ),
+				lists = arrayTools.filter( elements, isList );
+
+			arrayTools.forEach( lists, function( list ) {
+				var type = list.attributes.type,
+					start = parseInt( list.attributes.start, 10 ) || 1,
+					level = countParents( isList, list ) + 1;
+
+				if ( !type ) {
+					var style = tools.parseCssText( list.attributes.style );
+					type = style[ 'list-style-type' ];
+				}
+
+				arrayTools.forEach( arrayTools.filter( list.children, nameIs( 'li' ) ), function( child, index ) {
+					var symbol;
+
+					switch ( type ) {
+						case 'disc':
+							symbol = '·';
+							break;
+						case 'circle':
+							symbol = 'o';
+							break;
+						case 'square':
+							symbol = '§';
+							break;
+						case '1':
+						case 'decimal':
+							symbol = ( start + index ) + '.';
+							break;
+						case 'a':
+						case 'lower-alpha':
+							symbol = String.fromCharCode( 'a'.charCodeAt( 0 ) + start - 1 + index ) + '.';
+							break;
+						case 'A':
+						case 'upper-alpha':
+							symbol = String.fromCharCode( 'A'.charCodeAt( 0 ) + start - 1 + index ) + '.';
+							break;
+						case 'i':
+						case 'lower-roman':
+							symbol = toRoman( start + index ) + '.';
+							break;
+						case 'I':
+						case 'upper-roman':
+							symbol = toRoman( start + index ).toUpperCase() + '.';
+							break;
+						default:
+							symbol = list.name == 'ul' ? '·' : ( start + index ) + '.';
+					}
+
+					child.attributes[ 'cke-symbol' ] = symbol;
+					child.attributes[ 'cke-list-level' ] = level;
+				} );
+			} );
+
+			children = arrayTools.reduce( items, function( acc, listElement ) {
+				var child = listElement.children[ 0 ];
+
+				if ( child && child.name && child.attributes.style && child.attributes.style.match( /mso-list:/i ) ) {
+					Style.pushStylesLower( listElement, {
+						'list-style-type': true,
+						'display': true
+					} );
+
+					var childStyle = tools.parseCssText( child.attributes.style, true );
+
+					Style.setStyle( listElement, 'mso-list', childStyle[ 'mso-list' ], true );
+					Style.setStyle( child, 'mso-list', '' );
+					// mso-list takes precedence in determining the level.
+					delete listElement[ 'cke-list-level' ];
+
+					// If this style has a value it's usually "none". This marks such list elements for deletion.
+					var styleName = childStyle.display ? 'display' : childStyle.DISPLAY ? 'DISPLAY' : '';
+					if ( styleName ) {
+						Style.setStyle( listElement, 'display', childStyle[ styleName ], true );
+					}
+				}
+
+				// Don't include elements put there only to contain another list.
+				if ( listElement.children.length === 1 && isList( listElement.children[ 0 ] ) ) {
+					return acc;
+				}
+
+				listElement.name = 'p';
+				listElement.attributes[ 'cke-dissolved' ] = true;
+				acc.push( listElement );
+
+				return acc;
+			}, [] );
+
+			for ( i = children.length - 1; i >= 0; i-- ) {
+				children[ i ].insertAfter( element );
+			}
+			for ( i = lists.length - 1; i >= 0; i-- ) {
+				delete lists[ i ].name;
+			}
+
+			function toRoman( number ) {
+				if ( number >= 50 ) return 'l' + toRoman( number - 50 );
+				if ( number >= 40 ) return 'xl' + toRoman( number - 40 );
+				if ( number >= 10 ) return 'x' + toRoman( number - 10 );
+				if ( number == 9 ) return 'ix';
+				if ( number >= 5 ) return 'v' + toRoman( number - 5 );
+				if ( number == 4 ) return 'iv';
+				if ( number >= 1 ) return 'i' + toRoman( number - 1 );
+				return '';
+			}
+
+			function countParents( condition, element ) {
+				return count( element, 0 );
+
+				function count( parent, number ) {
+					if ( !parent || !parent.parent ) {
+						return number;
+					}
+
+					if ( condition( parent.parent ) ) {
+						return count( parent.parent, number + 1 );
+					} else {
+						return count( parent.parent, number );
+					}
+				}
+			}
+
+		},
+
+		groupLists: function( listElements ) {
+			// Chop data into continuous lists.
+			var i, element,
+				lists = [ [ listElements[ 0 ] ] ],
+				lastList = lists[ 0 ];
+
+			element = listElements[ 0 ];
+			element.attributes[ 'cke-indentation' ] = element.attributes[ 'cke-indentation' ] || getElementIndentation( element );
+
+			for ( i = 1; i < listElements.length; i++ ) {
+				element = listElements[ i ];
+				var previous = listElements[ i - 1 ];
+
+				element.attributes[ 'cke-indentation' ] = element.attributes[ 'cke-indentation' ] || getElementIndentation( element );
+
+				if ( element.previous !== previous ) {
+					List.chopDiscontinuousLists( lastList, lists );
+					lists.push( lastList = [] );
+				}
+
+				lastList.push( element );
+			}
+
+			List.chopDiscontinuousLists( lastList, lists );
+
+			return lists;
+		},
+
+		/**
+		 * Converts a single, flat list items array into an array with a hierarchy of items.
+		 *
+		 * As the list gets chopped, it will be forced to render as a separate list, even if it has a deeper nesting level.
+		 * For example, for level 3 it will create a structure like `ol > li > ol > li > ol > li`.
+		 *
+		 * Note that list items within a single list but with different levels that did not get chopped
+		 * will still be rendered as a list tree later.
+		 *
+		 * @private
+		 * @since 4.13.0
+		 * @param {CKEDITOR.htmlParser.element[]} list An array containing list items.
+		 * @param {CKEDITOR.htmlParser.element[]} lists All the lists in the pasted content represented by an array of arrays
+		 * of list items. Modified by this method.
+		 * @member CKEDITOR.plugins.pastetools.filters.word.lists
+		 */
+		chopDiscontinuousLists: function( list, lists ) {
+			var levelSymbols = {};
+			var choppedLists = [ [] ],
+				lastListInfo;
+
+			for ( var i = 0; i < list.length; i++ ) {
+				var lastSymbol = levelSymbols[ list[ i ].attributes[ 'cke-list-level' ] ],
+					currentListInfo = this.getListItemInfo( list[ i ] ),
+					currentSymbol,
+					forceType;
+
+				if ( lastSymbol ) {
+					// An "h" before an "i".
+					forceType = lastSymbol.type.match( /alpha/ ) && lastSymbol.index == 7 ? 'alpha' : forceType;
+					// An "n" before an "o".
+					forceType = list[ i ].attributes[ 'cke-symbol' ] == 'o' && lastSymbol.index == 14 ? 'alpha' : forceType;
+
+					currentSymbol = List.getSymbolInfo( list[ i ].attributes[ 'cke-symbol' ], forceType );
+					currentListInfo = this.getListItemInfo( list[ i ] );
+
+					// Based on current and last index we'll decide if we want to chop list.
+					if (
+						// If the last list was a different list type then chop it!
+						lastSymbol.type != currentSymbol.type ||
+						// If those are logically different lists, and current list is not a continuation (https://dev.ckeditor.com/ticket/7918):
+						( lastListInfo && currentListInfo.id != lastListInfo.id && !this.isAListContinuation( list[ i ] ) ) ) {
+						choppedLists.push( [] );
+					}
+				} else {
+					currentSymbol = List.getSymbolInfo( list[ i ].attributes[ 'cke-symbol' ] );
+				}
+
+				// Reset all higher levels
+				for ( var j = parseInt( list[ i ].attributes[ 'cke-list-level' ], 10 ) + 1; j < 20; j++ ) {
+					if ( levelSymbols[ j ] ) {
+						delete levelSymbols[ j ];
+					}
+				}
+
+				levelSymbols[ list[ i ].attributes[ 'cke-list-level' ] ] = currentSymbol;
+				choppedLists[ choppedLists.length - 1 ].push( list[ i ] );
+
+				lastListInfo = currentListInfo;
+			}
+
+			[].splice.apply( lists, [].concat( [ tools.indexOf( lists, list ), 1 ], choppedLists ) );
+		},
+
+		/**
+		 * Checks if this list is a direct continuation of a list interrupted by a list with a different ID and
+		 * with a different level. So if you look at the following list:
+		 *
+		 * * list1 level1
+		 * * list1 level1
+		 *		* list2 level2
+		 *		* list2 level2
+		 * * list1 level1
+		 *
+		 * It would return `true`, which means it is a continuation, and should not be chopped. However, if any paragraph or
+		 * anything else appears in-between, it should be broken into different lists.
+		 *
+		 * You can see fixtures from issue https://dev.ckeditor.com/ticket/7918 as an example.
+		 *
+		 * @private
+		 * @since 4.13.0
+		 * @param {CKEDITOR.htmlParser.element} listElement The list to be checked.
+		 * @returns {Boolean}
+		 * @member CKEDITOR.plugins.pastetools.filters.word.lists
+		 */
+		isAListContinuation: function( listElement ) {
+			var prev = listElement;
+
+			do {
+				prev = prev.previous;
+
+				if ( prev && prev.type === CKEDITOR.NODE_ELEMENT ) {
+					if ( prev.attributes[ 'cke-list-level' ] === undefined ) {
+						// Not a list, so looks like an interrupted list.
+						return false;
+					}
+
+					if ( prev.attributes[ 'cke-list-level' ] === listElement.attributes[ 'cke-list-level' ] ) {
+						// Same level, so we want to check if this is a continuation.
+						return prev.attributes[ 'cke-list-id' ] === listElement.attributes[ 'cke-list-id' ];
+					}
+				}
+
+			} while ( prev );
+
+			return false;
+		},
+
+		// Source: http://stackoverflow.com/a/17534350/3698944
+		toArabic: function( symbol ) {
+			if ( !symbol.match( /[ivxl]/i ) ) return 0;
+			if ( symbol.match( /^l/i ) ) return 50 + List.toArabic( symbol.slice( 1 ) );
+			if ( symbol.match( /^lx/i ) ) return 40 + List.toArabic( symbol.slice( 1 ) );
+			if ( symbol.match( /^x/i ) ) return 10 + List.toArabic( symbol.slice( 1 ) );
+			if ( symbol.match( /^ix/i ) ) return 9 + List.toArabic( symbol.slice( 2 ) );
+			if ( symbol.match( /^v/i ) ) return 5 + List.toArabic( symbol.slice( 1 ) );
+			if ( symbol.match( /^iv/i ) ) return 4 + List.toArabic( symbol.slice( 2 ) );
+			if ( symbol.match( /^i/i ) ) return 1 + List.toArabic( symbol.slice( 1 ) );
+			// Ignore other characters.
+			return List.toArabic( symbol.slice( 1 ) );
+		},
+
+		/**
+		 * Returns an object describing the given `symbol`.
+		 *
+		 * @private
+		 * @since 4.13.0
+		 * @param {String} symbol
+		 * @param {String} type
+		 * @returns {Object} ret
+		 * @returns {Number} ret.index Identified numbering value
+		 * @returns {String} ret.type One of: `decimal`, `disc`, `circle`, `square`, `roman`, `alpha`.
+		 * @member CKEDITOR.plugins.pastetools.filters.word.lists
+		 */
+		getSymbolInfo: function( symbol, type ) {
+			var symbolCase = symbol.toUpperCase() == symbol ? 'upper-' : 'lower-',
+				symbolMap = {
+					'·': [ 'disc', -1 ],
+					'o': [ 'circle', -2 ],
+					'§': [ 'square', -3 ]
+				};
+
+			if ( symbol in symbolMap || ( type && type.match( /(disc|circle|square)/ ) ) ) {
+				return {
+					index: symbolMap[ symbol ][ 1 ],
+					type: symbolMap[ symbol ][ 0 ]
+				};
+			}
+
+			if ( symbol.match( /\d/ ) ) {
+				return {
+					index: symbol ? parseInt( List.getSubsectionSymbol( symbol ) , 10 ) : 0,
+					type: 'decimal'
+				};
+			}
+
+			symbol = symbol.replace( /\W/g, '' ).toLowerCase();
+
+			if ( ( !type && symbol.match( /[ivxl]+/i ) ) || ( type && type != 'alpha' ) || type == 'roman' ) {
+				return {
+					index: List.toArabic( symbol ),
+					type: symbolCase + 'roman'
+				};
+			}
+
+			if ( symbol.match( /[a-z]/i ) ) {
+				return {
+					index: symbol.charCodeAt( 0 ) - 97,
+					type: symbolCase + 'alpha'
+				};
+			}
+
+			return {
+				index: -1,
+				type: 'disc'
+			};
+		},
+
+		/**
+		 * Returns Word-generated information about the given list item, mainly by parsing the `mso-list`
+		 * CSS property.
+		 *
+		 * Note: Paragraphs with `mso-list` are also counted as list items because Word serves
+		 * list items as paragraphs.
+		 *
+		 * @private
+		 * @since 4.13.0
+		 * @param {CKEDITOR.htmlParser.element} list
+		 * @returns ret
+		 * @returns {String} ret.id List ID. Usually it is a decimal string.
+		 * @returns {String} ret.level List nesting level. `0` means it is the outermost list. Usually it is
+		 * a decimal string.
+		 * @member CKEDITOR.plugins.pastetools.filters.word.lists
+		 */
+		getListItemInfo: function( list ) {
+			if ( list.attributes[ 'cke-list-id' ] !== undefined ) {
+				// List was already resolved.
+				return {
+					id: list.attributes[ 'cke-list-id' ],
+					level: list.attributes[ 'cke-list-level' ]
+				};
+			}
+
+			var propValue = tools.parseCssText( list.attributes.style )[ 'mso-list' ],
+				ret = {
+					id: '0',
+					level: '1'
+				};
+
+			if ( propValue ) {
+				// Add one whitespace so it's easier to match values assuming that all of these are separated with \s.
+				propValue += ' ';
+
+				ret.level = propValue.match( /level(.+?)\s+/ )[ 1 ];
+				ret.id = propValue.match( /l(\d+?)\s+/ )[ 1 ];
+			}
+
+			// Store values. List level will be reused if present to prevent regressions.
+			list.attributes[ 'cke-list-level' ] = list.attributes[ 'cke-list-level' ] !== undefined ? list.attributes[ 'cke-list-level' ] : ret.level;
+			list.attributes[ 'cke-list-id' ] = ret.id;
+
+			return ret;
+		}
+	};
+	List = plug.lists;
+
+	/**
+	 * Namespace containing methods used to process the pasted content using heuristics.
+	 *
+	 * @private
+	 * @since 4.13.0
+	 * @member CKEDITOR.plugins.pastetools.filters.word
+	*/
+	plug.heuristics = {
+		/**
+		 * Decides if an `item` looks like a list item in Microsoft Edge.
+		 *
+		 * Note: It will return `false` when run in a browser other than Microsoft Edge, despite the configuration.
+		 *
+		 * @param {CKEDITOR.editor} editor
+		 * @param {CKEDITOR.htmlParser.element} item
+		 * @returns {Boolean}
+		 * @member CKEDITOR.plugins.pastetools.filters.word.heuristics
+		 * @private
+		 */
+		isEdgeListItem: function( editor, item ) {
+			if ( !CKEDITOR.env.edge || !editor.config.pasteFromWord_heuristicsEdgeList ) {
+				return false;
+			}
+
+			var innerText = '';
+
+			// Edge doesn't provide any list-specific markup, so the only way to guess if it's a list is to check the text structure.
+			item.forEach && item.forEach( function( text ) {
+				innerText += text.value;
+			}, CKEDITOR.NODE_TEXT );
+
+			if ( innerText.match( /^(?: |&nbsp;)*\(?[a-zA-Z0-9]+?[\.\)](?: |&nbsp;){2,}/ ) ) {
+				return true;
+			}
+
+			return Heuristics.isDegenerateListItem( editor, item );
+		},
+
+		/**
+		 * Cleans up a given list `item`. It is needed to remove Edge pre-marker indentation, since Edge pastes
+		 * list items as plain paragraphs with multiple `&nbsp;`s before the list marker.
+		 *
+		 * @since 4.7.0
+		 * @param {CKEDITOR.htmlParser.element} item The pre-processed list-like item, like a paragraph.
+		 * @member CKEDITOR.plugins.pastetools.filters.word.heuristics
+		 * @private
+		 */
+		cleanupEdgeListItem: function( item ) {
+			var textOccurred = false;
+
+			item.forEach( function( node ) {
+				if ( !textOccurred ) {
+					node.value = node.value.replace( /^(?:&nbsp;|[\s])+/, '' );
+
+					// If there's any remaining text beside nbsp it means that we can stop filtering.
+					if ( node.value.length ) {
+						textOccurred = true;
+					}
+				}
+			}, CKEDITOR.NODE_TEXT );
+		},
+
+		/**
+		 * Checks whether an element is a degenerate list item.
+		 *
+		 * Degenerate list items are elements that have some styles specific to list items,
+		 * but lack the ones that could be used to determine their features (like list level etc.).
+		 *
+		 * @param {CKEDITOR.editor} editor
+		 * @param {CKEDITOR.htmlParser.element} item
+		 * @returns {Boolean}
+		 * @member CKEDITOR.plugins.pastetools.filters.word.heuristics
+		 * @private
+		 * */
+		isDegenerateListItem: function( editor, item ) {
+			return !!item.attributes[ 'cke-list-level' ] || ( item.attributes.style && !item.attributes.style.match( /mso\-list/ ) && !!item.find( function( child ) {
+					// In rare cases there's no indication that a heading is a list item other than
+					// the fact that it has a child element containing only a list symbol.
+					if ( child.type == CKEDITOR.NODE_ELEMENT && item.name.match( /h\d/i ) &&
+						child.getHtml().match( /^[a-zA-Z0-9]+?[\.\)]$/ ) ) {
+						return true;
+					}
+
+					var css = tools.parseCssText( child.attributes && child.attributes.style, true );
+
+					if ( !css ) {
+						return false;
+					}
+					var fontSize = css.font || css['font-size'] || '',
+						fontFamily = css[ 'font-family' ] || '';
+
+					return ( fontSize.match( /7pt/i ) && !!child.previous ) ||
+						fontFamily.match( /symbol/i );
+				}, true ).length );
+		},
+
+		/**
+		 * Assigns list levels to the `item` and all directly subsequent nodes for which {@link #isEdgeListItem} returns `true`.
+		 *
+		 * The algorithm determines list item level based on the lowest common non-zero difference in indentation
+		 * of two or more subsequent list-like elements.
+		 *
+		 * @param {CKEDITOR.editor} editor
+		 * @param {CKEDITOR.htmlParser.element} item The first item of the list.
+		 * @returns {Object/null} `null` if list levels were already applied, or an object used to verify results in tests.
+		 * @returns {Number[]} return.indents
+		 * @returns {Number[]} return.levels
+		 * @returns {Number[]} return.diffs
+		 * @member CKEDITOR.plugins.pastetools.filters.word.heuristics
+		 * @private
+		 */
+		assignListLevels: function( editor, item ) {
+			// If levels were already calculated, it means that this function was called for preceeding element. There's
+			// no need to do this heavy work.
+			if ( item.attributes && item.attributes[ 'cke-list-level' ] !== undefined ) {
+				return;
+			}
+
+			var indents = [ getElementIndentation( item ) ],
+				items = [ item ],
+				levels = [],
+				array = CKEDITOR.tools.array,
+				map = array.map;
+
+			while ( item.next && item.next.attributes && !item.next.attributes[ 'cke-list-level' ] && Heuristics.isDegenerateListItem( editor, item.next ) ) {
+				item = item.next;
+				indents.push( getElementIndentation( item ) );
+				items.push( item );
+			}
+
+			// An array with indentation difference between n and n-1 list item. It's 0 for the first one.
+			var indentationDiffs = map( indents, function( curIndent, i  ) {
+					return i === 0 ? 0 : curIndent - indents[ i - 1 ];
+				} ),
+				// Guess indentation step, but it must not be equal to 0.
+				indentationPerLevel = this.guessIndentationStep( array.filter( indents, function( val ) {
+					return val !== 0;
+				} ) );
+
+			// Here's the tricky part, we need to magically figure out what is the indentation difference between list level.
+			levels = map( indents, function( val ) {
+				// Make sure that the level is a full number.
+				return Math.round( val / indentationPerLevel );
+			} );
+
+			// Level can not be equal to 0, in case if it happens bump all the levels by 1,
+			if ( array.indexOf( levels, 0 ) !== -1 ) {
+				levels = map( levels, function( val ) {
+					return val + 1;
+				} );
+			}
+
+			// Assign levels to a proper place.
+			array.forEach( items, function( curItem, index ) {
+				curItem.attributes[ 'cke-list-level' ] = levels[ index ];
+			} );
+
+			return {
+				indents: indents,
+				levels: levels,
+				diffs: indentationDiffs
+			};
+		},
+
+		/**
+		 * Given an array of list indentations, this method tries to guess what the indentation difference per list level is.
+		 * E.g. assuming that you have something like:
+		 *
+		 *		* foo (indentation 30px)
+		 *				* bar (indentation 90px)
+		 *				* baz (indentation 90px)
+		 *					* baz (indentation 115px)
+		 *			* baz (indentation 60px)
+		 *
+		 * The method will return `30`.
+		 *
+		 * @param {Number[]} indentations An array of indentation sizes.
+		 * @returns {Number/null} A number or `null` if empty `indentations` was given.
+		 * @member CKEDITOR.plugins.pastetools.filters.word.heuristics
+		 * @private
+		 */
+		guessIndentationStep: function( indentations ) {
+			return indentations.length ? Math.min.apply( null, indentations ) : null;
+		},
+
+		/**
+		 * Shifts lists that were deformed during pasting one level down
+		 * so that the list structure matches the content copied from Word.
+		 *
+		 * @param {CKEDITOR.htmlParser.element} element
+		 * @member CKEDITOR.plugins.pastetools.filters.word.heuristics
+		 * @private
+		 * */
+		correctLevelShift: function( element ) {
+			var isShiftedList = function( list ) {
+				return list.children && list.children.length == 1 && Heuristics.isShifted( list.children[ 0 ] );
+			};
+
+			if ( this.isShifted( element ) ) {
+				var lists = CKEDITOR.tools.array.filter( element.children, function( child ) {
+					return ( child.name == 'ul' || child.name == 'ol' );
+				} );
+
+				var listChildren = CKEDITOR.tools.array.reduce( lists, function( acc, list ) {
+					var preceding = isShiftedList( list ) ? [ list ] : list.children;
+					return preceding.concat( acc );
+				}, [] );
+
+				CKEDITOR.tools.array.forEach( lists, function( list ) {
+					list.remove();
+				} );
+
+				CKEDITOR.tools.array.forEach( listChildren, function( child ) {
+					// `Add` method without index always append child at the end (#796).
+					element.add( child );
+				} );
+
+				delete element.name;
+			}
+		},
+
+		/**
+		 * Determines if the list is malformed in a manner that its items
+		 * are one level deeper than they should be.
+		 *
+		 * @param {CKEDITOR.htmlParser.element} element
+		 * @returns {Boolean}
+		 * @member CKEDITOR.plugins.pastetools.filters.word.heuristics
+		 * @private
+		 */
+		isShifted: function( element ) {
+			if ( element.name !== 'li' ) {
+				return false;
+			}
+
+			return CKEDITOR.tools.array.filter( element.children, function( child ) {
+				if ( child.name ) {
+					if ( child.name == 'ul' || child.name == 'ol' ) {
+						return false;
+					}
+
+					if ( child.name == 'p' && child.children.length === 0 ) {
+						return false;
+					}
+				}
+				return true;
+			} ).length === 0;
+		}
+	};
+
+	Heuristics = plug.heuristics;
+
+	// Expose this function since it's useful in other places.
+	List.setListSymbol.removeRedundancies = function( style, level ) {
+		// 'disc' and 'decimal' are the default styles in some cases - remove redundancy.
+		if ( ( level === 1 && style[ 'list-style-type' ] === 'disc' ) || style[ 'list-style-type' ] === 'decimal' ) {
+			delete style[ 'list-style-type' ];
+		}
+	};
+
+	function falseIfEmpty( value ) {
+		if ( value === '' ) {
+			return false;
+		}
+		return value;
+	}
+
+	// Used when filtering attributes - returning false deletes the attribute.
+	function remove() {
+		return false;
+	}
+
+	CKEDITOR.cleanWord = CKEDITOR.pasteFilters.word = pastetools.createFilter( {
+		rules: [
+			commonFilter.rules,
+			plug.rules
+		],
+		additionalTransforms: function( html ) {
+			// Before filtering inline all the styles to allow because some of them are available only in style
+			// sheets. This step is skipped in IEs due to their flaky support for custom types in dataTransfer. (https://dev.ckeditor.com/ticket/16847)
+			if ( CKEDITOR.plugins.clipboard.isCustomDataTypesSupported ) {
+				html = commonFilter.styles.inliner.inline( html ).getBody().getHtml();
+			}
+
+			// Sometimes Word malforms the comments.
+			return html.replace( /<!\[/g, '<!--[' ).replace( /\]>/g, ']-->' );
+		}
+	} );
+
+	/**
+	 * See {@link CKEDITOR.plugins.pastetools.filters.word.lists}.
+	 *
+	 * @property {Object} lists
+	 * @private
+	 * @deprecated 4.13.0
+	 * @since 4.6.0
+	 * @member CKEDITOR.plugins.pastefromword
+	 */
+
+	/**
+	 * See {@link CKEDITOR.plugins.pastetools.filters.word.images}.
+	 *
+	 * @property {Object} images
+	 * @private
+	 * @deprecated 4.13.0
+	 * @removed 4.16.0
+	 * @since 4.8.0
+	 * @member CKEDITOR.plugins.pastefromword
+	 */
+
+	/**
+	 * See {@link CKEDITOR.plugins.pastetools.filters.image}.
+	 *
+	 * @property {Object} images
+	 * @private
+	 * @removed 4.16.0
+	 * @since 4.13.0
+	 * @member CKEDITOR.plugins.pastetools.filters.word
+	 */
+
+	/**
+	 * See {@link CKEDITOR.plugins.pastetools.filters.image#extractFromRtf}.
+	 *
+	 * @property {Function} extractFromRtf
+	 * @private
+	 * @removed 4.16.0
+	 * @since 4.13.0
+	 * @member CKEDITOR.plugins.pastetools.filters.word.images
+	 */
+
+	/**
+	 * See {@link CKEDITOR.plugins.pastetools.filters.image#extractTagsFromHtml}.
+	 *
+	 * @property {Function} extractTagsFromHtml
+	 * @private
+	 * @removed 4.16.0
+	 * @since 4.13.0
+	 * @member CKEDITOR.plugins.pastetools.filters.word.images
+	 */
+
+	/**
+	 * See {@link CKEDITOR.plugins.pastetools.filters.word.heuristics}.
+	 *
+	 * @property {Object} heuristics
+	 * @private
+	 * @deprecated 4.13.0
+	 * @since 4.6.2
+	 * @member CKEDITOR.plugins.pastefromword
+	*/
+
+	/**
+	 * See {@link CKEDITOR.plugins.pastetools.filters.common.styles}.
+	 *
+	 * @property {Object} styles
+	 * @private
+	 * @deprecated 4.13.0
+	 * @since 4.6.0
+	 * @member CKEDITOR.plugins.pastefromword
+	 */
+
+
+
+	/**
+	 * See {@link #pasteTools_removeFontStyles}.
+	 *
+	 * **Important note:** Prior to version 4.6.0 this configuration option defaulted to `true`.
+	 *
+	 * @deprecated 4.13.0
+	 * @since 3.1.0
+	 * @cfg {Boolean} [pasteFromWordRemoveFontStyles=false]
+	 * @member CKEDITOR.config
+	 */
+
+	/**
+	 * Whether to transform Microsoft Word outline numbered headings into lists.
+	 *
+	 *		config.pasteFromWordNumberedHeadingToList = true;
+	 *
+	 * @removed 4.6.0
+	 * @since 3.1.0
+	 * @cfg {Boolean} [pasteFromWordNumberedHeadingToList=false]
+	 * @member CKEDITOR.config
+	 */
+
+	/**
+	 * Whether to remove element styles that cannot be managed with the editor. Note
+	 * that this option does not handle font-specific styles, which depend on the
+	 * {@link #pasteTools_removeFontStyles} setting instead.
+	 *
+	 *		config.pasteFromWordRemoveStyles = false;
+	 *
+	 * @removed 4.6.0
+	 * @since 3.1.0
+	 * @cfg {Boolean} [pasteFromWordRemoveStyles=true]
+	 * @member CKEDITOR.config
+	 */
+
+	/**
+	 * Activates a heuristic that helps detect lists pasted into the editor in Microsoft Edge.
+	 *
+	 * The reason why this heuristic is needed is that on pasting Microsoft Edge removes any Word-specific
+	 * metadata allowing to identify lists.
+	 *
+	 *		// Disables list heuristics for Edge.
+	 *		config.pasteFromWord_heuristicsEdgeList = false;
+	 *
+	 * @since 4.6.2
+	 * @cfg {Boolean} [pasteFromWord_heuristicsEdgeList=true]
+	 * @member CKEDITOR.config
+	*/
+	CKEDITOR.config.pasteFromWord_heuristicsEdgeList = true;
+} )();

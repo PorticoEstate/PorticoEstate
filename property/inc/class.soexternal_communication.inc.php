@@ -649,8 +649,11 @@
 			$sms_recipients = array();
 			if ($location_code)
 			{
-				$sql = "SELECT contact_phone, concat(last_name || ', ' || first_name) AS name, etasje as floor"
-					. " FROM fm_location4 JOIN fm_tenant ON fm_location4.tenant_id = fm_tenant.id"
+				$sql = "SELECT contact_phone, concat(last_name || ', ' || first_name) AS name, etasje as floor,"
+					. " concat(fm_streetaddress.descr || ' ' || fm_location4.street_number) AS address"
+					. " FROM fm_location4"
+					. " JOIN fm_tenant ON fm_location4.tenant_id = fm_tenant.id"
+					. " JOIN fm_streetaddress ON fm_location4.street_id = fm_streetaddress.id"
 					. " WHERE location_code {$this->like} '$location_code%'"
 					. " AND contact_phone IS NOT NULL"
 					. " ORDER BY name";
@@ -663,6 +666,7 @@
 						'name'			 => $this->db->f('name', true),
 						'contact_phone'	 => $this->db->f('contact_phone', true),
 						'floor'			 => $this->db->f('floor', true),
+						'address'		 => $this->db->f('address', true),
 					);
 				}
 			}

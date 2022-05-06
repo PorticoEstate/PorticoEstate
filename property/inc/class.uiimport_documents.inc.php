@@ -1440,7 +1440,7 @@
 
 				$current_tag = $file_tags[$file_info['path_relative_filename']];
 
-				if (isset($file_tags[$file_info['path_relative_filename']]) && empty($current_tag['import_ok']) && empty($current_tag['import_failed']))
+				if (isset($file_tags[$file_info['path_relative_filename']]) && empty($current_tag['import_ok']))// && empty($current_tag['import_failed']))
 				{
 					if (empty($current_tag['import_ok']) && ( $current_tag['document_category'] && $current_tag['branch'] && $current_tag['branch'] ))
 					{

@@ -1266,7 +1266,7 @@
 				$voucher_type = 'FK';
 			}
 
-			$stored_header = array();
+			$stored_header = array('tekst2' => false);
 			$line_no = 0;
 			$header_count = 0;
 			$log_order_id = '';
@@ -1386,7 +1386,6 @@
 
 					//Nøkkelfelt, kundens personnr/orgnr. - men differensiert for undergrupper innenfor samme orgnr
 					$stored_header['tekst2'] = $check_customer_identifier;
-					$stored_header['tekst3'] = $check_customer_identifier;
 
 //					if ($type == 'internal')
 //					{
@@ -1481,21 +1480,40 @@
 					*/
 					$line_no = 0;
 
+					$log_cost = 0;
+					$log_cost2 = 0;
+
 					if($purchase_order && !empty($purchase_order['lines']))
 					{
 
 						foreach ($purchase_order['lines'] as $order_line)
 						{
+							if(empty($order_line['amount']))
+							{
+								continue;
+							}
+							
+							if($order_line['parent_mapping_id'] == 0)
+							{
+								$article_name = $order_line['name']  . ' - ' . $reservation['description'];
+							}
+							else
+							{
+								$article_name = $order_line['name'];
+							}
+
 							$line_no += 1;
 							$fakturalinje['Linjenr']			 = $line_no;
 							$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['article_code']);
 							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
 							$fakturalinje['Avgift']				 = $order_line['tax'];
-							$fakturalinje['Tilleggstekst']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']);
+							$fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 255);
 							$fakturalinje['mvakode']			 = $order_line['tax_code'];
 							$fakturalinje['antall']				 = $order_line['quantity'];
 							$fakturalinje['enhetspris']			 = $order_line['unit_price'];
 							$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+							$log_cost							+= $order_line['amount'];
+							$log_cost2							+= $order_line['tax'];
 
 						}
 
@@ -1505,6 +1523,7 @@
 						$line_no += 1;
 						$fakturalinje['Linjenr']			 = $line_no;
 						$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+						$log_cost							 = $reservation['cost'];
 					}
 
 
@@ -1515,7 +1534,6 @@
 					$log_customer_nr = $stored_header['kundenr'];
 
 					$log_buidling = $reservation['building_name'];
-					$log_cost = $reservation['cost'];
 					$log_varelinjer_med_dato = $reservation['article_description'] . ' - ' . $reservation['description'];
 
 					$line_field = array();
@@ -1528,6 +1546,7 @@
 					$line_field[] = "\"{$log_varelinjer_med_dato}\"";
 					$line_field[] = "\"{$log_buidling}\"";
 					$line_field[] = "\"{$log_cost}\"";
+					$line_field[] = "\"{$log_cost2}\"";
 
 					$log[] = implode(';',  $line_field);
 
@@ -1585,23 +1604,39 @@
 					$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
 					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
 
+					$log_cost = 0;
+					$log_cost2 = 0;
 
 					if($purchase_order && !empty($purchase_order['lines']))
 					{
-
 						foreach ($purchase_order['lines'] as $order_line)
 						{
+							if(empty($order_line['amount']))
+							{
+								continue;
+							}
+
+							if($order_line['parent_mapping_id'] == 0)
+							{
+								$article_name = $order_line['name']  . ' - ' . $reservation['description'];
+							}
+							else
+							{
+								$article_name = $order_line['name'];
+							}
+
 							$line_no += 1;
 							$fakturalinje['Linjenr']			 = $line_no;
 							$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT",$order_line['article_code']);
 							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
 							$fakturalinje['Avgift']				 = $order_line['tax'];
-							$fakturalinje['Tilleggstekst']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']);
+							$fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 255);
 							$fakturalinje['mvakode']			 = $order_line['tax_code'];
 							$fakturalinje['antall']				 = $order_line['quantity'];
 							$fakturalinje['enhetspris']			 = $order_line['unit_price'];
 							$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
-
+							$log_cost							+= $order_line['amount'];
+							$log_cost2							+= $order_line['tax'];
 						}
 
 					}
@@ -1610,11 +1645,11 @@
 						$line_no += 1;
 						$fakturalinje['Linjenr']			 = $line_no;
 						$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+						$log_cost							 = $reservation['cost'];
 					}
 
 
 					$log_buidling			 = $reservation['building_name'];
-					$log_cost				 = $reservation['cost'];
 					$log_varelinjer_med_dato = $reservation['article_description'] . ' - ' . $reservation['description'];
 
 					$line_field = array();
@@ -1627,6 +1662,7 @@
 					$line_field[] = "\"{$log_varelinjer_med_dato}\"";
 					$line_field[] = "\"{$log_buidling}\"";
 					$line_field[] = "\"{$log_cost}\"";
+					$line_field[] = "\"{$log_cost2}\"";
 
 					$log[] = implode(';',  $line_field);
 
@@ -1736,7 +1772,7 @@
 				$voucher_type = str_pad(substr(strtoupper('FK'), 0, 2), 2, ' ');
 			}
 
-			$stored_header = array();
+			$stored_header = array('tekst4' => false);
 			$line_no = 0;
 			$header_count = 0;
 			$log_order_id = '';
@@ -1822,7 +1858,7 @@
 					$check_customer_identifier = $this->get_customer_identifier_value_for($reservation) . '::' . $customer_number;
 				}
 
-				if ($stored_header == array() || $stored_header['tekst2'] != $check_customer_identifier)
+				if ($stored_header == array() || $stored_header['tekst4'] != $check_customer_identifier)
 				{
 					$order_id = $sequential_number_generator->increment()->get_current();
 					$export_info[] = $this->create_export_item_info($reservation, $order_id);
@@ -1902,19 +1938,22 @@
 					}
 
 					//Nøkkelfelt, kundens personnr/orgnr. - men differensiert for undergrupper innenfor samme orgnr
-					$stored_header['tekst2'] = $check_customer_identifier;
-					$stored_header['tekst3'] = $check_customer_identifier;
+//					$stored_header['tekst2'] = $check_customer_identifier;
+//					$stored_header['tekst3'] = $check_customer_identifier;
+					$stored_header['tekst4'] = $check_customer_identifier;
 
 					if ($type == 'internal')
 					{
-						$header['tekst2'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
-						$header['tekst3'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
+//						$header['tekst2'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
+//						$header['tekst3'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
+						$header['tekst4'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
 						$header['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
 					}
 					else
 					{
-						$header['tekst2'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
-						$header['tekst3'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
+//						$header['tekst2'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
+//						$header['tekst3'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
+						$header['tekst4'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
 						$header['ext_ord_ref'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $customer_number), 0, 15), 15, ' ');
 					}
 
@@ -2031,12 +2070,14 @@
 					if ($type == 'internal')
 					{
 //						$log_customer_nr = $header['tekst2'] . ' ' . $header['ext_ord_ref'];
-						$log_customer_nr = $header['tekst3'] . ' ' . $header['ext_ord_ref'];
+//						$log_customer_nr = $header['tekst3'] . ' ' . $header['ext_ord_ref'];
+						$log_customer_nr = $header['tekst4'] . ' ' . $header['ext_ord_ref'];
 					}
 					else
 					{
 //						$log_customer_nr = $header['tekst2'];
-						$log_customer_nr = $header['tekst3'];
+//						$log_customer_nr = $header['tekst3'];
+						$log_customer_nr = $header['tekst4'];
 					}
 
 
@@ -2214,8 +2255,8 @@
 				'responsible2' => str_repeat(' ', 8), 'sequence_no' => str_repeat(' ', 8), 'sequence_ref' => str_repeat(' ', 8),
 				'serial_no' => str_repeat(' ', 20), 'short_info' => str_repeat(' ', 60), 'status' => str_repeat(' ', 1),
 				'tax_code' => str_repeat(' ', 2), 'tax_system' => str_repeat(' ', 2), 'template_id' => str_repeat(' ', 8),
-				'terms_id' => str_repeat(' ', 2), 'tekx1' => str_repeat(' ', 12), 'tekst2' => str_repeat(' ', 12),
-				'tekst3' => str_repeat(' ', 12), 'text4' => str_repeat(' ', 12), 'trans_type' => str_repeat(' ', 2),
+				'terms_id' => str_repeat(' ', 2), 'tekst1' => str_repeat(' ', 12), 'tekst2' => str_repeat(' ', 12),
+				'tekst3' => str_repeat(' ', 12), 'tekst4' => str_repeat(' ', 12), 'trans_type' => str_repeat(' ', 2),
 				'unit_code' => str_repeat(' ', 3), 'unit_descr' => str_repeat(' ', 50), 'value_1' => str_repeat(' ', 17),
 				'voucher_ref' => str_repeat(' ', 9), 'voucher_type' => str_repeat(' ', 2), 'warehouse' => str_repeat(' ', 4),
 				'zip_code' => str_repeat(' ', 15));

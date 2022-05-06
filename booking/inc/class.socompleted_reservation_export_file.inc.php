@@ -123,7 +123,11 @@
 			$export_configurations = array_fill_keys($export_types, array());
 			$total_items = array_fill_keys($export_types, 0);
 			$total_cost = array_fill_keys($export_types, 0.0);
-			$export_log = "";
+			$export_log = array();
+			foreach ($export_types as $export_type)
+			{
+				$export_log[$export_type] = "";
+			}
 
 			$entity_export_files = array();
 			$export_files = array();
@@ -154,17 +158,17 @@
 							$export_infos[$export_type][] = $export_result['export']['info'];
 						}
 
-						if ($export_type == 'external')
+//						if ($export_type == 'external')
 						{
 							$export_result['total_items'] = $export_result['export']['header_count'];
 
 							if (!is_null($export_result['export']['data_log']))
 							{
-								$export_log .= PHP_EOL . $export_result['export']['data_log'];
+								$export_log[$export_type] .= PHP_EOL . $export_result['export']['data_log'];
 							}
 							else
 							{
-								$export_log .= "";
+								$export_log[$export_type] .= "";
 							}
 						}
 
@@ -175,11 +179,6 @@
 					$export_data[$export_type] = $this->combine_export_result_data($export_results[$export_type]);
 				}
 
-				$log = "Reservasjon_Id;Reservasjon_Type;Ordrenr;Kundenavn;Kundenummer;Varelinjer med dato;Bygg;Beløp";
-				$log .= $export_log;
-//				$export_log = $log;
-				$export_log = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $log);
-
 				if ($do_generate_files === false)
 				{
 					return false;
@@ -187,6 +186,10 @@
 
 				foreach ($export_types as $export_type)
 				{
+					$log = "Reservasjon_Id;Reservasjon_Type;Ordrenr;Kundenavn;Kundenummer;Varelinjer med dato;Bygg;Beløp;Beløp2";
+					$log .= $export_log[$export_type];
+					$_export_log = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $log);
+
 					$entity_export_file = array();
 					$entity_export_file['type'] = $export_type;
 					$entity_export_file['total_cost'] = $total_cost[$export_type];
@@ -203,12 +206,12 @@
 
 					$this->file_storage->attach($export_file)->persist();
 
-					if ($export_type == 'external')
+//					if ($export_type == 'external')
 					{
 						$entity_export_file['log_filename'] = 'log_' . $export_type . '_' . $entity_export_file['id'] . '.csv';
 						$log_export_file = new booking_storage_object($entity_export_file['log_filename']);
 						$log_export_files[] = $log_export_file;
-						$log_export_file->set_data($export_log);
+						$log_export_file->set_data($_export_log);
 						$this->file_storage->attach($log_export_file)->persist();
 					}
 					$this->update($entity_export_file); //Save the generated file name

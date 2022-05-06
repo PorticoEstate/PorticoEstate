@@ -72,8 +72,7 @@
 							</ul>
 						</div>
 					</div>
-					<!--xsl:if test="has_articles  = 1"-->
-
+					<xsl:if test="config/activate_application_articles !=''">
 						<div class="form-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'Articles')" />
@@ -84,12 +83,9 @@
 								</xsl:attribute>
 							</input>
 							<div id="articles_container" style="display:inline-block;">
-								<span class="select_first_text">
-									<xsl:value-of select="php:function('lang', 'Select a resource first')" />
-								</span>
 							</div>
 						</div>
-					<!--/xsl:if-->
+					</xsl:if>
 					<!-- Select Time and Date Section -->
 					<div class="form-group">
 						<!-- Display Time Chosen -->
@@ -373,7 +369,7 @@
 	<script>
 		var date_format = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />';
 		var initialAcceptAllTerms = false;
-		var initialSelection = [];//<xsl:value-of select="application/resources_json"/>;
+		var initialSelection = <xsl:value-of select="application/resources_json"/>;
 		var initialAudience = <xsl:value-of select="application/audience_json"/>;
 		var initialDates = <xsl:value-of select="application/dates_json"/>;
 		var initialAgegroups = <xsl:value-of select="application/agegroups_json"/>;

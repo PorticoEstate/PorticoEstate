@@ -1299,7 +1299,7 @@
 			{
 				if($event['completed'])
 				{
-					self::add_javascript('booking', 'base', 'purchase_order_show.js');
+					self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
 				}
 				else
 				{

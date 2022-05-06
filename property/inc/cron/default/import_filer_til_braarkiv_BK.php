@@ -321,7 +321,8 @@
 					'fileDokumentTittel' => $dokument_title,
 					'fileKategorier'	 => $entry[6],
 					'fileBygningsdeler'	 => $entry[5] ? "{$entry[4]};$entry[5]" : $entry[4],
-					'fileFag'			 => $entry[3]
+					'fileFag'			 => $entry[3],
+					'merknad'			 => !empty($entry[8]) ? $entry[8] : ''
 				);
 			}
 
@@ -438,6 +439,7 @@
 			$fileKategorier		 = $file_info['fileKategorier'];
 			$fileBygningsdeler	 = $file_info['fileBygningsdeler'];
 			$fileFag			 = $file_info['fileFag'];
+			$remark				 = $file_info['merknad'];
 
 			$path_parts	 = pathinfo($file);
 			$extension	 = $path_parts['extension'];
@@ -459,7 +461,7 @@
 			{
 				try
 				{
-					$ok = $this->uploadFile($gnr, $bnr, $byggNummer, $file, $fileDokumentTittel, $fileKategorier, $fileBygningsdeler, $fileFag, $lokasjonskode);
+					$ok = $this->uploadFile($gnr, $bnr, $byggNummer, $file, $fileDokumentTittel, $fileKategorier, $fileBygningsdeler, $fileFag, $lokasjonskode, $remark);
 				}
 				catch (Exception $e)
 				{
@@ -477,7 +479,7 @@
 			return $ok;
 		}
 
-		function uploadFile( $gnr, $bnr, $byggNummer, $file, $DokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode )
+		function uploadFile( $gnr, $bnr, $byggNummer, $file, $DokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode, $remark = '' )
 		{
 
 			$accepted_file_formats	 = array(
@@ -502,7 +504,7 @@
 			}
 
 			$file_date	 = date('Y-m-d', filemtime($file));
-			$document	 = $this->setupDocument($gnr, $bnr, $byggNummer, $DokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode, $file_date);
+			$document	 = $this->setupDocument($gnr, $bnr, $byggNummer, $DokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode, $file_date, $remark);
 
 			$bra5ServiceCreate	 = new Bra5ServiceCreate();
 			$bra5CreateDocument	 = new Bra5StructCreateDocument($_assignDocKey		 = false, $this->secKey, $document);
@@ -578,7 +580,7 @@
 			return $ok;
 		}
 
-		private function setupDocument( $gnr, $bnr, $byggNummer, $dokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode, $file_date )
+		private function setupDocument( $gnr, $bnr, $byggNummer, $dokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode, $file_date, $remark = '' )
 		{
 			/*
 			 * @param boolean $_bFDoubleSided
@@ -642,10 +644,13 @@
 			$bygningsdelAttrib->setStringArrayValue(explode(";", $bygningsdeler));
 			$attribute_arr[]	 = $bygningsdelAttrib->build();
 
-			$merknad		 = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
-			$merknad->setName("Merknad");
-			$merknad->setStringValue("P nr 3449 Rehab Møhlenpris fase I 2018.");
-			$attribute_arr[] = $merknad->build();
+			if($remark)
+			{
+				$merknad		 = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+				$merknad->setName("Merknad");
+				$merknad->setStringValue($remark);
+				$attribute_arr[] = $merknad->build();
+			}
 
 			$attribs->setAttribute($attribute_arr);
 

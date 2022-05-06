@@ -49,8 +49,6 @@
 
 		function read( $data )
 		{
-			$valid_locations_data = $this->get_gallery_location();
-
 			$start			 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$query			 = isset($data['query']) ? $data['query'] : '';
 			$sort			 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'ASC';
@@ -62,8 +60,8 @@
 			$start_date		 = isset($data['start_date']) ? $data['start_date'] : 0;
 			$end_date		 = isset($data['end_date']) ? $data['end_date'] : 0;
 			$cat_id			 = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : '';
-			$valid_locations = isset($valid_locations_data) && $valid_locations_data ? $valid_locations_data : array();
 			$results		 = (isset($data['results']) ? $data['results'] : 0);
+//			$valid_locations = $this->get_gallery_location();
 
 			if ($order)
 			{
@@ -89,15 +87,17 @@
 			$filtermethod	 = "WHERE mime_type != 'Directory' AND mime_type != 'journal' AND mime_type != 'journal-deleted'";
 			$filtermethod	 .= " AND (phpgw_vfs.directory {$this->_like} '%/property%' OR phpgw_vfs.directory {$this->_like} '%/catch%')";
 
-
+/*
 			$filtermethod .= " AND (phpgw_vfs.directory = 'This_one_is_to_block'";
 
 			foreach ($valid_locations as $location)
 			{
-				$filtermethod .= " OR phpgw_vfs.directory {$this->_like} '%{$location['id']}%'";
+				$filtermethod .= " OR phpgw_vfs.directory = '{$location}'";
 			}
 
 			$filtermethod .= ')';
+*/
+
 
 			if ($user_id)
 			{

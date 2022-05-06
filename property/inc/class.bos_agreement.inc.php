@@ -269,11 +269,6 @@
 
 			$vfs->override_acl = 0;
 
-			if (!$values['files'][0]['file_id'])
-			{
-				unset($values['files']);
-			}
-
 			return $values;
 		}
 
@@ -488,7 +483,7 @@
 			$list = array_unique($list);
 			sort($list);
 
-			$values;
+			$values = array();
 			foreach ($list as $entry)
 			{
 				$values[] = array

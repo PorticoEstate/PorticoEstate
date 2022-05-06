@@ -338,7 +338,8 @@
 				. " JOIN bb_article_mapping ON bb_purchase_order_line.article_mapping_id = bb_article_mapping.id"
 				. " LEFT JOIN bb_service ON (bb_article_mapping.article_id = bb_service.id AND bb_article_mapping.article_cat_id = 2)"
 				. " LEFT JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id AND bb_article_mapping.article_cat_id = 1)"
-				. " {$filtermethod}";
+				. " {$filtermethod}"
+				. " ORDER BY bb_purchase_order_line.id";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 

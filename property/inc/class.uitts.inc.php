@@ -4056,9 +4056,13 @@ JS;
 					'col2'	 => lang('date') . ": {$date}"
 			));
 
-			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array('showHeadings'	 => 0,
-				'shaded'		 => 0, 'xPos'			 => 0,
-				'xOrientation'	 => 'right', 'width'			 => 500, 'gridlines'		 => EZ_GRIDLINE_ALL,
+			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array(
+				'showHeadings'	 => 0,
+				'shaded'		 => 0,
+				'xPos'			 => 'left',
+				'xOrientation'	 => 'right',
+				'width'			 => 500,
+				'gridlines'		 => EZ_GRIDLINE_ALL,
 				'cols'			 => array
 					(
 					'col1'	 => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
@@ -4075,10 +4079,13 @@ JS;
 			);
 
 			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array(
-				'showHeadings'	 => 0, 'shaded'		 => 0, 'xPos'			 => 0,
-				'xOrientation'	 => 'right', 'width'			 => 500, 'gridlines'		 => EZ_GRIDLINE_ALL,
-				'cols'			 => array
-					(
+				'showHeadings'	 => 0,
+				'shaded'		 => 0,
+				'xPos'			 => 'left',
+				'xOrientation'	 => 'right',
+				'width'			 => 500,
+				'gridlines'		 => EZ_GRIDLINE_ALL,
+				'cols'			 => array(
 					'col1'	 => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
 					'col2'	 => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
 				)
@@ -4115,11 +4122,14 @@ JS;
 				array('col1' => $delivery_address)
 			);
 
-			$pdf->ezTable($data, array('col1' => ''), '', array('showHeadings'	 => 0,
-				'shaded'		 => 0, 'xPos'			 => 0,
-				'xOrientation'	 => 'right', 'width'			 => 500, 'gridlines'		 => EZ_GRIDLINE_ALL,
-				'cols'			 => array
-					(
+			$pdf->ezTable($data, array('col1' => ''), '', array(
+				'showHeadings'	 => 0,
+				'shaded'		 => 0,
+				'xPos'			 => 'left',
+				'xOrientation'	 => 'right',
+				'width'			 => 500,
+				'gridlines'		 => EZ_GRIDLINE_ALL,
+				'cols'			 => array(
 					'col1' => array('justification' => 'right', 'width' => 500, 'justification' => 'left'),
 				)
 			));
@@ -4145,11 +4155,14 @@ JS;
 				$data[] = array('col1' => lang('deadline for execution'), 'col2' => "<b>{$ticket['order_deadline2']}</b>");
 			}
 
-			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array('showHeadings'	 => 0,
-				'shaded'		 => 0, 'xPos'			 => 0,
-				'xOrientation'	 => 'right', 'width'			 => 500, 'gridlines'		 => EZ_GRIDLINE_ALL,
-				'cols'			 => array
-					(
+			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array(
+				'showHeadings'	 => 0,
+				'shaded'		 => 0,
+				'xPos'			 => 'left',
+				'xOrientation'	 => 'right',
+				'width'			 => 500,
+				'gridlines'		 => EZ_GRIDLINE_ALL,
+				'cols'			 => array(
 					'col1'	 => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
 					'col2'	 => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
 				)
@@ -4364,15 +4377,21 @@ JS;
 			if ($content)
 			{
 				$pdf->ezSetDy(-20);
-				$pdf->ezTable($content, '', lang('details'), array('xPos'				 => 0, 'xOrientation'		 => 'right',
-					'width'				 => 500, 0, 'shaded'			 => 0, 'fontSize'			 => 8, 'gridlines'			 => EZ_GRIDLINE_ALL,
-					'titleFontSize'		 => 12, 'outerLineThickness' => 2
-					, 'cols'				 => array(
-						lang('bill per unit')	 => array('justification' => 'right', 'width' => 50)
-						, lang('quantity')		 => array('justification' => 'right', 'width' => 50)
-						, lang('cost')			 => array('justification' => 'right', 'width' => 50)
-						, lang('unit')			 => array('width' => 40)
-						, lang('descr')			 => array('width' => 120))
+				$pdf->ezTable($content, '', lang('details'), array(
+					'xPos'				 => 'left',
+					'xOrientation'		 => 'right',
+					'width'				 => 500,
+					'shaded'			 => 0,
+					'fontSize'			 => 8,
+					'gridlines'			 => EZ_GRIDLINE_ALL,
+					'titleFontSize'		 => 12,
+					'outerLineThickness' => 2,
+					'cols'				 => array(
+						lang('bill per unit')	 => array('justification' => 'right', 'width' => 50),
+						lang('quantity')		 => array('justification' => 'right', 'width' => 50),
+						lang('cost')			 => array('justification' => 'right', 'width' => 50),
+						lang('unit')			 => array('width' => 40),
+						lang('descr')			 => array('width' => 120))
 				));
 			}
 //start SMS::QRCODE
@@ -4398,12 +4417,14 @@ JS;
 				array('col1' => "<C:showimage:{$filename} 90>", 'col2' => $code_help)
 			);
 
-			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array('showHeadings'	 => 0,
-				'shaded'		 => 0, 'xPos'			 => 0,
-				'xOrientation'	 => 'right', 'width'			 => 500,
+			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array(
+				'showHeadings'	 => 0,
+				'shaded'		 => 0,
+				'xPos'			 => 'left',
+				'xOrientation'	 => 'right',
+				'width'			 => 500,
 				'gridlines'		 => EZ_GRIDLINE_ALL,
-				'cols'			 => array
-					(
+				'cols'			 => array(
 					'col1'	 => array('width' => 150, 'justification' => 'left'),
 					'col2'	 => array('width' => 350, 'justification' => 'left'),
 				)

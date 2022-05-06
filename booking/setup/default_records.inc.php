@@ -524,13 +524,6 @@
 				'task_class' => "booking.async_task_update_reservation_state")
 	);
 
-	/**
-	 * Billing 2
-	 */
-	$asyncservice->set_timer(
-		array('hour' => "*/1"), 'booking_async_task_generate_payment_enabled', 'booking.async_task.doRun', array(
-				'task_class' => "booking.async_task_generate_payment_enabled")
-	);
 
 	/**
 	 * Participants

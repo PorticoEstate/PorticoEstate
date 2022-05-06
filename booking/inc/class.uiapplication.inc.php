@@ -1563,15 +1563,18 @@
 				$template = 'application_new';
 			}
 
-			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+			if(!empty($config['activate_application_articles']))
 			{
-				self::add_javascript('bookingfrontend', 'base', 'purchase_order_add.js', 'text/javascript', true);
+				if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+				{
+					self::add_javascript('bookingfrontend', 'base', 'purchase_order_add.js', 'text/javascript', true);
+				}
+				else
+				{
+					self::add_javascript('booking', 'base', 'purchase_order_edit.js');
+				}
 			}
-			else
-			{
-				self::add_javascript('booking', 'base', 'purchase_order_edit.js');
-			}
-
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && !$simple)
 			{
 				$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
@@ -1592,7 +1595,7 @@
 				'audience' => $audience,
 				'resource_list'	=> array('options' => $resources),
 				'direct_booking' => $direct_booking,
-				'config' => CreateObject('phpgwapi.config', 'booking')->read(),
+				'config' => $config,
 				'has_articles' => !!$articles,
 				'tax_code_list'	=> json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
 				)
@@ -2493,6 +2496,7 @@
 
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
 
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'bookingfrontend')
 			{
@@ -2506,13 +2510,16 @@
 
 				self::add_javascript('phpgwapi', 'dateformatter', 'dateformatter.js');
 
-				if($associations['total_records'] > 0)
+				if(!empty($config['activate_application_articles']))
 				{
-					self::add_javascript('booking', 'base', 'purchase_order_show.js');
-				}
-				else
-				{
-					self::add_javascript('booking', 'base', 'purchase_order_edit.js');
+					if($associations['total_records'] > 0)
+					{
+						self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
+					}
+					else
+					{
+						self::add_javascript('booking', 'base', 'purchase_order_edit.js');
+					}
 				}
 
 				$application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
@@ -2534,7 +2541,7 @@
 				'activities' => $activities,
 				'agegroups' => $agegroups,
 				'audience' => $audience,
-				'config' => CreateObject('phpgwapi.config', 'booking')->read(),
+				'config' => $config,
 				'tax_code_list'	=> json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
 			));
 		}
@@ -2608,37 +2615,10 @@
 			return false; //Not that I think that it is necessary to return here too, but who knows, I might have overlooked something.
 		}
 
-		public function export_pdf()
+		private function _get_pdf_header($application,$config, $preview)
 		{
-//			$cases = createObject('booking.public360')->get_cases();
-//
-//			_debug_array($cases);
-//			die();
-
-
-			$id = phpgw::get_var('id', 'int');
-			if (!$id)
-			{
-				phpgw::no_access('booking', lang('missing id'));
-			}
-			$config	= CreateObject('phpgwapi.config', 'property')->read();
-			$application = $this->bo->read_single($id);
-			$this->set_case_officer($application);
-
-			if(!$application['case_officer']['is_current_user'])
-			{
-				phpgw::no_access('booking', lang('not case officer'));
-			}
-
-			$preview = phpgw::get_var('preview', 'bool');
-
-			$GLOBALS['phpgw_info']['flags']['noheader']	 = true;
-			$GLOBALS['phpgw_info']['flags']['nofooter']	 = true;
-			$GLOBALS['phpgw_info']['flags']['xslt_app']	 = false;
 			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$date		 = $GLOBALS['phpgw']->common->show_date(time(), $dateformat);
-
-			set_time_limit(1800);
 			$pdf = CreateObject('phpgwapi.pdf');
 
 			$pdf->ezSetMargins(50, 70, 50, 50);
@@ -2648,11 +2628,18 @@
 			$all = $pdf->openObject();
 			$pdf->saveState();
 
-			if (isset($config['order_logo']) && $config['order_logo'])
+//			if (!empty($GLOBALS['phpgw_info']['server']['logo_url']))
 			{
-				$pdf->addJpegFromFile($config['order_logo'], 40, 800, isset($config['order_logo_width']) && $config['order_logo_width'] ? $config['order_logo_width'] : 80
-				);
+				//cheating...
+				$footerlogoimg = PHPGW_SERVER_ROOT ."/phpgwapi/templates/bookingfrontend/img/logo-kristiansand.png";
+		//		_debug_array($footerlogoimg);die();
+		//		$pdf->addJpegFromFile($footerlogoimg, 40, 800, 80);
+				$pdf->addPngFromFile($footerlogoimg, 45, 780, 80);
+				$pdf->ezSetDy(-20);
+		//		$pdf->ezImage($footerlogoimg,$pad = 0,$width = 60,$resize = '',$just = 'left',$border = '');
 			}
+
+
 			$pdf->setStrokeColor(0, 0, 0, 1);
 			$pdf->line(20, 40, 578, 40);
 			//	$pdf->line(20,820,578,820);
@@ -2694,11 +2681,14 @@
 					'col2'	 => lang('date') . ": {$date}"
 			));
 
-			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array('showHeadings'	 => 0,
-				'shaded'		 => 0, 'xPos'			 => 0,
-				'xOrientation'	 => 'right', 'width'			 => 500, 'gridlines'		 => EZ_GRIDLINE_ALL,
-				'cols'			 => array
-					(
+			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array(
+				'showHeadings'	 => 0,
+				'shaded'		 => 0,
+				'xPos'			 => 'left',
+				'xOrientation'	 => 'right',
+				'width'			 => 500,
+				'gridlines'		 => EZ_GRIDLINE_ALL,
+				'cols'			 => array(
 					'col1'	 => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
 					'col2'	 => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
 				)
@@ -2712,36 +2702,117 @@
 					'col2'	 => "Saksbehandler: {$from_name}"//\nRessursnr.: {$ressursnr}"
 				),
 			);
-
+			
 			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array(
-				'showHeadings'	 => 0, 'shaded'		 => 0, 'xPos'			 => 0,
-				'xOrientation'	 => 'right', 'width'			 => 500, 'gridlines'		 => EZ_GRIDLINE_ALL,
-				'cols'			 => array
-					(
+				'showHeadings'	 => 0,
+				'shaded'		 => 0,
+				'xPos'			 => 'left',
+				'xOrientation'	 => 'right',
+				'width'			 => 500,
+				'gridlines'		 => EZ_GRIDLINE_ALL,
+				'cols'			 => array(
 					'col1'	 => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
 					'col2'	 => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
 				)
 			));
 
+			return $pdf;
+		}
+
+		private function _get_pdf_1($application, $config, $export_text, $preview)
+		{
+
+			set_time_limit(1800);
+
+			$pdf = $this->_get_pdf_header($application, $config, $preview);
+
+
 			$pdf->ezSetDy(-20);
 			$pdf->selectFont('Helvetica-Bold');
-			$pdf->ezText(lang('application') . " #{$application['id']} : " . lang($application['status']), 14);
+			$pdf->ezText($export_text['title'], 14);
 			$pdf->selectFont('Helvetica');
 
-			$export_text = $this->bo->get_export_text($application);
 			$html2text	 = createObject('phpgwapi.html2text', $export_text['body']);
 			$text		 = trim($html2text->getText());
 
 			$pdf->ezSetDy(-20);
 			$pdf->ezText($text, 12);
 
+			return $pdf;
+		}
+
+		private function _get_pdf_2($application, $config, $export_text, $preview)
+		{
+			$pdf = $this->_get_pdf_header($application, $config, $preview);
+
+			$pdf->ezSetDy(-20);
+			$pdf->selectFont('Helvetica-Bold');
+			$pdf->ezText($export_text['title'], 14);
+			$pdf->selectFont('Helvetica');
+
+			$html2text	 = createObject('phpgwapi.html2text', $export_text['body']);
+			$text		 = trim($html2text->getText());
+
+			$pdf->ezSetDy(-20);
+			$pdf->ezText($text, 12);
+
+			return $pdf;
+		}
+
+		public function export_pdf()
+		{
+//			$cases = createObject('booking.public360')->get_cases('2022000052');
+//			_debug_array($cases);
+//			die();
+
+
+			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+			$config	= CreateObject('phpgwapi.config', 'property')->read();
+			$application = $this->bo->read_single($id);
+			$this->set_case_officer($application);
+
+			if(!$application['case_officer']['is_current_user'])
+			{
+				phpgw::no_access('booking', lang('not case officer'));
+			}
+
+			$preview = phpgw::get_var('preview', 'bool');
+
+			$GLOBALS['phpgw_info']['flags']['noheader']	 = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter']	 = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app']	 = false;
+
+
 			$lang_application = lang('application');
-			$file_data = $pdf->ezOutput();
-			$file_name = "{$lang_application}_{$application['id']}.pdf";
+
+			$export_text1 = $this->bo->get_export_text1($application, $config);
+			$export_text2 = $this->bo->get_export_text2($application, $config);
+
+			$pdf1 = $this->_get_pdf_1($application, $config, $export_text1, $preview);
+			$file_data1 = $pdf1->ezOutput();
+			$pdf2 = $this->_get_pdf_2($application, $config, $export_text2, $preview);
+			$file_data2 = $pdf2->ezOutput();
+
+			$file_name1 = "{$lang_application}_{$application['id']}.pdf";
+			$file_name2 = "{$lang_application}_{$application['id']}_2.pdf";
 
 			if ($preview)
 			{
-				$pdf->print_pdf($file_data, "{$lang_application}_{$application['id']}");
+				$pdf_preview_alternate = phpgwapi_cache::session_get('booking', 'pdf_preview_alternate');
+				if(empty($pdf_preview_alternate))
+				{
+					phpgwapi_cache::session_set('booking', 'pdf_preview_alternate', 1);
+					$pdf1->print_pdf($file_data1, "{$lang_application}_{$application['id']}_1");
+				}
+				else
+				{
+					phpgwapi_cache::session_set('booking', 'pdf_preview_alternate', 0);
+					$pdf1->print_pdf($file_data2, "{$lang_application}_{$application['id']}_2");
+				}
 			}
 			else
 			{
@@ -2754,9 +2825,12 @@
 					$archive = createObject("booking.{$method}");
 
 					$files = array();
-					$files[] = array('file_name' => $file_name, 'file_data' => $file_data );
+					$files[] = array(
+						'file_name' => $file_name1,
+						'file_data' => $file_data1
+						);
 
-					unset($file_data);
+					unset($file_data1);
 
 					$attachments = $this->bo->get_related_files($application);
 
@@ -2771,7 +2845,33 @@
 
 					unset($file_content);
 
-					$result = $archive->export_data($export_text['title'], $application, $files);
+					$files[] = array(
+						'file_name' => $file_name2,
+						'file_data' => $file_data2
+						);
+
+					$resourcename = implode(",", $this->bo->get_resource_name($application['resources']));
+
+					if(!empty($application['customer_organization_name']))
+					{
+						$customer_name = $application['customer_organization_name'];
+					}
+					else
+					{
+						$customer_name = $application['contact_name'];
+					}
+					
+					$case_title = "{$application['building_name']}/{$resourcename} – utleie til arrangement – {$customer_name} - ref.nr. {$application['id']}";
+
+					$result = $archive->export_data(
+						array(
+							$case_title,
+							$export_text1['title'],
+							$export_text2['title']
+						),
+						$application,
+						$files
+					);
 
 					//update application with external_archive_key
 					if (!empty($result['external_archive_key']))
@@ -3095,6 +3195,10 @@
 JS;
 				$GLOBALS['phpgw']->js->add_code('', $js);
 			}
+
+			$orgid = $this->organization_bo->so->get_orgid($application['customer_organization_number']);
+			$organization = $this->organization_bo->read_single($orgid); // empty array if not found
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('application') . ' # ' . $application['id'] . ' - ' . $application['building_name'];
 			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = $GLOBALS['phpgw_info']['flags']['app_header'];
 			$this->is_assigned_to($application);
@@ -3104,11 +3208,16 @@ JS;
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
 
 			self::add_javascript('booking', 'base', 'application.show.js');
-			self::add_javascript('booking', 'base', 'purchase_order_show.js');
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+			if(!empty($config['activate_application_articles']))
+			{
+				self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');			
+			}
 			phpgwapi_jquery::load_widget('select2');
 
 			self::render_template_xsl('application', array(
 				'application'		 => $application,
+				'organization'		 => $organization,
 				'audience'			 => $audience,
 				'agegroups'			 => $agegroups,
 				'num_associations'	 => $num_associations,
@@ -3116,9 +3225,9 @@ JS;
 				'collision'			 => $collision_dates,
 				'comments'			 => $comments,
 				'simple'			 => $simple,
-				'config'			 => CreateObject('phpgwapi.config', 'booking')->read(),
+				'config'			 => $config,
 				'export_pdf_action'	 => self::link(array('menuaction' => 'booking.uiapplication.export_pdf', 'id' => $application['id'])),
-				'external_archive'	 => $external_archive,
+				'external_archive'	 => !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['archive_user_id']) ? $external_archive : '',
 				'user_list'			 => array('options' => createObject('booking.sopermission_building')->get_user_list()),
 				'internal_notes'	 => $internal_notes
 				)

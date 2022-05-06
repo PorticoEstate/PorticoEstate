@@ -642,6 +642,7 @@
 				$orders[$application_id][$order_id]['lines'][] = array(
 					'order_id'				 => $order_id,
 					'status'				 => (int)$this->db->f('status'),
+					'parent_mapping_id'		 => (int)$this->db->f('parent_mapping_id'),
 					'article_mapping_id'	 => (int)$this->db->f('article_mapping_id'),
 					'quantity'				 => (float)$this->db->f('quantity'),
 					'unit_price'			 => (float)$this->db->f('unit_price'),

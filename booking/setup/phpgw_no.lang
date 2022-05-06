@@ -903,3 +903,5 @@ square meter	booking	no	Kvadratmeter
 hour	booking	no	Time
 day	booking	no	Dag
 %1 resources mapped as articles	booking	no	%1 ressurser er mappet opp som artikler i varekatalogen
+billing delay	booking	no	Utsatt klargjøring av fakturering, virkedager
+activate application articles	booking	no	Aktiver artikler i søknad

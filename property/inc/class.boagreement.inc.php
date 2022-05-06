@@ -42,6 +42,7 @@
 		var $cat_id;
 		var $role;
 		var $member_id;
+		var $allrows;
 
 		/**
 		 * @var object $custom reference to custom fields object
@@ -189,11 +190,17 @@
 				$order	 = $this->order;
 			}
 
-			$list				 = $this->so->read_details(array('start'			 => $this->start, 'query'			 => $this->query,
-				'sort'			 => $sort, 'order'			 => $order,
-				'filter'		 => $this->filter, 'cat_id'		 => $this->cat_id, 'allrows'		 => $this->allrows,
+			$list				 = $this->so->read_details(array(
+				'start'			 => $this->start,
+				'query'			 => $this->query,
+				'sort'			 => $sort,
+				'order'			 => $order,
+				'filter'		 => $this->filter,
+				'cat_id'		 => $this->cat_id,
+				'allrows'		 => $this->allrows,
 				'member_id'		 => $this->member_id,
-				'agreement_id'	 => $id));
+				'agreement_id'	 => $id)
+			);
 			$this->total_records = $this->so->total_records;
 
 			$this->uicols = $this->so->uicols;

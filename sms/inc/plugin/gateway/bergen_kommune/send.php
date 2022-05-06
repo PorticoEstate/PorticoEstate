@@ -40,7 +40,15 @@
 			$options['login'] = $this->sms_param['login'];
 			$options['password'] = $this->sms_param['password'];
 
-			$service = new SmsService($this->sms_param['wsdl'], $options);
+			try
+			{
+				$service = new SmsService($this->sms_param['wsdl'], $options);
+			}
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
+
 
 			$Melding = new Melding();
 

@@ -350,6 +350,7 @@
 
 							// Iterate over the messages, getting the attachments for each.
 							$attachments = array();
+							$target = null;
 							foreach ($response_message2->Items->Message as $item3)
 							{
 								$target = $this->handle_message($item3, $folder_rules);
@@ -640,7 +641,7 @@
 			}
 			else if (preg_match("/ny leverandør/i", $subject))
 			{
-				$message_cat_id	 = 319; // LRS-Regnskap- underkategori: 24 Firewall-Fakturaavvik
+				$message_cat_id	 = 378; // LRS-Regnskap- underkategori: 31 Opprettelse av ny leverandør
 				$group_id		 = 4253; //LRS-Drift_Regnskap
 				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				if ($ticket_id)
@@ -662,9 +663,9 @@
 					$target['id']				 = $ticket_id;
 				}
 			}
-			else if (preg_match("/nye leverandører /i", $subject))
+			else if (preg_match("/nye leverandører/i", $subject))
 			{
-				$message_cat_id	 = 319; // LRS-Regnskap- underkategori: 24 Firewall-Fakturaavvik
+				$message_cat_id	 = 378; // LRS-Regnskap- underkategori: 31 Opprettelse av ny leverandør
 				$group_id		 = 4253; //LRS-Drift_Regnskap
 				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
 				if ($ticket_id)

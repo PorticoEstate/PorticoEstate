@@ -240,9 +240,9 @@
 
 				if (isset($values_attribute) && is_array($values_attribute))
 				{
-					if(empty($values_attribute[0]['datatype']))
+					$first_attribute = current($values_attribute);
+					if(empty($first_attribute['datatype']))
 					{
-
 						$this->bo->get_attribute_information($values_attribute);
 					}
 
@@ -3177,14 +3177,6 @@ JS;
 			// or 'even'.
 			$pdf->addObject($all, 'all');
 			$pdf->ezStartPageNumbers(500, 28, 10, 'right', '{PAGENUM} ' . lang('of') . ' {TOTALPAGENUM}', 1);
-
-			$pdf->ezTable($content_heading, '', '', array('xPos'				 => 220, 'xOrientation'		 => 'right',
-				'width'				 => 300, 0, 'shaded'			 => 0, 'fontSize'			 => 10, 'gridlines'			 => 0,
-				'titleFontSize'		 => 12, 'outerLineThickness' => 0, 'showHeadings'		 => 0
-				, 'cols'				 => array('text'	 => array('justification' => 'left', 'width' => 100),
-					'value'	 => array('justification' => 'left', 'width' => 200))
-				)
-			);
 
 			$table_header = array(
 				'name'	 => array('justification' => 'left', 'width' => 110),

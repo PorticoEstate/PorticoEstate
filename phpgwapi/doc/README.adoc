@@ -272,6 +272,19 @@ applications and functions.
   +--setup
 
 ```
+[TIP]
+====
+To set correct file attributes:
+```
+find your_catalog_in_question/ -type f -exec chmod 644 {} \;
+find your_catalog_in_question/ -type d -exec chmod 755 {} \;
+```
+
+To insert empty index files in each catalog:
+```
+find your_catalog_in_question/ -type d -exec touch {}/index.html \;
+```
+====
 
 === Translations
 

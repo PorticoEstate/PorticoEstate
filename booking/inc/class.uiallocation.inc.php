@@ -723,7 +723,7 @@
 			{
 				if($allocation['completed'])
 				{
-					self::add_javascript('booking', 'base', 'purchase_order_show.js');
+					self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
 				}
 				else
 				{
@@ -1004,7 +1004,7 @@
 			$allocation['resource_ids'] = $resource_ids;
 			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			self::add_javascript('booking', 'base', 'purchase_order_show.js');
+			self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
 			self::render_template_xsl('allocation', array('allocation' => $allocation));
 		}
 
