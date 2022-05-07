@@ -33,7 +33,7 @@
 	* @subpackage utilities
 	*/
 
-	if ( !isset($GLOBALS['phpgw_info']['server']['temp_dir'])  
+	if ( !isset($GLOBALS['phpgw_info']['server']['temp_dir'])
 			|| !is_dir($GLOBALS['phpgw_info']['server']['temp_dir']) )
 	{
 		if ( substr(PHP_OS, 3) == 'WIN' )
@@ -51,4 +51,4 @@
 	* Include the PhpSpreadsheet class
 	* @see PhpSpreadsheet
 	*/
-	require_once PHPGW_API_INC . '/phpspreadsheet/autoload.php';
+	require_once PHPGW_API_INC . '/phpspreadsheet/vendor/autoload.php';
