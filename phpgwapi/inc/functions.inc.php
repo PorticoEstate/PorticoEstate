@@ -274,7 +274,7 @@
 	* @link http://php.net/set_error_handler
 	*
 	*/
-	function phpgw_handle_error($error_level, $error_msg, $error_file, $error_line, $error_context = array())
+	function phpgw_handle_error($error_level, $error_msg, $error_file, $error_line)
 	{
 
 		if (!(error_reporting() & $error_level)) // 0 == @function() so we ignore it, as the dev requested
