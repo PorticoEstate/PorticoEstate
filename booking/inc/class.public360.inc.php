@@ -139,7 +139,12 @@
 			$input = array('parameter' => $data);
 			$method = 'ContactService/GetPrivatePersons';
 			$person_data = $this->transfer_data($method, $input);
-			return current($person_data['PrivatePersons']);
+			$ret = array();
+			if(isset($person_data['PrivatePersons']) && is_array($person_data['PrivatePersons']))
+			{
+				$ret =  current($person_data['PrivatePersons']);
+			}
+			return $ret;
 		}
 
 		public function add_update_person ( $application, $person_data )
@@ -236,7 +241,12 @@
 			$input = array('parameter' => $data);
 			$method = 'ContactService/GetEnterprises';
 			$enterprise_data = $this->transfer_data($method, $input);
-			return current($enterprise_data['Enterprises']);
+			$ret = array();
+			if(isset($enterprise_data['Enterprises']) && is_array($enterprise_data['Enterprises']))
+			{
+				$ret = current($enterprise_data['Enterprises']);
+			}
+			return $ret;
 		}
 
 		public function add_update_enterprise ( $application, $enterprise_data )
