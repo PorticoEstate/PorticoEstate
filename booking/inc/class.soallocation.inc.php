@@ -94,7 +94,7 @@
 		{
 			$receipt = parent::update($entry);
 
-			$cost = $this->_marshal($entry['cost'], 'decimal');
+			$cost = $this->_marshal((float)$entry['cost'], 'decimal');
 			$id = (int)$entry['id'];
 
 			$sql = "UPDATE bb_completed_reservation SET cost = '{$cost}'"
