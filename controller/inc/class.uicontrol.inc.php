@@ -832,9 +832,13 @@
 			$controls_array = $this->so->get_controls_by_control_area($control_area_id);
 
 			if (count($controls_array) > 0)
+			{
 				return json_encode($controls_array);
+			}
 			else
+			{
 				return null;
+			}
 		}
 
 		/**

@@ -449,7 +449,13 @@ function init_component_table()
 		api.destroy();
 	}
 	$("#table_def").html('<table cellpadding="0" cellspacing="0" border="0"  id="datatable-container_0"></table>');
-	oTable = JqueryPortico.inlineTableHelper('datatable-container_0', requestUrl, myColumnDefs);
+		var config	 = {
+//			'disableFilter' : true,
+//			'disablePagination' : true,
+			'order': [2, 'asc']
+		};
+
+	oTable = JqueryPortico.inlineTableHelper('datatable-container_0', requestUrl, myColumnDefs, config);
 
 }
 
