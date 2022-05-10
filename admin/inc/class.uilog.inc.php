@@ -122,7 +122,7 @@
 				{
 					$var = array
 					(
-						'submit_button'			=> lang('Submit'),
+						'submit_button'			=> lang('Delete'),
 						'action_url_button'     => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uilog.purge_log', 'account_id' => $account_id)),
 						'action_text_button'    => ' '.lang('Delete all log records for %1', $GLOBALS['phpgw']->common->grab_owner_name($account_id)),
 						'action_confirm_button' => '',
@@ -133,7 +133,7 @@
 				{
 					$var = array
 					(
-						'submit_button'			=> lang('Submit'),
+						'submit_button'			=> lang('Delete'),
 						'action_url_button'     => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uilog.purge_log') ),
 						'action_text_button'    => ' '.lang('Delete all log records'),
 						'action_confirm_button' => '',

@@ -131,8 +131,7 @@
 			$control_area_list = array();
 			foreach ($control_area['cat_list'] as $cat_list)
 			{
-				$control_area_list[] = array
-					(
+				$control_area_list[] = array(
 					'id' => $cat_list['cat_id'],
 					'name' => $cat_list['name'],
 				);
@@ -140,14 +139,10 @@
 
 			array_unshift($control_area_list, array('id' => '', 'name' => lang('select')));
 
-
-
-			$data = array
-				(
+			$data = array(
 				'msgbox_data' => $msgbox_data,
 				'control_area_list' => array('options' => $control_area_list),
-				'filter_form' => array
-					(
+				'filter_form' => array(
 					'control_area_list' => array('options' => $control_area_list),
 					'district_list' => array('options' => $district_list),
 					'part_of_town_list' => array('options' => $part_of_town_list),
@@ -233,8 +228,7 @@
 
 			$columndef = array();
 
-			$columndef[] = array
-				(
+			$columndef[] = array(
 				'data' => 'select',
 				'title' => lang('select'),
 				'orderable' => false,
@@ -243,8 +237,7 @@
 				'className' => 'center'
 			);
 
-			$columndef[] = array
-				(
+			$columndef[] = array(
 				'data' => 'delete',
 				'title' => lang('delete'),
 				'orderable' => false,
