@@ -135,7 +135,7 @@
 			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
 
 			$send = CreateObject('phpgwapi.send');
-			$result = array();
+			$result = array('ok' => array(),'failed' => array());
 
 			foreach ($contacts as $contact)
 			{
