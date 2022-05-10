@@ -1817,7 +1817,7 @@ HTML;
 			//_debug_array($data);
 			$appname		 = lang('helpdesk');
 			$function_msg	 = lang('add ticket');
-
+			phpgwapi_jquery::load_widget('select2');
 			self::add_javascript('property', 'portico', 'tts.add.js');
 //			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', 'text/javascript', true);
 			phpgwapi_jquery::load_widget('file-upload-minimum');
