@@ -237,10 +237,10 @@ HTML;
 
 			$detected .= $GLOBALS['phpgw_info']['setup']['PageMSG'];
 
-			if (version_compare(PHP_VERSION, '7.2.0') < 0)
+			if (version_compare(PHP_VERSION, '7.4.0') < 0)
 			{
 				$detected .= '<b><p align="center" class="msg">'
-					. lang('You appear to be using PHP %1, phpGroupWare requires version 7.2.0 or later', PHP_VERSION). "\n"
+					. lang('You appear to be using PHP %1, phpGroupWare requires version 7.4.0 or later', PHP_VERSION). "\n"
 					. '</p></b><td></tr></table></body></html>';
 				die($detected);
 			}
@@ -284,7 +284,7 @@ HTML;
 				}
 			}
 
-			$phpver = '<li>' . lang('You appear to be using PHP %1+', 7.2) . "</li>\n";
+			$phpver = '<li>' . lang('You appear to be using PHP %1+', '7.4') . "</li>\n";
 			$supported_sessions_type = array('php', 'db');
 
 			$detected .= '<table id="manageheader">' . "\n";
