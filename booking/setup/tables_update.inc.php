@@ -5796,3 +5796,30 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.79 to 0.2.80
+	 *
+	 */
+	$test[] = '0.2.79';
+	function booking_upgrade0_2_79()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$asyncservice = CreateObject('phpgwapi.asyncservice');
+		$asyncservice->delete('booking_async_task_delete_access_log');
+
+		/**
+		 * Delete the Anonymous frontend-user from access-log
+		 */
+		$asyncservice->set_timer(
+			array('day' => "*/1"), 'booking_async_task_delete_access_log', 'booking.async_task.doRun', array(
+					'task_class' => "booking.async_task_delete_access_log")
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.80';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

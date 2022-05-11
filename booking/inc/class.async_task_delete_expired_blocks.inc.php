@@ -3,6 +3,10 @@
 
 	class booking_async_task_delete_expired_blocks extends booking_async_task
 	{
+		public function __construct()
+		{
+			parent::__construct();
+		}
 
 		public function get_default_times()
 		{

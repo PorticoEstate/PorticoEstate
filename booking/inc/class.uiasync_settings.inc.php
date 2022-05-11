@@ -16,8 +16,8 @@
 			'booking_async_task_send_reminder_enabled',
 			'booking_async_task_send_access_request_enabled',
 			'booking_async_task_delete_participants_enabled',
-			'booking_async_task_delete_expired_blocks_enabled',		
-
+			'booking_async_task_delete_expired_blocks_enabled',
+			'booking_async_task_delete_access_log_enabled'
 		);
 
 		public function __construct()
@@ -42,6 +42,7 @@
 				$settings['booking_async_task_send_access_request_enabled'] = phpgw::get_var('booking_async_task_send_access_request_enabled', 'bool', 'POST');
 				$settings['booking_async_task_delete_participants_enabled'] = phpgw::get_var('booking_async_task_delete_participants_enabled', 'bool', 'POST');
 				$settings['booking_async_task_delete_expired_blocks_enabled'] = phpgw::get_var('booking_async_task_delete_expired_blocks_enabled', 'bool', 'POST');
+				$settings['booking_async_task_delete_access_log_enabled'] = phpgw::get_var('booking_async_task_delete_access_log_enabled', 'bool', 'POST');
 				$this->bo->update($settings);
 			}
 
