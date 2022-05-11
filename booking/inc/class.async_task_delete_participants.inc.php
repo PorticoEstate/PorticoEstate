@@ -4,6 +4,11 @@
 	class booking_async_task_delete_participants extends booking_async_task
 	{
 
+		public function __construct()
+		{
+			parent::__construct();
+		}
+
 		public function get_default_times()
 		{
 			return array( 'day' => '*/1');

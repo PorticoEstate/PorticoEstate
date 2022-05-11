@@ -533,6 +533,13 @@
 				'task_class' => "booking.async_task_delete_participants")
 	);
 
+	/**
+	 * The Anonymous frontend-user from access-log
+	 */
+	$asyncservice->set_timer(
+		array('day' => "*/1"), 'booking_async_task_delete_access_log', 'booking.async_task.doRun', array(
+				'task_class' => "booking.async_task_delete_access_log")
+	);
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO bb_article_category ( id, name)"
 			. " VALUES (1, 'resource')", __LINE__, __FILE__);
