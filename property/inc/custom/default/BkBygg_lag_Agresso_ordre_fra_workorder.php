@@ -135,7 +135,7 @@
 					throw new Exception('Dimensjonen "Ansvar" mangler');
 				}
 
-				if ($workorder['location_code'])
+				if (!empty($workorder['location_code']))
 				{
 					$location_code	 = $workorder['location_code'];
 					$location		 = explode('-', $location_code);
@@ -195,32 +195,24 @@
 
 				$location_info = execMethod('property.bolocation.read_single', $location[0]);
 
-				$tax_code	 = 0;
-				$tjeneste	 = 9;
-				if ($location_info['attributes'])
+				$named_attributes = array();
+
+				if (isset($location_info['attributes']) && is_array($location_info['attributes']))
 				{
-					$_found = 0;
 					foreach ($location_info['attributes'] as $key => $attribute)
 					{
-						if ($attribute['name'] == 'mva')
-						{
-							$tax_code = $attribute['value'];
-							$_found ++;
-						}
-						if ($attribute['name'] == 'kostra_id')
-						{
-							$tjeneste = $attribute['value'];
-							$_found ++;
-						}
-						if ($_found == 2)
-						{
-							break;
-						}
+						$named_attributes[$attribute['name']] = $attribute['value'];
 					}
 				}
-
+				
+				$tax_code	 = !empty($named_attributes['mva']) ? $named_attributes['mva'] : 0;
 				//Override from workorder
-				$tax_code = $workorder['tax_code'] ? $workorder['tax_code'] : $tax_code;
+				$tax_code	 = $workorder['tax_code'] ? $workorder['tax_code'] : $tax_code;
+
+				$tjeneste	 = !empty($named_attributes['kostra_id']) ? $named_attributes['kostra_id'] : 9;
+				//Override from workorder
+				$tjeneste	 = $workorder['service_id'] ? (int)$workorder['service_id'] : (int)$tjeneste;
+
 				switch ($tax_code)
 				{
 					case '0':
@@ -241,7 +233,6 @@
 					$tax_code = '69';
 				}
 
-				$tjeneste = $workorder['service_id'] ? (int)$workorder['service_id'] : (int)$tjeneste;
 
 				$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET service_id = {$tjeneste} WHERE id = {$workorder['id']}");
 
