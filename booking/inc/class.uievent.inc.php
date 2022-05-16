@@ -1269,9 +1269,9 @@
 			 */
 			if ($errors['allocation'])
 			{
-				$errors['allocation'] = lang('Overlaps with existing allocation %1. Remember to send a notification', " #" . implode(', #',$errors['allocation'][0])) ;
+				$errors['allocation'] = lang('Overlaps with existing allocation %1. Remember to send a notification', " #" . implode(', #',$errors['allocation'][0]));
 			}
-			elseif ($errors['booking'])
+			if ($errors['booking'])
 			{
 				$errors['booking'] = lang('Overlaps with existing booking %1. Remember to send a notification', " #" . implode(', #',$errors['booking'][0])) ;
 			}
