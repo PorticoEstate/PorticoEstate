@@ -1,5 +1,5 @@
 
-/* global lang, alertify, tax_code_list, template_set */
+/* global lang, alertify, tax_code_list, template_set, initialSelection, date_format */
 var custom_tax_code;
 
 function populateTableChkArticles(selection, resources, application_id, reservation_type, reservation_id)
@@ -32,7 +32,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 						//		{name: 'disabled', value: true},
 						{name: 'class', value: 'btn btn-success'},
 						{name: 'onClick', value: 'add_to_bastet(this);'},
-						{name: 'innerHTML', value: 'Legg til <i class="fas fa-shopping-basket"></i>'},
+						{name: 'innerHTML', value: 'Legg til <i class="fas fa-shopping-basket"></i>'}
 					]
 				}
 			]
@@ -51,22 +51,22 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 		{//2
 			key: 'name',
 			label: lang['article'],
-			attrs: [{name: 'class', value: "align-middle"}],
+			attrs: [{name: 'class', value: "align-middle"}]
 		},
 		{//3
 			key: 'unit',
 			label: lang['unit'],
-			attrs: [{name: 'class', value: "unit align-middle"}],
+			attrs: [{name: 'class', value: "unit align-middle"}]
 		},
 		{//4
 			key: 'tax_code',
 			label: lang['tax code'],
-			attrs: [{name: 'class', value: "text-right align-middle"}],
+			attrs: [{name: 'class', value: "text-right align-middle"}]
 		},
 		{//5
 			key: 'tax_percent',
 			label: lang['percent'],
-			attrs: [{name: 'class', value: "text-right align-middle"}],
+			attrs: [{name: 'class', value: "text-right align-middle"}]
 		},
 		{//6
 			key: 'ex_tax_price',
@@ -78,7 +78,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 		{//7
 			key: 'tax',
 			label: lang['tax'],
-			attrs: [{name: 'class', value: "text-right align-middle"}],
+			attrs: [{name: 'class', value: "text-right align-middle"}]
 		},
 		{//8
 			key: 'quantity',
@@ -90,7 +90,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 						{name: 'min', value: 1},
 						{name: 'value', value: 1},
 						{name: 'size', value: 3},
-						{name: 'class', value: 'quantity form-control'},
+						{name: 'class', value: 'quantity form-control'}
 					]
 				}
 			]},
@@ -130,7 +130,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 						{name: 'disabled', value: true},
 						{name: 'class', value: 'btn btn-danger'},
 						{name: 'onClick', value: 'empty_from_bastet(this);'},
-						{name: 'innerHTML', value: 'Slett <i class="far fa-trash-alt"></i>'},
+						{name: 'innerHTML', value: 'Slett <i class="far fa-trash-alt"></i>'}
 					]
 				}
 			]
@@ -243,7 +243,7 @@ function set_mandatory(xTable)
 	var from;
 	var to;
 	var timespan;
-	var sum_minutes = 0
+	var sum_minutes = 0;
 	var sum_hours = 0;
 	var sum_days = 0;
 
@@ -495,7 +495,7 @@ function set_basket(tr)
 
 	elem.innerText = selected_quantity;
 
-	var sum_cell = tr.childNodes[11]
+	var sum_cell = tr.childNodes[11];
 	sum_cell.innerText = (selected_quantity * parseFloat(price)).toFixed(2);
 
 //	var xTable = tr.parentNode.parentNode;
@@ -601,7 +601,7 @@ function set_sum(xTable)
 	}
 
 	var tableFooter = document.createElement('tfoot');
-	tableFooter.id = 'tfoot'
+	tableFooter.id = 'tfoot';
 	var tableFooterTr = document.createElement('tr');
 	var tableFooterTrTd = document.createElement('td');
 

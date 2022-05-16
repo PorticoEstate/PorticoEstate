@@ -1,5 +1,5 @@
 
-/* global date_format, lang */
+/* global date_format, lang, initialSelection */
 
 $(document).ready(function ()
 {
@@ -58,7 +58,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 						//		{name: 'disabled', value: true},
 						{name: 'class', value: 'btn btn-success'},
 						{name: 'onClick', value: 'add_to_bastet(this);'},
-						{name: 'innerHTML', value: 'Legg til <i class="fas fa-shopping-basket"></i>'},
+						{name: 'innerHTML', value: 'Legg til <i class="fas fa-shopping-basket"></i>'}
 					]
 				}
 			]
@@ -79,17 +79,17 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 		{//2
 			key: 'name',
 			label: lang['article'],
-			attrs: [{name: 'class', value: "align-middle"}],
+			attrs: [{name: 'class', value: "align-middle"}]
 		},
 		{//3
 			key: 'unit',
 			label: lang['unit'],
-			attrs: [{name: 'class', value: "unit align-middle"}],
+			attrs: [{name: 'class', value: "unit align-middle"}]
 		},
 		{//4
 			key: 'price',
 			label: lang['unit cost'],
-			attrs: [{name: 'class', value: "text-right align-middle"}],
+			attrs: [{name: 'class', value: "text-right align-middle"}]
 		},
 		{//5
 			key: 'quantity',
@@ -101,7 +101,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 						{name: 'min', value: 1},
 						{name: 'value', value: 1},
 						{name: 'size', value: 3},
-						{name: 'class', value: 'quantity form-control'},
+						{name: 'class', value: 'quantity form-control'}
 					]
 				}
 			]},
@@ -139,7 +139,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 						{name: 'disabled', value: true},
 						{name: 'class', value: 'btn btn-danger'},
 						{name: 'onClick', value: 'empty_from_bastet(this);'},
-						{name: 'innerHTML', value: 'Slett <i class="far fa-trash-alt"></i>'},
+						{name: 'innerHTML', value: 'Slett <i class="far fa-trash-alt"></i>'}
 					]
 				}
 			]
@@ -314,7 +314,7 @@ function set_basket(tr, quantity)
 
 	elem.innerText = selected_quantity;
 
-	var sum_cell = tr.childNodes[8]
+	var sum_cell = tr.childNodes[8];
 	sum_cell.innerText = (selected_quantity * parseFloat(price)).toFixed(2);
 
 	if(quantity !== 0)
@@ -382,7 +382,7 @@ function add_to_bastet(element)
 // add text
 	elem.innerText = selected_quantity;
 
-	var sum_cell = element.parentNode.parentNode.childNodes[8]
+	var sum_cell = element.parentNode.parentNode.childNodes[8];
 	sum_cell.innerText = (selected_quantity * parseFloat(price)).toFixed(2);
 
 	var xTable = element.parentNode.parentNode.parentNode.parentNode;
