@@ -243,6 +243,15 @@ if ($.formUtils)
 				}
 			});
 			var v = (n > 0) ? true : false;
+			if(!v)
+			{
+				$('#audience').addClass("error").css("border-color", "red");
+			}
+			else
+			{
+				$('#audience').removeClass("error").css("border-color", "");
+			}
+
 			return v;
 		},
 		errorMessage: 'Please choose at least 1 target audience',
@@ -262,6 +271,16 @@ if ($.formUtils)
 				}
 			});
 			var v = (n > 0) ? true : false;
+
+			if(!v)
+			{
+				$('#agegroup_tbody').addClass("error").css("border-color", "red");
+			}
+			else
+			{
+				$('#agegroup_tbody').removeClass("error").css("border-color", "");
+			}
+
 			return v;
 		},
 		errorMessage: 'Number of participants is required',
@@ -339,6 +358,16 @@ if ($.formUtils)
 				}
 			});
 			var v = (n > 0) ? true : false;
+
+			if(!v)
+			{
+				$('#resources_container').find('table').addClass("error").css("border-color", "red");
+			}
+			else
+			{
+				$('#resources_container').find('table').removeClass("error").css("border-color", "");
+			}
+
 			return v;
 		},
 		errorMessage: 'Please choose at least 1 resource',
