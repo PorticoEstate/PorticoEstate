@@ -783,7 +783,7 @@ var _excelSpecials = [
 	{ match: /^\([\d,]+\.\d{2}\)$/,         style: 62, fmt: function (d) { return -1 * d.replace(/[\(\)]/g, ''); } },  // Negative numbers indicated by brackets - 2d.p.
 	{ match: /^\-?[\d,]+$/,                 style: 63 }, // Numbers with thousand separators
 	{ match: /^\-?[\d,]+\.\d{2}$/,          style: 64 },
-	{ match: /^[\d]{4}\-[\d]{2}\-[\d]{2}$/, style: 67, fmt: function (d) {return Math.round(25569 + (Date.parse(d) / (86400 * 1000)));}} //Date yyyy-mm-dd
+	{ match: /^[\d]{4}\-[01][\d]\-[0123][\d]$/, style: 67, fmt: function (d) {return Math.round(25569 + (Date.parse(d) / (86400 * 1000)));}} //Date yyyy-mm-dd
 ];
 
 
@@ -1098,7 +1098,7 @@ DataTable.ext.buttons.excelHtml5 = {
 				if ( ! cell ) {
 					if ( typeof row[i] === 'number' || (
 						row[i].match &&
-						row[i].match(/^-?\d+(\.\d+)?$/) &&
+						row[i].match(/^-?\d+(\.\d+)?([eE]\-?\d+)?$/) && // Includes exponential format
 						! row[i].match(/^0\d+/) )
 					) {
 						// Detect numbers - don't match numbers with leading zeros

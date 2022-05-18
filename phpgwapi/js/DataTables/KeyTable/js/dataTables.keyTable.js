@@ -1,15 +1,14 @@
-/*! KeyTable 2.6.4
- * ©2009-2021 SpryMedia Ltd - datatables.net/license
+/*! KeyTable 2.7.0
+ * ©2009-2022 SpryMedia Ltd - datatables.net/license
  */
 
 /**
  * @summary     KeyTable
  * @description Spreadsheet like keyboard navigation for DataTables
- * @version     2.6.4
- * @file        dataTables.keyTable.js
+ * @version     2.7.0
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
- * @contact     www.sprymedia.co.uk/contact
- * @copyright   Copyright 2009-2021 SpryMedia Ltd.
+ * @contact     www.sprymedia.co.uk
+ * @copyright   SpryMedia Ltd.
  *
  * This source file is free software, available under the following license:
  *   MIT license - http://datatables.net/license/mit
@@ -307,16 +306,29 @@ $.extend( KeyTable.prototype, {
 		}
 
 		// Stave saving
-		if ( dt.settings()[0].oFeatures.bStateSave ) {
+		// if ( dt.settings()[0].oFeatures.bStateSave ) {
 			dt.on( 'stateSaveParams'+namespace, function (e, s, d) {
 				d.keyTable = that.s.lastFocus ?
 					that.s.lastFocus.cell.index() :
 					null;
 			} );
-		}
+		// }
 
 		dt.on( 'column-visibility'+namespace, function (e) {
 			that._tabInput();
+		} );
+
+		dt.on( 'column-reorder'+namespace, function (e, s, d) {
+			// Need to update the last focus cell's index
+			var lastFocus = that.s.lastFocus;
+
+			if (lastFocus && lastFocus.cell) {
+				var curr = lastFocus.relative.column;
+				
+				// Manipulate the API instance to correct the column index
+				lastFocus.cell[0][0].column = d.mapping.indexOf(curr);
+				lastFocus.relative.column = d.mapping.indexOf(curr);
+			}
 		} );
 
 		// Redraw - retain focus on the current cell
@@ -1015,7 +1027,7 @@ $.extend( KeyTable.prototype, {
 			return;
 		}
 	
-		var currentCell  = last.cell;
+		var currentCell = last.cell;
 		if ( ! currentCell ) {
 			return;
 		}
@@ -1244,7 +1256,7 @@ KeyTable.defaults = {
 
 
 
-KeyTable.version = "2.6.4";
+KeyTable.version = "2.7.0";
 
 
 $.fn.dataTable.KeyTable = KeyTable;

@@ -47,6 +47,7 @@ var collection = DataTable.ext.foundationVersion === 6 ?
 	{
 		tag: 'ul',
 		className: 'f-dropdown open dropdown-pane is-open',
+		closeButton: false,
 		button: {
 			tag: 'li',
 			className: 'small',
@@ -70,7 +71,7 @@ $.extend( true, DataTable.Buttons.defaults, {
 		},
 		button: {
 			tag: 'a',
-			className: 'button small',
+			className: 'dt-button button small',
 			active: 'secondary'
 		},
 		buttonLiner: {
@@ -80,15 +81,18 @@ $.extend( true, DataTable.Buttons.defaults, {
 		splitWrapper: {
 			tag: 'div',
 			className: 'dt-btn-split-wrapper button-group',
+			closeButton: false,
 		},
 		splitDropdown: {
 			tag: 'button',
 			text: '',
 			className: 'button dt-btn-split-drop dropdown arrow-only',
+			closeButton: false,
 		},
 		splitDropdownButton: {
 			tag: 'button',
-			className: 'dt-btn-split-drop-button button small'
+			className: 'dt-btn-split-drop-button button small',
+			closeButton: false
 		}
 	}
 } );
