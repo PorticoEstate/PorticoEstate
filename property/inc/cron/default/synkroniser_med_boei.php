@@ -83,7 +83,7 @@
 			$start = time();
 			set_time_limit(2000);
 			$this->update_tables();
-
+			$this->legg_til_formaal();
 			$this->legg_til_eier_phpgw();
 			$this->legg_til_gateadresse_phpgw();
 			$this->legg_til_objekt_phpgw();
@@ -140,6 +140,7 @@
 		 */
 		function update_tables()
 		{
+			$this->update_table_formaal();
 			$this->update_table_LeieobjektTVSignal();
 			$this->update_table_eier();
 			$this->update_table_gateadresse();
@@ -150,6 +151,57 @@
 			$this->update_table_leieobjekt();
 			$this->update_table_leietaker();
 			$this->update_table_reskontro();
+		}
+
+		function update_table_formaal()
+		{
+			$metadata = $this->db->metadata('boei_formaal');
+//_debug_array($metadata);
+
+			if (!$metadata)
+			{
+				$sql_table = <<<SQL
+				CREATE TABLE boei_formaal
+				(
+				  id integer NOT NULL,
+				  navn character varying(50),
+				  tjeneste_id integer,
+				  CONSTRAINT boei_formaal_pkey PRIMARY KEY (id)
+				);
+SQL;
+				$this->db->query($sql_table, __LINE__, __FILE__);
+			}
+			$this->db->query('DELETE FROM boei_formaal', __LINE__, __FILE__);
+			$sql_boei	 = 'SELECT TOP 100 PERCENT Formaal_ID as id, NavnPaaFormaal AS navn, Tjenestested as tjeneste_id FROM Formaal';
+			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
+			// using stored prosedures
+			$sql		 = 'INSERT INTO boei_formaal (id, navn, tjeneste_id)'
+				. ' VALUES(?, ?, ?)';
+			$valueset	 = array();
+
+			while ($this->db_boei->next_record())
+			{
+				$valueset[] = array
+					(
+					1	 => array
+						(
+						'value'	 => (int)$this->db_boei->f('id'),
+						'type'	 => PDO::PARAM_INT
+					),
+					2	 => array
+						(
+						'value'	 => $this->db->db_addslashes($this->db_boei->f('navn')),
+						'type'	 => PDO::PARAM_STR
+					),
+					3	 => array
+						(
+						'value'	 => (int)$this->db_boei->f('tjeneste_id'),
+						'type'	 => PDO::PARAM_INT
+					)
+				);
+			}
+
+			$this->db->insert($sql, $valueset, __LINE__, __FILE__);
 		}
 
 		function update_table_LeieobjektTVSignal()
@@ -925,6 +977,48 @@ SQL;
 			$this->db->transaction_commit();
 
 			$msg						 = count($owners) . ' eier er lagt til: ' . implode(",", $owner_msg);
+			$this->receipt['message'][]	 = array('msg' => $msg);
+			$this->cron_log($msg);
+		}
+
+		function legg_til_formaal()
+		{
+			$sql = "SELECT boei_formaal.id, boei_formaal.navn, boei_formaal.tjeneste_id"
+				. " FROM fm_location4_category RIGHT OUTER JOIN "
+				. " boei_formaal ON fm_location4_category.id = boei_formaal.id"
+				. " WHERE fm_location4_category.id IS NULL";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$formaal_latin = array();
+			while ($this->db->next_record())
+			{
+				$formaal_latin[] = array
+				(
+					'id'		 => $this->db->f('id'),
+					'descr'		 => $this->db->f('navn'),
+				);
+			}
+
+			$this->db->transaction_begin();
+
+			$formaal_msg = array();
+			foreach ($formaal_latin as $formaal)
+			{
+
+				$sql2 = "INSERT INTO fm_location4_category (id, descr) "
+					. "VALUES (" . $this->db->validate_insert($formaal) . ")";
+
+				$this->db->query($sql2, __LINE__, __FILE__);
+
+				$formaal_msg[] = $formaal['descr'];
+			}
+
+			$sql = "UPDATE fm_location4_category SET descr = boei_formaal.navn FROM boei_formaal WHERE fm_location4_category.id = boei_formaal.id";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$this->db->transaction_commit();
+
+			$msg						 = count($formaal_latin) . ' Formål er lagt til: ' . implode(",", $formaal_msg);
 			$this->receipt['message'][]	 = array('msg' => $msg);
 			$this->cron_log($msg);
 		}
