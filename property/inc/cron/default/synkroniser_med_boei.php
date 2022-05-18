@@ -172,7 +172,7 @@ SQL;
 				$this->db->query($sql_table, __LINE__, __FILE__);
 			}
 			$this->db->query('DELETE FROM boei_formaal', __LINE__, __FILE__);
-			$sql_boei	 = 'SELECT TOP 100 PERCENT Formaal_ID as id, NavnPaaFormaal AS navn, Tjenestested as tjeneste_id FROM Formaal';
+			$sql_boei	 = 'SELECT TOP 100 PERCENT CAST(Formaal_ID as TEXT) AS Formaal_ID, CAST(NavnPaaFormaal as TEXT) AS NavnPaaFormaal, CAST(Tjenestested as TEXT) AS Tjenestested FROM Formaal';
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
 			$sql		 = 'INSERT INTO boei_formaal (id, navn, tjeneste_id)'
@@ -185,17 +185,17 @@ SQL;
 					(
 					1	 => array
 						(
-						'value'	 => (int)$this->db_boei->f('id'),
+						'value'	 => (int)$this->db_boei->f('Formaal_ID'),
 						'type'	 => PDO::PARAM_INT
 					),
 					2	 => array
 						(
-						'value'	 => $this->db->db_addslashes($this->db_boei->f('navn')),
+						'value'	 => $this->db->db_addslashes($this->db_boei->f('NavnPaaFormaal')),
 						'type'	 => PDO::PARAM_STR
 					),
 					3	 => array
 						(
-						'value'	 => (int)$this->db_boei->f('tjeneste_id'),
+						'value'	 => (int)$this->db_boei->f('Tjenestested'),
 						'type'	 => PDO::PARAM_INT
 					)
 				);
