@@ -1,4 +1,4 @@
-/*! DateTime picker for DataTables.net v1.1.1
+/*! DateTime picker for DataTables.net v1.1.2
  *
  * © SpryMedia Ltd, all rights reserved.
  * License: MIT datatables.net/license/mit
@@ -6,7 +6,7 @@
 
 /**
  * @summary     DateTime picker for DataTables.net
- * @version     1.1.1
+ * @version     1.1.2
  * @file        dataTables.dateTime.js
  * @author      SpryMedia Ltd
  * @contact     www.datatables.net/contact
@@ -102,10 +102,10 @@ var DateTime = function ( input, opts ) {
 			'<div class="'+classPrefix+'-date">'+
 				'<div class="'+classPrefix+'-title">'+
 					'<div class="'+classPrefix+'-iconLeft">'+
-						'<button title="'+i18n.previous+'">'+i18n.previous+'</button>'+
+						'<button type="button" title="'+i18n.previous+'">'+i18n.previous+'</button>'+
 					'</div>'+
 					'<div class="'+classPrefix+'-iconRight">'+
-						'<button title="'+i18n.next+'">'+i18n.next+'</button>'+
+						'<button type="button" title="'+i18n.next+'">'+i18n.next+'</button>'+
 					'</div>'+
 					'<div class="'+classPrefix+'-label">'+
 						'<span></span>'+
@@ -740,6 +740,7 @@ $.extend( DateTime.prototype, {
 		$('div.dataTables_scrollBody').off( 'scroll.'+namespace );
 		$('div.DTE_Body_Content').off( 'scroll.'+namespace );
 		$('body').off( 'click.'+namespace );
+		$(this.dom.input[0].offsetParent).off('.'+namespace);
 	},
 
 	/**
@@ -1534,7 +1535,7 @@ DateTime.defaults = {
 	yearRange: 25
 };
 
-DateTime.version = '1.1.1';
+DateTime.version = '1.1.2';
 
 // Global export - if no conflicts
 if (! window.DateTime) {
