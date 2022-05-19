@@ -213,6 +213,21 @@
 				//Override from workorder
 				$tjeneste	 = $workorder['service_id'] ? (int)$workorder['service_id'] : (int)$tjeneste;
 
+
+				//EBF
+				if ($workorder['id'] >= 45000000 && $workorder['id'] <= 45249999 && count($location) == 4)
+				{
+					$location_info = CreateObject('property.bolocation')->read_single($location_code, array('noattrib' => true));
+					$formaal_id = (int)$location_info['cat_id'];
+					$sql = "SELECT tjeneste_id FROM boei_formaal WHERE id = {$formaal_id}";
+					$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+					$GLOBALS['phpgw']->db->next_record();
+					$_tjeneste = (int)$GLOBALS['phpgw']->db->f('tjeneste_id');
+
+					$tjeneste = $_tjeneste ? $_tjeneste : $tjeneste;
+				}
+
+
 				switch ($tax_code)
 				{
 					case '0':
