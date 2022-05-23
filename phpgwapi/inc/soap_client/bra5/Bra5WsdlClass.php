@@ -277,7 +277,7 @@ class Bra5WsdlClass extends stdClass implements ArrayAccess,Iterator,Countable
             $defaultWsdlOptions = self::getDefaultWsdlOptions();
             foreach($defaultWsdlOptions as $optioName=>$optionValue)
             {
-                if(array_key_exists($optioName,$_wsdlOptions) && !empty($_wsdlOptions[$optioName]))
+                if(array_key_exists($optioName,(array)$_wsdlOptions) && !empty($_wsdlOptions[$optioName]))
                     $wsdlOptions[str_replace('wsdl_','',$optioName)] = $_wsdlOptions[$optioName];
                 elseif(!empty($optionValue))
                     $wsdlOptions[str_replace('wsdl_','',$optioName)] = $optionValue;
