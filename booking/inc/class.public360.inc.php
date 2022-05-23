@@ -86,22 +86,50 @@
 			{
 				$person_data = $this->get_person( $application['customer_ssn'] );
 
+				if($this->debug)
+				{
+					echo "Eksisterende person:";
+					_debug_array($person_data);
+				}
+
 				if(!$person_data || empty($person_data['PostAddress']['StreetAddress']))
 				{
 					$person_data = $this->add_update_person( $application, $person_data );
+					if($this->debug)
+					{
+						echo "Ny person:";
+						_debug_array($person_data);
+					}
+
 				}
 			}
 
 			if(!empty($application['customer_organization_number']))
 			{
 				$enterprise_data = $this->get_enterprise( $application['customer_organization_number']);
+				if($this->debug)
+				{
+					echo "Eksisterende organisasjon:";
+					_debug_array($enterprise_data);
+				}
+
 				if(!$enterprise_data || empty($enterprise_data['OfficeAddress']['StreetAddress']))
 				{
 					$enterprise_data = $this->add_update_enterprise( $application, $enterprise_data);
+					if($this->debug)
+					{
+						echo "Ny organisasjon:";
+						_debug_array($enterprise_data);
+					}
 				}
 			}
 
 			$case_result = $this->create_case($case_title, $application);
+			if($this->debug)
+			{
+				echo "Ny sak:";
+				_debug_array($case_result);
+			}
 
 			$document_result1 = array();
 			$document_result2 = array();
