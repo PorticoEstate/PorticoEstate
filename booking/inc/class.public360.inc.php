@@ -351,15 +351,8 @@
 				'Title' => $title,
 				'ExternalId' => array('Id' => $application['id'], 'Type' => 'portico'),
 				'Status' => 'B',//'Under behandling',
+				'StartDate' => date('Y-m-d\TH:i:s', strtotime($application['created'])),
 				'AccessCodeCode' => 'U',
-//				'ResponsibleEnterprise' => Array
-//					(
-//						'Recno' => '201665',
-//					),
-//				'ResponsiblePerson' => array
-//					(
-//						'Recno' => $this->archive_user_id,
-//					),
 				'ResponsiblePersonRecno' => $this->archive_user_id,
 				'ArchiveCodes' => array
 				(
@@ -404,10 +397,13 @@
 			if($category == 110)//Dokument inn
 			{
 				$ssn_role = 5;//'Avsender'
+				$document_date = date('Y-m-d\TH:i:s', strtotime($application['created']));
 			}
 			else
 			{
 				$ssn_role = 6;// 'Mottaker'
+				$document_date = date('Y-m-d\TH:i:s', strtotime($application['modified']));
+//				$document_date = date('Y-m-d\TH:i:s', phpgwapi_datetime::user_localtime());
 			}
 
 			$data = array(
@@ -418,7 +414,7 @@
 				'Files'		=> array(),
 				'Contacts' => array(),
 				'ResponsiblePersonRecno' => $this->archive_user_id,
-				'DocumentDate'			=> date('Y-m-d\TH:i:s', phpgwapi_datetime::user_localtime()),
+				'DocumentDate'			=> $document_date,
 			);
 
 //			$ssn_role = 5;//'Avsender'

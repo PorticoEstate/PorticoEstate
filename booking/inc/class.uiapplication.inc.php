@@ -2870,7 +2870,7 @@
 						'file_data' => $file_data2
 						);
 
-					$resourcename = implode(",", $this->bo->get_resource_name($application['resources']));
+					$resourcename = implode(", ", $this->bo->get_resource_name($application['resources']));
 
 					if(!empty($application['customer_organization_name']))
 					{
