@@ -18,7 +18,7 @@
 		function get_export_text1( $application, $config)
 		{
 			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$resourcename = implode(",", $this->get_resource_name($application['resources']));
+			$resourcename = implode(", ", $this->get_resource_name($application['resources']));
 
 			$_adates = array();
 
@@ -91,7 +91,7 @@
 		function get_export_text2( $application, $config )
 		{
 
-			$resourcename = implode(",", $this->get_resource_name($application['resources']));
+			$resourcename = implode(", ", $this->get_resource_name($application['resources']));
 
 			$customer_name = !empty($application['customer_organization_name']) ? "{$application['customer_organization_name']}/{$application['contact_name']}" : $application['contact_name'];
 
@@ -211,7 +211,7 @@
 			$reply_to = !empty($config->config_data['email_reply_to']) ? $config->config_data['email_reply_to'] : '';
 			$external_site_address = !empty($config->config_data['external_site_address'])? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
-			$resourcename = implode(",", $this->get_resource_name($application['resources']));
+			$resourcename = implode(", ", $this->get_resource_name($application['resources']));
 			$subject = $config->config_data['application_mail_subject'];
 
 
