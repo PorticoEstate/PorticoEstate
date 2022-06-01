@@ -320,14 +320,9 @@
 				$split = 0;
 			}
 
-			$resources = $event['resources'];
-			$activity = $this->organization_bo->so->get_resource_activity($resources);
-			$mailadresses = $this->building_users($event['building_id'], $split, $activity);
-			$extra_mailadresses = $this->resource_users($resources);
-			$mailadresses = array_merge($mailadresses, $extra_mailadresses);
-
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+
 				if ($cdate < $event['to_'])
 				{
 					$event_owner = false;
@@ -346,8 +341,15 @@
 
 					if ($event_owner)
 					{
+						$resources = $event['resources'];
+						$activity = $this->organization_bo->so->get_resource_activity($resources);
+						$mailadresses = $this->building_users($event['building_id'], $split, $activity);
+						$extra_mailadresses = $this->resource_users($resources);
+						$mailadresses = array_merge($mailadresses, $extra_mailadresses);
+
 						$this->bo->send_notification(false, $event, $mailadresses);
 						$this->bo->send_admin_notification(false, $event, $_POST['message']);
+
 						if ($can_delete_events)
 						{
 							$this->bo->so->delete_event($event['id']);
@@ -357,6 +359,7 @@
 							$event['active'] = 0;
 							$this->bo->update($event);
 						}
+
 						$date = substr($event['from_'], 0, 10);
 
 						if ($from_org && $event['customer_organization_id'] !== null)

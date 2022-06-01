@@ -316,13 +316,13 @@
 				$values = $this->bo->read_single($id);
 			}
 
-			$link_data = array
-				(
+			$link_data = array(
 				'menuaction' => "property.uireport.save",
 				'id'		 => $id
 			);
 
 			$datasets = $this->bo->get_datasets();
+			$list = array();
 			foreach ($datasets as $item)
 			{
 				$selected = 0;
