@@ -7,7 +7,7 @@
 	class booking_async_task_update_reservation_state extends booking_async_task
 	{
 
-		private $soapplication, $sopurchase_order, $update_reservation_time;
+		private $soapplication, $sopurchase_order, $update_reservation_time, $activate_application_articles;
 
 		public function __construct()
 		{
@@ -15,6 +15,8 @@
 			$this->soapplication	 = CreateObject('booking.soapplication');
 			$this->sopurchase_order	 = createObject('booking.sopurchase_order');
 			$config					 = CreateObject('phpgwapi.config', 'booking')->read();
+
+			$this->activate_application_articles = !empty($config['activate_application_articles']) ? true : false;
 
 			$billing_delay = !empty($config['billing_delay']) ? (int) $config['billing_delay']  : 0;
 			$this->update_reservation_time = date('Y-m-d');
@@ -80,7 +82,8 @@
 							$this->add_payment($order_id);
 							$order = $this->sopurchase_order->get_single_purchase_order($order_id);
 							$_reservation = $bo->read_single($reservation['id']);
-							if((float)$_reservation['cost'] != (float)$order['sum'])
+
+							if($this->activate_application_articles && (float)$_reservation['cost'] != (float)$order['sum'])
 							{
 								$_reservation['cost'] = $order['sum'];
 								$this->add_cost_history($_reservation, 'update from order', $order['sum']);
