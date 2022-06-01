@@ -921,6 +921,17 @@
 					$event['customer_organization_id'] = phpgw::get_var('customer_organization_id', 'int', 'POST');
 				}
 
+				/**
+				 * Maker sure: Check if organization is registered
+				 */
+
+				$orginfo = $this->bo->so->get_org($event['customer_organization_number']);
+
+				if(empty($orginfo['id']))
+				{
+					$event['customer_organization_id'] = null;
+				}
+
 				if ($_POST['cost'] != 0 and ! $event['customer_organization_number'] and ! $event['customer_ssn'])
 				{
 					$errors['invoice_data'] = lang('There is set a cost, but no invoice data is filled inn');
