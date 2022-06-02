@@ -936,13 +936,8 @@
 																<xsl:if test="../case_officer/is_current_user">
 																	<xsl:if test="contains($collisiondata, from_)">
 																		<xsl:if test="not(contains($assocdata, from_))">
-																			<script type="text/javascript">
-																				applicationDate[<xsl:value-of select="id"/>] = '<xsl:value-of select="substring(from_,0,11)"/>';
-																				var oArgs = {menuaction:'bookingfrontend.uibuilding.schedule', id: building_id, backend: true, date: applicationDate[<xsl:value-of select="id"/>]};
-																				var scheduleUrl = phpGWLink('bookingfrontend/', oArgs);
-																			</script>
 																			<a href="javascript: void(0)"
-																			   onclick="window.open(scheduleUrl, '', 'width=1048, height=600, scrollbars=yes');return false;">
+																			   onclick="open_schedule(building_id,'{from_}');return false;">
 																				<i class="fa fa-exclamation-circle"></i>
 																			</a>
 																		</xsl:if>

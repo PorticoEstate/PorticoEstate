@@ -1,3 +1,10 @@
+function open_schedule(building_id, date)
+{
+	var oArgs = {menuaction:'bookingfrontend.uibuilding.schedule', id: building_id, backend: true, date: date.substring(0, 11)};
+	var scheduleUrl = phpGWLink('bookingfrontend/', oArgs);
+	window.open(scheduleUrl, '', 'width=1048, height=600, scrollbars=yes');
+};
+
 
 function show_order(element)
 {
