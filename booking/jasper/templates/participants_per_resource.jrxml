@@ -29,6 +29,7 @@
 				AND date_trunc('day' ,bo.to_) <= to_date($P{DATE_TO}, 'YYYY-MM-DD')
 				AND re.id = ANY (string_to_array($P{RESOURCES}, ',')::int4[])
 				AND EXTRACT(DOW FROM bo.from_) = ANY (string_to_array($P{WEEKDAYS}, ',')::int4[])
+				AND bu.id = $P{BUILDING_ID}
 				UNION
 				SELECT ag.name AS aname, ea.male, ea.female, bu.id, bu.name, ag.sort AS agegroup_sort, re.name AS resource_name
 				FROM bb_event ev
@@ -41,6 +42,7 @@
 				AND date_trunc('day' ,ev.to_) <= to_date($P{DATE_TO}, 'YYYY-MM-DD')
 				AND EXTRACT(DOW FROM ev.from_) = ANY (string_to_array($P{WEEKDAYS}, ',')::int4[])
 				AND er.resource_id = ANY (string_to_array($P{RESOURCES}, ',')::int4[])
+				AND bu.id = $P{BUILDING_ID}
 				ORDER BY resource_name ASC, agegroup_sort]]>
 		</queryString>
 		<field name="resource_name" class="java.lang.String"/>
@@ -54,9 +56,7 @@
 	<parameter name="BK_DATE_TO" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2014-01-01"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="BK_RESOURCES" class="java.lang.String">
-		<defaultValueExpression><![CDATA["1,2,3,4,5,6,7,8,9,10,20,31,36,38,39,44,48,50,51,65,66,82,83,84,85,91,96,108,109,110,111,112,113,114,127,261,294,370,411,417,418,419,420,421,422"]]></defaultValueExpression>
-	</parameter>
+	<parameter name="BK_RESOURCES" class="java.lang.String"/>
 	<parameter name="BK_WEEKDAYS" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1,2,3,4,5,6,7"]]></defaultValueExpression>
 	</parameter>

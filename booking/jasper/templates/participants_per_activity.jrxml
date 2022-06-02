@@ -37,6 +37,7 @@
 				AND date_part('hour' ,bo.to_) <= ANY (string_to_array($P{TO_HOUR}, ',')::int4[])
 				AND re.id = ANY (string_to_array($P{RESOURCES}, ',')::int4[])
 				AND EXTRACT(DOW FROM bo.from_) = ANY (string_to_array($P{WEEKDAYS}, ',')::int4[])
+				AND bu.id = $P{BUILDING_ID}
 				UNION
 				SELECT ag.name AS aname, ea.male, ea.female, bu.id, bu.name, ag.sort AS agegroup_sort, ac.name AS activity_name
 				FROM bb_event ev
@@ -52,6 +53,7 @@
 				AND date_part('hour' ,ev.to_) <= ANY (string_to_array($P{TO_HOUR}, ',')::int4[])
 				AND EXTRACT(DOW FROM ev.from_) = ANY (string_to_array($P{WEEKDAYS}, ',')::int4[])
 				AND er.resource_id = ANY (string_to_array($P{RESOURCES}, ',')::int4[])
+				AND bu.id = $P{BUILDING_ID}
 				ORDER BY activity_name ASC, agegroup_sort]]>
 		</queryString>
 		<field name="activity_name" class="java.lang.String"/>
