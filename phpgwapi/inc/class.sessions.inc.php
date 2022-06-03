@@ -184,7 +184,6 @@
 
 			//respect the config option for cookies
 			ini_set('session.use_cookies', $this->_use_cookies);
-			ini_set('session.cookie_samesite', 'Lax');
 
 			//don't rewrite URL, as we have to do it in link - why? cos it is buggy otherwise
 			ini_set('url_rewriter.tags', '');
@@ -902,28 +901,15 @@
 		public function phpgw_setcookie($cookiename, $cookievalue='', $cookietime=0)
 		{
 			$cookie_params = session_get_cookie_params();
-			setcookie($cookiename,
-				$cookievalue,
-				$cookietime,
-				$cookie_params['path'],
-				$cookie_params['domain'],
-				!!$cookie_params['secure'],
-				!!$cookie_params['httponly']
-			);
 
-			/**
-			 * Post php 7.3
-			 */
-			/*
 			setcookie($cookiename, $cookievalue, [
 				'expires'	 => $cookietime,
 				'path'		 => $cookie_params['path'],
 				'domain'	 => $cookie_params['domain'],
 				'secure'	 => !!$cookie_params['secure'],
 				'httponly'	 => !!$cookie_params['httponly'],
-				'samesite'	 => 'Lax',
+				'samesite'	 => $cookie_params['samesite'],
 			]);
-			*/
 		}
 
 
@@ -1684,17 +1670,8 @@
 				$webserver_url = '/';
 			}
 
-			/**
-			 * 20190904: to be changed, for now
-			 */
-
 			$webserver_url = '/';
 
-			// Pre php 7.3
-			session_set_cookie_params(0, parse_url($webserver_url, PHP_URL_PATH), $this->_cookie_domain, $secure, false);
-			
-			//Post php 7.3
-/*
 			session_set_cookie_params(
 				array(
 						'lifetime'=> 0,
@@ -1705,7 +1682,7 @@
 						'samesite' => 'Lax'
 				)
 			);
-*/
+
 			return $this->_cookie_domain;
 		}
 

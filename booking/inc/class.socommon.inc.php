@@ -639,7 +639,7 @@
 			}
 
 			$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
-			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'asc';
+			$_dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'asc';
 			$query = isset($params['query']) && $params['query'] ? $params['query'] : null;
 			$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
 			$cols_joins = $this->_get_cols_and_joins($query, $filters);
@@ -658,6 +658,16 @@
 			 * Due to problem on order with offset - we need to set an additional parameter in some cases
 			 * http://stackoverflow.com/questions/13580826/postgresql-repeating-rows-from-limit-offset
 			 */
+
+			switch ($_dir)
+			{
+				case 'desc':
+					$dir = 'desc';
+					break;
+				default:
+					$dir = 'asc';
+					break;
+			}
 
 			$order = '';
 			if ($sort)

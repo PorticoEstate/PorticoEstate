@@ -2832,11 +2832,28 @@
 
 					unset($file_data1);
 
+					$sodocument_application = CreateObject('booking.sodocument_application');
+
+					$submitted_files = $sodocument_application->read(array('filters' => array('owner_id' => $application['id']), 'results' =>'all'));
+
+					foreach ($submitted_files['results'] as $submitted_file)
+					{
+						$document = $sodocument_application->read_single($submitted_file['id']);
+
+						$file_content = file_get_contents($document['filename']);
+
+						$files[] = array(
+							'file_name'	 => basename($document['filename']),
+							'file_data' => $file_content ? $file_content : 'Dummytext'
+						);
+						unset($file_content);
+					}
+
 					$attachments = $this->bo->get_related_files($application);
 
 					foreach ($attachments as $attachment)
 					{
-						$file_content = file_get_contents($attachment['name']);
+						$file_content = file_get_contents($attachment['file']);
 						$files[] = array(
 							'file_name' => $attachment['name'],
 							'file_data' => $file_content ? $file_content : 'Dummytext'
@@ -2845,12 +2862,15 @@
 
 					unset($file_content);
 
+					/**
+					 * Add the outgoing file at the end of the file-list
+					 */
 					$files[] = array(
 						'file_name' => $file_name2,
 						'file_data' => $file_data2
 						);
 
-					$resourcename = implode(",", $this->bo->get_resource_name($application['resources']));
+					$resourcename = implode(", ", $this->bo->get_resource_name($application['resources']));
 
 					if(!empty($application['customer_organization_name']))
 					{

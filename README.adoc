@@ -4,7 +4,7 @@ If you don't have Apache, php and PostgreSQL installed
 
 == Running from Docker
 
-There is prepared a webserver with php 8.0 and Xdebug, connected to PostgreSQL 13.1
+There is prepared a webserver with php 8.1 and Xdebug, connected to PostgreSQL 13.1
 
 To run PorticoEstate using Docker containers:
 
@@ -17,14 +17,14 @@ To run PorticoEstate using Docker containers:
 2. Create a database
 
 pgAdmin is included in the Docker-setup at http://localhost:5050/[http://localhost:5050/]
-connect to the host, using "db" as host - and create a database
+connect to the host, using "db" as host, and 5432 as port - and create a database
 
 usename: pgadmin4@pgadmin.org
 Password: admin
 
 3. Connect to database and create the admin user
 
-http://localhost:8080/setup/[http://localhost:8080/setup/]
+http://localhost:8080/portico/setup/[http://localhost:8080/portico/setup/]
 [TIP]
 ====
 Use "db" as database-host in setup, as it is defined in the docker-environment

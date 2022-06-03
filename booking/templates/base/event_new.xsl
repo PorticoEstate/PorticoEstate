@@ -54,6 +54,12 @@
 									<xsl:attribute name="value">
 										<xsl:value-of select="event/name"/>
 									</xsl:attribute>
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Event name')" />
+									</xsl:attribute>
 								</input>
 							</div>
 							<div class="pure-control-group">
@@ -63,6 +69,12 @@
 								<input id="field_organizer" name="organizer" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
 									<xsl:attribute name="value">
 										<xsl:value-of select="event/organizer"/>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Organizer')" />
 									</xsl:attribute>
 								</input>
 							</div>
@@ -280,7 +292,7 @@
 									</label>
 									<input type="hidden" data-validation="target_audience">
 										<xsl:attribute name="data-validation-error-msg">
-											<xsl:value-of select="php:function('lang', 'Please choose at least 1 target audience')" />
+											<xsl:value-of select="php:function('lang', 'Target audience')" />
 										</xsl:attribute>
 									</input>
 									<ul id="audience" style="list-style:none;">
@@ -307,7 +319,7 @@
 									</label>
 									<input type="hidden" data-validation="number_participants">
 										<xsl:attribute name="data-validation-error-msg">
-											<xsl:value-of select="php:function('lang', 'Number of participants is required')" />
+											<xsl:value-of select="php:function('lang', 'Number of participants')" />
 										</xsl:attribute>
 									</input>
 									<table id="agegroup" class="pure-table pure-table-bordered">

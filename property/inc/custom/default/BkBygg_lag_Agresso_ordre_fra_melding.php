@@ -217,9 +217,22 @@
 				 */
 
 
+				//EBF
 				if ($_ticket['order_id'] >= 45000000 && $_ticket['order_id'] <= 45249999)
 				{
 					$voucher_type = 'P3';
+					
+					if(isset($_location_arr) && count($_location_arr) == 4)
+					{
+						$location_info = CreateObject('property.bolocation')->read_single($_ticket['location_code'], array('noattrib' => true));
+						$formaal_id = (int)$location_info['cat_id'];
+						$sql = "SELECT tjeneste_id FROM boei_formaal WHERE id = {$formaal_id}";
+						$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+						$GLOBALS['phpgw']->db->next_record();
+						$_tjeneste = (int)$GLOBALS['phpgw']->db->f('tjeneste_id');
+						$_ticket['service_id'] = $_tjeneste ? $_tjeneste : $_ticket['service_id'];
+					}
+
 				}
 				else if ($_ticket['order_id'] >= 45250000 && $_ticket['order_id'] <= 45499999)
 				{

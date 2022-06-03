@@ -39,7 +39,7 @@ PorticoEstate.
 These guidelines must be followed for any application that wants
 considered for inclusion into the PorticoEstate distribution:
 
--   It must run on PHP 7.2 or later
+-   It must run on PHP 7.4 or later
 -   SQL statements must be compatible with both MySQL, PostgreSQL, MSSQL Server and SAP-DB
 -   It must use our default header.inc.php include.
 -   It must use our $GLOBALS['phpgw']->link($url) for all links (this is for session support).

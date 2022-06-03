@@ -106,6 +106,16 @@
 			);
 		}
 
+		/**
+		 * FIXME
+		 * Dummy for documents
+		 * @see booking_bocommon_authorized
+		 */
+		public function get_subject_roles( $for_object = null, $initial_roles = array() )
+		{
+			return null;
+		}
+
 		protected function doValidate( $entity, booking_errorstack $errors )
 		{
 			$event_id = $entity['id'] ? $entity['id'] : -1;

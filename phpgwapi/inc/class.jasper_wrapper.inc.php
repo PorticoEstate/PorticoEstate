@@ -138,12 +138,21 @@
 							$jasper_info['config']);
 
 			exec($cmd, $cmd_output, $retval);
-//			echo $cmd . ":retval: " . $retval;
+
+			$keep_config_file = false;
+			if(!empty($GLOBALS['phpgw_info']['server']['log_levels']['module']['booking'])
+				&& $GLOBALS['phpgw_info']['server']['log_levels']['module']['booking'] == 'D')
+			{
+				$keep_config_file = true;
+				$jasper_info_config = htmlentities(file_get_contents($jasper_info['config']));
+				echo $cmd . ":retval: " . $retval . " jasper_info:<pre>" . $jasper_info_config . "</pre>";
+				echo "JASPER_BIN: " . JASPER_BIN;
+			}
 //			_debug_array($parameters);
 //			_debug_array( $cmd_output);
 //			exit(0);
 
-			if(is_file($jasper_info['config']))
+			if(!$keep_config_file && is_file($jasper_info['config']))
 			{
 				unlink($jasper_info['config']);
 			}

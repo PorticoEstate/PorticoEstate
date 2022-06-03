@@ -261,7 +261,7 @@
 			return $this->jquery_results($documents);
 		}
 
-		private function is_image( $document )
+		public function is_image( $document )
 		{
 			return $document['is_image'] == false;
 		}

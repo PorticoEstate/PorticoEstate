@@ -160,6 +160,21 @@ ajax_submit_form = function (action)
 
 $(document).ready(function ()
 {
+	$("#user_id").select2({
+		placeholder: "Select a user",
+		width: '75%'
+	});
+
+	$('#user_id').on('select2:open', function (e) {
+
+		$(".select2-search__field").each(function()
+		{
+			if ($(this).attr("aria-controls") == 'select2-user_id-results')
+			{
+				$(this)[0].focus();
+			}
+		});
+	});
 
 	$('#group_id').attr("data-validation", "assigned").attr("data-validation-error-msg", lang['Please select a person or a group to handle the ticket !']);
 	$('#user_id').attr("data-validation", "assigned").attr("data-validation-error-msg", lang['Please select a person or a group to handle the ticket !']);
@@ -293,7 +308,12 @@ $.formUtils.addValidator({
 		var user_id = $('#user_id').val();
 		if (group_id != "" || user_id != "")
 		{
+			$('#select2-user_id-container').removeClass("error");
 			v = true;
+		}
+		else
+		{
+			$('#select2-user_id-container').addClass("error");
 		}
 		return v;
 	},

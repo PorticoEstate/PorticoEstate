@@ -528,14 +528,6 @@
 														</p>
 														<small class="text-muted"></small>
 													</div>
-													<!--div href="#" class="list-group-item flex-column align-items-start">
-														<div class="d-flex w-100 justify-content-between">
-															<h5 class="mb-1">Adresse</h5>
-															<small class="text-muted"></small>
-														</div>
-														<p class="mb-1 font-weight-bold">Saksarlia 312</p>
-														<small class="text-muted">5253 Sandsli</small>
-													</div-->
 												</div>
 											</div>
 										</div>
@@ -580,57 +572,6 @@
 																<small class="text-muted"></small>
 															</div>
 														</xsl:if>
-														<xsl:if test="application/customer_identifier_type = 'ssn'">
-
-															<div href="#" class="list-group-item flex-column align-items-start">
-																<div class="d-flex w-100 justify-content-between">
-																	<h5 class="mb-1">
-																		<xsl:value-of select="php:function('lang', 'Date of birth or SSN')" />
-																	</h5>
-																	<small class="text-muted">Hentet fra ID-Porten</small>
-																</div>
-																<p class="mb-1 font-weight-bold">
-																	<xsl:value-of select="application/customer_ssn"/>
-																</p>
-																<small class="text-muted"></small>
-															</div>
-														</xsl:if>
-														<div href="#" class="list-group-item flex-column align-items-start">
-															<div class="d-flex w-100 justify-content-between">
-																<h5 class="mb-1">
-																	<xsl:value-of select="php:function('lang', 'Street')"/>
-																</h5>
-																<small class="text-muted">Hentet fra brukerinput</small>
-															</div>
-															<p class="mb-1 font-weight-bold">
-																<xsl:value-of select="application/responsible_street"/>
-															</p>
-															<small class="text-muted"></small>
-														</div>
-														<div href="#" class="list-group-item flex-column align-items-start">
-															<div class="d-flex w-100 justify-content-between">
-																<h5 class="mb-1">
-																	<xsl:value-of select="php:function('lang', 'Zip code')"/>
-																</h5>
-																<small class="text-muted">Hentet fra brukerinput</small>
-															</div>
-															<p class="mb-1 font-weight-bold">
-																<xsl:value-of select="application/responsible_zip_code"/>
-															</p>
-															<small class="text-muted"></small>
-														</div>
-														<div href="#" class="list-group-item flex-column align-items-start">
-															<div class="d-flex w-100 justify-content-between">
-																<h5 class="mb-1">
-																	<xsl:value-of select="php:function('lang', 'Postal City')"/>
-																</h5>
-																<small class="text-muted">Hentet fra brukerinput</small>
-															</div>
-															<p class="mb-1 font-weight-bold">
-																<xsl:value-of select="application/responsible_city"/>
-															</p>
-															<small class="text-muted"></small>
-														</div>
 														<div href="#" class="list-group-item flex-column align-items-start">
 															<div class="d-flex w-100 justify-content-between">
 																<h5 class="mb-1">
@@ -656,7 +597,88 @@
 										</div>
 									</xsl:if>
 
-									
+									<div class="panel panel-default">
+										<div class="panel-heading" role="tab" id="headingTwelve">
+											<h4 class="panel-title">
+												<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="collapseTwelve" aria-expanded="true" aria-controls="collapseTwelve">
+													<xsl:value-of select="php:function('lang', 'invoice information')" />
+												</a>
+											</h4>
+										</div>
+										<div id="collapseTwelve" class="panel-collapse collapse show" role="tabpanel" aria-labelledby="headingTwelve">
+											<div class="panel-body">
+
+												<div class="list-group">
+													<xsl:if test="application/customer_identifier_type = 'organization_number'">
+														<div href="#" class="list-group-item flex-column align-items-start">
+															<div class="d-flex w-100 justify-content-between">
+																<h5 class="mb-1">
+																	<xsl:value-of select="php:function('lang', 'organization number')" />
+																</h5>
+																<small class="text-muted"></small>
+															</div>
+															<p class="mb-1 font-weight-bold">
+																<xsl:value-of select="application/customer_organization_number"/>
+															</p>
+															<small class="text-muted"></small>
+														</div>
+													</xsl:if>
+													<xsl:if test="application/customer_identifier_type = 'ssn'">
+
+														<div href="#" class="list-group-item flex-column align-items-start">
+															<div class="d-flex w-100 justify-content-between">
+																<h5 class="mb-1">
+																	<xsl:value-of select="php:function('lang', 'Date of birth or SSN')" />
+																</h5>
+																<small class="text-muted">Hentet fra ID-Porten</small>
+															</div>
+															<p class="mb-1 font-weight-bold">
+																<xsl:value-of select="substring (application/customer_ssn ,1, 6 )"/>
+																<xsl:text>*****</xsl:text>
+															</p>
+															<small class="text-muted"></small>
+														</div>
+													</xsl:if>
+													<div href="#" class="list-group-item flex-column align-items-start">
+														<div class="d-flex w-100 justify-content-between">
+															<h5 class="mb-1">
+																<xsl:value-of select="php:function('lang', 'Street')"/>
+															</h5>
+															<small class="text-muted">Hentet fra brukerinput</small>
+														</div>
+														<p class="mb-1 font-weight-bold">
+															<xsl:value-of select="application/responsible_street"/>
+														</p>
+														<small class="text-muted"></small>
+													</div>
+													<div href="#" class="list-group-item flex-column align-items-start">
+														<div class="d-flex w-100 justify-content-between">
+															<h5 class="mb-1">
+																<xsl:value-of select="php:function('lang', 'Zip code')"/>
+															</h5>
+															<small class="text-muted">Hentet fra brukerinput</small>
+														</div>
+														<p class="mb-1 font-weight-bold">
+															<xsl:value-of select="application/responsible_zip_code"/>
+														</p>
+														<small class="text-muted"></small>
+													</div>
+													<div href="#" class="list-group-item flex-column align-items-start">
+														<div class="d-flex w-100 justify-content-between">
+															<h5 class="mb-1">
+																<xsl:value-of select="php:function('lang', 'Postal City')"/>
+															</h5>
+															<small class="text-muted">Hentet fra brukerinput</small>
+														</div>
+														<p class="mb-1 font-weight-bold">
+															<xsl:value-of select="application/responsible_city"/>
+														</p>
+														<small class="text-muted"></small>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
 									<xsl:if test="simple != 1">
 
 										<div class="panel panel-default">
@@ -914,13 +936,8 @@
 																<xsl:if test="../case_officer/is_current_user">
 																	<xsl:if test="contains($collisiondata, from_)">
 																		<xsl:if test="not(contains($assocdata, from_))">
-																			<script type="text/javascript">
-																				applicationDate[<xsl:value-of select="id"/>] = '<xsl:value-of select="substring(from_,0,11)"/>';
-																				var oArgs = {menuaction:'bookingfrontend.uibuilding.schedule', id: building_id, backend: true, date: applicationDate[<xsl:value-of select="id"/>]};
-																				var scheduleUrl = phpGWLink('bookingfrontend/', oArgs);
-																			</script>
 																			<a href="javascript: void(0)"
-																			   onclick="window.open(scheduleUrl, '', 'width=1048, height=600, scrollbars=yes');return false;">
+																			   onclick="open_schedule(building_id,'{from_}');return false;">
 																				<i class="fa fa-exclamation-circle"></i>
 																			</a>
 																		</xsl:if>

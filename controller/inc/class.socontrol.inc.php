@@ -593,14 +593,7 @@
 				$controls_array[] = $control->toArray();
 			}
 
-			if (count($controls_array) > 0)
-			{
-				return $controls_array;
-			}
-			else
-			{
-				return null;
-			}
+			return $controls_array;
 		}
 
 		/**
@@ -654,14 +647,7 @@
 				);
 			}
 
-			if (count($controls_array) > 0)
-			{
-				return $controls_array;
-			}
-			else
-			{
-				return null;
-			}
+			return $controls_array;
 		}
 
 		//Not used ?

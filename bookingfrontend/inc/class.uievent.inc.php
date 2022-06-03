@@ -30,6 +30,10 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
 			$from_org = phpgw::get_var('from_org', 'boolean', 'REQUEST', false);
 			$event = $this->bo->read_single($id);
 			$building_info = $this->bo->so->get_building_info($id);
@@ -273,10 +277,16 @@
 
 		public function cancel()
 		{
+			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 
-			$event = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$event = $this->bo->read_single($id);
 			$from_org = phpgw::get_var('from_org', 'boolean', 'REQUEST', false);
 			$bouser = CreateObject('bookingfrontend.bouser');
 			$errors = array();
@@ -310,14 +320,9 @@
 				$split = 0;
 			}
 
-			$resources = $event['resources'];
-			$activity = $this->organization_bo->so->get_resource_activity($resources);
-			$mailadresses = $this->building_users($event['building_id'], $split, $activity);
-			$extra_mailadresses = $this->resource_users($resources);
-			$mailadresses = array_merge($mailadresses, $extra_mailadresses);
-
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+
 				if ($cdate < $event['to_'])
 				{
 					$event_owner = false;
@@ -336,8 +341,15 @@
 
 					if ($event_owner)
 					{
+						$resources = $event['resources'];
+						$activity = $this->organization_bo->so->get_resource_activity($resources);
+						$mailadresses = $this->building_users($event['building_id'], $split, $activity);
+						$extra_mailadresses = $this->resource_users($resources);
+						$mailadresses = array_merge($mailadresses, $extra_mailadresses);
+
 						$this->bo->send_notification(false, $event, $mailadresses);
 						$this->bo->send_admin_notification(false, $event, $_POST['message']);
+
 						if ($can_delete_events)
 						{
 							$this->bo->so->delete_event($event['id']);
@@ -347,6 +359,7 @@
 							$event['active'] = 0;
 							$this->bo->update($event);
 						}
+
 						$date = substr($event['from_'], 0, 10);
 
 						if ($from_org && $event['customer_organization_id'] !== null)
@@ -493,6 +506,12 @@
 
 		public function info()
 		{
+			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+
 			$config = CreateObject('phpgwapi.config', 'booking')->read();
 			if ($config['user_can_delete_events'] != 'yes')
 			{
@@ -502,7 +521,7 @@
 			{
 				$user_can_delete_events = 1;
 			}
-			$event = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$event = $this->bo->read_single($id);
 			$from_org = phpgw::get_var('from_org', 'boolean', 'REQUEST', false);
 			unset($event['comments']);
 			$resources = $this->resource_bo->so->read(array('filters' => array('id' => $event['resources']),
@@ -595,7 +614,13 @@
 
 		public function show( )
 		{
-			$event = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+
+			$event = $this->bo->read_single($id);
 			unset($event['comments']);
 			$resources = $this->resource_bo->so->read(array('filters' => array('id' => $event['resources']),
 				'sort' => 'name'));
@@ -727,8 +752,12 @@
 
 		public function report_numbers()
 		{
-			$step = 1;
 			$id = phpgw::get_var('id', 'int');
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+			$step = 1;
 			$event = $this->bo->read_single($id);
 
 			$activity_path = $this->activity_bo->get_path($event['activity_id']);
@@ -742,13 +771,19 @@
 
 			$interval = (new DateTime($event['from_']))->diff(new DateTime($event['to_']));
 			$when = "";
-			if($interval->days > 0) {
+
+			if ($interval->days > 0)
+			{
 				$when = pretty_timestamp($event['from_']) . ' - ' . pretty_timestamp($event['to_']);
-			} else {
-				$end = new DateTime($event['to_']);				
-				$when = pretty_timestamp($event['from_']) . ' - ' . $end->format('H:i');
 			}
+			else
+			{
+				$end	 = new DateTime($event['to_']);
+				$when	 = pretty_timestamp($event['from_']) . ' - ' . $end->format('H:i');
+			}
+
 			$event['when'] = $when;
+
 			if ($event['secret'] != phpgw::get_var('secret', 'string'))
 			{
 				$step = -1; // indicates that an error message should be displayed in the template

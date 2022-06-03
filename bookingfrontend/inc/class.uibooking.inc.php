@@ -180,6 +180,8 @@
 
 			$bookings = $this->bo->organization_schedule($date, $organization_id, $building_ids, $group_ids);
 
+			$results = array();
+
 			foreach ($bookings['results'] as &$booking)
 			{
 				$booking['link'] = $this->link(array('menuaction' => 'bookingfrontend.uibooking.show',

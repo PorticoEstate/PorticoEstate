@@ -1139,6 +1139,10 @@ JS;
 				{
 					$params['formatter'] = 'JqueryPortico.formatLinkGeneric';
 				}
+				else if($lookup && $uicols['datatype'][$k] == 'link' && !preg_match('/^loc/', $uicols['name'][$k]))
+				{
+					$params['hidden'] = true;
+				}
 
 				if (!$lookup && in_array($uicols['name'][$k], $searc_levels))
 				{

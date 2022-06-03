@@ -54,7 +54,9 @@
 				// the array_filter function preserves the array keys. The javascript that later iterates over the resultset don't like gaps in the array keys
 				// reindexing the results array solves the problem
 				$doc_backup = $validated_doc;
-				unset($validated_doc['results']);
+
+				$validated_doc['results']= array();
+
 				foreach ($doc_backup['results'] as $doc)
 				{
 					$validated_doc['results'][] = $doc;

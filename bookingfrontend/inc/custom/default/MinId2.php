@@ -131,6 +131,10 @@
 			{
 				foreach ($orgs as $org)
 				{
+					if(empty($org['orgnr']))
+					{
+						continue;
+					}
 					$this->db->query("SELECT organization_number"
 						. " FROM bb_organization"
 						. " WHERE active = 1 AND organization_number = '{$org['orgnr']}'", __LINE__, __FILE__);
@@ -150,10 +154,11 @@
 				}
 			}
 
-			$hash = sha1($fodselsnr);
-			$ssn =  '{SHA1}' . base64_encode($hash);
+			$hash	 = sha1($fodselsnr);
+			$ssn	 = '{SHA1}';
+			$ssn	 .= base64_encode($hash);
 
-			$this->db->query("SELECT DISTINCT * FROM (SELECT bb_organization.customer_ssn, bb_organization.organization_number, bb_organization.name AS organization_name"
+			$sql = "SELECT DISTINCT * FROM (SELECT bb_organization.customer_ssn, bb_organization.organization_number, bb_organization.name AS organization_name"
 				. " FROM bb_delegate"
 				. " JOIN  bb_organization ON bb_delegate.organization_id = bb_organization.id"
 				. " WHERE bb_delegate.active = 1 AND bb_delegate.ssn = '{$ssn}'"
@@ -161,7 +166,11 @@
 				. " SELECT customer_ssn, organization_number, name AS organization_name"
 				. " FROM bb_organization"
 				. " WHERE (customer_ssn = '{$fodselsnr}' AND customer_identifier_type = 'ssn')"
-				. " OR organization_number IN ('". implode("','", $orgs_validate) ."') ) as t", __LINE__, __FILE__);
+				. " OR organization_number IN ('". implode("','", $orgs_validate) ."') ) as t";
+
+			$this->log('Delegert_eller_rolle_sql', $sql);
+
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			while($this->db->next_record())
 			{

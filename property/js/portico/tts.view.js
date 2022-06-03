@@ -565,6 +565,21 @@ window.on_location_updated = function (location_code)
 
 $(document).ready(function ()
 {
+	$("#user_id").select2({
+		placeholder: "Select a user",
+		width: '75%'
+	});
+
+	$('#user_id').on('select2:open', function (e) {
+
+		$(".select2-search__field").each(function()
+		{
+			if ($(this).attr("aria-controls") == 'select2-user_id-results')
+			{
+				$(this)[0].focus();
+			}
+		});
+	});
 
 	$("#tags").select2({
 		placeholder: "Velg en eller flere tagger, eller lag ny",
