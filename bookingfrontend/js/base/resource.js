@@ -64,7 +64,7 @@ $(document).ready(function ()
 
 function PopulateResourceData()
 {
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_resource.index_images", filter_owner_id: urlParams['id']}, true);
+	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_resource.index_images", filter_owner_id: urlParams['id'], length:-1}, true);
 	$.getJSON(getJsonURL, function (result)
 	{
 		var mainPictureFound = false;

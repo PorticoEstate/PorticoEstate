@@ -556,7 +556,7 @@ function getFreetime(urlParams)
 function PopulateBuildingData(urlParams)
 {
 
-	var getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_building.index_images", filter_owner_id: urlParams['id']}, true);
+	var getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_building.index_images", filter_owner_id: urlParams['id'], length:-1}, true);
 	$.getJSON(getJsonURL, function (result)
 	{
 		var mainPictureFound = false;
