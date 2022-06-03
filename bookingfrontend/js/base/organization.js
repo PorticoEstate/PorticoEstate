@@ -1,3 +1,5 @@
+/* global organization_id */
+
 $(".group_link").attr('data-bind', "attr: {'href': group_link }");
 var urlParams = [];
 CreateUrlParams(window.location.search);
@@ -117,7 +119,7 @@ function PopulateOrganizationData() {
 	});
 
 
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_organization.index_images", filter_owner_id:organization_id}, true);
+	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_organization.index_images", filter_owner_id:organization_id, length:-1}, true);
 	$.getJSON(getJsonURL, function(result){
 		var mainPictureFound = false;
 		if(result.ResultSet.Result.length > 0) {
