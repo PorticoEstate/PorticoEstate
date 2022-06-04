@@ -1609,6 +1609,8 @@
 				if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner']))
 //						&& isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner'])
 				{
+					$project = (isset($values['project_id']) ? CreateObject('property.boproject')->read_single_mini($values['project_id']) : '');
+
 					if ($this->account != $project['coordinator'] && $config->config_data['notify_project_owner']  && $config->config_data['mailnotification'])
 					{
 						$prefs_coordinator = $this->bocommon->create_preferences('common', $project['coordinator']);
