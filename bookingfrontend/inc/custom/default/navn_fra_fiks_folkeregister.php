@@ -129,7 +129,7 @@
 			$data['middle_name']	 = $ret['mellomnavn'];
 			$data['last_name']		 = $ret['etternavn'];
 			$data['name']			 = empty($ret['mellomnavn']) ? "{$ret['fornavn']} {$ret['etternavn']}" : "{$ret['fornavn']} {$ret['mellomnavn']} {$ret['etternavn']}";
-			$data['street']			 = $this->mb_ucfirst($ret['postadresse'][0]);
+			$data['street']			 = $this->mb_ucfirst(mb_convert_case($ret['postadresse'][0], MB_CASE_LOWER));
 			$data['zip_code']		 = $poststed[0];
 			$data['city']			 = $poststed[1];
 			$data['address_type']	 = $ret['adressegradering'];//"fortrolig"
