@@ -1606,15 +1606,25 @@
 				$toarray	 = array();
 				$toarray_sms = array();
 
-				if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner']) && $config->config_data['mailnotification'])
+				if (isset($receipt['notice_owner']) && is_array($receipt['notice_owner']))
 //						&& isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner'])
 				{
-					if ($this->account != $project['coordinator'] && $config->config_data['notify_project_owner'])
+					$project = (isset($values['project_id']) ? CreateObject('property.boproject')->read_single_mini($values['project_id']) : '');
+
+					if ($this->account != $project['coordinator'] && $config->config_data['notify_project_owner']  && $config->config_data['mailnotification'])
 					{
 						$prefs_coordinator = $this->bocommon->create_preferences('common', $project['coordinator']);
 						if (isset($prefs_coordinator['email']) && $prefs_coordinator['email'])
 						{
 							$toarray[] = $prefs_coordinator['email'];
+						}
+					}
+					if ($this->account != $values['user_id'])
+					{
+						$prefs_user = $this->bocommon->create_preferences('common', $values['user_id']);
+						if (isset($prefs_user['email']) && $prefs_user['email'])
+						{
+							$toarray[] = $prefs_user['email'];
 						}
 					}
 				}
@@ -1673,7 +1683,10 @@
 						$body .= $notice . "\n";
 					}
 					$body	 .= lang('Altered by') . ': ' . $from_name . "\n";
-					$body	 .= lang('remark') . ': ' . $values['remark'] . "\n";
+					if(empty($values['remark']))
+					{
+						$body	 .= lang('remark') . ': ' . $values['remark'] . "\n";
+					}
 					$body	 = nl2br($body);
 
 					if (!is_object($GLOBALS['phpgw']->send))
@@ -1681,21 +1694,23 @@
 						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 					}
 
-					$returncode = $GLOBALS['phpgw']->send->msg('email', $to, $subject, $body, false, false, false, $from_email, $from_name, 'html');
+					try
+					{
+						$GLOBALS['phpgw']->send->msg('email', $to, $subject, $body, false, false, false, $from_email, $from_name, 'html');
+						$historylog->add('ON', $id, lang('%1 is notified', $to));
+						$this->receipt['message'][] = array(
+							'msg' => lang('%1 is notified', $to));
 
-					if (!$returncode) // not nice, but better than failing silently
+					}
+					catch (Exception $e)
 					{
 						$this->receipt['error'][]	 = array(
 							'msg' => "uiworkorder::edit: sending message to '$to' subject='$subject' failed !!!");
 						$this->receipt['error'][]	 = array(
 							'msg' => $GLOBALS['phpgw']->send->err['desc']);
+
 					}
-					else
-					{
-						$historylog->add('ON', $id, lang('%1 is notified', $to));
-						$this->receipt['message'][] = array(
-							'msg' => lang('%1 is notified', $to));
-					}
+
 				}
 
 				if (phpgw::get_var('send_workorder', 'bool') && !$this->receipt['error'])

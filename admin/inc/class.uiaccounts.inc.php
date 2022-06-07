@@ -1432,7 +1432,7 @@
 			if ( !$user_data['expires'] )
 			{
 				// we assume this is a sane value
-				$user_data['expires'] = time() + $GLOBALS['phpgw_info']['server']['auto_create_expire'];
+				$user_data['expires'] = time() + (int)$GLOBALS['phpgw_info']['server']['auto_create_expire'];
 			}
 
 			if ($user_data['expires'] == -1) //switch to js cal - skwashd
