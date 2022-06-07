@@ -397,7 +397,7 @@
 				}
 				else
 				{
-					$resources = $data['resources'];
+					$resources = (array)$data['resources'];
 
 				}
 			}
