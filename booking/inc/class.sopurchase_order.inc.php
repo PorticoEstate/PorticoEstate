@@ -140,12 +140,12 @@
 					if($currentapp  == 'booking' && !is_null($_tax_code ) && $_tax_code != 'x') // restricted to backend
 					{
 						$tax_code	 = (int)$_tax_code;
-						$percent	 = $tax_codes[$tax_code];
+						$percent	 = (int)$tax_codes[$tax_code];
 					}
 					else
 					{
 						$tax_code	 = $current_price_info['tax_code'];
-						$percent	 = $current_price_info['percent'];
+						$percent	 = (int)$current_price_info['percent'];
 					}
 
 					$tax = $amount * $percent / 100;
