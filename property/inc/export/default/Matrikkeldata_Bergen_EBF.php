@@ -108,6 +108,7 @@
 			-- BYGNINGSTATUSHISTORIKK.*,
 			--MATRIKKELENHET.*,
 			--BYGG.*,
+				GATE.GATENAVN, ADRESSE.HUSNR, ADRESSE.BOKSTAV,
 				BYGNINGSTATUSHISTORIKK.REGISTRERTDATO as DATO,
 				MATRIKKELENHET.ID,
 				MATRIKKELENHET.CLASS as MATRIKKELENHET_CLASS,
@@ -149,6 +150,7 @@
 					}
 				}
 
+				$value['Matrikkel_Adresse'] = $this->db->f('GATENAVN') . " " . $this->db->f('HUSNR') . " " . $this->db->f('BOKSTAV');
 				$value['etableringsdato'] = $this->db->f('ETABLERINGSDATO');
 				if (!$value['etableringsdato'])
 				{
@@ -161,7 +163,7 @@
 				$value['kommune_id']		 = $this->db->f('KOMMUNEID');
 				$value['gardsnr']			 = $this->db->f('GARDSNR');
 				$value['bruksnr']			 = $this->db->f('BRUKSNR');
-				$value['BYGNINGSTYPEKODE']	 = $this->db->f('BYGNINGSTYPEKODE');
+				$value['Bygningstypekode']	 = $this->db->f('BYGNINGSTYPEKODE');
 			}
 		}
 
