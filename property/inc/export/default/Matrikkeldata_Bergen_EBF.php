@@ -169,15 +169,17 @@
 		{
 			$db = & $GLOBALS['phpgw']->db;
 
-			$sql = "SELECT DISTINCT bygningsnr,fm_location1.loc1 as objekt, loc1_name as navn, fm_owner_category.descr as eiertype FROM fm_location4
+			$sql = "SELECT DISTINCT bygningsnr,fm_location1.loc1 as objekt, loc1_name as navn, fm_owner_category.descr as eiertype, sum(boareal) as leieareal
+			FROM fm_location4
 			JOIN fm_location1 on fm_location4.loc1 = fm_location1.loc1
 			JOIN fm_owner ON fm_owner.id = fm_location1.owner_id
 			JOIN fm_owner_category ON fm_owner.category = fm_owner_category.id
-			WHERE fm_owner_category.id IN (2, 4)
-			AND fm_location4.category != 99
+			-- WHERE fm_owner_category.id IN (4)
+			WHERE fm_location4.category != 99
 			AND bygningsnr IS NOT NULL
 			--AND bygningsnr = 300383295
-			ORDER BY bygningsnr";
+			GROUP BY bygningsnr, objekt, navn, eiertype
+            ORDER BY bygningsnr";
 
 			$db->query($sql, __LINE__, __FILE__);
 			$values = array();
