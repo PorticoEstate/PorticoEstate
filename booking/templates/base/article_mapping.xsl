@@ -159,7 +159,7 @@
 
 							<div class="pure-control-group">
 								<xsl:variable name="lang_date_from">
-									<xsl:value-of select="php:function('lang', 'date from')"/>
+									<xsl:value-of select="php:function('lang', 'from')"/>
 								</xsl:variable>
 								<label>
 									<xsl:value-of select="$lang_date_from"/>
