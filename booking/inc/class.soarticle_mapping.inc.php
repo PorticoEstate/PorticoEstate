@@ -185,7 +185,7 @@
 					'price'				 => 0,
 					'remark'			 => 'Price not set',
 					'tax_code'			 => $this->db->f('tax_code'),
-					'percent'			 => $this->db->f('percent')
+					'percent'			 => (int)$this->db->f('percent')
 				);
 			}
 
@@ -222,11 +222,11 @@
 				$pricing[$article_mapping_id] = array(
 					'id'				 => $this->db->f('id'),
 					'article_mapping_id' => $article_mapping_id,
-					'price'				 => $this->db->f('price'),
+					'price'				 => (float)$this->db->f('price'),
 					'from_'				 => $this->db->f('from_'),
 					'remark'			 => $this->db->f('remark', true),
 					'tax_code'			 => $this->db->f('tax_code'),
-					'percent'			 => $this->db->f('percent')
+					'percent'			 => (int)$this->db->f('percent')
 				);
 			}
 			return $pricing;

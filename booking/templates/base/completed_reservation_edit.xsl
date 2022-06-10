@@ -20,12 +20,21 @@
 									<xsl:value-of select="php:function('lang', 'Cost')" />
 								</label>
 								<input id="field_cost" name="cost" type="text" value="{reservation/cost}" class="pure-u-1">
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Please enter a cost')" />
-									</xsl:attribute>
+									<xsl:choose>
+										<xsl:when test="config/activate_application_articles">
+											<xsl:attribute name="readonly">
+												<xsl:text>readonly</xsl:text>
+											</xsl:attribute>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:attribute name="data-validation">
+												<xsl:text>required</xsl:text>
+											</xsl:attribute>
+											<xsl:attribute name="data-validation-error-msg">
+												<xsl:value-of select="php:function('lang', 'Please enter a cost')" />
+											</xsl:attribute>
+										</xsl:otherwise>
+									</xsl:choose>
 								</input>
 							</div>
 							<div class="pure-control-group">
@@ -57,6 +66,35 @@
 							</div>
 						</div>
 						<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4">
+							<div class="pure-control-group">
+								<label for="field_org_name" class="pure-checkbox">
+									<xsl:value-of select="php:function('lang', 'Organization')" />
+									<xsl:text> </xsl:text>
+									<input type="checkbox" id="option_organization">
+										<xsl:if test="reservation/organization_name">
+											<xsl:attribute name="checked">
+												<xsl:text>true</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+
+									</input>
+								</label>
+								<input id="field_org_id" name="organization_id" type="hidden">
+									<xsl:attribute name="value">
+										<xsl:value-of select="reservation/organization_id"/>
+									</xsl:attribute>
+								</input>
+								<input id="field_org_name" name="organization_name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
+									<xsl:if test="not(reservation/organization_name)">
+										<xsl:attribute name="style">
+											<xsl:text>display: none;</xsl:text>
+										</xsl:attribute>
+									</xsl:if>
+									<xsl:attribute name="value">
+										<xsl:value-of select="reservation/organization_name"/>
+									</xsl:attribute>
+								</input>
+							</div>
 							<xsl:copy-of select="phpgw:booking_customer_identifier(reservation, 'Customer ID')"/>
 						</div>
 					</div>

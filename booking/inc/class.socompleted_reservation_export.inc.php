@@ -1545,8 +1545,8 @@
 					$line_field[] = "\"{$log_customer_nr}\"";
 					$line_field[] = "\"{$log_varelinjer_med_dato}\"";
 					$line_field[] = "\"{$log_buidling}\"";
-					$line_field[] = "\"{$log_cost}\"";
-					$line_field[] = "\"{$log_cost2}\"";
+					$line_field[] = '"' . number_format($log_cost, 2, ",", '') . '"';
+					$line_field[] = '"' . number_format($log_cost2, 2, ",", '') . '"';
 
 					$log[] = implode(';',  $line_field);
 
@@ -1661,8 +1661,8 @@
 					$line_field[] = "\"{$log_customer_nr}\"";
 					$line_field[] = "\"{$log_varelinjer_med_dato}\"";
 					$line_field[] = "\"{$log_buidling}\"";
-					$line_field[] = "\"{$log_cost}\"";
-					$line_field[] = "\"{$log_cost2}\"";
+					$line_field[] = '"' . number_format($log_cost, 2, ",", '') . '"';
+					$line_field[] = '"' . number_format($log_cost2, 2, ",", '') . '"';
 
 					$log[] = implode(';',  $line_field);
 
