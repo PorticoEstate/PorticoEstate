@@ -1314,6 +1314,21 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_payment_method' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'payment_gateway_name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false),//test and live.
+				'payment_gateway_mode' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),//test and live.
+				'is_default' => array('type' => 'int', 'precision' => '2', 'nullable' => true),
+				'expires' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'created' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'changed' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		//https://docs.drupalcommerce.org/commerce2/developer-guide/payments/payments-information-structure
 		'bb_payment' => array(
 			'fd' => array(
@@ -1341,21 +1356,6 @@
 				'bb_purchase_order' => array('order_id' => 'id'),
 				'bb_payment_method' => array('payment_method_id' => 'id'),
 			),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'bb_payment_method' => array(
-			'fd' => array(
-				'id' => array('type' => 'auto', 'nullable' => false),
-				'payment_gateway_name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => false),//test and live.
-				'payment_gateway_mode' => array('type' => 'varchar', 'precision' => '6', 'nullable' => false),//test and live.
-				'is_default' => array('type' => 'int', 'precision' => '2', 'nullable' => true),
-				'expires' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
-				'created' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
-				'changed' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
-			),
-			'pk' => array('id'),
-			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
 		),
