@@ -242,11 +242,13 @@
 					'sort' => 'from_', 'dir' => 'asc', 'results' =>'all'));
 				$_adates = array();
 
+				$cost = 0;
 				foreach ($associations['results'] as $assoc)
 				{
 					if ($assoc['active'])
 					{
 						$_adates[] = "\t{$assoc['from_']} - {$assoc['to_']}";
+						$cost += (float)$assoc['cost'];
 					}
 				}
 
@@ -275,6 +277,13 @@
 					$body .= "<pre>Godkjent tid:\n" . $adates . "</pre>";
 					$body .= "<br />";
 				}
+
+				if($cost)
+				{
+					$body .= "<pre>Totalkostnad: kr " .  number_format($cost, 2, ",", '.') . "</pre>";
+					$body .= "<br />";
+				}
+
 				if ($rdates)
 				{
 					$body .= "<pre>Avvist: " . $rdates . "</pre>";

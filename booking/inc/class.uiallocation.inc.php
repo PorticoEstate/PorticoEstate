@@ -717,9 +717,10 @@
 
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'base', 'allocation.js');
-			$purchase_order_check = $this->sopurchase_order->get_purchase_order(0, 'allocation', $id);
 
-			if($allocation['application_id'] && $purchase_order_check)
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+
+			if($allocation['application_id'] && !empty($config['activate_application_articles']))
 			{
 				if($allocation['completed'])
 				{
