@@ -118,6 +118,23 @@
 							</label>
 						</td>
 					</tr>
+					<tr>
+						<td>
+							<input type='checkbox' value='1' name="booking_async_task_anonyminizer_enabled" id="field_booking_async_task_anonyminizer_enabled">
+								<xsl:if test="settings/booking_async_task_anonyminizer_enabled and settings/booking_async_task_anonyminizer_enabled ='1'">
+									<xsl:attribute name="checked">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:if test="not(settings/permission/write)">
+									<xsl:attribute name="disabled">disabled</xsl:attribute>
+								</xsl:if>
+							</input>
+						</td>
+						<td>
+							<label for="field_booking_async_task_anonyminizer_enabled">
+								<xsl:value-of select="php:function('lang', 'booking_async_task_anonyminizer')" />
+							</label>
+						</td>
+					</tr>
 				</table>
 				<div class="clr"/>
 			</div>
