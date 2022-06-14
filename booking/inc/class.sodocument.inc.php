@@ -165,6 +165,24 @@
 					}
 					throw $e;
 				}
+
+				$finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
+
+				foreach (array_keys($files) as $key)
+				{
+					$_mime_type	 = $files[$key]['type'];
+					$_tmp_name	 = $files[$key]['tmp_name'];
+				}
+
+				/* get mime-type for a specific file */
+				$mime_type = finfo_file($finfo, $_tmp_name);
+				/* close connection */
+				finfo_close($finfo);
+
+				if ($_mime_type !== $mime_type)
+				{
+					$errors['name'] = lang('filetype %1 is spoofed as %2', $mime_type, $_mime_type);
+				}
 			}
 
 			if (!in_array($document['category'], $this->defaultCategories))
@@ -177,23 +195,6 @@
 				$errors['name'] = lang('Not a valid filetype');
 			}
 
-			$finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
-
-			foreach (array_keys($files) as $key)
-			{
-				$_mime_type = $files[$key]['type'];
-				$_tmp_name = $files[$key]['tmp_name'];
-			}
-
-			/* get mime-type for a specific file */
-			$mime_type =  finfo_file($finfo, $_tmp_name);
-			/* close connection */
-			finfo_close($finfo);
-
-			if($_mime_type !== $mime_type)
-			{
-				$errors['name'] = lang('filetype %1 is spoofed as %2', $mime_type, $_mime_type  );
-			}
 		}
 
 		function add( $document )
