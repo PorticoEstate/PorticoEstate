@@ -613,6 +613,17 @@
 
 			if (!phpgw::get_var('from_report', 'POST'))
 			{
+				/**
+				 * Translate into text
+				 */
+				if ($errors['allocation'] && is_array($errors['allocation']))
+				{
+					$errors['allocation'] = lang('Overlaps with existing allocation %1. Remember to send a notification', " #" . implode(', #',$errors['allocation'][0]));
+				}
+				if ($errors['booking'] && is_array($errors['booking']))
+				{
+					$errors['booking'] = lang('Overlaps with existing booking %1. Remember to send a notification', " #" . implode(', #',$errors['booking'][0])) ;
+				}
 				$this->flash_form_errors($errors);
 			}
 
