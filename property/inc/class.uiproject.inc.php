@@ -2015,7 +2015,7 @@ JS;
 
 			if (isset($values['reserve']) && $values['reserve'] != 0)
 			{
-				$reserve_remainder	 = $values['reserve'] - $values['deviation'];
+				$reserve_remainder	 = (float)$values['reserve'] - (float)$values['deviation'];
 				$remainder_percent	 = number_format((float)($reserve_remainder / $values['reserve']) * 100, 2, $this->decimal_separator, '');
 				$values['sum']		 = $values['sum'] + $values['reserve'];
 			}
@@ -2092,12 +2092,12 @@ JS;
 
 			if (isset($values['reserve']) && $values['reserve'] != 0)
 			{
-				$reserve_remainder	 = $values['reserve'] - $values['deviation'];
+				$reserve_remainder	 = (float)$values['reserve'] - (float)$values['deviation'];
 				$remainder_percent	 = number_format((float)($reserve_remainder / $values['reserve']) * 100, 2, $this->decimal_separator, '.');
 				$values['sum']		 = $values['sum'] + $values['reserve'];
 			}
 
-			$value_remainder = $values['sum'] - $sum_actual_cost - $sum_oblications;
+			$value_remainder = (float)$values['sum'] - (float)$sum_actual_cost - (float)$sum_oblications;
 			$values['sum']	 = number_format((float)$values['sum'], 0, $this->decimal_separator, '.');
 			$value_remainder = number_format((float)$value_remainder, 0, $this->decimal_separator, '.');
 
