@@ -24,7 +24,7 @@
 			if($billing_delay)
 			{
 				$_finnish_datestamp = time();
-				for ($i = 1; $i < 16; $i++)
+				for ($i = 1; $i < 30; $i++)
 				{
 					$finnish_datestamp	 = $_finnish_datestamp - (86400 * $i);
 					$working_days	 = phpgwapi_datetime::get_working_days( $finnish_datestamp, $_finnish_datestamp);
