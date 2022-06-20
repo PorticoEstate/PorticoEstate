@@ -807,9 +807,12 @@
 						</xsl:choose>
 					</div>
 					<xsl:if test="value_project_id > 0">
-						<div class="pure-form-stacked">
+						<div >
 
 							<div class="pure-control-group">
+								<label for="name">
+									<xsl:value-of select="php:function('lang', 'order')"/>
+								</label>
 								<div class="pure-input-3-4" style="float: right; width: 90%;">
 									<xsl:for-each select="datatable_def">
 										<xsl:if test="container = 'datatable-container_1'">
