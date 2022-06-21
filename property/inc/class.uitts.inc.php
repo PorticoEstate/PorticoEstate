@@ -3097,12 +3097,13 @@ JS;
 			$invoices = array();
 			if (!empty($ticket['order_id']))
 			{
-				$active_invoices	 = execMethod('property.soinvoice.read_invoice_sub_sum', array(
-					'order_id' => $ticket['order_id']));
-				$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array(
-					'order_id'	 => $ticket['order_id'],
-					'paid'		 => true));
-				$invoices			 = array_merge($active_invoices, $historical_invoices);
+				$invoices = createObject('property.soinvoice')->read_invoice_sub_sum(
+						array(
+							'order_id'	 => $ticket['order_id'],
+							'paid'		 => 'both',
+							'allrows'	 => true
+						)
+					);
 			}
 
 			$link_data_invoice1	 = array

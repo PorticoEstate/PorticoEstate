@@ -547,7 +547,7 @@
 			$groupmethod = "GROUP BY artid,pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,"
 				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start,external_voucher_id, mvakode,budsjettsigndato";
 
-			if ($paid == 'both')
+			if ($paid === 'both')
 			{
 				$history_table		 = 'fm_ecobilagoverf';
 				$live_table		 = 'fm_ecobilag';
@@ -626,7 +626,7 @@
 			}
 
 
-			if ($paid == 'both')
+			if ($paid === 'both')
 			{
 				if ($project_id)
 				{
