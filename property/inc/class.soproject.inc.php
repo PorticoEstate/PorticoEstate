@@ -1059,11 +1059,11 @@
 				. " {$this->left_join} fm_vendor ON fm_vendor.id = fm_workorder.vendor_id"
 				. " WHERE project_id={$project_id} {$filter_year}{$filtermethod}{$ordermethod}";
 
-			$this->db->query("SELECT count(fm_workorder.id) AS cnt FROM fm_workorder"
+			$this->db->query("SELECT count(*) AS cnt FROM (SELECT DISTINCT fm_workorder.id, fm_workorder_budget.year FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
 				. " {$this->left_join} fm_vendor ON fm_vendor.id = fm_workorder.vendor_id"
-				. " WHERE project_id={$project_id} {$filter_year}{$filtermethod}", __LINE__, __FILE__);
+				. " WHERE project_id={$project_id} {$filter_year}{$filtermethod}) as t", __LINE__, __FILE__);
 
 			$this->db->next_record();
 			$this->total_records = (int)$this->db->f('cnt');
