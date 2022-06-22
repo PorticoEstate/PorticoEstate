@@ -613,6 +613,17 @@
 
 			if (!phpgw::get_var('from_report', 'POST'))
 			{
+				/**
+				 * Translate into text
+				 */
+				if ($errors['allocation'] && is_array($errors['allocation']))
+				{
+					$errors['allocation'] = lang('Overlaps with existing allocation %1. Remember to send a notification', " #" . implode(', #',$errors['allocation'][0]));
+				}
+				if ($errors['booking'] && is_array($errors['booking']))
+				{
+					$errors['booking'] = lang('Overlaps with existing booking %1. Remember to send a notification', " #" . implode(', #',$errors['booking'][0])) ;
+				}
 				$this->flash_form_errors($errors);
 			}
 
@@ -1302,11 +1313,9 @@
 			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'datetime', phpgwapi_datetime::date_to_timestamp($event['to_']));
 			phpgwapi_jquery::load_widget('datepicker');
 
-
 			self::add_javascript('booking', 'base', 'event.js');
-			$purchase_order_check = $this->sopurchase_order->get_purchase_order(0, 'event', $id);
 
-			if($event['application_id'] && $purchase_order_check)
+			if($event['application_id'] && !empty($config->config_data['activate_application_articles']))
 			{
 				if($event['completed'])
 				{

@@ -38,7 +38,7 @@
 
 			$value_set = $this->db->validate_update($field_info);
 
-			return $this->db->query("UPDATE phpgw_reg_fields SET {$value_set} WHERE field_name='{$field_info[field_name]}'", __LINE__, __FILE__);
+			return $this->db->query("UPDATE phpgw_reg_fields SET {$value_set} WHERE field_name='{$field_info['field_name']}'", __LINE__, __FILE__);
 		}
 
 		function insert_field( $field_info )
@@ -56,7 +56,7 @@
 
 		function remove_field( $field_info )
 		{
-			$rv = $this->db->query("DELETE FROM phpgw_reg_fields WHERE field_name='{$field_info[field_name]}'");
+			$rv = $this->db->query("DELETE FROM phpgw_reg_fields WHERE field_name='{$field_info['field_name']}'");
 
 			return $rv;
 		}

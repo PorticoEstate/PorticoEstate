@@ -121,7 +121,7 @@
 					{
 						if ($this->debug)
 						{
-							echo "<br>UPDATE - $field_info[field_name]";
+							echo "<br/>UPDATE - " . $field_info['field_name'];
 						}
 						$this->so->update_field($field_info);
 					}
@@ -129,7 +129,7 @@
 					{
 						if ($this->debug)
 						{
-							echo "<br>INSERT - $field_info[field_name]";
+							echo "<br/>INSERT - " . $field_info['field_name'];
 						}
 						$this->so->insert_field($field_info);
 					}
@@ -146,7 +146,7 @@
 					{
 						if ($this->debug)
 						{
-							echo "<br>REMOVE - $field_info[field_name]";
+							echo "<br>REMOVE - " . $field_info['field_name'];
 						}
 						$this->so->remove_field($field_info);
 					}

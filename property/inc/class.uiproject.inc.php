@@ -2015,7 +2015,7 @@ JS;
 
 			if (isset($values['reserve']) && $values['reserve'] != 0)
 			{
-				$reserve_remainder	 = $values['reserve'] - $values['deviation'];
+				$reserve_remainder	 = (float)$values['reserve'] - (float)$values['deviation'];
 				$remainder_percent	 = number_format((float)($reserve_remainder / $values['reserve']) * 100, 2, $this->decimal_separator, '');
 				$values['sum']		 = $values['sum'] + $values['reserve'];
 			}
@@ -2092,12 +2092,12 @@ JS;
 
 			if (isset($values['reserve']) && $values['reserve'] != 0)
 			{
-				$reserve_remainder	 = $values['reserve'] - $values['deviation'];
+				$reserve_remainder	 = (float)$values['reserve'] - (float)$values['deviation'];
 				$remainder_percent	 = number_format((float)($reserve_remainder / $values['reserve']) * 100, 2, $this->decimal_separator, '.');
 				$values['sum']		 = $values['sum'] + $values['reserve'];
 			}
 
-			$value_remainder = $values['sum'] - $sum_actual_cost - $sum_oblications;
+			$value_remainder = (float)$values['sum'] - (float)$sum_actual_cost - (float)$sum_oblications;
 			$values['sum']	 = number_format((float)$values['sum'], 0, $this->decimal_separator, '.');
 			$value_remainder = number_format((float)$value_remainder, 0, $this->decimal_separator, '.');
 
@@ -2186,33 +2186,8 @@ JS;
 				)
 			);
 
-			$orders_def = array
-				(
-				array('key'			 => 'workorder_id', 'label'			 => lang('Workorder'), 'sortable'		 => true,
-					'formatter'		 => 'formatLink', 'value_footer'	 => lang('Sum')),
-				array('key' => 'year', 'label' => lang('year'), 'sortable' => true),
-				array('key' => 'title', 'label' => lang('title'), 'sortable' => true),
-				array('key'		 => 'b_account_id', 'label'		 => lang('Budget account'), 'sortable'	 => true,
-					'className'	 => 'right'),
-				array('key'		 => 'budget', 'label'		 => lang('budget'), 'sortable'	 => true,
-					'className'	 => 'right',
-					'formatter'	 => 'JqueryPortico.FormatterAmount0'),
-				array('key'		 => 'cost', 'label'		 => lang('cost'), 'sortable'	 => true, 'className'	 => 'right',
-					'formatter'	 => 'JqueryPortico.FormatterAmount0'),
-				array('key' => 'addition_percentage', 'label' => '%', 'sortable' => true, 'className' => 'right'),
-				array('key'		 => 'obligation', 'label'		 => lang('sum orders'), 'sortable'	 => true,
-					'className'	 => 'right', 'formatter'	 => 'JqueryPortico.FormatterAmount0'),
-				array('key'		 => 'actual_cost', 'label'		 => lang('actual cost'), 'sortable'	 => true,
-					'className'	 => 'right', 'formatter'	 => 'JqueryPortico.FormatterAmount0'),
-				array('key'		 => 'diff', 'label'		 => lang('difference'), 'sortable'	 => true,
-					'className'	 => 'right',
-					'formatter'	 => 'JqueryPortico.FormatterAmount0'),
-				array('key' => 'vendor_name', 'label' => lang('Vendor'), 'sortable' => true),
-				array('key' => 'status', 'label' => lang('Status'), 'sortable' => true),
-				array('key'		 => 'send_order', 'label'		 => lang('send workorder'), 'sortable'	 => false,
-					'className'	 => 'center')
-			);
 
+//			$order_data = array();
 			$order_data = $this->bo->get_orders(array(
 				'start'		 => 0,
 				'project_id' => $id,
@@ -2226,8 +2201,21 @@ JS;
 
 			$first_year	 = false;
 			$_order_data = array();
+
+			$_order_budget		 = 0;
+			$_order_cost		 = 0;
+			$_order_obligation	 = 0;
+			$_order_actual_cost	 = 0;
+			$_order_diff		 = 0;
+
 			foreach ($order_data as & $_order_entry)
 			{
+				$_order_budget		 += $_order_entry['budget'];
+				$_order_cost		 += $_order_entry['cost'];
+				$_order_obligation	 += $_order_entry['obligation'];
+				$_order_actual_cost	 += $_order_entry['actual_cost'];
+				$_order_diff		 += $_order_entry['diff'];
+
 				if (!empty($_order_entry['year']) && !$first_year)
 				{
 					$first_year = $_order_entry['year'];
@@ -2251,6 +2239,43 @@ JS;
 				$_order_data[] = $_order_entry;
 			}
 
+			$orders_def = array
+				(
+				array('key'			 => 'workorder_id', 'label'			 => lang('Workorder'), 'sortable'		 => true,
+					'formatter'		 => 'formatLink', 'value_footer'	 => lang('Sum')),
+				array('key' => 'year', 'label' => lang('year'), 'sortable' => true),
+				array('key' => 'title', 'label' => lang('title'), 'sortable' => true),
+				array('key'		 => 'b_account_id', 'label'		 => lang('Budget account'), 'sortable'	 => true,
+					'className'	 => 'right'),
+				array('key'		 => 'budget', 'label'		 => lang('budget'), 'sortable'	 => true,
+					'className'	 => 'right',
+					'formatter'	 => 'JqueryPortico.FormatterAmount0',
+					'value_footer'	 => number_format((float)$_order_budget, 0, $this->decimal_separator, '.')
+					),
+				array('key'		 => 'cost', 'label'		 => lang('cost'), 'sortable'	 => true, 'className'	 => 'right',
+					'formatter'	 => 'JqueryPortico.FormatterAmount0',
+					'value_footer'	 => number_format((float)$_order_cost, 0, $this->decimal_separator, '.')
+					),
+				array('key' => 'addition_percentage', 'label' => '%', 'sortable' => true, 'className' => 'right'),
+				array('key'		 => 'obligation', 'label'		 => lang('sum orders'), 'sortable'	 => true,
+					'className'	 => 'right', 'formatter'	 => 'JqueryPortico.FormatterAmount0',
+					'value_footer'	 => number_format((float)$_order_obligation, 0, $this->decimal_separator, '.')
+					),
+				array('key'		 => 'actual_cost', 'label'		 => lang('actual cost'), 'sortable'	 => true,
+					'className'	 => 'right', 'formatter'	 => 'JqueryPortico.FormatterAmount0',
+					'value_footer'	 => number_format((float)$_order_actual_cost, 0, $this->decimal_separator, '.')
+					),
+				array('key'		 => 'diff', 'label'		 => lang('difference'), 'sortable'	 => true,
+					'className'	 => 'right',
+					'formatter'	 => 'JqueryPortico.FormatterAmount0',
+					'value_footer'	 => number_format((float)$_order_diff, 0, $this->decimal_separator, '.')
+					),
+				array('key' => 'vendor_name', 'label' => lang('Vendor'), 'sortable' => true),
+				array('key' => 'status', 'label' => lang('Status'), 'sortable' => true),
+				array('key'		 => 'send_order', 'label'		 => lang('send workorder'), 'sortable'	 => false,
+					'className'	 => 'center')
+			);
+
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_1',
@@ -2260,9 +2285,10 @@ JS;
 				'data'		 => json_encode($_order_data),
 				'ColumnDefs' => $orders_def,
 				'config'	 => array(
-					//		array('disableFilter' => true),
-					array('disablePagination' => true),
-					array('order' => json_encode(array(1, 'asc')))
+			//		array('disableFilter' => true),
+//					array('disablePagination' => false),
+//					array('allrows' => true),
+					array('order' => json_encode(array(0, 'desc')))
 				)
 			);
 
@@ -2305,11 +2331,20 @@ JS;
 						'phpgw_return_as'	 => 'json'))),
 				'data'		 => json_encode(array()),
 				'ColumnDefs' => $invoice_def,
+				'tabletools' => array(),
 				'config'	 => array(
-					array('disableFilter' => true),
-					array('disablePagination' => true),
-					array('singleSelect' => true)
+					array('disableFilter' => false),
+//					array('disablePagination' => false),
+					array('singleSelect' => true),
+					array('allrows' => true),
+					array('order' => json_encode(array(1, 'asc')))
 				)
+
+//				'config'	 => array(
+//					array('disableFilter' => false),
+//					array('disablePagination' => false),
+//					array('singleSelect' => true)
+//				)
 			);
 
 			/*
@@ -2987,22 +3022,22 @@ JS;
 			$order	 = phpgw::get_var('order');
 			$columns = phpgw::get_var('columns');
 
-			$active_invoices	 = execMethod('property.soinvoice.read_invoice_sub_sum', array(
-				'project_id' => $project_id,
-				'year'		 => $year,
-				'order'		 => $columns[$order[0]['column']]['data'],
-				'sort'		 => $order[0]['dir'],
-				)
-			);
-			$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array(
-				'project_id' => $project_id,
-				'year'		 => $year,
-				'paid'		 => true,
-				'order'		 => $columns[$order[0]['column']]['data'],
-				'sort'		 => $order[0]['dir'],
-				)
-			);
-			$invoices			 = array_merge($active_invoices, $historical_invoices);
+			$soinvoice = createObject('property.soinvoice');
+
+			$invoices = $soinvoice->read_invoice_sub_sum(
+					array(
+						'project_id' => $project_id,
+						'year'		 => $year,
+						'paid'		 => 'both',
+						'order'		 => $columns[$order[0]['column']]['data'],
+						'sort'		 => $order[0]['dir'],
+						'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
+						'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
+						'allrows'	 => phpgw::get_var('length', 'int') == -1
+					)
+				);
+
+//			$invoices			 = array_merge($active_invoices, $historical_invoices);
 			$config				 = CreateObject('phpgwapi.config', 'property');
 			$config->read();
 
@@ -3019,8 +3054,7 @@ JS;
 					$voucher_id = $entry['external_voucher_id'];
 				}
 
-				$values[] = array
-					(
+				$values[] = array(
 					'voucher_id'			 => $voucher_id,
 					'voucher_out_id'		 => $entry['voucher_out_id'],
 					'workorder_id'			 => $entry['workorder_id'],
@@ -3049,7 +3083,7 @@ JS;
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				$total_records = count($values);
+				$total_records = $soinvoice->total_records;
 
 				$result_data = array('results' => $values);
 

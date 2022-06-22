@@ -203,7 +203,7 @@
 
 			$lang_disabled	= lang('disabled');
 			$lang_enabled	= lang('enabled');
-			$members = array();
+			$member_list = array();
 			$user_list = array();
 			foreach ( $account_list as $id => $user )
 			{

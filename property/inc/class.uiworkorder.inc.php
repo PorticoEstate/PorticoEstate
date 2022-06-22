@@ -2441,12 +2441,13 @@ JS;
 			$invoices = array();
 			if ($id)
 			{
-				$active_invoices	 = execMethod('property.soinvoice.read_invoice_sub_sum', array(
-					'order_id' => $id));
-				$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array(
-					'order_id'	 => $id,
-					'paid'		 => true));
-				$invoices			 = array_merge($active_invoices, $historical_invoices);
+				$invoices = createObject('property.soinvoice')->read_invoice_sub_sum(
+						array(
+							'order_id'	 => $id,
+							'paid'		 => 'both',
+							'allrows'	 => true
+						)
+					);
 			}
 
 			$link_data_invoice1	 = array
@@ -2694,7 +2695,8 @@ JS;
 				'data'		 => json_encode($content_invoice),
 				'ColumnDefs' => $invoice_def,
 				'config'	 => array(
-					array('disableFilter' => true),
+					array('singleSelect' => true),
+		//			array('disableFilter' => true),
 					array('disablePagination' => true)
 				)
 			);

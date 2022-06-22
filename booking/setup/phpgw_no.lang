@@ -834,6 +834,7 @@ Register out	booking	no	Ut-registrering
 booking_async_task_delete_participants	booking	no	Slette gamle deltagerregistreringer
 booking_async_task_delete_expired_blocks	booking	no	Slette ubrukte reservasjoner
 booking_async_task_delete_access_log	booking	no	Slette aksesslogg for anonym frontend-bruker
+booking_async_task_anonyminizer	booking	no	Anonymiser kunderegister
 register participant text	booking	no	Registrering av deltaker
 participant limit	booking	no	Max antall deltakere
 additional requirements	booking	no	Tilleggvilkår
@@ -906,3 +907,8 @@ day	booking	no	Dag
 %1 resources mapped as articles	booking	no	%1 ressurser er mappet opp som artikler i varekatalogen
 billing delay	booking	no	Utsatt klargjøring av fakturering, virkedager
 activate application articles	booking	no	Aktiver artikler i søknad
+prizing	booking	no	Prising
+remark	booking	no	Merknad
+article code	booking	no	Artikkelkode
+article id	booking	no	ID
+article mapping	booking	no	Artikkelmapping

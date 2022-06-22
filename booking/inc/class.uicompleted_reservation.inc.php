@@ -24,7 +24,7 @@
 		);
 		protected
 			$module = 'booking',
-			$fields = array('cost', 'customer_organization_number', 'customer_ssn',
+			$fields = array('cost', 'organization_id', 'customer_organization_number', 'customer_ssn',
 				'customer_type', 'description', 'article_description'),
 			$customer_id,
 			$export_filters = array();
@@ -646,6 +646,16 @@
 			{
 				list($reservation, $errors) = $this->extract_and_validate($reservation);
 
+				if(empty(phpgw::get_var('organization_name', 'string', 'POST')))
+				{
+					$reservation['organization_id'] = null;
+				}
+
+				if(phpgw::get_var('customer_identifier_type', 'string', 'POST') == 'ssn')
+				{
+					$reservation['organization_id'] = null;
+				}
+
 				if (!$errors)
 				{
 					try
@@ -671,6 +681,12 @@
 			$this->add_default_display_data($reservation);
 			$this->flash_form_errors($errors);
 			$this->install_customer_identifier_ui($reservation);
-			self::render_template_xsl('completed_reservation_edit', array('reservation' => $reservation));
+
+			self::add_javascript('booking', 'base', 'completed_reservation_edit.js');
+
+			self::render_template_xsl('completed_reservation_edit', array(
+				'reservation'	 => $reservation,
+				'config'		 => CreateObject('phpgwapi.config', 'booking')->read()
+			));
 		}
 	}

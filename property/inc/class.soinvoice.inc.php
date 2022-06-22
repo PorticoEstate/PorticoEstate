@@ -541,11 +541,22 @@
 			$year		 = isset($data['year']) ? $data['year'] : '';
 			$project_id	 = isset($data['project_id']) && $data['project_id'] ? (int)$data['project_id'] : 0;
 			$order_id	 = isset($data['order_id']) && $data['order_id'] ? $data['order_id'] : 0;//might be bigint
+			$results	 = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
+			$allrows	 = isset($data['allrows']) ? $data['allrows'] : '';
 
-			if ($paid)
+			$groupmethod = "GROUP BY artid,pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,"
+				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start,external_voucher_id, mvakode,budsjettsigndato";
+
+			if ($paid === 'both')
+			{
+				$history_table		 = 'fm_ecobilagoverf';
+				$live_table		 = 'fm_ecobilag';
+			}
+			else if ($paid === true)
 			{
 				$table		 = 'fm_ecobilagoverf';
-				$overftid	 = ',overftid';
+				$overftid	 = ',overftid AS transfer_time';
+				$groupmethod .= ',overftid';
 			}
 			else
 			{
@@ -614,22 +625,63 @@
 				return array();
 			}
 
-			$groupmethod = "GROUP BY pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,"
-				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start,external_voucher_id, mvakode";
 
-			$sql = "SELECT DISTINCT pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,"
-				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start,external_voucher_id, mvakode"
+			if ($paid === 'both')
+			{
+				if ($project_id)
+				{
+					$join_project_history	 = ""
+						. " {$this->join} fm_workorder ON fm_workorder.id = $history_table.pmwrkord_code"
+						. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id";
+					$join_project_live	 = ""
+						. " {$this->join} fm_workorder ON fm_workorder.id = $live_table.pmwrkord_code"
+						. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id";
+				}
+				else
+				{
+					$join_project_history	 = "";
+					$join_project_live	 = "";
+				}
+				$sql = "SELECT DISTINCT artid,pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,"
+				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start,external_voucher_id, mvakode,budsjettsigndato, overftid AS transfer_time"
+				. " FROM {$history_table}{$join_project_history}"
+				. " {$this->join} fm_vendor ON {$history_table}.spvend_code = fm_vendor.id {$filtermethod} {$groupmethod}, overftid"
+				. " UNION"
+				. " SELECT DISTINCT artid,pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,"
+				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start,external_voucher_id, mvakode,budsjettsigndato, null::timestamp AS transfer_time"
+				. " FROM {$live_table}{$join_project_live}"
+				. " {$this->join} fm_vendor ON {$live_table}.spvend_code = fm_vendor.id {$filtermethod} {$groupmethod}";
+
+			}
+			else
+			{
+				$sql = "SELECT DISTINCT artid,pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,"
+				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start,external_voucher_id, mvakode,budsjettsigndato{$overftid}"
 				. " FROM {$table}{$join_project}"
 				. " {$this->join} fm_vendor ON {$table}.spvend_code = fm_vendor.id {$filtermethod} {$groupmethod}";
+			}
 
-			$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
-			$this->total_records = $this->db->num_rows();
+			$sql_count = "SELECT count(*) as cnt FROM ($sql) as t";
+			$this->db->query($sql_count, __LINE__, __FILE__);
+			$this->db->next_record();
+			$this->total_records = (int)$this->db->f('cnt');
+
+			if (!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
+			}
+
 
 			$values = array();
 			while ($this->db->next_record())
 			{
 				$values[] = array
-					(
+				(
+					'artid'					 => $this->db->f('artid'),
 					'workorder_id'			 => $this->db->f('pmwrkord_code'),
 					'voucher_id'			 => $this->db->f('bilagsnr'),
 					'voucher_out_id'		 => $this->db->f('bilagsnr_ut'),
@@ -643,21 +695,29 @@
 					'periodization'			 => $this->db->f('periodization'),
 					'periodization_start'	 => $this->db->f('periodization_start'),
 					'budget_responsible'	 => $this->db->f('budsjettansvarligid'),
-					'external_voucher_id'	 => $this->db->f('external_voucher_id')
+					'external_voucher_id'	 => $this->db->f('external_voucher_id'),
+					'budsjettsigndato'		 => $this->db->f('budsjettsigndato'),
+					'transfer_time'			 => $this->db->f('transfer_time')
 				);
 			}
 
+			$types = array();
 			foreach ($values as &$entry)
 			{
-				$sql = "SELECT budsjettsigndato{$overftid},fm_ecoart.descr as type"
-					. " FROM {$table} {$this->join} fm_ecoart ON fm_ecoart.id = $table.artid"
-					. " WHERE pmwrkord_code = '{$entry['workorder_id']}' AND bilagsnr = '{$entry['voucher_id']}' AND fakturanr = '{$entry['invoice_id']}'";
+				if (!empty($types[$entry['artid']]))
+				{
+					$entry['type'] = $types[$entry['artid']];
+				}
+				else
+				{
+					$sql = "SELECT fm_ecoart.descr as type"
+						. " FROM  fm_ecoart WHERE fm_ecoart.id = {$entry['artid']}";
 
-				$this->db->query($sql, __LINE__, __FILE__);
-				$this->db->next_record();
-				$entry['budsjettsigndato']	 = $this->db->f('budsjettsigndato');
-				$entry['transfer_time']		 = $this->db->f('overftid');
-				$entry['type']				 = $this->db->f('type');
+					$this->db->query($sql, __LINE__, __FILE__);
+					$this->db->next_record();
+					$entry['type']			 = $this->db->f('type');
+					$types[$entry['artid']]	 = $entry['type'];
+				}
 			}
 
 			return $values;
