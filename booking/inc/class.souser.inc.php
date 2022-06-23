@@ -419,7 +419,7 @@
 
 			$table				 = 'bb_organization';
 			$dataset			 = array(
-				'customer_ssn' => array('type' => 'varchar', 'precision' => '12', 'nullable' => True),
+				'customer_ssn' => $substitute_ssn,
 			);
 			$value_set_update	 = $this->db->validate_update($dataset);
 			$this->db->query("UPDATE {$table} SET {$value_set_update} WHERE customer_ssn = '{$ssn}'", __LINE__, __FILE__);

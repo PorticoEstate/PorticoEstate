@@ -5607,6 +5607,30 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+//START temp fix Stavanger out of sync
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('bb_payment_method');
+		if(!isset($metadata['payment_gateway_name']))
+		{
+			$GLOBALS['phpgw_setup']->oProc->CreateTable(
+				'bb_payment_method', array(
+				'fd' => array(
+					'id'					 => array('type' => 'auto', 'nullable' => false),
+					'payment_gateway_name'	 => array('type' => 'varchar', 'precision' => '50', 'nullable' => false), //test and live.
+					'payment_gateway_mode'	 => array('type' => 'varchar', 'precision' => '6', 'nullable' => false), //test and live.
+					'is_default'			 => array('type' => 'int', 'precision' => '2', 'nullable' => true),
+					'expires'				 => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+					'created'				 => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+					'changed'				 => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+				)
+			);
+
+		}
+//END temp fix Stavanger out of sync
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_payment_method (id, payment_gateway_name, payment_gateway_mode) VALUES(1, 'Vipps', 'live')");
 		$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_payment_method (id, payment_gateway_name, payment_gateway_mode, is_default) VALUES(2, 'Etterfakturering', 'live', 1)");
 
