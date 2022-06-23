@@ -53,6 +53,12 @@
 				. " AND bb_application.customer_ssn NOT IN ("
 				. "		SELECT customer_ssn FROM bb_application "
 				. "		WHERE modified > '$time_limit' AND ( customer_ssn IS NOT NULL AND customer_ssn != '')"
+				. "		UNION"
+				. "		SELECT customer_ssn FROM bb_event "
+				. "		WHERE to_ > '$time_limit' AND ( customer_ssn IS NOT NULL AND customer_ssn != '')"
+				. "		UNION"
+				. "		SELECT customer_ssn FROM bb_completed_reservation "
+				. "		WHERE to_ > '$time_limit' AND ( customer_ssn IS NOT NULL AND customer_ssn != '')"
 				. "	)"
 				. " UNION"
 				. " SELECT DISTINCT bb_event.customer_ssn, bb_user.id "
@@ -60,7 +66,13 @@
 				. " WHERE to_ < '$time_limit'"
 				. " AND substring(bb_user.customer_ssn, 1, 4) != '0000'"
 				. " AND bb_event.customer_ssn NOT IN ("
+				. "		SELECT customer_ssn FROM bb_application "
+				. "		WHERE modified > '$time_limit' AND ( customer_ssn IS NOT NULL AND customer_ssn != '')"
+				. "		UNION"
 				. "		SELECT customer_ssn FROM bb_event "
+				. "		WHERE to_ > '$time_limit' AND ( customer_ssn IS NOT NULL AND customer_ssn != '')"
+				. "		UNION"
+				. "		SELECT customer_ssn FROM bb_completed_reservation "
 				. "		WHERE to_ > '$time_limit' AND ( customer_ssn IS NOT NULL AND customer_ssn != '')"
 				. "	)"
 				. " UNION"
@@ -69,10 +81,24 @@
 				. " WHERE to_ < '$time_limit'"
 				. " AND substring(bb_user.customer_ssn, 1, 4) != '0000'"
 				. " AND bb_completed_reservation.customer_ssn NOT IN ("
+				. "		SELECT customer_ssn FROM bb_application "
+				. "		WHERE modified > '$time_limit' AND ( customer_ssn IS NOT NULL AND customer_ssn != '')"
+				. "		UNION"
+				. "		SELECT customer_ssn FROM bb_event "
+				. "		WHERE to_ > '$time_limit' AND ( customer_ssn IS NOT NULL AND customer_ssn != '')"
+				. "		UNION"
 				. "		SELECT customer_ssn FROM bb_completed_reservation "
 				. "		WHERE to_ > '$time_limit' AND ( customer_ssn IS NOT NULL AND customer_ssn != '')"
 				. "	)"
 				. ") as t";
+
+//			_debug_array($sql);die();
+			$this->db->query($sql,__LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$users[] = $this->db->f('id');
+			}
 
 			return $users;
 		}
