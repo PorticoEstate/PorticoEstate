@@ -258,7 +258,7 @@ JS;
 			$account_id = (int)$GLOBALS['hook_values']['account_id'];
 
 			$GLOBALS['phpgw']->db->query("SELECT account_id FROM phpgw_accounts_data WHERE account_id = {$account_id}",__LINE__,__FILE__);
-			if ($this->db->next_record())
+			if ($GLOBALS['phpgw']->db->next_record())
 			{
 				return;
 			}
