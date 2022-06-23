@@ -249,12 +249,18 @@ JS;
 		* hook to add account
 		*
 		* this function is a wrapper function for eventplanner
+		* duplicated in registration?
 		*
 		* @param _hookValues contains the hook values as array
 		* @returns nothing
 		*/
 		function addaccount()
 		{
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] !== 'registration')
+			{
+				return;
+			}
+
 			$account_id = (int)$GLOBALS['hook_values']['account_id'];
 
 			$GLOBALS['phpgw']->db->query("SELECT account_id FROM phpgw_accounts_data WHERE account_id = {$account_id}",__LINE__,__FILE__);
