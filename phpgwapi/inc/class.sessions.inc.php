@@ -640,7 +640,14 @@
 
 				if(substr($url, 0, 4) != 'http' && $request_scheme != 'https')
 				{
-					$url = "{$request_scheme}://{$GLOBALS['phpgw_info']['server']['hostname']}:{$server_port}{$url}";
+					if($server_port == 80)
+					{
+						$url = "{$request_scheme}://{$GLOBALS['phpgw_info']['server']['hostname']}{$url}";
+					}
+					else
+					{
+						$url = "{$request_scheme}://{$GLOBALS['phpgw_info']['server']['hostname']}:{$server_port}{$url}";
+					}
 				}
 			}
 
