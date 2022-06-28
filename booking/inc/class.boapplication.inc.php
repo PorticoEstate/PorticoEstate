@@ -218,6 +218,7 @@
 			$link = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uiapplication.show&id=' . $application['id'] . '&secret=' . $application['secret'];
 
 
+			$attachments = array();
 			if ($created)
 			{
 				$body = "<p>" . $config->config_data['application_mail_created'] . "</p>";
