@@ -2992,7 +2992,7 @@
 					}
 					$return_after_action = true;
 				}
-				elseif (isset($_POST['unassign_user']))
+				else if (isset($_POST['unassign_user']))
 				{
 					if ($this->unassign_current_user($application))
 					{
@@ -3001,13 +3001,13 @@
 					}
 					$return_after_action = true;
 				}
-				elseif (isset($_POST['display_in_dashboard']))
+				else if (isset($_POST['display_in_dashboard']))
 				{
 					$this->check_application_assigned_to_current_user($application);
 					$update = $this->set_display_in_dashboard($application, $this->extract_display_in_dashboard_value());
 					$return_after_action = true;
 				}
-				elseif ($_POST['status'])
+				else if (isset($_POST['status']))
 				{
 					$this->check_application_assigned_to_current_user($application);
 					$application['status'] = phpgw::get_var('status', 'string', 'POST');
