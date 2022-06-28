@@ -212,6 +212,10 @@
 					<table>
 					<caption>Vi ønsker at følgende anlegg blir overført til EBF (Etat for boligforvaltning)</caption>
 						<tr>
+							<td>Ressursnr</td>
+							<td>{$ressursnr}</td>
+						</tr>
+						<tr>
 							<td>Kundenummer</td>
 							<td>{$kundenummer}</td>
 						</tr>
