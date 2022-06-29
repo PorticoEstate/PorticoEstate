@@ -381,10 +381,17 @@
 			}
 
 			$bcc = implode(';', $mail_addresses);
+			$recipient = '';
 
 			try
 			{
-				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html', '',$attachments, false, $reply_to);
+				$rcpt = $send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html', '',$attachments, false, $reply_to);
+
+				if($rcpt && $GLOBALS['phpgw_info']['flags']['currentapp'] == 'booking')
+				{
+					$recipient = $application['contact_email'];
+				}
+
 				if($bcc && $created)
 				{
 
@@ -426,6 +433,8 @@
 					// TODO: Inform user if something goes wrong
 				}
 			}
+
+			return $recipient;
 		}
 
 
