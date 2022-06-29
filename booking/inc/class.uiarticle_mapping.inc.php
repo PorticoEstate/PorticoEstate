@@ -180,7 +180,10 @@
 					}
 				}
 
-				$article['price']		 = number_format($article['price'], 2, '.', '');
+				$article['ex_tax_price'] = number_format((float)$article['ex_tax_price'], 2, '.', '');
+				$article['unit_price']	 = number_format((float)$article['unit_price'], 2, '.', '');
+				$article['price']		 = number_format((float)$article['price'], 2, '.', '');
+				$article['tax']			 = number_format((float)$article['tax'], 2, '.', '');
 				$article['mandatory']	 = isset($article['resource_id']) ? 1 : '';
 
 				if(empty($article['selected_quantity']))
