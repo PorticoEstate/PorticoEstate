@@ -3092,7 +3092,19 @@
 				}
 
 				$update AND $receipt = $this->bo->update($application);
-				$notify AND $this->bo->send_notification($application);
+
+	//			$notify AND $this->bo->send_notification($application);
+				if($notify)
+				{
+					$recipient = $this->bo->send_notification($application);
+					if($recipient)
+					{
+						$log_msg = "Epost er sendt til {$recipient}";
+						phpgwapi_cache::message_set($log_msg);
+						$this->add_comment($application, $log_msg);
+						$this->bo->update($application);
+					}
+				}
 
 				self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'], 'return_after_action' => $return_after_action));
 			}
