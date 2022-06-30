@@ -594,6 +594,9 @@
 								</label>
 								<div id="articles_container" class="pure-custom" style="display:inline-block;"></div>
 							</div>
+							<div class="pure-control-group">
+								<div id="participant_container"/>
+							</div>
 
 							<div class="heading">
 								<legend>
@@ -601,9 +604,6 @@
 										<xsl:value-of select="php:function('lang', 'participants')" />
 									</h3>
 								</legend>
-							</div>
-							<div class="pure-control-group">
-								<div id="participant_container"/>
 							</div>
 							<div class="pure-control-group">
 								<label for="field_sms_content">
