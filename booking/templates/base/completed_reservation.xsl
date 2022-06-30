@@ -21,8 +21,12 @@
 			<div id="completed_reservation" class="booking-container">
 				<field>
 					<h1>
-						<xsl:value-of select="php:function('lang', string(reservation/reservation_type))"/> #<xsl:value-of select="reservation/id"/>
+						<xsl:value-of select="php:function('lang', string(reservation/reservation_type))"/> #<xsl:value-of select="reservation/reservation_id"/>
 					</h1>
+					<h2>
+						<xsl:value-of select="php:function('lang', 'reservation')"/> #<xsl:value-of select="reservation/id"/>
+					</h2>
+
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Cost')" />

@@ -13,6 +13,30 @@
 							</h3>
 						</legend>
 					</div>
+					<xsl:if test="config/activate_application_articles !=''">
+						<div id="dates-container">
+							<input class="datetime" id="from_" name="from_" type="hidden">
+								<xsl:attribute name="value">
+									<xsl:value-of select="reservation/from_"/>
+								</xsl:attribute>
+							</input>
+							<input class="datetime" id="to_" name="to_" type="hidden">
+								<xsl:attribute name="value">
+									<xsl:value-of select="reservation/to_"/>
+								</xsl:attribute>
+							</input>
+						</div>
+
+						<div class="pure-control-group">
+							<label for="articles_container">
+								<xsl:value-of select="php:function('lang', 'Articles')" />
+							</label>
+							<div id="articles_container" class="pure-custom" style="display:inline-block;"></div>
+						</div>
+						<div class="pure-control-group">
+							<div id="participant_container"/>
+						</div>
+					</xsl:if>
 					<div class="pure-g">
 						<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4">
 							<div class="pure-control-group">
@@ -131,4 +155,16 @@
 			</a>
 		</div>
 	</form>
+	<script type="text/javascript">
+		var date_format = 'Y-m-d';
+		var template_set = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|template_set')" />';
+		var tax_code_list = <xsl:value-of select="tax_code_list"/>;
+		var reservation_type = '<xsl:value-of select="reservation/reservation_type"/>';
+		var reservation_id = '<xsl:value-of select="reservation/reservation_id"/>';
+		var initialSelection = <xsl:value-of select="reservation/resources_json"/>;
+
+		var lang = <xsl:value-of select="php:function('js_lang','Name', 'phone', 'email', 'Resource Type', 'quantity', 'from', 'to', 'send sms', 'article', 'Select', 'price', 'unit', 'tax', 'unit cost', 'quantity', 'Selected', 'Delete', 'Sum', 'tax code', 'percent')"/>;
+
+	</script>
+
 </xsl:template>

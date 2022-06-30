@@ -641,6 +641,8 @@
 				$this->redirect_to('show', array('id' => $reservation['id']));
 			}
 
+			$_reservation = createObject("booking.so{$reservation['reservation_type']}")->read_single($reservation['reservation_id']);
+
 			$errors = array();
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -661,6 +663,56 @@
 					try
 					{
 						$receipt = $this->bo->update($reservation);
+
+						/**
+						 * Start dealing with the purchase_order..
+						 */
+						$purchase_order = array(
+							'application_id' => $_reservation['application_id'],
+							'status' => 0,
+							'reservation_type' => $reservation['reservation_type'],
+							'reservation_id' => $reservation['reservation_id'],
+							'customer_id' => -1,
+							'lines' => array());
+
+						$selected_articles = (array)phpgw::get_var('selected_articles');
+
+						foreach ($selected_articles as $selected_article)
+						{
+							$_article_info = explode('_', $selected_article);
+
+							if(empty($_article_info[0]))
+							{
+								continue;
+							}
+
+							/**
+							 * the value selected_articles[]
+							 * <mapping_id>_<quantity>_<tax_code>_<ex_tax_price>_<parent_mapping_id>
+							 */
+							$purchase_order['lines'][] = array(
+								'article_mapping_id'	=> $_article_info[0],
+								'quantity'				=> $_article_info[1],
+								'tax_code'				=> $_article_info[2],
+								'ex_tax_price'			=> $_article_info[3],
+								'parent_mapping_id'		=> !empty($_article_info[4]) ? $_article_info[4] : null
+							);
+						}
+
+						if(!empty($purchase_order['lines']))
+						{
+							$sopurchase_order = createObject('booking.sopurchase_order');
+							$purchase_order_id = $sopurchase_order->add_purchase_order($purchase_order);
+							$purchase_order_result =  $sopurchase_order->get_single_purchase_order($purchase_order_id);
+							if($purchase_order_result['sum'] && $purchase_order_result['sum'] != $_reservation['cost'])
+							{
+								$this->add_cost_history($_reservation, lang('cost is set'), $purchase_order_result['sum']);
+								$_reservation['cost'] = $purchase_order_result['sum'];
+								createObject("booking.bo{$reservation['reservation_type']}")->update($_reservation);
+							}
+						}
+						/** END purchase order */
+
 						$this->redirect_to('show', array('id' => $reservation['id']));
 					}
 					catch (booking_unauthorized_exception $e)
@@ -682,11 +734,39 @@
 			$this->flash_form_errors($errors);
 			$this->install_customer_identifier_ui($reservation);
 
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+			if( !empty($config['activate_application_articles']))
+			{
+				$GLOBALS['phpgw']->js->validate_file('alertify', 'alertify.min', 'phpgwapi');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
+				self::add_javascript('booking', 'base', 'purchase_order_edit.js');
+				self::add_javascript('phpgwapi', 'dateformatter', 'dateformatter.js');
+			}
 			self::add_javascript('booking', 'base', 'completed_reservation_edit.js');
+
+			$reservation['resources_json'] = json_encode(array_map('intval', $_reservation['resources']));
 
 			self::render_template_xsl('completed_reservation_edit', array(
 				'reservation'	 => $reservation,
-				'config'		 => CreateObject('phpgwapi.config', 'booking')->read()
+				'tax_code_list'	 => json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
+				'config'		 => $config
 			));
 		}
+
+		protected function add_cost_history( &$reservation, $comment = '', $cost = '0.00' )
+		{
+			if (!$comment)
+			{
+				$comment = lang('cost is set');
+			}
+
+			$reservation['costs'][] = array(
+				'time' => 'now',
+				'author' => $this->current_account_fullname(),
+				'comment' => $comment,
+				'cost' => $cost
+			);
+		}
+
 	}

@@ -239,33 +239,35 @@
 										</button>
 									</form>
 								</xsl:if>
-								<xsl:if test="application/status='PENDING'">
-									<xsl:if test="num_associations='0'">
-										<button type="submit" disabled="" value="{php:function('lang', 'Accept application')}" class="dropdown-item" >
-											<i class="fas fa-flag mr-1 text-secondary"></i>
-											<xsl:value-of select="php:function('lang', 'One or more bookings, allocations or events needs to be created before an application can be Accepted')"/>
-										</button>
-									</xsl:if>
-									<xsl:if test="num_associations!='0'">
-										<div>
-											<form method="POST">
-												<input type="hidden" name="status" value="ACCEPTED"/>
-												<button type="submit" class="dropdown-item" >
-													<xsl:choose>
-														<!--xsl:when test="not(application/case_officer)"-->
-														<xsl:when test="not(application/case_officer/is_current_user)">
-															<xsl:attribute name="disabled">disabled</xsl:attribute>
-															<i class="fas fa-flag mr-1 text-secondary"></i>
-														</xsl:when>
-														<xsl:otherwise>
-															<i class="fas fa-flag mr-1 text-primary"></i>
-														</xsl:otherwise>
-													</xsl:choose>
-													<xsl:value-of select="php:function('lang', 'Accept application')" />
-												</button>
-											</form>
-										</div>
-									</xsl:if>
+								<xsl:if test="application/status='PENDING' or application/status='REJECTED'">
+									<xsl:choose>
+										<xsl:when test="num_associations='0'">
+											<button type="submit" disabled="" value="{php:function('lang', 'Accept application')}" class="dropdown-item" >
+												<i class="fas fa-flag mr-1 text-secondary"></i>
+												<xsl:value-of select="php:function('lang', 'One or more bookings, allocations or events needs to be created before an application can be Accepted')"/>
+											</button>
+										</xsl:when>
+										<xsl:when test="num_associations!='0'">
+											<div>
+												<form method="POST">
+													<input type="hidden" name="status" value="ACCEPTED"/>
+													<button type="submit" class="dropdown-item" >
+														<xsl:choose>
+															<!--xsl:when test="not(application/case_officer)"-->
+															<xsl:when test="not(application/case_officer/is_current_user)">
+																<xsl:attribute name="disabled">disabled</xsl:attribute>
+																<i class="fas fa-flag mr-1 text-secondary"></i>
+															</xsl:when>
+															<xsl:otherwise>
+																<i class="fas fa-flag mr-1 text-primary"></i>
+															</xsl:otherwise>
+														</xsl:choose>
+														<xsl:value-of select="php:function('lang', 'Accept application')" />
+													</button>
+												</form>
+											</div>
+										</xsl:when>
+									</xsl:choose>
 								</xsl:if>
 								<div>
 									<xsl:choose>

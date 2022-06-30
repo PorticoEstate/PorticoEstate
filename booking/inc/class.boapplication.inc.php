@@ -391,10 +391,18 @@
 				{
 					$recipient = $application['contact_email'];
 				}
+			}
+			catch (Exception $e)
+			{
+				phpgwapi_cache::message_set("Epost feilet for {$application['contact_email']}", 'error');
+				phpgwapi_cache::message_set($e->getMessage(), 'error');
 
-				if($bcc && $created)
+			}
+
+			if($bcc && $created)
+			{
+				try
 				{
-
 					/**
 					 * Evil hack
 					 */
@@ -410,11 +418,14 @@
 					. "<a href=\"{$link_backend}\">Link til søknad i backend</a></p>";
 
 					$send->msg('email', $bcc, "KOPI::$subject", $new_body, '', '', '', $from, 'AktivKommune', 'html', '',array(), false);
+
 				}
-			}
-			catch (Exception $e)
-			{
-				// TODO: Inform user if something goes wrong
+				catch (Exception $ex)
+				{
+					phpgwapi_cache::message_set("Epost feilet for {$application['contact_email']}", 'error');
+					phpgwapi_cache::message_set($e->getMessage(), 'error');
+
+				}
 			}
 
 			if ($cellphones && $created)

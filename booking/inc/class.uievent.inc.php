@@ -820,14 +820,13 @@
 			$building_info = $this->bo->so->get_building_info($id);
 			$event['building_id'] = $building_info['id'];
 			$event['building_name'] = $building_info['name'];
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('edit event'), 'link' => '#event_edit');
 			$active_tab = 'generic';
 
-			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+			$external_site_address = isset($config['external_site_address']) && $config['external_site_address'] ? $config['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 			$link = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uibuilding.schedule&id=' . $event['building_id'] . "&date=" . substr($event['from_'], 0, -9);
 			$errors = array();
 			$customer = array();
@@ -965,10 +964,10 @@
 							if (phpgw::get_var('sendtocollision', 'bool', 'POST'))
 							{
 
-								$subject = $config->config_data['event_conflict_mail_subject'];
-								$body = "<p>" . $config->config_data['event_mail_conflict_contact_active_collision'] . "<br />\n" . phpgw::get_var('mail','html', 'POST') . "\n";
-								$body .= '<br /><a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . '</a></p>';
-								$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
+								$subject = $config['event_conflict_mail_subject'];
+								$body = "<p>" . $config['event_mail_conflict_contact_active_collision'] . "<br />\n" . phpgw::get_var('mail','html', 'POST') . "\n";
+								$body .= '<br /><a href="' . $link . '">Link til ' . $config['application_mail_systemname'] . '</a></p>';
+								$body .= "<p>" . $config['application_mail_signature'] . "</p>";
 								$sendt = 0;
 								$mail_sendt_to = [];
 								foreach (array_keys($maildata) as $mail)
@@ -1021,9 +1020,9 @@
 							}
 							if (phpgw::get_var('sendtocontact', 'bool', 'POST'))
 							{
-								$subject = $config->config_data['event_change_mail_subject'];
-								$body = "<p>" . $config->config_data['event_change_mail'] . "\n<br/>Melding: " . phpgw::get_var('mail','html', 'POST');
-								$body .= '<br /><a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . '</a></p>';
+								$subject = $config['event_change_mail_subject'];
+								$body = "<p>" . $config['event_change_mail'] . "\n<br/>Melding: " . phpgw::get_var('mail','html', 'POST');
+								$body .= '<br /><a href="' . $link . '">Link til ' . $config['application_mail_systemname'] . '</a></p>';
 								$this->send_mailnotification($event['contact_email'], $subject, $body);
 								$comment = $comment_text_log . '<br />Denne er sendt til ' . $event['contact_email'] . ':<br />';
 								$comment .=  phpgw::get_var('mail','html', 'POST');
@@ -1060,9 +1059,9 @@
 							if (phpgw::get_var('sendtorbuilding', 'bool', 'POST') || phpgw::get_var('sendtorbuilding_email1', 'bool', 'POST') || phpgw::get_var('sendtorbuilding_email2', 'bool', 'POST'))
 							{
 
-								$subject = $config->config_data['event_mail_building_subject'];
+								$subject = $config['event_mail_building_subject'];
 
-								$body = "<p>" . $config->config_data['event_mail_building'] . "<br />\n" . phpgw::get_var('mail','html', 'POST') . "</p>";
+								$body = "<p>" . $config['event_mail_building'] . "<br />\n" . phpgw::get_var('mail','html', 'POST') . "</p>";
 
 								if ($event['customer_organization_name'])
 								{
@@ -1082,8 +1081,8 @@
 								$resources = $event['building_name'] . " (" . substr($resname, 0, -2) . ") " . pretty_timestamp($event['from_']) . " - " . pretty_timestamp($event['to_']);
 
 								$body .= '<p>' . $username . ' har fått innvilget et arrangement i ' . $resources . ".";
-								$body .= '<br /><a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . '</a></p>';
-								$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
+								$body .= '<br /><a href="' . $link . '">Link til ' . $config['application_mail_systemname'] . '</a></p>';
+								$body .= "<p>" . $config['application_mail_signature'] . "</p>";
 
 								$sendt = 0;
 								$mail_sendt_to = [];
@@ -1140,8 +1139,8 @@
 						if (!phpgw::get_var('active', 'bool', 'POST') && phpgw::get_var('sendtorbuilding', 'bool', 'POST'))
 						{
 
-							$subject = $config->config_data['event_canceled_mail_subject'];
-							$body = $config->config_data['event_canceled_mail'] . "<br />\n" . phpgw::get_var('mail','html', 'POST');
+							$subject = $config['event_canceled_mail_subject'];
+							$body = $config['event_canceled_mail'] . "<br />\n" . phpgw::get_var('mail','html', 'POST');
 
 							if ($event['customer_organization_name'])
 							{
@@ -1315,7 +1314,7 @@
 
 			self::add_javascript('booking', 'base', 'event.js');
 
-			if($event['application_id'] && !empty($config->config_data['activate_application_articles']))
+			if($event['application_id'] && !empty($config['activate_application_articles']))
 			{
 				if($event['completed'])
 				{
@@ -1342,7 +1341,7 @@
 			/**
 			 * Start hack
 			 */
-			$external_site_address = !empty($config->config_data['external_site_address']) ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+			$external_site_address = !empty($config['external_site_address']) ? $config['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 			$internal_site_address = $GLOBALS['phpgw_info']['server']['webserver_url'];
 
 			foreach ($comments as  &$comment)
@@ -1373,14 +1372,15 @@
 			$event['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 //              echo '<pre>'; print_r($event);echo '</pre>';
 			self::render_template_xsl('event_edit', array(
-				'event' => $event,
-				'activities' => $activities,
-				'agegroups' => $agegroups,
-				'audience' => $audience,
-				'comments' => $comments,
-				'cost_history' => $cost_history,
-				'tax_code_list'	=> json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
-				));
+				'event'			 => $event,
+				'activities'	 => $activities,
+				'agegroups'		 => $agegroups,
+				'audience'		 => $audience,
+				'comments'		 => $comments,
+				'cost_history'	 => $cost_history,
+				'config'		 => $config,
+				'tax_code_list'	 => json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
+			));
 		}
 
 		public function delete()

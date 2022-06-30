@@ -426,12 +426,21 @@
 									<xsl:value-of select="php:function('lang', 'Cost')" />
 								</label>
 								<input id="field_cost" name="cost" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Please enter a cost')" />
-									</xsl:attribute>
+									<xsl:choose>
+										<xsl:when test="config/activate_application_articles">
+											<xsl:attribute name="readonly">
+												<xsl:text>readonly</xsl:text>
+											</xsl:attribute>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:attribute name="data-validation">
+												<xsl:text>required</xsl:text>
+											</xsl:attribute>
+											<xsl:attribute name="data-validation-error-msg">
+												<xsl:value-of select="php:function('lang', 'Please enter a cost')" />
+											</xsl:attribute>
+										</xsl:otherwise>
+									</xsl:choose>
 									<xsl:attribute name="value">
 										<xsl:value-of select="event/cost"/>
 									</xsl:attribute>
@@ -585,6 +594,9 @@
 								</label>
 								<div id="articles_container" class="pure-custom" style="display:inline-block;"></div>
 							</div>
+							<div class="pure-control-group">
+								<div id="participant_container"/>
+							</div>
 
 							<div class="heading">
 								<legend>
@@ -592,9 +604,6 @@
 										<xsl:value-of select="php:function('lang', 'participants')" />
 									</h3>
 								</legend>
-							</div>
-							<div class="pure-control-group">
-								<div id="participant_container"/>
 							</div>
 							<div class="pure-control-group">
 								<label for="field_sms_content">
