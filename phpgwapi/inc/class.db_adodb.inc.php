@@ -76,7 +76,7 @@
 		*/
 		function link_id()
 		{
-			if(!$this->adodb || $this->adodb->IsConnected())
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->connect();
 			}
@@ -426,7 +426,7 @@
 		*/
 		public function transaction_begin()
 		{
-			if(!$this->adodb || $this->adodb->IsConnected())
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->connect();
 			}
@@ -677,7 +677,7 @@
 				//echo "depi: metadata";
 			}
 			
-			if(!$this->adodb || $this->adodb->IsConnected())
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->connect();
 			}
@@ -698,7 +698,7 @@
 		*/  
 		public function MetaForeignKeys($table, $owner=false, $upper=false)
 		{
-			if(!$this->adodb || $this->adodb->IsConnected())
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->connect();
 			}
@@ -719,7 +719,7 @@
 
 		public function metaindexes($table, $primary = false)
 		{
-			if(!$this->adodb || $this->adodb->IsConnected())
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->connect();
 			}
@@ -749,7 +749,7 @@
 		*/
 		public function table_names()
 		{
-			if(!$this->adodb || $this->adodb->IsConnected())
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->connect();
 			}

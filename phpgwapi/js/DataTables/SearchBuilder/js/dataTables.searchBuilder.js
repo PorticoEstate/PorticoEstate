@@ -1,4 +1,4 @@
-/*! SearchBuilder 1.3.3
+/*! SearchBuilder 1.3.4
  * ©SpryMedia Ltd - datatables.net/license/mit
  */
 (function () {
@@ -161,9 +161,6 @@
                 .append(this.dom.data)
                 .append(this.dom.condition)
                 .append(this.dom.inputCont);
-            this.dom.inputCont
-                .empty()
-                .append(this.dom.value[0]);
             this.setListeners();
             // Trigger the inserted events for the value elements as they are inserted
             if (this.dom.value[0] !== undefined) {
@@ -691,14 +688,16 @@
                         // Instead input elements need to be used for these instead
                         if (this.s.dt.page.info().serverSide && conditionObj[condition].init === Criteria.initSelect) {
                             var col = colInits[column];
-                            if (this.s.serverData[col.data]) {
+                            if (this.s.serverData && this.s.serverData[col.data]) {
                                 conditionObj[condition].init = Criteria.initSelectSSP;
+                                conditionObj[condition].inputValue = Criteria.inputValueSelect;
+                                conditionObj[condition].isInputValid = Criteria.isInputValidSelect;
                             }
                             else {
                                 conditionObj[condition].init = Criteria.initInput;
+                                conditionObj[condition].inputValue = Criteria.inputValueInput;
+                                conditionObj[condition].isInputValid = Criteria.isInputValidInput;
                             }
-                            conditionObj[condition].inputValue = Criteria.inputValueSelect;
-                            conditionObj[condition].isInputValid = Criteria.isInputValidSelect;
                         }
                         this.s.conditions[condition] = conditionObj[condition];
                         var condName = conditionObj[condition].conditionName;
@@ -3598,7 +3597,7 @@
                 _this.dom.clearAll.remove();
             });
         };
-        SearchBuilder.version = '1.3.3';
+        SearchBuilder.version = '1.3.4';
         SearchBuilder.classes = {
             button: 'dtsb-button',
             clearAll: 'dtsb-clearAll',
@@ -3704,7 +3703,7 @@
         return SearchBuilder;
     }());
 
-    /*! SearchBuilder 1.3.3
+    /*! SearchBuilder 1.3.4
      * ©SpryMedia Ltd - datatables.net/license/mit
      */
     // DataTables extensions common UMD. Note that this allows for AMD, CommonJS

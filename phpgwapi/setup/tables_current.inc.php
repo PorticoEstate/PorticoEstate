@@ -12,7 +12,7 @@
 	$phpgw_baseline = array(
 		'phpgw_config' => array(
 			'fd' => array(
-				'config_app' => array('type' => 'varchar','precision' => 50),
+				'config_app' => array('type' => 'varchar','precision' => 50,'nullable' => False),
 				'config_name' => array('type' => 'varchar','precision' => 255,'nullable' => False),
 				'config_value' => array('type' => 'text')
 			),

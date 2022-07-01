@@ -103,6 +103,13 @@
 						$sTranslated =  'text';
 					}
 					break;
+				case 'json':
+					$sTranslated = 'NVARCHAR(MAX)';
+					break;
+				case 'jsonb':
+					$sTranslated = 'NVARCHAR(MAX)';
+					break;
+
 			}
 			return $sTranslated;
 		}
@@ -227,13 +234,23 @@
 			}
 		*/
 
-		function GetIXSQL($sFields,$sTableName = '')
+		function GetIXSQL($sFields,$field_type = '')
 		{
-			if($sTableName)
+			/**
+			 * index for json is not supported in MSSQL
+			 * https://docs.microsoft.com/en-us/sql/relational-databases/json/index-json-data
+			 */
+			if(in_array($field_type ,array('jsonb', 'json')))
 			{
-				return "CREATE NONCLUSTERED INDEX ". str_replace(',','_',$sFields).'_'.$sTableName.'_idx' ."  ON $sTableName ($sFields)";
+				return '';
 			}
-			else
+
+//			// What...?
+//			if($sTableName)
+//			{
+//				return "CREATE NONCLUSTERED INDEX ". str_replace(',','_',$sFields).'_'.$sTableName.'_idx' ."  ON $sTableName ($sFields)";
+//			}
+//			else
 			{
 				$this->indexes_sql[str_replace(',','_',$sFields)] = "CREATE NONCLUSTERED INDEX __index_name__ ON __table_name__ ($sFields)";
 			}

@@ -1,4 +1,4 @@
-/*! SearchPanes 2.0.1
+/*! SearchPanes 2.0.2
  * 2019-2022 SpryMedia Ltd - datatables.net/license
  */
 (function () {
@@ -2101,8 +2101,12 @@
             }
             this._getState();
             if (this.s.dt.page.info().serverSide) {
+                var hostSettings = this.s.dt.settings()[0];
                 // Listener to get the data into the server request before it is made
                 this.s.dt.on('preXhr.dtsps', function (e, settings, data) {
+                    if (hostSettings !== settings) {
+                        return;
+                    }
                     if (data.searchPanes === undefined) {
                         data.searchPanes = {};
                     }
@@ -2289,15 +2293,23 @@
          */
         SearchPanes.prototype._setXHR = function () {
             var _this = this;
-            // We are using the xhr event to rebuild the panes if required due to viewTotal being enabled
-            // If viewTotal is not enabled then we simply update the data from the server
-            this.s.dt.on('xhr.dtsps', function (e, settings, json) {
+            var hostSettings = this.s.dt.settings()[0];
+            var run = function (json) {
                 if (json && json.searchPanes && json.searchPanes.options) {
                     _this.s.serverData = json;
                     _this.s.serverData.tableLength = json.recordsTotal;
                     _this._serverTotals();
                 }
+            };
+            // We are using the xhr event to rebuild the panes if required due to viewTotal being enabled
+            // If viewTotal is not enabled then we simply update the data from the server
+            this.s.dt.on('xhr.dtsps', function (e, settings, json) {
+                if (hostSettings === settings) {
+                    run(json);
+                }
             });
+            // Account for the initial JSON fetch having already completed
+            run(this.s.dt.ajax.json());
         };
         /**
          * Set's the function that is to be performed when a state is loaded
@@ -2660,7 +2672,7 @@
             });
             this._stateLoadListener();
             // Listener for paging on main table
-            table.off('page.dtsps').on('page.dtsps', function () {
+            table.off('page.dtsps page-nc.dtsps').on('page.dtsps page-nc.dtsps', function (e, s) {
                 _this.s.paging = true;
                 // This is an indicator to any selection tracking classes that paging has occured
                 // It has to happen here so that we don't stack event listeners unnecessarily
@@ -2820,7 +2832,7 @@
                 this.dom.clearAll.removeClass(this.classes.disabledButton).removeAttr('disabled');
             }
         };
-        SearchPanes.version = '2.0.1';
+        SearchPanes.version = '2.0.2';
         SearchPanes.classes = {
             clear: 'dtsp-clear',
             clearAll: 'dtsp-clearAll',
@@ -3187,7 +3199,7 @@
         return SearchPanesST;
     }(SearchPanes));
 
-    /*! SearchPanes 2.0.1
+    /*! SearchPanes 2.0.2
      * 2019-2022 SpryMedia Ltd - datatables.net/license
      */
     // DataTables extensions common UMD. Note that this allows for AMD, CommonJS
