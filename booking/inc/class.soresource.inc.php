@@ -13,7 +13,7 @@
 				'sort' => array('type' => 'int', 'required' => false),
 //				'building_id'		 => array('type' => 'int', 'required' => true),
 				'name' => array('type' => 'string', 'query' => true, 'required' => true),
-				'description' => array('type' => 'string', 'query' => true, 'required' => false),
+				'description' => array('type' => 'string', 'required' => false),
 				'deactivate_application' => array('type' => 'int'),
 				'opening_hours' => array('type' => 'string'),
 				'contact_info' => array('type' => 'string'),
