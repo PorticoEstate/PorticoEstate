@@ -248,7 +248,7 @@
 				}
 
 
-				if($behov_tilsyn || $manglende_tilgang)
+				if($behov_tilsyn)
 				{
 					$this->add_ticket($behov_tilsyn, $manglende_tilgang, $merknad, $values['id'], $values['location_code']);
 				}
