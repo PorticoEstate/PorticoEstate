@@ -90,6 +90,7 @@
 				case 'time':
 					$sTranslated = 'time';
 					break;
+				case 'datetime':
 				case 'timestamp':
 					$sTranslated = 'datetime';
 					break;
@@ -104,10 +105,12 @@
 					}
 					break;
 				case 'json':
-					$sTranslated = 'NVARCHAR(MAX)';
-					break;
 				case 'jsonb':
 					$sTranslated = 'NVARCHAR(MAX)';
+					break;
+				case 'bool':
+				case 'boolean':
+					$sTranslated = 'BIT';
 					break;
 
 			}

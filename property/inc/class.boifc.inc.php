@@ -112,6 +112,7 @@
 
 			switch ($GLOBALS['phpgw_info']['server']['db_type'])
 			{
+				case 'mssqlnative':
 				case 'mssql':
 					$this->dateformat		 = "M d Y";
 					$this->datetimeformat	 = "M d Y g:iA";

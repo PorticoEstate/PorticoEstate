@@ -305,7 +305,9 @@
 					$this->transaction_abort();
 					if($file)
 					{
-						trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+						$msg = "SQL: {$sql}<br/><br/> in File: $file<br/><br/> on Line: $line<br/><br/>";
+						$msg .= 'Error: ' . ($e->getMessage());
+						trigger_error($msg, E_USER_ERROR);
 					}
 					else
 					{
@@ -513,15 +515,18 @@
 					}
 					return $Record[0];
 					break;
+				case 'mssqlnative':
 				case 'mssql':
 					/*  MSSQL uses a query to retrieve the last
 					 *  identity on the connection, so table and field are ignored here as well.
 					 */
 					if(!isset($table) || $table == '' || !isset($field) || $field == '')
 					{
-					return -1;
+						return -1;
 					}
-					$result = @mssql_query("select @@identity", $this->adodb->_queryID);
+//					$result = @mssql_query("select @@identity", $this->adodb->_queryID);
+					$result = $this->adodb->Insert_ID($table, $field);
+
 					if(!$result)
 					{
 						return -1;

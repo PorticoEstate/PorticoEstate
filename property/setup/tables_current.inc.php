@@ -102,7 +102,7 @@
 		'fm_vendor' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'org_name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => True),
 				'email' => array('type' => 'varchar', 'precision' => '64', 'nullable' => True),
 				'contact_phone' => array('type' => 'varchar', 'precision' => '20', 'nullable' => True),
@@ -568,7 +568,7 @@
 		'fm_b_account_user' => array(
 			'fd' => array(
 				'b_account_id' => array('type' => 'varchar', 'precision' => '20', 'nullable' => False),
-				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'modified_by' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'modified_on' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
@@ -2842,9 +2842,9 @@
 		),
 		'fm_responsibility_module' => array(
 			'fd' => array(
-				'responsibility_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'cat_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'responsibility_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'cat_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'active' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => False),
 				'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
@@ -3032,7 +3032,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
 				'contact_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
-				'location_code' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
+				'location_code' => array('type' => 'varchar', 'precision' => 50, 'nullable' => False),
 				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => False),
 				'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => False)
@@ -3148,7 +3148,7 @@
 				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
 				'comment' => array('type' => 'text'),
 				'log_date' => array('type' => 'timestamp', 'default' => 'current_timestamp'),
-				'success' => array('type' => 'bool', 'nullable' => false, 'default' => 'false'),
+				'success' => array('type' => 'bool', 'nullable' => True, 'default' => 'false'),
 				'num_of_messages' => array('type' => 'int', 'precision' => 4)
 			),
 			'pk' => array('id'),

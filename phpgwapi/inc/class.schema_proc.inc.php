@@ -45,7 +45,7 @@
 				$this->m_oTranslator	= createObject('phpgwapi.schema_proc_sapdb');
 				break;
 
-				case 'mssqlnative';
+				case 'mssqlnative':
 				case 'mssql':
 				$this->m_oTranslator	= createObject('phpgwapi.schema_proc_mssql');
 				break;

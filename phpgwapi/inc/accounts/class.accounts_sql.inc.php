@@ -128,6 +128,11 @@
 				'person_id'			=> (int) $account->person_id
 			);
 
+			if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+			{
+				$this->db->query('SET identity_insert phpgw_accounts ON', __LINE__, __FILE__);
+			}
+
 			$this->db->query('INSERT INTO phpgw_accounts (' . implode(', ', array_keys($data)) . ') '.
 							'VALUES (' . implode(', ', $data) . ')', __LINE__, __FILE__);
 
@@ -182,6 +187,11 @@
 				'person_id'			=> (int) $account->person_id,
 				'account_quota'		=> (int) $account->quota,
 			);
+
+			if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+			{
+				$this->db->query('SET identity_insert phpgw_accounts ON', __LINE__, __FILE__);
+			}
 
 			$this->db->query('INSERT INTO phpgw_accounts (' . implode(', ', array_keys($data)) . ') '.
 							'VALUES (' . implode(', ', $data) . ')', __LINE__, __FILE__);

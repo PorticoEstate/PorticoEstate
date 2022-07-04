@@ -293,6 +293,7 @@
 
 			switch ( $this->Type )
 			{
+				case 'mssqlnative':
 				case 'mssql':
 					$sql = str_replace('SELECT ', 'SELECT TOP ', $sql);
 					$sql = str_replace('SELECT TOP DISTINCT', 'SELECT DISTINCT TOP ', $sql);
@@ -649,6 +650,7 @@
 			{
 				switch($GLOBALS['phpgw_info']['server']['db_type'])
 				{
+					case 'mssqlnative':
 					case 'mssql':
 						$date_format 		= 'M d Y';
 						break;
@@ -675,6 +677,7 @@
 			{
 				switch($GLOBALS['phpgw_info']['server']['db_type'])
 				{
+					case 'mssqlnative':
 					case 'mssql':
 						$datetime_format 		= 'M d Y g:iA';
 						break;
@@ -695,7 +698,7 @@
 		*/
 		final public static function money_format($amount)
 		{
-			if ($GLOBALS['phpgw_info']['server']['db_type']=='mssql')
+			if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
 			{
 				return "CONVERT(MONEY,'{$amount}',0)";
 			}

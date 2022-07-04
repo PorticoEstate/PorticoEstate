@@ -143,7 +143,14 @@
 					*/
 					try
 					{
-						$this->db = new PDO("mssql:host={$this->Host},1433;dbname={$this->Database}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $this->persistent));
+						$this->db = new PDO("mssql:host={$this->Host},{$this->Host};dbname={$this->Database}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $this->persistent));
+					}
+					catch(PDOException $e){}
+					break;
+					case 'mssqlnative':
+					try
+					{
+						$this->db = new PDO("sqlsrv:Server={$this->Host},{$this->Port};Database={$this->Database}", $this->User, $this->Password);
 					}
 					catch(PDOException $e){}
 					break;
@@ -399,6 +406,7 @@
 //			self::sanitize($sql);//killing performance
 			self::_get_fetchmode();
 			self::set_fetch_single($_fetch_single);
+			$exec = false;
 
 			$fetch_single = $this->fetch_single;
 
@@ -407,22 +415,24 @@
 				$this->connect();
 			}
 			$fetch = true;
-			if(preg_match('/(^INSERT INTO|^DELETE FROM|^CREATE|^DROP|^ALTER|^UPDATE)/i', $sql)) // need it for MySQL and Oracle
+			if(preg_match('/(^INSERT INTO|^DELETE FROM|^CREATE|^DROP|^ALTER|^UPDATE|^SET)/i', $sql)) // need it for MySQL and Oracle
 			{
-//				$exec = true; //ignored
 				$fetch = false;
+			}
+			if(preg_match('/(^SET)/i', $sql)) // need it for MSSQL
+			{
+				$exec = true; //ignored
 			}
 
 			try
 			{
-/*
-				if($exec) // Commented to prevent from SQL-injection
+
+				if($exec)
 				{
 					$this->affected_rows = $this->db->exec($sql);
 					return true;
 				}
 				else
-*/
 				{
 					if($statement_object = $this->db->query($sql))
 					{
@@ -461,7 +471,10 @@
 
 					if($file)
 					{
-						trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+//						trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+						$msg = "SQL: {$sql}<br/><br/> in File: $file<br/><br/> on Line: $line<br/><br/>";
+						$msg .= 'Error: ' . ($e->getMessage());
+						trigger_error($msg, E_USER_ERROR);
 					}
 					else
 					{
@@ -686,12 +699,17 @@
 					$sequence = $this->_get_sequence_field_for_table($table, $field);
 					$ret = $this->db->lastInsertId($sequence);
 					break;
+				case 'mssqlnative':
 				case 'mssql':
-					//FIXME
-					$this->fetchmode = 'BOTH';
+					$orig_fetchmode = $this->fetchmode;
+					if($this->fetchmode == 'ASSOC')
+					{
+						$this->fetchmode = 'BOTH';
+					}
 					$this->query("SELECT @@identity", __LINE__, __FILE__);
 					$this->next_record();
 					$ret = $this->f(0);
+					$this->fetchmode = $orig_fetchmode;
 					break;
 				default:
 					$ret = $this->db->lastInsertId();
@@ -992,11 +1010,12 @@
 						}
 					}
 					break;
-				case 'mssql': //not testet
+				case 'mssqlnative':
+				case 'mssql':
 					$this->query("SELECT name FROM sysobjects WHERE type='u' AND name != 'dtproperties'",__LINE__, __FILE__);
 					foreach($this->resultSet as $entry)
 					{
-						$return[] =  $entry;
+						$return[] =  $entry['name'];
 					}
 					break;
 				case 'oci8':
