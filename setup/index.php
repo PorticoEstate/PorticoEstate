@@ -179,11 +179,11 @@
 	$setup_tpl->set_var('subaction', $subaction);
 
 	// Old PHP
-	if (version_compare(phpversion(), '5.2.0', '<'))
+	if (version_compare(phpversion(), '7.4.0', '<'))
 	{
 		$GLOBALS['phpgw_setup']->html->show_header($GLOBALS['phpgw_info']['setup']['header_msg'],True);
 		$GLOBALS['phpgw_setup']->html->show_alert_msg('Error',
-			 lang('You appear to be using PHP %1. phpGroupWare now requires PHP 5.2.0 or later', phpversion()) );
+			 lang('You appear to be using PHP %1. phpGroupWare now requires PHP 7.4.0 or later', phpversion()) );
 		$GLOBALS['phpgw_setup']->html->show_footer();
 		exit;
 	}
