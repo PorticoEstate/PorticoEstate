@@ -324,7 +324,7 @@ HTML;
 			{
 				$detected .= '<li class="warn">' . lang('No MySQL support found. Disabling') . "</li>\n";
 			}
-			if (extension_loaded('mssql') || function_exists('mssql_connect'))
+			if (extension_loaded('mssql') || function_exists('mssql_connect') || extension_loaded('sqlsrv'))
 			{
 				$detected .= '<li>' . lang('You appear to have Microsoft SQL Server support enabled') . "</li>\n";
 //				$supported_db[] = 'mssql';
