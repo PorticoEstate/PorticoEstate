@@ -73,18 +73,18 @@
 					return self::_create_auth_object();
 
 				case 'accounts':
-					$account_id   = ($p1 != '_UNDEF_')? $p1 : null;
-					$account_type = ($p2 != '_UNDEF_')? $p2 : null;
+					$account_id   = ($p1 !== '_UNDEF_')? $p1 : null;
+					$account_type = ($p2 !== '_UNDEF_')? $p2 : null;
 					return self::_create_account_object($account_id, $account_type);
 
 				case 'mapping':
-					$auth_info = ($p1 != '_UNDEF_')? $p1 : null;
+					$auth_info = ($p1 !== '_UNDEF_')? $p1 : null;
 					return self::_create_mapping_object($auth_info);
 
 				case 'db':
-					$query = ($p1 != '_UNDEF_')? $p1 : null;
-					$db_type = ($p1 != '_UNDEF_')? $p1 : null;
-					$delay_connect = ($p1 != '_UNDEF_')? $p1 : null;
+					$query = ($p1 !== '_UNDEF_')? $p1 : null;
+					$db_type = ($p2 !== '_UNDEF_')? $p2 : null;
+					$delay_connect = ($p3 !== '_UNDEF_') ? $p3 : null;
 					return self::_create_db_object($query, $db_type, $delay_connect);
 
 				default:
