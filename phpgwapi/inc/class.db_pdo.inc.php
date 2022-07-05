@@ -1071,6 +1071,10 @@
 				case 'postgres':
 					$_database = 'postgres';
 					break;
+				case 'mssql':
+				case 'mssqlnative':
+					$_database = 'master';
+					break;
 				default:
 					$_database = null;
 			}
