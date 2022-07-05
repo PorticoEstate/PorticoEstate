@@ -675,22 +675,25 @@
 		* @param boolean $full optional, default False summary information, True full information
 		* @return array Table meta data
 		*/  
-		public function metadata($table,$full = false)
+		public function metadata($table, $full = false)
 		{
-			if($this->debug)
-			{
-				//echo "depi: metadata";
-			}
+			$metadata = array();
 			
 			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->connect();
 			}
-			if(!($return =& $this->adodb->MetaColumns($table,$full)))
+			if(!($return = $this->adodb->MetaColumns($table, $full)))
 			{
 				$return = array();
 			}
-			return $return;
+
+			foreach ($return as $key => $value)
+			{
+				$metadata[strtolower($key)] = $value;
+			}
+
+			return $metadata;
 		}
 
 		/**

@@ -894,16 +894,24 @@
 		*/
 		public function metadata($table, $full = false)
 		{
+			$metadata = array();
 			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->_connect_adodb();
 			}
-			if(!($return = $this->adodb->MetaColumns($table,$full)))
+			$return = $this->adodb->MetaColumns($table, $full);
+			if(!$return)
 			{
 				$return = array();
 			}
+
+			foreach ($return as $key => $value)
+			{
+				$metadata[strtolower($key)] = $value;
+			}
+
 			$this->adodb->close();
-			return $return;
+			return $metadata;
 
 		}
 
