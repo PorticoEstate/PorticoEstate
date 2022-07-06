@@ -150,7 +150,7 @@
 					case 'mssqlnative':
 					try
 					{
-						$this->db = new PDO("sqlsrv:Server={$this->Host},{$this->Port};Database={$this->Database}", $this->User, $this->Password);
+						$this->db = new PDO("sqlsrv:Server={$this->Host},{$this->Port};Database={$this->Database};Encrypt=true;TrustServerCertificate=true", $this->User, $this->Password);
 					}
 					catch(PDOException $e){}
 					break;
