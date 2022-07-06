@@ -13,6 +13,17 @@ services:
     volumes:
        - postgres:/data/postgres
     restart: unless-stopped
+  mssql:
+    container_name: mssql_container
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=ChangeMe10
+    volumes:
+       - sqldata1:/var/opt/mssql
+    restart: unless-stopped
 
   web:
     container_name: portico_container
@@ -43,3 +54,5 @@ services:
 volumes:
     postgres:
     pgadmin:
+    sqldata1:
+
