@@ -233,14 +233,19 @@
 	$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date) VALUES ({$loc_id_in},'contract_type_innleie',183,183,366)");
 	$oProc->query("INSERT INTO rental_contract_responsibility (location_id, title, notify_before, notify_before_due_date, notify_after_termination_date, account_out, agresso_export_format) VALUES ({$loc_id_out},'contract_type_eksternleie',183, 183, 366, '1510', 'agresso_lg04')");
 
-	$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (1, 'contract_type_internleie_egne', 1)");
-	$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (2, 'contract_type_internleie_innleie', 1)");
-	$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (3, 'contract_type_internleie_investeringskontrakt', 1)");
-	$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (4, 'contract_type_internleie_KF', 1)");
-	$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (5, 'contract_type_internleie_andre', 1)");
-	$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (6, 'contract_type_eksternleie_feste', 3, '1520')");
-	$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (7, 'contract_type_eksternleie_leilighet', 3, '1530')");
-	$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (8, 'contract_type_eksternleie_annen', 3, '1510')");
+	if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+	{
+		$oProc->query('SET identity_insert rental_contract_types ON', __LINE__, __FILE__);
+	}
+
+	$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (1, 'contract_type_internleie_egne', 1)", __LINE__, __FILE__);
+	$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (2, 'contract_type_internleie_innleie', 1)", __LINE__, __FILE__);
+	$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (3, 'contract_type_internleie_investeringskontrakt', 1)", __LINE__, __FILE__);
+	$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (4, 'contract_type_internleie_KF', 1)", __LINE__, __FILE__);
+	$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id) VALUES (5, 'contract_type_internleie_andre', 1)", __LINE__, __FILE__);
+	$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (6, 'contract_type_eksternleie_feste', 3, '1520')", __LINE__, __FILE__);
+	$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (7, 'contract_type_eksternleie_leilighet', 3, '1530')", __LINE__, __FILE__);
+	$oProc->query("INSERT INTO rental_contract_types (id, label, responsibility_id, account) VALUES (8, 'contract_type_eksternleie_annen', 3, '1510')", __LINE__, __FILE__);
 
 	$oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('monthly','1')");
 	$oProc->query("INSERT INTO rental_billing_term (title, months) VALUES ('annually','12')");
@@ -261,8 +266,17 @@
 //$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Leie', 'BEAA02', false, 1000000)");
 //$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area, price) VALUES ('Leie', 'BETGEI', false, 20000)");
 
-	$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area,is_inactive,is_adjustable,price,responsibility_id) VALUES ('Unknown', 'UNKNOWN', false,false,false, 0, 0)");
-	$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area,is_inactive,is_adjustable,price,responsibility_id) VALUES ('Leie', 'INNLEIE', false,false,false, 0, {$loc_id_in})");
+	if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+	{
+		$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area,is_inactive,is_adjustable,price,responsibility_id) VALUES ('Unknown', 'UNKNOWN', 0,0,0, 0, 0)", __LINE__, __FILE__);
+		$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area,is_inactive,is_adjustable,price,responsibility_id) VALUES ('Leie', 'INNLEIE', 0,0,0, 0, {$loc_id_in})", __LINE__, __FILE__);
+	}
+	else
+	{
+		$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area,is_inactive,is_adjustable,price,responsibility_id) VALUES ('Unknown', 'UNKNOWN', false,false,false, 0, 0)", __LINE__, __FILE__);
+		$oProc->query("INSERT INTO rental_price_item (title, agresso_id, is_area,is_inactive,is_adjustable,price,responsibility_id) VALUES ('Leie', 'INNLEIE', false,false,false, 0, {$loc_id_in})", __LINE__, __FILE__);
+
+	}
 
 	$oProc->query("INSERT INTO rental_document_types (title) VALUES ('contracts')");
 	$oProc->query("INSERT INTO rental_document_types (title) VALUES ('fire_drawings')");
@@ -283,5 +297,6 @@
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO rental_composite_type"
 			. " (id, name) VALUES (2, 'Type 2' )", __LINE__, __FILE__);
 
+	$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_idgenerator WHERE name = 'faktura_buntnr' ", __LINE__, __FILE__);
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_idgenerator(name,value,descr) "
 		. "VALUES('faktura_buntnr', 0, 'buntnr utgående faktura')", __LINE__, __FILE__);

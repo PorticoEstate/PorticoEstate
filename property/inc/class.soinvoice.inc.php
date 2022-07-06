@@ -744,11 +744,11 @@
 				$ecodimb		 = isset($data['ecodimb']) ? $data['ecodimb'] : '';
 			}
 
-			$this->db->query('SELECT id, percent FROM fm_ecomva', __LINE__, __FILE__);
+			$this->db->query('SELECT id, percent_ FROM fm_ecomva', __LINE__, __FILE__);
 			$tax_codes = array(0 => 0);
 			while ($this->db->next_record())
 			{
-				$tax_codes[$this->db->f('id')] = $this->db->f('percent');
+				$tax_codes[$this->db->f('id')] = $this->db->f('percent_');
 			}
 
 			$where = 'AND';

@@ -199,6 +199,17 @@
 			return $retVal && $this->m_oTranslator->DropTable($this, $this->m_aTables, $sTableName);
 		}
 
+		function DropView($sViewName)
+		{
+	//		$retVal = $this->m_oDeltaProc->DropView($this, $this->m_aTables, $sViewName);
+	//		if($this->m_bDeltaOnly)
+	//		{
+	//			return $retVal;
+	//		}
+
+			return $this->m_oTranslator->DropView($this, $sViewName);
+		}
+
 		function DropColumn($sTableName, $aTableDef, $sColumnName, $bCopyData = true)
 		{
 			$retVal = $this->m_oDeltaProc->DropColumn($this, $this->m_aTables, $sTableName, $aTableDef, $sColumnName, $bCopyData);

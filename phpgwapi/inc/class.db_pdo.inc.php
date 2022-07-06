@@ -404,6 +404,15 @@
  * CREATE OPERATOR ~@& (LEFTARG = jsonb, RIGHTARG = text[], PROCEDURE = jsonb_exists_all);
  */
 //			self::sanitize($sql);//killing performance
+
+			if(in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+			{
+				if(preg_match('/(^SELECT)/i', $sql) && ! preg_match('/TOP 100 PERCENT/i', $sql))
+				{
+					$sql = str_replace(array('SELECT', 'SELECT TOP 100 PERCENT DISTINCT'), array('SELECT TOP 100 PERCENT', 'SELECT DISTINCT TOP 100 PERCENT'), $sql);
+				}
+			}
+
 			self::_get_fetchmode();
 			self::set_fetch_single($_fetch_single);
 			$exec = false;
@@ -936,6 +945,21 @@
 			$this->adodb->close();
 			return $return;
 		}
+
+		public function MetaPrimaryKeys($table, $owner=false, $upper=false)
+		{
+			if(!$this->adodb || !$this->adodb->IsConnected())
+			{
+				$this->_connect_adodb();
+			}
+			if(!($return = $this->adodb->MetaPrimaryKeys($table, $owner)))
+			{
+				$return = array();
+			}
+			$this->adodb->close();
+			return $return;
+		}
+
 		/**
 		* Returns an associate array of foreign keys, or false if not supported.
 		*

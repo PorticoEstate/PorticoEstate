@@ -172,7 +172,7 @@
 			/**
 			 * Dummy - in case price is not set;
 			 */
-			$sql = "SELECT bb_article_mapping.id, bb_article_mapping.tax_code, fm_ecomva.percent FROM bb_article_mapping"
+			$sql = "SELECT bb_article_mapping.id, bb_article_mapping.tax_code, fm_ecomva.percent_ FROM bb_article_mapping"
 				. " JOIN fm_ecomva ON bb_article_mapping.tax_code = fm_ecomva.id"
 				. " WHERE bb_article_mapping.id IN ( " . implode (',',$article_mapping_ids) . ")";
 
@@ -185,7 +185,7 @@
 					'price'				 => 0,
 					'remark'			 => 'Price not set',
 					'tax_code'			 => $this->db->f('tax_code'),
-					'percent'			 => (int)$this->db->f('percent')
+					'percent'			 => (int)$this->db->f('percent_')
 				);
 			}
 
@@ -210,7 +210,7 @@
 				$pricing_ids[]	= (int) $this->db->f('id');
 			}
 
-			$this->db->query("SELECT bb_article_price.* , bb_article_mapping.tax_code, fm_ecomva.percent"
+			$this->db->query("SELECT bb_article_price.* , bb_article_mapping.tax_code, fm_ecomva.percent_"
 				. " FROM bb_article_mapping"
 				. " JOIN bb_article_price ON bb_article_price.article_mapping_id = bb_article_mapping.id"
 				. " JOIN fm_ecomva ON bb_article_mapping.tax_code = fm_ecomva.id"
@@ -226,7 +226,7 @@
 					'from_'				 => $this->db->f('from_'),
 					'remark'			 => $this->db->f('remark', true),
 					'tax_code'			 => $this->db->f('tax_code'),
-					'percent'			 => (int)$this->db->f('percent')
+					'percent'			 => (int)$this->db->f('percent_')
 				);
 			}
 			return $pricing;
@@ -276,7 +276,7 @@
 			 */
 			$sql = "SELECT bb_article_mapping.id AS mapping_id,"
 				. " concat( article_cat_id || '_' || article_id ) AS article_id,"
-				. " bb_resource.name as name ,article_id AS resource_id, unit, percent AS tax_percent, tax_code"
+				. " bb_resource.name as name ,article_id AS resource_id, unit, percent_ AS tax_percent, tax_code"
 				. " FROM bb_article_mapping"
 				. " JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id)"
 				. " JOIN fm_ecomva ON (bb_article_mapping.tax_code = fm_ecomva.id)"
@@ -309,7 +309,7 @@
 				$filter		 = 'AND bb_resource_service.resource_id =' . $_article['resource_id'];
 
 				$sql = "SELECT bb_article_mapping.id AS mapping_id, concat( article_cat_id || '_' || article_id ) AS article_id,"
-					. " bb_service.name as name, bb_resource_service.resource_id, unit, percent AS tax_percent, bb_article_mapping.tax_code"
+					. " bb_service.name as name, bb_resource_service.resource_id, unit, percent_ AS tax_percent, bb_article_mapping.tax_code"
 					. " FROM bb_article_mapping JOIN bb_service ON (bb_article_mapping.article_id = bb_service.id)"
 					. " JOIN bb_resource_service ON (bb_service.id = bb_resource_service.service_id)"
 					. " JOIN fm_ecomva ON (bb_article_mapping.tax_code = fm_ecomva.id)"

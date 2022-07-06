@@ -51,7 +51,7 @@
 					}
 					if ($iPrecision > 255)
 					{
-						$sTranslated =  'text';
+						$sTranslated = 'NVARCHAR(MAX)';
 					}
 					break;
 				case 'date':
@@ -78,14 +78,16 @@
 							$sTranslated = 'smallint';
 							break;
 						case 4:
-						case 8:
 							$sTranslated = 'int';
+							break;
+						case 8:
+							$sTranslated = 'bigint';
 							break;
 					}
 					break;
 				case 'longtext':
 				case 'text':
-					$sTranslated = 'text';
+					$sTranslated = 'NVARCHAR(MAX)';
 					break;
 				case 'time':
 					$sTranslated = 'time';
@@ -101,7 +103,7 @@
 					}
 					if ($iPrecision > 255)
 					{
-						$sTranslated =  'text';
+						$sTranslated = 'NVARCHAR(MAX)';
 					}
 					break;
 				case 'json':
@@ -117,7 +119,7 @@
 			return $sTranslated;
 		}
 
-		function TranslateDefault($sDefault)
+		function TranslateDefault($sDefault, $sType)
 		{
 			// Need Strict comparisons for true/false in case of datatype bolean
 			if ($sDefault === true || $sDefault === 'true' || $sDefault === 'True')
@@ -130,7 +132,14 @@
 			}
 			else if ($sDefault == 'current_date' || $sDefault == 'current_timestamp')
 			{
-				$ret= 'GetDate()';
+				if(preg_match('/int/i', $sType))
+				{
+					$ret= "DATEDIFF_BIG(SECOND,'1970-01-01', GETUTCDATE())";
+				}
+				else
+				{
+					$ret= 'GetDate()';
+				}
 			}
 			else
 			{
@@ -143,7 +152,7 @@
 		function rTranslateType($sType, $iPrecision = 0, $iScale = 0)
 		{
 			$sTranslated = '';
-			if ($sType == 'int' || $sType == 'tinyint' ||  $sType == 'smallint')
+			if ($sType == 'int' || $sType == 'tinyint' ||  $sType == 'smallint' || $sType == 'bigint')
 			{
 				if ($iPrecision > 8)
 				{
@@ -166,6 +175,9 @@
 					break;
 				case 'int':
 					$sTranslated = "'type' => 'int', 'precision' => 4";
+					break;
+				case 'bigint':
+					$sTranslated = "'type' => 'int', 'precision' => 8";
 					break;
 				case 'char':
 					if ($iPrecision > 0 && $iPrecision < 256)
@@ -191,6 +203,16 @@
 					$sTranslated = "'type' => 'timestamp'";
 					break;
 				case 'varchar':
+					if ($iPrecision > 0 && $iPrecision < 256)
+					{
+						$sTranslated =  "'type' => 'varchar', 'precision' => $iPrecision";
+					}
+					if ($iPrecision > 255)
+					{
+						$sTranslated =  "'type' => 'text'";
+					}
+					break;
+				case 'nvarchar':
 					if ($iPrecision > 0 && $iPrecision < 256)
 					{
 						$sTranslated =  "'type' => 'varchar', 'precision' => $iPrecision";
@@ -292,7 +314,20 @@
 
 				if ($oProc->m_odb->f('COLUMN_DEF'))
 				{
-					$default = "'default' => '".str_replace(array('((','))', "('", "')",'GetDate()'),array('','','','','current_timestamp'),$oProc->m_odb->f('COLUMN_DEF'))."'";
+					$default = "'default' => '".str_replace(array(
+						'(getdate())',
+						"(datediff_big(second,'1970-01-01',getutcdate()))",
+						'((','))',
+						"('", "')"
+						),
+						array(
+						'current_timestamp',
+						'current_timestamp',
+						'',
+						'',
+						'',
+						''
+						),$oProc->m_odb->f('COLUMN_DEF'))."'";
 					$nullcomma = ',';
 				}
 				else
@@ -307,7 +342,7 @@
 				$this->sCol[] = "\t\t\t\t'" . $oProc->m_odb->f('COLUMN_NAME')."' => array(" . $type . ',' . $null . $nullcomma . $default . '),' . "\n";
 			}
 
-			$this->pk = $oProc->m_odb->adodb->MetaPrimaryKeys($sTableName);
+			$this->pk = $oProc->m_odb->MetaPrimaryKeys($sTableName);
 
 			$ForeignKeys =$oProc->m_odb->MetaForeignKeys($sTableName);
 
@@ -322,17 +357,41 @@
 				$this->fk[] = "'" . $table . "' => array(" . implode(', ',$keystr)  . ')';
 			}
 
-			/*FIXME: not working as expected */
-			$oProc->m_odb->query("EXEC sp_indexes  @table_server = '{$GLOBALS['phpgw_info']['server']['db_host']}', @table_name = '$sTableName'", __LINE__, __FILE__);
+
+			$sql = "SELECT
+				table_name = t.name,
+				index_name = ind.name,
+				index_id = ind.index_id,
+				column_id = ic.index_column_id,
+				column_name = col.name,
+				index_type = ind.type,
+				ind.is_unique_constraint
+		   FROM
+				sys.indexes ind
+		   INNER JOIN
+				sys.index_columns ic ON  ind.object_id = ic.object_id and ind.index_id = ic.index_id
+		   INNER JOIN
+				sys.columns col ON ic.object_id = col.object_id and ic.column_id = col.column_id
+		   INNER JOIN
+				sys.tables t ON ind.object_id = t.object_id
+		   WHERE
+				ind.is_primary_key = 0
+				AND t.is_ms_shipped = 0
+				AND t.name = '{$sTableName}'
+		   ORDER BY
+				t.name, ind.name, ind.index_id, ic.is_included_column, ic.key_ordinal";
+
+			$oProc->m_odb->query($sql, __LINE__, __FILE__);
+
 			while ($oProc->m_odb->next_record())
 			{
-				if($oProc->m_odb->f('NON_UNIQUE') == 1)
+				if((int)$oProc->m_odb->f('is_unique_constraint') === 0)
 				{
-					$this->ix[] = $oProc->m_odb->f('COLUMN_NAME');
+					$this->ix[] = $oProc->m_odb->f('column_name');
 				}
 				else
 				{
-					$this->uc[] = $oProc->m_odb->f('COLUMN_NAME');
+					$this->uc[] = $oProc->m_odb->f('column_name');
 				}
 			}
 
@@ -345,6 +404,11 @@
 		function DropTable($oProc, &$aTables, $sTableName)
 		{
 			return !!($oProc->m_odb->query("DROP TABLE " . $sTableName));
+		}
+
+		function DropView($oProc, $sViewName)
+		{
+			return !!($oProc->m_odb->query("DROP VIEW " . $sViewName));
 		}
 
 		function DropColumn($oProc, &$aTables, $sTableName, $aNewTableDef, $sColumnName, $bCopyData = true)

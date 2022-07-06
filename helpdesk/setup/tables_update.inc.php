@@ -595,3 +595,23 @@
 			return $GLOBALS['setup_info']['helpdesk']['currentver'];
 		}
 	}
+
+	/**
+	 * alter column
+	 */
+	$test[] = '0.9.18.016';
+	function helpdesk_upgrade0_9_18_016()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('phpgw_helpdesk_response_template', 'public', 'public_');
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('phpgw_helpdesk_email_out_recipient_set', 'public', 'public_');
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('phpgw_helpdesk_email_out_recipient_list', 'public', 'public_');
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('phpgw_helpdesk_email_template', 'public', 'public_');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['helpdesk']['currentver'] = '0.9.18.017';
+			return $GLOBALS['setup_info']['helpdesk']['currentver'];
+		}
+	}

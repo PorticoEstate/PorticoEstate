@@ -406,6 +406,11 @@
 			return $oProc->m_odb->query("DROP TABLE " . $sTableName,__LINE__,__FILE__) && $this->DropSequenceForTable($oProc, $sTableName);
 		}
 
+		function DropView($oProc, $sViewName)
+		{
+			return !!($oProc->m_odb->query("DROP VIEW " . $sViewName . ' RESTRICT'));
+		}
+
 		/**
 		 * Drop column
 		 *

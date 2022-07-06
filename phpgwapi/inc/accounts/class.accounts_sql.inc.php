@@ -136,6 +136,11 @@
 			$this->db->query('INSERT INTO phpgw_accounts (' . implode(', ', array_keys($data)) . ') '.
 							'VALUES (' . implode(', ', $data) . ')', __LINE__, __FILE__);
 
+			if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+			{
+				$this->db->query('SET identity_insert phpgw_accounts OFF', __LINE__, __FILE__);
+			}
+
 			if ( !$this->global_lock )
 			{
 				$this->db->transaction_commit();
@@ -195,6 +200,11 @@
 
 			$this->db->query('INSERT INTO phpgw_accounts (' . implode(', ', array_keys($data)) . ') '.
 							'VALUES (' . implode(', ', $data) . ')', __LINE__, __FILE__);
+
+			if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+			{
+				$this->db->query('SET identity_insert phpgw_accounts OFF', __LINE__, __FILE__);
+			}
 
 			if ( !$this->global_lock )
 			{

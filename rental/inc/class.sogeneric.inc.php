@@ -191,7 +191,7 @@
 							),
 							array
 								(
-								'name' => 'public',
+								'name' => 'public_',
 								'descr' => lang('public'),
 								'type' => 'checkbox'
 							)

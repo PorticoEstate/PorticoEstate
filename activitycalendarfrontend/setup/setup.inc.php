@@ -16,13 +16,13 @@
 	/* Dependencies for this app to work */
 	$setup_info['activitycalendarfrontend']['depends'][] = array(
 		'appname' => 'phpgwapi',
-		'versions' => Array('0.9.17', '0.9.18')
+		'versions' => Array('0.9.17', '0.9.18', '0.9.19')
 	);
 
 	$setup_info['activitycalendarfrontend']['depends'][] = array(
 		'appname' => 'booking',
 		'versions' => array(
-			'0.2.58','0.2.59','0.2.60','0.2.61','0.2.62','0.2.63','0.2.64','0.2.65','0.2.66','0.2.67')
+			'0.2.79', '0.2.80', '0.2.81')
 	);
 
 	$setup_info['activitycalendarfrontend']['depends'][] = array(

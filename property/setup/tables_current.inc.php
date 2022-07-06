@@ -1331,7 +1331,7 @@
 				'order_dim1' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'order_descr' => array('type' => 'text', 'nullable' => True),
 				'remark' => array('type' => 'text', 'nullable' => true),
-				'public' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+				'public_' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'user_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
 				'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
@@ -1751,7 +1751,7 @@
 		'fm_ecomva' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'percent' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+				'percent_' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'descr' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False)
 			),
 			'pk' => array('id'),
@@ -2563,7 +2563,7 @@
 				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => 200, 'nullable' => False),
 				'content' => array('type' => 'text', 'nullable' => True),
-				'public' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+				'public_' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
@@ -2578,7 +2578,7 @@
 				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => 200, 'nullable' => False),
 				'content' => array('type' => 'text', 'nullable' => True),
-				'public' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+				'public_' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
@@ -2803,7 +2803,7 @@
 				'year' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'month' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'b_account_id' => array('type' => 'varchar', 'precision' => 4, 'nullable' => False),
-				'per_cent' => array('type' => 'int', 'precision' => 4, 'default' => '0', 'nullable' => True), //'percent' is reserved for mssql
+				'percent_' => array('type' => 'int', 'precision' => 4, 'default' => '0', 'nullable' => True), //'percent' is reserved for mssql
 				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'remark' => array('type' => 'text', 'nullable' => True)

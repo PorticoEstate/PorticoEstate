@@ -583,6 +583,11 @@
 				   $this->DropSequenceForTable($oProc, $sTableName);
 		}
 
+		function DropView($oProc, $sViewName)
+		{
+			return !!($oProc->m_odb->query("DROP VIEW " . $sViewName));
+		}
+
 		function DropColumn($oProc, &$aTables, $sTableName, $aNewTableDef, $sColumnName, $bCopyData = true)
 		{
 			$query = "ALTER TABLE $sTableName DROP COLUMN $sColumnName CASCADE";

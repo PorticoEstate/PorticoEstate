@@ -1,9 +1,11 @@
 <?php
 	switch ($GLOBALS['phpgw_info']['server']['db_type'])
 	{
+		case 'mssql':
+		case 'mssqlnative':
 		case 'postgres':
 			$GLOBALS['phpgw_setup']->oProc->query(
-				"CREATE OR REPLACE VIEW bb_document_view " .
+				"CREATE VIEW bb_document_view " .
 				"AS SELECT bb_document.id AS id, bb_document.name AS name, bb_document.owner_id AS owner_id, bb_document.category AS category, bb_document.description AS description, bb_document.type AS type " .
 				"FROM " .
 				"((SELECT *, 'building' as type from bb_document_building) UNION ALL (SELECT *, 'resource' as type from bb_document_resource)) " .
@@ -11,7 +13,7 @@
 			);
 
 			$GLOBALS['phpgw_setup']->oProc->query(
-				"CREATE OR REPLACE VIEW bb_application_association AS " .
+				"CREATE VIEW bb_application_association AS " .
 				"SELECT 'booking' AS type, application_id, id, from_, to_, cost, active FROM bb_booking WHERE application_id IS NOT NULL " .
 				"UNION " .
 				"SELECT 'allocation' AS type, application_id, id, from_, to_, cost, active FROM bb_allocation  WHERE application_id IS NOT NULL " .
@@ -117,6 +119,11 @@
 		array("64","2","Grendalag", 'Grendalag',"1")
 	);
 
+	if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+	{
+		$GLOBALS['phpgw_setup']->oProc->query('SET identity_insert bb_activity ON', __LINE__, __FILE__);
+	}
+
 	foreach ($bb_activity as $value_set)
 	{
 		$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert($value_set);
@@ -124,7 +131,15 @@
 		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 	}
 
-	$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_activity', COALESCE((SELECT MAX(id)+1 FROM bb_activity), 1), false)", __LINE__, __FILE__);
+	if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+	{
+		$GLOBALS['phpgw_setup']->oProc->query('SET identity_insert bb_activity OFF', __LINE__, __FILE__);
+	}
+	else
+	{
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_activity', COALESCE((SELECT MAX(id)+1 FROM bb_activity), 1), false)", __LINE__, __FILE__);
+	}
+
 
 
 	$bb_agegroup = array(
@@ -157,6 +172,11 @@
 		array(27,"Møtedeltakare",8,"",1,3),
 	);
 
+	if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+	{
+		$GLOBALS['phpgw_setup']->oProc->query('SET identity_insert bb_agegroup ON', __LINE__, __FILE__);
+	}
+
 	foreach ($bb_agegroup as $value_set)
 	{
 		$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert($value_set);
@@ -164,7 +184,14 @@
 		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 	}
 
-	$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_agegroup', COALESCE((SELECT MAX(id)+1 FROM bb_agegroup), 1), false)", __LINE__, __FILE__);
+	if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+	{
+		$GLOBALS['phpgw_setup']->oProc->query('SET identity_insert bb_agegroup OFF', __LINE__, __FILE__);
+	}
+	else
+	{
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_agegroup', COALESCE((SELECT MAX(id)+1 FROM bb_agegroup), 1), false)", __LINE__, __FILE__);
+	}
 
 	$bb_targetaudience = array(
 		array(1,"Fleirkulturelle",7,"''",0,1),
@@ -211,6 +238,10 @@
 		array(42,"Møte",9,"Møte i lokale",1,3),
 	);
 
+	if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+	{
+		$GLOBALS['phpgw_setup']->oProc->query('SET identity_insert bb_targetaudience ON', __LINE__, __FILE__);
+	}
 	foreach ($bb_targetaudience as $value_set)
 	{
 		$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert($value_set);
@@ -218,7 +249,14 @@
 		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 	}
 
-	$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_targetaudience', COALESCE((SELECT MAX(id)+1 FROM bb_targetaudience), 1), false)", __LINE__, __FILE__);
+	if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+	{
+		$GLOBALS['phpgw_setup']->oProc->query('SET identity_insert bb_targetaudience OFF', __LINE__, __FILE__);
+	}
+	else
+	{
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_targetaudience', COALESCE((SELECT MAX(id)+1 FROM bb_targetaudience), 1), false)", __LINE__, __FILE__);
+	}
 
 	// Default rescategory
 
@@ -227,6 +265,11 @@
 		array(2,"Utstyr",false, false,1),
 	);
 
+	if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+	{
+		$GLOBALS['phpgw_setup']->oProc->query('SET identity_insert bb_rescategory ON', __LINE__, __FILE__);
+	}
+
 	foreach ($bb_rescategory as $value_set)
 	{
 		$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert($value_set);
@@ -234,7 +277,14 @@
 		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 	}
 
-	$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_rescategory', COALESCE((SELECT MAX(id)+1 FROM bb_rescategory), 1), false)", __LINE__, __FILE__);
+	if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+	{
+		$GLOBALS['phpgw_setup']->oProc->query('SET identity_insert bb_rescategory OFF', __LINE__, __FILE__);
+	}
+	else
+	{
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_rescategory', COALESCE((SELECT MAX(id)+1 FROM bb_rescategory), 1), false)", __LINE__, __FILE__);
+	}
 
 	$bb_rescategory_activity = array(1,2,3,47,55,61,62);
 
@@ -541,17 +591,44 @@
 				'task_class' => "booking.async_task_delete_access_log")
 	);
 
+
+	if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+	{
+		$GLOBALS['phpgw_setup']->oProc->query('SET identity_insert bb_article_category ON', __LINE__, __FILE__);
+	}
+
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO bb_article_category ( id, name)"
 			. " VALUES (1, 'resource')", __LINE__, __FILE__);
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO bb_article_category ( id, name)"
 			. " VALUES (2, 'service')", __LINE__, __FILE__);
 
+	if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+	{
+		$GLOBALS['phpgw_setup']->oProc->query('SET identity_insert bb_article_category OFF', __LINE__, __FILE__);
+	}
+
+
+	switch ($GLOBALS['phpgw_info']['server']['db_type'])
+	{
+		case 'mssql':
+		case 'mssqlnative':
+			$concat_symbol = '+';
+			break;
+		case 'postgres':
+			$concat_symbol = '||';
+			break;
+		default:
+			$concat_symbol = '||';
+		//do nothing for now
+	}
+
+
 	$GLOBALS['phpgw_setup']->oProc->m_odb->query(
-		"CREATE OR REPLACE VIEW public.bb_article_view
+		"CREATE VIEW bb_article_view
 		 AS
 		 SELECT bb_resource.id,
-			bb_building.name || '::' || bb_resource.name as name,
+			bb_building.name {$concat_symbol} '::' {$concat_symbol} bb_resource.name as name,
 			bb_resource.description,
 			bb_resource.active,
 			1 AS article_cat_id

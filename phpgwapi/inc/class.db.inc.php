@@ -591,6 +591,16 @@
 		abstract public function MetaForeignKeys($table, $owner=false, $upper=false);
 
 		/**
+		* Returns an array with the primary key columns in it.
+		*
+		* @param string $table name of table to describe
+		* @param boolean $owner optional, default False. The optional schema or owner can be defined in $owner.
+		* @param boolean $upper optional, default False. If $upper is true, then the table names (array keys) are upper-cased.
+		* @return array with the primary key columns in it.
+		*/
+		abstract public function MetaPrimaryKeys($table, $owner=false,  $upper=false);
+
+		/**
 		* Returns an associate array of foreign keys, or false if not supported.
 		*
 		* @param string $table name of table to describe

@@ -717,6 +717,19 @@
 			return $return;
 		}
 
+		public function MetaPrimaryKeys($table, $owner=false,  $upper=false)
+		{
+			if(!$this->adodb || !$this->adodb->IsConnected())
+			{
+				$this->connect();
+			}
+			if(!($return =& $this->adodb->MetaPrimaryKeys($table, $owner)))
+			{
+				$return = array();
+			}
+			return $return;
+		}
+
 		/**
 		* Returns an associate array of foreign keys, or false if not supported.
 		*

@@ -11278,3 +11278,26 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+	/**
+	* Update property version from 0.9.17.563 to 0.9.17.564
+	* rename reserved columns
+	*
+	*/
+	$test[] = '0.9.17.754';
+	function property_upgrade0_9_17_754()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_tts_quick_order_template', 'public', 'public_');
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_order_template', 'public', 'public_');
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_response_template', 'public', 'public_');
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_ecomva', 'percent', 'percent_');
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_budget_period', 'per_cent', 'percent_');
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.755';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

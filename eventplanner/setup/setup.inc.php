@@ -11,7 +11,7 @@
 	 * @version $Id: setup.inc.php 14728 2016-02-11 22:28:46Z sigurdne $
 	 */
 	$setup_info['eventplanner']['name'] = 'eventplanner';
-	$setup_info['eventplanner']['version'] = '0.9.18.011';
+	$setup_info['eventplanner']['version'] = '0.9.18.012';
 	$setup_info['eventplanner']['app_order'] = 20;
 	$setup_info['eventplanner']['enable'] = 1;
 	$setup_info['eventplanner']['app_group'] = 'office';
@@ -52,8 +52,9 @@
 		'eventplanner_vendor_category',
 		'eventplanner_vendor',
 		'eventplanner_vendor_comment',
-		'eventplanner_application_type',
 		'eventplanner_application',
+		'eventplanner_application_type',
+		'eventplanner_application_type_relation',
 		'eventplanner_application_comment',
 		'eventplanner_calendar',
 		'eventplanner_calendar_comment',
@@ -62,7 +63,8 @@
 		'eventplanner_booking_cost',
 		'eventplanner_order',
 		'eventplanner_booking_vendor_report',
-		'eventplanner_booking_customer_report'
+		'eventplanner_booking_customer_report',
+		'eventplanner_permission'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */

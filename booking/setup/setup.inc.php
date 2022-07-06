@@ -1,10 +1,15 @@
 <?php
 	$setup_info['booking']['name'] = 'booking';
-	$setup_info['booking']['version'] = '0.2.80';
+	$setup_info['booking']['version'] = '0.2.81';
 	$setup_info['booking']['app_order'] = 9;
 	$setup_info['booking']['enable'] = 1;
 	$setup_info['booking']['app_group'] = 'office';
 
+	$setup_info['booking']['views'] = array(
+		'bb_document_view',
+		'bb_application_association',
+		'bb_article_view',
+		);
 
 	$setup_info['booking']['tables'] = array
 	(
@@ -14,7 +19,9 @@
 		'bb_contact_person',
 		'bb_organization',
 		'bb_user',
+		'bb_rescategory',
 		'bb_resource',
+		'bb_facility',
 		'bb_resource_activity',
 		'bb_resource_facility',
 		'bb_resource_e_lock',
@@ -68,9 +75,7 @@
 		'bb_office',
 		'bb_office_user',
 		'bb_documentation',
-		'bb_rescategory',
 		'bb_rescategory_activity',
-		'bb_facility',
 		'bb_participant',
 		'bb_participant_limit',
 		'bb_customer',

@@ -188,7 +188,7 @@
 						'id'			 => array('name' => 'id', 'type' => 'int'),
 						'fields'		 => array(
 							array(
-								'name'	 => 'percent',
+								'name'	 => 'percent_',
 								'descr'	 => lang('percent'),
 								'type'	 => 'int'
 							),

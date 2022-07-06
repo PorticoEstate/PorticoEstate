@@ -75,7 +75,7 @@
 			}
 			else
 			{
-				$cols = 'id, price_item_id, responsibility_id, new_price, percent, adjustment_interval, adjustment_date, adjustment_type, extra_adjustment, is_executed, year';
+				$cols = 'id, price_item_id, responsibility_id, new_price, percent_, adjustment_interval, adjustment_date, adjustment_type, extra_adjustment, is_executed, year';
 				$order = $sort_field ? "ORDER BY {$this->marshal($sort_field, 'field')} $dir " : ' ORDER BY adjustment_date DESC';
 			}
 
@@ -90,7 +90,7 @@
 				$adjustment->set_price_item_id($this->unmarshal($this->db->f('price_item_id', true), 'int'));
 				$adjustment->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 				$adjustment->set_new_price($this->unmarshal($this->db->f('new_price', true), 'float'));
-				$adjustment->set_percent($this->unmarshal($this->db->f('percent', true), 'float'));
+				$adjustment->set_percent($this->unmarshal($this->db->f('percent_', true), 'float'));
 				$adjustment->set_interval($this->unmarshal($this->db->f('adjustment_interval', true), 'int'));
 				$adjustment->set_adjustment_date($this->unmarshal($this->db->f('adjustment_date', true), 'int'));
 				$adjustment->set_adjustment_type($this->unmarshal($this->db->f('adjustment_type'), 'string'));
@@ -146,7 +146,7 @@
 		public function add( &$adjustment )
 		{
 			// Build a db-friendly array of the adjustment object
-			$cols = array('price_item_id', 'responsibility_id', 'new_price', 'percent', 'adjustment_interval',
+			$cols = array('price_item_id', 'responsibility_id', 'new_price', 'percent_', 'adjustment_interval',
 				'adjustment_date', 'adjustment_type', 'is_manual', 'is_executed', 'extra_adjustment',
 				'year');
 			$values = array(
@@ -179,7 +179,7 @@
 				"AND adjustment_date = {$adjustment->get_adjustment_date()} " .
 				"AND year = {$adjustment->year()} " .
 				"AND adjustment_interval = {$adjustment->get_interval()} " .
-				"AND percent = {$adjustment->get_percent()}";
+				"AND percent_ = {$adjustment->get_percent()}";
 			$result = $this->db->query($query);
 			if ($this->db->next_record())
 			{
@@ -233,7 +233,7 @@
 				$adjustment->set_price_item_id($this->unmarshal($this->db->f('price_item_id', true), 'int'));
 				$adjustment->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id', true), 'int'));
 				$adjustment->set_new_price($this->unmarshal($this->db->f('new_price', true), 'float'));
-				$adjustment->set_percent($this->unmarshal($this->db->f('percent', true), 'float'));
+				$adjustment->set_percent($this->unmarshal($this->db->f('percent_', true), 'float'));
 				$adjustment->set_interval($this->unmarshal($this->db->f('adjustment_interval', true), 'int'));
 				$adjustment->set_adjustment_date($this->unmarshal($this->db->f('adjustment_date', true), 'int'));
 				$adjustment->set_adjustment_type($this->unmarshal($this->db->f('adjustment_type'), 'string'));
