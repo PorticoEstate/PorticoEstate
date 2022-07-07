@@ -114,7 +114,9 @@
 				case 'boolean':
 					$sTranslated = 'BIT';
 					break;
-
+				case 'xml':
+					$sTranslated = 'xml';
+					break;
 			}
 			return $sTranslated;
 		}
@@ -226,6 +228,7 @@
 					$sTranslated = "'type' => 'blob'";
 					break;
 				case 'text':
+				case 'xml':
 					$sTranslated = "'type' => '$sType'";
 					break;
 			}
@@ -505,6 +508,36 @@
 
 			return false;
 		}
+
+		function update_table( $oProc, &$aTables, $sTableName, $aTableDef )
+		{
+			global $DEBUG;
+
+			if(!$aTableDef['fk'])
+			{
+				return true; // nothing to do
+			}
+
+			$sFKSQL = '';
+
+			if ($aTableDef['fk'] && $oProc->_GetFK($aTableDef['fk'], $sFKSQL))
+			{
+				
+				$query = "ALTER TABLE $sTableName ADD CONSTRAINT fk_{$sTableName} $sFKSQL";
+			//	if ( $DEBUG)
+				{
+					echo '<pre>';
+					print_r($query);
+					echo '</pre>';
+				}
+
+				$result = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
+				return $result;
+			}
+
+			return false;
+		}
+
 		function GetFKSQL($reftable, $sFields)
 		{
 			if(is_array($sFields))

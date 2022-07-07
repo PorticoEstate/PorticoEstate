@@ -217,6 +217,9 @@
 				case 'boolean':
 					$sTranslated = "'type' => 'bool'";
 					break;
+				case 'xml':
+					$sTranslated = "'type' => 'xml'";
+					break;
 			}
 			return $sTranslated;
 		}
@@ -402,11 +405,11 @@
 				//echo '<br> checking: ' . $sdc->f(4);
 				if ($sdc->f(4) == 't')
 				{
-					$this->pk[] = "'" . $sdc->f(2) . "'";
+					$this->pk[] = $sdc->f(2);
 				}
 				else if ($sdc->f(3) == 't')
 				{
-					$this->uc[] = "'" . $sdc->f(2) . "'";
+					$this->uc[] = $sdc->f(2);
 				}
 			}
 

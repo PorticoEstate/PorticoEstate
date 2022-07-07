@@ -194,5 +194,16 @@
 
 			return True;
 		}
+
+		function update_table($oProc, &$aTables, $sTableName, $aTableDef)
+		{
+			if(!isset($aTables[$sTableName]))
+			{
+				$aTables[$sTableName] = $aTableDef;
+			}
+
+			return True;
+		}
+
 	}
 

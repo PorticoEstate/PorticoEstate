@@ -126,6 +126,39 @@
 			return True;
 		}
 
+		function update_tables($aTables, $bOutputHTML=false)
+		{
+			if(!is_array($aTables) || !IsSet($this->m_odb))
+			{
+				return False;
+			}
+
+			$this->m_aTables = $aTables;
+
+			foreach ($aTables as $sTableName => $aTableDef)
+			{
+
+				if($this->update_table($sTableName, $aTableDef))
+				{
+					if($bOutputHTML)
+					{
+						echo '<br>Update Table <b>' . $sTableName . '</b>';
+					}
+				}
+				else
+				{
+					if($bOutputHTML)
+					{
+						echo '<br>Update Table Failed For <b>' . $sTableName . '</b>';
+					}
+
+					return False;
+				}
+			}
+
+			return True;
+		
+		}
 		function ExecuteScripts($aTables, $bOutputHTML=false)
 		{
 			if(!is_array($aTables) || !IsSet($this->m_odb))
@@ -274,6 +307,17 @@
 			}
 
 			return $retVal && $this->m_oTranslator->CreateTable($this, $this->m_aTables, $sTableName, $aTableDef);
+		}
+
+		function update_table($sTableName, $aTableDef)
+		{
+			$retVal = $this->m_oDeltaProc->update_table($this, $this->m_aTables, $sTableName, $aTableDef);
+			if($this->m_bDeltaOnly)
+			{
+				return $retVal;
+			}
+
+			return $retVal && $this->m_oTranslator->update_table($this, $this->m_aTables, $sTableName, $aTableDef);
 		}
 
 		function f($value)

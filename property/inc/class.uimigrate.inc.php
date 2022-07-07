@@ -149,6 +149,7 @@
 			$lang_select_migrate_text	 = '';
 			$text_select				 = '';
 
+			$content = array();
 			foreach ($domain_info as $domain => $entry)
 			{
 				if ($this->acl_edit)
