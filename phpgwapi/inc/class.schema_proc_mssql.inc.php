@@ -13,7 +13,7 @@
 
 	/**
 	* Database schema abstraction class for MSSQL
-	* 
+	*
 	* @package phpgwapi
 	* @subpackage database
 	*/
@@ -145,7 +145,7 @@
 			}
 			else
 			{
-				$ret= "'" . $sDefault . "'";			
+				$ret= "'" . $sDefault . "'";
 			}
 			return $ret;
 		}
@@ -258,7 +258,7 @@
 			        IGNORE_DUP_KEY |
 			        DROP_EXISTING |
 			    STATISTICS_NORECOMPUTE |
-			    SORT_IN_TEMPDB 
+			    SORT_IN_TEMPDB
 			}
 		*/
 
@@ -465,7 +465,7 @@
 
 		function GetTriggerSQL($sTableName, $sColumnNames, &$sTriggerSQL)
 		{
-			$sTriggerSQL = ''; 
+			$sTriggerSQL = '';
 			return false;
 		}
 
@@ -501,7 +501,7 @@
 							$IndexSQL = str_replace(array('__index_name__','__table_name__'), array($ix_name,$sTableName), $sIndexSQL);
 							$oProc->m_odb->query($IndexSQL, __LINE__, __FILE__);
 						}
-					}			
+					}
 				}
 				return $result;
 			}
@@ -509,7 +509,7 @@
 			return false;
 		}
 
-		function update_table( $oProc, &$aTables, $sTableName, $aTableDef )
+		function AlterTable( $oProc, &$aTables, $sTableName, $aTableDef )
 		{
 			global $DEBUG;
 
@@ -522,7 +522,7 @@
 
 			if ($aTableDef['fk'] && $oProc->_GetFK($aTableDef['fk'], $sFKSQL))
 			{
-				
+
 				$query = "ALTER TABLE $sTableName ADD CONSTRAINT fk_{$sTableName} $sFKSQL";
 			//	if ( $DEBUG)
 				{

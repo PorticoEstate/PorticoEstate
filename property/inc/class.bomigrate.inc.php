@@ -153,7 +153,7 @@
 
 					if($this->oProc->m_odb->table_names())
 					{
-						throw new Exception("There is already tables in the database '{$this->oProc->m_odb->Database}'");
+//						throw new Exception("There is already tables in the database '{$this->oProc->m_odb->Database}'");
 					}
 				}
 
@@ -168,7 +168,7 @@
 //			_debug_array($table_def);
 					$this->oProc->ExecuteScripts($table_def, true);
 //			_debug_array($foreign_keys);
-					$this->oProc->update_tables($foreign_keys, true);
+					$this->oProc->AlterTables($foreign_keys, true);
 					$this->copy_data($table_def);
 				}
 			}

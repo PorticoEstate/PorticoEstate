@@ -754,7 +754,7 @@
 				'section_id' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'attrib_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-				'value' => array('type' => 'text','nullable' => False)
+				'value' => array('type' => 'varchar', 'precision' => 256,'nullable' => False)
 			),
 			'pk' => array('section_id','attrib_id','id'),
 			'fk' => array(),

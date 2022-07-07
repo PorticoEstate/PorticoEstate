@@ -13,7 +13,7 @@
 
 	/**
 	* Database schema abstraction class for array
-	* 
+	*
 	* @package phpgwapi
 	* @subpackage database
 	*/
@@ -195,7 +195,7 @@
 			return True;
 		}
 
-		function update_table($oProc, &$aTables, $sTableName, $aTableDef)
+		function AlterTable($oProc, &$aTables, $sTableName, $aTableDef)
 		{
 			if(!isset($aTables[$sTableName]))
 			{

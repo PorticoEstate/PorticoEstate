@@ -261,7 +261,7 @@
 			}
 		}
 
-		function _GetColumns($oProc, $sTableName, &$sColumns)
+		function _GetColumns(&$oProc, $sTableName, &$sColumns)
 		{
 			$oProc->m_odb->fetchmode = 'BOTH';
 			$sdb = clone($oProc->m_odb);
@@ -479,7 +479,7 @@
 			unset($f_temp_primary);
 			unset($f_temp_foreign);
 
-			$metaindexes = $sdc->metaindexes($sTableName);
+			$metaindexes = $oProc->m_odb->metaindexes($sTableName);
 
 			foreach($metaindexes as $key => $index)
 			{

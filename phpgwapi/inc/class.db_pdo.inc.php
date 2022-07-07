@@ -285,9 +285,19 @@
 				case 'mysql':
 					$type = 'mysqli';
 					break;
+//				case 'postgres':
+//					$type = 'pdo';
+//					$this->Port = $this->Port ? $this->Port : 5432;
+//					$dsn = "pgsql:dbname={$this->Database};host={$this->Host};port={$this->Port}";
+//					break;
 				case 'mssql':
 					$type = 'odbc_mssql';
-					$dsn = "Driver={SQL Server};Server={$this->Host};Database={$this->Database};";
+					$dsn = "Driver={SQL Server};Server={$this->Host};Database={$this->Database};Encrypt=true;TrustServerCertificate=true";
+					break;
+				case 'mssqlnative':
+//					$type = 'pdo'; // pdo-driver are missing important functions
+					$type = 'mssqlnative';
+					$dsn = "sqlsrv:Server={$this->Host},{$this->Port};Database={$this->Database};Encrypt=true;TrustServerCertificate=true";
 					break;
 				case 'oci8':
 				case 'oracle':
@@ -305,7 +315,7 @@
 				$host .= ":{$port}";
 			}
 			require_once PHPGW_API_INC . '/adodb/adodb.inc.php';
-			$this->adodb = newADOConnection($type);
+			$this->adodb = ADOnewConnection($type);
 			$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
 			if($dsn)
 			{
@@ -978,7 +988,7 @@
 			{
 				$return = array();
 			}
-			$this->adodb->close();
+//			$this->adodb->close();
 			return $return;
 		}
 
