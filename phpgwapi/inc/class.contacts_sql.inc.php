@@ -593,7 +593,8 @@
 
 			$this->stock_contact_fields = & $this->contact_fields['showable'];
 			$this->account_id = isset($GLOBALS['phpgw_info']['user']['account_id']) ? $GLOBALS['phpgw_info']['user']['account_id'] : 0;
-			if ($session)
+
+			if ($session && !isset($GLOBALS['phpgw_setup']->oProc))
 			{
 				if (!is_object($GLOBALS['phpgw']->session))
 				{
@@ -702,12 +703,12 @@
 				'note_type_flag' => $this->note_type_flag,
 				'contact_type_flag' => $this->contact_type_flag
 			);
-			$GLOBALS['phpgw']->session->appsession('session_data', 'phpgwapi', $data);
+			phpgwapi_cache::session_set('phpgwapi', 'session_data', $data);
 		}
 
 		function delete_sessiondata( $var = '' )
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'phpgwapi');
+			$data = phpgwapi_cache::session_get('phpgwapi', 'session_data');
 			if ($var != '')
 			{
 				unset($data[$var]);
@@ -716,7 +717,7 @@
 			{
 				$data = '';
 			}
-			$GLOBALS['phpgw']->session->appsession('session_data', 'phpgwapi', $data);
+			phpgwapi_cache::session_set('phpgwapi', 'session_data', $data);
 		}
 
 		/**

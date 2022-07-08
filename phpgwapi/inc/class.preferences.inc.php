@@ -590,7 +590,7 @@
 		public function save_repository($update_session_info = False,$type='user')
 		{
 			// Don't get the old values back from the cache on next load
-			$GLOBALS['phpgw']->session->clear_phpgw_info_cache();
+			phpgwapi_cache::session_clear('phpgwapi', 'phpgw_info');
 
 			switch($type)
 			{

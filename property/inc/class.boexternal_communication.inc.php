@@ -573,11 +573,13 @@ HTML;
 		{
 			if ((int)$ticket['assignedto'])
 			{
-				$GLOBALS['phpgw']->preferences->set_account_id((int)$ticket['assignedto'], true);
+//				$GLOBALS['phpgw']->preferences->set_account_id((int)$ticket['assignedto'], true);
+				$prefs	 = $this->bocommon->create_preferences('common', (int)$ticket['assignedto']);
 			}
 			else if ((int)$ticket['user_id'])
 			{
-				$GLOBALS['phpgw']->preferences->set_account_id((int)$ticket['user_id'], true);
+//				$GLOBALS['phpgw']->preferences->set_account_id((int)$ticket['user_id'], true);
+				$prefs	 = $this->bocommon->create_preferences('common', (int)$ticket['user_id']);
 			}
 
 			$organisation	 = '';
@@ -617,8 +619,10 @@ HTML;
 
 			$order_id						 = $ticket['order_id'];
 			//account_display
-			$user_phone						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['cellphone'];
-			$user_email						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
+//			$user_phone						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['cellphone'];
+//			$user_email						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
+			$user_phone						 = $prefs['cellphone'];
+			$user_email						 = $prefs['email'];
 //			$order_email_template = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['order_email_template'];
 			$order_contact_block_template	 = $GLOBALS['phpgw_info']['user']['preferences'][$this->currentapp]['order_contact_block_1'];
 

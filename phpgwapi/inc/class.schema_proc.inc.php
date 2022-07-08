@@ -13,7 +13,7 @@
 
 	/**
 	* Database schema abstraction class
-	* 
+	*
 	* @package phpgwapi
 	* @subpackage database
 	*/
@@ -45,6 +45,7 @@
 				$this->m_oTranslator	= createObject('phpgwapi.schema_proc_sapdb');
 				break;
 
+				case 'mssqlnative':
 				case 'mssql':
 				$this->m_oTranslator	= createObject('phpgwapi.schema_proc_mssql');
 				break;
@@ -125,6 +126,39 @@
 			return True;
 		}
 
+		function AlterTables($aTables, $bOutputHTML=false)
+		{
+			if(!is_array($aTables) || !IsSet($this->m_odb))
+			{
+				return False;
+			}
+
+			$this->m_aTables = $aTables;
+
+			foreach ($aTables as $sTableName => $aTableDef)
+			{
+
+				if($this->AlterTable($sTableName, $aTableDef))
+				{
+					if($bOutputHTML)
+					{
+						echo '<br>Update Table <b>' . $sTableName . '</b>';
+					}
+				}
+				else
+				{
+					if($bOutputHTML)
+					{
+						echo '<br>Update Table Failed For <b>' . $sTableName . '</b>';
+					}
+
+					return False;
+				}
+			}
+
+			return True;
+
+		}
 		function ExecuteScripts($aTables, $bOutputHTML=false)
 		{
 			if(!is_array($aTables) || !IsSet($this->m_odb))
@@ -137,6 +171,12 @@
 
 			foreach ($aTables as $sTableName => $aTableDef)
 			{
+//				if( $this->m_odb->metadata($sTableName))
+//				{
+//					echo '<br>Table <b>' . $sTableName . '</b> already exist';
+//					continue;
+//				}
+
 				if($this->CreateTable($sTableName, $aTableDef))
 				{
 					if($bOutputHTML)
@@ -196,6 +236,17 @@
 			}
 
 			return $retVal && $this->m_oTranslator->DropTable($this, $this->m_aTables, $sTableName);
+		}
+
+		function DropView($sViewName)
+		{
+	//		$retVal = $this->m_oDeltaProc->DropView($this, $this->m_aTables, $sViewName);
+	//		if($this->m_bDeltaOnly)
+	//		{
+	//			return $retVal;
+	//		}
+
+			return $this->m_oTranslator->DropView($this, $sViewName);
 		}
 
 		function DropColumn($sTableName, $aTableDef, $sColumnName, $bCopyData = true)
@@ -262,6 +313,17 @@
 			}
 
 			return $retVal && $this->m_oTranslator->CreateTable($this, $this->m_aTables, $sTableName, $aTableDef);
+		}
+
+		function AlterTable($sTableName, $aTableDef)
+		{
+			$retVal = $this->m_oDeltaProc->AlterTable($this, $this->m_aTables, $sTableName, $aTableDef);
+			if($this->m_bDeltaOnly)
+			{
+				return $retVal;
+			}
+
+			return $retVal && $this->m_oTranslator->AlterTable($this, $this->m_aTables, $sTableName, $aTableDef);
 		}
 
 		function f($value)
@@ -333,7 +395,7 @@
 			$sTriggerSQL = '';
 			reset($aTableDef['fd']);
 			unset($sbufTriggerFD);
-			$sbufTriggerFD = array(); 
+			$sbufTriggerFD = array();
 			//while(list($sFieldName, $aFieldAttr) = each($aTableDef['fd']))
 			if (is_array($aTableDef['fd']))
 			{
@@ -343,7 +405,7 @@
 					{
 						$sFieldName = strtoupper("\"{$sFieldName}\"");
 					}
-					
+
 					$sFieldSQL = '';
 
 					try
@@ -653,7 +715,7 @@
 					{
 						foreach($sField as & $_sField)
 						{
-							$_sField = strtoupper("\"{$_sField}\"");							
+							$_sField = strtoupper("\"{$_sField}\"");
 						}
 					}
 					$sIXSQL .= $this->m_oTranslator->GetIXSQL(implode(',', $sField));
@@ -696,7 +758,7 @@
 					{
 						foreach($sField as & $_sField)
 						{
-							$_sField = strtoupper("\"{$_sField}\"");							
+							$_sField = strtoupper("\"{$_sField}\"");
 						}
 
 					}
@@ -744,7 +806,7 @@
 					{
 						foreach($sField as & $_sField)
 						{
-							$_sField = strtoupper("\"{$_sField}\"");							
+							$_sField = strtoupper("\"{$_sField}\"");
 						}
 					}
 					$sIXSQL .= $this->m_oTranslator->GetIXSQL(implode(',', $sField),$sTableName);
@@ -785,7 +847,7 @@
 
 		/**
 		 * Prepare the VALUES component of an INSERT sql statement
-		 * 
+		 *
 		 * @param array $value_set array of values to insert into the database
 		 * @return string the prepared sql, empty string for invalid input
 		 */

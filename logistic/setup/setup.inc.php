@@ -7,14 +7,14 @@
 
 	$setup_info['logistic']['tables'] = array
 	(
-			'lg_project',
 			'lg_project_type',
+			'lg_project',
 			'lg_activity',
 			'lg_requirement',
-			'lg_resource_type_requirement',
-			'lg_requirement_value',
 			'lg_calendar',
 			'lg_requirement_resource_allocation',
+			'lg_resource_type_requirement',
+			'lg_requirement_value',
 	);
 
 	$setup_info['logistic']['description'] = 'Bergen kommune logistics module';

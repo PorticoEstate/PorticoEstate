@@ -81,11 +81,11 @@
 			if (!empty($purchase_order['lines']))
 			{
 				$tax_codes = array();
-				$sql = "SELECT id, percent FROM fm_ecomva";
+				$sql = "SELECT id, percent_ FROM fm_ecomva";
 				$this->db->query($sql, __LINE__, __FILE__);
 				while ($this->db->next_record())
 				{
-					$tax_codes[(int)$this->db->f('id')] = (int)$this->db->f('percent');
+					$tax_codes[(int)$this->db->f('id')] = (int)$this->db->f('percent_');
 				}
 
 				foreach ($purchase_order['lines'] as $line)
@@ -310,11 +310,11 @@
 			}
 
 			$tax_codes = array();
-			$sql = "SELECT id, percent FROM fm_ecomva";
+			$sql = "SELECT id, percent_ FROM fm_ecomva";
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$tax_codes[(int)$this->db->f('id')] = (int)$this->db->f('percent');
+				$tax_codes[(int)$this->db->f('id')] = (int)$this->db->f('percent_');
 			}
 
 			$filtermethod = 'WHERE bb_purchase_order.cancelled IS NULL';
@@ -424,6 +424,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			if ($this->db->next_record())
 			{
+				$purchase_order_id = $this->db->f('id');
 				/**
 				 * Place the order where it belong
 				 */
@@ -448,9 +449,11 @@
 				$insert_fields	 = implode(',', array_keys($valueset));
 				$insert_values	 = $this->db->validate_insert(array_values($valueset));
 				$this->db->query("INSERT INTO bb_purchase_order ({$insert_fields}) VALUES ({$insert_values})", __LINE__, __FILE__);
-				$new_id			 = $this->db->get_last_insert_id('bb_purchase_order', 'id');
-				$this->copy_order_lines($order_id, $new_id);
+				$purchase_order_id	 = $this->db->get_last_insert_id('bb_purchase_order', 'id');
+				$this->copy_order_lines($order_id, $purchase_order_id);
 			}
+
+			return $purchase_order_id;
 		}
 
 		function copy_order_lines( $from_id, $to_id )

@@ -617,7 +617,14 @@
 			if ($year)
 			{
 				$filtermethod	 .= " {$where} ({$table}.periode > {$year}00 AND {$table}.periode < {$year}13)";// OR {$table}.periode IS NULL)";
+
+				if ($paid === 'both')
+				{
+					$filtermethod_history	 .= " {$where} ({$history_table}.periode > {$year}00 AND {$history_table}.periode < {$year}13)";// OR {$history_table}.periode IS NULL)";
+					$filtermethod_live	 .= " {$where} ({$live_table}.periode > {$year}00 AND {$live_table}.periode < {$year}13)";// OR {$live_table}.periode IS NULL)";
+				}
 				$where			 = 'AND';
+
 			}
 
 			if (!$filtermethod)
@@ -645,12 +652,12 @@
 				$sql = "SELECT DISTINCT artid,pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,"
 				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start,external_voucher_id, mvakode,budsjettsigndato, overftid AS transfer_time"
 				. " FROM {$history_table}{$join_project_history}"
-				. " {$this->join} fm_vendor ON {$history_table}.spvend_code = fm_vendor.id {$filtermethod} {$groupmethod}, overftid"
+				. " {$this->join} fm_vendor ON {$history_table}.spvend_code = fm_vendor.id {$filtermethod_history} {$groupmethod}, overftid"
 				. " UNION"
 				. " SELECT DISTINCT artid,pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,"
 				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start,external_voucher_id, mvakode,budsjettsigndato, null::timestamp AS transfer_time"
 				. " FROM {$live_table}{$join_project_live}"
-				. " {$this->join} fm_vendor ON {$live_table}.spvend_code = fm_vendor.id {$filtermethod} {$groupmethod}";
+				. " {$this->join} fm_vendor ON {$live_table}.spvend_code = fm_vendor.id {$filtermethod_live} {$groupmethod}";
 
 			}
 			else
@@ -744,11 +751,11 @@
 				$ecodimb		 = isset($data['ecodimb']) ? $data['ecodimb'] : '';
 			}
 
-			$this->db->query('SELECT id, percent FROM fm_ecomva', __LINE__, __FILE__);
+			$this->db->query('SELECT id, percent_ FROM fm_ecomva', __LINE__, __FILE__);
 			$tax_codes = array(0 => 0);
 			while ($this->db->next_record())
 			{
-				$tax_codes[$this->db->f('id')] = $this->db->f('percent');
+				$tax_codes[$this->db->f('id')] = $this->db->f('percent_');
 			}
 
 			$where = 'AND';

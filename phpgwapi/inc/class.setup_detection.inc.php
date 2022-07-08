@@ -329,7 +329,7 @@
 			{
 				/* no tables, so checking if we can create them */
 				$GLOBALS['phpgw_setup']->db->query('CREATE TABLE phpgw_testrights ( testfield varchar(5) NOT NULL )',__LINE__,__FILE__);
-				
+
 				if ( ob_get_contents() )
 				{
 					ob_end_clean();//dump the output

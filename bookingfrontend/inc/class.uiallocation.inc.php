@@ -114,7 +114,7 @@
 					$system_message['email']		 = $organization['contacts'][0]['email'];
 					$system_message['title']		 = lang('Cancelation of allocation from') . " " . $allocation['organization_name'];
 					$link							 = self::link(array('menuaction'	 => 'booking.uiallocation.delete',
-							'allocation_id'	 => $allocation['id'], 'outseason'		 => $outseason, 'recurring'		 => $recurring,
+							'id'	 => $allocation['id'], 'outseason'		 => $outseason, 'recurring'		 => $recurring,
 							'repeat_until'	 => $repeat_until, 'field_interval' => $field_interval));
 					if (strpos($link, '/portico/bookingfrontend') !== false)
 					{

@@ -5360,7 +5360,7 @@ Array
 			$this->a[$acctnum]['prefs'] = array();
 			
 			if ((isset($pref_array_data))
-			&& (count($pref_array_data > 0)))
+			&& (count($pref_array_data) > 0))
 			{
 				$this->a[$acctnum]['prefs'] = $pref_array_data;
 				// return True to indicate we filled, not just cleared
@@ -5940,7 +5940,7 @@ Array
 			$this->a[$acctnum]['args'] = array();
 			
 			if ((isset($arg_array_data))
-			&& (count($arg_array_data > 0)))
+			&& (count($arg_array_data) > 0))
 			{
 				/*
 				while(list($key,$value) = each($arg_array_data))

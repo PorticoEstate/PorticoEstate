@@ -232,7 +232,7 @@
 							(
 							array
 								(
-								'name'	 => 'percent',
+								'name'	 => 'percent_',
 								'descr'	 => lang('percent'),
 								'type'	 => 'int'
 							),
@@ -2126,7 +2126,7 @@
 							),
 							array
 								(
-								'name'	 => 'public',
+								'name'	 => 'public_',
 								'descr'	 => lang('public'),
 								'type'	 => 'checkbox'
 							)
@@ -2169,7 +2169,7 @@
 							),
 							array
 								(
-								'name'	 => 'public',
+								'name'	 => 'public_',
 								'descr'	 => lang('public'),
 								'type'	 => 'checkbox'
 							)

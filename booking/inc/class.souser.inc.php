@@ -331,7 +331,7 @@
 
 			$ssn = $this->db->f('customer_ssn');
 
-			if(false)
+			if(true)
 			{
 				/**
 				 * Include age and gender

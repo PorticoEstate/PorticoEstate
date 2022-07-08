@@ -1035,3 +1035,19 @@
 		}
 	}
 
+	$test[] = '0.1.0.40';
+	function rental_upgrade0_1_0_40()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('rental_adjustment', 'percent', 'percent_');
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('rental_email_template', 'public', 'public_');
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.41';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}
+

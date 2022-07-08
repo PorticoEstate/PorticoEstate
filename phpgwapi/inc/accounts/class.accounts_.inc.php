@@ -922,7 +922,7 @@
 				}
 			}
 
-			if	( $GLOBALS['phpgw_info']['server']['account_max_id'] &&
+			if	( isset($GLOBALS['phpgw_info']['server']['account_max_id']) &&
 				$GLOBALS['phpgw_info']['server']['account_max_id'] < $nextid )
 			{
 				return false;

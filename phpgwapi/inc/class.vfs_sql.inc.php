@@ -110,8 +110,7 @@
 			}
 
 			/* We store the linked directories in an array now, so we don't have to make the SQL call again */
-			if($GLOBALS['phpgw_info']['server']['db_type']=='mssql'
-				|| $GLOBALS['phpgw_info']['server']['db_type']=='sybase')
+			if(in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative', 'sybase')))
 			{
 				$query = $this->db->query("SELECT directory, name, link_directory, link_name"
 				. " FROM phpgw_vfs WHERE CONVERT(varchar,link_directory) != ''"

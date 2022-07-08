@@ -39,6 +39,7 @@
 			$besiktet_dato = time();
 			$datostempel = null;
 			$behov_tilsyn = false;
+			$manglende_tilgang = false;
 			$merknad = null;
 
 			if (isset($values_attribute) && is_array($values_attribute))
@@ -57,6 +58,12 @@
 							if ($entry['value'])
 							{
 								$behov_tilsyn = true;
+							}
+							break;
+						case 'manglende_tilgang':
+							if ($entry['value'])
+							{
+								$manglende_tilgang = true;
 							}
 							break;
 						case 'merknad':
@@ -243,17 +250,35 @@
 
 				if($behov_tilsyn)
 				{
-					$this->add_ticket($merknad, $values['id'], $values['location_code']);
+					$this->add_ticket($behov_tilsyn, $manglende_tilgang, $merknad, $values['id'], $values['location_code']);
 				}
 			}
 		}
 
 
-		private function add_ticket( $merknad,  $location1_item_id, $location_code)
+		private function add_ticket( $behov_tilsyn, $manglende_tilgang, $merknad,  $location1_item_id, $location_code)
 		{
 			$message_cat_id	 = 10006; // Melding fra eksterne
 			$priority	 = 1;
-			$message_title = 'Vekterinspeksjon: Behov for ekstra tilsyn';
+
+			if($behov_tilsyn)
+			{
+				$message_title = 'Vekterinspeksjon: Behov for ekstra tilsyn';
+				if(!$merknad)
+				{
+					$merknad = $message_title;
+				}
+			}
+
+			if($manglende_tilgang)
+			{
+				$message_title = $message_title ? 'Vekterinspeksjon: Behov for ekstra tilsyn' : 'Vekterinspeksjon: Manglende tilgang';
+				if(!$merknad)
+				{
+					$merknad = $message_title;
+				}
+			}
+
 			$ticket		 = array
 			(
 				'location_code'		 => $location_code,

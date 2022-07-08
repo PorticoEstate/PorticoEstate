@@ -241,8 +241,8 @@
 		'bb_resource_e_lock' => array(
 			'fd' => array(
 				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'e_lock_system_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-				'e_lock_resource_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'e_lock_system_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'e_lock_resource_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'e_lock_name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => true),
 				'access_code_format' => array('type' => 'varchar', 'precision' => 20, 'nullable' => true),
 				'active' => array('type' => 'int', 'nullable' => False, 'precision' => 2, 'default' => 1),
@@ -1305,7 +1305,7 @@
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'article_mapping_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'from_' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
-				'percent' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'percent_' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 			),
 			'pk' => array('id'),
 			'fk' => array(

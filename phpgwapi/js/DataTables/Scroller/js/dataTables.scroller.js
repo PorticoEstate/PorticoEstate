@@ -1,11 +1,11 @@
-/*! Scroller 2.0.6
+/*! Scroller 2.0.7
  * ©2011-2022 SpryMedia Ltd - datatables.net/license
  */
 
 /**
  * @summary     Scroller
  * @description Virtual rendering for DataTables
- * @version     2.0.6
+ * @version     2.0.7
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
  * @copyright   SpryMedia Ltd.
@@ -532,7 +532,10 @@ $.extend( Scroller.prototype, {
 			if ( initialStateSave && loadedState ) {
 				data.scroller = loadedState.scroller;
 				initialStateSave = false;
-				that.s.lastScrollTop = data.scroller.scrollTop;
+
+				if (data.scroller) {
+					that.s.lastScrollTop = data.scroller.scrollTop;
+				}
 			}
 			else {
 				// Need to used the saved position on init
@@ -1208,7 +1211,7 @@ Scroller.oDefaults = Scroller.defaults;
  *  @name      Scroller.version
  *  @static
  */
-Scroller.version = "2.0.6";
+Scroller.version = "2.0.7";
 
 
 

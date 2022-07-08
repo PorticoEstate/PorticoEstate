@@ -413,7 +413,12 @@
 					try
 					{
 						$receipt = $this->bo->add($allocation);
-						$this->sopurchase_order->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
+						$allocation['id'] = $receipt['id'];
+						$purchase_order_id = $this->sopurchase_order->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
+						$purchase_order_result =  $this->sopurchase_order->get_single_purchase_order($purchase_order_id);
+						$this->add_cost_history($allocation, lang('cost is set'), $purchase_order_result['sum']);
+						$allocation['cost'] = $purchase_order_result['sum'];
+						$this->bo->update($allocation);
 						$this->bo->so->update_id_string();
 						self::redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $receipt['id']));
 					}
@@ -462,7 +467,12 @@
 								try
 								{
 									$receipt = $this->bo->add($allocation);
-									$this->sopurchase_order->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
+									$allocation['id'] = $receipt['id'];
+									$purchase_order_id = $this->sopurchase_order->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
+									$purchase_order_result =  $this->sopurchase_order->get_single_purchase_order($purchase_order_id);
+									$this->add_cost_history($allocation, lang('cost is set'), $purchase_order_result['sum']);
+									$allocation['cost'] = $purchase_order_result['sum'];
+									$this->bo->update($allocation);
 								}
 								catch (booking_unauthorized_exception $e)
 								{
@@ -759,7 +769,7 @@
 
 		public function delete()
 		{
-			$id = phpgw::get_var('allocation_id', 'int');
+			$id = phpgw::get_var('id', 'int');
 			$outseason = phpgw::get_var('outseason', 'string');
 			$recurring = phpgw::get_var('recurring', 'string');
 			$repeat_until = phpgw::get_var('repeat_until', 'string');
@@ -986,7 +996,7 @@
 
 			$allocation['allocations_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
 			$allocation['delete_link'] = self::link(array('menuaction' => 'booking.uiallocation.delete',
-					'allocation_id' => $allocation['id'], 'from_' => $allocation['from_'], 'to_' => $allocation['to_'],
+					'id' => $allocation['id'], 'from_' => $allocation['from_'], 'to_' => $allocation['to_'],
 					'resource' => $allocation['resource']));
 			$allocation['edit_link'] = self::link(array('menuaction' => 'booking.uiallocation.edit',
 					'id' => $allocation['id']));
@@ -1027,7 +1037,7 @@
 			$allocation['org_link'] = self::link(array('menuaction' => 'booking.uiorganization.show',
 					'id' => $allocation['organization_id']));
 			$allocation['delete_link'] = self::link(array('menuaction' => 'booking.uiallocation.delete',
-					'allocation_id' => $allocation['id'], 'from_' => $allocation['from_'], 'to_' => $allocation['to_'],
+					'id' => $allocation['id'], 'from_' => $allocation['from_'], 'to_' => $allocation['to_'],
 					'resource' => $allocation['resource']));
 			$allocation['add_link'] = self::link(array('menuaction' => 'booking.uibooking.add',
 					'allocation_id' => $allocation['id'], 'from_' => $allocation['from_'], 'to_' => $allocation['to_'],

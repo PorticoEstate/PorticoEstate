@@ -218,6 +218,7 @@
 			$link = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uiapplication.show&id=' . $application['id'] . '&secret=' . $application['secret'];
 
 
+			$attachments = array();
 			if ($created)
 			{
 				$body = "<p>" . $config->config_data['application_mail_created'] . "</p>";
@@ -380,13 +381,28 @@
 			}
 
 			$bcc = implode(';', $mail_addresses);
+			$recipient = '';
 
 			try
 			{
-				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html', '',$attachments, false, $reply_to);
-				if($bcc && $created)
-				{
+				$rcpt = $send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, 'AktivKommune', 'html', '',$attachments, false, $reply_to);
 
+				if($rcpt && $GLOBALS['phpgw_info']['flags']['currentapp'] == 'booking')
+				{
+					$recipient = $application['contact_email'];
+				}
+			}
+			catch (Exception $e)
+			{
+				phpgwapi_cache::message_set("Epost feilet for {$application['contact_email']}", 'error');
+				phpgwapi_cache::message_set($e->getMessage(), 'error');
+
+			}
+
+			if($bcc && $created)
+			{
+				try
+				{
 					/**
 					 * Evil hack
 					 */
@@ -402,11 +418,14 @@
 					. "<a href=\"{$link_backend}\">Link til søknad i backend</a></p>";
 
 					$send->msg('email', $bcc, "KOPI::$subject", $new_body, '', '', '', $from, 'AktivKommune', 'html', '',array(), false);
+
 				}
-			}
-			catch (Exception $e)
-			{
-				// TODO: Inform user if something goes wrong
+				catch (Exception $ex)
+				{
+					phpgwapi_cache::message_set("Epost feilet for {$application['contact_email']}", 'error');
+					phpgwapi_cache::message_set($e->getMessage(), 'error');
+
+				}
 			}
 
 			if ($cellphones && $created)
@@ -425,6 +444,8 @@
 					// TODO: Inform user if something goes wrong
 				}
 			}
+
+			return $recipient;
 		}
 
 

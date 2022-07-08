@@ -11,7 +11,7 @@
 	 * @version $Id$
 	*/
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.754';
+	$setup_info['property']['version']		= '0.9.17.755';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -66,6 +66,15 @@
 
 	$setup_info['property']['note'] = '';
 
+	$setup_info['property']['views'] = array(
+		'fm_open_workorder_view',
+		'fm_ecobilag_sum_view',
+		'fm_orders_pending_cost_view',
+		'fm_orders_actual_cost_view',
+		'fm_orders_paid_or_pending_view',
+		'fm_project_budget_year_from_order_view',
+		'fm_project_budget_year_view',
+		);
 
 	$setup_info['property']['tables'] = array(
 		'fm_district',
@@ -93,10 +102,10 @@
 		'fm_location_type',
 		'fm_location_config',
 		'fm_location_contact',
-		'fm_location_exception',
 		'fm_location_exception_severity',
 		'fm_location_exception_category',
 		'fm_location_exception_category_text',
+		'fm_location_exception',
 		'fm_building_part',
 		'fm_b_account',
 		'fm_b_account_category',

@@ -77,6 +77,7 @@
 			$file = 'class.sql_sapdb.inc.php';
 			break;
 		
+		case 'mssqlnative':
 		case 'mssql':
 			$file = 'class.sql_mssql.inc.php';
 			break;

@@ -747,14 +747,22 @@ class ADODB_mssqlnative extends ADOConnection {
 		}
 		if (!$arr) return false;
 
-		$arr2 = false;
+		$arr2 = array();
 
-		foreach($arr as $k => $v) {
-			foreach($v as $a => $b) {
-				if ($upper) $a = strtoupper($a);
-				if (is_array($arr2[$a])) {	// a previous foreign key was define for this reference table, we merge the new one
+		foreach ($arr as $k => $v)
+		{
+			foreach ($v as $a => $b)
+			{
+				if ($upper)
+				{
+					$a = strtoupper($a);
+				}
+				if (isset($arr2[$a]) && is_array($arr2[$a]))
+				{ // a previous foreign key was define for this reference table, we merge the new one
 					$arr2[$a] = array_merge($arr2[$a], $b);
-				} else {
+				}
+				else
+				{
 					$arr2[$a] = $b;
 				}
 			}

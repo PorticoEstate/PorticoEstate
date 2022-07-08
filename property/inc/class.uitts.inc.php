@@ -84,7 +84,7 @@
 			parent::__construct();
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = 'property::helpdesk';
-			if ($this->tenant_id									 = $GLOBALS['phpgw']->session->appsession('tenant_id', 'property'))
+			if ($this->tenant_id = $GLOBALS['phpgw']->session->appsession('tenant_id', 'property'))
 			{
 				//			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 				$GLOBALS['phpgw_info']['flags']['noheader']	 = true;
