@@ -137,7 +137,11 @@
 
 			foreach ($aTables as $sTableName => $aTableDef)
 			{
-
+				if($this->m_odb->MetaForeignKeys($sTableName))
+				{
+					echo '<br>ForeignKeys exist for Table <b>' . $sTableName . '</b>';
+					continue;
+				}
 				if($this->AlterTable($sTableName, $aTableDef))
 				{
 					if($bOutputHTML)
@@ -171,11 +175,11 @@
 
 			foreach ($aTables as $sTableName => $aTableDef)
 			{
-//				if( $this->m_odb->metadata($sTableName))
-//				{
-//					echo '<br>Table <b>' . $sTableName . '</b> already exist';
-//					continue;
-//				}
+				if( $this->m_odb->metadata($sTableName))
+				{
+					echo '<br>Table <b>' . $sTableName . '</b> already exist';
+					continue;
+				}
 
 				if($this->CreateTable($sTableName, $aTableDef))
 				{

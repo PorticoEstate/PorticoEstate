@@ -108,6 +108,7 @@
 			$this->acl_add										 = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
 			$this->acl_edit										 = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
 			$this->acl_delete									 = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
+			$this->acl_manage									 = $this->acl->check($this->acl_location, 16, 'property');
 		}
 
 		private function save_sessiondata()
@@ -126,22 +127,29 @@
 		{
 			if (!$this->acl_read)
 			{
-				$this->no_access();
-				return;
+				phpgw::no_access();
 			}
-
 			$GLOBALS['phpgw']->xslttpl->add_file(array('migrate', 'nextmatchs'));
 
 			$values = phpgw::get_var('values', 'string', 'POST');
 
+			$_alert_msg = 'This one will really fuck up your database if you accidentally choose wrong';
+
 			if ($values)
 			{
-				if (!$this->acl_edit)
+				/**
+				 * FIXME
+				 * This one will really fuck up your database if you accidentally choose wrong
+				 */
+				if (!$this->acl_manage || $GLOBALS['phpgw_info']['user']['lid'] !== 'hc483')
 				{
-					$this->no_access();
-					return;
+					phpgw::no_access('admin', $_alert_msg);
 				}
 				$this->bo->migrate($values);
+			}
+			else
+			{
+				phpgwapi_cache::message_set($_alert_msg, 'error');
 			}
 
 			$domain_info = $this->bo->read();

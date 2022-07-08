@@ -297,7 +297,7 @@
 				case 'mssqlnative':
 //					$type = 'pdo'; // pdo-driver are missing important functions
 					$type = 'mssqlnative';
-					$dsn = "sqlsrv:Server={$this->Host},{$this->Port};Database={$this->Database};Encrypt=true;TrustServerCertificate=true";
+//					$dsn = "sqlsrv:Server={$this->Host},{$this->Port};Database={$this->Database};Encrypt=true;TrustServerCertificate=true";
 					break;
 				case 'oci8':
 				case 'oracle':
@@ -988,7 +988,7 @@
 			{
 				$return = array();
 			}
-//			$this->adodb->close();
+			$this->adodb->close();
 			return $return;
 		}
 

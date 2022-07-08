@@ -518,20 +518,27 @@
 				return true; // nothing to do
 			}
 
-			$sFKSQL = '';
-
-			if ($aTableDef['fk'] && $oProc->_GetFK($aTableDef['fk'], $sFKSQL))
+			if (is_array($aTableDef['fk']))
 			{
-
-				$query = "ALTER TABLE $sTableName ADD CONSTRAINT fk_{$sTableName} $sFKSQL";
-			//	if ( $DEBUG)
+				foreach ( $aTableDef['fk'] as $field => $foreign_key)
 				{
-					echo '<pre>';
-					print_r($query);
-					echo '</pre>';
+					$sFKSQL = '';
+					$oProc->_GetFK(array($field => $foreign_key), $sFKSQL);
+					$query = "ALTER TABLE $sTableName ADD CONSTRAINT {$sTableName}_{$field}_fk $sFKSQL";
+				//	if ( $DEBUG)
+					{
+						echo '<pre>';
+						print_r($query);
+						echo '</pre>';
+					}
+
+					$result = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
+					if(!$result)
+					{
+						break;
+					}
 				}
 
-				$result = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
 				return $result;
 			}
 
