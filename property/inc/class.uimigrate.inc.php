@@ -108,6 +108,7 @@
 			$this->acl_add										 = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
 			$this->acl_edit										 = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
 			$this->acl_delete									 = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
+			$this->acl_manage									 = $this->acl->check($this->acl_location, 16, 'property');
 		}
 
 		private function save_sessiondata()
@@ -126,20 +127,17 @@
 		{
 			if (!$this->acl_read)
 			{
-				$this->no_access();
-				return;
+				phpgw::no_access();
 			}
-
 			$GLOBALS['phpgw']->xslttpl->add_file(array('migrate', 'nextmatchs'));
 
 			$values = phpgw::get_var('values', 'string', 'POST');
 
 			if ($values)
 			{
-				if (!$this->acl_edit)
+				if (!$this->acl_manage)
 				{
-					$this->no_access();
-					return;
+					phpgw::no_access();
 				}
 				$this->bo->migrate($values);
 			}

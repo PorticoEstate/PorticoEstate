@@ -114,11 +114,12 @@
 	</xsl:variable>
 	<tr>
 		<td height="50">
-			<input type="submit" name="migrate" value="{$lang_migrate}">
+			<button onclick="return confirm('{php:function('lang', 'Are you really sure?')}')" type="submit" name="migrate" value="1" class="pure-button pure-button-primary">
 				<xsl:attribute name="title">
 					<xsl:value-of select="lang_migrate_statustext"/>
 				</xsl:attribute>
-			</input>
+					<xsl:value-of select="lang_migrate"/>
+			</button>
 		</td>
 	</tr>
 </xsl:template>
