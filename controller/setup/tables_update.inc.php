@@ -1620,6 +1620,21 @@
 	}
 
 
+	$test[] = '0.1.71';
+	function controller_upgrade0_1_71()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('controller_check_item_status', 'open', 'open_');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.72';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
+
+
 
 
 

@@ -907,7 +907,7 @@ CREATE TABLE public.fm_budget_period (
     year integer NOT NULL,
     month integer NOT NULL,
     b_account_id character varying(4) NOT NULL,
-    per_cent integer DEFAULT 0,
+    percent_ integer DEFAULT 0,
     user_id integer,
     entry_date integer,
     remark text
@@ -1727,7 +1727,7 @@ ALTER TABLE public.fm_ecologg OWNER TO portico;
 
 CREATE TABLE public.fm_ecomva (
     id integer NOT NULL,
-    percent integer,
+    percent_ integer,
     descr character varying(255) NOT NULL
 );
 
@@ -2876,7 +2876,7 @@ CREATE TABLE public.fm_order_template (
     id integer DEFAULT nextval('public.seq_fm_order_template'::regclass) NOT NULL,
     name character varying(200) NOT NULL,
     content text,
-    public smallint,
+    public_ smallint,
     user_id integer,
     entry_date integer,
     modified_date integer
@@ -3488,7 +3488,7 @@ CREATE TABLE public.fm_response_template (
     id integer DEFAULT nextval('public.seq_fm_response_template'::regclass) NOT NULL,
     name character varying(200) NOT NULL,
     content text,
-    public smallint,
+    public_ smallint,
     user_id integer,
     entry_date integer,
     modified_date integer
@@ -5600,7 +5600,7 @@ CREATE TABLE public.rental_adjustment (
     adjustment_date bigint,
     adjustment_type character varying(255),
     new_price numeric(20,2),
-    percent numeric(20,2),
+    percent_ numeric(20,2),
     adjustment_interval integer,
     is_manual boolean DEFAULT false NOT NULL,
     extra_adjustment boolean DEFAULT false NOT NULL,
@@ -6233,7 +6233,7 @@ CREATE TABLE public.rental_email_template (
     id integer DEFAULT nextval('public.seq_rental_email_template'::regclass) NOT NULL,
     name character varying(255) NOT NULL,
     content text,
-    public smallint,
+    public_ smallint,
     user_id integer,
     entry_date bigint DEFAULT date_part('epoch'::text, now()),
     modified_date bigint DEFAULT date_part('epoch'::text, now())
@@ -6919,7 +6919,7 @@ COPY public.fm_budget_cost (id, year, month, b_account_id, amount) FROM stdin;
 -- Data for Name: fm_budget_period; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY public.fm_budget_period (year, month, b_account_id, per_cent, user_id, entry_date, remark) FROM stdin;
+COPY public.fm_budget_period (year, month, b_account_id, percent_, user_id, entry_date, remark) FROM stdin;
 \.
 
 
@@ -7249,7 +7249,7 @@ COPY public.fm_ecologg (batchid, ecobilagid, status, melding, tid) FROM stdin;
 -- Data for Name: fm_ecomva; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY public.fm_ecomva (id, percent, descr) FROM stdin;
+COPY public.fm_ecomva (id, percent_, descr) FROM stdin;
 2	\N	Mva 2
 1	\N	Mva 1
 0	\N	ingen
@@ -7675,7 +7675,7 @@ COPY public.fm_order_dim1 (id, num, descr) FROM stdin;
 -- Data for Name: fm_order_template; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY public.fm_order_template (id, name, content, public, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_order_template (id, name, content, public_, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7855,7 +7855,7 @@ closed	avsluttet	\N	\N	\N	\N
 -- Data for Name: fm_response_template; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY public.fm_response_template (id, name, content, public, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_response_template (id, name, content, public_, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -17788,7 +17788,7 @@ COPY public.phpgw_vfs_filedata (file_id, metadata) FROM stdin;
 -- Data for Name: rental_adjustment; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY public.rental_adjustment (id, price_item_id, responsibility_id, adjustment_date, adjustment_type, new_price, percent, adjustment_interval, is_manual, extra_adjustment, is_executed) FROM stdin;
+COPY public.rental_adjustment (id, price_item_id, responsibility_id, adjustment_date, adjustment_type, new_price, percent_, adjustment_interval, is_manual, extra_adjustment, is_executed) FROM stdin;
 \.
 
 
@@ -17984,7 +17984,7 @@ COPY public.rental_email_out_party (id, email_out_id, party_id, status) FROM std
 -- Data for Name: rental_email_template; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY public.rental_email_template (id, name, content, public, user_id, entry_date, modified_date) FROM stdin;
+COPY public.rental_email_template (id, name, content, public_, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 

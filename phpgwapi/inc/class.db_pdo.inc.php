@@ -143,7 +143,14 @@
 					*/
 					try
 					{
-						$this->db = new PDO("mssql:host={$this->Host},1433;dbname={$this->Database}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $this->persistent));
+						$this->db = new PDO("mssql:host={$this->Host},{$this->Host};dbname={$this->Database}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $this->persistent));
+					}
+					catch(PDOException $e){}
+					break;
+					case 'mssqlnative':
+					try
+					{
+						$this->db = new PDO("sqlsrv:Server={$this->Host},{$this->Port};Database={$this->Database};Encrypt=true;TrustServerCertificate=true", $this->User, $this->Password);
 					}
 					catch(PDOException $e){}
 					break;
@@ -278,9 +285,19 @@
 				case 'mysql':
 					$type = 'mysqli';
 					break;
+//				case 'postgres':
+//					$type = 'pdo';
+//					$this->Port = $this->Port ? $this->Port : 5432;
+//					$dsn = "pgsql:dbname={$this->Database};host={$this->Host};port={$this->Port}";
+//					break;
 				case 'mssql':
 					$type = 'odbc_mssql';
-					$dsn = "Driver={SQL Server};Server={$this->Host};Database={$this->Database};";
+					$dsn = "Driver={SQL Server};Server={$this->Host};Database={$this->Database};Encrypt=true;TrustServerCertificate=true";
+					break;
+				case 'mssqlnative':
+//					$type = 'pdo'; // pdo-driver are missing important functions
+					$type = 'mssqlnative';
+					$dsn = "sqlsrv:Server={$this->Host},{$this->Port};Database={$this->Database};Encrypt=true;TrustServerCertificate=true";
 					break;
 				case 'oci8':
 				case 'oracle':
@@ -298,7 +315,7 @@
 				$host .= ":{$port}";
 			}
 			require_once PHPGW_API_INC . '/adodb/adodb.inc.php';
-			$this->adodb = newADOConnection($type);
+			$this->adodb = ADOnewConnection($type);
 			$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
 			if($dsn)
 			{
@@ -397,8 +414,18 @@
  * CREATE OPERATOR ~@& (LEFTARG = jsonb, RIGHTARG = text[], PROCEDURE = jsonb_exists_all);
  */
 //			self::sanitize($sql);//killing performance
+
+			if(in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
+			{
+				if(preg_match('/(^SELECT)/i', $sql) && ! preg_match('/TOP 100 PERCENT/i', $sql))
+				{
+					$sql = str_replace(array('SELECT', 'SELECT TOP 100 PERCENT DISTINCT'), array('SELECT TOP 100 PERCENT', 'SELECT DISTINCT TOP 100 PERCENT'), $sql);
+				}
+			}
+
 			self::_get_fetchmode();
 			self::set_fetch_single($_fetch_single);
+			$exec = false;
 
 			$fetch_single = $this->fetch_single;
 
@@ -407,22 +434,24 @@
 				$this->connect();
 			}
 			$fetch = true;
-			if(preg_match('/(^INSERT INTO|^DELETE FROM|^CREATE|^DROP|^ALTER|^UPDATE)/i', $sql)) // need it for MySQL and Oracle
+			if(preg_match('/(^INSERT INTO|^DELETE FROM|^CREATE|^DROP|^ALTER|^UPDATE|^SET)/i', $sql)) // need it for MySQL and Oracle
 			{
-//				$exec = true; //ignored
 				$fetch = false;
+			}
+			if(preg_match('/(^SET)/i', $sql)) // need it for MSSQL
+			{
+				$exec = true; //ignored
 			}
 
 			try
 			{
-/*
-				if($exec) // Commented to prevent from SQL-injection
+
+				if($exec)
 				{
 					$this->affected_rows = $this->db->exec($sql);
 					return true;
 				}
 				else
-*/
 				{
 					if($statement_object = $this->db->query($sql))
 					{
@@ -461,7 +490,10 @@
 
 					if($file)
 					{
-						trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+//						trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+						$msg = "SQL: {$sql}<br/><br/> in File: $file<br/><br/> on Line: $line<br/><br/>";
+						$msg .= 'Error: ' . ($e->getMessage());
+						trigger_error($msg, E_USER_ERROR);
 					}
 					else
 					{
@@ -686,12 +718,17 @@
 					$sequence = $this->_get_sequence_field_for_table($table, $field);
 					$ret = $this->db->lastInsertId($sequence);
 					break;
+				case 'mssqlnative':
 				case 'mssql':
-					//FIXME
-					$this->fetchmode = 'BOTH';
+					$orig_fetchmode = $this->fetchmode;
+					if($this->fetchmode == 'ASSOC')
+					{
+						$this->fetchmode = 'BOTH';
+					}
 					$this->query("SELECT @@identity", __LINE__, __FILE__);
 					$this->next_record();
 					$ret = $this->f(0);
+					$this->fetchmode = $orig_fetchmode;
 					break;
 				default:
 					$ret = $this->db->lastInsertId();
@@ -876,16 +913,24 @@
 		*/
 		public function metadata($table, $full = false)
 		{
+			$metadata = array();
 			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->_connect_adodb();
 			}
-			if(!($return = $this->adodb->MetaColumns($table,$full)))
+			$return = $this->adodb->MetaColumns($table, $full);
+			if(!$return)
 			{
 				$return = array();
 			}
+
+			foreach ($return as $key => $value)
+			{
+				$metadata[strtolower($key)] = $value;
+			}
+
 			$this->adodb->close();
-			return $return;
+			return $metadata;
 
 		}
 
@@ -910,6 +955,21 @@
 			$this->adodb->close();
 			return $return;
 		}
+
+		public function MetaPrimaryKeys($table, $owner=false, $upper=false)
+		{
+			if(!$this->adodb || !$this->adodb->IsConnected())
+			{
+				$this->_connect_adodb();
+			}
+			if(!($return = $this->adodb->MetaPrimaryKeys($table, $owner)))
+			{
+				$return = array();
+			}
+			$this->adodb->close();
+			return $return;
+		}
+
 		/**
 		* Returns an associate array of foreign keys, or false if not supported.
 		*
@@ -928,7 +988,7 @@
 			{
 				$return = array();
 			}
-			$this->adodb->close();
+//			$this->adodb->close();
 			return $return;
 		}
 
@@ -992,11 +1052,12 @@
 						}
 					}
 					break;
-				case 'mssql': //not testet
+				case 'mssqlnative':
+				case 'mssql':
 					$this->query("SELECT name FROM sysobjects WHERE type='u' AND name != 'dtproperties'",__LINE__, __FILE__);
 					foreach($this->resultSet as $entry)
 					{
-						$return[] =  $entry;
+						$return[] =  $entry['name'];
 					}
 					break;
 				case 'oci8':
@@ -1051,6 +1112,10 @@
 			{
 				case 'postgres':
 					$_database = 'postgres';
+					break;
+				case 'mssql':
+				case 'mssqlnative':
+					$_database = 'master';
 					break;
 				default:
 					$_database = null;

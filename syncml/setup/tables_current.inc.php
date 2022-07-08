@@ -40,8 +40,7 @@
 		 */
 		'phpgw_syncml_hashes' => array(
 			'fd' => array(
-				'account_id' => array(
-					'type' => 'int', 'precision' => 4),
+				'account_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'hash' => array( // b64(md5(username:passwd))
 					'type' => 'varchar', 'precision' => 32,
 					'nullable' => False)

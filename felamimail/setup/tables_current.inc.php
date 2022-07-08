@@ -25,7 +25,7 @@
 		'egw_felamimail_accounts' => array(
 			'fd' => array(
 				'fm_owner' => array('type' => 'int','precision' => '4','nullable' => False),
-				'fm_id' => array('type' => 'auto'),
+				'fm_id' => array('type' => 'auto','nullable' => False),
 				'fm_realname' => array('type' => 'varchar','precision' => '128'),
 				'fm_organization' => array('type' => 'varchar','precision' => '128'),
 				'fm_emailaddress' => array('type' => 'varchar','precision' => '128','nullable' => False),
@@ -53,7 +53,7 @@
 		),
 		'egw_felamimail_signatures' => array(
 			'fd' => array(
-				'fm_signatureid' => array('type' => 'auto'),
+				'fm_signatureid' => array('type' => 'auto','nullable' => False),
 				'fm_accountid' => array('type' => 'int','precision' => '4'),
 				'fm_signature' => array('type' => 'text'),
 				'fm_description' => array('type' => 'varchar','precision' => '255'),

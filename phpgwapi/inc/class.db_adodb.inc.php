@@ -76,7 +76,7 @@
 		*/
 		function link_id()
 		{
-			if(!$this->adodb || $this->adodb->IsConnected())
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->connect();
 			}
@@ -305,7 +305,9 @@
 					$this->transaction_abort();
 					if($file)
 					{
-						trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+						$msg = "SQL: {$sql}<br/><br/> in File: $file<br/><br/> on Line: $line<br/><br/>";
+						$msg .= 'Error: ' . ($e->getMessage());
+						trigger_error($msg, E_USER_ERROR);
 					}
 					else
 					{
@@ -426,7 +428,7 @@
 		*/
 		public function transaction_begin()
 		{
-			if(!$this->adodb || $this->adodb->IsConnected())
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->connect();
 			}
@@ -513,15 +515,18 @@
 					}
 					return $Record[0];
 					break;
+				case 'mssqlnative':
 				case 'mssql':
 					/*  MSSQL uses a query to retrieve the last
 					 *  identity on the connection, so table and field are ignored here as well.
 					 */
 					if(!isset($table) || $table == '' || !isset($field) || $field == '')
 					{
-					return -1;
+						return -1;
 					}
-					$result = @mssql_query("select @@identity", $this->adodb->_queryID);
+//					$result = @mssql_query("select @@identity", $this->adodb->_queryID);
+					$result = $this->adodb->Insert_ID($table, $field);
+
 					if(!$result)
 					{
 						return -1;
@@ -670,22 +675,25 @@
 		* @param boolean $full optional, default False summary information, True full information
 		* @return array Table meta data
 		*/  
-		public function metadata($table,$full = false)
+		public function metadata($table, $full = false)
 		{
-			if($this->debug)
-			{
-				//echo "depi: metadata";
-			}
+			$metadata = array();
 			
-			if(!$this->adodb || $this->adodb->IsConnected())
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->connect();
 			}
-			if(!($return =& $this->adodb->MetaColumns($table,$full)))
+			if(!($return = $this->adodb->MetaColumns($table, $full)))
 			{
 				$return = array();
 			}
-			return $return;
+
+			foreach ($return as $key => $value)
+			{
+				$metadata[strtolower($key)] = $value;
+			}
+
+			return $metadata;
 		}
 
 		/**
@@ -698,11 +706,24 @@
 		*/  
 		public function MetaForeignKeys($table, $owner=false, $upper=false)
 		{
-			if(!$this->adodb || $this->adodb->IsConnected())
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->connect();
 			}
 			if(!($return =& $this->adodb->MetaForeignKeys($table, $owner, $upper)))
+			{
+				$return = array();
+			}
+			return $return;
+		}
+
+		public function MetaPrimaryKeys($table, $owner=false,  $upper=false)
+		{
+			if(!$this->adodb || !$this->adodb->IsConnected())
+			{
+				$this->connect();
+			}
+			if(!($return =& $this->adodb->MetaPrimaryKeys($table, $owner)))
 			{
 				$return = array();
 			}
@@ -719,7 +740,7 @@
 
 		public function metaindexes($table, $primary = false)
 		{
-			if(!$this->adodb || $this->adodb->IsConnected())
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->connect();
 			}
@@ -749,7 +770,7 @@
 		*/
 		public function table_names()
 		{
-			if(!$this->adodb || $this->adodb->IsConnected())
+			if(!$this->adodb || !$this->adodb->IsConnected())
 			{
 				$this->connect();
 			}

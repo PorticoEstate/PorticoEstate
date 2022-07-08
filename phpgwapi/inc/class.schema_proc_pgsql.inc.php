@@ -19,7 +19,7 @@
 
 	/**
 	* Database schema abstraction class for PostgreSQL
-	* 
+	*
 	* @package phpgwapi
 	* @subpackage database
 	*/
@@ -140,7 +140,7 @@
 			}
 			else
 			{
-				$ret= "'" . $sDefault . "'";			
+				$ret= "'" . $sDefault . "'";
 			}
 			return $ret;
 		}
@@ -217,6 +217,9 @@
 				case 'boolean':
 					$sTranslated = "'type' => 'bool'";
 					break;
+				case 'xml':
+					$sTranslated = "'type' => 'xml'";
+					break;
 			}
 			return $sTranslated;
 		}
@@ -243,7 +246,7 @@
 			return '';
 		}
 
-			
+
 		function GetFKSQL($reftable, $sFields)
 		{
 			if(is_array($sFields))
@@ -257,9 +260,10 @@
 				return ""; // incorrect FK declaration found
 			}
 		}
-			
-		function _GetColumns($oProc, $sTableName, &$sColumns, $sDropColumn = '', $sAlteredColumn = '', $sAlteredColumnType = '')
+
+		function _GetColumns(&$oProc, $sTableName, &$sColumns)
 		{
+			$oProc->m_odb->fetchmode = 'BOTH';
 			$sdb = clone($oProc->m_odb);
 			$sdc = clone($oProc->m_odb);
 
@@ -269,29 +273,6 @@
 			$this->ix = array();
 			$this->uc = array();
 
-			$query = "SELECT a.attname,a.attnum FROM pg_attribute a,pg_class b WHERE ";
-			$query .= "b.oid=a.attrelid AND a.attnum>0 and b.relname='$sTableName'";
-			if ($sDropColumn != '')
-			{
-				$query .= " AND a.attname != '$sDropColumn'";
-			}
-			$query .= ' ORDER BY a.attnum';
-
-			$sdb->query($query, __LINE__, __FILE__);
-			while ($oProc->m_odb->next_record())
-			{
-				if ($sColumns != '')
-				{
-					$sColumns .= ',';
-				}
-
-				$sFieldName = $oProc->m_odb->f(0);
-				$sColumns .= $sFieldName;
-				if ($sAlteredColumn == $sFieldName && $sAlteredColumnType != '')
-				{
-					$sColumns .= '::' . $sAlteredColumnType;
-				}
-			}
 			//$qdefault = "SELECT substring(d.adsrc for 128) FROM pg_attrdef d, pg_class c "
 			//	. "WHERE c.relname = $sTableName AND c.oid = d.adrelid AND d.adnum =" . $oProc->m_odb->f(1);
 			$sql_get_fields = "
@@ -375,13 +356,13 @@
 						}
 						else
 						{
-							$default = "'default' => '" . str_replace(array('::bpchar','::character varying'),array('',''),$sdc->f(0));						
+							$default = "'default' => '" . str_replace(array('::integer','::text','::bpchar','::character varying'),array('','','',''),$sdc->f(0));
 						}
-						
+
 						// For db-functions - add an apos
 						if(substr($default,-1)!= "'")
 						{
-							$default .= "'"; 
+							$default .= "'";
 						}
 						$nullcomma = ',';
 					}
@@ -488,8 +469,8 @@
 					for ($i=0;$i<count($f_temp_primary);$i++)
 					{
 						$keystr[] = "'" . $f_temp_primary[$i] . "' => '" . $f_temp_foreign[$i] . "'";
-					}				
-					
+					}
+
 					$this->fk[] = "'" . trim($f_temp[4]) . "' => array(" . implode(', ',$keystr)  . ')';
 				}
 			}
@@ -498,7 +479,7 @@
 			unset($f_temp_primary);
 			unset($f_temp_foreign);
 
-			$metaindexes = $sdc->metaindexes($sTableName);
+			$metaindexes = $oProc->m_odb->metaindexes($sTableName);
 
 			foreach($metaindexes as $key => $index)
 			{
@@ -512,7 +493,7 @@
 				}
 				else
 				{
-					$this->ix[] = $index['columns'][0];	
+					$this->ix[] = $index['columns'][0];
 				}
 			}
 
@@ -583,6 +564,11 @@
 				   $this->DropSequenceForTable($oProc, $sTableName);
 		}
 
+		function DropView($oProc, $sViewName)
+		{
+			return !!($oProc->m_odb->query("DROP VIEW " . $sViewName));
+		}
+
 		function DropColumn($oProc, &$aTables, $sTableName, $aNewTableDef, $sColumnName, $bCopyData = true)
 		{
 			$query = "ALTER TABLE $sTableName DROP COLUMN $sColumnName CASCADE";
@@ -624,7 +610,7 @@
 				$Ok = !!$oProc->m_odb->query("ALTER TABLE $sNewTableName ALTER $sField SET DEFAULT nextval('seq_" . $sNewTableName . "')", __LINE__, __FILE__);
 				$this->DropSequenceForTable($oProc,$sOldTableName);
 			}
-			
+
 			return $Ok;
 
 		/* todo - fix index-renaming.
@@ -641,7 +627,7 @@
 			{
 				$oProc->m_odb->query('ALTER TABLE '.$sOldTableName.'_pkey RENAME TO '.$sNewTableName.'_pkey');
 			}
-		
+
 
 			return !!($oProc->m_odb->query("ALTER TABLE $sOldTableName RENAME TO $sNewTableName"));
 		*/
@@ -698,7 +684,7 @@
 			}
 			else
 			{
-				$sFieldSQL = ' DROP NOT NULL';			
+				$sFieldSQL = ' DROP NOT NULL';
 			}
 
 			$query = "ALTER TABLE $sTableName ALTER COLUMN $sColumnName $sFieldSQL";
@@ -707,7 +693,7 @@
 			if($sDefault == '0')
 			{
 				$defaultSQL = " DEFAULT 0";
-			}								
+			}
 			elseif(!is_numeric($sDefault) && $sDefault != '')
 			{
 				$sTranslatedDefault = $this->TranslateDefault($sDefault, $sType);
@@ -760,7 +746,7 @@
 
 		function GetTriggerSQL($sTableName, $sColumnNames, &$sTriggerSQL)
 		{
-			$sTriggerSQL = ''; 
+			$sTriggerSQL = '';
 			return false;
 		}
 
@@ -798,10 +784,10 @@
 							$IndexSQL = str_replace(array('__index_name__','__table_name__'), array($ix_name,$sTableName), $sIndexSQL);
 							$oProc->m_odb->query($IndexSQL, __LINE__, __FILE__);
 						}
-					}			
+					}
 				}
 				return $result;
-				//return !!($oProc->m_odb->query($query));				
+				//return !!($oProc->m_odb->query($query));
 			}
 
 			return false;

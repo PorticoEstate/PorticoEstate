@@ -12,7 +12,7 @@
 	$phpgw_baseline = array(
 		'phpgw_config' => array(
 			'fd' => array(
-				'config_app' => array('type' => 'varchar','precision' => 50),
+				'config_app' => array('type' => 'varchar','precision' => 50,'nullable' => False),
 				'config_name' => array('type' => 'varchar','precision' => 255,'nullable' => False),
 				'config_value' => array('type' => 'text')
 			),
@@ -754,7 +754,7 @@
 				'section_id' => array('type' => 'int','precision' => 4,'nullable' => False),
 				'attrib_id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
 				'id' => array('type' => 'int', 'precision' => 4,'nullable' => False),
-				'value' => array('type' => 'text','nullable' => False)
+				'value' => array('type' => 'varchar', 'precision' => 256,'nullable' => False)
 			),
 			'pk' => array('section_id','attrib_id','id'),
 			'fk' => array(),

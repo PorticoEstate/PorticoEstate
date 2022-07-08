@@ -886,11 +886,11 @@
 
 			$_actual_cost_arr = array();
 
-			$this->db->query('SELECT id, percent FROM fm_ecomva', __LINE__, __FILE__);
+			$this->db->query('SELECT id, percent_ FROM fm_ecomva', __LINE__, __FILE__);
 			$_taxcode = array(0 => 0);
 			while ($this->db->next_record())
 			{
-				$_taxcode[$this->db->f('id')] = $this->db->f('percent');
+				$_taxcode[$this->db->f('id')] = $this->db->f('percent_');
 			}
 
 			foreach ($workorder_list as &$workorder)
@@ -2069,12 +2069,12 @@
 			}
 
 
-			$sql		 = "SELECT id, percent FROM fm_ecomva";
+			$sql		 = "SELECT id, percent_ FROM fm_ecomva";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$tax_codes	 = array();
 			while ($this->db->next_record())
 			{
-				$tax_codes[$this->db->f('id')] = $this->db->f('percent');
+				$tax_codes[$this->db->f('id')] = $this->db->f('percent_');
 			}
 			$closed_period	 = array();
 			$active_period	 = array();

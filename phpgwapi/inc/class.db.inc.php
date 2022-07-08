@@ -293,6 +293,7 @@
 
 			switch ( $this->Type )
 			{
+				case 'mssqlnative':
 				case 'mssql':
 					$sql = str_replace('SELECT ', 'SELECT TOP ', $sql);
 					$sql = str_replace('SELECT TOP DISTINCT', 'SELECT DISTINCT TOP ', $sql);
@@ -590,6 +591,16 @@
 		abstract public function MetaForeignKeys($table, $owner=false, $upper=false);
 
 		/**
+		* Returns an array with the primary key columns in it.
+		*
+		* @param string $table name of table to describe
+		* @param boolean $owner optional, default False. The optional schema or owner can be defined in $owner.
+		* @param boolean $upper optional, default False. If $upper is true, then the table names (array keys) are upper-cased.
+		* @return array with the primary key columns in it.
+		*/
+		abstract public function MetaPrimaryKeys($table, $owner=false,  $upper=false);
+
+		/**
 		* Returns an associate array of foreign keys, or false if not supported.
 		*
 		* @param string $table name of table to describe
@@ -649,6 +660,7 @@
 			{
 				switch($GLOBALS['phpgw_info']['server']['db_type'])
 				{
+					case 'mssqlnative':
 					case 'mssql':
 						$date_format 		= 'M d Y';
 						break;
@@ -675,6 +687,7 @@
 			{
 				switch($GLOBALS['phpgw_info']['server']['db_type'])
 				{
+					case 'mssqlnative':
 					case 'mssql':
 						$datetime_format 		= 'M d Y g:iA';
 						break;
@@ -695,7 +708,7 @@
 		*/
 		final public static function money_format($amount)
 		{
-			if ($GLOBALS['phpgw_info']['server']['db_type']=='mssql')
+			if (in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql', 'mssqlnative')))
 			{
 				return "CONVERT(MONEY,'{$amount}',0)";
 			}

@@ -868,8 +868,20 @@
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('XHTML')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_jasper_format_type (id) VALUES ('DOCX')");
 
-	$solocation = createObject('property.solocation');
-	$solocation->update_location();
+	/**
+	 * FIXME
+	 * Fails at adodb::MetaColumns() for MSSQL
+	 */
+
+	if(!in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql','mssqlnative')))
+	{
+		$solocation = createObject('property.solocation');
+		$solocation->update_location();
+	}
+	else
+	{
+		echo "<li><b>Run the \"Update location\" from within the administration->property after installation</b></li>";
+	}
 
 	$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 
@@ -1004,31 +1016,38 @@
 		)
 	);
 
-	$sql = 'CREATE OR REPLACE VIEW fm_open_workorder_view AS'
+	$sql = 'CREATE VIEW fm_open_workorder_view AS'
 		. ' SELECT fm_workorder.id, fm_workorder.project_id, fm_workorder_status.descr FROM fm_workorder'
 		. ' JOIN fm_workorder_status ON fm_workorder.status = fm_workorder_status.id WHERE fm_workorder_status.delivered IS NULL AND fm_workorder_status.closed IS NULL';
 	$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
 
-	$sql = 'CREATE OR REPLACE VIEW fm_ecobilag_sum_view AS'
-		. ' SELECT DISTINCT bilagsnr, sum(godkjentbelop) AS approved_amount, sum(belop) AS amount FROM fm_ecobilag  GROUP BY bilagsnr ORDER BY bilagsnr ASC';
+	$sql = 'CREATE VIEW fm_ecobilag_sum_view AS'
+		. ' SELECT DISTINCT bilagsnr, sum(godkjentbelop) AS approved_amount, sum(belop) AS amount FROM fm_ecobilag GROUP BY bilagsnr';
+
+	if($GLOBALS['phpgw_info']['server']['db_type'] == 'postgres')
+	{
+		$sql .= " ORDER BY bilagsnr ASC";
+	}
+
 	$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
 
-	$sql = 'CREATE OR REPLACE VIEW fm_orders_pending_cost_view AS'
+	$sql = 'CREATE VIEW fm_orders_pending_cost_view AS'
 		. ' SELECT fm_ecobilag.pmwrkord_code AS order_id, sum(fm_ecobilag.godkjentbelop) AS pending_cost FROM fm_ecobilag GROUP BY fm_ecobilag.pmwrkord_code';
 
 	$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
-	$sql = 'CREATE OR REPLACE VIEW fm_orders_actual_cost_view AS'
+	$sql = 'CREATE VIEW fm_orders_actual_cost_view AS'
 		. ' SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, sum(fm_ecobilagoverf.godkjentbelop) AS actual_cost FROM fm_ecobilagoverf  GROUP BY fm_ecobilagoverf.pmwrkord_code';
 
 	$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
 	switch ($GLOBALS['phpgw_info']['server']['db_type'])
 	{
+		case 'mssqlnative':
 		case 'postgres':
-			$sql = 'CREATE OR REPLACE VIEW public.fm_orders_paid_or_pending_view AS
+			$sql = 'CREATE VIEW fm_orders_paid_or_pending_view AS
 				SELECT orders_paid_or_pending.order_id,
 				   orders_paid_or_pending.periode,
 				   orders_paid_or_pending.amount,
@@ -1051,29 +1070,38 @@
 						   fm_ecobilag.periodization_start,
 						   fm_ecobilag.mvakode
 						  FROM fm_ecobilag
-						 GROUP BY fm_ecobilag.pmwrkord_code, fm_ecobilag.periode, fm_ecobilag.periodization, fm_ecobilag.periodization_start, fm_ecobilag.mvakode) orders_paid_or_pending
-				 ORDER BY orders_paid_or_pending.periode, orders_paid_or_pending.order_id';
+						 GROUP BY fm_ecobilag.pmwrkord_code, fm_ecobilag.periode, fm_ecobilag.periodization, fm_ecobilag.periodization_start, fm_ecobilag.mvakode) orders_paid_or_pending';
 
+			if($GLOBALS['phpgw_info']['server']['db_type'] == 'postgres')
+			{
+				$sql .= " ORDER BY orders_paid_or_pending.periode, orders_paid_or_pending.order_id";
+			}
 			$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 			break;
 		default:
 		//do nothing for now
 	}
 
-	$sql = 'CREATE OR REPLACE VIEW fm_project_budget_year_from_order_view AS'
+	$sql = 'CREATE VIEW fm_project_budget_year_from_order_view AS'
 		. ' SELECT DISTINCT fm_workorder.project_id, fm_workorder_budget.year'
 		. ' FROM fm_workorder_budget'
-		. ' JOIN fm_workorder ON fm_workorder.id = fm_workorder_budget.order_id'
-		. ' ORDER BY fm_workorder.project_id';
+		. ' JOIN fm_workorder ON fm_workorder.id = fm_workorder_budget.order_id';
 
+	if($GLOBALS['phpgw_info']['server']['db_type'] == 'postgres')
+	{
+		$sql .= " ORDER BY fm_workorder.project_id";
+	}
 	$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
 
-	$sql = 'CREATE OR REPLACE VIEW fm_project_budget_year_view AS'
+	$sql = 'CREATE VIEW fm_project_budget_year_view AS'
 		. ' SELECT DISTINCT fm_project_budget.project_id, fm_project_budget.year'
-		. ' FROM fm_project_budget'
-		. ' ORDER BY fm_project_budget.project_id';
+		. ' FROM fm_project_budget';
 
+	if($GLOBALS['phpgw_info']['server']['db_type'] == 'postgres')
+	{
+		$sql .= " ORDER BY fm_project_budget.project_id";
+	}
 	$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
 

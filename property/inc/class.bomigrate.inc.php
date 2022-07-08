@@ -78,44 +78,59 @@
 
 		public function migrate( $values, $download_script = false )
 		{
+//			$download_script = true;
 			//_debug_array($GLOBALS['phpgw_domain']);die();
 //			_debug_array($values);
 			$oProc							 = createObject('phpgwapi.schema_proc', $GLOBALS['phpgw_info']['server']['db_type']);
 			$oProc->m_odb					 = $GLOBALS['phpgw']->db;
 			$oProc->m_odb->Halt_On_Error	 = 'yes';
+			$GLOBALS['phpgw_setup'] = CreateObject('phpgwapi.setup', false, false);
 			$GLOBALS['phpgw_setup']->oProc	 = $oProc;
 
 			$tables = $GLOBALS['phpgw']->db->table_names();
 
-//			$tables = array('fm_entity_history');
-
 			$setup = createObject('phpgwapi.setup_process');
 
 			$table_def = array();
+			$foreign_keys = array();
+//			$tables = array('fm_bim_model');
 			foreach ($tables as $table)
 			{
 				$tableinfo = $setup->sql_to_array($table);
-				//_debug_array($tableinfo);
+//				_debug_array($table);
+//				_debug_array($tableinfo);
 
 				$fd_temp				 = '$fd = array(' . str_replace("\t", '', $tableinfo[0]) . ');';
-				@eval($fd_temp);
+				//evil..
+				try
+				{
+					eval($fd_temp);
+				}
+				catch (Exception $exc)
+				{
+					echo $exc->getMessage();
+					$GLOBALS['phpgw']->common->phpgw_exit();
+				}
+
 				$table_def[$table]['fd'] = $fd;
 				$table_def[$table]['pk'] = $tableinfo[1];
-				$table_def[$table]['fk'] = $tableinfo[2];
+				$table_def[$table]['fk'] = array();//later...  $tableinfo[2];
 				$table_def[$table]['ix'] = $tableinfo[3];
 				$table_def[$table]['uc'] = $tableinfo[4];
-				//_debug_array($table_def);				
-				//die();
-				/* Work out the order of how the tables can be created
+//				_debug_array($table_def);
+//				die();
+
+				/* prepare for updating with foreign keys
 				 */
 				if ($tableinfo[2])
 				{
 					foreach ($tableinfo[2] as $ref_set => $ref_fields)
 					{
 						$fk_temp				 = '$fk = array(' . $ref_fields . ');';
-						@eval($fk_temp);
+						eval($fk_temp);
 						$fk_table				 = array_keys($fk);
-						$ForeignKeys[$table][]	 = $fk_table[0];
+				//		$ForeignKeys[$table][]	 = $fk_table[0];
+						$foreign_keys[$table]['fk']	 = $fk;
 					}
 				}
 			}
@@ -135,6 +150,11 @@
 					$this->oProc->m_odb->Password		 = $GLOBALS['phpgw_domain'][$domain]['db_pass'];
 					$this->oProc->m_odb->Halt_On_Error	 = 'yes';
 					$this->oProc->m_odb->connect();
+
+					if($this->oProc->m_odb->table_names())
+					{
+//						throw new Exception("There is already tables in the database '{$this->oProc->m_odb->Database}'");
+					}
 				}
 
 				if ($download_script)
@@ -145,7 +165,10 @@
 				}
 				else
 				{
+//			_debug_array($table_def);
 					$this->oProc->ExecuteScripts($table_def, true);
+//			_debug_array($foreign_keys);
+					$this->oProc->AlterTables($foreign_keys, true);
 					$this->copy_data($table_def);
 				}
 			}

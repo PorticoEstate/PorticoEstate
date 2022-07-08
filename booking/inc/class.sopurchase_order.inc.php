@@ -81,11 +81,11 @@
 			if (!empty($purchase_order['lines']))
 			{
 				$tax_codes = array();
-				$sql = "SELECT id, percent FROM fm_ecomva";
+				$sql = "SELECT id, percent_ FROM fm_ecomva";
 				$this->db->query($sql, __LINE__, __FILE__);
 				while ($this->db->next_record())
 				{
-					$tax_codes[(int)$this->db->f('id')] = (int)$this->db->f('percent');
+					$tax_codes[(int)$this->db->f('id')] = (int)$this->db->f('percent_');
 				}
 
 				foreach ($purchase_order['lines'] as $line)
@@ -310,11 +310,11 @@
 			}
 
 			$tax_codes = array();
-			$sql = "SELECT id, percent FROM fm_ecomva";
+			$sql = "SELECT id, percent_ FROM fm_ecomva";
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$tax_codes[(int)$this->db->f('id')] = (int)$this->db->f('percent');
+				$tax_codes[(int)$this->db->f('id')] = (int)$this->db->f('percent_');
 			}
 
 			$filtermethod = 'WHERE bb_purchase_order.cancelled IS NULL';

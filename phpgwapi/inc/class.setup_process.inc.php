@@ -249,6 +249,63 @@
 		}
 
 		/**
+		 * drop views per application, check that they are in the db first
+		*
+		 * @param $setup_info	array of application info from setup.inc.php files, etc.
+		 */
+		function dropviews($setup_info,$DEBUG=False)
+		{
+			if( !isset($GLOBALS['phpgw_setup']->oProc) || !$GLOBALS['phpgw_setup']->oProc )
+			{
+				$this->init_process();
+			}
+			$GLOBALS['phpgw_setup']->oProc->m_bDeltaOnly = False;
+
+			/* The following is built so below we won't try to drop a table that isn't there. */
+			// Views not returned for mssql
+			$include_views = true;
+			$tablenames = $GLOBALS['phpgw_setup']->db->table_names($include_views);
+			if ( !is_array($tablenames) )
+			{
+				$tablenames = array();
+			}
+			$tables = array_values($tablenames);
+
+			if ( !is_array($setup_info) )
+			{
+				$setup_info = array();
+			}
+			foreach($setup_info as $key => $ignored)
+			{
+				if ( isset($setup_info[$key]['views'])
+					&& is_array($setup_info[$key]['views']) )
+				{
+					//Tables has to be dropped in reversed order if they are referenced by others
+					foreach ( array_reverse($setup_info[$key]['views']) as $view )
+					{
+						// Views not returned for mssql, using brut force
+						try
+						{
+							$GLOBALS['phpgw_setup']->oProc->DropView($view);
+							if($DEBUG)
+							{
+								echo '<br>process->dropviews(): Dropping :'. $setup_info[$key]['name'] . ' view: ' . $view;
+							}
+						}
+						catch (Exception $ex)
+						{
+							// Nothing
+
+						}
+					}
+				}
+			}
+
+			/* Done, return current status */
+			return ($setup_info);
+		}
+
+		/**
 		 * process current table setup in each application/setup dir
 		*
 		 * @param $appinfo	array of application info from setup.inc.php files, etc.

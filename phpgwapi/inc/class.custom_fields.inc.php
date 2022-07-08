@@ -2123,15 +2123,16 @@
 
 			$sql = "SELECT * FROM phpgw_cust_choice "
 				. " WHERE location_id = {$location_id}"
-					. " AND attrib_id = {$attrib_id}"
-//				. " ORDER BY choice_sort ASC, value";
-				. " ORDER BY value";
+				. " AND attrib_id = {$attrib_id}";
+
 			$this->_db->query($sql,__LINE__,__FILE__);
 
+			$values = array();
 			$choices = array();
 			while ( $this->_db->next_record() )
 			{
 				$value = $this->_db->f('value', true);
+				$values[] = $value;
 				$choices[] = array
 				(
 					'id'	=> $this->_db->f('id'),
@@ -2141,6 +2142,9 @@
 					'order'	=> $this->_db->f('choice_sort')
 				);
 			}
+
+			array_multisort($values, SORT_ASC, $choices);
+
 			return $choices;
 		}
 

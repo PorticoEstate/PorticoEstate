@@ -372,6 +372,11 @@
 			return !!($oProc->m_odb->query("DROP TABLE " . $sTableName, __LINE__, __FILE__, true));
 		}
 
+		function DropView($oProc, $sViewName)
+		{
+			return !!($oProc->m_odb->query("DROP VIEW " . $sViewName));
+		}
+
 		function DropColumn($oProc, &$aTables, $sTableName, $aNewTableDef, $sColumnName, $bCopyData = true)
 		{
 			return !!($oProc->m_odb->query("ALTER TABLE $sTableName DROP COLUMN $sColumnName", __LINE__, __FILE__));

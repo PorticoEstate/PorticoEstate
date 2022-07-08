@@ -169,6 +169,13 @@
 					echo '<li>' . lang('%1 tables dropped', lang($appname)) . ".</li>\n";
 				}
 
+				if (isset($setup_info[$appname]['views'])
+					&& $setup_info[$appname]['views'] )
+				{
+					$GLOBALS['phpgw_setup']->process->dropviews($terror, $DEBUG);
+					echo '<li>' . lang('%1 views dropped', lang($appname)) . ".</li>\n";
+				}
+
 				$GLOBALS['phpgw_setup']->deregister_app($appname);
 				echo '<li>' . lang('%1 deregistered', lang($appname)) . ".</li>\n";
 

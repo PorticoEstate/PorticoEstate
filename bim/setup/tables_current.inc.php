@@ -26,7 +26,7 @@
 		),
 		'fm_bim_model' => array(
 			'fd' => array(
-				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => True),
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => 128, 'nullable' => False),
 				'vfs_file_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'authorization_value' => array('type' => 'varchar', 'precision' => 200, 'nullable' => true),
