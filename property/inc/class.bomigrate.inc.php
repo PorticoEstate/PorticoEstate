@@ -93,7 +93,7 @@
 
 			$table_def = array();
 			$foreign_keys = array();
-//			$tables = array('bb_event');
+//			$tables = array('bb_season_boundary');
 			foreach ($tables as $table)
 			{
 				$tableinfo = $setup->sql_to_array($table);
@@ -304,8 +304,8 @@
 								$data[] = date('Y-m-d',strtotime($row[$field_name]));
 								break;
 							case 'time':
-								break;
 								$data[] = date('H:i:s',strtotime($row[$field_name]));
+								break;
 								default:
 								$data[] = $row[$field_name];
 
