@@ -93,7 +93,7 @@
 
 			$table_def = array();
 			$foreign_keys = array();
-//			$tables = array('bb_allocation_cost');
+//			$tables = array('bb_event');
 			foreach ($tables as $table)
 			{
 				$tableinfo = $setup->sql_to_array($table);
@@ -289,6 +289,10 @@
 					$data = array();
 					foreach($table_def['fd'] as $field_name => $data_field)
 					{
+						if(empty($data_field['nullable']) && $row[$field_name]==="")
+						{
+							$row[$field_name] = 'NIL';
+						}
 
 						switch ($data_field['type'])
 						{
