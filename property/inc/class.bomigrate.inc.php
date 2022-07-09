@@ -93,7 +93,7 @@
 
 			$table_def = array();
 			$foreign_keys = array();
-//			$tables = array('activity_activity');
+//			$tables = array('bb_season_boundary');
 			foreach ($tables as $table)
 			{
 				$tableinfo = $setup->sql_to_array($table);
@@ -172,12 +172,12 @@
 			}
 		}
 
-		function copy_data( $table_def = array() )
+		function copy_data( $table_defs = array() )
 		{
 			$GLOBALS['phpgw']->db->fetchmode = 'ASSOC';
 			$db = $GLOBALS['phpgw']->db;
 
-			foreach ($table_def as $table => $fd)
+			foreach ($table_defs as $table => $table_def)
 			{
 				if ($table == 'fm_ecobilagoverf' || $table == 'phpgw_lang')
 				{
@@ -262,9 +262,22 @@
 					default:
 				}
 
+				$identity_sequence = false;
 				if (in_array($this->oProc->m_odb->Type, array('mssql', 'mssqlnative')))
 				{
-					$this->oProc->m_odb->query("SET identity_insert {$table} ON", __LINE__, __FILE__);
+					$this->oProc->m_odb->query("EXEC sp_columns '$table'", __LINE__, __FILE__);
+					while ($this->oProc->m_odb->next_record())
+					{
+						if ($this->oProc->m_odb->f('TYPE_NAME') == 'int identity')
+						{
+							$identity_sequence = true;
+						}
+
+					}
+					if($identity_sequence)
+					{
+						$this->oProc->m_odb->query("SET identity_insert {$table} ON", __LINE__, __FILE__);
+					}
 				}
 
 				$this->oProc->m_odb->query("DELETE FROM {$table}");
@@ -273,12 +286,39 @@
 
 				foreach ($db->resultSet as $row)
 				{
-					$insert_values	 = $db->validate_insert(array_values($row));
+					$data = array();
+					foreach($table_def['fd'] as $field_name => $data_field)
+					{
+						if(empty($data_field['nullable']) && $row[$field_name]==="")
+						{
+							$row[$field_name] = 'NIL';
+						}
+
+						switch ($data_field['type'])
+						{
+							case 'datetime':
+							case 'timestamp':
+								$data[] = $this->oProc->m_odb->to_timestamp(strtotime($row[$field_name]));
+								break;
+							case 'date':
+								$data[] = date('Y-m-d',strtotime($row[$field_name]));
+								break;
+							case 'time':
+								$data[] = date('H:i:s',strtotime($row[$field_name]));
+								break;
+								default:
+								$data[] = $row[$field_name];
+
+						}
+
+					}
+
+					$insert_values	 = $db->validate_insert($data);
 					$insert_fields	 = implode(',', array_keys($row));
 					$this->oProc->m_odb->query("INSERT INTO {$table} ({$insert_fields}) VALUES ({$insert_values})");
 				}
 
-				if (in_array($this->oProc->m_odb->Type, array('mssql', 'mssqlnative')))
+				if ($identity_sequence && in_array($this->oProc->m_odb->Type, array('mssql', 'mssqlnative')))
 				{
 					$this->oProc->m_odb->query("SET identity_insert {$table} OFF", __LINE__, __FILE__);
 				}

@@ -662,7 +662,7 @@
 				{
 					case 'mssqlnative':
 					case 'mssql':
-						$date_format 		= 'M d Y';
+						$date_format 		= 'Y-m-d';
 						break;
 					case 'mysql':
 					case 'pgsql':
@@ -689,7 +689,7 @@
 				{
 					case 'mssqlnative':
 					case 'mssql':
-						$datetime_format 		= 'M d Y g:iA';
+						$datetime_format 		= 'Y-m-d H:i:s';
 						break;
 					case 'mysql':
 					case 'pgsql':

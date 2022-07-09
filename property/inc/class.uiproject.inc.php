@@ -313,11 +313,11 @@
 				else if($filter_tags && $_entry['tags'])
 				{
 					$filter_check = json_decode($_entry['tags'], true);
-					
+
 					if(!array_intersect($filter_check, $filter_tags))
 					{
 						continue;
-					}				
+					}
 				}
 
 				$tags = array();
@@ -394,16 +394,16 @@
 			else if($action == 'set_tag' && $ids)
 			{
 				$bofiles->set_tags($ids, $tags);
-				
+
 			}
 			else if($action == 'remove_tag' && $ids)
 			{
 				$bofiles->remove_tags($ids, $tags);
-				
+
 			}
 
 			return $action;
-			
+
 		}
 
 		public function handle_multi_upload_file()
@@ -2013,7 +2013,7 @@ JS;
 
 			$values['sum'] = isset($values['budget']) ? $values['budget'] : 0;
 
-			if (isset($values['reserve']) && $values['reserve'] != 0)
+			if (isset($values['reserve']) && (int)$values['reserve'] != 0)
 			{
 				$reserve_remainder	 = (float)$values['reserve'] - (float)$values['deviation'];
 				$remainder_percent	 = number_format((float)($reserve_remainder / (float)$values['reserve']) * 100, 2, $this->decimal_separator, '');
@@ -2090,7 +2090,7 @@ JS;
 				unset($b_entry);
 			}
 
-			if (isset($values['reserve']) && $values['reserve'] != 0)
+			if (isset($values['reserve']) && (int)$values['reserve'] != 0)
 			{
 				$reserve_remainder	 = (float)$values['reserve'] - (float)$values['deviation'];
 				$remainder_percent	 = number_format((float)($reserve_remainder / (float)$values['reserve']) * 100, 2, $this->decimal_separator, '.');
@@ -2417,15 +2417,15 @@ JS;
 
 			$sort_array = array();
 			foreach ($_files as $_file)
-			{				
+			{
 				if($bofiles->is_image("{$bofiles->rootdir}{$_file['directory']}/{$_file['name']}"))
 				{
 					$sort_array[] = $_file['name'];
 					$image_list[] = array(
 						'image_url'		 => "{$link_view_file}&amp;file_id={$_file['file_id']}",
 						'image_name'	 => $_file['name']
-					);			
-				}				
+					);
+				}
 			}
 
 			array_multisort($sort_array, SORT_ASC, $image_list);
@@ -2456,7 +2456,7 @@ JS;
 			);
 
 //---file tagging
-			
+
 			$requestUrl	 = json_encode(self::link(array(
 				'menuaction' => 'property.uiproject.update_file_data',
 				'location_id' => $location_id,
@@ -2532,7 +2532,7 @@ JS;
 						}
 						{$entry['funct']}('{$entry['action']}', ids);
 						"
-				);					
+				);
 			}
 
 			$code		 = <<<JS
@@ -2572,7 +2572,7 @@ JS;
 
 				}
 				JqueryPortico.updateinlineTableHelper('datatable-container_5');
-				
+
 				if(action=='delete_file')
 				{
 					var oArgs = {menuaction: 'property.uiproject.get_files', id: {$id}};
@@ -2918,7 +2918,7 @@ JS;
 				'validator'							 => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file')),
 				'multiple_uploader'					 => true,
-				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.handle_multi_upload_file',	'id' => $id)),					
+				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.handle_multi_upload_file',	'id' => $id)),
 				'street_name'						 => $values['location_data']['street_name'],
 				'street_number'						 => $values['location_data']['street_number'],
 				'image_list'						 => $image_list,
