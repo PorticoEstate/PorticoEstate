@@ -97,6 +97,10 @@
 			{
 				$this->Database = $Database;
 			}
+			if ( $Database === '__NULL__' )
+			{
+				$this->Database = null;
+			}
 
 			if ( !is_null($Host) )
 			{
@@ -105,11 +109,13 @@
 
 			if ( !is_null($User) )
 			{
+				$fall_back_user = $this->User;
 				$this->User = $User;
 			}
 
 			if ( !is_null($Password) )
 			{
+				$fall_back_password = $this->Password;
 				$this->Password = $Password;
 			}
 
@@ -131,7 +137,17 @@
 				case 'mysql':
 					try
 					{
-						$this->db = new PDO("mysql:host={$this->Host};dbname={$this->Database}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $this->persistent));
+						if(!$this->Database)
+						{
+							$this->db = new PDO("mysql:host={$this->Host};charset=utf8mb4", $this->User, $this->Password);
+							$this->User = $fall_back_user;
+							$this->Password = $fall_back_password;
+						}
+						else
+						{
+							$this->db = new PDO("mysql:host={$this->Host};dbname={$this->Database};charset=utf8mb4", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $this->persistent));
+
+						}
 					}
 					catch(PDOException $e){}
 					break;
@@ -1100,7 +1116,7 @@
 		* @returns bool was the new db created?
 		* @throws Exception invalid db-name
 		*/
-		public function create_database($adminname = '', $adminpasswd = '')
+		public function create_database($adminname = null, $adminpasswd = null)
 		{
 			//THIS IS CALLED BY SETUP DON'T KILL IT!
 			if ( $this->db )
@@ -1118,13 +1134,13 @@
 					$_database = 'master';
 					break;
 				default:
-					$_database = null;
+					$_database = '__NULL__';
 			}
 
 			$database = $this->Database;
 			try
 			{
-				$this->connect($_database);
+				$this->connect($_database, null,  $adminname, $adminpasswd);
 			}
 			catch(Exception $e)
 			{
@@ -1167,7 +1183,7 @@
 			{
 				case 'mysql':
 					$this->db->exec("GRANT ALL ON {$this->Database}.*"
-							. " TO {$this->User}@{$_SERVER['SERVER_NAME']}"
+							. " TO {$this->User}@'%'"
 							. " IDENTIFIED BY '{$this->Password}'");
 					break;
 				default:

@@ -24,6 +24,19 @@ services:
     volumes:
        - sqldata1:/var/opt/mssql
     restart: unless-stopped
+  myqsl:
+    container_name: mysql_container
+    image: mariadb:10.8
+    environment:
+      MYSQL_ROOT_PASSWORD: ChangeMe10
+      MYSQL_DATABASE: mybb
+      MYSQL_USER: mybb
+      MYSQL_PASSWORD: ChangeMe10
+    ports:
+      - 3306:3306
+    volumes:
+       - sqldata2:/var/lib/mysql
+    restart: unless-stopped
 
   web:
     container_name: portico_container
@@ -55,4 +68,5 @@ volumes:
     postgres:
     pgadmin:
     sqldata1:
+    sqldata2:
 

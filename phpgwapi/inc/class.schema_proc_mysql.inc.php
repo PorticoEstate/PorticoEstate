@@ -10,10 +10,10 @@
 	* @subpackage database
 	* @version $Id$
 	*/
- 
+
 	/**
 	* Database schema abstraction class for MySQL
-	* 
+	*
 	* @package phpgwapi
 	* @subpackage database
 	*/
@@ -46,7 +46,7 @@
 			else
 			{
 				$ConfigDomain = phpgw::get_var('ConfigDomain');
-				$phpgw_domain = $GLOBALS['phpgw_domain'];	
+				$phpgw_domain = $GLOBALS['phpgw_domain'];
 
 				$temp_db->Host     = $phpgw_domain[$ConfigDomain]['db_host'];
 				$temp_db->Port     = $phpgw_domain[$ConfigDomain]['db_port'];
@@ -124,6 +124,10 @@
 				case 'timestamp':
 					$sTranslated = 'timestamp';
 					break;
+				case 'json':
+				case 'jsonb':
+						$sTranslated = 'json';
+					break;
 				case 'varchar':
 					if ($iPrecision > 0 && $iPrecision < 256)
 					{
@@ -135,7 +139,7 @@
 					}
 					break;
 			}
-			
+
 			return $sTranslated;
 		}
 
@@ -157,7 +161,7 @@
 			}
 			else
 			{
-				$ret= "'" . $sDefault . "'";			
+				$ret= "'" . $sDefault . "'";
 			}
 			return $ret;
 		}
@@ -232,7 +236,11 @@
 				case 'text':
 				case 'blob':
 				case 'date':
+				case 'json':
 					$sTranslated = "'type' => '$sType'";
+					break;
+				case 'jsonb':
+					$sTranslated = "'type' => 'json'";
 					break;
 			}
 			return $sTranslated;
@@ -256,7 +264,7 @@
 			}
 			else
 			{
-				return "KEY ($sFields)";			
+				return "KEY ($sFields)";
 			}
 		}
 
@@ -431,7 +439,7 @@
 
 		function GetTriggerSQL($sTableName, $sColumnNames, &$sTriggerSQL)
 		{
-			$sTriggerSQL = ''; 
+			$sTriggerSQL = '';
 			return false;
 		}
 
