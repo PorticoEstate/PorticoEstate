@@ -1183,8 +1183,8 @@
 			{
 				case 'mysql':
 					$this->db->exec("GRANT ALL ON {$this->Database}.*"
-							. " TO {$this->User}@'%'"
-							. " IDENTIFIED BY '{$this->Password}'");
+							. " TO {$this->User}@'%'");
+	//						. " IDENTIFIED BY '{$this->Password}'");
 					break;
 				default:
 					//do nothing

@@ -753,7 +753,7 @@
 		function CreateTable($oProc, $aTables, $sTableName, $aTableDef, $bCreateSequence = true)
 		{
 			global $DEBUG;
-			unset($this->indexes_sql);
+			$this->indexes_sql = array();
 			if ($oProc->_GetTableSQL($sTableName, $aTableDef, $sTableSQL, $sSequenceSQL, $sTriggerSQL))
 			{
 				/* create sequence first since it will be needed for default */

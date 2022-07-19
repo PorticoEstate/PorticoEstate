@@ -26,6 +26,7 @@
 		var $fk = array();
 		var $ix = array();
 		var $uc = array();
+		var $indexes_sql = array();
 
 		function __construct()
 		{
@@ -256,16 +257,21 @@
 			return "UNIQUE KEY ($sFields)";
 		}
 
-		function GetIXSQL($sFields, $sTableName = '')
+		function GetIXSQL($sFields, $field_type = '')
 		{
-			if($sTableName)
+			$index_type = 'btree';
+
+			if( in_array($field_type, array('jsonb', 'json')))
 			{
-				return "CREATE INDEX ". str_replace(',','_',$sFields) ." USING BTREE ON $sTableName ($sFields)";
+				/*
+				*FIXME
+				*/
+				return '';
 			}
-			else
-			{
-				return "KEY ($sFields)";
-			}
+
+			$this->indexes_sql[str_replace(',','_',$sFields)] = "CREATE INDEX __index_name__ ON __table_name__ ($sFields) USING {$index_type}";
+			return '';
+
 		}
 
 		// foreign key supports needs MySQL 3.23.44 and up with InnoDB or MySQL 5.1
@@ -447,6 +453,7 @@
 		{
 			global $DEBUG;
 
+			$this->indexes_sql = array();
 			if ($oProc->_GetTableSQL($sTableName, $aTableDef, $sTableSQL, $sSequenceSQL, $sTriggerSQL))
 			{
 				/* create sequence first since it will be needed for default */
@@ -459,7 +466,33 @@
 
 				if($DEBUG) { echo '<br>CREATE TABLE STATEMENT: ' ; var_dump($query); }
 
-				return !!($oProc->m_odb->query($query, __LINE__, __FILE__, true));
+				$result = !!($oProc->m_odb->query($query, __LINE__, __FILE__, true));
+				if($result==True)
+				{
+					if (isset($this->indexes_sql) && $DEBUG)
+					{
+						echo  '<pre>';
+						print_r($this->indexes_sql);
+						echo '</pre>';
+					}
+
+					if(isset($this->indexes_sql) && is_array($this->indexes_sql) && count($this->indexes_sql)>0)
+					{
+						foreach($this->indexes_sql as $key => $sIndexSQL)
+						{
+							$ix_name = str_replace(',','_',$key).'_'.$sTableName.'_idx';
+							$IndexSQL = str_replace(array('__index_name__','__table_name__'), array($ix_name,$sTableName), $sIndexSQL);
+							$oProc->m_odb->query($IndexSQL, __LINE__, __FILE__);
+						}
+					}
+				}
+				return $result;
+
+
+
+
+
+
 			}
 
 			return false;

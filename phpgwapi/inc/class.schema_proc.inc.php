@@ -734,10 +734,10 @@
 					$sIXSQL .= $this->m_oTranslator->GetIXSQL($sField, $field_type);
 				}
 
-				if($num_fields > 1 && $i < $num_fields-1 && $this->dbms == 'mysql')
-				{
-					$sIXSQL .= ', ';
-				}
+		//		if($num_fields > 1 && $i < $num_fields-1 && $this->dbms == 'mysql')
+		//		{
+		//			$sIXSQL .= ', ';
+		//		}
 				++$i;
 			}
 			return True;
