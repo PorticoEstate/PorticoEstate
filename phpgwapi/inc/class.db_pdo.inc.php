@@ -145,7 +145,10 @@
 						}
 						else
 						{
-							$this->db = new PDO("mysql:host={$this->Host};dbname={$this->Database};charset=utf8mb4", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $this->persistent));
+							$this->db = new PDO("mysql:host={$this->Host};dbname={$this->Database};charset=utf8mb4", $this->User, $this->Password, array(
+								PDO::ATTR_PERSISTENT => $this->persistent,
+								PDO::ATTR_AUTOCOMMIT => 0)
+							);
 
 						}
 					}
