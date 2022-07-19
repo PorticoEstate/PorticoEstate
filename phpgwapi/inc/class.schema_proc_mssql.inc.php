@@ -47,11 +47,11 @@
 				case 'char':
 					if ($iPrecision > 0 && $iPrecision < 256)
 					{
-						$sTranslated =  sprintf("char(%d)", $iPrecision);
+						$sTranslated =  sprintf("nchar(%d)", $iPrecision) . ' COLLATE Latin1_General_CS_AI';
 					}
 					if ($iPrecision > 255)
 					{
-						$sTranslated = 'NVARCHAR(MAX)';
+						$sTranslated = 'NVARCHAR(MAX) COLLATE Latin1_General_CS_AI';
 					}
 					break;
 				case 'date':
@@ -87,7 +87,7 @@
 					break;
 				case 'longtext':
 				case 'text':
-					$sTranslated = 'NVARCHAR(MAX)';
+					$sTranslated = 'NVARCHAR(MAX) COLLATE Latin1_General_CS_AI';
 					break;
 				case 'time':
 					$sTranslated = 'time';
@@ -99,16 +99,16 @@
 				case 'varchar':
 					if ($iPrecision > 0 && $iPrecision < 256)
 					{
-						$sTranslated =  sprintf("varchar(%d)", $iPrecision);
+						$sTranslated =  sprintf("NVARCHAR(%d)", $iPrecision) . ' COLLATE Latin1_General_CS_AI';
 					}
 					if ($iPrecision > 255)
 					{
-						$sTranslated = 'NVARCHAR(MAX)';
+						$sTranslated = 'NVARCHAR(MAX) COLLATE Latin1_General_CS_AI';
 					}
 					break;
 				case 'json':
 				case 'jsonb':
-					$sTranslated = 'NVARCHAR(MAX)';
+					$sTranslated = 'NVARCHAR(MAX) COLLATE Latin1_General_CS_AI';
 					break;
 				case 'bool':
 				case 'boolean':
