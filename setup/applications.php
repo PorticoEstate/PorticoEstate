@@ -312,7 +312,16 @@
 						$val = implode(',<br>', $val);
 					}
 					break;
-
+				case 'hooks':
+				case 'views':
+					$tblcnt = count($setup_info[$detail][$key]);
+					if(is_array($val))
+					{
+						$key =  $key . '(' . $tblcnt . ')';
+						$val = implode(',<br>', $val);
+					}
+					break;
+			
 				case 'depends':
 					$val = parsedep($val);
 					break;
