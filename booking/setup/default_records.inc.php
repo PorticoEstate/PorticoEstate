@@ -3,6 +3,7 @@
 	{
 		case 'mssql':
 		case 'mssqlnative':
+		case 'mysql':
 		case 'postgres':
 			$GLOBALS['phpgw_setup']->oProc->query(
 				"CREATE VIEW bb_document_view " .
@@ -135,9 +136,17 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->query('SET identity_insert bb_activity OFF', __LINE__, __FILE__);
 	}
-	else
+	else if ($GLOBALS['phpgw_info']['server']['db_type'] == 'postgres')
 	{
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_activity', COALESCE((SELECT MAX(id)+1 FROM bb_activity), 1), false)", __LINE__, __FILE__);
+	}
+	else
+	{
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT MAX(id)+1 AS next_value FROM bb_activity', __LINE__, __FILE__);
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$_next_value = (int) $GLOBALS['phpgw_setup']->oProc->f('next_value');
+
+		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE bb_activity AUTO_INCREMENT = {$_next_value}", __LINE__, __FILE__);
 	}
 
 
@@ -188,9 +197,17 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->query('SET identity_insert bb_agegroup OFF', __LINE__, __FILE__);
 	}
-	else
+	else if ($GLOBALS['phpgw_info']['server']['db_type'] == 'postgres')
 	{
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_agegroup', COALESCE((SELECT MAX(id)+1 FROM bb_agegroup), 1), false)", __LINE__, __FILE__);
+	}
+	else
+	{
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT MAX(id)+1 AS next_value FROM bb_agegroup', __LINE__, __FILE__);
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$_next_value = (int) $GLOBALS['phpgw_setup']->oProc->f('next_value');
+
+		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE bb_agegroup AUTO_INCREMENT = {$_next_value}", __LINE__, __FILE__);
 	}
 
 	$bb_targetaudience = array(
@@ -253,9 +270,17 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->query('SET identity_insert bb_targetaudience OFF', __LINE__, __FILE__);
 	}
-	else
+	else if ($GLOBALS['phpgw_info']['server']['db_type'] == 'postgres')
 	{
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_targetaudience', COALESCE((SELECT MAX(id)+1 FROM bb_targetaudience), 1), false)", __LINE__, __FILE__);
+	}
+	else
+	{
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT MAX(id)+1 AS next_value FROM bb_targetaudience', __LINE__, __FILE__);
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$_next_value = (int) $GLOBALS['phpgw_setup']->oProc->f('next_value');
+
+		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE bb_targetaudience AUTO_INCREMENT = {$_next_value}", __LINE__, __FILE__);
 	}
 
 	// Default rescategory
@@ -281,9 +306,17 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->query('SET identity_insert bb_rescategory OFF', __LINE__, __FILE__);
 	}
-	else
+	else if ($GLOBALS['phpgw_info']['server']['db_type'] == 'postgres')
 	{
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_rescategory', COALESCE((SELECT MAX(id)+1 FROM bb_rescategory), 1), false)", __LINE__, __FILE__);
+	}
+	else
+	{
+		$GLOBALS['phpgw_setup']->oProc->query('SELECT MAX(id)+1 AS next_value FROM bb_rescategory', __LINE__, __FILE__);
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$_next_value = (int) $GLOBALS['phpgw_setup']->oProc->f('next_value');
+
+		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE bb_rescategory AUTO_INCREMENT = {$_next_value}", __LINE__, __FILE__);
 	}
 
 	$bb_rescategory_activity = array(1,2,3,47,55,61,62);
