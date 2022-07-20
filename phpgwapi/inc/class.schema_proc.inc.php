@@ -385,6 +385,17 @@
 			return $this->m_odb->get_last_insert_id($table, $field);
 		}
 
+		function to_timestamp($epoch)
+		{
+			if($this->m_bDeltaOnly)
+			{
+				// Don't run this query, since we are processing deltas only
+				return false;
+			}
+
+			return $this->m_odb->to_timestamp($epoch);
+		}
+
 		function _GetTableSQL($sTableName, $aTableDef, &$sTableSQL, &$sSequenceSQL, &$sTriggerSQL)
 		{
 			global $DEBUG;

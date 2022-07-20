@@ -151,8 +151,9 @@
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_interserv(server_name,server_host,server_url,trust_level,trust_rel,server_mode) VALUES ('phpGW cvsdemo',NULL,'http://www.phpgroupware.org/cvsdemo/xmlrpc.php',99,0,'xmlrpc')");
 
-	$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO phpgw_vfs (owner_id, createdby_id, modifiedby_id, created, modified, size, mime_type, deleteable, comment, app, directory, name, link_directory, link_name) VALUES (0,0,0,'1970-01-01',NULL,NULL,'Directory','Y',NULL,NULL,'/','', NULL, NULL)");
-	$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO phpgw_vfs (owner_id, createdby_id, modifiedby_id, created, modified, size, mime_type, deleteable, comment, app, directory, name, link_directory, link_name) VALUES (0,0,0,'1970-01-01',NULL,NULL,'Directory','Y',NULL,NULL,'/','home', NULL, NULL)");
+	$now = $GLOBALS['phpgw_setup']->oProc->to_timestamp(time());
+	$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO phpgw_vfs (owner_id, createdby_id, modifiedby_id, created, modified, size, mime_type, deleteable, comment, app, directory, name, link_directory, link_name) VALUES (0,0,0,'{$now}',NULL,NULL,'Directory','Y',NULL,NULL,'/','', NULL, NULL)");
+	$GLOBALS['phpgw_setup']->oProc->query ("INSERT INTO phpgw_vfs (owner_id, createdby_id, modifiedby_id, created, modified, size, mime_type, deleteable, comment, app, directory, name, link_directory, link_name) VALUES (0,0,0,'{$now}',NULL,NULL,'Directory','Y',NULL,NULL,'/','home', NULL, NULL)");
 	
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_contact_types (contact_type_descr,contact_type_table) VALUES ('Persons','phpgw_contact_person')");
