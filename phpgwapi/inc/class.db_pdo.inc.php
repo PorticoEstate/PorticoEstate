@@ -147,7 +147,8 @@
 						{
 							$this->db = new PDO("mysql:host={$this->Host};dbname={$this->Database};charset=utf8mb4", $this->User, $this->Password, array(
 								PDO::ATTR_PERSISTENT => $this->persistent,
-								PDO::ATTR_AUTOCOMMIT => 0)
+					//			PDO::ATTR_AUTOCOMMIT => 0
+								)
 							);
 
 						}
@@ -668,6 +669,8 @@
 				$this->connect();
 			}
 
+			$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 1 );
+			$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 0 );
 			$this->Transaction = $this->db->beginTransaction();
 			return $this->Transaction;
 		}
@@ -685,7 +688,9 @@
 			unset($bt);
 */
 			$this->Transaction = false;
-			return $this->db->commit();
+			$ret = $this->db->commit();
+			$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 1 );
+			return $ret;
 		}
 
 		/**

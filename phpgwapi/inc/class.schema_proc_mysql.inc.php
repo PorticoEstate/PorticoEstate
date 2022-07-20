@@ -295,6 +295,7 @@
 
 		function _GetColumns($oProc, $sTableName, &$sColumns, $sDropColumn = '')
 		{
+			$oProc->m_odb->fetchmode = 'BOTH';
 			$sColumns = '';
 			$this->pk = array();
 			$this->fk = array();
@@ -314,8 +315,12 @@
 
 				/* The rest of this is used only for SQL->array */
 				$colinfo = explode('(',$oProc->m_odb->f(1));
-				$prec = str_replace(')','',$colinfo[1]);
-				$scales = explode(',',$prec);
+
+				if(isset($colinfo[1]))
+				{
+					$prec = str_replace(')','',$colinfo[1]);
+					$scales = explode(',',$prec);	
+				}
 
 				if($colinfo[0] == 'enum')
 				{
