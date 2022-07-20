@@ -792,5 +792,45 @@
 
 			return false;
 		}
+
+		/**
+		 * Adding foreign keys to existing tables
+		 */
+		function AlterTable( $oProc, &$aTables, $sTableName, $aTableDef )
+		{
+			global $DEBUG;
+
+			if(!$aTableDef['fk'])
+			{
+				return true; // nothing to do
+			}
+
+			if (is_array($aTableDef['fk']))
+			{
+				foreach ( $aTableDef['fk'] as $field => $foreign_key)
+				{
+					$sFKSQL = '';
+					$oProc->_GetFK(array($field => $foreign_key), $sFKSQL);
+					$query = "ALTER TABLE $sTableName ADD CONSTRAINT {$sTableName}_{$field}_fk $sFKSQL";
+				//	if ( $DEBUG)
+					{
+						echo '<pre>';
+						print_r($query);
+						echo '</pre>';
+					}
+
+					$result = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
+					if(!$result)
+					{
+						break;
+					}
+				}
+
+				return $result;
+			}
+
+			return false;
+		}
+
 	}
 
