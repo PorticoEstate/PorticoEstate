@@ -1047,6 +1047,7 @@
 	{
 		case 'mssqlnative':
 		case 'postgres':
+		case 'mysql':
 			$sql = 'CREATE VIEW fm_orders_paid_or_pending_view AS
 				SELECT orders_paid_or_pending.order_id,
 				   orders_paid_or_pending.periode,
