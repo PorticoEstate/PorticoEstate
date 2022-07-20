@@ -421,10 +421,8 @@
 			}
 			if(in_array('phpgw_app_sessions',$tables))
 			{
-				$this->db->lock(array('phpgw_app_sessions'));
-				@$this->db->query("DELETE FROM phpgw_app_sessions WHERE sessionid = '0' and loginid = '0' and app = 'phpgwapi' and location = 'config'",__LINE__,__FILE__);
-				@$this->db->query("DELETE FROM phpgw_app_sessions WHERE app = 'phpgwapi' and location = 'phpgw_info_cache'",__LINE__,__FILE__);
-				$this->db->unlock();
+				$this->db->query("DELETE FROM phpgw_app_sessions WHERE sessionid = '0' and loginid = '0' and app = 'phpgwapi' and location = 'config'",__LINE__,__FILE__);
+				$this->db->query("DELETE FROM phpgw_app_sessions WHERE app = 'phpgwapi' and location = 'phpgw_info_cache'",__LINE__,__FILE__);
 			}
 		}
 
@@ -487,7 +485,7 @@
 					. "'{$setup_info[$appname]['version']}')"
 					,__LINE__,__FILE__, true
 				);
-				$this->clear_session_cache();
+//				$this->clear_session_cache();
 			}
 			// hack to make phpgwapi_applications::name2id to work properly
 			unset($GLOBALS['phpgw_info']['apps']);
@@ -677,7 +675,7 @@
 			$this->db->query("DELETE FROM phpgw_config WHERE config_app='{$appname}'",__LINE__,__FILE__);
 			//echo 'DELETING application: ' . $appname;
 			$this->db->query("DELETE FROM phpgw_applications WHERE app_name='{$appname}'",__LINE__,__FILE__);
-			$this->clear_session_cache();
+//			$this->clear_session_cache();
 		}
 
 		/**

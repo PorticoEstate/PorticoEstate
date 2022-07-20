@@ -669,8 +669,11 @@
 				$this->connect();
 			}
 
-			$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 1 );
-			$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 0 );
+			if($GLOBALS['phpgw_info']['server']['db_type'] == 'mysql')
+			{
+				$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 1 );
+				$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 0 );	
+			}
 			$this->Transaction = $this->db->beginTransaction();
 			return $this->Transaction;
 		}
@@ -689,7 +692,10 @@
 */
 			$this->Transaction = false;
 			$ret = $this->db->commit();
-			$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 1 );
+			if($GLOBALS['phpgw_info']['server']['db_type'] == 'mysql')
+			{
+				$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 1 );
+			}
 			return $ret;
 		}
 

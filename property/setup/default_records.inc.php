@@ -871,9 +871,10 @@
 	/**
 	 * FIXME
 	 * Fails at adodb::MetaColumns() for MSSQL
+	 * - and mess up the transaction for mysql
 	 */
 
-	if(!in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mssql','mssqlnative')))
+	if(!in_array($GLOBALS['phpgw_info']['server']['db_type'], array('mysql','mssql','mssqlnative')))
 	{
 		$solocation = createObject('property.solocation');
 		$solocation->update_location();
@@ -1104,7 +1105,6 @@
 		$sql .= " ORDER BY fm_project_budget.project_id";
 	}
 	$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
-
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (1, 'Bestiller')", __LINE__, __FILE__);
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (2, 'Attestant')", __LINE__, __FILE__);
