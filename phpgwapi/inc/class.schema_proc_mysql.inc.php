@@ -144,7 +144,7 @@
 			return $sTranslated;
 		}
 
-		function TranslateDefault($sDefault)
+		function TranslateDefault($sDefault, $sType)
 		{
 
 			// Need Strict comparisons for true/false in case of datatype bolean
@@ -158,7 +158,16 @@
 			}
 			else if ($sDefault == 'current_date' || $sDefault == 'current_timestamp')
 			{
-				$ret= 'CURRENT_TIMESTAMP';
+
+				if(preg_match('/int/i', $sType))
+				{
+					$ret= "0"; // not supported in Mysql, might have to use trigger... "UNIX_TIMESTAMP()";
+				}
+				else
+				{
+					$ret= 'CURRENT_TIMESTAMP';
+				}
+
 			}
 			else
 			{
