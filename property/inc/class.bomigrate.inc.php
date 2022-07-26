@@ -165,7 +165,7 @@
 				}
 				else
 				{
-//					$this->oProc->m_odb->query("DROP TABLE phpgw_accounts");
+//					$this->oProc->m_odb->query("DROP TABLE fm_bim_item");
 
 					$this->oProc->ExecuteScripts($table_def, true);
 					$this->copy_data($table_def);
@@ -296,6 +296,7 @@
 
 				foreach ($db->resultSet as $row)
 				{
+
 					$field_names = array();
 					$data = array();
 					foreach($table_def['fd'] as $field_name => $data_field)
@@ -304,7 +305,11 @@
 						{
 							continue;
 						}
-						if(isset( $data_field['default']) && $data_field['default'] ==="" && empty($data_field['nullable'] ) && empty($row[$field_name]))
+						else if(!empty($data_field['nullable'] ) && empty($row[$field_name]))
+						{
+							continue;
+						}
+						else if(isset( $data_field['default']) && $data_field['default'] ==="" && empty($data_field['nullable'] ) && empty($row[$field_name]))
 						{
 							$row[$field_name] = 'NIL';
 						}
@@ -316,13 +321,13 @@
 						{
 							$row[$field_name] = 'NIL';
 						}
-						
+
 						$field_names[] = $field_name;
 						switch ($data_field['type'])
 						{
 							case 'datetime':
 							case 'timestamp':
-								$data[] = $this->oProc->m_odb->to_timestamp(strtotime($row[$field_name]));
+								$data[] = $this->oProc->m_odb->to_timestamp(strtotime($row[$field_name])+1);
 								break;
 							case 'date':
 								$data[] = date('Y-m-d',strtotime($row[$field_name]));
@@ -337,7 +342,7 @@
 
 					}
 
-					$insert_values	 = $db->validate_insert($data);
+					$insert_values	 = $this->oProc->m_odb->validate_insert($data);
 					$insert_fields	 = implode(',', $field_names);
 					$this->oProc->m_odb->query("INSERT INTO {$table} ({$insert_fields}) VALUES ({$insert_values})");
 				}

@@ -88,6 +88,7 @@
 					$sTranslated = 'time';
 					break;
 				case 'timestamp':
+				case 'datetime':
 					$sTranslated = 'timestamp';
 					break;
 				case 'varchar':

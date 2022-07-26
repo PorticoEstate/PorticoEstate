@@ -85,7 +85,10 @@
 				case 'date':
 					$sTranslated =  'date';
 					break;
-				case 'decimal':
+				case 'datetime':
+					$sTranslated =  'datetime';
+					break;
+					case 'decimal':
 					$sTranslated =  sprintf("decimal(%d,%d)", $iPrecision, $iScale);
 					break;
 				case 'float':
@@ -114,16 +117,15 @@
 					}
 					break;
 				case 'longtext':
-					$sTranslated = 'longtext';
-					break;
 				case 'text':
-					$sTranslated = 'text';
+					$sTranslated = 'longtext';
 					break;
 				case 'time':
 					$sTranslated = 'time';
 					break;
 				case 'timestamp':
-					$sTranslated = 'timestamp';
+			//		$sTranslated = 'timestamp';
+					$sTranslated = 'datetime';
 					break;
 				case 'json':
 				case 'jsonb':
@@ -147,8 +149,12 @@
 		function TranslateDefault($sDefault, $sType)
 		{
 
+			if ($sType === 'text')
+			{
+				$ret= ''; //default not supported for (shitty) mysql
+			}
 			// Need Strict comparisons for true/false in case of datatype bolean
-			if ($sDefault === true || $sDefault === 'true' || $sDefault === 'True')
+			else if ($sDefault === true || $sDefault === 'true' || $sDefault === 'True')
 			{
 				$ret= 1;
 			}
@@ -224,6 +230,8 @@
 					$sTranslated = "'type' => 'float', 'precision' => $iPrecision";
 					break;
 				case 'datetime':
+					$sTranslated = "'type' => 'datetime'"; // longer range..
+					break;
 				case 'timestamp':
 					$sTranslated = "'type' => 'timestamp'";
 					break;
@@ -476,7 +484,7 @@
 					$oProc->m_odb->query($sSequenceSQL, __LINE__, __FILE__);
 				}
 
-				$query = "CREATE TABLE $sTableName ($sTableSQL) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+				$query = "CREATE TABLE $sTableName ($sTableSQL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
 
 				if($DEBUG) { echo '<br>CREATE TABLE STATEMENT: ' ; var_dump($query); }
 
@@ -501,15 +509,51 @@
 					}
 				}
 				return $result;
-
-
-
-
-
-
 			}
 
 			return false;
 		}
+
+		function AlterTable( $oProc, &$aTables, $sTableName, $aTableDef )
+		{
+			global $DEBUG;
+
+			if(!$aTableDef['fk'])
+			{
+				return true; // nothing to do
+			}
+
+			if (is_array($aTableDef['fk']))
+			{
+				foreach ( $aTableDef['fk'] as $foreign_table => $foreign_key)
+				{
+					$sFKSQL = '';
+					$oProc->_GetFK(array($foreign_table => $foreign_key), $sFKSQL);
+					$local_key = array_key_first($foreign_key);
+					/**
+					 * FIXME: max length of contraint name: 64
+					 */
+					$query = "ALTER TABLE $sTableName ADD CONSTRAINT {$sTableName}_{$local_key}_fk $sFKSQL";
+				//	if ( $DEBUG)
+					{
+						echo '<pre>';
+						print_r($query);
+						echo '</pre>';
+					}
+
+					$result = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
+					if(!$result)
+					{
+						break;
+					}
+				}
+
+				return $result;
+			}
+
+			return false;
+		}
+
+
 	}
 
