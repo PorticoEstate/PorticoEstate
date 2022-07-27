@@ -808,11 +808,13 @@
 
 			if (is_array($aTableDef['fk']))
 			{
-				foreach ( $aTableDef['fk'] as $field => $foreign_key)
+				foreach ( $aTableDef['fk'] as $foreign_table => $foreign_key)
 				{
 					$sFKSQL = '';
-					$oProc->_GetFK(array($field => $foreign_key), $sFKSQL);
-					$query = "ALTER TABLE $sTableName ADD CONSTRAINT {$sTableName}_{$field}_fk $sFKSQL";
+					$oProc->_GetFK(array($foreign_table => $foreign_key), $sFKSQL);
+					$local_key = implode('_',array_keys($foreign_key));
+
+					$query = "ALTER TABLE $sTableName ADD CONSTRAINT {$sTableName}_{$local_key}_fk $sFKSQL";
 				//	if ( $DEBUG)
 					{
 						echo '<pre>';

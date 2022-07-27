@@ -529,10 +529,16 @@
 				{
 					$sFKSQL = '';
 					$oProc->_GetFK(array($foreign_table => $foreign_key), $sFKSQL);
-					$local_key = array_key_first($foreign_key);
+					$local_key = implode('_',array_keys($foreign_key));
 					/**
 					 * FIXME: max length of contraint name: 64
 					 */
+
+					 if(strlen($local_key) > 63)
+					 {
+						$local_key = md5($local_key);
+					 }
+
 					$query = "ALTER TABLE $sTableName ADD CONSTRAINT {$sTableName}_{$local_key}_fk $sFKSQL";
 				//	if ( $DEBUG)
 					{
