@@ -70,6 +70,14 @@
 	include(PHPGW_API_INC . '/functions.inc.php');
 
 	$data = array('function' => $function, 'enabled' => 1);
+
+	/*
+	 * $argc — The number of arguments passed to script
+	 * https://www.php.net/manual/en/reserved.variables.argc.php
+	 * $argv — Array of arguments passed to script
+	 * https://www.php.net/manual/en/reserved.variables.argv.php
+	 */
+
 	while ($argc > 3)
 	{
 		list($key, $value) = explode('=', $argv[3]);

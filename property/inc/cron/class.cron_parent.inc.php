@@ -78,7 +78,6 @@
 			if ($confirm)
 			{
 				$this->execute($data);
-				$this->cron_log($cron);
 				// initiated from ui
 				if (!$cron)
 				{
@@ -94,7 +93,7 @@
 		function confirm( $execute = '' )
 		{
 			$link_data = array
-				(
+			(
 				'menuaction' => 'property.custom_functions.index',
 				'function'	 => $this->function_name,
 				'execute'	 => $execute
@@ -149,7 +148,7 @@
 			$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($this->receipt);
 
 			$insert_values = array
-				(
+			(
 				$cron,
 				date($this->db->datetime_format()),
 				$this->function_name,
