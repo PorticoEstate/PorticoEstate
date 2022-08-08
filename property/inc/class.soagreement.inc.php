@@ -1063,7 +1063,7 @@
 				$agreement_group_list[] = array
 					(
 					'id'	 => $this->db->f('id'),
-					'name'	 => $GLOBALS['phpgw']->strip_html($this->db->f('descr')) . ' [ ' . $GLOBALS['phpgw']->strip_html($this->db->f('status')) . ' ] '
+					'name'	 => $GLOBALS['phpgw']->strip_html($this->db->f('descr', true)) . ' [ ' . $GLOBALS['phpgw']->strip_html($this->db->f('status')) . ' ] '
 				);
 			}
 			return $agreement_group_list;
@@ -1097,8 +1097,8 @@
 					(
 					'id'		 => $this->db->f('id'),
 					'num'		 => $this->db->f('num'),
-					'base_descr' => $this->db->f('base_descr'),
-					'descr'		 => $this->db->f('descr'),
+					'base_descr' => $this->db->f('base_descr', true),
+					'descr'		 => $this->db->f('descr', true),
 					'unit'		 => $this->db->f('unit'),
 					'ns3420'	 => $this->db->f('ns3420'),
 				);
