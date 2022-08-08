@@ -553,7 +553,11 @@
 		function _GetFieldSQL($aField, &$sFieldSQL, $sTableName, $sFieldName)
 		{
 			global $DEBUG;
-			if($DEBUG) { echo '<br>_GetFieldSQL(): Incoming ARRAY: '; var_dump($aField); }
+			if ($DEBUG)
+			{
+				echo '<br>_GetFieldSQL(): Incoming ARRAY: ';
+				var_dump($aField);
+			}
 
 			if(!is_array($aField))
 			{
@@ -583,7 +587,10 @@
 						break;
 					case 'default':
 						$sDefault = $vAttrVal;
-						if($DEBUG) { echo '<br>_GetFieldSQL(): Default="' . $sDefault . '"'; }
+						if ($DEBUG)
+						{
+							echo '<br>_GetFieldSQL(): Default="' . $sDefault . '"';
+						}
 						break;
 					case 'nullable':
 						$bNullable = $vAttrVal;
@@ -600,34 +607,32 @@
 				if($bNullable === false || $bNullable === 'False')
 				{
 					$sBufNullable = ' NOT NULL';
-					//$sFieldSQL .= ' NOT NULL';
 				}
 				else
 				{
 					$sBufNullable = ' NULL';
-					//$sFieldSQL .= ' NULL';
 				}
 
 				if($sDefault === '0' || $sDefault === 0)
 				{
 					$sBufDefault = ' DEFAULT 0';
-					//$sFieldSQL .= ' DEFAULT 0';
 				}
 				elseif(!is_numeric($sDefault) && $sDefault != '')
 				{
-					if($DEBUG) { echo '<br>_GetFieldSQL(): Calling TranslateDefault for "' . $sDefault . '"'; }
+					if ($DEBUG)
+					{
+						echo '<br>_GetFieldSQL(): Calling TranslateDefault for "' . $sDefault . '"';
+					}
 					// Get default DDL - useful for differences in date defaults (eg, now() vs. getdate())
 					$sTranslatedDefault = $this->m_oTranslator->TranslateDefault($sDefault, $sType);
-					if($sTranslatedDefault !== '') // f***ing mysql
+					if($sTranslatedDefault !== '') // mysql
 					{
 						$sBufDefault = " DEFAULT $sTranslatedDefault";
 					}
-					//$sFieldSQL .= " DEFAULT $sTranslatedDefault";
 				}
 				elseif($sDefault)
 				{
 					$sBufDefault .= " DEFAULT $sDefault";
-					//$sFieldSQL .= " DEFAULT $sDefault";
 				}
 
 				if($this->dbms == 'oracle')
@@ -638,7 +643,10 @@
 				{
 					$sFieldSQL .= "{$sBufNullable}{$sBufDefault}";
 				}
-				if($DEBUG) { echo '<br>_GetFieldSQL(): Outgoing SQL:   ' . $sFieldSQL; }
+				if ($DEBUG)
+				{
+					echo '<br>_GetFieldSQL(): Outgoing SQL:   ' . $sFieldSQL;
+				}
 				return true;
 			}
 			else
