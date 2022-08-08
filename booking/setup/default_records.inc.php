@@ -140,7 +140,7 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_activity', COALESCE((SELECT MAX(id)+1 FROM bb_activity), 1), false)", __LINE__, __FILE__);
 	}
-	else
+	else // mysql
 	{
 		$GLOBALS['phpgw_setup']->oProc->query('SELECT MAX(id)+1 AS next_value FROM bb_activity', __LINE__, __FILE__);
 		$GLOBALS['phpgw_setup']->oProc->next_record();
@@ -201,7 +201,7 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_agegroup', COALESCE((SELECT MAX(id)+1 FROM bb_agegroup), 1), false)", __LINE__, __FILE__);
 	}
-	else
+	else // mysql
 	{
 		$GLOBALS['phpgw_setup']->oProc->query('SELECT MAX(id)+1 AS next_value FROM bb_agegroup', __LINE__, __FILE__);
 		$GLOBALS['phpgw_setup']->oProc->next_record();
@@ -274,7 +274,7 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_targetaudience', COALESCE((SELECT MAX(id)+1 FROM bb_targetaudience), 1), false)", __LINE__, __FILE__);
 	}
-	else
+	else // mysql
 	{
 		$GLOBALS['phpgw_setup']->oProc->query('SELECT MAX(id)+1 AS next_value FROM bb_targetaudience', __LINE__, __FILE__);
 		$GLOBALS['phpgw_setup']->oProc->next_record();
@@ -310,7 +310,7 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_rescategory', COALESCE((SELECT MAX(id)+1 FROM bb_rescategory), 1), false)", __LINE__, __FILE__);
 	}
-	else
+	else // mysql
 	{
 		$GLOBALS['phpgw_setup']->oProc->query('SELECT MAX(id)+1 AS next_value FROM bb_rescategory', __LINE__, __FILE__);
 		$GLOBALS['phpgw_setup']->oProc->next_record();
