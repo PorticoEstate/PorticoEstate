@@ -192,7 +192,7 @@
 			$filtermethod	 = '';
 			if (isset($this->location_info['check_grant']) && $this->location_info['check_grant'])
 			{
-				$filtermethod	 = "{$where} (user_id = {$this->account} OR public = 1)";
+				$filtermethod	 = "{$where} (user_id = {$this->account} OR public_ = 1)";
 				$where			 = 'AND';
 			}
 
