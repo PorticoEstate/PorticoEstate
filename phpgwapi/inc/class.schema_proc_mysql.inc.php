@@ -88,7 +88,7 @@
 				case 'datetime':
 					$sTranslated =  'datetime';
 					break;
-					case 'decimal':
+				case 'decimal':
 					$sTranslated =  sprintf("decimal(%d,%d)", $iPrecision, $iScale);
 					break;
 				case 'float':
@@ -430,7 +430,10 @@
 			 like sequences and such
 			*/
 			global $DEBUG;
-			if ($DEBUG) { echo '<br>RenameColumn: calling _GetFieldSQL for ' . $sNewColumnName; }
+			if ($DEBUG)
+			{
+				echo '<br>RenameColumn: calling _GetFieldSQL for ' . $sNewColumnName;
+			}
 			if (isset($aTables[$sTableName]["fd"][$sNewColumnName]) && $oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sNewColumnName], $sNewColumnSQL, $sTableName, $sOldColumnName))
 			{
 				return !!($oProc->m_odb->query("ALTER TABLE $sTableName CHANGE $sOldColumnName $sNewColumnName " . $sNewColumnSQL, __LINE__, __FILE__));
@@ -441,7 +444,10 @@
 		function AlterColumn($oProc, &$aTables, $sTableName, $sColumnName, &$aColumnDef, $bCopyData = true)
 		{
 			global $DEBUG;
-			if ($DEBUG) { echo '<br>AlterColumn: calling _GetFieldSQL for ' . $sNewColumnName; }
+			if ($DEBUG)
+			{
+				echo '<br>AlterColumn: calling _GetFieldSQL for ' . $sNewColumnName;
+			}
 			if (isset($aTables[$sTableName]["fd"][$sColumnName]) && $oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sColumnName], $sNewColumnSQL, $sTableName, $sColumnName))
 			{
 				return !!($oProc->m_odb->query("ALTER TABLE $sTableName MODIFY $sColumnName " . $sNewColumnSQL, __LINE__, __FILE__));
@@ -486,7 +492,11 @@
 
 				$query = "CREATE TABLE $sTableName ($sTableSQL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
 
-				if($DEBUG) { echo '<br>CREATE TABLE STATEMENT: ' ; var_dump($query); }
+				if ($DEBUG)
+				{
+					echo '<br>CREATE TABLE STATEMENT: ';
+					var_dump($query);
+				}
 
 				$result = !!($oProc->m_odb->query($query, __LINE__, __FILE__, true));
 				if($result==True)
