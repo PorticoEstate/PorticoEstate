@@ -26,6 +26,7 @@
 		var $fk = array();
 		var $ix = array();
 		var $uc = array();
+		var $indexes_sql = array();
 
 		function __construct()
 		{
@@ -84,6 +85,9 @@
 				case 'date':
 					$sTranslated =  'date';
 					break;
+				case 'datetime':
+					$sTranslated =  'datetime';
+					break;
 				case 'decimal':
 					$sTranslated =  sprintf("decimal(%d,%d)", $iPrecision, $iScale);
 					break;
@@ -113,16 +117,15 @@
 					}
 					break;
 				case 'longtext':
-					$sTranslated = 'longtext';
-					break;
 				case 'text':
-					$sTranslated = 'text';
+					$sTranslated = 'longtext';
 					break;
 				case 'time':
 					$sTranslated = 'time';
 					break;
 				case 'timestamp':
-					$sTranslated = 'timestamp';
+			//		$sTranslated = 'timestamp';
+					$sTranslated = 'datetime';
 					break;
 				case 'json':
 				case 'jsonb':
@@ -143,11 +146,15 @@
 			return $sTranslated;
 		}
 
-		function TranslateDefault($sDefault)
+		function TranslateDefault($sDefault, $sType)
 		{
 
+			if ($sType === 'text')
+			{
+				$ret= ''; //default not supported for (shitty) mysql
+			}
 			// Need Strict comparisons for true/false in case of datatype bolean
-			if ($sDefault === true || $sDefault === 'true' || $sDefault === 'True')
+			else if ($sDefault === true || $sDefault === 'true' || $sDefault === 'True')
 			{
 				$ret= 1;
 			}
@@ -157,7 +164,16 @@
 			}
 			else if ($sDefault == 'current_date' || $sDefault == 'current_timestamp')
 			{
-				$ret= 'CURRENT_TIMESTAMP';
+
+				if(preg_match('/int/i', $sType))
+				{
+					$ret= "0"; // not supported in Mysql, might have to use trigger... "UNIX_TIMESTAMP()";
+				}
+				else
+				{
+					$ret= 'CURRENT_TIMESTAMP';
+				}
+
 			}
 			else
 			{
@@ -214,6 +230,8 @@
 					$sTranslated = "'type' => 'float', 'precision' => $iPrecision";
 					break;
 				case 'datetime':
+					$sTranslated = "'type' => 'datetime'"; // longer range..
+					break;
 				case 'timestamp':
 					$sTranslated = "'type' => 'timestamp'";
 					break;
@@ -256,16 +274,21 @@
 			return "UNIQUE KEY ($sFields)";
 		}
 
-		function GetIXSQL($sFields, $sTableName = '')
+		function GetIXSQL($sFields, $field_type = '')
 		{
-			if($sTableName)
+			$index_type = 'btree';
+
+			if( in_array($field_type, array('jsonb', 'json')))
 			{
-				return "CREATE INDEX ". str_replace(',','_',$sFields) ." USING BTREE ON $sTableName ($sFields)";
+				/*
+				*FIXME
+				*/
+				return '';
 			}
-			else
-			{
-				return "KEY ($sFields)";
-			}
+
+			$this->indexes_sql[str_replace(',','_',$sFields)] = "CREATE INDEX __index_name__ ON __table_name__ ($sFields) USING {$index_type}";
+			return '';
+
 		}
 
 		// foreign key supports needs MySQL 3.23.44 and up with InnoDB or MySQL 5.1
@@ -289,6 +312,7 @@
 
 		function _GetColumns($oProc, $sTableName, &$sColumns, $sDropColumn = '')
 		{
+			$oProc->m_odb->fetchmode = 'BOTH';
 			$sColumns = '';
 			$this->pk = array();
 			$this->fk = array();
@@ -308,8 +332,12 @@
 
 				/* The rest of this is used only for SQL->array */
 				$colinfo = explode('(',$oProc->m_odb->f(1));
-				$prec = str_replace(')','',$colinfo[1]);
-				$scales = explode(',',$prec);
+
+				if(isset($colinfo[1]))
+				{
+					$prec = str_replace(')','',$colinfo[1]);
+					$scales = explode(',',$prec);	
+				}
 
 				if($colinfo[0] == 'enum')
 				{
@@ -402,7 +430,10 @@
 			 like sequences and such
 			*/
 			global $DEBUG;
-			if ($DEBUG) { echo '<br>RenameColumn: calling _GetFieldSQL for ' . $sNewColumnName; }
+			if ($DEBUG)
+			{
+				echo '<br>RenameColumn: calling _GetFieldSQL for ' . $sNewColumnName;
+			}
 			if (isset($aTables[$sTableName]["fd"][$sNewColumnName]) && $oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sNewColumnName], $sNewColumnSQL, $sTableName, $sOldColumnName))
 			{
 				return !!($oProc->m_odb->query("ALTER TABLE $sTableName CHANGE $sOldColumnName $sNewColumnName " . $sNewColumnSQL, __LINE__, __FILE__));
@@ -413,7 +444,10 @@
 		function AlterColumn($oProc, &$aTables, $sTableName, $sColumnName, &$aColumnDef, $bCopyData = true)
 		{
 			global $DEBUG;
-			if ($DEBUG) { echo '<br>AlterColumn: calling _GetFieldSQL for ' . $sNewColumnName; }
+			if ($DEBUG)
+			{
+				echo '<br>AlterColumn: calling _GetFieldSQL for ' . $sNewColumnName;
+			}
 			if (isset($aTables[$sTableName]["fd"][$sColumnName]) && $oProc->_GetFieldSQL($aTables[$sTableName]["fd"][$sColumnName], $sNewColumnSQL, $sTableName, $sColumnName))
 			{
 				return !!($oProc->m_odb->query("ALTER TABLE $sTableName MODIFY $sColumnName " . $sNewColumnSQL, __LINE__, __FILE__));
@@ -447,6 +481,7 @@
 		{
 			global $DEBUG;
 
+			$this->indexes_sql = array();
 			if ($oProc->_GetTableSQL($sTableName, $aTableDef, $sTableSQL, $sSequenceSQL, $sTriggerSQL))
 			{
 				/* create sequence first since it will be needed for default */
@@ -455,14 +490,86 @@
 					$oProc->m_odb->query($sSequenceSQL, __LINE__, __FILE__);
 				}
 
-				$query = "CREATE TABLE $sTableName ($sTableSQL) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+				$query = "CREATE TABLE $sTableName ($sTableSQL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
 
-				if($DEBUG) { echo '<br>CREATE TABLE STATEMENT: ' ; var_dump($query); }
+				if ($DEBUG)
+				{
+					echo '<br>CREATE TABLE STATEMENT: ';
+					var_dump($query);
+				}
 
-				return !!($oProc->m_odb->query($query, __LINE__, __FILE__, true));
+				$result = !!($oProc->m_odb->query($query, __LINE__, __FILE__, true));
+				if($result==True)
+				{
+					if (isset($this->indexes_sql) && $DEBUG)
+					{
+						echo  '<pre>';
+						print_r($this->indexes_sql);
+						echo '</pre>';
+					}
+
+					if(isset($this->indexes_sql) && is_array($this->indexes_sql) && count($this->indexes_sql)>0)
+					{
+						foreach($this->indexes_sql as $key => $sIndexSQL)
+						{
+							$ix_name = str_replace(',','_',$key).'_'.$sTableName.'_idx';
+							$IndexSQL = str_replace(array('__index_name__','__table_name__'), array($ix_name,$sTableName), $sIndexSQL);
+							$oProc->m_odb->query($IndexSQL, __LINE__, __FILE__);
+						}
+					}
+				}
+				return $result;
 			}
 
 			return false;
 		}
+
+		function AlterTable( $oProc, &$aTables, $sTableName, $aTableDef )
+		{
+			global $DEBUG;
+
+			if(!$aTableDef['fk'])
+			{
+				return true; // nothing to do
+			}
+
+			if (is_array($aTableDef['fk']))
+			{
+				foreach ( $aTableDef['fk'] as $foreign_table => $foreign_key)
+				{
+					$sFKSQL = '';
+					$oProc->_GetFK(array($foreign_table => $foreign_key), $sFKSQL);
+					$local_key = implode('_',array_keys($foreign_key));
+					/**
+					 * FIXME: max length of contraint name: 64
+					 */
+
+					 if(strlen($local_key) > 63)
+					 {
+						$local_key = md5($local_key);
+					 }
+
+					$query = "ALTER TABLE $sTableName ADD CONSTRAINT {$sTableName}_{$local_key}_fk $sFKSQL";
+				//	if ( $DEBUG)
+					{
+						echo '<pre>';
+						print_r($query);
+						echo '</pre>';
+					}
+
+					$result = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
+					if(!$result)
+					{
+						break;
+					}
+				}
+
+				return $result;
+			}
+
+			return false;
+		}
+
+
 	}
 

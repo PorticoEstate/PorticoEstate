@@ -1837,7 +1837,7 @@
 
 			$this->db->query('SELECT max(id) as levels FROM fm_location_type');
 			$this->db->next_record();
-			$levels = $this->db->f('levels');
+			$levels = (int)$this->db->f('levels');
 
 			//perform an update on all location_codes on all levels to make sure they are consistent and unique
 			/* 			$locations = array();

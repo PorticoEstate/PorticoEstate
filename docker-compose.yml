@@ -21,12 +21,14 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=ChangeMe10
+      - MSSQL_COLLATION="Latin1_General_CS_AI"
+      # Note: collation settings here has no effect...
     volumes:
        - sqldata1:/var/opt/mssql
     restart: unless-stopped
   myqsl:
     container_name: mysql_container
-    image: mariadb:10.8
+    image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: ChangeMe10
       MYSQL_DATABASE: mybb
@@ -36,6 +38,7 @@ services:
       - 3306:3306
     volumes:
        - sqldata2:/var/lib/mysql
+#    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_0900_as_cs']
     restart: unless-stopped
 
   web:

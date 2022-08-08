@@ -418,8 +418,14 @@
 			{
 				if($value && $this->isJson($value))
 				{
-//					$insert_value[]	= "'" . $this->db_addslashes($value) . "'";
-					$insert_value[]	= "'{$value}'";//already escaped by json_encode()
+					if($this->Type == 'mysql')
+					{
+						$insert_value[] = "'" . str_ireplace(array('\\'),array('\\\\'), $value) . "'";
+					}
+					else
+					{
+						$insert_value[]	= "'{$value}'";//already escaped by json_encode()
+					}
 				}
 				else if($value || (is_numeric($value) && $value == 0) )
 				{

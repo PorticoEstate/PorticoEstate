@@ -165,6 +165,8 @@
 				}
 				else
 				{
+//					$this->oProc->m_odb->query("DROP TABLE fm_bim_item");
+
 					$this->oProc->ExecuteScripts($table_def, true);
 					$this->copy_data($table_def);
 					$this->oProc->AlterTables($foreign_keys, true);
@@ -179,6 +181,14 @@
 
 			foreach ($table_defs as $table => $table_def)
 			{
+				$this->oProc->m_odb->query("SELECT count(*) as cnt FROM {$table}");
+				$this->oProc->m_odb->next_record();
+				if($this->oProc->m_odb->f('cnt'))
+				{
+					_debug_array("Skip copy data to {$table}");
+					continue;
+				}
+				
 				if ($table == 'fm_ecobilagoverf' || $table == 'phpgw_lang')
 				{
 					continue;
@@ -286,19 +296,38 @@
 
 				foreach ($db->resultSet as $row)
 				{
+
+					$field_names = array();
 					$data = array();
 					foreach($table_def['fd'] as $field_name => $data_field)
 					{
-						if(empty($data_field['nullable']) && $row[$field_name]==="")
+						if(isset( $data_field['default']) && !empty( $data_field['default']) && empty($data_field['nullable'] ) && empty($row[$field_name]))
+						{
+							continue;
+						}
+						else if(!empty($data_field['nullable'] ) && empty($row[$field_name]))
+						{
+							continue;
+						}
+						else if(isset( $data_field['default']) && $data_field['default'] ==="" && empty($data_field['nullable'] ) && empty($row[$field_name]))
+						{
+							$row[$field_name] = 'NIL';
+						}
+						else if(empty($data_field['nullable']) && $data_field['type'] =='bool' && empty($row[$field_name]))
+						{
+							$row[$field_name] = 0;
+						}
+						else if(empty($data_field['nullable']) && $row[$field_name]==="")
 						{
 							$row[$field_name] = 'NIL';
 						}
 
+						$field_names[] = $field_name;
 						switch ($data_field['type'])
 						{
 							case 'datetime':
 							case 'timestamp':
-								$data[] = $this->oProc->m_odb->to_timestamp(strtotime($row[$field_name]));
+								$data[] = $this->oProc->m_odb->to_timestamp(strtotime($row[$field_name])+1);
 								break;
 							case 'date':
 								$data[] = date('Y-m-d',strtotime($row[$field_name]));
@@ -313,8 +342,8 @@
 
 					}
 
-					$insert_values	 = $db->validate_insert($data);
-					$insert_fields	 = implode(',', array_keys($row));
+					$insert_values	 = $this->oProc->m_odb->validate_insert($data);
+					$insert_fields	 = implode(',', $field_names);
 					$this->oProc->m_odb->query("INSERT INTO {$table} ({$insert_fields}) VALUES ({$insert_values})");
 				}
 

@@ -88,6 +88,7 @@
 					$sTranslated = 'time';
 					break;
 				case 'timestamp':
+				case 'datetime':
 					$sTranslated = 'timestamp';
 					break;
 				case 'varchar':
@@ -753,7 +754,7 @@
 		function CreateTable($oProc, $aTables, $sTableName, $aTableDef, $bCreateSequence = true)
 		{
 			global $DEBUG;
-			unset($this->indexes_sql);
+			$this->indexes_sql = array();
 			if ($oProc->_GetTableSQL($sTableName, $aTableDef, $sTableSQL, $sSequenceSQL, $sTriggerSQL))
 			{
 				/* create sequence first since it will be needed for default */
@@ -792,5 +793,47 @@
 
 			return false;
 		}
+
+		/**
+		 * Adding foreign keys to existing tables
+		 */
+		function AlterTable( $oProc, &$aTables, $sTableName, $aTableDef )
+		{
+			global $DEBUG;
+
+			if(!$aTableDef['fk'])
+			{
+				return true; // nothing to do
+			}
+
+			if (is_array($aTableDef['fk']))
+			{
+				foreach ( $aTableDef['fk'] as $foreign_table => $foreign_key)
+				{
+					$sFKSQL = '';
+					$oProc->_GetFK(array($foreign_table => $foreign_key), $sFKSQL);
+					$local_key = implode('_',array_keys($foreign_key));
+
+					$query = "ALTER TABLE $sTableName ADD CONSTRAINT {$sTableName}_{$local_key}_fk $sFKSQL";
+				//	if ( $DEBUG)
+					{
+						echo '<pre>';
+						print_r($query);
+						echo '</pre>';
+					}
+
+					$result = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
+					if(!$result)
+					{
+						break;
+					}
+				}
+
+				return $result;
+			}
+
+			return false;
+		}
+
 	}
 

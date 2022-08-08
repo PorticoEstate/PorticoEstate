@@ -145,7 +145,11 @@
 						}
 						else
 						{
-							$this->db = new PDO("mysql:host={$this->Host};dbname={$this->Database};charset=utf8mb4", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $this->persistent));
+							$this->db = new PDO("mysql:host={$this->Host};dbname={$this->Database};charset=utf8mb4", $this->User, $this->Password, array(
+								PDO::ATTR_PERSISTENT => $this->persistent,
+					//			PDO::ATTR_AUTOCOMMIT => 0
+								)
+							);
 
 						}
 					}
@@ -665,6 +669,11 @@
 				$this->connect();
 			}
 
+			if($GLOBALS['phpgw_info']['server']['db_type'] == 'mysql')
+			{
+				$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 1 );
+				$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 0 );	
+			}
 			$this->Transaction = $this->db->beginTransaction();
 			return $this->Transaction;
 		}
@@ -682,7 +691,12 @@
 			unset($bt);
 */
 			$this->Transaction = false;
-			return $this->db->commit();
+			$ret = $this->db->commit();
+			if($GLOBALS['phpgw_info']['server']['db_type'] == 'mysql')
+			{
+				$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 1 );
+			}
+			return $ret;
 		}
 
 		/**
@@ -1183,8 +1197,8 @@
 			{
 				case 'mysql':
 					$this->db->exec("GRANT ALL ON {$this->Database}.*"
-							. " TO {$this->User}@'%'"
-							. " IDENTIFIED BY '{$this->Password}'");
+							. " TO {$this->User}@'%'");
+	//						. " IDENTIFIED BY '{$this->Password}'");
 					break;
 				default:
 					//do nothing
