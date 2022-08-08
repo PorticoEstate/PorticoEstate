@@ -418,8 +418,14 @@
 			{
 				if($value && $this->isJson($value))
 				{
-//					$insert_value[]	= "'" . $this->db_addslashes($value) . "'";
-					$insert_value[]	= "'{$value}'";//already escaped by json_encode()
+					if($this->Type == 'mysql')
+					{
+						$insert_value[] = "'" . str_ireplace(array('\\'),array('\\\\'), $value) . "'";
+					}
+					else
+					{
+						$insert_value[]	= "'{$value}'";//already escaped by json_encode()
+					}
 				}
 				else if($value || (is_numeric($value) && $value == 0) )
 				{
@@ -662,7 +668,7 @@
 				{
 					case 'mssqlnative':
 					case 'mssql':
-						$date_format 		= 'M d Y';
+						$date_format 		= 'Y-m-d';
 						break;
 					case 'mysql':
 					case 'pgsql':
@@ -689,7 +695,7 @@
 				{
 					case 'mssqlnative':
 					case 'mssql':
-						$datetime_format 		= 'M d Y g:iA';
+						$datetime_format 		= 'Y-m-d H:i:s';
 						break;
 					case 'mysql':
 					case 'pgsql':

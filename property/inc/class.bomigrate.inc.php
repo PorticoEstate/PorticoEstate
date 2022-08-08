@@ -93,7 +93,7 @@
 
 			$table_def = array();
 			$foreign_keys = array();
-//			$tables = array('fm_bim_model');
+//			$tables = array('bb_season_boundary');
 			foreach ($tables as $table)
 			{
 				$tableinfo = $setup->sql_to_array($table);
@@ -165,21 +165,30 @@
 				}
 				else
 				{
-//			_debug_array($table_def);
+//					$this->oProc->m_odb->query("DROP TABLE fm_bim_item");
+
 					$this->oProc->ExecuteScripts($table_def, true);
-//			_debug_array($foreign_keys);
-					$this->oProc->AlterTables($foreign_keys, true);
 					$this->copy_data($table_def);
+					$this->oProc->AlterTables($foreign_keys, true);
 				}
 			}
 		}
 
-		function copy_data( $table_def = array() )
+		function copy_data( $table_defs = array() )
 		{
+			$GLOBALS['phpgw']->db->fetchmode = 'ASSOC';
 			$db = $GLOBALS['phpgw']->db;
 
-			foreach ($table_def as $table => $fd)
+			foreach ($table_defs as $table => $table_def)
 			{
+				$this->oProc->m_odb->query("SELECT count(*) as cnt FROM {$table}");
+				$this->oProc->m_odb->next_record();
+				if($this->oProc->m_odb->f('cnt'))
+				{
+					_debug_array("Skip copy data to {$table}");
+					continue;
+				}
+				
 				if ($table == 'fm_ecobilagoverf' || $table == 'phpgw_lang')
 				{
 					continue;
@@ -227,15 +236,120 @@
 						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET p_footer = 'NIL' WHERE p_footer = ''", __LINE__, __FILE__, true);
 						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET p_src = 'NIL' WHERE p_src = ''", __LINE__, __FILE__, true);
 						break;
+					case 'activity_activity':
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET title = 'NIL' WHERE title = ''", __LINE__, __FILE__, true);
+						break;
+					case 'activity_arena':
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET arena_name = 'NIL' WHERE arena_name = ''", __LINE__, __FILE__, true);
+						break;
+					case 'activity_contact_person':
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET email = 'NIL' WHERE email = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET address = 'NIL' WHERE address = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET zipcode = 'NIL' WHERE zipcode = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET city = 'NIL' WHERE city = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET phone = 'NIL' WHERE phone = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET name = 'NIL' WHERE name = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET group_id = 'NIL' WHERE group_id = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET organization_id = 'NIL' WHERE organization_id = ''", __LINE__, __FILE__, true);
+						break;
+					case 'activity_group':
+ 						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET organization_id = 'NIL' WHERE organization_id = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET name = 'NIL' WHERE name = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET description = 'NIL' WHERE description = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET change_type = 'NIL' WHERE change_type = ''", __LINE__, __FILE__, true);
+ 						break;
+					case 'activity_organization':
+ 						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET name = 'NIL' WHERE name = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET district = 'NIL' WHERE district = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET homepage = 'NIL' WHERE homepage = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET description = 'NIL' WHERE description = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET email = 'NIL' WHERE email = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET phone = 'NIL' WHERE phone = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET address = 'NIL' WHERE address = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET orgno = 'NIL' WHERE orgno = ''", __LINE__, __FILE__, true);
+						$GLOBALS['phpgw']->db->query("UPDATE {$table} SET change_type = 'NIL' WHERE change_type = ''", __LINE__, __FILE__, true);
+						break;
 					default:
 				}
 
+				$identity_sequence = false;
+				if (in_array($this->oProc->m_odb->Type, array('mssql', 'mssqlnative')))
+				{
+					$this->oProc->m_odb->query("EXEC sp_columns '$table'", __LINE__, __FILE__);
+					while ($this->oProc->m_odb->next_record())
+					{
+						if ($this->oProc->m_odb->f('TYPE_NAME') == 'int identity')
+						{
+							$identity_sequence = true;
+						}
+
+					}
+					if($identity_sequence)
+					{
+						$this->oProc->m_odb->query("SET identity_insert {$table} ON", __LINE__, __FILE__);
+					}
+				}
+
+				$this->oProc->m_odb->query("DELETE FROM {$table}");
+
 				$db->query("SELECT * FROM {$table}");
+
 				foreach ($db->resultSet as $row)
 				{
-					$insert_values	 = $db->validate_insert(array_values($row));
-					$insert_fields	 = implode(',', array_keys($row));
+
+					$field_names = array();
+					$data = array();
+					foreach($table_def['fd'] as $field_name => $data_field)
+					{
+						if(isset( $data_field['default']) && !empty( $data_field['default']) && empty($data_field['nullable'] ) && empty($row[$field_name]))
+						{
+							continue;
+						}
+						else if(!empty($data_field['nullable'] ) && empty($row[$field_name]))
+						{
+							continue;
+						}
+						else if(isset( $data_field['default']) && $data_field['default'] ==="" && empty($data_field['nullable'] ) && empty($row[$field_name]))
+						{
+							$row[$field_name] = 'NIL';
+						}
+						else if(empty($data_field['nullable']) && $data_field['type'] =='bool' && empty($row[$field_name]))
+						{
+							$row[$field_name] = 0;
+						}
+						else if(empty($data_field['nullable']) && $row[$field_name]==="")
+						{
+							$row[$field_name] = 'NIL';
+						}
+
+						$field_names[] = $field_name;
+						switch ($data_field['type'])
+						{
+							case 'datetime':
+							case 'timestamp':
+								$data[] = $this->oProc->m_odb->to_timestamp(strtotime($row[$field_name])+1);
+								break;
+							case 'date':
+								$data[] = date('Y-m-d',strtotime($row[$field_name]));
+								break;
+							case 'time':
+								$data[] = date('H:i:s',strtotime($row[$field_name]));
+								break;
+								default:
+								$data[] = $row[$field_name];
+
+						}
+
+					}
+
+					$insert_values	 = $this->oProc->m_odb->validate_insert($data);
+					$insert_fields	 = implode(',', $field_names);
 					$this->oProc->m_odb->query("INSERT INTO {$table} ({$insert_fields}) VALUES ({$insert_values})");
+				}
+
+				if ($identity_sequence && in_array($this->oProc->m_odb->Type, array('mssql', 'mssqlnative')))
+				{
+					$this->oProc->m_odb->query("SET identity_insert {$table} OFF", __LINE__, __FILE__);
 				}
 			}
 		}

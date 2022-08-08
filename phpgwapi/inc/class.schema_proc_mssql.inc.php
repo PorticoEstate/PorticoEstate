@@ -47,11 +47,11 @@
 				case 'char':
 					if ($iPrecision > 0 && $iPrecision < 256)
 					{
-						$sTranslated =  sprintf("char(%d)", $iPrecision);
+						$sTranslated =  sprintf("nchar(%d)", $iPrecision) . ' COLLATE Latin1_General_CS_AI';
 					}
 					if ($iPrecision > 255)
 					{
-						$sTranslated = 'NVARCHAR(MAX)';
+						$sTranslated = 'NVARCHAR(MAX) COLLATE Latin1_General_CS_AI';
 					}
 					break;
 				case 'date':
@@ -87,7 +87,7 @@
 					break;
 				case 'longtext':
 				case 'text':
-					$sTranslated = 'NVARCHAR(MAX)';
+					$sTranslated = 'NVARCHAR(MAX) COLLATE Latin1_General_CS_AI';
 					break;
 				case 'time':
 					$sTranslated = 'time';
@@ -99,16 +99,16 @@
 				case 'varchar':
 					if ($iPrecision > 0 && $iPrecision < 256)
 					{
-						$sTranslated =  sprintf("varchar(%d)", $iPrecision);
+						$sTranslated =  sprintf("NVARCHAR(%d)", $iPrecision) . ' COLLATE Latin1_General_CS_AI';
 					}
 					if ($iPrecision > 255)
 					{
-						$sTranslated = 'NVARCHAR(MAX)';
+						$sTranslated = 'NVARCHAR(MAX) COLLATE Latin1_General_CS_AI';
 					}
 					break;
 				case 'json':
 				case 'jsonb':
-					$sTranslated = 'NVARCHAR(MAX)';
+					$sTranslated = 'NVARCHAR(MAX) COLLATE Latin1_General_CS_AI';
 					break;
 				case 'bool':
 				case 'boolean':
@@ -518,20 +518,28 @@
 				return true; // nothing to do
 			}
 
-			$sFKSQL = '';
-
-			if ($aTableDef['fk'] && $oProc->_GetFK($aTableDef['fk'], $sFKSQL))
+			if (is_array($aTableDef['fk']))
 			{
-
-				$query = "ALTER TABLE $sTableName ADD CONSTRAINT fk_{$sTableName} $sFKSQL";
-			//	if ( $DEBUG)
+				foreach ( $aTableDef['fk'] as $foreign_table => $foreign_key)
 				{
-					echo '<pre>';
-					print_r($query);
-					echo '</pre>';
+					$sFKSQL = '';
+					$oProc->_GetFK(array($foreign_table => $foreign_key), $sFKSQL);
+					$local_key = implode('_',array_keys($foreign_key));
+					$query = "ALTER TABLE $sTableName ADD CONSTRAINT {$sTableName}_{$local_key}_fk $sFKSQL";
+				//	if ( $DEBUG)
+					{
+						echo '<pre>';
+						print_r($query);
+						echo '</pre>';
+					}
+
+					$result = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
+					if(!$result)
+					{
+						break;
+					}
 				}
 
-				$result = !!$oProc->m_odb->query($query, __LINE__, __FILE__);
 				return $result;
 			}
 

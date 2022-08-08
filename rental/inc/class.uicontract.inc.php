@@ -2824,7 +2824,7 @@ JS;
 				//return rental_soprice_item::get_instance()->reset_contract_price_item($price_item_id);
 				foreach ($list_price_item_id as $price_item_id)
 				{
-					$result = rental_soprice_item::get_instance()->reset_contract_price_item($price_item_id);
+					$result = rental_soprice_item::get_instance()->reset_contract_price_item($contract_id, $price_item_id);
 					if ($result)
 					{
 						$message['message'][] = array('msg' => 'price_item ' . $price_item_id . ' ' . lang('has been reseted'));

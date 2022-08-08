@@ -97,6 +97,10 @@
 			{
 				$this->Database = $Database;
 			}
+			if ( $Database === '__NULL__' )
+			{
+				$this->Database = null;
+			}
 
 			if ( !is_null($Host) )
 			{
@@ -105,11 +109,13 @@
 
 			if ( !is_null($User) )
 			{
+				$fall_back_user = $this->User;
 				$this->User = $User;
 			}
 
 			if ( !is_null($Password) )
 			{
+				$fall_back_password = $this->Password;
 				$this->Password = $Password;
 			}
 
@@ -131,7 +137,21 @@
 				case 'mysql':
 					try
 					{
-						$this->db = new PDO("mysql:host={$this->Host};dbname={$this->Database}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $this->persistent));
+						if(!$this->Database)
+						{
+							$this->db = new PDO("mysql:host={$this->Host};charset=utf8mb4", $this->User, $this->Password);
+							$this->User = $fall_back_user;
+							$this->Password = $fall_back_password;
+						}
+						else
+						{
+							$this->db = new PDO("mysql:host={$this->Host};dbname={$this->Database};charset=utf8mb4", $this->User, $this->Password, array(
+								PDO::ATTR_PERSISTENT => $this->persistent,
+					//			PDO::ATTR_AUTOCOMMIT => 0
+								)
+							);
+
+						}
 					}
 					catch(PDOException $e){}
 					break;
@@ -297,7 +317,7 @@
 				case 'mssqlnative':
 //					$type = 'pdo'; // pdo-driver are missing important functions
 					$type = 'mssqlnative';
-					$dsn = "sqlsrv:Server={$this->Host},{$this->Port};Database={$this->Database};Encrypt=true;TrustServerCertificate=true";
+//					$dsn = "sqlsrv:Server={$this->Host},{$this->Port};Database={$this->Database};Encrypt=true;TrustServerCertificate=true";
 					break;
 				case 'oci8':
 				case 'oracle':
@@ -649,6 +669,11 @@
 				$this->connect();
 			}
 
+			if($GLOBALS['phpgw_info']['server']['db_type'] == 'mysql')
+			{
+				$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 1 );
+				$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 0 );	
+			}
 			$this->Transaction = $this->db->beginTransaction();
 			return $this->Transaction;
 		}
@@ -666,7 +691,12 @@
 			unset($bt);
 */
 			$this->Transaction = false;
-			return $this->db->commit();
+			$ret = $this->db->commit();
+			if($GLOBALS['phpgw_info']['server']['db_type'] == 'mysql')
+			{
+				$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 1 );
+			}
+			return $ret;
 		}
 
 		/**
@@ -988,7 +1018,7 @@
 			{
 				$return = array();
 			}
-//			$this->adodb->close();
+			$this->adodb->close();
 			return $return;
 		}
 
@@ -1100,7 +1130,7 @@
 		* @returns bool was the new db created?
 		* @throws Exception invalid db-name
 		*/
-		public function create_database($adminname = '', $adminpasswd = '')
+		public function create_database($adminname = null, $adminpasswd = null)
 		{
 			//THIS IS CALLED BY SETUP DON'T KILL IT!
 			if ( $this->db )
@@ -1118,13 +1148,13 @@
 					$_database = 'master';
 					break;
 				default:
-					$_database = null;
+					$_database = '__NULL__';
 			}
 
 			$database = $this->Database;
 			try
 			{
-				$this->connect($_database);
+				$this->connect($_database, null,  $adminname, $adminpasswd);
 			}
 			catch(Exception $e)
 			{
@@ -1167,8 +1197,8 @@
 			{
 				case 'mysql':
 					$this->db->exec("GRANT ALL ON {$this->Database}.*"
-							. " TO {$this->User}@{$_SERVER['SERVER_NAME']}"
-							. " IDENTIFIED BY '{$this->Password}'");
+							. " TO {$this->User}@'%'");
+	//						. " IDENTIFIED BY '{$this->Password}'");
 					break;
 				default:
 					//do nothing
