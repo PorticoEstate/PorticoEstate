@@ -61,7 +61,7 @@
 
 
 			$msg						 = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
-			$this->cron_log($msg, $cron);
+			$this->cron_log($msg);
 			echo "$msg\n";
 			$this->receipt['message'][]	 = array('msg' => $msg);
 		}

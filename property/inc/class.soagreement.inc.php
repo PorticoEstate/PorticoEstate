@@ -626,7 +626,7 @@
 				{
 					foreach ($values['attributes'] as &$attr)
 					{
-						$attr['value'] = $this->db->f($attr['column_name']);
+						$attr['value'] = $this->db->f($attr['column_name'], true);
 					}
 				}
 			}
@@ -656,7 +656,7 @@
 				{
 					foreach ($values['attributes'] as &$attr)
 					{
-						$attr['value'] = $this->db->f($attr['column_name']);
+						$attr['value'] = $this->db->f($attr['column_name'], true);
 					}
 				}
 			}
@@ -1063,7 +1063,7 @@
 				$agreement_group_list[] = array
 					(
 					'id'	 => $this->db->f('id'),
-					'name'	 => $GLOBALS['phpgw']->strip_html($this->db->f('descr')) . ' [ ' . $GLOBALS['phpgw']->strip_html($this->db->f('status')) . ' ] '
+					'name'	 => $GLOBALS['phpgw']->strip_html($this->db->f('descr', true)) . ' [ ' . $GLOBALS['phpgw']->strip_html($this->db->f('status')) . ' ] '
 				);
 			}
 			return $agreement_group_list;
@@ -1094,11 +1094,11 @@
 			while ($this->db->next_record())
 			{
 				$activity_list[$this->db->f('id')] = array
-					(
+				(
 					'id'		 => $this->db->f('id'),
 					'num'		 => $this->db->f('num'),
-					'base_descr' => $this->db->f('base_descr'),
-					'descr'		 => $this->db->f('descr'),
+					'base_descr' => $this->db->f('base_descr', true),
+					'descr'		 => $this->db->f('descr', true),
 					'unit'		 => $this->db->f('unit'),
 					'ns3420'	 => $this->db->f('ns3420'),
 				);
@@ -1202,7 +1202,7 @@
 			while ($this->db->next_record())
 			{
 				$status[] = array
-					(
+				(
 					'id'	 => $this->db->f('id'),
 					'name'	 => $this->db->f('descr', true)
 				);
