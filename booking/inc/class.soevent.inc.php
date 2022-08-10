@@ -29,7 +29,7 @@
 					'invalid' => '%field% is invalid'))),
 				'contact_phone' => array('type' => 'string'),
 				'completed' => array('type' => 'int', 'required' => true, 'nullable' => false,
-					'default' => '0'),
+					'default' => '0','query' => true),
 				'access_requested' => array('type' => 'int', 'required' => false, 'nullable' => true,
 					'default' => '0'),
 				'reminder' => array('type' => 'int', 'required' => true, 'nullable' => false,

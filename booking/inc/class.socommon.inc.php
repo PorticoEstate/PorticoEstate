@@ -585,7 +585,7 @@
 						}
 						$clauses[] = "({$table_column} IN (" . join(',', $vals) . '))';
 					}
-					else if ($val == null)
+					else if ($val === null)
 					{
 						$clauses[] = "{$table_column} IS " . $this->db_null;
 					}
