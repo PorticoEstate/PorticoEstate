@@ -1274,6 +1274,7 @@
 			$log_customer_nr = '';
 			$log_buidling = '';
 			$tax_code = 0;
+			$contact_name = '';
 
 			foreach ($reservations as &$reservation)
 			{
@@ -1305,6 +1306,38 @@
 				if ($this->get_cost_value($reservation['cost']) <= 0)
 				{
 					continue; //Don't export costless rows
+				}
+
+				/**
+				 * Get contact person
+				 */
+				switch ($reservation['reservation_type'])
+				{
+					case 'allocation':
+						if (!empty($reservation['organization_id']))
+						{
+							$org = $this->organization_bo->read_single($reservation['organization_id']);
+							if(!empty($org['contacts'][0]['name']))
+							{
+								$contact_name = $org['contacts'][0]['name'];
+							}
+						}
+						break;
+					case 'booking':
+						if(!empty($test['group_id']))
+						{
+							$group = CreateObject('booking.sogroup')->read_single($test['group_id']);
+							if(!empty($group['contacts'][0]['name']))
+							{
+								$contact_name = $group['contacts'][0]['name'];
+							}
+						}
+						break;
+					case 'event':
+						$contact_name = $test['contact_name'];
+						break;
+					default:
+						break;
 				}
 
 				$purchase_order = $this->sopurchase_order->get_purchase_order(0, $reservation['reservation_type'], $reservation['reservation_id']);
@@ -1483,6 +1516,8 @@
 					$log_cost = 0;
 					$log_cost2 = 0;
 
+					$fakturalinje['contact_name'] = $contact_name;
+
 					if($purchase_order && !empty($purchase_order['lines']))
 					{
 
@@ -1606,6 +1641,8 @@
 
 					$log_cost = 0;
 					$log_cost2 = 0;
+
+					$fakturalinje['contact_name'] = $contact_name;
 
 					if($purchase_order && !empty($purchase_order['lines']))
 					{
