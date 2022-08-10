@@ -230,6 +230,9 @@
 
 			switch ($sort)
 			{
+				case 'id':
+					$_sort = 'id';
+					break;
 				case 'building_id':
 					$_sort = array('building_id', 'id');
 					break;

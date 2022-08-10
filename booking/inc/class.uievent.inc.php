@@ -72,6 +72,15 @@
 					'toolbar' => array(
 						'item' => array(
 							array('type' => 'filter',
+								'name' => 'completed',
+								'text' => lang('completed') . ':',
+								'list' => array(
+									array('id' => 0, 'name' => lang('Not selected')),
+									array('id' => -1, 'name' => lang('active')),
+									array('id' => 1, 'name' => lang('completed'))
+									),
+							),
+							array('type' => 'filter',
 								'name' => 'buildings',
 								'text' => lang('Building') . ':',
 								'list' => $this->bo->so->get_buildings(),
@@ -81,11 +90,11 @@
 								'text' => lang('Activity') . ':',
 								'list' => $this->bo->so->get_activities_main_level(),
 							),
-							array(
-								'type' => 'link',
-								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
-							),
+//							array(
+//								'type' => 'link',
+//								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+//								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
+//							),
 						)
 					),
 				),
@@ -165,31 +174,34 @@
 
 		public function query()
 		{
-			if (isset($_SESSION['showall']))
+			$testdata = phpgw::get_var('buildings', 'int', 'REQUEST', null);
+			if ($testdata != 0)
 			{
-				unset($filters['building_name']);
-				unset($filters['activity_id']);
+				$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));
 			}
 			else
 			{
-				$testdata = phpgw::get_var('buildings', 'int', 'REQUEST', null);
-				if ($testdata != 0)
-				{
-					$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['building_name']);
-				}
-				$testdata2 = phpgw::get_var('activities', 'int', 'REQUEST', null);
-				if ($testdata2 != 0)
-				{
-					$filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['activity_id']);
-				}
+				unset($filters['building_name']);
+			}
+			$testdata2 = phpgw::get_var('activities', 'int', 'REQUEST', null);
+			if ($testdata2 != 0)
+			{
+				$filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));
+			}
+			else
+			{
+				unset($filters['activity_id']);
+			}
+
+			$completed = phpgw::get_var('completed', 'int', 'REQUEST');
+
+			if($completed === -1)
+			{
+				$filters['completed'] = 0;
+			}
+			else if($completed)
+			{
+				$filters['completed'] = $completed;
 			}
 
 			$search = phpgw::get_var('search');
