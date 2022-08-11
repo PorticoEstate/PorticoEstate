@@ -273,7 +273,7 @@
 						'sortable'	 => true, 'resizeable' => true),
 					array('key'		 => 'value_select', 'label'		 => lang('select'), 'sortable'	 => false,
 						'resizeable' => true)),
-				'data'		 => htmlspecialchars(json_encode($content_email), ENT_QUOTES, 'UTF-8'),
+				'data'		 => json_encode($content_email),
 				'config'	 => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
