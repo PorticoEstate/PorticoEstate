@@ -37,12 +37,15 @@
 		private $db;
 		private $join;
 		private $like;
+		private $account_id;
 
 		function __construct()
 		{
-			$this->db	 = & $GLOBALS['phpgw']->db;
-			$this->join	 = & $this->db->join;
-			$this->like	 = & $this->db->like;
+			$this->db			 = & $GLOBALS['phpgw']->db;
+			$this->join			 = & $this->db->join;
+			$this->left_join	 = & $this->db->left_join;
+			$this->like			 = & $this->db->like;
+			$this->account_id	 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
 		function read_b_account( $data )
@@ -173,5 +176,75 @@
 				);
 			}
 			return $phpgw_user;
+		}
+
+		function read_outside_contact( $data )
+		{
+			if (is_array($data))
+			{
+				$start	 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+				$filter	 = isset($data['filter']) ? $data['filter'] : 'none';
+				$query	 = isset($data['query']) ? $data['query'] : '';
+				$sort	 = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+				$order	 = isset($data['order']) ? $data['order'] : '';
+				$cat_id	 = isset($data['cat_id']) ? $data['cat_id'] : 0;
+				$results = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
+			}
+		
+			switch ($order)
+			{
+				case 'contact_id':
+					$ordermethod = " ORDER BY phpgw_contact.contact_id $sort";
+					break;
+				default:
+					$ordermethod = " ORDER BY $order $sort";
+					break;
+			}
+			
+			if (!$order)
+			{
+				$ordermethod = ' ORDER BY last_name DESC';
+			}
+
+			$filtermethod = '';
+
+			if($cat_id)
+			{
+				$filtermethod .= "AND (cat_id $this->like '%,$cat_id,%' OR cat_id = '{$cat_id}') ";
+			}
+
+			if ($query)
+			{
+				$query = $this->db->db_addslashes($query);
+
+				$querymethod = " AND ( last_name $this->like '%$query%' OR first_name $this->like '%$query%' OR department $this->like '%$query%' OR comm_data $this->like '%$query%')";
+			}
+
+			$sql = "SELECT phpgw_contact.contact_id,first_name, last_name, department, comm_data AS email FROM phpgw_contact"
+				. " $this->join phpgw_contact_person ON phpgw_contact.contact_id = phpgw_contact_person.person_id"
+				. " $this->join phpgw_contact_comm ON phpgw_contact.contact_id = phpgw_contact_comm.contact_id AND comm_descr_id = 2"
+				. " $this->left_join phpgw_accounts ON phpgw_accounts.person_id = phpgw_contact.contact_id"
+				. " WHERE phpgw_accounts.person_id IS NULL"
+				. " AND contact_type_id = 1"
+				. " AND (access = 'public' OR owner = {$this->account_id})"
+				. " $filtermethod $querymethod";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->total_records = $this->db->num_rows();
+			$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
+
+			$contacts = array();
+			while ($this->db->next_record())
+			{
+				$contacts[] = array
+				(
+					'contact_id' => $this->db->f('contact_id'),
+					'last_name'	 => $this->db->f('last_name', true),
+					'first_name' => $this->db->f('first_name', true),
+					'department' => $this->db->f('department', true),
+					'email'		 => $this->db->f('email', true)
+				);
+			}
+			return $contacts;
 		}
 	}
