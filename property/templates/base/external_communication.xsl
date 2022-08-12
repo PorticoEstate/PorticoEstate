@@ -365,6 +365,12 @@
 
 		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address')"/>
 
+		function contact_lookup()
+		{
+		var oArgs = {menuaction:'property.uilookup.contact', column:'mail_recipients'};
+		var strURL = phpGWLink('index.php', oArgs);
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		}
 
 	</script>
 
@@ -554,11 +560,17 @@
 
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="php:function('lang', 'extra mail address')"/>
+									<a href="javascript:contact_lookup()">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'extra mail address')"/>
+										</xsl:attribute>
+										<xsl:value-of select="php:function('lang', 'extra mail address')"/>
+									</a>
+
 								</label>
 								<xsl:choose>
 									<xsl:when test="mode = 'edit'">
-										<input type="text" name="mail_recipients[]" value="{value_extra_mail_address}" class="pure-input-3-4" >
+										<input type="text" id="mail_recipients" name="mail_recipients[]" value="{value_extra_mail_address}" class="pure-input-3-4" >
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'comma separated list')"/>
 											</xsl:attribute>
