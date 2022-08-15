@@ -1319,7 +1319,7 @@
 							$org = $this->organization_bo->read_single($reservation['organization_id']);
 							if(!empty($org['contacts'][0]['name']))
 							{
-								$contact_name = $org['contacts'][0]['name'];
+								$contact_name = iconv("utf-8", "ISO-8859-1//TRANSLIT", $org['contacts'][0]['name']);
 							}
 						}
 						break;
@@ -1329,12 +1329,12 @@
 							$group = CreateObject('booking.sogroup')->read_single($test['group_id']);
 							if(!empty($group['contacts'][0]['name']))
 							{
-								$contact_name = $group['contacts'][0]['name'];
+								$contact_name = iconv("utf-8", "ISO-8859-1//TRANSLIT", $group['contacts'][0]['name']);
 							}
 						}
 						break;
 					case 'event':
-						$contact_name = $test['contact_name'];
+						$contact_name = iconv("utf-8", "ISO-8859-1//TRANSLIT", $test['contact_name']);
 						break;
 					default:
 						break;
