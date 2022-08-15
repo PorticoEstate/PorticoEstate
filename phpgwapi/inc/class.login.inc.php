@@ -376,6 +376,22 @@ HTML;
 						$login .= "#{$logindomain}";
 					}
 
+					/**
+					 * One last check...
+					 */
+					if(!phpgw::get_var('OIDC_pid', 'string', 'SERVER'))
+					{
+						$OIDC_groups = utf8_encode(utf8_decode($_SERVER["OIDC_groups"]));
+						$ad_groups	= explode(",",$OIDC_groups);
+						$default_group_lid	 = !empty($GLOBALS['phpgw_info']['server']['default_group_lid']) ? $GLOBALS['phpgw_info']['server']['default_group_lid'] : 'Default';
+
+						if (!in_array($default_group_lid, $ad_groups))
+						{
+							echo lang('missing membership: "%1" is not in the list', $default_group_lid);
+							$GLOBALS['phpgw']->common->phpgw_exit();
+						}
+					}
+
 					$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, '');
 				}
 				else if (!$login || empty($GLOBALS['sessionid']))
