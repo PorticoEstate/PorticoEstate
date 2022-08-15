@@ -167,7 +167,7 @@
 			$start = $from_->format('Y-m-d H:i');
 			$end = $to_->format('Y-m-d H:i');
 
-			if ($entity['from_'] == $entity['to_'])
+			if ($entity['from_'] == $entity['to_'] || $from_ === $to_)
 			{
 				$errors['to_'] = lang('Invalid to date');
 				return; //No need to continue validation if dates are invalid

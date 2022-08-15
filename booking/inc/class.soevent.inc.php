@@ -300,7 +300,7 @@
 			$start = $from_->format('Y-m-d H:i');
 			$end = $to_->format('Y-m-d H:i');
 
-			if ($from_ > $to_)
+			if ($from_ > $to_ || $from_ === $to_)
 			{
 				$errors['from_'] = lang('Invalid from date');
 			}
