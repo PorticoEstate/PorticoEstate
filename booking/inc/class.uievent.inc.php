@@ -76,7 +76,7 @@
 								'text' => lang('completed') . ':',
 								'list' => array(
 									array('id' => 0, 'name' => lang('Not selected')),
-									array('id' => -1, 'name' => lang('active')),
+									array('id' => -1, 'name' => lang('Not completed')),
 									array('id' => 1, 'name' => lang('completed'))
 									),
 							),
@@ -198,6 +198,7 @@
 			if($completed === -1)
 			{
 				$filters['completed'] = 0;
+				$filters['active'] = 1;
 			}
 			else if($completed)
 			{
