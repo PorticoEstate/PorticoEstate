@@ -89,28 +89,31 @@
 			$contracts_for_selection = array();
 			$number_of_valid_contracts = 0;
 			$contracts_per_location = $contracts_per_location_all[$org_unit];
-			foreach ($contracts_per_location[$this->header_state['selected_location']] as $contract)
+			foreach ($contracts_per_location[$this->header_state['selected_location']] as $contracts)
 			{
-				if (($this->contract_filter_doc == 'active' && $contract->is_active()) ||
-					($this->contract_filter_doc == 'not_active' && !$contract->is_active()) ||
-					$this->contract_filter_doc == 'all'
-				)
+				foreach ($contracts as $contract)
 				{
-					$number_of_valid_contracts += 1;
-					//Only select necessary fields
-					$contracts_for_selection[] = array(
-						'id' => $contract->get_id(),
-						'old_contract_id' => $contract->get_old_contract_id(),
-						'contract_status' => $contract->get_contract_status()
-					);
-
-					if ($change_contract || $new_contract == $contract->get_id() || !isset($this->contract_state_doc['contract']))
+					if (($this->contract_filter_doc == 'active' && $contract->is_active()) ||
+						($this->contract_filter_doc == 'not_active' && !$contract->is_active()) ||
+						$this->contract_filter_doc == 'all'
+					)
 					{
-						$this->contract_state_doc['selected'] = $contract->get_id();
-						$this->contract_state_doc['contract'] = $contract;
-						//$this->contract = rental_socontract::get_instance()->get_single($new_contract);
-						phpgwapi_cache::session_set('frontend', $this->contract_state_identifier_doc, $this->contract_state_doc);
-						$change_contract = false;
+						$number_of_valid_contracts += 1;
+						//Only select necessary fields
+						$contracts_for_selection[] = array(
+							'id' => $contract->get_id(),
+							'old_contract_id' => $contract->get_old_contract_id(),
+							'contract_status' => $contract->get_contract_status()
+						);
+
+						if ($change_contract || $new_contract == $contract->get_id() || !isset($this->contract_state_doc['contract']))
+						{
+							$this->contract_state_doc['selected'] = $contract->get_id();
+							$this->contract_state_doc['contract'] = $contract;
+							//$this->contract = rental_socontract::get_instance()->get_single($new_contract);
+							phpgwapi_cache::session_set('frontend', $this->contract_state_identifier_doc, $this->contract_state_doc);
+							$change_contract = false;
+						}
 					}
 				}
 			}
