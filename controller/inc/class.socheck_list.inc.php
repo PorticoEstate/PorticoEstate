@@ -1084,6 +1084,22 @@
 
 		function set_inspector($check_list_id, $user_id, $checked)
 		{
+			$delete = array();
+			$delete[] = array
+			(
+				1	=> array
+				(
+					'value'	=> $check_list_id,
+					'type'	=> PDO::PARAM_INT
+				),
+				2	=> array
+				(
+					'value'	=> $user_id,
+					'type'	=> PDO::PARAM_INT
+				)
+			);
+			$delete_sql = "DELETE FROM controller_check_list_inspector WHERE check_list_id =? AND user_id = ?";
+			$ok = $this->db->delete($delete_sql, $delete, __LINE__, __FILE__);
 
 			if($checked)
 			{
@@ -1114,25 +1130,6 @@
 
 				$add_sql = "INSERT INTO controller_check_list_inspector (check_list_id, user_id, modified_on, modified_by) VALUES (?, ?, ? ,? )";
 				$ok = $this->db->insert($add_sql, $add, __LINE__, __FILE__);
-			}
-			else
-			{
-				$delete = array();
-				$delete[] = array
-				(
-					1	=> array
-					(
-						'value'	=> $check_list_id,
-						'type'	=> PDO::PARAM_INT
-					),
-					2	=> array
-					(
-						'value'	=> $user_id,
-						'type'	=> PDO::PARAM_INT
-					)
-				);
-				$delete_sql = "DELETE FROM controller_check_list_inspector WHERE check_list_id =? AND user_id = ?";
-				$ok = $this->db->delete($delete_sql, $delete, __LINE__, __FILE__);
 			}
 
 			return $ok;
