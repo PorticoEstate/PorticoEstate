@@ -1349,6 +1349,9 @@
 				{
 					$payment = $payments[0];
 
+					/**
+					 * Already paid for, or cancelled
+					 */
 					if(in_array($payment['status'], array( 'completed', 'voided', 'refunded')))
 					{
 						continue;
