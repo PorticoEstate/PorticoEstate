@@ -65,6 +65,7 @@
 			{
 				return $this->query();
 			}
+			$GLOBALS['phpgw']->jqcal2->add_listener('filter_from');
 
 			$data = array(
 				'datatable_name' => $this->display_name,
@@ -89,6 +90,13 @@
 								'name' => 'activities',
 								'text' => lang('Activity') . ':',
 								'list' => $this->bo->so->get_activities_main_level(),
+							),
+							array(
+								'type' => 'date-picker',
+								'id' => 'from',
+								'name' => 'from',
+								'value' => '',
+								'text' => lang('from') . ':',
 							),
 //							array(
 //								'type' => 'link',
@@ -174,6 +182,7 @@
 
 		public function query()
 		{
+			$filters = array();
 			$testdata = phpgw::get_var('buildings', 'int', 'REQUEST', null);
 			if ($testdata != 0)
 			{
@@ -203,6 +212,15 @@
 			else if($completed)
 			{
 				$filters['completed'] = $completed;
+			}
+
+			$filter_from = phpgw::get_var('from', 'string', 'REQUEST', null);
+			$from_date = $filter_from ? $filter_from : phpgw::get_var('filter_from', 'string', 'REQUEST', null);
+
+			if ($from_date)
+			{
+				$filter_from2 = date('Y-m-d', phpgwapi_datetime::date_to_timestamp($from_date));
+				$filters['where'][] = "%%table%%" . sprintf(".from_ >= '%s 00:00:00'", $GLOBALS['phpgw']->db->db_addslashes($filter_from2));
 			}
 
 			$search = phpgw::get_var('search');
