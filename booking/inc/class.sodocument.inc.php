@@ -228,11 +228,12 @@
 				$image_maxwidth = isset($config->config_data['image_maxwidth']) && $config->config_data['image_maxwidth'] ? $config->config_data['image_maxwidth'] : 300;
 				$image_maxheight = isset($config->config_data['image_maxheight']) && $config->config_data['image_maxheight'] ? $config->config_data['image_maxheight'] : 300;
 
-				$thumb = new Imagick($filePath);
-				$thumb->resizeImage($image_maxwidth, $image_maxheight, Imagick::FILTER_LANCZOS, 1, true);
-				$thumb->writeImage($filePath);
-				$thumb->clear();
-				$thumb->destroy();
+				$this->resize_image($filePath, $filePath, $image_maxheight);
+//				$thumb = new Imagick($filePath);
+//				$thumb->resizeImage($image_maxwidth, $image_maxheight, Imagick::FILTER_LANCZOS, 1, true);
+//				$thumb->writeImage($filePath);
+//				$thumb->clear();
+//				$thumb->destroy();
 			}
 
 			if ($this->db->transaction_commit())
@@ -242,6 +243,53 @@
 
 			throw new UnexpectedValueException('Transaction failed.');
 		}
+
+		/**
+		 * Resize image using GD
+		 * @param type $source
+		 * @param type $dest
+		 * @param type $target_height
+		 */
+		function resize_image( $source, $dest, $target_height = 800 )
+		{
+			$imgInfo = getimagesize($source);
+
+			$width = $imgInfo[0];
+			$height = $imgInfo[1];
+
+			$target_width = round($width * ($target_height / $height));
+
+			$x = 0;
+			$y = 0;
+
+			$new_im = ImageCreatetruecolor($target_width, $target_height);
+
+			if ($imgInfo[2] == IMAGETYPE_JPEG)
+			{
+				$im = imagecreatefromjpeg($source);
+				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
+				imagejpeg($new_im, $dest, 95); // Thumbnail quality (Value from 1 to 100)
+			}
+			else if ($imgInfo[2] == IMAGETYPE_GIF)
+			{
+				$im = imagecreatefromgif($source);
+				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
+				imagegif($new_im, $dest);
+			}
+			else if ($imgInfo[2] == IMAGETYPE_PNG)
+			{
+				$im = imagecreatefrompng($source);
+				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
+				imagepng($new_im, $dest);
+			}
+			else if ($imgInfo[2] == IMAGETYPE_BMP)
+			{
+				$im = imagecreatefrombmp($source);
+				imagecopyresampled($new_im, $im, 0, 0, $x, $y, $target_width, $target_height, $width, $height);
+				imagebmp($new_im, $dest);
+			}
+		}
+
 
 		function delete( $id )
 		{
