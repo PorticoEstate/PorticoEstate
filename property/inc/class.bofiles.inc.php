@@ -424,10 +424,10 @@
 
 		function resize_image( $source, $dest, $target_height = 800 )
 		{
-			$size = getimagesize($source);
-			$width = $size[0];
-			$height = $size[1];
+			$imgInfo = getimagesize($source);
 
+			$width = $imgInfo[0];
+			$height = $imgInfo[1];
 
 			$target_width = round($width * ($target_height / $height));
 
@@ -446,8 +446,6 @@
 //			}
 
 			$new_im = ImageCreatetruecolor($target_width, $target_height);
-
-			@$imgInfo = getimagesize($source);
 
 			if ($imgInfo[2] == IMAGETYPE_JPEG)
 			{
