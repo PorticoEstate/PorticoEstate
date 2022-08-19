@@ -115,7 +115,7 @@
 				'time' => 'now',
 				'author' => 'Cron-job',
 				'comment' => $comment,
-				'cost' => $cost
+				'cost' => (float)$cost
 			);
 		}
 
