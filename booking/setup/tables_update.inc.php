@@ -5865,3 +5865,72 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.79 to 0.2.80
+	 * convert e_lock_resource_id from int to varchar (80s)
+	 *
+	 */
+	$test[] = '0.2.81';
+	function booking_upgrade0_2_81()
+	{
+		//bb_resource_e_lock
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$sql = "SELECT * FROM bb_resource_e_lock";
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query($sql, __LINE__, __FILE__);
+		$resource_e_locks = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$resource_e_locks[] = array(
+				'resource_id'		 => $GLOBALS['phpgw_setup']->oProc->f('resource_id'),
+				'e_lock_system_id'	 => $GLOBALS['phpgw_setup']->oProc->f('e_lock_system_id'),
+				'e_lock_resource_id' => $GLOBALS['phpgw_setup']->oProc->f('e_lock_resource_id'),
+				'e_lock_name'		 => $GLOBALS['phpgw_setup']->oProc->f('e_lock_name'),
+				'access_code_format' => $GLOBALS['phpgw_setup']->oProc->f('access_code_format'),
+				'active'			 => $GLOBALS['phpgw_setup']->oProc->f('active'),
+				'modified_on'		 => $GLOBALS['phpgw_setup']->oProc->f('modified_on'),
+				'modified_by'		 => $GLOBALS['phpgw_setup']->oProc->f('modified_by'),
+			);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('bb_resource_e_lock');
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_resource_e_lock', array(
+					'fd' => array(
+						'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+						'e_lock_system_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+						'e_lock_resource_id' => array('type' => 'varchar', 'precision' => 80, 'nullable' => False),
+						'e_lock_name' => array('type' => 'varchar', 'precision' => 50, 'nullable' => true),
+						'access_code_format' => array('type' => 'varchar', 'precision' => 20, 'nullable' => true),
+						'active' => array('type' => 'int', 'nullable' => False, 'precision' => 2, 'default' => 1),
+						'modified_on' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
+						'modified_by' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+					),
+					'pk' => array('resource_id', 'e_lock_system_id', 'e_lock_resource_id'),
+					'fk' => array(
+						'bb_resource' => array('resource_id' => 'id'),
+					),
+					'ix' => array(),
+					'uc' => array(),
+				)
+			);
+
+
+		foreach ($resource_e_locks as $value_set)
+		{
+			$values	= $GLOBALS['phpgw_setup']->oProc->validate_insert($value_set);
+			$sql = "INSERT INTO bb_resource_e_lock (resource_id, e_lock_system_id, e_lock_resource_id, e_lock_name, access_code_format, active, modified_on, modified_by) VALUES ({$values})";
+			$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+		}
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.82';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+

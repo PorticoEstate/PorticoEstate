@@ -385,7 +385,7 @@
 				$values[] = array(
 					'resource_id' => $this->db->f('resource_id'),
 					'e_lock_system_id' => $this->db->f('e_lock_system_id'),
-					'e_lock_resource_id' => $this->db->f('e_lock_resource_id'),
+					'e_lock_resource_id' => $this->db->f('e_lock_resource_id', true),
 					'e_lock_name' => $this->db->f('e_lock_name',true),
 					'access_code_format' => $this->db->f('access_code_format',true),
 					'active' => $this->db->f('active'),
@@ -410,6 +410,8 @@
 			{
 				return false;
 			}
+
+			$e_lock_resource_id = $this->db->db_addslashes($e_lock_resource_id);
 
 			$insert_update[] = array
 			(
@@ -446,14 +448,14 @@
 				7	=> array
 				(
 					'value'	=> $e_lock_resource_id,
-					'type'	=> PDO::PARAM_INT
+					'type'	=> PDO::PARAM_STR
 				)
 			);
 			//check for duplicate
 
 			$sql = "SELECT resource_id FROM bb_resource_e_lock"
 				. " WHERE resource_id = ? AND e_lock_system_id = ? AND e_lock_resource_id = ?";
-			$condition =  array((int)$resource_id, (int)$e_lock_system_id,  (int)$e_lock_resource_id);
+			$condition =  array((int)$resource_id, (int)$e_lock_system_id,  $e_lock_resource_id);
 
 			$this->db->select($sql, $condition, __LINE__, __FILE__);
 
@@ -485,6 +487,8 @@
 				return false;
 			}
 
+			$e_lock_resource_id = $this->db->db_addslashes($e_lock_resource_id);
+
 			$delete_sql = "DELETE FROM bb_resource_e_lock WHERE resource_id = ? AND e_lock_system_id = ? AND e_lock_resource_id = ?";
 			$delete = array();
 			$delete[] = array
@@ -502,7 +506,7 @@
 				3	=> array
 				(
 					'value'	=> $e_lock_resource_id,
-					'type'	=> PDO::PARAM_INT
+					'type'	=> PDO::PARAM_STR
 				)
 			);
 

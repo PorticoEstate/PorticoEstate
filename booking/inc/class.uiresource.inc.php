@@ -620,7 +620,7 @@
 		{
 			$resource_id = phpgw::get_var('resource_id', 'int');
 			$e_lock_system_id = phpgw::get_var('e_lock_system_id', 'int');
-			$e_lock_resource_id = phpgw::get_var('e_lock_resource_id', 'int');
+			$e_lock_resource_id = phpgw::get_var('e_lock_resource_id', 'string');
 			$e_lock_name = phpgw::get_var('e_lock_name', 'string');
 			$access_code_format = phpgw::get_var('access_code_format', 'string');
 
@@ -654,7 +654,7 @@
 		{
 			$resource_id = phpgw::get_var('resource_id', 'int');
 			$e_lock_system_id = phpgw::get_var('e_lock_system_id', 'int');
-			$e_lock_resource_id = phpgw::get_var('e_lock_resource_id', 'int');
+			$e_lock_resource_id = phpgw::get_var('e_lock_resource_id', 'string');
 
 			if (!$e_lock_system_id || !$e_lock_resource_id )
 			{
