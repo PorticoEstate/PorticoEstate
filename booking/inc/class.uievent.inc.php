@@ -72,15 +72,15 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array('type' => 'filter',
-								'name' => 'completed',
-								'text' => lang('completed') . ':',
-								'list' => array(
-									array('id' => 0, 'name' => lang('Not selected')),
-									array('id' => -1, 'name' => lang('Not completed')),
-									array('id' => 1, 'name' => lang('completed'))
-									),
-							),
+//							array('type' => 'filter',
+//								'name' => 'completed',
+//								'text' => lang('completed') . ':',
+//								'list' => array(
+//									array('id' => 0, 'name' => lang('Not selected')),
+//									array('id' => -1, 'name' => lang('Not completed')),
+//									array('id' => 1, 'name' => lang('completed'))
+//									),
+//							),
 							array('type' => 'filter',
 								'name' => 'buildings',
 								'text' => lang('Building') . ':',
