@@ -459,7 +459,7 @@
 			}
 
 			$sql = "SELECT DISTINCT customer_organization_number,customer_ssn,"
-				. " name, phone, email, street, zip_code, city, customer_internal"
+				. " name, phone, email,co_address, street, zip_code, city, customer_internal"
 				. " FROM bb_organization WHERE length(bb_organization.customer_organization_number) = 9"
 				. " AND active = 1";
 
@@ -483,6 +483,7 @@
 					'name' => $this->db->f('name', true),
 					'phone' => $this->db->f('phone'),
 					'email' => $this->db->f('email', true),
+					'co_address' => $this->db->f('co_address', true),
 					'street' => $this->db->f('street', true),
 					'zip_code' => $this->db->f('zip_code'),
 					'city' => $this->db->f('city', true),

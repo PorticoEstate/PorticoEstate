@@ -261,8 +261,10 @@
 //					xmlwriter_write_element($memory, 'Fornavn', $entry['name']);
 					xmlwriter_write_element($memory, 'Fagsystemkundeid', $entry['customer_ssn']);
 				}
+
+				$co_address = !empty($entry['co_address']) ? $entry['co_address'] : '';
 				xmlwriter_write_element($memory, 'Navn', $entry['name']);
-				xmlwriter_write_element($memory, 'AdresseLinje1', '');
+				xmlwriter_write_element($memory, 'AdresseLinje1', $co_address);
 				xmlwriter_write_element($memory, 'AdresseLinje2', $entry['street']);
 				xmlwriter_write_element($memory, 'Adressetype', 'O'); //Offentlig = O,Midlertidig = M, OffentligReg = R, Utenlands = U, UtenlandsMidlertidig = X
 				xmlwriter_write_element($memory, 'Poststed', $entry['city']);
