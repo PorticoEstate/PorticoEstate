@@ -104,7 +104,19 @@
 							</ul>
 						</div>
 					</xsl:if>
-						<xsl:copy-of select="phpgw:booking_customer_identifier_show(organization)"/>
+					<xsl:copy-of select="phpgw:booking_customer_identifier_show(organization)"/>
+
+					<xsl:if test="organization/co_address and normalize-space(organization/co_address)">
+						<div class="pure-control-group">
+							<label for="field_co_address">
+								<xsl:value-of select="php:function('lang', 'co_address')"/>
+							</label>
+							<span>
+								<xsl:value-of select="organization/co_address"/>
+							</span>
+						</div>
+					</xsl:if>
+
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Street')" />

@@ -201,6 +201,7 @@ Ssn	booking	nn	Fødselsnummer (11 siffer)
 Date of birth or SSN	booking	nn	Fødselsdato eller fødselsnummer
 status	booking	nn	Status
 street	booking	nn	Gate
+co_address	booking	nn	C/O Adresse
 su	booking	nn	sø
 submit	booking	nn	Lagre
 successfully created %1 allocations:	booking	nn	%1 tildelinger lagra

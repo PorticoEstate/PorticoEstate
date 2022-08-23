@@ -91,6 +91,7 @@
 				'homepage' => array('type' => 'text', 'nullable' => True),
 				'phone' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
 				'email' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+				'co_address' => array('type' => 'varchar', 'precision' => '150', 'nullable' => True),
 				'street' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'zip_code' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'district' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),

@@ -5849,7 +5849,7 @@
 	}
 
 	/**
-	 * Update booking version from 0.2.79 to 0.2.80
+	 * Update booking version from 0.2.80 to 0.2.81
 	 *
 	 */
 	$test[] = '0.2.80';
@@ -5867,7 +5867,7 @@
 	}
 
 	/**
-	 * Update booking version from 0.2.79 to 0.2.80
+	 * Update booking version from 0.2.81 to 0.2.82
 	 * convert e_lock_resource_id from int to varchar (80s)
 	 *
 	 */
@@ -5929,6 +5929,31 @@
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.82';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.82 to 0.2.83
+	 *
+	 */
+	$test[] = '0.2.82';
+	function booking_upgrade0_2_82()
+	{
+		//bb_resource_e_lock
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_organization', 'co_address',
+				array(
+					'type' => 'varchar',
+					'precision' => '150',
+					'nullable' => True
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.83';
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}

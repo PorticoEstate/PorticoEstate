@@ -155,6 +155,12 @@
 								</xsl:if>
 							</div>
 							<div class="pure-control-group">
+								<label for="field_co_address">
+									<xsl:value-of select="php:function('lang', 'co_address')"/>
+								</label>
+								<input id="field_co_address" name="co_address" type="text" value="{organization/co_address}" class="pure-u-1"/>
+							</div>
+							<div class="pure-control-group">
 								<label for="field_street">
 									<xsl:value-of select="php:function('lang', 'Street')"/>
 								</label>
