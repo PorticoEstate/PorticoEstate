@@ -1274,6 +1274,7 @@
 			$log_customer_nr = '';
 			$log_buidling = '';
 			$tax_code = 0;
+			$contact_name = '';
 
 			foreach ($reservations as &$reservation)
 			{
@@ -1307,6 +1308,38 @@
 					continue; //Don't export costless rows
 				}
 
+				/**
+				 * Get contact person
+				 */
+				switch ($reservation['reservation_type'])
+				{
+					case 'allocation':
+						if (!empty($reservation['organization_id']))
+						{
+							$org = $this->organization_bo->read_single($reservation['organization_id']);
+							if(!empty($org['contacts'][0]['name']))
+							{
+								$contact_name = iconv("utf-8", "ISO-8859-1//TRANSLIT", $org['contacts'][0]['name']);
+							}
+						}
+						break;
+					case 'booking':
+						if(!empty($test['group_id']))
+						{
+							$group = CreateObject('booking.sogroup')->read_single($test['group_id']);
+							if(!empty($group['contacts'][0]['name']))
+							{
+								$contact_name = iconv("utf-8", "ISO-8859-1//TRANSLIT", $group['contacts'][0]['name']);
+							}
+						}
+						break;
+					case 'event':
+						$contact_name = iconv("utf-8", "ISO-8859-1//TRANSLIT", $test['contact_name']);
+						break;
+					default:
+						break;
+				}
+
 				$purchase_order = $this->sopurchase_order->get_purchase_order(0, $reservation['reservation_type'], $reservation['reservation_id']);
 				/**
 				 * For vipps kan det være flere krav, for etterfakturering vil det være ett
@@ -1316,6 +1349,9 @@
 				{
 					$payment = $payments[0];
 
+					/**
+					 * Already paid for, or cancelled
+					 */
 					if(in_array($payment['status'], array( 'completed', 'voided', 'refunded')))
 					{
 						continue;
@@ -1483,6 +1519,8 @@
 					$log_cost = 0;
 					$log_cost2 = 0;
 
+					$fakturalinje['contact_name'] = $contact_name;
+
 					if($purchase_order && !empty($purchase_order['lines']))
 					{
 
@@ -1606,6 +1644,8 @@
 
 					$log_cost = 0;
 					$log_cost2 = 0;
+
+					$fakturalinje['contact_name'] = $contact_name;
 
 					if($purchase_order && !empty($purchase_order['lines']))
 					{

@@ -50,6 +50,7 @@
 		var $public_functions = array
 			(
 			'addressbook'		 => true,
+			'contact'		 => true,
 			'organisation'		 => true,
 			'vendor'			 => true,
 			'b_account'			 => true,
@@ -535,6 +536,138 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			self::render_template_xsl('datatable_jquery', $data);
+		}
+
+		function contact()
+		{
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				$search	 = phpgw::get_var('search');
+				$order	 = phpgw::get_var('order');
+				$draw	 = phpgw::get_var('draw', 'int');
+				$columns = phpgw::get_var('columns');
+
+				$params = array(
+					'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
+					'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
+					'query'		 => $search['value'],
+					'order'		 => $columns[$order[0]['column']]['data'],
+					'sort'		 => $order[0]['dir'],
+					'dir'		 => $order[0]['dir'],
+					'allrows'	 => phpgw::get_var('length', 'int') == -1,
+					'filter'	 => array(),
+					'cat_id'	 => $this->cat_id
+				);
+
+				$values = $this->bo->read_contact($params);
+
+				$result_data = array
+				(
+					'results'		 => $values,
+					'total_records'	 => $this->bo->total_records,
+					'draw'			 => $draw
+				);
+
+				return $this->jquery_results($result_data);
+			}
+
+			$this->cats					 = CreateObject('phpgwapi.categories', -1, 'addressbook');
+			$this->cats->supress_info	 = true;
+
+			$column = phpgw::get_var('column');
+
+			if ($column)
+			{
+				$contact_id	 = $column;
+			}
+			else
+			{
+				$contact_id	 = 'mail_recipients';
+			}
+
+			$action = <<<JS
+			var temp = parent.document.getElementById("{$contact_id}").value;
+			if(temp)
+			{
+				parent.document.getElementById("{$contact_id}").value += ", " + aData["email"];
+			}
+			else
+			{
+				parent.document.getElementById("{$contact_id}").value = aData["email"];
+			}
+			
+JS;
+
+			$data = array(
+				'left_click_action'	 => $action,
+				'datatable_name'	 => '',
+				'form'				 => array(
+					'toolbar' => array(
+						'item' => array()
+					)
+				),
+				'datatable'			 => array(
+					'source'		 => self::link(array(
+						'menuaction'		 => 'property.uilookup.contact',
+						'query'				 => $this->query,
+						'filter'			 => $this->filter,
+						'column'			 => $column,
+						'phpgw_return_as'	 => 'json'
+					)),
+					'allrows'		 => true,
+					'editor_action'	 => '',
+					'field'			 => array(),
+				)
+			);
+
+			$values_combo_box = $this->cats->formatted_xslt_list(array('selected'	 => $this->cat_id,
+				'globals'	 => true));
+			foreach ($values_combo_box['cat_list'] as &$val)
+			{
+				$val['id'] = $val['cat_id'];
+			}
+			$default_value = array('id' => '', 'name' => lang('no category'));
+			array_unshift($values_combo_box['cat_list'], $default_value);
+
+			$filter = array('type'	 => 'filter',
+				'name'	 => 'cat_id',
+				'text'	 => lang('Category'),
+				'list'	 => $values_combo_box['cat_list']
+			);
+
+			array_unshift($data['form']['toolbar']['item'], $filter);
+
+			$uicols = array(
+				'input_type' => array('text', 'text', 'text', 'text', 'text'),
+				'name'		 => array('contact_id', 'last_name', 'first_name','department', 'email'),
+				'formatter'	 => array('', '', '', '', ''),
+				'descr'		 => array(lang('ID'), lang('Last name'), lang('First name'), lang('department'), lang('email')),
+				'sortable'	 => array(true, true,true, true, false),
+				'dir'		 => array(false,"asc", false, false, false)
+			);
+
+			$count_uicols_name = count($uicols['name']);
+
+			for ($k = 0; $k < $count_uicols_name; $k++)
+			{
+				$params = array(
+					'key'		 => $uicols['name'][$k],
+					'label'		 => $uicols['descr'][$k],
+					'sortable'	 => $uicols['sortable'][$k],
+					'hidden'	 => false,
+					'dir'		 => $uicols['dir'][$k] ? $uicols['dir'][$k] : '',
+				);
+
+				array_push($data['datatable']['field'], $params);
+			}
+
+			$appname		 = lang('contact');
+			$function_msg	 = lang('list contacts');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+			self::render_template_xsl('datatable_jquery', $data);
+
 		}
 
 		function b_account()

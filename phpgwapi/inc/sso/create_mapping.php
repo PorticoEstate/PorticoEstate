@@ -35,7 +35,7 @@
 			}
 			if (!isset($_SERVER['REMOTE_USER']))
 			{
-				echo lang('Wrong configuration');
+				echo lang('Wrong configuration') . " REMOTE_USER not set";
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 			if ($GLOBALS['phpgw']->mapping->get_mapping($_SERVER['REMOTE_USER']) != '')

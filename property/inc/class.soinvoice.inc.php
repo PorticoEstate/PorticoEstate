@@ -588,26 +588,34 @@
 					$ordermethod = " ORDER BY pmwrkord_code DESC";
 			}
 
-			$filtermethod	 = '';
-			$where			 = 'WHERE';
+			$filtermethod			 = '';
+			$filtermethod_history	 = '';
+			$filtermethod_live		 = '';
+			$where					 = 'WHERE';
 
 			if ($voucher_id)
 			{
-				$filtermethod	 .= " {$where} bilagsnr= '$voucher_id'";
-				$where			 = 'AND';
+				$filtermethod			 .= " {$where} bilagsnr= '$voucher_id'";
+				$filtermethod_history	 .= " {$where} bilagsnr= '$voucher_id'";
+				$filtermethod_live		 .= " {$where} bilagsnr= '$voucher_id'";
+				$where					 = 'AND';
 			}
 
 			if ($order_id)
 			{
-				$filtermethod	 .= " {$where} pmwrkord_code= '{$order_id}'";
-				$where			 = 'AND';
+				$filtermethod			 .= " {$where} pmwrkord_code= '{$order_id}'";
+				$filtermethod_history	 .= " {$where} pmwrkord_code= '{$order_id}'";
+				$filtermethod_live		 .= " {$where} pmwrkord_code= '{$order_id}'";
+				$where					 = 'AND';
 			}
 
 			$join_project = '';
 			if ($project_id)
 			{
-				$filtermethod	 .= " {$where} fm_project.id = '{$project_id}'";
-				$where			 = 'AND';
+				$filtermethod			 .= " {$where} fm_project.id = '{$project_id}'";
+				$filtermethod_history	 .= " {$where} fm_project.id = '{$project_id}'";
+				$filtermethod_live		 .= " {$where} fm_project.id = '{$project_id}'";
+				$where					 = 'AND';
 				$join_project	 = ""
 					//		. " {$this->join} fm_ecoart ON fm_ecoart.id = $table.artid"
 					. " {$this->join} fm_workorder ON fm_workorder.id = $table.pmwrkord_code"

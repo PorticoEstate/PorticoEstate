@@ -167,10 +167,18 @@
 					}
 					catch(PDOException $e){}
 					break;
-					case 'mssqlnative':
+				case 'mssqlnative':
 					try
 					{
 						$this->db = new PDO("sqlsrv:Server={$this->Host},{$this->Port};Database={$this->Database};Encrypt=true;TrustServerCertificate=true", $this->User, $this->Password);
+						/**
+						 * On first time create-attempt
+						 */
+						if($this->Database === 'master')
+						{
+							$this->User = $fall_back_user;
+							$this->Password = $fall_back_password;
+						}
 					}
 					catch(PDOException $e){}
 					break;
@@ -1198,8 +1206,17 @@
 				case 'mysql':
 					$this->db->exec("GRANT ALL ON {$this->Database}.*"
 							. " TO {$this->User}@'%'");
-	//						. " IDENTIFIED BY '{$this->Password}'");
 					break;
+				case 'mssql':
+				case 'mssqlnative':
+					$this->query("SELECT * FROM master.sys.sql_logins WHERE name = '{$this->User}'");
+					if(!$this->next_record())
+					{
+						$this->db->exec("CREATE LOGIN {$this->User} WITH PASSWORD = '{$this->Password}'");
+					}
+					$this->db->exec("USE {$this->Database}");
+					$this->db->exec("CREATE USER {$this->User} FOR LOGIN {$this->User}");
+					$this->db->exec("GRANT CONTROL TO {$this->User}");
 				default:
 					//do nothing
 			}

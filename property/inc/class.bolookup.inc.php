@@ -96,83 +96,14 @@
 		}
 
 		/**
-		 * Read list of contacts from the addressbook
+		 * Read list of contacts from the addressbook that is not user
 		 *
 		 * @return array of contacts
 		 */
-		function read_addressbook_old( $data = array() )
+		function read_contact( $data = array() )
 		{
-			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
-			{
-				$limit = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$limit = 15;
-			}
-
-			$limit = $data['allrows'] ? 0 : $limit;
-
-			$fields = array
-				(
-				'per_first_name',
-				'per_last_name',
-				'owner',
-				'contact_id',
-			);
-
-			if ($this->cat_id && $this->cat_id != 0)
-			{
-				$category_filter = $this->cat_id;
-			}
-			else
-			{
-				$category_filter = -3;
-			}
-
-			$addressbook = CreateObject('addressbook.boaddressbook');
-
-			$criteria			 = $addressbook->criteria_contacts(1, $category_filter, 'person', $data['query'], $fields_search);
-			$this->total_records = $addressbook->get_count_persons($criteria);
-
-			$contacts = $addressbook->get_persons($fields, $data['start'], $limit, $data['order'], $data['dir'], '', $criteria);
-
-			$accounts		 = $GLOBALS['phpgw']->accounts->get_list();
-			$user_contacts	 = array();
-
-			$socommon	 = CreateObject('property.socommon');
-			$prefs		 = array();
-			foreach ($accounts as $account)
-			{
-				if (isset($account->person_id) && $account->person_id)
-				{
-					$user_contacts[] = $account->person_id;
-
-					$prefs[$account->person_id] = $socommon->create_preferences('common', $account->id);
-				}
-			}
-
-//_debug_array($prefs);die();
-			foreach ($contacts as &$contact)
-			{
-				$comms					 = $addressbook->get_comm_contact_data($contact['contact_id'], $fields_comms			 = '', $simple					 = false);
-				$contact['contact_name'] = "{$contact['per_last_name']}, {$contact['per_first_name']}";
-
-				if (is_array($comms) && count($comms))
-				{
-					$contact['email']	 = isset($comms[$contact['contact_id']]['work email']) && $comms[$contact['contact_id']]['work email'] ? $comms[$contact['contact_id']]['work email'] : $prefs[$contact['contact_id']]['email'];
-					$contact['wphone']	 = isset($comms[$contact['contact_id']]['work phone']) && $comms[$contact['contact_id']]['work phone'] ? $comms[$contact['contact_id']]['work phone'] : '';
-					$contact['mobile']	 = isset($comms[$contact['contact_id']]['mobile (cell) phone']) && $comms[$contact['contact_id']]['mobile (cell) phone'] ? $comms[$contact['contact_id']]['mobile (cell) phone'] : $prefs[$contact['contact_id']]['cellphone'];
-				}
-				if (in_array($contact['contact_id'], $user_contacts))
-				{
-					$contact['is_user'] = 'X';
-
-					$contact['email']	 = isset($contact['email']) && $contact['email'] ? $contact['email'] : $prefs[$contact['contact_id']]['email'];
-					$contact['wphone']	 = isset($contact['wphone']) && $contact['wphone'] ? $contact['wphone'] : '';
-					$contact['mobile']	 = isset($contact['mobile']) && $contact['mobile'] ? $contact['mobile'] : $prefs[$contact['contact_id']]['cellphone'];
-				}
-			}
+			$contacts = $this->so->read_outside_contact($data);
+			$this->total_records = $this->so->total_records;
 
 			return $contacts;
 		}

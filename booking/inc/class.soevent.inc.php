@@ -29,7 +29,7 @@
 					'invalid' => '%field% is invalid'))),
 				'contact_phone' => array('type' => 'string'),
 				'completed' => array('type' => 'int', 'required' => true, 'nullable' => false,
-					'default' => '0'),
+					'default' => '0','query' => true),
 				'access_requested' => array('type' => 'int', 'required' => false, 'nullable' => true,
 					'default' => '0'),
 				'reminder' => array('type' => 'int', 'required' => true, 'nullable' => false,
@@ -300,7 +300,7 @@
 			$start = $from_->format('Y-m-d H:i');
 			$end = $to_->format('Y-m-d H:i');
 
-			if ($from_ > $to_)
+			if ($from_ > $to_ || $from_ === $to_)
 			{
 				$errors['from_'] = lang('Invalid from date');
 			}

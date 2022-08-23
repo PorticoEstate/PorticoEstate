@@ -65,12 +65,22 @@
 			{
 				return $this->query();
 			}
+			$GLOBALS['phpgw']->jqcal2->add_listener('filter_from');
 
 			$data = array(
 				'datatable_name' => $this->display_name,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
+//							array('type' => 'filter',
+//								'name' => 'completed',
+//								'text' => lang('completed') . ':',
+//								'list' => array(
+//									array('id' => 0, 'name' => lang('Not selected')),
+//									array('id' => -1, 'name' => lang('Not completed')),
+//									array('id' => 1, 'name' => lang('completed'))
+//									),
+//							),
 							array('type' => 'filter',
 								'name' => 'buildings',
 								'text' => lang('Building') . ':',
@@ -82,10 +92,17 @@
 								'list' => $this->bo->so->get_activities_main_level(),
 							),
 							array(
-								'type' => 'link',
-								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
+								'type' => 'date-picker',
+								'id' => 'from',
+								'name' => 'from',
+								'value' => '',
+								'text' => lang('from') . ':',
 							),
+//							array(
+//								'type' => 'link',
+//								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+//								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
+//							),
 						)
 					),
 				),
@@ -165,31 +182,45 @@
 
 		public function query()
 		{
-			if (isset($_SESSION['showall']))
+			$filters = array();
+			$testdata = phpgw::get_var('buildings', 'int', 'REQUEST', null);
+			if ($testdata != 0)
 			{
-				unset($filters['building_name']);
-				unset($filters['activity_id']);
+				$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));
 			}
 			else
 			{
-				$testdata = phpgw::get_var('buildings', 'int', 'REQUEST', null);
-				if ($testdata != 0)
-				{
-					$filters['building_name'] = $this->bo->so->get_building(phpgw::get_var('buildings', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['building_name']);
-				}
-				$testdata2 = phpgw::get_var('activities', 'int', 'REQUEST', null);
-				if ($testdata2 != 0)
-				{
-					$filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));
-				}
-				else
-				{
-					unset($filters['activity_id']);
-				}
+				unset($filters['building_name']);
+			}
+			$testdata2 = phpgw::get_var('activities', 'int', 'REQUEST', null);
+			if ($testdata2 != 0)
+			{
+				$filters['activity_id'] = $this->bo->so->get_activities(phpgw::get_var('activities', 'int', 'REQUEST', null));
+			}
+			else
+			{
+				unset($filters['activity_id']);
+			}
+
+			$completed = phpgw::get_var('completed', 'int', 'REQUEST');
+
+			if($completed === -1)
+			{
+				$filters['completed'] = 0;
+				$filters['active'] = 1;
+			}
+			else if($completed)
+			{
+				$filters['completed'] = $completed;
+			}
+
+			$filter_from = phpgw::get_var('from', 'string', 'REQUEST', null);
+			$from_date = $filter_from ? $filter_from : phpgw::get_var('filter_from', 'string', 'REQUEST', null);
+
+			if ($from_date)
+			{
+				$filter_from2 = date('Y-m-d', phpgwapi_datetime::date_to_timestamp($from_date));
+				$filters['where'][] = "%%table%%" . sprintf(".from_ >= '%s 00:00:00'", $GLOBALS['phpgw']->db->db_addslashes($filter_from2));
 			}
 
 			$search = phpgw::get_var('search');
@@ -302,7 +333,7 @@
 				'time' => 'now',
 				'author' => $this->current_account_fullname(),
 				'comment' => $comment,
-				'cost' => $cost
+				'cost' => (float)$cost
 			);
 		}
 

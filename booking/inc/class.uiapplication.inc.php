@@ -587,6 +587,15 @@
 
 		public function associated()
 		{
+			$application_id = phpgw::get_var('filter_application_id', 'int');
+			$application = $this->bo->read_single($application_id);
+			$case_officer = false;
+
+			if ($this->is_assigned_to_current_user($application))// || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'booking'))
+			{
+				$case_officer = true;
+			}
+
 			$associations = $this->assoc_bo->read();
 			foreach ($associations['results'] as &$association)
 			{
@@ -598,8 +607,8 @@
 				$association['to_'] = pretty_timestamp($association['to_']);
 				$association['link'] = self::link(array('menuaction' => 'booking.ui' . $association['type'] . '.edit',
 						'id' => $association['id']));
-				$association['dellink'] = self::link(array('menuaction' => 'booking.ui' . $association['type'] . '.delete',
-						'id' => $association['id'], 'application_id' => $association['application_id']));
+				$association['dellink'] = $case_officer ? self::link(array('menuaction' => 'booking.ui' . $association['type'] . '.delete',
+						'id' => $association['id'], 'application_id' => $association['application_id'])) : '';
 				$association['type'] = lang($association['type']);
 			}
 			return $associations;

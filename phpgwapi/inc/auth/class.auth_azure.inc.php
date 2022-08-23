@@ -98,7 +98,7 @@
 			/**
 			 * Azure from inside firewall
 			 */
-			if($username && !$ssn)
+			if($username)
 			{
 				return $username;
 			}

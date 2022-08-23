@@ -765,7 +765,7 @@
 				'time' => 'now',
 				'author' => $this->current_account_fullname(),
 				'comment' => $comment,
-				'cost' => $cost
+				'cost' => (float)$cost
 			);
 		}
 

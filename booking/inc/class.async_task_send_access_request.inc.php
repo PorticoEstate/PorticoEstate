@@ -160,7 +160,7 @@
 											'email'		 => $reservation['contact_email'],
 											'from'		 => date('Y-m-d\TH:i:s.v', phpgwapi_datetime::user_localtime()) . 'Z',
 											'mobile'	 => $reservation['contact_phone'],
-											'resid'		 => (int)$e_lock['e_lock_resource_id'],
+											'resid'		 => $e_lock['e_lock_resource_id'],
 											'system'	 => (int)$e_lock['e_lock_system_id'],
 											'to'		 => $to->format('Y-m-d\TH:i:s.v') . 'Z',
 										);
@@ -186,8 +186,8 @@
 									foreach ($resource['e_locks'] as $e_lock)
 									{
 										$get_data = array
-											(
-											'resid'		 => (int)$e_lock['e_lock_resource_id'],
+										(
+											'resid'		 => $e_lock['e_lock_resource_id'],
 											'reserved'	 => 1,
 											'system'	 => (int)$e_lock['e_lock_system_id'],
 										);

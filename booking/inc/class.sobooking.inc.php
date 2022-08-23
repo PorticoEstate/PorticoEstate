@@ -167,7 +167,7 @@
 			$start = $from_->format('Y-m-d H:i');
 			$end = $to_->format('Y-m-d H:i');
 
-			if ($entity['from_'] == $entity['to_'])
+			if ($entity['from_'] == $entity['to_'] || $from_ === $to_)
 			{
 				$errors['to_'] = lang('Invalid to date');
 				return; //No need to continue validation if dates are invalid
@@ -196,7 +196,8 @@
 						 			 (e.from_ < '$start' AND e.to_ > '$end'))", __LINE__, __FILE__);
 				if ($this->db->next_record())
 				{
-					$errors['event'] = lang('Overlaps with existing event');
+					$existing_entity = $this->db->f('id');
+					$errors['event'] = lang('Overlaps with existing event') . " #" . $existing_entity;
 				}
 				// Check if we overlap with any existing allocation
 				$this->db->query("SELECT a.id FROM bb_allocation a
@@ -207,7 +208,8 @@
 						 			 (a.from_ < '$start' AND a.to_ > '$end'))", __LINE__, __FILE__);
 				if ($this->db->next_record())
 				{
-					$errors['allocation'] = lang('Overlaps other organizations allocation');
+					$existing_entity = $this->db->f('id');
+					$errors['allocation'] = lang('Overlaps other organizations allocation') . " #" . $existing_entity;
 				}
 
 				// Check if we overlap with any existing booking
@@ -219,7 +221,8 @@
 						 			 (b.from_ < '$start' AND b.to_ > '$end'))", __LINE__, __FILE__);
 				if ($this->db->next_record())
 				{
-					$errors['booking'] = lang('Overlaps with existing booking');
+					$existing_entity = $this->db->f('id');
+					$errors['booking'] = lang('Overlaps with existing booking') . " #" . $existing_entity;
 				}
 				if ($allocation_id != -1)
 				{

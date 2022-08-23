@@ -91,7 +91,7 @@
 			$filters = array();
 			foreach ($this->so->get_field_defs() as $field => $params)
 			{
-				if (isset($_REQUEST["filter_$field"]))
+				if (isset($_REQUEST["filter_$field"]) && $_REQUEST["filter_$field"])
 				{
 					$filters[$field] = phpgw::get_var("filter_$field", $params['type']);
 				}
@@ -138,7 +138,7 @@
 
 			foreach ($this->so->get_field_defs() as $field => $_params)
 			{
-				if (isset($_REQUEST["filter_$field"]))
+				if (isset($_REQUEST["filter_$field"]) && $_REQUEST["filter_$field"])
 				{
 					$params['filters'][$field] = phpgw::get_var("filter_$field", $_params['type']);
 				}
