@@ -667,17 +667,15 @@ HTML;
 		}
 
 		/**
-		 * Returns an array of application ids from applications assocciated with buildings
+		 * Returns a sql-statement of application ids from applications assocciated with buildings
 		 * which the given user has access to
 		 *
 		 * @param int $user_id
 		 * @param int $building_id
+		 * @return string $sql
 		 */
 		public function accessable_applications( $user_id, $building_id )
 		{
-			$applications = array();
-			$this->db = & $GLOBALS['phpgw']->db;
-
 			$filtermethod = array();
 
 			$filtermethod[] = '1=1';
@@ -709,16 +707,7 @@ HTML;
 			}
 
 			$sql.=  " WHERE " . implode(' AND ', $filtermethod);
-
-			$this->db->query($sql);
-			$result = $this->db->resultSet;
-
-			foreach ($result as $r)
-			{
-				$applications[] = $r['id'];
-			}
-
-			return $applications;
+			return $sql;
 		}
 
 		public function read_dashboard_data( $for_case_officer_id = array(null, null) )

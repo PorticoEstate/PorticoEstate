@@ -485,16 +485,9 @@
 			$building_id = phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
 			$case_officer_id = phpgw::get_var('filter_case_officer_id', 'int');
 
-			// users with the booking role admin should have access to all buildings
-			// admin users should have access to all buildings
-//			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && !$this->bo->has_role(booking_sopermission::ROLE_MANAGER))
-//			{
-//				$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id'], $building_id);
-//			}
-//			else
-			{
-				$filters['id'] = $this->bo->accessable_applications(!empty($case_officer_id) ? array_map('abs', $case_officer_id) : null, $building_id);
-			}
+			$filter_id_sql = $this->bo->accessable_applications(!empty($case_officer_id) ? array_map('abs', $case_officer_id) : null, $building_id);
+
+			$filters['where'] = "(bb_application.id IN ({$filter_id_sql}))";
 
 			$activity_id = phpgw::get_var('activities', 'int', 'REQUEST', null);
 			if ($activity_id)
