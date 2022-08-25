@@ -414,14 +414,36 @@
 					{
 						$receipt = $this->bo->add($allocation);
 						$allocation['id'] = $receipt['id'];
-						$purchase_order_id = $this->sopurchase_order->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
-						if($purchase_order_id)
+
+						/**
+						 *
+						 * Add purchase order from POST
+						 */
+
+						$temp_id = 'allocation_'. time();
+
+						$purchase_order = $this->compile_purchase_order($temp_id, true);
+
+						if(!empty($purchase_order['lines']) && empty($allocation['application_id']))
 						{
-							$purchase_order_result =  $this->sopurchase_order->get_single_purchase_order($purchase_order_id);
-							$this->add_cost_history($allocation, lang('cost is set'), $purchase_order_result['sum']);
-							$allocation['cost'] = $purchase_order_result['sum'];
-							$this->bo->update($allocation);
+							$purchase_order['application_id'] = -1;
+							$purchase_order['reservation_type'] = 'allocation';
+							$purchase_order['reservation_id'] = $allocation['id'];
+
+							createObject('booking.sopurchase_order')->add_purchase_order($purchase_order);
 						}
+						else
+						{
+							$purchase_order_id = $this->sopurchase_order->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
+							if($purchase_order_id)
+							{
+								$purchase_order_result =  $this->sopurchase_order->get_single_purchase_order($purchase_order_id);
+								$this->add_cost_history($allocation, lang('cost is set'), $purchase_order_result['sum']);
+								$allocation['cost'] = $purchase_order_result['sum'];
+								$this->bo->update($allocation);
+							}
+						}
+
 						$this->bo->so->update_id_string();
 						self::redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $receipt['id']));
 					}
@@ -432,6 +454,7 @@
 				}
 				else if (($_POST['outseason'] == 'on' || phpgw::get_var('repeat_until', 'bool')) && !$errors && $step > 1)
 				{
+
 					if (phpgw::get_var('repeat_until', 'bool'))
 					{
 						$repeat_until = phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']) + 60 * 60 * 24;
@@ -443,6 +466,18 @@
 						$repeat_until = strtotime($season['to_']) + 60 * 60 * 24;
 						$_POST['repeat_until'] = $season['to_'];
 					}
+
+					/**
+					 *
+					 * Add purchase order from session
+					 */
+
+					if ($step == 3)
+					{
+						$temp_id = phpgw::get_var('temp_id');
+						$purchase_order = phpgwapi_cache::session_get('booking', $temp_id);
+					}
+
 
 					$max_dato = strtotime($_POST['to_']); // highest date from input
 					$interval = $_POST['field_interval'] * 60 * 60 * 24 * 7; // weeks in seconds
@@ -471,13 +506,25 @@
 								{
 									$receipt = $this->bo->add($allocation);
 									$allocation['id'] = $receipt['id'];
-									$purchase_order_id = $this->sopurchase_order->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
-									if($purchase_order_id)
+
+									if(!empty($purchase_order['lines']) && empty($allocation['application_id']))
 									{
-										$purchase_order_result =  $this->sopurchase_order->get_single_purchase_order($purchase_order_id);
-										$this->add_cost_history($allocation, lang('cost is set'), $purchase_order_result['sum']);
-										$allocation['cost'] = (float)$purchase_order_result['sum'];
-										$this->bo->update($allocation);
+										$purchase_order['application_id'] = -1;
+										$purchase_order['reservation_type'] = 'allocation';
+										$purchase_order['reservation_id'] = $allocation['id'];
+
+										createObject('booking.sopurchase_order')->add_purchase_order($purchase_order);
+									}
+									else
+									{
+										$purchase_order_id = $this->sopurchase_order->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
+										if($purchase_order_id)
+										{
+											$purchase_order_result =  $this->sopurchase_order->get_single_purchase_order($purchase_order_id);
+											$this->add_cost_history($allocation, lang('cost is set'), $purchase_order_result['sum']);
+											$allocation['cost'] = (float)$purchase_order_result['sum'];
+											$this->bo->update($allocation);
+										}
 									}
 								}
 								catch (booking_unauthorized_exception $e)
@@ -532,7 +579,11 @@
 			}
 
 			$this->flash_form_errors($errors);
+			$GLOBALS['phpgw']->js->validate_file('alertify', 'alertify.min', 'phpgwapi');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
 			self::add_javascript('booking', 'base', 'allocation.js');
+
 			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
 			array_set_default($allocation, 'cost', '0');
@@ -576,19 +627,30 @@
 				$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime', $_timeFrom);
 				$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime', $_timeTo);
 
-				self::render_template_xsl('allocation_new', array('allocation' => $allocation,
+				self::add_javascript('booking', 'base', 'purchase_order_edit.js');
+
+				self::render_template_xsl('allocation_new', array(
+					'allocation' => $allocation,
 					'step' => $step,
 					'interval' => $_POST['field_interval'],
 					'outseason' => $_POST['outseason'],
 					'repeat_until' => pretty_timestamp($_POST['repeat_until']),
 					'outseason' => $_POST['outseason'],
 					'weekday' => $weekday,
+					'tax_code_list'	=> json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
+
 				));
 			}
 			else if ($step == 2)
 			{
+
+				$temp_id = 'allocation_'. time();
+
+				$this->compile_purchase_order($temp_id);
+
 				self::render_template_xsl('allocation_new_preview', array('allocation' => $allocation,
 					'step' => $step,
+					'temp_id' => $temp_id,
 					'outseason' => $_POST['outseason'],
 					'interval' => $_POST['field_interval'],
 					'repeat_until' => pretty_timestamp($_POST['repeat_until']),
@@ -599,6 +661,47 @@
 					'invalid_dates' => $invalid_dates
 				));
 			}
+		}
+
+		private function compile_purchase_order($temp_id, $ret = false)
+		{
+			/**
+			 * Start dealing with the purchase_order..
+			 */
+			$purchase_order = array('status' => 0, 'customer_id' => -1, 'lines' => array());
+			$selected_articles = (array)phpgw::get_var('selected_articles');
+
+			foreach ($selected_articles as $selected_article)
+			{
+				$_article_info = explode('_', $selected_article);
+
+				if(empty($_article_info[0]))
+				{
+					continue;
+				}
+
+				/**
+				 * the value selected_articles[]
+				 * <mapping_id>_<quantity>_<tax_code>_<ex_tax_price>_<parent_mapping_id>
+				 */
+				$purchase_order['lines'][] = array(
+					'article_mapping_id'	=> $_article_info[0],
+					'quantity'				=> $_article_info[1],
+					'tax_code'				=> $_article_info[2],
+					'ex_tax_price'			=> $_article_info[3],
+					'parent_mapping_id'		=> !empty($_article_info[4]) ? $_article_info[4] : null
+				);
+			}
+
+			if($ret)
+			{
+				return $purchase_order;
+			}
+			else
+			{
+				phpgwapi_cache::session_set('booking', $temp_id , $purchase_order);
+			}
+
 		}
 
 		private function send_mailnotification_to_organization( $organization, $subject, $body )
@@ -672,36 +775,10 @@
 						/**
 						 * Start dealing with the purchase_order..
 						 */
-						$purchase_order = array(
-							'application_id' => $allocation['application_id'],
-							'status' => 0,
-							'reservation_type' => 'allocation',
-							'reservation_id' => $id,
-							'customer_id' => -1,
-							'lines' => array());
-
-						$selected_articles = (array)phpgw::get_var('selected_articles');
-
-						foreach ($selected_articles as $selected_article)
-						{
-							$_article_info = explode('_', $selected_article);
-
-							if(empty($_article_info[0]))
-							{
-								continue;
-							}
-							/**
-							 * the value selected_articles[]
-							 * <mapping_id>_<quantity>_<tax_code>_<ex_tax_price>_<parent_mapping_id>
-							 */
-							$purchase_order['lines'][] = array(
-								'article_mapping_id'	=> $_article_info[0],
-								'quantity'				=> $_article_info[1],
-								'tax_code'				=> $_article_info[2],
-								'ex_tax_price'			=> $_article_info[3],
-								'parent_mapping_id'		=> !empty($_article_info[4]) ? $_article_info[4] : null
-							);
-						}
+						$purchase_order = $this->compile_purchase_order(0, true);
+						$purchase_order['application_id'] = !empty($allocation['application_id']) ? $allocation['application_id'] : -1;
+						$purchase_order['reservation_type'] = 'allocation';
+						$purchase_order['reservation_id'] = $id;
 
 						if(!empty($purchase_order['lines']))
 						{
@@ -736,7 +813,9 @@
 
 			$config = CreateObject('phpgwapi.config', 'booking')->read();
 
-			if($allocation['application_id'] && !empty($config['activate_application_articles']))
+			$purchase_order = $this->sopurchase_order->get_purchase_order(0, 'allocation', $allocation['id']);
+
+			if($purchase_order && !empty($config['activate_application_articles']))
 			{
 				if($allocation['completed'])
 				{
@@ -770,6 +849,8 @@
 				'allocation' => $allocation,
 				'cost_history' => $cost_history,
 				'tax_code_list'	=> json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
+				'config'		 => $config,
+
 				));
 		}
 

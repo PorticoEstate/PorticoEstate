@@ -63,7 +63,7 @@
 			else
 			{
 				$value_set = array(
-					'application_id'	 => (int)$purchase_order['application_id'],
+					'application_id'	 => (int)$purchase_order['application_id'] > 0 ? (int)$purchase_order['application_id'] : null,
 					'status'			 => 0,
 					'customer_id'		 => null,
 					'reservation_type'	 => !empty($purchase_order['reservation_type']) ? $purchase_order['reservation_type'] : null,
