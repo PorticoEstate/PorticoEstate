@@ -307,7 +307,7 @@ function set_mandatory(xTable)
 					{
 						if (tax_code_list[i].id == tax_code_value)
 						{
-							var new_percent = parseInt(tax_code_list[i].percent);
+							var new_percent = parseInt(tax_code_list[i].percent_);
 							if (isNaN(new_percent))
 							{
 								new_percent = 0;
