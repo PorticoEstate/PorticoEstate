@@ -415,10 +415,13 @@
 						$receipt = $this->bo->add($allocation);
 						$allocation['id'] = $receipt['id'];
 						$purchase_order_id = $this->sopurchase_order->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
-						$purchase_order_result =  $this->sopurchase_order->get_single_purchase_order($purchase_order_id);
-						$this->add_cost_history($allocation, lang('cost is set'), $purchase_order_result['sum']);
-						$allocation['cost'] = $purchase_order_result['sum'];
-						$this->bo->update($allocation);
+						if($purchase_order_id)
+						{
+							$purchase_order_result =  $this->sopurchase_order->get_single_purchase_order($purchase_order_id);
+							$this->add_cost_history($allocation, lang('cost is set'), $purchase_order_result['sum']);
+							$allocation['cost'] = $purchase_order_result['sum'];
+							$this->bo->update($allocation);
+						}
 						$this->bo->so->update_id_string();
 						self::redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $receipt['id']));
 					}
@@ -488,10 +491,13 @@
 									$receipt = $this->bo->add($allocation);
 									$allocation['id'] = $receipt['id'];
 									$purchase_order_id = $this->sopurchase_order->copy_purchase_order_from_application($allocation, $receipt['id'], 'allocation');
-									$purchase_order_result =  $this->sopurchase_order->get_single_purchase_order($purchase_order_id);
-									$this->add_cost_history($allocation, lang('cost is set'), $purchase_order_result['sum']);
-									$allocation['cost'] = (float)$purchase_order_result['sum'];
-									$this->bo->update($allocation);
+									if($purchase_order_id)
+									{
+										$purchase_order_result =  $this->sopurchase_order->get_single_purchase_order($purchase_order_id);
+										$this->add_cost_history($allocation, lang('cost is set'), $purchase_order_result['sum']);
+										$allocation['cost'] = (float)$purchase_order_result['sum'];
+										$this->bo->update($allocation);
+									}
 								}
 								catch (booking_unauthorized_exception $e)
 								{
