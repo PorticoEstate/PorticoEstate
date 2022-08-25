@@ -656,6 +656,10 @@ function empty_from_bastet(element)
 
 	$('#sum_price_table').html(temp_total_sum.toFixed(2));
 
+	var xTable = element.parentNode.parentNode.parentNode.parentNode;
+
+	set_sum(xTable);
+
 }
 
 

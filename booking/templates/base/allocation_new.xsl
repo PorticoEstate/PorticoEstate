@@ -256,6 +256,7 @@
 		</div>
 	</form>
 	<script type="text/javascript">
+		var application_id = <xsl:value-of select="allocation/application_id"/>;
 		var template_set = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|template_set')" />';
 		var date_format = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />';
 		var tax_code_list = <xsl:value-of select="tax_code_list"/>;
