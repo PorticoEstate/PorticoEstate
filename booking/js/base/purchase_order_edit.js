@@ -307,7 +307,7 @@ function set_mandatory(xTable)
 					{
 						if (tax_code_list[i].id == tax_code_value)
 						{
-							var new_percent = parseInt(tax_code_list[i].percent);
+							var new_percent = parseInt(tax_code_list[i].percent_);
 							if (isNaN(new_percent))
 							{
 								new_percent = 0;
@@ -655,6 +655,10 @@ function empty_from_bastet(element)
 	}
 
 	$('#sum_price_table').html(temp_total_sum.toFixed(2));
+
+	var xTable = element.parentNode.parentNode.parentNode.parentNode;
+
+	set_sum(xTable);
 
 }
 
