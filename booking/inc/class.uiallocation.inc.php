@@ -627,18 +627,23 @@
 				$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime', $_timeFrom);
 				$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime', $_timeTo);
 
-				self::add_javascript('booking', 'base', 'purchase_order_edit.js');
+				$config = CreateObject('phpgwapi.config', 'booking')->read();
+
+				if( !empty($config['activate_application_articles']))
+				{
+					self::add_javascript('booking', 'base', 'purchase_order_edit.js');
+				}
 
 				self::render_template_xsl('allocation_new', array(
-					'allocation' => $allocation,
-					'step' => $step,
-					'interval' => $_POST['field_interval'],
-					'outseason' => $_POST['outseason'],
-					'repeat_until' => pretty_timestamp($_POST['repeat_until']),
-					'outseason' => $_POST['outseason'],
-					'weekday' => $weekday,
-					'tax_code_list'	=> json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
-
+					'allocation'	 => $allocation,
+					'step'			 => $step,
+					'interval'		 => $_POST['field_interval'],
+					'outseason'		 => $_POST['outseason'],
+					'repeat_until'	 => pretty_timestamp($_POST['repeat_until']),
+					'outseason'		 => $_POST['outseason'],
+					'weekday'		 => $weekday,
+					'tax_code_list'	 => json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
+					'config'		 => $config
 				));
 			}
 			else if ($step == 2)
@@ -1102,8 +1107,17 @@
 			$allocation['resource_ids'] = $resource_ids;
 			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 			$allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
-			self::render_template_xsl('allocation', array('allocation' => $allocation));
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+
+			if (!empty($config['activate_application_articles']))
+			{
+				self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
+			}
+
+			self::render_template_xsl('allocation', array(
+				'allocation' => $allocation,
+				'config'	 => $config
+			));
 		}
 
 		public function info()
