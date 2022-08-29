@@ -134,13 +134,14 @@
 							</input>
 						</div>
 					</div>
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'Articles')" />
-						</label>
-						<div id="articles_container" class="pure-custom" style="display:inline-block;"></div>
-					</div>
-
+					<xsl:if test="config/activate_application_articles">
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'Articles')" />
+							</label>
+							<div id="articles_container" class="pure-custom" style="display:inline-block;"></div>
+						</div>
+					</xsl:if>
 					<div class="pure-control-group">
 						<label for="field_cost">
 							<xsl:value-of select="php:function('lang', 'Cost')" />

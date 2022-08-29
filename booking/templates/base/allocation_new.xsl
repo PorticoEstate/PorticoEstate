@@ -223,22 +223,23 @@
 						</span>
 					</div>
 				</div>
-				<div class="pure-control-group">
-					<label>
-						<xsl:value-of select="php:function('lang', 'Articles')" />
-					</label>
-					<input type="hidden" data-validation="application_articles">
-						<xsl:attribute name="data-validation-error-msg">
-							<xsl:value-of select="php:function('lang', 'Please choose at least 1 Article')" />
-						</xsl:attribute>
-					</input>
-					<div id="articles_container" style="display:inline-block;">
-						<span class="select_first_text">
-							<xsl:value-of select="php:function('lang', 'Select a resource first')" />
-						</span>
+				<xsl:if test="config/activate_application_articles">
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Articles')" />
+						</label>
+						<input type="hidden" data-validation="application_articles">
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please choose at least 1 Article')" />
+							</xsl:attribute>
+						</input>
+						<div id="articles_container" style="display:inline-block;">
+							<span class="select_first_text">
+								<xsl:value-of select="php:function('lang', 'Select a resource first')" />
+							</span>
+						</div>
 					</div>
-				</div>
-
+				</xsl:if>
 			</div>
 		</div>
 		<div class="form-buttons">
