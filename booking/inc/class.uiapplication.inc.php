@@ -327,8 +327,11 @@
 		{
 
 			$user_list = $this->bo->so->get_user_list();
-
-			array_unshift($user_list, array('id' => -1 * $this->current_account_id(),'name' => lang('My assigned applications')));
+			array_unshift($user_list, array(
+				'id'		 => -1 * $this->current_account_id(),
+				'name'		 => lang('My assigned applications'),
+				'selected'	 => 1
+			));
 
 			return $user_list;
 		}
