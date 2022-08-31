@@ -1,6 +1,14 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<xsl:call-template name="msgbox"/>
+	<xsl:variable name="date_format">
+		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
+	</xsl:variable>
+	<xsl:variable name="datetime_format">
+		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
+		<xsl:text> H:i</xsl:text>
+	</xsl:variable>
+
 	<form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
 		<input type="hidden" name="tab" value="" />
 		<div id="tab-content">
@@ -144,9 +152,6 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'Direct booking')"/>
 					</label>
-					<xsl:variable name="date_format">
-						<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
-					</xsl:variable>
 					<xsl:if test="not(resource/direct_booking = '')">
 						<xsl:value-of select="php:function('date', $date_format, number(resource/direct_booking))"/>
 					</xsl:if>
@@ -171,11 +176,8 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'start date')"/>
 					</label>
-					<xsl:variable name="date_format">
-						<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
-					</xsl:variable>
 					<xsl:if test="not(resource/simple_booking_start_date = '')">
-						<xsl:value-of select="php:function('date', $date_format, number(resource/simple_booking_start_date))"/>
+						<xsl:value-of select="php:function('date', $datetime_format, number(resource/simple_booking_start_date))"/>
 					</xsl:if>
 				</div>
 
@@ -183,9 +185,6 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'end date')"/>
 					</label>
-					<xsl:variable name="date_format">
-						<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
-					</xsl:variable>
 					<xsl:if test="not(resource/simple_booking_end_date = '')">
 						<xsl:value-of select="php:function('date', $date_format, number(resource/simple_booking_end_date))"/>
 					</xsl:if>

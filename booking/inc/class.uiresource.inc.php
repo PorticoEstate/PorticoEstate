@@ -311,7 +311,8 @@
 			$resource['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));
 			$GLOBALS['phpgw']->jqcal->add_listener('direct_booking');
-			$GLOBALS['phpgw']->jqcal->add_listener('simple_booking_start_date');
+//			$GLOBALS['phpgw']->jqcal->add_listener('simple_booking_start_date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('simple_booking_start_date', 'datetime', !empty($resource['simple_booking_start_date']) ? $resource['simple_booking_start_date'] :0, array('readonly' => true));
 			$GLOBALS['phpgw']->jqcal->add_listener('simple_booking_end_date');
 			$GLOBALS['phpgw']->jqcal2->add_listener('participant_limit_from', 'date');
 
