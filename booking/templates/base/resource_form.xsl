@@ -2,6 +2,11 @@
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
+	<xsl:variable name="datetime_format">
+		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
+		<xsl:text> H:i</xsl:text>
+	</xsl:variable>
+
 	<xsl:call-template name="msgbox"/>
 	<script type="text/javascript">
 		var resource_id = "<xsl:value-of select="resource/id"/>";
@@ -243,13 +248,13 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'start date')"/>
 					</label>
-					<input type="text" id="simple_booking_start_date" name="simple_booking_start_date" size="10" readonly="readonly">
+					<input type="text" id="simple_booking_start_date" name="simple_booking_start_date" size="16" readonly="readonly">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'start date')"/>
 						</xsl:attribute>
 						<xsl:if test="resource/simple_booking_start_date != ''">
 							<xsl:attribute name="value">
-								<xsl:value-of select="php:function('date', $date_format, number(resource/simple_booking_start_date))"/>
+								<xsl:value-of select="php:function('date', $datetime_format, number(resource/simple_booking_start_date))"/>
 							</xsl:attribute>
 						</xsl:if>
 					</input>
