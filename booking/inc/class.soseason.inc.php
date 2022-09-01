@@ -470,6 +470,7 @@ EOT;
 				'wday' => array('type' => 'int', 'required' => true),
 				'from_' => array('type' => 'time', 'required' => true),
 				'to_' => array('type' => 'time', 'required' => true),
+				'articles' => array('type' => 'json', 'required' => false),
 				'organization_name' => array('type' => 'string',
 					'query' => true,
 					'join' => array(

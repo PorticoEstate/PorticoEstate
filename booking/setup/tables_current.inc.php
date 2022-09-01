@@ -532,6 +532,7 @@
 					'default' => '0.0'),
 				'from_' => array('type' => 'time', 'nullable' => False),
 				'to_' => array('type' => 'time', 'nullable' => False),
+				'articles' => array('type' => 'jsonb', 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(
