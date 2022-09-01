@@ -10,7 +10,9 @@
 		foreach ($a as $x)
 		{
 			if (!array_key_exists($x, $b))
+			{
 				$c[] = $x;
+			}
 		}
 		return $c;
 	}
@@ -1466,7 +1468,7 @@
 							$now = new DateTime();
 							$now->setTimezone($DateTimeZone);
 
-							if($now->format('Y-m-d') == $StartTime->format('Y-m-d')
+							if($limitDate->format('Y-m-d') == $checkDate->format('Y-m-d')
 								&& $now->format('H') < $_simple_booking_start_date->format('H')
 							)
 							{
