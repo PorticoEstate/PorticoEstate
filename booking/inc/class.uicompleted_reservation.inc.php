@@ -362,7 +362,7 @@
 
 			if (!isset($_SESSION['show_all_completed_reservations']))
 			{
-				$filters['exported'] = '';
+				$filters['exported'] = null;
 			}
 
 			$params = array(
