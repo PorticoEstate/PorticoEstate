@@ -317,7 +317,7 @@
 			}
 			else if ($type == 'json')
 			{
-				return json_decode($value, true);
+				return json_decode(trim($value, '"'), true);
 			}
 			else if ($type == 'string')
 			{

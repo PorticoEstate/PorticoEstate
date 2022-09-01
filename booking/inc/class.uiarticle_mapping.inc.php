@@ -163,7 +163,7 @@
 				if(!empty($alloc['articles']))
 				{
 					$selected_alloc_articles = array();
-					$alloc_articles = json_decode($alloc['articles'], true);
+					$alloc_articles = $alloc['articles']['selected_articles'];
 					if($alloc_articles && is_array($alloc_articles))
 					{
 						foreach ($alloc_articles as $alloc_article)
@@ -181,12 +181,15 @@
 							 */
 
 							$article_mapping_id = $_article_info[0];
-							$selected_alloc_articles[$article_mapping_id] = array(
+							$parent_mapping_id		= !empty($_article_info[4]) ? $_article_info[4] : null;
+
+							$identificator = "{$article_mapping_id}_{$parent_mapping_id}";
+
+							$selected_alloc_articles[$identificator] = array(
 								'quantity'				=> $_article_info[1],
 								'tax_code'				=> $_article_info[2],
 								'ex_tax_price'			=> $_article_info[3],
-								'parent_mapping_id'		=> !empty($_article_info[4]) ? $_article_info[4] : null
-
+								'parent_mapping_id'		=> $parent_mapping_id
 							);
 						}
 
@@ -219,11 +222,12 @@
 					}
 				}
 
-				if(!empty($selected_alloc_articles[$article['id']]))
+				if(!empty($selected_alloc_articles["{$article['id']}_{$article['parent_mapping_id']}"]))
 				{
-					$article['selected_quantity']			= $selected_alloc_articles[$article['id']]['quantity'];
-					$article['tax_code']					= $selected_alloc_articles[$article['id']]['tax_code'];
-					$article['ex_tax_price']				= number_format((float)$selected_alloc_articles[$article['id']]['ex_tax_price'], 2, '.', '');
+					$article['selected_quantity']			= $selected_alloc_articles["{$article['id']}_{$article['parent_mapping_id']}"]['quantity'];
+					$article['tax_code']					= $selected_alloc_articles["{$article['id']}_{$article['parent_mapping_id']}"]['tax_code'];
+					$article['ex_tax_price']				= number_format((float)$selected_alloc_articles["{$article['id']}_{$article['parent_mapping_id']}"]['ex_tax_price'], 2, '.', '');
+					$article['selected_article_quantity']	 = "{$article['id']}_{$article['selected_quantity']}_{$article['tax_code']}_{$article['ex_tax_price']}_{$article['parent_mapping_id']}";
 				}
 
 				$article['ex_tax_price'] = number_format((float)$article['ex_tax_price'], 2, '.', '');
