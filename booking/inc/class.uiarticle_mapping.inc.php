@@ -155,6 +155,48 @@
 			$application_id	 = phpgw::get_var('application_id', 'int', 'GET');
 			$reservation_type	 = phpgw::get_var('reservation_type', 'string', 'GET');
 			$reservation_id	 = phpgw::get_var('reservation_id', 'int', 'GET');
+			$alloc_template_id	 = phpgw::get_var('alloc_template_id', 'int', 'GET');
+
+			if($alloc_template_id)
+			{
+				$alloc = CreateObject('booking.boseason')->wtemplate_alloc_read_single($alloc_template_id);
+				if(!empty($alloc['articles']))
+				{
+					$selected_alloc_articles = array();
+					$alloc_articles = $alloc['articles'];
+					if($alloc_articles && is_array($alloc_articles))
+					{
+						foreach ($alloc_articles as $alloc_article)
+						{
+							$_article_info = explode('_', $alloc_article);
+
+							if(empty($_article_info[0]))
+							{
+								continue;
+							}
+
+							/**
+							 * the value selected_articles[]
+							 * <mapping_id>_<quantity>_<tax_code>_<ex_tax_price>_<parent_mapping_id>
+							 */
+
+							$article_mapping_id = $_article_info[0];
+							$parent_mapping_id		= !empty($_article_info[4]) ? $_article_info[4] : null;
+
+							$identificator = "{$article_mapping_id}_{$parent_mapping_id}";
+
+							$selected_alloc_articles[$identificator] = array(
+								'quantity'				=> $_article_info[1],
+								'tax_code'				=> $_article_info[2],
+								'ex_tax_price'			=> $_article_info[3],
+								'parent_mapping_id'		=> $parent_mapping_id
+							);
+						}
+
+					}
+				}
+			}
+
 
 			$purchase_order = createObject('booking.sopurchase_order')->get_purchase_order($application_id, $reservation_type, $reservation_id);
 			$articles	 = $this->bo->get_articles($resources);
@@ -178,6 +220,14 @@
 							$article['tax']							 = $line['unit_price'] * ($line['tax_percent']/100);
 						}
 					}
+				}
+
+				if(!empty($selected_alloc_articles["{$article['id']}_{$article['parent_mapping_id']}"]))
+				{
+					$article['selected_quantity']			= $selected_alloc_articles["{$article['id']}_{$article['parent_mapping_id']}"]['quantity'];
+					$article['tax_code']					= $selected_alloc_articles["{$article['id']}_{$article['parent_mapping_id']}"]['tax_code'];
+					$article['ex_tax_price']				= number_format((float)$selected_alloc_articles["{$article['id']}_{$article['parent_mapping_id']}"]['ex_tax_price'], 2, '.', '');
+					$article['selected_article_quantity']	 = "{$article['id']}_{$article['selected_quantity']}_{$article['tax_code']}_{$article['ex_tax_price']}_{$article['parent_mapping_id']}";
 				}
 
 				$article['ex_tax_price'] = number_format((float)$article['ex_tax_price'], 2, '.', '');
