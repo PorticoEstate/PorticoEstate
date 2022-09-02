@@ -163,7 +163,7 @@
 				if(!empty($alloc['articles']))
 				{
 					$selected_alloc_articles = array();
-					$alloc_articles = $alloc['articles']['selected_articles'];
+					$alloc_articles = $alloc['articles'];
 					if($alloc_articles && is_array($alloc_articles))
 					{
 						foreach ($alloc_articles as $alloc_article)

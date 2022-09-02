@@ -656,8 +656,8 @@ JS;
 			$to = pretty_timestamp($season['to_']);
 			$interval = 1;
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'date');
-			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'date', strtotime( $season['from_']), array('readonly' => true));
+			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'date', strtotime( $season['to_']), array('readonly' => true));
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -712,9 +712,13 @@ JS;
 
 			  $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab); */
 
-			self::render_template_xsl('season_generate', array('season' => $season,
-				'result' => $result, 'step' => $step,
-				'interval' => $interval,
-				'from_' => $from, 'to_' => $to));
+			self::render_template_xsl('season_generate', array(
+				'season'	 => $season,
+				'result'	 => $result,
+				'step'		 => $step,
+				'interval'	 => $interval,
+				'from_'		 => $from,
+				'to_'		 => $to
+				));
 		}
 	}

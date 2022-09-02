@@ -96,14 +96,14 @@ saveTemplateAlloc = function ()
 	});
 
 	var articles =  $('#articles_container :input').serializeArray();
-	values['articles'] = {selected_articles:{}};
+	values['articles'] = {};
 
 	var n = 0;
 	for (var j = 0; j < articles.length; ++j)
 	{
 		if (articles[j].value !== "")
 		{
-			values['articles']['selected_articles'][n] = articles[j].value;
+			values['articles'][n] = articles[j].value;
 			n++;
 		}
 	};

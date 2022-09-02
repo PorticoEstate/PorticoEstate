@@ -317,7 +317,9 @@
 			}
 			else if ($type == 'json')
 			{
-				return json_decode(trim($value, '"'), true);
+				$_value = $this->db->stripslashes($value);
+				$__value = trim($_value, '"');
+				return json_decode($__value, true);
 			}
 			else if ($type == 'string')
 			{
@@ -430,7 +432,7 @@
 					}
 					else
 					{
-						$row[$field] = $this->_unmarshal($this->db->f($field, true), $params['type'], $modifier);
+						$row[$field] = $this->_unmarshal($this->db->f($field, false), $params['type'], $modifier);
 					}
 				}
 			}
@@ -752,7 +754,7 @@
 										$_modifier = $modifier;
 									}
 
-									$data[$col] = $this->_unmarshal($this->db->f($col, true), $type, $_modifier);
+									$data[$col] = $this->_unmarshal($this->db->f($col, false), $type, $_modifier);
 								}
 								$row[$field][] = $data;
 								$results[$id_map[$id]][$field][] = $data;
@@ -769,7 +771,7 @@
 								{
 									$results[$id_map[$id]][$field] = array();
 								}
-								$results[$id_map[$id]][$field][] = $this->_unmarshal($this->db->f($column, true), $params['type'], $modifier);
+								$results[$id_map[$id]][$field][] = $this->_unmarshal($this->db->f($column, false), $params['type'], $modifier);
 							}
 						}
 					}
