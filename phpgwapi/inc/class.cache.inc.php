@@ -130,7 +130,7 @@
 		 */
 		protected static function _shm_clear($key)
 		{
-			return $GLOBALS['phpgw']->shm->delete_key($key);
+			return phpgwapi_shm::delete_key($key);
 		}
 
 		/**
@@ -141,7 +141,7 @@
 		 */
 		protected static function _shm_get($key)
 		{
-			return $GLOBALS['phpgw']->shm->get_value($key);
+			return phpgwapi_shm::get_value($key);
 		}
 
 		/**
@@ -153,7 +153,7 @@
 		 */
 		protected static function _shm_set($key, $value)
 		{
-			return $GLOBALS['phpgw']->shm->store_value($key, $value);
+			return phpgwapi_shm::store_value($key, $value);
 		}
 
 		/**
@@ -251,7 +251,7 @@
 		{
 			$key = self::_gen_key($module, $id);
 
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
+			if ( phpgwapi_shm::is_enabled() )
 			{
 				return self::_shm_clear($key);
 			}
@@ -269,7 +269,7 @@
 		{
 			$key = self::_gen_key($module, $id);
 
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
+			if ( phpgwapi_shm::is_enabled() )
 			{
 				$value = self::_shm_get($key);
 			}
@@ -312,7 +312,7 @@
 				$value =  base64_encode(gzcompress($value, 9));
 			}
 
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
+			if ( phpgwapi_shm::is_enabled() )
 			{
 				return self::_shm_set($key, $value);
 			}
@@ -500,7 +500,7 @@
 
 			$key = self::_gen_key($module, $id);
 
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
+			if ( phpgwapi_shm::is_enabled() )
 			{
 				return self::_shm_clear($key);
 			}
@@ -521,7 +521,7 @@
 			$module = $module . '_' . $uid;
 			$key = self::_gen_key($module, $id);
 
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
+			if ( phpgwapi_shm::is_enabled() )
 			{
 				$value = self::_shm_get($key);
 			}
@@ -573,7 +573,7 @@
 				$value =  base64_encode(gzcompress($value, 9));
 			}
 
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
+			if ( phpgwapi_shm::is_enabled() )
 			{
 				return self::_shm_set($key, $value);
 			}

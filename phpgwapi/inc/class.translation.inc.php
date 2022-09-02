@@ -18,6 +18,7 @@
 	* @package phpgwapi
 	* @subpackage application
 	*/
+	phpgw::import_class('phpgwapi.shm');
 	phpgw::import_class('phpgwapi.cache');
 	class phpgwapi_translation
 	{
@@ -46,6 +47,7 @@
 		* @var bool $collect_missing collects missing translations to the lang_table with app_name = ##currentapp##
 		*/
 		private $collect_missing = false;
+		public $redis;
 
 		/**
 		* Maxiumum length of a translation string
@@ -198,7 +200,9 @@
 			$app_name = $GLOBALS['phpgw']->db->db_addslashes($app_name);
 			$lookup_key = strtolower(trim(substr($key, 0, self::MAX_MESSAGE_ID_LENGTH)));
 
-			if ( !is_array(self::$lang)	|| (!isset(self::$lang[$app_name][$lookup_key])	&& !isset(self::$lang['common'][$lookup_key])) || (!$only_common && !isset(self::$lang[$app_name][$lookup_key])))
+			if ( !is_array(self::$lang)	&&
+				((!isset(self::$lang[$app_name][$lookup_key]) && !isset(self::$lang['common'][$lookup_key]))
+				|| (!$only_common && !isset(self::$lang[$app_name][$lookup_key]))))
 			{
 				$applist = "'common'";
 				if ( !$only_common )

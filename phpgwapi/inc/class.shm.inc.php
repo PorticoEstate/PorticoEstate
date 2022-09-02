@@ -127,7 +127,7 @@
 		* @param string $log_string - the message to be logged
 		* @todo switch to the API logging class
 		*/
-		function log_this($log_string)
+		public static function log_this($log_string)
 		{
 			if(!PHPGW_SHM_LOG)
 			{
@@ -142,15 +142,15 @@
 		/**
 		* Delete a block from memory
 		*
-		* @param int $id memory block id
+		* @param shmop $id memory block id
 		*/
-		function delete_mem($id)
+		public static function delete_mem($id)
 		{
-			if ( (int) $id )
+			if ( $id )
 			{
 				if (!shmop_delete($id))
 				{
-					//$this->log_this("Couldn't mark shared memory block for deletion.\n");
+					//self::log_this("Couldn't mark shared memory block for deletion.\n");
 				}
 			}
 		}
@@ -158,10 +158,10 @@
 		/**
 		* Read a block from memory
 		*
-		* @param int $id memory block id
+		* @param shmop $id memory block id
 		* @return string the data from memory block
 		*/
-		function read_mem($id)
+		public static function read_mem($id)
 		{
 			return shmop_read($id, 0, shmop_size($id));
 		}
@@ -169,20 +169,20 @@
 		/**
 		* Write data to a block of memory
 		*
-		* @param int $id block id to store data at
+		* @param shmop $id block id to store data at
 		* @param string $data the data to store
 		* @return bool was the data written to memory ?
 		*/
-		function write_mem($id, $data)
+		public static function write_mem($id, $data)
 		{
-			if(shmop_size($id)< strlen($data))
+			if(shmop_size($id) < strlen($data))
 			{
 				return false;
 			}
 			
 			if(!shmop_write($id, $data, 0))
   			{
-				//$this->log_this("Could not write to shared memory segment\n");
+				//self::log_this("Could not write to shared memory segment\n");
 				return false;
 			}
 			return true;
@@ -192,16 +192,16 @@
 		* Create a shared memory segment
 		*
 		* @internal shouldn't the perms really be 0600 ? skwashd 20060815
-		* @param ?? $key the key for the memory allocation
+		* @param int $key the key for the memory allocation
 		* @param int $size the size of the memory allocation being requested (in bytes)
 		* @return int the id of the memory block allocated
 		*/
-		function create_mem($key, $size)
+		public static function create_mem($key, $size)
 		{
-			$id = @shmop_open($key, "n", 0644, $size);
+			$id = shmop_open($key, "n", 0644, $size);
 			if (!$id) 
 			{
-				//$this->log_this("Couldn't create shared memory segment with key = $key\n");
+				//self::log_this("Couldn't create shared memory segment with key = $key\n");
 			}
 			return $id;
 		}
@@ -210,31 +210,31 @@
 		* Check to see if a memory block is already allocated
 		* 
 		* @internal php.net/shmop_open suggests using shmop_open($key, 'a', 0, 0); for an existing block - skwashd 200608015
-		* @param ??? $key the key for the memory allocaiton
-		* @return int the id of the memory block - 0 when not found
+		* @param int $key the key for the memory allocaiton
+		* @return shmop the id of the memory block - 0 when not found
 		*/
-		function mem_exist($key)
+		public static function mem_exist($key)
 		{
-			if(!$id = @shmop_open($key, "a", 0644, 100))
+			if(!$id = shmop_open($key, "a", 0644, 100))
 			{
-				//$this->log_this("Couldn't find shared memory segment with key = $key\n");
+				//self::log_this("Couldn't find shared memory segment with key = $key\n");
 				return 0;
 			}
-			//$this->log_this("Memory segment exists with key = $key\n");
+			//self::log_this("Memory segment exists with key = $key\n");
 			return $id;
 		}
 
 		/**
 		* Close a memory allocation - this does not delete it the allocation - call shm::delete_mem first
 		*
-		* @param int $id the memory allocation id
+		* @param shmop $id the memory allocation id
 		*/
-		function close_mem($id)
-		{
-			if( $id != 0)
+		public static function close_mem($id)
+		{		
+			if ($id && version_compare(PHP_VERSION, '8.0.0', '<'))
 			{
 				shmop_close($id);
-			}
+			}	
 		}
 
 		/**
@@ -242,26 +242,26 @@
 		*
 		* @todo document me properly
 		*/
-		function get_value($key)
+		public static function get_value($key)
 		{
-			$hash_id = $this->hash($key);
+			$hash_id = self::hash($key);
 			$value = array('key' => '', 'value' => '');
-			$id = $this->mem_exist($hash_id);
+			$id = self::mem_exist($hash_id);
 			while($value['key']!=$key)
 			{
 				if($id!=0)
 				{
-					$value = unserialize($this->read_mem($id));
-					if($value['key']!=$key) $id = $this->mem_exist($this->hash($hash_id));
+					$value = unserialize(self::read_mem($id));
+					if($value['key']!=$key) $id = self::mem_exist(self::hash($hash_id));
 				}
 				else
 				{
-					//$this->log_this("no key in hash table\n");
-					$this->close_mem($id);
+					//self::log_this("no key in hash table\n");
+					self::close_mem($id);
 					return '';
 				}
 			}
-			$this->close_mem($id);
+			self::close_mem($id);
 			return $value['value'];
 		}
 
@@ -270,41 +270,42 @@
 		*
 		* @todo document me properly
 		*/
-		function store_value($key,$value)
+		public static function store_value($key,$value)
 		{
 			$SHM_KEY = ftok(PHPGW_SHM_LOCK, 'R');
-			$shmid = @sem_get($SHM_KEY, 1024, 0644 | IPC_CREAT);
+//			$shmid = sem_get($SHM_KEY, 1024, 0644 | IPC_CREAT);
+			$shmid = sem_get($SHM_KEY, 1024, 0666 );
 			sem_acquire($shmid);
-			$hash_id = $this->hash($key);
+			$hash_id = self::hash($key);
 			$store_value = array();
 			$store_value['key'] = trim($key);
 			$store_value['value'] = $value;
 			$store_value['time'] = time();
-			$id = $this->mem_exist($hash_id);
+			$id = self::mem_exist($hash_id);
 			while($id!=0)
 			{
-				$value = unserialize($this->read_mem($id));
+				$value = unserialize(self::read_mem($id));
 				if($value['key']==$key)
 				{
-					//$this->log_this("Key " . $key . "   $hash_id(" . dechex($hash_id) .") already in hash table, replacing with new contents\n");
-					$this->delete_mem($id);
-					$this->close_mem($id);
+					//self::log_this("Key " . $key . "   $hash_id(" . dechex($hash_id) .") already in hash table, replacing with new contents\n");
+					self::delete_mem($id);
+					self::close_mem($id);
 					$contents = serialize($store_value);
-					$id = $this->create_mem($hash_id,strlen($contents));
-					$this->write_mem($id, $contents); // place into memory
-					$this->close_mem($id);
+					$id = self::create_mem($hash_id,strlen($contents));
+					self::write_mem($id, $contents); // place into memory
+					self::close_mem($id);
 					sem_release($shmid);
 					return $hash_id;
 				}
-				$this->close_mem($id);
-				//$this->log_this("Collision while trying to store key=$key in hash table\n");
-				$hash_id = $this->hash($hash_id);
-				$id = $this->mem_exist($hash_id);
+				self::close_mem($id);
+				//self::log_this("Collision while trying to store key=$key in hash table\n");
+				$hash_id = self::hash($hash_id);
+				$id = self::mem_exist($hash_id);
 			}
 			$contents = serialize($store_value);
-			$id = $this->create_mem($hash_id,strlen($contents));
-			$this->write_mem($id, $contents); // place into memory
-			$this->close_mem($id);
+			$id = self::create_mem($hash_id,strlen($contents));
+			self::write_mem($id, $contents); // place into memory
+			self::close_mem($id);
 			sem_release($shmid);
 			return $hash_id;
 		}
@@ -314,14 +315,15 @@
 		*
 		* @todo document me properly
 		*/
-		function update_keys($key, $id)
+		public static function update_keys($key, $id)
 		{
 			$SHM_KEY = ftok(PHPGW_SHM_LOCK, 'R');
-			$shmid = @sem_get($SHM_KEY, 1024, 0644 | IPC_CREAT);
+//			$shmid = sem_get($SHM_KEY, 1024, 0644 | IPC_CREAT);
+			$shmid = sem_get($SHM_KEY, 1024, 0666);
 			sem_acquire($shmid);
-			$temp = $this->get_value($this->hashid);
+			$temp = self::get_value(self::$hashid);
 			$temp[$key] = array('shmid' => $id, 'time' => time());
-			$this->store_value($this->hashid,$temp);
+			self::store_value(self::$hashid,$temp);
 			sem_release($shmid);
 		}
 
@@ -331,10 +333,10 @@
 		* @param string $hash_string the string to encrypt
 		* @return string the encrypted hash
 		*/
-		function &hash($hash_string)
+		public static function &hash($hash_string)
 		{
 			$hash = fmod(hexdec(md5($hash_string)), PHPGW_SHM_HASH_PRIME);
-			//$this->log_this("Hashing " . $hash_string . " to " . $hash . "\n"); 
+			//self::log_this("Hashing " . $hash_string . " to " . $hash . "\n");
 			return $hash;
 		}
 
@@ -344,14 +346,14 @@
 		* @param string $content the contents to cache
 		* @return string the contents which was cached
 		*/
-		function cache_end($contents)
+		public static function cache_end($contents)
 		{
 			if(trim($contents))
 			{
 				$datasize = strlen($contents);
 				$hash_string = "http://{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}" . serialize($_POST);
-				$shmid = $this->store_value($hash_string,$contents);
-				$this->update_keys($hash_string,$shmid);
+				$shmid = self::store_value($hash_string,$contents);
+				self::update_keys($hash_string,$shmid);
 			}
 			return $contents; //display
 		}
@@ -361,7 +363,7 @@
 		*
 		* @param int $key the entry to delete from the cache
 		*/
-		function delete_key($key)
+		public static function delete_key($key)
 		{
 			if(!function_exists('ftok'))
 			{
@@ -369,19 +371,20 @@
 			}
 			
 			$SHM_KEY = ftok(PHPGW_SHM_LOCK, 'R');
-			$shmid = @sem_get($SHM_KEY, 1024, 0644 | IPC_CREAT);
+//			$shmid = sem_get($SHM_KEY, 1024, 0644 | IPC_CREAT);
+			$shmid = sem_get($SHM_KEY, 1024, 0666);
 
 			sem_acquire($shmid);
-			$data = $this->get_value($key);
+			$data = self::get_value($key);
 
 			if(isset($data))
 			{
-				$hash_id =& $this->hash($key);
-				$id = $this->mem_exist($this->hash($hash_id));
-				$this->delete_mem($id);
-				$this->close_mem($id);
+				$hash_id =& self::hash($key);
+				$id = self::mem_exist(self::hash($hash_id));
+				self::delete_mem($id);
+				self::close_mem($id);
 				unset($data);
-				$this->store_value($key, null);
+				self::store_value($key, null);
 			}
 			sem_release($shmid);
 		}
@@ -391,21 +394,22 @@
 		*
 		* @todo document me properly
 		*/
-		function clear_cache()
+		public static function clear_cache()
 		{
 			$SHM_KEY = ftok(PHPGW_SHM_LOCK, 'R');
-			$shmid = @sem_get($SHM_KEY, 1024, 0644 | IPC_CREAT);
+//			$shmid = sem_get($SHM_KEY, 1024, 0644 | IPC_CREAT);
+			$shmid = sem_get($SHM_KEY, 1024, 0666);
 			sem_acquire($shmid);
-			$data = $this->get_value($this->hashid);
+			$data = self::get_value(self::$hashid);
 			_debug_array($data);
 			foreach ($data as $k => $v)
 			{
-				$id = $this->mem_exist($v['shmid']);
-				$this->delete_mem($id);
-				$this->close_mem($id);
+				$id = self::mem_exist($v['shmid']);
+				self::delete_mem($id);
+				self::close_mem($id);
 			}
 			$data = array();
-			$this->store_value($this->hashid, $data);
+			self::store_value(self::$hashid, $data);
 			sem_release($shmid);
 		}
 
@@ -413,23 +417,24 @@
 		/**
 		* Delete stale entries from the cache
 		*/
-		function garbage_collection()
+		public static function garbage_collection()
 		{
 			$SHM_KEY = ftok(PHPGW_SHM_LOCK, 'R');
-			$shmid = @sem_get($SHM_KEY, 1024, 0644 | IPC_CREAT);
+	//		$shmid = sem_get($SHM_KEY, 1024, 0644 | IPC_CREAT);
+			$shmid = sem_get($SHM_KEY, 1024, 0666);
 			sem_acquire($shmid);
-			$data = $this->get_value($this->hashid);
+			$data = self::get_value(self::$hashid);
 			foreach ($data as $k => $v)
 			{
 				if(time() - $v['time'] > PHPGW_SHM_CACHE_SECONDS)
 				{
-					//$this->log_this("garbage collection found expired key $k, value $v[shmid] in hash table... deleting\n");
-					$id = $this->mem_exist($v['shmid']);
-					$this->delete_mem($id);
-					$this->close_mem($id);
+					//self::log_this("garbage collection found expired key $k, value $v[shmid] in hash table... deleting\n");
+					$id = self::mem_exist($v['shmid']);
+					self::delete_mem($id);
+					self::close_mem($id);
 					unset($data[$k]);
 				}
-				$this->store_value($this->hashid, $data);
+				self::store_value(self::$hashid, $data);
 			}
 			sem_release($shmid);
 		}
@@ -437,17 +442,17 @@
 		/**
 		* Get cached values for current url
 		*/
-		function do_cache()
+		public static function do_cache()
 		{
 			$key = "http://{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}" . serialize($_POST);
-			$contents = $this->get_value($key);
+			$contents = self::get_value($key);
 			if($contents)
 			{
-				//$this->log_this("Cache hit for " . $key . "\n");
+				//self::log_this("Cache hit for " . $key . "\n");
 				print $contents;
 				exit;
 			}
-			$this->garbage_collection();
+			self::garbage_collection();
 			ob_start("cache_end"); // callback
 		}
 
@@ -458,9 +463,20 @@
 		*/
 		public static function is_enabled()
 		{
-			if ( isset($GLOBALS['phpgw_info']['server']['shm_enable'])  
+			/**
+			 * cache results within session
+			 */
+			static $enabled = false;
+
+			if($enabled)
+			{
+				return true;
+			}
+
+			if ( isset($GLOBALS['phpgw_info']['server']['shm_enable'])
 				&& $GLOBALS['phpgw_info']['server']['shm_enable'] )
 			{
+				$enabled = true;
 				return function_exists('sem_get') && function_exists('shmop_open');
 			}
 
