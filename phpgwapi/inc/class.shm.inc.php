@@ -142,11 +142,11 @@
 		/**
 		* Delete a block from memory
 		*
-		* @param int $id memory block id
+		* @param shmop $id memory block id
 		*/
 		public static function delete_mem($id)
 		{
-			if ( (int) $id )
+			if ( $id )
 			{
 				if (!shmop_delete($id))
 				{
@@ -158,7 +158,7 @@
 		/**
 		* Read a block from memory
 		*
-		* @param int $id memory block id
+		* @param shmop $id memory block id
 		* @return string the data from memory block
 		*/
 		public static function read_mem($id)
@@ -169,13 +169,13 @@
 		/**
 		* Write data to a block of memory
 		*
-		* @param int $id block id to store data at
+		* @param shmop $id block id to store data at
 		* @param string $data the data to store
 		* @return bool was the data written to memory ?
 		*/
 		public static function write_mem($id, $data)
 		{
-			if(shmop_size($id)< strlen($data))
+			if(shmop_size($id) < strlen($data))
 			{
 				return false;
 			}
@@ -192,7 +192,7 @@
 		* Create a shared memory segment
 		*
 		* @internal shouldn't the perms really be 0600 ? skwashd 20060815
-		* @param ?? $key the key for the memory allocation
+		* @param int $key the key for the memory allocation
 		* @param int $size the size of the memory allocation being requested (in bytes)
 		* @return int the id of the memory block allocated
 		*/
@@ -210,8 +210,8 @@
 		* Check to see if a memory block is already allocated
 		* 
 		* @internal php.net/shmop_open suggests using shmop_open($key, 'a', 0, 0); for an existing block - skwashd 200608015
-		* @param ??? $key the key for the memory allocaiton
-		* @return int the id of the memory block - 0 when not found
+		* @param int $key the key for the memory allocaiton
+		* @return shmop the id of the memory block - 0 when not found
 		*/
 		public static function mem_exist($key)
 		{
@@ -227,14 +227,14 @@
 		/**
 		* Close a memory allocation - this does not delete it the allocation - call shm::delete_mem first
 		*
-		* @param int $id the memory allocation id
+		* @param shmop $id the memory allocation id
 		*/
 		public static function close_mem($id)
-		{
-			if( $id != 0)
+		{		
+			if ($id && version_compare(PHP_VERSION, '8.0.0', '<'))
 			{
 				shmop_close($id);
-			}
+			}	
 		}
 
 		/**
@@ -321,9 +321,9 @@
 //			$shmid = sem_get($SHM_KEY, 1024, 0644 | IPC_CREAT);
 			$shmid = sem_get($SHM_KEY, 1024, 0666);
 			sem_acquire($shmid);
-			$temp = self::get_value(self::hashid);
+			$temp = self::get_value(self::$hashid);
 			$temp[$key] = array('shmid' => $id, 'time' => time());
-			self::store_value(self::hashid,$temp);
+			self::store_value(self::$hashid,$temp);
 			sem_release($shmid);
 		}
 
@@ -400,7 +400,7 @@
 //			$shmid = sem_get($SHM_KEY, 1024, 0644 | IPC_CREAT);
 			$shmid = sem_get($SHM_KEY, 1024, 0666);
 			sem_acquire($shmid);
-			$data = self::get_value(self::hashid);
+			$data = self::get_value(self::$hashid);
 			_debug_array($data);
 			foreach ($data as $k => $v)
 			{
@@ -409,7 +409,7 @@
 				self::close_mem($id);
 			}
 			$data = array();
-			self::store_value(self::hashid, $data);
+			self::store_value(self::$hashid, $data);
 			sem_release($shmid);
 		}
 
@@ -423,7 +423,7 @@
 	//		$shmid = sem_get($SHM_KEY, 1024, 0644 | IPC_CREAT);
 			$shmid = sem_get($SHM_KEY, 1024, 0666);
 			sem_acquire($shmid);
-			$data = self::get_value(self::hashid);
+			$data = self::get_value(self::$hashid);
 			foreach ($data as $k => $v)
 			{
 				if(time() - $v['time'] > PHPGW_SHM_CACHE_SECONDS)
@@ -434,7 +434,7 @@
 					self::close_mem($id);
 					unset($data[$k]);
 				}
-				self::store_value(self::hashid, $data);
+				self::store_value(self::$hashid, $data);
 			}
 			sem_release($shmid);
 		}
