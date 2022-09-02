@@ -290,7 +290,10 @@ schedule.newAllocationForm = function (args)
 		sUrl += '&filter_id[]=' + resource_ids[i];
 	}
 
-	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 650, height: 500, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
+	TINY.box.show({iframe:sUrl, boxid:"frameless",
+		width:Math.round($(window).width()*0.9),
+		height:Math.round($(window).height()*0.9),
+		fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true,
 		close: true,
 		closejs: false
 	});

@@ -167,7 +167,7 @@
 			}
 
 			$config->set('Attr.AllowedFrameTargets', array('_blank', '_self', '_parent', '_top'));
-			
+
 //			$config->set('Core', 'CollectErrors', true);
 			if (!empty($GLOBALS['phpgw_info']['flags']['allow_html_image']))
 			{
@@ -189,12 +189,12 @@
 		$purifier = new HTMLPurifier($config);
 
 			$clean_html = $purifier->purify($html);
-			
+
 //			if($html && ! $clean_html)
 //			{
 //				return $purifier->context->get('ErrorCollector')->getHTMLFormatted($config);
 //			}
-			
+
 
 			return $clean_html;
 		}
@@ -401,6 +401,11 @@
 				else if ( $value !== 0 && ((is_null($value) || !$value) && !is_null($default) ))
 				{
 						return $default;
+				}
+
+				if($value_type === 'json')
+				{
+					return json_encode(self::clean_value($value, 'string', $default));
 				}
 
 				return self::clean_value($value, $value_type, $default);

@@ -281,7 +281,8 @@
 				. " JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id)"
 				. " JOIN fm_ecomva ON (bb_article_mapping.tax_code = fm_ecomva.id)"
 				. " WHERE article_cat_id = 1"
-				. " AND bb_resource.active = 1 {$filter}";
+				. " AND bb_resource.active = 1 {$filter}"
+				. " ORDER BY bb_resource.name";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 

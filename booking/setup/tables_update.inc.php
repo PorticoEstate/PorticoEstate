@@ -5958,4 +5958,28 @@
 		}
 	}
 
+	/**
+	 * Update booking version from 0.2.83 to 0.2.84
+	 *
+	 */
+	$test[] = '0.2.83';
+	function booking_upgrade0_2_83()
+	{
+		//bb_resource_e_lock
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_wtemplate_alloc', 'articles',
+				array(
+					'type' => 'jsonb',
+					'nullable' => True
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.84';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
 
