@@ -18,7 +18,6 @@
 	* @package phpgwapi
 	* @subpackage application
 	*/
-	phpgw::import_class('phpgwapi.shm');
 	phpgw::import_class('phpgwapi.cache');
 	class phpgwapi_translation
 	{
