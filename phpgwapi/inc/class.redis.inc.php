@@ -61,6 +61,17 @@
 			return empty($this->error_connect);
 		}
 		
+		private function log_this($msg, $line)
+		{
+			$GLOBALS['phpgw']->log->error(array(
+				'text'	=> 'data som feiler for phpgwapi_redis::connect(). Error: %1',
+				'p1'	=> $msg,
+				'line'	=> $line,
+				'file'	=> __FILE__
+			));
+
+		}
+
 		private function connect()
 		{
 			//Connecting to Redis server on localhost 
@@ -72,8 +83,10 @@
 
 			if(!$host)
 			{
-				phpgwapi_cache::message_set('Redis host not configures', 'error');
+				$msg = 'Redis host not configured';
+				phpgwapi_cache::message_set($msg, 'error');
 				$this->error_connect = true;
+				$this->log_this($msg, __LINE__);
 				return;
 			}
 			
@@ -85,7 +98,11 @@
 			}
 			catch (Exception $e)
 			{
-				phpgwapi_cache::message_set($e->getMessage());
+				$msg = $e->getMessage();
+				phpgwapi_cache::message_set($msg, 'error');
+				$this->error_connect = true;
+
+				$this->log_this($msg, __LINE__);
 			}
 		}
  
