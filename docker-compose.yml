@@ -44,6 +44,8 @@ services:
       container_name: redis_container
       image: redis
       restart: always
+      volumes:
+       - redisdata:/data
       ports:
         - '6379:6379'
 
@@ -78,4 +80,5 @@ volumes:
     pgadmin:
     sqldata1:
     sqldata2:
+    redisdata:
 
