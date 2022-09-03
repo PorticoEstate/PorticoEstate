@@ -36,8 +36,17 @@
 	*/
 
 	phpgw::import_class('phpgwapi.shm');
+	phpgw::import_class('phpgwapi.redis');
+
 	class phpgwapi_cache
 	{
+
+		static private $phpgwapi_redis;
+
+		private static function get_redis()
+		{
+			self::$phpgwapi_redis = new phpgwapi_redis;
+		}
 		/**
 		 * Decide whether to use database for caching - or not
 		 *
@@ -71,6 +80,26 @@
 			return true;
 		}
 
+		private static function _file_clear_all()
+		{
+			$dir = new DirectoryIterator($GLOBALS['phpgw_info']['server']['temp_dir']); 
+
+			if ( is_object($dir) )
+			{
+				foreach ( $dir as $file )
+				{
+					if ( $file->isDot()
+						|| !$file->isFile()
+						|| !$file->isReadable()
+						|| strcasecmp(  substr($file->getFilename(),0, 12 ) , 'phpgw_cache_' ) != 0 )
+ 					{
+						continue;
+					}
+					$file_path = $file->getPathname();
+					unlink($file_path);
+				}
+			}
+		}
 		/**
 		 * Retreive data from shared memory
 		 *
@@ -244,6 +273,29 @@
 		/**
 		 * Clear data stored in the system wide cache
 		 *
+		 * @return bool was the data deleted?
+		 */
+		public static function system_clear_all()
+		{
+
+			if(!self::$phpgwapi_redis)
+			{
+				self::get_redis();
+			}
+			if ( self::$phpgwapi_redis->is_connected() )
+			{
+				self::$phpgwapi_redis->clear_cache();
+			}
+			else if ( phpgwapi_shm::is_enabled() )
+			{
+				phpgwapi_shm::clear_cache($key);
+			}
+			return self::_file_clear_all();
+		}
+
+		/**
+		 * Clear data stored in the system wide cache
+		 *
 		 * @param string $module the module name the data belongs to
 		 * @param string $id the internal module id for the data
 		 * @return bool was the data deleted?
@@ -252,7 +304,15 @@
 		{
 			$key = self::_gen_key($module, $id);
 
-			if ( phpgwapi_shm::is_enabled() )
+			if(!self::$phpgwapi_redis)
+			{
+				self::get_redis();
+			}
+			if ( self::$phpgwapi_redis->is_connected() )
+			{
+				return self::$phpgwapi_redis->delete_key($key);
+			}
+			else if ( phpgwapi_shm::is_enabled() )
 			{
 				return self::_shm_clear($key);
 			}
@@ -270,7 +330,15 @@
 		{
 			$key = self::_gen_key($module, $id);
 
-			if ( phpgwapi_shm::is_enabled() )
+			if(!self::$phpgwapi_redis)
+			{
+				self::get_redis();
+			}
+			if ( self::$phpgwapi_redis->is_connected() )
+			{
+				$value = self::$phpgwapi_redis->get_value($key);		
+			}
+			else if ( phpgwapi_shm::is_enabled() )
 			{
 				$value = self::_shm_get($key);
 			}
@@ -311,6 +379,15 @@
 			if(function_exists('gzcompress') && $compress)
 			{
 				$value =  base64_encode(gzcompress($value, 9));
+			}
+
+			if(!self::$phpgwapi_redis)
+			{
+				self::get_redis();
+			}
+			if ( self::$phpgwapi_redis->is_connected() )
+			{
+				return self::$phpgwapi_redis->store_value($key, $value);				
 			}
 
 			if ( phpgwapi_shm::is_enabled() )

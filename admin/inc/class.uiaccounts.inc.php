@@ -2113,11 +2113,9 @@
 
 			if (phpgw::get_var('confirm', 'bool', 'POST') )
 			{
-				foreach($myfilearray as $delete_file)
-				{
-					unlink($delete_file['file_path']);
-				}
 				$myfilearray = array();
+
+				phpgwapi_cache::system_clear_all();
 
 				$GLOBALS['phpgw']->redirect_link('/index.php',
 						array('menuaction' => 'admin.uimainscreen.mainscreen'));

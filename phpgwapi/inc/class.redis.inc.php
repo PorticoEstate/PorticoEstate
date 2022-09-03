@@ -42,23 +42,51 @@
 	class phpgwapi_redis
 	{
 		private $redis;
+		private static $error_connect;
 		
 		/**
 		* Constructor
 		*/
 		function __construct()
 		{
-			if($this->is_enabled())
+			
+			if(!$this->redis && !$this->error_connect && $this->is_enabled())
 			{
 				$this->connect();
 			}
 		}
 
+		public function is_connected()
+		{
+			return empty($this->error_connect);
+		}
+		
 		private function connect()
 		{
 			//Connecting to Redis server on localhost 
-			$this->redis = new Redis(); 
-			$this->redis->connect('127.0.0.1', 6379); 
+			$this->redis = new Redis();
+			$host = 'redis';// docker...
+//			$host = '127.0.0.1';// local
+			$host = $GLOBALS['phpgw_info']['server']['redis_host'];
+			$port = 6379;
+
+			if(!$host)
+			{
+				phpgwapi_cache::message_set('Redis host not configures', 'error');
+				$this->error_connect = true;
+				return;
+			}
+			
+			try
+			{
+				$this->redis->connect($host, $port);
+				$ping = $this->redis->ping();
+				$this->error_connect = empty($ping);
+			}
+			catch (Exception $e)
+			{
+				phpgwapi_cache::message_set($e->getMessage());
+			}
 		}
  
 
@@ -69,7 +97,7 @@
 		*/
 		function get_value($key)
 		{
-			$this->redis->get($key); 
+			return $this->redis->get($key); 
 		}
 
 		/**
@@ -128,8 +156,7 @@
 				return $enabled;
 			}
 
-			if ( isset($GLOBALS['phpgw_info']['server']['redis_enable'])
-				&& $GLOBALS['phpgw_info']['server']['redis_enable'] )
+			if ( isset($GLOBALS['phpgw_info']['server']['redis_enable']) && $GLOBALS['phpgw_info']['server']['redis_enable'] )
 			{
 				$checked = true;
 				$enabled = extension_loaded('redis');
