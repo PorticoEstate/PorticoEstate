@@ -463,6 +463,14 @@ HTML;
 			{
 				$detected .= '<li class="warn">' . lang('No support for shared memory found.') . "</li>\n";
 			}
+			if(extension_loaded('redis'))
+			{
+				$detected .= '<li>' . lang('You appear to have Redis enabled') . "</li>\n";
+			}
+			else
+			{
+				$detected .= '<li class="warn">' . lang('No Redis-DB support found. Disabling') . "</li>\n";
+			}
 
 			$supported_crypto_type = array();
 			if(extension_loaded('libsodium') || extension_loaded('sodium'))

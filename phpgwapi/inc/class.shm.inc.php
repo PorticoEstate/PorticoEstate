@@ -467,17 +467,19 @@
 			 * cache results within session
 			 */
 			static $enabled = false;
+			static $checked = false;
 
-			if($enabled)
+			if($checked)
 			{
-				return true;
+				return $enabled;
 			}
 
 			if ( isset($GLOBALS['phpgw_info']['server']['shm_enable'])
 				&& $GLOBALS['phpgw_info']['server']['shm_enable'] )
 			{
-				$enabled = true;
-				return function_exists('sem_get') && function_exists('shmop_open');
+				$checked = true;
+				$enabled = function_exists('sem_get') && function_exists('shmop_open');
+				return $enabled;
 			}
 
 			return false;

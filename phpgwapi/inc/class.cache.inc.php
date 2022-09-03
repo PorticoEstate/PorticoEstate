@@ -35,6 +35,7 @@
 	* @category caching
 	*/
 
+	phpgw::import_class('phpgwapi.shm');
 	class phpgwapi_cache
 	{
 		/**
