@@ -271,6 +271,27 @@
 		}
 
 		/**
+		 * Check for redis
+		 */
+
+		private static function _redis_enabled()
+		{
+			static $enabled = false;
+			static $checked = false;
+			if($checked)
+			{
+				return $enabled;
+			}
+			if(!self::$phpgwapi_redis)
+			{
+				self::get_redis();
+			}
+			$enabled = !! self::$phpgwapi_redis->get_is_connected();
+			$checked = true;
+			return $enabled;
+
+		}
+		/**
 		 * Clear data stored in the system wide cache
 		 *
 		 * @return bool was the data deleted?
@@ -278,11 +299,7 @@
 		public static function system_clear_all()
 		{
 
-			if(!self::$phpgwapi_redis)
-			{
-				self::get_redis();
-			}
-			if ( self::$phpgwapi_redis->is_connected() )
+			if ( self::_redis_enabled() )
 			{
 				self::$phpgwapi_redis->clear_cache();
 			}
@@ -304,11 +321,7 @@
 		{
 			$key = self::_gen_key($module, $id);
 
-			if(!self::$phpgwapi_redis)
-			{
-				self::get_redis();
-			}
-			if ( self::$phpgwapi_redis->is_connected() )
+			if ( self::_redis_enabled() )
 			{
 				return self::$phpgwapi_redis->delete_key($key);
 			}
@@ -330,11 +343,7 @@
 		{
 			$key = self::_gen_key($module, $id);
 
-			if(!self::$phpgwapi_redis)
-			{
-				self::get_redis();
-			}
-			if ( self::$phpgwapi_redis->is_connected() )
+			if ( self::_redis_enabled() )
 			{
 				$value = self::$phpgwapi_redis->get_value($key);		
 			}
@@ -381,11 +390,7 @@
 				$value =  base64_encode(gzcompress($value, 9));
 			}
 
-			if(!self::$phpgwapi_redis)
-			{
-				self::get_redis();
-			}
-			if ( self::$phpgwapi_redis->is_connected() )
+			if ( self::_redis_enabled() )
 			{
 				return self::$phpgwapi_redis->store_value($key, $value);				
 			}

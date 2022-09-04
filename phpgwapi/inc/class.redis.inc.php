@@ -43,6 +43,7 @@
 	{
 		private $redis;
 		private static $error_connect;
+		private static $is_connected;
 		
 		/**
 		* Constructor
@@ -56,9 +57,9 @@
 			}
 		}
 
-		public function is_connected()
+		public function get_is_connected()
 		{
-			return empty($this->error_connect);
+			return $this->is_connected;
 		}
 		
 		private function log_this($msg, $line)
@@ -95,6 +96,7 @@
 				$this->redis->connect($host, $port);
 				$ping = $this->redis->ping();
 				$this->error_connect = empty($ping);
+				$this->is_connected = !!$ping;
 			}
 			catch (Exception $e)
 			{
