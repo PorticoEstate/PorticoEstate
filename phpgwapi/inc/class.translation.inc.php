@@ -46,7 +46,6 @@
 		* @var bool $collect_missing collects missing translations to the lang_table with app_name = ##currentapp##
 		*/
 		private $collect_missing = false;
-		public $redis;
 
 		/**
 		* Maxiumum length of a translation string
@@ -109,9 +108,9 @@
 		/**
 		* Read a lang file and return it as an array
 		*
-		* @param $fn the filename parse
-		* @param $lang the lang to be parsed - used for validation
-		* @return the array of translation string - empty array on failure
+		* @param string $fn the filename parse
+		* @param string $lang the lang to be parsed - used for validation
+		* @return array $entries of translation string - empty array on failure
 		*/
 		protected function parse_lang_file($fn, $lang)
 		{
