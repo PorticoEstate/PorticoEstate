@@ -191,7 +191,7 @@
 		 *
 		 * @param mixed the value to store
 		 * @param bool $bypass to skip encryption
-		 * @return value to store as a string
+		 * @return string value to store as a string
 		 */
 		protected static function _value_prepare($value, $bypass = true)
 		{
@@ -305,7 +305,7 @@
 			}
 			else if ( phpgwapi_shm::is_enabled() )
 			{
-				phpgwapi_shm::clear_cache($key);
+				phpgwapi_shm::clear_cache();
 			}
 			return self::_file_clear_all();
 		}
