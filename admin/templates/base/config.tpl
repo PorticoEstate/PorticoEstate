@@ -88,6 +88,20 @@
 				</td>
 			</tr>
 
+			<tr>
+				<td>{lang_Would_you_like_phpGroupWare_to_cache_data_in_redis_database}?:</td>
+				<td>
+					<select name="newsettings[redis_enable]">
+						<option value="">{lang_No}</option>
+						<option value="True"{selected_redis_enable_True}>{lang_Yes}</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>{lang_redis_host}:</td>
+				<td><input size="8" name="newsettings[redis_host]" value="{value_redis_host}"></td>
+			</tr>
+
 			<tr class="th">
 				<td colspan="2">&nbsp;<b>{lang_SMTP_settings}</b></td>
 			</tr>

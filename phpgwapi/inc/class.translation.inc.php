@@ -108,9 +108,9 @@
 		/**
 		* Read a lang file and return it as an array
 		*
-		* @param $fn the filename parse
-		* @param $lang the lang to be parsed - used for validation
-		* @return the array of translation string - empty array on failure
+		* @param string $fn the filename parse
+		* @param string $lang the lang to be parsed - used for validation
+		* @return array $entries of translation string - empty array on failure
 		*/
 		protected function parse_lang_file($fn, $lang)
 		{
@@ -198,7 +198,9 @@
 			$app_name = $GLOBALS['phpgw']->db->db_addslashes($app_name);
 			$lookup_key = strtolower(trim(substr($key, 0, self::MAX_MESSAGE_ID_LENGTH)));
 
-			if ( !is_array(self::$lang)	|| (!isset(self::$lang[$app_name][$lookup_key])	&& !isset(self::$lang['common'][$lookup_key])) || (!$only_common && !isset(self::$lang[$app_name][$lookup_key])))
+			if ( !is_array(self::$lang)	&&
+				((!isset(self::$lang[$app_name][$lookup_key]) && !isset(self::$lang['common'][$lookup_key]))
+				|| (!$only_common && !isset(self::$lang[$app_name][$lookup_key]))))
 			{
 				$applist = "'common'";
 				if ( !$only_common )
