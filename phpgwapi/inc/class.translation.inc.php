@@ -198,9 +198,8 @@
 			$app_name = $GLOBALS['phpgw']->db->db_addslashes($app_name);
 			$lookup_key = strtolower(trim(substr($key, 0, self::MAX_MESSAGE_ID_LENGTH)));
 
-			if ( !is_array(self::$lang)	&&
-				((!isset(self::$lang[$app_name][$lookup_key]) && !isset(self::$lang['common'][$lookup_key]))
-				|| (!$only_common && !isset(self::$lang[$app_name][$lookup_key]))))
+			if ( (!isset(self::$lang[$app_name][$lookup_key]) && !isset(self::$lang['common'][$lookup_key]))
+				&& (!$only_common && !isset(self::$lang[$app_name][$lookup_key])))
 			{
 				$applist = "'common'";
 				if ( !$only_common )
