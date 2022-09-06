@@ -41,9 +41,9 @@
 	*/
 	class phpgwapi_redis
 	{
-		private $redis;
-		private static $error_connect;
-		private static $is_connected;
+		private $redis = null;
+		private static $error_connect = null;
+		private static $is_connected = null;
 		
 		/**
 		* Constructor
@@ -51,7 +51,7 @@
 		function __construct()
 		{
 			
-			if(!$this->redis && !$this->error_connect && $this->is_enabled())
+			if(!$this->redis && !self::$error_connect && $this->is_enabled())
 			{
 				$this->connect();
 			}
@@ -59,7 +59,7 @@
 
 		public function get_is_connected()
 		{
-			return $this->is_connected;
+			return self::$is_connected;
 		}
 		
 		private function log_this($msg, $line)
@@ -86,7 +86,7 @@
 			{
 				$msg = 'Redis host not configured';
 				phpgwapi_cache::message_set($msg, 'error');
-				$this->error_connect = true;
+				self::$error_connect = true;
 				$this->log_this($msg, __LINE__);
 				return;
 			}
@@ -95,14 +95,14 @@
 			{
 				$this->redis->connect($host, $port);
 				$ping = $this->redis->ping();
-				$this->error_connect = empty($ping);
-				$this->is_connected = !!$ping;
+				self::$error_connect = empty($ping);
+				self::$is_connected = !!$ping;
 			}
 			catch (Exception $e)
 			{
 				$msg = $e->getMessage();
 				phpgwapi_cache::message_set($msg, 'error');
-				$this->error_connect = true;
+				self::$error_connect = true;
 
 				$this->log_this($msg, __LINE__);
 			}
