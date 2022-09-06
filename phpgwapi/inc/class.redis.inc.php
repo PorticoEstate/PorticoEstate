@@ -77,7 +77,7 @@
 		{
 			//Connecting to Redis server on localhost 
 			$this->redis = new Redis();
-			$host = 'redis';// docker...
+//			$host = 'redis';// docker...
 //			$host = '127.0.0.1';// local
 			$host = $GLOBALS['phpgw_info']['server']['redis_host'];
 			$port = 6379;
@@ -91,10 +91,30 @@
 				return;
 			}
 			
+			$n = 0;
+			foreach ($GLOBALS['phpgw_domain'] as $db_domain)
+			{
+				if($db_domain['db_name'] == $GLOBALS['phpgw_info']['server']['db_name'])
+				{
+					break;
+				}
+				$n++;
+			}
+
+			if($n > 15)
+			{
+				$msg = "Redis: max number of databases is 16";
+				phpgwapi_cache::message_set($msg, 'error');
+				self::$error_connect = true;
+				$this->log_this($msg, __LINE__);
+				return;
+			}
+
 			try
 			{
 				$this->redis->connect($host, $port);
 				$ping = $this->redis->ping();
+				$this->redis->select($n);
 				self::$error_connect = empty($ping);
 				self::$is_connected = !!$ping;
 			}
