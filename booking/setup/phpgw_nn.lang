@@ -908,3 +908,8 @@ day	booking	nn	Dag
 %1 resources mapped as articles	booking	nn	%1 ressursar er kopla opp som artiklar i varekatalogen
 billing delay	booking	nn	Utsett klargjering av fakturering, virkedager
 activate application articles	booking	nn	Aktiver artikler i søknad
+prizing	booking	nn	Prising
+remark	booking	nn	Merknad
+article code	booking	nn	Artikkelkode
+article id	booking	no	ID
+article mapping	booking	nn	Artikkelmapping

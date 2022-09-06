@@ -168,7 +168,7 @@
 					'action' => PHPGW_ACL_READ,
 					'type'	 => 'string',
 					'query'	 => true,
-					'label'	 => 'tax_code',
+					'label'	 => 'tax code',
 					'public'	 => true,
 					'join'	 => array(
 						'table'	 => 'fm_ecomva',
