@@ -620,8 +620,13 @@ JS;
 					else
 					{
 						//... 1. Contracts following regular billing cycle
-						$filters = array('contracts_for_billing' => true, 'contract_type' => $contract_type,
-							'billing_term_id' => $billing_term, 'year' => $year, 'month' => $month);
+						$filters		 = array(
+							'contracts_for_billing'	 => true,
+							'contract_type'			 => $contract_type,
+							'billing_term_id'		 => $billing_term,
+							'year'					 => $year,
+							'month'					 => $month
+						);
 						$contracts = rental_socontract::get_instance()->get($start_index = 0, $num_of_objects = 0, $sort_field = '', (bool)$sort_ascending, (string)$search_for, (string)$search_type, $filters);
 						$filters2 = array('contract_ids_one_time' => true, 'billing_term_id' => $billing_term,
 							'year' => $year, 'month' => $month);

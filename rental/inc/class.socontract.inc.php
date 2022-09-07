@@ -232,7 +232,7 @@
 				$firstJanAdjYear = mktime(0, 0, 0, 1, 1, $adjustment_year);
 
 				//make sure the contracts are active
-				$filter_clauses[] = "(contract.date_end is null OR contract.date_end >= {$firstJanAdjYear})";
+				$filter_clauses[] = "(contract.date_end is null OR contract.date_end = 0 OR contract.date_end >= {$firstJanAdjYear})";
 				$filter_clauses[] = "contract.date_start is not null AND contract.date_start <= {$firstJanAdjYear}";
 
 				$filter_clauses[] = "contract.adjustable IS true";
@@ -281,7 +281,7 @@
 						$filter_clauses[] = "contract.date_start > {$ts_query} OR contract.date_start IS NULL";
 						break;
 					case 'active':
-						$filter_clauses[] = "contract.date_start <= {$ts_query} AND ( contract.date_end >= {$ts_query} OR contract.date_end IS NULL)";
+						$filter_clauses[] = "contract.date_start <= {$ts_query} AND ( contract.date_end >= {$ts_query} OR contract.date_end IS NULL OR contract.date_end = 0)";
 						break;
 					case 'under_dismissal':
 						$filter_clauses[] = "contract.date_start <= {$ts_query} AND contract.date_end >= {$ts_query} AND (contract.date_end - (type.notify_before * (24 * 60 * 60)))  <= {$ts_query}";
@@ -336,8 +336,8 @@
 
 				$filter_clauses[] = "contract.term_id = {$billing_term_id}";
 				$filter_clauses[] = "contract.date_start < $timestamp_end";
-				$filter_clauses[] = "(contract.date_end IS NULL OR contract.date_end >= {$timestamp_start})";
-				$filter_clauses[] = "(contract.billing_start IS NULL OR contract.billing_start < {$timestamp_end})";
+				$filter_clauses[] = "(contract.date_end IS NULL OR contract.date_end = 0 OR contract.date_end >= {$timestamp_start})";
+				$filter_clauses[] = "(contract.billing_start IS NULL OR contract.billing_start = 0 OR contract.billing_start < {$timestamp_end})";
 
 				$specific_ordering = 'invoice.timestamp_end DESC, contract.billing_start DESC, contract.date_start DESC, contract.date_end DESC';
 				$order = $order ? $order . ', ' . $specific_ordering : "ORDER BY {$specific_ordering}";
