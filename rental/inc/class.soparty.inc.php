@@ -248,7 +248,7 @@
 					$filter_clauses[] = "party.org_enhet_id IS NULL";
 					// involved in active contracts
 					$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
-					$filter_clauses[] = "(NOT contract.date_start IS NULL AND contract.date_start < $ts_query AND (contract.date_end IS NULL OR (NOT contract.date_end IS NULL AND contract.date_end > $ts_query)))";
+					$filter_clauses[] = "(NOT contract.date_start IS NULL AND contract.date_start < $ts_query AND (contract.date_end IS NULL  OR contract.date_end = 0 OR (NOT contract.date_end IS NULL AND contract.date_end > $ts_query)))";
 				}
 				else if ($filters['sync'] == 'sync_parties_res_unit')
 				{
