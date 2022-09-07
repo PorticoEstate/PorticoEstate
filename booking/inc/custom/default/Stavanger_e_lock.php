@@ -143,7 +143,7 @@
 		  "from"	 => date('Y-m-d H:i:s'),
 		  "mobile" => 8 digit mobile number,
 		  "to"	 => date('Y-m-d H:i:s'),
-		  "resid"	 => (int)$resource_id,
+		  "resid"	 => $resource_id,
 		  "system" => (int)$system_id,
 		  );
 

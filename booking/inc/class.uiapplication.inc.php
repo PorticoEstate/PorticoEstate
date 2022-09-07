@@ -1855,6 +1855,13 @@
 				}
 			}
 
+			/**
+			 * hack
+			 */
+			if(isset($errors['customer_organization_number']) && is_array($errors['customer_organization_number']))
+			{
+				$errors['customer_organization_number'] = implode(', ', $errors['customer_organization_number']);
+			}
 			return array(
 				'status'		 => $errors ? 'error' : 'saved',
 				'direct_booking' => $direct_booking,

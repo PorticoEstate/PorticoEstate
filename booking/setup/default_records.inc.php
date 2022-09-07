@@ -676,3 +676,6 @@
 			2 AS article_cat_id
 		   FROM bb_service" , __LINE__, __FILE__
 		);
+
+$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_payment_method (id, payment_gateway_name, payment_gateway_mode) VALUES(1, 'Vipps', 'live')");
+$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_payment_method (id, payment_gateway_name, payment_gateway_mode, is_default) VALUES(2, 'Etterfakturering', 'live', 1)");
