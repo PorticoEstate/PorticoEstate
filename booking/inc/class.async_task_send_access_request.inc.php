@@ -347,14 +347,15 @@
 
 		private function log( $what, $value = '' )
 		{
-			$GLOBALS['phpgw']->log->message(array(
-				'text'	 => "what: %1, <br/>value: %2",
-				'p1'	 => $what,
-				'p2'	 => $value ? $value : ' ',
-				'line'	 => __LINE__,
-				'file'	 => __FILE__
-			));
-			$GLOBALS['phpgw']->log->commit();
+			$log_args = array
+			(
+				'severity'	 => 'I',
+				'file'		 => __FILE__,
+				'line'		 => __LINE__,
+				'text'		 => "what: {$what}, <br/>value: {$value}"
+			);
+
+			$GLOBALS['phpgw']->log->info($log_args);
 		}
 
 		function round_to_next_hour( $dateString )
