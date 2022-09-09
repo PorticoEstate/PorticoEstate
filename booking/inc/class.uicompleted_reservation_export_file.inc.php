@@ -143,6 +143,8 @@
 #            if ($config->config_data['output_files'] == 'single')
 			$export_files = $this->bo->read();
 			array_walk($export_files["results"], array($this, "_add_links"), $this->module . ".uicompleted_reservation_export_file.show");
+			$found_not_exported = false;
+			$export_files["results"] = array_reverse($export_files["results"]);
 			foreach ($export_files["results"] as &$export_file)
 			{
 				$export_file['created_on'] = pretty_timestamp(substr($export_file['created_on'], 0, 19));
@@ -166,8 +168,9 @@
 						'href' => '#'
 					);
 				}
-				if ($export_file['total_items'] > 0 and $export_file['id'] > $config->config_data['invoice_last_id'])
+				if (!$found_not_exported && $export_file['total_items'] > 0 and $export_file['id'] > $config->config_data['invoice_last_id'])
 				{
+					$found_not_exported = true;
 					$export_file['upload'] = array(
 						'label' => lang('Upload'),
 						'href' => $this->link_to('upload', array('id' => $export_file['id']))
@@ -187,6 +190,7 @@
 					$export_file['created_by_name'] = $record['account_firstname'] . " " . $record['account_lastname'];
 				}
 			}
+			$export_files["results"] = array_reverse($export_files["results"]);
 
 			$results = $this->jquery_results($export_files);
 			return $results;
