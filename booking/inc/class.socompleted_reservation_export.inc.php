@@ -96,12 +96,17 @@
 				return;
 			}
 
+			$invalid_customer_ids = array();
 			foreach ($exportable_reservations as &$reservation)
 			{
 				if (!$this->get_customer_identifier_value_for($reservation) && $this->get_cost_value($reservation['cost']) > 0 /* Exclude free reservations from this check */)
 				{
-					$errors['invalid_customer_ids'] = lang('Unable to export: Missing a valid Customer ID on some rows');
+					$invalid_customer_ids[] = $reservation['id'];
 				}
+			}
+			if($invalid_customer_ids)
+			{
+					$errors['invalid_customer_ids'] = lang('Unable to export: Missing a valid Customer ID on some rows') . ': ' .implode(', ', $invalid_customer_ids);
 			}
 		}
 
@@ -246,6 +251,10 @@
 				if ($entity['building_id'])
 				{
 					$filters['building_id'] = $entity['building_id'];
+				}
+				if (!empty($entity['process']))
+				{
+					$filters['id'] = $entity['process'];
 				}
 			}
 			else if ($entity)

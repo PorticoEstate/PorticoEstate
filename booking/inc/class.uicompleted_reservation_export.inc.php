@@ -419,13 +419,11 @@
 		public function add()
 		{
 			//Values passed in from the "Export"-action in uicompleted_reservation.index
-			$export = extract_values($_GET, $this->fields);
+			$export = extract_values($_POST, $this->fields);
+			$export['process'] = phpgw::get_var('process', 'int', 'POST');
 			$errors = array();
-			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			if (!phpgw::get_var('prevalidate', 'bool'))
 			{
-				$export = array();
-				$export = extract_values($_POST, $this->fields);
-
 				//Fill in a dummy value (so as to temporarily pass validation), this will then be
 				//automatically filled in by bo->add process later on.
 				$export['from_'] = date('Y-m-d H:i:s');
@@ -467,7 +465,6 @@
 
 			$export['cancel_link'] = $this->link_to('index', $cancel_params);
 			phpgwapi_jquery::load_widget('autocomplete');
-
 			self::render_template_xsl('completed_reservation_export_form', array('new_form' => true,
 				'export' => $export));
 		}
