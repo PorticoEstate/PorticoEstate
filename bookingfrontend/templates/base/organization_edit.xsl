@@ -55,21 +55,22 @@
 								<label class="text-uppercase">
 									<xsl:value-of select="php:function('lang', 'organization type')" />
 								</label>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" name="organization_type" id="privateRadio" value="customer_ssn">
-										<xsl:attribute name="data-validation">
-											<xsl:text>required</xsl:text>
-										</xsl:attribute>
-										<xsl:attribute name="data-validation-error-msg">
-											<xsl:value-of select="php:function('lang', 'Please select an organization type')" />
-										</xsl:attribute>
+								<!-- first value is disabled for now-->
+								<div class="form-check form-check-inline" style="display: none;">
+									<input class="form-check-input" type="radio" name="organization_type" id="privateRadio" value="customer_ssn" disabled="disabled">
 									</input>
 									<label class="form-check-label text-uppercase" for="privateRadio">
 										<xsl:value-of select="php:function('lang', 'personal group')" />
 									</label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" name="organization_type" id="officialRadio" value="organization_number">
+									<input class="form-check-input" type="radio" name="organization_type" id="officialRadio" value="organization_number" checked="checked">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Please select an organization type')" />
+										</xsl:attribute>
 									</input>
 									<label class="form-check-label text-uppercase" for="officialRadio">
 										<xsl:value-of select="php:function('lang', 'Official organization')" />
