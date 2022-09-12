@@ -40,6 +40,14 @@ services:
        - sqldata2:/var/lib/mysql
 #    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_0900_as_cs']
     restart: unless-stopped
+  redis:
+      container_name: redis_container
+      image: redis
+      restart: always
+      volumes:
+       - redisdata:/data
+      ports:
+        - '6379:6379'
 
   web:
     container_name: portico_container
@@ -54,7 +62,7 @@ services:
     restart: always
     depends_on:
       - db
-
+      - redis
   pgadmin:
     container_name: pgadmin_container
     image: dpage/pgadmin4
@@ -72,4 +80,5 @@ volumes:
     pgadmin:
     sqldata1:
     sqldata2:
+    redisdata:
 

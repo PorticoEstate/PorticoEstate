@@ -106,7 +106,7 @@
 					$filter_clauses[] = "
 					(
 						(
-							((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
+							((NOT rental_contract.date_start > $availability_date_to AND (rental_contract.date_end IS NULL OR rental_contract.date_end = 0))
 							OR
 							(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))
 						)
@@ -136,7 +136,7 @@
 							(
 								NOT rental_contract_composite.contract_id IS NULL AND
 								NOT rental_contract.date_start IS NULL AND
-								((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
+								((NOT rental_contract.date_start > $availability_date_to AND (rental_contract.date_end IS NULL OR rental_contract.date_end = 0))
 								OR
 								(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))
 							)
@@ -253,7 +253,7 @@
 				NOT rental_contract_composite.contract_id IS NULL AND
 				NOT rental_contract.date_start IS NULL AND
 				NOT rental_contract.location_id = {$location_id_into} AND
-				((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
+				((NOT rental_contract.date_start > $availability_date_to AND (rental_contract.date_end IS NULL OR rental_contract.date_end = 0))
 		 		OR
 				(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))
 				)

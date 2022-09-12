@@ -327,8 +327,11 @@
 		{
 
 			$user_list = $this->bo->so->get_user_list();
-
-			array_unshift($user_list, array('id' => -1 * $this->current_account_id(),'name' => lang('My assigned applications')));
+			array_unshift($user_list, array(
+				'id'		 => -1 * $this->current_account_id(),
+				'name'		 => lang('My assigned applications'),
+				'selected'	 => 1
+			));
 
 			return $user_list;
 		}
@@ -485,16 +488,9 @@
 			$building_id = phpgw::get_var('filter_building_id', 'int', 'REQUEST', null);
 			$case_officer_id = phpgw::get_var('filter_case_officer_id', 'int');
 
-			// users with the booking role admin should have access to all buildings
-			// admin users should have access to all buildings
-//			if (!isset($GLOBALS['phpgw_info']['user']['apps']['admin']) && !$this->bo->has_role(booking_sopermission::ROLE_MANAGER))
-//			{
-//				$filters['id'] = $this->bo->accessable_applications($GLOBALS['phpgw_info']['user']['id'], $building_id);
-//			}
-//			else
-			{
-				$filters['id'] = $this->bo->accessable_applications(!empty($case_officer_id) ? array_map('abs', $case_officer_id) : null, $building_id);
-			}
+			$filter_id_sql = $this->bo->accessable_applications(!empty($case_officer_id) ? array_map('abs', $case_officer_id) : null, $building_id);
+
+			$filters['where'] = "(bb_application.id IN ({$filter_id_sql}))";
 
 			$activity_id = phpgw::get_var('activities', 'int', 'REQUEST', null);
 			if ($activity_id)
@@ -1859,6 +1855,13 @@
 				}
 			}
 
+			/**
+			 * hack
+			 */
+			if(isset($errors['customer_organization_number']) && is_array($errors['customer_organization_number']))
+			{
+				$errors['customer_organization_number'] = implode(', ', $errors['customer_organization_number']);
+			}
 			return array(
 				'status'		 => $errors ? 'error' : 'saved',
 				'direct_booking' => $direct_booking,

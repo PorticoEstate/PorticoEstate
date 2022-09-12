@@ -40,6 +40,8 @@
 				return $this->query();
 			}
 
+			phpgwapi_jquery::load_widget('bootstrap-multiselect');
+
 			$data = array(
 				'datatable_name' => $this->display_name,
 				'form' => array(
@@ -87,11 +89,83 @@
 			);
 
 			$data['datatable']['actions'][] = array();
+			$filters = $this->_get_filters();
+
+			foreach ($filters as $filter)
+			{
+				$data['form']['toolbar']['item'][] = $filter;
+			}
+
 			self::render_template_xsl('datatable_jquery', $data);
+		}
+
+		private function _get_user_list( $selected )
+		{
+			$selected = abs($selected);
+			$users = createObject('booking.sopermission_building')->get_user_list();
+
+			$user_list		 = array();
+			$selected_found	 = false;
+			foreach ($users as $user)
+			{
+				$user_list[] = array(
+					'id'		 => $user['id'],
+					'name'		 => $user['name'],
+					'selected'	 => $user['id'] == $selected ? 1 : 0
+				);
+
+				if (!$selected_found)
+				{
+					$selected_found = $user['id'] == $selected ? true : false;
+				}
+			}
+			if ($selected && !$selected_found)
+			{
+				$user_list[] = array
+					(
+					'id'		 => $selected,
+					'name'		 => $GLOBALS['phpgw']->accounts->get($selected)->__toString(),
+					'selected'	 => 1
+				);
+			}
+			return $user_list;
+		}
+
+		private function _get_filters()
+		{
+			$values_combo_box	 = array();
+			$combos				 = array();
+
+
+			$filter_assigned_to_me = true;
+
+			$values_combo_box[0] = $this->_get_user_list($this->user_id);
+			array_unshift($values_combo_box[0], array(
+				'id'		 => -1 * $GLOBALS['phpgw_info']['user']['account_id'],
+				'name'		 => lang('my assigned buildings'),
+				'selected'	 => ((int)$this->user_id < 0 || (int)$filter_assigned_to_me == 1) ? 1 : 0));
+
+//			array_unshift($values_combo_box[0], array('id' => '', 'name' => lang('assigned to')));
+			$combos[] = array(
+				'type'		 => 'filter',
+				'multiple'	 => 'true',
+				'name'		 => 'filter_user_id',
+				'extra'		 => '',
+				'text'		 => lang('case officer'),
+				'list'		 => $values_combo_box[0]
+			);
+
+			return $combos;
 		}
 
 		public function query()
 		{
+
+			/**
+			 *
+			 * $filter_user_id = phpgw::get_var('filter_user_id', 'int');
+			 * Filter is Is handled by somassbooking::_get_conditions()
+			 */
 
 			$buildings = $this->bo->read();
 			foreach ($buildings['results'] as &$building)

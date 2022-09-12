@@ -134,24 +134,34 @@
 							</input>
 						</div>
 					</div>
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'Articles')" />
-						</label>
-						<div id="articles_container" class="pure-custom" style="display:inline-block;"></div>
-					</div>
-
+					<xsl:if test="config/activate_application_articles">
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'Articles')" />
+							</label>
+							<div id="articles_container" class="pure-custom" style="display:inline-block;"></div>
+						</div>
+					</xsl:if>
 					<div class="pure-control-group">
 						<label for="field_cost">
 							<xsl:value-of select="php:function('lang', 'Cost')" />
 						</label>
 						<input id="field_cost" name="cost" type="text">
-							<xsl:attribute name="data-validation">
-								<xsl:text>required</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation-error-msg">
-								<xsl:value-of select="php:function('lang', 'Please enter a cost')" />
-							</xsl:attribute>
+							<xsl:choose>
+								<xsl:when test="config/activate_application_articles">
+									<xsl:attribute name="readonly">
+										<xsl:text>readonly</xsl:text>
+									</xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Please enter a cost')" />
+									</xsl:attribute>
+								</xsl:otherwise>
+							</xsl:choose>
 							<xsl:attribute name="value">
 								<xsl:value-of select="allocation/cost"/>
 							</xsl:attribute>

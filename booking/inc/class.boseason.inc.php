@@ -134,14 +134,16 @@
 				foreach ($tallocations['results'] as $talloc)
 				{
 
-					$allocation = extract_values($talloc, array('season_id', 'organization_id',
+					$allocation					 = extract_values($talloc, array('season_id', 'organization_id',
 						'cost', 'resources', 'organization_name'));
-					$allocation['active'] = '1';
-					$allocation['from_'] = $date->format("Y-m-d") . ' ' . $talloc['from_'];
-					$allocation['to_'] = $date->format("Y-m-d") . ' ' . $talloc['to_'];
+					$allocation['active']		 = '1';
+					$allocation['from_']		 = $date->format("Y-m-d") . ' ' . $talloc['from_'];
+					$allocation['to_']			 = $date->format("Y-m-d") . ' ' . $talloc['to_'];
 					$allocation['building_name'] = $season['building_name'];
-					$allocation['completed'] = 1;
-					$errors = $this->bo_allocation->validate($allocation);
+					$allocation['completed']	 = 1;
+					$allocation['articles']		 = !empty($talloc['articles']) ? $talloc['articles'] : array();
+
+					$errors						 = $this->bo_allocation->validate($allocation);
 
 					if (!$errors)
 					{
@@ -177,14 +179,22 @@
 				if ($date->format('N') == 7) // sunday
 				{
 					if ($interval == 2)
+					{
 						$date->modify('+7 days');
+					}
 					elseif ($interval == 3)
+					{
 						$date->modify('+14 days');
+					}
 					elseif ($interval == 4)
+					{
 						$date->modify('+21 days');
+					}
 				}
 
 				$date->modify('+1 day');
+
+				$sopurchase_order = createObject('booking.sopurchase_order');
 
 				if ($date->format('Y-m-d') > $to->format('Y-m-d'))
 				{
@@ -193,7 +203,24 @@
 						$this->so->transaction_begin();
 						foreach ($valid as $alloc)
 						{
-							$this->bo_allocation->add($alloc);
+							$receipt = 	$this->bo_allocation->add($alloc);
+							$alloc['id'] = $receipt['id'];
+
+							/**
+							 *
+							 * Add purchase order from template
+							 */
+
+							$purchase_order = $this->compile_purchase_order($alloc);
+
+							if(!empty($purchase_order['lines']))
+							{
+								$purchase_order['application_id'] = -1;
+								$purchase_order['reservation_type'] = 'allocation';
+								$purchase_order['reservation_id'] = $alloc['id'];
+
+								$sopurchase_order->add_purchase_order($purchase_order);
+							}
 						}
 						$this->so->transaction_commit();
 					}
@@ -201,6 +228,38 @@
 				}
 			}
 			while (true);
+		}
+
+		function compile_purchase_order( $alloc )
+		{
+			$purchase_order = array('status' => 0, 'customer_id' => -1, 'lines' => array());
+
+			$selected_articles = isset($alloc['articles']) && is_array($alloc['articles']) ? $alloc['articles'] : array();
+
+			foreach ($selected_articles as $selected_article)
+			{
+				$_article_info = explode('_', $selected_article);
+
+				if(empty($_article_info[0]))
+				{
+					continue;
+				}
+
+				/**
+				 * the value selected_articles[]
+				 * <mapping_id>_<quantity>_<tax_code>_<ex_tax_price>_<parent_mapping_id>
+				 */
+				$purchase_order['lines'][] = array(
+					'article_mapping_id'	=> $_article_info[0],
+					'quantity'				=> $_article_info[1],
+					'tax_code'				=> $_article_info[2],
+					'ex_tax_price'			=> $_article_info[3],
+					'parent_mapping_id'		=> !empty($_article_info[4]) ? $_article_info[4] : null
+				);
+			}
+
+			return $purchase_order;
+
 		}
 
 		function read_boundary( $boundary_id )

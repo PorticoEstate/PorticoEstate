@@ -84,6 +84,16 @@
 			$placeholder = str_ireplace(array('Y','m', 'd', 'H', 'i'), array('YYYY', 'MM', 'DD', 'HH', 'mm' ),$dateformat);
 
 
+			if(empty($config['readonly']))
+			{
+				$readonly = 'false';
+			}
+			else
+			{
+				$readonly = 'true';
+			}
+
+
 			if(empty($config['min_date']))
 			{
 				$min_date = 'false';
@@ -130,7 +140,7 @@
 			$js = <<<JS
 			$(document).ready(function()
 			{
-				$( "#{$id}" ).attr('readonly', false);
+				$( "#{$id}" ).attr('readonly', {$readonly});
 				$( "#{$id}" ).attr('placeholder', '{$placeholder}');
 				$( "#{$id}" ).attr('autocomplete', 'off');
 

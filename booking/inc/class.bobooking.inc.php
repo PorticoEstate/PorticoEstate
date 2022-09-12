@@ -10,7 +10,9 @@
 		foreach ($a as $x)
 		{
 			if (!array_key_exists($x, $b))
+			{
 				$c[] = $x;
+			}
 		}
 		return $c;
 	}
@@ -1460,6 +1462,19 @@
 						$to_utc->setTimezone($DateTimeZone_utc);
 			
 									
+						if(!empty($simple_booking_start_date))
+						{
+							$_simple_booking_start_date = new DateTime(date('Y-m-d H:i', $resource['simple_booking_start_date']));
+							$now = new DateTime();
+							$now->setTimezone($DateTimeZone);
+
+							if($limitDate->format('Y-m-d') == $checkDate->format('Y-m-d')
+								&& $now->format('H') < $_simple_booking_start_date->format('H')
+							)
+							{
+								$within_season = false;
+							}
+						}
 						if($within_season)
 						{
 							$overlap = $this->check_if_resurce_is_taken($resource['id'], $StartTime, $endTime, $events);

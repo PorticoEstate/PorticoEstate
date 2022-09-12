@@ -91,6 +91,7 @@
 				'homepage' => array('type' => 'text', 'nullable' => True),
 				'phone' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
 				'email' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+				'co_address' => array('type' => 'varchar', 'precision' => '150', 'nullable' => True),
 				'street' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'zip_code' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'district' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
@@ -531,6 +532,7 @@
 					'default' => '0.0'),
 				'from_' => array('type' => 'time', 'nullable' => False),
 				'to_' => array('type' => 'time', 'nullable' => False),
+				'articles' => array('type' => 'jsonb', 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(

@@ -200,15 +200,15 @@
 								<div class="invalid-feedback">
 									Vennligst velg en organisasjon.
 								</div>
-								<!--
-																<label>
-																	<a id="add_new_value" href="#" data-toggle="modal" data-target="#new_organization">
-																		<img src="{add_img}" width="23"/>
-																		<xsl:text> </xsl:text>
-																		<xsl:value-of select="php:function('lang', 'new organization')"/>
-																	</a>
-																</label>
-								-->
+
+								<label>
+									<a id="add_new_value" href="#" data-toggle="modal" data-target="#new_organization">
+										<img src="{add_img}" width="23"/>
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="php:function('lang', 'new organization')"/>
+									</a>
+								</label>
+
 							</div>
 						</xsl:if>
 
@@ -387,7 +387,11 @@
 
 		$('#new_organization').on('hidden.bs.modal', function (e)
 		{
-		location.reload();
+			// alert on insufficient rights
+			if(!i_have_already_told_you)
+			{
+				location.reload();
+			}
 		});
 
 	</script>

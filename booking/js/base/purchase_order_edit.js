@@ -2,7 +2,7 @@
 /* global lang, alertify, tax_code_list, template_set, initialSelection, date_format */
 var custom_tax_code;
 
-function populateTableChkArticles(selection, resources, application_id, reservation_type, reservation_id)
+function populateTableChkArticles(selection, resources, application_id, reservation_type, reservation_id, alloc_template_id = null)
 {
 
 	var oArgs = {
@@ -10,7 +10,8 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 		sort: 'name',
 		application_id: application_id,
 		reservation_type: reservation_type,
-		reservation_id: reservation_id
+		reservation_id: reservation_id,
+		alloc_template_id: alloc_template_id
 	};
 	var url = phpGWLink('bookingfrontend/', oArgs, true);
 
@@ -186,9 +187,13 @@ $(document).ready(function ()
 		{
 			reservation_id = '';
 		}
+		if (typeof (alloc_template_id) === 'undefined')
+		{
+			alloc_template_id = '';
+		}
 
 		populateTableChkArticles([
-		], resources, application_id, reservation_type, reservation_id);
+		], resources, application_id, reservation_type, reservation_id, alloc_template_id);
 
 	}
 
@@ -270,6 +275,25 @@ function set_mandatory(xTable)
 		j++;
 	}
 
+	//alternative for time
+
+	var hourtime = $("#dates-container").find(".hourtime");
+	if (hourtime.length > 0)
+	{
+		var start_hour = parseInt(hourtime[0].value);
+		var start_min = parseInt(hourtime[1].value);
+		var end_hour = parseInt(hourtime[2].value);
+		var end_min = parseInt(hourtime[3].value);
+
+		sum_minutes = ((end_hour * 60) + end_min) - ((start_hour * 60) + start_min);
+		timespan = sum_minutes / 60;
+
+		sum_hours += Math.ceil(timespan);
+		sum_days += Math.ceil(sum_hours / 24);
+
+	}
+
+
 	//Create and append select list
 	var tax_code_select = document.createElement("select");
 	tax_code_select.id = "tax_code_select";
@@ -307,7 +331,7 @@ function set_mandatory(xTable)
 					{
 						if (tax_code_list[i].id == tax_code_value)
 						{
-							var new_percent = parseInt(tax_code_list[i].percent);
+							var new_percent = parseInt(tax_code_list[i].percent_);
 							if (isNaN(new_percent))
 							{
 								new_percent = 0;
@@ -655,6 +679,10 @@ function empty_from_bastet(element)
 	}
 
 	$('#sum_price_table').html(temp_total_sum.toFixed(2));
+
+	var xTable = element.parentNode.parentNode.parentNode.parentNode;
+
+	set_sum(xTable);
 
 }
 

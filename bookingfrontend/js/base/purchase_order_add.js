@@ -28,7 +28,7 @@ $(document).ready(function ()
 
 });
 
-function populateTableChkArticles(selection, resources, application_id, reservation_type, reservation_id)
+function populateTableChkArticles(selection, resources, application_id, reservation_type, reservation_id, alloc_template_id = null)
 {
 
 	var oArgs = {
@@ -36,7 +36,8 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 		sort: 'name',
 		application_id: application_id,
 		reservation_type: reservation_type,
-		reservation_id: reservation_id
+		reservation_id: reservation_id,
+		alloc_template_id: alloc_template_id
 	};
 	var url = phpGWLink('bookingfrontend/', oArgs, true);
 

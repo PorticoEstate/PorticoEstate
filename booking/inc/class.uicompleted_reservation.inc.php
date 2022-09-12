@@ -165,20 +165,22 @@
 							),
 						)
 					),
-					'list_actions' => array(
-						'item' => array(
-							array(
-								'type' => 'button',
-								'name' => 'export',
-								'value' => lang('Export') . '...',
-								'onClick' => "export_completed_reservations();"
-							),
-						)
-					),
+//					'list_actions' => array(
+//						'item' => array(
+//							array(
+//								'type' => 'button',
+//								'name' => 'export',
+//								'value' => lang('Export') . '...',
+//								'onClick' => "export_completed_reservations();"
+//							),
+//						)
+//					),
 				),
 				'datatable' => array(
 					'source' => $this->link_to('index', array('phpgw_return_as' => 'json')),
 					'sorted_by' => array('key' => 0, 'dir' => 'desc'),//id
+					'select_all'	=> true,
+					'allrows'		 => true,
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -248,6 +250,11 @@
 							'label' => lang('Order id'),
 						),
 						array(
+							'key' => 'select',
+							'label' => lang('select'),
+							'formatter' => 'myFormatterCheck',
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -255,7 +262,29 @@
 				)
 			);
 
+			$FormatterCheck = <<<JS
+				var myFormatterCheck = function (key, oData)
+				{
+					if (isNaN(parseInt(oData['exported'].label)))
+					{
+						return  "<center><input type=\"checkbox\" class=\"mychecks\"  name=\"process[]\" value=\"" + oData['id'] + "\"/></center>";
+					}
+				};
+JS;
+
+			$GLOBALS['phpgw']->js->add_code('', $FormatterCheck, true);
+
 			$data['filters'] = $this->export_filters;
+
+			$data['datatable']['actions'][] = array
+				(
+				'my_name'		 => 'Export',
+				'type'			 => 'custom',
+				'className'		 => 'save',
+				'custom_code'	 => "export_completed_reservations();",
+				'text'			 => lang('Export') . '...',
+			);
+
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -362,7 +391,7 @@
 
 			if (!isset($_SESSION['show_all_completed_reservations']))
 			{
-				$filters['exported'] = '';
+				$filters['exported'] = null;
 			}
 
 			$params = array(

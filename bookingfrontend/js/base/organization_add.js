@@ -1,4 +1,5 @@
 /* global count_new_org_list, personal_org */
+var i_have_already_told_you = false;
 
 $(document).ready(function ()
 {
@@ -20,69 +21,11 @@ $(document).ready(function ()
 
 	$("input[name='organization_type']").change(function ()
 	{
-		var unselect = {customer_ssn: 'organization_number', organization_number: 'customer_ssn'};
-		var identifier_type = {customer_ssn: 'ssn', organization_number: 'organization_number'};
-		var selected = $(this).val();
-
-		var error = false;
-		if(personal_org.length > 0 && selected === 'customer_ssn')
-		{
-			error = true;
-			$("#submitBtn").prop('disabled', true);
-			$("#privateRadio").prop('checked', false);
-			selected = 'customer_ssn';
-			$("#" + selected).hide();
-			$("#" + unselect[selected]).hide();
-			$("#" + selected).attr("required", "required");
-			$("#" + unselect[selected]).removeAttr("data-validation");
-			$("#field_customer_identifier_type").val(identifier_type[selected]);
-			alert('Du har allerede registrert "' + personal_org + '"');
-		}
-
-		if (count_new_org_list === 0 && selected === 'organization_number')
-		{
-			error = true;
-			$("#submitBtn").prop('disabled', true);
-			$("#officialRadio").prop('checked', false);
-			selected = 'customer_ssn';
-			$("#" + selected).hide();
-			$("#" + unselect[selected]).hide();
-			$("#" + selected).attr("required", "required");
-			$("#" + unselect[selected]).removeAttr("required");
-			$("#field_customer_identifier_type").val(identifier_type[selected]);
-			alert('Du har har ikke en rolle som gir muliget for å registrere på vegne av (en ny) organisasjon');
-		}
-		if(error)
-		{
-			return;
-		}
-
-		$("#submitBtn").prop('disabled', false);
-
-
-		$("#" + selected).show();
-		$("#" + unselect[selected]).hide();
-		$("#" + selected).attr("data-validation", "required");
-		$("#" + unselect[selected]).removeAttr("data-validation");
-		$("#field_customer_identifier_type").val(identifier_type[selected]);
-
-
-		var organization_number = $("#organization_number  option:selected").val();
-		if (selected === 'organization_number' && organization_number && !$("#field_name").val())
-		{
-			populate_organization_data(organization_number);
-		}
-		else if ((selected === 'organization_number' && !organization_number) || selected === 'customer_ssn')
-		{
-			$("#field_customer_organization_number").val('');
-			$("#field_name").val('');
-			$("#field_shortname").val('');
-			$("#field_street").val('');
-			$("#field_zip_code").val('');
-			$("#field_city").val('');
-		}
-
+		check_righst($(this).val());
 	});
+
+	check_righst('organization_number');
+
 
 	$("#organization_number").change(function ()
 	{
@@ -171,6 +114,74 @@ $(document).ready(function ()
 
 });
 
+function check_righst(selected)
+{	
+	var unselect = {customer_ssn: 'organization_number', organization_number: 'customer_ssn'};
+	var identifier_type = {customer_ssn: 'ssn', organization_number: 'organization_number'};
+
+	var error = false;
+	if(personal_org.length > 0 && selected === 'customer_ssn')
+	{
+		error = true;
+		$("#submitBtn").prop('disabled', true);
+		$("#privateRadio").prop('checked', false);
+		selected = 'customer_ssn';
+		$("#" + selected).hide();
+		$("#" + unselect[selected]).hide();
+		$("#" + selected).attr("required", "required");
+		$("#" + unselect[selected]).removeAttr("data-validation");
+		$("#field_customer_identifier_type").val(identifier_type[selected]);
+		alert('Du har allerede registrert "' + personal_org + '"');
+	}
+
+	if (count_new_org_list === 0 && selected === 'organization_number')
+	{
+		error = true;
+		$("#submitBtn").prop('disabled', true);
+//		$("#officialRadio").prop('checked', false);
+		selected = 'customer_ssn';
+		$("#" + selected).hide();
+		$("#" + unselect[selected]).hide();
+		$("#" + selected).attr("required", "required");
+		$("#" + unselect[selected]).removeAttr("required");
+		$("#field_customer_identifier_type").val(identifier_type[selected]);
+		if(!i_have_already_told_you)
+		{
+			i_have_already_told_you = true;
+			alert('Du har har ikke en rolle som gir muliget for å registrere på vegne av (en ny) organisasjon');
+		}
+	}
+	if(error)
+	{
+		return;
+	}
+
+	$("#submitBtn").prop('disabled', false);
+
+
+	$("#" + selected).show();
+	$("#" + unselect[selected]).hide();
+	$("#" + selected).attr("data-validation", "required");
+	$("#" + unselect[selected]).removeAttr("data-validation");
+	$("#field_customer_identifier_type").val(identifier_type[selected]);
+
+
+	var organization_number = $("#organization_number  option:selected").val();
+	if (selected === 'organization_number' && organization_number && !$("#field_name").val())
+	{
+		populate_organization_data(organization_number);
+	}
+	else if ((selected === 'organization_number' && !organization_number) || selected === 'customer_ssn')
+	{
+		$("#field_customer_organization_number").val('');
+		$("#field_name").val('');
+		$("#field_shortname").val('');
+		$("#field_street").val('');
+		$("#field_zip_code").val('');
+		$("#field_city").val('');
+	}
+
+};
 
 function populate_organization_data(organization_number)
 {

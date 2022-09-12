@@ -77,43 +77,52 @@
 						</option>
 					</select>					
 				</div>
-				<div class="pure-control-group">
-					<label>
-						<xsl:value-of select="php:function('lang', 'From')" />
-					</label>
-					<input id="from_h" name="from_h" type="text" size="5">
-						<xsl:attribute name="value">
-							<xsl:value-of select="season/from_h"/>
-						</xsl:attribute>
-					</input>
-					:
-					<input id="from_m" name="from_m" type="text" size="5">
-						<xsl:attribute name="value">
-							<xsl:value-of select="season/from_m"/>
-						</xsl:attribute>
-					</input>					
-				</div>
-				<div class="pure-control-group">
-					<label>
-						<xsl:value-of select="php:function('lang', 'To')" />
-					</label>
-					<input id="to_h" name="to_h" type="text" size="5">
-						<xsl:attribute name="value">
-							<xsl:value-of select="season/to_h"/>
-						</xsl:attribute>
-					</input>
-					:
-					<input id="to_m" name="to_m" type="text" size="5">
-						<xsl:attribute name="value">
-							<xsl:value-of select="season/to_m"/>
-						</xsl:attribute>
-					</input>									
+				<div id="dates-container">
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'From')" />
+						</label>
+						<input id="from_h" name="from_h" type="text" size="5" class="hourtime">
+							<xsl:attribute name="value">
+								<xsl:value-of select="season/from_h"/>
+							</xsl:attribute>
+						</input>
+						:
+						<input id="from_m" name="from_m" type="text" size="5" class="hourtime">
+							<xsl:attribute name="value">
+								<xsl:value-of select="season/from_m"/>
+							</xsl:attribute>
+						</input>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'To')" />
+						</label>
+						<input id="to_h" name="to_h" type="text" size="5" class="hourtime">
+							<xsl:attribute name="value">
+								<xsl:value-of select="season/to_h"/>
+							</xsl:attribute>
+						</input>
+						:
+						<input id="to_m" name="to_m" type="text" size="5" class="hourtime">
+							<xsl:attribute name="value">
+								<xsl:value-of select="season/to_m"/>
+							</xsl:attribute>
+						</input>
+					</div>
 				</div>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Cost')" />
 					</label>
-					<input id="cost" name="cost" type="text">
+					<input id="field_cost" name="cost" type="text">
+						<xsl:choose>
+							<xsl:when test="config/activate_application_articles">
+								<xsl:attribute name="readonly">
+									<xsl:text>readonly</xsl:text>
+								</xsl:attribute>
+							</xsl:when>
+						</xsl:choose>
 						<xsl:attribute name="value">
 							<xsl:value-of select="season/cost"/>
 						</xsl:attribute>
@@ -125,6 +134,24 @@
 					</label>
 					<div id="resources_container" class="custom-container"></div>
 				</div>
+				<xsl:if test="config/activate_application_articles">
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Articles')" />
+						</label>
+						<input type="hidden" data-validation="application_articles">
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please choose at least 1 Article')" />
+							</xsl:attribute>
+						</input>
+						<div id="articles_container" style="display:inline-block;">
+							<span class="select_first_text">
+								<xsl:value-of select="php:function('lang', 'Select a resource first')" />
+							</span>
+						</div>
+					</div>
+				</xsl:if>
+
 			</div>
 		</div>
 		<div class="form-buttons">
@@ -144,9 +171,14 @@
 	</form>
 
 	<script type="text/javascript">
+		var alloc_template_id = '<xsl:value-of select="season/id"/>';
+		var template_set = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|template_set')" />';
+		var date_format = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />';
+		var tax_code_list = <xsl:value-of select="tax_code_list"/>;
+		var initialSelection = <xsl:value-of select="season/resources_json"/>;
+
 		var resourceIds = '<xsl:value-of select="season/resource_ids"/>';
-		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Account', 'Role', 'Actions', 'Edit', 'Delete', 'Resource Type')"/>;
-                
+		var lang = <xsl:value-of select="php:function('js_lang','Account', 'Role', 'Actions', 'Edit', 'From', 'To', 'Resource Type', 'Name', 'article', 'Select', 'price', 'unit', 'tax', 'unit cost', 'quantity', 'Selected', 'Delete', 'Sum', 'tax code', 'percent')"/>;
     <![CDATA[
  //       var resourcesURL    = 'index.php?menuaction=booking.uiresource.index&sort=name&phpgw_return_as=json&' + resourceIds;
 		var resourcesURL = phpGWLink('index.php', {menuaction:'booking.uiresource.index', sort:'name', length:-1}, true) + '&' + resourceIds;
