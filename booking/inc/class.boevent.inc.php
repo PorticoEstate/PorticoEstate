@@ -164,7 +164,7 @@
 				$freetime = pretty_timestamp($event['from_']) . ' til ' . pretty_timestamp($event['to_']) . "\n";
 			}
 
-			$body .= '</p><p>' . $event['customer_organization_name'] . ' har avbestilt tid i ' . $event['building_name'] . ':<br />';
+			$body .= '</p><p>' . $event['customer_organization_name'] ? $event['customer_organization_name'] : $event['contact_name'] . ' har avbestilt tid i ' . $event['building_name'] . ':<br />';
 			$body .= implode(", ", $this->so->get_resources(implode(",", $event['resources']))) . ' den ' . $freetime;
 			$body .= ' - <a href="' . $link . '">' . lang('Check calendar') . '</a></p>';
 			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
@@ -207,7 +207,7 @@
 				$subject = $config->config_data['event_edited_mail_subject'];
 			}
 
-			$body = '<b>Beksjed fra ' . $event['customer_organization_name'] . '</b><br />' . $message . '<br /><br/>';
+			$body = '<b>Beksjed fra ' . $event['customer_organization_name'] ? $event['customer_organization_name'] : $event['contact_name'] . '</b><br />' . $message . '<br /><br/>';
 			$body .= '<b>Kontaktperson:</b> ' . $event['contact_name'] . '<br />';
 			$body .= '<b>Epost:</b> ' . $event['contact_email'] . '<br />';
 			$body .= '<b>Telefon:</b> ' . $event['contact_phone'] . '<br /><br />';
@@ -263,9 +263,18 @@
 				$freetime = pretty_timestamp($event['from_']) . ' til ' . pretty_timestamp($event['to_']) . "\n";
 			}
 
-			$body .= '</p><p>' . $event['customer_organization_name'] . ' har avbestilt tid i ' . $event['building_name'] . ':<br />';
+			$body .= '</p><p>' . $event['customer_organization_name'] ? $event['customer_organization_name'] : $event['contact_name'] . ' har avbestilt tid i ' . $event['building_name'] . ':<br />';
 			$body .= implode(", ", $this->so->get_resources(implode(",", $event['resources']))) . ' den ' . $freetime;
 			$body .= ' - <a href="' . $link . '">' . lang('Check calendar') . '</a></p>';
+
+			if($event['application_id'])
+			{
+				$link_application = $external_site_address . '/?menuaction=booking.uiapplication.show&id=';
+				$link_application .= $event['application_id'];
+
+				$body .= '<p> - <a href="' . $link_application . '">' . lang('Application') . '</a></p>';
+			}
+
 			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
 
 			foreach ($mailadresses as $adr)
