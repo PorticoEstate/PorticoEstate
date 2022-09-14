@@ -1695,7 +1695,7 @@
 					}
 					else
 					{
-						$organization_info = $this->add_organization($partial2['customer_organization_number'], $external_login_info['ssn']);
+						$organization_info = $this->add_organization($partial2, $external_login_info['ssn']);
 						if(!empty($organization_info['id']))
 						{
 							$partial2['customer_organization_id']		 = $organization_info['id'];
@@ -2228,11 +2228,11 @@
 			);
 		}
 
-		private function add_organization( $organization_number, $ssn )
+		private function add_organization( $partial2, $ssn )
 		{
 			try
 			{
-				$organization_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($organization_number);
+				$organization_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($partial2['customer_organization_number']);
 			}
 			catch (sfValidatorError $e)
 			{
@@ -2271,6 +2271,13 @@
 					'phone'							 => 'N/A',
 					'description'					 => 'N/A',
 					'district'						 => 'N/A',
+					'contacts'						 => array(
+						array(
+							'name'	 => $partial2['contact_name'],
+							'email'	 => $partial2['contact_email'],
+							'phone'	 => $partial2['contact_phone']
+						)
+					)
 				);
 
 				if( $organization_info['hjemmeside'])
