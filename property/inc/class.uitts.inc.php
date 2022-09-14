@@ -140,7 +140,7 @@
 			$params = array(
 				'start'				 => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results'			 => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query'				 => $search['value'],
+				'query'				 => isset($search['value']) ? $search['value'] : '',
 				'order'				 => is_array($order) ? $columns[$order[0]['column']]['data'] : $order,
 				'sort'				 => is_array($order) ? $order[0]['dir'] : $sort,
 				'dir'				 => is_array($order) ? $order[0]['dir'] : $sort,
@@ -200,11 +200,6 @@
 				}
 			}
 
-			if ($export)
-			{
-				return $values;
-			}
-//_debug_array($values);
 			$result_data = array('results' => $values);
 
 			$result_data['total_records']	 = $this->bo->total_records;
