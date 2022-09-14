@@ -77,7 +77,7 @@
 			{
 				if(!in_array($app, array('logout', 'about', 'preferences')) && isset($navbar[$app]))
 				{
-					$treemenu .= $menu->render_menu($app, $navigation[$app], $navbar[$app], true);
+					$treemenu .= $menu->render_menu($app, isset($navigation[$app]) ? $navigation[$app] : null, $navbar[$app], true);
 				}
 			}
 			$GLOBALS['phpgw']->common->phpgw_header(true);
