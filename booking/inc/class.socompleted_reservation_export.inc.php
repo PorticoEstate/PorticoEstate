@@ -117,6 +117,36 @@
 			return $entity;
 		}
 
+
+
+		/**
+		 * Reverse only not exported
+		 * @param int $id
+		 * @return bool on success
+		 */
+		function reverse_reservation( int $id )
+		{
+			$ret = false;
+			$sql0 = "SELECT id FROM bb_completed_reservation WHERE exported = {$id} AND export_file_id IS NULL";
+			$this->db->query($sql0, __LINE__, __FILE__);
+			$ids = array();
+			while($this->db->next_record())
+			{
+				$ids[] = $this->db->f('id');
+			}
+
+			if($ids)
+			{
+				$this->db->transaction_begin();
+
+				$sql1 = "UPDATE bb_completed_reservation SET exported = NULL WHERE id IN(" . implode(',', $ids) . ')';
+				$sql2 = "DELETE FROM bb_completed_reservation_export_configuration where export_id = {$id}";
+				$this->db->query($sql1, __LINE__, __FILE__);
+				$this->db->query($sql2, __LINE__, __FILE__);
+				$ret = $this->db->transaction_commit();
+			}
+			return $ret;
+		}
 		/**
 		 * Normalizes data on entity.
 		 */

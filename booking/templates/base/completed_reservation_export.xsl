@@ -53,6 +53,13 @@
 		</div>
 	</form>
 	<div class="form-buttons">
+		<xsl:if test="reversible = 1">
+			<xsl:if test="show_delete_button = 1">
+				<button onclick="window.location.href='{export/delete_link}'" class="pure-button pure-button-primary">
+					<xsl:value-of select="php:function('lang', 'Reverse')" />
+				</button>
+			</xsl:if>
+		</xsl:if>
 		<input type="button" class="pure-button pure-button-primary" name="cancel">
 			<xsl:attribute name="onclick">window.location.href="<xsl:value-of select="export/cancel_link"/>"</xsl:attribute>
 			<xsl:attribute name="value">
