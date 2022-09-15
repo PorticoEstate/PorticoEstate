@@ -2296,7 +2296,7 @@
 
 							$_item['art_descr'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 35), 35, ' '); //35 chars long
 							$_item['article'] = str_pad(substr(strtoupper($order_line['article_code']), 0, 15), 15, ' ');
-							$_item['amount'] = $this->format_cost(($order_line['amount'] + $order_line['tax']));
+							$_item['amount'] = $this->format_cost(($order_line['amount']));
 					//		$_item['tax_code'] = str_pad($order_line['tax_code'], 2, ' ', STR_PAD_LEFT);
 							$_item['value_1'] = str_pad($order_line['quantity'] * 100, 17, 0, STR_PAD_LEFT); //Units. Multiplied by 100.
 							$item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
@@ -2468,7 +2468,7 @@
 
 							$_item['art_descr'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 35), 35, ' '); //35 chars long
 							$_item['article'] = str_pad(substr(strtoupper($order_line['article_code']), 0, 15), 15, ' ');
-							$_item['amount'] = $this->format_cost(($order_line['amount'] + $order_line['tax']));
+							$_item['amount'] = $this->format_cost(($order_line['amount']));
 					//		$_item['tax_code'] = str_pad($order_line['tax_code'], 2, ' ', STR_PAD_LEFT);
 							$_item['value_1'] = str_pad($order_line['quantity'] * 100, 17, 0, STR_PAD_LEFT); //Units. Multiplied by 100.
 							$item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
