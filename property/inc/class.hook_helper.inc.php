@@ -34,8 +34,13 @@
 	class property_hook_helper
 	{
 
-		private $skip_portalbox_controls;
+		private $skip_portalbox_controls,
+			$navbar_bg;
 
+		public function __construct()
+		{
+			$this->navbar_bg = isset($GLOBALS['phpgw_info']['theme']['navbar_bg']) ? $GLOBALS['phpgw_info']['theme']['navbar_bg'] : '';
+		}
 		/**
 		 * Clear ACL-based userlists
 		 *
@@ -157,9 +162,9 @@
 				$portalbox		 = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => lang('tender delay') . " ({$total_records})",
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
@@ -231,9 +236,9 @@
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => lang('end date delay'),
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
@@ -341,9 +346,9 @@ JS;
 				$portalbox		 = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => lang('tenant claim'),
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
@@ -440,9 +445,9 @@ JS;
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => isset($prefs['property']['mainscreen_tts_title']) && $prefs['property']['mainscreen_tts_title'] ? "{$prefs['property']['mainscreen_tts_title']}" : lang('Helpdesk'),
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
@@ -579,9 +584,9 @@ JS;
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => isset($prefs['property']['mainscreen_projects_1_title']) && $prefs['property']['mainscreen_projects_1_title'] ? "{$prefs['property']['mainscreen_projects_1_title']} ({$total_records})" : lang('project') . '::' . lang('list') . ' ' . 1 . "::Status: {$default_status} ({$total_records})",
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
@@ -648,9 +653,9 @@ JS;
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => isset($prefs['property']['mainscreen_workorders_1_title']) && $prefs['property']['mainscreen_workorders_1_title'] ? "{$prefs['property']['mainscreen_workorders_1_title']} ({$total_records})" : lang('workorder') . '::' . lang('list') . ' ' . 1 . "::Status: {$default_status} ({$total_records})",
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
@@ -697,9 +702,9 @@ JS;
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => isset($prefs['property']['mainscreen_workorders_2_title']) && $prefs['property']['mainscreen_workorders_2_title'] ? "{$prefs['property']['mainscreen_workorders_2_title']} ({$total_records})" : lang('workorder') . '::' . lang('list') . ' ' . 2 . "::Status: {$default_status} ({$total_records})",
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
@@ -745,9 +750,9 @@ JS;
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => $title,
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
@@ -825,9 +830,9 @@ JS;
 				$portalbox		 = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => $title,
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)

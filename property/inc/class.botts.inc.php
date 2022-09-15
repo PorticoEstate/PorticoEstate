@@ -604,7 +604,7 @@
 			$this->sum_actual_cost	 = $this->so->sum_actual_cost;
 			$this->sum_difference	 = $this->so->sum_difference;
 
-			if (!$external)
+			if (true)//!$external)
 			{
 				$entity		 = $this->get_origin_entity_type();
 				$contacts	 = CreateObject('property.sogeneric');

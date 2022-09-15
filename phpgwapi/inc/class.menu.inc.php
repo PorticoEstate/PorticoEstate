@@ -141,11 +141,11 @@
 						case 'admin':
 							$app_text = $app == 'admin' ? lang('General') : lang($app);
 							$menus['navigation']['admin'][$app] = array
-								(
+							(
 								'text' => $GLOBALS['phpgw']->translation->translate($app, array(), true),
 								'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
 									'appname' => $app)),
-								'image' => $raw_menu['navbar'][$app]['image'],
+								'image' => isset($raw_menu['navbar'][$app]['image']) ? $raw_menu['navbar'][$app]['image'] : '',
 								'children' => $menu
 							);
 						// no break here - fall thru

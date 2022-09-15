@@ -368,6 +368,7 @@ HTML;
 				}
 
 				$login = $GLOBALS['phpgw']->auth->get_username();
+				$logindomain = phpgw::get_var('domain', 'string', 'GET');
 
 				if($login)
 				{
