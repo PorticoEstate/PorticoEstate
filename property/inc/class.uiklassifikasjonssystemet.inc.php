@@ -46,7 +46,8 @@
 			$nextmatchs,
 			$start,
 			$maxmatches,
-			$token;
+			$token,
+			$proxy;
 		var $public_functions = array
 			(
 			'login'			 => true,
@@ -59,6 +60,7 @@
 			parent::__construct();
 			$this->config			 = CreateObject('phpgwapi.config', 'property')->read();
 			$this->webservicehost	 = !empty($this->config['webservicehost']) ? $this->config['webservicehost'] : 'https://apitest.klassifikasjonssystemet.no';
+			$this->proxy = 'proxy.bergen.kommune.no:8080';
 
 			if (!$this->webservicehost)
 			{
@@ -214,21 +216,12 @@
 				'menuaction' => 'property.uiklassifikasjonssystemet.get_all',
 				'action'	 => $action
 			);
-			$nm			 = array
-				(
-				'start'			 => $this->start,
-				'start_record'	 => $this->start,
-				'num_records'	 => !empty($data_from_external) ? $data_from_external['Paging']['Returned'] : 0,
-				'all_records'	 => !empty($data_from_external) ? $data_from_external['Paging']['Total'] : 0,
-				'link_data'		 => $link_data,
-				'allow_all_rows' => true,
-				'allrows'		 => $allrows
-			);
 
 			$table_heading		 = array();
 			$_table_heading		 = array();
 			$table_data			 = array();
 			$_data_from_external = array();
+			$total_records		 = 0;
 
 			if ($data_from_external && empty($data_from_external['Data']))
 			{
@@ -246,6 +239,7 @@
 			else if ($data_from_external)
 			{
 				$_data_from_external = $data_from_external['Data'];
+				$total_records = count($_data_from_external);
 				foreach ($data_from_external['Data'][0] as $key => $dummy)
 				{
 					if ($key == 'RoomDetails')
@@ -285,9 +279,21 @@
 				$table_data[] = array('values' => $table_data_columns);
 			}
 
-//			_debug_array($table_data);
-//				die();
-			$data											 = array(
+			$nm			 = array
+			(
+				'start_record'	 => $this->start,
+				'num_records'	 => !empty($data_from_external['Paging']['Returned']) ? $data_from_external['Paging']['Returned'] : $total_records,
+				'all_records'	 => !empty($data_from_external['Paging']['Total']) ? $data_from_external['Paging']['Total'] : $total_records,
+				'link_data'		 => $link_data,
+				'allow_all_rows' => true,
+				'allrows'		 => $allrows
+			);
+
+//			_debug_array(array($action => $data_from_external['Paging']));
+
+
+			$data = array
+			(
 				'nm_data'					 => $this->nextmatchs->xslt_nm($nm),
 				'form_action'				 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiklassifikasjonssystemet.' . __FUNCTION__)),
 				'value_external_username'	 => $username,
@@ -950,6 +956,10 @@
 			$this->log('POST data', print_r($post_data, true));
 
 			$ch		 = curl_init();
+			if($this->proxy)
+			{
+				curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
+			}
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
 			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
@@ -989,6 +999,10 @@
 			}
 
 			$ch		 = curl_init();
+			if($this->proxy)
+			{
+				curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
+			}
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
 			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -1016,7 +1030,12 @@
 			$data_json	 = json_encode($data);
 			_debug_array($url);
 			_debug_array($data_json);
+
 			$ch			 = curl_init();
+			if($this->proxy)
+			{
+				curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
+			}
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
 			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
