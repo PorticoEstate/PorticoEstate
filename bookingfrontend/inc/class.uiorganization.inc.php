@@ -83,6 +83,11 @@
 				$delegate_map = array();
 				foreach ($delegate_data as $delegate_entry)
 				{
+					if(empty($delegate_entry['active']))
+					{
+						continue;
+					}
+
 					$delegate_map[] = $delegate_entry['organization_number'];
 					if( $delegate_entry['customer_ssn'] == $external_login_info['ssn'])
 					{
