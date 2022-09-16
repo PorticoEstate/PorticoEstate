@@ -224,6 +224,10 @@ $(document).ready(function ()
 			{
 				update_contact_informtation();
 			}
+			else
+			{
+				$("#btnSubmitGroup").hide();
+			}
 		});
 
 		$("#btnSubmit").on("click", function (e)
