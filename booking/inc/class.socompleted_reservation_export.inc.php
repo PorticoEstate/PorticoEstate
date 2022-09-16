@@ -141,8 +141,10 @@
 
 				$sql1 = "UPDATE bb_completed_reservation SET exported = NULL WHERE id IN(" . implode(',', $ids) . ')';
 				$sql2 = "DELETE FROM bb_completed_reservation_export_configuration where export_id = {$id}";
+				$sql3 = "DELETE FROM bb_completed_reservation_export WHERE id = {$id}";
 				$this->db->query($sql1, __LINE__, __FILE__);
 				$this->db->query($sql2, __LINE__, __FILE__);
+				$this->db->query($sql3, __LINE__, __FILE__);
 				$ret = $this->db->transaction_commit();
 			}
 			return $ret;

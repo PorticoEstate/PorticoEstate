@@ -388,7 +388,7 @@
 				}
 			}
 
-			if (isset($GLOBALS['phpgw_info']['user']['apps']['admin']) || $export['created_by'] ==  $this->current_account_id())
+			if ($export['created_by'] ==  $this->current_account_id())
 			{
 				$show_delete_button = true;
 			}
@@ -412,8 +412,17 @@
 			}
 
 			$export = $this->bo->read_single($id);
+			$reversible = true;
+			foreach ($export['export_configurations'] as $key => $export_configuration)
+			{
+				if($export_configuration['export_file_id'])
+				{
+					$reversible = false;
+					break;
+				}
+			}
 
-			if ( $export['created_by'] ==  $this->current_account_id())
+			if ( $reversible && $export['created_by'] ==  $this->current_account_id())
 			{
 				$this->bo->so->reverse_reservation($id);
 			}
