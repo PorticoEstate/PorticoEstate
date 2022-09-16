@@ -143,10 +143,17 @@
 					. " OR ticket_id=" . (int)$query . ')';
 			}
 
-			$sql = "SELECT * FROM "
-				. "(SELECT 'project' as type, fm_tenant_claim.*, fm_tenant_claim_category.descr as claim_category, fm_tenant.last_name, fm_tenant.first_name,district_id,"
-				. " fm_project.address, fm_project.category, fm_project.location_code,"
-				. "CASE WHEN
+			$sql = "SELECT type, id, project_id, tenant_id, amount, category, status,"
+				. " remark, user_id, entry_date, ticket_id, claim_category, last_name,"
+				. " first_name, district_id,address, location_code,"
+				. " sum(actual_cost) as actual_cost FROM "
+				. "(SELECT 'project' as type, fm_tenant_claim.id, fm_tenant_claim.project_id,
+					fm_tenant_claim.tenant_id,fm_tenant_claim.amount,fm_tenant_claim.category, fm_tenant_claim.status,
+					fm_tenant_claim.remark,fm_tenant_claim.user_id,fm_tenant_claim.entry_date,
+					fm_tenant_claim.ticket_id,
+					fm_tenant_claim_category.descr as claim_category, fm_tenant.last_name, fm_tenant.first_name,district_id,"
+				. " fm_project.address,  fm_project.location_code,"
+				. " CASE WHEN
 					(
 						fm_orders_actual_cost_view.actual_cost IS NULL
 					)"
@@ -162,9 +169,13 @@
 
 				. " $filtermethod $querymethod";
 			$sql .= " UNION "
-				. " SELECT 'ticket' as type, fm_tenant_claim.*, fm_tenant_claim_category.descr as claim_category, fm_tenant.last_name, fm_tenant.first_name,district_id,"
-				. " fm_tts_tickets.address, fm_tts_tickets.cat_id, fm_tts_tickets.location_code,"
-				. "CASE WHEN
+				. " SELECT 'ticket' as type, fm_tenant_claim.id, fm_tenant_claim.project_id,
+					fm_tenant_claim.tenant_id,fm_tenant_claim.amount,fm_tenant_claim.category, fm_tenant_claim.status,
+					fm_tenant_claim.remark,fm_tenant_claim.user_id,fm_tenant_claim.entry_date,
+					fm_tenant_claim.ticket_id,
+					fm_tenant_claim_category.descr as claim_category, fm_tenant.last_name, fm_tenant.first_name,district_id,"
+				. " fm_tts_tickets.address, fm_tts_tickets.location_code,"
+				. " CASE WHEN
 					(
 						fm_orders_actual_cost_view.actual_cost IS NULL
 					)"
@@ -177,7 +188,9 @@
 				. " $this->join fm_part_of_town ON fm_location1.part_of_town_id=fm_part_of_town.id"
 				. " $this->left_join fm_orders_actual_cost_view ON fm_orders_actual_cost_view.order_id = fm_tts_tickets.order_id"
 				. " $filtermethod_ticket $querymethod_ticket"
-				. ") as t";
+				. ") as t"
+				. " GROUP BY type, id, project_id, tenant_id, amount, category, status,	remark, user_id, entry_date,"
+				. " ticket_id, claim_category, last_name,	first_name, district_id,address, location_code";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -205,7 +218,6 @@
 					'name'			 => $this->db->f('last_name') . ', ' . $this->db->f('first_name'),
 					'remark'		 => $this->db->f('remark', true),
 					'entry_date'	 => $this->db->f('entry_date'),
-					'category'		 => $this->db->f('category'),
 					'status'		 => $this->db->f('status'),
 					'user_id'		 => $this->db->f('user_id'),
 					'district_id'	 => $this->db->f('district_id'),
@@ -217,19 +229,6 @@
 					'actual_cost'	 => (float)$this->db->f('actual_cost'),
 				);
 			}
-
-//			$soproject = CreateObject('property.soproject');
-//			foreach ($claims as &$claim)
-//			{
-//				$project_budget	 = $soproject->get_budget($claim['project_id']);
-//				$actual_cost	 = 0;
-//				foreach ($project_budget as $entry)
-//				{
-//					$actual_cost += (float)$entry['actual_cost'];
-//				}
-//
-//				$claim['actual_cost'] = $actual_cost;
-//			}
 
 			return $claims;
 		}
