@@ -184,13 +184,61 @@
             ORDER BY bygningsnr";
 
 			$db->query($sql, __LINE__, __FILE__);
-			$values = array();
+			$buildings = array();
 			while ($db->next_record())
 			{
-				$values[] = $db->Record;
+				$buildings[] = $db->Record;
 			}
 
-			$this->get_matrikkel_info($values);
-			return $values;
+			$this->get_matrikkel_info($buildings);
+
+			foreach ($buildings as & $building)
+			{
+				$sql = "SELECT DISTINCT fm_location4_category.descr as formaal FROM fm_location4 JOIN fm_location4_category ON fm_location4.category = fm_location4_category.id"
+					. " WHERE bygningsnr = {$building['bygningsnr']}"
+					. " AND fm_location4_category.id NOT IN (99)"
+					. " ORDER BY fm_location4_category.descr";
+				$db->query($sql, __LINE__, __FILE__);
+				$categories = array();
+				while ($db->next_record())
+				{
+					$categories[] = $db->f('formaal', true);
+				}
+
+				$building['formaal'] = implode(', ', $categories);
+
+
+				$sql = "SELECT DISTINCT loc1, loc2, loc3  FROM fm_location4 WHERE bygningsnr = {$building['bygningsnr']}";
+				$db->query($sql, __LINE__, __FILE__);
+				$location_codes = array();
+				while ($db->next_record())
+				{
+					$location_codes[] = $db->f('loc1') . '-' .$db->f('loc2') . '-' . $db->f('loc3')  ;
+				}
+
+				$building['lokation_code'] = implode(', ', $location_codes);
+
+				$maalepunkter = array();
+				foreach ($location_codes as $location_code)
+				{
+					$sql = "SELECT DISTINCT location_code, json_representation->>'maalepunkt_id' as maalepunkt_id FROM fm_bim_item "
+						. " WHERE fm_bim_item.location_id = 25" // el-anlegg
+						. " AND fm_bim_item.location_code like '{$location_code}%'"
+						. " AND (json_representation->>'maalepunkt_id' IS NOT NULL )"
+						. " AND (json_representation->>'category' = '2' )"; // felles
+
+					$db->query($sql, __LINE__, __FILE__);
+
+					while ($db->next_record())
+					{
+						$maalepunkter[] = $db->f('maalepunkt_id');
+					}
+				}
+
+				$building['maalepkunkt_id'] = implode(', ', $maalepunkter);
+
+			}
+
+			return $buildings;
 		}
 	}
