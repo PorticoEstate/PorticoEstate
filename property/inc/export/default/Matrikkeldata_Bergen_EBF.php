@@ -219,11 +219,11 @@
 				$building['lokation_code'] = implode(', ', $location_codes);
 
 				$maalepunkter = array();
-				foreach ($location_codes as $location_code)
+//				foreach ($location_codes as $location_code)
 				{
 					$sql = "SELECT DISTINCT location_code, json_representation->>'maalepunkt_id' as maalepunkt_id FROM fm_bim_item "
 						. " WHERE fm_bim_item.location_id = 25" // el-anlegg
-						. " AND fm_bim_item.location_code like '{$location_code}%'"
+						. " AND fm_bim_item.location_code like '{$building['objekt']}%'"
 						. " AND (json_representation->>'maalepunkt_id' IS NOT NULL )"
 						. " AND (json_representation->>'category' = '2' )"; // felles
 
