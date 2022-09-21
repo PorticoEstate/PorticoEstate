@@ -181,7 +181,6 @@
 			$results			 = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
 			$allrows			 = $results == -1 ? true : false;
 			$end_date			 = isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : mktime(23, 59, 59, date("n"), date("j"), date("Y"));
-			$external			 = isset($data['external']) ? $data['external'] : '';
 			$dry_run			 = isset($data['dry_run']) ? $data['dry_run'] : '';
 			$new				 = isset($data['new']) ? $data['new'] : '';
 			$location_code		 = isset($data['location_code']) ? $data['location_code'] : '';
@@ -440,6 +439,7 @@
 			{
 				$_membership = array();
 				$membership	 = array(-1);
+				$group_filter = '';
 				if (is_array($user_id))
 				{
 					$user_ids = array(-1);

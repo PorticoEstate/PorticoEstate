@@ -217,7 +217,7 @@
 						$_simple = true;
 					}
 
-					$user_groups =  $GLOBALS['phpgw']->accounts->membership($this->account);
+					$user_groups =  $GLOBALS['phpgw']->accounts->membership($GLOBALS['phpgw_info']['user']['account_id']);
 					$simple_group = isset($config['fmttssimple_group']) ? $config['fmttssimple_group'] : array();
 					foreach ($user_groups as $group => $dummy)
 					{

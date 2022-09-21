@@ -61,7 +61,7 @@
 		 */
 		private function is_external_login()
 		{
-			$ssn = (string)$_SERVER['HTTP_UID'];
+			$ssn = isset($_SERVER['HTTP_UID']) ? (string)$_SERVER['HTTP_UID'] : '';
 			try
 			{
 				$sf_validator = createObject('booking.sfValidatorNorwegianSSN', array(), array(

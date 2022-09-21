@@ -22,39 +22,16 @@
 			 * check external login
 			 */
 			$bouser = CreateObject('bookingfrontend.bouser');
-			if($bouser->is_logged_in())
-			{
-				$this->orgs = (array)phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);
 
-				$orgs_map = array();
-				foreach ($this->orgs as $org)
-				{
-					$orgs_map[] = $org['orgnumber'];
-				}
+			$this->external_login_info = $bouser->validate_ssn_login(array(	'menuaction' => 'bookingfrontend.uiuser.show'));
 
-				$session_org_id = phpgw::get_var('session_org_id','string', 'GET');
-
-				if($session_org_id && in_array($session_org_id, $orgs_map))
-				{
-					try
-					{
-						$org_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($session_org_id);
-						if($org_number)
-						{
-							$bouser->change_org($org_number);
-						}
-					}
-					catch (sfValidatorError $e)
-					{
-						$session_org_id = -1;
-					}
-				}
-			}
-
-			$this->external_login_info = $bouser->validate_ssn_login(array('menuaction' => 'bookingfrontend.uiuser.show'));
 			$this->ssn = $this->external_login_info['ssn'];
-
 			$this->orgnr = phpgw::get_var('session_org_id') ? phpgw::get_var('session_org_id') : $bouser->orgnr;
+
+			if(!$bouser->is_logged_in())
+			{
+				$bouser->log_in();
+			}
 			
 			if(!$this->ssn)
 			{

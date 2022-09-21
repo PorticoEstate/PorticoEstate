@@ -139,7 +139,7 @@
 			$_ssn =  '{SHA1}' . base64_encode($hash);
 
 			$sql = "SELECT DISTINCT id, name, active, organization_number, customer_ssn FROM ("
-				. "SELECT DISTINCT bb_organization.id,bb_organization.name,bb_organization.active,bb_organization.organization_number, customer_ssn FROM bb_delegate"
+				. "SELECT DISTINCT bb_organization.id,bb_organization.name,bb_delegate.active,bb_organization.organization_number, customer_ssn FROM bb_delegate"
 				. " JOIN bb_organization ON bb_delegate.organization_id = bb_organization.id"
 				. " WHERE ssn = '{$_ssn}'"
 				. " UNION"

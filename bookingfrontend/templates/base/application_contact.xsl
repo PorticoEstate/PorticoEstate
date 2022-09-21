@@ -169,7 +169,17 @@
 							<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
 								<label>
 									<xsl:value-of select="php:function('lang', 'organization number')" />*</label>
-								<input name="customer_organization_number_fallback" value="{application/customer_organization_number}" type="text" class="form-control" required="true"/>
+								<input name="customer_organization_number_fallback" value="{application/customer_organization_number}" type="text" class="form-control" required="true">
+									<xsl:attribute name="minlength">
+										<xsl:text>9</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="maxlength">
+										<xsl:text>9</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="pattern">
+										<xsl:text>[0-9]+</xsl:text>
+									</xsl:attribute>
+								</input>
 								<div class="invalid-feedback">
 									Vennligst oppgi gyldig organisasjonsnummer.
 								</div>
@@ -177,7 +187,7 @@
 							<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
 								<label>
 									<xsl:value-of select="php:function('lang', 'organization')" />*</label>
-								<input name="customer_organization_name" value="{application/customer_organization_name}" type="text" class="form-control" required="true"/>
+								<input name="customer_organization_name" value="{application/customer_organization_name}" type="text" class="form-control" maxlength="150" required="true"/>
 								<div class="invalid-feedback">
 									Vennligst oppgi organisasjonsnavn.
 								</div>
@@ -229,13 +239,16 @@
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:attribute name="type">
-											<xsl:text>number</xsl:text>
+											<xsl:text>text</xsl:text>
 										</xsl:attribute>
-										<xsl:attribute name="min">
+										<xsl:attribute name="minlength">
 											<xsl:text>11</xsl:text>
 										</xsl:attribute>
-										<xsl:attribute name="max">
+										<xsl:attribute name="maxlength">
 											<xsl:text>11</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="pattern">
+											<xsl:text>[0-9]+</xsl:text>
 										</xsl:attribute>
 									</xsl:otherwise>
 								</xsl:choose>
@@ -267,9 +280,13 @@
 						<div class="form-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'responsible_zip_code')" />*</label>
-							<input type="text" class="form-control" name="responsible_zip_code" value="{application/responsible_zip_code}" required="true"/>
+							<input type="text" minlength="4" maxlength="4" class="form-control" name="responsible_zip_code" value="{application/responsible_zip_code}" required="true">
+								<xsl:attribute name="pattern">
+									<xsl:text>[0-9]+</xsl:text>
+								</xsl:attribute>
+							</input>
 							<div class="invalid-feedback">
-								Vennligst oppgi postnummer.
+								Vennligst oppgi gyldig postnummer.
 							</div>
 						</div>
 						<!-- City -->
@@ -387,11 +404,11 @@
 
 		$('#new_organization').on('hidden.bs.modal', function (e)
 		{
-			// alert on insufficient rights
-			if(!i_have_already_told_you)
-			{
-				location.reload();
-			}
+		// alert on insufficient rights
+		if(!i_have_already_told_you)
+		{
+		location.reload();
+		}
 		});
 
 	</script>

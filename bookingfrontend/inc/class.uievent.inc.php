@@ -1,4 +1,3 @@
-
 <?php
 	phpgw::import_class('booking.uievent');
 	phpgw::import_class('booking.uiapplication');
@@ -419,21 +418,21 @@
 			$organizations = $this->organization_bo->find_building_users($building_id, $type, $activities);
 			foreach ($organizations['results'] as $key => $org)
 			{
-				if ($org['email'] != '' && strstr($org['email'], '@'))
+				if (!empty($org['email']) && strstr($org['email'], '@'))
 				{
 					if (!in_array($org['email'], $contacts))
 					{
 						$contacts[] = $org['email'];
 					}
 				}
-				if ($org['contacts'][0]['email'] != '' && strstr($org['contacts'][0]['email'], '@'))
+				if (!empty($org['contacts'][0]['email']) && strstr($org['contacts'][0]['email'], '@'))
 				{
 					if (!in_array($org['contacts'][0]['email'], $contacts))
 					{
 						$contacts[] = $org['contacts'][0]['email'];
 					}
 				}
-				if ($org['contacts'][1]['email'] != '' && strstr($org['contacts'][1]['email'], '@'))
+				if (!empty($org['contacts'][1]['email']) && strstr($org['contacts'][1]['email'], '@'))
 				{
 					if (!in_array($org['contacts'][1]['email'], $contacts))
 					{
@@ -443,7 +442,7 @@
 				$grp_con = $this->booking_bo->so->get_group_contacts_of_organization($org['id']);
 				foreach ($grp_con as $grp)
 				{
-					if (!in_array($grp['email'], $contacts) && strstr($grp['email'], '@'))
+					if (!empty($grp['email']) && !in_array($grp['email'], $contacts) && strstr($grp['email'], '@'))
 					{
 						$contacts[] = $grp['email'];
 					}

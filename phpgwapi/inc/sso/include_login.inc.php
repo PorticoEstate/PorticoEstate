@@ -634,7 +634,7 @@ HTML;
 				$this->tmpl->parse('message_blocks', 'message_block');
 			}
 
-			if($variables['lang_message'])
+			if(isset($variables['lang_message']))
 			{
 				$this->tmpl->parse('message_blocks', 'message_block');
 			}

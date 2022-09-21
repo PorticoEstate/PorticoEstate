@@ -273,15 +273,22 @@
 		 */
 		public static function redirect($url = '')
 		{
-			$iis = strpos($_SERVER['SERVER_SOFTWARE'], 'IIS', 0) !== false;
-
 			if ( !$url )
 			{
 				$url = self::get_var('PHP_SELF', 'string', 'SERVER');
 			}
 
-			if ( $iis || headers_sent() )
+			if ( headers_sent($filename, $linenum) )
 			{
+
+				$GLOBALS['phpgw']->log->error(array(
+				'text'	=> 'Headers already sent in %1 on line %2.',
+				'p1'	=> $filename,
+				'p2'	=> $linenum,
+				'line'	=> $linenum,
+				'file'	=> $filename
+			));
+
 				echo "<html>\n<head>\n<title>Redirecting to $url</title>";
 				echo "\n<meta http-equiv=\"refresh\ content=\"0; URL=$url\">";
 				echo "\n</head>\n<body>";

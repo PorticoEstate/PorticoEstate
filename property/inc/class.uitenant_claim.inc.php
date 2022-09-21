@@ -481,9 +481,7 @@
 				'district_id'	 => $district_id
 			);
 
-			$result_objects	 = array();
-			$result_count	 = 0;
-			//
+
 			$values			 = $this->bo->read($params);
 			if ($export)
 			{

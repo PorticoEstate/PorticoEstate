@@ -340,3 +340,4 @@ please, check your password	common	nn	Kontroller passord
 cellphone	common	nn	Mobiltelefon
 missing membership: "%1" is not in the list	common	nn	Feil med gruppemedlemskap: finner ikke "%1" i listen
 percent	common	nn	Prosent
+choose "Log out" if you want to end the session	common	nn	Velg "Logg ut" om du vil avslutte sesjonen.
