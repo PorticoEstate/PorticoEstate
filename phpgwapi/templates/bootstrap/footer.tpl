@@ -21,7 +21,7 @@
 						  <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">Velg "Logg ut" om du vil avslutte sesjonen.</div>
+                <div class="modal-body">{lang_logout_header}</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                     <a class="btn btn-primary" href="{logout_url}">{logout_text}</a>

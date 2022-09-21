@@ -35,7 +35,7 @@
 		$home_icon		= 'icon icon-home';
 		$about_url	= $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp']) );
 		$about_text	= lang('about');
-		$var['logout_url']	= $GLOBALS['phpgw']->link('/logout.php');
+//		$var['logout_url']	= $GLOBALS['phpgw']->link('/logout.php');
 		$var['logout_text']	= lang('logout');
 		$var['user_fullname'] = $user_fullname;
 		$preferences_url = $GLOBALS['phpgw']->link('/preferences/index.php');
@@ -628,6 +628,9 @@ HTML;
 		$var = array
 		(
 	//		'user_fullname'	=> $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] )->__toString(),
+			'lang_logout_header' => lang('Choose "Log out" if you want to end the session'),
+			'logout_url'	=> $GLOBALS['phpgw']->link('/logout.php'),
+			'logout_text'	=> lang('logout'),
 			'powered_by'	=> $powered_by,
 			'lang_login'	=> lang('login'),
 			'javascript_end'=> $GLOBALS['phpgw']->common->get_javascript_end($cache_refresh_token)
