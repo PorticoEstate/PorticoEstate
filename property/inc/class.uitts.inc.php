@@ -4327,6 +4327,11 @@ JS;
 					);
 			}
 
+			/**
+			 * Fix me
+			 */
+			$deadline_block = '';
+
 			$body = str_replace(array
 					(
 					'__vendor_name__',
@@ -4339,7 +4344,7 @@ JS;
 					'__payment_info__',
 					'__location__',
 					'__order_description__',
-//					'__deadline_block__',
+					'__deadline_block__',
 					'__important_imformation__',
 					'__contact_block__',
 					'__contact_name__',
@@ -4360,7 +4365,7 @@ JS;
 					$payment_info,
 					$delivery_address,
 					$ticket['order_descr'],
-//					$deadline_block,
+					$deadline_block,
 					$important_imformation,
 					$contact_block,
 					$contact_name,
