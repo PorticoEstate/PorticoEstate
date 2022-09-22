@@ -190,3 +190,7 @@ Do you want av CSV download button for main tables?	preferences	no	Ønsker du en
 CSV download button	preferences	no	CSV nedlastingsknapp
 help off	preferences	no	Slå av hjelp
 %1 - Preferences	preferences	no	%1 - Innstillinger
+Your archive user id	preferences	no	Din bruker i arkivsystem
+Insert your archive user id	preferences	no	Angi din bruker i eksternt arkivsystem
+Your job title	preferences	no	Din jobbtittel
+Insert job title	preferences	no	Angi din jobbtittel

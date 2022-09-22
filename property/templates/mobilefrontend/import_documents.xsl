@@ -45,6 +45,32 @@
 		var role = '<xsl:value-of select="role"/>';
 		var template_set = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|template_set')" />';
 	</script>
+
+	<xsl:variable name="template_set">
+		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|template_set')" />
+	</xsl:variable>
+	<xsl:variable name="group_class">
+		<xsl:choose>
+			<xsl:when test="$template_set = 'bootstrap'">
+				<xsl:text>form-group</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>pure-control-group</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+
+	<xsl:variable name="input_class">
+		<xsl:choose>
+			<xsl:when test="$template_set = 'bootstrap'">
+				<xsl:text>form-control</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>pure-control-group</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+
 	<div class="container">
 
 		<h5>
@@ -53,52 +79,52 @@
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 			<div id="step_1">
-				<fieldset class="pure-form pure-form-aligned">
+				<fieldset >
 					<!--<h1>Step 1 - Order reference</h1>-->
 					<div id="message_step_1" class='error' style="display:none;"/>
-					<div class="pure-control-group">
+					<div class="{$group_class}">
 						<label >
 							<xsl:value-of select="php:function('lang', 'order id')"/>
 						</label>
-						<input id="order_id" required="required" value="{order_id}"></input>
+						<input id="order_id" required="required" value="{order_id}" class="{$input_class}"></input>
 					</div>
-					<div id="input_secret" class="pure-control-group" style="display:none;">
+					<div id="input_secret" class="{$group_class}" style="display:none;">
 						<label >
 							<xsl:value-of select="php:function('lang', 'secret')"/>
 						</label>
-						<input id="secret" required="required" value="{secret}"></input>
+						<input id="secret" required="required" value="{secret}" class="{$input_class}"></input>
 					</div>
 					<div id="order_info" style="display:none;">
 
-						<div class="pure-control-group">
+						<div class="{$group_class}">
 							<label >
 								<xsl:value-of select="php:function('lang', 'vendor')"/>
 							</label>
 							<div class="pure-custom" id="vendor_name"></div>
 						</div>
-						<div class="pure-control-group">
+						<div class="{$group_class}">
 							<label >
 								<xsl:value-of select="php:function('lang', 'cadastral unit')"/>
 							</label>
-							<input id="cadastral_unit" required="required"></input>
+							<input id="cadastral_unit" required="required" class="{$input_class}"></input>
 						</div>
-						<div class="pure-control-group">
+						<div class="{$group_class}">
 							<label >
 								<xsl:value-of select="php:function('lang', 'location code')"/>
 							</label>
-							<input id="location_code" required="required"></input>
+							<input id="location_code" required="required" class="{$input_class}"></input>
 						</div>
-						<div class="pure-control-group">
+						<div class="{$group_class}">
 							<label>
 								<xsl:value-of select="php:function('lang', 'building number')"/>
 							</label>
-							<input id="building_number" required="required"></input>
+							<input id="building_number" required="required" class="{$input_class}"></input>
 						</div>
-						<div class="pure-control-group">
+						<div class="{$group_class}">
 							<label>
 								<xsl:value-of select="php:function('lang', 'remark')"/>
 							</label>
-							<input id="remark"></input>
+							<input id="remark" class="{$input_class}"></input>
 						</div>
 					</div>
 					<div class="pure-controls">
@@ -116,63 +142,66 @@
 				<h1>2) laste opp alle dokumentene til venterommet</h1>
 				<p id="select_upload_alternative_1">
 					<input type="radio" name = "upload_alternative"></input> Alternativ 1: laste opp alle dokumentene som en pakket fil (ZIP eller RAR)</p>
+				<div id="upload_alternative_1" class="pure-form pure-form-aligned" style="display:none">
+					<div class="{$group_class}">
+						<label>
+							<xsl:value-of select="php:function('lang', 'compressed')"/> (zip, rar)
+						</label>
+						<input type="file" id="fileupload_zip" class="{$input_class}"></input>
+						<div class="content_upload_download" id="content_upload_zip"></div>
+					</div>
+				</div>
 				<p id="select_upload_alternative_2">
 					<input  type="radio" name = "upload_alternative"></input> Alternativ 2: laste opp alle dokumentene fra samme katalog</p>
 
-				<fieldset  class="pure-form pure-form-aligned">
-					<div id="upload_alternative_1" class="pure-form pure-form-aligned" style="display:none">
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'compressed')"/> (zip, rar)
-							</label>
-							<input type="file" id="fileupload_zip" class="pure-input-3-4"></input>
-							<div class="content_upload_download" id="content_upload_zip"></div>
-						</div>
-					</div>
-					<div id="upload_alternative_2" class="pure-control-group" style="display:none">
-						<label>
-							<xsl:value-of select="php:function('lang', 'upload files')"/>
-						</label>
 
-						<xsl:call-template name="multi_upload_file_inline">
-							<xsl:with-param name="class">pure-input-3-4 pure-custom</xsl:with-param>
-							<xsl:with-param name="multi_upload_action">
-								<xsl:value-of select="multi_upload_action"/>
-							</xsl:with-param>
-						</xsl:call-template>
-					</div>
-					<div class="pure-control-group">
+				<div id="upload_alternative_2" class="{$group_class}" style="display:none">
+					<label>
+						<xsl:value-of select="php:function('lang', 'upload files')"/>
+					</label>
+
+					<xsl:call-template name="multi_upload_file_inline">
+						<xsl:with-param name="class">
+							<xsl:text></xsl:text>
+						</xsl:with-param>
+						<xsl:with-param name="multi_upload_action">
+							<xsl:value-of select="multi_upload_action"/>
+						</xsl:with-param>
+					</xsl:call-template>
+				</div>
+				<fieldset  class="pure-form pure-form-aligned">
+					<div class="{$group_class}">
 						<label>
 							<xsl:value-of select="php:function('lang', 'remark')"/>
 						</label>
 
-						<input id="remark_detail" class="pure-input-3-4"></input>
+						<input id="remark_detail" class="{$input_class}"></input>
 					</div>
-					<div class="pure-control-group">
+					<div class="{$group_class}">
 						<label>
 							<xsl:value-of select="php:function('lang', 'document categories')"/>
 						</label>
 
-						<select id='document_category' class="pure-input-3-4" multiple="multiple">
+						<select id='document_category' class="{$input_class}" multiple="multiple">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select')"/>
 							</xsl:attribute>
 							<xsl:apply-templates select="document_category_list/options"/>
 						</select>
 					</div>
-					<div class="pure-control-group">
+					<div class="{$group_class}">
 						<label>
 							<xsl:value-of select="php:function('lang', 'branch')"/>
 						</label>
 
-						<select id='branch' class="pure-input-3-4" multiple="multiple">
+						<select id='branch' class="{$input_class}" multiple="multiple">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select')"/>
 							</xsl:attribute>
 							<xsl:apply-templates select="branch_list/options"/>
 						</select>
 					</div>
-					<div class="pure-control-group">
+					<div class="{$group_class}">
 						<xsl:variable name="lang_building_part">
 							<xsl:value-of select="php:function('lang', 'building part')"/>
 						</xsl:variable>
@@ -180,7 +209,7 @@
 							<xsl:value-of select="$lang_building_part"/>
 						</label>
 
-						<select id="building_part" class="pure-input-3-4"  multiple="multiple">
+						<select id="building_part" class="{$input_class}"  multiple="multiple">
 							<xsl:attribute name="title">
 								<xsl:value-of select="$lang_building_part"/>
 							</xsl:attribute>
@@ -194,7 +223,7 @@
 						</select>
 					</div>
 
-					<div class="pure-control-group">
+					<div class="{$group_class}">
 						<div id="message_step_2" class='error' style="display:none; width:80%;"/>
 						<img src="{image_loader}" class="processing-import" style="display:none;"></img>
 						<div class="pure-input-1" >
