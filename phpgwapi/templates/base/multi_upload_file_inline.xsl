@@ -3,6 +3,7 @@
 <xsl:template xmlns:php="http://php.net/xsl" name="multi_upload_file_inline">
 	<xsl:param name="class" />
 	<xsl:param name="multi_upload_action" />
+	<xsl:param name="capture" />
 	<xsl:param name="section" />
 
 	<style>
@@ -47,7 +48,12 @@
 							<xsl:value-of select="php:function('lang', 'Add files')"/>...</span>
 						<input type="file" id="fileupload{$section}" name="files[]" multiple="multiple">
 <!--							<xsl:attribute name="accept">image/*</xsl:attribute>-->
-							<xsl:attribute name="capture">camera</xsl:attribute>
+							<xsl:if test="$capture !=''">
+								<xsl:attribute name="capture">
+									<xsl:value-of select="$capture"/>
+								</xsl:attribute>
+							</xsl:if>
+
 							<xsl:attribute name="data-url">
 								<xsl:value-of select="$multi_upload_action"/>
 							</xsl:attribute>
