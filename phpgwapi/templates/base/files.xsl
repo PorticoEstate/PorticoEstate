@@ -14,6 +14,7 @@
 <xsl:template xmlns:php="http://php.net/xsl" name="file_upload">
 	<xsl:param name="section" />
 	<xsl:param name="class" />
+	<xsl:param name="capture" />
 	
 	<div class="pure-control-group">
 		<xsl:choose>
@@ -35,6 +36,9 @@
 							</xsl:with-param>
 							<xsl:with-param name="section">
 								<xsl:value-of select="$section"/>
+							</xsl:with-param>
+							<xsl:with-param name="capture">
+								<xsl:value-of select="$capture"/>
 							</xsl:with-param>
 						</xsl:call-template>
 

@@ -139,6 +139,7 @@
 							<xsl:with-param name="multi_upload_action">
 								<xsl:value-of select="multi_upload_action"/>
 							</xsl:with-param>
+							<xsl:with-param name="capture">camera</xsl:with-param>
 						</xsl:call-template>
 					</div>
 					<div class="pure-control-group">

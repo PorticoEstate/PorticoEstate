@@ -164,6 +164,9 @@
 						<xsl:with-param name="class">
 							<xsl:text></xsl:text>
 						</xsl:with-param>
+						<xsl:with-param name="capture">
+							<xsl:text></xsl:text>
+						</xsl:with-param>
 						<xsl:with-param name="multi_upload_action">
 							<xsl:value-of select="multi_upload_action"/>
 						</xsl:with-param>
