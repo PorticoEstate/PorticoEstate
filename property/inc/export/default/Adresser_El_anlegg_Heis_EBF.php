@@ -67,13 +67,6 @@
 			$this->db->User		 = $db_info['db_user'];
 			$this->db->Password	 = $db_info['db_pass'];
 
-//			$this->db->debug = false;
-//			$this->db->Host = 'oradb36i.srv.bergenkom.no';
-//			$this->db->Port = 21525;
-//			$this->db->Type = 'oci8';
-//			$this->db->Database = 'MATPROD';
-//			$this->db->User = 'GIS_BRUKER';
-//			$this->db->Password = '3ruFrAdr';
 			try
 			{
 				$this->db->connect();
