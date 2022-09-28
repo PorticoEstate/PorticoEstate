@@ -7,7 +7,7 @@ $(document).ready(function ()
 	'use strict';
 
 	var input_width = '75%';
-	if (template_set === 'bootstrap')
+	if (template_set === 'mobilefrontend')
 	{
 		input_width = '100%';
 	}
