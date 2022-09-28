@@ -43,7 +43,7 @@
 	<script type="text/javascript">
 		var lang = <xsl:value-of select="php:function('js_lang', 'all', 'none', 'order id', 'building part', 'branch', 'document categories', 'cadastral unit', 'location code', 'building number', 'Missing value', 'Missing info')"/>
 		var role = '<xsl:value-of select="role"/>';
-		var template_set = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|template_set')" />';
+		var template_set = 'mobilefrontend';
 	</script>
 
 	<xsl:variable name="template_set">
