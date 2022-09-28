@@ -101,6 +101,12 @@
 							<input id="remark"></input>
 						</div>
 					</div>
+
+					<div class="pure-control-group">
+						<label>
+							<a href="http://webmatrikkel.adm.bgo/webmatrikkel/Matrikkel.aspx" target="_blank">WEBMatrikkelen</a>
+						</label>
+					</div>
 					<div class="pure-controls">
 						<button type="button" id="get_order_info" class="pure-button pure-button-primary" onClick="get_order_info();">
 							<xsl:value-of select="php:function('lang', 'get info')"/>
