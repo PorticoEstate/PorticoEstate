@@ -1453,14 +1453,15 @@ HTML;
 				'<tbody id="calendar">';
 
 			$weeksInMonth	 = $this->_weeksInMonth($month, $year);
-			$week			 = (int)date('W', mktime(0, 0, 0, $month, 1, $year));
 			// Create weeks in a month
 			for ($i = 0; $i < $weeksInMonth; $i++)
 			{
+				$week			 = (int)date('W', mktime(0, 0, 0, $month, ($i * 7) + 1, $year));
 
 				$content .= '<tr class="target_row">';
 				$content .= '<th scope="row" style="writing-mode: vertical-rl;text-orientation: upright;">' . lang('week') . ' ' . ($week) . '</th>';
 				$week++;
+
 				//Create days in a week
 				//$work_days = count($this->dayLabels);
 				for ($j = 1; $j <= 7; $j++)
