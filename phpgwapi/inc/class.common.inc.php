@@ -1235,7 +1235,15 @@ HTML;
 				return ''; // return nothing if not valid input
 			}
 
-			$date = new DateTime(date('Y-m-d H:i:s', $t));
+			try
+			{
+				$date = new DateTime(date('Y-m-d H:i:s', $t));
+			}
+			catch (Exception $exc)
+			{
+				return 'invalid date';
+			}
+
 			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
 			$DateTimeZone	 = new DateTimeZone($timezone);
 			$date->setTimezone($DateTimeZone);
