@@ -137,7 +137,7 @@ HTML;
 		);
 		$breadcrumbs = phpgwapi_cache::session_get('phpgwapi','breadcrumbs');
 		$breadcrumbs = $breadcrumbs ? $breadcrumbs : array(); // first one
-		if($breadcrumbs[0]['id'] != $flags['menu_selection'])
+		if(empty($breadcrumbs) ||( isset($breadcrumbs[0]['id']) && $breadcrumbs[0]['id'] != $breadcrumb_selection))
 		{
 			array_unshift($breadcrumbs, $current_url);
 		}

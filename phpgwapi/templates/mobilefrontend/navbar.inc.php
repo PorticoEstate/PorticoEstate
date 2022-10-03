@@ -332,7 +332,7 @@ HTML;
 
 
 
-		if($breadcrumbs[0]['id'] != $breadcrumb_selection)
+		if(empty($breadcrumbs) ||( isset($breadcrumbs[0]['id']) && $breadcrumbs[0]['id'] != $breadcrumb_selection))
 		{
 			array_unshift($breadcrumbs, $current_url);
 		}
