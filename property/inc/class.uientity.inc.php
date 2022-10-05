@@ -433,11 +433,6 @@
 				case 'PATCH':
 				case 'PUT':
 				case 'POST':
-					if(isset($_POST['files']))
-					{
-						$_FILES = $_POST['files'];
-					}
-
 					$upload_handler->add_file();
 					break;
 				case 'DELETE':

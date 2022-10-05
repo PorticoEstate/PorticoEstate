@@ -280,14 +280,11 @@
 				$file->error = $uploadErrors[$error];
 				return false;
 			}
-			/**
-			 * FIXME - does not work as forwarded via curl from external client
-			 */
-//			else if (!isset($uploaded_file) || !is_uploaded_file($uploaded_file))
-//			{
-//				$file->error = lang("Upload failed is_uploaded_file test.");
-//				return false;
-//			}
+			else if (!isset($uploaded_file) || !is_uploaded_file($uploaded_file))
+			{
+				$file->error = lang("Upload failed is_uploaded_file test.");
+				return false;
+			}
 			else if (!isset($file->name))
 			{
 				$file->error = lang("File has no name.");
