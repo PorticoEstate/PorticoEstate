@@ -114,6 +114,11 @@ var post_handle_order_table = function()
 
 function set_sum(xTable)
 {
+	var tableFooter = document.getElementById('tfoot');
+	if (tableFooter)
+	{
+		tableFooter.parentNode.removeChild(tableFooter);
+	}
 	var xTableBody = xTable.childNodes[1];
 	var selected_sum = xTableBody.getElementsByClassName('selected_sum');
 

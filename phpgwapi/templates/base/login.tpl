@@ -23,8 +23,8 @@
 
 		<link rel="stylesheet" href="{system_css}" type="text/css">
 		<link rel="stylesheet" href="{login_css}" type="text/css">
-
 		<link rel="stylesheet" href="{rounded_css}" type="text/css">
+		<link rel="stylesheet" href="{font_awesome}" type="text/css">
 
 		{onload}
 
@@ -188,7 +188,10 @@
 								<!-- BEGIN button_block -->
 
 								<div class="pure-controls">
-									<button type="submit" class="pure-button pure-button-primary" name="submitit_" onclick="do_login();">{lang_login}</button>
+									<button type="submit" class="pure-button pure-button-primary" name="submitit_" onclick="do_login();">
+										<i class="fas fa-sign-in-alt fa-sm fa-fw text-gray-400"></i>
+										{lang_login}
+									</button>
 								</div>
 								<input type="hidden" name="submitit" value="1">
 								<p class="link_group"><a href="{return_sso_login_url}">{lang_return_sso_login}</a></p>

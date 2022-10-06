@@ -602,14 +602,25 @@ JS;
 			$reservation['from_'] = pretty_timestamp($reservation['from_']);
 			$reservation['to_'] = pretty_timestamp($reservation['to_']);
 			$reservation['cancel_link'] = self::link(array('menuaction' => 'booking.uicompleted_reservation.index'));
+			$reservation['resources_json'] = json_encode(array_map('intval', $reservation['resources']));
 
 			$tabs = array();
 			$tabs['completed_reservation'] = array('label' => lang('Reservation show'), 'link' => '#completed_reservation');
 			$active_tab = 'completed_reservation';
 
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+
+			if (!empty($config['activate_application_articles']))
+			{
+				self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
+			}
+
 			$reservation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			self::render_template_xsl('completed_reservation', array('reservation' => $reservation,
-				'show_edit_button' => $show_edit_button));
+			self::render_template_xsl('completed_reservation', array(
+				'reservation'		 => $reservation,
+				'show_edit_button'	 => $show_edit_button,
+				'config'			 => $config
+			));
 		}
 
 		protected function get_customer_identifier()
@@ -730,6 +741,11 @@ JS;
 
 						if(!empty($purchase_order['lines']))
 						{
+							if(empty($purchase_order['application_id']))
+							{
+								$purchase_order['application_id'] = -1;
+							}
+
 							$sopurchase_order = createObject('booking.sopurchase_order');
 							$purchase_order_id = $sopurchase_order->add_purchase_order($purchase_order);
 							$purchase_order_result =  $sopurchase_order->get_single_purchase_order($purchase_order_id);

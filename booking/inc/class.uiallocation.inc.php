@@ -820,9 +820,17 @@
 
 			$purchase_order = $this->sopurchase_order->get_purchase_order(0, 'allocation', $allocation['id']);
 
+			
+			$completed_reservations = CreateObject('booking.socompleted_reservation')->read(array(
+				'filters'	 => array(
+					'reservation_type'	 => 'allocation',
+					'reservation_id'	 => $allocation['id'],
+					'exported'			 => null),
+				'results'	 => -1));
+
 			if($purchase_order && !empty($config['activate_application_articles']))
 			{
-				if($allocation['completed'])
+				if(empty($completed_reservations['results']))
 				{
 					self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
 				}

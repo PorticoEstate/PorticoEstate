@@ -1345,9 +1345,16 @@
 
 			self::add_javascript('booking', 'base', 'event.js');
 
+			$completed_reservations = CreateObject('booking.socompleted_reservation')->read(array(
+				'filters'	 => array(
+					'reservation_type'	 => 'event',
+					'reservation_id'	 => $event['id'],
+					'exported'			 => null),
+				'results'	 => -1));
+
 			if($event['application_id'] && !empty($config['activate_application_articles']))
 			{
-				if($event['completed'])
+				if(empty($completed_reservations['results']))
 				{
 					self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
 				}

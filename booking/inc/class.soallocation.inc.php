@@ -95,9 +95,13 @@
 			$receipt = parent::update($entry);
 
 			$cost = $this->_marshal((float)$entry['cost'], 'decimal');
+
 			$id = (int)$entry['id'];
 
-			$sql = "UPDATE bb_completed_reservation SET cost = '{$cost}'"
+			$description = mb_substr($entry['from_'], 0, -3, 'UTF-8') . ' - ' . mb_substr($entry['to_'], 0, -3, 'UTF-8');
+
+			$sql = "UPDATE bb_completed_reservation SET cost = '{$cost}', from_ = '{$entry['from_']}',"
+			. " to_ = '{$entry['to_']}', description = '{$description}'"
 			. " WHERE reservation_type = 'allocation'"
 			. " AND reservation_id = {$id}"
 			. " AND export_file_id IS NULL";

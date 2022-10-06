@@ -220,7 +220,7 @@
 								</div>
 							</div>
 						</div>
-						<div id="dates-container" class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
 								<legend>
 									<h3>
@@ -228,41 +228,44 @@
 									</h3>
 								</legend>
 							</div>
-							<div class="pure-control-group">
-								<label for="from_">
-									<xsl:value-of select="php:function('lang','Start date')" />
-								</label>
-								<input class="datetime pure-input-2-3" id="from_" name="from_" type="text">
-									<xsl:if test="event/from_ != ''">
-										<xsl:attribute name="value">
-											<xsl:value-of select="event/from_"/>
+							<div id="dates-container">
+
+								<div class="pure-control-group">
+									<label for="from_">
+										<xsl:value-of select="php:function('lang','Start date')" />
+									</label>
+									<input class="datetime pure-input-2-3" id="from_" name="from_" type="text">
+										<xsl:if test="event/from_ != ''">
+											<xsl:attribute name="value">
+												<xsl:value-of select="event/from_"/>
+											</xsl:attribute>
+										</xsl:if>
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
 										</xsl:attribute>
-									</xsl:if>
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Please enter a start date')" />
-									</xsl:attribute>
-								</input>
-							</div>
-							<div class="pure-control-group">
-								<label for="to_">
-									<xsl:value-of select="php:function('lang', 'End date')" />
-								</label>
-								<input class="datetime pure-input-2-3" id="to_" name="to_" type="text">
-									<xsl:if test="event/to_ != ''">
-										<xsl:attribute name="value">
-											<xsl:value-of select="event/to_"/>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Please enter a start date')" />
 										</xsl:attribute>
-									</xsl:if>
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Please enter an end date')" />
-									</xsl:attribute>
-								</input>
+									</input>
+								</div>
+								<div class="pure-control-group">
+									<label for="to_">
+										<xsl:value-of select="php:function('lang', 'End date')" />
+									</label>
+									<input class="datetime pure-input-2-3" id="to_" name="to_" type="text">
+										<xsl:if test="event/to_ != ''">
+											<xsl:attribute name="value">
+												<xsl:value-of select="event/to_"/>
+											</xsl:attribute>
+										</xsl:if>
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Please enter an end date')" />
+										</xsl:attribute>
+									</input>
+								</div>
 							</div>
 						</div>
 						<div class="pure-u-1 pure-u-md-1 pure-u-lg-1-3">
