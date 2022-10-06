@@ -111,7 +111,7 @@
 				$agreement_group_list[] = array
 					(
 					'id'	 => $this->db->f('id'),
-					'name'	 => $GLOBALS['phpgw']->strip_html($this->db->f('descr')) . ' [ ' . $GLOBALS['phpgw']->strip_html($this->db->f('status')) . ' ] '
+					'name'	 => $GLOBALS['phpgw']->strip_html($this->db->f('descr',true)) . ' [ ' . $GLOBALS['phpgw']->strip_html($this->db->f('status', true)) . ' ] '
 				);
 			}
 			return $agreement_group_list;
@@ -139,7 +139,7 @@
 				$unit_list[] = array
 					(
 					'id'	 => $this->db->f('id'),
-					'name'	 => $GLOBALS['phpgw']->strip_html($this->db->f('descr'))
+					'name'	 => $GLOBALS['phpgw']->strip_html($this->db->f('descr', true))
 				);
 			}
 			return $unit_list;
@@ -153,7 +153,7 @@
 				$branch_list[] = array
 					(
 					'id'	 => $this->db->f('id'),
-					'name'	 => $GLOBALS['phpgw']->strip_html($this->db->f('descr'))
+					'name'	 => $GLOBALS['phpgw']->strip_html($this->db->f('descr', true))
 				);
 			}
 			return $branch_list;
@@ -353,7 +353,7 @@
 					'agreement_group_id' => $this->db->f('id'),
 					'num'				 => $this->db->f('num'),
 					'status'			 => $this->db->f('status'),
-					'descr'				 => stripslashes($this->db->f('descr'))
+					'descr'				 => $this->db->f('descr',true)
 				);
 			}
 			//		_debug_array($agreement_group);
@@ -368,7 +368,7 @@
 			while ($this->db->next_record())
 			{
 				$status_entries[$i]['id']	 = $this->db->f('id');
-				$status_entries[$i]['name']	 = stripslashes($this->db->f('descr'));
+				$status_entries[$i]['name']	 = $this->db->f('descr',true);
 				$i++;
 			}
 			return $status_entries;
