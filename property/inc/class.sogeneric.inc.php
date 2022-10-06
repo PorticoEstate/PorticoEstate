@@ -2750,7 +2750,8 @@
 								'name'		 => 'end_date',
 								'descr'		 => lang('end date'),
 								'type'		 => 'date',
-								'nullable'	 => true
+								'nullable'	 => true,
+								'sortable'	 => true
 							),
 							array
 								(
