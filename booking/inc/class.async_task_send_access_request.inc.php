@@ -57,7 +57,7 @@
 			$stages = array(
 				0	 => 60 * 60 * 3, // 3 hours : send SMS and email as reminder
 				1	 => 60 * 15, // 15 minutes : request access
-				2	 => 60 * 10, // 5 minutes : get request status
+				2	 => 60 * 10, // 10 minutes : get request status
 			);
 
 			$so_resource = CreateObject('booking.soresource');
@@ -210,6 +210,11 @@
 										{
 											$custom_id = "{$reservation['id']}::{$resource['id']}::{$e_lock['e_lock_system_id']}::{$e_lock['e_lock_resource_id']}";
 											if(isset($status_call_ids[$custom_id]))
+											{
+												continue;
+											}
+
+											if(empty($e_lock['access_code_format']))
 											{
 												continue;
 											}

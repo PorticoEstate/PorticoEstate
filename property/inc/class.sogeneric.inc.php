@@ -990,13 +990,13 @@
 						'fields'		 => array
 							(
 							array
-							(
+								(
 								'name'	 => 'name',
 								'descr'	 => lang('name'),
 								'type'	 => 'varchar'
 							),
 							array
-							(
+								(
 								'name'		 => 'transfer_to_external',
 								'descr'		 => lang('transfer to external'),
 								'type'		 => 'checkbox',
@@ -1004,7 +1004,7 @@
 								'filter'	 => false,
 								'sortable'	 => true,
 								'values_def' => array
-								(
+									(
 									'valueset' => array(array('id' => 1, 'name' => lang('transfer to external'))),
 								)
 							),
@@ -1740,14 +1740,12 @@
 									'method_input'		 => array('type' => 'dimb_role', 'selected' => '##role_id##')
 								)
 							),
-							array
-								(
+							array(
 								'name'		 => 'user_id',
 								'descr'		 => lang('user'),
 								'type'		 => 'select',
 								'filter'	 => true,
-								'values_def' => array
-									(
+								'values_def' => array(
 									'valueset'			 => false,
 									'get_single_value'	 => 'get_user',
 									'method'			 => 'property.bocommon.get_user_list_right2',
@@ -2014,7 +2012,6 @@
 						'menu_selection' => 'admin::property::ticket::ticket_status'
 					);
 					break;
-
 
 				case 'regulations':
 					$info = array
@@ -2726,10 +2723,8 @@
 						(
 						'table'			 => 'fm_location_exception',
 						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
-							(
-							array
-								(
+						'fields'		 => array(
+							array(
 								'name'		 => 'location_code',
 								'descr'		 => lang('location'),
 								'type'		 => 'location',
@@ -2747,14 +2742,16 @@
 								'name'		 => 'start_date',
 								'descr'		 => lang('start date'),
 								'type'		 => 'date',
-								'nullable'	 => false
+								'nullable'	 => false,
+								'sortable'	 => true
 							),
 							array
 								(
 								'name'		 => 'end_date',
 								'descr'		 => lang('end date'),
 								'type'		 => 'date',
-								'nullable'	 => true
+								'nullable'	 => true,
+								'sortable'	 => true
 							),
 							array
 								(
@@ -2771,8 +2768,7 @@
 								'nullable'	 => false,
 								'filter'	 => true,
 								'sortable'	 => true,
-								'values_def' => array
-									(
+								'values_def' => array(
 									'valueset'			 => false,
 									'method'			 => 'property.bogeneric.get_list',
 									'get_single_value'	 => 'property.sogeneric.get_name',
@@ -2823,6 +2819,18 @@
 								'name'	 => 'alert_vendor',
 								'descr'	 => lang('alert vendor'),
 								'type'	 => 'checkbox'
+							),
+							array(
+								'name'		 => 'user_id',
+								'descr'		 => lang('user'),
+								'type'		 => 'select',
+								'filter'	 => true,
+								'values_def' => array(
+									'valueset'			 => false,
+									'get_single_value'	 => 'get_user',
+									'method'			 => 'property.bocommon.get_user_list_right2',
+									'method_input'		 => array('selected' => '##user_id##', 'right' => 1, 'acl_location' => '.location')
+								)
 							),
 						),
 						'edit_msg'		 => lang('edit'),

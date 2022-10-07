@@ -3545,11 +3545,13 @@ JS;
 								'__ressursnr__',
 								'__order_id__',
 								'__address__',
+								'__user_job_title__',
 							),
 							array(
 								$GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'],
 								$ticket['order_id'],
-								$_delivery_address
+								$_delivery_address,
+								$GLOBALS['phpgw_info']['user']['preferences']['common']['job_title'],
 							),
 							$payment_type['descr']
 						);
@@ -4186,6 +4188,7 @@ JS;
 
 			$user_phone						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['cellphone'];
 			$user_email						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
+			$user_job_title					 = $GLOBALS['phpgw_info']['user']['preferences']['common']['job_title'];
 			$order_email_template			 = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
 			$order_contact_block_template	 = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_contact_block_1'];
 
@@ -4245,6 +4248,7 @@ JS;
 					'__user_name__',
 					'__user_phone__',
 					'__user_email__',
+					'__user_job_title__',
 					'__contact_name__',
 					'__contact_email__',
 					'__contact_phone__',
@@ -4259,6 +4263,7 @@ JS;
 					$user_name,
 					$user_phone,
 					$user_email,
+					$user_job_title,
 					$contact_name,
 					$contact_email,
 					$contact_phone,
@@ -4322,6 +4327,11 @@ JS;
 					);
 			}
 
+			/**
+			 * Fix me
+			 */
+			$deadline_block = '';
+
 			$body = str_replace(array
 					(
 					'__vendor_name__',
@@ -4329,6 +4339,7 @@ JS;
 					'__user_name__',
 					'__user_phone__',
 					'__user_email__',
+					'__user_job_title__',
 					'__ressursnr__',
 					'__payment_info__',
 					'__location__',
@@ -4349,6 +4360,7 @@ JS;
 					$user_name,
 					$user_phone,
 					$user_email,
+					$user_job_title,
 					$ressursnr,
 					$payment_info,
 					$delivery_address,
@@ -4564,6 +4576,7 @@ JS;
 //account_display
 			$user_phone						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['cellphone'];
 			$user_email						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
+			$user_job_title					 = $GLOBALS['phpgw_info']['user']['preferences']['common']['job_title'];
 			$order_email_template			 = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
 			$order_contact_block_template	 = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_contact_block_1'];
 
@@ -4628,6 +4641,7 @@ JS;
 						'__user_name__',
 						'__user_phone__',
 						'__user_email__',
+						'__user_job_title__',
 						'__contact_name__',
 						'__contact_email__',
 						'__contact_phone__',
@@ -4642,6 +4656,7 @@ JS;
 						$user_name,
 						$user_phone,
 						$user_email,
+						$user_job_title,
 						$contact_name,
 						$contact_email,
 						$contact_phone,
@@ -4777,6 +4792,7 @@ JS;
 					'__user_name__',
 					'__user_phone__',
 					'__user_email__',
+					'__user_job_title__',
 					'__ressursnr__',
 					'__payment_info__',
 					'__location__',
@@ -4797,6 +4813,7 @@ JS;
 					$user_name,
 					$user_phone,
 					$user_email,
+					$user_job_title,
 					$ressursnr,
 					$payment_info,
 					$delivery_address,

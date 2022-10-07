@@ -1046,15 +1046,15 @@
 			{
 				$file_name = $file_info['path_relative_filename'];
 
-				if($filter_document_category && !array_intersect($filter_document_category, $file_tags[$file_name]['document_category']))
+				if($filter_document_category && (!isset($file_tags[$file_name]['document_category']) || !array_intersect($filter_document_category, $file_tags[$file_name]['document_category'])))
 				{
 					continue;
 				}
-				if($filter_branch && !array_intersect($filter_branch, $file_tags[$file_name]['branch']))
+				if($filter_branch && (!isset($file_tags[$file_name]['branch']) || !array_intersect($filter_branch, $file_tags[$file_name]['branch'])))
 				{
 					continue;
 				}
-				if($filter_building_part && !array_intersect($filter_building_part, $file_tags[$file_name]['building_part']))
+				if($filter_building_part && (!isset($file_tags[$file_name]['building_part']) || !array_intersect($filter_building_part, $file_tags[$file_name]['building_part'])))
 				{
 					continue;
 				}

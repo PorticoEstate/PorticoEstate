@@ -38,6 +38,16 @@ $(document).ready(function ()
 		}
 	});
 
+	/**
+	 * Update quantity related to time
+	 */
+	$("#dates-container").on("change", ".datetime", function (event)
+	{
+		event.preventDefault();
+		post_handle_order_table();
+
+	});
+
 	$('#field_cost_comment').hide();
 	$('#field_cost').on('input propertychange paste', function ()
 	{

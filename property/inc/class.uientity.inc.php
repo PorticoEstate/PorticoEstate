@@ -3695,7 +3695,6 @@ JS;
 
 //				_debug_array($items);	die();
 
-				$count_uicols_name = count($name);
 
 				$header = array();
 

@@ -486,11 +486,10 @@ HTML;
 			JqueryPortico.render_tabs = function ()
 			{
 				$('#{$tab_set}').responsiveTabs({
-					startCollapsed: 'accordion',
+//					startCollapsed: 'accordion',
 					collapsible: 'accordion',
 					rotate: false,
 					disabled: {$disabled_js},
-					startCollapsed: 'accordion',
 					collapsible: 'accordion',
 					setHash: true,
 					activate: function(e, tab) {

@@ -441,6 +441,11 @@
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiapplication_settings.index',
 								'appname' => 'booking'))
 						),
+						'e_lock_system' => array(
+							'text' => lang('e_lock_system'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uigeneric.index',
+								'type' => 'e_lock_system')),
+						),
 						'office' => array
 							(
 							'text' => lang('office'),

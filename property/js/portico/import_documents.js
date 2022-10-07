@@ -1,9 +1,17 @@
-/* global lang, JqueryPortico, role, oTable0 */
+/* global lang, JqueryPortico, role, oTable0, template_set */
 
 
 $(document).ready(function ()
 {
+
 	'use strict';
+
+	var input_width = '75%';
+	if (template_set === 'mobilefrontend')
+	{
+		input_width = '100%';
+	}
+
 	//Initialize the jQuery File Upload widget:
 	$('#fileupload_zip').fileupload({
 		limitConcurrentUploads: 1,
@@ -91,17 +99,17 @@ $(document).ready(function ()
 	$("#document_category").select2({
 		placeholder: lang['document categories'],
 		language: "no",
-		width: '75%'
+		width: input_width
 	});
 	$("#branch").select2({
 		placeholder: lang['branch'],
 		language: "no",
-		width: '75%'
+		width: input_width
 	});
 	$("#building_part").select2({
 		placeholder: lang['building part'],
 		language: "no",
-		width: '75%'
+		width: input_width
 	});
 	if ($("#order_id").val())
 	{
@@ -193,6 +201,7 @@ this.onActionsClick_files = function (action, files)
 			$('.record').addClass('disabled');
 			$("#toggle_select0").addClass('fa-toggle-off');
 			$("#toggle_select0").removeClass('fa-toggle-on');
+			$("#toggle_select_text0").text(lang['all']);
 			$('#step_2_next').hide();
 			$("#message0").hide();
 			$('#step_2_view_all').hide();
@@ -469,7 +478,7 @@ this.step_2_import = function ()
 			console.log(data);
 			if (data != null)
 			{
-				if(data.done)
+				if (data.done)
 				{
 					refresh_files(true);
 					$("#step_2_import").prop("disabled", false);

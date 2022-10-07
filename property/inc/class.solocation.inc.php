@@ -2766,6 +2766,13 @@
 				return array();
 			}
 
+			static $zip_info_cache = array();
+
+			if(isset($zip_info_cache[$location_code]))
+			{
+				return $zip_info_cache[$location_code];
+			}
+
 			$location_arr	 = explode('-', $location_code);
 			$zip_info = array();
 
@@ -2777,6 +2784,8 @@
 				$zip_info['zip_code'] = $this->db->f('zip_code');
 				$zip_info['city'] = $this->db->f('city', true);
 			}
+
+			$zip_info_cache[$location_code] = $zip_info;
 			return $zip_info;
 		}
 	}

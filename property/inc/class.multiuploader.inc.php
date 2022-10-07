@@ -280,7 +280,7 @@
 				$file->error = $uploadErrors[$error];
 				return false;
 			}
-			else if (!isset($uploaded_file) || !@is_uploaded_file($uploaded_file))
+			else if (!isset($uploaded_file) || !is_uploaded_file($uploaded_file))
 			{
 				$file->error = lang("Upload failed is_uploaded_file test.");
 				return false;
