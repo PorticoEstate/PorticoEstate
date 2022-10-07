@@ -212,6 +212,39 @@
 			$external_site_address = !empty($config->config_data['external_site_address'])? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
 			$resourcename = implode(", ", $this->get_resource_name($application['resources']));
+
+			$resources = CreateObject('booking.soresource')->read(array('filters' => array('id' => $application['resources']),
+				'results'	 => 100));
+
+			$bogeneric = createObject('booking.bogeneric');
+			$e_lock_instructions = array();
+			foreach ($resources['results'] as $resource)
+			{
+				if (!$resource['e_locks'])
+				{
+					continue;
+				}
+
+				foreach ($resource['e_locks'] as $e_lock)
+				{
+					if (!$e_lock['e_lock_system_id'] || !$e_lock['e_lock_resource_id'])
+					{
+						continue;
+					}
+
+					$lock_system = $bogeneric->read_single(
+						array(
+							'id'			 => $e_lock['e_lock_system_id'],
+							'location_info'	 => array(
+								'type' => 'e_lock_system'
+							)
+						)
+					);
+
+					$e_lock_instructions[] = $lock_system['instruction'];
+				}
+			}
+
 			$subject = $config->config_data['application_mail_subject'];
 
 
@@ -302,6 +335,11 @@
 				}
 				$body .= "<p>{$config->config_data['application_mail_accepted']}</p>"
 					. "<br /><a href=\"{$link}\">Link til {$config->config_data['application_mail_systemname']}: søknad #{$application['id']}</a>";
+
+				if($e_lock_instructions)
+				{
+					$body .= "\n" . implode("\n", $e_lock_instructions);
+				}
 
 				$attachments = $this->get_related_files($application);
 
