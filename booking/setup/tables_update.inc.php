@@ -5982,4 +5982,85 @@
 		}
 	}
 
+	/**
+	 * Update booking version from 0.2.83 to 0.2.84
+	 *
+	 */
+	$test[] = '0.2.84';
+	function booking_upgrade0_2_84()
+	{
+		//bb_resource_e_lock
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_e_lock_system', array(
+			'fd' => array(
+				'id'					 => array('type' => 'auto', 'nullable' => false),
+				'name'					 => array('type' => 'varchar', 'precision' => '200', 'nullable' => false),
+				'instruction'	 => array('type' => 'text', 'nullable' => true),
+				'sms_alert'				 => array('type' => 'int', 'precision' => 2, 'nullable' => true),
+				'user_id'				 => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'entry_date'			 => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'modified_date'			 => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array(),
+		));
+
+		$text = <<<HTML
+			<p>For å få tilgang til adgangskontrollsystemet SALTO - må den ansvarlige for bookingen laste ned en app til telefonen på forhånd.</p>
+			<p>Nøkkel vil bli pushet ut til appen ca 10 minutt før avtaletidspunktet.</p>
+			<p>Android:</p>
+			<a href="https://play.google.com/store/apps/details?id=com.saltosystems.justin&hl=no&gl=US" target="_blank" rel="noreferrer noopener">https://play.google.com/store/apps/details?id=com.saltosystems.justin&hl=no&gl=US</a>
+			<p>Apple:</p>
+			<a href="https://apps.apple.com/no/app/justin-mobile/id960998088" target="_blank" rel="noreferrer noopener">https://apps.apple.com/no/app/justin-mobile/id960998088</a>
+HTML;
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_e_lock_system (id, name, sms_alert) VALUES(1, 'STANLEY', 1)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_e_lock_system (id, name, sms_alert) VALUES(2, 'ARX', 1)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_e_lock_system (id, name, instruction) VALUES(3, 'SALTO', '{$text}')");
+
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn(
+			'bb_office', 'entry_date',
+			array(
+				'type'		 => 'int',
+				'precision'	 => 8,
+				'nullable'	 => true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn(
+			'bb_office', 'modified_date',
+			array(
+				'type'		 => 'int',
+				'precision'	 => 8,
+				'nullable'	 => true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn(
+			'bb_office_user', 'entry_date',
+			array(
+				'type'		 => 'int',
+				'precision'	 => 8,
+				'nullable'	 => true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn(
+			'bb_office_user', 'modified_date',
+			array(
+				'type'		 => 'int',
+				'precision'	 => 8,
+				'nullable'	 => true
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.85';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
 

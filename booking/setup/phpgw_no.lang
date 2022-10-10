@@ -914,3 +914,6 @@ article code	booking	no	Artikkelkode
 article id	booking	no	ID
 article mapping	booking	no	Artikkelmapping
 Reverse	booking	no	Reversér
+sms alert	booking	no	SMS-varsling
+e_lock_system	booking	no	Adgangskontrollsystem
+receipt	booking	no	Kvittering

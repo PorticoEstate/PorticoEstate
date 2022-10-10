@@ -677,5 +677,17 @@
 		   FROM bb_service" , __LINE__, __FILE__
 		);
 
-$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_payment_method (id, payment_gateway_name, payment_gateway_mode) VALUES(1, 'Vipps', 'live')");
-$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_payment_method (id, payment_gateway_name, payment_gateway_mode, is_default) VALUES(2, 'Etterfakturering', 'live', 1)");
+	$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_payment_method (id, payment_gateway_name, payment_gateway_mode) VALUES(1, 'Vipps', 'live')");
+	$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_payment_method (id, payment_gateway_name, payment_gateway_mode, is_default) VALUES(2, 'Etterfakturering', 'live', 1)");
+
+	$text = <<<HTML
+		<p>For å få tilgang til adgangskontrollsystemet SALTO - må den ansvarlige for bookingen laste ned en app til telefonen på forhånd.</p>
+		<p>Nøkkel vil bli pushet ut til appen ca 10 minutt før avtaletidspunktet.</p>
+		<p>Android:</p>
+		<a href="https://play.google.com/store/apps/details?id=com.saltosystems.justin&hl=no&gl=US" target="_blank" rel="noreferrer noopener">https://play.google.com/store/apps/details?id=com.saltosystems.justin&hl=no&gl=US</a>
+		<p>Apple:</p>
+		<a href="https://apps.apple.com/no/app/justin-mobile/id960998088" target="_blank" rel="noreferrer noopener">https://apps.apple.com/no/app/justin-mobile/id960998088</a>
+HTML;
+	$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_e_lock_system (id, name, sms_alert) VALUES(1, 'STANLEY', 1)");
+	$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_e_lock_system (id, name, sms_alert) VALUES(2, 'ARX', 1)");
+	$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_e_lock_system (id, name, instruction) VALUES(3, 'SALTO', '{$text}')");
