@@ -3608,6 +3608,26 @@
 
 			$id = (int)$id;
 
+			$location_arr = explode('-', $location_code);
+
+			$location_arr_parent = $location_arr;
+			array_pop($location_arr_parent);
+
+			$filter_parent = '';
+			$filter_parent_arr = array();
+			$loops = count($location_arr_parent);
+
+			if($location_arr_parent)
+			{
+				for ($m = 0; $m < $loops; $m++)
+				{
+					$filter_parent_arr[] = implode('-', $location_arr_parent);
+					array_pop($location_arr_parent);
+				}
+
+				$filter_parent = " OR fm_workorder.location_code IN ('" . implode("', '", $filter_parent_arr) . "')" ;
+			}
+
 			$location_code = $this->db->db_addslashes($location_code);
 
 			$values = array();
@@ -3618,9 +3638,10 @@
 				. " FROM fm_project"
 				. " {$this->join} phpgw_accounts ON (fm_project.coordinator = phpgw_accounts.account_id)"
 				. " {$this->join} fm_project_status ON (fm_project.status = fm_project_status.id)"
-				. " WHERE location_code {$this->like} '{$location_code}%'"
+				. " {$this->join} fm_workorder ON (fm_workorder.project_id = fm_project.id)"
+				. " WHERE (fm_workorder.location_code {$this->like} '{$location_code}%' {$filter_parent})"
 				. " AND fm_project.id !={$id}"
-				. " ORDER BY fm_project.id DESC";
+				. " ORDER BY fm_project.location_code DESC";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -3628,7 +3649,7 @@
 			{
 				$values[] = array(
 					'id'			 => $this->db->f('id', true),
-					'location_code'	 => $this->db->f('location_code', true),
+					'location_code'	 => $this->db->f('location_code'),
 					'start_date'	 => $this->db->f('start_date'),
 					'name'			 => $this->db->f('name', true),
 					'coordinator'	 => $this->db->f('coordinator', true),

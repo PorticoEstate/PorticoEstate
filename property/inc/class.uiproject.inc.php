@@ -2678,9 +2678,9 @@ JS;
 				'data'		 => json_encode($other_projects),
 				'ColumnDefs' => $other_projects_def,
 				'config'	 => array(
-					array('disableFilter' => true),
-					//			array('disablePagination' => true),
-					array('order' => json_encode(array(1, 'asc')))
+		//			array('disableFilter' => true),
+		//			array('disablePagination' => true),
+					array('order' => json_encode(array(1, 'desc')))
 				)
 			);
 
