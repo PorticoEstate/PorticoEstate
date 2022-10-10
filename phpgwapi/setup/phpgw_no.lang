@@ -238,7 +238,7 @@ start upload	common	no	Start opplasting
 cancel upload	common	no	Stopp opplasting
 invalid file extension	common	no	Ugyldig filtype
 number files	common	no	Antall filer
-(filtered from _max_ total entries)	common	no	(filtrert fra _max_ poster)
+(filtered from _MAX_ total entries)	common	no	(filtrert fra _MAX_ poster)
 bim	common	no	Bim
 categories	common	no	Kategorier
 char	common	no	Char
