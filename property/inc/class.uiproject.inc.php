@@ -255,7 +255,7 @@
 			{
 				$link				 = self::link(array('menuaction' => 'property.uiproject.view', 'id' => $entry['id']));
 				$entry['url']		 = "<a href='{$link}'>{$entry['id']}</a>";
-				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'], $dateformat);
+				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'], 'Y-m-d');
 			}
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -2666,7 +2666,7 @@ JS;
 				array('key' => 'url', 'label' => lang('id'), 'sortable' => true),
 				array('key' => 'location_code', 'label' => lang('location'), 'sortable' => true),
 				array('key' => 'name', 'label' => lang('name'), 'sortable' => false),
-				array('key' => 'start_date', 'label' => lang('start date'), 'sortable' => false),
+				array('key' => 'start_date', 'label' => lang('start date'), 'sortable' => true),
 				array('key' => 'coordinator', 'label' => lang('coordinator'), 'sortable' => true),
 				array('key' => 'status', 'label' => lang('status'), 'sortable' => true),
 			);
@@ -2680,7 +2680,7 @@ JS;
 				'config'	 => array(
 		//			array('disableFilter' => true),
 		//			array('disablePagination' => true),
-					array('order' => json_encode(array(1, 'desc')))
+					array('order' => json_encode(array(array(1, 'desc'),array(3, 'desc'))))
 				)
 			);
 

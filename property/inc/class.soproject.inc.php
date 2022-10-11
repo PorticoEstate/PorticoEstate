@@ -3641,7 +3641,7 @@
 				. " {$this->join} fm_workorder ON (fm_workorder.project_id = fm_project.id)"
 				. " WHERE (fm_workorder.location_code {$this->like} '{$location_code}%' {$filter_parent})"
 				. " AND fm_project.id !={$id}"
-				. " ORDER BY fm_project.location_code DESC";
+				. " ORDER BY fm_project.location_code DESC, start_date DESC";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
