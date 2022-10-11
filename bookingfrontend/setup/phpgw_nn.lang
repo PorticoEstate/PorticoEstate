@@ -341,7 +341,7 @@ E-mail address	bookingfrontend	nn	E-postadresse
 Confirm e-mail address	bookingfrontend	nn	Stadfest e-postadressa
 The e-mail addresses you entered do not match	bookingfrontend	nn	E-postadressene er ulike
 Lengt of shortname is to long, max 11 characters long	bookingfrontend	nn	Kortnamnet er for langt, maksimalt 11 teikn
-Lengt of name is to long, max 50 characters long	bookingfrontend	nn	Namnet er for langt, maksimalt 50 teikn
+Lengt of name is to long, max %1 characters long	bookingfrontend	nn	Namnet er for langt, maksimalt %1 teikn
 Go back to calendar	bookingfrontend	nn	Tilbake til kalendar
 Agegroups kan not be larger than 9999 peoples	bookingfrontend	nn	Det estimerte talet på deltakarar kan ikkje vere høgare enn 9999
 Contact information name is to long. max 50 characters	bookingfrontend	nn	Namnet i kontaktinformasjonen er for langt, maksimalt 50 teikn.

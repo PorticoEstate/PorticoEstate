@@ -59,6 +59,12 @@
 		$GLOBALS['phpgw']->session->appsession('session_data', 'preferences', $session_data);
 	}
 
+	$is_admin = false;
+	if ($GLOBALS['phpgw']->acl->check('run', 1, 'admin') )
+	{
+		$is_admin = true;
+	}
+
 	$tabs = array();
 	$tabs['user'] = array(
 		'label' => lang('Your preferences'),
@@ -67,13 +73,13 @@
 	);
 	$tabs['default'] = array(
 		'label' => lang('Default preferences'),
-		'link'  => $GLOBALS['phpgw']->link('/preferences/index.php',array('type'=>'default')),
-		'disable'=> 0
+		'link'  =>  $is_admin ? $GLOBALS['phpgw']->link('/preferences/index.php',array('type'=>'default')) : "",
+		'disable'=> $is_admin ? 0 : 1
 	);
 	$tabs['forced'] = array(
 		'label' => lang('Forced preferences'),
-		'link'  => $GLOBALS['phpgw']->link('/preferences/index.php',array('type'=>'forced')),
-		'disable'=> 0
+		'link'  =>  $is_admin ? $GLOBALS['phpgw']->link('/preferences/index.php',array('type'=>'forced')) : "",
+		'disable'=> $is_admin ? 0 : 1
 	);
 	$GLOBALS['phpgw']->template->set_var('tabs', $GLOBALS['phpgw']->common->create_tabs($tabs, $type));
 	$GLOBALS['phpgw']->template->set_var('tab_id', $type);

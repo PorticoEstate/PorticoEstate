@@ -341,7 +341,7 @@ E-mail address	bookingfrontend	en	E-mail address
 Confirm e-mail address	bookingfrontend	en	Confirm e-mail address
 The e-mail addresses you entered do not match	bookingfrontend	en	The e-mail addresses you entered do not match
 Lengt of shortname is to long, max 11 characters long	bookingfrontend	en	Lengt of shortname is to long, max 11 characters long
-Lengt of name is to long, max 50 characters long	bookingfrontend	en	Lengt of name is to long, max 50 characters long
+Lengt of name is to long, max %1 characters long	bookingfrontend	en	Lengt of name is to long, max %1 characters long
 Go back to calendar	bookingfrontend	en	Go back to calendar
 Agegroups kan not be larger than 9999 peoples	bookingfrontend	en	Agegroups kan not be larger than 9999 peoples
 Contact information name is to long. max 50 characters	bookingfrontend	en	Contact information name is to long. max 50 characters

@@ -243,9 +243,9 @@
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				list($organization, $errors) = $this->extract_and_validate(array('active' => 1));
-				if (strlen($_POST['name']) > 50)
+				if (strlen($_POST['name']) > 150)
 				{
-					$errors['name'] = lang('Lengt of name is to long, max 50 characters long');
+					$errors['name'] = lang('Lengt of name is to long, max %1 characters long', 150);
 				}
 				if (strlen($_POST['shortname']) > 11)
 				{
@@ -338,9 +338,9 @@
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				list($organization, $errors) = $this->extract_and_validate($organization);
-				if (strlen($_POST['name']) > 50)
+				if (strlen($_POST['name']) > 150)
 				{
-					$errors['name'] = lang('Lengt of name is to long, max 50 characters long');
+					$errors['name'] = lang('Lengt of name is to long, max %1 characters long',150);
 				}
 				if (strlen($_POST['shortname']) > 11)
 				{
