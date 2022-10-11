@@ -312,7 +312,7 @@
 				list($user, $errors) = $this->extract_and_validate(array('active' => 1));
 				if (strlen($_POST['name']) > 50)
 				{
-					$errors['name'] = lang('Lengt of name is to long, max 50 characters long');
+					$errors['name'] = lang('Lengt of name is to long, max %1 characters long', 50);
 				}
 				if (!$errors)
 				{
@@ -367,7 +367,7 @@
 				list($user, $errors) = $this->extract_and_validate($user);
 				if (strlen($_POST['name']) > 50)
 				{
-					$errors['name'] = lang('Lengt of name is to long, max 50 characters long');
+					$errors['name'] = lang('Lengt of name is to long, max %1 characters long', 50);
 				}
 				if ((strlen($_POST['customer_number']) != 5) && (strlen($_POST['customer_number']) != 6) && ($_POST['customer_number'] != ''))
 				{
