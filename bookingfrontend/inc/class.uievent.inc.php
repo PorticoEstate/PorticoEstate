@@ -26,6 +26,23 @@
 			$this->application_ui = new booking_uiapplication();
 		}
 
+		private function _is_event_owner( $event, $bouser )
+		{
+			$event_owner = false;
+			if($event['customer_identifier_type'] == 'ssn')
+			{
+				$external_login_info = $bouser->validate_ssn_login(array('menuaction' => 'bookingfrontend.uievent.cancel',
+					'id' => $event['id'],
+					'resource_ids' => $event['resource_ids']));
+				$event_owner = $event['customer_ssn'] == $external_login_info['ssn'] ? true : false;
+			}
+			else
+			{
+				$event_owner = $bouser->is_organization_admin($event['customer_organization_id']);
+			}
+			return $event_owner;
+		}
+
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
@@ -77,7 +94,7 @@
 			$activity = $this->organization_bo->so->get_resource_activity($resources);
 			$mailadresses = $this->building_users($event['building_id'], $split, $activity);
 
-			if (!$bouser->is_organization_admin($customer['customer_organization_id']))
+			if (!$this->_is_event_owner($event, $bouser))
 			{
 				$date = substr($event['from_'], 0, 10);
 				self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
@@ -324,21 +341,7 @@
 
 				if ($cdate < $event['to_'])
 				{
-					$event_owner = false;
-
-					if($event['customer_identifier_type'] == 'ssn')
-					{
-						$external_login_info = $bouser->validate_ssn_login(array('menuaction' => 'bookingfrontend.uievent.cancel',
-							'id' => $event['id'],
-							'resource_ids' => $event['resource_ids']));
-						$event_owner = $event['customer_ssn'] == $external_login_info['ssn'] ? true : false;
-					}
-					else
-					{
-						$event_owner = $bouser->is_organization_admin($event['customer_organization_id']);
-					}
-
-					if ($event_owner)
+					if ($this->_is_event_owner($event, $bouser))
 					{
 						$resources = $event['resources'];
 						$activity = $this->organization_bo->so->get_resource_activity($resources);
@@ -566,7 +569,7 @@
 			}			
 			$event['when'] = $when;
 			$bouser = CreateObject('bookingfrontend.bouser');
-			if ($bouser->is_organization_admin($event['customer_organization_id']))
+			if ($this->_is_event_owner($event, $bouser))
 			{
 				if ($event['from_'] > Date('Y-m-d H:i:s'))
 				{
