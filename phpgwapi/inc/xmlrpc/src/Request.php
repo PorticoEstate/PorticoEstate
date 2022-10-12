@@ -249,7 +249,7 @@ class Request
             //if (!is_valid_charset($respEncoding, array('UTF-8')))
             if (!in_array($respEncoding, array('UTF-8', 'US-ASCII')) && !XMLParser::hasEncoding($data)) {
                 if ($respEncoding == 'ISO-8859-1') {
-                    $data = utf8_encode($data);
+					$data = mb_convert_encoding($data, 'UTF-8', 'ISO-8859-1');
                 } else {
                     if (extension_loaded('mbstring')) {
                         $data = mb_convert_encoding($data, 'UTF-8', $respEncoding);

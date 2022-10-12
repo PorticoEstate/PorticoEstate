@@ -4443,7 +4443,7 @@ HTML;
 			}
 			else
 			{
-				return utf8_encode($text);
+				return mb_convert_encoding($text, 'UTF-8', 'ISO-8859-1');
 			}
 		}
 		

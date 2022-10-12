@@ -1032,7 +1032,7 @@
 			// additional attributes from the phpgw for groups
 			$entry['objectclass'][]  = 'posixGroup';
 			$entry['cn']             = $account_info->lid;
-			$entry['description']    = utf8_encode(str_replace('*', '', lang('phpgw-created group')));
+			$entry['description']    = mb_convert_encoding(str_replace('*', '', lang('phpgw-created group')), 'UTF-8', 'ISO-8859-1');
 			$entry['memberuid']      = $this->_get_member_uids($account_info->id);
 			if (!$entry['memberuid'])
 			{
@@ -1240,14 +1240,14 @@
 			if($acct_type =='g')
 			{
 				$account_name[$account_id]['lid']   = $allValues[0]['cn'][0];
-				$account_name[$account_id]['fname'] = utf8_decode($allValues[0]['cn'][0]);
+				$account_name[$account_id]['fname'] = mb_convert_encoding($allValues[0]['cn'][0], 'ISO-8859-1', 'UTF-8');
 				$account_name[$account_id]['lname'] = 'Group';
 			}
 			else
 			{
 				$account_name[$account_id]['lid']   = $allValues[0]['uid'][0];
-				$account_name[$account_id]['fname'] = utf8_decode($allValues[0]['givenname'][0]);
-				$account_name[$account_id]['lname'] = utf8_decode($allValues[0]['sn'][0]);
+				$account_name[$account_id]['fname'] = mb_convert_encoding($allValues[0]['givenname'][0], 'ISO-8859-1', 'UTF-8');
+				$account_name[$account_id]['lname'] = mb_convert_encoding($allValues[0]['sn'][0], 'ISO-8859-1', 'UTF-8');
 			}
 			$lid = $account_name[$account_id]['lid'];
 			$fname = $account_name[$account_id]['fname'];

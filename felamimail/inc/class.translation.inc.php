@@ -114,11 +114,11 @@ class felamimail_translation
 		}
 		if ($from == 'iso-8859-1' && $to == 'utf-8')
 		{
-			return utf8_encode($data);
+			return mb_convert_encoding($data, 'UTF-8', 'ISO-8859-1');
 		}
 		if ($to == 'iso-8859-1' && $from == 'utf-8')
 		{
-			return utf8_decode($data);
+			return mb_convert_encoding($data, 'ISO-8859-1', 'UTF-8');
 		}
 		if ($this->mbstring && mb_convert_encoding($data,$to,$from)!="")
 		{

@@ -1257,8 +1257,6 @@
 				$order_id = $sequential_number_generator->increment()->get_current();
 				$export_info[] = $this->create_export_item_info($reservation, $order_id);
 
-//				$reservation = array_map('utf8_decode', $reservation);
-
 				foreach ($reservation as $key => &$value)
 				{
 					if(!is_array($value))

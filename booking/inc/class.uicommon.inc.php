@@ -278,7 +278,8 @@
 				array('filename' => $base_name), $options
 			);
 
-			$options['latin1_filename'] = utf8_decode($options['filename']);
+			$options['latin1_filename'] = mb_convert_encoding($options['filename'], 'ISO-8859-1', 'UTF-8');
+
 			$options['utf8_filename'] = rawurlencode($options['filename']);
 
 			#Below only seems to work for firefox. RE: http://www.ietf.org/rfc/rfc2047.txt

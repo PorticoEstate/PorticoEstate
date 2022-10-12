@@ -67,12 +67,12 @@
 				{
 					//			if(!$header['seen'])
 					{
-						$sms[$j]['message']	 = utf8_encode($header['subject']);
+						$sms[$j]['message']	 = mb_convert_encoding($header['subject'], 'UTF-8', 'ISO-8859-1');
 						$bodyParts			 = $bofelamimail->getMessageBody($header['uid']);
 						$sms[$j]['message']	 .= "\n";
 						for ($i = 0; $i < count($bodyParts); $i++)
 						{
-							$sms[$j]['message'] .= utf8_encode($bodyParts[$i]['body']) . "\n";
+							$sms[$j]['message'] .= mb_convert_encoding($bodyParts[$i]['body'], 'UTF-8', 'ISO-8859-1') . "\n";
 						}
 
 						$sms[$j]['message'] = substr($sms[$j]['message'], 0, 160);

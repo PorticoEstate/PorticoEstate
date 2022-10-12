@@ -245,7 +245,7 @@ class Encoder
             //if (!is_valid_charset($valEncoding, array('UTF-8'))
             if (!in_array($valEncoding, array('UTF-8', 'US-ASCII')) && !XMLParser::hasEncoding($xmlVal)) {
                 if ($valEncoding == 'ISO-8859-1') {
-                    $xmlVal = utf8_encode($xmlVal);
+					$xmlVal = mb_convert_encoding($xmlVal, 'UTF-8', 'ISO-8859-1');
                 } else {
                     if (extension_loaded('mbstring')) {
                         $xmlVal = mb_convert_encoding($xmlVal, 'UTF-8', $valEncoding);

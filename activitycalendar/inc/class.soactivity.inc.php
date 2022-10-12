@@ -793,7 +793,7 @@
 				$activities[] = array
 					(
 					'id' => (int)$this->db->f('id'),
-					'title' => $soap ? $this->db->f('title', true) : utf8_decode($this->db->f('title', true)),
+					'title' => $soap ? $this->db->f('title', true) : mb_convert_encoding($this->db->f('title', true), 'ISO-8859-1', 'UTF-8'),
 					'organization_id' => $this->db->f('organization_id'),
 					'group_id' => $this->db->f('group_id'),
 					'district' => $this->db->f('district'),
@@ -802,7 +802,7 @@
 					'target' => $this->db->f('target'),
 					'arena' => $this->db->f('arena'),
 					'internal_arena' => $this->db->f('internal_arena'),
-					'time' => $soap ? $this->db->f('time', true) : utf8_decode($this->db->f('time', true)),
+					'time' => $soap ? $this->db->f('time', true) : mb_convert_encoding($this->db->f('time', true), 'ISO-8859-1', 'UTF-8'),
 					'contact_person_1' => $this->db->f('contact_person_1'),
 					'contact_person_2' => $this->db->f('contact_person_2'),
 					'special_adaptation' => $this->db->f('special_adaptation'),
@@ -822,8 +822,8 @@
 					$activity['organization_info'] = $this->get_org_info($activity['organization_id']);
 					$activity['group_info'] = $this->get_group_info($activity['group_id']);
 				}
-				$activity['district_name'] = $soap ? $this->get_district_name($activity['district']) : utf8_decode($this->get_district_name($activity['district']));
-				$activity['category_name'] = $soap ? $this->get_category_name($activity['category']) : utf8_decode($this->get_category_name($activity['category']));
+				$activity['district_name'] = $soap ? $this->get_district_name($activity['district']) : mb_convert_encoding($this->get_district_name($activity['district']), 'ISO-8859-1', 'UTF-8');
+				$activity['category_name'] = $soap ? $this->get_category_name($activity['category']) : mb_convert_encoding($this->get_category_name($activity['category']), 'ISO-8859-1', 'UTF-8');
 				$activity['description'] = $this->get_activity_description($activity['organization_id'], $activity['group_id']);
 				$activity['arena_info'] = $this->get_all_arena_info($activity['arena'], $activity['internal_arena']);
 				$activity['internal_arena_info'] = $this->get_internal_arena_info($activity['internal_arena']);
@@ -845,7 +845,7 @@
 				$this->db->next_record();
 
 				$result = array(
-					'name' => $this->soap ? $this->db->f('name', true) : utf8_decode($this->db->f('name', true)),
+					'name' => $this->soap ? $this->db->f('name', true) : mb_convert_encoding($this->db->f('name', true), 'ISO-8859-1', 'UTF-8'),
 					'phone' => $this->db->f('phone'), 'email' => $this->db->f('email')
 				);
 			}
@@ -854,7 +854,7 @@
 				$this->db->query("SELECT * FROM bb_organization_contact WHERE organization_id={$org_id} LIMIT 1", __LINE__, __FILE__);
 				$this->db->next_record();
 				$result = array(
-					'name' => $this->soap ? $this->db->f('name', true) : utf8_decode($this->db->f('name', true)),
+					'name' => $this->soap ? $this->db->f('name', true) : mb_convert_encoding($this->db->f('name', true), 'ISO-8859-1', 'UTF-8'),
 					'phone' => $this->db->f('phone'), 'email' => $this->db->f('email'));
 			}
 			return $result;
@@ -869,14 +869,14 @@
 				$this->db->query("SELECT * FROM bb_group WHERE id={$group_id}", __LINE__, __FILE__);
 				$this->db->next_record();
 
-				$result = $this->soap ? $this->db->f('description', true) : utf8_decode($this->db->f('description', true));
+				$result = $this->soap ? $this->db->f('description', true) : mb_convert_encoding($this->db->f('description', true), 'ISO-8859-1', 'UTF-8');
 			}
 			else if ($org_id)
 			{
 				$this->db->query("SELECT * FROM bb_organization WHERE id={$org_id}", __LINE__, __FILE__);
 				$this->db->next_record();
 
-				$result = $this->soap ? $this->db->f('description', true) : utf8_decode($this->db->f('description', true));
+				$result = $this->soap ? $this->db->f('description', true) : mb_convert_encoding($this->db->f('description', true), 'ISO-8859-1', 'UTF-8');
 			}
 			return $result;
 		}
@@ -895,9 +895,9 @@
 				$organizations[] = array
 					(
 					'id' => (int)$this->db->f('id'),
-					'name' => utf8_decode($this->db->f('name', true)),
-					'shortname' => utf8_decode($this->db->f('shortname', true)),
-					'description' => utf8_decode($this->db->f('description', true)),
+					'name' => mb_convert_encoding($this->db->f('name', true), 'ISO-8859-1', 'UTF-8'),
+					'shortname' => mb_convert_encoding($this->db->f('shortname', true), 'ISO-8859-1', 'UTF-8'),
+					'description' => mb_convert_encoding($this->db->f('description', true), 'ISO-8859-1', 'UTF-8'),
 					'homepage' => $homepage,
 					'phone' => $this->db->f('phone'),
 					'email' => $this->db->f('email')
@@ -916,9 +916,9 @@
 				$this->db->query("SELECT * FROM bb_organization WHERE id={$org_id}", __LINE__, __FILE__);
 				$this->db->next_record();
 				$result = array(
-					'name' => utf8_decode($this->db->f('name', true)),
-					'shortname' => utf8_decode($this->db->f('shortname', true)),
-					'description' => utf8_decode($this->db->f('description', true)),
+					'name' => mb_convert_encoding($this->db->f('name', true), 'ISO-8859-1', 'UTF-8'),
+					'shortname' => mb_convert_encoding($this->db->f('shortname', true), 'ISO-8859-1', 'UTF-8'),
+					'description' => mb_convert_encoding($this->db->f('description', true), 'ISO-8859-1', 'UTF-8'),
 					'homepage' => $this->db->f('homepage'),
 					'phone' => $this->db->f('phone'),
 					'email' => $this->db->f('email')
@@ -937,10 +937,10 @@
 				$groups[] = array
 					(
 					'id' => (int)$this->db->f('id'),
-					'name' => utf8_decode($this->db->f('name', true)),
-					'shortname' => utf8_decode($this->db->f('shortname', true)),
-					'description' => utf8_decode($this->db->f('description', true)),
-					'homepage' => utf8_decode($this->db->f('homepage')),
+					'name' => mb_convert_encoding($this->db->f('name', true), 'ISO-8859-1', 'UTF-8'),
+					'shortname' => mb_convert_encoding($this->db->f('shortname', true), 'ISO-8859-1', 'UTF-8'),
+					'description' => mb_convert_encoding($this->db->f('description', true), 'ISO-8859-1', 'UTF-8'),
+					'homepage' => mb_convert_encoding($this->db->f('homepage'), 'ISO-8859-1', 'UTF-8'),
 					'organization_id' => $this->db->f('organization_id')
 				);
 			}
@@ -973,9 +973,9 @@
 				$this->db->next_record();
 				$result = array
 					(
-					'name' => utf8_decode($this->db->f('name', true)),
-					'shortname' => utf8_decode($this->db->f('shortname', true)),
-					'description' => utf8_decode($this->db->f('description', true)),
+					'name' => mb_convert_encoding($this->db->f('name', true), 'ISO-8859-1', 'UTF-8'),
+					'shortname' => mb_convert_encoding($this->db->f('shortname', true), 'ISO-8859-1', 'UTF-8'),
+					'description' => mb_convert_encoding($this->db->f('description', true), 'ISO-8859-1', 'UTF-8'),
 					'organization_id' => $this->db->f('organization_id')
 				);
 			}
@@ -992,8 +992,8 @@
 				$this->db->query("SELECT * FROM activity_arena WHERE id={$arena_id}", __LINE__, __FILE__);
 				$this->db->next_record();
 				$result = array(
-					'arena_name' => $this->soap ? $this->db->f('arena_name', true) : utf8_decode($this->db->f('arena_name', true)),
-					'address' => $this->soap ? $this->db->f('address', true) : utf8_decode($this->db->f('address', true))
+					'arena_name' => $this->soap ? $this->db->f('arena_name', true) : mb_convert_encoding($this->db->f('arena_name', true), 'ISO-8859-1', 'UTF-8'),
+					'address' => $this->soap ? $this->db->f('address', true) : mb_convert_encoding($this->db->f('address', true), 'ISO-8859-1', 'UTF-8')
 				);
 			}
 			else if ($int_arena_id)
@@ -1001,8 +1001,8 @@
 				$this->db->query("SELECT id, name, street FROM bb_building WHERE id={$int_arena_id}", __LINE__, __FILE__);
 				$this->db->next_record();
 				$result = array(
-					'arena_name' => $this->soap ? $this->db->f('name', true) : utf8_decode($this->db->f('name', true)),
-					'address' => $this->soap ? $this->db->f('street', true) : utf8_decode($this->db->f('street', true))
+					'arena_name' => $this->soap ? $this->db->f('name', true) : mb_convert_encoding($this->db->f('name', true), 'ISO-8859-1', 'UTF-8'),
+					'address' => $this->soap ? $this->db->f('street', true) : mb_convert_encoding($this->db->f('street', true), 'ISO-8859-1', 'UTF-8')
 				);
 			}
 			return $result;
@@ -1017,8 +1017,8 @@
 				$this->db->query("SELECT * FROM activity_arena WHERE id={$arena_id}", __LINE__, __FILE__);
 				$this->db->next_record();
 				$result = array(
-					'arena_name' => $this->soap ? $this->db->f('arena_name', true) : utf8_decode($this->db->f('arena_name', true)),
-					'address' => $this->soap ? $this->db->f('address', true) : utf8_decode($this->db->f('address', true))
+					'arena_name' => $this->soap ? $this->db->f('arena_name', true) : mb_convert_encoding($this->db->f('arena_name', true), 'ISO-8859-1', 'UTF-8'),
+					'address' => $this->soap ? $this->db->f('address', true) : mb_convert_encoding($this->db->f('address', true), 'ISO-8859-1', 'UTF-8')
 				);
 			}
 			return $result;
@@ -1033,8 +1033,8 @@
 				$this->db->query("SELECT id, name, street FROM bb_building WHERE id={$arena_id}", __LINE__, __FILE__);
 				$this->db->next_record();
 				$result = array(
-					'arena_name' => $this->soap ? $this->db->f('name', true) : utf8_decode($this->db->f('name', true)),
-					'address' => $this->soap ? $this->db->f('street', true) : utf8_decode($this->db->f('street', true))
+					'arena_name' => $this->soap ? $this->db->f('name', true) : mb_convert_encoding($this->db->f('name', true), 'ISO-8859-1', 'UTF-8'),
+					'address' => $this->soap ? $this->db->f('street', true) : mb_convert_encoding($this->db->f('street', true), 'ISO-8859-1', 'UTF-8')
 				);
 			}
 			return $result;
@@ -1042,12 +1042,12 @@
 
 		function get_statuscodes()
 		{
-			$statuscodes[] = array('id' => '0', 'name' => utf8_decode('Ingen'));
-			$statuscodes[] = array('id' => '1', 'name' => utf8_decode('Ny'));
-			$statuscodes[] = array('id' => '2', 'name' => utf8_decode('Endring'));
-			$statuscodes[] = array('id' => '3', 'name' => utf8_decode('Akseptert'));
-			$statuscodes[] = array('id' => '4', 'name' => utf8_decode('Behandlet'));
-			$statuscodes[] = array('id' => '5', 'name' => utf8_decode('Avvist'));
+			$statuscodes[] = array('id' => '0', 'name' => mb_convert_encoding('Ingen', 'ISO-8859-1', 'UTF-8'));
+			$statuscodes[] = array('id' => '1', 'name' => mb_convert_encoding('Ny', 'ISO-8859-1', 'UTF-8'));
+			$statuscodes[] = array('id' => '2', 'name' => mb_convert_encoding('Endring', 'ISO-8859-1', 'UTF-8'));
+			$statuscodes[] = array('id' => '3', 'name' => mb_convert_encoding('Akseptert', 'ISO-8859-1', 'UTF-8'));
+			$statuscodes[] = array('id' => '4', 'name' => mb_convert_encoding('Behandlet', 'ISO-8859-1', 'UTF-8'));
+			$statuscodes[] = array('id' => '5', 'name' => mb_convert_encoding('Avvist', 'ISO-8859-1', 'UTF-8'));
 
 			return $statuscodes;
 		}
@@ -1060,7 +1060,7 @@
 			{
 				$targets[] = array(
 					'id' => (int)$this->db->f('id'),
-					'name' => utf8_decode($this->db->f('name', true)),
+					'name' => mb_convert_encoding($this->db->f('name', true), 'ISO-8859-1', 'UTF-8'),
 					'sort' => (int)$this->db->f('sort'),
 				);
 			}
@@ -1076,7 +1076,7 @@
 			{
 				$categories[] = array(
 					'id' => (int)$this->db->f('id'),
-					'name' => utf8_decode($this->db->f('name', true)),
+					'name' => mb_convert_encoding($this->db->f('name', true), 'ISO-8859-1', 'UTF-8'),
 				);
 			}
 			return $categories;
