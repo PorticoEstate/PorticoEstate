@@ -147,7 +147,7 @@
 			);
 
 
-			$delegate_data = $this->bo->so->get_delegate($this->ssn, $this->orgnr);
+			$delegate_data = $this->bo->so->get_delegate($this->ssn);
 
 			foreach ($delegate_data as &$entry)
 			{
