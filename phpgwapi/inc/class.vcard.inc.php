@@ -845,7 +845,7 @@
 				case '2.1':
 				break;
 				case '3.0':
-					$str = utf8_decode($str);
+					$str = mb_convert_encoding($str, 'ISO-8859-1', 'UTF-8');
 				break;
 				default:
 				break;
@@ -860,7 +860,7 @@
 			switch(strtoupper($charset))
 			{
 				case 'UTF-8':
-					$str = utf8_encode($str);
+					$str = mb_convert_encoding($str, 'UTF-8', 'ISO-8859-1');
 				break;
 				default:
 				break;

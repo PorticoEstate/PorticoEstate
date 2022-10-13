@@ -537,7 +537,7 @@ if (DEBUG_CACHE)
 					{
 						if(is_string($item[$vfs_name]))
 						{
-							$newitem[$vfs_name] = utf8_decode($item[$vfs_name]);
+							$newitem[$vfs_name] = mb_convert_encoding($item[$vfs_name], 'ISO-8859-1', 'UTF-8');
 						}
 						else
 						{
@@ -553,7 +553,7 @@ if (DEBUG_CACHE)
 					{
 						if(is_string($item[$dav_name]))
 						{
-							$newitem[$vfs_name] = utf8_decode($item[$dav_name]);
+							$newitem[$vfs_name] = mb_convert_encoding($item[$dav_name], 'ISO-8859-1', 'UTF-8');
 						}
 						else
 						{
@@ -858,7 +858,7 @@ if (DEBUG_CACHE) echo '<b>proppatch: cache cleared</b><br />';
 				$davxml .= '
   <D:set>
 	<D:prop>
-	   <'.$name.'>'.utf8_encode(htmlspecialchars($value)).'</'.$name.'>
+	   <'.$name.'>'.mb_convert_encoding(htmlspecialchars($value), 'UTF-8', 'ISO-8859-1').'</'.$name.'>
 	</D:prop>
   </D:set>
 ';

@@ -1865,6 +1865,7 @@ function backendScheduleDateColumn(data, col, date)
 	{
 		var id = data[k]['id'];
 		var name = (data[k]['shortname']) ? formatScheduleShorten(data[k]['shortname'], 9) : formatScheduleShorten(data[k]['name'], 9);
+		name = name ? name : formatScheduleShorten(data[k]['activity_name'], 9);
 		var type = data[k]['type'];
 		var colorCell = formatScheduleCellDateColumn(name, type);
 

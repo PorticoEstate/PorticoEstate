@@ -471,7 +471,7 @@ E-mail address	booking	en	E-mail address
 Confirm e-mail address	booking	en	Confirm e-mail address
 The e-mail addresses you entered do not match	booking	en	The e-mail addresses you entered do not match
 Lengt of shortname is to long, max 11 characters long	booking	en	Lengt of shortname is to long, max 11 characters long
-Lengt of name is to long, max 50 characters long	booking	en	Lengt of name is to long, max 50 characters long
+Lengt of name is to long, max %1 characters long	booking	en	Lengt of name is to long, max %1 characters long
 The organization number is wrong or not present	booking	en	The organization number is wrong or not present
 The resource number is wrong or not present	booking	en	The resource number is wrong or not present
 Recurring allocation	booking	en	Recurring allocation

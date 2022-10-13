@@ -1,5 +1,5 @@
 %1 group	helpdesk	no	%1 gruppe
-(filtered from _max_ total entries)	helpdesk	no	(filtrert fra _max_ totalt antall)
+(filtered from _MAX_ total entries)	helpdesk	no	(filtrert fra _MAX_ totalt antall)
 address	helpdesk	no	Adresse
 active	helpdesk	no	Aktiv
 enable	helpdesk	no	Aktiver

@@ -482,7 +482,7 @@ E-mail address	booking	nn	E-postadresse
 Confirm e-mail address	booking	nn	Stadfest e-postadressa
 The e-mail addresses you entered do not match	booking	nn	E-postadressene er ikkje like
 Lengt of shortname is to long, max 11 characters long	booking	nn	Kortnamn er for langt, maksimum 11 tegn
-Lengt of name is to long, max 50 characters long	booking	nn	Namn er for langt, maksimum 50 tegn
+Lengt of name is to long, max %1 characters long	booking	nn	Namn er for langt, maksimum %1 tegn
 The organization number is wrong or not present	booking	nn	Det er ikkje registrert fakturainformasjon på denne organisasjonen
 The resource number is wrong or not present	booking	nn	Det er ikkje registert et ressursnummer på denne organisasjonen
 Recurring allocation	booking	nn	Gjenta tildelingen

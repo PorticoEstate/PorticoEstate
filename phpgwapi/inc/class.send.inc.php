@@ -262,7 +262,7 @@
 						$mail->AddAttachment
 						(
 							$value['file'],
-							utf8_decode($value['name']),
+							mb_convert_encoding($value['name'], 'ISO-8859-1', 'UTF-8'),
 							'base64',
 							$value['type']
 						);

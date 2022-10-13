@@ -323,7 +323,7 @@
 				$errors = $this->bo->validate($group);
 				if (strlen($_POST['name']) > 50)
 				{
-					$errors['name'] = lang('Lengt of name is to long, max 50 characters long');
+					$errors['name'] = lang('Lengt of name is to long, max %1 characters long', 50);
 				}
 				if (strlen($_POST['shortname']) > 11)
 				{
