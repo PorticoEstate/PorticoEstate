@@ -608,7 +608,7 @@
 					case 'cn': // common name
 						if(isset($data[$attribute][0]) && !(isset($fields['first_name']) || isset($fields['last_name'])))
 						{
-							$fields['full_name'] = utf8_decode($data[$attribute][0]);
+							$fields['full_name'] = mb_convert_encoding($data[$attribute][0], 'ISO-8859-1', 'UTF-8');
 							$names = explode(' ', $fields['full_name'], 3);
 							switch(count($names))
 							{
@@ -627,29 +627,29 @@
 					case 'sn': // last name
 					case 'surname':
 						if(isset($data[$attribute][0]))
-							$fields['last_name'] = utf8_decode($data[$attribute][0]);
+							$fields['last_name'] = mb_convert_encoding($data[$attribute][0], 'ISO-8859-1', 'UTF-8');
 					break;
 					case 'givenname': // first name
 						if(isset($data[$attribute][0]))
-							$fields['first_name'] = utf8_decode($data[$attribute][0]);
+							$fields['first_name'] = mb_convert_encoding($data[$attribute][0], 'ISO-8859-1', 'UTF-8');
 					break;
 					case 'initials':
 						if(isset($data[$attribute][0]) && !isset($fields['initials']))
-							$fields['initials'] = utf8_decode($data[$attribute][0]);
+							$fields['initials'] = mb_convert_encoding($data[$attribute][0], 'ISO-8859-1', 'UTF-8');
 					break;
 					case 'title':
 					case 'personaltitle':
 						if(isset($data[$attribute][0]))
-							$fields['title'] = utf8_decode($data[$attribute][0]);
+							$fields['title'] = mb_convert_encoding($data[$attribute][0], 'ISO-8859-1', 'UTF-8');
 					break;
 					case 'distinguishedname':
 						if(isset($data[$attribute][0]))
 						{
-							$add_parts = explode(',', utf8_decode($data[$attribute][0]));
+							$add_parts = explode(',', mb_convert_encoding($data[$attribute][0], 'ISO-8859-1', 'UTF-8'));
 							for($k=0;$k<count($add_parts);++$k)
 							{
 								list($name, $value) = explode('=', $add_parts[$k], 2);
-								$value = utf8_decode($value);
+								$value = mb_convert_encoding($value, 'ISO-8859-1', 'UTF-8');
 								switch(strtolower($name))
 								{
 									case 'cn': // common name
@@ -670,45 +670,45 @@
 					break;
 					case 'department':
 						if(isset($data[$attribute][0]))
-							$fields['department'] = utf8_decode($data[$attribute][0]);
+							$fields['department'] = mb_convert_encoding($data[$attribute][0], 'ISO-8859-1', 'UTF-8');
 					break;
 
 					// location
 					case 'postaladdress':
 						if(isset($data[$attribute][0]))
-							$fields['locations']['work']['add1'] = utf8_decode($data[$attribute][0]);
+							$fields['locations']['work']['add1'] = mb_convert_encoding($data[$attribute][0], 'ISO-8859-1', 'UTF-8');
 						if(isset($data[$attribute][1]))
-							$fields['locations']['home']['add1'] = utf8_decode($data[$attribute][1]);
+							$fields['locations']['home']['add1'] = mb_convert_encoding($data[$attribute][1], 'ISO-8859-1', 'UTF-8');
 					break;
 					case 'postofficebox':
 						if(isset($data[$attribute][0]))
-							$fields['locations']['work']['add2'] = utf8_decode($data[$attribute][0]);
+							$fields['locations']['work']['add2'] = mb_convert_encoding($data[$attribute][0], 'ISO-8859-1', 'UTF-8');
 						if(isset($data[$attribute][1]))
-							$fields['locations']['home']['add2'] = utf8_decode($data[$attribute][1]);
+							$fields['locations']['home']['add2'] = mb_convert_encoding($data[$attribute][1], 'ISO-8859-1', 'UTF-8');
 					break;
 					case 'postalcode':
 						if(isset($data[$attribute][0]))
-							$fields['locations']['work']['postal_code'] = utf8_decode($data[$attribute][0]);
+							$fields['locations']['work']['postal_code'] = mb_convert_encoding($data[$attribute][0], 'ISO-8859-1', 'UTF-8');
 						if(isset($data[$attribute][1]))
-							$fields['locations']['home']['postal_code'] = utf8_decode($data[$attribute][1]);
+							$fields['locations']['home']['postal_code'] = mb_convert_encoding($data[$attribute][1], 'ISO-8859-1', 'UTF-8');
 					break;
 					case 'l': // Locality -> city
 					case 'locality':
 						if(isset($data[$attribute][0]))
-							$fields['locations']['work']['city'] = utf8_decode($data[$attribute][0]);
+							$fields['locations']['work']['city'] = mb_convert_encoding($data[$attribute][0], 'ISO-8859-1', 'UTF-8');
 						if(isset($data[$attribute][1]))
-							$fields['locations']['home']['city'] = utf8_decode($data[$attribute][1]);
+							$fields['locations']['home']['city'] = mb_convert_encoding($data[$attribute][1], 'ISO-8859-1', 'UTF-8');
 					break;
 					case 'countryname':
 						if(isset($data[$attribute][0]))
-							$fields['locations']['work']['country'] = utf8_decode($data[$attribute][0]);
+							$fields['locations']['work']['country'] = mb_convert_encoding($data[$attribute][0], 'ISO-8859-1', 'UTF-8');
 						if(isset($data[$attribute][1]))
-							$fields['locations']['home']['country'] = utf8_decode($data[$attribute][1]);
+							$fields['locations']['home']['country'] = mb_convert_encoding($data[$attribute][1], 'ISO-8859-1', 'UTF-8');
 					break;
 					case 'textencodedoraddress':
 						if(isset($data[$attribute][0]))
 						{
-							$add_parts = explode(';', utf8_decode($data[$attribute][0]));
+							$add_parts = explode(';', mb_convert_encoding($data[$attribute][0], 'ISO-8859-1', 'UTF-8'));
 							for($k=0;$k<count($add_parts);++$k)
 							{
 								list($name, $value) = explode('=', $add_parts[$k], 2);
@@ -841,14 +841,14 @@
 					case 'homepage':
 					case 'url':
 						if(isset($data[$attribute][0]))
-							$fields['comm_media']['website'] = utf8_decode($data[$attribute][0]);
+							$fields['comm_media']['website'] = mb_convert_encoding($data[$attribute][0], 'ISO-8859-1', 'UTF-8');
 					break;
 
 					// other
 					default:
 						// save any other ldap info as other fields
 						//if(isset($data[$attribute][0]))
-						//	$fields[$attribute] = utf8_decode($data[$attribute][0]);
+						//	$fields[$attribute] = mb_convert_encoding($data[$attribute][0], 'ISO-8859-1', 'UTF-8');
 					break;
 				}
 			}

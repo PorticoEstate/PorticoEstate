@@ -880,8 +880,6 @@
 			$target_code	 = phpgw::clean_value($target_code);
 			$message		 = phpgw::clean_value($message);
 
-//			$message = utf8_encode($message);
-//			$target_code = utf8_encode($target_code);
 			$ok = false;
 			switch ($target_code)
 			{

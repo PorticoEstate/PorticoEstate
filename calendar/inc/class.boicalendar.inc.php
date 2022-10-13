@@ -2983,7 +2983,7 @@ class calendar_boicalendar
 
 			preg_match("/$property_regexp/",$text,$temp);
 			$majortype = str_replace('-','_',strtolower($temp[1]));
-			$value = utf8_decode(chop($temp[2]));
+			$value = mb_convert_encoding(chop($temp[2]), 'ISO-8859-1', 'UTF-8');
 
 			if($mode != 'none' && ($majortype != 'begin' && $majortype != 'end'))
 			{

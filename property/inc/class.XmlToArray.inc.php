@@ -103,7 +103,7 @@
 
 		/**
 		 * Is set automaticaly by parse() if the data matches _seems_utf8()
-		 * then runs utf8_decode() on all values.
+		 * then runs mb_convert_encoding() on all values.
 		 *
 		 * @var bool
 		 * @access private
@@ -401,7 +401,7 @@
 			}
 			if ($this->_decodeUtf8)
 			{
-				$value = utf8_decode($value);
+				$value = mb_convert_encoding($value, 'ISO-8859-1', 'UTF-8');
 			}
 			if ($this->_valueModifier != NULL)
 			{

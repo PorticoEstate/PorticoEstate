@@ -1526,7 +1526,7 @@
 
 //			if(!mb_check_encoding($test, 'UTF-8'))
 //			{
-//				$test = utf8_encode($test);
+//				$test = mb_convert_encoding($test, 'UTF-8', 'ISO-8859-1')
 //			}
 
 			$test = str_replace('>&nbsp;<', '><', $test);

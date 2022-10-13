@@ -486,7 +486,7 @@ class Server
             //if (!is_valid_charset($reqEncoding, array('UTF-8')))
             if (!in_array($reqEncoding, array('UTF-8', 'US-ASCII')) && !XMLParser::hasEncoding($data)) {
                 if ($reqEncoding == 'ISO-8859-1') {
-                    $data = utf8_encode($data);
+					$data = mb_convert_encoding($data, 'UTF-8', 'ISO-8859-1');
                 } else {
                     if (extension_loaded('mbstring')) {
                         $data = mb_convert_encoding($data, 'UTF-8', $reqEncoding);

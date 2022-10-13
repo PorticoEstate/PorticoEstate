@@ -59,11 +59,22 @@
 				return array();
 			}
 
+			$organization_number = $this->get_validate_orgnr();
+			$orgs = $this->get_delegate($ssn, $organization_number);
 
-			$customer_organization_number = $this->get_validate_orgnr();
+			$func = function ( array $org ): int
+			{
+				return $org['id'];
+			};
+
+			if($orgs)
+			{
+				$org_ids = 	array_map($func, $orgs);
+				$filter_orgs = ' OR customer_organization_id IN (' . implode(', ', $org_ids) . ')';
+			}
 
 			$this->db->query("SELECT * FROM bb_application"
-				. " WHERE customer_ssn ='{$ssn}' OR customer_organization_number = '{$customer_organization_number}'"
+				. " WHERE customer_ssn ='{$ssn}' {$filter_orgs}"
 				. " ORDER BY id DESC", __LINE__, __FILE__);
 
 			$values = array();
@@ -89,10 +100,23 @@
 				return array();
 			}
 
-			$customer_organization_number = $this->get_validate_orgnr();
+			$organization_number = $this->get_validate_orgnr();
+			$orgs = $this->get_delegate($ssn, $organization_number);
+
+			$func = function ( array $org ): int
+			{
+				return $org['id'];
+			};
+
+			if($orgs)
+			{
+				$org_ids = 	array_map($func, $orgs);
+				$filter_orgs = ' OR organization_id IN (' . implode(', ', $org_ids) . ')';
+			}
+
 
 			$this->db->query("SELECT * FROM bb_completed_reservation"
-				. " WHERE (customer_ssn ='{$ssn}' OR customer_organization_number = '{$customer_organization_number}')"
+				. " WHERE (customer_ssn ='{$ssn}' {$filter_orgs})"
 				. " AND cost > 0"
 				. " ORDER BY id DESC", __LINE__, __FILE__);
 

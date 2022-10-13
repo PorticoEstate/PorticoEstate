@@ -190,8 +190,6 @@
 			{
 				foreach ($values as &$entry)
 				{
-					//				$entry['address'] = utf8_decode($entry['address']);
-					//				$entry['user'] = utf8_decode($entry['user_id']);
 					$__values				 = $solocation->read_single($entry['loc1'], $_values);
 					//				$entry['location_data'] = $solocation->read_single($entry['loc1'],$_values);
 					$entry['location_data']	 = $custom->prepare($__values, 'property', ".location.1", true);

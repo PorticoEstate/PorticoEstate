@@ -97,7 +97,7 @@ class HttpFactory
         }
         $output   = $calendar->createCalendar();
         if( $utf8Encode ?? false ) {
-            $output = utf8_encode( $output );
+            $output = mb_convert_encoding( $output, 'UTF-8', 'ISO-8859-1');
         }
         $fsize = null;
         if( $gzip ?? false ) {

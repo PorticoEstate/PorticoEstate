@@ -517,7 +517,7 @@
 		<D:owner><D:href>$lockOwner</D:href></D:owner>
 	</D:lockinfo>\n";
 			
-			$this->requestBody = utf8_encode( $body );
+			$this->requestBody = mb_convert_encoding( $body, 'UTF-8', 'ISO-8859-1');
 			if( $this->sendCommand( "LOCK $uri HTTP/$this->protocolVersion" ) )
 				$this->processReply();
 			return $this->reply;
