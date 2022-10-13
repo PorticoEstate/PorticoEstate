@@ -163,8 +163,7 @@
 
 			$this->_phpgw_set_cookie_params();
 
-			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
-				&& $GLOBALS['phpgw_info']['server']['usecookies'] == 'True'  && !phpgw::get_var('api_mode', 'bool'))
+			if ( !empty($GLOBALS['phpgw_info']['server']['usecookies'])  && !phpgw::get_var('api_mode', 'bool'))
 			{
 				$this->_use_cookies = true;
 				$this->_sessionid	= phpgw::get_var(session_name(), 'string', 'COOKIE');
@@ -306,10 +305,8 @@
 			session_start();
 			$this->_sessionid = session_id();
 
-			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
-				&& $GLOBALS['phpgw_info']['server']['usecookies'] )
+			if ( !empty($GLOBALS['phpgw_info']['server']['usecookies']) )
 			{
-//				$this->phpgw_setcookie(session_name(), $this->_sessionid);// already sendt with session_start()
 				$this->phpgw_setcookie('domain', $this->_account_domain);
 			}
 
@@ -322,8 +319,7 @@
 				$session_flags = 'N';
 			}
 
-			if ( $session_flags =='N' && (( isset($GLOBALS['phpgw_info']['server']['usecookies'])
-					&& $GLOBALS['phpgw_info']['server']['usecookies'] )
+			if ( $session_flags =='N' && ( !empty($GLOBALS['phpgw_info']['server']['usecookies'])
 				|| isset($_COOKIE['last_loginid'])))
 			{
 				// Create a cookie which expires in 14 days
@@ -703,8 +699,7 @@
 			if(!$external)
 			{
 				/* add session params if not using cookies */
-				if ( !isset($GLOBALS['phpgw_info']['server']['usecookies'])
-					|| !$GLOBALS['phpgw_info']['server']['usecookies'])
+				if ( empty($GLOBALS['phpgw_info']['server']['usecookies']))
 				{
 					if ( is_array($extravars) )
 					{
@@ -1266,6 +1261,12 @@
 			{
 				$this->_account_domain = $GLOBALS['phpgw_info']['server']['default_domain'];
 			}
+
+			if ( !empty($GLOBALS['phpgw_info']['server']['usecookies']) )
+			{
+				$this->phpgw_setcookie('domain', $this->_account_domain);
+			}
+
 			unset($lid_data);
 
 			$this->update_dla();
