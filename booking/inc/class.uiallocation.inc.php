@@ -830,7 +830,7 @@
 
 			if($purchase_order && !empty($config['activate_application_articles']))
 			{
-				if(empty($completed_reservations['results']))
+				if(!empty($completed_reservations['results']))
 				{
 					self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
 				}
