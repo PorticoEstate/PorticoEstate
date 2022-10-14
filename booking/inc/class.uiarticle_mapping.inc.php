@@ -411,7 +411,12 @@
 			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($pricing as $key => &$price)
 			{
-				$price['value_date'] = $GLOBALS['phpgw']->common->show_date(strtotime($price['from_']), 'Y-m-d');
+				$price['value_date']		 = $GLOBALS['phpgw']->common->show_date(strtotime($price['from_']), 'Y-m-d');
+				$active_checked				 = $price['active'] ? 'checked' : '';
+				$price['active_checkbox']	 = "<input type='checkbox' {$active_checked}  name='price_table[active][{$price['id']}]' value='1'>";
+				$default_checked			 = $price['default_'] ? 'checked' : '';
+				$price['default_radio']		 = "<input type='radio' {$default_checked}  name='price_table[default_]' value='{$price['id']}'>";
+				$price['delete_checkbox']	 = "<input type='checkbox' name='price_table[delete][{$price['id']}]' value='{$price['id']}'>";
 			}
 
 			$pricing_def = array(
@@ -419,7 +424,10 @@
 				array('key' => 'article_mapping_id', 'label' => lang('article id'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'price', 'label' => lang('price'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'value_date', 'label' => lang('from'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'remark', 'label' => lang('remark'), 'sortable' => true, 'resizeable' => true)
+				array('key' => 'remark', 'label' => lang('remark'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'active_checkbox', 'label' => lang('active'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'default_radio', 'label' => lang('default'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'delete_checkbox', 'label' => lang('delete'), 'sortable' => false, 'resizeable' => true),
 			);
 
 			$datatable_def	 = array();

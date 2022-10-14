@@ -209,7 +209,7 @@ function set_mandatory(xTable)
 	var from;
 	var to;
 	var timespan;
-	var sum_minutes;
+	var sum_minutes = 0;
 	var sum_hours = 0;
 	var sum_days = 0;
 
