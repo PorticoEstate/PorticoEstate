@@ -316,7 +316,7 @@
 								$received	 = createObject('property.botts')->receive_order((int)$order_id, $received_amount);
 								break;
 							default:
-								throw new Exception('Order type not supported');
+								throw new Exception('Order type not supported for order_id: '. $order_id);
 						}
 					}
 				}
@@ -325,7 +325,7 @@
 					if ($e)
 					{
 						$GLOBALS['phpgw']->log->error(array(
-							'text'	 => 'import_fra_agresso_X205::import() : error when trying to execute import_end_file(): %1',
+							'text'	 => 'import_conversion::add() : error: %1',
 							'p1'	 => $e->getMessage(),
 							'p2'	 => '',
 							'line'	 => __LINE__,

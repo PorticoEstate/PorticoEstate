@@ -60,8 +60,7 @@
 		}
 	}
 
-	if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
-		&& $GLOBALS['phpgw_info']['server']['usecookies'] )
+	if ( !empty($GLOBALS['phpgw_info']['server']['usecookies']) )
 	{
 		$GLOBALS['phpgw']->session->phpgw_setcookie(session_name());
 		$GLOBALS['phpgw']->session->phpgw_setcookie('domain');

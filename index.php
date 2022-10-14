@@ -24,7 +24,7 @@
 	   You should have received a copy of the GNU General Public License
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
-        $phpgw_info = array();
+	$phpgw_info = array();
 	if (!file_exists('header.inc.php'))
 	{
 		Header('Location: setup/index.php');

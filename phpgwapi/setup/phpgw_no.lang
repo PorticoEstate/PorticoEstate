@@ -353,3 +353,5 @@ cellphone	common	no	Mobiltelefon
 missing membership: "%1" is not in the list	common	no	Feil med gruppetilhørighet: finner ikke "%1" i listen
 percent	common	no	Prosent
 choose "Log out" if you want to end the session	common	no	Velg "Logg ut" om du vil avslutte sesjonen.
+messages_saved_form	common	no	Data er lagret
+messages_form_error	common	no	Data er ikke lagret

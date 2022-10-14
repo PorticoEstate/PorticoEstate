@@ -917,3 +917,4 @@ Reverse	booking	nn	Reversér
 sms alert	booking	nn	SMS-varsling
 e_lock_system	booking	nn	Adgangskontrollsystem
 receipt	booking	nn	Kvittering
+deactivate in frontend	booking	nn	Deaktivert i frontend
