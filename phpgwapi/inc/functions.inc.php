@@ -12,10 +12,19 @@
 	*/
 
 
-	if (!function_exists('filter_var')) // ext/filter was added in 5.2.0
+	if (version_compare(PHP_VERSION, '7.4.0') < 0)
 	{
-		die('<p class="msg">'
-			. lang('You appear to be using PHP %1, phpGroupWare requires 5.2.0 or later', PHP_VERSION). "\n"
+		die('<html><body>
+		<style>
+		.error
+		{
+			background-color: #fcc;
+			border: 1px solid #f00;
+			color: #c10000;
+		}
+		</style>
+		<p class="error">'
+			. lang('You appear to be using PHP %1, %2 requires %3 or later', PHP_VERSION, 'PorticoEstate', '7.4.0'). "\n"
 			. '</p></body></html>');
 	}
 
@@ -538,12 +547,6 @@ HTML;
 
 	 /* Load main class */
 	$GLOBALS['phpgw'] = createObject('phpgwapi.phpgw');
-	// get_magic_quotes_runtime() is deprecated in php 5.4.0
-	if( version_compare(PHP_VERSION, '5.3.7') <= 0 && get_magic_quotes_runtime())
-	{
-			echo '<center><b>The magic_quotes_runtime has to set to Off in php.ini</b></center>';
-			exit;
-	}
 
 
 // Can't use this yet - errorlog hasn't been created.

@@ -5,6 +5,25 @@ var resource_id_selection = "";
 var service_id_selected = "";
 $(document).ready(function ()
 {
+
+	$.formUtils.addValidator({
+		name: 'new_price',
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
+			var v = true;
+			var date_from = $('#date_from').val();
+			var price = $('#price').val();
+			if ((date_from == "" && price != "") || (date_from != "" && price == "") )
+			{
+				v = false;
+			}
+			return v;
+		},
+		errorMessage: 'please enter both a date and prize',
+		errorMessageKey: ''
+	});
+
+
 	$("#field_article_cat_id").change(function ()
 	{
 		if ($(this).val() == 2) //service
@@ -161,7 +180,7 @@ var callback_reserved = function (building_id, selection, data)
 	{
 		$.each(data, function (i)
 		{
-			if(! selection.includes(data[i]) )
+			if (!selection.includes(data[i]))
 			{
 				disabled.push(data[i]);
 			}

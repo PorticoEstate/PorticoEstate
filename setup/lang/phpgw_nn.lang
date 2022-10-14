@@ -373,7 +373,7 @@ yes	setup	nn	Yes
 you appear to be running a pre-beta version of phpgroupware.<br>these versions are no longer supported, and there is no upgrade path for them in setup.<br> you may wish to first upgrade to 0.9.10 (the last version to support pre-beta upgrades) <br>and then upgrade from there with the current version.	setup	nn	You appear to be running a pre-beta version of phpGroupWare.<br>These versions are no longer supported, and there is no upgrade path for them in setup.<br> You may wish to first upgrade to 0.9.10 (the last version to support pre-beta upgrades) <br>and then upgrade from there with the current version.
 you appear to be running version %1 of phpgroupware	setup	nn	You appear to be running version %1 of phpGroupWare
 you appear to be using php %1+	setup	nn	You appear to be using PHP %1+
-you appear to be using php %1, phpgroupware requires version 5.2.0 or later	setup	nn	You appear to be using PHP %1, phpGroupWare requires version 5.2.0 or later
+You appear to be using PHP %1, %2 requires %3 or later	setup	nn	You appear to be using PHP %1, %2 requires %3 or later
 you appear to have imap support enabled	setup	nn	You appear to have IMAP support enabled
 you appear to have microsoft sql server support enabled	setup	nn	You appear to have Microsoft SQL Server support enabled
 you appear to have mysql support enabled	setup	nn	You appear to have MySQL support enabled

@@ -5983,13 +5983,12 @@
 	}
 
 	/**
-	 * Update booking version from 0.2.83 to 0.2.84
+	 * Update booking version from 0.2.84 to 0.2.85
 	 *
 	 */
 	$test[] = '0.2.84';
 	function booking_upgrade0_2_84()
 	{
-		//bb_resource_e_lock
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
@@ -6059,6 +6058,45 @@ HTML;
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.85';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.85 to 0.2.86
+	 *
+	 */
+	$test[] = '0.2.85';
+	function booking_upgrade0_2_85()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_article_mapping', 'deactivate_in_frontend',
+				array(
+					'type' => 'int',
+					'precision' => 2,
+					'nullable' => True
+				)
+			);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_article_price', 'active',
+				array(
+					'type' => 'int',
+					'precision' => 2,
+					'default' => 1,
+					'nullable' => True
+				)
+			);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_article_price', 'default_',
+				array(
+					'type' => 'int',
+					'precision' => 2,
+					'nullable' => True
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.86';
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}

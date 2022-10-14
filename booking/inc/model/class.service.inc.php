@@ -84,7 +84,8 @@
 					'action'=>  PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
 					'required' => true,
-					'label' => 'name'
+					'label' => 'name',
+					'query'	 => true,
 					),
 				'active' => array(
 					'action'=>   PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
@@ -94,7 +95,8 @@
 					'action'=>  PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'html',
 					'required' => true,
-					'label' => 'description'
+					'label' => 'description',
+					'query'	 => true,
 					),
 				'owner_id' => array(
 					'action'=> PHPGW_ACL_ADD,

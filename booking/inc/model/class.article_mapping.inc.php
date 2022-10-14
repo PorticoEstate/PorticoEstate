@@ -50,7 +50,8 @@
 			$owner_id,
 			$unit,
 			$tax_code,
-			$tax_code_name;
+			$tax_code_name,
+			$deactivate_in_frontend;
 
 		protected $field_of_responsibility_name = '.article';
 
@@ -176,6 +177,12 @@
 						'key'	 => 'id',
 						'column' => 'descr'
 					)
+				),
+				'deactivate_in_frontend' => array(
+					'action'	 => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type'		 => 'int',
+					'required'	 => false,
+					'public'	 => true
 				),
 			);
 
