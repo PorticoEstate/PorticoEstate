@@ -971,13 +971,19 @@
 							continue;
 						}
 
+						/**
+						 * artikkelkoden kommer fra valgt konterings-oppsett pr fakturering
+						 * Samme ressurs kan ha flere artikkelkoder
+						 */
 						if($order_line['parent_mapping_id'] == 0)
 						{
 							$article_name = $order_line['name']  . ' - ' . $reservation['description'];
+							$_article_code = $account_codes['article'];
 						}
 						else
 						{
 							$article_name = $order_line['name'];
+							$_article_code = $order_line['article_code'];
 						}
 
 						/**
@@ -1024,7 +1030,7 @@
 							$fakturalinje['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
 						}
 
-						$fakturalinje['varenr']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['article_code']);
+						$fakturalinje['varenr']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $_article_code);
 						$fakturalinje['lopenr']		 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
 						$fakturalinje['pris']		 = str_pad($pris_inkl_mva * 100, 8, '0', STR_PAD_LEFT) . ' ';
 						$fakturalinje['grunnlag']	 = str_pad($order_line['quantity'], 8, '0', STR_PAD_LEFT);//'000000001'; // antall
@@ -1048,7 +1054,7 @@
 							$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
 						}
 
-						$linjetekst['varenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['article_code']), 4, '0', STR_PAD_LEFT);
+						$linjetekst['varenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $_article_code), 4, '0', STR_PAD_LEFT);
 						$linjetekst['lopenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
 						$linjetekst['linjenr']	 = $linjenr;
 						$linjetekst['tekst']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 50, ' ');
