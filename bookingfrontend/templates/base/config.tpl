@@ -12,6 +12,16 @@
 		<tr class="pure-table-odd">
 			<td colspan="2">&nbsp;<b>{lang_bookingfrontend_settings}</b></td>
 		</tr>
+
+		<tr >
+			<td>{lang_develope_mode}:</td>
+			<td>
+				<select name="newsettings[develope_mode]">
+					<option value="">{lang_No}</option>
+					<option value="True"{selected_develope_mode_True}>{lang_Yes}</option>
+				</select>
+			</td>
+		</tr>
 		<tr>
 			<td>{lang_site_title}</td>
 			<td><input name="newsettings[site_title]" value="{value_site_title}"></td>

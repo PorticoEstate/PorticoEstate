@@ -45,18 +45,16 @@
 	// Make sure we're always logged in
 	if (!phpgw::get_var(session_name()) || !$GLOBALS['phpgw']->session->verify())
 	{
-		$c = createobject('phpgwapi.config', 'bookingfrontend');
-		$c->read();
-		$config = $c->config_data;
+		$config = createobject('phpgwapi.config', 'bookingfrontend')->read();
 
-		$login = $c->config_data['anonymous_user'];
+		$login = $config['anonymous_user'];
 		$logindomain = phpgw::get_var('domain', 'string', 'GET');
 		if (strstr($login, '#') === false && $logindomain)
 		{
 			$login .= "#{$logindomain}";
 		}
 
-		$passwd = $c->config_data['anonymous_passwd'];
+		$passwd = $config['anonymous_passwd'];
 		$_POST['submitit'] = "";
 
 		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
@@ -129,9 +127,9 @@ HTML;
 	 */
 	switch ($template_set)
 	{
-		case 'aalesund':
+		case 'bookingfrontend_2':
 		case 'bookingfrontend':
-			$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] = 'bookingfrontend';
+			$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] = $template_set;
 			break;
 		default:
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] = 'bookingfrontend';

@@ -18,7 +18,7 @@
 
 			switch ($template_set)
 			{
-				case 'aalesund':
+				case 'bookingfrontend_2':
 				case 'bookingfrontend':
 					$GLOBALS['phpgw']->session->phpgw_setcookie('template_set', $template_set, (time() + (60 * 60 * 24 * 14)));
 					break;

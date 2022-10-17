@@ -356,15 +356,9 @@
 		public function get_pricing()
 		{
 			$id	 = phpgw::get_var('id', 'int');
-			$pricing	 = $this->bo->get_pricing($id);
+			$filter_active	 = phpgw::get_var('filter_active', 'bool');
 
-			$pricing[] =  array(
-					'id'				 => 0,
-					'article_mapping_id' => 0,
-					'price'				 => 0,
-					'from_'				 => 0,
-					'remark'			 => 'Gratis',
-			);
+			$pricing	 = $this->bo->get_pricing($id, $filter_active);
 
 			return $pricing;
 		}
