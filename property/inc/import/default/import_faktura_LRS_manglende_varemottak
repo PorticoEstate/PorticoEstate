@@ -66,7 +66,7 @@
 			$mva_kode	 = $data[5];
 			$amount		 = round($data[6] / (-1.25), 2);
 			$fakturanr	 = $data[7];
-			$order_id	 = $data[8];
+			$order_id	 = (int)$data[8];
 
 			if ($art != '2327010')
 			{
@@ -74,7 +74,12 @@
 				_debug_array($data);
 				return true;
 			}
-			$this->db->query("SELECT vendor_id FROM fm_workorder WHERE id = $order_id", __LINE__, __FILE__);
+			
+			$sql = "SELECT vendor_id FROM fm_workorder WHERE id = {$order_id}"
+			. " UNION"
+			. " SELECT vendor_id FROM fm_tts_tickets WHERE order_id = {$order_id}";
+
+			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			$vendor_id = $this->db->f('vendor_id');
 
@@ -359,7 +364,7 @@
 		{
 			$order_id = (int)$order_id;
 
-			$this->db->query("SELECT type FROM fm_orders WHERE id = $order_id", __LINE__, __FILE__);
+			$this->db->query("SELECT type FROM fm_orders WHERE id = {$order_id}", __LINE__, __FILE__);
 			$this->db->next_record();
 			$order_type = $this->db->f('type');
 

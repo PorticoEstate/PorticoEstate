@@ -915,13 +915,6 @@ HTML;
 				$redirect_data[$key] = phpgw::clean_value($value);
 			}
 
-			$sessid = phpgw::get_var('sessionid', 'string', 'GET');
-			if ( $sessid )
-			{
-				$redirect_data['sessionid'] = $sessid;
-				$redirect_data['kp3'] = phpgw::get_var('kp3', 'string', 'GET');
-			}
-
 			$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', '', time()-60); // expired
 
 			/**
@@ -932,7 +925,6 @@ HTML;
 			$GLOBALS['phpgw']->redirect_link('/index.php', $redirect_data);
 			unset($redirect);
 			unset($redirect_data);
-			unset($sessid);
 		}
 
 		/* A few hacker resistant constants that will be used throught the program */
