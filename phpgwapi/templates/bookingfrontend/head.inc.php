@@ -147,10 +147,6 @@ JS;
 
 	$GLOBALS['phpgw']->template->set_var('municipality', $municipality);
 
-//	$municipality_email = 'servicetorget@alesund.kommune.no';
-//	$GLOBALS['phpgw']->template->set_var( 'municipality_email', $municipality_email );
-
-
 	if (!empty($config_backend['support_address']))
 	{
 		$support_email = $config_backend['support_address'];
@@ -191,7 +187,6 @@ JS;
 		}
 	}
 
-	$config = CreateObject('phpgwapi.config', 'booking')->read();
 
 	$bodoc	 = CreateObject('booking.bodocumentation');
 	$manual	 = $bodoc->so->getFrontendDoc();
@@ -232,7 +227,7 @@ JS;
 	}
 	else
 	{
-		$keywords = '<meta name="keywords" content="phpGroupWare">';
+		$keywords = '<meta name="keywords" content="PorticoEstate">';
 	}
 	if (!empty($description))
 	{
@@ -240,19 +235,19 @@ JS;
 	}
 	else
 	{
-		$description = '<meta name="description" content="phpGroupWare">';
+		$description = '<meta name="description" content="PorticoEstate">';
 	}
-	if (!empty($config['metatag_author']))
+	if (!empty($config_frontend['metatag_author']))
 	{
-		$author = '<meta name="author" content="' . $config['metatag_author'] . '">';
+		$author = '<meta name="author" content="' . $config_frontend['metatag_author'] . '">';
 	}
 	else
 	{
-		$author = '<meta name="author" content="phpGroupWare http://www.phpgroupware.org">';
+		$author = '<meta name="author" content="PorticoEstate https://github.com/PorticoEstate/PorticoEstate">';
 	}
-	if (!empty($config['metatag_robots']))
+	if (!empty($config_frontend['metatag_robots']))
 	{
-		$robots = '<meta name="robots" content="' . $config['metatag_robots'] . '">';
+		$robots = '<meta name="robots" content="' . $config_frontend['metatag_robots'] . '">';
 	}
 	else
 	{
@@ -274,10 +269,6 @@ JS;
 
 	phpgwapi_cache::session_set('phpgwapi', 'footer_info', $footer_info);
 
-//$test = $GLOBALS['phpgw']->common->get_on_events();
-	$test	 = str_replace('window.onload = function()', '$(document).ready(function()', $test);
-	$test	 = str_replace("\n}\n", "\n})\n", $test);
-
 	$site_base = $app == 'bookingfrontend' ? "/{$app}/" : '/index.php';
 
 	$site_url			= $GLOBALS['phpgw']->link($site_base, array());
@@ -293,29 +284,34 @@ JS;
 	$separator = strpos($self_uri, '?') ? '&' : '?';
 	$self_uri = str_replace(array("{$separator}lang=no", "{$separator}lang=en"), '', $self_uri);
 
-switch($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
-{
-	case 'aalesund':
-		$selected_aalesund = ' selected = "selected"';
-		$selected_bookingfrontend = '';
-		break;
-	case 'bookingfrontend':
-		$selected_aalesund = '';
-		$selected_bookingfrontend = ' selected = "selected"';
-		break;
-}
-/*
-$template_selector = <<<HTML
+	switch($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
+	{
+		case 'bookingfrontend_2':
+			$selected_bookingfrontend_2 = ' selected = "selected"';
+			$selected_bookingfrontend = '';
+			break;
+		case 'bookingfrontend':
+			$selected_bookingfrontend_2 = '';
+			$selected_bookingfrontend = ' selected = "selected"';
+			break;
+	}
 
-	<li class="nav-item">
-	   <select id = "template_selector" class="btn btn-link btn-sm nav-link dropdown-toggle" style="padding-top: .315rem;-webkit-appearance: none;-moz-appearance: none;">
-		<option class="nav-link" value="bookingfrontend"{$selected_bookingfrontend}>AK V1</option>
-		<option class="nav-link" value="aalesund"{$selected_aalesund}>AK V2</option>
-	   </select>
-	</li>
+	if($config_frontend['develope_mode'])
+	{
+		$template_selector = <<<HTML
+		<li class="nav-item">
+		   <select id = "template_selector" class="btn btn-link btn-sm nav-link dropdown-toggle" style="padding-top: .315rem;-webkit-appearance: none;-moz-appearance: none;">
+			<option class="nav-link" value="bookingfrontend"{$selected_bookingfrontend}>AK V1</option>
+			<option class="nav-link" value="bookingfrontend_2"{$selected_bookingfrontend_2}>AK V2</option>
+		   </select>
+		</li>
 HTML;
-*/
-$template_selector = '';
+	}
+	else
+	{
+		$template_selector = '';
+	}
+
 	$nav = <<<HTML
 
 		<nav class="navbar navbar-default sticky-top navbar-expand-md navbar-light  header_borderline"   id="headcon">
@@ -370,7 +366,6 @@ HTML;
 		'site_url'				 => $GLOBALS['phpgw']->link($site_base, array()),
 		'eventsearch_url'        => $GLOBALS['phpgw']->link('/bookingfrontend/',array('menuaction'=>'bookingfrontend.uieventsearch.show')),
 		'webserver_url'			 => $webserver_url,
-		'win_on_events'			 => $test,
 		'metainfo_author'		 => $author,
 		'userlang'				 => $userlang,
 		'metainfo_keywords'		 => $keywords,

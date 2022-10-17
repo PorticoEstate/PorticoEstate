@@ -1,0 +1,257 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Feb 20, 2018, 11:08:19 AM
+    Author     : niruban
+*/
+
+
+
+
+html {
+    font-family: 'Work Sans',sans-serif !important;
+    color: #000;
+}
+
+a {
+    color: #23527c;
+}
+
+a:hover {
+    color: #000 !important;
+}
+
+.nav-link {
+    color: #000 !important;
+}
+
+.nav-link:hover {
+    border-bottom: 2px solid #000;
+    line-height: 1.4em;
+        
+}
+
+input[type="checkbox"]:checked + .label-text:before{
+	color: #005692;
+}
+
+.bg-light {
+    /*background-color: #f2f2f2 !important;*/
+     border-bottom: 1px solid #c3a203;
+}
+
+.bookable-resource-link-href span,
+.termAcceptDocsUrl {
+    color: #005692;
+    border-bottom: 2px solid #005692;
+}
+
+footer {
+    background: #fff;
+}
+
+.footer a {
+    color: #005692;
+    border-bottom: 2px solid #005692;
+}
+
+.footer a:hover {
+    color: #000;
+}
+
+.tooltip-inner {
+    background-color: #3d3d3d;
+}
+
+.popover-title {
+    border-bottom: 1px #e2e2e2 solid;
+    background-color: #f5f5f5;
+}
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575px) {
+
+    .footer {
+        background-color: #fff;
+        height: 20em;
+    }
+}
+
+/* Small devices (landscape phones, 576px and up)*/
+@media (min-width: 576px) and (max-width: 767px) {  
+
+    .footer {
+        background-color: #fff;
+        height: 20em;
+    }
+}
+
+
+/********************************************
+
+SEARCH PAGE STYLE
+
+*********************************************/
+
+
+.jumbotron {
+    /*background-image: url("../img/jumbotron-bg-bergen.png");*/
+    background-color: #b9d6ea;
+    border-bottom: 3px #3d3d3d solid;
+}
+
+.searchInput {
+    border: 2px solid #005692 !important;
+}
+
+.searchInput:focus {
+    border: 2px solid #085bbe !important;
+}
+
+.searchBtn {
+    background-color: #005692 !important;
+    border: 2px solid #005692;
+    color: #fff;
+}
+
+.searchBtn:hover {
+    background-color: #005692 !important;
+}
+
+.dropdown .btn,
+.dropdown .btn:hover,
+.dropdown .btn:active,
+.dropdown .btn:focus,
+.dropdown .show > .dropdown .btn-secondary.dropdown-toggle
+{
+    background-color: #fff !important;
+    color: #000 !important;
+    border: 1px #005692 solid;
+}
+
+.dropdown-item:active {
+    background-color: #f8f9fa;
+}
+
+/* SEARCH CONTAINER */
+
+.circle {
+    fill: #005692;
+}
+
+.filterSearchToggle {
+    background-color: #b9d6ea;
+    border: 1px solid #dedede;
+}
+
+.custom-card {
+    background-color: #fff;
+    border: 1px #dedede solid;
+    color: #000;
+}
+
+.custom-card:hover {
+    background-color: #e2e2e2;
+}
+
+.custom-subcard {
+    background-color: #fff;
+    border: 1px #dedede solid;
+}
+
+.custom-subcard:last-child {
+    border-bottom: 1px solid #dedede;
+}
+
+.autocompleter {
+    background-color: #f9f9f9;
+}
+
+.bygg-li {
+    background-color: #f9f9f9;
+    border-right: 5px #fff solid;
+}
+
+.org-li {
+    background-color: #f9f9f9;
+}
+
+.autocompleter-item span:last-child {
+    color: #000;
+}
+
+
+/********************************************
+
+BUILDING PAGE STYLE
+
+*********************************************/
+
+.info-content {
+    background-color: #b9d6ea;
+}
+
+.location span {
+    background-color: #fff;
+    border: 1px #dedede solid;
+}
+
+.location span:last-child {
+    border-right: 1px #dedede solid;
+}
+
+.building-card {
+    background-color: #fff;
+}
+
+.building-card-header {
+    background-color: #b9d6ea;
+    border-bottom: 1px #fff solid;
+}
+
+.card-body {
+    background-color: #b9d6ea;
+}
+
+.building-card-header button{
+    color: #000 !important;
+    background-color: transparent;
+}
+
+.scheduler-view-day-header-day .scheduler-today-hd {
+    color: #23527c !important;
+}
+
+.scheduler-today-hd {
+    border-bottom: 3px solid #23527c !important;
+}
+
+
+/********************************************
+
+APPLICATIONCART STYLE
+
+*********************************************/
+
+
+.booking-cart {
+    border: 1px solid #e2e2e2;
+    background-color: #fff;
+}
+
+.booking-cart-title {
+    background-color: #b9d6ea;
+    border-bottom: 1px solid #e2e2e2;
+    color: #000;
+}
+
+.booking-cart-item {
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.booking-cart-item .fa-trash-alt:hover,
+#new-application-partialtwo  .fa-trash-alt:hover {
+    color: #005692 !important;
+}
