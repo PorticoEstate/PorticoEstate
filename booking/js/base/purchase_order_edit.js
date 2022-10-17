@@ -6,14 +6,14 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 {
 
 	var oArgs = {
-		menuaction: 'bookingfrontend.uiarticle_mapping.get_articles',
+		menuaction: 'booking.uiarticle_mapping.get_articles',
 		sort: 'name',
 		application_id: application_id,
 		reservation_type: reservation_type,
 		reservation_id: reservation_id,
 		alloc_template_id: alloc_template_id
 	};
-	var url = phpGWLink('bookingfrontend/', oArgs, true);
+	var url = phpGWLink('index.php', oArgs, true);
 
 	for (var r in resources)
 	{
@@ -371,7 +371,7 @@ function set_mandatory(xTable)
 			var unit_price_cell = this;
 			var tr = this.parentNode;
 			var mapping_id = tr.childNodes[1].childNodes[0].value;
-			var requestURL = phpGWLink('index.php', {menuaction: "booking.uiarticle_mapping.get_pricing", id: mapping_id}, true);
+			var requestURL = phpGWLink('index.php', {menuaction: "booking.uiarticle_mapping.get_pricing", id: mapping_id, filter_active: true}, true);
 
 			$.getJSON(requestURL, function (result)
 			{
