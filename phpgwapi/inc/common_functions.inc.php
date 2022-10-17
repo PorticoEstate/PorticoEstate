@@ -303,10 +303,11 @@
 			unset ($GLOBALS['methodparts'][$classpartnum]);
 			unset ($GLOBALS['methodparts'][$partscount]);
 			reset ($GLOBALS['methodparts']);
-			$firstparent = 'True';
+			$parentobject = '';
+			$firstparent = True;
 			foreach ( $GLOBALS['methodparts'] as $key => $val )
 			{
-				if ($firstparent == 'True')
+				if ($firstparent == True)
 				{
 					$parentobject = '$GLOBALS["'.$val.'"]';
 					$firstparent = False;
@@ -574,9 +575,9 @@
 	/**
 	 * phpgw version checking, is param 1 > param 2 in phpgw versionspeak?
 	 *
-	 * @param	 * $a	 * phpgw version number to check if more than $b
-	 * @param	 * $b	 * phpgw version number to check $a against
-	 * #return	 * True if $a < $b
+	 * @param string $a phpgw version number to check if more than $b
+	 * @param string $b phpgw version number to check $a against
+	 * @return bool True if $a < $b
 	 */
 	function amorethanb($a,$b,$DEBUG=False)
 	{
