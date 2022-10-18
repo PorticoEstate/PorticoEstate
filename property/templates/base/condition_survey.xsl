@@ -156,13 +156,13 @@
 						</div>
 
 						<div class="pure-control-group">
-							<label for="date">
+							<label for="report_date">
 								<xsl:value-of select="php:function('lang', 'date')" />
 							</label>
 							<xsl:choose>
 								<xsl:when test="editable = 1">
 									<input id="report_date" name='values[report_date]' type="text" value="{survey/report_date}"
-										   data-validation="date" data-validation-format="{data_validation_format}"/>
+										   data-validation="required" readonly="readonly"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="survey/report_date"/>
