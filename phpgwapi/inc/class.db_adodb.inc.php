@@ -896,12 +896,12 @@
 		/**
 		 * Execute prepared SQL statement for select
 		 *
-		 * @param string $sql_string 
+		 * @param string $sql 
 		 * @param array $params conditions for the select 
 		 * @return boolean TRUE on success or FALSE on failure
 		 */
 
-		public function select($sql_string, $params, $line = '', $file = '')
+		public function select($sql, $params, $line = '', $file = '')
 		{		
 			try
 			{
