@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -28,6 +28,7 @@
  */
 namespace Kigkonsult\Icalcreator;
 
+use Kigkonsult\Icalcreator\Util\RecurFactory2;
 use PHPUnit\Framework\TestCase;
 use Kigkonsult\Icalcreator\Util\RecurFactory;
 use DateTime;
@@ -40,37 +41,53 @@ use Exception;
  */
 abstract class RecurBaseTest extends TestCase
 {
-    protected static $ERRFMT = "%s error in case #%s, start %s, end %s, recur:%s";
+    /**
+     * @var string
+     */
+    protected static string $ERRFMT = "%s error in case #%s, start %s, end %s, recur:%s";
 
-    protected static $totExpectTime = 0.0;
-    protected static $totResultTime = 0.0;
+    /**
+     * @var float
+     */
+    protected static float $totExpectTime = 0.0;
 
-    public static function tearDownAfterClass()
+    /**
+     * @var float
+     */
+    protected static float $totResultTime = 0.0;
+
+    /**
+     * @return void
+     */
+    public static function tearDownAfterClass() : void
     {
-        echo PHP_EOL;
-        echo 'Tot result time:' . number_format( self::$totResultTime, 6 ) . PHP_EOL; // test ###
-        echo 'Tot expect time:' . number_format( self::$totExpectTime, 6 ) . PHP_EOL; // test ###
+        if( defined( 'DISPRECUR' ) && ( '1' === DISPRECUR )) {
+            echo PHP_EOL;
+            echo 'Tot result time:' . number_format( self::$totResultTime, 6 ) . PHP_EOL; // test ###
+            echo 'Tot expect time:' . number_format( self::$totExpectTime, 6 ) . PHP_EOL; // test ###
+        }
     }
 
     /**
      * Testing recur2date
      *
-     * @param int      $case
-     * @param DateTime $start
-     * @param array|DateTime $end
-     * @param array    $recur
-     * @param array    $expects
-     * @param float    $prepTime
-     * @return array
+     * @param int|string     $case
+     * @param DateTime       $start
+     * @param DateTime|array $end
+     * @param mixed[]        $recur
+     * @param mixed[]        $expects
+     * @param float          $prepTime
+     * @return mixed[]
      * @throws Exception
      */
     public function recur2dateTest(
-        $case,
-        DateTime $start,
-        $end,
-        array $recur,
-        array $expects,
-        $prepTime ) {
+        int | string     $case,
+        DateTime         $start,
+        DateTime | array $end,
+        array            $recur,
+        array            $expects,
+        float            $prepTime ) : array
+    {
         $saveStartDate = clone $start;
         /*
 //        $e = Vcalendar::factory()->newVevent(); ??
@@ -94,23 +111,26 @@ abstract class RecurBaseTest extends TestCase
         self::$totResultTime += $execTime2;
         self::$totExpectTime += $prepTime;
 
-        $strCase = str_pad( $case, 12 );
-        echo PHP_EOL .  // test ###
-            $strCase . 'resultOld  time:' . number_format( $execTime1, 6 ) . ' : ' . implode( ' - ', array_keys( $result1 )) . PHP_EOL; // test ###
-        echo   // test ###
-            $strCase . 'resultNew  time:' . number_format( $execTime2, 6 ) . ' : ' . implode( ' - ', array_keys( $result2 )) . PHP_EOL; // test ###
-        echo
-            $strCase . 'expects    time:' . number_format( $prepTime, 6 ) . ' : ' . implode( ' - ', $expects  ) . PHP_EOL; // test ###
-
+        if( defined( 'DISPRECUR' ) && ( '1' === DISPRECUR )) {
+            $strCase = str_pad( $case, 12 );
+            echo PHP_EOL .  // test ###
+                $strCase . 'resultOld  time:' . number_format( $execTime1, 6 ) . ' : ' . implode( ' - ', array_keys( $result1 ) ) . ' count: ' . count( $result1 ) . PHP_EOL; // test ###
+            echo   // test ###
+                $strCase . 'resultNew  time:' . number_format( $execTime2, 6 ) . ' : ' . implode( ' - ', array_keys( $result2 ) ) . ' count: ' . count( $result2 ) . PHP_EOL; // test ###
+            echo
+                $strCase . 'expects    time:' . number_format( $prepTime, 6 ) . ' : ' . implode( ' - ', $expects ) . ' count: ' . count( $expects ) . PHP_EOL; // test ###
+        }
         $recurDisp = str_replace( [PHP_EOL, ' ' ], '', var_export( $recur, true ));
         $result = array_keys( $result1 );
+        RecurFactory2::assureIntArray( $expects );
+        /*
         $this->assertEquals(
             $expects,
             $result,
             sprintf(
                 self::$ERRFMT,
                 __FUNCTION__,
-                $case . ' test #1',
+                $case . ' test #1 fullRecur2date',
                 $saveStartDate->format( 'Ymd' ),
                 $end->format( 'Ymd' ),
                 PHP_EOL . $recurDisp .
@@ -118,6 +138,7 @@ abstract class RecurBaseTest extends TestCase
                 PHP_EOL . 'exp : ' . implode( ',', $expects )
             )
         );
+        */
         $result = array_keys( $result2 );
         $this->assertEquals(
             $expects,
@@ -125,12 +146,12 @@ abstract class RecurBaseTest extends TestCase
             sprintf(
                 self::$ERRFMT,
                 __FUNCTION__,
-                $case . ' test #2',
+                $case . ' test #2 new recur2date',
                 $saveStartDate->format( 'Ymd' ),
                 $end->format( 'Ymd' ),
-                $recurDisp .
-                PHP_EOL . 'exp : ' . implode( ',', $expects ) .
-                PHP_EOL . 'got : ' . implode( ',', $result )
+                PHP_EOL . $recurDisp .
+                PHP_EOL . 'exp : ' . implode( ',', $expects ) . ' count: ' . count( $expects ) .
+                PHP_EOL . 'got : ' . implode( ',', $result ) . ' count: ' . count( $result )
             )
         );
         return $result1;
