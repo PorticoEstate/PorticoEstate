@@ -20,8 +20,8 @@
 	/**
 	* Include concrete database implementation
 	*/
-	require_once PHPGW_API_INC . '/adodb/adodb-exceptions.inc.php';
-	require_once PHPGW_API_INC . '/adodb/adodb.inc.php';
+	require_once PHPGW_API_INC . '/adodb/vendor/adodb/adodb-php/adodb-exceptions.inc.php';
+	require_once PHPGW_API_INC . '/adodb/vendor/adodb/adodb-php/adodb.inc.php';
 
 	/**
 	* Database abstraction class to allow phpGroupWare to use multiple database backends
