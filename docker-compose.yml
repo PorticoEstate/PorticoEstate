@@ -13,6 +13,18 @@ services:
     volumes:
        - postgres:/data/postgres
     restart: unless-stopped
+  postgres15:
+    container_name: postgres15_container
+    image: postgres:15.0
+    ports:
+      - 5434:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    volumes:
+       - postgres15:/data/postgres
+    restart: unless-stopped
   mssql:
     container_name: mssql_container
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -62,6 +74,7 @@ services:
     restart: always
     depends_on:
       - db
+      - postgres15
       - redis
   pgadmin:
     container_name: pgadmin_container
@@ -77,6 +90,7 @@ services:
 
 volumes:
     postgres:
+    postgres15:
     pgadmin:
     sqldata1:
     sqldata2:

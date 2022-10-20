@@ -156,9 +156,10 @@ $(document).ready(function ()
 		language: "no",
 		width: '75%'
 	});
-	$('#user_id').on('select2:open', function (e) {
+	$('#user_id').on('select2:open', function (e)
+	{
 
-		$(".select2-search__field").each(function()
+		$(".select2-search__field").each(function ()
 		{
 			if ($(this).attr("aria-controls") == 'select2-user_id-results')
 			{
@@ -173,9 +174,10 @@ $(document).ready(function ()
 		width: '75%'
 	});
 
-	$('#global_category_id').on('select2:open', function (e) {
+	$('#global_category_id').on('select2:open', function (e)
+	{
 
-		$(".select2-search__field").each(function()
+		$(".select2-search__field").each(function ()
 		{
 			if ($(this).attr("aria-controls") == 'select2-global_category_id-results')
 			{
@@ -475,6 +477,46 @@ JqueryPortico.autocompleteHelper(strURL, 'b_account_group_name', 'b_account_grou
 oArgs = {menuaction: 'property.uiworkorder.get_b_account'};
 strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'b_account_name', 'b_account_id', 'b_account_container');
+
+$(window).on('load', function ()
+{
+
+	$("#b_account_name").on("autocompleteselect", function (event, ui)
+	{
+		var b_account_id = ui.item.value;
+		var oArgs = {menuaction: 'property.uiworkorder.get_b_account', query: b_account_id};
+		var strURL = phpGWLink('index.php', oArgs, true);
+
+		$.getJSON(strURL, function (Result)
+		{
+			if (Result.ResultSet.Result.length > 0)
+			{
+				var b_account = Result.ResultSet.Result[0];
+				var ecodimb_id = b_account.ecodimb
+
+				if (ecodimb_id !== $('#ecodimb').val())
+				{
+
+					var oArgs = {menuaction: 'property.uiproject.get_ecodimb', query: ecodimb_id};
+					var strURL = phpGWLink('index.php', oArgs, true);
+					$.getJSON(strURL, function (Result)
+					{
+						if (Result.ResultSet.Result.length > 0)
+						{
+							var ecodimb = Result.ResultSet.Result[0];
+							alert('Skifter ut ansvarssted "' + $('#ecodimb_name').val() + '" med "' + ecodimb.name + '"');
+
+							$('#ecodimb').val(ecodimb.id);
+							$('#ecodimb_name').val(ecodimb.name);
+						}
+					});
+
+				}
+			}
+		});
+
+	});
+});
 
 
 window.on_location_updated = function (location_code)

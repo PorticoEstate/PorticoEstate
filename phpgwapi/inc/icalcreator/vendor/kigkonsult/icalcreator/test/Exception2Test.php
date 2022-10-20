@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -28,110 +28,56 @@
  */
 namespace Kigkonsult\Icalcreator;
 
-use PHPUnit\Framework\TestCase;
-use Kigkonsult\Icalcreator\Util\RexdateFactory;
-use Kigkonsult\Icalcreator\Util\DateTimeFactory;
 use Exception;
+use DateTime;
+use PHPUnit\Framework\TestCase;
 
 /**
- * class Exception2Test
+ * class Exception1Test
  *
- * Testing exception in RexdateFactory
+ * Testing exception when dtstart+dtend and dtstart+due are not in order
  *
- * @since  2.27.14 - 2019-02-26
+ * @since  2.41.24 - 2022-04-07
  */
 class Exception2Test extends TestCase
 {
     /**
-     * RexdateFactoryPrepInputExdateTest provider
-     */
-    public function Provider1()
-    {
-        $dataArr = [];
-
-        $dataArr[] = [
-            1,
-            [
-                [
-                    DateTimeFactory::factory( 'now' )
-                ]
-            ],
-            [ Vcalendar::TZID => 'invalid/timezone' ]
-        ];
-
-        $dataArr[] = [
-            12,
-            [
-                [
-                    '011201250101'
-                ]
-            ],
-            [ Vcalendar::TZID => 'invalid/timezone' ]
-        ];
-
-        $dataArr[] = [
-            13,
-            [
-                '01120125010161'
-            ],
-            []
-        ];
-
-        $dataArr[] = [
-            30,
-            [
-                [
-                    'Kalle Stropp'
-                ]
-            ],
-            []
-        ];
-
-        return $dataArr;
-    }
-
-    /**
-     * Testing RexdateFactory::prepInputExdate
+     * Testing dtstart and dtend NOT in order
      *
      * @test
-     * @dataProvider Provider1
-     *
-     * @param int    $case
-     * @param mixed  $value
-     * @param array  $params
      */
-    public function RexdateFactoryPrepInputExdateTest( $case, $value, $params )
+    public function dtstartDtendTest() : void
     {
+        $calendar  = new Vcalendar();
+        $start     = new DateTime();
+        $end       = ( clone $start )->modify( '-1 day' );
         $ok = false;
         try {
-            $result = RexdateFactory::prepInputExdate( $value, $params );
+            $event = $calendar->newVevent( $start, $end );
         }
         catch ( Exception $e ) {
             $ok = true;
         }
-        $this->assertTrue( $ok, 'error in case #' . $case );
+        $this->assertTrue( $ok, 'error in case #1, dtstart/dtend' );
     }
 
-
     /**
-     * Testing RexdateFactory::prepInputRdate
+     * Testing dtstart and due NOT in order
      *
      * @test
-     * @dataProvider Provider1
-     *
-     * @param int    $case
-     * @param mixed  $value
-     * @param array  $params
      */
-    public function RexdateFactoryprepInputRdateTest( $case, $value, $params )
+    public function dtstartDueTest() : void
     {
+        $calendar = new Vcalendar();
+        $start    = new DateTime();
+        $due      = ( clone $start )->modify( '-1 day' );
         $ok = false;
         try {
-            $result = RexdateFactory::prepInputRdate( $value, $params );
+            $todo = $calendar->newVtodo( $start, $due );
         }
-        catch( Exception $e ) {
+        catch ( Exception $e ) {
             $ok = true;
         }
-        $this->assertTrue( $ok, 'error in case #' . $case );
+        $this->assertTrue( $ok, 'error in case #1, dtstart/dtend' );
     }
 }

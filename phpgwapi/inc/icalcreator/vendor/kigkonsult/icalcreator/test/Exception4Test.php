@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -28,95 +28,71 @@
  */
 namespace Kigkonsult\Icalcreator;
 
-use Exception;
-use Kigkonsult\Icalcreator\Util\StringFactory;
 use PHPUnit\Framework\TestCase;
+use Kigkonsult\Icalcreator\Util\DateIntervalFactory;
+use Exception;
 
 /**
  * class Exception4Test
  *
- * Testing SEQUENCE/PERCENT_COMPLETE integer exceptions
+ * Testing exceptions in DateIntervalFactory
  *
  * @since  2.27.14 - 2019-02-27
  */
 class Exception4Test extends TestCase
 {
     /**
-     * integerTest provider
+     * DateIntervalFactoryTest provider
+     *
+     * @return mixed[]
      */
-    public function integerTestProvider()
+    public function DateIntervalFactoryTestProvider() : array
     {
         $dataArr = [];
 
         $dataArr[] = [
-            11,
-            [
-                Vcalendar::SEQUENCE         => [ Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL ],
-            ],
-            'NaN',
+            1,
+            ''
         ];
 
         $dataArr[] = [
-            12,
-            [
-                Vcalendar::SEQUENCE         => [ Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL ],
-            ],
-            -1,
+            1,
+            'xyz'
         ];
 
         $dataArr[] = [
-            21,
-            [
-                Vcalendar::PERCENT_COMPLETE => [ Vcalendar::VTODO ],
-            ],
-            'NaN',
+            1,
+            'PT1X'
         ];
 
         $dataArr[] = [
-            22,
-            [
-                Vcalendar::PERCENT_COMPLETE => [ Vcalendar::VTODO ],
-            ],
-            -1,
-        ];
-
-        $dataArr[] = [
-            23,
-            [
-                Vcalendar::PERCENT_COMPLETE => [ Vcalendar::VTODO ],
-            ],
-            101,
+            1,
+            'T1D'
         ];
 
         return $dataArr;
     }
 
     /**
-     * Testing SEQUENCE/PERCENT_COMPLETE integer exceptions
+     * Testing DateInterval::factory
      *
      * @test
-     * @dataProvider integerTestProvider
-     * @param int    $case
-     * @param array  $propComps
+     * @dataProvider DateIntervalFactoryTestProvider
+     * @param int $case
      * @param mixed  $value
      */
-    public function integerTest( $case, $propComps, $value )
+    public function DateIntervalFactoryTest(
+        int   $case,
+        mixed $value
+    ) : void
     {
-        $calendar = new Vcalendar();
-        foreach( $propComps as $propName => $theComps ) {
-            $setMethod    = StringFactory::getSetMethodName( $propName );
-            foreach( $theComps as $theComp ) {
-                $newMethod = 'new' . $theComp;
-                $ok        = false;
-                try {
-                    $calendar->{$newMethod}()
-                             ->{$setMethod}( $value );
-                }
-                catch( Exception $e ) {
-                    $ok = true;
-                }
-                $this->assertTrue( $ok, 'error in case #' . $case );
-            }
+        $ok = false;
+        try {
+            $result = DateIntervalFactory::factory( $value );
         }
+        catch ( Exception $e ) {
+            $ok = true;
+        }
+        $this->assertTrue( $ok, 'error in case #' . $case );
     }
 }

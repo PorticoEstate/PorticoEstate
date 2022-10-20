@@ -168,10 +168,17 @@
 			}
 		}
 
-		public function get_pricing( $article_mapping_id )
+		public function get_pricing( $article_mapping_id, $filter_active = false )
 		{
 			$pricing = array();
-			$this->db->query('SELECT *  FROM bb_article_price WHERE article_mapping_id = ' . (int)$article_mapping_id, __LINE__, __FILE__);
+
+			$sql = 'SELECT *  FROM bb_article_price WHERE article_mapping_id = ' . (int)$article_mapping_id;
+			if($filter_active)
+			{
+				$sql .= ' AND active = 1';
+			}
+
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
@@ -374,7 +381,8 @@
 
 			foreach ($articles as &$article)
 			{
-				$sql = "SELECT price, remark FROM bb_article_price WHERE article_mapping_id = {$article['id']}"
+				$sql = "SELECT price, remark FROM bb_article_price WHERE article_mapping_id = {$article['id']} "
+				. " AND active = 1"
 				. " ORDER BY default_ ASC";
 				$this->db->query($sql, __LINE__, __FILE__);
 				$this->db->next_record();

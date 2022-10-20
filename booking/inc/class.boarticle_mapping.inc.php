@@ -106,9 +106,9 @@
 			return booking_soarticle_mapping::get_instance()->get_mapped_services();
 		}
 
-		public function get_pricing( $id )
+		public function get_pricing( $id , $filter_active = false )
 		{
-			return booking_soarticle_mapping::get_instance()->get_pricing($id);
+			return booking_soarticle_mapping::get_instance()->get_pricing($id, $filter_active );
 		}
 
 		public function get_reserved_resources( $building_id )
