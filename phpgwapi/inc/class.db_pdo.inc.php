@@ -342,7 +342,9 @@
 			{
 				$host .= ":{$port}";
 			}
-			require_once PHPGW_API_INC . '/adodb/adodb.inc.php';
+
+			require_once PHPGW_API_INC . '/adodb/vendor/adodb/adodb-php/adodb.inc.php';
+
 			$this->adodb = ADOnewConnection($type);
 			$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
 			if($dsn)
