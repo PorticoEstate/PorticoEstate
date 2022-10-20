@@ -91,8 +91,10 @@ class Cells
      * Whether the collection holds a cell for the given coordinate.
      *
      * @param string $cellCoordinate Coordinate of the cell to check
+     *
+     * @return bool
      */
-    public function has($cellCoordinate): bool
+    public function has($cellCoordinate)
     {
         return ($cellCoordinate === $this->currentCoordinate) || isset($this->index[$cellCoordinate]);
     }
@@ -101,8 +103,10 @@ class Cells
      * Add or update a cell in the collection.
      *
      * @param Cell $cell Cell to update
+     *
+     * @return Cell
      */
-    public function update(Cell $cell): Cell
+    public function update(Cell $cell)
     {
         return $this->add($cell->getCoordinate(), $cell);
     }
@@ -161,8 +165,10 @@ class Cells
 
     /**
      * Return the column coordinate of the currently active cell object.
+     *
+     * @return string
      */
-    public function getCurrentColumn(): string
+    public function getCurrentColumn()
     {
         sscanf($this->currentCoordinate ?? '', '%[A-Z]%d', $column, $row);
 
@@ -171,8 +177,10 @@ class Cells
 
     /**
      * Return the row coordinate of the currently active cell object.
+     *
+     * @return int
      */
-    public function getCurrentRow(): int
+    public function getCurrentRow()
     {
         sscanf($this->currentCoordinate ?? '', '%[A-Z]%d', $column, $row);
 
@@ -268,9 +276,7 @@ class Cells
      */
     private function getUniqueID()
     {
-        $cacheType = Settings::getCache();
-
-        return ($cacheType instanceof Memory\SimpleCache1 || $cacheType instanceof Memory\SimpleCache3)
+        return Settings::getCache() instanceof Memory
             ? random_bytes(7) . ':'
             : uniqid('phpspreadsheet.', true) . '.';
     }

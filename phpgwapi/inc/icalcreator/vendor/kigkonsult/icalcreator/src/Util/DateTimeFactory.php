@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -33,10 +33,8 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
-use Kigkonsult\Icalcreator\IcalInterface;
-use Kigkonsult\Icalcreator\Pc;
+use Kigkonsult\Icalcreator\Vcalendar;
 
-use function ctype_alpha;
 use function ctype_digit;
 use function date_default_timezone_get;
 use function in_array;
@@ -54,26 +52,31 @@ use function var_export;
  * iCalcreator DateTime support class
  *
  * @see https://en.wikipedia.org/wiki/Iso8601
- * @since 2.40.11 2022-01-15
+ * @since  2.29.21 - 2020-01-31
  */
 class DateTimeFactory
 {
+
     /**
-     * @var string
+     * @var array
      */
-    public static string $Ymd          = 'Ymd';
-    public static string $YmdTHis      = 'Ymd\THis';
-    public static string $YmdHis       = 'YmdHis';
-    public static string $YMDHISe      = 'Y-m-d H:i:s e';
-    public static string $NOW          = 'now';
-    public static string $AT           = '@';
+    public static $DEFAULTVALUEDATETIME = [ Vcalendar::VALUE => Vcalendar::DATE_TIME ];
 
     /**
      * @var string
      */
-    private static string $ERR1        = 'Invalid date : %s';
-    private static string $ERR3        = 'Can\'t update date with timezone : %s';
-    private static string $ERR4        = 'Invalid date \'%s\' - \'%s\'';
+    public static $Ymd          = 'Ymd';
+    public static $YmdTHis      = 'Ymd\THis';
+    public static $YmdHis       = 'YmdHis';
+    public static $YMDHISe      = 'Y-m-d H:i:s e';
+    public static $NOW          = 'now';
+
+    /**
+     * @var string
+     */
+    private static $ERR1        = 'Invalid date : %s';
+    private static $ERR3        = 'Can\'t update date with timezone : %s';
+    private static $ERR4        = 'Invalid date \'%s\' - \'%s\'';
 
     /**
      * Return new DateTime object instance
@@ -83,37 +86,36 @@ class DateTimeFactory
      * @return DateTime
      * @throws InvalidArgumentException
      * @throws Exception
-     * @since  2.40.11 - 2022-01-27
+     * @since  2.29.21 - 2020-01-31
      */
-    public static function factory( ? string $dateTimeString = null, ? string $timeZoneString = null ) : DateTime
+    public static function factory( $dateTimeString = null, $timeZoneString = null ) : DateTime
     {
-        $dateTimeString = $dateTimeString ?? self::$NOW;
-        if(( self::$AT === $dateTimeString[0] ) &&
+        static $AT      = '@';
+        $dateTimeString = ( null === $dateTimeString ) ? 'now' : (string) $dateTimeString;
+        if(( $AT == substr( $dateTimeString, 0, 1 )) &&
             ctype_digit( substr( $dateTimeString, 1 ))) {
             try {
                 $dateTime = new DateTime( $dateTimeString );
-                $dateTime->setTimezone( DateTimeZoneFactory::factory( IcalInterface::UTC ));
+                $dateTime->setTimezone( DateTimeZoneFactory::factory( Vcalendar::UTC ));
                 if( ! empty( $timeZoneString ) &&
-                    ! DateTimeZoneFactory::isUTCtimeZone( $timeZoneString )) {
-                    try {
-                        $dateTime->setTimezone(
+                    ! DateTimeZoneFactory::isUTCtimeZone( $timeZoneString ) &&
+                    ( false === $dateTime->setTimezone(
                             DateTimeZoneFactory::factory( $timeZoneString )
-                        );
-                    }
-                    catch( Exception $e ) {
-                        throw new InvalidArgumentException(
-                            sprintf( self::$ERR3, $timeZoneString ),
-                            1234,
-                            $e
-                        );
-                    }
+                        )
+                    )) {
+                    throw new InvalidArgumentException(
+                        sprintf( self::$ERR3, $timeZoneString )
+                    );
                 }
                 return $dateTime;
             }
-            catch( InvalidArgumentException | Exception $e ) {
+            catch( InvalidArgumentException $e ) {
                 throw $e;
             }
-        } // end if @
+            catch( Exception $e ) {
+                throw $e;
+            }
+        } // end if
         return self::assertDateTimeString( $dateTimeString, $timeZoneString );
     }
 
@@ -121,14 +123,14 @@ class DateTimeFactory
      * Assert DateTime String
      *
      * @param string $dateTimeString
-     * @param null|string $timeZoneString
+     * @param string $timeZoneString
      * @return DateTime
      * @throws InvalidArgumentException
      * @since  2.27.8 - 2019-01-12
      */
     public static function assertDateTimeString(
         string $dateTimeString,
-        ? string $timeZoneString
+        $timeZoneString = null
     ) : DateTime
     {
         try {
@@ -143,63 +145,73 @@ class DateTimeFactory
             throw new InvalidArgumentException(
                 sprintf( self::$ERR1, $dateTimeString ),
                 $e->getCode(),
-                $e
-            );
+                $e );
         }
         return $dateTime;
     }
 
     /**
-     * Return DateTime from DateTimeInterface on YmdHis+timezone base
+     * Return DateTime if DateTimeInterface else string
      *
      * @param DateTimeInterface $dateTime
      * @return DateTime
      * @throws Exception
-     * @since  2.41.67 - 2022-09-13
+     * @since 2.39 2021-06-15
      */
     public static function toDateTime( DateTimeInterface $dateTime ) : DateTime
     {
-        $dtTmp = new DateTime( self::$NOW, $dateTime->getTimezone());
-        $dtTmp->setTimestamp( $dateTime->getTimestamp());
+        if( $dateTime instanceof DateTime ) {
+            return $dateTime;
+        }
+        try {
+            $dtTmp = new DateTime( self::$NOW, $dateTime->getTimezone());
+            $dtTmp->setTimestamp( $dateTime->getTimestamp() );
+        }
+        catch( Exception $e ) {
+            throw $e;
+        }
         return $dtTmp;
     }
 
     /**
-     * Return Pc with internal date (format) with parameters based on input date
+     * Return internal date (format) with parameters based on input date
      *
-     * @param Pc  $value
-     * @param null|bool     $forceUTC
-     * @return Pc
+     * @param string|DateTimeInterface  $value
+     * @param array  $params
+     * @param bool   $forceUTC
+     * @return array
      * @throws Exception
      * @throws InvalidArgumentException
-     * @since 2.41.36 2022-04-03
+     * @since 2.29.16 2020-01-24
      */
-    public static function setDate( Pc $value, ? bool $forceUTC = false ) : Pc
+    public static function setDate( $value, $params = [], $forceUTC = false ) : array
     {
-        $isValueDate = $value->hasParamValue( IcalInterface::DATE );
-        $paramTZid   = $value->getParams( IcalInterface::TZID ) ?? Util::$SP0;
-        $isLocalTime = $value->hasParamKey( IcalInterface::ISLOCALTIME );
+        $output      = [ Util::$LCparams => $params ];
+        $isValueDate = ParameterFactory::isParamsValueSet( $output, Vcalendar::DATE );
+        $paramTZid   = ParameterFactory::getParamTzid( $output );
+        $isLocalTime = isset( $params[Util::$ISLOCALTIME] );
         if( ! empty( $paramTZid )) {
             if( DateTimeZoneFactory::hasOffset( $paramTZid )) {
-                $paramTZid = DateTimeZoneFactory::getTimeZoneNameFromOffset( $paramTZid );
+                $paramTZid =
+                    DateTimeZoneFactory::getTimeZoneNameFromOffset( $paramTZid );
             }
             else {
                 DateTimeZoneFactory::assertDateTimeZone( $paramTZid );
             }
         } // end if
         switch( true ) {
-            case ( $value->value instanceof DateTimeInterface ) :
+            case ( $value instanceof DateTimeInterface ) :
                 $dateTime = self::conformDateTime(
-                    self::toDateTime( $value->value ),
+                    self::toDateTime( $value ),
                     $isValueDate,
                     $forceUTC,
                     $paramTZid
                 );
                 break;
-            case self::isStringAndDate( $value->value ) :
+            case ( self::isStringAndDate( $value )) :
                 // string ex. "2006-08-03 10:12:18 [[[+/-]1234[56]] / timezone]"
                 $dateTime = self::conformStringDate(
-                    $value->value,
+                    $value,
                     $isValueDate,
                     $forceUTC,
                     $isLocalTime,
@@ -213,48 +225,55 @@ class DateTimeFactory
                 throw new InvalidArgumentException(
                     sprintf(
                         self::$ERR4,
-                        var_export( $value->value, true ),
-                        var_export( $value->params, true )
+                        var_export( $value, true ),
+                        var_export( $params, true )
                     )
                 );
         } // end switch
-        $value->setValue( $dateTime );
+        $output[Util::$LCvalue] = $dateTime;
         self::conformDateTimeParams(
-            $value,
+            $output[Util::$LCparams],
             $isValueDate,
             $isLocalTime,
-            ( $forceUTC ? IcalInterface::UTC : $paramTZid )
+            ( $forceUTC ? Vcalendar::UTC : $paramTZid )
         );
-        return $value;
+        return $output;
     }
 
     /**
      * Return conformed DateTime
      *
      * @param DateTime $input
-     * @param bool $isValueDate
-     * @param bool $forceUTC
-     * @param string $paramTZid
+     * @param bool     $isValueDate
+     * @param bool     $forceUTC
+     * @param string   $paramTZid
      * @return DateTime
-     * @throws Exception
      * @since  2.29.1 - 2019-06-26
      */
     public static function conformDateTime(
         DateTime $input,
         bool $isValueDate,
         bool $forceUTC,
-        string & $paramTZid
+        & $paramTZid
     ) : DateTime
     {
-        $dateTime = match (true) {
-            ! $isValueDate && $forceUTC          => self::setDateTimeTimeZone( $input, IcalInterface::UTC ),
-            ! $forceUTC && ! empty( $paramTZid ) => self::setDateTimeTimeZone( $input, $paramTZid ),
-            self::dateTimeHasOffset( $input )    => self::setDateTimeTimeZone(
-                $input,
-                $input->getTimezone()->getName()
-            ),
-            default => $input,
-        }; // end switch
+        switch( true ) {
+            case ( ! $isValueDate && $forceUTC ) :
+                $dateTime = self::setDateTimeTimeZone( $input, Vcalendar::UTC );
+                break;
+            case ( ! $forceUTC && ! empty( $paramTZid )) :
+                $dateTime = self::setDateTimeTimeZone( $input, $paramTZid );
+                break;
+            case ( self::dateTimeHasOffset( $input )) :
+                $dateTime = self::setDateTimeTimeZone(
+                    $input,
+                    $input->getTimezone()->getName()
+                );
+                break;
+            default :
+                $dateTime = $input;
+                break;
+        } // end switch
         if( empty( $paramTZid )) {
             $paramTZid = $dateTime->getTimezone()->getName();
         }
@@ -278,20 +297,20 @@ class DateTimeFactory
         string $input,
         bool $isValueDate,
         bool $forceUTC,
-        bool & $isLocalTime,
-        string & $paramTZid
+        & $isLocalTime,
+        & $paramTZid
     ) : DateTime
     {
-        [ $dateStr, $timezonePart ] = self::splitIntoDateStrAndTimezone( $input );
+        list( $dateStr, $timezonePart ) = self::splitIntoDateStrAndTimezone( $input );
         $isLocalTime = ( empty( $timezonePart ) && empty( $paramTZid ));
         $dateTime    = self::getDateTimeWithTimezoneFromString(
             $dateStr,
             $isLocalTime ? null : $timezonePart,
-            $isLocalTime ? IcalInterface::UTC : $paramTZid,
+            $isLocalTime ? Vcalendar::UTC : $paramTZid,
             $forceUTC
         );
         if( ! $isValueDate && $forceUTC ) {
-            $dateTime = self::setDateTimeTimeZone( $dateTime, IcalInterface::UTC );
+            $dateTime = self::setDateTimeTimeZone( $dateTime, Vcalendar::UTC );
         }
         if( empty( $paramTZid ) && ! $isLocalTime ) {
             $paramTZid = $dateTime->getTimezone()->getName();
@@ -302,36 +321,39 @@ class DateTimeFactory
     /**
      * Conform date parameters
      *
-     * @param Pc $pc
-     * @param bool $isValueDate
-     * @param bool $isLocalTime
+     * @param array  $params
+     * @param bool   $isValueDate
+     * @param bool   $isLocalTime
      * @param null|string $paramTZid
-     * @return void
-     * @throws Exception
-     * @since  2.41.36 - 2022-04-03
+     * @since  2.29.1 - 2019-06-27
      */
     public static function conformDateTimeParams(
-        Pc       $pc,
-        bool     $isValueDate,
-        bool     $isLocalTime,
-        ? string $paramTZid
-    ) : void
+        array & $params,
+        bool $isValueDate,
+        bool $isLocalTime,
+        $paramTZid
+    )
     {
-        $pc->removeParam(IcalInterface::VALUE,IcalInterface::DATE_TIME );
+        ParameterFactory::ifExistRemove( // remove default
+            $params,
+            Vcalendar::VALUE,
+            Vcalendar::DATE_TIME
+        );
         switch( true ) {
             case ( $isValueDate ) :
-                $pc->removeParam(IcalInterface::TZID );
-                $pc->removeParam( IcalInterface::ISLOCALTIME );
+                ParameterFactory::ifExistRemove( $params, Vcalendar::TZID );
+                ParameterFactory::ifExistRemove( $params, Util::$ISLOCALTIME );
                 break;
             case ( $isLocalTime ) :
-                $pc->removeParam( IcalInterface::TZID );
-                $pc->addParam( IcalInterface::ISLOCALTIME, true );
+                ParameterFactory::ifExistRemove( $params, Vcalendar::TZID );
+                $params[Util::$ISLOCALTIME] = true;
                 break;
-            case ( ! empty( $paramTZid ) && ! DateTimeZoneFactory::isUTCtimeZone( $paramTZid )) :
-                $pc->addParam( IcalInterface::TZID, $paramTZid );
+            case ( ! empty( $paramTZid ) &&
+                ! DateTimeZoneFactory::isUTCtimeZone( $paramTZid )) :
+                $params[Vcalendar::TZID] = $paramTZid;
                 break;
             default :
-                $pc->removeParam( IcalInterface::TZID );
+                ParameterFactory::ifExistRemove( $params, Vcalendar::TZID );
                 break;
         } // end switch
     }
@@ -341,61 +363,55 @@ class DateTimeFactory
      *
      * @param string $string
      * @return array  [<datePart>, <timezonePart>]
-     * @throws Exception
-     * @since  2.41.57 - 2022-08-19
+     * @since  2.27.14 - 2019-03-08
      */
     public static function splitIntoDateStrAndTimezone( string $string ) : array
     {
-        $string = self::concatIcalDateStr( trim( $string ));
-        if(( DateTimeZoneFactory::$UTCARR[0] === substr( $string, -1 )) &&
+        $string = trim( $string );
+        if(( DateTimeZoneFactory::$UTCARR[0] == substr( $string, -1 )) &&
             ( ctype_digit( substr( $string, -3, 2 )))) { // nnZ
-            return [ substr( $string, 0, -1 ), IcalInterface::UTC ]; // Z
+            return [ substr( $string, 0, -1 ), DateTimeZoneFactory::$UTCARR[1] ]; // UTC
         }
         $strLen = strlen( $string );
         if( self::isDateTimeStrInIcal( $string )) {
             $icalDateTimeString = substr( $string, 0, 15 );
-            if(( 16 === $strLen ) && ( DateTimeZoneFactory::$UTCARR[0] === $string[15] )) {
-                return [ $icalDateTimeString, IcalInterface::UTC ]; // 'Z'
+            if(( DateTimeZoneFactory::$UTCARR[0] ==
+                    substr( $string, 15, 1 )) && ( 16 == $strLen )) {
+                return [ $icalDateTimeString, Vcalendar::UTC ]; // 'Z'
             }
-            if( 15 === $strLen ) {
+            if( 15 == $strLen ) {
                 return [ $string, null ];
             }
         }
-        elseif(( 9 > $strLen ) && ctype_digit( $string )) { // ex. YYYYmmdd
+        elseif( ctype_digit( $string ) && ( 9 > $strLen )) { // ex. YYYYmmdd
             return [ $string, null ];
         }
         if( DateTimeZoneFactory::hasOffset( $string )) {
             $tz      = DateTimeZoneFactory::getOffset( $string );
             $string2 = trim( substr( $string, 0, 0 - strlen( $tz )));
-            if( IcalInterface::GMT === substr( $string2, -3 )) {
+            if( Vcalendar::GMT == substr( $string2, -3 )) {
                 $string2 = trim( substr( $string2, 0, -3 ));
             }
             $tz      = DateTimeZoneFactory::getTimeZoneNameFromOffset( $tz );
             return [ $string2, $tz ];
         } // end if
-        // if no space found then no trailing timezone
-        if( false === strrpos( $string, Util::$SP1 )) {
-            return [ $string, null ];
-        }
-        if( DateTimeZoneFactory::isUTCtimeZone( trim( substr( $string, -3 )))) {
-            return [ trim( substr( $string, 0, -3 )), IcalInterface::UTC ];
-        }
-        // timezone is always after a digit and, hopefully, a space-delim
-        $pos = strlen( $string ) - 1;
-        while( true ) {
-            if( 7 > $pos ) {
-                break;
+        if( false !== strrpos( $string, Util::$SP1 )) {
+            $tz      = StringFactory::afterLast( Util::$SP1, $string );
+            $string2 = StringFactory::beforeLast( Util::$SP1, $string );
+            if( DateTimeZoneFactory::isUTCtimeZone( $tz )) {
+                $tz = Vcalendar::UTC;
             }
-            if( self::hasLeadingDateAndTrailingString( $string, $pos )) {
-                $p1   = 1 + $pos;
-                if( isset( $string[$p1] )) {
-                    $pos += ctype_alpha( $string[$p1] ) ? 1 : 2;
-                    return [ trim( substr( $string, 0, $pos )), trim( substr( $string, $pos )) ];
-                }
-                return [ trim( substr( $string, 0, $p1 )), null ];
+            $found = true;
+            try {
+                DateTimeZoneFactory::assertDateTimeZone( $tz );
             }
-            --$pos;
-        }
+            catch( InvalidArgumentException $e ) {
+                $found = false;
+            }
+            if( $found ) {
+                return [ $string2, $tz ];
+            }
+        } // end if
         return [ $string, null ];
     }
 
@@ -403,9 +419,9 @@ class DateTimeFactory
      * Return DateTime with the right timezone set
      *
      * @param string $dateStr
-     * @param null|string $timezonePart
-     * @param null|string $paramTZid
-     * @param null|bool   $forceUTC
+     * @param string $timezonePart
+     * @param string $paramTZid
+     * @param bool   $forceUTC
      * @return DateTime
      * @throws Exception
      * @throws InvalidArgumentException
@@ -413,9 +429,9 @@ class DateTimeFactory
      */
     public static function getDateTimeWithTimezoneFromString(
         string $dateStr,
-        ? string $timezonePart,
-        ? string $paramTZid = null,
-        ? bool $forceUTC = false
+        $timezonePart = null,
+        $paramTZid    = null,
+        $forceUTC     = false
     ) : DateTime
     {
         $tz2 = null;
@@ -457,8 +473,8 @@ class DateTimeFactory
      */
     public static function dateTime2Str(
         DateTimeInterface $dateTime,
-        ? bool $isDATE = false,
-        ? bool $isLocalTime = false
+        $isDATE = false,
+        $isLocalTime = false
     ) : string
     {
         $dateTime = self::toDateTime( $dateTime );
@@ -495,7 +511,6 @@ class DateTimeFactory
      * @param DateTime $first
      * @param DateTime $second
      * @param string $propName
-     * @return void
      * @throws InvalidArgumentException
      * @since  2.27.14 - 2019-02-03
      */
@@ -503,7 +518,7 @@ class DateTimeFactory
         DateTime $first,
         DateTime $second,
         string $propName
-    ) : void
+    )
     {
         static $ERR  = '%s, dates are not in (asc) order (%s < _%s_)';
         if( $first->getTimestamp() > $second->getTimestamp()) {
@@ -528,20 +543,17 @@ class DateTimeFactory
      * @throws InvalidArgumentException
      * @since  2.27.8 - 2019-01-12
      */
-    /**
-     * @throws Exception
-     */
     private static function getDateTimeFromDateString(
         string $dateString,
-        ? string $tz
+        $tz = null
     ) : DateTime
     {
-        $tz      = trim((string) $tz );
+        $tz      = trim( $tz );
         switch( true ) {
             case ( empty( $tz )) :
                 break;
             case ( DateTimeZoneFactory::isUTCtimeZone( $tz )) :
-                $tz = IcalInterface::UTC;
+                $tz = Vcalendar::UTC;
                 break;
             case ( DateTimeZoneFactory::hasOffset( $tz )) :
                 $tz  = DateTimeZoneFactory::getTimeZoneNameFromOffset( $tz );
@@ -550,13 +562,16 @@ class DateTimeFactory
         try {
             $dateTime = self::factory( $dateString, $tz );
         }
-        catch( InvalidArgumentException | Exception $e ) {
+        catch( InvalidArgumentException $ie ) {
+            throw $ie;
+        }
+        catch( Exception $e ) {
             throw $e;
         }
         return $dateTime;
     }
 
-    /**
+    /*
      * Return DateTime modified from (ext) timezone
      *
      * @param DateTimeInterface $dateTime
@@ -564,7 +579,7 @@ class DateTimeFactory
      * @return DateTime
      * @throws Exception
      * @throws InvalidArgumentException
-     * @since  2.41.57 - 2022-08-20
+     * @since  2.27.14 - 2019-02-04
      */
     public static function setDateTimeTimeZone(
         DateTimeInterface $dateTime,
@@ -581,12 +596,10 @@ class DateTimeFactory
         $currTz = $dateTime->getTimezone()->getName();
         if( DateTimeZoneFactory::isUTCtimeZone( $currTz ) &&
             DateTimeZoneFactory::isUTCtimeZone( $tz )) {
-            return $dateTime->setTimezone( DateTimeZoneFactory::factory( IcalInterface::UTC ));
+            return $dateTime;
         }
-        if( 0 === strcasecmp( $currTz, $tz )) { // same
-            return empty( $dateTime->getOffset())
-                ? $dateTime->setTimezone( DateTimeZoneFactory::factory( IcalInterface::UTC ))
-                : $dateTime;
+        if( 0 == strcasecmp( $currTz, $tz )) { // same
+            return $dateTime;
         }
         try {
             $tzt = DateTimeZoneFactory::factory( $tz );
@@ -598,68 +611,33 @@ class DateTimeFactory
                 $e
             );
         }
-        $dateTime->setTimezone( $tzt );
-        return empty( $dateTime->getOffset())
-            ? $dateTime->setTimezone( DateTimeZoneFactory::factory( IcalInterface::UTC ))
-            : $dateTime;
+        if( false === $dateTime->setTimezone( $tzt )) {
+            throw new InvalidArgumentException(
+                sprintf( self::$ERR4, $dateTime->format( self::$YMDHISe ), $tz )
+            );
+        }
+        return $dateTime;
     }
 
     /*
-     *  Return bool true if string contains a valid date, opt with some timezne
+     *  Return bool true if string contains a valid date
      *
      * @param mixed $str
      * @return bool
-     * @since  2.41.57 - 2022-08-19
+     * @since  2.27.14 - 2019-02-17
      */
-    public static function isStringAndDate( mixed $string ) : bool
+    public static function isStringAndDate( $string ) : bool
     {
         if( ! is_string( $string )) {
             return false;
         }
         $string = trim( $string );
-        if(( false !== strtotime( $string )) &&
-            (( 8 <= strlen( $string )) || ( false === strrpos( $string, Util::$SP1 )))) {
-            return true;
-        }
-        // date(time)-part is a valid strtotime string, the trailing chars may be a timezone or offset
-        // timezone/offset is always after a digit
-        $pos = strlen( $string ) -1;
-        while( true ) {
-            if( 7 > $pos ) {
-                break;
-            }
-            if( self::hasLeadingDateAndTrailingString( $string, $pos )) {
-                return true;
-            }
-            --$pos;
-        }
-        return false;
+        return (( 8 <= strlen( $string )) &&
+            ( false !== strtotime ( $string )));
     }
-
-    /**
-     * Return bool true if string has a leading date and a trailing string
-     *
-     * @param string $string
-     * @param int $pos
-     * @return bool
-     */
-    private static function hasLeadingDateAndTrailingString( string $string, int $pos ) : bool
-    {
-        $p1 = 1 + $pos;
-        return ( ctype_digit( $string[$pos] ) &&
-            ( ! isset( $string[$p1] ) ||
-                (( ' ' === $string[$p1] ) || ctype_alpha( $string[$p1] )))  &&
-            ( false !== strtotime( substr( $string, 0, $p1 )))
-        );
-    }
-
-    /**
-     * @var string[]
-     */
-    private static array $Tarr = ['T','t'];
 
     /*
-     * Return bool true if dateStr starts with format YYYYmmdd[T/t]HHmmss
+     *  Return bool true if dateStr starts with format YYYYmmdd[T/t]HHmmss
      *
      * @param string $dateStr
      * @return bool
@@ -667,72 +645,11 @@ class DateTimeFactory
      */
     private static function isDateTimeStrInIcal( string $dateStr ) : bool
     {
-        if( 15 > strlen( $dateStr )) {
-            return false;
-        }
-        return ( ctype_digit( substr( $dateStr, 0, 8 )) &&
-               in_array( $dateStr[8], self::$Tarr, true ) &&
+        static $Tarr = ['T','t'];
+        return (      is_string( $dateStr) &&
+            ctype_digit( substr( $dateStr, 0, 8 )) &&
+               in_array( substr( $dateStr, 8, 1 ), $Tarr ) &&
             ctype_digit( substr( $dateStr, 9, 6 )));
     }
-
-    /**
-     * Concat '2022-08-19' to '20220819' and  '2022-08-19 09:00:00' to '20220819T090000'
-     *
-     * @param string $string
-     * @return string
-     */
-    private static function concatIcalDateStr( string $string ) : string
-    {
-        $string = trim( $string );
-        $strLen = strlen( $string );
-        if(( 10 === $strLen ) &&
-            ctype_digit( substr( $string, 0, 4 )) &&
-            ( Util::$MINUS === $string[4] ) &&
-            ctype_digit( substr( $string, 5, 2 )) &&
-            ( Util::$MINUS === $string[7] ) &&
-            ctype_digit( substr( $string, 8, 2 ))) {
-            return substr( $string, 0, 4 ) .
-                substr( $string, 5, 2 ) .
-                substr( $string, 8, 2 );
-        } // end if 10
-        if(( 19 === $strLen ) &&
-            ctype_digit( substr( $string, 0, 4 )) &&
-            ( Util::$MINUS === $string[4] ) &&
-            ctype_digit( substr( $string, 5, 2 )) &&
-            ( Util::$MINUS === $string[7] ) &&
-            ctype_digit( substr( $string, 8, 2 )) &&
-            ( empty( $string[10] ) || in_array( $string[10], self::$Tarr, true )) &&
-            ctype_digit( substr( $string, 11, 2 )) &&
-            ( Util::$COLON === $string[13] ) &&
-            ctype_digit( substr( $string, 14, 2 )) &&
-            ( Util::$COLON === $string[16] ) &&
-            ctype_digit( substr( $string, 17, 2 ))) {
-            return substr( $string, 0, 4 ) .
-                substr( $string, 5, 2 ) .
-                substr( $string, 8, 2 ) .
-                self::$Tarr[0] .
-                substr( $string, 11, 2 ) .
-                substr( $string, 14, 2 ) .
-                substr( $string, 17, 2 );
-        }
-        return $string;
-    }
-
-    /**
-     * Return diff in days (incl start day) i.e. event length in days
-     *
-     * @param UtilDateTime $start
-     * @param UtilDateTime $end
-     * @return int
-     */
-    public static function getDayDiff( UtilDateTime $start, UtilDateTime $end ) : int
-    {
-        static $PRA = '%a';
-        return 1 +
-            (int) $start->getClone()
-                ->setTime( 0, 0 )
-                ->diff( $end->getClone()
-                    ->setTime( 0, 0 ))
-                ->format( $PRA );
-    }
 }
+

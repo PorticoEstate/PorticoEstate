@@ -573,20 +573,24 @@ class Functions
             return (array) $array;
         }
 
-        $flattened = [];
-        $stack = array_values($array);
-
-        while ($stack) {
-            $value = array_shift($stack);
-
+        $arrayValues = [];
+        foreach ($array as $value) {
             if (is_array($value)) {
-                array_unshift($stack, ...array_values($value));
+                foreach ($value as $val) {
+                    if (is_array($val)) {
+                        foreach ($val as $v) {
+                            $arrayValues[] = $v;
+                        }
+                    } else {
+                        $arrayValues[] = $val;
+                    }
+                }
             } else {
-                $flattened[] = $value;
+                $arrayValues[] = $value;
             }
         }
 
-        return $flattened;
+        return $arrayValues;
     }
 
     /**
@@ -687,7 +691,7 @@ class Functions
             $worksheet2 = $defined->getWorkSheet();
             if (!$defined->isFormula() && $worksheet2 !== null) {
                 $coordinate = "'" . $worksheet2->getTitle() . "'!" .
-                    (string) preg_replace('/^=/', '', str_replace('$', '', $defined->getValue()));
+                    (string) preg_replace('/^=/', '', $defined->getValue());
             }
         }
 

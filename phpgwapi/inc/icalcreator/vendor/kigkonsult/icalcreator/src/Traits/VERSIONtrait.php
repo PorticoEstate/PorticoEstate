@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -30,12 +30,12 @@ declare( strict_types = 1 );
 namespace Kigkonsult\Icalcreator\Traits;
 
 use InvalidArgumentException;
-use Kigkonsult\Icalcreator\Formatter\Property\CalMetProVer;
+Use Kigkonsult\Icalcreator\Util\Util;
 
 /**
  * VERSION property functions
  *
- * @since 2.41.62 2022-08-29
+ * @since 2.29.14 2019-09-03
  */
 trait VERSIONtrait
 {
@@ -46,7 +46,7 @@ trait VERSIONtrait
      *
      * @var string calendar property VERSION
      */
-    protected string $version = '2.0';
+    protected $version = '2.0';
 
     /**
      * Return formatted output for calendar property version
@@ -55,7 +55,7 @@ trait VERSIONtrait
      */
     public function createVersion() : string
     {
-        return CalMetProVer::format( self::VERSION, $this->version );
+        return sprintf( self::$FMTICAL, self::VERSION, $this->version );
     }
 
     /**
@@ -72,18 +72,18 @@ trait VERSIONtrait
     /**
      * Set (another?) calendar version
      *
-     * @param string $value
+     * @param null|string $value
      * @return static
      * @throws InvalidArgumentException
-     * @since 2.41.62 2022-08-29
+     * @since 2.29.14 2019-09-03
      */
-    public function setVersion( string $value ) : static
+    public function setVersion( $value = null ) : self
     {
-        static $ERRMSG = 'Empty Version value not allowed';
         if( empty( $value )) {
-            throw new InvalidArgumentException( $ERRMSG );
+            $this->assertEmptyValue( $value, self::VERSION );
         }
-        $this->version = $value;
+        Util::assertString( $value, self::VERSION );
+        $this->version = (string) $value;
         return $this;
     }
 }

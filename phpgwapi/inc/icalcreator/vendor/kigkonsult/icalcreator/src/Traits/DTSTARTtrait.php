@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -33,25 +33,23 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
-use Kigkonsult\Icalcreator\Formatter\Property\Dt1Property;
-use Kigkonsult\Icalcreator\Pc;
 use Kigkonsult\Icalcreator\Util\DateTimeFactory;
 use Kigkonsult\Icalcreator\Util\ParameterFactory;
-use Kigkonsult\Icalcreator\VAcomponent;
-
-use function in_array;
+use Kigkonsult\Icalcreator\Util\StringFactory;
+use Kigkonsult\Icalcreator\Util\Util;
+use Kigkonsult\Icalcreator\Vcalendar;
 
 /**
  * DTSTART property functions
  *
- * @since 2.41.55 - 2022-08-13
+ * @since 2.29.25 2020-08-26
  */
 trait DTSTARTtrait
 {
     /**
-     * @var null|Pc component property DTSTART value
+     * @var array component property DTSTART value
      */
-    protected ? Pc $dtstart = null;
+    protected $dtstart = null;
 
     /**
      * Return formatted output for calendar component property dtstart
@@ -59,16 +57,27 @@ trait DTSTARTtrait
      * @return string
      * @throws Exception
      * @throws InvalidArgumentException
-     * @since 2.41.36 2022-04-03
+     * @since 2.29.1 2019-06-22
      */
     public function createDtstart() : string
     {
-        return  Dt1Property::format(
+        if( empty( $this->dtstart )) {
+            return Util::$SP0;
+        }
+        if( empty( $this->dtstart[Util::$LCvalue] )) {
+            return $this->getConfig( self::ALLOWEMPTY )
+                ? StringFactory::createElement( self::DTSTART )
+                : Util::$SP0;
+        }
+        $isLocalTime = isset( $this->dtstart[Util::$LCparams][Util::$ISLOCALTIME] );
+        return StringFactory::createElement(
             self::DTSTART,
-            $this->dtstart,
-            $this->getConfig( self::ALLOWEMPTY ),
-            Dt1Property::getIsDate( $this->dtstart ),
-            Dt1Property::getIsLocalTime( $this->dtstart )
+            ParameterFactory::createParams( $this->dtstart[Util::$LCparams] ),
+            DateTimeFactory::dateTime2Str(
+                $this->dtstart[Util::$LCvalue],
+                ParameterFactory::isParamsValueSet( $this->dtstart, self::DATE ),
+                $isLocalTime
+            )
         );
     }
 
@@ -88,84 +97,75 @@ trait DTSTARTtrait
      * Return calendar component property dtstart
      *
      * @param null|bool   $inclParam
-     * @return bool|string|DateTime|Pc
-     * @since 2.41.36 2022-04-03
+     * @return bool|DateTime|array
+     * @since 2.29.1 2019-06-22
      */
-    public function getDtstart( ? bool $inclParam = false ) : DateTime | bool | string | Pc
+    public function getDtstart( $inclParam = false )
     {
         if( empty( $this->dtstart )) {
             return false;
         }
-        return $inclParam ? clone $this->dtstart : $this->dtstart->value;
+        return ( $inclParam ) ? $this->dtstart : $this->dtstart[Util::$LCvalue];
     }
 
     /**
      * Get calendar component property dtstart params, opt TZID only
      *
      * @param null|bool $tzid   if true, only params TZID, if exists
-     * @return string[]
-     * @since 2.41.36 2022-04-03
+     * @return array
+     * @since 2.29.25 2020-08-26
      */
-    protected function getDtstartParams( ? bool $tzid = true ) : array
+    private function getDtstartParams( $tzid = true ) : array
     {
         if( ! $tzid ) {
-            return ( empty( $this->dtstart ) || empty( $this->dtstart->params ))
+            return ( empty( $this->dtstart ) || empty( $this->dtstart[Util::$LCparams] ))
                 ? []
-                : $this->dtstart->params;
+                : $this->dtstart[Util::$LCparams];
         }
         if( empty( $this->dtstart ) ||
-            empty( $this->dtstart->params ) ||
-            ! $this->dtstart->hasParamKey( self::TZID )) {
+            empty( $this->dtstart[Util::$LCparams] ) ||
+            ! isset( $this->dtstart[Util::$LCparams][Vcalendar::TZID] )) {
             return [];
         }
-        return $this->dtstart->hasParamKey( self::TZID )
-            ? [ self::TZID => $this->dtstart->params[self::TZID] ]
+        return isset( $this->dtstart[Util::$LCparams][Vcalendar::TZID] )
+            ? [ Vcalendar::TZID => $this->dtstart[Util::$LCparams][Vcalendar::TZID] ]
             : [];
-    }
-
-    /**
-     * Return bool true if set (and ignore empty property)
-     *
-     * @return bool
-     * @since 2.41.35 2022-03-28
-     */
-    public function isDtstartSet() : bool
-    {
-        return ! empty( $this->dtstart->value );
     }
 
     /**
      * Set calendar component property dtstart
      *
-     * @param null|string|Pc|DateTimeInterface  $value
-     * @param null|array $params
+     * @param null|string|DateTimeInterface  $value
+     * @param null|array  $params
      * @return static
      * @throws Exception
      * @throws InvalidArgumentException
-     * @since 2.41.36 2022-04-03
+     * @since 2.29.16 2020-01-24
      */
-    public function setDtstart( null|string|DateTimeInterface|Pc $value = null, ? array $params = [] ) : static
+    public function setDtstart( $value = null, $params = [] ) : self
     {
-        $value = ( $value instanceof Pc ) ? clone $value
-            : Pc::factory( $value, ParameterFactory::setParams( $params ));
-        if( empty( $value->value )) {
-            $this->assertEmptyValue( $value->value, self::DTSTART );
-            $this->dtstart = $value->setEmpty();
+        if( empty( $value )) {
+            $this->assertEmptyValue( $value, self::DTSTART );
+            $this->dtstart = [
+                Util::$LCvalue  => Util::$SP0,
+                Util::$LCparams => [],
+            ];
             return $this;
         }
         $compType = $this->getCompType();
-        switch( true ) {
-            case ( $this instanceof VAcomponent ) :
-                $value->addParamValue( self::DATE_TIME ); // req, rfc7953
-                break;
-            case ( in_array( $compType, self::$TZCOMPS, true )) :
-                $value->addParam( self::ISLOCALTIME, true );
-                $value->addParamValue( self::DATE_TIME ); // req
-                break;
-            default :
-                $value->addParamValue( self::DATE_TIME, false );
-        } // end switch
-        $this->dtstart = DateTimeFactory::setDate( $value, ( self::VFREEBUSY === $compType )); // $forceUTC
+        $params   = ParameterFactory::setParams(
+            ( $params ?? [] ),
+            DateTimeFactory::$DEFAULTVALUEDATETIME
+        );
+        if( Util::isCompInList( $compType, self::$TZCOMPS )) {
+            $params[Util::$ISLOCALTIME] = true;
+            $params[Vcalendar::VALUE]   = Vcalendar::DATE_TIME;
+        }
+        $this->dtstart = DateTimeFactory::setDate(
+            $value,
+            $params,
+            ( Vcalendar::VFREEBUSY == $compType ) // $forceUTC
+        );
         return $this;
     }
 }

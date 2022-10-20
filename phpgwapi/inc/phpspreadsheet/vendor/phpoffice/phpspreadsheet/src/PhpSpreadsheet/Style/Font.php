@@ -743,14 +743,14 @@ class Font extends Supervisor
 
     private function hashChartColor(?ChartColor $underlineColor): string
     {
-        if ($underlineColor === null) {
+        if ($this->underlineColor === null) {
             return '';
         }
 
         return
-            $underlineColor->getValue()
-            . $underlineColor->getType()
-            . (string) $underlineColor->getAlpha();
+            $this->underlineColor->getValue()
+            . $this->underlineColor->getType()
+            . (string) $this->underlineColor->getAlpha();
     }
 
     /**

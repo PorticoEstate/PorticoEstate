@@ -11,10 +11,10 @@ class ConditionalDataBar
 
     /** <dataBar> children */
 
-    /** @var ?ConditionalFormatValueObject */
+    /** @var ConditionalFormatValueObject */
     private $minimumConditionalFormatValueObject;
 
-    /** @var ?ConditionalFormatValueObject */
+    /** @var ConditionalFormatValueObject */
     private $maximumConditionalFormatValueObject;
 
     /** @var string */
@@ -22,7 +22,7 @@ class ConditionalDataBar
 
     /** <extLst> */
 
-    /** @var ?ConditionalFormattingRuleExtension */
+    /** @var ConditionalFormattingRuleExtension */
     private $conditionalFormattingRuleExt;
 
     /**
@@ -43,7 +43,10 @@ class ConditionalDataBar
         return $this;
     }
 
-    public function getMinimumConditionalFormatValueObject(): ?ConditionalFormatValueObject
+    /**
+     * @return ConditionalFormatValueObject
+     */
+    public function getMinimumConditionalFormatValueObject()
     {
         return $this->minimumConditionalFormatValueObject;
     }
@@ -55,7 +58,10 @@ class ConditionalDataBar
         return $this;
     }
 
-    public function getMaximumConditionalFormatValueObject(): ?ConditionalFormatValueObject
+    /**
+     * @return ConditionalFormatValueObject
+     */
+    public function getMaximumConditionalFormatValueObject()
     {
         return $this->maximumConditionalFormatValueObject;
     }
@@ -79,7 +85,10 @@ class ConditionalDataBar
         return $this;
     }
 
-    public function getConditionalFormattingRuleExt(): ?ConditionalFormattingRuleExtension
+    /**
+     * @return ConditionalFormattingRuleExtension
+     */
+    public function getConditionalFormattingRuleExt()
     {
         return $this->conditionalFormattingRuleExt;
     }

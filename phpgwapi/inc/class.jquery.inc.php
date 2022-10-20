@@ -207,7 +207,7 @@
 				case 'print':
 					$load = array
 						(
-						"print/jQuery.print.min"
+						"print/jQuery.print"
 					);
 
 					break;

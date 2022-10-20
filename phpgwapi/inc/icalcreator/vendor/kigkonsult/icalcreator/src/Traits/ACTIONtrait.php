@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -29,26 +29,24 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\Icalcreator\Traits;
 
-use Kigkonsult\Icalcreator\Formatter\Property\Property;
-use Kigkonsult\Icalcreator\Pc;
 use Kigkonsult\Icalcreator\Util\StringFactory;
+use Kigkonsult\Icalcreator\Util\Util;
 use Kigkonsult\Icalcreator\Util\ParameterFactory;
 use InvalidArgumentException;
 
-use Kigkonsult\Icalcreator\Util\Util;
 use function strtoupper;
 
 /**
  * ACTION property functions
  *
- * @since 2.41.55 2022-08-13
+ * @since 2.29.14 2019-09-03
  */
 trait ACTIONtrait
 {
     /**
-     * @var null|Pc component property ACTION value
+     * @var array component property ACTION value
      */
-    protected ? Pc $action = null;
+    protected $action = null;
 
     /**
      * Return formatted output for calendar component property action
@@ -57,10 +55,18 @@ trait ACTIONtrait
      */
     public function createAction() : string
     {
-        return Property::format(
+        if( empty( $this->action )) {
+            return Util::$SP0;
+        }
+        if( empty( $this->action[Util::$LCvalue] )) {
+            return $this->getConfig( self::ALLOWEMPTY )
+                ? StringFactory::createElement( self::ACTION )
+                : Util::$SP0;
+        }
+        return StringFactory::createElement(
             self::ACTION,
-            $this->action,
-            $this->getConfig( self::ALLOWEMPTY )
+            ParameterFactory::createParams( $this->action[Util::$LCparams] ),
+            $this->action[Util::$LCvalue]
         );
     }
 
@@ -79,59 +85,48 @@ trait ACTIONtrait
     /**
      * Get calendar component property action
      *
-     * @param null|bool  $inclParam
-     * @return bool|string|Pc
-     * @since 2.41.36 2022-04-03
+     * @param null|bool   $inclParam
+     * @return bool|array
+     * @since  2.27.1 - 2018-12-13
      */
-    public function getAction( ? bool $inclParam = false ) : bool | string | Pc
+    public function getAction( $inclParam = false )
     {
         if( empty( $this->action )) {
             return false;
         }
-        return $inclParam ? clone $this->action : $this->action->value;
-    }
-
-    /**
-     * Return bool true if set (ignore 'empty' property)
-     *
-     * @return bool
-     * @since 2.41.35 2022-03-28
-     */
-    public function isActionSet() : bool
-    {
-        return ! empty( $this->action->value );
+        return ( $inclParam ) ? $this->action : $this->action[Util::$LCvalue];
     }
 
     /**
      * Set calendar component property action
      *
-     * @param null|string|Pc   $value "AUDIO" / "DISPLAY" / "EMAIL" / "PROCEDURE"  / iana-token / x-name ??
-     * @param null|array $params
+     * @param null|string $value "AUDIO" / "DISPLAY" / "EMAIL" / "PROCEDURE"  / iana-token / x-name ??
+     * @param null|mixed  $params
      * @return static
      * @throws InvalidArgumentException
-     * @since 2.41.36 2022-04-03
+     * @since 2.29.14 2019-09-03
      */
-    public function setAction( null|string|Pc $value = null, ? array $params = [] ) : static
+    public function setAction( $value = null, $params = [] ) : self
     {
-        $value = ( $value instanceof Pc )
-            ? clone $value
-            : Pc::factory( $value, ParameterFactory::setParams( $params ));
         static $STDVALUES = [
             self::AUDIO,
             self::DISPLAY,
             self::EMAIL,
             self::PROCEDURE  // deprecated in rfc5545
         ];
-        if( empty( $value->value )) {
-            $this->assertEmptyValue( $value->value, self::ACTION );
-            $value->value  = self::$SP0;
-            $value->removeParam();
+        if( empty( $value )) {
+            $this->assertEmptyValue( $value, self::ACTION );
+            $value  = Util::$SP0;
+            $params = [];
         }
-        elseif( ! in_array( $value->value, $STDVALUES, true )) {
-            $value->value = Util::assertString( $value->value, self::ACTION );
-            $value->value = strtoupper( StringFactory::trimTrailNL( $value->value ));
+        elseif( Util::isPropInList( $value, $STDVALUES )) {
+            $value = strtoupper( $value );
         }
-        $this->action  = $value;
+        Util::assertString( $value, self::ACTION );
+        $this->action = [
+            Util::$LCvalue  => strtoupper( StringFactory::trimTrailNL((string) $value )),
+            Util::$LCparams => ParameterFactory::setParams( $params ?? [] ),
+        ];
         return $this;
     }
 }

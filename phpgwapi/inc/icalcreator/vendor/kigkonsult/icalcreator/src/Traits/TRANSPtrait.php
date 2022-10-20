@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -29,8 +29,6 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\Icalcreator\Traits;
 
-use Kigkonsult\Icalcreator\Formatter\Property\Property;
-use Kigkonsult\Icalcreator\Pc;
 use Kigkonsult\Icalcreator\Util\StringFactory;
 use Kigkonsult\Icalcreator\Util\Util;
 use Kigkonsult\Icalcreator\Util\ParameterFactory;
@@ -41,14 +39,14 @@ use function strtoupper;
 /**
  * TRANSP property functions
  *
- * @since 2.41.55 2022-08-13
+ * @since 2.27.3 2018-12-22
  */
 trait TRANSPtrait
 {
     /**
-     * @var null|Pc component property TRANSP value
+     * @var array component property TRANSP value
      */
-    protected ? Pc $transp = null;
+    protected $transp = null;
 
     /**
      * Return formatted output for calendar component property transp
@@ -57,10 +55,18 @@ trait TRANSPtrait
      */
     public function createTransp() : string
     {
-        return Property::format(
+        if( empty( $this->transp )) {
+            return Util::$SP0;
+        }
+        if( empty( $this->transp[Util::$LCvalue] )) {
+            return $this->getConfig( self::ALLOWEMPTY )
+                ? StringFactory::createElement( self::TRANSP )
+                : Util::$SP0;
+        }
+        return StringFactory::createElement(
             self::TRANSP,
-            $this->transp,
-            $this->getConfig( self::ALLOWEMPTY )
+            ParameterFactory::createParams( $this->transp[Util::$LCparams] ),
+            $this->transp[Util::$LCvalue]
         );
     }
 
@@ -80,56 +86,45 @@ trait TRANSPtrait
      * Get calendar component property transp
      *
      * @param null|bool   $inclParam
-     * @return bool|string|Pc
-     * @since 2.41.36 2022-04-03
+     * @return bool|array
+     * @since  2.27.1 - 2018-12-13
      */
-    public function getTransp( ? bool $inclParam = false ) : bool | string | Pc
+    public function getTransp( $inclParam = false )
     {
         if( empty( $this->transp )) {
             return false;
         }
-        return $inclParam ? clone $this->transp : $this->transp->value;
-    }
-
-    /**
-     * Return bool true if set (and ignore empty property)
-     *
-     * @return bool
-     * @since 2.41.36 2022-04-03
-     */
-    public function isTranspSet() : bool
-    {
-        return ! empty( $this->transp->value );
+        return ( $inclParam ) ? $this->transp : $this->transp[Util::$LCvalue];
     }
 
     /**
      * Set calendar component property transp
      *
-     * @param null|string|Pc   $value
-     * @param null|array $params
+     * @param null|string $value
+     * @param null|array  $params
      * @return static
      * @throws InvalidArgumentException
-     * @since 2.41.36 2022-04-03
+     * @since 2.29.14 2019-09-03
      */
-    public function setTransp( null|string|Pc $value = null, ? array $params = [] ) : static
+    public function setTransp( $value = null, $params = [] ) : self
     {
         static $ALLOWED = [
             self::OPAQUE,
             self::TRANSPARENT
         ];
-        $value = ( $value instanceof Pc )
-            ? clone $value
-            : Pc::factory( $value, ParameterFactory::setParams( $params ));
-        if( empty( $value->value )) {
-            $this->assertEmptyValue( $value->value, self::TRANSP );
-            $value->setEmpty();
+        if( empty( $value )) {
+            $this->assertEmptyValue( $value, self::TRANSP );
+            $value  = Util::$SP0;
+            $params = [];
         }
         else {
-            Util::assertString( $value->value, self::TRANSP );
-            $value->value = strtoupper( StringFactory::trimTrailNL( $value->value ));
-            Util::assertInEnumeration( $value->value, $ALLOWED, self::TRANSP );
+            $value = strtoupper( StringFactory::trimTrailNL( $value ));
+            Util::assertInEnumeration( $value, $ALLOWED, self::TRANSP );
         }
-        $this->transp = $value;
+        $this->transp = [
+            Util::$LCvalue  => $value,
+            Util::$LCparams => ParameterFactory::setParams( $params ?? [] ),
+        ];
         return $this;
     }
 }

@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -28,112 +28,66 @@
  */
 namespace Kigkonsult\Icalcreator;
 
-use Kigkonsult\Icalcreator\Util\ParameterFactory;
 use PHPUnit\Framework\TestCase;
-use Kigkonsult\Icalcreator\Util\RexdateFactory;
-use Kigkonsult\Icalcreator\Util\DateTimeFactory;
+use Kigkonsult\Icalcreator\Util\DateIntervalFactory;
 use Exception;
 
 /**
  * class Exception3Test
  *
- * Testing exception in RexdateFactory
+ * Testing exceptions in DateIntervalFactory
  *
- * @since  2.27.14 - 2019-02-26
+ * @since  2.27.14 - 2019-02-27
  */
 class Exception3Test extends TestCase
 {
     /**
-     * RexdateFactoryPrepInputExdateTest provider
-     *
-     * @return mixed[]
-     * @throws Exception
+     * DateIntervalFactoryTest provider
      */
-    public function Provider1() : array
+    public function DateIntervalFactoryTestProvider()
     {
         $dataArr = [];
 
         $dataArr[] = [
             1,
-            [
-                [
-                    DateTimeFactory::factory( 'now' )
-                ]
-            ],
-            [ IcalInterface::TZID => 'invalid/timezone' ]
+            ''
         ];
 
         $dataArr[] = [
-            12,
-            [
-                [
-                    '011201250101'
-                ]
-            ],
-            [ IcalInterface::TZID => 'invalid/timezone' ]
+            1,
+            'xyz'
         ];
 
         $dataArr[] = [
-            13,
-            [
-                '01120125010161'
-            ],
-            []
+            1,
+            'PT1X'
         ];
 
         $dataArr[] = [
-            30,
-            [
-                [
-                    'Kalle Stropp'
-                ]
-            ],
-            []
+            1,
+            'T1D'
         ];
 
         return $dataArr;
     }
 
     /**
-     * Testing RexdateFactory::prepInputExdate
+     * Testing DateInterval::factory
      *
      * @test
-     * @dataProvider Provider1
-     *
-     * @param int     $case
-     * @param mixed   $value
-     * @param mixed[] $params
+     * @dataProvider DateIntervalFactoryTestProvider
+     * @param int    $case
+     * @param mixed  $value
      */
-    public function RexdateFactoryPrepInputExdateTest( int $case, mixed $value, array $params ) : void
-    {
+    public function DateIntervalFactoryTest(
+        $case,
+        $value
+    ) {
         $ok = false;
         try {
-            $result = RexdateFactory::prepInputExdate( Pc::factory( $value, ParameterFactory::setParams( $params )));
+            $result = DateIntervalFactory::factory( $value );
         }
         catch ( Exception $e ) {
-            $ok = true;
-        }
-        $this->assertTrue( $ok, 'error in case #' . $case );
-    }
-
-
-    /**
-     * Testing RexdateFactory::prepInputRdate
-     *
-     * @test
-     * @dataProvider Provider1
-     *
-     * @param int     $case
-     * @param mixed   $value
-     * @param mixed[] $params
-     */
-    public function RexdateFactoryprepInputRdateTest( int $case, mixed $value, array $params ) : void
-    {
-        $ok = false;
-        try {
-            $result = RexdateFactory::prepInputRdate( Pc::factory( $value, ParameterFactory::setParams( $params )));
-        }
-        catch( Exception $e ) {
             $ok = true;
         }
         $this->assertTrue( $ok, 'error in case #' . $case );

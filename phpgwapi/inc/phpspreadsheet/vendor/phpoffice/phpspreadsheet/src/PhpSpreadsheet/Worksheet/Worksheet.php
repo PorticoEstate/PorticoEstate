@@ -32,20 +32,14 @@ use PhpOffice\PhpSpreadsheet\Style\Style;
 class Worksheet implements IComparable
 {
     // Break types
-    public const BREAK_NONE = 0;
-    public const BREAK_ROW = 1;
-    public const BREAK_COLUMN = 2;
+    const BREAK_NONE = 0;
+    const BREAK_ROW = 1;
+    const BREAK_COLUMN = 2;
 
     // Sheet state
-    public const SHEETSTATE_VISIBLE = 'visible';
-    public const SHEETSTATE_HIDDEN = 'hidden';
-    public const SHEETSTATE_VERYHIDDEN = 'veryHidden';
-
-    public const MERGE_CELL_CONTENT_EMPTY = 'empty';
-    public const MERGE_CELL_CONTENT_HIDE = 'hide';
-    public const MERGE_CELL_CONTENT_MERGE = 'merge';
-
-    protected const SHEET_NAME_REQUIRES_NO_QUOTES = '/^[_\p{L}][_\p{L}\p{N}]*$/mui';
+    const SHEETSTATE_VISIBLE = 'visible';
+    const SHEETSTATE_HIDDEN = 'hidden';
+    const SHEETSTATE_VERYHIDDEN = 'veryHidden';
 
     /**
      * Maximum 31 characters allowed for sheet title.
@@ -923,7 +917,7 @@ class Worksheet implements IComparable
             $this->parent->getCalculationEngine()
                 ->renameCalculationCacheForWorksheet($oldTitle, $newTitle);
             if ($updateFormulaCellReferences) {
-                ReferenceHelper::getInstance()->updateNamedFormulae($this->parent, $oldTitle, $newTitle);
+                ReferenceHelper::getInstance()->updateNamedFormulas($this->parent, $oldTitle, $newTitle);
             }
         }
 
@@ -1271,7 +1265,7 @@ class Worksheet implements IComparable
             }
         } elseif (
             !preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF . '$/i', $coordinate) &&
-            preg_match('/^' . Calculation::CALCULATION_REGEXP_DEFINEDNAME . '$/iu', $coordinate)
+            preg_match('/^' . Calculation::CALCULATION_REGEXP_DEFINEDNAME . '$/i', $coordinate)
         ) {
             // Named range?
             $namedRange = $this->validateNamedRange($coordinate, true);
@@ -1342,7 +1336,7 @@ class Worksheet implements IComparable
      *
      * @return Cell Cell that was created
      */
-    public function createNewCell($coordinate): Cell
+    public function createNewCell($coordinate)
     {
         [$column, $row, $columnString] = Coordinate::indexesFromString($coordinate);
         $cell = new Cell(null, DataType::TYPE_NULL, $this);
@@ -1363,7 +1357,7 @@ class Worksheet implements IComparable
 
         if ($rowDimension !== null && $rowDimension->getXfIndex() > 0) {
             // then there is a row dimension with explicit style, assign it to the cell
-            $cell->setXfIndex(/** @scrutinizer ignore-type */ $rowDimension->getXfIndex());
+            $cell->setXfIndex($rowDimension->getXfIndex());
         } elseif ($columnDimension !== null && $columnDimension->getXfIndex() > 0) {
             // then there is a column dimension, assign it to the cell
             $cell->setXfIndex($columnDimension->getXfIndex());
@@ -1762,15 +1756,10 @@ class Worksheet implements IComparable
      * @param AddressRange|array<int>|string $range A simple string containing a Cell range like 'A1:E10'
      *              or passing in an array of [$fromColumnIndex, $fromRow, $toColumnIndex, $toRow] (e.g. [3, 5, 6, 8]),
      *              or an AddressRange.
-     * @param string $behaviour How the merged cells should behave.
-     *               Possible values are:
-     *                   MERGE_CELL_CONTENT_EMPTY - Empty the content of the hidden cells
-     *                   MERGE_CELL_CONTENT_HIDE - Keep the content of the hidden cells
-     *                   MERGE_CELL_CONTENT_MERGE - Move the content of the hidden cells into the first cell
      *
      * @return $this
      */
-    public function mergeCells($range, $behaviour = self::MERGE_CELL_CONTENT_EMPTY)
+    public function mergeCells($range)
     {
         $range = Functions::trimSheetFromCellReference(Validations::validateCellRange($range));
 
@@ -1802,22 +1791,18 @@ class Worksheet implements IComparable
             $this->getCell($upperLeft)->setValueExplicit(null, DataType::TYPE_NULL);
         }
 
-        if ($behaviour !== self::MERGE_CELL_CONTENT_HIDE) {
-            // Blank out the rest of the cells in the range (if they exist)
-            if ($numberRows > $numberColumns) {
-                $this->clearMergeCellsByColumn($firstColumn, $lastColumn, $firstRow, $lastRow, $upperLeft, $behaviour);
-            } else {
-                $this->clearMergeCellsByRow($firstColumn, $lastColumnIndex, $firstRow, $lastRow, $upperLeft, $behaviour);
-            }
+        // Blank out the rest of the cells in the range (if they exist)
+        if ($numberRows > $numberColumns) {
+            $this->clearMergeCellsByColumn($firstColumn, $lastColumn, $firstRow, $lastRow, $upperLeft);
+        } else {
+            $this->clearMergeCellsByRow($firstColumn, $lastColumnIndex, $firstRow, $lastRow, $upperLeft);
         }
 
         return $this;
     }
 
-    private function clearMergeCellsByColumn(string $firstColumn, string $lastColumn, int $firstRow, int $lastRow, string $upperLeft, string $behaviour): void
+    private function clearMergeCellsByColumn(string $firstColumn, string $lastColumn, int $firstRow, int $lastRow, string $upperLeft): void
     {
-        $leftCellValue = [$this->getCell($upperLeft)->getFormattedValue()];
-
         foreach ($this->getColumnIterator($firstColumn, $lastColumn) as $column) {
             $iterator = $column->getCellIterator($firstRow);
             $iterator->setIterateOnlyExistingCells(true);
@@ -1827,21 +1812,17 @@ class Worksheet implements IComparable
                     if ($row > $lastRow) {
                         break;
                     }
-                    $leftCellValue = $this->mergeCellBehaviour($cell, $upperLeft, $behaviour, $leftCellValue);
+                    $thisCell = $cell->getColumn() . $row;
+                    if ($upperLeft !== $thisCell) {
+                        $cell->setValueExplicit(null, DataType::TYPE_NULL);
+                    }
                 }
             }
         }
-
-        $leftCellValue = implode(' ', $leftCellValue);
-        if ($behaviour === self::MERGE_CELL_CONTENT_MERGE) {
-            $this->getCell($upperLeft)->setValueExplicit($leftCellValue, DataType::TYPE_STRING);
-        }
     }
 
-    private function clearMergeCellsByRow(string $firstColumn, int $lastColumnIndex, int $firstRow, int $lastRow, string $upperLeft, string $behaviour): void
+    private function clearMergeCellsByRow(string $firstColumn, int $lastColumnIndex, int $firstRow, int $lastRow, string $upperLeft): void
     {
-        $leftCellValue = [$this->getCell($upperLeft)->getFormattedValue()];
-
         foreach ($this->getRowIterator($firstRow, $lastRow) as $row) {
             $iterator = $row->getCellIterator($firstColumn);
             $iterator->setIterateOnlyExistingCells(true);
@@ -1852,31 +1833,13 @@ class Worksheet implements IComparable
                     if ($columnIndex > $lastColumnIndex) {
                         break;
                     }
-                    $leftCellValue = $this->mergeCellBehaviour($cell, $upperLeft, $behaviour, $leftCellValue);
+                    $thisCell = $column . $cell->getRow();
+                    if ($upperLeft !== $thisCell) {
+                        $cell->setValueExplicit(null, DataType::TYPE_NULL);
+                    }
                 }
             }
         }
-
-        $leftCellValue = implode(' ', $leftCellValue);
-        if ($behaviour === self::MERGE_CELL_CONTENT_MERGE) {
-            $this->getCell($upperLeft)->setValueExplicit($leftCellValue, DataType::TYPE_STRING);
-        }
-    }
-
-    public function mergeCellBehaviour(Cell $cell, string $upperLeft, string $behaviour, array $leftCellValue): array
-    {
-        if ($cell->getCoordinate() !== $upperLeft) {
-            Calculation::getInstance($cell->getWorksheet()->getParent())->flushInstance();
-            if ($behaviour === self::MERGE_CELL_CONTENT_MERGE) {
-                $cellValue = $cell->getFormattedValue();
-                if ($cellValue !== '') {
-                    $leftCellValue[] = $cellValue;
-                }
-            }
-            $cell->setValueExplicit(null, DataType::TYPE_NULL);
-        }
-
-        return $leftCellValue;
     }
 
     /**
@@ -1891,22 +1854,17 @@ class Worksheet implements IComparable
      * @param int $row1 Numeric row coordinate of the first cell
      * @param int $columnIndex2 Numeric column coordinate of the last cell
      * @param int $row2 Numeric row coordinate of the last cell
-     * @param string $behaviour How the merged cells should behave.
-     *               Possible values are:
-     *                   MERGE_CELL_CONTENT_EMPTY - Empty the content of the hidden cells
-     *                   MERGE_CELL_CONTENT_HIDE - Keep the content of the hidden cells
-     *                   MERGE_CELL_CONTENT_MERGE - Move the content of the hidden cells into the first cell
      *
      * @return $this
      */
-    public function mergeCellsByColumnAndRow($columnIndex1, $row1, $columnIndex2, $row2, $behaviour = self::MERGE_CELL_CONTENT_EMPTY)
+    public function mergeCellsByColumnAndRow($columnIndex1, $row1, $columnIndex2, $row2)
     {
         $cellRange = new CellRange(
             CellAddress::fromColumnAndRow($columnIndex1, $row1),
             CellAddress::fromColumnAndRow($columnIndex2, $row2)
         );
 
-        return $this->mergeCells($cellRange, $behaviour);
+        return $this->mergeCells($cellRange);
     }
 
     /**
@@ -2501,8 +2459,10 @@ class Worksheet implements IComparable
 
     /**
      * Show gridlines?
+     *
+     * @return bool
      */
-    public function getShowGridlines(): bool
+    public function getShowGridlines()
     {
         return $this->showGridlines;
     }
@@ -2514,7 +2474,7 @@ class Worksheet implements IComparable
      *
      * @return $this
      */
-    public function setShowGridlines(bool $showGridLines): self
+    public function setShowGridlines($showGridLines)
     {
         $this->showGridlines = $showGridLines;
 
@@ -2523,8 +2483,10 @@ class Worksheet implements IComparable
 
     /**
      * Print gridlines?
+     *
+     * @return bool
      */
-    public function getPrintGridlines(): bool
+    public function getPrintGridlines()
     {
         return $this->printGridlines;
     }
@@ -2536,7 +2498,7 @@ class Worksheet implements IComparable
      *
      * @return $this
      */
-    public function setPrintGridlines(bool $printGridLines): self
+    public function setPrintGridlines($printGridLines)
     {
         $this->printGridlines = $printGridLines;
 
@@ -2545,8 +2507,10 @@ class Worksheet implements IComparable
 
     /**
      * Show row and column headers?
+     *
+     * @return bool
      */
-    public function getShowRowColHeaders(): bool
+    public function getShowRowColHeaders()
     {
         return $this->showRowColHeaders;
     }
@@ -2558,7 +2522,7 @@ class Worksheet implements IComparable
      *
      * @return $this
      */
-    public function setShowRowColHeaders(bool $showRowColHeaders): self
+    public function setShowRowColHeaders($showRowColHeaders)
     {
         $this->showRowColHeaders = $showRowColHeaders;
 
@@ -2567,8 +2531,10 @@ class Worksheet implements IComparable
 
     /**
      * Show summary below? (Row/Column outlining).
+     *
+     * @return bool
      */
-    public function getShowSummaryBelow(): bool
+    public function getShowSummaryBelow()
     {
         return $this->showSummaryBelow;
     }
@@ -2580,7 +2546,7 @@ class Worksheet implements IComparable
      *
      * @return $this
      */
-    public function setShowSummaryBelow(bool $showSummaryBelow): self
+    public function setShowSummaryBelow($showSummaryBelow)
     {
         $this->showSummaryBelow = $showSummaryBelow;
 
@@ -2589,8 +2555,10 @@ class Worksheet implements IComparable
 
     /**
      * Show summary right? (Row/Column outlining).
+     *
+     * @return bool
      */
-    public function getShowSummaryRight(): bool
+    public function getShowSummaryRight()
     {
         return $this->showSummaryRight;
     }
@@ -2602,7 +2570,7 @@ class Worksheet implements IComparable
      *
      * @return $this
      */
-    public function setShowSummaryRight(bool $showSummaryRight): self
+    public function setShowSummaryRight($showSummaryRight)
     {
         $this->showSummaryRight = $showSummaryRight;
 
@@ -2626,7 +2594,7 @@ class Worksheet implements IComparable
      *
      * @return $this
      */
-    public function setComments(array $comments): self
+    public function setComments(array $comments)
     {
         $this->comments = $comments;
 
@@ -2641,7 +2609,7 @@ class Worksheet implements IComparable
      *
      * @return $this
      */
-    public function removeComment($cellCoordinate): self
+    public function removeComment($cellCoordinate)
     {
         $cellAddress = Functions::trimSheetFromCellReference(Validations::validateCellAddress($cellCoordinate));
 
@@ -2665,8 +2633,10 @@ class Worksheet implements IComparable
      *
      * @param array<int>|CellAddress|string $cellCoordinate Coordinate of the cell as a string, eg: 'C5';
      *               or as an array of [$columnIndex, $row] (e.g. [3, 5]), or a CellAddress object.
+     *
+     * @return Comment
      */
-    public function getComment($cellCoordinate): Comment
+    public function getComment($cellCoordinate)
     {
         $cellAddress = Functions::trimSheetFromCellReference(Validations::validateCellAddress($cellCoordinate));
 
@@ -2699,8 +2669,10 @@ class Worksheet implements IComparable
      *
      * @param int $columnIndex Numeric column coordinate of the cell
      * @param int $row Numeric row coordinate of the cell
+     *
+     * @return Comment
      */
-    public function getCommentByColumnAndRow($columnIndex, $row): Comment
+    public function getCommentByColumnAndRow($columnIndex, $row)
     {
         return $this->getComment(Coordinate::stringFromColumnIndex($columnIndex) . $row);
     }
@@ -3079,11 +3051,7 @@ class Worksheet implements IComparable
      * Extract worksheet title from range.
      *
      * Example: extractSheetTitle("testSheet!A1") ==> 'A1'
-     * Example: extractSheetTitle("testSheet!A1:C3") ==> 'A1:C3'
      * Example: extractSheetTitle("'testSheet 1'!A1", true) ==> ['testSheet 1', 'A1'];
-     * Example: extractSheetTitle("'testSheet 1'!A1:C3", true) ==> ['testSheet 1', 'A1:C3'];
-     * Example: extractSheetTitle("A1", true) ==> ['', 'A1'];
-     * Example: extractSheetTitle("A1:C3", true) ==> ['', 'A1:C3']
      *
      * @param string $range Range to extract title from
      * @param bool $returnRange Return range? (see example)
@@ -3481,10 +3449,5 @@ class Worksheet implements IComparable
     public function hasCodeName()
     {
         return $this->codeName !== null;
-    }
-
-    public static function nameRequiresQuotes(string $sheetName): bool
-    {
-        return preg_match(self::SHEET_NAME_REQUIRES_NO_QUOTES, $sheetName) !== 1;
     }
 }

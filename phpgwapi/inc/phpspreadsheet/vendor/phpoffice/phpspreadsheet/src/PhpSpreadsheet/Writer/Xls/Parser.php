@@ -78,7 +78,7 @@ class Parser
     /**
      * The parse tree to be generated.
      *
-     * @var array|string
+     * @var string
      */
     public $parseTree;
 
@@ -531,7 +531,7 @@ class Parser
             {
                 return($this->convertFunction($token, $this->_func_args));
             }*/
-        // if it's an argument, ignore the token (the argument remains)
+            // if it's an argument, ignore the token (the argument remains)
         } elseif ($token == 'arg') {
             return '';
         }
@@ -1445,9 +1445,6 @@ class Parser
         if (empty($tree)) { // If it's the first call use parseTree
             $tree = $this->parseTree;
         }
-        if (!is_array($tree) || !isset($tree['left'], $tree['right'], $tree['value'])) {
-            throw new WriterException('Unexpected non-array');
-        }
 
         if (is_array($tree['left'])) {
             $converted_tree = $this->toReversePolish($tree['left']);
@@ -1478,7 +1475,7 @@ class Parser
                 $left_tree = '';
             }
 
-            // add its left subtree and return.
+            // add it's left subtree and return.
             return $left_tree . $this->convertFunction($tree['value'], $tree['right']);
         }
         $converted_tree = $this->convert($tree['value']);

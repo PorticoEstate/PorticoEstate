@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -33,22 +33,25 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
-use Kigkonsult\Icalcreator\Formatter\Property\DtxProperty;
-use Kigkonsult\Icalcreator\Pc;
 use Kigkonsult\Icalcreator\Util\DateTimeFactory;
 use Kigkonsult\Icalcreator\Util\ParameterFactory;
+use Kigkonsult\Icalcreator\Util\StringFactory;
+use Kigkonsult\Icalcreator\Util\Util;
+use Kigkonsult\Icalcreator\Vcalendar;
+
+use function array_change_key_case;
 
 /**
  * COMPLETED property functions
  *
- * @since 2.41.55 - 2022-08-13
+ * @since 2.29.16 2020-01-24
  */
 trait COMPLETEDtrait
 {
     /**
-     * @var null|Pc component property COMPLETED value
+     * @var array component property COMPLETED value
      */
-    protected ? Pc $completed = null;
+    protected $completed = null;
 
     /**
      * Return formatted output for calendar component property completed
@@ -56,14 +59,22 @@ trait COMPLETEDtrait
      * @return string
      * @throws Exception
      * @throws InvalidArgumentException
-     * @since 2.41.55 - 2022-08-13
+     * @since 2.29.1 2019-06-22
      */
     public function createCompleted() : string
     {
-        return  DtxProperty::format(
+        if( empty( $this->completed )) {
+            return Util::$SP0;
+        }
+        if( empty( $this->completed[Util::$LCvalue] )) {
+            return $this->getConfig( self::ALLOWEMPTY )
+                ? StringFactory::createElement( self::COMPLETED )
+                : Util::$SP0;
+        }
+        return StringFactory::createElement(
             self::COMPLETED,
-            $this->completed,
-            $this->getConfig( self::ALLOWEMPTY )
+            ParameterFactory::createParams( $this->completed[Util::$LCparams] ),
+            DateTimeFactory::dateTime2Str( $this->completed[Util::$LCvalue] )
         );
     }
 
@@ -83,53 +94,40 @@ trait COMPLETEDtrait
      * Return calendar component property completed
      *
      * @param null|bool  $inclParam
-     * @return bool|string|DateTime|Pc
-     * @since 2.41.36 2022-04-03
+     * @return bool|DateTime|array
+     * @since  2.27.1 - 2018-12-12
      */
-    public function getCompleted( ? bool $inclParam = false ) : DateTime | bool | string | Pc
+    public function getCompleted( $inclParam = false )
     {
         if( empty( $this->completed )) {
             return false;
         }
-        return $inclParam ? clone $this->completed : $this->completed->value;
-    }
-
-    /**
-     * Return bool true if set (and ignore empty property)
-     *
-     * @return bool
-     * @since 2.41.36 2022-04-03
-     */
-    public function isCompletedSet() : bool
-    {
-        return ! empty( $this->completed->value );
+        return ( $inclParam ) ? $this->completed : $this->completed[Util::$LCvalue];
     }
 
     /**
      * Set calendar component property completed
      *
-     * @param null|string|Pc|DateTimeInterface $value
+     * @param null|string|DateTimeInterface $value
      * @param null|array $params
      * @return static
      * @throws Exception
      * @throws InvalidArgumentException
-     * @since 2.41.36 2022-04-03
+     * @since 2.29.16 2020-01-24
      */
-    public function setCompleted( null|string|DateTimeInterface|Pc $value = null, ? array $params = [] ) : static
+    public function setCompleted( $value = null, $params = [] ) : self
     {
-        $value = ( $value instanceof Pc )
-            ? clone $value
-            : Pc::factory( $value, ParameterFactory::setParams( $params ));
-        if( empty( $value->value )) {
-            $this->assertEmptyValue( $value->value, self::COMPLETED );
-            $value->setEmpty();
+        if( empty( $value )) {
+            $this->assertEmptyValue( $value, self::COMPLETED );
+            $this->completed = [
+                Util::$LCvalue  => Util::$SP0,
+                Util::$LCparams => [],
+            ];
+            return $this;
         }
-        else {
-            $value->addParamValue( self::DATE_TIME ); // req.
-            $value = DateTimeFactory::setDate( $value, true ); // $forceUTC
-
-        }
-        $this->completed = $value;
+        $params = array_change_key_case( $params, CASE_UPPER );
+        $params[Vcalendar::VALUE] = Vcalendar::DATE_TIME;
+        $this->completed = DateTimeFactory::setDate( $value, $params, true ); // $forceUTC
         return $this;
     }
 }

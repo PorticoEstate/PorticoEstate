@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -31,22 +31,20 @@ namespace Kigkonsult\Icalcreator\Traits;
 
 use Exception;
 use InvalidArgumentException;
-use Kigkonsult\Icalcreator\Formatter\Property\Recur;
-use Kigkonsult\Icalcreator\Pc;
-use Kigkonsult\Icalcreator\Util\ParameterFactory;
 use Kigkonsult\Icalcreator\Util\RecurFactory;
+use Kigkonsult\Icalcreator\Util\Util;
 
 /**
  * RRULE property functions
  *
- * @since 2.41.55 - 2022-08-13
+ * @since 2.29.6 2019-06-23
  */
 trait RRULEtrait
 {
     /**
-     * @var null|Pc component property RRULE value
+     * @var array component property RRULE value
      */
-    protected ? Pc $rrule = null;
+    protected $rrule = null;
 
     /**
      * Return formatted output for calendar component property rrule
@@ -55,11 +53,11 @@ trait RRULEtrait
      * @return string
      * @throws Exception
      * @throws InvalidArgumentException
-     * @since 2.41.55 - 2022-08-13
+     * @since  2.27.13 - 2019-01-09
      */
     public function createRrule() : string
     {
-        return Recur::format(
+        return RecurFactory::formatRecur(
             self::RRULE,
             $this->rrule,
             $this->getConfig( self::ALLOWEMPTY )
@@ -72,7 +70,7 @@ trait RRULEtrait
      * @return static
      * @since 2.29.6 2019-06-23
      */
-    public function deleteRrule() : static
+    public function deleteRrule() : self
     {
         $this->rrule = null;
         return $this;
@@ -82,53 +80,38 @@ trait RRULEtrait
      * Get calendar component property rrule
      *
      * @param null|bool   $inclParam
-     * @return bool|array|Pc
-     * @since 2.41.36 2022-04-03
+     * @return bool|array
+     * @since 2.29.6 2019-06-23
      */
-    public function getRrule( ? bool $inclParam = false ) : bool | array | Pc
+    public function getRrule( $inclParam = false )
     {
         if( empty( $this->rrule )) {
             return false;
         }
-        return $inclParam ? clone $this->rrule : $this->rrule->value;
-    }
-
-    /**
-     * Return bool true if set (and ignore empty property)
-     *
-     * @return bool
-     * @since 2.41.36 2022-04-03
-     */
-    public function isRruleSet() : bool
-    {
-        return ! empty( $this->rrule->value );
+        return ( $inclParam ) ? $this->rrule : $this->rrule[Util::$LCvalue];
     }
 
     /**
      * Set calendar component property rrule
      *
-     * @param null|array|Pc  $rruleset  string[]
-     * @param null|array $params
+     * @param null|array   $rruleset
+     * @param null|array   $params
      * @return static
      * @throws InvalidArgumentException
      * @throws Exception
-     * @since 2.41.36 2022-04-03
+     * @since 2.29.6 2019-06-23
      */
-    public function setRrule( null|array|Pc $rruleset = null, ? array $params = [] ) : static
+    public function setRrule( $rruleset = null, $params = [] ) : self
     {
-        $value = ( $rruleset instanceof Pc )
-            ? clone $rruleset
-            : Pc::factory( $rruleset, ParameterFactory::setParams( $params ));
-        if( empty( $value->value )) {
-            $this->assertEmptyValue( $value->value, self::RRULE );
-            $value->setEmpty();
+        if( empty( $rruleset )) {
+            $this->assertEmptyValue( $rruleset, self::RRULE );
+            $rruleset = [];
+            $params   = [];
         }
-        else {
-            foreach( $this->getDtstartParams() as $k => $v ) {
-                $value->addParam( $k, $v );
-            }
-        }
-        $this->rrule = RecurFactory::setRexrule( $value );
+        $this->rrule = RecurFactory::setRexrule(
+            $rruleset,
+            array_merge( (array) $params, $this->getDtstartParams())
+        );
         return $this;
     }
 }

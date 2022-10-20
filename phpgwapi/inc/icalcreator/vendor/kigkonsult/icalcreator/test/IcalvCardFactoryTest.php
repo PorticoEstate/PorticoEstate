@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -28,7 +28,6 @@
  */
 namespace Kigkonsult\Icalcreator;
 
-use Exception;
 use Kigkonsult\Icalcreator\Util\CalAddressFactory;
 use PHPUnit\Framework\TestCase;
 use Kigkonsult\Icalcreator\Util\IcalvCardFactory;
@@ -46,13 +45,10 @@ class IcalvCardFactoryTest extends TestCase
 {
     /**
      * IcalvCardFactoryTest provider
-     * /**
+    /**
      * SelectComponentsTest provider
-     *
-     * @return mixed[]
-     * @throws Exception
      */
-    public function IcalvCardTestProvider() : array
+    public function IcalvCardFactoryTestProvider()
     {
         $dataArr = [];
 
@@ -101,12 +97,12 @@ class IcalvCardFactoryTest extends TestCase
      * Testing IcalvCardFactory::iCal2vCards (+iCal2vCard+...)
      *
      * @test
-     * @dataProvider IcalvCardTestProvider'
-     * @param int $case
+     * @dataProvider IcalvCardFactoryTestProvider'
+     * @param int       $case
      * @param Vcalendar $vcalendar
-     * @param null|string $version
+     * @param string    $version
      */
-    public function IcalvCardTest( int $case, Vcalendar $vcalendar, ? string $version = null ) : void
+    public function IcalvCardFactoryTest( $case, Vcalendar $vcalendar, $version )
     {
         static $ERRFMT1 = 'Error in #%d-1, version not found';
         static $ERRFMT2 = 'Error in #%d-2, count BEGIN not match, exp %d got %d';

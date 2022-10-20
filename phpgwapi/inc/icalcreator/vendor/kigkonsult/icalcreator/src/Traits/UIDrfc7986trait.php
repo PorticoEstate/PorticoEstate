@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -29,16 +29,14 @@
 declare( strict_types = 1 );
 namespace Kigkonsult\Icalcreator\Traits;
 
-use Exception;
 use InvalidArgumentException;
-use Kigkonsult\Icalcreator\Formatter\Property\Property;
-use Kigkonsult\Icalcreator\Pc;
 use Kigkonsult\Icalcreator\Util\ParameterFactory;
 use Kigkonsult\Icalcreator\Util\StringFactory;
 use Kigkonsult\Icalcreator\Util\Util;
 
 use function bin2hex;
 use function chr;
+use function openssl_random_pseudo_bytes;
 use function ord;
 use function str_split;
 use function vsprintf;
@@ -46,97 +44,128 @@ use function vsprintf;
 /**
  * UID property functions
  *
- * @since 2.41.55 2022-08-13
+ * @since 2.29.14 2019-09-03
  */
 trait UIDrfc7986trait
 {
     /**
-     * @var Pc component property UID value
+     * @var array component property UID value
      */
-    protected Pc $uid;
+    protected $uid = null;
 
     /**
      * Return formatted output for calendar component property uid
      *
      * If uid is missing, uid is created
      * @return string
-     * @throws Exception
-     * @since 2.41.55 2022-08-13
-s     */
+     * @since 2.29.5 2019-06-17
+     */
     public function createUid() : string
     {
-        return Property::format(
+        if( self::isUidEmpty( $this->uid )) {
+            $this->uid = self::makeUid();
+        }
+        return StringFactory::createElement(
             self::UID,
-            $this->uid,
-            $this->getConfig( self::ALLOWEMPTY )
+            ParameterFactory::createParams( $this->uid[Util::$LCparams] ),
+            $this->uid[Util::$LCvalue]
         );
+    }
+
+    /**
+     * Delete calendar component property uid
+     *
+     * @return bool
+     * @since 2.29.5 2019-06-17
+     */
+    public function deleteUid() : bool
+    {
+        $this->uid = null;
+        return true;
     }
 
     /**
      * Get calendar component property uid
      *
-     * @param null|bool $inclParam
-     * @return string|Pc
-     * @throws Exception
-     * @since 2.41.53 2022-08-11
+     * @param null|bool   $inclParam
+     * @return bool|array
+     * @since 2.29.5 2019-06-17
      */
-    public function getUid( ? bool $inclParam = false ) : string | Pc
+    public function getUid( $inclParam = false )
     {
-        return $inclParam ? clone $this->uid : $this->uid->value;
+        if( self::isUidEmpty( $this->uid )) {
+            $this->uid = self::makeUid();
+        }
+        return ( $inclParam ) ? $this->uid : $this->uid[Util::$LCvalue];
     }
 
     /**
-     * Return bool true if set (and ignore empty property)
+     * Return bool true if uid is empty
      *
+     * @param null|array  $array
      * @return bool
-     * @since 2.41.35 2022-03-28
+     * @since 2.29.5 2019-06-17
      */
-    public function isUidSet() : bool
+    private static function isUidEmpty( array $array = null ) : bool
     {
-        return true;
+        if( empty( $array )) {
+            return true;
+        }
+        if( empty( $array[Util::$LCvalue] ) &&
+            ( Util::$ZERO != $array[Util::$LCvalue] )) {
+            return true;
+        }
+        return false;
     }
 
     /**
-     * Return an unique id for a calendar/component object instance
+     * Return an unique id for a calendar component object instance
      *
-     * @return Pc
-     * @throws Exception
-     * @since 2.41.36 2022-04-03
+     * @return array
      * @see https://www.php.net/manual/en/function.com-create-guid.php#117893
+     * @since 2.29.5 2019-06-17
      */
-    private static function makeUid() : Pc
+    private static function makeUid() : array
     {
         static $FMT = '%s%s-%s-%s-%s-%s%s%s';
-        $bytes    = StringFactory::getRandChars( 32 ); // i.e. 16
+        static $MAX = 10;
+        $cnt = 0;
+        do {
+            do {
+                $bytes = openssl_random_pseudo_bytes( 16, $cStrong );
+            } while ( false === $bytes );
+            $cnt += 1;
+        } while(( $MAX > $cnt ) && ( false === $cStrong ));
         $bytes[6] = chr(ord( $bytes[6] ) & 0x0f | 0x40 ); // set version to 0100
         $bytes[8] = chr(ord( $bytes[8] ) & 0x3f | 0x80 ); // set bits 6-7 to 10
         $uid      = vsprintf( $FMT, str_split( bin2hex( $bytes ), 4 ));
-        return Pc::factory( $uid );
+        return [
+            Util::$LCvalue  => $uid,
+            Util::$LCparams => null,
+        ];
     }
 
     /**
      * Set calendar component property uid
      *
      * If empty input, male one
-     * @param null|int|string|Pc $value
-     * @param null|array $params
+     * @param null|int|string $value
+     * @param null|array  $params
      * @return static
      * @throws InvalidArgumentException
-     * @throws Exception
-     * @since 2.41.36 2022-04-03
+     * @since 2.29.14 2019-09-03
      */
-    public function setUid( null|int|string|Pc $value = null, ? array $params = [] ) : static
+    public function setUid( $value = null, $params = [] ) : self
     {
-        $value = ( $value instanceof Pc )
-            ? clone $value
-            : Pc::factory( $value, ParameterFactory::setParams( $params ));
-        if( empty( $value->value ) && ( Util::$ZERO !== (string) $value->value )) {
+        if( empty( $value ) && ( Util::$ZERO != $value )) {
             $this->uid = self::makeUid();
             return $this;
         } // no allowEmpty check here !!!!
-        $value->value = Util::assertString( $value->value, self::UID );
-        $value->value = StringFactory::trimTrailNL( $value->value );
-        $this->uid = $value;
+        $value = Util::assertString( $value, self::UID );
+        $this->uid = [
+            Util::$LCvalue  => StringFactory::trimTrailNL( $value ),
+            Util::$LCparams => ParameterFactory::setParams( $params ?? [] ),
+        ];
         return $this;
     }
 }

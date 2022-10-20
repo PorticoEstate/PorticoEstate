@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -33,198 +33,376 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
-use Kigkonsult\Icalcreator\IcalInterface;
-use Kigkonsult\Icalcreator\Pc;
 use Kigkonsult\Icalcreator\Vcalendar;
 use LogicException;
-
 use function array_change_key_case;
 use function array_keys;
 use function array_unique;
 use function checkdate;
 use function count;
 use function ctype_alpha;
+use function ctype_digit;
 use function date;
 use function end;
 use function explode;
+use function get_class;
+use function implode;
 use function in_array;
 use function is_array;
+use function is_null;
 use function is_string;
 use function ksort;
 use function mktime;
 use function sprintf;
 use function strcasecmp;
+use function strlen;
 use function strtoupper;
+use function substr;
+use function trim;
+use function usort;
 use function var_export;
 
 /**
  * iCalcreator recur support class
  *
- * @since  2.41.16 - 2022-01-31
+ * @since  2.29.27 - 2020-09-19
  */
 class RecurFactory
 {
     /**
      * @const int  in recur2date, years to extend startYear to create an endDate, if missing
      */
-    public const EXTENDYEAR = 2;
+    const EXTENDYEAR = 2;
 
     /**
      * @var string  iCal date/time key values ( week, tz used in test)
      */
-    public static string $LCYEAR  = 'year';
-
-    /**
-     * @var string
-     */
-    public static string $LCMONTH = 'month';
-
-    /**
-     * @var string
-     */
-    public static string $LCWEEK  = 'week';
-
-    /**
-     * @var string
-     */
-    public static string $LCDAY   = 'day';
-
-    /**
-     * @var string
-     */
-    public static string $LCHOUR  = 'hour';
-
-    /**
-     * @var string
-     */
-    public static string $LCMIN   = 'min';
-
-    /**
-     * @var string
-     */
-    public static string $LCSEC   = 'sec';
+    public static $LCYEAR  = 'year';
+    public static $LCMONTH = 'month';
+    public static $LCWEEK  = 'week';
+    public static $LCDAY   = 'day';
+    public static $LCHOUR  = 'hour';
+    public static $LCMIN   = 'min';
+    public static $LCSEC   = 'sec';
+    public static $LCtz    = 'tz';
 
     /**
      * Static values for recur BYDAY
      *
-     * @var string[]
+     * @var array
      */
-    public static array $DAYNAMES = [
-        IcalInterface::SU,
-        IcalInterface::MO,
-        IcalInterface::TU,
-        IcalInterface::WE,
-        IcalInterface::TH,
-        IcalInterface::FR,
-        IcalInterface::SA
+    public static $DAYNAMES = [
+        Vcalendar::SU,
+        Vcalendar::MO,
+        Vcalendar::TU,
+        Vcalendar::WE,
+        Vcalendar::TH,
+        Vcalendar::FR,
+        Vcalendar::SA
     ];
 
     /*
      * @var string  DateTime format keys
      */
-    public static string $YMDs = '%04d%02d%02d';
-
-    /**
-     * @var string dito
-     */
-    public static string $HIS  = '%02d%02d%02d';
+    public static $YMDs = '%04d%02d%02d';
+    public static $HIS  = '%02d%02d%02d';
 
     /*
      * @var string  fullRecur2date keys
      */
-    private static string $YEARCNT_UP      = 'yearcnt_up';
+    private static $YEARCNT_UP      = 'yearcnt_up';
+    private static $YEARCNT_DOWN    = 'yearcnt_down';
+    private static $MONTHDAYNO_UP   = 'monthdayno_up';
+    private static $MONTHDAYNO_DOWN = 'monthdayno_down';
+    private static $MONTHCNT_DOWN   = 'monthcnt_down';
+    private static $YEARDAYNO_UP    = 'yeardayno_up';
+    private static $YEARDAYNO_DOWN  = 'yeardayno_down';
+    private static $WEEKNO_UP       = 'weekno_up';
+    private static $WEEKNO_DOWN     = 'weekno_down';
 
     /**
-     * @var string
+     * Sort recur dates
+     *
+     * @param string $byDayA
+     * @param string $byDayB
+     * @return int
      */
-    private static string $YEARCNT_DOWN    = 'yearcnt_down';
+    private static function recurBydaySort( string $byDayA, string $byDayB ) : int
+    {
+        static $days = [
+            Vcalendar::SU => 0,
+            Vcalendar::MO => 1,
+            Vcalendar::TU => 2,
+            Vcalendar::WE => 3,
+            Vcalendar::TH => 4,
+            Vcalendar::FR => 5,
+            Vcalendar::SA => 6,
+        ];
+        return ( $days[substr( $byDayA, -2 )] < $days[substr( $byDayB, -2 )] )
+            ? -1
+            : 1;
+    }
 
     /**
-     * @var string
+     * Return formatted output for calendar component property data value type recur
+     *
+     * "The value of the UNTIL rule part MUST have the same value type as the "DTSTART" property.
+     *  Furthermore, if the "DTSTART" property is specified as a date with local time,
+     *    then the UNTIL rule part MUST also be specified as a date with local time.
+     *  If the "DTSTART" property is specified as a date
+     *      with UTC time
+     *      or
+     *      a date with local time and time zone reference,
+     *    then the UNTIL rule part MUST be specified as a date with UTC time.
+     *  In the case of the "STANDARD" and "DAYLIGHT" sub-components
+     *    the UNTIL rule part MUST always be specified as a date with UTC time.
+     *  If specified as a DATE-TIME value, then it MUST be specified in a UTC time format."
+     * @param string $recurProperty
+     * @param null|array  $recurData
+     * @param bool   $allowEmpty
+     * @return string
+     * @throws Exception
+     * @throws InvalidArgumentException
+     * @since 2.29.6 2019-06-23
+     * @todo above
      */
-    private static string $MONTHDAYNO_UP   = 'monthdayno_up';
+    public static function formatRecur(
+        string $recurProperty,
+        $recurData,
+        bool $allowEmpty
+    ) : string
+    {
+        static $FMTFREQEQ        = 'FREQ=%s';
+        static $FMTDEFAULTEQ     = ';%s=%s';
+        static $FMTOTHEREQ       = ';%s=';
+        static $RECURBYDAYSORTER = null;
+        if( is_null( $RECURBYDAYSORTER )) {
+            $RECURBYDAYSORTER    = [ get_class(), 'recurBydaySort' ];
+        }
+        if( empty( $recurData )) {
+            return Util::$SP0;
+        }
+        $output = Util::$SP0;
+        if( empty( $recurData[Util::$LCvalue] )) {
+            return ( $allowEmpty )
+                ? StringFactory::createElement( $recurProperty )
+                : Util::$SP0;
+        }
+        $isValueDate = ParameterFactory::isParamsValueSet( $recurData, Vcalendar::DATE );
+        if( isset( $recurData[Util::$LCparams] )) {
+            ParameterFactory::ifExistRemove(
+                $recurData[Util::$LCparams],
+                Vcalendar::VALUE
+            );
+            $attributes = ParameterFactory::createParams( $recurData[Util::$LCparams] );
+        }
+        else {
+            $attributes = null;
+        }
+        $content1 = $content2 = null;
+        foreach( $recurData[Util::$LCvalue] as $ruleLabel => $ruleValue ) {
+            $ruleLabel = strtoupper( $ruleLabel );
+            switch( $ruleLabel ) {
+                case Vcalendar::FREQ :
+                    $content1 .= sprintf( $FMTFREQEQ, $ruleValue );
+                    break;
+                case Vcalendar::UNTIL :
+                    $content2  .= sprintf(
+                        $FMTDEFAULTEQ,
+                        Vcalendar::UNTIL,
+                        DateTimeFactory::dateTime2Str( $ruleValue, $isValueDate )
+                    );
+                    break;
+                case Vcalendar::COUNT :
+                case Vcalendar::INTERVAL :
+                case Vcalendar::WKST :
+                    $content2 .= sprintf( $FMTDEFAULTEQ, $ruleLabel, $ruleValue );
+                    break;
+                case Vcalendar::BYDAY :
+                    $byday = [ Util::$SP0 ];
+                    $bx    = 0;
+                    foreach( $ruleValue as $bix => $bydayPart ) {
+                        if( ! empty( $byday[$bx] ) &&   // new day
+                            ! ctype_digit( substr( $byday[$bx], -1 ))) {
+                            $byday[++$bx] = Util::$SP0;
+                        }
+                        if( ! is_array( $bydayPart )) {  // day without rel pos number
+                            $byday[$bx] .= (string) $bydayPart;
+                        }
+                        else {                          // day with rel pos number
+                            foreach( $bydayPart as $bix2 => $bydayPart2 ) {
+                                $byday[$bx] .= (string) $bydayPart2;
+                            }
+                        }
+                    } // end foreach( $ruleValue as $bix => $bydayPart )
+                    if( 1 < count( $byday )) {
+                        usort( $byday, $RECURBYDAYSORTER );
+                    }
+                    $content2 .= sprintf(
+                        $FMTDEFAULTEQ,
+                        Vcalendar::BYDAY,
+                        implode( Util::$COMMA, $byday )
+                    );
+                    break;
+                default : // BYSECOND/BYMINUTE/BYHOUR/BYMONTHDAY/BYYEARDAY/BYWEEKNO/BYMONTH/BYSETPOS...
+                    if( is_array( $ruleValue )) {
+                        $content2 .= sprintf( $FMTOTHEREQ, $ruleLabel );
+                        $content2 .= implode( Util::$COMMA, $ruleValue );
+                    }
+                    else {
+                        $content2 .= sprintf( $FMTDEFAULTEQ, $ruleLabel, $ruleValue );
+                    }
+                    break;
+            } // end switch( $ruleLabel )
+        } // end foreach( $theRule[Util::$LCvalue] )) as $ruleLabel => $ruleValue )
+        $output .= StringFactory::createElement(
+            $recurProperty,
+            $attributes,
+            $content1 . $content2
+        );
+        return $output;
+    }
 
     /**
-     * @var string
+     * Return (array) parsed rexrule string
+     *
+     * @param string $row
+     * @return array
+     * @since 2.27.3 - 2018-12-28
      */
-    private static string $MONTHDAYNO_DOWN = 'monthdayno_down';
+    public static function parseRexrule( string $row ) : array
+    {
+        static $EQ = '=';
+        $recur     = [];
+        $values    = explode( Util::$SEMIC, $row );
+        foreach( $values as $value2 ) {
+            if( empty( $value2 )) {
+                continue;
+            } // ;-char in end position ???
+            $value3    = explode( $EQ, $value2, 2 );
+            $ruleLabel = strtoupper( $value3[0] );
+            switch( $ruleLabel ) {
+                case Vcalendar::BYDAY:
+                    $value4 = explode( Util::$COMMA, $value3[1] );
+                    if( 1 < count( $value4 )) {
+                        foreach( $value4 as $v5ix => $value5 ) {
+                            $value4[$v5ix] =
+                                self::updateDayNoAndDayName( trim((string) $value5 ));
+                        }
+                    }
+                    else {
+                        $value4 = self::updateDayNoAndDayName(
+                            trim((string) $value3[1] )
+                        );
+                    }
+                    $recur[$ruleLabel] = $value4;
+                    break;
+                default:
+                    $value4 = explode( Util::$COMMA, $value3[1] );
+                    if( 1 < count( $value4 )) {
+                        $value3[1] = $value4;
+                    }
+                    $recur[$ruleLabel] = $value3[1];
+                    break;
+            } // end - switch $ruleLabel
+        } // end - foreach( $values.. .
+        return $recur;
+    }
 
-    /**
-     * @var string
+    /*
+     * Return array, day rel pos number (opt) and day name abbr
+     *
+     * @param string $dayValueBase
+     * @return array
+     * @since  2.27.16 - 2019-03-03
      */
-    private static string $MONTHCNT_DOWN   = 'monthcnt_down';
-
-    /**
-     * @var string
-     */
-    private static string $YEARDAYNO_UP    = 'yeardayno_up';
-
-    /**
-     * @var string
-     */
-    private static string $YEARDAYNO_DOWN  = 'yeardayno_down';
-
-    /**
-     * @var string
-     */
-    private static string $WEEKNO_UP       = 'weekno_up';
-
-    /**
-     * @var string
-     */
-    private static string $WEEKNO_DOWN     = 'weekno_down';
+    private static function updateDayNoAndDayName( string $dayValueBase ) : array
+    {
+        $output = [];
+        $dayno  = $dayName = false;
+        if(( ctype_alpha( substr( $dayValueBase, -1 ))) &&
+            ( ctype_alpha( substr( $dayValueBase, -2, 1 )))) {
+            $dayName = substr( $dayValueBase, -2, 2 );
+            if( 2 < strlen( $dayValueBase )) {
+                $dayno = (int) substr( $dayValueBase, 0, ( strlen( $dayValueBase ) - 2 ));
+            }
+        }
+        if( false !== $dayno ) {
+            $output[] = $dayno;
+        }
+        if( false !== $dayName ) {
+            $output[Vcalendar::DAY] = $dayName;
+        }
+        return $output;
+    }
 
     /**
      * Convert input format for EXRULE and RRULE to internal format
      *
      * "The value of the UNTIL rule part MUST have the same value type as the "DTSTART" property."
      * "If specified as a DATE-TIME value, then it MUST be specified in a UTC time format."
-     * @param Pc $rexrule   params merged with dtstart params
-     * @return Pc
+     * @param array $rexrule
+     * @param array $params    merged with dtstart params
+     * @return array
      * @throws Exception
      * @throws InvalidArgumentException
-     * @throws LogicException
-     * @since 2.41.57 2022-08-17
+     * @since  2.29.25 - 2020-09-02
      * @todo "The BYSECOND, BYMINUTE and BYHOUR rule parts MUST NOT be specified
      *        when the associated "DTSTART" property has a DATE value type."
      */
-    public static function setRexrule( Pc $rexrule ) : Pc
+    public static function setRexrule( array $rexrule, array $params ) : array
     {
         static $ERR    = 'Invalid input date \'%s\'';
-        if( empty( $rexrule->value )) {
-            return $rexrule;
+        $input  = [];
+        if( empty( $rexrule )) {
+            return $input;
         }
-        $input          = [];
-        $isValueDate    = $rexrule->hasParamValue( IcalInterface::DATE );
-        $paramTZid      = $rexrule->getParams( IcalInterface::TZID );
-        $rexrule->value = array_change_key_case( $rexrule->value, CASE_UPPER );
-        foreach( $rexrule->value as $ruleLabel => $ruleValue ) {
+        $params      = [ Util::$LCparams => $params ];
+        $isValueDate = ParameterFactory::isParamsValueSet( $params, Vcalendar::DATE );
+        $paramTZid   = ParameterFactory::getParamTzid( $params );
+        $rexrule     = array_change_key_case( $rexrule, CASE_UPPER );
+        foreach( $rexrule as $ruleLabel => $ruleValue ) {
             switch( true ) {
-                case ( IcalInterface::UNTIL !== $ruleLabel ) :
+                case ( Vcalendar::UNTIL != $ruleLabel ) :
                     $input[$ruleLabel] = $ruleValue;
                     break;
                 case ( $ruleValue instanceof DateTimeInterface ) :
                     $input[$ruleLabel] =
                         DateTimeFactory::setDateTimeTimeZone(
                             DateTimeFactory::toDateTime( $ruleValue ),
-                            IcalInterface::UTC
+                            Vcalendar::UTC
                         );
-                    $rexrule->removeParam( IcalInterface::TZID ); // if exists
+                    ParameterFactory::ifExistRemove(
+                        $params[Util::$LCparams],
+                        Vcalendar::TZID
+                    );
                     break;
-                case DateTimeFactory::isStringAndDate( $ruleValue ) :
-                    [ $dateStr, $timezonePart ] =
+                case ( DateTimeFactory::isStringAndDate( $ruleValue )) :
+                    list( $dateStr, $timezonePart ) =
                         DateTimeFactory::splitIntoDateStrAndTimezone( $ruleValue );
                     $isLocalTime = ( empty( $timezonePart ) && empty( $paramTZid ));
                     $dateTime = DateTimeFactory::getDateTimeWithTimezoneFromString(
                         $dateStr,
                         $isLocalTime ? null : $timezonePart,
-                        $isLocalTime ? IcalInterface::UTC : $paramTZid,
+                        $isLocalTime ? Vcalendar::UTC : $paramTZid,
                         true
                     );
-                    if( ! $isValueDate ) {
-                        $dateTime = DateTimeFactory::setDateTimeTimeZone( $dateTime, IcalInterface::UTC );
+                    if( $isValueDate ) {
+                        ParameterFactory::ifExistRemove(
+                            $params[Util::$LCparams],
+                            Vcalendar::TZID
+                        );
                     }
-                    $rexrule->removeParam( IcalInterface::TZID ); // if exists
+                    else {
+                        $dateTime = DateTimeFactory::setDateTimeTimeZone(
+                            $dateTime,
+                            Vcalendar::UTC
+                        );
+                        ParameterFactory::ifExistRemove(
+                            $params[Util::$LCparams],
+                            Vcalendar::TZID
+                        );
+                    }
                     $input[$ruleLabel] = $dateTime;
                     break;
                 default :
@@ -234,8 +412,12 @@ class RecurFactory
             } // end switch
         } // end foreach( $rexrule as $ruleLabel => $ruleValue )
         $output = self::orderRRuleKeys( $input );
-        if( ! isset( $output[IcalInterface::UNTIL] )) {
-            $rexrule->removeParam( IcalInterface::TZID ); // if exists
+
+        if( ! isset( $output[Vcalendar::UNTIL] )) {
+            ParameterFactory::ifExistRemove(
+                $params[Util::$LCparams],
+                Vcalendar::TZID
+            );
         }
         try {
             RecurFactory2::assertRecur( $output );
@@ -243,57 +425,51 @@ class RecurFactory
         catch( LogicException $e ) {
             throw new InvalidArgumentException( $e->getMessage(), $e->getCode(), $e );
         }
-        return $rexrule->setValue( $output );
+        return [ Util::$LCvalue => $output ] + $params;
     }
 
     /**
      * @param array $input
      * @return array
-     * @since  2.41.16 - 2022-01-31
+     * @since  2.29.25 - 2020-09-02
      */
     private static function orderRRuleKeys( array $input ) : array
     {
         static $RKEYS1 = [
-            IcalInterface::FREQ,
-            IcalInterface::UNTIL,
-            IcalInterface::COUNT,
-            IcalInterface::INTERVAL,
-            IcalInterface::BYSECOND,
-            IcalInterface::BYMINUTE,
-            IcalInterface::BYHOUR
+            Vcalendar::FREQ,
+            Vcalendar::UNTIL,
+            Vcalendar::COUNT,
+            Vcalendar::INTERVAL,
+            Vcalendar::BYSECOND,
+            Vcalendar::BYMINUTE,
+            Vcalendar::BYHOUR
         ];
         static $RKEYS2 = [
-            IcalInterface::BYMONTHDAY,
-            IcalInterface::BYYEARDAY,
-            IcalInterface::BYWEEKNO,
-            IcalInterface::BYMONTH,
-            IcalInterface::BYSETPOS,
-            IcalInterface::WKST
+            Vcalendar::BYMONTHDAY,
+            Vcalendar::BYYEARDAY,
+            Vcalendar::BYWEEKNO,
+            Vcalendar::BYMONTH,
+            Vcalendar::BYSETPOS,
+            Vcalendar::WKST
         ];
         static $RKEYS3 = [
-            IcalInterface::BYSECOND,
-            IcalInterface::BYMINUTE,
-            IcalInterface::BYHOUR,
-            IcalInterface::BYMONTHDAY,
-            IcalInterface::BYYEARDAY,
-            IcalInterface::BYWEEKNO,
-            IcalInterface::BYMONTH,
-            IcalInterface::BYSETPOS,
+            Vcalendar::BYSECOND,
+            Vcalendar::BYMINUTE,
+            Vcalendar::BYHOUR,
+            Vcalendar::BYMONTHDAY,
+            Vcalendar::BYYEARDAY,
+            Vcalendar::BYWEEKNO,
+            Vcalendar::BYMONTH,
+            Vcalendar::BYSETPOS,
         ];
         /* set recurrence rule specification in rfc2445 order */
         $output = [];
-        if( isset( $input[IcalInterface::RSCALE] )) { // rfc7529 - first
-            $output[IcalInterface::RSCALE] = strtoupper( $input[IcalInterface::RSCALE] );
-        }
-        if( isset( $input[IcalInterface::FREQ] )) {
-            $input[IcalInterface::FREQ] = strtoupper( $input[IcalInterface::FREQ] );
-        }
         foreach( $RKEYS1 as $rKey1 ) {
             if( isset( $input[$rKey1] )) {
                 $output[$rKey1] = $input[$rKey1];
             }
         }
-        if( isset( $input[IcalInterface::BYDAY] )) {
+        if( isset( $input[Vcalendar::BYDAY] )) {
             self::orderRRuleBydayKey( $input, $output );
         }
         foreach( $RKEYS2 as $rKey2 ) {
@@ -307,7 +483,7 @@ class RecurFactory
             }
             if( is_string( $output[$rKey3] )) {
                 $temp = explode( Util::$COMMA, $output[$rKey3] );
-                if( 1 === count( $temp )) {
+                if( 1 == count( $temp )) {
                     $output[$rKey3] = reset( $temp );
                 }
                 else {
@@ -320,9 +496,6 @@ class RecurFactory
                 $output[$rKey3] = array_unique( $output[$rKey3] );
             }
         } // end foreach
-        if( isset( $input[IcalInterface::SKIP] )) { // rfc7529 - last
-            $output[IcalInterface::SKIP] = strtoupper( $input[IcalInterface::SKIP] );
-        }
         return $output;
     }
 
@@ -331,108 +504,71 @@ class RecurFactory
      *
      * @param array $input
      * @param array $output
-     * @return void
      * @since  2.29.27 - 2020-09-19
      */
-    private static function orderRRuleBydayKey( array $input, array & $output ) : void
+    private static function orderRRuleBydayKey( array $input, array & $output )
     {
-        if( empty( $input[IcalInterface::BYDAY] )) {
+        if( empty( $input[Vcalendar::BYDAY] )) {
             // results in error
-            $output[IcalInterface::BYDAY] = [];
+            $output[Vcalendar::BYDAY] = [];
             return;
         }
-        if( ! is_array( $input[IcalInterface::BYDAY] )) {
+        if( ! is_array( $input[Vcalendar::BYDAY] )) {
             // single day
-            $output[IcalInterface::BYDAY] = [
-                IcalInterface::DAY => strtoupper( $input[IcalInterface::BYDAY] ),
+            $output[Vcalendar::BYDAY] = [
+                Vcalendar::DAY => strtoupper( $input[Vcalendar::BYDAY] ),
             ];
             return;
         }
         $cntStr = $cntNum = 0;
-        foreach( $input[IcalInterface::BYDAY] as $BYDAYv ) {
+        foreach( $input[Vcalendar::BYDAY] as $BYDAYx => $BYDAYv ) {
             if( is_array( $BYDAYv )) {
                 break;
             }
             if( is_string( $BYDAYv ) && ctype_alpha( $BYDAYv )) {
-                ++$cntStr;
+                $cntStr += 1;
                 continue;
             }
             if( empty( $BYDAYv )) {
-                $input[IcalInterface::BYDAY] = [ Util::$SP0 ];
-                ++$cntStr;
+                $input[Vcalendar::BYDAY] = [ Util::$SP0 ];
+                $cntStr += 1;
                 continue;
             }
-            ++$cntNum;
+            $cntNum += 1;
         } // end foreach
-        if(( 1 === $cntStr ) || ( 1 < $cntNum )) { // single day OR invalid format...
-            $input[IcalInterface::BYDAY] = [ $input[IcalInterface::BYDAY] ];
+        if(( 1 == $cntStr ) || ( 1 < $cntNum )) { // single day OR invalid format...
+            $input[Vcalendar::BYDAY] = [ $input[Vcalendar::BYDAY] ];
         }
         elseif( 1 < $cntStr ) { // split (single) days
             $days = [];
-            foreach( $input[IcalInterface::BYDAY] as $BYDAYv ) {
-                $days[] = [ IcalInterface::DAY => $BYDAYv ];
+            foreach( $input[Vcalendar::BYDAY] as $BYDAYx => $BYDAYv ) {
+                $days[] = [ Vcalendar::DAY => $BYDAYv ];
             }
-            $input[IcalInterface::BYDAY] = $days;
+            $input[Vcalendar::BYDAY] = $days;
         }
-        foreach( $input[IcalInterface::BYDAY] as $BYDAYx => $BYDAYv ) {
+        foreach( $input[Vcalendar::BYDAY] as $BYDAYx => $BYDAYv ) {
             $nIx = 0;
             foreach( $BYDAYv as $BYDAYx2 => $BYDAYv2 ) {
                 switch( true ) {
                     case ( is_string( $BYDAYx2 ) &&
-                        ( 0 === strcasecmp( IcalInterface::DAY, $BYDAYx2 ))) :
+                        ( 0 == strcasecmp( Vcalendar::DAY, $BYDAYx2 ))) :
                         // day abbr with key
-                        $output[IcalInterface::BYDAY][$BYDAYx][$BYDAYx2] = strtoupper( $BYDAYv2 );
+                        $output[Vcalendar::BYDAY][$BYDAYx][$BYDAYx2] = strtoupper( $BYDAYv2 );
                         break;
                     case ( is_string( $BYDAYv2 ) && ctype_alpha( $BYDAYv2 )) :
                         // day abbr without key, set key
-                        $output[IcalInterface::BYDAY][$BYDAYx][IcalInterface::DAY] = strtoupper( $BYDAYv2 );
+                        $output[Vcalendar::BYDAY][$BYDAYx][Vcalendar::DAY] =
+                            strtoupper( $BYDAYv2 );
                         break;
                     default :
                         // rel pos day number. force key from 0 (1++ results in error)
-                        $output[IcalInterface::BYDAY][$BYDAYx][$nIx++] = $BYDAYv2;
+                        $output[Vcalendar::BYDAY][$BYDAYx][$nIx++] = $BYDAYv2;
                         break;
                 } // end switch
             } // end foreach
-            ksort( $output[IcalInterface::BYDAY][$BYDAYx], SORT_NATURAL );
+            ksort( $output[Vcalendar::BYDAY][$BYDAYx], SORT_NATURAL );
         } // end foreach
-        ksort( $output[IcalInterface::BYDAY], SORT_NATURAL );
-    }
-
-    /**
-     * Return UID[] where RRULE(/EXRULE) RECUR RSCALE exists and is NOT GREGORIAN (or similar)
-     *
-     * Return UID[] contains UID to skip, rfc7529 6. Compatibility, option 2
-     * For all (rfc7529) calendar systems, see
-     *   (http://www.unicode.org/repos/cldr/tags/latest/common/bcp47/calendar.xml, redirected to)
-     *   https://github.com/unicode-org/cldr/blob/latest/common/bcp47/calendar.xml
-     *
-     * @param Vcalendar  $calendar
-     * @param string[]   $compTypes  component types to accept
-     * @return string[]
-     * @since 2.41.16 - 2022-02-01
-     */
-    public static function rruleRscaleCheck( Vcalendar $calendar, array $compTypes ) : array
-    {
-        static $ACCEPTED   = [ 'GREGORY', IcalInterface::GREGORIAN, 'ISO8601' ];
-        static $RRULEPROPS = [ IcalInterface::EXRULE, IcalInterface::RRULE ];
-        $foundUids = [];
-        $calendar->resetCompCounter();
-        while( $component = $calendar->getComponent()) {
-            if( ! in_array( $component->getCompType(), $compTypes, true )) {
-                continue;
-            }
-            foreach( $RRULEPROPS as $rruleProp ) {
-                $getMethod = StringFactory::getGetMethodName( $rruleProp );
-                if( false === ( $propValue = $component->{$getMethod}( true ))) {
-                    continue;
-                }
-                if( isset( $propValue->value[IcalInterface::RSCALE] ) &&
-                    ! in_array( $propValue->value[IcalInterface::RSCALE], $ACCEPTED, true )) {
-                    $foundUids[] = $component->getUID();
-                }
-            } // end foreach
-        } // end while
-        return $foundUids;
+        ksort( $output[Vcalendar::BYDAY], SORT_NATURAL );
     }
 
     /**
@@ -440,85 +576,107 @@ class RecurFactory
      *
      * If missing, UNTIL is set 1 year from startdate (emergency break)
      *
-     * @param array $result      array to update, array([Y-m-d] => bool)
-     * @param array $recur       pattern for recurrency (only value part, params ignored)
+     * @param array           $result      array to update, array([Y-m-d] => bool)
+     * @param array           $recur       pattern for recurrency (only value part, params ignored)
      * @param string|DateTime $wDateIn     component start date
      * @param string|DateTime $fcnStartIn  start date
      * @param string|DateTime $fcnEndIn    end date
-     * @return void
      * @throws Exception
      * @since  2.29.24 - 2020-08-29
      * @todo   BYHOUR, BYMINUTE, BYSECOND, WEEKLY at year end/start OR not at all
      */
     public static function recur2date(
-        array & $result,
-        array $recur,
-        string | DateTime $wDateIn,
-        string | DateTime $fcnStartIn,
-        string | DateTime $fcnEndIn
-    ) : void
-    {
-        if( ! isset( $recur[IcalInterface::FREQ] )) { // "MUST be specified.. ." ??
-            $recur[IcalInterface::FREQ] = IcalInterface::DAILY;
+        & $result,
+        $recur,
+        $wDateIn,
+        $fcnStartIn,
+        $fcnEndIn = null
+    ) {
+        if( ! isset( $recur[Vcalendar::FREQ] )) { // "MUST be specified.. ." ??
+            $recur[Vcalendar::FREQ] = Vcalendar::DAILY;
         }
-        $recur[IcalInterface::INTERVAL] = isset( $recur[IcalInterface::INTERVAL] )
-            ? (int) $recur[IcalInterface::INTERVAL]
-            : 1;
+        if( ! isset( $recur[Vcalendar::INTERVAL] )) {
+            $recur[Vcalendar::INTERVAL] = 1;
+        }
         switch( true ) {
             case RecurFactory2::isRecurDaily1( $recur ) :
-                foreach( RecurFactory2::recurDaily1( $recur, $wDateIn, $fcnStartIn, $fcnEndIn )
-                         as $ymd => $v ) {
-                    $result[$ymd] = $v;
-                }
+                $result = $result +
+                    RecurFactory2::recurDaily1(
+                        $recur,
+                        $wDateIn,
+                        $fcnStartIn,
+                        $fcnEndIn
+                    );
                 ksort( $result, SORT_NUMERIC );
                 break;
             case RecurFactory2::isRecurDaily2( $recur ) :
-                foreach( RecurFactory2::recurDaily2( $recur, $wDateIn, $fcnStartIn, $fcnEndIn )
-                         as $ymd => $v ) {
-                    $result[$ymd] = $v;
-                }
+                $result = $result +
+                    RecurFactory2::recurDaily2(
+                        $recur,
+                        $wDateIn,
+                        $fcnStartIn,
+                        $fcnEndIn
+                    );
                 ksort( $result, SORT_NUMERIC );
                 break;
             case RecurFactory2::isRecurMonthly1( $recur ) :
-                foreach( RecurFactory2::recurMonthly1( $recur, $wDateIn, $fcnStartIn, $fcnEndIn )
-                         as $ymd => $v ) {
-                    $result[$ymd] = $v;
-                }
+                $result = $result +
+                    RecurFactory2::recurMonthly1(
+                        $recur,
+                        $wDateIn,
+                        $fcnStartIn,
+                        $fcnEndIn
+                    );
                 ksort( $result, SORT_NUMERIC );
                 break;
             case RecurFactory2::isRecurMonthly2( $recur ) :
-                foreach( RecurFactory2::recurMonthlyYearly3( $recur, $wDateIn, $fcnStartIn, $fcnEndIn )
-                         as $ymd => $v ) {
-                    $result[$ymd] = $v;
-                }
+                $result = $result +
+                    RecurFactory2::recurMonthlyYearly3(
+                        $recur,
+                        $wDateIn,
+                        $fcnStartIn,
+                        $fcnEndIn
+                    );
                 ksort( $result, SORT_NUMERIC );
                 break;
             case RecurFactory2::isRecurWeekly1( $recur ) :
-                foreach( RecurFactory2::recurWeekly1( $recur, $wDateIn, $fcnStartIn, $fcnEndIn )
-                         as $ymd => $v ) {
-                    $result[$ymd] = $v;
-                }
+                $result = $result +
+                    RecurFactory2::recurWeekly1(
+                        $recur,
+                        $wDateIn,
+                        $fcnStartIn,
+                        $fcnEndIn
+                    );
                 ksort( $result, SORT_NUMERIC );
                 break;
             case RecurFactory2::isRecurWeekly2( $recur ) :
-                foreach( RecurFactory2::recurWeekly2( $recur, $wDateIn, $fcnStartIn, $fcnEndIn )
-                         as $ymd => $v ) {
-                    $result[$ymd] = $v;
-                }
+                $result = $result +
+                    RecurFactory2::recurWeekly2(
+                        $recur,
+                        $wDateIn,
+                        $fcnStartIn,
+                        $fcnEndIn
+                    );
                 ksort( $result, SORT_NUMERIC );
                 break;
             case RecurFactory2::isRecurYearly1( $recur ) :
-                foreach( RecurFactory2::recurYearly1( $recur, $wDateIn, $fcnStartIn, $fcnEndIn )
-                         as $ymd => $v ) {
-                    $result[$ymd] = $v;
-                }
+                $result = $result +
+                    RecurFactory2::recurYearly1(
+                        $recur,
+                        $wDateIn,
+                        $fcnStartIn,
+                        $fcnEndIn
+                    );
                 ksort( $result, SORT_NUMERIC );
                 break;
             case RecurFactory2::isRecurYearly2( $recur ) :
-                foreach( RecurFactory2::recurMonthlyYearly3( $recur, $wDateIn, $fcnStartIn, $fcnEndIn )
-                         as $ymd => $v ) {
-                    $result[$ymd] = $v;
-                }
+                $result = $result +
+                    RecurFactory2::recurMonthlyYearly3(
+                        $recur,
+                        $wDateIn,
+                        $fcnStartIn,
+                        $fcnEndIn
+                    );
                 ksort( $result, SORT_NUMERIC );
                 break;
             default :
@@ -537,8 +695,8 @@ class RecurFactory
      *
      * If missing, UNTIL is set 1 year from startdate (emergency break)
      *
-     * @param array $result              array to update, array([Y-m-d] => bool)
-     * @param array $recur               pattern for recurrency (only value part, params ignored)
+     * @param array           $result      array to update, array([Y-m-d] => bool)
+     * @param array           $recur       pattern for recurrency (only value part, params ignored)
      * @param string|DateTime $wDateIn     component start date
      * @param string|DateTime $fcnStartIn  start date
      * @param string|DateTime $fcnEndIn    end date
@@ -547,23 +705,21 @@ class RecurFactory
      * @todo   BYHOUR, BYMINUTE, BYSECOND, WEEKLY at year end/start OR not at all
      */
     public static function fullRecur2date(
-        array & $result,
-        array $recur,
-        string | DateTime $wDateIn,
-        string | DateTime $fcnStartIn,
-        string | DateTime $fcnEndIn
-    ) : void
-    {
+        & $result,
+        $recur,
+        $wDateIn,
+        $fcnStartIn,
+        $fcnEndIn = null
+    ) {
         static $YEAR2DAYARR = [ 'YEARLY', 'MONTHLY', 'WEEKLY', 'DAILY' ];
-        if( ! isset( $recur[IcalInterface::FREQ] )) { // "MUST be specified.. ."
-            $recur[IcalInterface::FREQ] = IcalInterface::DAILY;
+        if( ! isset( $recur[Vcalendar::FREQ] )) { // "MUST be specified.. ."
+            $recur[Vcalendar::FREQ] = Vcalendar::DAILY;
         } // ??
-        $recur[IcalInterface::INTERVAL] =
-            isset( $recur[IcalInterface::INTERVAL] )
-                ? (int) $recur[IcalInterface::INTERVAL]
-                : 1;
-        $wDate     = self::reFormatDate( $wDateIn );
-        $wDateYMD  = sprintf(
+        if( ! isset( $recur[Vcalendar::INTERVAL] )) {
+            $recur[Vcalendar::INTERVAL] = 1;
+        }
+        $wDate       = self::reFormatDate( $wDateIn );
+        $wDateYMD    = sprintf(
             self::$YMDs,
             $wDate[self::$LCYEAR],
             $wDate[self::$LCMONTH],
@@ -596,13 +752,13 @@ class RecurFactory
             $fcnEnd[self::$LCMONTH],
             $fcnEnd[self::$LCDAY]
         );
-        if( ! isset( $recur[IcalInterface::COUNT] ) && ! isset( $recur[IcalInterface::UNTIL] )) {
-            $recur[IcalInterface::UNTIL] = $fcnEnd; // ??
+        if( ! isset( $recur[Vcalendar::COUNT] ) && ! isset( $recur[Vcalendar::UNTIL] )) {
+            $recur[Vcalendar::UNTIL] = $fcnEnd; // ??
         } // create break
-        if( isset( $recur[IcalInterface::UNTIL] )) {
-            $recur[IcalInterface::UNTIL] = self::reFormatDate( $recur[IcalInterface::UNTIL] );
-            if( $fcnEnd > $recur[IcalInterface::UNTIL] ) {
-                $fcnEnd    = $recur[IcalInterface::UNTIL]; // emergency break
+        if( isset( $recur[Vcalendar::UNTIL] )) {
+            $recur[Vcalendar::UNTIL] = self::reFormatDate( $recur[Vcalendar::UNTIL] );
+            if( $fcnEnd > $recur[Vcalendar::UNTIL] ) {
+                $fcnEnd    = $recur[Vcalendar::UNTIL]; // emergency break
                 $fcnEndYMD = sprintf(
                     self::$YMDs,
                     $fcnEnd[self::$LCYEAR],
@@ -610,12 +766,12 @@ class RecurFactory
                     $fcnEnd[self::$LCDAY]
                 );
             }
-            if( isset( $recur[IcalInterface::UNTIL][self::$LCHOUR] )) {
+            if( isset( $recur[Vcalendar::UNTIL][self::$LCHOUR] )) {
                 $untilHis = sprintf(
                     self::$HIS,
-                    $recur[IcalInterface::UNTIL][self::$LCHOUR],
-                    $recur[IcalInterface::UNTIL][self::$LCMIN],
-                    $recur[IcalInterface::UNTIL][self::$LCSEC]
+                    $recur[Vcalendar::UNTIL][self::$LCHOUR],
+                    $recur[Vcalendar::UNTIL][self::$LCMIN],
+                    $recur[Vcalendar::UNTIL][self::$LCSEC]
                 );
             }
             else {
@@ -625,14 +781,14 @@ class RecurFactory
         if( $wDateYMD > $fcnEndYMD ) {
             return; // nothing to do.. .
         }
-        $recurFreqIsYearly  = ( IcalInterface::YEARLY  === $recur[IcalInterface::FREQ] );
-        $recurFreqIsMonthly = ( IcalInterface::MONTHLY === $recur[IcalInterface::FREQ] );
-        $recurFreqIsWeekly  = ( IcalInterface::WEEKLY  === $recur[IcalInterface::FREQ] );
-        $recurFreqIsDaily   = ( IcalInterface::DAILY   === $recur[IcalInterface::FREQ] );
-        $wkst = ( Util::issetKeyAndEquals( $recur, IcalInterface::WKST, IcalInterface::SU ))
+        $recurFreqIsYearly  = ( Vcalendar::YEARLY  == $recur[Vcalendar::FREQ] );
+        $recurFreqIsMonthly = ( Vcalendar::MONTHLY == $recur[Vcalendar::FREQ] );
+        $recurFreqIsWeekly  = ( Vcalendar::WEEKLY  == $recur[Vcalendar::FREQ] );
+        $recurFreqIsDaily   = ( Vcalendar::DAILY   == $recur[Vcalendar::FREQ] );
+        $wkst = ( Util::issetKeyAndEquals( $recur, Vcalendar::WKST, Vcalendar::SU ))
             ? 24 * 60 * 60
             : 0; // ??
-        $recurCount = ( isset( $recur[IcalInterface::BYSETPOS] )) ? 0 : 1; // DTSTART counts as the first occurrence
+        $recurCount = ( ! isset( $recur[Vcalendar::BYSETPOS] )) ? 1 : 0; // DTSTART counts as the first occurrence
         /* find out how to step up dates and set index for interval \count */
         $step = [];
         if( $recurFreqIsYearly ) {
@@ -647,33 +803,35 @@ class RecurFactory
         else {
             $step[self::$LCDAY] = 1;
         }
-        if( isset( $step[self::$LCYEAR], $recur[IcalInterface::BYMONTH] )) {
+        if( isset( $step[self::$LCYEAR] ) && isset( $recur[Vcalendar::BYMONTH] )) {
             $step = [ self::$LCMONTH => 1 ];
         }
-        if( empty( $step ) && isset( $recur[IcalInterface::BYWEEKNO] )) { // ??
+        if( empty( $step ) && isset( $recur[Vcalendar::BYWEEKNO] )) { // ??
             $step = [ self::$LCDAY => 7 ];
         }
-        if( isset( $recur[IcalInterface::BYYEARDAY] ) ||
-            isset( $recur[IcalInterface::BYMONTHDAY] ) ||
-            isset( $recur[IcalInterface::BYDAY] )) {
+        if( isset( $recur[Vcalendar::BYYEARDAY] ) ||
+            isset( $recur[Vcalendar::BYMONTHDAY] ) ||
+            isset( $recur[Vcalendar::BYDAY] )) {
             $step = [ self::$LCDAY => 1 ];
         }
         $intervalArr = [];
-        if( 1 < $recur[IcalInterface::INTERVAL] ) {
+        if( 1 < $recur[Vcalendar::INTERVAL] ) {
             $intervalIx  = self::recurIntervalIx(
-                $recur[IcalInterface::FREQ],
+                $recur[Vcalendar::FREQ],
                 $wDate,
                 $wkst
             );
             $intervalArr = [ $intervalIx => 0 ];
         }
-        if( isset( $recur[IcalInterface::BYSETPOS] )) { // save start date + weekno
+        if( isset( $recur[Vcalendar::BYSETPOS] )) { // save start date + weekno
             $bysetPosymd1 = $bysetPosymd2 = $bysetPosw1 = $bysetPosw2 = [];
-            if( is_array( $recur[IcalInterface::BYSETPOS] )) {
-                RecurFactory2::assureIntArray( $recur[IcalInterface::BYSETPOS] );
+            if( is_array( $recur[Vcalendar::BYSETPOS] )) {
+                foreach( $recur[Vcalendar::BYSETPOS] as $bix => $bval ) {
+                    $recur[Vcalendar::BYSETPOS][$bix] = (int) $bval;
+                }
             }
             else {
-                $recur[IcalInterface::BYSETPOS] = [ (int) $recur[IcalInterface::BYSETPOS] ];
+                $recur[Vcalendar::BYSETPOS] = [ (int) $recur[Vcalendar::BYSETPOS] ];
             }
             if( $recurFreqIsYearly ) {
                 // start from beginning of year
@@ -701,8 +859,10 @@ class RecurFactory
             }
             else {
                 self::stepDate( $fcnEnd, $fcnEndYMD, $step );
-            } // make sure to count whole last period
+            } // make sure to \count whole last period
             $bysetPosWold = self::getWeekNumber(
+                0,
+                0,
                 $wkst,
                 $wDate[self::$LCMONTH],
                 $wDate[self::$LCDAY],
@@ -715,26 +875,26 @@ class RecurFactory
         else {
             self::stepDate( $wDate, $wDateYMD, $step );
         }
-        $yearOld = -1;
+        $yearOld = null;
         $dayCnts  = [];
         /* MAIN LOOP */
         while( true ) {
             if( $wDateYMD . $wDateHis > $fcnEndYMD . $untilHis ) {
                 break;
             }
-            if( isset( $recur[IcalInterface::COUNT] ) &&
-                ( $recurCount > (int) $recur[IcalInterface::COUNT] )) {
+            if( isset( $recur[Vcalendar::COUNT] ) &&
+                ( $recurCount >= $recur[Vcalendar::COUNT] )) {
                 break;
             }
-            if( $yearOld != $wDate[self::$LCYEAR] ) { // $yearOld=-1  1:st time
+            if( $yearOld != $wDate[self::$LCYEAR] ) { // $yearOld=null 1:st time
                 $yearOld  = $wDate[self::$LCYEAR];
                 $dayCnts  = self::initDayCnts( $wDate, $recur, $wkst );
             }
             /* check interval */
-            if( 1 < $recur[IcalInterface::INTERVAL] ) {
+            if( 1 < $recur[Vcalendar::INTERVAL] ) {
                 /* create interval index */
                 $intervalIx = self::recurIntervalIx(
-                    $recur[IcalInterface::FREQ],
+                    $recur[Vcalendar::FREQ],
                     $wDate,
                     $wkst
                 );
@@ -744,66 +904,67 @@ class RecurFactory
                 if( $currentKey != $intervalIx ) {
                     $intervalArr = [ $intervalIx => ( $intervalArr[$currentKey] + 1 ) ];
                 }
-                if(( $recur[IcalInterface::INTERVAL] != $intervalArr[$intervalIx] ) &&
+                if(( $recur[Vcalendar::INTERVAL] != $intervalArr[$intervalIx] ) &&
                     ( 0 != $intervalArr[$intervalIx] )) {
                     /* step up date */
                     self::stepDate( $wDate, $wDateYMD, $step );
-                    continue; // while
+                    continue;
                 }
-                // continue within the selected interval
-                $intervalArr[$intervalIx] = 0;
+                else { // continue within the selected interval
+                    $intervalArr[$intervalIx] = 0;
+                }
             } // endif( 1 < $recur['INTERVAL'] )
             $updateOK = true;
-            if( isset( $recur[IcalInterface::BYMONTH] ) ) {
+            if( $updateOK && isset( $recur[Vcalendar::BYMONTH] )) {
                 $updateOK = self::recurBYcntcheck(
-                    $recur[IcalInterface::BYMONTH],
+                    $recur[Vcalendar::BYMONTH],
                     $wDate[self::$LCMONTH],
                     ( $wDate[self::$LCMONTH] - 13 )
                 );
             }
-            if( $updateOK && isset( $recur[IcalInterface::BYWEEKNO] )) {
+            if( $updateOK && isset( $recur[Vcalendar::BYWEEKNO] )) {
                 $updateOK = self::recurBYcntcheck(
-                    $recur[IcalInterface::BYWEEKNO],
+                    $recur[Vcalendar::BYWEEKNO],
                     $dayCnts[$wDate[self::$LCMONTH]][$wDate[self::$LCDAY]][self::$WEEKNO_UP],
                     $dayCnts[$wDate[self::$LCMONTH]][$wDate[self::$LCDAY]][self::$WEEKNO_DOWN]
                 );
             }
-            if( $updateOK && isset( $recur[IcalInterface::BYYEARDAY] )) {
+            if( $updateOK && isset( $recur[Vcalendar::BYYEARDAY] )) {
                 $updateOK = self::recurBYcntcheck(
-                    $recur[IcalInterface::BYYEARDAY],
+                    $recur[Vcalendar::BYYEARDAY],
                     $dayCnts[$wDate[self::$LCMONTH]][$wDate[self::$LCDAY]][self::$YEARCNT_UP],
                     $dayCnts[$wDate[self::$LCMONTH]][$wDate[self::$LCDAY]][self::$YEARCNT_DOWN]
                 );
             }
-            if( $updateOK && isset( $recur[IcalInterface::BYMONTHDAY] )) {
+            if( $updateOK && isset( $recur[Vcalendar::BYMONTHDAY] )) {
                 $updateOK = self::recurBYcntcheck(
-                    $recur[IcalInterface::BYMONTHDAY],
+                    $recur[Vcalendar::BYMONTHDAY],
                     $wDate[self::$LCDAY],
                     $dayCnts[$wDate[self::$LCMONTH]][$wDate[self::$LCDAY]][self::$MONTHCNT_DOWN]
                 );
             }
-            if( $updateOK && isset( $recur[IcalInterface::BYDAY] )) {
+            if( $updateOK && isset( $recur[Vcalendar::BYDAY] )) {
                 $updateOK = false;
                 $m        = $wDate[self::$LCMONTH];
                 $d        = $wDate[self::$LCDAY];
-                if( isset( $recur[IcalInterface::BYDAY][IcalInterface::DAY] )) { // single day, opt with year/month day order no
+                if( isset( $recur[Vcalendar::BYDAY][Vcalendar::DAY] )) { // single day, opt with year/month day order no
                     $dayNumberExists = $dayNumberSw = $dayNameSw = false;
-                    if( $recur[IcalInterface::BYDAY][IcalInterface::DAY] ==
-                            $dayCnts[$m][$d][IcalInterface::DAY] ) {
+                    if( $recur[Vcalendar::BYDAY][Vcalendar::DAY] ==
+                        $dayCnts[$m][$d][Vcalendar::DAY] ) {
                         $dayNameSw = true;
                     }
-                    if( isset( $recur[IcalInterface::BYDAY][0] )) {
+                    if( isset( $recur[Vcalendar::BYDAY][0] )) {
                         $dayNumberExists = true;
-                        if( $recurFreqIsMonthly || isset( $recur[IcalInterface::BYMONTH] )) {
+                        if( $recurFreqIsMonthly || isset( $recur[Vcalendar::BYMONTH] )) {
                             $dayNumberSw = self::recurBYcntcheck(
-                                $recur[IcalInterface::BYDAY][0],
+                                $recur[Vcalendar::BYDAY][0],
                                 $dayCnts[$m][$d][self::$MONTHDAYNO_UP],
                                 $dayCnts[$m][$d][self::$MONTHDAYNO_DOWN]
                             );
                         }
                         elseif( $recurFreqIsYearly ) {
                             $dayNumberSw = self::recurBYcntcheck(
-                                $recur[IcalInterface::BYDAY][0],
+                                $recur[Vcalendar::BYDAY][0],
                                 $dayCnts[$m][$d][self::$YEARDAYNO_UP],
                                 $dayCnts[$m][$d][self::$YEARDAYNO_DOWN]
                             );
@@ -815,17 +976,17 @@ class RecurFactory
                     }
                 } // end if( isset( $recur[Vcalendar::BYDAY][Vcalendar::DAY] ))
                 else {  // multiple days
-                    foreach( $recur[IcalInterface::BYDAY] as $byDayValue ) {
+                    foreach( $recur[Vcalendar::BYDAY] as $byDayValue ) {
                         $dayNumberExists = $dayNumberSw = $dayNameSw = false;
-                        if( isset( $byDayValue[IcalInterface::DAY] ) &&
-                            ( $byDayValue[IcalInterface::DAY] ==
-                                $dayCnts[$m][$d][IcalInterface::DAY] )) {
+                        if( isset( $byDayValue[Vcalendar::DAY] ) &&
+                            ( $byDayValue[Vcalendar::DAY] ==
+                                $dayCnts[$m][$d][Vcalendar::DAY] )) {
                             $dayNameSw = true;
                         }
                         if( isset( $byDayValue[0] )) {
                             $dayNumberExists = true;
                             if( $recurFreqIsMonthly ||
-                                isset( $recur[IcalInterface::BYMONTH] )) {
+                                isset( $recur[Vcalendar::BYMONTH] )) {
                                 $dayNumberSw = self::recurBYcntcheck(
                                     $byDayValue[Util::$ZERO],
                                     $dayCnts[$m][$d][self::$MONTHDAYNO_UP],
@@ -850,8 +1011,8 @@ class RecurFactory
             } // end if( $updateOK && isset( $recur[Vcalendar::BYDAY] ))
             /* check BYSETPOS */
             if( $updateOK ) {
-                if(      isset( $recur[IcalInterface::BYSETPOS] ) &&
-                    ( in_array( $recur[IcalInterface::FREQ], $YEAR2DAYARR, true ) )) {
+                if(      isset( $recur[Vcalendar::BYSETPOS] ) &&
+                    ( in_array( $recur[Vcalendar::FREQ], $YEAR2DAYARR ))) {
                     if( $recurFreqIsWeekly ) {
                         if( $bysetPosWold ==
                             $dayCnts[$wDate[self::$LCMONTH]][$wDate[self::$LCDAY]][self::$WEEKNO_UP] ) {
@@ -860,20 +1021,22 @@ class RecurFactory
                         else {
                             $bysetPosw2[] = $wDateYMD;
                         }
-                    } // end if
-                    elseif(( $recurFreqIsYearly &&
-                            ( $bysetPosYold == $wDate[self::$LCYEAR] )) ||
-                        ( $recurFreqIsMonthly &&
-                            (( $bysetPosYold == $wDate[self::$LCYEAR] ) &&
-                             ( $bysetPosMold == $wDate[self::$LCMONTH] ))) ||
-                        ( $recurFreqIsDaily &&
-                            (( $bysetPosYold == $wDate[self::$LCYEAR] ) &&
-                             ( $bysetPosMold == $wDate[self::$LCMONTH] ) &&
-                             ( $bysetPosDold == $wDate[self::$LCDAY] )))) {
-                        $bysetPosymd1[] = $wDateYMD;
-                    } // end elseif
+                    }
                     else {
-                        $bysetPosymd2[] = $wDateYMD;
+                        if(( $recurFreqIsYearly &&
+                                ( $bysetPosYold == $wDate[self::$LCYEAR] )) ||
+                            ( $recurFreqIsMonthly &&
+                                (( $bysetPosYold == $wDate[self::$LCYEAR] ) &&
+                                 ( $bysetPosMold == $wDate[self::$LCMONTH] ))) ||
+                           ( $recurFreqIsDaily &&
+                                (( $bysetPosYold == $wDate[self::$LCYEAR] ) &&
+                                 ( $bysetPosMold == $wDate[self::$LCMONTH] ) &&
+                                 ( $bysetPosDold == $wDate[self::$LCDAY] )))) {
+                            $bysetPosymd1[] = $wDateYMD;
+                        }
+                        else {
+                            $bysetPosymd2[] = $wDateYMD;
+                        }
                     } // end else
                 }
                 else { // ! isset( $recur[Vcalendar::BYSETPOS] )
@@ -893,7 +1056,7 @@ class RecurFactory
             /* step up date */
             self::stepDate( $wDate, $wDateYMD, $step );
             /* check if BYSETPOS is set for updating result array */
-            if( $updateOK && isset( $recur[IcalInterface::BYSETPOS] )) {
+            if( $updateOK && isset( $recur[Vcalendar::BYSETPOS] )) {
                 $bysetPos = false;
                 if( $recurFreqIsYearly &&
                     ( $bysetPosYold != $wDate[self::$LCYEAR] )) {
@@ -909,6 +1072,8 @@ class RecurFactory
                 }
                 elseif( $recurFreqIsWeekly ) {
                     $weekNo = self::getWeekNumber(
+                        0,
+                        0,
                         $wkst,
                         $wDate[self::$LCMONTH],
                         $wDate[self::$LCDAY],
@@ -929,7 +1094,7 @@ class RecurFactory
                     $bysetPosDold = $wDate[self::$LCDAY];
                 }
                 if( $bysetPos ) {
-                    if( isset( $recur[IcalInterface::BYWEEKNO] )) {
+                    if( isset( $recur[Vcalendar::BYWEEKNO] )) {
                         $bysetPosArr1 = &$bysetPosw1;
                         $bysetPosArr2 = &$bysetPosw2;
                     }
@@ -938,7 +1103,7 @@ class RecurFactory
                         $bysetPosArr2 = &$bysetPosymd2;
                     }
 
-                    foreach( $recur[IcalInterface::BYSETPOS] as $ix ) {
+                    foreach( $recur[Vcalendar::BYSETPOS] as $ix ) {
                         if( 0 > $ix ) { // both positive and negative BYSETPOS allowed
                             $ix = ( count( $bysetPosArr1 ) + $ix + 1 );
                         }
@@ -949,8 +1114,8 @@ class RecurFactory
                             }
                             $recurCount++;
                         }
-                        if( isset( $recur[IcalInterface::COUNT] ) &&
-                            ( $recurCount >= $recur[IcalInterface::COUNT] )) {
+                        if( isset( $recur[Vcalendar::COUNT] ) &&
+                            ( $recurCount >= $recur[Vcalendar::COUNT] )) {
                             break;
                         }
                     }
@@ -960,77 +1125,86 @@ class RecurFactory
             } // end if( $updateOK && isset( $recur['BYSETPOS'] ))
         } // end while( true )
         ksort( $result );
-        if( isset( $recur[IcalInterface::COUNT] ) &&
-            ( count( $result ) >= $recur[IcalInterface::COUNT] )) {
-            $max    = $recur[IcalInterface::COUNT] - 1;
-            $result = array_slice( $result, 0, $max, true );
-        }
     }
 
     /**
      * Checking BYDAY (etc) hits, recur2date help function
      *
-     * @param int|string|array $BYvalue
-     * @param int $upValue
+     * @since  2.6.12 - 2011-01-03
+     * @param int|array $BYvalue
+     * @param int   $upValue
      * @param int   $downValue
      * @return bool
-     *@since  2.6.12 - 2011-01-03
      */
     private static function recurBYcntcheck(
-        int | string | array $BYvalue,
+        $BYvalue,
         int $upValue,
         int $downValue
     ) : bool
     {
         if( is_array( $BYvalue ) &&
-            ( in_array( $upValue, $BYvalue ) || in_array( $downValue, $BYvalue )) // no third arg tue
+            ( in_array( $upValue, $BYvalue ) || in_array( $downValue, $BYvalue ))
         ) {
             return true;
         }
-        return (( $BYvalue == $upValue ) || ( $BYvalue == $downValue ));  // no third arg tue
+        elseif(( $BYvalue == $upValue ) || ( $BYvalue == $downValue )) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
      * (re-)Calculate internal index, recur2date help function
      *
-     * @param string  $freq
-     * @param array $date
-     * @param int     $wkst
+     * @param string $freq
+     * @param array  $date
+     * @param int    $wkst
      * @return string
      * @since  2.26 - 2018-11-10
      */
     private static function recurIntervalIx( string $freq, array $date, int $wkst ) : string
     {
         /* create interval index */
-        $intervalIx = match( $freq ) {
-            IcalInterface::YEARLY  => $date[self::$LCYEAR],
-            IcalInterface::MONTHLY => $date[self::$LCYEAR] . Util::$MINUS . $date[self::$LCMONTH],
-            IcalInterface::WEEKLY  => self::getWeekNumber(
-                $wkst,
-                $date[self::$LCMONTH],
-                $date[self::$LCDAY],
-                $date[self::$LCYEAR]
-            ),
-            default => $date[self::$LCYEAR] .
-                Util::$MINUS .
-                $date[self::$LCMONTH] .
-                Util::$MINUS .
-                $date[self::$LCDAY],
-        }; // end switch
+        switch( $freq ) {
+            case Vcalendar::YEARLY :
+                $intervalIx = $date[self::$LCYEAR];
+                break;
+            case Vcalendar::MONTHLY :
+                $intervalIx =
+                    $date[self::$LCYEAR] . Util::$MINUS . $date[self::$LCMONTH];
+                break;
+            case Vcalendar::WEEKLY :
+                $intervalIx = self::getWeekNumber(
+                    0, 0, $wkst,
+                    $date[self::$LCMONTH], $date[self::$LCDAY], $date[self::$LCYEAR]
+                );
+                break;
+            case Vcalendar::DAILY :
+            default:
+                $intervalIx =
+                    $date[self::$LCYEAR] .
+                    Util::$MINUS .
+                    $date[self::$LCMONTH] .
+                    Util::$MINUS .
+                    $date[self::$LCDAY];
+                break;
+        } // end switch
         return (string) $intervalIx;
     }
 
     /**
      * Return updated date, array and timpstamp
      *
-     * @param array $date     date to step
-     * @param string       $dateYMD  date YMD
-     * @param null|array $step     default array( Util::$LCDAY => 1 )
+     * @param array  $date    date to step
+     * @param string $dateYMD date YMD
+     * @param array  $step    default array( Util::$LCDAY => 1 )
      * @return void
      */
-    private static function stepDate( array & $date, string & $dateYMD, ? array $step = null ) : void
+    private static function stepDate( & $date, & $dateYMD, $step = null )
     {
-        if( empty( $step )) {
+        if( is_null( $step )) {
             $step = [ self::$LCDAY => 1 ];
         }
         if( ! isset( $date[self::$LCHOUR] )) {
@@ -1052,24 +1226,23 @@ class RecurFactory
                 $date[self::$LCYEAR]
             );
         }
-        RecurFactory2::assureIntArray( $step, false );
-        RecurFactory2::assureIntArray( $date, false );
         foreach( $step as $stepix => $stepvalue ) {
             $date[$stepix] += $stepvalue;
         }
         if( isset( $step[self::$LCMONTH] )) {
             if( 12 < $date[self::$LCMONTH] ) {
-                ++$date[self::$LCYEAR];
+                $date[self::$LCYEAR]  += 1;
                 $date[self::$LCMONTH] -= 12;
             }
         }
-        elseif( isset( $step[self::$LCDAY] ) &&
-            ( $daysInMonth < $date[self::$LCDAY] )) {
-            $date[self::$LCDAY] -= $daysInMonth;
-            ++$date[self::$LCMONTH];
-            if( 12 < $date[self::$LCMONTH] ) {
-                ++$date[self::$LCYEAR];
-                $date[self::$LCMONTH] -= 12;
+        elseif( isset( $step[self::$LCDAY] )) {
+            if( $daysInMonth < $date[self::$LCDAY] ) {
+                $date[self::$LCDAY]   -= $daysInMonth;
+                $date[self::$LCMONTH] += 1;
+                if( 12 < $date[self::$LCMONTH] ) {
+                    $date[self::$LCYEAR]  += 1;
+                    $date[self::$LCMONTH] -= 12;
+                }
             }
         }
         $dateYMD = sprintf(
@@ -1085,7 +1258,7 @@ class RecurFactory
      *
      * @param array $wDate
      * @param array $recur
-     * @param int     $wkst
+     * @param int   $wkst
      * @return array
      */
     private static function initDayCnts( array $wDate, array $recur, int $wkst ) : array
@@ -1105,32 +1278,32 @@ class RecurFactory
             $daysInMonth = self::getDaysInMonth( 0, 0, 0, $m, 1, $wDate[self::$LCYEAR] );
             for( $d = 1; $d <= $daysInMonth; $d++ ) {
                 $dayCnts[$m][$d] = [];
-                if( isset( $recur[IcalInterface::BYYEARDAY] )) {
+                if( isset( $recur[Vcalendar::BYYEARDAY] )) {
                     $yearDays++;
                     $dayCnts[$m][$d][self::$YEARCNT_UP] = $yearDays;
                 }
-                if( isset( $recur[IcalInterface::BYDAY] )) {
-                    $day = self::getDayInWeek( $m, $d, $wDate[self::$LCYEAR] );
-                    $dayCnts[$m][$d][IcalInterface::DAY] = $day;
+                if( isset( $recur[Vcalendar::BYDAY] )) {
+                    $day = self::getDayInWeek( 0, 0, 0, $m, $d, $wDate[self::$LCYEAR] );
+                    $dayCnts[$m][$d][Vcalendar::DAY] = $day;
                     $weekDayCnt[$day]++;
                     $dayCnts[$m][$d][self::$MONTHDAYNO_UP] = $weekDayCnt[$day];
                     $yearDayCnt[$day]++;
                     $dayCnts[$m][$d][self::$YEARDAYNO_UP] = $yearDayCnt[$day];
                 }
-                if( isset( $recur[IcalInterface::BYWEEKNO] ) ||
-                    ( $recur[IcalInterface::FREQ] === IcalInterface::WEEKLY )) {
+                if( isset( $recur[Vcalendar::BYWEEKNO] ) ||
+                    ( $recur[Vcalendar::FREQ] == Vcalendar::WEEKLY )) {
                     $dayCnts[$m][$d][self::$WEEKNO_UP] =
-                        self::getWeekNumber($wkst, $m, $d, $wDate[self::$LCYEAR] );
+                        self::getWeekNumber(0,0, $wkst, $m, $d, $wDate[self::$LCYEAR] );
                 }
             } // end for( $d   = 1; $d <= $daysInMonth; $d++ )
         } // end for( $m = 1; $m <= 12; $m++ )
         $daycnt     = 0;
         $yearDayCnt = [];
-        if( isset( $recur[IcalInterface::BYWEEKNO] ) ||
-            ( $recur[IcalInterface::FREQ] === IcalInterface::WEEKLY )) {
-            $weekNo = 0;
+        if( isset( $recur[Vcalendar::BYWEEKNO] ) ||
+            ( $recur[Vcalendar::FREQ] == Vcalendar::WEEKLY )) {
+            $weekNo = null;
             for( $d = 31; $d > 25; $d-- ) { // get last weekno for year
-                if( empty( $weekNo )) {
+                if( ! $weekNo ) {
                     $weekNo = $dayCnts[12][$d][self::$WEEKNO_UP];
                 }
                 elseif( $weekNo < $dayCnts[12][$d][self::$WEEKNO_UP] ) {
@@ -1147,25 +1320,25 @@ class RecurFactory
             $monthCnt    = 0;
             $daysInMonth = self::getDaysInMonth( 0, 0, 0, $m, 1, $wDate[self::$LCYEAR] );
             for( $d = $daysInMonth; $d > 0; $d-- ) {
-                if( isset( $recur[IcalInterface::BYYEARDAY] )) {
-                    --$daycnt;
+                if( isset( $recur[Vcalendar::BYYEARDAY] )) {
+                    $daycnt                              -= 1;
                     $dayCnts[$m][$d][self::$YEARCNT_DOWN] = $daycnt;
                 }
-                if( isset( $recur[IcalInterface::BYMONTHDAY] )) {
-                    --$monthCnt;
+                if( isset( $recur[Vcalendar::BYMONTHDAY] )) {
+                    $monthCnt                             -= 1;
                     $dayCnts[$m][$d][self::$MONTHCNT_DOWN] = $monthCnt;
                 }
-                if( isset( $recur[IcalInterface::BYDAY] )) {
-                    $day                                     = $dayCnts[$m][$d][IcalInterface::DAY];
-                    --$weekDayCnt[$day];
+                if( isset( $recur[Vcalendar::BYDAY] )) {
+                    $day                                     = $dayCnts[$m][$d][Vcalendar::DAY];
+                    $weekDayCnt[$day]                       -= 1;
                     $dayCnts[$m][$d][self::$MONTHDAYNO_DOWN] = $weekDayCnt[$day];
-                    --$yearDayCnt[$day];
+                    $yearDayCnt[$day]                       -= 1;
                     $dayCnts[$m][$d][self::$YEARDAYNO_DOWN]  = $yearDayCnt[$day];
                 }
-                if( isset( $recur[IcalInterface::BYWEEKNO] ) ||
-                    ( $recur[IcalInterface::FREQ] === IcalInterface::WEEKLY )) {
+                if( isset( $recur[Vcalendar::BYWEEKNO] ) ||
+                    ( $recur[Vcalendar::FREQ] == Vcalendar::WEEKLY )) {
                     $dayCnts[$m][$d][self::$WEEKNO_DOWN] =
-                        ((int) $dayCnts[$m][$d][self::$WEEKNO_UP] - (int) $weekNo - 1 );
+                        ( $dayCnts[$m][$d][self::$WEEKNO_UP] - $weekNo - 1 );
                 }
             } // end for( $d = $daysInMonth; $d > 0; $d-- )
         } // end for( $m = 12; $m > 0; $m-- )
@@ -1175,12 +1348,12 @@ class RecurFactory
     /**
      * Return a reformatted input date
      *
-     * @param string|array|DateTime $inputDate
-     * @return int[]
+     * @param mixed $inputDate
+     * @return array
      * @throws Exception
      * @since  2.29.21 - 2020-01-31
      */
-    private static function reFormatDate( string | array | DateTime $inputDate ) : array
+    private static function reFormatDate( $inputDate ) : array
     {
         static $Y = 'Y';
         static $M = 'm';
@@ -1189,7 +1362,6 @@ class RecurFactory
         static $I = 'i';
         static $S = 'i';
         if( is_array( $inputDate )) {
-            RecurFactory2::assureIntArray( $inputDate, false );
             return $inputDate;
         }
         if( ! $inputDate instanceof DateTime ) {
@@ -1208,6 +1380,8 @@ class RecurFactory
     /**
      * Return week number
      *
+     * @param int $hour
+     * @param int $min
      * @param int $sec
      * @param int $month
      * @param int $day
@@ -1215,6 +1389,8 @@ class RecurFactory
      * @return int
      */
     private static function getWeekNumber(
+        int $hour,
+        int $min,
         int $sec,
         int $month,
         int $day,
@@ -1222,7 +1398,7 @@ class RecurFactory
     ) : int
     {
         static $UCW  = 'W'; // week number
-        return (int) date( $UCW, (int) mktime( 0, 0, $sec, $month, $day, $year ));
+        return (int) date( $UCW, mktime( $hour, $min, $sec, $month, $day, $year ));
     }
 
     /**
@@ -1246,18 +1422,24 @@ class RecurFactory
     ) : int
     {
         static $LCT  = 't'; // number of days in month
-        return (int) date( $LCT, (int) mktime( $hour, $min, $sec, $month, $day, $year ));
+        return (int) date( $LCT, mktime( $hour, $min, $sec, $month, $day, $year ));
     }
 
     /**
      * Return (string) 2-pos day in week
      *
+     * @param int $hour
+     * @param int $min
+     * @param int $sec
      * @param int $month
      * @param int $day
      * @param int $year
      * @return string
      */
     private static function getDayInWeek(
+        int $hour,
+        int $min,
+        int $sec,
         int $month,
         int $day,
         int $year
@@ -1266,7 +1448,7 @@ class RecurFactory
         static $LCW  = 'w'; // day of week number
         $dayNo = (int) date(
             $LCW,
-            (int) mktime( 0, 0, 0, $month, $day, $year )
+            mktime( $hour, $min, $sec, $month, $day, $year )
         );
         return self::$DAYNAMES[$dayNo];
     }

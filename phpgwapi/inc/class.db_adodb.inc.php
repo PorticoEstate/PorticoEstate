@@ -20,8 +20,8 @@
 	/**
 	* Include concrete database implementation
 	*/
-	require_once PHPGW_API_INC . '/adodb/vendor/adodb/adodb-php/adodb-exceptions.inc.php';
-	require_once PHPGW_API_INC . '/adodb/vendor/adodb/adodb-php/adodb.inc.php';
+	require_once PHPGW_API_INC . '/adodb/adodb-exceptions.inc.php';
+	require_once PHPGW_API_INC . '/adodb/adodb.inc.php';
 
 	/**
 	* Database abstraction class to allow phpGroupWare to use multiple database backends
@@ -896,12 +896,12 @@
 		/**
 		 * Execute prepared SQL statement for select
 		 *
-		 * @param string $sql 
+		 * @param string $sql_string 
 		 * @param array $params conditions for the select 
 		 * @return boolean TRUE on success or FALSE on failure
 		 */
 
-		public function select($sql, $params, $line = '', $file = '')
+		public function select($sql_string, $params, $line = '', $file = '')
 		{		
 			try
 			{

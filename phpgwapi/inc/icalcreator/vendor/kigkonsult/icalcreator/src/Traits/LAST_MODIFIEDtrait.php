@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -33,21 +33,25 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use InvalidArgumentException;
-use Kigkonsult\Icalcreator\Formatter\Property\DtxProperty;
-use Kigkonsult\Icalcreator\Pc;
 use Kigkonsult\Icalcreator\Util\DateTimeFactory;
+use Kigkonsult\Icalcreator\Util\ParameterFactory;
+use Kigkonsult\Icalcreator\Util\StringFactory;
+use Kigkonsult\Icalcreator\Util\Util;
+use Kigkonsult\Icalcreator\Vcalendar;
+
+use function array_change_key_case;
 
 /**
  * LAST-MODIFIED property functions
  *
- * @since 2.41.55 - 2022-08-13
+ * @since 2.29.16 2020-01-24
  */
 trait LAST_MODIFIEDtrait
 {
     /**
-     * @var null|Pc component property LAST-MODIFIED value
+     * @var array component property LAST-MODIFIED value
      */
-    protected ? Pc $lastmodified = null;
+    protected $lastmodified = null;
 
     /**
      * Return formatted output for calendar component property last-modified
@@ -55,14 +59,17 @@ trait LAST_MODIFIEDtrait
      * @return string
      * @throws Exception
      * @throws InvalidArgumentException
-     * @since 2.41.55 - 2022-08-13
+     * @since 2.29.9 2019-08-05
      */
     public function createLastmodified() : string
     {
-        return  DtxProperty::format(
+        if( empty( $this->lastmodified )) {
+            return Util::$SP0;
+        }
+        return StringFactory::createElement(
             self::LAST_MODIFIED,
-            $this->lastmodified,
-            $this->getConfig( self::ALLOWEMPTY )
+            ParameterFactory::createParams( $this->lastmodified[Util::$LCparams] ),
+            DateTimeFactory::dateTime2Str( $this->lastmodified[Util::$LCvalue] )
         );
     }
 
@@ -82,51 +89,41 @@ trait LAST_MODIFIEDtrait
      * Return calendar component property last-modified
      *
      * @param null|bool   $inclParam
-     * @return bool|string|DateTime|Pc
+     * @return bool|DateTime|array
      * @since 2.29.9 2019-08-05
      */
-    public function getLastmodified( ? bool $inclParam = false ) : DateTime | bool | string | Pc
+    public function getLastmodified( $inclParam = false )
     {
         if( empty( $this->lastmodified )) {
             return false;
         }
-        return $inclParam ? clone $this->lastmodified : $this->lastmodified->value;
-    }
-
-    /**
-     * Return bool true if set (and ignore empty property)
-     *
-     * @return bool
-     * @since 2.41.35 2022-03-28
-     */
-    public function isLastmodifiedSet() : bool
-    {
-        return ! empty( $this->lastmodified->value );
+        return ( $inclParam )
+            ? $this->lastmodified
+            : $this->lastmodified[Util::$LCvalue];
     }
 
     /**
      * Set calendar component property last-modified
      *
-     * @param null|string|Pc|DateTimeInterface  $value
-     * @param null|array $params
+     * @param null|string|DateTimeInterface  $value
+     * @param null|array  $params
      * @return static
      * @throws Exception
      * @throws InvalidArgumentException
      * @since 2.29.16 2020-01-24
      */
-    public function setLastmodified(
-        null | string | Pc | DateTimeInterface $value = null,
-        ? array $params = []
-    ) : static
+    public function setLastmodified( $value = null, $params = [] ) : self
     {
-        $value = ( $value instanceof Pc )
-            ? clone $value
-            : Pc::factory( $value, $params );
-        $value->addParamValue(self::DATE_TIME ); // req
-        $this->lastmodified = empty( $value->value )
-            ? $value->setValue( DateTimeFactory::factory( null, self::UTC ))
-                ->removeParam( self::VALUE )
-            : DateTimeFactory::setDate( $value, true );
+        if( empty( $value )) {
+            $this->lastmodified = [
+                Util::$LCvalue  => DateTimeFactory::factory( null, self::UTC ),
+                Util::$LCparams => [],
+            ];
+            return $this;
+        }
+        $params = array_change_key_case( $params, CASE_UPPER );
+        $params[Vcalendar::VALUE] = Vcalendar::DATE_TIME;
+        $this->lastmodified = DateTimeFactory::setDate( $value, $params, true ); // $forceUTC
         return $this;
     }
 }

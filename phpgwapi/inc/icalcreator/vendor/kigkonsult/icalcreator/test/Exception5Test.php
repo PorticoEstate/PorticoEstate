@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -28,97 +28,225 @@
  */
 namespace Kigkonsult\Icalcreator;
 
-use Exception;
-use Kigkonsult\Icalcreator\Util\StringFactory;
 use PHPUnit\Framework\TestCase;
+use Kigkonsult\Icalcreator\Util\StringFactory;
+use Exception;
 
 /**
  * class Exception5Test
  *
- * Testing SEQUENCE/PERCENT_COMPLETE integer exceptions
+ * Testing ALLOWEMPTY = false exceptions
  *
  * @since  2.27.14 - 2019-02-27
  */
 class Exception5Test extends TestCase
 {
+    private static $ERRFMT = "%s error in case #%s, <%s>->%s";
+
     /**
-     * integerTest provider
-     *
-     * @return mixed[]
+     * AllowEmptyTest1 provider
      */
-    public function integerTestProvider() : array
+    public function AllowEmptyTest1Provider()
     {
         $dataArr = [];
 
         $dataArr[] = [
             11,
             [
-                IcalInterface::SEQUENCE         => [ IcalInterface::VEVENT, IcalInterface::VTODO, IcalInterface::VJOURNAL ],
-            ],
-            'NaN',
+                Vcalendar::VEVENT =>
+                    [
+                        Vcalendar::ATTACH, Vcalendar::ATTENDEE, Vcalendar::CATEGORIES,
+                        Vcalendar::KLASS, Vcalendar::COMMENT, Vcalendar::CONTACT,
+                        Vcalendar::DESCRIPTION, Vcalendar::DTEND, Vcalendar::DTSTART,
+                        Vcalendar::DURATION, Vcalendar::EXDATE, Vcalendar::EXRULE,
+                        Vcalendar::GEO, Vcalendar::LOCATION, Vcalendar::ORGANIZER,
+                        Vcalendar::PRIORITY, Vcalendar::RECURRENCE_ID, Vcalendar::RELATED_TO,
+                        Vcalendar::REQUEST_STATUS, Vcalendar::RESOURCES, Vcalendar::RRULE, Vcalendar::RDATE,
+                        Vcalendar::STATUS, Vcalendar::SUMMARY, Vcalendar::TRANSP, Vcalendar::URL,
+                    ],
+            ]
         ];
 
         $dataArr[] = [
             12,
             [
-                IcalInterface::SEQUENCE         => [ IcalInterface::VEVENT, IcalInterface::VTODO, IcalInterface::VJOURNAL ],
+                Vcalendar::VTODO => [
+                    Vcalendar::ATTACH, Vcalendar::ATTENDEE, Vcalendar::CATEGORIES,
+                    Vcalendar::KLASS, Vcalendar::COMMENT, Vcalendar::COMPLETED, Vcalendar::CONTACT,
+                    Vcalendar::DESCRIPTION, Vcalendar::DTSTART, Vcalendar::DUE,
+                    Vcalendar::DURATION, Vcalendar::EXDATE, Vcalendar::EXRULE,
+                    Vcalendar::GEO, Vcalendar::LOCATION, Vcalendar::ORGANIZER,
+                    Vcalendar::PRIORITY, Vcalendar::RECURRENCE_ID, Vcalendar::RELATED_TO,
+                    Vcalendar::REQUEST_STATUS, Vcalendar::RESOURCES, Vcalendar::RRULE, Vcalendar::RDATE,
+                    Vcalendar::STATUS, Vcalendar::SUMMARY, Vcalendar::URL,
+                ],
             ],
-            -1,
         ];
 
         $dataArr[] = [
-            21,
+            13,
             [
-                IcalInterface::PERCENT_COMPLETE => [ IcalInterface::VTODO ],
+                Vcalendar::VJOURNAL => [
+                    Vcalendar::ATTACH, Vcalendar::ATTENDEE, Vcalendar::CATEGORIES,
+                    Vcalendar::KLASS, Vcalendar::COMMENT, Vcalendar::CONTACT,
+                    Vcalendar::DESCRIPTION, Vcalendar::DTSTART,
+                    Vcalendar::EXDATE, Vcalendar::EXRULE,
+                    Vcalendar::ORGANIZER,
+                    Vcalendar::RECURRENCE_ID, Vcalendar::RELATED_TO,
+                    Vcalendar::REQUEST_STATUS, Vcalendar::RRULE, Vcalendar::RDATE,
+                    Vcalendar::STATUS, Vcalendar::SUMMARY, Vcalendar::URL,
+                ],
             ],
-            'NaN',
         ];
 
         $dataArr[] = [
-            22,
+            14,
             [
-                IcalInterface::PERCENT_COMPLETE => [ IcalInterface::VTODO ],
-            ],
-            -1,
+                Vcalendar::VFREEBUSY => [
+                    Vcalendar::ATTENDEE, Vcalendar::COMMENT, Vcalendar::CONTACT,
+                    Vcalendar::DTEND, Vcalendar::DTSTART, Vcalendar::DURATION,
+                    Vcalendar::FREEBUSY, Vcalendar::REQUEST_STATUS, Vcalendar::URL,
+                ],
+            ]
         ];
 
         $dataArr[] = [
-            23,
+            15,
             [
-                IcalInterface::PERCENT_COMPLETE => [ IcalInterface::VTODO ],
-            ],
-            101,
+                Vcalendar::VTIMEZONE => [
+                    Vcalendar::TZID, Vcalendar::TZURL,
+                ],
+            ]
         ];
 
         return $dataArr;
     }
 
     /**
-     * Testing SEQUENCE/PERCENT_COMPLETE integer exceptions
+     * Test Vevent, Vtodo, Vjournal, Vfreebusy, Vtimezone
      *
      * @test
-     * @dataProvider integerTestProvider
-     * @param int     $case
-     * @param mixed[] $propComps
-     * @param mixed   $value
+     * @dataProvider AllowEmptyTest1Provider
+     * @param int    $case
+     * @param array  $compProps
      */
-    public function integerTest( int $case, array $propComps, mixed $value ) : void
+    public function AllowEmptyTest1( $case, $compProps )
     {
-        $calendar = new Vcalendar();
-        foreach( $propComps as $propName => $theComps ) {
-            $setMethod    = StringFactory::getSetMethodName( $propName );
-            foreach( $theComps as $theComp ) {
-                $newMethod = 'new' . $theComp;
-                $ok        = false;
+        $calendar = new Vcalendar( [ Vcalendar::ALLOWEMPTY => false ] );
+        foreach( $compProps as $theComp => $propNames ) {
+            $newMethod = 'new' . $theComp;
+            $comp = $calendar->{$newMethod}();
+            foreach( $propNames as $propName ) {
+                $setMethod = StringFactory::getSetMethodName( $propName );
+                $ok = false;
                 try {
-                    $calendar->{$newMethod}()
-                             ->{$setMethod}( $value );
+                    $comp->{$setMethod}();
                 }
                 catch( Exception $e ) {
                     $ok = true;
                 }
-                $this->assertTrue( $ok, 'error in case #' . $case );
+                $this->assertTrue( $ok, sprintf( self::$ERRFMT, __FUNCTION__ , $case, $theComp, $propName ));
+            } // end foreach
+        } // end foreach
+    }
+
+    /**
+     * Test Vevent, Vtodo, Vjournal, Vfreebusy, Vtimezone X-prop
+     *
+     * @test
+     */
+    public function AllowEmptyTest2()
+    {
+        $comps = [
+            Vcalendar::VEVENT,
+            Vcalendar::VTODO,
+            Vcalendar::VJOURNAL,
+            Vcalendar::VFREEBUSY,
+            Vcalendar::VTIMEZONE
+        ];
+        $calendar = new Vcalendar( [ Vcalendar::ALLOWEMPTY => false ] );
+        foreach( $comps as $x => $theComp ) {
+            $newMethod = 'new' . $theComp;
+            $ok = false;
+            try {
+                $calendar->{$newMethod}()->setXprop();
             }
-        }
+            catch( Exception $e ) {
+                $ok = true;
+            }
+            $this->assertTrue( $ok, sprintf( self::$ERRFMT, __FUNCTION__, $x, $theComp, 'xProp' ) );
+        } // end foreach
+    }
+
+    /**
+     * Test Valarm X-prop
+     *
+     * @test
+     */
+    public function AllowEmptyTest3()
+    {
+        $compProps = [
+            Vcalendar::VEVENT => [
+                Vcalendar::ACTION, Vcalendar::DESCRIPTION, Vcalendar::TRIGGER, Vcalendar::SUMMARY,
+                Vcalendar::ATTENDEE,
+                Vcalendar::DURATION, Vcalendar::REPEAT,
+                Vcalendar::ATTACH,
+            ],
+            Vcalendar::VTODO => [
+                Vcalendar::ACTION, Vcalendar::DESCRIPTION, Vcalendar::TRIGGER, Vcalendar::SUMMARY,
+                Vcalendar::ATTENDEE,
+                Vcalendar::DURATION, Vcalendar::REPEAT,
+                Vcalendar::ATTACH,
+            ],
+        ];
+        $calendar = new Vcalendar( [ Vcalendar::ALLOWEMPTY => false ] );
+        foreach( $compProps as $theComp => $propNames) {
+            $newMethod = 'new' . $theComp;
+            $comp      = $calendar->{$newMethod}()->newValarm();
+            foreach( $propNames as $x => $propName ) {
+                $setMethod = StringFactory::getSetMethodName( $propName );
+                $ok        = false;
+                try {
+                    $comp->{$setMethod}();
+                }
+                catch( Exception $e ) {
+                    $ok = true;
+                }
+                $this->assertTrue( $ok, sprintf( self::$ERRFMT, __FUNCTION__, $x, $theComp, $propName ) );
+            } // end foreach
+        } // end foreach
+    }
+
+    /**
+     * Test Valarm/Standard/Daylight X-prop
+     *
+     * @test
+     */
+    public function AllowEmptyTest4()
+    {
+        $compProps = [
+            Vcalendar::VEVENT => [
+                Vcalendar::VALARM
+            ],
+            Vcalendar::VTIMEZONE => [
+                Vcalendar::STANDARD,
+                Vcalendar::DAYLIGHT
+            ],
+        ];
+        $calendar = new Vcalendar( [ Vcalendar::ALLOWEMPTY => false ] );
+        foreach( $compProps as $theComp => $compNames ) {
+            $newMethod1 = 'new' . $theComp;
+            foreach( $compNames as $x => $subComp ) {
+                $newMethod2 = 'new' . $subComp;
+                $ok = false;
+                try {
+                    $calendar->{$newMethod1}()->{$newMethod2}()->setXprop();
+                }
+                catch( Exception $e ) {
+                    $ok = true;
+                }
+                $this->assertTrue( $ok, sprintf( self::$ERRFMT, __FUNCTION__, $x, $theComp, 'xProp' ) );
+            } // end foreach
+        } // end foreach
     }
 }

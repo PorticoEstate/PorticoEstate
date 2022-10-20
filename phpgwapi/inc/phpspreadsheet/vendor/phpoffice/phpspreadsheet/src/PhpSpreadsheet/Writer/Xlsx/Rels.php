@@ -67,13 +67,12 @@ class Rels extends WriterPart
             'xl/workbook.xml'
         );
         // a custom UI in workbook ?
-        $target = $spreadsheet->getRibbonXMLData('target');
         if ($spreadsheet->hasRibbon()) {
             $this->writeRelationShip(
                 $objWriter,
                 5,
                 'http://schemas.microsoft.com/office/2006/relationships/ui/extensibility',
-                is_string($target) ? $target : ''
+                $spreadsheet->getRibbonXMLData('target')
             );
         }
 
@@ -285,7 +284,7 @@ class Rels extends WriterPart
         return $objWriter->getData();
     }
 
-    private function writeUnparsedRelationship(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $worksheet, XMLWriter $objWriter, string $relationship, string $type): void
+    private function writeUnparsedRelationship(\PhpOffice\PhpSpreadsheet\Worksheet\Worksheet $worksheet, XMLWriter $objWriter, $relationship, $type): void
     {
         $unparsedLoadedData = $worksheet->getParent()->getUnparsedLoadedData();
         if (!isset($unparsedLoadedData['sheets'][$worksheet->getCodeName()][$relationship])) {
@@ -449,7 +448,7 @@ class Rels extends WriterPart
     /**
      * Write Override content type.
      *
-     * @param int|string $id Relationship ID. rId will be prepended!
+     * @param int $id Relationship ID. rId will be prepended!
      * @param string $type Relationship type
      * @param string $target Relationship target
      * @param string $targetMode Relationship target mode

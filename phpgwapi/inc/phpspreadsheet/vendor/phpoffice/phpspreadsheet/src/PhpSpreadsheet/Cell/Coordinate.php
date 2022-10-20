@@ -2,7 +2,6 @@
 
 namespace PhpOffice\PhpSpreadsheet\Cell;
 
-use PhpOffice\PhpSpreadsheet\Calculation\Functions;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
@@ -350,19 +349,6 @@ abstract class Coordinate
      */
     public static function extractAllCellReferencesInRange($cellRange): array
     {
-        if (substr_count($cellRange, '!') > 1) {
-            throw new Exception('3-D Range References are not supported');
-        }
-
-        [$worksheet, $cellRange] = Worksheet::extractSheetTitle($cellRange, true);
-        $quoted = '';
-        if ($worksheet > '') {
-            $quoted = Worksheet::nameRequiresQuotes($worksheet) ? "'" : '';
-            if (substr($worksheet, 0, 1) === "'" && substr($worksheet, -1, 1) === "'") {
-                $worksheet = substr($worksheet, 1, -1);
-            }
-            $worksheet = str_replace("'", "''", $worksheet);
-        }
         [$ranges, $operators] = self::getCellBlocksFromRangeString($cellRange);
 
         $cells = [];
@@ -378,12 +364,7 @@ abstract class Coordinate
 
         $cellList = array_merge(...$cells);
 
-        return array_map(
-            function ($cellAddress) use ($worksheet, $quoted) {
-                return ($worksheet !== '') ? "{$quoted}{$worksheet}{$quoted}!{$cellAddress}" : $cellAddress;
-            },
-            self::sortCellReferenceArray($cellList)
-        );
+        return self::sortCellReferenceArray($cellList);
     }
 
     private static function processRangeSetOperators(array $operators, array $cells): array

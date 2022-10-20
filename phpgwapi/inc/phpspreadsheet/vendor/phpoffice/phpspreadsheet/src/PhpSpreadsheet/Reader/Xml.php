@@ -18,7 +18,6 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Shared\File;
 use PhpOffice\PhpSpreadsheet\Shared\StringHelper;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use SimpleXMLElement;
 
 /**
@@ -365,7 +364,7 @@ class Xml extends BaseReader
                                 $rowTo = $rowTo + $cell_ss['MergeDown'];
                             }
                             $cellRange .= ':' . $columnTo . $rowTo;
-                            $spreadsheet->getActiveSheet()->mergeCells($cellRange, Worksheet::MERGE_CELL_CONTENT_HIDE);
+                            $spreadsheet->getActiveSheet()->mergeCells($cellRange);
                         }
 
                         $hasCalculatedValue = false;

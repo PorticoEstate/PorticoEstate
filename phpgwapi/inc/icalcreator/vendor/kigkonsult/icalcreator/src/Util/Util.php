@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -33,93 +33,77 @@ use InvalidArgumentException;
 use function array_key_exists;
 use function in_array;
 use function is_array;
+use function strtolower;
 use function strtoupper;
+use function ucfirst;
 
 /**
  * iCalcreator utility/support class
  *
- * @since  2.41.36 - 2022-04-03
+ * @since  2.27.2 - 2018-12-21
  */
 class Util
 {
     /**
      * @var string  misc. values
-     * @deprecated
      */
-    public static string $LCvalue       = 'value';
+    public static $LCvalue       = 'value';
+    public static $LCparams      = 'params';
+    public static $ISLOCALTIME   = 'ISLOCALTIME';
+    public static $CRLF          = "\r\n";
+    public static $COMMA         = ',';
+    public static $COLON         = ':';
+    public static $SEMIC         = ';';
+    public static $MINUS         = '-';
+    public static $PLUS          = '+';
+    public static $SP0           = '';
+    public static $SP1           = ' ';
+    public static $ZERO          = '0';
+    public static $DOT           = '.';
+    public static $SLASH         = '/';
 
     /**
-     * @var string
-     * @deprecated
+     * Return bool true if compType is in array
+     *
+     * @param string $compType   component name
+     * @param array  $compList   list of components
+     * @return bool
+     * @since  2.26 - 2018-11-03
      */
-    public static string $LCparams      = 'params';
+    public static function isCompInList( string $compType, array $compList ) : bool
+    {
+        if( empty( $compType )) {
+            return false;
+        }
+        return in_array( ucfirst( strtolower( $compType )), $compList);
+    }
 
     /**
-     * @var string
+     * Return bool true if property is in array
+     *
+     * @param string $propName   property name
+     * @param array  $propList   list of properties
+     * @return bool
+     * @since  2.26 - 2018-11-04
      */
-    public static string $CRLF          = "\r\n";
-
-    /**
-     * @var string
-     */
-    public static string $COMMA         = ',';
-
-    /**
-     * @var string
-     */
-    public static string $COLON         = ':';
-
-    /**
-     * @var string
-     */
-    public static string $SEMIC         = ';';
-
-    /**
-     * @var string
-     */
-    public static string $MINUS         = '-';
-
-    /**
-     * @var string
-     */
-    public static string $PLUS          = '+';
-
-    /**
-     * @var string
-     */
-    public static string $SP0           = '';
-
-    /**
-     * @var string
-     */
-    public static string $SP1           = ' ';
-
-    /**
-     * @var string
-     */
-    public static string $ZERO          = '0';
-
-    /**
-     * @var string
-     */
-    public static string $DOT           = '.';
-
-    /**
-     * @var string
-     */
-    public static string $SLASH         = '/';
+    public static function isPropInList( string $propName, array $propList ) : bool
+    {
+        return in_array( strtoupper( $propName ), $propList);
+    }
 
     /**
      * Return bool true if array key is isset and not empty
      *
      * @param mixed  $array
-     * @param null|string $key
+     * @param string $key
      * @return bool
      * @since  2.26.14 - 2019-01-28
      */
-    public static function issetAndNotEmpty( mixed $array = null, ? string $key = null) : bool
+    public static function issetAndNotEmpty( $array = null, $key = null) : bool
     {
-        if( empty( $array ) || ! is_array( $array )) {
+        if( empty( $array ) ||
+            ! is_array( $array ) ||
+            ! array_key_exists( $key, $array )) {
             return false;
         }
         return ( isset( $array[$key] ) && ! empty( $array[$key] ));
@@ -134,34 +118,32 @@ class Util
      * @return bool
      * @since  2.26.14 - 2019-03-01
      */
-    public static function issetKeyAndEquals( mixed $base, string $key, string $value ) : bool
+    public static function issetKeyAndEquals( $base, string $key, string $value ) : bool
     {
         if( empty( $base ) ||
             ! is_array( $base ) ||
             ! array_key_exists( $key, $base )) {
             return false;
         }
-        return ( $value === $base[$key] );
+        return ( $value == $base[$key] );
     }
 
     /**
-     * Assert value is integer (and in range)
+     * Assert value is integer
      *
      * @param mixed  $value
      * @param string $propName
-     * @param null|int $rangeMin
-     * @param null|int $rangeMax
-     * @return void
+     * @param int $rangeMin
+     * @param int $rangeMax
      * @throws InvalidArgumentException
      * @since  2.27.14 - 2019-02-19
      */
     public static function assertInteger(
-        mixed $value,
+        $value,
         string $propName,
-        ? int $rangeMin = null,
-        ? int $rangeMax = null
-    ) : void
-    {
+        $rangeMin = null,
+        $rangeMax = null
+    ) {
         static $ERR1 = '%s expects integer value, got %s';
         static $ERR2 = '%s value %s not in range (%d-%d)';
         if( ! is_scalar( $value ) || ! ctype_digit( (string) $value )) {
@@ -169,18 +151,17 @@ class Util
                 sprintf( $ERR1, $propName, var_export( $value, true ))
             );
         }
-        $value    = (int) $value;
-        $rangeMin = $rangeMin ?? $value;
-        $rangeMax = $rangeMax ?? $value;
-        if(( $rangeMin > $value ) || ( $rangeMax < $value )) {
+        if( ( ! is_null( $rangeMin ) && ( $rangeMin > $value )) ||
+            ( ! is_null( $rangeMax )) && ( $rangeMax < $value )) {
             throw new InvalidArgumentException(
                 sprintf( $ERR2, $propName, $value, $rangeMin, $rangeMax )
             );
         }
+
     }
 
     /**
-     * Assert value is string (i.e. scalar, return string)
+     * Assert value is string
      *
      * @param mixed  $value
      * @param string $propName
@@ -188,34 +169,42 @@ class Util
      * @throws InvalidArgumentException
      * @since  2.29.14 - 2019-09-03
      */
-    public static function assertString( mixed $value, string $propName ) : string
+    public static function assertString( $value, string $propName ) : string
     {
         static $ERR1 = '%s expects string value, got (%s) %s';
         if( ! is_scalar( $value )) {
             throw new InvalidArgumentException(
-                sprintf( $ERR1, $propName, gettype( $value ), var_export( $value, true ))
+                sprintf(
+                    $ERR1,
+                    $propName,
+                    gettype( $value ),
+                    var_export( $value, true )
+                )
             );
         }
-        return (string) $value;
+        return  (string) $value;
     }
 
     /**
      * Assert value in enumeration
      *
      * @param mixed  $value
-     * @param string[] $enumeration - all upper case
+     * @param array  $enumeration - all upper case
      * @param string $propName
-     * @return void
      * @throws InvalidArgumentException
      * @since  2.27.2 - 2019-01-04
      */
-    public static function assertInEnumeration( mixed  $value, array  $enumeration, string $propName ) : void
-    {
+    public static function assertInEnumeration(
+        $value,
+        array $enumeration,
+        string $propName
+    ) {
         static $ERR = 'Invalid %s value : %s';
-        if( ! in_array( strtoupper( $value ), $enumeration, true )) {
+        if( ! in_array( strtoupper( $value ), $enumeration )) {
             throw new InvalidArgumentException(
                 sprintf( $ERR, $propName, var_export( $value, true ))
             );
         }
     }
 }
+
