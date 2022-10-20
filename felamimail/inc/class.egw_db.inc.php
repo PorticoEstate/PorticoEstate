@@ -50,7 +50,8 @@ if(empty($GLOBALS['phpgw_info']['server']['db_type']))
 {
 	$GLOBALS['phpgw_info']['server']['db_type'] = 'mysql';
 }
-include_once(PHPGW_API_INC.'/adodb/adodb.inc.php');
+
+require_once PHPGW_API_INC . '/adodb/vendor/adodb/adodb-php/adodb.inc.php';
 
 class egw_db
 {
