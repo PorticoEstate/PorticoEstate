@@ -194,6 +194,7 @@
 			$order_dim1			 = isset($data['order_dim1']) && $data['order_dim1'] ? (int)$data['order_dim1'] : 0;
 			$custom_filtermethod = isset($data['custom_filtermethod']) && $data['custom_filtermethod'] ? (array)$data['custom_filtermethod'] : array();
 			$check_date_type	 = isset($data['check_date_type']) && $data['check_date_type'] ? (int)$data['check_date_type'] : 1;
+			$include_location_parent = !empty($data['include_location_parent']) ? true : false;
 
 
 			$result_order_field	 = array();
@@ -579,8 +580,32 @@
 
 			if ($location_code)
 			{
-				$filtermethod	 .= " $where fm_tts_tickets.location_code {$this->like} '{$location_code}%'";
+				$filter_parent = '';
+				if($include_location_parent)
+				{
+					$location_arr = explode('-', $location_code);
+					$location_arr_parent = $location_arr;
+					array_pop($location_arr_parent);
+
+					$filter_parent_arr = array();
+					$loops = count($location_arr_parent);
+
+					if($location_arr_parent)
+					{
+						for ($m = 0; $m < $loops; $m++)
+						{
+							$filter_parent_arr[] = implode('-', $location_arr_parent);
+							array_pop($location_arr_parent);
+						}
+
+						$filter_parent = " OR fm_tts_tickets.location_code IN ('" . implode("', '", $filter_parent_arr) . "')" ;
+					}
+				}
+
+				$filtermethod	 .= " $where (fm_tts_tickets.location_code {$this->like} '{$location_code}%' {$filter_parent})";
 				$where			 = 'AND';
+
+				
 			}
 
 			foreach ($custom_filtermethod as $custom_filter_key => $custom_filter_value)
