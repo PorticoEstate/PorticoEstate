@@ -95,6 +95,8 @@
 			$uicols['descr'][] = lang('status');
 			$uicols['name'][] = 'user';
 			$uicols['descr'][] = lang('user');
+			$uicols['name'][] = 'location_code';
+			$uicols['descr'][] = lang('location');
 
 			$count_uicols_name = count($uicols['name']);
 
@@ -109,7 +111,7 @@
 				);
 
 				$params['sortable'] = false;
-				if ($uicols['name'][$k] == 'id' || $uicols['name'][$k] == 'user' || $uicols['name'][$k] == 'entry_date')
+				if ($uicols['name'][$k] == 'id' || $uicols['name'][$k] == 'user' || $uicols['name'][$k] == 'entry_date' || $uicols['name'][$k] == 'location_code')
 				{
 					$params['sortable'] = true;
 				}
@@ -227,6 +229,7 @@
 			if (isset($this->location_code) && $this->location_code != '')
 			{
 				$params['location_code'] = $this->location_code;
+				$params['include_location_parent'] = true;
 				$ticket_list = $bo->read($params);
 			}
 			else
