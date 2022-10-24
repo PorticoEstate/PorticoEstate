@@ -76,7 +76,7 @@
 						<label class="text-uppercase">
 							<xsl:value-of select="php:function('lang', 'Message')" />
 						</label>
-						<textarea id="field-message" class="form-control" name="message" type="text">
+						<textarea id="field_message" class="form-control" name="message" type="text">
 							<xsl:value-of select="system_message/message"/>
 						</textarea>
 					</div>
@@ -99,7 +99,7 @@
 	</div>
 	<div class="push"></div>
 	<script>
-		var initialSelection = <xsl:value-of select="booking/resources_json" />
+		var initialSelection = <xsl:value-of select="event/resources_json" />
 		var lang = <xsl:value-of select="php:function('js_lang', 'Resource Type')" />;
 	</script>
 </xsl:template>

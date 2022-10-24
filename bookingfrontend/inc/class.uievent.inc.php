@@ -387,7 +387,7 @@
 			}
 			$this->flash_form_errors($errors);
 			$date = substr($event['from_'], 0, 10);
-			self::add_javascript('bookingfrontend', 'base', 'event.js');
+
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
 
 			if ($from_org && $event['customer_organization_id'] !== null)
@@ -409,7 +409,7 @@
 			$event['from_'] = pretty_timestamp($event['from_']);
 			$event['to_'] = pretty_timestamp($event['to_']);
 
-			self::rich_text_editor('field-message');
+			self::rich_text_editor('field_message');
 
 			self::render_template_xsl('event_delete', array('event' => $event, 'activities' => $activities,
 				'can_delete_events' => $can_delete_events));
