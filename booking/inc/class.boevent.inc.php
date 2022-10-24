@@ -189,7 +189,7 @@
 		{
 			if (empty($GLOBALS['phpgw_info']['server']['smtp_server']))
 			{
-//				return;
+				return;
 			}
 			$send = CreateObject('phpgwapi.send');
 
