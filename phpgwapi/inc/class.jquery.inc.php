@@ -630,8 +630,6 @@ JS;
 				var toolbarOptions = [
                 ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],
-  //              ['fontname', ['fontname']],
-  //              ['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['table', ['table']],
                 ['insert', ['link', 'picture']],
@@ -649,8 +647,7 @@ JS;
 			  {$disableDragAndDrop}
 			  placeholder: '{$lang_placeholder}',
 			  height: 250,
-			  toolbar: toolbarOptions,
-//			  dialogsInBody: true
+			  toolbar: toolbarOptions
 			});
 		});
 JS;
@@ -683,21 +680,10 @@ JS;
 			var quill = {};
 			var toolbarOptions = [
 			  ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-//			  ['blockquote', 'code-block'],
-
-//			  [{ 'header': 1 }, { 'header': 2 }],               // custom button values
 			  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-//			  [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
 			  [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-//			  [{ 'direction': 'rtl' }],                         // text direction
-
-//			  [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
 			  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-
-//			  [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-//			  [{ 'font': [] }],
 			  [{ 'align': [] }],
-
 			  ['clean']                                         // remove formatting button
 			];
 
@@ -714,9 +700,10 @@ JS;
 				   toolbar: toolbarOptions
 				 },
 			    table: true,
-				placeholder: '',
+				placeholder: 'Skriv her',
 			    theme: 'snow'
 			 });
+
 			quill.$target = editors.$target;
 
 		});
