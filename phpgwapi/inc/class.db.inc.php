@@ -94,6 +94,8 @@
 
 		var $resultSet = array();
 
+		var $Record = array();
+
 		var $fetchmode = 'ASSOC';//'BOTH';
 
 		protected $Transaction  = false;
