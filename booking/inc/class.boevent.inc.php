@@ -187,8 +187,10 @@
 		 */
 		function send_admin_notification( $type, $event, $message = null, $orgdate = null )
 		{
-			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
+			if (empty($GLOBALS['phpgw_info']['server']['smtp_server']))
+			{
 				return;
+			}
 			$send = CreateObject('phpgwapi.send');
 
 			$config = CreateObject('phpgwapi.config', 'booking');
