@@ -105,7 +105,6 @@
 		public function find_expired()
 		{
 			$table_name = $this->table_name;
-			$db = $this->db;
 			$expired_conditions = $this->find_expired_sql_conditions();
 			return $this->read(array('filters' => array('where' => $expired_conditions), 'results' => 1000));
 		}
@@ -117,8 +116,23 @@
 		protected function find_expired_sql_conditions()
 		{
 			$table_name = $this->table_name;
-			$now = date('Y-m-d H:i:s', time() - 10 * 60);
-			return "({$table_name}.active != 0 AND {$table_name}.entry_time < '{$now}')";
+
+			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+
+			try
+			{
+				$DateTimeZone	 = new DateTimeZone($timezone);
+			}
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
+
+			$now = new DateTime('now', $DateTimeZone);
+			$now->modify('-10 minutes');
+			$now_string = $now->format('Y-m-d H:i');
+
+			return "({$table_name}.active != 0 AND {$table_name}.entry_time < '{$now_string}')";
 		}
 
 	}
