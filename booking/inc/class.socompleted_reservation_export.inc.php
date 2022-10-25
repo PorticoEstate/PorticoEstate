@@ -810,6 +810,7 @@
 			$log_customer_name = '';
 			$log_customer_nr = '';
 			$log_buidling = '';
+			$contact_name = '';
 
 			$internal = false;
 
@@ -825,11 +826,69 @@
 
 			foreach ($reservations as &$reservation)
 			{
-				$output[] = implode('', str_replace(array("\n", "\r"), '', $startpost));
+
+				switch ($reservation['reservation_type'])
+				{
+					case 'allocation':
+						$test = $this->allocation_bo->read_single($reservation['reservation_id']);
+						break;
+					case 'booking':
+						$test = $this->booking_bo->read_single($reservation['reservation_id']);
+						break;
+					case 'event':
+						$test = $this->event_bo->read_single($reservation['reservation_id']);
+						break;
+					default:
+						break;
+				}
+
+				if(empty($test['id']))
+				{
+					continue; //Reservation has been deleted
+				}
+
+				if(empty($test['active']))
+				{
+					continue; //Reservation has been de-activated
+				}
 
 				if ($this->get_cost_value($reservation['cost']) <= 0)
 				{
 					continue; //Don't export costless rows
+				}
+
+				$output[] = implode('', str_replace(array("\n", "\r"), '', $startpost));
+
+				/**
+				 * Get contact person
+				 */
+				switch ($reservation['reservation_type'])
+				{
+					case 'allocation':
+						if (!empty($reservation['organization_id']))
+						{
+							$org = $this->organization_bo->read_single($reservation['organization_id']);
+							if(!empty($org['contacts'][0]['name']))
+							{
+								$contact_name = iconv("utf-8", "ISO-8859-1//TRANSLIT", $org['contacts'][0]['name']);
+							}
+						}
+						break;
+					case 'booking':
+						if(!empty($test['group_id']))
+						{
+							$group = CreateObject('booking.sogroup')->read_single($test['group_id']);
+							if(!empty($group['contacts'][0]['name']))
+							{
+								$contact_name = iconv("utf-8", "ISO-8859-1//TRANSLIT", $group['contacts'][0]['name']);
+							}
+						}
+						break;
+					case 'event':
+						$contact_name = iconv("utf-8", "ISO-8859-1//TRANSLIT", $test['contact_name']);
+						break;
+					default:
+						break;
 				}
 
 
@@ -866,10 +925,12 @@
 				}
 
 
+				$customer_number = '';
 				if (!empty($reservation['organization_id']))
 				{
 					$org = $this->organization_bo->read_single($reservation['organization_id']);
 					$reservation['organization_name'] = $org['name'];
+					$customer_number =  $org['customer_number'];
 					if(empty($street))
 					{
 						$street = $org['street'];
@@ -1017,6 +1078,7 @@
 						$fakturalinje['posttype'] = 'FL';
 						$fakturalinje['kundenr'] = $kundenr;
 						$fakturalinje['navn'] = $name;
+						$fakturalinje['deresref'] = $contact_name;
 
 						$fakturalinje['adresse1'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $street), 0, 40), 40, ' '); //40 chars long
 						$fakturalinje['adresse2'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $city), 0, 40), 40, ' '); //40 chars long
@@ -1074,6 +1136,8 @@
 					$fakturalinje['posttype'] = 'FL';
 					$fakturalinje['kundenr'] = $kundenr;
 					$fakturalinje['navn'] = $name;
+					$fakturalinje['deresref'] = $contact_name;
+
 
 					$fakturalinje['adresse1'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $street), 0, 40), 40, ' '); //40 chars long
 					$fakturalinje['adresse2'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $city), 0, 40), 40, ' '); //40 chars long
