@@ -451,7 +451,7 @@
 					}
 				}
 			}
-			return $contacts;
+			return array_unique($contacts);
 		}
 
 		public function resource_users( $resources )
