@@ -361,7 +361,8 @@
 							$body_notify_on_accepted .= "<p><b>{$config->config_data['application_equipment']}:</b><br />" . $application['equipment'] . "</p>";
 						}
 
-						foreach ($buildingemail as $email_notify_on_accepted)
+						$_buildingemail = array_unique($buildingemail);
+						foreach ($_buildingemail as $email_notify_on_accepted)
 						{
 							if(!$email_notify_on_accepted)
 							{
@@ -680,7 +681,8 @@
 </html>
 HTML;
 
-			foreach ($mailadresses as $adr)
+			$_mailadresses = array_unique($mailadresses);
+			foreach ($_mailadresses as $adr)
 			{
 				try
 				{

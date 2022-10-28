@@ -157,7 +157,8 @@
 
 			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
 
-			foreach ($mailadresses as $adr)
+			$_mailadresses = array_unique($mailadresses);
+			foreach ($_mailadresses as $adr)
 			{
 				try
 				{
@@ -297,7 +298,8 @@
 			}
 
 			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
-			foreach ($mailadresses as $adr)
+			$_mailadresses = array_unique($mailadresses);
+			foreach ($_mailadresses as $adr)
 			{
 				try
 				{
