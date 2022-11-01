@@ -200,6 +200,7 @@
 			$lang_expired = lang('expired for edit');
 			$lang_edit = lang('edit');
 			$lang_cancel = lang('Cancel booking');
+			$lang_incative = lang('inactive');
 			$lang_rights = lang('Missing rights');
 
 			foreach ($associations as &$association)
@@ -313,9 +314,9 @@
 				else
 				{
 					$association['edit_link']	 = '#';
-					$association['edit_text']	 = $lang_expired;
+					$association['edit_text']	 = $lang_incative;
 					$association['cancel_link']	 = '#';
-					$association['cancel_text']	 = $lang_expired;
+					$association['cancel_text']	 = $lang_incative;
 				}
 
 				$association['type']	 = lang($association['type'] . ' show');
