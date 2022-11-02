@@ -1393,7 +1393,7 @@
 
 					$spreadsheet->setActiveSheetIndex((int)$sheet_id);
 					$rows				 = $spreadsheet->getActiveSheet()->getHighestRow();
-					$highestColumn		 = $spreadsheet->getActiveSheet()->getHighestColumn();
+					$highestColumn		 = $spreadsheet->getActiveSheet()->getHighestColumn($start_line);
 					$highestColumnIndex	 = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
 				}
 				catch (Exception $e)
@@ -1455,13 +1455,14 @@
 			}
 			else if ($rows > 1 && $step == 3)
 			{
-				$_options = array
-					(
+				$_options = array(
 					'_skip_import_'				 => 'Utelates fra import/implisitt',
 					'import_type'				 => 'import type',
 					'building_part'				 => 'bygningsdels kode',
 					'descr'						 => 'Tilstandbeskrivelse',
 					'title'						 => 'Tiltak/overskrift',
+					'remark'					 => 'Tiltak/Merknad',
+					'proposed_measures'			 => 'Tiltak/Foreslåtte tiltak',
 					'condition_degree'			 => 'Tilstandsgrad',
 					'condition_type'			 => 'Konsekvenstype',
 					'consequence'				 => 'Konsekvensgrad',

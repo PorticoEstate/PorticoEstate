@@ -11278,8 +11278,9 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
 	/**
-	* Update property version from 0.9.17.563 to 0.9.17.564
+	* Update property version from 0.9.17.564 to 0.9.17.565
 	* rename reserved columns
 	*
 	*/
@@ -11301,3 +11302,35 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.565 to 0.9.17.566
+	* rename reserved columns
+	*
+	*/
+	$test[] = '0.9.17.755';
+	function property_upgrade0_9_17_755()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request', 'proposed_measures', array(
+			'type' => 'text',
+			'nullable' => True
+			));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request', 'remark', array(
+			'type' => 'text',
+			'nullable' => True
+			));
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_request SET proposed_measures = title");
+	//	$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_request SET descr = title");
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_request SET title = SUBSTRING (title, 1, 60) || '...' WHERE LENGTH (title) > 60");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.756';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	

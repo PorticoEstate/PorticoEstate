@@ -908,6 +908,8 @@
 					'title'						 => $this->_db->f('title', true),
 					'location_code'				 => $this->_db->f('location_code'),
 					'descr'						 => $this->_db->f('descr', true),
+					'proposed_measures'			 => $this->_db->f('proposed_measures', true),
+					'remark'					 => $this->_db->f('remark', true),
 					'status'					 => $this->_db->f('status'),
 					'amount_investment'			 => $amount_investment,
 					'amount_operation'			 => $amount_operation,
@@ -1051,6 +1053,8 @@
 			$value_set['owner']						 = $this->account;
 			$value_set['category']					 = $request['cat_id'];
 			$value_set['descr']						 = $this->_db->db_addslashes($request['descr']);
+			$value_set['proposed_measures']			 = $this->_db->db_addslashes($request['proposed_measures']);
+			$value_set['remark']					 = $this->_db->db_addslashes($request['remark']);
 //			$value_set['location_code']				= $request['location_code'];
 			$value_set['entry_date']				 = time();
 			$value_set['amount_investment']			 = (int)$request['amount_investment'];
@@ -1209,6 +1213,8 @@
 				'end_date'					 => $request['end_date'],
 				'coordinator'				 => $request['coordinator'],
 				'descr'						 => $this->_db->db_addslashes($request['descr']),
+				'proposed_measures'			 => $this->_db->db_addslashes($request['proposed_measures']),
+				'remark'					 => $this->_db->db_addslashes($request['remark']),
 				'amount_investment'			 => (int)$request['amount_investment'],
 				'amount_operation'			 => (int)$request['amount_operation'],
 				'amount_potential_grants'	 => (int)$request['amount_potential_grants'],
