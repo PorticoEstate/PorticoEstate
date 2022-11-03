@@ -522,7 +522,7 @@
 					$request['building_part']		 = (int)$entry['building_part'];
 					$request['coordinator']			 = $survey['coordinator_id'];
 
-					$this->_check_building_part($entry['building_part'], $_update_buildingpart);
+					$this->_check_building_part($request['building_part'], $_update_buildingpart);
 
 					if ($entry['import_type'] == 1)
 					{
