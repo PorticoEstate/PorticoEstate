@@ -130,7 +130,7 @@
 					<xsl:text>required extension</xsl:text>
 				</xsl:attribute>
 				<xsl:attribute name="data-validation-allowing">
-					<xsl:text>xls xlsx</xsl:text>
+					<xsl:text>xls,xlsx</xsl:text>
 				</xsl:attribute>
 			</input>
 		</div>

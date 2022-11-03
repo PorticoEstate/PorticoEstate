@@ -36,9 +36,12 @@
 	$javascripts[] = "/phpgwapi/templates/mobilefrontend/js/keep_alive.js";
 
 	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
-	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
+//	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
+//	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
+//	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/version_3/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
-	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/version_3/grids-responsive-min.css";
 	$stylesheets[] = "/phpgwapi/js/DataTables/DataTables/css/jquery.dataTables.min.css";
 	$stylesheets[] = "/phpgwapi/js/DataTables/DataTables/css/dataTables.jqueryui.min.css";
 	$stylesheets[] = "/phpgwapi/js/DataTables/Responsive/css/responsive.dataTables.min.css";

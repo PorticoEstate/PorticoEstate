@@ -51,16 +51,17 @@
 
 
 	$stylesheets = array();
-//	$stylesheets[] = "/phpgwapi/js/materialize/css/materialize.min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
-//	$stylesheets[] = "/phpgwapi/templates/pure/css/demo_mmenu.css";
-	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
+//	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
+//	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
+//	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/version_3/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
-	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/version_3/grids-responsive-min.css";
+
 	$stylesheets[] = "/phpgwapi/js/DataTables/DataTables/css/jquery.dataTables.min.css";
 	$stylesheets[] = "/phpgwapi/js/DataTables/DataTables/css/dataTables.jqueryui.min.css";
 	$stylesheets[] = "/phpgwapi/js/DataTables/Responsive/css/responsive.dataTables.min.css";
-//	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
 	$stylesheets[] = "/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
 
 	$stylesheets[] = "/phpgwapi/templates/base/css/base.css";

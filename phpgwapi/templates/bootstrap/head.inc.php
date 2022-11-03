@@ -43,9 +43,9 @@
 
 	$stylesheets = array();
 	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
-	$stylesheets[] = "/phpgwapi/templates/pure/css/version_2/pure-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/version_3/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
-	$stylesheets[] = "/phpgwapi/templates/pure/css/version_2/grids-responsive-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/version_3/grids-responsive-min.css";
 
 	$stylesheets[] = "/phpgwapi/js/bootstrap/css/bootstrap.min.css";
 
