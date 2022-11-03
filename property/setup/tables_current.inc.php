@@ -1007,6 +1007,8 @@
 				'loc3' => array('type' => 'varchar', 'precision' => '4', 'nullable' => True),
 				'loc4' => array('type' => 'varchar', 'precision' => '4', 'nullable' => True),
 				'descr' => array('type' => 'text', 'nullable' => True),
+				'remark' => array('type' => 'text', 'nullable' => True),
+				'proposed_measures' => array('type' => 'text', 'nullable' => True),
 				'category' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'owner' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'access' => array('type' => 'varchar', 'precision' => '7', 'nullable' => True),

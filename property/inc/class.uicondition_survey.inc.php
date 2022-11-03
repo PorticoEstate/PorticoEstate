@@ -1310,6 +1310,8 @@
 						'disable'	 => true);
 					$tabs['step_4']	 = array('label'		 => lang('choose columns'), 'link'		 => null,
 						'disable'	 => true);
+					$tabs['step_5']	 = array('label'		 => lang('completed'), 'link'		 => null,
+						'disable'	 => true);
 					break;
 				case 1:
 					$active_tab		 = 'step_2';
@@ -1321,6 +1323,8 @@
 					$tabs['step_3']	 = array('label'		 => lang('choose start line'), 'link'		 => null,
 						'disable'	 => true);
 					$tabs['step_4']	 = array('label'		 => lang('choose columns'), 'link'		 => null,
+						'disable'	 => true);
+					$tabs['step_5']	 = array('label'		 => lang('completed'), 'link'		 => null,
 						'disable'	 => true);
 					break;
 				case 2:
@@ -1334,6 +1338,8 @@
 							'sheet_id'	 => $sheet_id, 'start_line' => $start_line)));
 					$tabs['step_3']	 = array('label' => lang('choose start line'), 'link' => '#step_3');
 					$tabs['step_4']	 = array('label'		 => lang('choose columns'), 'link'		 => null,
+						'disable'	 => true);
+					$tabs['step_5']	 = array('label'		 => lang('completed'), 'link'		 => null,
 						'disable'	 => true);
 					break;
 				case 3:
@@ -1349,6 +1355,17 @@
 							'menuaction' => 'property.uicondition_survey.import', 'id'		 => $id, 'step'		 => 2,
 							'sheet_id'	 => $sheet_id, 'start_line' => $start_line)));
 					$tabs['step_4']	 = array('label' => lang('choose columns'), 'link' => '#step_4');
+					$tabs['step_5']	 = array('label'		 => lang('completed'), 'link'		 => null,
+						'disable'	 => true);
+					break;
+				case 4:
+					$active_tab		 = 'step_5';
+					$lang_submit	 = '';
+					$tabs['step_1']	 = array('label' => lang('choose file'), 'link' => null, 'disable'	 => true);
+					$tabs['step_2']	 = array('label'	 => lang('choose sheet'), 'link' => null, 'disable'	 => true);
+					$tabs['step_3']	 = array('label'	 => lang('choose start line'), 'link' => null, 'disable'	 => true);
+					$tabs['step_4']	 = array('label' => lang('choose columns'), 'link' => null, 'disable'	 => true);
+					$tabs['step_5']	 = array('label' => lang('completed'), 'link' => '#step_5');
 					break;
 				/*
 				  case 4://temporary
@@ -1393,7 +1410,7 @@
 
 					$spreadsheet->setActiveSheetIndex((int)$sheet_id);
 					$rows				 = $spreadsheet->getActiveSheet()->getHighestRow();
-					$highestColumn		 = $spreadsheet->getActiveSheet()->getHighestColumn();
+					$highestColumn		 = $spreadsheet->getActiveSheet()->getHighestColumn($start_line);
 					$highestColumnIndex	 = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
 				}
 				catch (Exception $e)
@@ -1455,13 +1472,14 @@
 			}
 			else if ($rows > 1 && $step == 3)
 			{
-				$_options = array
-					(
+				$_options = array(
 					'_skip_import_'				 => 'Utelates fra import/implisitt',
 					'import_type'				 => 'import type',
 					'building_part'				 => 'bygningsdels kode',
 					'descr'						 => 'Tilstandbeskrivelse',
 					'title'						 => 'Tiltak/overskrift',
+					'remark'					 => 'Tiltak/Merknad',
+					'proposed_measures'			 => 'Tiltak/Foreslåtte tiltak',
 					'condition_degree'			 => 'Tilstandsgrad',
 					'condition_type'			 => 'Konsekvenstype',
 					'consequence'				 => 'Konsekvensgrad',
@@ -1543,8 +1561,7 @@
 			}
 
 			$bolocation		 = CreateObject('property.bolocation');
-			$location_data	 = $bolocation->initiate_ui_location(array
-				(
+			$location_data	 = $bolocation->initiate_ui_location(array(
 				'values'		 => $survey['location_data'],
 				'type_id'		 => 2,
 				'lookup_type'	 => 'view2',
@@ -1553,8 +1570,7 @@
 				'entity_data'	 => isset($survey['p']) ? $survey['p'] : ''
 			));
 
-			$data = array
-				(
+			$data = array(
 				'lang_submit'	 => $lang_submit,
 				'survey'		 => $survey,
 				'location_data2' => $location_data,

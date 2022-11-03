@@ -457,12 +457,10 @@
 
 			foreach ($import_data as &$entry)
 			{
-				$entry['amount_investment']			 = (int)str_replace(array(' ', ','), array('',
-						'.'), $entry['amount_investment']);
+				$entry['amount_investment']			 = (int)str_replace(array(' ', ','), array('', '.'), $entry['amount_investment']);
 				$entry['amount_operation']			 = (int)str_replace(array(' ', ','), array('', '.'), $entry['amount_operation']);
-				$entry['amount_potential_grants']	 = (int)str_replace(array(' ', ','), array(
-						'', '.'), $entry['amount_potential_grants']);
-				$entry['import_type']				 = (int)$entry['import_type'];
+				$entry['amount_potential_grants']	 = (int)str_replace(array(' ', ','), array('', '.'), $entry['amount_potential_grants']);
+				$entry['import_type']				 = !isset($entry['import_type']) ? 2 : (int)$entry['import_type'];
 				$entry['condition_degree']			 = (int)$entry['condition_degree'];
 				$entry['amount']					 = $entry['amount_investment'] + $entry['amount_operation'] + $entry['amount_potential_grants'];
 			}
@@ -509,9 +507,6 @@
 						$request['cat_id'] = (int)$categories[0]['id'];
 					}
 
-					$this->_check_building_part($entry['building_part'], $_update_buildingpart);
-
-
 					$request['condition_survey_id']	 = $survey['id'];
 					$request['multiplier']			 = $survey['multiplier'];
 					$request['street_name']			 = $location_data['street_name'];
@@ -520,10 +515,14 @@
 					$request['location_code']		 = $survey['location_code'];
 					$request['origin_id']			 = $origin_id;
 					$request['origin_item_id']		 = (int)$survey['id'];
-					$request['title']				 = $entry['title'];
+					$request['title']				 = phpgw::clean_value($entry['title']);
 					$request['descr']				 = phpgw::clean_value($entry['descr'], 'string');
-					$request['building_part']		 = phpgw::clean_value($entry['building_part'], 'string');
+					$request['proposed_measures']	 = phpgw::clean_value($entry['proposed_measures']);
+					$request['remark']				 = phpgw::clean_value($entry['remark']);
+					$request['building_part']		 = (int)$entry['building_part'];
 					$request['coordinator']			 = $survey['coordinator_id'];
+
+					$this->_check_building_part($request['building_part'], $_update_buildingpart);
 
 					if ($entry['import_type'] == 1)
 					{
@@ -537,17 +536,13 @@
 					$request['amount_investment']		 = $entry['amount_investment'];
 					$request['amount_operation']		 = $entry['amount_operation'];
 					$request['amount_potential_grants']	 = $entry['amount_potential_grants'];
+					$request['planning_value']			 = $entry['amount'];
+					$request['planning_date']			 = mktime(13, 0, 0, 7, 1, $entry['due_year'] ? (int)$entry['due_year'] : date('Y'));
+					$request['recommended_year']		 = $entry['due_year'] ? (int)$entry['due_year'] : date('Y');
+					$request['responsible_unit']		 = (int)$import_type_responsibility[$entry['import_type']];
 
-					$request['planning_value']	 = $entry['amount'];
-					$request['planning_date']	 = mktime(13, 0, 0, 7, 1, $entry['due_year'] ? (int)$entry['due_year'] : date('Y'));
-					$request['recommended_year'] = $entry['due_year'] ? (int)$entry['due_year'] : date('Y');
-
-					$request['responsible_unit'] = (int)$import_type_responsibility[$entry['import_type']];
-
-					$request['condition'] = array
-						(
-						array
-							(
+					$request['condition'] = array(
+						array(
 							'degree'		 => $entry['condition_degree'],
 							'condition_type' => $entry['condition_type'],
 							'consequence'	 => $entry['consequence'],
@@ -562,8 +557,7 @@
 						{
 							$attribute_id = (int)ltrim($_field, 'custom_attribute_');
 
-							$values_attribute[] = array
-								(
+							$values_attribute[] = array(
 								'name'		 => $attributes[$attribute_id]['column_name'],
 								'value'		 => $_value,
 								'datatype'	 => $attributes[$attribute_id]['datatype'],

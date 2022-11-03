@@ -21,9 +21,9 @@
 	$stylesheets = array();
 	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/demo_mmenu.css";
-	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/version_3/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
-	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/version_3/grids-responsive-min.css";
     
 	$stylesheets[] = "/phpgwapi/templates/portico/css/base.css";
 	$stylesheets[] = "/phpgwapi/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";

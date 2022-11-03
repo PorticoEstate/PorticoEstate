@@ -1765,6 +1765,8 @@ JS;
 				'value_request_id'					 => $id,
 				'value_title'						 => $values['title'],
 				'value_descr'						 => $values['descr'],
+				'value_proposed_measures'			 => $values['proposed_measures'],
+				'value_remark'						 => $values['remark'],
 				'lang_score'						 => lang('Score'),
 				'value_score'						 => $values['score'],
 				'lang_done_statustext'				 => lang('Back to the list'),

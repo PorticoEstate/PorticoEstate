@@ -401,6 +401,28 @@
 							<xsl:value-of select="value_descr"/>
 						</textarea>
 					</div>
+					<div class="pure-control-group">
+						<xsl:variable name="lang_request_proposed_measures">
+							<xsl:value-of select="php:function('lang', 'proposed measures')"/>
+						</xsl:variable>
+						<label title="{$lang_request_proposed_measures}">
+							<xsl:value-of select="$lang_request_proposed_measures"/>
+						</label>
+						<textarea  class="pure-input-1-2" rows="6" name="values[proposed_measures]" title="{$lang_request_proposed_measures}">
+							<xsl:value-of select="value_proposed_measures"/>
+						</textarea>
+					</div>
+					<div class="pure-control-group">
+						<xsl:variable name="lang_request_remark">
+							<xsl:value-of select="php:function('lang', 'remark')"/>
+						</xsl:variable>
+						<label title="{$lang_request_remark}">
+							<xsl:value-of select="$lang_request_remark"/>
+						</label>
+						<textarea  class="pure-input-1-2" rows="6" name="values[remark]" title="{$lang_request_remark}">
+							<xsl:value-of select="value_remark"/>
+						</textarea>
+					</div>
 				</div>
 				<div class="clearBoth">&nbsp;</div>
 				<hr/>
