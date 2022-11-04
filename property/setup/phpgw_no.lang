@@ -2441,3 +2441,5 @@ change payment type	property	no	Endre betalingstype
 recipients	property	no	Mottaker
 extra sms address	property	no	Tilleggsnummer
 send sms	property	no	Send SMS
+qr-generator	property	no	QR-generator
+completed	property	no	Fullført

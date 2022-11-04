@@ -2412,3 +2412,5 @@ remove tag	property	nn	Slett tag
 transfer to external	property	nn	Overfør til eksternt system
 default tax code	property	nn	Standard mva-kode
 change payment type	property	nn	Endre betalingstype
+qr-generator	property	nn	QR-generator
+completed	property	nn	Fullført
