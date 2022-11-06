@@ -266,7 +266,7 @@
 					if (isset($prefs['email']) && $prefs['email'])
 					{
 						$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice2.index',
-								'voucher_id' => $bilagsnr, 'user_lid'	 => $lid), false, true) . '">Link til fakturabehandling</a>';
+								 'user_lid'	 => $lid), false, true) . '">Link til fakturabehandling</a>';
 						try
 						{
 							$rc = $this->send->msg('email', $prefs['email'], $subject, stripslashes($body), '', '', '', $from, '', 'html');
@@ -711,6 +711,8 @@
 					$from = "Ikke svar<IkkeSvar@nlsh.no>";
 
 					$to = implode(';', $order_info['toarray']);
+					$cc = '';
+					$bcc = '';
 
 					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 					{
@@ -789,7 +791,21 @@
 			$order_info['tax_code']		 = $this->db->f('tax_code');
 
 			$janitor_user_id		 = $this->db->f('user_id');
-			$order_info['janitor']	 = $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
+
+			
+			/*
+			* Check if janitor has rights
+			*/
+			if($this->invoice->check_dimb_role_right(1, $order_info['dimb'], $janitor_user_id))
+			{
+				$order_info['janitor']	 = $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
+			}
+			else
+			{
+				$order_info['janitor']	 = '';
+			}
+
+
 			$supervisor_user_id		 = $this->invoice->get_default_dimb_role_user(2, $order_info['dimb']);
 			if ($supervisor_user_id)
 			{

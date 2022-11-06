@@ -624,6 +624,11 @@
 						'text'	 => lang('import components') . ' (TIDA)',
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.index'))
 					),
+					'qr_generator'			 => array
+						(
+						'text'	 => lang('qr-generator'),
+						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiqr_generator.index'))
+					),
 					'entity'					 => array
 						(
 						'text'		 => lang('Admin entity'),
