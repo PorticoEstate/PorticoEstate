@@ -1474,6 +1474,22 @@
 			return (int)$this->db->f('user_id');
 		}
 
+		function check_dimb_role_right( $role_id, $dimb ,$user_id)
+		{
+			$dimb		 = (int)$dimb;
+			$role_id	 = (int)$role_id;
+			$_user_id	 = (int)$user_id;
+			$ret		 = false;
+			$sql		 = "SELECT user_id FROM fm_ecodimb_role_user"
+				. " WHERE role_id = {$role_id} AND ecodimb = {$dimb} AND user_id = {$_user_id} AND expired_on IS NULL  AND active_from < " . time() . ' AND (active_to > ' . time() . ' OR active_to = 0)';
+			$this->db->query($sql, __LINE__, __FILE__);
+			if($this->db->next_record())
+			{
+				$ret = true;
+			}
+			return $ret;
+		}
+
 		function check_count( $voucher_id )
 		{
 

@@ -791,7 +791,21 @@
 			$order_info['tax_code']		 = $this->db->f('tax_code');
 
 			$janitor_user_id		 = $this->db->f('user_id');
-			$order_info['janitor']	 = $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
+
+			
+			/*
+			* Check if janitor has rights
+			*/
+			if($this->invoice->check_dimb_role_right(1, $order_info['dimb'], $janitor_user_id))
+			{
+				$order_info['janitor']	 = $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
+			}
+			else
+			{
+				$order_info['janitor']	 = '';
+			}
+
+
 			$supervisor_user_id		 = $this->invoice->get_default_dimb_role_user(2, $order_info['dimb']);
 			if ($supervisor_user_id)
 			{
