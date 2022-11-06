@@ -266,7 +266,7 @@
 					if (isset($prefs['email']) && $prefs['email'])
 					{
 						$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice2.index',
-								'voucher_id' => $bilagsnr, 'user_lid'	 => $lid), false, true) . '">Link til fakturabehandling</a>';
+								 'user_lid'	 => $lid), false, true) . '">Link til fakturabehandling</a>';
 						try
 						{
 							$rc = $this->send->msg('email', $prefs['email'], $subject, stripslashes($body), '', '', '', $from, '', 'html');
@@ -711,6 +711,8 @@
 					$from = "Ikke svar<IkkeSvar@nlsh.no>";
 
 					$to = implode(';', $order_info['toarray']);
+					$cc = '';
+					$bcc = '';
 
 					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 					{
