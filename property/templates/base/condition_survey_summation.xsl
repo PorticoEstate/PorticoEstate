@@ -30,7 +30,7 @@
 				<label for="category">
 					<xsl:value-of select="php:function('lang', 'condition survey')" />
 				</label>
-				<select id="survey_id" name="survey_id" onChange="update_summation();" class="pure-u-24-24">
+				<select id="survey_id" name="survey_id[]" multiple="true" onChange="update_summation();" class="pure-u-24-24">
 					<xsl:apply-templates select="surveys/options"/>
 				</select>
 			</div>
@@ -178,45 +178,82 @@
 
 		$(document).ready(function ()
 		{
-		var api = oTable.api();
-		api.on( 'draw', sum_columns );
+			var api = oTable.api();
+			api.on( 'draw', sum_columns );
+
+			$("#survey_id").multiselect({
+					//	buttonWidth: 250,
+					includeSelectAllOption: true,
+					enableFiltering: true,
+					enableCaseInsensitiveFiltering: true,
+					buttonClass: 'form-control',
+					onChange: function ($option)
+					{
+						// Check if the filter was used.
+						var query = $("#survey_id").find('li.multiselect-filter input').val();
+
+						if (query)
+						{
+							$("#survey_id").find('li.multiselect-filter input').val('').trigger('keydown');
+						}
+					},
+					onDropdownHidden: function (event)
+					{
+			//			console.log(event);
+						$("#form").submit();
+					}
+				});
+
+				$(".btn-group").addClass('w-100');
+				$(".multiselect").addClass('form-control');
+				$(".multiselect").removeClass('btn');
+				$(".multiselect").removeClass('btn-default');
+
+
 		});
 
 		function sum_columns()
 		{
-		var api = oTable.api();
-		// Remove the formatting to get integer data for summation
-		var intVal = function ( i ) {
-		return typeof i === 'string' ?
-		i.replace(/[\$,]/g, '')*1 :
-		typeof i === 'number' ?
-		i : 0;
-		};
-			
-		var columns = ["2", "3", "4", "5", "6", "7", "8"];
-			
-		columns.forEach(function(col)
-		{
-		data = api.column( col, { page: 'current'} ).data();
-		pageTotal = data.length ?
-		data.reduce(function (a, b){
-		return intVal(a) + intVal(b);
-		}) : 0;
-				
-		pageTotal = $.number( pageTotal, 0, ',', '.' );
-		$(api.column(col).footer()).html(pageTotal);
-		});
+			var api = oTable.api();
+			// Remove the formatting to get integer data for summation
+			var intVal = function ( i ) {
+				return typeof i === 'string' ?
+				i.replace(/[\$,]/g, '')*1 :
+				typeof i === 'number' ?
+				i : 0;
+			};
+
+			var columns = ["2", "3", "4", "5", "6", "7", "8"];
+
+			columns.forEach(function(col)
+			{
+				data = api.column( col, { page: 'current'} ).data();
+				pageTotal = data.length ?
+				data.reduce(function (a, b){
+					return intVal(a) + intVal(b);
+				}) : 0;
+
+				pageTotal = $.number( pageTotal, 0, ',', '.' );
+				$(api.column(col).footer()).html(pageTotal);
+			});
 		}
+
+	<![CDATA[
 
 		function update_summation()
 		{
-		var survey_id = document.getElementById("survey_id").value;
-		var year = document.getElementById("year").value;
-		var oArgs = {menuaction:'property.uicondition_survey.get_summation', id:survey_id, year: year};
-		var strURL = phpGWLink('index.php', oArgs, true);
-		JqueryPortico.updateinlineTableHelper(oTable, strURL);
-		}
+		     var ids = $('#survey_id option:selected');
 
+			var year = document.getElementById("year").value;
+			var oArgs = {menuaction:'property.uicondition_survey.get_summation', year: year};
+			var strURL = phpGWLink('index.php', oArgs, true);
+
+			$(ids).each(function(index, brand){
+				strURL += '&ids[]=' + $(this).val();
+			});
+			JqueryPortico.updateinlineTableHelper(oTable, strURL);
+		}
+	]]>
 	</script>
 </xsl:template>
 
