@@ -562,3 +562,4 @@ quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days
 validate	bookingfrontend	nn	Kontrollér
 cost is set	booking	nn	Ny pris er definert
 Event was created	booking	nn	Arrangementet vart oppretta
+Link to website	bookingfrontend	nn	Link til heimeside
