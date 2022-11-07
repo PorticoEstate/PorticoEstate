@@ -518,7 +518,13 @@
 					$request['title']				 = phpgw::clean_value($entry['title']);
 					$request['descr']				 = phpgw::clean_value($entry['descr'], 'string');
 					$request['proposed_measures']	 = phpgw::clean_value($entry['proposed_measures']);
-					$request['remark']				 = phpgw::clean_value($entry['remark']);
+					$request['remark']				 = phpgw::clean_value($entry['remark_1']);
+
+					if(!empty($entry['remark_2']))
+					{
+						$request['remark']			.= "\n" . phpgw::clean_value($entry['remark_2']);
+					}
+
 					$request['building_part']		 = (int)$entry['building_part'];
 					$request['coordinator']			 = $survey['coordinator_id'];
 

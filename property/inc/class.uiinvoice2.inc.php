@@ -35,6 +35,9 @@
 	class property_uiinvoice2 extends phpgwapi_uicommon_jquery
 	{
 
+		const DELIMITER	 = ";";
+		const ENCLOSING	 = "'";
+
 		var $cat_id;
 		var $start;
 		var $query;
