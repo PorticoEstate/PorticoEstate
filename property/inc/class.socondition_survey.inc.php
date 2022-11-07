@@ -54,6 +54,7 @@
 			$status_open = empty($data['status_open']) ? false : true;
 			$allrows	 = isset($data['allrows']) ? $data['allrows'] : '';
 			$results	 = isset($data['results']) ? (int)$data['results'] : 0;
+			$ids		 = isset($data['ids']) ? (array)$data['ids'] : array();
 
 			$table = 'fm_condition_survey';
 			if ($order)
@@ -96,6 +97,14 @@
 				$filtermethod	 .= " {$where} {$table}_status.closed IS NULL";
 				$where			 = 'AND';
 			}
+
+			if($ids)
+			{
+				$allrows = true;
+				$filtermethod	 .= " {$where} {$table}.id IN (" . implode(', ', $ids) . ')';
+				$where			 = 'AND';
+			}
+
 			if ($query)
 			{
 				$query		 = $this->_db->db_addslashes($query);
@@ -597,18 +606,19 @@
 
 		public function get_summation( $id )
 		{
-			$id_filter = '';
 
-			$condition_survey_id = (int)$id;
+			$ids = array(-1);
 
-			if ($condition_survey_id == -1) // all
+			if(is_array($id))
 			{
-				$id_filter = "condition_survey_id > 0";
+				$ids = array_merge($ids, $id);
 			}
 			else
 			{
-				$id_filter = "condition_survey_id = {$condition_survey_id}";
+				$ids[] = $id;
 			}
+
+			$id_filter = 'condition_survey_id IN (' . implode(', ', $ids) . ')';
 
 			$sql = "SELECT condition_survey_id, substr(building_part, 1,3) as building_part_,"
 				. " amount_investment as investment ,amount_operation as operation,"

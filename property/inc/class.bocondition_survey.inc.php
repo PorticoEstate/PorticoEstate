@@ -316,15 +316,15 @@
 			}
 		}
 
-		public function get_summation( $id, $year = 0 )
+		public function get_summation( $ids, $year = 0 )
 		{
 			$year = $year ? (int)$year : date('Y');
 
 			$surveys = array();
 
-			if ($id == -1)
+			if ($ids)
 			{
-				$values = $this->so->read(array('allrows' => true, 'status_open' => true));
+				$values = $this->so->read(array('allrows' => true, 'status_open' => true, 'ids' => $ids));
 				foreach ($values as $survey)
 				{
 					$surveys[$survey['id']]['multiplier'] = $survey['multiplier'];
@@ -335,7 +335,7 @@
 				$surveys[$id] = $this->so->read_single(array('id' => $id));
 			}
 
-			$data = $this->so->get_summation($id);
+			$data = $this->so->get_summation($ids);
 
 //_debug_array($surveys);
 //_debug_array($data);

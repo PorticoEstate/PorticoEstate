@@ -809,7 +809,7 @@
 		function get_summation()
 		{
 
-			$id		 = phpgw::get_var('id', 'int', 'REQUEST');
+			$ids		 = phpgw::get_var('ids', 'int', 'REQUEST');
 			$year	 = phpgw::get_var('year', 'int', 'REQUEST');
 
 			if (!$this->acl_read)
@@ -817,7 +817,7 @@
 				return;
 			}
 
-			$values = $this->bo->get_summation($id, $year);
+			$values = $this->bo->get_summation($ids, $year);
 
 			$total_records	 = count($values);
 			$num_rows		 = phpgw::get_var('length', 'int', 'REQUEST', 0);
@@ -1791,16 +1791,15 @@
 			$survey_list = $this->bo->read($params);
 
 			$surveys	 = array();
-			$surveys[]	 = array
-				(
-				'id'	 => 0,
-				'name'	 => lang('select'),
-			);
-			$surveys[]	 = array
-				(
-				'id'	 => -1,
-				'name'	 => lang('all'),
-			);
+//			$surveys[]	 = array(
+//				'id'	 => 0,
+//				'name'	 => lang('select'),
+//			);
+
+//			$surveys[]	 = array(
+//				'id'	 => -1,
+//				'name'	 => lang('all'),
+//			);
 
 			foreach ($survey_list as $survey)
 			{
@@ -1809,8 +1808,7 @@
 					continue;
 				}
 
-				$surveys[] = array
-					(
+				$surveys[] = array(
 					'id'			 => $survey['id'],
 					'name'			 => $survey['title'],
 					'description'	 => $survey['address'],
@@ -1825,8 +1823,7 @@
 
 			for ($i = 0; $i < 6; $i++)
 			{
-				$years[] = array
-					(
+				$years[] = array(
 					'id'	 => $current_year,
 					'name'	 => $current_year
 				);
@@ -1857,8 +1854,9 @@
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_0',
-				'requestUrl' => json_encode(self::link(array('menuaction'		 => 'property.uicondition_survey.get_summation',
-						'id'				 => $id, 'phpgw_return_as'	 => 'json'))),
+				'requestUrl' => json_encode(self::link(array(
+						'menuaction'		 => 'property.uicondition_survey.get_summation',
+						'phpgw_return_as'	 => 'json'))),
 				'ColumnDefs' => $summation_def,
 //				'config' => array(
 //					array('disableFilter' => true),
@@ -1867,14 +1865,14 @@
 //				),
 			);
 
-			$data = array
-				(
+			$data = array(
 				'datatable_def'	 => $datatable_def,
 				'surveys'		 => array('options' => $surveys),
 				'years'			 => array('options' => $years),
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
+			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
 
