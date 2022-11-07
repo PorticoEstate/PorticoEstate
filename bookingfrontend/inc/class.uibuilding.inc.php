@@ -399,7 +399,7 @@
 						{
 							$value = 'http://' . $value;
 						}
-						$value = sprintf('<a href="%s" target="_blank">%s</a>', $value, $value);
+						$value = sprintf('<a href="%s" target="_blank">%s</a>', $value, lang('Link to website'));
 					}
 					if ($field == 'email')
 					{
