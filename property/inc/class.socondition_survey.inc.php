@@ -620,8 +620,7 @@
 				. " {$this->_join} fm_condition_survey_status ON fm_condition_survey.status_id = fm_condition_survey_status.id"
 				. " WHERE {$id_filter}"
 				. " AND fm_condition_survey_status.closed IS NULL"
-				. " AND degree > 1"
-				//		. " GROUP BY condition_survey_id, building_part_ , year, fm_request.multiplier, area_gross"
+				//. " AND degree > 1"
 				. " ORDER BY building_part_";
 
 			$this->_db->query($sql, __LINE__, __FILE__);
