@@ -824,6 +824,11 @@
 			$startpost['posttype'] = 'ST';
 			$startpost['referanse'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60), 60, ' ');
 
+//			if (isset($this->config_data['dim_value_5']))
+//			{
+//				$_vaar_ref = str_pad(substr($account_codes['dim_value_5'], 0, 12), 12, ' ');
+//			}
+
 			foreach ($reservations as &$reservation)
 			{
 
@@ -2202,6 +2207,9 @@
 						$header['dim_value_4'] = str_pad(substr($account_codes['dim_value_4'], 0, 12), 12, ' ');
 					}
 
+					/**
+					 * Vår ref.
+					 */
 					if (isset($this->config_data['dim_value_5']))
 					{
 						$header['dim_value_5'] = str_pad(substr($account_codes['dim_value_5'], 0, 12), 12, ' ');
