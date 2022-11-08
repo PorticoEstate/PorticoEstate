@@ -32,7 +32,7 @@
 				 */
 				if (!isset($for_object['buildings'][0]))
 				{
-					throw new InvalidArgumentException('Cannot initialize object parent roles unless building_id is provided');
+					throw new InvalidArgumentException('Cannot initialize object parent roles unless building_id is provided, id:'. $for_object['id'] );
 				}
 
 				$parent_building = $this->building_bo->read_single($for_object['buildings'][0]);
