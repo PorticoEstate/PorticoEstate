@@ -1435,6 +1435,20 @@
 					$target['type']				 = 'helpdesk';
 					$target['id']				 = $ticket_id;
 				}
+			}/**
+			 * Ny regel 2022-11-08
+			 */
+			else if (preg_match("/BkBestilling-System/i", $subject))
+			{
+				$message_cat_id	 = 387; // LRS-System  -  BkBestilling
+				$group_id		 = 4252; //LRS- System
+				$ticket_id		 = $this->create_ticket($subject, $body, $message_cat_id, $group_id, $sender, $body_type);
+				if ($ticket_id)
+				{
+					$this->receipt['message'][]	 = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type']				 = 'helpdesk';
+					$target['id']				 = $ticket_id;
+				}
 			}
 
 			/**
