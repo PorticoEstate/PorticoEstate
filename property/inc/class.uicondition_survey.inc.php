@@ -607,8 +607,10 @@
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_2',
-				'requestUrl' => json_encode(self::link(array('menuaction'		 => 'property.uicondition_survey.get_summation',
-						'id'				 => $id, 'phpgw_return_as'	 => 'json'))),
+				'requestUrl' => json_encode(self::link(array(
+					'menuaction'		 => 'property.uicondition_survey.get_summation',
+					'ids'	 => $id,
+					'phpgw_return_as'	 => 'json'))),
 				'ColumnDefs' => $summation_def,
 				'config'	 => array(
 					array('disableFilter' => true),
@@ -639,6 +641,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
 
+			$data['multi_upload_parans'] = '""';
 			if ($mode == 'edit')
 			{
 				$GLOBALS['phpgw']->jqcal->add_listener('report_date');
@@ -646,10 +649,12 @@
 				self::add_javascript('property', 'portico', 'condition_survey_edit.js');
 				phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 					'file'));
-				$data['multi_upload_parans'] = "{menuaction:'property.uicondition_survey.build_multi_upload_file', id:'{$id}'}";
+//				$data['multi_upload_parans'] = "{menuaction:'property.uicondition_survey.build_multi_upload_file', id:'{$id}'}";
 				$data['multi_upload_action'] = $GLOBALS['phpgw']->link('/index.php',
-														   array('menuaction' => 'property.uicondition_survey.handle_multi_upload_file',
-						'id'		 => $id));
+														   array(
+															   'menuaction' => 'property.uicondition_survey.handle_multi_upload_file',
+																'id'		 => $id)
+					);
 			}
 
 			phpgwapi_jquery::load_widget('numberformat');
@@ -1779,8 +1784,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.index'));
 			}
 
-			$params = array
-				(
+			$params = array(
 				'start'		 => 0,
 				'sort'		 => 'id',
 				'dir'		 => 'asc',
@@ -1791,15 +1795,6 @@
 			$survey_list = $this->bo->read($params);
 
 			$surveys	 = array();
-//			$surveys[]	 = array(
-//				'id'	 => 0,
-//				'name'	 => lang('select'),
-//			);
-
-//			$surveys[]	 = array(
-//				'id'	 => -1,
-//				'name'	 => lang('all'),
-//			);
 
 			foreach ($survey_list as $survey)
 			{
