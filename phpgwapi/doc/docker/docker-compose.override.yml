@@ -1,4 +1,4 @@
-version: '3'
+version: '3.6'
 services:
   web:
     depends_on:
@@ -12,6 +12,9 @@ services:
     environment:
       # Make sure postgres does not save to a persistent volume
       - PGDATA=/tmp/pgdata
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=changeme
     ports:
       - "5432:5432"
 

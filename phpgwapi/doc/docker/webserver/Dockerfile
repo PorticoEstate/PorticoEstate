@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
@@ -25,11 +25,11 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     libaio1 \
     locales
 
-RUN sed -i 's/"GP"/"GPCS"/' /etc/php/7.2/apache2/php.ini && \
-    sed -i 's/"GP"/"GPCS"/' /etc/php/7.2/cli/php.ini
+RUN sed -i 's/"GP"/"GPCS"/' /etc/php/8.1/apache2/php.ini && \
+    sed -i 's/"GP"/"GPCS"/' /etc/php/8.1/cli/php.ini
 
-COPY custom-apache.conf /etc/php/7.2/apache2/conf.d/91-app.ini
-RUN ln -s /etc/php/7.2/apache2/conf.d/91-app.ini /etc/php/7.2/cli/conf.d/91-app.ini
+COPY custom-apache.conf /etc/php/8.1/apache2/conf.d/91-app.ini
+RUN ln -s /etc/php/8.1/apache2/conf.d/91-app.ini /etc/php/8.1/cli/conf.d/91-app.ini
 
  # Enable mod_rewrite
 RUN a2enmod rewrite

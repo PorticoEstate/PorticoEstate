@@ -1,4 +1,4 @@
-version: '3'
+version: '3.6'
 services:
   web:
     depends_on:
@@ -8,6 +8,8 @@ services:
     image: selenium/standalone-chrome
 
   postgres:
+    ports:
+      - 5432:5432
     build: ./postgres
     restart: always
 
@@ -25,6 +27,9 @@ services:
       - DBPASSWORD=portico
       - DBDUMP=phpgwapi/test/_data/portico-test.sql
       - SELENIUMHOST=selenium-chrome
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD =changeme
     depends_on:
       - "postgres"
       - "web"
