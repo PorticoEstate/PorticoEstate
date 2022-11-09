@@ -2,7 +2,7 @@ version: '3.6'
 services:
   web:
     depends_on:
-        - "postgres"
+        - postgres
 
   selenium-chrome:
     image: selenium/standalone-chrome
@@ -18,19 +18,19 @@ services:
     volumes:
       - ../../..:/var/www/html/portico
     environment:
-      - WEBHOST=web
-      - WEBPORT=80
-      - DBHOST=postgres
-      - DBPORT=5432
-      - DBNAME=porticotest
-      - DBUSER=portico
-      - DBPASSWORD=portico
-      - DBDUMP=phpgwapi/test/_data/portico-test.sql
-      - SELENIUMHOST=selenium-chrome
-      - POSTGRES_HOST_AUTH_METHOD=trust
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD =changeme
+      WEBHOST: web
+      WEBPORT: 80
+      DBHOST: postgres
+      DBPORT: 5432
+      DBNAME: porticotest
+      DBUSER: portico
+      DBPASSWORD: portico
+      DBDUMP: phpgwapi/test/_data/portico-test.sql
+      SELENIUMHOST: selenium-chrome
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: changeme
     depends_on:
-      - "postgres"
-      - "web"
-      - "selenium-chrome"
+      - postgres
+      - web
+      - selenium-chrome
