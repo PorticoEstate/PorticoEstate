@@ -108,9 +108,8 @@
 			$raw_menus = $GLOBALS['phpgw']->hooks->process('menu');
 
 			foreach($GLOBALS['phpgw_info']['user']['apps'] as $app => $app_info)
-			//	foreach ( $raw_menus as $app => $raw_menu )
 			{
-				if($app_info['status'] == 2) // hidden
+				if($app_info['status'] === 2  || $app_info['enabled'] === false) // hidden
 				{
 					continue;
 				}
