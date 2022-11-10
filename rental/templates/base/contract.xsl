@@ -79,280 +79,284 @@
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-				<div id="details" class="pure-g">
-					<div class="pure-u-1 pure-u-lg-1-2">
-						<input type="hidden" name="id" id="contract_id" value="{contract_id}"/>
-						<div class="pure-control-group">
-							<label for="location_id">
-								<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
-							</label>
-
-							<select id="location_id" name="location_id">
-								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-error-msg">
-									<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
-								</xsl:attribute>
-								<xsl:apply-templates select="valid_contract_types/options"/>
-							</select>
-
-							<!--							<xsl:choose>
-								<xsl:when test="contract_id = 0 or contract_id = ''">
-									<input type="hidden" name="location_id" id="location_id" value="{location_id}"/>
-								</xsl:when>
-							</xsl:choose>
-							<xsl:value-of select="value_field_of_responsibility"/>-->
-						</div>
-						<xsl:if test="count(list_contract_type/*) &gt; 1">
+				<div id="details">
+					<div class="pure-g">
+						<div class="pure-u-1 pure-u-lg-1-2">
+							<input type="hidden" name="id" id="contract_id" value="{contract_id}"/>
 							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'contract_type')"/>
+								<label for="location_id">
+									<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
 								</label>
-								<select id="contract_type" name="contract_type">
+
+								<select id="location_id" name="location_id">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
 									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'contract_type')"/>
+										<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
 									</xsl:attribute>
-									<xsl:apply-templates select="list_contract_type/options"/>
+									<xsl:apply-templates select="valid_contract_types/options"/>
+								</select>
+
+								<!--							<xsl:choose>
+									<xsl:when test="contract_id = 0 or contract_id = ''">
+										<input type="hidden" name="location_id" id="location_id" value="{location_id}"/>
+									</xsl:when>
+								</xsl:choose>
+								<xsl:value-of select="value_field_of_responsibility"/>-->
+							</div>
+							<xsl:if test="count(list_contract_type/*) &gt; 1">
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'contract_type')"/>
+									</label>
+									<select id="contract_type" name="contract_type">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'contract_type')"/>
+										</xsl:attribute>
+										<xsl:apply-templates select="list_contract_type/options"/>
+									</select>
+								</div>
+							</xsl:if>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'executive_officer')"/>
+								</label>
+								<select id="executive_officer" name="executive_officer">
+									<xsl:apply-templates select="list_executive_officer/options"/>
 								</select>
 							</div>
-						</xsl:if>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'executive_officer')"/>
-							</label>
-							<select id="executive_officer" name="executive_officer">
-								<xsl:apply-templates select="list_executive_officer/options"/>
-							</select>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'date_start')"/>
+								</label>
+								<input type="text" id="date_start" name="date_start" size="10" value="{value_date_start}" readonly="readonly"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'date_end')"/>
+								</label>
+								<input type="text" id="date_end" name="date_end" size="10" value="{value_date_end}" readonly="readonly"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'due_date')"/>
+								</label>
+								<input type="text" id="due_date" name="due_date" size="10" value="{value_due_date}" readonly="readonly"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'invoice_header')"/>
+								</label>
+								<input type="text" name="invoice_header" value="{value_invoice_header}"></input>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'billing_term')"/>
+								</label>
+								<select id="billing_term" name="billing_term">
+									<xsl:apply-templates select="list_billing_term/options"/>
+								</select>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'billing_start')"/>
+								</label>
+								<input type="text" id="billing_start_date" name="billing_start_date" size="10" value="{value_billing_start}" readonly="readonly"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'billing_end')"/>
+								</label>
+								<input type="text" id="billing_end_date" name="billing_end_date" size="10" value="{value_billing_end}" readonly="readonly"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'reference')"/>
+								</label>
+								<input type="text" name="reference" value="{value_reference}"></input>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'customer order id')"/>
+								</label>
+								<input type="number" step="1" name="customer_order_id" value="{value_customer_order_id}"></input>
+							</div>
 						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'date_start')"/>
-							</label>
-							<input type="text" id="date_start" name="date_start" size="10" value="{value_date_start}" readonly="readonly"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'date_end')"/>
-							</label>
-							<input type="text" id="date_end" name="date_end" size="10" value="{value_date_end}" readonly="readonly"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'due_date')"/>
-							</label>
-							<input type="text" id="due_date" name="due_date" size="10" value="{value_due_date}" readonly="readonly"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'invoice_header')"/>
-							</label>
-							<input type="text" name="invoice_header" value="{value_invoice_header}"></input>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'billing_term')"/>
-							</label>
-							<select id="billing_term" name="billing_term">
-								<xsl:apply-templates select="list_billing_term/options"/>
-							</select>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'billing_start')"/>
-							</label>
-							<input type="text" id="billing_start_date" name="billing_start_date" size="10" value="{value_billing_start}" readonly="readonly"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'billing_end')"/>
-							</label>
-							<input type="text" id="billing_end_date" name="billing_end_date" size="10" value="{value_billing_end}" readonly="readonly"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'reference')"/>
-							</label>
-							<input type="text" name="reference" value="{value_reference}"></input>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'customer order id')"/>
-							</label>
-							<input type="number" step="1" name="customer_order_id" value="{value_customer_order_id}"></input>
+						<div class="pure-u-1 pure-u-lg-1-2">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'responsibility')"/>
+								</label>
+								<xsl:choose>
+									<xsl:when test="list_responsibility">
+										<xsl:if test="list_responsibility != ''">
+											<select id="responsibility_id" name="responsibility_id">
+												<xsl:apply-templates select="list_responsibility/options"/>
+											</select>
+										</xsl:if>
+										<xsl:if test="list_responsibility = ''">
+											<input type="text" name="responsibility_id" id="responsibility_id" value="{value_responsibility_id}"/>
+										</xsl:if>
+									</xsl:when>
+								</xsl:choose>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'service')"/>
+								</label>
+								<input type="text" name="service_id" value="{value_service}"></input>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'account_in')"/>
+								</label>
+								<input type="text" name="account_in" value="{value_account_in}"></input>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'account_out')"/>
+								</label>
+								<input type="text" name="account_out" value="{value_account_out}"></input>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'project_id')"/>
+								</label>
+								<input type="text" name="project_id" value="{value_project_id}"></input>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'security')"/>
+								</label>
+								<select id="security_type" name="security_type">
+									<xsl:apply-templates select="list_security/options"/>
+								</select>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'security_amount')"/>
+								</label>
+								<xsl:value-of select="security_amount_simbol"/>
+								<input type="text" name="security_amount" value="{value_security_amount}"></input>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'rented_area')"/>
+								</label>
+								<input type="text" name="rented_area" value="{value_rented_area}"></input>
+								<xsl:value-of select="rented_area_simbol"/>
+							</div>
+							<xsl:choose>
+								<xsl:when test="is_adjustable">
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'adjustable')"/>
+										</label>
+										<input type="checkbox" name="adjustable" id="adjustable">
+											<xsl:if test="is_adjustable = 1">
+												<xsl:attribute name="checked" value="checked"/>
+											</xsl:if>
+										</input>
+									</div>
+								</xsl:when>
+							</xsl:choose>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'adjustment_interval')"/>
+								</label>
+								<select id="adjustment_interval" name="adjustment_interval">
+									<xsl:apply-templates select="list_adjustment_interval/options"/>
+								</select>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'adjustment_share')"/>
+								</label>
+								<select id="adjustment_share" name="adjustment_share">
+									<xsl:apply-templates select="list_adjustment_share/options"/>
+								</select>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'adjustment_year')"/>
+								</label>
+								<xsl:value-of select="value_adjustment_year"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'override adjustment start')"/>
+								</label>
+								<input type="text" id="override_adjustment_start" name="override_adjustment_start" size="10" value="{value_override_adjustment_start}" data-validation-optional="true" data-validation="date" data-validation-format="yyyy">
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'year')"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'movein')"/>
+								</label>
+								<xsl:choose>
+									<xsl:when test="movein/url">
+										<a href="{movein/url}">
+											<xsl:value-of select="movein/created"/>
+										</a>
+									</xsl:when>
+									<xsl:otherwise>
+										<a href="{movein/new_report}">
+											<xsl:value-of select="php:function('lang', 'new')"/>
+										</a>
+									</xsl:otherwise>
+								</xsl:choose>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'moveout')"/>
+								</label>
+								<xsl:choose>
+									<xsl:when test="moveout/url">
+										<a href="{moveout/url}">
+											<xsl:value-of select="moveout/created"/>
+										</a>
+									</xsl:when>
+									<xsl:otherwise>
+										<a href="{moveout/new_report}">
+											<xsl:value-of select="php:function('lang', 'new')"/>
+										</a>
+									</xsl:otherwise>
+								</xsl:choose>
+							</div>
 						</div>
 					</div>
-					<div class="pure-u-1 pure-u-lg-1-2">
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'responsibility')"/>
-							</label>
+					<div class="pure-g">
+						<div class="pure-u-1 pure-u-lg-3-4">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'comment')"/>
+								</label>
+								<textarea  rows="10" name="comment" id="comment" class="pure-input-3-4 pure-custom">
+									<xsl:value-of select="value_comment"/>
+								</textarea>
+							</div>
 							<xsl:choose>
-								<xsl:when test="list_responsibility">
-									<xsl:if test="list_responsibility != ''">
-										<select id="responsibility_id" name="responsibility_id">
-											<xsl:apply-templates select="list_responsibility/options"/>
-										</select>
-									</xsl:if>
-									<xsl:if test="list_responsibility = ''">
-										<input type="text" name="responsibility_id" id="responsibility_id" value="{value_responsibility_id}"/>
-									</xsl:if>
+								<xsl:when test="value_publish_comment">
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'publish_comment')"/>
+										</label>
+										<input type="checkbox" name="publish_comment" id="publish_comment">
+											<xsl:if test="value_publish_comment = 1">
+												<xsl:attribute name="checked" value="checked"/>
+											</xsl:if>
+										</input>
+									</div>
 								</xsl:when>
 							</xsl:choose>
 						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'service')"/>
-							</label>
-							<input type="text" name="service_id" value="{value_service}"></input>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'account_in')"/>
-							</label>
-							<input type="text" name="account_in" value="{value_account_in}"></input>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'account_out')"/>
-							</label>
-							<input type="text" name="account_out" value="{value_account_out}"></input>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'project_id')"/>
-							</label>
-							<input type="text" name="project_id" value="{value_project_id}"></input>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'security')"/>
-							</label>
-							<select id="security_type" name="security_type">
-								<xsl:apply-templates select="list_security/options"/>
-							</select>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'security_amount')"/>
-							</label>
-							<xsl:value-of select="security_amount_simbol"/>
-							<input type="text" name="security_amount" value="{value_security_amount}"></input>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'rented_area')"/>
-							</label>
-							<input type="text" name="rented_area" value="{value_rented_area}"></input>
-							<xsl:value-of select="rented_area_simbol"/>
-						</div>
-						<xsl:choose>
-							<xsl:when test="is_adjustable">
-								<div class="pure-control-group">
-									<label>
-										<xsl:value-of select="php:function('lang', 'adjustable')"/>
-									</label>
-									<input type="checkbox" name="adjustable" id="adjustable">
-										<xsl:if test="is_adjustable = 1">
-											<xsl:attribute name="checked" value="checked"/>
-										</xsl:if>
-									</input>
-								</div>
-							</xsl:when>
-						</xsl:choose>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'adjustment_interval')"/>
-							</label>
-							<select id="adjustment_interval" name="adjustment_interval">
-								<xsl:apply-templates select="list_adjustment_interval/options"/>
-							</select>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'adjustment_share')"/>
-							</label>
-							<select id="adjustment_share" name="adjustment_share">
-								<xsl:apply-templates select="list_adjustment_share/options"/>
-							</select>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'adjustment_year')"/>
-							</label>
-							<xsl:value-of select="value_adjustment_year"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'override adjustment start')"/>
-							</label>
-							<input type="text" id="override_adjustment_start" name="override_adjustment_start" size="10" value="{value_override_adjustment_start}" data-validation-optional="true" data-validation="date" data-validation-format="yyyy">
-								<xsl:attribute name="data-validation-error-msg">
-									<xsl:value-of select="php:function('lang', 'year')"/>
-								</xsl:attribute>
-							</input>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'movein')"/>
-							</label>
-							<xsl:choose>
-								<xsl:when test="movein/url">
-									<a href="{movein/url}">
-										<xsl:value-of select="movein/created"/>
-									</a>
-								</xsl:when>
-								<xsl:otherwise>
-									<a href="{movein/new_report}">
-										<xsl:value-of select="php:function('lang', 'new')"/>
-									</a>
-								</xsl:otherwise>
-							</xsl:choose>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'moveout')"/>
-							</label>
-							<xsl:choose>
-								<xsl:when test="moveout/url">
-									<a href="{moveout/url}">
-										<xsl:value-of select="moveout/created"/>
-									</a>
-								</xsl:when>
-								<xsl:otherwise>
-									<a href="{moveout/new_report}">
-										<xsl:value-of select="php:function('lang', 'new')"/>
-									</a>
-								</xsl:otherwise>
-							</xsl:choose>
-						</div>
-					</div>
-					<div class="pure-u-1 pure-u-lg-1-2">
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'comment')"/>
-							</label>
-							<textarea cols="40" rows="10" name="comment" id="comment">
-								<xsl:value-of select="value_comment"/>
-							</textarea>
-						</div>
-						<xsl:choose>
-							<xsl:when test="value_publish_comment">
-								<div class="pure-control-group">
-									<label>
-										<xsl:value-of select="php:function('lang', 'publish_comment')"/>
-									</label>
-									<input type="checkbox" name="publish_comment" id="publish_comment">
-										<xsl:if test="value_publish_comment = 1">
-											<xsl:attribute name="checked" value="checked"/>
-										</xsl:if>
-									</input>
-								</div>
-							</xsl:when>
-						</xsl:choose>
 					</div>
 				</div>
 				<xsl:choose>
@@ -732,235 +736,238 @@
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-				<div id="details" class="pure-g">
-					<div class="pure-u-1 pure-u-lg-1-2">
-						<input type="hidden" name="id" id="contract_id" value="{contract_id}"/>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
-							</label>
+				<div id="details">
+					<div class="pure-g">
+						<div class="pure-u-1 pure-u-lg-1-2">
+							<input type="hidden" name="id" id="contract_id" value="{contract_id}"/>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
+								</label>
+								<xsl:choose>
+									<xsl:when test="contract_id = 0 or contract_id = ''">
+										<input type="hidden" name="location_id" id="location_id" value="{location_id}"/>
+									</xsl:when>
+								</xsl:choose>
+								<xsl:value-of select="value_field_of_responsibility"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'contract_type')"/>
+								</label>
+								<xsl:value-of select="value_contract_type"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'executive_officer')"/>
+								</label>
+								<xsl:value-of select="value_executive_officer"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'date_start')"/>
+								</label>
+								<xsl:value-of select="value_date_start"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'date_end')"/>
+								</label>
+								<xsl:value-of select="value_date_end"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'due_date')"/>
+								</label>
+								<xsl:value-of select="value_due_date"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'invoice_header')"/>
+								</label>
+								<xsl:value-of select="value_invoice_header"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'billing_term')"/>
+								</label>
+								<xsl:value-of select="value_billing_term"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'billing_start')"/>
+								</label>
+								<xsl:value-of select="value_billing_start"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'billing_end')"/>
+								</label>
+								<xsl:value-of select="value_billing_end"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'reference')"/>
+								</label>
+								<xsl:value-of select="value_reference"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'responsibility')"/>
+								</label>
+								<xsl:value-of select="value_responsibility_id"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'service')"/>
+								</label>
+								<xsl:value-of select="value_service"/>
+							</div>
+						</div>
+						<div class="pure-u-1 pure-u-lg-1-2">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'account_in')"/>
+								</label>
+								<xsl:value-of select="value_account_in"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'account_out')"/>
+								</label>
+								<xsl:value-of select="value_account_out"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'project_id')"/>
+								</label>
+								<xsl:value-of select="value_project_id"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'security')"/>
+								</label>
+								<xsl:value-of select="value_security_type"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'security_amount')"/>
+								</label>
+								<xsl:value-of select="security_amount_simbol"/>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="value_security_amount_view"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'rented_area')"/>
+								</label>
+								<xsl:value-of select="value_rented_area"/>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="rented_area_simbol"/>
+							</div>
 							<xsl:choose>
-								<xsl:when test="contract_id = 0 or contract_id = ''">
-									<input type="hidden" name="location_id" id="location_id" value="{location_id}"/>
-								</xsl:when>
-							</xsl:choose>
-							<xsl:value-of select="value_field_of_responsibility"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'contract_type')"/>
-							</label>
-							<xsl:value-of select="value_contract_type"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'executive_officer')"/>
-							</label>
-							<xsl:value-of select="value_executive_officer"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'date_start')"/>
-							</label>
-							<xsl:value-of select="value_date_start"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'date_end')"/>
-							</label>
-							<xsl:value-of select="value_date_end"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'due_date')"/>
-							</label>
-							<xsl:value-of select="value_due_date"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'invoice_header')"/>
-							</label>
-							<xsl:value-of select="value_invoice_header"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'billing_term')"/>
-							</label>
-							<xsl:value-of select="value_billing_term"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'billing_start')"/>
-							</label>
-							<xsl:value-of select="value_billing_start"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'billing_end')"/>
-							</label>
-							<xsl:value-of select="value_billing_end"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'reference')"/>
-							</label>
-							<xsl:value-of select="value_reference"/>
-						</div>
-					</div>
-					<div class="pure-u-1 pure-u-lg-1-2">
-
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'responsibility')"/>
-							</label>
-							<xsl:value-of select="value_responsibility_id"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'service')"/>
-							</label>
-							<xsl:value-of select="value_service"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'account_in')"/>
-							</label>
-							<xsl:value-of select="value_account_in"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'account_out')"/>
-							</label>
-							<xsl:value-of select="value_account_out"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'project_id')"/>
-							</label>
-							<xsl:value-of select="value_project_id"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'security')"/>
-							</label>
-							<xsl:value-of select="value_security_type"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'security_amount')"/>
-							</label>
-							<xsl:value-of select="security_amount_simbol"/>
-							<xsl:text> </xsl:text>
-							<xsl:value-of select="value_security_amount_view"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'rented_area')"/>
-							</label>
-							<xsl:value-of select="value_rented_area"/>
-							<xsl:text> </xsl:text>
-							<xsl:value-of select="rented_area_simbol"/>
-						</div>
-						<xsl:choose>
-							<xsl:when test="is_adjustable = 1">
-								<div class="pure-control-group">
-									<label>
-										<xsl:value-of select="php:function('lang', 'adjustable')"/>
-									</label>
-									<input type="checkbox" name="adjustable" id="adjustable" disabled="disabled">
-										<xsl:attribute name="checked" value="checked"/>
-									</input>
-								</div>
-								<div class="pure-control-group">
-									<label>
-										<xsl:value-of select="php:function('lang', 'adjustment_interval')"/>
-									</label>
-									<xsl:value-of select="value_current_interval"/>
-								</div>
-								<div class="pure-control-group">
-									<label>
-										<xsl:value-of select="php:function('lang', 'adjustment_share')"/>
-									</label>
-									<xsl:value-of select="value_current_share"/>
-								</div>
-								<div class="pure-control-group">
-									<label>
-										<xsl:value-of select="php:function('lang', 'adjustment_year')"/>
-									</label>
-									<xsl:value-of select="value_adjustment_year"/>
-								</div>
-								<div class="pure-control-group">
-									<label>
-										<xsl:value-of select="php:function('lang', 'override adjustment start')"/>
-									</label>
-									<xsl:value-of select="value_override_adjustment_start"/>
-								</div>
-							</xsl:when>
-							<xsl:otherwise>
-								<div class="pure-control-group">
-									<label></label>
-									<xsl:value-of select="php:function('lang', 'contract_not_adjustable')"/>
-								</div>
-							</xsl:otherwise>
-						</xsl:choose>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'movein')"/>
-							</label>
-							<xsl:choose>
-								<xsl:when test="movein/url">
-									<a href="{movein/url}">
-										<xsl:value-of select="movein/created"/>
-									</a>
-								</xsl:when>
-								<xsl:otherwise>
-									<a href="{movein/new_report}">
-										<xsl:value-of select="php:function('lang', 'new')"/>
-									</a>
-								</xsl:otherwise>
-							</xsl:choose>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'moveout')"/>
-							</label>
-							<xsl:choose>
-								<xsl:when test="moveout/url">
-									<a href="{moveout/url}">
-										<xsl:value-of select="moveout/created"/>
-									</a>
-								</xsl:when>
-								<xsl:otherwise>
-									<a href="{moveout/new_report}">
-										<xsl:value-of select="php:function('lang', 'new')"/>
-									</a>
-								</xsl:otherwise>
-							</xsl:choose>
-						</div>
-
-					</div>
-					<div class="pure-u-1 pure-u-lg-1-2">
-
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'comment')"/>
-							</label>
-							<xsl:value-of select="value_comment"/>
-						</div>
-						<xsl:choose>
-							<xsl:when test="value_publish_comment">
-								<div class="pure-control-group">
-									<label>
-										<xsl:value-of select="php:function('lang', 'publish_comment')"/>
-									</label>
-									<input type="checkbox" name="publish_comment" id="publish_comment" disabled="disabled">
-										<xsl:if test="value_publish_comment = 1">
+								<xsl:when test="is_adjustable = 1">
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'adjustable')"/>
+										</label>
+										<input type="checkbox" name="adjustable" id="adjustable" disabled="disabled">
 											<xsl:attribute name="checked" value="checked"/>
-										</xsl:if>
-									</input>
-								</div>
-							</xsl:when>
-						</xsl:choose>
+										</input>
+									</div>
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'adjustment_interval')"/>
+										</label>
+										<xsl:value-of select="value_current_interval"/>
+									</div>
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'adjustment_share')"/>
+										</label>
+										<xsl:value-of select="value_current_share"/>
+									</div>
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'adjustment_year')"/>
+										</label>
+										<xsl:value-of select="value_adjustment_year"/>
+									</div>
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'override adjustment start')"/>
+										</label>
+										<xsl:value-of select="value_override_adjustment_start"/>
+									</div>
+								</xsl:when>
+								<xsl:otherwise>
+									<div class="pure-control-group">
+										<label></label>
+										<xsl:value-of select="php:function('lang', 'contract_not_adjustable')"/>
+									</div>
+								</xsl:otherwise>
+							</xsl:choose>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'movein')"/>
+								</label>
+								<xsl:choose>
+									<xsl:when test="movein/url">
+										<a href="{movein/url}">
+											<xsl:value-of select="movein/created"/>
+										</a>
+									</xsl:when>
+									<xsl:otherwise>
+										<a href="{movein/new_report}">
+											<xsl:value-of select="php:function('lang', 'new')"/>
+										</a>
+									</xsl:otherwise>
+								</xsl:choose>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'moveout')"/>
+								</label>
+								<xsl:choose>
+									<xsl:when test="moveout/url">
+										<a href="{moveout/url}">
+											<xsl:value-of select="moveout/created"/>
+										</a>
+									</xsl:when>
+									<xsl:otherwise>
+										<a href="{moveout/new_report}">
+											<xsl:value-of select="php:function('lang', 'new')"/>
+										</a>
+									</xsl:otherwise>
+								</xsl:choose>
+							</div>
+						</div>
+					</div>
+					<hr/>
+					<div class="pure-g">
+						<div class="pure-u-1 pure-u-lg-1-2">
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'comment')"/>
+								</label>
+								<xsl:value-of select="value_comment"/>
+							</div>
+							<xsl:choose>
+								<xsl:when test="value_publish_comment">
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'publish_comment')"/>
+										</label>
+										<input type="checkbox" name="publish_comment" id="publish_comment" disabled="disabled">
+											<xsl:if test="value_publish_comment = 1">
+												<xsl:attribute name="checked" value="checked"/>
+											</xsl:if>
+										</input>
+									</div>
+								</xsl:when>
+							</xsl:choose>
+						</div>
 					</div>
 				</div>
 				<div id="composite">
