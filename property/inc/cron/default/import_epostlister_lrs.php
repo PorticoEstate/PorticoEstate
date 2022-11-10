@@ -171,12 +171,12 @@
 		{
 			$ok = true;
 
-			$fp = fopen($file, 'rb');
+			$fp = fopen($file, 'r');
+//			fseek($fp, 3); //seek to after BOM
 
 			$values = array();
 
-			$email_list = array
-				(
+			$email_list = array(
 				'AgrHRLeder' => 1, //AgressoHR-LedereGruppe1
 				'AgrHRSak'	 => 2, //AgressoHR-SaksbehandlereGruppe1, AgressoHR-SaksbehandlereGruppe2
 				'AgrHRLonn'	 => 3, //LRSAnsatteLønn
@@ -186,15 +186,15 @@
 
 			while (($data = fgetcsv($fp, 1000, ";")) !== false && $ok == true)
 			{
-				$alias				 = trim(mb_convert_encoding($data[0], "UTF-8", "utf-16"));
-				$name				 = trim(mb_convert_encoding($data[1], "UTF-8", "utf-16"));
-				$email				 = trim(mb_convert_encoding($data[2], "UTF-8", "utf-16"));
-				$liste				 = trim(mb_convert_encoding($data[3], "UTF-8", "utf-16"));
-				$office				 = trim(mb_convert_encoding($data[4], "UTF-8", "utf-16"));
-				$department			 = trim(mb_convert_encoding($data[5], "UTF-8", "utf-16"));
-				$alias_supervisor	 = trim(mb_convert_encoding($data[6], "UTF-8", "utf-16"));
-				$name_supervisor	 = trim(mb_convert_encoding($data[7], "UTF-8", "utf-16"));
-				$email_supervisor	 = trim(mb_convert_encoding($data[8], "UTF-8", "utf-16"));
+				$alias				 = rtrim(trim(mb_convert_encoding($data[0], "UTF-8", "UTF-16")),' ?');
+				$name				 = rtrim(trim(mb_convert_encoding($data[1], "UTF-8", "UTF-16")),' ?');
+				$email				 = rtrim(trim(mb_convert_encoding($data[2], "UTF-8", "UTF-16")),' ?');
+				$liste				 = rtrim(trim(mb_convert_encoding($data[3], "UTF-8", "UTF-16")),' ?');
+				$office				 = rtrim(trim(mb_convert_encoding($data[4], "UTF-8", "UTF-16")),' ?');
+				$department			 = rtrim(trim(mb_convert_encoding($data[5], "UTF-8", "UTF-16")),' ?');
+				$alias_supervisor	 = rtrim(trim(mb_convert_encoding($data[6], "UTF-8", "UTF-16")),' ?');
+				$name_supervisor	 = rtrim(trim(mb_convert_encoding($data[7], "UTF-8", "UTF-16")),' ?');
+				$email_supervisor	 = rtrim(trim(mb_convert_encoding($data[8], "UTF-8", "UTF-16")),' ?');
 
 				$liste_id = $email_list[$liste];
 
@@ -269,7 +269,7 @@
 				  name_supervisor character varying(255),
 				  email_supervisor character varying(255),
 				  active smallint DEFAULT 0,
-				  public smallint,
+				  public_ smallint,
 				  user_id integer,
 				  created bigint DEFAULT date_part('epoch'::text, now()),
 				  modified bigint DEFAULT date_part('epoch'::text, now()),
@@ -441,7 +441,7 @@ SQL;
 					)
 				);
 			}
-			$sql = 'INSERT INTO phpgw_helpdesk_email_out_recipient_list (set_id, alias, name, email, office, department, alias_supervisor, name_supervisor, email_supervisor , active, public)'
+			$sql = 'INSERT INTO phpgw_helpdesk_email_out_recipient_list (set_id, alias, name, email, office, department, alias_supervisor, name_supervisor, email_supervisor , active, public_)'
 				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
 			if ($valueset_diff && !$error)
