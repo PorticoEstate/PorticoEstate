@@ -1,6 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-# Guidelines: This file will create a virtualbox instance of ubuntu server 18.04 LTS,
+# Guidelines: This file will create a virtualbox instance of ubuntu server 20.04 LTS,
 # complete with postgresql, apache, php and xdebug.
 # The user 'portico' has password 'portico' - and is member of sudoers.
 # Roles/Passwd in posgresql: portico/portico, vagrant/vagrant
@@ -126,7 +126,7 @@ Vagrant.configure("2") do |config|
     sudo apt-get install -y apt-utils
     sudo apt-get install -y apache2
     sudo apt-get install -y mysql-client-core-8.0
-    sudo apt-get install -y libapache2-mod-php8.0 php8.0 php8.0-curl php8.0-intl php8.0-mysql php8.0-xdebug php8.0-apcu php8.0-dev php8.0-xml php8.0-gd php8.0-xsl php8.0-sybase php8.0-pgsql php8.0-gd php8.0-imagick php8.0-imap php8.0-soap php8.0-zip php8.0-mbstring php-pear libaio1 locales
+    sudo apt-get install -y libapache2-mod-php8.1 php8.1 php8.1-curl php8.1-intl php8.1-mysql php8.1-xdebug php8.1-apcu php8.1-dev php8.1-xml php8.1-gd php8.1-xsl php8.1-sybase php8.1-pgsql php8.1-gd php8.1-imagick php8.1-imap php8.1-soap php8.1-zip php8.1-mbstring php-pear libaio1 locales
     sudo apt-get install -y git
     sudo apt-get install -y less vim-tiny
 	sudo apt-get install -y subversion
@@ -163,10 +163,10 @@ EOF
 
     sudo apt-get upgrade -y
 
-    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/8.0/apache2/php.ini
-    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/8.0/cli/php.ini
+    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/8.1/apache2/php.ini
+    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/8.1/cli/php.ini
 
-    sudo cat > /etc/php/8.0/apache2/conf.d/91-app.ini <<EOF
+    sudo cat > /etc/php/8.1/apache2/conf.d/91-app.ini <<EOF
 xdebug.mode = debug,develop
 xdebug.start_with_request=yes
 xdebug.idekey=netbeans-xdebug
@@ -196,7 +196,7 @@ sudo sed -i "s/PermitRootLogin.*/PermitRootLogin yes/" /etc/ssh/sshd_config
 
 sudo service ssh restart
 
-sudo cp /etc/php/8.0/apache2/conf.d/91-app.ini /etc/php/8.0/cli/conf.d/91-app.ini
+sudo cp /etc/php/8.1/apache2/conf.d/91-app.ini /etc/php/8.1/cli/conf.d/91-app.ini
 
 # Enable mod_rewrite
  sudo a2enmod rewrite
