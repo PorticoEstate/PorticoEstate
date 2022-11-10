@@ -19,7 +19,7 @@
 					</h1>
 
 					<p>
-						<xsl:value-of select="config/application_new_application"/>
+						<xsl:value-of disable-output-escaping="yes" select="config/application_new_application"/>
 					</p>
 					<hr class="mt-5 mb-5"></hr>
 
