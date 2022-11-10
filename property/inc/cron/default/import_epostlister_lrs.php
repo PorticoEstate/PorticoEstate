@@ -158,7 +158,7 @@
 				$file_local	 = "{$directory_local}/{$file_name}";
 
 				ftp_pasv($connection, true);
-				if (!ftp_get($connection, $file_local, $file_remote, FTP_ASCII))
+				if (!ftp_get($connection, $file_local, $file_remote, FTP_BINARY))
 				{
 					echo "Feiler på ftp_fget()<br/>";
 				}
