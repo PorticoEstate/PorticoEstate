@@ -539,7 +539,7 @@
 			$location1_id	 = $GLOBALS['phpgw']->locations->get_id($appname, $origin_location);
 			$location2_id	 = $GLOBALS['phpgw']->locations->get_id($appname, $target_location);
 
-			$sql = "SELECT entry_date, location2_item_id FROM phpgw_interlink WHERE location2_item_id = {$id} AND location1_id = {$location1_id} AND location2_id = {$location2_id}";
+			$sql = "SELECT entry_date, location1_item_id FROM phpgw_interlink WHERE location2_item_id = {$id} AND location1_id = {$location1_id} AND location2_id = {$location2_id}";
 
 			$this->_db->query($sql, __LINE__, __FILE__);
 
@@ -555,14 +555,14 @@
 
 			foreach ($date_info as &$entry)
 			{
-				$entry['link'] = $this->get_relation_link(array('location' => $target_location), $entry['target_id']);
+				$entry['link'] = $this->get_relation_link(array('location' => $origin_location), $entry['target_id']);
 				if ($cat_id)
 				{
 					$entry['descr'] = $this->soadmin_entity->read_category_name($entity_id, $cat_id);
 				}
 				else
 				{
-					$entry['descr'] = lang($target_location);
+					$entry['descr'] = lang($origin_location);
 				}
 			}
 			return $date_info;
