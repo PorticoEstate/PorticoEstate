@@ -182,11 +182,15 @@
 			}
 			$_columns = $this->get_columns();
 
+			$name = array();
 			$columns = array();
 			foreach ($_columns as $id => $column_info)
 			{
 				$columns[] = $column_info;
+				$name[] = $column_info['name'];
 			}
+
+			array_multisort($name, SORT_ASC, $columns);
 
 			$column_list = $this->bocommon->select_multi_list($selected, $columns);
 			return $column_list;
