@@ -64,20 +64,21 @@
 							</xsl:for-each>
 						</div>
 					</div>
+					<div class="heading">
+						<legend>
+							<h3>
+								<xsl:value-of select="php:function('lang', 'Why')" />
+							</h3>
+						</legend>
+					</div>
 					<div class="pure-g">
-						<div class="pure-u-1">
-							<div class="heading">
-								<legend>
-									<h3>
-										<xsl:value-of select="php:function('lang', 'Why')" />
-									</h3>
-								</legend>
-							</div>
+
+						<div class="pure-u-1 pure-u-lg-1-2">
 							<div class="pure-control-group">
 								<label for="field_activity">
 									<xsl:value-of select="php:function('lang', 'Activity')" />
 								</label>
-								<select name="activity_id" id="field_activity" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+								<select name="activity_id" id="field_activity" class="pure-u-1 pure-u-lg-11-12">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
@@ -104,7 +105,7 @@
 								<label for="field_name">
 									<xsl:value-of select="php:function('lang', 'Event name')" />
 								</label>
-								<input id="field_name" name="name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+								<input id="field_name" name="name" type="text" class="pure-u-1 pure-u-lg-11-12">
 									<xsl:attribute name="value">
 										<xsl:value-of select="event/name"/>
 									</xsl:attribute>
@@ -114,7 +115,7 @@
 								<label for="field_organizer">
 									<xsl:value-of select="php:function('lang', 'Organizer')" />
 								</label>
-								<input id="field_organizer" name="organizer" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+								<input id="field_organizer" name="organizer" type="text" class="pure-u-1 pure-u-lg-11-12">
 									<xsl:attribute name="value">
 										<xsl:value-of select="event/organizer"/>
 									</xsl:attribute>
@@ -124,17 +125,20 @@
 								<label for="field_homepage">
 									<xsl:value-of select="php:function('lang', 'Homepage')" />
 								</label>
-								<input id="field_homepage" name="homepage" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+								<input id="field_homepage" name="homepage" type="text" class="pure-u-1 pure-u-lg-11-12">
 									<xsl:attribute name="value">
 										<xsl:value-of select="event/homepage"/>
 									</xsl:attribute>
 								</input>
 							</div>
+						</div>
+						<div class="pure-u-1 pure-u-lg-1-2">
+
 							<div class="pure-control-group">
 								<label for="field_description">
 									<xsl:value-of select="php:function('lang', 'Description')" />
 								</label>
-								<textarea id="field_description" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="description">
+								<textarea id="field_description" class="full-width pure-u-1 pure-u-lg-11-12" name="description">
 									<xsl:value-of select="event/description"/>
 								</textarea>
 							</div>
@@ -142,7 +146,7 @@
 								<label for="field_equipment">
 									<xsl:value-of select="php:function('lang', 'Equipment (2018)')" />
 								</label>
-								<textarea id="field_equipment" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="equipment">
+								<textarea id="field_equipment" class="full-width pure-u-1 pure-u-lg-11-12" name="equipment">
 									<xsl:value-of select="event/equipment"/>
 								</textarea>
 							</div>
@@ -150,7 +154,7 @@
 								<label for="field_public">
 									<xsl:value-of select="php:function('lang', 'Event type')"/>
 								</label>
-								<select id="field_public" name="is_public" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+								<select id="field_public" name="is_public" class="pure-u-1 pure-u-lg-11-12">
 									<option value="0">
 										<xsl:if test="event/is_public=0">
 											<xsl:attribute name="selected">checked</xsl:attribute>
@@ -172,6 +176,7 @@
 								<xsl:copy-of select="phpgw:option_checkbox(event/include_in_list, 'include_in_list')"/>
 							</div>
 						</div>
+
 					</div>
 					<div class="pure-g">
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
@@ -361,7 +366,7 @@
 											<xsl:value-of select="php:function('lang', 'participant limit')" />
 										</h4>
 									</label>
-									<input id="field_participant_limit" name="participant_limit" type="number" min="-1">
+									<input id="field_participant_limit" name="participant_limit" type="number" min="-1" class="pure-u-1">
 										<xsl:attribute name="value">
 											<xsl:value-of select="event/participant_limit"/>
 										</xsl:attribute>
@@ -372,7 +377,7 @@
 											<xsl:value-of select="php:function('lang', 'SMS total')" />
 										</h4>
 									</label>
-									<input type="text" id="sms_total" name="sms_total">
+									<input type="text" id="sms_total" name="sms_total" class="pure-u-1">
 										<xsl:attribute name="value">
 											<xsl:value-of select="event/sms_total"/>
 										</xsl:attribute>
@@ -525,7 +530,9 @@
 								</legend>
 							</div>
 							<div class="pure-control-group">
-								<label style="display:none;">!</label>
+								<label>
+									<br/>
+								</label>
 								<select name="reminder" id="field_reminder" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
 									<xsl:choose>
 										<xsl:when test="event/reminder = 1">
@@ -612,7 +619,7 @@
 								<label for="field_sms_content">
 									<xsl:value-of select="php:function('lang', 'SMS')" />
 								</label>
-								<textarea rows="5" id="field_sms_content" name="sms_content" class="pure-input-1-2" >
+								<textarea rows="5" id="field_sms_content" name="sms_content" class="pure-input-1" >
 								</textarea>
 							</div>
 							<div id="sms_receipt"></div>
@@ -637,7 +644,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'Text written in the text area below will be sent as an email to all registered contact persons.')" />
 								</label>
-								<textarea rows="4" id="field_mail" name="mail" class="full-width pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3"></textarea>
+								<textarea rows="4" id="field_mail" name="mail" class="pure-u-1"></textarea>
 							</div>
 							<div class="pure-control-group">
 								<label>
@@ -667,13 +674,13 @@
 								<label for="sendtorbuilding_email1">
 									<xsl:value-of select="php:function('lang', 'Optional e-mail adress')" />
 								</label>
-								<input type="text" id="sendtorbuilding_email1" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="sendtorbuilding_email1" />
+								<input type="text" id="sendtorbuilding_email1" class="pure-u-1" name="sendtorbuilding_email1" />
 							</div>
 							<div class="pure-control-group">
 								<label for="sendtorbuilding_email2">
 									<xsl:value-of select="php:function('lang', 'Optional e-mail adress')" />
 								</label>
-								<input type="text" id="sendtorbuilding_email2" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3" name="sendtorbuilding_email2" />
+								<input type="text" id="sendtorbuilding_email2" class="pure-u-1" name="sendtorbuilding_email2" />
 							</div>
 						</div>
 					</div>
