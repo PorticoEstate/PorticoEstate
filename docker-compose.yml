@@ -1,18 +1,6 @@
 version: '3.6'
 
 services:
-  db:
-    container_name: postgres_container
-    image: postgres:13.1
-    ports:
-      - 5433:5432
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
-      PGDATA: /data/postgres
-    volumes:
-       - postgres:/data/postgres
-    restart: unless-stopped
   postgres15:
     container_name: postgres15_container
     image: postgres:15.0
@@ -23,7 +11,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
       PGDATA: /data/postgres
     volumes:
-       - postgres15:/data/postgres
+       - postgres15_volume:/data/postgres
     restart: unless-stopped
   mssql:
     container_name: mssql_container
@@ -73,7 +61,6 @@ services:
       - ./:/var/www/html/portico/
     restart: always
     depends_on:
-      - db
       - postgres15
       - redis
   pgadmin:
@@ -89,8 +76,7 @@ services:
     restart: unless-stopped
 
 volumes:
-    postgres:
-    postgres15:
+    postgres15_volume:
     pgadmin:
     sqldata1:
     sqldata2:
