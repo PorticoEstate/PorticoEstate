@@ -15,7 +15,7 @@
 					<label for="field_name">
 						<xsl:value-of select="php:function('lang', 'Name')" />
 					</label>
-					<input id="field_name" name="name" type="text">
+					<input id="field_name" name="name" type="text" class="pure-input-3-4">
 						<xsl:attribute name="value">
 							<xsl:value-of select="season/name"/>
 						</xsl:attribute>

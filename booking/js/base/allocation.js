@@ -106,7 +106,10 @@ function populateSelectSeason(building_id, selection)
 	var url = phpGWLink('index.php', {menuaction: 'booking.uiseason.index', sort: 'name', filter_building_id: building_id, length: -1}, true);
 	var container = $('#season_container');
 	var attr = [
-		{name: 'name', value: 'season_id'}, {name: 'data-validation', value: 'required'}, {name: 'data-validation-error-msg', value: 'Please select a season'}
+		{name: 'name', value: 'season_id'},
+		{name: 'data-validation', value: 'required'},
+		{name: 'data-validation-error-msg', value: 'Please select a season'},
+		{name: 'class', value: 'pure-input-1-4'}
 	];
 	populateSelect(url, selection, container, attr);
 }

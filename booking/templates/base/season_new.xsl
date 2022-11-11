@@ -17,7 +17,7 @@
 					<label for="field_name">
 						<xsl:value-of select="php:function('lang', 'Name')" />
 					</label>
-					<input id="field_name" name="name" type="text">
+					<input id="field_name" name="name" type="text" class="pure-input-1-2">
 						<xsl:attribute name="value">
 							<xsl:value-of select="season/name"/>
 						</xsl:attribute>
@@ -38,7 +38,7 @@
 							<xsl:value-of select="season/building_id"/>
 						</xsl:attribute>
 					</input>
-					<input id="field_building_name" name="building_name" type="text">
+					<input id="field_building_name" name="building_name" type="text" class="pure-input-1-2">
 						<xsl:attribute name="value">
 							<xsl:value-of select="season/building_name"/>
 						</xsl:attribute>
@@ -65,7 +65,7 @@
 							<xsl:value-of select="php:function('lang', 'Please enter an officer name')" />
 						</xsl:attribute>
 					</input>
-					<input id="field_officer_name" name="officer_name" type="text">
+					<input id="field_officer_name" name="officer_name" type="text" class="pure-input-1-2">
 						<xsl:attribute name="value">
 							<xsl:value-of select="season/officer_name"/>
 						</xsl:attribute>
@@ -96,7 +96,7 @@
 					<label for="status_field">
 						<xsl:value-of select="php:function('lang', 'Status')" />
 					</label>
-					<select name="status" id=" ">
+					<select name="status" id=" " class="pure-input-1-2">
 						<option value="PLANNING">
 							<xsl:if test="season/status='PLANNING'">
 								<xsl:attribute name="selected">selected</xsl:attribute>

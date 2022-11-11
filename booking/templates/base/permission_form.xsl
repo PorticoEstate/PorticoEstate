@@ -58,7 +58,7 @@
 						<label for="field_subject_name">
 							<xsl:value-of select="php:function('lang', 'Account')" />
 						</label>
-						<input id="field_subject_name" name="subject_name" type="text">
+						<input id="field_subject_name" name="subject_name" type="text" class="pure-input-1-4">
 							<xsl:attribute name="value">
 								<xsl:value-of select="subject_name"/>
 							</xsl:attribute>
@@ -80,7 +80,7 @@
 						<label for="field_object_name">
 							<xsl:value-of select="php:function('lang', string(object_type_label))" />
 						</label>
-						<input id="field_object_name" name="object_name" type="text">
+						<input id="field_object_name" name="object_name" type="text" class="pure-input-1-4">
 							<xsl:attribute name="value">
 								<xsl:value-of select="object_name"/>
 							</xsl:attribute>
