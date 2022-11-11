@@ -749,11 +749,32 @@
 				{
 					for ($j = 0; $j < count($entity); $j++)
 					{
-						$ticket['child_date'][$entity[$j]['name']] = $interlink->get_child_date('property', '.ticket', $entity[$j]['type'], $ticket['id'], isset($entity[$j]['entity_id']) ? $entity[$j]['entity_id'] : '', isset($entity[$j]['cat_id']) ? $entity[$j]['cat_id'] : '');
+						$date_info = $interlink->get_child_date(
+							'property',
+							'.ticket',
+							$entity[$j]['type'],
+							$ticket['id'],
+							isset($entity[$j]['entity_id']) ? $entity[$j]['entity_id'] : '',
+							isset($entity[$j]['cat_id']) ? $entity[$j]['cat_id'] : ''
+							);
+
+						$date_info_reverse = $interlink->get_child_date_reverse(
+							'property',
+							$entity[$j]['type'],
+							'.ticket',
+							$ticket['id'],
+							isset($entity[$j]['entity_id']) ? $entity[$j]['entity_id'] : '',
+							isset($entity[$j]['cat_id']) ? $entity[$j]['cat_id'] : ''
+							);
+						
+						$ticket['child_date'][$entity[$j]['name']] = array('date_info' => array_merge($date_info, $date_info_reverse));
+
 						if ($ticket['child_date'][$entity[$j]['name']]['date_info'] && !$download)
 						{
-							$ticket['child_date'][$entity[$j]['name']]['statustext'] = $interlink->get_relation_info(array(
-								'location' => $entity[$j]['type']), $ticket['child_date'][$entity[$j]['name']]['date_info'][0]['target_id']);
+							$ticket['child_date'][$entity[$j]['name']]['statustext'] = $interlink->get_relation_info(
+								array('location' => $entity[$j]['type']),
+								$ticket['child_date'][$entity[$j]['name']]['date_info'][0]['target_id']
+							);
 						}
 					}
 				}
