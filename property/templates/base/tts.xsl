@@ -137,7 +137,7 @@
 								<xsl:variable name="select_priority_name">
 									<xsl:value-of select="select_priority_name"/>
 								</xsl:variable>
-								<select name="{$select_priority_name}" class="pure-input-3-4" >
+								<select name="{$select_priority_name}" class="pure-input-3-4">
 									<xsl:apply-templates select="priority_list/options"/>
 								</select>
 							</div>

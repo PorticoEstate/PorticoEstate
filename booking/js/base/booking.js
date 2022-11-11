@@ -242,7 +242,10 @@ function populateSelectSeason(building_id, selection)
 	var url = phpGWLink('index.php', {menuaction: 'booking.uiseason.index', sort: 'name', filter_building_id: building_id, length: -1}, true);
 	var container = $('#season_container');
 	var attr = [
-		{name: 'name', value: 'season_id'}, {name: 'data-validation', value: 'required'}, {name: 'data-validation-error-msg', value: lang['Please select a season']}
+		{name: 'name', value: 'season_id'},
+		{name: 'data-validation', value: 'required'},
+		{name: 'data-validation-error-msg', value: lang['Please select a season']},
+		{name: 'class', value: 'pure-u-1 pure-u-lg-11-12'}
 	];
 	populateSelect(url, selection, container, attr);
 }
@@ -251,7 +254,7 @@ function populateSelectGroup(organization_id, selection)
 	var url = phpGWLink('index.php', {menuaction: 'booking.uigroup.index', filter_organization_id: organization_id, length: -1}, true);
 	var container = $('#group_container');
 	var attr = [
-		{name: 'name', value: 'group_id'}, {name: 'data-validation', value: 'required'}, {name: 'data-validation-error-msg', value: lang['Please select a group']}
+		{name: 'name', value: 'group_id'}, {name: 'data-validation', value: 'required'}, {name: 'data-validation-error-msg', value: lang['Please select a group']},{name: 'class', value: 'pure-u-1 pure-u-lg-11-12'}
 	];
 	populateSelect(url, selection, container, attr);
 }
