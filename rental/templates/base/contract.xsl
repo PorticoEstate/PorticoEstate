@@ -88,7 +88,7 @@
 									<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
 								</label>
 
-								<select id="location_id" name="location_id">
+								<select id="location_id" name="location_id" class="pure-input-1-2">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
@@ -110,7 +110,7 @@
 									<label>
 										<xsl:value-of select="php:function('lang', 'contract_type')"/>
 									</label>
-									<select id="contract_type" name="contract_type">
+									<select id="contract_type" name="contract_type" class="pure-input-1-2">
 										<xsl:attribute name="data-validation">
 											<xsl:text>required</xsl:text>
 										</xsl:attribute>
@@ -125,7 +125,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'executive_officer')"/>
 								</label>
-								<select id="executive_officer" name="executive_officer">
+								<select id="executive_officer" name="executive_officer" class="pure-input-1-2">
 									<xsl:apply-templates select="list_executive_officer/options"/>
 								</select>
 							</div>
@@ -151,13 +151,14 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'invoice_header')"/>
 								</label>
-								<input type="text" name="invoice_header" value="{value_invoice_header}"></input>
+								<input type="text" name="invoice_header" value="{value_invoice_header}" class="pure-input-1-2">
+								</input>
 							</div>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'billing_term')"/>
 								</label>
-								<select id="billing_term" name="billing_term">
+								<select id="billing_term" name="billing_term" class="pure-input-1-2">
 									<xsl:apply-templates select="list_billing_term/options"/>
 								</select>
 							</div>
@@ -177,13 +178,13 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'reference')"/>
 								</label>
-								<input type="text" name="reference" value="{value_reference}"></input>
+								<input type="text" name="reference" value="{value_reference}" class="pure-input-1-2"></input>
 							</div>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'customer order id')"/>
 								</label>
-								<input type="number" step="1" name="customer_order_id" value="{value_customer_order_id}"></input>
+								<input type="number" step="1" name="customer_order_id" value="{value_customer_order_id}" class="pure-input-1-2"></input>
 							</div>
 						</div>
 						<div class="pure-u-1 pure-u-lg-1-2">
@@ -194,12 +195,12 @@
 								<xsl:choose>
 									<xsl:when test="list_responsibility">
 										<xsl:if test="list_responsibility != ''">
-											<select id="responsibility_id" name="responsibility_id">
+											<select id="responsibility_id" name="responsibility_id" class="pure-input-1-2">
 												<xsl:apply-templates select="list_responsibility/options"/>
 											</select>
 										</xsl:if>
 										<xsl:if test="list_responsibility = ''">
-											<input type="text" name="responsibility_id" id="responsibility_id" value="{value_responsibility_id}"/>
+											<input type="text" name="responsibility_id" id="responsibility_id" value="{value_responsibility_id}"  class="pure-input-1-2"/>
 										</xsl:if>
 									</xsl:when>
 								</xsl:choose>
@@ -208,47 +209,51 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'service')"/>
 								</label>
-								<input type="text" name="service_id" value="{value_service}"></input>
+								<input type="text" name="service_id" value="{value_service}" class="pure-input-1-2"></input>
 							</div>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'account_in')"/>
 								</label>
-								<input type="text" name="account_in" value="{value_account_in}"></input>
+								<input type="text" name="account_in" value="{value_account_in}" class="pure-input-1-2"></input>
 							</div>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'account_out')"/>
 								</label>
-								<input type="text" name="account_out" value="{value_account_out}"></input>
+								<input type="text" name="account_out" value="{value_account_out}" class="pure-input-1-2"></input>
 							</div>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'project_id')"/>
 								</label>
-								<input type="text" name="project_id" value="{value_project_id}"></input>
+								<input type="text" name="project_id" value="{value_project_id}" class="pure-input-1-2"></input>
 							</div>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'security')"/>
 								</label>
-								<select id="security_type" name="security_type">
+								<select id="security_type" name="security_type" class="pure-input-1-2">
 									<xsl:apply-templates select="list_security/options"/>
 								</select>
 							</div>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'security_amount')"/>
+									<xsl:text> (</xsl:text>
+									<xsl:value-of select="security_amount_simbol"/>
+									<xsl:text>) </xsl:text>
 								</label>
-								<xsl:value-of select="security_amount_simbol"/>
-								<input type="text" name="security_amount" value="{value_security_amount}"></input>
+								<input type="text" name="security_amount" value="{value_security_amount}" class="pure-input-1-2"></input>
 							</div>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'rented_area')"/>
+									<xsl:text> (</xsl:text>
+									<xsl:value-of select="rented_area_simbol"/>
+									<xsl:text>) </xsl:text>
 								</label>
-								<input type="text" name="rented_area" value="{value_rented_area}"></input>
-								<xsl:value-of select="rented_area_simbol"/>
+								<input type="text" name="rented_area" value="{value_rented_area}" class="pure-input-1-2"></input>
 							</div>
 							<xsl:choose>
 								<xsl:when test="is_adjustable">
@@ -268,7 +273,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'adjustment_interval')"/>
 								</label>
-								<select id="adjustment_interval" name="adjustment_interval">
+								<select id="adjustment_interval" name="adjustment_interval" class="pure-input-1-2">
 									<xsl:apply-templates select="list_adjustment_interval/options"/>
 								</select>
 							</div>
@@ -276,7 +281,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'adjustment_share')"/>
 								</label>
-								<select id="adjustment_share" name="adjustment_share">
+								<select id="adjustment_share" name="adjustment_share" class="pure-input-1-2">
 									<xsl:apply-templates select="list_adjustment_share/options"/>
 								</select>
 							</div>
@@ -290,7 +295,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'override adjustment start')"/>
 								</label>
-								<input type="text" id="override_adjustment_start" name="override_adjustment_start" size="10" value="{value_override_adjustment_start}" data-validation-optional="true" data-validation="date" data-validation-format="yyyy">
+								<input type="text" id="override_adjustment_start" name="override_adjustment_start" size="10" value="{value_override_adjustment_start}" data-validation-optional="true" data-validation="date" data-validation-format="yyyy" class="pure-input-1-2">
 									<xsl:attribute name="data-validation-error-msg">
 										<xsl:value-of select="php:function('lang', 'year')"/>
 									</xsl:attribute>
@@ -390,9 +395,9 @@
 											<xsl:value-of select="php:function('lang', 'search_for')"/>
 										</label>
 										<input type="text" id="composite_query" name="composite_query" value=""></input>
-										<label>
-											<xsl:value-of select="php:function('lang', 'search_where')"/>
-										</label>
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="php:function('lang', 'search_where')"/>
+										<xsl:text> </xsl:text>
 										<select id="composite_search_options" name="composite_search_options">
 											<xsl:apply-templates select="list_composite_search/options"/>
 										</select>										
@@ -465,9 +470,9 @@
 											<xsl:value-of select="php:function('lang', 'search_for')"/>
 										</label>
 										<input type="text" id="party_query" name="party_query" value=""></input>
-										<label>
-											<xsl:value-of select="php:function('lang', 'search_where')"/>
-										</label>
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="php:function('lang', 'search_where')"/>
+										<xsl:text> </xsl:text>
 										<select id="party_search_options" name="party_search_options">
 											<xsl:apply-templates select="list_party_search/options"/>
 										</select>										
@@ -479,9 +484,9 @@
 										<select id="party_type" name="party_type">
 											<xsl:apply-templates select="list_party_types/options"/>
 										</select>
-										<label>
-											<xsl:value-of select="php:function('lang', 'marked_as')"/>
-										</label>
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="php:function('lang', 'marked_as')"/>
+										<xsl:text> </xsl:text>
 										<select id="active" name="active">
 											<xsl:apply-templates select="list_status/options"/>
 										</select>																				
@@ -611,15 +616,15 @@
 											<xsl:value-of select="php:function('lang', 'search_for')"/>
 										</label>
 										<input id="document_query" type="text" name="document_query" />
-										<label>
-											<xsl:value-of select="php:function('lang', 'search_where')"/>
-										</label>
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="php:function('lang', 'search_where')"/>
+										<xsl:text> </xsl:text>
 										<select id="document_search_option" name="document_search_option">
 											<xsl:apply-templates select="list_document_search/options"/>
 										</select>
-										<label>
-											<xsl:value-of select="php:function('lang', 'document_type')"/>
-										</label>
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="php:function('lang', 'document_type')"/>
+										<xsl:text> </xsl:text>
 										<select id="document_type_search" name="document_type_search">
 											<xsl:apply-templates select="list_document_types/options"/>
 										</select>																	
@@ -666,9 +671,9 @@
 											<xsl:value-of select="php:function('lang', 'date')"/>
 										</label>
 										<input type="text" id="date_notification" name="date_notification" size="10" value="" readonly="readonly"/>												
-										<label>
+										<xsl:text> </xsl:text>
 											<xsl:value-of select="php:function('lang', 'recurrence')"/>
-										</label>
+										<xsl:text> </xsl:text>
 										<select id="notification_recurrence" name="notification_recurrence">
 											<xsl:apply-templates select="list_notification_recurrence/options"/>
 										</select>										
@@ -690,9 +695,8 @@
 											<xsl:apply-templates select="list_notification_user_group/option_group"/>
 										</select>
 										<xsl:text> </xsl:text>
-										<label>
 											<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
-										</label>
+										<xsl:text> </xsl:text>
 										<select id="notification_location" name="notification_location">
 											<option value=''>
 												<xsl:value-of select="php:function('lang', 'target_none')"/>
