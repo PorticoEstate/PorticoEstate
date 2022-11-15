@@ -825,4 +825,9 @@
 			}
 			return $files;
 		}
+
+		public function edit_representative( $values )
+		{
+			return $this->so->edit_representative($values);
+		}
 	}

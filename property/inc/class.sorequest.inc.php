@@ -250,7 +250,7 @@
 				. " (fm_request.amount_potential_grants * fm_request.multiplier) as amount_potential_grants,"
 				. " fm_request.score,"
 				. " fm_request.recommended_year,"
-				. " fm_request.start_date"
+				. " fm_request.start_date, representative"
 				. " FROM (( fm_request  LEFT JOIN fm_request_status ON fm_request.status = fm_request_status.id)"
 				. " LEFT JOIN fm_request_condition ON fm_request.id = fm_request_condition.request_id)"
 				. " {$filtermethod}"
@@ -295,6 +295,7 @@
 					'recommended_year'			 => $this->_db->f('recommended_year') ? $this->_db->f('recommended_year') : '',
 					'planned_year'				 => $this->_db->f('start_date') ? date('Y', $this->_db->f('start_date')) : '',
 					'cat_id'					 => $this->_db->f('cat_id'),
+					'representative'			 => (float)$this->_db->f('representative'),
 				);
 			}
 			return $values;
@@ -1467,5 +1468,16 @@
 				);
 			}
 			return $values;
+		}
+
+		public function edit_representative( $values )
+		{
+			$id = (int) $values['id'];
+			$representative = (float) $values['representative'];
+
+			$sql = "UPDATE fm_request SET representative = '{$representative}'"
+				. " WHERE id =  {$id}";
+
+			return $this->_db->query($sql, __LINE__, __FILE__);
 		}
 	}
