@@ -64,6 +64,7 @@
 			'build_multi_upload_file'	 => true,
 			'get_files'					 => true,
 			'view_image'				 => true,
+			'set_value'					 => true,
 		);
 
 		public function __construct()
@@ -1990,4 +1991,52 @@ JS;
 			);
 			return phpgwapi_jquery::tabview_generate($tabs, $active_tab, 'request_tabview');
 		}
+
+		/**
+		 * Edit values for entity directly from table
+		 *
+		 * @param int  $id  id of entity
+		 * @param string  $value new title of entity
+		 *
+		 * @return string text to appear in ui as receipt on action
+		 */
+		public function set_value()
+		{
+			$id = phpgw::get_var('id', 'int', 'POST');
+
+			$field_name = phpgw::get_var('field_name');
+
+			if (!$this->acl_edit)
+			{
+				return lang('no access');
+			}
+
+			if ($id)
+			{
+				$values = $this->bo->read_single( $id);
+
+				try
+				{
+					if ($field_name == 'representative')
+					{
+						$values['representative'] = phpgw::get_var('value', 'float');
+						$this->bo->edit_representative($values);
+					}
+				}
+				catch (Exception $e)
+				{
+					if ($e)
+					{
+						echo $e->getMessage();
+					}
+				}
+				echo true;
+			}
+			else
+			{
+				echo "ERROR";
+			}
+		}
+
+
 	}

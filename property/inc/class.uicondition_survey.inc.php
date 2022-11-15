@@ -570,6 +570,7 @@
 					'className'	 => 'center'),
 				array('key'		 => 'planned_year', 'label'		 => lang('planned year'), 'sortable'	 => true,
 					'className'	 => 'center'),
+				array('key' => 'representative', 'label' => lang('representative') . '*', 'sortable' => false , 'editor' => $mode == 'edit' ? true : false),
 				array('key' => 'related', 'label' => lang('related'), 'sortable' => false),
 			);
 
@@ -581,6 +582,7 @@
 				'ColumnDefs' => $related_def,
 				'config'	 => array(
 					array('allrows' => true),
+					array('editor_action' => self::link(array('menuaction' => 'property.uirequest.set_value')))//, 'phpgw_return_as'	 => 'json')))
 				)
 			);
 
