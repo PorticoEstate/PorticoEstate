@@ -3287,6 +3287,8 @@ JS;
 			
 			$delivery_address = str_replace('__username__', $GLOBALS['phpgw_info']['user']['fullname'], $delivery_address);
 
+			$default_tax_code = (!empty($project['tax_code']) || $project['tax_code'] === 0) ? $project['tax_code'] : (int)$GLOBALS['phpgw_info']['user']['preferences']['property']['default_tax_code'];
+
 			$data = array(
 				'datatable_def'							 => $datatable_def,
 				'periodization_data'					 => $periodization_data,
@@ -3453,7 +3455,7 @@ JS;
 				'tax_code_list'							 => array('options' => $this->bocommon->select_category_list(
 					array(
 						'type' => 'tax',
-						'selected'	 => (!empty($values['tax_code']) || $values['tax_code'] === 0) ? $values['tax_code']: (int)$GLOBALS['phpgw_info']['user']['preferences']['property']['default_tax_code'],
+						'selected'	 => (!empty($values['tax_code']) || $values['tax_code'] === 0) ? $values['tax_code']: $default_tax_code,
 						'order'		 => 'id',
 						'id_in_name' => 'num'))),
 				'contract_list'							 => array('options' => $this->get_vendor_contract($values['vendor_id'], $values['contract_id'])),

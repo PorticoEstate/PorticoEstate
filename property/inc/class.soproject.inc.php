@@ -940,6 +940,7 @@
 					'inherit_location'		 => $this->db->f('inherit_location'),
 					'periodization_id'		 => $this->db->f('periodization_id'),
 					'delivery_address'		 => $this->db->f('delivery_address', true),
+					'tax_code'				 => $this->db->f('tax_code'),
 				);
 
 				if (isset($values['attributes']) && is_array($values['attributes']))
@@ -1316,12 +1317,14 @@
 				$project['inherit_location'],
 				$project['budget_periodization'],
 				$project['delivery_address'],
+				$project['tax_code'],
 			);
 
 			$values = $this->db->validate_insert($values);
 
 			$this->db->query("INSERT INTO fm_project (id,project_type_id,external_project_id,name,access,category,entry_date,start_date,end_date,coordinator,status,"
-				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,b_account_id,contact_id,inherit_location,periodization_id,delivery_address $cols) "
+				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,b_account_id,"
+				. "contact_id,inherit_location,periodization_id,delivery_address,tax_code $cols) "
 				. "VALUES ($values $vals )", __LINE__, __FILE__);
 
 			/**
@@ -1529,6 +1532,7 @@
 				'contact_id'			 => $project['contact_id'],
 				'inherit_location'		 => $project['inherit_location'],
 				'delivery_address'		 => $project['delivery_address'],
+				'tax_code'				 => $project['tax_code'],
 			);
 
 			if (isset($project['budget_periodization']) && $project['budget_periodization'])

@@ -1950,7 +1950,8 @@
 				'inherit_location' => array('type' => 'int', 'precision' => 2, 'nullable' => True,
 					'default' => 1),
 				'periodization_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-				'delivery_address' => array('type' => 'text', 'nullable' => True)
+				'delivery_address' => array('type' => 'text', 'nullable' => True),
+				'tax_code' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

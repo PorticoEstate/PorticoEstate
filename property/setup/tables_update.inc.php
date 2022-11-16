@@ -11333,4 +11333,27 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.566 to 0.9.17.567
+	* add default tax-code to project
+	*
+	*/
+	$test[] = '0.9.17.756';
+	function property_upgrade0_9_17_756()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project', 'tax_code', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+			));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.757';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
 	
