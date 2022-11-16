@@ -874,7 +874,7 @@
 							<label>
 								<xsl:value-of select="$lang_tax_code"/>
 							</label>
-							<select name="values[tax_code]">
+							<select name="values[tax_code]" class="pure-input-3-4">
 								<xsl:attribute name="title">
 									<xsl:value-of select="$lang_tax_code"/>
 								</xsl:attribute>

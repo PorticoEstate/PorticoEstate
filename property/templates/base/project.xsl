@@ -555,18 +555,29 @@
 						</div>
 					</xsl:if>
 
-					<!--xsl:choose>
-						<xsl:when test="b_account_data!=''">
-							<xsl:choose>
-								<xsl:when test="mode='edit'">
-									<xsl:call-template name="b_account_form"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:call-template name="b_account_view"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:when>
-					</xsl:choose-->
+					<xsl:if test="collect_tax_code=1">
+
+						<div class="pure-control-group">
+							<xsl:variable name="lang_tax_code">
+								<xsl:value-of select="php:function('lang', 'tax code')"/>
+							</xsl:variable>
+							<label>
+								<xsl:value-of select="$lang_tax_code"/>
+							</label>
+							<select name="values[tax_code]" class="pure-input-3-4">
+								<xsl:attribute name="title">
+									<xsl:value-of select="$lang_tax_code"/>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="$lang_tax_code"/>
+								</xsl:attribute>
+								<xsl:apply-templates select="tax_code_list/options"/>
+							</select>
+						</div>
+					</xsl:if>
 					<xsl:if test="value_project_id &gt; 0 and mode='edit'">
 						<div class="pure-control-group">
 							<label for="name">

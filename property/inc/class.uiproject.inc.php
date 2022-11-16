@@ -2922,7 +2922,15 @@ JS;
 				'street_name'						 => $values['location_data']['street_name'],
 				'street_number'						 => $values['location_data']['street_number'],
 				'image_list'						 => $image_list,
-				'tag_list'							 => array('options' => $bofiles->get_all_tags())
+				'tag_list'							 => array('options' => $bofiles->get_all_tags()),
+				'collect_tax_code'						 => !empty($config->config_data['workorder_require_tax_code']),
+				'tax_code_list'							 => array('options' => $this->bocommon->select_category_list(
+					array(
+						'type' => 'tax',
+						'selected'	 => (!empty($values['tax_code']) || $values['tax_code'] === 0) ? $values['tax_code']: (int)$GLOBALS['phpgw_info']['user']['preferences']['property']['default_tax_code'],
+						'order'		 => 'id',
+						'id_in_name' => 'num'))),
+
 			);
 			if ($auto_create)
 			{
