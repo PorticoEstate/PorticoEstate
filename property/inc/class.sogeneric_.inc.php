@@ -656,7 +656,7 @@
 			{
 				foreach ($this->location_info['default'] as $field => $default)
 				{
-					if (isset($default['add']))
+					if (isset($default['add']) && !in_array($field, $cols))
 					{
 						$cols[] = $field;
 						eval('$vals[] = ' . $default['add'] . ';');
