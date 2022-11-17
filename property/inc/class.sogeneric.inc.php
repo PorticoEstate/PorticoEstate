@@ -2839,8 +2839,7 @@
 						'acl_app'		 => 'property',
 						'acl_location'	 => '.location',
 						'menu_selection' => 'admin::property::location::location_exception::category::category_text',
-						'default'		 => array
-							(
+						'default'		 => array(
 							'user_id'		 => array('add' => '$this->account'),
 							'entry_date'	 => array('add' => 'time()'),
 							'modified_date'	 => array('add' => 'time()', 'edit' => 'time()'),
