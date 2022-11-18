@@ -400,12 +400,19 @@
 			{
 				$this->get_location_info($data['type']);
 			}
-			$values = $this->read_single($data);
 
-			$ret = isset($values[$mapping['name']]) ? $values[$mapping['name']] : $values['title'];
-			$ret = $ret ? $ret : $values['descr'];
+			$test_ids = explode(',',trim($data['id'], ','));
 
-			return $ret;
+			$names = array();
+			foreach($test_ids as $id)
+			{
+				$values = $this->read_single(array('id' => $id));
+				$ret = isset($values[$mapping['name']]) ? $values[$mapping['name']] : $values['title'];
+				$ret = $ret ? $ret : $values['descr'];
+				$names[] = $ret;
+			}
+
+			return implode(', ', $names);
 		}
 
 		function read_single( $data, $values = array() )

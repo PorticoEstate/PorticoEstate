@@ -2006,6 +2006,7 @@
 				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False),
 				'budget' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'active' => array('type' => 'int', 'precision' => 2, 'nullable' => True, 'default' => 1),
+				'b_account_category' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
