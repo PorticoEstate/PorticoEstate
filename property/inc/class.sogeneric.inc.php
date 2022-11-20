@@ -671,10 +671,8 @@
 						(
 						'table'			 => 'fm_wo_hours_category',
 						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
-							(
-							array
-								(
+						'fields'		 => array(
+							array(
 								'name'	 => 'descr',
 								'descr'	 => lang('descr'),
 								'type'	 => 'varchar'
@@ -682,10 +680,10 @@
 						),
 						'edit_msg'		 => lang('edit'),
 						'add_msg'		 => lang('add'),
-						'name'			 => '',
+						'name'			 => 'workorder detail',
 						'acl_app'		 => 'property',
 						'acl_location'	 => '.admin',
-						'menu_selection' => 'admin::property::workorder_detail'
+						'menu_selection' => 'admin::property::project::workorder_detail'
 					);
 					break;
 				case 'r_condition_type':
@@ -1061,14 +1059,31 @@
 								'type'	 => 'int'
 							),
 							array(
+								'name'		 => 'b_account_category',
+								'descr'		 => lang('budget account group'),
+								'type'		 => 'multiple_select',
+								'nullable'	 => true,
+								'filter'	 => true,
+								'sortable'	 => true,
+
+								'values_def' => array(
+									'valueset'			 => false,
+									'method'			 => 'property.bogeneric.get_list',
+									'get_single_value'	 => 'property.sogeneric.get_name',
+									'method_input'		 => array(
+										'type' => 'b_account',
+										'selected' => '##b_account_category##',
+										'filter' => array('active' => 1))
+								)
+							),
+							array(
 								'name'		 => 'active',
 								'descr'		 => lang('active'),
 								'type'		 => 'checkbox',
 								'default'	 => 'checked',
 								'filter'	 => true,
 								'sortable'	 => true,
-								'values_def' => array
-									(
+								'values_def' => array(
 									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
 								)
 							)
@@ -1078,7 +1093,7 @@
 						'name'			 => lang('external project'),
 						'acl_app'		 => 'property',
 						'acl_location'	 => '.admin',
-						'menu_selection' => 'admin::property::external_project'
+						'menu_selection' => 'admin::property::project::external_project',
 					);
 					break;
 				case 'unspsc_code':
@@ -1099,7 +1114,7 @@
 						'name'			 => lang('unspsc code'),
 						'acl_app'		 => 'property',
 						'acl_location'	 => '.admin',
-						'menu_selection' => 'admin::property::unspsc_code'
+						'menu_selection' => 'admin::property::project::unspsc_code'
 					);
 					break;
 				case 'project_status':
@@ -1133,7 +1148,7 @@
 						'name'			 => lang('project status'),
 						'acl_app'		 => 'property',
 						'acl_location'	 => '.admin',
-						'menu_selection' => 'admin::property::project_status'
+						'menu_selection' => 'admin::property::project::project_status'
 					);
 					break;
 				case 'workorder_status':
@@ -1187,7 +1202,7 @@
 						'name'			 => lang('workorder status'),
 						'acl_app'		 => 'property',
 						'acl_location'	 => '.admin',
-						'menu_selection' => 'admin::property::workorder_status'
+						'menu_selection' => 'admin::property::project::workorder_status'
 					);
 					break;
 				case 'request_status':
@@ -1378,8 +1393,12 @@
 									'valueset'			 => false,
 									'method'			 => 'property.bogeneric.get_list',
 									'get_single_value'	 => 'property.sogeneric.get_name',
-									'method_input'		 => array('type'		 => 'ns3420', 'role'		 => 'parent', 'selected'	 => '##parent_id##',
-										'id_in_name' => 'num', 'mapping'	 => array('name' => 'tekst1')
+									'method_input'		 => array(
+										'type'		 => 'ns3420',
+										'role'		 => 'parent',
+										'selected'	 => '##parent_id##',
+										'id_in_name' => 'num',
+										'mapping'	 => array('name' => 'tekst1')
 									)
 								)
 							),
@@ -1533,8 +1552,11 @@
 									'valueset'			 => false,
 									'get_single_value'	 => 'get_user',
 									'method'			 => 'property.bocommon.get_user_list_right2',
-									'method_input'		 => array('selected'		 => '##responsible##', 'right'			 => 128,
-										'acl_location'	 => '.invoice')
+									'method_input'		 => array(
+										'selected'		 => '##responsible##',
+										'right'			 => 128,
+										'acl_location'	 => '.invoice'
+									)
 								)
 							),
 							array

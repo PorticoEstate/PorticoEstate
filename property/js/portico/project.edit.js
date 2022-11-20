@@ -1,6 +1,8 @@
 var project_id;
 var sUrl_workorder = phpGWLink('index.php', {'menuaction': 'property.uiworkorder.edit'});
 var sUrl_invoice = phpGWLink('index.php', {'menuaction': 'property.uiinvoice.index'});
+var external_project_budget_account_category = null;
+
 
 formatLink = function (key, oData)
 {
@@ -218,29 +220,29 @@ $(document).ready(function ()
 	});
 
 
-	$("#global_category_id").change(function ()
-	{
-		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: $(this).val()};
-		var requestUrl = phpGWLink('index.php', oArgs, true);
+	// $("#global_category_id").change(function ()
+	// {
+	// 	var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: $(this).val()};
+	// 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
-		var htmlString = "";
+	// 	var htmlString = "";
 
-		$.ajax({
-			type: 'POST',
-			dataType: 'json',
-			url: requestUrl,
-			success: function (data)
-			{
-				if (data != null)
-				{
-					if (data.active != 1)
-					{
-						alert('Denne kan ikke velges');
-					}
-				}
-			}
-		});
-	});
+	// 	$.ajax({
+	// 		type: 'POST',
+	// 		dataType: 'json',
+	// 		url: requestUrl,
+	// 		success: function (data)
+	// 		{
+	// 			if (data != null)
+	// 			{
+	// 				if (data.active != 1)
+	// 				{
+	// 					alert('Denne kan ikke velges');
+	// 				}
+	// 			}
+	// 		}
+	// 	});
+	// });
 
 	$("#order_time_span").change(function ()
 	{
@@ -328,6 +330,146 @@ $(document).ready(function ()
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		JqueryPortico.updateinlineTableHelper('datatable-container_8', requestUrl);
 	});
+
+
+	function validate_order_category(data)
+	{
+		if (!data.id)
+		{
+			return data.text;
+		}
+
+		var b_account_id = $('#b_account_id').val();
+
+		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: data.id, b_account_id: b_account_id};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data !== null)
+				{
+					if (data.active !== 1 || data.is_node === false)
+					{
+						alert('Ugyldig kategori - eller feil kombinasjon av art og kategori');
+						$('#select2-global_category_id-container').addClass('error');
+						$('#select2-global_category_id-container').removeClass('valid');
+						$('#validatet_category').val('');
+					}
+					else
+					{
+						$('#select2-global_category_id-container').addClass('valid');
+						$('#select2-global_category_id-container').removeClass('error');
+						$('#validatet_category').val(1);
+					}
+				}
+			},
+			complete:function ()
+			{
+
+			}
+		});
+
+		return data.text;
+	}
+
+	$("#global_category_id").change(function ()
+	{
+		var cat_id = $(this).val();
+		validate_order_category({id: cat_id});
+	});
+
+	validate_change_budget_account = function()
+	{
+		var cat_id = $("#global_category_id").val();
+		validate_order_category({id: cat_id});
+	}
+
+	oArgs = {menuaction: 'property.uiworkorder.get_b_account'};
+	strURL = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.autocompleteHelper(strURL, 'b_account_name', 'b_account_id', 'b_account_container', null, null, null, validate_change_budget_account);
+
+	var oArgs = {menuaction: 'property.uiproject.get_external_project'};
+	var strURL = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.autocompleteHelper(strURL, 'external_project_name', 'external_project_id', 'external_project_container', null, null, null, validate_dim_b);
+	
+	oArgs = {menuaction: 'property.uiproject.get_ecodimb'};
+	strURL = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.autocompleteHelper(strURL, 'ecodimb_name', 'ecodimb', 'ecodimb_container');
+	
+	oArgs = {menuaction: 'property.uiworkorder.get_b_account', role: 'group'};
+	strURL = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.autocompleteHelper(strURL, 'b_account_group_name', 'b_account_group', 'b_account_group_container');
+		
+	$("#b_account_name").on("autocompleteselect", function (event, ui)
+	{
+		var b_account_id = ui.item.value;
+		check_valid_dim_b(b_account_id);
+	});
+
+	function validate_dim_b()
+	{
+		var b_account_id = $("#b_account_id").val();
+		check_valid_dim_b(b_account_id);
+	}
+	
+	function check_valid_dim_b(b_account_id)
+	{
+		var oArgs = {menuaction: 'property.uiworkorder.get_b_account', query: b_account_id};
+		var strURL = phpGWLink('index.php', oArgs, true);
+
+		$.getJSON(strURL, function (Result)
+		{
+			if (Result.ResultSet.Result.length > 0)
+			{
+				var b_account = Result.ResultSet.Result[0];
+				var ecodimb_id = b_account.ecodimb
+
+				if(external_project_budget_account_category)
+				{
+					var valid_category = false;
+					var external_project_budget_account_category_arr = external_project_budget_account_category.split(',');
+					for (a in external_project_budget_account_category_arr )
+					{
+						if(external_project_budget_account_category_arr[a] == b_account.category)
+						{
+							valid_category = true;
+						}
+					}
+					if(!valid_category)
+					{
+						alert('Arten er ikke gyldig for dette eksterne prosjektet');
+						$('#b_account_name').val('');
+						$('#b_account_id').val('');
+						return;
+					}
+				}
+
+				if (ecodimb_id !== $('#ecodimb').val())
+				{
+
+					var oArgs = {menuaction: 'property.uiproject.get_ecodimb', query: ecodimb_id};
+					var strURL = phpGWLink('index.php', oArgs, true);
+					$.getJSON(strURL, function (Result)
+					{
+						if (Result.ResultSet.Result.length > 0)
+						{
+							var ecodimb = Result.ResultSet.Result[0];
+							alert('Skifter ut ansvarssted "' + $('#ecodimb_name').val() + '" med "' + ecodimb.name + '"');
+
+							$('#ecodimb').val(ecodimb.id);
+							$('#ecodimb_name').val(ecodimb.name);
+						}
+					});
+
+				}
+			}
+		});
+		
+	}
 
 });
 
@@ -462,60 +604,38 @@ validate_submit = function ()
 //	});
 //});
 
-var oArgs = {menuaction: 'property.uiproject.get_external_project'};
-var strURL = phpGWLink('index.php', oArgs, true);
-JqueryPortico.autocompleteHelper(strURL, 'external_project_name', 'external_project_id', 'external_project_container');
-
-oArgs = {menuaction: 'property.uiproject.get_ecodimb'};
-strURL = phpGWLink('index.php', oArgs, true);
-JqueryPortico.autocompleteHelper(strURL, 'ecodimb_name', 'ecodimb', 'ecodimb_container');
-
-oArgs = {menuaction: 'property.uiworkorder.get_b_account', role: 'group'};
-strURL = phpGWLink('index.php', oArgs, true);
-JqueryPortico.autocompleteHelper(strURL, 'b_account_group_name', 'b_account_group', 'b_account_group_container');
-
-oArgs = {menuaction: 'property.uiworkorder.get_b_account'};
-strURL = phpGWLink('index.php', oArgs, true);
-JqueryPortico.autocompleteHelper(strURL, 'b_account_name', 'b_account_id', 'b_account_container');
 
 $(window).on('load', function ()
 {
 
-	$("#b_account_name").on("autocompleteselect", function (event, ui)
+
+	$("#external_project_name").on("autocompleteselect", function (event, ui)
 	{
-		var b_account_id = ui.item.value;
-		var oArgs = {menuaction: 'property.uiworkorder.get_b_account', query: b_account_id};
+		var external_project_id = ui.item.value;
+
+		check_valid_external_project(external_project_id);
+
+	});
+
+
+	function check_valid_external_project(external_project_id)
+	{
+
+		var oArgs = {menuaction: 'property.uiproject.get_external_project', query: external_project_id};
 		var strURL = phpGWLink('index.php', oArgs, true);
+		
 
 		$.getJSON(strURL, function (Result)
 		{
 			if (Result.ResultSet.Result.length > 0)
 			{
-				var b_account = Result.ResultSet.Result[0];
-				var ecodimb_id = b_account.ecodimb
+				var external_project = Result.ResultSet.Result[0];
+				external_project_budget_account_category = external_project.b_account_category;
 
-				if (ecodimb_id !== $('#ecodimb').val())
-				{
-
-					var oArgs = {menuaction: 'property.uiproject.get_ecodimb', query: ecodimb_id};
-					var strURL = phpGWLink('index.php', oArgs, true);
-					$.getJSON(strURL, function (Result)
-					{
-						if (Result.ResultSet.Result.length > 0)
-						{
-							var ecodimb = Result.ResultSet.Result[0];
-							alert('Skifter ut ansvarssted "' + $('#ecodimb_name').val() + '" med "' + ecodimb.name + '"');
-
-							$('#ecodimb').val(ecodimb.id);
-							$('#ecodimb_name').val(ecodimb.name);
-						}
-					});
-
-				}
 			}
 		});
-
-	});
+		
+	}
 });
 
 

@@ -260,12 +260,6 @@
 					<!--xsl:call-template name="contact_form"/-->
 					<div class="pure-control-group">
 						<label for="name">
-							<xsl:value-of select="lang_category"/>
-						</label>
-						<xsl:call-template name="categories"/>
-					</div>
-					<div class="pure-control-group">
-						<label for="name">
 							<xsl:value-of select="lang_status"/>
 						</label>
 						<xsl:call-template name="status_select">
@@ -554,6 +548,12 @@
 							<div id="b_account_container"/>
 						</div>
 					</xsl:if>
+					<div class="pure-control-group">
+						<label for="name">
+							<xsl:value-of select="lang_category"/>
+						</label>
+						<xsl:call-template name="categories"/>
+					</div>
 
 					<xsl:if test="collect_tax_code=1">
 

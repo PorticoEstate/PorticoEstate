@@ -260,15 +260,18 @@
 						$method_input = array();
 						foreach ($field['values_def']['method_input'] as $_argument => $_argument_value)
 						{
-							if (preg_match('/^##/', $_argument_value))
+							if(!is_array($_argument_value))
 							{
-								$_argument_value_name	 = trim($_argument_value, '#');
-								$_argument_value		 = $values[$_argument_value_name];
-							}
-							if (preg_match('/^\$this->/', $_argument_value))
-							{
-								$_argument_value_name	 = ltrim($_argument_value, '$this->');
-								$_argument_value		 = $this->$_argument_value_name;
+								if (preg_match('/^##/', $_argument_value))
+								{
+									$_argument_value_name	 = trim($_argument_value, '#');
+									$_argument_value		 = $values[$_argument_value_name];
+								}
+								else if (preg_match('/^\$this->/', $_argument_value))
+								{
+									$_argument_value_name	 = ltrim($_argument_value, '$this->');
+									$_argument_value		 = $this->$_argument_value_name;
+								}
 							}
 							$method_input[$_argument] = $_argument_value;
 						}
@@ -737,7 +740,7 @@
 							if (!is_array($_argument_value) && preg_match('/^##/', $_argument_value))
 							{
 								$_argument_value_name	 = trim($_argument_value, '#');
-								$_argument_value		 = $values[$_argument_value_name];
+								$_argument_value		 = explode(',', trim($values[$_argument_value_name], ','));
 							}
 
 							if ($_argument == 'filter' && is_array($_argument_value))

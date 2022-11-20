@@ -106,7 +106,7 @@
 		 */
 		public function get_category()
 		{
-			$b_account_id = phpgw::get_var('b_account_id', 'int');
+			$b_account_id = phpgw::get_var('b_account_id', 'string');
 			$cat_id		 = phpgw::get_var('cat_id', 'int');
 			$category	 = $this->cats->return_single($cat_id);
 
