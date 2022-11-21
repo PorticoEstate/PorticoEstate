@@ -777,10 +777,10 @@
 								'filter'	 => true,
 								'sortable'	 => false,
 								'hidden'	 => false,
-								'values_def' => array
-									(
+								'values_def' => array(
 									'valueset'		 => false,
 									'method'		 => 'property.bocommon.get_top_level_categories',
+									'get_single_value'	 => 'property.bocommon.get_top_level_category_names',
 									'method_input'	 => array(
 										'app'			 => 'property',
 										'acl_location'	 => '.project',

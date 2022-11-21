@@ -2466,6 +2466,49 @@
 			return $values;
 
 		}
+		public function get_top_level_category_names( $data )
+		{
+			static $_cats = array();
+
+			$selected = array();
+			if(!empty($data['id']))
+			{
+				if(is_array($data['id']))
+				{
+					$selected = $data['id'];
+				}
+				else if(preg_match('/^\,|&\,/', $data['id']))
+				{
+					$selected = explode(',',trim($data['id'],','));
+				}
+				else
+				{
+					$selected[] = $data['id'];
+				}
+			}
+
+			if(!isset($_cats[$data['acl_location']]))
+			{
+				$cats							 = CreateObject('phpgwapi.categories', -1, 'property', $data['acl_location']);
+				$cats->supress_info				 = true;
+				$_cats[$data['acl_location']]	 = $cats->return_sorted_array(0, false, '', '', '', false, false);
+			}
+
+			$names = array();
+
+			if(is_array($_cats[$data['acl_location']]))
+			{
+				foreach ($_cats[$data['acl_location']] as $_cat)
+				{
+					if ($_cat['level'] == 0 && $_cat['active'] != 2 && in_array($_cat['id'], $selected))
+					{
+						$names[] = $_cat['name'];
+					}
+				}
+			}
+
+			return implode(', ', $names);
+		}
 
 		public function get_categories( $data )
 		{
