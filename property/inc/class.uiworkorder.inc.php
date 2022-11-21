@@ -2553,41 +2553,41 @@ JS;
 				$invoice_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			}
 
-			$attachmen_list = array();
-			foreach ($invoices as $entry)
-			{
-				$directory_attachment = rtrim($invoice_config->config_data['import']['local_path'], '/') . '/attachment/' . $entry['external_voucher_id'];
-				try
-				{
-					$dir = new DirectoryIterator("$directory_attachment/");
-					if (is_object($dir))
-					{
-						foreach ($dir as $file)
-						{
-							if ($file->isDot() || !$file->isFile() || !$file->isReadable())
-							{
-								continue;
-							}
-
-							$url = self::link(array(
-									'menuaction' => 'property.uitts.show_attachment',
-									'file_name'	 => urlencode((string)$file),
-									'key'		 => $entry['external_voucher_id']
-							));
-
-							$attachmen_list[] = array(
-								'voucher_id' => $entry['external_voucher_id'],
-								'file_name'	 => "<a href='{$url}' target='_blank'>" . (string)$file . "</a>"
-							);
-						}
-					}
-				}
-				catch (Exception $e)
-				{
-
-				}
-			}
-			unset($entry);
+//			$attachmen_list = array();
+//			foreach ($invoices as $entry)
+//			{
+//				$directory_attachment = rtrim($invoice_config->config_data['import']['local_path'], '/') . '/attachment/' . $entry['external_voucher_id'];
+//				try
+//				{
+//					$dir = new DirectoryIterator("$directory_attachment/");
+//					if (is_object($dir))
+//					{
+//						foreach ($dir as $file)
+//						{
+//							if ($file->isDot() || !$file->isFile() || !$file->isReadable())
+//							{
+//								continue;
+//							}
+//
+//							$url = self::link(array(
+//									'menuaction' => 'property.uitts.show_attachment',
+//									'file_name'	 => urlencode((string)$file),
+//									'key'		 => $entry['external_voucher_id']
+//							));
+//
+//							$attachmen_list[] = array(
+//								'voucher_id' => $entry['external_voucher_id'],
+//								'file_name'	 => "<a href='{$url}' target='_blank'>" . (string)$file . "</a>"
+//							);
+//						}
+//					}
+//				}
+//				catch (Exception $e)
+//				{
+//
+//				}
+//			}
+//			unset($entry);
 
 			$attachmen_def = array(
 				array(
@@ -2722,8 +2722,13 @@ JS;
 
 			$datatable_def[] = array(
 				'container'	 => 'datatable-container_6',
-				'requestUrl' => "''",
-				'data'		 => json_encode($attachmen_list),
+//				'requestUrl' => "''",
+//				'data'		 => json_encode($attachmen_list),
+				'requestUrl' => json_encode(self::link(array(
+						'menuaction'		 => 'property.uiproject.get_attachment',
+						'phpgw_return_as'	 => 'json'))),
+				'data'		 => json_encode(array()),
+
 				'ColumnDefs' => $attachmen_def,
 				'config'	 => array(
 					array('disableFilter' => true),
