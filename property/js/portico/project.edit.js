@@ -322,7 +322,6 @@ $(document).ready(function ()
 		});
 	}
 
-//	$("#datatable-container_2 tr").on("click", function (e)
 	$("#datatable-container_2 tbody").on('click', 'tr', function ()
 	{
 		var voucher_id = $('td', this).eq(1).text();
@@ -418,6 +417,10 @@ $(document).ready(function ()
 	
 	function check_valid_dim_b(b_account_id)
 	{
+		if(!b_account_id)
+		{
+			return;
+		}
 		var oArgs = {menuaction: 'property.uiworkorder.get_b_account', query: b_account_id};
 		var strURL = phpGWLink('index.php', oArgs, true);
 

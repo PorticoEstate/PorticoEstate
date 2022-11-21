@@ -1183,9 +1183,32 @@
 
 					$linjetekst['lopenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
 					$linjetekst['linjenr'] = $linjenr;
+
+					$linjetekst['tekst'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description']), 50, ' ');
+
+					$output[] = implode('', str_replace(array("\n", "\r"), '', $linjetekst));
+
+					//Linjetekst LT
+					$linjetekst = $this->get_visma_LT_row_template();
+					$linjetekst['posttype'] = 'LT';
+					$linjetekst['kundenr'] = $kundenr;
+
+					//Skal leverer oppdragsgiver, blir et nr. pr. fagavdeling. XXXX, et pr. fagavdeling
+					if (isset($this->config_data['dim_value_1']))
+					{
+	//					$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['object_number']), 3, '0', STR_PAD_LEFT);
+						$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
+					}
+
+					$linjetekst['varenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']), 4, '0', STR_PAD_LEFT);
+
+					$linjetekst['lopenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
+					$linjetekst['linjenr'] = $linjenr +1;
+
 					$linjetekst['tekst'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 50, ' ');
 
 					$output[] = implode('', str_replace(array("\n", "\r"), '', $linjetekst));
+
 
 				}
 
