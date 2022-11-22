@@ -1814,15 +1814,16 @@
 
 
 
-			$current_year = date('Y');
+			$current_year = date('Y') - 4;
 
 			$years = array();
 
-			for ($i = 0; $i < 6; $i++)
+			for ($i = 0; $i < 10; $i++)
 			{
 				$years[] = array(
 					'id'	 => $current_year,
-					'name'	 => $current_year
+					'name'	 => $current_year,
+					'selected' => $current_year == date('Y') ? 1 : 0
 				);
 				$current_year++;
 			}
