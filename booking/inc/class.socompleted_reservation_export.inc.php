@@ -993,11 +993,11 @@
 
 				if (strlen($this->get_customer_identifier_value_for($reservation)) > 9)
 				{
-					$name = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['organization_name']), 40, ' ');
+					$name = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $contact_name), 0, 40), 40, ' '); //40 chars long
 				}
 				else
 				{
-					$name = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['organization_name']), 40, ' ');
+					$name = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['organization_name']), 0, 40), 40, ' '); //40 chars long
 				}
 
 
