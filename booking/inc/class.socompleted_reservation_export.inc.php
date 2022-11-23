@@ -1123,7 +1123,7 @@
 
 						$linjetekst['varenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $_article_code), 4, '0', STR_PAD_LEFT);
 						$linjetekst['lopenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
-						$linjetekst['linjenr']	 = $linjenr;
+						$linjetekst['linjenr']	 = str_pad($linjenr, 2, '0', STR_PAD_LEFT);
 						$linjetekst['tekst']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 50, ' ');
 
 						$output[] = implode('', str_replace(array("\n", "\r"), '', $linjetekst));
@@ -1144,9 +1144,9 @@
 					$fakturalinje['deresref'] = $contact_name;
 
 
-					$fakturalinje['adresse1'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $street), 0, 40), 40, ' '); //40 chars long
-					$fakturalinje['adresse2'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $city), 0, 40), 40, ' '); //40 chars long
-					$fakturalinje['postnr'] = str_pad(substr($zip_code, 0, 4), 4, ' '); //4 chars long
+					$fakturalinje['adresse1']	 = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $street), 0, 40), 40, ' '); //40 chars long
+					$fakturalinje['adresse2']	 = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $city), 0, 40), 40, ' '); //40 chars long
+					$fakturalinje['postnr']		 = str_pad(substr($zip_code, 0, 4), 4, ' '); //4 chars long
 
 					$fakturalinje['betform'] = 'BG';
 
@@ -1179,12 +1179,10 @@
 						$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
 					}
 
-					$linjetekst['varenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']), 4, '0', STR_PAD_LEFT);
-
-					$linjetekst['lopenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
-					$linjetekst['linjenr'] = $linjenr;
-
-					$linjetekst['tekst'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description']), 50, ' ');
+					$linjetekst['varenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']), 4, '0', STR_PAD_LEFT);
+					$linjetekst['lopenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
+					$linjetekst['linjenr']	 = str_pad($linjenr, 2, '0', STR_PAD_LEFT);
+					$linjetekst['tekst']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description']), 50, ' ');
 
 					$output[] = implode('', str_replace(array("\n", "\r"), '', $linjetekst));
 
@@ -1200,12 +1198,10 @@
 						$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
 					}
 
-					$linjetekst['varenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']), 4, '0', STR_PAD_LEFT);
-
-					$linjetekst['lopenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
-					$linjetekst['linjenr'] = $linjenr +1;
-
-					$linjetekst['tekst'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 50, ' ');
+					$linjetekst['varenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']), 4, '0', STR_PAD_LEFT);
+					$linjetekst['lopenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
+					$linjetekst['linjenr']	 = str_pad($linjenr +1, 2, '0', STR_PAD_LEFT);
+					$linjetekst['tekst']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 50, ' ');
 
 					$output[] = implode('', str_replace(array("\n", "\r"), '', $linjetekst));
 
