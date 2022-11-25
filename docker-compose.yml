@@ -59,6 +59,8 @@ services:
       XDEBUG_CONFIG: client_host=$XDEBUG_IP_ADDRESS
     volumes:
       - ./:/var/www/html/portico/
+      - /var/local/:/var/local/
+      # developement: store your files in '/var/local/phpgw/<domain>/tmp' and '/var/local/phpgw/<domain>/files'
     restart: always
     depends_on:
       - postgres15
