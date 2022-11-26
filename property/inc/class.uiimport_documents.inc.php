@@ -1174,7 +1174,7 @@
 			if(!$order_id)
 			{
 				$upload_handler			 = new property_multiuploader($options, false);
-				$response = array(files => array(array('error' => 'missing order_id in request')));
+				$response = array('files' => array(array('error' => 'missing order_id in request')));
 				$upload_handler->generate_response($response);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
@@ -1182,7 +1182,7 @@
 			if (($receipt['error']))
 			{
 				$upload_handler			 = new property_multiuploader($options, false);
-				$response = array(files => array(array('error' => $receipt['error'])));
+				$response = array('files' => array(array('error' => $receipt['error'])));
 				$upload_handler->generate_response($response);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}

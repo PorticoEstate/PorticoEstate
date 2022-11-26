@@ -972,6 +972,7 @@
 
 			phpgw::import_class('property.multiuploader');
 
+			$options = array();
 			$options['fakebase'] = "/controller";
 			$options['base_dir'] = "check_list/{$id}";
 			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/controller/'.$options['base_dir'].'/';

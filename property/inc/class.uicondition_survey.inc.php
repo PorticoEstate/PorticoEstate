@@ -114,6 +114,7 @@
 			phpgw::import_class('property.multiuploader');
 
 
+			$options = array();
 			$options['base_dir']	 = "condition_survey/{$id}";
 			$options['upload_dir']	 = $GLOBALS['phpgw_info']['server']['files_dir'] . '/property/' . $options['base_dir'] . '/';
 			$options['script_url']	 = html_entity_decode($multi_upload_action);

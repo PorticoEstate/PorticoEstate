@@ -111,6 +111,7 @@
 
 			phpgw::import_class('property.multiuploader');
 
+			$options = array();
 			$options['base_dir']	 = 'tenant_claim/' . $id;
 			$options['upload_dir']	 = $GLOBALS['phpgw_info']['server']['files_dir'] . '/property/' . $options['base_dir'] . '/';
 			$options['script_url']	 = html_entity_decode(self::link(array('menuaction' => 'property.uitts.handle_multi_upload_file',
@@ -119,7 +120,7 @@
 
 			if (!$id)
 			{
-				$response = array(files => array(array('error' => 'missing id in request')));
+				$response = array('files' => array(array('error' => 'missing id in request')));
 				$upload_handler->generate_response($response);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
