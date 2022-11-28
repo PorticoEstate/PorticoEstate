@@ -3,7 +3,7 @@
 	<div id="tab-content">
 	{tabs}
 		<div id="user">
-	{rows}
+			{rows}
 		</div>
 		<div id="default">
 				{rows}
