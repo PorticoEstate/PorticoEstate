@@ -166,6 +166,10 @@
 							'key' => 'simple_booking',
 							'label' => lang('Simple booking'),
 						),
+						array(
+							'key' => 'direct_booking',
+							'label' => lang('direct booking'),
+						),
 					)
 				)
 			);
@@ -182,7 +186,15 @@
 
 		public function query()
 		{
-			return $this->jquery_results($this->bo->populate_grid_data("booking.uiresource.show"));
+			$values = $this->bo->populate_grid_data("booking.uiresource.show");
+
+			foreach ($values['results'] as &$entry)
+			{
+				$entry['direct_booking'] = !empty($entry['direct_booking']) ? 1 : '';
+
+			}
+
+			return $this->jquery_results($values);
 		}
 
 		public function add()
