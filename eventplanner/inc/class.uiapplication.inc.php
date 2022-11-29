@@ -636,6 +636,7 @@
 
 			phpgw::import_class('property.multiuploader');
 
+			$options = array();
 			$options['fakebase'] = "/eventplanner";
 			$options['base_dir'] = "application/{$id}/{$section}";
 			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/eventplanner/'.$options['base_dir'].'/';

@@ -733,6 +733,7 @@ JS;
 
 			phpgw::import_class('property.multiuploader');
 
+			$options = array();
 			$options['fakebase']	 = "/booking";
 			$options['base_dir']	 = "article/{$id}/{$section}";
 			$options['upload_dir']	 = $GLOBALS['phpgw_info']['server']['files_dir'] . '/booking/' . $options['base_dir'] . '/';

@@ -73,12 +73,12 @@
 	);
 	$tabs['default'] = array(
 		'label' => lang('Default preferences'),
-		'link'  =>  $is_admin ? $GLOBALS['phpgw']->link('/preferences/index.php',array('type'=>'default')) : "",
+		'link'  =>  $is_admin ? $GLOBALS['phpgw']->link('/preferences/index.php',array('type'=>'default')) : "#default",
 		'disable'=> $is_admin ? 0 : 1
 	);
 	$tabs['forced'] = array(
 		'label' => lang('Forced preferences'),
-		'link'  =>  $is_admin ? $GLOBALS['phpgw']->link('/preferences/index.php',array('type'=>'forced')) : "",
+		'link'  =>  $is_admin ? $GLOBALS['phpgw']->link('/preferences/index.php',array('type'=>'forced')) : "#forced",
 		'disable'=> $is_admin ? 0 : 1
 	);
 	$GLOBALS['phpgw']->template->set_var('tabs', $GLOBALS['phpgw']->common->create_tabs($tabs, $type));
