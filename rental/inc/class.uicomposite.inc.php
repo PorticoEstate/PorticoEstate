@@ -1541,6 +1541,7 @@ JS;
 
 			phpgw::import_class('property.multiuploader');
 
+			$options = array();
 			$options['base_dir'] = 'composite/'.$id;
 			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/rental/'.$options['base_dir'].'/';
 			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.handle_multi_upload_file', 'id' => $id)));

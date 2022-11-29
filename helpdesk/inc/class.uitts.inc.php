@@ -703,6 +703,7 @@ HTML;
 
 			phpgw::import_class('property.multiuploader');
 
+			$options = array();
 			$options['fakebase'] = "/helpdesk";
 			$options['base_dir'] = $id;
 			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/helpdesk/'.$options['base_dir'].'/';
@@ -726,7 +727,7 @@ HTML;
 
 			if(!$id)
 			{
-				$response = array(files => array(array('error' => 'missing id in request')));
+				$response = array('files' => array(array('error' => 'missing id in request')));
 				$upload_handler->generate_response($response);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
