@@ -390,6 +390,9 @@
 											<xsl:when test="$control_item_type = 'control_item_type_3'">
 												<!--  MEASUREMENT -->
 												<div class="row">
+													<xsl:variable name="measurement_value">
+														<xsl:value-of select="measurement"/>
+													</xsl:variable>
 													<label class="comment">Velg verdi fra liste</label>
 													<select name="measurement" class="pure-input-1">
 														<xsl:for-each select="../control_item/options_array">
@@ -397,6 +400,11 @@
 																<xsl:attribute name="value">
 																	<xsl:value-of select="option_value"/>
 																</xsl:attribute>
+																<xsl:choose>
+																	<xsl:when test="option_value = $measurement_value">
+																		<xsl:attribute name="selected" value="selected"/>
+																	</xsl:when>
+																</xsl:choose>
 																<xsl:value-of select="option_value"/>
 															</option>
 														</xsl:for-each>
@@ -406,6 +414,10 @@
 											<xsl:when test="$control_item_type = 'control_item_type_4'">
 												<!--  MEASUREMENT -->
 												<div class="row">
+													<xsl:variable name="measurement_value">
+														<xsl:value-of select="measurement"/>
+													</xsl:variable>
+
 													<label class="comment">Velg verdi fra liste</label>
 													<xsl:for-each select="../control_item/options_array">
 														<input type="radio" name="measurement" value="female">
@@ -413,6 +425,11 @@
 																<xsl:value-of select="option_value"/>
 															</xsl:attribute>
 														</input>
+														<xsl:choose>
+															<xsl:when test="option_value = $measurement_value">
+																<xsl:attribute name="checked" value="checked"/>
+															</xsl:when>
+														</xsl:choose>
 														<xsl:value-of select="option_value"/>
 													</xsl:for-each>
 												</div>
@@ -426,12 +443,20 @@
 													</div>
 													<div class="pure-control-group">
 
+														<xsl:variable name="measurement_value">
+															<xsl:value-of select="measurement"/>
+														</xsl:variable>
 														<xsl:for-each select="../control_item/options_array">
 															<label class="pure-checkbox">
 																<input type="checkbox" name="measurement[]">
 																	<xsl:attribute name="value">
 																		<xsl:value-of select="option_value"/>
 																	</xsl:attribute>
+																	<xsl:choose>
+																		<xsl:when test="option_value = $measurement_value">
+																			<xsl:attribute name="checked" value="checked"/>
+																		</xsl:when>
+																	</xsl:choose>
 																</input>
 																<xsl:value-of select="option_value"/>
 															</label>
@@ -461,6 +486,9 @@
 									</div>
 									<xsl:if test="../control_item/include_regulation_reference = 1">
 										<div class="form-group">
+											<xsl:variable name="regulation_reference_value">
+												<xsl:value-of select="regulation_reference"/>
+											</xsl:variable>
 											<label>
 												<xsl:attribute name="title">
 													<xsl:value-of select="php:function('lang', 'regulation reference')"/>
@@ -476,6 +504,11 @@
 														<xsl:attribute name="value">
 															<xsl:value-of select="option_value"/>
 														</xsl:attribute>
+														<xsl:choose>
+															<xsl:when test="option_value = $regulation_reference_value">
+																<xsl:attribute name="selected" value="selected"/>
+															</xsl:when>
+														</xsl:choose>
 														<xsl:value-of select="option_value"/>
 													</option>
 												</xsl:for-each>
