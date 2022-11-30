@@ -777,8 +777,11 @@ JS;
 				unset($portalbox);
 
 				echo '<div id="approval_info_container"></div>';
+				
 
-				$lang = js_lang('responsible', 'id', 'date');
+				$lang = js_lang('responsible', 'id', 'date', 'cancel');
+
+				phpgwapi_cache::session_set('property', 'return_to_self', $_SERVER['REQUEST_URI']);
 
 				$js = <<<JS
 						<script type="text/javascript">
@@ -805,8 +808,8 @@ JS;
 						var colDefsApproval_info = [
 							{key: 'id', label: lang['id'], formatter: genericLink},
 							{key: 'responsible_name', label: lang['responsible']},
-							{key: 'requested_date', label: lang['date']}
-
+							{key: 'requested_date', label: lang['date']},
+							{key: 'dellink', label: lang['cancel'], formatter: genericLink2}
 							];
 
 						var paginatorTableApproval_info = new Array();

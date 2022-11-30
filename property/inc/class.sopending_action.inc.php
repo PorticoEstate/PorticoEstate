@@ -367,4 +367,11 @@
 			$data['close'] = true;
 			return !!$this->set_pending_action($data);
 		}
+		public function cancel_pending_action( $location_id, $item_id  )
+		{
+			$sql = 'UPDATE fm_action_pending SET expired_on = '. time() . ',expired_by = ' .(int)$this->account
+				. ' WHERE location_id = ' . (int)$location_id . ' AND item_id = ' . (int)  $item_id
+				. ' AND action_performed IS NULL';
+			return $this->db->query($sql, __LINE__, __FILE__);
+		}
 	}
