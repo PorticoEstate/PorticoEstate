@@ -69,7 +69,7 @@
 											<xsl:value-of select="value_id"/>
 										</xsl:when>
 										<xsl:otherwise>
-											<input type="text" name="values[{id_name}]" value="{value_id}">
+											<input type="text" name="values[{id_name}]" value="{value_id}" class="pure-input-3-4">
 												<xsl:attribute name="title">
 													<xsl:value-of select="php:function('lang', 'Enter the ID')"/>
 												</xsl:attribute>
@@ -186,7 +186,7 @@
 
 
 									<xsl:when test="type='integer' or type='int'">
-										<input data-validation="number" type="text" id="{name}" name="values[{name}]" value="{value}" size="{size}">
+										<input data-validation="number" type="text" id="{name}" name="values[{name}]" value="{value}" size="{size}" class="pure-input-3-4" >
 											<xsl:attribute name="title">
 												<xsl:value-of select="$descr"/>
 											</xsl:attribute>
@@ -200,7 +200,7 @@
 										</input>
 									</xsl:when>
 									<xsl:when test="type='numeric'">
-										<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." type="text" id="{name}" name="values[{name}]" value="{value}" size="{size}">
+										<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." type="text" id="{name}" name="values[{name}]" value="{value}" size="{size}" class="pure-input-3-4" >
 											<xsl:attribute name="title">
 												<xsl:value-of select="$descr"/>
 											</xsl:attribute>
@@ -229,7 +229,7 @@
 													</xsl:attribute>
 													<xsl:choose>
 														<xsl:when test="$value_id = '' and default = 'checked'">
-																<xsl:attribute name="checked" value="checked"/>
+															<xsl:attribute name="checked" value="checked"/>
 														</xsl:when>
 													</xsl:choose>
 
@@ -306,7 +306,9 @@
 
 							</div>
 						</xsl:for-each>
-						<xsl:call-template name="attributes_values"/>
+						<xsl:call-template name="attributes_values">
+							<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+						</xsl:call-template>
 					</fieldset>
 				</div>
 			</div>

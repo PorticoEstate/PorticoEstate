@@ -326,7 +326,7 @@ $(document).ready(function ()
 				id: term,
 				text: term,
 				newTag: true // add additional parameters
-			}
+			};
 		}
 	});
 
