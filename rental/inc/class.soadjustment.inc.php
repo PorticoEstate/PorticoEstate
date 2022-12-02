@@ -122,7 +122,7 @@
 				'price_item_id = ' . $adjustment->get_price_item_id(),
 				'responsibility_id = ' . $adjustment->get_responsibility_id(),
 				'new_price= ' . $adjustment->get_new_price(),
-				'percent = ' . $adjustment->get_percent(),
+				'percent_ = ' . $adjustment->get_percent(),
 				'adjustment_interval = ' . $adjustment->get_interval(),
 				'adjustment_date = ' . $adjustment->get_adjustment_date(),
 				'adjustment_type = \'' . $adjustment->get_adjustment_type() . '\'',
