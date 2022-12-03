@@ -13,6 +13,7 @@
 			'building_users' => true,
 			'get_orgid' => true,
 			'toggle_show_inactive' => true,
+			'get_organization_list'	=> true
 		);
 		protected $module;
 
@@ -263,5 +264,50 @@
 			}
 
 			phpgw::no_access();
+		}
+
+		public function get_organization_list()
+		{
+			$page = phpgw::get_var('page', 'int');
+			$query = phpgw::get_var('query', 'string');
+			$length = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$start = ($page - 1) * $length;
+
+			$organizations = $this->bo->read(array(
+				'start' => $start,
+				'query' => $query,
+				'filters' => array('active' => 1, 'where' => array(
+			//		'%%table%%.organization_number IS NOT NULL',
+			//		"%%table%%.organization_number != ''",
+					"length(%%table%%.organization_number) = 9"
+					)
+				)
+			));
+			$total = $organizations['total_records'];
+			
+			$results = array();
+			foreach ($organizations['results'] as $entry)
+			{
+				$results[]=array(
+					'id'	=> "{$entry['id']}_{$entry['organization_number']}",
+					'text' => "{$entry['organization_number']} [{$entry['name']}]",
+					'disabled' => $entry['active'] ? false : true
+				);
+			}
+
+			$num_records = count($results);
+			
+			$morePages = $total > ($num_records + $start);
+
+			return array(
+				'results'	=> $results,
+				'start'		=> $start,
+				'pagination' => array(
+					'more' => $morePages
+				)
+			);
+			
+
+
 		}
 	}

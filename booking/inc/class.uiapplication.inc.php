@@ -1679,7 +1679,7 @@
 						$update_org = true;
 					}
 
-					if($update_org && !$this->organization_bo->validate($organization))
+					if($update_org && !$this->organization_bo->validate($organization) && $organization_number == $customer_organization_number_arr[1])
 					{
 						$this->organization_bo->update($organization);
 					}
@@ -2184,6 +2184,8 @@
 			 * This one is for bookingfrontend
 			 */
 			self::add_javascript('bookingfrontend', 'base', 'application_contact.js', 'text/javascript', true);
+			phpgwapi_jquery::load_widget('select2');
+
 
 			$location_id		 = $GLOBALS['phpgw']->locations->get_id('booking', 'run');
 			$custom_config		 = CreateObject('admin.soconfig', $location_id)->read();

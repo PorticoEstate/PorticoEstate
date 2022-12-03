@@ -161,6 +161,42 @@ $(document).ready(function ()
 		}
 	});
 
+	var oArgs = {menuaction: 'bookingfrontend.uiorganization.get_organization_list'};
+	var strURL = phpGWLink('index.php', oArgs, true);
+
+	$("#customer_organization_number").select2({
+	  ajax: {
+		url: strURL,
+		dataType: 'json',
+		delay: 250,
+		data: function (params) {
+		  return {
+			query: params.term, // search term
+			page: params.page || 1
+		  };
+		},
+		cache: true
+	  },
+	  width: '100%',
+	  placeholder: 'Velg organisasjon',
+	  minimumInputLength: 2,
+	  language: "no",
+	  allowClear: true
+	});
+
+	$('#customer_organization_number').on('select2:open', function (e) {
+
+		$(".select2-search__field").each(function()
+		{
+			if ($(this).attr("aria-controls") == 'select2-customer_organization_number-results')
+			{
+				$(this)[0].focus();
+			}
+		});
+	});
+
+
+
 	check_payment_status();
 
 	function update_contact_informtation()
