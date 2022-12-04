@@ -27,7 +27,7 @@ this.get_sms_recipients = function (location_code)
 				{
 					$('#sms_recipients').append($('<option/>', {
 						value: obj[i].contact_phone,
-						text: obj[i].name + " [" + location_code + " - " + obj[i].address + ", " + obj[i].floor + "]::" + obj[i].contact_phone
+						text: obj[i].name + " [" + obj[i].location_code + " - " + obj[i].address + ", " + obj[i].floor + "]::" + obj[i].contact_phone
 					}));
 
 				});
@@ -64,6 +64,20 @@ $(window).on('load', function ()
 			location_code_selection = location_code;
 		}
 		get_sms_recipients(location_code);
+	});
+
+	$("#send_sms_to_all").change(function ()
+	{
+		if($(this).is(":checked"))
+		{
+			$("#location_selector").hide();
+			get_sms_recipients($(this).val());
+		}
+		else
+		{
+			$("#location_selector").show();
+		}
+
 	});
 
 

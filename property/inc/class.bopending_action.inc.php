@@ -35,14 +35,16 @@
 	{
 
 		var $so;
-		var $public_functions = array
-			(
-			'get_pending_action_ajax' => true,
+		var $public_functions = array(
+			'get_pending_action_ajax'	 => true,
+			'cancel_pending_action'		 => true
 		);
 
 		public function __construct()
 		{
 			$this->so = CreateObject('property.sopending_action');
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+
 		}
 
 		function get_pending_action_ajax( $data = array() )
@@ -84,6 +86,11 @@
 				$entry['responsible_name']	 = $entry['responsible'] ? $GLOBALS['phpgw']->accounts->get($entry['responsible'])->__toString() : '';
 				$entry['requested_date']	 = $GLOBALS['phpgw']->common->show_date($entry['action_requested']);//, $dateFormat);
 				$entry['link']				 = $entry['url'];
+				$entry['dellink']			 = $this->account == $entry['created_by'] ? $GLOBALS['phpgw']->link(
+						'/index.php', array(
+						'menuaction'	 => 'property.bopending_action.cancel_pending_action',
+						'item_id'		 => $entry['item_id'],
+						'location_id'	 => $entry['location_id'])) : '';
 			}
 
 
@@ -99,5 +106,17 @@
 					'sortDir'				 => $this->sort,
 				)
 			);
+		}
+
+		function cancel_pending_action()
+		{
+			$item_id	 = phpgw::get_var('item_id', 'int');
+			$location_id = phpgw::get_var('location_id', 'int');
+			$this->so->cancel_pending_action($location_id, $item_id);
+
+			$request_uri = phpgwapi_cache::session_get('property', 'return_to_self');
+
+			header('Location: ' . $request_uri);
+			exit;
 		}
 	}
