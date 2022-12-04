@@ -165,11 +165,40 @@
 							<xsl:value-of select="php:function('lang', 'choose a')" />
 						</p>
 						<!-- Organization Number -->
-						<xsl:if test="count(delegate_data)=0">
+
+						<!--xsl:if test="count(delegate_data) > 0"-->
+							<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
+								<!--label>
+									<xsl:value-of select="php:function('lang', 'organization number')" />*</label-->
+									<select id="customer_organization_number" class="" name="customer_organization_number" required="true">
+										<option></option>
+										<xsl:for-each select="delegate_data">
+											<option  id="customer_organization_number_{id}" value="{id}_{organization_number}">
+												<xsl:value-of select="organization_number"/>
+												[ <xsl:value-of select="name"/> ]
+											</option>
+										</xsl:for-each>
+									</select>
+								<div class="invalid-feedback">
+									Vennligst velg en organisasjon.
+								</div>
+
+								<label class="mt-2">
+									<!--a id="add_new_value" href="#" data-toggle="modal" data-target="#new_organization"-->
+									<a id="add_new_value" href="#" OnClick="add_new_organization();">
+										<img src="{add_img}" width="23"/>
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="php:function('lang', 'new organization')"/>
+									</a>
+								</label>
+
+							</div>
+						<!--/xsl:if-->
+						<!--xsl:if test="count(delegate_data)=0"-->
 							<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
 								<label>
 									<xsl:value-of select="php:function('lang', 'organization number')" />*</label>
-								<input name="customer_organization_number_fallback" value="{application/customer_organization_number}" type="text" class="form-control" required="true">
+								<input name="customer_organization_number_fallback" value="{application/customer_organization_number}" type="text" class="form-control" required="true" readonly="true">
 									<xsl:attribute name="minlength">
 										<xsl:text>9</xsl:text>
 									</xsl:attribute>
@@ -187,40 +216,12 @@
 							<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
 								<label>
 									<xsl:value-of select="php:function('lang', 'organization')" />*</label>
-								<input name="customer_organization_name" value="{application/customer_organization_name}" type="text" class="form-control" maxlength="150" required="true"/>
+								<input name="customer_organization_name" value="{application/customer_organization_name}" type="text" class="form-control" maxlength="150" required="true" readonly="true"/>
 								<div class="invalid-feedback">
 									Vennligst oppgi organisasjonsnavn.
 								</div>
 							</div>
-						</xsl:if>
-
-						<xsl:if test="count(delegate_data) > 0">
-							<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
-								<label>
-									<xsl:value-of select="php:function('lang', 'organization number')" />*</label>
-									<select id="customer_organization_number" class="" name="customer_organization_number" required="true">
-										<option></option>
-										<xsl:for-each select="delegate_data">
-											<option  id="customer_organization_number_{id}" value="{id}_{organization_number}">
-												<xsl:value-of select="organization_number"/>
-												[ <xsl:value-of select="name"/> ]
-											</option>
-										</xsl:for-each>
-									</select>
-								<div class="invalid-feedback">
-									Vennligst velg en organisasjon.
-								</div>
-
-								<label class="mt-2">
-									<a id="add_new_value" href="#" data-toggle="modal" data-target="#new_organization">
-										<img src="{add_img}" width="23"/>
-										<xsl:text> </xsl:text>
-										<xsl:value-of select="php:function('lang', 'new organization')"/>
-									</a>
-								</label>
-
-							</div>
-						</xsl:if>
+						<!--/xsl:if-->
 
 						<!-- Customer Personal Number -->
 						<div class="form-group" data-bind="visible: typeApplicationRadio() === 'ssn'">

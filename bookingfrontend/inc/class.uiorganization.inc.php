@@ -276,6 +276,7 @@
 			$organizations = $this->bo->read(array(
 				'start' => $start,
 				'query' => $query,
+				'results' => $length,
 				'filters' => array('active' => 1, 'where' => array(
 			//		'%%table%%.organization_number IS NOT NULL',
 			//		"%%table%%.organization_number != ''",
@@ -291,7 +292,9 @@
 				$results[]=array(
 					'id'	=> "{$entry['id']}_{$entry['organization_number']}",
 					'text' => "{$entry['organization_number']} [{$entry['name']}]",
-					'disabled' => $entry['active'] ? false : true
+					'disabled' => $entry['active'] ? false : true,
+					'name' => $entry['name'],
+					'organization_number' => $entry['organization_number']
 				);
 			}
 

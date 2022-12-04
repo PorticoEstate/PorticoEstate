@@ -193,9 +193,19 @@ $(document).ready(function ()
 				$(this)[0].focus();
 			}
 		});
+
+		$("input[name='customer_organization_number_fallback']").prop('readonly', true);
+		$("input[name='customer_organization_name']").prop('readonly', true);
+	
 	});
 
+	$('#customer_organization_number').on('select2:select', function (e) {
+		var data = e.params.data;
 
+		$("input[name='customer_organization_number_fallback']").val(data['organization_number']);
+		$("input[name='customer_organization_name']").val(data['name']);
+
+	});
 
 	check_payment_status();
 
@@ -282,7 +292,17 @@ $(document).ready(function ()
 
 
 
+function add_new_organization()
+{
+	$("input[name='customer_organization_number_fallback']").prop('readonly', false);
+	$("input[name='customer_organization_number_fallback']").val('');
+	$("input[name='customer_organization_name']").prop('readonly', false);
+	$("input[name='customer_organization_name']").val('');
+	$("input[name='customer_organization_number_fallback']").focus();
+	$('#customer_organization_number').prop('required', false);
+	$('#customer_organization_number').val(null).trigger('change');
 
+}
 
 
 function validate_form(e)
