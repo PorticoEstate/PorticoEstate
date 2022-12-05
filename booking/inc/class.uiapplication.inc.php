@@ -37,6 +37,7 @@
 			$module;
 		protected $application_bo;
 		protected $building_so;
+		protected $errors = array();
 
 		public function __construct()
 		{
@@ -1725,7 +1726,7 @@
 				$partial2['dates']     = array(array('from_' => '2018-01-01 00:00:00', 'to_' => '2018-01-01 01:00:00'));
 				$partial2['resources'] = array(-1);
 
-				$errors = $this->validate($partial2);
+				$errors = array_merge($this->errors, $this->validate($partial2));
 
 				$session_id = $GLOBALS['phpgw']->session->get_session_id();
 				if (empty($session_id))
@@ -2247,6 +2248,12 @@
 			}
 
 			$organization_info = createObject('bookingfrontend.organization_helper')->get_organization($organization_number);
+
+			if(!$organization_info)
+			{
+				$this->errors['organization_number'] = "Kunne ikke finne nummeret '{$organization_number}' i Brønnøysundregistrene";
+			}
+
 			$activities = CreateObject('booking.soactivity')->read(array('filters' => array('active' => 1)));
 
 			// just guessing...
