@@ -701,7 +701,7 @@
 				unset($attributes_groups);
 				unset($values['attributes']);
 			}
-
+			$jscode = '';
 			foreach ($this->location_info['fields'] as & $field)
 			{
 				$field['value'] = isset($values[$field['name']]) ? $values[$field['name']] : '';
@@ -715,6 +715,27 @@
 					$GLOBALS['phpgw']->jqcal->add_listener($field['name']);
 					$dateformat		 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 					$field['value']	 = $GLOBALS['phpgw']->common->show_date($field['value'], $dateformat);
+				}
+				elseif (in_array($field['type'], array('select', 'multiple_select')))
+				{
+					$jscode .= <<<JS
+					$("#{$field['name']}").select2({
+						placeholder: "{$field['descr']}",
+						width: '75%'
+					});
+
+					$('#{$field['name']}').on('select2:open', function (e) {
+
+						$(".select2-search__field").each(function()
+						{
+							if ($(this).attr("aria-controls") == 'select2-{$field['name']}-results')
+							{
+								$(this)[0].focus();
+							}
+						});
+					});
+JS;
+
 				}
 
 				if (!empty($field['js_file']))
@@ -820,6 +841,12 @@
 			$appname = $this->location_info['name'];
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
+			phpgwapi_jquery::load_widget('select2');
+
+			if($jscode)
+			{
+				$GLOBALS['phpgw']->js->add_code('', $jscode, true);
+			}
 
 			self::render_template_xsl(array('generic', 'attributes_form'), array('edit' => $data));
 		}

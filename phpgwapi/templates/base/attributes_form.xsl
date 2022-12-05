@@ -6,6 +6,7 @@
 
 <!-- New template-->
 <xsl:template xmlns:php="http://php.net/xsl" name="attributes_values">
+	<xsl:param name="class" />
 	<script type="text/javascript">
 		help_Popup = function(requestUrl)
 		{
@@ -47,6 +48,9 @@
 					</xsl:with-param>
 					<xsl:with-param name="textarearows">
 						<xsl:value-of select="$textarearows" />
+					</xsl:with-param>
+					<xsl:with-param name="class">
+						<xsl:value-of select="$class" />
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</fieldset>
