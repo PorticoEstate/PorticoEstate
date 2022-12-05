@@ -12,12 +12,12 @@ ko.validation.locale('nb-NO');
 
 function initiate_payment(method)
 {
-	if(payment_initated)
+	if (payment_initated)
 	{
 		alert('payment_initated');
 		return;
 	}
-	
+
 	var parameter = {
 		menuaction: "bookingfrontend." + method + "_helper.initiate"
 	};
@@ -32,7 +32,7 @@ function initiate_payment(method)
 	$.getJSON(getJsonURL, function (result)
 	{
 		console.log(result);
-		if(typeof(result.url) !== 'undefined')
+		if (typeof (result.url) !== 'undefined')
 		{
 			var url = result.url;
 			window.location.replace(url);
@@ -82,11 +82,11 @@ function check_payment_status()
 		var last_transaction = result.transactionLogHistory[0];
 		if (last_transaction.operationSuccess === true)
 		{
-			if(last_transaction.operation == 'RESERVE' || last_transaction.operation == 'RESERVED')
+			if (last_transaction.operation == 'RESERVE' || last_transaction.operation == 'RESERVED')
 			{
 				alert('Transaksjonen er fullført, du får en kvittering på epost');
 			}
-			else if(last_transaction.operation == 'CANCEL')
+			else if (last_transaction.operation == 'CANCEL')
 			{
 				alert('Transaksjonen er kansellert');
 			}
@@ -162,31 +162,33 @@ $(document).ready(function ()
 	});
 
 	var oArgs = {menuaction: 'bookingfrontend.uiorganization.get_organization_list'};
-	var strURL = phpGWLink('index.php', oArgs, true);
+	var strURL = phpGWLink('bookingfrontend/', oArgs, true);
 
 	$("#customer_organization_number").select2({
-	  ajax: {
-		url: strURL,
-		dataType: 'json',
-		delay: 250,
-		data: function (params) {
-		  return {
-			query: params.term, // search term
-			page: params.page || 1
-		  };
+		ajax: {
+			url: strURL,
+			dataType: 'json',
+			delay: 250,
+			data: function (params)
+			{
+				return {
+					query: params.term, // search term
+					page: params.page || 1
+				};
+			},
+			cache: true
 		},
-		cache: true
-	  },
-	  width: '100%',
-	  placeholder: 'Velg organisasjon',
-	  minimumInputLength: 2,
-	  language: "no",
-	  allowClear: true
+		width: '100%',
+		placeholder: 'Velg organisasjon',
+		minimumInputLength: 2,
+		language: "no",
+		allowClear: true
 	});
 
-	$('#customer_organization_number').on('select2:open', function (e) {
+	$('#customer_organization_number').on('select2:open', function (e)
+	{
 
-		$(".select2-search__field").each(function()
+		$(".select2-search__field").each(function ()
 		{
 			if ($(this).attr("aria-controls") == 'select2-customer_organization_number-results')
 			{
@@ -196,15 +198,27 @@ $(document).ready(function ()
 
 		$("input[name='customer_organization_number_fallback']").prop('readonly', true);
 		$("input[name='customer_organization_name']").prop('readonly', true);
-	
+
 	});
 
-	$('#customer_organization_number').on('select2:select', function (e) {
+	$('#customer_organization_number').on('select2:select', function (e)
+	{
 		var data = e.params.data;
 
 		$("input[name='customer_organization_number_fallback']").val(data['organization_number']);
 		$("input[name='customer_organization_name']").val(data['name']);
+		$('#btnSubmitGroup').hide();
 
+	});
+
+	$('#customer_organization_number').on('select2:clear', function (e)
+	{
+		$("input[name='customer_organization_number_fallback']").prop('readonly', true);
+		$("input[name='customer_organization_number_fallback']").val('');
+		$("input[name='customer_organization_name']").prop('readonly', true);
+		$("input[name='customer_organization_name']").val('');
+		$('#customer_organization_number').prop('required', true);
+		$('#btnSubmitGroup').hide();
 	});
 
 	check_payment_status();
@@ -241,11 +255,11 @@ $(document).ready(function ()
 					}
 					else
 					{
-						var total_sum =  $("#total_sum").text();
+						var total_sum = $("#total_sum").text();
 						/**
 						 * Hide external paymentmetod if nothing to pay
 						 */
-						if(total_sum === "" || data.direct_booking == false)
+						if (total_sum === "" || data.direct_booking == false)
 						{
 							$("#external_payment_method").hide();
 							$("#btnSubmit").text(lang['Send']);
@@ -279,7 +293,7 @@ $(document).ready(function ()
 		$("#btnSubmit").on("click", function (e)
 		{
 			var validated = validate_form(e);
-			if(validated)
+			if (validated)
 			{
 				$("#application_form").submit();
 			}
@@ -301,6 +315,7 @@ function add_new_organization()
 	$("input[name='customer_organization_number_fallback']").focus();
 	$('#customer_organization_number').prop('required', false);
 	$('#customer_organization_number').val(null).trigger('change');
+	$('#btnSubmitGroup').hide();
 
 }
 
