@@ -487,7 +487,7 @@
 										<xsl:text> </xsl:text>
 										<xsl:value-of select="php:function('lang', 'marked_as')"/>
 										<xsl:text> </xsl:text>
-										<select id="active" name="active">
+										<select id="filter_active" name="active">
 											<xsl:apply-templates select="list_status/options"/>
 										</select>																				
 									</div>
