@@ -288,7 +288,7 @@ $(document).ready(function ()
 		filterDataParty('party_type', $(this).val());
 	});
 
-	$('#active').change(function ()
+	$('#filter_active').change(function ()
 	{
 		filterDataParty('active', $(this).val());
 	});
@@ -622,7 +622,7 @@ downloadParties = function (oArgs)
 	requestUrl += '&search_option=' + $('#party_search_options').val();
 	requestUrl += '&search=' + $('#party_query').val();
 	requestUrl += '&party_type=' + $('#party_type').val();
-	requestUrl += '&active=' + $('#active').val();
+	requestUrl += '&active=' + $('#filter_active').val();
 
 	window.open(requestUrl, '_self');
 };
