@@ -77,7 +77,7 @@
 	</xsl:choose>
 
 	<div id="voucher_details">
-		<table class="pure-table">
+		<table class="table table-sm">
 			<xsl:apply-templates select="filter_form" />
 			<xsl:apply-templates select="filter_invoice" />
 		</table>
@@ -87,20 +87,20 @@
 
 			</div>
 				<div class='col-sm-3'>
-				<a href="#" id="show_image" class="pure-button pure-button-primary" data-toggle="modal" data-target="#mapModal" style="display:none; margin-bottom: 5px">
+				<a href="#" id="show_image" class="btn btn-primary" data-toggle="modal" data-target="#mapModal" style="display:none; margin-bottom: 5px">
 					<p><i class="fas fa-image"></i>  Trykk for å se faktura</p>
 				</a>
 			</div>
 		</div>-->
 
 
-		<form action="{update_action}" name="voucher_form" id="voucher_form" method="post" class="pure-form">
+		<form action="{update_action}" name="voucher_form" id="voucher_form" method="post" class="">
 				<xsl:variable name="label_submit">
 					<xsl:value-of select="php:function('lang', 'save')" />
 				</xsl:variable>
 					<div class='sticky_bottom'>
 						<div>
-							<button type="submit" class="pure-button pure-button-primary " name="values[update_voucher]">
+							<button type="submit" class="btn btn-primary" name="values[update_voucher]">
 									<p>
 										<i class="fas fa-save"></i>
 										<xsl:text> </xsl:text>
@@ -112,7 +112,7 @@
 
 				<div class='row'>
 						<div class='col-sm-12'>
-					<div class=" col pure-table">
+					<div class="table table-sm table-hover">
 						<xsl:for-each select="datatable_def">
 							<xsl:if test="container = 'datatable-container_1'">
 								<xsl:call-template name="table_setup">
@@ -136,7 +136,7 @@
 				<div class='row'>
 					<div class='col'>
 			
-						<table class="table">
+						<table class="table table-sm table-hover">
 							<tr>
 								<td valign="top" height="30">
 									<div id = 'split_text'>
@@ -146,7 +146,7 @@
 							<tr class ='row_on'>
 								<td colspan = '6'>
 									<div class="row_on">
-										<button type="submit" class="pure-button pure-button-primary " name="values[update_voucher]">
+										<button type="submit" class="btn btn-primary" name="values[update_voucher]">
 											<p>
 												<i class="fas fa-save"></i>
 												<xsl:text> </xsl:text>
@@ -163,7 +163,7 @@
 <!--					<div class='col-sm-3 align-self-start float-left sticky_bottom'>-->
 <!--					<div class='col-sm-3  sticky_bottom'>
 						<div>
-							<button type="submit" class="pure-button pure-button-primary " name="values[update_voucher]">
+							<button type="submit" class="btn btn-primary" name="values[update_voucher]">
 									<p>
 										<i class="fas fa-save"></i>
 										<xsl:text> </xsl:text>
@@ -212,8 +212,8 @@
 <xsl:template name="filter_list" xmlns:php="http://php.net/xsl">
 	<tr>
 		<td>
-			<table class="pure-table pure-form">
-				 <thead>
+			<table class="table table-sm table-hover">
+				 <thead class="thead-light">
 					<tr>
 						<th>
 							<label>
@@ -244,33 +244,33 @@
 				 </thead>
 				<tr>
 					<td>
-						<select id="janitor_lid" name="janitor_lid" class="pure-u-md-1">
+						<select id="janitor_lid" name="janitor_lid" class="custom-select">
 							<xsl:apply-templates select="janitor_list/options"/>
 						</select>
 					</td>		
 					<td>
-						<select id="supervisor_lid" name="supervisor_lid" class="pure-u-md-1">
+						<select id="supervisor_lid" name="supervisor_lid" class="custom-select">
 							<xsl:apply-templates select="supervisor_list/options"/>
 						</select>
 					</td>		
 					<td>
-						<select id="budget_responsible_lid" name="budget_responsible_lid" class="pure-u-md-1">
+						<select id="budget_responsible_lid" name="budget_responsible_lid" class="custom-select">
 							<xsl:apply-templates select="budget_responsible_list/options"/>
 						</select>
 					</td>		
 					<td>
-						<select id="criteria" name="criteria" class="pure-u-md-1">
+						<select id="criteria" name="criteria" class="custom-select">
 							<xsl:apply-templates select="criteria_list/options"/>
 						</select>
 					</td>		
 					<td>
-						<input type="text" name="query" id="query" class="pure-u-md-1"/>
+						<input type="text" name="query" id="query" class="form-control"/>
 					</td>
 					<td>
 						<xsl:variable name="lang_search">
 							<xsl:value-of select="php:function('lang', 'Search')" />
 						</xsl:variable>
-						<button class="pure-button pure-button-primary" id="search" name="search" value="{$lang_search}" title = "{$lang_search}" >
+						<button class="btn btn-primary" id="search" name="search" value="{$lang_search}" title = "{$lang_search}" >
 							<p>
 								<i class="fas fa-search"></i>
 								<xsl:text> </xsl:text>
@@ -298,7 +298,7 @@
 				</xsl:attribute>
 				<!-- When janitor area is chosen, an ajax request is executed. The operation fetches vouchers from db and populates the voucher list.
 				The ajax opearation is handled in ajax_invoice.js -->
-				<select id="voucher_id_filter" name="voucher_id_filter" class="pure-u-md-1">
+				<select id="voucher_id_filter" name="voucher_id_filter" class="custom-select">
 					<xsl:apply-templates select="voucher_list/options"/>
 				</select>
 			</form>
@@ -419,8 +419,8 @@
 		<td>
 		</td>
 		<td>
-			<table class="pure-table">
-				<thead>
+			<table class="table table-sm">
+				<thead class="thead-light">
 					<tr>
 						<th>
 							<xsl:value-of select="php:function('lang', 'period')" />
@@ -436,17 +436,17 @@
 				 <tbody>
 					<tr class ='row_on'>
 						<td>
-							<select id="period" name="values[period]" class="pure-u-md-1">
+							<select id="period" name="values[period]" class="form-control">
 								<xsl:apply-templates select="voucher_info/generic/period_list/options"/>
 							</select>
 						</td>
 						<td>
-							<select id="periodization" name="values[periodization]" class="pure-u-md-1">
+							<select id="periodization" name="values[periodization]" class="custom-select">
 								<xsl:apply-templates select="voucher_info/generic/periodization_list/options"/>
 							</select>
 						</td>
 						<td>
-							<select id="periodization_start" name="values[periodization_start]" class="pure-u-md-1">
+							<select id="periodization_start" name="values[periodization_start]" class="custom-select">
 								<xsl:apply-templates select="voucher_info/generic/periodization_start_list/options"/>
 							</select>
 						</td>
@@ -641,7 +641,7 @@
 
 <!-- options for use with select-->
 <xsl:template match="options">
-	<option value="{id}">
+	<option value="{id}" class="small">
 		<xsl:if test="selected != 0">
 			<xsl:attribute name="selected" value="selected"/>
 		</xsl:if>
