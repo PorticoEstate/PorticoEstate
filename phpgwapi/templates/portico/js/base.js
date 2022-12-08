@@ -9,7 +9,7 @@ $(document).ready(function ()
 		}
 		, north: {
 			size: "auto"
-			, spacing_open: 0
+			, spacing_open: 10
 			, closable: false
 			, resizable: false
 		}
