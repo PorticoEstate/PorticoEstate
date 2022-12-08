@@ -71,7 +71,8 @@
 			'step_2_import'					 => true,
 			'step_3_clean_up'				 => true,
 			'view_file'						 => true,
-			'unzip_files'					 => true
+			'unzip_files'					 => true,
+			'set_value'						 => true
 		);
 
 		public function __construct()
@@ -746,6 +747,13 @@
 
 			$files_def = array
 			(
+				array('key'		 => 'id',
+					'label'		 => lang('id'),
+					'sortable'	 => true,
+					'resizeable' => true,
+					'hidden'	 => true
+					),
+
 				array('key'		 => 'file_link',
 					'label'		 => lang('filename'),
 					'sortable'	 => true,
@@ -755,23 +763,27 @@
 				array('key'		 => 'cadastral_unit',
 					'label'		 => lang('cadastral unit'),
 					'sortable'	 => true,
-					'resizeable' => true
+					'resizeable' => true,
+					'editor'	 => true
 					),
 				array('key'		 => 'building_number',
 					'label'		 => lang('building number'),
 					'sortable'	 => true,
-					'resizeable' => true
+					'resizeable' => true,
+					'editor'	 => true
 					),
 				array('key'		 => 'location_code',
 					'label'		 => lang('location code'),
 					'sortable'	 => true,
-					'resizeable' => true
+					'resizeable' => true,
+					'editor'	 => true
 					),
 
 				array('key'		 => 'remark_detail',
 					'label'		 => lang('remark'),
 					'sortable'	 => true,
-					'resizeable' => true
+					'resizeable' => true,
+					'editor'	 => true
 					),
 				array('key' => 'document_category',
 					'label' => lang('document categories'),
@@ -921,7 +933,8 @@
 //					array('scrollY' => 800),
 //					array('fixedColumns' => true),
 //					array('fixedColumns' => json_encode(array('leftColumns' => 1))),
-					array('order' => json_encode(array('0', 'asc')))
+					array('order' => json_encode(array('0', 'asc'))),
+					array('editor_action' => self::link(array('menuaction' => 'property.uiimport_documents.set_value')))
 				)
 			);
 
@@ -1002,9 +1015,15 @@
 				$file_info['select']	= "<input type='checkbox' class='mychecks'/>";
 				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$encoded_file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";
 				$file_info['remark_detail'] =  isset($file_tags[$file_name]['remark_detail']) ? $file_tags[$file_name]['remark_detail'] :'';
+				$file_info['cadastral_unit'] =  !empty($file_tags[$file_name]['cadastral_unit']) ? $file_tags[$file_name]['cadastral_unit'] : $missing_value;
+				$file_info['location_code'] =  !empty($file_tags[$file_name]['location_code']) ? $file_tags[$file_name]['location_code'] : $missing_value;
+				$file_info['building_number'] =  !empty($file_tags[$file_name]['building_number']) ? $file_tags[$file_name]['building_number'] : $missing_value;
 				$file_info['document_category'] =  !empty($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : $missing_value;
 				$file_info['branch'] = !empty($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : $missing_value;
 				$file_info['building_part'] = !empty($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : $missing_value;
+				$file_info['cadastral_unit_validate'] =  empty($file_tags[$file_name]['cadastral_unit']) ? false : true;
+				$file_info['location_code_validate'] =  empty($file_tags[$file_name]['location_code']) ? false : true;
+				$file_info['building_number_validate'] =  empty($file_tags[$file_name]['building_number']) ? false : true;
 				$file_info['document_category_validate'] =  empty($file_tags[$file_name]['document_category']) ? false : true;
 				$file_info['branch_validate'] = empty($file_tags[$file_name]['branch']) ?  false : true;
 				$file_info['building_part_validate'] = empty($file_tags[$file_name]['building_part']) ? false : true;
@@ -1019,7 +1038,13 @@
 				}
 				$debug = false;
 
-				if(!$file_info['document_category_validate'] || !$file_info['branch_validate']  || !$file_info['building_part_validate'] || ($sub_step == 2 && !$file_info['import_ok_validate']))
+				if(!$file_info['document_category_validate']
+					|| !$file_info['branch_validate']
+					|| !$file_info['building_part_validate']
+					|| !$file_info['cadastral_unit_validate']
+					|| !$file_info['location_code_validate']
+					|| !$file_info['building_number_validate']
+					|| ($sub_step == 2 && !$file_info['import_ok_validate']))
 				{
 					$error_list[] = $file_info;
 				}
@@ -1027,8 +1052,7 @@
 
 			$total_records = count($error_list);
 
-			return array
-				(
+			return array(
 				'data'				 => $error_list,
 				'draw'				 => phpgw::get_var('draw', 'int'),
 				'recordsTotal'		 => $total_records,
@@ -1140,6 +1164,7 @@
 				$file_info['import_ok'] = isset($file_tags[$file_name]['import_ok']) ? $file_tags[$file_name]['import_ok'] : '';
 				$file_info['import_failed'] = isset($file_tags[$file_name]['import_failed']) ? $file_tags[$file_name]['import_failed'] : '';
 				unset($file_info['path_absolute']);
+				$file_info['id'] = urlencode("{$order_id}::{$file_name}");
 				$values[] = $file_info;
 			}
 
@@ -1702,7 +1727,7 @@
 
 		private function _un_zip( $file, $dir )
 		{
-			@set_time_limit(5 * 60);
+			set_time_limit(5 * 60);
 
 			$zip = new ZipArchive;
 			if ($zip->open($file) === TRUE)
@@ -1734,7 +1759,7 @@
 
 		private function _un_rar( $file, $dir )
 		{
-			@set_time_limit(5 * 60);
+			set_time_limit(5 * 60);
 
 			$archive = RarArchive::open($file);
 			if ($archive === FALSE)
@@ -1760,4 +1785,95 @@
 
 			return true;
 		}
+
+		public function set_value()
+		{
+			if (!$this->acl_edit)
+			{
+				return;
+			}
+
+			$field_name = phpgw::get_var('field_name');
+			$id = urldecode(phpgw::get_var('id','raw'));
+			
+			$id_arr = explode('::', $id);
+
+			$order_id = $id_arr[0];
+			$file_name = $id_arr[1];
+
+			$file_tags = $this->_get_metadata($order_id);
+
+
+			if(!empty($file_tags[$file_name]['import_ok']))
+			{
+				return;
+			}
+
+			switch ($field_name)
+			{
+				case 'remark_detail':
+				case 'cadastral_unit':
+				case 'location_code':
+				case 'building_number':
+					$value = phpgw::get_var('value');
+					$file_tags[$file_name][$field_name] = $value;
+					break;
+				default:
+					return;
+			}
+
+
+/*
+			if($document_category)
+			{
+				if(!empty($file_tags[$file_name]['document_category']))
+				{
+					$file_tags[$file_name]['document_category'] = array_unique(array_merge($document_category, $file_tags[$file_name]['document_category']));
+				}
+				else
+				{
+					$file_tags[$file_name]['document_category'] = $document_category;
+				}
+			}
+			if($branch)
+			{
+				if(!empty($file_tags[$file_name]['branch']))
+				{
+					$file_tags[$file_name]['branch'] = array_unique(array_merge($branch, $file_tags[$file_name]['branch']));
+				}
+				else
+				{
+					$file_tags[$file_name]['branch'] = $branch;
+				}
+			}
+			if($building_part)
+			{
+				if(!empty($file_tags[$file_name]['building_part']))
+				{
+					$file_tags[$file_name]['building_part'] = array_unique(array_merge($building_part, $file_tags[$file_name]['building_part']));
+				}
+				else
+				{
+					$file_tags[$file_name]['building_part'] = $building_part;
+				}
+			}
+*/
+
+			$result = $this->_set_metadata($order_id, $file_tags);
+
+
+
+			$message = array();
+			if ($result)
+			{
+				$message['message'][] = array('msg' => lang('data has been saved'));
+			}
+			else
+			{
+				$message['error'][] = array('msg' => lang('data has not been saved'));
+			}
+
+			return $message;
+		}
+
 	}
