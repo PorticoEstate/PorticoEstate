@@ -260,11 +260,11 @@
 
 			$vendor_name = CreateObject('property.boinvoice')->get_vendor_name($vendor_id);
 			$location_code = $item['location_code'];
-			$location_data = @execMethod('property.bolocation.read_single', array('location_code' => $location_code,	'extra' => array('view' => true)));
+//			$location_data = execMethod('property.bolocation.read_single', array('location_code' => $location_code,	'extra' => array('view' => true)));
 
 			$gab_id = '';
 			$cadastral_unit = '';
-			$gabinfos = @execMethod('property.sogab.read', array(
+			$gabinfos = execMethod('property.sogab.read', array(
 				'location_code' => $location_code,
 				'allrows' => true)
 				);
@@ -396,7 +396,11 @@
 			$branch= phpgw::get_var('branch', 'string');
 			$building_part= phpgw::get_var('building_part', 'string');
 			$order_id = phpgw::get_var('order_id', 'int');
+			$cadastral_unit= phpgw::get_var('cadastral_unit', 'string');
+			$location_code= phpgw::get_var('location_code', 'string');
+			$building_number= phpgw::get_var('building_number', 'string');
 			$remark_detail= phpgw::get_var('remark_detail', 'string');
+
 
 			if(!$order_id)
 			{
@@ -439,7 +443,7 @@
 
 						if(!empty($file_tags[$file_info['path_relative_filename']]))
 						{
-							$file_tags[$file_info['path_relative_filename']] = null;
+							unset($file_tags[$file_info['path_relative_filename']]);
 						}
 					}
 				}
@@ -460,6 +464,19 @@
 					{
 						$file_tags[$file_name]['remark_detail'] = $remark_detail;
 					}
+					if($cadastral_unit)
+					{
+						$file_tags[$file_name]['cadastral_unit'] = $cadastral_unit;
+					}
+					if($location_code)
+					{
+						$file_tags[$file_name]['location_code'] = $location_code;
+					}
+					if($building_number)
+					{
+						$file_tags[$file_name]['building_number'] = $building_number;
+					}
+
 					if($document_category)
 					{
 						if(!empty($file_tags[$file_name]['document_category']))
@@ -510,6 +527,19 @@
 					{
 						$file_tags[$file_name]['remark_detail'] = '';
 					}
+					if($cadastral_unit)
+					{
+						$file_tags[$file_name]['cadastral_unit'] = $file_tags['common_data']['cadastral_unit'];
+					}
+					if($location_code)
+					{
+						$file_tags[$file_name]['location_code'] = $file_tags['common_data']['location_code'];
+					}
+					if($building_number)
+					{
+						$file_tags[$file_name]['location_code'] = $file_tags['common_data']['location_code'];
+					}
+
 					if($document_category)
 					{
 						if(!empty($file_tags[$file_name]['document_category']))
@@ -560,10 +590,10 @@
 			}
 
 			$order_id = phpgw::get_var('order_id', 'int');
-			$cadastral_unit= phpgw::get_var('cadastral_unit', 'string');
-			$location_code= phpgw::get_var('location_code', 'string');
-			$building_number= phpgw::get_var('building_number', 'string');
-			$remark= phpgw::get_var('remark', 'string');
+			$cadastral_unit_common= phpgw::get_var('cadastral_unit_common', 'string');
+			$location_code_common= phpgw::get_var('location_code_common', 'string');
+			$building_number_common= phpgw::get_var('building_number_common', 'string');
+			$remark_common= phpgw::get_var('remark_common', 'string');
 
 			if(!$order_id)
 			{
@@ -586,7 +616,18 @@
 				}
 			}
 
+			return $this->_set_common_metadata($order_id, $cadastral_unit_common, $location_code_common, $building_number_common, $remark_common);
+		}
+
+		private function _set_common_metadata( $order_id, $cadastral_unit_common = '', $location_code_common = '', $building_number_common = '', $remark_common ='' )
+		{
 			$file_tags = $this->_get_metadata($order_id);
+
+			$cadastral_unit = $cadastral_unit_common ? $cadastral_unit_common : $file_tags['common_data']['cadastral_unit'];
+			$location_code = $location_code_common ? $location_code_common : $file_tags['common_data']['location_code'];
+			$building_number = $building_number_common ? $building_number_common : $file_tags['common_data']['building_number'];
+			$remark = $remark_common ? $remark_common : $file_tags['common_data']['remark'];
+
 			$list_files = $this->_get_dir_contents($this->order_path_dir);
 			foreach ($list_files as $file_info)
 			{
@@ -597,25 +638,33 @@
 					continue;
 				}
 
-				if($cadastral_unit)
+				if($cadastral_unit && empty($file_tags[$file_name]['cadastral_unit']))
 				{
 					$file_tags[$file_name]['cadastral_unit'] = $cadastral_unit;
 				}
-				if($location_code)
+				if($location_code && empty($file_tags[$file_name]['location_code']))
 				{
 					$file_tags[$file_name]['location_code'] = $location_code;
 				}
-				if($building_number)
+				if($building_number && empty($file_tags[$file_name]['building_number']))
 				{
 					$file_tags[$file_name]['building_number'] = $building_number;
 				}
-				if($remark)
+				if($remark && empty($file_tags[$file_name]['remark']))
 				{
 					$file_tags[$file_name]['remark'] = $remark;
 				}
 			}
 
+			$file_tags['common_data'] = array(
+				'cadastral_unit' => $cadastral_unit,
+				'location_code' => $location_code,
+				'building_number' => $building_number,
+				'remark' => $remark
+			);
+
 			return $this->_set_metadata($order_id, $file_tags);
+
 		}
 
 		public function index()
@@ -702,6 +751,23 @@
 					'sortable'	 => true,
 					'resizeable' => true
 					),
+
+				array('key'		 => 'cadastral_unit',
+					'label'		 => lang('cadastral unit'),
+					'sortable'	 => true,
+					'resizeable' => true
+					),
+				array('key'		 => 'building_number',
+					'label'		 => lang('building number'),
+					'sortable'	 => true,
+					'resizeable' => true
+					),
+				array('key'		 => 'location_code',
+					'label'		 => lang('location code'),
+					'sortable'	 => true,
+					'resizeable' => true
+					),
+
 				array('key'		 => 'remark_detail',
 					'label'		 => lang('remark'),
 					'sortable'	 => true,
@@ -1060,9 +1126,13 @@
 				}
 
 				$encoded_file_name = urlencode($file_name);
+
 				$file_info['duplicate']	= $_duplicates[$file_info['file_name']] > 1 ?  $_duplicates[$file_info['file_name']] : '';
 				$file_info['select']	= "<input type='checkbox' class='mychecks'/>";
 				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$encoded_file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";
+				$file_info['cadastral_unit'] =  isset($file_tags[$file_name]['cadastral_unit']) ? $file_tags[$file_name]['cadastral_unit'] :'';
+				$file_info['building_number'] =  isset($file_tags[$file_name]['building_number']) ? $file_tags[$file_name]['building_number'] :'';
+				$file_info['location_code'] =  isset($file_tags[$file_name]['location_code']) ? $file_tags[$file_name]['location_code'] :'';
 				$file_info['remark_detail'] =  isset($file_tags[$file_name]['remark_detail']) ? $file_tags[$file_name]['remark_detail'] :'';
 				$file_info['document_category'] =  isset($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : array();
 				$file_info['branch'] = isset($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : array();
@@ -1218,6 +1288,7 @@
 			}
 
 			$upload_handler			 = new property_multiuploader($options, true, $error_messages);
+			$this->_set_common_metadata($order_id);
 		}
 
 		private function check_upload_dir($order_id)

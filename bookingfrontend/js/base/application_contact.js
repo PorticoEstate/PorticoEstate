@@ -148,17 +148,17 @@ $(document).ready(function ()
 
 		if (selected === "organization_number")
 		{
-			$("input[name='customer_organization_number']").prop('required', true);
+			$("#customer_organization_number").prop('required', true);
 			$("input[name='customer_organization_number_fallback']").prop('required', true);
 			$("input[name='customer_organization_name']").prop('required', true);
 		}
 		else if (selected === "ssn")
 		{
-			$("input[name='customer_organization_number']").prop('checked', false);
-			$("input[name='customer_organization_number']").prop('required', false);
+			$("#customer_organization_number").prop('required', false);
 			$("input[name='customer_organization_number_fallback']").prop('required', false);
 			$("input[name='customer_organization_name']").prop('required', false);
 		}
+		$('#btnSubmitGroup').hide();
 	});
 
 	var oArgs = {menuaction: 'bookingfrontend.uiorganization.get_organization_list'};
@@ -185,7 +185,7 @@ $(document).ready(function ()
 		allowClear: true
 	});
 
-	$('#customer_organization_number').on('select2:open', function (e)
+	$("#customer_organization_number").on('select2:open', function (e)
 	{
 
 		$(".select2-search__field").each(function ()
@@ -201,7 +201,7 @@ $(document).ready(function ()
 
 	});
 
-	$('#customer_organization_number').on('select2:select', function (e)
+	$("#customer_organization_number").on('select2:select', function (e)
 	{
 		var data = e.params.data;
 
@@ -211,13 +211,13 @@ $(document).ready(function ()
 
 	});
 
-	$('#customer_organization_number').on('select2:clear', function (e)
+	$("#customer_organization_number").on('select2:clear', function (e)
 	{
 		$("input[name='customer_organization_number_fallback']").prop('readonly', true);
 		$("input[name='customer_organization_number_fallback']").val('');
 		$("input[name='customer_organization_name']").prop('readonly', true);
 		$("input[name='customer_organization_name']").val('');
-		$('#customer_organization_number').prop('required', true);
+		$("#customer_organization_number").prop('required', true);
 		$('#btnSubmitGroup').hide();
 	});
 
@@ -313,8 +313,8 @@ function add_new_organization()
 	$("input[name='customer_organization_name']").prop('readonly', false);
 	$("input[name='customer_organization_name']").val('');
 	$("input[name='customer_organization_number_fallback']").focus();
-	$('#customer_organization_number').prop('required', false);
-	$('#customer_organization_number').val(null).trigger('change');
+	$("#customer_organization_number").prop('required', false);
+	$("#customer_organization_number").val(null).trigger('change');
 	$('#btnSubmitGroup').hide();
 
 }

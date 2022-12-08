@@ -169,6 +169,10 @@ this.onActionsClick_files = function (action, files)
 		return false;
 	}
 
+	var cadastral_unit = $('#cadastral_unit').val();
+	var location_code = $('#location_code').val();
+	var building_number = $('#building_number').val();
+
 	var order_id = $('#order_id').val();
 	var secret = $("#secret").val();
 	var remark_detail = $('#remark_detail').val();
@@ -177,7 +181,7 @@ this.onActionsClick_files = function (action, files)
 	var building_part = $('#building_part option:selected').toArray().map(item => item.value);
 	if (action !== 'delete_file')
 	{
-		if (!remark_detail && !document_category.length && !branch.length && !building_part.length)
+		if (!cadastral_unit && !location_code && !building_number &&!remark_detail && !document_category.length && !branch.length && !building_part.length)
 		{
 			alert('ingenting valgt');
 			return false;
@@ -188,7 +192,19 @@ this.onActionsClick_files = function (action, files)
 		type: 'POST',
 		dataType: 'json',
 		url: phpGWLink('index.php', {menuaction: 'property.uiimport_documents.update_file_data'}, true),
-		data: {files: files, remark_detail: remark_detail, document_category: document_category, branch: branch, building_part: building_part, action: action, order_id: order_id, secret: secret},
+		data: {
+			files: files,
+			cadastral_unit: cadastral_unit,
+			location_code: location_code,
+			building_number: building_number,
+			remark_detail: remark_detail,
+			document_category: document_category,
+			branch: branch,
+			building_part: building_part,
+			action: action,
+			order_id: order_id,
+			secret: secret
+		},
 		success: function (data)
 		{
 			if (data !== null)
@@ -282,10 +298,10 @@ this.get_order_info = function ()
 					$("#order_info").hide();
 					$("#message_step_1").text(data.error).show();
 					$("#vendor_name").text('');
-					$("#cadastral_unit").val('');
-					$("#location_code").val('');
-					$("#building_number").val('');
-					$("#remark").val('');
+					$("#cadastral_unit_common").val('');
+					$("#location_code_common").val('');
+					$("#building_number_common").val('');
+					$("#remark_common").val('');
 					//	$("#get_order_info").show();
 					$("#validate_step_1").hide();
 				}
@@ -309,10 +325,10 @@ this.get_order_info = function ()
 				}
 
 				$("#vendor_name").text(data.vendor_name);
-				$("#cadastral_unit").val(data.cadastral_unit);
-				$("#location_code").val(data.location_code);
-				$("#building_number").val(data.building_number[0]);
-				$("#remark").val(data.remark);
+				$("#cadastral_unit_common").val(data.cadastral_unit);
+				$("#location_code_common").val(data.location_code);
+				$("#building_number_common").val(data.building_number[0]);
+				$("#remark_common").val(data.remark);
 			}
 			else
 			{
@@ -327,14 +343,22 @@ this.update_common = function ()
 {
 	var order_id = $("#order_id").val();
 	var secret = $("#secret").val();
-	var cadastral_unit = $("#cadastral_unit").val();
-	var location_code = $("#location_code").val();
-	var building_number = $("#building_number").val();
-	var remark = $("#remark").val();
+	var cadastral_unit_common = $("#cadastral_unit_common").val();
+	var location_code_common = $("#location_code_common").val();
+	var building_number_common = $("#building_number_common").val();
+	var remark_common = $("#remark_common").val();
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		data: {cadastral_unit: cadastral_unit, location_code: location_code, building_number: building_number, remark: remark, action: 'set_tag', order_id: order_id, secret: secret},
+		data: {
+			cadastral_unit_common: cadastral_unit_common,
+			location_code_common: location_code_common,
+			building_number_common: building_number_common,
+			remark_common: remark_common,
+			action: 'set_tag',
+			order_id: order_id,
+			secret: secret
+		},
 		url: phpGWLink('index.php', {menuaction: 'property.uiimport_documents.update_common'}, true),
 		success: function (data)
 		{
@@ -353,9 +377,9 @@ this.validate_step_1 = function ()
 	$("#validate_step_1").prop("disabled", true);
 //	}, 5);
 
-	var cadastral_unit = $("#cadastral_unit").val();
-	var location_code = $("#location_code").val();
-	var building_number = $("#building_number").val();
+	var cadastral_unit = $("#cadastral_unit_common").val();
+	var location_code = $("#location_code_common").val();
+	var building_number = $("#building_number_common").val();
 	var order_id = $("#order_id").val();
 	var $html = [];
 	if (!order_id)
