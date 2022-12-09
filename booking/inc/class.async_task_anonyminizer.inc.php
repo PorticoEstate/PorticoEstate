@@ -27,7 +27,7 @@
 			/**
 			 * anonyminize
 			 */
-			$souser = CreateObject('booking.bouser');
+			$souser = CreateObject('booking.souser');
 			foreach ($users as $user_id)
 			{
 				$souser->delete($user_id);
