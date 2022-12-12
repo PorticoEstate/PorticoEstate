@@ -164,6 +164,8 @@
 			}
 
 			$this->remind();
+
+			$this->cron_log($this->cron);
 		}
 
 		protected function check_archive()

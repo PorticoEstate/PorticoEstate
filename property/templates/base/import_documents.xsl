@@ -45,7 +45,7 @@
 		var role = '<xsl:value-of select="role"/>';
 		var template_set = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|template_set')" />';
 	</script>
-	<div class="container">
+	<div class="container-fluid">
 
 		<h5>
 			<xsl:value-of select="role"/>
@@ -80,25 +80,25 @@
 							<label >
 								<xsl:value-of select="php:function('lang', 'cadastral unit')"/>
 							</label>
-							<input id="cadastral_unit" required="required"></input>
+							<input id="cadastral_unit_common" required="required"></input>
 						</div>
 						<div class="pure-control-group">
 							<label >
 								<xsl:value-of select="php:function('lang', 'location code')"/>
 							</label>
-							<input id="location_code" required="required"></input>
+							<input id="location_code_common" required="required"></input>
 						</div>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'building number')"/>
 							</label>
-							<input id="building_number" required="required"></input>
+							<input id="building_number_common" required="required"></input>
 						</div>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'remark')"/>
 							</label>
-							<input id="remark"></input>
+							<input id="remark_common"></input>
 						</div>
 					</div>
 
@@ -146,6 +146,27 @@
 								<xsl:value-of select="multi_upload_action"/>
 							</xsl:with-param>
 						</xsl:call-template>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'cadastral unit')"/>
+						</label>
+
+						<input id="cadastral_unit" class="pure-input-3-4"></input>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'building number')"/>
+						</label>
+
+						<input id="building_number" class="pure-input-3-4"></input>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'location code')"/>
+						</label>
+
+						<input id="location_code" class="pure-input-3-4"></input>
 					</div>
 					<div class="pure-control-group">
 						<label>

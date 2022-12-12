@@ -133,7 +133,7 @@
 
 		abstract public function execute();
 
-		private function cron_log( $cron )
+		function cron_log( $cron )
 		{
 			if (!$this->receipt)
 			{

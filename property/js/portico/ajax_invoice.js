@@ -313,7 +313,7 @@ function update_voucher_filter()
 
 				$.each(obj, function (i)
 				{
-					htmlString += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
+					htmlString += "<option class='small' value='" + obj[i].id + "'>" + obj[i].name + "</option>";
 				});
 
 				$("#voucher_id_filter").html(htmlString);
@@ -548,7 +548,7 @@ function update_form_values(line_id, voucher_id_orig)
 						{
 							selected = ' selected';
 						}
-						htmlString += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
+						htmlString += "<option class='small' value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
 					});
 					$("#period").html(htmlString);
 				}
@@ -565,7 +565,7 @@ function update_form_values(line_id, voucher_id_orig)
 						{
 							selected = ' selected';
 						}
-						htmlString += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
+						htmlString += "<option class='small' value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
 					});
 
 					$("#periodization").html(htmlString);
@@ -583,7 +583,7 @@ function update_form_values(line_id, voucher_id_orig)
 						{
 							selected = ' selected';
 						}
-						htmlString += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
+						htmlString += "<option class='small' value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
 					});
 
 					$("#periodization_start").html(htmlString);
@@ -621,7 +621,7 @@ function update_form_values(line_id, voucher_id_orig)
 						}
 						else
 						{
-							var htmlString = "<select  class=\"pure-u-md-1\" id=\"_" + role_sign + "\" name=\"values[forward][" + role_sign + "]\">";
+							var htmlString = "<select class=\"pure-u-1-2\" id=\"_" + role_sign + "\" name=\"values[forward][" + role_sign + "]\">";
 							var obj = data['generic']['approved_list'][i]['user_list'].options;
 							$.each(obj, function (i)
 							{

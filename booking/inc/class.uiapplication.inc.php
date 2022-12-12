@@ -30,13 +30,16 @@
 			'payments'					 => true,
 			'cancel_payment'			 => true,
 			'refund_payment'			 => true,
-			'get_purchase_order'		 => true
+			'get_purchase_order'		 => true,
+			'delete'					 => true
 		);
 		protected $customer_id,
 			$default_module = 'bookingfrontend',
 			$module;
 		protected $application_bo;
 		protected $building_so;
+		protected $errors = array();
+		private $acl_delete;
 
 		public function __construct()
 		{
@@ -46,20 +49,21 @@
 
 			$this->set_module();
 //			Analizar esta linea self::process_booking_unauthorized_exceptions();
-			$this->bo = CreateObject('booking.boapplication');
-			$this->customer_id = CreateObject('booking.customer_identifier');
-			$this->event_bo = CreateObject('booking.boevent');
-			$this->activity_bo = CreateObject('booking.boactivity');
-			$this->audience_bo = CreateObject('booking.boaudience');
-			$this->assoc_bo = new booking_boapplication_association();
-			$this->agegroup_bo = CreateObject('booking.boagegroup');
-			$this->resource_bo = CreateObject('booking.boresource');
-			$this->building_bo = CreateObject('booking.bobuilding');
-			$this->organization_bo = CreateObject('booking.boorganization');
+			$this->bo				 = CreateObject('booking.boapplication');
+			$this->customer_id		 = CreateObject('booking.customer_identifier');
+			$this->event_bo			 = CreateObject('booking.boevent');
+			$this->activity_bo		 = CreateObject('booking.boactivity');
+			$this->audience_bo		 = CreateObject('booking.boaudience');
+			$this->assoc_bo			 = new booking_boapplication_association();
+			$this->agegroup_bo		 = CreateObject('booking.boagegroup');
+			$this->resource_bo		 = CreateObject('booking.boresource');
+			$this->building_bo		 = CreateObject('booking.bobuilding');
+			$this->organization_bo	 = CreateObject('booking.boorganization');
 			$this->document_building = CreateObject('booking.bodocument_building');
 			$this->document_resource = CreateObject('booking.bodocument_resource');
-			$this->building_so = new booking_sobuilding();
-			$this->application_bo = new booking_boapplication();
+			$this->building_so		 = new booking_sobuilding();
+			$this->application_bo	 = new booking_boapplication();
+			$this->acl_delete		 = $GLOBALS['phpgw']->acl->check('.application', PHPGW_ACL_DELETE, 'booking');
 
 			self::set_active_menu('booking::applications::applications');
 			$this->fields = array(
@@ -476,8 +480,35 @@
 				$data['form']['toolbar']['item'][] = $filter;
 			}
 
+			$parameters			 = array(
+				'parameter' => array(
+					array(
+						'name'	 => 'id',
+						'source' => 'id'
+					),
+				)
+			);
+
+			if ($this->acl_delete)
+			{
+				$data['datatable']['actions'][] = array
+					(
+					'my_name'		 => 'delete',
+					'statustext'	 => lang('delete application'),
+					'text'			 => lang('delete'),
+					'confirm_msg'	 => lang('do you really want to delete this application'),
+					'action'		 => $GLOBALS['phpgw']->link('/index.php', array(
+						'menuaction' => 'booking.uiapplication.delete'
+					)),
+					'parameters'	 => json_encode($parameters)
+				);
+			}
+			else
+			{
+				$data['datatable']['actions'][] = array();
+			}
+
 			$data['datatable']['new_item'] = self::link(array('menuaction' => 'booking.uiapplication.add'));
-			$data['datatable']['actions'][] = array();
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
@@ -1725,7 +1756,7 @@
 				$partial2['dates']     = array(array('from_' => '2018-01-01 00:00:00', 'to_' => '2018-01-01 01:00:00'));
 				$partial2['resources'] = array(-1);
 
-				$errors = $this->validate($partial2);
+				$errors = array_merge($this->errors, $this->validate($partial2));
 
 				$session_id = $GLOBALS['phpgw']->session->get_session_id();
 				if (empty($session_id))
@@ -2247,6 +2278,12 @@
 			}
 
 			$organization_info = createObject('bookingfrontend.organization_helper')->get_organization($organization_number);
+
+			if(!$organization_info)
+			{
+				$this->errors['organization_number'] = "Kunne ikke finne nummeret '{$organization_number}' i Brønnøysundregistrene";
+			}
+
 			$activities = CreateObject('booking.soactivity')->read(array('filters' => array('active' => 1)));
 
 			// just guessing...
@@ -3374,6 +3411,33 @@ JS;
 
 				$GLOBALS['phpgw']->db->transaction_commit();
 
+			}
+			return $status;
+		}
+
+		function delete()
+		{
+			if (!$this->acl_delete)
+			{
+				return lang('sorry - insufficient rights');
+			}
+
+			$application_id = phpgw::get_var('id', 'int', 'GET');
+
+			$soassociation = new booking_soapplication_association();
+			$associations = $soassociation->read(array('results' => -1, 'filters' => array('application_id' => $application_id )));
+
+			if (empty($associations['total_records']) && $application_id)
+			{
+				$GLOBALS['phpgw']->db->transaction_begin();
+				createObject('booking.sopurchase_order')->delete_purchase_order($application_id);
+				$this->bo->delete_application($application_id);
+				$status = lang('deleted');
+				$GLOBALS['phpgw']->db->transaction_commit();
+			}
+			else
+			{
+				$status = lang('error');
 			}
 			return $status;
 		}

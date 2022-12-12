@@ -8,16 +8,16 @@
 <xsl:template xmlns:php="http://php.net/xsl" name="attributes_values">
 	<xsl:param name="class" />
 
-	<xsl:choose>
-		<xsl:when test="$class !=''">
-			<xsl:variable name="class">
+	<xsl:variable name="_class">
+		<xsl:choose>
+			<xsl:when test="$class !=''">
 				<xsl:value-of select="$class"/>
-			</xsl:variable>
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:variable name="class">pure-input-3-4</xsl:variable>
-		</xsl:otherwise>
-	</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>pure-input-3-4</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 
 	<script type="text/javascript">
 		help_Popup = function(requestUrl)
@@ -69,7 +69,7 @@
 						<xsl:value-of select="$supress_history_date" />
 					</xsl:with-param>
 					<xsl:with-param name="class">
-						<xsl:value-of select="$class" />
+						<xsl:value-of select="$_class" />
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</fieldset>

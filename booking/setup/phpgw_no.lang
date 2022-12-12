@@ -918,3 +918,5 @@ sms alert	booking	no	SMS-varsling
 e_lock_system	booking	no	Adgangskontrollsystem
 receipt	booking	no	Kvittering
 deactivate in frontend	booking	no	Deaktivert i frontend
+deleted	booking	no	Slettet
+sorry - insufficient rights	booking	no	Beklager, du er ikke autorisert for handlingen

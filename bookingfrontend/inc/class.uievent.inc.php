@@ -26,21 +26,16 @@
 			$this->application_ui = new booking_uiapplication();
 		}
 
-		private function _is_event_owner( $event, $bouser )
+		private function _is_event_owner( $event, $bouser, $skip_redirect = false )
 		{
-			$event_owner = false;
-			if($event['customer_identifier_type'] == 'ssn')
-			{
-				$external_login_info = $bouser->validate_ssn_login(array('menuaction' => 'bookingfrontend.uievent.cancel',
-					'id' => $event['id'],
-					'resource_ids' => $event['resource_ids']));
-				$event_owner = $event['customer_ssn'] == $external_login_info['ssn'] ? true : false;
-			}
-			else
-			{
-				$event_owner = $bouser->is_organization_admin($event['customer_organization_id']);
-			}
-			return $event_owner;
+			$external_login_info = $bouser->validate_ssn_login(array('menuaction' => 'bookingfrontend.uievent.cancel',
+				'id' => $event['id'],
+				'resource_ids' => $event['resource_ids']), $skip_redirect);
+
+			$event_owner_person = $event['customer_ssn'] == $external_login_info['ssn'] ? true : false;
+			$event_owner_organization = $bouser->is_organization_admin($event['customer_organization_id']);
+
+			return ( $event_owner_person || $event_owner_organization);
 		}
 
 		public function edit()
@@ -569,7 +564,7 @@
 			}			
 			$event['when'] = $when;
 			$bouser = CreateObject('bookingfrontend.bouser');
-			if ($this->_is_event_owner($event, $bouser))
+			if ($this->_is_event_owner($event, $bouser, true))
 			{
 				if ($event['from_'] > Date('Y-m-d H:i:s'))
 				{
