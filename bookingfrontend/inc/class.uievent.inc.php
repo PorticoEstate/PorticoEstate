@@ -32,7 +32,7 @@
 				'id' => $event['id'],
 				'resource_ids' => $event['resource_ids']), $skip_redirect);
 
-			$event_owner_person = $event['customer_ssn'] == $external_login_info['ssn'] ? true : false;
+			$event_owner_person = !empty($external_login_info['ssn']) && $event['customer_ssn'] == $external_login_info['ssn'] ? true : false;
 			$event_owner_organization = $bouser->is_organization_admin($event['customer_organization_id']);
 
 			return ( $event_owner_person || $event_owner_organization);
