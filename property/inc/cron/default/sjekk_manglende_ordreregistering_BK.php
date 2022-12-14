@@ -62,7 +62,7 @@
 				. " to_char(to_timestamp(fm_workorder.entry_date ),'YYYYMMDD') as sorteringsdato,"
 				. " fm_workorder.account_id as kostnadsart,"
 				. " to_char(to_timestamp(fm_workorder.order_sent ),'DD/MM-YYYY') as overfort_dato, "
-				. " fm_workorder.combined_cost as budget,"
+				. " fm_workorder.combined_cost as budget,fm_workorder.project_id,"
 				. " account_firstname, account_lastname"
 				. " FROM fm_workorder JOIN fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " JOIN phpgw_accounts ON fm_workorder.user_id = phpgw_accounts.account_id"
@@ -81,6 +81,7 @@
 			{
 				$orderserie[] = array(
 					'type'				 => 'workorder',
+					'project_id'		 => $this->db->f('project_id'),
 					'order_id'			 => $this->db->f('order_id'),
 					'title'				 => $this->db->f('title', true),
 					'status'			 => $this->db->f('status'),
@@ -117,6 +118,7 @@ SQL;
 				$orderserie[] = array(
 					'type'				 => 'ticket',
 					'ticket_id'			 => $this->db->f('ticket_id'),
+					'project_id'		 => '',
 					'order_id'			 => $this->db->f('order_id'),
 					'title'				 => $this->db->f('title', true),
 					'status'			 => $this->db->f('status'),
@@ -149,6 +151,7 @@ SQL;
 					<table>
 					 <caption>Manglende ordreregistering i Agresso fra Portico</caption>
 					<tr>
+						<th>Prosjekt</th>
 						<th>Ordre</th>
 						<th>Dato</th>
 						<th>Bestillingssum</th>
@@ -161,6 +164,7 @@ HTML;
 			$i		 = 0;
 			foreach ($orderserie as $entry)
 			{
+				$project_id	 = $entry['project_id'];
 				$order_id	 = $entry['order_id'];
 
 				try
@@ -197,12 +201,17 @@ HTML;
 
 					$i++;
 
+					$project_link = '';
 					switch ($entry['type'])
 					{
 						case 'workorder':
 								$order_link = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
 									'menuaction' => 'property.uiworkorder.edit',
 									'id'		 => $order_id), false, true) . "\">{$order_id}</a>";
+								$project_link = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
+									'menuaction' => 'property.uiproject.edit',
+									'id'		 => $project_id), false, true) . "\">{$project_id}</a>";
+
 							break;
 						case 'ticket':
 								$order_link = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
@@ -216,6 +225,7 @@ HTML;
 					$html .= <<<HTML
 
 					<tr>
+						<td>{$project_link}</td>
 						<td>{$order_link}</td>
 						<td>{$entry['date']}</td>
 						<td>{$entry['budget']}</td>
