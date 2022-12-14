@@ -36,169 +36,173 @@
 		<form id="form" name="form" method="post" ENCTYPE="multipart/form-data" action="{$form_action}" class="pure-form pure-form-stacked">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-				<div id="details" class="pure-g">
-					<div class="pure-u-1 pure-u-lg-1-2">
-						<input type="hidden" name="id" value="{composite_id}"/>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'name')"/>
-							</label>
-							<input type="text" name="name" id="name" value="{value_name}">
-								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
-								</xsl:attribute>
-							</input>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'address')"/>
-							</label>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'location')"/>
-							</label>
-							<xsl:if test="value_unit_count > 0">
-								<input type="hidden" name="part_of_town_id"  value="{value_part_of_town_id}"/>
-							</xsl:if>
-							<select id="part_of_town_id" name="part_of_town_id">
-								<xsl:choose>
-									<xsl:when test="value_unit_count > 0">
-										<xsl:attribute name="disabled">
-											<xsl:text>disabled</xsl:text>
-										</xsl:attribute>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:attribute name="data-validation">
-											<xsl:text>required</xsl:text>
-										</xsl:attribute>
-									</xsl:otherwise>
-								</xsl:choose>
-								<xsl:apply-templates select="list_part_of_town/options"/>
-							</select>
-						</div>
-						<xsl:if test="contract_furnished_status = 1">
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'custom price')"/>
-								</label>
-								<input type="text" name="custom_price" id="custom_price" value="{value_custom_price}"/>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'price type')"/>
-								</label>
-								<xsl:if test="count(//list_price_type/options) > 0">
-									<select id="price_type_id" name="price_type_id">
-										<xsl:apply-templates select="list_price_type/options"/>
-									</select>
-								</xsl:if>
-							</div>
+				<div id="details">
+					<div class="pure-g">
 
+						<div class="pure-u-1 pure-u-lg-1-2">
+							<input type="hidden" name="id" value="{composite_id}"/>
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="php:function('lang', 'custom price factor')"/>
+									<xsl:value-of select="php:function('lang', 'name')"/>
 								</label>
-								<input type="text" name="custom_price_factor" id="custom_price_factor" value="{value_custom_price_factor}"/>
+								<input type="text" name="name" id="name" value="{value_name}" class="pure-input-1-2">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+								</input>
 							</div>
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="php:function('lang', 'composite standard')"/>
+									<xsl:value-of select="php:function('lang', 'address')"/>
 								</label>
-								<xsl:if test="count(//list_composite_standard/options) > 0">
-									<select id="composite_standard_id" name="composite_standard_id">
-										<xsl:apply-templates select="list_composite_standard/options"/>
-									</select>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'location')"/>
+								</label>
+								<xsl:if test="value_unit_count > 0">
+									<input type="hidden" name="part_of_town_id"  value="{value_part_of_town_id}"/>
 								</xsl:if>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'composite type')"/>
-								</label>
-								<xsl:if test="count(//list_composite_type/options) > 0">
-									<select id="composite_type_id" name="composite_type_id">
-										<xsl:apply-templates select="list_composite_type/options"/>
-									</select>
-								</xsl:if>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'furnish_type')"/>
-								</label>
-								<select id="furnish_type_id" name="furnish_type_id">
-									<xsl:apply-templates select="list_furnish_type/options"/>
+								<select id="part_of_town_id" name="part_of_town_id" class="pure-input-1-2">
+									<xsl:choose>
+										<xsl:when test="value_unit_count > 0">
+											<xsl:attribute name="disabled">
+												<xsl:text>disabled</xsl:text>
+											</xsl:attribute>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:attribute name="data-validation">
+												<xsl:text>required</xsl:text>
+											</xsl:attribute>
+										</xsl:otherwise>
+									</xsl:choose>
+									<xsl:apply-templates select="list_part_of_town/options"/>
 								</select>
 							</div>
-						</xsl:if>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'has_custom_address')"/>
-							</label>
-							<input type="checkbox" name="has_custom_address" id="has_custom_address">
-								<xsl:if test="has_custom_address = 1">
-									<xsl:attribute name="checked" value="checked"/>
-								</xsl:if>
-							</input>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'overridden_address')"/> / <xsl:value-of select="php:function('lang', 'house_number')"/>
-							</label>
-							<input type="text" name="address_1" id="address_1" value="{value_custom_address_1}"/>
-							<input type="text" name="house_number" id="house_number" value="{value_custom_house_number}"/>
-							<input type="text" name="address_2" id="address_2" value="{value_custom_address_2}"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'post_code')"/> / <xsl:value-of select="php:function('lang', 'post_place')"/>
-							</label>
-							<input type="text" name="postcode" id="postcode" value="{value_custom_postcode}"/>
-							<input type="text" name="place" id="place" value="{value_custom_place}"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'description')"/>
-							</label>
-							<textarea name="description" id="description" rows="10" cols="50">
-								<xsl:value-of select="value_description"/>
-							</textarea>
-						</div>
-					</div>
-					<div class="pure-u-1 pure-u-lg-1-2">
+							<xsl:if test="contract_furnished_status = 1">
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'custom price')"/>
+									</label>
+									<input type="text" name="custom_price" id="custom_price" value="{value_custom_price}" class="pure-input-1-2"/>
+								</div>
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'price type')"/>
+									</label>
+									<xsl:if test="count(//list_price_type/options) > 0">
+										<select id="price_type_id" name="price_type_id" class="pure-input-1-2">
+											<xsl:apply-templates select="list_price_type/options"/>
+										</select>
+									</xsl:if>
+								</div>
 
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'area_gros')"/>
-							</label>
-							<xsl:value-of select="value_area_gros"/>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'area_net')"/>
-							</label>
-							<xsl:value-of select="value_area_net"/>
-						</div>
-						<!--div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'available ?')"/>
-							</label>
-							<input type="checkbox" name="is_active" id="is_active">
-								<xsl:if test="is_active = 1">
-									<xsl:attribute name="checked" value="checked"/>
-								</xsl:if>
-							</input>
-						</div-->
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'available ?')"/>
-							</label>
-							<xsl:if test="count(//list_status_id/options) > 0">
-								<select id="status_id" name="status_id">
-									<xsl:apply-templates select="list_status_id/options"/>
-								</select>
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'custom price factor')"/>
+									</label>
+									<input type="text" name="custom_price_factor" id="custom_price_factor" value="{value_custom_price_factor}" class="pure-input-1-2"/>
+								</div>
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'composite standard')"/>
+									</label>
+									<xsl:if test="count(//list_composite_standard/options) > 0">
+										<select id="composite_standard_id" name="composite_standard_id" class="pure-input-1-2">
+											<xsl:apply-templates select="list_composite_standard/options"/>
+										</select>
+									</xsl:if>
+								</div>
+								
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'composite type')"/>
+									</label>
+									<xsl:if test="count(//list_composite_type/options) > 0">
+										<select id="composite_type_id" name="composite_type_id" class="pure-input-1-2">
+											<xsl:apply-templates select="list_composite_type/options"/>
+										</select>
+									</xsl:if>
+								</div>
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'furnish_type')"/>
+									</label>
+									<select id="furnish_type_id" name="furnish_type_id" class="pure-input-1-2">
+										<xsl:apply-templates select="list_furnish_type/options"/>
+									</select>
+								</div>
 							</xsl:if>
 						</div>
 
+						<div class="pure-u-1 pure-u-lg-1-2">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'has_custom_address')"/>
+								</label>
+								<input type="checkbox" name="has_custom_address" id="has_custom_address">
+									<xsl:if test="has_custom_address = 1">
+										<xsl:attribute name="checked" value="checked"/>
+									</xsl:if>
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'overridden_address')"/> / <xsl:value-of select="php:function('lang', 'house_number')"/>
+								</label>
+								<input type="text" placeholder="Gatenavn" name="address_1" id="address_1" value="{value_custom_address_1}" class="pure-input-1-2"/>
+								<input type="text" placeholder="Husnr"  name="house_number" id="house_number" value="{value_custom_house_number}" class="pure-input-1-2"/>
+								<input type="text" placeholder="Adresse 2" name="address_2" id="address_2" value="{value_custom_address_2}" class="pure-input-1-2"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'post_code')"/> / <xsl:value-of select="php:function('lang', 'post_place')"/>
+								</label>
+								<input type="text" name="postcode" id="postcode" value="{value_custom_postcode}" class="pure-input-1-2">
+									<xsl:attribute name="placeholder">
+										<xsl:value-of select="php:function('lang', 'post_code')"/>
+									</xsl:attribute>
+								</input>
+
+								<input type="text" name="place" id="place" value="{value_custom_place}" class="pure-input-1-2">
+									<xsl:attribute name="placeholder">
+										<xsl:value-of select="php:function('lang', 'post_place')"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'description')"/>
+								</label>
+								<textarea name="description" id="description" rows="10" cols="50">
+									<xsl:value-of select="value_description"/>
+								</textarea>
+							</div>
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'area_gros')"/>
+								</label>
+								<xsl:value-of select="value_area_gros"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'area_net')"/>
+								</label>
+								<xsl:value-of select="value_area_net"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'available ?')"/>
+								</label>
+								<xsl:if test="count(//list_status_id/options) > 0">
+									<select id="status_id" name="status_id">
+										<xsl:apply-templates select="list_status_id/options"/>
+									</select>
+								</xsl:if>
+							</div>
+
+						</div>
 					</div>
 					<xsl:choose>
 						<xsl:when test="fileupload = 1">
@@ -258,11 +262,11 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'search_for')"/>
 										</label>
-										<input type="text" id="query" name="query" value=""></input>
+										<input type="text" id="query" name="query" value="" class="pure-input-1-4"></input>
 										<label>
 											<xsl:value-of select="php:function('lang', 'search_where')"/>
 										</label>
-										<select id="search_option" name="search_option">
+										<select id="search_option" name="search_option" class="pure-input-1-4">
 											<xsl:apply-templates select="list_search_option/options"/>
 										</select>
 									</div>
@@ -270,7 +274,7 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'level')"/>
 										</label>
-										<select id="type_id" name="type_id">
+										<select id="type_id" name="type_id"  class="pure-input-1-4">
 											<xsl:apply-templates select="list_type_id/options"/>
 										</select>
 									</div>
@@ -301,11 +305,11 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'search_for')"/>
 										</label>
-										<input type="text" id="contracts_query" name="contracts_query" value=""></input>
+										<input type="text" id="contracts_query" name="contracts_query" value="" class="pure-input-1-4"></input>
 										<label>
 											<xsl:value-of select="php:function('lang', 'search_where')"/>
 										</label>
-										<select id="contracts_search_option" name="contracts_search_option">
+										<select id="contracts_search_option" name="contracts_search_option" class="pure-input-1-4">
 											<xsl:apply-templates select="list_contracts_search_options/options"/>
 										</select>
 									</div>
@@ -313,19 +317,19 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'status')"/>
 										</label>
-										<select id="contract_status" name="contract_status">
+										<select id="contract_status" name="contract_status" class="pure-input-1-4">
 											<xsl:apply-templates select="list_status_options/options"/>
 										</select>
 										<label>
 											<xsl:value-of select="php:function('lang', 'date')"/>
 										</label>
-										<input type="text" id="status_date" name="status_date" value=""></input>
+										<input type="text" id="status_date" name="status_date" value="" class="pure-input-1-4" readonly="true"></input>
 									</div>
 									<div class="pure-control-group">
 										<label>
 											<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
 										</label>
-										<select id="contract_type" name="contract_type">
+										<select id="contract_type" name="contract_type" class="pure-input-1-4">
 											<xsl:apply-templates select="list_fields_of_responsibility_options/options"/>
 										</select>
 									</div>
@@ -358,13 +362,13 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'search_for')"/>
 										</label>
-										<input type="text" id="applications_query" name="applications_query" value=""></input>
+										<input type="text" id="applications_query" name="applications_query" value="" class="pure-input-1-4"></input>
 									</div>
 									<div class="pure-control-group">
 										<label>
 											<xsl:value-of select="php:function('lang', 'status')"/>
 										</label>
-										<select id="application_status" name="application_status">
+										<select id="application_status" name="application_status" class="pure-input-1-4">
 											<xsl:apply-templates select="list_status_application_options/options"/>
 										</select>
 									</div>

@@ -13,7 +13,7 @@
 			<div id="application_add" class="booking-container">
 				<xsl:if test="config/application_new_application">
 					<p style="width: 750px;">
-						<xsl:value-of select="config/application_new_application"/>
+						<xsl:value-of disable-output-escaping="yes" select="config/application_new_application"/>
 					</p>
 				</xsl:if>
 				<div class="pure-g">
