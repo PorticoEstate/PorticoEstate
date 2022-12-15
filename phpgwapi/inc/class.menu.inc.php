@@ -372,6 +372,10 @@ HTML;
 			return $menu;
 		}
 
+		/**
+		 * Used for jstree
+		 * @return array menu
+		 */
 		public function get_top_level_menu_ajax()
 		{
 			$navbar = $this->get('navbar');
@@ -396,6 +400,10 @@ HTML;
 			return $top_level_menu;
 		}
 
+		/**
+		 * Used for jstree
+		 * @return array menu
+		 */
 		public function get_local_menu_ajax()
 		{
 			$node = phpgw::get_var('node');

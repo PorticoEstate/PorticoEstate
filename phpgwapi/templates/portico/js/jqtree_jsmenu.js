@@ -1,44 +1,87 @@
 $(document).ready(function ()
 {
-	var tree = $('#navbar');
-	setTimeout(function ()
-	{
-		tree.tree({
-			data: treemenu_data,
-			autoEscape: false,
-			dragAndDrop: false,
-			autoOpen: false,
-			saveState: true,
-			useContextMenu: false,
-			onCreateLi: function (node, $li)
-			{
-				// Add 'icon' span before title
-		//		$li.find('.jqtree-title').before('<span class="jstree-icon"></span>');
-				tree.tree('removeFromSelection', node);
-				if (typeof (current_node_id) != 'undefined' && current_node_id > 0 && node.id == current_node_id)
-				{
-		//			console.log(current_node_id);
-					tree.tree('addToSelection', node);
-					var parent = node.parent;
-					while (typeof (parent.element) !== 'undefined')
-					{
-						tree.tree('openNode', parent, false);
-		//				tree.tree('addToSelection', parent);
-						parent = parent.parent;
-					}
-				}
-			}
-		});
 
-		$('#navbar').on(
-			'tree.click',
-			function(event) {
-				// The clicked node is 'event.node'
-				var node = event.node;
-				tree.tree('openNode', node, false);
+	if (true)
+	{
+		var oArgs = {menuaction: 'phpgwapi.menu_jqtree.get_menu'};
+		var some_url = phpGWLink('index.php', oArgs, true);
+		var tree = $('#navbar');
+		$.getJSON(
+			some_url,
+			function (data)
+			{
+				tree.tree({
+					data: data,
+					autoEscape: false,
+					dragAndDrop: false,
+					autoOpen: false,
+					saveState: true,
+					useContextMenu: false,
+					closedIcon: $('<i class="fas fa-arrow-circle-right"></i>'),
+					openedIcon: $('<i class="fas fa-arrow-circle-down"></i>'),
+					onCreateLi: function (node, $li)
+					{
+						tree.tree('removeFromSelection', node);
+						if (node.selected === 1)
+						{
+							tree.tree('addToSelection', node);
+							var parent = node.parent;
+							while (typeof (parent.element) !== 'undefined')
+							{
+								tree.tree('openNode', parent, false);
+								parent = parent.parent;
+							}
+						}
+					}
+				});
 			}
 		);
-	}, 200);
+
+	}
+	else
+	{
+		var tree = $('#navbar');
+		setTimeout(function ()
+		{
+			tree.tree({
+				data: treemenu_data,
+				autoEscape: false,
+				dragAndDrop: false,
+				autoOpen: false,
+				saveState: true,
+				useContextMenu: false,
+				onCreateLi: function (node, $li)
+				{
+					// Add 'icon' span before title
+					//		$li.find('.jqtree-title').before('<span class="jstree-icon"></span>');
+					tree.tree('removeFromSelection', node);
+					if (typeof (current_node_id) != 'undefined' && current_node_id > 0 && node.id == current_node_id)
+					{
+						//			console.log(current_node_id);
+						tree.tree('addToSelection', node);
+						var parent = node.parent;
+						while (typeof (parent.element) !== 'undefined')
+						{
+							tree.tree('openNode', parent, false);
+							//				tree.tree('addToSelection', parent);
+							parent = parent.parent;
+						}
+					}
+				}
+			});
+
+			$('#navbar').on(
+				'tree.click',
+				function (event)
+				{
+					// The clicked node is 'event.node'
+					var node = event.node;
+					tree.tree('openNode', node, false);
+				}
+			);
+		}, 200);
+	}
+
 });
 //$(document).ready(function () {
 //    var tree = $('#navbar'),
@@ -115,6 +158,39 @@ $(document).ready(function ()
 
 $(function ()
 {
+/*
+	//adapt from this one.
+	//https://stackoverflow.com/questions/4220126/run-javascript-function-when-user-finishes-typing-instead-of-on-key-up?page=1&tab=scoredesc#tab-top
+	$('#navbar_search').click(
+		function ()
+		{
+			var $tree = $('#navbar');
+			var search_term = 'Innbox';
+
+			var tree = $tree.tree('getTree');
+
+			tree.iterate(
+				function (node)
+				{
+					let text = node.text;
+					let position = text.search(search_term);
+					if (position === -1)
+					{
+						// Not found, continue searching
+						return true;
+					}
+					else
+					{
+						// Found. Select node. Stop searching.
+						$tree.tree('selectNode', node, true);
+						return false
+					}
+				}
+			);
+		}
+	);
+*/
+
 
 //	$('#navbar').tree({
 //		data: treemenu_data,

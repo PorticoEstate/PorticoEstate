@@ -66,7 +66,7 @@
 		<div class="layouheader">{user_fullname}</div>
 		<input type="text" id="navbar_search" value="" class="input" style="margin:0em auto 1em auto; display:block; padding:4px; border-radius:4px; border:1px solid silver;" />
 		<div id="navtreecontrol">
-			<a id="collapseNavbar" title="Collapse the entire tree below" href="#">
+			<a id="collapseNavbar" title="Collapse the entire tree below" href="#" style="white-space:nowrap; color:inherit;">
 				{lang_collapse_all}
 			</a>
 		</div>

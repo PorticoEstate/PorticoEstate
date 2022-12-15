@@ -51,16 +51,6 @@
 					'order'	=> -100,
 					'group'	=> 'core'
 				),
-				/*
-				'home' => array
-				(
-					'text'	=> lang('something'),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'phpgwapi.uiphpgwapi.index') ),
-					'image'	=> array('phpgwapi', 'navbar'),
-					'order'	=> 99,
-					'group'	=> 'core'
-				)
-				*/
 				'logout' => array
 				(
 					'text'	=> lang('Logout'),
@@ -70,23 +60,6 @@
 					'group'	=> 'core'
 				)
 			);
-			/*
-
-			$menus['toolbar'] = array();
-
-			if ( isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
-			{
-				$menus['admin'] = array();
-			}
-
-			if ( isset($GLOBALS['phpgw_info']['user']['apps']['preferences']) )
-			{
-				$menus['preferences'] = array();
-			}
-
-			$menus['navigation'] = array();
-			$menus['folders'] = phpgwapi_menu::get_categories('phpgwapi');
-			*/
 			return $menus;
 		}
 	}
