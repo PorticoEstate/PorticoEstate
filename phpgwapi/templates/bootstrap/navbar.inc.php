@@ -155,7 +155,7 @@ HTML;
 		{
 			$breadcrumb_html = <<<HTML
 				<nav aria-label="breadcrumb">
-				  <ol class="breadcrumb">
+				  <ol class="breadcrumb shadow">
 HTML;
 			$history_url = array();
 			for($i=0;$i< (count($breadcrumbs) -1); $i++)
@@ -393,6 +393,23 @@ HTML;
 					</div>
 				</nav>
 HTML;
+			$lang_collapse_all	= lang('collapse all');
+			$var['sidebar'] = <<<HTML
+				<nav id="sidebar" class="{menu_state} shadow">
+					<div class="sidebar-header">
+						<h1>{$user_fullname}</h1>
+					</div>
+						<!--input type="text" id="navbar_search" value="" class="input mt-2" /-->
+						<div id="navtreecontrol" class="ml-3">
+							<a id="collapseNavbar" title="Collapse the entire tree below" href="#" style="white-space:nowrap; color:inherit; font-size: 1rem">
+								{$lang_collapse_all}
+							</a>
+						</div>
+						<div id="navbar" style="overflow: auto" class="ml-4"></div>
+				</nav>
+
+HTML;
+
 
 			$var['top_panel'] = <<<HTML
 				<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
@@ -496,9 +513,9 @@ HTML;
 
 		if($children)
 		{
-		$ret = <<<HTML
-		$out
-		{$children}
+			$ret = <<<HTML
+			$out
+			{$children}
 			</li>
 HTML;
 

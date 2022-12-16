@@ -1,5 +1,57 @@
 $(document).ready(function ()
 {
+	var oArgs = {menuaction: 'phpgwapi.menu_jqtree.get_menu'};
+	var some_url = phpGWLink('index.php', oArgs, true);
+	var tree = $('#navbar');
+	$.getJSON(
+		some_url,
+		function (data)
+		{
+			tree.tree({
+				data: data,
+				autoEscape: false,
+				dragAndDrop: false,
+				autoOpen: false,
+				saveState: true,
+				useContextMenu: false,
+				closedIcon: $('<i class="fas fa-arrow-circle-right"></i>'),
+				openedIcon: $('<i class="fas fa-arrow-circle-down"></i>'),
+				onCreateLi: function (node, $li)
+				{
+					tree.tree('removeFromSelection', node);
+					if (node.selected === 1)
+					{
+						tree.tree('addToSelection', node);
+						var parent = node.parent;
+						while (typeof (parent.element) !== 'undefined')
+						{
+							tree.tree('openNode', parent, false);
+							parent = parent.parent;
+						}
+					}
+				}
+			});
+		}
+	);
+
+	$('#collapseNavbar').on('click', function ()
+	{
+		$(this).attr('href', 'javascript:;');
+
+		var $tree = $('#navbar');
+		var tree = $tree.tree('getTree');
+
+		tree.iterate(
+			function (node)
+			{
+				$tree.tree('closeNode', node, true);
+			}
+		);
+
+		$('#navbar_search').hide();
+	})
+
+
 	$('#sidebarCollapse').on('click', function ()
 	{
 		$('#sidebar').toggleClass('active');
@@ -28,8 +80,9 @@ $(document).ready(function ()
 		callback: function (key, options)
 		{
 			var id = $(this).attr("id");
+			var name = $(this).val();
 
-			var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu', bookmark_candidate: id};
+			var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu', bookmark_candidate: id, name: name};
 			var requestUrl = phpGWLink('index.php', oArgs, true);
 
 			$.ajax({

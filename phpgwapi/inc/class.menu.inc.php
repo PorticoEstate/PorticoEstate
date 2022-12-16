@@ -559,7 +559,7 @@ HTML;
 
 		public function update_bookmark_menu()
 		{
-//			$bookmark_candidate = phpgw::get_var('bookmark_candidate', 'string');
+			$bookmark_name = phpgw::get_var('name', 'string');
 
 			$bookmark_candidate_arr = explode('bookmark_', phpgw::get_var('bookmark_candidate', 'string'));
 
@@ -580,7 +580,7 @@ HTML;
 					$bookmarks = array();
 				}
 
-				$bookmarks[$bookmark_candidate] = true;
+				$bookmarks[$bookmark_candidate] = $bookmark_name;
 				$status = lang('bookmark added');
 			}
 

@@ -30,6 +30,8 @@
 
 	phpgw::import_class('phpgwapi.jquery');
 	phpgwapi_jquery::load_widget('core');
+		phpgwapi_jquery::load_widget('jqtree');
+
 
 	$javascripts[]	 = "/phpgwapi/js/popper/popper.min.js";
 	$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
@@ -54,6 +56,14 @@
 	if($app != 'frontend')
 	{
 		$stylesheets[] = "/phpgwapi/templates/bootstrap/css/base.css";
+		if(false)
+		{
+			$stylesheets[] = "/phpgwapi/templates/bootstrap/css/navbar_bootstrap.css";
+		}
+		else
+		{
+			$stylesheets[] = "/phpgwapi/templates/bootstrap/css/navbar_jqtree.css";
+		}
 	}
 
 
