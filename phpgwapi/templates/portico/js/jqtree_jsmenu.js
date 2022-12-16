@@ -158,47 +158,64 @@ $(document).ready(function ()
 
 $(function ()
 {
-/*
-	//adapt from this one.
+	//adapted from this one.
 	//https://stackoverflow.com/questions/4220126/run-javascript-function-when-user-finishes-typing-instead-of-on-key-up?page=1&tab=scoredesc#tab-top
-	$('#navbar_search').click(
-		function ()
+
+	var check_typing = true;                //timer identifier
+	var typingTimer;                //timer identifier
+	var doneTypingInterval = 50;  //time in ms
+	var $input = $('#navbar_search');
+
+//on keyup, start the countdown
+	$input.on('keyup', function ()
+	{
+		var search_term = $('#navbar_search').val();
+		if (search_term.length < 3 || !check_typing)
 		{
-			var $tree = $('#navbar');
-			var search_term = 'Innbox';
-
-			var tree = $tree.tree('getTree');
-
-			tree.iterate(
-				function (node)
-				{
-					let text = node.text;
-					let position = text.search(search_term);
-					if (position === -1)
-					{
-						// Not found, continue searching
-						return true;
-					}
-					else
-					{
-						// Found. Select node. Stop searching.
-						$tree.tree('selectNode', node, true);
-						return false
-					}
-				}
-			);
+			return false;
 		}
-	);
-*/
+		alert(search_term);
+		doneTyping(search_term);
+		check_typing = false;
+//		clearTimeout(typingTimer);
+//		typingTimer = setTimeout(doneTyping, doneTypingInterval);
+	});
+
+//on keydown, clear the countdown
+	$input.on('keydown', function ()
+	{
+		check_typing = true;
+//		clearTimeout(typingTimer);
+	});
+
+//user is "finished typing," do something
+	function doneTyping(search_term)
+	{
+		var $tree = $('#navbar');
+		var tree = $tree.tree('getTree');
+		tree.iterate(
+			function (node)
+			{
+				let text = node.text;
+				let position = text.search(search_term);
+				if (position === -1)
+				{
+					$tree.tree('closeNode', node, true);
+					// Not found, continue searching
+					return true;
+				}
+				else
+				{
+					// Found. Select node. Stop searching.
+					$tree.tree('selectNode', node, true);
+					return false
+				}
+			}
+		);
+	}
 
 
-//	$('#navbar').tree({
-//		data: treemenu_data,
-//		autoEscape: false,
-//		autoOpen: 0,
-//		saveState: true,
-//		dragAndDrop: true
-//	});
+
 
 
 	$('#navbar_search').hide();

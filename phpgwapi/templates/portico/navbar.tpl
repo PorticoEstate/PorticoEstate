@@ -27,8 +27,6 @@
 			window.open(sUrl, '_self');
 		}
 
-		var treemenu_data = {treemenu_data};
-		var current_node_id = {current_node_id};
 	</script>
 	<div class="ui-layout-north">
 		<div id="logo">{site_title}</div>

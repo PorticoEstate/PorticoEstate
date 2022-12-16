@@ -111,28 +111,13 @@ JS;
 		phpgwapi_cache::session_set('phpgwapi','breadcrumbs', $breadcrumbs);
 		$breadcrumbs = array_reverse($breadcrumbs);
 		
+		phpgwapi_cache::session_set('navbar', 'menu_selection',$GLOBALS['phpgw_info']['flags']['menu_selection']);
 
-//		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'jsmenu'
-//			&& !phpgwapi_cache::session_get('navbar', 'compiled') == true
-//		)
-		{
+//		$menu_organizer = createObject('phpgwapi.menu_jqtree');
+//		$treemenu = $menu_organizer->get_menu();
 
-			phpgwapi_cache::session_set('navbar', 'menu_selection',$GLOBALS['phpgw_info']['flags']['menu_selection']);
-
-			$menu_organizer = createObject('phpgwapi.menu_jqtree');
-			$treemenu = $menu_organizer->get_menu();
-
-			$var['treemenu_data'] = json_encode($treemenu);
-			$var['current_node_id'] =  $menu_organizer->get_current_node_id();
-			
-			/**
-			 * Check for HTML5
-			 */
-			if(!preg_match('/MSIE (6|7|8)/', $_SERVER['HTTP_USER_AGENT']))
-			{
-				phpgwapi_cache::session_set('navbar', 'compiled', true);
-			}
-		}
+//		$var['treemenu_data'] = json_encode($treemenu);
+//		$var['current_node_id'] =  $menu_organizer->get_current_node_id();
 
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar');
