@@ -559,7 +559,7 @@ HTML;
 
 		public function update_bookmark_menu()
 		{
-			$bookmark_text = strip_tags(phpgw::get_var('text', 'string'));
+			$bookmark_text = strip_tags(phpgw::get_var('text', 'html'));
 			$bookmark_icon = phpgw::get_var('icon', 'string');
 			$location_id = phpgw::get_var('location_id', 'string');
 			

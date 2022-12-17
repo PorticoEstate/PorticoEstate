@@ -162,10 +162,9 @@
 
 			}
 
-			if ($id == "navbar::{$menu_selection}")
+			if ($id == "navbar::{$menu_selection}" || ($item['location_id'] && $item['location_id'] == $menu_selection))
 			{
 				$selected = true;
-//				$this->set_current_node_id($node_id);
 				$node_text = "<b>{$item['text']}</b>";
 			}
 			else
@@ -180,7 +179,6 @@
 				{
 					$current_class .= ' bookmark_checked';
 					$item['bookmark_id'] =$id;
-					$this->set_get_bookmarks($item);
 				}
 			}
 

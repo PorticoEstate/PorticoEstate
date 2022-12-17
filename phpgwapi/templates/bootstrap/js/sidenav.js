@@ -83,7 +83,7 @@ $(document).ready(function ()
 			var icon = $(this).attr("icon");
 			var href = $(this).attr("href");
 			var location_id = $(this).attr("location_id");
-			var text = $(this).html();
+			var text = $(this).text();
 			var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu'};
 			var requestUrl = phpGWLink('index.php', oArgs, true);
 
