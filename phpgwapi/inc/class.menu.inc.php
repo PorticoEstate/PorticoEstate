@@ -559,7 +559,16 @@ HTML;
 
 		public function update_bookmark_menu()
 		{
-			$bookmark_name = phpgw::get_var('name', 'string');
+			$bookmark_text = strip_tags(phpgw::get_var('text', 'string'));
+			$bookmark_icon = phpgw::get_var('icon', 'string');
+			$location_id = phpgw::get_var('location_id', 'string');
+			
+			$href_comopnents = parse_url(phpgw::get_var('href', 'raw'));
+			parse_str($href_comopnents['query'],$query_arr);
+
+			unset($query_arr['click_history']);
+
+			$bookmark_href = $href_comopnents['path'] . '?' . http_build_query($query_arr);
 
 			$bookmark_candidate_arr = explode('bookmark_', phpgw::get_var('bookmark_candidate', 'string'));
 
@@ -580,7 +589,12 @@ HTML;
 					$bookmarks = array();
 				}
 
-				$bookmarks[$bookmark_candidate] = $bookmark_name;
+				$bookmarks[$bookmark_candidate] = array(
+					'text' => $bookmark_text,
+					'icon' => $bookmark_icon,
+					'href' => $bookmark_href,
+					'location_id' => $location_id
+					);
 				$status = lang('bookmark added');
 			}
 

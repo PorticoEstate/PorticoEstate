@@ -165,7 +165,7 @@
 			if ($id == "navbar::{$menu_selection}")
 			{
 				$selected = true;
-				$this->set_current_node_id($node_id);
+//				$this->set_current_node_id($node_id);
 				$node_text = "<b>{$item['text']}</b>";
 			}
 			else
@@ -196,11 +196,15 @@
 				$item['url'] = 'file:///' . str_replace(':', '|', $item['url']);
 			}
 
+			$icon = !empty($entry['icon']) ? "<i class='{$entry['icon']} mr-2 text-gray-400'></i>": '<i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>';
+
 			$ret = array(
-				'name'		 => "<a id=\"{$id}\" href=\"{$item['url']}\" {$link_class} style=\"white-space:nowrap; color:inherit;\"{$target}>{$node_text}</a>",
+				'name'		 => "<a id='{$id}' href='{$item['url']}' {$link_class} icon='{$item['icon']}' location_id='{$item['location_id']}' style='white-space:nowrap; color:inherit;'{$target}>{$node_text}</a>",
 				'id'		 => $node_id,
 				'text'		 => $item['text'],
-				'selected'	 => $selected ? 1 : 0
+				'selected'	 => $selected ? 1 : 0,
+				'icon'		 => isset($item['icon']) ? $item['icon'] : null
+
 			);
 
 			if ($children)

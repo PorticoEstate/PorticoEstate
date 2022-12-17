@@ -30,15 +30,15 @@
 
 	phpgw::import_class('phpgwapi.jquery');
 	phpgwapi_jquery::load_widget('core');
-		phpgwapi_jquery::load_widget('jqtree');
+	phpgwapi_jquery::load_widget('jqtree');
 
 
 	$javascripts[]	 = "/phpgwapi/js/popper/popper.min.js";
 	$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
 
+	$GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] = 'ajax_menu';//ajax_menu|jsmenu
 	if( empty($GLOBALS['phpgw_info']['flags']['noframework']) && empty($GLOBALS['phpgw_info']['flags']['nonavbar']) )
 	{
-		$GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] = 'ajax_menu';//ajax_menu|jsmenu
 		phpgwapi_jquery::load_widget('contextMenu');
 		$javascripts[] = "/phpgwapi/templates/bootstrap/js/sidenav.js";
 	}
@@ -56,13 +56,13 @@
 	if($app != 'frontend')
 	{
 		$stylesheets[] = "/phpgwapi/templates/bootstrap/css/base.css";
-		if(false)
+		if($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
 		{
-			$stylesheets[] = "/phpgwapi/templates/bootstrap/css/navbar_bootstrap.css";
+			$stylesheets[] = "/phpgwapi/templates/bootstrap/css/navbar_jqtree.css";
 		}
 		else
 		{
-			$stylesheets[] = "/phpgwapi/templates/bootstrap/css/navbar_jqtree.css";
+			$stylesheets[] = "/phpgwapi/templates/bootstrap/css/navbar_bootstrap.css";
 		}
 	}
 

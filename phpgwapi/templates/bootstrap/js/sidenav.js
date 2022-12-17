@@ -80,15 +80,18 @@ $(document).ready(function ()
 		callback: function (key, options)
 		{
 			var id = $(this).attr("id");
-			var name = $(this).val();
-
-			var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu', bookmark_candidate: id, name: name};
+			var icon = $(this).attr("icon");
+			var href = $(this).attr("href");
+			var location_id = $(this).attr("location_id");
+			var text = $(this).html();
+			var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu'};
 			var requestUrl = phpGWLink('index.php', oArgs, true);
 
 			$.ajax({
 				type: 'POST',
 				url: requestUrl,
 				dataType: 'json',
+				data:{bookmark_candidate: id, text: text, icon: icon, href: href, location_id: location_id},
 				success: function (data)
 				{
 					if (data)
