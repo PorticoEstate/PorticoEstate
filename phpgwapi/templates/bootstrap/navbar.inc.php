@@ -115,15 +115,19 @@ HTML;
 //			_debug_array($bookmarks);
 			$lang_bookmarks = lang('bookmarks');
 
-			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
 			$_treemenu = '';
-			foreach($navbar as $app => $app_data)
+
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] !== 'ajax_menu')
 			{
-				if(!in_array($app, array('logout', 'about', 'preferences')))
+				$navigation = execMethod('phpgwapi.menu.get', 'navigation');
+				foreach($navbar as $app => $app_data)
 				{
-					$submenu = isset($navigation[$app]) ? render_submenu($app, $navigation[$app], $bookmarks, $app_data['text']) : '';
-					$node = render_item($app_data, "navbar::{$app}", $submenu, $bookmarks);
-					$_treemenu .= $node['node'];
+					if(!in_array($app, array('logout', 'about', 'preferences')))
+					{
+						$submenu = isset($navigation[$app]) ? render_submenu($app, $navigation[$app], $bookmarks, $app_data['text']) : '';
+						$node = render_item($app_data, "navbar::{$app}", $submenu, $bookmarks);
+						$_treemenu .= $node['node'];
+					}
 				}
 			}
 			$treemenu = <<<HTML
@@ -155,7 +159,7 @@ HTML;
 		{
 			$breadcrumb_html = <<<HTML
 				<nav aria-label="breadcrumb">
-				  <ol class="breadcrumb">
+				  <ol class="breadcrumb shadow">
 HTML;
 			$history_url = array();
 			for($i=0;$i< (count($breadcrumbs) -1); $i++)
@@ -243,7 +247,8 @@ HTML;
 
 
 		$bookmark_option = '';
-		$collected_bm = set_get_bookmarks();
+//		$collected_bm = set_get_bookmarks();
+		$collected_bm = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
 		if($collected_bm)
 		{
 			$bookmark_option .= <<<HTML
@@ -258,17 +263,24 @@ HTML;
 				aria-labelledby="bookmarkDropdown">
 HTML;
 
-				foreach($collected_bm as $entry)
+				foreach($collected_bm as $bookmark_id => $entry)
 				{
+					if(empty($entry['text']))
+					{
+						continue;
+					}
 					$seleced_bm = 'dropdown-item';
 					$icon = !empty($entry['icon']) ? "<i class='{$entry['icon']} mr-2 text-gray-400'></i>": '<i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>';
-					if( isset($entry['selected']) && $entry['selected'])
+
+
+					if ( $bookmark_id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}"
+					|| ( !empty($entry['location_id']) && $entry['location_id'] == $GLOBALS['phpgw_info']['flags']['menu_selection'] ))
 					{
 						$seleced_bm .= ' active';
 					}
 
 					$bookmark_option .= <<<HTML
-					<a class="$seleced_bm" href="{$entry['url']}" id="bookmark_{$entry['bookmark_id']}">
+					<a class="{$seleced_bm}" href="{$entry['href']}" id="bookmark_{$bookmark_id}">
 						{$icon}
 						{$entry['text']}
 					</a>
@@ -380,10 +392,31 @@ HTML;
 			$var['sidebar'] = '';
 			$var['top_panel'] = '';
 		}
-		else
+		else 
 		{
 
-			$var['sidebar'] = <<<HTML
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
+			{
+				$lang_collapse_all	= lang('collapse all');
+				$var['sidebar'] = <<<HTML
+					<nav id="sidebar" class="{menu_state} shadow">
+						<div class="sidebar-header">
+							<h1>{$user_fullname}</h1>
+						</div>
+							<!--input type="text" id="navbar_search" value="" class="input mt-2" /-->
+							<div id="navtreecontrol" class="ml-3">
+								<a id="collapseNavbar" title="Collapse the entire tree below" href="#" style="white-space:nowrap; color:inherit; font-size: 1rem">
+									{$lang_collapse_all}
+								</a>
+							</div>
+							<div id="navbar" style="overflow: auto" class="ml-4"></div>
+					</nav>
+HTML;
+
+			}
+			else
+			{
+				$var['sidebar'] = <<<HTML
 				<nav id="sidebar" class="{menu_state}">
 					<div class="sidebar-header">
 						<h1>{$user_fullname}</h1>
@@ -393,6 +426,9 @@ HTML;
 					</div>
 				</nav>
 HTML;
+			}
+
+
 
 			$var['top_panel'] = <<<HTML
 				<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
@@ -496,9 +532,9 @@ HTML;
 
 		if($children)
 		{
-		$ret = <<<HTML
-		$out
-		{$children}
+			$ret = <<<HTML
+			$out
+			{$children}
 			</li>
 HTML;
 

@@ -1,8 +1,6 @@
 $(document).ready(function ()
 {
 
-	if (true)
-	{
 		var oArgs = {menuaction: 'phpgwapi.menu_jqtree.get_menu'};
 		var some_url = phpGWLink('index.php', oArgs, true);
 		var tree = $('#navbar');
@@ -37,52 +35,51 @@ $(document).ready(function ()
 			}
 		);
 
-	}
-	else
-	{
-		var tree = $('#navbar');
-		setTimeout(function ()
-		{
-			tree.tree({
-				data: treemenu_data,
-				autoEscape: false,
-				dragAndDrop: false,
-				autoOpen: false,
-				saveState: true,
-				useContextMenu: false,
-				onCreateLi: function (node, $li)
-				{
-					// Add 'icon' span before title
-					//		$li.find('.jqtree-title').before('<span class="jstree-icon"></span>');
-					tree.tree('removeFromSelection', node);
-					if (typeof (current_node_id) != 'undefined' && current_node_id > 0 && node.id == current_node_id)
+	//	$('#navbar').on(
+	//		'tree.click',
+	//		function (event)
+	//		{
+	//			// The clicked node is 'event.node'
+	//			var node = event.node;
+	//			tree.tree('openNode', node, false);
+	//		}
+	//	);
+
+		$.contextMenu({
+			selector: '.context-menu-nav',
+			callback: function (key, options)
+			{
+				var id = $(this).attr("id");
+				var icon = $(this).attr("icon");
+				var href = $(this).attr("href");
+				var location_id = $(this).attr("location_id");
+				var text = $(this).html();
+				var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu'};
+				var requestUrl = phpGWLink('index.php', oArgs, true);
+		
+				$.ajax({
+					type: 'POST',
+					url: requestUrl,
+					dataType: 'json',
+					data:{bookmark_candidate: id, text: text, icon: icon, href: href, location_id: location_id},
+					success: function (data)
 					{
-						//			console.log(current_node_id);
-						tree.tree('addToSelection', node);
-						var parent = node.parent;
-						while (typeof (parent.element) !== 'undefined')
+						if (data)
 						{
-							tree.tree('openNode', parent, false);
-							//				tree.tree('addToSelection', parent);
-							parent = parent.parent;
+							alert(data.status);
+							location.reload();
 						}
 					}
-				}
-			});
-
-			$('#navbar').on(
-				'tree.click',
-				function (event)
-				{
-					// The clicked node is 'event.node'
-					var node = event.node;
-					tree.tree('openNode', node, false);
-				}
-			);
-		}, 200);
-	}
-
+				});
+			},
+			items: {
+				"edit": {name: "Bookmark", icon: "far fa-bookmark"}
+			}
+		});
+		
 });
+
+
 //$(document).ready(function () {
 //    var tree = $('#navbar'),
 //        filter = $('#navbar_search'),

@@ -36,7 +36,7 @@
 
 		private $current_node_id;
 		private $navbar = array();
-		private $menu;
+		private $menu, $bookmarks ;
 
 		function __construct( $navbar = array() )
 		{
@@ -47,6 +47,8 @@
 			}
 			$this->set_navbar($navbar);
 			$this->set_current_node_id(0);
+			$this->bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
+
 		}
 
 		private function get_navbar()
@@ -134,16 +136,18 @@
 			return $treemenu;
 		}
 
-		private function render_item( $item, $id = '', $children = array() )
+		private function render_item( $item, $id = '', $children = array())
 		{
+			
 			static $node_id = 0;
 			$node_id++;
 
-			$current_class	 = '';
+			$current_class	 = 'context-menu-nav';
 			$parent_class	 = '';
 			$link_class		 = '';
 			$expand_class	 = '';
 			$icon_style		 = '';
+			$selected		 = false;
 
 //			static $blank_image;
 //			static $images	 = array(); // cache
@@ -160,14 +164,24 @@
 
 			if ($id == "navbar::{$menu_selection}")
 			{
-				$current_class = 'jqtree-selected';
-				$this->set_current_node_id($node_id);
+				$selected = true;
+//				$this->set_current_node_id($node_id);
 				$node_text = "<b>{$item['text']}</b>";
 			}
 			else
 			{
 				$node_text = $item['text'];
 
+			}
+
+			if(!$children && preg_match("/(^navbar::)/i", $id)) // bookmarks
+			{
+				if(is_array($this->bookmarks) && isset($this->bookmarks[$id]))
+				{
+					$current_class .= ' bookmark_checked';
+					$item['bookmark_id'] =$id;
+					$this->set_get_bookmarks($item);
+				}
 			}
 
 			$link_class	 = " class=\"{$current_class}\"";
@@ -182,11 +196,15 @@
 				$item['url'] = 'file:///' . str_replace(':', '|', $item['url']);
 			}
 
+			$icon = !empty($entry['icon']) ? "<i class='{$entry['icon']} mr-2 text-gray-400'></i>": '<i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>';
+
 			$ret = array(
-				'name'		 => "<a href=\"{$item['url']}\" style=\"white-space:nowrap; color:inherit;\"{$target}>{$node_text}</a>",
+				'name'		 => "<a id='{$id}' href='{$item['url']}' {$link_class} icon='{$item['icon']}' location_id='{$item['location_id']}' style='white-space:nowrap; color:inherit;'{$target}>{$node_text}</a>",
 				'id'		 => $node_id,
 				'text'		 => $item['text'],
-				'selected'	 => $current_class ? 1 : 0
+				'selected'	 => $selected ? 1 : 0,
+				'icon'		 => isset($item['icon']) ? $item['icon'] : null
+
 			);
 
 			if ($children)
@@ -206,5 +224,21 @@
 				$out[]		 = $this->render_item($item, "navbar::{$parent}::{$key}", $children);
 			}
 			return $out;
+		}
+
+		/**
+		 * Cheat function to collect bookmarks
+		 * @staticvar array $bookmarks
+		 * @param array $item
+		 * @return array bookmarks
+		 */
+		function set_get_bookmarks($item = array())
+		{
+			static $bookmarks = array();
+			if($item)
+			{
+				$bookmarks[] = $item;
+			}
+			return $bookmarks;
 		}
 	}

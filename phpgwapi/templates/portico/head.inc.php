@@ -40,6 +40,7 @@
 	{
 		phpgwapi_jquery::load_widget('layout');
 		phpgwapi_jquery::load_widget('jqtree');
+		phpgwapi_jquery::load_widget('contextMenu');
 
 		$GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] = 'ajax_menu';//ajax_menu|jsmenu
 		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
