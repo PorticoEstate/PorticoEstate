@@ -14,8 +14,8 @@ $(document).ready(function ()
 				autoOpen: false,
 				saveState: true,
 				useContextMenu: false,
-				closedIcon: $('<i class="fas fa-arrow-circle-right"></i>'),
-				openedIcon: $('<i class="fas fa-arrow-circle-down"></i>'),
+				closedIcon: $('<i class="far fa-arrow-alt-circle-right"></i>'),
+				openedIcon: $('<i class="far fa-arrow-alt-circle-down"></i>'),
 				onCreateLi: function (node, $li)
 				{
 					tree.tree('removeFromSelection', node);
@@ -87,6 +87,12 @@ $(document).ready(function ()
 			var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu'};
 			var requestUrl = phpGWLink('index.php', oArgs, true);
 
+			if(key === 'open_in_new')
+			{
+				window.open(href, '_blank');
+				return;
+			}
+
 			$.ajax({
 				type: 'POST',
 				url: requestUrl,
@@ -103,7 +109,8 @@ $(document).ready(function ()
 			});
 		},
 		items: {
-			"edit": {name: "Bookmark", icon: "far fa-bookmark"}
+			"edit": {name: "Bookmark", icon: "far fa-bookmark"},
+			"open_in_new": {name: "Åpne i nytt vindu", icon: "fas fa-external-link-alt"}
 		}
 	});
 
