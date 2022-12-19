@@ -88,7 +88,7 @@
 			else
 			{
 
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::{$this->appname}";
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::admin::{$this->appname}";
 				$this->local_menu_selection = true;
 			}
 		}

@@ -162,6 +162,9 @@
 
 			}
 
+			/*
+			 * navbar#{$location_id}
+			 */
 			if ($id == "navbar::{$menu_selection}" || ($item['location_id'] && $item['location_id'] == $menu_selection))
 			{
 				$selected = true;

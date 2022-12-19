@@ -259,6 +259,7 @@
 					'ticket_config'		 => array
 						(
 						'text'	 => lang('ticket config'),
+						'location_id' => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'admin.uiconfig2.index',
 							'location_id'	 => $GLOBALS['phpgw']->locations->get_id('property', '.ticket')))
 					),
@@ -367,6 +368,7 @@
 					'accounting_config'		 => array
 						(
 						'text'	 => lang('Configuration'),
+						'location_id' => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('property', '.invoice'),
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'admin.uiconfig2.index',
 							'location_id'	 => $GLOBALS['phpgw']->locations->get_id('property', '.invoice')))
 					),
@@ -592,30 +594,24 @@
 					'text'	 => lang('Config')
 				);
 
-				$menus['admin'] = array
-					(
-					'index'						 => array
-						(
+				$menus['admin'] = array(
+					'index'			 => array(
 						'text'		 => lang('Configuration'),
-						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
-							'appname'	 => 'property')),
-						'children'	 => array
-							(
-							'custom_config'				 => array
-								(
-								'text'	 => lang('custom config'),
-								'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'admin.uiconfig2.index',
+						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',	'appname'	 => 'property')),
+						'children'	 => array(
+							'custom_config'		 => array(
+								'text'			 => lang('custom config'),
+								'location_id'	 => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('property', '.admin'),
+								'url'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'admin.uiconfig2.index',
 									'location_id'	 => $GLOBALS['phpgw']->locations->get_id('property', '.admin')))
 							),
-							'klassifikasjonssystemet'	 => array
-								(
+							'klassifikasjonssystemet'	 => array(
 								'text'	 => 'Klassifikasjonssystemet',
 								'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiklassifikasjonssystemet.login'))
 							),
 						)
 					),
-					'import'					 => array
-						(
+					'import'	 => array(
 						'text'	 => lang('Generic import'),
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport.index'))
 					),
