@@ -133,7 +133,7 @@ new document	booking	no	Nye dokumenter
 new equipment	booking	no	Nytt utstyr
 new event	booking	no	Nytt arrangement
 new group	booking	no	Ny gruppe
-new organization	booking	no	Ny organisasjon
+new organization	booking	no	Opprett ny organisasjon/bedrift
 new resource	booking	no	Ny ressurs
 new root permission	booking	no	Nye systemrettigheter
 new season	booking	no	Ny sesong
@@ -147,7 +147,7 @@ number of participants	booking	no	Antall deltakere
 estimated number of participants	booking	no	Estimert antall deltakere
 of	booking	no	av
 officer	booking	no	Saksbehandler
-organization	booking	no	Organisasjon
+organization	booking	no	Organisasjon/bedrift
 organization number	booking	no	Organisasjonnummer
 organizations	booking	no	Organisasjoner
 other	booking	no	Annet

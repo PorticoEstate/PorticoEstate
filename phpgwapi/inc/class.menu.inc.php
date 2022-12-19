@@ -577,7 +577,7 @@ HTML;
 			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $user_id);
-			if($bookmarks && is_array($bookmarks) && isset($bookmarks[$bookmark_candidate]))
+			if($bookmarks && is_array($bookmarks) && isset($bookmarks[$bookmark_candidate]) && is_array($bookmarks[$bookmark_candidate]))
 			{
 				unset($bookmarks[$bookmark_candidate]);
 				$status = lang('bookmark deleted');

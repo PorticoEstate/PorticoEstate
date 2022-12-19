@@ -33,6 +33,18 @@
 		max-height: calc(100vh - 210px);
 		overflow-y: auto;
 		}
+		.select2-selection__rendered
+		{
+			line-height: 33px !important;
+		}
+		.select2-container .select2-selection--single
+		{
+			height: 36px !important;
+		}
+		.select2-selection__arrow
+		{
+			height: 35px !important;
+		}
 	</style>
 	<div class="container new-application-page pt-5 my-container-top-fix" id="new-application-partialtwo">
 		<a class="btn btn-light">

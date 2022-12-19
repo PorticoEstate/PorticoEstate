@@ -140,7 +140,7 @@ new document	booking	nn	Nye dokumenter
 new equipment	booking	nn	Nytt utstyr
 new event	booking	nn	Nytt arrangement
 new group	booking	nn	Ny gruppe
-new organization	booking	nn	Ny organisasjon
+new organization	booking	nn	Opprett ny organisasjon/bedrift
 new resource	booking	nn	Ny ressurs
 new root permission	booking	nn	Nye systemtilgangar
 new season	booking	nn	Ny sesong
@@ -156,7 +156,7 @@ estimated number of participants	booking	nn	Estimert Antal deltakarar
 oct	booking	nn	oktober
 of	booking	nn	av
 officer	booking	nn	Saksbehandlar
-organization	booking	nn	Organisasjon
+organization	booking	nn	Organisasjon/bedrift
 organization number	booking	nn	Organisasjonnummer
 organizations	booking	nn	Organisasjonar
 other	booking	nn	Anna
