@@ -33,6 +33,7 @@
 			{
 				$GLOBALS['phpgw']->asyncservice = CreateObject('phpgwapi.asyncservice');
 			}
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::async';
 		}
 
 		public function index()

@@ -66,27 +66,3 @@ a[aria-expanded="true"] {
     transform: translateY(-50%);
 }
 */
-ul ul a {
-    font-size: 0.9em !important;
-   /* padding-left: 10px !important;*/
-    /*background: #6d7fcc;*/
-}
-ul ul ul a {
-    font-size: 0.9em !important;
-  /*  padding-left: 40px !important;*/
-}
-
-ul ul ul ul a {
-    font-size: 0.9em !important;
- /*   padding-left: 10px !important;*/
-}
-
-ul ul ul ul ul a {
-    font-size: 0.9em !important;
- /*   padding-left: 60px !important;*/
-}
-
-ul ul ul ul ul ul a {
-    font-size: 0.9em !important;
-  /*  padding-left: 10px !important;*/
-}

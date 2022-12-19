@@ -494,6 +494,7 @@
 					'customconfig' => array
 					(
 						'text' => lang('custom config'),
+						'location_id' => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('booking', 'run'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index',
 						'location_id' => $GLOBALS['phpgw']->locations->get_id('booking', 'run')))
 					),

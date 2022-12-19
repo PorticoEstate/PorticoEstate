@@ -78,7 +78,7 @@
 		*/
 		function search_catalog($field_to_search, $value_to_search, $field, $catalog)
 		{
-			reset($this->$catalog);
+//			reset($this->$catalog);
 			foreach ($this->$catalog as $key => $value)
 			{
 				if ($value[$field_to_search] == $value_to_search)

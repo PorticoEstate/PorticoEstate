@@ -81,6 +81,7 @@
 				$menus['admin']['file_config'] = array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('file configuration', array(), true),
+					'location_id' => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('admin', 'vfs_filedata'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',
 						array
 						(
@@ -99,7 +100,7 @@
 							'menuaction'		=> 'admin.ui_custom.list_attribute',
 							'appname'			=> 'admin',
 							'location'			=> 'vfs_filedata',
-							'menu_selection'	=> 'admin::file_attribs'
+							'menu_selection'	=> 'admin::admin::file_attribs'
 						)
 					)
 				);
@@ -112,7 +113,7 @@
 							'menuaction'		=> 'admin.uicategories.index',
 							'appname'			=> 'admin',
 							'location'			=> 'vfs_filedata',
-							'menu_selection'	=> 'admin::file_cats'
+							'menu_selection'	=> 'admin::admin::file_cats'
 						)
 					)
 				);
