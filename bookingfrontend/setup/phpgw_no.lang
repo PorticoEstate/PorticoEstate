@@ -156,7 +156,7 @@ new document	bookingfrontend	no	Nye dokumenter
 new equipment	bookingfrontend	no	Nytt utstyr
 new event	bookingfrontend	no	Ny arrangement
 new group	bookingfrontend	no	Ny gruppe
-new organization	bookingfrontend	no	Ny organisajon
+new organization	bookingfrontend	no	Opprett ny organisasjon/bedrift
 new resource	bookingfrontend	no	Ny ressurs
 new root permission	bookingfrontend	no	Nye systemrettigheter
 new season	bookingfrontend	no	Ny sesong
@@ -172,7 +172,7 @@ estimated number of participants	bookingfrontend	no	Estimert antall deltakere
 oct	bookingfrontend	no	oktober
 of	bookingfrontend	no	av
 officer	bookingfrontend	no	Saksbehandler
-organization	bookingfrontend	no	Organisasjon
+organization	bookingfrontend	no	Organisasjon/bedrift
 organization number	bookingfrontend	no	Organisasjonnummer
 organizations	bookingfrontend	no	Organisasjoner
 organization index	bookingfrontend	no	Organisasjonsoversikt

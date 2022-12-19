@@ -156,7 +156,7 @@ new document	bookingfrontend	nn	Nye dokument
 new equipment	bookingfrontend	nn	Nytt utstyr
 new event	bookingfrontend	nn	Nytt arrangement
 new group	bookingfrontend	nn	Ny gruppe
-new organization	bookingfrontend	nn	Ny organisajon
+new organization	bookingfrontend	nn	Opprett ny organisasjon/bedrift
 new resource	bookingfrontend	nn	Ny ressurs
 new root permission	bookingfrontend	nn	Nye systemrettar
 new season	bookingfrontend	nn	Ny sesong
@@ -172,7 +172,7 @@ estimated number of participants	bookingfrontend	nn	Estimert tal på deltakarar
 oct	bookingfrontend	nn	oktober
 of	bookingfrontend	nn	av
 officer	bookingfrontend	nn	Sakshandsamar
-organization	bookingfrontend	nn	Organisasjon
+organization	bookingfrontend	nn	Organisasjon/bedrift
 organization number	bookingfrontend	nn	Organisasjonsnummer
 organizations	bookingfrontend	nn	Organisasjonar
 organization index	bookingfrontend	nn	Organisasjonsoversikt
