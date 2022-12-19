@@ -1,5 +1,57 @@
 $(document).ready(function ()
 {
+	var oArgs = {menuaction: 'phpgwapi.menu_jqtree.get_menu'};
+	var some_url = phpGWLink('index.php', oArgs, true);
+	var tree = $('#navbar');
+	$.getJSON(
+		some_url,
+		function (data)
+		{
+			tree.tree({
+				data: data,
+				autoEscape: false,
+				dragAndDrop: false,
+				autoOpen: false,
+				saveState: true,
+				useContextMenu: false,
+				closedIcon: $('<i class="far fa-arrow-alt-circle-right"></i>'),
+				openedIcon: $('<i class="far fa-arrow-alt-circle-down"></i>'),
+				onCreateLi: function (node, $li)
+				{
+					tree.tree('removeFromSelection', node);
+					if (node.selected === 1)
+					{
+						tree.tree('addToSelection', node);
+						var parent = node.parent;
+						while (typeof (parent.element) !== 'undefined')
+						{
+							tree.tree('openNode', parent, false);
+							parent = parent.parent;
+						}
+					}
+				}
+			});
+		}
+	);
+
+	$('#collapseNavbar').on('click', function ()
+	{
+		$(this).attr('href', 'javascript:;');
+
+		var $tree = $('#navbar');
+		var tree = $tree.tree('getTree');
+
+		tree.iterate(
+			function (node)
+			{
+				$tree.tree('closeNode', node, true);
+			}
+		);
+
+		$('#navbar_search').hide();
+	})
+
+
 	$('#sidebarCollapse').on('click', function ()
 	{
 		$('#sidebar').toggleClass('active');
@@ -28,14 +80,24 @@ $(document).ready(function ()
 		callback: function (key, options)
 		{
 			var id = $(this).attr("id");
-
-			var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu', bookmark_candidate: id};
+			var icon = $(this).attr("icon");
+			var href = $(this).attr("href");
+			var location_id = $(this).attr("location_id");
+			var text = $(this).text();
+			var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu'};
 			var requestUrl = phpGWLink('index.php', oArgs, true);
+
+			if(key === 'open_in_new')
+			{
+				window.open(href, '_blank');
+				return;
+			}
 
 			$.ajax({
 				type: 'POST',
 				url: requestUrl,
 				dataType: 'json',
+				data:{bookmark_candidate: id, text: text, icon: icon, href: href, location_id: location_id},
 				success: function (data)
 				{
 					if (data)
@@ -47,7 +109,8 @@ $(document).ready(function ()
 			});
 		},
 		items: {
-			"edit": {name: "Bookmark", icon: "far fa-bookmark"}
+			"edit": {name: "Bookmark", icon: "far fa-bookmark"},
+			"open_in_new": {name: "Åpne i nytt vindu", icon: "fas fa-external-link-alt"}
 		}
 	});
 

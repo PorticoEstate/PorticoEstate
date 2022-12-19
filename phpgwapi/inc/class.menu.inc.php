@@ -372,6 +372,10 @@ HTML;
 			return $menu;
 		}
 
+		/**
+		 * Used for jstree
+		 * @return array menu
+		 */
 		public function get_top_level_menu_ajax()
 		{
 			$navbar = $this->get('navbar');
@@ -396,6 +400,10 @@ HTML;
 			return $top_level_menu;
 		}
 
+		/**
+		 * Used for jstree
+		 * @return array menu
+		 */
 		public function get_local_menu_ajax()
 		{
 			$node = phpgw::get_var('node');
@@ -551,7 +559,16 @@ HTML;
 
 		public function update_bookmark_menu()
 		{
-//			$bookmark_candidate = phpgw::get_var('bookmark_candidate', 'string');
+			$bookmark_text = strip_tags(phpgw::get_var('text', 'html'));
+			$bookmark_icon = phpgw::get_var('icon', 'string');
+			$location_id = phpgw::get_var('location_id', 'string');
+			
+			$href_comopnents = parse_url(phpgw::get_var('href', 'raw'));
+			parse_str($href_comopnents['query'],$query_arr);
+
+			unset($query_arr['click_history']);
+
+			$bookmark_href = $href_comopnents['path'] . '?' . http_build_query($query_arr);
 
 			$bookmark_candidate_arr = explode('bookmark_', phpgw::get_var('bookmark_candidate', 'string'));
 
@@ -572,7 +589,12 @@ HTML;
 					$bookmarks = array();
 				}
 
-				$bookmarks[$bookmark_candidate] = true;
+				$bookmarks[$bookmark_candidate] = array(
+					'text' => $bookmark_text,
+					'icon' => $bookmark_icon,
+					'href' => $bookmark_href,
+					'location_id' => $location_id
+					);
 				$status = lang('bookmark added');
 			}
 

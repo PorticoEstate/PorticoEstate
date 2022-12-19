@@ -97,6 +97,7 @@
 					'text' => lang('Buildings'),
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uibuilding.index')),
 					'image' => array('property', 'location_1'),
+					'icon' => 'fa fa-2x fa-building',
 					'children' => array
 						(
 						'buildings' => array
