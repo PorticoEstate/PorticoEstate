@@ -179,7 +179,7 @@ $(document).ready(function ()
 			cache: true
 		},
 		width: '100%',
-		placeholder: 'Velg organisasjon',
+		placeholder: 'Søk etter din organisasjon/bedrift med navn eller organisasjonsnummer',
 		minimumInputLength: 2,
 		language: "no",
 		allowClear: true

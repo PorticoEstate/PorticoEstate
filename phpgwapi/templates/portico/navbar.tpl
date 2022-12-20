@@ -27,16 +27,11 @@
 			window.open(sUrl, '_self');
 		}
 
-		var treemenu_data = {treemenu_data};
-		var current_node_id = {current_node_id};
 	</script>
 	<div class="ui-layout-north">
 		<div id="logo">{site_title}</div>
 		<div id="navigation">
 			{template_selector}
-			<a href="{print_url}" class="icon icon-print" target="_blank">
-				{print_text}
-			</a>
 			<a href="{home_url}" class="icon icon-home">
 				{home_text}
 			</a>
@@ -66,7 +61,7 @@
 		<div class="layouheader">{user_fullname}</div>
 		<input type="text" id="navbar_search" value="" class="input" style="margin:0em auto 1em auto; display:block; padding:4px; border-radius:4px; border:1px solid silver;" />
 		<div id="navtreecontrol">
-			<a id="collapseNavbar" title="Collapse the entire tree below" href="#">
+			<a id="collapseNavbar" title="Collapse the entire tree below" href="#" style="white-space:nowrap; color:inherit;">
 				{lang_collapse_all}
 			</a>
 		</div>

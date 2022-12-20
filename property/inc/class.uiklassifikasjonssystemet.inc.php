@@ -88,6 +88,9 @@
 			{
 				phpgw::no_access();
 			}
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::property::index::klassifikasjonssystemet';
+
 		}
 
 		function login()

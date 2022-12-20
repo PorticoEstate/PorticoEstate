@@ -58,7 +58,7 @@
 			$this->sort					= $this->bo->sort;
 			$this->order				= $this->bo->order;
 			$this->allrows				= $this->bo->allrows;
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::config';
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "navbar#{$this->location_id}";
 			$GLOBALS['phpgw_info']['flags']['app_header'] = "{$this->currentapp}::{$this->acl_location}::";
 		}
 

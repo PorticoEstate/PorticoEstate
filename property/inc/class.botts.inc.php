@@ -764,7 +764,7 @@
 						{
 							$ticket['child_date'][$entity[$j]['name']]['statustext'] = $interlink->get_relation_info(
 								array('location' => $entity[$j]['type']),
-								$ticket['child_date'][$entity[$j]['name']]['date_info'][0]['target_id']
+								$ticket['child_date'][$entity[$j]['name']]['date_info'][0]['item_id']
 							);
 						}
 					}
