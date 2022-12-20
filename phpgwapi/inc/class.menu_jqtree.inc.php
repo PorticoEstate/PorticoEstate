@@ -168,12 +168,6 @@
 			if ($id == "navbar::{$menu_selection}" || ($item['location_id'] && $item['location_id'] == $menu_selection))
 			{
 				$selected = true;
-				$node_text = "<b>{$item['text']}</b>";
-			}
-			else
-			{
-				$node_text = $item['text'];
-
 			}
 
 			if(!$children && preg_match("/(^navbar::)/i", $id)) // bookmarks
@@ -200,7 +194,7 @@
 			$icon = !empty($entry['icon']) ? "<i class='{$entry['icon']} mr-2 text-gray-400'></i>": '<i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>';
 
 			$ret = array(
-				'name'		 => "<a id='{$id}' href='{$item['url']}' {$link_class} icon='{$item['icon']}' location_id='{$item['location_id']}' style='white-space:nowrap; color:inherit;'{$target}>{$node_text}</a>",
+				'name'		 => "<a id='{$id}' href='{$item['url']}' {$link_class} icon='{$item['icon']}' location_id='{$item['location_id']}' style='white-space:nowrap; color:inherit;'{$target}>{$item['text']}</a>",
 				'id'		 => $node_id,
 				'text'		 => $item['text'],
 				'selected'	 => $selected ? 1 : 0,

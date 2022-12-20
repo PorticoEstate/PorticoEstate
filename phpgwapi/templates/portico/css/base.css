@@ -596,3 +596,8 @@ SPAN.expander {
 	margin-bottom: 50px;
 	display: inline-block;
 }
+
+.jqtree-selected
+{
+	font-weight:	bold;
+}
