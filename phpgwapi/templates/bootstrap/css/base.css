@@ -294,3 +294,6 @@ label > input[type="search"] {
 .select2-container {
   display: inline-block;
 }
+.ms-n5 {
+    margin-left: -40px;
+}

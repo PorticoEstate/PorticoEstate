@@ -66,3 +66,7 @@ a[aria-expanded="true"] {
     transform: translateY(-50%);
 }
 */
+.jqtree-selected
+{
+	font-weight:	bold;
+}

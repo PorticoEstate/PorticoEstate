@@ -404,13 +404,18 @@ HTML;
 						<div class="sidebar-header">
 							<h1>{$user_fullname}</h1>
 						</div>
-							<!--input type="text" id="navbar_search" value="" class="input mt-2" /-->
-							<div id="navtreecontrol" class="ml-3">
-								<a id="collapseNavbar" title="Collapse the entire tree below" href="#" style="white-space:nowrap; color:inherit; font-size: 1rem">
-									{$lang_collapse_all}
-								</a>
-							</div>
-							<div id="navbar" style="overflow: auto" class="ml-4"></div>
+						<div class="input-group">
+							<input class="form-control py-2 border-right-0 border" type="search" value="" id="navbar_search">
+							<span class="input-group-append">
+								<div class="input-group-text bg-transparent"><i class="fa fa-search"></i></div>
+							</span>
+						</div>
+						<div id="navtreecontrol" class="ml-4">
+							<a id="collapseNavbar" title="Collapse the entire tree below" href="#" style="white-space:nowrap; color:inherit; font-size: 1rem">
+								{$lang_collapse_all}
+							</a>
+						</div>
+						<div id="navbar" style="overflow: auto" class="ml-4"></div>
 					</nav>
 HTML;
 
