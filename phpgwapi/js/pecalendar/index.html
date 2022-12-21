@@ -1,0 +1,46 @@
+
+<html>
+<head>
+    <link rel="stylesheet" href="pecalendar.css">
+    <script src="luxon.js"></script>
+    <script src="pecalendar.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <div id="calendar" class="calendar">
+
+        </div>
+    </div>
+    <script>
+        let cal = new PEcalendar("calendar");
+        cal.createCalendarDom();
+
+        const events = [
+            {
+                from: "12:00",
+                to: "14:00",
+                date: "2022-12-21",
+                id_string: "1126",
+                organization_name: "Innbyggerdialog",
+                resource: "Diskotek",
+                resource_id: 18,
+                type: "allocation"
+            },
+            {
+                from: "10:00",
+                to: "16:00",
+                date: "2022-12-20",
+                id_string: "1126",
+                organization_name: "Vegard",
+                resource: "Diskotek",
+                resource_id: 18,
+                type: "allocation"
+            }
+        ]
+
+        cal.setEvents(events);
+
+    </script>
+</body>
+</html>
