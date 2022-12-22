@@ -1322,7 +1322,7 @@
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $code);
 
-			self::add_javascript('rental', 'rental', 'contract.index.js');
+			self::add_javascript('rental', 'base', 'contract.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
@@ -1811,7 +1811,7 @@ JS;
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('view');
 
-			self::add_javascript('rental', 'rental', 'contract.view.js');
+			self::add_javascript('rental', 'base', 'contract.view.js');
 			phpgwapi_jquery::load_widget('numberformat');
 			self::render_template_xsl(array('contract', 'datatable_inline'), array('view' => $data));
 		}
@@ -2415,7 +2415,7 @@ JS;
 			//$appname	=  $this->location_info['name'];
 			//$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
 			phpgwapi_jquery::formvalidator_generate(array('date'));
-			self::add_javascript('rental', 'rental', 'contract.edit.js');
+			self::add_javascript('rental', 'base', 'contract.edit.js');
 			phpgwapi_jquery::load_widget('numberformat');
 			self::render_template_xsl(array('contract', 'datatable_inline'), array('edit' => $data));
 		}

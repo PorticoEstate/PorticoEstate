@@ -502,7 +502,7 @@
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $code);
 
-			self::add_javascript('rental', 'rental', 'frontpage.index.js');
+			self::add_javascript('rental', 'base', 'frontpage.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 			self::render_template_xsl(array('frontpage', 'datatable_inline'), array('edit' => $data));
 		}
