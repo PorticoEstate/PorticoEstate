@@ -17,19 +17,32 @@
   <body>
     <div class="container">
       <h1 id="home">STYLEGUIDE</h1>
-      <ul class="list-unstyled d-flex">
-        <li>
-            <a href="#typography" class="pe-4">Typography</a>
-        <li>
-        <li>
-            <a href="#colors">Colors</a>
-        <li>
-      </ul>
+
       <?php
-        echo '<span id="typography"></span>';
+        $sectionLinks = array(
+          'Typography', 'Colors', 'Effects', 'Icons', 'Button', 'Link', 'Input'
+        );
+
+        echo '<ul class="list-unstyled d-flex">';
+        foreach ($sectionLinks as $sectionLink) {
+         echo '<li><a href="#'.$sectionLink.'" class="me-4">'.$sectionLink.'</a></li>';
+        }
+        echo '</ul>';
+
+        echo '<span id="Typography"></span>';
         include 'typography/typography.php';
-        echo '<span id="colors"></span>';
+        echo '<span id="Colors"></span>';
         include 'colors/colors.php';
+        echo '<span id="Effects"></span>';
+        include 'effects/effects.php';
+        echo '<span id="Icons"></span>';
+        include 'icons/icons.php';
+        echo '<span id="Button"></span>';
+        include 'button/button.php';
+        echo '<span id="Link"></span>';
+        include 'link/link.php';
+        echo '<span id="Input"></span>';
+        include 'input/input.php';
       ?>
     </div>
   </body>
