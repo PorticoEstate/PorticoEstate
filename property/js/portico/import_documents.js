@@ -181,7 +181,7 @@ this.onActionsClick_files = function (action, files)
 	var building_part = $('#building_part option:selected').toArray().map(item => item.value);
 	if (action !== 'delete_file')
 	{
-		if (!cadastral_unit && !location_code && !building_number &&!remark_detail && !document_category.length && !branch.length && !building_part.length)
+		if (!cadastral_unit && !location_code && !building_number && !remark_detail && !document_category.length && !branch.length && !building_part.length)
 		{
 			alert('ingenting valgt');
 			return false;
@@ -585,4 +585,33 @@ this.step_3_clean_up = function ()
 
 		}
 	});
+};
+
+this.local_DrawCallback0 = function (oTable)
+{
+	return;
+
+	var categories = $('.document_category');
+	var category_list = [{id: 1, name: "navn1"}, {id: 2, name: "navn2"}];
+
+	var htmlString;
+	categories.each(function (i, obj)
+	{
+		$(obj).find('select').remove();
+		var selected = '';
+		htmlString = '<select name="document_category">';
+
+		category_list.forEach(function (category)
+		{
+			console.log(category)
+			htmlString += "<option value='" + category.id + "'" + selected + ">" + category.name + "</option>";
+		});
+		htmlString += '</select>';
+
+//		$(obj).append(htmlString);
+
+	});
+
+
+
 };
