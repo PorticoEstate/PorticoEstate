@@ -1,0 +1,21 @@
+.box-shadow {
+  box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
+}
+
+.rounded {
+  &-mini {
+    border-radius: 0.5rem;
+  }
+
+  &-small {
+    border-radius: 1rem;
+  }
+
+  &-medium {
+    border-radius: 2rem;
+  }
+
+  &-large {
+    border-radius: 3.125rem;
+  }
+}

@@ -1,9 +1,8 @@
-
+<div class="d-flex justify-content-between">
+  <a href="#home">Home</a> <span>Color</span>
+</div>
 <div class="container">
-  <div class="d-flex justify-content-between">
-    <a href="#home">Home</a> <span>Color</span>
-  </div>
-  <div class="row g-0 border-top border-2 py-4">
+  <div class="row g-0 border-top border-2 py-5">
     <div class="row">
         <div class="d-flex align-items-center text-center mb-2">
           <div class="colorbox bg-purple"></div>
@@ -45,11 +44,11 @@
       echo '</div>';
       
       
-      echo '<div class="d-flex align-items-center justify-content-center mb-5">';
+      echo '<div class="row mb-5">';
       foreach ( $colors as $color => $hexColor) {
-        echo '<div class="d-flex flex-column justify-content-center pe-4">
-                <span class="text-center text-lg text-'.$color.'">text-'.$color.'</span>
-                <span class="text-center">text-'.$color.'</span>
+        echo '<div class="col-3 d-flex flex-column mb-3">
+                <span class="text-lg text-'.$color.'">text-'.$color.'</span>
+                <span class="">text-'.$color.'</span>
               </div>';
       }
       echo '</div>';
@@ -72,15 +71,3 @@
     ?>
   </div>
 </div>
-
-
-<style>
-  .colorbox {
-    height: 50px;
-    width: 50px;
-    border-radius: 5px;
-    flex: none;
-
-  }
-
-</style>

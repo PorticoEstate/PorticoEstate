@@ -1,9 +1,8 @@
-
+<div class="d-flex justify-content-end">
+  Typography
+</div>
 <div class="container">
-  <div class="row justify-content-end">
-    Typography
-  </div>
-  <div class="row g-0 border-top border-2 py-4">
+  <div class="row g-0 border-top border-2 py-5">
     <div class="col-lg">
       <h1>H1 - Bold - 36px</h1>
       <h2>H2 - Bold - 28px</h2>
