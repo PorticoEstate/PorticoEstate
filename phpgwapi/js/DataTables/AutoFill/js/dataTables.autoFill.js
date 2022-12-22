@@ -1,23 +1,7 @@
-/*! AutoFill 2.4.0
+/*! AutoFill 2.5.1
  * ©2008-2022 SpryMedia Ltd - datatables.net/license
  */
 
-/**
- * @summary     AutoFill
- * @description Add Excel like click and drag auto-fill options to DataTables
- * @version     2.4.0
- * @author      SpryMedia Ltd (www.sprymedia.co.uk)
- * @copyright   SpryMedia Ltd.
- *
- * This source file is free software, available under the following license:
- *   MIT license - http://datatables.net/license/mit
- *
- * This source file is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
- *
- * For details please refer to: http://www.datatables.net
- */
 (function( factory ){
 	if ( typeof define === 'function' && define.amd ) {
 		// AMD
@@ -29,12 +13,21 @@
 		// CommonJS
 		module.exports = function (root, $) {
 			if ( ! root ) {
+				// CommonJS environments without a window global must pass a
+				// root. This will give an error otherwise
 				root = window;
 			}
 
-			if ( ! $ || ! $.fn.dataTable ) {
-				$ = require('datatables.net')(root, $).$;
+			if ( ! $ ) {
+				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
+					require('jquery') :
+					require('jquery')( root );
 			}
+
+			if ( ! $.fn.dataTable ) {
+				require('datatables.net')(root, $);
+			}
+
 
 			return factory( $, root, root.document );
 		};
@@ -47,6 +40,24 @@
 'use strict';
 var DataTable = $.fn.dataTable;
 
+
+
+/**
+ * @summary     AutoFill
+ * @description Add Excel like click and drag auto-fill options to DataTables
+ * @version     2.5.1
+ * @author      SpryMedia Ltd (www.sprymedia.co.uk)
+ * @copyright   SpryMedia Ltd.
+ *
+ * This source file is free software, available under the following license:
+ *   MIT license - http://datatables.net/license/mit
+ *
+ * This source file is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
+ *
+ * For details please refer to: http://www.datatables.net
+ */
 
 var _instance = 0;
 
@@ -351,15 +362,17 @@ $.extend( AutoFill.prototype, {
 			} );
 
 			this.dom.background.appendTo( 'body' );
-			this.dom.background.one('click', () => {
-				this.dom.background.remove();
-				this.dom.list.remove();
+			this.dom.background.one('click', function() {
+				that.dom.background.remove();
+				that.dom.list.remove();
 			})
 			this.dom.list.appendTo( 'body' );
 
 			if (this.c.closeButton) {
 				this.dom.list.prepend(this.dom.closeButton).addClass(AutoFill.classes.closeable)
-				this.dom.closeButton.on('click', () => this.dom.background.click())
+				this.dom.closeButton.on('click', function() {
+					return that.dom.background.click()
+				});
 			}
 
 			this.dom.list.css( 'margin-top', this.dom.list.outerHeight()/2 * -1 );
@@ -1104,7 +1117,7 @@ AutoFill.actions = {
 
 	fillVertical: {
 		available: function ( dt, cells ) {
-			return cells.length > 1;
+			return cells.length > 1 && cells[0].length > 1;
 		},
 
 		option: function ( dt, cells ) {
@@ -1145,7 +1158,7 @@ AutoFill.actions = {
  * @static
  * @type      String
  */
-AutoFill.version = '2.4.0';
+AutoFill.version = '2.5.1';
 
 
 /**
@@ -1255,5 +1268,5 @@ DataTable.AutoFill = AutoFill;
 DataTable.AutoFill = AutoFill;
 
 
-return AutoFill;
+return DataTable;
 }));

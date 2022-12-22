@@ -13,16 +13,25 @@
 		// CommonJS
 		module.exports = function (root, $) {
 			if ( ! root ) {
+				// CommonJS environments without a window global must pass a
+				// root. This will give an error otherwise
 				root = window;
 			}
 
-			if ( ! $ || ! $.fn.dataTable ) {
-				$ = require('datatables.net-bs5')(root, $).$;
+			if ( ! $ ) {
+				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
+					require('jquery') :
+					require('jquery')( root );
+			}
+
+			if ( ! $.fn.dataTable ) {
+				require('datatables.net-bs5')(root, $);
 			}
 
 			if ( ! $.fn.dataTable.AutoFill ) {
 				require('datatables.net-autofill')(root, $);
 			}
+
 
 			return factory( $, root, root.document );
 		};
@@ -34,6 +43,7 @@
 }(function( $, window, document, undefined ) {
 'use strict';
 var DataTable = $.fn.dataTable;
+
 
 
 DataTable.AutoFill.classes.btn = 'btn btn-primary';

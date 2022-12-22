@@ -2,14 +2,6 @@
  * ©2011-2015 SpryMedia Ltd - datatables.net/license
  */
 
-/**
- * DataTables integration for Foundation. This requires Foundation 5 and
- * DataTables 1.10 or newer.
- *
- * This file sets the defaults and adds options to DataTables to style its
- * controls using Foundation. See http://datatables.net/manual/styling/foundation
- * for further information.
- */
 (function( factory ){
 	if ( typeof define === 'function' && define.amd ) {
 		// AMD
@@ -21,12 +13,21 @@
 		// CommonJS
 		module.exports = function (root, $) {
 			if ( ! root ) {
+				// CommonJS environments without a window global must pass a
+				// root. This will give an error otherwise
 				root = window;
 			}
 
-			if ( ! $ || ! $.fn.dataTable ) {
-				$ = require('datatables.net')(root, $).$;
+			if ( ! $ ) {
+				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
+					require('jquery') :
+					require('jquery')( root );
 			}
+
+			if ( ! $.fn.dataTable ) {
+				require('datatables.net')(root, $);
+			}
+
 
 			return factory( $, root, root.document );
 		};
@@ -38,6 +39,17 @@
 }(function( $, window, document, undefined ) {
 'use strict';
 var DataTable = $.fn.dataTable;
+
+
+
+/**
+ * DataTables integration for Foundation. This requires Foundation 5 and
+ * DataTables 1.10 or newer.
+ *
+ * This file sets the defaults and adds options to DataTables to style its
+ * controls using Foundation. See http://datatables.net/manual/styling/foundation
+ * for further information.
+ */
 
 // Detect Foundation 5 / 6 as they have different element and class requirements
 var meta = $('<meta class="foundation-mq"/>').appendTo('head');
