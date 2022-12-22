@@ -1,13 +1,53 @@
-/*! StateRestore 1.1.1
+/*! StateRestore 1.2.0
  * 2019-2022 SpryMedia Ltd - datatables.net/license
  */
+
+(function( factory ){
+	if ( typeof define === 'function' && define.amd ) {
+		// AMD
+		define( ['jquery', 'datatables.net'], function ( $ ) {
+			return factory( $, window, document );
+		} );
+	}
+	else if ( typeof exports === 'object' ) {
+		// CommonJS
+		module.exports = function (root, $) {
+			if ( ! root ) {
+				// CommonJS environments without a window global must pass a
+				// root. This will give an error otherwise
+				root = window;
+			}
+
+			if ( ! $ ) {
+				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
+					require('jquery') :
+					require('jquery')( root );
+			}
+
+			if ( ! $.fn.dataTable ) {
+				require('datatables.net')(root, $);
+			}
+
+
+			return factory( $, root, root.document );
+		};
+	}
+	else {
+		// Browser
+		factory( jQuery, window, document );
+	}
+}(function( $, window, document, undefined ) {
+'use strict';
+var DataTable = $.fn.dataTable;
+
+
 (function () {
     'use strict';
 
-    var $$1;
+    var $$2;
     var dataTable$1;
     function setJQuery$1(jq) {
-        $$1 = jq;
+        $$2 = jq;
         dataTable$1 = jq.fn.dataTable;
     }
     var StateRestore = /** @class */ (function () {
@@ -25,9 +65,9 @@
                 throw new Error('StateRestore requires Buttons');
             }
             var table = new dataTable$1.Api(settings);
-            this.classes = $$1.extend(true, {}, StateRestore.classes);
+            this.classes = $$2.extend(true, {}, StateRestore.classes);
             // Get options from user
-            this.c = $$1.extend(true, {}, StateRestore.defaults, opts);
+            this.c = $$2.extend(true, {}, StateRestore.defaults, opts);
             this.s = {
                 dt: table,
                 identifier: identifier,
@@ -36,38 +76,38 @@
                 tableId: state && state.stateRestore ? state.stateRestore.tableId : undefined
             };
             this.dom = {
-                background: $$1('<div class="' + this.classes.background + '"/>'),
-                closeButton: $$1('<div class="' + this.classes.closeButton + '">x</div>'),
-                confirmation: $$1('<div class="' + this.classes.confirmation + '"/>'),
-                confirmationButton: $$1('<button class="' + this.classes.confirmationButton + ' ' + this.classes.dtButton + '">'),
-                confirmationTitleRow: $$1('<div class="' + this.classes.confirmationTitleRow + '"></div>'),
-                dtContainer: $$1(this.s.dt.table().container()),
-                duplicateError: $$1('<span class="' + this.classes.modalError + '">' +
+                background: $$2('<div class="' + this.classes.background + '"/>'),
+                closeButton: $$2('<div class="' + this.classes.closeButton + '">x</div>'),
+                confirmation: $$2('<div class="' + this.classes.confirmation + '"/>'),
+                confirmationButton: $$2('<button class="' + this.classes.confirmationButton + ' ' + this.classes.dtButton + '">'),
+                confirmationTitleRow: $$2('<div class="' + this.classes.confirmationTitleRow + '"></div>'),
+                dtContainer: $$2(this.s.dt.table().container()),
+                duplicateError: $$2('<span class="' + this.classes.modalError + '">' +
                     this.s.dt.i18n('stateRestore.duplicateError', this.c.i18n.duplicateError) +
                     '</span>'),
-                emptyError: $$1('<span class="' + this.classes.modalError + '">' +
+                emptyError: $$2('<span class="' + this.classes.modalError + '">' +
                     this.s.dt.i18n('stateRestore.emptyError', this.c.i18n.emptyError) +
                     '</span>'),
-                removeContents: $$1('<div class="' + this.classes.confirmationText + '"><span>' +
+                removeContents: $$2('<div class="' + this.classes.confirmationText + '"><span>' +
                     this.s.dt
                         .i18n('stateRestore.removeConfirm', this.c.i18n.removeConfirm)
                         .replace(/%s/g, this.s.identifier) +
                     '</span></div>'),
-                removeError: $$1('<span class="' + this.classes.modalError + '">' +
+                removeError: $$2('<span class="' + this.classes.modalError + '">' +
                     this.s.dt.i18n('stateRestore.removeError', this.c.i18n.removeError) +
                     '</span>'),
-                removeTitle: $$1('<h2 class="' + this.classes.confirmationTitle + '">' +
+                removeTitle: $$2('<h2 class="' + this.classes.confirmationTitle + '">' +
                     this.s.dt.i18n('stateRestore.removeTitle', this.c.i18n.removeTitle) +
                     '</h2>'),
-                renameContents: $$1('<div class="' + this.classes.confirmationText + ' ' + this.classes.renameModal + '">' +
+                renameContents: $$2('<div class="' + this.classes.confirmationText + ' ' + this.classes.renameModal + '">' +
                     '<label class="' + this.classes.confirmationMessage + '">' +
                     this.s.dt
                         .i18n('stateRestore.renameLabel', this.c.i18n.renameLabel)
                         .replace(/%s/g, this.s.identifier) +
                     '</label>' +
                     '</div>'),
-                renameInput: $$1('<input class="' + this.classes.input + '" type="text"></input>'),
-                renameTitle: $$1('<h2 class="' + this.classes.confirmationTitle + '">' +
+                renameInput: $$2('<input class="' + this.classes.input + '" type="text"></input>'),
+                renameTitle: $$2('<h2 class="' + this.classes.confirmationTitle + '">' +
                     this.s.dt.i18n('stateRestore.renameTitle', this.c.i18n.renameTitle) +
                     '</h2>')
             };
@@ -97,10 +137,10 @@
             };
             var successCallback = function () {
                 _this.dom.confirmation.trigger('dtsr-remove');
-                $$1(_this.s.dt.table().node()).trigger('stateRestore-change');
+                $$2(_this.s.dt.table().node()).trigger('stateRestore-change');
                 _this.dom.background.click();
                 _this.dom.confirmation.remove();
-                $$1(document).unbind('keyup', function (e) { return _this._keyupFunction(e); });
+                $$2(document).unbind('keyup', function (e) { return _this._keyupFunction(e); });
                 _this.dom.confirmationButton.off('click');
             };
             // If the remove is not happening over ajax remove it from local storage and then trigger the event
@@ -123,7 +163,7 @@
             // Also only want to save if the table has been initialised and the states have been loaded in
             else if (typeof this.c.ajax === 'string' && this.s.dt.settings()[0]._bInitComplete) {
                 removeFunction = function () {
-                    $$1.ajax({
+                    $$2.ajax({
                         data: ajaxData,
                         success: successCallback,
                         type: 'POST',
@@ -143,7 +183,7 @@
             // If the modal is to be skipped then remove straight away
             if (skipModal) {
                 this.dom.confirmation.appendTo(this.dom.dtContainer);
-                $$1(this.s.dt.table().node()).trigger('dtsr-modal-inserted');
+                $$2(this.s.dt.table().node()).trigger('dtsr-modal-inserted');
                 removeFunction();
                 this.dom.confirmation.remove();
             }
@@ -246,11 +286,11 @@
             var settings = this.s.dt.settings()[0];
             // Always want the states stored here to be loaded in - regardless of when they were created
             loadedState.time = +new Date();
-            settings.oLoadedState = $$1.extend(true, {}, loadedState);
+            settings.oLoadedState = $$2.extend(true, {}, loadedState);
             // Click on a background if there is one to shut the collection
-            $$1('div.dt-button-background').click();
+            $$2('div.dt-button-background').click();
             // Call the internal datatables function to implement the state on the table
-            $$1.fn.dataTable.ext.oApi._fnImplementState(settings, loadedState, function () {
+            $$2.fn.dataTable.ext.oApi._fnImplementState(settings, loadedState, function () {
                 var correctPaging = function (e, preSettings) {
                     setTimeout(function () {
                         var currpage = preSettings._iDisplayStart / preSettings._iDisplayLength;
@@ -283,7 +323,7 @@
             var renameFunction = function () {
                 var _a;
                 if (newIdentifier === null) {
-                    var tempIdentifier = $$1('input.' + _this.classes.input.replace(/ /g, '.')).val();
+                    var tempIdentifier = $$2('input.' + _this.classes.input.replace(/ /g, '.')).val();
                     if (tempIdentifier.length === 0) {
                         _this.dom.confirmation.children('.' + _this.classes.modalError).remove();
                         _this.dom.confirmation.append(_this.dom.emptyError);
@@ -307,7 +347,7 @@
                 var successCallback = function () {
                     _this.s.identifier = newIdentifier;
                     _this.save(_this.s.savedState, function () { return null; }, false);
-                    _this.dom.removeContents = $$1('<div class="' + _this.classes.confirmationText + '"><span>' +
+                    _this.dom.removeContents = $$2('<div class="' + _this.classes.confirmationText + '"><span>' +
                         _this.s.dt
                             .i18n('stateRestore.removeConfirm', _this.c.i18n.removeConfirm)
                             .replace(/%s/g, _this.s.identifier) +
@@ -315,7 +355,7 @@
                     _this.dom.confirmation.trigger('dtsr-rename');
                     _this.dom.background.click();
                     _this.dom.confirmation.remove();
-                    $$1(document).unbind('keyup', function (e) { return _this._keyupFunction(e); });
+                    $$2(document).unbind('keyup', function (e) { return _this._keyupFunction(e); });
                     _this.dom.confirmationButton.off('click');
                 };
                 if (!_this.c.ajax) {
@@ -331,7 +371,7 @@
                     }
                 }
                 else if (typeof _this.c.ajax === 'string' && _this.s.dt.settings()[0]._bInitComplete) {
-                    $$1.ajax({
+                    $$2.ajax({
                         data: ajaxData,
                         success: successCallback,
                         type: 'POST',
@@ -353,7 +393,7 @@
                 }
                 else {
                     this.dom.confirmation.appendTo(this.dom.dtContainer);
-                    $$1(this.s.dt.table().node()).trigger('dtsr-modal-inserted');
+                    $$2(this.s.dt.table().node()).trigger('dtsr-modal-inserted');
                     renameFunction();
                     this.dom.confirmation.remove();
                 }
@@ -490,7 +530,7 @@
                     passedSuccessCallback.call(_this);
                 }
                 _this.dom.confirmation.trigger('dtsr-save');
-                $$1(_this.s.dt.table().node()).trigger('stateRestore-change');
+                $$2(_this.s.dt.table().node()).trigger('stateRestore-change');
             };
             if (!this.c.ajax) {
                 localStorage.setItem('DataTables_stateRestore_' + this.s.identifier + '_' + location.pathname +
@@ -499,7 +539,7 @@
             }
             else if (typeof this.c.ajax === 'string' && callAjax) {
                 if (this.s.dt.settings()[0]._bInitComplete) {
-                    $$1.ajax({
+                    $$2.ajax({
                         data: ajaxData,
                         success: successCallback,
                         type: 'POST',
@@ -508,7 +548,7 @@
                 }
                 else {
                     this.s.dt.one('init', function () {
-                        $$1.ajax({
+                        $$2.ajax({
                             data: ajaxData,
                             success: successCallback,
                             type: 'POST',
@@ -628,7 +668,7 @@
             }
             // If escape close modal
             else if (e.key === 'Escape') {
-                $$1('div.' + this.classes.background.replace(/ /g, '.')).click();
+                $$2('div.' + this.classes.background.replace(/ /g, '.')).click();
             }
         };
         /**
@@ -648,20 +688,20 @@
                 .empty()
                 .append(this.dom.confirmationTitleRow)
                 .append(modalContents)
-                .append($$1('<div class="' + this.classes.confirmationButtons + '"></div>')
+                .append($$2('<div class="' + this.classes.confirmationButtons + '"></div>')
                 .append(this.dom.confirmationButton))
                 .appendTo(this.dom.dtContainer);
-            $$1(this.s.dt.table().node()).trigger('dtsr-modal-inserted');
+            $$2(this.s.dt.table().node()).trigger('dtsr-modal-inserted');
             var inputs = modalContents.children('input');
             // If there is an input focus on that
             if (inputs.length > 0) {
-                $$1(inputs[0]).focus();
+                $$2(inputs[0]).focus();
             }
             // Otherwise focus on the confirmation button
             else {
                 this.dom.confirmationButton.focus();
             }
-            var background = $$1('div.' + this.classes.background.replace(/ /g, '.'));
+            var background = $$2('div.' + this.classes.background.replace(/ /g, '.'));
             if (this.c.modalCloseButton) {
                 this.dom.confirmation.append(this.dom.closeButton);
                 this.dom.closeButton.on('click', function () { return background.click(); });
@@ -676,9 +716,9 @@
             background.one('click', function () {
                 _this.dom.background.remove();
                 _this.dom.confirmation.remove();
-                $$1(document).unbind('keyup', function (e) { return _this._keyupFunction(e); });
+                $$2(document).unbind('keyup', function (e) { return _this._keyupFunction(e); });
             });
-            $$1(document).on('keyup', function (e) { return _this._keyupFunction(e); });
+            $$2(document).on('keyup', function (e) { return _this._keyupFunction(e); });
         };
         /**
          * Convert from camelCase notation to the internal Hungarian.
@@ -696,7 +736,7 @@
                 sSearch: obj.search
             };
         };
-        StateRestore.version = '1.1.1';
+        StateRestore.version = '1.2.0';
         StateRestore.classes = {
             background: 'dtsr-background',
             closeButton: 'dtsr-popover-close',
@@ -792,10 +832,10 @@
         return StateRestore;
     }());
 
-    var $;
+    var $$1;
     var dataTable;
     function setJQuery(jq) {
-        $ = jq;
+        $$1 = jq;
         dataTable = jq.fn.dataTable;
     }
     var StateRestoreCollection = /** @class */ (function () {
@@ -811,12 +851,12 @@
                 throw new Error('StateRestore requires Buttons');
             }
             var table = new dataTable.Api(settings);
-            this.classes = $.extend(true, {}, StateRestoreCollection.classes);
+            this.classes = $$1.extend(true, {}, StateRestoreCollection.classes);
             if (table.settings()[0]._stateRestore !== undefined) {
                 return;
             }
             // Get options from user
-            this.c = $.extend(true, {}, StateRestoreCollection.defaults, opts);
+            this.c = $$1.extend(true, {}, StateRestoreCollection.defaults, opts);
             this.s = {
                 dt: table,
                 hasColReorder: dataTable.ColReorder !== undefined,
@@ -833,9 +873,9 @@
                 }
             });
             this.dom = {
-                background: $('<div class="' + this.classes.background + '"/>'),
-                closeButton: $('<div class="' + this.classes.closeButton + '">x</div>'),
-                colReorderToggle: $('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                background: $$1('<div class="' + this.classes.background + '"/>'),
+                closeButton: $$1('<div class="' + this.classes.closeButton + '">x</div>'),
+                colReorderToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.colReorderToggle + ' ' +
                     this.classes.checkBox +
@@ -844,7 +884,7 @@
                     this.s.dt.i18n('stateRestore.creationModal.colReorder', this.c.i18n.creationModal.colReorder) +
                     '</label>' +
                     '</div>'),
-                columnsSearchToggle: $('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                columnsSearchToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.columnsSearchToggle + ' ' +
                     this.classes.checkBox +
@@ -853,7 +893,7 @@
                     this.s.dt.i18n('stateRestore.creationModal.columns.search', this.c.i18n.creationModal.columns.search) +
                     '</label>' +
                     '</div>'),
-                columnsVisibleToggle: $('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + ' ' + '">' +
+                columnsVisibleToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + ' ' + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.columnsVisibleToggle + ' ' +
                     this.classes.checkBox +
@@ -862,28 +902,28 @@
                     this.s.dt.i18n('stateRestore.creationModal.columns.visible', this.c.i18n.creationModal.columns.visible) +
                     '</label>' +
                     '</div>'),
-                confirmation: $('<div class="' + this.classes.confirmation + '"/>'),
-                confirmationTitleRow: $('<div class="' + this.classes.confirmationTitleRow + '"></div>'),
-                createButtonRow: $('<div class="' + this.classes.formRow + ' ' + this.classes.modalFoot + '">' +
+                confirmation: $$1('<div class="' + this.classes.confirmation + '"/>'),
+                confirmationTitleRow: $$1('<div class="' + this.classes.confirmationTitleRow + '"></div>'),
+                createButtonRow: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.modalFoot + '">' +
                     '<button class="' + this.classes.creationButton + ' ' + this.classes.dtButton + '">' +
                     this.s.dt.i18n('stateRestore.creationModal.button', this.c.i18n.creationModal.button) +
                     '</button>' +
                     '</div>'),
-                creation: $('<div class="' + this.classes.creation + '"/>'),
-                creationForm: $('<div class="' + this.classes.creationForm + '"/>'),
-                creationTitle: $('<div class="' + this.classes.creationText + '">' +
+                creation: $$1('<div class="' + this.classes.creation + '"/>'),
+                creationForm: $$1('<div class="' + this.classes.creationForm + '"/>'),
+                creationTitle: $$1('<div class="' + this.classes.creationText + '">' +
                     '<h2 class="' + this.classes.creationTitle + '">' +
                     this.s.dt.i18n('stateRestore.creationModal.title', this.c.i18n.creationModal.title) +
                     '</h2>' +
                     '</div>'),
-                dtContainer: $(this.s.dt.table().container()),
-                duplicateError: $('<span class="' + this.classes.modalError + '">' +
+                dtContainer: $$1(this.s.dt.table().container()),
+                duplicateError: $$1('<span class="' + this.classes.modalError + '">' +
                     this.s.dt.i18n('stateRestore.duplicateError', this.c.i18n.duplicateError) +
                     '</span>'),
-                emptyError: $('<span class="' + this.classes.modalError + '">' +
+                emptyError: $$1('<span class="' + this.classes.modalError + '">' +
                     this.s.dt.i18n('stateRestore.emptyError', this.c.i18n.emptyError) +
                     '</span>'),
-                lengthToggle: $('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                lengthToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.lengthToggle + ' ' +
                     this.classes.checkBox +
@@ -892,13 +932,13 @@
                     this.s.dt.i18n('stateRestore.creationModal.length', this.c.i18n.creationModal.length) +
                     '</label>' +
                     '</div>'),
-                nameInputRow: $('<div class="' + this.classes.formRow + '">' +
+                nameInputRow: $$1('<div class="' + this.classes.formRow + '">' +
                     '<label class="' + this.classes.nameLabel + '">' +
                     this.s.dt.i18n('stateRestore.creationModal.name', this.c.i18n.creationModal.name) +
                     '</label>' +
                     '<input class="' + this.classes.nameInput + '" type="text">' +
                     '</div>'),
-                orderToggle: $('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                orderToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.orderToggle + ' ' +
                     this.classes.checkBox +
@@ -907,7 +947,7 @@
                     this.s.dt.i18n('stateRestore.creationModal.order', this.c.i18n.creationModal.order) +
                     '</label>' +
                     '</div>'),
-                pagingToggle: $('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                pagingToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.pagingToggle + ' ' +
                     this.classes.checkBox +
@@ -916,13 +956,13 @@
                     this.s.dt.i18n('stateRestore.creationModal.paging', this.c.i18n.creationModal.paging) +
                     '</label>' +
                     '</div>'),
-                removeContents: $('<div class="' + this.classes.confirmationText + '"><span></span></div>'),
-                removeTitle: $('<div class="' + this.classes.creationText + '">' +
+                removeContents: $$1('<div class="' + this.classes.confirmationText + '"><span></span></div>'),
+                removeTitle: $$1('<div class="' + this.classes.creationText + '">' +
                     '<h2 class="' + this.classes.creationTitle + '">' +
                     this.s.dt.i18n('stateRestore.removeTitle', this.c.i18n.removeTitle) +
                     '</h2>' +
                     '</div>'),
-                scrollerToggle: $('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                scrollerToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.scrollerToggle + ' ' +
                     this.classes.checkBox +
@@ -931,7 +971,7 @@
                     this.s.dt.i18n('stateRestore.creationModal.scroller', this.c.i18n.creationModal.scroller) +
                     '</label>' +
                     '</div>'),
-                searchBuilderToggle: $('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                searchBuilderToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.searchBuilderToggle + ' ' +
                     this.classes.checkBox +
@@ -940,7 +980,7 @@
                     this.s.dt.i18n('stateRestore.creationModal.searchBuilder', this.c.i18n.creationModal.searchBuilder) +
                     '</label>' +
                     '</div>'),
-                searchPanesToggle: $('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                searchPanesToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.searchPanesToggle + ' ' +
                     this.classes.checkBox +
@@ -949,7 +989,7 @@
                     this.s.dt.i18n('stateRestore.creationModal.searchPanes', this.c.i18n.creationModal.searchPanes) +
                     '</label>' +
                     '</div>'),
-                searchToggle: $('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                searchToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.searchToggle + ' ' +
                     this.classes.checkBox +
@@ -958,7 +998,7 @@
                     this.s.dt.i18n('stateRestore.creationModal.search', this.c.i18n.creationModal.search) +
                     '</label>' +
                     '</div>'),
-                selectToggle: $('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
+                selectToggle: $$1('<div class="' + this.classes.formRow + ' ' + this.classes.checkRow + '">' +
                     '<input type="checkbox" class="' +
                     this.classes.selectToggle + ' ' +
                     this.classes.checkBox +
@@ -967,7 +1007,7 @@
                     this.s.dt.i18n('stateRestore.creationModal.select', this.c.i18n.creationModal.select) +
                     '</label>' +
                     '</div>'),
-                toggleLabel: $('<label class="' + this.classes.nameLabel + ' ' + this.classes.toggleLabel + '">' +
+                toggleLabel: $$1('<label class="' + this.classes.nameLabel + ' ' + this.classes.toggleLabel + '">' +
                     this.s.dt.i18n('stateRestore.creationModal.toggleLabel', this.c.i18n.creationModal.toggleLabel) +
                     '</label>')
             };
@@ -988,7 +1028,7 @@
             }
             else if (typeof this.c.ajax === 'string') {
                 ajaxFunction = function () {
-                    $.ajax({
+                    $$1.ajax({
                         data: ajaxData,
                         success: function (data) {
                             _this._addPreDefined(data);
@@ -1058,8 +1098,8 @@
                     }
                     _this.c.saveState = opts;
                 }
-                var newState = new StateRestore(_this.s.dt.settings()[0], $.extend(true, {}, _this.c, options), id, currState, false, successCallback);
-                $(_this.s.dt.table().node()).on('dtsr-modal-inserted', function () {
+                var newState = new StateRestore(_this.s.dt.settings()[0], $$1.extend(true, {}, _this.c, options), id, currState, false, successCallback);
+                $$1(_this.s.dt.table().node()).on('dtsr-modal-inserted', function () {
                     newState.dom.confirmation.one('dtsr-remove', function () { return _this._removeCallback(newState.s.identifier); });
                     newState.dom.confirmation.one('dtsr-rename', function () { return _this._collectionRebuild(); });
                     newState.dom.confirmation.one('dtsr-save', function () { return _this._collectionRebuild(); });
@@ -1102,7 +1142,7 @@
                     this.s.dt.i18n('stateRestore.removeJoiner', this.c.i18n.removeJoiner) +
                     ids.slice(-1);
             }
-            $(this.dom.removeContents.children('span')).html(this.s.dt
+            $$1(this.dom.removeContents.children('span')).html(this.s.dt
                 .i18n('stateRestore.removeConfirm', this.c.i18n.removeConfirm)
                 .replace(/%s/g, replacementString));
             this._newModal(this.dom.removeTitle, this.s.dt.i18n('stateRestore.removeSubmit', this.c.i18n.removeSubmit), removeFunction, this.dom.removeContents);
@@ -1121,7 +1161,7 @@
             });
             this.s.states = [];
             this.s.dt.off('.dtsr');
-            $(this.s.dt.table().node()).off('.dtsr');
+            $$1(this.s.dt.table().node()).off('.dtsr');
         };
         /**
          * Identifies active states and updates their button to reflect this.
@@ -1133,14 +1173,14 @@
             this.s.dt.state.save();
             var currState = this.s.dt.state();
             // Make all of the buttons inactive so that only any that match will be marked as active
-            var buttons = $('button.' + $.fn.DataTable.Buttons.defaults.dom.button.className.replace(/ /g, '.'));
+            var buttons = $$1('button.' + $$1.fn.DataTable.Buttons.defaults.dom.button.className.replace(/ /g, '.'));
             // Some of the styling libraries use a tags instead of buttons
             if (buttons.length === 0) {
-                buttons = $('a.' + $.fn.DataTable.Buttons.defaults.dom.button.className.replace(/ /g, '.'));
+                buttons = $$1('a.' + $$1.fn.DataTable.Buttons.defaults.dom.button.className.replace(/ /g, '.'));
             }
             for (var _i = 0, buttons_1 = buttons; _i < buttons_1.length; _i++) {
                 var button = buttons_1[_i];
-                this.s.dt.button($(button).parent()[0]).active(false);
+                this.s.dt.button($$1(button).parent()[0]).active(false);
             }
             var results = [];
             // Go through all of the states comparing if their state is the same to the current one
@@ -1154,8 +1194,8 @@
                     // If so, find the corresponding button and mark it as active
                     for (var _c = 0, buttons_2 = buttons; _c < buttons_2.length; _c++) {
                         var button = buttons_2[_c];
-                        if ($(button).text() === state.s.identifier) {
-                            this.s.dt.button($(button).parent()[0]).active(true);
+                        if ($$1(button).text() === state.s.identifier) {
+                            this.s.dt.button($$1(button).parent()[0]).active(true);
                             break;
                         }
                     }
@@ -1230,11 +1270,11 @@
                     that._collectionRebuild();
                 };
                 var loadedState = preDefined[state];
-                var newState = new StateRestore(this_1.s.dt, $.extend(true, {}, this_1.c, loadedState.c !== undefined ?
+                var newState = new StateRestore(this_1.s.dt, $$1.extend(true, {}, this_1.c, loadedState.c !== undefined ?
                     { saveState: loadedState.c.saveState } :
                     undefined, true), state, loadedState, true, successCallback);
                 newState.s.savedState = loadedState;
-                $(this_1.s.dt.table().node()).on('dtsr-modal-inserted', function () {
+                $$1(this_1.s.dt.table().node()).on('dtsr-modal-inserted', function () {
                     newState.dom.confirmation.one('dtsr-remove', function () { return _this._removeCallback(newState.s.identifier); });
                     newState.dom.confirmation.one('dtsr-rename', function () { return _this._collectionRebuild(); });
                     newState.dom.confirmation.one('dtsr-save', function () { return _this._collectionRebuild(); });
@@ -1327,7 +1367,7 @@
             var buttons = this.s.dt.buttons();
             for (var _b = 0, buttons_3 = buttons; _b < buttons_3.length; _b++) {
                 var butt = buttons_3[_b];
-                if ($(butt.node).hasClass('dtsr-removeAllStates')) {
+                if ($$1(butt.node).hasClass('dtsr-removeAllStates')) {
                     if (this.s.states.length === 0) {
                         this.s.dt.button(butt.node).disable();
                     }
@@ -1484,7 +1524,7 @@
                 this.dom.creationForm.append(toggle);
             }
             // Insert the toggle label next to the first check box
-            $(this.dom.creationForm.children('div.' + this.classes.checkRow)[0]).prepend(this.dom.toggleLabel);
+            $$1(this.dom.creationForm.children('div.' + this.classes.checkRow)[0]).prepend(this.dom.toggleLabel);
             // Insert the creation modal and the background
             this.dom.background.appendTo(this.dom.dtContainer);
             this.dom.creation
@@ -1492,9 +1532,9 @@
                 .append(this.dom.creationForm)
                 .append(this.dom.createButtonRow)
                 .appendTo(this.dom.dtContainer);
-            $(this.s.dt.table().node()).trigger('dtsr-modal-inserted');
+            $$1(this.s.dt.table().node()).trigger('dtsr-modal-inserted');
             var _loop_2 = function (toggle) {
-                $(toggle.children('label:last-child')).on('click', function () {
+                $$1(toggle.children('label:last-child')).on('click', function () {
                     toggle.children('input').prop('checked', !toggle.children('input').prop('checked'));
                 });
             };
@@ -1503,17 +1543,17 @@
                 var toggle = togglesToInsert_2[_a];
                 _loop_2(toggle);
             }
-            var creationButton = $('button.' + this.classes.creationButton.replace(/ /g, '.'));
+            var creationButton = $$1('button.' + this.classes.creationButton.replace(/ /g, '.'));
             var inputs = this.dom.creationForm.find('input');
             // If there is an input focus on that
             if (inputs.length > 0) {
-                $(inputs[0]).focus();
+                $$1(inputs[0]).focus();
             }
             // Otherwise focus on the confirmation button
             else {
                 creationButton.focus();
             }
-            var background = $('div.' + this.classes.background.replace(/ /g, '.'));
+            var background = $$1('div.' + this.classes.background.replace(/ /g, '.'));
             var keyupFunction = function (e) {
                 if (e.key === 'Enter') {
                     creationButton.click();
@@ -1544,13 +1584,13 @@
                     select: _this.dom.selectToggle.children('input').is(':checked')
                 };
                 // Call the buttons functionality passing in the identifier and what should be saved
-                var success = buttonAction($('input.' + _this.classes.nameInput.replace(/ /g, '.')).val(), { saveState: saveState });
+                var success = buttonAction($$1('input.' + _this.classes.nameInput.replace(/ /g, '.')).val(), { saveState: saveState });
                 if (success === true) {
                     // Remove the dom elements as operation has completed
                     _this.dom.background.remove();
                     _this.dom.creation.remove();
                     // Unbind the keyup function  - don't want it to run unnecessarily on every keypress that occurs
-                    $(document).unbind('keyup', keyupFunction);
+                    $$1(document).unbind('keyup', keyupFunction);
                 }
                 else {
                     _this.dom.creation.children('.' + _this.classes.modalError).remove();
@@ -1562,12 +1602,12 @@
                 _this.dom.background.remove();
                 _this.dom.creation.remove();
                 // Unbind the keyup function - don't want it to run unnecessarily on every keypress that occurs
-                $(document).unbind('keyup', keyupFunction);
+                $$1(document).unbind('keyup', keyupFunction);
                 // Rebuild the collection to ensure that the latest changes are present
                 _this._collectionRebuild();
             });
             // Have to listen to the keyup event as `escape` doesn't trigger keypress
-            $(document).on('keyup', keyupFunction);
+            $$1(document).on('keyup', keyupFunction);
             // Need to save the state before the focus is lost when the modal is interacted with
             this.s.dt.state.save();
         };
@@ -1599,27 +1639,27 @@
             var _this = this;
             this.dom.background.appendTo(this.dom.dtContainer);
             this.dom.confirmationTitleRow.empty().append(title);
-            var confirmationButton = $('<button class="' + this.classes.confirmationButton + ' ' + this.classes.dtButton + '">' +
+            var confirmationButton = $$1('<button class="' + this.classes.confirmationButton + ' ' + this.classes.dtButton + '">' +
                 buttonText +
                 '</button>');
             this.dom.confirmation
                 .empty()
                 .append(this.dom.confirmationTitleRow)
                 .append(modalContents)
-                .append($('<div class="' + this.classes.confirmationButtons + '"></div>')
+                .append($$1('<div class="' + this.classes.confirmationButtons + '"></div>')
                 .append(confirmationButton))
                 .appendTo(this.dom.dtContainer);
-            $(this.s.dt.table().node()).trigger('dtsr-modal-inserted');
+            $$1(this.s.dt.table().node()).trigger('dtsr-modal-inserted');
             var inputs = modalContents.children('input');
             // If there is an input focus on that
             if (inputs.length > 0) {
-                $(inputs[0]).focus();
+                $$1(inputs[0]).focus();
             }
             // Otherwise focus on the confirmation button
             else {
                 confirmationButton.focus();
             }
-            var background = $('div.' + this.classes.background.replace(/ /g, '.'));
+            var background = $$1('div.' + this.classes.background.replace(/ /g, '.'));
             var keyupFunction = function (e) {
                 // If enter same action as pressing the button
                 if (e.key === 'Enter') {
@@ -1637,7 +1677,7 @@
                 if (success === true) {
                     _this.dom.background.remove();
                     _this.dom.confirmation.remove();
-                    $(document).unbind('keyup', keyupFunction);
+                    $$1(document).unbind('keyup', keyupFunction);
                     confirmationButton.off('click');
                 }
                 else {
@@ -1652,9 +1692,9 @@
             background.one('click', function () {
                 _this.dom.background.remove();
                 _this.dom.confirmation.remove();
-                $(document).unbind('keyup', keyupFunction);
+                $$1(document).unbind('keyup', keyupFunction);
             });
-            $(document).on('keyup', keyupFunction);
+            $$1(document).on('keyup', keyupFunction);
         };
         /**
          * Private method that checks for previously created states on initialisation
@@ -1679,8 +1719,8 @@
                         that_1.s.states.push(this);
                         that_1._collectionRebuild();
                     };
-                    var newState_1 = new StateRestore(this_2.s.dt, $.extend(true, {}, this_2.c, { saveState: loadedState_1.c.saveState }), loadedState_1.stateRestore.state, loadedState_1, false, successCallback);
-                    $(this_2.s.dt.table().node()).on('dtsr-modal-inserted', function () {
+                    var newState_1 = new StateRestore(this_2.s.dt, $$1.extend(true, {}, this_2.c, { saveState: loadedState_1.c.saveState }), loadedState_1.stateRestore.state, loadedState_1, false, successCallback);
+                    $$1(this_2.s.dt.table().node()).on('dtsr-modal-inserted', function () {
                         newState_1.dom.confirmation.one('dtsr-remove', function () { return _this._removeCallback(newState_1.s.identifier); });
                         newState_1.dom.confirmation.one('dtsr-rename', function () { return _this._collectionRebuild(); });
                         newState_1.dom.confirmation.one('dtsr-save', function () { return _this._collectionRebuild(); });
@@ -1815,430 +1855,270 @@
         return StateRestoreCollection;
     }());
 
-    /*! StateRestore 1.1.1
+    /*! StateRestore 1.2.0
      * 2019-2022 SpryMedia Ltd - datatables.net/license
      */
-    // DataTables extensions common UMD. Note that this allows for AMD, CommonJS
-    // (with window and jQuery being allowed as parameters to the returned
-    // function) or just default browser loading.
-    (function (factory) {
-        if (typeof define === 'function' && define.amd) {
-            // AMD
-            define(['jquery', 'datatables.net'], function ($) {
-                return factory($, window, document);
+    setJQuery$1($);
+    setJQuery($);
+    $.fn.dataTable.StateRestore = StateRestore;
+    $.fn.DataTable.StateRestore = StateRestore;
+    $.fn.dataTable.StateRestoreCollection = StateRestoreCollection;
+    $.fn.DataTable.StateRestoreCollection = StateRestoreCollection;
+    var apiRegister = DataTable.Api.register;
+    apiRegister('stateRestore()', function () {
+        return this;
+    });
+    apiRegister('stateRestore.state()', function (identifier) {
+        var ctx = this.context[0];
+        if (!ctx._stateRestore) {
+            var api = DataTable.Api(ctx);
+            var src = new DataTable.StateRestoreCollection(api, {});
+            _stateRegen(api, src);
+        }
+        this[0] = ctx._stateRestore.getState(identifier);
+        return this;
+    });
+    apiRegister('stateRestore.state.add()', function (identifier, options) {
+        var ctx = this.context[0];
+        if (!ctx._stateRestore) {
+            var api = DataTable.Api(ctx);
+            var src = new DataTable.StateRestoreCollection(api, {});
+            _stateRegen(api, src);
+        }
+        if (!ctx._stateRestore.c.create) {
+            return this;
+        }
+        if (ctx._stateRestore.addState) {
+            var states = ctx._stateRestore.s.states;
+            var ids = [];
+            for (var _i = 0, states_1 = states; _i < states_1.length; _i++) {
+                var intState = states_1[_i];
+                ids.push(intState.s.identifier);
+            }
+            ctx._stateRestore.addState(identifier, ids, options);
+            return this;
+        }
+    });
+    apiRegister('stateRestore.states()', function (ids) {
+        var ctx = this.context[0];
+        if (!ctx._stateRestore) {
+            var api = DataTable.Api(ctx);
+            var src = new DataTable.StateRestoreCollection(api, {});
+            _stateRegen(api, src);
+        }
+        this.length = 0;
+        this.push.apply(this, ctx._stateRestore.getStates(ids));
+        return this;
+    });
+    apiRegister('stateRestore.state().save()', function () {
+        var ctx = this[0];
+        // Check if saving states is allowed
+        if (ctx.c.save) {
+            ctx.save();
+        }
+        return this;
+    });
+    apiRegister('stateRestore.state().rename()', function (newIdentifier) {
+        var ctx = this.context[0];
+        var state = this[0];
+        // Check if renaming states is allowed
+        if (state.c.save) {
+            var states = ctx._stateRestore.s.states;
+            var ids = [];
+            for (var _i = 0, states_2 = states; _i < states_2.length; _i++) {
+                var intState = states_2[_i];
+                ids.push(intState.s.identifier);
+            }
+            state.rename(newIdentifier, ids);
+        }
+        return this;
+    });
+    apiRegister('stateRestore.state().load()', function () {
+        var ctx = this[0];
+        ctx.load();
+        return this;
+    });
+    apiRegister('stateRestore.state().remove()', function (skipModal) {
+        var ctx = this[0];
+        // Check if removal of states is allowed
+        if (ctx.c.remove) {
+            ctx.remove(skipModal);
+        }
+        return this;
+    });
+    apiRegister('stateRestore.states().remove()', function (skipModal) {
+        var _this = this;
+        var removeAllCallBack = function (skipModalIn) {
+            var success = true;
+            var that = _this.toArray();
+            while (that.length > 0) {
+                var set = that[0];
+                if (set !== undefined && set.c.remove) {
+                    var tempSuccess = set.remove(skipModalIn);
+                    if (tempSuccess !== true) {
+                        success = tempSuccess;
+                    }
+                    else {
+                        that.splice(0, 1);
+                    }
+                }
+                else {
+                    break;
+                }
+            }
+            return success;
+        };
+        if (this.context[0]._stateRestore && this.context[0]._stateRestore.c.remove) {
+            if (skipModal) {
+                removeAllCallBack(skipModal);
+            }
+            else {
+                this.context[0]._stateRestore.removeAll(removeAllCallBack);
+            }
+        }
+        return this;
+    });
+    apiRegister('stateRestore.activeStates()', function () {
+        var ctx = this.context[0];
+        this.length = 0;
+        if (!ctx._stateRestore) {
+            var api = DataTable.Api(ctx);
+            var src = new DataTable.StateRestoreCollection(api, {});
+            _stateRegen(api, src);
+        }
+        if (ctx._stateRestore) {
+            this.push.apply(this, ctx._stateRestore.findActive());
+        }
+        return this;
+    });
+    DataTable.ext.buttons.stateRestore = {
+        action: function (e, dt, node, config) {
+            config._stateRestore.load();
+            node.blur();
+        },
+        config: {
+            split: ['updateState', 'renameState', 'removeState']
+        },
+        text: function (dt) {
+            return dt.i18n('buttons.stateRestore', 'State %d', dt.stateRestore.states()[0].length + 1);
+        }
+    };
+    DataTable.ext.buttons.updateState = {
+        action: function (e, dt, node, config) {
+            $('div.dt-button-background').click();
+            config.parent._stateRestore.save();
+        },
+        text: function (dt) {
+            return dt.i18n('buttons.updateState', 'Update');
+        }
+    };
+    DataTable.ext.buttons.savedStates = {
+        buttons: [],
+        extend: 'collection',
+        init: function (dt, node, config) {
+            dt.on('stateRestore-change', function () {
+                dt.button(node).text(dt.i18n('buttons.savedStates', 'Saved States', dt.stateRestore.states().length));
             });
+            if (dt.settings()[0]._stateRestore === undefined) {
+                _buttonInit(dt, config);
+            }
+        },
+        name: 'SaveStateRestore',
+        text: function (dt) {
+            return dt.i18n('buttons.savedStates', 'Saved States', 0);
         }
-        else if (typeof exports === 'object') {
-            // CommonJS
-            module.exports = function (root, $) {
-                if (!root) {
-                    root = window;
+    };
+    DataTable.ext.buttons.savedStatesCreate = {
+        buttons: [],
+        extend: 'collection',
+        init: function (dt, node, config) {
+            dt.on('stateRestore-change', function () {
+                dt.button(node).text(dt.i18n('buttons.savedStates', 'Saved States', dt.stateRestore.states().length));
+            });
+            if (dt.settings()[0]._stateRestore === undefined) {
+                if (config.config === undefined) {
+                    config.config = {};
                 }
-                if (!$ || !$.fn.dataTable) {
-                    // eslint-disable-next-line @typescript-eslint/no-var-requires
-                    $ = require('datatables.net')(root, $).$;
-                }
-                return factory($, root, root.document);
-            };
+                config.config._createInSaved = true;
+                _buttonInit(dt, config);
+            }
+        },
+        name: 'SaveStateRestore',
+        text: function (dt) {
+            return dt.i18n('buttons.savedStates', 'Saved States', 0);
         }
-        else {
-            // Browser - assume jQuery has already been loaded
-            factory(window.jQuery, window, document);
-        }
-    }(function ($, window, document) {
-        setJQuery$1($);
-        setJQuery($);
-        var dataTable = $.fn.dataTable;
-        $.fn.dataTable.StateRestore = StateRestore;
-        $.fn.DataTable.StateRestore = StateRestore;
-        $.fn.dataTable.StateRestoreCollection = StateRestoreCollection;
-        $.fn.DataTable.StateRestoreCollection = StateRestoreCollection;
-        var apiRegister = $.fn.dataTable.Api.register;
-        apiRegister('stateRestore()', function () {
-            return this;
-        });
-        apiRegister('stateRestore.state()', function (identifier) {
-            var ctx = this.context[0];
-            if (!ctx._stateRestore) {
-                var api = $.fn.DataTable.Api(ctx);
-                var src = new $.fn.dataTable.StateRestoreCollection(api, {});
-                _stateRegen(api, src);
+    };
+    DataTable.ext.buttons.createState = {
+        action: function (e, dt, node, config) {
+            e.stopPropagation();
+            var stateRestoreOpts = dt.settings()[0]._stateRestore.c;
+            var language = dt.settings()[0].oLanguage;
+            // If creation/saving is not allowed then return
+            if (!stateRestoreOpts.create || !stateRestoreOpts.save) {
+                return;
             }
-            this[0] = ctx._stateRestore.getState(identifier);
-            return this;
-        });
-        apiRegister('stateRestore.state.add()', function (identifier, options) {
-            var ctx = this.context[0];
-            if (!ctx._stateRestore) {
-                var api = $.fn.DataTable.Api(ctx);
-                var src = new $.fn.dataTable.StateRestoreCollection(api, {});
-                _stateRegen(api, src);
+            var prevStates = dt.stateRestore.states().toArray();
+            // Create a replacement regex based on the i18n values
+            var defaultString = language.buttons !== undefined && language.buttons.stateRestore !== undefined ?
+                language.buttons.stateRestore :
+                'State ';
+            var replaceRegex;
+            if (defaultString.indexOf('%d') === defaultString.length - 3) {
+                replaceRegex = new RegExp(defaultString.replace(/%d/g, ''));
             }
-            if (!ctx._stateRestore.c.create) {
-                return this;
-            }
-            if (ctx._stateRestore.addState) {
-                var states = ctx._stateRestore.s.states;
-                var ids = [];
-                for (var _i = 0, states_1 = states; _i < states_1.length; _i++) {
-                    var intState = states_1[_i];
-                    ids.push(intState.s.identifier);
+            else {
+                var splitString = defaultString.split('%d');
+                replaceRegex = [];
+                for (var _i = 0, splitString_1 = splitString; _i < splitString_1.length; _i++) {
+                    var split = splitString_1[_i];
+                    replaceRegex.push(new RegExp(split));
                 }
-                ctx._stateRestore.addState(identifier, ids, options);
-                return this;
             }
-        });
-        apiRegister('stateRestore.states()', function (ids) {
-            var ctx = this.context[0];
-            if (!ctx._stateRestore) {
-                var api = $.fn.DataTable.Api(ctx);
-                var src = new $.fn.dataTable.StateRestoreCollection(api, {});
-                _stateRegen(api, src);
-            }
-            this.length = 0;
-            this.push.apply(this, ctx._stateRestore.getStates(ids));
-            return this;
-        });
-        apiRegister('stateRestore.state().save()', function () {
-            var ctx = this[0];
-            // Check if saving states is allowed
-            if (ctx.c.save) {
-                ctx.save();
-            }
-            return this;
-        });
-        apiRegister('stateRestore.state().rename()', function (newIdentifier) {
-            var ctx = this.context[0];
-            var state = this[0];
-            // Check if renaming states is allowed
-            if (state.c.save) {
-                var states = ctx._stateRestore.s.states;
-                var ids = [];
-                for (var _i = 0, states_2 = states; _i < states_2.length; _i++) {
-                    var intState = states_2[_i];
-                    ids.push(intState.s.identifier);
-                }
-                state.rename(newIdentifier, ids);
-            }
-            return this;
-        });
-        apiRegister('stateRestore.state().load()', function () {
-            var ctx = this[0];
-            ctx.load();
-            return this;
-        });
-        apiRegister('stateRestore.state().remove()', function (skipModal) {
-            var ctx = this[0];
-            // Check if removal of states is allowed
-            if (ctx.c.remove) {
-                ctx.remove(skipModal);
-            }
-            return this;
-        });
-        apiRegister('stateRestore.states().remove()', function (skipModal) {
-            var _this = this;
-            var removeAllCallBack = function (skipModalIn) {
-                var success = true;
-                var that = _this.toArray();
-                while (that.length > 0) {
-                    var set = that[0];
-                    if (set !== undefined && set.c.remove) {
-                        var tempSuccess = set.remove(skipModalIn);
-                        if (tempSuccess !== true) {
-                            success = tempSuccess;
-                        }
-                        else {
-                            that.splice(0, 1);
-                        }
+            var getId = function (identifier) {
+                var id;
+                if (Array.isArray(replaceRegex)) {
+                    id = identifier;
+                    for (var _i = 0, replaceRegex_1 = replaceRegex; _i < replaceRegex_1.length; _i++) {
+                        var reg = replaceRegex_1[_i];
+                        id = id.replace(reg, '');
                     }
-                    else {
-                        break;
-                    }
-                }
-                return success;
-            };
-            if (this.context[0]._stateRestore.c.remove) {
-                if (skipModal) {
-                    removeAllCallBack(skipModal);
                 }
                 else {
-                    this.context[0]._stateRestore.removeAll(removeAllCallBack);
+                    id = identifier.replace(replaceRegex, '');
                 }
-            }
-            return this;
-        });
-        apiRegister('stateRestore.activeStates()', function () {
-            var ctx = this.context[0];
-            this.length = 0;
-            if (!ctx._stateRestore) {
-                var api = $.fn.DataTable.Api(ctx);
-                var src = new $.fn.dataTable.StateRestoreCollection(api, {});
-                _stateRegen(api, src);
-            }
-            if (ctx._stateRestore) {
-                this.push.apply(this, ctx._stateRestore.findActive());
-            }
-            return this;
-        });
-        $.fn.dataTable.ext.buttons.stateRestore = {
-            action: function (e, dt, node, config) {
-                config._stateRestore.load();
-                node.blur();
-            },
-            config: {
-                split: ['updateState', 'renameState', 'removeState']
-            },
-            text: function (dt) {
-                return dt.i18n('buttons.stateRestore', 'State %d', dt.stateRestore.states()[0].length + 1);
-            }
-        };
-        $.fn.dataTable.ext.buttons.updateState = {
-            action: function (e, dt, node, config) {
-                $('div.dt-button-background').click();
-                config.parent._stateRestore.save();
-            },
-            text: function (dt) {
-                return dt.i18n('buttons.updateState', 'Update');
-            }
-        };
-        $.fn.dataTable.ext.buttons.savedStates = {
-            buttons: [],
-            extend: 'collection',
-            init: function (dt, node, config) {
-                dt.on('stateRestore-change', function () {
-                    dt.button(node).text(dt.i18n('buttons.savedStates', 'Saved States', dt.stateRestore.states().length));
-                });
-                if (dt.settings()[0]._stateRestore === undefined) {
-                    _buttonInit(dt, config);
+                // If the id after replacement is not a number, or the length is the same as before,
+                //  it has been customised so return 0
+                if (isNaN(+id) || id.length === identifier) {
+                    return 0;
                 }
-            },
-            name: 'SaveStateRestore',
-            text: function (dt) {
-                return dt.i18n('buttons.savedStates', 'Saved States', 0);
-            }
-        };
-        $.fn.dataTable.ext.buttons.savedStatesCreate = {
-            buttons: [],
-            extend: 'collection',
-            init: function (dt, node, config) {
-                dt.on('stateRestore-change', function () {
-                    dt.button(node).text(dt.i18n('buttons.savedStates', 'Saved States', dt.stateRestore.states().length));
-                });
-                if (dt.settings()[0]._stateRestore === undefined) {
-                    if (config.config === undefined) {
-                        config.config = {};
-                    }
-                    config.config._createInSaved = true;
-                    _buttonInit(dt, config);
-                }
-            },
-            name: 'SaveStateRestore',
-            text: function (dt) {
-                return dt.i18n('buttons.savedStates', 'Saved States', 0);
-            }
-        };
-        $.fn.dataTable.ext.buttons.createState = {
-            action: function (e, dt, node, config) {
-                e.stopPropagation();
-                var stateRestoreOpts = dt.settings()[0]._stateRestore.c;
-                var language = dt.settings()[0].oLanguage;
-                // If creation/saving is not allowed then return
-                if (!stateRestoreOpts.create || !stateRestoreOpts.save) {
-                    return;
-                }
-                var prevStates = dt.stateRestore.states().toArray();
-                // Create a replacement regex based on the i18n values
-                var defaultString = language.buttons !== undefined && language.buttons.stateRestore !== undefined ?
-                    language.buttons.stateRestore :
-                    'State ';
-                var replaceRegex;
-                if (defaultString.indexOf('%d') === defaultString.length - 3) {
-                    replaceRegex = new RegExp(defaultString.replace(/%d/g, ''));
-                }
+                // Otherwise return the number that has been assigned previously
                 else {
-                    var splitString = defaultString.split('%d');
-                    replaceRegex = [];
-                    for (var _i = 0, splitString_1 = splitString; _i < splitString_1.length; _i++) {
-                        var split = splitString_1[_i];
-                        replaceRegex.push(new RegExp(split));
-                    }
+                    return +id;
                 }
-                var getId = function (identifier) {
-                    var id;
-                    if (Array.isArray(replaceRegex)) {
-                        id = identifier;
-                        for (var _i = 0, replaceRegex_1 = replaceRegex; _i < replaceRegex_1.length; _i++) {
-                            var reg = replaceRegex_1[_i];
-                            id = id.replace(reg, '');
-                        }
-                    }
-                    else {
-                        id = identifier.replace(replaceRegex, '');
-                    }
-                    // If the id after replacement is not a number, or the length is the same as before,
-                    //  it has been customised so return 0
-                    if (isNaN(+id) || id.length === identifier) {
-                        return 0;
-                    }
-                    // Otherwise return the number that has been assigned previously
-                    else {
-                        return +id;
-                    }
-                };
-                // Extract the numbers from the identifiers that use the standard naming convention
-                var identifiers = prevStates
-                    .map(function (state) { return getId(state.s.identifier); })
-                    .sort(function (a, b) { return +a < +b ?
+            };
+            // Extract the numbers from the identifiers that use the standard naming convention
+            var identifiers = prevStates
+                .map(function (state) { return getId(state.s.identifier); })
+                .sort(function (a, b) { return +a < +b ?
+                1 :
+                +a > +b ?
+                    -1 :
+                    0; });
+            var lastNumber = identifiers[0];
+            dt.stateRestore.state.add(dt.i18n('buttons.stateRestore', 'State %d', lastNumber !== undefined ? lastNumber + 1 : 1), config.config);
+            var states = dt.stateRestore.states().sort(function (a, b) {
+                var aId = +getId(a.s.identifier);
+                var bId = +getId(b.s.identifier);
+                return aId > bId ?
                     1 :
-                    +a > +b ?
+                    aId < bId ?
                         -1 :
-                        0; });
-                var lastNumber = identifiers[0];
-                dt.stateRestore.state.add(dt.i18n('buttons.stateRestore', 'State %d', lastNumber !== undefined ? lastNumber + 1 : 1), config.config);
-                var states = dt.stateRestore.states().sort(function (a, b) {
-                    var aId = +getId(a.s.identifier);
-                    var bId = +getId(b.s.identifier);
-                    return aId > bId ?
-                        1 :
-                        aId < bId ?
-                            -1 :
-                            0;
-                });
-                var button = dt.button('SaveStateRestore:name');
-                var stateButtons = button[0] !== undefined && button[0].inst.c.buttons[0].buttons !== undefined ?
-                    button[0].inst.c.buttons[0].buttons :
-                    [];
-                // remove any states from the previous rebuild - if they are still there they will be added later
-                for (var i = 0; i < stateButtons.length; i++) {
-                    if (stateButtons[i].extend === 'stateRestore') {
-                        stateButtons.splice(i, 1);
-                        i--;
-                    }
-                }
-                if (stateRestoreOpts._createInSaved) {
-                    stateButtons.push('createState');
-                    stateButtons.push('');
-                }
-                for (var _a = 0, states_3 = states; _a < states_3.length; _a++) {
-                    var state = states_3[_a];
-                    var split = Object.assign([], stateRestoreOpts.splitSecondaries);
-                    if (split.includes('updateState') && !stateRestoreOpts.save) {
-                        split.splice(split.indexOf('updateState'), 1);
-                    }
-                    if (split.includes('renameState') &&
-                        (!stateRestoreOpts.save || !stateRestoreOpts.rename)) {
-                        split.splice(split.indexOf('renameState'), 1);
-                    }
-                    if (split.includes('removeState') && !stateRestoreOpts.remove) {
-                        split.splice(split.indexOf('removeState'), 1);
-                    }
-                    if (split.length > 0 &&
-                        !split.includes('<h3>' + state.s.identifier + '</h3>')) {
-                        split.unshift('<h3>' + state.s.identifier + '</h3>');
-                    }
-                    stateButtons.push({
-                        _stateRestore: state,
-                        attr: {
-                            title: state.s.identifier
-                        },
-                        config: {
-                            split: split
-                        },
-                        extend: 'stateRestore',
-                        text: state.s.identifier
-                    });
-                }
-                dt.button('SaveStateRestore:name').collectionRebuild(stateButtons);
-                node.blur();
-                // Need to disable the removeAllStates button if there are no states and it is present
-                var buttons = dt.buttons();
-                for (var _b = 0, buttons_1 = buttons; _b < buttons_1.length; _b++) {
-                    var butt = buttons_1[_b];
-                    if ($(butt.node).hasClass('dtsr-removeAllStates')) {
-                        if (states.length === 0) {
-                            dt.button(butt.node).disable();
-                        }
-                        else {
-                            dt.button(butt.node).enable();
-                        }
-                    }
-                }
-            },
-            init: function (dt, node, config) {
-                if (dt.settings()[0]._stateRestore === undefined && dt.button('SaveStateRestore:name').length > 1) {
-                    _buttonInit(dt, config);
-                }
-            },
-            text: function (dt) {
-                return dt.i18n('buttons.createState', 'Create State');
-            }
-        };
-        $.fn.dataTable.ext.buttons.removeState = {
-            action: function (e, dt, node, config) {
-                config.parent._stateRestore.remove();
-                node.blur();
-            },
-            text: function (dt) {
-                return dt.i18n('buttons.removeState', 'Remove');
-            }
-        };
-        $.fn.dataTable.ext.buttons.removeAllStates = {
-            action: function (e, dt, node) {
-                dt.stateRestore.states().remove(true);
-                node.blur();
-            },
-            className: 'dt-button dtsr-removeAllStates',
-            init: function (dt, node) {
-                if (dt.stateRestore.states().length === 0) {
-                    $(node).addClass('disabled');
-                }
-            },
-            text: function (dt) {
-                return dt.i18n('buttons.removeAllStates', 'Remove All States');
-            }
-        };
-        $.fn.dataTable.ext.buttons.renameState = {
-            action: function (e, dt, node, config) {
-                var states = dt.settings()[0]._stateRestore.s.states;
-                var ids = [];
-                for (var _i = 0, states_4 = states; _i < states_4.length; _i++) {
-                    var state = states_4[_i];
-                    ids.push(state.s.identifier);
-                }
-                config.parent._stateRestore.rename(undefined, ids);
-                node.blur();
-            },
-            text: function (dt) {
-                return dt.i18n('buttons.renameState', 'Rename');
-            }
-        };
-        function _init(settings, options) {
-            if (options === void 0) { options = null; }
-            var api = new dataTable.Api(settings);
-            var opts = options
-                ? options
-                : api.init().stateRestore || dataTable.defaults.stateRestore;
-            var stateRestore = new StateRestoreCollection(api, opts);
-            _stateRegen(api, stateRestore);
-            return stateRestore;
-        }
-        /**
-         * Initialisation function if initialising using a button
-         *
-         * @param dt The datatables instance
-         * @param config the config for the button
-         */
-        function _buttonInit(dt, config) {
-            var SRC = new $.fn.dataTable.StateRestoreCollection(dt, config.config);
-            _stateRegen(dt, SRC);
-        }
-        function _stateRegen(dt, src) {
-            var states = dt.stateRestore.states();
+                        0;
+            });
             var button = dt.button('SaveStateRestore:name');
             var stateButtons = button[0] !== undefined && button[0].inst.c.buttons[0].buttons !== undefined ?
                 button[0].inst.c.buttons[0].buttons :
                 [];
-            var stateRestoreOpts = dt.settings()[0]._stateRestore.c;
             // remove any states from the previous rebuild - if they are still there they will be added later
             for (var i = 0; i < stateButtons.length; i++) {
                 if (stateButtons[i].extend === 'stateRestore') {
@@ -2248,48 +2128,43 @@
             }
             if (stateRestoreOpts._createInSaved) {
                 stateButtons.push('createState');
+                stateButtons.push('');
             }
-            if (states === undefined || states.length === 0) {
-                stateButtons.push('<span class="' + src.classes.emptyStates + '">' +
-                    dt.i18n('stateRestore.emptyStates', src.c.i18n.emptyStates) +
-                    '</span>');
-            }
-            else {
-                for (var _i = 0, states_5 = states; _i < states_5.length; _i++) {
-                    var state = states_5[_i];
-                    var split = Object.assign([], stateRestoreOpts.splitSecondaries);
-                    if (split.includes('updateState') && !stateRestoreOpts.save) {
-                        split.splice(split.indexOf('updateState'), 1);
-                    }
-                    if (split.includes('renameState') &&
-                        (!stateRestoreOpts.save || !stateRestoreOpts.rename)) {
-                        split.splice(split.indexOf('renameState'), 1);
-                    }
-                    if (split.includes('removeState') && !stateRestoreOpts.remove) {
-                        split.splice(split.indexOf('removeState'), 1);
-                    }
-                    if (split.length > 0 &&
-                        !split.includes('<h3>' + state.s.identifier + '</h3>')) {
-                        split.unshift('<h3>' + state.s.identifier + '</h3>');
-                    }
-                    stateButtons.push({
-                        _stateRestore: state,
-                        attr: {
-                            title: state.s.identifier
-                        },
-                        config: {
-                            split: split
-                        },
-                        extend: 'stateRestore',
-                        text: state.s.identifier
-                    });
+            for (var _a = 0, states_3 = states; _a < states_3.length; _a++) {
+                var state = states_3[_a];
+                var split = Object.assign([], stateRestoreOpts.splitSecondaries);
+                if (split.includes('updateState') && !stateRestoreOpts.save) {
+                    split.splice(split.indexOf('updateState'), 1);
                 }
+                if (split.includes('renameState') &&
+                    (!stateRestoreOpts.save || !stateRestoreOpts.rename)) {
+                    split.splice(split.indexOf('renameState'), 1);
+                }
+                if (split.includes('removeState') && !stateRestoreOpts.remove) {
+                    split.splice(split.indexOf('removeState'), 1);
+                }
+                if (split.length > 0 &&
+                    !split.includes('<h3>' + state.s.identifier + '</h3>')) {
+                    split.unshift('<h3>' + state.s.identifier + '</h3>');
+                }
+                stateButtons.push({
+                    _stateRestore: state,
+                    attr: {
+                        title: state.s.identifier
+                    },
+                    config: {
+                        split: split
+                    },
+                    extend: 'stateRestore',
+                    text: state.s.identifier
+                });
             }
             dt.button('SaveStateRestore:name').collectionRebuild(stateButtons);
+            node.blur();
             // Need to disable the removeAllStates button if there are no states and it is present
             var buttons = dt.buttons();
-            for (var _a = 0, buttons_2 = buttons; _a < buttons_2.length; _a++) {
-                var butt = buttons_2[_a];
+            for (var _b = 0, buttons_1 = buttons; _b < buttons_1.length; _b++) {
+                var butt = buttons_1[_b];
                 if ($(butt.node).hasClass('dtsr-removeAllStates')) {
                     if (states.length === 0) {
                         dt.button(butt.node).disable();
@@ -2299,20 +2174,159 @@
                     }
                 }
             }
-        }
-        // Attach a listener to the document which listens for DataTables initialisation
-        // events so we can automatically initialise
-        $(document).on('preInit.dt.dtsr', function (e, settings) {
-            if (e.namespace !== 'dt') {
-                return;
+        },
+        init: function (dt, node, config) {
+            if (dt.settings()[0]._stateRestore === undefined && dt.button('SaveStateRestore:name').length > 1) {
+                _buttonInit(dt, config);
             }
-            if (settings.oInit.stateRestore ||
-                dataTable.defaults.stateRestore) {
-                if (!settings._stateRestore) {
-                    _init(settings, null);
+        },
+        text: function (dt) {
+            return dt.i18n('buttons.createState', 'Create State');
+        }
+    };
+    DataTable.ext.buttons.removeState = {
+        action: function (e, dt, node, config) {
+            config.parent._stateRestore.remove();
+            node.blur();
+        },
+        text: function (dt) {
+            return dt.i18n('buttons.removeState', 'Remove');
+        }
+    };
+    DataTable.ext.buttons.removeAllStates = {
+        action: function (e, dt, node) {
+            dt.stateRestore.states().remove(true);
+            node.blur();
+        },
+        className: 'dt-button dtsr-removeAllStates',
+        init: function (dt, node) {
+            if (!dt.settings()[0]._stateRestore || dt.stateRestore.states().length === 0) {
+                $(node).addClass('disabled');
+            }
+        },
+        text: function (dt) {
+            return dt.i18n('buttons.removeAllStates', 'Remove All States');
+        }
+    };
+    DataTable.ext.buttons.renameState = {
+        action: function (e, dt, node, config) {
+            var states = dt.settings()[0]._stateRestore.s.states;
+            var ids = [];
+            for (var _i = 0, states_4 = states; _i < states_4.length; _i++) {
+                var state = states_4[_i];
+                ids.push(state.s.identifier);
+            }
+            config.parent._stateRestore.rename(undefined, ids);
+            node.blur();
+        },
+        text: function (dt) {
+            return dt.i18n('buttons.renameState', 'Rename');
+        }
+    };
+    function _init(settings, options) {
+        if (options === void 0) { options = null; }
+        var api = new DataTable.Api(settings);
+        var opts = options
+            ? options
+            : api.init().stateRestore || DataTable.defaults.stateRestore;
+        var stateRestore = new StateRestoreCollection(api, opts);
+        _stateRegen(api, stateRestore);
+        return stateRestore;
+    }
+    /**
+     * Initialisation function if initialising using a button
+     *
+     * @param dt The datatables instance
+     * @param config the config for the button
+     */
+    function _buttonInit(dt, config) {
+        var SRC = new DataTable.StateRestoreCollection(dt, config.config);
+        _stateRegen(dt, SRC);
+    }
+    function _stateRegen(dt, src) {
+        var states = dt.stateRestore.states();
+        var button = dt.button('SaveStateRestore:name');
+        var stateButtons = button[0] !== undefined && button[0].inst.c.buttons[0].buttons !== undefined ?
+            button[0].inst.c.buttons[0].buttons :
+            [];
+        var stateRestoreOpts = dt.settings()[0]._stateRestore.c;
+        // remove any states from the previous rebuild - if they are still there they will be added later
+        for (var i = 0; i < stateButtons.length; i++) {
+            if (stateButtons[i].extend === 'stateRestore') {
+                stateButtons.splice(i, 1);
+                i--;
+            }
+        }
+        if (stateRestoreOpts._createInSaved) {
+            stateButtons.push('createState');
+        }
+        if (states === undefined || states.length === 0) {
+            stateButtons.push('<span class="' + src.classes.emptyStates + '">' +
+                dt.i18n('stateRestore.emptyStates', src.c.i18n.emptyStates) +
+                '</span>');
+        }
+        else {
+            for (var _i = 0, states_5 = states; _i < states_5.length; _i++) {
+                var state = states_5[_i];
+                var split = Object.assign([], stateRestoreOpts.splitSecondaries);
+                if (split.includes('updateState') && !stateRestoreOpts.save) {
+                    split.splice(split.indexOf('updateState'), 1);
+                }
+                if (split.includes('renameState') &&
+                    (!stateRestoreOpts.save || !stateRestoreOpts.rename)) {
+                    split.splice(split.indexOf('renameState'), 1);
+                }
+                if (split.includes('removeState') && !stateRestoreOpts.remove) {
+                    split.splice(split.indexOf('removeState'), 1);
+                }
+                if (split.length > 0 &&
+                    !split.includes('<h3>' + state.s.identifier + '</h3>')) {
+                    split.unshift('<h3>' + state.s.identifier + '</h3>');
+                }
+                stateButtons.push({
+                    _stateRestore: state,
+                    attr: {
+                        title: state.s.identifier
+                    },
+                    config: {
+                        split: split
+                    },
+                    extend: 'stateRestore',
+                    text: state.s.identifier
+                });
+            }
+        }
+        dt.button('SaveStateRestore:name').collectionRebuild(stateButtons);
+        // Need to disable the removeAllStates button if there are no states and it is present
+        var buttons = dt.buttons();
+        for (var _a = 0, buttons_2 = buttons; _a < buttons_2.length; _a++) {
+            var butt = buttons_2[_a];
+            if ($(butt.node).hasClass('dtsr-removeAllStates')) {
+                if (states.length === 0) {
+                    dt.button(butt.node).disable();
+                }
+                else {
+                    dt.button(butt.node).enable();
                 }
             }
-        });
-    }));
+        }
+    }
+    // Attach a listener to the document which listens for DataTables initialisation
+    // events so we can automatically initialise
+    $(document).on('preInit.dt.dtsr', function (e, settings) {
+        if (e.namespace !== 'dt') {
+            return;
+        }
+        if (settings.oInit.stateRestore ||
+            DataTable.defaults.stateRestore) {
+            if (!settings._stateRestore) {
+                _init(settings, null);
+            }
+        }
+    });
 
 })();
+
+
+return DataTable;
+}));

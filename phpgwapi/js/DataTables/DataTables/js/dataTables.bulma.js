@@ -13,15 +13,21 @@
 		// CommonJS
 		module.exports = function (root, $) {
 			if ( ! root ) {
+				// CommonJS environments without a window global must pass a
+				// root. This will give an error otherwise
 				root = window;
 			}
 
-			if ( ! $ || ! $.fn.dataTable ) {
-				// Require DataTables, which attaches to jQuery, including
-				// jQuery if needed and have a $ property so we can access the
-				// jQuery object that is used
-				$ = require('datatables.net')(root, $).$;
+			if ( ! $ ) {
+				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
+					require('jquery') :
+					require('jquery')( root );
 			}
+
+			if ( ! $.fn.dataTable ) {
+				require('datatables.net')(root, $);
+			}
+
 
 			return factory( $, root, root.document );
 		};
@@ -33,6 +39,7 @@
 }(function( $, window, document, undefined ) {
 'use strict';
 var DataTable = $.fn.dataTable;
+
 
 
 /* Set the defaults for DataTables initialisation */
@@ -64,7 +71,7 @@ DataTable.ext.renderer.pageButton.bulma = function ( settings, host, idx, button
 	var classes = settings.oClasses;
 	var lang    = settings.oLanguage.oPaginate;
 	var aria = settings.oLanguage.oAria.paginate || {};
-	var btnDisplay, btnClass, counter=0;
+	var btnDisplay, btnClass;
 
 	var attach = function( container, buttons ) {
 		var i, ien, node, button, tag, disabled;
@@ -136,7 +143,7 @@ DataTable.ext.renderer.pageButton.bulma = function ( settings, host, idx, button
 								'href': '#',
 								'aria-controls': settings.sTableId,
 								'aria-label': aria[ button ],
-								'data-dt-idx': counter,
+								'data-dt-idx': button,
 								'tabindex': settings.iTabIndex,
 								'class': 'pagination-link ' + btnClass,
 								'disabled': disabled
@@ -148,8 +155,6 @@ DataTable.ext.renderer.pageButton.bulma = function ( settings, host, idx, button
 					settings.oApi._fnBindAction(
 						node, {action: button}, clickHandler
 					);
-
-					counter++;
 				}
 			}
 		}
@@ -193,7 +198,6 @@ $(document).on( 'init.dt', function (e, ctx) {
 	// $( 'div.dataTables_filter.ui.input', api.table().container() ).removeClass('input').addClass('form');
 	// $( 'div.dataTables_filter input', api.table().container() ).wrap( '<span class="ui input" />' );
 } );
-
 
 
 return DataTable;

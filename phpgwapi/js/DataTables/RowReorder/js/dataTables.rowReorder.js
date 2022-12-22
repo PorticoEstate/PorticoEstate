@@ -1,24 +1,5 @@
-/*! RowReorder 1.2.8
- * 2015-2020 SpryMedia Ltd - datatables.net/license
- */
-
-/**
- * @summary     RowReorder
- * @description Row reordering extension for DataTables
- * @version     1.2.8
- * @file        dataTables.rowReorder.js
- * @author      SpryMedia Ltd (www.sprymedia.co.uk)
- * @contact     www.sprymedia.co.uk/contact
- * @copyright   Copyright 2015-2020 SpryMedia Ltd.
- *
- * This source file is free software, available under the following license:
- *   MIT license - http://datatables.net/license/mit
- *
- * This source file is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
- *
- * For details please refer to: http://www.datatables.net
+/*! RowReorder 1.3.1
+ * 2015-2022 SpryMedia Ltd - datatables.net/license
  */
 
 (function( factory ){
@@ -32,12 +13,21 @@
 		// CommonJS
 		module.exports = function (root, $) {
 			if ( ! root ) {
+				// CommonJS environments without a window global must pass a
+				// root. This will give an error otherwise
 				root = window;
 			}
 
-			if ( ! $ || ! $.fn.dataTable ) {
-				$ = require('datatables.net')(root, $).$;
+			if ( ! $ ) {
+				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
+					require('jquery') :
+					require('jquery')( root );
 			}
+
+			if ( ! $.fn.dataTable ) {
+				require('datatables.net')(root, $);
+			}
+
 
 			return factory( $, root, root.document );
 		};
@@ -50,6 +40,26 @@
 'use strict';
 var DataTable = $.fn.dataTable;
 
+
+
+/**
+ * @summary     RowReorder
+ * @description Row reordering extension for DataTables
+ * @version     1.3.1
+ * @file        dataTables.rowReorder.js
+ * @author      SpryMedia Ltd
+ * @contact     datatables.net
+ * @copyright   Copyright 2015-2022 SpryMedia Ltd.
+ *
+ * This source file is free software, available under the following license:
+ *   MIT license - http://datatables.net/license/mit
+ *
+ * This source file is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
+ *
+ * For details please refer to: http://www.datatables.net
+ */
 
 /**
  * RowReorder provides the ability in DataTables to click and drag rows to
@@ -131,6 +141,7 @@ var RowReorder = function ( dt, opts ) {
 	this.dom = {
 		/** @type {jQuery} Cloned row being moved around */
 		clone: null,
+		cloneParent: null,
 
 		/** @type {jQuery} DataTables scrolling container */
 		dtScroll: $('div.dataTables_scrollBody', this.s.dt.table().container())
@@ -266,6 +277,9 @@ $.extend( RowReorder.prototype, {
 		// to reduce reflows
 		var tableWidth = target.outerWidth();
 		var tableHeight = target.outerHeight();
+		var scrollBody = $($(this.s.dt.table().node()).parent());
+		var scrollWidth = scrollBody.width();
+		var scrollLeft = scrollBody.scrollLeft();
 		var sizes = target.children().map( function () {
 			return $(this).width();
 		} );
@@ -277,10 +291,17 @@ $.extend( RowReorder.prototype, {
 				this.style.width = sizes[i]+'px';
 			} );
 
+		var cloneParent = $('<div>')
+			.addClass('dt-rowReorder-float-parent')
+			.width(scrollWidth)
+			.append(clone)
+			.appendTo( 'body' )
+			.scrollLeft(scrollLeft);
+
 		// Insert into the document to have it floating around
-		clone.appendTo( 'body' );
 
 		this.dom.clone = clone;
+		this.dom.cloneParent = cloneParent;
 		this.s.domCloneOuterHeight = clone.outerHeight();
 	},
 
@@ -307,7 +328,7 @@ $.extend( RowReorder.prototype, {
 			left = start.offsetLeft + snap;
 		}
 		else {
-			left = leftDiff + start.offsetLeft;
+			left = leftDiff + start.offsetLeft + this.dom.cloneParent.scrollLeft();
 		}
 
 		if(top < 0) {
@@ -317,7 +338,7 @@ $.extend( RowReorder.prototype, {
 			top = this.s.documentOuterHeight - this.s.domCloneOuterHeight;
 		}
 
-		this.dom.clone.css( {
+		this.dom.cloneParent.css( {
 			top: top,
 			left: left
 		} );
@@ -479,7 +500,9 @@ $.extend( RowReorder.prototype, {
 		var dataSrc = this.c.dataSrc;
 
 		this.dom.clone.remove();
+		this.dom.cloneParent.remove();
 		this.dom.clone = null;
+		this.dom.cloneParent = null;
 
 		this.dom.target.removeClass( 'dt-rowReorder-moving' );
 		//this.dom.target = null;
@@ -662,8 +685,8 @@ $.extend( RowReorder.prototype, {
 					$(document).scrollTop(top + scroll.windowVert);
 
 					if ( top !== $(document).scrollTop() ) {
-						var move = parseFloat(that.dom.clone.css("top"));
-						that.dom.clone.css("top", move + scroll.windowVert);					
+						var move = parseFloat(that.dom.cloneParent.css("top"));
+						that.dom.cloneParent.css("top", move + scroll.windowVert);					
 					}
 				}
 
@@ -790,7 +813,7 @@ Api.register( 'rowReorder.disable()', function () {
  * @name RowReorder.version
  * @static
  */
-RowReorder.version = '1.2.8';
+RowReorder.version = '1.3.1';
 
 
 $.fn.dataTable.RowReorder = RowReorder;
@@ -816,5 +839,5 @@ $(document).on( 'init.dt.dtr', function (e, settings, json) {
 } );
 
 
-return RowReorder;
+return DataTable;
 }));

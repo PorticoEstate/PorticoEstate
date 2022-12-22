@@ -1,16 +1,9 @@
-/*! DateTime picker for DataTables.net v1.1.2
+/*! DateTime picker for DataTables.net v1.2.0
  *
  * © SpryMedia Ltd, all rights reserved.
  * License: MIT datatables.net/license/mit
  */
 
-/**
- * @summary     DateTime picker for DataTables.net
- * @version     1.1.2
- * @file        dataTables.dateTime.js
- * @author      SpryMedia Ltd
- * @contact     www.datatables.net/contact
- */
 (function( factory ){
 	if ( typeof define === 'function' && define.amd ) {
 		// AMD
@@ -22,8 +15,17 @@
 		// CommonJS
 		module.exports = function (root, $) {
 			if ( ! root ) {
+				// CommonJS environments without a window global must pass a
+				// root. This will give an error otherwise
 				root = window;
 			}
+
+			if ( ! $ ) {
+				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
+					require('jquery') :
+					require('jquery')( root );
+			}
+
 
 			return factory( $, root, root.document );
 		};
@@ -34,6 +36,16 @@
 	}
 }(function( $, window, document, undefined ) {
 'use strict';
+
+
+
+/**
+ * @summary     DateTime picker for DataTables.net
+ * @version     1.2.0
+ * @file        dataTables.dateTime.js
+ * @author      SpryMedia Ltd
+ * @contact     www.datatables.net/contact
+ */
 
 // Supported formatting and parsing libraries:
 // * Moment
@@ -268,7 +280,7 @@ $.extend( DateTime.prototype, {
 			this.s.d = null;
 		}
 		else if ( set === '--now' ) {
-			this.s.d = new Date();
+			this.s.d = this._dateToUtc(new Date());
 		}
 		else if ( typeof set === 'string' ) {
 			// luxon uses different method names so need to be able to call them
@@ -586,6 +598,7 @@ $.extend( DateTime.prototype, {
 								'setSeconds';
 
 						d[set]( val );
+						that._setCalander();
 						that._setTime();
 						that._writeOutput( true );
 						onChange();
@@ -619,6 +632,7 @@ $.extend( DateTime.prototype, {
 						}
 						else {
 							that._setCalander();
+							that._setTime();
 						}
 
 						onChange();
@@ -983,6 +997,13 @@ $.extend( DateTime.prototype, {
 	_needValue: function () {
 		if ( ! this.s.d ) {
 			this.s.d = this._dateToUtc( new Date() );
+
+			if (! this.s.parts.time) {
+				this.s.d.setUTCHours(0);
+				this.s.d.setUTCMinutes(0);
+				this.s.d.setSeconds(0);
+				this.s.d.setMilliseconds(0);
+			}
 		}
 
 		return this.s.d;
@@ -1077,7 +1098,7 @@ $.extend( DateTime.prototype, {
 				'selected' :
 				'';
 			
-			if (allowed && $.inArray(value, allowed) === -1) {
+			if (typeof value === 'number' && allowed && $.inArray(value, allowed) === -1) {
 				selected += ' disabled';
 			}
 
@@ -1137,9 +1158,11 @@ $.extend( DateTime.prototype, {
 			// Slight hack to allow for the different number of columns
 			a += '</tbody></thead><table class="'+className+' '+className+'-nospace"><tbody>';
 
-			var start = range !== null ?
-				range :
-				Math.floor( val / 10 )*10;
+			var start = range !== null
+				? range
+				: val === -1
+					? 0
+					: Math.floor( val / 10 )*10;
 
 			a += '<tr>';
 			for (j=start+1 ; j<start+10 ; j++ ) {
@@ -1327,7 +1350,7 @@ $.extend( DateTime.prototype, {
 			? luxDT.hour
 			: d
 				? d.getUTCHours()
-				: 0;
+				: -1;
 
 		var allowed = function ( prop ) { // Backwards compt with `Increment` option
 			return that.c[prop+'Available'] ?
@@ -1343,7 +1366,8 @@ $.extend( DateTime.prototype, {
 				? luxDT.minute
 				: d
 					? d.getUTCMinutes()
-					: 0, allowed('minutes'),
+					: -1,
+			allowed('minutes'),
 			this.s.minutesRange
 		);
 		this._optionsTime(
@@ -1353,7 +1377,7 @@ $.extend( DateTime.prototype, {
 				? luxDT.second
 				: d
 					? d.getSeconds()
-					: 0,
+					: -1,
 			allowed('seconds'),
 			this.s.secondsRange
 		);
@@ -1535,7 +1559,7 @@ DateTime.defaults = {
 	yearRange: 25
 };
 
-DateTime.version = '1.1.2';
+DateTime.version = '1.2.0';
 
 // Global export - if no conflicts
 if (! window.DateTime) {
@@ -1559,6 +1583,6 @@ if ($.fn.dataTable) {
 	}
 }
 
-return DateTime;
 
+return DateTime;
 }));

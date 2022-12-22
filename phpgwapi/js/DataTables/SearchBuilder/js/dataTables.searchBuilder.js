@@ -1,11 +1,51 @@
-/*! SearchBuilder 1.3.4
+/*! SearchBuilder 1.4.0
  * ©SpryMedia Ltd - datatables.net/license/mit
  */
+
+(function( factory ){
+	if ( typeof define === 'function' && define.amd ) {
+		// AMD
+		define( ['jquery', 'datatables.net'], function ( $ ) {
+			return factory( $, window, document );
+		} );
+	}
+	else if ( typeof exports === 'object' ) {
+		// CommonJS
+		module.exports = function (root, $) {
+			if ( ! root ) {
+				// CommonJS environments without a window global must pass a
+				// root. This will give an error otherwise
+				root = window;
+			}
+
+			if ( ! $ ) {
+				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
+					require('jquery') :
+					require('jquery')( root );
+			}
+
+			if ( ! $.fn.dataTable ) {
+				require('datatables.net')(root, $);
+			}
+
+
+			return factory( $, root, root.document );
+		};
+	}
+	else {
+		// Browser
+		factory( jQuery, window, document );
+	}
+}(function( $, window, document, undefined ) {
+'use strict';
+var DataTable = $.fn.dataTable;
+
+
 (function () {
     'use strict';
 
-    var $$2;
-    var dataTable$2;
+    var $$3;
+    var dataTable$3;
     function moment() {
         return window.moment;
     }
@@ -18,8 +58,8 @@
      * @param jq the instance of jQuery to be set
      */
     function setJQuery$2(jq) {
-        $$2 = jq;
-        dataTable$2 = jq.fn.dataTable;
+        $$3 = jq;
+        dataTable$3 = jq.fn.dataTable;
     }
     /**
      * The Criteria class is used within SearchBuilder to represent a search criteria
@@ -31,12 +71,12 @@
             if (depth === void 0) { depth = 1; }
             if (serverData === void 0) { serverData = undefined; }
             // Check that the required version of DataTables is included
-            if (!dataTable$2 || !dataTable$2.versionCheck || !dataTable$2.versionCheck('1.10.0')) {
+            if (!dataTable$3 || !dataTable$3.versionCheck || !dataTable$3.versionCheck('1.10.0')) {
                 throw new Error('SearchPane requires DataTables 1.10 or newer');
             }
-            this.classes = $$2.extend(true, {}, Criteria.classes);
+            this.classes = $$3.extend(true, {}, Criteria.classes);
             // Get options from user and any extra conditions/column types defined by plug-ins
-            this.c = $$2.extend(true, {}, Criteria.defaults, $$2.fn.dataTable.ext.searchBuilder, opts);
+            this.c = $$3.extend(true, {}, Criteria.defaults, $$3.fn.dataTable.ext.searchBuilder, opts);
             var i18n = this.c.i18n;
             this.s = {
                 condition: undefined,
@@ -57,58 +97,58 @@
                 value: []
             };
             this.dom = {
-                buttons: $$2('<div/>')
+                buttons: $$3('<div/>')
                     .addClass(this.classes.buttonContainer),
-                condition: $$2('<select disabled/>')
+                condition: $$3('<select disabled/>')
                     .addClass(this.classes.condition)
                     .addClass(this.classes.dropDown)
                     .addClass(this.classes.italic)
                     .attr('autocomplete', 'hacking'),
-                conditionTitle: $$2('<option value="" disabled selected hidden/>')
+                conditionTitle: $$3('<option value="" disabled selected hidden/>')
                     .html(this.s.dt.i18n('searchBuilder.condition', i18n.condition)),
-                container: $$2('<div/>')
+                container: $$3('<div/>')
                     .addClass(this.classes.container),
-                data: $$2('<select/>')
+                data: $$3('<select/>')
                     .addClass(this.classes.data)
                     .addClass(this.classes.dropDown)
                     .addClass(this.classes.italic),
-                dataTitle: $$2('<option value="" disabled selected hidden/>')
+                dataTitle: $$3('<option value="" disabled selected hidden/>')
                     .html(this.s.dt.i18n('searchBuilder.data', i18n.data)),
-                defaultValue: $$2('<select disabled/>')
+                defaultValue: $$3('<select disabled/>')
                     .addClass(this.classes.value)
                     .addClass(this.classes.dropDown)
                     .addClass(this.classes.select)
                     .addClass(this.classes.italic),
-                "delete": $$2('<button/>')
+                "delete": $$3('<button/>')
                     .html(this.s.dt.i18n('searchBuilder.delete', i18n["delete"]))
                     .addClass(this.classes["delete"])
                     .addClass(this.classes.button)
                     .attr('title', this.s.dt.i18n('searchBuilder.deleteTitle', i18n.deleteTitle))
                     .attr('type', 'button'),
-                inputCont: $$2('<div/>')
+                inputCont: $$3('<div/>')
                     .addClass(this.classes.inputCont),
                 // eslint-disable-next-line no-useless-escape
-                left: $$2('<button/>')
+                left: $$3('<button/>')
                     .html(this.s.dt.i18n('searchBuilder.left', i18n.left))
                     .addClass(this.classes.left)
                     .addClass(this.classes.button)
                     .attr('title', this.s.dt.i18n('searchBuilder.leftTitle', i18n.leftTitle))
                     .attr('type', 'button'),
                 // eslint-disable-next-line no-useless-escape
-                right: $$2('<button/>')
+                right: $$3('<button/>')
                     .html(this.s.dt.i18n('searchBuilder.right', i18n.right))
                     .addClass(this.classes.right)
                     .addClass(this.classes.button)
                     .attr('title', this.s.dt.i18n('searchBuilder.rightTitle', i18n.rightTitle))
                     .attr('type', 'button'),
                 value: [
-                    $$2('<select disabled/>')
+                    $$3('<select disabled/>')
                         .addClass(this.classes.value)
                         .addClass(this.classes.dropDown)
                         .addClass(this.classes.italic)
                         .addClass(this.classes.select)
                 ],
-                valueTitle: $$2('<option value="--valueTitle--" disabled selected hidden/>')
+                valueTitle: $$3('<option value="--valueTitle--" disabled selected hidden/>')
                     .html(this.s.dt.i18n('searchBuilder.value', i18n.value))
             };
             // If the greyscale option is selected then add the class to add the grey colour to SearchBuilder
@@ -121,7 +161,7 @@
                     val.addClass(this.classes.greyscale);
                 }
             }
-            $$2(window).on('resize.dtsb', dataTable$2.util.throttle(function () {
+            $$3(window).on('resize.dtsb', dataTable$3.util.throttle(function () {
                 _this.s.topGroup.trigger('dtsb-redrawLogic');
             }));
             this._buildCriteria();
@@ -359,15 +399,15 @@
                 var data_1 = this.dom.data;
                 this.dom.data.children('option').each(function () {
                     if (!foundData &&
-                        ($$2(this).text() === loadedCriteria.data ||
-                            loadedCriteria.origData && $$2(this).prop('origData') === loadedCriteria.origData)) {
-                        $$2(this).prop('selected', true);
+                        ($$3(this).text() === loadedCriteria.data ||
+                            loadedCriteria.origData && $$3(this).prop('origData') === loadedCriteria.origData)) {
+                        $$3(this).prop('selected', true);
                         data_1.removeClass(italic_1);
                         foundData = true;
-                        dataIdx = $$2(this).val();
+                        dataIdx = $$3(this).val();
                     }
                     else {
-                        $$2(this).removeProp('selected');
+                        $$3(this).removeProp('selected');
                     }
                 });
             }
@@ -385,7 +425,7 @@
                 var options = this.dom.condition.children('option');
                 // eslint-disable-next-line @typescript-eslint/prefer-for-of
                 for (var i = 0; i < options.length; i++) {
-                    var option = $$2(options[i]);
+                    var option = $$3(options[i]);
                     if (loadedCriteria.condition !== undefined &&
                         option.val() === loadedCriteria.condition &&
                         typeof loadedCriteria.condition === 'string') {
@@ -404,7 +444,7 @@
                     this.dom.condition.removeClass(this.classes.italic);
                     // eslint-disable-next-line @typescript-eslint/prefer-for-of
                     for (var i = 0; i < options.length; i++) {
-                        var option = $$2(options[i]);
+                        var option = $$3(options[i]);
                         if (option.val() !== this.s.condition) {
                             option.removeProp('selected');
                         }
@@ -429,7 +469,7 @@
                 var options = _this.dom.data.children('option.' + _this.classes.option);
                 // eslint-disable-next-line @typescript-eslint/prefer-for-of
                 for (var i = 0; i < options.length; i++) {
-                    var option = $$2(options[i]);
+                    var option = $$3(options[i]);
                     if (option.val() === _this.dom.data.val()) {
                         _this.dom.data.removeClass(_this.classes.italic);
                         option.prop('selected', true);
@@ -464,7 +504,7 @@
                 var options = _this.dom.condition.children('option.' + _this.classes.option);
                 // eslint-disable-next-line @typescript-eslint/prefer-for-of
                 for (var i = 0; i < options.length; i++) {
-                    var option = $$2(options[i]);
+                    var option = $$3(options[i]);
                     if (option.val() === _this.dom.condition.val()) {
                         _this.dom.condition.removeClass(_this.classes.italic);
                         option.prop('selected', true);
@@ -605,7 +645,7 @@
             }
             this.s.value = [];
             this.dom.value = [
-                $$2('<select disabled/>')
+                $$3('<select disabled/>')
                     .addClass(this.classes.value)
                     .addClass(this.classes.dropDown)
                     .addClass(this.classes.italic)
@@ -620,7 +660,7 @@
          */
         Criteria.prototype._getOptions = function () {
             var table = this.s.dt;
-            return $$2.extend(true, {}, Criteria.defaults, table.settings()[0].aoColumns[this.s.dataIdx].searchBuilder);
+            return $$3.extend(true, {}, Criteria.defaults, table.settings()[0].aoColumns[this.s.dataIdx].searchBuilder);
         };
         /**
          * Populates the condition dropdown
@@ -644,7 +684,7 @@
                 }
                 // If the column type is still unknown, call a draw to try reading it again
                 if (this.s.type === null || this.s.type === undefined) {
-                    $$2.fn.dataTable.ext.oApi._fnColumnTypes(this.s.dt.settings()[0]);
+                    $$3.fn.dataTable.ext.oApi._fnColumnTypes(this.s.dt.settings()[0]);
                     this.s.type = this.s.dt.columns().type().toArray()[column];
                 }
                 // Enable the condition element
@@ -704,7 +744,7 @@
                         if (typeof condName === 'function') {
                             condName = condName(this.s.dt, this.c.i18n);
                         }
-                        conditionOpts.push($$2('<option>', {
+                        conditionOpts.push($$3('<option>', {
                             text: condName,
                             value: condition
                         })
@@ -722,7 +762,7 @@
                     if (typeof condName === 'function') {
                         condName = condName(this.s.dt, this.c.i18n);
                     }
-                    var newOpt = $$2('<option>', {
+                    var newOpt = $$3('<option>', {
                         text: condName,
                         value: condition
                     })
@@ -814,7 +854,7 @@
                                     col.searchBuilderTitle).replace(/(<([^>]+)>)/ig, '')
                             };
                             _this.s.dataPoints.push(opt);
-                            _this.dom.data.append($$2('<option>', {
+                            _this.dom.data.append($$3('<option>', {
                                 text: opt.text,
                                 value: opt.index
                             })
@@ -841,7 +881,7 @@
                             data.origData = col.data;
                         }
                     });
-                    var newOpt = $$2('<option>', {
+                    var newOpt = $$3('<option>', {
                         text: data.text.replace(/(<([^>]+)>)/ig, ''),
                         value: data.index
                     })
@@ -893,7 +933,7 @@
             if (children.length > 1) {
                 // eslint-disable-next-line @typescript-eslint/prefer-for-of
                 for (var i = 0; i < children.length; i++) {
-                    $$2(children[i]).remove();
+                    $$3(children[i]).remove();
                 }
             }
             // Find the column with the title matching the data for the criteria and take note of the index
@@ -1000,14 +1040,14 @@
             var settings = that.s.dt.settings()[0];
             that.dom.valueTitle.prop('selected', true);
             // Declare select element to be used with all of the default classes and listeners.
-            var el = $$2('<select/>')
+            var el = $$3('<select/>')
                 .addClass(Criteria.classes.value)
                 .addClass(Criteria.classes.dropDown)
                 .addClass(Criteria.classes.italic)
                 .addClass(Criteria.classes.select)
                 .append(that.dom.valueTitle)
                 .on('change.dtsb', function () {
-                $$2(this).removeClass(Criteria.classes.italic);
+                $$3(this).removeClass(Criteria.classes.italic);
                 fn(that, this);
             });
             if (that.c.greyscale) {
@@ -1042,7 +1082,7 @@
                         filt.replace(/(<([^>]+)>)/ig, '');
                     }
                     // Add text and value, stripping out any html if that is the column type
-                    var opt = $$2('<option>', {
+                    var opt = $$3('<option>', {
                         type: Array.isArray(filt) ? 'Array' : 'String',
                         value: filt
                     })
@@ -1131,14 +1171,14 @@
             if (preDefined === void 0) { preDefined = null; }
             that.dom.valueTitle.prop('selected', true);
             // Declare select element to be used with all of the default classes and listeners.
-            var el = $$2('<select/>')
+            var el = $$3('<select/>')
                 .addClass(Criteria.classes.value)
                 .addClass(Criteria.classes.dropDown)
                 .addClass(Criteria.classes.italic)
                 .addClass(Criteria.classes.select)
                 .append(that.dom.valueTitle)
                 .on('change.dtsb', function () {
-                $$2(this).removeClass(Criteria.classes.italic);
+                $$3(this).removeClass(Criteria.classes.italic);
                 fn(that, this);
             });
             if (that.c.greyscale) {
@@ -1155,7 +1195,7 @@
                         filt.replace(/(<([^>]+)>)/ig, '');
                     }
                     // Add text and value, stripping out any html if that is the column type
-                    var opt = $$2('<option>', {
+                    var opt = $$3('<option>', {
                         type: Array.isArray(filt) ? 'Array' : 'String',
                         value: filt
                     })
@@ -1198,7 +1238,7 @@
             if (preDefined === void 0) { preDefined = null; }
             // Declare the input element
             var searchDelay = that.s.dt.settings()[0].searchDelay;
-            var el = $$2('<input/>')
+            var el = $$3('<input/>')
                 .addClass(Criteria.classes.value)
                 .addClass(Criteria.classes.input)
                 .on('input.dtsb keypress.dtsb', that._throttle(function (e) {
@@ -1226,17 +1266,17 @@
             // Declare all of the necessary jQuery elements
             var searchDelay = that.s.dt.settings()[0].searchDelay;
             var els = [
-                $$2('<input/>')
+                $$3('<input/>')
                     .addClass(Criteria.classes.value)
                     .addClass(Criteria.classes.input)
                     .on('input.dtsb keypress.dtsb', that._throttle(function (e) {
                     var code = e.keyCode || e.which;
                     return fn(that, this, code);
                 }, searchDelay === null ? 100 : searchDelay)),
-                $$2('<span>')
+                $$3('<span>')
                     .addClass(that.classes.joiner)
                     .html(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
-                $$2('<input/>')
+                $$3('<input/>')
                     .addClass(Criteria.classes.value)
                     .addClass(Criteria.classes.input)
                     .on('input.dtsb keypress.dtsb', that._throttle(function (e) {
@@ -1266,7 +1306,7 @@
             if (preDefined === void 0) { preDefined = null; }
             var searchDelay = that.s.dt.settings()[0].searchDelay;
             // Declare date element using DataTables dateTime plugin
-            var el = $$2('<input/>')
+            var el = $$3('<input/>')
                 .addClass(Criteria.classes.value)
                 .addClass(Criteria.classes.input)
                 .dtDateTime({
@@ -1307,7 +1347,7 @@
             var searchDelay = that.s.dt.settings()[0].searchDelay;
             // Declare all of the date elements that are required using DataTables dateTime plugin
             var els = [
-                $$2('<input/>')
+                $$3('<input/>')
                     .addClass(Criteria.classes.value)
                     .addClass(Criteria.classes.input)
                     .dtDateTime({
@@ -1327,10 +1367,10 @@
                         return fn(that, this, code);
                     }, searchDelay === null ? 0 : searchDelay);
                 }),
-                $$2('<span>')
+                $$3('<span>')
                     .addClass(that.classes.joiner)
                     .html(that.s.dt.i18n('searchBuilder.valueJoiner', that.c.i18n.valueJoiner)),
-                $$2('<input/>')
+                $$3('<input/>')
                     .addClass(Criteria.classes.value)
                     .addClass(Criteria.classes.input)
                     .dtDateTime({
@@ -2434,16 +2474,16 @@
         return Criteria;
     }());
 
-    var $$1;
-    var dataTable$1;
+    var $$2;
+    var dataTable$2;
     /**
      * Sets the value of jQuery for use in the file
      *
      * @param jq the instance of jQuery to be set
      */
     function setJQuery$1(jq) {
-        $$1 = jq;
-        dataTable$1 = jq.fn.dataTable;
+        $$2 = jq;
+        dataTable$2 = jq.fn.dataTable;
     }
     /**
      * The Group class is used within SearchBuilder to represent a group of criteria
@@ -2455,12 +2495,12 @@
             if (depth === void 0) { depth = 1; }
             if (serverData === void 0) { serverData = undefined; }
             // Check that the required version of DataTables is included
-            if (!dataTable$1 || !dataTable$1.versionCheck || !dataTable$1.versionCheck('1.10.0')) {
+            if (!dataTable$2 || !dataTable$2.versionCheck || !dataTable$2.versionCheck('1.10.0')) {
                 throw new Error('SearchBuilder requires DataTables 1.10 or newer');
             }
-            this.classes = $$1.extend(true, {}, Group.classes);
+            this.classes = $$2.extend(true, {}, Group.classes);
             // Get options from user
-            this.c = $$1.extend(true, {}, Group.defaults, opts);
+            this.c = $$2.extend(true, {}, Group.defaults, opts);
             this.s = {
                 criteria: [],
                 depth: depth,
@@ -2475,21 +2515,21 @@
                 topGroup: topGroup
             };
             this.dom = {
-                add: $$1('<button/>')
+                add: $$2('<button/>')
                     .addClass(this.classes.add)
                     .addClass(this.classes.button)
                     .attr('type', 'button'),
-                clear: $$1('<button>&times</button>')
+                clear: $$2('<button>&times</button>')
                     .addClass(this.classes.button)
                     .addClass(this.classes.clearGroup)
                     .attr('type', 'button'),
-                container: $$1('<div/>')
+                container: $$2('<div/>')
                     .addClass(this.classes.group),
-                logic: $$1('<button><div/></button>')
+                logic: $$2('<button><div/></button>')
                     .addClass(this.classes.logic)
                     .addClass(this.classes.button)
                     .attr('type', 'button'),
-                logicContainer: $$1('<div/>')
+                logicContainer: $$2('<div/>')
                     .addClass(this.classes.logicContainer)
             };
             // A reference to the top level group is maintained throughout any subgroups and criteria that may be created
@@ -2704,7 +2744,7 @@
             // Set vertical alignment
             var firstCrit = this.dom.logicContainer.next();
             var currentTop = logicOffset.top;
-            var firstTop = $$1(firstCrit).offset().top;
+            var firstTop = $$2(firstCrit).offset().top;
             var shuffleTop = currentTop - firstTop;
             var newTop = currentTop - shuffleTop;
             this.dom.logicContainer.offset({ top: newTop });
@@ -3173,16 +3213,16 @@
         return Group;
     }());
 
-    var $;
-    var dataTable;
+    var $$1;
+    var dataTable$1;
     /**
      * Sets the value of jQuery for use in the file
      *
      * @param jq the instance of jQuery to be set
      */
     function setJQuery(jq) {
-        $ = jq;
-        dataTable = jq.fn.DataTable;
+        $$1 = jq;
+        dataTable$1 = jq.fn.DataTable;
     }
     /**
      * SearchBuilder class for DataTables.
@@ -3192,23 +3232,23 @@
         function SearchBuilder(builderSettings, opts) {
             var _this = this;
             // Check that the required version of DataTables is included
-            if (!dataTable || !dataTable.versionCheck || !dataTable.versionCheck('1.10.0')) {
+            if (!dataTable$1 || !dataTable$1.versionCheck || !dataTable$1.versionCheck('1.10.0')) {
                 throw new Error('SearchBuilder requires DataTables 1.10 or newer');
             }
-            var table = new dataTable.Api(builderSettings);
-            this.classes = $.extend(true, {}, SearchBuilder.classes);
+            var table = new dataTable$1.Api(builderSettings);
+            this.classes = $$1.extend(true, {}, SearchBuilder.classes);
             // Get options from user
-            this.c = $.extend(true, {}, SearchBuilder.defaults, opts);
+            this.c = $$1.extend(true, {}, SearchBuilder.defaults, opts);
             this.dom = {
-                clearAll: $('<button type="button">' + table.i18n('searchBuilder.clearAll', this.c.i18n.clearAll) + '</button>')
+                clearAll: $$1('<button type="button">' + table.i18n('searchBuilder.clearAll', this.c.i18n.clearAll) + '</button>')
                     .addClass(this.classes.clearAll)
                     .addClass(this.classes.button)
                     .attr('type', 'button'),
-                container: $('<div/>')
+                container: $$1('<div/>')
                     .addClass(this.classes.container),
-                title: $('<div/>')
+                title: $$1('<div/>')
                     .addClass(this.classes.title),
-                titleRow: $('<div/>')
+                titleRow: $$1('<div/>')
                     .addClass(this.classes.titleRow),
                 topGroup: undefined
             };
@@ -3324,14 +3364,14 @@
             var _this = this;
             if (loadState === void 0) { loadState = true; }
             // Register an Api method for getting the column type
-            $.fn.DataTable.Api.registerPlural('columns().type()', 'column().type()', function () {
+            $$1.fn.DataTable.Api.registerPlural('columns().type()', 'column().type()', function () {
                 return this.iterator('column', function (settings, column) {
                     return settings.aoColumns[column].sType;
                 }, 1);
             });
             // Check that DateTime is included, If not need to check if it could be used
             // eslint-disable-next-line no-extra-parens
-            if (!dataTable.DateTime) {
+            if (!dataTable$1.DateTime) {
                 var types = this.s.dt.columns().type().toArray();
                 if (types === undefined || types.includes(undefined) || types.includes(null)) {
                     types = [];
@@ -3343,7 +3383,7 @@
                 var columnIdxs = this.s.dt.columns().toArray();
                 // If the types are not yet set then draw to see if they can be retrieved then
                 if (types === undefined || types.includes(undefined) || types.includes(null)) {
-                    $.fn.dataTable.ext.oApi._fnColumnTypes(this.s.dt.settings()[0]);
+                    $$1.fn.dataTable.ext.oApi._fnColumnTypes(this.s.dt.settings()[0]);
                     types = this.s.dt.columns().type().toArray();
                 }
                 for (var i = 0; i < columnIdxs[0].length; i++) {
@@ -3466,7 +3506,7 @@
             this.dom.container.append(this.dom.topGroup);
             this._setRedrawListener();
             var tableNode = this.s.dt.table(0).node();
-            if (!$.fn.dataTable.ext.search.includes(this.s.search)) {
+            if (!$$1.fn.dataTable.ext.search.includes(this.s.search)) {
                 // Custom search function for SearchBuilder
                 this.s.search = function (settings, searchData, dataIndex) {
                     if (settings.nTable !== tableNode) {
@@ -3475,18 +3515,18 @@
                     return _this.s.topGroup.search(searchData, dataIndex);
                 };
                 // Add SearchBuilder search function to the dataTables search array
-                $.fn.dataTable.ext.search.push(this.s.search);
+                $$1.fn.dataTable.ext.search.push(this.s.search);
             }
             this.s.dt.on('destroy.dtsb', function () {
                 _this.dom.container.remove();
                 _this.dom.clearAll.remove();
-                var searchIdx = $.fn.dataTable.ext.search.indexOf(_this.s.search);
+                var searchIdx = $$1.fn.dataTable.ext.search.indexOf(_this.s.search);
                 while (searchIdx !== -1) {
-                    $.fn.dataTable.ext.search.splice(searchIdx, 1);
-                    searchIdx = $.fn.dataTable.ext.search.indexOf(_this.s.search);
+                    $$1.fn.dataTable.ext.search.splice(searchIdx, 1);
+                    searchIdx = $$1.fn.dataTable.ext.search.indexOf(_this.s.search);
                 }
                 _this.s.dt.off('.dtsb');
-                $(_this.s.dt.table().node()).off('.dtsb');
+                $$1(_this.s.dt.table().node()).off('.dtsb');
             });
         };
         /**
@@ -3597,7 +3637,7 @@
                 _this.dom.clearAll.remove();
             });
         };
-        SearchBuilder.version = '1.3.4';
+        SearchBuilder.version = '1.4.0';
         SearchBuilder.classes = {
             button: 'dtsb-button',
             clearAll: 'dtsb-clearAll',
@@ -3703,149 +3743,123 @@
         return SearchBuilder;
     }());
 
-    /*! SearchBuilder 1.3.4
+    /*! SearchBuilder 1.4.0
      * ©SpryMedia Ltd - datatables.net/license/mit
      */
-    // DataTables extensions common UMD. Note that this allows for AMD, CommonJS
-    // (with window and jQuery being allowed as parameters to the returned
-    // function) or just default browser loading.
-    (function (factory) {
-        if (typeof define === 'function' && define.amd) {
-            // AMD
-            define(['jquery', 'datatables.net'], function ($) {
-                return factory($, window, document);
+    setJQuery($);
+    setJQuery$1($);
+    setJQuery$2($);
+    var dataTable = $.fn.dataTable;
+    // eslint-disable-next-line no-extra-parens
+    DataTable.SearchBuilder = SearchBuilder;
+    // eslint-disable-next-line no-extra-parens
+    dataTable.SearchBuilder = SearchBuilder;
+    // eslint-disable-next-line no-extra-parens
+    DataTable.Group = Group;
+    // eslint-disable-next-line no-extra-parens
+    dataTable.Group = Group;
+    // eslint-disable-next-line no-extra-parens
+    DataTable.Criteria = Criteria;
+    // eslint-disable-next-line no-extra-parens
+    dataTable.Criteria = Criteria;
+    // eslint-disable-next-line no-extra-parens
+    var apiRegister = DataTable.Api.register;
+    // Set up object for plugins
+    DataTable.ext.searchBuilder = {
+        conditions: {}
+    };
+    DataTable.ext.buttons.searchBuilder = {
+        action: function (e, dt, node, config) {
+            this.popover(config._searchBuilder.getNode(), {
+                align: 'container',
+                span: 'container'
             });
-        }
-        else if (typeof exports === 'object') {
-            // CommonJS
-            module.exports = function (root, $) {
-                if (!root) {
-                    root = window;
-                }
-                if (!$ || !$.fn.dataTable) {
-                    // eslint-disable-next-line @typescript-eslint/no-var-requires
-                    $ = require('datatables.net')(root, $).$;
-                }
-                return factory($, root, root.document);
-            };
-        }
-        else {
-            // Browser - assume jQuery has already been loaded
-            // eslint-disable-next-line no-extra-parens
-            factory(window.jQuery, window, document);
-        }
-    }(function ($, window, document) {
-        setJQuery($);
-        setJQuery$1($);
-        setJQuery$2($);
-        var dataTable = $.fn.dataTable;
-        // eslint-disable-next-line no-extra-parens
-        $.fn.dataTable.SearchBuilder = SearchBuilder;
-        // eslint-disable-next-line no-extra-parens
-        $.fn.DataTable.SearchBuilder = SearchBuilder;
-        // eslint-disable-next-line no-extra-parens
-        $.fn.dataTable.Group = Group;
-        // eslint-disable-next-line no-extra-parens
-        $.fn.DataTable.Group = Group;
-        // eslint-disable-next-line no-extra-parens
-        $.fn.dataTable.Criteria = Criteria;
-        // eslint-disable-next-line no-extra-parens
-        $.fn.DataTable.Criteria = Criteria;
-        // eslint-disable-next-line no-extra-parens
-        var apiRegister = $.fn.dataTable.Api.register;
-        // Set up object for plugins
-        $.fn.dataTable.ext.searchBuilder = {
-            conditions: {}
-        };
-        $.fn.dataTable.ext.buttons.searchBuilder = {
-            action: function (e, dt, node, config) {
-                this.popover(config._searchBuilder.getNode(), {
-                    align: 'container',
-                    span: 'container'
-                });
-                var topGroup = config._searchBuilder.s.topGroup;
-                // Need to redraw the contents to calculate the correct positions for the elements
-                if (topGroup !== undefined) {
-                    topGroup.dom.container.trigger('dtsb-redrawContents-noDraw');
-                }
-                if (topGroup.s.criteria.length === 0) {
-                    $('.' + $.fn.dataTable.Group.classes.add.replace(/ /g, '.')).click();
-                }
-            },
-            config: {},
-            init: function (dt, node, config) {
-                var sb = new $.fn.dataTable.SearchBuilder(dt, $.extend({
-                    filterChanged: function (count, text) {
-                        dt.button(node).text(text);
-                    }
-                }, config.config));
-                dt.button(node).text(config.text || dt.i18n('searchBuilder.button', sb.c.i18n.button, 0));
-                config._searchBuilder = sb;
-            },
-            text: null
-        };
-        apiRegister('searchBuilder.getDetails()', function (deFormatDates) {
-            if (deFormatDates === void 0) { deFormatDates = false; }
-            var ctx = this.context[0];
-            // If SearchBuilder has not been initialised on this instance then return
-            return ctx._searchBuilder ?
-                ctx._searchBuilder.getDetails(deFormatDates) :
-                null;
-        });
-        apiRegister('searchBuilder.rebuild()', function (details) {
-            var ctx = this.context[0];
-            // If SearchBuilder has not been initialised on this instance then return
-            if (ctx._searchBuilder === undefined) {
-                return null;
+            var topGroup = config._searchBuilder.s.topGroup;
+            // Need to redraw the contents to calculate the correct positions for the elements
+            if (topGroup !== undefined) {
+                topGroup.dom.container.trigger('dtsb-redrawContents-noDraw');
             }
-            ctx._searchBuilder.rebuild(details);
-            return this;
-        });
-        apiRegister('searchBuilder.container()', function () {
-            var ctx = this.context[0];
-            // If SearchBuilder has not been initialised on this instance then return
-            return ctx._searchBuilder ?
-                ctx._searchBuilder.getNode() :
-                null;
-        });
-        /**
-         * Init function for SearchBuilder
-         *
-         * @param settings the settings to be applied
-         * @param options the options for SearchBuilder
-         * @returns JQUERY<HTMLElement> Returns the node of the SearchBuilder
-         */
-        function _init(settings, options) {
-            var api = new dataTable.Api(settings);
-            var opts = options
-                ? options
-                : api.init().searchBuilder || dataTable.defaults.searchBuilder;
-            var searchBuilder = new SearchBuilder(api, opts);
-            var node = searchBuilder.getNode();
-            return node;
-        }
-        // Attach a listener to the document which listens for DataTables initialisation
-        // events so we can automatically initialise
-        $(document).on('preInit.dt.dtsp', function (e, settings) {
-            if (e.namespace !== 'dt') {
-                return;
+            if (topGroup.s.criteria.length === 0) {
+                $('.' + $.fn.dataTable.Group.classes.add.replace(/ /g, '.')).click();
             }
-            if (settings.oInit.searchBuilder ||
-                dataTable.defaults.searchBuilder) {
-                if (!settings._searchBuilder) {
-                    _init(settings);
+        },
+        config: {},
+        init: function (dt, node, config) {
+            var sb = new DataTable.SearchBuilder(dt, $.extend({
+                filterChanged: function (count, text) {
+                    dt.button(node).text(text);
                 }
-            }
-        });
-        // DataTables `dom` feature option
-        dataTable.ext.feature.push({
-            cFeature: 'Q',
-            fnInit: _init
-        });
-        // DataTables 2 layout feature
-        if (dataTable.ext.features) {
-            dataTable.ext.features.register('searchBuilder', _init);
+            }, config.config));
+            dt.button(node).text(config.text || dt.i18n('searchBuilder.button', sb.c.i18n.button, 0));
+            config._searchBuilder = sb;
+        },
+        text: null
+    };
+    apiRegister('searchBuilder.getDetails()', function (deFormatDates) {
+        if (deFormatDates === void 0) { deFormatDates = false; }
+        var ctx = this.context[0];
+        // If SearchBuilder has not been initialised on this instance then return
+        return ctx._searchBuilder ?
+            ctx._searchBuilder.getDetails(deFormatDates) :
+            null;
+    });
+    apiRegister('searchBuilder.rebuild()', function (details) {
+        var ctx = this.context[0];
+        // If SearchBuilder has not been initialised on this instance then return
+        if (ctx._searchBuilder === undefined) {
+            return null;
         }
-    }));
+        ctx._searchBuilder.rebuild(details);
+        return this;
+    });
+    apiRegister('searchBuilder.container()', function () {
+        var ctx = this.context[0];
+        // If SearchBuilder has not been initialised on this instance then return
+        return ctx._searchBuilder ?
+            ctx._searchBuilder.getNode() :
+            null;
+    });
+    /**
+     * Init function for SearchBuilder
+     *
+     * @param settings the settings to be applied
+     * @param options the options for SearchBuilder
+     * @returns JQUERY<HTMLElement> Returns the node of the SearchBuilder
+     */
+    function _init(settings, options) {
+        var api = new DataTable.Api(settings);
+        var opts = options
+            ? options
+            : api.init().searchBuilder || DataTable.defaults.searchBuilder;
+        var searchBuilder = new SearchBuilder(api, opts);
+        var node = searchBuilder.getNode();
+        return node;
+    }
+    // Attach a listener to the document which listens for DataTables initialisation
+    // events so we can automatically initialise
+    $(document).on('preInit.dt.dtsp', function (e, settings) {
+        if (e.namespace !== 'dt') {
+            return;
+        }
+        if (settings.oInit.searchBuilder ||
+            DataTable.defaults.searchBuilder) {
+            if (!settings._searchBuilder) {
+                _init(settings);
+            }
+        }
+    });
+    // DataTables `dom` feature option
+    DataTable.ext.feature.push({
+        cFeature: 'Q',
+        fnInit: _init
+    });
+    // DataTables 2 layout feature
+    if (DataTable.ext.features) {
+        DataTable.ext.features.register('searchBuilder', _init);
+    }
 
 })();
+
+
+return DataTable;
+}));
