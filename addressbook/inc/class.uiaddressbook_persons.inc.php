@@ -574,7 +574,7 @@ class addressbook_uiaddressbook_persons extends phpgwapi_uicommon
 		);
 
 
-		self::add_javascript('addressbook', 'portico', 'addressbook_persons.index.js');
+		self::add_javascript('addressbook', 'base', 'addressbook_persons.index.js');
 		self::render_template_xsl('datatable_jquery', $data);
 	}
 
@@ -858,7 +858,7 @@ class addressbook_uiaddressbook_persons extends phpgwapi_uicommon
 		);
 		
 		phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
-		self::add_javascript('addressbook', 'portico', 'addressbook_persons.edit.js');
+		self::add_javascript('addressbook', 'base', 'addressbook_persons.edit.js');
 		self::render_template_xsl(array('persons', 'datatable_inline'), array($mode => $data));
 	}
 

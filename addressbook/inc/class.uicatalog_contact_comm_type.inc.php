@@ -105,7 +105,7 @@
 				'value_active_tab' => 0
 			);
 			
-			self::add_javascript('addressbook', 'portico', 'catalog_comm_type.js');
+			self::add_javascript('addressbook', 'base', 'catalog_comm_type.js');
 			self::render_template_xsl(array('catalog_comm_type', 'datatable_inline'), array('view' => $data));
 		}
 	

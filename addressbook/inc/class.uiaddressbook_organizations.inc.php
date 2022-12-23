@@ -447,7 +447,7 @@ class addressbook_uiaddressbook_organizations extends phpgwapi_uicommon
 			'parameters' => json_encode($parameters)
 		);
 
-		self::add_javascript('addressbook', 'portico', 'addressbook_persons.index.js');
+		self::add_javascript('addressbook', 'base', 'addressbook_persons.index.js');
 		self::render_template_xsl('datatable_jquery', $data);
 	}
 
@@ -707,7 +707,7 @@ class addressbook_uiaddressbook_organizations extends phpgwapi_uicommon
 		);
 		
 		phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
-		self::add_javascript('addressbook', 'portico', 'addressbook_organizations.edit.js');
+		self::add_javascript('addressbook', 'base', 'addressbook_organizations.edit.js');
 		self::render_template_xsl(array('organizations', 'datatable_inline'), array($mode => $data));
 	}
 	

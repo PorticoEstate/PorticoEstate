@@ -740,7 +740,7 @@ JS;
 
 				if (!empty($field['js_file']))
 				{
-					self::add_javascript($this->appname, 'portico', $field['js_file']);
+					self::add_javascript($this->appname, 'base', $field['js_file']);
 				}
 
 				if (isset($field['values_def']))

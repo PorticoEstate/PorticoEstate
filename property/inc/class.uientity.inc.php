@@ -3635,7 +3635,7 @@ JS;
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript($this->type_app[$this->type], 'portico', 'entity.summary.js');
+			self::add_javascript($this->type_app[$this->type], 'base', 'entity.summary.js');
 			self::render_template_xsl(array('entity'), array('summary' => $data));
 		}
 
