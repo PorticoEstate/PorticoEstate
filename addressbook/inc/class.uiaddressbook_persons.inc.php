@@ -637,7 +637,8 @@ class addressbook_uiaddressbook_persons extends phpgwapi_uicommon
 		foreach ($entries as &$entry)
 		{
 			$entry['owner'] = $GLOBALS['phpgw']->accounts->id2name($entry['owner']);
-			$entry['per_birthday'] = ($entry['per_birthday']) ? date($userformat, $entry['per_birthday']) : '';
+			//FIXME
+	//		$entry['per_birthday'] = ($entry['per_birthday']) ? date($userformat, $entry['per_birthday']) : '';
 			$entry['addr_type'] = $this->bo->search_location_type_id($entry['addr_type']);
 		}
 
