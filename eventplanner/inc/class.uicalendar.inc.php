@@ -147,7 +147,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript($this->currentapp, 'portico', 'calendar.index.js');
+			self::add_javascript($this->currentapp, 'base', 'calendar.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -332,7 +332,7 @@
 				'value_active_tab' => $active_tab
 			);
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript($this->currentapp, 'portico', 'calendar.edit.js');
+			self::add_javascript($this->currentapp, 'base', 'calendar.edit.js');
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::render_template_xsl(array('calendar', 'datatable_inline'), array($mode => $data));
 		}

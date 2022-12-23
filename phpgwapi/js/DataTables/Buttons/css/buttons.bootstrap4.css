@@ -34,6 +34,10 @@ div.dataTables_wrapper {
 div.dt-buttons {
   position: initial;
 }
+div.dt-buttons .dt-button {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 div.dt-button-info {
   position: fixed;
@@ -130,7 +134,7 @@ div.dt-button-collection {
   border-radius: 4px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   padding: 0.5rem;
-  width: 200px;
+  width: 218px;
 }
 div.dt-button-collection div.dropdown-menu {
   position: relative;

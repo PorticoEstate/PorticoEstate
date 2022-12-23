@@ -960,7 +960,7 @@
 
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 			phpgwapi_jquery::load_widget('select2');
-			self::add_javascript('property', 'portico', 'import_documents.js');
+			self::add_javascript('property', 'base', 'import_documents.js');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('import documents');
 
 			self::render_template_xsl(array('import_documents', 'multi_upload_file_inline', 'datatable_inline'), $data);

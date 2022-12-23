@@ -1476,7 +1476,7 @@
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
 
-			self::add_javascript('property', 'portico', 's_agreement.edit.js');
+			self::add_javascript('property', 'base', 's_agreement.edit.js');
 			self::render_template_xsl(array('s_agreement', 'datatable_inline', 'files', 'attributes_form'), array(
 				'edit' => $data));
 		}
@@ -1963,7 +1963,7 @@
 
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
-			self::add_javascript('property', 'portico', 's_agreement.edit.js');
+			self::add_javascript('property', 'base', 's_agreement.edit.js');
 			self::render_template_xsl(array('s_agreement', 'datatable_inline', 'attributes_form'), array(
 				'edit_item' => $data));
 		}

@@ -17,11 +17,19 @@
 		// CommonJS
 		module.exports = function (root, $, jszip, pdfmake) {
 			if ( ! root ) {
+				// CommonJS environments without a window global must pass a
+				// root. This will give an error otherwise
 				root = window;
 			}
 
-			if ( ! $ || ! $.fn.dataTable ) {
-				$ = require('datatables.net')(root, $).$;
+			if ( ! $ ) {
+				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
+					require('jquery') :
+					require('jquery')( root );
+			}
+
+			if ( ! $.fn.dataTable ) {
+				require('datatables.net')(root, $);
 			}
 
 			if ( ! $.fn.dataTable.Buttons ) {
@@ -39,27 +47,32 @@
 'use strict';
 var DataTable = $.fn.dataTable;
 
+
+
 // Allow the constructor to pass in JSZip and PDFMake from external requires.
 // Otherwise, use globally defined variables, if they are available.
+var useJszip;
+var usePdfmake;
+
 function _jsZip () {
-	return jszip || window.JSZip;
+	return useJszip || window.JSZip;
 }
 function _pdfMake () {
-	return pdfmake || window.pdfMake;
+	return usePdfmake || window.pdfMake;
 }
 
 DataTable.Buttons.pdfMake = function (_) {
 	if ( ! _ ) {
 		return _pdfMake();
 	}
-	pdfmake = _;
+	usePdfmake = _;
 }
 
 DataTable.Buttons.jszip = function (_) {
 	if ( ! _ ) {
 		return _jsZip();
 	}
-	jszip = _;
+	useJszip = _;
 }
 
 
@@ -1252,18 +1265,28 @@ DataTable.ext.buttons.excelHtml5 = {
 		var jszip = _jsZip();
 		var zip = new jszip();
 		var zipConfig = {
+			compression: "DEFLATE",
 			type: 'blob',
 			mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 		};
 
 		_addToZip( zip, xlsx );
 
+		// Modern Excel has a 218 character limit on the file name + path of the file (why!?)
+		// https://support.microsoft.com/en-us/office/excel-specifications-and-limits-1672b34d-7043-467e-8e27-269d656771c3
+		// So we truncate to allow for this.
+		var filename = exportInfo.filename;
+
+		if (filename > 175) {
+			filename = filename.substr(0, 175);
+		}
+
 		if ( zip.generateAsync ) {
 			// JSZip 3+
 			zip
 				.generateAsync( zipConfig )
 				.then( function ( blob ) {
-					_saveAs( blob, exportInfo.filename );
+					_saveAs( blob, filename );
 					that.processing( false );
 				} );
 		}
@@ -1271,7 +1294,7 @@ DataTable.ext.buttons.excelHtml5 = {
 			// JSZip 2.5
 			_saveAs(
 				zip.generate( zipConfig ),
-				exportInfo.filename
+				filename
 			);
 			this.processing( false );
 		}
@@ -1459,5 +1482,5 @@ DataTable.ext.buttons.pdfHtml5 = {
 };
 
 
-return DataTable.Buttons;
+return DataTable;
 }));

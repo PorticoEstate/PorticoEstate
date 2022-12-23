@@ -1,11 +1,51 @@
-/*! ColReorder 1.5.6
+/*! ColReorder 1.6.1
  * ©2010-2022 SpryMedia Ltd - datatables.net/license
  */
+
+(function( factory ){
+	if ( typeof define === 'function' && define.amd ) {
+		// AMD
+		define( ['jquery', 'datatables.net'], function ( $ ) {
+			return factory( $, window, document );
+		} );
+	}
+	else if ( typeof exports === 'object' ) {
+		// CommonJS
+		module.exports = function (root, $) {
+			if ( ! root ) {
+				// CommonJS environments without a window global must pass a
+				// root. This will give an error otherwise
+				root = window;
+			}
+
+			if ( ! $ ) {
+				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
+					require('jquery') :
+					require('jquery')( root );
+			}
+
+			if ( ! $.fn.dataTable ) {
+				require('datatables.net')(root, $);
+			}
+
+
+			return factory( $, root, root.document );
+		};
+	}
+	else {
+		// Browser
+		factory( jQuery, window, document );
+	}
+}(function( $, window, document, undefined ) {
+'use strict';
+var DataTable = $.fn.dataTable;
+
+
 
 /**
  * @summary     ColReorder
  * @description Provide the ability to reorder columns in a DataTable
- * @version     1.5.6
+ * @version     1.6.1
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk
  * @copyright   SpryMedia Ltd.
@@ -19,35 +59,6 @@
  *
  * For details please refer to: http://www.datatables.net
  */
-(function( factory ){
-	if ( typeof define === 'function' && define.amd ) {
-		// AMD
-		define( ['jquery', 'datatables.net'], function ( $ ) {
-			return factory( $, window, document );
-		} );
-	}
-	else if ( typeof exports === 'object' ) {
-		// CommonJS
-		module.exports = function (root, $) {
-			if ( ! root ) {
-				root = window;
-			}
-
-			if ( ! $ || ! $.fn.dataTable ) {
-				$ = require('datatables.net')(root, $).$;
-			}
-
-			return factory( $, root, root.document );
-		};
-	}
-	else {
-		// Browser
-		factory( jQuery, window, document );
-	}
-}(function( $, window, document, undefined ) {
-'use strict';
-var DataTable = $.fn.dataTable;
-
 
 /**
  * Switch the key value pairing of an index array to be value key (i.e. the old value is now the
@@ -770,6 +781,9 @@ $.extend( ColReorder.prototype, {
 
 		// Destroy clean up
 		$(table).on( 'destroy.dt.colReorder', function () {
+			// Restore table to original order from when it was loaded
+			that.fnReset();
+
 			$(table).off( 'destroy.dt.colReorder draw.dt.colReorder' );
 
 			$.each( that.s.dt.aoColumns, function (i, column) {
@@ -1380,7 +1394,7 @@ ColReorder.defaults = {
  *  @type      String
  *  @default   As code
  */
-ColReorder.version = "1.5.6";
+ColReorder.version = "1.6.1";
 
 
 
@@ -1493,5 +1507,5 @@ $.fn.dataTable.Api.register( 'colReorder.disable()', function() {
 } );
 
 
-return ColReorder;
+return DataTable;
 }));

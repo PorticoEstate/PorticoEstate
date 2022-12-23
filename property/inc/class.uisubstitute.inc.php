@@ -146,7 +146,7 @@
 				'update_action'	 => self::link(array('menuaction' => 'property.uisubstitute.edit2'))
 			);
 
-			self::add_javascript('property', 'portico', 'substitute.index.js');
+			self::add_javascript('property', 'base', 'substitute.index.js');
 
 			self::add_jquery_translation($data);
 			$GLOBALS['phpgw']->jqcal2->add_listener('start_time', 'datetime');

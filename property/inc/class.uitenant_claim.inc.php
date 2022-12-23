@@ -1172,7 +1172,7 @@
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 
-			self::add_javascript('property', 'portico', 'tenant_claim.edit.js');
+			self::add_javascript('property', 'base', 'tenant_claim.edit.js');
 
 			self::render_template_xsl(array('tenant_claim', 'datatable_inline', 'files', 'multi_upload_file_inline'), array(
 				'edit' => $data));

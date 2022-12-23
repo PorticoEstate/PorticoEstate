@@ -1,5 +1,5 @@
 /*! Bootstrap 4 integration for DataTables' Responsive
- * ©2016 SpryMedia Ltd - datatables.net/license
+ * © SpryMedia Ltd - datatables.net/license
  */
 
 (function( factory ){
@@ -13,16 +13,25 @@
 		// CommonJS
 		module.exports = function (root, $) {
 			if ( ! root ) {
+				// CommonJS environments without a window global must pass a
+				// root. This will give an error otherwise
 				root = window;
 			}
 
-			if ( ! $ || ! $.fn.dataTable ) {
-				$ = require('datatables.net-bs4')(root, $).$;
+			if ( ! $ ) {
+				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
+					require('jquery') :
+					require('jquery')( root );
 			}
 
-			if ( ! $.fn.dataTable.Responsive ) {
+			if ( ! $.fn.dataTable ) {
+				require('datatables.net-bs4')(root, $);
+			}
+
+			if ( ! $.fn.dataTable ) {
 				require('datatables.net-responsive')(root, $);
 			}
+
 
 			return factory( $, root, root.document );
 		};
@@ -34,6 +43,7 @@
 }(function( $, window, document, undefined ) {
 'use strict';
 var DataTable = $.fn.dataTable;
+
 
 
 var _display = DataTable.Responsive.display;
@@ -81,5 +91,5 @@ _display.modal = function ( options ) {
 };
 
 
-return DataTable.Responsive;
+return DataTable;
 }));

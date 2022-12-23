@@ -1,5 +1,12 @@
 $(document).ready(function ()
 {
+	var tree = $('#navbar'),
+		filter = $('#navbar_search'),
+		//	filtering = false,
+		thread = null;
+	var treemenu_data = {};
+
+
 	var oArgs = {menuaction: 'phpgwapi.menu_jqtree.get_menu'};
 	var some_url = phpGWLink('index.php', oArgs, true);
 	var tree = $('#navbar');
@@ -7,12 +14,13 @@ $(document).ready(function ()
 		some_url,
 		function (data)
 		{
+			treemenu_data = data;
 			tree.tree({
 				data: data,
 				autoEscape: false,
 				dragAndDrop: false,
 				autoOpen: false,
-				saveState: true,
+				saveState: false,
 				useContextMenu: false,
 				closedIcon: $('<i class="far fa-arrow-alt-circle-right"></i>'),
 				openedIcon: $('<i class="far fa-arrow-alt-circle-down"></i>'),
@@ -21,6 +29,7 @@ $(document).ready(function ()
 					tree.tree('removeFromSelection', node);
 					if (node.selected === 1)
 					{
+						$li.addClass('jqtree-selected');
 						tree.tree('addToSelection', node);
 						var parent = node.parent;
 						while (typeof (parent.element) !== 'undefined')
@@ -29,10 +38,60 @@ $(document).ready(function ()
 							parent = parent.parent;
 						}
 					}
+
+					var title = $li.find('.jqtree-title'),
+						search = filter.val().toLowerCase(),
+						value = title.text().toLowerCase();
+					if (search !== '')
+					{
+						$li.hide();
+						if (value.indexOf(search) > -1)
+						{
+							$li.show();
+							var parent = node.parent;
+							while (typeof (parent.element) !== 'undefined')
+							{
+								$(parent.element)
+									.show()
+									.addClass('jqtree-filtered');
+								tree.tree('openNode', parent, false);
+								parent = parent.parent;
+							}
+						}
+//						if (!filtering)
+//						{
+//							filtering = true;
+//						}
+						if (!tree.hasClass('jqtree-filtered'))
+						{
+							tree.addClass('jqtree-filtered');
+						}
+					}
+					else
+					{
+//						if (filtering)
+//						{
+//							filtering = false;
+//						}
+//
+						if (tree.hasClass('jqtree-filtered'))
+						{
+							tree.removeClass('jqtree-filtered');
+						}
+					}
 				}
 			});
 		}
 	);
+
+	filter.keyup(function ()
+	{
+		clearTimeout(thread);
+		thread = setTimeout(function ()
+		{
+			tree.tree('loadData', treemenu_data);
+		}, 50);
+	});
 
 	$('#collapseNavbar').on('click', function ()
 	{
@@ -48,8 +107,7 @@ $(document).ready(function ()
 			}
 		);
 
-		$('#navbar_search').hide();
-	})
+	});
 
 
 	$('#sidebarCollapse').on('click', function ()

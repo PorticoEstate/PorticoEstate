@@ -59,13 +59,12 @@
 
 	<div class="ui-layout-west" style="display: none;">
 		<div class="layouheader">{user_fullname}</div>
-		<input type="text" id="navbar_search" value="" class="input" style="margin:0em auto 1em auto; display:block; padding:4px; border-radius:4px; border:1px solid silver;" />
+		<input type="text" id="navbar_search" value="" class="input" style="margin:1em auto 1em 2em; display:block; padding:4px; border-radius:2px; border:1px solid silver;" />
 		<div id="navtreecontrol">
-			<a id="collapseNavbar" title="Collapse the entire tree below" href="#" style="white-space:nowrap; color:inherit;">
+			<a id="collapseNavbar" title="Collapse the entire tree below" href="#" style="margin-left: 2em; white-space:nowrap; color:inherit;">
 				{lang_collapse_all}
 			</a>
 		</div>
-
 
 		<div id="navbar" class="ui-layout-content" style="overflow: auto;"></div>
 	</div>

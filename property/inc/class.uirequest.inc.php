@@ -1136,7 +1136,7 @@ JS;
 				}
 			}
 
-			self::add_javascript('property', 'portico', 'request.index.js');
+			self::add_javascript('property', 'base', 'request.index.js');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -1827,7 +1827,7 @@ JS;
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			self::add_javascript('property', 'portico', 'request.edit.js');
+			self::add_javascript('property', 'base', 'request.edit.js');
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 

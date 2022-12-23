@@ -225,7 +225,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			self::add_javascript('property', 'portico', 'wo_hour.deviation.js');
+			self::add_javascript('property', 'base', 'wo_hour.deviation.js');
 			self::render_template_xsl(array('wo_hour', 'datatable_inline'), array('list_deviation' => $data));
 		}
 
@@ -1013,7 +1013,7 @@
 			$data['datatable']['table_sum']		 = $common_data['table_sum'][0];
 			$data['datatable']['workorder_data'] = $common_data['workorder_data'];
 
-			self::add_javascript('property', 'portico', 'wo_hour.index.js');
+			self::add_javascript('property', 'base', 'wo_hour.index.js');
 			self::render_template_xsl(array('wo_hour.index', 'datatable_inline'), $data);
 
 			//Title of Page
@@ -2022,7 +2022,7 @@ HTML;
 			$function_msg									 = $this->boworkorder->order_sent_adress ? lang('ReSend order') : lang('Send order');
 			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			self::add_javascript('property', 'portico', 'wo_hour.view.js');
+			self::add_javascript('property', 'base', 'wo_hour.view.js');
 			self::render_template_xsl(array('wo_hour', 'datatable_inline'), array(
 				'view' => $data));
 		}
@@ -2749,8 +2749,8 @@ HTML;
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			self::add_javascript('property', 'portico', 'wo_hour.index.js');
-			self::add_javascript('property', 'portico', 'wo_hour.prizebook.js');
+			self::add_javascript('property', 'base', 'wo_hour.index.js');
+			self::add_javascript('property', 'base', 'wo_hour.prizebook.js');
 			self::render_template_xsl(array('wo_hour.index', 'datatable_inline'), $data);
 		}
 
@@ -3099,8 +3099,8 @@ HTML;
 			// Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			self::add_javascript('property', 'portico', 'wo_hour.index.js');
-			self::add_javascript('property', 'portico', 'wo_hour.template.js');
+			self::add_javascript('property', 'base', 'wo_hour.index.js');
+			self::add_javascript('property', 'base', 'wo_hour.template.js');
 			self::render_template_xsl(array('wo_hour.index', 'datatable_inline'), $data);
 
 			//$this->save_sessiondata();

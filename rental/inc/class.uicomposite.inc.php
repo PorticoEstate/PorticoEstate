@@ -663,7 +663,7 @@
 				);
 			}
 
-			//self::add_javascript('rental', 'rental', 'party.sync.js');
+			//self::add_javascript('rental', 'base', 'party.sync.js');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -1169,7 +1169,7 @@ JS;
 				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uicomposite.handle_multi_upload_file', 'id' => $composite_id))				
 			);
 
-			self::add_javascript('rental', 'rental', 'composite.' . $mode . '.js');
+			self::add_javascript('rental', 'base', 'composite.' . $mode . '.js');
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 
@@ -1482,7 +1482,7 @@ JS;
 			$schedule['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
 			$schedule['toolbar'] = json_encode($toolbar);
 			$data['schedule'] = $schedule;
-			self::add_javascript('rental','rental','schedule.js');
+			self::add_javascript('rental','base','schedule.js');
 
 			phpgwapi_jquery::load_widget("datepicker");
 

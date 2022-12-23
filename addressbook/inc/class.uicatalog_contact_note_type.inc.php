@@ -108,7 +108,7 @@
 				'lang_name' => lang('Please enter a name'),
 			);
 			
-			self::add_javascript('addressbook', 'portico', 'catalog_note_type.js');
+			self::add_javascript('addressbook', 'base', 'catalog_note_type.js');
 			self::render_template_xsl(array('catalog_note_type', 'datatable_inline'), array('view' => $data));
 		}
 

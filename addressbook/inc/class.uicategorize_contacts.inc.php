@@ -81,7 +81,7 @@
 				'value_active_tab' => 0
 			);
 			
-			self::add_javascript('addressbook', 'portico', 'categorize_contacts.index.js');
+			self::add_javascript('addressbook', 'base', 'categorize_contacts.index.js');
 			self::render_template_xsl(array('categorize'), array('edit' => $data));
 		}
 

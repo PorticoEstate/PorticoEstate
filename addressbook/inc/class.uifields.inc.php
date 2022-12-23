@@ -106,7 +106,7 @@
 				'value_active_tab' => 0
 			);
 			
-			self::add_javascript('addressbook', 'portico', 'fields.js');
+			self::add_javascript('addressbook', 'base', 'fields.js');
 			self::render_template_xsl(array('fields', 'datatable_inline'), array('index' => $data));			
 		}
 

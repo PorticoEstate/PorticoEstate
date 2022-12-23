@@ -987,7 +987,7 @@ JS;
 			}
 
 
-			self::add_javascript('property', 'portico', 'project.index.js');
+			self::add_javascript('property', 'base', 'project.index.js');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -2971,7 +2971,7 @@ JS;
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 
-			self::add_javascript('property', 'portico', 'project.edit.js');
+			self::add_javascript('property', 'base', 'project.edit.js');
 			self::render_template_xsl(array('project', 'datatable_inline', 'multi_upload_file_inline', 'attributes_form'), array(
 				'edit' => $data));
 		}
@@ -3428,7 +3428,7 @@ JS;
 
 			phpgwapi_jquery::load_widget('numberformat');
 
-			self::add_javascript('property', 'portico', 'project.bulk_update_status.js');
+			self::add_javascript('property', 'base', 'project.bulk_update_status.js');
 			self::render_template_xsl(array('project', 'datatable_inline'), array('bulk_update_status' => $data));
 		}
 

@@ -342,7 +342,7 @@
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript($this->currentapp, 'portico', 'order_template.edit.js');
+			self::add_javascript($this->currentapp, 'base', 'order_template.edit.js');
 			self::render_template_xsl(array('order_template', 'datatable_inline', 'cat_sub_select'), array(
 				'edit' => $data));
 		}

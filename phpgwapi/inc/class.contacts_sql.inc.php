@@ -2611,7 +2611,7 @@
 //					$this->lock_table($this->location->table, '', true);
 				}
 			}
-			if (count($addr[0]) == 0)
+			if (count((array)$addr[0]) == 0)
 			{
 				$location['addr_preferred'] = 'Y';
 			}

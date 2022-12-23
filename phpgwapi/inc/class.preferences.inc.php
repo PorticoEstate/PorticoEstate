@@ -787,7 +787,7 @@
 			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']) ||
 					!$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
 			{
-				$this->add('common','template_set','portico');
+				$this->add('common','template_set','bootstrap');
 				$preferences_update = True;
 			}
 			if (!isset($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']) ||

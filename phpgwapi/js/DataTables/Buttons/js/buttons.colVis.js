@@ -14,11 +14,19 @@
 		// CommonJS
 		module.exports = function (root, $) {
 			if ( ! root ) {
+				// CommonJS environments without a window global must pass a
+				// root. This will give an error otherwise
 				root = window;
 			}
 
-			if ( ! $ || ! $.fn.dataTable ) {
-				$ = require('datatables.net')(root, $).$;
+			if ( ! $ ) {
+				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
+					require('jquery') :
+					require('jquery')( root );
+			}
+
+			if ( ! $.fn.dataTable ) {
+				require('datatables.net')(root, $);
 			}
 
 			if ( ! $.fn.dataTable.Buttons ) {
@@ -35,6 +43,7 @@
 }(function( $, window, document, undefined ) {
 'use strict';
 var DataTable = $.fn.dataTable;
+
 
 
 $.extend( DataTable.ext.buttons, {
@@ -231,5 +240,5 @@ $.extend( DataTable.ext.buttons, {
 } );
 
 
-return DataTable.Buttons;
+return DataTable;
 }));

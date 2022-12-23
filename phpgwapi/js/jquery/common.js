@@ -265,7 +265,7 @@ JqueryPortico.formatJsonArray = function (key, oData)
 		});
 
 	}
-	return string;
+	return "<div class=\"" + key + "\">" + string + "</div>";;
 };
 
 JqueryPortico.FormatterAmount0 = function (key, oData)

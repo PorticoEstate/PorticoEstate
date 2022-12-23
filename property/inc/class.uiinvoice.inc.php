@@ -917,7 +917,7 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			phpgwapi_jquery::load_widget('numberformat');
-			self::add_javascript('property', 'portico', 'invoice.index.js');
+			self::add_javascript('property', 'base', 'invoice.index.js');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -1690,7 +1690,7 @@ JS;
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
-			self::add_javascript('property', 'portico', 'invoice.list_sub.js');
+			self::add_javascript('property', 'base', 'invoice.list_sub.js');
 			self::render_template_xsl(array('invoice_list_sub', 'datatable_inline'), array(
 				'list_sub' => $data));
 		}
@@ -2608,7 +2608,7 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			phpgwapi_jquery::load_widget('numberformat');
-			self::add_javascript('property', 'portico', 'invoice.consume.js');
+			self::add_javascript('property', 'base', 'invoice.consume.js');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

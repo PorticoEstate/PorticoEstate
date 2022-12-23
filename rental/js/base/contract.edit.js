@@ -1,4 +1,6 @@
 
+/* global lang_select_date, img_cal, dateformat, oTable0, oTable9 */
+
 var set_composite_data = 0;
 var set_parties_data = 0;
 var set_price_data = 0;
@@ -783,4 +785,4 @@ addNotification = function ()
 this.local_OnEditedCallback_datatable_container_5 = function (oTable)
 {
 	oTable0.fnDraw();
-}
+};

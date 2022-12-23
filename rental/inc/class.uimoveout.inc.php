@@ -129,7 +129,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript('rental', 'rental', 'moveout.index.js');
+			self::add_javascript('rental', 'base', 'moveout.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -251,7 +251,7 @@
 //			self::add_javascript('phpgwapi', 'signature_pad', 'signature_pad.min.js');
 //			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/signature_pad/signature-pad.css');
 			$attributes_xsl = $mode == 'edit' ? 'attributes_form' : 'attributes_view';
-			self::add_javascript('rental', 'rental', 'moveout.edit.js');
+			self::add_javascript('rental', 'base', 'moveout.edit.js');
 			self::render_template_xsl(array('moveout', 'contract_info', 'datatable_inline', $attributes_xsl), array($mode => $data));
 		}
 

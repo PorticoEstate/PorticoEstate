@@ -372,7 +372,7 @@
 			unset($parameters);
 
 
-			self::add_javascript('property', 'portico', 'event.index.js');
+			self::add_javascript('property', 'base', 'event.index.js');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

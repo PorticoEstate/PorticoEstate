@@ -200,7 +200,7 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
 			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
 
-			self::add_javascript('property', 'portico', 'ajax_dimb_role_user.js');
+			self::add_javascript('property', 'base', 'ajax_dimb_role_user.js');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('dimb_role_user', 'datatable_inline'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('data' => $data));

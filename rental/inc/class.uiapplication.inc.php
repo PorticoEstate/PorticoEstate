@@ -222,7 +222,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript('rental', 'rental', 'application.index.js');
+			self::add_javascript('rental', 'base', 'application.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -595,8 +595,8 @@
 			phpgwapi_jquery::load_widget("datepicker");
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
-			self::add_javascript('rental','rental','schedule.js');
-			self::add_javascript('rental', 'rental', 'application.edit.js');
+			self::add_javascript('rental','base','schedule.js');
+			self::add_javascript('rental', 'base', 'application.edit.js');
 			self::render_template_xsl(array('application', 'datatable_inline', 'rental_schedule'), array($mode => $data));
 		}
 		/*

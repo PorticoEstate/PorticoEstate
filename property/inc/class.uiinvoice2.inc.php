@@ -189,7 +189,7 @@
 			);
 
 			phpgwapi_jquery::load_widget('core');
-			self::add_javascript('property', 'portico', 'ajax_invoice.js');
+			self::add_javascript('property', 'base', 'ajax_invoice.js');
 
 			$GLOBALS['phpgw']->xslttpl->add_file('invoice');
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('split_voucher' => $data));
@@ -610,8 +610,8 @@
 			phpgwapi_jquery::load_widget('layout');
 			phpgwapi_jquery::load_widget('numberformat');
 
-			self::add_javascript('property', 'portico', 'ajax_invoice.js');
-			self::add_javascript('property', 'portico', 'invoice2.index.js');
+			self::add_javascript('property', 'base', 'ajax_invoice.js');
+			self::add_javascript('property', 'base', 'invoice2.index.js');
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('invoice');

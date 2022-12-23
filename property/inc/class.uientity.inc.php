@@ -2711,7 +2711,7 @@ JS;
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
 
-			self::add_javascript('property', 'portico', 'entity.edit.js');
+			self::add_javascript('property', 'base', 'entity.edit.js');
 			phpgwapi_jquery::load_widget('glider');
 
 			$attribute_template = 'attributes_form';
@@ -3446,7 +3446,7 @@ JS;
 			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
 			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
 
-			self::add_javascript('property', 'portico', 'entity.edit_inventory.js');
+			self::add_javascript('property', 'base', 'entity.edit_inventory.js');
 
 			self::render_template_xsl(array('entity', 'attributes_form', 'files'), array(
 				'edit_inventory' => $data));
@@ -3635,7 +3635,7 @@ JS;
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript($this->type_app[$this->type], 'portico', 'entity.summary.js');
+			self::add_javascript($this->type_app[$this->type], 'base', 'entity.summary.js');
 			self::render_template_xsl(array('entity'), array('summary' => $data));
 		}
 
