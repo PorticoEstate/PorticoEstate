@@ -356,7 +356,7 @@
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
 
-			self::add_javascript('property', 'portico', 'uialarm.index.js');
+			self::add_javascript('property', 'base', 'uialarm.index.js');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

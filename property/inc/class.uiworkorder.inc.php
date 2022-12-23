@@ -746,7 +746,7 @@
 			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
-			self::add_javascript('property', 'portico', 'workorder.index.js');
+			self::add_javascript('property', 'base', 'workorder.index.js');
 
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
@@ -3491,7 +3491,7 @@ JS;
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 
-			self::add_javascript('property', 'portico', 'workorder.edit.js');
+			self::add_javascript('property', 'base', 'workorder.edit.js');
 
 			self::render_template_xsl(array(
 				'workorder',
@@ -3955,7 +3955,7 @@ JS;
 					'active_tab' => 'budget')) : null,
 			);
 
-			self::add_javascript('property', 'portico', 'workorder.add_invoice.js');
+			self::add_javascript('property', 'base', 'workorder.add_invoice.js');
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			$GLOBALS['phpgw']->xslttpl->add_file(array(	'workorder'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;

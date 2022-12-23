@@ -649,7 +649,7 @@
 			{
 				$GLOBALS['phpgw']->jqcal->add_listener('report_date');
 				phpgwapi_jquery::load_widget('core');
-				self::add_javascript('property', 'portico', 'condition_survey_edit.js');
+				self::add_javascript('property', 'base', 'condition_survey_edit.js');
 				phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 					'file'));
 //				$data['multi_upload_parans'] = "{menuaction:'property.uicondition_survey.build_multi_upload_file', id:'{$id}'}";
@@ -662,7 +662,7 @@
 
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
-			self::add_javascript('property', 'portico', 'condition_survey.js');
+			self::add_javascript('property', 'base', 'condition_survey.js');
 
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
