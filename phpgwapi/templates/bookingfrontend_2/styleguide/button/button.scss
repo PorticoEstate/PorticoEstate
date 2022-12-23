@@ -1,0 +1,67 @@
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-radius: 500px;
+  border: 2px solid $purple;
+  font-weight: 700;
+  line-height: 1.15;
+
+  &:hover,
+  &:active,
+  &:first-child:active,
+  &:focus,
+  &:focus-visible {
+    border-color: $purple;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 0.25rem rgba($black, .5);
+  }
+
+  &-primary {
+    background: $purple;
+    color: $white;
+
+    &:hover,
+    &:active,
+    &:first-child:active,
+    &:focus,
+    &:focus-visible {
+      background: $white;
+      color: $purple;
+    }
+  }
+
+  &-secondary {
+    color: $purple;
+    background: $white;
+
+    &:hover,
+    &:active,
+    &:first-child:active,
+    &:focus,
+    &:focus-visible {
+      background: $purple;
+      color: $white;
+    }
+  }
+
+  &--small {
+    font-size: 0.875rem;
+    padding: 0.625rem 1.25rem;
+  }
+
+  &--large {
+    font-size: 1.125rem;
+  }
+
+  &:disabled,
+  &[disabled] {
+    background: $grey-light;
+    color: $grey;
+    border-color: $grey;
+    opacity: 1;
+  }
+}

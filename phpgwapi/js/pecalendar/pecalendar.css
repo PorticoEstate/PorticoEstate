@@ -1,0 +1,105 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: #fff;
+}
+
+.calendar {
+  width: 100%;
+  display: grid;
+  grid-template-rows: 3em 3em auto;
+  position: absolute;
+}
+
+.title {
+  background: #217346;
+  text-align: center;
+  display: grid;
+  place-content: center;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.days {
+  background: #FFFFFF;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  grid-template-columns: 3em repeat(7, 1fr);
+  position: sticky;
+  top: 3em;
+  z-index: 10;
+  border-width: 1px 1px 1px 1px;
+  border-style: solid;
+  border-color: #D6D6D6;
+}
+
+.day {
+  border-left: 1px solid #dadce0;
+  font-weight: bold;
+  display: grid;
+  align-items: center;
+  height: 3em;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 3em repeat(7, 1fr);
+}
+
+.time {
+  grid-column: 1;
+  text-align: right;
+  align-self: end;
+  font-size: 80%;
+  position: relative;
+  bottom: -1ex;
+  color: #70757a;
+  padding-right: 2px;
+}
+
+.col {
+  border-right: 1px solid #dadce0;
+}
+
+.filler-col {
+  grid-row: 1/-1;
+  grid-column: 2;
+  border-right: 1px solid #dadce0;
+}
+
+.row {
+  grid-column: 2/-1;
+  border-bottom: 1px solid #dadce0;
+}
+
+.event {
+  border-radius: 5px;
+  padding: 5px;
+  font-weight: normal;
+  font-size: 80%;
+}
+
+.weekend {
+  background-color: #f1f3f4;
+}
+
+.event4 {
+  grid-column: 8;
+  grid-row: 21/span 2;
+}
+
+.current {
+  font-weight: bold;
+}
+
+.event-allocation {
+  background-color: #E6E3DB;
+  border-color: #acb2d3;
+}
+
+/*# sourceMappingURL=pecalendar.css.map */

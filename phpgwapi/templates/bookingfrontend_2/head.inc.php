@@ -54,8 +54,8 @@ JS;
 	$stylesheets = array();
 
 
-	$stylesheets[]	 = "/phpgwapi/js/bootstrap/css/bootstrap.min.css";
-//	$stylesheets[]	 = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
+//	$stylesheets[]	 = "/phpgwapi/js/bootstrap/css/bootstrap.min.css";
+	$stylesheets[]	 = "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css";
 	$stylesheets[]	 = "/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
 
 	$stylesheets[]	 = "/phpgwapi/templates/bookingfrontend/css/jquery.autocompleter.css";
@@ -168,9 +168,13 @@ JS;
 	phpgwapi_jquery::load_widget('core');
 
 	$javascripts	 = array();
-	$javascripts[]	 = "/phpgwapi/js/popper/popper.min.js";
+	/**
+	 * FIXME - popper er omdøpt til floating ui for bootstrap5
+	 */
+//	$javascripts[]	 = "/phpgwapi/js/popper/popper.min.js";
 	$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
-
+	//$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
+	$javascripts[]	 = "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/knockout-min.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/knockout.validation.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/jquery.autocompleter.js";
