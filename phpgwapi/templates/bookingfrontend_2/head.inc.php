@@ -172,8 +172,7 @@ JS;
 	 * FIXME - popper er omdøpt til floating ui for bootstrap5
 	 */
 //	$javascripts[]	 = "/phpgwapi/js/popper/popper.min.js";
-	$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
-	//$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
+//	$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
 	$javascripts[]	 = "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/knockout-min.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/knockout.validation.js";
