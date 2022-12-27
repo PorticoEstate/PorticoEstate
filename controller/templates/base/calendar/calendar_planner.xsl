@@ -792,7 +792,7 @@
 					</span>
 				</div>
 				<div class="mt-2">
-					<select id="check_list_id" name="check_list_id" class="form-control custom-select">
+					<select id="check_list_id" name="check_list_id" class="form-select">
 						<xsl:apply-templates select="todo_list/options"/>
 					</select>
 					<div class="float-end mt-2">
@@ -1035,7 +1035,7 @@
 					</span>
 				</div>
 				<div class="mt-2">
-					<select id="check_list_id" name="check_list_id" class="form-control custom-select">
+					<select id="check_list_id" name="check_list_id" class="form-select">
 						<xsl:apply-templates select="todo_list/options"/>
 					</select>
 					<div class="float-end mt-2">

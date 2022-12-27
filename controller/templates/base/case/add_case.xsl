@@ -99,7 +99,7 @@
 
 											<xsl:choose>
 												<xsl:when test="components_at_location/child::node()">
-													<select name="component_at_control_group_{control_group/id}" id="component_at_control_group_{control_group/id}" class="custom-select">
+													<select name="component_at_control_group_{control_group/id}" id="component_at_control_group_{control_group/id}" class="form-select">
 														<xsl:apply-templates select="components_at_location/component_options"/>
 													</select>
 												</xsl:when>
@@ -177,7 +177,7 @@
 																	</xsl:attribute>
 																	<xsl:value-of select="php:function('lang', 'condition degree')"/>
 																</label>
-																<select name="condition_degree" class="custom-select">
+																<select name="condition_degree" class="form-select">
 																	<xsl:attribute name="title">
 																		<xsl:value-of select="php:function('lang', 'select value')"/>
 																	</xsl:attribute>
@@ -191,7 +191,7 @@
 																	</xsl:attribute>
 																	<xsl:value-of select="php:function('lang', 'consequence')"/>
 																</label>
-																<select name="consequence" class="custom-select">
+																<select name="consequence" class="form-select">
 																	<xsl:attribute name="title">
 																		<xsl:value-of select="php:function('lang', 'select value')"/>
 																	</xsl:attribute>
@@ -206,7 +206,7 @@
 																<input type="hidden" name="type" value="control_item_type_1" />
 																<div class="form-group">
 																	<label>Status</label>
-																	<select name="status" class="custom-select">
+																	<select name="status" class="form-select">
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
@@ -256,7 +256,7 @@
 
 																<div class="form-group">
 																	<label>Status</label>
-																	<select name="status" class="custom-select">
+																	<select name="status" class="form-select">
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
@@ -319,7 +319,7 @@
 
 																<div class="form-group">
 																	<label>Status</label>
-																	<select name="status" class="custom-select">
+																	<select name="status" class="form-select">
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
@@ -330,10 +330,10 @@
 																</div>
 																<div class="form-group">
 																	<label>Velg verdi fra liste</label>
-																	<select name="option_value" class="custom-select">
+																	<select name="option_value" class="form-select">
 																		<xsl:if test="required = 1">
 																			<xsl:attribute name="class" >
-																				<xsl:text>custom-select required</xsl:text>
+																				<xsl:text>form-select required</xsl:text>
 																			</xsl:attribute>
 																		</xsl:if>
 																		<option value="" >Velg</option>
@@ -386,7 +386,7 @@
 
 																<div class="form-group">
 																	<label>Status</label>
-																	<select name="status" class="custom-select">
+																	<select name="status" class="form-select">
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
@@ -397,7 +397,7 @@
 																</div>
 																<div class="form-group">
 																	<label>Velg verdi fra lister</label>
-																	<select name="option_value" class="custom-select">
+																	<select name="option_value" class="form-select">
 																		<xsl:if test="required = 1">
 																			<xsl:attribute name="class" >
 																				<xsl:text>required</xsl:text>
@@ -620,7 +620,7 @@
 				</xsl:attribute>
 				<xsl:value-of select="php:function('lang', 'regulation reference')"/>
 			</label>
-			<select id="regulation_reference" name="regulation_reference" class="custom-select">
+			<select id="regulation_reference" name="regulation_reference" class="form-select">
 				<xsl:attribute name="title">
 					<xsl:value-of select="php:function('lang', 'select value')"/>
 				</xsl:attribute>

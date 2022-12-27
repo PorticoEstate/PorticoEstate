@@ -13,7 +13,7 @@
 
 	<!-- Tab links -->
 	<form action="{$form_url}" method="post">
-		<select class="form-control custom-select" name="contract_filter" onchange="this.form.submit()">
+		<select class="form-select" name="contract_filter" onchange="this.form.submit()">
 			<xsl:choose>
 				<xsl:when test="//contract_filter = 'active'">
 					<option value="active" selected="selected">
