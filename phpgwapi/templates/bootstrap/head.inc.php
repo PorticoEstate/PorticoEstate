@@ -49,7 +49,6 @@
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/version_3/grids-responsive-min.css";
 
-//	$stylesheets[] = "/phpgwapi/js/bootstrap/css/bootstrap.min.css";
 	$stylesheets[]	 = "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css";
 
 	$stylesheets[] = "/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
