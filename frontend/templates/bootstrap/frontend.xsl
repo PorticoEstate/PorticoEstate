@@ -194,7 +194,7 @@
 		<div id="accordion1">
 			<div class="card">
 				<div class="card-header" id="headingOne">
-					<button class="btn btn-light w-100 text-left" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+					<button class="btn btn-light w-100 text-start" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 						<h5>
 							<xsl:value-of select="php:function('lang', 'organisational_units')"/>
 							<span class="badge rounded-pill bg-success float-end mt-2">
@@ -293,7 +293,7 @@
 			<div class="card mt-1">
 				<div class="card-header" id="headingTwo">
 
-					<button class="btn collapsed btn-light w-100 text-left" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+					<button class="btn collapsed btn-light w-100 text-start" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
 						<h5>
 							Bygninger
 							<xsl:if test="locations !=''">
@@ -426,7 +426,7 @@
 			<div class="card">
 				<div class="card-header" id="subMenuHeading">
 					<h5 class="mb-0">
-						<button class="btn btn-light w-100 text-left" data-bs-toggle="collapse" data-bs-target="#collapseSubMenu" aria-expanded="true" aria-controls="collapseSubMenu">
+						<button class="btn btn-light w-100 text-start" data-bs-toggle="collapse" data-bs-target="#collapseSubMenu" aria-expanded="true" aria-controls="collapseSubMenu">
 							<h5>
 								Innholdsmeny
 								<xsl:for-each select="tabs_data">

@@ -87,7 +87,7 @@
 							</xsl:when>
 						</xsl:choose>
 					</div>
-					<div class="col-md-6 text-right">
+					<div class="col-md-6 text-end">
 						<xsl:value-of select="responsible_organization"/>
 					</div>
 					<div class="col-md-12 align-right">
@@ -157,7 +157,7 @@
 							<div class="col-sm-3">
 								<table class="table table-bordered table-sm">
 									<tr>
-										<th class="text-left text-left border-bottom-0">
+										<th class="text-start border-bottom-0">
 											<xsl:attribute name="colspan">
 												<xsl:value-of select="count(findings)"/>
 											</xsl:attribute>
@@ -166,7 +166,7 @@
 									</tr>
 									<tr>
 										<xsl:for-each select="findings">
-											<th class="text-left border-bottom-0 border-top-0">
+											<th class="text-start border-bottom-0 border-top-0">
 												<xsl:value-of select="name"/>
 											</th>
 										</xsl:for-each>

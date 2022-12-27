@@ -159,7 +159,8 @@ HTML;
 		if((phpgw::get_var('phpgw_return_as') != 'json'  && $breadcrumbs && is_array($breadcrumbs)) && !$nonavbar)// && isset($GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs'])
 		{
 			$breadcrumb_html = <<<HTML
-				<nav aria-label="breadcrumb">
+			<div class="clearfix">
+			<nav aria-label="breadcrumb">
 				  <ol class="breadcrumb shadow pb-2">
 HTML;
 			$history_url = array();
@@ -177,7 +178,7 @@ HTML;
 			$breadcrumb_html .= <<<HTML
 				</ol>
 			  </nav>
-
+		</div>
 HTML;
 
 		}

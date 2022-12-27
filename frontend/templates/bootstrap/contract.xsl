@@ -272,7 +272,7 @@
 								<div class="card">
 									<div class="card-header" id="subMenuHeading4">
 										<h5 class="mb-0">
-											<button class="btn btn-light w-100 text-left" data-bs-toggle="collapse" data-bs-target="#collapseSubMenu4" aria-expanded="true" aria-controls="collapseSubMenu4">
+											<button class="btn btn-light w-100 text-start" data-bs-toggle="collapse" data-bs-target="#collapseSubMenu4" aria-expanded="true" aria-controls="collapseSubMenu4">
 												<h6 class="text-uppercase">
 													<xsl:value-of select="php:function('lang', 'remark')"/>
 												</h6>
@@ -281,7 +281,7 @@
 									</div>
 									<div id="collapseSubMenu4" class="collapse" aria-labelledby="subMenuHeading4" data-parent="#accordion4">
 										<div class="card-body row">
-											<div class="col text-left">
+											<div class="col text-start">
 												<div class="smallboxline"></div>
 												<div class="text-value-xl">
 													<xsl:value-of select="comment" disable-output-escaping="yes"/>
@@ -298,7 +298,7 @@
 						<div class="card">
 							<div class="card-header" id="subMenuHeading5">
 								<h5 class="mb-0">
-									<button class="btn btn-light w-100 text-left" data-bs-toggle="collapse" data-bs-target="#collapseSubMenu5" aria-expanded="true" aria-controls="collapseSubMenu5">
+									<button class="btn btn-light w-100 text-start" data-bs-toggle="collapse" data-bs-target="#collapseSubMenu5" aria-expanded="true" aria-controls="collapseSubMenu5">
 										<h6 class="text-uppercase">
 											<xsl:value-of select="php:function('lang', 'send_contract_message')"/>
 										</h6>

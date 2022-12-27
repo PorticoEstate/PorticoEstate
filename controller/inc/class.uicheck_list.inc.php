@@ -3449,13 +3449,13 @@ HTML;
 
 			$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
 			$stylesheets = array();
-			$stylesheets[] = "{$webserver_url}/phpgwapi/js/bootstrap/css/bootstrap.min.css";
+			$stylesheets[] = "{$webserver_url}/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css";
 //			$stylesheets[] = "{$webserver_url}/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
 			$stylesheets[] = "{$webserver_url}/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
 
 			$javascripts = array();
-			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/popper/popper.min.js";
-			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/bootstrap/js/bootstrap.min.js";
+			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/popper/popper2.min.js";
+			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js";
 
 			$report_data['stylesheets'] = $stylesheets;
 			$report_data['javascripts'] = $javascripts;

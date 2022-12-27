@@ -12,7 +12,7 @@
 			<div id="accordion">
 				<div class="card mt-1">
 					<div class="card-header" id="headingDelegat">
-						<button class="btn collapsed btn-light w-100 text-left" data-bs-toggle="collapse" data-bs-target="#collapseDelegat" aria-expanded="false" aria-controls="collapseDelegat">
+						<button class="btn collapsed btn-light w-100 text-start" data-bs-toggle="collapse" data-bs-target="#collapseDelegat" aria-expanded="false" aria-controls="collapseDelegat">
 							<h5>
 								Ny delegat
 							</h5>
