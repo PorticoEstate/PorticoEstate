@@ -34,7 +34,6 @@
 
 
 	$javascripts[]	 = "/phpgwapi/js/popper/popper2.min.js";
-//	$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
 	$javascripts[]	 = "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js";
 
 	$GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] = 'ajax_menu';//ajax_menu|jsmenu
