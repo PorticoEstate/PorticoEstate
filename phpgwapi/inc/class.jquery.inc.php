@@ -276,7 +276,7 @@
 
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/select2/css/select2{$_type}.css");
 
-					if (in_array($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'], array('bootstrap','bootstrap2', 'bookingfrontend', 'aalesund')))
+					if (in_array($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'], array('bootstrap','bootstrap2', 'bookingfrontend', 'mobilefrontend')))
 					{
 //						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/select2/css/select2-bootstrap4{$_type}.css");
 						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/select2/css/select2-bootstrap-5-theme{$_type}.css");

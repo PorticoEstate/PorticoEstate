@@ -6,38 +6,34 @@
 			<!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
 			<xsl:choose>
 				<xsl:when test="check_list/id != 0 and $active_tab != 'view_details'">
-					<div class="box-2 select-box">
+					<div class="col-12">
 						<xsl:variable name="action_url">
 							<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.update_status,phpgw_return_as:json')" />
 						</xsl:variable>
-						<form id="update-check-list-status" class="done form-inline" action="{$action_url}" method="post">
+						<form id="update-check-list-status" class="done form-inline d-grid" action="{$action_url}" method="post">
 							<input type="hidden" name="check_list_id" value="{check_list/id}" />
 							<xsl:choose>
 								<xsl:when test="check_list/status = 0">
-									<div class="form-group">
 										<label>
 											<xsl:value-of select="php:function('lang', 'check list status')" />:
 										</label>
 										<span id="status_text">
 											<xsl:value-of select="php:function('lang', 'not performed')" />
 										</span>
-									</div>
 									<input id='update-check-list-status-value' type="hidden" name="status" value="1" />
-									<input id="status_submit" type="submit" class="mt-3 btn btn-warning btn-block">
+									<input id="status_submit" type="submit" class="mt-3 btn btn-warning d-flex">
 										<xsl:attribute name="value">
 											<xsl:value-of select="php:function('lang', 'change status')" />
 										</xsl:attribute>
 									</input>
 								</xsl:when>
 								<xsl:otherwise>
-									<div class="form-group">
 										<label>
 											<xsl:value-of select="php:function('lang', 'check list status')" />:
 										</label>
 										<span id="status_text">
 											<xsl:value-of select="php:function('lang', 'performed')" />
 										</span>
-									</div>
 									<input id='update-check-list-status-value' type="hidden" name="status" value="0" />
 									<input type="submit" class="mt-3 btn btn-success btn-block">
 										<xsl:attribute name="value">
