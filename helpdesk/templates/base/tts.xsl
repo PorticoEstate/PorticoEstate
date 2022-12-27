@@ -28,7 +28,7 @@
 		<div class="row mt-4">
 			<xsl:for-each select="sub_menu">
 				<div class="col-4 mb-3">
-					<a href="{url}" class="stretched-link text-secondary">
+					<a href="{url}" class="text-secondary">
 						<div class="card h-100 mb-2">
 							<div class="card-block text-center">
 								<h1 class="p-3">

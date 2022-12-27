@@ -86,20 +86,23 @@ HTML;
 		{
 			if(is_array($bookmark_data))
 			{
-				{
-					$icon = $bookmark_data['icon'] ? $bookmark_data['icon'] : 'fas fa-2x fa-file-alt';
-					$bookmark_section .= <<<HTML
-					<div class="col-4 mb-3">
-						<a href="{$bookmark_data['href']}" class="stretched-link text-secondary">
-							<div class="card shadow h-100 mb-2">
-								<div class="card-block text-center"><h1 class="p-3"><i class="{$icon}"></i></h1></div>
-								<div class="card-footer text-center">{$bookmark_data['text']}</div>
+				
+				$icon = $bookmark_data['icon'] ? $bookmark_data['icon'] : 'fas fa-2x fa-file-alt';
+				$bookmark_section .= <<<HTML
+				<div class="col-4 mb-3">
+					<a href="{$bookmark_data['href']}" class="text-secondary">
+						<div class="card shadow h-100 mb-2">
+							<div class="card-block text-center">
+								<h1 class="p-3">
+									<i class="{$icon}"></i>
+								</h1>
 							</div>
-						</a>
-					</div>
-
+							<div class="card-footer text-center">{$bookmark_data['text']}</div>
+						</div>
+					</a>
+				</div>
 HTML;
-				}
+				
 			}
 
 		}
