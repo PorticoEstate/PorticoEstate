@@ -311,7 +311,7 @@ HTML;
 			if ($total_messages > 0)
 			{
 				$new_messages		 = $total_messages;
-				$new_messages_alert	 = "<span class='badge badge-danger badge-counter'>{$new_messages}</span>";
+				$new_messages_alert	 = "<span class='badge bg-danger rounded-pill'>{$new_messages}</span>";
 			}
 			else
 			{

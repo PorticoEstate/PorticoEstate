@@ -164,7 +164,7 @@
 				</a>
 				<a href="{$messages_url}" class="btn btn-light pt-4 pb-4">
 					<i class="far fa-bell"></i>
-					<span class="badge badge-info rounded-pill bg-secondary ms-2">
+					<span class="badge rounded-pill bg-success ms-2">
 						<xsl:if test="total_messages > 0">
 							<xsl:value-of select="total_messages"/>
 						</xsl:if>
@@ -197,7 +197,7 @@
 					<button class="btn btn-light w-100 text-left" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 						<h5>
 							<xsl:value-of select="php:function('lang', 'organisational_units')"/>
-							<span class="badge badge-info rounded-pill bg-secondary float-end mt-2">
+							<span class="badge rounded-pill bg-success float-end mt-2">
 								<xsl:value-of select="number_of_org_units"/>
 							</span>
 						</h5>
@@ -313,7 +313,7 @@
 										</span>
 									</xsl:if>
 								</xsl:for-each>
-								<span class="badge badge-info rounded-pill bg-secondary float-end mt-2">
+								<span class="badge rounded-pill bg-success float-end mt-2">
 									<xsl:value-of select="count(locations)"/>
 								</span>
 							</xsl:if>

@@ -185,7 +185,7 @@
 					<h2 class="modal-title w-100">
 						Fakturaimage
 					</h2>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">
 							<i class="fas fa-times"></i>
 						</span>
