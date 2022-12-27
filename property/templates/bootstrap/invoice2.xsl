@@ -160,7 +160,7 @@
 							<xsl:call-template name="approve"/>
 						</table>
 					</div>
-<!--					<div class='col-sm-3 align-self-start float-left sticky_bottom'>-->
+<!--					<div class='col-sm-3 align-self-start float-start sticky_bottom'>-->
 <!--					<div class='col-sm-3  sticky_bottom'>
 						<div>
 							<button type="submit" class="btn btn-primary" name="values[update_voucher]">

@@ -146,7 +146,7 @@
 		<!-- LOGO -->
 
 		<div class="container">
-			<div class="float-left">
+			<div class="float-start">
 				<a href="#">
 					<img src="{logo_path}" width="200"/>
 				</a>

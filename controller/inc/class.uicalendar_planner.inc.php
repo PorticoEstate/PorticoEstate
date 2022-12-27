@@ -1562,7 +1562,7 @@ HTML;
 						check_list_id="{$item['schedule']['info']['check_list_id']}"
 						deadline_date_ts="{$item['schedule']['info']['deadline_date_ts']}"
 						assigned_to="{$item['schedule']['info']['assigned_to']}">
-						<span class="float-left link_to_checklist">
+						<span class="float-start link_to_checklist">
 							{$link_to_checklist}
 						</span>
 						<span class="float-right">
@@ -1577,7 +1577,7 @@ HTML;
 			}
 
 			return '<td id="' . $this->currentDate . '" class="' . ($cellNumber % 7 == 1 ? ' start ' : ($cellNumber % 7 == 0 ? ' end ' : ' ')) .
-				($cellContent == null ? 'bg-light' : 'table-active') . '"><div class="clearfix"><span class="float-left">' . $cellContent . "</span>{$item_content}</div></td>";
+				($cellContent == null ? 'bg-light' : 'table-active') . '"><div class="clearfix"><span class="float-start">' . $cellContent . "</span>{$item_content}</div></td>";
 		}
 
 		/**

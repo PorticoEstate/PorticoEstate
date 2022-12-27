@@ -129,7 +129,7 @@
 		<div class="row">
 			<div class="mt-5 container">
 				<div class="text-center clearfix">
-					<span class="float-left">
+					<span class="float-start">
 						<a href="#">
 							<button type="submit" name="prev_year" value="1" class="btn btn-secondary">&lt;
 								<xsl:value-of select="prev_year"/>
@@ -556,7 +556,7 @@
 
 
 		<div class="text-center clearfix">
-			<span class="float-left">
+			<span class="float-start">
 				<a href="{prev_month_url}">
 					<button type="button" name="prev_year" value="1" class="btn btn-secondary">&lt;
 						<xsl:value-of select="prev_month"/>
@@ -589,7 +589,7 @@
 
 		<div class="container">
 			<div class="clearfix">
-				<span class="float-left">
+				<span class="float-start">
 					<a href="{start_url}">
 						<button type="button" class="btn btn-warning">Gå tilbake</button>
 					</a>
@@ -685,7 +685,7 @@
 
 			<div class="container">
 				<div class="clearfix">
-					<span class="float-left">
+					<span class="float-start">
 						<a href="{monthly_url}">
 							<button type="button" class="btn btn-warning">Gå tilbake</button>
 						</a>
@@ -762,7 +762,7 @@
 
 			<div class="container">
 				<div class="text-center clearfix">
-					<span class="float-left">
+					<span class="float-start">
 						<a href="#">
 							<button type="submit" name="prev_day" value="1" class="btn btn-secondary">&lt;
 								<xsl:value-of select="prev_day"/>
@@ -890,7 +890,7 @@
 		</div>
 
 		<div class="text-center clearfix">
-			<span class="float-left">
+			<span class="float-start">
 				<a href="{prev_month_url}">
 					<button type="button" name="prev_year" value="1" class="btn btn-secondary">&lt;
 						<xsl:value-of select="prev_month"/>
@@ -1005,7 +1005,7 @@
 			<div class="row mt-2">
 
 				<div class="text-center clearfix">
-					<span class="float-left">
+					<span class="float-start">
 						<a href="#">
 							<button type="submit" name="prev_day" value="1" class="btn btn-secondary">&lt;
 								<xsl:value-of select="prev_day"/>
@@ -1094,7 +1094,7 @@
 		<xsl:for-each select="cell_data">
 			<td onClick="open_monthly('{part_of_town_id}', '{$current_year}', '{month}');">
 				<xsl:if test="registered &gt; 0">
-					<span class="ms-3 float-left">
+					<span class="ms-3 float-start">
 						<xsl:value-of select="registered"/>
 						<xsl:text>/</xsl:text>
 						<xsl:value-of select="planned"/>
