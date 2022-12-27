@@ -151,7 +151,7 @@
 					<img src="{logo_path}" width="200"/>
 				</a>
 			</div>
-			<div class="btn-group float-right">
+			<div class="btn-group float-end">
 
 				<a href="{home_url}"   class="btn btn-light pt-4 pb-4">
 					<xsl:value-of select="php:function('lang', 'home')"/>
@@ -164,18 +164,18 @@
 				</a>
 				<a href="{$messages_url}" class="btn btn-light pt-4 pb-4">
 					<i class="far fa-bell"></i>
-					<span class="badge badge-info badge-pill ml-2">
+					<span class="badge badge-info badge-pill ms-2">
 						<xsl:if test="total_messages > 0">
 							<xsl:value-of select="total_messages"/>
 						</xsl:if>
 					</span>
 				</a>
 				<div class="btn-group">
-					<button type="button" class="btn btn-light dropdown-toggle pt-4 pb-4" data-toggle="dropdown">
+					<button type="button" class="btn btn-light dropdown-toggle pt-4 pb-4" data-bs-toggle="dropdown">
 						<i class="fas fa-user-cog"></i>
 					</button>
 					<div class="dropdown-menu">
-						<a class="dropdown-item" href="#" data-toggle="modal" data-target="#myProfile">Min profil</a>
+						<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#myProfile">Min profil</a>
 						<a class="dropdown-item" href="logout.php" >
 							<xsl:value-of select="php:function('lang', 'logout')"/>
 						</a>
@@ -194,10 +194,10 @@
 		<div id="accordion1">
 			<div class="card">
 				<div class="card-header" id="headingOne">
-					<button class="btn btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+					<button class="btn btn-light w-100 text-left" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 						<h5>
 							<xsl:value-of select="php:function('lang', 'organisational_units')"/>
-							<span class="badge badge-info badge-pill float-right mt-2">
+							<span class="badge badge-info badge-pill float-end mt-2">
 								<xsl:value-of select="number_of_org_units"/>
 							</span>
 						</h5>
@@ -293,7 +293,7 @@
 			<div class="card mt-1">
 				<div class="card-header" id="headingTwo">
 
-					<button class="btn collapsed btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+					<button class="btn collapsed btn-light w-100 text-left" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
 						<h5>
 							Bygninger
 							<xsl:if test="locations !=''">
@@ -313,7 +313,7 @@
 										</span>
 									</xsl:if>
 								</xsl:for-each>
-								<span class="badge badge-info badge-pill float-right mt-2">
+								<span class="badge badge-info badge-pill float-end mt-2">
 									<xsl:value-of select="count(locations)"/>
 								</span>
 							</xsl:if>
@@ -426,7 +426,7 @@
 			<div class="card">
 				<div class="card-header" id="subMenuHeading">
 					<h5 class="mb-0">
-						<button class="btn btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseSubMenu" aria-expanded="true" aria-controls="collapseSubMenu">
+						<button class="btn btn-light w-100 text-left" data-bs-toggle="collapse" data-bs-target="#collapseSubMenu" aria-expanded="true" aria-controls="collapseSubMenu">
 							<h5>
 								Innholdsmeny
 								<xsl:for-each select="tabs_data">

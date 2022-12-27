@@ -35,11 +35,11 @@
 			<div class="pure-menu pure-menu-horizontal pure-menu-scrollable">
 
 				<!-- LOGO -->
-				<a class="navbar-brand" href="#" data-toggle="collapse" data-target="#collapsibleNavbar">
+				<a class="navbar-brand" href="#" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
 					<xsl:value-of select="php:function('lang', 'create_case_message')"/>
 				</a>
 <!--
-				<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
+				<button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar" aria-expanded="false">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 -->
@@ -313,7 +313,7 @@
 							<xsl:variable name="lang_save">
 								<xsl:value-of select="php:function('lang', 'save')" />
 							</xsl:variable>
-							<input class="btn btn-primary btn-lg mr-3" type="submit" name="save_control" value="Send melding" title="{$lang_save}" />
+							<input class="btn btn-primary btn-lg me-3" type="submit" name="save_control" value="Send melding" title="{$lang_save}" />
 						</div>
 					</form>
 				</xsl:when>

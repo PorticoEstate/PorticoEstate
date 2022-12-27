@@ -8,7 +8,7 @@
 				<xsl:value-of select="php:function('lang', 'Compose message')" />
 			</h6>
 			<div class="dropdown no-arrow">
-				<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink" style="">
@@ -98,11 +98,15 @@
 	</div>
 	<script>
 		$("#account_groups").multiselect({
-		buttonWidth: 450,
-		includeSelectAllOption: true,
-		enableFiltering: true,
-		enableCaseInsensitiveFiltering: true,
-		onChange: function ($option)
+			buttonClass: 'form-select',
+			templates: {
+			button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>',
+			},
+			buttonWidth: 450,
+			includeSelectAllOption: true,
+			enableFiltering: true,
+			enableCaseInsensitiveFiltering: true,
+			onChange: function ($option)
 		{
 		// Check if the filter was used.
 		var query = $("#account_groups").find("li.multiselect-filter input").val();

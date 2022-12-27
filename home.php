@@ -80,9 +80,10 @@
 	<script type="text/javascript">
 	$('#_bookmark').children().each(function ()
 	{
-		var a = $(this);
+		var li = $(this);
+		var a = li.find('a');
 		var href = a.attr('href');
-		var icon = a.find('i').attr('class');
+		var icon = li.find('i').attr('class');
 
 		if (typeof(icon) == 'undefined')
 		{

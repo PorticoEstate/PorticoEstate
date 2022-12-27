@@ -395,7 +395,7 @@ HTML;
 
 	$user_url = $GLOBALS['phpgw']->link("/{$app}/", array('menuaction' => 'bookingfrontend.uiuser.show'));
 	$lang_user = lang('My page');
-	$tpl_vars['user_info_view'] = "<span><i class='fas fa-user ml-1 mr-1'></i><a href='{$user_url}'>{$lang_user}</a></span>";
+	$tpl_vars['user_info_view'] = "<span><i class='fas fa-user ms-1 me-1'></i><a href='{$user_url}'>{$lang_user}</a></span>";
 
 	$user_data = phpgwapi_cache::session_get($bouser->get_module(), $bouser::USERARRAY_SESSION_KEY);
 	if ($bouser->is_logged_in())

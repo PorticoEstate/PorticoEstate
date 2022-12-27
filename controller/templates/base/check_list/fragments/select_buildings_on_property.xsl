@@ -2,7 +2,7 @@
 <xsl:template name="select_buildings_on_property">
   
 	<div class="pure-control-group row mt-3">
-		<span style="display: block;font-size: 16px;margin-bottom: 8px;" class="ml-3 mr-3">
+		<span style="display: block;font-size: 16px;margin-bottom: 8px;" class="ms-3 me-3">
 			Spesifiser lokalisering du vil registrere saken på.
 			<xsl:if test="mandatory_location = 1">
 				Lokalisering <u>må</u> velges før du registrerer ny sak.
@@ -12,10 +12,10 @@
 		<select id="choose-building-on-property" class="custom-select">
 			<xsl:choose>
 				<xsl:when test="cases_view = 'open_cases' or cases_view = 'closed_cases'">
-					<xsl:attribute name="class">view-cases custom-select ml-3</xsl:attribute>
+					<xsl:attribute name="class">view-cases custom-select ms-3</xsl:attribute>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:attribute name="class">add-case required custom-select ml-3</xsl:attribute>
+					<xsl:attribute name="class">add-case required custom-select ms-3</xsl:attribute>
 				</xsl:otherwise>
 			</xsl:choose>
     

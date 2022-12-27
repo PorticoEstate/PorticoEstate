@@ -256,11 +256,13 @@
 					if ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] != 'bootstrap')
 					{
 						unset($load['bootstrap-multiselect']);//to be inserted last
-						$load['popper']					 = array("popper{$_type}");
+						$load['popper']					 = array("popper2{$_type}");
 						$load['bootstrap']				 = array("js/bootstrap{$_type}");
+
 						$load['bootstrap-multiselect']	 = array("js/bootstrap-multiselect.min");
 
-						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/bootstrap/css/bootstrap.min.css");
+						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css");
+
 					}
 
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/bootstrap-multiselect/css/bootstrap-multiselect.min.css");
@@ -276,7 +278,8 @@
 
 					if (in_array($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'], array('bootstrap','bootstrap2', 'bookingfrontend', 'aalesund')))
 					{
-						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/select2/css/select2-bootstrap4{$_type}.css");
+//						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/select2/css/select2-bootstrap4{$_type}.css");
+						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/select2/css/select2-bootstrap-5-theme{$_type}.css");
 					}
 
 					break;

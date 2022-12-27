@@ -30,14 +30,14 @@
 					<xsl:call-template name="select_component_children" />
 					<div class="row mt-2">
 						<div class="container">
-							<h5 class="ml-5">Kontrollert utstyr</h5>
-							<ul class="ml-2">
+							<h5 class="ms-5">Kontrollert utstyr</h5>
+							<ul class="ms-2">
 								<xsl:for-each select="completed_list">
 									<li style="display: block;">
 										<a href="#">
-											<img src="{//img_undo}" width="16" class="mr-2" onClick="undo_completed({completed_id})"/>
+											<img src="{//img_undo}" width="16" class="me-2" onClick="undo_completed({completed_id})"/>
 										</a>
-										<img src="{//img_green_check}" width="16" class="mr-2"/>
+										<img src="{//img_green_check}" width="16" class="me-2"/>
 										<xsl:value-of select="short_description" />
 									</li>
 								</xsl:for-each>
@@ -58,8 +58,8 @@
 			</xsl:choose>-->
 
 			<h5>
-				<a href="#" data-toggle="modal" data-target="#inspectObject">
-					<img src="{img_add2}" width="23" class="mr-2"/>Utfør kontroll</a>
+				<a href="#" data-bs-toggle="modal" data-bs-target="#inspectObject">
+					<img src="{img_add2}" width="23" class="me-2"/>Utfør kontroll</a>
 			</h5>
 
 			<!-- MODAL INSPECT EQUIPMENT START -->
@@ -240,7 +240,7 @@
 																</xsl:with-param>
 															</xsl:call-template>
 
-															<input type="submit" class="btn btn-primary btn-lg mr-3" name="save_control" value="Lagre sak" />
+															<input type="submit" class="btn btn-primary btn-lg me-3" name="save_control" value="Lagre sak" />
 
 														</xsl:when>
 														<xsl:when test="type = 'control_item_type_2'">
@@ -304,7 +304,7 @@
 															<xsl:variable name="lang_save">
 																<xsl:value-of select="php:function('lang', 'register_error')" />
 															</xsl:variable>
-															<input type="submit" class="btn btn-primary btn-lg mr-3" name="save_control" value="Lagre måling" title="{$lang_save}" />
+															<input type="submit" class="btn btn-primary btn-lg me-3" name="save_control" value="Lagre måling" title="{$lang_save}" />
 
 														</xsl:when>
 														<xsl:when test="type = 'control_item_type_3'">
@@ -371,7 +371,7 @@
 															<xsl:variable name="lang_save">
 																<xsl:value-of select="php:function('lang', 'register_error')" />
 															</xsl:variable>
-															<input type="submit" class="btn btn-primary btn-lg mr-3" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
+															<input type="submit" class="btn btn-primary btn-lg me-3" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
 
 														</xsl:when>
 														<xsl:when test="type = 'control_item_type_4'">
@@ -439,7 +439,7 @@
 															<xsl:variable name="lang_save">
 																<xsl:value-of select="php:function('lang', 'register_error')" />
 															</xsl:variable>
-															<input type="submit" class="btn btn-primary btn-lg mr-3" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
+															<input type="submit" class="btn btn-primary btn-lg me-3" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
 
 														</xsl:when>
 														<xsl:when test="type = 'control_item_type_5'">
@@ -496,7 +496,7 @@
 															<xsl:variable name="lang_save">
 																<xsl:value-of select="php:function('lang', 'register_error')" />
 															</xsl:variable>
-															<input type="submit" class="btn btn-primary btn-lg mr-3" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
+															<input type="submit" class="btn btn-primary btn-lg me-3" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
 
 														</xsl:when>
 													</xsl:choose>
@@ -529,7 +529,7 @@
 																	</label>
 																</div>
 															</div>
-															<!--															<button id = "submit_update_component" type="submit" class="btn btn-primary btn-lg mr-3 mt-3">
+															<!--															<button id = "submit_update_component" type="submit" class="btn btn-primary btn-lg me-3 mt-3">
 																<xsl:value-of select="php:function('lang', 'add picture')" />
 															</button>-->
 														</div>
@@ -565,7 +565,7 @@
 								</xsl:attribute>
 							</input>
 							<div class="modal-footer">
-								<button type="submit" class="btn btn-success ml-5 mr-3">Ferdig</button>
+								<button type="submit" class="btn btn-success ms-5 me-3">Ferdig</button>
 							</div>
 						</form>
 					</div>

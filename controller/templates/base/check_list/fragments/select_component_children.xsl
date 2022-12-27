@@ -89,7 +89,7 @@
 						<xsl:choose>
 							<xsl:when test="$template_set = 'bootstrap'">
 								<xsl:attribute name="class">
-									<xsl:text>btn btn-primary btn-sm ml-1</xsl:text>
+									<xsl:text>btn btn-primary btn-sm ms-1</xsl:text>
 								</xsl:attribute>
 							</xsl:when>
 							<xsl:otherwise>

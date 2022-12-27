@@ -72,7 +72,7 @@
 		<xsl:value-of select="current_year"/>
 	</xsl:variable>
 
-	<button class="btn btn-info" type="button" data-toggle="collapse" data-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">Filter</button>
+	<button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">Filter</button>
 
 	<form method="post" id="form" action="{form_action}">
 		<div class="row">
@@ -137,7 +137,7 @@
 						</a>
 					</span>
 
-					<span class="float-right">
+					<span class="float-end">
 						<a href="#">
 							<button type="submit" name="next_year" value="1" class="btn btn-secondary">
 								<xsl:value-of select="next_year"/> &gt;
@@ -254,7 +254,7 @@
 		<xsl:value-of select="current_year"/>
 	</xsl:variable>
 
-	<button class="btn btn-info" type="button" data-toggle="collapse" data-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">Filter</button>
+	<button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">Filter</button>
 
 	<form method="post" id="form" action="{form_action}">
 
@@ -336,7 +336,7 @@
 							<xsl:value-of select="php:function('lang', 'deviation')"/>
 						</label>
 					</div>
-					<button class="btn btn-primary ml-2" type="submit">
+					<button class="btn btn-primary ms-2" type="submit">
 						<xsl:value-of select="php:function('lang', 'search')"/>
 					</button>
 
@@ -546,10 +546,10 @@
 			</div>
 			<!--			<div class="col">
 				<div class="clearfix">
-					<span class="float-right" style="font-size: 14px">Legg til ny <i class="far fa-plus-square"></i></span>
+					<span class="float-end" style="font-size: 14px">Legg til ny <i class="far fa-plus-square"></i></span>
 				</div>
 				<div class="mt-2 clearfix">
-					<span class="float-right" style="font-size: 14px">Merk som inaktiv <i class="far fa-trash-alt"></i></span>
+					<span class="float-end" style="font-size: 14px">Merk som inaktiv <i class="far fa-trash-alt"></i></span>
 				</div>
 			</div>-->
 		</div>
@@ -564,7 +564,7 @@
 				</a>
 			</span>
 
-			<span class="float-right">
+			<span class="float-end">
 				<a href="{next_month_url}">
 					<button type="button" name="next_year" value="1" class="btn btn-secondary">
 						<xsl:value-of select="next_month"/> &gt;
@@ -594,12 +594,12 @@
 						<button type="button" class="btn btn-warning">Gå tilbake</button>
 					</a>
 				</span>
-				<span class="float-right">
+				<span class="float-end">
 					<a href="{send_notification_url}">
 						<button type="button" class="btn btn-success">Gå til utsending</button>
 					</a>
 				</span>
-				<span class="mr-2 float-right">
+				<span class="me-2 float-end">
 					<button type="button" class="btn btn-success" onclick="save_schedule();">Lagre</button>
 				</span>
 			</div>
@@ -690,7 +690,7 @@
 							<button type="button" class="btn btn-warning">Gå tilbake</button>
 						</a>
 					</span>
-					<span class="float-right">
+					<span class="float-end">
 						<a href="">
 							<button type="submit" class="btn btn-success">Send varsel</button>
 						</a>
@@ -707,7 +707,7 @@
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
 
-	<button class="btn btn-info" type="button" data-toggle="collapse" data-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">Filter</button>
+	<button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">Filter</button>
 
 	<form method="post" id="form" action="{form_action}">
 
@@ -770,7 +770,7 @@
 						</a>
 					</span>
 
-					<span class="float-right">
+					<span class="float-end">
 						<a href="#">
 							<button type="submit" name="next_day" value="1" class="btn btn-secondary">
 								<xsl:value-of select="next_day"/> &gt;
@@ -785,7 +785,7 @@
 										<xsl:value-of select="php:function('date', $date_format, number(current_day))"/>
 									</xsl:attribute>
 								</input>
-								<i class="fa fa-calendar ml-1"></i>
+								<i class="fa fa-calendar ms-1"></i>
 							</div>
 
 						</h4>
@@ -795,7 +795,7 @@
 					<select id="check_list_id" name="check_list_id" class="form-control custom-select">
 						<xsl:apply-templates select="todo_list/options"/>
 					</select>
-					<div class="float-right mt-2">
+					<div class="float-end mt-2">
 						<button type="button" class="btn btn-success" onClick="start_inspection();">
 							<xsl:value-of select="php:function('lang', 'next')"/>
 						</button>
@@ -828,7 +828,7 @@
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
 
-	<button class="btn btn-info" type="button" data-toggle="collapse" data-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">Filter</button>
+	<button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">Filter</button>
 
 	<form method="post" id="form" action="{form_action}">
 
@@ -874,7 +874,7 @@
 							</label>
 							<input class="form-control" type="text" name="query" value="{query}" placeholder="Fritekstsøk..."/>
 						</div>
-						<button class="btn btn-primary ml-2" type="submit">
+						<button class="btn btn-primary ms-2" type="submit">
 							<xsl:value-of select="php:function('lang', 'search')"/>
 						</button>
 					</fieldset>
@@ -898,7 +898,7 @@
 				</a>
 			</span>
 
-			<span class="float-right">
+			<span class="float-end">
 				<a href="{next_month_url}">
 					<button type="button" name="next_year" value="1" class="btn btn-secondary">
 						<xsl:value-of select="next_month"/> &gt;
@@ -950,7 +950,7 @@
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
 
-	<button class="btn btn-info" type="button" data-toggle="collapse" data-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">Filter</button>
+	<button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">Filter</button>
 
 	<form method="post" id="form" action="{form_action}">
 		<div class="container">
@@ -1013,7 +1013,7 @@
 						</a>
 					</span>
 
-					<span class="float-right">
+					<span class="float-end">
 						<a href="#">
 							<button type="submit" name="next_day" value="1" class="btn btn-secondary">
 								<xsl:value-of select="next_day"/> &gt;
@@ -1028,7 +1028,7 @@
 										<xsl:value-of select="php:function('date', $date_format, number(current_day))"/>
 									</xsl:attribute>
 								</input>
-								<i class="fa fa-calendar ml-1"></i>
+								<i class="fa fa-calendar ms-1"></i>
 							</div>
 
 						</h4>
@@ -1038,7 +1038,7 @@
 					<select id="check_list_id" name="check_list_id" class="form-control custom-select">
 						<xsl:apply-templates select="todo_list/options"/>
 					</select>
-					<div class="float-right mt-2">
+					<div class="float-end mt-2">
 						<button type="button" class="btn btn-success" onClick="start_inspection();">
 							<xsl:value-of select="php:function('lang', 'next')"/>
 						</button>
@@ -1094,7 +1094,7 @@
 		<xsl:for-each select="cell_data">
 			<td onClick="open_monthly('{part_of_town_id}', '{$current_year}', '{month}');">
 				<xsl:if test="registered &gt; 0">
-					<span class="ml-3 float-left">
+					<span class="ms-3 float-left">
 						<xsl:value-of select="registered"/>
 						<xsl:text>/</xsl:text>
 						<xsl:value-of select="planned"/>
@@ -1102,8 +1102,8 @@
 						<xsl:value-of select="completed"/>
 					</span>
 					<xsl:if test="registered = completed">
-						<span class="float-right">
-							<i class="fas fa-check float-right"></i>
+						<span class="float-end">
+							<i class="fas fa-check float-end"></i>
 						</span>
 					</xsl:if>
 				</xsl:if>

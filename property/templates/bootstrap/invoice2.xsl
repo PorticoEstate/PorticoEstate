@@ -87,7 +87,7 @@
 
 			</div>
 				<div class='col-sm-3'>
-				<a href="#" id="show_image" class="btn btn-primary" data-toggle="modal" data-target="#mapModal" style="display:none; margin-bottom: 5px">
+				<a href="#" id="show_image" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mapModal" style="display:none; margin-bottom: 5px">
 					<p><i class="fas fa-image"></i>  Trykk for å se faktura</p>
 				</a>
 			</div>

@@ -51,7 +51,7 @@
 
 	{javascript_end}
 	<script>
-		$('[data-target="#popupModal"]').on('click', function (e) {
+		$('[data-bs-target="#popupModal"]').on('click', function (e) {
 			e.preventDefault();
 
 			var _linky = $(this).attr('href');

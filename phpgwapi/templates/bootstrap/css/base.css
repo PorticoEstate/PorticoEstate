@@ -297,3 +297,13 @@ label > input[type="search"] {
 .ms-n5 {
     margin-left: -40px;
 }
+
+
+.dataTables_wrapper .dataTables_length select {
+	padding: 4px 36px 4px 8px;
+}
+
+thead
+{
+background-color: rgb(224, 224, 224);
+}

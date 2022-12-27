@@ -47,7 +47,7 @@
 							<xsl:choose>
 								<xsl:when test="template_set = 'bootstrap'">
 									<xsl:attribute name="class">
-										<xsl:text>btn btn-primary btn-sm ml-2</xsl:text>
+										<xsl:text>btn btn-primary btn-sm ms-2</xsl:text>
 									</xsl:attribute>
 								</xsl:when>
 								<xsl:otherwise>
@@ -89,11 +89,11 @@
 						</button>
 					</xsl:if>
 					<xsl:if test="get_info =1 and enable_add_case = 1">
-						<button id = "perform_control_on_selected" type="button" data-toggle="modal" data-target="#inspectObject">
+						<button id = "perform_control_on_selected" type="button" data-bs-toggle="modal" data-bs-target="#inspectObject">
 							<xsl:choose>
 								<xsl:when test="template_set = 'bootstrap'">
 									<xsl:attribute name="class">
-										<xsl:text>btn btn-primary btn-sm ml-2</xsl:text>
+										<xsl:text>btn btn-primary btn-sm ms-2</xsl:text>
 									</xsl:attribute>
 								</xsl:when>
 								<xsl:otherwise>
@@ -111,7 +111,7 @@
 	</div>
 	<xsl:if test="open_cases !=''">
 		<div class="container">
-			<div class="row ml-5 mt-3">
+			<div class="row ms-5 mt-3">
 				<table class="pure-table">
 					<caption>Åpne saker</caption>
 					<tr>
