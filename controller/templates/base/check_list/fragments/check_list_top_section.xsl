@@ -134,9 +134,8 @@
 			<!--			<button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar" aria-expanded="false">
 				<span class="navbar-toggler-icon"></span>
 			</button>-->
-			<div class="navbar-collapse collapse" id="collapsibleNavbar" style="">
-
-				<ul class="navbar-nav">
+			<div class="pure-menu pure-menu-horizontal" id="collapsibleNavbar" style="">
+				<ul class="pure-menu-list">
 					<xsl:choose>
 						<xsl:when test="count(check_list_type) = 0 or check_list_type != 'add_check_list'">
 							<xsl:call-template name="check_list_menu">
@@ -181,11 +180,11 @@
 		</xsl:when>
 	</xsl:choose>
 	<xsl:choose>
-		<xsl:when test="component_children/child::node()">
+		<xsl:when test="component_children/child::node() and $active_tab != 'view_cases'">
 			<div id="choose-building-wrp">
 				<xsl:call-template name="select_component_children">
 					<xsl:with-param name="template_set">
-						<xsl:text>bootstrap</xsl:text>
+						<xsl:text>portico</xsl:text>
 					</xsl:with-param>
 				</xsl:call-template>
 				<xsl:if test="$active_tab != 'view_details'">
