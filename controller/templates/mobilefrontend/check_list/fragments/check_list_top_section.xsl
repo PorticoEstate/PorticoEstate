@@ -18,7 +18,7 @@
 		<br/>
 		<xsl:value-of select="php:function('lang', 'category')" />
 		<xsl:text>: </xsl:text>
-		<select id ="categories" class="pure-form pure-form-stacked pure-input-1">
+		<select id ="categories" class="form-select pure-form-stacked pure-input-1">
 			<option>
 				<xsl:value-of select="php:function('lang', 'select')"/>
 			</option>
@@ -86,22 +86,15 @@
 						</label>-->
 						<div  id="equipment_parent_picture_container"/>
 					</div>
-					<div class="form-group">
 
-						<div class="input-group">
-							<div class="custom-file">
-								<input type="file" id="component_parent_picture_file" name="file" class="custom-file-input" aria-describedby="submit_update_component_parent" onchange="show_picture_parent_submit();">
-									<xsl:attribute name="accept">image/*</xsl:attribute>
-									<xsl:attribute name="capture">camera</xsl:attribute>
-								</input>
-								<label class="custom-file-label">
-									<xsl:value-of select="php:function('lang', 'new picture')" />
-								</label>
-							</div>
-						</div>
-						<!--						<button id = "submit_update_component_parent" type="submit" class="btn btn-primary btn-lg me-3 mt-3" style="display:none">
-							<xsl:value-of select="php:function('lang', 'add picture')" />
-						</button>-->
+					<div class="mb-3">
+						<label class="form-label custom-file-label" for="component_parent_picture_file">
+							<xsl:value-of select="php:function('lang', 'new picture')" />
+						</label>
+						<input type="file" id="component_parent_picture_file" name="file" class="form-control custom-file-input" aria-describedby="submit_update_component_parent" onchange="show_picture_parent_submit();">
+							<xsl:attribute name="accept">image/*</xsl:attribute>
+							<xsl:attribute name="capture">camera</xsl:attribute>
+						</input>
 					</div>
 				</div>
 
@@ -189,8 +182,8 @@
 				<xsl:if test="$active_tab != 'view_details'">
 					<div class="row mt-2">
 						<div class="container">
-							<h5 class="ms-5">Kontrollert utstyr</h5>
-							<ul class="ms-2">
+							<h5 class="ms-0">Kontrollert utstyr</h5>
+							<ul class="ms-0">
 								<xsl:for-each select="completed_list">
 									<li style="display: block;">
 										<a href="#">
