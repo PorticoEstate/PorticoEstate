@@ -76,11 +76,22 @@
 
 	$bookmark_section = '';
 
+	if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+	{
+		$grid_envelope = 'row mt-4';
+		$grid_element = 'col-4 mb-3';
+	}
+	else
+	{
+		$grid_envelope = 'pure-g';
+		$grid_element = 'pure-u-1-8 pure-button pure-button-active';
+	}
+
 	if($bookmarks && is_array($bookmarks))
 	{
 		$bookmark_section = <<<HTML
 	<div class="container">
-		<div id="container_bookmark" class="row mt-4">
+		<div id="container_bookmark" class="{$grid_envelope}">
 HTML;		
 		foreach ($bookmarks as $bm_key => $bookmark_data)
 		{
@@ -89,7 +100,7 @@ HTML;
 				
 				$icon = $bookmark_data['icon'] ? $bookmark_data['icon'] : 'fas fa-2x fa-file-alt';
 				$bookmark_section .= <<<HTML
-				<div class="col-4 mb-3">
+				<div class="{$grid_element}">
 					<a href="{$bookmark_data['href']}" class="text-secondary">
 						<div class="card shadow h-100 mb-2">
 							<div class="card-block text-center">
