@@ -92,7 +92,11 @@ $(document).ready(function ()
 init_multiselect = function ()
 {
 	$("#sms_recipients").multiselect({
-		//	buttonWidth: 250,
+		buttonClass: 'form-select',
+		templates: {
+		button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>',
+		},
+//	buttonWidth: 250,
 		includeSelectAllOption: true,
 		enableFiltering: true,
 		enableCaseInsensitiveFiltering: true,

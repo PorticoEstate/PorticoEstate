@@ -1,15 +1,15 @@
 <div class="booking-cart" id="applications-cart-content" data-bind="visible: applicationCartItems().length > 0 && visible">
 	<div class="booking-cart-title">
 		<span class="font-weight-bold">{cart_header} </span><span data-bind="text: '('+applicationCartItems().length+')'"></span>
-		<i class="booking-cart-icon far fa-window-minimize float-right mr-2"></i>
+		<i class="booking-cart-icon far fa-window-minimize float-end me-2"></i>
 	</div>
 	<div class="booking-cart-items">
 		<div data-bind="foreach: applicationCartItems">
 			<div class="booking-cart-item">
 				<div class="row">
 					<div class="col-5" data-bind="text: building_name"></div>
-					<div class="col-5 d-inline" data-bind="foreach: resources"><span class="mr-3" data-bind="text: name"></span></div>
-					<div class="col-2 float-right"><span data-bind="click: $parent.deleteItem" class="far fa-trash-alt mr-2"></span></div>
+					<div class="col-5 d-inline" data-bind="foreach: resources"><span class="me-3" data-bind="text: name"></span></div>
+					<div class="col-2 float-end"><span data-bind="click: $parent.deleteItem" class="far fa-trash-alt me-2"></span></div>
 				</div>
 				<div class="row" data-bind="foreach: dates">
 					<div class="col-5" data-bind="text: date"></div>

@@ -223,7 +223,7 @@ function get_messages()
 					}
 					console.log(obj[i]);
 					htmlString += '<a class="dropdown-item d-flex align-items-center" href="' + obj[i].link + '">';
-					htmlString += '		<div class="dropdown-list-image mr-3">';
+					htmlString += '		<div class="dropdown-list-image me-3">';
 					htmlString += '			<img class="rounded-circle" src="' + profile_img + '" alt="">';
 					htmlString += '			<div class="status-indicator bg-success"></div>';
 					htmlString += '		</div>';

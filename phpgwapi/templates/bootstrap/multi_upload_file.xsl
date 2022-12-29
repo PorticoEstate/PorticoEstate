@@ -14,24 +14,24 @@
             <div class="col-lg-7">
                 <!-- The fileinput-button span is used to style the file input field as button -->
 				<div class="btn-group">
-					<span class="ml-3 btn btn-success fileinput-button">
-						<i class="mr-3 fas fa-plus"></i>
+					<span class="ms-3 btn btn-success fileinput-button">
+						<i class="me-3 fas fa-plus"></i>
 						<span><xsl:value-of select="php:function('lang', 'Add files')"/>...</span>
 						<input type="file" id="files" name="files[]" multiple="">
 							<xsl:attribute name="accept">image/*</xsl:attribute>
 							<xsl:attribute name="capture">camera</xsl:attribute>
 						</input>
 				   </span>
-					<button type="submit" class="ml-3 btn btn-primary start">
-						<i class="mr-3 fas fa-arrow-circle-up"></i>
+					<button type="submit" class="ms-3 btn btn-primary start">
+						<i class="me-3 fas fa-arrow-circle-up"></i>
 					   <span><xsl:value-of select="php:function('lang', 'Start upload')"/></span>
 					</button>
-                <button type="reset" class="ml-3 btn btn-warning cancel">
-                    <i class="mr-3 fas fa-ban"></i>
+                <button type="reset" class="ms-3 btn btn-warning cancel">
+                    <i class="me-3 fas fa-ban"></i>
                    <span><xsl:value-of select="php:function('lang', 'Cancel upload')"/></span>
                 </button>
-                <button type="button" class="ml-3 btn btn-danger delete">
-                    <i class="mr-3 fas fa-trash-alt"></i>
+                <button type="button" class="ms-3 btn btn-danger delete">
+                    <i class="me-3 fas fa-trash-alt"></i>
                     <span><xsl:value-of select="php:function('lang', 'Delete')"/></span>
                 </button>
  				</div>
@@ -60,7 +60,7 @@
 	{% for (var i=0, file; file=o.files[i]; i++) { %}
 		<div class="template-upload">
 			<div class="table-cell">
-				<div class="ml-3 name">{%=file.name%}</div>
+				<div class="ms-3 name">{%=file.name%}</div>
 				<div class="error"></div>
 			</div>
 			<div class="table-cell">
@@ -73,13 +73,13 @@
 				{% if (!i && !o.options.autoUpload) { %}
 
                <button class="btn btn-primary start" disabled>
-                    <i class="mr-3 fas fa-arrow-circle-up"></i>
+                    <i class="me-3 fas fa-arrow-circle-up"></i>
                     <span>Start</span>
                 </button>
 				{% } %}
 				{% if (!i) { %}
                <button class="btn btn-warning cancel">
-                   <i class="mr-3 fas fa-ban"></i>
+                   <i class="me-3 fas fa-ban"></i>
                     <span>Cancel</span>
                 </button>
 				{% } %}
@@ -94,7 +94,7 @@
 	{% for (var i=0, file; file=o.files[i]; i++) { %}
 		<div class="template-download">
 			<div class="table-cell">
-				<div class="ml-3 name">
+				<div class="ms-3 name">
 					<!--<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>-->
 					{%=file.name%}							
 				</div>
@@ -105,7 +105,7 @@
 			</div>
 			<div class="table-cell">
 				{% if (file.deleteUrl && Allowed_Methods.includes("DELETE")) { %}
-					<button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %} ><i class="mr-3 fas fa-trash-alt"></i>Delete</button>
+					<button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %} ><i class="me-3 fas fa-trash-alt"></i>Delete</button>
 					<input type="checkbox" name="delete" value="1" class="toggle"/>
 				{% } %}
 			</div>

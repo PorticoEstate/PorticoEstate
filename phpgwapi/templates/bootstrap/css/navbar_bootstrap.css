@@ -54,7 +54,7 @@ a[aria-expanded="true"] {
     /*background: #6d7fcc;*/
 }
 
-#sidebar a[data-toggle="collapse"] {
+#sidebar a[data-bs-toggle="collapse"] {
     position: relative;
 }
 

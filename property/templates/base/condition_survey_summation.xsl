@@ -182,6 +182,10 @@
 			api.on( 'draw', sum_columns );
 
 			$("#survey_id").multiselect({
+					buttonClass: 'form-select',
+					templates: {
+					button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>',
+					},
 					//	buttonWidth: 250,
 					includeSelectAllOption: true,
 					enableFiltering: true,
