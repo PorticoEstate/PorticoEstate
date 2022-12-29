@@ -205,7 +205,7 @@
 											<script type="text/javascript">
 												filter_selects['<xsl:value-of select="text"/>'] = '<xsl:value-of select="$name"/>';
 											</script>
-											<select id="{$name}" name="{$name}" class="form-control">
+											<select id="{$name}" name="{$name}" class="form-select">
 												<xsl:if test="multiple">
 													<xsl:attribute name="multiple">
 														<xsl:text>true</xsl:text>
