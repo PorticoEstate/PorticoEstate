@@ -410,7 +410,7 @@ HTML;
 			}
 
 			$breadcrumb_html .= <<<HTML
-				    <li class="breadcrumb-item active" aria-current="page">{$breadcrumbs[$i]['name']}</li>
+				    <li class="breadcrumb-item" aria-current="page">{$breadcrumbs[$i]['name']}</li>
 HTML;
 
 			$breadcrumb_html .= <<<HTML

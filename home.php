@@ -72,33 +72,58 @@
 		echo parse_navbar();
 	}
 
-	echo <<<JS
+	$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
 
-	<div class="container">
-		<div id="container_bookmark" class="row mt-4"></div>
-	</div>
-	<script type="text/javascript">
-	$('#_bookmark').children().each(function ()
+	$bookmark_section = '';
+
+	if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
 	{
-		var a = $(this);
-		var href = a.attr('href');
-		var icon = a.find('i').attr('class');
+		$grid_envelope = 'row mt-4';
+		$grid_element = 'col-4 mb-3';
+	}
+	else
+	{
+		$grid_envelope = 'pure-g';
+		$grid_element = 'pure-u-1-8 pure-button pure-button-active';
+	}
 
-		if (typeof(icon) == 'undefined')
+	if($bookmarks && is_array($bookmarks))
+	{
+		$bookmark_section = <<<HTML
+	<div class="container">
+		<div id="container_bookmark" class="{$grid_envelope}">
+HTML;		
+		foreach ($bookmarks as $bm_key => $bookmark_data)
 		{
-			icon = 'fas fa-2x fa-file-alt';
+			if(is_array($bookmark_data))
+			{
+				
+				$icon = $bookmark_data['icon'] ? $bookmark_data['icon'] : 'fas fa-2x fa-file-alt';
+				$bookmark_section .= <<<HTML
+				<div class="{$grid_element}">
+					<a href="{$bookmark_data['href']}" class="text-secondary">
+						<div class="card shadow h-100 mb-2">
+							<div class="card-block text-center">
+								<h1 class="p-3">
+									<i class="{$icon}"></i>
+								</h1>
+							</div>
+							<div class="card-footer text-center">{$bookmark_data['text']}</div>
+						</div>
+					</a>
+				</div>
+HTML;
+				
+			}
+
 		}
-		var templateString = '<div class="col-4 mb-3"><a href="' + href + '" class="stretched-link text-secondary"><div class="card shadow h-100 mb-2">';
-		templateString += '<div class="card-block text-center"><h1 class="p-3"><i class="' + icon + '"></i></h1></div>';
-		templateString += '<div class="card-footer text-center">' + a.text() + '</div>';
-		templateString += '</div></a></div>';
-		$('#container_bookmark').append(templateString);
+		$bookmark_section .= <<<HTML
+		</div>
+	</div>
+HTML;	
+	}
 
-	 });
-	 </script>
-
-JS;
-
+	echo $bookmark_section;
 	$GLOBALS['phpgw']->translation->add_app('mainscreen');
 	if (lang('mainscreen_message') != '!mainscreen_message')
 	{

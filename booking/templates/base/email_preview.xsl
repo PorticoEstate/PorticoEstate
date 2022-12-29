@@ -40,6 +40,10 @@
 	</form>
 	<script>
 		$("#field_contacts").multiselect({
+				buttonClass: 'form-select',
+				templates: {
+				button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>',
+				},
 				buttonWidth: 450,
 				includeSelectAllOption: true,
 				enableFiltering: true,

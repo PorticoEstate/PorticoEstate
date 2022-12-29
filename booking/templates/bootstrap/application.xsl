@@ -133,42 +133,42 @@
 				<ul class="list-inline">
 					<li class="list-inline-item mb-2">
 						<div class="dropdown">
-							<button class="btn btn-outline-success btn-circle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<button class="btn btn-outline-success btn-circle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<i class="fas fa-reply" aria-hidden="true" title="Send svar eller opprett notat i saken"></i>
 							</button>
 							<div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-								<button class="dropdown-item" href="#" data-toggle="modal" data-target="#commentModal">
+								<button class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#commentModal">
 									<xsl:choose>
 										<xsl:when test="not(application/case_officer/is_current_user)">
 											<xsl:attribute name="disabled">disabled</xsl:attribute>
-											<i class="fas fa-reply mr-1 text-secondary"></i>
+											<i class="fas fa-reply me-1 text-secondary"></i>
 										</xsl:when>
 										<xsl:otherwise>
-											<i class="fas fa-reply mr-1 text-success"></i>
+											<i class="fas fa-reply me-1 text-success"></i>
 										</xsl:otherwise>
 									</xsl:choose>
 									Send svar til innsender
 								</button>
-								<button class="dropdown-item" href="#" data-toggle="modal" data-target="#messengerModal">
+								<button class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#messengerModal">
 									<xsl:choose>
 										<xsl:when test="$messenger_enabled !='true' or application/case_officer/is_current_user or application/case_officer_id ='' ">
 											<xsl:attribute name="disabled">disabled</xsl:attribute>
-											<i class="fas fa-reply mr-1 text-secondary"></i>
+											<i class="fas fa-reply me-1 text-secondary"></i>
 										</xsl:when>
 										<xsl:otherwise>
-											<i class="fas fa-reply mr-1 text-success"></i>
+											<i class="fas fa-reply me-1 text-success"></i>
 										</xsl:otherwise>
 									</xsl:choose>
 									Send melding til saksbehandler
 								</button>
-								<button class="dropdown-item" href="#" data-toggle="modal" data-target="#internal_noteModal">
+								<button class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#internal_noteModal">
 									<xsl:choose>
 										<xsl:when test="not(application/case_officer/is_current_user)">
 											<xsl:attribute name="disabled">disabled</xsl:attribute>
-											<i class="far fa-sticky-note mr-1 text-secondary"></i>
+											<i class="far fa-sticky-note me-1 text-secondary"></i>
 										</xsl:when>
 										<xsl:otherwise>
-											<i class="far fa-sticky-note mr-1 text-warning"></i>
+											<i class="far fa-sticky-note me-1 text-warning"></i>
 										</xsl:otherwise>
 									</xsl:choose>
 									Opprett internt notat
@@ -178,19 +178,19 @@
 					</li>
 					<li class="list-inline-item mb-2">
 						<div class="dropdown">
-							<button class="btn btn-outline-warning btn-circle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<button class="btn btn-outline-warning btn-circle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<i class="fas fa-arrow-right" aria-hidden="true" title="Videresend sak"></i>
 							</button>
 							<div class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
-								<a class="dropdown-item" href="#" data-toggle="modal" data-target="#change_userModal">
-									<i class="fas fa-arrow-right mr-1 text-warning"></i>Sett sak til en annen saksbehandler
+								<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#change_userModal">
+									<i class="fas fa-arrow-right me-1 text-warning"></i>Sett sak til en annen saksbehandler
 								</a>
 							</div>
 						</div>
 					</li>
 					<li class="list-inline-item mb-2">
 						<div class="dropdown" id="action_dropdown">
-							<button class="btn btn-outline-primary btn-circle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<button class="btn btn-outline-primary btn-circle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								<i class="fas fa-flag" aria-hidden="true" title="Flere handlinger"></i>
 							</button>
 							<div id="return_after_action" class="dropdown-menu animated--fade-in" aria-labelledby="dropdownMenuButton">
@@ -198,14 +198,14 @@
 									<form method="POST" style="display:inline">
 										<input type="hidden" name="unassign_user"/>
 										<button type="submit"  class="dropdown-item" >
-											<i class="fas fa-flag mr-1 text-primary"></i>
+											<i class="fas fa-flag me-1 text-primary"></i>
 											<xsl:value-of select="php:function('lang', 'Unassign me')"/>
 										</button>
 									</form>
 									<form method="POST" style="display:inline">
 										<input type="hidden" name="display_in_dashboard" value="{phpgw:conditional(application/display_in_dashboard='1', '0', '1')}"/>
 										<button type="submit" class="dropdown-item">
-											<i class="fas fa-flag mr-1 text-primary"></i>
+											<i class="fas fa-flag me-1 text-primary"></i>
 											<xsl:value-of select="php:function('lang', phpgw:conditional(application/display_in_dashboard='1', 'Hide from my Dashboard until new activity occurs', 'Display in my Dashboard'))"/>
 										</button>
 									</form>
@@ -215,7 +215,7 @@
 										<input type="hidden" name="assign_to_user"/>
 										<input type="hidden" name="status" value="PENDING"/>
 										<button type="submit" class="dropdown-item" >
-											<i class="fas fa-flag mr-1 text-primary"></i>
+											<i class="fas fa-flag me-1 text-primary"></i>
 											<xsl:value-of select="php:function('lang', phpgw:conditional(application/case_officer, 'Re-assign to me', 'Assign to me'))"/>
 										</button>
 									</form>
@@ -229,10 +229,10 @@
 												<!--xsl:when test="not(application/case_officer)"-->
 												<xsl:when test="not(application/case_officer/is_current_user)">
 													<xsl:attribute name="disabled">disabled</xsl:attribute>
-													<i class="fas fa-flag mr-1 text-secondary"></i>
+													<i class="fas fa-flag me-1 text-secondary"></i>
 												</xsl:when>
 												<xsl:otherwise>
-													<i class="fas fa-flag mr-1 text-primary"></i>
+													<i class="fas fa-flag me-1 text-primary"></i>
 												</xsl:otherwise>
 											</xsl:choose>
 											<xsl:value-of select="php:function('lang', 'Reject application')" />
@@ -243,7 +243,7 @@
 									<xsl:choose>
 										<xsl:when test="num_associations='0'">
 											<button type="submit" disabled="" value="{php:function('lang', 'Accept application')}" class="dropdown-item" >
-												<i class="fas fa-flag mr-1 text-secondary"></i>
+												<i class="fas fa-flag me-1 text-secondary"></i>
 												<xsl:value-of select="php:function('lang', 'One or more bookings, allocations or events needs to be created before an application can be Accepted')"/>
 											</button>
 										</xsl:when>
@@ -256,10 +256,10 @@
 															<!--xsl:when test="not(application/case_officer)"-->
 															<xsl:when test="not(application/case_officer/is_current_user)">
 																<xsl:attribute name="disabled">disabled</xsl:attribute>
-																<i class="fas fa-flag mr-1 text-secondary"></i>
+																<i class="fas fa-flag me-1 text-secondary"></i>
 															</xsl:when>
 															<xsl:otherwise>
-																<i class="fas fa-flag mr-1 text-primary"></i>
+																<i class="fas fa-flag me-1 text-primary"></i>
 															</xsl:otherwise>
 														</xsl:choose>
 														<xsl:value-of select="php:function('lang', 'Accept application')" />
@@ -278,7 +278,7 @@
 													<xsl:if test="not(application/case_officer/is_current_user)">
 														<xsl:attribute name="disabled">disabled</xsl:attribute>
 													</xsl:if>
-													<i class="fas fa-flag mr-1 text-primary"></i>
+													<i class="fas fa-flag me-1 text-primary"></i>
 													<xsl:value-of select="php:function('lang', 'PDF-export to archive')" />
 												</button>
 											</form>
@@ -289,7 +289,7 @@
 													<xsl:if test="not(application/case_officer/is_current_user)">
 														<xsl:attribute name="disabled">disabled</xsl:attribute>
 													</xsl:if>
-													<i class="fas fa-flag mr-1 text-primary"></i>
+													<i class="fas fa-flag me-1 text-primary"></i>
 													<xsl:value-of select="php:function('lang', 'PDF-export to archive')" />
 													<xsl:text> (</xsl:text>
 													<xsl:value-of select="php:function('lang', 'preview')"/>
@@ -305,25 +305,25 @@
 										<xsl:choose>
 											<xsl:when test="not(application/case_officer/is_current_user)">
 												<xsl:attribute name="disabled">disabled</xsl:attribute>
-												<i class="fas fa-flag mr-1 text-secondary"></i>
+												<i class="fas fa-flag me-1 text-secondary"></i>
 											</xsl:when>
 											<xsl:otherwise>
 												<xsl:attribute name="onclick">window.location.href='<xsl:value-of select="application/edit_link"/>'</xsl:attribute>
-												<i class="fas fa-flag mr-1 text-primary"></i>
+												<i class="fas fa-flag me-1 text-primary"></i>
 											</xsl:otherwise>
 										</xsl:choose>
 										<xsl:value-of select="php:function('lang', 'Edit')" />
 									</button>
 								</xsl:if>
 								<a class="dropdown-item" href="{application/dashboard_link}">
-									<i class="fas fa-flag mr-1 text-primary"></i>
+									<i class="fas fa-flag me-1 text-primary"></i>
 									<xsl:value-of select="php:function('lang', 'Back to Dashboard')" />
 								</a>
 								<a class="dropdown-item">
 									<xsl:attribute name="href">
 										<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:booking.uiapplication.index')" />
 									</xsl:attribute>
-									<i class="fas fa-flag mr-1 text-primary"></i>Tilbake til hovedoversikt
+									<i class="fas fa-flag me-1 text-primary"></i>Tilbake til hovedoversikt
 								</a>
 							</div>
 						</div>
@@ -331,26 +331,26 @@
 				</ul>
 			</div>
 			<div class="col-6">
-				<ul class="nav nav-pills nav-justified float-right">
-					<li class="nav-item mr-2">
-						<a class="nav-link active border" data-toggle="tab" href="#booking">
+				<ul class="list-inline float-end">
+					<li class="list-inline-item me-2">
+						<a class="btn btn-outline-primary active border" data-bs-toggle="tab" href="#booking">
 							<i class="fas fa-calendar-alt fa-2x" aria-hidden="true" title="Søknad"></i>
 						</a>
 
 					</li>
-					<li class="nav-item mr-2">
-						<a class="nav-link border" data-toggle="tab" href="#internal_notes">
+					<li class="list-inline-item me-2">
+						<a class="btn btn-outline-warning border" data-bs-toggle="tab" href="#internal_notes">
 							<i class="far fa-sticky-note fa-2x text-warning" aria-hidden="true" title="Interne notat"></i>
 						</a>
 
 					</li>
-					<!--li class="nav-item mr-2">
-						<a class="nav-link border" data-toggle="tab" href="#checklist">
+					<!--li class="nav-item me-2">
+						<a class="nav-link border" data-bs-toggle="tab" href="#checklist">
 							<i class="fas fa-clipboard-list fa-3x" aria-hidden="true" title="Sjekkliste"></i>
 						</a>
 					</li>-->
-					<li class="nav-item mr-2">
-						<a class="nav-link border" data-toggle="tab" href="#history">
+					<li class="list-inline-item me-2">
+						<a class="btn btn-outline-primary border" data-bs-toggle="tab" href="#history">
 							<i class="fas fa-history fa-2x" aria-hidden="true" title="Historikk"></i>
 						</a>
 					</li>
@@ -371,11 +371,11 @@
 			<!-- FIRST PANE START -->
 			<div class="tab-pane active" id="booking">
 
-				<!--				<div class="row mt-2 float-right">
+				<!--				<div class="row mt-2 float-end">
 					<div class="container-fluid">
 
 
-						<a href="#" class="btn btn-success btn-icon-split mr-2">
+						<a href="#" class="btn btn-success btn-icon-split me-2">
 							<span class="icon text-white-50">
 								<i class="fas fa-check"></i>
 							</span>
@@ -486,7 +486,7 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab" id="headingOne">
 											<h4 class="panel-title">
-												<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="">
+												<a role="button" data-bs-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="">
 													Søker: <xsl:value-of select="application/contact_name"/>
 												</a>
 											</h4>
@@ -539,7 +539,7 @@
 										<div class="panel panel-default">
 											<div class="panel-heading" role="tab" id="headingTwo">
 												<h4 class="panel-title">
-													<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+													<a class="" role="button" data-bs-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
 														<xsl:value-of select="php:function('lang', 'Organization')" />: <xsl:value-of select="application/customer_organization_name"/>
 													</a>
 												</h4>
@@ -602,7 +602,7 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab" id="headingTwelve">
 											<h4 class="panel-title">
-												<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="collapseTwelve" aria-expanded="true" aria-controls="collapseTwelve">
+												<a class="" role="button" data-bs-toggle="collapse" data-parent="#accordion" href="collapseTwelve" aria-expanded="true" aria-controls="collapseTwelve">
 													<xsl:value-of select="php:function('lang', 'invoice information')" />
 												</a>
 											</h4>
@@ -686,7 +686,7 @@
 										<div class="panel panel-default">
 											<div class="panel-heading" role="tab" id="headingThree">
 												<h4 class="panel-title">
-													<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+													<a class="" role="button" data-bs-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
 														<xsl:value-of select="php:function('lang', 'Who?')" />
 													</a>
 												</h4>
@@ -770,7 +770,7 @@
 										<div class="panel panel-default">
 											<div class="panel-heading" role="tab" id="headingFour">
 												<h4 class="panel-title">
-													<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+													<a class="" role="button" data-bs-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
 														<xsl:value-of select="php:function('lang', 'Why?')" />
 													</a>
 												</h4>
@@ -855,7 +855,7 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab" id="headingFive">
 											<h4 class="panel-title">
-												<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
+												<a class="" role="button" data-bs-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
 													Ønsker ressurs: <i class="fas fa-redo-alt text-primary"></i>
 												</a>
 											</h4>
@@ -899,7 +899,7 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab" id="headingSix">
 											<h4 class="panel-title">
-												<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
+												<a class="" role="button" data-bs-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
 													<xsl:value-of select="php:function('lang', 'When?')" />
 												</a>
 											</h4>
@@ -996,7 +996,7 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab" id="headingSeven">
 											<h4 class="panel-title">
-												<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven">
+												<a class="" role="button" data-bs-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven">
 													<xsl:value-of select="php:function('lang', 'payments')" />
 												</a>
 											</h4>
@@ -1020,7 +1020,7 @@
 									<!--									<div class="panel panel-default">
 										<div class="panel-heading" role="tab" id="headingEight">
 											<h4 class="panel-title">
-												<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="true" aria-controls="collapseEight">
+												<a class="" role="button" data-bs-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="true" aria-controls="collapseEight">
 													Booking-konflikter på ressurs: Ingen
 												</a>
 											</h4>
@@ -1033,7 +1033,7 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab" id="headingNine">
 											<h4 class="panel-title">
-												<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseNine" aria-expanded="true" aria-controls="collapseNine">
+												<a class="" role="button" data-bs-toggle="collapse" data-parent="#accordion" href="#collapseNine" aria-expanded="true" aria-controls="collapseNine">
 													<xsl:value-of select="php:function('lang', 'Associated items')" />
 												</a>
 											</h4>
@@ -1047,7 +1047,7 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab" id="headingTen">
 											<h4 class="panel-title">
-												<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTen" aria-expanded="true" aria-controls="collapseTen">
+												<a class="" role="button" data-bs-toggle="collapse" data-parent="#accordion" href="#collapseTen" aria-expanded="true" aria-controls="collapseTen">
 													<xsl:value-of select="php:function('lang', 'attachments')" />
 												</a>
 											</h4>
@@ -1084,7 +1084,7 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" role="tab" id="headingEleven">
 											<h4 class="panel-title">
-												<a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseEleven" aria-expanded="true" aria-controls="collapseEleven">
+												<a class="" role="button" data-bs-toggle="collapse" data-parent="#accordion" href="#collapseEleven" aria-expanded="true" aria-controls="collapseEleven">
 													<xsl:value-of select="php:function('lang', 'Terms and conditions')" />
 												</a>
 											</h4>
@@ -1292,7 +1292,7 @@
 					<h5 class="modal-title" id="commentModalLabel">
 						<xsl:value-of select="php:function('lang', 'Add a comment')" />
 					</h5>
-					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<button class="btn-close" type="button" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">x</span>
 					</button>
 				</div>
@@ -1334,7 +1334,7 @@
 						<xsl:text>)</xsl:text>
 					</h5>
 
-					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<button class="btn-close" type="button" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">x</span>
 					</button>
 				</div>
@@ -1385,7 +1385,7 @@
 					<h5 class="modal-title" id="change_userModalLabel">
 						<xsl:value-of select="php:function('lang', 'case officer')" />
 					</h5>
-					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<button class="btn-close" type="button" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">x</span>
 					</button>
 				</div>
@@ -1426,7 +1426,7 @@
 					<h5 class="modal-title" id="internal_noteModalLabel">
 						<xsl:value-of select="php:function('lang', 'internal notes')" />
 					</h5>
-					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<button class="btn-close" type="button" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">x</span>
 					</button>
 				</div>

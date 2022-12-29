@@ -190,7 +190,7 @@
 																</xsl:if>
 																<!-- === QUICK EDIT MENU === -->
 																<div class="quick_menu">
-																	<a class="open_case btn btn-primary btn-lg mr-3">
+																	<a class="open_case btn btn-primary btn-lg me-3">
 																		<xsl:attribute name="href">
 																			<xsl:text>index.php?menuaction=controller.uicase.open_case</xsl:text>
 																			<xsl:text>&amp;case_id=</xsl:text>
@@ -204,7 +204,7 @@
 																	</a>
 																	<xsl:choose>
 																		<xsl:when test="location_item_id = 0">
-																			<a class="delete_case btn btn-primary btn-lg mr-3">
+																			<a class="delete_case btn btn-primary btn-lg me-3">
 																				<xsl:attribute name="href">
 																					<xsl:text>index.php?menuaction=controller.uicase.delete_case</xsl:text>
 																					<xsl:text>&amp;case_id=</xsl:text>

@@ -297,3 +297,25 @@ label > input[type="search"] {
 .ms-n5 {
     margin-left: -40px;
 }
+
+
+.dataTables_wrapper .dataTables_length select {
+	padding: 4px 36px 4px 8px;
+}
+
+thead
+{
+background-color: rgb(224, 224, 224);
+}
+.select2-selection__rendered
+{
+    line-height: 33px !important;
+}
+.select2-container .select2-selection--single
+{
+    height: 36px !important;
+}
+.select2-selection__arrow
+{
+    height: 35px !important;
+}

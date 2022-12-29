@@ -348,7 +348,7 @@
 									<div class="icon-box">
 										<i class="material-icons"></i>
 									</div>
-									<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+									<button type="button" class="btn-close" data-dismiss="modal" aria-hidden="true"></button>
 								</div>
 								<div class="modal-body text-center">
 									<h4>Ooops!</h4>	

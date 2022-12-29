@@ -49,26 +49,26 @@
 
 
 <xsl:template match="toolbar" xmlns:php="http://php.net/xsl">
-	<div class="row ml-1">
+	<div class="row ms-1">
 		<div id="active_filters">
 		</div>
 	</div>
-	<div class="row mt-2 mb-2 ml-1">
-		<button class="btn btn-info" type="button" data-toggle="collapse" data-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">
+	<div class="mt-2 mb-2 ms-1">
+		<button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">
 			<xsl:value-of select="php:function('lang', 'filter')"/>
 		</button>
-		<button id="reset_filter" class="ml-2 btn btn-secondary" type="button" onclick="reset_filter();" style="display: none;">
+		<button id="reset_filter" class="ms-2 btn btn-secondary" type="button" onclick="reset_filter();" style="display: none;">
 			<xsl:value-of select="php:function('lang', 'reset filter')"/>
 		</button>
 	</div>
 
-	<div class="row mt-2 collapse ml-1" id="democollapseBtn">
+	<div class="row mt-2 collapse" id="democollapseBtn">
 		<xsl:if test="item">
 			<xsl:variable name="count_items" select="count(item)"/>
 			<div id="toolbar" class='dtable_custom_controls'>
 				<form>
 					<fieldset>
-						<div class="form-row">
+						<div class="row mb-2">
 							<xsl:for-each select="item">
 								<script type="text/javascript">
 									number_of_toolbar_items += 1;
@@ -81,11 +81,11 @@
 											</xsl:when>
 											<xsl:otherwise>
 												<xsl:choose>
-													<xsl:when test="$count_items > 3">
-														<xsl:text>form-group col-md-4</xsl:text>
+													<xsl:when test="$count_items > 4 or $count_items = 3">
+														<xsl:text>col-4</xsl:text>
 													</xsl:when>
 													<xsl:otherwise>
-														<xsl:text>form-group</xsl:text>
+														<xsl:text>col-6</xsl:text>
 													</xsl:otherwise>
 												</xsl:choose>
 											</xsl:otherwise>
@@ -96,7 +96,7 @@
 									<xsl:variable name="filter_key_name" select="concat(concat('filter_', name), '_name')"/>
 									<xsl:variable name="filter_key_id" select="concat(concat('filter_', name), '_id')"/>
 									<xsl:if test="name">
-										<label>
+										<label class="form-label">
 											<xsl:attribute name="for">
 												<xsl:value-of select="phpgw:conditional(not(name), '', name)"/>
 											</xsl:attribute>
@@ -239,16 +239,15 @@
 											</select>
 										</xsl:when>
 										<xsl:when test="type = 'link'">
-											<!--<div class="form-row ml-1">-->
+											<!--<div class="form-row ms-1">-->
 												<label>
-													<!--<xsl:if test="count(//item) = 1 ">-->
 														<xsl:attribute name="class">
 														<xsl:text>invisible</xsl:text>
 														</xsl:attribute>
-													<!--</xsl:if>-->
 													<xsl:value-of select="value"/>
 												</label>
-												<input type="button" class= "form-control btn btn-primary ml-2">
+												<br/>
+												<input type="button" class= "btn btn btn-primary ms-2">
 													<xsl:choose>
 														<xsl:when test="onclick">
 															<xsl:attribute name="onclick">
@@ -397,7 +396,7 @@
 						<xsl:for-each select="//top-toolbar/fields/field">
 							<xsl:choose>
 								<xsl:when test="type='button'">
-									<button id="{id}" type="{type}" class="form-control btn btn-primary">
+									<button id="{id}" type="{type}" class="btn btn btn-primary">
 										<xsl:value-of select="value"/>
 									</button>
 								</xsl:when>
@@ -426,7 +425,7 @@
 									</input>
 								</xsl:when>
 								<xsl:when test="type='button'">
-									<button id="{id}" type="{type}" class="form-control btn btn-primary" onclick="{action}">
+									<button id="{id}" type="{type}" class="btn btn btn-primary" onclick="{action}">
 										<xsl:value-of select="value"/>
 									</button>
 								</xsl:when>
@@ -450,7 +449,7 @@
 </xsl:template>
 
 <xsl:template name="datasource-definition">
-	<table id="datatable-container" class="display cell-border compact responsive no-wrap" width="99%">
+	<table id="datatable-container" class="display cell-border compact responsive no-wrap">
 	<!--table id="datatable-container" class="table table-bordered" width="99%" style="float: left;" cellspacing="0"-->
 		<thead>
 			<xsl:for-each select="//datatable/field">
@@ -992,6 +991,10 @@
 				try
 				{
 					oControl.multiselect({
+						buttonClass: 'form-select',
+						templates: {
+						button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>',
+						},
 						buttonWidth: 250,
 						includeSelectAllOption: true,
 						enableFiltering: true,

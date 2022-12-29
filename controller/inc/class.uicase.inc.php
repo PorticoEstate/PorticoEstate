@@ -848,7 +848,7 @@
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 				$type = 'location';
 				// Fetches buildings on property
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($location_code);
 				foreach ($buildings_on_property as &$building)
 				{
 					$building['selected'] = $building['id'] == $case_location_code ? 1 : 0;
@@ -1560,9 +1560,6 @@ JS;
 			$cats = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info = true;
 
-			//liste alle
-			$control_areas = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => $control_area_id,
-				'globals' => true, 'use_acl' => $_category_acl));
 
 			$control_area_id = $control->get_control_area_id();
 			$control_area = $cats->return_single($control_area_id);
@@ -1998,7 +1995,7 @@ JS;
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $check_list_location_code));
 				$type = 'location';
 				// Fetches locations on property
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $check_list_location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property( $check_list_location_code);
 			}
 
 
@@ -2177,7 +2174,7 @@ JS;
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 				$type = 'location';
 				// Fetches buildings on property
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property( $location_code);
 			}
 			// Check list top section info
 

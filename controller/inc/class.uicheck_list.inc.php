@@ -393,12 +393,11 @@
 			$month_nr = date("n", $deadline_ts);
 
 			$level = $this->location_finder->get_location_level($location_code);
-			$user_role = true;
 
 			// Fetches buildings on property
 			if ($type == "location")
 			{
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($location_code);
 			}
 			else
 			{
@@ -703,12 +702,11 @@
 			$month = date("n", $check_list->get_deadline());
 
 			$level = $this->location_finder->get_location_level($location_code);
-			$user_role = true;
 
 			// Fetches buildings on property
 			if($get_buildings_on_property)
 			{
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property( $location_code);
 			}
 
 			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_ADD, $this->acl_location);
@@ -1754,7 +1752,7 @@
 			// Fetches buildings on property
 			if($get_buildings_on_property)
 			{
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($location_code);
 			}
 
 			$year = date("Y", $check_list->get_deadline());
@@ -3449,13 +3447,13 @@ HTML;
 
 			$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
 			$stylesheets = array();
-			$stylesheets[] = "{$webserver_url}/phpgwapi/js/bootstrap/css/bootstrap.min.css";
+			$stylesheets[] = "{$webserver_url}/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css";
 //			$stylesheets[] = "{$webserver_url}/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
 			$stylesheets[] = "{$webserver_url}/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
 
 			$javascripts = array();
-			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/popper/popper.min.js";
-			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/bootstrap/js/bootstrap.min.js";
+			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/popper/popper2.min.js";
+			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js";
 
 			$report_data['stylesheets'] = $stylesheets;
 			$report_data['javascripts'] = $javascripts;
@@ -4141,12 +4139,10 @@ HTML;
 			}
 			else
 			{
-				$user_role = false;
-
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $check_list_location_code));
 				$type = 'location';
 				// Fetches locations on property
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $check_list_location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property( $check_list_location_code);
 			}
 
 

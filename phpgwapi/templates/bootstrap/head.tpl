@@ -24,6 +24,8 @@
 		//-->
 		</script>
 		{javascript}
+		<script src="https://unpkg.com/@popperjs/core@2"></script>
+
 		<script>
 		<!--
 			var navbar_config = {navbar_config};

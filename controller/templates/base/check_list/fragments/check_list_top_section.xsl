@@ -101,7 +101,7 @@
 										</label>
 									</div>
 								</div>
-								<!--								<button id = "submit_update_component_parent" type="submit" class="btn btn-primary btn-lg mr-3 mt-3" style="display:none">
+								<!--								<button id = "submit_update_component_parent" type="submit" class="btn btn-primary btn-lg me-3 mt-3" style="display:none">
 									<xsl:value-of select="php:function('lang', 'add picture')" />
 								</button>-->
 							</div>
@@ -128,15 +128,14 @@
 		<!-- differ from bootstrap-->
 		<div class="pure-menu pure-menu-horizontal pure-menu-scrollable">
 			<!-- LOGO -->
-			<a class="navbar-brand" href="#" data-toggle="collapse" data-target="#collapsibleNavbar">
+			<a class="navbar-brand" href="#" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
 				<xsl:value-of select="php:function('lang', $active_tab)"/>
 			</a>
-			<!--			<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
+			<!--			<button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar" aria-expanded="false">
 				<span class="navbar-toggler-icon"></span>
 			</button>-->
-			<div class="navbar-collapse collapse" id="collapsibleNavbar" style="">
-
-				<ul class="navbar-nav">
+			<div class="pure-menu pure-menu-horizontal" id="collapsibleNavbar" style="">
+				<ul class="pure-menu-list">
 					<xsl:choose>
 						<xsl:when test="count(check_list_type) = 0 or check_list_type != 'add_check_list'">
 							<xsl:call-template name="check_list_menu">
@@ -162,14 +161,14 @@
 				<xsl:if test="$active_tab != 'view_details'">
 					<div class="row mt-2">
 						<div class="container">
-							<h5 class="ml-5">Kontrollert lokasjon</h5>
-							<ul class="ml-2">
+							<h5 class="ms-5">Kontrollert lokasjon</h5>
+							<ul class="ms-2">
 								<xsl:for-each select="completed_list">
 									<li style="display: block;">
 										<a href="#">
-											<img src="{//img_undo}" width="16" class="mr-2" onClick="undo_completed({completed_id})"/>
+											<img src="{//img_undo}" width="16" class="me-2" onClick="undo_completed({completed_id})"/>
 										</a>
-										<img src="{//img_green_check}" width="16" class="mr-2"/>
+										<img src="{//img_green_check}" width="16" class="me-2"/>
 										<xsl:value-of select="name" />
 									</li>
 								</xsl:for-each>
@@ -181,24 +180,24 @@
 		</xsl:when>
 	</xsl:choose>
 	<xsl:choose>
-		<xsl:when test="component_children/child::node()">
+		<xsl:when test="component_children/child::node() and $active_tab != 'view_cases'">
 			<div id="choose-building-wrp">
 				<xsl:call-template name="select_component_children">
 					<xsl:with-param name="template_set">
-						<xsl:text>bootstrap</xsl:text>
+						<xsl:text>portico</xsl:text>
 					</xsl:with-param>
 				</xsl:call-template>
 				<xsl:if test="$active_tab != 'view_details'">
 					<div class="row mt-2">
 						<div class="container">
-							<h5 class="ml-5">Kontrollert utstyr</h5>
-							<ul class="ml-2">
+							<h5 class="ms-5">Kontrollert utstyr</h5>
+							<ul class="ms-2">
 								<xsl:for-each select="completed_list">
 									<li style="display: block;">
 										<a href="#">
-											<img src="{//img_undo}" width="16" class="mr-2" onClick="undo_completed({completed_id})"/>
+											<img src="{//img_undo}" width="16" class="me-2" onClick="undo_completed({completed_id})"/>
 										</a>
-										<img src="{//img_green_check}" width="16" class="mr-2"/>
+										<img src="{//img_green_check}" width="16" class="me-2"/>
 										<xsl:value-of select="short_description" />
 									</li>
 								</xsl:for-each>

@@ -30,15 +30,12 @@
 	phpgw::import_class('phpgwapi.jquery');
 	phpgwapi_jquery::load_widget('core');
 
-	$javascripts[]	 = "/phpgwapi/js/popper/popper.min.js";
-	$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
+	$javascripts[]	 = "/phpgwapi/js/popper/popper2.min.js";
+	$javascripts[]	 = "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js";
 
 	$javascripts[] = "/phpgwapi/templates/mobilefrontend/js/keep_alive.js";
 
 	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
-//	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
-//	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
-//	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/version_3/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/version_3/grids-responsive-min.css";
@@ -47,7 +44,7 @@
 	$stylesheets[] = "/phpgwapi/js/DataTables/Responsive/css/responsive.dataTables.min.css";
 
 
-	$stylesheets[] = "/phpgwapi/js/bootstrap/css/bootstrap.min.css";
+	$stylesheets[]	 = "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css";
 
 //	$stylesheets[] = "/{$app}/templates/base/css/base.css";
 	$stylesheets[] = "/{$app}/templates/mobilefrontend/css/base.css";

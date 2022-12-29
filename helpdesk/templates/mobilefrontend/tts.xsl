@@ -25,7 +25,7 @@
 					<div class="list-group">
 						<xsl:for-each select="sub_menu">
 							<a href="{url}" class="list-group-item list-group-item-action">
-								<i class="mr-3 far fa-folder"></i>
+								<i class="me-3 far fa-folder"></i>
 								<xsl:value-of select="text"/>
 							</a>
 						</xsl:for-each>

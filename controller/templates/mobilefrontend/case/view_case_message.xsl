@@ -74,10 +74,10 @@
 			<nav class="navbar bg-dark navbar-dark">
 
 				<!-- LOGO -->
-				<a class="navbar-brand" href="#" data-toggle="collapse" data-target="#collapsibleNavbar">
+				<a class="navbar-brand" href="#" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
 					<xsl:value-of select="php:function('lang', 'view case message')"/>
 				</a>
-				<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-expanded="false">
+				<button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar" aria-expanded="false">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="navbar-collapse collapse" id="collapsibleNavbar" style="">
