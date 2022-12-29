@@ -393,12 +393,11 @@
 			$month_nr = date("n", $deadline_ts);
 
 			$level = $this->location_finder->get_location_level($location_code);
-			$user_role = true;
 
 			// Fetches buildings on property
 			if ($type == "location")
 			{
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($location_code);
 			}
 			else
 			{
@@ -703,12 +702,11 @@
 			$month = date("n", $check_list->get_deadline());
 
 			$level = $this->location_finder->get_location_level($location_code);
-			$user_role = true;
 
 			// Fetches buildings on property
 			if($get_buildings_on_property)
 			{
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property( $location_code);
 			}
 
 			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_ADD, $this->acl_location);
@@ -1754,7 +1752,7 @@
 			// Fetches buildings on property
 			if($get_buildings_on_property)
 			{
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($location_code);
 			}
 
 			$year = date("Y", $check_list->get_deadline());
@@ -4141,12 +4139,10 @@ HTML;
 			}
 			else
 			{
-				$user_role = false;
-
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $check_list_location_code));
 				$type = 'location';
 				// Fetches locations on property
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $check_list_location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property( $check_list_location_code);
 			}
 
 

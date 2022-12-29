@@ -142,10 +142,8 @@
 			{
 				$level = $this->location_finder->get_location_level($location_code);
 
-				$user_role = true;
-
 				// Fetches buildings on property
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property( $location_code);
 
 				// Fetches controls for location within specified time period
 				$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
@@ -303,10 +301,8 @@
 			{
 				$level = $this->location_finder->get_location_level($location_code);
 
-				$user_role = true;
-
 				// Fetches buildings on property
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property( $location_code);
 
 				// Fetches all controls for the location within time period
 				$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
@@ -690,10 +686,8 @@
 
 			$level = $this->location_finder->get_location_level($location_code);
 
-			$user_role = true;
-
 			// Fetches buildings on property
-			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+			$buildings_on_property = $this->location_finder->get_buildings_on_property($location_code);
 
 			// Fetches all controls for the location within time period
 			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
