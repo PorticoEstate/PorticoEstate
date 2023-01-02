@@ -108,4 +108,17 @@ body {
 .event-allocation {
     background-color: #E6E3DB;
     border-color: #acb2d3;
+    z-index: 2;
+}
+
+.event-booking {
+    background-color: #8d742f;
+    border-color: #acb2d3;
+    z-index: 3;
+}
+
+.event-event {
+    background-color: #5c9a11;
+    border-color: #acb2d3;
+    z-index: 4;
 }

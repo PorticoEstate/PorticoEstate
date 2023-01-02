@@ -4,6 +4,11 @@
     <link rel="stylesheet" href="pecalendar.css">
     <script src="luxon.js"></script>
     <script src="pecalendar.js"></script>
+    <script src="../jquery/js/jquery-3.6.1.min.js"></script>
+    <script src="../core/base.js"></script>
+    <script>
+        let strBaseURL = '/portico/?click_history=1111';
+    </script>
 </head>
 <body>
 
@@ -16,30 +21,26 @@
         let cal = new PEcalendar("calendar");
         cal.createCalendarDom();
 
-        const events = [
-            {
-                from: "12:00",
-                to: "14:00",
-                date: "2022-12-21",
-                id_string: "1126",
-                organization_name: "Innbyggerdialog",
-                resource: "Diskotek",
-                resource_id: 18,
-                type: "allocation"
-            },
-            {
-                from: "10:00",
-                to: "16:00",
-                date: "2022-12-20",
-                id_string: "1126",
-                organization_name: "Vegard",
-                resource: "Diskotek",
-                resource_id: 18,
-                type: "allocation"
-            }
-        ]
+        let url = phpGWLink('bookingfrontend/', {
+            menuaction: 'bookingfrontend.uibooking.building_schedule_pe',
+            building_id: 5,
+            date: "2022-12-12"
+        }, true);
 
-        cal.setEvents(events);
+        $.ajax({
+            url: "http://localhost:8080/"+url,
+            type: 'GET',
+            async: false,
+            success: function (response)
+            {
+                console.log("Response", response);
+                const events = response?.ResultSet?.Result?.results;
+                console.log(events);
+                cal.setEvents(events)
+            }
+        });
+
+//        cal.setEvents(events);
 
     </script>
 </body>

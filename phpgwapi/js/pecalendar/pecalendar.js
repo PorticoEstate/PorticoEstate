@@ -86,7 +86,7 @@ class PEcalendar {
             for (let event of this.events) {
                 const dateFrom = DateTime.fromISO(`${event.date}T${event.from}`);
                 const dateTo = DateTime.fromISO(`${event.date}T${event.to}`);
-                const e = this.createElement("div", `event event-${event.type}`, `${event.resource}<br/>${event.organization_name}`)
+                const e = this.createElement("div", `event event-${event.type}`, `${event.resources.map(r => r.name).join(" / ")}<br/>${event.name}`)
                 const row = +(dateFrom.toFormat("H"))-this.startHour + 2;
                 const span = +dateTo.toFormat("H")-dateFrom.toFormat("H")
                 e.style.gridColumn = `${+dateFrom.toFormat("c")+1} / span 1`;

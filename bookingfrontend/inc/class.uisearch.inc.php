@@ -167,7 +167,6 @@
 			$params['top_levels'] = $top_levels;
 			$params['filter_tree'] = json_encode($filter_tree);
 
-
 			self::render_template_xsl('search', $params);
 		}
 

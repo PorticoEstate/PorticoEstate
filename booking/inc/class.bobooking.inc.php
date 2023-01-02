@@ -450,6 +450,148 @@
 			);
 		}
 
+        /**
+         * Return a building's schedule for a given week in PorticoEstate Format
+         *
+         * @param int   $building_id
+         * @param DateTime  $date
+         *
+         * @return array containing allocations, bookings and events
+         */
+
+        function building_schedule_pe( $building_id, $date)
+        {
+            $results = array();
+            $from = clone $date;
+            $from->setTime(0, 0, 0);
+            // Make sure $from is a monday
+            if ($from->format('w') != 1)
+            {
+                $from->modify('last monday');
+            }
+            $to				 = clone $from;
+            $to->modify('+7 days');
+
+            // Find building name
+            $building_names = (new booking_sobuilding)->get_building_names(array($building_id));
+            $building_name = $building_names[$building_id]['name'];
+
+            $resources		 = $this->resource_so->read(array('filters'	 => array('building_id'	 => $building_id,
+                'active' => 1), 'results'	 => -1));
+            $resource_ids = array();
+            $resources_id = array();
+            foreach ($resources['results'] as $resource)
+            {
+                $resource_ids[] = $resource['id'];
+                $resources_id[$resource['id']] = array(
+                    'active' => $resource['active'],
+                    'id' => $resource['id'],
+                    'activity_id' => $resource['activity_id'],
+                    'activity_name' => $resource['activity_name'],
+                    'name' => $resource['name']
+                );
+            }
+
+            // Allocations (Tildeling)
+            $allocation_ids	 = $this->so->allocation_ids_for_resource($resource_ids, $from, $to);
+
+            $allocations	 = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids),
+                'results' => -1));
+            $allocations	 = $allocations['results'];
+            foreach ($allocations as &$allocation)
+            {
+                $resources = array();
+                foreach ($allocation['resources'] as $resource_id) {
+                    $resources[] = $resources_id[$resource_id];
+                }
+                $results[] = array(
+                    'id' => $allocation['id'],
+                    'id_string' => $allocation['id_string'],
+                    'active' => $allocation['active'],
+                    'building_id' => $allocation['building_id'],
+                    'application_id' => $allocation['application_id'],
+                    'completed' => $allocation['completed'],
+                    'name' => $allocation['organization_name'],
+                    'shortname' => $allocation['organization_shortname'],
+                    'organization_id' => $allocation['organization_id'],
+                    'resources' => $resources,
+                    'season_id' => $allocation['season_id'],
+                    'season_name' => $allocation['season_name'],
+                    'type' => 'allocation',
+                    'from' => explode(" ", $allocation['from_'])[1],
+                    'to' => explode(" ", $allocation['to_'])[1],
+                    'date' => explode(" ", $allocation['from_'])[0],
+                    'building_name' => $building_name
+                );
+            }
+
+            // Bookings (Interntildeling)
+            $booking_ids = $this->so->booking_ids_for_resource($resource_ids, $from, $to);
+            $_bookings	 = $this->so->read(array('filters' => array('id' => $booking_ids), 'results' => -1));
+
+            foreach ($_bookings['results'] as $booking)
+            {
+                $results[] = array(
+                    'type'				 => 'booking',
+                    'id'				 => $booking['id'],
+                    'name'				 => $booking['group_name'],
+                    'shortname'			 => $booking['group_shortname'],
+                    'active'			 => $booking['active'],
+                    'allocation_id'		 => $booking['allocation_id'],
+                    'group_id'			 => $booking['group_id'],
+                    'season_id'			 => $booking['season_id'],
+                    'season_name'		 => $booking['season_name'],
+                    'activity_id'		 => $booking['activity_id'],
+                    'activity_name'		 => $booking['activity_name'],
+                    'application_id'	 => $booking['application_id'],
+                    'group_name'		 => $booking['group_name'],
+                    'group_shortname'	 => $booking['group_shortname'],
+                    'building_id'		 => $booking['building_id'],
+                    'building_name'		 => $booking['building_name'],
+                    'from'				 => $booking['from_'],
+                    'to'				 => $booking['to_'],
+                    'completed'			 => $booking['completed'],
+                    'reminder'			 => $booking['reminder'],
+                    'resources'			 => $booking['resources'],
+                    'dates'				 => $booking['dates']
+                );
+            }
+
+            // Events
+            $event_ids	 = $this->so->event_ids_for_resource($resource_ids, $from, $to);
+            $_events	 = $this->event_so->read(array('filters' => array('id' => $event_ids),
+                'results' => -1));
+
+            foreach ($_events['results'] as $event)
+            {
+                $results[] = array(
+                    'type'				 => 'event',
+                    'id'				 => $event['id'],
+                    'id_string'			 => $event['id_string'],
+                    'active'			 => $event['active'],
+                    'activity_id'		 => $event['activity_id'],
+                    'application_id'	 => $event['application_id'],
+                    'name'				 => $event['is_public'] ? $event['name'] : '',
+                    'homepage'			 => $event['homepage'],
+                    'description'		 => $event['is_public'] ? $event['description'] : '',
+                    'equipment'			 => $event['equipment'],
+                    'building_id'		 => $event['building_id'],
+                    'building_name'		 => $event['building_name'],
+                    'from_'				 => $event['from_'],
+                    'to_'				 => $event['to_'],
+                    'completed'			 => $event['completed'],
+                    'access_requested'	 => $event['access_requested'],
+                    'reminder'			 => $event['reminder'],
+                    'is_public'			 => $event['is_public'],
+                    'activity_name'		 => $event['activity_name'],
+                    'resources'			 => $event['resources'],
+                    'dates'				 => $event['dates']
+                );
+            }
+
+            return array('total_records' => count($results), 'results' => $results);
+        }
+
 		/**
 		 * Return a building's schedule for a given week in a YUI DataSource
 		 * compatible format
