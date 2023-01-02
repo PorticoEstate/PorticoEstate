@@ -32,6 +32,15 @@ class PEcalendar {
 
     setEvents(events) {
         this.events = events;
+        // Fix span of day
+        for(let event of this.events) {
+            const start = +event.from.substring(0, 2)
+            const end = +event.to.substring(0,2) + 1;
+            if (this.startHour>start)
+                this.startHour = start;
+            if (this.endHour<end)
+                this.endHour = end;
+        }
         this.createCalendarDom();
     }
 
