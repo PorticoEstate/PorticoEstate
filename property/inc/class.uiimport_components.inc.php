@@ -893,7 +893,7 @@ HTML;
 				'image_loader'				 => $GLOBALS['phpgw']->common->image('property', 'ajax-loader', '.gif', false)
 			);
 
-			self::add_javascript('property', 'portico', 'import_components.js');
+			self::add_javascript('property', 'base', 'import_components.js');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('import components');
 
 			self::render_template_xsl(array('import_components', 'multi_upload_file', 'datatable_inline'), $data);

@@ -1554,7 +1554,7 @@ JS;
 
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
-			self::add_javascript('property', 'portico', 'location.responsiblility_role.js');
+			self::add_javascript('property', 'base', 'location.responsiblility_role.js');
 
 			$this->bo->get_responsible(array('user_id'	 => $user_id, 'role_id'	 => $role_id,
 				'type_id'	 => $type_id, 'allrows'	 => $this->allrows, 'dry_run'	 => true));
@@ -2789,7 +2789,7 @@ JS;
 
 			$appname = lang('location');
 
-			self::add_javascript('property', 'portico', 'location.edit.js');
+			self::add_javascript('property', 'base', 'location.edit.js');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			self::render_template_xsl(array('location', 'datatable_inline', 'attributes_form'), array(

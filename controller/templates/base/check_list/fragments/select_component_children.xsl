@@ -1,6 +1,6 @@
 <xsl:template name="select_component_children" xmlns:php="http://php.net/xsl">
 	<xsl:param name="template_set" />
-	<form class="pure-form pure-form-aligned" ENCTYPE="multipart/form-data" method="post" id="frm_add_picture">
+	<form class="pure-form pure-form-stacked" ENCTYPE="multipart/form-data" method="post" id="frm_add_picture">
 		<xsl:attribute name="action">
 			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.add_component_image, phpgw_return_as:json')" />
 		</xsl:attribute>
@@ -16,7 +16,7 @@
 			<label>
 				<xsl:value-of select="php:function('lang', 'equipment')" />
 			</label>
-			<select id="choose-child-on-component" name = "component" class="pure-input-1-2 select-component">
+			<select id="choose-child-on-component" name = "component" class="form-select pure-input-1-2">
 				<xsl:for-each select="component_children">
 					<option>
 						<xsl:if test="id = //current_child/id">
@@ -57,7 +57,7 @@
 	</form>
 
 	<xsl:for-each select="location_children">
-		<form class="pure-form pure-form-aligned form_new_component row" method="post">
+		<form class="pure-form pure-form-stacked form_new_component row" method="post">
 			<xsl:attribute name="action">
 				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.edit_component_child, phpgw_return_as:json')" />
 			</xsl:attribute>
@@ -89,7 +89,7 @@
 						<xsl:choose>
 							<xsl:when test="$template_set = 'bootstrap'">
 								<xsl:attribute name="class">
-									<xsl:text>btn btn-primary btn-sm ml-1</xsl:text>
+									<xsl:text>btn btn-primary btn-sm ms-1</xsl:text>
 								</xsl:attribute>
 							</xsl:when>
 							<xsl:otherwise>

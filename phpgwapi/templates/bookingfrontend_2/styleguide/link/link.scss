@@ -1,0 +1,66 @@
+a {
+  &,
+  &:link,
+  &:visited {
+    color: $black;
+    text-decoration: underline;
+  }
+
+  &:hover, 
+  &:focus,
+  &:active {
+    color: $purple;
+  }
+
+  &.arrow {
+
+    &::after {
+      content:url(gfx/arrow.svg);
+      padding-left: 0.5rem;
+    }
+
+  }
+
+  &.link-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 700;
+    padding: 1.25rem 2rem;
+    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid $grey-light;
+    position: relative;
+    text-decoration: none;
+    color: $black;
+    @extend .rounded-large;
+
+    &::after {
+      content: "\f054";
+      padding-left: 1rem;
+      font-size: 1em;
+      color: $purple;
+      font-family: "Font Awesome 5 Free";
+    }
+
+    &::before {
+      content: '';
+      border: 1px solid transparent;
+      position: absolute;
+      display: block;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      @extend .rounded-large;
+    }
+
+    &:hover {
+      border-color: $purple;
+      color: $black;
+
+      &::before {
+        border-color: $purple;
+      }
+    }
+  }
+}

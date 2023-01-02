@@ -550,7 +550,7 @@
 
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('autocomplete');
-			self::add_javascript('property', 'portico', 'generic_document.edit.js');
+			self::add_javascript('property', 'base', 'generic_document.edit.js');
 
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');

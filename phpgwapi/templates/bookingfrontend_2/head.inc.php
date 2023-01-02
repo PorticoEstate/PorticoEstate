@@ -54,8 +54,8 @@ JS;
 	$stylesheets = array();
 
 
-	$stylesheets[]	 = "/phpgwapi/js/bootstrap/css/bootstrap.min.css";
-//	$stylesheets[]	 = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
+//	$stylesheets[]	 = "/phpgwapi/js/bootstrap/css/bootstrap.min.css";
+	$stylesheets[]	 = "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css";
 	$stylesheets[]	 = "/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
 
 	$stylesheets[]	 = "/phpgwapi/templates/bookingfrontend/css/jquery.autocompleter.css";
@@ -168,9 +168,8 @@ JS;
 	phpgwapi_jquery::load_widget('core');
 
 	$javascripts	 = array();
-	$javascripts[]	 = "/phpgwapi/js/popper/popper.min.js";
-	$javascripts[]	 = "/phpgwapi/js/bootstrap/js/bootstrap.min.js";
-
+	$javascripts[]	 = "/phpgwapi/js/popper/popper2.min.js";
+	$javascripts[]	 = "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/knockout-min.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/knockout.validation.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/jquery.autocompleter.js";
@@ -392,7 +391,7 @@ HTML;
 
 	$user_url = $GLOBALS['phpgw']->link("/{$app}/", array('menuaction' => 'bookingfrontend.uiuser.show'));
 	$lang_user = lang('My page');
-	$tpl_vars['user_info_view'] = "<span><i class='fas fa-user ml-1 mr-1'></i><a href='{$user_url}'>{$lang_user}</a></span>";
+	$tpl_vars['user_info_view'] = "<span><i class='fas fa-user ms-1 me-1'></i><a href='{$user_url}'>{$lang_user}</a></span>";
 
 	$user_data = phpgwapi_cache::session_get($bouser->get_module(), $bouser::USERARRAY_SESSION_KEY);
 	if ($bouser->is_logged_in())

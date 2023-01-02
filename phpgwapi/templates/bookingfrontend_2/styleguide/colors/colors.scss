@@ -1,0 +1,51 @@
+
+$purple: #793C8A;
+$blue: #28358B;
+$black: #000000;
+$beige-dark: #E6E3DB;
+$beige: #F7F5F0;
+$grey: #D6D6D6;
+$grey-light: #F5F5F5;
+$white: #FFFFFF;
+
+$primary-color: $purple;
+$secondary-color: $blue;
+
+$colors: (
+  'purple' : $purple,
+  'blue': $blue,
+  'black': $black,
+  'beige-dark': $beige-dark,
+  'beige': $beige,
+  'grey': $grey,
+  'grey-light': $grey-light,
+  'white': $white, );
+$opacities: (
+  '80' : 0.8,
+  '64' : 0.64,
+  '56' : 0.56,
+  '40' : 0.40,
+  '24' : 0.24,
+  '16' : 0.16,
+  '8' : 0.08,
+  '4' : 0.04,
+  );
+
+@each $color, $colorValue in $colors {
+  .text-#{$color} {
+    color: $colorValue;
+  }
+
+  .bg-#{$color} {
+    background-color: $colorValue;
+  }
+
+  @each $opacity, $opacityValue in $opacities {
+    .bg-#{$color}-#{$opacity} {
+      background-color: rgba($colorValue, $opacityValue);
+    }
+  }
+
+}
+
+

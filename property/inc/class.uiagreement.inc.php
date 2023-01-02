@@ -1569,7 +1569,7 @@
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
 
-			self::add_javascript('property', 'portico', 'agreement.edit.js');
+			self::add_javascript('property', 'base', 'agreement.edit.js');
 			self::render_template_xsl(array('agreement', 'datatable_inline', 'files', 'attributes_form',
 				'nextmatchs'), array('edit' => $data));
 		}
@@ -1895,7 +1895,7 @@
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
 
-			self::add_javascript('property', 'portico', 'agreement.edit.js');
+			self::add_javascript('property', 'base', 'agreement.edit.js');
 			self::render_template_xsl(array('agreement', 'datatable_inline', 'attributes_form'), array(
 				'edit_item' => $data));
 		}

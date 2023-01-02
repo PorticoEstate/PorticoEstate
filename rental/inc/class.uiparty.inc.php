@@ -593,7 +593,7 @@ JS;
 
 			$GLOBALS['phpgw']->js->add_code('', $jscode);
 
-			self::add_javascript('rental', 'rental', 'party.sync.js');
+			self::add_javascript('rental', 'base', 'party.sync.js');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -957,7 +957,7 @@ JS;
 					'security', 'file'))
 			);
 
-			self::add_javascript('rental', 'rental', 'party.edit.js');
+			self::add_javascript('rental', 'base', 'party.edit.js');
 			phpgwapi_jquery::load_widget('numberformat');
 			self::render_template_xsl(array('party', 'datatable_inline'), array($mode => $data));
 		}
@@ -1275,7 +1275,7 @@ JS;
 
 			$GLOBALS['phpgw']->js->add_code('', $jscode);
 
-			self::add_javascript('rental', 'rental', 'party.sync.js');
+			self::add_javascript('rental', 'base', 'party.sync.js');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

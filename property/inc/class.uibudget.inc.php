@@ -599,7 +599,7 @@
 
 			phpgwapi_jquery::load_widget('numberformat');
 
-			self::add_javascript('property', 'portico', 'budget.index.js');
+			self::add_javascript('property', 'base', 'budget.index.js');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -766,7 +766,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('budget') . ': ' . lang('list budget');
 
 			phpgwapi_jquery::load_widget('numberformat');
-			self::add_javascript('property', 'portico', 'budget.basis.js');
+			self::add_javascript('property', 'base', 'budget.basis.js');
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
@@ -916,7 +916,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('budget') . ': ' . lang('list obligations');
 
 			phpgwapi_jquery::load_widget('numberformat');
-			self::add_javascript('property', 'portico', 'budget.obligations.js');
+			self::add_javascript('property', 'base', 'budget.obligations.js');
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}

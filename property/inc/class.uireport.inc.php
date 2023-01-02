@@ -278,7 +278,7 @@
 				'tabs'			 => phpgwapi_jquery::tabview_generate($tabs, 'reports')
 			);
 
-			self::add_javascript('property', 'portico', 'report.index.js');
+			self::add_javascript('property', 'base', 'report.index.js');
 
 			self::render_template_xsl(array('report', 'datatable_inline'), array('lists' => $data));
 		}
@@ -387,7 +387,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . lang('report generator');
 
-			self::add_javascript('property', 'portico', 'report.edit.js');
+			self::add_javascript('property', 'base', 'report.edit.js');
 
 			self::render_template_xsl(array('report'), array('edit' => $data));
 		}
@@ -611,7 +611,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . lang('report generator');
 
-			self::add_javascript('property', 'portico', 'report.edit.js');
+			self::add_javascript('property', 'base', 'report.edit.js');
 
 			self::render_template_xsl(array('report'), array('edit_dataset' => $data));
 		}

@@ -121,7 +121,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript('helpdesk', 'portico', 'email_out.index.js');
+			self::add_javascript('helpdesk', 'base', 'email_out.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -352,7 +352,7 @@
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::formvalidator_generate(array());
 			self::rich_text_editor('content');
-			self::add_javascript('helpdesk', 'portico', 'email_out.edit.js');
+			self::add_javascript('helpdesk', 'base', 'email_out.edit.js');
 			self::render_template_xsl(array('email_out', 'datatable_inline'), array($mode => $data));
 		}
 

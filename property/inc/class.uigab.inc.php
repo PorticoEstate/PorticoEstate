@@ -427,7 +427,7 @@ JS;
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			self::add_javascript('property', 'portico', 'gab.index.js');
+			self::add_javascript('property', 'base', 'gab.index.js');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

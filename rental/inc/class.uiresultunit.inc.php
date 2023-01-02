@@ -263,7 +263,7 @@
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
-			self::add_javascript('rental', 'rental', 'resultunit.edit.js');
+			self::add_javascript('rental', 'base', 'resultunit.edit.js');
 			self::render_template_xsl(array('resultunit', 'datatable_inline'), array('edit' => $data));
 		}
 

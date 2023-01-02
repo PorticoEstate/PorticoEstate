@@ -1197,7 +1197,7 @@ HTML;
 			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
-			self::add_javascript('helpdesk', 'portico', 'tts.index.js');
+			self::add_javascript('helpdesk', 'base', 'tts.index.js');
 
 			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 
@@ -1972,7 +1972,7 @@ JS;
 			$function_msg .= lang('add ticket');
 
 			self::add_javascript('phpgwapi', 'paste', 'paste.js');
-			self::add_javascript('helpdesk', 'portico', 'tts.add.js');
+			self::add_javascript('helpdesk', 'base', 'tts.add.js');
 //			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', 'text/javascript', true);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 			phpgwapi_jquery::load_widget('autocomplete');
@@ -2986,7 +2986,7 @@ JS;
 			phpgwapi_jquery::load_widget('glider');
 
 			self::add_javascript('phpgwapi', 'paste', 'paste.js');
-			self::add_javascript('helpdesk', 'portico', 'tts.view.js');
+			self::add_javascript('helpdesk', 'base', 'tts.view.js');
 			self::rich_text_editor('new_note');
 
 			$this->_insert_custom_js();

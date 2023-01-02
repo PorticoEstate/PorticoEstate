@@ -350,7 +350,7 @@
 						var area_suffix = '{$this->area_suffix}';
 JS;
 						$GLOBALS['phpgw']->js->add_code('', $code);
-						self::add_javascript('rental', 'rental', 'billing.add.js');
+						self::add_javascript('rental', 'base', 'billing.add.js');
 						phpgwapi_jquery::load_widget('numberformat');
 						self::render_template_xsl(array('billing', 'datatable_inline'), array($template => $data));
 						return;
@@ -1031,7 +1031,7 @@ JS;
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $code);
 
-			self::add_javascript('rental', 'rental', 'billing.add.js');
+			self::add_javascript('rental', 'base', 'billing.add.js');
 			phpgwapi_jquery::load_widget('numberformat');
 			self::render_template_xsl(array('billing', 'datatable_inline'), array($template => $data));
 		}
@@ -1183,7 +1183,7 @@ JS;
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $code);
 
-			self::add_javascript('rental', 'rental', 'billing.index.js');
+			self::add_javascript('rental', 'base', 'billing.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 			self::render_template_xsl('datatable_jquery', $data);
 		}

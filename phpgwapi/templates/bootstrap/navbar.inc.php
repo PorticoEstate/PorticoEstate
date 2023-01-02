@@ -140,7 +140,7 @@ HTML;
 			{
 				$preferences_option .= <<<HTML
 				<a class="dropdown-item" href="{$preferences_url}">
-					<i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+					<i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>
 					{$preferences_text}
 				</a>
 HTML;
@@ -159,8 +159,9 @@ HTML;
 		if((phpgw::get_var('phpgw_return_as') != 'json'  && $breadcrumbs && is_array($breadcrumbs)) && !$nonavbar)// && isset($GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs'])
 		{
 			$breadcrumb_html = <<<HTML
-				<nav aria-label="breadcrumb">
-				  <ol class="breadcrumb shadow">
+			<div class="clearfix">
+			<nav aria-label="breadcrumb">
+				  <ol class="breadcrumb shadow ps-2 pt-2 pb-3">
 HTML;
 			$history_url = array();
 			for($i=0;$i< (count($breadcrumbs) -1); $i++)
@@ -171,13 +172,13 @@ HTML;
 			}
 
 			$breadcrumb_html .= <<<HTML
-				    <li class="breadcrumb-item active" aria-current="page">{$breadcrumbs[$i]['name']}</li>
+				    <li class="breadcrumb-item" aria-current="page">{$breadcrumbs[$i]['name']}</li>
 HTML;
 
 			$breadcrumb_html .= <<<HTML
 				</ol>
 			  </nav>
-
+		</div>
 HTML;
 
 		}
@@ -223,7 +224,7 @@ HTML;
 				));
 			$support_option = <<<HTML
 			<li class="nav-item">
-				<a href="$support_link" class="nav-link" data-toggle="modal" data-target="#popupModal">{$support_text}</a>
+				<a href="$support_link" class="nav-link" data-bs-toggle="modal" data-bs-target="#popupModal">{$support_text}</a>
 			</li>
 HTML;
 		}
@@ -256,11 +257,11 @@ HTML;
 
 			<li class="nav-item dropdown no-arrow">
 				<a class="nav-link dropdown-toggle" href="#" id="bookmarkDropdown" role="button"
-					data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<span class="mr-2 d-none d-lg-inline">{$lang_bookmarks}</span>
+					data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<span class="me-2 d-none d-lg-inline">{$lang_bookmarks}</span>
 				</a>
 				<!-- Dropdown - bookmarks -->
-				<div id="_bookmark" class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+				<ul id="_bookmark" class="dropdown-menu"
 				aria-labelledby="bookmarkDropdown">
 HTML;
 
@@ -271,7 +272,7 @@ HTML;
 						continue;
 					}
 					$seleced_bm = 'dropdown-item';
-					$icon = !empty($entry['icon']) ? "<i class='{$entry['icon']} mr-2 text-gray-400'></i>": '<i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>';
+					$icon = !empty($entry['icon']) ? "<i class='{$entry['icon']} me-2 text-gray-400'></i>": '<i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>';
 
 
 					if ( $bookmark_id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}"
@@ -281,14 +282,16 @@ HTML;
 					}
 
 					$bookmark_option .= <<<HTML
-					<a class="{$seleced_bm}" href="{$entry['href']}" id="bookmark_{$bookmark_id}">
-						{$icon}
-						{$entry['text']}
-					</a>
+					<li>
+						<a class="{$seleced_bm}" href="{$entry['href']}" id="bookmark_{$bookmark_id}">
+							{$icon}
+							{$entry['text']}
+						</a>
+					</li>
 HTML;
 
 				}
-				$bookmark_option .= '</div></li>';
+				$bookmark_option .= '</ul></li>';
 		}
 		else
 		{
@@ -309,7 +312,7 @@ HTML;
 			if ($total_messages > 0)
 			{
 				$new_messages		 = $total_messages;
-				$new_messages_alert	 = "<span class='badge badge-danger badge-counter'>{$new_messages}</span>";
+				$new_messages_alert	 = "<span class='badge bg-danger rounded-pill'>{$new_messages}</span>";
 			}
 			else
 			{
@@ -322,7 +325,7 @@ HTML;
 			$messenger_option = <<<HTML
                         <li class="nav-item dropdown no-arrow mx-1" onClick="get_messages();">
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
                                 <!-- Counter - Messages -->
 								{$new_messages_alert}
@@ -341,7 +344,7 @@ HTML;
 		$topmenu = <<<HTML
 
                     <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
+                    <ul class="navbar-nav ms-auto">
 					<li class="nav-item">
 						<a href="{$home_url}" class="nav-link">{$home_text}</a>
 					</li>
@@ -358,8 +361,8 @@ HTML;
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600">$user_fullname</span>
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="me-2 d-none d-lg-inline text-gray-600">$user_fullname</span>
                                 <img class="img-profile rounded-circle" style="height:2rem; width: 2rem;"
                                     src="{$undraw_profile}">
                             </a>
@@ -367,17 +370,17 @@ HTML;
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
                                 <!--a class="dropdown-item" href="#">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
                                     Profile
                                 </a-->
 								{$preferences_option}
                                 <!--a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    <i class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>
                                     Activity Log
                                 </a-->
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
                                     {$var['logout_text']}
                                 </a>
                             </div>
@@ -405,17 +408,20 @@ HTML;
 							<h1>{$user_fullname}</h1>
 						</div>
 						<div class="input-group">
-							<input class="form-control py-2 border-right-0 border" type="search" value="" id="navbar_search">
+							<input class="form-control border-end-0 border" type="search" value="" id="navbar_search">
 							<span class="input-group-append">
-								<div class="input-group-text bg-transparent"><i class="fa fa-search"></i></div>
-							</span>
+				                <button class="btn btn-outline-secondary bg-white border-start-0 border ms-n3" type="button">
+                				    <i class="fa fa-search"></i>
+               					</button>
+        					</span>
 						</div>
-						<div id="navtreecontrol" class="ml-4">
+
+						<div id="navtreecontrol" class="ms-4">
 							<a id="collapseNavbar" title="Collapse the entire tree below" href="#" style="white-space:nowrap; color:inherit; font-size: 1rem">
 								{$lang_collapse_all}
 							</a>
 						</div>
-						<div id="navbar" style="overflow: auto" class="ml-4"></div>
+						<div id="navbar" style="overflow: auto" class="ms-4"></div>
 					</nav>
 HTML;
 
@@ -445,7 +451,7 @@ HTML;
 							<i class="fas fa-align-left"></i>
 							<span>Sidemeny</span>
 						</button>
-						<button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+						<button class="btn btn-dark d-inline-block d-lg-none ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 							<i class="fas fa-align-justify"></i>
 						</button>
 
@@ -627,7 +633,7 @@ HTML;
 		{
 			$id ++;
 			$out = <<<HTML
-	          <a href="#_$id" data-toggle="collapse" aria-expanded="{$aria_expanded}" class="dropdown-toggle">{$parent_name}</a>
+	          <a href="#_$id" data-bs-toggle="collapse" aria-expanded="{$aria_expanded}" class="dropdown-toggle">{$parent_name}</a>
 				<ul class="{$ul_class}list-unstyled collapse" id = "_$id">
 					{$out}
 				</ul>

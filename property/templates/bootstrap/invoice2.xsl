@@ -87,7 +87,7 @@
 
 			</div>
 				<div class='col-sm-3'>
-				<a href="#" id="show_image" class="btn btn-primary" data-toggle="modal" data-target="#mapModal" style="display:none; margin-bottom: 5px">
+				<a href="#" id="show_image" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mapModal" style="display:none; margin-bottom: 5px">
 					<p><i class="fas fa-image"></i>  Trykk for å se faktura</p>
 				</a>
 			</div>
@@ -160,7 +160,7 @@
 							<xsl:call-template name="approve"/>
 						</table>
 					</div>
-<!--					<div class='col-sm-3 align-self-start float-left sticky_bottom'>-->
+<!--					<div class='col-sm-3 align-self-start float-start sticky_bottom'>-->
 <!--					<div class='col-sm-3  sticky_bottom'>
 						<div>
 							<button type="submit" class="btn btn-primary" name="values[update_voucher]">
@@ -185,7 +185,7 @@
 					<h2 class="modal-title w-100">
 						Fakturaimage
 					</h2>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">
 							<i class="fas fa-times"></i>
 						</span>
@@ -244,22 +244,22 @@
 				 </thead>
 				<tr>
 					<td>
-						<select id="janitor_lid" name="janitor_lid" class="custom-select">
+						<select id="janitor_lid" name="janitor_lid" class="form-select">
 							<xsl:apply-templates select="janitor_list/options"/>
 						</select>
 					</td>		
 					<td>
-						<select id="supervisor_lid" name="supervisor_lid" class="custom-select">
+						<select id="supervisor_lid" name="supervisor_lid" class="form-select">
 							<xsl:apply-templates select="supervisor_list/options"/>
 						</select>
 					</td>		
 					<td>
-						<select id="budget_responsible_lid" name="budget_responsible_lid" class="custom-select">
+						<select id="budget_responsible_lid" name="budget_responsible_lid" class="form-select">
 							<xsl:apply-templates select="budget_responsible_list/options"/>
 						</select>
 					</td>		
 					<td>
-						<select id="criteria" name="criteria" class="custom-select">
+						<select id="criteria" name="criteria" class="form-select">
 							<xsl:apply-templates select="criteria_list/options"/>
 						</select>
 					</td>		
@@ -298,7 +298,7 @@
 				</xsl:attribute>
 				<!-- When janitor area is chosen, an ajax request is executed. The operation fetches vouchers from db and populates the voucher list.
 				The ajax opearation is handled in ajax_invoice.js -->
-				<select id="voucher_id_filter" name="voucher_id_filter" class="custom-select">
+				<select id="voucher_id_filter" name="voucher_id_filter" class="form-select">
 					<xsl:apply-templates select="voucher_list/options"/>
 				</select>
 			</form>
@@ -441,12 +441,12 @@
 							</select>
 						</td>
 						<td>
-							<select id="periodization" name="values[periodization]" class="custom-select">
+							<select id="periodization" name="values[periodization]" class="form-select">
 								<xsl:apply-templates select="voucher_info/generic/periodization_list/options"/>
 							</select>
 						</td>
 						<td>
-							<select id="periodization_start" name="values[periodization_start]" class="custom-select">
+							<select id="periodization_start" name="values[periodization_start]" class="form-select">
 								<xsl:apply-templates select="voucher_info/generic/periodization_start_list/options"/>
 							</select>
 						</td>

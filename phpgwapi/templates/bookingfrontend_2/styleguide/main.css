@@ -1,0 +1,584 @@
+.container {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.row {
+  margin-left: -1.25rem;
+  margin-right: -1.25rem;
+}
+
+.colorbox {
+  height: 50px;
+  width: 50px;
+  border-radius: 5px;
+  flex: none;
+}
+.colorbox--large {
+  height: 80px;
+  width: 80px;
+}
+
+.text-purple {
+  color: #793C8A;
+}
+
+.bg-purple {
+  background-color: #793C8A;
+}
+
+.bg-purple-80 {
+  background-color: rgba(121, 60, 138, 0.8);
+}
+
+.bg-purple-64 {
+  background-color: rgba(121, 60, 138, 0.64);
+}
+
+.bg-purple-56 {
+  background-color: rgba(121, 60, 138, 0.56);
+}
+
+.bg-purple-40 {
+  background-color: rgba(121, 60, 138, 0.4);
+}
+
+.bg-purple-24 {
+  background-color: rgba(121, 60, 138, 0.24);
+}
+
+.bg-purple-16 {
+  background-color: rgba(121, 60, 138, 0.16);
+}
+
+.bg-purple-8 {
+  background-color: rgba(121, 60, 138, 0.08);
+}
+
+.bg-purple-4 {
+  background-color: rgba(121, 60, 138, 0.04);
+}
+
+.text-blue {
+  color: #28358B;
+}
+
+.bg-blue {
+  background-color: #28358B;
+}
+
+.bg-blue-80 {
+  background-color: rgba(40, 53, 139, 0.8);
+}
+
+.bg-blue-64 {
+  background-color: rgba(40, 53, 139, 0.64);
+}
+
+.bg-blue-56 {
+  background-color: rgba(40, 53, 139, 0.56);
+}
+
+.bg-blue-40 {
+  background-color: rgba(40, 53, 139, 0.4);
+}
+
+.bg-blue-24 {
+  background-color: rgba(40, 53, 139, 0.24);
+}
+
+.bg-blue-16 {
+  background-color: rgba(40, 53, 139, 0.16);
+}
+
+.bg-blue-8 {
+  background-color: rgba(40, 53, 139, 0.08);
+}
+
+.bg-blue-4 {
+  background-color: rgba(40, 53, 139, 0.04);
+}
+
+.text-black {
+  color: #000000;
+}
+
+.bg-black {
+  background-color: #000000;
+}
+
+.bg-black-80 {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.bg-black-64 {
+  background-color: rgba(0, 0, 0, 0.64);
+}
+
+.bg-black-56 {
+  background-color: rgba(0, 0, 0, 0.56);
+}
+
+.bg-black-40 {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.bg-black-24 {
+  background-color: rgba(0, 0, 0, 0.24);
+}
+
+.bg-black-16 {
+  background-color: rgba(0, 0, 0, 0.16);
+}
+
+.bg-black-8 {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.bg-black-4 {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.text-beige-dark {
+  color: #E6E3DB;
+}
+
+.bg-beige-dark {
+  background-color: #E6E3DB;
+}
+
+.bg-beige-dark-80 {
+  background-color: rgba(230, 227, 219, 0.8);
+}
+
+.bg-beige-dark-64 {
+  background-color: rgba(230, 227, 219, 0.64);
+}
+
+.bg-beige-dark-56 {
+  background-color: rgba(230, 227, 219, 0.56);
+}
+
+.bg-beige-dark-40 {
+  background-color: rgba(230, 227, 219, 0.4);
+}
+
+.bg-beige-dark-24 {
+  background-color: rgba(230, 227, 219, 0.24);
+}
+
+.bg-beige-dark-16 {
+  background-color: rgba(230, 227, 219, 0.16);
+}
+
+.bg-beige-dark-8 {
+  background-color: rgba(230, 227, 219, 0.08);
+}
+
+.bg-beige-dark-4 {
+  background-color: rgba(230, 227, 219, 0.04);
+}
+
+.text-beige {
+  color: #F7F5F0;
+}
+
+.bg-beige {
+  background-color: #F7F5F0;
+}
+
+.bg-beige-80 {
+  background-color: rgba(247, 245, 240, 0.8);
+}
+
+.bg-beige-64 {
+  background-color: rgba(247, 245, 240, 0.64);
+}
+
+.bg-beige-56 {
+  background-color: rgba(247, 245, 240, 0.56);
+}
+
+.bg-beige-40 {
+  background-color: rgba(247, 245, 240, 0.4);
+}
+
+.bg-beige-24 {
+  background-color: rgba(247, 245, 240, 0.24);
+}
+
+.bg-beige-16 {
+  background-color: rgba(247, 245, 240, 0.16);
+}
+
+.bg-beige-8 {
+  background-color: rgba(247, 245, 240, 0.08);
+}
+
+.bg-beige-4 {
+  background-color: rgba(247, 245, 240, 0.04);
+}
+
+.text-grey {
+  color: #D6D6D6;
+}
+
+.bg-grey {
+  background-color: #D6D6D6;
+}
+
+.bg-grey-80 {
+  background-color: rgba(214, 214, 214, 0.8);
+}
+
+.bg-grey-64 {
+  background-color: rgba(214, 214, 214, 0.64);
+}
+
+.bg-grey-56 {
+  background-color: rgba(214, 214, 214, 0.56);
+}
+
+.bg-grey-40 {
+  background-color: rgba(214, 214, 214, 0.4);
+}
+
+.bg-grey-24 {
+  background-color: rgba(214, 214, 214, 0.24);
+}
+
+.bg-grey-16 {
+  background-color: rgba(214, 214, 214, 0.16);
+}
+
+.bg-grey-8 {
+  background-color: rgba(214, 214, 214, 0.08);
+}
+
+.bg-grey-4 {
+  background-color: rgba(214, 214, 214, 0.04);
+}
+
+.text-grey-light {
+  color: #F5F5F5;
+}
+
+.bg-grey-light {
+  background-color: #F5F5F5;
+}
+
+.bg-grey-light-80 {
+  background-color: rgba(245, 245, 245, 0.8);
+}
+
+.bg-grey-light-64 {
+  background-color: rgba(245, 245, 245, 0.64);
+}
+
+.bg-grey-light-56 {
+  background-color: rgba(245, 245, 245, 0.56);
+}
+
+.bg-grey-light-40 {
+  background-color: rgba(245, 245, 245, 0.4);
+}
+
+.bg-grey-light-24 {
+  background-color: rgba(245, 245, 245, 0.24);
+}
+
+.bg-grey-light-16 {
+  background-color: rgba(245, 245, 245, 0.16);
+}
+
+.bg-grey-light-8 {
+  background-color: rgba(245, 245, 245, 0.08);
+}
+
+.bg-grey-light-4 {
+  background-color: rgba(245, 245, 245, 0.04);
+}
+
+.text-white {
+  color: #FFFFFF;
+}
+
+.bg-white {
+  background-color: #FFFFFF;
+}
+
+.bg-white-80 {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.bg-white-64 {
+  background-color: rgba(255, 255, 255, 0.64);
+}
+
+.bg-white-56 {
+  background-color: rgba(255, 255, 255, 0.56);
+}
+
+.bg-white-40 {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.bg-white-24 {
+  background-color: rgba(255, 255, 255, 0.24);
+}
+
+.bg-white-16 {
+  background-color: rgba(255, 255, 255, 0.16);
+}
+
+.bg-white-8 {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.bg-white-4 {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  line-height: 1.75rem;
+}
+
+h1, .h1 {
+  font-size: 2.25rem;
+  line-height: 4rem;
+  margin-top: 0;
+  font-weight: 700;
+}
+
+h2, .h2 {
+  font-size: 1.75rem;
+  line-height: 3rem;
+  font-weight: 700;
+}
+
+h3, .h3 {
+  font-size: 1.375rem;
+  line-height: 3rem;
+  font-weight: 700;
+}
+
+h4, .h4 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+}
+
+.text {
+  /* TEXT SIZE */
+  /* TEXT STYLE */
+}
+.text-body {
+  font-size: 1rem;
+  line-height: 1.75rem;
+}
+.text-lg {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.text-xl {
+  font-size: 1.375rem;
+  line-height: 3rem;
+}
+.text-2xl {
+  font-size: 1.75rem;
+  line-height: 3rem;
+}
+.text-3xl {
+  font-size: 2.25rem;
+  line-height: 4rem;
+}
+.text-4xl {
+  font-size: 3.5rem;
+  line-height: 4.5rem;
+}
+.text-bold {
+  font-weight: 700;
+}
+
+.box-shadow {
+  box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
+}
+
+.rounded-mini, .choice__check {
+  border-radius: 0.5rem;
+}
+.rounded-small {
+  border-radius: 1rem;
+}
+.rounded-medium {
+  border-radius: 2rem;
+}
+.rounded-large, .choice input:checked ~ .choice__radio::after, .choice__radio, a.link-button::before, a.link-button {
+  border-radius: 3.125rem;
+}
+
+.box-shadow {
+  box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
+}
+
+.rounded-small {
+  border-radius: 1rem;
+}
+.rounded-medium {
+  border-radius: 2rem;
+}
+.rounded-large, .choice input:checked ~ .choice__radio::after, .choice__radio, a.link-button::before, a.link-button {
+  border-radius: 3.125rem;
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-radius: 500px;
+  border: 2px solid #793C8A;
+  font-weight: 700;
+  line-height: 1.15;
+}
+.btn:hover, .btn:active, .btn:first-child:active, .btn:focus, .btn:focus-visible {
+  border-color: #793C8A;
+}
+.btn:focus-visible {
+  box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.5);
+}
+.btn-primary {
+  background: #793C8A;
+  color: #FFFFFF;
+}
+.btn-primary:hover, .btn-primary:active, .btn-primary:first-child:active, .btn-primary:focus, .btn-primary:focus-visible {
+  background: #FFFFFF;
+  color: #793C8A;
+}
+.btn-secondary {
+  color: #793C8A;
+  background: #FFFFFF;
+}
+.btn-secondary:hover, .btn-secondary:active, .btn-secondary:first-child:active, .btn-secondary:focus, .btn-secondary:focus-visible {
+  background: #793C8A;
+  color: #FFFFFF;
+}
+.btn--small {
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+}
+.btn--large {
+  font-size: 1.125rem;
+}
+.btn:disabled, .btn[disabled] {
+  background: #F5F5F5;
+  color: #D6D6D6;
+  border-color: #D6D6D6;
+  opacity: 1;
+}
+
+a, a:link, a:visited {
+  color: #000000;
+  text-decoration: underline;
+}
+a:hover, a:focus, a:active {
+  color: #793C8A;
+}
+a.arrow::after {
+  content: url(gfx/arrow.svg);
+  padding-left: 0.5rem;
+}
+a.link-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  padding: 1.25rem 2rem;
+  box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid #F5F5F5;
+  position: relative;
+  text-decoration: none;
+  color: #000000;
+}
+a.link-button::after {
+  content: "\f054";
+  padding-left: 1rem;
+  font-size: 1em;
+  color: #793C8A;
+  font-family: "Font Awesome 5 Free";
+}
+a.link-button::before {
+  content: "";
+  border: 1px solid transparent;
+  position: absolute;
+  display: block;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+}
+a.link-button:hover {
+  border-color: #793C8A;
+  color: #000000;
+}
+a.link-button:hover::before {
+  border-color: #793C8A;
+}
+
+.choice {
+  position: relative;
+  cursor: pointer;
+  padding-left: 2.5rem;
+}
+.choice input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+.choice input:focus-visible ~ .choice__radio, .choice input:focus-visible ~ .choice__check {
+  box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.5);
+}
+.choice:hover .choice__radio, .choice:hover .choice__check {
+  background-color: #793C8A;
+}
+.choice__radio, .choice__check {
+  position: absolute;
+  width: 1.75rem;
+  height: 1.75rem;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #FFFFFF;
+  z-index: 1;
+}
+.choice__radio {
+  border: 2px solid #000000;
+}
+.choice input:checked ~ .choice__radio::after {
+  content: "";
+  position: absolute;
+  width: 0.75rem;
+  height: 0.75rem;
+  background-color: #000000;
+  z-index: 2;
+}
+.choice__check {
+  border: 1px solid #D6D6D6;
+  box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
+}
+.choice input:checked ~ .choice__check {
+  background-color: #793C8A;
+}
+.choice input:checked ~ .choice__check::after {
+  content: url(gfx/checkmark-white.svg);
+  position: absolute;
+  color: #FFFFFF;
+  z-index: 2;
+  font-size: 1em;
+}/*# sourceMappingURL=main.css.map */

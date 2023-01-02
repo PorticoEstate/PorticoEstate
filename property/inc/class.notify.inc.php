@@ -244,7 +244,7 @@
 				);
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('portico', 'notify', 'property');
+			$GLOBALS['phpgw']->js->validate_file('base', 'notify', 'property');
 
 			$lang_view	 = lang('view');
 			$code		 = <<<JS
