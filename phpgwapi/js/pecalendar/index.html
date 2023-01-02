@@ -28,7 +28,7 @@
         }, true);
 
         $.ajax({
-            url: "http://localhost:8080/"+url,
+            url: url,
             type: 'GET',
             async: false,
             success: function (response)
@@ -39,8 +39,6 @@
                 cal.setEvents(events)
             }
         });
-
-//        cal.setEvents(events);
 
     </script>
 </body>
