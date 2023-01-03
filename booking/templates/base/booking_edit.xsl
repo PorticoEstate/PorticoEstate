@@ -72,7 +72,9 @@
 					<div class="pure-g">
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
-								<legend>&nbsp;</legend>
+								<!--<legend>-->
+									&nbsp;
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<label for="field_building_name">
@@ -117,7 +119,9 @@
 						</div>
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
-								<legend>&nbsp;</legend>
+								<!--<legend>-->
+&nbsp;
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<label for="field_org_name">
@@ -210,11 +214,11 @@
 							</div>
 							<div>
 								<div class="heading">
-									<legend>
+									<!--<legend>-->
 										<h3>
 											<xsl:value-of select="php:function('lang', 'History of Cost (%1)', count(cost_history/author))" />
 										</h3>
-									</legend>
+									<!--</legend>-->
 								</div>
 								<xsl:for-each select="cost_history[author]">
 									<div class="pure-control-group">
@@ -234,7 +238,7 @@
 						</div>
 						<div class="pure-u-1 pure-u-md-1 pure-u-lg-1-3">
 							<div class="heading">
-								<legend></legend>
+								<!--<legend></legend>-->
 							</div>
 							<div class="pure-g">
 								<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
@@ -398,7 +402,7 @@
 					<div class="pure-g">
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend></legend>
+								<!--<legend></legend>-->
 							</div>
 							<div class="pure-control-group">
 								<label for="field_mail">

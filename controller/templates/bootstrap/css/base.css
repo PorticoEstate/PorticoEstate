@@ -1,9 +1,7 @@
 #list_navigation { float: left; width: 30%; }
 #user_messages { float: right; width: 40%;}
 
-div.content {
-  margin: 2em;	
-}
+
 .hd {
   margin-bottom: 0;
   text-align: center;
@@ -782,9 +780,7 @@ dl.proplist, dl.proplist-col {
   padding: 20px;
 }
 
-#datatable-container {
-  margin: 20px;
-}
+
 
 #paginator {
   margin: 20px;

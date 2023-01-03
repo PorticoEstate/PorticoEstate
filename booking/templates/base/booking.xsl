@@ -28,11 +28,11 @@
 					</div>
 					<div>
 						<div class="heading">
-							<legend>
+							<!--<legend>-->
 								<h3>
 									<xsl:value-of select="php:function('lang', 'History of Cost (%1)', count(cost_history/author))" />
 								</h3>
-							</legend>
+							<!--</legend>-->
 						</div>
 						<xsl:for-each select="cost_history[author]">
 							<div class="pure-control-group">

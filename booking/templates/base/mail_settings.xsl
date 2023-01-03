@@ -7,11 +7,11 @@
 			<div id="mail_settings" class="booking-container">
 				<fieldset>
 					<div class="heading">
-						<legend>
+						<!--<legend>-->
 							<h3>
 								<xsl:value-of select="php:function('lang', 'Application email settings')"/>
 							</h3>
-						</legend>
+						<!--</legend>-->
 					</div>
 					<div class="pure-control-group">
 						<label for="field_application_mail_systemname">
@@ -93,11 +93,11 @@
 					</div>
 					<div class="pure-control-group">
 						<div class="heading">
-							<legend>
+							<!--<legend>-->
 								<h3>
 									<xsl:value-of select="php:function('lang', 'Application comment email settings')"/>
 								</h3>
-							</legend>
+							<!--</legend>-->
 						</div>
 					</div>
 					<div class="pure-control-group">

@@ -161,7 +161,7 @@ HTML;
 			$breadcrumb_html = <<<HTML
 			<div class="clearfix">
 			<nav aria-label="breadcrumb">
-				  <ol class="breadcrumb shadow pb-2">
+				  <ol class="breadcrumb shadow ps-2 pt-2 pb-3">
 HTML;
 			$history_url = array();
 			for($i=0;$i< (count($breadcrumbs) -1); $i++)

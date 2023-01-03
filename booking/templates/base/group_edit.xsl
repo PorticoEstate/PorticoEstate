@@ -7,7 +7,7 @@
 			<div id="group_edit" class="booking-container">
 				<fieldset>
 					<div class="heading">
-						<legend>
+						<!--<legend>-->
 							<h3>
 								<xsl:if test="not(group/id)">
 									<xsl:value-of select="php:function('lang', 'New Group')" />
@@ -16,7 +16,7 @@
 									<xsl:value-of select="php:function('lang', 'Edit Group')" />
 								</xsl:if>
 							</h3>
-						</legend>
+						<!--</legend>-->
 					</div>
 					<div class="pure-control-group">
 						<label for="name">
@@ -172,11 +172,11 @@
 						<div class="pure-u-1 pure-u-sm-1-2">
 
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>
 										<xsl:value-of select="php:function('lang', 'Team leader 1')" />
 									</h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 
 							<div class="pure-control-group">
@@ -207,11 +207,11 @@
 						</div>
 						<div class="pure-u-1 pure-u-sm-1-2">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>
 										<xsl:value-of select="php:function('lang', 'Team leader 2')" />
 									</h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<label for="field_admin_name_2">
