@@ -500,11 +500,12 @@
             $allocations	 = $allocations['results'];
             foreach ($allocations as &$allocation)
             {
-                $resources = array();
+                $allocation_resources = array();
                 foreach ($allocation['resources'] as $resource_id) {
-                    $resources[] = $resources_id[$resource_id];
+                    $allocation_resources[] = $resources_id[$resource_id];
                 }
                 $results[] = array(
+                    'type' => 'allocation',
                     'id' => $allocation['id'],
                     'id_string' => $allocation['id_string'],
                     'active' => $allocation['active'],
@@ -514,10 +515,9 @@
                     'name' => $allocation['organization_name'],
                     'shortname' => $allocation['organization_shortname'],
                     'organization_id' => $allocation['organization_id'],
-                    'resources' => $resources,
+                    'resources' => $allocation_resources,
                     'season_id' => $allocation['season_id'],
                     'season_name' => $allocation['season_name'],
-                    'type' => 'allocation',
                     'from' => explode(" ", $allocation['from_'])[1],
                     'to' => explode(" ", $allocation['to_'])[1],
                     'date' => explode(" ", $allocation['from_'])[0],
@@ -531,6 +531,10 @@
 
             foreach ($_bookings['results'] as $booking)
             {
+                $booking_resources = array();
+                foreach ($booking['resources'] as $resource_id) {
+                    $booking_resources[] = $resources_id[$resource_id];
+                }
                 $results[] = array(
                     'type'				 => 'booking',
                     'id'				 => $booking['id'],
@@ -548,11 +552,12 @@
                     'group_shortname'	 => $booking['group_shortname'],
                     'building_id'		 => $booking['building_id'],
                     'building_name'		 => $booking['building_name'],
-                    'from'				 => $booking['from_'],
-                    'to'				 => $booking['to_'],
+                    'from' => explode(" ", $booking['from_'])[1],
+                    'to' => explode(" ", $booking['to_'])[1],
+                    'date' => explode(" ", $booking['from_'])[0],
                     'completed'			 => $booking['completed'],
                     'reminder'			 => $booking['reminder'],
-                    'resources'			 => $booking['resources'],
+                    'resources'			 => $booking_resources,
                     'dates'				 => $booking['dates']
                 );
             }
@@ -564,6 +569,10 @@
 
             foreach ($_events['results'] as $event)
             {
+                $event_resources = array();
+                foreach ($event['resources'] as $resource_id) {
+                    $event_resources[] = $resources_id[$resource_id];
+                }
                 $results[] = array(
                     'type'				 => 'event',
                     'id'				 => $event['id'],
@@ -577,14 +586,15 @@
                     'equipment'			 => $event['equipment'],
                     'building_id'		 => $event['building_id'],
                     'building_name'		 => $event['building_name'],
-                    'from'				 => $event['from_'],
-                    'to'				 => $event['to_'],
+                    'from' => explode(" ", $event['from_'])[1],
+                    'to' => explode(" ", $event['to_'])[1],
+                    'date' => explode(" ", $event['from_'])[0],
                     'completed'			 => $event['completed'],
                     'access_requested'	 => $event['access_requested'],
                     'reminder'			 => $event['reminder'],
                     'is_public'			 => $event['is_public'],
                     'activity_name'		 => $event['activity_name'],
-                    'resources'			 => $event['resources'],
+                    'resources'			 => $event_resources,
                     'dates'				 => $event['dates']
                 );
             }

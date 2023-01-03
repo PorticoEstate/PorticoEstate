@@ -98,21 +98,27 @@ body {
 }
 
 .event-allocation {
-  background-color: #E6E3DB;
-  border-color: #acb2d3;
+  background-color: #B5B5B5;
+  border-color: #FFF;
   z-index: 2;
+  color: #000000;
+  position: relative;
 }
 
 .event-booking {
-  background-color: #8d742f;
-  border-color: #acb2d3;
+  background-color: #7f81a5;
+  border-color: #FFF;
   z-index: 3;
+  color: #000000;
+  position: relative;
 }
 
 .event-event {
-  background-color: #5c9a11;
-  border-color: #acb2d3;
+  background-color: #28358B;
+  border-color: #FFF;
   z-index: 4;
+  color: #FFFFFF;
+  position: relative;
 }
 
 /*# sourceMappingURL=pecalendar.css.map */
