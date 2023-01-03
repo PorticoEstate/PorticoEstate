@@ -123,9 +123,9 @@
 					<div class="pure-g">
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>1. <xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<table class="pure-table pure-table-striped">
 								<tr>
@@ -167,9 +167,9 @@
 					<div class="pure-g">
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>1.1 <xsl:value-of select="php:function('lang', 'attachments')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div id="attachments_container"/>
 							<br/>
@@ -202,9 +202,9 @@
 					<div class="pure-g">
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>2. <xsl:value-of select="php:function('lang', 'Why?')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<xsl:if test="simple != 1">
 								<div class="pure-control-group">
@@ -265,9 +265,9 @@
 
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>3. <xsl:value-of select="php:function('lang', 'Where?')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<label>
@@ -293,9 +293,9 @@
 						</div>
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>4. <xsl:value-of select="php:function('lang', 'When?')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<p>
 								<small>
@@ -383,9 +383,9 @@
 						</div>
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>5. <xsl:value-of select="php:function('lang', 'Who?')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<xsl:if test="simple != 1">
 
@@ -449,9 +449,9 @@
 						</div>
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>6. <xsl:value-of select="php:function('lang', 'Contact information')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<label>
@@ -480,9 +480,9 @@
 						</div>
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>7. <xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<xsl:if test="application/customer_organization_name != ''">
 								<div class="pure-control-group">
@@ -542,9 +542,9 @@
 					<div class="pure-g">
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<xsl:if test="config/application_terms">
@@ -562,11 +562,11 @@
 						</div>
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h4>
 										<xsl:value-of select="php:function('lang', 'additional requirements')" />
 									</h4>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<xsl:value-of disable-output-escaping="yes" select="application/agreement_requirements"/>
 						</div>
@@ -576,11 +576,11 @@
 						<div class="pure-g">
 							<div class="pure-u-1">
 								<div class="heading">
-									<legend>
+									<!--<legend>-->
 										<h3>
 											<xsl:value-of select="php:function('lang', 'Associated items')" />
 										</h3>
-									</legend>
+									<!--</legend>-->
 								</div>
 								<div class="pure-control-group">
 									<div id="associated_container"/>
@@ -588,11 +588,11 @@
 							</div>
 							<div class="pure-u-1">
 								<div class="heading">
-									<legend>
+									<!--<legend>-->
 										<h3>
 											<xsl:value-of select="php:function('lang', 'payments')" />
 										</h3>
-									</legend>
+									<!--</legend>-->
 								</div>
 								<div class="pure-control-group">
 									<div id="payments_container"/>
@@ -600,11 +600,11 @@
 							</div>
 							<div id="order_details" class="pure-u-1" style="display:none;">
 								<div class="heading">
-									<legend>
+									<!--<legend>-->
 										<h3>
 											<xsl:value-of select="php:function('lang', 'details')" />
 										</h3>
-									</legend>
+									<!--</legend>-->
 								</div>
 								<div class="pure-control-group">
 									<div id="order_container"/>
@@ -616,11 +616,11 @@
 						<div class="pure-g">
 							<div class="pure-u-1">
 								<div class="heading">
-									<legend>
+									<!--<legend>-->
 										<h3>
 											<xsl:value-of select="php:function('lang', 'Actions')" />
 										</h3>
-									</legend>
+									<!--</legend>-->
 								</div>
 								<form method="POST">
 									<div class="pure-control-group">

@@ -59,11 +59,11 @@
 					<div class="pure-g">
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>
 										<xsl:value-of select="php:function('lang', 'Add Boundary')" />
 									</h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<label for="field_status">
