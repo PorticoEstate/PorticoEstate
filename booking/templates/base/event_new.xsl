@@ -13,11 +13,11 @@
 					<div class="pure-g">
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>
 										<xsl:value-of select="php:function('lang', 'Why')" />
 									</h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<label for="field_activity">
@@ -134,11 +134,11 @@
 					<div class="pure-g">
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>
 										<xsl:value-of select="php:function('lang', 'Where')" />
 									</h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<label>
@@ -186,11 +186,11 @@
 
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>
 										<xsl:value-of select="php:function('lang', 'When?')" />
 									</h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div id="dates-container"  class="pure-control-group">
 								<input type="hidden" data-validation="application_dates">
@@ -279,11 +279,11 @@
 
 						<div class="pure-u-1 pure-u-md-1 pure-u-lg-1-3">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>
 										<xsl:value-of select="php:function('lang', 'Who')" />
 									</h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div class="pure-g">
 								<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
@@ -377,11 +377,11 @@
 					<div class="pure-g">
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>
 										<xsl:value-of select="php:function('lang', 'Cost')" />
 									</h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<label style="margin-top:10px;">&nbsp;</label>
@@ -401,11 +401,11 @@
 
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>
 										<xsl:value-of select="php:function('lang', 'send reminder for participants statistics')" />
 									</h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<label style="margin-top:10px;">&nbsp;</label>
@@ -433,11 +433,11 @@
 						</div>
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>
 										<xsl:value-of select="php:function('lang', 'Get all contact and invoice information from organization')" />
 									</h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<label for="field_org_name">
@@ -472,11 +472,11 @@
 						</div>
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>
 										<xsl:value-of select="php:function('lang', 'Contact information')" />
 									</h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<label for="field_contact_name">
@@ -517,11 +517,11 @@
 						</div>
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>
 										<xsl:value-of select="php:function('lang', 'Invoice information')" />
 									</h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<xsl:copy-of select="phpgw:booking_customer_identifier(event, '')"/>

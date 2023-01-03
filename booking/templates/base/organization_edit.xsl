@@ -24,7 +24,7 @@
 			<div id="organization_edit" class="booking-container">
 				<fieldset>
 					<div class="heading">
-						<legend>
+						<!--<legend>-->
 							<h3>
 								<xsl:if test="new_form">
 									<xsl:value-of select="php:function('lang', 'New Organization')" />
@@ -33,7 +33,7 @@
 									<xsl:value-of select="php:function('lang', 'Edit Organization')" />
 								</xsl:if>
 							</h3>
-						</legend>
+						<!--</legend>-->
 					</div>
 					<div class="pure-g">
 						<div class="pure-u-1 pure-u-sm-1-2">
@@ -283,11 +283,11 @@
 						<div class="pure-g">
 							<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-2 pure-u-lg-1-2">
 								<div class="heading">
-									<legend>
+									<!--<legend>-->
 										<h3>
 											<xsl:value-of select="php:function('lang', 'Admin 1')" />
 										</h3>
-									</legend>
+									<!--</legend>-->
 								</div>
 								<div class="pure-control-group">
 									<label for="field_admin_name_1">
@@ -318,11 +318,11 @@
 							</div>
 							<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-2 pure-u-lg-1-2">
 								<div class="heading">
-									<legend>
+									<!--<legend>-->
 										<h3>
 											<xsl:value-of select="php:function('lang', 'Admin 2')" />
 										</h3>
-									</legend>
+									<!--</legend>-->
 								</div>
 								<div class="pure-control-group">
 									<label for="field_admin_name_2">

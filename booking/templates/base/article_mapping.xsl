@@ -168,9 +168,9 @@
 					</div>
 					<div id="prizing">
 						<fieldset>
-							<legend>
+							<!--<legend>-->
 								<xsl:value-of select="php:function('lang', 'prizing')"/>
-							</legend>
+							<!--</legend>-->
 
 							<div class="pure-control-group">
 								<xsl:variable name="lang_date_from">

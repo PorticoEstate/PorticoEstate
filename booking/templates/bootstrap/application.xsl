@@ -1107,11 +1107,11 @@
 
 											</div>
 											<div class="panel-body">
-												<legend>
+												<!--<legend>-->
 													<h4>
 														<xsl:value-of select="php:function('lang', 'additional requirements')" />
 													</h4>
-												</legend>
+												<!--</legend>-->
 												<xsl:value-of disable-output-escaping="yes" select="application/agreement_requirements"/>
 											</div>
 										</div>

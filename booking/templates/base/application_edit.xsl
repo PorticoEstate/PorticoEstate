@@ -38,9 +38,9 @@
 					<div class="pure-g">
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>1. <xsl:value-of select="php:function('lang', 'Why?')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<label for="field_activity">
@@ -135,9 +135,9 @@
 					<div class="pure-g">
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>2. <xsl:value-of select="php:function('lang', 'Where?')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<xsl:if test="config/application_where">
 								<p>
@@ -201,9 +201,9 @@
 						</div>
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>3. <xsl:value-of select="php:function('lang', 'When?')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<xsl:if test="config/application_when">
 								<p>
@@ -298,9 +298,9 @@
 						</div>
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>4. <xsl:value-of select="php:function('lang', 'Who?')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<xsl:if test="config/application_who">
 								<p>
@@ -397,11 +397,11 @@
 					<div class="pure-g">
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>
 										<xsl:value-of select="php:function('lang', 'Contact information')" />
 									</h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<xsl:if test="config/application_contact_information">
 								<p>
@@ -453,11 +453,11 @@
 						</div>
 						<div class="pure-u-1">
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>
 										<xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" />
 									</h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<label for="field_org_name">
@@ -522,11 +522,11 @@
 							<div class="pure-g">
 								<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
 									<div class="heading">
-										<legend>
+										<!--<legend>-->
 											<h3>
 												<xsl:value-of select="php:function('lang', 'Terms and conditions')" />
 											</h3>
-										</legend>
+										<!--</legend>-->
 									</div>
 									<xsl:if test="config/application_terms">
 										<p>
@@ -549,11 +549,11 @@
 								</div>
 								<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
 									<div class="heading">
-										<legend>
+										<!--<legend>-->
 											<h4>
 												<xsl:value-of select="php:function('lang', 'additional requirements')" />
 											</h4>
-										</legend>
+										<!--</legend>-->
 									</div>
 									<textarea id="field_agreement_requirements" name="agreement_requirements">
 										<xsl:value-of select="application/agreement_requirements"/>
