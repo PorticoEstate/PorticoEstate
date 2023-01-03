@@ -197,6 +197,39 @@
 							</option>
 						</select>
 					</div>
+
+
+					<div class="pure-control-group custom-container">
+						<label>
+							<xsl:value-of select="php:function('lang', 'seasons')"/>
+						</label>
+
+						<div class="pure-u-md-1-2">
+							<table class="table cell-border no-wrap dataTable">
+								<thead>
+									<tr>
+										<th>
+											<xsl:value-of select="php:function('lang', 'id')"/>
+										</th>
+										<th>
+											<xsl:value-of select="php:function('lang', 'name')"/>
+										</th>
+									</tr>
+								</thead>
+								<xsl:for-each select="seasons">
+									<tr>
+										<td>
+											<xsl:value-of select="id" />
+										</td>
+										<td>
+											<xsl:value-of select="name" />
+										</td>
+									</tr>
+								</xsl:for-each>
+							</table>
+						</div>
+					</div>
+
 				</xsl:if>
 
 				<div id="capacity_form">
