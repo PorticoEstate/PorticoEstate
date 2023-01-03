@@ -10,6 +10,12 @@ class PEcalendar {
 
     events = null;
 
+    // Hour parts
+    hourParts = 4; // 15 minutes intervals
+
+    // Popper window
+    info = null;
+
     constructor(id) {
         this.dom = document.getElementById(id);
         this.setDate(DateTime.now())
@@ -69,24 +75,29 @@ class PEcalendar {
         }
 
         // Content
+        // Time column
         const content = this.createElement("div", "content");
         content.id = "content";
-        content.style.cssText = `grid-template-rows: repeat(${this.endHour-this.startHour+1}, 3em);`
-        for(let hour=this.startHour;hour<=this.endHour;hour++) {
+        content.style.cssText = `grid-template-rows: repeat(${(this.endHour-this.startHour)*this.hourParts}, calc(3rem/${this.hourParts}));`
+        for(let hour=this.startHour;hour<this.endHour;hour++) {
             const time = this.createElement("div", "time", `${hour<10 ? "0" : ""}${hour}:00`);
-            time.style.gridRow = `${hour-this.startHour+1} / span 1`;
+            time.style.gridRow = `${((hour-this.startHour)*this.hourParts)+2} / span 1`;
             content.appendChild(time);
         }
-        content.appendChild(this.createElement("div", "filler-col"));
+
+        // Lines
+//        content.appendChild(this.createElement("div", "filler-col"));
+        // Columns
         for(let column=2;column<=8;column++) {
             const col = this.createElement("div", "col");
             col.style.gridColumn = `${column} / span 1`;
-            col.style.gridRow = `1 / span ${this.endHour - this.startHour + 1}`
+            col.style.gridRow = `1 / span ${(this.endHour - this.startHour + 1)*this.hourParts}`
             content.appendChild(col);
         }
-        for(let hour=this.startHour;hour<=this.endHour;hour++) {
+        // Rows
+        for(let hour=this.startHour;hour<this.endHour;hour++) {
             const time = this.createElement("div", "row");
-            time.style.gridRow = `${hour-this.startHour+1} / span 1`;
+            time.style.gridRow = `${((hour-this.startHour)*this.hourParts)+1} / span ${this.hourParts}`;
             content.appendChild(time);
         }
 
@@ -95,13 +106,46 @@ class PEcalendar {
             for (let event of this.events) {
                 const dateFrom = DateTime.fromISO(`${event.date}T${event.from}`);
                 const dateTo = DateTime.fromISO(`${event.date}T${event.to}`);
-                const e = this.createElement("div", `event event-${event.type}`, `${event.resources.map(r => r.name).join(" / ")}<br/>${event.name}`)
-                const row = +(dateFrom.toFormat("H"))-this.startHour + 2;
-                const span = +dateTo.toFormat("H")-dateFrom.toFormat("H")
+                const e = this.createElement("div", `event event-${event.type}`, `<div><div>${event.name}</div><div>${event.resources.map(r => r.name).join(" / ")}</div></div>`)
+                const row = ((+(dateFrom.toFormat("H"))-this.startHour)*this.hourParts)+1;
+                // Add 60/hourParts
+                const rowStartAdd = Math.floor(+(dateFrom.toFormat("m"))/(60/this.hourParts));
+                const span = (+dateTo.toFormat("H")-dateFrom.toFormat("H"))*this.hourParts;
+                const rowStopAdd = Math.floor(+(dateTo.toFormat("m"))/(60/this.hourParts));
                 e.style.gridColumn = `${+dateFrom.toFormat("c")+1} / span 1`;
-                e.style.gridRow = `${row} / span ${span}`
-                console.log(`${+dateFrom.toFormat("c")+1} / span 1`, `${row} / span ${span}`)
+                e.style.gridRow = `${row+rowStartAdd} / span ${span-rowStartAdd+rowStopAdd}`
+                // console.log(`${+dateFrom.toFormat("c")+1} / span 1`, `${row} / span ${span}`)
+
+                // Add dots
+                const dots = this.createElement("button", "dots-container")
+
+                let img = this.createElement('img', 'dots');
+                img.src = phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false);
+                dots.appendChild(img);
+                e.appendChild(dots);
                 content.appendChild(e);
+
+                // Add info popup
+                const info = this.createElement("div", "info");
+                info.id = `event-${event.id}`;
+                info.innerHTML = `<p>
+                <b>${event.name}</b>
+                </p>
+                <p>
+                Kl: ${dateFrom.toFormat("HH:mm")} - ${dateTo.toFormat("HH:mm")}
+</p>`
+
+                const popper = Popper.createPopper(dots, info, {
+                    placement: 'left',
+                });
+                dots.onclick = () => {
+                    info.setAttribute('data-show', '');
+                    popper.update();
+                }
+                info.onclick = () => {
+                    info.removeAttribute('data-show');
+                }
+                content.appendChild(info);
             }
         }
         this.dom.replaceChildren(...[header, days, content]);

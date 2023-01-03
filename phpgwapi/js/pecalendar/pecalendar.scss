@@ -1,3 +1,5 @@
+@import '../../templates/bookingfrontend_2/styleguide/main';
+
 $title-height: 3em;
 $days-height: 3em;
 $time-width: 3em;
@@ -7,21 +9,20 @@ $calendar-template: $time-width repeat(7, 1fr);
 $current-time-color: #ea4335;
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
-    background: #fff;
+  background: #fff;
 }
 
 .calendar {
-    width: 100%;
-    display: grid;
-    grid-template-rows: $title-height $days-height auto;
-    position: absolute;
-}
+  width: 90%;
+  display: grid;
+  grid-template-rows: $title-height $days-height auto;
+  position: absolute;
 
-.title {
+  .title {
     background: #217346;
     text-align: center;
     display: grid;
@@ -30,9 +31,9 @@ body {
     position: sticky;
     top: 0;
     z-index: 10;
-}
+  }
 
-.days {
+  .days {
     background: #FFFFFF;
     display: grid;
     place-content: center;
@@ -41,90 +42,160 @@ body {
     position: sticky;
     top: $title-height;
     z-index: 10;
-    border-width: 1px 1px 1px 1px;
-    border-style: solid;
-    border-color: #D6D6D6;
-}
+  }
 
-.day {
-    border-left: 1px solid $grid-color;
+  .day {
     font-weight: bold;
     display: grid;
     align-items: center;
     height: $days-height;
-}
+    background-color: #F5F5F5;
+    margin-right: 1px;
+  }
 
-.content {
+  .day:last-child {
+    margin-right: 0;
+  }
+
+  .content {
     display: grid;
     grid-template-columns: $calendar-template;
-}
+  }
 
-.time {
+  .time {
     grid-column: 1;
     text-align: right;
     align-self: end;
-    font-size: 80%;
     position: relative;
     bottom: -1ex;
     color: #70757a;
     padding-right: 2px;
-}
+    height: 12px;
 
-.col {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 14px;
+  }
+
+  .col {
     border-right: 1px solid $grid-color;
-}
+  }
 
-.filler-col {
+  .filler-col {
     grid-row: 1 / -1;
     grid-column: 2;
     border-right: 1px solid $grid-color;
-}
+  }
 
-.row {
+  .row {
     grid-column: 2 / -1;
     border-bottom: 1px solid $grid-color;
-}
+    margin-left: 0;
+    margin-right: 0;
+  }
 
-.event {
+  .event {
     border-radius: 5px;
     padding: 5px;
     font-weight: normal;
     font-size: 80%;
-}
+    border: 1px solid #FFF;
+    line-height: 1rem;
 
-.weekend {
+    >div:first-child {
+      display: flex;
+      flex-direction: column;
+
+      div:nth-child(1) {
+        @extend .text-bold;
+      }
+
+      div:nth-child(2) {
+        font-size: 0.5rem;
+      }
+    }
+
+    button {
+      height: 24px;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
+  }
+
+  .weekend {
     background-color: #f1f3f4;
-}
+  }
 
-.event4 {
-    grid-column: 8;
-    grid-row: 21 / span 2;
-}
-
-.current {
+  .current {
     font-weight: bold;
-}
+  }
 
-.event-allocation {
+  .event-allocation {
     background-color: #B5B5B5;
     border-color: #FFF;
     z-index: 2;
-    color: #000000;
+    @extend .text-black;
     position: relative;
-}
+    display: flex;
+    justify-content: space-between;
 
-.event-booking {
+    .dots {
+      height: 16px;
+      width: 16px;
+      fill: #000;
+    }
+  }
+
+  .event-booking {
     background-color: #7f81a5;
     border-color: #FFF;
     z-index: 3;
-    color: #000000;
+    @extend .text-black;
     position: relative;
-}
+    display: flex;
+    justify-content: space-between;
 
-.event-event {
-    background-color: #28358B;
+    .dots {
+      height: 16px;
+      width: 16px;
+      fill: #000;
+    }
+  }
+
+  .event-event {
+    @extend .bg-blue;
     border-color: #FFF;
     z-index: 4;
-    color: #FFFFFF;
+    @extend .text-white;
     position: relative;
+    display: flex;
+    justify-content: space-between;
+
+    .dots {
+      height: 16px;
+      width: 16px;
+      filter: invert(100%);
+    }
+  }
+
+  .info {
+    background: #FFF;
+    @extend .text-black;
+    padding: 4px 8px;
+    border-radius: 5px;
+    border: 1px solid #000;
+    min-height: 100px;
+    display: none;
+    z-index: 10;
+    width: 10rem;
+    cursor: pointer;
+  }
+
+  .info[data-show] {
+    display: block;
+  }
+
 }
