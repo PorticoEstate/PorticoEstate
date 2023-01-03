@@ -20,9 +20,9 @@
 					<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 						<fieldset>
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>1. <xsl:value-of select="php:function('lang', 'Why?')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<label for="field_activity">
@@ -105,9 +105,9 @@
 					<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 						<fieldset>
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>2. <xsl:value-of select="php:function('lang', 'How many?')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<xsl:if test="config/application_howmany">
 								<p>
@@ -170,9 +170,9 @@
 					<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 						<fieldset>
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>3. <xsl:value-of select="php:function('lang', 'Where?')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<xsl:if test="config/application_where">
 								<p>
@@ -237,9 +237,9 @@
 					<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 						<fieldset>
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>4. <xsl:value-of select="php:function('lang', 'When?')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<xsl:if test="config/application_when">
 								<p>
@@ -347,9 +347,9 @@
 					<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 						<fieldset>
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>5. <xsl:value-of select="php:function('lang', 'Who?')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<xsl:if test="config/application_who">
 								<p>
@@ -388,9 +388,9 @@
 					<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 						<fieldset>
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>6. <xsl:value-of select="php:function('lang', 'Contact information')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
 								<xsl:if test="config/application_contact_information">
@@ -466,9 +466,9 @@
 						<fieldset>
 							<div class="pure-control-group">
 								<div class="heading">
-									<legend>
+									<!--<legend>-->
 										<h3>7. <xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></h3>
-									</legend>
+									<!--</legend>-->
 								</div>
 								<p>Ut fra reglementet i pkt. 8 finner du kriterier for fakturering. Når du som privatperson skal låne noe som det ikke skal faktureres for oppgir du kun fødselsdato, men skal du leie noe som koster noe, da må vi ha hele personnummeret. Alle lag og organisasjoner skal oppgi organisasjonsnr.</p>
 								<div class="pure-control-group">
@@ -547,9 +547,9 @@
 					<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 						<fieldset>
 							<div class="heading">
-								<legend>
+								<!--<legend>-->
 									<h3>8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></h3>
-								</legend>
+								<!--</legend>-->
 							</div>
 							<p>Alle som leier lokaler må bekrefte at de har lest betingelsene, dette gjelder som regel brannforskrifter og husreglement.</p>
 							<div class="pure-control-group">

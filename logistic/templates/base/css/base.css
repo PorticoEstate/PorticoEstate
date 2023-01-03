@@ -1,9 +1,7 @@
 #list_navigation { float: left; width: 30%; }
 #user_messages { float: right; width: 40%;}
 
-div.content {
-  margin: 2em;	
-}
+
 .hd {
   margin-bottom: 0;
   text-align: center;

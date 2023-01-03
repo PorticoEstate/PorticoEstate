@@ -2190,17 +2190,17 @@
 
 			$periodization_id		 = (int)$periodization_id;
 			$periodization_outline	 = array();
-			$skip_period			 = 0;
+			$skip_period			 = array();
 
 			if ($periodization_id)
 			{
 				$this->db->query("SELECT month, value,dividend,divisor FROM fm_eco_periodization_outline WHERE periodization_id = {$periodization_id} ORDER BY month ASC", __LINE__, __FILE__);
 				while ($this->db->next_record())
 				{
-					$month = $this->db->f('month');
-					if ($month < date('n'))
+					$month = (int)$this->db->f('month');
+					if ($month < date('n') && $year == date('Y'))
 					{
-						$skip_period ++;
+						$skip_period[] = $month;
 					}
 					$periodization_outline[] = array
 						(
@@ -2209,10 +2209,6 @@
 						'dividend'	 => $this->db->f('dividend'),
 						'divisor'	 => $this->db->f('divisor')
 					);
-				}
-				if ($skip_period && $skip_period == count($periodization_outline))
-				{
-					$skip_period -= 1;
 				}
 			}
 			else
@@ -2229,22 +2225,23 @@
 			//reset skip in case of 'all'
 			if ($budget_periodization_all)
 			{
-				$skip_period = 0;
+				$skip_period = array();
 			}
 
 
-			$percentage_to_move = 0;
+			$sum_to_move = 0;
+			$count_periodization_outline = count($periodization_outline);
 			foreach ($periodization_outline as $_key => $outline)
 			{
-				if ($skip_period && $skip_period == ($_key + 1))
+				if (in_array( ( $outline['month']), $skip_period))
 				{
 					if ($outline['dividend'] && $outline['divisor'])
 					{
-						$percentage_to_move += $outline['dividend'] / $outline['divisor'];
+						$sum_to_move += ($budget * ($outline['dividend'] / $outline['divisor']));
 					}
 					else
 					{
-						$percentage_to_move += $outline['value'] / 100;
+						$sum_to_move += ($budget * ($outline['value'] /100));
 					}
 
 					continue;
@@ -2258,7 +2255,8 @@
 				{
 					$partial_budget = $budget * $outline['value'] / 100;
 				}
-				$partial_budget = $partial_budget * (1 + $percentage_to_move);
+
+				$partial_budget = $partial_budget + ($sum_to_move / ($count_periodization_outline - count($skip_period)));
 
 				$this->_update_budget($project_id, $year, $outline['month'], $partial_budget, $action, $activate);
 			}

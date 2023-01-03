@@ -38,9 +38,9 @@
 					<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 					<div id="first_tab">
 						<fieldset>
-							<legend>
+							<!--<legend>-->
 								<xsl:value-of select="php:function('lang', 'service')"/>
-							</legend>
+							<!--</legend>-->
 							<xsl:if test="service/id > 0">
 								<div class="pure-control-group">
 									<label>
@@ -89,9 +89,9 @@
 					</div>
 					<div id="mapping">
 						<fieldset>
-							<legend>
+							<!--<legend>-->
 								<xsl:value-of select="php:function('lang', 'mapping')"/>
-							</legend>
+							<!--</legend>-->
 
 							<div id="tree_container">
 								<script type="text/javascript">
@@ -163,9 +163,9 @@
 					<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 					<div id="first_tab">
 						<fieldset>
-							<legend>
+							<!--<legend>-->
 								<xsl:value-of select="php:function('lang', 'service')"/>
-							</legend>
+							<!--</legend>-->
 							<xsl:if test="service/id > 0">
 								<div class="pure-control-group">
 									<label>
@@ -203,9 +203,9 @@
 					</div>
 					<div id="mapping">
 						<fieldset>
-							<legend>
+							<!--<legend>-->
 								<xsl:value-of select="php:function('lang', 'mapping')"/>
-							</legend>
+							<!--</legend>-->
 
 							<div id="tree_container">
 								<script type="text/javascript">

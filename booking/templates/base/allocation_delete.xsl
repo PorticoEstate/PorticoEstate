@@ -7,11 +7,11 @@
 				<xsl:value-of disable-output-escaping="yes" select="allocation/tabs"/>
 				<div id="allocation_delete" class="booking-container">
 					<div class="heading">
-						<legend>
+						<!--<legend>-->
 							<h3>
 								<xsl:value-of select="php:function('lang', 'Delete allocation')"/>
 							</h3>
-						</legend>
+						<!--</legend>-->
 					</div>
 					<div class="pure-control-group">
 						<h4>
