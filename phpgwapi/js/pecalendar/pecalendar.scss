@@ -1,6 +1,6 @@
 @import '../../templates/bookingfrontend_2/styleguide/main';
 
-$title-height: 3em;
+$header-height: 80px;
 $days-height: 3em;
 $time-width: 3em;
 $time-height: 3em;
@@ -19,8 +19,82 @@ body {
 .calendar {
   width: 90%;
   display: grid;
-  grid-template-rows: $title-height $days-height auto;
+  grid-template-rows: $header-height $days-height auto;
   position: absolute;
+  border-width: 10px 10px 10px 10px;
+  border-radius: 20px 20px 20px 20px;
+  box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background: #F5F5F5;
+    border-width: 10px 10px 10px 10px;
+    border-radius: 20px 20px 20px 20px;
+    box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
+
+    padding: 10px 15px 10px 15px;
+
+
+    .place {
+      display: flex;
+      flex-direction: column;
+
+      .select_building_resource {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .datetime {
+        border: 1px solid #D6D6D6;
+        /* Input_shadows */
+
+        box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
+        border-radius: 50px;
+        padding: 7px 18px;
+        height: 38px;
+        margin-right: 10px;
+        width: 110px;
+      }
+    }
+
+    .infopart {
+      display: flex;
+      flex-direction: row;
+
+      .type {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        margin-right: 20px;
+
+        font-family: 'Open Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 16px;
+
+        img {
+          height: 14px;
+        }
+      }
+
+
+    }
+
+    select {
+      border: 1px solid #D6D6D6;
+      /* Input_shadows */
+
+      box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
+      border-radius: 50px;
+      padding: 7px 18px;
+      height: 38px;
+      margin-right: 10px;
+    }
+  }
 
   .title {
     background: #217346;
@@ -40,17 +114,24 @@ body {
     text-align: center;
     grid-template-columns: $calendar-template;
     position: sticky;
-    top: $title-height;
+    top: $days-height;
     z-index: 10;
+    line-height: 1rem;
   }
 
   .day {
     font-weight: bold;
-    display: grid;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     height: $days-height;
     background-color: #F5F5F5;
     margin-right: 1px;
+
+    :nth-child(2) {
+      font-weight: normal;
+      font-size: 0.5rem;
+    }
   }
 
   .day:last-child {
@@ -104,7 +185,7 @@ body {
     border: 1px solid #FFF;
     line-height: 1rem;
 
-    >div:first-child {
+    > div:first-child {
       display: flex;
       flex-direction: column;
 
@@ -134,7 +215,7 @@ body {
   }
 
   .event-allocation {
-    background-color: #B5B5B5;
+    background-color: #E6E3DB;;
     border-color: #FFF;
     z-index: 2;
     @extend .text-black;
@@ -150,7 +231,7 @@ body {
   }
 
   .event-booking {
-    background-color: #7f81a5;
+    background-color: #999EC1;
     border-color: #FFF;
     z-index: 3;
     @extend .text-black;
@@ -196,6 +277,18 @@ body {
 
   .info[data-show] {
     display: block;
+  }
+
+  .event-filter {
+    filter: invert(16%) sepia(22%) saturate(6235%) hue-rotate(219deg) brightness(105%) contrast(91%);
+  }
+
+  .booking-filter {
+    filter: invert(65%) sepia(11%) saturate(712%) hue-rotate(195deg) brightness(97%) contrast(87%);
+  }
+
+  .allocation-filter {
+    filter: invert(84%) sepia(12%) saturate(111%) hue-rotate(6deg) brightness(108%) contrast(90%);
   }
 
 }

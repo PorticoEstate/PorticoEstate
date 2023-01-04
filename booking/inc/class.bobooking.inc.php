@@ -599,7 +599,7 @@
                 );
             }
 
-            return array('total_records' => count($results), 'results' => $results);
+            return array('total_records' => count($results), 'results' => array("schedule" => $results, "resources" => $resources_id));
         }
 
 		/**

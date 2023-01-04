@@ -2,14 +2,17 @@
 <html>
 <head>
     <link rel="stylesheet" href="pecalendar.css">
+    <link rel="stylesheet" href="../datetimepicker/css/jquery.datetimepicker.css">
+
     <script src="luxon.js"></script>
-    <script src="pecalendar.js"></script>
     <script src="../jquery/js/jquery-3.6.1.min.js"></script>
     <script src="../core/base.js"></script>
     <script src="../popper/popper2.min.js"></script>
+    <script src="../datetimepicker/js/jquery.datetimepicker.full.js"></script>
     <script>
         let strBaseURL = '/portico/?click_history=1111';
     </script>
+    <script src="pecalendar.js"></script>
 </head>
 <body>
 
@@ -19,27 +22,10 @@
         </div>
     </div>
     <script>
-        let cal = new PEcalendar("calendar");
+        let cal = new PEcalendar("calendar", 6);
         cal.createCalendarDom();
 
-        let url = phpGWLink('bookingfrontend/', {
-            menuaction: 'bookingfrontend.uibooking.building_schedule_pe',
-            building_id: 6,
-            date: "2022-12-12"
-        }, true);
 
-        $.ajax({
-            url: url,
-            type: 'GET',
-            async: false,
-            success: function (response)
-            {
-                console.log("Response", response);
-                const events = response?.ResultSet?.Result?.results;
-                console.log(events);
-                cal.setEvents(events)
-            }
-        });
 
     </script>
 </body>
