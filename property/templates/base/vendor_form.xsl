@@ -26,24 +26,24 @@
 			</a>
 		</label>
 		<div class="{$class} pure-custom">
-		<input size="5" type="text" id="vendor_id" name="vendor_id" value="{value_vendor_id}" class ="pure-u-1-5">
-			<xsl:attribute name="title">
-				<xsl:value-of select="lang_select_vendor_help"/>
-			</xsl:attribute>
-			<xsl:if test="required='1'">
-				<xsl:attribute name="data-validation">
-					<xsl:text>required</xsl:text>
+			<input size="5" type="text" id="vendor_id" name="vendor_id" value="{value_vendor_id}" class ="pure-u-1-5">
+				<xsl:attribute name="title">
+					<xsl:value-of select="lang_select_vendor_help"/>
 				</xsl:attribute>
-				<xsl:attribute name="data-validation-error-msg">
-					<xsl:value-of select="php:function('lang', 'no vendor')"/>
+				<xsl:if test="required='1'">
+					<xsl:attribute name="data-validation">
+						<xsl:text>required</xsl:text>
+					</xsl:attribute>
+					<xsl:attribute name="data-validation-error-msg">
+						<xsl:value-of select="php:function('lang', 'no vendor')"/>
+					</xsl:attribute>
+				</xsl:if>
+			</input>
+			<input size="30" type="text" name="vendor_name" value="{value_vendor_name}" onClick="vendor_lookup();" readonly="readonly" class ="pure-u-4-5">
+				<xsl:attribute name="title">
+					<xsl:value-of select="lang_select_vendor_help"/>
 				</xsl:attribute>
-			</xsl:if>
-		</input>
-		<input size="30" type="text" name="vendor_name" value="{value_vendor_name}" onClick="vendor_lookup();" readonly="readonly" class ="pure-u-4-5">
-			<xsl:attribute name="title">
-				<xsl:value-of select="lang_select_vendor_help"/>
-			</xsl:attribute>
-		</input>
+			</input>
 		</div>
 	</div>
 </xsl:template>
