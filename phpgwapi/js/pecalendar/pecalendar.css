@@ -583,6 +583,17 @@ a.link-button:hover::before {
   font-size: 1em;
 }
 
+:root {
+  --day-width: 1fr;
+  --time-width: 3em;
+  --calendar-rows: 1;
+}
+@media all and (max-width: 480px) {
+  :root {
+    --time-width: 2em;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -590,15 +601,32 @@ a.link-button:hover::before {
 body {
   background: #fff;
 }
+@media all and (max-width: 480px) {
+  body {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.container {
+  margin: 10px;
+}
+@media all and (max-width: 480px) {
+  .container {
+    margin: 0;
+    padding: 0;
+  }
+}
 
 .calendar {
-  width: 90%;
   display: grid;
   grid-template-rows: 80px 3em auto;
   position: absolute;
   border-width: 10px 10px 10px 10px;
   border-radius: 20px 20px 20px 20px;
   box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
+  font-size: 1.5rem;
+  grid-template-columns: var(--time-width) repeat(7, 1fr);
 }
 .calendar .header {
   display: flex;
@@ -609,6 +637,11 @@ body {
   border-radius: 20px 20px 20px 20px;
   box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
   padding: 10px 15px 10px 15px;
+  grid-row: 1/span 1;
+  grid-column: 1/span 8;
+  position: sticky;
+  top: 0;
+  z-index: 12;
 }
 .calendar .header .place {
   display: flex;
@@ -641,7 +674,7 @@ body {
   font-family: "Open Sans";
   font-style: normal;
   font-weight: 700;
-  font-size: 12px;
+  font-size: 1rem;
   line-height: 16px;
 }
 .calendar .header .infopart .type img {
@@ -671,11 +704,13 @@ body {
   display: grid;
   place-content: center;
   text-align: center;
-  grid-template-columns: 3em repeat(7, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   position: sticky;
   top: 3em;
-  z-index: 10;
+  z-index: 11;
   line-height: 1rem;
+  grid-row: 2/span 1;
+  grid-column: 2/span 7;
 }
 .calendar .day {
   font-weight: bold;
@@ -693,9 +728,25 @@ body {
 .calendar .day:last-child {
   margin-right: 0;
 }
+.calendar .time-container {
+  display: grid;
+  grid-row: 3/span var(--calendar-rows);
+  grid-column: 1/span 1;
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  background-color: #FFF;
+}
 .calendar .content {
   display: grid;
-  grid-template-columns: 3em repeat(7, 1fr);
+  grid-template-columns: repeat(7, 1fr);
+  grid-row: 3/span 1;
+  grid-column: 2/span 7;
+}
+@media all and (max-width: 480px) {
+  .calendar .content {
+    width: 500vw;
+  }
 }
 .calendar .time {
   grid-column: 1;
@@ -709,8 +760,8 @@ body {
   font-family: "Open Sans";
   font-style: normal;
   font-weight: 400;
-  font-size: 10px;
-  line-height: 14px;
+  font-size: 1rem;
+  line-height: 1px;
 }
 .calendar .col {
   border-right: 1px solid #dadce0;
@@ -721,7 +772,7 @@ body {
   border-right: 1px solid #dadce0;
 }
 .calendar .row {
-  grid-column: 2/-1;
+  grid-column: 1/-1;
   border-bottom: 1px solid #dadce0;
   margin-left: 0;
   margin-right: 0;
@@ -730,7 +781,7 @@ body {
   border-radius: 5px;
   padding: 5px;
   font-weight: normal;
-  font-size: 80%;
+  font-size: 1rem;
   border: 1px solid #FFF;
   line-height: 1rem;
 }

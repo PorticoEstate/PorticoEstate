@@ -1,11 +1,22 @@
 @import '../../templates/bookingfrontend_2/styleguide/main';
 
+:root {
+  --day-width: 1fr;
+  --time-width: 3em;
+  --calendar-rows: 1;
+
+  @media all and (max-width: 480px) {
+    --time-width: 2em;
+  }
+}
+
+
+
 $header-height: 80px;
 $days-height: 3em;
 $time-width: 3em;
 $time-height: 3em;
 $grid-color: #dadce0;
-$calendar-template: $time-width repeat(7, 1fr);
 $current-time-color: #ea4335;
 
 * {
@@ -14,16 +25,29 @@ $current-time-color: #ea4335;
 
 body {
   background: #fff;
+  @media all and (max-width: 480px) {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.container {
+  margin: 10px;
+  @media all and (max-width: 480px) {
+    margin: 0;
+    padding: 0;
+  }
 }
 
 .calendar {
-  width: 90%;
   display: grid;
   grid-template-rows: $header-height $days-height auto;
   position: absolute;
   border-width: 10px 10px 10px 10px;
   border-radius: 20px 20px 20px 20px;
   box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
+  font-size: 1.5rem;
+  grid-template-columns: var(--time-width) repeat(7, 1fr);
 
   .header {
     display: flex;
@@ -33,9 +57,12 @@ body {
     border-width: 10px 10px 10px 10px;
     border-radius: 20px 20px 20px 20px;
     box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
-
     padding: 10px 15px 10px 15px;
-
+    grid-row: 1 /span 1;
+    grid-column: 1 / span 8;
+    position: sticky;
+    top: 0;
+    z-index: 12;
 
     .place {
       display: flex;
@@ -73,7 +100,7 @@ body {
         font-family: 'Open Sans';
         font-style: normal;
         font-weight: 700;
-        font-size: 12px;
+        font-size: 1rem;
         line-height: 16px;
 
         img {
@@ -112,11 +139,13 @@ body {
     display: grid;
     place-content: center;
     text-align: center;
-    grid-template-columns: $calendar-template;
+    grid-template-columns: repeat(7, 1fr);
     position: sticky;
     top: $days-height;
-    z-index: 10;
+    z-index: 11;
     line-height: 1rem;
+    grid-row: 2 / span 1;
+    grid-column: 2 / span 7;
   }
 
   .day {
@@ -138,9 +167,24 @@ body {
     margin-right: 0;
   }
 
+  .time-container {
+    display: grid;
+    grid-row: 3 / span var(--calendar-rows);
+    grid-column: 1 / span 1;
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    background-color: #FFF;
+  }
+
   .content {
     display: grid;
-    grid-template-columns: $calendar-template;
+    grid-template-columns: repeat(7, 1fr);
+    grid-row: 3 / span 1;
+    grid-column: 2 / span 7;
+    @media all and (max-width: 480px) {
+        width: 500vw;
+    }
   }
 
   .time {
@@ -156,8 +200,8 @@ body {
     font-family: 'Open Sans';
     font-style: normal;
     font-weight: 400;
-    font-size: 10px;
-    line-height: 14px;
+    font-size: 1rem;
+    line-height: 1px;
   }
 
   .col {
@@ -171,7 +215,7 @@ body {
   }
 
   .row {
-    grid-column: 2 / -1;
+    grid-column: 1 / -1;
     border-bottom: 1px solid $grid-color;
     margin-left: 0;
     margin-right: 0;
@@ -181,7 +225,7 @@ body {
     border-radius: 5px;
     padding: 5px;
     font-weight: normal;
-    font-size: 80%;
+    font-size: 1rem;
     border: 1px solid #FFF;
     line-height: 1rem;
 

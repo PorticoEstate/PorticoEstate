@@ -72,12 +72,17 @@ class PEcalendar {
     }
 
     createCalendarDom() {
+        if (!this.currentDate) return;
         const self = this;
+
+        // Fix css variables
+        const root = document.querySelector(':root');
+        root.style.setProperty('--calendar-rows', `${(this.endHour - this.startHour + 1) * this.hourParts}`);
+
         // Creating header
         const header = this.createCalendarHeader();
         // Creating days header
         const days = this.createElement("div", "days");
-        days.appendChild(this.createElement("div", "filler"));
         for (let c = 0; c < 7; c++) {
             const day = this.firstDayOfWeek.plus({day: c});
             const dayEl = this.createElement("div", "day");
@@ -91,21 +96,24 @@ class PEcalendar {
             days.appendChild(dayEl);
         }
 
+        // Time
+        const timeEl = this.createElement("div", "time-container");
+        timeEl.style.cssText = `grid-template-rows: repeat(${(this.endHour - this.startHour) * this.hourParts}, calc(3rem/${this.hourParts}));`
+
+        for (let hour = this.startHour; hour < this.endHour; hour++) {
+            const time = this.createElement("div", "time", `${hour < 10 ? "0" : ""}${hour}:00`);
+            time.style.gridRow = `${((hour - this.startHour) * this.hourParts) + 1} / span 1`;
+            timeEl.appendChild(time);
+        }
+
         // Content
-        // Time column
         const content = this.createElement("div", "content");
         content.id = "content";
         content.style.cssText = `grid-template-rows: repeat(${(this.endHour - this.startHour) * this.hourParts}, calc(3rem/${this.hourParts}));`
-        for (let hour = this.startHour; hour < this.endHour; hour++) {
-            const time = this.createElement("div", "time", `${hour < 10 ? "0" : ""}${hour}:00`);
-            time.style.gridRow = `${((hour - this.startHour) * this.hourParts) + 2} / span 1`;
-            content.appendChild(time);
-        }
 
         // Lines
-//        content.appendChild(this.createElement("div", "filler-col"));
         // Columns
-        for (let column = 2; column <= 8; column++) {
+        for (let column = 1; column <= 7; column++) {
             const col = this.createElement("div", "col");
             col.style.gridColumn = `${column} / span 1`;
             col.style.gridRow = `1 / span ${(this.endHour - this.startHour + 1) * this.hourParts}`
@@ -129,7 +137,7 @@ class PEcalendar {
                 const rowStartAdd = Math.floor(+(dateFrom.toFormat("m")) / (60 / this.hourParts));
                 const span = (+dateTo.toFormat("H") - dateFrom.toFormat("H")) * this.hourParts;
                 const rowStopAdd = Math.floor(+(dateTo.toFormat("m")) / (60 / this.hourParts));
-                e.style.gridColumn = `${+dateFrom.toFormat("c") + 1} / span 1`;
+                e.style.gridColumn = `${+dateFrom.toFormat("c")} / span 1`;
                 e.style.gridRow = `${row + rowStartAdd} / span ${span - rowStartAdd + rowStopAdd}`
                 // console.log(`${+dateFrom.toFormat("c")+1} / span 1`, `${row} / span ${span}`)
 
@@ -145,7 +153,7 @@ class PEcalendar {
             }
         }
         if (this.dom) {
-            this.dom.replaceChildren(...[header, days, content]);
+            this.dom.replaceChildren(...[header, days, timeEl, content]);
             const building = document.getElementById("building");
             building.onchange = (option) => {
                 self.loadBuilding(+option.target.value);
@@ -157,8 +165,8 @@ class PEcalendar {
                 self.createCalendarDom();
             }
             jQuery('#datetimepicker').datetimepicker({
-                format:'d.m.Y',
-                lang:'no',
+                format: 'd.m.Y',
+                lang: 'no',
                 timepicker: false,
                 onSelectDate: (date) => {
                     const d = DateTime.fromJSDate(date);
@@ -191,6 +199,7 @@ class PEcalendar {
     }
 
     createCalendarHeader() {
+        if (!this.currentDate) return;
         const self = this;
         const buildings = this.buildings;
 
