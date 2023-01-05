@@ -748,6 +748,11 @@ body {
     width: 500vw;
   }
 }
+@media all and (max-width: 992px) {
+  .calendar .content {
+    width: 400vw;
+  }
+}
 .calendar .time {
   grid-column: 1;
   text-align: right;

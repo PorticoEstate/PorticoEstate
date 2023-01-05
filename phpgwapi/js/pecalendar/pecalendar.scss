@@ -185,6 +185,11 @@ body {
     @media all and (max-width: 480px) {
         width: 500vw;
     }
+
+    @media all and (max-width: 992px) {
+      width: 400vw;
+    }
+
   }
 
   .time {
