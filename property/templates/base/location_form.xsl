@@ -24,7 +24,7 @@
 				<div>
 					<xsl:if test="input_type != 'hidden'">
 						<xsl:attribute name="class">
-							<xsl:text>pure-u-1-6</xsl:text>
+							<xsl:text>pure-u-1-5</xsl:text>
 						</xsl:attribute>
 					</xsl:if>
 					<xsl:if test="class != ''">
