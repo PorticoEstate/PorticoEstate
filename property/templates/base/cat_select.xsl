@@ -1,6 +1,7 @@
 
 <!-- $Id$ -->
 <xsl:template name="cat_select">
+		<xsl:param name="class" />
 		<xsl:variable name="lang_cat_statustext">
 			<xsl:value-of select="lang_cat_statustext"/>
 		</xsl:variable>
@@ -8,6 +9,18 @@
 			<xsl:value-of select="select_name"/>
 		</xsl:variable>
 		<select name="{$select_name}" class="forms" title="{$lang_cat_statustext}">
+		<xsl:choose>
+			<xsl:when test="$class != ''">
+				<xsl:attribute name="class">
+					<xsl:value-of select="$class"/>
+				</xsl:attribute>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:attribute name="class">
+					<xsl:text>pure-input-1-2</xsl:text>
+				</xsl:attribute>
+			</xsl:otherwise>
+		</xsl:choose>
 		<xsl:attribute name="data-validation">
 			<xsl:text>required</xsl:text>
 		</xsl:attribute>
@@ -19,13 +32,26 @@
 </xsl:template>
 
 <xsl:template name="cat_select_investment">
+	<xsl:param name="class" />
 	<xsl:variable name="lang_cat_statustext">
 		<xsl:value-of select="lang_cat_statustext"/>
 	</xsl:variable>
 	<xsl:variable name="select_name">
 		<xsl:value-of select="select_name"/>
 	</xsl:variable>
-	<select name="{$select_name}" data-validation="write_period_num" id="period_num" title="{$lang_cat_statustext}" class="pure-input-1-2">
+	<select name="{$select_name}" data-validation="write_period_num" id="period_num" title="{$lang_cat_statustext}">
+		<xsl:choose>
+			<xsl:when test="$class != ''">
+				<xsl:attribute name="class">
+					<xsl:value-of select="$class"/>
+				</xsl:attribute>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:attribute name="class">
+					<xsl:text>pure-input-1-2</xsl:text>
+				</xsl:attribute>
+			</xsl:otherwise>
+		</xsl:choose>
 		<!--xsl:attribute name="data-validation">
 			<xsl:text>required</xsl:text>
 		</xsl:attribute-->
