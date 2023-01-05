@@ -209,7 +209,9 @@ class PEcalendar {
             'afterbegin',
             `
 <div class="place">
-    Kalenderen viser:
+    <span class="hide-mobile">
+        Kalenderen viser:
+    </span>
     <div class="select_building_resource">
         <select id="building" class="building">
         ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name + '</option>').join("")}

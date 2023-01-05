@@ -4,15 +4,14 @@
   --day-width: 1fr;
   --time-width: 3em;
   --calendar-rows: 1;
+  --header-height: 80px;
 
   @media all and (max-width: 480px) {
     --time-width: 2em;
+    --header-height: 130px;
   }
 }
 
-
-
-$header-height: 80px;
 $days-height: 3em;
 $time-width: 3em;
 $time-height: 3em;
@@ -41,7 +40,7 @@ body {
 
 .calendar {
   display: grid;
-  grid-template-rows: $header-height $days-height auto;
+  grid-template-rows: var(--header-height) $days-height auto;
   position: absolute;
   border-width: 10px 10px 10px 10px;
   border-radius: 20px 20px 20px 20px;
@@ -67,10 +66,14 @@ body {
     .place {
       display: flex;
       flex-direction: column;
+      
 
       .select_building_resource {
         display: flex;
         flex-direction: row;
+        @media screen and (max-width: 480px){
+          flex-direction: column;
+        }
       }
 
       .datetime {
@@ -187,7 +190,7 @@ body {
     }
 
     @media all and (max-width: 992px) {
-      width: 400vw;
+      width: 300vw;
     }
 
   }
@@ -340,4 +343,9 @@ body {
     filter: invert(84%) sepia(12%) saturate(111%) hue-rotate(6deg) brightness(108%) contrast(90%);
   }
 
+  .hide-mobile {
+    @media screen and (max-width: 480px){
+      display: none;
+    }
+  }
 }

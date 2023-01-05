@@ -11,7 +11,22 @@
     <script src="../popper/popper2.min.js"></script>
     <script src="../datetimepicker/js/jquery.datetimepicker.full.js"></script>
     <script>
-        let strBaseURL = '/portico/?click_history=1111';
+        let pathname = window.location.pathname;
+        let pathname_parts = pathname.split('/');
+        let strBaseURL = '';
+        let found = false;
+        for (var i = 1; i < pathname_parts.length; ++i)
+        {
+            if(pathname_parts[i] !== 'phpgwapi'  && found !==true)
+            {
+                strBaseURL += '/' + pathname_parts[i];
+            }
+            else
+            {
+                found = true;
+            }
+        }
+        strBaseURL +=  '/?click_history=1111';
     </script>
     <script src="pecalendar.js"></script>
 </head>

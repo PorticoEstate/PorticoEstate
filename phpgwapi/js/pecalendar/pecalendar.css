@@ -587,10 +587,12 @@ a.link-button:hover::before {
   --day-width: 1fr;
   --time-width: 3em;
   --calendar-rows: 1;
+  --header-height: 80px;
 }
 @media all and (max-width: 480px) {
   :root {
     --time-width: 2em;
+    --header-height: 130px;
   }
 }
 
@@ -620,7 +622,7 @@ body {
 
 .calendar {
   display: grid;
-  grid-template-rows: 80px 3em auto;
+  grid-template-rows: var(--header-height) 3em auto;
   position: absolute;
   border-width: 10px 10px 10px 10px;
   border-radius: 20px 20px 20px 20px;
@@ -650,6 +652,11 @@ body {
 .calendar .header .place .select_building_resource {
   display: flex;
   flex-direction: row;
+}
+@media screen and (max-width: 480px) {
+  .calendar .header .place .select_building_resource {
+    flex-direction: column;
+  }
 }
 .calendar .header .place .datetime {
   border: 1px solid #D6D6D6;
@@ -750,7 +757,7 @@ body {
 }
 @media all and (max-width: 992px) {
   .calendar .content {
-    width: 400vw;
+    width: 300vw;
   }
 }
 .calendar .time {
@@ -869,6 +876,11 @@ body {
 }
 .calendar .allocation-filter {
   filter: invert(84%) sepia(12%) saturate(111%) hue-rotate(6deg) brightness(108%) contrast(90%);
+}
+@media screen and (max-width: 480px) {
+  .calendar .hide-mobile {
+    display: none;
+  }
 }
 
 /*# sourceMappingURL=pecalendar.css.map */
