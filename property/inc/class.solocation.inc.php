@@ -464,18 +464,22 @@
 
 				for ($i = 1; $i < ($type_id + 1); $i++)
 				{
-					if (isset($list_info[$i]) && $list_info[$i])
+					$cols					 .= ",fm_location{$i}.loc{$i}_name";
+					$cols_return[]			 = "loc{$i}_name";
+					$uicols['name'][]		 = "loc{$i}_name";
+					$uicols['descr'][]		 = $location_types[($i - 1)]['name'] . ' ' . lang('name');
+					$uicols['statustext'][]	 = $location_types[($i - 1)]['name'] . ' ' . lang('name');
+					$uicols['exchange'][]	 = true;
+					$uicols['align'][]		 = 'left';
+					$uicols['datatype'][]	 = 'V';
+					$uicols['formatter'][]	 = '';
+					if (!empty($list_info[$i]))
 					{
-						$cols					 .= ",fm_location{$i}.loc{$i}_name";
-						$cols_return[]			 = "loc{$i}_name";
 						$uicols['input_type'][]	 = 'text';
-						$uicols['name'][]		 = "loc{$i}_name";
-						$uicols['descr'][]		 = $location_types[($i - 1)]['name'] . ' ' . lang('name');
-						$uicols['statustext'][]	 = $location_types[($i - 1)]['name'] . ' ' . lang('name');
-						$uicols['exchange'][]	 = true;
-						$uicols['align'][]		 = 'left';
-						$uicols['datatype'][]	 = 'V';
-						$uicols['formatter'][]	 = '';
+					}
+					else
+					{
+						$uicols['input_type'][]	 = 'hidden';
 					}
 				}
 
