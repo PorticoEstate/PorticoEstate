@@ -455,7 +455,7 @@
 
 		function list_content( $list, $uicols, $edit_item = '', $view_only = '' )
 		{
-			$j = 0;
+			$j		 = 0;
 			$content = array();
 
 			if (isset($list) AND is_array($list))
@@ -782,7 +782,6 @@
 			$order	 = phpgw::get_var('order');
 			$columns = phpgw::get_var('columns');
 
-
 			$list	 = $this->bo->read_details($s_agreement_id);
 			$uicols	 = $this->bo->uicols;
 			$values	 = $this->list_content($list, $uicols);
@@ -818,18 +817,18 @@
 			$method			 = phpgw::get_var('method');
 			$data			 = phpgw::get_var('data');
 			$account_id		 = phpgw::get_var('account_id');
+			$draw			 = phpgw::get_var('draw', 'int');
 
 			if (empty($id))
 			{
 				$result_data					 = array('results' => array());
 				$result_data['total_records']	 = 0;
-				$result_data['draw']			 = 0;
+				$result_data['draw']			 = $draw;
 
 				return $this->jquery_results($result_data);
 			}
 
-			$params = array
-				(
+			$params = array(
 				'acl_location'	 => $acl_location,
 				'alarm_type'	 => 's_agreement',
 				'type'			 => 'form',
@@ -999,7 +998,7 @@
 				$content		 = $list['content'];
 				$table_header	 = $list['table_header'];
 
-				if($content)
+				if ($content)
 				{
 					for ($i = 0; $i < count($list['content'][0]['row']); $i++)
 					{
@@ -1078,15 +1077,13 @@
 					's_agreement_id' => $id))
 			);
 
-
 			$link_file_data = array
 				(
 				'menuaction' => 'property.uis_agreement.view_file',
 				'id'		 => $id
 			);
 
-
-			$j = count($values['files']);
+			$j = count((array)$values['files']);
 			for ($i = 0; $i < $j; $i++)
 			{
 				$values['files'][$i]['file_name'] = urlencode($values['files'][$i]['name']);
@@ -1251,7 +1248,7 @@
 							'sortable'	 => false,
 							'resizeable' => true
 						);
-						$td_count ++;
+						$td_count++;
 					}
 				}
 			}
@@ -1297,12 +1294,11 @@
 				)
 			);
 
-
 			unset($ColumnDefs_data);
 
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
 
-			for ($z = 0; $z < count($values['files']); $z++)
+			for ($z = 0; $z < count((array)$values['files']); $z++)
 			{
 				$content_files[$z]['file_name']		 = '<a href="' . $link_view_file . '&amp;file_id=' . $values['files'][$z]['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $values['files'][$z]['name'] . '</a>';
 				$content_files[$z]['delete_file']	 = '<input type="checkbox" name="values[file_action][]" value="' . $values['files'][$z]['file_id'] . '" title="' . lang('Check to delete file') . '">';
@@ -1327,7 +1323,6 @@
 					array('disablePagination' => true)
 				)
 			);
-
 
 			if ($id)
 			{
@@ -1373,7 +1368,6 @@
 			array_unshift($alarm_data['add_alarm']['day_list'], $indice);
 			array_unshift($alarm_data['add_alarm']['hour_list'], $indice);
 			array_unshift($alarm_data['add_alarm']['minute_list'], $indice);
-
 
 			$data = array
 				(
@@ -1469,7 +1463,6 @@
 				'validator'							 => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'))
 			);
-
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('service agreement') . ': ' . ($id ? lang('edit') . ' ' . lang($this->role) : lang('add') . ' ' . lang($this->role));
 
@@ -1683,7 +1676,6 @@
 				'role'			 => $this->role
 			);
 
-
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 			$member_of_data = $this->cats->formatted_xslt_list(array('selected'	 => $this->member_id,
@@ -1696,7 +1688,6 @@
 				'add_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'property.uis_agreement.edit_item',
 					's_agreement_id' => $s_agreement_id))
 			);
-
 
 			if ($id)
 			{
@@ -1758,7 +1749,6 @@
 				'lang_update_statustext'	 => lang('update selected investments')
 			);
 
-
 			$lookup_type = 'form';
 
 			//_debug_array($values);
@@ -1775,7 +1765,6 @@
 
 			self::add_javascript('property', 'overlib', 'overlib.js');
 			self::add_javascript('property', 'core', 'check.js');
-
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
@@ -1844,7 +1833,6 @@
 
 			$content_values[$y - 1]['index_date'] .= $hidden;
 
-
 			$parameters = array
 				(
 				'parameter' => array
@@ -1863,7 +1851,6 @@
 					)
 				)
 			);
-
 
 			/* REQUIRES VALIDATION OF PERMISSIONS */
 			$permissions['rowactions'][] = array
@@ -2028,7 +2015,6 @@
 				'lookup_entity'	 => $this->bocommon->get_lookup_entity('s_agreement'),
 				'entity_data'	 => $values['p']
 			));
-
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
@@ -2263,7 +2249,6 @@
 
 			$s_agreement = $this->bo->read_single(array('s_agreement_id' => $s_agreement_id));
 
-
 			if ($s_agreement_id)
 			{
 				$this->cat_id	 = ($s_agreement['cat_id'] ? $s_agreement['cat_id'] : $this->cat_id);
@@ -2299,7 +2284,6 @@
 				)
 			);
 
-
 			$alarm_data = $this->bocommon->initiate_ui_alarm(array
 				(
 				'acl_location'	 => $this->acl_location,
@@ -2313,7 +2297,6 @@
 				'account_id'	 => $account_id
 				)
 			);
-
 
 			$dateformat						 = strtolower($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			$sep							 = '/';
@@ -2361,7 +2344,6 @@
 				)),
 				'parameters' => $parameters
 			);
-
 
 			$myColumnDefs0 = array
 				(
@@ -2422,7 +2404,7 @@
 							'sortable'	 => true,
 							'resizeable' => true
 						);
-						$td_count ++;
+						$td_count++;
 					}
 				}
 			}
@@ -2446,9 +2428,7 @@
 				)
 			);
 
-
 			unset($ColumnDefs_data);
-
 
 			//---datatable2 settings---------------------------------------------------
 

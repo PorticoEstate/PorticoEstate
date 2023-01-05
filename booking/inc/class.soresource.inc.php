@@ -367,7 +367,7 @@
 			{
 				$values[] = array(
 					'id' => $this->db->f('id'),
-					'name' => $this->db->f('building_name') . '::' . $this->db->f('name')
+					'name' => $this->db->f('building_name',true) . '::' . $this->db->f('name',true)
 					);
 			}
 

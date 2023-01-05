@@ -262,7 +262,7 @@
 					<label>
 						<xsl:value-of select="lang_name"/>
 					</label>
-					<input type="text" name="values[name]" value="{value_name}">
+					<input type="text" name="values[name]" value="{value_name}" class="pure-input-3-4">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_name_statustext"/>
 						</xsl:attribute>
@@ -279,7 +279,7 @@
 					<label>
 						<xsl:value-of select="lang_descr"/>
 					</label>
-					<textarea cols="60" rows="6" name="values[descr]">
+					<textarea cols="60" rows="6" name="values[descr]" class="pure-input-3-4">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_descr_statustext"/>
 						</xsl:attribute>
@@ -296,7 +296,7 @@
 					<label>
 						<xsl:value-of select="lang_category"/>
 					</label>
-					<select id="cat_id" name="values[cat_id]">
+					<select id="cat_id" name="values[cat_id]" class="pure-input-3-4">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'Select the category the s_agreement belongs to. To do not use a category select NO CATEGORY')"/>
 						</xsl:attribute>
@@ -313,7 +313,9 @@
 						<xsl:apply-templates select="cat_list/options"/>
 					</select>
 				</div>
-				<xsl:call-template name="vendor_form"/>
+				<xsl:call-template name="vendor_form">
+					<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+				</xsl:call-template>
 				<xsl:choose>
 					<xsl:when test="member_of_list2 != ''">
 						<div class="pure-control-group">
@@ -331,29 +333,35 @@
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="lang_budget"/>
+						<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 					</label>
-					<input id="field_budget" type="text" name="values[budget]" value="{value_budget}">
+					<input id="field_budget" type="text" name="values[budget]" value="{value_budget}" class="pure-input-3-4">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_budget_statustext"/>
 						</xsl:attribute>
 					</input>
-					<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 				</div>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="lang_year"/>
 					</label>
-					<select name="values[year]" class="forms" title="{lang_year_statustext}">
+					<select name="values[year]" title="{lang_year_statustext}" class="pure-input-3-4">
 						<xsl:apply-templates select="year"/>
 					</select>
 				</div>
-				<xsl:call-template name="ecodimb_form"/>
-				<xsl:call-template name="b_account_form"/>
+				<xsl:call-template name="ecodimb_form">
+					<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+				</xsl:call-template>
+				<xsl:call-template name="b_account_form">
+					<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+				</xsl:call-template>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="lang_category"/>
 					</label>
-					<xsl:call-template name="categories"/>
+					<xsl:call-template name="categories">
+						<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+					</xsl:call-template>
 				</div>
 				<div class="pure-control-group">
 					<label>
@@ -403,7 +411,7 @@
 					</label>
 					<!-- DataTable 2 EDIT -->
 					<!--div id="datatable-container_3"/-->
-					<div class="pure-custom">
+					<div class="pure-custom pure-u-3-4">
 						<xsl:for-each select="datatable_def">
 							<xsl:if test="container = 'datatable-container_3'">
 								<xsl:call-template name="table_setup">
@@ -419,7 +427,9 @@
 					</div>
 				</div>
 				<div class="pure-control-group">
-					<xsl:call-template name="attributes_values"/>
+					<xsl:call-template name="attributes_values">
+						<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+					</xsl:call-template>
 				</div>
 				<xsl:choose>
 					<xsl:when test="files!=''">
@@ -449,7 +459,9 @@
 				</xsl:choose>
 				<xsl:choose>
 					<xsl:when test="fileupload = 1">
-						<xsl:call-template name="file_upload"/>
+						<xsl:call-template name="file_upload">
+							<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+						</xsl:call-template>
 					</xsl:when>
 				</xsl:choose>
 				<div class="pure-control-group">

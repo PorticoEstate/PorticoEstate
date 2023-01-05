@@ -888,13 +888,12 @@
 			{
 				$result_data					 = array('results' => array());
 				$result_data['total_records']	 = 0;
-				$result_data['draw']			 = 0;
+				$result_data['draw']			 = $draw;
 
 				return $this->jquery_results($result_data);
 			}
 
-			$params = array
-				(
+			$params = array(
 				'acl_location'	 => $acl_location,
 				'alarm_type'	 => 'agreement',
 				'type'			 => 'form',
@@ -1093,6 +1092,7 @@
 			}
 			else
 			{
+				$list = array();
 				$agreement = $values;
 			}
 			$this->cat_id	 = ($agreement['cat_id'] ? $agreement['cat_id'] : $this->cat_id);
@@ -1155,7 +1155,7 @@
 
 			if (isset($agreement['files']) && is_array($agreement['files']))
 			{
-				$j = count($agreement['files']);
+				$j = count((array)$agreement['files']);
 				for ($i = 0; $i < $j; $i++)
 				{
 					$agreement['files'][$i]['file_name'] = urlencode($agreement['files'][$i]['name']);
@@ -1435,7 +1435,7 @@
 
 			if(!empty($agreement['files']))
 			{
-				for ($z = 0; $z < count($agreement['files']); $z++)
+				for ($z = 0; $z < count((array)$agreement['files']); $z++)
 				{
 					$content_files[$z]['file_name']		 = '<a href="' . $link_view_file . '&amp;file_id=' . $agreement['files'][$z]['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $agreement['files'][$z]['name'] . '</a>';
 					$content_files[$z]['delete_file']	 = '<input type="checkbox" name="values[file_action][]" value="' . $agreement['files'][$z]['file_id'] . '" title="' . lang('Check to delete file') . '">';

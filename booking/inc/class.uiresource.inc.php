@@ -855,7 +855,9 @@
 
 			$data = array(
 				'datatable_def' => self::get_datatable_def($id),
-				'resource' => $resource
+				'resource' => $resource,
+				'seasons'	=> $this->bo->so->get_seasons($id)
+
 			);
 			self::add_javascript('booking', 'base', 'resource_new.js'); // to render custom fields
 			self::render_template_xsl(array('resource', 'datatable_inline'), $data);
