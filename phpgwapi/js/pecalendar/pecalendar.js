@@ -177,6 +177,7 @@ class PEcalendar {
     }
 
     addInfoPopup(contentEl, dotsEl, event) {
+        return;
         // Add info popup
         const dateFrom = DateTime.fromISO(`${event.date}T${event.from}`);
         const dateTo = DateTime.fromISO(`${event.date}T${event.to}`);

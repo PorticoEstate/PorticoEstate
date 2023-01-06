@@ -29,9 +29,22 @@ body {
     padding: 0;
   }
 }
+.over-ting {
+  padding-top: 200px;
+}
+
+.under-ting {
+  padding-top: 200px;
+}
 
 .container {
   margin: 10px;
+  @media all and (max-width: 992px) {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: scroll;
+  }
   @media all and (max-width: 480px) {
     margin: 0;
     padding: 0;
@@ -41,17 +54,22 @@ body {
 .calendar {
   display: grid;
   grid-template-rows: var(--header-height) $days-height auto;
-  position: absolute;
   border-width: 10px 10px 10px 10px;
   border-radius: 20px 20px 20px 20px;
   box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
   font-size: 1.5rem;
   grid-template-columns: var(--time-width) repeat(7, 1fr);
+  @media all and (max-width: 480px) {
+    width: calc(500vw + var(--time-width));
+  }
+
+  @media all and (max-width: 992px) {
+    width: calc(300vw + var(--time-width));
+  }
 
   .header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: var(--time-width) repeat(7, 1fr);
     background: #F5F5F5;
     border-width: 10px 10px 10px 10px;
     border-radius: 20px 20px 20px 20px;
@@ -59,20 +77,30 @@ body {
     padding: 10px 15px 10px 15px;
     grid-row: 1 /span 1;
     grid-column: 1 / span 8;
-    position: sticky;
-    top: 0;
     z-index: 12;
+    @media all and (max-width: 480px) {
+      width: 500vw;
+    }
+
+    @media all and (max-width: 992px) {
+      width: 300vw;
+    }
 
     .place {
-      display: flex;
-      flex-direction: column;
-      
+      grid-row: 1 / span 1;
+      grid-column: 1 / span 4;
+      display: grid;
+      grid-template-columns: 1fr;
 
       .select_building_resource {
-        display: flex;
-        flex-direction: row;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         @media screen and (max-width: 480px){
-          flex-direction: column;
+          grid-template-columns: 1fr;
+        }
+
+        @media all and (max-width: 992px) {
+          width: 90vw;
         }
       }
 
@@ -90,6 +118,8 @@ body {
     }
 
     .infopart {
+      grid-row: 1 / span 1;
+      grid-column: 5 / span 4;
       display: flex;
       flex-direction: row;
 
@@ -144,11 +174,19 @@ body {
     text-align: center;
     grid-template-columns: repeat(7, 1fr);
     position: sticky;
-    top: $days-height;
+    position: -webkit-sticky;
+    top: 0;
     z-index: 11;
     line-height: 1rem;
     grid-row: 2 / span 1;
     grid-column: 2 / span 7;
+    @media all and (max-width: 480px) {
+      width: 500vw;
+    }
+
+    @media all and (max-width: 992px) {
+      width: 300vw;
+    }
   }
 
   .day {
@@ -162,7 +200,7 @@ body {
 
     :nth-child(2) {
       font-weight: normal;
-      font-size: 0.5rem;
+      font-size: 0.8rem;
     }
   }
 
@@ -175,9 +213,11 @@ body {
     grid-row: 3 / span var(--calendar-rows);
     grid-column: 1 / span 1;
     position: sticky;
+    position: -webkit-sticky;
     left: 0;
     z-index: 10;
     background-color: #FFF;
+    height: 100%;
   }
 
   .content {
