@@ -331,28 +331,28 @@
 				</ul>
 			</div>
 			<div class="col-6">
-				<ul class="list-inline float-end">
-					<li class="list-inline-item me-2">
-						<a class="btn btn-outline-primary active border" data-bs-toggle="tab" href="#booking">
+				<ul class="list-inline float-end" role="tablist">
+					<li class="nav-item list-inline-item me-2">
+						<button class="btn btn-outline-primary active border" data-bs-toggle="tab" data-bs-target="#booking">
 							<i class="fas fa-calendar-alt fa-2x" aria-hidden="true" title="Søknad"></i>
-						</a>
+						</button>
 
 					</li>
-					<li class="list-inline-item me-2">
-						<a class="btn btn-outline-warning border" data-bs-toggle="tab" href="#internal_notes">
+					<li class="nav-item list-inline-item me-2">
+						<button class="btn btn-outline-warning border" data-bs-toggle="tab" data-bs-target="#internal_notes">
 							<i class="far fa-sticky-note fa-2x text-warning" aria-hidden="true" title="Interne notat"></i>
-						</a>
+						</button>
 
 					</li>
-					<!--li class="nav-item me-2">
-						<a class="nav-link border" data-bs-toggle="tab" href="#checklist">
+					<!--li class="nav-item nav-item me-2">
+						<button class="nav-link border" data-bs-toggle="tab" href="#checklist">
 							<i class="fas fa-clipboard-list fa-3x" aria-hidden="true" title="Sjekkliste"></i>
-						</a>
+						</button>
 					</li>-->
-					<li class="list-inline-item me-2">
-						<a class="btn btn-outline-primary border" data-bs-toggle="tab" href="#history">
+					<li class="nav-item list-inline-item me-2">
+						<button class="btn btn-outline-primary border" data-bs-toggle="tab" data-bs-target="#history">
 							<i class="fas fa-history fa-2x" aria-hidden="true" title="Historikk"></i>
-						</a>
+						</button>
 					</li>
 				</ul>
 			</div>
