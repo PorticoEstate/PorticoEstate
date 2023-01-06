@@ -387,7 +387,7 @@ HTML;
 	 * Might be set wrong in the ui-class
 	 */
 	$xslt_app = !empty($GLOBALS['phpgw_info']['flags']['xslt_app']) ? true : false;
-	$org	 = CreateObject('bookingfrontend.uiorganization');
+	$org	 = CreateObject('booking.soorganization');
 	$GLOBALS['phpgw_info']['flags']['xslt_app'] = $xslt_app;
 
 	$user_url = $GLOBALS['phpgw']->link("/{$app}/", array('menuaction' => 'bookingfrontend.uiuser.show'));

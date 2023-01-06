@@ -1515,7 +1515,7 @@ HTML;
 				foreach ($this->items[$this->currentDate] as $item)
 				{
 //				_debug_array($item);
-					$desc = str_replace(':', ':<br/>', $item['component']['xml_short_desc']);
+					$desc = ucwords(mb_convert_case(str_replace(':', ':<br/>', $item['component']['xml_short_desc']),  MB_CASE_TITLE), "'");
 
 					if($item['schedule']['info']['check_list_id'])
 					{
@@ -1525,7 +1525,7 @@ HTML;
 							'check_list_id' => $item['schedule']['info']['check_list_id'],
 						);
 						$url_target = '_self';
-						$link_to_checklist = "<a href=\"" . $GLOBALS['phpgw']->link('/index.php', $control_link_data) . "\" target=\"{$url_target}\"><kbd><i class='fas fa-link'></i></kbd></a>";
+						$link_to_checklist = "<a href='" . $GLOBALS['phpgw']->link('/index.php', $control_link_data) . " target='{$url_target}'><kbd><i class='fas fa-link'></i></kbd></a>";
 					}
 					else
 					{
@@ -1538,36 +1538,37 @@ HTML;
 						case 'CONTROL_NOT_DONE_WITH_PLANNED_DATE':
 						case 'CONTROL_NOT_DONE':
 						case 'CONTROL_PLANNED':
-							$class = 'badge-primary';
+							$class = 'bg-primary text-light';
 							$draggable =  'draggable="true"';
 							break;
 
 						case 'CONTROL_DONE_IN_TIME_WITHOUT_ERRORS':
-							$class = 'badge-secondary';
+							$class = 'bg-secondary text-light';
 							$draggable =  '';
 							break;
 
 						default:
-							$class = 'badge-secondary';
+							$class = 'bg-secondary text-light';
 							$draggable =  '';
 							break;
 					}
 
 					$item_content .= <<<HTML
-
-					<div class="mb-1 card badge event {$class}" style="width: 8rem;" {$draggable}
+					<div class="mb-1 card event {$class}" style="width: 8rem;" {$draggable}
 						id="{$item['component']['location_id']}_{$item['component']['id']}"
 						control_id="{$item['schedule']['info']['control_id']}"
 						serie_id="{$item['schedule']['info']['serie_id']}"
 						check_list_id="{$item['schedule']['info']['check_list_id']}"
 						deadline_date_ts="{$item['schedule']['info']['deadline_date_ts']}"
 						assigned_to="{$item['schedule']['info']['assigned_to']}">
-						<span class="float-start link_to_checklist">
-							{$link_to_checklist}
-						</span>
-						<span class="float-right">
-							{$desc}
-						</span>
+						<div class="card-body">
+							<p class="link_to_checklist">
+								{$link_to_checklist}
+							</p>
+							<p class="card-text">
+								{$desc}
+							</p>
+						</div>
 
 					</div>
 HTML;
