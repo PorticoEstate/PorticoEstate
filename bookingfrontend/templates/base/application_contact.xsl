@@ -409,7 +409,7 @@
 
 		<!-- Modal JQUERY logic -->
 
-		$('#new_organization').on('show.bs.modal', function (e)
+		$('#new_organization').on('shown.bs.modal', function (e)
 		{
 		var src_organization = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiorganization.add', nonavbar: true} );
 		$("#iframeorganization").attr("src", src_organization);

@@ -1292,7 +1292,7 @@
 					<h5 class="modal-title" id="commentModalLabel">
 						<xsl:value-of select="php:function('lang', 'Add a comment')" />
 					</h5>
-					<button class="btn-close" type="button" data-dismiss="modal" aria-label="Close">
+					<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">x</span>
 					</button>
 				</div>
@@ -1334,7 +1334,7 @@
 						<xsl:text>)</xsl:text>
 					</h5>
 
-					<button class="btn-close" type="button" data-dismiss="modal" aria-label="Close">
+					<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">x</span>
 					</button>
 				</div>
@@ -1367,7 +1367,7 @@
 						<button type="submit" class="btn btn-primary">
 							<xsl:value-of select="php:function('lang', 'save')" />
 						</button>
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
 							<xsl:value-of select="php:function('lang', 'cancel')" />
 						</button>
 					</div>
@@ -1385,7 +1385,7 @@
 					<h5 class="modal-title" id="change_userModalLabel">
 						<xsl:value-of select="php:function('lang', 'case officer')" />
 					</h5>
-					<button class="btn-close" type="button" data-dismiss="modal" aria-label="Close">
+					<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">x</span>
 					</button>
 				</div>
@@ -1407,7 +1407,7 @@
 						<button type="submit" class="btn btn-primary">
 							<xsl:value-of select="php:function('lang', 'save')" />
 						</button>
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
 							<xsl:value-of select="php:function('lang', 'cancel')" />
 						</button>
 					</div>
@@ -1426,7 +1426,7 @@
 					<h5 class="modal-title" id="internal_noteModalLabel">
 						<xsl:value-of select="php:function('lang', 'internal notes')" />
 					</h5>
-					<button class="btn-close" type="button" data-dismiss="modal" aria-label="Close">
+					<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">x</span>
 					</button>
 				</div>
@@ -1446,7 +1446,7 @@
 						<button type="submit" class="btn btn-primary">
 							<xsl:value-of select="php:function('lang', 'save')" />
 						</button>
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
 							<xsl:value-of select="php:function('lang', 'cancel')" />
 						</button>
 					</div>

@@ -132,6 +132,7 @@ $(document).ready(function ()
 	});
 
 
+
 });
 
 this.onActionsClick_filter_files = function (action, ids)
@@ -592,14 +593,24 @@ this.local_DrawCallback0 = function (oTable)
 	return;
 
 	var categories = $('.document_category');
-	var category_list = [{id: 1, name: "navn1"}, {id: 2, name: "navn2"}];
+	var category_list = [];
+	$("#document_category > option").each(function ()
+	{
+		category_list.push({id:this.value,name:this.text });
+	});
 
+	var select = null;
 	var htmlString;
+
+	$('.select_document_category').multiselect('destroy');
+
 	categories.each(function (i, obj)
 	{
 		$(obj).find('select').remove();
-		var selected = '';
-		htmlString = '<select name="document_category">';
+
+		console.log($(obj).html());
+		var selected = ' selected="selected"';
+		htmlString = '<select name="document_category" multiple="true" class="select_document_category">';
 
 		category_list.forEach(function (category)
 		{
@@ -608,9 +619,25 @@ this.local_DrawCallback0 = function (oTable)
 		});
 		htmlString += '</select>';
 
-//		$(obj).append(htmlString);
+		$(obj).append(htmlString);
 
 	});
+
+
+
+
+	$('.select_document_category').multiselect({
+		buttonClass: 'form-select',
+		templates: {
+			li: '<li><div style="display:inline;"><a><label></label></a></div></li>',
+			button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+				//		option: '<button type="button" class="multiselect-option dropdown-item"></button>'
+		}
+	});
+//	$('.multiselect-container .multiselect-filter', $('.select_document_category')).css({
+//		'position': 'sticky', 'top': '0px', 'z-index': 1
+//	});
+
 
 
 
