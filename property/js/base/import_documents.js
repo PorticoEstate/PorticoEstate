@@ -590,31 +590,44 @@ this.step_3_clean_up = function ()
 
 this.local_DrawCallback0 = function (oTable)
 {
-	return;
+	set_up_multiselect('document_category');
+	set_up_multiselect('branch');
+};
 
-	var categories = $('.document_category');
-	var category_list = [];
-	$("#document_category > option").each(function ()
+
+set_up_multiselect = function(field_name)
+{
+//	let field_name = 'document_category';
+
+	let categories = $('.' + field_name);
+	let category_list = [];
+	$("#" + field_name + " > option").each(function ()
 	{
 		category_list.push({id:this.value,name:this.text });
 	});
 
-	var select = null;
-	var htmlString;
+	let htmlString;
 
-	$('.select_document_category').multiselect('destroy');
+	$('.select_' + field_name).multiselect('destroy');
 
 	categories.each(function (i, obj)
 	{
 		$(obj).find('select').remove();
 
-		console.log($(obj).html());
-		var selected = ' selected="selected"';
-		htmlString = '<select name="document_category" multiple="true" class="select_document_category">';
+		const data = $(obj).parent().attr('data').split('::').filter(Boolean);
+//		console.log(data);
+
+		let selected;
+		htmlString = '<select name="' + field_name + '" multiple="true" class="select_' + field_name +'">';
 
 		category_list.forEach(function (category)
 		{
-			console.log(category)
+			selected = '';
+			if(data.includes(category.id))
+			{
+				selected = ' selected="selected"';
+			}
+//			console.log(category)
 			htmlString += "<option value='" + category.id + "'" + selected + ">" + category.name + "</option>";
 		});
 		htmlString += '</select>';
@@ -624,9 +637,7 @@ this.local_DrawCallback0 = function (oTable)
 	});
 
 
-
-
-	$('.select_document_category').multiselect({
+	$('.select_' + field_name).multiselect({
 		buttonClass: 'form-select',
 		templates: {
 			li: '<li><div style="display:inline;"><a><label></label></a></div></li>',
@@ -637,8 +648,5 @@ this.local_DrawCallback0 = function (oTable)
 //	$('.multiselect-container .multiselect-filter', $('.select_document_category')).css({
 //		'position': 'sticky', 'top': '0px', 'z-index': 1
 //	});
-
-
-
 
 };

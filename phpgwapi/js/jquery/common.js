@@ -256,16 +256,18 @@ JqueryPortico.show_picture_popup = function (img_url)
 JqueryPortico.formatJsonArray = function (key, oData)
 {
 	var string = "";
+	const elements = [];
 	if (oData[key])
 	{
 		var tags = oData[key];
 		$.each(tags, function (k, v)
 		{
-			string += v + '<br/>';
+			elements.push(v);
 		});
 
 	}
-	return "<div class=\"" + key + "\">" + string + "</div>";;
+	string = elements.join('::');
+	return '<div data="'+ string +'"><div class="' + key + '"></div></div>';
 };
 
 JqueryPortico.FormatterAmount0 = function (key, oData)
