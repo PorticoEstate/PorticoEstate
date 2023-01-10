@@ -263,16 +263,7 @@ this.refresh_files = function (show_all_columns)
 //		api.column( 5 ).visible( false, false );
 //	}
 };
-this.local_DrawCallback0 = function (container)
-{
-	var api = $("#" + container).dataTable().api();
-	if (api.rows().data().count() > 0)
-	{
-		$('#step_2_validate').show();
-	}
-	update_common();
 
-};
 this.get_order_info = function ()
 {
 	$("#validate_step_1").prop("disabled", false);
@@ -588,14 +579,23 @@ this.step_3_clean_up = function ()
 	});
 };
 
-this.local_DrawCallback0 = function (oTable)
+this.local_DrawCallback0 = function (container)
 {
+	var api = $("#" + container).dataTable().api();
+	if (api.rows().data().count() > 0)
+	{
+		$('#step_2_validate').show();
+	}
+	update_common();
+
 	set_up_multiselect('document_category');
 	set_up_multiselect('branch');
+	set_up_multiselect('building_part');
+
+
 };
 
-
-set_up_multiselect = function(field_name)
+set_up_multiselect = function (field_name)
 {
 //	let field_name = 'document_category';
 
@@ -603,7 +603,7 @@ set_up_multiselect = function(field_name)
 	let category_list = [];
 	$("#" + field_name + " > option").each(function ()
 	{
-		category_list.push({id:this.value,name:this.text });
+		category_list.push({id: this.value, name: this.text});
 	});
 
 	let htmlString;
@@ -618,12 +618,12 @@ set_up_multiselect = function(field_name)
 //		console.log(data);
 
 		let selected;
-		htmlString = '<select name="' + field_name + '" multiple="true" class="select_' + field_name +'">';
+		htmlString = '<select name="' + field_name + '" multiple="true" class="select_' + field_name + '">';
 
 		category_list.forEach(function (category)
 		{
 			selected = '';
-			if(data.includes(category.id))
+			if (data.includes(category.id))
 			{
 				selected = ' selected="selected"';
 			}
@@ -643,10 +643,44 @@ set_up_multiselect = function(field_name)
 			li: '<li><div style="display:inline;"><a><label></label></a></div></li>',
 			button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
 				//		option: '<button type="button" class="multiselect-option dropdown-item"></button>'
+		},
+		onChange: function (option, checked, select)
+		{
+			let file_name = $(option).parent().parent().parent().parent().parent().parent().children('td')[0].innerText;
+			let order_id = $('#order_id').val();
+
+			console.log(checked);
+			console.log(field_name);
+			console.log($(option).parent().parent().parent().parent().parent().parent().children('td')[0].innerText);
+
+			$.ajax({
+				type: 'POST',
+				dataType: 'json',
+				url: phpGWLink('index.php', {menuaction: 'property.uiimport_documents.set_value'}, true),
+				data: {
+					id: order_id + '::' + file_name,
+					field_name: field_name,
+					checked: checked === true ? 1 : 0,
+					value : [$(option).val()],
+					secret: $("#secret").val()
+				},
+				success: function (data)
+				{
+				},
+				error: function (data)
+				{
+					alert('feil');
+				}
+			});
+
+
 		}
+//		,
+//		onDropdownHidden: function (event)
+//		{
+//			alert('lagre verdier');
+//		}
+
 	});
-//	$('.multiselect-container .multiselect-filter', $('.select_document_category')).css({
-//		'position': 'sticky', 'top': '0px', 'z-index': 1
-//	});
 
 };

@@ -944,8 +944,7 @@
 			$branch_list = $import_document_files->get_branch_list();
 			$document_categories = $import_document_files->get_document_categories();
 
-			$data = array
-				(
+			$data = array(
 				'order_id'				 => $order_id,
 				'secret'				 => $secret,
 				'datatable_def'			 => $datatable_def,
@@ -1007,9 +1006,11 @@
 			$lang_missing = lang('Missing value');
 			$error_list = array();
 //			$debug = true;
-			$missing_value = array('<span style="color:red;">*</span>');
+			$missing_value = '';
+//			$missing_value ='<div data="e::e"><span style="color:red;">*</span><div class="building_part"></div></div>';
 			foreach ($list_files as &$file_info)
 			{
+
 				$file_name = $file_info['path_relative_filename'];
 				$encoded_file_name = urlencode($file_name);
 				$file_info['duplicate']	= $_duplicates[$file_info['file_name']] > 1 ?  $_duplicates[$file_info['file_name']] : '';
@@ -1819,46 +1820,39 @@
 					$value = phpgw::get_var('value');
 					$file_tags[$file_name][$field_name] = $value;
 					break;
+				case 'document_category':
+				case 'branch':
+				case 'building_part':
+					$value = phpgw::get_var('value');
+
+					if(!phpgw::get_var('checked', 'bool'))
+					{
+						if(!empty($file_tags[$file_name][$field_name]))
+						{
+							$file_tags[$file_name][$field_name] = array_diff($file_tags[$file_name][$field_name], $value);
+						}
+						else
+						{
+							$file_tags[$file_name][$field_name] = array();
+						}
+					}
+					else
+					{
+						if(!empty($file_tags[$file_name][$field_name]))
+						{
+							$file_tags[$file_name][$field_name] = array_unique(array_merge($value, $file_tags[$file_name][$field_name]));
+						}
+						else
+						{
+							$file_tags[$file_name][$field_name] = $value;
+						}
+					
+					}
+
+					break;
 				default:
 					return;
 			}
-
-
-/*
-			if($document_category)
-			{
-				if(!empty($file_tags[$file_name]['document_category']))
-				{
-					$file_tags[$file_name]['document_category'] = array_unique(array_merge($document_category, $file_tags[$file_name]['document_category']));
-				}
-				else
-				{
-					$file_tags[$file_name]['document_category'] = $document_category;
-				}
-			}
-			if($branch)
-			{
-				if(!empty($file_tags[$file_name]['branch']))
-				{
-					$file_tags[$file_name]['branch'] = array_unique(array_merge($branch, $file_tags[$file_name]['branch']));
-				}
-				else
-				{
-					$file_tags[$file_name]['branch'] = $branch;
-				}
-			}
-			if($building_part)
-			{
-				if(!empty($file_tags[$file_name]['building_part']))
-				{
-					$file_tags[$file_name]['building_part'] = array_unique(array_merge($building_part, $file_tags[$file_name]['building_part']));
-				}
-				else
-				{
-					$file_tags[$file_name]['building_part'] = $building_part;
-				}
-			}
-*/
 
 			$result = $this->_set_metadata($order_id, $file_tags);
 
