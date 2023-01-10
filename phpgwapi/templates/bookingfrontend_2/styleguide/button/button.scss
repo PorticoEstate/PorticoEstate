@@ -3,10 +3,10 @@
   justify-content: center;
   align-items: center;
   padding: 1rem 1.25rem;
-  border-radius: 500px;
   border: 2px solid $purple;
   font-weight: 700;
   line-height: 1.15;
+  @extend .rounded-large;
 
   &:hover,
   &:active,

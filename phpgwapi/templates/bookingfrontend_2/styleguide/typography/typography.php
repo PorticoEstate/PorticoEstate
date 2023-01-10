@@ -1,6 +1,3 @@
-<div class="d-flex justify-content-end">
-  Typography
-</div>
 <div class="container">
   <div class="row g-0 border-top border-2 py-5">
     <div class="col-lg">
