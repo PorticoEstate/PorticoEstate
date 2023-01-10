@@ -1006,7 +1006,7 @@
 			$lang_missing = lang('Missing value');
 			$error_list = array();
 //			$debug = true;
-			$missing_value = '';
+			$missing_value = array(-1);
 //			$missing_value ='<div data="e::e"><span style="color:red;">*</span><div class="building_part"></div></div>';
 			foreach ($list_files as &$file_info)
 			{
@@ -1490,7 +1490,7 @@
 
 //------ End pagination
 
-			$result_data = array('results' => $out);
+			$result_data = array('results' => (array)$out);
 
 			$result_data['total_records']	 = $total_records;
 			$result_data['draw']			 = phpgw::get_var('draw', 'int');

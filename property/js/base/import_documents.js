@@ -615,6 +615,11 @@ set_up_multiselect = function (field_name)
 		$(obj).find('select').remove();
 
 		const data = $(obj).parent().attr('data').split('::').filter(Boolean);
+
+		if(data[0] == -1)
+		{
+			$(obj).append('<span style="color:red;">*</span>');
+		}
 //		console.log(data);
 
 		let selected;
