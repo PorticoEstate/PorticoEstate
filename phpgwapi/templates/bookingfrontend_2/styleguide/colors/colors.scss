@@ -8,18 +8,92 @@ $grey: #D6D6D6;
 $grey-light: #F5F5F5;
 $white: #FFFFFF;
 
+$colorVariations : (
+  'purple' (
+    '100': $purple,
+    '80': #9463a1,
+    '64': #a982b4,
+    '56': #b492bd,
+    '40': #c9b1d0,
+    '24': #dfd0e3,
+    '16': #e9e0ec,
+    '8': #f4f0f6,
+    '4': #faf7fa,
+  ),
+  'blue' (
+    '100': $blue,
+    '80': #535da2,
+    '64': #767eb5,
+    '56': #868ebe,
+    '40': #a9aed1,
+    '24': #cccfe3,
+    '16': #dcdfec,
+    '8': #eeeff6,
+    '4': #f7f7fa,
+  ),
+  'black' (
+    '100': $black,
+    '80': #333333,
+    '64': #5c5c5c,
+    '56': #707070,
+    '40': #999999,
+    '24': #c2c2c2,
+    '16': #d6d6d6,
+    '8': #ebebeb,
+    '4': #f5f5f5,
+  ),
+  'beige-dark' (
+    '100': $beige-dark,
+    '80': #ebe9e2,
+    '64': #efede8,
+    '56': #f1efeb,
+    '40': #f5f4f1,
+    '24': #f9f8f6,
+    '16': #fbfaf9,
+    '8': #fdfdfc,
+    '4': #fefefe,
+  ),
+  'beige' (
+    '100': $beige,
+    '80': #f9f7f3,
+    '64': #faf9f5,
+    '56': #fbf9f7,
+    '40': #fcfbf9,
+    '24': #fdfdfb,
+    '16': #fefdfd,
+    '8': #fefefe,
+    '4': #fffffe,
+  ),
+  'grey' (
+    '100': $grey,
+    '80': #dedede,
+    '64': #e5e5e5,
+    '56': #e8e8e8,
+    '40': #efefef,
+    '24': #f5f5f5,
+    '16': #f8f8f8,
+    '8': #fcfcfc,
+    '4': #fdfdfd,
+  ),
+  'grey-light' (
+    '100': $grey-light,
+    '80': #f7f7f7,
+    '64': #f9f9f9,
+    '56': #f9f9f9,
+    '40': #fbfbfb,
+    '24': #fdfdfd,
+    '16': #fdfdfd,
+    '8': #fefefe,
+    '4': #ffffff,
+  ),
+  'white' (
+    '100': $white,
+  ),
+);
+
 $primary-color: $purple;
 $secondary-color: $blue;
 
-$colors: (
-  'purple' : $purple,
-  'blue': $blue,
-  'black': $black,
-  'beige-dark': $beige-dark,
-  'beige': $beige,
-  'grey': $grey,
-  'grey-light': $grey-light,
-  'white': $white, );
 $opacities: (
   '80' : 0.8,
   '64' : 0.64,
@@ -31,21 +105,32 @@ $opacities: (
   '4' : 0.04,
   );
 
-@each $color, $colorValue in $colors {
-  .text-#{$color} {
-    color: $colorValue;
-  }
 
-  .bg-#{$color} {
-    background-color: $colorValue;
-  }
+@each $mainColor, $tones in $colorVariations {
 
-  @each $opacity, $opacityValue in $opacities {
-    .bg-#{$color}-#{$opacity} {
-      background-color: rgba($colorValue, $opacityValue);
+  @each $tone, $value in $tones {
+    @if $tone == '100' {
+
+      .text-#{$mainColor} {
+        color: $value;
+      }
+
+      .bg-#{$mainColor} {
+        background-color: $value;
+      }
+
+      
+      @each $opacity, $opacityValue in $opacities {
+        .bgo-#{$mainColor}-#{$opacity} {
+          background-color: rgba($value, $opacityValue);
+        }
+      }
+
+    } @else {
+      .bg-#{$mainColor}-#{$tone} {
+        background-color: $value;
+      }
     }
   }
-
 }
-
 

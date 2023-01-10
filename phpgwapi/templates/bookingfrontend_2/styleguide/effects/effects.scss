@@ -2,6 +2,9 @@
   box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
 }
 
+$roundedLarge: 3.125rem;
+$roundedMedium: 2rem;
+
 .rounded {
   &-mini {
     border-radius: 0.5rem;
@@ -12,10 +15,20 @@
   }
 
   &-medium {
-    border-radius: 2rem;
+    border-radius: $roundedMedium;
+
+    &-bottom {
+      border-bottom-left-radius: $roundedMedium;
+      border-bottom-right-radius: $roundedMedium;
+    }
   }
 
   &-large {
-    border-radius: 3.125rem;
+    border-radius: $roundedLarge;
+
+    &-bottom {
+      border-bottom-left-radius: $roundedLarge;
+      border-bottom-right-radius: $roundedLarge;
+    }
   }
 }
