@@ -1,5 +1,5 @@
 
-/* global lang_select_date, img_cal, dateformat, oTable0, oTable9 */
+/* global lang_select_date, img_cal, dateformat, oTable0, oTable9, oTable6, link_not_included_price_items, oTable3, link_included_parties, oTable4, link_not_included_parties, oTable5, link_included_price_items, link_upload_document, oTable1, link_included_composites, oTable2, link_not_included_composites */
 
 var set_composite_data = 0;
 var set_parties_data = 0;

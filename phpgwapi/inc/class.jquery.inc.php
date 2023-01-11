@@ -256,8 +256,8 @@
 					if ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] != 'bootstrap')
 					{
 						unset($load['bootstrap-multiselect']);//to be inserted last
-						$load['popper']					 = array("popper2{$_type}");
-						$load['bootstrap']				 = array("js/bootstrap{$_type}");
+						$load['popper']					 = array("popper2.min");
+						$load['bootstrap5']				 = array("vendor/twbs/bootstrap/dist/js/bootstrap.min");
 
 						$load['bootstrap-multiselect']	 = array("js/bootstrap-multiselect.min");
 
