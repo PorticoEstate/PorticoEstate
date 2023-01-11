@@ -38,6 +38,16 @@
 
 		}
 
+		.form-check-label
+		{
+			text-align: left !important;
+		}
+
+		.dataTables_scrollBody
+		{
+			overflow: visible !important;
+		}
+
 	</style>
 
 	<script type="text/javascript">
@@ -147,78 +157,97 @@
 							</xsl:with-param>
 						</xsl:call-template>
 					</div>
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'cadastral unit')"/>
-						</label>
 
-						<input id="cadastral_unit" class="pure-input-3-4"></input>
-					</div>
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'building number')"/>
-						</label>
+					<div class="accordion" id="accordionExample">
+						<div class="accordion-item">
+							<h2 class="accordion-header" id="headingOne">
+							<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+								Felles-Tagging av metadata
+							</button>
+							</h2>
+							<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+								<div class="accordion-body">
 
-						<input id="building_number" class="pure-input-3-4"></input>
-					</div>
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'location code')"/>
-						</label>
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'cadastral unit')"/>
+										</label>
 
-						<input id="location_code" class="pure-input-3-4"></input>
-					</div>
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'remark')"/>
-						</label>
+										<input id="cadastral_unit" class="pure-input-3-4"></input>
+									</div>
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'building number')"/>
+										</label>
 
-						<input id="remark_detail" class="pure-input-3-4"></input>
-					</div>
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'document categories')"/>
-						</label>
+										<input id="building_number" class="pure-input-3-4"></input>
+									</div>
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'location code')"/>
+										</label>
 
-						<select id='document_category' class="pure-input-3-4" multiple="multiple">
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'select')"/>
-							</xsl:attribute>
-							<xsl:apply-templates select="document_category_list/options"/>
-						</select>
-					</div>
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'branch')"/>
-						</label>
+										<input id="location_code" class="pure-input-3-4"></input>
+									</div>
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'remark')"/>
+										</label>
 
-						<select id='branch' class="pure-input-3-4" multiple="multiple">
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'select')"/>
-							</xsl:attribute>
-							<xsl:apply-templates select="branch_list/options"/>
-						</select>
-					</div>
-					<div class="pure-control-group">
-						<xsl:variable name="lang_building_part">
-							<xsl:value-of select="php:function('lang', 'building part')"/>
-						</xsl:variable>
-						<label>
-							<xsl:value-of select="$lang_building_part"/>
-						</label>
+										<input id="remark_detail" class="pure-input-3-4"></input>
+									</div>
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'document categories')"/>
+										</label>
 
-						<select id="building_part" class="pure-input-3-4"  multiple="multiple">
-							<xsl:attribute name="title">
-								<xsl:value-of select="$lang_building_part"/>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation">
-								<xsl:text>required</xsl:text>
-							</xsl:attribute>
-							<xsl:attribute name="data-validation-error-msg">
-								<xsl:value-of select="$lang_building_part"/>
-							</xsl:attribute>
-							<xsl:apply-templates select="building_part_list/options"/>
-						</select>
+										<select id='document_category' class="form-select" multiple="multiple">
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'select')"/>
+											</xsl:attribute>
+											<xsl:attribute name="data-placeholder">
+												<xsl:value-of select="php:function('lang', 'document categories')"/>
+											</xsl:attribute>
+											<xsl:apply-templates select="document_category_list/options"/>
+										</select>
+									</div>
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'branch')"/>
+										</label>
+
+										<select id='branch' class="pure-input-3-4" multiple="multiple">
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'select')"/>
+											</xsl:attribute>
+											<xsl:apply-templates select="branch_list/options"/>
+										</select>
+									</div>
+									<div class="pure-control-group">
+										<xsl:variable name="lang_building_part">
+											<xsl:value-of select="php:function('lang', 'building part')"/>
+										</xsl:variable>
+										<label>
+											<xsl:value-of select="$lang_building_part"/>
+										</label>
+
+										<select id="building_part" class="pure-input-3-4"  multiple="multiple">
+											<xsl:attribute name="title">
+												<xsl:value-of select="$lang_building_part"/>
+											</xsl:attribute>
+											<xsl:attribute name="data-validation">
+												<xsl:text>required</xsl:text>
+											</xsl:attribute>
+											<xsl:attribute name="data-validation-error-msg">
+												<xsl:value-of select="$lang_building_part"/>
+											</xsl:attribute>
+											<xsl:apply-templates select="building_part_list/options"/>
+										</select>
+									</div>
+
+								</div>
+							</div>
+						</div>
 					</div>
 
 					<div class="pure-control-group">

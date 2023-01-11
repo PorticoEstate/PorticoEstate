@@ -97,18 +97,21 @@ $(document).ready(function ()
 	});
 
 	$("#document_category").select2({
-		placeholder: lang['document categories'],
+		placeholder: $( this ).data( 'placeholder' ),
 		language: "no",
-		width: input_width
+		width: input_width,
+		closeOnSelect: false
 	});
 	$("#branch").select2({
 		placeholder: lang['branch'],
 		language: "no",
+		closeOnSelect: false,
 		width: input_width
 	});
 	$("#building_part").select2({
 		placeholder: lang['building part'],
 		language: "no",
+		closeOnSelect: false,
 		width: input_width
 	});
 	if ($("#order_id").val())
@@ -644,10 +647,13 @@ set_up_multiselect = function (field_name)
 
 	$('.select_' + field_name).multiselect({
 		buttonClass: 'form-select',
+		widthSynchronizationMode: 'always',
+		buttonWidth: '200px',
+//		enableResetButton: true,
+//		resetButtonText: 'Angre',
 		templates: {
 			li: '<li><div style="display:inline;"><a><label></label></a></div></li>',
 			button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
-				//		option: '<button type="button" class="multiselect-option dropdown-item"></button>'
 		},
 		onChange: function (option, checked, select)
 		{

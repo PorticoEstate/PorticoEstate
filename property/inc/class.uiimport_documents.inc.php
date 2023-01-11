@@ -926,6 +926,7 @@
 				'ColumnDefs' => $files_def,
 				'tabletools' => $tabletools,
 				'config'	 => array(
+//					array('responsive' => true),
 					array('disablePagination' => true),
 //					array('disableFilter' => true),
 					array('scrollX' => false),
@@ -1797,7 +1798,7 @@
 
 			$field_name = phpgw::get_var('field_name');
 			$id = urldecode(phpgw::get_var('id','raw'));
-			
+
 			$id_arr = explode('::', $id);
 
 			$order_id = $id_arr[0];
@@ -1846,7 +1847,7 @@
 						{
 							$file_tags[$file_name][$field_name] = $value;
 						}
-					
+
 					}
 
 					break;
