@@ -24,6 +24,5 @@
 		<!-- BEGIN javascript -->
 		<script src="{javascript_uri}"></script>
 		<!-- END javascript -->
-		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
 	</head>
 	{nav}
