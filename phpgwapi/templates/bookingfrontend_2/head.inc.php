@@ -21,28 +21,31 @@
 	$config_frontend = CreateObject('phpgwapi.config', 'bookingfrontend')->read();
 	$config_backend = CreateObject('phpgwapi.config', 'booking')->read();
 
-	$tracker_id		 = !empty($config_frontend['tracker_id']) ? $config_frontend['tracker_id'] : '';
-	$tracker_code1	 = <<<JS
-		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-JS;
-	$tracker_code2	 = <<<JS
-		try
-		{
-			var pageTracker = _gat._getTracker("{$tracker_id}");
-			pageTracker._trackPageview();
-		}
-		catch(err)
-		{
-//			alert(err);
-		}
-JS;
 
-	if ($tracker_id)
-	{
-		$GLOBALS['phpgw']->js->add_code('', $tracker_code1);
-		$GLOBALS['phpgw']->js->add_code('', $tracker_code2);
-	}
+	/**
+	 * Sigurd: regner med at google-trackeren er historie
+	 */
+//	$tracker_id		 = !empty($config_frontend['tracker_id']) ? $config_frontend['tracker_id'] : '';
+//	$tracker_code1	 = <<<JS
+//		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+//		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+//JS;
+//	$tracker_code2	 = <<<JS
+//		try
+//		{
+//			var pageTracker = _gat._getTracker("{$tracker_id}");
+//			pageTracker._trackPageview();
+//		}
+//		catch(err)
+//		{
+//		}
+//JS;
+//
+//	if ($tracker_id)
+//	{
+//		$GLOBALS['phpgw']->js->add_code('', $tracker_code1);
+//		$GLOBALS['phpgw']->js->add_code('', $tracker_code2);
+//	}
 
 	$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 	$GLOBALS['phpgw']->template->set_unknowns('remove');
@@ -54,21 +57,16 @@ JS;
 	$stylesheets = array();
 
 
-//	$stylesheets[]	 = "/phpgwapi/js/bootstrap/css/bootstrap.min.css";
 	$stylesheets[]	 = "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css";
 	$stylesheets[]	 = "/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
-
 	$stylesheets[]	 = "/phpgwapi/templates/bookingfrontend/css/jquery.autocompleter.css";
 	$stylesheets[]	 = "https://fonts.googleapis.com/css?family=Work+Sans";
-	$stylesheets[]	 = "/phpgwapi/templates/bookingfrontend/css/custom.css";
+	$stylesheets[]	 = "https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap";
+//	$stylesheets[]	 = "/phpgwapi/templates/bookingfrontend_2/css/custom.css";
 	$stylesheets[]	 = "/phpgwapi/templates/bookingfrontend/css/normalize.css";
 	$stylesheets[]   = "/phpgwapi/templates/bookingfrontend/css/rubik-font.css";
+ 	$stylesheets[]	 = "/phpgwapi/templates/bookingfrontend_2/styleguide/main.css";
 
-	if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
-	{
-		$stylesheets[]	 = "/phpgwapi/templates/bookingfrontend/themes/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
-		$stylesheets[]	 = "/{$app}/templates/bookingfrontend/themes/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
-	}
 
 	foreach ($stylesheets as $stylesheet)
 	{
