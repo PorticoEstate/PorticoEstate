@@ -313,8 +313,8 @@ HTML;
 
 		<nav class="navbar navbar-default sticky-top navbar-expand-md navbar-light  header_borderline"   id="headcon">
 			<div class="container header-container my_class">
-				<a class="navbar-brand brand-site-title" href="{$site_url}">{$site_title} - <b>ustabil</b><br/> utviklingsversjon av ny template </a>
 				<a href="{$site_url}"><img class="navbar-brand brand-site-img" src="{$headlogoimg}" alt="{$logo_title}"/></a>
+				<a class="navbar-brand brand-site-title" href="{$site_url}">{$site_title} - <b>ustabil</b><br/> utviklingsversjon av ny template </a>
 				<!-- Search Box -->
 				<!--div class="search-container">
 					<form id="navSearchForm" class="search-form">
