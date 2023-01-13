@@ -2,33 +2,35 @@
   box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
 }
 
-$roundedLarge: 3.125rem;
-$roundedMedium: 2rem;
+$rounded-mini: 0.5rem;
+$rounded-small: 1rem;
+$rounded-medium: 2rem;
+$rounded-large: 3.125rem;
 
 .rounded {
   &-mini {
-    border-radius: 0.5rem;
+    border-radius: $rounded-mini;
   }
 
   &-small {
-    border-radius: 1rem;
+    border-radius: $rounded-small;
   }
 
   &-medium {
-    border-radius: $roundedMedium;
+    border-radius: $rounded-medium;
 
     &-bottom {
-      border-bottom-left-radius: $roundedMedium;
-      border-bottom-right-radius: $roundedMedium;
+      border-bottom-left-radius: $rounded-medium;
+      border-bottom-right-radius: $rounded-medium;
     }
   }
 
   &-large {
-    border-radius: $roundedLarge;
+    border-radius: $rounded-large;
 
     &-bottom {
-      border-bottom-left-radius: $roundedLarge;
-      border-bottom-right-radius: $roundedLarge;
+      border-bottom-left-radius: $rounded-large;
+      border-bottom-right-radius: $rounded-large;
     }
   }
 }

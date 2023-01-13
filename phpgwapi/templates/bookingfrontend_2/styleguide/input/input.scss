@@ -37,7 +37,7 @@
 
   &__radio {
     border: 2px solid $black;
-    @extend .rounded-large;
+    border-radius: $rounded-large;
   }
 
   & input:checked ~ &__radio::after {
@@ -47,13 +47,13 @@
     height: 0.75rem;
     background-color: $black;
     z-index: 2;
-    @extend .rounded-large;
+    border-radius: $rounded-large;
   }
 
   &__check {
     border: 1px solid $grey;
     box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
-    @extend .rounded-mini;
+    border-radius: $rounded-mini;
   }
 
   & input:checked ~ &__check {
