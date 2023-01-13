@@ -929,12 +929,19 @@
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_0',
-				'requestUrl' => "''",
+				'requestUrl' => json_encode(self::link(array(
+						'menuaction'		 => 'property.uiimport_documents.get_files',
+						'action'			 => 'get_files',
+						'order_id'			 => $order_id,
+						'secret'			 => $secret,
+						'phpgw_return_as'	 => 'json'
+						)
+					)),
 				'ColumnDefs' => $files_def,
 				'tabletools' => $tabletools,
 				'config'	 => array(
 //					array('responsive' => true),
-					array('disablePagination' => true),
+//					array('disablePagination' => true),
 //					array('disableFilter' => true),
 					array('scrollX' => false),
 					array('singleSelect' => true),
@@ -989,6 +996,13 @@
 				return;
 			}
 
+			$order	 = phpgw::get_var('order');
+			$sort	 = phpgw::get_var('sort');
+			$columns = phpgw::get_var('columns');
+
+			$_order_column	 = is_array($order) ? $columns[$order[0]['column']]['data'] : $order;
+			$_dir			 = is_array($order) ? $order[0]['dir'] : $sort;
+
 			/**
 			 * '2' - means validate actual import
 			 */
@@ -1011,8 +1025,9 @@
 			}
 			unset($file_info);
 			$file_tags = $this->_get_metadata($order_id);
-			$lang_missing = lang('Missing value');
-			$error_list = array();
+
+			$sort_key	 = array();
+			$values		 = array();
 //			$debug = true;
 			$missing_value ='<span style="color:red;">*</span>';
 			foreach ($list_files as &$file_info)
@@ -1055,17 +1070,49 @@
 					|| !$file_info['building_number_validate']
 					|| ($sub_step == 2 && !$file_info['import_ok_validate']))
 				{
-					$error_list[] = $file_info;
+					$values[] = $file_info;
+					$sort_key[] = $file_info[$_order_column];
 				}
 			}
 
-			$total_records = count($error_list);
+			if($_dir == 'asc')
+			{
+				array_multisort($sort_key, SORT_ASC, $values);
+			}
+			else
+			{
+				array_multisort($sort_key, SORT_DESC, $values);
+			}
+
+//------ Start pagination
+
+			$start			 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$results		 = phpgw::get_var('length', 'int', 'REQUEST', 0);
+			$allrows		 = phpgw::get_var('length', 'int') == -1;
+
+			$total_records	 = count($values);
+
+			$maxmatchs = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])  ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
+
+			$num_rows = $results ? $results : $maxmatchs;
+			if ($allrows)
+			{
+				$out = $values;
+			}
+			else
+			{
+				$page		 = ceil(( $start / $num_rows));
+				$values_part = array_chunk($values, $num_rows);
+				$out		 = (array)$values_part[$page];
+			}
+
+//------ End pagination
 
 			return array(
-				'data'				 => $error_list,
+				'data'				 => $out,
 				'draw'				 => phpgw::get_var('draw', 'int'),
 				'recordsTotal'		 => $total_records,
-				'recordsFiltered'	 => $total_records
+				'recordsFiltered'	 => count($out)
 			);
 
 		}
@@ -1117,6 +1164,13 @@
 				return false;
 			}
 
+			$order	 = phpgw::get_var('order');
+			$sort	 = phpgw::get_var('sort');
+			$columns = phpgw::get_var('columns');
+
+			$_order_column	 = is_array($order) ? $columns[$order[0]['column']]['data'] : $order;
+			$_dir			 = is_array($order) ? $order[0]['dir'] : $sort;
+
 			$order_id = phpgw::get_var('order_id', 'int');
 
 			$filter_document_category	 = phpgw::get_var('filter_document_category');
@@ -1131,16 +1185,18 @@
 			}
 			unset($file_info);
 
-			$link_file_data = array
-			(
+			$link_file_data	 = array
+				(
 				'menuaction' => 'property.uiimport_documents.view_file',
-				'order_id'	=> $order_id
+				'order_id'	 => $order_id
 			);
 			$link_view_file	 = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
-			$lang_view = lang('click to view file');
+			$lang_view		 = lang('click to view file');
 
-			$file_tags = $this->_get_metadata($order_id);
-			$values = array();
+			$file_tags	 = $this->_get_metadata($order_id);
+			$values		 = array();
+			$sort_key	 = array();
+
 			foreach ($list_files as $file_info)
 			{
 				$file_name = $file_info['path_relative_filename'];
@@ -1175,16 +1231,50 @@
 				unset($file_info['path_absolute']);
 				$file_info['id'] = urlencode("{$order_id}::{$file_name}");
 				$values[] = $file_info;
+				$sort_key[] = $file_info[$_order_column];
+
 			}
 
-			$total_records = count($list_files);
 
-			return array
-				(
-				'data'				 => $values,
+			if($_dir == 'asc')
+			{
+				array_multisort($sort_key, SORT_ASC, $values);
+			}
+			else
+			{
+				array_multisort($sort_key, SORT_DESC, $values);
+			}
+
+
+//------ Start pagination
+
+			$start			 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$results		 = phpgw::get_var('length', 'int', 'REQUEST', 0);
+			$allrows		 = phpgw::get_var('length', 'int') == -1;
+
+			$total_records	 = count($values);
+
+			$maxmatchs = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])  ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
+
+			$num_rows = $results ? $results : $maxmatchs;
+			if ($allrows)
+			{
+				$out = $values;
+			}
+			else
+			{
+				$page		 = ceil(( $start / $num_rows));
+				$values_part = array_chunk($values, $num_rows);
+				$out		 = (array)$values_part[$page];
+			}
+
+//------ End pagination
+
+			return array(
+				'data'				 => $out,
 				'draw'				 => phpgw::get_var('draw', 'int'),
 				'recordsTotal'		 => $total_records,
-				'recordsFiltered'	 => $total_records
+				'recordsFiltered'	 => count($out)
 			);
 
 		}

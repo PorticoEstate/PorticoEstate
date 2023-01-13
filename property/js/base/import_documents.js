@@ -406,7 +406,7 @@ this.validate_step_1 = function ()
 		$("#message_step_1").removeClass('error');
 		$('#tab-content').responsiveTabs('enable', 1);
 		$('#tab-content').responsiveTabs('activate', 1);
-		refresh_files();
+//		refresh_files();
 	}
 };
 this.validate_step_2 = function (sub_step)
