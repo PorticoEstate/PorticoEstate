@@ -996,6 +996,8 @@
 				return;
 			}
 
+			$search	 = phpgw::get_var('search');
+			$query	 = isset($search['value']) ? $search['value'] : '';
 			$order	 = phpgw::get_var('order');
 			$sort	 = phpgw::get_var('sort');
 			$columns = phpgw::get_var('columns');
@@ -1034,6 +1036,12 @@
 			{
 
 				$file_name = $file_info['path_relative_filename'];
+
+				if($query && !preg_match("/$query/i", $file_name))
+				{
+					continue;
+				}
+
 				$encoded_file_name = urlencode($file_name);
 				$file_info['duplicate']	= $_duplicates[$file_info['file_name']] > 1 ?  $_duplicates[$file_info['file_name']] : '';
 				$file_info['select']	= "<input type='checkbox' class='mychecks'/>";
@@ -1164,6 +1172,8 @@
 				return false;
 			}
 
+			$search	 = phpgw::get_var('search');
+			$query	 = isset($search['value']) ? $search['value'] : '';
 			$order	 = phpgw::get_var('order');
 			$sort	 = phpgw::get_var('sort');
 			$columns = phpgw::get_var('columns');
@@ -1200,6 +1210,11 @@
 			foreach ($list_files as $file_info)
 			{
 				$file_name = $file_info['path_relative_filename'];
+
+				if($query && !preg_match("/$query/i", $file_name))
+				{
+					continue;
+				}
 
 				if($filter_document_category && (!isset($file_tags[$file_name]['document_category']) || !array_intersect($filter_document_category, $file_tags[$file_name]['document_category'])))
 				{
