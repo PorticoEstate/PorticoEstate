@@ -32,7 +32,7 @@ a {
     position: relative;
     text-decoration: none;
     color: $black;
-    @extend .rounded-large;
+    border-radius: $rounded-large;
 
     &::after {
       content: "\f054";
@@ -51,7 +51,7 @@ a {
       left: -2px;
       right: -2px;
       bottom: -2px;
-      @extend .rounded-large;
+      border-radius: $rounded-large;
     }
 
     &:hover {

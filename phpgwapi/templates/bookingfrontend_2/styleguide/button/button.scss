@@ -6,7 +6,7 @@
   border: 2px solid $purple;
   font-weight: 700;
   line-height: 1.15;
-  @extend .rounded-large;
+  border-radius: $rounded-large;
 
   &:hover,
   &:active,
