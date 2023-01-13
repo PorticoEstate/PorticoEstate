@@ -620,8 +620,6 @@ check_validation = function (field_name)
 
 set_up_multiselect = function (field_name)
 {
-//	let field_name = 'document_category';
-
 	let categories = $('.' + field_name);
 	let category_list = [];
 	$("#" + field_name + " > option").each(function ()
@@ -640,12 +638,6 @@ set_up_multiselect = function (field_name)
 
 		const data = $(obj).parent().attr('data').split('::').filter(Boolean);
 
-		if(data[0] == -1)
-		{
-			$(obj).prepend('<span style="color:red;">*</span>');
-		}
-//		console.log(data);
-
 		let selected;
 		htmlString = '<select name="' + field_name + '" multiple="true" class="select_' + field_name + '">';
 
@@ -656,7 +648,7 @@ set_up_multiselect = function (field_name)
 			{
 				selected = ' selected="selected"';
 			}
-//			console.log(category)
+
 			htmlString += "<option value='" + category.id + "'" + selected + ">" + category.name + "</option>";
 		});
 		htmlString += '</select>';
@@ -681,10 +673,6 @@ set_up_multiselect = function (field_name)
 			let file_name = $(option).parent().parent().parent().parent().parent().parent().children('td')[0].innerText;
 			let order_id = $('#order_id').val();
 
-//			console.log(checked);
-//			console.log(field_name);
-//			console.log($(option).parent().parent().parent().parent().parent().parent().children('td')[0].innerText);
-
 			$.ajax({
 				type: 'POST',
 				dataType: 'json',
@@ -708,12 +696,6 @@ set_up_multiselect = function (field_name)
 
 
 		}
-//		,
-//		onDropdownHidden: function (event)
-//		{
-//			alert('lagre verdier');
-//		}
-
 	});
 
 };

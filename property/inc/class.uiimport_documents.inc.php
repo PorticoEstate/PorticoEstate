@@ -1014,8 +1014,7 @@
 			$lang_missing = lang('Missing value');
 			$error_list = array();
 //			$debug = true;
-			$missing_value = array(-1);
-//			$missing_value ='<div data="e::e"><span style="color:red;">*</span><div class="building_part"></div></div>';
+			$missing_value ='<span style="color:red;">*</span>';
 			foreach ($list_files as &$file_info)
 			{
 
@@ -1028,9 +1027,9 @@
 				$file_info['cadastral_unit'] =  !empty($file_tags[$file_name]['cadastral_unit']) ? $file_tags[$file_name]['cadastral_unit'] : $missing_value;
 				$file_info['location_code'] =  !empty($file_tags[$file_name]['location_code']) ? $file_tags[$file_name]['location_code'] : $missing_value;
 				$file_info['building_number'] =  !empty($file_tags[$file_name]['building_number']) ? $file_tags[$file_name]['building_number'] : $missing_value;
-				$file_info['document_category'] =  !empty($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : $missing_value;
-				$file_info['branch'] = !empty($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : $missing_value;
-				$file_info['building_part'] = !empty($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : $missing_value;
+				$file_info['document_category'] =  !empty($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : '';
+				$file_info['branch'] = !empty($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : '';
+				$file_info['building_part'] = !empty($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : '';
 				$file_info['cadastral_unit_validate'] =  empty($file_tags[$file_name]['cadastral_unit']) ? false : true;
 				$file_info['location_code_validate'] =  empty($file_tags[$file_name]['location_code']) ? false : true;
 				$file_info['building_number_validate'] =  empty($file_tags[$file_name]['building_number']) ? false : true;
