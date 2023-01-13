@@ -2,7 +2,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<style>
-		.delete_file
+/*		.delete_file
 		{
 		float: right;
 		}
@@ -10,6 +10,7 @@
 		{
 		float: right;
 		}
+*/
 		.dt-buttons
 		{
 		width:100%;

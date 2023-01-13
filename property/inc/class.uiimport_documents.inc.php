@@ -155,32 +155,38 @@
 
 				$entry = $file_tags[$file_info['path_relative_filename']];
 				$entry['file_name'] = $file_info['path_relative_filename'];
-				$entry['document_category'] = !empty($entry['document_category']) ? implode("\n", $entry['document_category']) : '';
-				$entry['branch'] = !empty($entry['branch']) ? implode("\n", $entry['branch']) : '';
-				$entry['building_part'] = !empty($entry['building_part']) ? implode("\n", $entry['building_part']) : '';
+				$entry['document_category'] = !empty($entry['document_category']) ? implode("::", $entry['document_category']) : '';
+				$entry['branch'] = !empty($entry['branch']) ? implode("::", $entry['branch']) : '';
+				$entry['building_part'] = !empty($entry['building_part']) ? implode("::", $entry['building_part']) : '';
 
 				$values[] = $entry;
 
 			}
 
-			$name = array();
+			$name	 = array();
+			$descr	 = array();
 			$name[]	 = 'cadastral_unit';
+			$descr[] = lang('cadastral unit');
 			$name[]	 = 'building_number';
+			$descr[] = lang('building number');
 			$name[]	 = 'location_code';
+			$descr[] = lang('location code');
 			$name[]	 = 'branch';
+			$descr[] = lang('branch');
 			$name[]	 = 'building_part';
+			$descr[] = lang('building part');
 			$name[]	 = 'document_category';
+			$descr[] = lang('document categories');
 			$name[]	 = 'remark';
+			$descr[] = lang('remark');
 			$name[]	 = 'remark_detail';
+			$descr[] = lang('remark') . ' 2';
 			$name[]	 = 'file_name';
+			$descr[] = lang('file name');
 			$name[]	 = 'import_ok';
+			$descr[] = lang('import ok');
 			$name[]	 = 'import_failed';
-
-			$descr = array();
-			foreach ($name as $_entry)
-			{
-				$descr[] = lang(str_replace('_', ' ', $_entry));
-			}
+			$descr[] = lang('import failed');
 
 			$this->bocommon->download($values, $name, $descr);
 
@@ -787,19 +793,19 @@
 					),
 				array('key' => 'document_category',
 					'label' => lang('document categories'),
-					'sortable' => true,
+					'sortable' => false,
 					'resizeable' => true,
 					'formatter' => 'JqueryPortico.formatJsonArray'
 					),
 				array('key' => 'branch',
 					'label' => lang('branch'),
-					'sortable' => true,
+					'sortable' => false,
 					'resizeable' => true,
 					'formatter' => 'JqueryPortico.formatJsonArray'
 					),
 				array('key' => 'building_part',
 					'label' => lang('building part'),
-					'sortable' => true,
+					'sortable' => false,
 					'resizeable' => true,
 					'formatter' => 'JqueryPortico.formatJsonArray'
 					),
@@ -834,59 +840,60 @@
 			$datatable_def = array();
 
 			$buttons = array
-			(
+				(
 				array(
-					'action' => 'filter_tag',
-					'type'	 => 'buttons',
-					'name'	 => 'filter_tag',
-					'icon'	 => '<i class="fas fa-filter"></i>',
-					'label'	 => lang('filter tag'),
-					'funct'	 => 'onActionsClick_filter_files',
-					'classname'	=> 'enabled',
+					'action'		 => 'filter_tag',
+					'type'			 => 'buttons',
+					'name'			 => 'filter_tag',
+					'icon'			 => '<i class="fas fa-filter"></i>',
+					'label'			 => lang('filter tag'),
+					'funct'			 => 'onActionsClick_filter_files',
+					'classname'		 => 'enabled',
 					'value_hidden'	 => ""
-					),
+				),
 				array(
-					'action' => 'set_tag',
-					'type'	 => 'buttons',
-					'name'	 => 'set_tag',
-					'icon'	=> '<i class="far fa-save"></i>',
-					'label'	 => lang('set tag'),
-					'funct'	 => 'onActionsClick_files',
-					'classname'	=> '',
-					'value_hidden'	 => ""
-					),
-				array(
-					'action' => 'download',
-					'type'	 => 'buttons',
-					'name'	 => 'download_custom',
-					'icon'	=> '<i class="fas fa-download"></i>',
-					'label'	 => lang('download'),
-					'funct'	 => 'download',
-					'classname'	=> 'enabled',
-					'value_hidden'	 => ""
-					),
-				array(
-					'action' => 'delete_file',
-					'type'	 => 'buttons',
-					'name'	 => 'delete',
-					'icon'	=> '<i class="far fa-trash-alt"></i>',
-					'label'	 => lang('Delete file'),
-					'funct'	 => 'onActionsClick_files',
-					'classname'	 => 'record disabled delete_file',
+					'action'		 => 'set_tag',
+					'type'			 => 'buttons',
+					'name'			 => 'set_tag',
+					'icon'			 => '<i class="far fa-save"></i>',
+					'label'			 => lang('set tag'),
+					'funct'			 => 'onActionsClick_files',
+					'classname'		 => '',
 					'value_hidden'	 => "",
-					'confirm_msg'		=> "Vil du slette fil(er)"
-					),
+					'confirm_msg'	 => ""
+				),
 				array(
-					'action' => 'remove_tag',
-					'type'	 => 'buttons',
-					'name'	 => 'remove_tag',
-					'icon'	=> '<i class="far fa-trash-alt"></i>',
-					'label'	 => lang('remove tag'),
-					'funct'	 => 'onActionsClick_files',
-					'classname'	 => 'record disabled remove_tag',
+					'action'		 => 'remove_tag',
+					'type'			 => 'buttons',
+					'name'			 => 'remove_tag',
+					'icon'			 => '<i class="far fa-trash-alt"></i>',
+					'label'			 => lang('remove tag'),
+					'funct'			 => 'onActionsClick_files',
+					'classname'		 => 'record disabled remove_tag',
 					'value_hidden'	 => "",
-					'confirm_msg'		=> "Vil du slette tag fra fil(er)"
-					),
+					'confirm_msg'	 => "Vil du slette tag fra fil(er)"
+				),
+				array(
+					'action'		 => 'download',
+					'type'			 => 'buttons',
+					'name'			 => 'download_custom',
+					'icon'			 => '<i class="fas fa-download"></i>',
+					'label'			 => lang('download'),
+					'funct'			 => 'download',
+					'classname'		 => 'enabled',
+					'value_hidden'	 => ""
+				),
+				array(
+					'action'		 => 'delete_file',
+					'type'			 => 'buttons',
+					'name'			 => 'delete',
+					'icon'			 => '<i class="far fa-trash-alt"></i>',
+					'label'			 => lang('Delete file'),
+					'funct'			 => 'onActionsClick_files',
+					'classname'		 => 'record disabled delete_file',
+					'value_hidden'	 => "",
+					'confirm_msg'	 => "Vil du slette fil(er)"
+				),
 			);
 
 			$tabletools = array

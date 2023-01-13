@@ -164,7 +164,6 @@
 				'Fargekoder',
 				'Garantibefaring',
 				'Generell orientering',
-				'Ikke aktiv',
 				'Innholdsfortegnelse',
 				'Kart',
 				'Låseplaner',
