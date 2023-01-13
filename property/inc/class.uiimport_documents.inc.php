@@ -1120,7 +1120,7 @@
 				'data'				 => $out,
 				'draw'				 => phpgw::get_var('draw', 'int'),
 				'recordsTotal'		 => $total_records,
-				'recordsFiltered'	 => count($out)
+				'recordsFiltered'	 => $total_records
 			);
 
 		}
@@ -1289,7 +1289,7 @@
 				'data'				 => $out,
 				'draw'				 => phpgw::get_var('draw', 'int'),
 				'recordsTotal'		 => $total_records,
-				'recordsFiltered'	 => count($out)
+				'recordsFiltered'	 => $total_records
 			);
 
 		}
