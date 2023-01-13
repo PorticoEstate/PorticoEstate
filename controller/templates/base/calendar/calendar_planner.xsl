@@ -84,14 +84,14 @@
 						<label for="control_area_id">
 							<xsl:value-of select="php:function('lang', 'control types')"/>
 						</label>
-						<select id="control_area_id" name="control_area_id" class="form-control">
+						<select id="control_area_id" name="control_area_id" class="form-select">
 							<xsl:apply-templates select="control_area_list/options"/>
 						</select>
 
 						<label for="control_id">
 							<xsl:value-of select="php:function('lang', 'control')"/>
 						</label>
-						<select id="control_id" name="control_id" class="form-control" onchange="this.form.submit()">
+						<select id="control_id" name="control_id" class="form-select" onchange="this.form.submit()">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select control type')"/>
 							</xsl:attribute>
@@ -101,7 +101,7 @@
 						<!--						<label for="entity_group_id">
 							<xsl:value-of select="php:function('lang', 'entity group')"/>
 						</label>
-						<select id="entity_group_id" name="entity_group_id" class="form-control" onchange="this.form.submit()">
+						<select id="entity_group_id" name="entity_group_id" class="form-select" onchange="this.form.submit()">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select')"/>
 							</xsl:attribute>
@@ -111,7 +111,7 @@
 						<label for="part_of_town_id">
 							<xsl:value-of select="php:function('lang', 'part of town')"/>
 						</label>
-						<select id="part_of_town_id" name="part_of_town_id[]" class="form-control">
+						<select id="part_of_town_id" name="part_of_town_id[]" class="form-select">
 							<xsl:attribute name="multiple">
 								<xsl:text>true</xsl:text>
 							</xsl:attribute>
@@ -267,7 +267,7 @@
 						<label for="control_area_id">
 							<xsl:value-of select="php:function('lang', 'control types')"/>
 						</label>
-						<select id="control_area_id" name="control_area_id" class="form-control">
+						<select id="control_area_id" name="control_area_id" class="form-select">
 							<xsl:apply-templates select="control_area_list/options"/>
 						</select>
 					</div>
@@ -276,7 +276,7 @@
 						<label for="control_id">
 							<xsl:value-of select="php:function('lang', 'control')"/>
 						</label>
-						<select id="control_id" name="control_id" class="form-control" onchange="this.form.submit()">
+						<select id="control_id" name="control_id" class="form-select" onchange="this.form.submit()">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select control type')"/>
 							</xsl:attribute>
@@ -287,7 +287,7 @@
 						<label for="part_of_town_id">
 							<xsl:value-of select="php:function('lang', 'part of town')"/>
 						</label>
-						<select id="part_of_town_id" name="part_of_town_id[]" class="form-control">
+						<select id="part_of_town_id" name="part_of_town_id[]" class="form-select">
 							<xsl:attribute name="multiple">
 								<xsl:text>true</xsl:text>
 							</xsl:attribute>
@@ -301,7 +301,7 @@
 						<label for="inspector_id">
 							<xsl:value-of select="php:function('lang', 'performed by')"/>
 						</label>
-						<select id="inspector_id" name="inspector_id[]" class="form-control">
+						<select id="inspector_id" name="inspector_id[]" class="form-select">
 							<xsl:attribute name="multiple">
 								<xsl:text>true</xsl:text>
 							</xsl:attribute>
@@ -657,7 +657,7 @@
 													<xsl:text>true</xsl:text>
 												</xsl:attribute>
 											</xsl:if>
-									
+
 										</input>
 									</div>
 								</td>
@@ -720,14 +720,14 @@
 						<label for="control_area_id">
 							<xsl:value-of select="php:function('lang', 'control types')"/>
 						</label>
-						<select id="control_area_id" name="control_area_id" class="form-control">
+						<select id="control_area_id" name="control_area_id" class="form-select">
 							<xsl:apply-templates select="control_area_list/options"/>
 						</select>
 
 						<label for="control_id">
 							<xsl:value-of select="php:function('lang', 'control')"/>
 						</label>
-						<select id="control_id" name="control_id" class="form-control" onchange="this.form.submit()">
+						<select id="control_id" name="control_id" class="form-select" onchange="this.form.submit()">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select control type')"/>
 							</xsl:attribute>
@@ -738,7 +738,7 @@
 						<label for="part_of_town_id">
 							<xsl:value-of select="php:function('lang', 'part of town')"/>
 						</label>
-						<select id="part_of_town_id" name="part_of_town_id[]" class="form-control">
+						<select id="part_of_town_id" name="part_of_town_id[]" class="form-select">
 							<xsl:attribute name="multiple">
 								<xsl:text>true</xsl:text>
 							</xsl:attribute>
@@ -841,14 +841,14 @@
 						<label for="control_area_id">
 							<xsl:value-of select="php:function('lang', 'control types')"/>
 						</label>
-						<select id="control_area_id" name="control_area_id" class="form-control">
+						<select id="control_area_id" name="control_area_id" class="form-select">
 							<xsl:apply-templates select="control_area_list/options"/>
 						</select>
 
 						<label for="control_id">
 							<xsl:value-of select="php:function('lang', 'control')"/>
 						</label>
-						<select id="control_id" name="control_id" class="form-control" onchange="this.form.submit()">
+						<select id="control_id" name="control_id" class="form-select" onchange="this.form.submit()">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'select control type')"/>
 							</xsl:attribute>
@@ -859,7 +859,7 @@
 						<label for="part_of_town_id">
 							<xsl:value-of select="php:function('lang', 'part of town')"/>
 						</label>
-						<select id="part_of_town_id" name="part_of_town_id[]" class="form-control">
+						<select id="part_of_town_id" name="part_of_town_id[]" class="form-select">
 							<xsl:attribute name="multiple">
 								<xsl:text>true</xsl:text>
 							</xsl:attribute>
@@ -964,14 +964,14 @@
 							<label for="control_area_id">
 								<xsl:value-of select="php:function('lang', 'control types')"/>
 							</label>
-							<select id="control_area_id" name="control_area_id" class="form-control">
+							<select id="control_area_id" name="control_area_id" class="form-select">
 								<xsl:apply-templates select="control_area_list/options"/>
 							</select>
 
 							<label for="control_id">
 								<xsl:value-of select="php:function('lang', 'control')"/>
 							</label>
-							<select id="control_id" name="control_id" class="form-control" onchange="this.form.submit()">
+							<select id="control_id" name="control_id" class="form-select" onchange="this.form.submit()">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'select control type')"/>
 								</xsl:attribute>
@@ -982,7 +982,7 @@
 							<label for="part_of_town_id">
 								<xsl:value-of select="php:function('lang', 'part of town')"/>
 							</label>
-							<select id="part_of_town_id" name="part_of_town_id[]" class="form-control">
+							<select id="part_of_town_id" name="part_of_town_id[]" class="form-select">
 								<xsl:attribute name="multiple">
 									<xsl:text>true</xsl:text>
 								</xsl:attribute>

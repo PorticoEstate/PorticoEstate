@@ -511,7 +511,11 @@ HTML;
 							}
 							try
 							{
-								$($.fn.dataTable.tables(true)).DataTable().draw();
+				//				$($.fn.dataTable.tables(true)).DataTable().draw();
+								$.fn.dataTable.tables({
+									visible: true,
+									api: true
+								}).columns.adjust();
 							}
 							catch (err)
 							{

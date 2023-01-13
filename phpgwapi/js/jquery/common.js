@@ -267,7 +267,12 @@ JqueryPortico.formatJsonArray = function (key, oData)
 
 	}
 	string = elements.join('::');
-	return '<div data="'+ string +'"><div class="' + key + '"></div></div>';
+
+//	return '<div data="'+ string +'"><div class="' + key + '"></div></div>';
+	/**
+	 * input field is placeholder for column width-calculation
+	 */
+	return '<div data="'+ string +'"><div class="' + key + '"><input size="19" class="select_' + key + '"/></div></div>';
 };
 
 JqueryPortico.FormatterAmount0 = function (key, oData)

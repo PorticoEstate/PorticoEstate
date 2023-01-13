@@ -4,7 +4,7 @@ $(document).ready(function ()
 
 	$("#current_day_str").change(function ()
 	{
-		document.getElementById("form").submit(); 
+		document.getElementById("form").submit();
 	});
 
 
@@ -58,7 +58,6 @@ $(document).ready(function ()
 		includeSelectAllOption: true,
 		enableFiltering: true,
 		enableCaseInsensitiveFiltering: true,
-		buttonClass: 'form-control',
 		onChange: function ($option)
 		{
 			// Check if the filter was used.

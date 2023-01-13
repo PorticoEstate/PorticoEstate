@@ -97,18 +97,21 @@ $(document).ready(function ()
 	});
 
 	$("#document_category").select2({
-		placeholder: lang['document categories'],
+		placeholder: $( this ).data( 'placeholder' ),
 		language: "no",
-		width: input_width
+		width: input_width,
+		closeOnSelect: false
 	});
 	$("#branch").select2({
 		placeholder: lang['branch'],
 		language: "no",
+		closeOnSelect: false,
 		width: input_width
 	});
 	$("#building_part").select2({
 		placeholder: lang['building part'],
 		language: "no",
+		closeOnSelect: false,
 		width: input_width
 	});
 	if ($("#order_id").val())
@@ -592,13 +595,31 @@ this.local_DrawCallback0 = function (container)
 	set_up_multiselect('branch');
 	set_up_multiselect('building_part');
 
+	check_validation('document_category');
+	check_validation('branch');
+	check_validation('building_part');
 
+};
+
+
+check_validation = function (field_name)
+{
+
+	$('.select_' + field_name).each(function ()
+	{
+		if($(this).val().length === 0)
+		{
+			$(this).parent().find('button').addClass('is-invalid');
+		}
+		else
+		{
+			$(this).parent().find('button').removeClass('is-invalid');
+		}
+	});
 };
 
 set_up_multiselect = function (field_name)
 {
-//	let field_name = 'document_category';
-
 	let categories = $('.' + field_name);
 	let category_list = [];
 	$("#" + field_name + " > option").each(function ()
@@ -612,15 +633,10 @@ set_up_multiselect = function (field_name)
 
 	categories.each(function (i, obj)
 	{
+		$(obj).find('input').remove();
 		$(obj).find('select').remove();
 
 		const data = $(obj).parent().attr('data').split('::').filter(Boolean);
-
-		if(data[0] == -1)
-		{
-			$(obj).append('<span style="color:red;">*</span>');
-		}
-//		console.log(data);
 
 		let selected;
 		htmlString = '<select name="' + field_name + '" multiple="true" class="select_' + field_name + '">';
@@ -632,7 +648,7 @@ set_up_multiselect = function (field_name)
 			{
 				selected = ' selected="selected"';
 			}
-//			console.log(category)
+
 			htmlString += "<option value='" + category.id + "'" + selected + ">" + category.name + "</option>";
 		});
 		htmlString += '</select>';
@@ -644,19 +660,18 @@ set_up_multiselect = function (field_name)
 
 	$('.select_' + field_name).multiselect({
 		buttonClass: 'form-select',
+		widthSynchronizationMode: 'always',
+		buttonWidth: '200px',
+//		enableResetButton: true,
+//		resetButtonText: 'Angre',
 		templates: {
 			li: '<li><div style="display:inline;"><a><label></label></a></div></li>',
 			button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
-				//		option: '<button type="button" class="multiselect-option dropdown-item"></button>'
 		},
 		onChange: function (option, checked, select)
 		{
 			let file_name = $(option).parent().parent().parent().parent().parent().parent().children('td')[0].innerText;
 			let order_id = $('#order_id').val();
-
-			console.log(checked);
-			console.log(field_name);
-			console.log($(option).parent().parent().parent().parent().parent().parent().children('td')[0].innerText);
 
 			$.ajax({
 				type: 'POST',
@@ -671,6 +686,7 @@ set_up_multiselect = function (field_name)
 				},
 				success: function (data)
 				{
+					check_validation(field_name);
 				},
 				error: function (data)
 				{
@@ -680,12 +696,6 @@ set_up_multiselect = function (field_name)
 
 
 		}
-//		,
-//		onDropdownHidden: function (event)
-//		{
-//			alert('lagre verdier');
-//		}
-
 	});
 
 };
