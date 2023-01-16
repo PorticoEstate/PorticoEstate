@@ -44,7 +44,8 @@
 
 		public function send()
 		{
-			$values = phpgw::get_var('values');
+			$values		 = phpgw::get_var('values');
+			$form_type	 = phpgw::get_var('form_type', 'string', 'GET', 'aligned');
 
 			$receipt = array();
 			if (isset($values['save']))
@@ -112,14 +113,13 @@
 			$config->read();
 			$support_address = isset($config->config_data['support_address']) && $config->config_data['support_address'] ? $config->config_data['support_address'] : $GLOBALS['phpgw_info']['server']['support_address'];
 
-			$data = array
-				(
-				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
-				'from_name' => $GLOBALS['phpgw_info']['user']['fullname'],
-				'from_address' => $GLOBALS['phpgw_info']['user']['preferences']['common']['email'],
-				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'manual.uisupport.send')),
-				'support_address' => $support_address,
-				'form_type'		=> phpgw::get_var('form_type', 'string', 'GET', 'aligned')
+			$data = array(
+				'msgbox_data'		 => $GLOBALS['phpgw']->common->msgbox($GLOBALS['phpgw']->common->msgbox_data($receipt)),
+				'from_name'			 => $GLOBALS['phpgw_info']['user']['fullname'],
+				'from_address'		 => $GLOBALS['phpgw_info']['user']['preferences']['common']['email'],
+				'form_action'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'manual.uisupport.send', 'form_type' => $form_type)),
+				'support_address'	 => $support_address,
+				'form_type'			 => $form_type
 			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file('support');

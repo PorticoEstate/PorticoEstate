@@ -213,6 +213,11 @@
 			<td>{lang_manual}:</td>
 			<td><input name="newsettings[bookingfrontend_manual]" value="{value_bookingfrontend_manual}"></td>
 		</tr>
+		<tr>
+			<td>{lang_uustatus}:</td>
+			<td><input name="newsettings[url_uustatus]" value="{value_url_uustatus}"></td>
+		</tr>
+
 
 		<!-- END body -->
 		<!-- BEGIN footer -->

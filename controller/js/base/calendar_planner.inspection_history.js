@@ -51,7 +51,6 @@ $(document).ready(function ()
 		includeSelectAllOption: true,
 		enableFiltering: true,
 		enableCaseInsensitiveFiltering: true,
-		buttonClass: 'form-control',
 		onChange: function ($option)
 		{
 			// Check if the filter was used.
@@ -78,7 +77,6 @@ $(document).ready(function ()
 		includeSelectAllOption: true,
 		enableFiltering: true,
 		enableCaseInsensitiveFiltering: true,
-		buttonClass: 'form-control',
 		onChange: function ($option)
 		{
 			// Check if the filter was used.

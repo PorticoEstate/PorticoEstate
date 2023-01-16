@@ -97,18 +97,21 @@ $(document).ready(function ()
 	});
 
 	$("#document_category").select2({
-		placeholder: lang['document categories'],
+		placeholder: $( this ).data( 'placeholder' ),
 		language: "no",
-		width: input_width
+		width: input_width,
+		closeOnSelect: false
 	});
 	$("#branch").select2({
 		placeholder: lang['branch'],
 		language: "no",
+		closeOnSelect: false,
 		width: input_width
 	});
 	$("#building_part").select2({
 		placeholder: lang['building part'],
 		language: "no",
+		closeOnSelect: false,
 		width: input_width
 	});
 	if ($("#order_id").val())
@@ -130,6 +133,7 @@ $(document).ready(function ()
 		$("#upload_alternative_1").hide(50);
 		$("#upload_alternative_2").show(50);
 	});
+
 
 
 });
@@ -262,16 +266,7 @@ this.refresh_files = function (show_all_columns)
 //		api.column( 5 ).visible( false, false );
 //	}
 };
-this.local_DrawCallback0 = function (container)
-{
-	var api = $("#" + container).dataTable().api();
-	if (api.rows().data().count() > 0)
-	{
-		$('#step_2_validate').show();
-	}
-	update_common();
 
-};
 this.get_order_info = function ()
 {
 	$("#validate_step_1").prop("disabled", false);
@@ -411,7 +406,7 @@ this.validate_step_1 = function ()
 		$("#message_step_1").removeClass('error');
 		$('#tab-content').responsiveTabs('enable', 1);
 		$('#tab-content').responsiveTabs('activate', 1);
-		refresh_files();
+//		refresh_files();
 	}
 };
 this.validate_step_2 = function (sub_step)
@@ -587,31 +582,120 @@ this.step_3_clean_up = function ()
 	});
 };
 
-this.local_DrawCallback0 = function (oTable)
+this.local_DrawCallback0 = function (container)
 {
-	return;
+	var api = $("#" + container).dataTable().api();
+	if (api.rows().data().count() > 0)
+	{
+		$('#step_2_validate').show();
+	}
+	update_common();
 
-	var categories = $('.document_category');
-	var category_list = [{id: 1, name: "navn1"}, {id: 2, name: "navn2"}];
+	set_up_multiselect('document_category');
+	set_up_multiselect('branch');
+	set_up_multiselect('building_part');
 
-	var htmlString;
+	check_validation('document_category');
+	check_validation('branch');
+	check_validation('building_part');
+
+};
+
+
+check_validation = function (field_name)
+{
+
+	$('.select_' + field_name).each(function ()
+	{
+		if($(this).val().length === 0)
+		{
+			$(this).parent().find('button').addClass('is-invalid');
+		}
+		else
+		{
+			$(this).parent().find('button').removeClass('is-invalid');
+		}
+	});
+};
+
+set_up_multiselect = function (field_name)
+{
+	let categories = $('.' + field_name);
+	let category_list = [];
+	$("#" + field_name + " > option").each(function ()
+	{
+		category_list.push({id: this.value, name: this.text});
+	});
+
+	let htmlString;
+
+	$('.select_' + field_name).multiselect('destroy');
+
 	categories.each(function (i, obj)
 	{
+		$(obj).find('input').remove();
 		$(obj).find('select').remove();
-		var selected = '';
-		htmlString = '<select name="document_category">';
+
+		const data = $(obj).parent().attr('data').split('::').filter(Boolean);
+
+		let selected;
+		htmlString = '<select name="' + field_name + '" multiple="true" class="select_' + field_name + '">';
 
 		category_list.forEach(function (category)
 		{
-			console.log(category)
+			selected = '';
+			if (data.includes(category.id))
+			{
+				selected = ' selected="selected"';
+			}
+
 			htmlString += "<option value='" + category.id + "'" + selected + ">" + category.name + "</option>";
 		});
 		htmlString += '</select>';
 
-//		$(obj).append(htmlString);
+		$(obj).append(htmlString);
 
 	});
 
 
+	$('.select_' + field_name).multiselect({
+		buttonClass: 'form-select',
+		widthSynchronizationMode: 'always',
+		buttonWidth: '200px',
+//		enableResetButton: true,
+//		resetButtonText: 'Angre',
+		templates: {
+			li: '<li><div style="display:inline;"><a><label></label></a></div></li>',
+			button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+		},
+		onChange: function (option, checked, select)
+		{
+			let file_name = $(option).parent().parent().parent().parent().parent().parent().children('td')[0].innerText;
+			let order_id = $('#order_id').val();
+
+			$.ajax({
+				type: 'POST',
+				dataType: 'json',
+				url: phpGWLink('index.php', {menuaction: 'property.uiimport_documents.set_value'}, true),
+				data: {
+					id: order_id + '::' + file_name,
+					field_name: field_name,
+					checked: checked === true ? 1 : 0,
+					value : [$(option).val()],
+					secret: $("#secret").val()
+				},
+				success: function (data)
+				{
+					check_validation(field_name);
+				},
+				error: function (data)
+				{
+					alert('feil');
+				}
+			});
+
+
+		}
+	});
 
 };

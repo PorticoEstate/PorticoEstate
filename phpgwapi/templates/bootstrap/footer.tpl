@@ -17,13 +17,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="logoutModalLabel">{logout_text}</h5>
-                    <button class="btn-close" type="button" data-dismiss="modal" aria-label="Close">
-						  <span aria-hidden="true">&times;</span>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close">
                     </button>
                 </div>
                 <div class="modal-body">{lang_logout_header}</div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
                     <a class="btn btn-primary" href="{logout_url}">{logout_text}</a>
                 </div>
             </div>
@@ -33,13 +32,11 @@
 	<div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-labelledby="popupModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
 			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-					  <span aria-hidden="true">&times;</span>
-					</button>
+				<div class="modal-header bg-dark">
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<iframe src="about:blank" width="100%" height="380" frameborder="0" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
+					<iframe id="iframepopupModal" src="about:blank" width="100%" height="380" frameborder="0" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
 							allowtransparency="true"></iframe>
 				</div>
 			</div>
@@ -55,25 +52,23 @@
 			e.preventDefault();
 
 			var _linky = $(this).attr('href');
-			var _target = $(this).data('target');
-			var $target = $(_target);
 
 			const urlParams = new URLSearchParams(_linky);
 
 			if(urlParams.has('height'))
 			{
 				const height = urlParams.get('height');
-				$target.find('iframe').attr('height', height);
+				$("#iframepopupModal").attr('height', height);
 			}
 
-			$('#popupModal').on('show.bs.modal', function (e)
+			$('#popupModal').on('shown.bs.modal', function (e)
 			{
-				$target.find('iframe').attr("src", _linky);
+				$("#iframepopupModal").attr("src", _linky);
 			});
 
 			$('#popupModal').on('hidden.bs.modal', function (e)
 			{
-				$target.find('iframe').attr('src', 'about:blank');
+				$("#iframepopupModal").attr("src", 'about:blank');
 			});
 			
 		});

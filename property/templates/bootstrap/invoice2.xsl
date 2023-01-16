@@ -185,7 +185,7 @@
 					<h2 class="modal-title w-100">
 						Fakturaimage
 					</h2>
-					<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">
 							<i class="fas fa-times"></i>
 						</span>
@@ -198,7 +198,7 @@
 					<br />
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary w-100" data-dismiss="modal">Lukk vindu</button>
+					<button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Lukk vindu</button>
 				</div>
 			</div>
 		</div>

@@ -164,6 +164,13 @@ JS;
 	}
 	$GLOBALS['phpgw']->template->set_var('support_email', $support_email);
 
+	if (!empty($config_frontend['url_uustatus']))
+	{
+		$lang_uustatus = lang('uustatus');
+		$url_uustatus ="<span><a target='_blank' rel='noopener noreferrer'  href='{$config_frontend['url_uustatus']}'>{$lang_uustatus}</a></span>";
+		$GLOBALS['phpgw']->template->set_var('url_uustatus', $url_uustatus);
+	}
+
 //loads jquery
 	phpgwapi_jquery::load_widget('core');
 
@@ -387,7 +394,7 @@ HTML;
 	 * Might be set wrong in the ui-class
 	 */
 	$xslt_app = !empty($GLOBALS['phpgw_info']['flags']['xslt_app']) ? true : false;
-	$org	 = CreateObject('bookingfrontend.uiorganization');
+	$org	 = CreateObject('booking.soorganization');
 	$GLOBALS['phpgw_info']['flags']['xslt_app'] = $xslt_app;
 
 	$user_url = $GLOBALS['phpgw']->link("/{$app}/", array('menuaction' => 'bookingfrontend.uiuser.show'));

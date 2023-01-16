@@ -563,3 +563,4 @@ validate	bookingfrontend	nn	Kontrollér
 cost is set	booking	nn	Ny pris er definert
 Event was created	booking	nn	Arrangementet vart oppretta
 Link to website	bookingfrontend	nn	Link til heimeside
+uustatus	bookingfrontend	nn	Tilgjengelegheitserklæring
