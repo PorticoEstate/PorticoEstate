@@ -211,7 +211,7 @@
 
 				$tjeneste	 = !empty($named_attributes['kostra_id']) ? $named_attributes['kostra_id'] : 9;
 				//Override from workorder
-				$tjeneste	 = $workorder['service_id'] ? (int)$workorder['service_id'] : (int)$tjeneste;
+				$tjeneste	 = $workorder['service_id'] && $workorder['service_id'] != 9 ? (int)$workorder['service_id'] : (int)$tjeneste;
 
 
 				//EBF
