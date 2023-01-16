@@ -559,3 +559,4 @@ unit cost	bookingfrontend	no	Enhetspris
 cost is set	booking	no	Ny pris er angitt
 Event was created	booking	no	Arrangementet ble opprettet
 Link to website	bookingfrontend	no	Link til hjemmeside
+uustatus	bookingfrontend	no	Tilgjengeleghetserklæring
