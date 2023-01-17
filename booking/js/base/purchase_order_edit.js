@@ -275,7 +275,7 @@ function set_mandatory(xTable)
 		j++;
 	}
 
-	//alternative for time
+	//alternative for time (season)
 
 	var hourtime = $("#dates-container").find(".hourtime");
 	if (hourtime.length > 0)

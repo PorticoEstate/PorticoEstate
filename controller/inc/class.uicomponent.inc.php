@@ -1655,7 +1655,7 @@
 			);
 		}
 
-		private function translate_calendar_info( $param = array(), $year, $month, $filter_status = '', &$found_at_least_one = false, $keep_only_assigned_to, $location_code ='', &$control_link_data, $url_target)
+		private function translate_calendar_info( $param, $year, $month, $filter_status = '', &$found_at_least_one = false, $keep_only_assigned_to, $location_code ='', &$control_link_data, $url_target)
 		{
 			if (!isset($param['repeat_type']))
 			{
@@ -1789,30 +1789,53 @@
 			}
 			if ($param['info']['check_list_id'])
 			{
-				$control_link_data = array
-					(
+				$control_link_data = array(
 					'menuaction' => 'controller.uicheck_list.edit_check_list',
 					'check_list_id' => $param['info']['check_list_id'],
 				);
+				$_href = $GLOBALS['phpgw']->link('/index.php', $control_link_data);
+				$link = "<a href='{$_href}' target='{$url_target}'>{$img}</a>";
 			}
 			else
 			{
 				$menuaction = 'controller.uicheck_list.add_check_list';
 				$a_date = "{$year}-{$month}-23";
-				$control_link_data = array
-					(
-					'menuaction' => $menuaction,
-					'control_id' => $param['info']['control_id'],
-					'location_id' => $param['info']['location_id'],
-					'component_id' => $param['info']['component_id'],
-					'serie_id' => $param['info']['serie_id'],
-					'deadline_ts' => mktime(23, 59, 00, $month, date('t', strtotime($a_date)), $year),
-					'type' => $param['info']['component_id'] ? 'component' : '',
-					'location_code' => $location_code,
-					'assigned_to' => $param['info']['assigned_to']
+
+				$_control_id	 = $param['info']['control_id'];
+				$_location_id	 = $param['info']['location_id'];
+				$_component_id	 = $param['info']['component_id'];
+				$_serie_id		 = $param['info']['serie_id'];
+				$_deadline_ts	 = mktime(23, 59, 00, $month, date('t', strtotime($a_date)), $year);
+				$_type			 = $param['info']['component_id'] ? 'component' : '';
+				$_location_code	 = $location_code;
+
+				$control_link_data = array(
+					'menuaction'	 => $menuaction,
+					'control_id'	 => $_control_id,
+					'location_id'	 => $_location_id,
+					'component_id'	 => $_component_id,
+					'serie_id'		 => $_serie_id,
+					'deadline_ts'	 => $_deadline_ts,
+					'type'			 => $_type,
+					'location_code'	 => $_location_code,
+					'assigned_to'	 => $param['info']['assigned_to']
 				);
+
+				if(in_array($param['status'], array('CONTROL_REGISTERED', 'CONTROL_NOT_DONE')))
+				{
+					
+					$control_link = json_encode($control_link_data);
+					$_onclick = "perform_action(\"set_planning_month\", {$control_link});";
+					$link = "<span onclick='{$_onclick}'>{$img}</span>";
+				}
+				else
+				{
+					$_href = $GLOBALS['phpgw']->link('/index.php', $control_link_data);
+					$link = "<a href='{$_href}' target='{$url_target}'>{$img}</a>";
+				}
+
 			}
-			$link = "<a href=\"" . $GLOBALS['phpgw']->link('/index.php', $control_link_data) . "\" target=\"{$url_target}\">{$img}</a>";
+//			$link = "<a href='{$_href}' target='{$url_target}' onclick='alert(\"test\");'>{$img}</a>";
 
 			$repeat_type = $param['repeat_type'];
 			//	$responsible = '---';
