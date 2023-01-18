@@ -209,7 +209,7 @@
 						<button id="submit_ok" class="submit_ok pure-button pure-button-primary"  type="submit" name="submit_ok" value="1">
 							<i class="fa fa-check-square-o" aria-hidden="true"></i>
 							<xsl:text> </xsl:text>
-							<xsl:value-of select="php:function('lang', 'ok')" />
+							<xsl:value-of select="php:function('lang', 'performed without deviation')" />
 						</button>
 						<button id="submit_deviation" class="submit_deviation pure-button pure-button-primary" type="submit" name="submit_deviation" value="1">
 							<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
