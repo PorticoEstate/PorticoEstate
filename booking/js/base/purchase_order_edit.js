@@ -253,6 +253,7 @@ function set_mandatory(xTable)
 	var sum_days = 0;
 
 	var datetime = $("#dates-container").find(".datetime");
+	var one_day = 1000 * 60 * 60 * 24;
 
 	for (var j = 0; j < datetime.length; )
 	{
@@ -269,10 +270,13 @@ function set_mandatory(xTable)
 
 		sum_minutes = timespan * 60;
 		sum_hours += Math.ceil(timespan);
-		sum_days += Math.ceil(sum_hours / 24);
+//		sum_days += Math.ceil(sum_hours / 24);
+
+		sum_days += Math.ceil((to - from) / one_day);
 
 		j++;
 		j++;
+		
 	}
 
 	//alternative for time (season)
