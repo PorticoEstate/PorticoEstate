@@ -491,25 +491,25 @@
 								<xsl:value-of select="profile/name" />
 							</legend>
 
-							<div class="form-group">
-								<label>
+							<div class="mb-1">
+								<label class="form-label">
 									<xsl:value-of select="php:function('lang', 'phone')" />
 								</label>
 								<input type="text" name="values[cellphone]" value="{profile/cellphone}" required="required" class="form-control">
 								</input>
 							</div>
-							<div class="form-group">
-								<label>
+							<div class="mb-1">
+								<label class="form-label">
 									<xsl:value-of select="php:function('lang', 'email')" />
 								</label>
 								<input type="Email" name="values[email]" value="{profile/email}" required="required" class="form-control">
 								</input>
 							</div>
-							<div class="form-group">
+							<div class="mb-1">
 								<xsl:variable name="lang_send">
 									<xsl:value-of select="php:function('lang', 'save')" />
 								</xsl:variable>
-								<label>
+								<label class="form-label">
 									<input type="submit" class="btn btn-primary" name="values[save]" value="{$lang_send}" title='{$lang_send}'/>
 								</label>
 							</div>
