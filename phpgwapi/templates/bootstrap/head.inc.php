@@ -229,6 +229,23 @@ JS;
 		$javascript_end = $GLOBALS['phpgw']->common->get_javascript_end($cache_refresh_token);
 
 		$footer = <<<HTML
+
+			<div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-labelledby="popupModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+					<div class="modal-content">
+						<div class="modal-header bg-dark">
+							<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<iframe id="iframepopupModal" src="about:blank" width="100%" height="380" frameborder="0" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
+									allowtransparency="true"></iframe>
+						</div>
+					</div>
+					<!-- /.modal-content -->
+				</div>
+				<!-- /.modal-dialog -->
+			</div>
+			<!-- /.modal -->
 		</body>
 		{$javascript_end}
 	</html>
