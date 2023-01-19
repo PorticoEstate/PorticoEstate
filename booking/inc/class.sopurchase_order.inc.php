@@ -296,7 +296,7 @@
 			return $order;
 		}
 
-		function get_purchase_order( $application_id = 0, $reservation_type = '', $reservation_id = 0)
+		function get_purchase_order( $application_id = 0, $reservation_type = '', $reservation_id = 0, $collection = false)
 		{
 
 			if(!$application_id && !($reservation_type && $reservation_id))
@@ -323,9 +323,13 @@
 			{
 				$filtermethod .= " AND bb_purchase_order.reservation_type = '{$reservation_type}' AND bb_purchase_order.reservation_id = " . (int) $reservation_id;
 			}
-			else if((int) $application_id)
+			else if((int) $application_id && $collection == false)
 			{
 				$filtermethod .= " AND bb_purchase_order.parent_id IS NULL AND bb_purchase_order.application_id = " . (int) $application_id;
+			}
+			else if((int) $application_id && $collection == true)
+			{
+				$filtermethod .= " AND bb_purchase_order.application_id = " . (int) $application_id;
 			}
 
 			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id, bb_article_mapping.article_code,"

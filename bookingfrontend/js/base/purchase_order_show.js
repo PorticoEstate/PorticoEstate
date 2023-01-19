@@ -22,7 +22,8 @@ $(document).ready(function ()
 				sort: 'name',
 				application_id: application_id,
 				reservation_type: reservation_type,
-				reservation_id: reservation_id
+				reservation_id: reservation_id,
+				collection: 1
 			};
 			url = phpGWLink('bookingfrontend/', oArgs, true);
 
@@ -34,7 +35,8 @@ $(document).ready(function ()
 				sort: 'name',
 				application_id: application_id,
 				reservation_type: reservation_type,
-				reservation_id: reservation_id
+				reservation_id: reservation_id,
+				collection: 1
 			};
 			url = phpGWLink('index.php', oArgs, true);
 		}
