@@ -564,3 +564,11 @@ cost is set	booking	nn	Ny pris er definert
 Event was created	booking	nn	Arrangementet vart oppretta
 Link to website	bookingfrontend	nn	Link til heimeside
 uustatus	bookingfrontend	nn	Tilgjengelegheitserklæring
+each	bookingfrontend	nn	Stk
+kg	bookingfrontend	nn	Kg
+meter	bookingfrontend	nn	Meter
+square meter	bookingfrontend	nn	Kvadratmeter
+m	bookingfrontend	nn	Meter
+m2	bookingfrontend	nn	Kvadratmeter
+hour	bookingfrontend	nn	Time
+day	bookingfrontend	nn	Dag
