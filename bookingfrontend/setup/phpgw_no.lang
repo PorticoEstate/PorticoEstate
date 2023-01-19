@@ -560,3 +560,11 @@ cost is set	booking	no	Ny pris er angitt
 Event was created	booking	no	Arrangementet ble opprettet
 Link to website	bookingfrontend	no	Link til hjemmeside
 uustatus	bookingfrontend	no	Tilgjengeleghetserklæring
+each	bookingfrontend	no	Stk
+kg	bookingfrontend	no	Kg
+m	bookingfrontend	no	Meter
+m2	bookingfrontend	no	Kvadratmeter
+meter	bookingfrontend	no	Meter
+square meter	bookingfrontend	no	Kvadratmeter
+hour	bookingfrontend	no	Time
+day	bookingfrontend	no	Dag

@@ -235,6 +235,7 @@
 				$article['price']		 = number_format((float)$article['price'], 2, '.', '');
 				$article['tax']			 = number_format((float)$article['tax'], 2, '.', '');
 				$article['mandatory']	 = isset($article['resource_id']) ? 1 : '';
+				$article['lang_unit']	 = lang($article['unit']);
 
 				if(empty($article['selected_quantity']))
 				{
