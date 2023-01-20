@@ -1220,6 +1220,12 @@
 
 			$receipt = $this->so->add($data, $values_attribute);
 
+
+			if(!empty($receipt['id']) && !empty($data['notify_account_id']))
+			{
+				$this->add_ticket_notify_item($receipt['id'], $data['notify_account_id']);
+			}
+
 			$this->config->read();
 
 			if (!empty($data['send_mail']) || !empty($this->config->config_data['mailnotification']))
@@ -1248,6 +1254,16 @@
 				$receipt = array_merge($receipt, $receipt_mail);
 			}
 			return $receipt;
+		}
+
+		function add_ticket_notify_item( $ticket_id, $account_id )
+		{
+
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+			$contact_id = $GLOBALS['phpgw']->accounts->get($account_id)->person_id;
+
+			CreateObject('property.notify')->refresh_notify_contact_2($location_id, $ticket_id, $contact_id);
+			
 		}
 
 		function get_address_element( $location_code = '' )
