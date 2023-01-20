@@ -1,5 +1,13 @@
+
+$box-shadow-large: 3px 3px 50px 0px rgba(0, 0, 0, 0.1);
+$box-shadow-large-focus: 3px 3px 20px 0px rgba(0, 0, 0, 0.5);
+
 .box-shadow {
-  box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
+  box-shadow: $box-shadow-large;
+
+  &--focus {
+    box-shadow: $box-shadow-large-focus;
+  }
 }
 
 $rounded-mini: 0.5rem;
