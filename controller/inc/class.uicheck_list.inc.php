@@ -1181,7 +1181,7 @@
 
 			$control_id = phpgw::get_var('control_id', 'int');
 			$serie_id = phpgw::get_var('serie_id', 'int');
-			$status = (int)phpgw::get_var('status');
+			$status = phpgw::get_var('status', 'int');
 			$type = phpgw::get_var('type');
 			$deadline_date = phpgw::get_var('deadline_date', 'string');
 			$original_deadline_date_ts = phpgw::get_var('original_deadline_date', 'int');
@@ -1237,7 +1237,7 @@
 			else
 			{
 				$completed_date_ts = 0;
-				$status = controller_check_list::STATUS_NOT_DONE;
+				$status = $status && controller_check_list::STATUS_CANCELED ? controller_check_list::STATUS_CANCELED : controller_check_list::STATUS_NOT_DONE;
 			}
 
 			if($submit_ok)
