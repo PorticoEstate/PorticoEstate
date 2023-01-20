@@ -7,13 +7,14 @@
     <link href="../../../../phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css" type="text/css" rel="StyleSheet">
     <link href="../../../../phpgwapi/templates/base/css/fontawesome/css/all.min.css" type="text/css" rel="StyleSheet">
     <link href="../../../../phpgwapi/templates/bookingfrontend/css/jquery.autocompleter.css" type="text/css" rel="StyleSheet">
-    <link href="https://fonts.googleapis.com/css?family=Work+Sans" type="text/css" rel="StyleSheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link href="../../../../phpgwapi/templates/bookingfrontend/css/normalize.css" type="text/css" rel="StyleSheet">
     <link href="../../../../phpgwapi/templates/bookingfrontend/css/rubik-font.css" type="text/css" rel="StyleSheet">
+    <link href="../../../js/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans" type="text/css" rel="StyleSheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <link href="../../../js/select2/css/select2.min.css" rel="stylesheet" />
+    <script src="../../../../phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="../../../js/select2/js/select2.min.js"></script>
 
     <link href="main.css" type="text/css" rel="StyleSheet">
@@ -41,11 +42,6 @@
             'folder' => 'effects',
             'filename' => 'effects',
           ),
-          'Icons' => array(
-            'name' => 'Ikoner',
-            'folder' => 'icons',
-            'filename' => 'icons',
-          ),
           'Button' => array(
             'name' => 'Knapper',
             'folder' => 'button',
@@ -57,16 +53,27 @@
             'folder' => 'link',
             'filename' => 'link',
           ),
-          'Input' => array(
-            'name' => 'Input',
-            'folder' => 'input',
-            'filename' => 'input',
-          ),
           'Dropdown' => array(
             'name' => 'Nedtrekksmeny',
             'folder' => 'dropdown',
             'filename' => 'dropdown',
           ),
+          'Input' => array(
+            'name' => 'Input',
+            'folder' => 'input',
+            'filename' => 'input',
+          ),
+          'Filter' => array(
+            'name' => 'Filter',
+            'folder' => 'filter',
+            'filename' => 'filter',
+          ),
+          'Status' => array(
+            'name' => 'Status',
+            'folder' => 'status',
+            'filename' => 'status',
+          ),
+          
         );
 
         echo '<ul class="list-unstyled d-flex">';
