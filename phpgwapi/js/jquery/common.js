@@ -266,6 +266,24 @@ JqueryPortico.formatJsonArray = function (key, oData)
 		});
 
 	}
+	string = elements.join('<br/>');
+
+	return string;
+};
+
+JqueryPortico.formatJsonArrayData = function (key, oData)
+{
+	var string = "";
+	const elements = [];
+	if (oData[key])
+	{
+		var tags = oData[key];
+		$.each(tags, function (k, v)
+		{
+			elements.push(v);
+		});
+
+	}
 	string = elements.join('::');
 
 //	return '<div data="'+ string +'"><div class="' + key + '"></div></div>';
