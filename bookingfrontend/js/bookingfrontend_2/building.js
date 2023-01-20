@@ -291,14 +291,17 @@ function PopulateBookableResources(urlParams)
 				booking_month_horizon = Number(result.results[i].booking_month_horizon) + 1;
 			}
 
-			bookableResources.push({
-				name: result.results[i].name,
-				resourceItemLink: resourceItemLink,
-				facilitiesList: ko.observableArray(facilitiesList),
-				activitiesList: ko.observableArray(activitiesList),
-				availlableTimeSlots: ko.observableArray(availlableTimeSlots[result.results[i].id])
-			});
-			resourceIds.push({id: result.results[i].id, name: result.results[i].name, visible: true});
+			if (result.results[i].deactivate_application !== 1)
+			{
+				bookableResources.push({
+					name: result.results[i].name,
+					resourceItemLink: resourceItemLink,
+					facilitiesList: ko.observableArray(facilitiesList),
+					activitiesList: ko.observableArray(activitiesList),
+					availlableTimeSlots: ko.observableArray(availlableTimeSlots[result.results[i].id])
+				});
+				resourceIds.push({id: result.results[i].id, name: result.results[i].name, visible: true});
+			}
 		}
 	});
 }
