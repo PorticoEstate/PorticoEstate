@@ -1,73 +1,84 @@
+$text-normal: 400;
+$text-bold: 700;
+$text-bolder: 900;
+
+$text-body: 1rem; //16px
+$text-lg: 1.25rem; //20px
+$text-xl: 1.375rem; //22px 
+$text-2xl: 1.75rem; //28px 
+$text-3xl: 2.25rem; //36px 
+$text-4xl: 3.5rem; //56px 
+
 body {
   font-family: 'Roboto', sans-serif;
-  font-size:16px;
+  font-size: 16px;
   line-height: 1.75rem;
+  font-weight: $text-normal;
 }
 
 h1, .h1 {
   font-size: 2.25rem; //36px
   line-height: 4rem; //64px
   margin-top: 0;
-  font-weight: 700;
+  font-weight: $text-bolder;
 }
 
 h2, .h2 {
   font-size: 1.75rem; //28px
   line-height: 3rem; //48px
-  font-weight: 700;
+  font-weight: $text-bolder;
 }
 
 h3, .h3 {
   font-size: 1.375rem; //22px
   line-height: 3rem; //48px
-  font-weight: 700;
+  font-weight: $text-bolder;
 }
 
 h4, .h4 {
   font-size: 1.25rem; //20px
   line-height: 1.75rem; //28px
-  font-weight: 700;
+  font-weight: $text-bold;
 }
 
 .text {
-  /* TEXT SIZE */ 
+  /* SIZE */ 
   &-body {
-    font-size: 1rem; //16px
+    font-size: $text-body; //16px
     line-height: 1.75rem; //28px
   }
 
   &-lg {
-    font-size: 1.25rem; //20px
+    font-size: $text-lg; //20px
     line-height: 1.75rem; //28px
   }
 
   &-xl {
-    font-size: 1.375rem; //22px 
+    font-size: $text-xl; //22px 
     line-height: 3rem; //48px
   }
 
   &-2xl {
-    font-size: 1.75rem; //28px 
+    font-size: $text-2xl; //28px 
     line-height: 3rem; //48px
   }
 
   &-3xl {
-    font-size: 2.25rem; //36px 
+    font-size: $text-3xl; //36px 
     line-height: 4rem; //64px
   }
 
   &-4xl {
-    font-size: 3.5rem; //56px 
+    font-size: $text-4xl; //56px 
     line-height: 4.5rem; //72px
   }
 
-  /* TEXT STYLE */
+  /* WEIGHT */
   &-bold {
-    font-weight: 700;
+    font-weight: $text-bold;
+  }
+
+  &-bolder {
+    font-weight: $text-bolder;
   }
 }
-
-
-
-
-

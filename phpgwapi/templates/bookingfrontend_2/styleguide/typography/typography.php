@@ -1,10 +1,11 @@
 <div class="container">
   <div class="row g-0 border-top border-2 py-5">
     <div class="col-lg">
-      <h1>H1 - Bold - 36px</h1>
-      <h2>H2 - Bold - 28px</h2>
-      <h3>H3 - Bold - 22px</h3>
-      <h4>H3 - Bold - 20px</h4>
+      <h1>H1 - text-bolder - 36px</h1>
+      <h2>H2 - text-bolder - 28px</h2>
+      <h3>H3 - text-bolder - 22px</h3>
+      <h4>H3 - text-bold - 20px</h4>
+      <p class="text-bold">Body - text-bold - 16px</p>
       <p>Body - Regular - 16px</p>
     </div>
     <div class="col-lg">

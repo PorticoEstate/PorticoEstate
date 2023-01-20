@@ -70,6 +70,9 @@ $grey-light-8: #fefefe;
 $grey-light-4: #ffffff;
 
 $white: #FFFFFF;
+$green-light: #B0FF94;
+$red-light: #FF9494;
+$yellow-light: #FFEE94;
 
 
 $colorVariations : (
@@ -152,6 +155,15 @@ $colorVariations : (
   ),
   'white' (
     '100': $white,
+  ),
+  'green-light' (
+    '100': $green-light,
+  ),
+  'red-light' (
+    '100': $red-light,
+  ),
+  'yellow-light' (
+    '100': $yellow-light,
   ),
 );
 

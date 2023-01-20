@@ -21,7 +21,12 @@
         'grey' => '#D6D6D6',
         'grey-light' => '#F5F5F5',
         'white' => '#FFFFFF',
+        'green-light' => '#B0FF94',
+        'red-light' => '#FF9494',
+        'yellow-light' => '#FFEE94',
       );
+
+      $onlyMainColor = array('white', 'green-light', 'red-light','yellow-light');
 
       $opacities = array(
         '80', '64', '56', '40', '24', '16', '8', '4'
@@ -58,28 +63,31 @@
                   <div class="colorbox bg-'.$color.'"></div>
                   <span class="text-center">bg-'.$color.'</span>
                 </div>';
-          if( $color !== 'white' ) {  
+          if( !in_array($color, $onlyMainColor)) {
             foreach ( $opacities as $opacity ) {
               echo '<div class="col d-flex flex-column align-items-center text-center px-4">
                     <div class="colorbox bg-'.$color.'-'.$opacity.'"></div>
                     <span class="text-center">*-'.$opacity.'</span>
                   </div>';
             }
-          }
+          };
         echo '</div>';
-        echo '<div class="row">';
-          echo '<div class="col-2 d-flex flex-column align-items-center pe-4 mb-4">
-                  <div class="colorbox bgo-'.$color.'"></div>
-                  <span class="text-center">bgo-'.$color.'</span>
-                </div>';
-          
-          foreach ( $opacities as $opacity ) {
-            echo '<div class="col d-flex flex-column align-items-center text-center px-4">
-                  <div class="colorbox bgo-'.$color.'-'.$opacity.'"></div>
-                  <span class="text-center">*-'.$opacity.'</span>
-                </div>';
-          }
-        echo '</div>';
+        if( !in_array($color, $onlyMainColor)) {
+          echo '<div class="row">';
+            echo '<div class="col-2 d-flex flex-column align-items-center pe-4 mb-4">
+                    <div class="colorbox bgo-'.$color.'"></div>
+                    <span class="text-center">bgo-'.$color.'</span>
+                  </div>';
+            
+              foreach ( $opacities as $opacity ) {
+                echo '<div class="col d-flex flex-column align-items-center text-center px-4">
+                      <div class="colorbox bgo-'.$color.'-'.$opacity.'"></div>
+                      <span class="text-center">*-'.$opacity.'</span>
+                    </div>';
+              }
+        
+          echo '</div>';
+        };
       };
     ?>
   </div>
