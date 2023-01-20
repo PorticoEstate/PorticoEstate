@@ -795,19 +795,19 @@
 					'label' => lang('document categories'),
 					'sortable' => false,
 					'resizeable' => true,
-					'formatter' => 'JqueryPortico.formatJsonArray'
+					'formatter' => 'JqueryPortico.formatJsonArrayData'
 					),
 				array('key' => 'branch',
 					'label' => lang('branch'),
 					'sortable' => false,
 					'resizeable' => true,
-					'formatter' => 'JqueryPortico.formatJsonArray'
+					'formatter' => 'JqueryPortico.formatJsonArrayData'
 					),
 				array('key' => 'building_part',
 					'label' => lang('building part'),
 					'sortable' => false,
 					'resizeable' => true,
-					'formatter' => 'JqueryPortico.formatJsonArray'
+					'formatter' => 'JqueryPortico.formatJsonArrayData'
 					),
 //				array('key'		 => 'select',
 //					'label'		 => '',
