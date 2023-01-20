@@ -2763,4 +2763,27 @@
 
 		}
 
+		public function get_users($query)
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts', $start, $sort, $order, $query, $offset);
+
+			$values = array();
+			foreach ($accounts as $account)
+			{
+				if ($account->enabled)
+				{
+					$values[] = array
+						(
+						'id'	 => $account->id,
+						'name'	 => $account->__toString(),
+					);
+				}
+			}
+			return array('ResultSet' => array('Result' => $values));
+		}
 	}
