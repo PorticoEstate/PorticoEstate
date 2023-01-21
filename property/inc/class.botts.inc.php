@@ -67,6 +67,10 @@
 			'addfiles'		 => true,
 		);
 
+		var $account, $so, $custom, $bocommon, $historylog, $config, $dateformat, $cats, $allrows, $location_code,
+		$vendor_id, $ecodimb, $b_account, $building_part, $branch_id, $order_dim1, $p_num, $uicols,
+		$send, $order_sent_adress;
+
 		function __construct()
 		{
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'property')

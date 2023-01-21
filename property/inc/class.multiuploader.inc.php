@@ -35,6 +35,7 @@
 	class property_multiuploader extends UploadHandler
 	{
 
+		var $bofiles;
 		function __construct( $options = null, $initialize = true, $error_messages = null )
 		{
 			$fakebase = !empty($options['fakebase']) ? $options['fakebase'] : '/property';

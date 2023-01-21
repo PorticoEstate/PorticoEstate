@@ -55,6 +55,9 @@
 		var $project_type_id;
 		var $ecodimb;
 		var $bypass_error	 = false;
+		var $account, $bo, $bocommon, $cats, $custom,$acl,$acl_location, $acl_read,$acl_add, $acl_edit,
+		$acl_delete, $acl_manage, $status_id, $wo_hour_cat_id, $user_id, $filter_year, $decimal_separator,
+		$type_id;
 		var $public_functions = array
 			(
 			'query'							 => true,
