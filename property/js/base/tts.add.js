@@ -176,7 +176,7 @@ $(document).ready(function ()
 			cache: true
 		},
 		width: '50%',
-		placeholder: lang['Search for a user'],
+		placeholder: lang['Search'],
 		minimumInputLength: 2,
 		language: "no",
 		allowClear: true
