@@ -67,6 +67,10 @@
 			'addfiles'		 => true,
 		);
 
+		var $account, $so, $custom, $bocommon, $historylog, $config, $dateformat, $cats, $allrows, $location_code,
+		$vendor_id, $ecodimb, $b_account, $building_part, $branch_id, $order_dim1, $p_num, $uicols,
+		$send, $order_sent_adress;
+
 		function __construct()
 		{
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'property')
@@ -1260,9 +1264,21 @@
 		{
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
-			$contact_id = $GLOBALS['phpgw']->accounts->get($account_id)->person_id;
+			$notify = CreateObject('property.notify');
+			if(is_array($account_id))
+			{
+				$account_ids = $account_id;
+			}
+			else
+			{
+				$account_ids = array($account_id);
+			}
 
-			CreateObject('property.notify')->refresh_notify_contact_2($location_id, $ticket_id, $contact_id);
+			foreach ($account_ids as $_account_id)
+			{
+				$contact_id = $GLOBALS['phpgw']->accounts->get($_account_id)->person_id;
+				$notify->refresh_notify_contact_2($location_id, $ticket_id, $contact_id);
+			}
 			
 		}
 

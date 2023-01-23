@@ -38,6 +38,7 @@
 		public $sum_amount			 = 0;
 		public $role				 = array();
 		protected $invoice_approval	 = 2;
+		var $db, $account_id, $acl, $join, $left_join, $like, $config;
 
 		function __construct()
 		{
@@ -1069,7 +1070,7 @@
 						$GLOBALS['phpgw']->db->next_record();
 						if ($GLOBALS['phpgw']->db->f('cnt') == 0)
 						{
-							$receipt['error'][]	 = array('msg' => lang('This Dim B is not valid:') . " " . $dimd);
+							$receipt['error'][]	 = array('msg' => lang('This Dim B is not valid:') . " " . $dimb);
 							$local_error		 = true;
 						}
 

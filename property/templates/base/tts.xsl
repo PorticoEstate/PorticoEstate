@@ -31,7 +31,7 @@
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
 		var my_groups = <xsl:value-of select="my_groups"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Please select a person or a group to handle the ticket !', 'Search for a user')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Please select a person or a group to handle the ticket !', 'Search')"/>;
 
 	</script>
 	<dl>
@@ -288,7 +288,7 @@
 					<label for="set_notify_name">
 						<xsl:value-of select="$lang_notify"/>
 					</label>
-					<select id="notify_account_id" name="values[notify_account_id]">
+					<select id="notify_account_id" name="values[notify_account_id][]" multiple="multiple">
 					</select>
 				</div>
 			</div>
@@ -388,7 +388,7 @@
 		var location_code = '<xsl:value-of select="value_location_code"/>';
 
 		//	var initialSelection = <xsl:value-of select="resources_json"/>;
-		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address', 'Search for a user')"/>
+		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address', 'Search')"/>
 
 	</script>
 	<dl>
