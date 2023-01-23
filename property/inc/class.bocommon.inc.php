@@ -1460,25 +1460,12 @@
 			{
 				foreach ($parts as $entry)
 				{
-					if ($entry['id'] == $selected)
-					{
-						$part_of_town_list[] = array
-							(
-							'id'			 => $entry['id'],
-							'name'			 => $entry['name'],
-							'district_id'	 => $entry['district_id'],
-							'selected'		 => 'selected'
-						);
-					}
-					else
-					{
-						$part_of_town_list[] = array
-							(
-							'id'			 => $entry['id'],
-							'name'			 => $entry['name'],
-							'district_id'	 => $entry['district_id'],
-						);
-					}
+					$part_of_town_list[] = array(
+						'id'			 => $entry['id'],
+						'name'			 => $entry['name'],
+						'district_id'	 => $entry['district_id'],
+						'selected'		 => $entry['id'] == $selected ? 1 : 0
+					);
 				}
 			}
 
