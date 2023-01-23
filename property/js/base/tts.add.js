@@ -193,6 +193,11 @@ $(document).ready(function ()
 		});
 	});
 
+//	$('#notify_account_id').on('select2:select', function (e)
+//	{
+//		// Do something
+//	});
+
 
 
 	$("#user_id").select2({

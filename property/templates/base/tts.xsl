@@ -288,7 +288,7 @@
 					<label for="set_notify_name">
 						<xsl:value-of select="$lang_notify"/>
 					</label>
-					<select id="notify_account_id" name="values[notify_account_id]">
+					<select id="notify_account_id" name="values[notify_account_id][]" multiple="multiple">
 					</select>
 				</div>
 			</div>
