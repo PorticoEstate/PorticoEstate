@@ -5,16 +5,22 @@
 	class booking_uisend_email extends booking_uicommon
 	{
 
-		public $public_functions = array
-			(
-			'index' => true,
-			'query' => true,
-			'receipt' => true,
+		public $public_functions = array(
+			'index'					 => true,
+			'get_email_addresses'	 => true,
+			'query'					 => true,
+			'receipt'				 => true,
 		);
+
+		private $from;
 
 		public function __construct()
 		{
 			parent::__construct();
+
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+			$this->from = isset($config['email_sender']) && $config['email_sender'] ? $config['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+
 
 			self::set_active_menu('booking::mailing');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::" . lang('Send e-mail');
@@ -28,12 +34,9 @@
 		public function index()
 		{
 			$errors = array();
-			$step = 1;
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$step = phpgw::get_var('step', 'int');
-				$step++;
 				$building_id = phpgw::get_var('building_id', 'int');
 				$building_name = phpgw::get_var('building_name', 'string');
 				if (is_array(phpgw::get_var('seasons')))
@@ -46,35 +49,22 @@
 				}
 				$mailsubject = phpgw::get_var('mailsubject', 'string');
 				$mailbody = phpgw::get_var('mailbody', 'html');
-				$contacts = phpgw::get_var('contacts', 'string');
+				$email_recipients = phpgw::get_var('email_recipients', 'string');
 
-				if ($step == 1)
+				if ($building_id == '' || $season == '' || $mailsubject == '' || $mailbody == '')
 				{
-					if ($building_id == '' || $season == '' || $mailsubject == '' || $mailbody == '')
-					{
-						$errors['incomplete form'] = lang('All fields are required');
-					}
-					else
-					{
-						$contacts = $this->get_email_addresses($building_id, $season);
-						$step++;
-					}
+					$errors['incomplete form'] = lang('All fields are required');
 				}
-				elseif ($step == 2)
-				{
-					$contacts = $this->get_email_addresses($building_id, $season);
-					$step++;
-				}
-				elseif ($step == 3)
+
+
+				if (!$errors)
 				{
 					$_contacts = array();
 
-					foreach ($contacts as $contact)
+					foreach ($email_recipients as $email_recipient)
 					{
-						$_contacts[] = array('email' => $contact);
+						$_contacts[] = array('email' => $email_recipient);
 					}
-
-//					$contacts = $this->get_email_addresses($building_id, $season);
 
 					$result = $this->send_emails($_contacts, $mailsubject, $mailbody);
 					self::redirect(array('menuaction' => 'booking.uisend_email.receipt',
@@ -97,28 +87,16 @@
 			$building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$building['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));
-
-			if ($step == 1)
-			{
-				$this->rich_text_editor(array('field_mailbody'));
-				self::render_template_xsl('email_index', array('building' => $building,
-					'season' => $season,
-					'mailsubject' => $mailsubject,
-					'mailbody' => $mailbody,
-					'step' => $step));
-			}
-
-			if ($step == 2)
-			{
-				phpgwapi_jquery::load_widget('bootstrap-multiselect');
-				self::render_template_xsl('email_preview', array('building' => $building,
-					'building_id' => $building_id,
-					'season' => $season,
-					'mailsubject' => $mailsubject,
-					'mailbody' => $mailbody,
-					'contacts' => $contacts,
-					'step' => $step));
-			}
+			phpgwapi_jquery::load_widget('bootstrap-multiselect');
+			$this->rich_text_editor(array('field_mailbody'));
+			self::render_template_xsl('email_index', array(
+				'building'		 => $building,
+				'season'		 => $season,
+				'mailsubject'	 => $mailsubject,
+				'mailbody'		 => $mailbody,
+				'from'			 => $this->from,
+				'html_editor'	 => $GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor']
+			));
 		}
 
 		public function receipt()
@@ -130,9 +108,7 @@
 
 		private function send_emails( $contacts, $subject, $body )
 		{
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
-			$from = isset($config->config_data['email_sender']) && $config->config_data['email_sender'] ? $config->config_data['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+			$from = $this->from;
 
 			$send = CreateObject('phpgwapi.send');
 			$result = array('ok' => array(),'failed' => array());
@@ -152,10 +128,20 @@
 			return $result;
 		}
 
-		private function get_email_addresses( $building_id, $season_id )
+		public function get_email_addresses()
 		{
+			$building_id = phpgw::get_var('building_id', 'int');
+			$seasons = implode(',', phpgw::get_var('seasons', 'int'));
+
 			$contacts = array();
 			$db = & $GLOBALS['phpgw']->db;
+
+
+
+			$sql = "SELECT from_ FROM public.bb_season WHERE bb_season.id IN($seasons) ORDER BY from_ ASC";
+			$db->query($sql);
+			$db->next_record();
+			$from = $db->f('from_');
 
 			$sql = "SELECT DISTINCT oc.name, oc.email
 				FROM bb_allocation alo
@@ -163,7 +149,7 @@
 				INNER JOIN bb_season se ON se.id = alo.season_id AND se.active = 1
 				INNER JOIN bb_building bu ON bu.id = se.building_id AND bu.active = 1
 				WHERE alo.active = 1 
-				AND se.id in($season_id)
+				AND se.id in($seasons)
 				AND bu.id = $building_id
 				UNION
 				SELECT DISTINCT gc.name, gc.email
@@ -172,11 +158,20 @@
 				INNER JOIN bb_season se ON se.id = alo.season_id AND se.active = 1
 				INNER JOIN bb_building bu ON bu.id = se.building_id AND bu.active = 1
 				INNER JOIN bb_group_contact gc ON gc.group_id = bo.group_id AND trim(gc.email) <> ''
-				WHERE bo.active = 1 
-				AND se.id in($season_id)
+				WHERE bo.active = 1
+				AND se.id in($seasons)
 				AND bu.id = $building_id
+				UNION
+				SELECT DISTINCT bb_event.contact_name as name, bb_event.contact_email as email
+				FROM bb_event
+				INNER JOIN bb_event_resource ON bb_event.id = bb_event_resource.event_id
+				JOIN bb_season_resource ON bb_event_resource.resource_id = bb_season_resource.resource_id
+				INNER JOIN bb_resource ON bb_resource.id = bb_season_resource.resource_id
+				INNER JOIN bb_season ON bb_season.id = bb_season_resource.season_id
+				WHERE bb_season.id in($seasons)
+				AND bb_event.from_ > '$from'
 				ORDER BY name";
-			$db->query($sql);
+				$db->query($sql);
 
 			$result = $db->resultSet;
 
@@ -184,6 +179,10 @@
 
 			foreach ($result as $c)
 			{
+				if(empty($c['email']))
+				{
+					continue;
+				}
 				if(!isset($duplicates[$c['email']]))
 				{
 					$contacts[] = array('email' => $c['email'], 'name' => $c['name']);

@@ -43,6 +43,29 @@
 					</div>
 				</div>
 				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'recipients')"/>
+					</label>
+					<select id="email_recipients" name="email_recipients[]" multiple="true" class="pure-input-3-4">
+						<xsl:attribute name="data-validation">
+							<xsl:text>email_recipients</xsl:text>
+						</xsl:attribute>
+						<xsl:attribute name="data-validation-error-msg">
+							<xsl:value-of select="php:function('lang', 'select at least one recipient')" />
+						</xsl:attribute>
+						<xsl:apply-templates select="recipient_list/options"/>
+					</select>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'from')"/>
+					</label>
+					<xsl:value-of select="from"/>
+				</div>
+
+
+
+				<div class="pure-control-group">
 					<label for="field_mailsubject">
 						<xsl:value-of select="php:function('lang', 'Mail subject')" />
 					</label>
@@ -65,7 +88,7 @@
 					<div class="pure-custom pure-input-3-4">
 						<textarea id="field_mailbody" name="mailbody">
 							<xsl:attribute name="data-validation">
-								<xsl:text>required</xsl:text>
+								<xsl:text>mailbody</xsl:text>
 							</xsl:attribute>
 							<xsl:attribute name="data-validation-error-msg">
 								<xsl:value-of select="php:function('lang', 'Please enter a mail body')" />
@@ -79,12 +102,13 @@
 		<div class="form-buttons">
 			<input type="submit" class="pure-button pure-button-primary">
 				<xsl:attribute name="value">
-					<xsl:value-of select="php:function('lang', 'preview')"/>
+					<xsl:value-of select="php:function('lang', 'Send e-mails')"/>
 				</xsl:attribute>
 			</input>
 		</div>
 	</form>
 	<script type="text/javascript">
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name')"/>;
+		var html_editor = '<xsl:value-of select="html_editor"/>';
 	</script>
 </xsl:template>
