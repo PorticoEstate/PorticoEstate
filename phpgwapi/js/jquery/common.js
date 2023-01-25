@@ -290,7 +290,7 @@ JqueryPortico.formatJsonArrayData = function (key, oData)
 	/**
 	 * input field is placeholder for column width-calculation
 	 */
-	return '<div data="'+ string +'"><div class="' + key + '"><input size="19" class="select_' + key + '"/></div></div>';
+	return '<div data="'+ string +'"><div class="' + key + '"><input size="19" class="field_' + key + '"/></div></div>';
 };
 
 JqueryPortico.FormatterAmount0 = function (key, oData)
