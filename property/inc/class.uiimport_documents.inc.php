@@ -1626,6 +1626,8 @@
 			}
 
 			$order_id = phpgw::get_var('order_id', 'int', 'GET');
+			$query = phpgw::get_var('query');
+
 			if(!$order_id)
 			{
 				return;
@@ -1645,8 +1647,16 @@
 
 			$i = 0;
 
+
 			foreach ($list_files as $file_info)
 			{
+				$file_name = $file_info['path_relative_filename'];
+
+				if($query && !preg_match("/$query/i", $file_name))
+				{
+					continue;
+				}
+
 				$i++;
 
 				$current_tag = $file_tags[$file_info['path_relative_filename']];
