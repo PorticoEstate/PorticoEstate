@@ -592,10 +592,9 @@ this.local_DrawCallback0 = function (container)
 	}
 	update_common();
 
-//	set_up_data_array('document_category');
-	set_up_multiselect('document_category');
-	set_up_multiselect('branch');
-	set_up_multiselect('building_part');
+	set_up_data_array('document_category');
+	set_up_data_array('branch');
+	set_up_data_array('building_part');
 
 	check_validation('document_category');
 	check_validation('branch');
@@ -625,17 +624,16 @@ set_up_data_array = function (field_name)
 	let data_cadidates = $('.' + field_name);
 	data_cadidates.each(function (i, obj)
 	{
-
-		$(obj).on("click", function (event)
+		obj.parentNode.addEventListener('click', function ()
 		{
 			set_up_multiselect2(this, field_name);
-		});
+		}, {once: true});
 
 	});
 
 };
 
-set_up_multiselect2 = function (obj, field_name)
+set_up_multiselect2 = function (td, field_name)
 {
 	select_id++;
 	let data_list = [];
@@ -645,22 +643,11 @@ set_up_multiselect2 = function (obj, field_name)
 	});
 
 	let htmlString;
+	var obj = $(td).find('div');
 
-//	$('.select_' + field_name).multiselect('destroy');
-//	$('.select_' + field_name).multiselect('rebuild');
+	$(obj).find('button').remove();
 
-
-	$(obj).find('input').remove();
-//	$(obj).find('select').remove();
-
-	var button = $(obj).find('button');
-
-	if (button.length > 0)
-	{
-		return;
-	}
-
-	const data = $(obj).parent().attr('data').split('::').filter(Boolean);
+	const data = $(obj).attr('data').split('::').filter(Boolean);
 
 
 	let selected;
@@ -690,7 +677,7 @@ set_up_multiselect2 = function (obj, field_name)
 		},
 		onChange: function (option, checked, select)
 		{
-			let file_name = $(option).parent().parent().parent().parent().parent().parent().children('td')[0].innerText;
+			let file_name = $(option).parent().parent().parent().parent().parent().children('td')[0].innerText;
 			let order_id = $('#order_id').val();
 
 			$.ajax({
@@ -720,91 +707,4 @@ set_up_multiselect2 = function (obj, field_name)
 
 		}
 	});
-
-	var multiselect = $('#select_id_' + select_id).find('.multiselect-container');
-
-
-//	$('#select_id_' + select_id).multiselect('rebuild');
-};
-
-set_up_multiselect = function (field_name)
-{
-	let data_cadidates = $('.' + field_name);
-	let data_list = [];
-	$("#" + field_name + " > option").each(function ()
-	{
-		data_list.push({id: this.value, name: this.text});
-	});
-
-	let htmlString;
-
-	$('.select_' + field_name).multiselect('destroy');
-
-	data_cadidates.each(function (i, obj)
-	{
-		$(obj).find('input').remove();
-		$(obj).find('select').remove();
-
-		const data = $(obj).parent().attr('data').split('::').filter(Boolean);
-
-		let selected;
-		htmlString = '<select name="' + field_name + '" multiple="true" class="select_' + field_name + '">';
-
-		data_list.forEach(function (category)
-		{
-			selected = '';
-			if (data.includes(category.id))
-			{
-				selected = ' selected="selected"';
-			}
-
-			htmlString += "<option value='" + category.id + "'" + selected + ">" + category.name + "</option>";
-		});
-		htmlString += '</select>';
-
-		$(obj).append(htmlString);
-
-	});
-
-
-	$('.select_' + field_name).multiselect({
-		buttonClass: 'form-select',
-		widthSynchronizationMode: 'always',
-		buttonWidth: '200px',
-//		enableResetButton: true,
-//		resetButtonText: 'Angre',
-		templates: {
-			li: '<li><div style="display:inline;"><a><label></label></a></div></li>',
-			button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
-		},
-		onChange: function (option, checked, select)
-		{
-			let file_name = $(option).parent().parent().parent().parent().parent().parent().children('td')[0].innerText;
-			let order_id = $('#order_id').val();
-
-			$.ajax({
-				type: 'POST',
-				dataType: 'json',
-				url: phpGWLink('index.php', {menuaction: 'property.uiimport_documents.set_value'}, true),
-				data: {
-					id: order_id + '::' + file_name,
-					field_name: field_name,
-					checked: checked === true ? 1 : 0,
-					value: [$(option).val()],
-					secret: $("#secret").val()
-				},
-				success: function (data)
-				{
-					check_validation(field_name);
-				},
-				error: function (data)
-				{
-					alert('feil');
-				}
-			});
-
-
-		}
-	});
-
 };

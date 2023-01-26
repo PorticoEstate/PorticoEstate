@@ -286,11 +286,19 @@ JqueryPortico.formatJsonArrayData = function (key, oData)
 	}
 	string = elements.join('::');
 
-//	return '<div data="'+ string +'"><div class="' + key + '"></div></div>';
 	/**
 	 * input field is placeholder for column width-calculation
 	 */
-	return '<div data="'+ string +'"><div class="' + key + '"><input size="19" class="field_' + key + '"/></div></div>';
+	var ret;
+	ret = '<div data="' + string + '" class="' + key + '">';
+	ret += '<button style="text-align:left;" class="btn field_' + key + '">';
+	ret += '<span>';
+	ret += string.replaceAll('::', '<br/>');
+	ret += '</span>';
+	ret += '</button>';
+	ret += '</div>';
+
+	return ret;
 };
 
 JqueryPortico.FormatterAmount0 = function (key, oData)
