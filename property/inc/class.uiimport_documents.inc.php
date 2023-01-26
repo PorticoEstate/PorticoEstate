@@ -940,6 +940,7 @@
 				'ColumnDefs' => $files_def,
 				'tabletools' => $tabletools,
 				'config'	 => array(
+					array('allrows' => true),
 //					array('responsive' => true),
 //					array('disablePagination' => true),
 //					array('disableFilter' => true),
