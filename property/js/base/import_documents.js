@@ -414,7 +414,7 @@ this.validate_step_2 = function (sub_step)
 {
 	var order_id = $("#order_id").val();
 	var secret = $("#secret").val();
-	var oArgs = {menuaction: 'property.uiimport_documents.validate_info', order_id: order_id, sub_step: sub_step};
+	var oArgs = {menuaction: 'property.uiimport_documents.validate_info', order_id: order_id, sub_step: sub_step, secret: secret};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper('datatable-container_0', requestUrl);
 
@@ -485,13 +485,15 @@ this.step_2_import = function ()
 	$("#step_2_view_all").prop("disabled", true);
 	$('.processing-import').show();
 	$("#message0").hide();
+
+	var query = $("#datatable-container_0_filter").find("input[type=search]").val();
 	var order_id = $("#order_id").val();
 	var oArgs = {menuaction: 'property.uiimport_documents.step_2_import', order_id: order_id};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		data: {},
+		data: {query: query},
 		url: requestUrl,
 		success: function (data)
 		{
