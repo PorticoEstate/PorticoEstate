@@ -151,11 +151,13 @@ if ($.formUtils)
 			if (email_recipients.length > 0)
 			{
 				v = true;
-				$(".multiselect").removeClass(['btn','btn-danger']);
+				$(".multiselect").removeClass(['btn','is-invalid']);
+				$(".multiselect").addClass(['btn','is-valid']);
 			}
 			else
 			{
-				$(".multiselect").addClass(['btn','btn-danger']);
+				$(".multiselect").removeClass(['is-valid']);
+				$(".multiselect").addClass(['btn','is-invalid']);
 			}
 			return v;
 		},
