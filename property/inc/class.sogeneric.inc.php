@@ -809,13 +809,18 @@
 						(
 						'table'			 => 'fm_ecodimb_role',
 						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
-							(
-							array
-								(
+						'fields'		 => array(
+							array(
 								'name'	 => 'name',
 								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'type'	 => 'varchar',
+								'sortable'	 => true
+							),
+							array(
+								'name'		 => 'amount',
+								'descr'		 => lang('amount'),
+								'type'		 => 'integer',
+								'sortable'	 => true
 							)
 						),
 						'edit_msg'		 => lang('edit role'),

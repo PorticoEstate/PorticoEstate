@@ -11357,7 +11357,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.567 to 0.9.17.568
+	* Update property version from 0.9.17.557 to 0.9.17.558
 	* add account category to external projects
 	*
 	*/
@@ -11379,4 +11379,26 @@
 		}
 	}
 
-	
+	/**
+	* Update property version from 0.9.17.558 to 0.9.17.55
+	* amount limits to fm_ecodimb_role
+	*
+	*/
+	$test[] = '0.9.17.758';
+	function property_upgrade0_9_17_758()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecodimb_role', 'amount', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+			));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.759';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
