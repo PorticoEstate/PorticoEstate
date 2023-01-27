@@ -630,7 +630,7 @@ function PopulateBookableResources(urlParams)
 				booking_month_horizon = Number(result.results[i].booking_month_horizon) + 1;
 			}
 
-			if (result.results[i].deactivate_application !== 1)
+			if (result.results[i].hidden_in_frontend !== 1)
 			{
 				bookableResources.push({
 					name: result.results[i].name,

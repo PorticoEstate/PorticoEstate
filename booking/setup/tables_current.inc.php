@@ -220,6 +220,8 @@
 				'capacity' => array('type' => 'int', 'nullable' => true, 'precision' => 4),
 				'deactivate_application' => array('type' => 'int', 'nullable' => False, 'precision' => '4',
 					'default' => 0),
+				'hidden_in_frontend' => array('type' => 'int', 'nullable' => False, 'precision' => 2,
+					'default' => 0),
 				//NOTE: deactivate_calendar is created for some instances during upgrade0_2_68 , but is not used - so far.
 			),
 			'pk' => array('id'),

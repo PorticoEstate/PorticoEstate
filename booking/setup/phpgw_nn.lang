@@ -924,3 +924,4 @@ please choose at least 1 season	booking	nn	Velg minst ein sesong
 please enter a mail subject	booking	nn	Manglar tittel
 please enter a mail body	booking	nn	Manglar innhold
 select at least one recipient	booking	nn	Velg minst ein adressat
+hidden in frontend	booking	nn	Skjult i frontend

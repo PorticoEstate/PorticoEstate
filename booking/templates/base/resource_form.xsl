@@ -198,6 +198,25 @@
 						</select>
 					</div>
 
+					<div class="pure-control-group">
+						<label for="for_field_hidden_in_frontend">
+							<xsl:value-of select="php:function('lang', 'hidden in frontend')"/>
+						</label>
+						<select id="for_field_hidden_in_frontend" name="hidden_in_frontend" class="pure-input-3-4" >
+							<option value="1">
+								<xsl:if test="resource/hidden_in_frontend=1">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'Yes')"/>
+							</option>
+							<option value="0">
+								<xsl:if test="resource/hidden_in_frontend=0">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'No')"/>
+							</option>
+						</select>
+					</div>
 
 					<div class="pure-control-group custom-container">
 						<label>
