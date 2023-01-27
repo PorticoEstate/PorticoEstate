@@ -1106,9 +1106,9 @@
 	}
 	$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (1, 'Bestiller')", __LINE__, __FILE__);
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (2, 'Attestant')", __LINE__, __FILE__);
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (3, 'Anviser')", __LINE__, __FILE__);
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (1, 'Bestiller', 50000)", __LINE__, __FILE__);
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (2, 'Attestant', 250000)", __LINE__, __FILE__);
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_ecodimb_role (id, name) VALUES (3, 'Anviser', 1000000)", __LINE__, __FILE__);
 
 	$translation = p_setup_translate('Highest');
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_priority (id, name) VALUES (1, '1 - {$translation}')");

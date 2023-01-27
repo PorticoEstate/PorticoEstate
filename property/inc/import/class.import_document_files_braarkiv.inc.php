@@ -418,7 +418,8 @@
 			$byggNummer			 = $file_tags['building_number'];
 			$lokasjonskode		 = $file_tags['location_code'];
 			$file				 = str_replace('\\', '/', $file_info['path_absolute']);
-			$fileDokumentTittel	 = $file_info['file_name'];
+//			$fileDokumentTittel	 = $file_info['file_name'];
+			$fileDokumentTittel	 = $file_info['path_relative_filename'];
 			$fileKategorier		 = (array)$file_tags['document_category'];
 			$fileBygningsdeler	 = (array)$file_tags['building_part'];
 			$fileFag			 = (array)$file_tags['branch'];
@@ -487,6 +488,19 @@
 			if ($extension == null || $extension == "" || !in_array(strtolower($extension), $accepted_file_formats))
 			{
 				$this->receipt['error'][] = array('msg' => "{$file}: Fileformat not accepted: {$extension}");
+				return false;
+			}
+
+			/**
+			 * Sjekk for duplikater
+			 */
+			$_where		 = "Byggnr = {$byggNummer} AND Innhold='{$DokumentTittel}'";
+
+			$bra5ServiceSearch	 = new Bra5ServiceSearch();
+
+			if ($bra5ServiceSearch->searchAndGetDocuments(new Bra5StructSearchAndGetDocuments($secKey, $baseclassname, $classname, $_where, $_maxhits = 1)))
+			{
+				$this->receipt['error'][] = array('msg' => "{$file}: is a duplicate");
 				return false;
 			}
 

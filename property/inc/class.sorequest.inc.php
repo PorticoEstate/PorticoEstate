@@ -858,7 +858,7 @@
 				{
 					$dataset[$j][$field] = array
 						(
-						'value'		 => $this->_db->f($field),
+						'value'		 => $this->_db->f($field, true),
 						'datatype'	 => $_datatype[$field],
 						'attrib_id'	 => $_attrib[$field]
 					);
