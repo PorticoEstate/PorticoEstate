@@ -284,7 +284,7 @@
 						<div class="form-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'responsible_street')" />*</label>
-							<input type="text" class="form-control" name="responsible_street" value="{application/responsible_street}" required="true"/>
+							<input type="text" class="form-control" id ="field_responsible_street" name="responsible_street" value="{application/responsible_street}" required="true"/>
 							<div class="invalid-feedback">
 								Vennligst oppgi gatenavn.
 							</div>
@@ -293,7 +293,7 @@
 						<div class="form-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'responsible_zip_code')" />*</label>
-							<input type="text" minlength="4" maxlength="4" class="form-control" name="responsible_zip_code" value="{application/responsible_zip_code}" required="true">
+							<input type="text" minlength="4" maxlength="4" class="form-control" id="field_responsible_zip_code" name="responsible_zip_code" value="{application/responsible_zip_code}" required="true">
 								<xsl:attribute name="pattern">
 									<xsl:text>[0-9]+</xsl:text>
 								</xsl:attribute>
@@ -306,7 +306,7 @@
 						<div class="form-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'responsible_city')" />*</label>
-							<input type="text" class="form-control" name="responsible_city" value="{application/responsible_city}" required="true"/>
+							<input type="text" class="form-control" id="field_responsible_city" name="responsible_city" value="{application/responsible_city}" required="true"/>
 							<div class="invalid-feedback">
 								Vennligst oppgi poststed.
 							</div>
