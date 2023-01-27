@@ -1,3 +1,24 @@
+@mixin pill() {
+  padding: 0.713rem 1.5rem;
+  border: 1px solid $grey-light;
+  border-radius: $rounded-large;
+  color: $black;
+  background-color: $white;
+  line-height: 1.2;
+
+  &:focus-visible {
+    border-color: transparent;
+    outline: $box-focus-outline;
+  }
+
+  &:hover{
+    border-color: transparent;
+    outline: $box-hover;
+    color: $black;
+  }
+
+}
+
 a {
   &,
   &:link,
@@ -12,40 +33,49 @@ a {
     color: $purple;
   }
 
+  &:focus-visible {
+    outline: $box-focus-outline;
+  }
+
+
+
   &.arrow {
+    text-decoration: none;
+    position: relative;
+    padding-right: 1.25rem;
 
     &::after {
-      content:url(gfx/arrow.svg);
-      padding-left: 0.5rem;
+      content: "\f04b";
+      font-size: 0.625em;
+      color: #793C8A;
+      font-weight: 700;
+      font-family: "Font Awesome 5 Free";
+      position: absolute;
+      transform: rotate(-30deg);
+      right: 0;
+      top: -0.1rem;
     }
   }
 
   &.link-button {
+    @include pill;
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-weight: 700;
-    padding: 1.25rem 2rem;
-    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15);
-    border: 1px solid $grey-light;
     position: relative;
     text-decoration: none;
-    color: $black;
-    border-radius: $rounded-large;
+    box-shadow: $box-shadow;
+    padding-top: 0.963rem;
+    padding-bottom: 0.963rem;
 
     &::after {
       content: "\f054";
       padding-left: 1rem;
       font-size: 1em;
       color: $purple;
+      font-weight: $text-bold;
       font-family: "Font Awesome 5 Free";
-    }
-
-    &:hover,
-    &:focus-visible {
-      border-color: transparent;
-      outline: 2px solid $purple;      
-      color: $black;
     }
   }
 }

@@ -2,22 +2,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem 1.25rem;
+  padding: 0.5rem 1.25rem;
   border: 2px solid $purple;
   font-weight: 700;
-  line-height: 1.15;
   border-radius: $rounded-large;
 
   &:hover,
   &:active,
-  &:first-child:active,
-  &:focus,
-  &:focus-visible {
+  &:first-child:active {
     border-color: $purple;
   }
 
+  &:focus,
   &:focus-visible {
-    box-shadow: 0 0 0 0.25rem rgba($black, .5);
+    border-color: $purple;
+    box-shadow: $box-focus-shadow;
   }
 
   &-primary {
@@ -26,11 +25,15 @@
 
     &:hover,
     &:active,
-    &:first-child:active,
-    &:focus,
-    &:focus-visible {
+    &:first-child:active {
       background: $white;
       color: $purple;
+    }
+
+    &:focus,
+    &:focus-visible{
+      background: $purple;
+      color: $white;
     }
   }
 
@@ -40,20 +43,26 @@
 
     &:hover,
     &:active,
-    &:first-child:active,
-    &:focus,
-    &:focus-visible {
+    &:first-child:active {
       background: $purple;
       color: $white;
+    }
+
+    &:focus,
+    &:focus-visible {
+      border-color: $purple;
+      background: $white;
+      color: $purple;
     }
   }
 
   &--small {
     font-size: 0.875rem;
-    padding: 0.625rem 1.25rem;
+    padding: 0.344rem 1.25rem;
   }
 
   &--large {
+    padding: 0.657rem 1.25rem;
     font-size: 1.125rem;
   }
 

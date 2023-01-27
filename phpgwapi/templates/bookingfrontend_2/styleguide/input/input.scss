@@ -13,7 +13,7 @@
 
   & input:focus-visible ~ &__radio,
   & input:focus-visible ~ &__check {
-    box-shadow: 0 0 0 0.25rem rgba($black, .5);
+    box-shadow: $box-focus-shadow;
   }
 
   &:hover &__radio,
@@ -72,5 +72,68 @@
     color: $white;
     z-index: 2;
     font-size: 1rem;
+  }
+}
+
+input[type="text"] {
+  @include pill;
+  border-radius: $rounded-large;
+  box-shadow: $box-shadow;
+}
+
+.input-icon {
+  position: relative;
+
+  input[type="text"] {
+    padding-left: 3.25rem;
+    width: 100%;
+  }
+
+  i {
+    color: $purple;
+    position: absolute;
+    left: 1.5rem;
+    top: 0.65rem;
+    font-size: 1.25rem;
+  }
+
+  &--action {
+    input[type="text"] {
+      padding-left: 1.5rem;
+      padding-right: 3.5rem;
+    }
+
+    button {
+      position: absolute;
+      top: 0.25rem;
+      right: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background-color: transparent;
+      border: 0;
+      border-radius: $rounded-large;
+
+      &:focus,
+      &:focus-visible {
+        outline: none;
+
+        i {
+          color: $purple-light;
+        }
+      }
+
+      &:hover {
+        i {
+          color: $purple;
+        }
+      }
+
+      i { 
+        position: relative;
+        font-size: 1.25rem;
+        color: $black;
+        left: 0;
+        top: 0;
+      }
+    }
   }
 }
