@@ -76,11 +76,11 @@
       placeholder: 'Velg pris',
       allowClear: true,
       templateSelection: function(data){
-        return $('<p class="d-flex m-0 justify-content-between flex-auto pe-2">')
+        return $('<p class="d-flex m-0 justify-content-between align-items-center flex-auto pe-2">')
         .html('<span>' + data.text + '</span><span class="text-end"> ' + ((data.price) ? data.price : '') + ' </span>');
       },
       templateResult: function(data){
-        return $('<p class="d-flex m-0 justify-content-between">')
+        return $('<p class="d-flex m-0 justify-content-between align-items-center ">')
         .html('<span>' + data.text + '</span><span class="text-end"> ' + ((data.price) ? data.price : '') + ' </span>');
       },
     });
@@ -139,8 +139,8 @@
   });
 </script>
 
-<div class="container">
-  <div class="row border-top border-2 py-5">
+<div class="container border-top border-2 py-5">
+  <div class="row">
     <div class="col-sm-6 mb-4">
       <p class="mb-2 text-bold">Standard</p>
       <select id="js-select-basic">

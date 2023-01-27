@@ -73,10 +73,15 @@
             'folder' => 'status',
             'filename' => 'status',
           ),
+          'Snarvei' => array(
+            'name' => 'Snarvei',
+            'folder' => 'shortcut',
+            'filename' => 'shortcut',
+          ),
           
         );
 
-        echo '<ul class="list-unstyled d-flex">';
+        echo '<ul class="list-unstyled d-flex flex-wrap">';
           foreach ($componentLinks as $key => $componentLink) {
             echo '<li><a href="#'.$key.'" class="me-4">'.$componentLink['name'].'</a></li>';
           }

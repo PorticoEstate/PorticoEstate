@@ -13,7 +13,7 @@
 
    & input:focus-visible ~ &__check,
    & input:focus-visible ~ &__radio {
-    box-shadow: 0 0 0 0.25rem rgba($black, .5);
+    box-shadow: $box-focus-shadow;
   }
 
   &__check {
@@ -22,7 +22,7 @@
     align-items: center;
     font-size: 1rem;
     font-weight: bold;
-    padding: 0 1rem;
+    padding: 0.125rem 1rem;
     color: $purple;
     background-color: $white;
     border: 2px solid $purple;

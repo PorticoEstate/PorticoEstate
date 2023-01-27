@@ -1,12 +1,11 @@
 
   @mixin dropdown {
     border-radius: $rounded-large;
-    padding: 0.5rem 3.5rem 0.5rem 1.5rem;
-    font-size: 0.875rem;
+    padding: 0.438rem 3.5rem 0.438rem 1.5rem;
+    font-size: 1rem;
     border: 1px solid $grey;
     height: auto;
     background-color: $white;
-    line-height: 2;
   }
 
   @mixin dropdown-arrow {
@@ -36,7 +35,7 @@
 
     .select2-selection {
       border: 1px solid transparent;
-      box-shadow: 0px 0px 0px 2px $purple;
+      box-shadow: $box-focus-shadow;
     }
 
     .select2-selection--multiple {
@@ -114,15 +113,15 @@
         
         &__clear {
           padding: 0 0.5rem 0 0.5rem;
-          font-size: 1.25rem;
-          line-height: 1.3;
+          font-size: 1rem;
+          font-weight: 700;
         }
       }
     }
 
     &--multiple {
-      padding-top: 0.25rem;
-      padding-bottom: 0.25rem;
+      padding-top: 0.1875rem;
+      padding-bottom: 0.1875rem;
 
       .select2-selection {
         &__choice {
@@ -136,14 +135,25 @@
 
           &__remove {
             padding: 0 0.25rem 0 0.25rem;
-            font-size: 1.25rem;
-            line-height: 1.2;
+            font-size: 1rem;
+            font-weight: 700;
           }
         }
       }
 
       .select2-search {
         padding: 0.25rem;
+
+        &__field {
+          margin: 0;
+          
+        &::-webkit-input-placeholder, /* Chrome/Opera/Safari */
+        &::-moz-placeholder, /* Firefox 19+ */
+        &:-ms-input-placeholder, /* IE 10+ */
+        &:-moz-placeholder { /* Firefox 18- */
+          color: $black;
+        }
+        }
       }
     }
   }
@@ -207,6 +217,10 @@
       border-top-right-radius: $rounded-medium;
       border: 1px solid transparent;
       box-shadow: 0px 0px 0px 2px $purple;
+
+      &:focus-visible {
+        box-shadow: 0px 0px 0px 2px $purple;
+      }
       
       &::after {
         transform: rotate(-180deg);
@@ -226,15 +240,18 @@
     font-weight: 900;
     width: 100%;
     line-height: 1.75;
-    padding-top: 0.85rem;
-    padding-bottom: 0.85rem;
+    padding-top: 0.6875rem;
+    padding-bottom: 0.6875rem;
 
-    &:focus,
-    &:hover,
     &:focus-visible {
       outline: none;
-      box-shadow: 0px 0px 0px 2px $purple;
+      box-shadow: $box-focus-shadow;
     }
+
+    &:hover {
+      box-shadow: 0 0 0 0.125rem $purple;
+    }
+
 
     &::after {
       @include dropdown-arrow;
@@ -266,11 +283,15 @@
   background-color: $white;
   box-shadow: $box-shadow-large;
   transition: border-radius 0.2s;
-
-  &:hover,
+  
   &:focus-within {
-    outline: 2px solid $purple;
+    outline: $box-focus-outline;
   }
+
+  &:hover {
+    outline: $box-hover;
+  }
+
 
   &--open {
     border-radius: $rounded-medium;
@@ -324,7 +345,7 @@
       @media (min-width: $media-small) {
         font-size: 1.6rem;
         right: 2rem;
-        top: 1.4rem;
+        top: 1.3rem;
       }
     }
   }

@@ -786,39 +786,49 @@ h4, .h4 {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem 1.25rem;
+  padding: 0.5rem 1.25rem;
   border: 2px solid #793C8A;
   font-weight: 700;
-  line-height: 1.15;
   border-radius: 3.125rem;
 }
-.btn:hover, .btn:active, .btn:first-child:active, .btn:focus, .btn:focus-visible {
+.btn:hover, .btn:active, .btn:first-child:active {
   border-color: #793C8A;
 }
-.btn:focus-visible {
-  box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.5);
+.btn:focus, .btn:focus-visible {
+  border-color: #793C8A;
+  box-shadow: 0 0 0 0.25rem #946da8;
 }
 .btn-primary {
   background: #793C8A;
   color: #FFFFFF;
 }
-.btn-primary:hover, .btn-primary:active, .btn-primary:first-child:active, .btn-primary:focus, .btn-primary:focus-visible {
+.btn-primary:hover, .btn-primary:active, .btn-primary:first-child:active {
   background: #FFFFFF;
   color: #793C8A;
+}
+.btn-primary:focus, .btn-primary:focus-visible {
+  background: #793C8A;
+  color: #FFFFFF;
 }
 .btn-secondary {
   color: #793C8A;
   background: #FFFFFF;
 }
-.btn-secondary:hover, .btn-secondary:active, .btn-secondary:first-child:active, .btn-secondary:focus, .btn-secondary:focus-visible {
+.btn-secondary:hover, .btn-secondary:active, .btn-secondary:first-child:active {
   background: #793C8A;
   color: #FFFFFF;
 }
+.btn-secondary:focus, .btn-secondary:focus-visible {
+  border-color: #793C8A;
+  background: #FFFFFF;
+  color: #793C8A;
+}
 .btn--small {
   font-size: 0.875rem;
-  padding: 0.625rem 1.25rem;
+  padding: 0.344rem 1.25rem;
 }
 .btn--large {
+  padding: 0.657rem 1.25rem;
   font-size: 1.125rem;
 }
 .btn:disabled, .btn[disabled] {
@@ -835,34 +845,58 @@ a, a:link, a:visited {
 a:hover, a:focus, a:active {
   color: #793C8A;
 }
+a:focus-visible {
+  outline: 0.25rem solid #946DA8;
+}
+a.arrow {
+  text-decoration: none;
+  position: relative;
+  padding-right: 1.25rem;
+}
 a.arrow::after {
-  content: url(gfx/arrow.svg);
-  padding-left: 0.5rem;
+  content: "\f04b";
+  font-size: 0.625em;
+  color: #793C8A;
+  font-weight: 700;
+  font-family: "Font Awesome 5 Free";
+  position: absolute;
+  transform: rotate(-30deg);
+  right: 0;
+  top: -0.1rem;
 }
 a.link-button {
+  padding: 0.713rem 1.5rem;
+  border: 1px solid #F5F5F5;
+  border-radius: 3.125rem;
+  color: #000000;
+  background-color: #FFFFFF;
+  line-height: 1.2;
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-weight: 700;
-  padding: 1.25rem 2rem;
-  box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15);
-  border: 1px solid #F5F5F5;
   position: relative;
   text-decoration: none;
+  box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15);
+  padding-top: 0.963rem;
+  padding-bottom: 0.963rem;
+}
+a.link-button:focus-visible {
+  border-color: transparent;
+  outline: 0.25rem solid #946DA8;
+}
+a.link-button:hover {
+  border-color: transparent;
+  outline: 2px solid #793C8A;
   color: #000000;
-  border-radius: 3.125rem;
 }
 a.link-button::after {
   content: "\f054";
   padding-left: 1rem;
   font-size: 1em;
   color: #793C8A;
+  font-weight: 700;
   font-family: "Font Awesome 5 Free";
-}
-a.link-button:hover, a.link-button:focus-visible {
-  border-color: transparent;
-  outline: 2px solid #793C8A;
-  color: #000000;
 }
 
 .choice {
@@ -878,7 +912,7 @@ a.link-button:hover, a.link-button:focus-visible {
   width: 0;
 }
 .choice input:focus-visible ~ .choice__radio, .choice input:focus-visible ~ .choice__check {
-  box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 0.25rem #946da8;
 }
 .choice:hover .choice__radio, .choice:hover .choice__check {
   background-color: #793C8A;
@@ -929,6 +963,70 @@ a.link-button:hover, a.link-button:focus-visible {
   font-size: 1rem;
 }
 
+input[type=text] {
+  padding: 0.713rem 1.5rem;
+  border: 1px solid #F5F5F5;
+  border-radius: 3.125rem;
+  color: #000000;
+  background-color: #FFFFFF;
+  line-height: 1.2;
+  border-radius: 3.125rem;
+  box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15);
+}
+input[type=text]:focus-visible {
+  border-color: transparent;
+  outline: 0.25rem solid #946DA8;
+}
+input[type=text]:hover {
+  border-color: transparent;
+  outline: 2px solid #793C8A;
+  color: #000000;
+}
+
+.input-icon {
+  position: relative;
+}
+.input-icon input[type=text] {
+  padding-left: 3.25rem;
+  width: 100%;
+}
+.input-icon i {
+  color: #793C8A;
+  position: absolute;
+  left: 1.5rem;
+  top: 0.65rem;
+  font-size: 1.25rem;
+}
+.input-icon--action input[type=text] {
+  padding-left: 1.5rem;
+  padding-right: 3.5rem;
+}
+.input-icon--action button {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: transparent;
+  border: 0;
+  border-radius: 3.125rem;
+}
+.input-icon--action button:focus, .input-icon--action button:focus-visible {
+  outline: none;
+}
+.input-icon--action button:focus i, .input-icon--action button:focus-visible i {
+  color: #946DA8;
+}
+.input-icon--action button:hover i {
+  color: #793C8A;
+}
+.input-icon--action button i {
+  position: relative;
+  font-size: 1.25rem;
+  color: #000000;
+  left: 0;
+  top: 0;
+}
+
 .select2-container--select-v2 {
   box-shadow: 3px 3px 50px 0px rgba(0, 0, 0, 0.1);
   border-radius: 3.125rem;
@@ -938,7 +1036,7 @@ a.link-button:hover, a.link-button:focus-visible {
 }
 .select2-container--select-v2.select2-container--focus .select2-selection {
   border: 1px solid transparent;
-  box-shadow: 0px 0px 0px 2px #793C8A;
+  box-shadow: 0 0 0 0.25rem #946da8;
 }
 .select2-container--select-v2.select2-container--focus .select2-selection--multiple {
   border-color: #D6D6D6;
@@ -968,12 +1066,11 @@ a.link-button:hover, a.link-button:focus-visible {
 }
 .select2-container--select-v2 .select2-selection {
   border-radius: 3.125rem;
-  padding: 0.5rem 3.5rem 0.5rem 1.5rem;
-  font-size: 0.875rem;
+  padding: 0.438rem 3.5rem 0.438rem 1.5rem;
+  font-size: 1rem;
   border: 1px solid #D6D6D6;
   height: auto;
   background-color: #FFFFFF;
-  line-height: 2;
 }
 .select2-container--select-v2 .select2-selection--single:focus-visible, .select2-container--select-v2 .select2-selection--multiple:focus-visible {
   outline: none;
@@ -1012,12 +1109,12 @@ a.link-button:hover, a.link-button:focus-visible {
 }
 .select2-container--select-v2 .select2-selection--single .select2-selection__clear, .select2-container--select-v2 .select2-selection--multiple .select2-selection__clear {
   padding: 0 0.5rem 0 0.5rem;
-  font-size: 1.25rem;
-  line-height: 1.3;
+  font-size: 1rem;
+  font-weight: 700;
 }
 .select2-container--select-v2 .select2-selection--multiple {
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
+  padding-top: 0.1875rem;
+  padding-bottom: 0.1875rem;
 }
 .select2-container--select-v2 .select2-selection--multiple .select2-selection__choice {
   display: flex;
@@ -1030,11 +1127,17 @@ a.link-button:hover, a.link-button:focus-visible {
 }
 .select2-container--select-v2 .select2-selection--multiple .select2-selection__choice__remove {
   padding: 0 0.25rem 0 0.25rem;
-  font-size: 1.25rem;
-  line-height: 1.2;
+  font-size: 1rem;
+  font-weight: 700;
 }
 .select2-container--select-v2 .select2-selection--multiple .select2-search {
   padding: 0.25rem;
+}
+.select2-container--select-v2 .select2-selection--multiple .select2-search__field {
+  margin: 0;
+}
+.select2-container--select-v2 .select2-selection--multiple .select2-search__field::-webkit-input-placeholder, .select2-container--select-v2 .select2-selection--multiple .select2-search__field::-moz-placeholder, .select2-container--select-v2 .select2-selection--multiple .select2-search__field:-ms-input-placeholder, .select2-container--select-v2 .select2-selection--multiple .select2-search__field:-moz-placeholder { /* Firefox 18- */
+  color: #000000;
 }
 .select2-container--select-v2 .select2-dropdown {
   padding: 1rem 2rem 1rem 1.5rem;
@@ -1083,6 +1186,9 @@ a.link-button:hover, a.link-button:focus-visible {
   border: 1px solid transparent;
   box-shadow: 0px 0px 0px 2px #793C8A;
 }
+.dropdown--open .dropdown-toggler:focus-visible {
+  box-shadow: 0px 0px 0px 2px #793C8A;
+}
 .dropdown--open .dropdown-toggler::after {
   transform: rotate(-180deg);
 }
@@ -1091,24 +1197,26 @@ a.link-button:hover, a.link-button:focus-visible {
 }
 .dropdown-toggler {
   border-radius: 3.125rem;
-  padding: 0.5rem 3.5rem 0.5rem 1.5rem;
-  font-size: 0.875rem;
+  padding: 0.438rem 3.5rem 0.438rem 1.5rem;
+  font-size: 1rem;
   border: 1px solid #D6D6D6;
   height: auto;
   background-color: #FFFFFF;
-  line-height: 2;
   text-align: left;
   position: relative;
   font-size: 1rem;
   font-weight: 900;
   width: 100%;
   line-height: 1.75;
-  padding-top: 0.85rem;
-  padding-bottom: 0.85rem;
+  padding-top: 0.6875rem;
+  padding-bottom: 0.6875rem;
 }
-.dropdown-toggler:focus, .dropdown-toggler:hover, .dropdown-toggler:focus-visible {
+.dropdown-toggler:focus-visible {
   outline: none;
-  box-shadow: 0px 0px 0px 2px #793C8A;
+  box-shadow: 0 0 0 0.25rem #946da8;
+}
+.dropdown-toggler:hover {
+  box-shadow: 0 0 0 0.125rem #793C8A;
 }
 .dropdown-toggler::after {
   content: "\f078";
@@ -1151,7 +1259,10 @@ a.link-button:hover, a.link-button:focus-visible {
   box-shadow: 3px 3px 50px 0px rgba(0, 0, 0, 0.1);
   transition: border-radius 0.2s;
 }
-.slidedown:hover, .slidedown:focus-within {
+.slidedown:focus-within {
+  outline: 0.25rem solid #946DA8;
+}
+.slidedown:hover {
   outline: 2px solid #793C8A;
 }
 .slidedown--open {
@@ -1217,7 +1328,7 @@ a.link-button:hover, a.link-button:focus-visible {
   .slidedown-toggler::after {
     font-size: 1.6rem;
     right: 2rem;
-    top: 1.4rem;
+    top: 1.3rem;
   }
 }
 .slidedown-content {
@@ -1240,7 +1351,7 @@ a.link-button:hover, a.link-button:focus-visible {
   width: 0;
 }
 .filter input:focus-visible ~ .filter__check, .filter input:focus-visible ~ .filter__radio {
-  box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 0.25rem #946da8;
 }
 .filter__check {
   display: flex;
@@ -1248,7 +1359,7 @@ a.link-button:hover, a.link-button:focus-visible {
   align-items: center;
   font-size: 1rem;
   font-weight: bold;
-  padding: 0 1rem;
+  padding: 0.125rem 1rem;
   color: #793C8A;
   background-color: #FFFFFF;
   border: 2px solid #793C8A;
@@ -1305,12 +1416,12 @@ a.link-button:hover, a.link-button:focus-visible {
 .status {
   font-size: 1rem;
   font-weight: 700;
-  font-size: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5625rem 2rem;
+  padding: 0.5rem 2rem;
   border-radius: 3.125rem;
+  text-align: center;
 }
 .status i {
   margin-right: 0.75rem;
@@ -1323,4 +1434,21 @@ a.link-button:hover, a.link-button:focus-visible {
 }
 .status--warning {
   background-color: #FFEE94;
+}
+
+.shortcut {
+  display: flex;
+  flex-direction: column;
+  background-color: #FFFFFF;
+  padding: 3.5rem 2.5rem;
+  align-items: center;
+  margin-top: 4rem;
+  border-radius: 3.125rem;
+  width: 100%;
+}
+.shortcut img {
+  max-width: 20rem;
+  width: 100%;
+  margin-bottom: 2rem;
+  margin-top: -7rem;
 }/*# sourceMappingURL=main.css.map */
