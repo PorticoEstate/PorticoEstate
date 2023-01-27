@@ -1639,7 +1639,21 @@
 				return false;
 			}
 
-			$list_files = $this->_get_dir_contents($this->order_path_dir);
+			$_list_files = $this->_get_dir_contents($this->order_path_dir);
+
+			$list_files = array();
+			foreach ($_list_files as $file_info)
+			{
+				$file_name = $file_info['path_relative_filename'];
+
+				if($query && !preg_match("/$query/i", $file_name))
+				{
+					continue;
+				}
+				$list_files[] = $file_info;
+			}
+
+			unset($file_info);
 
 			$total_records = count($list_files);
 
@@ -1659,19 +1673,19 @@
 
 				$i++;
 
-				$current_tag = $file_tags[$file_info['path_relative_filename']];
+				$current_tag = $file_tags[$file_name];
 
-				if (isset($file_tags[$file_info['path_relative_filename']]) && empty($current_tag['import_ok']))// && empty($current_tag['import_failed']))
+				if (isset($file_tags[$file_name]) && empty($current_tag['import_ok']))// && empty($current_tag['import_failed']))
 				{
 					if (empty($current_tag['import_ok']) && ( $current_tag['document_category'] && $current_tag['branch'] && $current_tag['branch'] ))
 					{
 						if ($import_document_files->process_file($file_info, $current_tag))
 						{
-							$file_tags[$file_info['path_relative_filename']]['import_ok'] = date('Y-m-d H:i:s');
+							$file_tags[$file_name]['import_ok'] = date('Y-m-d H:i:s');
 						}
 						else
 						{
-							$file_tags[$file_info['path_relative_filename']]['import_failed'] = date('Y-m-d H:i:s');
+							$file_tags[$file_name]['import_failed'] = date('Y-m-d H:i:s');
 						}
 
 						$this->_set_metadata($order_id, $file_tags);
