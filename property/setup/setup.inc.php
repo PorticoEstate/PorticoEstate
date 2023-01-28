@@ -11,7 +11,7 @@
 	 * @version $Id$
 	*/
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.759';
+	$setup_info['property']['version']		= '0.9.17.760';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -131,6 +131,8 @@
 		'fm_request',
 		'fm_request_responsible_unit',
 		'fm_request_condition_type',
+		'fm_request_probability',
+		'fm_request_consequence',
 		'fm_request_condition',
 		'fm_request_status',
 		'fm_request_history',

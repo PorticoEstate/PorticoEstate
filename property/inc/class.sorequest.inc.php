@@ -443,6 +443,19 @@
 			$uicols['classname'][]	 = '';
 			$uicols['sortable'][]	 = true;
 
+			$cols					 .= ", max(fm_request_condition.probability * fm_request_condition.consequence) as risk";
+			$cols_return[]			 = 'risk';
+			$uicols['input_type'][]	 = 'text';
+			$uicols['name'][]		 = 'risk';
+			$uicols['descr'][]		 = lang('risk');
+			$uicols['statustext'][]	 = lang('risk');
+			$uicols['exchange'][]	 = '';
+			$uicols['align'][]		 = '';
+			$uicols['datatype'][]	 = '';
+			$uicols['formatter'][]	 = '';
+			$uicols['classname'][]	 = '';
+			$uicols['sortable'][]	 = true;
+
 
 			$cols					 .= ",($entity_table.amount_investment * multiplier) as amount_investment";
 			$cols_return[]			 = 'amount_investment';

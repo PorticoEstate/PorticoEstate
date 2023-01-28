@@ -1882,6 +1882,26 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'fm_request_probability' => array(
+			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_request_consequence' => array(
+			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_projectbranch' => array(
 			'fd' => array(
 				'project_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),

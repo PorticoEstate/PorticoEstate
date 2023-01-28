@@ -1413,6 +1413,8 @@ request %1 has been added	property	no	Behov %1 er lagt til
 request %1 has already been added to project %2	property	no	Behov %1 er allerede koplet til prosjekt %2
 request budget	property	no	Budsjett for tiltak
 request condition type	property	no	Behov::konsekvenstype
+request probability	property	no	Behov::Sannsynlighet
+request consequence	property	no	Behov::konsekvens
 request descr	property	no	Beskrivelse av tiltak
 request end date	property	no	Behov frist
 request entry date	property	no	Registreringsdato for tiltak
