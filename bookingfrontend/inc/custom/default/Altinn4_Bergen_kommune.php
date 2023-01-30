@@ -44,7 +44,7 @@
 			parent::__construct();
 		}
 
-		protected function get_user_org_id()
+		protected function get_user_orginfo()
 		{
 			$data = $this->validate_ssn_login();
 			$fodselsnr = (string)$data['ssn'];
@@ -64,11 +64,16 @@
 					$orgs = array();
 					foreach ($bregorgs as $org)
 					{
-						$orgs[] = array('orgnumber' => $org['orgnr'], 'orgname' => $this->get_orgname_from_db($org['orgnr'], $org['customer_ssn']));
+						$orgs[] = array(
+							'org_id' => $org['org_id'],
+							'orgnumber' => $org['orgnr'],
+							'orgname' => $this->get_orgname_from_db($org['orgnr'], $org['customer_ssn'], $org['org_id'])
+							);
+
 					}
 					phpgwapi_cache::session_set($this->get_module(), self::ORGARRAY_SESSION_KEY, $orgs);
 				}
-				elseif (count($bregorgs) > 0)
+				elseif (count($bregorgs) == 1)
 				{
 					phpgwapi_cache::session_set($this->get_module(), self::ORGARRAY_SESSION_KEY, NULL);
 					$external_user = (object)'ciao';
@@ -81,7 +86,12 @@
 
 			try
 			{
-				return createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($external_user->login);
+				$orgnr = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($external_user->login);
+				return array(
+					'ssn'	 => $fodselsnr,
+					'org_id' => $bregorgs[0]['org_id'],
+					'orgnr' => $orgnr
+				);
 			}
 			catch (sfValidatorError $e)
 			{
@@ -90,7 +100,11 @@
 					echo $e->getMessage();
 					die();
 				}
-				return null;
+				return array(
+					'ssn'	 => null,
+					'org_id' => null,
+					'orgnr' => null
+				);
 			}
 		}
 

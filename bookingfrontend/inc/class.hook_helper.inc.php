@@ -80,7 +80,8 @@
 
 			if(!empty($orgs) && is_array($orgs) && count($orgs) > 1)
 			{
-				$org_id = $bouser->orgnr;
+				$org_id = $bouser->org_id;
+				$orgnr = $bouser->orgnr;
 			}
 			else
 			{
@@ -92,14 +93,14 @@
 			foreach ($orgs as $org)
 			{
 				$selected = '';
-				if ($org_id == (int)$org['orgnumber'])
+				if ($org_id == (int)$org['org_id'])
 				{
 					$selected = ' selected="selected"';
 				}
 
 				$org_option .= <<<HTML
 
-				<option value='{$org['orgnumber']}'{$selected}>{$org['orgname']}</option>
+				<option value='{$org['org_id']}'{$selected}>{$org['orgname']}</option>
 HTML;
 			}
 

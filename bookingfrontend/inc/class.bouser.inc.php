@@ -4,12 +4,21 @@
 	{
 
 		const ORGNR_SESSION_KEY = 'orgnr';
+		const ORGID_SESSION_KEY = 'org_id';
 		const ORGARRAY_SESSION_KEY = 'orgarray';
 		const USERARRAY_SESSION_KEY = 'userarray';
 
-		public $ssn = null;
-		public $orgnr = null;
-		public $orgname = null;
+		public $ssn					 = null;
+		/*
+		 * Official public identificator
+		 */
+		public $orgnr				 = null;
+		public $orgname				 = null;
+
+		/*
+		 * Internal identificator
+		 */
+		public $org_id				 = null;
 		protected
 			$default_module = 'bookingfrontend',
 			$module,
@@ -27,21 +36,30 @@
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->set_module();
 			$this->orgnr = $this->get_user_orgnr_from_session();
+			$this->org_id = $this->get_user_org_id_from_session();
 			
 			if($get_external_login_info && $this->is_logged_in())
 			{
 				$orgs = phpgwapi_cache::session_get($this->get_module(), self::ORGARRAY_SESSION_KEY);
 
-				$session_org_id = phpgw::get_var('session_org_id', 'string', 'GET');
+				$session_org_id = phpgw::get_var('session_org_id', 'int', 'GET');
 
-				if ($session_org_id && ($session_org_id != $this->orgnr) && in_array($session_org_id, array_map("self::get_ids_from_array", $orgs)))
+				if ($session_org_id && ($session_org_id != $this->org_id) && in_array($session_org_id, array_map("self::get_ids_from_array", $orgs)))
 				{
 					try
 					{
-						$org_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($session_org_id);
+						$session_org_nr = '';
+						foreach ($orgs as $org)
+						{
+							if($org['org_id'] == $session_org_id)
+							{
+								$session_org_nr = $org['orgnumber'];
+							}
+						}
+						$org_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($session_org_nr);
 						if ($org_number)
 						{
-							$this->change_org($org_number);
+							$this->change_org($session_org_id);
 						}
 					}
 					catch (sfValidatorError $e)
@@ -64,19 +82,23 @@
 
 		function get_ids_from_array( $org )
 		{
-			return $org['orgnumber'];
+			return $org['org_id'];
 		}
 
-		protected function get_orgname_from_db( $orgnr, $customer_ssn = null)
+		protected function get_orgname_from_db( $orgnr, $customer_ssn = null, $org_id = null)
 		{
 			if(!$orgnr)
 			{
 				return null;
 			}
 
-			if($orgnr == '000000000' && $customer_ssn)
+			if($org_id)
 			{
-				$this->db->limit_query("SELECT name FROM bb_organization WHERE customer_ssn ='{$customer_ssn}'", 0, __LINE__, __FILE__, 1);				
+				$this->db->query("SELECT name FROM bb_organization WHERE id =". (int)$org_id, __LINE__, __FILE__);
+			}
+			else if($orgnr == '000000000' && $customer_ssn)
+			{
+				$this->db->limit_query("SELECT name FROM bb_organization WHERE customer_ssn ='{$customer_ssn}'", 0, __LINE__, __FILE__, 1);
 			}
 			else
 			{
@@ -133,8 +155,10 @@
 
 			$external_user = new bookingfrontend_external_user();
 
-			$this->orgnr = $external_user->get_user_org_id();
-			$this->orgname = $this->get_orgname_from_db($this->orgnr);
+			$orginfo = $external_user->get_user_orginfo();
+			$this->orgnr = $orginfo['orgnr'];
+			$this->org_id = $orginfo['org_id'];
+			$this->orgname = $this->get_orgname_from_db($orginfo['orgnr'], $orginfo['ssn'], $orginfo['org_id'] );
 
 			if ($this->is_logged_in())
 			{
@@ -150,19 +174,24 @@
 			return $this->is_logged_in();
 		}
 
-		public function change_org( $orgnumber )
+		public function change_org( $org_id )
 		{
 			$orgs = phpgwapi_cache::session_get($this->get_module(), self::ORGARRAY_SESSION_KEY);
 			$orglist = array();
 			foreach ($orgs as $org)
 			{
-				$orglist[] = $org['orgnumber'];
+				$orglist[] = $org['org_id'];
+
+				if($org['org_id'] == $org_id)
+				{
+					$this->orgnr = $org['orgnumber'];
+				}
 			}
-			if (in_array($orgnumber, $orglist))
+			if (in_array($org_id, $orglist))
 			{
 
-				$this->orgnr = $orgnumber;
-				$this->orgname = $this->get_orgname_from_db($this->orgnr, $this->ssn);
+				$this->org_id = $org_id;
+				$this->orgname = $this->get_orgname_from_db($this->orgnr, $this->ssn, $this->org_id);
 
 				if ($this->is_logged_in())
 				{
@@ -188,10 +217,12 @@
 			$this->clear_user_orgnr();
 			$this->clear_user_orgnr_from_session();
 			$this->clear_user_orglist_from_session();
+			$this->clear_user_org_id_from_session();
 		}
 
 		protected function clear_user_orgnr()
 		{
+			$this->org_id = null;
 			$this->orgnr = null;
 			$this->orgname = null;
 		}
@@ -203,6 +234,15 @@
 				$this->orgnr = $this->get_user_orgnr_from_session();
 			}
 			return $this->orgnr;
+		}
+
+		public function get_user_org_id()
+		{
+			if (!$this->org_id)
+			{
+				$this->org_id = $this->get_user_org_id_from_session();
+			}
+			return $this->org_id;
 		}
 
 		public function is_logged_in()
@@ -248,7 +288,7 @@
 				return false;
 			}
 
-			return $organization['organization_number'] == $this->orgnr;
+			return $organization_id == $this->org_id;
 		}
 
 		public function is_group_admin( $group_id = null )
@@ -276,6 +316,8 @@
 			}
 
 			phpgwapi_cache::session_set($this->get_module(), self::ORGNR_SESSION_KEY, $this->get_user_orgnr());
+			phpgwapi_cache::session_set($this->get_module(), self::ORGID_SESSION_KEY, $this->get_user_org_id());
+
 		}
 
 		protected function clear_user_orgnr_from_session()
@@ -283,9 +325,19 @@
 			phpgwapi_cache::session_clear($this->get_module(), self::ORGNR_SESSION_KEY);
 		}
 
+		protected function clear_user_org_id_from_session()
+		{
+			phpgwapi_cache::session_clear($this->get_module(), self::ORGID_SESSION_KEY);
+		}
+
 		protected function clear_user_orglist_from_session()
 		{
 #			phpgwapi_cache::session_clear($this->get_module(), self::ORGARRAY_SESSION_KEY);
+		}
+
+		protected function get_user_org_id_from_session()
+		{
+			return phpgwapi_cache::session_get($this->get_module(), self::ORGID_SESSION_KEY);
 		}
 
 		protected function get_user_orgnr_from_session()
