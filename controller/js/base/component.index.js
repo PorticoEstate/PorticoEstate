@@ -1,6 +1,7 @@
 var billable_hours = 0;
 var global_args;
 var planned_month;
+var initial_selected_month;
 
 /**
  * Detect if browsertab is active - and update when revisit
@@ -459,6 +460,14 @@ $(document).ready(function ()
 		{
 			form[ 0 ].reset();
 			$("#planned_month").removeClass("ui-state-error");
+		},
+		open: function (event, ui)
+		{
+			var init_month = initial_selected_month;
+			$("#planned_month").each(function ()
+			{
+				$(this).find('option[value="' + init_month + '"]').prop('selected', true);
+			});
 		}
 	});
 
@@ -499,7 +508,7 @@ $(document).ready(function ()
 		});
 	};
 
-	perform_action = function (name, oArgs)
+	perform_action = function (name, oArgs, init_month)
 	{
 		if (name === 'save_check_list')
 		{
@@ -522,7 +531,9 @@ $(document).ready(function ()
 		else if (name === 'set_planning_month')
 		{
 			global_args = oArgs;
+			initial_selected_month = init_month;
 			dialog2.dialog("open");
+			
 		}
 	};
 });
