@@ -739,6 +739,18 @@
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type'		 => 'r_condition_type'))
 					),
+					'request_probability'	=> array
+						(
+						'text'	 => lang('Request probability'),
+						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type'		 => 'r_probability'))
+					),
+					'request_consequence'	 => array
+						(
+						'text'	 => lang('Request consequence'),
+						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type'		 => 'r_consequence'))
+					),
 					'condition_survey_cats'		 => array
 						(
 						'text'	 => lang('condition survey Categories'),

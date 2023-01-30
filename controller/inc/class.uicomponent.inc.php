@@ -1855,7 +1855,7 @@
 				{
 					
 					$control_link = json_encode($control_link_data);
-					$_onclick = "perform_action(\"set_planning_month\", {$control_link});";
+					$_onclick = "perform_action(\"set_planning_month\", {$control_link}, {$month});";
 					$link = "<span onclick='{$_onclick}'>{$img}</span>";
 				}
 				else

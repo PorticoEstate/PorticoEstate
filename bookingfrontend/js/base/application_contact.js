@@ -264,6 +264,20 @@ $(document).ready(function ()
 							$("#external_payment_method").hide();
 							$("#btnSubmit").text(lang['Send']);
 						}
+
+						if(data.contact_info.responsible_street)
+						{
+							$("#field_responsible_street").val(data.contact_info.responsible_street);
+						}
+						if(data.contact_info.responsible_zip_code)
+						{
+							$("#field_responsible_zip_code").val(data.contact_info.responsible_zip_code);
+						}
+						if(data.contact_info.responsible_city)
+						{
+							$("#field_responsible_city").val(data.contact_info.responsible_city);
+						}
+
 						$("#btnSubmitGroup").show();
 					}
 					var element = document.getElementById('spinner');

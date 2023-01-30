@@ -363,9 +363,7 @@
 			<!--<fieldset>-->
 				<div class="pure-control-group">
 					<label>Måned</label>
-					<select class="pure-input-1" required='required'>
-						<xsl:attribute name="id">planned_month</xsl:attribute>
-						<xsl:attribute name="name">planned_month</xsl:attribute>
+					<select id="planned_month" name="planned_month" class="pure-input-1" required='required'>
 						<option value="1">Januar</option>
 						<option value="2">Februar</option>
 						<option value="3">Mars</option>

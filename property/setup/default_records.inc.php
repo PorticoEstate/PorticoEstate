@@ -1115,3 +1115,21 @@
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_priority (id, name) VALUES (2, '2')");
 	$translation = p_setup_translate('Lowest');
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_tts_priority (id, name) VALUES (3, '3 - {$translation}')");
+
+	$probability_comment[1]	 = ' - ' . 'low probability';
+	$probability_comment[2]	 = ' - ' . 'medium probability';
+	$probability_comment[3]	 = ' - ' . 'high probability';
+	for ($i = 1; $i <= 3; $i++)
+	{
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_probability (id, name) VALUES ({$i}, '{$i}{$probability_comment[$i]}')");
+	}
+
+	$consequence_comment[0]	 = ' - ' . 'None Consequences';
+	$consequence_comment[1]	 = ' - ' . 'Minor Consequences';
+	$consequence_comment[2]	 = ' - ' . 'Medium Consequences';
+	$consequence_comment[3]	 = ' - ' . 'Serious Consequences';
+	for ($i = 0; $i <= 3; $i++)
+	{
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_consequence (id, name) VALUES ({$i}, '{$i}{$consequence_comment[$i]}')");
+	}
+
