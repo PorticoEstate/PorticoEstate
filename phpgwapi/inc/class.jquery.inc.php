@@ -64,7 +64,7 @@
 				$_jquery_core = 'jquery-3.6.3';
 			}
 
-			$_jquery_ui	 = 'jquery-ui-1.13.1';
+			$_jquery_ui	 = 'jquery-ui-1.13.2';
 			$_type		 = '.min'; // save some download
 
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
@@ -91,6 +91,7 @@
 						"ui/i18n/datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}",
 					);
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui.min.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/theme.css");
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");
 					break;
 
@@ -124,6 +125,7 @@
 					);
 
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui.min.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/theme.css");
 
 					break;
 
