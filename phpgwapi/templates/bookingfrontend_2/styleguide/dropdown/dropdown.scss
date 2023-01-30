@@ -39,7 +39,7 @@
     }
 
     .select2-selection--multiple {
-      border-color: $grey;
+      border-color: transparent;
     }
 
     .select2-search__field {
@@ -236,7 +236,6 @@
     @include dropdown;
     text-align: left;
     position: relative;
-    font-size: 1rem;
     font-weight: 900;
     width: 100%;
     line-height: 1.75;
@@ -279,23 +278,22 @@
 .slidedown {
   position: relative;
   border-radius: $rounded-large;
+  -webkit-border-radius: $rounded-large;
   border: 1px solid $grey;
   background-color: $white;
   box-shadow: $box-shadow-large;
   transition: border-radius 0.2s;
   
   &:focus-within {
-    outline: $box-focus-outline;
+    box-shadow: $box-shadow-large, $box-focus-shadow;
   }
 
   &:hover {
-    outline: $box-hover;
+    box-shadow: $box-shadow-large, $box-focus-shadow-purple;
   }
-
 
   &--open {
     border-radius: $rounded-medium;
-    outline: 2px solid $purple !important;
     border: 1px solid transparent;
 
     .slidedown-toggler {

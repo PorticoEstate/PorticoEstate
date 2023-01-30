@@ -77,7 +77,6 @@
 
 input[type="text"] {
   @include pill;
-  border-radius: $rounded-large;
   box-shadow: $box-shadow;
 }
 
