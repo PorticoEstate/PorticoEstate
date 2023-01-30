@@ -1697,7 +1697,7 @@
 					$organization								 = $this->organization_bo->read_single(intval($customer_organization_number_arr[0]));
 					$partial2['customer_organization_name']		 = $organization['name'];
 
-					if(!empty($organization_number['city']))
+					if(!empty($organization['city']))
 					{
 						$partial2['responsible_city']		 = $organization['city'];
 					}
