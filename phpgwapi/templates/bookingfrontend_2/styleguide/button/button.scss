@@ -7,13 +7,24 @@
   font-weight: 700;
   border-radius: $rounded-large;
 
+  &:first-child:active:focus-visible,
+  :not(&-check)+&:active:focus-visible {
+    box-shadow: $box-focus-shadow;
+  }
+
   &:hover,
   &:active,
-  &:first-child:active {
+  &:first-child:active,
+  &:first-child:active:focus-visible,
+  :not(&-check)+&:active,
+  :not(&-check)+&:active:focus-visible {
     border-color: $purple;
   }
 
-  &:focus,
+  &:focus {
+    outline: none;
+  }
+
   &:focus-visible {
     border-color: $purple;
     box-shadow: $box-focus-shadow;
@@ -25,13 +36,15 @@
 
     &:hover,
     &:active,
-    &:first-child:active {
+    &:first-child:active,
+    &:first-child:active:focus-visible,
+    :not(&-check)+&:active,
+    :not(&-check)+&:active:focus-visible {
       background: $white;
       color: $purple;
     }
 
-    &:focus,
-    &:focus-visible{
+    &:focus-visible {
       background: $purple;
       color: $white;
     }
@@ -43,12 +56,14 @@
 
     &:hover,
     &:active,
-    &:first-child:active {
+    &:first-child:active,
+    &:first-child:active:focus-visible,
+    :not(&-check)+&:active,
+    :not(&-check)+&:active:focus-visible {
       background: $purple;
       color: $white;
     }
-
-    &:focus,
+    
     &:focus-visible {
       border-color: $purple;
       background: $white;

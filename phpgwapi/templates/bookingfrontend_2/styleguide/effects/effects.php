@@ -1,12 +1,21 @@
 <div class="container">
   <div class="row border-top border-2 py-5">
-    <div class="col-12 d-flex align-items-center mb-5">
+    <div class="col-sm-6 col-lg-4 d-flex align-items-center mb-5">
       <div class="colorbox colorbox--large bg-white box-shadow rounded-small"></div>
         <div class="d-flex flex-column ps-3 ">
           <span>Skygge</span>
           <span>box-shadow</span>
         </div>
     </div>
+    <div class="col-sm-6 col-lg-4 d-flex align-items-center mb-5">
+      <div class="colorbox colorbox--large bg-white box-shadow--large rounded-small"></div>
+        <div class="d-flex flex-column ps-3 ">
+          <span>Skygge</span>
+          <span>box-shadow--large</span>
+        </div>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-sm-6 col-lg-4 d-flex align-items-center mb-4">
       <div class="colorbox colorbox--large bg-black rounded-small"></div>
       <div class="d-flex flex-column ps-3 ">

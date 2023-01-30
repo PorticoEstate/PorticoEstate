@@ -6,17 +6,21 @@
   background-color: $white;
   line-height: 1.2;
 
-  &:focus-visible {
-    border-color: transparent;
-    outline: $box-focus-outline;
+  &:focus {
+    outline: none;
   }
 
+  &:focus-visible {
+    outline: none;
+    border-color: transparent;
+    box-shadow: $box-shadow, $box-focus-shadow;
+  }
+  
   &:hover{
     border-color: transparent;
-    outline: $box-hover;
     color: $black;
+    box-shadow: $box-shadow, $box-focus-shadow-purple;
   }
-
 }
 
 a {
@@ -34,10 +38,9 @@ a {
   }
 
   &:focus-visible {
-    outline: $box-focus-outline;
+    outline: none;  
+    box-shadow: $box-focus-shadow;
   }
-
-
 
   &.arrow {
     text-decoration: none;
