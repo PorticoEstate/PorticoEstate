@@ -37,8 +37,8 @@
 	* Include the pdf class
 	* @see Cezpdf
 	*/
-	require_once PHPGW_API_INC . '/pdf/autoload.php';
-	require_once PHPGW_API_INC . '/pdf/rospdf/pdf-php/extensions/CezTableImage.php';
+	require_once PHPGW_API_INC . '/pdf/vendor/autoload.php';
+	require_once PHPGW_API_INC . '/pdf/vendor/rospdf/pdf-php/extensions/CezTableImage.php';
 
 	/**
 	* Document me!
