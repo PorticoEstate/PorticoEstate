@@ -2326,8 +2326,8 @@ HTML;
 			$pdf->ezSetDy(-20);
 
 			$pdf->ezText(lang('descr') . ':', 20);
-			$pdf->ezText($common_data['workorder']['descr'], 14);
-
+			
+			$pdf->ezText(str_replace(array('☐'), array('* '), $common_data['workorder']['descr']), 14);
 			if ($content)
 			{
 				$pdf->ezSetDy(-20);
