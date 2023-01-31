@@ -11,7 +11,7 @@
 			'edit' => true,
 		);
 		protected $module;
-		private $ssn, $orgnr, $orgs, $external_login_info;
+		private $ssn, $orgnr,$org_id, $orgs, $external_login_info;
 
 		public function __construct()
 		{
@@ -26,7 +26,7 @@
 			$this->external_login_info = $bouser->validate_ssn_login(array(	'menuaction' => 'bookingfrontend.uiuser.show'));
 
 			$this->ssn = $this->external_login_info['ssn'];
-			$this->orgnr = phpgw::get_var('session_org_id') ? phpgw::get_var('session_org_id') : $bouser->orgnr;
+			$this->org_id = phpgw::get_var('session_org_id') ? phpgw::get_var('session_org_id') : $bouser->org_id;
 
 			if(!$bouser->is_logged_in())
 			{
@@ -66,6 +66,7 @@
 				array('key' => 'date', 'label' => lang('Date'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'lang_status', 'label' => lang('status'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'building_name', 'label' => lang('Where'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'resource_names', 'label' => lang('resources'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'customer_organization_number', 'label' => lang('organization number'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'contact_name', 'label' => lang('contact'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'link', 'label' => $lang_view, 'sortable' => false, 'resizeable' => true),

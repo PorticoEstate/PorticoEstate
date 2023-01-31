@@ -53,7 +53,7 @@
 				$orgs_map = array();
 				foreach ($orgs as $org)
 				{
-					$orgs_map[$org['orgnumber']] = $org;
+					$orgs_map[$org['orgnr']] = $org;
 				}
 				unset($org);
 
