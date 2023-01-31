@@ -12,20 +12,20 @@
 				<fieldset>
 					<xsl:if test="document/id">
 						<div class="heading">
-							<legend>
+							<!--<legend>-->
 								<h3>
 									<xsl:value-of select="php:function('lang', 'Edit document')" />
 								</h3>
-							</legend>
+							<!--</legend>-->
 						</div>
 					</xsl:if>
 					<xsl:if test="not(document/id)">
 						<div class="heading">
-							<legend>
+							<!--<legend>-->
 								<h3>
 									<xsl:value-of select="php:function('lang', 'Upload document')" />
 								</h3>
-							</legend>
+							<!--</legend>-->
 						</div>
 					</xsl:if>
 					<xsl:if test="document/id">
