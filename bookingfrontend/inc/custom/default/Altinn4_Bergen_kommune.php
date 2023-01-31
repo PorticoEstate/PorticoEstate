@@ -66,7 +66,7 @@
 					{
 						$orgs[] = array(
 							'org_id' => $org['org_id'],
-							'orgnumber' => $org['orgnr'],
+							'orgnr' => $org['orgnr'],
 							'orgname' => $this->get_orgname_from_db($org['orgnr'], $org['customer_ssn'], $org['org_id'])
 							);
 
@@ -144,20 +144,20 @@
 					{
 						continue;
 					}
-					$this->db->query("SELECT organization_number"
-						. " FROM bb_organization"
-						. " WHERE active = 1 AND organization_number = '{$org['organizationNumber']}'", __LINE__, __FILE__);
-
-					if (!$this->db->next_record())
-					{
-						continue;
-					}
-
-					$results[] = array
-					(
-						'orgnr' => $org['organizationNumber'],
-						'customer_ssn'	 => null
-					);
+//					$this->db->query("SELECT organization_number"
+//						. " FROM bb_organization"
+//						. " WHERE active = 1 AND organization_number = '{$org['organizationNumber']}'", __LINE__, __FILE__);
+//
+//					if (!$this->db->next_record())
+//					{
+//						continue;
+//					}
+//
+//					$results[] = array
+//					(
+//						'orgnr' => $org['organizationNumber'],
+//						'customer_ssn'	 => null
+//					);
 
 					$orgs_validate[] = $org['organizationNumber'];
 				}
@@ -166,25 +166,41 @@
 			$hash = sha1($fodselsnr);
 			$ssn =  '{SHA1}' . base64_encode($hash);
 
-			$this->db->query("SELECT DISTINCT * FROM (SELECT bb_organization.customer_ssn, bb_organization.organization_number, bb_organization.name AS organization_name"
-				. " FROM bb_delegate"
-				. " JOIN  bb_organization ON bb_delegate.organization_id = bb_organization.id"
-				. " WHERE bb_delegate.active = 1 AND bb_delegate.ssn = '{$ssn}'"
+
+			$sql = "SELECT DISTINCT * FROM ("
+				// Delegates
+				. "SELECT bb_organization.id as org_id, bb_organization.customer_ssn, bb_organization.organization_number, bb_organization.name AS organization_name"
+					. " FROM bb_delegate"
+					. " JOIN  bb_organization ON bb_delegate.organization_id = bb_organization.id"
+					. " WHERE bb_delegate.active = 1 AND bb_delegate.ssn = '{$ssn}'"
 				. " UNION"
-				. " SELECT customer_ssn, organization_number, name AS organization_name"
-				. " FROM bb_organization"
-				. " WHERE (customer_ssn = '{$fodselsnr}' AND customer_identifier_type = 'ssn')"
-				. " OR organization_number IN ('". implode("','", $orgs_validate) ."') ) as t", __LINE__, __FILE__);
+				// Personal organizations
+				. " SELECT bb_organization.id as org_id, customer_ssn, organization_number, name AS organization_name"
+					. " FROM bb_organization"
+					. " WHERE (customer_ssn = '{$fodselsnr}' AND customer_identifier_type = 'ssn')"
+					. " OR organization_number IN ('". implode("','", $orgs_validate) ."')"
+				. " UNION"
+				// Role from official registers
+				. " SELECT id as org_id, customer_ssn, organization_number, name AS organization_name"
+					. " FROM bb_organization"
+					. " WHERE active = 1 AND organization_number IN ('". implode("','", $orgs_validate) ."')"
+				. " ) as t";
+
+			$this->log('Delegert_eller_rolle_sql', $sql);
+
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			while($this->db->next_record())
 			{
-				$customer_ssn = $this->db->f('customer_ssn');
+				$org_id				 = $this->db->f('org_id');
+				$customer_ssn		 = $this->db->f('customer_ssn');
 				$organization_number = $this->db->f('organization_number');
-				
-				if($organization_number && in_array($organization_number, $orgs_validate))
-				{
-					continue;
-				}
+
+//
+//				if($organization_number && in_array($organization_number, $orgs_validate))
+//				{
+//					continue;
+//				}
 
 				if($customer_ssn && !$organization_number)
 				{
@@ -193,6 +209,7 @@
 				
 				$results[] = array
 				(
+					'org_id'		 => $org_id,
 					'orgnr'			 => $organization_number,
 					'customer_ssn'	 => $customer_ssn
 				);
@@ -210,11 +227,17 @@
 					{
 						continue;
 					}
-					$results[] = array
-					(
-						'orgnr'			 => $test_organization,
-						'customer_ssn'	 => null
-					);					
+
+					$this->db->query("SELECT id FROM bb_organization WHERE organization_number = '{$test_organization}'", __LINE__, __FILE__);
+					while($this->db->next_record())
+					{
+						$results[] = array
+						(
+							'org_id'		 => $this->db->f('id'),
+							'orgnr'			 => $test_organization,
+							'customer_ssn'	 => null
+						);
+					}
 				}
 			}
 

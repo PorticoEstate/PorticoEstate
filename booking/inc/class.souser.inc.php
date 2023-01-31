@@ -68,21 +68,27 @@
 
 			$org_id = $this->get_validate_org_id();
 
-			$orgs = $this->get_delegate($ssn, null, $org_id);
-
-			$func = function ( array $org ): int
-			{
-				return $org['id'];
-			};
+//			$orgs = $this->get_delegate($ssn, null, $org_id);
+//
+//			$func = function ( array $org ): int
+//			{
+//				return $org['id'];
+//			};
 
 			$filter_method = "customer_ssn ='{$ssn}'";
 
-			if($orgs)
-			{
-				$org_ids = 	array_map($func, $orgs);
-				$filter_orgs = ' OR customer_organization_id IN (' . implode(', ', $org_ids) . ')';
-				$filter_method .= $filter_orgs;
+//			if($orgs)
+//			{
+//				$org_ids = 	array_map($func, $orgs);
+//				$filter_orgs = ' OR customer_organization_id IN (' . implode(', ', $org_ids) . ')';
+//				$filter_method .= $filter_orgs;
+//
+//			}
 
+			if($org_id)
+			{
+				$filter_orgs = ' OR customer_organization_id =' . (int)$org_id;
+				$filter_method .= $filter_orgs;
 			}
 
 			$filters = array();

@@ -38,11 +38,11 @@
 			$this->orgnr = $this->get_user_orgnr_from_session();
 			$this->org_id = $this->get_user_org_id_from_session();
 			
-			if($get_external_login_info && $this->is_logged_in())
+			$session_org_id = phpgw::get_var('session_org_id', 'int', 'GET');
+//			if($get_external_login_info && $this->is_logged_in())
+			if($session_org_id && $this->is_logged_in())
 			{
 				$orgs = phpgwapi_cache::session_get($this->get_module(), self::ORGARRAY_SESSION_KEY);
-
-				$session_org_id = phpgw::get_var('session_org_id', 'int', 'GET');
 
 				if ($session_org_id && ($session_org_id != $this->org_id) && in_array($session_org_id, array_map("self::get_ids_from_array", $orgs)))
 				{
@@ -53,7 +53,7 @@
 						{
 							if($org['org_id'] == $session_org_id)
 							{
-								$session_org_nr = $org['orgnumber'];
+								$session_org_nr = $org['orgnr'];
 							}
 						}
 						$org_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($session_org_nr);
@@ -184,7 +184,7 @@
 
 				if($org['org_id'] == $org_id)
 				{
-					$this->orgnr = $org['orgnumber'];
+					$this->orgnr = $org['orgnr'];
 				}
 			}
 			if (in_array($org_id, $orglist))
@@ -267,7 +267,7 @@
 				$orgs_map = array();
 				foreach ($orgs as $org)
 				{
-					$orgs_map[] = $org['orgnumber'];
+					$orgs_map[] = $org['orgnr'];
 				}
 				unset($org);
 				return in_array($organization_number, $orgs_map);

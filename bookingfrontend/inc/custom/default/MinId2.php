@@ -71,7 +71,7 @@
 					{
 						$orgs[] = array(
 							'org_id' => $org['org_id'],
-							'orgnumber' => $org['orgnr'],
+							'orgnr' => $org['orgnr'],
 							'orgname' => $this->get_orgname_from_db($org['orgnr'], $org['customer_ssn'], $org['org_id'])
 							);
 					}
