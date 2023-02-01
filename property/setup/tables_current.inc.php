@@ -1647,7 +1647,7 @@
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => '25', 'nullable' => False),
-				'amount' => array('type' => 'int', 'precision' => 4, 'nullable' => False)
+				'amount_limit' => array('type' => 'int', 'precision' => 4, 'nullable' => False)
 			),
 			'pk' => array('id'),
 			'ix' => array(),

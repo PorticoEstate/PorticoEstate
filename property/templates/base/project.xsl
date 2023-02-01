@@ -296,34 +296,6 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
-					<!--xsl:choose>
-						<xsl:when test="need_approval='1' and mode='edit'">
-							<div class="pure-control-group">
-								<label for="name">
-									<xsl:value-of select="lang_ask_approval"/>
-								</label>
-								<div class="pure-custom">
-									<xsl:for-each select="value_approval_mail_address">
-										<div>
-											<input type="checkbox" name="values[approval][{id}]" value="True">
-												<xsl:attribute name="title">
-													<xsl:value-of select="//lang_ask_approval_statustext"/>
-												</xsl:attribute>
-											</input>
-											<input type="text" name="values[mail_address][{id}]" value="{address}">
-												<xsl:attribute name="title">
-													<xsl:value-of select="//lang_ask_approval_statustext"/>
-												</xsl:attribute>
-											</input>
-											<xsl:if test="default = '1'">
-												<xsl:text>&lt;=</xsl:text>
-											</xsl:if>
-										</div>
-									</xsl:for-each>
-								</div>
-							</div>
-						</xsl:when>
-					</xsl:choose-->
 					<div class="pure-control-group">
 						<label for="name">
 							<xsl:value-of select="lang_remark"/>

@@ -857,8 +857,8 @@
 								'sortable'	 => true
 							),
 							array(
-								'name'		 => 'amount',
-								'descr'		 => lang('amount'),
+								'name'		 => 'amount_limit',
+								'descr'		 => lang('limit'),
 								'type'		 => 'integer',
 								'sortable'	 => true
 							)
