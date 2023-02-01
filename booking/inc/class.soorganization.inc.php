@@ -264,16 +264,23 @@
 			$result = array();
 			array_set_default($result, 'name', '');
 			array_set_default($result, 'id', '');
+			array_set_default($result, 'street', '');
+			array_set_default($result, 'zip_code', '');
+			array_set_default($result, 'city', '');
+
 			$org_number = (int)$org_number;
 			if ($org_number)
 			{
 				$org_number = intval($org_number);
-				$q1 = "SELECT name, id FROM bb_organization WHERE organization_number='{$org_number}'";
+				$q1 = "SELECT name, id, street, zip_code, city FROM bb_organization WHERE organization_number='{$org_number}'";
 				$this->db->query($q1, __LINE__, __FILE__);
 				if($this->db->next_record())
 				{
-					$result['name'] = $this->db->f('name', true);
-					$result['id'] = $this->db->f('id');
+					$result['name']		 = $this->db->f('name', true);
+					$result['id']		 = $this->db->f('id', true);
+					$result['street']	 = $this->db->f('street', true);
+					$result['zip_code']	 = $this->db->f('zip_code', true);
+					$result['city']		 = $this->db->f('city', true);
 				}
 			}
 

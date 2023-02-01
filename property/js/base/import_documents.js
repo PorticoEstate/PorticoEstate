@@ -1,5 +1,6 @@
 /* global lang, JqueryPortico, role, oTable0, template_set */
 
+var select_id = 0;
 
 $(document).ready(function ()
 {
@@ -97,7 +98,7 @@ $(document).ready(function ()
 	});
 
 	$("#document_category").select2({
-		placeholder: $( this ).data( 'placeholder' ),
+		placeholder: $(this).data('placeholder'),
 		language: "no",
 		width: input_width,
 		closeOnSelect: false
@@ -413,7 +414,7 @@ this.validate_step_2 = function (sub_step)
 {
 	var order_id = $("#order_id").val();
 	var secret = $("#secret").val();
-	var oArgs = {menuaction: 'property.uiimport_documents.validate_info', order_id: order_id, sub_step: sub_step};
+	var oArgs = {menuaction: 'property.uiimport_documents.validate_info', order_id: order_id, sub_step: sub_step, secret: secret};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper('datatable-container_0', requestUrl);
 
@@ -484,13 +485,15 @@ this.step_2_import = function ()
 	$("#step_2_view_all").prop("disabled", true);
 	$('.processing-import').show();
 	$("#message0").hide();
+
+	var query = $("#datatable-container_0_filter").find("input[type=search]").val();
 	var order_id = $("#order_id").val();
 	var oArgs = {menuaction: 'property.uiimport_documents.step_2_import', order_id: order_id};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		data: {},
+		data: {query: query},
 		url: requestUrl,
 		success: function (data)
 		{
@@ -591,9 +594,9 @@ this.local_DrawCallback0 = function (container)
 	}
 	update_common();
 
-	set_up_multiselect('document_category');
-	set_up_multiselect('branch');
-	set_up_multiselect('building_part');
+	set_up_data_array('document_category');
+	set_up_data_array('branch');
+	set_up_data_array('building_part');
 
 	check_validation('document_category');
 	check_validation('branch');
@@ -607,7 +610,7 @@ check_validation = function (field_name)
 
 	$('.select_' + field_name).each(function ()
 	{
-		if($(this).val().length === 0)
+		if ($(this).val().length === 0)
 		{
 			$(this).parent().find('button').addClass('is-invalid');
 		}
@@ -618,59 +621,65 @@ check_validation = function (field_name)
 	});
 };
 
-set_up_multiselect = function (field_name)
+set_up_data_array = function (field_name)
 {
-	let categories = $('.' + field_name);
-	let category_list = [];
+	let data_cadidates = $('.' + field_name);
+	data_cadidates.each(function (i, obj)
+	{
+		obj.parentNode.addEventListener('click', function ()
+		{
+			set_up_multiselect2(this, field_name);
+		}, {once: true});
+
+	});
+
+};
+
+set_up_multiselect2 = function (td, field_name)
+{
+	select_id++;
+	let data_list = [];
 	$("#" + field_name + " > option").each(function ()
 	{
-		category_list.push({id: this.value, name: this.text});
+		data_list.push({id: this.value, name: this.text});
 	});
 
 	let htmlString;
+	var obj = $(td).find('div');
 
-	$('.select_' + field_name).multiselect('destroy');
+	$(obj).find('button').remove();
 
-	categories.each(function (i, obj)
+	const data = $(obj).attr('data').split('::').filter(Boolean);
+
+
+	let selected;
+	htmlString = '<select id="select_id_' + select_id + '" name="' + field_name + '" multiple="true" class="select_' + field_name + '">';
+
+	data_list.forEach(function (category)
 	{
-		$(obj).find('input').remove();
-		$(obj).find('select').remove();
-
-		const data = $(obj).parent().attr('data').split('::').filter(Boolean);
-
-		let selected;
-		htmlString = '<select name="' + field_name + '" multiple="true" class="select_' + field_name + '">';
-
-		category_list.forEach(function (category)
+		selected = '';
+		if (data.includes(category.id))
 		{
-			selected = '';
-			if (data.includes(category.id))
-			{
-				selected = ' selected="selected"';
-			}
+			selected = ' selected="selected"';
+		}
 
-			htmlString += "<option value='" + category.id + "'" + selected + ">" + category.name + "</option>";
-		});
-		htmlString += '</select>';
-
-		$(obj).append(htmlString);
-
+		htmlString += "<option value='" + category.id + "'" + selected + ">" + category.name + "</option>";
 	});
+	htmlString += '</select>';
 
+	$(obj).append(htmlString);
 
-	$('.select_' + field_name).multiselect({
+	$('#select_id_' + select_id).multiselect({
 		buttonClass: 'form-select',
 		widthSynchronizationMode: 'always',
 		buttonWidth: '200px',
-//		enableResetButton: true,
-//		resetButtonText: 'Angre',
 		templates: {
 			li: '<li><div style="display:inline;"><a><label></label></a></div></li>',
 			button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
 		},
 		onChange: function (option, checked, select)
 		{
-			let file_name = $(option).parent().parent().parent().parent().parent().parent().children('td')[0].innerText;
+			let file_name = $(option).parent().parent().parent().parent().parent().children('td')[0].innerText;
 			let order_id = $('#order_id').val();
 
 			$.ajax({
@@ -681,7 +690,7 @@ set_up_multiselect = function (field_name)
 					id: order_id + '::' + file_name,
 					field_name: field_name,
 					checked: checked === true ? 1 : 0,
-					value : [$(option).val()],
+					value: [$(option).val()],
 					secret: $("#secret").val()
 				},
 				success: function (data)
@@ -693,9 +702,11 @@ set_up_multiselect = function (field_name)
 					alert('feil');
 				}
 			});
+		},
+		onInitialized: function (select, container)
+		{
 
 
 		}
 	});
-
 };

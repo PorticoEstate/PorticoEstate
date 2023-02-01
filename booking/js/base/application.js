@@ -173,9 +173,11 @@ $(window).on('load', function ()
 			reservation_id = '';
 		}
 
-		populateTableChkArticles([
-		], resources, application_id, reservation_type, reservation_id);
-
+		if (typeof (populateTableChkArticles) !== 'undefined')
+		{
+			populateTableChkArticles([
+			], resources, application_id, reservation_type, reservation_id);
+		}
 	});
 
 	$('#articles_container').on('change', '.quantity', function ()

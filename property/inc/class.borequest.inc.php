@@ -55,6 +55,9 @@
 			'delete'		 => true,
 		);
 
+		var $so, $bocommon, $solocation, $historylog, $cats, $custom, $use_session, $p_num, $condition_survey_id, $district_id, $property_cat_id,$status_id,
+		$degree_id, $uicols, $allrows, $start_date,$end_date, $total_records, $recommended_year, $building_part, $criteria_id;
+
 		function __construct( $session = false )
 		{
 			$this->so					 = CreateObject('property.sorequest');
@@ -270,6 +273,20 @@
 		{
 			$selected = $probability_value;
 
+			static $probability_list = array();
+
+			if(!$probability_list)
+			{
+				$probability_list = execMethod('property.bogeneric.get_list', array(
+					'type'	=> 'r_probability'));
+			}
+
+			foreach ($probability_list as & $entry)
+			{
+				$entry['selected'] = $entry['id'] == $selected ? 1 : 0;
+			}
+
+/*
 			$probability_comment[1]	 = ' - ' . lang('low probability');
 			$probability_comment[2]	 = ' - ' . lang('medium probability');
 			$probability_comment[3]	 = ' - ' . lang('high probability');
@@ -279,7 +296,7 @@
 				$probability_list[$i]['name']		 = $i . $probability_comment[$i];
 				$probability_list[$i]['selected']	 = $i == $selected ? 1 : 0;
 			}
-
+*/
 			return $probability_list;
 		}
 
@@ -384,6 +401,20 @@
 				$selected = $GLOBALS['phpgw_info']['user']['preferences']['property'][$consequencedefault_type];
 			}
 
+			static $consequence_list = array();
+
+			if(!$consequence_list)
+			{
+				$consequence_list = execMethod('property.bogeneric.get_list', array(
+					'type'	=> 'r_consequence'));
+			}
+
+			foreach ($consequence_list as & $entry)
+			{
+				$entry['selected'] = $entry['id'] == $selected ? 1 : 0;
+			}
+
+/*
 			$consequence_comment[0]	 = ' - ' . lang('None Consequences');
 			$consequence_comment[1]	 = ' - ' . lang('Minor Consequences');
 			$consequence_comment[2]	 = ' - ' . lang('Medium Consequences');
@@ -394,7 +425,7 @@
 				$consequence_list[$i]['name']		 = $i . $consequence_comment[$i];
 				$consequence_list[$i]['selected']	 = $i == $selected ? 1 : 0;
 			}
-
+*/
 			return $consequence_list;
 		}
 

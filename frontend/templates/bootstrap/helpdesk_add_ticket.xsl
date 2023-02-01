@@ -17,43 +17,43 @@
 					<legend  class="w-auto">
 						<xsl:value-of select="php:function('lang', 'ticket')" />
 					</legend>
-					<div class="form-group">
-						<label>
+					<div class="mb-1">
+						<label class="form-label">
 							<xsl:value-of select="php:function('lang', 'category')" />
 						</label>
-						<select name="values[cat_id]" required="required" class="form-control">
+						<select name="values[cat_id]" required="required" class="form-select">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'category')" />
 							</xsl:attribute>
 							<xsl:apply-templates select="category_list"/>
 						</select>
 					</div>
-					<div class="form-group">
-						<label>
+					<div class="mb-1">
+						<label class="form-label">
 							<xsl:value-of select="php:function('lang', 'subject')" />
 						</label>
 						<input type="text" name="values[title]" value="{title}" required="required" class="form-control">
 						</input>
 					</div>
-					<div class="form-group">
-						<label>
+					<div class="mb-1">
+						<label class="form-label">
 							<xsl:value-of select="php:function('lang', 'locationdesc')" />
 						</label>
 						<input type="text" name="values[locationdesc]" value="{locationdesc}" required="required" class="form-control"></input>
 					</div>
-					<div class="form-group">
-						<label>
+					<div class="mb-1">
+						<label class="form-label">
 							<xsl:value-of select="php:function('lang', 'description')" />
 						</label>
-						<textarea cols="50" rows="10" name="values[description]" wrap="virtual" required="required" class="form-control">
+						<textarea cols="50" rows="6" name="values[description]" wrap="virtual" required="required" class="form-control">
 							<xsl:value-of select="description"/>
 						</textarea>
 					</div>
-					<div class="form-group">
-						<label>
+					<div class="mb-1">
+						<label class="form-label">
 							<xsl:value-of select="php:function('lang', 'file')" />
 						</label>
-						<input type="file" name="file" size="50" class="form-control-file">
+						<input type="file" name="file" class="form-control">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'file')" />
 							</xsl:attribute>
@@ -68,7 +68,7 @@
 					<xsl:variable name="lang_send">
 						<xsl:value-of select="php:function('lang', 'send')" />
 					</xsl:variable>
-					<label>
+					<label class="form-label">
 						<input type="submit" class="btn btn-primary" name="values[save]" value="{$lang_send}" title='{$lang_send}'/>
 					</label>
 				</div>

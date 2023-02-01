@@ -714,6 +714,46 @@
 						'menu_selection' => 'admin::property::request_condition'
 					);
 					break;
+				case 'r_probability':
+					$info	 = array
+						(
+						'table'			 => 'fm_request_probability',
+						'id'			 => array('name' => 'id', 'type' => 'int'),
+						'fields'		 => array(
+							array(
+								'name'	 => 'name',
+								'descr'	 => lang('name'),
+								'type'	 => 'varchar'
+							)
+						),
+						'edit_msg'		 => lang('edit'),
+						'add_msg'		 => lang('add'),
+						'name'			 => 'probability',
+						'acl_app'		 => 'property',
+						'acl_location'	 => '.admin',
+						'menu_selection' => 'admin::property::request_probability'
+					);
+					break;
+				case 'r_consequence':
+					$info	 = array
+						(
+						'table'			 => 'fm_request_consequence',
+						'id'			 => array('name' => 'id', 'type' => 'int'),
+						'fields'		 => array(
+							array(
+								'name'	 => 'name',
+								'descr'	 => lang('name'),
+								'type'	 => 'varchar'
+							)
+						),
+						'edit_msg'		 => lang('edit'),
+						'add_msg'		 => lang('add'),
+						'name'			 => 'consequence',
+						'acl_app'		 => 'property',
+						'acl_location'	 => '.admin',
+						'menu_selection' => 'admin::property::request_consequence'
+					);
+					break;	
 				case 'authorities_demands':
 					$info	 = array
 						(
@@ -809,13 +849,18 @@
 						(
 						'table'			 => 'fm_ecodimb_role',
 						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
-							(
-							array
-								(
+						'fields'		 => array(
+							array(
 								'name'	 => 'name',
 								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'type'	 => 'varchar',
+								'sortable'	 => true
+							),
+							array(
+								'name'		 => 'amount_limit',
+								'descr'		 => lang('limit'),
+								'type'		 => 'integer',
+								'sortable'	 => true
 							)
 						),
 						'edit_msg'		 => lang('edit role'),

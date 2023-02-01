@@ -356,5 +356,32 @@
 			<!--</fieldset>-->
 		</form>
 	</div>
+
+	<div id="dialog-set_planned_month" title="Sett planlagt måned">
+		<p>Angi ønsket planlagt måned</p>
+		<form>
+			<!--<fieldset>-->
+				<div class="pure-control-group">
+					<label>Måned</label>
+					<select id="planned_month" name="planned_month" class="pure-input-1" required='required'>
+						<option value="1">Januar</option>
+						<option value="2">Februar</option>
+						<option value="3">Mars</option>
+						<option value="4">April</option>
+						<option value="5">Mai</option>
+						<option value="6">Juni</option>
+						<option value="7">Juli</option>
+						<option value="8">August</option>
+						<option value="9">September</option>
+						<option value="10">Oktober</option>
+						<option value="11">November</option>
+						<option value="12">Desember</option>
+					</select>
+				</div>
+			<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+			</input>
+			<!--</fieldset>-->
+		</form>
+	</div>
 	 
 </xsl:template>

@@ -1181,11 +1181,12 @@
 
 			$control_id = phpgw::get_var('control_id', 'int');
 			$serie_id = phpgw::get_var('serie_id', 'int');
-			$status = (int)phpgw::get_var('status');
+			$status = phpgw::get_var('status', 'int');
 			$type = phpgw::get_var('type');
 			$deadline_date = phpgw::get_var('deadline_date', 'string');
 			$original_deadline_date_ts = phpgw::get_var('original_deadline_date', 'int');
 			$planned_date = phpgw::get_var('planned_date', 'string');
+			$planned_month = phpgw::get_var('planned_month', 'int');
 			$completed_date = phpgw::get_var('completed_date', 'string');
 			$comment = phpgw::get_var('comment', 'string');
 			$assigned_to = phpgw::get_var('assigned_to', 'int');
@@ -1204,6 +1205,14 @@
 			}
 
 			$error = false;
+
+			if($planned_month)
+			{
+				$_planned_date = new DateTime(date('Y', $deadline_date_ts) . "-{$planned_month}-1");
+				$_planned_date->modify('last day of this month');
+				$planned_date = $_planned_date->format($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+			}
+
 
 			if ($planned_date != '')
 			{
@@ -1228,7 +1237,7 @@
 			else
 			{
 				$completed_date_ts = 0;
-				$status = controller_check_list::STATUS_NOT_DONE;
+				$status = $status && controller_check_list::STATUS_CANCELED ? controller_check_list::STATUS_CANCELED : controller_check_list::STATUS_NOT_DONE;
 			}
 
 			if($submit_ok)
@@ -1485,7 +1494,7 @@
 
 					if (phpgw::get_var('phpgw_return_as') == 'json')
 					{
-						if($ret)
+						if(!empty($ret['message']))
 						{
 							return $ret;
 						}

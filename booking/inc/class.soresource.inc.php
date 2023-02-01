@@ -36,6 +36,7 @@
 				'booking_time_minutes' => array('type' => 'int', 'required' => false),
 				'booking_limit_number' => array('type' => 'int', 'required' => false),
 				'booking_limit_number_horizont' => array('type' => 'int', 'required' => false),
+				'hidden_in_frontend' => array('type' => 'int', 'required' => false),
 
 				'building_id' => array(
 					'type' => 'int',
@@ -417,7 +418,7 @@
 			(
 				1	=> array
 				(
-					'value'	=> $this->db->db_addslashes(substr($e_lock_name, 0, 20)),
+					'value'	=> $this->db->db_addslashes(substr($e_lock_name, 0, 200)),
 					'type'	=> PDO::PARAM_STR
 				),
 				2	=> array

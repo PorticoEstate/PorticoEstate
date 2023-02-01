@@ -556,7 +556,7 @@ function getFreetime(urlParams)
 function PopulateBuildingData(urlParams)
 {
 
-	var getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_building.index_images", filter_owner_id: urlParams['id'], length:-1}, true);
+	var getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_building.index_images", filter_owner_id: urlParams['id'], length: -1}, true);
 	$.getJSON(getJsonURL, function (result)
 	{
 		var mainPictureFound = false;
@@ -600,6 +600,7 @@ function PopulateBookableResources(urlParams)
 		{
 			facilitiesList = [];
 			activitiesList = [];
+
 			if (result.results[i].simple_booking == 1 && result.results[i].simple_booking_start_date < now)
 			{
 				result.results[i].name += '*';
@@ -629,14 +630,17 @@ function PopulateBookableResources(urlParams)
 				booking_month_horizon = Number(result.results[i].booking_month_horizon) + 1;
 			}
 
-			bookableResources.push({
-				name: result.results[i].name,
-				resourceItemLink: resourceItemLink,
-				facilitiesList: ko.observableArray(facilitiesList),
-				activitiesList: ko.observableArray(activitiesList),
-				availlableTimeSlots: ko.observableArray(availlableTimeSlots[result.results[i].id])
-			});
-			resourceIds.push({id: result.results[i].id, name: result.results[i].name, visible: true});
+			if (result.results[i].hidden_in_frontend !== 1)
+			{
+				bookableResources.push({
+					name: result.results[i].name,
+					resourceItemLink: resourceItemLink,
+					facilitiesList: ko.observableArray(facilitiesList),
+					activitiesList: ko.observableArray(activitiesList),
+					availlableTimeSlots: ko.observableArray(availlableTimeSlots[result.results[i].id])
+				});
+				resourceIds.push({id: result.results[i].id, name: result.results[i].name, visible: true});
+			}
 		}
 		if (deactivate_calendar == 0)
 		{
@@ -1271,7 +1275,8 @@ function GenerateCalendarForEvents(date)
 					$('.tooltip').tooltip('hide');
 				}
 			});
-			$(".yui3-widget-bd").mouseenter(function () {
+			$(".yui3-widget-bd").mouseenter(function ()
+			{
 				$(".tooltip").remove();
 			});
 		}

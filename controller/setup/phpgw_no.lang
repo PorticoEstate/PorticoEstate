@@ -479,3 +479,4 @@ check list status	controller	no	Status for hele kontrollen
 perform control	controller	no	Utfør kontroll
 perform control on selected	controller	no	Utfør kontroll på valgt utstyr
 regulation reference	controller	no	Hjemmel
+performed without deviation	controller	no	Utført uten avvik

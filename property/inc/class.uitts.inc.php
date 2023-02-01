@@ -1734,13 +1734,12 @@ HTML;
 				$my_groups[$group_id] = $group->firstname;
 			}
 
-			$tabs		 = array();
-			$tabs['add'] = array('label' => lang('Add'), 'link' => '#add');
-			$active_tab	 = 'add';
+			$tabs			 = array();
+			$tabs['add']	 = array('label' => lang('Add'), 'link' => '#add');
+			$tabs['notify']	 = array('label' => lang('Notify'), 'link' => '#notify');
+			$active_tab		 = 'add';
 
 			$fmttssimple_categories = isset($this->bo->config->config_data['fmttssimple_categories']) ? $this->bo->config->config_data['fmttssimple_categories'] : array();
-
-
 
 			$cat_select = $this->cats->formatted_xslt_list(array(
 				'select_name'	 => 'values[cat_id]',
@@ -5223,4 +5222,16 @@ JS;
 			}
 			return $_budget_amount;
 		}
+
+		public function get_users()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+			$query = phpgw::get_var('query');
+
+			return $this->bocommon->get_users($query);
+		}
+
 	}

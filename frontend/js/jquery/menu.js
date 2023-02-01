@@ -76,6 +76,8 @@ $(document).ready(function ()
 					{
 						var submitBnt = $(thisForm).find("input[type='submit']");
 						$(submitBnt).val("Lagret");
+						$(submitBnt).removeClass('btn-primary');
+						$(submitBnt).addClass('btn-success');
 					}
 				}
 			}

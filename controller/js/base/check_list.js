@@ -135,6 +135,12 @@ $(document).ready(function ()
 		var check_list_id = $("#check_list_id").val();
 
 		var statusFieldVal = $("#status").val();
+
+		// Cancelled
+		if(statusFieldVal == 3 || statusFieldVal == 0)
+		{
+			$("#completed_date").val('');
+		}
 		var statusRow = $("#status");
 		var plannedDateVal = $("#planned_date").val();
 		var plannedDateRow = $("#planned_date");

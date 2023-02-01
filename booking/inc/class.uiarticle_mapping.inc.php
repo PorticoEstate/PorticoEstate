@@ -151,11 +151,12 @@
 
 		public function get_articles()
 		{
-			$resources	 = phpgw::get_var('resources', 'int', 'GET');
-			$application_id	 = phpgw::get_var('application_id', 'int', 'GET');
+			$resources			 = phpgw::get_var('resources', 'int', 'GET');
+			$application_id		 = phpgw::get_var('application_id', 'int', 'GET');
 			$reservation_type	 = phpgw::get_var('reservation_type', 'string', 'GET');
-			$reservation_id	 = phpgw::get_var('reservation_id', 'int', 'GET');
+			$reservation_id		 = phpgw::get_var('reservation_id', 'int', 'GET');
 			$alloc_template_id	 = phpgw::get_var('alloc_template_id', 'int', 'GET');
+			$collection			 = phpgw::get_var('collection', 'bool', 'GET');
 
 			if($alloc_template_id)
 			{
@@ -198,7 +199,7 @@
 			}
 
 
-			$purchase_order = createObject('booking.sopurchase_order')->get_purchase_order($application_id, $reservation_type, $reservation_id);
+			$purchase_order = createObject('booking.sopurchase_order')->get_purchase_order($application_id, $reservation_type, $reservation_id, $collection);
 			$articles	 = $this->bo->get_articles($resources);
 
 			foreach ($articles as &$article)
@@ -212,8 +213,8 @@
 							$article['unit_price']					 = $line['unit_price'];
 							$article['ex_tax_price']				 = $line['unit_price'];
 							$article['price']						 = $line['price'];
-							$article['selected_quantity']			 = $line['quantity'];
-							$article['selected_sum']				 = (float)($line['amount'] + $line['tax']);
+							$article['selected_quantity']			 += $line['quantity'];
+							$article['selected_sum']				 += (float)($line['amount'] + $line['tax']);
 							$article['selected_article_quantity']	 = "{$article['id']}_{$line['quantity']}_{$line['tax_code']}_{$line['unit_price']}_{$article['parent_mapping_id']}";
 							$article['tax_code']					 = $line['tax_code'];
 							$article['tax_percent']					 = $line['tax_percent'];
@@ -235,6 +236,7 @@
 				$article['price']		 = number_format((float)$article['price'], 2, '.', '');
 				$article['tax']			 = number_format((float)$article['tax'], 2, '.', '');
 				$article['mandatory']	 = isset($article['resource_id']) ? 1 : '';
+				$article['lang_unit']	 = lang($article['unit']);
 
 				if(empty($article['selected_quantity']))
 				{

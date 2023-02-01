@@ -61,7 +61,7 @@
 								<label for="field_name">
 									<xsl:value-of select="php:function('lang', 'Event name')" />
 								</label>
-								<input id="field_name" name="name" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+								<input id="field_name" name="name" type="text" class="pure-input-1">
 									<xsl:attribute name="value">
 										<xsl:value-of select="application/name"/>
 									</xsl:attribute>
@@ -71,7 +71,7 @@
 								<label for="field_organizer">
 									<xsl:value-of select="php:function('lang', 'Organizer')" />
 								</label>
-								<input id="field_organizer" name="organizer" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+								<input id="field_organizer" name="organizer" type="text" class="pure-input-1">
 									<xsl:attribute name="value">
 										<xsl:value-of select="application/organizer"/>
 									</xsl:attribute>
@@ -81,7 +81,7 @@
 								<label for="field_homepage">
 									<xsl:value-of select="php:function('lang', 'Homepage for the event')" />
 								</label>
-								<input id="field_homepage" name="homepage" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+								<input id="field_homepage" name="homepage" type="text" class="pure-input-1">
 									<xsl:attribute name="value">
 										<xsl:value-of select="application/homepage"/>
 									</xsl:attribute>

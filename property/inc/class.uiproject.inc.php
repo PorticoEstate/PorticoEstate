@@ -55,6 +55,9 @@
 		var $project_type_id;
 		var $ecodimb;
 		var $bypass_error	 = false;
+		var $account, $bo, $bocommon, $cats, $custom,$acl,$acl_location, $acl_read,$acl_add, $acl_edit,
+		$acl_delete, $acl_manage, $status_id, $wo_hour_cat_id, $user_id, $filter_year, $decimal_separator,
+		$type_id;
 		var $public_functions = array
 			(
 			'query'							 => true,
@@ -1907,88 +1910,6 @@ JS;
 				'relation_type'	 => 'project'
 			);
 
-			$supervisor_email	 = array();
-			if ($need_approval		 = isset($config->config_data['project_approval']) ? $config->config_data['project_approval'] : '')
-			{
-				$invoice = CreateObject('property.soinvoice');
-				if (isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
-				{
-					$supervisor_id = $invoice->get_default_dimb_role_user(2, $values['ecodimb']);
-
-					$sodimb_role_users = execMethod('property.sodimb_role_user.read', array
-						(
-						'dimb_id'		 => $values['ecodimb'],
-						'role_id'		 => 2,
-						'query_start'	 => date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
-						'get_netto_list' => true
-						)
-					);
-					if (isset($sodimb_role_users[$values['ecodimb']][2]) && is_array($sodimb_role_users[$values['ecodimb']][2]))
-					{
-						foreach ($sodimb_role_users[$values['ecodimb']][2] as $supervisor_id => $entry)
-						{
-							$prefs				 = $this->bocommon->create_preferences('common', $supervisor_id);
-							$supervisor_email[]	 = array
-								(
-								'id'		 => $supervisor_id,
-								'address'	 => $prefs['email'],
-								'default'	 => $entry['default_user'],
-							);
-						}
-					}
-
-					$supervisor2_id		 = $invoice->get_default_dimb_role_user(3, $values['ecodimb']);
-					$prefs2				 = $this->bocommon->create_preferences('common', $supervisor2_id);
-					$supervisor_email[]	 = array
-						(
-						'id'		 => $supervisor2_id,
-						'address'	 => $prefs2['email'],
-					);
-//					$supervisor_email = array_reverse($supervisor_email);
-					unset($prefs);
-					unset($prefs2);
-					unset($invoice);
-				}
-				else
-				{
-					$supervisor_id = 0;
-
-					if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
-					{
-						$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
-					}
-
-
-					if ($supervisor_id)
-					{
-						$prefs				 = $this->bocommon->create_preferences('common', $supervisor_id);
-						$supervisor_email[]	 = array
-							(
-							'id'		 => $supervisor_id,
-							'address'	 => $prefs['email'],
-						);
-
-						if (isset($prefs['approval_from']))
-						{
-							$prefs2 = $this->bocommon->create_preferences('common', $prefs['approval_from']);
-
-
-
-							if (isset($prefs2['email']))
-							{
-								$supervisor_email[]	 = array
-									(
-									'id'		 => $prefs['approval_from'],
-									'address'	 => $prefs2['email'],
-								);
-								$supervisor_email	 = array_reverse($supervisor_email);
-							}
-							unset($prefs2);
-						}
-						unset($prefs);
-					}
-				}
-			}
 
 			$project_status		 = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_status']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_status'] : '');
 			$project_category	 = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_category']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_category'] : '');
@@ -2907,7 +2828,6 @@ JS;
 				'need_approval'						 => $need_approval,
 				'lang_ask_approval'					 => lang('Ask for approval'),
 				'lang_ask_approval_statustext'		 => lang('Check this to send a mail to your supervisor for approval'),
-				'value_approval_mail_address'		 => $supervisor_email,
 				'currency'							 => $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
 				'base_java_url'						 => "{menuaction:'property.bocommon.get_vendor_email',phpgw_return_as:'json'}",
 				'location_item_id'					 => $id,

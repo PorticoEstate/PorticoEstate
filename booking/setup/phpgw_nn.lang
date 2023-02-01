@@ -920,3 +920,8 @@ receipt	booking	nn	Kvittering
 deactivate in frontend	booking	nn	Deaktivert i frontend
 deleted	booking	nn	Slettet
 sorry - insufficient rights	booking	nn	Beklagar, du er ikkje autorisert for handlingen
+please choose at least 1 season	booking	nn	Velg minst ein sesong
+please enter a mail subject	booking	nn	Manglar tittel
+please enter a mail body	booking	nn	Manglar innhold
+select at least one recipient	booking	nn	Velg minst ein adressat
+hidden in frontend	booking	nn	Skjult i frontend

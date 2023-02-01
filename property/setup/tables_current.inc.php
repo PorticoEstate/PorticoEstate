@@ -1646,7 +1646,8 @@
 		'fm_ecodimb_role' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'name' => array('type' => 'varchar', 'precision' => '25', 'nullable' => False)
+				'name' => array('type' => 'varchar', 'precision' => '25', 'nullable' => False),
+				'amount_limit' => array('type' => 'int', 'precision' => 4, 'nullable' => False)
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -1875,6 +1876,26 @@
 				'descr' => array('type' => 'varchar', 'precision' => '50', 'nullable' => true),
 				'priority_key' => array('type' => 'int', 'precision' => '4', 'default' => '1',
 					'nullable' => True)
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_request_probability' => array(
+			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_request_consequence' => array(
+			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False),
 			),
 			'pk' => array('id'),
 			'fk' => array(),

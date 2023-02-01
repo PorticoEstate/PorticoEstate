@@ -76,6 +76,17 @@
 						<xsl:value-of select="php:function('lang', 'No')"/>
 					</xsl:if>
 				</div>
+				<div class="pure-control-group">
+					<label for="for_field_hidden_in_frontend">
+						<xsl:value-of select="php:function('lang', 'hidden in frontend')"/>
+					</label>
+					<xsl:if test="resource/hidden_in_frontend=1">
+						<xsl:value-of select="php:function('lang', 'Yes')"/>
+					</xsl:if>
+					<xsl:if test="resource/hidden_in_frontend=0">
+						<xsl:value-of select="php:function('lang', 'No')"/>
+					</xsl:if>
+				</div>
 				<div class="pure-control-group custom-container">
 					<label>
 						<xsl:value-of select="php:function('lang', 'seasons')"/>

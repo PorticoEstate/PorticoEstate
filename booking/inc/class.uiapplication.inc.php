@@ -1697,6 +1697,19 @@
 					$organization								 = $this->organization_bo->read_single(intval($customer_organization_number_arr[0]));
 					$partial2['customer_organization_name']		 = $organization['name'];
 
+					if(!empty($organization['city']))
+					{
+						$partial2['responsible_city']		 = $organization['city'];
+					}
+					if(!empty($organization['street']))
+					{
+						$partial2['responsible_street']		 = $organization['street'];
+					}
+					if(!empty($organization['zip_code']))
+					{
+						$partial2['responsible_zip_code']		 = $organization['zip_code'];
+					}
+
 					$update_org = false;
 					if(!$organization['customer_identifier_type'] == 'organization_number')
 					{
@@ -1737,6 +1750,19 @@
 							 */
 							$organization_created = true;
 						}
+					}
+
+					if(!empty($organization_info['city']))
+					{
+						$partial2['responsible_city']		 = $organization_info['city'];
+					}
+					if(!empty($organization_info['street']))
+					{
+						$partial2['responsible_street']		 = $organization_info['street'];
+					}
+					if(!empty($organization_info['zip_code']))
+					{
+						$partial2['responsible_zip_code']		 = $organization_info['zip_code'];
 					}
 				}
 
@@ -1893,10 +1919,30 @@
 			{
 				$errors['customer_organization_number'] = implode(', ', $errors['customer_organization_number']);
 			}
+
+			if(empty($partial2['responsible_street']) && !empty($external_login_info['street']))
+			{
+				$partial2['responsible_street'] = $external_login_info['street'];
+			}
+			if(empty($partial2['responsible_zip_code']) && !empty($external_login_info['zip_code']))
+			{
+				$partial2['responsible_zip_code'] = $external_login_info['zip_code'];
+			}
+			if(empty($partial2['responsible_city']) && !empty($external_login_info['city']))
+			{
+				$partial2['responsible_city'] = $external_login_info['city'];
+			}
+	
+			$contact_info = array(
+				'responsible_street' => $partial2['responsible_street'],
+				'responsible_zip_code' => $partial2['responsible_zip_code'],
+				'responsible_city' => $partial2['responsible_city']
+			);
 			return array(
 				'status'		 => $errors ? 'error' : 'saved',
 				'direct_booking' => $direct_booking,
-				'message'		 => preg_replace('/\<br(\s*)?\/?\>/i', PHP_EOL, implode(', ', array_values($errors)))
+				'message'		 => preg_replace('/\<br(\s*)?\/?\>/i', PHP_EOL, implode(', ', array_values($errors))),
+				'contact_info'	 => $contact_info
 			);
 		}
 

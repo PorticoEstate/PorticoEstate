@@ -156,7 +156,8 @@
 				'custom_code' => "
 						var oArgs = " . json_encode(array(
 					'menuaction' => 'frontend.uihelpdesk.add_ticket',
-					'noframework' => 1
+					'noframework' => 1,
+					'height'	=> 620
 				)) . ";
 						newTicket(oArgs);
 					"

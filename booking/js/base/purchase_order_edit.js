@@ -48,7 +48,8 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 						{name: 'type', value: 'hidden'}
 					]
 				}
-			], value: 'id'},
+			], value: 'id'
+		},
 		{//2
 			key: 'name',
 			label: lang['article'],
@@ -57,31 +58,37 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 		{//3
 			key: 'unit',
 			label: lang['unit'],
-			attrs: [{name: 'class', value: "unit align-middle"}]
+			attrs: [{name: 'class', value: "unit"},{name: 'style', value: "display:none;"}
+			]
 		},
 		{//4
-			key: 'tax_code',
-			label: lang['tax code'],
-			attrs: [{name: 'class', value: "text-right align-middle"}]
+			key: 'lang_unit',
+			label: lang['unit'],
+			attrs: [{name: 'class', value: "align-middle"},{name: 'style', value: "text-align:center;"}]
 		},
 		{//5
-			key: 'tax_percent',
-			label: lang['percent'],
-			attrs: [{name: 'class', value: "text-right align-middle"}]
+			key: 'tax_code',
+			label: lang['tax code'],
+			attrs: [{name: 'class', value: "align-middle"},{name: 'style', value: "text-align:center;"}]
 		},
 		{//6
+			key: 'tax_percent',
+			label: lang['percent'],
+			attrs: [{name: 'class', value: "align-middle"},{name: 'style', value: "text-align:center;"}]
+		},
+		{//7
 			key: 'ex_tax_price',
 			label: lang['unit cost'],
 			attrs: [
-				{name: 'class', value: "text-right align-middle"}
+				{name: 'class', value: "align-middle"},{name: 'style', value: "text-align:right;"}
 			]
 		},
-		{//7
+		{//8
 			key: 'tax',
 			label: lang['tax'],
-			attrs: [{name: 'class', value: "text-right align-middle"}]
+			attrs: [{name: 'class', value: "text-right align-middle"},{name: 'style', value: "text-align:right;"}]
 		},
-		{//8
+		{//9
 			key: 'quantity',
 			label: lang['quantity'],
 			attrs: [{name: 'class', value: "align-middle"}],
@@ -95,14 +102,14 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 					]
 				}
 			]},
-		{//9
+		{//10
 			key: 'selected_quantity',
 			label: lang['Selected'],
 			attrs: [
-				{name: 'class', value: "selected_quantity text-right align-middle"}
+				{name: 'class', value: "selected_quantity text-right align-middle"},{name: 'style', value: "text-align:right;"}
 			]
 		},
-		{//10
+		{//11
 			label: 'hidden',
 			attrs: [{name: 'style', value: "display:none;"}],
 			object: [
@@ -113,14 +120,14 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 				}
 			], value: 'selected_article_quantity'
 		},
-		{//11
+		{//12
 			key: 'selected_sum',
 			label: lang['Sum'],
 			attrs: [
-				{name: 'class', value: "text-right align-middle selected_sum"}
+				{name: 'class', value: "text-right align-middle selected_sum"},{name: 'style', value: "text-align:right;"}
 			]
 		},
-		{//12
+		{//13
 			label: lang['Delete'],
 			attrs: [{name: 'class', value: "align-middle"}],
 			object: [
@@ -136,7 +143,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 				}
 			]
 		},
-		{//13
+		{//14
 			/**
 			 * Hidden field for holding information on mandatory items
 			 */
@@ -150,7 +157,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 			],
 			value: 'mandatory'
 		},
-		{//14
+		{//15
 			/**
 			 * Hidden field for holding information on parent_mapping_id
 			 */
@@ -253,6 +260,9 @@ function set_mandatory(xTable)
 	var sum_days = 0;
 
 	var datetime = $("#dates-container").find(".datetime");
+	var one_day = 1000 * 60 * 60 * 24;
+	var day;
+	var days = [];
 
 	for (var j = 0; j < datetime.length; )
 	{
@@ -269,13 +279,21 @@ function set_mandatory(xTable)
 
 		sum_minutes = timespan * 60;
 		sum_hours += Math.ceil(timespan);
-		sum_days += Math.ceil(sum_hours / 24);
+//		sum_days += Math.ceil(sum_hours / 24);
+
+		day = new Date(from).toISOString().split('T')[0];
+		if(!days.includes(day) )
+		{
+			sum_days += Math.ceil((to - from) / one_day);
+			days.push(day);
+		}
 
 		j++;
 		j++;
+		
 	}
 
-	//alternative for time
+	//alternative for time (season)
 
 	var hourtime = $("#dates-container").find(".hourtime");
 	if (hourtime.length > 0)
@@ -313,7 +331,7 @@ function set_mandatory(xTable)
 	for (var i = 0; i < mandatory.length; i++)
 	{
 		tr = mandatory[i].parentNode.parentNode;
-		tax_code_element = tr.childNodes[4];
+		tax_code_element = tr.childNodes[5];
 		tax_code_element.id = 'tax_code_element_' + i;
 		tax_code_element.classList.add("bg-light");
 
@@ -339,18 +357,18 @@ function set_mandatory(xTable)
 						}
 					}
 
-					tax_code_cell.parentNode.childNodes[5].innerHTML = new_percent;
-					var ex_tax_price = tax_code_cell.parentNode.childNodes[6];
+					tax_code_cell.parentNode.childNodes[6].innerHTML = new_percent;
+					var ex_tax_price = tax_code_cell.parentNode.childNodes[7];
 					//tax
-					tax_code_cell.parentNode.childNodes[7].innerHTML = new_percent * parseFloat(ex_tax_price.innerHTML) / 100;
+					tax_code_cell.parentNode.childNodes[8].innerHTML = new_percent * parseFloat(ex_tax_price.innerHTML) / 100;
 
-					var selected_quantity = parseFloat(tax_code_cell.parentNode.childNodes[9].innerHTML);
+					var selected_quantity = parseFloat(tax_code_cell.parentNode.childNodes[10].innerHTML);
 					if (isNaN(selected_quantity))
 					{
 						selected_quantity = 0;
 					}
 
-					var selected_sum = tax_code_cell.parentNode.childNodes[11];
+					var selected_sum = tax_code_cell.parentNode.childNodes[12];
 					selected_sum.innerHTML = parseFloat(ex_tax_price.innerHTML) * selected_quantity * (1 + (new_percent / 100));
 
 					var _tr = tax_code_cell.parentNode;
@@ -362,7 +380,7 @@ function set_mandatory(xTable)
 
 		});
 
-		unit_price_element = tr.childNodes[6];
+		unit_price_element = tr.childNodes[7];
 		unit_price_element.id = 'unit_price_element_' + i;
 		unit_price_element.classList.add("bg-light");
 
@@ -400,19 +418,19 @@ function set_mandatory(xTable)
 							var unit_price_value = $('#unit_price_select').val();
 							$(unit_price_cell).html(unit_price_value);
 
-							var tax_percent = unit_price_cell.parentNode.childNodes[5].innerHTML;
-							var ex_tax_price = unit_price_cell.parentNode.childNodes[6].innerHTML;
-							var tax = unit_price_cell.parentNode.childNodes[7].innerHTML;
+							var tax_percent = unit_price_cell.parentNode.childNodes[6].innerHTML;
+							var ex_tax_price = unit_price_cell.parentNode.childNodes[7].innerHTML;
+							var tax = unit_price_cell.parentNode.childNodes[8].innerHTML;
 							tax = tax_percent * parseFloat(ex_tax_price) / 100;
-							unit_price_cell.parentNode.childNodes[7].innerHTML = tax;
+							unit_price_cell.parentNode.childNodes[8].innerHTML = tax.toFixed(2);
 
-							var selected_quantity = parseFloat(unit_price_cell.parentNode.childNodes[9].innerHTML);
+							var selected_quantity = parseFloat(unit_price_cell.parentNode.childNodes[10].innerHTML);
 							if (isNaN(selected_quantity))
 							{
 								selected_quantity = 0;
 							}
 
-							var selected_sum = unit_price_cell.parentNode.childNodes[11];
+							var selected_sum = unit_price_cell.parentNode.childNodes[12];
 							selected_sum.innerHTML = parseFloat(ex_tax_price) * selected_quantity * (1 + (tax_percent / 100));
 
 							var _tr = unit_price_cell.parentNode;
@@ -432,8 +450,8 @@ function set_mandatory(xTable)
 		{
 			tr.classList.add("table-success");
 			tr.childNodes[0].childNodes[0].setAttribute('style', 'display:none;');
-			tr.childNodes[8].childNodes[0].setAttribute('style', 'display:none;');//quantity
-			tr.childNodes[12].childNodes[0].setAttribute('style', 'display:none;');
+			tr.childNodes[9].childNodes[0].setAttribute('style', 'display:none;');//quantity
+			tr.childNodes[13].childNodes[0].setAttribute('style', 'display:none;');
 
 			unit = tr.getElementsByClassName("unit")[0];
 
@@ -483,13 +501,13 @@ function set_mandatory(xTable)
 
 function set_basket(tr)
 {
-	var selected_quantity = parseInt(tr.childNodes[9].innerHTML);
+	var selected_quantity = parseInt(tr.childNodes[10].innerHTML);
 	if (isNaN(selected_quantity))
 	{
 		selected_quantity = 0;
 	}
 	var id = tr.childNodes[1].childNodes[0].value;
-	var price = parseFloat(tr.childNodes[6].innerText) + parseFloat(tr.childNodes[7].innerText);
+	var price = parseFloat(tr.childNodes[7].innerText) + parseFloat(tr.childNodes[8].innerText);
 
 	var parent_mapping_id = tr.getElementsByClassName('parent_mapping_id')[0].value;
 //	var selected_quantity = parseInt(quantity);
@@ -499,13 +517,13 @@ function set_basket(tr)
 	 * <mapping_id>_<quantity>_<tax_code>_<ex_tax_price>_<parent_mapping_id>
 	 */
 
-	var tax_code = tr.childNodes[4].innerHTML;
+	var tax_code = tr.childNodes[5].innerHTML;
 	if (isNaN(tax_code))
 	{
 		tax_code = 0;
 	}
-	var ex_tax_price =tr.childNodes[6].innerHTML;
-	var target = tr.childNodes[10].childNodes[0];
+	var ex_tax_price =tr.childNodes[7].innerHTML;
+	var target = tr.childNodes[11].childNodes[0];
 	if(selected_quantity === 0)
 	{
 		target.value = null;
@@ -515,11 +533,11 @@ function set_basket(tr)
 		target.value = id + '_' + selected_quantity + '_' + tax_code + '_' + ex_tax_price + '_' + parent_mapping_id;
 	}
 
-	var elem = tr.childNodes[9];
+	var elem = tr.childNodes[10];
 
 	elem.innerText = selected_quantity;
 
-	var sum_cell = tr.childNodes[11];
+	var sum_cell = tr.childNodes[12];
 	sum_cell.innerText = (selected_quantity * parseFloat(price)).toFixed(2);
 
 //	var xTable = tr.parentNode.parentNode;
@@ -538,15 +556,15 @@ function add_to_bastet(element)
 	tr.classList.add("table-success");
 
 	var id = element.parentNode.parentNode.childNodes[1].childNodes[0].value;
-	var quantity = element.parentNode.parentNode.childNodes[8].childNodes[0].value;
-	var price = parseFloat(element.parentNode.parentNode.childNodes[6].innerText) + parseFloat(element.parentNode.parentNode.childNodes[7].innerText);
+	var quantity = element.parentNode.parentNode.childNodes[9].childNodes[0].value;
+	var price = parseFloat(element.parentNode.parentNode.childNodes[7].innerText) + parseFloat(element.parentNode.parentNode.childNodes[8].innerText);
 
 	var parent_mapping_id = tr.getElementsByClassName('parent_mapping_id')[0].value;
 
 	/**
 	 * set selected items
 	 */
-	var temp = element.parentNode.parentNode.childNodes[10].childNodes[0].value;
+	var temp = element.parentNode.parentNode.childNodes[11].childNodes[0].value;
 
 	var selected_quantity = 0;
 
@@ -560,32 +578,32 @@ function add_to_bastet(element)
 	/**
 	 * Reset quantity
 	 */
-	element.parentNode.parentNode.childNodes[8].childNodes[0].value = 1;
+	element.parentNode.parentNode.childNodes[9].childNodes[0].value = 1;
 	/**
 	 * Reset button to disabled
 	 */
 	//element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
-	element.parentNode.parentNode.childNodes[12].childNodes[0].removeAttribute('disabled');
+	element.parentNode.parentNode.childNodes[13].childNodes[0].removeAttribute('disabled');
 
 	/**
 	 * the value selected_articles[]
 	 * <mapping_id>_<quantity>_<tax_code>_<ex_tax_price>_<parent_mapping_id>
 	 */
-	var tax_code = element.parentNode.parentNode.childNodes[4].innerHTML;
+	var tax_code = element.parentNode.parentNode.childNodes[5].innerHTML;
 	if (isNaN(tax_code))
 	{
 		tax_code = 0;
 	}
-	var ex_tax_price = element.parentNode.parentNode.childNodes[6].innerHTML;
-	var target = element.parentNode.parentNode.childNodes[10].childNodes[0];
+	var ex_tax_price = element.parentNode.parentNode.childNodes[7].innerHTML;
+	var target = element.parentNode.parentNode.childNodes[11].childNodes[0];
 	target.value = id + '_' + selected_quantity + '_' + tax_code + '_' + ex_tax_price + '_' + parent_mapping_id;
 
-	var elem = element.parentNode.parentNode.childNodes[9];
+	var elem = element.parentNode.parentNode.childNodes[10];
 
 // add text
 	elem.innerText = selected_quantity;
 
-	var sum_cell = element.parentNode.parentNode.childNodes[11];
+	var sum_cell = element.parentNode.parentNode.childNodes[12];
 	sum_cell.innerText = (selected_quantity * parseFloat(price)).toFixed(2);
 
 	var xTable = element.parentNode.parentNode.parentNode.parentNode;
@@ -616,7 +634,7 @@ function set_sum(xTable)
 		if (selected_sum[i].innerHTML > 0)
 		{
 			tr.classList.add("table-success");
-			var cell = $(selected_sum[i]).parents().children()[12];
+			var cell = $(selected_sum[i]).parents().children()[13];
 			$(cell).children()[0].removeAttribute('disabled');
 
 			temp_total_sum = parseFloat(temp_total_sum) + parseFloat(selected_sum[i].innerHTML);
@@ -641,6 +659,7 @@ function set_sum(xTable)
 	$('#field_cost').val(temp_total_sum.toFixed(2));
 
 	tableFooterTr.appendChild(tableFooterTrTd2);
+	tableFooterTr.appendChild(document.createElement('td'));
 
 	tableFooter.appendChild(tableFooterTr);
 	xTable.appendChild(tableFooter);
@@ -655,16 +674,16 @@ function empty_from_bastet(element)
 	/**
 	 * Reset quantity
 	 */
-	element.parentNode.parentNode.childNodes[8].childNodes[0].value = 1;//quantity
-	element.parentNode.parentNode.childNodes[9].innerText = '';
-	element.parentNode.parentNode.childNodes[10].childNodes[0].value = '';
-	element.parentNode.parentNode.childNodes[11].innerText = '';
+	element.parentNode.parentNode.childNodes[9].childNodes[0].value = 1;//quantity
+	element.parentNode.parentNode.childNodes[10].innerText = '';
+	element.parentNode.parentNode.childNodes[11].childNodes[0].value = '';
+	element.parentNode.parentNode.childNodes[12].innerText = '';
 
 	/**
 	 * Reset button to disabled
 	 */
 //	element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
-	element.parentNode.parentNode.childNodes[12].childNodes[0].setAttribute('disabled', true);
+	element.parentNode.parentNode.childNodes[13].childNodes[0].setAttribute('disabled', true);
 
 	var xTableBody = element.parentNode.parentNode.parentNode;
 	var selected_sum = xTableBody.getElementsByClassName('selected_sum');

@@ -479,6 +479,7 @@
 				<!-- Modal Header -->
 				<div class="modal-header">
 					<h4 id="inspection_title" class="modal-title">Min profil</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<!-- Modal body -->
 				<div class="modal-body">
@@ -491,27 +492,28 @@
 								<xsl:value-of select="profile/name" />
 							</legend>
 
-							<div class="form-group">
-								<label>
+							<div class="mb-1">
+								<label class="form-label">
 									<xsl:value-of select="php:function('lang', 'phone')" />
 								</label>
 								<input type="text" name="values[cellphone]" value="{profile/cellphone}" required="required" class="form-control">
 								</input>
 							</div>
-							<div class="form-group">
-								<label>
+							<div class="mb-1">
+								<label class="form-label">
 									<xsl:value-of select="php:function('lang', 'email')" />
 								</label>
 								<input type="Email" name="values[email]" value="{profile/email}" required="required" class="form-control">
 								</input>
 							</div>
-							<div class="form-group">
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+									<xsl:value-of select="php:function('lang', 'cancel')" />
+								</button>
 								<xsl:variable name="lang_send">
 									<xsl:value-of select="php:function('lang', 'save')" />
 								</xsl:variable>
-								<label>
-									<input type="submit" class="btn btn-primary" name="values[save]" value="{$lang_send}" title='{$lang_send}'/>
-								</label>
+								<input type="submit" class="btn btn-primary" name="values[save]" value="{$lang_send}" title='{$lang_send}'/>
 							</div>
 						</fieldset>
 					</form>

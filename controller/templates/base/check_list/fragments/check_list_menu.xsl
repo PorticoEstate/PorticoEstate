@@ -114,5 +114,8 @@
 			<xsl:value-of select="php:function('lang', 'report')"/>
 		</a>
 	</li>
+	<script type="text/javascript">
+			var lang = <xsl:value-of select="php:function('js_lang', 'Select')"/>;
+	</script>
 
 </xsl:template>
