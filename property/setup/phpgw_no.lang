@@ -2446,3 +2446,4 @@ send sms	property	no	Send SMS
 qr-generator	property	no	QR-generator
 completed	property	no	Fullført
 proposed measures	property	no	Foreslåtte tiltak
+limit	property	no	grense

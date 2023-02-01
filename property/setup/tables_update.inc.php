@@ -11461,4 +11461,23 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+	/**
+	* Update property version from 0.9.17.560 to 0.9.17.561
+	* Rename column
+	*
+	*/
+	$test[] = '0.9.17.760';
+	function property_upgrade0_9_17_760()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_ecodimb_role', 'amount', 'amount_limit');
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.761';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
 
