@@ -1203,7 +1203,7 @@
 			{
 				throw $ex;
 			}
-
+			
 			$start_date->setTimezone($DateTimeZone);
 			$end_date->setTimezone($DateTimeZone);
 
@@ -1241,12 +1241,15 @@
 
 				if($resource['simple_booking_start_date'])
 				{
-					$simple_booking_start_date = new DateTime(date('Y-m-d', $resource['simple_booking_start_date']));
-					$simple_booking_start_date->setTimezone($DateTimeZone);
+					$simple_booking_start_date = new DateTime(date('Y-m-d H:i', $resource['simple_booking_start_date']));
 
 					if($simple_booking_start_date > $_from)
 					{
 						$from = clone $simple_booking_start_date;
+					}
+					else
+					{
+						$from->setTime($simple_booking_start_date->format('H'), $simple_booking_start_date->format('i'), 0);
 					}
 				}
 
@@ -1269,10 +1272,10 @@
 				if($resource['booking_month_horizon'])
 				{
 //					$test = $from->format('Y-m-d');
-					$__to = $this->month_shifter($from, $resource['booking_month_horizon']);
+					$__to = $this->month_shifter($from, $resource['booking_month_horizon'], $DateTimeZone);
 
 //					$test = $__to->format('Y-m-d');
-					if($__to > $_to)
+//					if($__to > $_to)
 					{
 						$to = clone $__to;
 					}
@@ -1583,8 +1586,15 @@
 			return $overlap;
 		}
 
-		function month_shifter( DateTime $aDate, $months )
+		function month_shifter( DateTime $aDate, $months, $DateTimeZone )
 		{
+			$now = new DateTime();
+			$now->setTimezone($DateTimeZone);
+
+			if($aDate > $now && $months > 1)
+			{
+				$months -=1;
+			}
 			$dateA		 = clone($aDate);
 			$dateB		 = clone($aDate);
 			$plusMonths	 = clone($dateA->modify($months . ' Month'));
@@ -1601,6 +1611,7 @@
 			{
 				$result = $plusMonths->modify('last day of this month');
 			}
+			$result->setTime(23, 59, 59);
 			return $result;
 		}
 
