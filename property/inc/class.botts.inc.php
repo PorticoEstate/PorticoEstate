@@ -2254,8 +2254,6 @@ HTML;
 			}
 			else if ($approval_amount_limit1 > 0 && $amount > $approval_amount_limit1)
 			{
-				$amount = 51000;
-				
 				$dimb_role_list = execMethod('property.bogeneric.read', array(
 				'location_info' => array('type' => 'dimb_role'),
 				'sort' => 'ASC',
