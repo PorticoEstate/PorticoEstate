@@ -177,7 +177,7 @@
 
 					if (!is_null($event['application_id']) && $event['application_id'] != '' && !$errors['start_time'] && !$errors['end_time'])
 					{
-						$comment = "ID: " . $event['id'] . " " . lang("User has made a request to increase time on existing booking") . ' ' . $new_date['from_'] . ' - ' . $new_date['to_'];
+						$comment = lang('event') ." #: " . $event['id'] . " " . lang("User has made a request to alter time on existing booking") . ' ' . $new_date['from_'] . ' - ' . $new_date['to_'];
 
 						$this->application_ui->add_comment_to_application($event['application_id'], $comment , True);
 						phpgwapi_cache::message_set(lang('Request for changed time') . '</br>' . lang('Follow status' ));
@@ -213,7 +213,7 @@
 					}
 					$message = '';
 					$this->bo->send_admin_notification(true, $event, $message, $orgdate);
-					$this->bo->update($event);
+//					$this->bo->update($event);
 					$date = substr($event['from_'], 0, 10);
 
 					if ($from_org && $event['customer_organization_id'] !== null)
@@ -227,6 +227,15 @@
 							'id' => $event['building_id'], 'date' => $date));
 					}
 				}
+			}
+
+			if ($errors['allocation'] && is_array($errors['allocation']))
+			{
+				$errors['allocation'] = lang('Overlaps with existing allocation %1. Remember to send a notification', " #" . implode(', #',$errors['allocation'][0]));
+			}
+			if ($errors['booking'] && is_array($errors['booking']))
+			{
+				$errors['booking'] = lang('Overlaps with existing booking %1. Remember to send a notification', " #" . implode(', #',$errors['booking'][0])) ;
 			}
 
 			$this->flash_form_errors($errors);
