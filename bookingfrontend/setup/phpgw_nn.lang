@@ -521,7 +521,7 @@ Reset filter	bookingfrontend	nn	Nullstill søk
 Reset filters	bookingfrontend	nn	Nullstill filter
 To application site	bookingfrontend	nn	Til søknadsside
 locations	bookingfrontend	nn	Lokaler
-User has made a request to increase time on existing booking	bookingfrontend	nn	Ønsker å øke lengden på arrangement. Ny tid:
+User has made a request to alter time on existing booking	bookingfrontend	nn	Ynskjer å endre tida for booking. Ny tid:
 User has changed field for equipment	bookingfrontend	nn	Endring av felt for nødvendig utstyr:
 Request for changed time	bookingfrontend	nn	Forespørsel om øke tid er sendt til saksbehandler
 Follow status	bookingfrontend	nn	Du kan følge med på status under Min side --> Søknader

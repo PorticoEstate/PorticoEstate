@@ -652,6 +652,7 @@
 			$application = $this->application_bo->read_single($allocation['application_id']);
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+				$link =  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiallocation.show','id' => $allocation['id']), false, true, true);
 				$outseason = $_POST['outseason'];
 				$recurring = $_POST['recurring'];
 				$repeat_until = $_POST['repeat_until'];
@@ -680,7 +681,7 @@
 					}
 					else
 					{
-						$comment = "ID: " . $allocation['id'] . " " . lang("User has made a request to increase time on existing booking") . ' ' . $new_from_ . ' - ' . $new_to_;
+						$comment = lang('allocation') ." #: " . $allocation['id'] . " " . lang("User has made a request to alter time on existing booking") . ' ' . $new_from_ . ' - ' . $new_to_;
 						$message = lang('Request for changed time');
 
 						if ($outseason == 'on')
@@ -711,8 +712,11 @@
 							$this->application_ui->add_comment_to_application($allocation['application_id'], $comment, True);
 						}
 
+//						$external_site_address = !empty($config->config_data['external_site_address'])? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+
 						$system_message['title'] = lang("Request to increase time on existing booking") . " " . $allocation['id'];
-						$system_message['message'] = $comment . '<br/>' . '<a href="/index.php?menuaction=booking.uiallocation.show&id=' . $allocation['id'] . '" target="_blank">' . lang('Go to allocation') .'</a>';
+						$system_message['message'] = $comment . '<br/>' . '<a href="' . $link . '" target="_blank">' . lang('Go to allocation') .'</a>';
+
 
 						$this->system_message_bo->add($system_message);
 						phpgwapi_cache::message_set($message);
@@ -727,9 +731,12 @@
 					{
 						if ($new_from_ < $new_to_)
 						{
-							$allocation['from_'] = $new_from_;
-							$this->allocation_so->update($allocation);
-							phpgwapi_cache::message_set(lang('Successfully changed start time') . ' ' . $allocation['from_']);
+							/**
+							 * Saksbehandler må håndtere eventuelle endringer
+							 */
+//							$allocation['from_'] = $new_from_;
+//							$this->allocation_so->update($allocation);
+//							phpgwapi_cache::message_set(lang('Successfully changed start time') . ' ' . $allocation['from_']);
 						}
 						else
 						{
@@ -750,9 +757,12 @@
 					{
 						if ($new_to_ > $new_from_)
 						{
-							$allocation['to_'] = $new_to_;
-							$this->allocation_so->update($allocation);
-							phpgwapi_cache::message_set(lang('Successfully changed end time') . ' ' . $allocation['to_']);
+							/**
+							 * Saksbehandler må håndtere eventuelle endringer
+							 */
+//							$allocation['to_'] = $new_to_;
+//							$this->allocation_so->update($allocation);
+//							phpgwapi_cache::message_set(lang('Successfully changed end time') . ' ' . $allocation['to_']);
 						}
 						else
 						{
@@ -775,6 +785,10 @@
 
 					if (!empty($application))
 					{
+						/**
+						 * Read fresh from database
+						 */
+						$application = $this->application_bo->read_single($allocation['application_id']);
 						$application['equipment'] = $_POST['equipment'];
 						$this->application_bo->update($application);
 						$this->application_ui->add_comment_to_application($allocation['application_id'], $comment , false);
@@ -782,7 +796,7 @@
 					}
 
 					$system_message['title'] = lang("Request for equipment") . " " . $allocation['id'];
-					$system_message['message'] = $comment . '<br/>' . '<a href="/index.php?menuaction=booking.uiallocation.show&id=' . $allocation['id'] . '" target="_blank">' . lang('Go to allocation') .'</a>';
+					$system_message['message'] = $comment . '<br/>' . '<a href="' . $link . '" target="_blank">' . lang('Go to allocation') .'</a>';
 
 					$this->system_message_bo->add($system_message);
 					phpgwapi_cache::message_set($message);
