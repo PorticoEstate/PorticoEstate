@@ -96,7 +96,8 @@
 				. " FROM fm_ecodimb_role_user"
 				. " {$this->join} fm_ecodimb ON fm_ecodimb.id = fm_ecodimb_role_user.ecodimb"
 				. " {$this->join} fm_ecodimb_role ON fm_ecodimb_role.id = fm_ecodimb_role_user.role_id"
-				. " WHERE expired_on IS NULL {$filtermethod}"
+				. " {$this->join}  phpgw_accounts ON fm_ecodimb_role_user.user_id = phpgw_accounts.account_id"
+				. " WHERE expired_on IS NULL AND account_status = 'A' {$filtermethod}"
 				. " ORDER BY ecodimb ASC , default_user ASC ";
 
 //_debug_array($sql);
