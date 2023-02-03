@@ -1,6 +1,6 @@
 <!-- BEGIN header -->
 <form method="POST" action="{action_url}">
-	<table class="pure-table pure-table-bordered pure-table-striped">
+	<table class="pure-table pure-table-bordered pure-table-striped pure-form">
 		<thead>
 			<tr>
 				<th colspan="2">{title}</th>
@@ -14,73 +14,73 @@
 			</tr>
 			<tr>
 				<td>{lang_organisation}:</td>
-				<td><input name="newsettings[org_name]" value="{value_org_name}"></td>
+				<td><input name="newsettings[org_name]" value="{value_org_name}" class="pure-u-1"/></td>
 			</tr>
 			<tr>
 				<td>{lang_department}:</td>
-				<td><input name="newsettings[department]" value="{value_department}"></td>
+				<td><input name="newsettings[department]" value="{value_department}" class="pure-u-1"/></td>
 			</tr>
 			<tr>
 				<td>{lang_org_unit_id}:</td>
-				<td><input name="newsettings[org_unit_id]" value="{value_org_unit_id}"></td>
+				<td><input name="newsettings[org_unit_id]" value="{value_org_unit_id}" class="pure-u-1"/></td>
 			</tr>
 			<tr>
 				<td>{lang_delivery_address}:</td>
 				<td>
-					<textarea cols="40" rows="4" name="newsettings[delivery_address]" wrap="virtual">{value_delivery_address}</textarea>
+					<textarea cols="40" rows="4" name="newsettings[delivery_address]" wrap="virtual" class="pure-u-1">{value_delivery_address} </textarea>
 				</td>
 			</tr>
 			<tr>
 				<td>{lang_invoice_address}:</td>
 				<td>
-					<textarea cols="40" rows="4" name="newsettings[invoice_address]" wrap="virtual">{value_invoice_address}</textarea>
+					<textarea cols="40" rows="4" name="newsettings[invoice_address]" wrap="virtual" class="pure-u-1">{value_invoice_address}</textarea>
 				</td>
 			</tr>
 
 			<tr>
 				<td>{lang_order_footer_header}:</td>
-				<td><input name="newsettings[order_footer_header]" value="{value_order_footer_header}"></td>
+				<td><input name="newsettings[order_footer_header]" value="{value_order_footer_header}" class="pure-u-1"/></td>
 			</tr>
 
 			<tr>
 				<td>{lang_order_footer}:</td>
 				<td>
-					<textarea cols="40" rows="4" name="newsettings[order_footer]" wrap="virtual">{value_order_footer}</textarea>
+					<textarea cols="40" rows="4" name="newsettings[order_footer]" wrap="virtual" class="pure-u-1">{value_order_footer}</textarea>
 				</td>
 			</tr>
 
 			<tr>
 				<td>{lang_order_logo}:</td>
-				<td><input name="newsettings[order_logo]" value="{value_order_logo}"></td>
+				<td><input name="newsettings[order_logo]" value="{value_order_logo}" class="pure-u-1"/></td>
 			</tr>
 
 			<tr>
 				<td>{lang_order_logo_width}:</td>
-				<td><input name="newsettings[order_logo_width]" value="{value_order_logo_width}"></td>
+				<td><input name="newsettings[order_logo_width]" value="{value_order_logo_width}" class="pure-u-1"/></td>
 			</tr>
 
 			<tr>
 				<td>{lang_SMS_client_order_notice}:'ref: __order_id__. Message'</td>
 				<td>
-					<textarea cols="40" rows="4" name="newsettings[sms_client_order_notice]" wrap="virtual">{value_sms_client_order_notice}</textarea>
+					<textarea cols="40" rows="4" name="newsettings[sms_client_order_notice]" wrap="virtual" class="pure-u-1">{value_sms_client_order_notice}</textarea>
 				</td>
 			</tr>
 			<tr>
 				<td>{lang_alternative_to_contract} 1:</td>
-				<td><input name="newsettings[alternative_to_contract_1]" value="{value_alternative_to_contract_1}"></td>
+				<td><input name="newsettings[alternative_to_contract_1]" value="{value_alternative_to_contract_1}" class="pure-u-1"/></td>
 			</tr>
 			<tr>
 				<td>{lang_alternative_to_contract} 2:</td>
-				<td><input name="newsettings[alternative_to_contract_2]" value="{value_alternative_to_contract_2}"></td>
+				<td><input name="newsettings[alternative_to_contract_2]" value="{value_alternative_to_contract_2}" class="pure-u-1"/></td>
 			</tr>
 			<tr>
 				<td>{lang_alternative_to_contract} 3:</td>
-				<td><input name="newsettings[alternative_to_contract_3]" value="{value_alternative_to_contract_3}"></td>
+				<td><input name="newsettings[alternative_to_contract_3]" value="{value_alternative_to_contract_3}" class="pure-u-1"/></td>
 			</tr>
 			<tr>
 				<td>{lang_dimb_responsible_1}:</td>
 				<td>
-					<select name="newsettings[dimb_responsible_1]">
+					<select name="newsettings[dimb_responsible_1]" class="pure-u-1">
 						{hook_dimb_cat_1}
 					</select>
 				</td>
@@ -88,7 +88,7 @@
 			<tr>
 				<td>{lang_dimb_responsible_2}:</td>
 				<td>
-					<select name="newsettings[dimb_responsible_2]">
+					<select name="newsettings[dimb_responsible_2]" class="pure-u-1">
 						{hook_dimb_cat_2}
 					</select>
 				</td>
@@ -96,7 +96,7 @@
 			<tr>
 				<td>{lang_invoicehandler}:</td>
 				<td>
-					<select name="newsettings[invoicehandler]">
+					<select name="newsettings[invoicehandler]" class="pure-u-1">
 						<option value="1" {selected_invoicehandler_1}>Default</option>
 						<option value="2" {selected_invoicehandler_2}>Alternative</option>
 					</select>
@@ -105,7 +105,7 @@
 			<tr>
 				<td>{lang_invoice_acl}:</td>
 				<td>
-					<select name="newsettings[invoice_acl]">
+					<select name="newsettings[invoice_acl]" class="pure-u-1">
 						<option value="default" {selected_invoice_acl_default}>ACL</option>
 						<option value="dimb" {selected_invoice_acl_dimb}>DimB</option>
 					</select>
@@ -114,7 +114,7 @@
 			<tr>
 				<td>{lang_project_status_on_approval}:</td>
 				<td>
-					<select name="newsettings[project_approval_status]">
+					<select name="newsettings[project_approval_status]" class="pure-u-1">
 						{hook_project_approval_status}
 					</select>
 				</td>
@@ -123,7 +123,7 @@
 			<tr>
 				<td>{lang_project_status_on_last_order_closed}:</td>
 				<td>
-					<select name="newsettings[project_status_on_last_order_closed]">
+					<select name="newsettings[project_status_on_last_order_closed]" class="pure-u-1">
 						{hook_project_status_on_last_order_closed}
 					</select>
 				</td>
@@ -132,7 +132,7 @@
 			<tr>
 				<td>{lang_workorder_status_on_approval}:</td>
 				<td>
-					<select name="newsettings[workorder_approval_status]">
+					<select name="newsettings[workorder_approval_status]" class="pure-u-1">
 						{hook_workorder_approval_status}
 					</select>
 				</td>
@@ -140,7 +140,7 @@
 			<tr>
 				<td>{lang_ticket_status_on_approval}:</td>
 				<td>
-					<select name="newsettings[ticket_approval_status]">
+					<select name="newsettings[ticket_approval_status]" class="pure-u-1">
 						{hook_ticket_approval_status}
 					</select>
 				</td>
@@ -148,19 +148,19 @@
 			<tr>
 				<td>{lang_approval_amount_limit}:</td>
 				<td>
-					<input name="newsettings[approval_amount_limit]" value="{value_approval_amount_limit}">
+					<input name="newsettings[approval_amount_limit]" value="{value_approval_amount_limit}" class="pure-u-1"/>
 				</td>
 			</tr>
 			<tr>
 				<td>{lang_approval_amount_limit} 2:</td>
 				<td>
-					<input name="newsettings[approval_amount_limit2]" value="{value_approval_amount_limit2}">
+					<input name="newsettings[approval_amount_limit2]" value="{value_approval_amount_limit2}" class="pure-u-1"/>
 				</td>
 			</tr>
 			<tr>
 				<td>{lang_approval_level}:</td>
 				<td>
-					<select name="newsettings[approval_level]">
+					<select name="newsettings[approval_level]" class="pure-u-1">
 						<option value="order" {selected_approval_level_order}>{lang_order}</option>
 						<option value="project" {selected_approval_level_project}>{lang_project}</option>
 					</select>
@@ -170,7 +170,7 @@
 			<tr>
 				<td>{lang_workorder_status_on_ordered}:</td>
 				<td>
-					<select name="newsettings[workorder_ordered_status]">
+					<select name="newsettings[workorder_ordered_status]" class="pure-u-1">
 						{hook_workorder_ordered_status}
 					</select>
 				</td>
@@ -179,7 +179,7 @@
 			<tr>
 				<td>{lang_request_status_on_project_hookup}:</td>
 				<td>
-					<select name="newsettings[request_project_hookup_status]">
+					<select name="newsettings[request_project_hookup_status]" class="pure-u-1">
 						{hook_request_project_hookup_status}
 					</select>
 				</td>
@@ -187,7 +187,7 @@
 			<tr>
 				<td>{lang_request_status_on_ticket_hookup}:</td>
 				<td>
-					<select name="newsettings[request_ticket_hookup_status]">
+					<select name="newsettings[request_ticket_hookup_status]" class="pure-u-1">
 						{hook_request_ticket_hookup_status}
 					</select>
 				</td>
@@ -196,21 +196,21 @@
 			<tr>
 				<td>{lang_workorder_status_that_are_to_be_set_when_invoice_is_processed}:</td>
 				<td>
-					<select name="newsettings[workorder_closed_status]">
+					<select name="newsettings[workorder_closed_status]" class="pure-u-1">
 						{hook_workorder_closed_status}
 					</select>
 				</td>
 			<tr>
 				<td>{lang_workorder_reopen_status_that_are_to_be_set_when_invoice_is_processed}:</td>
 				<td>
-					<select name="newsettings[workorder_reopen_status]">
+					<select name="newsettings[workorder_reopen_status]" class="pure-u-1">
 						{hook_workorder_reopen_status}
 					</select>
 				</td>
 			<tr>
 				<td>{lang_require_building_part_at_workorder}:</td>
 				<td>
-					<select name="newsettings[workorder_require_building_part]">
+					<select name="newsettings[workorder_require_building_part]" class="pure-u-1">
 						<option value="" {selected_workorder_require_building_part_}>NO</option>
 						<option value="1" {selected_workorder_require_building_part_1}>YES</option>
 					</select>
@@ -219,7 +219,7 @@
 			<tr>
 				<td>{lang_require_tax_code_at_workorder}:</td>
 				<td>
-					<select name="newsettings[workorder_require_tax_code]">
+					<select name="newsettings[workorder_require_tax_code]" class="pure-u-1">
 						<option value="" {selected_workorder_require_tax_code_}>NO</option>
 						<option value="1" {selected_workorder_require_tax_code_1}>YES</option>
 					</select>
@@ -228,7 +228,7 @@
 			<tr>
 				<td>{lang_require_vendor_at_workorder}:</td>
 				<td>
-					<select name="newsettings[workorder_require_vendor]">
+					<select name="newsettings[workorder_require_vendor]" class="pure-u-1">
 						<option value="" {selected_workorder_require_vendor_}>NO</option>
 						<option value="1" {selected_workorder_require_vendor_1}>YES</option>
 					</select>
@@ -237,7 +237,7 @@
 			<tr>
 				<td>{lang_delay_operation_workorder_end_date}, {lang_last_day_in_year}:</td>
 				<td>
-					<select name="newsettings[delay_operation_workorder_end_date]">
+					<select name="newsettings[delay_operation_workorder_end_date]" class="pure-u-1">
 						<option value="" {selected_delay_operation_workorder_end_date_}>NO</option>
 						<option value="1" {selected_delay_operation_workorder_end_date_1}>YES</option>
 					</select>
@@ -246,7 +246,7 @@
 			<tr>
 				<td>{lang_enable_UNSPSC_kode}:</td>
 				<td>
-					<select name="newsettings[enable_unspsc]">
+					<select name="newsettings[enable_unspsc]" class="pure-u-1">
 						<option value="" {selected_enable_unspsc_}>NO</option>
 						<option value="1" {selected_enable_unspsc_1}>YES</option>
 					</select>
@@ -255,7 +255,7 @@
 			<tr>
 				<td>{lang_enable_order_service_id}:</td>
 				<td>
-					<select name="newsettings[enable_order_service_id]">
+					<select name="newsettings[enable_order_service_id]" class="pure-u-1">
 						<option value="" {selected_enable_order_service_id_}>NO</option>
 						<option value="1" {selected_enable_order_service_id_1}>YES</option>
 					</select>
@@ -263,26 +263,26 @@
 			</tr>
 			<tr>
 				<td>{lang_Default_municipal_number}:</td>
-				<td><input name="newsettings[default_municipal]" value="{value_default_municipal}"></td>
+				<td><input name="newsettings[default_municipal]" value="{value_default_municipal}" class="pure-u-1"/></td>
 			</tr>
 			<tr>
 				<td>{lang_Tax}: [%]</td>
-				<td><input name="newsettings[fm_tax]" value="{value_fm_tax}"></td>
+				<td><input name="newsettings[fm_tax]" value="{value_fm_tax}" class="pure-u-1"/></td>
 			</tr>
 			<tr>
 				<td>{lang_Enter_the_location_of_files_URL} <br>
 					{lang_Example}: http://www.domain.com/files</td>
-				<td><input name="newsettings[files_url]" value="{value_files_url}"></td>
+				<td><input name="newsettings[files_url]" value="{value_files_url}" class="pure-u-1"/></td>
 			</tr>
 			<tr>
 				<td>{lang_Path_to_external_files_for_use_with_location}:<br>
 					{lang_On_windows_use}: "//computername/share" {lang_or} "\\\\computername\share"</td>
-				<td><input name="newsettings[external_files]" value="{value_external_files}"></td>
+				<td><input name="newsettings[external_files]" value="{value_external_files}" class="pure-u-1"/></td>
 			</tr>
 			<tr>
 				<td>{lang_max_recursive_level_at_external_files}:</td>
 				<td>
-					<select name="newsettings[external_files_maxlevel]">
+					<select name="newsettings[external_files_maxlevel]" class="pure-u-1">
 						<option value="0" {selected_external_files_maxlevel_0}>None</option>
 						<option value="1" {selected_external_files_maxlevel_1}>1</option>
 						<option value="2" {selected_external_files_maxlevel_2}>2</option>
@@ -298,7 +298,7 @@
 			<tr>
 				<td>{lang_filter_at_level_at_external_files}: <br/>(loc1)</td>
 				<td>
-					<select name="newsettings[external_files_filterlevel]">
+					<select name="newsettings[external_files_filterlevel]" class="pure-u-1">
 						<option value="0" {selected_external_files_filterlevel_0}>None</option>
 						<option value="1" {selected_external_files_filterlevel_1}>1</option>
 						<option value="2" {selected_external_files_filterlevel_2}>2</option>
@@ -314,30 +314,30 @@
 			<tr>
 				<td>{lang_Enter_MAP_URL} <br>
 					{lang_Example}: http://www.domain.com/map</td>
-				<td><input name="newsettings[map_url]" value="{value_map_url}"></td>
+				<td><input name="newsettings[map_url]" value="{value_map_url}" class="pure-u-1"/></td>
 			</tr>
 			<tr>
 				<td>{lang_Enter_GAB_Location_Level} <br>
 					{lang_Default_value_is}: 3</td>
-				<td><input name="newsettings[gab_insert_level]" value="{value_gab_insert_level}"></td>
+				<td><input name="newsettings[gab_insert_level]" value="{value_gab_insert_level}" class="pure-u-1"/></td>
 			</tr>
 			<tr>
 				<td>{lang_Enter_GAB_URL} <br>
 					{lang_Example}: http://www.domain.com/gab</td>
-				<td><input name="newsettings[gab_url]" value="{value_gab_url}"></td>
+				<td><input name="newsettings[gab_url]" value="{value_gab_url}" class="pure-u-1"/></td>
 			</tr>
 			<tr>
 				<td>{lang_gab_url_paramtres}:<br>
 					lang_Example: type=eiendom&knr=__kommune_nr__&Gnr=__gaards_nr__&Bnr=__bruks_nr__&Fnr=__feste_nr__&Snr=__seksjons_nr__
 				</td>
 				<td>
-					<textarea cols="40" rows="4" name="newsettings[gab_url_paramtres]" wrap="virtual">{value_gab_url_paramtres}</textarea>
+					<textarea cols="40" rows="4" name="newsettings[gab_url_paramtres]" wrap="virtual" class="pure-u-1">{value_gab_url_paramtres}</textarea>
 				</td>
 			</tr>
 			<tr>
 				<td>{lang_suppress_old_tenant}:</td>
 				<td>
-					<select name="newsettings[suppress_tenant]">
+					<select name="newsettings[suppress_tenant]" class="pure-u-1">
 						<option value="" {selected_suppress_tenant_}>NO</option>
 						<option value="1" {selected_suppress_tenant_1}>YES</option>
 					</select>
@@ -346,7 +346,7 @@
 			<tr>
 				<td>{lang_show_billable_hours}:</td>
 				<td>
-					<select name="newsettings[show_billable_hours]">
+					<select name="newsettings[show_billable_hours]" class="pure-u-1">
 						<option value="" {selected_show_billable_hours_}>NO</option>
 						<option value="1" {selected_show_billable_hours_1}>YES</option>
 					</select>
@@ -355,7 +355,7 @@
 			<tr>
 				<td>{lang_suppress_location_summary}:</td>
 				<td>
-					<select name="newsettings[suppress_location_summary]">
+					<select name="newsettings[suppress_location_summary]" class="pure-u-1">
 						<option value="" {selected_suppress_location_summary_}>NO</option>
 						<option value="1" {selected_suppress_location_summary_1}>YES</option>
 					</select>
@@ -367,12 +367,12 @@
 			<tr>
 				<td>{lang_Open_translates_to}: <br>
 					{lang_default}: {lang_Open}</td>
-				<td><input name="newsettings[tts_lang_open]" value="{value_tts_lang_open}"></td>
+				<td><input name="newsettings[tts_lang_open]" value="{value_tts_lang_open}" class="pure-u-1"/></td>
 			</tr>
 			<tr>
 				<td>{lang_tts_deviation_category}:</td>
 				<td>
-					<select name="newsettings[tts_deviation_category]">
+					<select name="newsettings[tts_deviation_category]" class="pure-u-1">
 						{hook_tts_deviation_category}
 					</select>
 				</td>
@@ -391,7 +391,7 @@
 			<tr>
 				<td >{lang_TTS_disable_assign_to_user_on_add}:</td>
 				<td>
-					<select name="newsettings[tts_disable_userassign_on_add]">
+					<select name="newsettings[tts_disable_userassign_on_add]" class="pure-u-1">
 						<option value="" {selected_tts_disable_userassign_on_add_}>NO</option>
 						<option value="1" {selected_tts_disable_userassign_on_add_1}>YES</option>
 					</select>
@@ -400,7 +400,7 @@
 			<tr>
 				<td >{lang_TTS_default_interface}:</td>
 				<td>
-					<select name="newsettings[tts_default_interface]">
+					<select name="newsettings[tts_default_interface]" class="pure-u-1">
 						<option value="" {selected_tts_default_interface_}>Full</option>
 						<option value="simplified" {selected_tts_default_interface_simplified}>{lang_simplified}</option>
 					</select>
@@ -429,7 +429,7 @@
 			<tr>
 				<td>{lang_Mail_Notification}:</td>
 				<td>
-					<select name="newsettings[mailnotification]">
+					<select name="newsettings[mailnotification]" class="pure-u-1">
 						<option value="" {selected_mailnotification_}>NO</option>
 						<option value="1" {selected_mailnotification_1}>YES</option>
 					</select>
@@ -438,7 +438,7 @@
 			<tr>
 				<td>{lang_Owner_Notification_Project}.</td>
 				<td>
-					<select name="newsettings[notify_project_owner]">
+					<select name="newsettings[notify_project_owner]" class="pure-u-1">
 						<option value="" {selected_notify_project_owner_}>NO</option>
 						<option value="1" {selected_notify_project_owner_1}>YES</option>
 					</select>
@@ -447,7 +447,7 @@
 			<tr>
 				<td>{lang_Owner_Notification_TTS}.</td>
 				<td>
-					<select name="newsettings[ownernotification]">
+					<select name="newsettings[ownernotification]" class="pure-u-1">
 						<option value="" {selected_ownernotification_}>NO</option>
 						<option value="1" {selected_ownernotification_1}>YES</option>
 					</select>
@@ -456,7 +456,7 @@
 			<tr>
 				<td>{lang_Assigned_Notification_TTS}.</td>
 				<td>
-					<select name="newsettings[assignednotification]">
+					<select name="newsettings[assignednotification]" class="pure-u-1">
 						<option value="" {selected_assignednotification_}>NO</option>
 						<option value="1" {selected_assignednotification_1}>YES</option>
 					</select>
@@ -465,7 +465,7 @@
 			<tr>
 				<td>{lang_Group_Notification_TTS}.</td>
 				<td>
-					<select name="newsettings[groupnotification]">
+					<select name="newsettings[groupnotification]" class="pure-u-1">
 						<option value="" {selected_groupnotification_}>NO</option>
 						<option value="1" {selected_groupnotification_1}>YES</option>
 						<option value="2" {selected_groupnotification_2}>Never</option>
@@ -475,7 +475,7 @@
 			<tr>
 				<td>{lang_TTS_file_upload}:</td>
 				<td>
-					<select name="newsettings[fmttsfileupload]">
+					<select name="newsettings[fmttsfileupload]" class="pure-u-1">
 						<option value="" {selected_fmttsfileupload_}>NO</option>
 						<option value="1" {selected_fmttsfileupload_1}>YES</option>
 					</select>
@@ -484,7 +484,7 @@
 			<tr>
 				<td>{lang_mandatory_title_TTS}.</td>
 				<td>
-					<select name="newsettings[tts_mandatory_title]">
+					<select name="newsettings[tts_mandatory_title]" class="pure-u-1">
 						<option value="" {selected_tts_mandatory_title_}>NO</option>
 						<option value="1" {selected_tts_mandatory_title_1}>YES</option>
 					</select>
@@ -504,7 +504,7 @@
 			<tr>
 				<td>{lang_TTS_order_contact_at_location}.</td>
 				<td>
-					<select name="newsettings[contact_at_location]">
+					<select name="newsettings[contact_at_location]" class="pure-u-1">
 						{hook_list_contact_at_location}
 					</select>
 				</td>
@@ -512,7 +512,7 @@
 			<tr>
 				<td>{lang_send_response_TTS}.</td>
 				<td>
-					<select name="newsettings[tts_send_response]">
+					<select name="newsettings[tts_send_response]" class="pure-u-1">
 						<option value="" {selected_tts_send_response_}>NO</option>
 						<option value="1" {selected_tts_send_response_1}>YES</option>
 					</select>
@@ -522,7 +522,7 @@
 			<tr>
 				<td>{lang_Ask_for_workorder_approval_by_email}.</td>
 				<td>
-					<select name="newsettings[workorder_approval]">
+					<select name="newsettings[workorder_approval]" class="pure-u-1">
 						<option value="" {selected_workorder_approval_}>NO</option>
 						<option value="1" {selected_workorder_approval_1}>YES</option>
 					</select>
@@ -532,7 +532,7 @@
 			<tr>
 				<td>{lang_Ask_for_project_approval_by_email}.</td>
 				<td>
-					<select name="newsettings[project_approval]">
+					<select name="newsettings[project_approval]" class="pure-u-1">
 						<option value="" {selected_project_approval_}>NO</option>
 						<option value="1" {selected_project_approval_1}>YES</option>
 					</select>
@@ -542,7 +542,7 @@
 			<tr>
 				<td>{lang_project_suppress_meter}.</td>
 				<td>
-					<select name="newsettings[project_suppressmeter]">
+					<select name="newsettings[project_suppressmeter]" class="pure-u-1">
 						<option value="" {selected_project_suppressmeter_}>NO</option>
 						<option value="1" {selected_project_suppressmeter_1}>YES</option>
 					</select>
@@ -551,7 +551,7 @@
 			<tr>
 				<td>{lang_project_suppress_coordination}.</td>
 				<td>
-					<select name="newsettings[project_suppresscoordination]">
+					<select name="newsettings[project_suppresscoordination]" class="pure-u-1">
 						<option value="" {selected_project_suppresscoordination_}>NO</option>
 						<option value="1" {selected_project_suppresscoordination_1}>YES</option>
 					</select>
@@ -560,7 +560,7 @@
 			<tr>
 				<td>{lang_project_optional_category}.</td>
 				<td>
-					<select name="newsettings[project_optional_category]">
+					<select name="newsettings[project_optional_category]" class="pure-u-1">
 						<option value="" {selected_project_optional_category_}>NO</option>
 						<option value="1" {selected_project_optional_category_1}>YES</option>
 					</select>
@@ -569,7 +569,7 @@
 			<tr>
 				<td>{lang_request_show_dates}.</td>
 				<td>
-					<select name="newsettings[request_show_dates]">
+					<select name="newsettings[request_show_dates]" class="pure-u-1">
 						<option value="" {selected_request_show_dates_}>NO</option>
 						<option value="1" {selected_request_show_dates_1}>YES</option>
 					</select>
@@ -579,7 +579,7 @@
 			<tr>
 				<td>{lang_request_location_level}.</td>
 				<td>
-					<select name="newsettings[request_location_level]">
+					<select name="newsettings[request_location_level]" class="pure-u-1">
 						{hook_list_location_level_otions}
 					</select>
 				</td>
@@ -588,23 +588,23 @@
 
 			<tr>
 				<td>{lang_request_coordinator_text}:</td>
-				<td><input name="newsettings[lang_request_coordinator]" value="{value_lang_request_coordinator}"></td>
+				<td><input name="newsettings[lang_request_coordinator]" value="{value_lang_request_coordinator}" class="pure-u-1"/></td>
 			</tr>
 
 			<tr>
 				<td>{lang_meter_register} (ex: <b>entity_1_11</b>):</td>
-				<td><input name="newsettings[meter_register]" value="{value_meter_register}"></td>
+				<td><input name="newsettings[meter_register]" value="{value_meter_register}" class="pure-u-1"/></td>
 			</tr>
 			<tr>
 				<td>{lang_comma_separated_email_addresses_to_be_notified_about_tenant_claim}:</td>
 				<td>
-					<input name="newsettings[tenant_claim_notify_mails]" value="{value_tenant_claim_notify_mails}" size="40">
+					<input name="newsettings[tenant_claim_notify_mails]" value="{value_tenant_claim_notify_mails}" size="40" class="pure-u-1"/>
 				</td>
 			</tr>
 			<tr>
 				<td>{lang_Receive_workorder_status_by_SMS}.</td>
 				<td>
-					<select name="newsettings[wo_status_sms]">
+					<select name="newsettings[wo_status_sms]" class="pure-u-1">
 						<option value="" {selected_wo_status_sms_}>NO</option>
 						<option value="1" {selected_wo_status_sms_1}>YES</option>
 					</select>
@@ -613,7 +613,7 @@
 			<tr>
 				<td>{lang_Use_ACL_for_accessing_location_based_information}.</td>
 				<td>
-					<select name="newsettings[acl_at_location]">
+					<select name="newsettings[acl_at_location]" class="pure-u-1">
 						<option value="" {selected_acl_at_location_}>NO</option>
 						<option value="1" {selected_acl_at_location_1}>YES</option>
 					</select>
@@ -622,7 +622,7 @@
 			<tr>
 				<td>{lang_Bypass_ACL_for_accessing_tickets}.</td>
 				<td>
-					<select name="newsettings[bypass_acl_at_tickets]">
+					<select name="newsettings[bypass_acl_at_tickets]" class="pure-u-1">
 						<option value="" {selected_bypass_acl_at_tickets_}>NO</option>
 						<option value="1" {selected_bypass_acl_at_tickets_1}>YES</option>
 					</select>
@@ -642,7 +642,7 @@
 			<tr>
 				<td>{lang_Use_ACL_for_helpdesk_categories}.</td>
 				<td>
-					<select name="newsettings[acl_at_tts_category]">
+					<select name="newsettings[acl_at_tts_category]" class="pure-u-1">
 						<option value="" {selected_acl_at_tts_category_}>NO</option>
 						<option value="1" {selected_acl_at_tts_category_1}>YES</option>
 					</select>
@@ -651,7 +651,7 @@
 			<tr>
 				<td>{lang_Use_location_at_workorder}.</td>
 				<td>
-					<select name="newsettings[location_at_workorder]">
+					<select name="newsettings[location_at_workorder]" class="pure-u-1">
 						<option value="" {selected_location_at_workorder_}>NO</option>
 						<option value="1" {selected_location_at_workorder_1}>YES</option>
 					</select>
@@ -660,7 +660,7 @@
 			<tr>
 				<td>{lang_budget_at_project_level}.</td>
 				<td>
-					<select name="newsettings[budget_at_project]">
+					<select name="newsettings[budget_at_project]" class="pure-u-1">
 						<option value="" {selected_budget_at_project_}>NO</option>
 						<option value="1" {selected_budget_at_project_1}>YES</option>
 					</select>
@@ -669,7 +669,7 @@
 			<tr>
 				<td>{lang_common_budget_account_at_project_level}.</td>
 				<td>
-					<select name="newsettings[budget_account_at_project]">
+					<select name="newsettings[budget_account_at_project]" class="pure-u-1">
 						<option value="" {selected_budget_account_at_project_}>NO</option>
 						<option value="1" {selected_budget_account_at_project_1}>YES</option>
 					</select>
@@ -678,7 +678,7 @@
 			<tr>
 				<td>{lang_update_project_budget_from_order}.</td>
 				<td>
-					<select name="newsettings[update_project_budget_from_order]">
+					<select name="newsettings[update_project_budget_from_order]" class="pure-u-1">
 						<option value="" {selected_update_project_budget_from_order_}>NO</option>
 						<option value="1" {selected_update_project_budget_from_order_1}>YES</option>
 					</select>
@@ -688,7 +688,7 @@
 			<tr>
 				<td>{lang_disallow_multiple_condition_types_at_demands}.</td>
 				<td>
-					<select name="newsettings[disallow_multiple_condition_types]">
+					<select name="newsettings[disallow_multiple_condition_types]" class="pure-u-1">
 						<option value="" {selected_disallow_multiple_condition_types_}>NO</option>
 						<option value="1" {selected_disallow_multiple_condition_types_1}>YES</option>
 					</select>
@@ -708,11 +708,11 @@
 
 			<tr>
 				<td>{lang_ntlm_alternative_host}:</td>
-				<td><input name="newsettings[ntlm_alternative_host]" value="{value_ntlm_alternative_host}"></td>
+				<td><input name="newsettings[ntlm_alternative_host]" value="{value_ntlm_alternative_host}" class="pure-u-1"/></td>
 			</tr>
 			<tr>
 				<td>{lang_uploader_filetypes}: jpg,gif,png</td>
-				<td><input name="newsettings[uploader_filetypes]" value="{value_uploader_filetypes}"></td>
+				<td><input name="newsettings[uploader_filetypes]" value="{value_uploader_filetypes}" class="pure-u-1"/></td>
 			</tr>
 
 			<tr>
@@ -744,7 +744,7 @@
 			<tr>
 				<td>{lang_initial_status_that_are_to_be_set_when_condition_survey_are_imported}:</td>
 				<td>
-					<select name="newsettings[condition_survey_initial_status]">
+					<select name="newsettings[condition_survey_initial_status]" class="pure-u-1">
 						{hook_condition_survey_initial_status}
 					</select>
 				</td>
@@ -753,7 +753,7 @@
 			<tr>
 				<td>{lang_hidden_status_that_are_to_be_set_when_condition_survey_are_imported}:</td>
 				<td>
-					<select name="newsettings[condition_survey_hidden_status]">
+					<select name="newsettings[condition_survey_hidden_status]" class="pure-u-1">
 						{hook_condition_survey_hidden_status}
 					</select>
 				</td>
@@ -762,7 +762,7 @@
 			<tr>
 				<td>{lang_obsolete_status_that_are_to_be_set_for_old_records_when_condition_survey_are_imported}:</td>
 				<td>
-					<select name="newsettings[condition_survey_obsolete_status]">
+					<select name="newsettings[condition_survey_obsolete_status]" class="pure-u-1">
 						{hook_condition_survey_obsolete_status}
 					</select>
 				</td>
@@ -771,7 +771,7 @@
 			<tr>
 				<td>{lang_path_to_temp_files_components}:</td>
 				<td>
-					<input name="newsettings[temp_files_components]" value="{value_temp_files_components}" size="40">
+					<input name="newsettings[temp_files_components]" value="{value_temp_files_components}" size="40" class="pure-u-1">
 				</td>
 			</tr>
 		</tbody>
@@ -790,8 +790,8 @@
 			</tr>
 			<tr>
 				<td colspan="2" align="center">
-					<input type="submit" name="submit" value="{lang_submit}">
-					<input type="submit" name="cancel" value="{lang_cancel}">
+					<input type="submit" name="submit" value="{lang_submit}" class="pure-button"/>
+					<input type="submit" name="cancel" value="{lang_cancel}" class="pure-button"/>
 				</td>
 			</tr>
 		</tfoot>

@@ -1,6 +1,6 @@
 <!-- BEGIN header -->
 <form method="post" action="{action_url}">
-	<table class="pure-table pure-table-bordered">
+	<table class="pure-table pure-table-bordered pure-table-striped pure-form">
 		<th>
 		<td colspan="2"><font color="{th_text}">&nbsp;<b>{title}</b></font></td>
 		</th>
@@ -18,7 +18,7 @@
 		<tr class="row_off">
 			<td>{lang_Select_where_you_want_to_store}/{lang_retrieve_messages}.</td>
 			<td>
-				<select name="newsettings[message_repository]">
+				<select name="newsettings[message_repository]" class="pure-u-1">
 					<option value="sql" {selected_message_repository_sql}>SQL</option>
 					<option value="imap" {selected_message_repository_imap}>SMTP/IMAP</option>
 				</select>
@@ -26,7 +26,7 @@
 		</tr>
 		<tr class="row_on">
 			<td>{lang_IMAP_host_for_messages}:</td>
-			<td><input name="newsettings[imap_message_host]" value="{value_imap_message_host}" size="40" /></td>
+			<td><input name="newsettings[imap_message_host]" value="{value_imap_message_host}" size="40" class="pure-u-1"/></td>
 		</tr>
 		<tr class="row_off">
 			<td>{lang_Restrict_users_to_only_sending_to_the_follow_group}:</td>
@@ -43,8 +43,8 @@
 		</tr>
 		<tr>
 			<td colspan="2" align="center">
-				<input type="submit" name="submit" value="{lang_submit}" />
-				<input type="submit" name="cancel" value="{lang_cancel}" />
+				<input type="submit" name="submit" value="{lang_submit}" class="pure-button"/>
+				<input type="submit" name="cancel" value="{lang_cancel}" class="pure-button"/>
 			</td>
 		</tr>
 	</table>
