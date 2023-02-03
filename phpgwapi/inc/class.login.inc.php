@@ -446,6 +446,9 @@ HTML;
 					$GLOBALS['phpgw']->redirect_link('/' . $partial_url, array('cd' => '5'));
 				}
 
+				//Reset auth object
+				$GLOBALS['phpgw']->auth	= createObject('phpgwapi.auth');
+
 				$login	 = phpgw::get_var('login', 'string', 'POST');
 				// remove entities to stop mangling
 				$passwd	 = html_entity_decode(phpgw::get_var('passwd', 'string', 'POST'));
