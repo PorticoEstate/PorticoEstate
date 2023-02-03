@@ -2585,7 +2585,7 @@
 						$value_set_line['category']		 = $data['dim_e'];
 
 						$value_set_line = $this->db->validate_update($value_set_line);
-						$this->db->query("UPDATE fm_workorder SET {$value_set_line} WHERE id='{$data['order_id']}'");
+						$this->db->query("UPDATE fm_workorder SET {$value_set_line} WHERE id='{$data['order_id']}' AND continuous IS NULL", __LINE__, __FILE__);
 						unset($value_set_line);
 						break;
 				}

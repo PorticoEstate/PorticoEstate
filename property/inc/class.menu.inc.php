@@ -625,6 +625,11 @@
 						'text'	 => lang('qr-generator'),
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiqr_generator.index'))
 					),
+					'qrcode_scanner'		 => array
+						(
+						'text'	 => lang('qrcode scanner'),
+						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiscanner.index'))
+					),
 					'entity'					 => array
 						(
 						'text'		 => lang('Admin entity'),
