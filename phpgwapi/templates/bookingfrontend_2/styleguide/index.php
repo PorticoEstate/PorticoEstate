@@ -82,6 +82,11 @@
             'folder' => 'status',
             'filename' => 'status',
           ),
+          'Navbar' => array(
+            'name' => 'Navigasjon',
+            'folder' => 'navbar',
+            'filename' => 'navbar',
+          ),
           'MultiSearch' => array(
             'name' => 'Flervalgssøk',
             'folder' => 'multi-search',
@@ -92,6 +97,7 @@
             'folder' => 'shortcut',
             'filename' => 'shortcut',
           ),
+          
         );
 
         echo '<ul class="list-unstyled d-flex flex-wrap">';

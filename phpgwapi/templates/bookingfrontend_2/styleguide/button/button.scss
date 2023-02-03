@@ -1,4 +1,4 @@
-.btn {
+.pe-btn {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -7,17 +7,12 @@
   font-weight: 700;
   border-radius: $rounded-large;
 
-  &:first-child:active:focus-visible,
-  :not(&-check)+&:active:focus-visible {
+  &:first-child:active:focus-visible {
     box-shadow: $box-focus-shadow;
   }
 
   &:hover,
-  &:active,
-  &:first-child:active,
-  &:first-child:active:focus-visible,
-  :not(&-check)+&:active,
-  :not(&-check)+&:active:focus-visible {
+  &:active {
     border-color: $purple;
   }
 
@@ -35,11 +30,7 @@
     color: $white;
 
     &:hover,
-    &:active,
-    &:first-child:active,
-    &:first-child:active:focus-visible,
-    :not(&-check)+&:active,
-    :not(&-check)+&:active:focus-visible {
+    &:active {
       background: $white;
       color: $purple;
     }
@@ -48,6 +39,7 @@
       background: $purple;
       color: $white;
     }
+
   }
 
   &-secondary {
@@ -55,11 +47,7 @@
     background: $white;
 
     &:hover,
-    &:active,
-    &:first-child:active,
-    &:first-child:active:focus-visible,
-    :not(&-check)+&:active,
-    :not(&-check)+&:active:focus-visible {
+    &:active {
       background: $purple;
       color: $white;
     }
@@ -91,5 +79,7 @@
     color: $grey;
     border-color: $grey;
     opacity: 1;
+    pointer-events: none;
   }
 }
+

@@ -13,9 +13,9 @@
 
       foreach ($buttonTypes as $buttonType) {
 
-        $typeClass = ' btn-'.$buttonType;
-        $modifierClass = ' btn--'.$buttonModifier;
-        $contentType = '<span>btn '.$typeClass.'</span>';
+        $typeClass = ' pe-btn-'.$buttonType;
+        $modifierClass = ' pe-btn--'.$buttonModifier;
+        $contentType = '<span>pe-btn '.$typeClass.'</span>';
         $contentModifier = '<span>'.$modifierClass.'</span>';
         
         if($buttonModifier == 'normal') {
@@ -24,12 +24,12 @@
         }
 
         if($buttonType == 'disabled') {
-          $typeClass = ' btn-primary';
-          $contentType = 'btn';
+          $typeClass = ' pe-btn-primary';
+          $contentType = 'pe-btn';
         }
 
         echo '<div class="col-6 col-sm-4 d-flex flex-column align-items-center mb-4">
-                <button type="button" class="btn '.$typeClass.$modifierClass.'"
+                <button type="button" class="pe-btn '.$typeClass.$modifierClass.'"
                 '.(($buttonType == 'disabled') ? 'disabled' : '').'>'.(($buttonModifier == 'circle') ? '<i class="fas fa-search"></i>' : 'Button').'</button>
                 <div class="d-flex flex-column mt-2 text-center">
                   '. $contentType.$contentModifier .'
