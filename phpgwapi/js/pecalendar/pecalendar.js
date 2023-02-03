@@ -83,6 +83,7 @@ class PEcalendar {
         const header = this.createCalendarHeader();
         // Creating days header
         const days = this.createElement("div", "days");
+        days.id = "days";
         for (let c = 0; c < 7; c++) {
             const day = this.firstDayOfWeek.plus({day: c});
             const dayEl = this.createElement("div", "day");
@@ -173,6 +174,7 @@ class PEcalendar {
                     self.setDate(d)
                 }
             });
+
         }
     }
 
@@ -288,5 +290,18 @@ class PEcalendar {
     }
 
 }
+
+$(window).scroll(function() {
+    // const days = $('#days');
+    // if (days) {
+    //     const val = days.offset().top - $(window).scrollTop();
+    //     if(val < 5 && val > 0) {
+    //
+    //     }
+    //     if (Math.abs(days.offset().top - $(window).scrollTop()) < 5) {
+    //         console.log('On Top', Date.now())
+    //     }
+    // }
+});
 
 new PEcalendar();

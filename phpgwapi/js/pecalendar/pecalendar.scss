@@ -39,15 +39,19 @@ body {
 
 .container {
   margin: 10px;
-  @media all and (max-width: 992px) {
+  @media all and (min-width: 481px) and  (max-width: 992px) {
     width: 100vw;
     height: 100vh;
-    position: relative;
-    overflow: scroll;
+    //position: relative;
+    //overflow: scroll;
   }
   @media all and (max-width: 480px) {
     margin: 0;
     padding: 0;
+    width: 100vw;
+    height: 100vh;
+    //position: relative;
+    overflow: scroll;
   }
 }
 
@@ -63,7 +67,7 @@ body {
     width: calc(500vw + var(--time-width));
   }
 
-  @media all and (max-width: 992px) {
+  @media all and (min-width: 481px) and  (max-width: 992px) {
     width: calc(300vw + var(--time-width));
   }
 
@@ -82,7 +86,7 @@ body {
       width: 500vw;
     }
 
-    @media all and (max-width: 992px) {
+    @media all and (min-width: 481px) and  (max-width: 992px) {
       width: 300vw;
     }
 
@@ -96,10 +100,11 @@ body {
         display: grid;
         grid-template-columns: 1fr 1fr;
         @media screen and (max-width: 480px){
+          width: 90vw;
           grid-template-columns: 1fr;
         }
 
-        @media all and (max-width: 992px) {
+        @media all and (min-width: 481px) and  (max-width: 992px) {
           width: 90vw;
         }
       }
@@ -184,7 +189,7 @@ body {
       width: 500vw;
     }
 
-    @media all and (max-width: 992px) {
+    @media all and (min-width: 481px) and  (max-width: 992px) {
       width: 300vw;
     }
   }
@@ -229,7 +234,7 @@ body {
         width: 500vw;
     }
 
-    @media all and (max-width: 992px) {
+    @media all and (min-width: 481px) and  (max-width: 992px) {
       width: 300vw;
     }
 
