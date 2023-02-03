@@ -2263,7 +2263,7 @@ HTML;
 
 				for ($i = 0; $i < count($dimb_role_list); $i++)
 				{
-					if ($amount > $dimb_role_list[$i]['amount_limit'] && ($amount <= $dimb_role_list[$i + 1] || !isset($dimb_role_list[$i + 1])))
+					if ($amount > $dimb_role_list[$i]['amount_limit'] && ($amount <= $dimb_role_list[$i + 1]['amount_limit'] || !isset($dimb_role_list[$i + 1])))
 					{
 						$dimb_role_id = $dimb_role_list[$i]['id'];
 					}
