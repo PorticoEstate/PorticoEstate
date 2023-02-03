@@ -78,6 +78,7 @@
 input[type="text"] {
   @include pill;
   box-shadow: $box-shadow;
+  -webkit-appearance: none;
 }
 
 .input-icon {

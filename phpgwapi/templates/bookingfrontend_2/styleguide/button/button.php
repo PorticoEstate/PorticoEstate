@@ -5,7 +5,7 @@
     );
 
     $buttonModifiers = array(
-      'normal', 'small', 'large'
+      'normal', 'small', 'large', 'circle'
     );
 
     foreach ($buttonModifiers as $buttonModifier) {
@@ -30,7 +30,7 @@
 
         echo '<div class="col-6 col-sm-4 d-flex flex-column align-items-center mb-4">
                 <button type="button" class="btn '.$typeClass.$modifierClass.'"
-                '.(($buttonType == 'disabled') ? 'disabled' : '').'>Button</button>
+                '.(($buttonType == 'disabled') ? 'disabled' : '').'>'.(($buttonModifier == 'circle') ? '<i class="fas fa-search"></i>' : 'Button').'</button>
                 <div class="d-flex flex-column mt-2 text-center">
                   '. $contentType.$contentModifier .'
                 </div>

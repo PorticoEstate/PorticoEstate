@@ -1,0 +1,105 @@
+.multisearch {
+  background: rgba($purple, 0.1);
+  padding: 1.25rem;
+  border-radius: $rounded-large;
+
+  @media (min-width: $media-medium) {
+    border-radius: 7rem;
+    padding: 1rem;
+  }
+
+  &__inner {
+    border-radius: $rounded-large;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    @media (min-width: $media-medium) {
+      flex-direction: row;
+      background: $white;
+      border-radius: 7rem;
+      padding: 1.6rem 5.5rem 1.2rem 1.5rem;
+    }
+
+    &__item {
+      display: flex;
+      flex-direction: column;
+      background: $white;
+      border-radius: $rounded-large;
+      padding: 1rem 1rem 1rem 2rem;
+      margin-bottom: 1rem;
+      width: 100%;
+
+      @media (max-width: ($media-medium - 1)) {
+        box-shadow: $box-shadow-large;
+
+        &:focus-within {
+          box-shadow: $box-shadow-large, $box-focus-shadow;
+        }
+
+        &:hover {
+          box-shadow: $box-shadow-large, $box-focus-shadow-purple;
+        }
+      }
+
+      @media (min-width: $media-medium) {
+        background: transparent;
+        padding: 0 1rem;
+        border-radius: 0;
+        margin-bottom: 0;
+      }
+
+      &--border {
+        @media (min-width: $media-medium) {
+          border-left: 1px solid $grey;
+        }
+      }
+    }
+
+    &__icon-button {
+      font-size: $text-2xl;
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+    }
+  }
+
+  label {
+    color: $purple;
+    font-weight: $text-bolder;
+    font-size: 1rem;
+    line-height: 1.2em;
+
+    &:focus-within {
+      box-shadow: 2px 2px 2px red;
+    }
+  }
+
+  input[type="text"] {
+    box-shadow: none;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    line-height: 1.75rem;
+    border-bottom: 2px solid transparent;
+
+    &::-webkit-input-placeholder, /* Chrome/Opera/Safari */
+    &::-moz-placeholder, /* Firefox 19+ */
+    &:-ms-input-placeholder, /* IE 10+ */
+    &:-moz-placeholder { /* Firefox 18- */
+      color: $black;
+    }
+
+    &:focus-visible {
+      @media (min-width: $media-medium) {
+        border-color: $purple-light;
+      }
+    }
+
+    &:hover {
+      @media (min-width: $media-medium) {
+        border-color: $purple;
+      }
+    }
+  }
+}
