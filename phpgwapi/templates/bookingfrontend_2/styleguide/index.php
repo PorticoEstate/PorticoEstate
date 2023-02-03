@@ -10,19 +10,23 @@
     <link href="../../../../phpgwapi/templates/bookingfrontend/css/normalize.css" type="text/css" rel="StyleSheet">
     <link href="../../../../phpgwapi/templates/bookingfrontend/css/rubik-font.css" type="text/css" rel="StyleSheet">
     <link href="../../../js/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="../../../../phpgwapi/js/jquery/css/redmond/jquery-ui.min.css?n=621960364497" type="text/css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Work+Sans" type="text/css" rel="StyleSheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+ 
+    <script src="../../../../phpgwapi/js/jquery/js/jquery-3.6.3.min.js"></script>
     <script src="../../../../phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../../../phpgwapi/js/jquery/ui/jquery-ui-1.13.2.min.js"></script>
+
     <script src="../../../js/select2/js/select2.min.js"></script>
 
-    <link href="main.css" type="text/css" rel="StyleSheet">
+    <link href="main.css?v=<?php echo uniqid(); ?>" type="text/css" rel="StyleSheet">
 
     <title>Styleguide - Aktiv kommune</title>
   </head>
   <body>
-    <div class="container">
+    <div class="container-fluid container-lg">
       <h1 id="home">STYLEGUIDE</h1>
 
       <?php
@@ -63,6 +67,11 @@
             'folder' => 'input',
             'filename' => 'input',
           ),
+          'Datovelger' => array(
+            'name' => 'Datovelger',
+            'folder' => 'datepicker',
+            'filename' => 'datepicker',
+          ),
           'Filter' => array(
             'name' => 'Filter',
             'folder' => 'filter',
@@ -73,12 +82,16 @@
             'folder' => 'status',
             'filename' => 'status',
           ),
-          'Snarvei' => array(
+          'MultiSearch' => array(
+            'name' => 'Flervalgssøk',
+            'folder' => 'multi-search',
+            'filename' => 'multi-search',
+          ),
+          'Shortcut' => array(
             'name' => 'Snarvei',
             'folder' => 'shortcut',
             'filename' => 'shortcut',
           ),
-          
         );
 
         echo '<ul class="list-unstyled d-flex flex-wrap">';
