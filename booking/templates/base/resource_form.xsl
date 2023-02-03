@@ -224,7 +224,7 @@
 						</label>
 
 						<div class="pure-u-md-1-2">
-							<table class="table cell-border no-wrap dataTable">
+							<table class="table table-striped table-bordered dataTable" style="white-space: nowrap;">
 								<thead>
 									<tr>
 										<th>
