@@ -41,8 +41,8 @@
         <label for="datepicker">Dato</label>
         <input type="text" id="datepicker" placeholder="Velg">
       </div>
-      <button type="button" class="btn btn-primary btn--large w-100 d-md-none">Søk</button>
-      <button type="button" class="btn btn-primary btn--circle d-none d-md-flex multisearch__inner__icon-button"><i class="fas fa-search"></i></button>
+      <button type="button" class="pe-btn pe-btn-primary pe-btn--large w-100 d-md-none">Søk</button>
+      <button type="button" class="pe-btn pe-btn-primary pe-btn--circle d-none d-md-flex multisearch__inner__icon-button"><i class="fas fa-search"></i></button>
     </div>
   </div>
 </div>

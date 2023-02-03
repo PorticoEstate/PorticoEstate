@@ -23,6 +23,19 @@
   flex: auto;
 }
 
+.main-container {
+  max-width: 1280px;
+  margin-right: auto;
+  margin-left: auto;
+  width: 100%;
+}
+@media (min-width: 992px) {
+  .main-container {
+    padding-left: 3.75rem;
+    padding-right: 3.75rem;
+  }
+}
+
 .text-purple {
   color: #793C8A;
 }
@@ -782,7 +795,7 @@ h4, .h4 {
   border-bottom-right-radius: 3.125rem;
 }
 
-.btn {
+.pe-btn {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -791,60 +804,61 @@ h4, .h4 {
   font-weight: 700;
   border-radius: 3.125rem;
 }
-.btn:first-child:active:focus-visible, :not(.btn-check) + .btn:active:focus-visible {
+.pe-btn:first-child:active:focus-visible {
   box-shadow: 0 0 0 0.25rem #946da8;
 }
-.btn:hover, .btn:active, .btn:first-child:active, .btn:first-child:active:focus-visible, :not(.btn-check) + .btn:active, :not(.btn-check) + .btn:active:focus-visible {
+.pe-btn:hover, .pe-btn:active {
   border-color: #793C8A;
 }
-.btn:focus {
+.pe-btn:focus {
   outline: none;
 }
-.btn:focus-visible {
+.pe-btn:focus-visible {
   border-color: #793C8A;
   box-shadow: 0 0 0 0.25rem #946da8;
 }
-.btn-primary {
+.pe-btn-primary {
   background: #793C8A;
   color: #FFFFFF;
 }
-.btn-primary:hover, .btn-primary:active, .btn-primary:first-child:active, .btn-primary:first-child:active:focus-visible, :not(.btn-primary-check) + .btn-primary:active, :not(.btn-primary-check) + .btn-primary:active:focus-visible {
+.pe-btn-primary:hover, .pe-btn-primary:active {
   background: #FFFFFF;
   color: #793C8A;
 }
-.btn-primary:focus-visible {
+.pe-btn-primary:focus-visible {
   background: #793C8A;
   color: #FFFFFF;
 }
-.btn-secondary {
+.pe-btn-secondary {
   color: #793C8A;
   background: #FFFFFF;
 }
-.btn-secondary:hover, .btn-secondary:active, .btn-secondary:first-child:active, .btn-secondary:first-child:active:focus-visible, :not(.btn-secondary-check) + .btn-secondary:active, :not(.btn-secondary-check) + .btn-secondary:active:focus-visible {
+.pe-btn-secondary:hover, .pe-btn-secondary:active {
   background: #793C8A;
   color: #FFFFFF;
 }
-.btn-secondary:focus-visible {
+.pe-btn-secondary:focus-visible {
   border-color: #793C8A;
   background: #FFFFFF;
   color: #793C8A;
 }
-.btn--small {
+.pe-btn--small {
   font-size: 0.875rem;
   padding: 0.344rem 1.25rem;
 }
-.btn--large {
+.pe-btn--large {
   padding: 0.657rem 1.25rem;
   font-size: 1.125rem;
 }
-.btn--circle {
+.pe-btn--circle {
   padding: 1rem;
 }
-.btn:disabled, .btn[disabled] {
+.pe-btn:disabled, .pe-btn[disabled] {
   background: #F5F5F5;
   color: #D6D6D6;
   border-color: #D6D6D6;
   opacity: 1;
+  pointer-events: none;
 }
 
 a, a:link, a:visited {
