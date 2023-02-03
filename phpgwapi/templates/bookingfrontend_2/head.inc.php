@@ -60,8 +60,6 @@
 	$stylesheets[]	 = "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css";
 	$stylesheets[]	 = "/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
 	$stylesheets[]	 = "/phpgwapi/templates/bookingfrontend/css/jquery.autocompleter.css";
-	$stylesheets[]	 = "https://fonts.googleapis.com/css?family=Work+Sans";
-	$stylesheets[]	 = "https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap";
 //	$stylesheets[]	 = "/phpgwapi/templates/bookingfrontend_2/css/custom.css";
 	$stylesheets[]	 = "/phpgwapi/templates/bookingfrontend/css/normalize.css";
 	$stylesheets[]   = "/phpgwapi/templates/bookingfrontend/css/rubik-font.css";
@@ -112,7 +110,7 @@
 		$site_title = $GLOBALS['phpgw_info']['server']['site_title'];
 	}
 
-	$headlogoimg = $webserver_url . "/phpgwapi/templates/bookingfrontend/img/Aktiv-kommune-logo.png";
+	$headlogoimg = $webserver_url . "/phpgwapi/templates/bookingfrontend_2/img/aktiv-kommune-logo.svg";
 	$GLOBALS['phpgw']->template->set_var('headlogoimg', $headlogoimg);
 
 	$loginlogo = $webserver_url . "/phpgwapi/templates/bookingfrontend/img/login-logo.svg";
@@ -175,12 +173,12 @@
 	$javascripts	 = array();
 	$javascripts[]	 = "/phpgwapi/js/popper/popper2.min.js";
 	$javascripts[]	 = "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js";
-	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/knockout-min.js";
-	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/knockout.validation.js";
-	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/jquery.autocompleter.js";
-	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/common.js";
-	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/custom.js";
-	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/nb-NO.js";
+	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend_2/js/knockout-min.js";
+	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend_2/js/knockout.validation.js";
+	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend_2/js/jquery.autocompleter.js";
+	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend_2/js/common.js";
+	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend_2/js/custom.js";
+	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend_2/js/nb-NO.js";
 	$javascripts[]	 = "/phpgwapi/js/dateformat/dateformat.js";
 	foreach ($javascripts as $javascript)
 	{
