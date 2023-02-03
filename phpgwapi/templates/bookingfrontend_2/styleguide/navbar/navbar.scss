@@ -1,0 +1,45 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-shadow: $box-shadow-large;
+  background: $white;
+  padding: 1rem 2rem;
+  border-radius: $rounded-large;
+
+  &__logo {
+    &__img {
+      width: 100%;
+      flex: none;
+      max-width: 12rem;
+
+      @media (min-width: $media-medium) {
+        display: none;
+      }
+
+      &--desktop {
+        display: none;
+        max-width: 5rem;
+
+        @media (min-width: $media-medium) {
+          display: flex;
+        }
+      }
+    }
+  }
+
+  &__section {
+    display: flex;
+    align-items: center;
+
+    &__links {
+      display: flex;
+      margin-bottom: 0;
+
+      li {
+        margin-right: 2.75rem;
+      }
+    }
+  }
+}
