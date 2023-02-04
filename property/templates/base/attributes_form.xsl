@@ -220,6 +220,9 @@
 			</xsl:choose>
 			<xsl:text> ]</xsl:text>
 		</xsl:when>
+		<xsl:when test="datatype='QR_code'">
+			<xsl:text> [ QR ]</xsl:text>
+		</xsl:when>		
 	</xsl:choose>
 </xsl:template>
 

@@ -240,6 +240,60 @@ JS;
 						$m++;
 					}
 				}
+				else if ($attributes['datatype'] == 'QR_code')
+				{
+
+					$GLOBALS['phpgw']->js->validate_file('html5-qrcode', str_replace('.js', '', 'html5-qrcode.min.js'), 'phpgwapi');
+				
+					$_QR_code = <<<JS
+
+
+					var html5QrcodeScanner_{$attributes['name']};
+
+					function onScanSuccess_{$attributes['name']}(decodedText, decodedResult)
+					{
+						// Handle on success condition with the decoded text or result.
+						document.getElementById("id_{$attributes['name']}").value = decodedText;
+
+						// ...
+						html5QrcodeScanner_{$attributes['name']}.clear();
+						// ^ this will stop the scanner (video feed) and clear the scan area.
+					}
+
+					function onScanError_{$attributes['name']}(errorMessage)
+					{
+						// handle on error condition, with error message
+					}
+
+
+					const element_{$attributes['name']} = document.getElementById("id_{$attributes['name']}");
+					$(element_{$attributes['name']}).parent().append('<div style="width: 500px" id="qr_scanner_{$attributes['name']}"></div>');
+					element_{$attributes['name']}.addEventListener("click", function (event)
+					{
+					//	if(!this.value)
+						{
+							init_scanner_{$attributes['name']}(this);
+						}
+					}, {once: false});
+
+
+					init_scanner_{$attributes['name']} = function ()
+					{
+						
+						html5QrcodeScanner_{$attributes['name']} = new Html5QrcodeScanner(
+							"qr_scanner_{$attributes['name']}", {fps: 10, qrbox: 250});
+
+						html5QrcodeScanner_{$attributes['name']}.render(onScanSuccess_{$attributes['name']}, onScanError_{$attributes['name']});
+						document.getElementById("qr_scanner_{$attributes['name']}").removeAttribute("style");
+						document.getElementById("qr_scanner_{$attributes['name']}").style.width = "500px";
+					};
+
+
+JS;
+
+					$GLOBALS['phpgw']->js->add_code('', $_QR_code, true);
+
+				}
 				else if ($attributes['datatype'] == 'VENDOR')
 				{
 					if ($attributes['value'])
@@ -554,6 +608,7 @@ JS;
 						case 'link':
 						case 'email':
 						case 'link':
+						case 'QR_code':
 							$data['value_set'][$entry['name']]	 = isset($entry['value']) && $entry['value'] ? $this->_db2->db_addslashes(phpgw::clean_value($entry['value'], 'string')) : '';
 							$entry['value']						 = $this->_db2->db_addslashes($entry['value']); // in case of history entries
 							break;
