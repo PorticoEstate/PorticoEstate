@@ -532,45 +532,6 @@ HTML;
 					$('#{$tab_set}').responsiveTabs('activate', {$selected});
 				}
 
-				// Experimental
-//				if ($(window).width() < 768)
-//				{
-//					$('.pure-form-aligned').each(function ()
-//					{
-//						$(this).removeClass('pure-form-aligned');
-//						$(this).addClass('pure-form-stacked');
-//					});
-//				}
-//
-//				$(window).bind('resizeEnd', function() {
-//
-//					if ($(window).width() < 768)
-//					{
-//						$('.pure-form-aligned').each(function ()
-//						{
-//							$(this).removeClass('pure-form-aligned');
-//							$(this).addClass('pure-form-stacked');
-//						});
-//					}
-//					else
-//					{
-//						$('.pure-form-stacked').each(function ()
-//						{
-//							$(this).addClass('pure-form-aligned');
-//							$(this).removeClass('pure-form-stacked');
-//						});
-//					}
-//
-//				});
-//
-//				$(window).resize(function() {
-//						if(this.resizeTO) clearTimeout(this.resizeTO);
-//						this.resizeTO = setTimeout(function() {
-//							$(this).trigger('resizeEnd');
-//						}, 500);
-//					});
-//
-
 			};
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $js);
