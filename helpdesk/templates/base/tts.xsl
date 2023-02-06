@@ -77,7 +77,7 @@
 		{
 		var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template', category:1};
 		var strURL = phpGWLink('index.php', oArgs);
-		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 
 		var parent_cat_id = <xsl:value-of select="parent_cat_id"/>;
@@ -439,7 +439,7 @@
 		{
 		var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template', category:1};
 		var strURL = phpGWLink('index.php', oArgs);
-		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 
 		var my_groups = <xsl:value-of select="my_groups"/>;

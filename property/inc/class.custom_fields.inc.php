@@ -190,7 +190,7 @@ JS;
 							'clear_state'	 => 1));
 
 						$lookup_functions[$m]['name']	 = 'lookup_' . $attributes['name'] . '()';
-						$lookup_functions[$m]['action']	 = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
+						$lookup_functions[$m]['action']	 = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 
 						$clear_functions[$m]['name']	 = "clear_{$attributes['name']}()";
 						$confirm_msg					 = lang('delete') . '?';
@@ -236,7 +236,7 @@ JS;
 							'column'	 => $attributes['name']));
 
 						$lookup_functions[$m]['name']	 = 'lookup_' . $attributes['name'] . '()';
-						$lookup_functions[$m]['action']	 = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
+						$lookup_functions[$m]['action']	 = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 						$m++;
 					}
 				}
@@ -318,7 +318,7 @@ JS;
 							'column'	 => $attributes['name']));
 
 						$lookup_functions[$m]['name']	 = 'lookup_' . $attributes['name'] . '()';
-						$lookup_functions[$m]['action']	 = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
+						$lookup_functions[$m]['action']	 = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 						$m++;
 					}
 				}
@@ -367,7 +367,7 @@ JS;
 						));
 
 						$lookup_functions[$m]['name']	 = 'lookup_' . $attributes['name'] . '()';
-						$lookup_functions[$m]['action']	 = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
+						$lookup_functions[$m]['action']	 = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 						$m++;
 					}
 				}
@@ -423,7 +423,7 @@ JS;
 							'column'		 => $attributes['name'], 'clear_state'	 => 1));
 
 						$lookup_functions[$m]['name']	 = 'lookup_' . $attributes['name'] . '()';
-						$lookup_functions[$m]['action']	 = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
+						$lookup_functions[$m]['action']	 = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 						$m++;
 					}
 				}
@@ -521,7 +521,7 @@ JS;
 						$lookup_functions[$m]['action']	 .= "oArgs['id'] = document.form.{$attributes['name']}.value;";
 						$lookup_functions[$m]['action']	 .= "}\n";
 						$lookup_functions[$m]['action']	 .= "var strURL = phpGWLink('index.php', oArgs);\n";
-						$lookup_functions[$m]['action']	 .= 'TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
+						$lookup_functions[$m]['action']	 .= 'TINY.box.show({iframe:strURL, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 						$m++;
 					}
 				}

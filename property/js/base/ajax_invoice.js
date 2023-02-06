@@ -721,7 +721,7 @@ function load_order(id)
 {
 	var oArgs = {menuaction: 'property.uiinvoice.view_order', order_id: id, nonavbar: true, lean: true};
 	var requestUrl = phpGWLink('index.php', oArgs);
-	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true, closejs: function ()
+	TINY.box.show({iframe: requestUrl, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true, closejs: function ()
 		{
 			closeJS_local();
 		}});
@@ -731,7 +731,7 @@ function load_split(voucher_id)
 {
 	var oArgs = {menuaction: 'property.uiinvoice2.split_voucher', voucher_id: voucher_id, nonavbar: true, lean: true};
 	var requestUrl = phpGWLink('index.php', oArgs);
-	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true, closejs: function ()
+	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9), fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true, closejs: function ()
 		{
 			reset_table(voucher_id);
 		}});
