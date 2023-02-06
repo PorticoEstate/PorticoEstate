@@ -8,7 +8,7 @@
 		var oArgs = {menuaction:'property.uientity.edit', location_id:location_id, id: id, noframework:1, lean: 1};
 		var sUrl = phpGWLink('index.php', oArgs);
 
-		TINY.box.show({iframe:sUrl, boxid:'frameless',width:750,height:550,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true,
+		TINY.box.show({iframe:sUrl, boxid:'frameless',width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9),fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true,
 		close: true,
 		closejs:function(){refresh_entity(location_id, id)}
 		});
@@ -16,7 +16,7 @@
 
 		showlightbox_start_ticket = function(sUrl)
 		{
-		TINY.box.show({iframe:sUrl, boxid:'frameless',width:750,height:550,fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true,
+		TINY.box.show({iframe:sUrl, boxid:'frameless',width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9),fixed:false,maskid:'darkmask',maskopacity:40, mask:true, animate:true,
 		close: true,
 		closejs:function(){refresh_entity(false, false)}
 		});

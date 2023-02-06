@@ -3,8 +3,7 @@
 this.fileuploader = function ()
 {
 	var sUrl = phpGWLink('index.php', multi_upload_parans);
-	//TINY.box.show({iframe: sUrl, boxid: "frameless", width: 750, height: 450, fixed: false, maskid: "darkmask", maskopacity: 40, mask: true, animate: true, close: true}); //refresh_files is called after upload
-	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9), fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 		close: true,
 		closejs: function ()
 		{
@@ -28,7 +27,7 @@ this.showlightbox_add_inventory = function (location_id, id)
 	var oArgs = {menuaction: 'property.uientity.add_inventory', location_id: location_id, id: id};
 	var sUrl = phpGWLink('index.php', oArgs);
 
-	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 650, height: 600, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9), fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 		close: true,
 		closejs: function ()
 		{
@@ -42,7 +41,7 @@ this.showlightbox_edit_inventory = function (location_id, id, inventory_id)
 	var oArgs = {menuaction: 'property.uientity.edit_inventory', location_id: location_id, id: id, inventory_id: inventory_id};
 	var sUrl = phpGWLink('index.php', oArgs);
 
-	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 650, height: 600, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9), fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 		close: true,
 		closejs: function ()
 		{
@@ -56,7 +55,7 @@ this.showlightbox_show_calendar = function (location_id, id, inventory_id)
 	var oArgs = {menuaction: 'property.uientity.inventory_calendar', location_id: location_id, id: id, inventory_id: inventory_id};
 	var sUrl = phpGWLink('index.php', oArgs);
 
-	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 650, height: 600, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9), fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 		close: true,
 		closejs: function ()
 		{
@@ -70,7 +69,7 @@ this.showlightbox_assigned_history = function (serie_id)
 	var oArgs = {menuaction: 'property.uientity.get_assigned_history', serie_id: serie_id};
 	var sUrl = phpGWLink('index.php', oArgs);
 
-	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 400, height: 350, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9), fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 		close: true,
 		closejs: false
 	});

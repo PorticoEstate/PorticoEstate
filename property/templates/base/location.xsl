@@ -259,13 +259,13 @@ onMouseOut="nd()">
 		{
 		var oArgs = {<xsl:value-of select="street_link"/>};
 		var strURL = phpGWLink('index.php', oArgs);
-		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 		function tenant_lookup()
 		{
 		var oArgs = {<xsl:value-of select="tenant_link"/>};
 		var strURL = phpGWLink('index.php', oArgs);
-		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 	</script>
 	<script type="text/javascript">
@@ -600,14 +600,14 @@ onMouseOut="nd()">
 							{
 							var oArgs = {menuaction:'property.uilookup.phpgw_user', column:'control_responsible', acl_app:'controller', acl_location: '.checklist', acl_required:4};
 							var requestUrl = phpGWLink('index.php', oArgs);
-							TINY.box.show({iframe:requestUrl, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+							TINY.box.show({iframe:requestUrl, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 							}
 
 							lookup_control = function()
 							{
 							var oArgs = {menuaction:'controller.uilookup.control'};
 							var requestUrl = phpGWLink('index.php', oArgs);
-							TINY.box.show({iframe:requestUrl, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+							TINY.box.show({iframe:requestUrl, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 							}
 
 							var location_id = <xsl:value-of select="location_id"/>;

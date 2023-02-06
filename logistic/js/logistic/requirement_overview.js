@@ -3,7 +3,7 @@ function load_requirement_edit(activity_id)
 	var oArgs = {menuaction: 'logistic.uirequirement.edit', activity_id: activity_id, nonavbar: true, lean: true};
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true, closejs: function ()
+	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9), fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true, closejs: function ()
 		{
 			closeJS_local(activity_id)
 		}});
@@ -14,7 +14,7 @@ function load_requirement_edit_id(id, activity_id)
 	var oArgs = {menuaction: 'logistic.uirequirement.edit', id: id, nonavbar: true, lean: true};
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true, closejs: function ()
+	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9), fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true, closejs: function ()
 		{
 			closeJS_local(activity_id)
 		}});
@@ -100,7 +100,7 @@ function load_assign_task(frm, id)
 	var oArgs = {menuaction: 'logistic.uirequirement.assign_job', id: id, assign_requirement: assign_requirement, nonavbar: true};
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true, closejs: function ()
+	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9), fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true, closejs: function ()
 		{
 			closeJS_local_allocation(id)
 		}});
