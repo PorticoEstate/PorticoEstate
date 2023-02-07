@@ -87,6 +87,19 @@
 						<xsl:value-of select="php:function('lang', 'No')"/>
 					</xsl:if>
 				</div>
+				<div class="pure-control-group">
+					<label for="for_field_activate_prepayment">
+						<xsl:value-of select="php:function('lang', 'activate prepayment')"/>
+					</label>
+					<xsl:if test="resource/activate_prepayment=1">
+						<xsl:value-of select="php:function('lang', 'Yes')"/>
+					</xsl:if>
+					<xsl:if test="resource/activate_prepayment=0">
+						<xsl:value-of select="php:function('lang', 'No')"/>
+					</xsl:if>
+				</div>
+
+
 				<div class="pure-control-group custom-container">
 					<label>
 						<xsl:value-of select="php:function('lang', 'seasons')"/>

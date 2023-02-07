@@ -6133,12 +6133,11 @@ HTML;
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
-		/**
+	/**
 	 * Update booking version from 0.2.87 to 0.2.88
 	 *
 	 */
 	$test[] = '0.2.87';
-
 	function booking_upgrade0_2_87()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
@@ -6160,3 +6159,28 @@ HTML;
 		}
 	}
 
+	/**
+	 * Update booking version from 0.2.88 to 0.2.89
+	 *
+	 */
+	$test[] = '0.2.88';
+	function booking_upgrade0_2_88()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'activate_prepayment',
+				array(
+					'type' => 'int',
+					'precision' => 2,
+					'default' => 0,
+					'nullable' => true
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.89';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

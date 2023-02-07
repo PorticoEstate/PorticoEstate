@@ -1973,13 +1973,33 @@
 
 			$partial2 = array();
 			$partial2['frontpage_url'] = self::link(array('menuaction' => 'bookingfrontend.uisearch.index'));
+
+			//inspect resources for prepayment
+			$session_id	 = $GLOBALS['phpgw']->session->get_session_id();
+			$partials	 = $this->bo->get_partials_list($session_id);
+			foreach ($partials['results'] as $application)
+			{
+				$resources = $this->resource_bo->so->read(array(
+					'sort'		 => 'sort',
+					'results'	 => 'all',
+					'filters'	 => array('id' => $application['resources']), 'results'	 => 'all'
+				));
+
+				$activate_prepayment = 0;
+				foreach ($resources['results'] as $resource)
+				{
+					if ($resource['activate_prepayment'])
+					{
+						$activate_prepayment++;
+					}
+				}
+			}
+
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$this->update_contact_informtation($partial2);
 
 				// Get data on prior partial applications for this session ID
-				$session_id = $GLOBALS['phpgw']->session->get_session_id();
-				$partials = $this->bo->get_partials_list($session_id);
 				if ($partials['total_records'] == 0)
 				{
 					$errors['records'] = lang("No partial applications exist for this session, contact details are not saved");
@@ -2268,7 +2288,7 @@
 			$custom_config		 = CreateObject('admin.soconfig', $location_id)->read();
 
 			$payment_methods = array();
-			if(!empty($custom_config['payment']['method']) && !empty($custom_config['Vipps']['active']))
+			if($activate_prepayment && !empty($custom_config['payment']['method']) && !empty($custom_config['Vipps']['active']))
 			{
 				$vipps_logo = 'continue_with_vipps_rect_210';
 
