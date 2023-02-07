@@ -191,7 +191,7 @@
 					<label style="vertical-align:top;">
 						<xsl:value-of select="php:function('lang', 'Season')" />
 					</label>
-					<div id="season_container" style="display:inline-block;" class="pure-u-1-4">
+					<div id="season_container" style="display:inline;">
 						<span class="select_first_text">
 							<xsl:value-of select="php:function('lang', 'Select a building first')" />
 						</span>
