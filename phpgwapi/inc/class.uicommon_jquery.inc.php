@@ -430,8 +430,8 @@
 					'thousands' => json_encode(","),
 					'lengthMenu' => json_encode(lang("Show _MENU_ entries")),
 					'loadingRecords' => json_encode(lang("Loading...")),
-//					'processing' => json_encode(lang("Processing...")),
-					'processing' => json_encode('<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">' . lang("Processing...") . '</span> '),
+					'processing' => json_encode(lang("Processing...")),
+//					'processing' => json_encode('<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">' . lang("Processing...") . '</span> '),
 					'search' => json_encode(lang('search')),
 					'zeroRecords' => json_encode(lang("No matching records found")),
 					'paginate' => json_encode(array(
