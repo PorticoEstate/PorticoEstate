@@ -240,7 +240,7 @@
 			<tr>
 				<td>{lang_How_many_days_should_entries_stay_in_the_access_log_before_they_get_deleted}? (default 90):</td>
 				<td>
-					<input name="newsettings[max_access_log_age]" value="{value_max_access_log_age}" size="5">
+					<input name="newsettings[max_access_log_age]" value="{value_max_access_log_age}" size="5" class="pure-u-1"/>
 				</td>
 			</tr>
 
