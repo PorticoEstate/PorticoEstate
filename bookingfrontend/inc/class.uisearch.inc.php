@@ -19,6 +19,7 @@
 			'get_all_available_buildings' => true,
 			'autocomplete_resource_and_building' => true,
 			'get_all_towns' => true,
+            'get_search_data_location' => true
 		);
 
 		function __construct()
@@ -407,4 +408,8 @@
 		{
 			 return execMethod('property.solocation.get_booking_part_of_towns');
 		}
+
+        function get_search_data_location() {
+            return execMethod('property.solocation.get_search_data_location');
+        }
 	}

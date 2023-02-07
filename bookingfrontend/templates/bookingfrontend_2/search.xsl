@@ -14,17 +14,18 @@
                         </div>
                         <div class="multisearch__inner__item multisearch__inner__item--border">
                             <label for="id_label_location">Lokale</label>
-                            <select class="js-select-multisearch" id="id_label_location">
-                                <option value="">Velg</option>
-                            </select>
+                            <select class="js-select-multisearch" id="id_label_location" aria-label="Large" data-bind="options: locations,
+                            optionsText: 'name',
+                            value: selectedLocation,
+                            optionsCaption: 'Velg'
+                            "/>
                         </div>
                         <div class="multisearch__inner__item multisearch__inner__item--border">
                             <label for="datepicker">Dato</label>
                             <input type="text" id="datepicker" placeholder="Velg" />
                         </div>
-                        <button type="button" class="btn btn-primary btn--large w-100 d-md-none">Søk</button>
-                        <button type="button" class="btn btn-primary btn--circle d-none d-md-flex multisearch__inner__icon-button"><i class="fas fa-search"></i></button>
-                    </div>
+                        <button type="button" class="pe-btn pe-btn-primary pe-btn--large w-100 d-md-none">Søk</button>
+                        <button type="button" class="pe-btn pe-btn-primary pe-btn--circle d-none d-md-flex multisearch__inner__icon-button"><i class="fas fa-search"></i></button>                    </div>
                 </div>
             </div>
         </div>

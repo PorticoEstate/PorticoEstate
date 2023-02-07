@@ -68,8 +68,7 @@ if (!empty($GLOBALS['phpgw_info']['server']['site_title'])) {
     $site_title = $GLOBALS['phpgw_info']['server']['site_title'];
 }
 
-$headlogoimg = $webserver_url . "/phpgwapi/templates/bookingfrontend_2/img/Aktiv-kommune-logo.svg";
-$GLOBALS['phpgw']->template->set_var('headlogoimg', $headlogoimg);
+$headlogopath = $webserver_url . "/phpgwapi/templates/bookingfrontend_2/styleguide/gfx/";
 
 //loads jquery
 phpgwapi_jquery::load_widget('core');
@@ -178,23 +177,21 @@ switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
 }
 
 $nav = <<<HTML
-		<nav class="navbar navbar-default sticky-top navbar-expand-md navbar-light w-100" id="headcon">
-		    <div class="d-flex flex-row justify-content-between box-shadow--large w-100 align-items-center">
-			    <div class="ms-3">
-				    <a href="{$site_url}"><img class="navbar-brand brand-site-img" src="{$headlogoimg}" alt="{$logo_title}" height="63px"/></a>
-		        </div>
-		        <div class="d-flex flex-row align-items-center">
-		            <div>
-		                Hva er aktiv kommune
-		            </div>
-		            <div class="ms-3">Faq</div>
-		            <div class="ms-3 me-3">
-		                <button class="btn btn-primary">Logg inn</button>
-                    </div>
-                </div>
-		    </div>
-		</nav>
-
+<div class="border-top border-2 py-5">
+  <nav class="navbar">
+    <a href="{$site_url}" class="navbar__logo">
+      <img src="{$headlogopath}/logo_aktiv_kommune_horizontal.png" alt="Aktiv kommune logo" class="navbar__logo__img">
+      <img src="{$headlogopath}/logo_aktiv_kommune.png" alt="Aktiv kommune logo" class="navbar__logo__img--desktop">
+    </a>
+    <div class="navbar__section d-none d-md-flex">
+      <ul class="list-unstyled navbar__section__links">
+        <li><a href="/">Hva er Aktiv kommune?</a></li>
+        <li><a href="/">FAQ</a></li>
+      </ul>
+      <button type="button" class="pe-btn pe-btn-primary py-3">Logg inn</button>
+    </div>
+  </nav>
+</div>
 HTML;
 
 $tpl_vars = array
