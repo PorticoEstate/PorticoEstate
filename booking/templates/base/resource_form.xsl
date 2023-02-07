@@ -217,6 +217,25 @@
 							</option>
 						</select>
 					</div>
+					<div class="pure-control-group">
+						<label for="for_field_activate_prepayment">
+							<xsl:value-of select="php:function('lang', 'activate prepayment')"/>
+						</label>
+						<select id="for_field_activate_prepayment" name="activate_prepayment" class="pure-input-3-4" >
+							<option value="1">
+								<xsl:if test="resource/activate_prepayment=1">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'Yes')"/>
+							</option>
+							<option value="0">
+								<xsl:if test="resource/activate_prepayment=0">
+									<xsl:attribute name="selected">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="php:function('lang', 'No')"/>
+							</option>
+						</select>
+					</div>
 
 					<div class="pure-control-group custom-container">
 						<label>
