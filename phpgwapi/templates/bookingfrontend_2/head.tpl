@@ -31,4 +31,3 @@
 	</head>
 	<div class="main-container">
 	{nav}
-	</div>

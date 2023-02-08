@@ -178,12 +178,47 @@ switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
 
 $nav = <<<HTML
 <div class="border-top border-2 py-5">
-  <nav class="navbar">
+  <nav class="navbar mb-5">
     <a href="{$site_url}" class="navbar__logo">
       <img src="{$headlogopath}/logo_aktiv_kommune_horizontal.png" alt="Aktiv kommune logo" class="navbar__logo__img">
       <img src="{$headlogopath}/logo_aktiv_kommune.png" alt="Aktiv kommune logo" class="navbar__logo__img--desktop">
     </a>
-    <div class="navbar__section d-none d-md-flex">
+    <div class="navbar__section navbar__section--right d-none d-md-flex">
+      <!-- Button trigger modal -->
+      <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector" data-bs-toggle="modal" data-bs-target="#selectLanguage" aria-label="Velg språk">
+        <img src="{$headlogopath}/norway.png" alt="Norsk flagg" class="">
+        <i class="fas fa-chevron-down"></i>
+      </button>
+
+      <!-- Modal -->
+      <div class="modal fade" id="selectLanguage" tabindex="-1" aria-labelledby="selectLanguage" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header border-0">
+              <button type="button" class="btn-close text-grey-light" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex justify-content-center pt-0 pb-4">
+              <div>
+                <h3>Velg språk</h3>
+                <p>Hvilket språk ønsker du?</p>
+                <form class="d-flex flex-column">
+                  <label class="choice mb-3">
+                    <input type="radio" name="select_language" value="norwegian" checked />
+                    <img src="{$headlogopath}norway.png" alt="Norsk flagg" class=""> Norsk
+                    <span class="choice__radio"></span>
+                  </label>
+                  <label class="choice mb-5">
+                    <input type="radio" name="select_language" value="english" />
+                    <img src="{$headlogopath}united-kingdom.png" alt="Engelsk flagg" class=""> English
+                    <span class="choice__radio"></span>
+                  </label>
+                  <button type="button" class="pe-btn pe-btn-primary w-auto">Lagre</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <ul class="list-unstyled navbar__section__links">
         <li><a href="/">Hva er Aktiv kommune?</a></li>
         <li><a href="/">FAQ</a></li>
