@@ -182,6 +182,17 @@ $opacities: (
   '4' : 0.04,
   );
 
+.text {
+  &-primary {
+    color: $primary-color !important;
+  }
+
+  &-secondary {
+    color: $secondary-color !important;
+  }
+}
+
+
 
 @each $mainColor, $tones in $colorVariations {
 

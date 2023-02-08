@@ -46,6 +46,15 @@
     
     echo '<p class="mb-4 text-bold">TEKSTFARGE</p>';
     echo '<div class="row mb-5">';
+
+    echo '<div class="col-6 col-md-4 col-lg-3 d-flex flex-column mb-3">
+            <span class="text-lg text-primary">text-primary</span>
+            <span>text-primary</span>
+          </div>';
+    echo '<div class="col-6 col-md-4 col-lg-3 d-flex flex-column mb-3">
+            <span class="text-lg text-secondary">text-secondary</span>
+            <span>text-secondary</span>
+          </div>';
     foreach ( $colors as $color => $hexColor) {
       echo '<div class="col-6 col-md-4 col-lg-3 d-flex flex-column mb-3">
               <span class="text-lg text-'.$color.'">text-'.$color.'</span>

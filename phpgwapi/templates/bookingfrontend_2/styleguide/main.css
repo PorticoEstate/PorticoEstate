@@ -36,6 +36,13 @@
   }
 }
 
+.text-primary {
+  color: #793C8A !important;
+}
+.text-secondary {
+  color: #28358B !important;
+}
+
 .text-purple {
   color: #793C8A;
 }
