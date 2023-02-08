@@ -1,19 +1,17 @@
 <script>
-  $(document).ready(function() {
+  $(document).ready(function () {
+
+    $('#js-select-basic').select2({ 
+      theme: 'select-v2',
+      width: '100%', 
+    })
 
     /* Select 2 */
     $("#js-select").select2({
       width: '100%',
       templateResult: formatImageState,
     });
-
-    /* Basic dropdown */
-    $selectBasic = $('#js-select-basic').select2({
-      theme: 'select-v2',
-      width: '100%',
-      placeholder: 'Velg kommune',
-    });
-
+  
     /* Image dropdown */
     function formatImageState (state) {
       if (!state.id) {
@@ -21,7 +19,6 @@
       }
 
       var optionImage = (state.element.value && state.element.value.length > 0) ? '<span style="width: 2rem"><img src="gfx/' + state.element.value.toLowerCase() + '.png" class="" style="max-width: 1.75rem; max-height:1.5rem;" /></span>' : '' ;
-
       var state = $(
         '<span class="d-flex align-items-center">' + optionImage + state.text + '</span>'
       );
@@ -29,112 +26,60 @@
       return state;
     };
 
-    $selectImage = $("#js-select-image").select2({
+    $("#js-select-image").select2({
       theme: 'select-v2',
       width: '100%',
       templateResult: formatImageState,
       templateSelection: formatImageState,
       placeholder: 'Velg kommune med bilde',
     });
-
-    /* Multiselect */
-    $selectMultiple = $('#js-select-multiple').select2({
+  
+    /* Multiselect dropdown */
+    $('#js-select-multiple').select2({
       theme: 'select-v2',
       width: '100%',
       placeholder: 'Velg en eller flere kommuner',
       closeOnSelect: false
     });
-
-    /* Price example */
+  
+    /* Dropdown f.ex. price */
     var prices = [
-        {
-          "id": 1,
-          "text": "Privatperson",
-          "price": "123 kr. per dag",
-        },
-        {
-          "id": 2,
-          "text": "Barn u/18år",
-          "price": "Gratis",
-        },
-        {
-          "id": 3,
-          "text": "Idrett",
-          "price": "89 kr. per dag",
-        },
-        {
-          "id": 4,
-          "text": "Organisasjon",
-          "price": "89 kr. per dag",
-        },
-      ];
-
-    $selectPrice = $('#js-select-price').select2({
-      theme: 'select-v2',
-      width: '100%',
-      data: prices,
-      placeholder: 'Velg pris',
-      allowClear: true,
-      templateSelection: function(data){
-        return $('<p class="d-flex m-0 justify-content-between align-items-center flex-auto pe-2">')
-        .html('<span>' + data.text + '</span><span class="text-end"> ' + ((data.price) ? data.price : '') + ' </span>');
+      {
+        "id": 1,
+        "text": "Privatperson",
+        "price": "123 kr. per dag",
       },
-      templateResult: function(data){
-        return $('<p class="d-flex m-0 justify-content-between align-items-center ">')
-        .html('<span>' + data.text + '</span><span class="text-end"> ' + ((data.price) ? data.price : '') + ' </span>');
+      {
+        "id": 2,
+        "text": "Barn u/18år",
+        "price": "Gratis",
       },
-    });
+      {
+        "id": 3,
+        "text": "Idrett",
+        "price": "89 kr. per dag",
+      },
+      {
+        "id": 4,
+        "text": "Organisasjon",
+        "price": "89 kr. per dag",
+      },
+    ];
 
-    // Text
-    $(document).on('click', function(event) {
-      var container = $(".dropdown");
-
-      //check if the clicked area is dropdown or not
-      if (container.has(event.target).length === 0) {
-        container.removeClass('dropdown--open');
-        $('.dropdown-toggler').attr("aria-expanded","false");
-        $('.dropdown-content').addClass('hidden');
-      }
-    })
-
-    $(".dropdown").each(function(){
-
-      var $toggler = $(this).find(".dropdown-toggler");
-      var $dropDown = $(this).find(".dropdown-content");
-
-      $(this).on("click", function(){
-        $dropDown.toggleClass("hidden");
-
-        if($dropDown.hasClass('hidden')) {
-          $toggler.attr("aria-expanded","false");
-          $(this).removeClass('dropdown--open');
-        } else {
-          $toggler.attr("aria-expanded","true");
-          $(this).addClass('dropdown--open');
-        }
-
-      });
-
-    });
-
-    $(".slidedown").each(function(){
-
-      var $toggler = $(this).find(".slidedown-toggler");
-      var $dropDown = $(this).find(".slidedown-content");
-
-      $(this).on("click", function(){
-        $dropDown.slideToggle('fast', function() {
-          if($dropDown.is(':visible')) {
-            $toggler.attr("aria-expanded","true");
-            $('.slidedown').addClass('slidedown--open');
-          } else {
-            $toggler.attr("aria-expanded","false");
-            $('.slidedown').removeClass('slidedown--open');
-          }
-        });
-
-        
-      });
+    $('#js-select-price').select2({
+        theme: 'select-v2',
+        width: '100%',
+        data: prices,
+        placeholder: 'Velg pris',
+        allowClear: true,
+        templateSelection: function(data){
+            return $('<p class="d-flex m-0 justify-content-between align-items-center flex-auto pe-2">')
+            .html('<span>' + data.text + '</span><span class="text-end"> ' + ((data.price) ? data.price : '') + ' </span>');
+        },
+        templateResult: function(data){
+            return $('<p class="d-flex m-0 justify-content-between align-items-center ">')
+            .html('<span>' + data.text + '</span><span class="text-end"> ' + ((data.price) ? data.price : '') + ' </span>');
+        },
     });
   });
 </script>
@@ -185,11 +130,11 @@
     </div>
     <div class="col-sm-6 mb-4">
       <p class="mb-2 text-bold">Informasjon</p>
-      <div class="dropdown">
-        <button class="dropdown-toggler" type="button" aria-expanded="false">
+      <div class="js-dropdown dropdown">
+        <button class="js-dropdown-toggler dropdown__toggler" type="button" aria-expanded="false">
           Informasjon
         </button>
-        <div class="dropdown-content hidden">
+        <div class="js-dropdown-content dropdown__content">
           <p>
             Som innbygger kan du søke om leie av idrettsanlegg, baner, lokaler, byrom og utstyr
             <ul>
@@ -206,11 +151,11 @@
     </div>
     <div class="col-12 mb-4">
       <p class="mb-2 text-bold">Informasjonskort</p>
-      <div class="slidedown">
-        <button class="slidedown-toggler" type="button" aria-expanded="false">
+      <div class="js-slidedown slidedown">
+        <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="false">
           Sandnes idrettspark
         </button>
-        <div class="slidedown-content" style="display: none">
+        <div class="js-slidedown-content slidedown__content">
           <p>
             Som innbygger kan du søke om leie av idrettsanlegg, baner, lokaler, byrom og utstyr
             <ul>
@@ -227,4 +172,3 @@
     </div>
   </div>
 </div>
-

@@ -1,0 +1,67 @@
+.menu {
+
+  &__toggler[aria-expanded="true"] {
+    i {
+      transform: rotate(30deg);
+    }
+  }
+
+  &__toggler {
+    background-color: transparent;
+    border: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    font-weight: $text-normal;
+    padding: 0.25rem 1.5rem 0.25rem 0.5rem;    
+
+    &:hover span{
+      text-decoration: underline;
+      color: $purple;
+    }
+
+    i {
+      position: absolute;
+      font-size: 0.625em;
+      color: $purple;
+      transform: rotate(-30deg);
+      transition: transform 0.3s;
+      right: 0.5rem;
+      top: 0.35rem;
+    }
+  }
+
+  &__content {
+    position: absolute;
+    box-shadow: $box-shadow-large;
+    background: $white;
+    border-radius: $rounded-medium;
+    padding: 1.25rem 1.5rem;
+    margin-top: 0.25rem;
+
+    @media (min-width: $media-medium) {
+      border-color: $purple;
+    }
+
+    ul {
+      margin-bottom: 0;
+
+      li {
+        padding-bottom: 0.25rem;
+      }
+    }
+
+    a {
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    &--navbar {
+      min-width: 11rem;
+      right: -1rem;
+    }
+  }
+}

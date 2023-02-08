@@ -81,5 +81,13 @@
     opacity: 1;
     pointer-events: none;
   }
+
+  &--transparent {
+    background-color: transparent;
+    border: 0;
+    padding: 0.5rem;
+    min-width: 2.5rem;
+  }
+
 }
 

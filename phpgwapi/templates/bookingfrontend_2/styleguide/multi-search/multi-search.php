@@ -1,23 +1,3 @@
-<script>
-  $(document).ready(function() {
-
-    /* Basic dropdown */
-    $('.js-select-multisearch').select2({
-      theme: 'select-v2 select-v2--main-search',
-      width: '100%',
-    });
-
-    //Datepicker
-    $('#datepicker').datepicker();
-
-    $(".multisearch__inner__item").on("click", function () {
-      $(this).find('.js-select-multisearch').select2("open");
-      $(this).find('#datepicker').datepicker("show");
-    });
-
-  });
-</script>
-
 <div class="border-top border-2 py-5">
   <div class="multisearch w-100">
     <div class="multisearch__inner">

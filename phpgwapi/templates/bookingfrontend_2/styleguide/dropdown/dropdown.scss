@@ -272,37 +272,43 @@
   }
 }
 
+.js-dropdown, .js-slidedown {
+  &-toggler[aria-expanded="true"] ~ &-content{
+    display: block;
+  }
+
+  &-content {
+    display: none;
+  }
+}
+
 .dropdown {
   position: relative;
   box-shadow: $box-shadow-large;
   border-radius: $rounded-large;
 
-  &--open {
-    border-radius: $rounded-medium;
-    
-    .dropdown-toggler {
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-      border-top-left-radius: $rounded-medium;
-      border-top-right-radius: $rounded-medium;
-      border: 1px solid transparent;
+  &__toggler[aria-expanded="true"]{
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: $rounded-medium;
+    border-top-right-radius: $rounded-medium;
+    border: 1px solid transparent;
+    box-shadow: 0px 0px 0px 2px $purple;
+
+    &:focus-visible {
       box-shadow: 0px 0px 0px 2px $purple;
-
-      &:focus-visible {
-        box-shadow: 0px 0px 0px 2px $purple;
-      }
-      
-      &::after {
-        transform: rotate(-180deg);
-      }
     }
-
-    .dropdown-content {
-      border-top: 0;
+    
+    &::after {
+      transform: rotate(-180deg);
     }
   }
 
-  &-toggler {
+  &__toggler[aria-expanded="true"] ~ &-content{
+    border-top: 0;
+  }
+
+  &__toggler {
     @include dropdown;
     text-align: left;
     position: relative;
@@ -322,14 +328,13 @@
       box-shadow: 0 0 0 0.125rem $purple;
     }
 
-
     &::after {
       @include dropdown-arrow;
       top: 0.75rem;
     }
   }
 
-  &-content {
+  &__content {
     position: absolute;
     z-index: 1051;
     padding: 1rem 2rem 1rem 1.5rem;
@@ -339,10 +344,6 @@
     border-bottom-left-radius: $rounded-medium;
     border-bottom-right-radius: $rounded-medium;
     box-shadow: 0px -3px 0px 0px $white, 0px 0px 0px 2px $purple;
-
-    &.hidden {
-      display: none;
-    }
   }
 }
 
@@ -367,7 +368,7 @@
     border-radius: $rounded-medium;
     border: 1px solid transparent;
 
-    .slidedown-toggler {
+    .slidedown__toggler {
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
       border-top-left-radius: $rounded-medium;
@@ -378,12 +379,12 @@
       }
     }
 
-    .slidedown-content {
+    .slidedown__content {
       border-top: 0;
     }
   }
 
-  &-toggler {
+  &__toggler {
     background: transparent;
     border-radius: $rounded-large;
     color: $purple;
@@ -419,7 +420,7 @@
     }
   }
 
-  &-content {
+  &__content {
     padding: 1rem 2rem 1rem 1.5rem;
     font-size: 1rem;
     background: $white;
