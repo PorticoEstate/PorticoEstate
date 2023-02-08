@@ -18,8 +18,8 @@
     <script src="../../../../phpgwapi/js/jquery/js/jquery-3.6.3.min.js"></script>
     <script src="../../../../phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="../../../../phpgwapi/js/jquery/ui/jquery-ui-1.13.2.min.js"></script>
-
     <script src="../../../js/select2/js/select2.min.js"></script>
+    <script src="js/main.js?v=<?php echo uniqid(); ?>"></script>
 
     <link href="main.css?v=<?php echo uniqid(); ?>" type="text/css" rel="StyleSheet">
 
@@ -71,6 +71,16 @@
             'name' => 'Datovelger',
             'folder' => 'datepicker',
             'filename' => 'datepicker',
+          ),
+          'Menu' => array(
+            'name' => 'Meny',
+            'folder' => 'menu',
+            'filename' => 'menu',
+          ),
+          'Modal' => array(
+            'name' => 'Modal',
+            'folder' => 'modal',
+            'filename' => 'modal',
           ),
           'Filter' => array(
             'name' => 'Filter',
