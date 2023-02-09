@@ -57,6 +57,9 @@
 			'download'	 => true
 		);
 
+		var $bocommon, $account, $bo, $cats, $bolocation,$config, $acl, $boadmin_entity, $acl_location, $acl_read,
+		$acl_add, $acl_edit, $acl_delete, $bofiles, $fakebase, $status_id, $entity_id, $doc_type,$query_location;
+
 		function __construct()
 		{
 			parent::__construct();
@@ -730,7 +733,7 @@
 			if ($_POST && !$bypass)
 			{
 				$insert_record			 = $GLOBALS['phpgw']->session->appsession('insert_record', 'property');
-				$insert_record_entity	 = $GLOBALS['phpgw']->session->appsession('insert_record_entity', 'property');
+				$insert_record_entity	 = (array)$GLOBALS['phpgw']->session->appsession('insert_record_entity', 'property');
 
 				for ($j = 0; $j < count($insert_record_entity); $j++)
 				{
