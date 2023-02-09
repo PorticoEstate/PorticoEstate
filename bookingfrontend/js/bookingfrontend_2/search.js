@@ -146,7 +146,7 @@ const Search = () => {
                 }
                 // Unique
                 ids = [...new Set(ids)];
-                organizations = organizations.filter(o => ids.some(id => id === o.id))
+                organizations = organizations.filter(o => ids.some(id => id === o.activity_id))
             }
         }
         const el = $("#search-result");
@@ -210,6 +210,7 @@ const Search = () => {
             <li>Postnr: ${organization.zip_code}</li>
                 <li>Poststed: ${organization.city}</li>
                 <li>Distrikt: ${organization.district}</li>
+                <li>Aktivitetskode: ${organization.activity_id}</li>
             </ul>
           </p> 
         </div>
