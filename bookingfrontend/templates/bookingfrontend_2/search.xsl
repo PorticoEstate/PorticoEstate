@@ -1,6 +1,21 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <H1 class="text-primary">Lei lokale til det du trenger</H1>
     <div id="search-page-content">
+        <H1 class="text-primary text-md-start text-center" data-bind="text: header_text"></H1>
+        <div class="col-12 mb-4">
+            <label class="filter">
+                <input type="radio" name="type_group" value="booking" data-bind="checked: type_group"/>
+                <span class="filter__radio">Leie</span>
+            </label>
+            <label class="filter">
+                <input type="radio" name="type_group" value="event" data-bind="checked: type_group"/>
+                <span class="filter__radio">Arrangement</span>
+            </label>
+            <label class="filter">
+                <input type="radio" name="type_group" value="organization"  data-bind="checked: type_group"/>
+                <span class="filter__radio">Organisasjon</span>
+            </label>
+        </div>
+
         <div class="bodySection">
             <div class="multisearch w-100">
                 <div class="multisearch__inner">
@@ -12,7 +27,7 @@
                         <label for="id_label_area">Område</label>
                         <select class="js-select-multisearch" id="id_label_area" aria-label="Bydel" data-bind="options: towns,
 						   optionsText: 'name',
-						   value: selectedTown,
+						   value: selected_town,
 						   optionsCaption: 'Område/bydel'"/>
 
                     </div>
@@ -20,7 +35,7 @@
                         <label for="id_label_location">Lokale</label>
                         <select class="js-select-multisearch" id="id_label_location" aria-label="Lokale" data-bind="options: locations,
                             optionsText: 'name',
-                            value: selectedLocation,
+                            value: selected_location,
                             optionsCaption: 'Velg'
                             "/>
                     </div>
@@ -38,29 +53,38 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-4 mb-4">
+            <div class="col-3 mb-4">
                 <label class="text-bold text-primary" for="js-select-activities">Aktivitet</label>
                 <select class="js-select-multisearch" id="js-select-activities" aria-label="Aktiviteter"
                         multiple="true" data-bind="options: activities,
             optionsText: 'name',
-            selectedOptions: selectedActivities
+            selectedOptions: selected_activities
             "/>
             </div>
-            <div class="col-sm-4 mb-4">
+            <div class="col-3 mb-4">
+                <label class="text-bold text-primary" for="js-select-resource_categories">Ressurskategori</label>
+                <select class="js-select-multisearch" id="js-select-resource-categories" aria-label="Ressurskategori"
+                        multiple="true" data-bind="options: resource_categories,
+            optionsText: 'name',
+            selectedOptions: selected_resource_categories
+            "/>
+            </div>
+            <div class="col-3 mb-4">
                 <label class="text-bold text-primary" for="js-select-resources">Ressurser</label>
                 <select class="js-select-multisearch" id="js-select-resources" aria-label="Ressurser"
                         multiple="true" data-bind="options: resources,
             optionsText: 'name',
-            selectedOptions: selectedResources
+            selectedOptions: selected_resources
             "/>
             </div>
-            <div class="col-sm-4 mb-4">
+            <div class="col-3 mb-4">
                 <label class="text-bold text-primary" for="js-select-facilities">Fasiliteter</label>
                 <select class="js-select-multisearch" id="js-select-facilities" aria-label="Fasiliteter"
                         multiple="true" data-bind="options: facilities,
             optionsText: 'name',
-            selectedOptions: selectedFacilities
+            selectedOptions: selected_facilities
             "/>
+
             </div>
         </div>
     </div>

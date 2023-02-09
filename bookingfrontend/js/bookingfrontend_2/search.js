@@ -3,6 +3,7 @@ const Search = () => {
     let data = {
         location: [],
         activities: [],
+        resource_categories: [],
         resources: [],
         facilities: [],
         buildings: [],
@@ -13,15 +14,19 @@ const Search = () => {
     // All data for ko
     const ko_data = {
         towns: ko.observableArray([]),
-        selectedTown: ko.observable(),
+        selected_town: ko.observable(),
         locations: ko.observableArray([]),
-        selectedLocation: ko.observable(),
+        selected_location: ko.observable(),
         activities: ko.observableArray([]),
-        selectedActivities: ko.observableArray([]),
+        selected_activities: ko.observableArray([]),
+        resource_categories: ko.observableArray([]),
+        selected_resource_categories: ko.observableArray([]),
         resources: ko.observableArray([]),
-        selectedResources: ko.observableArray([]),
+        selected_resources: ko.observableArray([]),
         facilities: ko.observableArray([]),
-        selectedFacilities: ko.observableArray([])
+        selected_facilities: ko.observableArray([]),
+        type_group: ko.observable("booking"),
+        header_text: ko.observable("Lei lokale til det du trenger")
     }
 
     const fetchData = () => {
@@ -42,6 +47,7 @@ const Search = () => {
                 ko_data.activities(data.activities)
                 ko_data.resources(data.resources)
                 ko_data.facilities(data.facilities)
+                ko_data.resource_categories(data.resource_categories)
                 updateLocations(null);
             },
             error: error => {
@@ -62,12 +68,29 @@ const Search = () => {
     ko.applyBindings(ko_data, searchEl);
 
     // Setting up update of location from town
-    ko_data.selectedTown.subscribe(town => {
+    ko_data.selected_town.subscribe(town => {
         updateLocations(town);
     });
 
-    ko_data.selectedFacilities.subscribe(facilitites => {
+    ko_data.selected_facilities.subscribe(facilitites => {
         console.log(facilitites);
+    })
+
+    ko_data.type_group.subscribe(type => {
+        console.log("Type", type);
+        switch(type) {
+            case "booking":
+                ko_data.header_text("Lei lokale til det du trenger");
+                break;
+            case "event":
+                ko_data.header_text("Finn arrangement");
+                break;
+            case "organization":
+                ko_data.header_text("Finn organisasjon");
+                break;
+            default:
+                ko_data.header_text("Lei lokale til det du trenger");
+        }
     })
 
     fetchData();
@@ -77,6 +100,11 @@ Search();
 
 $(document).ready(function() {
     $('#js-select-activities').select2({
+        theme: 'select-v2',
+        width: '100%',
+        closeOnSelect: false
+    });
+    $('#js-select-resource-categories').select2({
         theme: 'select-v2',
         width: '100%',
         closeOnSelect: false

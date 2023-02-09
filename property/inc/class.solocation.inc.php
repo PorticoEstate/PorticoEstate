@@ -2404,9 +2404,11 @@
 				'buildings'				=> $this->get_rows_as_array("SELECT * from bb_building where active=1"),
 				'building_resources'	=> $this->get_rows_as_array("SELECT * from bb_building_resource"),
 				'facilities'			=> $this->get_rows_as_array("SELECT * from bb_facility where active=1"),
-				'resources'				=> $this->get_rows_as_array("SELECT * from bb_resource where active=1"),
+				'resources'				=> $this->get_rows_as_array("SELECT * from bb_resource where active=1 and hidden_in_frontend=0 and deactivate_calendar=0"),
 				'resource_activities'	=> $this->get_rows_as_array("SELECT * from bb_resource_activity"),
 				'resource_facilities'	=> $this->get_rows_as_array("SELECT * from bb_resource_facility"),
+				'resource_categories'	=> $this->get_rows_as_array("SELECT * from bb_rescategory where active=1"),
+				'resource_category_activity' => $this->get_rows_as_array("SELECT * from bb_rescategory_activity"),
 				'towns'					=> $this->get_search_data_location()
 			);
 
