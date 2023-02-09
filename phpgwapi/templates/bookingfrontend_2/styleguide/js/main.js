@@ -1,3 +1,24 @@
+
+const createJsSlidedowns = () => {
+    // Dropdown f.ex. search result
+    $(".js-slidedown").each(function(){
+        var $toggler = $(this).find(".js-slidedown-toggler");
+        var $dropDown = $(this).find(".js-slidedown-content");
+
+        $(this).on("click", function(){
+            $dropDown.slideToggle('fast', function() {
+                if($dropDown.is(':visible')) {
+                    $toggler.attr("aria-expanded","true");
+                    $('.js-slidedown').addClass('slidedown--open');
+                } else {
+                    $toggler.attr("aria-expanded","false");
+                    $('.js-slidedown').removeClass('slidedown--open');
+                }
+            });
+        });
+    });
+}
+
 $(document).ready(function () {
     /* Basic dropdown */
      $('#js-select-basic').select2({
@@ -23,24 +44,8 @@ $(document).ready(function () {
         });
     });
 
+    createJsSlidedowns();
 
-    // Dropdown f.ex. search result 
-    $(".js-slidedown").each(function(){
-        var $toggler = $(this).find(".js-slidedown-toggler");
-        var $dropDown = $(this).find(".js-slidedown-content");
-
-        $(this).on("click", function(){
-            $dropDown.slideToggle('fast', function() {
-            if($dropDown.is(':visible')) {
-                $toggler.attr("aria-expanded","true");
-                $('.js-slidedown').addClass('slidedown--open');
-            } else {
-                $toggler.attr("aria-expanded","false");
-                $('.js-slidedown').removeClass('slidedown--open');
-            }
-            });       
-        });
-    });
 
     //Datepicker
     $('#datepicker').datepicker();

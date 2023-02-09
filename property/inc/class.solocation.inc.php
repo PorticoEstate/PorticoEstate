@@ -2409,7 +2409,8 @@
 				'resource_facilities'	=> $this->get_rows_as_array("SELECT * from bb_resource_facility"),
 				'resource_categories'	=> $this->get_rows_as_array("SELECT * from bb_rescategory where active=1"),
 				'resource_category_activity' => $this->get_rows_as_array("SELECT * from bb_rescategory_activity"),
-				'towns'					=> $this->get_search_data_location()
+				'towns'					=> $this->get_search_data_location(),
+				'organizations'			=> $this->get_rows_as_array("SELECT * from bb_organization where active=1")
 			);
 
             return $values;
