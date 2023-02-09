@@ -156,7 +156,6 @@ const Search = () => {
     }
 
     ko_search.type_group.subscribe(type => {
-        console.log("Type", type);
         switch (type) {
             case "booking":
                 ko_search.header_text("Lei lokale til det du trenger");
@@ -201,16 +200,19 @@ const Search = () => {
         </button>
         <div class="js-slidedown-content slidedown__content">
           <p>
-          ${organization.description}
-          <ul>
-            <li>Hjemmeside: ${organization.homepage}</li>
-            <li>Tlf: ${organization.phone}</li>
-            <li>E-post: ${organization.email}</li>
-            <li>Adresse: ${organization.street}</li>
-            <li>Postnr: ${organization.zip_code}</li>
+            ${organization.description}
+            <ul>
+                <li>Hjemmeside: ${organization.homepage}</li>
+                <li>Tlf: ${organization.phone}</li>
+                <li>E-post: ${organization.email}</li>
+                <li>Adresse: ${organization.street}</li>
+                <li>Postnr: ${organization.zip_code}</li>
                 <li>Poststed: ${organization.city}</li>
                 <li>Distrikt: ${organization.district}</li>
-                <li>Aktivitetskode: ${organization.activity_id}</li>
+                <li><a href="${phpGWLink('bookingfrontend/', {
+                    menuaction: 'bookingfrontend.uiorganization.show',
+                    id: organization.id
+                }, false)}">Mer info</a></li>
             </ul>
           </p> 
         </div>
