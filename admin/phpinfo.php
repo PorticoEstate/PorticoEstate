@@ -29,7 +29,7 @@
 
 	include_once('../header.inc.php');
 
-	if (phpgw::get_var('noheader', 'bool', 'GET'))
+	if (phpgw::get_var('noheader', 'bool', 'GET') && !phpgw::get_var('iframe', 'bool', 'GET'))
 	{
 		$close = lang('close window');
 
@@ -48,7 +48,7 @@ HTML;
 		}
 		else
 		{
-			$link = $GLOBALS['phpgw']->link('/admin/phpinfo.php', array('get_info' => true, 'noheader' => true));
+			$link = $GLOBALS['phpgw']->link('/admin/phpinfo.php', array('get_info' => true, 'noheader' => true, 'iframe' => true));
 			echo <<<HTML
 
 				<script>
