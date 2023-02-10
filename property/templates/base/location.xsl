@@ -1,82 +1,83 @@
-  <!-- $Id$ -->
-	<xsl:template match="data">
-		<xsl:call-template name="jquery_phpgw_i18n"/>
-		<xsl:choose>
-			<xsl:when test="edit">
-				<xsl:apply-templates select="edit"/>
-			</xsl:when>
-			<xsl:when test="view">
-				<xsl:apply-templates select="view"/>
-			</xsl:when>
-			<xsl:when test="update_cat">
-				<xsl:apply-templates select="update_cat"/>
-			</xsl:when>
-			<xsl:when test="stop">
-				<xsl:apply-templates select="stop"/>
-			</xsl:when>
-			<xsl:when test="summary">
-				<xsl:apply-templates select="summary"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="list"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
 
-	<!-- New template-->
-	<xsl:template match="list">
-		<xsl:choose>
-			<xsl:when test="//lookup=1">
-				<script type="text/javascript">
-					function Exchange_values(thisform)
-					{
-						<xsl:value-of select="function_exchange_values"/>
-					}
-				</script>
-			</xsl:when>
-		</xsl:choose>
-		<xsl:choose>
-			<xsl:when test="lookup=''">
-				<xsl:apply-templates select="menu"/>
-			</xsl:when>
-		</xsl:choose>
-		<table width="100%" cellpadding="0" cellspacing="1" align="center">
-			<tr>
-				<td>
-					<!-- FILTER TABLE -->
-					<table>
-						<tr>
-							<td>
-								<xsl:call-template name="cat_filter"/>
-							</td>
-							<td align="left">
-								<xsl:call-template name="filter_district"/>
-							</td>
-							<td>
-								<xsl:call-template name="filter_part_of_town"/>
-							</td>
-							<xsl:choose>
-								<xsl:when test="status_eco_list='' and lookup!=1">
-									<td align="right">
-										<xsl:call-template name="status_filter"/>
-									</td>
-								</xsl:when>
-							</xsl:choose>
-							<td align="left">
-								<xsl:call-template name="owner_filter"/>
-							</td>
-							<td align="left">
-								<xsl:call-template name="search_field"/>
-							</td>
-							<td align="left">
-								<div id="paging"/>
-							</td>
-						</tr>
-						<!-- /FILTER TABLE -->
-					</table>
-				</td>
-			</tr>
-			<!-- <tr>
+<!-- $Id$ -->
+<xsl:template match="data">
+	<xsl:call-template name="jquery_phpgw_i18n"/>
+	<xsl:choose>
+		<xsl:when test="edit">
+			<xsl:apply-templates select="edit"/>
+		</xsl:when>
+		<xsl:when test="view">
+			<xsl:apply-templates select="view"/>
+		</xsl:when>
+		<xsl:when test="update_cat">
+			<xsl:apply-templates select="update_cat"/>
+		</xsl:when>
+		<xsl:when test="stop">
+			<xsl:apply-templates select="stop"/>
+		</xsl:when>
+		<xsl:when test="summary">
+			<xsl:apply-templates select="summary"/>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:apply-templates select="list"/>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<!-- New template-->
+<xsl:template match="list">
+	<xsl:choose>
+		<xsl:when test="//lookup=1">
+			<script type="text/javascript">
+				function Exchange_values(thisform)
+				{
+				<xsl:value-of select="function_exchange_values"/>
+				}
+			</script>
+		</xsl:when>
+	</xsl:choose>
+	<xsl:choose>
+		<xsl:when test="lookup=''">
+			<xsl:apply-templates select="menu"/>
+		</xsl:when>
+	</xsl:choose>
+	<table width="100%" cellpadding="0" cellspacing="1" align="center">
+		<tr>
+			<td>
+				<!-- FILTER TABLE -->
+				<table>
+					<tr>
+						<td>
+							<xsl:call-template name="cat_filter"/>
+						</td>
+						<td align="left">
+							<xsl:call-template name="filter_district"/>
+						</td>
+						<td>
+							<xsl:call-template name="filter_part_of_town"/>
+						</td>
+						<xsl:choose>
+							<xsl:when test="status_eco_list='' and lookup!=1">
+								<td align="right">
+									<xsl:call-template name="status_filter"/>
+								</td>
+							</xsl:when>
+						</xsl:choose>
+						<td align="left">
+							<xsl:call-template name="owner_filter"/>
+						</td>
+						<td align="left">
+							<xsl:call-template name="search_field"/>
+						</td>
+						<td align="left">
+							<div id="paging"/>
+						</td>
+					</tr>
+					<!-- /FILTER TABLE -->
+				</table>
+			</td>
+		</tr>
+		<!-- <tr>
 <td colspan="{colspan}" width="100%">
 <table width="100%">
 <tr>
@@ -308,7 +309,7 @@ onMouseOut="nd()">
 									<xsl:variable name="lang_change_type_statustext">
 										<xsl:value-of select="lang_change_type_statustext"/>
 									</xsl:variable>
-									<select name="change_type" class="forms" title="{$lang_change_type_statustext}">
+									<select name="change_type" title="{$lang_change_type_statustext}" class="pure-input-3-4">
 										<xsl:attribute name="data-validation">
 											<xsl:text>required</xsl:text>
 										</xsl:attribute>
@@ -325,7 +326,9 @@ onMouseOut="nd()">
 						</xsl:choose>
 						<xsl:choose>
 							<xsl:when test="lookup_type='form'">
-								<xsl:call-template name="location_form"/>
+								<xsl:call-template name="location_form">
+									<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+								</xsl:call-template>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:call-template name="location_view"/>
@@ -338,7 +341,7 @@ onMouseOut="nd()">
 								</label>
 								<xsl:choose>
 									<xsl:when test="datatype ='text'">
-										<textarea cols="60" rows="4" name="{input_name}">
+										<textarea cols="60" rows="4" name="{input_name}" class="pure-input-3-4">
 											<xsl:attribute name="title">
 												<xsl:value-of select="statustext"/>
 											</xsl:attribute>
@@ -356,7 +359,7 @@ onMouseOut="nd()">
 										<xsl:text>]</xsl:text>
 									</xsl:when>
 									<xsl:otherwise>
-										<input type="text" name="{input_name}" value="{value}" size="{size}">
+										<input type="text" name="{input_name}" value="{value}" size="{size}" class="pure-input-3-4">
 											<xsl:attribute name="title">
 												<xsl:value-of select="statustext"/>
 											</xsl:attribute>
@@ -377,7 +380,9 @@ onMouseOut="nd()">
 							<label>
 								<xsl:value-of select="lang_category"/>
 							</label>
-							<xsl:call-template name="cat_select"/>
+							<xsl:call-template name="cat_select">
+								<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+							</xsl:call-template>
 						</div>
 						<xsl:choose>
 							<xsl:when test="edit_part_of_town = 1">
@@ -388,7 +393,7 @@ onMouseOut="nd()">
 									<xsl:variable name="lang_town_statustext">
 										<xsl:value-of select="lang_town_statustext"/>
 									</xsl:variable>
-									<select name="part_of_town_id" title="{$lang_town_statustext}">
+									<select name="part_of_town_id" title="{$lang_town_statustext}" class="pure-input-3-4">
 										<xsl:attribute name="data-validation">
 											<xsl:text>required</xsl:text>
 										</xsl:attribute>
@@ -398,6 +403,7 @@ onMouseOut="nd()">
 										<option value="">
 											<xsl:value-of select="lang_no_part_of_town"/>
 										</option>
+										<!--<xsl:apply-templates select="part_of_town_list/options"/>-->
 										<xsl:apply-templates select="part_of_town_list"/>
 									</select>
 								</div>
@@ -412,7 +418,7 @@ onMouseOut="nd()">
 									<xsl:variable name="lang_owner_statustext">
 										<xsl:value-of select="lang_owner_statustext"/>
 									</xsl:variable>
-									<select name="owner_id" class="forms" title="{$lang_owner_statustext}">
+									<select name="owner_id" title="{$lang_owner_statustext}" class="pure-input-3-4">
 										<xsl:attribute name="data-validation">
 											<xsl:text>required</xsl:text>
 										</xsl:attribute>
@@ -471,7 +477,9 @@ onMouseOut="nd()">
 								</div>
 							</xsl:when>
 						</xsl:choose>
-						<xsl:apply-templates select="attributes_general/attributes"/>
+						<xsl:apply-templates select="attributes_general/attributes">
+							<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+						</xsl:apply-templates>
 						<xsl:choose>
 							<xsl:when test="entities_link != ''">
 								<div class="pure-control-group">
@@ -486,7 +494,10 @@ onMouseOut="nd()">
 						</xsl:choose>
 					</fieldset>
 				</div>
-				<xsl:call-template name="attributes_values"/>
+				<xsl:call-template name="attributes_values">
+					<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+				</xsl:call-template>
+
 				<xsl:choose>
 					<xsl:when test="roles != ''">
 						<div id="roles">
