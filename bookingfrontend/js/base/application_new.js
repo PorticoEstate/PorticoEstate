@@ -294,6 +294,10 @@ $(document).ready(function ()
 					}
 					else
 					{
+						if(result.results[i].direct_booking && result.results[i].direct_booking < now)
+						{
+							resource_name += ' *';
+						}
 						bookableresource.push({id: result.results[i].id, name: resource_name, selected: ko.observable(tempSelected)});
 					}
 				}
