@@ -15,3 +15,4 @@ compose.yml
 .idea
 composer.lock
 PorticoEstate.iml
+/docker-compose.override.yml
