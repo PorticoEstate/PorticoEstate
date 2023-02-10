@@ -11,4 +11,8 @@
 /phpgwapi/test/_output
 .vscode/launch.json
 /property/test_ad_bruker.php
+compose.yml
+.idea
+composer.lock
+PorticoEstate.iml
 /docker-compose.override.yml
