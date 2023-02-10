@@ -1919,7 +1919,6 @@ JS;
 				'lookup_tenant'	 => $lookup_tenant
 			);
 
-
 			$lookup_type = ($mode == 'view') ? 'view' : 'form';
 
 			if (!$location_code && $parent)
@@ -2709,6 +2708,7 @@ JS;
 				'controller'					 => $_enable_controller && $location_code,
 				'roles'							 => $roles,
 				'edit'							 => ($mode == 'view') ? '' : true,
+				'mode'							 => $mode,
 				'lang_change_type'				 => lang('Change type'),
 				'lang_no_change_type'			 => lang('No Change type'),
 				'lang_change_type_statustext'	 => lang('Type of changes'),
@@ -2782,7 +2782,14 @@ JS;
 				'lang_expand_all'				 => lang('expand all'),
 				'lang_collapse_all'				 => lang('collapse all'),
 				'validator'						 => phpgwapi_jquery::formvalidator_generate(array('location',
-					'date', 'security', 'file'))
+					'date', 'security', 'file')),
+				'edit_link' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction'	 => 'property.uilocation.edit',
+					'location_code'	 => $location_code,
+					'type_id'		 => $type_id,
+					'lookup_tenant'	 => $lookup_tenant
+				))
 			);
 
 			//phpgwapi_jquery::load_widget('treeview');
@@ -2792,8 +2799,13 @@ JS;
 			self::add_javascript('property', 'base', 'location.edit.js');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			self::render_template_xsl(array('location', 'datatable_inline', 'attributes_form'), array(
-				'edit' => $data));
+			self::render_template_xsl(array(
+				'location',
+				'datatable_inline',
+				$mode == 'view' ? 'attributes_view' : 'attributes_form'
+				),
+				 array(
+					'edit' => $data));
 		}
 
 		private function is_external_login()

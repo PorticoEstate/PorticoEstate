@@ -289,6 +289,10 @@ onMouseOut="nd()">
 			</xsl:when>
 		</xsl:choose>
 	</dl>
+	<xsl:variable name="mode">
+		<xsl:value-of select="mode"/>
+	</xsl:variable>
+
 	<div id="message"/>
 	<div id="location_edit_tabview">
 		<xsl:variable name="form_action">
@@ -301,7 +305,7 @@ onMouseOut="nd()">
 				<div id="general">
 					<fieldset>
 						<xsl:choose>
-							<xsl:when test="change_type_list != ''">
+							<xsl:when test="change_type_list != '' and mode='edit'">
 								<div class="pure-control-group">
 									<label for="name">
 										<xsl:value-of select="lang_change_type"/>
@@ -371,6 +375,11 @@ onMouseOut="nd()">
 													<xsl:value-of select="input_text"/>
 												</xsl:attribute>
 											</xsl:if>
+											<xsl:if test="$mode ='view'">
+												<xsl:attribute name="disabled">
+													<xsl:text>disabled</xsl:text>
+												</xsl:attribute>
+											</xsl:if>
 										</input>
 									</xsl:otherwise>
 								</xsl:choose>
@@ -382,6 +391,9 @@ onMouseOut="nd()">
 							</label>
 							<xsl:call-template name="cat_select">
 								<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+								<xsl:with-param name="mode">
+									<xsl:value-of select="$mode"/>
+								</xsl:with-param>
 							</xsl:call-template>
 						</div>
 						<xsl:choose>
@@ -400,6 +412,12 @@ onMouseOut="nd()">
 										<xsl:attribute name="data-validation-error-msg">
 											<xsl:value-of select="lang_no_part_of_town"/>
 										</xsl:attribute>
+										<xsl:if test="$mode ='view'">
+											<xsl:attribute name="disabled">
+												<xsl:text>disabled</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+
 										<option value="">
 											<xsl:value-of select="lang_no_part_of_town"/>
 										</option>
@@ -418,6 +436,11 @@ onMouseOut="nd()">
 										<xsl:value-of select="lang_owner_statustext"/>
 									</xsl:variable>
 									<select name="owner_id" title="{$lang_owner_statustext}" class="pure-input-3-4">
+										<xsl:if test="$mode ='view'">
+											<xsl:attribute name="disabled">
+												<xsl:text>disabled</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
 										<xsl:attribute name="data-validation">
 											<xsl:text>required</xsl:text>
 										</xsl:attribute>
@@ -450,6 +473,11 @@ onMouseOut="nd()">
 										<xsl:attribute name="title">
 											<xsl:value-of select="lang_street_num_statustext"/>
 										</xsl:attribute>
+										<xsl:if test="$mode ='view'">
+											<xsl:attribute name="disabled">
+												<xsl:text>disabled</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
 									</input>
 								</div>
 							</xsl:when>
@@ -478,6 +506,9 @@ onMouseOut="nd()">
 						</xsl:choose>
 						<xsl:apply-templates select="attributes_general/attributes">
 							<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+							<xsl:with-param name="mode">
+								<xsl:value-of select="$mode"/>
+							</xsl:with-param>
 						</xsl:apply-templates>
 						<xsl:choose>
 							<xsl:when test="entities_link != ''">
@@ -773,7 +804,7 @@ onMouseOut="nd()">
 			</div>
 			<div class="proplist-col">
 				<xsl:choose>
-					<xsl:when test="edit != ''">
+					<xsl:when test="mode = 'edit'">
 						<xsl:variable name="lang_save">
 							<xsl:value-of select="lang_save"/>
 						</xsl:variable>
@@ -782,6 +813,20 @@ onMouseOut="nd()">
 								<xsl:value-of select="lang_save_statustext"/>
 							</xsl:attribute>
 						</input>
+					</xsl:when>
+					<xsl:when test="mode = 'view'">
+						<xsl:variable name="lang_edit">
+							<xsl:value-of select="php:function('lang', 'edit')"/>
+						</xsl:variable>
+						<a role="button" class="pure-button pure-button-primary" name="edit">
+							<xsl:attribute name="title">
+								<xsl:value-of select="$lang_edit"/>
+							</xsl:attribute>
+							<xsl:attribute name="href">
+								<xsl:value-of select="edit_link"/>
+							</xsl:attribute>
+							<xsl:value-of select="$lang_edit"/>
+						</a>
 					</xsl:when>
 				</xsl:choose>
 				<xsl:variable name="lang_done">
