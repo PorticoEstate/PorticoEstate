@@ -2726,7 +2726,7 @@ JS;
 				'edit_part_of_town'				 => (isset($edit_part_of_town) ? $edit_part_of_town : ''),
 				'edit_owner'					 => (isset($edit_owner) ? $edit_owner : ''),
 				'select_name_part_of_town'		 => (isset($select_name_part_of_town) ? $select_name_part_of_town : ''),
-				'part_of_town_list'				 => (isset($part_of_town_list) ? $part_of_town_list : ''),
+				'part_of_town_list'				 => array('options' => $part_of_town_list),
 				'lang_town_statustext'			 => (isset($lang_town_statustext) ? $lang_town_statustext : ''),
 				'lang_part_of_town'				 => lang('Part of town'),
 				'lang_no_part_of_town'			 => lang('No part of town'),
