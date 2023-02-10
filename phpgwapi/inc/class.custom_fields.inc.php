@@ -82,6 +82,8 @@
 
 		protected $node_id = 0;
 
+		private $_db2, $_dateformat,$_datetimeformat, $_oProc;
+
 		/**
 		 * Constructor
 		 *
@@ -129,6 +131,7 @@
 				'custom1'=> lang('Custom listbox'),//Custom listbox to generic lists
 				'custom2'=> lang('Custom lookup'),//Custom lookup to generic lists
 				'custom3'=> lang('Custom autocomplete::integer'),//Custom lookup to generic lists
+				'QR_code'=> lang('QR code'),
 			);
 
 			$this->_oProc			= createObject('phpgwapi.schema_proc', $GLOBALS['phpgw_info']['server']['db_type']);
@@ -2224,6 +2227,7 @@
 				'custom1'	=> 'int',
 				'custom2'	=> 'int',
 				'custom3'	=> 'int',
+				'QR_code'	=> 'varchar'
 			);
 
 			if ( !isset($datatype_text[$datatype]) )

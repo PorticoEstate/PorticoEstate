@@ -17,7 +17,7 @@ this.showlightbox_assigned_history = function (serie_id)
 	var oArgs = {menuaction: 'property.uientity.get_assigned_history', serie_id: serie_id};
 	var sUrl = phpGWLink('index.php', oArgs);
 
-	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 400, height: 350, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9), fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 		close: true,
 		closejs: false
 	});

@@ -62,9 +62,7 @@
 						</label>
 						<div id="season_container" style="display:inline;">
 							<span class="select_first_text">
-								<span class="select_first_text">
-									<xsl:value-of select="php:function('lang', 'Select a building first')" />
-								</span>
+								<xsl:value-of select="php:function('lang', 'Select a building first')" />
 							</span>
 						</div>
 					</div>
@@ -182,9 +180,9 @@
 					<div>
 						<div class="heading">
 							<!--<legend>-->
-								<h3>
-									<xsl:value-of select="php:function('lang', 'History of Cost (%1)', count(cost_history/author))" />
-								</h3>
+							<h3>
+								<xsl:value-of select="php:function('lang', 'History of Cost (%1)', count(cost_history/author))" />
+							</h3>
 							<!--</legend>-->
 						</div>
 						<xsl:for-each select="cost_history[author]">

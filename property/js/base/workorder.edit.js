@@ -163,7 +163,7 @@ this.showlightbox_manual_invoice = function (workorder_id)
 	var oArgs = {menuaction: 'property.uiworkorder.add_invoice', order_id: workorder_id};
 	var sUrl = phpGWLink('index.php', oArgs);
 
-	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9), fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 		close: true
 			//	closejs:function(){closeJS_local()}
 	});
@@ -827,7 +827,7 @@ window.get_location_exception = function (location_code)
 this.fileuploader = function ()
 {
 	var sUrl = phpGWLink('index.php', multi_upload_parans);
-	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9), fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 		close: true,
 		closejs: function ()
 		{

@@ -10,7 +10,7 @@
 	<script type="text/javascript">
 		help_Popup = function(requestUrl)
 		{
-		TINY.box.show({iframe:requestUrl, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		TINY.box.show({iframe:requestUrl, boxid:"frameless",width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		};
 	</script>
 	<xsl:variable name="lang_hour">

@@ -78,6 +78,8 @@
 		 * @var object $custom reference to custom fields object
 		 */
 		protected $custom;
+
+		public $total_records;
 		var $public_functions = array
 			(
 			'read'				 => true,

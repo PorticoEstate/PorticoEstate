@@ -881,7 +881,7 @@ JqueryPortico.lightboxlogin = function ()
 
 JqueryPortico.showlightbox_history = function (sUrl)
 {
-	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 650, height: 400, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true});
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9), fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true});
 }
 
 JqueryPortico.checkAll = function (myclass)

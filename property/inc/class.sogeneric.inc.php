@@ -2163,7 +2163,7 @@
 						'name'			 => lang('Pending action type'),
 						'acl_app'		 => 'property',
 						'acl_location'	 => '.admin',
-						'menu_selection' => 'admin::property::action_type'
+						'menu_selection' => 'admin::property::pending_action_type'
 					);
 
 					break;

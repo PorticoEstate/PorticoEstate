@@ -37,6 +37,8 @@
 		public $allrows;
 		public $method_id;
 
+		var $async, $so, $bocommon, $start,$query, $filter, $sort, $order, $config, $cat_id, $total_records;
+
 		function __construct( $session = '' )
 		{
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'property';

@@ -18,7 +18,7 @@
 							<xsl:value-of select="allocation/building_id"/>
 						</xsl:attribute>
 					</input>
-					<input id="field_building_name" name="building_name" type="text">
+					<input id="field_building_name" name="building_name" type="text" class="pure-input-1-4">
 						<xsl:attribute name="data-validation">
 							<xsl:text>required</xsl:text>
 						</xsl:attribute>
@@ -39,7 +39,7 @@
 							<xsl:value-of select="allocation/organization_id"/>
 						</xsl:attribute>
 					</input>
-					<input id="field_org_name" name="organization_name" type="text">
+					<input id="field_org_name" name="organization_name" type="text" class="pure-input-1-4">
 						<xsl:attribute name="data-validation">
 							<xsl:text>required</xsl:text>
 						</xsl:attribute>
@@ -106,7 +106,7 @@
 						<label for="field_from">
 							<xsl:value-of select="php:function('lang', 'From')" />
 						</label>
-						<input id="field_from" name="from_" type="text" class="datetime">
+						<input id="field_from" name="from_" type="text" class="datetime pure-input-1-4">
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
@@ -122,7 +122,7 @@
 						<label for="field_to">
 							<xsl:value-of select="php:function('lang', 'To')" />
 						</label>
-						<input id="field_to" name="to_" type="text" class="datetime">
+						<input id="field_to" name="to_" type="text" class="datetime pure-input-1-4">
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
@@ -152,7 +152,7 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'Repeat until')" />
 					</label>
-					<input class="datetime" id="field_repeat_until" name="repeat_until" type="text" value="{repeat_until}" />
+					<input class="datetime pure-input-1-4" id="field_repeat_until" name="repeat_until" type="text" value="{repeat_until}" />
 				</div>
 
 				<div class="pure-control-group">
@@ -160,7 +160,7 @@
 						<xsl:value-of select="php:function('lang', 'Interval')" />
 					</label>
 					<xsl:value-of select="../field_interval" />
-					<select id="field_interval" name="field_interval">
+					<select id="field_interval" name="field_interval" class="pure-input-1-4">
 						<option value="1">
 							<xsl:if test="interval=1">
 								<xsl:attribute name="selected">selected</xsl:attribute>
@@ -191,7 +191,7 @@
 					<label style="vertical-align:top;">
 						<xsl:value-of select="php:function('lang', 'Season')" />
 					</label>
-					<div id="season_container" style="display:inline-block;">
+					<div id="season_container" style="display:inline;">
 						<span class="select_first_text">
 							<xsl:value-of select="php:function('lang', 'Select a building first')" />
 						</span>

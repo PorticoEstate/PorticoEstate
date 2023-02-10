@@ -531,6 +531,7 @@ HTML;
 				{
 					$('#{$tab_set}').responsiveTabs('activate', {$selected});
 				}
+
 			};
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $js);

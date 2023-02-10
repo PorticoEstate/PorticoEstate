@@ -1432,6 +1432,7 @@
 						$to = clone $__to;
 					}
 //					$test = $to->format('Y-m-d');
+					$to->setTime(23, 59, 59);
 				}
 
 				if($resource['simple_booking_end_date'])
@@ -1443,9 +1444,9 @@
 					{
 						$to = clone $simple_booking_end_date;
 					}
+					$to->setTime(23, 59, 59);
 				}
 
-				$to->setTime(23, 59, 59);
 
 				if ($resource['simple_booking'])
 				{

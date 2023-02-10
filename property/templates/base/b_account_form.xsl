@@ -15,7 +15,7 @@
 	<script type="text/javascript">
 		function b_account_lookup()
 		{
-		TINY.box.show({iframe:'<xsl:value-of select="b_account_link"/>', boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		TINY.box.show({iframe:'<xsl:value-of select="b_account_link"/>', boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 	</script>
 	<xsl:choose>

@@ -37,6 +37,7 @@
 				'booking_limit_number' => array('type' => 'int', 'required' => false),
 				'booking_limit_number_horizont' => array('type' => 'int', 'required' => false),
 				'hidden_in_frontend' => array('type' => 'int', 'required' => false),
+				'activate_prepayment' => array('type' => 'int', 'required' => false),
 
 				'building_id' => array(
 					'type' => 'int',

@@ -1,14 +1,15 @@
 
 <!-- $Id$ -->
 <xsl:template name="cat_select">
-		<xsl:param name="class" />
-		<xsl:variable name="lang_cat_statustext">
-			<xsl:value-of select="lang_cat_statustext"/>
-		</xsl:variable>
-		<xsl:variable name="select_name">
-			<xsl:value-of select="select_name"/>
-		</xsl:variable>
-		<select name="{$select_name}" class="forms" title="{$lang_cat_statustext}">
+	<xsl:param name="class" />
+	<xsl:param name="mode" />
+	<xsl:variable name="lang_cat_statustext">
+		<xsl:value-of select="lang_cat_statustext"/>
+	</xsl:variable>
+	<xsl:variable name="select_name">
+		<xsl:value-of select="select_name"/>
+	</xsl:variable>
+	<select name="{$select_name}" title="{$lang_cat_statustext}">
 		<xsl:choose>
 			<xsl:when test="$class != ''">
 				<xsl:attribute name="class">
@@ -24,11 +25,15 @@
 		<xsl:attribute name="data-validation">
 			<xsl:text>required</xsl:text>
 		</xsl:attribute>
-			<option value="">
-				<xsl:value-of select="lang_no_cat"/>
-			</option>
-			<xsl:apply-templates select="cat_list"/>
-		</select>
+		<xsl:if test="$mode ='view'">
+			<xsl:attribute name="disabled">
+				<xsl:text>disabled</xsl:text>
+			</xsl:attribute>
+		</xsl:if>e		<option value="">
+			<xsl:value-of select="lang_no_cat"/>
+		</option>
+		<xsl:apply-templates select="cat_list"/>
+	</select>
 </xsl:template>
 
 <xsl:template name="cat_select_investment">

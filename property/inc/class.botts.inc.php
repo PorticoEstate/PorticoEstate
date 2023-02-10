@@ -2254,8 +2254,6 @@ HTML;
 			}
 			else if ($approval_amount_limit1 > 0 && $amount > $approval_amount_limit1)
 			{
-				$amount = 51000;
-				
 				$dimb_role_list = execMethod('property.bogeneric.read', array(
 				'location_info' => array('type' => 'dimb_role'),
 				'sort' => 'ASC',
@@ -2265,7 +2263,7 @@ HTML;
 
 				for ($i = 0; $i < count($dimb_role_list); $i++)
 				{
-					if ($amount > $dimb_role_list[$i]['amount_limit'] && ($amount <= $dimb_role_list[$i + 1] || !isset($dimb_role_list[$i + 1])))
+					if ($amount > $dimb_role_list[$i]['amount_limit'] && ($amount <= $dimb_role_list[$i + 1]['amount_limit'] || !isset($dimb_role_list[$i + 1])))
 					{
 						$dimb_role_id = $dimb_role_list[$i]['id'];
 					}

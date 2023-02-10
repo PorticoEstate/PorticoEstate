@@ -925,3 +925,4 @@ please enter a mail subject	booking	no	Angi en tittel
 please enter a mail body	booking	no	Angi innhold
 select at least one recipient	booking	no	Velg minst en adressat
 hidden in frontend	booking	no	Skjult i frontend
+activate prepayment	booking	no	Aktiver forhåndsbetaling (Vipps)

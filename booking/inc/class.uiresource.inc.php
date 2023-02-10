@@ -74,6 +74,7 @@
 				'booking_day_horizon' => 'int',
 				'deactivate_application' => 'int',
 				'hidden_in_frontend' => 'int',
+				'activate_prepayment' => 'int',
 			);
 			self::set_active_menu('booking::buildings::resources::resources');
 			$this->display_name = lang('resources');
