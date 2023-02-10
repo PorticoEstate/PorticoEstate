@@ -403,8 +403,7 @@ onMouseOut="nd()">
 										<option value="">
 											<xsl:value-of select="lang_no_part_of_town"/>
 										</option>
-										<!--<xsl:apply-templates select="part_of_town_list/options"/>-->
-										<xsl:apply-templates select="part_of_town_list"/>
+										<xsl:apply-templates select="part_of_town_list/options"/>
 									</select>
 								</div>
 							</xsl:when>
