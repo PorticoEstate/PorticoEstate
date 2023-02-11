@@ -391,7 +391,7 @@
 			CREATE OR REPLACE TEMP VIEW bsbt AS SELECT
 			TIMESTAMP 'epoch ' + (EXTRACT(EPOCH FROM from_)+86400*(wday-1)) * INTERVAL '1 second' as from_,
 			TIMESTAMP 'epoch ' + (EXTRACT(EPOCH FROM to_)+86400*(wday-1)) * INTERVAL '1 second' as to_
-			FROM bb_season_boundary WHERE season_id={$season_id} ORDER BY from_;
+			FROM bb_season_boundary WHERE season_id={$season_id};
 EOT;
 
 			$this->db->query($view_sql, __LINE__, __FILE__, true);
@@ -448,11 +448,9 @@ EOT;
 			}
 
 			$ts_from = strtotime($record['from_']);
-//			if ($ts_from <= strtotime('00:00:59', $ts_from))
-			if ($ts_from <= strtotime('00:00:00', $ts_from))
+			if ($ts_from <= strtotime('00:00:59', $ts_from))
 			{
 				$r['to_'] = $record['to_'];
-				$r[1] = $record['to_'];
 				$this->coalesce_boundary($r, $result_set);
 			}
 			else

@@ -572,3 +572,4 @@ m	bookingfrontend	nn	Meter
 m2	bookingfrontend	nn	Kvadratmeter
 hour	bookingfrontend	nn	Time
 day	bookingfrontend	nn	Dag
+this application is not within a valid season	bookingfrontend	nn	Denne søknaden er utanfor gyldig åpningstid
