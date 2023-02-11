@@ -448,7 +448,7 @@ EOT;
 			}
 
 			$ts_from = strtotime($record['from_']);
-			if ($ts_from <= strtotime('00:00:59', $ts_from))
+			if ($ts_from <= strtotime('00:00:59', $ts_from) && $ts_to >= strtotime('23:59:00', $ts_to))
 			{
 				$r['to_'] = $record['to_'];
 				$this->coalesce_boundary($r, $result_set);
