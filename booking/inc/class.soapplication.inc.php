@@ -118,6 +118,9 @@
 
 		protected function doValidate( $entity, booking_errorstack $errors )
 		{
+			$valid_dates = array();
+			$valid_timespan = 0;
+			$soseason = CreateObject('booking.soseason');
 			// Make sure to_ > from_
 			foreach ($entity['dates'] as $date)
 			{
@@ -130,6 +133,10 @@
 				else if (empty($date['from_']) || empty($date['to_']))
 				{
 					$errors['dates'] = lang('date is required');
+				}
+				else
+				{
+					$valid_dates[] = array('from_' => $from_, 'to_' => $to_);
 				}
 			}
 			if (strlen($entity['contact_name']) > 50)
@@ -149,7 +156,19 @@
 
 				if ($direct_booking && $direct_booking < time())
 				{
-					if (!CreateObject('booking.soseason')->get_resource_seasons((int)$esource_id))
+					$seasons = $soseason->get_resource_seasons((int)$esource_id);
+
+					foreach ($seasons as $season_id)
+					{
+						foreach ($valid_dates as $valid_date)
+						{
+							if($soseason->timespan_within_season($season_id, $valid_date['from_'], $valid_date['to_']))
+							{
+								$valid_timespan ++;
+							}
+						}
+					}
+					if (!$valid_timespan)
 					{
 						$errors['season_boundary'] = lang("This application is not within a valid season");
 					}

@@ -568,3 +568,4 @@ meter	bookingfrontend	no	Meter
 square meter	bookingfrontend	no	Kvadratmeter
 hour	bookingfrontend	no	Time
 day	bookingfrontend	no	Dag
+this application is not within a valid season	bookingfrontend	no	Denne søknaden er utenfor gyldig åpningstid
