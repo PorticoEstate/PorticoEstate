@@ -1018,7 +1018,7 @@ HTML;
 			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
-			self::add_javascript('property', 'base', 'tts.index.js');
+			self::add_javascript('property', 'portico', 'tts.index.js');
 
 			$start_date	 = urldecode($this->start_date);
 			$end_date	 = urldecode($this->end_date);
@@ -1813,7 +1813,7 @@ HTML;
 			$appname		 = lang('helpdesk');
 			$function_msg	 = lang('add ticket');
 			phpgwapi_jquery::load_widget('select2');
-			self::add_javascript('property', 'base', 'tts.add.js');
+			self::add_javascript('property', 'portico', 'tts.add.js');
 //			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', 'text/javascript', true);
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 
@@ -3788,7 +3788,7 @@ JS;
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 			phpgwapi_jquery::load_widget('glider');
 			phpgwapi_jquery::load_widget('select2');
-			self::add_javascript('property', 'base', 'tts.view.js');
+			self::add_javascript('property', 'portico', 'tts.view.js');
 
 			$this->_insert_custom_js();
 			//-----------------------datatable settings---
