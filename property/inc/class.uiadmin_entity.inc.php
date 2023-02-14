@@ -95,7 +95,19 @@
 			$this->acl_delete	 = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, $this->type_app[$this->type]);
 			$this->acl_manage	 = $this->acl->check($this->acl_location, 16, $this->type_app[$this->type]);
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.$this->entity_id.{$this->cat_id}");
+			if($this->cat_id)
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
+			}
+			else if($this->entity_id)
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}");
+			}
+			else
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location);
+
+			}
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin#{$location_id}";
 		}
 
@@ -349,7 +361,7 @@
 			}
 
 			$entity_id											 = phpgw::get_var('entity_id', 'int');
-			$GLOBALS['phpgw_info']['flags']['menu_selection']	 .= "::entity_{$entity_id}";
+//			$GLOBALS['phpgw_info']['flags']['menu_selection']	 .= "::entity_{$entity_id}";
 
 			$entity = $this->bo->read_single($entity_id);
 
@@ -1184,7 +1196,7 @@
 			$entity_id	 = $this->entity_id;
 			$cat_id		 = $this->cat_id;
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
+//			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
 
 			$id		 = phpgw::get_var('id', 'int');
 			$resort	 = phpgw::get_var('resort');
@@ -1641,7 +1653,7 @@
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
 			$active_tab		 = 'general';
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
+//			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
 
 			if (!$values)
 			{
@@ -1807,7 +1819,7 @@
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
 			$active_tab		 = 'general';
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
+//			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
 
 			if (!$values)
 			{
@@ -2068,7 +2080,7 @@
 			$entity		 = $this->bo->read_single($entity_id);
 			$category	 = $this->bo->read_single_category($entity_id, $cat_id);
 
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
+//			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= "::entity_{$entity_id}::entity_{$entity_id}_{$cat_id}";
 
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
