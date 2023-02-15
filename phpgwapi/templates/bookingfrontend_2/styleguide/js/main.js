@@ -5,15 +5,18 @@ const createJsSlidedowns = () => {
         var $toggler = $(this).find(".js-slidedown-toggler");
         var $dropDown = $(this).find(".js-slidedown-content");
 
-        $(this).on("click", function(){
+        $($toggler).on("click", function(){
             $dropDown.slideToggle('fast', function() {
-                if($dropDown.is(':visible')) {
-                    $toggler.attr("aria-expanded","true");
-                    $('.js-slidedown').addClass('slidedown--open');
-                } else {
-                    $toggler.attr("aria-expanded","false");
-                    $('.js-slidedown').removeClass('slidedown--open');
-                }
+                var isExpanded = $($toggler).attr("aria-expanded");
+                $($toggler).attr("aria-expanded", function() {
+                    if(isExpanded == "false") {
+                        $(this).closest('.js-slidedown').addClass('js-slidedown--open');
+                        return "true";
+                    } else {
+                        $(this).closest('.js-slidedown').removeClass('js-slidedown--open');
+                        return "false";
+                    }
+                });
             });
         });
     });

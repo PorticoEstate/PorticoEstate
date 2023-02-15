@@ -350,7 +350,6 @@
 .slidedown {
   position: relative;
   border-radius: $rounded-large;
-  -webkit-border-radius: $rounded-large;
   border: 1px solid $grey;
   background-color: $white;
   box-shadow: $box-shadow-large;
@@ -364,7 +363,7 @@
     box-shadow: $box-shadow-large, $box-focus-shadow-purple;
   }
 
-  &--open {
+  &.js-slidedown--open {
     border-radius: $rounded-medium;
     border: 1px solid transparent;
 
@@ -386,7 +385,7 @@
 
   &__toggler {
     background: transparent;
-    border-radius: $rounded-large;
+    border-radius: $rounded-medium;
     color: $purple;
     font-size: $text-lg;
     text-align: left;
@@ -423,8 +422,76 @@
   &__content {
     padding: 1rem 2rem 1rem 1.5rem;
     font-size: 1rem;
-    background: $white;
+    background: transparent;
     border-bottom-left-radius: $rounded-medium;
     border-bottom-right-radius: $rounded-medium;
+  }
+}
+
+
+.submenu {
+  border-bottom: 1px solid $grey;
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.25rem;
+  border-radius: none;
+  background-color: $white;
+
+  &__toggler {
+    padding: 1rem 0 1rem 0.5rem;
+    width: 100%;
+    font-weight: $text-bold;
+    background: transparent;
+    border: 0;
+    position: relative;
+    text-align: left;
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: $box-focus-shadow;
+    }
+  
+    &:hover {
+      &::after {
+        color: $purple;
+      }
+    }
+
+    &::after {
+      content: "\f04b";
+      position: absolute;
+      font-family: "Font Awesome 5 Free";
+      font-weight: 700;
+      transition: all 0.25s;
+      transform: rotate(-30deg);
+      font-size: 0.65rem;
+      color: $white;
+      text-shadow: -1px -2px 0px #000, -1px 2px 0px #000, 2px 0px 0px #000;
+      right: 0.5rem;
+      top: 1.05rem;
+    }
+    
+    &[aria-expanded="true"] {
+      &::after {
+        color: $purple;
+        transform: rotate(30deg);
+      }
+    }
+
+  }
+
+  &__content {
+    padding: 0 0.5rem 1rem 0.5rem;
+
+    a {
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 }
