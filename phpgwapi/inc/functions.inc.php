@@ -629,7 +629,7 @@ HTML;
 	 * Load up the main instance of the db class.                             *
 	 \************************************************************************/
 	$GLOBALS['phpgw']->db                = createObject('phpgwapi.db');
-	$GLOBALS['phpgw']->db->Debug         = $GLOBALS['phpgw']->debug ? 1 : 0;
+	$GLOBALS['phpgw']->db->debug         = $GLOBALS['phpgw']->debug ? 1 : 0;
 	$GLOBALS['phpgw']->db->Halt_On_Error = 'no';
 
 	if(is_object($GLOBALS['phpgw']->db))

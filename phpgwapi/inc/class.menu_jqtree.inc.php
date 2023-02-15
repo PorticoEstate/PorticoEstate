@@ -36,7 +36,7 @@
 
 		private $current_node_id;
 		private $navbar = array();
-		private $menu, $bookmarks ;
+		private $menu, $bookmarks, $menu_selection ;
 
 		function __construct( $navbar = array() )
 		{
@@ -49,6 +49,14 @@
 			$this->set_current_node_id(0);
 			$this->bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
 
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				$this->menu_selection = phpgwapi_cache::session_get('navbar', 'menu_selection');
+			}
+			else
+			{
+				$this->menu_selection = $GLOBALS['phpgw_info']['flags']['menu_selection'];
+			}
 		}
 
 		private function get_navbar()
@@ -152,15 +160,8 @@
 //			static $blank_image;
 //			static $images	 = array(); // cache
 
-			if (phpgw::get_var('phpgw_return_as') == 'json')
-			{
-				$menu_selection = phpgwapi_cache::session_get('navbar', 'menu_selection');
-			}
-			else
-			{
-				$menu_selection = $GLOBALS['phpgw_info']['flags']['menu_selection'];
 
-			}
+			$menu_selection = $this->menu_selection;
 
 			/*
 			 * navbar#{$location_id}

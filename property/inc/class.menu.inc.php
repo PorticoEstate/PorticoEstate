@@ -95,7 +95,8 @@
 							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.category',
 								'entity_id'	 => $entry['id'])),
 							'text'	 => $entry['name'],
-							'image'	 => array('property', 'entity_' . $entry['id'])
+							'image'	 => array('property', 'entity_' . $entry['id']),
+							'location_id' => "admin#"  . $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entry['id']}")
 						);
 
 						$admin_children_entity["entity_{$entry['id']}"]['children'] = $entity->read_category_tree($entry['id'], 'property.uiadmin_entity.list_attribute', false, 'admin#');
@@ -634,7 +635,8 @@
 						(
 						'text'		 => lang('Admin entity'),
 						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.index')),
-						'children'	 => $admin_children_entity
+						'children'	 => $admin_children_entity,
+						'location_id' => "admin#" . $GLOBALS['phpgw']->locations->get_id('property', '.admin.entity')
 					),
 					'location'					 => array
 						(
