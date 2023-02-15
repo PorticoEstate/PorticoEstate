@@ -92,11 +92,11 @@
 					{
 						$admin_children_entity["entity_{$entry['id']}"] = array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.category',
+							'url'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.category',
 								'entity_id'	 => $entry['id'])),
-							'text'	 => $entry['name'],
-							'image'	 => array('property', 'entity_' . $entry['id']),
-							'location_id' => "admin#"  . $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entry['id']}")
+							'text'			 => $entry['name'],
+							'image'			 => array('property', 'entity_' . $entry['id']),
+							'nav_location'	 => "admin#" . $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entry['id']}")
 						);
 
 						$admin_children_entity["entity_{$entry['id']}"]['children'] = $entity->read_category_tree($entry['id'], 'property.uiadmin_entity.list_attribute', false, 'admin#');
@@ -260,7 +260,7 @@
 					'ticket_config'		 => array
 						(
 						'text'	 => lang('ticket config'),
-						'location_id' => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
+						'nav_location' => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'admin.uiconfig2.index',
 							'location_id'	 => $GLOBALS['phpgw']->locations->get_id('property', '.ticket')))
 					),
@@ -369,7 +369,7 @@
 					'accounting_config'		 => array
 						(
 						'text'	 => lang('Configuration'),
-						'location_id' => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('property', '.invoice'),
+						'nav_location' => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('property', '.invoice'),
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'admin.uiconfig2.index',
 							'location_id'	 => $GLOBALS['phpgw']->locations->get_id('property', '.invoice')))
 					),
@@ -602,7 +602,7 @@
 						'children'	 => array(
 							'custom_config'		 => array(
 								'text'			 => lang('custom config'),
-								'location_id'	 => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('property', '.admin'),
+								'nav_location'	 => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('property', '.admin'),
 								'url'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'admin.uiconfig2.index',
 									'location_id'	 => $GLOBALS['phpgw']->locations->get_id('property', '.admin')))
 							),
@@ -636,7 +636,7 @@
 						'text'		 => lang('Admin entity'),
 						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.index')),
 						'children'	 => $admin_children_entity,
-						'location_id' => "admin#" . $GLOBALS['phpgw']->locations->get_id('property', '.admin.entity')
+						'nav_location' => "admin#" . $GLOBALS['phpgw']->locations->get_id('property', '.admin.entity')
 					),
 					'location'					 => array
 						(

@@ -276,7 +276,7 @@ HTML;
 
 
 					if ( $bookmark_id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}"
-					|| ( !empty($entry['location_id']) && $entry['location_id'] == $GLOBALS['phpgw_info']['flags']['menu_selection'] ))
+					|| ( !empty($entry['nav_location']) && $entry['nav_location'] == $GLOBALS['phpgw_info']['flags']['menu_selection'] ))
 					{
 						$seleced_bm .= ' active';
 					}
@@ -511,7 +511,7 @@ HTML;
 		$current_class = 'nav-item';
 
 		if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}"
-		|| ( !empty($item['location_id']) && $item['location_id'] == $GLOBALS['phpgw_info']['flags']['menu_selection'] ))
+		|| ( !empty($item['nav_location']) && $item['nav_location'] == $GLOBALS['phpgw_info']['flags']['menu_selection'] ))
 		{
 			$current_class .= ' active';
 			$item['selected'] = true;

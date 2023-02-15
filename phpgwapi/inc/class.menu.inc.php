@@ -561,7 +561,7 @@ HTML;
 		{
 			$bookmark_text = strip_tags(phpgw::get_var('text', 'html'));
 			$bookmark_icon = phpgw::get_var('icon', 'string');
-			$location_id = phpgw::get_var('location_id', 'string');
+			$nav_location = phpgw::get_var('nav_location', 'string');
 			
 			$href_comopnents = parse_url(phpgw::get_var('href', 'raw'));
 			parse_str($href_comopnents['query'],$query_arr);
@@ -589,12 +589,12 @@ HTML;
 					$bookmarks = array();
 				}
 
-				$bookmarks[$bookmark_candidate] = array(
-					'text' => $bookmark_text,
-					'icon' => $bookmark_icon,
-					'href' => $bookmark_href,
-					'location_id' => $location_id
-					);
+				$bookmarks[$bookmark_candidate]	 = array(
+					'text'			 => $bookmark_text,
+					'icon'			 => $bookmark_icon,
+					'href'			 => $bookmark_href,
+					'nav_location'	 => $nav_location
+				);
 				$status = lang('bookmark added');
 			}
 
