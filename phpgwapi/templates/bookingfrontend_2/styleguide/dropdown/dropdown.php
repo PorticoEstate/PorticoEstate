@@ -149,6 +149,22 @@
         </div>
       </div>
     </div>
+    <div class="col-sm-6 mb-4">
+      <p class="mb-2 text-bold">Meny - slide</p>
+      <div class="js-slidedown submenu">
+        <button class="js-slidedown-toggler submenu__toggler" type="button" aria-expanded="false">
+          Administrasjon
+        </button>
+        <div class="js-slidedown-content submenu__content">
+          <ul class="list-unstyled mb-0">
+            <li><a href="">Rapport</a></li>
+            <li><a href="">Kundeliste</a></li>
+            <li><a href="">Tjenester</a></li>
+            <li><a href="">Send epost</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
     <div class="col-12 mb-4">
       <p class="mb-2 text-bold">Informasjonskort</p>
       <div class="js-slidedown slidedown">

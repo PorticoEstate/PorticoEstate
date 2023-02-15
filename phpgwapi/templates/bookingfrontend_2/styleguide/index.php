@@ -131,7 +131,6 @@
           } 
 
           include $componentLink['folder'].'/'.$componentLink['filename'].'.php';
-
         }
       ?>
     </div>

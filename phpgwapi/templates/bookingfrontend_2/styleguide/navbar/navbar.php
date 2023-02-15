@@ -4,7 +4,14 @@
       <img src="gfx/logo_aktiv_kommune_horizontal.png" alt="Aktiv kommune logo" class="navbar__logo__img">
       <img src="gfx/logo_aktiv_kommune.png" alt="Aktiv kommune logo" class="navbar__logo__img--desktop">
     </a>
-    <div class="navbar__section navbar__section--right d-none d-md-flex">
+    <div class="d-flex d-lg-none">
+      <button class="pe-btn nav-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeft" aria-label="Åpne hovedmeny">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div class="navbar__section navbar__section--right d-none d-lg-flex">
       <!-- Button trigger modal -->
       <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector" data-bs-toggle="modal" data-bs-target="#selectLanguage" aria-label="Velg språk">
         <img src="gfx/norway.png" alt="Norsk flagg" class="">
@@ -48,7 +55,12 @@
     </div>
   </nav>
   <nav class="navbar mb-5">
-    <div class="navbar__section d-none d-md-flex">
+    <div class="navbar__section d-none d-lg-flex">
+      <button class="pe-btn nav-toggler me-4" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeft" aria-label="Åpne hovedmeny">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
       <ul class="list-unstyled navbar__section__links">
         <li><a href="/">Hva er Aktiv kommune?</a></li>
         <li><a href="/">FAQ</a></li>
@@ -58,7 +70,12 @@
       <img src="gfx/logo_aktiv_kommune_horizontal.png" alt="Aktiv kommune logo" class="navbar__logo__img">
       <img src="gfx/logo_aktiv_kommune.png" alt="Aktiv kommune logo" class="navbar__logo__img--desktop">
     </a>
-    <div class="navbar__section navbar__section--right d-none d-md-flex">
+    <button class="pe-btn nav-toggler d-flex d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeft" aria-label="Åpne hovedmeny">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    <div class="navbar__section navbar__section--right d-none d-lg-flex">
       <!-- Button trigger modal -->
       <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector" data-bs-toggle="modal" data-bs-target="#selectLanguage" aria-label="Velg språk">
         <img src="gfx/norway.png" alt="Norsk flagg" class="">
