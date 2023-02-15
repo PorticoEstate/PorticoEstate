@@ -1379,7 +1379,8 @@ HTML;
 				'menuaction' => 'controller.uicalendar_planner.inspection_history',
 				'part_of_town_id' => $part_of_town_id,
 				'deviation'	=> $deviation,
-				'limit_date' => date($this->dateformat, $limit_date)
+				'limit_date' => date($this->dateformat, $limit_date),
+				'allrows'	=> $allrows,
 			);
 
 			$nm = array
@@ -1388,7 +1389,8 @@ HTML;
  				'num_records'		=> count($history_content),
  				'all_records'		=> $total,
 				'link_data'			=> $link_data,
-				'allow_all_rows'	=> $total < 150 ? true : false,
+//				'allow_all_rows'	=> $total < 150 ? true : false,
+				'allow_all_rows'	=> true,
 				'allrows'			=> $allrows,
 				'query'				=> $query
 			);
