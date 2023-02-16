@@ -361,6 +361,30 @@ HTML;
         </div>
 HTML;
 
+	if(!empty($config_frontend['tracker_matomo_url']))
+	{
+		$tracker_matomo_url = rtrim($config_frontend['tracker_matomo_url'], '/') . '/';
+		$tracker_matomo_code = <<<JS
+
+	   <!-- Start Matomo Code -->
+			<script>
+			  var _paq = window._paq = window._paq || [];
+			  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+			  _paq.push(['trackPageView']);
+			  _paq.push(['enableLinkTracking']);
+			  (function() {
+				var u="//{$tracker_matomo_url}";
+				_paq.push(['setTrackerUrl', u+'matomo.php']);
+				_paq.push(['setSiteId', '1']);
+				var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+				g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+			  })();
+			</script>
+		<!-- End Matomo Code -->
+
+JS;
+	}
+
 
 	$tpl_vars = array
 	(
@@ -381,7 +405,8 @@ HTML;
 		'lbl_search'			 => lang('Search'),
 		'logofile'				 => $logofile_frontend,
 		'header_search_class'	 => 'hidden',//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
-		'nav'					 => empty($GLOBALS['phpgw_info']['flags']['noframework']) ? $nav : ''
+		'nav'					 => empty($GLOBALS['phpgw_info']['flags']['noframework']) ? $nav : '',
+		'tracker_code'			 => $tracker_matomo_code
 	);
 
 

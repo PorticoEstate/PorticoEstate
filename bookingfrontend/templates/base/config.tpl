@@ -9,7 +9,7 @@
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
-		<tr class="pure-table-odd">
+		<tr>
 			<td colspan="2">&nbsp;<b>{lang_bookingfrontend_settings}</b></td>
 		</tr>
 
@@ -30,7 +30,7 @@
 			<td>{lang_footer_info}</td>
 			<td><input name="newsettings[footer_info]" value="{value_footer_info}" class="pure-u-1"/></td>
 		</tr>
-		<tr class="pure-table-odd">
+		<tr>
 			<td>{lang_footer_privacy_link}</td>
 			<td><input name="newsettings[footer_privacy_link]" value="{value_footer_privacy_link}" class="pure-u-1"/></td>
 		</tr>
@@ -42,7 +42,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="pure-table-odd">
+		<tr>
 			<td>{lang_get_name_from_external_source}:</td>
 			<td>
 				<select name="newsettings[get_name_from_external]" class="pure-u-1">
@@ -61,7 +61,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="pure-table-odd">
+		<tr>
 			<td>{lang_Use_cookies_to_pass_sessionid}:</td>
 			<td>
 				<select name="newsettings[usecookies]" class="pure-u-1">
@@ -74,11 +74,11 @@
 			<td>{lang_cookie_domain_for_sessions} - {lang_if_Same_as_framework_leave_empty}</td>
 			<td><input name="newsettings[cookie_domain]" value="{value_cookie_domain}" class="pure-u-1"/></td>
 		</tr>
-		<tr class="pure-table-odd">
+		<tr>
 			<td>{lang_Anonymous_user}:</td>
 			<td><input name="newsettings[anonymous_user]" value="{value_anonymous_user}" class="pure-u-1"/></td>
 		</tr>
-		<tr class="pure-table-odd">
+		<tr>
 			<td>{lang_Anonymous_password}:</td>
 			<td>
 				<input type="password" name="newsettings[anonymous_passwd]" value="{value_anonymous_passwd}" autocomplete="off"
@@ -92,11 +92,11 @@
 			<td>{lang_custom_login_url_parameter}:</td>
 			<td><input name="newsettings[login_parameter]" value="{value_login_parameter}" class="pure-u-1"/></td>
 		</tr>
-		<tr class="pure-table-odd">
+		<tr>
 			<td>{lang_login_apikey} MinId2:</td>
 			<td><input name="newsettings[apikey]" value="{value_apikey}" class="pure-u-1"/></td>
 		</tr>
-		<tr class="pure-table-odd">
+		<tr>
 			<td>{lang_login_webservicehost} MinId2:</td>
 			<td><input name="newsettings[webservicehost]" value="{value_webservicehost}" class="pure-u-1"/></td>
 		</tr>
@@ -120,48 +120,6 @@
 		<tr>
 			<td>{lang_login_webservicehost} Fiks folkeregister:</td>
 			<td><input name="newsettings[webservicehost_fiks_folkeregister]" value="{value_webservicehost_fiks_folkeregister}" class="pure-u-1"/></td>
-		</tr>
-
-		<tr class="pure-table-odd">
-			<td>{lang_login_header_key}:</td>
-			<td><input name="newsettings[header_key]" value="{value_header_key}" class="pure-u-1"/></td>
-		</tr>
-		<tr class="pure-table-odd">
-			<td>{lang_login_header_regular_expression}:</td>
-			<td><input name="newsettings[header_regular_expression]" value="{value_header_regular_expression}" class="pure-u-1"/></td>
-		</tr>
-		<tr class="pure-table-odd">
-			<td>{lang_login_soap_client_location}:</td>
-			<td><input name="newsettings[soap_location]" value="{value_soap_location}" class="pure-u-1"/></td>
-		</tr>
-		<tr class="pure-table-odd">
-			<td>{lang_login_soap_client_uri}:</td>
-			<td><input name="newsettings[soap_uri]" value="{value_soap_uri}" class="pure-u-1"/></td>
-		</tr>
-		<tr class="pure-table-odd">
-			<td>{lang_login_soap_client_proxy_host}:</td>
-			<td><input name="newsettings[soap_proxy_host]" value="{value_soap_proxy_host}" class="pure-u-1"/></td>
-		</tr>
-		<tr class="pure-table-odd">
-			<td>{lang_login_soap_client_proxy_port}:</td>
-			<td><input name="newsettings[soap_proxy_port]" value="{value_soap_proxy_port}" class="pure-u-1"/></td>
-		</tr>
-		<tr class="pure-table-odd">
-			<td>{lang_login_soap_client_encoding}:</td>
-			<td><input name="newsettings[soap_encoding]" value="{value_soap_encoding}" class="pure-u-1"/></td>
-		</tr>
-		<tr class="pure-table-odd">
-			<td>{lang_login_soap_client_login}:</td>
-			<td><input name="newsettings[soap_login]" value="{value_soap_login}" class="pure-u-1"/></td>
-		</tr>
-		<tr class="pure-table-odd">
-			<td>{lang_login_soap_client_password}:</td>
-			<td><input type ="password" name="newsettings[soap_password]" value="{value_soap_password}" autocomplete="off"
-					   readonly="readonly" onfocus="this.removeAttribute('readonly');" class="pure-u-1"/></td>
-		</tr>
-		<tr class="pure-table-odd">
-			<td>{lang_login_soap_client_wsdl}:</td>
-			<td><input name="newsettings[soap_wsdl]" value="{value_soap_wsdl}" class="pure-u-1"/></td>
 		</tr>
 		<tr>
 			<td>{lang_Debug_external_logn}:</td>
@@ -189,21 +147,25 @@
 			<td>{lang_test_person}:</td>
 			<td><input name="newsettings[test_ssn]" value="{value_test_ssn}" class="pure-u-1"/></td>
 		</tr>
-		<tr class="pure-table-odd">
+		<tr>
 			<td>{lang_google_tracker_id}:</td>
 			<td><input name="newsettings[tracker_id]" value="{value_tracker_id}" class="pure-u-1"/></td>
+		</tr>
+		<tr>
+			<td>Matomo url:</td>
+			<td><input name="newsettings[tracker_matomo_url]" value="{value_tracker_matomo_url}" class="pure-u-1"/></td>
 		</tr>
 		<tr>
 			<td>{lang_support_email_address}:</td>
 			<td><input name="newsettings[support_address]" value="{value_support_address}" class="pure-u-1"/></td>
 		</tr>
-		<tr class="pure-table-odd">
+		<tr>
 			<td>{lang_url_to_external_logout}:
 				<br/> {lang_Redirect_is_computed_if_url_ends_with} '='
 			</td>
 			<td><input name="newsettings[external_logout]" value="{value_external_logout}" class="pure-u-1"/></td>
 		</tr>
-		<tr class="pure-table-odd">
+		<tr>
 			<td>{lang_bookingfrontend_host}:
 				<br/> {lang_Needed_for_the_return_from_the_external_logout}
 			</td>
