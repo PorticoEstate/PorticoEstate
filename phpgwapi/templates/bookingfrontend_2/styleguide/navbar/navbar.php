@@ -1,8 +1,16 @@
+<?php
+    $site_url = "/portico/bookingfrontend";
+    $headlogopath = "gfx";
+    $about = $site_url;
+    $faq = $site_url;
+    $login_url = $site_url;
+
+    $nav = <<<HTML
 <div class="border-top border-2 py-5">
   <nav class="navbar mb-5">
-    <a href="/" class="navbar__logo">
-      <img src="gfx/logo_aktiv_kommune_horizontal.png" alt="Aktiv kommune logo" class="navbar__logo__img">
-      <img src="gfx/logo_aktiv_kommune.png" alt="Aktiv kommune logo" class="navbar__logo__img--desktop">
+    <a href="{$site_url}" class="navbar__logo">
+      <img src="{$headlogopath}/logo_aktiv_kommune_horizontal.png" alt="Aktiv kommune logo" class="navbar__logo__img">
+      <img src="{$headlogopath}/logo_aktiv_kommune.png" alt="Aktiv kommune logo" class="navbar__logo__img--desktop">
     </a>
     <div class="d-flex d-lg-none">
       <button class="pe-btn nav-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeft" aria-label="Åpne hovedmeny">
@@ -14,7 +22,7 @@
     <div class="navbar__section navbar__section--right d-none d-lg-flex">
       <!-- Button trigger modal -->
       <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector" data-bs-toggle="modal" data-bs-target="#selectLanguage" aria-label="Velg språk">
-        <img src="gfx/norway.png" alt="Norsk flagg" class="">
+        <img src="{$headlogopath}/norway.png" alt="Norsk flagg" class="">
         <i class="fas fa-chevron-down"></i>
       </button>
 
@@ -32,12 +40,12 @@
                 <form class="d-flex flex-column">
                   <label class="choice mb-3">
                     <input type="radio" name="select_language" value="norwegian" checked />
-                    <img src="gfx/norway.png" alt="Norsk flagg" class=""> Norsk
+                    <img src="{$headlogopath}/norway.png" alt="Norsk flagg" class=""> Norsk
                     <span class="choice__radio"></span>
                   </label>
                   <label class="choice mb-5">
                     <input type="radio" name="select_language" value="english" />
-                    <img src="gfx/united-kingdom.png" alt="Engelsk flagg" class=""> English
+                    <img src="{$headlogopath}/united-kingdom.png" alt="Engelsk flagg" class=""> English
                     <span class="choice__radio"></span>
                   </label>
                   <button type="button" class="pe-btn pe-btn-primary w-auto">Lagre</button>
@@ -48,8 +56,8 @@
         </div>
       </div>
       <ul class="list-unstyled navbar__section__links">
-        <li><a href="/">Hva er Aktiv kommune?</a></li>
-        <li><a href="/">FAQ</a></li>
+        <li><a href="{$about}">Hva er Aktiv kommune?</a></li>
+        <li><a href="{$faq}">FAQ</a></li>
       </ul>
       <button type="button" class="pe-btn pe-btn-primary py-3">Logg inn</button>
     </div>
@@ -62,13 +70,13 @@
         <span></span>
       </button>
       <ul class="list-unstyled navbar__section__links">
-        <li><a href="/">Hva er Aktiv kommune?</a></li>
-        <li><a href="/">FAQ</a></li>
+        <li><a href="${about}">Hva er Aktiv kommune?</a></li>
+        <li><a href="${faq}">FAQ</a></li>
       </ul>
     </div>
     <a href="/" class="navbar__logo">
-      <img src="gfx/logo_aktiv_kommune_horizontal.png" alt="Aktiv kommune logo" class="navbar__logo__img">
-      <img src="gfx/logo_aktiv_kommune.png" alt="Aktiv kommune logo" class="navbar__logo__img--desktop">
+      <img src="{$headlogopath}/logo_aktiv_kommune_horizontal.png" alt="Aktiv kommune logo" class="navbar__logo__img">
+      <img src="{$headlogopath}/logo_aktiv_kommune.png" alt="Aktiv kommune logo" class="navbar__logo__img--desktop">
     </a>
     <button class="pe-btn nav-toggler d-flex d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeft" aria-label="Åpne hovedmeny">
         <span></span>
@@ -78,7 +86,7 @@
     <div class="navbar__section navbar__section--right d-none d-lg-flex">
       <!-- Button trigger modal -->
       <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector" data-bs-toggle="modal" data-bs-target="#selectLanguage" aria-label="Velg språk">
-        <img src="gfx/norway.png" alt="Norsk flagg" class="">
+        <img src="{$headlogopath}/norway.png" alt="Norsk flagg" class="">
         <i class="fas fa-chevron-down"></i>
       </button>
 
@@ -96,12 +104,12 @@
                 <form class="d-flex flex-column">
                   <label class="choice mb-3">
                     <input type="radio" name="select_language" value="norwegian" checked />
-                    <img src="gfx/norway.png" alt="Norsk flagg" class=""> Norsk
+                    <img src="{$headlogopath}/norway.png" alt="Norsk flagg" class=""> Norsk
                     <span class="choice__radio"></span>
                   </label>
                   <label class="choice mb-5">
                     <input type="radio" name="select_language" value="english" />
-                    <img src="gfx/united-kingdom.png" alt="Engelsk flagg" class=""> English
+                    <img src="{$headlogopath}/united-kingdom.png" alt="Engelsk flagg" class=""> English
                     <span class="choice__radio"></span>
                   </label>
                   <button type="button" class="pe-btn pe-btn-primary w-auto">Lagre</button>
@@ -143,3 +151,6 @@
     </div>
   </nav>
 </div>
+HTML;
+
+    echo $nav;
