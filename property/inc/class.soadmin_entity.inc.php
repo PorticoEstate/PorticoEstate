@@ -291,8 +291,9 @@
 			{
 				$id = $this->db2->f('id');
 
+				$location_id = (int)$this->db2->f('location_id');
 				$children[$id] = array
-					(
+				(
 					'id'			 => $id,
 					'name'			 => $this->db2->f('name'),
 					'prefix'		 => $this->db2->f('prefix'),
@@ -300,7 +301,8 @@
 					'level'			 => (int)$this->db2->f('level'),
 					'parent_id'		 => (int)$this->db2->f('parent_id'),
 					'owner'			 => (int)$this->db2->f('owner'),
-					'location_id'	 => $prefix . (int)$this->db2->f('location_id')
+					'location_id'	 => $location_id,
+					'nav_location'	 => $prefix . $location_id
 				);
 			}
 
@@ -336,15 +338,17 @@
 
 				if (!$required || ($required && $GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, $this->type_app[$this->type])))
 				{
+					$location_id = (int)$this->db2->f('location_id');
 					$categories[$id] = array
-						(
+					(
 						'id'			 => $id,
 						'name'			 => $this->db2->f('name', true),
 						'prefix'		 => $this->db2->f('prefix'),
 						'descr'			 => $this->db2->f('descr', true),
 						'level'			 => 0,
 						'parent_id'		 => 0,
-						'location_id'	 => $prefix . $this->db2->f('location_id')
+						'location_id'	 => $location_id,
+						'nav_location'	 => $prefix . $location_id
 					);
 				}
 			}

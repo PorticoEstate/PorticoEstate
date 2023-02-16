@@ -1960,8 +1960,46 @@
 
 		function sync_accounts_contacts()
 		{
-			$GLOBALS['phpgw']->accounts->sync_accounts_contacts();
-			$GLOBALS['phpgw']->redirect_link('/admin/index.php');
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::sync_account';
+
+			if(!$this->_acl->check('run', phpgwapi_acl::READ, 'admin') )
+			{
+				phpgw::no_access();
+			}
+			if ( phpgw::get_var('cancel', 'bool', 'POST'))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uimainscreen.mainscreen'));
+			}
+
+			if (phpgw::get_var('confirm', 'bool', 'POST') )
+			{
+
+				$GLOBALS['phpgw']->accounts->sync_accounts_contacts();
+
+				$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uimainscreen.mainscreen'));
+			}
+
+			$GLOBALS['phpgw']->xslttpl->set_root(PHPGW_APP_TPL);
+			$GLOBALS['phpgw']->xslttpl->add_file('confirm_delete');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration') . ': ' . lang('Sync Account-Contact');
+
+			$data = array
+			(
+				'form_action'				=> $GLOBALS['phpgw']->link('/index.php', array
+												(
+													'menuaction' => 'admin.uiaccounts.sync_accounts_contacts',
+												)),
+				'lang_yes'					=> lang('yes'),
+				'lang_no'					=> lang('no'),
+				'lang_confirm_msg'			=> lang('are you sure you want to sync account-contact')
+			);
+
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
+
+
+//			$GLOBALS['phpgw']->redirect_link('/admin/index.php');
 		}
 
 		/**

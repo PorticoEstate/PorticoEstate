@@ -81,7 +81,7 @@
 				$menus['admin']['file_config'] = array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('file configuration', array(), true),
-					'location_id' => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('admin', 'vfs_filedata'),
+					'nav_location' => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('admin', 'vfs_filedata'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',
 						array
 						(
