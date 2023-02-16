@@ -175,7 +175,6 @@ switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
         $selected_bookingfrontend = ' checked';
         break;
 }
-echo $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'];
 $about = "";
 $faq = "";
 
