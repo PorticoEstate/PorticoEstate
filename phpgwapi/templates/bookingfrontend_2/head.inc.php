@@ -167,13 +167,42 @@ $self_uri = str_replace(array("{$separator}lang=no", "{$separator}lang=en"), '',
 
 switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']) {
     case 'bookingfrontend_2':
-        $selected_bookingfrontend_2 = ' selected = "selected"';
+        $selected_bookingfrontend_2 = ' checked';
         $selected_bookingfrontend = '';
         break;
     case 'bookingfrontend':
         $selected_bookingfrontend_2 = '';
-        $selected_bookingfrontend = ' selected = "selected"';
+        $selected_bookingfrontend = ' checked';
         break;
+}
+echo $GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'];
+$about = "";
+$faq = "";
+
+if($config_frontend['develope_mode'])
+{
+	$template_selector = <<<HTML
+              <div>
+                <h3>Template valg</h3>
+                <p>Hvilken template ønsker du?</p>
+                <form class="d-flex flex-column">
+                  <label class="choice mb-3">
+                    <input type="radio" id="template_bookingfrontend" name="select_template" value="bookingfrontend" {$selected_bookingfrontend} />
+                    Gammel
+                    <span class="choice__radio"></span>
+                  </label>
+                  <label class="choice mb-5">
+                    <input type="radio" id="template_bookingfrontend_2" name="select_template" value="bookingfrontend_2" {$selected_bookingfrontend_2} />
+                    Ny
+                    <span class="choice__radio"></span>
+                  </label>
+                </form>
+              </div>
+HTML;
+}
+else
+{
+	$template_selector = '';
 }
 
 $nav = <<<HTML
@@ -183,7 +212,14 @@ $nav = <<<HTML
       <img src="{$headlogopath}/logo_aktiv_kommune_horizontal.png" alt="Aktiv kommune logo" class="navbar__logo__img">
       <img src="{$headlogopath}/logo_aktiv_kommune.png" alt="Aktiv kommune logo" class="navbar__logo__img--desktop">
     </a>
-    <div class="navbar__section navbar__section--right d-none d-md-flex">
+    <div class="d-flex d-lg-none">
+      <button class="pe-btn nav-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeft" aria-label="Åpne hovedmeny">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div class="navbar__section navbar__section--right d-none d-lg-flex">
       <!-- Button trigger modal -->
       <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector" data-bs-toggle="modal" data-bs-target="#selectLanguage" aria-label="Velg språk">
         <img src="{$headlogopath}/norway.png" alt="Norsk flagg" class="">
@@ -204,12 +240,12 @@ $nav = <<<HTML
                 <form class="d-flex flex-column">
                   <label class="choice mb-3">
                     <input type="radio" name="select_language" value="norwegian" checked />
-                    <img src="{$headlogopath}norway.png" alt="Norsk flagg" class=""> Norsk
+                    <img src="{$headlogopath}/norway.png" alt="Norsk flagg" class=""> Norsk
                     <span class="choice__radio"></span>
                   </label>
                   <label class="choice mb-5">
                     <input type="radio" name="select_language" value="english" />
-                    <img src="{$headlogopath}united-kingdom.png" alt="Engelsk flagg" class=""> English
+                    <img src="{$headlogopath}/united-kingdom.png" alt="Engelsk flagg" class=""> English
                     <span class="choice__radio"></span>
                   </label>
                   <button type="button" class="pe-btn pe-btn-primary w-auto">Lagre</button>
@@ -219,14 +255,62 @@ $nav = <<<HTML
           </div>
         </div>
       </div>
+            <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector" data-bs-toggle="modal" data-bs-target="#selectTemplate" aria-label="Velg template">
+        Template
+        <i class="fas fa-chevron-down"></i>
+      </button>
+            <div class="modal fade" id="selectTemplate" tabindex="-1" aria-labelledby="selectTemplate" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header border-0">
+              <button type="button" class="btn-close text-grey-light" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex justify-content-center pt-0 pb-4">
+             {$template_selector}
+            </div>
+          </div>
+        </div>
+      </div>
       <ul class="list-unstyled navbar__section__links">
-        <li><a href="/">Hva er Aktiv kommune?</a></li>
-        <li><a href="/">FAQ</a></li>
+        <li><a href="{$about}">Hva er Aktiv kommune?</a></li>
+        <li><a href="{$faq}">FAQ</a></li>
       </ul>
       <button type="button" class="pe-btn pe-btn-primary py-3">Logg inn</button>
     </div>
   </nav>
 </div>
+        <div class="offcanvas offcanvas-start main-menu" tabindex="-1" id="offcanvasLeft" aria-labelledby="offcanvasLeftLabel">
+          <div class="offcanvas-header justify-content-end">
+            <button type="button" class="pe-btn pe-btn--transparent text-xl" data-bs-dismiss="offcanvas" aria-label="Close">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="offcanvas-body">
+               <div>
+                <h3>Velg språk</h3>
+                <p>Hvilket språk ønsker du?</p>
+                <form class="d-flex flex-column">
+                  <label class="choice mb-3">
+                    <input type="radio" name="select_language" value="norwegian" checked />
+                    <img src="{$headlogopath}/norway.png" alt="Norsk flagg" class=""> Norsk
+                    <span class="choice__radio"></span>
+                  </label>
+                  <label class="choice mb-5">
+                    <input type="radio" name="select_language" value="english" />
+                    <img src="{$headlogopath}/united-kingdom.png" alt="Engelsk flagg" class=""> English
+                    <span class="choice__radio"></span>
+                  </label>
+                </form>
+              </div>
+              <div>
+<ul class="list-unstyled">
+        <li><a href="${about}">Hva er Aktiv kommune?</a></li>
+        <li><a href="${faq}">FAQ</a></li>
+      </ul>
+      </div>
+      	{$template_selector}
+          </div>
+        </div>
 HTML;
 
 $tpl_vars = array
