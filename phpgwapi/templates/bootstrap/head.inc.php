@@ -53,7 +53,7 @@
 			}
 		}
 
-		$cachedir	 = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+		$cachedir	 = urlencode("{$GLOBALS['phpgw_info']['server']['temp_dir']}/combine_cache");
 		$jsfiles	 = implode(',', $_jsfiles);
 		$GLOBALS['phpgw']->template->set_var('javascript_uri', "{$webserver_url}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files={$jsfiles}");
 		$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);

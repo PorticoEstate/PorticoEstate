@@ -173,6 +173,18 @@
 					phpgwapi_cache::message_set($message, 'error');
 				}
 			}
+			
+			if($combine)
+			{
+				$cachedir = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/combine_cache";
+				
+				if(is_dir($GLOBALS['phpgw_info']['server']['temp_dir']) && !is_dir($cachedir))
+				{
+					mkdir($cachedir, 0770);
+				}
+			}
+
+
 			$links = "<!--JS Imports from phpGW javascript class -->\n";
 			$jsfiles = array();
 			if (is_array($files) && count($files))
@@ -231,12 +243,13 @@ HTML;
 
 			if($combine && $jsfiles)
 			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$jsfiles = implode(',', $jsfiles);
+				$_cachedir = urlencode($cachedir);
+				$_jsfiles = implode(',', $jsfiles);
 				$links .= '<script '
-					. "src=\"{$this->webserver_url}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files={$jsfiles}\">"
+					. "src=\"{$this->webserver_url}/phpgwapi/inc/combine.php?cachedir={$_cachedir}&type=javascript&files={$_jsfiles}\">"
 					. "</script>\n";
 				unset($jsfiles);
+				unset($_jsfiles);
 			}
 
 			return $links;
