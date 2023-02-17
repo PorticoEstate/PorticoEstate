@@ -1,7 +1,4 @@
 <body>
-	<script>
-		{support_request}
-	</script>
 	<div class="wrapper">
 		<!-- Sidebar  -->
 		{sidebar}

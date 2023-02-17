@@ -183,7 +183,7 @@
 			$link_class	 = " class=\"{$current_class}\"";
 
 			$target = '';
-			if (isset($item['target']))
+			if (!empty($item['target']))
 			{
 				$target = "target = '{$item['target']}'";
 			}

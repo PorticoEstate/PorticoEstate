@@ -157,9 +157,9 @@
 
 
 			$combine = true;
-			$combine = false; // Temporary
+//			$combine = false; // Temporary
 
-			if (isset($GLOBALS['phpgw_info']['server']['no_jscombine']) && $GLOBALS['phpgw_info']['server']['no_jscombine'])
+			if (!empty($GLOBALS['phpgw_info']['server']['no_jscombine']))
 			{
 				$combine = false;
 			}
@@ -229,7 +229,7 @@ HTML;
 				}
 			}
 
-			if($combine)
+			if($combine && $jsfiles)
 			{
 				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
 				$jsfiles = implode(',', $jsfiles);
@@ -294,7 +294,7 @@ HTML;
 		*/
 		public function set_onunload($code)
 		{
-			$this->events['unload'][] = $code;
+			$this->win_events['unload'][] = $code;
 		}
 
 		/**

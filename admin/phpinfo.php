@@ -58,7 +58,7 @@ HTML;
 					}
 				</script>
 
-				<iframe id="phpinfo" src="{$link}" width="100%" frameborder="0" scrolling="no" onload="resizeIframe(this)" />
+				<iframe id="phpinfo" src="{$link}" width="100%" frameborder="0" scrolling="no" onload="resizeIframe(this)" ></iframe>
 HTML;
 		}
 	}
