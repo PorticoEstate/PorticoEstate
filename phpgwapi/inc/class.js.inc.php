@@ -157,7 +157,7 @@
 
 
 			$combine = true;
-//			$combine = false; // Temporary
+			$combine = false; // Temporary
 
 			if (!empty($GLOBALS['phpgw_info']['server']['no_jscombine']))
 			{
