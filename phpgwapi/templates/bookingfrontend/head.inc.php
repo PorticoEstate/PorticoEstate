@@ -395,25 +395,39 @@ HTML;
 	if(!empty($config_frontend['tracker_matomo_url']))
 	{
 		$tracker_matomo_url = rtrim($config_frontend['tracker_matomo_url'], '/') . '/';
-		$tracker_matomo_code = <<<JS
+		$tracker_matomo_id = (int)$config_frontend['tracker_matomo_id'];
+//		$tracker_matomo_code = <<<JS
+//
+//	   <!-- Start Matomo Code -->
+//			<script>
+//			  var _paq = window._paq = window._paq || [];
+//			  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+//			  _paq.push(['trackPageView']);
+//			  _paq.push(['enableLinkTracking']);
+//			  (function() {
+//				var u="//{$tracker_matomo_url}";
+//				_paq.push(['setTrackerUrl', u+'matomo.php']);
+//				_paq.push(['setSiteId', '1']);
+//				var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+//				g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+//			  })();
+//			</script>
+//		<!-- End Matomo Code -->
+//
+//JS;
 
-	   <!-- Start Matomo Code -->
-			<script>
-			  var _paq = window._paq = window._paq || [];
-			  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-			  _paq.push(['trackPageView']);
-			  _paq.push(['enableLinkTracking']);
-			  (function() {
-				var u="//{$tracker_matomo_url}";
-				_paq.push(['setTrackerUrl', u+'matomo.php']);
-				_paq.push(['setSiteId', '1']);
-				var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-				g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-			  })();
-			</script>
-		<!-- End Matomo Code -->
+		/**
+		 * Alternative to avoid adblockers and no-script
+		 */
 
-JS;
+		$urlref = $_SERVER['HTTP_REFERER'];
+
+		$tracker_image = <<<HTML
+			<!-- Matomo Image Tracker -->
+			<img src="https://{$tracker_matomo_url}matomo.php?idsite={$tracker_matomo_id}&rec=1&urlref={$urlref}&send_image=0" style="border:0" alt="" />
+			<!-- End Matomo Image Tracker-->
+HTML;
+
 	}
 
 
@@ -437,7 +451,8 @@ JS;
 		'logofile'				 => $logofile_frontend,
 		'header_search_class'	 => 'hidden',//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 		'nav'					 => empty($GLOBALS['phpgw_info']['flags']['noframework']) ? $nav : '',
-		'tracker_code'			 => $tracker_matomo_code
+//		'tracker_code'			 => $tracker_matomo_code,
+		'tracker_image'			 => $tracker_image
 	);
 
 
