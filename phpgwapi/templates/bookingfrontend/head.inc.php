@@ -1,5 +1,5 @@
 <?php
-	$GLOBALS['phpgw_info']['server']['no_jscombine'] = true;
+	$GLOBALS['phpgw_info']['server']['no_jscombine'] = false;
 	phpgw::import_class('phpgwapi.jquery');
 	phpgw::import_class('phpgwapi.template_portico');
 
@@ -185,12 +185,43 @@ JS;
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/custom.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/nb-NO.js";
 	$javascripts[]	 = "/phpgwapi/js/dateformat/dateformat.js";
-	foreach ($javascripts as $javascript)
+//	foreach ($javascripts as $javascript)
+//	{
+//		if (file_exists(PHPGW_SERVER_ROOT . $javascript))
+//		{
+//			$GLOBALS['phpgw']->template->set_var('javascript_uri', $webserver_url . $javascript . $cache_refresh_token);
+//			$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
+//		}
+//	}
+
+	if (!$GLOBALS['phpgw_info']['server']['no_jscombine'])
 	{
-		if (file_exists(PHPGW_SERVER_ROOT . $javascript))
+		$_jsfiles = array();
+		foreach ($javascripts as $javascript)
 		{
-			$GLOBALS['phpgw']->template->set_var('javascript_uri', $webserver_url . $javascript . $cache_refresh_token);
-			$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
+			if (file_exists(PHPGW_SERVER_ROOT . $javascript))
+			{
+				// Add file path to array and replace path separator with "--" for URL-friendlyness
+				$_jsfiles[] = str_replace('/', '--', ltrim($javascript, '/'));
+			}
+		}
+
+		$cachedir	 = urlencode("{$GLOBALS['phpgw_info']['server']['temp_dir']}/combine_cache");
+		$jsfiles	 = implode(',', $_jsfiles);
+		$GLOBALS['phpgw']->template->set_var('javascript_uri', "{$webserver_url}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files={$jsfiles}");
+		$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
+		unset($jsfiles);
+		unset($_jsfiles);
+	}
+	else
+	{
+		foreach ($javascripts as $javascript)
+		{
+			if (file_exists(PHPGW_SERVER_ROOT . $javascript))
+			{
+				$GLOBALS['phpgw']->template->set_var('javascript_uri', $webserver_url . $javascript . $cache_refresh_token);
+				$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
+			}
 		}
 	}
 
@@ -364,25 +395,39 @@ HTML;
 	if(!empty($config_frontend['tracker_matomo_url']))
 	{
 		$tracker_matomo_url = rtrim($config_frontend['tracker_matomo_url'], '/') . '/';
-		$tracker_matomo_code = <<<JS
+		$tracker_matomo_id = (int)$config_frontend['tracker_matomo_id'];
+//		$tracker_matomo_code = <<<JS
+//
+//	   <!-- Start Matomo Code -->
+//			<script>
+//			  var _paq = window._paq = window._paq || [];
+//			  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+//			  _paq.push(['trackPageView']);
+//			  _paq.push(['enableLinkTracking']);
+//			  (function() {
+//				var u="//{$tracker_matomo_url}";
+//				_paq.push(['setTrackerUrl', u+'matomo.php']);
+//				_paq.push(['setSiteId', '1']);
+//				var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+//				g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+//			  })();
+//			</script>
+//		<!-- End Matomo Code -->
+//
+//JS;
 
-	   <!-- Start Matomo Code -->
-			<script>
-			  var _paq = window._paq = window._paq || [];
-			  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-			  _paq.push(['trackPageView']);
-			  _paq.push(['enableLinkTracking']);
-			  (function() {
-				var u="//{$tracker_matomo_url}";
-				_paq.push(['setTrackerUrl', u+'matomo.php']);
-				_paq.push(['setSiteId', '1']);
-				var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-				g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-			  })();
-			</script>
-		<!-- End Matomo Code -->
+		/**
+		 * Alternative to avoid adblockers and no-script
+		 */
 
-JS;
+		$urlref = $_SERVER['HTTP_REFERER'];
+
+		$tracker_image = <<<HTML
+			<!-- Matomo Image Tracker -->
+			<img src="https://{$tracker_matomo_url}matomo.php?idsite={$tracker_matomo_id}&rec=1&urlref={$urlref}&send_image=0" style="border:0" alt="" />
+			<!-- End Matomo Image Tracker-->
+HTML;
+
 	}
 
 
@@ -406,7 +451,8 @@ JS;
 		'logofile'				 => $logofile_frontend,
 		'header_search_class'	 => 'hidden',//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 		'nav'					 => empty($GLOBALS['phpgw_info']['flags']['noframework']) ? $nav : '',
-		'tracker_code'			 => $tracker_matomo_code
+//		'tracker_code'			 => $tracker_matomo_code,
+		'tracker_image'			 => $tracker_image
 	);
 
 

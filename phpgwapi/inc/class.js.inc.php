@@ -157,9 +157,9 @@
 
 
 			$combine = true;
-			$combine = false; // Temporary
+//			$combine = false; // Temporary
 
-			if (isset($GLOBALS['phpgw_info']['server']['no_jscombine']) && $GLOBALS['phpgw_info']['server']['no_jscombine'])
+			if (!empty($GLOBALS['phpgw_info']['server']['no_jscombine']))
 			{
 				$combine = false;
 			}
@@ -173,6 +173,18 @@
 					phpgwapi_cache::message_set($message, 'error');
 				}
 			}
+			
+			if($combine)
+			{
+				$cachedir = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/combine_cache";
+				
+				if(is_dir($GLOBALS['phpgw_info']['server']['temp_dir']) && !is_dir($cachedir))
+				{
+					mkdir($cachedir, 0770);
+				}
+			}
+
+
 			$links = "<!--JS Imports from phpGW javascript class -->\n";
 			$jsfiles = array();
 			if (is_array($files) && count($files))
@@ -229,14 +241,15 @@ HTML;
 				}
 			}
 
-			if($combine)
+			if($combine && $jsfiles)
 			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$jsfiles = implode(',', $jsfiles);
+				$_cachedir = urlencode($cachedir);
+				$_jsfiles = implode(',', $jsfiles);
 				$links .= '<script '
-					. "src=\"{$this->webserver_url}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files={$jsfiles}\">"
+					. "src=\"{$this->webserver_url}/phpgwapi/inc/combine.php?cachedir={$_cachedir}&type=javascript&files={$_jsfiles}\">"
 					. "</script>\n";
 				unset($jsfiles);
+				unset($_jsfiles);
 			}
 
 			return $links;
@@ -294,7 +307,7 @@ HTML;
 		*/
 		public function set_onunload($code)
 		{
-			$this->events['unload'][] = $code;
+			$this->win_events['unload'][] = $code;
 		}
 
 		/**

@@ -26,33 +26,28 @@
 
 
 	$cache = true;
-	$cachedir = urldecode($_GET['cachedir']);//dirname(__FILE__) . '/../cache';
-	$cssdir = dirname(__FILE__) . '/../../';
-	$jsdir = dirname(__FILE__) . '/../../';
 
-// Determine the directory and type we should use
-	switch ($_GET['type'])
+	$cachedir = urldecode($_GET['cachedir']);
+
+	$type = $_GET['type'];
+	switch ($type)
 	{
 		case 'css':
-			$base = realpath($cssdir);
-			break;
 		case 'javascript':
-			$base = realpath($jsdir);
 			break;
 		default:
 			header("HTTP/1.0 503 Not Implemented");
 			exit;
 	};
 
-	$type = $_GET['type'];
+	$base = dirname(__DIR__, 2);
 	$elements = explode(',', $_GET['files']);
 
 // Determine last modification date of the files
 	$lastmodified = 0;
-	//while (list(, $element) = each($elements))
 	foreach($elements as $key => $element)
 	{
-		$path = realpath($base . '/' . str_replace('--', '/', $element));
+		$path = $base . '/' . str_replace('--', '/', $element);
 
 		if (($type == 'javascript' && substr($path, -3) != '.js') ||
 				($type == 'css' && substr($path, -4) != '.css'))
@@ -61,6 +56,7 @@
 			exit;
 		}
 
+		$test = substr($path, 0, strlen($base));
 		if (substr($path, 0, strlen($base)) != $base || !file_exists($path))
 		{
 			header("HTTP/1.0 404 Not Found");
@@ -131,8 +127,6 @@
 
 		// Get contents of the files
 		$contents = '';
-		//reset($elements);
-		//while (list(, $element) = each($elements))
 		foreach($elements as $key => $element)
 		{
 			$path = realpath($base . '/' . str_replace('--', '/', $element));

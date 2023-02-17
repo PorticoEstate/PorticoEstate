@@ -142,7 +142,7 @@ HTML;
 
 			if($combine)
 			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+				$cachedir = urlencode("{$GLOBALS['phpgw_info']['server']['temp_dir']}/combine_cache");
 				$cssfiles = implode(',', $cssfiles);
 				$links .= "<link type=\"text/css\" href=\"{$this->webserver_url}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=css&files={$cssfiles}\">\n";
 				unset($cssfiles);

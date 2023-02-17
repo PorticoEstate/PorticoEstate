@@ -410,7 +410,7 @@ HTML;
 						<div class="input-group">
 							<input class="form-control border-end-0 border" type="search" value="" id="navbar_search">
 							<span class="input-group-append">
-				                <button class="btn btn-outline-secondary bg-white border-start-0 border ms-n3" type="button">
+				                <button class="btn btn-outline-secondary bg-white border-start-0 border ms-n3">
                 				    <i class="fa fa-search"></i>
                					</button>
         					</span>
@@ -444,17 +444,14 @@ HTML;
 
 			$var['top_panel'] = <<<HTML
 				<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
-
 					<div class="container-fluid">
-
-						<button type="button" id="sidebarCollapse" class="btn btn-info">
+						<button id="sidebarCollapse" class="btn btn-info">
 							<i class="fas fa-align-left"></i>
 							<span>Sidemeny</span>
 						</button>
-						<button class="btn btn-dark d-inline-block d-lg-none ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+						<button class="btn btn-dark d-inline-block d-lg-none ms-auto" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 							<i class="fas fa-align-justify"></i>
 						</button>
-
 						<!-- Brand -->
 						<a class="navbar-brand" href="#">{$GLOBALS['phpgw_info']['server']['site_title']}</a>
 

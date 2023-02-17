@@ -156,6 +156,10 @@
 			<td><input name="newsettings[tracker_matomo_url]" value="{value_tracker_matomo_url}" class="pure-u-1"/></td>
 		</tr>
 		<tr>
+			<td>Matomo site id:</td>
+			<td><input type="number" name="newsettings[tracker_matomo_id]" value="{value_tracker_matomo_id}" class="pure-u-1"/></td>
+		</tr>
+		<tr>
 			<td>{lang_support_email_address}:</td>
 			<td><input name="newsettings[support_address]" value="{value_support_address}" class="pure-u-1"/></td>
 		</tr>

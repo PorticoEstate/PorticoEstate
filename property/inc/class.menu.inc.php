@@ -1446,7 +1446,7 @@
 							(
 							'text'	 => $GLOBALS['phpgw']->translation->translate('laws and regulations', array(), true),
 							// degrade gracefully hack
-							'url'	 => $laws_url . '" onclick="window.open(\'' . $laws_url . '\'); return false;',
+							'url'	 => $laws_url,
 						),
 						'location'		 => array
 							(
