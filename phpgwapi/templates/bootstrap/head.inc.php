@@ -24,15 +24,12 @@
 
 	$GLOBALS['phpgw_info']['server']['no_jscombine']=false;
 
-	$javascripts = array();
-
-	$stylesheets = array();
 
 	phpgw::import_class('phpgwapi.jquery');
 	phpgwapi_jquery::load_widget('core');
 	phpgwapi_jquery::load_widget('jqtree');
 
-
+	$javascripts = array();
 	$javascripts[]	 = "/phpgwapi/js/popper/popper2.min.js";
 	$javascripts[]	 = "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js";
 
@@ -42,6 +39,39 @@
 		phpgwapi_jquery::load_widget('contextMenu');
 		$javascripts[] = "/phpgwapi/templates/bootstrap/js/sidenav.js";
 	}
+
+
+	if (!$GLOBALS['phpgw_info']['server']['no_jscombine'])
+	{
+		$_jsfiles = array();
+		foreach ($javascripts as $javascript)
+		{
+			if (file_exists(PHPGW_SERVER_ROOT . $javascript))
+			{
+				// Add file path to array and replace path separator with "--" for URL-friendlyness
+				$_jsfiles[] = str_replace('/', '--', ltrim($javascript, '/'));
+			}
+		}
+
+		$cachedir	 = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
+		$jsfiles	 = implode(',', $_jsfiles);
+		$GLOBALS['phpgw']->template->set_var('javascript_uri', "{$webserver_url}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files={$jsfiles}");
+		$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
+		unset($jsfiles);
+		unset($_jsfiles);
+	}
+	else
+	{
+		foreach ($javascripts as $javascript)
+		{
+			if (file_exists(PHPGW_SERVER_ROOT . $javascript))
+			{
+				$GLOBALS['phpgw']->template->set_var('javascript_uri', $webserver_url . $javascript . $cache_refresh_token);
+				$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
+			}
+		}
+	}
+
 
 	$stylesheets = array();
 	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
@@ -78,7 +108,6 @@
 		$stylesheets[] = "/{$app}/templates/bootstrap/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
 
-
 	foreach ( $stylesheets as $stylesheet )
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $stylesheet ) )
@@ -87,18 +116,7 @@
 			$GLOBALS['phpgw']->template->parse('stylesheets', 'stylesheet', true);
 		}
 	}
-
-	foreach ( $javascripts as $javascript )
-	{
-		$test = PHPGW_SERVER_ROOT . $javascript;
-		if( file_exists( PHPGW_SERVER_ROOT . $javascript ) )
-		{
-			$GLOBALS['phpgw']->template->set_var( 'javascript_uri', $webserver_url . $javascript . $cache_refresh_token );
-			$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
-		}
-	}
-
-
+	
 	// Construct navbar_config by taking into account the current selected menu
 	// The only problem with this loop is that leafnodes will be included
 	$navbar_config = execMethod('phpgwapi.template_portico.retrieve_local', 'navbar_config');
