@@ -36,7 +36,7 @@
 
 		private $current_node_id;
 		private $navbar = array();
-		private $menu, $bookmarks ;
+		private $menu, $bookmarks, $menu_selection ;
 
 		function __construct( $navbar = array() )
 		{
@@ -49,6 +49,14 @@
 			$this->set_current_node_id(0);
 			$this->bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
 
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				$this->menu_selection = phpgwapi_cache::session_get('navbar', 'menu_selection');
+			}
+			else
+			{
+				$this->menu_selection = $GLOBALS['phpgw_info']['flags']['menu_selection'];
+			}
 		}
 
 		private function get_navbar()
@@ -152,20 +160,13 @@
 //			static $blank_image;
 //			static $images	 = array(); // cache
 
-			if (phpgw::get_var('phpgw_return_as') == 'json')
-			{
-				$menu_selection = phpgwapi_cache::session_get('navbar', 'menu_selection');
-			}
-			else
-			{
-				$menu_selection = $GLOBALS['phpgw_info']['flags']['menu_selection'];
 
-			}
+			$menu_selection = $this->menu_selection;
 
 			/*
 			 * navbar#{$location_id}
 			 */
-			if ($id == "navbar::{$menu_selection}" || ($item['location_id'] && $item['location_id'] == $menu_selection))
+			if ($id == "navbar::{$menu_selection}" || ($item['nav_location'] && $item['nav_location'] == $menu_selection))
 			{
 				$selected = true;
 			}
@@ -182,7 +183,7 @@
 			$link_class	 = " class=\"{$current_class}\"";
 
 			$target = '';
-			if (isset($item['target']))
+			if (!empty($item['target']))
 			{
 				$target = "target = '{$item['target']}'";
 			}
@@ -194,7 +195,7 @@
 			$icon = !empty($entry['icon']) ? "<i class='{$entry['icon']} mr-2 text-gray-400'></i>": '<i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>';
 
 			$ret = array(
-				'name'		 => "<a id='{$id}' href='{$item['url']}' {$link_class} icon='{$item['icon']}' location_id='{$item['location_id']}' style='white-space:nowrap; color:inherit;'{$target}>{$item['text']}</a>",
+				'name'		 => "<a id='{$id}' href='{$item['url']}' {$link_class} icon='{$item['icon']}' nav_location='{$item['nav_location']}' style='white-space:nowrap; color:inherit;'{$target}>{$item['text']}</a>",
 				'id'		 => $node_id,
 				'text'		 => $item['text'],
 				'selected'	 => $selected ? 1 : 0,

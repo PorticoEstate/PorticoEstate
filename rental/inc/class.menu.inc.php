@@ -102,7 +102,7 @@
 					'sync' => array
 						(
 						'text' => lang('sync_menu'),
-						'url' => '',
+						'url' => '#',
 						'image' => array('rental', 'x-office-document'),
 						'children' => $sync_choices
 					),

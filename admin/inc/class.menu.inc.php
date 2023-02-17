@@ -81,7 +81,7 @@
 				$menus['admin']['file_config'] = array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('file configuration', array(), true),
-					'location_id' => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('admin', 'vfs_filedata'),
+					'nav_location' => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('admin', 'vfs_filedata'),
 					'url'	=> $GLOBALS['phpgw']->link('/index.php',
 						array
 						(
@@ -296,10 +296,7 @@
 				$menus['admin']['phpinfo'] = array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('PHP Configuration', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/admin/phpinfo.php')
-								. '" onclick="window.open(\''
-								. $GLOBALS['phpgw']->link('/admin/phpinfo.php', array('noheader' => 1))
-								. '\'); return false;',
+					'url'	=> $GLOBALS['phpgw']->link('/admin/phpinfo.php'),
 				);
 			}
 
