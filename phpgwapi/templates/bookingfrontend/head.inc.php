@@ -1,5 +1,5 @@
 <?php
-	$GLOBALS['phpgw_info']['server']['no_jscombine'] = false;
+	$GLOBALS['phpgw_info']['server']['no_jscombine'] = true;
 	phpgw::import_class('phpgwapi.jquery');
 	phpgw::import_class('phpgwapi.template_portico');
 
