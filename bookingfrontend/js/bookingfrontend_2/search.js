@@ -13,7 +13,8 @@ const Search = () => {
 
     const ko_search = {
         type_group: ko.observable("booking"),
-        header_text: ko.observable("Lei lokale til det du trenger")
+        header_text: ko.observable(""),
+        header_sub: ko.observable("")
     }
 
     // All data for ko
@@ -33,18 +34,9 @@ const Search = () => {
     }
 
     const ko_event = {
-        towns: ko.observableArray([]),
-        selected_town: ko.observable(),
-        locations: ko.observableArray([]),
-        selected_location: ko.observable(),
-        activities: ko.observableArray([]),
-        selected_activities: ko.observableArray([]),
-        resource_categories: ko.observableArray([]),
-        selected_resource_categories: ko.observableArray([]),
-        resources: ko.observableArray([]),
-        selected_resources: ko.observableArray([]),
-        facilities: ko.observableArray([]),
-        selected_facilities: ko.observableArray([]),
+        text: ko.observable(""),
+        from_date: ko.observable(getSearchDateString(new Date())),
+        to_date: ko.observable(),
     }
 
     const ko_organization = {
@@ -76,10 +68,10 @@ const Search = () => {
                 ko_booking.resource_categories(data.resource_categories)
                 updateLocations(null);
 
-                ko_event.activities(data.activities)
-                ko_event.resources(data.resources)
-                ko_event.facilities(data.facilities)
-                ko_event.resource_categories(data.resource_categories)
+                // ko_event.activities(data.activities)
+                // ko_event.resources(data.resources)
+                // ko_event.facilities(data.facilities)
+                // ko_event.resource_categories(data.resource_categories)
 
                 ko_organization.activities(data.activities)
                 ko_organization.organizations(data.organizations)
@@ -88,6 +80,12 @@ const Search = () => {
                 console.log(error);
             }
         })
+    }
+
+    const fetchEventOnDates = () => {
+        const from = ko_event.from_date();
+        const to = ko_event.to_date();
+        console.log("Fetching events", from, to);
     }
 
     const updateLocations = (town = null) => {
@@ -131,6 +129,14 @@ const Search = () => {
         organizationSearch();
     })
 
+    ko_event.from_date.subscribe(from => {
+        fetchEventOnDates();
+    })
+
+    ko_event.to_date.subscribe(to => {
+        fetchEventOnDates();
+    })
+
     const organizationSearch = () => {
         let organizations = [];
         if (ko_organization.text()!=="" || ko_organization.selected_organizations().length>0 ||ko_organization.selected_activities().length>0) {
@@ -156,21 +162,29 @@ const Search = () => {
     }
 
     ko_search.type_group.subscribe(type => {
+       updateHeaderTexts(type);
+    })
+
+    const updateHeaderTexts = (type) => {
         switch (type) {
             case "booking":
-                ko_search.header_text("Lei lokale til det du trenger");
+                ko_search.header_text("Lei lokale, anlegg eller utstyr");
+                ko_search.header_sub("Bruk filtrene til å finne de leieobjekter som du ønsker å leie");
                 $("#search-booking").show();
                 $("#search-event").hide();
                 $("#search-organization").hide();
                 break;
             case "event":
-                ko_search.header_text("Finn arrangement");
+                ko_search.header_text("Finn arrangement eller aktivitet");
+                ko_search.header_sub("Bruk filtrene til å finne ut hva som skjer i dag, eller til helgen");
                 $("#search-event").show();
                 $("#search-booking").hide();
                 $("#search-organization").hide();
+                fetchEventOnDates();
                 break;
             case "organization":
-                ko_search.header_text("Finn organisasjon");
+                ko_search.header_text("Finn lag eller organisasjon");
+                ko_search.header_sub("Er du på jakt etter noen som er interessert i det samme som deg? Søk på navn til lag eller organisasjon, eller filtrer på aktivitet eller område");
                 $("#search-organization").show();
                 $("#search-booking").hide();
                 $("#search-event").hide();
@@ -178,7 +192,7 @@ const Search = () => {
             default:
                 ko_search.header_text("Lei lokale til det du trenger");
         }
-    })
+    }
 
     // Traverse data and give you parent and childs with parent_id in dataset
     const getAllSubRowsIds = (rows, id) => {
@@ -225,6 +239,7 @@ const Search = () => {
     }
 
     fetchData();
+    updateHeaderTexts(ko_search.type_group());
 }
 
 Search();
@@ -253,4 +268,8 @@ $(document).ready(function () {
     //     closeOnSelect: false
     // });
 })
+
+function getSearchDateString(date) {
+    return `${date.getDate()}.${date.getMonth()+1}.${date.getFullYear()}`;
+}
 

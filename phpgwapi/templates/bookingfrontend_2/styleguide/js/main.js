@@ -51,7 +51,13 @@ $(document).ready(function () {
 
 
     //Datepicker
-    $('#datepicker').datepicker();
+    //Datepicker
+    $( ".js-basic-datepicker" ).datepicker({
+        dateFormat: "d.m.yy",
+        changeMonth: true,
+        changeYear: true
+    });
+
 
     
     /* Dropdown multisearch */
