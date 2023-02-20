@@ -124,18 +124,18 @@
                             <div class="col mb-3 mb-md-0">
                                 <div class="multisearch__inner__item">
                                     <label for="search-event-text">Søk</label>
-                                    <input id="search-event--text" type="text" placeholder="Søk"
+                                    <input id="search-event--text" type="text" placeholder="Arrangement / bygning"
                                            data-bind="textInput: text"></input>
                                 </div>
                             </div>
-                            <div class="col mb-3 mb-md-0">
+                            <div class="col mb-3 mb-md-0 multisearch__inner--border">
                                 <div class="multisearch__inner__item">
                                     <label for="search-event-datepicker-from">Fra dato</label>
                                     <input type="text" id="search-event-datepicker-from" class="js-basic-datepicker"
                                            placeholder="dd.mm.yyyy" data-bind="textInput: from_date"/>
                                 </div>
                             </div>
-                            <div class="col mb-3 mb-md-0">
+                            <div class="col mb-3 mb-md-0 multisearch__inner--border">
                                 <div class="multisearch__inner__item">
                                     <label for="search-event-datepicker-to">Til dato</label>
                                     <input type="text" id="search-event-datepicker-to" class="js-basic-datepicker"
@@ -156,7 +156,8 @@
                             <div class="col mb-3 mb-md-0">
                                 <div class="multisearch__inner__item">
                                     <label for="search-organization-text">Søk</label>
-                                    <input id="search-organization-text" type="text" placeholder="Søk"
+                                    <input id="search-organization-text" type="text"
+                                           placeholder="Skriv navn på lag/organisasjon"
                                            data-bind="textInput: text"></input>
                                 </div>
                             </div>

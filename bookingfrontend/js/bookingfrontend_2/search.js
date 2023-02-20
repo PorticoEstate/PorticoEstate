@@ -1,45 +1,5 @@
-const Search = () => {
-    // All data from server
-    let data = {
-        location: [],
-        activities: [],
-        resource_categories: [],
-        resources: [],
-        facilities: [],
-        buildings: [],
-        building_resources: [],
-        organizations: [],
-    }
-
-    const ko_search = {
-        type_group: ko.observable("booking"),
-        header_text: ko.observable(""),
-        header_sub: ko.observable("")
-    }
-
-    // All data for ko
-    const ko_booking = {
-        towns: ko.observableArray([]),
-        selected_town: ko.observable(),
-        locations: ko.observableArray([]),
-        selected_location: ko.observable(),
-        activities: ko.observableArray([]),
-        selected_activities: ko.observableArray([]),
-        resource_categories: ko.observableArray([]),
-        selected_resource_categories: ko.observableArray([]),
-        resources: ko.observableArray([]),
-        selected_resources: ko.observableArray([]),
-        facilities: ko.observableArray([]),
-        selected_facilities: ko.observableArray([]),
-    }
-
-    const ko_event = {
-        text: ko.observable(""),
-        from_date: ko.observable(getSearchDateString(new Date())),
-        to_date: ko.observable(),
-    }
-
-    const ko_organization = {
+class OrganizationSearch {
+    data = {
         activities: ko.observableArray([]),
         selected_activities: ko.observableArray([]),
         organizations: ko.observableArray([]),
@@ -47,163 +7,48 @@ const Search = () => {
         text: ko.observable("")
     }
 
-    const fetchData = () => {
-        const url = phpGWLink('bookingfrontend/', {
-            menuaction: 'bookingfrontend.uisearch.get_search_data_all',
-            length: -1
-        }, true);
-        $.ajax({
-            url,
-            success: response => {
-                console.log(response);
-                data = response;
-                ko_booking.towns(
-                    [...new Set(data.towns.map(item => item.name))]
-                        .sort()
-                        .map(name => ({name, id: data.towns.find(i => i.name === name).id}))
-                )
-                ko_booking.activities(data.activities)
-                ko_booking.resources(data.resources)
-                ko_booking.facilities(data.facilities)
-                ko_booking.resource_categories(data.resource_categories)
-                updateLocations(null);
+    constructor() {
+        const organizationEl = document.getElementById("search-organization");
+        ko.cleanNode(organizationEl);
+        ko.applyBindings(this.data, organizationEl);
 
-                // ko_event.activities(data.activities)
-                // ko_event.resources(data.resources)
-                // ko_event.facilities(data.facilities)
-                // ko_event.resource_categories(data.resource_categories)
+        this.data.selected_organizations.subscribe(organizations => {
+            this.search();
+        })
 
-                ko_organization.activities(data.activities)
-                ko_organization.organizations(data.organizations)
-            },
-            error: error => {
-                console.log(error);
-            }
+        this.data.text.subscribe(text => {
+            this.search();
+        })
+
+        this.data.selected_activities.subscribe(activities => {
+            this.search();
         })
     }
 
-    const fetchEventOnDates = () => {
-        const from = ko_event.from_date();
-        const to = ko_event.to_date();
-        console.log("Fetching events", from, to);
-    }
-
-    const updateLocations = (town = null) => {
-        ko_booking.locations(
-            data.towns.filter(item => town ? town.id === item.id : true)
-                .map(item => ({id: item.b_id, name: item.b_name}))
-        )
-    }
-
-    const searchEl = document.getElementById("search-header");
-    ko.cleanNode(searchEl);
-    ko.applyBindings(ko_search, searchEl);
-    const bookingEl = document.getElementById("search-booking");
-    ko.cleanNode(bookingEl);
-    ko.applyBindings(ko_booking, bookingEl);
-    const eventEl = document.getElementById("search-event");
-    ko.cleanNode(eventEl);
-    ko.applyBindings(ko_event, eventEl);
-    const organizationEl = document.getElementById("search-organization");
-    ko.cleanNode(organizationEl);
-    ko.applyBindings(ko_organization, organizationEl);
-
-    // Setting up update of location from town
-    ko_booking.selected_town.subscribe(town => {
-        updateLocations(town);
-    });
-
-    ko_booking.selected_facilities.subscribe(facilitites => {
-        console.log(facilitites);
-    })
-
-    ko_organization.selected_organizations.subscribe(organizations => {
-        organizationSearch();
-    })
-
-    ko_organization.text.subscribe(text => {
-        organizationSearch();
-    })
-
-    ko_organization.selected_activities.subscribe(activities => {
-        organizationSearch();
-    })
-
-    ko_event.from_date.subscribe(from => {
-        fetchEventOnDates();
-    })
-
-    ko_event.to_date.subscribe(to => {
-        fetchEventOnDates();
-    })
-
-    const organizationSearch = () => {
+    search() {
         let organizations = [];
-        if (ko_organization.text()!=="" || ko_organization.selected_organizations().length>0 ||ko_organization.selected_activities().length>0) {
-            const re = new RegExp(ko_organization.text(), 'i');
-            organizations = data.organizations.filter(o => o.name.match(re))
-            if (ko_organization.selected_organizations().length > 0) {
-                organizations = organizations.filter(o => ko_organization.selected_organizations().some(ko => ko.id === o.id))
+        if (this.data.text()!=="" || this.data.selected_organizations().length>0 ||this.data.selected_activities().length>0) {
+            const re = new RegExp(this.data.text(), 'i');
+            organizations = this.data.organizations().filter(o => o.name.match(re))
+            if (this.data.selected_organizations().length > 0) {
+                organizations = organizations.filter(o => this.data.selected_organizations().some(ko => ko.id === o.id))
             }
-            if (ko_organization.selected_activities().length > 0) {
+            if (this.data.selected_activities().length > 0) {
                 let ids = [];
-                for (const activity of ko_organization.selected_activities()) {
-                    ids.push(...getAllSubRowsIds(data.activities, activity.id))
+                for (const activity of this.data.selected_activities()) {
+                    ids.push(...getAllSubRowsIds(this.data.activities(), activity.id))
                 }
                 // Unique
                 ids = [...new Set(ids)];
                 organizations = organizations.filter(o => ids.some(id => id === o.activity_id))
             }
         }
-        const el = $("#search-result");
-        el.empty();
-        addInfoCardOrganizations(el, organizations);
+        const el = emptySearch();
+        this.addInfoCards(el, organizations);
         createJsSlidedowns();
     }
 
-    ko_search.type_group.subscribe(type => {
-       updateHeaderTexts(type);
-    })
-
-    const updateHeaderTexts = (type) => {
-        switch (type) {
-            case "booking":
-                ko_search.header_text("Lei lokale, anlegg eller utstyr");
-                ko_search.header_sub("Bruk filtrene til å finne de leieobjekter som du ønsker å leie");
-                $("#search-booking").show();
-                $("#search-event").hide();
-                $("#search-organization").hide();
-                break;
-            case "event":
-                ko_search.header_text("Finn arrangement eller aktivitet");
-                ko_search.header_sub("Bruk filtrene til å finne ut hva som skjer i dag, eller til helgen");
-                $("#search-event").show();
-                $("#search-booking").hide();
-                $("#search-organization").hide();
-                fetchEventOnDates();
-                break;
-            case "organization":
-                ko_search.header_text("Finn lag eller organisasjon");
-                ko_search.header_sub("Er du på jakt etter noen som er interessert i det samme som deg? Søk på navn til lag eller organisasjon, eller filtrer på aktivitet eller område");
-                $("#search-organization").show();
-                $("#search-booking").hide();
-                $("#search-event").hide();
-                break;
-            default:
-                ko_search.header_text("Lei lokale til det du trenger");
-        }
-    }
-
-    // Traverse data and give you parent and childs with parent_id in dataset
-    const getAllSubRowsIds = (rows, id) => {
-        let result = [id];
-        rows.filter(a => a.parent_id === id).map(a => {
-            result.push(...getAllSubRowsIds(rows, a.id));
-        });
-        return result;
-    }
-
-    const addInfoCardOrganizations = (el, organizations) => {
+    addInfoCards = (el, organizations) => {
         const append = [];
         for (const organization of organizations) {
             append.push(`
@@ -237,12 +82,259 @@ const Search = () => {
         }
         el.append(append.join(""));
     }
-
-    fetchData();
-    updateHeaderTexts(ko_search.type_group());
 }
 
-Search();
+class BookingSearch {
+    data = {
+        towns: ko.observableArray([]),
+        selected_town: ko.observable(),
+        locations: ko.observableArray([]),
+        selected_location: ko.observable(),
+        activities: ko.observableArray([]),
+        selected_activities: ko.observableArray([]),
+        resource_categories: ko.observableArray([]),
+        selected_resource_categories: ko.observableArray([]),
+        resources: ko.observableArray([]),
+        selected_resources: ko.observableArray([]),
+        facilities: ko.observableArray([]),
+        selected_facilities: ko.observableArray([]),
+    }
+
+    constructor() {
+        const bookingEl = document.getElementById("search-booking");
+        ko.cleanNode(bookingEl);
+        ko.applyBindings(this.data, bookingEl);
+
+    }
+
+    search() {
+        const el = emptySearch();
+    }
+}
+
+class EventSearch {
+    data = {
+        text: ko.observable(""),
+        from_date: ko.observable(getSearchDateString(new Date())),
+        to_date: ko.observable(),
+        events: ko.observableArray([])
+    }
+
+    constructor() {
+        const eventEl = document.getElementById("search-event");
+        ko.cleanNode(eventEl);
+        ko.applyBindings(this.data, eventEl);
+        this.data.text.subscribe(text => {
+            this.search();
+        })
+
+        this.data.from_date.subscribe(from => {
+            this.fetchEventOnDates();
+        })
+
+        this.data.to_date.subscribe(to => {
+            this.fetchEventOnDates();
+        })
+    }
+
+    fetchEventOnDates() {
+        const from = this.data.from_date()?.split(".");
+        const to = this.data.to_date()?.split(".");
+        const fromDate = from && from.length>1 ? `${from[2]}-${from[1]}-${from[0]}` : getIsoDateString(new Date()); // year-month-day
+        const toDate = to && to.length>1 ? `${to[2]}-${to[1]}-${to[0]}` : "";
+        const buildingID = "";
+        const facilityTypeID = "";
+        const start = 0;
+        const end = 1000;
+        const loggedInOrgs = "";
+        console.log("Fetching events", from, to);
+        const url = phpGWLink('bookingfrontend/', {
+            menuaction: 'bookingfrontend.uieventsearch.upcoming_events',
+            fromDate,
+            toDate,
+            buildingID,
+            facilityTypeID,
+            loggedInOrgs,
+            start,
+            end,
+            length: -1
+        }, true);
+        $.ajax({
+            url,
+            success: response => {
+                console.log("Loading events", response);
+                this.data.events = response;
+                this.search();
+            },
+            error: error => {
+                console.log(error);
+            }
+        })
+    }
+
+    search() {
+        let events = this.data.events.slice(0, 5);
+        if (this.data.text()!=="") {
+            const re = new RegExp(this.data.text(), 'i');
+            events = this.data.events.filter(o => o.event_name.match(re) || o.location_name.match(re))
+        }
+        const el = emptySearch();
+        console.log("Events", events);
+        this.addInfoCards(el, events);
+        createJsSlidedowns();
+    }
+
+    addInfoCards(el, events) {
+        const append = [];
+        for (const event of events) {
+            append.push(`
+    <div class="col-12 mb-4">
+      <div class="js-slidedown slidedown">
+        <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="true">
+          ${event.event_name}
+        </button>
+        <div class="js-slidedown-content slidedown__content">
+          <p>
+            ${event.location_name}
+            <ul>
+                <li>Fra: ${event.from}</li>
+                <li>Til: ${event.to}</li>
+            </ul>
+          </p> 
+        </div>
+      </div>
+    </div>
+`
+            )
+        }
+        el.append(append.join(""));
+    }
+}
+
+class Search {
+    // All data from server
+    data = {
+        location: [],
+        activities: [],
+        resource_categories: [],
+        resources: [],
+        facilities: [],
+        buildings: [],
+        building_resources: [],
+        organizations: [],
+        events: []
+    }
+    booking = new BookingSearch();
+    event = new EventSearch();
+    organization = new OrganizationSearch();
+
+    ko_search = {
+        type_group: ko.observable("booking"),
+        header_text: ko.observable(""),
+        header_sub: ko.observable("")
+    }
+
+    constructor() {
+        const searchEl = document.getElementById("search-header");
+        ko.cleanNode(searchEl);
+        ko.applyBindings(this.ko_search, searchEl);
+
+
+
+        this.ko_search.type_group.subscribe(type => {
+            this.updateHeaderTexts(type);
+        })
+
+
+        this.fetchData();
+        this.updateHeaderTexts(this.ko_search.type_group());
+    }
+
+    fetchData = () => {
+        const self = this;
+        const url = phpGWLink('bookingfrontend/', {
+            menuaction: 'bookingfrontend.uisearch.get_search_data_all',
+            length: -1
+        }, true);
+        $.ajax({
+            url,
+            success: response => {
+                console.log(response);
+                self.data = {...self.data, ...response};
+                self.booking.data.towns(
+                    [...new Set(self.data.towns.map(item => item.name))]
+                        .sort()
+                        .map(name => ({name, id: self.data.towns.find(i => i.name === name).id}))
+                )
+                self.booking.data.activities(self.data.activities)
+                self.booking.data.resources(self.data.resources)
+                self.booking.data.facilities(self.data.facilities)
+                self.booking.data.resource_categories(self.data.resource_categories)
+                self.updateLocations(null);
+
+                self.event.data.events(self.data.events);
+
+                self.organization.data.activities(self.data.activities)
+                self.organization.data.organizations(self.data.organizations)
+            },
+            error: error => {
+                console.log(error);
+            }
+        })
+    }
+
+
+
+    updateLocations = (town = null) => {
+        this.booking.data.locations(
+            this.data.towns.filter(item => town ? town.id === item.id : true)
+                .map(item => ({id: item.b_id, name: item.b_name}))
+        )
+    }
+
+    updateHeaderTexts = (type) => {
+        switch (type) {
+            case "booking":
+                this.ko_search.header_text("Lei lokale, anlegg eller utstyr");
+                this.ko_search.header_sub("Bruk filtrene til å finne de leieobjekter som du ønsker å leie");
+                $("#search-booking").show();
+                $("#search-event").hide();
+                $("#search-organization").hide();
+                this.booking.search();
+                break;
+            case "event":
+                this.ko_search.header_text("Finn arrangement eller aktivitet");
+                this.ko_search.header_sub("Bruk filtrene til å finne ut hva som skjer i dag, eller til helgen");
+                $("#search-event").show();
+                $("#search-booking").hide();
+                $("#search-organization").hide();
+                if (this.data.events.length===0) {
+                    this.event.fetchEventOnDates();
+                }
+                this.event.search();
+                break;
+            case "organization":
+                this.ko_search.header_text("Finn lag eller organisasjon");
+                this.ko_search.header_sub("Er du på jakt etter noen som er interessert i det samme som deg? Søk på navn til lag eller organisasjon, eller filtrer på aktivitet eller område");
+                $("#search-organization").show();
+                $("#search-booking").hide();
+                $("#search-event").hide();
+                this.organization.search();
+                break;
+            default:
+                this.ko_search.header_text("Lei lokale til det du trenger");
+        }
+    }
+
+    // Traverse data and give you parent and childs with parent_id in dataset
+
+
+
+
+
+}
+
+const search = new Search();
 
 $(document).ready(function () {
     $("#search-event").hide();
@@ -273,3 +365,20 @@ function getSearchDateString(date) {
     return `${date.getDate()}.${date.getMonth()+1}.${date.getFullYear()}`;
 }
 
+function getIsoDateString(date) {
+    return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+}
+
+function getAllSubRowsIds(rows, id) {
+    let result = [id];
+    rows.filter(a => a.parent_id === id).map(a => {
+        result.push(...getAllSubRowsIds(rows, a.id));
+    });
+    return result;
+}
+
+function emptySearch() {
+    const el = $("#search-result");
+    el.empty();
+    return el;
+}
