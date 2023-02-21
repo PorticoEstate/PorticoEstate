@@ -27,7 +27,7 @@ class OrganizationSearch {
 
     search() {
         let organizations = [];
-        if (this.data.text()!=="" || this.data.selected_organizations().length>0 ||this.data.selected_activities().length>0) {
+        if (this.data.text() !== "" || this.data.selected_organizations().length > 0 || this.data.selected_activities().length > 0) {
             const re = new RegExp(this.data.text(), 'i');
             organizations = this.data.organizations().filter(o => o.name.match(re))
             if (this.data.selected_organizations().length > 0) {
@@ -140,14 +140,13 @@ class EventSearch {
     fetchEventOnDates() {
         const from = this.data.from_date()?.split(".");
         const to = this.data.to_date()?.split(".");
-        const fromDate = from && from.length>1 ? `${from[2]}-${from[1]}-${from[0]}` : getIsoDateString(new Date()); // year-month-day
-        const toDate = to && to.length>1 ? `${to[2]}-${to[1]}-${to[0]}` : "";
+        const fromDate = from && from.length > 1 ? `${from[2]}-${from[1]}-${from[0]}` : getIsoDateString(new Date()); // year-month-day
+        const toDate = to && to.length > 1 ? `${to[2]}-${to[1]}-${to[0]}` : "";
         const buildingID = "";
         const facilityTypeID = "";
         const start = 0;
         const end = 1000;
         const loggedInOrgs = "";
-        console.log("Fetching events", from, to);
         const url = phpGWLink('bookingfrontend/', {
             menuaction: 'bookingfrontend.uieventsearch.upcoming_events',
             fromDate,
@@ -162,7 +161,6 @@ class EventSearch {
         $.ajax({
             url,
             success: response => {
-                console.log("Loading events", response);
                 this.data.events = response;
                 this.search();
             },
@@ -174,12 +172,11 @@ class EventSearch {
 
     search() {
         let events = this.data.events.slice(0, 5);
-        if (this.data.text()!=="") {
+        if (this.data.text() !== "") {
             const re = new RegExp(this.data.text(), 'i');
             events = this.data.events.filter(o => o.event_name.match(re) || o.location_name.match(re))
         }
         const el = emptySearch();
-        console.log("Events", events);
         this.addInfoCards(el, events);
         createJsSlidedowns();
     }
@@ -229,7 +226,7 @@ class Search {
     organization = new OrganizationSearch();
 
     ko_search = {
-        type_group: ko.observable("booking"),
+        type_group: ko.observable(null),
         header_text: ko.observable(""),
         header_sub: ko.observable("")
     }
@@ -239,15 +236,15 @@ class Search {
         ko.cleanNode(searchEl);
         ko.applyBindings(this.ko_search, searchEl);
 
-
-
         this.ko_search.type_group.subscribe(type => {
             this.updateHeaderTexts(type);
         })
 
-
         this.fetchData();
-        this.updateHeaderTexts(this.ko_search.type_group());
+        const self = this;
+        $(document).ready(function () {
+            self.ko_search.type_group(location.hash.substring(1))
+        });
     }
 
     fetchData = () => {
@@ -284,7 +281,6 @@ class Search {
     }
 
 
-
     updateLocations = (town = null) => {
         this.booking.data.locations(
             this.data.towns.filter(item => town ? town.id === item.id : true)
@@ -301,6 +297,7 @@ class Search {
                 $("#search-event").hide();
                 $("#search-organization").hide();
                 this.booking.search();
+                window.location.hash = '#booking';
                 break;
             case "event":
                 this.ko_search.header_text("Finn arrangement eller aktivitet");
@@ -308,10 +305,11 @@ class Search {
                 $("#search-event").show();
                 $("#search-booking").hide();
                 $("#search-organization").hide();
-                if (this.data.events.length===0) {
+                if (this.data.events.length === 0) {
                     this.event.fetchEventOnDates();
                 }
                 this.event.search();
+                window.location.hash = '#event';
                 break;
             case "organization":
                 this.ko_search.header_text("Finn lag eller organisasjon");
@@ -320,53 +318,23 @@ class Search {
                 $("#search-booking").hide();
                 $("#search-event").hide();
                 this.organization.search();
+                window.location.hash = '#organization';
                 break;
             default:
-                this.ko_search.header_text("Lei lokale til det du trenger");
+                this.ko_search.type_group("booking")
         }
     }
-
-    // Traverse data and give you parent and childs with parent_id in dataset
-
-
-
-
 
 }
 
 const search = new Search();
 
-$(document).ready(function () {
-    $("#search-event").hide();
-    $("#search-organization").hide();
-    // $('#js-select-activities').select2({
-    //     theme: 'select-v2',
-    //     width: '100%',
-    //     closeOnSelect: false
-    // });
-    // $('#js-select-resource-categories').select2({
-    //     theme: 'select-v2',
-    //     width: '100%',
-    //     closeOnSelect: false
-    // });
-    // $('#js-select-resources').select2({
-    //     theme: 'select-v2',
-    //     width: '100%',
-    //     closeOnSelect: false
-    // });
-    // $('#js-select-facilities').select2({
-    //     theme: 'select-v2',
-    //     width: '100%',
-    //     closeOnSelect: false
-    // });
-})
-
 function getSearchDateString(date) {
-    return `${date.getDate()}.${date.getMonth()+1}.${date.getFullYear()}`;
+    return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
 }
 
 function getIsoDateString(date) {
-    return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }
 
 function getAllSubRowsIds(rows, id) {
