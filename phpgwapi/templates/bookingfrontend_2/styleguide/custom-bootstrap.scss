@@ -1,20 +1,19 @@
-.container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl,
-.row>* {
-  padding-left: 0.625rem;
-  padding-right: 0.625rem;
+:root {
+  --bs-gutter-x: 0.625rem;
+  --bs-gutter-y: 0.625rem;
 
   @media (min-width: $media-small) {
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
+    --bs-gutter-x: 1.25rem;
+    --bs-gutter-y: 1.25rem;
   }
 }
 
-.row {
-  margin-left: -0.625rem;
-  margin-right: -0.625rem;
+.container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+  --bs-gutter-x: 0.625rem;
+  padding-right: var(--bs-gutter-x);
+  padding-left: var(--bs-gutter-x);
 
   @media (min-width: $media-small) {
-    margin-left: -1.25rem;
-    margin-right: -1.25rem;
+    --bs-gutter-x: 1.25rem;
   }
 }
