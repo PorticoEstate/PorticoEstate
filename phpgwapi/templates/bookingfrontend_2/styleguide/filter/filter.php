@@ -1,4 +1,4 @@
-<div class="container border-top border-2 py-5">
+<section class="container py-5">
   <div class="row">
     <p class="mb-2 text-bold">Filter</p>
     <div class="col mb-4">
@@ -29,4 +29,4 @@
       </label>
     </div>
   </div>
-</div>
+</section>

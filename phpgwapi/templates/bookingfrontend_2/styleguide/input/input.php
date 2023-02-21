@@ -1,4 +1,4 @@
-<div class="container border-top border-2 py-5">
+<section class="container py-5">
   <div class="row mb-4">
     <div class="col-sm-4 mb-4">
       <label class="choice">
@@ -57,4 +57,4 @@
       </div>
     </div>
   </div>
-</div>
+</section>

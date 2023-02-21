@@ -1,4 +1,4 @@
-<div class="container border-top border-2 py-5">
+<section class="container py-5">
   <?php 
     $statusTypes = array(
       'success' => 'Tidspunkt ledig', 
@@ -34,4 +34,4 @@
       }
     echo '</div>';
   ?>
-</div>
+</section>

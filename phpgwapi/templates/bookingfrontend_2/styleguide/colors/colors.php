@@ -1,4 +1,4 @@
-<div class="container g-0 border-top border-2 py-5">
+<section class="container py-5">
   <div class="row">
       <div class="d-flex align-items-center text-center mb-2">
         <div class="colorbox bg-purple"></div>
@@ -98,4 +98,4 @@
       };
     };
   ?>
-</div>
+</section>
