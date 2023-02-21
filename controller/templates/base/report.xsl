@@ -8,6 +8,11 @@
 
 <!-- new_component-->
 <xsl:template match="report" xmlns:php="http://php.net/xsl">
+
+	<xsl:variable name="inline_images">
+		<xsl:value-of select="inline_images" />
+	</xsl:variable>
+
 	<html>
 		<head>
 			<!-- Required meta tags -->
@@ -137,7 +142,7 @@
 				<div class="row mt-2">
 					<xsl:if test="location_image !=''">
 						<xsl:choose>
-							<xsl:when test="inline_images =1">
+							<xsl:when test="$inline_images =1">
 								<img src="data:image/jpg;base64,{image_data}" class="img-fluid"/>
 							</xsl:when>
 							<xsl:otherwise>
@@ -237,7 +242,7 @@
 								<xsl:if test="image_link !=''">
 									<a href="{image_link}">
 										<xsl:choose>
-											<xsl:when test="inline_images =1">
+											<xsl:when test="$inline_images =1">
 												<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
 											</xsl:when>
 											<xsl:otherwise>
@@ -278,7 +283,7 @@
 									<xsl:for-each select="files">
 										<a href="{link}" title="{text}">
 											<xsl:choose>
-												<xsl:when test="inline_images =1">
+												<xsl:when test="$inline_images =1">
 													<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
 												</xsl:when>
 												<xsl:otherwise>
@@ -330,7 +335,7 @@
 								<xsl:for-each select="files">
 									<a href="{link}" title="{text}">
 										<xsl:choose>
-											<xsl:when test="inline_images =1">
+											<xsl:when test="$inline_images =1">
 												<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
 											</xsl:when>
 											<xsl:otherwise>

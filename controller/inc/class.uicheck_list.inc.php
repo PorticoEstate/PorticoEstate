@@ -3476,7 +3476,6 @@ HTML;
 
 			$stylesheets = array();
 			$stylesheets[] = "{$webserver_url}/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css";
-//			$stylesheets[] = "{$webserver_url}/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
 			$stylesheets[] = "{$webserver_url}/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
 
 			$javascripts = array();
