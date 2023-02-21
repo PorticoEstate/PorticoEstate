@@ -109,11 +109,11 @@
 		 * @param $type control items registration type (Radiobuttons, Checklist, textfield, just commentfield)
 		 * @return returns a check list object
 		 */
-		public function get_single_with_check_items( $check_list_id, $status, $type )
+		public function get_single_with_check_items( $check_list_id, $status = '', $type = null)
 		{
 			$check_list_id = (int)$check_list_id;
 			$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, original_deadline, planned_date, completed_date,assigned_to, num_open_cases, location_code, num_pending_cases,num_corrected_cases, ";
-			$sql .= "ci.id as ci_id, control_item_id, check_list_id, cl.serie_id";
+			$sql .= "ci.id as ci_id, control_item_id, check_list_id, cl.serie_id,";
 			$sql .= "coi.title as coi_title, coi.required as coi_required, ";
 			$sql .= "coi.what_to_do as coi_what_to_do, coi.how_to_do as coi_how_to_do, coi.control_group_id as coi_control_group_id, coi.type ";
 			$sql .= "FROM controller_check_list cl ";
@@ -123,11 +123,11 @@
 
 			if ($status == 'open')
 			{
-				$sql .= "AND ci.status = 0 ";
+				$sql .= "AND cl.status = 0 ";
 			}
 			else if ($status == 'handled')
 			{
-				$sql .= "AND ci.status = 1 ";
+				$sql .= "AND cl.status = 1 ";
 			}
 
 			if ($type != null)

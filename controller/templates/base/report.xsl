@@ -74,9 +74,11 @@
 
 		<body>
 						
-			<button class="btn btn-secondary" onClick="window.print();">
-				<xsl:value-of select="php:function('lang', 'print')" />
-			</button>
+			<xsl:if test = "return_as_pdf !=1">
+				<button class="btn btn-secondary" onClick="window.print();">
+					<xsl:value-of select="php:function('lang', 'print')" />
+				</button>
+			</xsl:if>
 		
 			<div class="container small">
 				<div class="mt-5 row">
