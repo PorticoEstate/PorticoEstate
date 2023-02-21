@@ -27,6 +27,7 @@ class OrganizationSearch {
 
     search() {
         let organizations = [];
+        const el = emptySearch();
         if (this.data.text() !== "" || this.data.selected_organizations().length > 0 || this.data.selected_activities().length > 0) {
             const re = new RegExp(this.data.text(), 'i');
             organizations = this.data.organizations().filter(o => o.name.match(re))
@@ -42,9 +43,11 @@ class OrganizationSearch {
                 ids = [...new Set(ids)];
                 organizations = organizations.filter(o => ids.some(id => id === o.activity_id))
             }
+            this.addInfoCards(el, organizations);
+        } else {
+            fillSearchCount(null);
         }
-        const el = emptySearch();
-        this.addInfoCards(el, organizations);
+
         createJsSlidedowns();
     }
 
@@ -81,34 +84,146 @@ class OrganizationSearch {
             )
         }
         el.append(append.join(""));
+        fillSearchCount(organizations);
     }
 }
 
 class BookingSearch {
     data = {
+        towns_data: ko.observableArray([]),
         towns: ko.observableArray([]),
         selected_town: ko.observable(),
-        locations: ko.observableArray([]),
-        selected_location: ko.observable(),
+        buildings: ko.observableArray([]),
+        selected_buildings: ko.observableArray([]),
+        building_resources: ko.observableArray([]),
         activities: ko.observableArray([]),
         selected_activities: ko.observableArray([]),
+        resource_activities: ko.observableArray([]),
         resource_categories: ko.observableArray([]),
         selected_resource_categories: ko.observableArray([]),
+        resource_category_activity: ko.observableArray([]),
         resources: ko.observableArray([]),
         selected_resources: ko.observableArray([]),
         facilities: ko.observableArray([]),
         selected_facilities: ko.observableArray([]),
+        resource_facilities: ko.observableArray([]),
+        text: ko.observable("")
     }
+
+    activity_cache = {};
 
     constructor() {
         const bookingEl = document.getElementById("search-booking");
         ko.cleanNode(bookingEl);
         ko.applyBindings(this.data, bookingEl);
+        this.updateBuildings(null);
+
+        this.data.text.subscribe(_ => this.search())
+        this.data.selected_buildings.subscribe(_ => this.search())
+        this.data.selected_resource_categories.subscribe(_ => this.search())
+        this.data.selected_facilities.subscribe(_ => this.search())
+        this.data.selected_activities.subscribe(_ => this.search())
+        this.data.towns.subscribe(_ => this.updateBuildings(null));
+
+        this.data.selected_town.subscribe(town => {
+            this.updateBuildings(town);
+            this.search();
+        })
+
+        this.data.towns_data.subscribe(towns => {
+            this.data.towns(
+                [...new Set(towns.map(item => item.name))]
+                    .sort()
+                    .map(name => ({name: htmlDecode(name), id: towns.find(i => i.name === name).id}))
+            )
+        })
+
+        this.data.activities.subscribe(activities => {
+            for (const activity of activities) {
+                this.activity_cache[activity.id] = getAllSubRowsIds(activities, activity.id);
+            }
+        })
 
     }
 
     search() {
+        let resources = [];
         const el = emptySearch();
+        let hasSearch = false;
+        if (this.data.selected_town() !== undefined ||
+            this.data.selected_buildings().length > 0 ||
+            this.data.selected_facilities().length > 0 ||
+            this.data.selected_activities().length > 0 ||
+            this.data.selected_resource_categories().length > 0
+        ) {
+            resources = this.data.resources();
+            if (this.data.selected_town() !== undefined)
+                resources = resources.filter(resource => this.data.building_resources().some(br => this.data.buildings().some(b => b.id === br.building_id && resource.id === br.resource_id)));
+            if (this.data.selected_buildings().length > 0) {
+                resources = resources.filter(resource => this.data.building_resources().some(br => this.data.selected_buildings().some(sb => sb.id === br.building_id && resource.id === br.resource_id)));
+            }
+            if (this.data.selected_facilities().length > 0) {
+                resources = resources.filter(resource => this.data.resource_facilities().some(rf => this.data.selected_facilities().some(sf => sf.id === rf.facility_id && resource.id === rf.resource_id)));
+            }
+            if (this.data.selected_activities().length > 0) {
+                resources = resources.filter(resource => this.data.resource_activities().some(ra => this.data.selected_activities().some(sa => this.activity_cache[sa.id].includes(ra.activity_id) && resource.id === ra.resource_id)));
+            }
+            if (this.data.selected_resource_categories().length > 0) {
+                const activities = [...new Set(this.data.resource_category_activity().filter(activity => this.data.selected_resource_categories().some(rc => rc.id===activity.rescategory_id)).map(a => a.activity_id))];
+                console.log("Activities", activities, this.data.resource_category_activity(), this.data.selected_resource_categories());
+                resources = resources.filter(resource => this.data.resource_activities().some(ra => activities.some(sa => this.activity_cache[sa].includes(ra.activity_id) && resource.id === ra.resource_id)));
+            }
+
+            hasSearch = true;
+        }
+        if (this.data.text() !== "") {
+            if (!hasSearch)
+                resources = this.data.resources();
+            const re = new RegExp(this.data.text(), 'i');
+            resources = resources.filter(resource => resource.name.match(re))
+            hasSearch = true;
+        }
+
+        if (hasSearch) {
+            this.addInfoCards(el, resources);
+        } else {
+            fillSearchCount(null);
+        }
+        createJsSlidedowns();
+    }
+
+    updateBuildings = (town = null) => {
+        this.data.buildings(
+            this.data.towns_data().filter(item => town ? town.id === item.id : true)
+                .map(item => ({id: item.b_id, name: htmlDecode(item.b_name)}))
+        )
+    }
+
+    addInfoCards(el, resources) {
+        const append = [];
+        for (const resource of resources) {
+            append.push(`
+    <div class="col-12 mb-4">
+      <div class="js-slidedown slidedown">
+        <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="true">
+          ${resource.name}
+        </button>
+        <div class="js-slidedown-content slidedown__content">
+          <p>
+            ${resource.description}
+            <ul>
+                <li></li>
+                <li></li>
+            </ul>
+          </p> 
+        </div>
+      </div>
+    </div>
+`
+            )
+        }
+        el.append(append.join(""));
+        fillSearchCount(resources);
     }
 }
 
@@ -172,11 +287,11 @@ class EventSearch {
 
     search() {
         let events = this.data.events.slice(0, 5);
+        const el = emptySearch();
         if (this.data.text() !== "") {
             const re = new RegExp(this.data.text(), 'i');
             events = this.data.events.filter(o => o.event_name.match(re) || o.location_name.match(re))
         }
-        const el = emptySearch();
         this.addInfoCards(el, events);
         createJsSlidedowns();
     }
@@ -205,6 +320,7 @@ class EventSearch {
             )
         }
         el.append(append.join(""));
+        fillSearchCount(events);
     }
 }
 
@@ -258,21 +374,24 @@ class Search {
             success: response => {
                 console.log(response);
                 self.data = {...self.data, ...response};
-                self.booking.data.towns(
-                    [...new Set(self.data.towns.map(item => item.name))]
-                        .sort()
-                        .map(name => ({name, id: self.data.towns.find(i => i.name === name).id}))
-                )
+
+                self.booking.data.building_resources(response.building_resources);
+                self.booking.data.towns_data(response.towns);
                 self.booking.data.activities(self.data.activities)
-                self.booking.data.resources(self.data.resources)
-                self.booking.data.facilities(self.data.facilities)
+                self.booking.data.resources(self.data.resources.map(r => ({...r, name: htmlDecode(r.name)})))
+                self.booking.data.facilities(self.data.facilities.map(f => ({...f, name: htmlDecode(f.name)})))
                 self.booking.data.resource_categories(self.data.resource_categories)
-                self.updateLocations(null);
+                self.booking.data.resource_facilities(self.data.resource_facilities)
+                self.booking.data.resource_activities(self.data.resource_activities)
+                self.booking.data.resource_category_activity(self.data.resource_category_activity);
 
                 self.event.data.events(self.data.events);
 
-                self.organization.data.activities(self.data.activities)
-                self.organization.data.organizations(self.data.organizations)
+                self.organization.data.activities(self.data.activities.map(a => ({...a, name: htmlDecode(a.name)})))
+                self.organization.data.organizations(self.data.organizations.map(o => ({
+                    ...o,
+                    name: htmlDecode(o.name)
+                })));
             },
             error: error => {
                 console.log(error);
@@ -280,13 +399,6 @@ class Search {
         })
     }
 
-
-    updateLocations = (town = null) => {
-        this.booking.data.locations(
-            this.data.towns.filter(item => town ? town.id === item.id : true)
-                .map(item => ({id: item.b_id, name: item.b_name}))
-        )
-    }
 
     updateHeaderTexts = (type) => {
         switch (type) {
@@ -349,4 +461,20 @@ function emptySearch() {
     const el = $("#search-result");
     el.empty();
     return el;
+}
+
+function fillSearchCount(data) {
+    const el = $("#search-count");
+    el.empty();
+    if (data) {
+        el.append(`Antall treff: ${data.length}`);
+    }
+}
+
+function htmlDecode(input) {
+    const doc = new DOMParser().parseFromString(input, "text/html");
+    const newInput = doc.documentElement.textContent;
+    // Some texts are double encoded
+    const newDoc = new DOMParser().parseFromString(newInput, "text/html");
+    return newDoc.documentElement.textContent;
 }

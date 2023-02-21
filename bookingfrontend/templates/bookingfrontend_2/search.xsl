@@ -24,13 +24,34 @@
                 <div class="multisearch w-100">
                     <div class="multisearch__inner multisearch__inner--no-button w-100">
                         <div class="row flex-column flex-md-row mb-lg-4">
-                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0">
+                            <div class="col col-md-6 col-lg-6 mb-6 mb-lg-0">
                                 <div class="multisearch__inner__item">
                                     <label for="search-booking-text">Søk</label>
-                                    <input id="search-booking-text" type="text" placeholder="Søk"></input>
+                                    <input id="search-booking-text" type="text" placeholder="Søk" data-bind="textInput: text"></input>
+                                </div>
+                            </div>
+
+                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
+                                <div class="multisearch__inner__item">
+                                    <label for="search-booking-datepicker">Dato</label>
+                                    <input type="text" id="search-booking-datepicker" placeholder="Velg"/>
                                 </div>
                             </div>
                             <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
+                                <div class="multisearch__inner__item ">
+                                    <label class="text-bold text-primary" for="search-booking-activities">Aktivitet
+                                    </label>
+                                    <select class="js-select-multisearch" id="search-booking-activities"
+                                            aria-label="Aktiviteter"
+                                            multiple="true" data-bind="options: activities,
+            optionsText: 'name',
+            selectedOptions: selected_activities
+            "/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row flex-column flex-md-row">
+                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0">
                                 <div class="multisearch__inner__item">
                                     <label for="search-booking-area">Område</label>
                                     <select class="js-select-multisearch" id="search-booking-area" aria-label="Bydel"
@@ -43,36 +64,17 @@
                             </div>
                             <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
                                 <div class="multisearch__inner__item">
-                                    <label for="search-booking-location">Lokale</label>
-                                    <select class="js-select-multisearch" id="search-booking-location"
+                                    <label for="search-booking-building">Lokale</label>
+                                    <select class="js-select-multisearch" id="search-booking-building"
                                             aria-label="Lokale"
-                                            data-bind="options: locations,
+                                            multiple="true"
+                                            data-bind="options: buildings,
                             optionsText: 'name',
-                            value: selected_location,
-                            optionsCaption: 'Velg'
+                            selectedOptions: selected_buildings
                             "/>
                                 </div>
                             </div>
-                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
-                                <div class="multisearch__inner__item">
-                                    <label for="search-booking-datepicker">Dato</label>
-                                    <input type="text" id="search-booking-datepicker" placeholder="Velg"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row flex-column flex-md-row">
-                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0">
-                                <div class="multisearch__inner__item ">
-                                    <label class="text-bold text-primary" for="search-booking-activities">Aktivitet
-                                    </label>
-                                    <select class="js-select-multisearch" id="search-booking-activities"
-                                            aria-label="Aktiviteter"
-                                            multiple="true" data-bind="options: activities,
-            optionsText: 'name',
-            selectedOptions: selected_activities
-            "/>
-                                </div>
-                            </div>
+
                             <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
                                 <div class="multisearch__inner__item">
                                     <label class="text-bold text-primary" for="search-booking-resource_categories">
@@ -83,18 +85,6 @@
                                             multiple="true" data-bind="options: resource_categories,
             optionsText: 'name',
             selectedOptions: selected_resource_categories
-            "/>
-                                </div>
-                            </div>
-                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
-                                <div class="multisearch__inner__item">
-                                    <label class="text-bold text-primary" for="search-booking-resources">Ressurser
-                                    </label>
-                                    <select class="js-select-multisearch" id="search-booking-resources"
-                                            aria-label="Ressurser"
-                                            multiple="true" data-bind="options: resources,
-            optionsText: 'name',
-            selectedOptions: selected_resources
             "/>
                                 </div>
                             </div>
@@ -194,7 +184,7 @@
                 </div>
             </div>
         </div>
-
+        <div id="search-count" class="pt-3"></div>
         <div id="search-result" class="pt-3"></div>
     </div>
 </xsl:template>
