@@ -5779,8 +5779,16 @@ class Html2Pdf
         $this->parsingCss->setPosition();
         $this->parsingCss->fontSet();
 
-        $res = $this->_drawImage($src, isset($param['sub_li']));
-        if (!$res) {
+        try
+		{
+			$res = $this->_drawImage($src, isset($param['sub_li']));
+		}
+		catch (ImageException $e)
+		{
+			$res = null;
+		}
+
+		if (!$res) {
             return $res;
         }
 
