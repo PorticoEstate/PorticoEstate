@@ -84,7 +84,7 @@
   });
 </script>
 
-<div class="container border-top border-2 py-5">
+<section class="container py-5">
   <div class="row">
     <div class="col-sm-6 mb-4">
       <p class="mb-2 text-bold">Standard</p>
@@ -166,9 +166,10 @@
       </div>
     </div>
     <div class="col-12 mb-4">
-      <p class="mb-2 text-bold">Informasjonskort</p>
+      <p class="mb-2 text-bold">Informasjonskort stor</p>
       <div class="js-slidedown slidedown">
-        <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="false">
+        <button class="js-slidedown-toggler slidedown__toggler slidedown__toggler--large" type="button" aria-expanded="false">
+          <span>
           Sandnes idrettspark
         </button>
         <div class="js-slidedown-content slidedown__content">
@@ -182,9 +183,38 @@
               <li>se status for, og eventuelt endre dine søknader</li>
               <li>se eventuelle fakturaer tilknyttet ulike leieforhold</li>
             </ul>
-          </p> 
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 mb-4">
+      <p class="mb-2 text-bold">Informasjonskort</p>
+      <?php 
+        $toggerInfo = ['Møterom 2', 'Ledig i valgt tid'];
+      ?>
+      <div class="js-slidedown slidedown">
+        <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="false">
+          <span>Sandnes idrettspark</span>
+          <span class="slidedown__toggler__info">
+            <?php
+              echo implode(' <span class="slidedown__toggler__info__separator">&#8226;</span> ', $toggerInfo);
+            ?>
+          </span>
+        </button>
+        <div class="js-slidedown-content slidedown__content">
+          <p>
+            Som innbygger kan du søke om leie av idrettsanlegg, baner, lokaler, byrom og utstyr
+            <ul>
+              <li>finne treningstid og arrangement</li>
+              <li>finne lag og foreninger</li>
+              <li>via «Min side» få</li>
+              <li>oversikt over og eventuelt endre kontaktinformasjon</li>
+              <li>se status for, og eventuelt endre dine søknader</li>
+              <li>se eventuelle fakturaer tilknyttet ulike leieforhold</li>
+            </ul>
+          </p>
         </div>
       </div>
     </div>
   </div>
-</div>
+</section>

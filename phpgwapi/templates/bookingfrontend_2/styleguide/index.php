@@ -51,7 +51,6 @@
             'folder' => 'button',
             'filename' => 'button',
           ),
-
           'Link' => array(
             'name' => 'Link',
             'folder' => 'link',
@@ -102,12 +101,16 @@
             'folder' => 'multi-search',
             'filename' => 'multi-search',
           ),
+          'Search result' => array(
+            'name' => 'Søkeresultat',
+            'folder' => 'search-result',
+            'filename' => 'search-result',
+          ),
           'Shortcut' => array(
             'name' => 'Snarvei',
             'folder' => 'shortcut',
             'filename' => 'shortcut',
           ),
-          
         );
 
         echo '<ul class="list-unstyled d-flex flex-wrap">';
@@ -120,12 +123,12 @@
           echo '<span id="'.$key.'"></span>';
           
           if ($key !== array_key_first($componentLinks)) {
-            echo '<div class="d-flex justify-content-between mt-5">
+            echo '<div class="d-flex justify-content-between mt-5 border-bottom border-2">
                     <a href="#home">Til toppen</a>
                     <span>'.$componentLink['name'].'</span>
                   </div>';
           } else {
-            echo '<div class="d-flex justify-content-end mt-5">
+            echo '<div class="d-flex justify-content-end mt-5 border-bottom border-2">
                     <span>'.$componentLink['name'].'</span>
                   </div>';
           } 
