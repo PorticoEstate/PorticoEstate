@@ -3483,6 +3483,14 @@ HTML;
 			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/popper/popper2.min.js";
 			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js";
 
+
+			//testing..
+			if($absolute_url)
+			{
+				$inline_images = true;
+				$absolute_url = false;
+			}
+
 			$report_data['stylesheets'] = $stylesheets;
 			$report_data['javascripts'] = $javascripts;
 			$report_data['inline_images'] = $inline_images;
