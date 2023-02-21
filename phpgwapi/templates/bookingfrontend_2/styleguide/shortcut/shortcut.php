@@ -1,4 +1,4 @@
-<div class="container border-top border-2 py-5">
+<section class="container py-5">
   <div class="row" style="background-color: #c7e8fa">
     <div class="col col-md-6 col-lg-4 col-xl-3 d-flex">
       <div class="shortcut mb-5">
@@ -25,4 +25,4 @@
       </div>
     </div>
   </div>
-</div>
+</section>

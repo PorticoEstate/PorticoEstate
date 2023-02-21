@@ -1,5 +1,5 @@
-<div class="container">
-  <div class="row border-top border-2 py-5">
+<section class="container py-5">
+  <div class="row mb-4">
     <div class="col-sm-6 col-lg-4 d-flex align-items-center mb-5">
       <div class="colorbox colorbox--large bg-white box-shadow rounded-small"></div>
         <div class="d-flex flex-column ps-3 ">
@@ -38,4 +38,4 @@
       </div>
     </div>
   </div>
-</div>
+</section>

@@ -7,7 +7,7 @@ $(document).ready(function () {
 
 </script>
 
-<section class="border-top border-2 py-5">
+<section class="container py-5">
   <div class="multisearch w-100 mb-5">
     <div class="multisearch__inner w-100">
       <div class="row flex-column flex-md-row">

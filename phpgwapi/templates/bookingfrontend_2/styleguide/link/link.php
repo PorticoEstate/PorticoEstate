@@ -1,5 +1,5 @@
-<div class="container">
-  <div class="row border-top border-2 py-5">
+<section class="container py-5">
+  <div class="row">
     <div class="col-6 col-sm-4 d-flex flex-column align-items-center">
       <a href="">Link</a>
     </div>
@@ -29,4 +29,4 @@
       </div>
     </div>
   </div>
-</div>
+</section>

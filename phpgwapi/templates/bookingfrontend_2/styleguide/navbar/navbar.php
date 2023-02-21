@@ -6,7 +6,7 @@
     $login_url = $site_url;
 
     $nav = <<<HTML
-<div class="border-top border-2 py-5">
+<div class="py-5">
   <nav class="navbar mb-5">
     <a href="{$site_url}" class="navbar__logo">
       <img src="{$headlogopath}/logo_aktiv_kommune_horizontal.png" alt="Aktiv kommune logo" class="navbar__logo__img">

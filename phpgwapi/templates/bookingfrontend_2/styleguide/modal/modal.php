@@ -1,4 +1,4 @@
-<div class="border-top border-2 py-5">
+<section class="container py-5">
   <!-- Button trigger modal -->
   <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector" data-bs-toggle="modal" data-bs-target="#selectLanguage" aria-label="Velg språk">
     <img src="gfx/norway.png" alt="Norsk flagg" class="">
@@ -34,4 +34,4 @@
       </div>
     </div>
   </div>
-</div>
+</section>
