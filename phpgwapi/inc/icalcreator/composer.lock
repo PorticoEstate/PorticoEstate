@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "kigkonsult/icalcreator",
-            "version": "v2.41.67",
+            "version": "v2.41.71",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCalcreator/iCalcreator.git",
-                "reference": "2236adc7ad8247e95d4e58ac0026bde755b262a7"
+                "reference": "591b63a76875d5d164c5e2986cc42afbb0524b47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCalcreator/iCalcreator/zipball/2236adc7ad8247e95d4e58ac0026bde755b262a7",
-                "reference": "2236adc7ad8247e95d4e58ac0026bde755b262a7",
+                "url": "https://api.github.com/repos/iCalcreator/iCalcreator/zipball/591b63a76875d5d164c5e2986cc42afbb0524b47",
+                "reference": "591b63a76875d5d164c5e2986cc42afbb0524b47",
                 "shasum": ""
             },
             "require": {
@@ -29,6 +29,7 @@
                 "php": ">=8.0"
             },
             "require-dev": {
+                "degraciamathieu/php-arguments-detector": ">=0.5.0",
                 "ext-xdebug": "*",
                 "phpcompatibility/php-compatibility": ">=9.3.5",
                 "phpstan/phpstan": ">=0.9.3",
@@ -95,7 +96,7 @@
             ],
             "support": {
                 "issues": "https://github.com/iCalcreator/iCalcreator/issues",
-                "source": "https://github.com/iCalcreator/iCalcreator/tree/v2.41.67"
+                "source": "https://github.com/iCalcreator/iCalcreator/tree/v2.41.71"
             },
             "funding": [
                 {
@@ -103,7 +104,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2022-09-22T14:48:08+00:00"
+            "time": "2022-12-04T10:48:48+00:00"
         }
     ],
     "packages-dev": [],
@@ -114,5 +115,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }
