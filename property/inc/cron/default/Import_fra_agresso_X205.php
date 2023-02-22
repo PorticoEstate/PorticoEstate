@@ -32,10 +32,13 @@
 	 * @package property
 	 */
 	include_class('property', 'cron_parent', 'inc/cron/');
-	require_once PHPGW_API_INC . '/flysystem/autoload.php';
+
+	require_once PHPGW_API_INC . '/flysystem3/vendor/autoload.php';
 
 	use League\Flysystem\Filesystem;
-	use League\Flysystem\Sftp\SftpAdapter;
+	use League\Flysystem\PhpseclibV3\SftpConnectionProvider;
+	use League\Flysystem\PhpseclibV3\SftpAdapter;
+	use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 
 	class Import_fra_agresso_X205 extends property_cron_parent
 	{
@@ -296,14 +299,33 @@
 			$directory_local	 = rtrim($this->config->config_data['import']['local_path'], '/');
 			$port				 = 22;
 
-			$filesystem = new Filesystem(new SftpAdapter([
-					'host'		 => $server,
-					'port'		 => $port,
-					'username'	 => $user,
-					'password'	 => $password,
-					'root'		 => $directory_remote,
-					'timeout'	 => 10,
-			]));
+			$filesystem = new Filesystem(new SftpAdapter(
+				new SftpConnectionProvider(
+					$server, // host (required)
+					$user, // username (required)
+					$password, // password (optional, default: null) set to null if privateKey is used
+					null, // private key (optional, default: null) can be used instead of password, set to null if password is set
+					null, // passphrase (optional, default: null), set to null if privateKey is not used or has no passphrase
+					$port, // port (optional, default: 22)
+					false, // use agent (optional, default: false)
+					10, // timeout (optional, default: 10)
+					40, // max tries (optional, default: 4)
+					null, // host fingerprint (optional, default: null),
+					null, // connectivity checker (must be an implementation of 'League\Flysystem\PhpseclibV2\ConnectivityChecker' to check if a connection can be established (optional, omit if you don't need some special handling for setting reliable connections)
+				),
+				$directory_remote, // root path (required)
+				PortableVisibilityConverter::fromArray([
+					'file' => [
+						'public' => 0640,
+						'private' => 0604,
+					],
+					'dir' => [
+						'public' => 0740,
+						'private' => 7604,
+					],
+				])
+			));
+
 
 			try
 			{
@@ -333,7 +355,7 @@
 					continue;
 				}
 
-				$size = $filesystem->getSize($file);
+				$size = $filesystem->fileSize($file);
 				echo "File $file Size: $size<br/>\n";
 
 				if ($this->debug)
@@ -371,11 +393,11 @@
 						if (fclose($fp))
 						{
 							echo "File remote: {$file_remote} was copied to local: $file_local<br/>";
-							if ($filesystem->has("archive/{$file_name}") && $filesystem->delete("archive/{$file_name}"))
+							if ($filesystem->fileExists("archive/{$file_name}") && $filesystem->delete("archive/{$file_name}"))
 							{
 								echo "Deleted duplicate File remote: {$directory_remote}/archive/{$file_name}<br/>";
 							}
-							if ($filesystem->rename($file_remote, "archive/{$file_name}"))
+							if ($filesystem->move($file_remote, "archive/{$file_name}"))
 							{
 								echo "File remote: {$file_remote} was moved to remote: {$directory_remote}/archive/{$file_name}<br/>";
 							}
