@@ -21,18 +21,21 @@
 
 			<!-- Bootstrap CSS -->
 			<xsl:for-each select="stylesheets">
-				<link rel="stylesheet" type="text/css">
+<!--				<link rel="stylesheet" type="text/css">
 					<xsl:attribute name="href">
 						<xsl:value-of select="node()"/>
 					</xsl:attribute>
-				</link>
+				</link>-->
+				<style TYPE="text/css">
+					<xsl:value-of select="node()"/>
+				</style>
 			</xsl:for-each>
 
 			<xsl:for-each select="javascripts">
 				<script>
-					<xsl:attribute name="src">
+<!--					<xsl:attribute name="src">-->
 						<xsl:value-of select="node()"/>
-					</xsl:attribute>
+<!--					</xsl:attribute>-->
 				</script>
 			</xsl:for-each>
 
