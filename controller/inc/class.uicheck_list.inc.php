@@ -3412,8 +3412,8 @@ HTML;
 
 		function get_report($check_list_id = null)
 		{
-			$inline_images = false;
-			$absolute_url = phpgw::get_var('absolute_url', 'bool');
+			$inline_images = phpgw::get_var('inline_images', 'bool');
+
 			$config = createObject('phpgwapi.config', 'property')->read();
 
 			if(!$check_list_id)
@@ -3454,46 +3454,15 @@ HTML;
 
 			$report_data = array();
 
-			if ($absolute_url)
-			{
-				$server_port = !empty($GLOBALS['phpgw_info']['server']['enforce_ssl']) ? 443 : phpgw::get_var('SERVER_PORT', 'int', 'SERVER');
-
-				$request_scheme = $server_port == 443 ? 'https' : 'http';
-
-				if ($server_port == 80)
-				{
-					$webserver_url = "{$request_scheme}://{$GLOBALS['phpgw_info']['server']['hostname']}/{$GLOBALS['phpgw_info']['server']['webserver_url']}";
-				}
-				else
-				{
-					$webserver_url = "{$request_scheme}://{$GLOBALS['phpgw_info']['server']['hostname']}:{$server_port}/{$GLOBALS['phpgw_info']['server']['webserver_url']}";
-				}
-			}
-			else
-			{
-				$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
-			}
 
 			$stylesheets = array();
-//			$stylesheets[] = "{$webserver_url}/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css";
-//			$stylesheets[] = "{$webserver_url}/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
 
 			$stylesheets[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css");
 			$stylesheets[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/base/css/fontawesome/css/all.min.css");
 
 			$javascripts = array();
-//			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/popper/popper2.min.js";
-//			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js";
 			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/popper/popper2.min.js");
 			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js");
-
-
-			//testing..
-			if($absolute_url)
-			{
-				$inline_images = true;
-				$absolute_url = false;
-			}
 
 			$report_data['stylesheets'] = $stylesheets;
 			$report_data['javascripts'] = $javascripts;
@@ -3550,7 +3519,7 @@ HTML;
 			$file = end($files);
 
 
-			$report_data['location_image'] = $file ? self::link(array('menuaction'=>'controller.uicase.get_image', 'component' =>"{$location_id}_{$item_id}"), false, $absolute_url) : '';
+			$report_data['location_image'] = $file ? self::link(array('menuaction'=>'controller.uicase.get_image', 'component' =>"{$location_id}_{$item_id}")) : '';
 
 			if($file && $inline_images)
 			{
@@ -3756,8 +3725,7 @@ HTML;
 					foreach ($case_files as &$case_file)
 					{
 						$case_file['text'] = lang('picture') . " #{$i}_{$n}";
-//						$case_file['link'] = "{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']}";
-						$case_file['link'] = self::link(array('menuaction' => 'controller.uicheck_list.view_image', 'img_id' => $case_file['file_id']), false, $absolute_url);
+						$case_file['link'] = self::link(array('menuaction' => 'controller.uicheck_list.view_image', 'img_id' => $case_file['file_id']));
 						if($inline_images)
 						{
 							$case_file['image_data'] = base64_encode(file_get_contents("{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']}"));
@@ -3898,7 +3866,7 @@ HTML;
 					$component_child_data[] = array(
 						'location_id' => $component_child['location_id'],
 						'name'	=> $component_child['short_description'],
-						'image_link' => $file ? self::link(array('menuaction'=>'controller.uicase.get_image', 'component' => "{$component_child['location_id']}_{$component_child['id']}"), false, $absolute_url) : '',
+						'image_link' => $file ? self::link(array('menuaction'=>'controller.uicase.get_image', 'component' => "{$component_child['location_id']}_{$component_child['id']}")) : '',
 						'image_data' => $inline_images ? base64_encode(file_get_contents("{$this->vfs->basedir}/{$file['directory']}/{$file['name']}")) : '',
 						'data' => $data,
 						'cases' => $data_case[$location_identificator]
@@ -4013,8 +3981,6 @@ HTML;
 			$html2pdf = new \Spipu\Html2Pdf\Html2Pdf('P', 'A4', 'no');
 			$html2pdf->writeHTML($stringData);
 			$html2pdf->output();
-
-
 
 //			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyMedia.php';
 //			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyPdf.php';
