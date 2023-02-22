@@ -1839,6 +1839,55 @@ input[type=text]:hover {
   background-color: #793C8A;
   border: 2px solid #793C8A;
 }
+.filter-group {
+  width: auto;
+  font-size: 1rem;
+  color: #793C8A;
+  background: #FFFFFF;
+  border: 2px solid #793C8A;
+  border-radius: 3.125rem;
+  padding: 0.125rem;
+  z-index: 0;
+}
+.filter-group__item input {
+  position: absolute;
+  cursor: pointer;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+.filter-group__item input:focus-visible ~ .filter-group__item__radio {
+  box-shadow: 0 0 0 0.25rem #946da8;
+}
+.filter-group__item__radio {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 0.625rem;
+  background-color: transparent;
+  z-index: 1;
+  border: 2px solid transparent;
+  border-radius: 3.125rem;
+  cursor: pointer;
+  font-weight: 700;
+  min-width: 4rem;
+}
+@media (min-width: 576px) {
+  .filter-group__item__radio {
+    padding: 0.5rem 1.25rem;
+  }
+}
+.filter-group__item input[type=radio]:hover ~ .filter-group__item__radio {
+  color: #793C8A;
+  background-color: #FFFFFF;
+  border: 2px solid #793C8A;
+}
+.filter-group__item input[type=radio]:checked ~ .filter-group__item__radio, .filter-group__item input[type=radio]:checked:hover ~ .filter-group__item__radio {
+  color: #FFFFFF;
+  background-color: #793C8A;
+  border: 2px solid #793C8A;
+}
 
 .status {
   font-size: 1rem;

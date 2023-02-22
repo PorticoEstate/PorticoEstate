@@ -44,7 +44,28 @@ $(document).ready(function () {
       </div>
     </div>
   </div>
+  <div class="d-flex flex-column flex-md-row justify-content-between mb-4">
+    <div class="filter-group align-self-start mb-4 mb-md-0">
+      <label class="filter-group__item">
+        <input type="radio" name="type_group" value="booking" checked>
+        <span class="filter-group__item__radio">Leie</span>
+      </label>
+      <label class="filter-group__item">
+        <input type="radio" name="type_group" value="event">
+        <span class="filter-group__item__radio">Arrangement</span>
+      </label>
+      <label class="filter-group__item">
+        <input type="radio" name="type_group" value="organization">
+        <span class="filter-group__item__radio">Organisasjon</span>
+      </label>
+    </div>
+    <button type="button" class="pe-btn pe-btn-secondary align-self-end">
+      Nullstill søk
+      <i class="fas fa-undo ms-2"></i>
+    </button>
+  </div>
   <div class="multisearch w-100">
+    
     <div class="multisearch__inner multisearch__inner--no-button w-100">
       <div class="row flex-column flex-md-row mb-lg-4">
         <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0">
