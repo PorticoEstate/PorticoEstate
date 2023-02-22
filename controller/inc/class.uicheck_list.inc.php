@@ -3475,12 +3475,17 @@ HTML;
 			}
 
 			$stylesheets = array();
-			$stylesheets[] = "{$webserver_url}/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css";
-			$stylesheets[] = "{$webserver_url}/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
+//			$stylesheets[] = "{$webserver_url}/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css";
+//			$stylesheets[] = "{$webserver_url}/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
+
+			$stylesheets[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css");
+			$stylesheets[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/base/css/fontawesome/css/all.min.css");
 
 			$javascripts = array();
-			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/popper/popper2.min.js";
-			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js";
+//			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/popper/popper2.min.js";
+//			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js";
+			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/popper/popper2.min.js");
+			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js");
 
 
 			//testing..
