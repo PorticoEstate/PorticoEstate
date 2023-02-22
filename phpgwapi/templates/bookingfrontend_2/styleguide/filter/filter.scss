@@ -84,4 +84,62 @@
     background-color: $purple;
     border: 2px solid $purple;
   }
+
+  &-group {
+    width: auto;
+    font-size: 1rem;
+    color: $purple;
+    background: $white;
+    border: 2px solid $purple;
+    border-radius: $rounded-large;
+    padding: 0.125rem;
+    z-index: 0;
+
+    &__item {
+
+      & input {
+        position: absolute;
+        cursor: pointer;
+        opacity: 0;
+        height: 0;
+        width: 0;
+      }
+  
+      & input:focus-visible ~ &__radio {
+        box-shadow: $box-focus-shadow;
+      }
+  
+      &__radio {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5rem 0.625rem;
+        background-color: transparent;
+        z-index: 1;
+        border: 2px solid transparent;
+        border-radius: $rounded-large;
+        cursor: pointer;
+        font-weight: $text-bold;
+        min-width: 4rem;
+
+        @media (min-width: $media-small) {
+          padding: 0.5rem 1.25rem;
+        }
+      }
+  
+      & input[type='radio']:hover ~ &__radio {
+        color: $purple;
+        background-color: $white;
+        border: 2px solid $purple;
+      }
+  
+      & input[type='radio']:checked ~ &__radio,
+      & input[type='radio']:checked:hover ~ &__radio {
+        color: $white;
+        background-color: $purple;
+        border: 2px solid $purple;
+      }
+    }
+  }
 }

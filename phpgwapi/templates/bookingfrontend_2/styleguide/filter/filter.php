@@ -29,4 +29,21 @@
       </label>
     </div>
   </div>
+  <div class="row">
+    <p class="mb-2 text-bold">Filtergruppe</p>
+    <div class="filter-group">
+      <label class="filter-group__item">
+        <input type="radio" name="type_group" value="booking" checked>
+        <span class="filter-group__item__radio">Leie</span>
+      </label>
+      <label class="filter-group__item">
+        <input type="radio" name="type_group" value="event">
+        <span class="filter-group__item__radio">Arrangement</span>
+      </label>
+      <label class="filter-group__item">
+        <input type="radio" name="type_group" value="organization">
+        <span class="filter-group__item__radio">Organisasjon</span>
+      </label>
+    </div>
+  </div>
 </section>
