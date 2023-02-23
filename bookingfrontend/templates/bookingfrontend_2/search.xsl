@@ -3,19 +3,25 @@
         <div id="search-header">
             <H1 class="text-primary text-md-start text-center mb-0" data-bind="text: header_text"></H1>
             <p class="mb-4 text-primary" data-bind="text: header_sub"></p>
-            <div class="col-12 mb-4">
-                <label class="filter">
-                    <input type="radio" name="type_group" value="booking" data-bind="checked: type_group"/>
-                    <span class="filter__radio">Leie</span>
-                </label>
-                <label class="filter">
-                    <input type="radio" name="type_group" value="event" data-bind="checked: type_group"/>
-                    <span class="filter__radio">Arrangement</span>
-                </label>
-                <label class="filter">
-                    <input type="radio" name="type_group" value="organization" data-bind="checked: type_group"/>
-                    <span class="filter__radio">Organisasjon</span>
-                </label>
+            <div class="d-flex flex-column flex-md-row justify-content-between mb-4">
+                <div class="filter-group align-self-start mb-4 mb-md-0">
+                    <label class="filter-group__item">
+                        <input type="radio" name="type_group" value="booking" data-bind="checked: type_group"/>
+                        <span class="filter-group__item__radio">Leie</span>
+                    </label>
+                    <label class="filter-group__item">
+                        <input type="radio" name="type_group" value="event" data-bind="checked: type_group"/>
+                        <span class="filter-group__item__radio">Arrangement</span>
+                    </label>
+                    <label class="filter-group__item">
+                        <input type="radio" name="type_group" value="organization" data-bind="checked: type_group"/>
+                        <span class="filter-group__item__radio">Organisasjon</span>
+                    </label>
+                </div>
+                <button type="button" class="pe-btn pe-btn-secondary align-self-end" id="id-reset-filter">
+                    Nullstill søk
+                    <i class="fas fa-undo ms-2"></i>
+                </button>
             </div>
         </div>
 
@@ -34,7 +40,7 @@
                             <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
                                 <div class="multisearch__inner__item">
                                     <label for="search-booking-datepicker">Dato</label>
-                                    <input type="text" id="search-booking-datepicker" placeholder="Velg"/>
+                                    <input type="text" id="search-booking-datepicker" placeholder="Velg" data-bind="textInput: date"/>
                                 </div>
                             </div>
                             <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
@@ -162,20 +168,6 @@
                                                 options: activities,
                                                 optionsText: 'name',
                                                 selectedOptions: selected_activities
-            "/>
-                                </div>
-                            </div>
-                            <div class="col mb-3 mb-md-0">
-                                <div class="multisearch__inner__item">
-                                    <label class="text-bold text-primary" for="search-organization-organization">
-                                        Organisasjon
-                                    </label>
-                                    <select class="js-select-multisearch" id="search-organization-organization"
-                                            aria-label="Organisasjoner"
-                                            multiple="true" data-bind="
-                                                options: organizations,
-                                                optionsText: 'name',
-                                                selectedOptions: selected_organizations
             "/>
                                 </div>
                             </div>

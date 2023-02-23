@@ -12,10 +12,6 @@ class OrganizationSearch {
         ko.cleanNode(organizationEl);
         ko.applyBindings(this.data, organizationEl);
 
-        this.data.selected_organizations.subscribe(organizations => {
-            this.search();
-        })
-
         this.data.text.subscribe(text => {
             this.search();
         })
@@ -23,6 +19,11 @@ class OrganizationSearch {
         this.data.selected_activities.subscribe(activities => {
             this.search();
         })
+    }
+
+    reset() {
+        $('#search-organization-activities').val([]).trigger('change');
+        this.data.text("");
     }
 
     search() {
@@ -107,7 +108,8 @@ class BookingSearch {
         facilities: ko.observableArray([]),
         selected_facilities: ko.observableArray([]),
         resource_facilities: ko.observableArray([]),
-        text: ko.observable("")
+        text: ko.observable(""),
+        date: ko.observable("")
     }
 
     activity_cache = {};
@@ -143,7 +145,16 @@ class BookingSearch {
                 this.activity_cache[activity.id] = getAllSubRowsIds(activities, activity.id);
             }
         })
+    }
 
+    reset() {
+        this.data.selected_town(null);
+        $('#search-booking-activities').val([]).trigger('change');
+        $('#search-booking-building').val([]).trigger('change');
+        $('#search-booking-resource_categories').val([]).trigger('change');
+        $('#search-booking-facilities').val([]).trigger('change');
+        this.data.text("");
+        this.data.date("");
     }
 
     search() {
@@ -169,7 +180,7 @@ class BookingSearch {
                 resources = resources.filter(resource => this.data.resource_activities().some(ra => this.data.selected_activities().some(sa => this.activity_cache[sa.id].includes(ra.activity_id) && resource.id === ra.resource_id)));
             }
             if (this.data.selected_resource_categories().length > 0) {
-                const activities = [...new Set(this.data.resource_category_activity().filter(activity => this.data.selected_resource_categories().some(rc => rc.id===activity.rescategory_id)).map(a => a.activity_id))];
+                const activities = [...new Set(this.data.resource_category_activity().filter(activity => this.data.selected_resource_categories().some(rc => rc.id === activity.rescategory_id)).map(a => a.activity_id))];
                 resources = resources.filter(resource => this.data.resource_activities().some(ra => activities.some(sa => this.activity_cache[sa].includes(ra.activity_id) && resource.id === ra.resource_id)));
             }
 
@@ -284,6 +295,12 @@ class EventSearch {
         })
     }
 
+    reset() {
+        this.data.text("");
+        this.data.from_date(getSearchDateString(new Date()))
+        this.data.to_date("");
+    }
+
     search() {
         let events = this.data.events.slice(0, 5);
         const el = emptySearch();
@@ -360,6 +377,23 @@ class Search {
         $(document).ready(function () {
             self.ko_search.type_group(location.hash.substring(1))
         });
+
+        $('#id-reset-filter').click(() => {
+            console.log("Clicking reset", self.ko_search.type_group())
+            switch (self.ko_search.type_group()) {
+                case "booking":
+                    self.booking.reset();
+                    break;
+                case "event":
+                    self.event.reset();
+                    break;
+                case "organization":
+                    self.organization.reset();
+                    break;
+                default:
+
+            }
+        })
     }
 
     fetchData = () => {
