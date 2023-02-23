@@ -59,7 +59,10 @@ class OrganizationSearch {
     <div class="col-12 mb-4">
       <div class="js-slidedown slidedown">
         <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="false">
-          ${organization.name}
+          <span>${organization.name}</span>
+          <span class="slidedown__toggler__info">
+          ${joinWithDot([organization.email, organization.street])}
+          </span>
         </button>
         <div class="js-slidedown-content slidedown__content">
           <p>
@@ -209,14 +212,29 @@ class BookingSearch {
         )
     }
 
+    getBuildingFromResource = (resource_id) => {
+        const building_id = this.data.building_resources().find(br => br.resource_id===resource_id);
+        return this.data.buildings().find(b => b.id === building_id.building_id);
+    }
+
+    getTownFromBuilding = (building_id) => {
+        return this.data.towns().find(t => t.b_id === building_id);
+    }
+
     addInfoCards(el, resources) {
         const append = [];
         for (const resource of resources) {
-            append.push(`
+            const building = this.getBuildingFromResource(resource.id);
+            const town = this.getTownFromBuilding(building?.id);
+            if (town) {
+                append.push(`
     <div class="col-12 mb-4">
       <div class="js-slidedown slidedown">
-        <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="true">
-          ${resource.name}
+        <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="false">
+          <span>${resource.name}</span>
+            <span class="slidedown__toggler__info">
+                ${joinWithDot([town.name, building?.name])}
+            </span>
         </button>
         <div class="js-slidedown-content slidedown__content">
           <p>
@@ -230,7 +248,8 @@ class BookingSearch {
       </div>
     </div>
 `
-            )
+                )
+            }
         }
         el.append(append.join(""));
         fillSearchCount(resources);
@@ -318,8 +337,13 @@ class EventSearch {
             append.push(`
     <div class="col-12 mb-4">
       <div class="js-slidedown slidedown">
-        <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="true">
-          ${event.event_name}
+        <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="false">
+          <span>${event.event_name}</span>
+          <span class="slidedown__toggler__info">
+          ${joinWithDot([
+                event.location_name, 
+                getSearchDatetimeString(new Date(event.from))+" - "+((new Date(event.from)).getDate()===(new Date(event.to)).getDate() ? getSearchTimeString(new Date(event.to)) : getSearchDatetimeString(new Date(event.to)))])}
+          </span>
         </button>
         <div class="js-slidedown-content slidedown__content">
           <p>
@@ -477,6 +501,14 @@ function getSearchDateString(date) {
     return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
 }
 
+function getSearchTimeString(date) {
+    return `${("0" + date.getHours()).slice(-2)}:${("0" + date.getMinutes()).slice(-2)}`
+}
+
+function getSearchDatetimeString(date) {
+    return `${getSearchDateString(date)} ${getSearchTimeString(date)}`;
+}
+
 function getIsoDateString(date) {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }
@@ -509,4 +541,8 @@ function htmlDecode(input) {
     // Some texts are double encoded
     const newDoc = new DOMParser().parseFromString(newInput, "text/html");
     return newDoc.documentElement.textContent;
+}
+
+function joinWithDot(texts) {
+    return texts.map(t => t && t.length>0 ? `<span>${t}</span>` : null).filter(t => t).join(` <span className="slidedown__toggler__info__separator">&#8226;</span> `)
 }
