@@ -379,7 +379,6 @@ class Search {
         });
 
         $('#id-reset-filter').click(() => {
-            console.log("Clicking reset", self.ko_search.type_group())
             switch (self.ko_search.type_group()) {
                 case "booking":
                     self.booking.reset();

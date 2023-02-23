@@ -29,5 +29,5 @@
 		<link href="{webserver_url}/phpgwapi/templates/bookingfrontend_2/styleguide/main.css" rel="stylesheet">
 		<script src="{webserver_url}/phpgwapi/templates/bookingfrontend_2/styleguide/js/main.js"></script>
 	</head>
-	<div class="main-container">
+	<div class="container-fluid container-lg">
 	{nav}
