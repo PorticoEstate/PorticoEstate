@@ -6,10 +6,12 @@
 	include_class('rental', 'contract', 'inc/model/');
 	include_class('rental', 'billing', 'inc/model/');
 
-	require_once PHPGW_API_INC . '/flysystem/autoload.php';
+	require_once PHPGW_API_INC . '/flysystem3/vendor/autoload.php';
 
 	use League\Flysystem\Filesystem;
-	use League\Flysystem\Sftp\SftpAdapter;
+	use League\Flysystem\PhpseclibV3\SftpConnectionProvider;
+	use League\Flysystem\PhpseclibV3\SftpAdapter;
+	use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 
 	class rental_uibilling extends rental_uicommon
 	{
@@ -1671,14 +1673,34 @@ JS;
 					}
 					break;
 				case 'ssh';
-					$connection = new Filesystem(new SftpAdapter([
-						'host' => $server,
-						'port' => $port,
-						'username' => $user,
-						'password' => $password,
-						'root' => $basedir,
-						'timeout' => 10,
-					]));
+
+					$connection = new Filesystem(new SftpAdapter(
+						new SftpConnectionProvider(
+							$server, // host (required)
+							$user, // username (required)
+							$password, // password (optional, default: null) set to null if privateKey is used
+							null, // private key (optional, default: null) can be used instead of password, set to null if password is set
+							null, // passphrase (optional, default: null), set to null if privateKey is not used or has no passphrase
+							$port, // port (optional, default: 22)
+							false, // use agent (optional, default: false)
+							10, // timeout (optional, default: 10)
+							40, // max tries (optional, default: 4)
+							null, // host fingerprint (optional, default: null),
+							null, // connectivity checker (must be an implementation of 'League\Flysystem\PhpseclibV2\ConnectivityChecker' to check if a connection can be established (optional, omit if you don't need some special handling for setting reliable connections)
+						),
+						$basedir, // root path (required)
+						PortableVisibilityConverter::fromArray([
+							'file' => [
+								'public' => 0640,
+								'private' => 0604,
+							],
+							'dir' => [
+								'public' => 0740,
+								'private' => 7604,
+							],
+						])
+					));
+
 					break;
 			}
 			return $connection;

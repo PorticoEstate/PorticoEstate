@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '9e269d2e9fffd2bbbcd18954b4dfbda94888592c',
+        'reference' => '3748c899fe06c091d7fc0594a6169edb2a1b856c',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '9e269d2e9fffd2bbbcd18954b4dfbda94888592c',
+            'reference' => '3748c899fe06c091d7fc0594a6169edb2a1b856c',
             'dev_requirement' => false,
         ),
         'rospdf/pdf-php' => array(
