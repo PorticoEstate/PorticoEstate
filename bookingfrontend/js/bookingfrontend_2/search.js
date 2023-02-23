@@ -212,28 +212,30 @@ class BookingSearch {
         )
     }
 
-    getBuildingFromResource = (resource_id) => {
-        const building_id = this.data.building_resources().find(br => br.resource_id===resource_id);
-        return this.data.buildings().find(b => b.id === building_id.building_id);
+    getBuildingsFromResource = (resource_id) => {
+        const building_resources = this.data.building_resources().filter(br => br.resource_id===resource_id);
+        const ids = building_resources.map(br => br.building_id);
+        return this.data.buildings().filter(b => ids.includes(b.id));
     }
 
-    getTownFromBuilding = (building_id) => {
-        return this.data.towns().find(t => t.b_id === building_id);
+    getTownFromBuilding = (buildings) => {
+        const ids = buildings.map(b => +b.id)
+        return this.data.towns_data().filter(t => ids.includes(+t.b_id));
     }
 
     addInfoCards(el, resources) {
         const append = [];
         for (const resource of resources) {
-            const building = this.getBuildingFromResource(resource.id);
-            const town = this.getTownFromBuilding(building?.id);
-            if (town) {
+            const buildings = this.getBuildingsFromResource(resource.id);
+            const towns = this.getTownFromBuilding(buildings);
+            if (towns.length>0) {
                 append.push(`
     <div class="col-12 mb-4">
       <div class="js-slidedown slidedown">
         <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="false">
           <span>${resource.name}</span>
             <span class="slidedown__toggler__info">
-                ${joinWithDot([town.name, building?.name])}
+                ${joinWithDot([...towns.map(t => t.name), ...buildings.map(b => b.name)])}
             </span>
         </button>
         <div class="js-slidedown-content slidedown__content">
