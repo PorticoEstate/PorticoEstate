@@ -192,7 +192,18 @@
 							'id'		 => $entry['workorder_id'], 'tab'		 => 'budget'))
 					);
 				}
-				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_tickets';
+				}
+
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
+				echo "\n</div>";
 
 				unset($tts);
 				unset($portalbox);
@@ -266,7 +277,16 @@
 //							'id' => $entry['project_id'], 'tab' => 'budget'))
 //					);
 //				}
-				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_tickets';
+				}
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
 
 				echo '<div id="project_overdue_info_container"></div>';
 
@@ -306,7 +326,7 @@
 JS;
 
 				echo $js;
-
+				echo "\n</div>";
 				unset($tts);
 				unset($portalbox);
 				unset($category_name);
@@ -380,7 +400,17 @@ JS;
 							'claim_id'	 => $entry['claim_id']))
 					);
 				}
-				echo "\n" . '<!-- BEGIN claim info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_tickets';
+				}
+
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN claim info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
 
 				echo '<div id="claim_info_container"></div>';
 
@@ -417,6 +447,7 @@ JS;
 JS;
 
 				echo $js;
+				echo "\n</div>";
 
 			}
 			$GLOBALS['phpgw_info']['flags']['currentapp']						 = $save_app;
@@ -463,12 +494,21 @@ JS;
 
 				foreach ($var as $key => $value)
 				{
-					$portalbox->set_controls($key, $value);
+//					$portalbox->set_controls($key, $value);
 				}
 
 				$portalbox->data = array();
 
-				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_tickets';
+				}
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
 
 
 				echo '<div id="ticket_info_container"></div>';
@@ -546,6 +586,7 @@ JS;
 JS;
 
 				echo $js;
+				echo "\n</div>";
 
 				unset($tts);
 				unset($portalbox);
@@ -616,7 +657,17 @@ JS;
 					);
 				}
 
-				echo "\n" . '<!-- BEGIN project 1 info -->' . "\n<div class='property_project' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END project 1 info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_project';
+				}
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN project 1 info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END project 1 info -->' . "\n";
+				echo "\n</div>";
 
 				unset($obj);
 				unset($portalbox);
@@ -684,8 +735,17 @@ JS;
 							'id'		 => $workorder['workorder_id']))
 					);
 				}
-
-				echo "\n" . '<!-- BEGIN workorder 1 info -->' . "\n<div class='property_workorder' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END workorder 1 info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_workorder';
+				}
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN workorder 1 info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END workorder 1 info -->' . "\n";
+				echo "\n</div>";
 
 				unset($obj);
 				unset($portalbox);
@@ -734,7 +794,17 @@ JS;
 					);
 				}
 
-				echo "\n" . '<!-- BEGIN workorder 2 info -->' . "\n<div class='property_workorder' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END workorder 2 info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_workorder';
+				}
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN workorder 2 info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END workorder 2 info -->' . "\n";
+				echo "\n</div>";
 
 				unset($obj);
 				unset($portalbox);
@@ -772,7 +842,16 @@ JS;
 					//			$portalbox->set_controls($key,$value);
 				}
 
-				echo "\n" . '<!-- BEGIN approval info -->' . "\n<div class='property_approval' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END approval info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_approval';
+				}
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN approval info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END approval info -->' . "\n";
 
 				unset($portalbox);
 
@@ -823,6 +902,7 @@ JS;
 JS;
 
 				echo $js;
+				echo "\n</div>";
 			}
 
 			if (isset($prefs['property']['mainscreen_showapprovals']) && $prefs['property']['mainscreen_showapprovals'] == 'yes')
@@ -859,8 +939,16 @@ JS;
 				$portalbox->setvar('title', $title);
 				$portalbox->start_template();
 
-
-				echo "\n" . '<!-- BEGIN approval info -->' . "\n<div class='property_approval' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END approval info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_approval';
+				}
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN approval info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END approval info -->' . "\n";
 
 				unset($portalbox);
 
@@ -919,6 +1007,7 @@ JS;
 JS;
 
 				echo $js;
+				echo "\n</div>";
 			}
 
 			$GLOBALS['phpgw_info']['flags']['currentapp']						 = $save_app;
