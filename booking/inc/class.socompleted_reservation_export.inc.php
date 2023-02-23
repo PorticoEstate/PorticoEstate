@@ -1027,7 +1027,31 @@
 					 */
 				}
 
+				/**
+				 * precheck
+				 */
+				
+				$bypass = false;
+				$found_amount = 0;
 				if($purchase_order && !empty($purchase_order['lines']))
+				{
+
+					foreach ($purchase_order['lines'] as $order_line)
+					{
+						if (!empty($order_line['amount']))
+						{
+							$found_amount++;
+						}
+					}
+					unset($order_line);
+
+					if(!$found_amount && $reservation['cost'])
+					{
+						$bypass = true;
+					}
+				}
+
+				if($purchase_order && !$bypass && !empty($purchase_order['lines']))
 				{
 
 					foreach ($purchase_order['lines'] as $order_line)
