@@ -181,16 +181,20 @@
 				)
 			);
 
-			$data['datatable']['actions'][] = array();
-
 			if ($this->bo->allow_create())
 			{
-				array_unshift($data['form']['toolbar']['item'], array(
-					'type' => 'link',
-					'value' => lang(sprintf('New %s Permission', self::humanize($this->get_object_type()))),
-					'href' => $this->get_object_typed_link('add')
-				));
-				$data['datatable']['new_item'] = $this->get_object_typed_link('add');
+				$data['datatable']['actions'][] = array(
+					'my_name'	 => 'new_item',
+					'className'	 => 'save',
+					'type'		 => 'custom',
+					'statustext' => lang(sprintf('New %s Permission', self::humanize($this->get_object_type()))),
+					'text'		 => lang(sprintf('New %s Permission', self::humanize($this->get_object_type()))),
+					'custom_code'	 => 'window.open("' . $this->get_object_typed_link('add') . '", "_self");',
+				);
+			}
+			else
+			{
+				$data['datatable']['actions'][] = array();
 			}
 
 			self::render_template_xsl('datatable_jquery', $data);

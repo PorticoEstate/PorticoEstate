@@ -503,13 +503,14 @@
 					if ($_status_filter)
 					{
 						$filtermethod .= " $where fm_project.status IN ('" . implode("','", $_status_filter) . "')";
+						$where = 'AND';
 					}
 				}
 				else
 				{
 					$filtermethod .= " $where fm_project.status='$status_id' ";
+					$where = 'AND';
 				}
-				$where = 'AND';
 			}
 
 			if ($project_type_id)
