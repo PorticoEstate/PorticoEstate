@@ -317,7 +317,9 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
+			$template_set = isset($GLOBALS['phpgw_info']['server']['template_set']) ? $GLOBALS['phpgw_info']['server']['template_set'] : 'base';
+			$xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/{$template_set}";
+			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'), $xsl_rootdir);
 			$GLOBALS['phpgw_info']['flags']['noframework']	 = true;
 			$values											 = phpgw::get_var('values');
 
