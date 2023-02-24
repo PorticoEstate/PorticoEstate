@@ -1599,7 +1599,6 @@ input[type=text]:hover {
   border: 1px solid #D6D6D6;
   background-color: #FFFFFF;
   box-shadow: 3px 3px 50px 0px rgba(0, 0, 0, 0.1);
-  transition: border-radius 0.2s;
 }
 .slidedown:focus-within {
   box-shadow: 3px 3px 50px 0px rgba(0, 0, 0, 0.1), 0 0 0 0.25rem #946da8;
@@ -1608,14 +1607,13 @@ input[type=text]:hover {
   box-shadow: 3px 3px 50px 0px rgba(0, 0, 0, 0.1), 0 0 0 2px #793c8a;
 }
 .slidedown.js-slidedown--open {
-  border-radius: 2rem;
   border: 1px solid transparent;
 }
 .slidedown.js-slidedown--open .slidedown__toggler {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  border-top-left-radius: 2rem;
-  border-top-right-radius: 2rem;
+  border-top-left-radius: 3.125rem;
+  border-top-right-radius: 3.125rem;
 }
 .slidedown.js-slidedown--open .slidedown__toggler::after {
   transform: rotate(-180deg);
@@ -1627,7 +1625,7 @@ input[type=text]:hover {
   display: flex;
   flex-direction: column;
   background: transparent;
-  border-radius: 2rem;
+  border-radius: 3.125rem;
   color: #793C8A;
   font-size: 1rem;
   text-align: left;
@@ -1709,8 +1707,8 @@ input[type=text]:hover {
   padding: 1rem 2rem 1rem 1.5rem;
   font-size: 1rem;
   background: transparent;
-  border-bottom-left-radius: 2rem;
-  border-bottom-right-radius: 2rem;
+  border-bottom-left-radius: 3.125rem;
+  border-bottom-right-radius: 3.125rem;
 }
 
 .submenu {
@@ -1745,7 +1743,7 @@ input[type=text]:hover {
   font-family: "Font Awesome 5 Free";
   font-weight: 700;
   transition: all 0.25s;
-  transform: rotate(-30deg);
+  transform: rotate(90deg);
   font-size: 0.65rem;
   color: #FFFFFF;
   text-shadow: -1px -2px 0px #000, -1px 2px 0px #000, 2px 0px 0px #000;
@@ -1999,26 +1997,26 @@ input[type=text]:hover {
     margin-bottom: 0;
   }
 }
+.multisearch__inner__item label {
+  color: #793C8A;
+  font-weight: 900;
+  font-size: 1rem;
+  line-height: 1.2em;
+}
 .multisearch__inner__icon-button {
   font-size: 1.75rem;
   position: absolute;
   right: 1rem;
   top: 1rem;
 }
-.multisearch label {
-  color: #793C8A;
-  font-weight: 900;
-  font-size: 1rem;
-  line-height: 1.2em;
-}
-.multisearch label:focus-within {
-  box-shadow: 2px 2px 2px red;
+.multisearch .select2-container--select-v2 .select2-selection--single .select2-selection__rendered {
+  padding: 0.25rem 0;
 }
 .multisearch input[type=text] {
   box-shadow: none;
   border: 0;
   border-radius: 0;
-  padding: 0;
+  padding: 0.25rem 0;
   line-height: 1.75rem;
   border-bottom: 2px solid transparent;
 }
@@ -2115,7 +2113,7 @@ input[type=text]:hover {
   position: absolute;
   font-size: 0.625em;
   color: #793C8A;
-  transform: rotate(-30deg);
+  transform: rotate(90deg);
   transition: transform 0.3s;
   right: 0.5rem;
   top: 0.35rem;

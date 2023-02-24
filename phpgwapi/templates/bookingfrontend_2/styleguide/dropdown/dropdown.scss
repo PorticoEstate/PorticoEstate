@@ -353,7 +353,7 @@
   border: 1px solid $grey;
   background-color: $white;
   box-shadow: $box-shadow-large;
-  transition: border-radius 0.2s;
+  //transition: border-radius 0.2s;
   
   &:focus-within {
     box-shadow: $box-shadow-large, $box-focus-shadow;
@@ -364,14 +364,14 @@
   }
 
   &.js-slidedown--open {
-    border-radius: $rounded-medium;
+    //border-radius: $rounded-medium;
     border: 1px solid transparent;
 
     .slidedown__toggler {
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
-      border-top-left-radius: $rounded-medium;
-      border-top-right-radius: $rounded-medium;
+      border-top-left-radius: $rounded-large;
+      border-top-right-radius: $rounded-large;
       
       &::after {
         transform: rotate(-180deg);
@@ -387,7 +387,7 @@
     display: flex;
     flex-direction: column;
     background: transparent;
-    border-radius: $rounded-medium;
+    border-radius: $rounded-large;
     color: $purple;
     font-size: $text-body;
     text-align: left;
@@ -458,8 +458,8 @@
     padding: 1rem 2rem 1rem 1.5rem;
     font-size: 1rem;
     background: transparent;
-    border-bottom-left-radius: $rounded-medium;
-    border-bottom-right-radius: $rounded-medium;
+    border-bottom-left-radius: $rounded-large;
+    border-bottom-right-radius: $rounded-large;
   }
 }
 
@@ -501,7 +501,7 @@
       font-family: "Font Awesome 5 Free";
       font-weight: 700;
       transition: all 0.25s;
-      transform: rotate(-30deg);
+      transform: rotate(90deg);
       font-size: 0.65rem;
       color: $white;
       text-shadow: -1px -2px 0px #000, -1px 2px 0px #000, 2px 0px 0px #000;
