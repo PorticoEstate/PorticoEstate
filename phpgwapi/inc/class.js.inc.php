@@ -197,7 +197,7 @@
 						{
 							if (is_array($files) && count($files))
 							{
-								foreach ($files as $file => $type)
+								foreach ($files as $file => $config)
 								{
 									if($combine)
 									{
@@ -208,9 +208,9 @@
 									{
 										//echo "file: {$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js <br>";
 										$links .= "<script ";
-										if($type != 'text/javascript')
+										if($config['type'] != 'text/javascript')
 										{
-											$links .= "type=\"{$type}\" ";
+											$links .= "type=\"{$config['type']}\" ";
 										}
 										$links .=  "src=\"{$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js{$cache_refresh_token}\">"
 									 	. "</script>\n";
@@ -331,19 +331,48 @@ HTML;
 		* @param string $app application directory to search - default = phpgwapi
 		* @returns bool was the file found?
 		*/
-		public function validate_file($package, $file, $app='phpgwapi', $type ='text/javascript', $end_of_page = false)
+		public function validate_file($package, $file, $app ='phpgwapi', $end_of_page = false, $config = array())
 		{
+
+			if($end_of_page == 'text/javascript')
+			{
+			
+				$bt = debug_backtrace();
+				$GLOBALS['phpgw']->log->error(array(
+					'text'	=> 'js::%1 Called from file: %2 line: %3',
+					'p1'	=> $bt[0]['function'],
+					'p2'	=> $bt[0]['file'],
+					'p3'	=> $bt[0]['line'],
+					'line'	=> __LINE__,
+					'file'	=> __FILE__
+				));
+				unset($bt);
+			}
+
+			if ($config === true)
+			{
+				$end_of_page = true;
+			}
+			
+			
+			if(!$config)
+			{
+				$config = array('type' => 'text/javascript');
+			}
+
+
+
 			$template_set = $GLOBALS['phpgw_info']['server']['template_set'];
 
 			if(is_readable(PHPGW_INCLUDE_ROOT . "/$app/js/$template_set/$file.js"))
 			{
 				if($end_of_page)
 				{
-					$this->end_files[$app][$template_set][$file] = $type;
+					$this->end_files[$app][$template_set][$file] = $config;
 				}
 				else
 				{
-					$this->files[$app][$template_set][$file] = $type;
+					$this->files[$app][$template_set][$file] = $config;
 				}
 				return True;
 			}
@@ -351,11 +380,11 @@ HTML;
 			{
 				if($end_of_page)
 				{
-					$this->end_files[$app][$package][$file] = $type;
+					$this->end_files[$app][$package][$file] = $config;
 				}
 				else
 				{
-					$this->files[$app][$package][$file] = $type;
+					$this->files[$app][$package][$file] = $config;
 				}
 				return True;
 			}
@@ -365,11 +394,11 @@ HTML;
 				{
 					if($end_of_page)
 					{
-						$this->end_files['phpgwapi'][$package][$file] = $type;
+						$this->end_files['phpgwapi'][$package][$file] = $config;
 					}
 					else
 					{
-						$this->files['phpgwapi'][$package][$file] = $type;
+						$this->files['phpgwapi'][$package][$file] = $config;
 					}
 					return True;
 				}
