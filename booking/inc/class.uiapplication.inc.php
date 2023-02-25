@@ -1592,7 +1592,7 @@
 					'min_date' => time(),
 					'max_date' => $_max_date_ts,
 					));
-				self::add_javascript('bookingfrontend', 'base', 'application_new_simple.js', 'text/javascript', true);
+				self::add_javascript('bookingfrontend', 'base', 'application_new_simple.js', true);
 			}
 			else
 			{
@@ -1604,7 +1604,7 @@
 			{
 				if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 				{
-					self::add_javascript('bookingfrontend', 'base', 'purchase_order_add.js', 'text/javascript', true);
+					self::add_javascript('bookingfrontend', 'base', 'purchase_order_add.js', true);
 				}
 				else
 				{
@@ -1614,7 +1614,7 @@
 			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && !$simple)
 			{
 				$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
-				self::add_javascript('bookingfrontend', 'base', 'application_new.js', 'text/javascript', true);
+				self::add_javascript('bookingfrontend', 'base', 'application_new.js', true);
 			}
 
 			self::add_javascript('phpgwapi', 'dateformatter', 'dateformatter.js');
@@ -2280,7 +2280,7 @@
 			/**
 			 * This one is for bookingfrontend
 			 */
-			self::add_javascript('bookingfrontend', 'base', 'application_contact.js', 'text/javascript', true);
+			self::add_javascript('bookingfrontend', 'base', 'application_contact.js', true);
 			phpgwapi_jquery::load_widget('select2');
 
 
