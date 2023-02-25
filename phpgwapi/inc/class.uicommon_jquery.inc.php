@@ -317,6 +317,19 @@
 
 		public static function add_javascript( $app, $pkg, $name, $end_of_page = false, $config = array())
 		{
+			if($end_of_page == 'text/javascript')
+			{			
+				$bt = debug_backtrace();
+				$GLOBALS['phpgw']->log->error(array(
+					'text'	=> 'js::%1 Called from file: %2 line: %3',
+					'p1'	=> $bt[0]['function'],
+					'p2'	=> $bt[0]['file'],
+					'p3'	=> $bt[0]['line'],
+					'line'	=> __LINE__,
+					'file'	=> __FILE__
+				));
+				unset($bt);
+			}
 			return $GLOBALS['phpgw']->js->validate_file($pkg, str_replace('.js', '', $name), $app, $end_of_page, $config);
 		}
 

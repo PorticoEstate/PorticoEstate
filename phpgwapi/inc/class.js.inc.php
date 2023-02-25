@@ -199,7 +199,7 @@
 							{
 								foreach ($files as $file => $config)
 								{
-									if($combine)
+									if($combine && $config['combine'])
 									{
 										// Add file path to array and replace path separator with "--" for URL-friendlyness
 										$jsfiles[] = str_replace('/', '--', "{$app}/js/{$pkg}/{$file}.js");
@@ -216,6 +216,7 @@
 									 	. "</script>\n";
 									}
 								}
+								unset($config);
 							}
 						}
 					}
@@ -224,9 +225,9 @@
 
 			if ( !empty($external_files) && is_array($external_files) )
 			{
-				foreach($external_files as $file => $dummy)
+				foreach($external_files as $file => $config)
 				{
-					if($combine)
+					if($combine && $config['combine'])
 					{
 						// Add file path to array and replace path separator with "--" for URL-friendlyness
 						$jsfiles[] = str_replace('/', '--', ltrim($file,'/'));
@@ -432,18 +433,18 @@ HTML;
 		 *
 		 * @param string $file Full path to js file relative to root of phpgw install
 		 */
-		function add_external_file($file, $end_of_page = false)
+		function add_external_file($file, $end_of_page = false, $config = array())
 		{
 			$_file = ltrim($file, '/');
 			if ( is_file(PHPGW_SERVER_ROOT . "/$_file") )
 			{
 				if($end_of_page)
 				{
-					$this->external_end_files[$_file] = true;
+					$this->external_end_files[$_file] = $config;
 				}
 				else
 				{
-					$this->external_files[$_file] = true;
+					$this->external_files[$_file] = $config;
 				}
 			}
 		}
