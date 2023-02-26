@@ -144,7 +144,7 @@
 				'config_data' => $config->config_data
 			);
 
-			self::add_javascript('bookingfrontend', 'base', 'resource.js', 'text/javascript', true);
+			self::add_javascript('bookingfrontend', 'base', 'resource.js', true);
 			$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
 
 			self::render_template_xsl('resource', $data);
