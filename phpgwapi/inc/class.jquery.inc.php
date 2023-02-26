@@ -182,9 +182,13 @@
 					$load = array
 						(
 		//				"js/{$_jquery_core}{$_type}",
-						"ui/{$_jquery_ui}{$_type}",
-						'layout' => array("jquery.layout{$_type}", "plugins/jquery.layout.state")
+		//				"ui/{$_jquery_ui}{$_type}",
+		//				'layout' => array("jquery.layout{$_type}", "plugins/jquery.layout.state")
 					);
+					$GLOBALS['phpgw']->js->validate_file('jquery', "ui/{$_jquery_ui}{$_type}", 'phpgwapi', true, array('combine' => true ));
+					$GLOBALS['phpgw']->js->validate_file('layout', "jquery.layout{$_type}", 'phpgwapi', true, array('combine' => true ));
+					$GLOBALS['phpgw']->js->validate_file('layout', "plugins/jquery.layout.state", 'phpgwapi', true, array('combine' => true ));
+
 					break;
 
 				case 'contextMenu':
