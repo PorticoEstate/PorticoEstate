@@ -76,17 +76,14 @@
 				$theme = 'base';
 			}
 			$load = array();
+
+			$GLOBALS['phpgw']->js->validate_file('jquery', "js/{$_jquery_core}{$_type}", 'phpgwapi', false, array('combine' => true ));
+
 			switch ($widget)
 			{
-				case 'core':
-					$load = array(
-						"js/{$_jquery_core}{$_type}",
-					);
-					break;
-
 				case 'datepicker':
 					$load = array(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						"ui/{$_jquery_ui}{$_type}",
 						"ui/i18n/datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}",
 					);
@@ -98,7 +95,7 @@
 				case 'datetimepicker':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						'datetimepicker' => array(
 							"js/jquery.datetimepicker.full{$_type}",
 						//					"i18n/DateTimePicker-i18n"
@@ -110,7 +107,7 @@
 				case 'validator':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						'form-validator' => array("jquery.form-validator{$_type}")//, "lang/{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}")
 					);
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/form-validator/theme-default.css");
@@ -120,7 +117,7 @@
 				case 'autocomplete':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						"ui/{$_jquery_ui}{$_type}",
 					);
 
@@ -132,11 +129,12 @@
 				case 'tabview':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						//	"tabs/jquery.responsiveTabs",
 						"tabs/jquery.responsiveTabs{$_type}",
-						'common'
+		//				'common'
 					);
+					$GLOBALS['phpgw']->js->validate_file('jquery', "common", 'phpgwapi', false, array('combine' => true ));
 
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/tabs/css/responsive-tabs.css");
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/tabs/css/style.css");
@@ -145,7 +143,7 @@
 				case 'mmenu':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						"mmenu/src/js/jquery.mmenu.min.all"
 					);
 
@@ -156,7 +154,7 @@
 				case 'treeview':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						"treeview/jstree{$_type}"
 					);
 
@@ -166,7 +164,7 @@
 
 				case 'jqtree':
 					$load = array(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						"jqTree/tree.jquery",
 					);
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/jqTree/jqtree.css");
@@ -175,7 +173,7 @@
 				case 'numberformat':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						"number-format/jquery.number{$_type}"
 					);
 
@@ -183,7 +181,7 @@
 				case 'layout':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						"ui/{$_jquery_ui}{$_type}",
 						'layout' => array("jquery.layout{$_type}", "plugins/jquery.layout.state")
 					);
@@ -192,7 +190,7 @@
 				case 'contextMenu':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						'contextMenu' => array("jquery.contextMenu{$_type}")
 					);
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/contextMenu/jquery.contextMenu.min.css");
@@ -217,7 +215,7 @@
 				case 'file-upload':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						"ui/{$_jquery_ui}{$_type}",
 						"file-upload/js/tmpl{$_type}",
 						"file-upload/js/jquery.fileupload",
@@ -234,14 +232,11 @@
 				case 'file-upload-minimum':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						"ui/{$_jquery_ui}{$_type}",
-						//					"file-upload/js/tmpl{$_type}",
 						"file-upload/js/jquery.fileupload",
 						"file-upload/js/jquery.fileupload-process",
 						"file-upload/js/jquery.fileupload-validate",
-						//					"file-upload/js/jquery.fileupload-ui",
-						//					"file-upload/js/jquery.fileupload-jquery-ui",
 					);
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload.css");
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload-ui.css");
@@ -251,7 +246,7 @@
 
 				case 'bootstrap-multiselect':
 					$load = array(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						'bootstrap-multiselect' => array("js/bootstrap-multiselect.min")
 					);
 
@@ -272,7 +267,7 @@
 					break;
 				case 'select2':
 					$load = array(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						'select2' => array("js/select2{$_type}", "js/i18n/{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}")
 					);
 
