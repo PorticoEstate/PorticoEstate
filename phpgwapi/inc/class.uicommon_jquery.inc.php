@@ -75,9 +75,9 @@
 
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('contextMenu');
-			self::add_javascript('phpgwapi', "jquery", 'common.js');
+			self::add_javascript('phpgwapi', "jquery", 'common.js', false, array('combine' => true ));
 
-			self::add_javascript('phpgwapi', 'DataTables', 'DataTables/js/jquery.dataTables.min.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'DataTables/js/jquery.dataTables.min.js', false, array('combine' => true ));
 
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/jquery.dataTables.min.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Responsive/css/responsive.dataTables.min.css');
@@ -92,42 +92,42 @@
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Select/css/select.bootstrap5.min.css');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Scroller/css/scroller.bootstrap5.min.css');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/FixedColumns/css/fixedColumns.bootstrap5.min.css');
-				self::add_javascript('phpgwapi', 'DataTables', 'DataTables/js/dataTables.bootstrap5.min.js');
-				self::add_javascript('phpgwapi', 'DataTables', 'FixedColumns/js/fixedColumns.bootstrap5.min.js');
-				self::add_javascript('phpgwapi', 'DataTables', 'Scroller/js/scroller.bootstrap5.min.js');
+				self::add_javascript('phpgwapi', 'DataTables', 'DataTables/js/dataTables.bootstrap5.min.js', false, array('combine' => true ));
+				self::add_javascript('phpgwapi', 'DataTables', 'FixedColumns/js/fixedColumns.bootstrap5.min.js', false, array('combine' => true ));
+				self::add_javascript('phpgwapi', 'DataTables', 'Scroller/js/scroller.bootstrap5.min.js', false, array('combine' => true ));
 			}
 			else
 			{
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/DataTables/css/dataTables.jqueryui.min.css');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Scroller/css/scroller.jqueryui.min.css');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/FixedColumns/css/fixedColumns.jqueryui.min.css');
-				self::add_javascript('phpgwapi', 'DataTables', 'DataTables/js/dataTables.jqueryui.min.js');
-				self::add_javascript('phpgwapi', 'DataTables', 'FixedColumns/js/fixedColumns.jqueryui.min.js');
-				self::add_javascript('phpgwapi', 'DataTables', 'Scroller/js/scroller.jqueryui.min.js');
+				self::add_javascript('phpgwapi', 'DataTables', 'DataTables/js/dataTables.jqueryui.min.js', false, array('combine' => true ));
+				self::add_javascript('phpgwapi', 'DataTables', 'FixedColumns/js/fixedColumns.jqueryui.min.js', false, array('combine' => true ));
+				self::add_javascript('phpgwapi', 'DataTables', 'Scroller/js/scroller.jqueryui.min.js', false, array('combine' => true ));
 			}
 
 
-			self::add_javascript('phpgwapi', 'DataTables', 'Scroller/js/dataTables.scroller.js');
-			self::add_javascript('phpgwapi', 'DataTables', 'FixedColumns/js/dataTables.fixedColumns.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'Scroller/js/dataTables.scroller.js', false, array('combine' => true ));
+			self::add_javascript('phpgwapi', 'DataTables', 'FixedColumns/js/dataTables.fixedColumns.js', false, array('combine' => true ));
 
 
-			self::add_javascript('phpgwapi', 'DataTables', 'Responsive/js/dataTables.responsive.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'Responsive/js/dataTables.responsive.js', false, array('combine' => true ));
 			//Buttons
-			self::add_javascript('phpgwapi', 'DataTables', 'Buttons/js/dataTables.buttons.min.js');
-			self::add_javascript('phpgwapi', 'DataTables', 'Buttons/js/buttons.colVis.min.js');
-			self::add_javascript('phpgwapi', 'DataTables', 'Buttons/js/buttons.flash.js');
-			self::add_javascript('phpgwapi', 'DataTables', 'Buttons/js/buttons.html5.js');
-			self::add_javascript('phpgwapi', 'jszip', 'jszip.min.js');
-			self::add_javascript('phpgwapi', 'DataTables', 'Select/js/dataTables.select.min.js');
-//			self::add_javascript('phpgwapi', 'DataTables', 'ColReorder/js/dataTables.ColReorder.min.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'Buttons/js/dataTables.buttons.min.js', false, array('combine' => true ));
+			self::add_javascript('phpgwapi', 'DataTables', 'Buttons/js/buttons.colVis.min.js', false, array('combine' => true ));
+			self::add_javascript('phpgwapi', 'DataTables', 'Buttons/js/buttons.flash.js', false, array('combine' => true ));
+			self::add_javascript('phpgwapi', 'DataTables', 'Buttons/js/buttons.html5.js', false, array('combine' => true ));
+			self::add_javascript('phpgwapi', 'jszip', 'jszip.min.js', false, array('combine' => true ));
+			self::add_javascript('phpgwapi', 'DataTables', 'Select/js/dataTables.select.min.js', false, array('combine' => true ));
+//			self::add_javascript('phpgwapi', 'DataTables', 'ColReorder/js/dataTables.ColReorder.min.js', false, array('combine' => true ));
 
-			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
-			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
-			self::add_javascript('phpgwapi', 'DataTables', 'plugins/input.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js', false, array('combine' => true ));
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js', false, array('combine' => true ));
+			self::add_javascript('phpgwapi', 'DataTables', 'plugins/input.js', false, array('combine' => true ));
 
 
 			//pop up script
-			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js', false, array('combine' => true ));
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
 			if (phpgw::get_var('nonavbar'))

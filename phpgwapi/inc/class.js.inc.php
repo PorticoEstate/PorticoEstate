@@ -92,7 +92,7 @@
 		*/
 		public function __construct()
 		{
-			$this->validate_file('core', 'base');
+			$this->validate_file('core', 'base', 'phpgwapi', false, array('combine' => true ));
 			$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
 			$this->webserver_url = $webserver_url;
 		}
@@ -157,7 +157,6 @@
 
 
 			$combine = true;
-			$combine = false; // Temporary
 
 			if (!empty($GLOBALS['phpgw_info']['server']['no_jscombine']))
 			{
@@ -186,6 +185,7 @@
 
 
 			$links = "<!--JS Imports from phpGW javascript class -->\n";
+			$_links = '';
 			$jsfiles = array();
 			if (is_array($files) && count($files))
 			{
@@ -199,7 +199,7 @@
 							{
 								foreach ($files as $file => $config)
 								{
-									if($combine && $config['combine'])
+									if($combine && !empty($config['combine']))
 									{
 										// Add file path to array and replace path separator with "--" for URL-friendlyness
 										$jsfiles[] = str_replace('/', '--', "{$app}/js/{$pkg}/{$file}.js");
@@ -207,12 +207,12 @@
 									else
 									{
 										//echo "file: {$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js <br>";
-										$links .= "<script ";
+										$_links .= "<script ";
 										if($config['type'] != 'text/javascript')
 										{
-											$links .= "type=\"{$config['type']}\" ";
+											$_links .= "type=\"{$config['type']}\" ";
 										}
-										$links .=  "src=\"{$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js{$cache_refresh_token}\">"
+										$_links .=  "src=\"{$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js{$cache_refresh_token}\">"
 									 	. "</script>\n";
 									}
 								}
@@ -223,18 +223,19 @@
 				}
 			}
 
+
 			if ( !empty($external_files) && is_array($external_files) )
 			{
 				foreach($external_files as $file => $config)
 				{
-					if($combine && $config['combine'])
+					if($combine && !empty($config['combine']))
 					{
 						// Add file path to array and replace path separator with "--" for URL-friendlyness
 						$jsfiles[] = str_replace('/', '--', ltrim($file,'/'));
 					}
 					else
 					{
-						$links .= <<<HTML
+						$_links .= <<<HTML
 						<script src="{$this->webserver_url}/{$file}{$cache_refresh_token}" >
 						</script>
 HTML;
@@ -252,6 +253,7 @@ HTML;
 				unset($jsfiles);
 				unset($_jsfiles);
 			}
+			$links .= $_links;
 
 			return $links;
 		}
@@ -356,12 +358,10 @@ HTML;
 			}
 			
 			
-			if(!$config)
+			if(empty($config['type']))
 			{
-				$config = array('type' => 'text/javascript');
+				$config = array_merge((array)$config, array('type' => 'text/javascript'));
 			}
-
-
 
 			$template_set = $GLOBALS['phpgw_info']['server']['template_set'];
 

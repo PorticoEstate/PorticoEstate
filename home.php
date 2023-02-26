@@ -65,8 +65,8 @@
 	{
 		phpgw::import_class('phpgwapi.jquery');
 		phpgwapi_jquery::load_widget('core');
-		$GLOBALS['phpgw']->js->validate_file('jquery', 'common', 'phpgwapi');
-		$GLOBALS['phpgw']->js->validate_file('tinybox2', 'packed', 'phpgwapi');
+		$GLOBALS['phpgw']->js->validate_file('jquery', 'common', 'phpgwapi', false, array('combine' => true ));
+		$GLOBALS['phpgw']->js->validate_file('tinybox2', 'packed', 'phpgwapi', false, array('combine' => true ));
 		$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 		$GLOBALS['phpgw']->common->phpgw_header();
 		echo parse_navbar();
