@@ -77,7 +77,10 @@
 		var $part_of_town_id;
 		var $status;
 		var $filter;
-		var $user_filter;
+		var $user_filter,$bo, $cats,$acl, $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete, $acl_manage,
+		$district_id, $tenant_id, $account, $bocommon, $start, $query, $sort, $order, $status_id, $user_id, $group_id, $reported_by, $cat_id,
+		$allrows, $vendor_id, $start_date, $end_date, $location_code, $p_num, $show_finnish_date, $ecodimb,$b_account,
+		$building_part, $branch_id, $parent_cat_id;
 
 		public function __construct()
 		{
@@ -764,7 +767,7 @@ HTML;
 
 			$combos[] = array('type'	 => 'filter',
 				'name'	 => 'status_id',
-				'extra'	 => $code,
+				'extra'	 => '',
 				'text'	 => lang('status'),
 				'list'	 => $values_combo_box[3]
 			);
