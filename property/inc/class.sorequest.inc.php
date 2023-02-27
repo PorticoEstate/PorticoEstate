@@ -318,8 +318,8 @@
 			$list_descr			 = isset($data['list_descr']) ? $data['list_descr'] : '';
 			$dry_run			 = isset($data['dry_run']) ? $data['dry_run'] : '';
 			$p_num				 = isset($data['p_num']) ? $data['p_num'] : '';
-			$start_date			 = isset($data['start_date']) && $data['start_date'] ? phpgwapi_datetime::date_to_timestamp($data['start_date']) : 0;
-			$end_date			 = isset($data['end_date']) && $data['end_date'] ? phpgwapi_datetime::date_to_timestamp($data['end_date']) : 0;
+			$start_date			 = isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : 0;
+			$end_date			 = isset($data['end_date']) && $data['end_date'] ? $data['end_date'] : 0;
 			$building_part		 = isset($data['building_part']) && $data['building_part'] ? (int)$data['building_part'] : 0;
 			$degree_id			 = $data['degree_id'];
 			$attrib_filter		 = $data['attrib_filter'] ? $data['attrib_filter'] : array();
@@ -715,10 +715,17 @@
 
 			if ($start_date)
 			{
-				$end_date	 = $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
 				$start_date	 = $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
 
-				$filtermethod	 .= " $where fm_request.start_date >= $start_date AND fm_request.start_date <= $end_date ";
+				$filtermethod	 .= " $where fm_request.start_date >= $start_date ";
+				$where			 = 'AND';
+			}
+
+			if ($end_date)
+			{
+				$end_date	 = $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
+
+				$filtermethod	 .= " $where fm_request.start_date <= $end_date ";
 				$where			 = 'AND';
 			}
 
