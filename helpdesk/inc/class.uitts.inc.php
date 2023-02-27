@@ -1973,7 +1973,7 @@ JS;
 
 			self::add_javascript('phpgwapi', 'paste', 'paste.js');
 			self::add_javascript('helpdesk', 'base', 'tts.add.js');
-//			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', 'text/javascript', true);
+//			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', true);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('file-upload-minimum');

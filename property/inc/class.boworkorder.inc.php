@@ -129,6 +129,8 @@
 					$sogeneric->get_location_info('b_account_category', false);
 					$account_group_data	 = $sogeneric->read_single(array('id' => (int)$_b_account_group), array());
 
+					$category[0]['mandatory_external_project'] = $account_group_data['external_project'];
+
 					if (isset($account_group_data['project_category']) && $account_group_data['project_category'])
 					{
 						$parent_categories = explode(',', trim($account_group_data['project_category'], ','));

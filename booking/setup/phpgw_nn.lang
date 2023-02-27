@@ -50,7 +50,7 @@ building name	booking	nn	Bygg/anlegg
 building schedule	booking	nn	Kalendar
 buildings	booking	nn	Bygg/anlegg
 bygning	booking	nn	Bygg/anlegg
-cancel	booking	nn	Avbryt
+cancel	booking	nn	Tilbake
 cancelled	booking	nn	Avbestilt
 case officer	booking	nn	Saksbehandlar
 category	booking	nn	Kategori
@@ -193,7 +193,7 @@ select role...	booking	nn	Velg rolle...
 select activity...	booking	nn	Velg aktivitet...
 sep	booking	nn	september
 settings	booking	nn	Innstillingar
-show only active	booking	nn	Skjul
+show only active	booking	nn	Vis aktive
 showing items	booking	nn	Viser
 showing items {startRecord} - {endRecord} of {totalRecords}	booking	nn	Viser {startRecord} - {endRecord} av {totalRecords}
 social security number	booking	nn	Fødselsnummer (11 siffer)

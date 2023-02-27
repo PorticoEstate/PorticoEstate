@@ -232,7 +232,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript($this->currentapp, 'base', 'service.index.js', 'text/javascript', true);
+			self::add_javascript($this->currentapp, 'base', 'service.index.js', true);
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);

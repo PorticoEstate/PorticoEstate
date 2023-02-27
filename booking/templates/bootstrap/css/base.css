@@ -155,18 +155,6 @@ dl.form-2col {
     display:none; 
     position:absolute; z-index:1;
 }
-#toolbar {
-    width: 100%;
-    background-color: #eee;
-    border: 1px solid #bbb;
-    margin-bottom: 1em;
-    padding: .3em;
-}
-#toolbar input[type="text"] {
-    vertical-align: text-bottom;
-    font-size: 120%;
-    margin: auto .25em;
-}
 
 #list_actions {
 	margin-top: 0.5em;

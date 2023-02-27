@@ -610,9 +610,9 @@
 			phpgwapi_jquery::load_widget('layout');
 			phpgwapi_jquery::load_widget('numberformat');
 
-			self::add_javascript('property', 'base', 'ajax_invoice.js');
-			self::add_javascript('property', 'base', 'invoice2.index.js');
-			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+			self::add_javascript('property', 'base', 'ajax_invoice.js', false, array('combine' => true ));
+			self::add_javascript('property', 'base', 'invoice2.index.js', false, array('combine' => true ));
+			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js', false, array('combine' => true ));
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('invoice');
 

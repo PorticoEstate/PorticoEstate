@@ -92,11 +92,11 @@
 								'ui' => 'building',
 								'text' => lang('Building') . ':',
 							),
-							array(
-								'type' => 'link',
-								'value' => $_SESSION['showall'] ? lang('Show only messages assigned to me') : lang('Show all messages'),
-								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
-							),
+//							array(
+//								'type' => 'link',
+//								'value' => $_SESSION['showall'] ? lang('Show only messages assigned to me') : lang('Show all messages'),
+//								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
+//							),
 						)
 					),
 				),
@@ -143,7 +143,16 @@
 					)
 				)
 			);
-			$data['datatable']['actions'][] = array();
+
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'toggle_inactive',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => $_SESSION['showall'] ? lang('Show only messages assigned to me') : lang('Show all messages'),
+				'text'		 => $_SESSION['showall'] ? lang('Show only messages assigned to me') : lang('Show all messages'),
+				'custom_code'	 => 'window.open("' . self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive')) . '", "_self");',
+			);
+
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

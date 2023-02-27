@@ -40,8 +40,8 @@
 			phpgwapi_jquery::load_widget('daterangepicker');
 			phpgwapi_jquery::load_widget('timepicker');
 
-			self::add_javascript('bookingfrontend', 'base', 'search.js', 'text/javascript', true);
-			self::add_javascript('bookingfrontend', 'base', 'util.js', 'text/javascript', true);
+			self::add_javascript('bookingfrontend', 'base', 'search.js', true);
+			self::add_javascript('bookingfrontend', 'base', 'util.js', true);
 
 
 			$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");

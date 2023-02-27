@@ -177,12 +177,12 @@
 				phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 					'file'));
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3-gallery/gallery-formvalidator/validatorCss.css');
-				self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+				self::add_javascript('phpgwapi', 'tinybox2', 'packed.js', false, array('combine' => true ));
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
-				self::add_javascript('manual', 'base', 'documents.add.js');
+				self::add_javascript('manual', 'base', 'documents.add.js', false, array('combine' => true ));
 			}
 
-			self::add_javascript('manual', 'base', 'documents.view.js');
+			self::add_javascript('manual', 'base', 'documents.view.js', false, array('combine' => true ));
 
 
 			self::render_template_xsl(array('documents_add', 'datatable_inline'), $data);

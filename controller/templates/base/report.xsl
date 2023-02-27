@@ -8,6 +8,11 @@
 
 <!-- new_component-->
 <xsl:template match="report" xmlns:php="http://php.net/xsl">
+
+	<xsl:variable name="inline_images">
+		<xsl:value-of select="inline_images" />
+	</xsl:variable>
+
 	<html>
 		<head>
 			<!-- Required meta tags -->
@@ -16,18 +21,21 @@
 
 			<!-- Bootstrap CSS -->
 			<xsl:for-each select="stylesheets">
-				<link rel="stylesheet" type="text/css">
+<!--				<link rel="stylesheet" type="text/css">
 					<xsl:attribute name="href">
 						<xsl:value-of select="node()"/>
 					</xsl:attribute>
-				</link>
+				</link>-->
+				<style TYPE="text/css">
+					<xsl:value-of select="node()"/>
+				</style>
 			</xsl:for-each>
 
 			<xsl:for-each select="javascripts">
 				<script>
-					<xsl:attribute name="src">
+<!--					<xsl:attribute name="src">-->
 						<xsl:value-of select="node()"/>
-					</xsl:attribute>
+<!--					</xsl:attribute>-->
 				</script>
 			</xsl:for-each>
 
@@ -74,9 +82,11 @@
 
 		<body>
 						
-			<button class="btn btn-secondary" onClick="window.print();">
-				<xsl:value-of select="php:function('lang', 'print')" />
-			</button>
+			<xsl:if test = "return_as_pdf !=1">
+				<button class="btn btn-secondary" onClick="window.print();">
+					<xsl:value-of select="php:function('lang', 'print')" />
+				</button>
+			</xsl:if>
 		
 			<div class="container small">
 				<div class="mt-5 row">
@@ -135,7 +145,7 @@
 				<div class="row mt-2">
 					<xsl:if test="location_image !=''">
 						<xsl:choose>
-							<xsl:when test="inline_images =1">
+							<xsl:when test="$inline_images =1">
 								<img src="data:image/jpg;base64,{image_data}" class="img-fluid"/>
 							</xsl:when>
 							<xsl:otherwise>
@@ -235,7 +245,7 @@
 								<xsl:if test="image_link !=''">
 									<a href="{image_link}">
 										<xsl:choose>
-											<xsl:when test="inline_images =1">
+											<xsl:when test="$inline_images =1">
 												<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
 											</xsl:when>
 											<xsl:otherwise>
@@ -276,7 +286,7 @@
 									<xsl:for-each select="files">
 										<a href="{link}" title="{text}">
 											<xsl:choose>
-												<xsl:when test="inline_images =1">
+												<xsl:when test="$inline_images =1">
 													<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
 												</xsl:when>
 												<xsl:otherwise>
@@ -328,7 +338,7 @@
 								<xsl:for-each select="files">
 									<a href="{link}" title="{text}">
 										<xsl:choose>
-											<xsl:when test="inline_images =1">
+											<xsl:when test="$inline_images =1">
 												<img src="data:image/jpg;base64,{image_data}" class="img-thumbnail img-fluid"/>
 											</xsl:when>
 											<xsl:otherwise>

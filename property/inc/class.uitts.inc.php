@@ -77,7 +77,10 @@
 		var $part_of_town_id;
 		var $status;
 		var $filter;
-		var $user_filter;
+		var $user_filter,$bo, $cats,$acl, $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete, $acl_manage,
+		$district_id, $tenant_id, $account, $bocommon, $start, $query, $sort, $order, $status_id, $user_id, $group_id, $reported_by, $cat_id,
+		$allrows, $vendor_id, $start_date, $end_date, $location_code, $p_num, $show_finnish_date, $ecodimb,$b_account,
+		$building_part, $branch_id, $parent_cat_id;
 
 		public function __construct()
 		{
@@ -764,7 +767,7 @@ HTML;
 
 			$combos[] = array('type'	 => 'filter',
 				'name'	 => 'status_id',
-				'extra'	 => $code,
+				'extra'	 => '',
 				'text'	 => lang('status'),
 				'list'	 => $values_combo_box[3]
 			);
@@ -1016,9 +1019,9 @@ HTML;
 			}
 
 			phpgwapi_jquery::load_widget('numberformat');
-			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
-			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
-			self::add_javascript('property', 'portico', 'tts.index.js');
+	//		self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+	//		self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+			self::add_javascript('property', 'portico', 'tts.index.js', false, array('combine' => true ));
 
 			$start_date	 = urldecode($this->start_date);
 			$end_date	 = urldecode($this->end_date);
@@ -1277,7 +1280,7 @@ HTML;
 			$appname		 = lang('helpdesk');
 			$function_msg	 = lang('Report');
 
-			self::add_javascript('property', 'base', 'tts.report.js');
+			self::add_javascript('property', 'base', 'tts.report.js', false, array('combine' => true ));
 
 			$data = array(
 				'start_date'	 => $start_date,
@@ -1813,8 +1816,8 @@ HTML;
 			$appname		 = lang('helpdesk');
 			$function_msg	 = lang('add ticket');
 			phpgwapi_jquery::load_widget('select2');
-			self::add_javascript('property', 'portico', 'tts.add.js');
-//			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', 'text/javascript', true);
+			self::add_javascript('property', 'portico', 'tts.add.js', false, array('combine' => true ));
+//			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', true, array('combine' => true ));
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
@@ -3788,7 +3791,7 @@ JS;
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 			phpgwapi_jquery::load_widget('glider');
 			phpgwapi_jquery::load_widget('select2');
-			self::add_javascript('property', 'portico', 'tts.view.js');
+			self::add_javascript('property', 'portico', 'tts.view.js', false, array('combine' => true ));
 
 			$this->_insert_custom_js();
 			//-----------------------datatable settings---

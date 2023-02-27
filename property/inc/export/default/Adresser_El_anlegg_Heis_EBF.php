@@ -42,7 +42,7 @@
 			$db_info = array(
 				'db_host'	 => $config->config_data['matrikkelen']['host'], //'oradb36i.srv.bergenkom.no',
 				'db_type'	 => 'oci8',
-				'db_port'	 => $config->config_data['matrikkelen']['port'],//'21525',
+				'db_port'	 => $config->config_data['matrikkelen']['port'], //'21525',
 				'db_name'	 => $config->config_data['matrikkelen']['db_name'], //'MATPROD',
 				'db_user'	 => $config->config_data['matrikkelen']['user'], //'GIS_BRUKER',
 				'db_pass'	 => $config->config_data['matrikkelen']['password'],
@@ -92,7 +92,6 @@
 			AND GATE.ID = ADRESSE.GATEID
 			AND BYGG.CLASS = 'Bygning'
 			AND MATRIKKELENHET.UTGATT = 0";
-
 
 			foreach ($values as &$value)
 			{
@@ -145,8 +144,8 @@
 					}
 				}
 
-				$value['Matrikkel_Adresse'] = $this->db->f('GATENAVN') . " " . $this->db->f('HUSNR') . " " . $this->db->f('BOKSTAV');
-				$value['etableringsdato'] = $this->db->f('ETABLERINGSDATO');
+				$value['Matrikkel_Adresse']	 = $this->db->f('GATENAVN') . " " . $this->db->f('HUSNR') . " " . $this->db->f('BOKSTAV');
+				$value['etableringsdato']	 = $this->db->f('ETABLERINGSDATO');
 				if (!$value['etableringsdato'])
 				{
 					$value['etableringsdato'] = $this->db->f('DATO');
@@ -159,7 +158,6 @@
 				$value['gardsnr']			 = $this->db->f('GARDSNR');
 				$value['bruksnr']			 = $this->db->f('BRUKSNR');
 				$value['Bygningstypekode']	 = $this->db->f('BYGNINGSTYPEKODE');
-
 			}
 		}
 
@@ -194,14 +192,15 @@
 
 			$solocation = CreateObject('property.solocation');
 
-			$return = array();
-			$maalepunkter_total = array();
+			$return				 = array();
+			$maalepunkter_total	 = array();
+			$get_maalepunkt = false;
 
 			foreach ($addresses as & $addresse)
 			{
 
 
-				$sql = "SELECT DISTINCT fm_location4_category.descr as formaal"
+				$sql		 = "SELECT DISTINCT fm_location4_category.descr as formaal"
 					. " FROM fm_location4"
 					. " JOIN fm_location4_category ON fm_location4.category = fm_location4_category.id"
 					. " WHERE street_id = {$addresse['street_id']}"
@@ -209,7 +208,7 @@
 					. " AND fm_location4_category.id NOT IN (99)"
 					. " ORDER BY fm_location4_category.descr";
 				$db->query($sql, __LINE__, __FILE__);
-				$categories = array();
+				$categories	 = array();
 				while ($db->next_record())
 				{
 					$categories[] = $db->f('formaal', true);
@@ -217,11 +216,10 @@
 
 				$addresse['formaal'] = implode(', ', $categories);
 
-
 				$zip_info = $solocation->get_zip_info($addresse['objekt']);
 
-				$addresse['postnr'] = $zip_info['zip_code'];
-				$addresse['poststed'] = $zip_info['city'];
+				$addresse['postnr']		 = $zip_info['zip_code'];
+				$addresse['poststed']	 = $zip_info['city'];
 
 				$sql = "SELECT DISTINCT loc1, loc2, loc3  FROM fm_location4 WHERE street_id = {$addresse['street_id']}"
 					. " AND street_number = '{$addresse['gatenummer']}'"
@@ -231,67 +229,73 @@
 				$location_codes = array();
 				while ($db->next_record())
 				{
-					$location_codes[] = $db->f('loc1') . '-' .$db->f('loc2') . '-' . $db->f('loc3')  ;
+					$location_codes[] = $db->f('loc1') . '-' . $db->f('loc2') . '-' . $db->f('loc3');
 				}
 
-				$addresse['lokation_code'] = implode(', ', $location_codes);
-				$addresse['Heis'] = '';
-				$addresse['nhk_nummer'] = '';
+				$addresse['lokation_code']	 = implode(', ', $location_codes);
+				$addresse['Heis']			 = '';
+				$addresse['nhk_nummer']		 = '';
 
-				$maalepunkter = array();
-				$heiser = array();
-				foreach ($location_codes as $location_code)
+				if ($get_maalepunkt)
 				{
-					$sql = "SELECT DISTINCT location_code, json_representation->>'maalepunkt_id' as maalepunkt_id FROM fm_bim_item "
-						. " WHERE fm_bim_item.location_id = 25" // el-anlegg
-						. " AND fm_bim_item.location_code like '{$location_code}%'"
-						. " AND (json_representation->>'maalepunkt_id' IS NOT NULL )"
-						. " AND (json_representation->>'category' = '2' )"; // felles
 
-					$db->query($sql, __LINE__, __FILE__);
-
-					while ($db->next_record())
+					$maalepunkter	 = array();
+					$heiser			 = array();
+					foreach ($location_codes as $location_code)
 					{
-						$addresse['lokation_code'] = $db->f('location_code');
-						$maalepunkt_id = $db->f('maalepunkt_id');
-						if($maalepunkt_id && strlen($maalepunkt_id) < 9)
+						$sql = "SELECT DISTINCT location_code, json_representation->>'maalepunkt_id' as maalepunkt_id FROM fm_bim_item "
+							. " WHERE fm_bim_item.location_id = 25" // el-anlegg
+							. " AND fm_bim_item.location_code like '{$location_code}%'"
+							. " AND (json_representation->>'maalepunkt_id' IS NOT NULL )"
+							. " AND (json_representation->>'category' = '2' )"; // felles
+
+						$db->query($sql, __LINE__, __FILE__);
+
+						while ($db->next_record())
 						{
-							$maalepunkt_id = '7070575000' . $maalepunkt_id;
-						}
-						
-						$maalepunkter[] = true;
-						$addresse['maalepkunkt_id'] = $maalepunkt_id;
+							$addresse['lokation_code']	 = $db->f('location_code');
+							$maalepunkt_id				 = $db->f('maalepunkt_id');
+							if ($maalepunkt_id && strlen($maalepunkt_id) < 9)
+							{
+								$maalepunkt_id = '7070575000' . $maalepunkt_id;
+							}
 
-						if(!isset($maalepunkter_total[$maalepunkt_id]))
+							$maalepunkter[]				 = true;
+							$addresse['maalepkunkt_id']	 = $maalepunkt_id;
+
+							if (!isset($maalepunkter_total[$maalepunkt_id]))
+							{
+								$return[]							 = $addresse;
+								$maalepunkter_total[$maalepunkt_id]	 = true;
+							}
+						}
+
+						$sql = "SELECT DISTINCT location_code, json_representation->>'nhk_nummer' as nhk_nummer FROM fm_bim_item "
+							. " WHERE fm_bim_item.location_id = 23" // Heis
+							. " AND fm_bim_item.location_code like '{$location_code}%'";
+
+						$db->query($sql, __LINE__, __FILE__);
+
+						$nhk_nummer = array();
+						while ($db->next_record())
 						{
-							$return[] = $addresse;
-							$maalepunkter_total[$maalepunkt_id] = true;
+							$heiser[] = true;
+
+							$addresse['Heis']	 = 'Ja';
+							$nhk_nummer[]		 = $db->f('nhk_nummer');
+						}
+						$addresse['nhk_nummer'] = implode(', ', $nhk_nummer);
+
+						if (!$maalepunkter)
+						{
+							$addresse['maalepkunkt_id']	 = '';
+							$return[]					 = $addresse;
 						}
 					}
-
-					$sql = "SELECT DISTINCT location_code, json_representation->>'nhk_nummer' as nhk_nummer FROM fm_bim_item "
-						. " WHERE fm_bim_item.location_id = 23" // Heis
-						. " AND fm_bim_item.location_code like '{$location_code}%'";
-
-					$db->query($sql, __LINE__, __FILE__);
-
-					$nhk_nummer = array();
-					while ($db->next_record())
-					{
-						$heiser[] = true;
-
-						$addresse['Heis'] = 'Ja';
-						$nhk_nummer[] = $db->f('nhk_nummer');
-						
-					}
-					$addresse['nhk_nummer'] = implode(', ', $nhk_nummer);
-
-					if(!$maalepunkter)
-					{
-						$addresse['maalepkunkt_id'] = '';
-						$return[] = $addresse;
-					}
-
+				}
+				else
+				{
+					$return[]					 = $addresse;
 				}
 			}
 
