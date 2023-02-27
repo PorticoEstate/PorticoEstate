@@ -112,7 +112,10 @@ class BookingSearch {
         selected_facilities: ko.observableArray([]),
         resource_facilities: ko.observableArray([]),
         text: ko.observable(""),
-        date: ko.observable("")
+        date: ko.observable(""),
+        showOnlyAvailable: ko.observable(false),
+        result: ko.observableArray([]),
+        available_resources: ko.observableArray([])
     }
 
     activity_cache = {};
@@ -129,6 +132,7 @@ class BookingSearch {
         this.data.selected_facilities.subscribe(_ => this.search())
         this.data.selected_activities.subscribe(_ => this.search())
         this.data.towns.subscribe(_ => this.updateBuildings(null));
+        this.data.date.subscribe(_ => this.search())
 
         this.data.selected_town.subscribe(town => {
             this.updateBuildings(town);
@@ -146,6 +150,36 @@ class BookingSearch {
         this.data.activities.subscribe(activities => {
             for (const activity of activities) {
                 this.activity_cache[activity.id] = getAllSubRowsIds(activities, activity.id);
+            }
+        })
+
+        this.data.result.subscribe(result => {
+            this.data.available_resources([]);
+            if (this.data.date()) {
+                this.fetchAvailableResources();
+            }
+        })
+    }
+
+    fetchAvailableResources() {
+        const from_date = `${this.data.date()} 00:00:00`;
+        const to_date = `${this.data.date()} 23:59:59`;
+        console.log(this.data.result());
+        const resource_ids = this.data.result().map(r => r.id).join(",");
+        const url = phpGWLink('bookingfrontend/', {
+            menuaction: 'bookingfrontend.uisearch.search_available_resources',
+            from_date,
+            to_date,
+            resource_ids,
+            length: -1
+        }, true);
+        $.ajax({
+            url,
+            success: response => {
+                console.log("Res", response);
+            },
+            error: error => {
+                console.log(error);
             }
         })
     }
@@ -225,10 +259,12 @@ class BookingSearch {
 
     addInfoCards(el, resources) {
         const append = [];
+        const okResources = [];
         for (const resource of resources) {
             const buildings = this.getBuildingsFromResource(resource.id);
             const towns = this.getTownFromBuilding(buildings);
             if (towns.length>0) {
+                okResources.push(resource);
                 append.push(`
     <div class="col-12 mb-4">
       <div class="js-slidedown slidedown">
@@ -253,8 +289,9 @@ class BookingSearch {
                 )
             }
         }
+        this.data.result(okResources);
         el.append(append.join(""));
-        fillSearchCount(resources);
+        fillSearchCount(okResources);
     }
 }
 

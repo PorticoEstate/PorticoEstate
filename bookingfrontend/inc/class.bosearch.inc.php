@@ -832,7 +832,6 @@
 		{
 			$from_date = DateTime::createFromFormat('d.m.Y H:i:s', $params['from_date']);
 			$to_date = DateTime::createFromFormat('d.m.Y H:i:s', $params['to_date']);
-
 			$this->soresource->get_season_boundary($resources, $from_date, $to_date);
 
 			$is_time_set = false;

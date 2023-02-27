@@ -40,7 +40,7 @@
                             <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
                                 <div class="multisearch__inner__item">
                                     <label for="search-booking-datepicker">Dato</label>
-                                    <input type="text" id="search-booking-datepicker" placeholder="Velg" data-bind="textInput: date"/>
+                                    <input type="text" id="search-booking-datepicker" placeholder="dd.mm.yyyy" class="js-basic-datepicker" data-bind="textInput: date"/>
                                 </div>
                             </div>
                             <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
@@ -104,6 +104,17 @@
             optionsText: 'name',
             selectedOptions: selected_facilities
             "/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row flex-column flex-md-row">
+                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0">
+                                <div class="multisearch__inner__item">
+                                    <label class="choice">
+                                        <input type="checkbox" data-bind="checked: showOnlyAvailable" />
+                                        Vis kun tilgjengelige
+                                        <span class="choice__check"></span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
