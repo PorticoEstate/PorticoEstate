@@ -337,7 +337,7 @@ HTML;
 		public function validate_file($package, $file, $app ='phpgwapi', $end_of_page = false, $config = array())
 		{
 
-			if($end_of_page == 'text/javascript')
+			if($end_of_page === "text/javascript")
 			{
 			
 				$bt = debug_backtrace();

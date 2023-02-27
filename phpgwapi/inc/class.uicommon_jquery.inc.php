@@ -317,7 +317,7 @@
 
 		public static function add_javascript( $app, $pkg, $name, $end_of_page = false, $config = array())
 		{
-			if($end_of_page == 'text/javascript')
+			if($end_of_page === "text/javascript")
 			{			
 				$bt = debug_backtrace();
 				$GLOBALS['phpgw']->log->error(array(
