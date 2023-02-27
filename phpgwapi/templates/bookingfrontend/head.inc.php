@@ -353,9 +353,15 @@ HTML;
 	$nav = <<<HTML
 
 		<nav class="navbar navbar-default sticky-top navbar-expand-md navbar-light  header_borderline"   id="headcon">
-			<div class="container header-container my_class">
+			<div class="container-fluid header-container my_class">
+			<div>
 				<a class="navbar-brand brand-site-title" href="{$site_url}">{$site_title} </a>
 				<a href="{$site_url}"><img class="navbar-brand brand-site-img" src="{$headlogoimg}" alt="{$logo_title}"/></a>
+				</div>
+		    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+		 <div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<!-- Search Box -->
 				<!--div class="search-container">
 					<form id="navSearchForm" class="search-form">
@@ -363,8 +369,8 @@ HTML;
 						<button class="searchButton" type="submit" ><i class="fas fa-search"></i></button>
 					</form>
 				</div-->
-		</div>
-		<ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+
+		<ul class="navbar-nav flex-row ml-auto d-flex">
 				<li class="nav-item">
 					<a class="nav-link p-2" href="{$self_uri}{$separator}lang={$userlang}" aria-label="Norsk"><img src="{$flag_no}" alt="Norsk (Norway)" title="Norsk (Norway)" />
 					</a>
@@ -385,6 +391,8 @@ HTML;
 			</button>
 		</div>
         <div class="navbar-organization-select">
+        </div>
+        </div>
         </div>
 		</nav>
 		<div class="overlay">

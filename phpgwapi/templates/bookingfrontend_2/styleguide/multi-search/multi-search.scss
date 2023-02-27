@@ -1,0 +1,119 @@
+.multisearch {
+  background: rgba($purple, 0.1);
+  padding: 1.25rem 0.625rem;
+  border-radius: $rounded-medium;
+
+  @media (min-width: $media-small) {
+    padding: 1.25rem;
+  }
+
+  @media (min-width: $media-medium) {
+    border-radius: $rounded-large;
+    border-radius: 8rem;
+    padding: 1rem;
+  }
+
+  &__inner {
+    border-radius: $rounded-large;
+    position: relative;
+
+    @media (min-width: $media-medium) {
+      background: $white;
+      border-radius: 7rem;
+      padding: 1.6rem 4rem 1.2rem 4rem;
+    }
+
+    @media (min-width: $media-medium) {
+      padding-right: 5.5rem;
+    }
+
+    &--border {
+      @media (min-width: $media-large) {
+        border-left: 1px solid $grey;
+      }
+    }
+
+    &--no-button {
+      @media (min-width: $media-medium) {
+        padding-right: 4rem;
+      }
+    }
+
+    &__item {
+      display: flex;
+      flex-direction: column;
+      background: $white;
+      border-radius: $rounded-large;
+      padding: 1rem 1rem 1rem 2rem;
+      width: 100%;
+
+      @media (max-width: ($media-medium - 1)) {
+        box-shadow: $box-shadow-large;
+
+        &:focus-within {
+          box-shadow: $box-shadow-large, $box-focus-shadow;
+        }
+
+        &:hover {
+          box-shadow: $box-shadow-large, $box-focus-shadow-purple;
+        }
+      }
+
+      @media (min-width: $media-medium) {
+        background: transparent;
+        padding: 0;
+        border-radius: 0;
+        margin-bottom: 0;
+      }
+      
+      label {
+        color: $purple;
+        font-weight: $text-bolder;
+        font-size: 1rem;
+        line-height: 1.2em;
+      }
+
+    }
+
+    &__icon-button {
+      font-size: $text-2xl;
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+    }
+  }
+
+  .select2-container--select-v2 
+  .select2-selection--single 
+  .select2-selection__rendered {
+    padding: 0.25rem 0;
+  }
+
+  input[type="text"] {
+    box-shadow: none;
+    border: 0;
+    border-radius: 0;
+    padding: 0.25rem 0;
+    line-height: 1.75rem;
+    border-bottom: 2px solid transparent;
+
+    &::-webkit-input-placeholder, /* Chrome/Opera/Safari */
+    &::-moz-placeholder, /* Firefox 19+ */
+    &:-ms-input-placeholder, /* IE 10+ */
+    &:-moz-placeholder { /* Firefox 18- */
+      color: $black;
+    }
+
+    &:focus-visible {
+      @media (min-width: $media-medium) {
+        border-color: $purple-light;
+      }
+    }
+
+    &:hover {
+      @media (min-width: $media-medium) {
+        border-color: $purple;
+      }
+    }
+  }
+}

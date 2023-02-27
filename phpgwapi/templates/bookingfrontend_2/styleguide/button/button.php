@@ -1,45 +1,46 @@
+<section class="container py-5">
+  <?php 
+    $buttonTypes = array(
+      'primary', 'secondary', 'disabled'
+    );
 
-<div class="d-flex justify-content-between">
-  <a href="#home">Home</a> <span>Button</span>
-</div>
-<div class="container">
-  <div class="row border-top border-2 py-5">
-    <?php 
+    $buttonModifiers = array(
+      'normal', 'small', 'large', 'circle', 'transparent'
+    );
 
-      $buttonTypes = array(
-        'primary', 'secondary',
-      );
-
-      $buttonModifiers = array(
-        'small', 'large'
-      );
+    foreach ($buttonModifiers as $buttonModifier) {
+      echo '<div class="row mb-3">';
 
       foreach ($buttonTypes as $buttonType) {
-        echo '<div class="row mb-3">
-                <div class="col d-flex flex-column align-items-center mb-2">
-                  <button type="button" class="btn btn-'.$buttonType.' mb-2">Button</button>
-                    <div class="d-flex flex-column ps-3 ">
-                      <span>btn btn-'.$buttonType.'</span>
-                    </div>
-                </div>';
 
-                foreach ($buttonModifiers as $buttonModifier) {
-                  echo '<div class="col d-flex flex-column align-items-center mb-2">
-                          <button type="button" class="btn btn-'.$buttonType.' btn--'.$buttonModifier.' mb-2">Button</button>
-                          <div class="d-flex flex-column ps-3 ">
-                            <span>btn btn-'.$buttonType.'</span>
-                            <span>btn--'.$buttonModifier.'</span>
-                          </div>
-                        </div>';
-                }
+        $typeClass = ' pe-btn-'.$buttonType;
+        $modifierClass = ' pe-btn--'.$buttonModifier;
+        $contentType = '<span>pe-btn '.$typeClass.'</span>';
+        $contentModifier = '<span>'.$modifierClass.'</span>';
+        
+        if($buttonModifier == 'normal') {
+          $modifierClass = '';
+          $contentModifier = '';
+        }
 
-        echo '<div class="col d-flex flex-column align-items-center mb-2">
-                <button type="button" class="btn btn-primary mb-2" disabled>Button</button>
-                <span>Disabled</span>
-              </div>
-            </div>';
+        if($buttonModifier == 'transparent') {
+          $typeClass = '';
+        }
+
+        if($buttonType == 'disabled') {
+          $typeClass = ' pe-btn-primary';
+          $contentType = 'pe-btn';
+        }
+
+        echo '<div class="col-6 col-sm-4 d-flex flex-column align-items-center mb-4">
+                <button type="button" class="pe-btn '.$typeClass.$modifierClass.'"
+                '.(($buttonType == 'disabled') ? 'disabled' : '').'>'.(($buttonModifier == 'circle' || $buttonModifier == 'transparent') ? '<i class="fas fa-search"></i>' : 'Button').'</button>
+                <div class="d-flex flex-column mt-2 text-center">
+                  '. $contentType.$contentModifier .'
+                </div>
+              </div>';
       }
-
-    ?>
-  </div>
-</div>
+      echo '</div>';
+    }
+  ?>
+</section>

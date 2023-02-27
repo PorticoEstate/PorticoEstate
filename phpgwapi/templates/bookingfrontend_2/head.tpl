@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{userlang}">
     <head>
-		<title>{site_title} - utviklingsversjon av ny template</title>
+		<title>{site_title}</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1">
 		{metainfo_author}
@@ -24,6 +24,10 @@
 		<!-- BEGIN javascript -->
 		<script src="{javascript_uri}"></script>
 		<!-- END javascript -->
-		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
+		<link href="https://fonts.googleapis.com/css?family=Work+Sans" type="text/css" rel="StyleSheet">
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+		<link href="{webserver_url}/phpgwapi/templates/bookingfrontend_2/styleguide/main.css" rel="stylesheet">
+		<script src="{webserver_url}/phpgwapi/templates/bookingfrontend_2/styleguide/js/main.js"></script>
 	</head>
+	<div class="container-fluid container-lg">
 	{nav}
