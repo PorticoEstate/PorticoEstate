@@ -690,8 +690,7 @@
 				    inner join
 				        bb_rescategory bbrc on br.rescategory_id = bbrc.id
 				where
-		        	bbe.from_ > current_date
-				  	AND bbe.from_ >= '$from_date' "
+				  	bbe.from_ >= '$from_date' "
 						.$to_date_sql
 						.$org_info_sql
 						.$building_id_sql

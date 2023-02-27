@@ -1,9 +1,19 @@
-.container {
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
+:root {
+  --bs-gutter-x: 0.625rem;
+  --bs-gutter-y: 0.625rem;
+
+  @media (min-width: $media-small) {
+    --bs-gutter-x: 1.25rem;
+    --bs-gutter-y: 1.25rem;
+  }
 }
 
-.row {
-  margin-left: -1.25rem;
-  margin-right: -1.25rem;
+.container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+  --bs-gutter-x: 0.625rem;
+  padding-right: var(--bs-gutter-x);
+  padding-left: var(--bs-gutter-x);
+
+  @media (min-width: $media-small) {
+    --bs-gutter-x: 1.25rem;
+  }
 }

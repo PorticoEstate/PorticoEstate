@@ -1,0 +1,106 @@
+.menu {
+
+  &__toggler[aria-expanded="true"] {
+    i {
+      transform: rotate(30deg);
+    }
+  }
+
+  &__toggler {
+    background-color: transparent;
+    border: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    font-weight: $text-normal;
+    padding: 0.25rem 1.5rem 0.25rem 0.5rem;    
+
+    &:hover span{
+      text-decoration: underline;
+      color: $purple;
+    }
+
+    i {
+      position: absolute;
+      font-size: 0.625em;
+      color: $purple;
+      transform: rotate(90deg);
+      transition: transform 0.3s;
+      right: 0.5rem;
+      top: 0.35rem;
+    }
+  }
+
+  &__content {
+    position: absolute;
+    box-shadow: $box-shadow-large;
+    background: $white;
+    border-radius: $rounded-medium;
+    padding: 1.25rem 1.5rem;
+    margin-top: 0.25rem;
+    z-index: 1;
+
+    @media (min-width: $media-medium) {
+      border-color: $purple;
+    }
+
+    ul {
+      margin-bottom: 0;
+
+      li {
+        padding-bottom: 0.25rem;
+      }
+    }
+
+    a {
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    &--navbar {
+      min-width: 11rem;
+      right: -1rem;
+    }
+  }
+}
+
+.main-menu {
+  margin-top: 1rem; 
+  margin-bottom: 1rem;
+  border-top-right-radius: $rounded-large;
+  border-bottom-right-radius: $rounded-large;
+  box-shadow: $box-shadow-large;
+}
+
+.nav-toggler {
+  background: white;
+  border: 0;
+  padding: 0.25rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 2.75rem;
+
+  span {
+    height: 2px;
+    background: $purple;
+    margin-bottom: 0.4rem;
+    width: 100%;
+
+    &:first-child {
+      width: 70%;
+    }
+
+    &:last-child {
+      width: 60%;
+      margin-bottom: 0;
+    }
+  }
+
+  &:hover span {
+    background: $black;
+  }
+}

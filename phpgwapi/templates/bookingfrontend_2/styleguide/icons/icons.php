@@ -1,7 +1,3 @@
-
-<div class="d-flex justify-content-between">
-  <a href="#home">Home</a> <span>Icons</span>
-</div>
 <div class="container">
   <div class="row border-top border-2 py-5">
     <div class="row">

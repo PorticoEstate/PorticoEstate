@@ -715,11 +715,11 @@
 				'acl_add' => $this->acl_add
 			);
 
-			self::add_javascript('logistic', 'logistic', 'resource_allocation.js');
-			self::add_javascript('logistic', 'logistic', 'requirement_overview.js');
+			self::add_javascript('logistic', 'logistic', 'resource_allocation.js', false, array('combine' => true ));
+			self::add_javascript('logistic', 'logistic', 'requirement_overview.js', false, array('combine' => true ));
 
-			self::add_javascript('logistic', 'logistic', 'requirement.js');
-			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+			self::add_javascript('logistic', 'logistic', 'requirement.js', false, array('combine' => true ));
+			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js', false, array('combine' => true ));
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
 			self::render_template_xsl(array('activity/view_activity_item', 'requirement/requirement_overview',

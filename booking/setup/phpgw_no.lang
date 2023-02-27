@@ -50,7 +50,7 @@ building name	booking	no	Bygg/anlegg
 building schedule	booking	no	Kalender
 buildings	booking	no	Bygg/anlegg
 bygning	booking	no	Bygg/anlegg
-cancel	booking	no	Avbryt
+cancel	booking	no	Tilbake
 cancelled	booking	no	Avbestilt
 case officer	booking	no	Saksbehandler
 category	booking	no	Kategori

@@ -53,7 +53,7 @@
 		{
 
 			self::add_javascript('phpgwapi', 'html5-qrcode', 'html5-qrcode.min.js');
-			self::add_javascript('property', 'base', 'qrcode_scanner.js', 'text/javascript', true);
+			self::add_javascript('property', 'base', 'qrcode_scanner.js', true);
 
 			self::render_template_xsl(array('qrcode_scanner'), $data);
 		}

@@ -2386,10 +2386,60 @@
 			return $values;
 		}
 
+		public function get_rows_as_array($sql, $legal_keys=null)
+		{
+			$values = array();
+			$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record())
+			{
+				$values[] = $this->db->Record;
+			}
+			return $values;
+		}
+
+        public function get_search_data_all()
+		{
+            $values = array(
+				'activities'			=> $this->get_rows_as_array("SELECT * from bb_activity where active=1"),
+				'buildings'				=> $this->get_rows_as_array("SELECT * from bb_building where active=1"),
+				'building_resources'	=> $this->get_rows_as_array("SELECT * from bb_building_resource"),
+				'facilities'			=> $this->get_rows_as_array("SELECT * from bb_facility where active=1"),
+				'resources'				=> $this->get_rows_as_array("SELECT * from bb_resource where active=1 and hidden_in_frontend=0 and deactivate_calendar=0"),
+				'resource_activities'	=> $this->get_rows_as_array("SELECT * from bb_resource_activity"),
+				'resource_facilities'	=> $this->get_rows_as_array("SELECT * from bb_resource_facility"),
+				'resource_categories'	=> $this->get_rows_as_array("SELECT * from bb_rescategory where active=1"),
+				'resource_category_activity' => $this->get_rows_as_array("SELECT * from bb_rescategory_activity"),
+				'towns'					=> $this->get_search_data_location(),
+				'organizations'			=> $this->get_rows_as_array("SELECT * from bb_organization where active=1")
+			);
+
+            return $values;
+        }
+        public function get_search_data_location()
+		{
+            $values	= array();
+            $sql	= "SELECT DISTINCT bb_building.id as b_id, bb_building.name as b_name, fm_part_of_town.id, fm_part_of_town.name FROM"
+                . " bb_building {$this->join} fm_locations ON bb_building.location_code = fm_locations.location_code"
+                . " {$this->join} fm_location1 ON fm_locations.loc1 = fm_location1.loc1"
+                . " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id"
+                . " where bb_building.active=1";
+            $this->db->query($sql, __LINE__, __FILE__);
+            while ($this->db->next_record())
+            {
+                $values[] = array(
+                    'b_id'   => $this->db->f('b_id'),
+                    'b_name' => $this->db->f('b_name'),
+                    'id'	 => $this->db->f('id'),
+                    'name'	 => $this->db->f('name', true)
+                );
+            }
+            return $values;
+        }
+
 		public function get_booking_part_of_towns()
 		{
-			$values	 = array();
-			$sql	 = "SELECT DISTINCT fm_part_of_town.id, fm_part_of_town.name FROM"
+			$values	= array();
+			$sql	= "SELECT DISTINCT fm_part_of_town.id, fm_part_of_town.name FROM"
 				. " bb_building {$this->join} fm_locations ON bb_building.location_code = fm_locations.location_code"
 				. " {$this->join} fm_location1 ON fm_locations.loc1 = fm_location1.loc1"
 				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id ORDER BY name ASC";

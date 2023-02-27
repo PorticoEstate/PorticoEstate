@@ -1,4 +1,5 @@
-<body>
+<body style="visibility: hidden;">
+	<script>0</script>
 	<div id="debug-navbar">
 		{debug}
 	</div>

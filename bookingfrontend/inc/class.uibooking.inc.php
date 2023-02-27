@@ -7,6 +7,7 @@
 		public $public_functions = array
 			(
 			'building_schedule' => true,
+            'building_schedule_pe' => true,
 			'building_extraschedule' => true,
 			'resource_schedule' => true,
 			'organization_schedule' => true,
@@ -64,6 +65,33 @@
 
 			return $freetime;
 		}
+
+        public function building_schedule_pe()
+        {
+            $dates = phpgw::get_var('dates');
+            if(!$dates || !is_array($dates))
+            {
+                $dates = array(phpgw::get_var('date'));
+            }
+
+            $results = array();
+
+            foreach ($dates as $date) {
+                $_date = new DateTime($date);
+                $bookings = $this->bo->building_schedule_pe(phpgw::get_var('building_id', 'int'), $_date);
+                foreach ($bookings['results'] as &$booking) {
+                    $results = array_merge($results, $bookings);
+                }
+            }
+            $data = array
+            (
+                'ResultSet' => array(
+                    "totalResultsAvailable" =>  count($results),
+                    "Result" => $results
+                )
+            );
+            return $data;
+        }
 
 		public function building_schedule()
 		{

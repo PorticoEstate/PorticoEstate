@@ -300,7 +300,7 @@
 				}
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('tinybox2', 'packed', 'phpgwapi');
+			$GLOBALS['phpgw']->js->validate_file('tinybox2', 'packed', 'phpgwapi', false, array('combine' => true ));
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
 			$filter_location	 = isset($data['filter_location']) ? $data['filter_location'] : '';

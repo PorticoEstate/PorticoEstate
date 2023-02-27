@@ -1,3 +1,28 @@
+@mixin pill() {
+  padding: 0.713rem 1.5rem;
+  border: 1px solid $grey-light;
+  border-radius: $rounded-large;
+  color: $black;
+  background-color: $white;
+  line-height: 1.2;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: transparent;
+    box-shadow: $box-shadow, $box-focus-shadow;
+  }
+  
+  &:hover{
+    border-color: transparent;
+    color: $black;
+    box-shadow: $box-shadow, $box-focus-shadow-purple;
+  }
+}
+
 a {
   &,
   &:link,
@@ -12,55 +37,48 @@ a {
     color: $purple;
   }
 
+  &:focus-visible {
+    outline: none;  
+    box-shadow: $box-focus-shadow;
+  }
+
   &.arrow {
+    text-decoration: none;
+    position: relative;
+    padding-right: 1.25rem;
 
     &::after {
-      content:url(gfx/arrow.svg);
-      padding-left: 0.5rem;
+      content: "\f04b";
+      font-size: 0.625em;
+      color: $purple;
+      font-weight: 700;
+      font-family: "Font Awesome 5 Free";
+      position: absolute;
+      transform: rotate(-30deg);
+      right: 0;
+      top: -0.1rem;
     }
-
   }
 
   &.link-button {
+    @include pill;
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-weight: 700;
-    padding: 1.25rem 2rem;
-    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15);
-    border: 1px solid $grey-light;
     position: relative;
     text-decoration: none;
-    color: $black;
-    @extend .rounded-large;
+    box-shadow: $box-shadow;
+    padding-top: 0.963rem;
+    padding-bottom: 0.963rem;
 
     &::after {
       content: "\f054";
       padding-left: 1rem;
       font-size: 1em;
       color: $purple;
+      font-weight: $text-bold;
       font-family: "Font Awesome 5 Free";
-    }
-
-    &::before {
-      content: '';
-      border: 1px solid transparent;
-      position: absolute;
-      display: block;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      @extend .rounded-large;
-    }
-
-    &:hover {
-      border-color: $purple;
-      color: $black;
-
-      &::before {
-        border-color: $purple;
-      }
     }
   }
 }
