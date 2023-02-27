@@ -121,11 +121,11 @@
 								'ui' => 'building',
 								'text' => lang('Building') . ':',
 							),
-							array(
-								'type' => 'link',
-								'value' => $this->show_all_dashboard_applications() ? lang('Show only applications assigned to me') : lang('Show all applications'),
-								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_all_dashboard_applications'))
-							),
+//							array(
+//								'type' => 'link',
+//								'value' => $this->show_all_dashboard_applications() ? lang('Show only applications assigned to me') : lang('Show all applications'),
+//								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_all_dashboard_applications'))
+//							),
 						)
 					),
 				),
@@ -178,6 +178,15 @@
 					)
 				)
 			);
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'toggle_inactive',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => $this->show_all_dashboard_applications() ? lang('Show only applications assigned to me') : lang('Show all applications'),
+				'text'		 => $this->show_all_dashboard_applications() ? lang('Show only applications assigned to me') : lang('Show all applications'),
+				'custom_code'	 => 'window.open("' . self::link(array('menuaction' => $this->url_prefix . '.toggle_show_all_dashboard_applications')) . '", "_self");',
+			);
+
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

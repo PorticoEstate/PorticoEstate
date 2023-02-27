@@ -1898,9 +1898,9 @@
 		public function get_check_list_info()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
-			$check_list = $this->so->get_single_with_check_items($check_list_id, "open");
+			$check_list = $this->so->get_single_with_check_items($check_list_id);
 
-			return json_encode($check_list);
+			return $check_list;
 		}
 
 		// Returns open cases for a check list as JSON
@@ -3412,7 +3412,7 @@ HTML;
 
 		function get_report($check_list_id = null)
 		{
-			$inline_images = false;
+			$inline_images = phpgw::get_var('inline_images', 'bool');
 
 			$config = createObject('phpgwapi.config', 'property')->read();
 
@@ -3454,15 +3454,15 @@ HTML;
 
 			$report_data = array();
 
-			$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
+
 			$stylesheets = array();
-			$stylesheets[] = "{$webserver_url}/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css";
-//			$stylesheets[] = "{$webserver_url}/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
-			$stylesheets[] = "{$webserver_url}/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
+
+			$stylesheets[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css");
+			$stylesheets[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/base/css/fontawesome/css/all.min.css");
 
 			$javascripts = array();
-			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/popper/popper2.min.js";
-			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js";
+			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/popper/popper2.min.js");
+			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js");
 
 			$report_data['stylesheets'] = $stylesheets;
 			$report_data['javascripts'] = $javascripts;
@@ -3725,7 +3725,6 @@ HTML;
 					foreach ($case_files as &$case_file)
 					{
 						$case_file['text'] = lang('picture') . " #{$i}_{$n}";
-//						$case_file['link'] = "{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']}";
 						$case_file['link'] = self::link(array('menuaction' => 'controller.uicheck_list.view_image', 'img_id' => $case_file['file_id']));
 						if($inline_images)
 						{
@@ -3933,6 +3932,9 @@ HTML;
 			$report_data['responsible_logo'] = $report_info['control']->get_responsible_logo();
 
 			$report_data['findings'] = array_merge($report_data['findings'],$findings);
+
+			$report_data['return_as_pdf'] = phpgw::get_var('return_as_pdf', 'bool');
+
 //			_debug_array($report_data['findings']);die();
 
 			$this->render_report($report_data);
@@ -3961,43 +3963,55 @@ HTML;
 
 			$html = trim($proc->transformToXML($xml));
 
-			echo $html;
+			if($report_data['return_as_pdf'])
+			{
+				$this->makePDF($html);
+			}
+			else
+			{
+				echo $html;
 
-//			$this->makePDF($html);
+			}
 		}
 
 		public function makePDF($stringData)
 		{
-			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyMedia.php';
-			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyPdf.php';
-			$tmp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
-			$myFile = $tmp_dir . "/temp_report_" . strtotime(date('Y-m-d')) . ".html";
-			$fh = fopen($myFile, 'w') or die("can't open file");
-			fwrite($fh, $stringData);
-			fclose($fh);
 
-			$pdf_file_name = $tmp_dir . "/temp_contract_" . strtotime(date('Y-m-d')) . ".pdf";
+			phpgw::import_class('phpgwapi.html2pdf');
+			$html2pdf = new \Spipu\Html2Pdf\Html2Pdf('P', 'A4', 'no');
+			$html2pdf->writeHTML($stringData);
+			$html2pdf->output();
 
-			//var_dump($config->config_data['path_to_wkhtmltopdf']);
-			//var_dump($GLOBALS['phpgw_info']);
-			$wkhtmltopdf_executable = '/usr/local/bin/wkhtmltopdf';
-			if (!is_file($wkhtmltopdf_executable))
-			{
-				throw new Exception('wkhtmltopdf not configured correctly');
-			}
-			$snappy = new SnappyPdf();
-			$snappy->setExecutable($wkhtmltopdf_executable); // or whatever else
-			$snappy->save($myFile, $pdf_file_name);
-
-			if (!is_file($pdf_file_name))
-			{
-				throw new Exception('pdf-file not produced');
-			}
-			$filesize = filesize($pdf_file_name);
-			$browser = CreateObject('phpgwapi.browser');
-			$browser->content_header('report.pdf', 'application/pdf', $filesize);
-
-			readfile($pdf_file_name);
+//			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyMedia.php';
+//			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyPdf.php';
+//			$tmp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
+//			$myFile = $tmp_dir . "/temp_report_" . strtotime(date('Y-m-d')) . ".html";
+//			$fh = fopen($myFile, 'w') or die("can't open file");
+//			fwrite($fh, $stringData);
+//			fclose($fh);
+//
+//			$pdf_file_name = $tmp_dir . "/temp_contract_" . strtotime(date('Y-m-d')) . ".pdf";
+//
+//			//var_dump($config->config_data['path_to_wkhtmltopdf']);
+//			//var_dump($GLOBALS['phpgw_info']);
+//			$wkhtmltopdf_executable = '/usr/local/bin/wkhtmltopdf';
+//			if (!is_file($wkhtmltopdf_executable))
+//			{
+//				throw new Exception('wkhtmltopdf not configured correctly');
+//			}
+//			$snappy = new SnappyPdf();
+//			$snappy->setExecutable($wkhtmltopdf_executable); // or whatever else
+//			$snappy->save($myFile, $pdf_file_name);
+//
+//			if (!is_file($pdf_file_name))
+//			{
+//				throw new Exception('pdf-file not produced');
+//			}
+//			$filesize = filesize($pdf_file_name);
+//			$browser = CreateObject('phpgwapi.browser');
+//			$browser->content_header('report.pdf', 'application/pdf', $filesize);
+//
+//			readfile($pdf_file_name);
 
 		}
 		function view_image()

@@ -65,6 +65,13 @@
         border-radius: 0;
         margin-bottom: 0;
       }
+      
+      label {
+        color: $purple;
+        font-weight: $text-bolder;
+        font-size: 1rem;
+        line-height: 1.2em;
+      }
 
     }
 
@@ -76,22 +83,17 @@
     }
   }
 
-  label {
-    color: $purple;
-    font-weight: $text-bolder;
-    font-size: 1rem;
-    line-height: 1.2em;
-
-    &:focus-within {
-      box-shadow: 2px 2px 2px red;
-    }
+  .select2-container--select-v2 
+  .select2-selection--single 
+  .select2-selection__rendered {
+    padding: 0.25rem 0;
   }
 
   input[type="text"] {
     box-shadow: none;
     border: 0;
     border-radius: 0;
-    padding: 0;
+    padding: 0.25rem 0;
     line-height: 1.75rem;
     border-bottom: 2px solid transparent;
 

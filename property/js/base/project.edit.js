@@ -339,6 +339,7 @@ $(document).ready(function ()
 		}
 
 		var b_account_id = $('#b_account_id').val();
+		var external_project_id = $('#external_project_id').val();
 
 		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: data.id, b_account_id: b_account_id};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
@@ -360,6 +361,18 @@ $(document).ready(function ()
 					}
 					else
 					{
+						if(data.mandatory_external_project == 1 && !external_project_id)
+						{
+							$('#external_project_name').addClass('error');
+							$("#external_project_name").attr("data-validation", "required");
+						}
+						else
+						{
+							$('#external_project_name').removeClass('error');
+							$('#select2-global_category_id-container').addClass('valid');
+							$("#external_project_name").removeAttr("data-validation");
+						}
+
 						$('#select2-global_category_id-container').addClass('valid');
 						$('#select2-global_category_id-container').removeClass('error');
 						$('#validatet_category').val(1);

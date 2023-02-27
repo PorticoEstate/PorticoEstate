@@ -158,23 +158,13 @@
 								'value' => '',
 								'text' => lang('To') . ':',
 							),
-							array(
-								'type' => 'link',
-								'value' => $_SESSION['show_all_completed_reservations'] ? lang('Show only unexported') : lang('Show all'),
-								'href' => $this->link_to('toggle_show_all_completed_reservations'),
-							),
+//							array(
+//								'type' => 'link',
+//								'value' => $_SESSION['show_all_completed_reservations'] ? lang('Show only unexported') : lang('Show all'),
+//								'href' => $this->link_to('toggle_show_all_completed_reservations'),
+//							),
 						)
 					),
-//					'list_actions' => array(
-//						'item' => array(
-//							array(
-//								'type' => 'button',
-//								'name' => 'export',
-//								'value' => lang('Export') . '...',
-//								'onClick' => "export_completed_reservations();"
-//							),
-//						)
-//					),
 				),
 				'datatable' => array(
 					'source' => $this->link_to('index', array('phpgw_return_as' => 'json')),
@@ -283,6 +273,15 @@ JS;
 				'className'		 => 'save',
 				'custom_code'	 => "export_completed_reservations();",
 				'text'			 => lang('Export') . '...',
+			);
+
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'toggle_inactive',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => $_SESSION['show_all_completed_reservations'] ? lang('Show only unexported') : lang('Show all'),
+				'text'		 => $_SESSION['show_all_completed_reservations'] ? lang('Show only unexported') : lang('Show all'),
+				'custom_code'	 => 'window.open("' . $this->link_to('toggle_show_all_completed_reservations') . '", "_self");',
 			);
 
 			self::render_template_xsl('datatable_jquery', $data);

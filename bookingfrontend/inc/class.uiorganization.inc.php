@@ -252,7 +252,7 @@
 			phpgwapi_jquery::load_widget("core");
 
 			$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
-			self::add_javascript('bookingfrontend', 'base', 'organization.js', 'text/javascript', true);
+			self::add_javascript('bookingfrontend', 'base', 'organization.js', true);
 
 			self::render_template_xsl('organization', array('organization' => $organization, 'config_data' => $config->config_data));
 		}

@@ -33,7 +33,9 @@
 
 	if( !isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{
-		$javascripts[] = "/phpgwapi/templates/portico/js/base.js";
+//		$javascripts[] = "/phpgwapi/templates/portico/js/base.js";
+		//https://medium.com/@fbnlsr/how-to-get-rid-of-the-flash-of-unstyled-content-d6b79bf5d75f
+		$GLOBALS['phpgw']->js->add_external_file("/phpgwapi/templates/portico/js/base.js", $end_of_page = true, array('combine' => true ));
 	}
 
 	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )

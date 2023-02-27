@@ -1070,6 +1070,7 @@ function createTable(d, u, c, r, cl, l, callback)
 	var tableClass = (cl) ? cl : "table";
 
 	xTable.setAttribute('class', tableClass);
+	xTable.setAttribute('width', '100%');
 
 	$.each(c, function (i, v)
 	{

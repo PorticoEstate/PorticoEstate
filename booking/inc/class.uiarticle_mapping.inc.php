@@ -349,7 +349,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript($this->currentapp, 'base', 'article_mapping.index.js', 'text/javascript', true);
+			self::add_javascript($this->currentapp, 'base', 'article_mapping.index.js', true);
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
