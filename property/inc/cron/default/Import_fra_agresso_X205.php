@@ -329,7 +329,7 @@
 
 			try
 			{
-				$listing = $filesystem->listContents();
+				$listing = $filesystem->listContents($directory_remote);
 			}
 			catch (Exception $exc)
 			{
