@@ -1476,7 +1476,8 @@
 			$defaultStartHour			 = 8;
 			$defaultStartMinute			 = 0;
 			$defaultStartHour_fallback	 = 8;
-			$defaultEndHour				 = 16;
+			$defaultEndHour				 = 23;
+			$defaultEndHour_fallback	 = 23;
 
 			$days = array(
 				0	 => "Sunday",
@@ -1552,12 +1553,12 @@
 					$test	 = $limitDate->format('Y-m-d');
 					$test	 = $checkDate->format('Y-m-d');
 
-					$active_seasons = $soseason->get_resource_seasons($resource['id']);
+					$active_seasons = $soseason->get_resource_seasons($resource['id'], $checkDate->format('Y-m-d'), $limitDate->format('Y-m-d'));
 
 					do
 					{
 						$StartTime = clone ($checkDate);
-						if ($defaultStartHour > $defaultEndHour && $booking_lenght > -1)
+						if ($defaultStartHour > $defaultEndHour && ($booking_lenght > -1 || $resource['booking_time_default_end'] == -1))
 						{
 							$defaultStartHour = $defaultStartHour_fallback;
 						}
@@ -1592,16 +1593,24 @@
 						{
 							$endTime->setTime($booking_end, 0, 0);
 						}
-						else
+						else if($booking_end > -1 && !$booking_lenght > -1)
 						{
 							$test = $endTime->format('i');
 //							$endTime->setTime(min($booking_end, $StartTime->format('H')) + 1, 0, 0);
 							$endTime->setTime(min($booking_end, $StartTime->format('H')), (int)$endTime->format('i') + $booking_time_minutes, 0);
 						}
+						else
+						{
+							$endTime->setTime($StartTime->format('H'), (int)$endTime->format('i') + $booking_time_minutes, 0);
+						}
 
 						$checkDate = clone ($endTime);
 
 						$within_season = false;
+
+						/**
+						 * Expensive
+						 */
 						foreach ($active_seasons as $season_id)
 						{
 							$within_season = $soseason->timespan_within_season($season_id, $StartTime, $endTime);
@@ -1652,7 +1661,7 @@
 							];
 						}
 
-						if ($booking_lenght == -1)
+						if ($booking_lenght == -1 || $resource['booking_time_default_end'] == -1)
 						{
 							$defaultStartHour = $endTime->format('H');
 							$defaultStartMinute = (int)$endTime->format('i');
