@@ -703,6 +703,10 @@
   padding-bottom: 0.5rem;
 }
 
+fieldset {
+  padding: 0;
+}
+
 :root {
   --bs-gutter-x: 0.625rem;
   --bs-gutter-y: 0.625rem;

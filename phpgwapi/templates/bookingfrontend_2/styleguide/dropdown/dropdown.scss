@@ -353,7 +353,6 @@
   border: 1px solid $grey;
   background-color: $white;
   box-shadow: $box-shadow-large;
-  //transition: border-radius 0.2s;
   
   &:focus-within {
     box-shadow: $box-shadow-large, $box-focus-shadow;
@@ -364,7 +363,6 @@
   }
 
   &.js-slidedown--open {
-    //border-radius: $rounded-medium;
     border: 1px solid transparent;
 
     .slidedown__toggler {

@@ -50,20 +50,22 @@ $(document).ready(function () {
     </div>
   </div>
   <div class="d-flex flex-column flex-md-row justify-content-between mb-4">
-    <div class="filter-group align-self-start mb-4 mb-md-0">
-      <label class="filter-group__item">
-        <input type="radio" name="type_group" value="booking" checked>
-        <span class="filter-group__item__radio">Leie</span>
-      </label>
-      <label class="filter-group__item">
-        <input type="radio" name="type_group" value="event">
-        <span class="filter-group__item__radio">Arrangement</span>
-      </label>
-      <label class="filter-group__item">
-        <input type="radio" name="type_group" value="organization">
-        <span class="filter-group__item__radio">Organisasjon</span>
-      </label>
-    </div>
+    <fieldset>
+      <div class="filter-group align-self-start mb-4 mb-md-0">
+        <label class="filter-group__item">
+          <input type="radio" name="type_group" value="booking" checked>
+          <span class="filter-group__item__radio">Leie</span>
+        </label>
+        <label class="filter-group__item">
+          <input type="radio" name="type_group" value="event">
+          <span class="filter-group__item__radio">Arrangement</span>
+        </label>
+        <label class="filter-group__item">
+          <input type="radio" name="type_group" value="organization">
+          <span class="filter-group__item__radio">Organisasjon</span>
+        </label>
+      </div>
+    </fieldset>
     <button type="button" class="pe-btn pe-btn-secondary align-self-end d-none d-md-flex">
       Nullstill søk
       <i class="fas fa-undo ms-2"></i>
@@ -76,7 +78,7 @@ $(document).ready(function () {
         <div class="col col-md-6 col-lg-3 mb-3">
           <div class="multisearch__inner__item">
             <label for="search-event-text">Søk</label>
-            <input id="search-event--text" type="text" placeholder="Søk">
+            <input id="search-event-text" type="text" placeholder="Søk">
           </div>
         </div>
         <div class="col col-md-6 col-lg-3 mb-3 multisearch__inner--border">
