@@ -1,4 +1,4 @@
-<html>
+<html lang="en">
   <head>
     
     <meta charset="utf-8">
@@ -52,7 +52,7 @@
             'filename' => 'button',
           ),
           'Link' => array(
-            'name' => 'Link',
+            'name' => 'Lenke',
             'folder' => 'link',
             'filename' => 'link',
           ),
