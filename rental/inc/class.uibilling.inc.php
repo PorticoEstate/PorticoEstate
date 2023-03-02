@@ -1629,7 +1629,17 @@ JS;
 						unlink($tmpfname);
 						break;
 					case 'ssh';
-						$transfer_ok = $connection->write(basename($filename), $content);
+						try
+						{
+							$connection->write(basename($filename), $content);
+							$transfer_ok = true;
+						}
+						catch (FilesystemException | UnableToWriteFile $exception)
+						{
+							// handle the error
+							$transfer_ok = false;
+						}
+
 						break;
 					default:
 						$transfer_ok = false;

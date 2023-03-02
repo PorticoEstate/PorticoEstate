@@ -490,7 +490,7 @@
 		{
 //			$download = 'on';
 //			$download = False;
-			$this->debug=True;
+//			$this->debug=True;
 			//Generer batch ID
 			$batchid = $this->soXport->next_batchid();
 			if ($download == 'on')
@@ -935,8 +935,9 @@
 					'ALLOCATION.PERIOD'	 => $line['periodization_start'] //dummy
 				);
 
-				$periodization		 = $line['periodization'];
-				$periodization_start = $line['periodization_start'];
+	// TEST
+	//			$periodization		 = $line['periodization'];
+	//			$periodization_start = $line['periodization_start'];
 			}
 
 			if ($accountline)
@@ -1129,7 +1130,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 
-		protected function transfer( $Filnavn, $batchid, $tranfser_bilag )
+		protected function transfer($Filnavn, $batchid, $tranfser_bilag )
 		{
 			$transfer_ok = false;
 			if ($this->config->config_data['common']['method'] == 'ftp' || $this->config->config_data['common']['method'] == 'ssh')
@@ -1156,7 +1157,16 @@
 						break;
 					case 'ssh';
 						$data_to_send	 = file_get_contents($Filnavn);
-						$transfer_ok	 = $connection->write(basename($Filnavn), $data_to_send);
+						try
+						{
+							$connection->write(basename($Filnavn), $data_to_send);
+							$transfer_ok = true;
+						}
+						catch (FilesystemException | UnableToWriteFile $exception)
+						{
+							// handle the error
+							$transfer_ok = false;
+						}
 						break;
 					default:
 						$transfer_ok	 = false;
@@ -1201,30 +1211,30 @@
 					break;
 				case 'ssh';
 					$connection = new Filesystem(new SftpAdapter(
-						new SftpConnectionProvider(
-							$server, // host (required)
-							$user, // username (required)
-							$password, // password (optional, default: null) set to null if privateKey is used
-							null, // private key (optional, default: null) can be used instead of password, set to null if password is set
-							null, // passphrase (optional, default: null), set to null if privateKey is not used or has no passphrase
-							$port, // port (optional, default: 22)
-							false, // use agent (optional, default: false)
-							10, // timeout (optional, default: 10)
-							40, // max tries (optional, default: 4)
-							null, // host fingerprint (optional, default: null),
-							null, // connectivity checker (must be an implementation of 'League\Flysystem\PhpseclibV2\ConnectivityChecker' to check if a connection can be established (optional, omit if you don't need some special handling for setting reliable connections)
-						),
-						$basedir, // root path (required)
-						PortableVisibilityConverter::fromArray([
+							new SftpConnectionProvider(
+								$server, // host (required)
+								$user, // username (required)
+								$password, // password (optional, default: null) set to null if privateKey is used
+								null, // private key (optional, default: null) can be used instead of password, set to null if password is set
+								null, // passphrase (optional, default: null), set to null if privateKey is not used or has no passphrase
+								$port, // port (optional, default: 22)
+								false, // use agent (optional, default: false)
+								10, // timeout (optional, default: 10)
+								40, // max tries (optional, default: 4)
+								null, // host fingerprint (optional, default: null),
+								null, // connectivity checker (must be an implementation of 'League\Flysystem\PhpseclibV2\ConnectivityChecker' to check if a connection can be established (optional, omit if you don't need some special handling for setting reliable connections)
+							),
+							$basedir, // root path (required)
+							PortableVisibilityConverter::fromArray([
 							'file' => [
 								'public' => 0640,
 								'private' => 0604,
-							],
+								],
 							'dir' => [
 								'public' => 0740,
 								'private' => 7604,
-							],
-						])
+								],
+							])
 					));
 
 					break;
