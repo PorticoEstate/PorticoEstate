@@ -43,7 +43,7 @@
     <div class="col-12 col-md-6 col-lg-4 mb-4 d-flex flex-column align-items-center">
       <span class="mb-2 text-bold align-self-start">Tekstfelt med ikon</span>
       <label class="input-icon w-100">
-        <i class="fas fa-calendar-alt"></i>
+        <span class="fas fa-calendar-alt icon" aria-hidden="true"></span>
         <input type="text" value="Tekstfelt med ikon"/>
       </label>
       <div class="d-flex flex-column mt-2 text-center">
@@ -55,7 +55,7 @@
       <label class="input-icon input-icon--action w-100">
         <input type="text" value="Tekstfelt med knapp"/>
         <button type="button" aria-label="Mer informasjon">
-          <i class="fas fa-info-circle"></i>
+          <span class="fas fa-info-circle icon" title="Les mer informasjon"></span>
         </button> 
       </label>
       <div class="d-flex flex-column mt-2 text-center">

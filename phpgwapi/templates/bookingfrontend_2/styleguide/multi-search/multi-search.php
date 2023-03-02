@@ -15,7 +15,7 @@ $(document).ready(function () {
 <section class="container py-5">
   <div class="multisearch w-100 mb-5">
     <div class="multisearch__inner w-100">
-      <div class="row flex-column flex-md-row">
+      <div class="row flex-column flex-md-row flex-md-nowrap">
         <div class="col mb-3 mb-md-0">
           <div class="multisearch__inner__item">
             <label for="id_label_area">Område</label>
@@ -45,7 +45,7 @@ $(document).ready(function () {
       </div>
       <div class="w-100">
         <button type="button" class="pe-btn pe-btn-primary pe-btn--large w-100 mb-2 mt-md-3 d-md-none">Søk</button>
-        <button type="button" class="pe-btn pe-btn-primary pe-btn--circle d-none d-md-flex multisearch__inner__icon-button"><i class="fas fa-search"></i></button>
+        <button type="button" class="pe-btn pe-btn-primary pe-btn--circle d-none d-md-flex multisearch__inner__icon-button"><span class="fas fa-search" title="Søk"></span></button>
       </div>
     </div>
   </div>
@@ -68,7 +68,7 @@ $(document).ready(function () {
     </fieldset>
     <button type="button" class="pe-btn pe-btn-secondary align-self-end d-none d-md-flex">
       Nullstill søk
-      <i class="fas fa-undo ms-2"></i>
+      <span class="fas fa-undo ms-2" aria-hidden="true"></span>
     </button>
   </div>
   <div class="multisearch w-100">
@@ -172,7 +172,7 @@ $(document).ready(function () {
   <div class="d-flex d-md-none mt-3 justify-content-end">
     <button type="button" class="pe-btn pe-btn-secondary align-self-end">
       Nullstill søk
-      <i class="fas fa-undo ms-2"></i>
+      <span class="fas fa-undo ms-2" aria-hidden="true"></span>
     </button>
   </div>
 </section>
