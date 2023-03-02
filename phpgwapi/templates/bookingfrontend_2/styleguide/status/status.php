@@ -23,7 +23,7 @@
       foreach ($statusTypes as $key => $statusLabel) {      
         echo '<div class="col-md-6 col-lg-4 d-flex flex-column align-items-center mb-2">
                 <div class="status status--'.$key.' w-100">
-                  <i class="fas fa-info-circle"></i>
+                  <span class="fas fa-info-circle icon" aria-hidden="true"></span>
                   '.$statusLabel.'
                 </div>
                 <div class="d-flex flex-column mt-2 text-center">

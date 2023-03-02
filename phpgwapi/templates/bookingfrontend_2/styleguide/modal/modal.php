@@ -2,7 +2,7 @@
   <!-- Button trigger modal -->
   <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector" data-bs-toggle="modal" data-bs-target="#selectLanguage" aria-label="Velg språk">
     <img src="gfx/norway.png" alt="Norsk flagg" class="">
-    <i class="fas fa-chevron-down"></i>
+    <span class="fas fa-chevron-down icon" aria-hidden="true"></span>
   </button>
 
   <!-- Modal -->

@@ -1,7 +1,7 @@
 .menu {
 
   &__toggler[aria-expanded="true"] {
-    i {
+    .icon {
       transform: rotate(30deg);
     }
   }
@@ -15,12 +15,12 @@
     font-weight: $text-normal;
     padding: 0.25rem 1.5rem 0.25rem 0.5rem;    
 
-    &:hover span{
+    &:hover span.text {
       text-decoration: underline;
       color: $purple;
     }
 
-    i {
+    .icon {
       position: absolute;
       font-size: 0.625em;
       color: $purple;

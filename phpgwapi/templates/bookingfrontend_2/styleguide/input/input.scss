@@ -89,7 +89,7 @@ input[type="text"] {
     width: 100%;
   }
 
-  i {
+  .icon {
     color: $purple;
     position: absolute;
     left: 1.5rem;
@@ -116,7 +116,7 @@ input[type="text"] {
       &:focus-visible {
         outline: none;
 
-        i {
+        .icon {
           color: $purple-light;
         }
       }
@@ -127,7 +127,7 @@ input[type="text"] {
         }
       }
 
-      i { 
+      .icon { 
         position: relative;
         font-size: 1.25rem;
         color: $black;
