@@ -45,7 +45,10 @@ $(document).ready(function () {
       </div>
       <div class="w-100">
         <button type="button" class="pe-btn pe-btn-primary pe-btn--large w-100 mb-2 mt-md-3 d-md-none">Søk</button>
-        <button type="button" class="pe-btn pe-btn-primary pe-btn--circle d-none d-md-flex multisearch__inner__icon-button"><span class="fas fa-search" title="Søk"></span></button>
+        <button type="button" class="pe-btn pe-btn-primary pe-btn--circle d-none d-md-flex multisearch__inner__icon-button">
+          <span class="sr-only">Søk</span>  
+          <span class="fas fa-search" title="Søk"></span>
+        </button>
       </div>
     </div>
   </div>
