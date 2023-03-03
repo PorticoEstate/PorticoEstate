@@ -54,6 +54,7 @@ $(document).ready(function () {
   </div>
   <div class="d-flex flex-column flex-md-row justify-content-between mb-4">
     <fieldset>
+      <legend class="mb-2 text-bold text-body">Velg kategori</legend>
       <div class="filter-group align-self-start mb-4 mb-md-0">
         <label class="filter-group__item">
           <input type="radio" name="type_group" value="booking" checked>

@@ -7,7 +7,7 @@
         <span></span>
         <span></span>
       </button>
-      <div class="offcanvas offcanvas-start main-menu" tabindex="-1" id="offcanvasLeft" aria-labelledby="offcanvasLeftLabel">
+      <div class="offcanvas offcanvas-start main-menu" tabindex="-1" id="offcanvasLeft">
         <div class="offcanvas-header justify-content-end">
           <button type="button" class="pe-btn pe-btn--transparent text-xl" data-bs-dismiss="offcanvas" aria-label="Lukk meny">
             <span class="fas fa-times" title="Lukk meny"></span>
