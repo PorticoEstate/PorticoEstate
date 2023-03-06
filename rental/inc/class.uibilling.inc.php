@@ -1081,12 +1081,12 @@ JS;
 								'text' => lang('field_of_responsibility'),
 								'list' => $field_of_responsibility_options
 							),
-							array(
-								'type' => 'link',
-								'value' => lang('create_billing'),
-								'onclick' => 'onCreateBilling()',
-								'class' => 'new_item'
-							)
+//							array(
+//								'type' => 'link',
+//								'value' => lang('create_billing'),
+//								'onclick' => 'onCreateBilling()',
+//								'class' => 'new_item'
+//							)
 						)
 					)
 				),
@@ -1161,13 +1161,19 @@ JS;
 				)
 			);
 
-			$parameters = array
-				(
-				'parameter' => array
-					(
-					array
-						(
-						'name' => 'id',
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'create_billing',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => lang('create_billing'),
+				'text'		 => lang('create_billing'),
+				'custom_code'	 => 'onCreateBilling();',
+			);
+
+			$parameters = array(
+				'parameter' => array(
+					array(
+						'name'	 => 'id',
 						'source' => 'id'
 					)
 				)
