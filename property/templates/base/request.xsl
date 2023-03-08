@@ -72,8 +72,10 @@
 	<div class="pure-control-group">
 		<label for="name">
 			<xsl:value-of select="name"/>
-			<xsl:text>::</xsl:text>
-			<xsl:value-of select="descr"/>
+			<xsl:if test="descr !=''">
+				<xsl:text>::</xsl:text>
+				<xsl:value-of select="descr"/>
+			</xsl:if>
 		</label>
 		<input type="text" size="3" name="values[priority_key][{id}]" value="{priority_key}">
 			<xsl:attribute name="title">

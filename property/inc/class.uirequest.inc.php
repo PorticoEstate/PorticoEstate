@@ -848,14 +848,14 @@
 				'form'			 => array(
 					'toolbar' => array(
 						'item' => array(
-							array
-								(
-								'type'		 => 'link',
-								'value'		 => lang('Priority key'),
-								'href'		 => '#',
-								'class'		 => '',
-								'onclick'	 => "JqueryPortico.openPopup({menuaction:'property.uirequest.priority_key'})"
-							),
+//							array
+//								(
+//								'type'		 => 'link',
+//								'value'		 => lang('Priority key'),
+//								'href'		 => '#',
+//								'class'		 => '',
+//								'onclick'	 => "JqueryPortico.openPopup({menuaction:'property.uirequest.priority_key'})"
+//							),
 							array
 								(
 								'type'	 => 'date-picker',
@@ -1081,6 +1081,15 @@
 					);
 				}
 				unset($parameters);
+
+				$data['datatable']['actions'][] = array(
+					'my_name'		 => 'priority_key',
+					'className'		 => 'save',
+					'statustext'	 => lang('Priority key'),
+					'text'			 => lang('Priority key'),
+					'type'			 => 'custom',
+					'custom_code'	 => "JqueryPortico.openPopup({menuaction:'property.uirequest.priority_key'});"
+				);
 			}
 			else
 			{
@@ -1099,14 +1108,14 @@
 											}
 
 											for(i=0;i<myChecks.length;i++)
-				{
+											{
 												   $('<input>').attr({
 													   type: 'hidden',
 													   id: 'add_request[request_id][]',
 													   name: 'add_request[request_id][]',
 													   value: myChecks[i].value
 												   }).appendTo('#custom_values_form');			 
-			}
+											}
 
 											var path_update = new Array();
 											path_update['menuaction'] = '{$update_menuaction}';
