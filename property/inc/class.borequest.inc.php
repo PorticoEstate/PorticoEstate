@@ -239,6 +239,12 @@
 				'name'		 => lang('closed date'),
 				'sortable'	 => true
 			);
+			$columns['responsible_unit']		 = array
+				(
+				'id'		 => 'responsible_unit',
+				'name'		 => lang('responsible unit'),
+				'sortable'	 => true
+			);
 
 			return $columns;
 		}
@@ -543,6 +549,10 @@
 			$cols_extra					 = $this->so->cols_extra;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns'] : array();
+
+			$request_responsible_unit = createObject('property.bogeneric');
+			$request_responsible_unit->get_location_info('request_responsible_unit');
 
 			foreach ($values as & $value)
 			{
@@ -562,10 +572,16 @@
 						$value[$cols_extra[$j]] = $location_data[$cols_extra[$j]];
 					}
 				}
+
+				if(!empty($value['responsible_unit']) && in_array('responsible_unit', $custom_cols))
+				{
+					$responsible_unit = $request_responsible_unit->read_single(array('location_info' => array('type' => 'request_responsible_unit'),'id' => $value['responsible_unit']));
+					$value['responsible_unit'] = $responsible_unit['name'];
+				}
+
 			}
 
 			$column_list = $this->get_column_list();
-			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns'] : array();
 			foreach ($custom_cols as $col_id)
 			{
 				$this->uicols['input_type'][]	 = 'text';

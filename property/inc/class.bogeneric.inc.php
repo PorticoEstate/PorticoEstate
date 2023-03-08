@@ -42,7 +42,7 @@
 		var $cat_id;
 		var $location_info	 = array();
 		var $appname;
-		var $allrows;
+		var $allrows, $custom, $so, $bocommon, $type, $type_id, $total_records, $uicols, $use_session;
 		var $public_functions = array
 			(
 			'get_autocomplete'	 => true,
@@ -193,8 +193,15 @@
 
 		public function read_single( $data = array() )
 		{
+			static $value_set = array();
+
+			if(!empty($data['id']) && isset($value_set[$data['id']]))
+			{
+				return $value_set[$data['id']];
+			}
+
 			$values = array();
-			if (isset($data['location_info']) && $data['location_info']['type'])
+			if (!$this->location_info && isset($data['location_info']) && $data['location_info']['type'])
 			{
 				$this->get_location_info($data['location_info']['type'], (int)$data['location_info']['type_id']);
 				unset($data['location_info']);
@@ -215,6 +222,8 @@
 			{
 				$values = $this->custom->prepare($values, $this->location_info['acl_app'], $system_location, $data['view']);
 			}
+
+			$value_set[$data['id']] = $values;
 			return $values;
 		}
 

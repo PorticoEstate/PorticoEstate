@@ -373,7 +373,8 @@
 			$uicols['classname'][]	 = '';
 			$uicols['sortable'][]	 = true;
 
-			$cols			 .= ",$entity_table.start_date,$entity_table.entry_date,$entity_table.closed_date,$entity_table.in_progress_date,$entity_table.delivered_date";
+			$cols			 .= ",$entity_table.responsible_unit,$entity_table.start_date,$entity_table.entry_date,$entity_table.closed_date,$entity_table.in_progress_date,$entity_table.delivered_date";
+			$cols_return[]	 = "responsible_unit";
 			$cols_return[]	 = "start_date";
 			$cols_return[]	 = "entry_date";
 			$cols_return[]	 = "closed_date";
@@ -864,7 +865,7 @@
 			{
 				$this->_db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
-			
+
 			$_datatype = array();
 			foreach ($this->uicols['name'] as $key => $_name)
 			{
