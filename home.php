@@ -135,18 +135,31 @@ HTML;
 		(isset($GLOBALS['phpgw_info']['server']['checkfornewversion']) &&
 		$GLOBALS['phpgw_info']['server']['checkfornewversion']))
 	{
-		$GLOBALS['phpgw']->network->set_addcrlf(False);
-		$lines = (array)$GLOBALS['phpgw']->network->gethttpsocketfile('https://raw.githubusercontent.com/PorticoEstate/PorticoEstate/master/setup/currentversion');
-		//currentversion:0.9.17.567
+		// Create a stream
+		$opts = array(
+			'http' => array(
+				'method' => "GET",
+			    'proxy' => 'proxy.bergen.kommune.no:8080',
+			)
+		);
 
-		for ($i=0; $i < count($lines); ++$i)
+		if (isset($GLOBALS['phpgw_info']['server']['httpproxy_server']))
 		{
-			if ( preg_match('/currentversion/',$lines[$i]))
-			{
-				$line_found = explode(':',chop($lines[$i]));
-			}
+			$opts['http']['proxy'] = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
 		}
-		if($GLOBALS['phpgw']->common->cmp_version($GLOBALS['phpgw_info']['server']['versions']['phpgwapi'],$line_found[1]))
+
+		$context = stream_context_create($opts);
+
+		$contents = file_get_contents('https://raw.githubusercontent.com/PorticoEstate/PorticoEstate/master/setup/currentversion', false, $context);
+		if (preg_match('/currentversion/', $contents))
+		{
+			$line_found = explode(':', rtrim($contents));
+		}
+
+		/**
+		 * compares for major versions only
+		 */
+		if($GLOBALS['phpgw']->common->cmp_version($GLOBALS['phpgw_info']['server']['versions']['phpgwapi'],$line_found[1], false))
 		{
 			echo '<p>There is a new version of PorticoEstate available from <a href="'
 				. 'https://github.com/PorticoEstate/PorticoEstate">https://github.com/PorticoEstate/PorticoEstate</a>';
