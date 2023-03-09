@@ -20,9 +20,9 @@
 		'noheader'                => true,
 		'nonavbar'                => false,
 		'currentapp'              => 'home',
-		'enable_network_class'    => true,
-		'enable_contacts_class'   => true,
-		'enable_nextmatchs_class' => true
+//		'enable_network_class'    => true,
+//		'enable_contacts_class'   => true,
+//		'enable_nextmatchs_class' => true
 	);
 
 	/**
@@ -136,7 +136,9 @@ HTML;
 		$GLOBALS['phpgw_info']['server']['checkfornewversion']))
 	{
 		$GLOBALS['phpgw']->network->set_addcrlf(False);
-		$lines = $GLOBALS['phpgw']->network->gethttpsocketfile('http://www.phpgroupware.org/currentversion');
+		$lines = (array)$GLOBALS['phpgw']->network->gethttpsocketfile('https://raw.githubusercontent.com/PorticoEstate/PorticoEstate/master/setup/currentversion');
+		//currentversion:0.9.17.567
+
 		for ($i=0; $i < count($lines); ++$i)
 		{
 			if ( preg_match('/currentversion/',$lines[$i]))
@@ -146,8 +148,8 @@ HTML;
 		}
 		if($GLOBALS['phpgw']->common->cmp_version($GLOBALS['phpgw_info']['server']['versions']['phpgwapi'],$line_found[1]))
 		{
-			echo '<p>There is a new version of phpGroupWare available from <a href="'
-				. 'http://www.phpgroupware.org">http://www.phpgroupware.org</a>';
+			echo '<p>There is a new version of PorticoEstate available from <a href="'
+				. 'https://github.com/PorticoEstate/PorticoEstate">https://github.com/PorticoEstate/PorticoEstate</a>';
 		}
 
 		$_found = False;
