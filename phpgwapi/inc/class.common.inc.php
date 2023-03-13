@@ -55,20 +55,26 @@
 		{
 			preg_match("/([0-9]+)\.([0-9]+)\.([0-9]+)[a-z]*([0-9]*)/i", $str1, $regs);
 			preg_match("/([0-9]+)\.([0-9]+)\.([0-9]+)[a-z]*([0-9]*)/i", $str2, $regs2);
-			if($debug) { echo "<br />$regs[0] - $regs2[0]"; }
-
-			for($i=1;$i<5;++$i)
+			if ($debug)
 			{
-				if($debug) { echo "<br />$i: $regs[$i] - $regs2[$i]"; }
-				if($regs2[$i] == $regs[$i])
+				echo "<br />$regs[0] - $regs2[0]";
+			}
+
+			for ($i = 1; $i < 5; ++$i)
+			{
+				if ($debug)
+				{
+					echo "<br />$i: $regs[$i] - $regs2[$i]";
+				}
+				if ($regs2[$i] == $regs[$i])
 				{
 					continue;
 				}
-				if($regs2[$i] > $regs[$i])
+				if ($regs2[$i] > $regs[$i])
 				{
 					return 1;
 				}
-				elseif($regs2[$i] < $regs[$i])
+				elseif ($regs2[$i] < $regs[$i])
 				{
 					return 0;
 				}
@@ -85,36 +91,54 @@
 		*/
 		public function cmp_version_long($str1, $str2, $debug = false)
 		{
-			$regs = explode('.', $str1);
-			$regs2 = explode('.', $str2);
-			if($debug) { echo "<br />$regs[0] - $regs2[0]"; }
-
-			for($i=1;$i<6;++$i)
+			$regs	 = explode('.', $str1);
+			$regs2	 = explode('.', $str2);
+			if ($debug)
 			{
-				if(!isset($regs2[$i]) && !isset($regs[$i]))
+				echo "<br />$regs[0] - $regs2[0]";
+			}
+
+			for ($i = 1; $i < 6; ++$i)
+			{
+				if (!isset($regs2[$i]) && !isset($regs[$i]))
 				{
 					continue;
 				}
 
-				if($debug) { echo "<br />$i: $regs[$i] - $regs2[$i]"; }
-
-				if($regs2[$i] == $regs[$i])
+				if ($debug)
 				{
-					if($debug) { echo ' are equal...'; }
+					echo "<br />$i: $regs[$i] - $regs2[$i]";
+				}
+
+				if ($regs2[$i] == $regs[$i])
+				{
+					if ($debug)
+					{
+						echo ' are equal...';
+					}
 					continue;
 				}
-				if($regs2[$i] > $regs[$i])
+				if ($regs2[$i] > $regs[$i])
 				{
-					if($debug) { echo ', and a > b'; }
+					if ($debug)
+					{
+						echo ', and a > b';
+					}
 					return 1;
 				}
-				elseif($regs2[$i] < $regs[$i])
+				elseif ($regs2[$i] < $regs[$i])
 				{
-					if($debug) { echo ', and a < b'; }
+					if ($debug)
+					{
+						echo ', and a < b';
+					}
 					return 0;
 				}
 			}
-			if($debug) { echo ' - all equal.'; }
+			if ($debug)
+			{
+				echo ' - all equal.';
+			}
 		}
 
 		/**
