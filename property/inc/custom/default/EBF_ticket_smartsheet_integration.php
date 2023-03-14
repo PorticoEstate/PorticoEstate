@@ -60,6 +60,15 @@
 				'descr'		 => 'Sheet name'
 				)
 			);
+
+			$receipt = $this->custom_config->add_attrib(array(
+				'section_id' => $receipt_section['section_id'],
+				'input_type' => 'text',
+				'name'		 => 'sheet_id',
+				'descr'		 => 'sheet id'
+				)
+			);
+
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'admin.uiconfig2.list_attrib',
 				'section_id'	 => $receipt_section['section_id'], 'location_id'	 => $GLOBALS['phpgw']->locations->get_id('property', '.ticket')));
 		}
@@ -68,28 +77,28 @@
 		{
 			$category_arr = explode(',', $this->config['smartsheet_integration']['category']);
 
-			if(in_array($data['cat_id'], $category_arr))
+			if (in_array($data['cat_id'], $category_arr))
 			{
 				$this->post_to_smartsheet($data);
 			}
-
 		}
 
 		function post_to_smartsheet( $data )
 		{
 			$access_token	 = $this->config['smartsheet_integration']['access_token'];
 			$sheet_name		 = $this->config['smartsheet_integration']['sheet_name'];
+			$sheet_id		 = $this->config['smartsheet_integration']['sheet_id'];
 
 			$link_data = array(
 				'menuaction' => 'property.uitts.view',
 				'id'		 => $data['id']
 			);
 
-			$hyperlink	 = $GLOBALS['phpgw']->link('/index.php', $link_data, false, true);
+			$hyperlink = $GLOBALS['phpgw']->link('/index.php', $link_data, false, true);
 
 			require_once PHPGW_API_INC . '/smartsheet/vendor/autoload.php';
 
-			$proxy		 = 'http://proxy.bergen.kommune.no:8080';
+			$proxy = 'http://proxy.bergen.kommune.no:8080';
 
 			$config			 = array('token' => $access_token);
 			$config['proxy'] = array(
@@ -100,13 +109,16 @@
 			$smartsheetClient	 = new \Smartsheet\SmartsheetClient($config);
 			$sheets				 = $smartsheetClient->listSheets();
 
-			foreach ($sheets as $sheet_info)
+			if (!$sheet_id)
 			{
-				if ($sheet_info->getname() == $sheet_name)
+				foreach ($sheets as $sheet_info)
 				{
-					$sheet_id = $sheet_info->getid();
+					if ($sheet_info->getname() == $sheet_name)
+					{
+						$sheet_id = $sheet_info->getid();
+					}
+					unset($sheet_info);
 				}
-				unset($sheet_info);
 			}
 
 			$sheet = $smartsheetClient->getSheet($sheet_id);
@@ -129,6 +141,7 @@
 			$rows['SakID']							 = $data['id'];
 			$rows['Beskrivelse av sak/reklamasjon']	 = $ticket['details'];
 			$rows['Type sak']						 = 'reklamasjon';
+			$rows['Hvor']							 = $ticket['location_code'] . ' : ' . $ticket['address'];
 			$rows['Referanse']						 = array(
 				'value'		 => 'Link til saken i Portico',
 				'hyperlink'	 => $hyperlink
