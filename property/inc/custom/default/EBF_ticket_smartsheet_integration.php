@@ -1,30 +1,27 @@
 <?php
 	/*
-	 * This class will enable status conditional redirect on tickets.
+	 * This class will push tickets to an external smartsheet based on category.
 	 * A config section will be defined where conditions on status and target can be configured.
 	 */
 
-	class ticket_smartsheet_integration extends property_botts
+	class EBF_ticket_smartsheet_integration extends property_botts
 	{
-
-		protected $db;
-		protected $config		 = array();
-		protected $status_text	 = array();
-		protected $custom_config;
+		private $_config = array();
+		private $db;
+		private $custom_config;
 
 		function __construct()
 		{
 			parent::__construct();
-			$this->db			 = & $GLOBALS['phpgw']->db;
-			$custom_config		 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
-			$this->config		 = $custom_config->config_data;
-			$this->status_text	 = parent::get_status_text();
+			$this->db		 = & $GLOBALS['phpgw']->db;
+			$custom_config	 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
+			$this->_config	 = $custom_config->config_data;
 			if ($this->acl_location != '.ticket')
 			{
 				throw new Exception("'catch_ticket_export'  is intended for location = '.ticket'");
 			}
 
-			if (!isset($this->config['smartsheet_integration']) || !$this->config['smartsheet_integration'])
+			if (!isset($this->_config['smartsheet_integration']) || !$this->_config['smartsheet_integration'])
 			{
 				$this->custom_config = $custom_config;
 				$this->initiate_config();
@@ -75,7 +72,7 @@
 
 		function check_category( $data )
 		{
-			$category_arr = explode(',', $this->config['smartsheet_integration']['category']);
+			$category_arr = explode(',', $this->_config['smartsheet_integration']['category']);
 
 			if (in_array($data['cat_id'], $category_arr))
 			{
@@ -85,9 +82,9 @@
 
 		function post_to_smartsheet( $data )
 		{
-			$access_token	 = $this->config['smartsheet_integration']['access_token'];
-			$sheet_name		 = $this->config['smartsheet_integration']['sheet_name'];
-			$sheet_id		 = $this->config['smartsheet_integration']['sheet_id'];
+			$access_token	 = $this->_config['smartsheet_integration']['access_token'];
+			$sheet_name		 = $this->_config['smartsheet_integration']['sheet_name'];
+			$sheet_id		 = $this->_config['smartsheet_integration']['sheet_id'];
 
 			$link_data = array(
 				'menuaction' => 'property.uitts.view',
@@ -153,5 +150,5 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 	}
-	$ticket_smartsheet = new ticket_smartsheet_integration();
+	$ticket_smartsheet = new EBF_ticket_smartsheet_integration();
 	$ticket_smartsheet->check_category($data);
