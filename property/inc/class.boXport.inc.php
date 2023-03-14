@@ -335,10 +335,13 @@
 				$data	 = phpgw::clean_value($data);
 			}
 
-			$receipt = $this->export($data);
-			if(!empty($receipt))
+			if (!isset($data['enabled']) || (isset($data['enabled']) && $data['enabled'] === 1))
 			{
-				_debug_array($receipt);
+				$receipt = $this->export($data);
+				if (!empty($receipt))
+				{
+					_debug_array($receipt);
+				}
 			}
 		}
 	}	
