@@ -1024,8 +1024,9 @@
 
 			foreach ($events as &$event)
 			{
-				$event['name']		 = substr($event['name'], 0, 34);
-				$event['shortname']	 = substr($event['name'], 0, 12);
+				$_name = $event['name'] === 'dummy' ? $event['activity_name'] : $event['name'];
+				$event['name']		 = substr($_name, 0, 34);
+				$event['shortname']	 = substr($_name, 0, 12);
 				$event['type']		 = 'event';
 				$datef				 = strtotime($event['from_']);
 				$event['weekday']	 = date('D', $datef);
@@ -1051,7 +1052,9 @@
 				$from	 = $from[0] * 60 + $from[1];
 				$to		 = $to[0] * 60 + $to[1];
 				if ($to == 0)
+				{
 					$to		 = 24 * 60;
+				}
 				$colspan = ($to - $from) / 30;
 
 				$allocation['colspan']				 = $colspan;
