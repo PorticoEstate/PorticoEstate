@@ -253,9 +253,9 @@
 			{
 				$data['origin_id'] = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$data['extra']['p_entity_id']}.{$data['extra']['p_cat_id']}");
 
-				$this->db->query('SELECT prefix FROM fm_entity_category WHERE entity_id = ' . (int)$data['extra']['p_entity_id'] . ' AND id = ' . (int)$data['extra']['p_cat_id']);
-				$this->db->next_record();
-				$prefix					 = $this->db->f('prefix');
+				$this->_db->query('SELECT prefix FROM fm_entity_category WHERE entity_id = ' . (int)$data['extra']['p_entity_id'] . ' AND id = ' . (int)$data['extra']['p_cat_id']);
+				$this->_db->next_record();
+				$prefix					 = $this->_db->f('prefix');
 				$data['origin_item_id']	 = (int)ltrim($data['extra']['p_num'], $prefix);
 
 				$interlink_data = array

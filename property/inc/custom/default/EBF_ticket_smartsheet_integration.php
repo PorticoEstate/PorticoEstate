@@ -1,30 +1,27 @@
 <?php
 	/*
-	 * This class will enable status conditional redirect on tickets.
+	 * This class will push tickets to an external smartsheet based on category.
 	 * A config section will be defined where conditions on status and target can be configured.
 	 */
 
-	class ticket_smartsheet_integration extends property_botts
+	class EBF_ticket_smartsheet_integration extends property_botts
 	{
-
-		protected $db;
-		protected $config		 = array();
-		protected $status_text	 = array();
-		protected $custom_config;
+		private $_config = array();
+		private $db;
+		private $custom_config;
 
 		function __construct()
 		{
 			parent::__construct();
-			$this->db			 = & $GLOBALS['phpgw']->db;
-			$custom_config		 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
-			$this->config		 = $custom_config->config_data;
-			$this->status_text	 = parent::get_status_text();
+			$this->db		 = & $GLOBALS['phpgw']->db;
+			$custom_config	 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
+			$this->_config	 = $custom_config->config_data;
 			if ($this->acl_location != '.ticket')
 			{
 				throw new Exception("'catch_ticket_export'  is intended for location = '.ticket'");
 			}
 
-			if (!isset($this->config['smartsheet_integration']) || !$this->config['smartsheet_integration'])
+			if (!isset($this->_config['smartsheet_integration']) || !$this->_config['smartsheet_integration'])
 			{
 				$this->custom_config = $custom_config;
 				$this->initiate_config();
@@ -60,36 +57,45 @@
 				'descr'		 => 'Sheet name'
 				)
 			);
+
+			$receipt = $this->custom_config->add_attrib(array(
+				'section_id' => $receipt_section['section_id'],
+				'input_type' => 'text',
+				'name'		 => 'sheet_id',
+				'descr'		 => 'sheet id'
+				)
+			);
+
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'admin.uiconfig2.list_attrib',
 				'section_id'	 => $receipt_section['section_id'], 'location_id'	 => $GLOBALS['phpgw']->locations->get_id('property', '.ticket')));
 		}
 
 		function check_category( $data )
 		{
-			$category_arr = explode(',', $this->config['smartsheet_integration']['category']);
+			$category_arr = explode(',', $this->_config['smartsheet_integration']['category']);
 
-			if(in_array($data['cat_id'], $category_arr))
+			if (in_array($data['cat_id'], $category_arr))
 			{
 				$this->post_to_smartsheet($data);
 			}
-
 		}
 
 		function post_to_smartsheet( $data )
 		{
-			$access_token	 = $this->config['smartsheet_integration']['access_token'];
-			$sheet_name		 = $this->config['smartsheet_integration']['sheet_name'];
+			$access_token	 = $this->_config['smartsheet_integration']['access_token'];
+			$sheet_name		 = $this->_config['smartsheet_integration']['sheet_name'];
+			$sheet_id		 = $this->_config['smartsheet_integration']['sheet_id'];
 
 			$link_data = array(
 				'menuaction' => 'property.uitts.view',
 				'id'		 => $data['id']
 			);
 
-			$hyperlink	 = $GLOBALS['phpgw']->link('/index.php', $link_data, false, true);
+			$hyperlink = $GLOBALS['phpgw']->link('/index.php', $link_data, false, true);
 
 			require_once PHPGW_API_INC . '/smartsheet/vendor/autoload.php';
 
-			$proxy		 = 'http://proxy.bergen.kommune.no:8080';
+			$proxy = 'http://proxy.bergen.kommune.no:8080';
 
 			$config			 = array('token' => $access_token);
 			$config['proxy'] = array(
@@ -100,13 +106,16 @@
 			$smartsheetClient	 = new \Smartsheet\SmartsheetClient($config);
 			$sheets				 = $smartsheetClient->listSheets();
 
-			foreach ($sheets as $sheet_info)
+			if (!$sheet_id)
 			{
-				if ($sheet_info->getname() == $sheet_name)
+				foreach ($sheets as $sheet_info)
 				{
-					$sheet_id = $sheet_info->getid();
+					if ($sheet_info->getname() == $sheet_name)
+					{
+						$sheet_id = $sheet_info->getid();
+					}
+					unset($sheet_info);
 				}
-				unset($sheet_info);
 			}
 
 			$sheet = $smartsheetClient->getSheet($sheet_id);
@@ -129,6 +138,7 @@
 			$rows['SakID']							 = $data['id'];
 			$rows['Beskrivelse av sak/reklamasjon']	 = $ticket['details'];
 			$rows['Type sak']						 = 'reklamasjon';
+			$rows['Hvor']							 = $ticket['location_code'] . ' : ' . $ticket['address'];
 			$rows['Referanse']						 = array(
 				'value'		 => 'Link til saken i Portico',
 				'hyperlink'	 => $hyperlink
@@ -140,5 +150,5 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 	}
-	$ticket_smartsheet = new ticket_smartsheet_integration();
+	$ticket_smartsheet = new EBF_ticket_smartsheet_integration();
 	$ticket_smartsheet->check_category($data);
