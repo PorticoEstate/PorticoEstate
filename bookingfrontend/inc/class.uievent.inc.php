@@ -397,10 +397,22 @@
 
 						if(!empty($event['application_id']))
 						{
+							$this->assoc_bo	 = new booking_boapplication_association();
+							$associations = $this->assoc_bo->so->read(array('filters' => array('application_id' => $event['application_id']),
+								'sort' => 'from_', 'dir' => 'asc', 'results' =>'all'));
+							$changeStatus = 'REJECTED';
+							foreach ($associations['results'] as $association)
+							{
+								if($association['id'] != $event['id'] && $association['active'] == 1)
+								{
+									$changeStatus = null;
+								}
+							}
+
 							foreach ($event['dates'] as $odate){}
 
 							$comment = lang('event') ." #: " . $event['id'] . " " . lang("User has made a request to cancel event") . ' ' . $odate['from_'] . ' - ' . $odate['to_'];
-							$this->application_ui->add_comment_to_application($event['application_id'], $comment , 'REJECTED');
+							$this->application_ui->add_comment_to_application($event['application_id'], $comment , $changeStatus);
 						}
 
 						$date = substr($event['from_'], 0, 10);
