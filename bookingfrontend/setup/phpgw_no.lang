@@ -514,6 +514,7 @@ Reset filters	bookingfrontend	no	Nullstill filter
 To application site	bookingfrontend	no	Til søknadsside
 locations	bookingfrontend	no	Lokaler
 User has made a request to alter time on existing booking	bookingfrontend	no	Ønsker å endre tiden for booking. Ny tid:
+User has made a request to cancel event	bookingfrontend	no	Kunde har avbestilt arrangement.
 User has changed field for equipment	bookingfrontend	no	Endring av felt for nødvendig utstyr:
 Request for changed time	bookingfrontend	no	Forespørsel om øke tid er sendt til saksbehandler
 Follow status	bookingfrontend	no	Du kan følge med på status under Min side --> Søknader

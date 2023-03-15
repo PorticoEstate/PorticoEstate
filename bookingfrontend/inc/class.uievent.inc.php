@@ -202,7 +202,7 @@
 					{
 						$comment = lang('event') ." #: " . $event['id'] . " " . lang("User has made a request to alter time on existing booking") . ' ' . $new_date['from_'] . ' - ' . $new_date['to_'];
 
-						$change_status = $free_up_time ? false : true;
+						$change_status = $free_up_time ? false : 'PENDING';
 						$this->application_ui->add_comment_to_application($event['application_id'], $comment , $change_status);
 						phpgwapi_cache::message_set(lang('Request for changed time') . '</br>' . lang('Follow status' ));
 					}
@@ -393,6 +393,14 @@
 						{
 							$event['active'] = 0;
 							$this->bo->update($event);
+						}
+
+						if(!empty($event['application_id']))
+						{
+							foreach ($event['dates'] as $odate){}
+
+							$comment = lang('event') ." #: " . $event['id'] . " " . lang("User has made a request to cancel event") . ' ' . $odate['from_'] . ' - ' . $odate['to_'];
+							$this->application_ui->add_comment_to_application($event['application_id'], $comment , 'REJECTED');
 						}
 
 						$date = substr($event['from_'], 0, 10);
