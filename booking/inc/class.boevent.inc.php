@@ -34,6 +34,13 @@
 				{
 					$initial_roles[] = array('role' => self::ROLE_ADMIN);
 				}
+
+				$external_login_info = $bouser->validate_ssn_login(array(), true);
+
+				if ($for_object['customer_ssn'] == $external_login_info['ssn'])
+				{
+					$initial_roles[] = array('role' => self::ROLE_ADMIN);
+				}
 			}
 			return parent::get_subject_roles($for_object, $initial_roles);
 		}
