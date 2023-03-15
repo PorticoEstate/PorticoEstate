@@ -272,7 +272,7 @@
 			}
 		}
 
-		function add_comment_to_application($application_id, $comment, $changeStatus)
+		function add_comment_to_application($application_id, $comment, $changeStatus = null)
 		{
 			$application = $this->application_bo->read_single($application_id);
 
@@ -280,9 +280,9 @@
 			$this->set_display_in_dashboard($application, true, array('force' => true));
 			$application['frontend_modified'] = 'now';
 
-			if ($changeStatus && $application['status'] != 'PENDING')
+			if ($changeStatus && $application['status'] != $changeStatus)
 			{
-				$application['status'] = 'PENDING';
+				$application['status'] = $changeStatus;
 			}
 
 			$this->bo->send_admin_notification($application, $comment);
