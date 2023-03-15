@@ -96,39 +96,35 @@
 					'id' => $event['building_id'], 'date' => $date));
 			}
 
-			$currres = $event['resources'];
-
-			list($event, $errors) = $this->extract_and_validate($event);
-
-			if ($event['customer_organization_number'])
-			{
-				$orginfo = $this->bo->so->get_org($event['customer_organization_number']);
-				$event['customer_organization_id'] = $orginfo['id'];
-				$event['customer_organization_name'] = $orginfo['name'];
-			}
-
-			$orgdate = array();
-			foreach ($event['dates'] as $odate)
-			{
-				if (substr($odate['from_'], 0, 10) == substr($event['from_'], 0, 10))
-				{
-					$orgdate['from'] = $odate['from_'];
-					$orgdate['to'] = $odate['to_'];
-				}
-			}
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$test = $this->bo->read_single($event['id']);
+				$currres = $event['resources'];
 
 				$_POST['org_from'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['org_from']));
 				$_POST['org_to'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['org_to']));
 
-				$new_date['from_'] = substr($_POST['org_from'], 0, 11) . $_POST['from_'] . ":00";
-				$new_date['to_'] = substr($_POST['org_to'], 0, 11) . $_POST['to_'] . ":00";
+				$new_date['from_'] = substr($_POST['org_from'], 0, 11) . $_POST['from_'];// . ":00";
+				$new_date['to_'] = substr($_POST['org_to'], 0, 11) . $_POST['to_'];// . ":00";
+
 				array_set_default($_POST, 'resources', array());
 
-				if ($_POST['org_from'] <= $new_date['from_'] && $_POST['org_to'] >= $new_date['to_'])
+
+				$free_up_time = false;
+				$orgdate = array();
+				foreach ($event['dates'] as $odate)
+				{
+					if (substr($odate['from_'], 0, 10) == substr($event['from_'], 0, 10))
+					{
+						$orgdate['from'] = $odate['from_'];
+						$orgdate['to'] = $odate['to_'];
+					}
+				}
+
+				$test = $this->bo->read_single($event['id']);
+
+//				if ($_POST['org_from'] <= $new_date['from_'] && $_POST['org_to'] >= $new_date['to_'])
+				if ($test['from_'] <= $new_date['from_'] && $test['to_'] >= $new_date['to_'])
 				{
 					if ($new_date['from_'] > $new_date['to_'])
 					{
@@ -138,11 +134,14 @@
 					{
 						$event['from_'] = $new_date['from_'];
 						$event['to_'] = $new_date['to_'];
+						$_POST['from_'] = $new_date['from_'];
+						$_POST['to_'] = $new_date['to_'];
 					}
 				}
 				else
 				{
-					if ($_POST['org_from'] <= $new_date['from_'])
+//					if ($_POST['org_from'] <= $new_date['from_'])
+					if ($test['from_'] <= $new_date['from_'])
 					{
 						if ($new_date['from_'] > $new_date['to_'])
 						{
@@ -151,14 +150,20 @@
 						else
 						{
 							$event['from_'] = $new_date['from_'];
+							$_POST['from_'] = $new_date['from_'];
 						}
 					}
 					else
 					{
-						$event['from_'] = $_POST['org_from'];
+						$free_up_time = true;
+//						$event['from_'] = $_POST['org_from'];
+//						$_POST['from_'] = $_POST['org_from'];
+						$event['from_'] = $new_date['from_'];
+						$_POST['from_'] = $new_date['from_'];
 					}
 
-					if ($_POST['org_to'] >= $new_date['to_'])
+//					if ($_POST['org_to'] >= $new_date['to_'])
+					if ($test['to_'] >= $new_date['to_'])
 					{
 						if ($new_date['to_'] < $new_date['from_'])
 						{
@@ -167,19 +172,38 @@
 						else
 						{
 							$event['to_'] = $new_date['to_'];
+							$_POST['to_'] = $new_date['to_'];
 						}
 
 					}
 					else
 					{
-						$event['to_'] = $_POST['org_to'];
+						$free_up_time = true;
+//						$event['to_'] = $_POST['org_to'];
+//						$_POST['to_'] = $_POST['org_to'];
+						$event['to_'] = $new_date['to_'];
+						$_POST['to_'] = $new_date['to_'];
 					}
+				}
+
+				list($event, $errors) = $this->extract_and_validate($event);
+
+				if ($event['customer_organization_number'])
+				{
+					$orginfo = $this->bo->so->get_org($event['customer_organization_number']);
+					$event['customer_organization_id'] = $orginfo['id'];
+					$event['customer_organization_name'] = $orginfo['name'];
+				}
+
+				if(!$errors)
+				{
 
 					if (!is_null($event['application_id']) && $event['application_id'] != '' && !$errors['start_time'] && !$errors['end_time'])
 					{
 						$comment = lang('event') ." #: " . $event['id'] . " " . lang("User has made a request to alter time on existing booking") . ' ' . $new_date['from_'] . ' - ' . $new_date['to_'];
 
-						$this->application_ui->add_comment_to_application($event['application_id'], $comment , True);
+						$change_status = $free_up_time ? false : true;
+						$this->application_ui->add_comment_to_application($event['application_id'], $comment , $change_status);
 						phpgwapi_cache::message_set(lang('Request for changed time') . '</br>' . lang('Follow status' ));
 					}
 				}
@@ -213,7 +237,12 @@
 					}
 					$message = '';
 					$this->bo->send_admin_notification(true, $event, $message, $orgdate);
-//					$this->bo->update($event);
+
+					if($free_up_time)
+					{
+						$this->bo->update($event);
+					}
+
 					$date = substr($event['from_'], 0, 10);
 
 					if ($from_org && $event['customer_organization_id'] !== null)
