@@ -524,7 +524,7 @@ locations	bookingfrontend	nn	Lokaler
 User has made a request to alter time on existing booking	bookingfrontend	nn	Ynskjer å endre tida for booking. Ny tid:
 User has made a request to cancel event	bookingfrontend	nn	Kunde har avbestilt arrangement.
 User has changed field for equipment	bookingfrontend	nn	Endring av felt for nødvendig utstyr:
-Request for changed time	bookingfrontend	nn	Forespørsel om øke tid er sendt til saksbehandler
+Request for changed time	bookingfrontend	nn	Forespørsel om å endre tid er registrert
 Follow status	bookingfrontend	nn	Du kan følge med på status under Min side --> Søknader
 for remaining season	bookingfrontend	nn	for gjenværende sesong
 for allocations until	bookingfrontend	nn	for tildelinger frem til:
