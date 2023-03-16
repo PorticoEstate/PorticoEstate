@@ -143,6 +143,8 @@
 					phpgwapi_cache::message_set($message, 'error');
 			}
 
+			$info['type']		 = $type;
+			$info['type_id']	 = $type_id;
 			$this->location_info = $info;
 			return $info;
 		}

@@ -122,6 +122,8 @@
 //				throw new Exception(lang('ERROR: illegal type %1', $type));
 			}
 
+			$info['type']		 = $type;
+			$info['type_id']	 = $type_id;
 			$this->location_info = $info;
 			return $info;
 		}
