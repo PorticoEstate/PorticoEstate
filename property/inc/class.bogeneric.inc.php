@@ -147,11 +147,8 @@
 
 		public function read( $data = array() )
 		{
-			if (isset($data['location_info']) && $data['location_info']['type'])
-			{
-				$this->get_location_info($data['location_info']['type'], (int)$data['location_info']['type_id']);
-				unset($data['location_info']);
-			}
+			$this->validate_location_info($data);
+
 			$values = $this->so->read($data);
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -191,21 +188,33 @@
 			return $values;
 		}
 
-		public function read_single( $data = array() )
+		function validate_location_info(&$data)
 		{
-			static $value_set = array();
-
-			if(!empty($data['id']) && isset($value_set[$data['id']]))
-			{
-				return $value_set[$data['id']];
-			}
-
-			$values = array();
-			if (!$this->location_info && isset($data['location_info']) && $data['location_info']['type'])
+			if (empty($this->location_info['type']) && !empty($data['location_info']['type'])
+				|| ($this->location_info['type'] !== $data['location_info']['type'])
+				|| (empty($this->location_info['type_id']) && !empty($data['location_info']['type_id'])
+					|| ($this->location_info['type_id'] !== $data['location_info']['type_id'])
+					)
+				)
 			{
 				$this->get_location_info($data['location_info']['type'], (int)$data['location_info']['type_id']);
 				unset($data['location_info']);
 			}
+		}
+
+		public function read_single( $data = array() )
+		{
+			static $value_set = array();
+
+			$values = array();
+
+			$this->validate_location_info($data);
+
+			if(!empty($data['id']) && isset($value_set[$this->location_info['table']][$data['id']]))
+			{
+				return $value_set[$this->location_info['table']][$data['id']];
+			}
+
 			$custom_fields	 = false;
 			$system_location = !empty($this->location_info['system_location']) ? $this->location_info['system_location'] : $this->location_info['acl_location'];
 			if ($GLOBALS['phpgw']->locations->get_attrib_table($this->location_info['acl_app'], $this->location_info['acl_location']))
@@ -223,7 +232,7 @@
 				$values = $this->custom->prepare($values, $this->location_info['acl_app'], $system_location, $data['view']);
 			}
 
-			$value_set[$data['id']] = $values;
+			$value_set[$this->location_info['table']][$data['id']] = $values;
 			return $values;
 		}
 

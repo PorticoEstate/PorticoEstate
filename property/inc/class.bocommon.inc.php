@@ -2238,12 +2238,14 @@
 			if (isset($origin) && $origin)
 			{
 				$interlink				 = CreateObject('property.interlink');
-				$values['origin_data']	 = array(
+				$values['origin_data'][] = array(
 					'location'	 => $origin,
 					'descr'		 => $interlink->get_location_name($origin),
 					'data'		 => array(
-						'id'	 => $origin_id,
-						'link'	 => $interlink->get_relation_link(array('location' => $origin), $origin_id)
+						array(
+							'id'	 => $origin_id,
+							'link'	 => $interlink->get_relation_link(array('location' => $origin), $origin_id)
+						)
 					)
 				);
 			}
