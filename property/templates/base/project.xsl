@@ -57,6 +57,25 @@
 	</xsl:choose>
 	<div id="message" class='message'/>
 
+	<xsl:if test="value_project_id &gt; 0  and mode='edit'">
+		<form method="post" action="{ticket_link}">
+			<xsl:variable name="lang_start_ticket">
+				<xsl:value-of select="php:function('lang', 'start ticket')"/>
+			</xsl:variable>
+			<input type="hidden" name="values[subject]" value="{value_name}"/>
+			<input type="hidden" name="values[details]">
+				<xsl:attribute name="value">
+					<xsl:value-of select="php:function('lang', 'project')"/>
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="value_project_id"/>
+					<xsl:text>: </xsl:text>
+				</xsl:attribute>
+			</input>
+			<input type="submit" class="pure-button pure-button-primary" name="start_ticket" value="{$lang_start_ticket}">
+			</input>
+		</form>
+	</xsl:if>
+
 	<form ENCTYPE="multipart/form-data" method="post" id="form" name="form" action="{form_action}" class= "pure-form pure-form-aligned">
 		<xsl:variable name="decimal_separator">
 			<xsl:value-of select="decimal_separator"/>
