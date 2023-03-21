@@ -7,7 +7,7 @@
 		function __construct()
 		{
 			parent::__construct('bb_building', array(
-				'id' => array('type' => 'int'),
+				'id' => array('type' => 'int', 'query' => true),
 				'name' => array('type' => 'string', 'query' => true, 'required' => true),
 				'homepage' => array('type' => 'string', 'required' => true),
 				'calendar_text' => array('type' => 'string'),
