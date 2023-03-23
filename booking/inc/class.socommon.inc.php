@@ -182,7 +182,8 @@
 				else if (isset($params['join']) && $params['join'])
 				{
 //					if ((isset($params['join_type']) && $params['join_type'] == 'manytomany') && ( !isset($filters[$field]) && empty($query) ) )
-					if ((isset($params['join_type']) && $params['join_type'] == 'manytomany') && ( !array_key_exists($field, $filters) ) )
+//					if ((isset($params['join_type']) && $params['join_type'] == 'manytomany') && ( !array_key_exists($field, $filters) ) )
+					if ((isset($params['join_type']) && $params['join_type'] == 'manytomany') && ( !array_key_exists($field, $filters) && empty($query)) )
 					{
 						continue;
 					}

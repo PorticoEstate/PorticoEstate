@@ -8,7 +8,7 @@
 		function __construct()
 		{
 			parent::__construct('bb_resource', array(
-				'id' => array('type' => 'int'),
+				'id' => array('type' => 'int', 'query' => true),
 				'active' => array('type' => 'int', 'required' => true),
 				'sort' => array('type' => 'int', 'required' => false),
 //				'building_id'		 => array('type' => 'int', 'required' => true),

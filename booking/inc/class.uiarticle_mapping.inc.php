@@ -245,7 +245,7 @@
 
 				if(empty($article['selected_article_quantity']))
 				{
-					$article['selected_article_quantity']	 = isset($article['resource_id']) ? "{$article['id']}_1" : '';
+					$article['selected_article_quantity']	 = isset($article['resource_id']) ? "{$article['id']}_1_{$article['tax_code']}_{$article['ex_tax_price']}_{$article['parent_mapping_id']}" : '';
 				}
 
 				if(empty($article['selected_sum']))
