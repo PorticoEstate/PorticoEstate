@@ -645,7 +645,7 @@
 			foreach ($documents as $item)
 			{
 				$document_name	 = '<a href="' . self::link(array('menuaction' => 'property.uidocument.view_file',
-						'id'		 => $item['document_id'])) . '" target="_blank">' . $item['document_name'] . '</a>';
+						'id'		 => $item['id'])) . '" target="_blank">' . $item['document_name'] . '</a>';
 				$values[]		 = array('document_name' => $document_name, 'title' => $item['title']);
 			}
 

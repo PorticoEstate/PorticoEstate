@@ -227,11 +227,6 @@
 			return $documents;
 		}
 
-		function get_files_at_location( $data )
-		{
-			return $this->so->get_files_at_location($data);
-		}
-
 		function read_at_location( $data = array() )
 		{
 			$use_svn = false;
@@ -266,22 +261,22 @@
 				$entry['entry_date']	 = $GLOBALS['phpgw']->common->show_date($entry['entry_date'], $dateformat);
 				if ($use_svn)
 				{
-					$entry['journal'] = $this->get_file($entry['document_id'], true);
+					$entry['journal'] = $this->get_file($entry['id'], true);
 				}
 			}
 
 			return $document;
 		}
 
-		function read_single( $document_id )
+		function read_single( $id )
 		{
-			$document					 = $this->so->read_single($document_id);
+			$document					 = $this->so->read_single($id);
 			$dateformat					 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$document['document_date']	 = $GLOBALS['phpgw']->common->show_date($document['document_date'], $dateformat);
 
 			if (preg_match('/svn[s:][:\/]\//', $GLOBALS['phpgw_info']['server']['files_dir']))
 			{
-				$document['journal'] = $this->get_file($document_id, true, $document);
+				$document['journal'] = $this->get_file($id, true, $document);
 			}
 
 			if (isset($document['vendor_id']) && $document['vendor_id'])
@@ -432,11 +427,11 @@
 			return $record_history;
 		}
 
-		function get_file( $document_id, $get_journal = false, $values = array() )
+		function get_file( $id, $get_journal = false, $values = array() )
 		{
 			if (!$values)
 			{
-				$values = $this->read_single($document_id);
+				$values = $this->read_single($id);
 			}
 
 			if ($values['p_num'])
@@ -476,9 +471,9 @@
 			$values['document_date'] = mktime(2, 0, 0, $document_date['month'], $document_date['day'], $document_date['year']);
 
 			//_debug_array($values);
-			if ($values['document_id'])
+			if ($values['id'])
 			{
-				if ($values['document_id'] != 0)
+				if ($values['id'] != 0)
 				{
 					$receipt = $this->so->edit($values);
 				}
@@ -490,8 +485,8 @@
 			return $receipt;
 		}
 
-		function delete( $document_id )
+		function delete( $id )
 		{
-			$this->so->delete($document_id);
+			$this->so->delete($id);
 		}
 	}
