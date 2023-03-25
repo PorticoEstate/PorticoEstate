@@ -250,13 +250,14 @@ $(document).ready(function ()
 		{
 			var progress = parseInt((data.loaded / data.total) * 100, 10);
 			data.context.css("background-position-x", 100 - progress + "%");
+			$('#files_progress').html(progress + ' %');
 		},
 		done: function (e, data)
 		{
 			var error = false;
 			file_count++;
 
-			var result = JSON.parse(data.result);
+			var result = data.result;
 
 			if (result.files[0].error)
 			{

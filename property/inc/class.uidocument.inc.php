@@ -1055,7 +1055,7 @@
 			//_debug_array($data);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security',
 				'file'));
-			phpgwapi_jquery::load_widget('file-upload-minimum');
+			phpgwapi_jquery::load_widget('file-upload');
 			self::add_javascript('property', 'base', 'document.edit.js', false, array('combine' => false ));
 
 			$appname = lang('document');

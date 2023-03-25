@@ -126,7 +126,7 @@
 										<span class="fileupload-process"></span>
 									</div>
 									<div class="fileupload-count">
-										<xsl:value-of select="php:function('lang', 'Number files')"/>: <span id="files_count"></span>
+										<xsl:value-of select="php:function('lang', 'Number files')"/>: <span id="files_count"></span> <span id="files_progress"></span>
 									</div>
 									<div class="fileupload-progress" style="display:none">
 										<!-- The global progress bar -->
