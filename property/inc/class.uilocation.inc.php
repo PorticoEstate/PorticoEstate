@@ -1755,7 +1755,7 @@ JS;
 					}
 
 					$values[]		 = array(
-						'id'			 => $item['document_id'],
+						'id'			 => $item['id'],
 						'type'			 => 'location',
 						'document_name'	 => "<a href='{$link}'>{$item['title']}</a>",
 						'title'			 => $item['title'],
@@ -1766,9 +1766,9 @@ JS;
 				}
 
 				$document_name	 = '<a href="' . self::link(array('menuaction' => 'property.uidocument.view_file',
-						'id'		 => $item['document_id'])) . '" target="_blank">' . $item['document_name'] . '</a>';
+						'id'		 => $item['id'])) . '" target="_blank">' . $item['document_name'] . '</a>';
 				$values[]		 = array(
-					'id'			 => $item['document_id'],
+					'id'			 => $item['id'],
 					'type'			 => 'location',
 					'document_name'	 => $document_name,
 					'title'			 => $item['title'],
@@ -2237,7 +2237,7 @@ JS;
 							var oArgs = " . json_encode(array(
 							'menuaction' => 'property.uidocument.edit'
 						)) . ";
-							var parameters = " . json_encode(array('parameter' => array(array('name'	 => 'document_id',
+							var parameters = " . json_encode(array('parameter' => array(array('name'	 => 'id',
 									'source' => 'id')))) . ";
 							editDocument(oArgs, parameters);
 						"
@@ -2254,7 +2254,7 @@ JS;
 						)),
 						'parameters'	 => json_encode(array(
 							'parameter' => array(array(
-									'name'	 => 'document_id',
+									'name'	 => 'id',
 									'source' => 'id'
 									))))
 					);

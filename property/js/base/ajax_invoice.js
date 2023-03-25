@@ -423,7 +423,7 @@ function update_form_values(line_id, voucher_id_orig)
 
 				$("#invoice_id").html(voucher[0].invoice_id);
 				$("#kid_nr").html(voucher[0].kid_nr);
-				$("#vendor").html(voucher[0].vendor);
+				$("#vendor").html(voucher[0].vendor + ' (' + voucher[0].vendor_id + ')');
 				$("#invoice_date").html(voucher[0].invoice_date);
 				$("#payment_date").html(voucher[0].payment_date);
 				$("#b_account_id").val(voucher[0].b_account_id);
