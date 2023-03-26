@@ -126,11 +126,12 @@
 
 		public function query()
 		{
-			$search	 = phpgw::get_var('search');
-			$order	 = phpgw::get_var('order');
-			$draw	 = phpgw::get_var('draw', 'int');
-			$columns = phpgw::get_var('columns');
-			$export	 = phpgw::get_var('export', 'bool');
+			$search		 = phpgw::get_var('search');
+			$order		 = phpgw::get_var('order');
+			$draw		 = phpgw::get_var('draw', 'int');
+			$columns	 = phpgw::get_var('columns');
+			$export		 = phpgw::get_var('export', 'bool');
+			$entity_id	 = phpgw::get_var('entity_id', 'int');
 
 			$params = array(
 				'start'		 => phpgw::get_var('start', 'int', 'REQUEST', 0),
@@ -138,6 +139,7 @@
 				'query'		 => $search['value'],
 				'order'		 => $columns[$order[0]['column']]['data'],
 				'sort'		 => $order[0]['dir'],
+				'entity_id'	 => $entity_id,
 				'allrows'	 => phpgw::get_var('length', 'int') == -1 || $export,
 			);
 
@@ -169,7 +171,7 @@
 				return $this->query();
 			}
 
-			$entity_id	 = phpgw::get_var('entity_id', 'int');
+//			$entity_id	 = phpgw::get_var('entity_id', 'int');
 			$preserve	 = phpgw::get_var('preserve', 'bool');
 
 			if ($preserve)
@@ -349,6 +351,8 @@
 			$draw	 = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 			$export	 = phpgw::get_var('export', 'bool');
+			$entity_id	 = phpgw::get_var('entity_id', 'int');
+
 
 			$location_code = phpgw::get_var('location_code');
 			if ($this->query_location)
@@ -363,7 +367,8 @@
 				'order'			 => $columns[$order[0]['column']]['data'],
 				'sort'			 => $order[0]['dir'],
 				'allrows'		 => phpgw::get_var('length', 'int') == -1 || $export,
-				'location_code'	 => $location_code
+				'location_code'	 => $location_code,
+				'entity_id'	 => $entity_id
 			);
 
 			$values = $this->bo->read_at_location($params);
@@ -577,7 +582,7 @@
 						'cat_id'			 => $this->cat_id,
 						'p_num'				 => $p_num,
 						'doc_type'			 => $this->doc_type,
-				//		'location_code'		 => $location_code,
+						'location_code'		 => $location_code,
 						'phpgw_return_as'	 => 'json'
 						)
 					),
@@ -585,6 +590,7 @@
 					'download'	 => self::link(array('menuaction' => 'property.uidocument.download',
 						'doc_type'	 => $this->doc_type,
 						'entity_id'	 => $this->entity_id,
+						'location_code'	 => $location_code,
 						'export'	 => true,
 						'allrows'	 => true
 						)
@@ -599,7 +605,7 @@
 				$data['datatable']['new_item'] = self::link(array(
 						'menuaction'	 => 'property.uidocument.edit',
 						'from'			 => 'property.uidocument.list_doc',
-				//		'location_code'	 => $location_code,
+						'location_code'	 => $location_code,
 						'p_entity_id'	 => $this->entity_id,
 						'p_cat_id'		 => $this->cat_id,
 						'p_num'			 => $p_num
@@ -1055,7 +1061,7 @@
 			//_debug_array($data);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security',
 				'file'));
-			phpgwapi_jquery::load_widget('file-upload');
+			phpgwapi_jquery::load_widget('file-upload-minimum');
 			self::add_javascript('property', 'base', 'document.edit.js', false, array('combine' => false ));
 
 			$appname = lang('document');
