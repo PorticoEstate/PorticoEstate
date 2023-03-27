@@ -131,14 +131,14 @@
 				$order		 = isset($data['order']) ? $data['order'] : '';
 				$ordermethod = isset($data['ordermethod']) ? $data['ordermethod'] : '';
 				$cat_id		 = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-				$entity_id	 = isset($data['entity_id']) ? $data['entity_id'] : '';
+				$entity_id	 = isset($data['entity_id']) ? (int)$data['entity_id'] : '';
 				$doc_type	 = isset($data['doc_type']) && $data['doc_type'] ? $data['doc_type'] : 0;
 				$allrows	 = isset($data['allrows']) ? $data['allrows'] : '';
 				$dry_run	 = isset($data['dry_run']) ? $data['dry_run'] : '';
 			}
 			$doc_types = $this->get_sub_doc_types($doc_type);
 
-			$sql = $this->bocommon->fm_cache('sql_document_' . $entity_id);
+//			$sql = $this->bocommon->fm_cache('sql_document_' . $entity_id);
 
 			if (!$sql)
 			{
@@ -178,7 +178,10 @@
 					$cols			 .= ",$document_table.p_cat_id";
 					$cols_return[]	 = 'p_cat_id';
 
-					$joinmethod	 .= " $this->join  fm_entity_category ON (fm_entity_category.entity_id =$document_table.p_entity_id AND fm_entity_category.id = $document_table.p_cat_id))";
+					$joinmethod	 .= " $this->join fm_entity_category ON "
+						. "(fm_entity_category.entity_id = {$document_table}.p_entity_id"
+						. " AND  fm_entity_category.entity_id ={$entity_id}"
+						. " AND fm_entity_category.id = $document_table.p_cat_id))";
 					$paranthesis .= '(';
 				}
 
@@ -384,6 +387,12 @@
 
 			$where			 = 'WHERE';
 			$filtermethod	 = '';
+			if ($entity_id)
+			{
+				$filtermethod	 = " $where fm_document.p_entity_id = {$entity_id}";
+				$where			 = 'AND';
+			}
+
 			if ($location_code)
 			{
 				$filtermethod	 = " $where fm_document.location_code $this->like '$location_code%'";
