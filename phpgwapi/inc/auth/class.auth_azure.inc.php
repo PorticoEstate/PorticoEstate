@@ -80,7 +80,7 @@
 		public function get_username($primary = false)
 		{
 			$remote_user_1 = explode('@', phpgw::get_var('OIDC_upn', 'string', 'SERVER'));
-			$remote_user_2 = phpgw::get_var('OIDC_samaccountname', 'string', 'SERVER');
+			$remote_user_2 = phpgw::get_var('OIDC_onpremisessamaccountname', 'string', 'SERVER');
 
 			$GLOBALS['phpgw']->log->write(array('text' => 'I-Notification, SERVER-values %1',
 				'p1' => '<pre>' . print_r($_SERVER, true) . '</pre>'));
