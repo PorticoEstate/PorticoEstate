@@ -379,6 +379,7 @@
 		}
 		function get_user_list($type='',$get_grants='')
 		{
+			$user_list = array();
 			if($type == 'groups')
 			{
 				$check_account_type = array('accounts');
