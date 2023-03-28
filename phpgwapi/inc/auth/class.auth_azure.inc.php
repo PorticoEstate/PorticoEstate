@@ -82,8 +82,8 @@
 			$remote_user_1 = explode('@', phpgw::get_var('OIDC_upn', 'string', 'SERVER'));
 			$remote_user_2 = phpgw::get_var('OIDC_onpremisessamaccountname', 'string', 'SERVER');
 
-			$GLOBALS['phpgw']->log->write(array('text' => 'I-Notification, SERVER-values %1',
-				'p1' => '<pre>' . print_r($_SERVER, true) . '</pre>'));
+//			$GLOBALS['phpgw']->log->write(array('text' => 'I-Notification, SERVER-values %1',
+//				'p1' => '<pre>' . print_r($_SERVER, true) . '</pre>'));
 
 			$_remote_user = $remote_user_2 ? $remote_user_2 : $remote_user_1[0];
 
