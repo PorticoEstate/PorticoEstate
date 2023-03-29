@@ -75,6 +75,11 @@
 		}
 		else
 		{
+			if(!preg_match("/\%1/", $message))
+			{
+				$message.= ": %1";
+			}
+
 			log_debug($message, $var);
 		}
 	}
