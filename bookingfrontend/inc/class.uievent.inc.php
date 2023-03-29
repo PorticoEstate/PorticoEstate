@@ -14,7 +14,7 @@
 			'show'	=> true
 		);
 
-		protected $application_ui;
+		protected $application_ui, $customer_name;
 
 		public function __construct()
 		{
@@ -34,6 +34,16 @@
 
 			$event_owner_person = !empty($external_login_info['ssn']) && $event['customer_ssn'] == $external_login_info['ssn'] ? true : false;
 			$event_owner_organization = $bouser->is_organization_admin($event['customer_organization_id']);
+
+			if(!empty($external_login_info['ssn']))
+			{
+				$user_id = CreateObject('booking.souser')->get_user_id($external_login_info['ssn']);
+				if($user_id)
+				{
+					$customer = CreateObject('booking.bouser')->read_single($user_id);
+					$this->customer_name = $customer['name'];
+				}
+			}
 
 			return ( $event_owner_person || $event_owner_organization);
 		}
@@ -203,7 +213,7 @@
 						$comment = lang('event') ." #: " . $event['id'] . " " . lang("User has made a request to alter time on existing booking") . ' ' . $new_date['from_'] . ' - ' . $new_date['to_'];
 
 						$change_status = $free_up_time ? false : 'PENDING';
-						$this->application_ui->add_comment_to_application($event['application_id'], $comment , $change_status);
+						$this->application_ui->add_comment_to_application($event['application_id'], $comment , $change_status, $this->customer_name);
 						phpgwapi_cache::message_set(lang('Request for changed time') . '</br>' . lang('Follow status' ));
 					}
 				}
@@ -215,7 +225,7 @@
 
 						$comment = "ID: " . $event['id'] . " " . lang("User has changed field for equipment") . ' ' . $event['equipment'];
 
-						$this->application_ui->add_comment_to_application($event['application_id'], $comment , false);
+						$this->application_ui->add_comment_to_application($event['application_id'], $comment , false, $this->customer_name);
 						phpgwapi_cache::message_set(lang('Request for equipment has been sent') . '</br>' . lang('Follow status' ));
 
 					}
@@ -412,7 +422,7 @@
 							foreach ($event['dates'] as $odate){}
 
 							$comment = lang('event') ." #: " . $event['id'] . " " . lang("User has made a request to cancel event") . ' ' . $odate['from_'] . ' - ' . $odate['to_'];
-							$this->application_ui->add_comment_to_application($event['application_id'], $comment , $changeStatus);
+							$this->application_ui->add_comment_to_application($event['application_id'], $comment , $changeStatus, $this->customer_name);
 						}
 
 						$date = substr($event['from_'], 0, 10);
