@@ -25,7 +25,7 @@
 
 	}
 
-	if (!phpgw::get_var(session_name()) || !$GLOBALS['phpgw']->session->verify())
+	if (!phpgw::get_var(session_name(), 'string', 'COOKIE') || !$GLOBALS['phpgw']->session->verify())
 	{
 
 		if(!empty($config['debug_local_login']))
