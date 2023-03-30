@@ -161,9 +161,13 @@
 					
 					$parms['text'] = $v;
 					//while ( list($k, $v) = each($arg_array) )
-					foreach($arg_array as $k => $v)
+					foreach ($arg_array as $k => $v)
 					{
-						$parms['p'.$k] = $v;
+						if ($k < 1)
+						{
+							continue;
+						}
+						$parms['p' . $k] = $v;
 					}
 				}
 			}

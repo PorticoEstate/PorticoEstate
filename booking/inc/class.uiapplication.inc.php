@@ -272,11 +272,11 @@
 			}
 		}
 
-		function add_comment_to_application($application_id, $comment, $changeStatus = null)
+		function add_comment_to_application($application_id, $comment, $changeStatus = null, $customer_name = null)
 		{
 			$application = $this->application_bo->read_single($application_id);
 
-			$this->add_comment($application, $comment);
+			$this->add_comment($application, $comment, 'comment', $customer_name);
 			$this->set_display_in_dashboard($application, true, array('force' => true));
 			$application['frontend_modified'] = 'now';
 
@@ -290,11 +290,11 @@
 		}
 
 
-		protected function add_comment( &$application, $comment, $type = 'comment' )
+		protected function add_comment( &$application, $comment, $type = 'comment' , $customer_name = null)
 		{
 			$application['comments'][] = array(
 				'time' => 'now',
-				'author' => $this->current_account_fullname(),
+				'author' => $customer_name ? $customer_name : $this->current_account_fullname(),
 				'comment' => $comment,
 				'type' => $type
 			);
