@@ -32,8 +32,18 @@
 				'id' => $event['id'],
 				'resource_ids' => $event['resource_ids']), $skip_redirect);
 
-			$event_owner_person = !empty($external_login_info['ssn']) && $event['customer_ssn'] == $external_login_info['ssn'] ? true : false;
-			$event_owner_organization = $bouser->is_organization_admin($event['customer_organization_id']);
+
+			if(!empty($event['application_id']))
+			{
+				$check_for_owner = $this->application_ui->bo->read_single($event['application_id']);
+			}
+			else
+			{
+				$check_for_owner = $event;
+			}
+
+			$event_owner_person = !empty($external_login_info['ssn']) && $check_for_owner['customer_ssn'] == $external_login_info['ssn'] ? true : false;
+			$event_owner_organization = $bouser->is_organization_admin($check_for_owner['customer_organization_id']);
 
 			if(!empty($external_login_info['ssn']))
 			{
@@ -114,8 +124,8 @@
 				$_POST['org_from'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['org_from']));
 				$_POST['org_to'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['org_to']));
 
-				$new_date['from_'] = substr($_POST['org_from'], 0, 11) . $_POST['from_'];// . ":00";
-				$new_date['to_'] = substr($_POST['org_to'], 0, 11) . $_POST['to_'];// . ":00";
+				$new_date['from_'] = substr($_POST['org_from'], 0, 11) . $_POST['from_'] . ":00";
+				$new_date['to_'] = substr($_POST['org_to'], 0, 11) . $_POST['to_'] . ":00";
 
 				array_set_default($_POST, 'resources', array());
 
@@ -133,6 +143,8 @@
 
 				$test = $this->bo->read_single($event['id']);
 
+				$no_time_changes = false;
+
 //				if ($_POST['org_from'] <= $new_date['from_'] && $_POST['org_to'] >= $new_date['to_'])
 				if ($test['from_'] <= $new_date['from_'] && $test['to_'] >= $new_date['to_'])
 				{
@@ -142,6 +154,15 @@
 					}
 					else
 					{
+						if($test['from_'] == $new_date['from_'] && $test['to_'] == $new_date['to_'])
+						{
+							$no_time_changes = true;							
+						}
+						else if($test['from_'] < $new_date['from_'] || $test['to_'] > $new_date['to_'])
+						{
+							$free_up_time = true;
+						}
+
 						$event['from_'] = $new_date['from_'];
 						$event['to_'] = $new_date['to_'];
 						$_POST['from_'] = $new_date['from_'];
@@ -205,7 +226,7 @@
 					$event['customer_organization_name'] = $orginfo['name'];
 				}
 
-				if(!$errors)
+				if(!$errors && !$no_time_changes)
 				{
 
 					if (!is_null($event['application_id']) && $event['application_id'] != '' && !$errors['start_time'] && !$errors['end_time'])
@@ -245,8 +266,13 @@
 
 						$this->bo->send_notification(true, $event, $mailadresses, $orgdate);
 					}
-					$message = '';
-					$this->bo->send_admin_notification(true, $event, $message, $orgdate);
+
+
+					if(!$no_time_changes)
+					{
+						$message = '';
+						$this->bo->send_admin_notification(true, $event, $message, $orgdate);
+					}
 
 					if($free_up_time)
 					{

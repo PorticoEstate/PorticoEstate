@@ -30,17 +30,33 @@
 
 				$org_id = is_array($for_object) ? $for_object['customer_organization_id'] : (!is_null($for_object) ? $for_object : null);
 
+				$found_credentials = false;
 				if ($bouser->is_organization_admin($org_id))
 				{
 					$initial_roles[] = array('role' => self::ROLE_ADMIN);
+					$found_credentials = true;
 				}
 
 				$external_login_info = $bouser->validate_ssn_login(array(), true);
 
-				if ($for_object['customer_ssn'] == $external_login_info['ssn'])
+				if (!$found_credentials && $for_object['customer_ssn'] == $external_login_info['ssn'])
 				{
 					$initial_roles[] = array('role' => self::ROLE_ADMIN);
 				}
+
+				//final check on parent object (application)
+				if(!$found_credentials && $for_object['application_id'])
+				{
+					$check_for_owner = CreateObject('booking.boapplication')->read_single($for_object['application_id']);
+					$application_owner_person = !empty($external_login_info['ssn']) && $check_for_owner['customer_ssn'] == $external_login_info['ssn'] ? true : false;
+					$application_owner_organization = $bouser->is_organization_admin($check_for_owner['customer_organization_id']);
+
+					if($application_owner_person || $application_owner_organization)
+					{
+						$initial_roles[] = array('role' => self::ROLE_ADMIN);
+					}
+				}
+
 			}
 			return parent::get_subject_roles($for_object, $initial_roles);
 		}
@@ -273,7 +289,7 @@
 				$freetime = pretty_timestamp($event['from_']) . ' til ' . pretty_timestamp($event['to_']) . "\n";
 			}
 
-			$body .= '</p><p>' . $event['customer_organization_name'] ? $event['customer_organization_name'] : $event['contact_name'] . ' har avbestilt tid i ' . $event['building_name'] . ':<br />';
+			$body .= '</p><p>' . $event['customer_organization_name'] ? $event['customer_organization_name'] : $event['contact_name'] . ' har endret tid i ' . $event['building_name'] . ':<br />';
 			$body .= implode(", ", $this->so->get_resources(implode(",", $event['resources']))) . ' den ' . $freetime;
 			$body .= ' - <a href="' . $link . '">' . lang('Check calendar') . '</a></p>';
 
