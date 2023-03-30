@@ -1756,7 +1756,9 @@
 			$now = new DateTime();
 			$now->setTimezone($DateTimeZone);
 
-			if($aDate > $now && $months > 1)
+			$check_limit = clone($aDate);
+			$check_limit->modify('last day of this month');
+			if($check_limit > $now && $months > 1)
 			{
 				$months -=1;
 			}
