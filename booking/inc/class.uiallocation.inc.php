@@ -1147,10 +1147,13 @@
 			{
 				$res_names[] = $res['name'];
 			}
+
 			$allocation['resource'] = phpgw::get_var('resource');
+			$allocation['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show',
+					'id' => $allocation['application_id']));
 			$allocation['resource_info'] = join(', ', $res_names);
 			$allocation['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
-					'id' => $allocation['resources'][0]['building_id']));
+					'id' => $allocation['building_id']));
 			$allocation['org_link'] = self::link(array('menuaction' => 'booking.uiorganization.show',
 					'id' => $allocation['organization_id']));
 			$allocation['delete_link'] = self::link(array('menuaction' => 'booking.uiallocation.delete',
