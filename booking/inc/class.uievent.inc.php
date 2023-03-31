@@ -1457,6 +1457,8 @@
 			}
 			$event['resource'] = phpgw::get_var('resource');
 			$event['resource_info'] = join(', ', $res_names);
+			$event['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show',
+					'id' => $event['application_id']));
 			$event['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
 					'id' => $event['resources'][0]['buildings'][0]));
 			$event['org_link'] = self::link(array('menuaction' => 'booking.uiorganization.show',
