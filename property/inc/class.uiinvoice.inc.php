@@ -229,15 +229,64 @@
 
 			$list = $this->query();
 
-			if (is_array($list[0]))
+			$paid	 = phpgw::get_var('paid', 'bool');
+
+			$descr	 = array();
+			$name	 = array();
+			if($paid)
 			{
-				foreach ($list[0] as $name_entry => $value)
+				$name[]	 = 'voucher_out_id';
+				$descr[] = lang('voucher');
+				$name[]	 = 'voucher_date';
+				$descr[] = lang('voucher date');
+				$name[]	 = 'num_days';
+				$descr[] = lang('days');
+				$name[]	 = 'amount';
+				$descr[] = lang('amount');
+				$name[]	 = 'currency';
+				$descr[] = lang('currency');
+				$name[]	 = 'vendor';
+				$descr[] = lang('vendor');
+				$name[]	 = 'invoice_count';
+				$descr[] = lang('count');
+				$name[]	 = 'type';
+				$descr[] = lang('type');
+				$name[]	 = 'period';
+				$descr[] = lang('period');
+				$name[]	 = 'periodization';
+				$descr[] = lang('periodization');
+				$name[]	 = 'periodization_start';
+				$descr[] = lang('periodization start');
+				$name[]	 = 'janitor';
+				$descr[] = lang('janitor');
+				$name[]	 = 'supervisor';
+				$descr[] = lang('supervisor');
+				$name[]	 = 'budget_responsible';
+				$descr[] = lang('budget responsible');
+				$name[]	 = 'transfer_date';
+				$descr[] = lang('transfer');
+			}
+			else
+			{
+				if (is_array($list[0]))
 				{
-					$name[] = $name_entry;
+					foreach ($list[0] as $name_entry => $value)
+					{
+						$name[] = $name_entry;
+					}
 				}
+
+				$descr = $name;
+
 			}
 
-			$descr = $name;
+			foreach ($list as &$entry)
+			{
+				if(empty($entry['voucher_out_id']))
+				{
+					$entry['voucher_out_id'] = $entry['voucher_id'];
+				}
+			}
 
 			$this->bocommon->download($list, $name, $descr);
 		}
@@ -403,14 +452,15 @@
 						'menuaction'	 => 'property.uiinvoice.download',
 						'export'		 => true,
 						'skip_origin'	 => true,
-						'allrows'		 => true
-					)),
+						'allrows'		 => true,
+						'paid'			 => $paid
+						)),
 					'allrows'		 => true,
 					'editor_action'	 => '',
 					'field'			 => array()
 				)
 			);
-			if ($this->acl_add)
+			if (!$paid && $this->acl_add)
 			{
 				$data['datatable']['new_item'] = self::link(array(
 						'menuaction' => 'property.uiinvoice.add'
@@ -443,239 +493,8 @@
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
 
-			$uicols = array(
-				'input_type' => array
-					(
-					'hidden',
-					'hidden',
-					'hidden',
-					'hidden',
-					'hidden',
-					'hidden',
-					'hidden',
-					'hidden',
-					'hidden',
-					'link',
-					'link',
-					'hidden',
-					'hidden',
-					'hidden',
-					$paid ? 'varchar' : 'input',
-					'varchar',
-					'varchar',
-					'varchar',
-					'hidden',
-					'varchar',
-					'varchar',
-					'varchar',
-					'varchar',
-					'varchar',
-					$paid ? 'hidden' : 'input',
-					$paid ? 'hidden' : 'input',
-					'special',
-					'special',
-					'special',
-					'special2'
-				),
-				'type'		 => array
-					(
-					'number',
-					'',
-					'',
-					'',
-					'number',
-					'number',
-					'',
-					'number',
-					'',
-					'url',
-					'msg_box',
-					'',
-					'',
-					'',
-					$paid ? '' : 'text',
-					'',
-					'text',
-					'text',
-					'',
-					'',
-					'',
-					'',
-					'',
-					'',
-					$paid ? '' : 'checkbox',
-					$paid ? '' : 'radio',
-					'',
-					'',
-					'',
-					''
-				),
-				'col_name'	 => array
-					(
-					'payment_date',
-					'transfer',
-					'kreditnota',
-					'sign',
-					'vendor_name',
-					'counter_num',
-					'counter',
-					'voucher_id_num',
-					'voucher_id',
-					'voucher_id_lnk',
-					'voucher_date_lnk',
-					'sign_orig',
-					'num_days_orig',
-					'timestamp_voucher_date',
-					'num_days',
-					'amount_lnk',
-					'currency',
-					'vendor',
-					'invoice_count',
-					'invoice_count_lnk',
-					'type_lnk',
-					'period',
-					'periodization',
-					'periodization_start',
-					'kreditnota_tmp',
-					'sign_tmp',
-					'janitor_lnk',
-					'supervisor_lnk',
-					'budget_responsible_lnk',
-					'transfer_lnk'
-				),
-				'name'		 => array
-					(
-					'payment_date',
-					'dummy',
-					'dummy',
-					'dummy',
-					'vendor',
-					'counter',
-					'counter',
-					'voucher_id',
-					'voucher_id',
-					'voucher_id',
-					'voucher_date',
-					'sign_orig',
-					'num_days',
-					'timestamp_voucher_date',
-					'num_days',
-					'approved_amount',
-					'currency',
-					'vendor',
-					'invoice_count',
-					'invoice_count',
-					'type',
-					'period',
-					'periodization',
-					'periodization_start',
-					'kreditnota',
-					'empty_fild',
-					'janitor',
-					'supervisor',
-					'budget_responsible',
-					'transfer_id'
-				),
-				'formatter'	 => array
-					(
-					'',
-					'',
-					'',
-					'',
-					'',
-					'',
-					'',
-					'',
-					'',
-					'',
-					'',
-					'',
-					'',
-					'',
-					'',
-					'JqueryPortico.FormatterAmount2',
-					'',
-					'',
-					'',
-					'',
-					'',
-					$paid ? '' : 'FormatterPeriod',
-					$paid ? '' : 'FormatterPeriodization',
-					$paid ? '' : 'FormatterPeriodization_start',
-					'',
-					'',
-					'',
-					'',
-					'',
-					''
-				),
-				'descr'		 => array
-					(
-					'dummy',
-					'dummy',
-					'dummy',
-					'dummy',
-					'dummy',
-					'dummy',
-					'dummy',
-					'dummy',
-					'dummy',
-					lang('voucher'),
-					lang('Voucher Date'),
-					'dummy',
-					'dummy',
-					'dummy',
-					lang('Days'),
-					lang('approved amount'),
-					lang('currency'),
-					lang('Vendor'),
-					'dummy',
-					lang('Count'),
-					lang('Type'),
-					lang('Period'),
-					lang('periodization'),
-					lang('periodization start'),
-					lang('KreditNota'),
-					lang('None'),
-					lang('Janitor'),
-					lang('Supervisor'),
-					lang('Budget Responsible'),
-					lang('Transfer')
-				),
-				'className'	 => array
-					(
-					'',
-					'',
-					'',
-					'',
-					'',
-					'',
-					'',
-					'',
-					'',
-					'',
-					'center',
-					'',
-					'',
-					'',
-					$paid ? 'right' : '',
-					'right',
-					'',
-					'',
-					'',
-					'right',
-					'',
-					$paid ? 'center' : 'center',
-					$paid ? 'center' : 'center',
-					$paid ? 'center' : 'center',
-					'dt-center all',
-					'dt-center all',
-					'dt-center all',
-					'dt-center all',
-					'dt-center all',
-					'dt-center all'
-				)
-			);
+			$uicols = $this->get_uicols($paid);
+
 
 			$count_uicols_name = count($uicols['name']);
 
@@ -697,6 +516,8 @@
 
 				array_push($data['datatable']['field'], $params);
 			}
+
+			$data['datatable']['actions'] = array();
 
 			if (!$paid)
 			{
@@ -921,54 +742,10 @@ JS;
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		public function query()
+		private function get_uicols( $paid = null )
 		{
-			$paid			 = phpgw::get_var('paid', 'bool');
-			$start_date		 = phpgw::get_var('start_date');
-			$end_date		 = phpgw::get_var('end_date');
-			$vendor_id		 = phpgw::get_var('vendor_id', 'int');
-			$workorder_id	 = phpgw::get_var('workorder_id', 'int');
-			$project_id		 = phpgw::get_var('project_id', 'int');
-			$loc1			 = phpgw::get_var('loc1');
-			$voucher_id		 = $this->query && ctype_digit($this->query) ? $this->query : phpgw::get_var('voucher_id');
-			$invoice_id		 = phpgw::get_var('invoice_id');
-			$ecodimb		 = phpgw::get_var('ecodimb');
-			$search			 = phpgw::get_var('search');
-			$order			 = phpgw::get_var('order');
-			$draw			 = phpgw::get_var('draw', 'int');
-			$columns		 = phpgw::get_var('columns');
-			$export			 = phpgw::get_var('export', 'bool');
-
-			$params = array
-				(
-				'start'			 => phpgw::get_var('start', 'int', 'REQUEST', 0),
-				'results'		 => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query'			 => $search['value'],
-				'order'			 => $columns[$order[0]['column']]['data'],
-				'sort'			 => $order[0]['dir'],
-				'allrows'		 => phpgw::get_var('length', 'int') == -1 || $export,
-				'start_date'	 => $start_date,
-				'end_date'		 => $end_date,
-				'paid'			 => $paid,
-				'vendor_id'		 => $vendor_id,
-				'workorder_id'	 => $workorder_id,
-				'project_id'	 => $project_id,
-				'loc1'			 => $loc1,
-				'voucher_id'	 => $voucher_id,
-				'invoice_id'	 => $invoice_id,
-				'ecodimb'		 => $ecodimb
-			);
-
-			$invoice_list = $this->bo->read_invoice($params);
-
-			if ($export)
-			{
-				return $invoice_list;
-			}
-
 			$uicols = array(
-				'input_type' => array
-					(
+				'input_type' => array(
 					'hidden',
 					'hidden',
 					'hidden',
@@ -1000,8 +777,7 @@ JS;
 					'special',
 					'special2'
 				),
-				'type'		 => array
-					(
+				'type'		 => array(
 					'number',
 					'',
 					'',
@@ -1033,8 +809,7 @@ JS;
 					'',
 					''
 				),
-				'col_name'	 => array
-					(
+				'col_name'	 => array(
 					'payment_date',
 					'transfer',
 					'kreditnota',
@@ -1066,8 +841,7 @@ JS;
 					'budget_responsible_lnk',
 					'transfer_lnk'
 				),
-				'name'		 => array
-					(
+				'name'		 => array(
 					'payment_date',
 					'dummy',
 					'dummy',
@@ -1122,9 +896,9 @@ JS;
 					'',
 					'',
 					'',
-					$paid ? '' : 'myPeriodDropDown',
-					$paid ? '' : 'myPeriodizationDropDown',
-					$paid ? '' : 'myPeriodization_startDropDown',
+					$paid ? '' : 'FormatterPeriod',
+					$paid ? '' : 'FormatterPeriodization',
+					$paid ? '' : 'FormatterPeriodization_start',
 					'',
 					'',
 					'',
@@ -1165,8 +939,7 @@ JS;
 					lang('Budget Responsible'),
 					lang('Transfer')
 				),
-				'className'	 => array
-					(
+				'className'	 => array(
 					'',
 					'',
 					'',
@@ -1177,28 +950,78 @@ JS;
 					'',
 					'',
 					'',
-					'centerClasss',
+					'center',
 					'',
 					'',
 					'',
-					$paid ? 'rightClasss' : '',
-					'rightClasss',
+					$paid ? 'right' : '',
+					'right',
 					'',
 					'',
 					'',
-					'rightClasss',
+					'right',
 					'',
-					$paid ? 'centerClasss' : 'comboClasss',
-					$paid ? 'centerClasss' : 'comboClasss',
-					$paid ? 'centerClasss' : 'comboClasss',
-					'centerClasss',
-					'centerClasss',
-					'',
-					'',
-					'centerClasss',
-					'centerClasss'
+					$paid ? 'center' : 'center',
+					$paid ? 'center' : 'center',
+					$paid ? 'center' : 'center',
+					'dt-center all',
+					'dt-center all',
+					'dt-center all',
+					'dt-center all',
+					'dt-center all',
+					'dt-center all'
 				)
 			);
+
+			return $uicols;
+		}
+
+		public function query()
+		{
+			$paid			 = phpgw::get_var('paid', 'bool');
+			$start_date		 = phpgw::get_var('start_date');
+			$end_date		 = phpgw::get_var('end_date');
+			$vendor_id		 = phpgw::get_var('vendor_id', 'int');
+			$workorder_id	 = phpgw::get_var('workorder_id', 'int');
+			$project_id		 = phpgw::get_var('project_id', 'int');
+			$loc1			 = phpgw::get_var('loc1');
+			$voucher_id		 = $this->query && ctype_digit($this->query) ? $this->query : phpgw::get_var('voucher_id');
+			$invoice_id		 = phpgw::get_var('invoice_id');
+			$ecodimb		 = phpgw::get_var('ecodimb');
+			$search			 = phpgw::get_var('search');
+			$order			 = phpgw::get_var('order');
+			$draw			 = phpgw::get_var('draw', 'int');
+			$columns		 = phpgw::get_var('columns');
+			$export			 = phpgw::get_var('export', 'bool');
+
+			$params = array
+				(
+				'start'			 => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results'		 => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query'			 => $search['value'],
+				'order'			 => $columns[$order[0]['column']]['data'],
+				'sort'			 => $order[0]['dir'],
+				'allrows'		 => phpgw::get_var('length', 'int') == -1 || $export,
+				'start_date'	 => $start_date,
+				'end_date'		 => $end_date,
+				'paid'			 => $paid,
+				'vendor_id'		 => $vendor_id,
+				'workorder_id'	 => $workorder_id,
+				'project_id'	 => $project_id,
+				'loc1'			 => $loc1,
+				'voucher_id'	 => $voucher_id,
+				'invoice_id'	 => $invoice_id,
+				'ecodimb'		 => $ecodimb
+			);
+
+			$invoice_list = $this->bo->read_invoice($params);
+
+			if ($export)
+			{
+				return $invoice_list;
+			}
+
+			$uicols = $this->get_uicols($paid);
 
 			$link_sub = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice.list_sub',
 				'user_lid'	 => $this->user_lid));
