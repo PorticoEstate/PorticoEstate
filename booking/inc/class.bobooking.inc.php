@@ -1756,6 +1756,16 @@
 			$now = new DateTime();
 			$now->setTimezone($DateTimeZone);
 
+			/**
+			 * wait for desired time within day
+			 */
+			$start_of_month = clone($aDate);
+			$start_of_month->modify('first day of this month');
+
+			if($start_of_month > $now && $months > 1)
+			{
+				$months -=1;
+			}
 			$check_limit = clone($aDate);
 			$check_limit->modify('last day of this month');
 			if($check_limit > $now && $months > 1)

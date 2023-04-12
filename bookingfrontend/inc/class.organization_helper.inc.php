@@ -80,6 +80,10 @@
 				{
 					$ret['postadresse'] = $ret['forretningsadresse'];
 				}
+				if(empty($ret['postadresse']))
+				{
+					$ret['postadresse'] = $ret['beliggenhetsadresse'];
+				}
 				return $ret;
 			}
 			else
@@ -115,6 +119,11 @@
 			if($ret && !isset($ret['postadresse']))
 			{
 				$ret['postadresse'] = $ret['forretningsadresse'];
+			}
+
+			if($ret && empty($ret['postadresse']))
+			{
+				$ret['postadresse'] = $ret['beliggenhetsadresse'];
 			}
 
 			return $ret;
