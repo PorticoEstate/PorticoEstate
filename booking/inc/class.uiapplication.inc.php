@@ -1632,15 +1632,16 @@
 			$articles = CreateObject('booking.soarticle_mapping')->get_articles($resource_ids);
 
 			self::render_template_xsl($template, array(
-				'application' => $application,
-				'activities' => $activities,
-				'agegroups' => $agegroups,
-				'audience' => $audience,
-				'resource_list'	=> array('options' => $resources),
+				'add_action'	 => self::link(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'resource_id' => $resource_id, 'simple' => $simple)),
+				'application'	 => $application,
+				'activities'	 => $activities,
+				'agegroups'		 => $agegroups,
+				'audience'		 => $audience,
+				'resource_list'	 => array('options' => $resources),
 				'direct_booking' => $direct_booking,
-				'config' => $config,
-				'has_articles' => !!$articles,
-				'tax_code_list'	=> json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
+				'config'		 => $config,
+				'has_articles'	 => !!$articles,
+				'tax_code_list'	 => json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
 				)
 			);
 		}
