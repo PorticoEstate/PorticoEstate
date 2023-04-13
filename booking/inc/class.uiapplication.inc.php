@@ -978,14 +978,22 @@
 			$organization_number = phpgwapi_cache::session_get($this->module, self::ORGNR_SESSION_KEY);
 
 			$building_id = phpgw::get_var('building_id', 'int' ,'REQUEST', -1 );
+			$resource_id = phpgw::get_var('resource_id', 'int');
+			$resource = $this->resource_bo->so->read_single($resource_id);
 			$simple = phpgw::get_var('simple', 'bool');
+
+			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && $resource['simple_booking_start_date'] && $resource['simple_booking_start_date'] < time() && !$simple)
+			{
+				self::redirect(array('menuaction' => 'bookingfrontend.uiresource.show', 'id' => $resource_id, 'building_id' => $building_id, 'simple' => true));
+			}
+
 			$bouser = CreateObject('bookingfrontend.bouser');
 
 			$errors = array();
 			$user_data = phpgwapi_cache::session_get($bouser->get_module(), $bouser::USERARRAY_SESSION_KEY);
 			if($user_data['ssn'])
 			{
-				$this->validate_limit_number(phpgw::get_var('resource_id', 'int' ),$user_data['ssn'],$errors);
+				$this->validate_limit_number($resource_id, $user_data['ssn'],$errors);
 			}
 
 			$application_id = phpgw::get_var('application_id', 'int');
@@ -1157,7 +1165,7 @@
 							'</button>'
 						);
 						// Redirect to same URL so as to present a new, empty form
-						self::redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple, 'resource_id' => phpgw::get_var('resource_id', 'int')));
+						self::redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple, 'resource_id' => $resource_id));
 					}
 					else
 					{
@@ -1293,7 +1301,7 @@
 						// Redirect to same URL so as to present a new, empty form
 						if($simple)
 						{
-							self::redirect(array('menuaction' => $this->url_prefix . '.add_contact',  'id' => phpgw::get_var('resource_id', 'int'), 'building_id' => $building_id ));
+							self::redirect(array('menuaction' => $this->url_prefix . '.add_contact',  'id' => $resource_id, 'building_id' => $building_id ));
 						}
 						else
 						{
@@ -1394,7 +1402,7 @@
 
 			if(empty($application['resources']))
 			{
-				$application['resources_json'] = json_encode(array(phpgw::get_var('resource_id', 'int')));
+				$application['resources_json'] = json_encode(array($resource_id));
 			}
 			else
 			{
@@ -1509,7 +1517,6 @@
 			$resource_filters = array('active' => 1, 'rescategory_active' => 1, 'building_id' => $building_id );
 			$_resources = $this->resource_bo->so->read(array('filters' => $resource_filters, 'sort' => 'sort', 'results' => -1));
 
-			$resource_id = phpgw::get_var('resource_id', 'int');
 			$resource_ids = array();
 			$resources = array();
 			$direct_booking = false;
