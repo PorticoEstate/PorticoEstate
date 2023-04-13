@@ -1396,7 +1396,15 @@
 
 				if($resource['simple_booking_start_date'])
 				{
-					$simple_booking_start_date = new DateTime(date('Y-m-d H:i', $resource['simple_booking_start_date']));
+					$simple_booking_start_date = new DateTime(date('Y-m-d H:i', $resource['simple_booking_start_date']), $DateTimeZone);
+
+					$now = new DateTime();
+					$now->setTimezone($DateTimeZone);
+
+					if($simple_booking_start_date > $now)
+					{
+						$resource['skip_timeslot'] = true;
+					}
 
 					if($simple_booking_start_date > $_from)
 					{
@@ -1451,9 +1459,9 @@
 				}
 
 
-				if ($resource['simple_booking'])
+				if ($resource['simple_booking'] && empty($resource['skip_timeslot']))
 				{
-					$event_ids = array_merge($event_ids, $this->so->event_ids_for_resource($resource['id'], $from, $to));
+					$event_ids = array_merge($event_ids, $this->so->event_ids_for_resource($resource['id'], $_from, $_to));
 				}
 
 				$resource['from'] = $from;
@@ -1501,6 +1509,11 @@
 
 			foreach ($resources['results'] as $resource)
 			{
+				if(!empty($resource['skip_timeslot']))
+				{
+					continue;
+				}
+
 				$availlableTimeSlots[$resource['id']] = [];
 
 				if ($resource['simple_booking'] && $resource['simple_booking_start_date'])
