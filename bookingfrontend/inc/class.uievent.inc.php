@@ -372,6 +372,13 @@
 			$config->read();
 
 			$event = $this->bo->read_single($id);
+
+			if(!$event)
+			{
+				// Redirect to the front page
+				self::redirect(array());
+			}
+
 			$from_org = phpgw::get_var('from_org', 'boolean', 'REQUEST', false);
 			$bouser = CreateObject('bookingfrontend.bouser');
 			$errors = array();

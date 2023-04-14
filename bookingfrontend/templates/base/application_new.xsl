@@ -1,6 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div class="container new-application-page pt-5" id="new-application-page">
-		<form action="#" data-bind='' method="POST" id='application_form' enctype='multipart/form-data' name="form" novalidate="true" class="needs-validationm">
+		<form action="{add_action}" data-bind='' method="POST" id='application_form' enctype='multipart/form-data' name="form" novalidate="true" class="needs-validationm">
 			<div class="row">
 
 				<div class="col-md-8 offset-md-2">
