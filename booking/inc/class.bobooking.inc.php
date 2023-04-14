@@ -1461,7 +1461,7 @@
 
 				if ($resource['simple_booking'] && empty($resource['skip_timeslot']))
 				{
-					$event_ids = array_merge($event_ids, $this->so->event_ids_for_resource($resource['id'], $_from, $_to));
+					$event_ids = array_merge($event_ids, $this->so->event_ids_for_resource($resource['id'], $_from, $to));
 				}
 
 				$resource['from'] = $from;
