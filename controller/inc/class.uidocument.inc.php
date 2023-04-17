@@ -61,6 +61,9 @@
 			$this->add = $GLOBALS['phpgw']->acl->check('.procedure', PHPGW_ACL_ADD, 'controller');//2
 			$this->edit = $GLOBALS['phpgw']->acl->check('.procedure', PHPGW_ACL_EDIT, 'controller');//4
 			$this->delete = $GLOBALS['phpgw']->acl->check('.procedure', PHPGW_ACL_DELETE, 'controller');//8
+
+			self::set_active_menu('admin::controller::controller_document_types');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= ': ' .lang('document types');
 		}
 
 		public function query()

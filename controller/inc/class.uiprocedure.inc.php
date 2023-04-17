@@ -79,6 +79,8 @@
 			$this->_category_acl = isset($config->config_data['acl_at_control_area']) && $config->config_data['acl_at_control_area'] == 1 ? true : false;
 			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 //			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
+			$function_msg	 = lang('procedure');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . ': ' . $function_msg;
 		}
 
 		public function index()
