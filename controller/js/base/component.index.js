@@ -202,7 +202,7 @@ update_table = function (location_code)
 					$("#extra_row").hide();
 
 				}
-				if (filter_options !== null && filtered_location_id != return_location_id)
+				if (filter_options !== null && location_id && filtered_location_id != return_location_id)
 				{
 					$("#filtered_location_id").val(location_id);
 					$("#extra_row").show();
@@ -211,7 +211,7 @@ update_table = function (location_code)
 					$.each(filter_options, function (key, filter)
 					{
 						var list = filter.list;
-						$extra_filter.append($("<select></select>").attr("id", location_id + '_' + filter.name).text(location_id + '_' + filter.name));
+						$extra_filter.append($("<select class='pure-u-20-24'></select>").attr("id", location_id + '_' + filter.name).text(location_id + '_' + filter.name));
 
 						var custom_select = $("#" + location_id + '_' + filter.name);
 
