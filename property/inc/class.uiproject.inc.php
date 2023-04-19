@@ -2946,8 +2946,11 @@ JS;
 				'results'	 => -1,
 				)
 			);
+			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($values as & $_order_entry)
 			{
+				$_order_entry['end_date'] = $GLOBALS['phpgw']->common->show_date($_order_entry['end_date'], $dateformat);
+
 				$_order_entry['send_order'] = '';
 				if (isset($_order_entry['mail_recipients'][0]) && $_order_entry['mail_recipients'][0])
 				{

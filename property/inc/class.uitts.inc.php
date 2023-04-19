@@ -3391,6 +3391,54 @@ JS;
 
 
 			// end invoice table
+
+			$orders_def = array
+				(
+				array('key'			 => 'workorder_id', 'label'			 => lang('Workorder'), 'sortable'		 => true,
+					'formatter'		 => 'JqueryPortico.formatLink'),
+				array('key' => 'title', 'label' => lang('title'), 'sortable' => true),
+//				array('key'		 => 'budget', 'label'		 => lang('budget'), 'sortable'	 => true,
+//					'className'	 => 'right',
+//					'formatter'	 => 'JqueryPortico.FormatterAmount0'
+//					),
+				array('key' => 'vendor_name', 'label' => lang('Vendor'), 'sortable' => true),
+				array('key' => 'status', 'label' => lang('Status'), 'sortable' => true),
+				array('key'		 => 'end_date', 'label'		 => lang('end date'), 'sortable'	 => false,
+					'className'	 => 'center')
+			);
+
+
+			$list_orders = false;
+			$project_id = -1;
+			if(!empty($ticket['target']))
+			{
+				foreach ($ticket['target'] as $_targets)
+				{
+					if($_targets['location'] == '.project')
+					{
+						$project_id = $_targets['data'][0]['id'];
+						$list_orders = true;
+					}
+				}
+			}
+
+			$datatable_def[] = array
+				(
+				'container'	 => 'datatable-container_10',
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiproject.get_orders',
+						'project_id' => $project_id, 'phpgw_return_as' => 'json'))),
+//				'requestUrl' => "''",
+//				'data'		 => json_encode($_order_data),
+				'data'		 => json_encode(array()),
+				'ColumnDefs' => $orders_def,
+				'config'	 => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true),
+//					array('allrows' => true),
+					array('order' => json_encode(array(0, 'desc')))
+				)
+			);
+
 			//----------------------------------------------datatable settings--------
 
 
@@ -3784,6 +3832,7 @@ JS;
 				'payment_type_list'				 => array('options' => execMethod('property.bogeneric.get_list', array('type' => 'order_template_payment_type', 'selected' => $ticket['payment_type']))),
 				'content_files'					 => $content_files,
 				'tag_list'						 => array('options' => createObject('property.bofiles')->get_all_tags()),
+				'list_orders'					 => $list_orders,
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');

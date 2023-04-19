@@ -73,14 +73,14 @@
 			);
 
 
-			if ($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('.control', phpgwapi_acl::EDIT, 'controller'))
-			{
-				$menus['navigation']['settings']			 = array(
-					'text'	 => lang('settings'),
-					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uisettings.edit')),
-					'image'	 => array('property', 'location_1')
-				);
-			}
+//			if ($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('.control', phpgwapi_acl::EDIT, 'controller'))
+//			{
+//				$menus['navigation']['settings']			 = array(
+//					'text'	 => lang('settings'),
+//					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uisettings.edit')),
+//					'image'	 => array('property', 'location_1')
+//				);
+//			}
 
 			$menus['navigation']['start_inspection']	 = array(
 				'text'	 => lang('start inspection'),
@@ -206,14 +206,14 @@
 					'group' => 'office'
 				);
 
-			if ($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('.control', phpgwapi_acl::EDIT, 'controller'))
-			{
-				$menus['navigation']['settings']			 = array(
-					'text'	 => lang('settings'),
-					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uisettings.edit')),
-					'image'	 => array('property', 'location_1')
-				);
-			}
+//			if ($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('.control', phpgwapi_acl::EDIT, 'controller'))
+//			{
+//				$menus['navigation']['settings']			 = array(
+//					'text'	 => lang('settings'),
+//					'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uisettings.edit')),
+//					'image'	 => array('property', 'location_1')
+//				);
+//			}
 
 			$menus['navigation']['start_inspection']	 = array(
 				'text'	 => lang('start inspection'),
