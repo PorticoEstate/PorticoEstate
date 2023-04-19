@@ -1054,7 +1054,7 @@
 			$sql = "SELECT DISTINCT fm_workorder.id AS workorder_id, fm_workorder.title, fm_workorder.vendor_id, fm_workorder.addition,"
 				. " fm_workorder_status.descr as status, fm_workorder_status.closed, fm_workorder_status.canceled,"
 				. " fm_workorder.account_id AS b_account_id, fm_workorder.charge_tenant,"
-				. " fm_workorder.mail_recipients,fm_workorder_budget.year, order_sent"
+				. " fm_workorder.mail_recipients,fm_workorder_budget.year, order_sent, fm_workorder.end_date"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
@@ -1100,7 +1100,8 @@
 					'obligation'			 => 0,
 					'actual_cost'			 => 0,
 					'year'					 => $this->db->f('year'),
-					'order_sent'			 => $this->db->f('order_sent')
+					'order_sent'			 => $this->db->f('order_sent'),
+					'end_date'				 => $this->db->f('end_date')
 				);
 				$_orders[]	 = $this->db->f('workorder_id');
 			}
