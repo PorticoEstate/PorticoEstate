@@ -2940,7 +2940,12 @@ JS;
 				return $this->jquery_results($result_data);
 			}
 
+			$order		 = phpgw::get_var('order');
+			$columns	 = phpgw::get_var('columns');
+
 			$values = $this->bo->get_orders(array(
+				'order'			 => $columns[$order[0]['column']]['data'],
+				'sort'			 => $order[0]['dir'],
 				'project_id' => $project_id,
 				'year'		 => phpgw::get_var('year', 'int'),
 				'results'	 => -1,
@@ -2950,6 +2955,7 @@ JS;
 			foreach ($values as & $_order_entry)
 			{
 				$_order_entry['end_date'] = $GLOBALS['phpgw']->common->show_date($_order_entry['end_date'], $dateformat);
+				$_order_entry['user_name'] = $GLOBALS['phpgw']->accounts->get($_order_entry['user_id'])->__toString();
 
 				$_order_entry['send_order'] = '';
 				if (isset($_order_entry['mail_recipients'][0]) && $_order_entry['mail_recipients'][0])

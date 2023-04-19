@@ -3393,40 +3393,58 @@ JS;
 			// end invoice table
 
 			$orders_def = array
-				(
-				array('key'			 => 'workorder_id', 'label'			 => lang('Workorder'), 'sortable'		 => true,
-					'formatter'		 => 'formatLinkproject'),
-				array('key' => 'title', 'label' => lang('title'), 'sortable' => true),
-//				array('key'		 => 'budget', 'label'		 => lang('budget'), 'sortable'	 => true,
-//					'className'	 => 'right',
-//					'formatter'	 => 'JqueryPortico.FormatterAmount0'
-//					),
-				array('key' => 'vendor_name', 'label' => lang('Vendor'), 'sortable' => true),
-				array('key' => 'status', 'label' => lang('Status'), 'sortable' => true),
-				array('key'		 => 'end_date', 'label'		 => lang('end date'), 'sortable'	 => false,
-					'className'	 => 'center')
+			(
+			array('key' => 'workorder_id', 'label' => lang('Workorder'), 'sortable' => true,
+			'formatter' => 'formatLinkproject'),
+			array('key' => 'title', 'label' => lang('title'), 'sortable' => false),
+			array('key' => 'user_name', 'label' => lang('user'), 'sortable' => false),
+			array('key' => 'vendor_name', 'label' => lang('Vendor'), 'sortable' => false),
+			array('key' => 'status', 'label' => lang('Status'), 'sortable' => false),
+			array('key' => 'end_date', 'label' => lang('end date'), 'sortable' => false,
+			'className' => 'center')
 			);
 
-
 			$list_orders = false;
-			$project_id = -1;
+			$project_ids = array();
 			if(!empty($ticket['target']))
 			{
 				foreach ($ticket['target'] as $_targets)
 				{
 					if($_targets['location'] == '.project')
 					{
-						$project_id = $_targets['data'][0]['id'];
+						foreach ($_targets['data'] as $_target_data)
+						{
+							$project_ids[] = $_target_data['id'];
+						}
 						$list_orders = true;
+						unset($_target_data);
 					}
 				}
+				unset($_targets);
+			}
+
+			if(!empty($ticket['origin']))
+			{
+				foreach ($ticket['origin'] as $_targets)
+				{
+					if($_targets['location'] == '.project')
+					{
+						foreach ($_targets['data'] as $_target_data)
+						{
+							$project_ids[] = $_target_data['id'];
+						}
+						$list_orders = true;
+						unset($_target_data);
+					}
+				}
+				unset($_targets);
 			}
 
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_10',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiproject.get_orders',
-						'project_id' => $project_id, 'phpgw_return_as' => 'json'))),
+						'project_id' => $project_ids, 'phpgw_return_as' => 'json'))),
 //				'requestUrl' => "''",
 //				'data'		 => json_encode($_order_data),
 				'data'		 => json_encode(array()),
