@@ -3395,7 +3395,7 @@ JS;
 			$orders_def = array
 				(
 				array('key'			 => 'workorder_id', 'label'			 => lang('Workorder'), 'sortable'		 => true,
-					'formatter'		 => 'JqueryPortico.formatLink'),
+					'formatter'		 => 'formatLinkproject'),
 				array('key' => 'title', 'label' => lang('title'), 'sortable' => true),
 //				array('key'		 => 'budget', 'label'		 => lang('budget'), 'sortable'	 => true,
 //					'className'	 => 'right',
