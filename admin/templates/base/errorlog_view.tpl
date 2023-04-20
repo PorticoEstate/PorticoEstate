@@ -1,9 +1,22 @@
 <!-- BEGIN list -->
-<table class="pure-table">
-	<tr>
-		{nextmatchs_left}&nbsp;{nextmatchs_right}
-	</tr>
-</table>
+
+<form class='pure-form' method='POST' action=''>
+	<table class="pure-table">
+		<tr>
+			<td style="text-align: left;" colspan="2">
+				<input id="date" name="date" onChange="this.form.submit();" value="{value_date}"/>
+			</td>
+			<td style="text-align: right;" colspan="2">
+				{select_user}
+			</td>
+		</tr>
+		<tbody
+			<tr>
+			{nextmatchs_left}&nbsp;{nextmatchs_right}
+			</tr>
+		</tbody>
+	</table>
+</form>
 {showing}
 
 <table id="admin_error_log_list" class="pure-table">
@@ -35,17 +48,17 @@
 <!-- END list -->
 
 <!-- BEGIN row -->
-	<tr class="{tr_class}">
-		<td>{row_date}</td>
-		<td>{row_loginid}</td>
-		<td>{row_app}</td>
-		<td>{row_severity}</td>
-		<td>{row_file}</td>
-		<td>{row_line}</td>
-	</tr>
-	<tr class="{tr_class}">
-	    <td>&nbsp;</td>
-		<td colspan="5"><pre>{row_message}</pre></td>
+<tr class="{tr_class}">
+	<td>{row_date}</td>
+	<td>{row_loginid}</td>
+	<td>{row_app}</td>
+	<td>{row_severity}</td>
+	<td>{row_file}</td>
+	<td>{row_line}</td>
+</tr>
+<tr class="{tr_class}">
+	<td>&nbsp;</td>
+	<td colspan="5"><pre>{row_message}</pre></td>
 	</tr>
 <!-- END row -->
 
