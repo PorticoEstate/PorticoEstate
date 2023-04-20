@@ -1,7 +1,7 @@
 <!-- BEGIN list -->
 
-<form class='pure-form' method='POST' action=''>
-	<table class="pure-table">
+<table class="pure-table">
+	<form class='pure-form' method='POST' action=''>
 		<tr>
 			<td style="text-align: left;" colspan="2">
 				<input id="date" name="date" onChange="this.form.submit();" value="{value_date}"/>
@@ -10,13 +10,11 @@
 				{select_user}
 			</td>
 		</tr>
-		<tbody
-			<tr>
-			{nextmatchs_left}&nbsp;{nextmatchs_right}
-			</tr>
-		</tbody>
-	</table>
-</form>
+	</form>
+	<tr>
+		{nextmatchs_left}&nbsp;{nextmatchs_right}
+	</tr>
+</table>
 {showing}
 
 <table id="admin_error_log_list" class="pure-table">
