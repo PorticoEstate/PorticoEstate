@@ -20,19 +20,35 @@
 			$this->db =& $GLOBALS['phpgw']->db;
 		}
 
-		function test_account_id($account_id)
+		function test_account_id($account_id, $date = null)
 		{
 			$account_id = (int) $account_id;
+
+			$where = 'WHERE';
+
+			$filtermethod = '';
+
 			if ($account_id > 0)
 			{
-				return " WHERE log_account_id = $account_id";
+				$filtermethod.= " $where log_account_id = $account_id";
+				$where = 'AND';
 			}
+
+			if ($date > 0)
+			{
+				$limit_date = date($this->db->date_format(), $date);
+				$filtermethod.= " $where log_date <= '$limit_date 23:59:59'";
+				$where = 'AND';
+			}
+			return $filtermethod;
 		}
 
-		function list_log($account_id,$start,$order,$sort)
+		function list_log($account_id,$start,$order,$sort, $date = null)
 		{
-			$where = $this->test_account_id($account_id);
-			$this->db->limit_query("SELECT log_date,log_account_lid,log_app,log_severity,log_file,log_line,log_msg FROM phpgw_log $where ORDER BY log_id desc",$start, __LINE__, __FILE__);
+			$where = $this->test_account_id($account_id, $date);
+			$this->db->limit_query("SELECT log_date,log_account_lid,log_app,log_severity,"
+				. "log_file,log_line,log_msg FROM phpgw_log"
+				. " $where ORDER BY log_id desc",$start, __LINE__, __FILE__);
 			$records = array();
 			while ($this->db->next_record())
 			{
@@ -49,9 +65,9 @@
 			return $records;
 		}
 
-		function total($account_id)
+		function total($account_id, $date = null)
 		{
-			$where = $this->test_account_id($account_id);
+			$where = $this->test_account_id($account_id, $date);
 
 			$this->db->query("SELECT COUNT(*) as cnt FROM phpgw_log $where", __LINE__, __FILE__);
 			$this->db->next_record();

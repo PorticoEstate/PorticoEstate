@@ -11,8 +11,6 @@
 
 	/* $Id$ */
 
-	phpgw::import_class('phpgwapi.jquery');
-
 	class admin_uiaccess_history
 	{
 		public $public_functions = array
@@ -22,7 +20,7 @@
 
 		public function __construct()
 		{
-			phpgwapi_jquery::load_widget('select2');
+
 		}
 
 		public function list_history()
@@ -48,6 +46,9 @@
 			
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Admin').' - '.lang('View access log');
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::access_log';
+
+			phpgw::import_class('phpgwapi.jquery');
+			phpgwapi_jquery::load_widget('select2');
 
 			$GLOBALS['phpgw']->common->phpgw_header(true);
 
@@ -82,8 +83,6 @@
 				);
 			}
 
-			phpgw::import_class('phpgwapi.jquery');
-			phpgwapi_jquery::load_widget('select2');
 
 			$account_list	 = "<div><form class='pure-form' method='POST' action=''>";
 			$account_list	 .= '<select name="account_id" id="account_id" onChange="this.form.submit();" style="width:50%;">';
@@ -101,7 +100,7 @@
 			$account_list	 .= '<noscript><input type="submit" name="user" value="Select"></noscript>';
 			$account_list	 .= '</form></div>';
 
-			$lan_user = lang('Search for a user');
+			$lang_user = lang('Search for a user');
 			$account_list	 .= <<<HTML
 					<script>
 						var oArgs = {menuaction: 'preferences.boadmin_acl.get_users'};
@@ -121,7 +120,7 @@
 							cache: true
 						  },
 						  width: '50%',
-						  placeholder: '{$lan_user}',
+						  placeholder: '{$lang_user}',
 						  minimumInputLength: 2,
 						  language: "no",
 						  allowClear: true
