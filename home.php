@@ -285,7 +285,7 @@ HTML;
 	}
 	if( phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message'))
 	{
-		echo "<div class='msg_important'><h2>";
+		echo "<div class='msg_important container'><h2>";
 		echo nl2br(phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message_title'));
 		echo "</h2>";
 		echo nl2br(phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message'));
