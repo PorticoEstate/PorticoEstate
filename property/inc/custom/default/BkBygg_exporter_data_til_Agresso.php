@@ -143,7 +143,7 @@
 
 				$Header = array(
 					'AcceptFlag' => 1,
-					'OrderType]' => 'WB',
+					'OrderType' => 'WB',
 					'Status'	 => 'N',
 					'OrderDate'	 => date('Y-m-d'),
 					'HeaderText' => $param['invoice_remark'], // Fakturanotat
