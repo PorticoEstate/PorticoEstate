@@ -317,6 +317,7 @@
 					'order_id'		 => $workorder['id'],
 					'tax_code'		 => $tax_code,
 					'buyer'			 => $buyer,
+					'invoice_remark' => mb_substr($workorder['title'], 0, 50),
 					'lines'			 => array(
 						array(
 							'unspsc_code'	 => $workorder['unspsc_code'] ? $workorder['unspsc_code'] : 'UN-72000000',
