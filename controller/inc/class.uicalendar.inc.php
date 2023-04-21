@@ -96,7 +96,7 @@
 
 			$this->location_finder = new location_finder();
 
-			self::set_active_menu('controller::location_check_list');
+			self::set_active_menu('controller::calendar_overview');
 
 			if (phpgw::get_var('noframework', 'bool'))
 			{
