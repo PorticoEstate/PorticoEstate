@@ -271,6 +271,9 @@
 				case 'FACTUM':
 					$file_name_part = 'FACTUM_';
 					break;
+				case 'UBW_XML':
+					$file_name_part = 'ABWOrder_';
+					break;
 				case 'VISMA':
 					$file_name_part = 'VISMA_';
 					break;

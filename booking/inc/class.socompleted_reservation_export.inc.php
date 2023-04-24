@@ -386,6 +386,10 @@
 			{
 				$export_format = 'factum';
 			}
+			elseif ($this->config_data['external_format'] == 'UBW_XML')
+			{
+				$export_format = 'ubw_xml';
+			}
 			elseif ($this->config_data['external_format'] == 'KOMMFAKT')
 			{
 				$export_format = 'kommfakt';
@@ -423,6 +427,12 @@
 								$export_format, count(array_filter($external_reservations, array($this, 'not_free'))), $this->calculate_total_cost($external_reservations), $this->format_factum($external_reservations, $account_codes, $number_generator)
 						);
 					}
+					elseif ($this->config_data['external_format'] == 'UBW_XML')
+					{
+						return $this->build_export_result(
+								$export_format, count(array_filter($external_reservations, array($this, 'not_free'))), $this->calculate_total_cost($external_reservations), $this->format_ubw_xml($external_reservations, $account_codes, $number_generator)
+						);
+					}
 					elseif ($this->config_data['external_format'] == 'KOMMFAKT')
 					{
 						return $this->build_export_result(
@@ -458,6 +468,10 @@
 			{
 				$export_format = 'factum';
 			}
+			elseif ($this->config_data['internal_format'] == 'UBW_XML')
+			{
+				$export_format = 'ubw_xml';
+			}
 			elseif ($this->config_data['internal_format'] == 'KOMMFAKT')
 			{
 				$export_format = 'kommfakt';
@@ -492,6 +506,12 @@
 					{
 						return $this->build_export_result(
 								$export_format, count(array_filter($internal_reservations, array($this, 'not_free'))), $this->calculate_total_cost($internal_reservations), $this->format_factum($internal_reservations, $account_codes, $number_generator)
+						);
+					}
+					elseif ($this->config_data['internal_format'] == 'UBW_XML')
+					{
+						return $this->build_export_result(
+								$export_format, count(array_filter($internal_reservations, array($this, 'not_free'))), $this->calculate_total_cost($internal_reservations), $this->format_ubw_xml($internal_reservations, $account_codes, $number_generator)
 						);
 					}
 					elseif ($this->config_data['internal_format'] == 'KOMMFAKT')
@@ -621,6 +641,10 @@
 			{
 				case 'factum':
 					return $this->format_factum_out($combined_data);
+					break;
+				case 'ubw_xml':
+					return $this->format_ubw_xml($combined_data);
+					break;
 				default:
 					return join('', $combined_data);
 			}
@@ -639,7 +663,37 @@
 			return $xml;
 
 		}
+
+		protected function format_ubw_xml_out( $combined_data )
+		{
+			/*
+			 * Create xml file
+			 */
+			$xmltool = CreateObject('phpgwapi.xmltool');
+			$xmltool->set_encoding('ISO-8859-1');
+
+			$xml	 = $xmltool->import_var('BkPffFakturagrunnlags', $combined_data, true, true);
+
+			return $xml;
+
+		}
+
 		protected function combine_factum_export_data( array &$combined_data, $export )
+		{
+			if(isset($combined_data['BkPffFakturagrunnlag']) && $export['data']['BkPffFakturagrunnlag'] && is_array($export['data']['BkPffFakturagrunnlag']))
+			{
+				foreach ($export['data']['BkPffFakturagrunnlag'] as $BkPffFakturagrunnlag)
+				{
+					$combined_data['BkPffFakturagrunnlag'][] = $BkPffFakturagrunnlag;
+				}
+			}
+			else
+			{
+				$combined_data = array_merge($combined_data, $export['data']);
+			}
+		}
+
+		protected function combine_ubw_xml_export_data( array &$combined_data, $export )
 		{
 			if(isset($combined_data['BkPffFakturagrunnlag']) && $export['data']['BkPffFakturagrunnlag'] && is_array($export['data']['BkPffFakturagrunnlag']))
 			{
@@ -2017,6 +2071,509 @@
 				'info' => $export_info, 'header_count' => $header_count);
 		}
 
+		public function format_ubw_xml( array &$reservations, array $account_codes, $sequential_number_generator )
+		{
+			$headers = array();
+			$fakturalinjer = array();
+			$export_info = array();
+			$output = array();
+
+			$log = array();
+
+			if (!empty($this->config_data['voucher_client']))
+			{
+				$client_id = strtoupper($this->config_data['voucher_client']);
+			}
+			else
+			{
+				$client_id = 'BY';
+			}
+
+			$status = 'N';
+			$trans_type = '42';
+
+			if (!empty($this->config_data['voucher_type']))
+			{
+				$voucher_type = substr(strtoupper($this->config_data['voucher_type']), 0, 2);
+			}
+			else
+			{
+				$voucher_type = 'FK';
+			}
+
+			$stored_header = array('tekst2' => false);
+			$line_no = 0;
+			$header_count = 0;
+			$log_order_id = '';
+			$log_customer_name = '';
+			$log_customer_nr = '';
+			$log_buidling = '';
+			$tax_code = 0;
+			$contact_name = '';
+
+			foreach ($reservations as &$reservation)
+			{
+				switch ($reservation['reservation_type'])
+				{
+					case 'allocation':
+						$test = $this->allocation_bo->read_single($reservation['reservation_id']);
+						break;
+					case 'booking':
+						$test = $this->booking_bo->read_single($reservation['reservation_id']);
+						break;
+					case 'event':
+						$test = $this->event_bo->read_single($reservation['reservation_id']);
+						break;
+					default:
+						break;
+				}
+
+				if(empty($test['id']))
+				{
+					continue; //Reservation has been deleted
+				}
+
+				if(empty($test['active']))
+				{
+					continue; //Reservation has been de-activated
+				}
+
+				if ($this->get_cost_value($reservation['cost']) <= 0)
+				{
+					continue; //Don't export costless rows
+				}
+
+				/**
+				 * Get contact person
+				 */
+				switch ($reservation['reservation_type'])
+				{
+					case 'allocation':
+						if (!empty($reservation['organization_id']))
+						{
+							$org = $this->organization_bo->read_single($reservation['organization_id']);
+							if(!empty($org['contacts'][0]['name']))
+							{
+								$contact_name = iconv("utf-8", "ISO-8859-1//TRANSLIT", $org['contacts'][0]['name']);
+							}
+						}
+						break;
+					case 'booking':
+						if(!empty($test['group_id']))
+						{
+							$group = CreateObject('booking.sogroup')->read_single($test['group_id']);
+							if(!empty($group['contacts'][0]['name']))
+							{
+								$contact_name = iconv("utf-8", "ISO-8859-1//TRANSLIT", $group['contacts'][0]['name']);
+							}
+						}
+						break;
+					case 'event':
+						$contact_name = iconv("utf-8", "ISO-8859-1//TRANSLIT", $test['contact_name']);
+						break;
+					default:
+						break;
+				}
+
+				$purchase_order = $this->sopurchase_order->get_purchase_order(0, $reservation['reservation_type'], $reservation['reservation_id']);
+				/**
+				 * For vipps kan det være flere krav, for etterfakturering vil det være ett
+				 */
+				$payments = $this->sopurchase_order->get_order_payments($purchase_order['order_id']);
+				if(isset($payments[0]))
+				{
+					$payment = $payments[0];
+
+					/**
+					 * Already paid for, or cancelled
+					 */
+					if(in_array($payment['status'], array( 'completed', 'voided', 'refunded')))
+					{
+						continue;
+					}
+
+					//FIXME: move method from soapplication
+					// status: new, pending, completed, voided, partially_refunded, refunded
+					$this->application_so->update_payment_status($payment['remote_id'], 'completed', 'RESERVE');
+
+					/**
+					 * sjekk status / opdater status
+					 */
+				}
+
+				$type = $reservation['customer_type'];
+
+				$from_date = new DateTime($reservation['from_']);
+				$to_date = new DateTime($reservation['to_']);
+
+				$log_customer_name = '';
+				if (!empty($reservation['organization_id']))
+				{
+					$org = $this->organization_bo->read_single($reservation['organization_id']);
+					$log_customer_name = $org['name'];
+					$customer_number =  $org['customer_number'];
+					if(!empty($org['in_tax_register']))
+					{
+						$tax_code = 1;
+					}
+				}
+				else
+				{
+					$data = $this->event_so->get_org($reservation['customer_organization_number']);
+					if (!empty($data['id']))
+					{
+						$log_customer_name = $data['name'];
+					}
+					else
+					{
+						if ($reservation['reservation_type'] == 'event')
+						{
+							$data = $this->event_bo->read_single($reservation['reservation_id']);
+							$log_customer_name = $data['contact_name'];
+						}
+					}
+				}
+
+				if ($type == 'internal')
+				{
+					//Nøkkelfelt, kundens personnr/orgnr.
+					$check_customer_identifier = $this->get_customer_identifier_value_for($reservation);
+				}
+				else
+				{
+					//Nøkkelfelt, kundens personnr/orgnr. - men differensiert for undergrupper innenfor samme orgnr
+					$check_customer_identifier = $this->get_customer_identifier_value_for($reservation) . '::' . $customer_number;
+				}
+
+
+				if ($stored_header == array() || $stored_header['tekst2'] != $check_customer_identifier)
+				{
+					$order_id = $sequential_number_generator->increment()->get_current();
+					$export_info[] = $this->create_export_item_info($reservation, $order_id);
+					$header_count += 1;
+					//header level
+
+					$stored_header['client'] = $client_id;
+
+					//Nøkkelfelt, kundens personnr/orgnr. - men differensiert for undergrupper innenfor samme orgnr
+					$stored_header['tekst2'] = $check_customer_identifier;
+
+//					if ($type == 'internal')
+//					{
+//						$ext_ord_ref = substr($this->get_customer_identifier_value_for($reservation), 0, 30);
+//					}
+//					else
+					{
+						$ext_ord_ref = iconv("utf-8", "ISO-8859-1//TRANSLIT", $customer_number);
+					}
+
+					$kundenr = trim($this->get_customer_identifier_value_for($reservation));
+					$stored_header['kundenr'] = $kundenr;
+
+					$stored_header['order_id'] = $order_id;
+
+					$stored_header['status'] = $status;
+					$stored_header['trans_type'] = $trans_type;
+					$stored_header['voucher_type'] = $voucher_type;
+
+
+					$header = array();
+
+					$header['order_id'] = $purchase_order['order_id'];
+					$header['Blanketttype'] = 'F';//char(1) F = Faktura
+					$header['datoendr'] = date('d.m.Y');//dato 31.01.1997
+					$header['Deresref'] = $ext_ord_ref;//char(30)
+					$header['Fagsystemkundeid'] = $kundenr;
+
+					$fakturalinje = array();
+
+					//item level
+					//Ansvarssted for inntektsføring for varelinjen avleveres i feltet (ANSVAR - f.eks 724300). ansvarsted (6 siffer) knyttet mot bygg /sesong
+					if (isset($this->config_data['dim_1']))
+					{
+						$fakturalinje['AnsvarDim'] = strtoupper(substr($account_codes['responsible_code'], 0, 8));	//char(8)
+					}
+
+					$fakturalinje['antall']	 = 1;	//Desimal
+					$fakturalinje['ArtDim']	 = '';  //char(8)
+					$fakturalinje['Avgift']	 = '';  //Beløp
+					$fakturalinje['BalanseDim']	 = '';  //char(8)
+					$fakturalinje['Grunnlagstype']	 = 'KRV';  //char(8)
+					$fakturalinje['enhetspris']	 = $reservation['cost'];  //Beløp
+					$fakturalinje['Fagsystemkontoid']	 = '';  //char(30) ???
+					$fakturalinje['FeiletLinjeFelt']	 = '';  //Char
+					$fakturalinje['FormalDim']	 = '';  //char(8)
+					$fakturalinje['fradato']	 = $from_date->format('d.m.Y');  //dato
+
+//					$fakturalinje['mvakode']	 = $tax_code;  //char(1)
+
+					//Formål. eks.
+					if ($type == 'internal' && isset($this->config_data['dim_2']))
+					{
+						$fakturalinje['FormalDim'] = strtoupper(substr($account_codes['service'], 0, 8));
+					}
+
+					//Objektnr. vil være knyttet til hvert hus (FDVU)
+					if (isset($this->config_data['dim_3']))
+					{
+						$fakturalinje['ObjektDim'] = strtoupper(substr($account_codes['object_number'], 0, 8));//char(8)
+					}
+
+					$fakturalinje['orgkode']	 = '';  //char(8)
+					$fakturalinje['SumPrisUtenAvgift']	 =$reservation['cost'];  //Beløp
+					$fakturalinje['tildato']	 = $to_date->format('d.m.Y');  //Dato
+					$fakturalinje['Tilleggstekst'] = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description'] . ' - ' . $reservation['description']), 0, 225);
+					$fakturalinje['Varekode']	 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
+					$fakturalinje['Fakturaorgkode']	 = '';  //
+					//Topptekst til faktura, knyttet mot fagavdeling
+					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
+
+//
+//					//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt
+					if (isset($this->config_data['dim_5']))
+					{
+						$fakturalinje['orgkode'] = trim(strtoupper($account_codes['project_number']));
+					}
+
+					/*
+					'order_id'
+					'status'
+					'parent_mapping_id'
+					'article_mapping_id'
+					'quantity'
+					'unit_price'
+					'overridden_unit_price'
+					'currency'
+					'amount'
+					'tax_code'
+					'article_code'
+					'tax'
+					'name'
+					*/
+					$line_no = 0;
+
+					$log_cost = 0;
+					$log_cost2 = 0;
+
+					$fakturalinje['contact_name'] = $contact_name;
+
+					if($purchase_order && !empty($purchase_order['lines']))
+					{
+
+						foreach ($purchase_order['lines'] as $order_line)
+						{
+							if(empty($order_line['amount']))
+							{
+								continue;
+							}
+
+							if($order_line['parent_mapping_id'] == 0)
+							{
+								$article_name = $order_line['name']  . ' - ' . $reservation['description'];
+							}
+							else
+							{
+								$article_name = $order_line['name'];
+							}
+
+							$line_no += 1;
+							$fakturalinje['Linjenr']			 = $line_no;
+							$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['article_code']);
+							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
+							$fakturalinje['Avgift']				 = $order_line['tax'];
+							$fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 255);
+//							$fakturalinje['mvakode']			 = $order_line['tax_code'];
+							$fakturalinje['mvakode']			 = $order_line['tax_code'] == 38 ? "U" : $order_line['tax_code'];
+							$fakturalinje['antall']				 = $order_line['quantity'];
+							$fakturalinje['enhetspris']			 = $order_line['unit_price'];
+							$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+							$log_cost							+= $order_line['amount'];
+							$log_cost2							+= $order_line['tax'];
+
+						}
+
+					}
+					else
+					{
+						$line_no += 1;
+						$fakturalinje['Linjenr']			 = $line_no;
+						$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+						$log_cost							 = $reservation['cost'];
+					}
+
+
+					$headers[$check_customer_identifier] = $header;
+
+					$log_order_id = $order_id;
+
+					$log_customer_nr = $stored_header['kundenr'];
+
+					$log_buidling = $reservation['building_name'];
+					$log_varelinjer_med_dato = $reservation['article_description'] . ' - ' . $reservation['description'];
+
+					$line_field = array();
+
+					$line_field[] = "\"{$reservation['reservation_id']}\"";
+					$line_field[] = "\"{$reservation['reservation_type']}\"";
+					$line_field[] = "\"{$log_order_id}\"";
+					$line_field[] = "\"{$log_customer_name}\"";
+					$line_field[] = "\"{$log_customer_nr}\"";
+					$line_field[] = "\"{$log_varelinjer_med_dato}\"";
+					$line_field[] = "\"{$log_buidling}\"";
+					$line_field[] = '"' . number_format($log_cost, 2, ",", '') . '"';
+					$line_field[] = '"' . number_format($log_cost2, 2, ",", '') . '"';
+
+					$log[] = implode(';',  $line_field);
+
+				}
+				else
+				{
+					//item level
+
+					$fakturalinje = array();
+
+					//item level
+					//Ansvarssted for inntektsføring for varelinjen avleveres i feltet (ANSVAR - f.eks 724300). ansvarsted (6 siffer) knyttet mot bygg /sesong
+					if (isset($this->config_data['dim_1']))
+					{
+						$fakturalinje['AnsvarDim'] = strtoupper(trim($account_codes['responsible_code']));	//char(8)
+					}
+
+					$fakturalinje['antall']				 = 1; //Desimal
+					$fakturalinje['ArtDim']				 = '';  //char(8)
+					$fakturalinje['Avgift']				 = '';  //Beløp
+					$fakturalinje['BalanseDim']			 = '';  //char(8)
+					$fakturalinje['Grunnlagstype']	 = 'KRV';  //char(8)
+					$fakturalinje['enhetspris']			 = $reservation['cost'];  //Beløp
+					$fakturalinje['Fagsystemkontoid']	 = '';  //char(30)
+//					$fakturalinje['Fagsystemvareid']	 = '';  //char(30)
+					$fakturalinje['FeiletLinjeFelt']	 = '';  //Char
+					$fakturalinje['FormalDim']			 = '';  //char(8)
+					$fakturalinje['fradato']			 = $from_date->format('d.m.Y');  //dato
+
+//					$fakturalinje['mvakode']			 = $tax_code;  //char(1)
+
+					//Formål. Eks Idrett
+					if ($type == 'internal' && isset($this->config_data['dim_2']))
+					{
+						$fakturalinje['FormalDim'] = trim(strtoupper($account_codes['service']));
+					}
+
+					//Objektnr. vil være knyttet til hvert hus (FDVU)
+					if (isset($this->config_data['dim_3']))
+					{
+						$fakturalinje['ObjektDim'] = strtoupper(trim($account_codes['object_number']));//char(8)
+					}
+
+					$fakturalinje['orgkode']	 = '';  //char(8)
+					if (isset($this->config_data['dim_5']))
+					{
+						$fakturalinje['orgkode'] = trim(strtoupper($account_codes['project_number']));
+					}
+
+
+					$fakturalinje['SumPrisUtenAvgift'] = $reservation['cost'];  //Beløp
+
+					$fakturalinje['tildato']			 = $to_date->format('d.m.Y');  //Dato
+					$fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description'] . ' - ' . $reservation['description']), 0, 225);
+					$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']);  //char(8)
+					$fakturalinje['Fakturaoverskrift']	 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60);  //char(60)
+
+					$log_cost = 0;
+					$log_cost2 = 0;
+
+					$fakturalinje['contact_name'] = $contact_name;
+
+					if($purchase_order && !empty($purchase_order['lines']))
+					{
+						foreach ($purchase_order['lines'] as $order_line)
+						{
+							if(empty($order_line['amount']))
+							{
+								continue;
+							}
+
+							if($order_line['parent_mapping_id'] == 0)
+							{
+								$article_name = $order_line['name']  . ' - ' . $reservation['description'];
+							}
+							else
+							{
+								$article_name = $order_line['name'];
+							}
+
+							$line_no += 1;
+							$fakturalinje['Linjenr']			 = $line_no;
+							$fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT",$order_line['article_code']);
+							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
+							$fakturalinje['Avgift']				 = $order_line['tax'];
+							$fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 255);
+//							$fakturalinje['mvakode']			 = $order_line['tax_code'];
+							$fakturalinje['mvakode']			 = $order_line['tax_code'] == 38 ? "U" : $order_line['tax_code'];
+							$fakturalinje['antall']				 = $order_line['quantity'];
+							$fakturalinje['enhetspris']			 = $order_line['unit_price'];
+							$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+							$log_cost							+= $order_line['amount'];
+							$log_cost2							+= $order_line['tax'];
+						}
+
+					}
+					else
+					{
+						$line_no += 1;
+						$fakturalinje['Linjenr']			 = $line_no;
+						$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
+						$log_cost							 = $reservation['cost'];
+					}
+
+
+					$log_buidling			 = $reservation['building_name'];
+					$log_varelinjer_med_dato = $reservation['article_description'] . ' - ' . $reservation['description'];
+
+					$line_field = array();
+
+					$line_field[] = "\"{$reservation['reservation_id']}\"";
+					$line_field[] = "\"{$reservation['reservation_type']}\"";
+					$line_field[] = "\"{$log_order_id}\"";
+					$line_field[] = "\"{$log_customer_name}\"";
+					$line_field[] = "\"{$log_customer_nr}\"";
+					$line_field[] = "\"{$log_varelinjer_med_dato}\"";
+					$line_field[] = "\"{$log_buidling}\"";
+					$line_field[] = '"' . number_format($log_cost, 2, ",", '') . '"';
+					$line_field[] = '"' . number_format($log_cost2, 2, ",", '') . '"';
+
+					$log[] = implode(';',  $line_field);
+
+					$header_count += 1;
+
+				}
+			}
+
+			$invoice = array();
+			foreach ($fakturalinjer as $key => $_fakturalinjer)
+			{
+				$fakturagrunnlag = $headers[$key];
+				$fakturagrunnlag['Fakturalinjer'] = $_fakturalinjer;
+				$fakturagrunnlag['Systemid']	 = $client_id;  //
+
+				$fakturagrunnlag['OrderNo']	 = array('agrlib' => $headers[$key]['order_id']);
+				$fakturagrunnlag['VoucherType']	 = array('agrlib' => '42');
+				$fakturagrunnlag['TransType']	 = array('agr' => '42');
+				$fakturagrunnlag['Period']	 = array('agrlib' => date('Ymd'));//YYYYMM
+
+
+				$invoice['Order'][] = array('agr' => $fakturagrunnlag);
+
+			}
+
+			if (count($export_info) == 0)
+			{
+				return null;
+			}
+			return array('data' => $invoice, 'data_log' => implode(PHP_EOL, $log),
+				'info' => $export_info, 'header_count' => $header_count);
+		}
+
 		protected function combine_agresso_export_data( array &$combined_data, $export )
 		{
 			if (count($combined_data) == 0)
@@ -3011,3 +3568,125 @@
 			return $row_template;
 		}
 	}
+
+
+	class booking_xml_creator extends XMLWriter
+	{
+
+		/**
+		 * Constructor.
+		 * @param string $prm_rootElementName A root element's name of a current xml document
+		 * @param ARRAY $root_attributtes array of root attributes.
+		 * @param string $prm_xsltFilePath Path of a XSLT file.
+		 * @access public
+		 * @param null
+		 */
+		public function __construct( $prm_rootElementName, $root_attributes = array(), $prm_xsltFilePath = '' )
+		{
+			$this->openMemory();
+			$this->setIndent(true);
+			$this->setIndentString(' ');
+			$this->startDocument('1.0', 'UTF-8');
+
+			if ($prm_xsltFilePath)
+			{
+				$this->writePi('xml-stylesheet', 'type="text/xsl" href="' . $prm_xsltFilePath . '"');
+			}
+
+			$this->startElement($prm_rootElementName);
+
+			foreach ($root_attributes as $key => $value)
+			{
+				$this->writeAttribute($key, $value);
+			}
+		}
+
+		/**
+		 * Set an element with a text to a current xml document.
+		 * @access public
+		 * @param string $prm_elementName An element's name
+		 * @param string $prm_ElementText An element's text
+		 * @return null
+		 */
+		public function setElement( $prm_elementName, $prm_ElementText )
+		{
+			$this->startElement($prm_elementName);
+			$this->text($prm_ElementText);
+			$this->endElement();
+		}
+
+		/**
+		 * Set an element with a text to a current xml document.
+		 * @access public
+		 * @param ?string $prefix <p>The namespace prefix. If <code>prefix</code> is <b><code>null</code></b>, the namespace will be omitted.</p>
+		 * @param string $prm_elementName An element's name
+		 * @param string $prm_ElementText An element's text
+		 * @return null
+		 */
+		public function setElementNs( $prefix, $prm_elementName, $prm_ElementText )
+		{
+			$this->startElementNs($prefix, $prm_elementName);
+			$this->text($prm_ElementText);
+			$this->endElement();
+		}
+
+		/**
+		 * Construct elements and texts from an array.
+		 * The array should contain an attribute's name in index part
+		 * and a attribute's text in value part.
+		 * @access public
+		 * @param array $prm_array Contains attributes and texts
+		 * @return null
+		 */
+		public function fromArray( array $array )
+		{
+			foreach ($array as $key => $entry)
+			{
+				foreach ($entry as $prefix => $val)
+				{
+					if (is_array($val))
+					{
+						if (is_numeric($key))
+						{
+							// numeric keys aren't allowed so we'll skip the key
+							$this->fromArray($val);
+						}
+						else
+						{
+							$this->startElementNs($prefix, $key);
+							$this->fromArray($val);
+							$this->endElement();
+						}
+					}
+					else
+					{
+						$this->writeElementNs($prefix, $key, $val);
+					}
+				}
+			}
+		}
+
+		/**
+		 * Return the content of a current xml document.
+		 * @access public
+		 * @param null
+		 * @return string Xml document
+		 */
+		public function getDocument()
+		{
+			$this->endElement();
+			$this->endDocument();
+			return $this->outputMemory();
+		}
+
+		/**
+		 * Output the content of a current xml document.
+		 * @access public
+		 * @param null
+		 */
+		public function output()
+		{
+			header('Content-type: text/xml');
+			echo $this->getDocument();
+		}
+	}	

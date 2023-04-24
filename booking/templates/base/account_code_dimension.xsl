@@ -290,6 +290,12 @@
 							</xsl:if>
 							FACTUM
 						</option>
+						<option value="UBW_XML">
+							<xsl:if test="config_data/internal_format='UBW_XML'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							UBW_XML
+						</option>
 					</select>
 				</div>
 				<div class="pure-control-group">
@@ -371,6 +377,12 @@
 								<xsl:attribute name="selected">checked</xsl:attribute>
 							</xsl:if>
 							FACTUM
+						</option>
+						<option value="UBW_XML">
+							<xsl:if test="config_data/internal_format='UBW_XML'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							UBW_XML
 						</option>
 					</select>
 				</div>

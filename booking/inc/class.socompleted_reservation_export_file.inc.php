@@ -53,6 +53,7 @@
 					$file_type =  'csv';
 					break;
 				case 'FACTUM':
+				case 'UBW_XML':
 					$file_type =  'xml';
 					break;
 				default:
