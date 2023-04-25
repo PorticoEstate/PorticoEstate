@@ -4,30 +4,33 @@
 		<xsl:value-of select="php:function('lang', 'Allocation')"/> #<xsl:value-of select="allocation/id"/>
 	</h3>
 	<div class="pure-form pure-form-aligned">
+		<xsl:if test="allocation/application_id!=''">
+			<div class="pure-control-group">
+				<label>
+					<xsl:value-of select="php:function('lang', 'Application')"/>
+				</label>
+				<a href="{allocation/application_link}">#<xsl:value-of select="allocation/application_id"/></a>
+			</div>
+		</xsl:if>
 		<div class="pure-control-group">
 			<label>
-				<h4>
-					<xsl:value-of select="php:function('lang', 'Where')"/>
-				</h4>
+				<xsl:value-of select="php:function('lang', 'Where')"/>
 			</label>
 			<a href="{allocation/building_link}">
-				<xsl:value-of select="allocation/resources[position()=1]/building_name"/>
+				<xsl:value-of select="allocation/building_name"/>
 			</a>
 			(<xsl:value-of select="allocation/resource_info"/>)
 		</div>
+
 		<div class="pure-control-group">
 			<label>
-				<h4>
-					<xsl:value-of select="php:function('lang', 'When')"/>
-				</h4>
+				<xsl:value-of select="php:function('lang', 'When')"/>
 			</label>
 			<xsl:value-of select="allocation/when"/>
 		</div>
 		<div class="pure-control-group">
 			<label>
-				<h4>
-					<xsl:value-of select="php:function('lang', 'Who')"/>
-				</h4>
+				<xsl:value-of select="php:function('lang', 'Who')"/>
 			</label>
 			<a href="{allocation/org_link}">
 				<xsl:value-of select="allocation/organization_name"/>

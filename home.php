@@ -20,9 +20,9 @@
 		'noheader'                => true,
 		'nonavbar'                => false,
 		'currentapp'              => 'home',
-		'enable_network_class'    => true,
-		'enable_contacts_class'   => true,
-		'enable_nextmatchs_class' => true
+//		'enable_network_class'    => true,
+//		'enable_contacts_class'   => true,
+//		'enable_nextmatchs_class' => true
 	);
 
 	/**
@@ -135,19 +135,34 @@ HTML;
 		(isset($GLOBALS['phpgw_info']['server']['checkfornewversion']) &&
 		$GLOBALS['phpgw_info']['server']['checkfornewversion']))
 	{
-		$GLOBALS['phpgw']->network->set_addcrlf(False);
-		$lines = $GLOBALS['phpgw']->network->gethttpsocketfile('http://www.phpgroupware.org/currentversion');
-		for ($i=0; $i < count($lines); ++$i)
+		// Create a stream
+		$opts = array(
+			'http' => array(
+				'method' => "GET",
+			    'proxy' => 'proxy.bergen.kommune.no:8080',
+			)
+		);
+
+		if (isset($GLOBALS['phpgw_info']['server']['httpproxy_server']))
 		{
-			if ( preg_match('/currentversion/',$lines[$i]))
-			{
-				$line_found = explode(':',chop($lines[$i]));
-			}
+			$opts['http']['proxy'] = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
 		}
-		if($GLOBALS['phpgw']->common->cmp_version($GLOBALS['phpgw_info']['server']['versions']['phpgwapi'],$line_found[1]))
+
+		$context = stream_context_create($opts);
+
+		$contents = file_get_contents('https://raw.githubusercontent.com/PorticoEstate/PorticoEstate/master/setup/currentversion', false, $context);
+		if (preg_match('/currentversion/', $contents))
 		{
-			echo '<p>There is a new version of phpGroupWare available from <a href="'
-				. 'http://www.phpgroupware.org">http://www.phpgroupware.org</a>';
+			$line_found = explode(':', rtrim($contents));
+		}
+
+		/**
+		 * compares for major versions only
+		 */
+		if($GLOBALS['phpgw']->common->cmp_version($GLOBALS['phpgw_info']['server']['versions']['phpgwapi'],$line_found[1], false))
+		{
+			echo '<p>There is a new version of PorticoEstate available from <a href="'
+				. 'https://github.com/PorticoEstate/PorticoEstate">https://github.com/PorticoEstate/PorticoEstate</a>';
 		}
 
 		$_found = False;
@@ -270,7 +285,7 @@ HTML;
 	}
 	if( phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message'))
 	{
-		echo "<div class='msg_important'><h2>";
+		echo "<div class='msg_important container'><h2>";
 		echo nl2br(phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message_title'));
 		echo "</h2>";
 		echo nl2br(phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message'));

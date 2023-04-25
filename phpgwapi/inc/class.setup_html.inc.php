@@ -85,7 +85,7 @@
 			/* hack to get tpl dir */
 			if (is_dir(PHPGW_SERVER_ROOT))
 			{
-				$srv_root = PHPGW_SERVER_ROOT . "/$app_name/";
+				$srv_root = PHPGW_SERVER_ROOT . "/$app_name";
 			}
 			else
 			{

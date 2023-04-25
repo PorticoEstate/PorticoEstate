@@ -8,7 +8,7 @@
 	{
 
 		protected $db;
-		protected $config		 = array();
+		var $config				 = array();
 		protected $status_text	 = array();
 		protected $custom_config;
 

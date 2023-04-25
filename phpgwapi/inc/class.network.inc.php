@@ -170,9 +170,10 @@
 		// return contents of a web url as an array or false if timeout
 		function gethttpsocketfile($file,$user='',$passwd='')
 		{
-			$server = str_replace('http://','',$file);
+			$server = str_replace(array('http://','https://'),'',$file);
 			$file = strstr($server,'/');
 			$server = str_replace($file,'',$server);
+			$lines = array();
 
 			//allows for access to http-auth pages - added by Dave Hall <dave.hall@mbox.com.au>
 			if(!((empty($user))&&(empty($passwd))))
@@ -188,7 +189,7 @@
 			{
 				if ($this->open_port($server,80, 15))
 				{
-					if (! $this->write_port('GET http://' . $server . $file . ' HTTP/1.0'."\n".$auth."\r\n\r\n"))
+					if (! $this->write_port('GET https://' . $server . $file . ' HTTP/1.0'."\n".$auth."\r\n\r\n"))
 					{
 						return False;
 					}

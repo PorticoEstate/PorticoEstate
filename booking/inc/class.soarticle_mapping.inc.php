@@ -233,7 +233,7 @@
 			$sql = "SELECT id, article_mapping_id FROM bb_article_price"
 				. " WHERE article_mapping_id IN ( " . implode (',',$article_mapping_ids) . ")"
 				. " AND from_ < '{$now}'"
-				. " ORDER BY from_ DESC";
+				. " ORDER BY default_ ASC, from_ DESC";
 
 
 			$this->db->query($sql, __LINE__, __FILE__);

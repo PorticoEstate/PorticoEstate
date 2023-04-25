@@ -329,7 +329,7 @@
 
 			try
 			{
-				$listing = $filesystem->listContents();
+				$listing = $filesystem->listContents('');
 			}
 			catch (Exception $exc)
 			{
@@ -347,9 +347,9 @@
 
 			foreach ($listing as $object)
 			{
-				$file = $object['basename'];
+				$file = $object->path();
 
-				if ($object['type'] == 'dir')
+				if ($object->type() == 'dir')
 				{
 					echo "Directory: $file<br/>\n";
 					continue;
@@ -393,22 +393,34 @@
 						if (fclose($fp))
 						{
 							echo "File remote: {$file_remote} was copied to local: $file_local<br/>";
-							if ($filesystem->fileExists("archive/{$file_name}") && $filesystem->delete("archive/{$file_name}"))
+							if ($filesystem->fileExists("archive/{$file_name}")	)
 							{
-								echo "Deleted duplicate File remote: {$directory_remote}/archive/{$file_name}<br/>";
+								try
+								{
+									$filesystem->delete("archive/{$file_name}");
+									echo "Deleted duplicate File remote: {$directory_remote}/archive/{$file_name}<br/>";
+								}
+								catch (FilesystemException | UnableToDeleteFile $exception)
+								{
+									// handle the error
+								}
 							}
-							if ($filesystem->move($file_remote, "archive/{$file_name}"))
+
+							try
 							{
+								$filesystem->move($file_remote, "archive/{$file_name}");
 								echo "File remote: {$file_remote} was moved to remote: {$directory_remote}/archive/{$file_name}<br/>";
 							}
-							else
+							catch (FilesystemException | UnableToDeleteFile $exception)
 							{
+								// handle the error
 								echo "ERROR! File remote: {$file_remote} failed to move to remote: {$directory_remote}/archive/{$file_name}<br/>";
 								if (unlink($file_local))
 								{
 									echo "Lokal file was deleted: {$file_local}<br/>";
 								}
 							}
+
 						}
 					}
 					else

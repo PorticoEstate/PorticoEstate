@@ -36,7 +36,7 @@
 			 */
 			$bouser = CreateObject('bookingfrontend.bouser');
 
-			$bouser->validate_ssn_login(
+			$external_login_info = $bouser->validate_ssn_login(
 				array
 				(
 					'menuaction' => 'bookingfrontend.uiapplication.show',
@@ -44,6 +44,17 @@
 					'secret'	=> $secret
 				)
 			);
+
+			if(!empty($external_login_info['ssn']))
+			{
+				$user_id = CreateObject('booking.souser')->get_user_id($external_login_info['ssn']);
+				$customer_name = '';
+				if($user_id)
+				{
+					$customer = CreateObject('booking.bouser')->read_single($user_id);
+					$customer_name = $customer['name'];
+				}
+			}
 
 			$application = $this->bo->read_single($id);
 
@@ -56,7 +67,7 @@
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST' && $comment)
 			{
-				$this->add_comment($application, $comment);
+				$this->add_comment($application, $comment,'comment', $customer_name);
 				$this->set_display_in_dashboard($application, true, array('force' => true));
 				$application['frontend_modified'] = 'now';
 				$this->bo->send_admin_notification($application, $comment);

@@ -271,7 +271,7 @@
 			}
 			else if ($type == '.document')
 			{
-				$link = array('menuaction' => 'property.uidocument.edit', 'document_id' => $id);
+				$link = array('menuaction' => 'property.uidocument.edit', 'id' => $id);
 			}
 			else if ($type == '.project.workorder')
 			{

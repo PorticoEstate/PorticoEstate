@@ -49,7 +49,7 @@
 				'messenger' => array
 					(
 					'text' => lang('messenger'),
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "messenger.uimessenger.inbox")),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "messenger.uimessenger.index")),
 					'image' => array('messenger', 'navbar'),
 					'order' => 35,
 					'group' => 'office'
@@ -107,7 +107,7 @@
 				'inbox' => array
 					(
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'messenger.uimessenger.index')),
-					'text' => $GLOBALS['phpgw']->translation->translate('inbox', array(), true),
+					'text' => $GLOBALS['phpgw']->translation->translate('inbox', array(), false, 'messenger'),
 					'image' => array('messenger', 'navbar')
 				)
 			);
@@ -116,7 +116,7 @@
 				$menus['navigation']['compose'] = array
 					(
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'messenger.uimessenger.compose')),
-					'text' => $GLOBALS['phpgw']->translation->translate('compose', array(), true),
+					'text' => $GLOBALS['phpgw']->translation->translate('compose', array(), false, 'messenger'),
 				);
 			}
 			if ($GLOBALS['phpgw']->acl->check('.compose_groups', PHPGW_ACL_ADD, 'messenger'))
@@ -124,7 +124,7 @@
 				$menus['navigation']['compose_groups'] = array
 					(
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'messenger.uimessenger.compose_groups')),
-					'text' => $GLOBALS['phpgw']->translation->translate('compose groups', array(), true),
+					'text' => $GLOBALS['phpgw']->translation->translate('compose groups', array(), false, 'messenger'),
 				);
 			}
 			if ($GLOBALS['phpgw']->acl->check('.compose_global', PHPGW_ACL_ADD, 'messenger'))
@@ -132,7 +132,7 @@
 				$menus['navigation']['compose_global'] = array
 					(
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'messenger.uimessenger.compose_global')),
-					'text' => $GLOBALS['phpgw']->translation->translate('compose global', array(), true),
+					'text' => $GLOBALS['phpgw']->translation->translate('compose global', array(), false, 'messenger'),
 				);
 			}
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;

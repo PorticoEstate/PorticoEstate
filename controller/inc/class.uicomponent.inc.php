@@ -122,7 +122,16 @@
 			}
 
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('status components');
+			
+			if(phpgw::get_var('get_locations', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('status locations');
+				
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('status components');
+			}
 
 		}
 

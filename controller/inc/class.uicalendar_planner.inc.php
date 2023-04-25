@@ -267,7 +267,7 @@
 			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 			self::add_javascript('controller', 'base', 'calendar_planner.start.js');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= ': ' .lang('calendar planner');
 			self::render_template_xsl(array('calendar/calendar_planner'), array('start' => $data));
 		}
 
@@ -511,7 +511,7 @@
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('controller', 'base', 'calendar_planner.monthly.js');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner') . '::' . lang('monthly');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= ': ' . lang('calendar planner') . '::' . lang('monthly');
 			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = 'controller::calendar_planner::monthly';
 
 			self::render_template_xsl(array('calendar/calendar_planner'), array('monthly' => $data));
@@ -852,7 +852,7 @@
 
 			self::add_javascript('controller', 'base', 'calendar_planner.send_notification.js');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner') . '::' . lang('send notification');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= ': ' . lang('calendar planner') . '::' . lang('send notification');
 			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = 'controller::calendar_planner::send_notification';
 			self::render_template_xsl(array('calendar/calendar_planner'), array('notification' => $data));
 		}
@@ -1424,7 +1424,7 @@ HTML;
 			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 			self::add_javascript('controller', 'base', 'calendar_planner.inspection_history.js');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('inspection history');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= ': ' . lang('inspection history');
 			self::render_template_xsl(array('calendar/calendar_planner'), array('inspection_history' => $data));
 		}
 		/**
@@ -1878,7 +1878,7 @@ HTML;
 
 			self::add_javascript('controller', 'base', 'calendar_planner.start_inspection.js');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner') . '::' . lang('start inspection');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= ': ' . lang('calendar planner') . '::' . lang('start inspection');
 			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = 'controller::calendar_planner::start_inspection';
 			self::render_template_xsl(array('calendar/calendar_planner'), array('start_inspection' => $data));
 
@@ -2055,7 +2055,7 @@ HTML;
 
 			self::add_javascript('controller', 'base', 'calendar_planner.start_inspection.js');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner') . '::Ad hoc';
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= ': ' . lang('calendar planner') . '::Ad hoc';
 			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = 'controller::calendar_planner::ad_hoc';
 			self::render_template_xsl(array('calendar/calendar_planner'), array('ad_hoc' => $data));
 

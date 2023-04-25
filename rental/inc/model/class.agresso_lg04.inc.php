@@ -479,7 +479,7 @@
 				. sprintf("%12s", '') // 	48		dim_value_7
 				. sprintf("%17s", '') //	49-50	just white space..
 				. sprintf("%017s", '') // 	51		exch_rate
-				. sprintf("%-15.15s", $client_ref) // 	52		ext_ord_ref
+				. sprintf("%-15.15s", mb_convert_encoding($client_ref, 'ISO-8859-1', 'UTF-8')) // 	52		ext_ord_ref
 				. sprintf("%6s", '')  // 	53		intrule_id
 				. sprintf("%8s", '')  //	54-55	just white space..
 				. sprintf("%-120.120s", mb_convert_encoding($header, 'ISO-8859-1', 'UTF-8')) // 	56		long_info1				DATA

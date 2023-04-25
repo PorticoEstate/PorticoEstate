@@ -449,7 +449,7 @@ application add	bookingfrontend	nn	søknad
 Application cart	bookingfrontend	nn	Handlekurv
 Application basket	bookingfrontend	nn	Søknadskorg
 back	bookingfrontend	nn	tilbake
-Building information	bookingfrontend	nn	Informasjon om anlegget
+Building information	bookingfrontend	nn	Informasjon
 Choose another building	bookingfrontend	nn	Velg annet anlegg
 Choose categories	bookingfrontend	nn	Velg kategorier
 Choose resources	bookingfrontend	nn	Velg lokaler
@@ -491,7 +491,7 @@ For rent	bookingfrontend	nn	Til leige
 Choose atleast one object	bookingfrontend	nn	Vel minst eitt leigeobjekt
 Please fill all fields	bookingfrontend	nn	Vennlegst fyll ut alle obligatoriske felt!
 available	bookingfrontend	nn	Ledig
-leased	bookingfrontend	nn	Utleigd
+leased	bookingfrontend	nn	Opptatt
 It is currently not possible to rent anything here	bookingfrontend	nn	NB! Det er for tida ikkje mogeleg å leige noko her
 my page	bookingfrontend	nn	Mi side
 invoice	bookingfrontend	nn	Faktura
@@ -522,8 +522,9 @@ Reset filters	bookingfrontend	nn	Nullstill filter
 To application site	bookingfrontend	nn	Til søknadsside
 locations	bookingfrontend	nn	Lokaler
 User has made a request to alter time on existing booking	bookingfrontend	nn	Ynskjer å endre tida for booking. Ny tid:
+User has made a request to cancel event	bookingfrontend	nn	Kunde har avbestilt arrangement.
 User has changed field for equipment	bookingfrontend	nn	Endring av felt for nødvendig utstyr:
-Request for changed time	bookingfrontend	nn	Forespørsel om øke tid er sendt til saksbehandler
+Request for changed time	bookingfrontend	nn	Forespørsel om å endre tid er registrert
 Follow status	bookingfrontend	nn	Du kan følge med på status under Min side --> Søknader
 for remaining season	bookingfrontend	nn	for gjenværende sesong
 for allocations until	bookingfrontend	nn	for tildelinger frem til:

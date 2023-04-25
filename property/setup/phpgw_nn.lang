@@ -1045,6 +1045,7 @@ list vendors	property	nn	List leverandør
 list vendors per activity	property	nn	List leverandør pr aktivitet
 list voucher	property	nn	list underbilag
 list workorder	property	nn	List bestillinger
+workorders	property	nn	Bestillinger
 location	property	nn	Lokalisering
 loc1 name	property	nn	Navn
 local files	property	nn	Lokale filer

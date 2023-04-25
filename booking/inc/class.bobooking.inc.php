@@ -1024,8 +1024,9 @@
 
 			foreach ($events as &$event)
 			{
-				$event['name']		 = substr($event['name'], 0, 34);
-				$event['shortname']	 = substr($event['name'], 0, 12);
+				$_name = $event['name'] === 'dummy' ? $event['activity_name'] : $event['name'];
+				$event['name']		 = substr($_name, 0, 34);
+				$event['shortname']	 = substr($_name, 0, 12);
 				$event['type']		 = 'event';
 				$datef				 = strtotime($event['from_']);
 				$event['weekday']	 = date('D', $datef);
@@ -1051,7 +1052,9 @@
 				$from	 = $from[0] * 60 + $from[1];
 				$to		 = $to[0] * 60 + $to[1];
 				if ($to == 0)
+				{
 					$to		 = 24 * 60;
+				}
 				$colspan = ($to - $from) / 30;
 
 				$allocation['colspan']				 = $colspan;
@@ -1393,7 +1396,15 @@
 
 				if($resource['simple_booking_start_date'])
 				{
-					$simple_booking_start_date = new DateTime(date('Y-m-d H:i', $resource['simple_booking_start_date']));
+					$simple_booking_start_date = new DateTime(date('Y-m-d H:i', $resource['simple_booking_start_date']), $DateTimeZone);
+
+					$now = new DateTime();
+					$now->setTimezone($DateTimeZone);
+
+					if($simple_booking_start_date > $now)
+					{
+						$resource['skip_timeslot'] = true;
+					}
 
 					if($simple_booking_start_date > $_from)
 					{
@@ -1448,9 +1459,9 @@
 				}
 
 
-				if ($resource['simple_booking'])
+				if ($resource['simple_booking'] && empty($resource['skip_timeslot']))
 				{
-					$event_ids = array_merge($event_ids, $this->so->event_ids_for_resource($resource['id'], $from, $to));
+					$event_ids = array_merge($event_ids, $this->so->event_ids_for_resource($resource['id'], $_from, $to));
 				}
 
 				$resource['from'] = $from;
@@ -1476,7 +1487,8 @@
 			$defaultStartHour			 = 8;
 			$defaultStartMinute			 = 0;
 			$defaultStartHour_fallback	 = 8;
-			$defaultEndHour				 = 16;
+			$defaultEndHour				 = 23;
+			$defaultEndHour_fallback	 = 23;
 
 			$days = array(
 				0	 => "Sunday",
@@ -1497,6 +1509,11 @@
 
 			foreach ($resources['results'] as $resource)
 			{
+				if(!empty($resource['skip_timeslot']))
+				{
+					continue;
+				}
+
 				$availlableTimeSlots[$resource['id']] = [];
 
 				if ($resource['simple_booking'] && $resource['simple_booking_start_date'])
@@ -1552,12 +1569,12 @@
 					$test	 = $limitDate->format('Y-m-d');
 					$test	 = $checkDate->format('Y-m-d');
 
-					$active_seasons = $soseason->get_resource_seasons($resource['id']);
+					$active_seasons = $soseason->get_resource_seasons($resource['id'], $checkDate->format('Y-m-d'), $limitDate->format('Y-m-d'));
 
 					do
 					{
 						$StartTime = clone ($checkDate);
-						if ($defaultStartHour > $defaultEndHour && $booking_lenght > -1)
+						if ($defaultStartHour > $defaultEndHour && ($booking_lenght > -1 || $resource['booking_time_default_end'] == -1))
 						{
 							$defaultStartHour = $defaultStartHour_fallback;
 						}
@@ -1592,16 +1609,24 @@
 						{
 							$endTime->setTime($booking_end, 0, 0);
 						}
-						else
+						else if($booking_end > -1 && !$booking_lenght > -1)
 						{
 							$test = $endTime->format('i');
 //							$endTime->setTime(min($booking_end, $StartTime->format('H')) + 1, 0, 0);
 							$endTime->setTime(min($booking_end, $StartTime->format('H')), (int)$endTime->format('i') + $booking_time_minutes, 0);
 						}
+						else
+						{
+							$endTime->setTime($StartTime->format('H'), (int)$endTime->format('i') + $booking_time_minutes, 0);
+						}
 
 						$checkDate = clone ($endTime);
 
 						$within_season = false;
+
+						/**
+						 * Expensive
+						 */
 						foreach ($active_seasons as $season_id)
 						{
 							$within_season = $soseason->timespan_within_season($season_id, $StartTime, $endTime);
@@ -1652,7 +1677,7 @@
 							];
 						}
 
-						if ($booking_lenght == -1)
+						if ($booking_lenght == -1 || $resource['booking_time_default_end'] == -1)
 						{
 							$defaultStartHour = $endTime->format('H');
 							$defaultStartMinute = (int)$endTime->format('i');
@@ -1744,7 +1769,19 @@
 			$now = new DateTime();
 			$now->setTimezone($DateTimeZone);
 
-			if($aDate > $now && $months > 1)
+			/**
+			 * wait for desired time within day
+			 */
+			$start_of_month = clone($aDate);
+			$start_of_month->modify('first day of this month');
+
+			if($start_of_month > $now && $months > 1)
+			{
+				$months -=1;
+			}
+			$check_limit = clone($aDate);
+			$check_limit->modify('last day of this month');
+			if($check_limit > $now && $months > 1)
 			{
 				$months -=1;
 			}

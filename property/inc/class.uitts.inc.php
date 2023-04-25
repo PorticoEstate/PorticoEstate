@@ -1816,7 +1816,7 @@ HTML;
 			$appname		 = lang('helpdesk');
 			$function_msg	 = lang('add ticket');
 			phpgwapi_jquery::load_widget('select2');
-			self::add_javascript('property', 'portico', 'tts.add.js', false, array('combine' => true ));
+			self::add_javascript('property', 'portico', 'tts.add.js', false, array('combine' => false ));
 //			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', true, array('combine' => true ));
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 
@@ -3391,6 +3391,72 @@ JS;
 
 
 			// end invoice table
+
+			$orders_def = array
+			(
+			array('key' => 'workorder_id', 'label' => lang('Workorder'), 'sortable' => true,
+			'formatter' => 'formatLinkproject'),
+			array('key' => 'title', 'label' => lang('title'), 'sortable' => false),
+			array('key' => 'user_name', 'label' => lang('user'), 'sortable' => false),
+			array('key' => 'vendor_name', 'label' => lang('Vendor'), 'sortable' => false),
+			array('key' => 'status', 'label' => lang('Status'), 'sortable' => false),
+			array('key' => 'end_date', 'label' => lang('end date'), 'sortable' => false,
+			'className' => 'center')
+			);
+
+			$list_orders = false;
+			$project_ids = array();
+			if(!empty($ticket['target']))
+			{
+				foreach ($ticket['target'] as $_targets)
+				{
+					if($_targets['location'] == '.project')
+					{
+						foreach ($_targets['data'] as $_target_data)
+						{
+							$project_ids[] = $_target_data['id'];
+						}
+						$list_orders = true;
+						unset($_target_data);
+					}
+				}
+				unset($_targets);
+			}
+
+			if(!empty($ticket['origin']))
+			{
+				foreach ($ticket['origin'] as $_targets)
+				{
+					if($_targets['location'] == '.project')
+					{
+						foreach ($_targets['data'] as $_target_data)
+						{
+							$project_ids[] = $_target_data['id'];
+						}
+						$list_orders = true;
+						unset($_target_data);
+					}
+				}
+				unset($_targets);
+			}
+
+			$datatable_def[] = array
+				(
+				'container'	 => 'datatable-container_10',
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiproject.get_orders',
+						'project_id' => $project_ids, 'phpgw_return_as' => 'json'))),
+//				'requestUrl' => "''",
+//				'data'		 => json_encode($_order_data),
+				'data'		 => json_encode(array()),
+				'ColumnDefs' => $orders_def,
+				'config'	 => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true),
+//					array('allrows' => true),
+					array('order' => json_encode(array(0, 'desc')))
+				)
+			);
+
 			//----------------------------------------------datatable settings--------
 
 
@@ -3784,6 +3850,7 @@ JS;
 				'payment_type_list'				 => array('options' => execMethod('property.bogeneric.get_list', array('type' => 'order_template_payment_type', 'selected' => $ticket['payment_type']))),
 				'content_files'					 => $content_files,
 				'tag_list'						 => array('options' => createObject('property.bofiles')->get_all_tags()),
+				'list_orders'					 => $list_orders,
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
@@ -3791,7 +3858,7 @@ JS;
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 			phpgwapi_jquery::load_widget('glider');
 			phpgwapi_jquery::load_widget('select2');
-			self::add_javascript('property', 'portico', 'tts.view.js', false, array('combine' => true ));
+			self::add_javascript('property', 'portico', 'tts.view.js', false, array('combine' => false ));
 
 			$this->_insert_custom_js();
 			//-----------------------datatable settings---

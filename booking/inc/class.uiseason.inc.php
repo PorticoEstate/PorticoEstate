@@ -155,7 +155,6 @@
 				$season['from_'] = pretty_timestamp($season['from_']);
 				$season['to_'] = pretty_timestamp($season['to_']);
 
-				$resources = $this->resource_bo->read_single($season['id']);
 				if (isset($season['resources']))
 				{
 					$filters['results'] = -1;

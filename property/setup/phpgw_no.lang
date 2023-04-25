@@ -1046,6 +1046,7 @@ list vendors	property	no	List leverandør
 list vendors per activity	property	no	List leverandør pr aktivitet
 list voucher	property	no	list underbilag
 list workorder	property	no	List bestillinger
+workorders	property	no	Bestillinger
 location	property	no	Lokalisering
 loc1 name	property	no	Navn
 local files	property	no	Lokale filer

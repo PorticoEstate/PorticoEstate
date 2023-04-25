@@ -1612,7 +1612,7 @@
 				// notify admin(s) via email
 
 				$from_name = !empty($GLOBALS['phpgw_info']['server']['site_title']) ? $GLOBALS['phpgw_info']['server']['site_title'] : $GLOBALS['phpgw_info']['server']['system_name'];
-				$from    = "{$from_name}@{$GLOBALS['phpgw_info']['server']['email_domain']}";
+				$from    = str_replace(" ", "_", $from_name) . "@{$GLOBALS['phpgw_info']['server']['email_domain']}";
 				$subject = lang("%1: login blocked for user '%2', ip %3", $from_name, $login, $ip);
 				$body    = lang('Too many unsuccessful attempts to login: '
 							. "%1 for the user '%2', %3 for the IP %4", $false_id, $login, $false_ip, $ip);
