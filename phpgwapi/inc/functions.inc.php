@@ -475,7 +475,7 @@ _debug_array($error_line);
 		{
 			case 'no':
 			case 'nn':
-				$error_header = 'Oops - der var det ei lus...';
+				$error_header = 'Der kom du over en feil';
 				$error_msg = 'Feilen er logget til databasen';
 				$help = 'Ta kontakt med brukerstøtte for å få hjelp.';
 				break;
@@ -500,7 +500,8 @@ HTML;
 		$msg = $e->getMessage();
 		$trace = $e->getTraceAsString();
 		echo <<<HTML
-			<h1>{$error_header}: {$msg}</h1>
+			<h1>{$error_header}:</h1>
+			<strong>{$msg}</strong>
 			<p>{$help}</p>
 			<p>{$error_msg}</p>
 			<h2>Backtrace:</h2>
