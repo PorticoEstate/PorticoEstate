@@ -1423,6 +1423,7 @@
 		{
 			//cache result
 			static $location = array();
+			static $location_noattribs = array();
 
 			$location_array	 = explode('-', $location_code);
 			$type_id		 = count($location_array);
@@ -1453,9 +1454,13 @@
 				return;
 			}
 
-			if (isset($location[$location_code]))
+			if (isset($location[$location_code]) && !$skip_attribs )
 			{
 				return $location[$location_code];
+			}
+			else if (isset($location_noattribs[$location_code]) && $skip_attribs )
+			{
+				return	$location_noattribs[$location_code];
 			}
 
 			if (!$skip_attribs && (!isset($values['attributes']) || !$values['attributes']))
@@ -1569,7 +1574,14 @@
 //				}
 //			}
 
-			$location[$location_code] = $values;
+			if ( !$skip_attribs )
+			{
+				$location[$location_code] = $values;
+			}
+			else
+			{
+				$location_noattribs[$location_code] = $values;
+			}
 			return $values;
 		}
 
