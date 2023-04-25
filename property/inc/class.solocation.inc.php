@@ -1453,7 +1453,7 @@
 				return;
 			}
 
-			if (isset($location[$location_code]))
+			if (isset($location[$location_code]) && !$skip_attribs )
 			{
 				return $location[$location_code];
 			}
@@ -1569,7 +1569,10 @@
 //				}
 //			}
 
-			$location[$location_code] = $values;
+			if (isset($values['attributes']) && is_array($values['attributes']))
+			{
+				$location[$location_code] = $values;
+			}
 			return $values;
 		}
 
