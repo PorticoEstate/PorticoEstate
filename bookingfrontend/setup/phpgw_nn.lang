@@ -449,7 +449,7 @@ application add	bookingfrontend	nn	søknad
 Application cart	bookingfrontend	nn	Handlekurv
 Application basket	bookingfrontend	nn	Søknadskorg
 back	bookingfrontend	nn	tilbake
-Building information	bookingfrontend	nn	Informasjon om anlegget
+Building information	bookingfrontend	nn	Informasjon
 Choose another building	bookingfrontend	nn	Velg annet anlegg
 Choose categories	bookingfrontend	nn	Velg kategorier
 Choose resources	bookingfrontend	nn	Velg lokaler
@@ -491,7 +491,7 @@ For rent	bookingfrontend	nn	Til leige
 Choose atleast one object	bookingfrontend	nn	Vel minst eitt leigeobjekt
 Please fill all fields	bookingfrontend	nn	Vennlegst fyll ut alle obligatoriske felt!
 available	bookingfrontend	nn	Ledig
-leased	bookingfrontend	nn	Utleigd
+leased	bookingfrontend	nn	Opptatt
 It is currently not possible to rent anything here	bookingfrontend	nn	NB! Det er for tida ikkje mogeleg å leige noko her
 my page	bookingfrontend	nn	Mi side
 invoice	bookingfrontend	nn	Faktura
