@@ -37,7 +37,16 @@
 	{
 
 		private $receipt		 = array();
-		var $grants;
+		var $grants, $acl, $bo, $bocommon, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage, $cats;
+		var $status_id,	$wo_hour_cat_id,$start_date,$end_date,
+		$b_group,
+		$ecodimb,
+		$paid,
+		$b_account,
+		$district_id,
+		$obligation,
+		$decimal_separator;
+
 		var $cat_id;
 		var $start;
 		var $query;
@@ -3290,7 +3299,7 @@ JS;
 			{
 				$delivery_address = CreateObject('property.solocation')->get_delivery_address($_location_data['loc1']);
 			}
-			
+
 			$delivery_address = str_replace('__username__', $GLOBALS['phpgw_info']['user']['fullname'], $delivery_address);
 
 			$default_tax_code = (!empty($project['tax_code']) || $project['tax_code'] === 0) ? $project['tax_code'] : (int)$GLOBALS['phpgw_info']['user']['preferences']['property']['default_tax_code'];
