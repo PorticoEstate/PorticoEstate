@@ -1746,9 +1746,18 @@
 		</div>
 		<div class="proplist-col">
 			<input type="hidden" id="save" name="values[save]" value=""/>
-			<input type="button" class="pure-button pure-button-primary" name="save" onClick="confirm_session('save');">
+			<input type="hidden" id="apply" name="values[apply]" value=""/>
+			<input class="pure-button pure-button-primary" type="button" name="save" onClick="confirm_session('save');">
 				<xsl:attribute name="value">
 					<xsl:value-of select="php:function('lang', 'save')"/>
+				</xsl:attribute>
+				<xsl:attribute name="title">
+					<xsl:value-of select="php:function('lang', 'Save the entry and return to list')"/>
+				</xsl:attribute>
+			</input>
+			<input type="button" class="pure-button pure-button-primary" name="apply" onClick="confirm_session('apply');">
+				<xsl:attribute name="value">
+					<xsl:value-of select="php:function('lang', 'apply')"/>
 				</xsl:attribute>
 				<xsl:attribute name="title">
 					<xsl:value-of select="php:function('lang', 'save the ticket')"/>
