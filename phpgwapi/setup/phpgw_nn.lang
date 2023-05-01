@@ -343,3 +343,4 @@ percent	common	nn	Prosent
 choose "Log out" if you want to end the session	common	nn	Velg "Logg ut" om du vil avslutte sesjonen.
 messages_saved_form	common	nn	Data er lagra
 messages_form_error	common	nn	Data er ikkje lagra
+fatal error	common	nn	Fatal feil

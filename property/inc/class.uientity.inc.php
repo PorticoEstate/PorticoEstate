@@ -49,7 +49,26 @@
 		var $sub;
 		var $currentapp;
 		var $check_lst_time_span	 = array();
-		var $controller_helper;
+		var $acl, 
+		$controller_helper,
+		$account,
+		$bo,
+		$bocommon,
+		$soadmin_entity,
+		$district_id,
+		$status,
+		$location_code,
+		$p_num,
+		$category_dir,
+		$start_date,
+		$end_date,
+		$allrows,
+		$type,
+		$type_app,
+		$acl_location
+			
+		
+		;
 		var $public_functions	 = array(
 			'summary'					 => true,
 			'columns'					 => true,
@@ -2391,7 +2410,7 @@
 
 				$related_def = array
 					(
-					array('key' => 'url', 'label' => lang('where'), 'sortable' => false, 'resizeable' => true)
+					array('key' => 'url', 'label' => lang('related'), 'sortable' => false, 'resizeable' => true)
 				);
 
 				$datatable_def[] = array
@@ -2702,7 +2721,7 @@ JS;
 				'validator'						 => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file')),
 				'content_images'				 => $content_images,
-				'get_files_java_url'			=> "{menuaction:'property.uientity.get_files',id:{$id},entity_id:{$this->entity_id},cat_id:{$this->cat_id},type:'{$this->type}',length:-1}",
+				'get_files_java_url'			=> "{menuaction:'property.uientity.get_files',id:'{$id}',entity_id:{$this->entity_id},cat_id:{$this->cat_id},type:'{$this->type}',length:-1}",
 			);
 
 			//print_r($data['location_data2']);die;

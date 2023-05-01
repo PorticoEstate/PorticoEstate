@@ -34,7 +34,7 @@
 	class property_soentity
 	{
 
-		var $entity_id;
+		var $entity_id, $db, $db2,$bocommon, $custom, $join, $left_join, $like;
 		var $cat_id;
 		var $total_records	 = 0;
 		var $uicols;
@@ -2871,10 +2871,10 @@
 				$category = array();
 				while ($this->db->next_record())
 				{
-					$category[] = array
-						(
-						'entity_id'	 => $this->db->f('entity_id'),
-						'cat_id'	 => $this->db->f('id'),
+					$category[] = array(
+						'location_id'=> (int)$this->db->f('location_id'),
+						'entity_id'	 => (int)$this->db->f('entity_id'),
+						'cat_id'	 => (int)$this->db->f('id'),
 						'name'		 => $this->db->f('name', true),
 						'descr'		 => $this->db->f('descr', true),
 						'is_eav'	 => $this->db->f('is_eav')
@@ -2884,31 +2884,11 @@
 
 				$sql = "SELECT DISTINCT location_id FROM fm_bim_item WHERE p_location_id = {$p_location_id} AND p_id = '{$p_id}'";
 				$this->db->query($sql, __LINE__, __FILE__);
+				$location_ids = array();
 				while ($this->db->next_record())
 				{
-					$location_id = $this->db->f('location_id');
-					$sql = "SELECT count(*) as hits FROM fm_bim_item WHERE location_id = {$location_id} AND p_location_id = {$p_location_id} AND p_id = '{$p_id}'";
-					$this->db->query($sql, __LINE__, __FILE__);
-					$this->db->next_record();
-					if ($this->db->f('hits'))
-					{
-						$entity['related'][] = array
-							(
-							'entity_link'	 => $GLOBALS['phpgw']->link('/index.php', array
-								(
-								'menuaction'	 => "property.uientity.index",
-								'entity_id'		 => $entry['entity_id'],
-								'cat_id'		 => $entry['cat_id'],
-								'p_entity_id'	 => $entity_id,
-								'p_cat_id'		 => $cat_id,
-								'p_num'			 => $p_id,
-								'type'			 => $type
-								)
-							),
-							'name'			 => $entry['name'] . ' [' . $this->db->f('hits') . ']',
-							'descr'			 => $entry['descr']
-						);
-					}
+					$location_ids[] = (int)$this->db->f('location_id');
+					
 				}
 
 				foreach ($category as $entry)
@@ -2918,38 +2898,66 @@
 						continue;
 					}
 
-					if ($entry['is_eav'])
+					if ($entry['is_eav'] )
 					{
-						continue;
+						if(!in_array($entry['location_id'],$location_ids))
+						{
+							continue;
+						}
+
+						$sql = "SELECT count(*) as hits FROM fm_bim_item WHERE location_id = {$entry['location_id']} AND p_location_id = {$p_location_id} AND p_id = '{$p_id}'";
+						$this->db2->query($sql, __LINE__, __FILE__);
+						$this->db2->next_record();
+						if ($this->db2->f('hits'))
+						{
+							$entity['related'][] = array
+								(
+								'entity_link'	 => $GLOBALS['phpgw']->link('/index.php', array
+									(
+									'menuaction'	 => "property.uientity.index",
+									'entity_id'		 => $entry['entity_id'],
+									'cat_id'		 => $entry['cat_id'],
+									'p_entity_id'	 => $entity_id,
+									'p_cat_id'		 => $cat_id,
+									'p_num'			 => $p_id,
+									'type'			 => $type
+									)
+								),
+								'name'			 => $entry['name'] . ' [' . $this->db2->f('hits') . ']',
+								'descr'			 => $entry['descr']
+							);
+						}
+
 //						$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$type], ".{$type}.{$entry['entity_id']}.{$entry['cat_id']}");
 //						$sql = "SELECT count(*) as hits FROM fm_bim_item WHERE location_id = {$location_id} AND p_location_id = {$p_location_id} AND p_id = '{$p_id}'";
 					}
 					else
 					{
 						$sql = "SELECT count(*) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
+						$this->db->query($sql, __LINE__, __FILE__);
+						$this->db->next_record();
+						if ($this->db->f('hits'))
+						{
+							$entity['related'][] = array
+								(
+								'entity_link'	 => $GLOBALS['phpgw']->link('/index.php', array
+									(
+									'menuaction'	 => "property.uientity.index",
+									'entity_id'		 => $entry['entity_id'],
+									'cat_id'		 => $entry['cat_id'],
+									'p_entity_id'	 => $entity_id,
+									'p_cat_id'		 => $cat_id,
+									'p_num'			 => $p_id,
+									'type'			 => $type
+									)
+								),
+								'name'			 => $entry['name'] . ' [' . $this->db->f('hits') . ']',
+								'descr'			 => $entry['descr']
+							);
+						}
+	
 					}
 
-					$this->db->query($sql, __LINE__, __FILE__);
-					$this->db->next_record();
-					if ($this->db->f('hits'))
-					{
-						$entity['related'][] = array
-							(
-							'entity_link'	 => $GLOBALS['phpgw']->link('/index.php', array
-								(
-								'menuaction'	 => "property.uientity.index",
-								'entity_id'		 => $entry['entity_id'],
-								'cat_id'		 => $entry['cat_id'],
-								'p_entity_id'	 => $entity_id,
-								'p_cat_id'		 => $cat_id,
-								'p_num'			 => $p_id,
-								'type'			 => $type
-								)
-							),
-							'name'			 => $entry['name'] . ' [' . $this->db->f('hits') . ']',
-							'descr'			 => $entry['descr']
-						);
-					}
 				}
 			}
 

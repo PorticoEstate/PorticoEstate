@@ -22,7 +22,8 @@
 	{
 
 		private $pdf_templates = array();
-		private $config;
+		private $config, $district_id, $part_of_town_id;
+
 		public $public_functions = array
 			(
 			'add' => true,
@@ -58,6 +59,9 @@
 
 			$this->config = CreateObject('phpgwapi.config', 'rental');
 			$this->config->read();
+			$this->district_id		 = phpgw::get_var('district_id', 'int');
+			$this->part_of_town_id	 = phpgw::get_var('part_of_town_id', 'int');
+
 		}
 
 		private function _get_filters()
@@ -157,6 +161,49 @@
 				'name' => 'contract_type',
 				'text' => lang('field_of_responsibility'),
 				'list' => $types_options
+			);
+
+			$bocommon			= CreateObject('property.bocommon');
+			$values_combo_box = array();
+			$values_combo_box[1] = $bocommon->select_district_list('filter', $this->district_id);
+			array_unshift($values_combo_box[1],  array('id' => '', 'name' => lang('select')));
+			$link				 = self::link(array(
+					'menuaction'		 => 'property.uilocation.get_part_of_town',
+					'district_id'		 => $this->district_id,
+					'part_of_town_id'	 => $this->part_of_town_id,
+					'phpgw_return_as'	 => 'json'
+			));
+
+			$code = '
+				var link = "' . $link . '";
+				var data = {"district_id": $(this).val()};
+				execute_ajax(link,
+					function(result){
+						var $el = $("#part_of_town_id");
+						$el.empty();
+						$.each(result, function(key, value) {
+						  $el.append($("<option>").attr("value", value.id).text(value.name));
+						});
+					}, data, "GET", "json"
+				);
+				';
+/*
+			$filters[] = array('type'	 => 'filter',
+				'name'	 => 'district_id',
+				'extra'	 => $code,
+				'text'	 => lang('district'),
+				'list'	 => $values_combo_box[1]
+			);
+*/
+			$values_combo_box[2] = $bocommon->select_part_of_town('filter', $this->part_of_town_id, $this->district_id);
+
+			array_unshift($values_combo_box[2], array('id' => '', 'name' => lang('select')));
+			$filters[]			 = array('type'	 => 'filter',
+				'name'	 => 'part_of_town_id',
+				'multiple'	=> true,
+				'extra'	 => '',
+				'text'	 => lang('part of town'),
+				'list'	 => $values_combo_box[2]
 			);
 
 			return $filters;
@@ -975,6 +1022,9 @@
 					$filters['end_date_report'] = phpgwapi_datetime::date_to_timestamp(phpgw::get_var('filter_end_date_report'));
 			}
 
+			$filters['district_id'] = $this->district_id;
+			$filters['part_of_town_id'] = $this->part_of_town_id;
+
 			$result_objects = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 			$result_count = rental_socontract::get_instance()->get_count($search_for, $search_type, $filters);
 
@@ -1323,6 +1373,7 @@ JS;
 			$GLOBALS['phpgw']->js->add_code('', $code);
 
 			self::add_javascript('rental', 'base', 'contract.index.js');
+			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 			phpgwapi_jquery::load_widget('numberformat');
 			self::render_template_xsl('datatable_jquery', $data);
 		}

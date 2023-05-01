@@ -1923,16 +1923,16 @@ HTML;
 			else if($action == 'set_tag' && $ids)
 			{
 				$bofiles->set_tags($ids, $tags);
-				
+
 			}
 			else if($action == 'remove_tag' && $ids)
 			{
 				$bofiles->remove_tags($ids, $tags);
-				
+
 			}
 
 			return $action;
-			
+
 		}
 
 		function get_files()
@@ -1973,11 +1973,11 @@ HTML;
 				else if($filter_tags && $_entry['tags'])
 				{
 					$filter_check = json_decode($_entry['tags'], true);
-					
+
 					if(!array_intersect($filter_check, $filter_tags))
 					{
 						continue;
-					}				
+					}
 				}
 				$datetime = new DateTime($_entry['created'], new DateTimeZone('UTC'));
 				$datetime->setTimeZone(new DateTimeZone($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']));
@@ -2109,7 +2109,7 @@ HTML;
 				$access_order = true;
 			}
 
-			if (!empty($values['save']) || !empty($values['send_order']))
+			if (!empty($values['save']) || !empty($values['apply']) || !empty($values['send_order']))
 			{
 				if (!$this->acl_edit)
 				{
@@ -2257,6 +2257,17 @@ HTML;
 					$sms->websend2pv($this->account, $to_sms_phone, $values['response_text']);
 					$historylog->add('MS', $id, "{$to_sms_phone}::{$values['response_text']}");
 				}
+
+				if ((isset($values['save']) && $values['save']))
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitts.index'));
+				}
+				else
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitts.view',
+						'id'		 => $id, 'tab'		 => 'general'));
+				}
+
 			}
 
 			/* Preserve attribute values from post */
@@ -2788,7 +2799,7 @@ HTML;
 					}
 					unset($tag);
 				}
-				
+
 				$content_files[] = array(
 					'tags'			 => $tags,
 					'file_id'		 => $_entry['file_id'],
@@ -2847,7 +2858,7 @@ HTML;
 					'sortable'	 => false, 'resizeable' => true, 'formatter'	 => 'FormatterCenter');
 			}
 //---file tagging
-			
+
 			$requestUrl	 = json_encode(self::link(array(
 				'menuaction' => 'property.uitts.update_file_data',
 				'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
@@ -2923,7 +2934,7 @@ HTML;
 						}
 						{$entry['funct']}('{$entry['action']}', ids);
 						"
-				);					
+				);
 			}
 
 			$code		 = <<<JS
@@ -2965,7 +2976,7 @@ HTML;
 				var strURL = phpGWLink('index.php', oArgs, true);
 
 				JqueryPortico.updateinlineTableHelper('datatable-container_2',strURL);
-				
+
 				if(action=='delete_file')
 				{
 					refresh_glider(strURL);
@@ -3667,7 +3678,7 @@ JS;
 					$GLOBALS['phpgw_info']['user']['preferences']['property']['order_payment_info']
 					);
 			}
-			
+
 			$payment_info = $ticket['payment_info'] ? $ticket['payment_info'] : $payment_info;
 			$cats					 = CreateObject('phpgwapi.categories', -1, 'property', '.project');
 			$cats->supress_info	 = true;
@@ -4536,7 +4547,7 @@ JS;
 
 		private function get_documentation_url( $id )
 		{
-			return  $this->bocommon->get_documentation_url($id);	
+			return  $this->bocommon->get_documentation_url($id);
 		}
 
 		private function _html_order( $id = 0, $preview = false, $show_cost = false )
