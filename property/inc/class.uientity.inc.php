@@ -2410,7 +2410,7 @@
 
 				$related_def = array
 					(
-					array('key' => 'url', 'label' => lang('where'), 'sortable' => false, 'resizeable' => true)
+					array('key' => 'url', 'label' => lang('related'), 'sortable' => false, 'resizeable' => true)
 				);
 
 				$datatable_def[] = array
