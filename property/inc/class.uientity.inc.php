@@ -49,7 +49,26 @@
 		var $sub;
 		var $currentapp;
 		var $check_lst_time_span	 = array();
-		var $controller_helper;
+		var $acl, 
+		$controller_helper,
+		$account,
+		$bo,
+		$bocommon,
+		$soadmin_entity,
+		$district_id,
+		$status,
+		$location_code,
+		$p_num,
+		$category_dir,
+		$start_date,
+		$end_date,
+		$allrows,
+		$type,
+		$type_app,
+		$acl_location
+			
+		
+		;
 		var $public_functions	 = array(
 			'summary'					 => true,
 			'columns'					 => true,
