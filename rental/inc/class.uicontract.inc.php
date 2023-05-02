@@ -166,8 +166,9 @@
 			$bocommon			= CreateObject('property.bocommon');
 			$values_combo_box = array();
 			$values_combo_box[1] = $bocommon->select_district_list('filter', $this->district_id);
-			array_unshift($values_combo_box[1],  array('id' => '', 'name' => lang('select')));
-			$link				 = self::link(array(
+
+			/*
+  			$link				 = self::link(array(
 					'menuaction'		 => 'property.uilocation.get_part_of_town',
 					'district_id'		 => $this->district_id,
 					'part_of_town_id'	 => $this->part_of_town_id,
@@ -187,17 +188,17 @@
 					}, data, "GET", "json"
 				);
 				';
-/*
+*/
 			$filters[] = array('type'	 => 'filter',
 				'name'	 => 'district_id',
-				'extra'	 => $code,
+				'multiple'	=> true,
+				'extra'	 => '',
 				'text'	 => lang('district'),
 				'list'	 => $values_combo_box[1]
 			);
-*/
-			$values_combo_box[2] = $bocommon->select_part_of_town('filter', $this->part_of_town_id, $this->district_id);
 
-			array_unshift($values_combo_box[2], array('id' => '', 'name' => lang('select')));
+/*
+			$values_combo_box[2] = $bocommon->select_part_of_town('filter', $this->part_of_town_id, $this->district_id);
 			$filters[]			 = array('type'	 => 'filter',
 				'name'	 => 'part_of_town_id',
 				'multiple'	=> true,
@@ -205,7 +206,7 @@
 				'text'	 => lang('part of town'),
 				'list'	 => $values_combo_box[2]
 			);
-
+*/
 			return $filters;
 		}
 
@@ -1023,7 +1024,7 @@
 			}
 
 			$filters['district_id'] = $this->district_id;
-			$filters['part_of_town_id'] = $this->part_of_town_id;
+//			$filters['part_of_town_id'] = $this->part_of_town_id;
 
 			$result_objects = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 			$result_count = rental_socontract::get_instance()->get_count($search_for, $search_type, $filters);
