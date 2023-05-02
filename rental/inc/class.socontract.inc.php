@@ -343,6 +343,19 @@
 				$order = $order ? $order . ', ' . $specific_ordering : "ORDER BY {$specific_ordering}";
 			}
 
+			if($filters['part_of_town_id'])
+			{
+				if(is_array($filters['part_of_town_id']))
+				{
+					$part_of_town_ids = $filters['part_of_town_id'];
+				}
+				else
+				{
+					$part_of_town_ids = array($filters['part_of_town_id']);
+				}
+				$filter_clauses[] = "composite.part_of_town_id IN ( " . implode(',', array_map('intval', $part_of_town_ids)) . ")";
+			}
+
 			if (count($filter_clauses))
 			{
 				$clauses[] = join(' AND ', $filter_clauses);

@@ -765,12 +765,12 @@
 					'hidden'	 => ($uicols['input_type'][$k] == 'hidden') ? true : false
 				);
 
-				if ($uicols['name'][$k] == 'project_id')
+				if ($uicols['name'][$k] == 'project_id' && !$lookup)
 				{
 					$params['formatter'] = 'JqueryPortico.formatProject';
 				}
 
-				if ($uicols['name'][$k] == 'ticket')
+				if ($uicols['name'][$k] == 'ticket' && !$lookup)
 				{
 					$params['formatter'] = 'formatLinkTicket';
 				}
@@ -1033,8 +1033,7 @@ JS;
 			$result_data					 = array('results' => $values);
 			$result_data['total_records']	 = $this->bo->total_records;
 			$result_data['draw']			 = $draw;
-			$link_data						 = array
-				(
+			$link_data						 = array(
 				'menuaction' => 'property.uiproject.edit'
 			);
 			array_walk($result_data['results'], array($this, '_add_links'), $link_data);

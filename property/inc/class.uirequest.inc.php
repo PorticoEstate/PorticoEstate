@@ -46,7 +46,34 @@
 		var $part_of_town_id;
 		var $sub;
 		var $currentapp;
-		var $nonavbar;
+		var $nonavbar,
+		$account,
+		$bo,
+		$boproject,
+		$bocommon,
+		$cats,
+		$bolocation,
+		$config,
+		$acl,
+		$acl_location,
+		$acl_read,
+		$acl_add,
+		$acl_edit,
+		$acl_delete,
+		$acl_manage,
+		$property_cat_id,
+		$status_id,
+		$degree_id,
+		$district_id,
+		$start_date,
+		$end_date,
+		$building_part,
+		$allrows,
+		$p_num,
+		$condition_survey_id,
+		$responsible_unit,
+		$recommended_year;
+
 		var $public_functions = array
 			(
 			'index'						 => true,
@@ -1100,7 +1127,7 @@
 					'text'			 => $lang_update_relation,
 					'type'			 => 'custom',
 					'custom_code'	 => "
-											
+
 											var myChecks = $('.mychecks:checked');
 											if (myChecks.length == 0) {
 												alert('Any box selected');
@@ -1114,7 +1141,7 @@
 													   id: 'add_request[request_id][]',
 													   name: 'add_request[request_id][]',
 													   value: myChecks[i].value
-												   }).appendTo('#custom_values_form');			 
+												   }).appendTo('#custom_values_form');
 											}
 
 											var path_update = new Array();
@@ -1132,7 +1159,7 @@
 				if (!empty($query))
 				{
 					$code = <<<JS
-						function initCompleteDatatable(oSettings, json, oTable) 
+						function initCompleteDatatable(oSettings, json, oTable)
 					{
 							setTimeout(function() {
 								var api = oTable.api();
@@ -1260,8 +1287,8 @@ JS;
 					$headers			 .= "Bcc: " . $coordinator_name . "<" . $coordinator_email . ">\r\n";
 					$headers			 .= "Content-type: text/plain; charset=iso-8859-1\r\n";
 
-					$subject = lang(notify) . ": " . $values['id'];
-					$message = lang(request) . " " . $values['id'] . " " . lang('is registered');
+					$subject = lang('notify') . ": " . $values['id'];
+					$message = lang('request') . " " . $values['id'] . " " . lang('is registered');
 
 					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 					{
@@ -1827,7 +1854,7 @@ JS;
 				'validator'							 => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file')),
 				'multiple_uploader'					 => !!$id,
-				
+
 				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uirequest.handle_multi_upload_file','id'	 => $id))
 
 			);

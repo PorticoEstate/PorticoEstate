@@ -197,8 +197,9 @@ JS;
 						$clear_functions[$m]['action']	 = <<<JS
 						if(confirm("{$confirm_msg}"))
 						{
-							parent.getElementsByName('{$attributes['name']}')[0].value = '';
-							parent.getElementsByName('{$attributes['name']}_name')[0].value = '';
+							document.getElementsByName('{$attributes['name']}')[0].value = '';
+							document.getElementsByName('{$attributes['name']}_name')[0].value = '';
+							document.getElementsByName('clear_{$attributes['name']}_box')[0].checked = false;
 						}
 JS;
 						$m++;
@@ -244,7 +245,7 @@ JS;
 				{
 
 					$GLOBALS['phpgw']->js->validate_file('html5-qrcode', str_replace('.js', '', 'html5-qrcode.min.js'), 'phpgwapi');
-				
+
 					$_QR_code = <<<JS
 
 
@@ -279,7 +280,7 @@ JS;
 
 					init_scanner_{$attributes['name']} = function ()
 					{
-						
+
 						html5QrcodeScanner_{$attributes['name']} = new Html5QrcodeScanner(
 							"qr_scanner_{$attributes['name']}", {fps: 10, qrbox: 250});
 

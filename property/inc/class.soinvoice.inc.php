@@ -2651,9 +2651,25 @@
 
 					$value_set = array();
 
-					$skip_values = array('id', 'project_id', 'pmwrkord_code', 'dima', 'dime', 'loc1',
-						'mvakode', 'dimd', 'merknad', 'line_text', 'oppsynsmannid', 'saksbehandlerid',
-						'oppsynsigndato', 'saksigndato', 'budsjettsigndato', 'process_code', 'process_log');
+					$skip_values = array(
+						'id',
+//						'project_id',
+//						'pmwrkord_code',
+//						'dima',
+//						'dime',
+//						'loc1',
+//						'mvakode',
+//						'dimd',
+						'merknad',
+//						'line_text',
+//						'oppsynsmannid',
+//						'saksbehandlerid',
+//						'oppsynsigndato',
+						'saksigndato',
+						'budsjettsigndato',
+						'process_code',
+						'process_log'
+					);
 
 					foreach ($metadata as $_field)
 					{

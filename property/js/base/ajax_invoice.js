@@ -364,7 +364,10 @@ function update_form_values(line_id, voucher_id_orig)
 				{
 					var voucher_id_text = voucher[0].voucher_id;
 				}
-				$("#voucher_id_text").html(voucher_id_text);
+
+				var voucher_image_open = '<a href="javascript: load_voucher_image(\'' + voucher[0].image_url + '\');" title=\'Last bilde av faktura\'>' + voucher_id_text + '</a>';
+
+				$("#voucher_id_text").html(voucher_image_open);
 
 				var htmlString_split = " <a class=\"pure-button pure-button-primary\" style=\"color: white\" href=\"javascript:load_split(" + voucher[0].voucher_id + ");\" title=\"" + voucher_id_text + "\" >"
 					htmlString_split += "<i class=\"fas fa-share-alt\"></i> Splitt " + voucher_id_text + "</a>";
@@ -378,7 +381,6 @@ function update_form_values(line_id, voucher_id_orig)
 				{
 					var oArgs_order = {menuaction: 'property.uiinvoice.view_order', order_id: voucher[0].order_id};
 					var requestUrl_order = phpGWLink('index.php', oArgs_order);
-//					var htmlString_order  =  " <a target= \"_blank\" href=\"" + requestUrl_order + "\" title=\"" + voucher[0].status + "\" > Bestilling</a>";
 
 					var htmlString_order = " <a href=\"javascript:load_order(" + voucher[0].order_id + ");\" title=\"" + voucher[0].status + "\" > Bestilling</a>";
 
@@ -721,6 +723,13 @@ function load_order(id)
 {
 	var oArgs = {menuaction: 'property.uiinvoice.view_order', order_id: id, nonavbar: true, lean: true};
 	var requestUrl = phpGWLink('index.php', oArgs);
+	TINY.box.show({iframe: requestUrl, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true, closejs: function ()
+		{
+			closeJS_local();
+		}});
+}
+function load_voucher_image(requestUrl)
+{
 	TINY.box.show({iframe: requestUrl, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true, closejs: function ()
 		{
 			closeJS_local();
