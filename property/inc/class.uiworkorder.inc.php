@@ -2808,7 +2808,8 @@ JS;
 			$lang_active	 = lang('Check to activate period');
 			$lang_fictive	 = lang('fictive');
 
-			$rows_per_page	 = 10;
+			$maxmatchs = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$rows_per_page	 = $maxmatchs ? $maxmatchs : 10;
 			$initial_page	 = 1;
 
 			if ($content_budget && $project['periodization_id'])
@@ -2817,7 +2818,7 @@ JS;
 				foreach ($content_budget as $key => $row)
 				{
 					$_year_count[$row['year']]	 += 1;
-					$rows_per_page				 = $_year_count[$row['year']];
+					$rows_per_page				 = max($_year_count[$row['year']], $maxmatchs);
 				}
 				$initial_page = floor(count($content_budget) / $rows_per_page);
 			}
