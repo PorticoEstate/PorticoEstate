@@ -730,10 +730,13 @@ function load_order(id)
 }
 function load_voucher_image(requestUrl)
 {
-	TINY.box.show({iframe: requestUrl, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true, closejs: function ()
-		{
-			closeJS_local();
-		}});
+	Window1 = window.open(requestUrl,"invoiceimage","left=50,top=100,width=1000,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+	Window1.focus();
+
+//	TINY.box.show({iframe: requestUrl, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true, closejs: function ()
+//		{
+//			closeJS_local();
+//		}});
 }
 
 function load_split(voucher_id)
