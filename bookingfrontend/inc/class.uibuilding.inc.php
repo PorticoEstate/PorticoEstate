@@ -145,7 +145,7 @@
 			$time = $timestart;
 			$html = '<html><head><title>Kalender for ' . $building['name'] . '</title>';
 			$html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
-			$html .= '<meta name="author" content="Bergen Kommune">';
+			$html .= '<meta name="author" content="Aktiv Kommune">';
 			$html .= '<style>';
 			$html .= 'body { font-size: 12px; padding: 0px; border-spacing: 0px;} ';
 			if ($fontsize != '')
@@ -172,7 +172,7 @@
 			$html .= '<table class="calender">';
 			$html .= '<thead>';
 			$html .= '<tr>';
-			$html .= '<th colspan="2" style="text-align: left; width: 12%;">Bane</th>';
+			$html .= '<th colspan="2" style="text-align: left; width: 12%;"></th>';//Bane
 			while ($time < $timeend)
 			{
 				$html .= '<th colspan="1" style="width: ' . $cellwidth . '%; text-align: left;">' . str_pad($time, 2, '0', STR_PAD_LEFT) . ':00</th>';

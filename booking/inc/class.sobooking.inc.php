@@ -479,7 +479,7 @@
 			$start = $start->format('Y-m-d H:i');
 			$end = $end->format('Y-m-d H:i');
 			$results = array();
-			$sql = "SELECT bb_allocation.id AS id"
+			$sql = "SELECT DISTINCT bb_allocation.id AS id"
 				. " FROM bb_allocation JOIN bb_allocation_resource ON (allocation_id=id AND resource_id IN (" . implode(',', $resource_ids) . ") )"
 				. " JOIN bb_resource as res ON ( res.id IN (" . implode(',', $resource_ids) . ") )"
 				. " JOIN bb_season ON (bb_allocation.season_id=bb_season.id AND bb_allocation.active=1)"
