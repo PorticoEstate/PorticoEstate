@@ -701,7 +701,7 @@
 				);
 			}
 
-			$allocations = $this->split_allocations($allocations, $bookings);
+			$allocations = $this->split_allocations2($allocations, $bookings);
 
 //			$event_ids	 = $this->so->event_ids_for_building($building_id, $from, $to);
 			$event_ids	 = $this->so->event_ids_for_resource($resource_ids, $from, $to);
@@ -1095,7 +1095,9 @@
 				foreach ($all_bookings as $b)
 				{
 					if ($b['allocation_id'] == $allocation['id'])
+					{
 						$bookings[] = $b;
+					}
 				}
 				$times = array($allocation['from_'], $allocation['to_']);
 
@@ -1112,7 +1114,9 @@
 					{
 
 						if (($b['from_'] >= $from_ && $b['from_'] < $to_) || ($b['to_'] > $from_ && $b['to_'] <= $to_) || ($b['from_'] <= $from_ && $b['to_'] >= $to_))
+						{
 							$resources = array_minus($resources, array($b['resource_id']));
+						}
 					}
 					if ($resources)
 					{
