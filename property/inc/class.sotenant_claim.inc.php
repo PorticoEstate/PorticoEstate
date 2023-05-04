@@ -64,7 +64,7 @@
 				switch ($order)
 				{
 					case 'claim_id':
-						$order	 = 'fm_tenant_claim.id';
+						$order	 = 'id';
 						break;
 					case 'name':
 						$order	 = 'last_name';

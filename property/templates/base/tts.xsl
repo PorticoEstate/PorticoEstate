@@ -420,10 +420,18 @@
 											<xsl:value-of select="php:function('lang', 'save')"/>
 										</xsl:attribute>
 										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'save the ticket')"/>
+											<xsl:value-of select="php:function('lang', 'Save the entry and return to list')"/>
 										</xsl:attribute>
 									</input>
 								</td>
+								<input type="button" class="pure-button pure-button-primary" name="apply" onClick="confirm_session('apply');">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('lang', 'apply')"/>
+									</xsl:attribute>
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'save the ticket')"/>
+									</xsl:attribute>
+								</input>
 								<xsl:choose>
 									<xsl:when test="access_order = 1">
 										<xsl:choose>
