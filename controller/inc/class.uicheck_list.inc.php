@@ -2061,6 +2061,10 @@
 
 		private function notify_supervisor($check_list)
 		{
+			/**
+			 * Maybe not...
+			 */
+
 			$message = '';
 			if($check_list->get_status() == controller_check_list::STATUS_DONE)
 			{
