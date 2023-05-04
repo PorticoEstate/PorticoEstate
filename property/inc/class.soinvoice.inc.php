@@ -2263,6 +2263,13 @@
 				$global_check	 = true;
 			}
 
+			$condition_approval = $condition;
+			if ((!empty($data['approve']) || !empty($data['sign_orig'])) && !empty($data['voucher_id']) && !empty($data['approve_all_lines']))
+			{
+				$condition_approval		 = 'WHERE bilagsnr =' . (int)$data['voucher_id'];
+				$global_check	 = true;
+			}
+
 			$receipt	 = array();
 			$local_error = false;
 			if ($condition)
@@ -2273,9 +2280,7 @@
 
 				$this->db->query("SELECT * FROM fm_ecobilag {$condition}", __LINE__, __FILE__);
 				$this->db->next_record();
-				$oppsynsigndato		 = $this->db->f('oppsynsigndato');
 				$oppsynsmannid		 = $this->db->f('oppsynsmannid');
-				$saksigndato		 = $this->db->f('saksigndato');
 				$saksbehandlerid	 = $this->db->f('saksbehandlerid');
 				$budsjettansvarligid = $this->db->f('budsjettansvarligid');
 
@@ -2303,10 +2308,16 @@
 						$local_error = true;
 					}
 
-					if ($check_count['dimd_count'] != $check_count['invoice_count'])
+					/**
+					 * if dim 6 is mandatory...
+					 */
+					if(false)
 					{
-						phpgwapi_cache::message_set(lang('Dim D is mandatory') . ": {$data['voucher_id']}", 'error');
-						$local_error = true;
+						if ($check_count['dimd_count'] != $check_count['invoice_count'])
+						{
+							phpgwapi_cache::message_set(lang('Dim D is mandatory') . ": {$data['voucher_id']}", 'error');
+							$local_error = true;
+						}
 					}
 
 					if ($this->check_claim($data['voucher_id']))
@@ -2404,7 +2415,7 @@
 				else
 				{
 					$value_set = $this->db->validate_update($value_set);
-					return $this->db->query("UPDATE fm_ecobilag SET $value_set {$condition}", __LINE__, __FILE__);
+					return $this->db->query("UPDATE fm_ecobilag SET $value_set {$condition_approval}", __LINE__, __FILE__);
 				}
 			}
 

@@ -379,8 +379,8 @@ function update_form_values(line_id, voucher_id_orig)
 
 				if (voucher[0].order_id)
 				{
-					var oArgs_order = {menuaction: 'property.uiinvoice.view_order', order_id: voucher[0].order_id};
-					var requestUrl_order = phpGWLink('index.php', oArgs_order);
+//					var oArgs_order = {menuaction: 'property.uiinvoice.view_order', order_id: voucher[0].order_id};
+//					var requestUrl_order = phpGWLink('index.php', oArgs_order);
 
 					var htmlString_order = " <a href=\"javascript:load_order(" + voucher[0].order_id + ");\" title=\"" + voucher[0].status + "\" > Bestilling</a>";
 
@@ -649,7 +649,7 @@ function update_form_values(line_id, voucher_id_orig)
 					var obj = data['generic']['approve_list']['options'];
 					$.each(obj, function (i)
 					{
-						htmlString2 += "<th align=\"center\">" + obj[i].name + "</th>";
+						htmlString2 += "<th align=\"left\">" + obj[i].name + "</th>";
 					});
 					htmlString2 += "</tr><thead><tbody><tr>";
 					$.each(obj, function (i)
@@ -662,13 +662,14 @@ function update_form_values(line_id, voucher_id_orig)
 							checked = "checked = \"checked\"";
 						}
 						htmlString += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
-						htmlString2 += "<td align=\"center\"><input type =\"radio\" name=\"values[approve]\" value='" + obj[i].id + "'" + checked + "></input></td>";
+						htmlString2 += "<td align=\"left\"><input type =\"radio\" name=\"values[approve]\" value='" + obj[i].id + "'" + checked + "></input></td>";
 					});
 
 					htmlString2 += "</tr><tbody></table>";
 					$("#approve_as2").html(htmlString2);
-					//		$("#approve_as").html( htmlString );
 				}
+				$("#approve_all_lines").prop('checked', false);
+
 				var Url_email = email_base_url + '&voucher_id=' + voucher[0].voucher_id;
 
 				var email_buttons = "<input type=\"button\" class=\"pure-button pure-button-primary\" name=\"Kopier til utklippstavle\" onClick=\"copyToClipboard('" + Url_email + "');\" value=\"Kopier til utklippstavle\" title=\"Kopier til utklippstavle\">";
