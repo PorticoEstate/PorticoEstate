@@ -577,7 +577,7 @@ EOT;
 			}
 			$this->db->query(
 				"SELECT 1 FROM bb_season_boundary " .
-				"WHERE wday = $wday AND from_ <= ${from_} AND to_ >= ${to_} AND season_id = ${season_id}", __LINE__, __FILE__);
+				"WHERE wday = {$wday} AND from_ <= {$from_} AND to_ >= {$to_} AND season_id = {$season_id}", __LINE__, __FILE__);
 			if (!$this->db->next_record())
 			{
 				$errors['overlaps'] = lang("This allocation is outside season boundaries");

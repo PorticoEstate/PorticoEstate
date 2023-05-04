@@ -388,7 +388,7 @@
 				$content_attachments[] = array(
 					'source'		 => $lang_workorder,
 					'file_id'		 => $_entry['file_id'],
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 				if (in_array($_entry['mime_type'], $img_types))
@@ -420,7 +420,7 @@
 
 				$content_attachments[] = array(
 					'source'		 => $lang_project,
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 
@@ -3212,7 +3212,7 @@ JS;
 
 				$content_attachments[] = array(
 					'source'		 => $lang_workorder,
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 
@@ -3253,7 +3253,7 @@ JS;
 				}
 				$content_attachments[] = array(
 					'source'		 => $lang_project,
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 

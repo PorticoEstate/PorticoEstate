@@ -303,8 +303,8 @@ $nav = <<<HTML
               </div>
               <div>
 <ul class="list-unstyled">
-        <li><a href="${about}">Hva er Aktiv kommune?</a></li>
-        <li><a href="${faq}">FAQ</a></li>
+        <li><a href="{$about}">Hva er Aktiv kommune?</a></li>
+        <li><a href="{$faq}">FAQ</a></li>
       </ul>
       </div>
       	{$template_selector}

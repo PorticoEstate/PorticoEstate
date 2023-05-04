@@ -70,8 +70,8 @@
         <span></span>
       </button>
       <ul class="list-unstyled navbar__section__links">
-        <li><a href="${about}">Hva er Aktiv kommune?</a></li>
-        <li><a href="${faq}">FAQ</a></li>
+        <li><a href="{$about}">Hva er Aktiv kommune?</a></li>
+        <li><a href="{$faq}">FAQ</a></li>
       </ul>
     </div>
     <a href="/" class="navbar__logo">
