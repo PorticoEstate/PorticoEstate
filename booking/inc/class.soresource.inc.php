@@ -724,4 +724,28 @@
 			}
 			$resources = array_values($resources);
 		}
+
+		public function get_season_boundary_interval($resource_ids, $start, $end)
+		{
+			$start_query = $start->format('Y-m-d H:i');
+			$end_query = $end->format('Y-m-d H:i');
+
+			$sql = "SELECT resource_id, bsb.wday, bs.from_ as from_date, bs.to_ as to_date, bsb.from_ as from_time, bsb.to_ as to_time"
+				. " FROM bb_season_resource bsr, bb_season bs, bb_season_boundary bsb"
+				. " WHERE bsr.resource_id in (" . implode(',', $resource_ids) . ")"
+				. " AND bsr.season_id = bs.id"
+				. " AND bsr.season_id = bsb.season_id"
+				. " AND status = 'PUBLISHED'"
+				. " AND active = 1"
+				. " AND bs.from_ < '$end_query'"        // Cover all four variants
+				. " AND bs.to_ > '$start_query'";       //
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$results = array();
+			while ($this->db->next_record())
+			{
+				$results[] = $this->db->Record;
+			}
+			return $results;
+		}
 	}
