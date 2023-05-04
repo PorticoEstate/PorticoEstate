@@ -2948,9 +2948,12 @@ JS;
 				'sort'			 => $order[0]['dir'],
 				'project_id' => $project_id,
 				'year'		 => phpgw::get_var('year', 'int'),
-				'results'	 => -1,
+//				'results'	 => phpgw::get_var('results', 'int'),
+				'start'			 => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results'		 => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				)
 			);
+
 			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($values as & $_order_entry)
 			{
