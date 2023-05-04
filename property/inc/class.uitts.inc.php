@@ -3463,7 +3463,7 @@ JS;
 				'ColumnDefs' => $orders_def,
 				'config'	 => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true),
+//					array('disablePagination' => true),
 //					array('allrows' => true),
 					array('order' => json_encode(array(0, 'desc')))
 				)
