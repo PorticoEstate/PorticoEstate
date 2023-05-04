@@ -1549,12 +1549,12 @@
 			if ($oldfinnish_date && isset($ticket['finnish_date']) && $ticket['finnish_date'])
 			{
 				$this->db->query("update fm_tts_tickets set finnish_date2='" . $finnish_date
-					. "' where id='$id'", __LINE__, __FILE__);
+					. "' where id={$id}", __LINE__, __FILE__);
 			}
 			else if (!$oldfinnish_date && isset($ticket['finnish_date']) && $ticket['finnish_date'])
 			{
 				$this->db->query("update fm_tts_tickets set finnish_date='" . $finnish_date
-					. "' where id='$id'", __LINE__, __FILE__);
+					. "' where id={$id}", __LINE__, __FILE__);
 			}
 
 			if ($oldfinnish_date2 > 0)
@@ -1621,7 +1621,7 @@
 				$value_set	 = array('assignedto' => $ticket['assignedto']);
 				$value_set	 = $this->db->validate_update($value_set);
 
-				$this->db->query("update fm_tts_tickets set $value_set where id='$id'", __LINE__, __FILE__);
+				$this->db->query("update fm_tts_tickets set $value_set where id={$id}", __LINE__, __FILE__);
 				$this->historylog->add('A', $id, $ticket['assignedto'], $oldassigned);
 			}
 
@@ -1642,7 +1642,7 @@
 				$value_set	 = array('group_id' => $ticket['group_id']);
 				$value_set	 = $this->db->validate_update($value_set);
 
-				$this->db->query("update fm_tts_tickets set $value_set where id='$id'", __LINE__, __FILE__);
+				$this->db->query("update fm_tts_tickets set $value_set where id={$id}", __LINE__, __FILE__);
 				$this->historylog->add('G', $id, $ticket['group_id'], $oldgroup_id);
 			}
 
@@ -1658,14 +1658,14 @@
 			{
 				$contact_id				 = (int)$ticket['contact_id'];
 				$this->fields_updated[]	 = 'contact_id';
-				$this->db->query("update fm_tts_tickets set contact_id={$contact_id} WHERE id=$id", __LINE__, __FILE__);
+				$this->db->query("update fm_tts_tickets set contact_id={$contact_id} WHERE id={$id}", __LINE__, __FILE__);
 			}
 
 			if ($ticket['cat_id'] && ( ($oldcat_id != $ticket['cat_id']) && $ticket['cat_id'] != 'ignore'))
 			{
 				$this->fields_updated[] = 'cat_id';
 				$this->db->query("update fm_tts_tickets set cat_id='" . $ticket['cat_id']
-					. "' where id='$id'", __LINE__, __FILE__);
+					. "' where id={$id}", __LINE__, __FILE__);
 				$this->historylog->add('T', $id, $ticket['cat_id'], $oldcat_id);
 			}
 
@@ -1866,10 +1866,10 @@
 
 					$this->db->query("SELECT sum(amount) AS budget FROM fm_tts_budget WHERE ticket_id = {$id}", __LINE__, __FILE__);
 					$this->db->next_record();
-					$old_budget	 = $this->db->f('budget');
+					$old_budget	 = (float)$this->db->f('budget');
 					$new_budget	 = (float) str_replace(array(' ', ','), array('', '.'), $ticket['budget']) + $old_budget;
 
-					$this->db->query("UPDATE fm_tts_tickets SET budget='{$new_budget}' WHERE id='$id'", __LINE__, __FILE__);
+					$this->db->query("UPDATE fm_tts_tickets SET budget='{$new_budget}' WHERE id={$id}", __LINE__, __FILE__);
 
 					$value_set_cost = array
 						(

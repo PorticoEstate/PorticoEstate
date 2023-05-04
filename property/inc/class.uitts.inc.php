@@ -2258,6 +2258,16 @@ HTML;
 					$historylog->add('MS', $id, "{$to_sms_phone}::{$values['response_text']}");
 				}
 
+				if (!empty($values['send_order']))
+				{
+					$send_order_format		 = !empty($values['send_order_format']) ? $values['send_order_format'] : 'html';
+					$purchase_grant_checked	 = false;
+					$purchase_grant_error	 = !empty($values['purchase_grant_error']) ? true : false;
+
+					$_ticket = $this->bo->read_single($id);
+					$this->_send_order($_ticket, $send_order_format, $purchase_grant_checked, $purchase_grant_error);
+				}
+
 				if ((isset($values['save']) && $values['save']))
 				{
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitts.index'));
@@ -2634,15 +2644,6 @@ HTML;
 
 			// end approval
 			// -------- end order section
-
-			if (!empty($values['send_order']))
-			{
-				$send_order_format		 = !empty($values['send_order_format']) ? $values['send_order_format'] : 'html';
-				$purchase_grant_checked	 = !empty($values['purchase_grant_checked']) ? true : false;
-				$purchase_grant_error	 = !empty($values['purchase_grant_error']) ? true : false;
-
-				$this->_send_order($ticket, $send_order_format, $purchase_grant_checked, $purchase_grant_error);
-			}
 
 			$additional_notes	 = $this->bo->read_additional_notes($id);
 			$record_history		 = $this->bo->read_record_history($id);
@@ -5253,7 +5254,14 @@ JS;
 
 				try
 				{
-					$purchase_grant_ok = $this->bo->validate_purchase_grant($ecodimb, $budget_amount, $order_id);
+					if($on_behalf_of_assigned)
+					{
+						$GLOBALS['phpgw']->preferences->set_account_id($ticket['user_id'], true);
+					}
+					$purchase_grant_ok = $this->bo->validate_purchase_grant($ticket['ecodimb'], $budget_amount, $order_id);
+
+					$GLOBALS['phpgw']->preferences->set_account_id($this->account, true);
+
 				}
 				catch (Exception $ex)
 				{
