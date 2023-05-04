@@ -10,7 +10,7 @@
 	include_once '../header.inc.php';
 
 // Make sure we're always logged in
-	if (!phpgw::get_var(session_name()) || !$GLOBALS['phpgw']->session->verify())
+	if (!phpgw::get_var(session_name(), 'string', 'COOKIE') || !$GLOBALS['phpgw']->session->verify())
 	{
 
 		$c = createobject('phpgwapi.config', 'activitycalendarfrontend');

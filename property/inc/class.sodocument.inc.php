@@ -131,14 +131,14 @@
 				$order		 = isset($data['order']) ? $data['order'] : '';
 				$ordermethod = isset($data['ordermethod']) ? $data['ordermethod'] : '';
 				$cat_id		 = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
-				$entity_id	 = isset($data['entity_id']) ? $data['entity_id'] : '';
+				$entity_id	 = isset($data['entity_id']) ? (int)$data['entity_id'] : '';
 				$doc_type	 = isset($data['doc_type']) && $data['doc_type'] ? $data['doc_type'] : 0;
 				$allrows	 = isset($data['allrows']) ? $data['allrows'] : '';
 				$dry_run	 = isset($data['dry_run']) ? $data['dry_run'] : '';
 			}
 			$doc_types = $this->get_sub_doc_types($doc_type);
 
-			$sql = $this->bocommon->fm_cache('sql_document_' . $entity_id);
+//			$sql = $this->bocommon->fm_cache('sql_document_' . $entity_id);
 
 			if (!$sql)
 			{
@@ -178,7 +178,10 @@
 					$cols			 .= ",$document_table.p_cat_id";
 					$cols_return[]	 = 'p_cat_id';
 
-					$joinmethod	 .= " $this->join  fm_entity_category ON (fm_entity_category.entity_id =$document_table.p_entity_id AND fm_entity_category.id = $document_table.p_cat_id))";
+					$joinmethod	 .= " $this->join fm_entity_category ON "
+						. "(fm_entity_category.entity_id = {$document_table}.p_entity_id"
+						. " AND  fm_entity_category.entity_id ={$entity_id}"
+						. " AND fm_entity_category.id = $document_table.p_cat_id))";
 					$paranthesis .= '(';
 				}
 
@@ -384,6 +387,12 @@
 
 			$where			 = 'WHERE';
 			$filtermethod	 = '';
+			if ($entity_id)
+			{
+				$filtermethod	 = " $where fm_document.p_entity_id = {$entity_id}";
+				$where			 = 'AND';
+			}
+
 			if ($location_code)
 			{
 				$filtermethod	 = " $where fm_document.location_code $this->like '$location_code%'";
@@ -445,11 +454,11 @@
 				$document_list[] = array
 					(
 					'location_code'		 => $this->db->f('location_code'),
-					'document_id'		 => $this->db->f('id'),
+					'id'				 => $this->db->f('id'),
 					'document_name'		 => $this->db->f('document_name', true),
 					'link'				 => $this->db->f('link', true),
 					'title'				 => $this->db->f('title', true),
-					'doc_type'			 => $this->db->f('category'),
+					'doc_type'			 => $this->db->f('category',true),
 					'user_id'			 => $this->db->f('coordinator'),
 					'document_date'		 => $this->db->f('document_date'),
 					'loc1_name'			 => $this->db->f('loc1_name', true),
@@ -462,15 +471,15 @@
 			return $document_list;
 		}
 
-		function read_single( $document_id )
+		function read_single( $id )
 		{
-			$sql = "SELECT * from fm_document where id='$document_id'";
+			$sql = "SELECT * from fm_document where id='$id'";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			if ($this->db->next_record())
 			{
-				$document['document_id']	 = $this->db->f('id');
+				$document['id']	 = $this->db->f('id');
 				$document['title']			 = $this->db->f('title', true);
 				$document['document_name']	 = $this->db->f('document_name', true);
 				$document['link']			 = $this->db->f('link', true);
@@ -572,21 +581,21 @@
 				. "descr,location_code,address,branch_id,vendor_id,user_id $cols) "
 				. "VALUES ($values $vals )", __LINE__, __FILE__);
 
-			$receipt['document_id'] = $this->db->get_last_insert_id('fm_document', 'id');
+			$receipt['id'] = $this->db->get_last_insert_id('fm_document', 'id');
 
-			$this->historylog->add('SO', $receipt['document_id'], $document['status']);
-			$this->historylog->add('TO', $receipt['document_id'], $document['doc_type']);
+			$this->historylog->add('SO', $receipt['id'], $document['status']);
+			$this->historylog->add('TO', $receipt['id'], $document['doc_type']);
 			if ($document['coordinator'])
 			{
-				$this->historylog->add('CO', $receipt['document_id'], $document['coordinator']);
+				$this->historylog->add('CO', $receipt['id'], $document['coordinator']);
 			}
 			if ($document['document_name'])
 			{
-				$this->historylog->add('FO', $receipt['document_id'], $document['coodocument_name']);
+				$this->historylog->add('FO', $receipt['id'], $document['coodocument_name']);
 			}
 			if ($document['link'])
 			{
-				$this->historylog->add('LO', $receipt['document_id'], $document['link']);
+				$this->historylog->add('LO', $receipt['id'], $document['link']);
 			}
 
 			$receipt['message'][] = array('msg' => lang('document %1 has been saved', "'" . $document['document_name'] . "'"));
@@ -631,7 +640,7 @@
 				$address = $this->db->db_addslashes($document['location_name']);
 			}
 
-			$this->db->query("SELECT status,category,coordinator,document_name,location_code,link,p_entity_id,p_cat_id,p_num FROM fm_document where id='" . $document['document_id'] . "'", __LINE__, __FILE__);
+			$this->db->query("SELECT status,category,coordinator,document_name,location_code,link,p_entity_id,p_cat_id,p_num FROM fm_document where id='" . (int)$document['id'] . "'", __LINE__, __FILE__);
 			$this->db->next_record();
 
 			$old_status			 = $this->db->f('status');
@@ -658,16 +667,16 @@
 
 			if ($old_status != $document['status'])
 			{
-				$this->historylog->add('S', $document['document_id'], $document['status'], $old_status);
+				$this->historylog->add('S', $document['id'], $document['status'], $old_status);
 			}
 			if ($old_doc_type != $document['doc_type'])
 			{
-				$this->historylog->add('T', $document['document_id'], $document['doc_type'], $old_doc_type);
+				$this->historylog->add('T', $document['id'], $document['doc_type'], $old_doc_type);
 				$move_file = true;
 			}
 			if ((int)$old_coordinator != (int)$document['coordinator'])
 			{
-				$this->historylog->add('C', $document['document_id'], $document['coordinator'], $old_coordinator);
+				$this->historylog->add('C', $document['id'], $document['coordinator'], $old_coordinator);
 			}
 
 			if ($document['document_name_orig'] && !$document['document_name'])
@@ -677,7 +686,7 @@
 
 			if ($old_link != $document['link'])
 			{
-				$this->historylog->add('L', $document['document_id'], $this->db->db_addslashes($document['link']), $old_link);
+				$this->historylog->add('L', $document['id'], $this->db->db_addslashes($document['link']), $old_link);
 				$alter_link = true;
 			}
 
@@ -686,11 +695,11 @@
 			{
 				if ($document['link'] && !$alter_link)
 				{
-					$this->historylog->add('L', $document['document_id'], $document['link'], $old_document_name);
+					$this->historylog->add('L', $document['id'], $document['link'], $old_document_name);
 				}
 				else
 				{
-					$this->historylog->add('F', $document['document_id'], $document['document_name'], $old_document_name);
+					$this->historylog->add('F', $document['id'], $document['document_name'], $old_document_name);
 				}
 
 				// file is already moved
@@ -728,9 +737,9 @@
 
 			$value_set = $this->db->validate_update($value_set);
 
-			$this->db->query("UPDATE fm_document set $value_set $vals WHERE id= '" . $document['document_id'] . "'", __LINE__, __FILE__);
+			$this->db->query("UPDATE fm_document set $value_set $vals WHERE id= '" . $document['id'] . "'", __LINE__, __FILE__);
 
-			$receipt['document_id']	 = $document['document_id'];
+			$receipt['id']	 = $document['id'];
 			$receipt['message'][]	 = array('msg' => lang('document %1 has been edited', "'" . $document['title'] . "'"));
 			return $receipt;
 		}
@@ -754,175 +763,6 @@
 				}
 			}
 			return $doc_types;
-		}
-
-		/**
-		 * Get a hierarchical array of doc-types with number of hits for each level at locatin and link to list.
-		 * Basis for the folder-menu
-		 *
-		 * @param string $location_code location_code in the (physical) location-hierarchy
-		 * @return array parent and children
-		 */
-		function get_files_at_location( $data )
-		{
-			$location_code	 = isset($data['location_code']) ? $data['location_code'] : '';
-			$entity_id		 = (int)$data['entity_id'];
-			$cat_id			 = (int)$data['cat_id'];
-			$num			 = $data['num'];
-
-			if (!$location_code)
-			{
-				if (!$entity_id || !$cat_id || !$num)
-				{
-					throw new Exception("property_soentity::read_entity_to_link - Missing entity information info in input");
-				}
-			}
-			else if (!$entity_id || !$cat_id || !$num)
-			{
-				if (!$location_code)
-				{
-					throw new Exception("property_soentity::read_entity_to_link - Missing entity information info in input");
-				}
-			}
-
-			$acl_add	 = $GLOBALS['phpgw']->acl->check('.document', PHPGW_ACL_ADD, 'property');
-			$documents	 = array();
-			if ($location_code)
-			{
-				$sql = "SELECT count(*) as hits FROM fm_document WHERE location_code {$this->like} '$location_code%' AND p_num IS NULL";
-			}
-			else
-			{
-				$sql = "SELECT count(*) as hits FROM fm_document WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$num}'";
-			}
-			$this->db->query($sql, __LINE__, __FILE__);
-			if ($this->db->next_record())
-			{
-				$hits = (int)$this->db->f('hits');
-
-				$x					 = 0; // within level
-				$y					 = 0; //level
-				$cache_x_at_y[$y]	 = $x;
-				$documents[$x]		 = array
-					(
-					'link'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'property.uidocument.list_doc',
-						'location_code'	 => $location_code,
-						'entity_id'		 => $entity_id,
-						'cat_id'		 => $cat_id,
-						'p_num'			 => $num)),
-					'text'	 => lang('documents') . ' [' . $hits . ']:',
-					'descr'	 => lang('Documentation'),
-					'level'	 => 0
-				);
-			}
-			else
-			{
-//				return $documents;
-			}
-
-			$categories = $this->cats->return_sorted_array(0, false);
-
-			$location_filter = 'WHERE 1=1';
-
-			if ($location_code)
-			{
-				$location_filter = "WHERE location_code {$this->like} '{$location_code}%' AND p_num IS NULL";
-			}
-			else
-			{
-				$location_filter = "WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$num}'";
-			}
-
-			foreach ($categories as $category)
-			{
-				$doc_types = $this->get_sub_doc_types($category['id']);
-
-				$sql	 = "SELECT count(*) as hits FROM fm_document {$location_filter} AND category IN (" . implode(',', $doc_types) . ')';
-				$this->db->query($sql, __LINE__, __FILE__);
-				$this->db->next_record();
-				$hits	 = (int)$this->db->f('hits');
-
-				$level = $category['level'] + 1;
-				if ($level == $y)
-				{
-					$x++;
-				}
-				else if ($level < $y)
-				{
-					$x = $cache_x_at_y[$level] + 1;
-				}
-				else if ($level > $y)
-				{
-					$x = 0;
-				}
-				$y = $level;
-
-				$map = '$documents';
-				for ($i = 0; $i < $level; $i++)
-				{
-
-					$map .= '[' . $cache_x_at_y[$i] . "]['children']";
-				}
-
-				$map .= '[]';
-
-				eval($map . ' =array('
-					. "'link'	=> '" . $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'property.uidocument.list_doc',
-						'location_code'	 => $location_code,
-						'doc_type'		 => $category['id'],
-						'entity_id'		 => $entity_id,
-						'cat_id'		 => $cat_id,
-						'p_num'			 => $num)) . "',\n"
-					. "'text'			=> '" . $category['name'] . ' [' . $hits . ']' . "',\n"
-					. "'descr'		=> '" . lang('Documentation') . "',\n"
-					. "'level'		=> " . ($category['level'] + 1) . "\n"
-					. ');');
-
-				$cache_x_at_y[$y] = $x;
-
-//--add node
-
-				if ($acl_add && count($doc_types) == 1) // node
-				{
-					$level = $level + 1;
-					if ($level == $y)
-					{
-						$x++;
-					}
-					else if ($level < $y)
-					{
-						$x = $cache_x_at_y[$level] + 1;
-					}
-					else if ($level > $y)
-					{
-						$x = 0;
-					}
-					$y = $level;
-
-					$map = '$documents';
-					for ($i = 0; $i < $level; $i++)
-					{
-						$map .= '[' . $cache_x_at_y[$i] . "]['children']";
-					}
-
-					$map .= '[]';
-
-					eval($map . ' =array('
-						. "'link'	=> '" . $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'property.uidocument.edit',
-							'location_code'	 => $location_code,
-							'doc_type'		 => $category['id'],
-							'p_entity_id'	 => $entity_id,
-							'p_cat_id'		 => $cat_id,
-							'p_num'			 => $num)) . "',\n"
-						. "'text'			=> '" . lang('add') . "',\n"
-						. "'descr'		=> '" . lang('Add Document') . "',\n"
-						. "'level'		=> " . $y . "\n"
-						. ');');
-
-					$cache_x_at_y[$y] = $x;
-				}
-			}
-			return $documents;
 		}
 
 		function delete_file( $file )
@@ -953,11 +793,11 @@
 			return $receipt;
 		}
 
-		function delete( $document_id )
+		function delete( $id )
 		{
 			$receipt		 = array();
-			$document_id	 = (int)$document_id;
-			$this->db->query("SELECT document_name,location_code,p_num,p_entity_id,p_cat_id,category FROM fm_document where id='$document_id'", __LINE__, __FILE__);
+			$id	 = (int)$id;
+			$this->db->query("SELECT document_name,location_code,p_num,p_entity_id,p_cat_id,category FROM fm_document where id='$id'", __LINE__, __FILE__);
 			$this->db->next_record();
 			$document_name	 = $this->db->f('document_name');
 			$location_code	 = $this->db->f('location_code');
@@ -982,8 +822,8 @@
 			if (!isset($receipt['error']))
 			{
 				$this->db->transaction_begin();
-				$this->db->query("DELETE FROM fm_document WHERE id={$document_id}", __LINE__, __FILE__);
-				$this->db->query("DELETE FROM fm_document_history  WHERE  history_record_id={$document_id}", __LINE__, __FILE__);
+				$this->db->query("DELETE FROM fm_document WHERE id={$id}", __LINE__, __FILE__);
+				$this->db->query("DELETE FROM fm_document_history  WHERE  history_record_id={$id}", __LINE__, __FILE__);
 				$this->db->transaction_commit();
 			}
 			return $receipt;

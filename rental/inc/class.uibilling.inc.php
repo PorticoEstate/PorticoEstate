@@ -6,12 +6,20 @@
 	include_class('rental', 'contract', 'inc/model/');
 	include_class('rental', 'billing', 'inc/model/');
 
-	require_once PHPGW_API_INC . '/flysystem3/vendor/autoload.php';
 
+	require_once PHPGW_API_INC . '/flysystem2/autoload.php';
 	use League\Flysystem\Filesystem;
-	use League\Flysystem\PhpseclibV3\SftpConnectionProvider;
-	use League\Flysystem\PhpseclibV3\SftpAdapter;
+	use League\Flysystem\PhpseclibV2\SftpConnectionProvider;
+	use League\Flysystem\PhpseclibV2\SftpAdapter;
 	use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
+
+
+//  php 8 +
+//	require_once PHPGW_API_INC . '/flysystem3/vendor/autoload.php';
+//	use League\Flysystem\Filesystem;
+//	use League\Flysystem\PhpseclibV3\SftpConnectionProvider;
+//	use League\Flysystem\PhpseclibV3\SftpAdapter;
+//	use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 
 	class rental_uibilling extends rental_uicommon
 	{
@@ -1073,12 +1081,12 @@ JS;
 								'text' => lang('field_of_responsibility'),
 								'list' => $field_of_responsibility_options
 							),
-							array(
-								'type' => 'link',
-								'value' => lang('create_billing'),
-								'onclick' => 'onCreateBilling()',
-								'class' => 'new_item'
-							)
+//							array(
+//								'type' => 'link',
+//								'value' => lang('create_billing'),
+//								'onclick' => 'onCreateBilling()',
+//								'class' => 'new_item'
+//							)
 						)
 					)
 				),
@@ -1153,13 +1161,19 @@ JS;
 				)
 			);
 
-			$parameters = array
-				(
-				'parameter' => array
-					(
-					array
-						(
-						'name' => 'id',
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'create_billing',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => lang('create_billing'),
+				'text'		 => lang('create_billing'),
+				'custom_code'	 => 'onCreateBilling();',
+			);
+
+			$parameters = array(
+				'parameter' => array(
+					array(
+						'name'	 => 'id',
 						'source' => 'id'
 					)
 				)
@@ -1629,7 +1643,17 @@ JS;
 						unlink($tmpfname);
 						break;
 					case 'ssh';
-						$transfer_ok = $connection->write(basename($filename), $content);
+						try
+						{
+							$connection->write(basename($filename), $content);
+							$transfer_ok = true;
+						}
+						catch (FilesystemException | UnableToWriteFile $exception)
+						{
+							// handle the error
+							$transfer_ok = false;
+						}
+
 						break;
 					default:
 						$transfer_ok = false;

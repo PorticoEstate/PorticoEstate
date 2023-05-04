@@ -60,6 +60,15 @@
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 			$resource = $this->bo->read_single(phpgw::get_var('id', 'int', 'GET'));
+
+			if($resource['simple_booking_start_date'] && $resource['simple_booking_start_date'] < time())
+			{
+				/**
+				 * Disable from calendar
+				 */
+				$resource['deactivate_application'] = 1;
+			}
+
 			$array_resource = array(&$resource);
 			$this->bo->add_activity_facility_data($array_resource);
 			$pathway = array();

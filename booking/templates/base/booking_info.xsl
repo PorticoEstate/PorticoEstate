@@ -4,19 +4,23 @@
 		<xsl:value-of select="php:function('lang', 'Booking')"/> #<xsl:value-of select="booking/id"/>
 	</h3>
 	<div class="pure-form pure-form-aligned">
+		<xsl:if test="booking/application_id!=''">
+			<div class="pure-control-group">
+				<label>
+					<xsl:value-of select="php:function('lang', 'Application')"/>
+				</label>
+				<a href="{booking/application_link}">#<xsl:value-of select="booking/application_id"/></a>
+			</div>
+		</xsl:if>
 		<div class="pure-control-group">
 			<label>
-				<h4>
-					<xsl:value-of select="php:function('lang', 'Activity')"/>
-				</h4>
+				<xsl:value-of select="php:function('lang', 'Activity')"/>
 			</label>
 			<xsl:value-of select="booking/activity_name"/>
 		</div>
 		<div class="pure-control-group">
 			<label>
-				<h4>
-					<xsl:value-of select="php:function('lang', 'Where')"/>
-				</h4>
+				<xsl:value-of select="php:function('lang', 'Where')"/>
 			</label>
 			<a href="{booking/building_link}">
 				<xsl:value-of select="booking/resources[position()=1]/building_name"/>
@@ -25,17 +29,13 @@
 		</div>
 		<div class="pure-control-group">
 			<label>
-				<h4>
-					<xsl:value-of select="php:function('lang', 'When')"/>
-				</h4>
+				<xsl:value-of select="php:function('lang', 'When')"/>
 			</label>
 			<xsl:value-of select="booking/when"/>
 		</div>
 		<div class="pure-control-group">
 			<label>
-				<h4>
-					<xsl:value-of select="php:function('lang', 'Who')"/>
-				</h4>
+				<xsl:value-of select="php:function('lang', 'Who')"/>
 			</label>
 			<a href="{booking/org_link}">
 				<xsl:value-of select="booking/group/organization_name"/>

@@ -144,23 +144,23 @@
 				$errors['contact_name'] = lang('Contact information name is to long. max 50 characters');
 			}
 
-			foreach ($entity['resources'] as $esource_id)
+			foreach ($entity['resources'] as $resource_id)
 			{
-				if ((int)$esource_id < 0)
+				if ((int)$resource_id < 0)
 				{
 					continue;
 				}
-				$this->db->query("SELECT direct_booking FROM bb_resource WHERE id = " . (int)$esource_id, __LINE__, __FILE__);
+				$this->db->query("SELECT direct_booking FROM bb_resource WHERE id = " . (int)$resource_id, __LINE__, __FILE__);
 				$this->db->next_record();
 				$direct_booking = $this->db->f('direct_booking');
 
 				if ($direct_booking && $direct_booking < time())
 				{
-					$seasons = $soseason->get_resource_seasons((int)$esource_id);
-
-					foreach ($seasons as $season_id)
+					foreach ($valid_dates as $valid_date)
 					{
-						foreach ($valid_dates as $valid_date)
+						$seasons = $soseason->get_resource_seasons((int)$resource_id, $valid_date['from_']->format('Y-m-d'), $valid_date['to_']->format('Y-m-d'));
+
+						foreach ($seasons as $season_id)
 						{
 							if($soseason->timespan_within_season($season_id, $valid_date['from_'], $valid_date['to_']))
 							{
@@ -168,6 +168,7 @@
 							}
 						}
 					}
+
 					if (!$valid_timespan)
 					{
 						$errors['season_boundary'] = lang("This application is not within a valid season");

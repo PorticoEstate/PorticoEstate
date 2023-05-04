@@ -107,6 +107,8 @@
 
 			self::set_active_menu('controller::control');
 //			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
+			$function_msg	 = lang('control types');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . ': ' . $function_msg;
 		}
 
 		/**

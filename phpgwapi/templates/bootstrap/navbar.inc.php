@@ -246,6 +246,26 @@ HTML;
 			</li>
 HTML;
 		}
+		/**
+		 * Modal-version
+		 */
+//		$debug_option = '';
+//		if(isset($GLOBALS['phpgw_info']['server']['support_address']) && $GLOBALS['phpgw_info']['server']['support_address'])
+//		{
+//			$debug_text = lang('debug');
+//			$debug_link = $GLOBALS['phpgw']->link('/index.php', array
+//				(
+//					'menuaction'=> 'property.uidebug_json.index',
+//					'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
+//					'width' => 700,
+//					'height' => 800
+//				));
+//			$debug_option = <<<HTML
+//			<li class="nav-item">
+//				<a href="$debug_link" class="nav-link" data-bs-toggle="modal" data-bs-target="#popupModal">{$debug_text}</a>
+//			</li>
+//HTML;
+//		}
 
 
 		$bookmark_option = '';
@@ -322,6 +342,9 @@ HTML;
 
 			$link_messages = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'messenger.uimessenger.index' ));
 
+			$lang_messenger = $GLOBALS['phpgw']->translation->translate('messenger', array(), true);
+			$lang_read_messages = $GLOBALS['phpgw']->translation->translate('read messages', array(), false, 'messenger');
+
 			$messenger_option = <<<HTML
                         <li class="nav-item dropdown no-arrow mx-1" onClick="get_messages();">
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
@@ -333,10 +356,10 @@ HTML;
                             <!-- Dropdown - Messages -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
                                 <h6 class="dropdown-header">
-                                    Message Center
+									{$lang_messenger}
                                 </h6>
 								<div id="messages"></div>
-                                <a class="dropdown-item text-center small text-gray-500" href="{$link_messages}">Read More Messages</a>
+                                <a class="dropdown-item small text-muted" href="{$link_messages}">{$lang_read_messages}</a>
                             </div>
                         </li>
 HTML;

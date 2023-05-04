@@ -1002,7 +1002,7 @@
 		function project_workorder_data( $data = array() )
 		{
 			$start		 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$project_id	 = (int)$data['project_id'];
+			$project_ids = !empty($data['project_id']) && is_array($data['project_id']) ? implode(',', array_map('intval', $data['project_id'])) : (int)$data['project_id'] ;
 			$year		 = (int)$data['year'];
 			$sort		 = isset($data['sort']) ? $data['sort'] : 'DESC';
 			$order		 = isset($data['order']) ? $data['order'] : 'workorder_id';
@@ -1054,18 +1054,18 @@
 			$sql = "SELECT DISTINCT fm_workorder.id AS workorder_id, fm_workorder.title, fm_workorder.vendor_id, fm_workorder.addition,"
 				. " fm_workorder_status.descr as status, fm_workorder_status.closed, fm_workorder_status.canceled,"
 				. " fm_workorder.account_id AS b_account_id, fm_workorder.charge_tenant,"
-				. " fm_workorder.mail_recipients,fm_workorder_budget.year, order_sent"
+				. " fm_workorder.mail_recipients,fm_workorder_budget.year, order_sent, fm_workorder.end_date, fm_workorder.user_id"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
 				. " {$this->left_join} fm_vendor ON fm_vendor.id = fm_workorder.vendor_id"
-				. " WHERE project_id={$project_id} {$filter_year}{$filtermethod}{$ordermethod}";
+				. " WHERE project_id IN ({$project_ids}) {$filter_year}{$filtermethod}{$ordermethod}";
 
 			$this->db->query("SELECT count(*) AS cnt FROM (SELECT DISTINCT fm_workorder.id, fm_workorder_budget.year FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
 				. " {$this->left_join} fm_vendor ON fm_vendor.id = fm_workorder.vendor_id"
-				. " WHERE project_id={$project_id} {$filter_year}{$filtermethod}) as t", __LINE__, __FILE__);
+				. " WHERE project_id IN ({$project_ids}) {$filter_year}{$filtermethod}) as t", __LINE__, __FILE__);
 
 			$this->db->next_record();
 			$this->total_records = (int)$this->db->f('cnt');
@@ -1086,6 +1086,7 @@
 				$values[]	 = array(
 					'workorder_id'			 => $this->db->f('workorder_id'),
 					'title'					 => $this->db->f('title', true),
+					'user_id'				 => $this->db->f('user_id'),
 					'vendor_id'				 => $this->db->f('vendor_id'),
 					'charge_tenant'			 => $this->db->f('charge_tenant'),
 					'status'				 => $this->db->f('status'),
@@ -1100,7 +1101,8 @@
 					'obligation'			 => 0,
 					'actual_cost'			 => 0,
 					'year'					 => $this->db->f('year'),
-					'order_sent'			 => $this->db->f('order_sent')
+					'order_sent'			 => $this->db->f('order_sent'),
+					'end_date'				 => $this->db->f('end_date')
 				);
 				$_orders[]	 = $this->db->f('workorder_id');
 			}

@@ -79,14 +79,20 @@
 		 */
 		public function get_username($primary = false)
 		{
-			$remote_user = explode('@', phpgw::get_var('OIDC_upn', 'string', 'SERVER'));
+			$remote_user_1 = explode('@', phpgw::get_var('OIDC_upn', 'string', 'SERVER'));
+			$remote_user_2 = phpgw::get_var('OIDC_onpremisessamaccountname', 'string', 'SERVER');
+
+//			$GLOBALS['phpgw']->log->write(array('text' => 'I-Notification, SERVER-values %1',
+//				'p1' => '<pre>' . print_r($_SERVER, true) . '</pre>'));
+
+			$_remote_user = $remote_user_2 ? $remote_user_2 : $remote_user_1[0];
 
 			if($primary)
 			{
-				return $remote_user[0];
+				return $_remote_user;
 			}
 
-			$username = $GLOBALS['phpgw']->mapping->get_mapping($remote_user[0]);
+			$username = $GLOBALS['phpgw']->mapping->get_mapping($_remote_user);
 
 			if(!$username)
 			{

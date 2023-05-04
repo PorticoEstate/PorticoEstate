@@ -88,7 +88,7 @@
 		 * @param int $resource_id
 		 * @return array
 		 */
-		public function get_resource_seasons( $resource_id )
+		public function get_resource_seasons( $resource_id, $from_ = null, $to_ = null )
 		{
 			static $seasons = array();
 
@@ -99,11 +99,27 @@
 
 			$now = date('Y-m-d');
 
+			$filter = '';
+			if($from_ && $to_)
+			{
+				 $filter = "AND ((from_ >= '$from_' AND from_ < '$to_') OR"
+					. " (to_ > '$from_' AND to_ <= '$to_') OR"
+					. " (from_ < '$from_' AND to_ > '$to_'))";
+
+			}
+			else
+			{
+				 $filter = "AND from_ <= '{$now}' AND to_ >= '{$now}'";
+			}
+			
+//			$filter = "AND from_ <= '{$now}' AND to_ >= '{$now}'";
+
 			$sql = "SELECT season_id FROM bb_season_resource"
 				. " JOIN bb_season ON bb_season.id = bb_season_resource.season_id"
 				. " WHERE status = 'PUBLISHED'"
-				. " AND from_ <= '{$now}'"
-				. " AND to_ >= '{$now}'"
+				. " {$filter}"
+//				. " AND from_ <= '{$now}'"
+//				. " AND to_ >= '{$now}'"
 				. " AND resource_id=" . (int) $resource_id;
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -126,7 +142,17 @@
 		 */
 		public function timespan_within_season( $season_id, $from_, $to_ )
 		{
-			$season = $this->read_single($season_id);
+			static $seasons = array();
+
+			if(isset($seasons[$season_id]))
+			{
+				$season = $seasons[$season_id];
+			}
+			else
+			{
+				$season = $this->read_single($season_id);
+				$seasons[$season_id] = $season;
+			}
 
 			if (!$season)
 			{
@@ -387,6 +413,14 @@
 		 * */
 		public function retrieve_season_boundaries( $season_id, $coalesce_days = false )
 		{
+			
+			static $season_boundaries = array();
+
+			if(isset($season_boundaries[$season_id]))
+			{
+				return $season_boundaries[$season_id];
+			}
+
 			$view_sql = <<<EOT
 			CREATE OR REPLACE TEMP VIEW bsbt AS SELECT
 			TIMESTAMP 'epoch ' + (EXTRACT(EPOCH FROM from_)+86400*(wday-1)) * INTERVAL '1 second' as from_,
@@ -420,7 +454,11 @@ EOT;
 
 			$this->db->query($ranges_sql, __LINE__, __FILE__);
 
-			return $coalesce_days ? $this->coalesce_season_boundaries_over_days($this->db->resultSet) : $this->db->resultSet;
+			$ret = $coalesce_days ? $this->coalesce_season_boundaries_over_days($this->db->resultSet) : $this->db->resultSet;
+
+			$season_boundaries[$season_id] = $ret;
+
+			return $ret;
 		}
 
 		public function coalesce_season_boundaries_over_days( &$result_set )

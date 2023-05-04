@@ -2036,12 +2036,12 @@
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::global_message';
 
-			if(phpgw::get_var('message', 'string'))
+			if(phpgw::get_var('message', 'string') && phpgw::get_var('confirm', 'bool'))
 			{
 				phpgwapi_cache::system_set('phpgwapi', 'phpgw_global_message',phpgw::get_var('message', 'string'));			
 			}
 
-			if(phpgw::get_var('delete_message', 'bool'))
+			if(phpgw::get_var('delete_message', 'bool') && phpgw::get_var('confirm', 'bool'))
 			{
 				phpgwapi_cache::system_clear('phpgwapi', 'phpgw_global_message');
 			}
@@ -2084,13 +2084,13 @@
 				$msg_title = lang("important message");
 			}
 
-			if (phpgw::get_var('message', 'string'))
+			if(phpgw::get_var('message', 'string') && phpgw::get_var('confirm', 'bool'))
 			{
 				phpgwapi_cache::system_set('phpgwapi', 'phpgw_home_screen_message_title', $msg_title);
 				phpgwapi_cache::system_set('phpgwapi', 'phpgw_home_screen_message', phpgw::get_var('message', 'html'));
 			}
 
-			if (phpgw::get_var('delete_message', 'bool'))
+			if (phpgw::get_var('delete_message', 'bool') && phpgw::get_var('confirm', 'bool'))
 			{
 				phpgwapi_cache::system_clear('phpgwapi', 'phpgw_home_screen_message_title');
 				phpgwapi_cache::system_clear('phpgwapi', 'phpgw_home_screen_message');
@@ -2106,6 +2106,8 @@
 				'lang_cancel'	 => lang('cancel'),
 				'lang_submit'	 => lang('submit')
 			);
+
+//			phpgwapi_jquery::init_quill('message');
 			$GLOBALS['phpgw']->xslttpl->add_file('home_screen_message');
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('home_screen_message' => $data));
 		}

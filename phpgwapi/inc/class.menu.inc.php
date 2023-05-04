@@ -98,6 +98,18 @@
 		}
 
 		/**
+		 * Callback for usort($navbar)
+		 *
+		 * @param array $item1 the first item to compare
+		 * @param array $item2 the second item to compare
+		 * @return int result of comparision
+		 */
+		private static function sort_navitems( $item1, $item2 )
+		{
+			return strcmp($item1['text'], $item2['text']);
+		}
+
+		/**
 		 * Load the menu structure from all available applications
 		 *
 		 * @return array the menu structure for the current user
@@ -126,6 +138,11 @@
 					{
 						continue;
 					}
+
+					/**
+					 * the order of items is there for a reason...
+					 */
+//					uasort($menu, array('phpgwapi_menu', 'sort_navitems'));
 
 					if(!isset($menus[$mtype]))
 					{

@@ -1113,6 +1113,8 @@
 			$activity_path = $this->activity_bo->get_path($booking['activity_id']);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
 
+			$booking['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show',
+					'id' => $booking['application_id']));
 			$booking['bookings_link'] = self::link(array('menuaction' => 'booking.uibooking.index'));
 			$booking['edit_link'] = self::link(array('menuaction' => 'booking.uibooking.edit',
 					'id' => $booking['id']));
@@ -1150,6 +1152,8 @@
 			{
 				$res_names[] = $res['name'];
 			}
+			$booking['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show',
+					'id' => $booking['application_id']));
 			$booking['resource_info'] = join(', ', $res_names);
 			$booking['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
 					'id' => $booking['resources'][0]['building_id']));

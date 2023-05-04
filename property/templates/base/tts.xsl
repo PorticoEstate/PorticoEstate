@@ -531,6 +531,28 @@
 							</xsl:for-each>
 						</div>
 					</xsl:for-each>
+
+					<xsl:if test="list_orders = 1">
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'workorders')"/>
+							</label>
+							<div class = 'pure-u-md-3-4'>
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_10'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl'/>
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+											<xsl:with-param name="data" select ='data'/>
+											<xsl:with-param name="config" select ='config'/>
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
+						</div>
+					</xsl:if>
+
 					<xsl:if test="simple !='1'">
 						<div class="pure-control-group">
 							<xsl:variable name="lang_make_relation">
@@ -965,7 +987,7 @@
 										</div>
 										<xsl:call-template name="payment_type"/>
 									</xsl:if>
-									</xsl:otherwise>
+								</xsl:otherwise>
 							</xsl:choose>
 							<xsl:choose>
 								<xsl:when test="value_order_id!=''">

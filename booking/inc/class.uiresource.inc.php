@@ -120,6 +120,10 @@
 					'source' => self::link(array('menuaction' => 'booking.uiresource.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
+							'key'	 => 'id',
+							'label'	 => lang('id'),
+						),
+						array(
 							'key' => 'name',
 							'label' => lang('Resource Name'),
 							'formatter' => 'JqueryPortico.formatLink'

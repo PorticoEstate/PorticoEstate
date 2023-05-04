@@ -709,7 +709,7 @@
 
 						if (!is_null($allocation['application_id']) && $allocation['application_id'] != '')
 						{
-							$this->application_ui->add_comment_to_application($allocation['application_id'], $comment, True);
+							$this->application_ui->add_comment_to_application($allocation['application_id'], $comment, 'PENDING');
 						}
 
 //						$external_site_address = !empty($config->config_data['external_site_address'])? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];

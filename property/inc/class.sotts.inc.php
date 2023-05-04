@@ -1048,6 +1048,7 @@
 				$ticket['payment_type']			 = $this->db->f('payment_type');
 				$ticket['charge_tenant']		 = $this->db->f('charge_tenant');
 				$ticket['verified_transfered']	 = $this->db->f('verified_transfered');
+				$ticket['handyman_checklist_id'] = $this->db->f('handyman_checklist_id');
 				
 
 				$user_id = (int)$this->db->f('user_id');

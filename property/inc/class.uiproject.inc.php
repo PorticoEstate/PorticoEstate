@@ -2530,6 +2530,8 @@ JS;
 			);
 
 //--------------files
+			$lang_from = lang('from');
+			$lang_to = lang('to');
 
 			$lang_delete_request_statustext	 = lang('Check to delete this request from this project');
 			$_origin						 = array();
@@ -2547,7 +2549,7 @@ JS;
 
 						$_origin[] = array
 							(
-							'url'	 => "<a href='{$_origin_data['link']}'>{$_origin_data['id']} </a>",
+							'url'	 => "<a href='{$_origin_data['link']}'>{$lang_from}: {$_origin_data['id']} </a>",
 							'type'	 => $__origin['descr'],
 							'title'	 => $_origin_data['title'],
 							'status' => $_origin_data['statustext'],
@@ -2558,6 +2560,27 @@ JS;
 					}
 				}
 			}
+
+			if (!empty($values['target']))
+			{
+				foreach ($values['target'] as $__target)
+				{
+					foreach ($__target['data'] as $_target_data)
+					{
+						$_origin[] = array(
+							'url'	 => "<a href='{$_target_data['link']}'>{$lang_to}: {$_target_data['id']} </a>",
+							'type'	 => $__target['descr'],
+							'title'	 => $_target_data['title'],
+							'status' => $_target_data['statustext'],
+							//			'user'			=> $GLOBALS['phpgw']->accounts->get($_target_data['account_id'])->__toString(),
+							//			'entry_date'	=> $GLOBALS['phpgw']->common->show_date($_target_data['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+							'select' => $_select
+						);
+					}
+				}
+			}
+
+
 
 			$origin_def = array
 				(
@@ -2691,11 +2714,19 @@ JS;
 				$delivery_address = CreateObject('property.solocation')->get_delivery_address($values['location_data']['loc1']);
 			}
 
-			$data = array
+			$ticket_link_data = array
 				(
+				'menuaction'	 => 'property.uitts.add',
+				'bypass'		 => true,
+				'location_code'	 => $values['location_code'],
+				'origin'		 => '.project',
+				'origin_id'		 => $id
+			);
+			$data = array(
 				'datatable_def'						 => $datatable_def,
 				'project_types'						 => array('options' => $this->bo->get_project_types($project_type_id)),
 				'project_type_id'					 => $values['project_type_id'],
+				'ticket_link'						 => $GLOBALS['phpgw']->link('/index.php', $ticket_link_data),
 				'inherit_location'					 => $id ? $values['inherit_location'] : 1,
 				'mode'								 => $mode,
 				'suppressmeter'						 => isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
@@ -2715,6 +2746,7 @@ JS;
 				)),
 				'value_active_tab'					 => $active_tab,
 				'msgbox_data'						 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'value_target'						 => $values['target'],
 				'value_origin'						 => isset($values['origin_data']) ? $values['origin_data'] : '',
 				'value_origin_type'					 => isset($origin) ? $origin : '',
 				'value_origin_id'					 => isset($origin_id) ? $origin_id : '',
@@ -2908,14 +2940,23 @@ JS;
 				return $this->jquery_results($result_data);
 			}
 
+			$order		 = phpgw::get_var('order');
+			$columns	 = phpgw::get_var('columns');
+
 			$values = $this->bo->get_orders(array(
+				'order'			 => $columns[$order[0]['column']]['data'],
+				'sort'			 => $order[0]['dir'],
 				'project_id' => $project_id,
 				'year'		 => phpgw::get_var('year', 'int'),
 				'results'	 => -1,
 				)
 			);
+			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($values as & $_order_entry)
 			{
+				$_order_entry['end_date'] = $GLOBALS['phpgw']->common->show_date($_order_entry['end_date'], $dateformat);
+				$_order_entry['user_name'] = $GLOBALS['phpgw']->accounts->get($_order_entry['user_id'])->__toString();
+
 				$_order_entry['send_order'] = '';
 				if (isset($_order_entry['mail_recipients'][0]) && $_order_entry['mail_recipients'][0])
 				{

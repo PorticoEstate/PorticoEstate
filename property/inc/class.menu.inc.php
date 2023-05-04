@@ -1430,7 +1430,7 @@
 
 			if ($acl->check('.document', PHPGW_ACL_READ, 'property'))
 			{
-				$laws_url								 = $GLOBALS['phpgw']->link('/redirect.php', array('go' => urlencode('http://www.regelhjelp.no/')));
+//				$laws_url								 = $GLOBALS['phpgw']->link('/redirect.php', array('go' => urlencode('http://www.regelhjelp.no/')));
 				$menus['navigation']['documentation']	 = array
 				(
 					'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidocument.index')),
@@ -1442,15 +1442,13 @@
 							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric_document.index')),
 							'text'	 => lang('generic document')
 						),
-						'legislation'	 => array
-							(
-							'text'	 => $GLOBALS['phpgw']->translation->translate('laws and regulations', array(), true),
-							// degrade gracefully hack
-							'url'	 => $laws_url,
-						),
-						'location'		 => array
-							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidocument.list_doc')),
+//						'legislation'	 => array
+//							(
+//							'text'	 => $GLOBALS['phpgw']->translation->translate('laws and regulations', array(), true),
+//							'url'	 => $laws_url,
+//						),
+						'location'		 => array(
+							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidocument.index')),
 							'text'	 => lang('location')
 						)
 					)

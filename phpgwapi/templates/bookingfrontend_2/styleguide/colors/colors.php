@@ -11,10 +11,32 @@
   </div>
   
   <?php
+    function lumdiff($hex){
+
+      $background = "#FFFFFF";
+
+      list($R1, $G1, $B1) = sscanf($hex, "#%02x%02x%02x");
+      list($R2, $G2, $B2) = sscanf($background, "#%02x%02x%02x");
+
+      $L1 = 0.2126 * pow($R1/255, 2.2) +
+            0.7152 * pow($G1/255, 2.2) +
+            0.0722 * pow($B1/255, 2.2);
+
+      $L2 = 0.2126 * pow($R2/255, 2.2) +
+            0.7152 * pow($G2/255, 2.2) +
+            0.0722 * pow($B2/255, 2.2);
+
+      if($L1 > $L2){
+          return ($L1+0.05) / ($L2+0.05);
+      }else{
+          return ($L2+0.05) / ($L1+0.05);
+      }
+    }
+
     $colors = array(
       'purple' => '#793C8A',
       'blue' => '#28358B',
-      'black' => '#E6E3DB',
+      'black' => '#000000',
       'beige-dark' => '#E6E3DB',
       'beige' => '#F7F5F0',
       'grey' => '#D6D6D6',
@@ -48,17 +70,25 @@
     echo '<div class="row mb-5">';
 
     echo '<div class="col-6 col-md-4 col-lg-3 d-flex flex-column mb-3">
-            <span class="text-lg text-primary">text-primary</span>
-            <span>text-primary</span>
+            <span class="text-lg text-primary p-1">text-primary</span>
+            <span class="px-1">text-primary</span>
           </div>';
     echo '<div class="col-6 col-md-4 col-lg-3 d-flex flex-column mb-3">
-            <span class="text-lg text-secondary">text-secondary</span>
-            <span>text-secondary</span>
+            <span class="text-lg text-secondary p-1">text-secondary</span>
+            <span class="px-1">text-secondary</span>
           </div>';
+
     foreach ( $colors as $color => $hexColor) {
+
+      $backgroundColor = '';
+      if(lumdiff($hexColor) < 5 ) {
+        $backgroundColor = 'bg-black-80';
+      } else {
+      }
+
       echo '<div class="col-6 col-md-4 col-lg-3 d-flex flex-column mb-3">
-              <span class="text-lg text-'.$color.'">text-'.$color.'</span>
-              <span class="">text-'.$color.'</span>
+              <span class="text-lg text-'.$color.' '.$backgroundColor.' p-1 rounded-mini">text-'.$color.'</span>
+              <span class="px-1">text-'.$color.'</span>
             </div>';
     }
     echo '</div>';
