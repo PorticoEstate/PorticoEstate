@@ -99,7 +99,8 @@
 			'get_checklists'			 => true,
 			'get_cases_for_checklist'	 => true,
 			'handle_multi_upload_file'	 => true,
-			'build_multi_upload_file'	 => true
+			'build_multi_upload_file'	 => true,
+			'get_items_per_qr'			 => true
 		);
 
 		function __construct()
@@ -3609,6 +3610,19 @@ JS;
 		}
 
 
+		public function get_items_per_qr()
+		{
+			if (!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
+
+			$qr_code	 = phpgw::get_var('qr_code', 'string', 'GET');
+
+			return $this->bo->get_items_per_qr($qr_code);
+			
+		}
+
 		public function summary()
 		{
 			if (!$this->acl_read)
@@ -3635,14 +3649,20 @@ JS;
 
 			$tabs			 = array();
 			$tabs['main']	 = array(
-				'label'	 => $entity['name'],
+				'label'	 => lang('summary'),
 				'link'	 => '#main'
+			);
+			$tabs['scanner']	 = array(
+				'label'	 => 'scanner',
+				'link'	 => '#scanner'
 			);
 
 
 			$data = array(
 				'form_action'				 => self::link(array('menuaction' => "{$this->type_app[$this->type]}.uientity.summary", 'entity_id' => $this->entity_id)),
 				'cancel_url'				 => $GLOBALS['phpgw']->link('/home.php'),
+				'value_type'				 => $this->type,
+				'value_entity_id'			 => $this->entity_id,
 				'vendor_data'				 => $vendor_data,
 				'contact_data'				 => $contact_data,
 				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, 0),
@@ -3654,6 +3674,8 @@ JS;
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::formvalidator_generate(array());
+			self::add_javascript('phpgwapi', 'html5-qrcode', 'html5-qrcode.min.js');
+
 			self::add_javascript($this->type_app[$this->type], 'base', 'entity.summary.js');
 			self::render_template_xsl(array('entity'), array('summary' => $data));
 		}

@@ -1129,4 +1129,71 @@ JS;
 
 			return $result;
 		}
+
+		public function get_items_per_qr( $qr_code )
+		{
+			$categories = $this->soadmin_entity->read_category(array('allrows'	 => true, 'entity_id'	 => $this->entity_id,
+				'required'	 => PHPGW_ACL_READ, 'order'	 => 'name', 'sort'		 => 'ASC'));
+
+
+			$attributes = array();
+
+			$filter = array('datatype' => 'QR_code');
+
+			$category_names=array();
+			foreach ($categories as $category)
+			{
+				$_attributes = $this->custom->find2($category['location_id'], 0, '', 'ASC', 'attrib_sort', true, false, $filter);
+				if($_attributes)
+				{
+					$attributes[$category['location_id']] = $_attributes;
+					$category_names[$category['location_id']] = $category['name'];
+				}
+			}
+
+			$values = array();
+			$total_records = 0;
+			foreach ($attributes as $location_id => $entry_set)
+			{
+				foreach ($entry_set as $attrib)
+				{
+	//				$attrib_filter = array("json_representation->>'{$attrib['column_name']}' = '{$qr_code}'");
+
+					$records		 = $this->so->read(array(
+						'location_id'	 => $location_id,
+						'query'			 => $qr_code,
+	//					'attrib_filter'		 => $attrib_filter,
+						)
+					);
+					$total_records += $this->so->total_records;
+					$values = array_merge($values, $records);
+				}
+			}
+
+			foreach ($values as &$entry)
+			{
+				$entry['link'] = $GLOBALS['phpgw']->link('/index.php', array(
+					'menuaction' => 'property.uientity.view',
+					'entity_id'	 => $entry['entity_id'],
+					'cat_id'	 => $entry['cat_id'],
+					'id'		 => $entry['id']
+				));
+
+				$entry['register_name']  = $category_names[$entry['location_id']];
+			}
+
+			return array(
+				'ResultSet' => array(
+					"totalResultsAvailable"	 => $total_records,
+					"totalRecords"			 => $total_records,
+					'recordsReturned'		 => count($values),
+					'pageSize'				 => phpgw::get_var('results', 'int', 'REQUEST', 0),
+					'startIndex'			 => $start,
+					'sortKey'				 => $this->order,
+					'sortDir'				 => $this->sort,
+					"Result"				 => $values
+				)
+			);
+
+		}
 	}
