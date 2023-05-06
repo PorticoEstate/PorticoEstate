@@ -87,9 +87,9 @@
 							<label>
 								QR-code
 							</label>
-							<input type="text" id="filter_location" name="filter_location" readonly="true" class="pure-input-1-2">
+							<input type="text" id="filter_location" name="filter_location" class="pure-input-1-2">
 								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'location')"/>
+									QR-code
 								</xsl:attribute>
 							</input>
 						</div>
