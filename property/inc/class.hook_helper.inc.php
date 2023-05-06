@@ -102,8 +102,8 @@
 			$this->home_project_overdue_end_date();
 			$this->home_tenant_claims();
 			$this->home_ticket();
-			$this->home_project();
-			$this->home_workorder();
+	//		$this->home_project();
+	//		$this->home_workorder();
 		}
 
 		/**
