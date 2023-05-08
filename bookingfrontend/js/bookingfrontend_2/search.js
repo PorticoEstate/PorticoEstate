@@ -357,8 +357,8 @@ class EventSearch {
     fetchEventOnDates() {
         const from = this.data.from_date()?.split(".");
         const to = this.data.to_date()?.split(".");
-        const fromDate = from && from.length > 1 ? `${from[2]}-${from[1]}-${from[0]}` : getIsoDateString(new Date()); // year-month-day
-        const toDate = to && to.length > 1 ? `${to[2]}-${to[1]}-${to[0]}` : "";
+        const fromDate = from && from.length > 1 ? `${from[2]}-${from[1]}-${from[0]}T00:00:00` : getIsoDateString(new Date()); // year-month-day
+        const toDate = to && to.length > 1 ? `${to[2]}-${to[1]}-${to[0]}T23:59:59` : `${from[2]}-${from[1]}-${from[0]}T23:59:59`;
         const buildingID = "";
         const facilityTypeID = "";
         const start = 0;
@@ -395,16 +395,18 @@ class EventSearch {
 
     search() {
         let events = this.data.events.slice(0, 5);
+        let count = this.data.events.length;
         const el = emptySearch();
         if (this.data.text() !== "") {
             const re = new RegExp(this.data.text(), 'i');
             events = this.data.events.filter(o => o.event_name.match(re) || o.location_name.match(re))
+            count = events.length;
         }
-        this.addInfoCards(el, events);
+        this.addInfoCards(el, events, count);
         createJsSlidedowns();
     }
 
-    addInfoCards(el, events) {
+    addInfoCards(el, events, count) {
         const append = [];
         for (const event of events) {
             append.push(`
@@ -433,7 +435,7 @@ class EventSearch {
             )
         }
         el.append(append.join(""));
-        fillSearchCount(events);
+        fillSearchCount(events, count);
     }
 }
 
@@ -613,11 +615,11 @@ function emptySearch() {
     return el;
 }
 
-function fillSearchCount(data) {
+function fillSearchCount(data, count=0) {
     const el = $("#search-count");
     el.empty();
     if (data) {
-        el.append(`Antall treff: ${data.length}`);
+        el.append(`Antall treff: ${data.length}${count>0 ? " av "+count : ""}`);
     }
 }
 
