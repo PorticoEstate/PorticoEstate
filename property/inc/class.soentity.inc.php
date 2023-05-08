@@ -3258,4 +3258,43 @@
 			$this->db->next_record();
 			return $this->db->f('value');
 		}
+
+		function get_QR_attributes( )
+		{
+			$sql = "SELECT DISTINCT location_id, column_name FROM phpgw_cust_attribute WHERE datatype = 'QR_code'";
+
+			$values= array();
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record())
+			{
+				$column_name =  $this->db->f('column_name');
+				$location_id =  $this->db->f('location_id');
+				$values[$column_name][] = $location_id;
+			}
+
+			return $values;
+		}
+
+		function get_items_per_qr( $location_ids, $attrib_filter )
+		{
+			$filtermethod	 = 'location_id IN(' . implode(',', $location_ids) . ')';
+			$filtermethod	 .= ' AND (' . implode(' OR ', $attrib_filter) . ')';
+
+			$sql	 = "SELECT DISTINCT id, location_id, location_code, address FROM fm_bim_item WHERE {$filtermethod}";
+			$values	 = array();
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$values[] = array(
+					'id'			 => $this->db->f('id'),
+					'location_id'	 => $this->db->f('location_id'),
+					'location_code'	 => $this->db->f('location_code'),
+					'address'		 => $this->db->f('address', true),
+				);
+			}
+
+			return $values;
+		}
 	}
