@@ -1823,6 +1823,8 @@
 
 					$order_template = createObject('property.soorder_template')->read_single((int)$ticket['order_template_id']);
 
+					$order_descr = !empty($ticket['order_descr']) ? "{$order_template['order_descr']}{$ticket['order_descr']}" : $order_template['order_descr'];
+
 					$ticket['vendor_id']			 = $order_template['vendor_id'];
 					$ticket['vendor_email']			 = (array)$order_template['mail_recipients'];
 					$ticket['contract_id']			 = $order_template['contract_id'];
@@ -1830,7 +1832,7 @@
 					$ticket['external_project_id']	 = $order_template['external_project_id'];
 					$ticket['unspsc_code']			 = $order_template['unspsc_code'];
 					$ticket['b_account_id']			 = $order_template['b_account_id'];
-					$ticket['order_descr']			 = $order_template['order_descr'];
+					$ticket['order_descr']			 = $order_descr;
 					$ticket['ecodimb']				 = $order_template['ecodimb'];
 					$ticket['branch_id']			 = $order_template['branch_id'];
 					$ticket['tax_code']				 = $order_template['tax_code'];
