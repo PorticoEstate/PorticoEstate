@@ -44,7 +44,7 @@ class OrganizationSearch {
                 ids = [...new Set(ids)];
                 organizations = organizations.filter(o => ids.some(id => id === o.activity_id))
             }
-            this.addInfoCards(el, organizations);
+            this.addInfoCards(el, organizations.slice(0,10), organizations.length);
         } else {
             fillSearchCount(null);
         }
@@ -52,7 +52,7 @@ class OrganizationSearch {
         createJsSlidedowns();
     }
 
-    addInfoCards = (el, organizations) => {
+    addInfoCards = (el, organizations, count) => {
         const append = [];
         for (const organization of organizations) {
             append.push(`
@@ -88,7 +88,7 @@ class OrganizationSearch {
             )
         }
         el.append(append.join(""));
-        fillSearchCount(organizations);
+        fillSearchCount(organizations, count);
     }
 }
 
@@ -250,7 +250,7 @@ class BookingSearch {
             return +sec + (+min * 60) + (+hour * 3600);
         }
         const numberToTime = (num) => {
-            const date = new Date(num*1000);
+            const date = new Date(num * 1000);
             return getFullTimeString(date);
         }
         const [day, month, year] = this.data.date().split(".");
@@ -265,7 +265,7 @@ class BookingSearch {
             return acc;
         }, {})
         const resource_season = this.data.seasons().reduce((acc, cur) => {
-            if (cur.wday===wday)
+            if (cur.wday === wday)
                 acc[cur.resource_id] = cur;
             return acc;
         }, {})
@@ -615,11 +615,11 @@ function emptySearch() {
     return el;
 }
 
-function fillSearchCount(data, count=0) {
+function fillSearchCount(data, count = 0) {
     const el = $("#search-count");
     el.empty();
     if (data) {
-        el.append(`Antall treff: ${data.length}${count>0 ? " av "+count : ""}`);
+        el.append(`Antall treff: ${data.length}${count > 0 ? " av " + count : ""}`);
     }
 }
 
