@@ -30,7 +30,7 @@
                 <div class="multisearch w-100">
                     <div class="multisearch__inner multisearch__inner--no-button w-100">
                         <div class="row flex-column flex-md-row mb-lg-4">
-                            <div class="col col-md-6 col-lg-6 mb-6 mb-lg-0">
+                            <div class="col col-md-6 col-lg-6 mb-3 mb-lg-0">
                                 <div class="multisearch__inner__item">
                                     <label for="search-booking-text">Søk</label>
                                     <input id="search-booking-text" type="text" placeholder="Søk" data-bind="textInput: text"></input>
@@ -107,19 +107,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row flex-column flex-md-row">
-                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0">
-                                <div class="multisearch__inner__item">
-                                    <label class="choice">
-                                        <input type="checkbox" data-bind="checked: showOnlyAvailable" />
-                                        Vis kun tilgjengelige
-                                        <span class="choice__check"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
+            </div>
+            <div class="col-12 d-flex justify-content-end my-4 mb-md-0">
+                <label class="choice text-purple text-bolder">
+                    <input type="checkbox" name="available"/>
+                    Vis kun tilgjengelige
+                    <span class="choice__check"></span>
+                </label>
             </div>
         </div>
 

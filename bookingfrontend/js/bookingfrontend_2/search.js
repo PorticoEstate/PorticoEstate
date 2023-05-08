@@ -115,10 +115,13 @@ class BookingSearch {
         date: ko.observable(""),
         showOnlyAvailable: ko.observable(false),
         result: ko.observableArray([]),
-        available_resources: ko.observableArray([])
+        available_resources: ko.observableArray([]),
+        taken_allocations: ko.observableArray([]),
+        seasons: ko.observableArray([])
     }
 
     activity_cache = {};
+    resource_availability_cache = {}
 
     constructor() {
         const bookingEl = document.getElementById("search-booking");
@@ -142,7 +145,7 @@ class BookingSearch {
         this.data.towns_data.subscribe(towns => {
             this.data.towns(
                 [...new Set(towns.map(item => item.name))]
-                    .sort()
+                    .sort((a, b) => a.localeCompare(b, "no"))
                     .map(name => ({name: htmlDecode(name), id: towns.find(i => i.name === name).id}))
             )
         })
@@ -164,7 +167,6 @@ class BookingSearch {
     fetchAvailableResources() {
         const from_date = `${this.data.date()} 00:00:00`;
         const to_date = `${this.data.date()} 23:59:59`;
-        console.log(this.data.result());
         const resource_ids = this.data.result().map(r => r.id).join(",");
         const url = phpGWLink('bookingfrontend/', {
             menuaction: 'bookingfrontend.uisearch.search_available_resources',
@@ -176,6 +178,9 @@ class BookingSearch {
         $.ajax({
             url,
             success: response => {
+                this.data.taken_allocations(response.allocations);
+                this.data.seasons(response.seasons);
+                this.calculateAvailableResources();
                 console.log("Res", response);
             },
             error: error => {
@@ -239,15 +244,44 @@ class BookingSearch {
         createJsSlidedowns();
     }
 
+    calculateAvailableResources = () => {
+        const timeToNumber = (time) => {
+            const [hour, min, sec] = time.split(":");
+            return +sec + (+min * 60) + (+hour * 3600);
+        }
+        const numberToTime = (num) => {
+            const date = new Date(num*1000);
+            return getFullTimeString(date);
+        }
+        const [day, month, year] = this.data.date().split(".");
+        const date = new Date(`${year}-${month}-${day}`);
+        const wday = date.getDay();
+        const resource_allocation = this.data.taken_allocations().reduce((acc, cur) => {
+            acc[cur.resource_id] = acc[cur.resource_id] || [];
+            acc[cur.resource_id].push([
+                timeToNumber(cur.from_.split(" ")[1]),
+                timeToNumber(cur.to_.split(" ")[1])
+            ]);
+            return acc;
+        }, {})
+        const resource_season = this.data.seasons().reduce((acc, cur) => {
+            if (cur.wday===wday)
+                acc[cur.resource_id] = cur;
+            return acc;
+        }, {})
+        console.log(resource_allocation, date, wday, resource_season);
+    }
+
     updateBuildings = (town = null) => {
         this.data.buildings(
             this.data.towns_data().filter(item => town ? town.id === item.id : true)
                 .map(item => ({id: item.b_id, name: htmlDecode(item.b_name)}))
+                .sort((a, b) => a.name?.localeCompare(b.name, "no"))
         )
     }
 
     getBuildingsFromResource = (resource_id) => {
-        const building_resources = this.data.building_resources().filter(br => br.resource_id===resource_id);
+        const building_resources = this.data.building_resources().filter(br => br.resource_id === resource_id);
         const ids = building_resources.map(br => br.building_id);
         return this.data.buildings().filter(b => ids.includes(b.id));
     }
@@ -263,7 +297,7 @@ class BookingSearch {
         for (const resource of resources) {
             const buildings = this.getBuildingsFromResource(resource.id);
             const towns = this.getTownFromBuilding(buildings);
-            if (towns.length>0) {
+            if (towns.length > 0) {
                 okResources.push(resource);
                 append.push(`
     <div class="col-12 mb-4">
@@ -380,8 +414,8 @@ class EventSearch {
           <span>${event.event_name}</span>
           <span class="slidedown__toggler__info">
           ${joinWithDot([
-                event.location_name, 
-                getSearchDatetimeString(new Date(event.from))+" - "+((new Date(event.from)).getDate()===(new Date(event.to)).getDate() ? getSearchTimeString(new Date(event.to)) : getSearchDatetimeString(new Date(event.to)))])}
+                event.location_name,
+                getSearchDatetimeString(new Date(event.from)) + " - " + ((new Date(event.from)).getDate() === (new Date(event.to)).getDate() ? getSearchTimeString(new Date(event.to)) : getSearchDatetimeString(new Date(event.to)))])}
           </span>
         </button>
         <div class="js-slidedown-content slidedown__content">
@@ -471,21 +505,30 @@ class Search {
                 self.data = {...self.data, ...response};
 
                 self.booking.data.building_resources(response.building_resources);
-                self.booking.data.towns_data(response.towns);
-                self.booking.data.activities(self.data.activities)
-                self.booking.data.resources(self.data.resources.map(r => ({...r, name: htmlDecode(r.name)})))
-                self.booking.data.facilities(self.data.facilities.map(f => ({...f, name: htmlDecode(f.name)})))
-                self.booking.data.resource_categories(self.data.resource_categories)
+                self.booking.data.towns_data(sortOnName(response.towns));
+                self.booking.data.activities(sortOnName(self.data.activities));
+                self.booking.data.resources(sortOnName(self.data.resources.map(resource => ({
+                    ...resource,
+                    name: htmlDecode(resource.name)
+                }))));
+                self.booking.data.facilities(sortOnName(self.data.facilities.map(facility => ({
+                    ...facility,
+                    name: htmlDecode(facility.name)
+                }))));
+                self.booking.data.resource_categories(sortOnName(self.data.resource_categories))
                 self.booking.data.resource_facilities(self.data.resource_facilities)
                 self.booking.data.resource_activities(self.data.resource_activities)
                 self.booking.data.resource_category_activity(self.data.resource_category_activity);
 
                 self.event.data.events(self.data.events);
 
-                self.organization.data.activities(self.data.activities.map(a => ({...a, name: htmlDecode(a.name)})))
-                self.organization.data.organizations(self.data.organizations.map(o => ({
-                    ...o,
-                    name: htmlDecode(o.name)
+                self.organization.data.activities(sortOnName(self.data.activities.map(activity => ({
+                    ...activity,
+                    name: htmlDecode(activity.name)
+                }))))
+                self.organization.data.organizations(self.data.organizations.map(organization => ({
+                    ...organization,
+                    name: htmlDecode(organization.name)
                 })));
             },
             error: error => {
@@ -544,6 +587,10 @@ function getSearchTimeString(date) {
     return `${("0" + date.getHours()).slice(-2)}:${("0" + date.getMinutes()).slice(-2)}`
 }
 
+function getFullTimeString(date) {
+    return `${("0" + date.getHours()).slice(-2)}:${("0" + date.getMinutes()).slice(-2)}:${("0" + date.getSeconds()).slice(-2)}`
+}
+
 function getSearchDatetimeString(date) {
     return `${getSearchDateString(date)} ${getSearchTimeString(date)}`;
 }
@@ -583,5 +630,13 @@ function htmlDecode(input) {
 }
 
 function joinWithDot(texts) {
-    return texts.map(t => t && t.length>0 ? `<span>${t}</span>` : null).filter(t => t).join(` <span className="slidedown__toggler__info__separator">&#8226;</span> `)
+    return texts.map(t => t && t.length > 0 ? `<span>${t}</span>` : null).filter(t => t).join(` <span className="slidedown__toggler__info__separator">&#8226;</span> `)
+}
+
+function sortOnField(data, field) {
+    return data.sort((a, b) => a[field]?.localeCompare(b[field], "no"))
+}
+
+function sortOnName(data) {
+    return sortOnField(data, 'name')
 }

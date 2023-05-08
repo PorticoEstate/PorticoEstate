@@ -381,11 +381,12 @@
 			$ids = array();
 			foreach ($_ids as $id)
 			{
-				$ids[] = array('id' => (int)$id);
+				$ids[] = (int)$id;
 			}
-			$from_date = phpgw::get_var('from_date', 'string', 'REQUEST', '');
-			$to_date = phpgw::get_var('to_date', 'string', 'REQUEST', '');
-			return $this->bo->available_resources($ids, array('from_date' => $from_date, 'to_date' => $to_date));
+			$from_date = DateTime::createFromFormat('d.m.Y H:i:s', phpgw::get_var('from_date', 'string', 'REQUEST', ''));
+			$to_date = DateTime::createFromFormat('d.m.Y H:i:s', phpgw::get_var('to_date', 'string', 'REQUEST', ''));
+			return $this->bo->get_all_allocations_and_events_for_resource($ids, $from_date, $to_date);
+//			return $this->bo->available_resources($ids, array('from_date' => $from_date, 'to_date' => $to_date));
 		}
 
 
