@@ -1133,66 +1133,76 @@ JS;
 
 		public function get_items_per_qr( $qr_code )
 		{
-			$categories = $this->soadmin_entity->read_category(array('allrows'	 => true, 'entity_id'	 => $this->entity_id,
-				'required'	 => PHPGW_ACL_READ, 'order'	 => 'name', 'sort'		 => 'ASC'));
 
+			$attributes = $this->so->get_QR_attributes();
 
-			$attributes = array();
-
-			$filter = array('datatype' => 'QR_code');
-
-			$category_names=array();
-			foreach ($categories as $category)
+			$attrib_filter = array();
+			$location_ids = array();
+			foreach ($attributes as $column_name => $_location_ids)
 			{
-				$_attributes = $this->custom->find2($category['location_id'], 0, '', 'ASC', 'attrib_sort', true, false, $filter);
-				if($_attributes)
-				{
-					$attributes[$category['location_id']] = $_attributes;
-					$category_names[$category['location_id']] = $category['name'];
-				}
+				$attrib_filter[] = "json_representation->>'{$column_name}' = '{$qr_code}'";
+				$location_ids = array_merge($location_ids, $_location_ids);
 			}
 
-			$values = array();
-			$total_records = 0;
-			foreach ($attributes as $location_id => $entry_set)
-			{
-				foreach ($entry_set as $attrib)
-				{
-	//				$attrib_filter = array("json_representation->>'{$attrib['column_name']}' = '{$qr_code}'");
+			$values = $this->so->get_items_per_qr($location_ids, $attrib_filter);
 
-					$records		 = $this->so->read(array(
-						'location_id'	 => $location_id,
-						'query'			 => $qr_code,
-	//					'attrib_filter'		 => $attrib_filter,
-						)
-					);
-					$total_records += $this->so->total_records;
-					$values = array_merge($values, $records);
-				}
-			}
 
 			foreach ($values as &$entry)
 			{
+
+				$loc_arr	 = $GLOBALS['phpgw']->locations->get_name($entry['location_id']);
+				$type_arr	 = explode('.', $loc_arr['location']);
+
+				$type	 = $type_arr[1];
+				$entity_id	 = $type_arr[2];
+				$cat_id		 = $type_arr[3];
+
 				$entry['link'] = $GLOBALS['phpgw']->link('/index.php', array(
 					'menuaction' => 'property.uientity.view',
-					'entity_id'	 => $entry['entity_id'],
-					'cat_id'	 => $entry['cat_id'],
+					'type'	 => $type,
+					'entity_id'	 => $entity_id,
+					'cat_id'	 => $cat_id,
 					'id'		 => $entry['id']
 				));
 
-				$entry['register_name']  = $category_names[$entry['location_id']];
+				$entry['register_name']  = $loc_arr['descr'];
 			}
+
+			$start			 = phpgw::get_var('startIndex', 'REQUEST', 'int', 0);
+			$total_records	 = count($values);
+
+			$num_rows = phpgw::get_var('length', 'int', 'REQUEST', 0);
+
+			if ($num_rows == -1)
+			{
+				$out = $values;
+			}
+			else
+			{
+				if ($total_records > $num_rows)
+				{
+					$page		 = ceil(( $start / $total_records ) * ($total_records / $num_rows));
+					$values_part = array_chunk($values, $num_rows);
+					$out		 = $values_part[$page];
+				}
+				else
+				{
+					$out = $values;
+				}
+			}
+
+
 
 			return array(
 				'ResultSet' => array(
 					"totalResultsAvailable"	 => $total_records,
 					"totalRecords"			 => $total_records,
-					'recordsReturned'		 => count($values),
-					'pageSize'				 => phpgw::get_var('results', 'int', 'REQUEST', 0),
+					'recordsReturned'		 => count($out),
+					'pageSize'				 => $num_rows,
 					'startIndex'			 => $start,
 					'sortKey'				 => $this->order,
 					'sortDir'				 => $this->sort,
-					"Result"				 => $values
+					"Result"				 => $out
 				)
 			);
 
