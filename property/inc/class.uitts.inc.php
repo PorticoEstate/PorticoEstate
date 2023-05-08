@@ -2188,6 +2188,14 @@ HTML;
 							$receipt['error'][] = array('msg' => lang('budget') . ': ' . lang('Please enter a numeric value'));
 						}
 					}
+
+					if (isset($values['order_text']))
+					{
+						foreach ($values['order_text'] as $_text)
+						{
+							$values['order_descr'] .= "\n" . $GLOBALS['phpgw']->db->stripslashes($_text);
+						}
+					}
 				}
 
 				if (isset($values['takeover']) && $values['takeover'])
@@ -2672,13 +2680,13 @@ HTML;
 			}
 			unset($_note);
 
-			if (isset($values['order_text']) && $ticket['order_id'])
-			{
-				foreach ($values['order_text'] as $_text)
-				{
-					$ticket['order_descr'] .= "\n" . $GLOBALS['phpgw']->db->stripslashes($_text);
-				}
-			}
+//			if (isset($values['order_text']) && $ticket['order_id'])
+//			{
+//				foreach ($values['order_text'] as $_text)
+//				{
+//					$ticket['order_descr'] .= "\n" . $GLOBALS['phpgw']->db->stripslashes($_text);
+//				}
+//			}
 
 			$note_def = array
 				(
