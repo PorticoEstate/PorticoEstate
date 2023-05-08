@@ -323,9 +323,9 @@ class BookingSearch {
                 )
             }
         }
-        this.data.result(okResources);
+        this.data.result(okResources.slice(0,50));
         el.append(append.join(""));
-        fillSearchCount(okResources);
+        fillSearchCount(okResources.slice(0,50), okResources.length);
     }
 }
 
