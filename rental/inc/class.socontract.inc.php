@@ -388,7 +388,7 @@
 			$tables = "rental_contract contract";
 			$join_contract_type = $this->left_join . ' rental_contract_responsibility type ON (type.location_id = contract.location_id)';
 			$join_parties = $this->left_join . ' rental_contract_party c_t ON (contract.id = c_t.contract_id) LEFT JOIN rental_party party ON (c_t.party_id = party.id)';
-			$join_composites = $this->left_join . " rental_contract_composite c_c ON (contract.id = c_c.contract_id) {$this->left_join} rental_composite composite ON c_c.composite_id = composite.id {$this->join} fm_part_of_town part_of_town ON composite.part_of_town_id = part_of_town.id";
+			$join_composites = $this->left_join . " rental_contract_composite c_c ON (contract.id = c_c.contract_id) {$this->left_join} rental_composite composite ON c_c.composite_id = composite.id {$this->left_join} fm_part_of_town part_of_town ON composite.part_of_town_id = part_of_town.id";
 			$join_units = $this->left_join . " rental_unit r_u ON (r_u.composite_id=composite.id)";
 			$join_last_edited = $this->left_join . ' rental_contract_last_edited last_edited ON (contract.id = last_edited.contract_id)';
 			$join_last_billed = "{$this->left_join} rental_invoice invoice ON (contract.id = invoice.contract_id) {$this->left_join} rental_billing billing ON (invoice.billing_id = billing.id)";
