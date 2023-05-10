@@ -1,3 +1,14 @@
+// Easier way of getting old value from KO on change
+ko.subscribable.fn.subscribeChanged = function (callback) {
+    let previousValue;
+    this.subscribe(function (_previousValue) {
+        previousValue = _previousValue;
+    }, undefined, 'beforeChange');
+    this.subscribe(function (latestValue) {
+        callback(latestValue, previousValue);
+    });
+};
+
 class OrganizationSearch {
     data = {
         activities: ko.observableArray([]),
@@ -44,7 +55,7 @@ class OrganizationSearch {
                 ids = [...new Set(ids)];
                 organizations = organizations.filter(o => ids.some(id => id === o.activity_id))
             }
-            this.addInfoCards(el, organizations.slice(0,10), organizations.length);
+            this.addInfoCards(el, organizations.slice(0, 10), organizations.length);
         } else {
             fillSearchCount(null);
         }
@@ -112,16 +123,18 @@ class BookingSearch {
         selected_facilities: ko.observableArray([]),
         resource_facilities: ko.observableArray([]),
         text: ko.observable(""),
-        date: ko.observable(""),
-        showOnlyAvailable: ko.observable(false),
+        date: ko.observable(getSearchDateString(new Date())),
+        show_only_available: ko.observable(false),
         result: ko.observableArray([]),
+        result_all: ko.observableArray([]),
         available_resources: ko.observableArray([]),
         taken_allocations: ko.observableArray([]),
-        seasons: ko.observableArray([])
+        seasons: ko.observableArray([]),
+        resources_with_available_time: ko.observableArray([])
     }
 
     activity_cache = {};
-    resource_availability_cache = {}
+    allocation_cache = {}
 
     constructor() {
         const bookingEl = document.getElementById("search-booking");
@@ -129,17 +142,28 @@ class BookingSearch {
         ko.applyBindings(this.data, bookingEl);
         this.updateBuildings(null);
 
-        this.data.text.subscribe(_ => this.search())
-        this.data.selected_buildings.subscribe(_ => this.search())
-        this.data.selected_resource_categories.subscribe(_ => this.search())
-        this.data.selected_facilities.subscribe(_ => this.search())
-        this.data.selected_activities.subscribe(_ => this.search())
+        this.data.text.subscribe(_ => this.searchFetch())
+        this.data.selected_buildings.subscribe(_ => this.searchFetch())
+        this.data.selected_resource_categories.subscribe(_ => this.searchFetch())
+        this.data.selected_facilities.subscribe(_ => this.searchFetch())
+        this.data.selected_activities.subscribe(_ => this.searchFetch())
+        this.data.show_only_available.subscribe(show => {
+            if (!show)
+                this.data.resources_with_available_time([])
+            this.searchFetch();
+        })
         this.data.towns.subscribe(_ => this.updateBuildings(null));
-        this.data.date.subscribe(_ => this.search())
+        this.data.date.subscribe(date => {
+            if (date === "") {
+                this.data.date(getSearchDateString(new Date()));
+                return;
+            }
+            this.searchFetch()
+        })
 
         this.data.selected_town.subscribe(town => {
             this.updateBuildings(town);
-            this.search();
+            this.searchFetch();
         })
 
         this.data.towns_data.subscribe(towns => {
@@ -156,18 +180,36 @@ class BookingSearch {
             }
         })
 
-        this.data.result.subscribe(result => {
-            this.data.available_resources([]);
-            if (this.data.date()) {
+        this.data.result_all.subscribeChanged((result, old) => {
+            // Only download new available resources if old data is different from new
+            if (arraysAreEqual(result.map(r => r.id).sort(), old.map(r => r.id).sort()))
+                return;
+            if (this.data.show_only_available())
                 this.fetchAvailableResources();
-            }
         })
     }
 
     fetchAvailableResources() {
+        const onSuccess = (from_date) => {
+            this.data.available_resources([]);
+            this.data.taken_allocations(this.data.result_all().map(r => this.allocation_cache[from_date].allocations[r.id]).flat());
+            this.data.seasons(this.data.result_all().map(r => this.allocation_cache[from_date].seasons[r.id]).flat());
+            this.calculateAvailableResources();
+            this.search();
+
+        }
         const from_date = `${this.data.date()} 00:00:00`;
         const to_date = `${this.data.date()} 23:59:59`;
-        const resource_ids = this.data.result().map(r => r.id).join(",");
+        if (!(from_date in this.allocation_cache)) {
+            this.allocation_cache[from_date] = {};
+            this.allocation_cache[from_date].allocations = {};
+            this.allocation_cache[from_date].seasons = {};
+        }
+        const resource_ids = this.data.result_all().filter(r => !(r.id in this.allocation_cache[from_date].allocations)).map(r => r.id).join(",");
+        if (resource_ids.length === 0) {
+            onSuccess(from_date);
+            return;
+        }
         const url = phpGWLink('bookingfrontend/', {
             menuaction: 'bookingfrontend.uisearch.search_available_resources',
             from_date,
@@ -178,14 +220,30 @@ class BookingSearch {
         $.ajax({
             url,
             success: response => {
-                this.data.taken_allocations(response.allocations);
-                this.data.seasons(response.seasons);
-                this.calculateAvailableResources();
-                console.log("Res", response);
+                // console.log("Res", response);
+                this.populate_allocation_cache(response, from_date, resource_ids);
+                onSuccess(from_date);
             },
             error: error => {
                 console.log(error);
             }
+        })
+    }
+
+    populate_allocation_cache = (response, from_date, resource_ids) => {
+        const cache = this.allocation_cache[from_date];
+        resource_ids.split(",").map(id => {
+            if (!(id in cache.allocations))
+                cache.allocations[id] = [];
+            if (!(id in cache.seasons))
+                cache.seasons[id] = [];
+        })
+
+        response.allocations.map(allocation => {
+            cache.allocations[allocation.resource_id].push(allocation);
+        })
+        response.seasons.map(season => {
+            cache.seasons[season.resource_id].push(season);
         })
     }
 
@@ -196,12 +254,16 @@ class BookingSearch {
         $('#search-booking-resource_categories').val([]).trigger('change');
         $('#search-booking-facilities').val([]).trigger('change');
         this.data.text("");
-        this.data.date("");
+        this.data.date(getSearchDateString(new Date()));
     }
 
+    searchFetch() {
+        if (this.data.show_only_available())
+            this.fetchAvailableResources();
+        else this.search();
+    }
     search() {
         let resources = [];
-        const el = emptySearch();
         let hasSearch = false;
         if (this.data.selected_town() !== undefined ||
             this.data.selected_buildings().length > 0 ||
@@ -237,6 +299,10 @@ class BookingSearch {
         }
 
         if (hasSearch) {
+            this.data.result_all(resources);
+            if (this.data.show_only_available())
+                resources = resources.filter(r => this.data.resources_with_available_time().includes(r.id));
+            const el = emptySearch();
             this.addInfoCards(el, resources);
         } else {
             fillSearchCount(null);
@@ -253,6 +319,31 @@ class BookingSearch {
             const date = new Date(num * 1000);
             return getFullTimeString(date);
         }
+
+        const allocationFillsAllowed = (allocations, allowed) => {
+            allocations.sort((a, b) => a[0] - b[0]);
+            const mergedAllocations = [allocations[0]];
+
+            for (let i = 1; i < allocations.length; i++) {
+                const lastMerged = mergedAllocations[mergedAllocations.length - 1];
+                if (allocations[i][0] <= lastMerged[1]) {
+                    lastMerged[1] = Math.max(lastMerged[1], allocations[i][1]);
+                } else {
+                    mergedAllocations.push(allocations[i]);
+                }
+            }
+
+            const totalAllocatedSeconds = mergedAllocations.reduce((sum, allocation) => {
+                return sum + (allocation[1] - allocation[0]);
+            }, 0);
+
+            const totalAllowedSeconds = allowed.reduce((sum, range) => {
+                return sum + (range[1] - range[0]);
+            }, 0);
+
+            return totalAllocatedSeconds === totalAllowedSeconds;
+        }
+
         const [day, month, year] = this.data.date().split(".");
         const date = new Date(`${year}-${month}-${day}`);
         const wday = date.getDay();
@@ -265,11 +356,18 @@ class BookingSearch {
             return acc;
         }, {})
         const resource_season = this.data.seasons().reduce((acc, cur) => {
-            if (cur.wday === wday)
-                acc[cur.resource_id] = cur;
+            if (cur.wday === wday) {
+                if (!(cur.resource_id in acc))
+                    acc[cur.resource_id] = [];
+                acc[cur.resource_id].push([timeToNumber(cur.from_time), timeToNumber(cur.to_time)]);
+            }
             return acc;
         }, {})
-        console.log(resource_allocation, date, wday, resource_season);
+        const available_ids = Object.keys(resource_season).filter(id => {
+            if (!(id in resource_allocation)) return true;
+            return !allocationFillsAllowed(resource_allocation[id], resource_season[id])
+        }).map(id => +id)
+        this.data.resources_with_available_time(available_ids);
     }
 
     updateBuildings = (town = null) => {
@@ -323,9 +421,9 @@ class BookingSearch {
                 )
             }
         }
-        this.data.result(okResources.slice(0,50));
+        this.data.result(okResources.slice(0, 50));
         el.append(append.join(""));
-        fillSearchCount(okResources.slice(0,50), okResources.length);
+        fillSearchCount(okResources.slice(0, 50), okResources.length);
     }
 }
 
@@ -641,4 +739,16 @@ function sortOnField(data, field) {
 
 function sortOnName(data) {
     return sortOnField(data, 'name')
+}
+
+function arraysAreEqual(arr1, arr2) {
+    if (arr1.length !== arr2.length) {
+        return false;
+    }
+    for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) {
+            return false;
+        }
+    }
+    return true;
 }
