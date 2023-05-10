@@ -1152,11 +1152,11 @@
 
 			$address_element = array();
 
-			if ($common_data['workorder']['delivery_address'])
+			if (!empty($common_data['workorder']['delivery_address']) && !ctype_space((string)$common_data['workorder']['delivery_address']))
 			{
 				$address_element[] = array('value' => nl2br($common_data['workorder']['delivery_address']));
 			}
-			else if (isset($this->config->config_data['delivery_address']) && $this->config->config_data['delivery_address'])
+			else if (!empty($this->config->config_data['delivery_address']) && !ctype_space((string)$this->config->config_data['delivery_address']))
 			{
 				$address_element[] = array('value' => nl2br($this->config->config_data['delivery_address']));
 			}
@@ -2228,11 +2228,11 @@ HTML;
 
 			$delivery_address = lang('delivery address') . ':';
 
-			if ($common_data['workorder']['delivery_address'])
+			if (!empty($common_data['workorder']['delivery_address']) && !ctype_space((string)$common_data['workorder']['delivery_address']))
 			{
 				$delivery_address .= "\n{$common_data['workorder']['delivery_address']}";
 			}
-			else if (isset($this->config->config_data['delivery_address']) && $this->config->config_data['delivery_address'])
+			else if (!empty($this->config->config_data['delivery_address']) && !ctype_space((string)$this->config->config_data['delivery_address']))
 			{
 				$delivery_address .= "\n{$this->config->config_data['delivery_address']}";
 			}
