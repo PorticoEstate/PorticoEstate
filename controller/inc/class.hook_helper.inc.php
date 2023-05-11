@@ -56,15 +56,16 @@
 		 */
 		public function home_backend()
 		{
+			$this->status_componants();
 //			return;
-			if ($this->home_alternative)
-			{
-				$this->status_componants();
-			}
-			else
-			{
-				$this->home();
-			}
+//			if ($this->home_alternative)
+//			{
+//				$this->status_componants();
+//			}
+//			else
+//			{
+//				$this->home();
+//			}
 		}
 
 		/**
@@ -74,14 +75,15 @@
 		 */
 		public function home_mobilefrontend()
 		{
-			if ($this->home_alternative)
-			{
-				$this->skip_portalbox_controls = true;
-			}
-			else
-			{
-				$this->home(true);
-			}
+			$this->status_componants();
+//			if ($this->home_alternative)
+//			{
+//				$this->skip_portalbox_controls = true;
+//			}
+//			else
+//			{
+//				$this->home(true);
+//			}
 		}
 
 		private function status_componants_old()
@@ -131,29 +133,25 @@ HTML;
 			unset($portalbox);
 		}
 
-		public function status_componants($front_end = false)
+		public function status_componants()
 		{
-			$front_end = true;
 			$app_id = $GLOBALS['phpgw']->applications->name2id('controller');
 			if (!isset($GLOBALS['portal_order']) || !in_array($app_id, $GLOBALS['portal_order']))
 			{
 				$GLOBALS['portal_order'][] = $app_id;
 			}
 
-			$location_array = array();
 			$component_short_desc = array();
 			$component_short_desc[0][0] = '';
 
 			$so_check_list = CreateObject('controller.socheck_list');
-			$so_control = CreateObject('controller.socontrol');
 
 			$config = CreateObject('phpgwapi.config', 'controller');
 			$config->read();
 			$limit_no_of_planned = isset($GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_planned_controls']) ? $GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_planned_controls'] : (isset($config->config_data['no_of_planned_controls']) && $config->config_data['no_of_planned_controls'] > 0 ? $config->config_data['no_of_planned_controls'] : 5);
-			$limit_no_of_assigned = isset($GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_assigned_controls']) ? $GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_assigned_controls'] : (isset($config->config_data['no_of_assigned_controls']) && $config->config_data['no_of_assigned_controls'] > 0 ? $config->config_data['no_of_assigned_controls'] : 10);
+//			$limit_no_of_assigned = isset($GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_assigned_controls']) ? $GLOBALS['phpgw_info']['user']['preferences']['controller']['no_of_assigned_controls'] : (isset($config->config_data['no_of_assigned_controls']) && $config->config_data['no_of_assigned_controls'] > 0 ? $config->config_data['no_of_assigned_controls'] : 10);
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-
 
 			/* =======================================  PLANNED CONTROLS FOR CURRENT USER  ================================= */
 
@@ -168,7 +166,7 @@ HTML;
 			// Fetches controls current user is responsible for 1 month ahead
 			$my_controls = array();
 
-			$my_check_lists = $this->get_my_assigned_check_list($from_date_ts, $to_date_ts, $repeat_type);
+			$my_check_lists = $this->get_my_assigned_check_list($from_date_ts, $to_date_ts, $repeat_type, null, $limit_no_of_planned);
 
 			$_assigned_list = array();
 			foreach ($my_check_lists as $_key => $my_check_list)
@@ -255,16 +253,16 @@ HTML;
 					<table class = "pure-table pure-table-bordered" width="100%">
 						<thead>
 							<tr>
-								<th class='date heading'>Planlagt dato</th>
-								<th class='date heading'>Fristdato</th>
-								<th class='control heading'>Tittel på kontroll</th>
-								<th class='title heading'>Lokasjonsnavn</th>
-								<th class='control-area heading'>Kontrollområde</th>
+								<th>Planlagt dato</th>
+								<th>Fristdato</th>
+								<th>Tittel på kontroll</th>
+								<th>Lokasjonsnavn</th>
+								<th>Kontrollområde</th>
 							</tr>
 						</thead>
 						<tbody>
-
 HTML;
+
 			$found_at_least_one = false;
 			foreach ($my_planned_controls as $planned_date_ts => $planned_controls_on_date)
 			{
@@ -297,11 +295,11 @@ HTML;
 
 					$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicase.add_case',
 						'check_list_id' => $check_list_id));
-					$my_planned_controls_HTML .= "<td><a href='$link'><div class='date'>{$planned_formatted}</div></a></td>";
-					$my_planned_controls_HTML .= "<td><a href='$link'><div class='date'>{$deadline_formatted}</div></a></td>";
-					$my_planned_controls_HTML .= "<td><a href='$link'><div class='control'>{$my_control['title']}</div></a></td>";
-					$my_planned_controls_HTML .= "<td><a href='$link'><div class='title'>{$location_name}</div></a></td>";
-					$my_planned_controls_HTML .= "<td><a href='$link'><div class='control-area'>{$control_area_name}</div></a></td>";
+					$my_planned_controls_HTML .= "<td><a href='$link'>{$planned_formatted}</a></td>";
+					$my_planned_controls_HTML .= "<td>{$deadline_formatted}</td>";
+					$my_planned_controls_HTML .= "<td>{$my_control['title']}</td>";
+					$my_planned_controls_HTML .= "<td>{$location_name}</td>";
+					$my_planned_controls_HTML .= "<td>{$control_area_name}</td>";
 					$my_planned_controls_HTML .= "</tr>";
 				}
 			}
@@ -359,7 +357,6 @@ HTML;
 				$my_locations = array_merge($my_properties, $my_buildings);
 
 				// Fetches controls current user is responsible for 1 month ahead in time
-				$my_controls = array();
 				$my_controls = $this->get_my_controls($my_locations, $from_date_ts, $to_date_ts, $repeat_type);
 
 //				_debug_array(date('Y-m-d'), $to_date_ts);
@@ -421,7 +418,7 @@ HTML;
 								{
 									$component = $container_arr[3];
 									$my_assigned_controls[$deadline_ts][] = array("add", $deadline_ts, $my_control,
-										"component", $component['location_id'], $component['id']);
+										"component", $component['location_id'], $component['id'], $location_code);
 								}
 							}
 							// Do not put checklist with status planned in list
@@ -442,23 +439,13 @@ HTML;
 
 				$my_assigned_controls_HTML = <<<HTML
 				<div class='home_portal'>
-					<h2>
-						<div class='date heading'>Fristdato</div>
-						<div class='control heading'>Tittel på kontroll</div>
-						<div class='title heading'>Lokasjonsnavn</div>
-						<div class='control-area heading'>Kontrollområde</div>
-					</h2>
-HTML;
-
-				$my_assigned_controls_HTML = <<<HTML
-				<div class='home_portal'>
 					<table class = "pure-table pure-table-bordered" width="100%">
 						<thead>
 							<tr>
-								<th class='date heading'>Fristdato</th>
-								<th class='control heading'>Tittel på kontroll</th>
-								<th class='title heading'>Lokasjonsnavn</th>
-								<th class='control-area heading'>Kontrollområde</th>
+								<th>Fristdato</th>
+								<th>Tittel på kontroll</th>
+								<th>Lokasjonsnavn</th>
+								<th>Kontrollområde</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -469,13 +456,6 @@ HTML;
 
 				foreach ($my_assigned_controls as $date_ts => $assigned_controls_on_date)
 				{
-					if (count($assigned_controls_on_date) > 1)
-					{
-//						$my_assigned_controls_HTML .= "<li>";
-//						$my_assigned_controls_HTML .= "<a href='#'><h4 class='expand_trigger'><img height='12' src='controller/images/arrow_right.png' /><span class='deadline'>" . date($dateformat, $date_ts) . "</span><span class='num_controls'>(" . count($assigned_controls_on_date) . " kontroller)</span></h4></a>";
-//						$my_assigned_controls_HTML .= "<ul class='expand_list'>";
-					}
-
 					foreach ($assigned_controls_on_date as $my_assigned_control)
 					{
 						$my_assigned_controls_HTML .= "<tr>";
@@ -506,34 +486,50 @@ HTML;
 
 								$location_name = $this->get_location_name($location_code);
 
-								$link = "";
-								$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list',
-									'type' => "location", 'control_id' => $my_control['id'], 'location_code' => $location_code,
-									'deadline_ts' => $deadline_ts));
+								$link = $GLOBALS['phpgw']->link('/index.php', array(
+									'menuaction'	 => 'controller.uicheck_list.add_check_list',
+									'type'			 => "location",
+									'control_id'	 => $my_control['id'],
+									'location_code'	 => $location_code,
+									'deadline_ts'	 => $deadline_ts,
+									'assigned_to'	 => $GLOBALS['phpgw_info']['user']['account_id']
+								));
 
 								$my_assigned_controls_HTML .= ""
-								. "<td><a href='$link'><div class='date'>{$date_str}</div></a></td>"
-								. "<td class='control'>{$my_control['title']}</td>"
-								. "<td class='title'>{$location_name}</td>"
-								. "<td class='control-area'>{$control_area_name}</td>";
+								. "<td><a href='$link'><div>{$date_str}</a></td>"
+								. "<td>{$my_control['title']}</td>"
+								. "<td>{$location_name}</td>"
+								. "<td>{$control_area_name}</td>";
 							}
 							else if ($check_list_type == "component")
 							{
 								$location_id = $my_assigned_control[4];
 								$component_id = $my_assigned_control[5];
+								$location_code = $my_assigned_control[6];
 
-								$short_descr = $this->get_short_description($location_id, $component_id);
+								$location_name = $this->get_location_name($location_code);
 
-								$link = "";
-								$link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicheck_list.add_check_list',
-									'type' => "component", 'control_id' => $my_control['id'], 'location_id' => $location_id,
-									'component_id' => $component_id, 'deadline_ts' => $deadline_ts));
+								if ($component_id)
+								{
+									$short_descr = $this->get_short_description($location_id, $component_id);
+									$location_name .= "::{$short_descr}";
+								}
+
+								$link = $GLOBALS['phpgw']->link('/index.php', array(
+									'menuaction'	 => 'controller.uicheck_list.add_check_list',
+									'type'			 => "component",
+									'control_id'	 => $my_control['id'],
+									'location_id'	 => $location_id,
+									'component_id'	 => $component_id,
+									'deadline_ts'	 => $deadline_ts,
+									'assigned_to'	 => $GLOBALS['phpgw_info']['user']['account_id']
+								));
 
 								$my_assigned_controls_HTML .= ""
 									. "<td><a href='$link'><div class='date'>{$date_str}</div></a></td>"
-									. "<td class='control'>{$my_control['title']}</td>"
-									. "<td class='title'>{$short_descr}</td>"
-									. "<td class='control-area'>{$control_area_name}</td>";
+									. "<td>{$my_control['title']}</td>"
+									. "<td>{$location_name}</td>"
+									. "<td>{$control_area_name}</td>";
 							}
 						}
 						else if ($check_list_status == "edit")
@@ -549,19 +545,13 @@ HTML;
 
 							$my_assigned_controls_HTML .= ""
 								. "<td><a href='$link'><div class='date'>{$date_str}</div></a></td>"
-								. "<td class='control'>{$my_control['title']}</td>"
-								. "<div class='title'>{$location_name}</td>"
-								. "<td class='control-area'>{$control_area_name}</td>";
+								. "<td>{$my_control['title']}</td>"
+								. "<td>{$location_name}</td>"
+								. "<td>{$control_area_name}</td>";
 						}
 
 						$my_assigned_controls_HTML .= "</tr>";
 
-					}
-
-					if (count($assigned_controls_on_date) > 1)
-					{
-//						$my_assigned_controls_HTML .= "</li>";
-//						$my_assigned_controls_HTML .= "</ul>";
 					}
 				}
 
@@ -571,8 +561,6 @@ HTML;
 				}
 
 				$my_assigned_controls_HTML .= "</tr>";
-//				$my_assigned_controls_HTML .= "</div>"; // home_portal
-
 
 			echo "<!-- BEGIN checklist info -->"
 			. "<div class=\"container\">"
@@ -740,7 +728,7 @@ HTML;
 			$my_controls = array();
 //			$my_controls = $this->get_my_controls($my_locations, $from_date_ts, $to_date_ts, $repeat_type);
 
-			$my_check_lists = $this->get_my_assigned_check_list($from_date_ts, $to_date_ts, $repeat_type);
+			$my_check_lists = $this->get_my_assigned_check_list($from_date_ts, $to_date_ts, $repeat_type, null);
 
 			$_assigned_list = array();
 			foreach ($my_check_lists as $_key => $my_check_list)
@@ -1159,7 +1147,6 @@ HTML;
 				$repeat_type = null;
 
 				// Fetches controls current user is responsible for 1 month ahead in time
-				$my_controls = array();
 				$my_controls = $this->get_my_controls($my_locations, $from_date_ts, $to_date_ts, $repeat_type);
 
 				$my_assigned_controls = array();
@@ -1338,14 +1325,20 @@ HTML;
 		}
 		/* ================================  FUNCTIONS  ======================================== */
 
-		function get_my_assigned_check_list( $from_date_ts, $to_date_ts, $repeat_type, $completed = null )
+		function get_my_assigned_check_list( $from_date_ts, $to_date_ts, $repeat_type, $completed = null, $limit_no_of_planned =null )
 		{
 			$check_list_array = array();
 
 			$so_control = CreateObject('controller.socontrol');
 
-			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$assigned_check_list_at_location = $so_control->get_assigned_check_list_at_location($from_date_ts, $to_date_ts, $repeat_type, $user_id, $completed, 'return_array');
+			$user_id = array($GLOBALS['phpgw_info']['user']['account_id']);
+
+			if (!empty($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']))
+			{
+				$user_id[] = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+			}
+
+			$assigned_check_list_at_location = $so_control->get_assigned_check_list_at_location($from_date_ts, $to_date_ts, $repeat_type, $user_id, $completed, 'return_array', $limit_no_of_planned);
 
 			foreach ($assigned_check_list_at_location as $assigned_check_list)
 			{
@@ -1353,7 +1346,7 @@ HTML;
 			}
 			unset($assigned_check_list);
 
-			$assigned_check_list_at_component = $so_control->get_assigned_check_list_by_component($from_date_ts, $to_date_ts, $repeat_type, $user_id, $completed, 'return_array');
+			$assigned_check_list_at_component = $so_control->get_assigned_check_list_by_component($from_date_ts, $to_date_ts, $repeat_type, $user_id, $completed, 'return_array', $limit_no_of_planned);
 
 			foreach ($assigned_check_list_at_component as $assigned_check_list)
 			{
@@ -1403,8 +1396,7 @@ HTML;
 					foreach ($components_with_controls_array as $component)
 					{
 						// Saves location code, location type, an array containing controls at locations and component object
-						$my_controls[] = array($location_code, 'component', $component['controls_array'],
-							$component);
+						$my_controls[] = array($location_code, 'component', $component['controls_array'], $component);
 					}
 				}
 			}
