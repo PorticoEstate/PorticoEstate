@@ -92,10 +92,11 @@
 					{
 						$admin_children_entity["entity_{$entry['id']}"] = array
 							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.category',
+							'url'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.category',
 								'entity_id'	 => $entry['id'])),
-							'text'	 => $entry['name'],
-							'image'	 => array('property', 'entity_' . $entry['id'])
+							'text'			 => $entry['name'],
+							'image'			 => array('property', 'entity_' . $entry['id']),
+							'nav_location'	 => "admin#" . $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entry['id']}")
 						);
 
 						$admin_children_entity["entity_{$entry['id']}"]['children'] = $entity->read_category_tree($entry['id'], 'property.uiadmin_entity.list_attribute', false, 'admin#');
@@ -259,6 +260,7 @@
 					'ticket_config'		 => array
 						(
 						'text'	 => lang('ticket config'),
+						'nav_location' => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'admin.uiconfig2.index',
 							'location_id'	 => $GLOBALS['phpgw']->locations->get_id('property', '.ticket')))
 					),
@@ -367,6 +369,7 @@
 					'accounting_config'		 => array
 						(
 						'text'	 => lang('Configuration'),
+						'nav_location' => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('property', '.invoice'),
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'admin.uiconfig2.index',
 							'location_id'	 => $GLOBALS['phpgw']->locations->get_id('property', '.invoice')))
 					),
@@ -592,30 +595,24 @@
 					'text'	 => lang('Config')
 				);
 
-				$menus['admin'] = array
-					(
-					'index'						 => array
-						(
+				$menus['admin'] = array(
+					'index'			 => array(
 						'text'		 => lang('Configuration'),
-						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
-							'appname'	 => 'property')),
-						'children'	 => array
-							(
-							'custom_config'				 => array
-								(
-								'text'	 => lang('custom config'),
-								'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'admin.uiconfig2.index',
+						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',	'appname'	 => 'property')),
+						'children'	 => array(
+							'custom_config'		 => array(
+								'text'			 => lang('custom config'),
+								'nav_location'	 => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('property', '.admin'),
+								'url'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'admin.uiconfig2.index',
 									'location_id'	 => $GLOBALS['phpgw']->locations->get_id('property', '.admin')))
 							),
-							'klassifikasjonssystemet'	 => array
-								(
+							'klassifikasjonssystemet'	 => array(
 								'text'	 => 'Klassifikasjonssystemet',
 								'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiklassifikasjonssystemet.login'))
 							),
 						)
 					),
-					'import'					 => array
-						(
+					'import'	 => array(
 						'text'	 => lang('Generic import'),
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport.index'))
 					),
@@ -624,11 +621,22 @@
 						'text'	 => lang('import components') . ' (TIDA)',
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.index'))
 					),
+					'qr_generator'			 => array
+						(
+						'text'	 => lang('qr-generator'),
+						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiqr_generator.index'))
+					),
+					'qrcode_scanner'		 => array
+						(
+						'text'	 => lang('qrcode scanner'),
+						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiscanner.index'))
+					),
 					'entity'					 => array
 						(
 						'text'		 => lang('Admin entity'),
 						'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.index')),
-						'children'	 => $admin_children_entity
+						'children'	 => $admin_children_entity,
+						'nav_location' => "admin#" . $GLOBALS['phpgw']->locations->get_id('property', '.admin.entity')
 					),
 					'location'					 => array
 						(
@@ -737,6 +745,18 @@
 						'text'	 => lang('Request condition type'),
 						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type'		 => 'r_condition_type'))
+					),
+					'request_probability'	=> array
+						(
+						'text'	 => lang('Request probability'),
+						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type'		 => 'r_probability'))
+					),
+					'request_consequence'	 => array
+						(
+						'text'	 => lang('Request consequence'),
+						'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type'		 => 'r_consequence'))
 					),
 					'condition_survey_cats'		 => array
 						(
@@ -1410,7 +1430,7 @@
 
 			if ($acl->check('.document', PHPGW_ACL_READ, 'property'))
 			{
-				$laws_url								 = $GLOBALS['phpgw']->link('/redirect.php', array('go' => urlencode('http://www.regelhjelp.no/')));
+//				$laws_url								 = $GLOBALS['phpgw']->link('/redirect.php', array('go' => urlencode('http://www.regelhjelp.no/')));
 				$menus['navigation']['documentation']	 = array
 				(
 					'url'		 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidocument.index')),
@@ -1422,15 +1442,13 @@
 							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric_document.index')),
 							'text'	 => lang('generic document')
 						),
-						'legislation'	 => array
-							(
-							'text'	 => $GLOBALS['phpgw']->translation->translate('laws and regulations', array(), true),
-							// degrade gracefully hack
-							'url'	 => $laws_url . '" onclick="window.open(\'' . $laws_url . '\'); return false;',
-						),
-						'location'		 => array
-							(
-							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidocument.list_doc')),
+//						'legislation'	 => array
+//							(
+//							'text'	 => $GLOBALS['phpgw']->translation->translate('laws and regulations', array(), true),
+//							'url'	 => $laws_url,
+//						),
+						'location'		 => array(
+							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidocument.index')),
 							'text'	 => lang('location')
 						)
 					)

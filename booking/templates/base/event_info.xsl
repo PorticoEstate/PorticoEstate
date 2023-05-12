@@ -9,11 +9,17 @@
 		</div>
 	</xsl:if>
 	<div class="pure-form pure-form-aligned">
+		<xsl:if test="event/application_id!=''">
+			<div class="pure-control-group">
+				<label>
+					<xsl:value-of select="php:function('lang', 'Application')"/>
+				</label>
+				<a href="{event/application_link}">#<xsl:value-of select="event/application_id"/></a>
+			</div>
+		</xsl:if>
 		<div class="pure-control-group">
 			<label>
-				<h4>
-					<xsl:value-of select="php:function('lang', 'Where')"/>
-				</h4>
+				<xsl:value-of select="php:function('lang', 'Where')"/>
 			</label>
 			<a href="{event/building_link}">
 				<xsl:value-of select="event/resources[position()=1]/building_name"/>
@@ -22,17 +28,13 @@
 		</div>
 		<div class="pure-control-group">
 			<label>
-				<h4>
-					<xsl:value-of select="php:function('lang', 'When')"/>
-				</h4>
+				<xsl:value-of select="php:function('lang', 'When')"/>
 			</label>
 			<xsl:value-of select="event/when"/>
 		</div>
 		<div class="pure-control-group">
 			<label>
-				<h4>
-					<xsl:value-of select="php:function('lang', 'Who')"/>
-				</h4>
+				<xsl:value-of select="php:function('lang', 'Who')"/>
 			</label>
 			<xsl:if test="event/is_public=1">
 				<xsl:value-of select="event/contact_name"/>
@@ -45,9 +47,7 @@
 		<xsl:if test="event/participant_limit">
 			<div class="pure-control-group">
 				<label for="field_participant_limit">
-					<h4>
-						<xsl:value-of select="php:function('lang', 'participant limit')" />
-					</h4>
+					<xsl:value-of select="php:function('lang', 'participant limit')" />
 				</label>
 				<xsl:value-of select="event/participant_limit"/>
 			</div>

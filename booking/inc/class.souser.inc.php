@@ -52,6 +52,13 @@
 			return $organization_number;
 		}
 
+		function get_validate_org_id()
+		{
+			$bouser = CreateObject('bookingfrontend.bouser');
+
+			return $bouser->org_id ? $bouser->org_id : -1;
+		}
+
 		function get_applications( $ssn )
 		{
 			if(!$ssn)
@@ -59,27 +66,64 @@
 				return array();
 			}
 
+			$org_id = $this->get_validate_org_id();
 
-			$customer_organization_number = $this->get_validate_orgnr();
+//			$orgs = $this->get_delegate($ssn, null, $org_id);
+//
+//			$func = function ( array $org ): int
+//			{
+//				return $org['id'];
+//			};
 
-			$this->db->query("SELECT * FROM bb_application"
-				. " WHERE customer_ssn ='{$ssn}' OR customer_organization_number = '{$customer_organization_number}'"
-				. " ORDER BY id DESC", __LINE__, __FILE__);
+			$filter_method = "customer_ssn ='{$ssn}'";
 
-			$values = array();
-			while ($this->db->next_record())
+//			if($orgs)
+//			{
+//				$org_ids = 	array_map($func, $orgs);
+//				$filter_orgs = ' OR customer_organization_id IN (' . implode(', ', $org_ids) . ')';
+//				$filter_method .= $filter_orgs;
+//
+//			}
+
+			if($org_id)
 			{
-				$values[] = array(
-					'id'							 => $this->db->f('id'),
-					'created'						 => $this->db->f('created'),
-					'status'						 => $this->db->f('status'),
-					'building_name'					 => $this->db->f('building_name', true),
-					'secret'						 => $this->db->f('secret', true),
-					'customer_organization_number'	 => $this->db->f('customer_organization_number', true),
-					'contact_name'					 => $this->db->f('contact_name', true),
-				);
+				$filter_orgs = ' OR customer_organization_id =' . (int)$org_id;
+				$filter_method .= $filter_orgs;
 			}
-			return $values;
+
+			$filters = array();
+			$filters['where'] = $filter_method;
+
+			$params = array(
+				'start' => 0,
+				'results' => -1,
+	//			'query' => $search['value'],
+				'sort' => 'id',
+				'dir' => 'DESC',
+				'filters' => $filters
+			);
+
+			$applications = CreateObject('booking.soapplication')->read($params);
+
+			$resource_so		 = CreateObject('booking.soresource');
+			foreach ($applications['results'] as &$application)
+			{
+				$resources = $resource_so->read(array('results' =>'all', 'filters' => array(
+						'id' => $application['resources'])));
+
+				$resource_names = array();
+
+				if ($resources['results'])
+				{
+					foreach ($resources['results'] as $resource)
+					{
+						$resource_names[] = $resource['name'];
+					}
+				}
+				$application['resource_names'] = implode(', ', $resource_names);
+			}
+
+			return $applications['results'];
 		}
 
 		function get_invoices( $ssn )
@@ -89,10 +133,23 @@
 				return array();
 			}
 
-			$customer_organization_number = $this->get_validate_orgnr();
+			$org_id	 = $this->get_validate_org_id();
+			$orgs	 = $this->get_delegate($ssn, null, $org_id);
+
+			$func = function ( array $org ): int
+			{
+				return $org['id'];
+			};
+
+			if($orgs)
+			{
+				$org_ids = 	array_map($func, $orgs);
+				$filter_orgs = ' OR organization_id IN (' . implode(', ', $org_ids) . ')';
+			}
+
 
 			$this->db->query("SELECT * FROM bb_completed_reservation"
-				. " WHERE (customer_ssn ='{$ssn}' OR customer_organization_number = '{$customer_organization_number}')"
+				. " WHERE (customer_ssn ='{$ssn}' {$filter_orgs})"
 				. " AND cost > 0"
 				. " ORDER BY id DESC", __LINE__, __FILE__);
 
@@ -112,26 +169,31 @@
 			return $values;
 		}
 
-		function get_delegate( $ssn, $organization_number = null)
+		function get_delegate( $ssn, $organization_number = null, $org_id = null)
 		{
 			if(!$ssn)
 			{
 				return array();
 			}
 
-			$filter_organization_number = "1=2";
+			$filter_method = "1=2";
 
-			if($organization_number)
+			if((int)$org_id)
+			{
+					$filter_method= "bb_organization.id = " . (int) $org_id;
+				
+			}
+			else if($organization_number)
 			{
 				if(is_array($organization_number))
 				{
 					$organization_numbers = array_diff( $organization_number, ['000000000'] );
 					$organization_numbers[] = -1;
-					$filter_organization_number= "organization_number IN ('" . implode("','", $organization_numbers) . "')";
+					$filter_method= "organization_number IN ('" . implode("','", $organization_numbers) . "')";
 				}
 				else if($organization_number !== '000000000')
 				{
-					$filter_organization_number= "organization_number = '$organization_number'";
+					$filter_method= "organization_number = '{$organization_number}'";
 				}
 			}
 
@@ -139,12 +201,12 @@
 			$_ssn =  '{SHA1}' . base64_encode($hash);
 
 			$sql = "SELECT DISTINCT id, name, active, organization_number, customer_ssn FROM ("
-				. "SELECT DISTINCT bb_organization.id,bb_organization.name,bb_organization.active,bb_organization.organization_number, customer_ssn FROM bb_delegate"
+				. "SELECT DISTINCT bb_organization.id,bb_organization.name,bb_delegate.active,bb_organization.organization_number, customer_ssn FROM bb_delegate"
 				. " JOIN bb_organization ON bb_delegate.organization_id = bb_organization.id"
 				. " WHERE ssn = '{$_ssn}'"
 				. " UNION"
 				. " SELECT DISTINCT bb_organization.id,bb_organization.name,bb_organization.active,bb_organization.organization_number, customer_ssn FROM bb_organization"
-				. " WHERE {$filter_organization_number} OR customer_ssn = '{$ssn}') as t";
+				. " WHERE {$filter_method} OR customer_ssn = '{$ssn}') as t";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 

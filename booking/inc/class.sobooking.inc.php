@@ -104,7 +104,10 @@
 			$cost = $this->_marshal((float)$entry['cost'], 'decimal');
 			$id = (int)$entry['id'];
 
-			$sql = "UPDATE bb_completed_reservation SET cost = '{$cost}'"
+			$description = mb_substr($entry['from_'], 0, -3, 'UTF-8') . ' - ' . mb_substr($entry['to_'], 0, -3, 'UTF-8');
+
+			$sql = "UPDATE bb_completed_reservation SET cost = '{$cost}', from_ = '{$entry['from_']}',"
+			. " to_ = '{$entry['to_']}', description = '{$description}'"
 			. " WHERE reservation_type = 'booking'"
 			. " AND reservation_id = {$id}"
 			. " AND export_file_id IS NULL";
@@ -476,7 +479,7 @@
 			$start = $start->format('Y-m-d H:i');
 			$end = $end->format('Y-m-d H:i');
 			$results = array();
-			$sql = "SELECT bb_allocation.id AS id"
+			$sql = "SELECT DISTINCT bb_allocation.id AS id"
 				. " FROM bb_allocation JOIN bb_allocation_resource ON (allocation_id=id AND resource_id IN (" . implode(',', $resource_ids) . ") )"
 				. " JOIN bb_resource as res ON ( res.id IN (" . implode(',', $resource_ids) . ") )"
 				. " JOIN bb_season ON (bb_allocation.season_id=bb_season.id AND bb_allocation.active=1)"
@@ -915,10 +918,10 @@
 					'building_id' => $this->db->f('building_id', false),
 					'resource_id' => $this->db->f('resource_id', false),
 					'organization_id' => $this->db->f('organization_id', false),
-					'building_name' => $this->db->f('building_name', false),
-					'resource_name' => $this->db->f('resource_name', false),
-					'organization_name' => $this->db->f('organization_name', false),
-					'organization_shortname' => $this->db->f('organization_shortname', false),
+					'building_name' => $this->db->f('building_name', true),
+					'resource_name' => $this->db->f('resource_name', true),
+					'organization_name' => $this->db->f('organization_name', true),
+					'organization_shortname' => $this->db->f('organization_shortname', true),
 					'from_' => $this->db->f('from_', false),
 					'to_' => $this->db->f('to_', false),
 				);
@@ -1049,8 +1052,10 @@
                     bb_resource.sort AS sort,
                     bb_resource.id AS resource_id,
                     bb_resource.name AS resource_name,
-                    bb_building_resource.building_id AS building_id
+                    bb_building_resource.building_id AS building_id,
+					bb_activity.name AS activity_name
                     FROM bb_event
+                    INNER JOIN bb_activity ON (bb_activity.id = bb_event.activity_id)
                     INNER JOIN bb_event_resource ON (bb_event_resource.event_id = bb_event.id)
                     INNER JOIN bb_resource ON (bb_resource.id = bb_event_resource.resource_id)
                     INNER JOIN bb_building_resource ON (bb_building_resource.resource_id  = bb_resource.id)
@@ -1077,6 +1082,7 @@
 					'resource_name' => $this->db->f('resource_name', true),
 					'name' => $this->db->f('name', true),
 					'description' => $this->db->f('description', true),
+					'activity_name' => $this->db->f('activity_name', true),
 					'from_' => $this->db->f('from_', false),
 					'to_' => $this->db->f('to_', false),
 				);

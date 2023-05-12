@@ -50,7 +50,7 @@ building name	booking	nn	Bygg/anlegg
 building schedule	booking	nn	Kalendar
 buildings	booking	nn	Bygg/anlegg
 bygning	booking	nn	Bygg/anlegg
-cancel	booking	nn	Avbryt
+cancel	booking	nn	Tilbake
 cancelled	booking	nn	Avbestilt
 case officer	booking	nn	Saksbehandlar
 category	booking	nn	Kategori
@@ -140,7 +140,7 @@ new document	booking	nn	Nye dokumenter
 new equipment	booking	nn	Nytt utstyr
 new event	booking	nn	Nytt arrangement
 new group	booking	nn	Ny gruppe
-new organization	booking	nn	Ny organisasjon
+new organization	booking	nn	Opprett ny organisasjon/bedrift
 new resource	booking	nn	Ny ressurs
 new root permission	booking	nn	Nye systemtilgangar
 new season	booking	nn	Ny sesong
@@ -156,7 +156,7 @@ estimated number of participants	booking	nn	Estimert Antal deltakarar
 oct	booking	nn	oktober
 of	booking	nn	av
 officer	booking	nn	Saksbehandlar
-organization	booking	nn	Organisasjon
+organization	booking	nn	Organisasjon/bedrift
 organization number	booking	nn	Organisasjonnummer
 organizations	booking	nn	Organisasjonar
 other	booking	nn	Anna
@@ -190,10 +190,10 @@ secondary admin	booking	nn	Kontaktperson 2
 select a building first	booking	nn	Velg fyrst bygg/anlegg
 select category...	booking	nn	Velg ein kategori...
 select role...	booking	nn	Velg rolle...
-select activity...	booking	no	Velg aktivitet...
+select activity...	booking	nn	Velg aktivitet...
 sep	booking	nn	september
 settings	booking	nn	Innstillingar
-show only active	booking	nn	Skjul
+show only active	booking	nn	Vis aktive
 showing items	booking	nn	Viser
 showing items {startRecord} - {endRecord} of {totalRecords}	booking	nn	Viser {startRecord} - {endRecord} av {totalRecords}
 social security number	booking	nn	Fødselsnummer (11 siffer)
@@ -479,10 +479,10 @@ Show all applications	booking	nn	Vis alle søknader
 Show all messages	booking	nn	Vis alle meldinger
 Show only messages assigned to me	booking	nn	Vis berre mine meldingar
 E-mail address	booking	nn	E-postadresse
-Confirm e-mail address	booking	nn	Bekreft e-postadressa
+Confirm e-mail address	booking	nn	Stadfest e-postadressa
 The e-mail addresses you entered do not match	booking	nn	E-postadressene er ikkje like
 Lengt of shortname is to long, max 11 characters long	booking	nn	Kortnamn er for langt, maksimum 11 tegn
-Lengt of name is to long, max 50 characters long	booking	nn	Namn er for langt, maksimum 50 tegn
+Lengt of name is to long, max %1 characters long	booking	nn	Namn er for langt, maksimum %1 tegn
 The organization number is wrong or not present	booking	nn	Det er ikkje registrert fakturainformasjon på denne organisasjonen
 The resource number is wrong or not present	booking	nn	Det er ikkje registert et ressursnummer på denne organisasjonen
 Recurring allocation	booking	nn	Gjenta tildelingen
@@ -740,7 +740,7 @@ Application for	booking	nn	Søknaden gjelder
 applicationcart empty	booking	nn	Ingen søknader finnes
 At least one activity must be selected	booking	nn	Det må velges minst én aktivitet
 Bookable resources (2018)	booking	nn	Lokaler til leie
-For rent	booking	no	Til leie
+For rent	booking	nn	Til leie
 Booking (2018)	booking	nn	Interntildeling
 Building (2018)	booking	nn	Anlegg
 Calendar	booking	nn	Kalender
@@ -801,7 +801,7 @@ Complete application text booking	booking	nn	For å fullføre søknadsprosessen 
 duplicate	booking	nn	Duplikat
 direct booking	booking	nn	Direkte booking
 export customer	booking	nn	Eksporter kundeliste
-Enter both first and last name	booking	no	Oppgje både førenamn og etternamn
+Enter both first and last name	booking	nn	Oppgje både førenamn og etternamn
 Electronic lock	booking	nn	E-lås
 booking_async_task_send_access_request	booking	nn	Send bestilling om tilgang til API for E-lås
 add electronic lock	booking	nn	Legg til E-lås
@@ -816,7 +816,7 @@ time default start	booking	nn	Start/utlevering time
 time default end	booking	nn	Slutt/innlevering time
 added	booking	nn	Lagt til
 updated	booking	nn	Oppdatert
-value is ignored for -1	booking	no	Verdien blir ignorert for -1
+value is ignored for -1	booking	nn	Verdien blir ignorert for -1
 Simple booking	booking	nn	Forenklet bestilling
 reservation	booking	nn	Reservasjon
 Booking	booking	nn	Booking
@@ -860,18 +860,18 @@ Building type	booking	nn	Bygningstype
 Search for events	booking	nn	Finn arrangement
 Building or facility name	booking nn	Bygning/anleggsnavn
 enable upload attachment	booking nn	Aktiver opplasting av vedlegg
-minutes	booking	no	Minutt
-limit number	booking	no	Begrensning på antall
-limit number horizont	booking	no	Begrensningshorisont (dager)
+minutes	booking	nn	Minutt
+limit number	booking	nn	Begrensning på antall
+limit number horizont	booking	nn	Begrensningshorisont (dager)
 update service-resource-mapping?	booking	nn	Oppdatere kopling av tenesten til valde ressursar?
 mapping updated	booking	nn	Kobling er oppdatert
 mapping	booking	nn	Kopling
-unit price	booking	no	Einingspris
-quantity	booking	no	Mengde
-amount	booking	no	Beløp
-tax	booking	no	Mva
-sum	booking	no	Sum
-details	booking	no	Detaljar
+unit price	booking	nn	Einingspris
+quantity	booking	nn	Mengde
+amount	booking	nn	Beløp
+tax	booking	nn	Mva
+sum	booking	nn	Sum
+details	booking	nn	Detaljar
 currency	booking	nn	Valuta
 payment method	booking	nn	Refundér
 refunded	booking	nn	Refundert
@@ -908,3 +908,21 @@ day	booking	nn	Dag
 %1 resources mapped as articles	booking	nn	%1 ressursar er kopla opp som artiklar i varekatalogen
 billing delay	booking	nn	Utsett klargjering av fakturering, virkedager
 activate application articles	booking	nn	Aktiver artikler i søknad
+prizing	booking	nn	Prising
+remark	booking	nn	Merknad
+article code	booking	nn	Artikkelkode
+article id	booking	nn	ID
+article mapping	booking	nn	Artikkelmapping
+Reverse	booking	nn	Reversér
+sms alert	booking	nn	SMS-varsling
+e_lock_system	booking	nn	Adgangskontrollsystem
+receipt	booking	nn	Kvittering
+deactivate in frontend	booking	nn	Deaktivert i frontend
+deleted	booking	nn	Slettet
+sorry - insufficient rights	booking	nn	Beklagar, du er ikkje autorisert for handlingen
+please choose at least 1 season	booking	nn	Velg minst ein sesong
+please enter a mail subject	booking	nn	Manglar tittel
+please enter a mail body	booking	nn	Manglar innhold
+select at least one recipient	booking	nn	Velg minst ein adressat
+hidden in frontend	booking	nn	Skjult i frontend
+activate prepayment	booking	nn	Aktiver forhåndsbetaling (Vipps)

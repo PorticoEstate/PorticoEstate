@@ -55,6 +55,9 @@
 		var $project_type_id;
 		var $ecodimb;
 		var $bypass_error	 = false;
+		var $account, $bo, $bocommon, $cats, $custom,$acl,$acl_location, $acl_read,$acl_add, $acl_edit,
+		$acl_delete, $acl_manage, $status_id, $wo_hour_cat_id, $user_id, $filter_year, $decimal_separator,
+		$type_id;
 		var $public_functions = array
 			(
 			'query'							 => true,
@@ -255,7 +258,7 @@
 			{
 				$link				 = self::link(array('menuaction' => 'property.uiproject.view', 'id' => $entry['id']));
 				$entry['url']		 = "<a href='{$link}'>{$entry['id']}</a>";
-				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'], $dateformat);
+				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'], 'Y-m-d');
 			}
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -417,6 +420,7 @@
 
 			phpgw::import_class('property.multiuploader');
 
+			$options = array();
 			$options['base_dir']	 = 'project/' . $id;
 			$options['upload_dir']	 = $GLOBALS['phpgw_info']['server']['files_dir'] . '/property/' . $options['base_dir'] . '/';
 			$options['script_url']	 = html_entity_decode(self::link(array('menuaction' => 'property.uiproject.handle_multi_upload_file',
@@ -761,12 +765,12 @@
 					'hidden'	 => ($uicols['input_type'][$k] == 'hidden') ? true : false
 				);
 
-				if ($uicols['name'][$k] == 'project_id')
+				if ($uicols['name'][$k] == 'project_id' && !$lookup)
 				{
 					$params['formatter'] = 'JqueryPortico.formatProject';
 				}
 
-				if ($uicols['name'][$k] == 'ticket')
+				if ($uicols['name'][$k] == 'ticket' && !$lookup)
 				{
 					$params['formatter'] = 'formatLinkTicket';
 				}
@@ -986,7 +990,7 @@ JS;
 			}
 
 
-			self::add_javascript('property', 'portico', 'project.index.js');
+			self::add_javascript('property', 'base', 'project.index.js');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -1029,8 +1033,7 @@ JS;
 			$result_data					 = array('results' => $values);
 			$result_data['total_records']	 = $this->bo->total_records;
 			$result_data['draw']			 = $draw;
-			$link_data						 = array
-				(
+			$link_data						 = array(
 				'menuaction' => 'property.uiproject.edit'
 			);
 			array_walk($result_data['results'], array($this, '_add_links'), $link_data);
@@ -1906,88 +1909,6 @@ JS;
 				'relation_type'	 => 'project'
 			);
 
-			$supervisor_email	 = array();
-			if ($need_approval		 = isset($config->config_data['project_approval']) ? $config->config_data['project_approval'] : '')
-			{
-				$invoice = CreateObject('property.soinvoice');
-				if (isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
-				{
-					$supervisor_id = $invoice->get_default_dimb_role_user(2, $values['ecodimb']);
-
-					$sodimb_role_users = execMethod('property.sodimb_role_user.read', array
-						(
-						'dimb_id'		 => $values['ecodimb'],
-						'role_id'		 => 2,
-						'query_start'	 => date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
-						'get_netto_list' => true
-						)
-					);
-					if (isset($sodimb_role_users[$values['ecodimb']][2]) && is_array($sodimb_role_users[$values['ecodimb']][2]))
-					{
-						foreach ($sodimb_role_users[$values['ecodimb']][2] as $supervisor_id => $entry)
-						{
-							$prefs				 = $this->bocommon->create_preferences('common', $supervisor_id);
-							$supervisor_email[]	 = array
-								(
-								'id'		 => $supervisor_id,
-								'address'	 => $prefs['email'],
-								'default'	 => $entry['default_user'],
-							);
-						}
-					}
-
-					$supervisor2_id		 = $invoice->get_default_dimb_role_user(3, $values['ecodimb']);
-					$prefs2				 = $this->bocommon->create_preferences('common', $supervisor2_id);
-					$supervisor_email[]	 = array
-						(
-						'id'		 => $supervisor2_id,
-						'address'	 => $prefs2['email'],
-					);
-//					$supervisor_email = array_reverse($supervisor_email);
-					unset($prefs);
-					unset($prefs2);
-					unset($invoice);
-				}
-				else
-				{
-					$supervisor_id = 0;
-
-					if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
-					{
-						$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
-					}
-
-
-					if ($supervisor_id)
-					{
-						$prefs				 = $this->bocommon->create_preferences('common', $supervisor_id);
-						$supervisor_email[]	 = array
-							(
-							'id'		 => $supervisor_id,
-							'address'	 => $prefs['email'],
-						);
-
-						if (isset($prefs['approval_from']))
-						{
-							$prefs2 = $this->bocommon->create_preferences('common', $prefs['approval_from']);
-
-
-
-							if (isset($prefs2['email']))
-							{
-								$supervisor_email[]	 = array
-									(
-									'id'		 => $prefs['approval_from'],
-									'address'	 => $prefs2['email'],
-								);
-								$supervisor_email	 = array_reverse($supervisor_email);
-							}
-							unset($prefs2);
-						}
-						unset($prefs);
-					}
-				}
-			}
 
 			$project_status		 = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_status']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_status'] : '');
 			$project_category	 = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['project_category']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['project_category'] : '');
@@ -2035,7 +1956,8 @@ JS;
 
 			$sum_actual_cost = 0;
 			$sum_oblications = 0;
-			$rows_per_page	 = 10;
+			$maxmatchs = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$rows_per_page	 = $maxmatchs ? $maxmatchs : 10;
 			$initial_page	 = 1;
 
 			$s_budget		 = 0;
@@ -2058,7 +1980,7 @@ JS;
 					foreach ($content_budget as $key => $row)
 					{
 						$_year_count[$row['year']]	 += 1;
-						$rows_per_page				 = $_year_count[$row['year']];
+						$rows_per_page				 = max($_year_count[$row['year']], $maxmatchs);
 					}
 					$initial_page = floor(count($content_budget) / $rows_per_page);
 				}
@@ -2608,6 +2530,8 @@ JS;
 			);
 
 //--------------files
+			$lang_from = lang('from');
+			$lang_to = lang('to');
 
 			$lang_delete_request_statustext	 = lang('Check to delete this request from this project');
 			$_origin						 = array();
@@ -2625,7 +2549,7 @@ JS;
 
 						$_origin[] = array
 							(
-							'url'	 => "<a href='{$_origin_data['link']}'>{$_origin_data['id']} </a>",
+							'url'	 => "<a href='{$_origin_data['link']}'>{$lang_from}: {$_origin_data['id']} </a>",
 							'type'	 => $__origin['descr'],
 							'title'	 => $_origin_data['title'],
 							'status' => $_origin_data['statustext'],
@@ -2636,6 +2560,27 @@ JS;
 					}
 				}
 			}
+
+			if (!empty($values['target']))
+			{
+				foreach ($values['target'] as $__target)
+				{
+					foreach ($__target['data'] as $_target_data)
+					{
+						$_origin[] = array(
+							'url'	 => "<a href='{$_target_data['link']}'>{$lang_to}: {$_target_data['id']} </a>",
+							'type'	 => $__target['descr'],
+							'title'	 => $_target_data['title'],
+							'status' => $_target_data['statustext'],
+							//			'user'			=> $GLOBALS['phpgw']->accounts->get($_target_data['account_id'])->__toString(),
+							//			'entry_date'	=> $GLOBALS['phpgw']->common->show_date($_target_data['entry_date'],$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+							'select' => $_select
+						);
+					}
+				}
+			}
+
+
 
 			$origin_def = array
 				(
@@ -2666,7 +2611,7 @@ JS;
 				array('key' => 'url', 'label' => lang('id'), 'sortable' => true),
 				array('key' => 'location_code', 'label' => lang('location'), 'sortable' => true),
 				array('key' => 'name', 'label' => lang('name'), 'sortable' => false),
-				array('key' => 'start_date', 'label' => lang('start date'), 'sortable' => false),
+				array('key' => 'start_date', 'label' => lang('start date'), 'sortable' => true),
 				array('key' => 'coordinator', 'label' => lang('coordinator'), 'sortable' => true),
 				array('key' => 'status', 'label' => lang('status'), 'sortable' => true),
 			);
@@ -2678,9 +2623,9 @@ JS;
 				'data'		 => json_encode($other_projects),
 				'ColumnDefs' => $other_projects_def,
 				'config'	 => array(
-					array('disableFilter' => true),
-					//			array('disablePagination' => true),
-					array('order' => json_encode(array(1, 'asc')))
+		//			array('disableFilter' => true),
+		//			array('disablePagination' => true),
+					array('order' => json_encode(array(array(1, 'desc'),array(3, 'desc'))))
 				)
 			);
 
@@ -2769,11 +2714,19 @@ JS;
 				$delivery_address = CreateObject('property.solocation')->get_delivery_address($values['location_data']['loc1']);
 			}
 
-			$data = array
+			$ticket_link_data = array
 				(
+				'menuaction'	 => 'property.uitts.add',
+				'bypass'		 => true,
+				'location_code'	 => $values['location_code'],
+				'origin'		 => '.project',
+				'origin_id'		 => $id
+			);
+			$data = array(
 				'datatable_def'						 => $datatable_def,
 				'project_types'						 => array('options' => $this->bo->get_project_types($project_type_id)),
 				'project_type_id'					 => $values['project_type_id'],
+				'ticket_link'						 => $GLOBALS['phpgw']->link('/index.php', $ticket_link_data),
 				'inherit_location'					 => $id ? $values['inherit_location'] : 1,
 				'mode'								 => $mode,
 				'suppressmeter'						 => isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
@@ -2793,6 +2746,7 @@ JS;
 				)),
 				'value_active_tab'					 => $active_tab,
 				'msgbox_data'						 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'value_target'						 => $values['target'],
 				'value_origin'						 => isset($values['origin_data']) ? $values['origin_data'] : '',
 				'value_origin_type'					 => isset($origin) ? $origin : '',
 				'value_origin_id'					 => isset($origin_id) ? $origin_id : '',
@@ -2906,7 +2860,6 @@ JS;
 				'need_approval'						 => $need_approval,
 				'lang_ask_approval'					 => lang('Ask for approval'),
 				'lang_ask_approval_statustext'		 => lang('Check this to send a mail to your supervisor for approval'),
-				'value_approval_mail_address'		 => $supervisor_email,
 				'currency'							 => $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
 				'base_java_url'						 => "{menuaction:'property.bocommon.get_vendor_email',phpgw_return_as:'json'}",
 				'location_item_id'					 => $id,
@@ -2922,7 +2875,15 @@ JS;
 				'street_name'						 => $values['location_data']['street_name'],
 				'street_number'						 => $values['location_data']['street_number'],
 				'image_list'						 => $image_list,
-				'tag_list'							 => array('options' => $bofiles->get_all_tags())
+				'tag_list'							 => array('options' => $bofiles->get_all_tags()),
+				'collect_tax_code'						 => !empty($config->config_data['workorder_require_tax_code']),
+				'tax_code_list'							 => array('options' => $this->bocommon->select_category_list(
+					array(
+						'type' => 'tax',
+						'selected'	 => (!empty($values['tax_code']) || $values['tax_code'] === 0) ? $values['tax_code']: (int)$GLOBALS['phpgw_info']['user']['preferences']['property']['default_tax_code'],
+						'order'		 => 'id',
+						'id_in_name' => 'num'))),
+
 			);
 			if ($auto_create)
 			{
@@ -2962,7 +2923,7 @@ JS;
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 
-			self::add_javascript('property', 'portico', 'project.edit.js');
+			self::add_javascript('property', 'base', 'project.edit.js');
 			self::render_template_xsl(array('project', 'datatable_inline', 'multi_upload_file_inline', 'attributes_form'), array(
 				'edit' => $data));
 		}
@@ -2979,14 +2940,26 @@ JS;
 				return $this->jquery_results($result_data);
 			}
 
+			$order		 = phpgw::get_var('order');
+			$columns	 = phpgw::get_var('columns');
+
 			$values = $this->bo->get_orders(array(
+				'order'			 => $columns[$order[0]['column']]['data'],
+				'sort'			 => $order[0]['dir'],
 				'project_id' => $project_id,
 				'year'		 => phpgw::get_var('year', 'int'),
-				'results'	 => -1,
+//				'results'	 => phpgw::get_var('results', 'int'),
+				'start'			 => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results'		 => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				)
 			);
+
+			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($values as & $_order_entry)
 			{
+				$_order_entry['end_date'] = $GLOBALS['phpgw']->common->show_date($_order_entry['end_date'], $dateformat);
+				$_order_entry['user_name'] = $GLOBALS['phpgw']->accounts->get($_order_entry['user_id'])->__toString();
+
 				$_order_entry['send_order'] = '';
 				if (isset($_order_entry['mail_recipients'][0]) && $_order_entry['mail_recipients'][0])
 				{
@@ -3419,7 +3392,7 @@ JS;
 
 			phpgwapi_jquery::load_widget('numberformat');
 
-			self::add_javascript('property', 'portico', 'project.bulk_update_status.js');
+			self::add_javascript('property', 'base', 'project.bulk_update_status.js');
 			self::render_template_xsl(array('project', 'datatable_inline'), array('bulk_update_status' => $data));
 		}
 

@@ -1,3 +1,7 @@
+/**
+ *
+ * Denne filen er midlertidig - til "base" katalogen slipper igjennom reverse-proxy i portalen i Bergen
+ */
 
 this.addFooterDatatable2 = function (nRow, aaData, iStart, iEnd, aiDisplay, oTable)
 {

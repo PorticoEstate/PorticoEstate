@@ -7,7 +7,7 @@
 			<div id="delegate_edit" class="booking-container">
 				<fieldset>
 					<div class="heading">
-						<legend>
+						<!--<legend>-->
 							<h3>
 								<xsl:if test="not(delegate/id)">
 									<xsl:value-of select="php:function('lang', 'New delegate')" />
@@ -16,7 +16,7 @@
 									<xsl:value-of select="php:function('lang', 'Edit delegate')" />
 								</xsl:if>
 							</h3>
-						</legend>
+						<!--</legend>-->
 					</div>
 					<div class="pure-control-group">
 						<label for="name">

@@ -479,10 +479,10 @@
 				. sprintf("%12s", '') // 	48		dim_value_7
 				. sprintf("%17s", '') //	49-50	just white space..
 				. sprintf("%017s", '') // 	51		exch_rate
-				. sprintf("%-15.15s", $client_ref) // 	52		ext_ord_ref
+				. sprintf("%-15.15s", mb_convert_encoding($client_ref, 'ISO-8859-1', 'UTF-8')) // 	52		ext_ord_ref
 				. sprintf("%6s", '')  // 	53		intrule_id
 				. sprintf("%8s", '')  //	54-55	just white space..
-				. sprintf("%-120.120s", utf8_decode($header)) // 	56		long_info1				DATA
+				. sprintf("%-120.120s", mb_convert_encoding($header, 'ISO-8859-1', 'UTF-8')) // 	56		long_info1				DATA
 				. sprintf("%120s", '') //	57		long_info2
 				. sprintf("%10s", '') //	58		just white space..
 				. sprintf("%08s", '') // 	59		main_apar_id
@@ -532,7 +532,7 @@
 					. $this->get_formatted_amount($item['amount'])   //  6		amount					DATA
 					. '1' //  7		amount_set
 					. sprintf("%38s", '')   //	8-9		just white space..
-					. sprintf("%-35.35s", utf8_decode($item['article_description']))  // 	10	art_descr		DATA
+					. sprintf("%-35.35s", mb_convert_encoding($item['article_description'], 'ISO-8859-1', 'UTF-8'))  // 	10	art_descr		DATA
 					. sprintf("%-15.15s", $item['article_code']) // 	11		article					DATA
 					. sprintf("%49s", '')   //	12-19	just white space..
 					. sprintf("%-12s", $batch_id) // 	20		batch_id				DATA
@@ -597,7 +597,7 @@
 					. sprintf("%110s", '')   //	66-74	just white space..
 					. sprintf("%08s", 1) // 	75		sequence_no				DATA
 					. sprintf("%28s", '')   //	76-77	just white space..
-					. sprintf("%-60.60s", utf8_decode($text)) // 	78		shot_info				DATA
+					. sprintf("%-60.60s", mb_convert_encoding($text, 'ISO-8859-1', 'UTF-8')) // 	78		shot_info				DATA
 					. sprintf("%63s", '')   //	79-88	just white space..
 					. '42' // 	89		trans_type				DATA
 					. sprintf("%79s", '')   //	90-93	just white space..
@@ -621,7 +621,7 @@
 						. sprintf("%110s", '')   //	66-74	just white space..
 						. sprintf("%08s", $extra_text_sequence_no) // 	75		sequence_no				DATA
 						. sprintf("%28s", '')   //	76-77	just white space..
-						. sprintf("%-60.60s", utf8_decode($extra_text)) // 	78		shot_info				DATA
+						. sprintf("%-60.60s", mb_convert_encoding($extra_text, 'ISO-8859-1', 'UTF-8')) // 	78		shot_info				DATA
 						. sprintf("%63s", '')   //	79-88	just white space..
 						. '42' // 	89		trans_type				DATA
 						. sprintf("%79s", '')   //	90-93	just white space..
@@ -646,7 +646,7 @@
 						. sprintf("%110s", '')   //	66-74	just white space..
 						. sprintf("%08s", $extra_text_sequence_no) // 	75		sequence_no				DATA
 						. sprintf("%28s", '')   //	76-77	just white space..
-						. sprintf("%-60.60s", utf8_decode($extra_text2)) // 	78		shot_info				DATA
+						. sprintf("%-60.60s", mb_convert_encoding($extra_text2, 'ISO-8859-1', 'UTF-8')) // 	78		shot_info				DATA
 						. sprintf("%63s", '')   //	79-88	just white space..
 						. '42' // 	89		trans_type				DATA
 						. sprintf("%79s", '')   //	90-93	just white space..
@@ -677,7 +677,7 @@
 				'customer id' => $customer_id,
 				'client_ref' => $client_ref,
 				'customer order id' => $customer_order_id,
-				'header' => utf8_decode($header),
+				'header' => mb_convert_encoding($header, 'ISO-8859-1', 'UTF-8'),
 				'bill_year' => $bill_year,
 				'bill_month' => $bill_month,
 				'Ansvar' => 'BKBPE',
@@ -686,7 +686,7 @@
 				'name' => $party_name,
 				'amount' => $this->get_formatted_amount_excel($product_item['amount']),
 //                        'amount' => $this->get_formatted_amount($product_items[0]['amount']),
-				'article description' => utf8_decode($product_item['article_description']),
+				'article description' => mb_convert_encoding($product_item['article_description'], 'ISO-8859-1', 'UTF-8'),
 				'article_code' => $product_item['article_code'],
 				'batch_id' => "BKBPE{$this->date_str}",
 				'client' => 'BY',
@@ -699,7 +699,7 @@
 				'batch_id' => "BKBPE{$this->date_str}",
 				'client' => 'BY',
 				'item_counter' => $item_counter,
-				'text' => utf8_decode($text)
+				'text' => mb_convert_encoding($text, 'ISO-8859-1', 'UTF-8')
 			);
 
 			return str_replace(array("\n", "\r"), '', $order);

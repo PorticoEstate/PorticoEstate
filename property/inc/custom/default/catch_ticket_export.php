@@ -8,7 +8,7 @@
 	{
 
 		protected $db;
-		protected $config		 = array();
+		private $_config		 = array();
 		protected $status_text	 = array();
 		protected $connection	 = false;
 		protected $custom_config;
@@ -18,14 +18,14 @@
 			parent::__construct();
 			$this->db			 = & $GLOBALS['phpgw']->db;
 			$custom_config		 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
-			$this->config		 = $custom_config->config_data;
+			$this->_config		 = $custom_config->config_data;
 			$this->status_text	 = parent::get_status_text();
 			if ($this->acl_location != '.ticket')
 			{
 				throw new Exception("'catch_ticket_export'  is intended for location = '.ticket'");
 			}
 
-			if (!isset($this->config['catch_export']) || !$this->config['catch_export'])
+			if (!isset($this->_config['catch_export']) || !$this->_config['catch_export'])
 			{
 				$this->custom_config = $custom_config;
 				$this->initiate_config();
@@ -174,7 +174,7 @@
 			$xml = $doc->saveXML();
 
 //			echo $xml;
-//			_debug_array($this->config);
+//			_debug_array($this->_config);
 
 			$filename = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$guid}.xml";
 
@@ -191,14 +191,14 @@
 
 		protected function transfer( $xml, $filename )
 		{
-			if ($this->config['catch_export']['export_method'] == 'ftp' || $this->config['catch_export']['export_method'] == 'ssh')
+			if ($this->_config['catch_export']['export_method'] == 'ftp' || $this->_config['catch_export']['export_method'] == 'ssh')
 			{
 				if (!$connection = $this->connection)
 				{
 					$connection = $this->phpftp_connect();
 				}
 
-				$basedir = $this->config['catch_export']['basedir'];
+				$basedir = $this->_config['catch_export']['basedir'];
 				if ($basedir)
 				{
 					$remote_file = $basedir . '/' . basename($filename);
@@ -208,7 +208,7 @@
 					$remote_file = basename($filename);
 				}
 
-				switch ($this->config['catch_export']['export_method'])
+				switch ($this->_config['catch_export']['export_method'])
 				{
 					case 'ftp';
 						$transfer_ok	 = ftp_put($connection, $remote_file, $filename, FTP_BINARY);
@@ -241,12 +241,12 @@
 
 		protected function phpftp_connect()
 		{
-			$server		 = $this->config['catch_export']['host'];
-			$user		 = $this->config['catch_export']['user'];
-			$password	 = $this->config['catch_export']['password'];
+			$server		 = $this->_config['catch_export']['host'];
+			$user		 = $this->_config['catch_export']['user'];
+			$password	 = $this->_config['catch_export']['password'];
 			$port		 = 22;
 
-			switch ($this->config['catch_export']['export_method'])
+			switch ($this->_config['catch_export']['export_method'])
 			{
 				case 'ftp';
 					if ($connection = ftp_connect($server))

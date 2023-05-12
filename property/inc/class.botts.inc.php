@@ -67,6 +67,10 @@
 			'addfiles'		 => true,
 		);
 
+		var $account, $so, $custom, $bocommon, $historylog, $config, $dateformat, $cats, $allrows, $location_code,
+		$vendor_id, $ecodimb, $b_account, $building_part, $branch_id, $order_dim1, $p_num, $uicols,
+		$send, $order_sent_adress;
+
 		function __construct()
 		{
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'property')
@@ -182,11 +186,15 @@
 			}
 			$_columns = $this->get_columns();
 
+			$name = array();
 			$columns = array();
 			foreach ($_columns as $id => $column_info)
 			{
 				$columns[] = $column_info;
+				$name[] = $column_info['name'];
 			}
+
+			array_multisort($name, SORT_ASC, $columns);
 
 			$column_list = $this->bocommon->select_multi_list($selected, $columns);
 			return $column_list;
@@ -604,7 +612,7 @@
 			$this->sum_actual_cost	 = $this->so->sum_actual_cost;
 			$this->sum_difference	 = $this->so->sum_difference;
 
-			if (!$external)
+			if (true)//!$external)
 			{
 				$entity		 = $this->get_origin_entity_type();
 				$contacts	 = CreateObject('property.sogeneric');
@@ -745,11 +753,23 @@
 				{
 					for ($j = 0; $j < count($entity); $j++)
 					{
-						$ticket['child_date'][$entity[$j]['name']] = $interlink->get_child_date('property', '.ticket', $entity[$j]['type'], $ticket['id'], isset($entity[$j]['entity_id']) ? $entity[$j]['entity_id'] : '', isset($entity[$j]['cat_id']) ? $entity[$j]['cat_id'] : '');
-						if ($ticket['child_date'][$entity[$j]['name']]['date_info'] && !$download)
+						$date_info = $interlink->get_child_date(
+							'property',
+							'.ticket',
+							$entity[$j]['type'],
+							$ticket['id'],
+							isset($entity[$j]['entity_id']) ? $entity[$j]['entity_id'] : '',
+							isset($entity[$j]['cat_id']) ? $entity[$j]['cat_id'] : ''
+							);
+						
+						$ticket['child_date'][$entity[$j]['name']] = array('date_info' => $date_info);
+
+						if ($date_info)
 						{
-							$ticket['child_date'][$entity[$j]['name']]['statustext'] = $interlink->get_relation_info(array(
-								'location' => $entity[$j]['type']), $ticket['child_date'][$entity[$j]['name']]['date_info'][0]['target_id']);
+							$ticket['child_date'][$entity[$j]['name']]['statustext'] = $interlink->get_relation_info(
+								array('location' => $entity[$j]['type']),
+								$ticket['child_date'][$entity[$j]['name']]['date_info'][0]['item_id']
+							);
 						}
 					}
 				}
@@ -1204,6 +1224,12 @@
 
 			$receipt = $this->so->add($data, $values_attribute);
 
+
+			if(!empty($receipt['id']) && !empty($data['notify_account_id']))
+			{
+				$this->add_ticket_notify_item($receipt['id'], $data['notify_account_id']);
+			}
+
 			$this->config->read();
 
 			if (!empty($data['send_mail']) || !empty($this->config->config_data['mailnotification']))
@@ -1232,6 +1258,28 @@
 				$receipt = array_merge($receipt, $receipt_mail);
 			}
 			return $receipt;
+		}
+
+		function add_ticket_notify_item( $ticket_id, $account_id )
+		{
+
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+			$notify = CreateObject('property.notify');
+			if(is_array($account_id))
+			{
+				$account_ids = $account_id;
+			}
+			else
+			{
+				$account_ids = array($account_id);
+			}
+
+			foreach ($account_ids as $_account_id)
+			{
+				$contact_id = $GLOBALS['phpgw']->accounts->get($_account_id)->person_id;
+				$notify->refresh_notify_contact_2($location_id, $ticket_id, $contact_id);
+			}
+			
 		}
 
 		function get_address_element( $location_code = '' )
@@ -2074,8 +2122,7 @@ HTML;
 					$default_found	 = true;
 				}
 
-				$sodimb_role_users = execMethod('property.sodimb_role_user.read', array
-					(
+				$sodimb_role_users = execMethod('property.sodimb_role_user.read', array(
 					'dimb_id'		 => $ecodimb,
 					'role_id'		 => 2,
 					'query_start'	 => date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
@@ -2207,37 +2254,57 @@ HTML;
 			}
 			else if ($approval_amount_limit1 > 0 && $amount > $approval_amount_limit1)
 			{
-				$invoice			 = CreateObject('property.soinvoice');
-				$level_1_required	 = true;
+				$dimb_role_list = execMethod('property.bogeneric.read', array(
+				'location_info' => array('type' => 'dimb_role'),
+				'sort' => 'ASC',
+				'order' => 'amount_limit',
+				'allrows' => true));
 
-				if ($approval_amount_limit2 > 0 && $amount > $approval_amount_limit2)
+
+				for ($i = 0; $i < count($dimb_role_list); $i++)
 				{
-					$supervisor_id = $invoice->get_default_dimb_role_user(2, $ecodimb);
-					if ($supervisor_id)
+					if ($amount > $dimb_role_list[$i]['amount_limit'] && ($amount <= $dimb_role_list[$i + 1]['amount_limit'] || !isset($dimb_role_list[$i + 1])))
 					{
-						$substitute = $sosubstitute->get_substitute($supervisor_id);
-
-						$supervisors[$supervisor_id] = array(
-							'id'		 => $supervisor_id,
-							'substitute' => $substitute,
-							'required'	 => true,
-							'default'	 => true
-						);
-						$level_1_required			 = false;
+						$dimb_role_id = $dimb_role_list[$i]['id'];
 					}
 				}
 
-				$supervisor_id = $invoice->get_default_dimb_role_user(1, $ecodimb);
-				if ($supervisor_id)
+
+// start fetch candidates
+				$sodimb_role_users = execMethod('property.sodimb_role_user.read', array(
+					'dimb_id'		 => $ecodimb,
+					'role_id'		 => $dimb_role_id,
+					'query_start'	 => date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+					'get_netto_list' => true
+					)
+				);
+
+				if (isset($sodimb_role_users[$ecodimb][$dimb_role_id]) && is_array($sodimb_role_users[$ecodimb][$dimb_role_id]))
 				{
-					$substitute = $sosubstitute->get_substitute($supervisor_id);
-					$supervisors[$supervisor_id] = array(
-						'id'		 => $supervisor_id,
-						'substitute' => $substitute,
-						'required'	 => $level_1_required,
-						'default'	 => $level_1_required
-					);
+					$default_found	 = false;
+					$first_hit		 = false;
+
+					foreach ($sodimb_role_users[$ecodimb][$dimb_role_id] as $supervisor_id => $entry)
+					{
+						if (in_array($supervisor_id, array_keys($supervisors)))
+						{
+							continue;
+						}
+
+						$substitute	 = $sosubstitute->get_substitute($supervisor_id);
+
+						$supervisors[$supervisor_id] = array(
+							'id'		 => $supervisor_id,
+							'substitute' => $substitute ? $substitute : null,
+							'required'	 => $first_hit == false ? true : false,
+							'default'	 => false
+						);
+
+						$default_found	 = $default_found || $entry['default_user'] ? true : false;
+						$first_hit		 = true;
+					}
 				}
+
 			}
 			else if (!empty($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']))
 			{

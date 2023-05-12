@@ -98,6 +98,18 @@
 		}
 
 		/**
+		 * Callback for usort($navbar)
+		 *
+		 * @param array $item1 the first item to compare
+		 * @param array $item2 the second item to compare
+		 * @return int result of comparision
+		 */
+		private static function sort_navitems( $item1, $item2 )
+		{
+			return strcmp($item1['text'], $item2['text']);
+		}
+
+		/**
 		 * Load the menu structure from all available applications
 		 *
 		 * @return array the menu structure for the current user
@@ -108,9 +120,8 @@
 			$raw_menus = $GLOBALS['phpgw']->hooks->process('menu');
 
 			foreach($GLOBALS['phpgw_info']['user']['apps'] as $app => $app_info)
-			//	foreach ( $raw_menus as $app => $raw_menu )
 			{
-				if($app_info['status'] == 2) // hidden
+				if($app_info['status'] === 2  || $app_info['enabled'] === false) // hidden
 				{
 					continue;
 				}
@@ -128,6 +139,11 @@
 						continue;
 					}
 
+					/**
+					 * the order of items is there for a reason...
+					 */
+//					uasort($menu, array('phpgwapi_menu', 'sort_navitems'));
+
 					if(!isset($menus[$mtype]))
 					{
 						$menus[$mtype] = array();
@@ -141,11 +157,11 @@
 						case 'admin':
 							$app_text = $app == 'admin' ? lang('General') : lang($app);
 							$menus['navigation']['admin'][$app] = array
-								(
+							(
 								'text' => $GLOBALS['phpgw']->translation->translate($app, array(), true),
 								'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
 									'appname' => $app)),
-								'image' => $raw_menu['navbar'][$app]['image'],
+								'image' => isset($raw_menu['navbar'][$app]['image']) ? $raw_menu['navbar'][$app]['image'] : '',
 								'children' => $menu
 							);
 						// no break here - fall thru
@@ -373,6 +389,10 @@ HTML;
 			return $menu;
 		}
 
+		/**
+		 * Used for jstree
+		 * @return array menu
+		 */
 		public function get_top_level_menu_ajax()
 		{
 			$navbar = $this->get('navbar');
@@ -397,6 +417,10 @@ HTML;
 			return $top_level_menu;
 		}
 
+		/**
+		 * Used for jstree
+		 * @return array menu
+		 */
 		public function get_local_menu_ajax()
 		{
 			$node = phpgw::get_var('node');
@@ -552,7 +576,16 @@ HTML;
 
 		public function update_bookmark_menu()
 		{
-//			$bookmark_candidate = phpgw::get_var('bookmark_candidate', 'string');
+			$bookmark_text = strip_tags(phpgw::get_var('text', 'html'));
+			$bookmark_icon = phpgw::get_var('icon', 'string');
+			$nav_location = phpgw::get_var('nav_location', 'string');
+			
+			$href_comopnents = parse_url(phpgw::get_var('href', 'raw'));
+			parse_str($href_comopnents['query'],$query_arr);
+
+			unset($query_arr['click_history']);
+
+			$bookmark_href = $href_comopnents['path'] . '?' . http_build_query($query_arr);
 
 			$bookmark_candidate_arr = explode('bookmark_', phpgw::get_var('bookmark_candidate', 'string'));
 
@@ -561,7 +594,7 @@ HTML;
 			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $user_id);
-			if($bookmarks && is_array($bookmarks) && isset($bookmarks[$bookmark_candidate]))
+			if($bookmarks && is_array($bookmarks) && isset($bookmarks[$bookmark_candidate]) && is_array($bookmarks[$bookmark_candidate]))
 			{
 				unset($bookmarks[$bookmark_candidate]);
 				$status = lang('bookmark deleted');
@@ -573,7 +606,12 @@ HTML;
 					$bookmarks = array();
 				}
 
-				$bookmarks[$bookmark_candidate] = true;
+				$bookmarks[$bookmark_candidate]	 = array(
+					'text'			 => $bookmark_text,
+					'icon'			 => $bookmark_icon,
+					'href'			 => $bookmark_href,
+					'nav_location'	 => $nav_location
+				);
 				$status = lang('bookmark added');
 			}
 

@@ -122,7 +122,16 @@
 			}
 
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('status components');
+			
+			if(phpgw::get_var('get_locations', 'bool'))
+			{
+				$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('status locations');
+				
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('status components');
+			}
 
 		}
 
@@ -271,6 +280,8 @@
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('autocomplete');
 
+			$filter_status_components = phpgwapi_cache::user_get('controller', 'filter_status_components', $this->account);
+
 			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.checklist');
 			$user_list = array();
 			foreach ($users as $user)
@@ -282,6 +293,7 @@
 					'selected' => 0 //$this->account == $user['account_id'] ? 1 : 0
 				);
 			}
+			unset($user);
 
 			$_my_negative_self = -1 * $this->account;
 
@@ -300,13 +312,22 @@
 
 			unset($_my_negative_self);
 			array_unshift($user_list, $default_value);
-			array_unshift($user_list, array('id' => 'all', 'name' => lang('all')));
+			array_unshift($user_list, array(
+				'id' => 'all',
+				'name' => lang('all'),
+				'selected' => 1
+				));
+
+			foreach ($user_list as &$user)
+			{
+				$user['selected'] = isset($filter_status_components['filter_user_id']) && $user['id'] == $filter_status_components['filter_user_id'] ? 1 : 0;
+			}
 
 			// Sigurd: Start categories
 			$cats = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cats->supress_info = true;
 
-			$control_areas = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => $control_area_id,
+			$control_areas = $cats->formatted_xslt_list(array('format' => 'filter',
 				'globals' => true, 'use_acl' => $this->_category_acl));
 			array_unshift($control_areas['cat_list'], array('cat_id' => '', 'name' => lang('select value')));
 			$control_areas_array = array();
@@ -321,11 +342,14 @@
 			// END categories
 			// start district
 			$property_bocommon = CreateObject('property.bocommon');
-			$district_list = $property_bocommon->select_district_list('dummy', $this->district_id);
+
+			$district_list = $property_bocommon->select_district_list('dummy', isset($filter_status_components['filter_district_id']) ? $filter_status_components['filter_district_id'] : 0);
 			array_unshift($district_list, array('id' => '', 'name' => lang('no district')));
 			// end district
 
-			$part_of_town_list = $property_bocommon->select_part_of_town('filter', $this->part_of_town_id, $this->district_id);
+			$part_of_town_list = $property_bocommon->select_part_of_town('filter', 
+				isset($filter_status_components['filter_part_of_town_id']) ? $filter_status_components['filter_part_of_town_id'] : 0,
+				isset($filter_status_components['filter_district_id']) ? $filter_status_components['filter_district_id'] : 0);
 			array_unshift($part_of_town_list, array('id' => '', 'name' => lang('no part of town')));
 
 			$year_list = array();
@@ -348,33 +372,36 @@
 				'name' => lang('all')
 			);
 
-			$filter_month = phpgw::get_var('month', 'int');
+			$filter_month = isset($filter_status_components['filter_month']) ? $filter_status_components['filter_month'] : 0;
 
 			$default_filter_month = !empty($GLOBALS['phpgw_info']['flags']['custom_frontend']) ? date('n') : 0;
 			$filter_month = $filter_month ? $filter_month : $default_filter_month;
 			for ($_month = 1; $_month < 13; $_month++)
 			{
-				$month_list[] = array
-					(
-					'id' => $_month,
-					'name' => $_month,
-					'selected' => $_month == $filter_month ? 1 : 0
+				$month_list[] = array(
+					'id'		 => $_month,
+					'name'		 => $_month,
+					'selected'	 => $_month == $filter_month ? 1 : 0
 				);
 			}
 			$status_list = array(
-				array('id' => 'all',
-					'name' => lang('All'),
-					'selected' => empty($GLOBALS['phpgw_info']['flags']['custom_frontend']) ? 1 : false
-					),
-				array('id' => 'in_queue',
-					'name' => lang('in queue'),
-					'selected' => !empty($GLOBALS['phpgw_info']['flags']['custom_frontend']) ? 1 : false
-					),
+				array('id'	 => 'all',
+					'name'	 => lang('All'),
+				//				'selected' => empty($GLOBALS['phpgw_info']['flags']['custom_frontend']) ? 1 : false
+				),
+				array('id'	 => 'in_queue',
+					'name'	 => lang('in queue'),
+				//				'selected' => !empty($GLOBALS['phpgw_info']['flags']['custom_frontend']) ? 1 : false
+				),
 				array('id' => 'performed', 'name' => lang('status done')),
 				array('id' => 'not_performed', 'name' => lang('status not done')),
 				array('id' => 'done_with_open_deviation', 'name' => lang('done with open deviation')),
 			);
 
+			foreach ($status_list as &$status_entry)
+			{
+				$status_entry['selected'] = isset($filter_status_components['filter_status']) && $status_entry['id'] == $filter_status_components['filter_status'] ? 1 : 0;
+			}
 
 			$filter_component = phpgw::get_var('filter_component');
 
@@ -385,7 +412,8 @@
 			{
 				$control_types_arr[] = array(
 					'id'	=> $control_type->get_id(),
-					'name'	=> $control_type->get_title()
+					'name'	=> $control_type->get_title(),
+					'selected' => isset($filter_status_components['filter_control_id']) && $filter_status_components['filter_control_id'] == $control_type->get_id() ? 1 : 0
 				);
 			}
 
@@ -802,7 +830,6 @@
 		}
 
 
-
 		public function query()
 		{
 			$get_locations = $this->get_locations;
@@ -827,6 +854,18 @@
 //			$user_only = phpgw::get_var('user_only', 'bool');
 			$user_only = $total_hours ? false : true;
 			$filter_status = phpgw::get_var('status', 'string');
+
+			$filter_status_components = array(
+				'filter_control_id'		 => $filter_control_id,
+				'filter_month'			 => $filter_month,
+				'filter_status'			 => $filter_status,
+				'filter_user_id'		 => phpgw::get_var('user_id', 'string', 'REQUEST', -1),
+				'filter_district_id'	 => $district_id,
+				'filter_part_of_town_id' => $part_of_town_id
+			);
+
+			phpgwapi_cache::user_set('controller', 'filter_status_components', $filter_status_components, $this->account);
+
 			if($all_items)
 			{
 				$filter_status = 'all';
@@ -1655,7 +1694,7 @@
 			);
 		}
 
-		private function translate_calendar_info( $param = array(), $year, $month, $filter_status = '', &$found_at_least_one = false, $keep_only_assigned_to, $location_code ='', &$control_link_data, $url_target)
+		private function translate_calendar_info( $param, $year, $month, $filter_status = '', &$found_at_least_one = false, $keep_only_assigned_to, $location_code ='', &$control_link_data, $url_target)
 		{
 			if (!isset($param['repeat_type']))
 			{
@@ -1789,30 +1828,53 @@
 			}
 			if ($param['info']['check_list_id'])
 			{
-				$control_link_data = array
-					(
+				$control_link_data = array(
 					'menuaction' => 'controller.uicheck_list.edit_check_list',
 					'check_list_id' => $param['info']['check_list_id'],
 				);
+				$_href = $GLOBALS['phpgw']->link('/index.php', $control_link_data);
+				$link = "<a href='{$_href}' target='{$url_target}'>{$img}</a>";
 			}
 			else
 			{
 				$menuaction = 'controller.uicheck_list.add_check_list';
 				$a_date = "{$year}-{$month}-23";
-				$control_link_data = array
-					(
-					'menuaction' => $menuaction,
-					'control_id' => $param['info']['control_id'],
-					'location_id' => $param['info']['location_id'],
-					'component_id' => $param['info']['component_id'],
-					'serie_id' => $param['info']['serie_id'],
-					'deadline_ts' => mktime(23, 59, 00, $month, date('t', strtotime($a_date)), $year),
-					'type' => $param['info']['component_id'] ? 'component' : '',
-					'location_code' => $location_code,
-					'assigned_to' => $param['info']['assigned_to']
+
+				$_control_id	 = $param['info']['control_id'];
+				$_location_id	 = $param['info']['location_id'];
+				$_component_id	 = $param['info']['component_id'];
+				$_serie_id		 = $param['info']['serie_id'];
+				$_deadline_ts	 = mktime(23, 59, 00, $month, date('t', strtotime($a_date)), $year);
+				$_type			 = $param['info']['component_id'] ? 'component' : '';
+				$_location_code	 = $location_code;
+
+				$control_link_data = array(
+					'menuaction'	 => $menuaction,
+					'control_id'	 => $_control_id,
+					'location_id'	 => $_location_id,
+					'component_id'	 => $_component_id,
+					'serie_id'		 => $_serie_id,
+					'deadline_ts'	 => $_deadline_ts,
+					'type'			 => $_type,
+					'location_code'	 => $_location_code,
+					'assigned_to'	 => $param['info']['assigned_to']
 				);
+
+				if(in_array($param['status'], array('CONTROL_REGISTERED', 'CONTROL_NOT_DONE')))
+				{
+					
+					$control_link = json_encode($control_link_data);
+					$_onclick = "perform_action(\"set_planning_month\", {$control_link}, {$month});";
+					$link = "<span onclick='{$_onclick}'>{$img}</span>";
+				}
+				else
+				{
+					$_href = $GLOBALS['phpgw']->link('/index.php', $control_link_data);
+					$link = "<a href='{$_href}' target='{$url_target}'>{$img}</a>";
+				}
+
 			}
-			$link = "<a href=\"" . $GLOBALS['phpgw']->link('/index.php', $control_link_data) . "\" target=\"{$url_target}\">{$img}</a>";
+//			$link = "<a href='{$_href}' target='{$url_target}' onclick='alert(\"test\");'>{$img}</a>";
 
 			$repeat_type = $param['repeat_type'];
 			//	$responsible = '---';

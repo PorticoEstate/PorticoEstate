@@ -393,12 +393,11 @@
 			$month_nr = date("n", $deadline_ts);
 
 			$level = $this->location_finder->get_location_level($location_code);
-			$user_role = true;
 
 			// Fetches buildings on property
 			if ($type == "location")
 			{
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($location_code);
 			}
 			else
 			{
@@ -703,12 +702,11 @@
 			$month = date("n", $check_list->get_deadline());
 
 			$level = $this->location_finder->get_location_level($location_code);
-			$user_role = true;
 
 			// Fetches buildings on property
 			if($get_buildings_on_property)
 			{
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property( $location_code);
 			}
 
 			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_ADD, $this->acl_location);
@@ -972,6 +970,7 @@
 
 			phpgw::import_class('property.multiuploader');
 
+			$options = array();
 			$options['fakebase'] = "/controller";
 			$options['base_dir'] = "check_list/{$id}";
 			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/controller/'.$options['base_dir'].'/';
@@ -1182,11 +1181,12 @@
 
 			$control_id = phpgw::get_var('control_id', 'int');
 			$serie_id = phpgw::get_var('serie_id', 'int');
-			$status = (int)phpgw::get_var('status');
+			$status = phpgw::get_var('status', 'int');
 			$type = phpgw::get_var('type');
 			$deadline_date = phpgw::get_var('deadline_date', 'string');
 			$original_deadline_date_ts = phpgw::get_var('original_deadline_date', 'int');
 			$planned_date = phpgw::get_var('planned_date', 'string');
+			$planned_month = phpgw::get_var('planned_month', 'int');
 			$completed_date = phpgw::get_var('completed_date', 'string');
 			$comment = phpgw::get_var('comment', 'string');
 			$assigned_to = phpgw::get_var('assigned_to', 'int');
@@ -1205,6 +1205,14 @@
 			}
 
 			$error = false;
+
+			if($planned_month)
+			{
+				$_planned_date = new DateTime(date('Y', $deadline_date_ts) . "-{$planned_month}-1");
+				$_planned_date->modify('last day of this month');
+				$planned_date = $_planned_date->format($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+			}
+
 
 			if ($planned_date != '')
 			{
@@ -1229,7 +1237,7 @@
 			else
 			{
 				$completed_date_ts = 0;
-				$status = controller_check_list::STATUS_NOT_DONE;
+				$status = $status && controller_check_list::STATUS_CANCELED ? controller_check_list::STATUS_CANCELED : controller_check_list::STATUS_NOT_DONE;
 			}
 
 			if($submit_ok)
@@ -1486,7 +1494,7 @@
 
 					if (phpgw::get_var('phpgw_return_as') == 'json')
 					{
-						if($ret)
+						if(!empty($ret['message']))
 						{
 							return $ret;
 						}
@@ -1753,7 +1761,7 @@
 			// Fetches buildings on property
 			if($get_buildings_on_property)
 			{
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property($location_code);
 			}
 
 			$year = date("Y", $check_list->get_deadline());
@@ -1890,9 +1898,9 @@
 		public function get_check_list_info()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
-			$check_list = $this->so->get_single_with_check_items($check_list_id, "open");
+			$check_list = $this->so->get_single_with_check_items($check_list_id);
 
-			return json_encode($check_list);
+			return $check_list;
 		}
 
 		// Returns open cases for a check list as JSON
@@ -2053,6 +2061,20 @@
 
 		private function notify_supervisor($check_list)
 		{
+			/**
+			 * Maybe not...
+			 */
+
+			$config = CreateObject('phpgwapi.config', 'controller')->read();
+
+			if (!empty($config['disable_auto_ticket_creation']))
+			{
+				return array(
+					'status'	 => $check_list->get_status(),
+					'message'	 => ''
+				);
+			}
+
 			$message = '';
 			if($check_list->get_status() == controller_check_list::STATUS_DONE)
 			{
@@ -3404,7 +3426,7 @@ HTML;
 
 		function get_report($check_list_id = null)
 		{
-			$inline_images = false;
+			$inline_images = phpgw::get_var('inline_images', 'bool');
 
 			$config = createObject('phpgwapi.config', 'property')->read();
 
@@ -3446,15 +3468,15 @@ HTML;
 
 			$report_data = array();
 
-			$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
+
 			$stylesheets = array();
-			$stylesheets[] = "{$webserver_url}/phpgwapi/js/bootstrap/css/bootstrap.min.css";
-//			$stylesheets[] = "{$webserver_url}/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
-			$stylesheets[] = "{$webserver_url}/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
+
+			$stylesheets[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css");
+			$stylesheets[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/base/css/fontawesome/css/all.min.css");
 
 			$javascripts = array();
-			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/popper/popper.min.js";
-			$javascripts[]	 = "{$webserver_url}/phpgwapi/js/bootstrap/js/bootstrap.min.js";
+			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/popper/popper2.min.js");
+			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js");
 
 			$report_data['stylesheets'] = $stylesheets;
 			$report_data['javascripts'] = $javascripts;
@@ -3717,7 +3739,6 @@ HTML;
 					foreach ($case_files as &$case_file)
 					{
 						$case_file['text'] = lang('picture') . " #{$i}_{$n}";
-//						$case_file['link'] = "{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']}";
 						$case_file['link'] = self::link(array('menuaction' => 'controller.uicheck_list.view_image', 'img_id' => $case_file['file_id']));
 						if($inline_images)
 						{
@@ -3925,6 +3946,9 @@ HTML;
 			$report_data['responsible_logo'] = $report_info['control']->get_responsible_logo();
 
 			$report_data['findings'] = array_merge($report_data['findings'],$findings);
+
+			$report_data['return_as_pdf'] = phpgw::get_var('return_as_pdf', 'bool');
+
 //			_debug_array($report_data['findings']);die();
 
 			$this->render_report($report_data);
@@ -3953,43 +3977,55 @@ HTML;
 
 			$html = trim($proc->transformToXML($xml));
 
-			echo $html;
+			if($report_data['return_as_pdf'])
+			{
+				$this->makePDF($html);
+			}
+			else
+			{
+				echo $html;
 
-//			$this->makePDF($html);
+			}
 		}
 
 		public function makePDF($stringData)
 		{
-			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyMedia.php';
-			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyPdf.php';
-			$tmp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
-			$myFile = $tmp_dir . "/temp_report_" . strtotime(date('Y-m-d')) . ".html";
-			$fh = fopen($myFile, 'w') or die("can't open file");
-			fwrite($fh, $stringData);
-			fclose($fh);
 
-			$pdf_file_name = $tmp_dir . "/temp_contract_" . strtotime(date('Y-m-d')) . ".pdf";
+			phpgw::import_class('phpgwapi.html2pdf');
+			$html2pdf = new \Spipu\Html2Pdf\Html2Pdf('P', 'A4', 'no');
+			$html2pdf->writeHTML($stringData);
+			$html2pdf->output();
 
-			//var_dump($config->config_data['path_to_wkhtmltopdf']);
-			//var_dump($GLOBALS['phpgw_info']);
-			$wkhtmltopdf_executable = '/usr/local/bin/wkhtmltopdf';
-			if (!is_file($wkhtmltopdf_executable))
-			{
-				throw new Exception('wkhtmltopdf not configured correctly');
-			}
-			$snappy = new SnappyPdf();
-			$snappy->setExecutable($wkhtmltopdf_executable); // or whatever else
-			$snappy->save($myFile, $pdf_file_name);
-
-			if (!is_file($pdf_file_name))
-			{
-				throw new Exception('pdf-file not produced');
-			}
-			$filesize = filesize($pdf_file_name);
-			$browser = CreateObject('phpgwapi.browser');
-			$browser->content_header('report.pdf', 'application/pdf', $filesize);
-
-			readfile($pdf_file_name);
+//			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyMedia.php';
+//			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyPdf.php';
+//			$tmp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
+//			$myFile = $tmp_dir . "/temp_report_" . strtotime(date('Y-m-d')) . ".html";
+//			$fh = fopen($myFile, 'w') or die("can't open file");
+//			fwrite($fh, $stringData);
+//			fclose($fh);
+//
+//			$pdf_file_name = $tmp_dir . "/temp_contract_" . strtotime(date('Y-m-d')) . ".pdf";
+//
+//			//var_dump($config->config_data['path_to_wkhtmltopdf']);
+//			//var_dump($GLOBALS['phpgw_info']);
+//			$wkhtmltopdf_executable = '/usr/local/bin/wkhtmltopdf';
+//			if (!is_file($wkhtmltopdf_executable))
+//			{
+//				throw new Exception('wkhtmltopdf not configured correctly');
+//			}
+//			$snappy = new SnappyPdf();
+//			$snappy->setExecutable($wkhtmltopdf_executable); // or whatever else
+//			$snappy->save($myFile, $pdf_file_name);
+//
+//			if (!is_file($pdf_file_name))
+//			{
+//				throw new Exception('pdf-file not produced');
+//			}
+//			$filesize = filesize($pdf_file_name);
+//			$browser = CreateObject('phpgwapi.browser');
+//			$browser->content_header('report.pdf', 'application/pdf', $filesize);
+//
+//			readfile($pdf_file_name);
 
 		}
 		function view_image()
@@ -4140,12 +4176,10 @@ HTML;
 			}
 			else
 			{
-				$user_role = false;
-
 				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $check_list_location_code));
 				$type = 'location';
 				// Fetches locations on property
-				$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $check_list_location_code, $level);
+				$buildings_on_property = $this->location_finder->get_buildings_on_property( $check_list_location_code);
 			}
 
 

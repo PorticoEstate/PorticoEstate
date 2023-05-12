@@ -13,7 +13,7 @@
 
 	<!-- Tab links -->
 	<form action="{$form_url}" method="post">
-		<select class="form-control custom-select" name="contract_filter" onchange="this.form.submit()">
+		<select class="form-select" name="contract_filter" onchange="this.form.submit()">
 			<xsl:choose>
 				<xsl:when test="//contract_filter = 'active'">
 					<option value="active" selected="selected">
@@ -272,7 +272,7 @@
 								<div class="card">
 									<div class="card-header" id="subMenuHeading4">
 										<h5 class="mb-0">
-											<button class="btn btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseSubMenu4" aria-expanded="true" aria-controls="collapseSubMenu4">
+											<button class="btn btn-light w-100 text-start" data-bs-toggle="collapse" data-bs-target="#collapseSubMenu4" aria-expanded="true" aria-controls="collapseSubMenu4">
 												<h6 class="text-uppercase">
 													<xsl:value-of select="php:function('lang', 'remark')"/>
 												</h6>
@@ -281,7 +281,7 @@
 									</div>
 									<div id="collapseSubMenu4" class="collapse" aria-labelledby="subMenuHeading4" data-parent="#accordion4">
 										<div class="card-body row">
-											<div class="col text-left">
+											<div class="col text-start">
 												<div class="smallboxline"></div>
 												<div class="text-value-xl">
 													<xsl:value-of select="comment" disable-output-escaping="yes"/>
@@ -298,7 +298,7 @@
 						<div class="card">
 							<div class="card-header" id="subMenuHeading5">
 								<h5 class="mb-0">
-									<button class="btn btn-light w-100 text-left" data-toggle="collapse" data-target="#collapseSubMenu5" aria-expanded="true" aria-controls="collapseSubMenu5">
+									<button class="btn btn-light w-100 text-start" data-bs-toggle="collapse" data-bs-target="#collapseSubMenu5" aria-expanded="true" aria-controls="collapseSubMenu5">
 										<h6 class="text-uppercase">
 											<xsl:value-of select="php:function('lang', 'send_contract_message')"/>
 										</h6>
@@ -320,7 +320,7 @@
 											</textarea>
 										</div>
 										<div class="form-group w-100">
-											<button class="btn btn-info float-right w-50" type="submit" name="send">
+											<button class="btn btn-info float-end w-50" type="submit" name="send">
 												<h6 class="text-uppercase">
 													<xsl:value-of select="php:function('lang', 'btn_send')"/>
 												</h6>

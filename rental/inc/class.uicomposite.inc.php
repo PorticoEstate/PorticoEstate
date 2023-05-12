@@ -124,7 +124,7 @@
 			$districts_arr = execMethod('property.sogeneric.get_list', array('type' => 'district'));
 			$default_district = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'] : '');
 			$districts = array();
-			array_unshift($districts, array('id' => '', 'name' => lang('select')));
+//			array_unshift($districts, array('id' => '', 'name' => lang('select')));
 			foreach ($districts_arr as $district)
 			{
 				$districts[] = array(
@@ -133,9 +133,9 @@
 					'selected'	=> $default_district == $district['id'] ? 1 : 0
 					);
 			}
-			$filters[] = array
-				(
+			$filters[] = array(
 				'type' => 'filter',
+				'multiple'	=> true,
 				'name' => 'district_id',
 				'text' => lang('district'),
 				'list' => $districts
@@ -663,7 +663,8 @@
 				);
 			}
 
-			//self::add_javascript('rental', 'rental', 'party.sync.js');
+			phpgwapi_jquery::load_widget('bootstrap-multiselect');
+			//self::add_javascript('rental', 'base', 'party.sync.js');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -1169,7 +1170,7 @@ JS;
 				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uicomposite.handle_multi_upload_file', 'id' => $composite_id))				
 			);
 
-			self::add_javascript('rental', 'rental', 'composite.' . $mode . '.js');
+			self::add_javascript('rental', 'base', 'composite.' . $mode . '.js');
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 
@@ -1482,7 +1483,7 @@ JS;
 			$schedule['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
 			$schedule['toolbar'] = json_encode($toolbar);
 			$data['schedule'] = $schedule;
-			self::add_javascript('rental','rental','schedule.js');
+			self::add_javascript('rental','base','schedule.js');
 
 			phpgwapi_jquery::load_widget("datepicker");
 
@@ -1541,6 +1542,7 @@ JS;
 
 			phpgw::import_class('property.multiuploader');
 
+			$options = array();
 			$options['base_dir'] = 'composite/'.$id;
 			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/rental/'.$options['base_dir'].'/';
 			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.handle_multi_upload_file', 'id' => $id)));

@@ -49,26 +49,26 @@
 
 
 <xsl:template match="toolbar" xmlns:php="http://php.net/xsl">
-	<div class="row ml-1">
+	<div class="row ms-1">
 		<div id="active_filters">
 		</div>
 	</div>
-	<div class="row mt-2 mb-2 ml-1">
-		<button class="btn btn-info" type="button" data-toggle="collapse" data-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">
+	<div class="mt-2 mb-2 ms-1">
+		<button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#democollapseBtn" aria-expanded="false" aria-controls="democollapseBtn">
 			<xsl:value-of select="php:function('lang', 'filter')"/>
 		</button>
-		<button id="reset_filter" class="ml-2 btn btn-secondary" type="button" onclick="reset_filter();" style="display: none;">
+		<button id="reset_filter" class="ms-2 btn btn-secondary" type="button" onclick="reset_filter();" style="display: none;">
 			<xsl:value-of select="php:function('lang', 'reset filter')"/>
 		</button>
 	</div>
 
-	<div class="row mt-2 collapse ml-1" id="democollapseBtn">
+	<div class="row mt-2 collapse" id="democollapseBtn">
 		<xsl:if test="item">
 			<xsl:variable name="count_items" select="count(item)"/>
 			<div id="toolbar" class='dtable_custom_controls'>
 				<form>
 					<fieldset>
-						<div class="form-row">
+						<div class="row mb-2">
 							<xsl:for-each select="item">
 								<script type="text/javascript">
 									number_of_toolbar_items += 1;
@@ -81,11 +81,11 @@
 											</xsl:when>
 											<xsl:otherwise>
 												<xsl:choose>
-													<xsl:when test="$count_items > 3">
-														<xsl:text>form-group col-md-4</xsl:text>
+													<xsl:when test="$count_items > 4 or $count_items = 3">
+														<xsl:text>col-4</xsl:text>
 													</xsl:when>
 													<xsl:otherwise>
-														<xsl:text>form-group</xsl:text>
+														<xsl:text>col-6</xsl:text>
 													</xsl:otherwise>
 												</xsl:choose>
 											</xsl:otherwise>
@@ -96,7 +96,7 @@
 									<xsl:variable name="filter_key_name" select="concat(concat('filter_', name), '_name')"/>
 									<xsl:variable name="filter_key_id" select="concat(concat('filter_', name), '_id')"/>
 									<xsl:if test="name">
-										<label>
+										<label class="form-label">
 											<xsl:attribute name="for">
 												<xsl:value-of select="phpgw:conditional(not(name), '', name)"/>
 											</xsl:attribute>
@@ -205,7 +205,7 @@
 											<script type="text/javascript">
 												filter_selects['<xsl:value-of select="text"/>'] = '<xsl:value-of select="$name"/>';
 											</script>
-											<select id="{$name}" name="{$name}" class="form-control">
+											<select id="{$name}" name="{$name}" class="form-select">
 												<xsl:if test="multiple">
 													<xsl:attribute name="multiple">
 														<xsl:text>true</xsl:text>
@@ -239,16 +239,15 @@
 											</select>
 										</xsl:when>
 										<xsl:when test="type = 'link'">
-											<!--<div class="form-row ml-1">-->
+											<!--<div class="form-row ms-1">-->
 												<label>
-													<!--<xsl:if test="count(//item) = 1 ">-->
 														<xsl:attribute name="class">
 														<xsl:text>invisible</xsl:text>
 														</xsl:attribute>
-													<!--</xsl:if>-->
 													<xsl:value-of select="value"/>
 												</label>
-												<input type="button" class= "form-control btn btn-primary ml-2">
+												<br/>
+												<input type="button" class= "btn btn btn-primary ms-2">
 													<xsl:choose>
 														<xsl:when test="onclick">
 															<xsl:attribute name="onclick">
@@ -397,7 +396,7 @@
 						<xsl:for-each select="//top-toolbar/fields/field">
 							<xsl:choose>
 								<xsl:when test="type='button'">
-									<button id="{id}" type="{type}" class="form-control btn btn-primary">
+									<button id="{id}" type="{type}" class="btn btn btn-primary">
 										<xsl:value-of select="value"/>
 									</button>
 								</xsl:when>
@@ -426,7 +425,7 @@
 									</input>
 								</xsl:when>
 								<xsl:when test="type='button'">
-									<button id="{id}" type="{type}" class="form-control btn btn-primary" onclick="{action}">
+									<button id="{id}" type="{type}" class="btn btn btn-primary" onclick="{action}">
 										<xsl:value-of select="value"/>
 									</button>
 								</xsl:when>
@@ -450,8 +449,9 @@
 </xsl:template>
 
 <xsl:template name="datasource-definition">
-	<table id="datatable-container" class="display cell-border compact responsive no-wrap" width="99%">
-	<!--table id="datatable-container" class="table table-bordered" width="99%" style="float: left;" cellspacing="0"-->
+	<!--<table id="datatable-container" class="display cell-border compact responsive no-wrap">-->
+	<table id="datatable-container" class="responsive cell-border no-wrap" width="100%">
+	<!--<table id="datatable-container" class="table table-bordered" width="99%" style="float: left;" cellspacing="0">-->
 		<thead>
 			<xsl:for-each select="//datatable/field">
 				<xsl:choose>
@@ -596,163 +596,163 @@
 		var contextMenuItems={};
 		var InitContextMenu=false
 		var button_def = [];
+		var group_buttons = false;
 
+		//button_def.push({
+		//		extend: 'colvis',
+		//		exclude: exclude_colvis,
+		//		text: function ( dt, button, config ) {
+		//		return dt.i18n( 'buttons.show_hide', 'Show / hide columns' );
+		//	}
+		//});
 		<xsl:choose>
-			<xsl:when test="//datatable/actions">
-				//button_def.push({
-				//		extend: 'colvis',
-				//		exclude: exclude_colvis,
-				//		text: function ( dt, button, config ) {
-				//		return dt.i18n( 'buttons.show_hide', 'Show / hide columns' );
-				//	}
-				//});
+			<xsl:when test="new_item">
 				<xsl:choose>
-					<xsl:when test="new_item">
+					<xsl:when test="new_item/onclick">
+						button_def.push({
+						text: "<xsl:value-of select="php:function('lang', 'new')"/>",
+						action: function (e, dt, node, config) {
+						<xsl:value-of select="new_item/onclick"/>;
+						}
+						});
+					</xsl:when>
+					<xsl:otherwise>
+						button_def.push({
+						text: "<xsl:value-of select="php:function('lang', 'new')"/>",
 						<xsl:choose>
-							<xsl:when test="new_item/onclick">
-								button_def.push({
-								text: "<xsl:value-of select="php:function('lang', 'new')"/>",
-								action: function (e, dt, node, config) {
-								<xsl:value-of select="new_item/onclick"/>;
-								}
-								});
+							<xsl:when test="bigmenubutton">
+								className: 'bigmenubutton',
 							</xsl:when>
-							<xsl:otherwise>
-								button_def.push({
-								text: "<xsl:value-of select="php:function('lang', 'new')"/>",
-								<xsl:choose>
-									<xsl:when test="bigmenubutton">
-										className: 'bigmenubutton',
-									</xsl:when>
-								</xsl:choose>
-								sUrl: '<xsl:value-of select="new_item"/>',
-
-								action: function (e, dt, node, config) {
-								var sUrl = config.sUrl;
-								window.open(sUrl, '_self');
-								}
-								});
-							</xsl:otherwise>
 						</xsl:choose>
-					</xsl:when>
-				</xsl:choose>
-				<xsl:choose>
-					<xsl:when test="select_all = '1'">
-						button_def.push({
-						text: "<xsl:value-of select="php:function('lang', 'select all')"/>",
-						action: function () {
-						var api = oTable.api();
-						api.rows().select();
-						$(".mychecks").each(function()
-						{
-						$(this).prop("checked", true);
-						});
-						var selectedRows = api.rows( { selected: true } ).count();
-						api.buttons( '.record' ).enable( selectedRows > 0 );
+						sUrl: '<xsl:value-of select="new_item"/>',
 
-						}
-						});
-
-						button_def.push({
-						text: "<xsl:value-of select="php:function('lang', 'select none')"/>",
-						action: function () {
-						var api = oTable.api();
-						api.rows().deselect();
-						$(".mychecks").each(function()
-						{
-						$(this).prop("checked", false);
-						});
-						api.buttons( '.record' ).enable( false );
-						}
-						});
-					</xsl:when>
-				</xsl:choose>
-				var csv_download = JqueryPortico.i18n.csv_download();
-				if(csv_download.show_button == 1)
-				{
-				button_def.push({
-				extend:    'csvHtml5',
-				titleAttr: csv_download.title,
-				fieldSeparator: ';',
-				bom:true
-				});
-				}
-				<xsl:choose>
-					<xsl:when test="download">
-						button_def.push({
-						text: "<xsl:value-of select="php:function('lang', 'download')"/>",
-						titleAttr: "<xsl:value-of select="php:function('lang', 'download data')"/>",
-						className: 'download',
-						sUrl: '<xsl:value-of select="download"/>',
 						action: function (e, dt, node, config) {
 						var sUrl = config.sUrl;
+						window.open(sUrl, '_self');
+						}
+						});
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+		</xsl:choose>
+		<xsl:choose>
+			<xsl:when test="select_all = '1'">
+				button_def.push({
+				text: "<xsl:value-of select="php:function('lang', 'select all')"/>",
+				action: function () {
+				var api = oTable.api();
+				api.rows().select();
+				$(".mychecks").each(function()
+				{
+				$(this).prop("checked", true);
+				});
+				var selectedRows = api.rows( { selected: true } ).count();
+				api.buttons( '.record' ).enable( selectedRows > 0 );
 
-							<![CDATA[
-								var oParams = {};
-								oParams.length = -1;
-								oParams.columns = null;
-								oParams.start = null;
-								oParams.draw = null;
-					//			var addtional_filterdata = oTable.dataTableSettings[0]['ajax']['data'];
-								var addtional_filterdata = oTable.dataTableSettings[0]['oAjaxData'];
-								for (var attrname in addtional_filterdata)
-								{
-									oParams[attrname] = addtional_filterdata[attrname];
-								}
-								var iframe = document.createElement('iframe');
-								iframe.style.height = "0px";
-								iframe.style.width = "0px";
-								console.log(oParams);
+				}
+				});
 
-								if(typeof(oParams.order[0]) != 'undefined')
-								{
-									var column = oParams.order[0].column;
-									var dir = oParams.order[0].dir;
-									var column_to_keep = oParams.columns[column];
-									delete oParams.columns;
-									oParams.columns = {};
-									if(JqueryPortico.columns[column]['orderable'] == true)
-									{
-										oParams.columns[column] = column_to_keep;
-									}
-								}
-								else
-								{
-										delete oParams.columns;
-								}
+				button_def.push({
+				text: "<xsl:value-of select="php:function('lang', 'select none')"/>",
+				action: function () {
+				var api = oTable.api();
+				api.rows().deselect();
+				$(".mychecks").each(function()
+				{
+				$(this).prop("checked", false);
+				});
+				api.buttons( '.record' ).enable( false );
+				}
+				});
+			</xsl:when>
+		</xsl:choose>
+		var csv_download = JqueryPortico.i18n.csv_download();
+		if(csv_download.show_button == 1)
+		{
+		button_def.push({
+		extend:    'csvHtml5',
+		titleAttr: csv_download.title,
+		fieldSeparator: ';',
+		bom:true
+		});
+		}
+		<xsl:choose>
+			<xsl:when test="download">
+				button_def.push({
+				text: "<xsl:value-of select="php:function('lang', 'download')"/>",
+				titleAttr: "<xsl:value-of select="php:function('lang', 'download data')"/>",
+				className: 'download',
+				sUrl: '<xsl:value-of select="download"/>',
+				action: function (e, dt, node, config) {
+				var sUrl = config.sUrl;
 
-								iframe.src = sUrl+"&"+$.param(oParams) + "&export=1" + "&query=" + $('div.dataTables_filter input').val();
-								if(confirm("This will take some time..."))
-								{
-									document.body.appendChild( iframe );
-								}
-								]]>
+					<![CDATA[
+						var oParams = {};
+						oParams.length = -1;
+						oParams.columns = null;
+						oParams.start = null;
+						oParams.draw = null;
+			//			var addtional_filterdata = oTable.dataTableSettings[0]['ajax']['data'];
+						var addtional_filterdata = oTable.dataTableSettings[0]['oAjaxData'];
+						for (var attrname in addtional_filterdata)
+						{
+							oParams[attrname] = addtional_filterdata[attrname];
+						}
+						var iframe = document.createElement('iframe');
+						iframe.style.height = "0px";
+						iframe.style.width = "0px";
+						console.log(oParams);
+
+						if(typeof(oParams.order[0]) != 'undefined')
+						{
+							var column = oParams.order[0].column;
+							var dir = oParams.order[0].dir;
+							var column_to_keep = oParams.columns[column];
+							delete oParams.columns;
+							oParams.columns = {};
+							if(JqueryPortico.columns[column]['orderable'] == true)
+							{
+								oParams.columns[column] = column_to_keep;
+							}
+						}
+						else
+						{
+								delete oParams.columns;
 						}
 
-						});
-					</xsl:when>
-				</xsl:choose>
+						iframe.src = sUrl+"&"+$.param(oParams) + "&export=1" + "&query=" + $('div.dataTables_filter input').val();
+						if(confirm("This will take some time..."))
+						{
+							document.body.appendChild( iframe );
+						}
+						]]>
+				}
+
+				});
+			</xsl:when>
+		</xsl:choose>
+		<xsl:choose>
+			<xsl:when test="columns">
+				button_def.push({
 				<xsl:choose>
-					<xsl:when test="columns">
-						button_def.push({
-						<xsl:choose>
-							<xsl:when test="columns/name">
-								text: "<xsl:value-of select="columns/name"/>",
-								titleAttr: "<xsl:value-of select="columns/name"/>",
-							</xsl:when>
-							<xsl:otherwise>
-								text: "<xsl:value-of select="php:function('lang', 'columns')"/>",
-								titleAttr: "<xsl:value-of select="php:function('lang', 'columns')"/>",
-							</xsl:otherwise>
-						</xsl:choose>
-						className: 'download',
-						action: function (e, dt, node, config) {
-						<xsl:value-of select="columns/onclick"/>;
-						}
-						});
+					<xsl:when test="columns/name">
+						text: "<xsl:value-of select="columns/name"/>",
+						titleAttr: "<xsl:value-of select="columns/name"/>",
 					</xsl:when>
+					<xsl:otherwise>
+						text: "<xsl:value-of select="php:function('lang', 'columns')"/>",
+						titleAttr: "<xsl:value-of select="php:function('lang', 'columns')"/>",
+					</xsl:otherwise>
 				</xsl:choose>
-
+				className: 'download',
+				action: function (e, dt, node, config) {
+				<xsl:value-of select="columns/onclick"/>;
+				}
+				});
+			</xsl:when>
+		</xsl:choose>
+		<xsl:choose>
+			<xsl:when test="//datatable/actions">
 				<xsl:choose>
 					<xsl:when test="//datatable/actions != ''">
 						<xsl:for-each select="//datatable/actions">
@@ -878,10 +878,10 @@
 				</xsl:choose>
 				<xsl:choose>
 					<xsl:when test="group_buttons = '1'">
-						var group_buttons = true;
+						group_buttons = true;
 					</xsl:when>
 					<xsl:otherwise>
-						var group_buttons = false;
+						group_buttons = false;
 					</xsl:otherwise>
 				</xsl:choose>
 	<![CDATA[
@@ -907,43 +907,48 @@
 	]]>
 				if($(document).width() &lt; 1000)
 				{
-				group_buttons = true;
+					group_buttons = true;
 				}
 				$.fn.dataTable.Buttons.swfPath = "phpgwapi/js/DataTables/extensions/Buttons/swf/flashExport.swf";
 
 
 				if(isChrome == true)
 				{
-				group_buttons = false;
+					group_buttons = false;
 				}
 				//disable grouping for now
 				group_buttons = false;
 
+			</xsl:when>
+		</xsl:choose>
+			if(button_def.length > 0)
+			{
 				if(group_buttons === true)
 				{
 				//					button_def.push({text: 'Esc',
 				//                       action: function ( e, dt, node, config ) {
 				//                        }});
-				JqueryPortico.buttons = [
-				{
-				extend: 'collection',
-				autoClose: true,
-				text: "<xsl:value-of select="php:function('lang', 'toolbar')"/>",
-				collectionLayout: 'three-column',
-				buttons: button_def
-				}
-				];
+					JqueryPortico.buttons = [
+						{
+							extend: 'collection',
+							autoClose: true,
+							text: "<xsl:value-of select="php:function('lang', 'toolbar')"/>",
+							collectionLayout: 'three-column',
+							buttons: button_def
+						}
+					];
 				}
 				else
 				{
-				JqueryPortico.buttons = button_def;
+					JqueryPortico.buttons = button_def;
 				}
-			</xsl:when>
-			<xsl:otherwise>
-				JqueryPortico.buttons = false;
-			</xsl:otherwise>
-		</xsl:choose>
-			<![CDATA[
+			}
+			else
+			{
+				JqueryPortico.buttons = null;
+			}
+
+		<![CDATA[
 			for(i=0;i < JqueryPortico.columns.length;i++)
 			{
 				if (JqueryPortico.columns[i]['visible'] != 'undefined' && JqueryPortico.columns[i]['visible'] == false)
@@ -992,6 +997,10 @@
 				try
 				{
 					oControl.multiselect({
+						buttonClass: 'form-select',
+						templates: {
+						button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>',
+						},
 						buttonWidth: 250,
 						includeSelectAllOption: true,
 						enableFiltering: true,

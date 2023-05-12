@@ -7,7 +7,7 @@
 		function __construct()
 		{
 			parent::__construct('bb_building', array(
-				'id' => array('type' => 'int'),
+				'id' => array('type' => 'int', 'query' => true),
 				'name' => array('type' => 'string', 'query' => true, 'required' => true),
 				'homepage' => array('type' => 'string', 'required' => true),
 				'calendar_text' => array('type' => 'string'),
@@ -58,7 +58,7 @@
 
 		function get_endofseason( $id )
 		{
-			$this->db->limit_query("SELECT to_ FROM bb_season WHERE status = 'PUBLISHED' AND active=1 AND building_id =" . intval($id) . "ORDER BY to_ DESC", 0, __LINE__, __FILE__, 1);
+			$this->db->limit_query("SELECT to_ FROM bb_season WHERE status = 'PUBLISHED' AND active=1 AND building_id =" . intval($id) . " ORDER BY to_ DESC", 0, __LINE__, __FILE__, 1);
 			if (!$this->db->next_record())
 			{
 				return false;

@@ -1,0 +1,49 @@
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+    <link rel="stylesheet" href="pecalendar.css">
+    <link rel="stylesheet" href="../datetimepicker/css/jquery.datetimepicker.css">
+
+    <script src="luxon.js"></script>
+    <script src="../jquery/js/jquery-3.6.1.min.js"></script>
+    <script src="../core/base.js"></script>
+    <script src="../popper/popper2.min.js"></script>
+    <script src="../datetimepicker/js/jquery.datetimepicker.full.js"></script>
+    <script>
+        let pathname = window.location.pathname;
+        let pathname_parts = pathname.split('/');
+        let strBaseURL = '';
+        let found = false;
+        for (var i = 1; i < pathname_parts.length; ++i)
+        {
+            if(pathname_parts[i] !== 'phpgwapi'  && found !==true)
+            {
+                strBaseURL += '/' + pathname_parts[i];
+            }
+            else
+            {
+                found = true;
+            }
+        }
+        strBaseURL +=  '/?click_history=1111';
+    </script>
+    <script src="pecalendar.js"></script>
+</head>
+<body>
+    <div class="over-ting">Over kalenderen</div>
+    <div class="container">
+        <div id="calendar" class="calendar">
+
+        </div>
+    </div>
+    <div class="under-ting">Under kalenderen</div>
+    <script>
+        let cal = new PEcalendar("calendar", 6);
+        cal.createCalendarDom();
+
+
+
+    </script>
+</body>
+</html>

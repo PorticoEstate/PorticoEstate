@@ -96,12 +96,17 @@
 				return;
 			}
 
+			$invalid_customer_ids = array();
 			foreach ($exportable_reservations as &$reservation)
 			{
 				if (!$this->get_customer_identifier_value_for($reservation) && $this->get_cost_value($reservation['cost']) > 0 /* Exclude free reservations from this check */)
 				{
-					$errors['invalid_customer_ids'] = lang('Unable to export: Missing a valid Customer ID on some rows');
+					$invalid_customer_ids[] = $reservation['id'];
 				}
+			}
+			if($invalid_customer_ids)
+			{
+					$errors['invalid_customer_ids'] = lang('Unable to export: Missing a valid Customer ID on some rows') . ': ' .implode(', ', $invalid_customer_ids);
 			}
 		}
 
@@ -112,6 +117,38 @@
 			return $entity;
 		}
 
+
+
+		/**
+		 * Reverse only not exported
+		 * @param int $id
+		 * @return bool on success
+		 */
+		function reverse_reservation( int $id )
+		{
+			$ret = false;
+			$sql0 = "SELECT id FROM bb_completed_reservation WHERE exported = {$id} AND export_file_id IS NULL";
+			$this->db->query($sql0, __LINE__, __FILE__);
+			$ids = array();
+			while($this->db->next_record())
+			{
+				$ids[] = $this->db->f('id');
+			}
+
+			if($ids)
+			{
+				$this->db->transaction_begin();
+
+				$sql1 = "UPDATE bb_completed_reservation SET exported = NULL WHERE id IN(" . implode(',', $ids) . ')';
+				$sql2 = "DELETE FROM bb_completed_reservation_export_configuration where export_id = {$id}";
+				$sql3 = "DELETE FROM bb_completed_reservation_export WHERE id = {$id}";
+				$this->db->query($sql1, __LINE__, __FILE__);
+				$this->db->query($sql2, __LINE__, __FILE__);
+				$this->db->query($sql3, __LINE__, __FILE__);
+				$ret = $this->db->transaction_commit();
+			}
+			return $ret;
+		}
 		/**
 		 * Normalizes data on entity.
 		 */
@@ -246,6 +283,10 @@
 				if ($entity['building_id'])
 				{
 					$filters['building_id'] = $entity['building_id'];
+				}
+				if (!empty($entity['process']))
+				{
+					$filters['id'] = $entity['process'];
 				}
 			}
 			else if ($entity)
@@ -769,6 +810,7 @@
 			$log_customer_name = '';
 			$log_customer_nr = '';
 			$log_buidling = '';
+			$contact_name = '';
 
 			$internal = false;
 
@@ -782,13 +824,76 @@
 			$startpost['posttype'] = 'ST';
 			$startpost['referanse'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60), 60, ' ');
 
+//			if (isset($this->config_data['dim_value_5']))
+//			{
+//				$_vaar_ref = str_pad(substr($account_codes['dim_value_5'], 0, 12), 12, ' ');
+//			}
+
 			foreach ($reservations as &$reservation)
 			{
-				$output[] = implode('', str_replace(array("\n", "\r"), '', $startpost));
+
+				switch ($reservation['reservation_type'])
+				{
+					case 'allocation':
+						$test = $this->allocation_bo->read_single($reservation['reservation_id']);
+						break;
+					case 'booking':
+						$test = $this->booking_bo->read_single($reservation['reservation_id']);
+						break;
+					case 'event':
+						$test = $this->event_bo->read_single($reservation['reservation_id']);
+						break;
+					default:
+						break;
+				}
+
+				if(empty($test['id']))
+				{
+					continue; //Reservation has been deleted
+				}
+
+				if(empty($test['active']))
+				{
+					continue; //Reservation has been de-activated
+				}
 
 				if ($this->get_cost_value($reservation['cost']) <= 0)
 				{
 					continue; //Don't export costless rows
+				}
+
+				$output[] = implode('', str_replace(array("\n", "\r"), '', $startpost));
+
+				/**
+				 * Get contact person
+				 */
+				switch ($reservation['reservation_type'])
+				{
+					case 'allocation':
+						if (!empty($reservation['organization_id']))
+						{
+							$org = $this->organization_bo->read_single($reservation['organization_id']);
+							if(!empty($org['contacts'][0]['name']))
+							{
+								$contact_name = iconv("utf-8", "ISO-8859-1//TRANSLIT", $org['contacts'][0]['name']);
+							}
+						}
+						break;
+					case 'booking':
+						if(!empty($test['group_id']))
+						{
+							$group = CreateObject('booking.sogroup')->read_single($test['group_id']);
+							if(!empty($group['contacts'][0]['name']))
+							{
+								$contact_name = iconv("utf-8", "ISO-8859-1//TRANSLIT", $group['contacts'][0]['name']);
+							}
+						}
+						break;
+					case 'event':
+						$contact_name = iconv("utf-8", "ISO-8859-1//TRANSLIT", $test['contact_name']);
+						break;
+					default:
+						break;
 				}
 
 
@@ -825,10 +930,12 @@
 				}
 
 
+				$customer_number = '';
 				if (!empty($reservation['organization_id']))
 				{
 					$org = $this->organization_bo->read_single($reservation['organization_id']);
 					$reservation['organization_name'] = $org['name'];
+					$customer_number =  $org['customer_number'];
 					if(empty($street))
 					{
 						$street = $org['street'];
@@ -886,11 +993,11 @@
 
 				if (strlen($this->get_customer_identifier_value_for($reservation)) > 9)
 				{
-					$name = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['organization_name']), 40, ' ');
+					$name = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $contact_name), 0, 40), 40, ' '); //40 chars long
 				}
 				else
 				{
-					$name = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['organization_name']), 40, ' ');
+					$name = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['organization_name']), 0, 40), 40, ' '); //40 chars long
 				}
 
 
@@ -920,7 +1027,31 @@
 					 */
 				}
 
+				/**
+				 * precheck
+				 */
+				
+				$bypass = false;
+				$found_amount = 0;
 				if($purchase_order && !empty($purchase_order['lines']))
+				{
+
+					foreach ($purchase_order['lines'] as $order_line)
+					{
+						if (!empty($order_line['amount']))
+						{
+							$found_amount++;
+						}
+					}
+					unset($order_line);
+
+					if(!$found_amount && $reservation['cost'])
+					{
+						$bypass = true;
+					}
+				}
+
+				if($purchase_order && !$bypass && !empty($purchase_order['lines']))
 				{
 
 					foreach ($purchase_order['lines'] as $order_line)
@@ -930,13 +1061,19 @@
 							continue;
 						}
 
+						/**
+						 * artikkelkoden kommer fra valgt konterings-oppsett pr fakturering
+						 * Samme ressurs kan ha flere artikkelkoder
+						 */
 						if($order_line['parent_mapping_id'] == 0)
 						{
 							$article_name = $order_line['name']  . ' - ' . $reservation['description'];
+							$_article_code = $account_codes['article'];
 						}
 						else
 						{
 							$article_name = $order_line['name'];
+							$_article_code = $order_line['article_code'];
 						}
 
 						/**
@@ -970,6 +1107,7 @@
 						$fakturalinje['posttype'] = 'FL';
 						$fakturalinje['kundenr'] = $kundenr;
 						$fakturalinje['navn'] = $name;
+						$fakturalinje['deresref'] = $contact_name;
 
 						$fakturalinje['adresse1'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $street), 0, 40), 40, ' '); //40 chars long
 						$fakturalinje['adresse2'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $city), 0, 40), 40, ' '); //40 chars long
@@ -983,7 +1121,7 @@
 							$fakturalinje['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
 						}
 
-						$fakturalinje['varenr']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['article_code']);
+						$fakturalinje['varenr']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $_article_code);
 						$fakturalinje['lopenr']		 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
 						$fakturalinje['pris']		 = str_pad($pris_inkl_mva * 100, 8, '0', STR_PAD_LEFT) . ' ';
 						$fakturalinje['grunnlag']	 = str_pad($order_line['quantity'], 8, '0', STR_PAD_LEFT);//'000000001'; // antall
@@ -1007,9 +1145,9 @@
 							$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
 						}
 
-						$linjetekst['varenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['article_code']), 4, '0', STR_PAD_LEFT);
+						$linjetekst['varenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $_article_code), 4, '0', STR_PAD_LEFT);
 						$linjetekst['lopenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
-						$linjetekst['linjenr']	 = $linjenr;
+						$linjetekst['linjenr']	 = str_pad($linjenr, 2, '0', STR_PAD_LEFT);
 						$linjetekst['tekst']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 50, ' ');
 
 						$output[] = implode('', str_replace(array("\n", "\r"), '', $linjetekst));
@@ -1027,10 +1165,12 @@
 					$fakturalinje['posttype'] = 'FL';
 					$fakturalinje['kundenr'] = $kundenr;
 					$fakturalinje['navn'] = $name;
+					$fakturalinje['deresref'] = $contact_name;
 
-					$fakturalinje['adresse1'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $street), 0, 40), 40, ' '); //40 chars long
-					$fakturalinje['adresse2'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $city), 0, 40), 40, ' '); //40 chars long
-					$fakturalinje['postnr'] = str_pad(substr($zip_code, 0, 4), 4, ' '); //4 chars long
+
+					$fakturalinje['adresse1']	 = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $street), 0, 40), 40, ' '); //40 chars long
+					$fakturalinje['adresse2']	 = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $city), 0, 40), 40, ' '); //40 chars long
+					$fakturalinje['postnr']		 = str_pad(substr($zip_code, 0, 4), 4, ' '); //4 chars long
 
 					$fakturalinje['betform'] = 'BG';
 
@@ -1063,13 +1203,32 @@
 						$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
 					}
 
-					$linjetekst['varenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']), 4, '0', STR_PAD_LEFT);
-
-					$linjetekst['lopenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
-					$linjetekst['linjenr'] = $linjenr;
-					$linjetekst['tekst'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 50, ' ');
+					$linjetekst['varenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']), 4, '0', STR_PAD_LEFT);
+					$linjetekst['lopenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
+					$linjetekst['linjenr']	 = str_pad($linjenr, 2, '0', STR_PAD_LEFT);
+					$linjetekst['tekst']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description']), 50, ' ');
 
 					$output[] = implode('', str_replace(array("\n", "\r"), '', $linjetekst));
+
+					//Linjetekst LT
+					$linjetekst = $this->get_visma_LT_row_template();
+					$linjetekst['posttype'] = 'LT';
+					$linjetekst['kundenr'] = $kundenr;
+
+					//Skal leverer oppdragsgiver, blir et nr. pr. fagavdeling. XXXX, et pr. fagavdeling
+					if (isset($this->config_data['dim_value_1']))
+					{
+	//					$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['object_number']), 3, '0', STR_PAD_LEFT);
+						$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
+					}
+
+					$linjetekst['varenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']), 4, '0', STR_PAD_LEFT);
+					$linjetekst['lopenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
+					$linjetekst['linjenr']	 = str_pad($linjenr +1, 2, '0', STR_PAD_LEFT);
+					$linjetekst['tekst']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 50, ' ');
+
+					$output[] = implode('', str_replace(array("\n", "\r"), '', $linjetekst));
+
 
 				}
 
@@ -1215,8 +1374,6 @@
 				}
 				$order_id = $sequential_number_generator->increment()->get_current();
 				$export_info[] = $this->create_export_item_info($reservation, $order_id);
-
-//				$reservation = array_map('utf8_decode', $reservation);
 
 				foreach ($reservation as $key => &$value)
 				{
@@ -1675,7 +1832,8 @@
 							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
 							$fakturalinje['Avgift']				 = $order_line['tax'];
 							$fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 255);
-							$fakturalinje['mvakode']			 = $order_line['tax_code'];
+//							$fakturalinje['mvakode']			 = $order_line['tax_code'];
+							$fakturalinje['mvakode']			 = $order_line['tax_code'] == 38 ? "U" : $order_line['tax_code'];
 							$fakturalinje['antall']				 = $order_line['quantity'];
 							$fakturalinje['enhetspris']			 = $order_line['unit_price'];
 							$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
@@ -1800,7 +1958,8 @@
 							$fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
 							$fakturalinje['Avgift']				 = $order_line['tax'];
 							$fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 255);
-							$fakturalinje['mvakode']			 = $order_line['tax_code'];
+//							$fakturalinje['mvakode']			 = $order_line['tax_code'];
+							$fakturalinje['mvakode']			 = $order_line['tax_code'] == 38 ? "U" : $order_line['tax_code'];
 							$fakturalinje['antall']				 = $order_line['quantity'];
 							$fakturalinje['enhetspris']			 = $order_line['unit_price'];
 							$fakturalinjer[$check_customer_identifier]['BkPffFakturagrunnlaglinje'][] = $fakturalinje;
@@ -2120,6 +2279,9 @@
 						$header['dim_value_4'] = str_pad(substr($account_codes['dim_value_4'], 0, 12), 12, ' ');
 					}
 
+					/**
+					 * Vår ref.
+					 */
 					if (isset($this->config_data['dim_value_5']))
 					{
 						$header['dim_value_5'] = str_pad(substr($account_codes['dim_value_5'], 0, 12), 12, ' ');

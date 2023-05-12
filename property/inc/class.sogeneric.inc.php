@@ -671,10 +671,8 @@
 						(
 						'table'			 => 'fm_wo_hours_category',
 						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
-							(
-							array
-								(
+						'fields'		 => array(
+							array(
 								'name'	 => 'descr',
 								'descr'	 => lang('descr'),
 								'type'	 => 'varchar'
@@ -682,10 +680,10 @@
 						),
 						'edit_msg'		 => lang('edit'),
 						'add_msg'		 => lang('add'),
-						'name'			 => '',
+						'name'			 => 'workorder detail',
 						'acl_app'		 => 'property',
 						'acl_location'	 => '.admin',
-						'menu_selection' => 'admin::property::workorder_detail'
+						'menu_selection' => 'admin::property::project::workorder_detail'
 					);
 					break;
 				case 'r_condition_type':
@@ -716,6 +714,46 @@
 						'menu_selection' => 'admin::property::request_condition'
 					);
 					break;
+				case 'r_probability':
+					$info	 = array
+						(
+						'table'			 => 'fm_request_probability',
+						'id'			 => array('name' => 'id', 'type' => 'int'),
+						'fields'		 => array(
+							array(
+								'name'	 => 'name',
+								'descr'	 => lang('name'),
+								'type'	 => 'varchar'
+							)
+						),
+						'edit_msg'		 => lang('edit'),
+						'add_msg'		 => lang('add'),
+						'name'			 => 'probability',
+						'acl_app'		 => 'property',
+						'acl_location'	 => '.admin',
+						'menu_selection' => 'admin::property::request_probability'
+					);
+					break;
+				case 'r_consequence':
+					$info	 = array
+						(
+						'table'			 => 'fm_request_consequence',
+						'id'			 => array('name' => 'id', 'type' => 'int'),
+						'fields'		 => array(
+							array(
+								'name'	 => 'name',
+								'descr'	 => lang('name'),
+								'type'	 => 'varchar'
+							)
+						),
+						'edit_msg'		 => lang('edit'),
+						'add_msg'		 => lang('add'),
+						'name'			 => 'consequence',
+						'acl_app'		 => 'property',
+						'acl_location'	 => '.admin',
+						'menu_selection' => 'admin::property::request_consequence'
+					);
+					break;	
 				case 'authorities_demands':
 					$info	 = array
 						(
@@ -779,10 +817,10 @@
 								'filter'	 => true,
 								'sortable'	 => false,
 								'hidden'	 => false,
-								'values_def' => array
-									(
+								'values_def' => array(
 									'valueset'		 => false,
 									'method'		 => 'property.bocommon.get_top_level_categories',
+									'get_single_value'	 => 'property.bocommon.get_top_level_category_names',
 									'method_input'	 => array(
 										'app'			 => 'property',
 										'acl_location'	 => '.project',
@@ -811,13 +849,18 @@
 						(
 						'table'			 => 'fm_ecodimb_role',
 						'id'			 => array('name' => 'id', 'type' => 'int'),
-						'fields'		 => array
-							(
-							array
-								(
+						'fields'		 => array(
+							array(
 								'name'	 => 'name',
 								'descr'	 => lang('name'),
-								'type'	 => 'varchar'
+								'type'	 => 'varchar',
+								'sortable'	 => true
+							),
+							array(
+								'name'		 => 'amount_limit',
+								'descr'		 => lang('limit'),
+								'type'		 => 'integer',
+								'sortable'	 => true
 							)
 						),
 						'edit_msg'		 => lang('edit role'),
@@ -990,13 +1033,13 @@
 						'fields'		 => array
 							(
 							array
-							(
+								(
 								'name'	 => 'name',
 								'descr'	 => lang('name'),
 								'type'	 => 'varchar'
 							),
 							array
-							(
+								(
 								'name'		 => 'transfer_to_external',
 								'descr'		 => lang('transfer to external'),
 								'type'		 => 'checkbox',
@@ -1004,7 +1047,7 @@
 								'filter'	 => false,
 								'sortable'	 => true,
 								'values_def' => array
-								(
+									(
 									'valueset' => array(array('id' => 1, 'name' => lang('transfer to external'))),
 								)
 							),
@@ -1061,14 +1104,31 @@
 								'type'	 => 'int'
 							),
 							array(
+								'name'		 => 'b_account_category',
+								'descr'		 => lang('budget account group'),
+								'type'		 => 'multiple_select',
+								'nullable'	 => true,
+								'filter'	 => true,
+								'sortable'	 => true,
+
+								'values_def' => array(
+									'valueset'			 => false,
+									'method'			 => 'property.bogeneric.get_list',
+									'get_single_value'	 => 'property.sogeneric.get_name',
+									'method_input'		 => array(
+										'type' => 'b_account',
+										'selected' => '##b_account_category##',
+										'filter' => array('active' => 1))
+								)
+							),
+							array(
 								'name'		 => 'active',
 								'descr'		 => lang('active'),
 								'type'		 => 'checkbox',
 								'default'	 => 'checked',
 								'filter'	 => true,
 								'sortable'	 => true,
-								'values_def' => array
-									(
+								'values_def' => array(
 									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
 								)
 							)
@@ -1078,7 +1138,7 @@
 						'name'			 => lang('external project'),
 						'acl_app'		 => 'property',
 						'acl_location'	 => '.admin',
-						'menu_selection' => 'admin::property::external_project'
+						'menu_selection' => 'admin::property::project::external_project',
 					);
 					break;
 				case 'unspsc_code':
@@ -1099,7 +1159,7 @@
 						'name'			 => lang('unspsc code'),
 						'acl_app'		 => 'property',
 						'acl_location'	 => '.admin',
-						'menu_selection' => 'admin::property::unspsc_code'
+						'menu_selection' => 'admin::property::project::unspsc_code'
 					);
 					break;
 				case 'project_status':
@@ -1133,7 +1193,7 @@
 						'name'			 => lang('project status'),
 						'acl_app'		 => 'property',
 						'acl_location'	 => '.admin',
-						'menu_selection' => 'admin::property::project_status'
+						'menu_selection' => 'admin::property::project::project_status'
 					);
 					break;
 				case 'workorder_status':
@@ -1187,7 +1247,7 @@
 						'name'			 => lang('workorder status'),
 						'acl_app'		 => 'property',
 						'acl_location'	 => '.admin',
-						'menu_selection' => 'admin::property::workorder_status'
+						'menu_selection' => 'admin::property::project::workorder_status'
 					);
 					break;
 				case 'request_status':
@@ -1378,8 +1438,12 @@
 									'valueset'			 => false,
 									'method'			 => 'property.bogeneric.get_list',
 									'get_single_value'	 => 'property.sogeneric.get_name',
-									'method_input'		 => array('type'		 => 'ns3420', 'role'		 => 'parent', 'selected'	 => '##parent_id##',
-										'id_in_name' => 'num', 'mapping'	 => array('name' => 'tekst1')
+									'method_input'		 => array(
+										'type'		 => 'ns3420',
+										'role'		 => 'parent',
+										'selected'	 => '##parent_id##',
+										'id_in_name' => 'num',
+										'mapping'	 => array('name' => 'tekst1')
 									)
 								)
 							),
@@ -1533,8 +1597,11 @@
 									'valueset'			 => false,
 									'get_single_value'	 => 'get_user',
 									'method'			 => 'property.bocommon.get_user_list_right2',
-									'method_input'		 => array('selected'		 => '##responsible##', 'right'			 => 128,
-										'acl_location'	 => '.invoice')
+									'method_input'		 => array(
+										'selected'		 => '##responsible##',
+										'right'			 => 128,
+										'acl_location'	 => '.invoice'
+									)
 								)
 							),
 							array
@@ -1740,14 +1807,12 @@
 									'method_input'		 => array('type' => 'dimb_role', 'selected' => '##role_id##')
 								)
 							),
-							array
-								(
+							array(
 								'name'		 => 'user_id',
 								'descr'		 => lang('user'),
 								'type'		 => 'select',
 								'filter'	 => true,
-								'values_def' => array
-									(
+								'values_def' => array(
 									'valueset'			 => false,
 									'get_single_value'	 => 'get_user',
 									'method'			 => 'property.bocommon.get_user_list_right2',
@@ -2015,7 +2080,6 @@
 					);
 					break;
 
-
 				case 'regulations':
 					$info = array
 						(
@@ -2099,7 +2163,7 @@
 						'name'			 => lang('Pending action type'),
 						'acl_app'		 => 'property',
 						'acl_location'	 => '.admin',
-						'menu_selection' => 'admin::property::action_type'
+						'menu_selection' => 'admin::property::pending_action_type'
 					);
 
 					break;
@@ -2726,10 +2790,8 @@
 						(
 						'table'			 => 'fm_location_exception',
 						'id'			 => array('name' => 'id', 'type' => 'auto'),
-						'fields'		 => array
-							(
-							array
-								(
+						'fields'		 => array(
+							array(
 								'name'		 => 'location_code',
 								'descr'		 => lang('location'),
 								'type'		 => 'location',
@@ -2747,14 +2809,16 @@
 								'name'		 => 'start_date',
 								'descr'		 => lang('start date'),
 								'type'		 => 'date',
-								'nullable'	 => false
+								'nullable'	 => false,
+								'sortable'	 => true
 							),
 							array
 								(
 								'name'		 => 'end_date',
 								'descr'		 => lang('end date'),
 								'type'		 => 'date',
-								'nullable'	 => true
+								'nullable'	 => true,
+								'sortable'	 => true
 							),
 							array
 								(
@@ -2771,8 +2835,7 @@
 								'nullable'	 => false,
 								'filter'	 => true,
 								'sortable'	 => true,
-								'values_def' => array
-									(
+								'values_def' => array(
 									'valueset'			 => false,
 									'method'			 => 'property.bogeneric.get_list',
 									'get_single_value'	 => 'property.sogeneric.get_name',
@@ -2824,6 +2887,18 @@
 								'descr'	 => lang('alert vendor'),
 								'type'	 => 'checkbox'
 							),
+							array(
+								'name'		 => 'user_id',
+								'descr'		 => lang('user'),
+								'type'		 => 'select',
+								'filter'	 => true,
+								'values_def' => array(
+									'valueset'			 => false,
+									'get_single_value'	 => 'get_user',
+									'method'			 => 'property.bocommon.get_user_list_right2',
+									'method_input'		 => array('selected' => '##user_id##', 'right' => 1, 'acl_location' => '.location')
+								)
+							),
 						),
 						'edit_msg'		 => lang('edit'),
 						'add_msg'		 => lang('add'),
@@ -2831,8 +2906,7 @@
 						'acl_app'		 => 'property',
 						'acl_location'	 => '.location',
 						'menu_selection' => 'admin::property::location::location_exception::category::category_text',
-						'default'		 => array
-							(
+						'default'		 => array(
 							'user_id'		 => array('add' => '$this->account'),
 							'entry_date'	 => array('add' => 'time()'),
 							'modified_date'	 => array('add' => 'time()', 'edit' => 'time()'),
@@ -2896,6 +2970,8 @@
 					phpgwapi_cache::message_set($message, 'error');
 //				throw new Exception(lang('ERROR: illegal type %1', $type));
 			}
+			$info['type']		 = $type;
+			$info['type_id']	 = $type_id;
 
 			$this->location_info = $info;
 			return $info;

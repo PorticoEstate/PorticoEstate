@@ -389,7 +389,7 @@
 			$data['datatable']['actions'] = '';
 
 			phpgwapi_jquery::load_widget('numberformat');
-			self::add_javascript('property', 'portico', 'investment.index.js');
+			self::add_javascript('property', 'base', 'investment.index.js');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -615,7 +615,7 @@
 
 			//Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			self::add_javascript('property', 'portico', 'investment.history.js');
+			self::add_javascript('property', 'base', 'investment.history.js');
 
 			self::render_template_xsl(array('investment', 'datatable_inline'), array('history' => $data));
 		}

@@ -106,7 +106,7 @@
 		 */
 		public function get_category()
 		{
-			$b_account_id = phpgw::get_var('b_account_id', 'int');
+			$b_account_id = phpgw::get_var('b_account_id', 'string');
 			$cat_id		 = phpgw::get_var('cat_id', 'int');
 			$category	 = $this->cats->return_single($cat_id);
 
@@ -128,6 +128,8 @@
 					$sogeneric			 = CreateObject('property.sogeneric');
 					$sogeneric->get_location_info('b_account_category', false);
 					$account_group_data	 = $sogeneric->read_single(array('id' => (int)$_b_account_group), array());
+
+					$category[0]['mandatory_external_project'] = $account_group_data['external_project'];
 
 					if (isset($account_group_data['project_category']) && $account_group_data['project_category'])
 					{

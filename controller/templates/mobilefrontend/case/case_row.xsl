@@ -219,10 +219,10 @@
 
 									<!-- === QUICK EDIT MENU === -->
 									<div class="quick_menu">
-										<a class="quick_edit_case first btn btn-primary btn-lg mr-3" href="#">
+										<a class="quick_edit_case first btn btn-primary btn-lg me-3" href="#">
 											endre
 										</a>
-										<a class="close_case btn btn-primary btn-lg mr-3">
+										<a class="close_case btn btn-primary btn-lg me-3">
 											<xsl:attribute name="href">
 												<xsl:text>index.php?menuaction=controller.uicase.close_case</xsl:text>
 												<xsl:text>&amp;case_id=</xsl:text>
@@ -236,7 +236,7 @@
 										</a>
 										<!--										<xsl:choose>
 											<xsl:when test="location_item_id = 0">
-												<a class="delete_case btn btn-primary btn-lg mr-3">
+												<a class="delete_case btn btn-primary btn-lg me-3">
 													<xsl:attribute name="href">
 														<xsl:text>index.php?menuaction=controller.uicase.delete_case</xsl:text>
 														<xsl:text>&amp;case_id=</xsl:text>
@@ -390,6 +390,9 @@
 											<xsl:when test="$control_item_type = 'control_item_type_3'">
 												<!--  MEASUREMENT -->
 												<div class="row">
+													<xsl:variable name="measurement_value">
+														<xsl:value-of select="measurement"/>
+													</xsl:variable>
 													<label class="comment">Velg verdi fra liste</label>
 													<select name="measurement" class="pure-input-1">
 														<xsl:for-each select="../control_item/options_array">
@@ -397,6 +400,11 @@
 																<xsl:attribute name="value">
 																	<xsl:value-of select="option_value"/>
 																</xsl:attribute>
+																<xsl:choose>
+																	<xsl:when test="option_value = $measurement_value">
+																		<xsl:attribute name="selected" value="selected"/>
+																	</xsl:when>
+																</xsl:choose>
 																<xsl:value-of select="option_value"/>
 															</option>
 														</xsl:for-each>
@@ -406,6 +414,10 @@
 											<xsl:when test="$control_item_type = 'control_item_type_4'">
 												<!--  MEASUREMENT -->
 												<div class="row">
+													<xsl:variable name="measurement_value">
+														<xsl:value-of select="measurement"/>
+													</xsl:variable>
+
 													<label class="comment">Velg verdi fra liste</label>
 													<xsl:for-each select="../control_item/options_array">
 														<input type="radio" name="measurement" value="female">
@@ -413,6 +425,11 @@
 																<xsl:value-of select="option_value"/>
 															</xsl:attribute>
 														</input>
+														<xsl:choose>
+															<xsl:when test="option_value = $measurement_value">
+																<xsl:attribute name="checked" value="checked"/>
+															</xsl:when>
+														</xsl:choose>
 														<xsl:value-of select="option_value"/>
 													</xsl:for-each>
 												</div>
@@ -426,12 +443,20 @@
 													</div>
 													<div class="pure-control-group">
 
+														<xsl:variable name="measurement_value">
+															<xsl:value-of select="measurement"/>
+														</xsl:variable>
 														<xsl:for-each select="../control_item/options_array">
 															<label class="pure-checkbox">
 																<input type="checkbox" name="measurement[]">
 																	<xsl:attribute name="value">
 																		<xsl:value-of select="option_value"/>
 																	</xsl:attribute>
+																	<xsl:choose>
+																		<xsl:when test="option_value = $measurement_value">
+																			<xsl:attribute name="checked" value="checked"/>
+																		</xsl:when>
+																	</xsl:choose>
 																</input>
 																<xsl:value-of select="option_value"/>
 															</label>
@@ -461,6 +486,9 @@
 									</div>
 									<xsl:if test="../control_item/include_regulation_reference = 1">
 										<div class="form-group">
+											<xsl:variable name="regulation_reference_value">
+												<xsl:value-of select="regulation_reference"/>
+											</xsl:variable>
 											<label>
 												<xsl:attribute name="title">
 													<xsl:value-of select="php:function('lang', 'regulation reference')"/>
@@ -476,6 +504,11 @@
 														<xsl:attribute name="value">
 															<xsl:value-of select="option_value"/>
 														</xsl:attribute>
+														<xsl:choose>
+															<xsl:when test="option_value = $regulation_reference_value">
+																<xsl:attribute name="selected" value="selected"/>
+															</xsl:when>
+														</xsl:choose>
 														<xsl:value-of select="option_value"/>
 													</option>
 												</xsl:for-each>
@@ -484,8 +517,8 @@
 									</xsl:if>
 
 									<div>
-										<input class='btn_m first btn btn-primary btn-lg mr-3' type='submit' value='Oppdater' />
-										<input class='btn_m cancel first btn btn-primary btn-lg mr-3' type='button' value='Avbryt' />
+										<input class='btn_m first btn btn-primary btn-lg me-3' type='submit' value='Oppdater' />
+										<input class='btn_m cancel first btn btn-primary btn-lg me-3' type='button' value='Avbryt' />
 									</div>
 								</form>
 							</div>

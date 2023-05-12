@@ -1,44 +1,36 @@
 <!-- $Id$ -->
 
-	<xsl:template name="dummy">
-		<xsl:apply-templates select="global_message"/>
-	</xsl:template>
+<xsl:template name="dummy">
+	<xsl:apply-templates select="global_message"/>
+</xsl:template>
 
-	<xsl:template match="global_message" xmlns:php="http://php.net/xsl">
-		<h1><xsl:value-of select="php:function('lang', 'global message')" /></h1>
-		<form method="post" action="{form_action}">
-			<table>
-				<tr>
-					<td valign="top">
-								<xsl:value-of select="php:function('lang', 'message')" />
-					</td>
-					<td>
-						<textarea cols="40" rows="6" id='message' name="message" wrap="virtual">
-							<xsl:attribute name="title">
-	    		        		<xsl:value-of select="php:function('lang', 'global message')" />
-							</xsl:attribute>
-							<xsl:value-of select="value_message"/>
-						</textarea>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<xsl:value-of select="php:function('lang', 'delete message')" />
-					</td>
-					<td>
-						<input type="checkbox" name="delete_message" value="1" >
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'delete message')" />
-							</xsl:attribute>
-						</input>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<input type="submit" name="confirm" value="{lang_submit}"/>
-						<input type="submit" name="cancel" value="{lang_cancel}" />
-					</td>
-				</tr>
-			</table>
+<xsl:template match="global_message" xmlns:php="http://php.net/xsl">
+	<div class = "container">
+		<form method="post" action="{form_action}" class="pure-form pure-form-stacked">
+			<fieldset>
+				<legend>
+					<xsl:value-of select="php:function('lang', 'global message')" />
+				</legend>
+				<label>
+					<xsl:value-of select="php:function('lang', 'message')" />
+				</label>
+				<textarea rows="6" id='message' name="message" wrap="virtual" class="pure-input-1">
+					<xsl:attribute name="title">
+						<xsl:value-of select="php:function('lang', 'global message')" />
+					</xsl:attribute>
+					<xsl:value-of select="value_message"/>
+				</textarea>
+				<label for="delete_message" class="pure-checkbox">
+					<input type="checkbox" id="delete_message" name="delete_message" value="1" >
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'delete message')" />
+						</xsl:attribute>
+					</input>
+					<xsl:value-of select="php:function('lang', 'delete message')" />
+				</label>
+				<input type="submit" name="confirm" value="{lang_submit}" class="pure-button pure-button-primary"/>
+				<input type="submit" name="cancel" value="{lang_cancel}" class="pure-button pure-button-primary"/>
+			</fieldset>
 		</form>
-	</xsl:template>
+	</div>
+</xsl:template>

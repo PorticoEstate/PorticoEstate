@@ -78,11 +78,11 @@
 								'text' => lang('Organization') . ':',
 								'list' => $this->bo->so->get_organizations(),
 							),
-							array(
-								'type' => 'link',
-								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
-							),
+//							array(
+//								'type' => 'link',
+//								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+//								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
+//							),
 						)
 					),
 				),
@@ -145,7 +145,15 @@
 			{
 				$data['datatable']['new_item'] = self::link(array('menuaction' => 'booking.uiallocation.add'));
 			}
-			$data['datatable']['actions'][] = array();
+
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'toggle_inactive',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+				'text'		 => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+				'custom_code'	 => 'window.open("' .self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive')) . '", "_self");',
+			);
 
 			$data['filters'] = $this->export_filters;
 			self::render_template_xsl('datatable_jquery', $data);
@@ -820,9 +828,17 @@
 
 			$purchase_order = $this->sopurchase_order->get_purchase_order(0, 'allocation', $allocation['id']);
 
+			
+			$completed_reservations = CreateObject('booking.socompleted_reservation')->read(array(
+				'filters'	 => array(
+					'reservation_type'	 => 'allocation',
+					'reservation_id'	 => $allocation['id'],
+					'exported'			 => null),
+				'results'	 => -1));
+
 			if($purchase_order && !empty($config['activate_application_articles']))
 			{
-				if($allocation['completed'])
+				if(!empty($completed_reservations['results'][0]['exported']))
 				{
 					self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
 				}
@@ -1131,10 +1147,13 @@
 			{
 				$res_names[] = $res['name'];
 			}
+
 			$allocation['resource'] = phpgw::get_var('resource');
+			$allocation['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show',
+					'id' => $allocation['application_id']));
 			$allocation['resource_info'] = join(', ', $res_names);
 			$allocation['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
-					'id' => $allocation['resources'][0]['building_id']));
+					'id' => $allocation['building_id']));
 			$allocation['org_link'] = self::link(array('menuaction' => 'booking.uiorganization.show',
 					'id' => $allocation['organization_id']));
 			$allocation['delete_link'] = self::link(array('menuaction' => 'booking.uiallocation.delete',

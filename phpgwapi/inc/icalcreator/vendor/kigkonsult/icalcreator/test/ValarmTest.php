@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -29,10 +29,11 @@
 namespace Kigkonsult\Icalcreator;
 
 use Exception;
+use Kigkonsult\Icalcreator\Formatter\Property\Attendee;
+use Kigkonsult\Icalcreator\Formatter\Property\Property;
 use Kigkonsult\Icalcreator\Util\CalAddressFactory;
 use Kigkonsult\Icalcreator\Util\DateIntervalFactory;
-use Kigkonsult\Icalcreator\Util\ParameterFactory;
-use Kigkonsult\Icalcreator\Util\StringFactory;
+use Kigkonsult\Icalcreator\Util\DateTimeFactory;
 use Kigkonsult\Icalcreator\Util\Util;
 
 /**
@@ -46,132 +47,189 @@ use Kigkonsult\Icalcreator\Util\Util;
  */
 class ValarmTest extends DtBase
 {
-    private static $ERRFMT = "Error %sin case #%s, %s <%s>->%s";
-    private static $STCPAR = [ 'X-PARAM' => 'Y-vALuE' ];
+    /**
+     * @var array|string[]
+     */
+    private static array $STCPAR = [ 'X-PARAM' => 'Y-vALuE' ];
 
     /**
      * valarmTest provider
+     *
+     * @return mixed[]
+     * @throws Exception
      */
-    public function valarmTestProvider()
+    public function valarmTestProvider() : array
     {
         $dataArr = [];
 
-        // ACTION
+        // UID, optional in Valarm, rfc7094
+        $uid = bin2hex( random_bytes( 16 )); // i.e. 32
         $dataArr[] = [
-            11,
-            Vcalendar::ACTION,
+            101,
+            IcalInterface::UID,
+            $uid,
+            self::$STCPAR,
+            Pc::factory(
+                $uid,
+                self::$STCPAR
+            ),
+            Property::formatParams( self::$STCPAR ) . ':' . $uid
+        ];
+
+        // RELATED-TO
+        $dataArr[] = [
+            111,
+            IcalInterface::RELATED_TO,
             null,
             self::$STCPAR,
-            [
-                Util::$LCvalue  => '',
-                Util::$LCparams => []
-            ],
+            Pc::factory(
+                '',
+                []
+            ),
             ':'
         ];
 
-        $value = Vcalendar::AUDIO; // "DISPLAY" / "EMAIL
+        $params = [ IcalInterface::RELTYPE => IcalInterface::SNOOZE ] + self::$STCPAR;
         $dataArr[] = [
-            12,
-            Vcalendar::ACTION,
+            112,
+            IcalInterface::RELATED_TO,
+            $uid,
+            $params,
+            Pc::factory(
+                $uid,
+                $params
+            ),
+            Property::formatParams( $params ) . ':' . $uid
+        ];
+
+        // ACKNOWLEDGED
+        $value     = DateTimeFactory::factory( DateTimeFactory::$AT . time(), IcalInterface::UTC );
+        $dataArr[] = [
+            121,
+            IcalInterface::ACKNOWLEDGED,
             $value,
             self::$STCPAR,
-            [
-                Util::$LCvalue  => $value,
-                Util::$LCparams => self::$STCPAR
-            ],
-            ParameterFactory::createParams( self::$STCPAR ) .
-            ':' . $value
+            Pc::factory(
+                clone $value,
+                self::$STCPAR
+            ),
+            Property::formatParams( self::$STCPAR ) .
+                $this->getDateTimeAsCreateLongString( $value, IcalInterface::UTC )
+        ];
+
+        // ACTION
+        $dataArr[] = [
+            131,
+            IcalInterface::ACTION,
+            null,
+            self::$STCPAR,
+            Pc::factory(
+                '',
+                []
+            ),
+            ':'
+        ];
+
+        $value = IcalInterface::AUDIO; // "DISPLAY" / "EMAIL
+        $dataArr[] = [
+            132,
+            IcalInterface::ACTION,
+            $value,
+            self::$STCPAR,
+            Pc::factory(
+                $value,
+
+                self::$STCPAR
+            ),
+            Property::formatParams( self::$STCPAR ) . ':' . $value
         ];
 
         // TRIGGER
         $dataArr[] = [
-            21,
-            Vcalendar::TRIGGER,
+            141,
+            IcalInterface::TRIGGER,
             null,
             self::$STCPAR,
-            [
-                Util::$LCvalue  => '',
-                Util::$LCparams => []
-            ],
+            Pc::factory(
+                '',
+                []
+            ),
             ':'
         ];
 
         $value = 'P1D';
         $dataArr[] = [
-            22,
-            Vcalendar::TRIGGER,
+            142,
+            IcalInterface::TRIGGER,
             $value,
             self::$STCPAR,
-            [
-                Util::$LCvalue  => DateIntervalFactory::factory( $value ),
-                Util::$LCparams => self::$STCPAR
-            ],
-            ParameterFactory::createParams( self::$STCPAR ) .
-            ':' . $value
+            Pc::factory(
+                DateIntervalFactory::factory( $value ),
+                self::$STCPAR
+            ),
+            Property::formatParams( self::$STCPAR ) . ':' . $value
         ];
 
         // DURATION
         $dataArr[] = [
-            31,
-            Vcalendar::DURATION,
+            151,
+            IcalInterface::DURATION,
             null,
             self::$STCPAR,
-            [
-                Util::$LCvalue  => '',
-                Util::$LCparams => []
-            ],
+            Pc::factory(
+                '',
+                []
+            ),
             ':'
         ];
 
         $value = 'P1D';
         $dataArr[] = [
-            32,
-            Vcalendar::DURATION,
+            152,
+            IcalInterface::DURATION,
             $value,
             self::$STCPAR,
-            [
-                Util::$LCvalue  => DateIntervalFactory::factory( $value ),
-                Util::$LCparams => self::$STCPAR
-            ],
-            ParameterFactory::createParams( self::$STCPAR ) .
-            ':' . $value
+            Pc::factory(
+                DateIntervalFactory::factory( $value ),
+                self::$STCPAR
+            ),
+            Property::formatParams( self::$STCPAR ) . ':' . $value
         ];
 
         // REPEAT
         $dataArr[] = [
-            41,
-            Vcalendar::REPEAT,
+            161,
+            IcalInterface::REPEAT,
             null,
             self::$STCPAR,
-            [
-                Util::$LCvalue  => '',
-                Util::$LCparams => []
-            ],
+            Pc::factory(
+                '',
+                []
+            ),
             ':'
         ];
 
         $value = 3;
         $dataArr[] = [
-            42,
-            Vcalendar::REPEAT,
+            162,
+            IcalInterface::REPEAT,
             $value,
             self::$STCPAR,
-            [
-                Util::$LCvalue  => $value,
-                Util::$LCparams => self::$STCPAR
-            ],
-            ParameterFactory::createParams( self::$STCPAR ) .
-            ':' . $value
+            Pc::factory(
+                $value,
+                self::$STCPAR
+            ),
+            Property::formatParams( self::$STCPAR ) . ':' . $value
         ];
 
         // ATTACH
-        $getValue  = [
-            Util::$LCvalue  => '',
-            Util::$LCparams => []
-        ];
+        $getValue  = Pc::factory(
+            '',
+            []
+        );
         $dataArr[] = [
-            51,
-            Vcalendar::ATTACH,
+            171,
+            IcalInterface::ATTACH,
             null,
             self::$STCPAR,
             $getValue,
@@ -180,125 +238,212 @@ class ValarmTest extends DtBase
 
         $value  = 'CID:jsmith.part3.960817T083000.xyzMail@example.com';
         $params = self::$STCPAR;
-        $getValue  = [
-            Util::$LCvalue  => $value,
-            Util::$LCparams => $params
-        ];
+        $getValue  = Pc::factory(
+            $value,
+            $params
+        );
         $dataArr[] = [
-            52,
-            Vcalendar::ATTACH,
+            172,
+            IcalInterface::ATTACH,
             $value,
             $params,
             $getValue,
-            ParameterFactory::createParams( $params ) .
-            ':' . $value
+            Property::formatParams( $params ) . ':' . $value
         ];
 
         // ATTACH
         $value  = 'ftp://example.com/pub/reports/r-960812.ps';
-        $params = [ Vcalendar::FMTTYPE => 'application/postscript' ] + self::$STCPAR;
-        $getValue  = [
-            Util::$LCvalue  => $value,
-            Util::$LCparams => $params
-        ];
+        $params = [ IcalInterface::FMTTYPE => 'application/postscript' ] + self::$STCPAR;
+        $getValue  = Pc::factory(
+            $value,
+            $params
+        );
         $dataArr[] = [
-            53,
-            Vcalendar::ATTACH,
+            173,
+            IcalInterface::ATTACH,
             $value,
             $params,
             $getValue,
-            ParameterFactory::createParams( $params ) .
-            ':' . $value
+            Property::formatParams( $params ) . ':' . $value
         ];
 
         // DESCRIPTION
         $dataArr[] = [
-            61,
-            Vcalendar::DESCRIPTION,
+            181,
+            IcalInterface::DESCRIPTION,
             null,
             self::$STCPAR,
-            [
-                Util::$LCvalue  => '',
-                Util::$LCparams => []
-            ],
+            Pc::factory(
+                '',
+                []
+            ),
             ':'
         ];
 
         $value  = 'Meeting to provide technical review for \'Phoenix\' design.\nHappy Face Conference Room. Phoenix design team MUST attend this meeting.\nRSVP to team leader.';
         $params = [
-                Vcalendar::ALTREP   => 'This is an alternative representation',
-                Vcalendar::LANGUAGE => 'EN'
+                IcalInterface::ALTREP   => 'http://example.org/altrep182.html',
+                IcalInterface::LANGUAGE => 'EN'
             ] + self::$STCPAR;
         $dataArr[] = [
-            62,
-            Vcalendar::DESCRIPTION,
+            182,
+            IcalInterface::DESCRIPTION,
             $value,
             $params,
-            [
-                Util::$LCvalue  => $value,
-                Util::$LCparams => $params
-            ],
-            ParameterFactory::createParams( $params, [ Vcalendar::ALTREP, Vcalendar::LANGUAGE ] ) .
-            ':' . $value
+            Pc::factory(
+                $value,
+                $params
+            ),
+            Property::formatParams(
+                $params,
+                [ IcalInterface::ALTREP, IcalInterface::LANGUAGE ]
+            ) . ':' . $value
+        ];
+
+        // PROXIMITY
+        $dataArr[] = [
+            191,
+            IcalInterface::PROXIMITY,
+            null,
+            self::$STCPAR,
+            Pc::factory(
+                '',
+                []
+            ),
+            ':'
+        ];
+
+        $dataArr[] = [
+            192,
+            IcalInterface::PROXIMITY,
+            IcalInterface::ARRIVE,
+            self::$STCPAR,
+            Pc::factory(
+                IcalInterface::ARRIVE,
+                self::$STCPAR
+            ),
+            Property::formatParams( self::$STCPAR ) . ':' . IcalInterface::ARRIVE
+        ];
+
+        // STYLED-DESCRIPTION
+        $dataArr[] = [
+            201,
+            IcalInterface::STYLED_DESCRIPTION,
+            null,
+            self::$STCPAR,
+            Pc::factory(
+                '',
+                []
+            ),
+            ':'
+        ];
+
+        $value  = 'http://example.org/desc001.html';
+        $params = [
+                IcalInterface::VALUE    => IcalInterface::URI,
+                IcalInterface::ALTREP   => 'http://example.org/altrep202.html', // skipped
+                IcalInterface::LANGUAGE => 'EN'                                 // skipped
+            ] + self::$STCPAR;
+        $params2 = [
+                IcalInterface::VALUE   => IcalInterface::URI,
+                IcalInterface::DERIVED => IcalBase::FALSE
+            ] + self::$STCPAR;
+        $dataArr[] = [
+            202,
+            IcalInterface::STYLED_DESCRIPTION,
+            $value,
+            $params,
+            Pc::factory(
+                $value,
+                $params2
+            ),
+            Property::formatParams(
+                $params2,
+                [ IcalInterface::ALTREP, IcalInterface::LANGUAGE ]
+            ) . ':' . $value
+        ];
+
+        $value  = 'This is a longer styled description property with a number of meaningless words';
+        $params = [
+                IcalInterface::VALUE    => IcalInterface::TEXT,
+                IcalInterface::ALTREP   => 'http://example.org/altrep203.html',
+                IcalInterface::LANGUAGE => 'EN',
+                IcalInterface::DERIVED  => IcalInterface::TRUE
+            ] + self::$STCPAR;
+        $dataArr[] = [
+            203,
+            IcalInterface::STYLED_DESCRIPTION,
+            $value,
+            $params,
+            Pc::factory(
+                $value,
+                $params
+            ),
+            Property::formatParams(
+                $params,
+                [ IcalInterface::ALTREP, IcalInterface::LANGUAGE ]
+            ) . ':' . $value
         ];
 
         // SUMMARY
         $dataArr[] = [
-            71,
-            Vcalendar::SUMMARY,
+            211,
+            IcalInterface::SUMMARY,
             null,
             self::$STCPAR,
-            [
-                Util::$LCvalue  => '',
-                Util::$LCparams => []
-            ],
+            Pc::factory(
+                '',
+                []
+            ),
             ':'
         ];
 
         $value  = 'Department Party';
         $params = [
-                Vcalendar::ALTREP   => 'This is an alternative representation',
-                Vcalendar::LANGUAGE => 'EN'
+                IcalInterface::ALTREP   => 'http://example.org/altrep212.html',
+                IcalInterface::LANGUAGE => 'EN'
             ] + self::$STCPAR;
         $dataArr[] = [
-            72,
-            Vcalendar::SUMMARY,
+            212,
+            IcalInterface::SUMMARY,
             $value,
             $params,
-            [
-                Util::$LCvalue  => $value,
-                Util::$LCparams => $params
-            ],
-            ParameterFactory::createParams( $params, [ Vcalendar::ALTREP, Vcalendar::LANGUAGE ] ) .
-            ':' . $value
+            Pc::factory(
+                $value,
+                $params
+            ),
+            Property::formatParams(
+                $params,
+                [ IcalInterface::ALTREP, IcalInterface::LANGUAGE ]
+            ) . ':' . $value
         ];
 
         // ATTENDEE
         $dataArr[] = [
-            71,
-            Vcalendar::ATTENDEE,
+            221,
+            IcalInterface::ATTENDEE,
             null,
             self::$STCPAR,
-            [
-                Util::$LCvalue  => '',
-                Util::$LCparams => []
-            ],
+            Pc::factory(
+                '',
+                []
+            ),
             ':'
         ];
 
         $value  = 'MAILTO:ildoit@example.com';
         $params = self::$STCPAR;
-        $getValue  = [
-            Util::$LCvalue  => $value,
-            Util::$LCparams => $params
-        ];
-        $expectedString = trim( CalAddressFactory::outputFormatAttendee( [ $getValue ], true ));
+        $getValue  = Pc::factory(
+            CalAddressFactory::conformCalAddress( $value ),
+            $params
+        );
+        $expectedString = trim( Attendee::format( IcalInterface::ATTENDEE, [ $getValue ], true ));
         $expectedString = str_replace( Util::$CRLF . ' ' , null, $expectedString);
         $expectedString = str_replace( '\,', ',', $expectedString );
         $expectedString = substr( $expectedString, 8 );
         $dataArr[] = [
-            72,
-            Vcalendar::ATTENDEE,
+            222,
+            IcalInterface::ATTENDEE,
             $value,
             $params,
             $getValue,
@@ -313,86 +458,198 @@ class ValarmTest extends DtBase
     }
 
     /**
+     * valarmTest provider TEST multi Valarms
+     *
+     * @return mixed[]
+     */
+    public function valarmTestProviderTest() : array
+    {
+        $dataArr = [];
+
+        $value  = 'Meeting to provide....';
+        $params = [];
+        $dataArr[] = [
+            9999,
+            IcalInterface::DESCRIPTION,
+            $value,
+            $params,
+            Pc::factory(
+                $value,
+                $params
+            ),
+            Property::formatParams(
+                $params,
+                [ IcalInterface::ALTREP, IcalInterface::LANGUAGE ]
+            ) . ':' . $value
+        ];
+
+        return $dataArr;
+    }
+
+    /**
      * Testing Valarm
      *
      * @test
      * @dataProvider valarmTestProvider
-     * @param int    $case
+     * @ // dataProvider valarmTestProviderTest
+     * @param int|string $caseIn
      * @param string $propName
      * @param mixed  $value
      * @param mixed  $params
-     * @param array  $expectedGet
+     * @param Pc     $expectedGet
      * @param string $expectedString
      * @throws Exception
      */
     public function valarmTest(
-        $case,
-        $propName,
-        $value,
-        $params,
-        $expectedGet,
-        $expectedString
-    ) {
-        $c  = new Vcalendar();
-        foreach( [ $c->newVevent(), $c->newVtodo() ] as $comp  ) {
-            $a1 = $comp->newValarm();
+        int|string $caseIn,
+        string $propName,
+        mixed  $value,
+        mixed  $params,
+        Pc     $expectedGet,
+        string $expectedString
+    ) : void
+    {
+        static $MULTIPROPS = [
+            IcalInterface::ATTACH,
+            IcalInterface::ATTENDEE,
+            IcalInterface::DESCRIPTION,
+            IcalInterface::RELATED_TO,
+            IcalInterface::STYLED_DESCRIPTION
+        ];
+        static $pcInput = false;
 
-            $getMethod    = StringFactory::getGetMethodName( $propName );
-            $createMethod = StringFactory::getCreateMethodName( $propName );
-            $deleteMethod = StringFactory::getDeleteMethodName( $propName );
-            $setMethod    = StringFactory::getSetMethodName( $propName );
-
-            $a1->{$setMethod}( $value, $params );
-            if( in_array( $propName, [ Vcalendar::ATTACH, Vcalendar::DESCRIPTION, Vcalendar::ATTENDEE ] ) ) {
-                $getValue = $a1->{$getMethod}( null, true );
+        $c       = new Vcalendar();
+        for( $cix = 0; $cix < 2; $cix++ ) {
+            if( 0 === $cix ) {
+                $comp = $c->newVevent();
             }
             else {
-                $getValue = $a1->{$getMethod}( true );
+                $comp = $c->newVtodo();
             }
+            $case = $caseIn . '-' . ( 1 + $cix);
+            $comp->setXprop( 'x-case', $case )
+                ->setXprop( 'x-time', self::getYmdHisDate());
+
+            $a1 = $comp->newValarm()
+                ->setXprop( 'x-case', $case )
+                ->setXprop( 'x-time', self::getYmdHisDate());
+
+            if( IcalInterface::DESCRIPTION === $propName ) {
+                $vLocation1 = $a1->newVlocation( 'Office1' )
+                    ->setDescription( $value, $params )
+                    ->setXprop( 'x-time', self::getYmdHisDate())
+                    ->setXprop( 'x-case', $case . ' location 1' ); // by-pass test
+                $vLocation2 = $a1->newVlocation( 'Office2' )
+                    ->setDescription( $value, $params )
+                    ->setXprop( 'x-time', self::getYmdHisDate())
+                    ->setXprop( 'x-case', $case . ' location 2' ); // by-pass test
+            }
+
+            [ $createMethod, $deleteMethod, $getMethod, $isMethod, $setMethod ] = self::getPropMethodnames( $propName );
+            if( IcalInterface::UID !== $propName ) { // always (sort of...) set
+                $this->assertFalse(
+                    $a1->{$isMethod}(),
+                    self::getErrMsg(  null, $case . '-1', __FUNCTION__, IcalInterface::VALARM, $isMethod )
+                );
+            }
+
+            // set first
+            if( $pcInput ) {
+                $a1->{$setMethod}( Pc::factory( $value, $params ));
+            }
+            else {
+                $a1->{$setMethod}( $value, $params );
+            }
+            $this->assertSame(
+                ! empty( $value ),
+                $a1->{$isMethod}(),
+                self::getErrMsg(  null, $case . '-2', __FUNCTION__, IcalInterface::VALARM, $isMethod )
+                    . ', exp: ' . ( empty( $value ) ? IcalInterface::FALSE : IcalInterface::TRUE )
+            );
+
+            $getValue = ( in_array( $propName, $MULTIPROPS, true ))
+                ? $a1->{$getMethod}( null, true )
+                : $a1->{$getMethod}( true );
             $this->assertEquals(
                 $expectedGet,
                 $getValue,
-                sprintf( self::$ERRFMT, null, $case . '-1', __FUNCTION__, 'Valarm', $getMethod )
+                self::getErrMsg(  null, $case . '-3', __FUNCTION__, IcalInterface::VALARM, $getMethod )
             );
             $actualString = $a1->{$createMethod}();
-            $actualString = str_replace( [ Util::$CRLF . ' ', Util::$CRLF ], null, $actualString );
+            $actualString = str_replace( [ Util::$CRLF . ' ', Util::$CRLF ], '', $actualString );
             $actualString = str_replace( '\,', ',', $actualString );
             $this->assertEquals(
                 strtoupper( $propName ) . $expectedString,
                 trim( $actualString ),
-                sprintf( self::$ERRFMT, null, $case . '-2', __FUNCTION__, 'Valarm', $createMethod )
+                self::getErrMsg(  null, $case . '-4', __FUNCTION__, 'Valarm', $createMethod )
             );
-            $a1->{$deleteMethod}();
-            $this->assertFalse(
-                $a1->{$getMethod}(),
-                sprintf( self::$ERRFMT, '(after delete) ', $case . '-3', __FUNCTION__, 'Valarm', $getMethod )
-            );
-            $a1->{$setMethod}( $value, $params );
+            if( $propName !== IcalInterface::UID ) { // sort of mandatory....
+                $a1->{$deleteMethod}();
+                $this->assertFalse(
+                    $a1->{$isMethod}(),
+                    self::getErrMsg(  '(after delete) ', $case . '-5', __FUNCTION__, 'Valarm', $isMethod )
+                );
+                $this->assertFalse(
+                    $a1->{$getMethod}(),
+                    self::getErrMsg(  '(after delete) ', $case . '-6', __FUNCTION__, 'Valarm', $getMethod )
+                );
+                $a1->{$setMethod}( $value, $params ); // set again
+                $expected = ! empty( $value );
+                $this->assertSame(
+                    $expected,
+                    $a1->{$isMethod}(),
+                    self::getErrMsg(  '(exp ' .
+                        ( $expected ? IcalInterface::TRUE : IcalInterface::FALSE ) .
+                        ' after set) ', $case . '-7', __FUNCTION__, 'Valarm', $isMethod )
+                    . PHP_EOL . ' iCal string ' . $a1->{$createMethod}() // test ###
+
+                );
+            } // end if propName !== UID
 
             $this->parseCalendarTest( $case, $c, $expectedString );
 
-            $compArr = [
-                clone $a1,
-                clone $a1
-            ];
-
-            $x = 1;
-            while( $comp->deleteComponent( $x ) ) {
-                $x += 1;
+            // clone $a1 into 2 (incl cloned subs)
+            $subs = [];
+            while( $sub = $a1->getComponent()) { // return clone
+                $subs[] = $sub;
             }
-            $this->assertTrue(
-                ( 0 == $comp->countComponents() ),
-                $case .  '-5 deleteComponent-error 2, has ' . $comp->countComponents()
+            $x = 1;
+            while( $a1->deleteComponent( $x )) {
+                ++$x;
+            }
+            $a11 = clone $a1;
+            $a11->setXprop( 'x-clone', $case . ' clone 1' );
+            $a12 = clone $a1;
+            $a12->setXprop( 'x-clone', $case . ' clone 2' );
+            foreach( $subs as $six => $sub ) {
+                $sub->setXprop( 'x-clone', $case . ' clone ' . $six . '-1' );
+                $a11->addSubComponent( $sub ); // set clone
+                $sub->setXprop( 'x-clone', $case . ' clone ' . $six . '-2' );
+                $a12->addSubComponent( $sub );
+            }
+
+            $compArr = [ $a11, $a12 ];
+            $x = 1;
+            while( $comp->deleteComponent( $x )) {
+                ++$x;
+            }
+            $this->assertSame(
+                0, $comp->countComponents(), $case .  '-5 deleteComponent-error 2, has ' . $comp->countComponents()
             );
-            // check components are set
+            // set the cloned components
             foreach( $compArr as $subComp ) {
                 $comp->setComponent( $subComp );
             }
             // check number of components
-            $this->assertTrue(
-                ( count( $compArr ) == $comp->countComponents() ),
-                $case .  '-6 setComponent-error 3, has ' . $comp->countComponents()
+            $this->assertSame(
+                count( $compArr ), $comp->countComponents(), $case .  '-6 setComponent-error 3, has ' . $comp->countComponents()
             );
-        }
+
+        } // end for
+    }
+
+    private static function getYmdHisDate() : string
+    {
+        return DateTimeFactory::factory()->format( DateTimeFactory::$YmdHis );
     }
 }

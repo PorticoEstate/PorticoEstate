@@ -175,7 +175,7 @@
 						</input>
 					</div>
 					<div class="pure-control-group">
-						<label>Dim_value_5 (pos 962 - 973)</label>
+						<label>Dim_value_5 (pos 962 - 973), vår ref.</label>
 						<input id="field_dim_value_5" name="dim_value_5" type="text">
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/dim_value_5"/>

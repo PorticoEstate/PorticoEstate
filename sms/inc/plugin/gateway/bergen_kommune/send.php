@@ -14,7 +14,7 @@
 			$orgnr = $orgnr ? $orgnr : $this->sms_param['orgnr'];
 
 			$result = array();
-			$sms_msg = utf8_decode($sms_msg);
+			$sms_msg = mb_convert_encoding($sms_msg, 'ISO-8859-1', 'UTF-8');
 
 			$sms_to = ltrim($sms_to, '+');
 

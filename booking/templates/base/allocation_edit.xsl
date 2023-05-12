@@ -24,7 +24,7 @@
 								<xsl:value-of select="allocation/building_id"/>
 							</xsl:attribute>
 						</input>
-						<input id="field_building_name" name="building_name" type="text">
+						<input id="field_building_name" name="building_name" type="text" class="pure-input-1-4">
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
@@ -41,7 +41,7 @@
 						<label for="field_active">
 							<xsl:value-of select="php:function('lang', 'Active')"/>
 						</label>
-						<select id="field_active" name="active">
+						<select id="field_active" name="active" class="pure-input-1-4">
 							<option value="1">
 								<xsl:if test="allocation/active=1">
 									<xsl:attribute name="selected">checked</xsl:attribute>
@@ -60,11 +60,9 @@
 						<label style="vertical-align:top;">
 							<xsl:value-of select="php:function('lang', 'Season')" />
 						</label>
-						<div id="season_container" style="display:inline-block;">
+						<div id="season_container" style="display:inline;">
 							<span class="select_first_text">
-								<span class="select_first_text">
-									<xsl:value-of select="php:function('lang', 'Select a building first')" />
-								</span>
+								<xsl:value-of select="php:function('lang', 'Select a building first')" />
 							</span>
 						</div>
 					</div>
@@ -87,7 +85,7 @@
 								<xsl:value-of select="allocation/organization_id"/>
 							</xsl:attribute>
 						</input>
-						<input id="field_org_name" name="organization_name" type="text">
+						<input id="field_org_name" name="organization_name" type="text" class="pure-input-1-4">
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
@@ -105,7 +103,7 @@
 							<label for="field_from">
 								<xsl:value-of select="php:function('lang', 'From')" />
 							</label>
-							<input class="datetime" id="field_from" name="from_" type="text">
+							<input class="datetime pure-input-1-4" id="field_from" name="from_" type="text">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -121,7 +119,7 @@
 							<label for="field_to">
 								<xsl:value-of select="php:function('lang', 'To')" />
 							</label>
-							<input class="datetime" id="field_to" name="to_" type="text">
+							<input class="datetime pure-input-1-4" id="field_to" name="to_" type="text">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -146,7 +144,7 @@
 						<label for="field_cost">
 							<xsl:value-of select="php:function('lang', 'Cost')" />
 						</label>
-						<input id="field_cost" name="cost" type="text">
+						<input id="field_cost" name="cost" type="text" class="pure-input-1-4">
 							<xsl:choose>
 								<xsl:when test="config/activate_application_articles">
 									<xsl:attribute name="readonly">
@@ -181,11 +179,11 @@
 					</div>
 					<div>
 						<div class="heading">
-							<legend>
-								<h3>
-									<xsl:value-of select="php:function('lang', 'History of Cost (%1)', count(cost_history/author))" />
-								</h3>
-							</legend>
+							<!--<legend>-->
+							<h3>
+								<xsl:value-of select="php:function('lang', 'History of Cost (%1)', count(cost_history/author))" />
+							</h3>
+							<!--</legend>-->
 						</div>
 						<xsl:for-each select="cost_history[author]">
 							<div class="pure-control-group">
@@ -209,7 +207,9 @@
 							<span>
 								<xsl:value-of select="php:function('lang', 'Text written in the text area below will be sent as an email to all registered contact persons.')" />
 							</span>
-							<textarea id="field_mail" name="mail" class="full-width" style="display: block;"></textarea>
+							<textarea id="field_mail" name="mail" style="display: block;" class="pure-input-1">
+
+							</textarea>
 						</p>
 					</div>
 				</fieldset>

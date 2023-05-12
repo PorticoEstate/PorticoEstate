@@ -76,7 +76,60 @@
 						<xsl:value-of select="php:function('lang', 'No')"/>
 					</xsl:if>
 				</div>
+				<div class="pure-control-group">
+					<label for="for_field_hidden_in_frontend">
+						<xsl:value-of select="php:function('lang', 'hidden in frontend')"/>
+					</label>
+					<xsl:if test="resource/hidden_in_frontend=1">
+						<xsl:value-of select="php:function('lang', 'Yes')"/>
+					</xsl:if>
+					<xsl:if test="resource/hidden_in_frontend=0">
+						<xsl:value-of select="php:function('lang', 'No')"/>
+					</xsl:if>
+				</div>
+				<div class="pure-control-group">
+					<label for="for_field_activate_prepayment">
+						<xsl:value-of select="php:function('lang', 'activate prepayment')"/>
+					</label>
+					<xsl:if test="resource/activate_prepayment=1">
+						<xsl:value-of select="php:function('lang', 'Yes')"/>
+					</xsl:if>
+					<xsl:if test="resource/activate_prepayment=0">
+						<xsl:value-of select="php:function('lang', 'No')"/>
+					</xsl:if>
+				</div>
 
+
+				<div class="pure-control-group custom-container">
+					<label>
+						<xsl:value-of select="php:function('lang', 'seasons')"/>
+					</label>
+
+					<div class="pure-u-md-1-2">
+						<table class="table table-striped table-bordered dataTable" style="white-space: nowrap;">
+							<thead>
+								<tr>
+									<th>
+										<xsl:value-of select="php:function('lang', 'id')"/>
+									</th>
+									<th>
+										<xsl:value-of select="php:function('lang', 'name')"/>
+									</th>
+								</tr>
+							</thead>
+							<xsl:for-each select="seasons">
+								<tr>
+									<td>
+										<xsl:value-of select="id" />
+									</td>
+									<td>
+										<xsl:value-of select="name" />
+									</td>
+								</tr>
+							</xsl:for-each>
+						</table>
+					</div>
+				</div>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Resource category')"/>
@@ -155,14 +208,6 @@
 					<xsl:if test="not(resource/direct_booking = '')">
 						<xsl:value-of select="php:function('date', $date_format, number(resource/direct_booking))"/>
 					</xsl:if>
-				</div>
-				<div class="pure-control-group">
-					<label>
-						<xsl:value-of select="php:function('lang', 'season')"/>
-					</label>
-					<span>
-						<xsl:value-of select="resource/direct_booking_season_name"/>
-					</span>
 				</div>
 				<div class="pure-control-group">
 					<label>

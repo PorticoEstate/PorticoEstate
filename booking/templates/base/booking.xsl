@@ -10,6 +10,15 @@
 					<h1>#<xsl:value-of select="booking/id"/> (<xsl:value-of select="booking/activity_name"/>)</h1>
 					<div class="pure-control-group">
 						<label>
+							<xsl:value-of select="php:function('lang', 'Application')"/>
+						</label>
+						<xsl:if test="booking/application_id != ''">
+							<a href="{booking/application_link}">#<xsl:value-of select="booking/application_id"/></a>
+						</xsl:if>
+					</div>
+
+					<div class="pure-control-group">
+						<label>
 							<xsl:value-of select="php:function('lang', 'From')" />
 						</label>
 						<xsl:value-of select="php:function('pretty_timestamp', booking/from_)"/>
@@ -28,11 +37,11 @@
 					</div>
 					<div>
 						<div class="heading">
-							<legend>
-								<h3>
-									<xsl:value-of select="php:function('lang', 'History of Cost (%1)', count(cost_history/author))" />
-								</h3>
-							</legend>
+							<!--<legend>-->
+							<h3>
+								<xsl:value-of select="php:function('lang', 'History of Cost (%1)', count(cost_history/author))" />
+							</h3>
+							<!--</legend>-->
 						</div>
 						<xsl:for-each select="cost_history[author]">
 							<div class="pure-control-group">

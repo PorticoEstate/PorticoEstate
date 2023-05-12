@@ -145,7 +145,7 @@
 			$time = $timestart;
 			$html = '<html><head><title>Kalender for ' . $building['name'] . '</title>';
 			$html .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
-			$html .= '<meta name="author" content="Bergen Kommune">';
+			$html .= '<meta name="author" content="Aktiv Kommune">';
 			$html .= '<style>';
 			$html .= 'body { font-size: 12px; padding: 0px; border-spacing: 0px;} ';
 			if ($fontsize != '')
@@ -172,7 +172,7 @@
 			$html .= '<table class="calender">';
 			$html .= '<thead>';
 			$html .= '<tr>';
-			$html .= '<th colspan="2" style="text-align: left; width: 12%;">Bane</th>';
+			$html .= '<th colspan="2" style="text-align: left; width: 12%;"></th>';//Bane
 			while ($time < $timeend)
 			{
 				$html .= '<th colspan="1" style="width: ' . $cellwidth . '%; text-align: left;">' . str_pad($time, 2, '0', STR_PAD_LEFT) . ':00</th>';
@@ -399,7 +399,7 @@
 						{
 							$value = 'http://' . $value;
 						}
-						$value = sprintf('<a href="%s" target="_blank">%s</a>', $value, $value);
+						$value = sprintf('<a href="%s" target="_blank">%s</a>', $value, lang('Link to website'));
 					}
 					if ($field == 'email')
 					{
@@ -426,9 +426,19 @@
 				$building['homepage'] = 'http://' . $building['homepage'];
 			}
 
+			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']=='bookingfrontend_2')
+			{
+				phpgwapi_jquery::load_widget("datetimepicker");
+				self::add_javascript('phpgwapi', 'pecalendar', 'luxon.js');
+				self::add_javascript('phpgwapi', 'pecalendar', 'pecalendar.js');
+				$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/pecalendar/pecalendar.css");
+			}
+			else
+			{
+				$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
+			}
 
-			$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
-			self::add_javascript('bookingfrontend', 'base', 'building.js', 'text/javascript', true);
+			self::add_javascript('bookingfrontend', 'base', 'building.js', true);
 
 			self::render_template_xsl('building', array('building' => $building, 'config_data' => $config->config_data));
 		}

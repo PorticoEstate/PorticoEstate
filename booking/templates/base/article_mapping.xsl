@@ -137,16 +137,31 @@
 								</div>
 							</div>
 
-							<div id="service_container" class="pure-control-group" style="display:none;">
-								<label>
-									<xsl:value-of select="php:function('lang', 'service')"/>
-								</label>
-								<select id="field_service_id" name="service_id" class="pure-input-1-2" >
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:apply-templates select="service_list/options"/>
-								</select>
+							<div id="service_container" style="display:none;">
+								<div class="pure-control-group">
+									<label for="field_deactivate_in_frontend">
+										<xsl:value-of select="php:function('lang', 'deactivate in frontend')"/>
+									</label>
+									<input name="deactivate_in_frontend" type="checkbox" value="1" id="field_deactivate_in_frontend" >
+										<xsl:if test="article/deactivate_in_frontend = 1">
+										<xsl:attribute name="checked">
+											<xsl:text>checked</xsl:text>
+										</xsl:attribute>
+										</xsl:if>
+									</input>
+								</div>
+
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'service')"/>
+									</label>
+									<select id="field_service_id" name="service_id" class="pure-input-1-2" >
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:apply-templates select="service_list/options"/>
+									</select>
+								</div>
 							</div>
 
 						</fieldset>
@@ -156,7 +171,6 @@
 							<legend>
 								<xsl:value-of select="php:function('lang', 'prizing')"/>
 							</legend>
-
 							<div class="pure-control-group">
 								<xsl:variable name="lang_date_from">
 									<xsl:value-of select="php:function('lang', 'from')"/>
@@ -171,7 +185,7 @@
 										</xsl:attribute>
 									</xsl:if>
 									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
+										<xsl:text>new_price</xsl:text>
 									</xsl:attribute>
 									<xsl:attribute name="data-validation-error-msg">
 										<xsl:value-of select="$lang_date_from"/>
@@ -183,9 +197,9 @@
 									<xsl:value-of select="php:function('lang', 'price')"/>
 								</label>
 								<input type="text" id="price" name="article_prizing[price]" size="10" value="{article_prizing/price}" >
-									<xsl:attribute name="data-validation">
+<!--									<xsl:attribute name="data-validation">
 										<xsl:text>number</xsl:text>
-									</xsl:attribute>
+									</xsl:attribute>-->
 									<xsl:attribute name="data-validation-allowing">
 										<xsl:text>float</xsl:text>
 									</xsl:attribute>
@@ -250,6 +264,7 @@
 												<xsl:value-of select="multi_upload_action"/>
 											</xsl:with-param>
 											<xsl:with-param name="section">documents</xsl:with-param>
+											<xsl:with-param name="capture">camera</xsl:with-param>
 										</xsl:call-template>
 									</div>
 

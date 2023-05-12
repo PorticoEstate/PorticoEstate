@@ -208,7 +208,7 @@ JS;
 
 			$GLOBALS['phpgw']->js->add_code('', $code);
 
-			self::add_javascript('rental', 'rental', 'price_item.index.js');
+			self::add_javascript('rental', 'base', 'price_item.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -724,7 +724,7 @@ JS;
 				'list_type' => array('options' => $types_options),
 			);
 
-			self::add_javascript('rental', 'rental', 'price_item.adjust_price.js');
+			self::add_javascript('rental', 'base', 'price_item.adjust_price.js');
 			self::render_template_xsl(array('price_item', 'datatable_inline'), array('adjustment_price' => $data));
 		}
 

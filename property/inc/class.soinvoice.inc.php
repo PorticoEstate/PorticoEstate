@@ -38,6 +38,7 @@
 		public $sum_amount			 = 0;
 		public $role				 = array();
 		protected $invoice_approval	 = 2;
+		var $db, $account_id, $acl, $join, $left_join, $like, $config;
 
 		function __construct()
 		{
@@ -1069,7 +1070,7 @@
 						$GLOBALS['phpgw']->db->next_record();
 						if ($GLOBALS['phpgw']->db->f('cnt') == 0)
 						{
-							$receipt['error'][]	 = array('msg' => lang('This Dim B is not valid:') . " " . $dimd);
+							$receipt['error'][]	 = array('msg' => lang('This Dim B is not valid:') . " " . $dimb);
 							$local_error		 = true;
 						}
 
@@ -1472,6 +1473,22 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			return (int)$this->db->f('user_id');
+		}
+
+		function check_dimb_role_right( $role_id, $dimb ,$user_id)
+		{
+			$dimb		 = (int)$dimb;
+			$role_id	 = (int)$role_id;
+			$_user_id	 = (int)$user_id;
+			$ret		 = false;
+			$sql		 = "SELECT user_id FROM fm_ecodimb_role_user"
+				. " WHERE role_id = {$role_id} AND ecodimb = {$dimb} AND user_id = {$_user_id} AND expired_on IS NULL  AND active_from < " . time() . ' AND (active_to > ' . time() . ' OR active_to = 0)';
+			$this->db->query($sql, __LINE__, __FILE__);
+			if($this->db->next_record())
+			{
+				$ret = true;
+			}
+			return $ret;
 		}
 
 		function check_count( $voucher_id )
@@ -2246,6 +2263,13 @@
 				$global_check	 = true;
 			}
 
+			$condition_approval = $condition;
+			if ((!empty($data['approve']) || !empty($data['sign_orig'])) && !empty($data['voucher_id']) && !empty($data['approve_all_lines']))
+			{
+				$condition_approval		 = 'WHERE bilagsnr =' . (int)$data['voucher_id'];
+				$global_check	 = true;
+			}
+
 			$receipt	 = array();
 			$local_error = false;
 			if ($condition)
@@ -2256,9 +2280,7 @@
 
 				$this->db->query("SELECT * FROM fm_ecobilag {$condition}", __LINE__, __FILE__);
 				$this->db->next_record();
-				$oppsynsigndato		 = $this->db->f('oppsynsigndato');
 				$oppsynsmannid		 = $this->db->f('oppsynsmannid');
-				$saksigndato		 = $this->db->f('saksigndato');
 				$saksbehandlerid	 = $this->db->f('saksbehandlerid');
 				$budsjettansvarligid = $this->db->f('budsjettansvarligid');
 
@@ -2286,10 +2308,16 @@
 						$local_error = true;
 					}
 
-					if ($check_count['dimd_count'] != $check_count['invoice_count'])
+					/**
+					 * if dim 6 is mandatory...
+					 */
+					if(false)
 					{
-						phpgwapi_cache::message_set(lang('Dim D is mandatory') . ": {$data['voucher_id']}", 'error');
-						$local_error = true;
+						if ($check_count['dimd_count'] != $check_count['invoice_count'])
+						{
+							phpgwapi_cache::message_set(lang('Dim D is mandatory') . ": {$data['voucher_id']}", 'error');
+							$local_error = true;
+						}
 					}
 
 					if ($this->check_claim($data['voucher_id']))
@@ -2387,7 +2415,7 @@
 				else
 				{
 					$value_set = $this->db->validate_update($value_set);
-					return $this->db->query("UPDATE fm_ecobilag SET $value_set {$condition}", __LINE__, __FILE__);
+					return $this->db->query("UPDATE fm_ecobilag SET $value_set {$condition_approval}", __LINE__, __FILE__);
 				}
 			}
 
@@ -2568,7 +2596,7 @@
 						$value_set_line['category']		 = $data['dim_e'];
 
 						$value_set_line = $this->db->validate_update($value_set_line);
-						$this->db->query("UPDATE fm_workorder SET {$value_set_line} WHERE id='{$data['order_id']}'");
+						$this->db->query("UPDATE fm_workorder SET {$value_set_line} WHERE id='{$data['order_id']}' AND continuous IS NULL", __LINE__, __FILE__);
 						unset($value_set_line);
 						break;
 				}
@@ -2634,9 +2662,25 @@
 
 					$value_set = array();
 
-					$skip_values = array('id', 'project_id', 'pmwrkord_code', 'dima', 'dime', 'loc1',
-						'mvakode', 'dimd', 'merknad', 'line_text', 'oppsynsmannid', 'saksbehandlerid',
-						'oppsynsigndato', 'saksigndato', 'budsjettsigndato', 'process_code', 'process_log');
+					$skip_values = array(
+						'id',
+//						'project_id',
+//						'pmwrkord_code',
+//						'dima',
+//						'dime',
+//						'loc1',
+//						'mvakode',
+//						'dimd',
+						'merknad',
+//						'line_text',
+//						'oppsynsmannid',
+//						'saksbehandlerid',
+//						'oppsynsigndato',
+						'saksigndato',
+						'budsjettsigndato',
+						'process_code',
+						'process_log'
+					);
 
 					foreach ($metadata as $_field)
 					{

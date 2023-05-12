@@ -97,6 +97,7 @@
 					'text' => lang('Buildings'),
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uibuilding.index')),
 					'image' => array('property', 'location_1'),
+					'icon' => 'fa fa-2x fa-building',
 					'children' => array
 						(
 						'buildings' => array
@@ -441,6 +442,11 @@
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiapplication_settings.index',
 								'appname' => 'booking'))
 						),
+						'e_lock_system' => array(
+							'text' => lang('e_lock_system'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uigeneric.index',
+								'type' => 'e_lock_system')),
+						),
 						'office' => array
 							(
 							'text' => lang('office'),
@@ -487,9 +493,10 @@
 					),
 					'customconfig' => array
 					(
-						'text' => lang('custom config'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index',
-						'location_id' => $GLOBALS['phpgw']->locations->get_id('booking', 'run')))
+						'text'			 => lang('custom config'),
+						'nav_location'	 => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('booking', 'run'),
+						'url'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction'	 => 'admin.uiconfig2.index',
+							'location_id'	 => $GLOBALS['phpgw']->locations->get_id('booking', 'run')))
 					),
 					'permissions' => array
 						(

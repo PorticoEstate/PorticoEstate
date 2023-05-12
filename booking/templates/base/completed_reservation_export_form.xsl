@@ -103,7 +103,15 @@
 					</div>
 				</dd>
 			</dl>
-			
+
+			<xsl:for-each select="export/process">
+				<input type="hidden" name="process[]">
+					<xsl:attribute name="value">
+						<xsl:value-of select="node()"/>
+					</xsl:attribute>
+				</input>
+			</xsl:for-each>
+
 			<div class="clr"/>
 
 			<div class="form-buttons">

@@ -1,0 +1,139 @@
+.choice {
+  position: relative;
+  cursor: pointer;
+  padding-left: 2.5rem;
+
+  & input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  & input:focus-visible ~ &__radio,
+  & input:focus-visible ~ &__check {
+    box-shadow: $box-focus-shadow;
+  }
+
+  &:hover &__radio,
+  &:hover &__check {
+    background-color: $purple;
+  }  
+
+  &__radio,
+  &__check {
+    position: absolute;
+    width: 1.75rem;
+    height: 1.75rem;
+    left: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $white;
+    z-index: 1;
+  }
+
+  &__radio {
+    border: 2px solid $black;
+    border-radius: $rounded-large;
+  }
+
+  & input:checked ~ &__radio::after {
+    content:'';
+    position: absolute;
+    width: 0.75rem;
+    height: 0.75rem;
+    background-color: $black;
+    z-index: 2;
+    border-radius: $rounded-large;
+  }
+
+  & input:hover:checked ~ &__radio::after {
+    background-color: $white;
+  }
+
+  &__check {
+    border: 1px solid $grey;
+    box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
+    border-radius: $rounded-mini;
+  }
+
+  & input:checked ~ &__check {
+    background-color: $purple;
+  }
+
+  & input:checked ~ &__check::after {
+    content: "\f00c";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 600;
+    position: absolute;
+    color: $white;
+    z-index: 2;
+    font-size: 1rem;
+  }
+}
+
+input[type="text"] {
+  @include pill;
+  box-shadow: $box-shadow;
+  -webkit-appearance: none;
+}
+
+.input-icon {
+  position: relative;
+
+  input[type="text"] {
+    padding-left: 3.25rem;
+    width: 100%;
+  }
+
+  i {
+    color: $purple;
+    position: absolute;
+    left: 1.5rem;
+    top: 0.65rem;
+    font-size: 1.25rem;
+  }
+
+  &--action {
+    input[type="text"] {
+      padding-left: 1.5rem;
+      padding-right: 3.5rem;
+    }
+
+    button {
+      position: absolute;
+      top: 0.25rem;
+      right: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background-color: transparent;
+      border: 0;
+      border-radius: $rounded-large;
+
+      &:focus,
+      &:focus-visible {
+        outline: none;
+
+        i {
+          color: $purple-light;
+        }
+      }
+
+      &:hover {
+        i {
+          color: $purple;
+        }
+      }
+
+      i { 
+        position: relative;
+        font-size: 1.25rem;
+        color: $black;
+        left: 0;
+        top: 0;
+      }
+    }
+  }
+}

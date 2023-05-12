@@ -77,7 +77,10 @@
 		var $part_of_town_id;
 		var $status;
 		var $filter;
-		var $user_filter;
+		var $user_filter,$bo, $cats,$acl, $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete, $acl_manage,
+		$district_id, $tenant_id, $account, $bocommon, $start, $query, $sort, $order, $status_id, $user_id, $group_id, $reported_by, $cat_id,
+		$allrows, $vendor_id, $start_date, $end_date, $location_code, $p_num, $show_finnish_date, $ecodimb,$b_account,
+		$building_part, $branch_id, $parent_cat_id;
 
 		public function __construct()
 		{
@@ -140,7 +143,7 @@
 			$params = array(
 				'start'				 => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results'			 => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query'				 => $search['value'],
+				'query'				 => isset($search['value']) ? $search['value'] : '',
 				'order'				 => is_array($order) ? $columns[$order[0]['column']]['data'] : $order,
 				'sort'				 => is_array($order) ? $order[0]['dir'] : $sort,
 				'dir'				 => is_array($order) ? $order[0]['dir'] : $sort,
@@ -200,11 +203,6 @@
 				}
 			}
 
-			if ($export)
-			{
-				return $values;
-			}
-//_debug_array($values);
 			$result_data = array('results' => $values);
 
 			$result_data['total_records']	 = $this->bo->total_records;
@@ -526,6 +524,7 @@ HTML;
 
 			phpgw::import_class('property.multiuploader');
 
+			$options = array();
 			$options['base_dir']	 = 'fmticket/' . $id;
 			$options['upload_dir']	 = $GLOBALS['phpgw_info']['server']['files_dir'] . '/property/' . $options['base_dir'] . '/';
 			$options['script_url']	 = html_entity_decode(self::link(array('menuaction' => 'property.uitts.handle_multi_upload_file',
@@ -534,7 +533,7 @@ HTML;
 
 			if(!$id)
 			{
-				$response = array(files => array(array('error' => 'missing id in request')));
+				$response = array('files' => array(array('error' => 'missing id in request')));
 				$upload_handler->generate_response($response);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
@@ -768,7 +767,7 @@ HTML;
 
 			$combos[] = array('type'	 => 'filter',
 				'name'	 => 'status_id',
-				'extra'	 => $code,
+				'extra'	 => '',
 				'text'	 => lang('status'),
 				'list'	 => $values_combo_box[3]
 			);
@@ -1020,9 +1019,9 @@ HTML;
 			}
 
 			phpgwapi_jquery::load_widget('numberformat');
-			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
-			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
-			self::add_javascript('property', 'portico', 'tts.index.js');
+	//		self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+	//		self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+			self::add_javascript('property', 'portico', 'tts.index.js', false, array('combine' => true ));
 
 			$start_date	 = urldecode($this->start_date);
 			$end_date	 = urldecode($this->end_date);
@@ -1281,7 +1280,7 @@ HTML;
 			$appname		 = lang('helpdesk');
 			$function_msg	 = lang('Report');
 
-			self::add_javascript('property', 'portico', 'tts.report.js');
+			self::add_javascript('property', 'base', 'tts.report.js', false, array('combine' => true ));
 
 			$data = array(
 				'start_date'	 => $start_date,
@@ -1738,13 +1737,12 @@ HTML;
 				$my_groups[$group_id] = $group->firstname;
 			}
 
-			$tabs		 = array();
-			$tabs['add'] = array('label' => lang('Add'), 'link' => '#add');
-			$active_tab	 = 'add';
+			$tabs			 = array();
+			$tabs['add']	 = array('label' => lang('Add'), 'link' => '#add');
+			$tabs['notify']	 = array('label' => lang('Notify'), 'link' => '#notify');
+			$active_tab		 = 'add';
 
 			$fmttssimple_categories = isset($this->bo->config->config_data['fmttssimple_categories']) ? $this->bo->config->config_data['fmttssimple_categories'] : array();
-
-
 
 			$cat_select = $this->cats->formatted_xslt_list(array(
 				'select_name'	 => 'values[cat_id]',
@@ -1818,8 +1816,8 @@ HTML;
 			$appname		 = lang('helpdesk');
 			$function_msg	 = lang('add ticket');
 			phpgwapi_jquery::load_widget('select2');
-			self::add_javascript('property', 'portico', 'tts.add.js');
-//			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', 'text/javascript', true);
+			self::add_javascript('property', 'portico', 'tts.add.js', false, array('combine' => false ));
+//			self::add_javascript('phpgwapi', 'core', 'files_drag_drop.js', true, array('combine' => true ));
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
@@ -1925,16 +1923,16 @@ HTML;
 			else if($action == 'set_tag' && $ids)
 			{
 				$bofiles->set_tags($ids, $tags);
-				
+
 			}
 			else if($action == 'remove_tag' && $ids)
 			{
 				$bofiles->remove_tags($ids, $tags);
-				
+
 			}
 
 			return $action;
-			
+
 		}
 
 		function get_files()
@@ -1975,11 +1973,11 @@ HTML;
 				else if($filter_tags && $_entry['tags'])
 				{
 					$filter_check = json_decode($_entry['tags'], true);
-					
+
 					if(!array_intersect($filter_check, $filter_tags))
 					{
 						continue;
-					}				
+					}
 				}
 				$datetime = new DateTime($_entry['created'], new DateTimeZone('UTC'));
 				$datetime->setTimeZone(new DateTimeZone($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']));
@@ -2111,7 +2109,7 @@ HTML;
 				$access_order = true;
 			}
 
-			if (!empty($values['save']) || !empty($values['send_order']))
+			if (!empty($values['save']) || !empty($values['apply']) || !empty($values['send_order']))
 			{
 				if (!$this->acl_edit)
 				{
@@ -2190,6 +2188,14 @@ HTML;
 							$receipt['error'][] = array('msg' => lang('budget') . ': ' . lang('Please enter a numeric value'));
 						}
 					}
+
+					if (isset($values['order_text']))
+					{
+						foreach ($values['order_text'] as $_text)
+						{
+							$values['order_descr'] .= "\n" . $GLOBALS['phpgw']->db->stripslashes($_text);
+						}
+					}
 				}
 
 				if (isset($values['takeover']) && $values['takeover'])
@@ -2259,6 +2265,27 @@ HTML;
 					$sms->websend2pv($this->account, $to_sms_phone, $values['response_text']);
 					$historylog->add('MS', $id, "{$to_sms_phone}::{$values['response_text']}");
 				}
+
+				if (!empty($values['send_order']))
+				{
+					$send_order_format		 = !empty($values['send_order_format']) ? $values['send_order_format'] : 'html';
+					$purchase_grant_checked	 = false;
+					$purchase_grant_error	 = !empty($values['purchase_grant_error']) ? true : false;
+
+					$_ticket = $this->bo->read_single($id);
+					$this->_send_order($_ticket, $send_order_format, $purchase_grant_checked, $purchase_grant_error);
+				}
+
+				if ((isset($values['save']) && $values['save']))
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitts.index'));
+				}
+				else
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitts.view',
+						'id'		 => $id, 'tab'		 => 'general'));
+				}
+
 			}
 
 			/* Preserve attribute values from post */
@@ -2626,15 +2653,6 @@ HTML;
 			// end approval
 			// -------- end order section
 
-			if (!empty($values['send_order']))
-			{
-				$send_order_format		 = !empty($values['send_order_format']) ? $values['send_order_format'] : 'html';
-				$purchase_grant_checked	 = !empty($values['purchase_grant_checked']) ? true : false;
-				$purchase_grant_error	 = !empty($values['purchase_grant_error']) ? true : false;
-
-				$this->_send_order($ticket, $send_order_format, $purchase_grant_checked, $purchase_grant_error);
-			}
-
 			$additional_notes	 = $this->bo->read_additional_notes($id);
 			$record_history		 = $this->bo->read_record_history($id);
 
@@ -2662,13 +2680,13 @@ HTML;
 			}
 			unset($_note);
 
-			if (isset($values['order_text']) && $ticket['order_id'])
-			{
-				foreach ($values['order_text'] as $_text)
-				{
-					$ticket['order_descr'] .= "\n" . $GLOBALS['phpgw']->db->stripslashes($_text);
-				}
-			}
+//			if (isset($values['order_text']) && $ticket['order_id'])
+//			{
+//				foreach ($values['order_text'] as $_text)
+//				{
+//					$ticket['order_descr'] .= "\n" . $GLOBALS['phpgw']->db->stripslashes($_text);
+//				}
+//			}
 
 			$note_def = array
 				(
@@ -2790,7 +2808,7 @@ HTML;
 					}
 					unset($tag);
 				}
-				
+
 				$content_files[] = array(
 					'tags'			 => $tags,
 					'file_id'		 => $_entry['file_id'],
@@ -2849,7 +2867,7 @@ HTML;
 					'sortable'	 => false, 'resizeable' => true, 'formatter'	 => 'FormatterCenter');
 			}
 //---file tagging
-			
+
 			$requestUrl	 = json_encode(self::link(array(
 				'menuaction' => 'property.uitts.update_file_data',
 				'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
@@ -2925,7 +2943,7 @@ HTML;
 						}
 						{$entry['funct']}('{$entry['action']}', ids);
 						"
-				);					
+				);
 			}
 
 			$code		 = <<<JS
@@ -2967,7 +2985,7 @@ HTML;
 				var strURL = phpGWLink('index.php', oArgs, true);
 
 				JqueryPortico.updateinlineTableHelper('datatable-container_2',strURL);
-				
+
 				if(action=='delete_file')
 				{
 					refresh_glider(strURL);
@@ -3393,6 +3411,72 @@ JS;
 
 
 			// end invoice table
+
+			$orders_def = array
+			(
+			array('key' => 'workorder_id', 'label' => lang('Workorder'), 'sortable' => true,
+			'formatter' => 'formatLinkproject'),
+			array('key' => 'title', 'label' => lang('title'), 'sortable' => false),
+			array('key' => 'user_name', 'label' => lang('user'), 'sortable' => false),
+			array('key' => 'vendor_name', 'label' => lang('Vendor'), 'sortable' => false),
+			array('key' => 'status', 'label' => lang('Status'), 'sortable' => false),
+			array('key' => 'end_date', 'label' => lang('end date'), 'sortable' => false,
+			'className' => 'center')
+			);
+
+			$list_orders = false;
+			$project_ids = array();
+			if(!empty($ticket['target']))
+			{
+				foreach ($ticket['target'] as $_targets)
+				{
+					if($_targets['location'] == '.project')
+					{
+						foreach ($_targets['data'] as $_target_data)
+						{
+							$project_ids[] = $_target_data['id'];
+						}
+						$list_orders = true;
+						unset($_target_data);
+					}
+				}
+				unset($_targets);
+			}
+
+			if(!empty($ticket['origin']))
+			{
+				foreach ($ticket['origin'] as $_targets)
+				{
+					if($_targets['location'] == '.project')
+					{
+						foreach ($_targets['data'] as $_target_data)
+						{
+							$project_ids[] = $_target_data['id'];
+						}
+						$list_orders = true;
+						unset($_target_data);
+					}
+				}
+				unset($_targets);
+			}
+
+			$datatable_def[] = array
+				(
+				'container'	 => 'datatable-container_10',
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiproject.get_orders',
+						'project_id' => $project_ids, 'phpgw_return_as' => 'json'))),
+//				'requestUrl' => "''",
+//				'data'		 => json_encode($_order_data),
+				'data'		 => json_encode(array()),
+				'ColumnDefs' => $orders_def,
+				'config'	 => array(
+					array('disableFilter' => true),
+//					array('disablePagination' => true),
+//					array('allrows' => true),
+					array('order' => json_encode(array(0, 'desc')))
+				)
+			);
+
 			//----------------------------------------------datatable settings--------
 
 
@@ -3550,11 +3634,13 @@ JS;
 								'__ressursnr__',
 								'__order_id__',
 								'__address__',
+								'__user_job_title__',
 							),
 							array(
 								$GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'],
 								$ticket['order_id'],
-								$_delivery_address
+								$_delivery_address,
+								$GLOBALS['phpgw_info']['user']['preferences']['common']['job_title'],
 							),
 							$payment_type['descr']
 						);
@@ -3584,7 +3670,7 @@ JS;
 
 			if (!$delivery_address && !empty($location_data['loc1']))
 			{
-				$delivery_address = CreateObject('property.solocation')->get_delivery_address($_location_data['loc1']);
+				$delivery_address = CreateObject('property.solocation')->get_delivery_address($location_data['loc1']);
 			}
 
 			if(!$payment_info && $GLOBALS['phpgw_info']['user']['preferences']['property']['order_payment_info'])
@@ -3601,7 +3687,7 @@ JS;
 					$GLOBALS['phpgw_info']['user']['preferences']['property']['order_payment_info']
 					);
 			}
-			
+
 			$payment_info = $ticket['payment_info'] ? $ticket['payment_info'] : $payment_info;
 			$cats					 = CreateObject('phpgwapi.categories', -1, 'property', '.project');
 			$cats->supress_info	 = true;
@@ -3784,6 +3870,7 @@ JS;
 				'payment_type_list'				 => array('options' => execMethod('property.bogeneric.get_list', array('type' => 'order_template_payment_type', 'selected' => $ticket['payment_type']))),
 				'content_files'					 => $content_files,
 				'tag_list'						 => array('options' => createObject('property.bofiles')->get_all_tags()),
+				'list_orders'					 => $list_orders,
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
@@ -3791,7 +3878,7 @@ JS;
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 			phpgwapi_jquery::load_widget('glider');
 			phpgwapi_jquery::load_widget('select2');
-			self::add_javascript('property', 'portico', 'tts.view.js');
+			self::add_javascript('property', 'portico', 'tts.view.js', false, array('combine' => false ));
 
 			$this->_insert_custom_js();
 			//-----------------------datatable settings---
@@ -4100,7 +4187,7 @@ JS;
 			{
 				$delivery_address = "\n{$ticket['delivery_address']}";
 			}
-			else if (isset($this->bo->config->config_data['delivery_address']) && $this->bo->config->config_data['delivery_address'])
+			else if (!empty($this->bo->config->config_data['delivery_address']) && !ctype_space((string)$this->bo->config->config_data['delivery_address']))
 			{
 				$delivery_address .= "\n{$this->bo->config->config_data['delivery_address']}";
 			}
@@ -4191,6 +4278,7 @@ JS;
 
 			$user_phone						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['cellphone'];
 			$user_email						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
+			$user_job_title					 = $GLOBALS['phpgw_info']['user']['preferences']['common']['job_title'];
 			$order_email_template			 = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
 			$order_contact_block_template	 = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_contact_block_1'];
 
@@ -4250,6 +4338,7 @@ JS;
 					'__user_name__',
 					'__user_phone__',
 					'__user_email__',
+					'__user_job_title__',
 					'__contact_name__',
 					'__contact_email__',
 					'__contact_phone__',
@@ -4264,6 +4353,7 @@ JS;
 					$user_name,
 					$user_phone,
 					$user_email,
+					$user_job_title,
 					$contact_name,
 					$contact_email,
 					$contact_phone,
@@ -4327,6 +4417,11 @@ JS;
 					);
 			}
 
+			/**
+			 * Fix me
+			 */
+			$deadline_block = '';
+
 			$body = str_replace(array
 					(
 					'__vendor_name__',
@@ -4334,6 +4429,7 @@ JS;
 					'__user_name__',
 					'__user_phone__',
 					'__user_email__',
+					'__user_job_title__',
 					'__ressursnr__',
 					'__payment_info__',
 					'__location__',
@@ -4354,6 +4450,7 @@ JS;
 					$user_name,
 					$user_phone,
 					$user_email,
+					$user_job_title,
 					$ressursnr,
 					$payment_info,
 					$delivery_address,
@@ -4459,7 +4556,7 @@ JS;
 
 		private function get_documentation_url( $id )
 		{
-			return  $this->bocommon->get_documentation_url($id);	
+			return  $this->bocommon->get_documentation_url($id);
 		}
 
 		private function _html_order( $id = 0, $preview = false, $show_cost = false )
@@ -4569,6 +4666,7 @@ JS;
 //account_display
 			$user_phone						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['cellphone'];
 			$user_email						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
+			$user_job_title					 = $GLOBALS['phpgw_info']['user']['preferences']['common']['job_title'];
 			$order_email_template			 = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
 			$order_contact_block_template	 = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_contact_block_1'];
 
@@ -4633,6 +4731,7 @@ JS;
 						'__user_name__',
 						'__user_phone__',
 						'__user_email__',
+						'__user_job_title__',
 						'__contact_name__',
 						'__contact_email__',
 						'__contact_phone__',
@@ -4647,6 +4746,7 @@ JS;
 						$user_name,
 						$user_phone,
 						$user_email,
+						$user_job_title,
 						$contact_name,
 						$contact_email,
 						$contact_phone,
@@ -4782,6 +4882,7 @@ JS;
 					'__user_name__',
 					'__user_phone__',
 					'__user_email__',
+					'__user_job_title__',
 					'__ressursnr__',
 					'__payment_info__',
 					'__location__',
@@ -4802,6 +4903,7 @@ JS;
 					$user_name,
 					$user_phone,
 					$user_email,
+					$user_job_title,
 					$ressursnr,
 					$payment_info,
 					$delivery_address,
@@ -5160,7 +5262,14 @@ JS;
 
 				try
 				{
-					$purchase_grant_ok = $this->bo->validate_purchase_grant($ecodimb, $budget_amount, $order_id);
+					if($on_behalf_of_assigned)
+					{
+						$GLOBALS['phpgw']->preferences->set_account_id($ticket['user_id'], true);
+					}
+					$purchase_grant_ok = $this->bo->validate_purchase_grant($ticket['ecodimb'], $budget_amount, $order_id);
+
+					$GLOBALS['phpgw']->preferences->set_account_id($this->account, true);
+
 				}
 				catch (Exception $ex)
 				{
@@ -5210,4 +5319,16 @@ JS;
 			}
 			return $_budget_amount;
 		}
+
+		public function get_users()
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+			$query = phpgw::get_var('query');
+
+			return $this->bocommon->get_users($query);
+		}
+
 	}

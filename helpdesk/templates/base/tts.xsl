@@ -28,7 +28,7 @@
 		<div class="row mt-4">
 			<xsl:for-each select="sub_menu">
 				<div class="col-4 mb-3">
-					<a href="{url}" class="stretched-link text-secondary">
+					<a href="{url}" class="text-secondary">
 						<div class="card h-100 mb-2">
 							<div class="card-block text-center">
 								<h1 class="p-3">
@@ -77,7 +77,7 @@
 		{
 		var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template', category:1};
 		var strURL = phpGWLink('index.php', oArgs);
-		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 
 		var parent_cat_id = <xsl:value-of select="parent_cat_id"/>;
@@ -439,7 +439,7 @@
 		{
 		var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template', category:1};
 		var strURL = phpGWLink('index.php', oArgs);
-		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 
 		var my_groups = <xsl:value-of select="my_groups"/>;
@@ -856,6 +856,7 @@
 									<xsl:with-param name="multi_upload_action">
 										<xsl:value-of select="multi_upload_action"/>
 									</xsl:with-param>
+									<xsl:with-param name="capture">camera</xsl:with-param>
 								</xsl:call-template>
 							</div>
 						</xsl:when>

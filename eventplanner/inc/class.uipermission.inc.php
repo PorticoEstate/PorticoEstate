@@ -154,7 +154,7 @@
 
 			}
 
-			self::add_javascript('eventplanner', 'portico', 'permission.index.js');
+			self::add_javascript('eventplanner', 'base', 'permission.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -221,7 +221,7 @@
 
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript('eventplanner', 'portico', 'permission.edit.js');
+			self::add_javascript('eventplanner', 'base', 'permission.edit.js');
 			self::render_template_xsl(array('permission'), array('edit' => $data));
 		}
 		

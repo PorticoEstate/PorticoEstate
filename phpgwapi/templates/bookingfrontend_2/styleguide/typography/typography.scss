@@ -1,0 +1,134 @@
+$text-normal: 400;
+$text-bold: 700;
+$text-bolder: 900;
+
+$text-small: 0.875rem; //14px
+$text-body: 1rem; //16px
+$text-medium: 1.125rem; //18px
+$text-lg: 1.25rem; //20px
+$text-xl: 1.375rem; //22px 
+$text-2xl: 1.75rem; //28px 
+$text-3xl: 2.25rem; //36px 
+$text-4xl: 3.5rem; //56px 
+
+$h1-text: $text-3xl; //36px 
+$h1-lineheight: 1.75;
+
+$h2-text: $text-2xl; //28px 
+$h2-lineheight: 1.75;
+
+$h3-text: $text-xl; //22px 
+$h3-lineheight: 2.2;
+
+$h4-text: $text-lg; //20px
+$h4-lineheight: 1.4;
+
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  line-height: 1.75rem;
+  font-weight: $text-normal;
+}
+
+h1, .h1 {
+  font-size: $h2-text;
+  line-height: $h2-lineheight;
+  margin-top: 0;
+  font-weight: $text-bolder;
+
+  @media (min-width: $media-medium) {
+    font-size: $h1-text; //36px
+    line-height: $h1-lineheight; //64px
+  }
+}
+
+h2, .h2 {
+  font-size: $h3-text;
+  line-height: $h3-lineheight;
+  font-weight: $text-bolder;
+
+  @media (min-width: $media-medium) {
+    font-size: $h2-text; //28px
+    line-height: $h2-lineheight; //48px
+  }
+}
+
+h3, .h3 {
+  font-size: $h4-text;
+  line-height: $h4-lineheight;
+  font-weight: $text-bolder;
+
+  @media (min-width: $media-medium) {
+    font-size: $h3-text; //22px
+    line-height: $h3-lineheight; //48px
+  }
+}
+
+h4, .h4 {
+  font-size: $text-medium;
+  line-height: $h4-lineheight;
+  font-weight: $text-bolder;
+
+  @media (min-width: $media-medium) {
+    font-size: $h4-text; //20px
+    line-height: $h4-lineheight; //28px
+  }
+}
+
+.text {
+  /* SIZE */ 
+
+  &-small {
+    font-size: $text-small; //14px
+    line-height: 1.75rem; //28px
+  }
+
+  &-body {
+    font-size: $text-body; //16px
+    line-height: 1.75rem; //28px
+  }
+
+  &-medium {
+    font-size: $text-medium; //18px
+    line-height: 1.75rem; //28px
+  }
+
+  &-lg {
+    font-size: $text-lg; //20px
+    line-height: 1.75rem; //28px
+  }
+
+  &-xl {
+    font-size: $text-xl; //22px 
+    line-height: 3rem; //48px
+  }
+
+  &-2xl {
+    font-size: $text-2xl; //28px 
+    line-height: 3rem; //48px
+  }
+
+  &-3xl {
+    font-size: $text-3xl; //36px 
+    line-height: 4rem; //64px
+  }
+
+  &-4xl {
+    font-size: $text-4xl; //56px 
+    line-height: 4.5rem; //72px
+  }
+
+  /* WEIGHT */
+  &-normal {
+    font-weight: $text-normal;
+  }
+
+  &-bold {
+    font-weight: $text-bold;
+  }
+
+  &-bolder {
+    font-weight: $text-bolder;
+  }
+}

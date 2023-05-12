@@ -1045,6 +1045,7 @@ list vendors	property	nn	List leverandør
 list vendors per activity	property	nn	List leverandør pr aktivitet
 list voucher	property	nn	list underbilag
 list workorder	property	nn	List bestillinger
+workorders	property	nn	Bestillinger
 location	property	nn	Lokalisering
 loc1 name	property	nn	Navn
 local files	property	nn	Lokale filer
@@ -1412,6 +1413,8 @@ request %1 has been added	property	nn	Behov %1 er lagt til
 request %1 has already been added to project %2	property	nn	Behov %1 er allerede koplet til prosjekt %2
 request budget	property	nn	Budsjett for tiltak
 request condition type	property	nn	Behov::konsekvenstype
+request probability	property	nn	Behov::Sannsynlegheit
+request consequence	property	nn	Behov::konsekvens
 request descr	property	nn	Beskrivelse av tiltak
 request end date	property	nn	Behov frist
 request entry date	property	nn	Registreringsdato for tiltak
@@ -2412,3 +2415,8 @@ remove tag	property	nn	Slett tag
 transfer to external	property	nn	Overfør til eksternt system
 default tax code	property	nn	Standard mva-kode
 change payment type	property	nn	Endre betalingstype
+qr-generator	property	nn	QR-generator
+completed	property	nn	Fullført
+proposed measures	property	nn	Foreslåtte tiltak
+limit	property	nn	grense
+approve all lines	property	nn	Godkjenn alle linjer

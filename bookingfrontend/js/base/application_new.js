@@ -287,13 +287,17 @@ $(document).ready(function ()
 
 					var now = Math.floor(Date.now() / 1000);
 
-					if ((result.results[i].simple_booking && result.results[i].simple_booking_start_date < now) || result.results[i].deactivate_application == 1)
+					if ((result.results[i].simple_booking && result.results[i].simple_booking_start_date < now) || result.results[i].hidden_in_frontend == 1)
 					{
 						//skip this one
 						resource_name += ' *';
 					}
 					else
 					{
+						if(result.results[i].direct_booking && result.results[i].direct_booking < now)
+						{
+							resource_name += ' *';
+						}
 						bookableresource.push({id: result.results[i].id, name: resource_name, selected: ko.observable(tempSelected)});
 					}
 				}

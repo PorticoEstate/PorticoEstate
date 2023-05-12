@@ -1046,6 +1046,7 @@ list vendors	property	no	List leverandør
 list vendors per activity	property	no	List leverandør pr aktivitet
 list voucher	property	no	list underbilag
 list workorder	property	no	List bestillinger
+workorders	property	no	Bestillinger
 location	property	no	Lokalisering
 loc1 name	property	no	Navn
 local files	property	no	Lokale filer
@@ -1413,6 +1414,8 @@ request %1 has been added	property	no	Behov %1 er lagt til
 request %1 has already been added to project %2	property	no	Behov %1 er allerede koplet til prosjekt %2
 request budget	property	no	Budsjett for tiltak
 request condition type	property	no	Behov::konsekvenstype
+request probability	property	no	Behov::Sannsynlighet
+request consequence	property	no	Behov::konsekvens
 request descr	property	no	Beskrivelse av tiltak
 request end date	property	no	Behov frist
 request entry date	property	no	Registreringsdato for tiltak
@@ -2441,3 +2444,8 @@ change payment type	property	no	Endre betalingstype
 recipients	property	no	Mottaker
 extra sms address	property	no	Tilleggsnummer
 send sms	property	no	Send SMS
+qr-generator	property	no	QR-generator
+completed	property	no	Fullført
+proposed measures	property	no	Foreslåtte tiltak
+limit	property	no	grense
+approve all lines	property	no	Godkjenn alle linjer

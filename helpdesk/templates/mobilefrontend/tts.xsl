@@ -25,7 +25,7 @@
 					<div class="list-group">
 						<xsl:for-each select="sub_menu">
 							<a href="{url}" class="list-group-item list-group-item-action">
-								<i class="mr-3 far fa-folder"></i>
+								<i class="me-3 far fa-folder"></i>
 								<xsl:value-of select="text"/>
 							</a>
 						</xsl:for-each>
@@ -49,7 +49,7 @@
 		{
 		var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template'};
 		var strURL = phpGWLink('index.php', oArgs);
-		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 
 		var parent_cat_id = <xsl:value-of select="parent_cat_id"/>;
@@ -330,7 +330,7 @@
 		{
 		var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template'};
 		var strURL = phpGWLink('index.php', oArgs);
-		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 
 		var my_groups = <xsl:value-of select="my_groups"/>;
@@ -715,6 +715,7 @@
 									<xsl:with-param name="multi_upload_action">
 										<xsl:value-of select="multi_upload_action"/>
 									</xsl:with-param>
+									<xsl:with-param name="capture">camera</xsl:with-param>
 								</xsl:call-template>
 							</div>
 

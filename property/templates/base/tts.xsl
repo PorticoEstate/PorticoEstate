@@ -31,7 +31,8 @@
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
 		var my_groups = <xsl:value-of select="my_groups"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Please select a person or a group to handle the ticket !')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Please select a person or a group to handle the ticket !', 'Search')"/>;
+
 	</script>
 	<dl>
 		<xsl:choose>
@@ -137,7 +138,7 @@
 								<xsl:variable name="select_priority_name">
 									<xsl:value-of select="select_priority_name"/>
 								</xsl:variable>
-								<select name="{$select_priority_name}" class="pure-input-3-4" >
+								<select name="{$select_priority_name}" class="pure-input-3-4">
 									<xsl:apply-templates select="priority_list/options"/>
 								</select>
 							</div>
@@ -279,6 +280,18 @@
 					</xsl:choose>
 				</fieldset>
 			</div>
+			<div id="notify">
+				<div class="pure-control-group">
+					<xsl:variable name="lang_notify">
+						<xsl:value-of select="php:function('lang', 'notify')"/>
+					</xsl:variable>
+					<label for="set_notify_name">
+						<xsl:value-of select="$lang_notify"/>
+					</label>
+					<select id="notify_account_id" name="values[notify_account_id][]" multiple="multiple">
+					</select>
+				</div>
+			</div>
 		</div>
 		<div class="proplist-col">
 			<input type="hidden" id="save" name="values[save]" value=""/>
@@ -336,14 +349,14 @@
 		{
 		var oArgs = {menuaction:'property.uilookup.order_template',type:'order_template'};
 		var strURL = phpGWLink('index.php', oArgs);
-		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 
 		function response_lookup()
 		{
 		var oArgs = {menuaction:'property.uilookup.response_template',type:'response_template'};
 		var strURL = phpGWLink('index.php', oArgs);
-		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 
 		function preview_html(id)
@@ -375,8 +388,7 @@
 		var location_code = '<xsl:value-of select="value_location_code"/>';
 
 		//	var initialSelection = <xsl:value-of select="resources_json"/>;
-		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address')"/>
-
+		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address', 'Search')"/>
 
 	</script>
 	<dl>
@@ -408,10 +420,18 @@
 											<xsl:value-of select="php:function('lang', 'save')"/>
 										</xsl:attribute>
 										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'save the ticket')"/>
+											<xsl:value-of select="php:function('lang', 'Save the entry and return to list')"/>
 										</xsl:attribute>
 									</input>
 								</td>
+								<input type="button" class="pure-button pure-button-primary" name="apply" onClick="confirm_session('apply');">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('lang', 'apply')"/>
+									</xsl:attribute>
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'save the ticket')"/>
+									</xsl:attribute>
+								</input>
 								<xsl:choose>
 									<xsl:when test="access_order = 1">
 										<xsl:choose>
@@ -519,6 +539,28 @@
 							</xsl:for-each>
 						</div>
 					</xsl:for-each>
+
+					<xsl:if test="list_orders = 1">
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'workorders')"/>
+							</label>
+							<div class = 'pure-u-md-3-4'>
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_10'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl'/>
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+											<xsl:with-param name="data" select ='data'/>
+											<xsl:with-param name="config" select ='config'/>
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
+						</div>
+					</xsl:if>
+
 					<xsl:if test="simple !='1'">
 						<div class="pure-control-group">
 							<xsl:variable name="lang_make_relation">
@@ -793,6 +835,7 @@
 									<xsl:with-param name="multi_upload_action">
 										<xsl:value-of select="multi_upload_action"/>
 									</xsl:with-param>
+									<xsl:with-param name="capture">camera</xsl:with-param>
 								</xsl:call-template>
 							</div>
 						</xsl:when>
@@ -952,7 +995,7 @@
 										</div>
 										<xsl:call-template name="payment_type"/>
 									</xsl:if>
-									</xsl:otherwise>
+								</xsl:otherwise>
 							</xsl:choose>
 							<xsl:choose>
 								<xsl:when test="value_order_id!=''">
@@ -1711,9 +1754,18 @@
 		</div>
 		<div class="proplist-col">
 			<input type="hidden" id="save" name="values[save]" value=""/>
-			<input type="button" class="pure-button pure-button-primary" name="save" onClick="confirm_session('save');">
+			<input type="hidden" id="apply" name="values[apply]" value=""/>
+			<input class="pure-button pure-button-primary" type="button" name="save" onClick="confirm_session('save');">
 				<xsl:attribute name="value">
 					<xsl:value-of select="php:function('lang', 'save')"/>
+				</xsl:attribute>
+				<xsl:attribute name="title">
+					<xsl:value-of select="php:function('lang', 'Save the entry and return to list')"/>
+				</xsl:attribute>
+			</input>
+			<input type="button" class="pure-button pure-button-primary" name="apply" onClick="confirm_session('apply');">
+				<xsl:attribute name="value">
+					<xsl:value-of select="php:function('lang', 'apply')"/>
 				</xsl:attribute>
 				<xsl:attribute name="title">
 					<xsl:value-of select="php:function('lang', 'save the ticket')"/>

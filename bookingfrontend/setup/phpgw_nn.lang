@@ -156,7 +156,7 @@ new document	bookingfrontend	nn	Nye dokument
 new equipment	bookingfrontend	nn	Nytt utstyr
 new event	bookingfrontend	nn	Nytt arrangement
 new group	bookingfrontend	nn	Ny gruppe
-new organization	bookingfrontend	nn	Ny organisajon
+new organization	bookingfrontend	nn	Opprett ny organisasjon/bedrift
 new resource	bookingfrontend	nn	Ny ressurs
 new root permission	bookingfrontend	nn	Nye systemrettar
 new season	bookingfrontend	nn	Ny sesong
@@ -172,7 +172,7 @@ estimated number of participants	bookingfrontend	nn	Estimert tal på deltakarar
 oct	bookingfrontend	nn	oktober
 of	bookingfrontend	nn	av
 officer	bookingfrontend	nn	Sakshandsamar
-organization	bookingfrontend	nn	Organisasjon
+organization	bookingfrontend	nn	Organisasjon/bedrift
 organization number	bookingfrontend	nn	Organisasjonsnummer
 organizations	bookingfrontend	nn	Organisasjonar
 organization index	bookingfrontend	nn	Organisasjonsoversikt
@@ -341,7 +341,7 @@ E-mail address	bookingfrontend	nn	E-postadresse
 Confirm e-mail address	bookingfrontend	nn	Stadfest e-postadressa
 The e-mail addresses you entered do not match	bookingfrontend	nn	E-postadressene er ulike
 Lengt of shortname is to long, max 11 characters long	bookingfrontend	nn	Kortnamnet er for langt, maksimalt 11 teikn
-Lengt of name is to long, max 50 characters long	bookingfrontend	nn	Namnet er for langt, maksimalt 50 teikn
+Lengt of name is to long, max %1 characters long	bookingfrontend	nn	Namnet er for langt, maksimalt %1 teikn
 Go back to calendar	bookingfrontend	nn	Tilbake til kalendar
 Agegroups kan not be larger than 9999 peoples	bookingfrontend	nn	Det estimerte talet på deltakarar kan ikkje vere høgare enn 9999
 Contact information name is to long. max 50 characters	bookingfrontend	nn	Namnet i kontaktinformasjonen er for langt, maksimalt 50 teikn.
@@ -449,7 +449,7 @@ application add	bookingfrontend	nn	søknad
 Application cart	bookingfrontend	nn	Handlekurv
 Application basket	bookingfrontend	nn	Søknadskorg
 back	bookingfrontend	nn	tilbake
-Building information	bookingfrontend	nn	Informasjon om anlegget
+Building information	bookingfrontend	nn	Informasjon
 Choose another building	bookingfrontend	nn	Velg annet anlegg
 Choose categories	bookingfrontend	nn	Velg kategorier
 Choose resources	bookingfrontend	nn	Velg lokaler
@@ -491,7 +491,7 @@ For rent	bookingfrontend	nn	Til leige
 Choose atleast one object	bookingfrontend	nn	Vel minst eitt leigeobjekt
 Please fill all fields	bookingfrontend	nn	Vennlegst fyll ut alle obligatoriske felt!
 available	bookingfrontend	nn	Ledig
-leased	bookingfrontend	nn	Utleigd
+leased	bookingfrontend	nn	Opptatt
 It is currently not possible to rent anything here	bookingfrontend	nn	NB! Det er for tida ikkje mogeleg å leige noko her
 my page	bookingfrontend	nn	Mi side
 invoice	bookingfrontend	nn	Faktura
@@ -521,9 +521,10 @@ Reset filter	bookingfrontend	nn	Nullstill søk
 Reset filters	bookingfrontend	nn	Nullstill filter
 To application site	bookingfrontend	nn	Til søknadsside
 locations	bookingfrontend	nn	Lokaler
-User has made a request to increase time on existing booking	bookingfrontend	nn	Ønsker å øke lengden på arrangement. Ny tid:
+User has made a request to alter time on existing booking	bookingfrontend	nn	Ynskjer å endre tida for booking. Ny tid:
+User has made a request to cancel event	bookingfrontend	nn	Kunde har avbestilt arrangement.
 User has changed field for equipment	bookingfrontend	nn	Endring av felt for nødvendig utstyr:
-Request for changed time	bookingfrontend	nn	Forespørsel om øke tid er sendt til saksbehandler
+Request for changed time	bookingfrontend	nn	Forespørsel om å endre tid er registrert
 Follow status	bookingfrontend	nn	Du kan følge med på status under Min side --> Søknader
 for remaining season	bookingfrontend	nn	for gjenværende sesong
 for allocations until	bookingfrontend	nn	for tildelinger frem til:
@@ -562,3 +563,14 @@ quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days
 validate	bookingfrontend	nn	Kontrollér
 cost is set	booking	nn	Ny pris er definert
 Event was created	booking	nn	Arrangementet vart oppretta
+Link to website	bookingfrontend	nn	Link til heimeside
+uustatus	bookingfrontend	nn	Tilgjengelegheitserklæring
+each	bookingfrontend	nn	Stk
+kg	bookingfrontend	nn	Kg
+meter	bookingfrontend	nn	Meter
+square meter	bookingfrontend	nn	Kvadratmeter
+m	bookingfrontend	nn	Meter
+m2	bookingfrontend	nn	Kvadratmeter
+hour	bookingfrontend	nn	Time
+day	bookingfrontend	nn	Dag
+this application is not within a valid season	bookingfrontend	nn	Denne søknaden er utanfor gyldig åpningstid

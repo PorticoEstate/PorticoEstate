@@ -1,12 +1,19 @@
 {
     "name": "kigkonsult/icalcreator",
     "type": "library",
-    "description": "iCalcreator is the PHP implementation of rfc2445/rfc5545, management of calendar information",
+    "description": "iCalcreator is the PHP implementation of rfc2445/rfc5545 and rfc updates, management of calendar information",
     "keywords": [
         "rfc2445",
         "rfc5545",
+        "rfc5870",
         "rfc6321",
+        "rfc6868",
+        "rfc7529",
+        "rfc7808",
+        "rfc7953",
         "rfc7986",
+        "rfc9073",
+        "rfc9074",
         "management",
         "calendar",
         "vCalendar",
@@ -18,9 +25,16 @@
         "vjournal",
         "vfreebusy",
         "valarm",
+        "participant",
+        "location",
+        "resource",
+        "availability",
         "vtimezone",
         "standard",
-        "daylight"
+        "daylight",
+        "ical",
+        "xml",
+        "json"
     ],
     "license": "LGPL-3.0-or-later",
     "authors": [
@@ -43,12 +57,16 @@
         "psr-4": { "Kigkonsult\\Icalcreator\\": ["src/", "src/Util/", "src/Traits/"] }
     },
     "require": {
-        "php": ">=7.0",
-        "ext-simplexml": "*",
+        "php": ">=8.0",
+        "ext-intl": "*",
         "ext-openssl": "*",
-        "ext-zlib": "*"
+        "ext-simplexml": "*",
+        "ext-zlib": "*",
+        "ext-mbstring": "*"
     },
     "require-dev": {
+        "ext-xdebug": "*",
+        "degraciamathieu/php-arguments-detector": ">=0.5.0",
         "phpcompatibility/php-compatibility": ">=9.3.5",
         "phpstan/phpstan": ">=0.9.3",
         "phpunit/phpunit": ">=6.5.13",

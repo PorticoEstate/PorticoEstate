@@ -385,13 +385,13 @@
 				'contract_id' => $contract_id,
 				'account' => $account,
 				'client_ref' => $client_ref,
-				'header' => utf8_decode($header),
+				'header' => mb_convert_encoding($header, 'ISO-8859-1', 'UTF-8'),
 				'bill_year' => $bill_year,
 				'bill_month' => $bill_month,
 				'building' => $building,
 				'name' => $party_full_name,
 				'amount' => $this->get_formatted_amount_excel($amount),
-				'article description' => utf8_decode($product_item['article_description']),
+				'article description' => mb_convert_encoding($product_item['article_description'], 'ISO-8859-1', 'UTF-8'),
 				'article_code' => $part_no, //$product_item['article_code'],
 				'batch_id' => "BKBPE{$this->date_str}",
 				'client' => 'BY',
@@ -403,7 +403,7 @@
 				'batch_id' => "BKBPE{$this->date_str}",
 				'client' => 'BY',
 				'item_counter' => $item_counter,
-				'text' => utf8_decode($description)
+				'text' => mb_convert_encoding($description, 'ISO-8859-1', 'UTF-8')
 			);
 
 			return str_replace(array("\n", "\r"), '', $order);
@@ -467,7 +467,7 @@
 				'account_in' => $account,
 				'account_out' => $account_out,
 				'client_ref' => $client_ref,
-				'header' => utf8_decode($header),
+				'header' => mb_convert_encoding($header, 'ISO-8859-1', 'UTF-8'),
 				'bill_year' => $bill_year,
 				'bill_month' => $bill_month,
 				'building' => $building,
@@ -476,7 +476,7 @@
 				'address' => $party_address,
 				'Leieboer' => $party_full_name,
 				'amount' => $this->get_formatted_amount_excel($amount),
-//				'article description' => utf8_decode($price_item->get_title()),
+//				'article description' => mb_convert_encoding($price_item->get_title(), 'ISO-8859-1', 'UTF-8'),
 				'article_code' => $part_no,
 				'start_date' => $start_date,
 				'end_date' => $end_date,
@@ -492,7 +492,7 @@
 				'batch_id' => "BKBPE{$this->date_str}",
 				'client' => 'BY',
 				'item_counter' => $item_counter,
-				'text' => utf8_decode($description)
+				'text' => mb_convert_encoding($description, 'ISO-8859-1', 'UTF-8')
 			);
 
 			return str_replace(array("\n", "\r"), '', $order);

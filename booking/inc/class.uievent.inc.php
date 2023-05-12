@@ -1345,9 +1345,16 @@
 
 			self::add_javascript('booking', 'base', 'event.js');
 
+			$completed_reservations = CreateObject('booking.socompleted_reservation')->read(array(
+				'filters'	 => array(
+					'reservation_type'	 => 'event',
+					'reservation_id'	 => $event['id'],
+					'exported'			 => null),
+				'results'	 => -1));
+
 			if($event['application_id'] && !empty($config['activate_application_articles']))
 			{
-				if($event['completed'])
+				if(!empty($completed_reservations['results'][0]['exported']))
 				{
 					self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
 				}
@@ -1450,6 +1457,8 @@
 			}
 			$event['resource'] = phpgw::get_var('resource');
 			$event['resource_info'] = join(', ', $res_names);
+			$event['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show',
+					'id' => $event['application_id']));
 			$event['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
 					'id' => $event['resources'][0]['buildings'][0]));
 			$event['org_link'] = self::link(array('menuaction' => 'booking.uiorganization.show',

@@ -244,7 +244,7 @@
 				);
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('portico', 'notify', 'property');
+			$GLOBALS['phpgw']->js->validate_file('base', 'notify', 'property');
 
 			$lang_view	 = lang('view');
 			$code		 = <<<JS
@@ -300,12 +300,36 @@ JS;
 			}
 		}
 
-		protected function refresh_notify_contact()
+		public function refresh_notify_contact()
 		{
 			$location_id		 = (int)phpgw::get_var('location_id', 'int');
 			$location_item_id	 = (int)phpgw::get_var('location_item_id', 'int');
 			$contact_id			 = (int)phpgw::get_var('contact_id', 'int');
+			$type				 = phpgw::get_var('type');
+			$notify				 = phpgw::get_var('notify', 'bool');
+			$ids				 = phpgw::get_var('ids', 'int');
 
+
+			$content = $this->refresh_notify_contact_2($location_id, $location_item_id, $contact_id, $type, $notify, $ids );
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				$total_records = count($content);
+				$result_data = array(
+					'data'				 => $content,
+					'total_records'		 => $total_records,
+					'draw'				 => phpgw::get_var('draw', 'int'),
+					'recordsTotal'		 => $total_records,
+					'recordsFiltered'	 => $total_records
+				);
+
+				return $result_data;
+			}
+			return $content;
+		}
+
+		function refresh_notify_contact_2($location_id, $location_item_id, $contact_id, $type = '', $notify = false, $ids = array() )
+		{
 			$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 
 			if (!$GLOBALS['phpgw']->acl->check($location_info['location'], PHPGW_ACL_EDIT, $location_info['appname']))
@@ -314,10 +338,8 @@ JS;
 			}
 
 			$update	 = false;
-			$type	 = phpgw::get_var('type');
-			if ($notify	 = phpgw::get_var('notify', 'bool'))
+			if ($notify)
 			{
-				$ids = phpgw::get_var('ids', 'int');
 //				_debug_array($ids);
 				if ($ids)
 				{
@@ -361,8 +383,7 @@ JS;
 				$this->_db->query($sql, __LINE__, __FILE__);
 				if (!$this->_db->next_record())
 				{
-					$values_insert = array
-						(
+					$values_insert = array(
 						'location_id'			 => $location_id,
 						'location_item_id'		 => $location_item_id,
 						'contact_id'			 => $contact_id,
@@ -379,19 +400,6 @@ JS;
 
 			$content = $this->read(array('location_id' => $location_id, 'location_item_id' => $location_item_id));
 
-			if (phpgw::get_var('phpgw_return_as') == 'json')
-			{
-				$result_data = array
-					(
-					'data'				 => $content,
-					'total_records'		 => $total_records,
-					'draw'				 => phpgw::get_var('draw', 'int'),
-					'recordsTotal'		 => $total_records,
-					'recordsFiltered'	 => $total_records
-				);
-
-				return $result_data;
-			}
 			return $content;
 		}
 	}

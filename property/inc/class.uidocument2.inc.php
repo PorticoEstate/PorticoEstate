@@ -515,15 +515,15 @@
 			{
 				$GLOBALS['phpgw']->jqcal->add_listener('report_date');
 				phpgwapi_jquery::load_widget('core');
-				self::add_javascript('property', 'portico', 'condition_survey_edit.js');
+				self::add_javascript('property', 'base', 'condition_survey_edit.js', false, array('combine' => true ));
 				self::add_javascript('phpgwapi', 'yui3', 'yui/yui-min.js');
 				self::add_javascript('phpgwapi', 'yui3-gallery', 'gallery-formvalidator/gallery-formvalidator-min.js');
 				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/yui3-gallery/gallery-formvalidator/validatorCss.css');
 			}
 
-			self::add_javascript('property', 'portico', 'condition_survey.js');
+			self::add_javascript('property', 'base', 'condition_survey.js', false, array('combine' => true ));
 
-			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js', false, array('combine' => true ));
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
 //			$GLOBALS['phpgw_info']['server']['no_jscombine'] = true;

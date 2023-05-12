@@ -85,6 +85,7 @@
 								'custom_config' => array
 									(
 									'text' => lang('custom config'),
+									'nav_location' => 'navbar#' . $GLOBALS['phpgw']->locations->get_id('helpdesk', '.admin'),
 									'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig2.index',
 										'location_id' => $GLOBALS['phpgw']->locations->get_id('helpdesk', '.admin')))
 								)
@@ -217,7 +218,7 @@
 						$_simple = true;
 					}
 
-					$user_groups =  $GLOBALS['phpgw']->accounts->membership($this->account);
+					$user_groups =  $GLOBALS['phpgw']->accounts->membership($GLOBALS['phpgw_info']['user']['account_id']);
 					$simple_group = isset($config['fmttssimple_group']) ? $config['fmttssimple_group'] : array();
 					foreach ($user_groups as $group => $dummy)
 					{

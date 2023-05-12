@@ -33,6 +33,18 @@
 		max-height: calc(100vh - 210px);
 		overflow-y: auto;
 		}
+		.select2-selection__rendered
+		{
+			line-height: 33px !important;
+		}
+		.select2-container .select2-selection--single
+		{
+			height: 36px !important;
+		}
+		.select2-selection__arrow
+		{
+			height: 35px !important;
+		}
 	</style>
 	<div class="container new-application-page pt-5 my-container-top-fix" id="new-application-partialtwo">
 		<a class="btn btn-light">
@@ -165,11 +177,50 @@
 							<xsl:value-of select="php:function('lang', 'choose a')" />
 						</p>
 						<!-- Organization Number -->
-						<xsl:if test="count(delegate_data)=0">
+
+						<!--xsl:if test="count(delegate_data) > 0"-->
+							<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
+								<!--label>
+									<xsl:value-of select="php:function('lang', 'organization number')" />*</label-->
+									<select id="customer_organization_number" class="" name="customer_organization_number" required="true">
+										<option></option>
+										<xsl:for-each select="delegate_data">
+											<option  id="customer_organization_number_{id}" value="{id}_{organization_number}">
+												<xsl:value-of select="organization_number"/>
+												[ <xsl:value-of select="name"/> ]
+											</option>
+										</xsl:for-each>
+									</select>
+								<div class="invalid-feedback">
+									Vennligst velg en organisasjon.
+								</div>
+
+								<label class="mt-2">
+									<!--a id="add_new_value" href="#" data-toggle="modal" data-target="#new_organization"-->
+									<a id="add_new_value" href="#" OnClick="add_new_organization();">
+										<img src="{add_img}" width="23"/>
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="php:function('lang', 'new organization')"/>
+									</a>
+								</label>
+
+							</div>
+						<!--/xsl:if-->
+						<!--xsl:if test="count(delegate_data)=0"-->
 							<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
 								<label>
 									<xsl:value-of select="php:function('lang', 'organization number')" />*</label>
-								<input name="customer_organization_number_fallback" value="{application/customer_organization_number}" type="text" class="form-control" required="true"/>
+								<input name="customer_organization_number_fallback" value="{application/customer_organization_number}" type="text" class="form-control" required="true" readonly="true">
+									<xsl:attribute name="minlength">
+										<xsl:text>9</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="maxlength">
+										<xsl:text>9</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="pattern">
+										<xsl:text>[0-9]+</xsl:text>
+									</xsl:attribute>
+								</input>
 								<div class="invalid-feedback">
 									Vennligst oppgi gyldig organisasjonsnummer.
 								</div>
@@ -177,40 +228,12 @@
 							<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
 								<label>
 									<xsl:value-of select="php:function('lang', 'organization')" />*</label>
-								<input name="customer_organization_name" value="{application/customer_organization_name}" type="text" class="form-control" required="true"/>
+								<input name="customer_organization_name" value="{application/customer_organization_name}" type="text" class="form-control" maxlength="150" required="true" readonly="true"/>
 								<div class="invalid-feedback">
 									Vennligst oppgi organisasjonsnavn.
 								</div>
 							</div>
-						</xsl:if>
-
-						<xsl:if test="count(delegate_data) > 0">
-							<div class="form-group" data-bind="visible: typeApplicationRadio() === 'organization_number'">
-								<label>
-									<xsl:value-of select="php:function('lang', 'organization number')" />*</label>
-								<xsl:for-each select="delegate_data">
-									<div class="form-check form-check-inline" data-bind="visible: typeApplicationRadio() === 'organization_number'">
-										<input class="form-check-input" type="radio" name="customer_organization_number" id="customer_organization_number_{id}" value="{id}_{organization_number}" required="true"/>
-										<label class="form-check-label" for="customer_organization_number_{id}">
-											<xsl:value-of select="organization_number"/>
-											[ <xsl:value-of select="name"/> ]
-										</label>
-									</div>
-								</xsl:for-each>
-								<div class="invalid-feedback">
-									Vennligst velg en organisasjon.
-								</div>
-								<!--
-																<label>
-																	<a id="add_new_value" href="#" data-toggle="modal" data-target="#new_organization">
-																		<img src="{add_img}" width="23"/>
-																		<xsl:text> </xsl:text>
-																		<xsl:value-of select="php:function('lang', 'new organization')"/>
-																	</a>
-																</label>
-								-->
-							</div>
-						</xsl:if>
+						<!--/xsl:if-->
 
 						<!-- Customer Personal Number -->
 						<div class="form-group" data-bind="visible: typeApplicationRadio() === 'ssn'">
@@ -229,13 +252,16 @@
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:attribute name="type">
-											<xsl:text>number</xsl:text>
+											<xsl:text>text</xsl:text>
 										</xsl:attribute>
-										<xsl:attribute name="min">
+										<xsl:attribute name="minlength">
 											<xsl:text>11</xsl:text>
 										</xsl:attribute>
-										<xsl:attribute name="max">
+										<xsl:attribute name="maxlength">
 											<xsl:text>11</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="pattern">
+											<xsl:text>[0-9]+</xsl:text>
 										</xsl:attribute>
 									</xsl:otherwise>
 								</xsl:choose>
@@ -258,7 +284,7 @@
 						<div class="form-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'responsible_street')" />*</label>
-							<input type="text" class="form-control" name="responsible_street" value="{application/responsible_street}" required="true"/>
+							<input type="text" class="form-control" id ="field_responsible_street" name="responsible_street" value="{application/responsible_street}" required="true"/>
 							<div class="invalid-feedback">
 								Vennligst oppgi gatenavn.
 							</div>
@@ -267,16 +293,20 @@
 						<div class="form-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'responsible_zip_code')" />*</label>
-							<input type="text" class="form-control" name="responsible_zip_code" value="{application/responsible_zip_code}" required="true"/>
+							<input type="text" minlength="4" maxlength="4" class="form-control" id="field_responsible_zip_code" name="responsible_zip_code" value="{application/responsible_zip_code}" required="true">
+								<xsl:attribute name="pattern">
+									<xsl:text>[0-9]+</xsl:text>
+								</xsl:attribute>
+							</input>
 							<div class="invalid-feedback">
-								Vennligst oppgi postnummer.
+								Vennligst oppgi gyldig postnummer.
 							</div>
 						</div>
 						<!-- City -->
 						<div class="form-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'responsible_city')" />*</label>
-							<input type="text" class="form-control" name="responsible_city" value="{application/responsible_city}" required="true"/>
+							<input type="text" class="form-control" id="field_responsible_city" name="responsible_city" value="{application/responsible_city}" required="true"/>
 							<div class="invalid-feedback">
 								Vennligst oppgi poststed.
 							</div>
@@ -379,7 +409,7 @@
 
 		<!-- Modal JQUERY logic -->
 
-		$('#new_organization').on('show.bs.modal', function (e)
+		$('#new_organization').on('shown.bs.modal', function (e)
 		{
 		var src_organization = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uiorganization.add', nonavbar: true} );
 		$("#iframeorganization").attr("src", src_organization);
@@ -387,7 +417,11 @@
 
 		$('#new_organization').on('hidden.bs.modal', function (e)
 		{
+		// alert on insufficient rights
+		if(!i_have_already_told_you)
+		{
 		location.reload();
+		}
 		});
 
 	</script>

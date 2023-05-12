@@ -10,7 +10,9 @@
 		foreach ($a as $x)
 		{
 			if (!array_key_exists($x, $b))
+			{
 				$c[] = $x;
+			}
 		}
 		return $c;
 	}
@@ -155,7 +157,8 @@
 
 			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
 
-			foreach ($mailadresses as $adr)
+			$_mailadresses = array_unique($mailadresses);
+			foreach ($_mailadresses as $adr)
 			{
 				try
 				{
@@ -295,7 +298,8 @@
 			}
 
 			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
-			foreach ($mailadresses as $adr)
+			$_mailadresses = array_unique($mailadresses);
+			foreach ($_mailadresses as $adr)
 			{
 				try
 				{
@@ -446,6 +450,158 @@
 			);
 		}
 
+        /**
+         * Return a building's schedule for a given week in PorticoEstate Format
+         *
+         * @param int   $building_id
+         * @param DateTime  $date
+         *
+         * @return array containing allocations, bookings and events
+         */
+
+        function building_schedule_pe( $building_id, $date)
+        {
+            $results = array();
+            $from = clone $date;
+            $from->setTime(0, 0, 0);
+            // Make sure $from is a monday
+            if ($from->format('w') != 1)
+            {
+                $from->modify('last monday');
+            }
+            $to				 = clone $from;
+            $to->modify('+7 days');
+
+            // Find building name
+            $building_names = (new booking_sobuilding)->get_building_names(array($building_id));
+            $building_name = $building_names[$building_id]['name'];
+
+            $resources		 = $this->resource_so->read(array('filters'	 => array('building_id'	 => $building_id,
+                'active' => 1), 'results'	 => -1));
+            $resource_ids = array();
+            $resources_id = array();
+            foreach ($resources['results'] as $resource)
+            {
+                $resource_ids[] = $resource['id'];
+                $resources_id[$resource['id']] = array(
+                    'active' => $resource['active'],
+                    'id' => $resource['id'],
+                    'activity_id' => $resource['activity_id'],
+                    'activity_name' => $resource['activity_name'],
+                    'name' => $resource['name']
+                );
+            }
+
+            // Allocations (Tildeling)
+            $allocation_ids	 = $this->so->allocation_ids_for_resource($resource_ids, $from, $to);
+
+            $allocations	 = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids),
+                'results' => -1));
+            $allocations	 = $allocations['results'];
+            foreach ($allocations as &$allocation)
+            {
+                $allocation_resources = array();
+                foreach ($allocation['resources'] as $resource_id) {
+                    $allocation_resources[] = $resources_id[$resource_id];
+                }
+                $results[] = array(
+                    'type' => 'allocation',
+                    'id' => $allocation['id'],
+                    'id_string' => $allocation['id_string'],
+                    'active' => $allocation['active'],
+                    'building_id' => $allocation['building_id'],
+                    'application_id' => $allocation['application_id'],
+                    'completed' => $allocation['completed'],
+                    'name' => $allocation['organization_name'],
+                    'shortname' => $allocation['organization_shortname'],
+                    'organization_id' => $allocation['organization_id'],
+                    'resources' => $allocation_resources,
+                    'season_id' => $allocation['season_id'],
+                    'season_name' => $allocation['season_name'],
+                    'from' => explode(" ", $allocation['from_'])[1],
+                    'to' => explode(" ", $allocation['to_'])[1],
+                    'date' => explode(" ", $allocation['from_'])[0],
+                    'building_name' => $building_name
+                );
+            }
+
+            // Bookings (Interntildeling)
+            $booking_ids = $this->so->booking_ids_for_resource($resource_ids, $from, $to);
+            $_bookings	 = $this->so->read(array('filters' => array('id' => $booking_ids), 'results' => -1));
+
+            foreach ($_bookings['results'] as $booking)
+            {
+                $booking_resources = array();
+                foreach ($booking['resources'] as $resource_id) {
+                    $booking_resources[] = $resources_id[$resource_id];
+                }
+                $results[] = array(
+                    'type'				 => 'booking',
+                    'id'				 => $booking['id'],
+                    'name'				 => $booking['group_name'],
+                    'shortname'			 => $booking['group_shortname'],
+                    'active'			 => $booking['active'],
+                    'allocation_id'		 => $booking['allocation_id'],
+                    'group_id'			 => $booking['group_id'],
+                    'season_id'			 => $booking['season_id'],
+                    'season_name'		 => $booking['season_name'],
+                    'activity_id'		 => $booking['activity_id'],
+                    'activity_name'		 => $booking['activity_name'],
+                    'application_id'	 => $booking['application_id'],
+                    'group_name'		 => $booking['group_name'],
+                    'group_shortname'	 => $booking['group_shortname'],
+                    'building_id'		 => $booking['building_id'],
+                    'building_name'		 => $booking['building_name'],
+                    'from' => explode(" ", $booking['from_'])[1],
+                    'to' => explode(" ", $booking['to_'])[1],
+                    'date' => explode(" ", $booking['from_'])[0],
+                    'completed'			 => $booking['completed'],
+                    'reminder'			 => $booking['reminder'],
+                    'resources'			 => $booking_resources,
+                    'dates'				 => $booking['dates']
+                );
+            }
+
+            // Events
+            $event_ids	 = $this->so->event_ids_for_resource($resource_ids, $from, $to);
+            $_events	 = $this->event_so->read(array('filters' => array('id' => $event_ids),
+                'results' => -1));
+
+            foreach ($_events['results'] as $event)
+            {
+                $event_resources = array();
+                foreach ($event['resources'] as $resource_id) {
+                    $event_resources[] = $resources_id[$resource_id];
+                }
+                $results[] = array(
+                    'type'				 => 'event',
+                    'id'				 => $event['id'],
+                    'id_string'			 => $event['id_string'],
+                    'active'			 => $event['active'],
+                    'activity_id'		 => $event['activity_id'],
+                    'application_id'	 => $event['application_id'],
+                    'name'				 => $event['is_public'] ? $event['name'] : '',
+                    'homepage'			 => $event['homepage'],
+                    'description'		 => $event['is_public'] ? $event['description'] : '',
+                    'equipment'			 => $event['equipment'],
+                    'building_id'		 => $event['building_id'],
+                    'building_name'		 => $event['building_name'],
+                    'from' => explode(" ", $event['from_'])[1],
+                    'to' => explode(" ", $event['to_'])[1],
+                    'date' => explode(" ", $event['from_'])[0],
+                    'completed'			 => $event['completed'],
+                    'access_requested'	 => $event['access_requested'],
+                    'reminder'			 => $event['reminder'],
+                    'is_public'			 => $event['is_public'],
+                    'activity_name'		 => $event['activity_name'],
+                    'resources'			 => $event_resources,
+                    'dates'				 => $event['dates']
+                );
+            }
+
+            return array('total_records' => count($results), 'results' => array("schedule" => $results, "resources" => $resources_id));
+        }
+
 		/**
 		 * Return a building's schedule for a given week in a YUI DataSource
 		 * compatible format
@@ -545,7 +701,7 @@
 				);
 			}
 
-			$allocations = $this->split_allocations($allocations, $bookings);
+			$allocations = $this->split_allocations2($allocations, $bookings);
 
 //			$event_ids	 = $this->so->event_ids_for_building($building_id, $from, $to);
 			$event_ids	 = $this->so->event_ids_for_resource($resource_ids, $from, $to);
@@ -868,8 +1024,9 @@
 
 			foreach ($events as &$event)
 			{
-				$event['name']		 = substr($event['name'], 0, 34);
-				$event['shortname']	 = substr($event['name'], 0, 12);
+				$_name = $event['name'] === 'dummy' ? $event['activity_name'] : $event['name'];
+				$event['name']		 = substr($_name, 0, 34);
+				$event['shortname']	 = substr($_name, 0, 12);
 				$event['type']		 = 'event';
 				$datef				 = strtotime($event['from_']);
 				$event['weekday']	 = date('D', $datef);
@@ -895,7 +1052,9 @@
 				$from	 = $from[0] * 60 + $from[1];
 				$to		 = $to[0] * 60 + $to[1];
 				if ($to == 0)
+				{
 					$to		 = 24 * 60;
+				}
 				$colspan = ($to - $from) / 30;
 
 				$allocation['colspan']				 = $colspan;
@@ -936,7 +1095,9 @@
 				foreach ($all_bookings as $b)
 				{
 					if ($b['allocation_id'] == $allocation['id'])
+					{
 						$bookings[] = $b;
+					}
 				}
 				$times = array($allocation['from_'], $allocation['to_']);
 
@@ -953,7 +1114,9 @@
 					{
 
 						if (($b['from_'] >= $from_ && $b['from_'] < $to_) || ($b['to_'] > $from_ && $b['to_'] <= $to_) || ($b['from_'] <= $from_ && $b['to_'] >= $to_))
+						{
 							$resources = array_minus($resources, array($b['resource_id']));
+						}
 					}
 					if ($resources)
 					{
@@ -1199,7 +1362,7 @@
 			{
 				throw $ex;
 			}
-
+			
 			$start_date->setTimezone($DateTimeZone);
 			$end_date->setTimezone($DateTimeZone);
 
@@ -1237,12 +1400,23 @@
 
 				if($resource['simple_booking_start_date'])
 				{
-					$simple_booking_start_date = new DateTime(date('Y-m-d', $resource['simple_booking_start_date']));
-					$simple_booking_start_date->setTimezone($DateTimeZone);
+					$simple_booking_start_date = new DateTime(date('Y-m-d H:i', $resource['simple_booking_start_date']), $DateTimeZone);
+
+					$now = new DateTime();
+					$now->setTimezone($DateTimeZone);
+
+					if($simple_booking_start_date > $now)
+					{
+						$resource['skip_timeslot'] = true;
+					}
 
 					if($simple_booking_start_date > $_from)
 					{
 						$from = clone $simple_booking_start_date;
+					}
+					else
+					{
+						$from->setTime($simple_booking_start_date->format('H'), $simple_booking_start_date->format('i'), 0);
 					}
 				}
 
@@ -1265,14 +1439,15 @@
 				if($resource['booking_month_horizon'])
 				{
 //					$test = $from->format('Y-m-d');
-					$__to = $this->month_shifter($from, $resource['booking_month_horizon']);
+					$__to = $this->month_shifter($from, $resource['booking_month_horizon'], $DateTimeZone);
 
 //					$test = $__to->format('Y-m-d');
-					if($__to > $_to)
+//					if($__to > $_to)
 					{
 						$to = clone $__to;
 					}
 //					$test = $to->format('Y-m-d');
+					$to->setTime(23, 59, 59);
 				}
 
 				if($resource['simple_booking_end_date'])
@@ -1284,13 +1459,13 @@
 					{
 						$to = clone $simple_booking_end_date;
 					}
+					$to->setTime(23, 59, 59);
 				}
 
-				$to->setTime(23, 59, 59);
 
-				if ($resource['simple_booking'])
+				if ($resource['simple_booking'] && empty($resource['skip_timeslot']))
 				{
-					$event_ids = array_merge($event_ids, $this->so->event_ids_for_resource($resource['id'], $from, $to));
+					$event_ids = array_merge($event_ids, $this->so->event_ids_for_resource($resource['id'], $_from, $to));
 				}
 
 				$resource['from'] = $from;
@@ -1316,7 +1491,8 @@
 			$defaultStartHour			 = 8;
 			$defaultStartMinute			 = 0;
 			$defaultStartHour_fallback	 = 8;
-			$defaultEndHour				 = 16;
+			$defaultEndHour				 = 23;
+			$defaultEndHour_fallback	 = 23;
 
 			$days = array(
 				0	 => "Sunday",
@@ -1337,6 +1513,11 @@
 
 			foreach ($resources['results'] as $resource)
 			{
+				if(!empty($resource['skip_timeslot']))
+				{
+					continue;
+				}
+
 				$availlableTimeSlots[$resource['id']] = [];
 
 				if ($resource['simple_booking'] && $resource['simple_booking_start_date'])
@@ -1392,12 +1573,12 @@
 					$test	 = $limitDate->format('Y-m-d');
 					$test	 = $checkDate->format('Y-m-d');
 
-					$active_seasons = $soseason->get_resource_seasons($resource['id']);
+					$active_seasons = $soseason->get_resource_seasons($resource['id'], $checkDate->format('Y-m-d'), $limitDate->format('Y-m-d'));
 
 					do
 					{
 						$StartTime = clone ($checkDate);
-						if ($defaultStartHour > $defaultEndHour && $booking_lenght > -1)
+						if ($defaultStartHour > $defaultEndHour && ($booking_lenght > -1 || $resource['booking_time_default_end'] == -1))
 						{
 							$defaultStartHour = $defaultStartHour_fallback;
 						}
@@ -1432,16 +1613,24 @@
 						{
 							$endTime->setTime($booking_end, 0, 0);
 						}
-						else
+						else if($booking_end > -1 && !$booking_lenght > -1)
 						{
 							$test = $endTime->format('i');
 //							$endTime->setTime(min($booking_end, $StartTime->format('H')) + 1, 0, 0);
 							$endTime->setTime(min($booking_end, $StartTime->format('H')), (int)$endTime->format('i') + $booking_time_minutes, 0);
 						}
+						else
+						{
+							$endTime->setTime($StartTime->format('H'), (int)$endTime->format('i') + $booking_time_minutes, 0);
+						}
 
 						$checkDate = clone ($endTime);
 
 						$within_season = false;
+
+						/**
+						 * Expensive
+						 */
 						foreach ($active_seasons as $season_id)
 						{
 							$within_season = $soseason->timespan_within_season($season_id, $StartTime, $endTime);
@@ -1466,7 +1655,7 @@
 							$now = new DateTime();
 							$now->setTimezone($DateTimeZone);
 
-							if($now->format('Y-m-d') == $StartTime->format('Y-m-d')
+							if($limitDate->format('Y-m-d') == $checkDate->format('Y-m-d')
 								&& $now->format('H') < $_simple_booking_start_date->format('H')
 							)
 							{
@@ -1492,7 +1681,7 @@
 							];
 						}
 
-						if ($booking_lenght == -1)
+						if ($booking_lenght == -1 || $resource['booking_time_default_end'] == -1)
 						{
 							$defaultStartHour = $endTime->format('H');
 							$defaultStartMinute = (int)$endTime->format('i');
@@ -1579,8 +1768,27 @@
 			return $overlap;
 		}
 
-		function month_shifter( DateTime $aDate, $months )
+		function month_shifter( DateTime $aDate, $months, $DateTimeZone )
 		{
+			$now = new DateTime();
+			$now->setTimezone($DateTimeZone);
+
+			/**
+			 * wait for desired time within day
+			 */
+			$start_of_month = clone($aDate);
+			$start_of_month->modify('first day of this month');
+
+			if($start_of_month > $now && $months > 1)
+			{
+				$months -=1;
+			}
+			$check_limit = clone($aDate);
+			$check_limit->modify('last day of this month');
+			if($check_limit > $now && $months > 1)
+			{
+				$months -=1;
+			}
 			$dateA		 = clone($aDate);
 			$dateB		 = clone($aDate);
 			$plusMonths	 = clone($dateA->modify($months . ' Month'));
@@ -1597,6 +1805,7 @@
 			{
 				$result = $plusMonths->modify('last day of this month');
 			}
+			$result->setTime(23, 59, 59);
 			return $result;
 		}
 

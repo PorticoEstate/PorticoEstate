@@ -464,18 +464,22 @@
 
 				for ($i = 1; $i < ($type_id + 1); $i++)
 				{
-					if (isset($list_info[$i]) && $list_info[$i])
+					$cols					 .= ",fm_location{$i}.loc{$i}_name";
+					$cols_return[]			 = "loc{$i}_name";
+					$uicols['name'][]		 = "loc{$i}_name";
+					$uicols['descr'][]		 = $location_types[($i - 1)]['name'] . ' ' . lang('name');
+					$uicols['statustext'][]	 = $location_types[($i - 1)]['name'] . ' ' . lang('name');
+					$uicols['exchange'][]	 = true;
+					$uicols['align'][]		 = 'left';
+					$uicols['datatype'][]	 = 'V';
+					$uicols['formatter'][]	 = '';
+					if (!empty($list_info[$i]))
 					{
-						$cols					 .= ",fm_location{$i}.loc{$i}_name";
-						$cols_return[]			 = "loc{$i}_name";
 						$uicols['input_type'][]	 = 'text';
-						$uicols['name'][]		 = "loc{$i}_name";
-						$uicols['descr'][]		 = $location_types[($i - 1)]['name'] . ' ' . lang('name');
-						$uicols['statustext'][]	 = $location_types[($i - 1)]['name'] . ' ' . lang('name');
-						$uicols['exchange'][]	 = true;
-						$uicols['align'][]		 = 'left';
-						$uicols['datatype'][]	 = 'V';
-						$uicols['formatter'][]	 = '';
+					}
+					else
+					{
+						$uicols['input_type'][]	 = 'hidden';
 					}
 				}
 
@@ -1419,6 +1423,7 @@
 		{
 			//cache result
 			static $location = array();
+			static $location_noattribs = array();
 
 			$location_array	 = explode('-', $location_code);
 			$type_id		 = count($location_array);
@@ -1449,9 +1454,13 @@
 				return;
 			}
 
-			if (isset($location[$location_code]))
+			if (isset($location[$location_code]) && !$skip_attribs )
 			{
 				return $location[$location_code];
+			}
+			else if (isset($location_noattribs[$location_code]) && $skip_attribs )
+			{
+				return	$location_noattribs[$location_code];
 			}
 
 			if (!$skip_attribs && (!isset($values['attributes']) || !$values['attributes']))
@@ -1565,7 +1574,14 @@
 //				}
 //			}
 
-			$location[$location_code] = $values;
+			if ( !$skip_attribs )
+			{
+				$location[$location_code] = $values;
+			}
+			else
+			{
+				$location_noattribs[$location_code] = $values;
+			}
 			return $values;
 		}
 
@@ -2382,10 +2398,60 @@
 			return $values;
 		}
 
+		public function get_rows_as_array($sql, $legal_keys=null)
+		{
+			$values = array();
+			$this->db->query($sql, __LINE__, __FILE__);
+			while($this->db->next_record())
+			{
+				$values[] = $this->db->Record;
+			}
+			return $values;
+		}
+
+        public function get_search_data_all()
+		{
+            $values = array(
+				'activities'			=> $this->get_rows_as_array("SELECT * from bb_activity where active=1"),
+				'buildings'				=> $this->get_rows_as_array("SELECT * from bb_building where active=1"),
+				'building_resources'	=> $this->get_rows_as_array("SELECT * from bb_building_resource"),
+				'facilities'			=> $this->get_rows_as_array("SELECT * from bb_facility where active=1"),
+				'resources'				=> $this->get_rows_as_array("SELECT * from bb_resource where active=1 and hidden_in_frontend=0 and deactivate_calendar=0"),
+				'resource_activities'	=> $this->get_rows_as_array("SELECT * from bb_resource_activity"),
+				'resource_facilities'	=> $this->get_rows_as_array("SELECT * from bb_resource_facility"),
+				'resource_categories'	=> $this->get_rows_as_array("SELECT * from bb_rescategory where active=1"),
+				'resource_category_activity' => $this->get_rows_as_array("SELECT * from bb_rescategory_activity"),
+				'towns'					=> $this->get_search_data_location(),
+				'organizations'			=> $this->get_rows_as_array("SELECT * from bb_organization where active=1")
+			);
+
+            return $values;
+        }
+        public function get_search_data_location()
+		{
+            $values	= array();
+            $sql	= "SELECT DISTINCT bb_building.id as b_id, bb_building.name as b_name, fm_part_of_town.id, fm_part_of_town.name FROM"
+                . " bb_building {$this->join} fm_locations ON bb_building.location_code = fm_locations.location_code"
+                . " {$this->join} fm_location1 ON fm_locations.loc1 = fm_location1.loc1"
+                . " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id"
+                . " where bb_building.active=1";
+            $this->db->query($sql, __LINE__, __FILE__);
+            while ($this->db->next_record())
+            {
+                $values[] = array(
+                    'b_id'   => $this->db->f('b_id'),
+                    'b_name' => $this->db->f('b_name'),
+                    'id'	 => $this->db->f('id'),
+                    'name'	 => $this->db->f('name', true)
+                );
+            }
+            return $values;
+        }
+
 		public function get_booking_part_of_towns()
 		{
-			$values	 = array();
-			$sql	 = "SELECT DISTINCT fm_part_of_town.id, fm_part_of_town.name FROM"
+			$values	= array();
+			$sql	= "SELECT DISTINCT fm_part_of_town.id, fm_part_of_town.name FROM"
 				. " bb_building {$this->join} fm_locations ON bb_building.location_code = fm_locations.location_code"
 				. " {$this->join} fm_location1 ON fm_locations.loc1 = fm_location1.loc1"
 				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id ORDER BY name ASC";
@@ -2766,6 +2832,13 @@
 				return array();
 			}
 
+			static $zip_info_cache = array();
+
+			if(isset($zip_info_cache[$location_code]))
+			{
+				return $zip_info_cache[$location_code];
+			}
+
 			$location_arr	 = explode('-', $location_code);
 			$zip_info = array();
 
@@ -2777,6 +2850,8 @@
 				$zip_info['zip_code'] = $this->db->f('zip_code');
 				$zip_info['city'] = $this->db->f('city', true);
 			}
+
+			$zip_info_cache[$location_code] = $zip_info;
 			return $zip_info;
 		}
 	}

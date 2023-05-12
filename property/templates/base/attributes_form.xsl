@@ -6,10 +6,23 @@
 
 <!-- New template-->
 <xsl:template xmlns:php="http://php.net/xsl" name="attributes_values">
+	<xsl:param name="class" />
+
+	<xsl:variable name="_class">
+		<xsl:choose>
+			<xsl:when test="$class !=''">
+				<xsl:value-of select="$class"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>pure-input-3-4</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+
 	<script type="text/javascript">
 		help_Popup = function(requestUrl)
 		{
-		TINY.box.show({iframe:requestUrl, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		TINY.box.show({iframe:requestUrl, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		};
 	</script>
 	<xsl:variable name="lang_hour">
@@ -55,6 +68,9 @@
 					<xsl:with-param name="supress_history_date">
 						<xsl:value-of select="$supress_history_date" />
 					</xsl:with-param>
+					<xsl:with-param name="class">
+						<xsl:value-of select="$_class" />
+					</xsl:with-param>
 				</xsl:apply-templates>
 			</fieldset>
 		</div>
@@ -70,6 +86,7 @@
 	<xsl:param name="textareacols" />
 	<xsl:param name="textarearows" />
 	<xsl:param name="supress_history_date" />
+	<xsl:param name="class" />
 
 	<xsl:choose>
 		<xsl:when test="datatype='section'">
@@ -160,6 +177,9 @@
 							<xsl:with-param name="supress_history_date">
 								<xsl:value-of select="$supress_history_date" />
 							</xsl:with-param>
+							<xsl:with-param name="class">
+								<xsl:value-of select="$class" />
+							</xsl:with-param>
 
 						</xsl:call-template>
 
@@ -200,6 +220,9 @@
 			</xsl:choose>
 			<xsl:text> ]</xsl:text>
 		</xsl:when>
+		<xsl:when test="datatype='QR_code'">
+			<xsl:text> [ QR ]</xsl:text>
+		</xsl:when>		
 	</xsl:choose>
 </xsl:template>
 
@@ -210,8 +233,7 @@
 	<xsl:param name="textareacols" />
 	<xsl:param name="textarearows" />
 	<xsl:param name="supress_history_date" />
-
-
+	<xsl:param name="class" />
 
 	<input type="hidden" name="values_attribute[{id}][name]" value="{name}"/>
 	<input type="hidden" name="values_attribute[{id}][datatype]" value="{datatype}"/>
@@ -229,7 +251,7 @@
 			<xsl:call-template name="choice"/>
 		</xsl:when>
 		<xsl:when test="datatype='LB'">
-			<div  class="pure-input-1-2 pure-custom">
+			<div  class="{$class} pure-custom">
 				<select id="id_{name}" name="values_attribute[{id}][value]" title="{$statustext}" class="pure-input-1" >
 					<xsl:choose>
 						<xsl:when test="disabled!=''">
@@ -406,7 +428,7 @@
 			</input>
 		</xsl:when>
 		<xsl:when test="datatype='custom1'">
-			<select name="values_attribute[{id}][value]" class="pure-input-1-2">
+			<select name="values_attribute[{id}][value]" class="{$class}">
 				<xsl:choose>
 					<xsl:when test="disabled!=''">
 						<xsl:attribute name="disabled">
@@ -632,7 +654,7 @@
 			</table>
 		</xsl:when>
 		<xsl:when test="datatype='T'">
-			<textarea id="id_{name}"  name="values_attribute[{id}][value]" class="pure-input-1-2">
+			<textarea id="id_{name}"  name="values_attribute[{id}][value]" class="{$class}">
 				<xsl:choose>
 					<xsl:when test="disabled!=''">
 						<xsl:attribute name="disabled">
@@ -710,7 +732,7 @@
 			</input>
 		</xsl:when>
 		<xsl:when test="datatype='link'">
-			<input type="text" name="values_attribute[{id}][value]" value="{value}" size="30" class="pure-input-1-2">
+			<input type="text" name="values_attribute[{id}][value]" value="{value}" size="30" class="{$class}">
 				<xsl:choose>
 					<xsl:when test="disabled!=''">
 						<xsl:attribute name="disabled">
@@ -778,7 +800,7 @@
 			</xsl:choose>
 		</xsl:when>
 		<xsl:when test="datatype='I'">
-			<input data-validation="number" data-validation-allowing="negative" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30" class="pure-input-1-2">
+			<input data-validation="number" data-validation-allowing="negative" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30" class="{$class}">
 				<xsl:choose>
 					<xsl:when test="disabled!=''">
 						<xsl:attribute name="disabled">
@@ -794,7 +816,7 @@
 			</input>
 		</xsl:when>
 		<xsl:when test="datatype='N'">
-			<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30" class="pure-input-1-2">
+			<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30" class="{$class}">
 				<xsl:choose>
 					<xsl:when test="disabled!=''">
 						<xsl:attribute name="disabled">
@@ -810,7 +832,7 @@
 			</input>
 		</xsl:when>
 		<xsl:when test="datatype='email'">
-			<input data-validation="email" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30" class="pure-input-1-2">
+			<input data-validation="email" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30" class="{$class}">
 				<xsl:choose>
 					<xsl:when test="disabled!=''">
 						<xsl:attribute name="disabled">
@@ -826,7 +848,7 @@
 			</input>
 		</xsl:when>
 		<xsl:otherwise>
-			<input id="id_{name}" type="text" name="values_attribute[{id}][value]" size="30" class="pure-input-1-2">
+			<input id="id_{name}" type="text" name="values_attribute[{id}][value]" size="30" class="{$class}">
 				<xsl:attribute name="value">
 					<xsl:choose>
 						<xsl:when test="value!=''">

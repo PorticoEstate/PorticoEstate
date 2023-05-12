@@ -88,7 +88,7 @@
 		 * @param int $resource_id
 		 * @return array
 		 */
-		public function get_resource_seasons( $resource_id )
+		public function get_resource_seasons( $resource_id, $from_ = null, $to_ = null )
 		{
 			static $seasons = array();
 
@@ -99,11 +99,27 @@
 
 			$now = date('Y-m-d');
 
+			$filter = '';
+			if($from_ && $to_)
+			{
+				 $filter = "AND ((from_ >= '$from_' AND from_ < '$to_') OR"
+					. " (to_ > '$from_' AND to_ <= '$to_') OR"
+					. " (from_ < '$from_' AND to_ > '$to_'))";
+
+			}
+			else
+			{
+				 $filter = "AND from_ <= '{$now}' AND to_ >= '{$now}'";
+			}
+			
+//			$filter = "AND from_ <= '{$now}' AND to_ >= '{$now}'";
+
 			$sql = "SELECT season_id FROM bb_season_resource"
 				. " JOIN bb_season ON bb_season.id = bb_season_resource.season_id"
 				. " WHERE status = 'PUBLISHED'"
-				. " AND from_ <= '{$now}'"
-				. " AND to_ >= '{$now}'"
+				. " {$filter}"
+//				. " AND from_ <= '{$now}'"
+//				. " AND to_ >= '{$now}'"
 				. " AND resource_id=" . (int) $resource_id;
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -126,7 +142,17 @@
 		 */
 		public function timespan_within_season( $season_id, $from_, $to_ )
 		{
-			$season = $this->read_single($season_id);
+			static $seasons = array();
+
+			if(isset($seasons[$season_id]))
+			{
+				$season = $seasons[$season_id];
+			}
+			else
+			{
+				$season = $this->read_single($season_id);
+				$seasons[$season_id] = $season;
+			}
 
 			if (!$season)
 			{
@@ -305,8 +331,8 @@
 				"bb_season s2 JOIN bb_season_resource AS sr2 ON(s2.id=sr2.season_id) " .
 				"WHERE (s1.from_ <= s2.to_) AND (s2.from_ <= s1.to_) " .
 				"AND sr1.resource_id=sr2.resource_id " .
-				"AND s1.active=1" .
-				"AND s2.active=1" .
+				"AND s1.active=1 " .
+				"AND s2.active=1 " .
 				"AND s1.id=$season_id";
 
 			$this->db->query("SELECT 1 FROM bb_season_boundary AS sb1 " .
@@ -387,6 +413,14 @@
 		 * */
 		public function retrieve_season_boundaries( $season_id, $coalesce_days = false )
 		{
+			
+			static $season_boundaries = array();
+
+			if(isset($season_boundaries[$season_id]))
+			{
+				return $season_boundaries[$season_id];
+			}
+
 			$view_sql = <<<EOT
 			CREATE OR REPLACE TEMP VIEW bsbt AS SELECT
 			TIMESTAMP 'epoch ' + (EXTRACT(EPOCH FROM from_)+86400*(wday-1)) * INTERVAL '1 second' as from_,
@@ -420,7 +454,11 @@ EOT;
 
 			$this->db->query($ranges_sql, __LINE__, __FILE__);
 
-			return $coalesce_days ? $this->coalesce_season_boundaries_over_days($this->db->resultSet) : $this->db->resultSet;
+			$ret = $coalesce_days ? $this->coalesce_season_boundaries_over_days($this->db->resultSet) : $this->db->resultSet;
+
+			$season_boundaries[$season_id] = $ret;
+
+			return $ret;
 		}
 
 		public function coalesce_season_boundaries_over_days( &$result_set )
@@ -439,15 +477,18 @@ EOT;
 			$ts_to = strtotime($r['to_']);
 
 			if (!$ts_to >= strtotime('23:59:00', $ts_to))
+			{
 				return;
+			}
 			if (!$record = array_shift($result_set))
+			{
 				return;
+			}
 
 			$ts_from = strtotime($record['from_']);
-			if ($ts_from <= strtotime('00:00:59', $ts_from))
+			if ($ts_from <= strtotime('00:00:59', $ts_from) && $ts_to >= strtotime('23:59:00', $ts_to))
 			{
 				$r['to_'] = $record['to_'];
-				$r[1] = $record['to_'];
 				$this->coalesce_boundary($r, $result_set);
 			}
 			else
@@ -470,6 +511,7 @@ EOT;
 				'wday' => array('type' => 'int', 'required' => true),
 				'from_' => array('type' => 'time', 'required' => true),
 				'to_' => array('type' => 'time', 'required' => true),
+				'articles' => array('type' => 'json', 'required' => false),
 				'organization_name' => array('type' => 'string',
 					'query' => true,
 					'join' => array(
@@ -535,7 +577,7 @@ EOT;
 			}
 			$this->db->query(
 				"SELECT 1 FROM bb_season_boundary " .
-				"WHERE wday = $wday AND from_ <= ${from_} AND to_ >= ${to_} AND season_id = ${season_id}", __LINE__, __FILE__);
+				"WHERE wday = {$wday} AND from_ <= {$from_} AND to_ >= {$to_} AND season_id = {$season_id}", __LINE__, __FILE__);
 			if (!$this->db->next_record())
 			{
 				$errors['overlaps'] = lang("This allocation is outside season boundaries");

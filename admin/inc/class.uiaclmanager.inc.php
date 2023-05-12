@@ -78,6 +78,8 @@
 
 			$this->_template	=& $GLOBALS['phpgw']->template;
 			$this->_boacl		= CreateObject('admin.boaclmanager');
+
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::addressmasters';
 		}
 
 		/**

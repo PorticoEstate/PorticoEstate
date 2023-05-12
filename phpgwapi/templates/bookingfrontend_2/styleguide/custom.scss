@@ -1,0 +1,39 @@
+$media-small: 576px;
+$media-medium: 768px;
+$media-large: 992px;
+$media-xlarge: 1200px;
+$media-xxlarge: 1400px;
+
+.colorbox {
+  height: 50px;
+  width: 50px;
+  border-radius: 5px;
+  flex: none;
+
+  &--large {
+    height: 80px;
+    width: 80px;
+  }
+}
+
+.flex-auto {
+  flex: auto;
+}
+
+.main-container {
+  max-width: 1280px;
+  margin-right: auto;
+  margin-left: auto;
+  width: 100%;
+
+  @media (min-width: $media-large) {
+    padding-left: 3.75rem;
+    padding-right: 3.75rem;
+  }
+}
+
+.heading-underline {
+  border-bottom: 1px solid $purple-24;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+}

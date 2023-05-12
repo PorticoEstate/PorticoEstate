@@ -316,29 +316,21 @@
 			}
 		}
 
-		public function get_summation( $id, $year = 0 )
+		public function get_summation( $ids, $year = 0 )
 		{
 			$year = $year ? (int)$year : date('Y');
 
-			$surveys = array();
-
-			if ($id == -1)
+			if ($ids)
 			{
-				$values = $this->so->read(array('allrows' => true, 'status_open' => true));
-				foreach ($values as $survey)
-				{
-					$surveys[$survey['id']]['multiplier'] = $survey['multiplier'];
-				}
+				$values = $this->so->read(array('allrows' => true, 'status_open' => true, 'ids' => $ids));
+				$data = $this->so->get_summation($ids);
 			}
 			else
 			{
-				$surveys[$id] = $this->so->read_single(array('id' => $id));
+				$data = array();
 			}
 
-			$data = $this->so->get_summation($id);
 
-//_debug_array($surveys);
-//_debug_array($data);
 			$values	 = array();
 			$i		 = 0;
 			foreach ($data as $entry)
@@ -361,7 +353,6 @@
 
 				$entry['amount'] = $entry['amount'] * $entry['multiplier'] * $entry['representative'];
 
-//				$entry['amount'] = $entry['amount'] * $surveys[$entry['condition_survey_id']]['multiplier'];
 				$i = "{$entry['building_part']}_{$entry['category']}";
 
 				$values[$entry['condition_survey_id']][$i]['building_part']	 = $entry['building_part'];

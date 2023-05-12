@@ -103,7 +103,7 @@ class Charset
 
             case 'ISO-8859-1_UTF-8':
                 $escapedData = str_replace(array('&', '"', "'", '<', '>'), array('&amp;', '&quot;', '&apos;', '&lt;', '&gt;'), $data);
-                $escapedData = utf8_encode($escapedData);
+				$escapedData = mb_convert_encoding($escapedData, 'UTF-8', 'ISO-8859-1');
                 break;
 
             case 'ISO-8859-1_ISO-8859-1':
@@ -202,8 +202,8 @@ class Charset
                 $escapedData = str_replace(array('&', '"', "'", '<', '>'), array('&amp;', '&quot;', '&apos;', '&lt;', '&gt;'), $data);
                 /// @todo we could use real UTF8 chars here instead of xml entities... (note that utf_8 encode all allone will NOT convert them)
                 $escapedData = str_replace($this->xml_cp1252_Entities['in'], $this->xml_cp1252_Entities['out'], $escapedData);
-                $escapedData = utf8_encode($escapedData);
-                break;
+				$escapedData = mb_convert_encoding($escapedData, 'UTF-8', 'ISO-8859-1');
+			  break;
             case 'CP1252_ISO-8859-1':
                 $escapedData = str_replace(array('&', '"', "'", '<', '>'), array('&amp;', '&quot;', '&apos;', '&lt;', '&gt;'), $data);
                 // we might as well replace all funky chars with a '?' here, but we are kind and leave it to the receiving application layer to decide what to do with these weird entities...

@@ -28,7 +28,7 @@ $(document).ready(function ()
 
 });
 
-function populateTableChkArticles(selection, resources, application_id, reservation_type, reservation_id)
+function populateTableChkArticles(selection, resources, application_id, reservation_type, reservation_id, alloc_template_id = null)
 {
 
 	var oArgs = {
@@ -36,7 +36,8 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 		sort: 'name',
 		application_id: application_id,
 		reservation_type: reservation_type,
-		reservation_id: reservation_id
+		reservation_id: reservation_id,
+		alloc_template_id: alloc_template_id
 	};
 	var url = phpGWLink('bookingfrontend/', oArgs, true);
 
@@ -84,14 +85,20 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 		{//3
 			key: 'unit',
 			label: lang['unit'],
-			attrs: [{name: 'class', value: "unit align-middle"}]
+			attrs: [{name: 'class', value: "unit"},{name: 'style', value: "display:none;"}
+			]
 		},
 		{//4
+			key: 'lang_unit',
+			label: lang['unit'],
+			attrs: [{name: 'class', value: "align-middle"}]
+		},
+		{//5
 			key: 'price',
 			label: lang['unit cost'],
 			attrs: [{name: 'class', value: "text-right align-middle"}]
 		},
-		{//5
+		{//6
 			key: 'quantity',
 			label: lang['quantity'],
 			attrs: [{name: 'class', value: "align-middle"}],
@@ -105,12 +112,12 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 					]
 				}
 			]},
-		{//6
+		{//7
 			key: 'selected_quantity',
 			label: lang['Selected'],
 			attrs: [{name: 'class', value: "selected_quantity text-right align-middle"}]
 		},
-		{//7
+		{//8
 			label: 'hidden',
 			attrs: [{name: 'style', value: "display:none;"}],
 			object: [
@@ -121,14 +128,14 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 				}
 			], value: 'selected_article_quantity'
 		},
-		{//8
+		{//9
 			key: 'selected_sum',
 			label: lang['Sum'],
 			attrs: [
 				{name: 'class', value: "text-right align-middle selected_sum"}
 			]
 		},
-		{//9
+		{//10
 			label: lang['Delete'],
 			attrs: [{name: 'class', value: "align-middle"}],
 			object: [
@@ -144,7 +151,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 				}
 			]
 		},
-		{//10
+		{//11
 			/**
 			 * Hidden field for holding information on mandatory items
 			 */
@@ -158,7 +165,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 			],
 			value: 'mandatory'
 		},
-		{//11
+		{//12
 			/**
 			 * Hidden field for holding information on parent_mapping_id
 			 */
@@ -208,12 +215,15 @@ function set_mandatory(xTable)
 	var from;
 	var to;
 	var timespan;
-	var sum_minutes;
+	var sum_minutes = 0;
 	var sum_hours = 0;
 	var sum_days = 0;
 
 //	var datetime = $("#dates-container").find(".datetime");
 	var datetime = document.getElementsByClassName('datetime');
+	var one_day = 1000 * 60 * 60 * 24;
+	var day;
+	var days = [];
 
 	for (var j = 0; j < datetime.length; )
 	{
@@ -230,7 +240,14 @@ function set_mandatory(xTable)
 
 		sum_minutes = timespan * 60;
 		sum_hours += Math.ceil(timespan);
-		sum_days += Math.ceil(sum_hours/24);
+//		sum_days += Math.ceil(sum_hours/24);
+
+		day = new Date(from).toISOString().split('T')[0];
+		if(!days.includes(day) )
+		{
+			sum_days += Math.ceil((to - from) / one_day);
+			days.push(day);
+		}
 
 		j++;
 		j++;
@@ -245,8 +262,8 @@ function set_mandatory(xTable)
 			tr = mandatory[i].parentNode.parentNode;
 			tr.classList.add("table-success");
 			tr.childNodes[0].childNodes[0].setAttribute('style', 'display:none;');
-			tr.childNodes[5].childNodes[0].setAttribute('style', 'display:none;');
-			tr.childNodes[9].childNodes[0].setAttribute('style', 'display:none;');
+			tr.childNodes[6].childNodes[0].setAttribute('style', 'display:none;');
+			tr.childNodes[10].childNodes[0].setAttribute('style', 'display:none;');
 
 			unit = tr.getElementsByClassName("unit")[0];
 
@@ -297,7 +314,7 @@ function set_mandatory(xTable)
 function set_basket(tr, quantity)
 {
 	var id = tr.childNodes[1].childNodes[0].value;
-	var price = tr.childNodes[4].innerText;
+	var price = tr.childNodes[5].innerText;
 	var parent_mapping_id = tr.getElementsByClassName('parent_mapping_id')[0].value;
 	var selected_quantity = parseInt(quantity);
 	/**
@@ -307,14 +324,14 @@ function set_basket(tr, quantity)
 
 	var tax_code = 'x';
 	var ex_tax_price = 'x';
-	var target = tr.childNodes[7].childNodes[0];
+	var target = tr.childNodes[8].childNodes[0];
 	target.value = id + '_' + selected_quantity + '_' + tax_code + '_' + ex_tax_price + '_' + parent_mapping_id;
 
-	var elem = tr.childNodes[6];
+	var elem = tr.childNodes[7];
 
 	elem.innerText = selected_quantity;
 
-	var sum_cell = tr.childNodes[8];
+	var sum_cell = tr.childNodes[9];
 	sum_cell.innerText = (selected_quantity * parseFloat(price)).toFixed(2);
 
 	if(quantity !== 0)
@@ -339,14 +356,14 @@ function add_to_bastet(element)
 	tr.classList.add("table-success");
 
 	var id = element.parentNode.parentNode.childNodes[1].childNodes[0].value;
-	var quantity = element.parentNode.parentNode.childNodes[5].childNodes[0].value;
-	var price = element.parentNode.parentNode.childNodes[4].innerText;
+	var quantity = element.parentNode.parentNode.childNodes[6].childNodes[0].value;
+	var price = element.parentNode.parentNode.childNodes[5].innerText;
 	var parent_mapping_id = tr.getElementsByClassName('parent_mapping_id')[0].value;
 
 	/**
 	 * set selected items
 	 */
-	var temp = element.parentNode.parentNode.childNodes[7].childNodes[0].value;
+	var temp = element.parentNode.parentNode.childNodes[8].childNodes[0].value;
 
 	var selected_quantity = 0;
 
@@ -360,12 +377,12 @@ function add_to_bastet(element)
 	/**
 	 * Reset quantity
 	 */
-	element.parentNode.parentNode.childNodes[5].childNodes[0].value = 1;
+	element.parentNode.parentNode.childNodes[6].childNodes[0].value = 1;
 	/**
 	 * Reset button to disabled
 	 */
 	//element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
-	element.parentNode.parentNode.childNodes[9].childNodes[0].removeAttribute('disabled');
+	element.parentNode.parentNode.childNodes[10].childNodes[0].removeAttribute('disabled');
 
 	/**
 	 * target is the value for selected_articles[]
@@ -374,15 +391,15 @@ function add_to_bastet(element)
 
 	var tax_code = 'x';//Excluded
 	var ex_tax_price = 'x';//Excluded
-	var target = element.parentNode.parentNode.childNodes[7].childNodes[0];
+	var target = element.parentNode.parentNode.childNodes[8].childNodes[0];
 	target.value = id + '_' + selected_quantity + '_' + tax_code + '_' + ex_tax_price + '_' + parent_mapping_id;
 
-	var elem = element.parentNode.parentNode.childNodes[6];
+	var elem = element.parentNode.parentNode.childNodes[7];
 
 // add text
 	elem.innerText = selected_quantity;
 
-	var sum_cell = element.parentNode.parentNode.childNodes[8];
+	var sum_cell = element.parentNode.parentNode.childNodes[9];
 	sum_cell.innerText = (selected_quantity * parseFloat(price)).toFixed(2);
 
 	var xTable = element.parentNode.parentNode.parentNode.parentNode;
@@ -408,7 +425,7 @@ function set_sum(xTable)
 		if (selected_sum[i].innerHTML)
 		{
 			partial_sum = selected_sum[i].innerHTML.replaceAll(' ', '');
-			var cell = $(selected_sum[i]).parents().children()[9];
+			var cell = $(selected_sum[i]).parents().children()[10];
 			$(cell).children()[0].removeAttribute('disabled');
 
 			temp_total_sum = parseFloat(temp_total_sum) + parseFloat(partial_sum);
@@ -445,16 +462,16 @@ function empty_from_bastet(element)
 	/**
 	 * Reset quantity
 	 */
-	element.parentNode.parentNode.childNodes[6].innerText = '';
-	element.parentNode.parentNode.childNodes[5].childNodes[0].value = 1;
-	element.parentNode.parentNode.childNodes[8].innerText = '';
-	element.parentNode.parentNode.childNodes[7].childNodes[0].value = '';
+	element.parentNode.parentNode.childNodes[7].innerText = '';
+	element.parentNode.parentNode.childNodes[6].childNodes[0].value = 1;
+	element.parentNode.parentNode.childNodes[9].innerText = '';
+	element.parentNode.parentNode.childNodes[8].childNodes[0].value = '';
 
 	/**
 	 * Reset button to disabled
 	 */
 //	element.parentNode.parentNode.childNodes[0].childNodes[0].setAttribute('disabled', true);
-	element.parentNode.parentNode.childNodes[9].childNodes[0].setAttribute('disabled', true);
+	element.parentNode.parentNode.childNodes[10].childNodes[0].setAttribute('disabled', true);
 
 	var xTableBody = element.parentNode.parentNode.parentNode;
 	var selected_sum = xTableBody.getElementsByClassName('selected_sum');

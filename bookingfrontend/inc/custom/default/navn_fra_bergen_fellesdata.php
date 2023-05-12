@@ -147,5 +147,27 @@
 			{
 				_debug_array($data);
 			}
+
+			if($this->debug)
+			{
+				$this->log('user ssn', $data['ssn']);
+				$this->log('FORNAVN', $data['first_name']);
+			}
+
 		}
+
+		private function log( $what, $value = '' )
+		{
+			if (!empty($GLOBALS['phpgw_info']['server']['log_levels']['module']['bookingfrontend']))
+			{
+				$GLOBALS['phpgw']->log->debug(array(
+					'text' => "what: %1, <br/>value: %2",
+					'p1' => $what,
+					'p2' => $value ? $value : ' ',
+					'line' => __LINE__,
+					'file' => __FILE__
+				));
+			}
+		}
+
 	}

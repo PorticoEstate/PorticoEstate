@@ -227,7 +227,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript($this->currentapp, 'portico', 'vendor_report.index.js');
+			self::add_javascript($this->currentapp, 'base', 'vendor_report.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -331,7 +331,7 @@
 			);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
-		//	self::add_javascript($this->currentapp, 'portico', 'vendor_report.edit.js');
+		//	self::add_javascript($this->currentapp, 'base', 'vendor_report.edit.js');
 			self::render_template_xsl(array('report','application_info', 'datatable_inline', 'attributes_form'), array($mode => $data));
 		}
 

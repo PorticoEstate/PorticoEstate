@@ -36,7 +36,7 @@
 			 */
 			$bouser = CreateObject('bookingfrontend.bouser');
 
-			$bouser->validate_ssn_login(
+			$external_login_info = $bouser->validate_ssn_login(
 				array
 				(
 					'menuaction' => 'bookingfrontend.uiapplication.show',
@@ -44,6 +44,17 @@
 					'secret'	=> $secret
 				)
 			);
+
+			if(!empty($external_login_info['ssn']))
+			{
+				$user_id = CreateObject('booking.souser')->get_user_id($external_login_info['ssn']);
+				$customer_name = '';
+				if($user_id)
+				{
+					$customer = CreateObject('booking.bouser')->read_single($user_id);
+					$customer_name = $customer['name'];
+				}
+			}
 
 			$application = $this->bo->read_single($id);
 
@@ -56,7 +67,7 @@
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST' && $comment)
 			{
-				$this->add_comment($application, $comment);
+				$this->add_comment($application, $comment,'comment', $customer_name);
 				$this->set_display_in_dashboard($application, true, array('force' => true));
 				$application['frontend_modified'] = 'now';
 				$this->bo->send_admin_notification($application, $comment);
@@ -200,6 +211,7 @@
 			$lang_expired = lang('expired for edit');
 			$lang_edit = lang('edit');
 			$lang_cancel = lang('Cancel booking');
+			$lang_incative = lang('inactive');
 			$lang_rights = lang('Missing rights');
 
 			foreach ($associations as &$association)
@@ -214,114 +226,113 @@
 						}
 						else
 						{
-							$association['edit_link'] = '#';
-							$association['edit_text'] = $lang_expired;
+							$association['edit_link']	 = '#';
+							$association['edit_text']	 = $lang_expired;
 						}
 						$association['edit_text'] = $lang_edit;
 						if ($config['user_can_delete_allocations'] == 'yes')
 						{
 							if ($association['from_'] > Date('Y-m-d H:i:s'))
 							{
-								$association['cancel_link'] = self::link(array('menuaction' => "{$this->module}.uiallocation.cancel", 'allocation_id' => $association['id']));
-								$association['cancel_text'] = $lang_cancel;
+								$association['cancel_link']	 = self::link(array('menuaction' => "{$this->module}.uiallocation.cancel", 'allocation_id' => $association['id']));
+								$association['cancel_text']	 = $lang_cancel;
 							}
 							else
 							{
-								$association['cancel_link'] = '#';
-								$association['cancel_text'] = $lang_expired;
+								$association['cancel_link']	 = '#';
+								$association['cancel_text']	 = $lang_expired;
 							}
 						}
 						else
-							{
-							$association['cancel_link'] = '#';
-							$association['cancel_text'] = $lang_rights;
+						{
+							$association['cancel_link']	 = '#';
+							$association['cancel_text']	 = $lang_rights;
 						}
 					}
 					if ($association['type'] === 'event')
 					{
 						if ($association['from_'] > Date('Y-m-d H:i:s'))
 						{
-							$association['edit_link'] = self::link(array('menuaction' => "{$this->module}.uievent.edit",
-								'id' => $association['id'],
-								'resource_ids' => $application['resources']));
-							$association['edit_text'] = $lang_edit;
+							$association['edit_link']	 = self::link(array('menuaction'	 => "{$this->module}.uievent.edit",
+									'id'			 => $association['id'],
+									'resource_ids'	 => $application['resources']));
+							$association['edit_text']	 = $lang_edit;
 						}
 						else
 						{
-							$association['edit_link'] = '#';
-							$association['edit_text'] = $lang_expired;
+							$association['edit_link']	 = '#';
+							$association['edit_text']	 = $lang_expired;
 						}
 
 						if ($config['user_can_delete_events'] == 'yes')
 						{
 							if ($association['from_'] > Date('Y-m-d H:i:s'))
 							{
-								$association['cancel_link'] = self::link(array('menuaction' => "{$this->module}.uievent.cancel",
-									'id' => $association['id'],
-									'resource_ids' => $application['resources']));
-								$association['cancel_text'] = $lang_cancel;
+								$association['cancel_link']	 = self::link(array('menuaction'	 => "{$this->module}.uievent.cancel",
+										'id'			 => $association['id'],
+										'resource_ids'	 => $application['resources']));
+								$association['cancel_text']	 = $lang_cancel;
 							}
 							else
 							{
-								$association['cancel_link'] = '#';
-								$association['cancel_text'] = $lang_expired;
+								$association['cancel_link']	 = '#';
+								$association['cancel_text']	 = $lang_expired;
 							}
-
 						}
 						else
 						{
-							$association['cancel_link'] = '#';
-							$association['cancel_text'] = $lang_rights;
+							$association['cancel_link']	 = '#';
+							$association['cancel_text']	 = $lang_rights;
 						}
 					}
 					if ($association['type'] === 'booking')
 					{
 						if ($association['from_'] > Date('Y-m-d H:i:s'))
 						{
-							$association['edit_link'] = self::link(array('menuaction' => "{$this->module}.uibooking.edit",
-								'id' => $association['id'],
-								'resource_ids' => $application['resources']));
-							$association['edit_text'] = $lang_edit;
+							$association['edit_link']	 = self::link(array('menuaction'	 => "{$this->module}.uibooking.edit",
+									'id'			 => $association['id'],
+									'resource_ids'	 => $application['resources']));
+							$association['edit_text']	 = $lang_edit;
 						}
 						else
 						{
-							$association['edit_link'] = '#';
-							$association['edit_text'] = $lang_expired;
+							$association['edit_link']	 = '#';
+							$association['edit_text']	 = $lang_expired;
 						}
 
 						if ($config['user_can_delete_bookings'] == 'yes')
 						{
 							if ($association['from_'] > Date('Y-m-d H:i:s'))
 							{
-								$association['cancel_link'] = self::link(array('menuaction' => "{$this->module}.uibooking.cancel",
-									'id' => $association['id'],
-									'resource_ids' => $application['resources']));
-								$association['cancel_text'] = $lang_cancel;
+								$association['cancel_link']	 = self::link(array('menuaction'	 => "{$this->module}.uibooking.cancel",
+										'id'			 => $association['id'],
+										'resource_ids'	 => $application['resources']));
+								$association['cancel_text']	 = $lang_cancel;
 							}
 							else
 							{
-								$association['cancel_link'] = '#';
-								$association['cancel_text'] = $lang_expired;
+								$association['cancel_link']	 = '#';
+								$association['cancel_text']	 = $lang_expired;
 							}
 						}
 						else
 						{
-							$association['cancel_link'] = '#';
-							$association['cancel_text'] = $lang_rights;
+							$association['cancel_link']	 = '#';
+							$association['cancel_text']	 = $lang_rights;
 						}
 					}
 				}
 				else
 				{
-					$association['edit_link'] = '#';
-					$association['edit_text'] = $lang_expired;
-					$association['cancel_link'] = '#';
-					$association['cancel_text'] = $lang_expired;
+					$association['edit_link']	 = '#';
+					$association['edit_text']	 = $lang_incative;
+					$association['cancel_link']	 = '#';
+					$association['cancel_text']	 = $lang_incative;
 				}
 
-				$association['type'] = lang($association['type'].' show');
-				$association['from_'] = DateTime::createFromFormat('Y-m-d H:i:s', $association['from_'])->format('d.m.Y H:i');
-				$association['to_'] = DateTime::createFromFormat('Y-m-d H:i:s', $association['to_'])->format('d.m.Y H:i');
+				$association['type']	 = lang($association['type'] . ' show');
+				$association['from_']	 = DateTime::createFromFormat('Y-m-d H:i:s', $association['from_'])->format('d.m.Y H:i');
+				$association['to_']		 = DateTime::createFromFormat('Y-m-d H:i:s', $association['to_'])->format('d.m.Y H:i');
 			}
 			$application['resources_json'] = json_encode(array_map('intval', $application['resources']));
 

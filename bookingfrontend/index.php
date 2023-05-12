@@ -32,32 +32,30 @@
 	 * This script will check if there is defined a startpage in the users
 	 * preferences - and then forward the user to this page
 	 */
-	$GLOBALS['phpgw_info']['flags'] = array
+	$GLOBALS['phpgw_info']['flags']					 = array
 		(
-		'noheader' => true,
-		'nonavbar' => true,
+		'noheader'	 => true,
+		'nonavbar'	 => true,
 		'currentapp' => 'login', // To stop functions.inc.php from validating the session
 	);
-	$GLOBALS['phpgw_info']['flags']['session_name'] = 'bookingfrontendsession';
-	$GLOBALS['phpgw_remote_user_fallback'] = 'sql';
+	$GLOBALS['phpgw_info']['flags']['session_name']	 = 'bookingfrontendsession';
+	$GLOBALS['phpgw_remote_user_fallback']			 = 'sql';
 	include_once('../header.inc.php');
 
 	// Make sure we're always logged in
-	if (!phpgw::get_var(session_name()) || !$GLOBALS['phpgw']->session->verify())
+	if (!phpgw::get_var(session_name(), 'string', 'COOKIE') || !$GLOBALS['phpgw']->session->verify())
 	{
-		$c = createobject('phpgwapi.config', 'bookingfrontend');
-		$c->read();
-		$config = $c->config_data;
+		$config = createobject('phpgwapi.config', 'bookingfrontend')->read();
 
-		$login = $c->config_data['anonymous_user'];
+		$login		 = $config['anonymous_user'];
 		$logindomain = phpgw::get_var('domain', 'string', 'GET');
 		if (strstr($login, '#') === false && $logindomain)
 		{
 			$login .= "#{$logindomain}";
 		}
 
-		$passwd = $c->config_data['anonymous_passwd'];
-		$_POST['submitit'] = "";
+		$passwd				 = $config['anonymous_passwd'];
+		$_POST['submitit']	 = "";
 
 		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 		if (!$GLOBALS['sessionid'])
@@ -68,8 +66,50 @@
 				$lang_denied = $GLOBALS['phpgw']->session->reason;
 			}
 			echo <<<HTML
-				<div class="error">$lang_denied</div>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Nede for vedlikehold</title>
+	<style>
+		body {
+			background-color: #f2f2f2;
+			font-family: Arial, sans-serif;
+		}
+		h1 {
+			font-size: 48px;
+			color: #333333;
+			text-align: center;
+			margin-top: 100px;
+		}
+		p {
+			font-size: 24px;
+			color: #666666;
+			text-align: center;
+			margin-top: 50px;
+		}
+		.footer {
+			font-size: 14px;
+			color: #666666;
+			text-align: center;
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+			margin-bottom: 10px;
+		}
+	</style>
+</head>
+<body>
+	<h1>Nede for vedlikehold</h1>
+	<p>Vi beklager ulempen, men denne nettsiden er for tiden under vedlikehold. Kom tilbake senere.</p>
+	<div class="footer">$lang_denied</div>
+</body>
+</html>
+
 HTML;
+
+//			echo <<<HTML
+//				<div class="error">$lang_denied</div>
+//HTML;
 			/**
 			 * Used for footer on exit
 			 */
@@ -78,7 +118,7 @@ HTML;
 		}
 	}
 
-	$redirect = json_decode(phpgw::get_var('redirect','raw', 'COOKIE'), true);
+	$redirect = json_decode(phpgw::get_var('redirect', 'raw', 'COOKIE'), true);
 
 	if (is_array($redirect) && count($redirect))
 	{
@@ -93,8 +133,8 @@ HTML;
 		$sessid = phpgw::get_var('sessionid', 'string', 'GET');
 		if ($sessid)
 		{
-			$redirect_data['sessionid'] = $sessid;
-			$redirect_data['kp3'] = phpgw::get_var('kp3', 'string', 'GET');
+			$redirect_data['sessionid']	 = $sessid;
+			$redirect_data['kp3']		 = phpgw::get_var('kp3', 'string', 'GET');
 		}
 
 		$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', false, 0);
@@ -110,7 +150,7 @@ HTML;
 // BEGIN Stuff copied from functions.inc.php
 /////////////////////////////////////////////////////////////////////////////
 
-	$selected_lang = phpgw::get_var('selected_lang','string', 'COOKIE');
+	$selected_lang = phpgw::get_var('selected_lang', 'string', 'COOKIE');
 
 	if (phpgw::get_var('lang', 'bool', 'GET'))
 	{
@@ -122,19 +162,19 @@ HTML;
 
 	$GLOBALS['phpgw']->translation->set_userlang($userlang, true);
 
-	$template_set = phpgw::get_var('template_set','string', 'COOKIE');
+	$template_set = phpgw::get_var('template_set', 'string', 'COOKIE');
 
 	/**
 	 * we want the "bookingfrontend" for now
 	 */
 	switch ($template_set)
 	{
-		case 'aalesund':
+		case 'bookingfrontend_2':
 		case 'bookingfrontend':
-			$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] = 'bookingfrontend';
+			$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']	 = $template_set;
 			break;
 		default:
-			$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] = 'bookingfrontend';
+			$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']	 = 'bookingfrontend';
 			break;
 	}
 
@@ -166,14 +206,14 @@ HTML;
 	$GLOBALS['phpgw']->preferences->verify_basic_settings();
 
 	/*	 * ******* Optional classes, which can be disabled for performance increases ******** */
-	if(is_array($GLOBALS['phpgw_info']['flags']))
+	if (is_array($GLOBALS['phpgw_info']['flags']))
 	{
 		foreach ($GLOBALS['phpgw_info']['flags'] as $phpgw_class_name => $dummy)
 		{
 			if (preg_match('/enable_/', $phpgw_class_name))
 			{
-				$enable_class = str_replace('enable_', '', $phpgw_class_name);
-				$enable_class = str_replace('_class', '', $enable_class);
+				$enable_class					 = str_replace('enable_', '', $phpgw_class_name);
+				$enable_class					 = str_replace('_class', '', $enable_class);
 				$GLOBALS['phpgw']->$enable_class = createObject("phpgwapi.{$enable_class}");
 			}
 		}
@@ -186,8 +226,8 @@ HTML;
 	  \************************************************************************ */
 	if (!isset($GLOBALS['phpgw_info']['flags']['disable_Template_class']) || !$GLOBALS['phpgw_info']['flags']['disable_Template_class'])
 	{
-		$GLOBALS['phpgw']->template = createObject('phpgwapi.template', PHPGW_APP_TPL);
-		$GLOBALS['phpgw']->xslttpl = createObject('phpgwapi.xslttemplates', PHPGW_APP_TPL);
+		$GLOBALS['phpgw']->template	 = createObject('phpgwapi.template', PHPGW_APP_TPL);
+		$GLOBALS['phpgw']->xslttpl	 = createObject('phpgwapi.xslttemplates', PHPGW_APP_TPL);
 	}
 
 	/*	 * ***********************************************************************\
@@ -201,10 +241,10 @@ HTML;
 		{
 			$invalid_data = true;
 			$GLOBALS['phpgw']->common->phpgw_header(true);
-			$GLOBALS['phpgw']->log->write(array('text' => 'W-Permissions, Attempted to access %1 from %2',
-				'p1' => $GLOBALS['phpgw_info']['flags']['currentapp'],
-				'p2'=> phpgw::get_ip_address()
-				));
+			$GLOBALS['phpgw']->log->write(array('text'	 => 'W-Permissions, Attempted to access %1 from %2',
+				'p1'	 => $GLOBALS['phpgw_info']['flags']['currentapp'],
+				'p2'	 => phpgw::get_ip_address()
+			));
 
 			$lang_denied = lang('Access not permitted');
 			echo <<<HTML
@@ -242,7 +282,7 @@ HTML;
 	{
 		include_once(PHPGW_APP_INC . '/header.inc.php');
 	}
-        
+
 /////////////////////////////////////////////////////////////////////////////
 // END Stuff copied from functions.inc.php
 /////////////////////////////////////////////////////////////////////////////
@@ -252,19 +292,19 @@ HTML;
 	}
 	else
 	{
-		$app = 'bookingfrontend';
-		$class = 'uisearch';
-		$method = 'index';
+		$app	 = 'bookingfrontend';
+		$class	 = 'uisearch';
+		$method	 = 'index';
 	}
 
-	if($app != 'bookingfrontend')
+	if ($app != 'bookingfrontend')
 	{
 		$invalid_data = true;
 		$GLOBALS['phpgw']->common->phpgw_header(true);
-		$GLOBALS['phpgw']->log->write(array('text' => 'W-Permissions, Attempted to access %1 from %2',
-			'p1' => $app,
-			'p2'=> phpgw::get_ip_address()
-			));
+		$GLOBALS['phpgw']->log->write(array('text'	 => 'W-Permissions, Attempted to access %1 from %2',
+			'p1'	 => $app,
+			'p2'	 => phpgw::get_ip_address()
+		));
 
 		$lang_denied = lang('Access not permitted');
 		echo <<<HTML
@@ -272,7 +312,6 @@ HTML;
 
 HTML;
 		$GLOBALS['phpgw']->common->phpgw_exit(True);
-
 	}
 
 	$GLOBALS[$class] = CreateObject("{$app}.{$class}");
@@ -285,9 +324,9 @@ HTML;
 		{
 			// comply with RFC 4627
 			header('Content-Type: application/json');
-			$return_data = $GLOBALS[$class]->$method();
+			$return_data								 = $GLOBALS[$class]->$method();
 			echo json_encode($return_data);
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter']	 = true;
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 		else

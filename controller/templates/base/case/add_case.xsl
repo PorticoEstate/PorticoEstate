@@ -36,14 +36,14 @@
 					<xsl:call-template name="select_component_children" />
 					<div class="row mt-2">
 						<div class="container">
-							<h5 class="ml-5">Kontrollert utstyr</h5>
-							<ul class="ml-2">
+							<h5 class="ms-5">Kontrollert utstyr</h5>
+							<ul class="ms-2">
 								<xsl:for-each select="completed_list">
 									<li style="display: block;">
 										<a href="#">
-											<img src="{//img_undo}" width="16" class="mr-2" onClick="undo_completed({completed_id})"/>
+											<img src="{//img_undo}" width="16" class="me-2" onClick="undo_completed({completed_id})"/>
 										</a>
-										<img src="{//img_green_check}" width="16" class="mr-2"/>
+										<img src="{//img_green_check}" width="16" class="me-2"/>
 										<xsl:value-of select="short_description" />
 									</li>
 								</xsl:for-each>
@@ -67,8 +67,8 @@
 			</xsl:choose>-->
 			<!-- differ from bootstrap-->
 			<!--			<h5>
-				<a href="#" data-toggle="modal" data-target="#inspectObject">
-					<img src="{img_add2}" width="23" class="mr-2"/>Utfør kontroll</a>
+				<a href="#" data-bs-toggle="modal" data-bs-target="#inspectObject">
+					<img src="{img_add2}" width="23" class="me-2"/>Utfør kontroll</a>
 			</h5>-->
 
 			<!-- MODAL INSPECT EQUIPMENT START -->
@@ -99,7 +99,7 @@
 
 											<xsl:choose>
 												<xsl:when test="components_at_location/child::node()">
-													<select name="component_at_control_group_{control_group/id}" id="component_at_control_group_{control_group/id}" class="custom-select">
+													<select name="component_at_control_group_{control_group/id}" id="component_at_control_group_{control_group/id}" class="form-select">
 														<xsl:apply-templates select="components_at_location/component_options"/>
 													</select>
 												</xsl:when>
@@ -177,7 +177,7 @@
 																	</xsl:attribute>
 																	<xsl:value-of select="php:function('lang', 'condition degree')"/>
 																</label>
-																<select name="condition_degree" class="custom-select">
+																<select name="condition_degree" class="form-select">
 																	<xsl:attribute name="title">
 																		<xsl:value-of select="php:function('lang', 'select value')"/>
 																	</xsl:attribute>
@@ -191,7 +191,7 @@
 																	</xsl:attribute>
 																	<xsl:value-of select="php:function('lang', 'consequence')"/>
 																</label>
-																<select name="consequence" class="custom-select">
+																<select name="consequence" class="form-select">
 																	<xsl:attribute name="title">
 																		<xsl:value-of select="php:function('lang', 'select value')"/>
 																	</xsl:attribute>
@@ -206,7 +206,7 @@
 																<input type="hidden" name="type" value="control_item_type_1" />
 																<div class="form-group">
 																	<label>Status</label>
-																	<select name="status" class="custom-select">
+																	<select name="status" class="form-select">
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
@@ -248,7 +248,7 @@
 																		<xsl:value-of select="$lang_new_value" />
 																	</xsl:with-param>
 																</xsl:call-template>
-																<input type="submit" class="btn btn-primary btn-lg mr-3" name="save_control" value="Lagre sak" />
+																<input type="submit" class="btn btn-primary btn-lg me-3" name="save_control" value="Lagre sak" />
 
 															</xsl:when>
 															<xsl:when test="type = 'control_item_type_2'">
@@ -256,7 +256,7 @@
 
 																<div class="form-group">
 																	<label>Status</label>
-																	<select name="status" class="custom-select">
+																	<select name="status" class="form-select">
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
@@ -311,7 +311,7 @@
 																<xsl:variable name="lang_save">
 																	<xsl:value-of select="php:function('lang', 'register_error')" />
 																</xsl:variable>
-																<input type="submit" class="btn btn-primary btn-lg mr-3" name="save_control" value="Lagre måling" title="{$lang_save}" />
+																<input type="submit" class="btn btn-primary btn-lg me-3" name="save_control" value="Lagre måling" title="{$lang_save}" />
 
 															</xsl:when>
 															<xsl:when test="type = 'control_item_type_3'">
@@ -319,7 +319,7 @@
 
 																<div class="form-group">
 																	<label>Status</label>
-																	<select name="status" class="custom-select">
+																	<select name="status" class="form-select">
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
@@ -330,10 +330,10 @@
 																</div>
 																<div class="form-group">
 																	<label>Velg verdi fra liste</label>
-																	<select name="option_value" class="custom-select">
+																	<select name="option_value" class="form-select">
 																		<xsl:if test="required = 1">
 																			<xsl:attribute name="class" >
-																				<xsl:text>custom-select required</xsl:text>
+																				<xsl:text>form-select required</xsl:text>
 																			</xsl:attribute>
 																		</xsl:if>
 																		<option value="" >Velg</option>
@@ -377,7 +377,7 @@
 																<xsl:variable name="lang_save">
 																	<xsl:value-of select="php:function('lang', 'register_error')" />
 																</xsl:variable>
-																<input type="submit" class="btn btn-primary btn-lg mr-3" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
+																<input type="submit" class="btn btn-primary btn-lg me-3" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
 
 															</xsl:when>
 															<xsl:when test="type = 'control_item_type_4'">
@@ -386,7 +386,7 @@
 
 																<div class="form-group">
 																	<label>Status</label>
-																	<select name="status" class="custom-select">
+																	<select name="status" class="form-select">
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
 																		<option value="2" >Venter på tilbakemelding</option>
@@ -397,7 +397,7 @@
 																</div>
 																<div class="form-group">
 																	<label>Velg verdi fra lister</label>
-																	<select name="option_value" class="custom-select">
+																	<select name="option_value" class="form-select">
 																		<xsl:if test="required = 1">
 																			<xsl:attribute name="class" >
 																				<xsl:text>required</xsl:text>
@@ -444,7 +444,7 @@
 																<xsl:variable name="lang_save">
 																	<xsl:value-of select="php:function('lang', 'register_error')" />
 																</xsl:variable>
-																<input type="submit" class="btn btn-primary btn-lg mr-3" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
+																<input type="submit" class="btn btn-primary btn-lg me-3" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
 
 															</xsl:when>
 															<xsl:when test="type = 'control_item_type_5'">
@@ -501,7 +501,7 @@
 																<xsl:variable name="lang_save">
 																	<xsl:value-of select="php:function('lang', 'register_error')" />
 																</xsl:variable>
-																<input type="submit" class="btn btn-primary btn-lg mr-3" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
+																<input type="submit" class="btn btn-primary btn-lg me-3" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
 
 															</xsl:when>
 														</xsl:choose>
@@ -534,7 +534,7 @@
 																		</label>
 																	</div>
 																</div>
-																<!--																<button id = "submit_update_component" type="submit" class="btn btn-primary btn-lg mr-3 mt-3">
+																<!--																<button id = "submit_update_component" type="submit" class="btn btn-primary btn-lg me-3 mt-3">
 																	<xsl:value-of select="php:function('lang', 'add picture')" />
 																</button>-->
 															</div>
@@ -573,7 +573,7 @@
 										</xsl:attribute>
 									</input>
 									<div class="modal-footer">
-										<button type="submit" class="btn btn-success ml-5 mr-3">Ferdig (delskjema)</button>
+										<button type="submit" class="btn btn-success ms-5 me-3">Ferdig (delskjema)</button>
 									</div>
 								</form>
 							</xsl:when>
@@ -620,7 +620,7 @@
 				</xsl:attribute>
 				<xsl:value-of select="php:function('lang', 'regulation reference')"/>
 			</label>
-			<select id="regulation_reference" name="regulation_reference" class="custom-select">
+			<select id="regulation_reference" name="regulation_reference" class="form-select">
 				<xsl:attribute name="title">
 					<xsl:value-of select="php:function('lang', 'select value')"/>
 				</xsl:attribute>

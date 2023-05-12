@@ -267,7 +267,7 @@
 			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 			self::add_javascript('controller', 'base', 'calendar_planner.start.js');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= ': ' .lang('calendar planner');
 			self::render_template_xsl(array('calendar/calendar_planner'), array('start' => $data));
 		}
 
@@ -511,7 +511,7 @@
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('controller', 'base', 'calendar_planner.monthly.js');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner') . '::' . lang('monthly');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= ': ' . lang('calendar planner') . '::' . lang('monthly');
 			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = 'controller::calendar_planner::monthly';
 
 			self::render_template_xsl(array('calendar/calendar_planner'), array('monthly' => $data));
@@ -852,7 +852,7 @@
 
 			self::add_javascript('controller', 'base', 'calendar_planner.send_notification.js');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner') . '::' . lang('send notification');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= ': ' . lang('calendar planner') . '::' . lang('send notification');
 			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = 'controller::calendar_planner::send_notification';
 			self::render_template_xsl(array('calendar/calendar_planner'), array('notification' => $data));
 		}
@@ -1379,7 +1379,8 @@ HTML;
 				'menuaction' => 'controller.uicalendar_planner.inspection_history',
 				'part_of_town_id' => $part_of_town_id,
 				'deviation'	=> $deviation,
-				'limit_date' => date($this->dateformat, $limit_date)
+				'limit_date' => date($this->dateformat, $limit_date),
+				'allrows'	=> $allrows,
 			);
 
 			$nm = array
@@ -1388,7 +1389,8 @@ HTML;
  				'num_records'		=> count($history_content),
  				'all_records'		=> $total,
 				'link_data'			=> $link_data,
-				'allow_all_rows'	=> $total < 150 ? true : false,
+//				'allow_all_rows'	=> $total < 150 ? true : false,
+				'allow_all_rows'	=> true,
 				'allrows'			=> $allrows,
 				'query'				=> $query
 			);
@@ -1422,7 +1424,7 @@ HTML;
 			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 			self::add_javascript('controller', 'base', 'calendar_planner.inspection_history.js');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('inspection history');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= ': ' . lang('inspection history');
 			self::render_template_xsl(array('calendar/calendar_planner'), array('inspection_history' => $data));
 		}
 		/**
@@ -1453,14 +1455,15 @@ HTML;
 				'<tbody id="calendar">';
 
 			$weeksInMonth	 = $this->_weeksInMonth($month, $year);
-			$week			 = (int)date('W', mktime(0, 0, 0, $month, 1, $year));
 			// Create weeks in a month
 			for ($i = 0; $i < $weeksInMonth; $i++)
 			{
+				$week			 = (int)date('W', mktime(0, 0, 0, $month, ($i * 7) + 1, $year));
 
 				$content .= '<tr class="target_row">';
 				$content .= '<th scope="row" style="writing-mode: vertical-rl;text-orientation: upright;">' . lang('week') . ' ' . ($week) . '</th>';
 				$week++;
+
 				//Create days in a week
 				//$work_days = count($this->dayLabels);
 				for ($j = 1; $j <= 7; $j++)
@@ -1514,7 +1517,7 @@ HTML;
 				foreach ($this->items[$this->currentDate] as $item)
 				{
 //				_debug_array($item);
-					$desc = str_replace(':', ':<br/>', $item['component']['xml_short_desc']);
+					$desc = ucwords(mb_convert_case(str_replace(':', ':<br/>', $item['component']['xml_short_desc']),  MB_CASE_TITLE), "'");
 
 					if($item['schedule']['info']['check_list_id'])
 					{
@@ -1524,7 +1527,7 @@ HTML;
 							'check_list_id' => $item['schedule']['info']['check_list_id'],
 						);
 						$url_target = '_self';
-						$link_to_checklist = "<a href=\"" . $GLOBALS['phpgw']->link('/index.php', $control_link_data) . "\" target=\"{$url_target}\"><kbd><i class='fas fa-link'></i></kbd></a>";
+						$link_to_checklist = "<a href='" . $GLOBALS['phpgw']->link('/index.php', $control_link_data) . " target='{$url_target}'><kbd><i class='fas fa-link'></i></kbd></a>";
 					}
 					else
 					{
@@ -1537,36 +1540,37 @@ HTML;
 						case 'CONTROL_NOT_DONE_WITH_PLANNED_DATE':
 						case 'CONTROL_NOT_DONE':
 						case 'CONTROL_PLANNED':
-							$class = 'badge-primary';
+							$class = 'bg-primary text-light';
 							$draggable =  'draggable="true"';
 							break;
 
 						case 'CONTROL_DONE_IN_TIME_WITHOUT_ERRORS':
-							$class = 'badge-secondary';
+							$class = 'bg-secondary text-light';
 							$draggable =  '';
 							break;
 
 						default:
-							$class = 'badge-secondary';
+							$class = 'bg-secondary text-light';
 							$draggable =  '';
 							break;
 					}
 
 					$item_content .= <<<HTML
-
-					<div class="mb-1 card badge event {$class}" style="width: 8rem;" {$draggable}
+					<div class="mb-1 card event {$class}" style="width: 8rem;" {$draggable}
 						id="{$item['component']['location_id']}_{$item['component']['id']}"
 						control_id="{$item['schedule']['info']['control_id']}"
 						serie_id="{$item['schedule']['info']['serie_id']}"
 						check_list_id="{$item['schedule']['info']['check_list_id']}"
 						deadline_date_ts="{$item['schedule']['info']['deadline_date_ts']}"
 						assigned_to="{$item['schedule']['info']['assigned_to']}">
-						<span class="float-left link_to_checklist">
-							{$link_to_checklist}
-						</span>
-						<span class="float-right">
-							{$desc}
-						</span>
+						<div class="card-body">
+							<p class="link_to_checklist">
+								{$link_to_checklist}
+							</p>
+							<p class="card-text">
+								{$desc}
+							</p>
+						</div>
 
 					</div>
 HTML;
@@ -1576,7 +1580,7 @@ HTML;
 			}
 
 			return '<td id="' . $this->currentDate . '" class="' . ($cellNumber % 7 == 1 ? ' start ' : ($cellNumber % 7 == 0 ? ' end ' : ' ')) .
-				($cellContent == null ? 'bg-light' : 'table-active') . '"><div class="clearfix"><span class="float-left">' . $cellContent . "</span>{$item_content}</div></td>";
+				($cellContent == null ? 'bg-light' : 'table-active') . '"><div class="clearfix"><span class="float-start">' . $cellContent . "</span>{$item_content}</div></td>";
 		}
 
 		/**
@@ -1874,7 +1878,7 @@ HTML;
 
 			self::add_javascript('controller', 'base', 'calendar_planner.start_inspection.js');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner') . '::' . lang('start inspection');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= ': ' . lang('calendar planner') . '::' . lang('start inspection');
 			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = 'controller::calendar_planner::start_inspection';
 			self::render_template_xsl(array('calendar/calendar_planner'), array('start_inspection' => $data));
 
@@ -2051,7 +2055,7 @@ HTML;
 
 			self::add_javascript('controller', 'base', 'calendar_planner.start_inspection.js');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('calendar planner') . '::Ad hoc';
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= ': ' . lang('calendar planner') . '::Ad hoc';
 			$GLOBALS['phpgw_info']['flags']['breadcrumb_selection'] = 'controller::calendar_planner::ad_hoc';
 			self::render_template_xsl(array('calendar/calendar_planner'), array('ad_hoc' => $data));
 

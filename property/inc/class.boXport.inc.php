@@ -227,7 +227,7 @@
 				return array();
 			}
 			$i			 = 0;
-			$myfilearray = '';
+			$myfilearray = array();
 			while ($file = readdir($dir_handle))
 			{
 				if ((substr($file, 0, 1) != '.') && is_file("{$file_catalog}/{$file}"))
@@ -237,7 +237,7 @@
 				}
 			}
 			closedir($dir_handle);
-			@sort($myfilearray);
+			sort($myfilearray);
 
 			for ($i = 0; $i < count($myfilearray); $i++)
 			{
@@ -335,10 +335,13 @@
 				$data	 = phpgw::clean_value($data);
 			}
 
-			$receipt = $this->export($data);
-			if(!empty($receipt))
+			if (!isset($data['enabled']) || (isset($data['enabled']) && $data['enabled'] === 1))
 			{
-				_debug_array($receipt);
+				$receipt = $this->export($data);
+				if (!empty($receipt))
+				{
+					_debug_array($receipt);
+				}
 			}
 		}
 	}	

@@ -1,3 +1,7 @@
+/**
+ *
+ * Denne filen er midlertidig - til "base" katalogen slipper igjennom reverse-proxy i portalen i Bergen
+ */
 var pendingList = 0;
 var redirect_action;
 var file_count = 0;
@@ -53,8 +57,8 @@ this.confirm_session = function (action)
 				{
 					var form = document.getElementById('form');
 					$('<div id="spinner" class="d-flex align-items-center">')
-					.append($('<strong>').text('Lagrer...'))
-					.append($('<div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>')).insertAfter(form);
+						.append($('<strong>').text('Lagrer...'))
+						.append($('<div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>')).insertAfter(form);
 					window.scrollBy(0, 100); //
 
 					document.getElementById(action).value = 1;
@@ -118,7 +122,7 @@ ajax_submit_form = function (action)
 					}
 					else
 					{
-						var oArgs = {menuaction: 'property.uitts.index'	};
+						var oArgs = {menuaction: 'property.uitts.index'};
 					}
 
 					redirect_action = phpGWLink('index.php', oArgs);
@@ -139,7 +143,7 @@ ajax_submit_form = function (action)
 						$(this).prop('disabled', false);
 					});
 					var element = document.getElementById('spinner');
-					if(element)
+					if (element)
 					{
 						element.parentNode.removeChild(element);
 					}
@@ -160,14 +164,55 @@ ajax_submit_form = function (action)
 
 $(document).ready(function ()
 {
+
+	$("#notify_account_id").select2({
+		ajax: {
+			url: phpGWLink('index.php', {menuaction: 'preferences.boadmin_acl.get_users'}, true),
+			dataType: 'json',
+			delay: 250,
+			data: function (params)
+			{
+				return {
+					query: params.term, // search term
+					page: params.page || 1
+				};
+			},
+			cache: true
+		},
+		width: '50%',
+		placeholder: lang['Search'],
+		minimumInputLength: 2,
+		language: "no",
+		allowClear: true
+	});
+
+	$('#notify_account_id').on('select2:open', function (e)
+	{
+		$(".select2-search__field").each(function ()
+		{
+			if ($(this).attr("aria-controls") == 'select2-notify_account_id-results')
+			{
+				$(this)[0].focus();
+			}
+		});
+	});
+
+//	$('#notify_account_id').on('select2:select', function (e)
+//	{
+//		// Do something
+//	});
+
+
+
 	$("#user_id").select2({
 		placeholder: "Select a user",
 		width: '75%'
 	});
 
-	$('#user_id').on('select2:open', function (e) {
+	$('#user_id').on('select2:open', function (e)
+	{
 
-		$(".select2-search__field").each(function()
+		$(".select2-search__field").each(function ()
 		{
 			if ($(this).attr("aria-controls") == 'select2-user_id-results')
 			{
@@ -321,9 +366,23 @@ $.formUtils.addValidator({
 	errorMessageKey: ''
 });
 
-set_tab = function ()
+set_tab = function (active_tab)
 {
-	//Dummy
+	conf = {
+		//	modules: 'date, security, file',
+		validateOnBlur: false,
+		scrollToTopOnError: true,
+		errorMessagePosition: 'top',
+		validateHiddenInputs: true
+	};
+
+	if (active_tab === 'notify')
+	{
+		if (!$('form').isValid(false, conf))
+		{
+			$('#tab-content').responsiveTabs('activate', 0);
+		}
+	}
 };
 
 window.on_location_updated = function (location_code)
@@ -347,7 +406,7 @@ window.on_location_updated = function (location_code)
 				var exceptions = data.location_exception;
 				$.each(exceptions, function (k, v)
 				{
-					if(v.alert_vendor == 1)
+					if (v.alert_vendor == 1)
 					{
 						htmlString += "<div class=\"error\">";
 					}
@@ -356,7 +415,7 @@ window.on_location_updated = function (location_code)
 						htmlString += "<div class=\"msg_good\">";
 					}
 					htmlString += v.severity + ": " + v.category_text;
-					if(v.location_descr)
+					if (v.location_descr)
 					{
 						htmlString += "<br/>" + v.location_descr;
 					}
@@ -368,3 +427,4 @@ window.on_location_updated = function (location_code)
 		}
 	});
 };
+

@@ -34,8 +34,13 @@
 	class property_hook_helper
 	{
 
-		private $skip_portalbox_controls;
+		private $skip_portalbox_controls,
+			$navbar_bg;
 
+		public function __construct()
+		{
+			$this->navbar_bg = isset($GLOBALS['phpgw_info']['theme']['navbar_bg']) ? $GLOBALS['phpgw_info']['theme']['navbar_bg'] : '';
+		}
 		/**
 		 * Clear ACL-based userlists
 		 *
@@ -97,8 +102,8 @@
 			$this->home_project_overdue_end_date();
 			$this->home_tenant_claims();
 			$this->home_ticket();
-			$this->home_project();
-			$this->home_workorder();
+	//		$this->home_project();
+	//		$this->home_workorder();
 		}
 
 		/**
@@ -157,9 +162,9 @@
 				$portalbox		 = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => lang('tender delay') . " ({$total_records})",
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
@@ -187,7 +192,18 @@
 							'id'		 => $entry['workorder_id'], 'tab'		 => 'budget'))
 					);
 				}
-				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_tickets';
+				}
+
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
+				echo "\n</div>";
 
 				unset($tts);
 				unset($portalbox);
@@ -231,9 +247,9 @@
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => lang('end date delay'),
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
@@ -261,7 +277,16 @@
 //							'id' => $entry['project_id'], 'tab' => 'budget'))
 //					);
 //				}
-				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_tickets';
+				}
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
 
 				echo '<div id="project_overdue_info_container"></div>';
 
@@ -301,7 +326,7 @@
 JS;
 
 				echo $js;
-
+				echo "\n</div>";
 				unset($tts);
 				unset($portalbox);
 				unset($category_name);
@@ -341,9 +366,9 @@ JS;
 				$portalbox		 = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => lang('tenant claim'),
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
@@ -375,7 +400,17 @@ JS;
 							'claim_id'	 => $entry['claim_id']))
 					);
 				}
-				echo "\n" . '<!-- BEGIN claim info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_tickets';
+				}
+
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN claim info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
 
 				echo '<div id="claim_info_container"></div>';
 
@@ -412,6 +447,7 @@ JS;
 JS;
 
 				echo $js;
+				echo "\n</div>";
 
 			}
 			$GLOBALS['phpgw_info']['flags']['currentapp']						 = $save_app;
@@ -440,9 +476,9 @@ JS;
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => isset($prefs['property']['mainscreen_tts_title']) && $prefs['property']['mainscreen_tts_title'] ? "{$prefs['property']['mainscreen_tts_title']}" : lang('Helpdesk'),
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
@@ -458,12 +494,21 @@ JS;
 
 				foreach ($var as $key => $value)
 				{
-					$portalbox->set_controls($key, $value);
+//					$portalbox->set_controls($key, $value);
 				}
 
 				$portalbox->data = array();
 
-				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_tickets';
+				}
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
 
 
 				echo '<div id="ticket_info_container"></div>';
@@ -541,6 +586,7 @@ JS;
 JS;
 
 				echo $js;
+				echo "\n</div>";
 
 				unset($tts);
 				unset($portalbox);
@@ -579,9 +625,9 @@ JS;
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => isset($prefs['property']['mainscreen_projects_1_title']) && $prefs['property']['mainscreen_projects_1_title'] ? "{$prefs['property']['mainscreen_projects_1_title']} ({$total_records})" : lang('project') . '::' . lang('list') . ' ' . 1 . "::Status: {$default_status} ({$total_records})",
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
@@ -611,7 +657,17 @@ JS;
 					);
 				}
 
-				echo "\n" . '<!-- BEGIN project 1 info -->' . "\n<div class='property_project' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END project 1 info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_project';
+				}
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN project 1 info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END project 1 info -->' . "\n";
+				echo "\n</div>";
 
 				unset($obj);
 				unset($portalbox);
@@ -648,9 +704,9 @@ JS;
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => isset($prefs['property']['mainscreen_workorders_1_title']) && $prefs['property']['mainscreen_workorders_1_title'] ? "{$prefs['property']['mainscreen_workorders_1_title']} ({$total_records})" : lang('workorder') . '::' . lang('list') . ' ' . 1 . "::Status: {$default_status} ({$total_records})",
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
@@ -679,8 +735,17 @@ JS;
 							'id'		 => $workorder['workorder_id']))
 					);
 				}
-
-				echo "\n" . '<!-- BEGIN workorder 1 info -->' . "\n<div class='property_workorder' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END workorder 1 info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_workorder';
+				}
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN workorder 1 info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END workorder 1 info -->' . "\n";
+				echo "\n</div>";
 
 				unset($obj);
 				unset($portalbox);
@@ -697,9 +762,9 @@ JS;
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => isset($prefs['property']['mainscreen_workorders_2_title']) && $prefs['property']['mainscreen_workorders_2_title'] ? "{$prefs['property']['mainscreen_workorders_2_title']} ({$total_records})" : lang('workorder') . '::' . lang('list') . ' ' . 2 . "::Status: {$default_status} ({$total_records})",
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
@@ -729,7 +794,17 @@ JS;
 					);
 				}
 
-				echo "\n" . '<!-- BEGIN workorder 2 info -->' . "\n<div class='property_workorder' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END workorder 2 info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_workorder';
+				}
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN workorder 2 info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END workorder 2 info -->' . "\n";
+				echo "\n</div>";
 
 				unset($obj);
 				unset($portalbox);
@@ -745,9 +820,9 @@ JS;
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => $title,
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
@@ -767,13 +842,25 @@ JS;
 					//			$portalbox->set_controls($key,$value);
 				}
 
-				echo "\n" . '<!-- BEGIN approval info -->' . "\n<div class='property_approval' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END approval info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_approval';
+				}
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN approval info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END approval info -->' . "\n";
 
 				unset($portalbox);
 
 				echo '<div id="approval_info_container"></div>';
+				
 
-				$lang = js_lang('responsible', 'id', 'date');
+				$lang = js_lang('responsible', 'id', 'date', 'cancel');
+
+				phpgwapi_cache::session_set('property', 'return_to_self', $_SERVER['REQUEST_URI']);
 
 				$js = <<<JS
 						<script type="text/javascript">
@@ -800,8 +887,8 @@ JS;
 						var colDefsApproval_info = [
 							{key: 'id', label: lang['id'], formatter: genericLink},
 							{key: 'responsible_name', label: lang['responsible']},
-							{key: 'requested_date', label: lang['date']}
-
+							{key: 'requested_date', label: lang['date']},
+							{key: 'dellink', label: lang['cancel'], formatter: genericLink2}
 							];
 
 						var paginatorTableApproval_info = new Array();
@@ -815,6 +902,7 @@ JS;
 JS;
 
 				echo $js;
+				echo "\n</div>";
 			}
 
 			if (isset($prefs['property']['mainscreen_showapprovals']) && $prefs['property']['mainscreen_showapprovals'] == 'yes')
@@ -825,9 +913,9 @@ JS;
 				$portalbox		 = CreateObject('phpgwapi.listbox', array
 					(
 					'title'						 => $title,
-					'primary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'secondary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
-					'tertiary'					 => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
+					'primary'					 => $this->navbar_bg,
+					'secondary'					 => $this->navbar_bg,
+					'tertiary'					 => $this->navbar_bg,
 					'width'						 => '100%',
 					'outerborderwidth'			 => '0',
 					'header_background_image'	 => $GLOBALS['phpgw']->common->image('phpgwapi', 'bg_filler', '.png', False)
@@ -851,8 +939,16 @@ JS;
 				$portalbox->setvar('title', $title);
 				$portalbox->start_template();
 
-
-				echo "\n" . '<!-- BEGIN approval info -->' . "\n<div class='property_approval' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END approval info -->' . "\n";
+				if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
+				{
+					$grid_element = 'row mt-4';
+				}
+				else
+				{
+					$grid_element = 'property_approval';
+				}
+				echo "\n<div class='container'>";
+				echo "\n" . '<!-- BEGIN approval info -->' . "\n<div class='{$grid_element}' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END approval info -->' . "\n";
 
 				unset($portalbox);
 
@@ -911,6 +1007,7 @@ JS;
 JS;
 
 				echo $js;
+				echo "\n</div>";
 			}
 
 			$GLOBALS['phpgw_info']['flags']['currentapp']						 = $save_app;

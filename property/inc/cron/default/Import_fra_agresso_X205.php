@@ -32,10 +32,13 @@
 	 * @package property
 	 */
 	include_class('property', 'cron_parent', 'inc/cron/');
-	require_once PHPGW_API_INC . '/flysystem/autoload.php';
+
+	require_once PHPGW_API_INC . '/flysystem3/vendor/autoload.php';
 
 	use League\Flysystem\Filesystem;
-	use League\Flysystem\Sftp\SftpAdapter;
+	use League\Flysystem\PhpseclibV3\SftpConnectionProvider;
+	use League\Flysystem\PhpseclibV3\SftpAdapter;
+	use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 
 	class Import_fra_agresso_X205 extends property_cron_parent
 	{
@@ -164,6 +167,8 @@
 			}
 
 			$this->remind();
+
+			$this->cron_log($this->cron);
 		}
 
 		protected function check_archive()
@@ -266,7 +271,7 @@
 					if (isset($prefs['email']) && $prefs['email'])
 					{
 						$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice2.index',
-								'voucher_id' => $bilagsnr, 'user_lid'	 => $lid), false, true) . '">Link til fakturabehandling</a>';
+								 'user_lid'	 => $lid), false, true) . '">Link til fakturabehandling</a>';
 						try
 						{
 							$rc = $this->send->msg('email', $prefs['email'], $subject, stripslashes($body), '', '', '', $from, '', 'html');
@@ -294,18 +299,37 @@
 			$directory_local	 = rtrim($this->config->config_data['import']['local_path'], '/');
 			$port				 = 22;
 
-			$filesystem = new Filesystem(new SftpAdapter([
-					'host'		 => $server,
-					'port'		 => $port,
-					'username'	 => $user,
-					'password'	 => $password,
-					'root'		 => $directory_remote,
-					'timeout'	 => 10,
-			]));
+			$filesystem = new Filesystem(new SftpAdapter(
+				new SftpConnectionProvider(
+					$server, // host (required)
+					$user, // username (required)
+					$password, // password (optional, default: null) set to null if privateKey is used
+					null, // private key (optional, default: null) can be used instead of password, set to null if password is set
+					null, // passphrase (optional, default: null), set to null if privateKey is not used or has no passphrase
+					$port, // port (optional, default: 22)
+					false, // use agent (optional, default: false)
+					10, // timeout (optional, default: 10)
+					40, // max tries (optional, default: 4)
+					null, // host fingerprint (optional, default: null),
+					null, // connectivity checker (must be an implementation of 'League\Flysystem\PhpseclibV2\ConnectivityChecker' to check if a connection can be established (optional, omit if you don't need some special handling for setting reliable connections)
+				),
+				$directory_remote, // root path (required)
+				PortableVisibilityConverter::fromArray([
+					'file' => [
+						'public' => 0640,
+						'private' => 0604,
+					],
+					'dir' => [
+						'public' => 0740,
+						'private' => 7604,
+					],
+				])
+			));
+
 
 			try
 			{
-				$listing = $filesystem->listContents();
+				$listing = $filesystem->listContents('');
 			}
 			catch (Exception $exc)
 			{
@@ -323,15 +347,15 @@
 
 			foreach ($listing as $object)
 			{
-				$file = $object['basename'];
+				$file = $object->path();
 
-				if ($object['type'] == 'dir')
+				if ($object->type() == 'dir')
 				{
 					echo "Directory: $file<br/>\n";
 					continue;
 				}
 
-				$size = $filesystem->getSize($file);
+				$size = $filesystem->fileSize($file);
 				echo "File $file Size: $size<br/>\n";
 
 				if ($this->debug)
@@ -369,22 +393,34 @@
 						if (fclose($fp))
 						{
 							echo "File remote: {$file_remote} was copied to local: $file_local<br/>";
-							if ($filesystem->has("archive/{$file_name}") && $filesystem->delete("archive/{$file_name}"))
+							if ($filesystem->fileExists("archive/{$file_name}")	)
 							{
-								echo "Deleted duplicate File remote: {$directory_remote}/archive/{$file_name}<br/>";
+								try
+								{
+									$filesystem->delete("archive/{$file_name}");
+									echo "Deleted duplicate File remote: {$directory_remote}/archive/{$file_name}<br/>";
+								}
+								catch (FilesystemException | UnableToDeleteFile $exception)
+								{
+									// handle the error
+								}
 							}
-							if ($filesystem->rename($file_remote, "archive/{$file_name}"))
+
+							try
 							{
+								$filesystem->move($file_remote, "archive/{$file_name}");
 								echo "File remote: {$file_remote} was moved to remote: {$directory_remote}/archive/{$file_name}<br/>";
 							}
-							else
+							catch (FilesystemException | UnableToDeleteFile $exception)
 							{
+								// handle the error
 								echo "ERROR! File remote: {$file_remote} failed to move to remote: {$directory_remote}/archive/{$file_name}<br/>";
 								if (unlink($file_local))
 								{
 									echo "Lokal file was deleted: {$file_local}<br/>";
 								}
 							}
+
 						}
 					}
 					else
@@ -711,6 +747,8 @@
 					$from = "Ikke svar<IkkeSvar@nlsh.no>";
 
 					$to = implode(';', $order_info['toarray']);
+					$cc = '';
+					$bcc = '';
 
 					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 					{
@@ -789,7 +827,21 @@
 			$order_info['tax_code']		 = $this->db->f('tax_code');
 
 			$janitor_user_id		 = $this->db->f('user_id');
-			$order_info['janitor']	 = $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
+
+			
+			/*
+			* Check if janitor has rights
+			*/
+			if($this->invoice->check_dimb_role_right(1, $order_info['dimb'], $janitor_user_id))
+			{
+				$order_info['janitor']	 = $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
+			}
+			else
+			{
+				$order_info['janitor']	 = '';
+			}
+
+
 			$supervisor_user_id		 = $this->invoice->get_default_dimb_role_user(2, $order_info['dimb']);
 			if ($supervisor_user_id)
 			{

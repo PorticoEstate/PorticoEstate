@@ -85,11 +85,11 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
-							),
+//							array(
+//								'type' => 'link',
+//								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+//								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
+//							),
 						)
 					),
 				),
@@ -159,8 +159,17 @@
 					)
 				)
 			);
-			$data['datatable']['actions'][] = array();
 			$data['datatable']['new_item'] = self::link(array('menuaction' => $this->module . '.uiorganization.add'));
+
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'toggle_inactive',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+				'text'		 => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+				'custom_code'	 => 'window.open("' .self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive')) . '", "_self");',
+			);
+
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -243,9 +252,9 @@
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				list($organization, $errors) = $this->extract_and_validate(array('active' => 1));
-				if (strlen($_POST['name']) > 50)
+				if (strlen($_POST['name']) > 150)
 				{
-					$errors['name'] = lang('Lengt of name is to long, max 50 characters long');
+					$errors['name'] = lang('Lengt of name is to long, max %1 characters long', 150);
 				}
 				if (strlen($_POST['shortname']) > 11)
 				{
@@ -338,9 +347,9 @@
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				list($organization, $errors) = $this->extract_and_validate($organization);
-				if (strlen($_POST['name']) > 50)
+				if (strlen($_POST['name']) > 150)
 				{
-					$errors['name'] = lang('Lengt of name is to long, max 50 characters long');
+					$errors['name'] = lang('Lengt of name is to long, max %1 characters long',150);
 				}
 				if (strlen($_POST['shortname']) > 11)
 				{

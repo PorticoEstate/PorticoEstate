@@ -1,5 +1,7 @@
 var billable_hours = 0;
 var global_args;
+var planned_month;
+var initial_selected_month;
 
 /**
  * Detect if browsertab is active - and update when revisit
@@ -200,7 +202,7 @@ update_table = function (location_code)
 					$("#extra_row").hide();
 
 				}
-				if (filter_options !== null && filtered_location_id != return_location_id)
+				if (filter_options !== null && location_id && filtered_location_id != return_location_id)
 				{
 					$("#filtered_location_id").val(location_id);
 					$("#extra_row").show();
@@ -209,7 +211,7 @@ update_table = function (location_code)
 					$.each(filter_options, function (key, filter)
 					{
 						var list = filter.list;
-						$extra_filter.append($("<select></select>").attr("id", location_id + '_' + filter.name).text(location_id + '_' + filter.name));
+						$extra_filter.append($("<select class='pure-u-20-24'></select>").attr("id", location_id + '_' + filter.name).text(location_id + '_' + filter.name));
 
 						var custom_select = $("#" + location_id + '_' + filter.name);
 
@@ -383,7 +385,7 @@ JqueryPortico.autocompleteHelper(strURL, 'location_name', 'location_code', 'loca
 $(document).ready(function ()
 {
 
-	var dialog, form;
+	var dialog, dialog2, form, form2;
 
 	function get_billable_hours()
 	{
@@ -442,7 +444,71 @@ $(document).ready(function ()
 		});
 	};
 
-	perform_action = function (name, oArgs)
+	dialog2 = $("#dialog-set_planned_month").dialog({
+		autoOpen: false,
+		height: 250,
+		width: 350,
+		modal: true,
+		buttons: {
+			"Ok": get_planned_month,
+			Cancel: function ()
+			{
+				dialog2.dialog("close");
+			}
+		},
+		close: function ()
+		{
+			form[ 0 ].reset();
+			$("#planned_month").removeClass("ui-state-error");
+		},
+		open: function (event, ui)
+		{
+			var init_month = initial_selected_month;
+			$("#planned_month").each(function ()
+			{
+				$(this).find('option[value="' + init_month + '"]').prop('selected', true);
+			});
+		}
+	});
+
+	form2 = dialog2.find("form").on("submit", function (event)
+	{
+		event.preventDefault();
+		get_planned_month();
+	});
+
+	function get_planned_month()
+	{
+		var valid = true;
+		$("#planned_month").removeClass("ui-state-error");
+		planned_month = $("#planned_month").val();
+		dialog2.dialog("close");
+		submit_set_planned_month();
+		return valid;
+	}
+
+	submit_set_planned_month = function ()
+	{
+		global_args.menuaction = 'controller.uicheck_list.save_check_list';
+		var requestUrl = phpGWLink('index.php', global_args, true);
+		$.ajax({
+			type: 'POST',
+			data: {planned_month: planned_month},
+			dataType: 'json',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data !== null)
+				{
+					var message = data.message;
+					alert(message);
+					update_table();
+				}
+			}
+		});
+	};
+
+	perform_action = function (name, oArgs, init_month)
 	{
 		if (name === 'save_check_list')
 		{
@@ -462,6 +528,12 @@ $(document).ready(function ()
 			oArgs.submit_deviation = 1;
 			location.assign(phpGWLink('index.php', oArgs));
 		}
-
+		else if (name === 'set_planning_month')
+		{
+			global_args = oArgs;
+			initial_selected_month = init_month;
+			dialog2.dialog("open");
+			
+		}
 	};
 });

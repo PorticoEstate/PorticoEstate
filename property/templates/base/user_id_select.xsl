@@ -2,6 +2,7 @@
 <!-- $Id$ -->
 <xsl:template name="user_id_select">
 	<xsl:param name="class" />
+	<xsl:param name="required" />
 	<xsl:variable name="lang_user_statustext">
 		<xsl:value-of select="lang_user_statustext"/>
 	</xsl:variable>
@@ -9,6 +10,11 @@
 		<xsl:value-of select="select_user_name"/>
 	</xsl:variable>
 	<select name="{$select_user_name}" id="user_id" title="{$lang_user_statustext}">
+		<xsl:if test="$required = 'required'">
+			<xsl:attribute name="data-validation">
+				<xsl:text>required</xsl:text>
+			</xsl:attribute>
+		</xsl:if>
 		<xsl:choose>
 			<xsl:when test="$class != ''">
 				<xsl:attribute name="class">

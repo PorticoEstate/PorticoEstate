@@ -40,8 +40,9 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:attribute name="class">
-					<xsl:text>table table-striped table-bordered</xsl:text>
-					<!--<xsl:text>display cell-border compact responsive no-wrap</xsl:text>-->
+					<!--<xsl:text>pure-table table-striped pure-table-bordered</xsl:text>-->
+					<!--xsl:text>table table-striped table-bordered</xsl:text-->
+					<xsl:text>display cell-border compact responsive no-wrap</xsl:text>
 				</xsl:attribute>
 			</xsl:otherwise>
 		</xsl:choose>

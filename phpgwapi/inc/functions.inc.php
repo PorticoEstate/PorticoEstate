@@ -12,10 +12,19 @@
 	*/
 
 
-	if (!function_exists('filter_var')) // ext/filter was added in 5.2.0
+	if (version_compare(PHP_VERSION, '7.4.0') < 0)
 	{
-		die('<p class="msg">'
-			. lang('You appear to be using PHP %1, phpGroupWare requires 5.2.0 or later', PHP_VERSION). "\n"
+		die('<html><body>
+		<style>
+		.error
+		{
+			background-color: #fcc;
+			border: 1px solid #f00;
+			color: #c10000;
+		}
+		</style>
+		<p class="error">'
+			. lang('You appear to be using PHP %1, %2 requires %3 or later', PHP_VERSION, 'PorticoEstate', '7.4.0'). "\n"
 			. '</p></body></html>');
 	}
 
@@ -466,7 +475,7 @@ _debug_array($error_line);
 		{
 			case 'no':
 			case 'nn':
-				$error_header = 'Oops - der var det ei lus...';
+				$error_header = 'Der kom du over en feil';
 				$error_msg = 'Feilen er logget til databasen';
 				$help = 'Ta kontakt med brukerstøtte for å få hjelp.';
 				break;
@@ -491,7 +500,8 @@ HTML;
 		$msg = $e->getMessage();
 		$trace = $e->getTraceAsString();
 		echo <<<HTML
-			<h1>{$error_header}: {$msg}</h1>
+			<h1>{$error_header}:</h1>
+			<strong>{$msg}</strong>
 			<p>{$help}</p>
 			<p>{$error_msg}</p>
 			<h2>Backtrace:</h2>
@@ -538,12 +548,6 @@ HTML;
 
 	 /* Load main class */
 	$GLOBALS['phpgw'] = createObject('phpgwapi.phpgw');
-	// get_magic_quotes_runtime() is deprecated in php 5.4.0
-	if( version_compare(PHP_VERSION, '5.3.7') <= 0 && get_magic_quotes_runtime())
-	{
-			echo '<center><b>The magic_quotes_runtime has to set to Off in php.ini</b></center>';
-			exit;
-	}
 
 
 // Can't use this yet - errorlog hasn't been created.
@@ -626,7 +630,7 @@ HTML;
 	 * Load up the main instance of the db class.                             *
 	 \************************************************************************/
 	$GLOBALS['phpgw']->db                = createObject('phpgwapi.db');
-	$GLOBALS['phpgw']->db->Debug         = $GLOBALS['phpgw']->debug ? 1 : 0;
+	$GLOBALS['phpgw']->db->debug         = $GLOBALS['phpgw']->debug ? 1 : 0;
 	$GLOBALS['phpgw']->db->Halt_On_Error = 'no';
 
 	if(is_object($GLOBALS['phpgw']->db))
@@ -912,13 +916,6 @@ HTML;
 				$redirect_data[$key] = phpgw::clean_value($value);
 			}
 
-			$sessid = phpgw::get_var('sessionid', 'string', 'GET');
-			if ( $sessid )
-			{
-				$redirect_data['sessionid'] = $sessid;
-				$redirect_data['kp3'] = phpgw::get_var('kp3', 'string', 'GET');
-			}
-
 			$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', '', time()-60); // expired
 
 			/**
@@ -929,7 +926,6 @@ HTML;
 			$GLOBALS['phpgw']->redirect_link('/index.php', $redirect_data);
 			unset($redirect);
 			unset($redirect_data);
-			unset($sessid);
 		}
 
 		/* A few hacker resistant constants that will be used throught the program */

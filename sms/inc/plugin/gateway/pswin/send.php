@@ -59,7 +59,7 @@
 				)
 			);
 
-			$xmldata = utf8_decode(str_replace(" encoding='utf-8'", '', phpgwapi_xmlhelper::toXML($data, 'SESSION')));
+			$xmldata = mb_convert_encoding(str_replace(" encoding='utf-8'", '', phpgwapi_xmlhelper::toXML($data, 'SESSION')), 'ISO-8859-1', 'UTF-8');
 
 			$url = $this->pswin_param['send_url'];
 

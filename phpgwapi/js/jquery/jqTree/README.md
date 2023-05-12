@@ -1,4 +1,4 @@
-![Build](https://github.com/mbraak/jqTree/workflows/Continuous%20integration/badge.svg) [![Coverage Status](https://img.shields.io/coveralls/mbraak/jqTree.svg)](https://coveralls.io/r/mbraak/jqTree)
+![Build](https://github.com/mbraak/jqTree/workflows/Continuous%20integration/badge.svg) [![codecov](https://codecov.io/gh/mbraak/jqTree/branch/dev/graph/badge.svg?token=DKzjY5YUlq)](https://codecov.io/gh/mbraak/jqTree)
 
 [![NPM version](https://img.shields.io/npm/v/jqtree.svg)](https://www.npmjs.com/package/jqtree)
 
@@ -10,10 +10,10 @@ JqTree is a tree widget. Read more in the [documentation](https://mbraak.github.
 
 ## Features
 
-* Create a tree from JSON data
-* Drag and drop
-* Works on ie9+, firefox, chrome and safari
-* Written in Typescript
+-   Create a tree from JSON data
+-   Drag and drop
+-   Works on ie11+, firefox, chrome and safari
+-   Written in Typescript
 
 The project is hosted on [github](https://github.com/mbraak/jqTree), has a [test suite](http://mbraak.github.io/jqTree/test/test.html).
 
@@ -36,18 +36,21 @@ var data = [
     {
         label: "node1",
         id: 1,
-        children: [{ label: "child1", id: 2 }, { label: "child2", id: 3 }]
+        children: [
+            { label: "child1", id: 2 },
+            { label: "child2", id: 3 },
+        ],
     },
     {
         label: "node2",
         id: 4,
-        children: [{ label: "child3", id: 5 }]
-    }
+        children: [{ label: "child3", id: 5 }],
+    },
 ];
 $("#tree1").tree({
     data: data,
     autoOpen: true,
-    dragAndDrop: true
+    dragAndDrop: true,
 });
 ```
 

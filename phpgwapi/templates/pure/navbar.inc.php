@@ -137,7 +137,7 @@ HTML;
 		);
 		$breadcrumbs = phpgwapi_cache::session_get('phpgwapi','breadcrumbs');
 		$breadcrumbs = $breadcrumbs ? $breadcrumbs : array(); // first one
-		if($breadcrumbs[0]['id'] != $flags['menu_selection'])
+		if(empty($breadcrumbs) ||( isset($breadcrumbs[0]['id']) && $breadcrumbs[0]['id'] != $breadcrumb_selection))
 		{
 			array_unshift($breadcrumbs, $current_url);
 		}
@@ -147,6 +147,7 @@ HTML;
 		}
 		phpgwapi_cache::session_set('phpgwapi','breadcrumbs', $breadcrumbs);
 		$breadcrumbs = array_reverse($breadcrumbs);
+		phpgwapi_cache::session_set('navbar', 'menu_selection',$GLOBALS['phpgw_info']['flags']['menu_selection']);
 
 		$navigation = array();
 		if( !isset($GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar']) || $GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar'] != 'yes' )

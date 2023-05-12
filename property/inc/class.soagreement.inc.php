@@ -415,16 +415,16 @@
 					case 'w_cost':
 					case 'descr':
 					case 'm_cost':
-						$ordermethod = "ORDER BY {$entity_table}.{$order} {$sort}";
+						$ordermethod = " ORDER BY {$entity_table}.{$order} {$sort}";
 						break;
 					case 'id':
-						$ordermethod = "ORDER BY {$entity_table}.activity_id {$sort}";
+						$ordermethod = " ORDER BY {$entity_table}.activity_id {$sort}";
 						break;
 					case 'num':
-						$ordermethod = "ORDER BY fm_activities.num {$sort}";
+						$ordermethod = " ORDER BY fm_activities.num {$sort}";
 						break;
 					case 'unit_name':
-						$ordermethod = "ORDER BY fm_standard_unit.name {$sort}";
+						$ordermethod = " ORDER BY fm_standard_unit.name {$sort}";
 						break;
 					default:
 						$ordermethod = '';
@@ -432,7 +432,7 @@
 			}
 			else
 			{
-				$ordermethod = "ORDER BY {$entity_table}.activity_id DESC";
+				$ordermethod = " ORDER BY {$entity_table}.activity_id DESC";
 			}
 //            ORDER BY fm_activity_price_index.num asc
 			$sql = "SELECT {$cols} FROM {$paranthesis} {$entity_table} {$joinmethod}";

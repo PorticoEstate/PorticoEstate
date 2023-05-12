@@ -156,13 +156,13 @@
 						</div>
 
 						<div class="pure-control-group">
-							<label for="date">
+							<label for="report_date">
 								<xsl:value-of select="php:function('lang', 'date')" />
 							</label>
 							<xsl:choose>
 								<xsl:when test="editable = 1">
 									<input id="report_date" name='values[report_date]' type="text" value="{survey/report_date}"
-										   data-validation="date" data-validation-format="{data_validation_format}"/>
+										   data-validation="required" readonly="readonly"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="survey/report_date"/>
@@ -265,6 +265,7 @@
 									<xsl:with-param name="requestUrl" select ='requestUrl' />
 									<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
 									<xsl:with-param name="tabletools" select ='tabletools' />
+									<xsl:with-param name="data" select ='data' />
 									<xsl:with-param name="config" select ='config' />
 								</xsl:call-template>
 							</xsl:if>
@@ -313,6 +314,7 @@
 								<xsl:with-param name="requestUrl" select ='requestUrl' />
 								<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
 								<xsl:with-param name="tabletools" select ='tabletools' />
+								<xsl:with-param name="data" select ='data' />
 								<xsl:with-param name="config" select ='config' />
 							</xsl:call-template>
 						</xsl:if>
@@ -332,6 +334,7 @@
 								<xsl:with-param name="requestUrl" select ='requestUrl' />
 								<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
 								<xsl:with-param name="tabletools" select ='tabletools' />
+								<xsl:with-param name="data" select ='data' />
 								<xsl:with-param name="config" select ='config' />
 							</xsl:call-template>
 						</xsl:if>

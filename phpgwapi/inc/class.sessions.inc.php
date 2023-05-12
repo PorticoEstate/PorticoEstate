@@ -163,8 +163,7 @@
 
 			$this->_phpgw_set_cookie_params();
 
-			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
-				&& $GLOBALS['phpgw_info']['server']['usecookies'] == 'True'  && !phpgw::get_var('api_mode', 'bool'))
+			if ( !empty($GLOBALS['phpgw_info']['server']['usecookies'])  && !phpgw::get_var('api_mode', 'bool'))
 			{
 				$this->_use_cookies = true;
 				$this->_sessionid	= phpgw::get_var(session_name(), 'string', 'COOKIE');
@@ -306,10 +305,8 @@
 			session_start();
 			$this->_sessionid = session_id();
 
-			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
-				&& $GLOBALS['phpgw_info']['server']['usecookies'] )
+			if ( !empty($GLOBALS['phpgw_info']['server']['usecookies']) )
 			{
-//				$this->phpgw_setcookie(session_name(), $this->_sessionid);// already sendt with session_start()
 				$this->phpgw_setcookie('domain', $this->_account_domain);
 			}
 
@@ -322,8 +319,7 @@
 				$session_flags = 'N';
 			}
 
-			if ( $session_flags =='N' && (( isset($GLOBALS['phpgw_info']['server']['usecookies'])
-					&& $GLOBALS['phpgw_info']['server']['usecookies'] )
+			if ( $session_flags =='N' && ( !empty($GLOBALS['phpgw_info']['server']['usecookies'])
 				|| isset($_COOKIE['last_loginid'])))
 			{
 				// Create a cookie which expires in 14 days
@@ -703,8 +699,7 @@
 			if(!$external)
 			{
 				/* add session params if not using cookies */
-				if ( !isset($GLOBALS['phpgw_info']['server']['usecookies'])
-					|| !$GLOBALS['phpgw_info']['server']['usecookies'])
+				if ( empty($GLOBALS['phpgw_info']['server']['usecookies']))
 				{
 					if ( is_array($extravars) )
 					{
@@ -1266,6 +1261,12 @@
 			{
 				$this->_account_domain = $GLOBALS['phpgw_info']['server']['default_domain'];
 			}
+
+			if ( !empty($GLOBALS['phpgw_info']['server']['usecookies']) )
+			{
+				$this->phpgw_setcookie('domain', $this->_account_domain);
+			}
+
 			unset($lid_data);
 
 			$this->update_dla();
@@ -1611,7 +1612,7 @@
 				// notify admin(s) via email
 
 				$from_name = !empty($GLOBALS['phpgw_info']['server']['site_title']) ? $GLOBALS['phpgw_info']['server']['site_title'] : $GLOBALS['phpgw_info']['server']['system_name'];
-				$from    = "{$from_name}@{$GLOBALS['phpgw_info']['server']['email_domain']}";
+				$from    = str_replace(" ", "_", $from_name) . "@{$GLOBALS['phpgw_info']['server']['email_domain']}";
 				$subject = lang("%1: login blocked for user '%2', ip %3", $from_name, $login, $ip);
 				$body    = lang('Too many unsuccessful attempts to login: '
 							. "%1 for the user '%2', %3 for the IP %4", $false_id, $login, $false_ip, $ip);

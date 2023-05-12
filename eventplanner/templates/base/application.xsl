@@ -820,6 +820,7 @@
 									<xsl:value-of select="multi_upload_action_cv"/>
 								</xsl:with-param>
 								<xsl:with-param name="section">cv</xsl:with-param>
+								<xsl:with-param name="capture">camera</xsl:with-param>
 							</xsl:call-template>
 
 
@@ -862,6 +863,7 @@
 									<xsl:value-of select="multi_upload_action_documents"/>
 								</xsl:with-param>
 								<xsl:with-param name="section">documents</xsl:with-param>
+								<xsl:with-param name="capture">camera</xsl:with-param>
 							</xsl:call-template>
 
 

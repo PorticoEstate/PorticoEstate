@@ -37,7 +37,16 @@
 	{
 
 		private $receipt		 = array();
-		var $grants;
+		var $grants, $acl, $bo, $bocommon, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage, $cats;
+		var $status_id,	$wo_hour_cat_id,$start_date,$end_date,
+		$b_group,
+		$ecodimb,
+		$paid,
+		$b_account,
+		$district_id,
+		$obligation,
+		$decimal_separator;
+
 		var $cat_id;
 		var $start;
 		var $query;
@@ -379,7 +388,7 @@
 				$content_attachments[] = array(
 					'source'		 => $lang_workorder,
 					'file_id'		 => $_entry['file_id'],
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 				if (in_array($_entry['mime_type'], $img_types))
@@ -411,7 +420,7 @@
 
 				$content_attachments[] = array(
 					'source'		 => $lang_project,
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 
@@ -451,6 +460,7 @@
 
 			phpgw::import_class('property.multiuploader');
 
+			$options = array();
 			$options['base_dir']	 = 'workorder/' . $id;
 			$options['upload_dir']	 = $GLOBALS['phpgw_info']['server']['files_dir'] . '/property/' . $options['base_dir'] . '/';
 			$options['script_url']	 = html_entity_decode(self::link(array('menuaction' => 'property.uiworkorder.handle_multi_upload_file',
@@ -745,7 +755,7 @@
 			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
-			self::add_javascript('property', 'portico', 'workorder.index.js');
+			self::add_javascript('property', 'base', 'workorder.index.js');
 
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
@@ -2553,41 +2563,41 @@ JS;
 				$invoice_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			}
 
-			$attachmen_list = array();
-			foreach ($invoices as $entry)
-			{
-				$directory_attachment = rtrim($invoice_config->config_data['import']['local_path'], '/') . '/attachment/' . $entry['external_voucher_id'];
-				try
-				{
-					$dir = new DirectoryIterator("$directory_attachment/");
-					if (is_object($dir))
-					{
-						foreach ($dir as $file)
-						{
-							if ($file->isDot() || !$file->isFile() || !$file->isReadable())
-							{
-								continue;
-							}
-
-							$url = self::link(array(
-									'menuaction' => 'property.uitts.show_attachment',
-									'file_name'	 => urlencode((string)$file),
-									'key'		 => $entry['external_voucher_id']
-							));
-
-							$attachmen_list[] = array(
-								'voucher_id' => $entry['external_voucher_id'],
-								'file_name'	 => "<a href='{$url}' target='_blank'>" . (string)$file . "</a>"
-							);
-						}
-					}
-				}
-				catch (Exception $e)
-				{
-
-				}
-			}
-			unset($entry);
+//			$attachmen_list = array();
+//			foreach ($invoices as $entry)
+//			{
+//				$directory_attachment = rtrim($invoice_config->config_data['import']['local_path'], '/') . '/attachment/' . $entry['external_voucher_id'];
+//				try
+//				{
+//					$dir = new DirectoryIterator("$directory_attachment/");
+//					if (is_object($dir))
+//					{
+//						foreach ($dir as $file)
+//						{
+//							if ($file->isDot() || !$file->isFile() || !$file->isReadable())
+//							{
+//								continue;
+//							}
+//
+//							$url = self::link(array(
+//									'menuaction' => 'property.uitts.show_attachment',
+//									'file_name'	 => urlencode((string)$file),
+//									'key'		 => $entry['external_voucher_id']
+//							));
+//
+//							$attachmen_list[] = array(
+//								'voucher_id' => $entry['external_voucher_id'],
+//								'file_name'	 => "<a href='{$url}' target='_blank'>" . (string)$file . "</a>"
+//							);
+//						}
+//					}
+//				}
+//				catch (Exception $e)
+//				{
+//
+//				}
+//			}
+//			unset($entry);
 
 			$attachmen_def = array(
 				array(
@@ -2722,8 +2732,13 @@ JS;
 
 			$datatable_def[] = array(
 				'container'	 => 'datatable-container_6',
-				'requestUrl' => "''",
-				'data'		 => json_encode($attachmen_list),
+//				'requestUrl' => "''",
+//				'data'		 => json_encode($attachmen_list),
+				'requestUrl' => json_encode(self::link(array(
+						'menuaction'		 => 'property.uiproject.get_attachment',
+						'phpgw_return_as'	 => 'json'))),
+				'data'		 => json_encode(array()),
+
 				'ColumnDefs' => $attachmen_def,
 				'config'	 => array(
 					array('disableFilter' => true),
@@ -2802,7 +2817,8 @@ JS;
 			$lang_active	 = lang('Check to activate period');
 			$lang_fictive	 = lang('fictive');
 
-			$rows_per_page	 = 10;
+			$maxmatchs = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$rows_per_page	 = $maxmatchs ? $maxmatchs : 10;
 			$initial_page	 = 1;
 
 			if ($content_budget && $project['periodization_id'])
@@ -2811,7 +2827,7 @@ JS;
 				foreach ($content_budget as $key => $row)
 				{
 					$_year_count[$row['year']]	 += 1;
-					$rows_per_page				 = $_year_count[$row['year']];
+					$rows_per_page				 = max($_year_count[$row['year']], $maxmatchs);
 				}
 				$initial_page = floor(count($content_budget) / $rows_per_page);
 			}
@@ -3196,7 +3212,7 @@ JS;
 
 				$content_attachments[] = array(
 					'source'		 => $lang_workorder,
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 
@@ -3237,7 +3253,7 @@ JS;
 				}
 				$content_attachments[] = array(
 					'source'		 => $lang_project,
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 
@@ -3284,8 +3300,10 @@ JS;
 			{
 				$delivery_address = CreateObject('property.solocation')->get_delivery_address($_location_data['loc1']);
 			}
-			
+
 			$delivery_address = str_replace('__username__', $GLOBALS['phpgw_info']['user']['fullname'], $delivery_address);
+
+			$default_tax_code = (!empty($project['tax_code']) || $project['tax_code'] === 0) ? $project['tax_code'] : (int)$GLOBALS['phpgw_info']['user']['preferences']['property']['default_tax_code'];
 
 			$data = array(
 				'datatable_def'							 => $datatable_def,
@@ -3453,7 +3471,7 @@ JS;
 				'tax_code_list'							 => array('options' => $this->bocommon->select_category_list(
 					array(
 						'type' => 'tax',
-						'selected'	 => (!empty($values['tax_code']) || $values['tax_code'] === 0) ? $values['tax_code']: (int)$GLOBALS['phpgw_info']['user']['preferences']['property']['default_tax_code'],
+						'selected'	 => (!empty($values['tax_code']) || $values['tax_code'] === 0) ? $values['tax_code']: $default_tax_code,
 						'order'		 => 'id',
 						'id_in_name' => 'num'))),
 				'contract_list'							 => array('options' => $this->get_vendor_contract($values['vendor_id'], $values['contract_id'])),
@@ -3483,7 +3501,7 @@ JS;
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 
-			self::add_javascript('property', 'portico', 'workorder.edit.js');
+			self::add_javascript('property', 'base', 'workorder.edit.js');
 
 			self::render_template_xsl(array(
 				'workorder',
@@ -3947,7 +3965,7 @@ JS;
 					'active_tab' => 'budget')) : null,
 			);
 
-			self::add_javascript('property', 'portico', 'workorder.add_invoice.js');
+			self::add_javascript('property', 'base', 'workorder.add_invoice.js');
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			$GLOBALS['phpgw']->xslttpl->add_file(array(	'workorder'));
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;

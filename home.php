@@ -20,9 +20,9 @@
 		'noheader'                => true,
 		'nonavbar'                => false,
 		'currentapp'              => 'home',
-		'enable_network_class'    => true,
-		'enable_contacts_class'   => true,
-		'enable_nextmatchs_class' => true
+//		'enable_network_class'    => true,
+//		'enable_contacts_class'   => true,
+//		'enable_nextmatchs_class' => true
 	);
 
 	/**
@@ -65,40 +65,65 @@
 	{
 		phpgw::import_class('phpgwapi.jquery');
 		phpgwapi_jquery::load_widget('core');
-		$GLOBALS['phpgw']->js->validate_file('jquery', 'common', 'phpgwapi');
-		$GLOBALS['phpgw']->js->validate_file('tinybox2', 'packed', 'phpgwapi');
+		$GLOBALS['phpgw']->js->validate_file('jquery', 'common', 'phpgwapi', false, array('combine' => true ));
+		$GLOBALS['phpgw']->js->validate_file('tinybox2', 'packed', 'phpgwapi', false, array('combine' => true ));
 		$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 		$GLOBALS['phpgw']->common->phpgw_header();
 		echo parse_navbar();
 	}
 
-	echo <<<JS
+	$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
 
-	<div class="container">
-		<div id="container_bookmark" class="row mt-4"></div>
-	</div>
-	<script type="text/javascript">
-	$('#_bookmark').children().each(function ()
+	$bookmark_section = '';
+
+	if($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bootstrap')
 	{
-		var a = $(this);
-		var href = a.attr('href');
-		var icon = a.find('i').attr('class');
+		$grid_envelope = 'row mt-4';
+		$grid_element = 'col-4 mb-3';
+	}
+	else
+	{
+		$grid_envelope = 'pure-g';
+		$grid_element = 'pure-u-1-8 pure-button pure-button-active';
+	}
 
-		if (typeof(icon) == 'undefined')
+	if($bookmarks && is_array($bookmarks))
+	{
+		$bookmark_section = <<<HTML
+	<div class="container">
+		<div id="container_bookmark" class="{$grid_envelope}">
+HTML;		
+		foreach ($bookmarks as $bm_key => $bookmark_data)
 		{
-			icon = 'fas fa-2x fa-file-alt';
+			if(is_array($bookmark_data))
+			{
+				
+				$icon = $bookmark_data['icon'] ? $bookmark_data['icon'] : 'fas fa-2x fa-file-alt';
+				$bookmark_section .= <<<HTML
+				<div class="{$grid_element}">
+					<a href="{$bookmark_data['href']}" class="text-secondary">
+						<div class="card shadow h-100 mb-2">
+							<div class="card-block text-center">
+								<h1 class="p-3">
+									<i class="{$icon}"></i>
+								</h1>
+							</div>
+							<div class="card-footer text-center">{$bookmark_data['text']}</div>
+						</div>
+					</a>
+				</div>
+HTML;
+				
+			}
+
 		}
-		var templateString = '<div class="col-4 mb-3"><a href="' + href + '" class="stretched-link text-secondary"><div class="card shadow h-100 mb-2">';
-		templateString += '<div class="card-block text-center"><h1 class="p-3"><i class="' + icon + '"></i></h1></div>';
-		templateString += '<div class="card-footer text-center">' + a.text() + '</div>';
-		templateString += '</div></a></div>';
-		$('#container_bookmark').append(templateString);
+		$bookmark_section .= <<<HTML
+		</div>
+	</div>
+HTML;	
+	}
 
-	 });
-	 </script>
-
-JS;
-
+	echo $bookmark_section;
 	$GLOBALS['phpgw']->translation->add_app('mainscreen');
 	if (lang('mainscreen_message') != '!mainscreen_message')
 	{
@@ -110,19 +135,34 @@ JS;
 		(isset($GLOBALS['phpgw_info']['server']['checkfornewversion']) &&
 		$GLOBALS['phpgw_info']['server']['checkfornewversion']))
 	{
-		$GLOBALS['phpgw']->network->set_addcrlf(False);
-		$lines = $GLOBALS['phpgw']->network->gethttpsocketfile('http://www.phpgroupware.org/currentversion');
-		for ($i=0; $i < count($lines); ++$i)
+		// Create a stream
+		$opts = array(
+			'http' => array(
+				'method' => "GET",
+			    'proxy' => 'proxy.bergen.kommune.no:8080',
+			)
+		);
+
+		if (isset($GLOBALS['phpgw_info']['server']['httpproxy_server']))
 		{
-			if ( preg_match('/currentversion/',$lines[$i]))
-			{
-				$line_found = explode(':',chop($lines[$i]));
-			}
+			$opts['http']['proxy'] = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
 		}
-		if($GLOBALS['phpgw']->common->cmp_version($GLOBALS['phpgw_info']['server']['versions']['phpgwapi'],$line_found[1]))
+
+		$context = stream_context_create($opts);
+
+		$contents = file_get_contents('https://raw.githubusercontent.com/PorticoEstate/PorticoEstate/master/setup/currentversion', false, $context);
+		if (preg_match('/currentversion/', $contents))
 		{
-			echo '<p>There is a new version of phpGroupWare available from <a href="'
-				. 'http://www.phpgroupware.org">http://www.phpgroupware.org</a>';
+			$line_found = explode(':', rtrim($contents));
+		}
+
+		/**
+		 * compares for major versions only
+		 */
+		if($GLOBALS['phpgw']->common->cmp_version($GLOBALS['phpgw_info']['server']['versions']['phpgwapi'],$line_found[1], false))
+		{
+			echo '<p>There is a new version of PorticoEstate available from <a href="'
+				. 'https://github.com/PorticoEstate/PorticoEstate">https://github.com/PorticoEstate/PorticoEstate</a>';
 		}
 
 		$_found = False;
@@ -245,7 +285,7 @@ HTML;
 	}
 	if( phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message'))
 	{
-		echo "<div class='msg_important'><h2>";
+		echo "<div class='msg_important container'><h2>";
 		echo nl2br(phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message_title'));
 		echo "</h2>";
 		echo nl2br(phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message'));

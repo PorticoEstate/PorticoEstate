@@ -260,15 +260,18 @@
 						$method_input = array();
 						foreach ($field['values_def']['method_input'] as $_argument => $_argument_value)
 						{
-							if (preg_match('/^##/', $_argument_value))
+							if(!is_array($_argument_value))
 							{
-								$_argument_value_name	 = trim($_argument_value, '#');
-								$_argument_value		 = $values[$_argument_value_name];
-							}
-							if (preg_match('/^\$this->/', $_argument_value))
-							{
-								$_argument_value_name	 = ltrim($_argument_value, '$this->');
-								$_argument_value		 = $this->$_argument_value_name;
+								if (preg_match('/^##/', $_argument_value))
+								{
+									$_argument_value_name	 = trim($_argument_value, '#');
+									$_argument_value		 = $values[$_argument_value_name];
+								}
+								else if (preg_match('/^\$this->/', $_argument_value))
+								{
+									$_argument_value_name	 = ltrim($_argument_value, '$this->');
+									$_argument_value		 = $this->$_argument_value_name;
+								}
 							}
 							$method_input[$_argument] = $_argument_value;
 						}
@@ -314,7 +317,9 @@
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'));
+			$template_set = isset($GLOBALS['phpgw_info']['server']['template_set']) ? $GLOBALS['phpgw_info']['server']['template_set'] : 'base';
+			$xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/{$template_set}";
+			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'), $xsl_rootdir);
 			$GLOBALS['phpgw_info']['flags']['noframework']	 = true;
 			$values											 = phpgw::get_var('values');
 
@@ -698,7 +703,7 @@
 				unset($attributes_groups);
 				unset($values['attributes']);
 			}
-
+			$jscode = '';
 			foreach ($this->location_info['fields'] as & $field)
 			{
 				$field['value'] = isset($values[$field['name']]) ? $values[$field['name']] : '';
@@ -713,10 +718,31 @@
 					$dateformat		 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 					$field['value']	 = $GLOBALS['phpgw']->common->show_date($field['value'], $dateformat);
 				}
+				elseif (in_array($field['type'], array('select', 'multiple_select')))
+				{
+					$jscode .= <<<JS
+					$("#{$field['name']}").select2({
+						placeholder: "{$field['descr']}",
+						width: '75%'
+					});
+
+					$('#{$field['name']}').on('select2:open', function (e) {
+
+						$(".select2-search__field").each(function()
+						{
+							if ($(this).attr("aria-controls") == 'select2-{$field['name']}-results')
+							{
+								$(this)[0].focus();
+							}
+						});
+					});
+JS;
+
+				}
 
 				if (!empty($field['js_file']))
 				{
-					self::add_javascript($this->appname, 'portico', $field['js_file']);
+					self::add_javascript($this->appname, 'base', $field['js_file']);
 				}
 
 				if (isset($field['values_def']))
@@ -737,7 +763,7 @@
 							if (!is_array($_argument_value) && preg_match('/^##/', $_argument_value))
 							{
 								$_argument_value_name	 = trim($_argument_value, '#');
-								$_argument_value		 = $values[$_argument_value_name];
+								$_argument_value		 = explode(',', trim($values[$_argument_value_name], ','));
 							}
 
 							if ($_argument == 'filter' && is_array($_argument_value))
@@ -817,6 +843,12 @@
 			$appname = $this->location_info['name'];
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
+			phpgwapi_jquery::load_widget('select2');
+
+			if($jscode)
+			{
+				$GLOBALS['phpgw']->js->add_code('', $jscode, true);
+			}
 
 			self::render_template_xsl(array('generic', 'attributes_form'), array('edit' => $data));
 		}

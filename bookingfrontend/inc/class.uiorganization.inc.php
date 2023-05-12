@@ -13,6 +13,7 @@
 			'building_users' => true,
 			'get_orgid' => true,
 			'toggle_show_inactive' => true,
+			'get_organization_list'	=> true
 		);
 		protected $module;
 
@@ -52,7 +53,7 @@
 				$orgs_map = array();
 				foreach ($orgs as $org)
 				{
-					$orgs_map[$org['orgnumber']] = $org;
+					$orgs_map[$org['orgnr']] = $org;
 				}
 				unset($org);
 
@@ -83,6 +84,11 @@
 				$delegate_map = array();
 				foreach ($delegate_data as $delegate_entry)
 				{
+					if(empty($delegate_entry['active']))
+					{
+						continue;
+					}
+
 					$delegate_map[] = $delegate_entry['organization_number'];
 					if( $delegate_entry['customer_ssn'] == $external_login_info['ssn'])
 					{
@@ -246,7 +252,7 @@
 			phpgwapi_jquery::load_widget("core");
 
 			$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
-			self::add_javascript('bookingfrontend', 'base', 'organization.js', 'text/javascript', true);
+			self::add_javascript('bookingfrontend', 'base', 'organization.js', true);
 
 			self::render_template_xsl('organization', array('organization' => $organization, 'config_data' => $config->config_data));
 		}
@@ -258,5 +264,53 @@
 			}
 
 			phpgw::no_access();
+		}
+
+		public function get_organization_list()
+		{
+			$page = phpgw::get_var('page', 'int');
+			$query = phpgw::get_var('query', 'string');
+			$length = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$start = ($page - 1) * $length;
+
+			$organizations = $this->bo->read(array(
+				'start' => $start,
+				'query' => $query,
+				'results' => $length,
+				'filters' => array('active' => 1, 'where' => array(
+			//		'%%table%%.organization_number IS NOT NULL',
+			//		"%%table%%.organization_number != ''",
+					"length(%%table%%.organization_number) = 9"
+					)
+				)
+			));
+			$total = $organizations['total_records'];
+			
+			$results = array();
+			foreach ($organizations['results'] as $entry)
+			{
+				$results[]=array(
+					'id'	=> "{$entry['id']}_{$entry['organization_number']}",
+					'text' => "{$entry['organization_number']} [{$entry['name']}]",
+					'disabled' => $entry['active'] ? false : true,
+					'name' => $entry['name'],
+					'organization_number' => $entry['organization_number']
+				);
+			}
+
+			$num_records = count($results);
+			
+			$morePages = $total > ($num_records + $start);
+
+			return array(
+				'results'	=> $results,
+				'start'		=> $start,
+				'pagination' => array(
+					'more' => $morePages
+				)
+			);
+			
+
+
 		}
 	}

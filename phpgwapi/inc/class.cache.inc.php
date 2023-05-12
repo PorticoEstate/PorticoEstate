@@ -35,8 +35,18 @@
 	* @category caching
 	*/
 
+	phpgw::import_class('phpgwapi.shm');
+	phpgw::import_class('phpgwapi.redis');
+
 	class phpgwapi_cache
 	{
+
+		static private $phpgwapi_redis;
+
+		private static function get_redis()
+		{
+			self::$phpgwapi_redis = new phpgwapi_redis;
+		}
 		/**
 		 * Decide whether to use database for caching - or not
 		 *
@@ -70,6 +80,26 @@
 			return true;
 		}
 
+		private static function _file_clear_all()
+		{
+			$dir = new DirectoryIterator($GLOBALS['phpgw_info']['server']['temp_dir']); 
+
+			if ( is_object($dir) )
+			{
+				foreach ( $dir as $file )
+				{
+					if ( $file->isDot()
+						|| !$file->isFile()
+						|| !$file->isReadable()
+						|| strcasecmp(  substr($file->getFilename(),0, 12 ) , 'phpgw_cache_' ) != 0 )
+ 					{
+						continue;
+					}
+					$file_path = $file->getPathname();
+					unlink($file_path);
+				}
+			}
+		}
 		/**
 		 * Retreive data from shared memory
 		 *
@@ -130,7 +160,7 @@
 		 */
 		protected static function _shm_clear($key)
 		{
-			return $GLOBALS['phpgw']->shm->delete_key($key);
+			return phpgwapi_shm::delete_key($key);
 		}
 
 		/**
@@ -141,7 +171,7 @@
 		 */
 		protected static function _shm_get($key)
 		{
-			return $GLOBALS['phpgw']->shm->get_value($key);
+			return phpgwapi_shm::get_value($key);
 		}
 
 		/**
@@ -153,7 +183,7 @@
 		 */
 		protected static function _shm_set($key, $value)
 		{
-			return $GLOBALS['phpgw']->shm->store_value($key, $value);
+			return phpgwapi_shm::store_value($key, $value);
 		}
 
 		/**
@@ -161,7 +191,7 @@
 		 *
 		 * @param mixed the value to store
 		 * @param bool $bypass to skip encryption
-		 * @return value to store as a string
+		 * @return string value to store as a string
 		 */
 		protected static function _value_prepare($value, $bypass = true)
 		{
@@ -241,6 +271,46 @@
 		}
 
 		/**
+		 * Check for redis
+		 */
+
+		private static function _redis_enabled()
+		{
+			static $enabled = false;
+			static $checked = false;
+			if($checked)
+			{
+				return $enabled;
+			}
+			if(!self::$phpgwapi_redis)
+			{
+				self::get_redis();
+			}
+			$enabled = !! self::$phpgwapi_redis->get_is_connected();
+			$checked = true;
+			return $enabled;
+
+		}
+		/**
+		 * Clear data stored in the system wide cache
+		 *
+		 * @return bool was the data deleted?
+		 */
+		public static function system_clear_all()
+		{
+
+			if ( self::_redis_enabled() )
+			{
+				self::$phpgwapi_redis->clear_cache();
+			}
+			else if ( phpgwapi_shm::is_enabled() )
+			{
+				phpgwapi_shm::clear_cache();
+			}
+			return self::_file_clear_all();
+		}
+
+		/**
 		 * Clear data stored in the system wide cache
 		 *
 		 * @param string $module the module name the data belongs to
@@ -251,7 +321,11 @@
 		{
 			$key = self::_gen_key($module, $id);
 
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
+			if ( self::_redis_enabled() )
+			{
+				return self::$phpgwapi_redis->delete_key($key);
+			}
+			else if ( phpgwapi_shm::is_enabled() )
 			{
 				return self::_shm_clear($key);
 			}
@@ -269,7 +343,11 @@
 		{
 			$key = self::_gen_key($module, $id);
 
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
+			if ( self::_redis_enabled() )
+			{
+				$value = self::$phpgwapi_redis->get_value($key);		
+			}
+			else if ( phpgwapi_shm::is_enabled() )
 			{
 				$value = self::_shm_get($key);
 			}
@@ -312,7 +390,12 @@
 				$value =  base64_encode(gzcompress($value, 9));
 			}
 
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
+			if ( self::_redis_enabled() )
+			{
+				return self::$phpgwapi_redis->store_value($key, $value);				
+			}
+
+			if ( phpgwapi_shm::is_enabled() )
 			{
 				return self::_shm_set($key, $value);
 			}
@@ -500,7 +583,7 @@
 
 			$key = self::_gen_key($module, $id);
 
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
+			if ( phpgwapi_shm::is_enabled() )
 			{
 				return self::_shm_clear($key);
 			}
@@ -521,7 +604,7 @@
 			$module = $module . '_' . $uid;
 			$key = self::_gen_key($module, $id);
 
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
+			if ( phpgwapi_shm::is_enabled() )
 			{
 				$value = self::_shm_get($key);
 			}
@@ -573,7 +656,7 @@
 				$value =  base64_encode(gzcompress($value, 9));
 			}
 
-			if ( $GLOBALS['phpgw']->shm->is_enabled() )
+			if ( phpgwapi_shm::is_enabled() )
 			{
 				return self::_shm_set($key, $value);
 			}

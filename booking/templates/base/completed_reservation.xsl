@@ -27,6 +27,14 @@
 						<xsl:value-of select="php:function('lang', 'reservation')"/> #<xsl:value-of select="reservation/id"/>
 					</h2>
 
+					<xsl:if test="config/activate_application_articles">
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'Articles')" />
+							</label>
+							<div id="articles_container" class="pure-custom" style="display:inline-block;"></div>
+						</div>
+					</xsl:if>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Cost')" />
@@ -176,4 +184,11 @@
 			</xsl:attribute>
 		</input>
 	</div>
+	<script type="text/javascript">
+		var template_set = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|template_set')" />';
+		var reservation_type = '<xsl:value-of select="reservation/reservation_type"/>';
+		var reservation_id = '<xsl:value-of select="reservation/reservation_id"/>';
+		var initialSelection = <xsl:value-of select="reservation/resources_json"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Resource Type', 'phone', 'email', 'quantity', 'from', 'to', 'tax', 'article', 'unit', 'unit cost', 'Selected', 'Sum')"/>;
+	</script>
 </xsl:template>

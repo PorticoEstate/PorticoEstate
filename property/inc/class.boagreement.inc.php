@@ -44,6 +44,8 @@
 		var $member_id;
 		var $allrows;
 
+		var $so, $bocommon, $status_id, $uicols, $total_records, $vendor_id, $use_session;
+
 		/**
 		 * @var object $custom reference to custom fields object
 		 */

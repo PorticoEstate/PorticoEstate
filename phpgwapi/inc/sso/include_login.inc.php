@@ -534,9 +534,9 @@ JS;
 			$this->tmpl->set_var('template_set', $GLOBALS['phpgw_info']['login_template_set']);
 
 
-			$responsive_css = "{$webserver_url}/phpgwapi/templates/pure/css/pure-min.css";
-			$responsive_grid_css = "{$webserver_url}/phpgwapi/templates/pure/css/grids-responsive-min.css";
-			$responsive_grid_old_ie_css = "{$webserver_url}/phpgwapi/templates/pure/css/grids-responsive-old-ie-min.css";
+			$responsive_css = "{$webserver_url}/phpgwapi/templates/pure/css/version_3/pure-min.css";
+			$responsive_grid_css = "{$webserver_url}/phpgwapi/templates/pure/css/version_3/grids-responsive-min.css";
+			$font_awesome = "{$webserver_url}/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
 
 
 			if( is_file("{$GLOBALS['phpgw_info']['server']['template_dir']}/css/base.css") )
@@ -568,10 +568,11 @@ JS;
 
 			$this->tmpl->set_var('responsive_css', $responsive_css);
 			$this->tmpl->set_var('responsive_grid_css', $responsive_grid_css);
-			$this->tmpl->set_var('responsive_grid_old_ie_css', $responsive_grid_old_ie_css);
 			$this->tmpl->set_var('system_css', $system_css);
 			$this->tmpl->set_var('base_css', $base_css);
 			$this->tmpl->set_var('login_css', $login_css);
+			$this->tmpl->set_var('font_awesome', $font_awesome);
+
 			if(empty($variables['lang_firstname']))
 			{
 				$this->tmpl->set_var('grid_css', 'pure-u-md-1-2');
@@ -634,7 +635,7 @@ HTML;
 				$this->tmpl->parse('message_blocks', 'message_block');
 			}
 
-			if($variables['lang_message'])
+			if(isset($variables['lang_message']))
 			{
 				$this->tmpl->parse('message_blocks', 'message_block');
 			}

@@ -181,7 +181,6 @@
 			$results			 = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
 			$allrows			 = $results == -1 ? true : false;
 			$end_date			 = isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : mktime(23, 59, 59, date("n"), date("j"), date("Y"));
-			$external			 = isset($data['external']) ? $data['external'] : '';
 			$dry_run			 = isset($data['dry_run']) ? $data['dry_run'] : '';
 			$new				 = isset($data['new']) ? $data['new'] : '';
 			$location_code		 = isset($data['location_code']) ? $data['location_code'] : '';
@@ -195,6 +194,7 @@
 			$order_dim1			 = isset($data['order_dim1']) && $data['order_dim1'] ? (int)$data['order_dim1'] : 0;
 			$custom_filtermethod = isset($data['custom_filtermethod']) && $data['custom_filtermethod'] ? (array)$data['custom_filtermethod'] : array();
 			$check_date_type	 = isset($data['check_date_type']) && $data['check_date_type'] ? (int)$data['check_date_type'] : 1;
+			$include_location_parent = !empty($data['include_location_parent']) ? true : false;
 
 
 			$result_order_field	 = array();
@@ -440,6 +440,7 @@
 			{
 				$_membership = array();
 				$membership	 = array(-1);
+				$group_filter = '';
 				if (is_array($user_id))
 				{
 					$user_ids = array(-1);
@@ -579,8 +580,32 @@
 
 			if ($location_code)
 			{
-				$filtermethod	 .= " $where fm_tts_tickets.location_code {$this->like} '{$location_code}%'";
+				$filter_parent = '';
+				if($include_location_parent)
+				{
+					$location_arr = explode('-', $location_code);
+					$location_arr_parent = $location_arr;
+					array_pop($location_arr_parent);
+
+					$filter_parent_arr = array();
+					$loops = count($location_arr_parent);
+
+					if($location_arr_parent)
+					{
+						for ($m = 0; $m < $loops; $m++)
+						{
+							$filter_parent_arr[] = implode('-', $location_arr_parent);
+							array_pop($location_arr_parent);
+						}
+
+						$filter_parent = " OR fm_tts_tickets.location_code IN ('" . implode("', '", $filter_parent_arr) . "')" ;
+					}
+				}
+
+				$filtermethod	 .= " $where (fm_tts_tickets.location_code {$this->like} '{$location_code}%' {$filter_parent})";
 				$where			 = 'AND';
+
+				
 			}
 
 			foreach ($custom_filtermethod as $custom_filter_key => $custom_filter_value)
@@ -945,7 +970,11 @@
 			$entity[$i]['type']	 = '.project.workorder';
 			$entity[$i]['name']	 = 'workorder';
 			$uicols[]			 = 'workorder';
+			$i++;
 
+			$entity[$i]['type']	 = '.project.request';
+			$entity[$i]['name']	 = 'request';
+			$uicols[]			 = 'request';
 
 			$this->uicols_related = $uicols;
 			return $entity;
@@ -1019,6 +1048,7 @@
 				$ticket['payment_type']			 = $this->db->f('payment_type');
 				$ticket['charge_tenant']		 = $this->db->f('charge_tenant');
 				$ticket['verified_transfered']	 = $this->db->f('verified_transfered');
+				$ticket['handyman_checklist_id'] = $this->db->f('handyman_checklist_id');
 				
 
 				$user_id = (int)$this->db->f('user_id');
@@ -1519,12 +1549,12 @@
 			if ($oldfinnish_date && isset($ticket['finnish_date']) && $ticket['finnish_date'])
 			{
 				$this->db->query("update fm_tts_tickets set finnish_date2='" . $finnish_date
-					. "' where id='$id'", __LINE__, __FILE__);
+					. "' where id={$id}", __LINE__, __FILE__);
 			}
 			else if (!$oldfinnish_date && isset($ticket['finnish_date']) && $ticket['finnish_date'])
 			{
 				$this->db->query("update fm_tts_tickets set finnish_date='" . $finnish_date
-					. "' where id='$id'", __LINE__, __FILE__);
+					. "' where id={$id}", __LINE__, __FILE__);
 			}
 
 			if ($oldfinnish_date2 > 0)
@@ -1591,7 +1621,7 @@
 				$value_set	 = array('assignedto' => $ticket['assignedto']);
 				$value_set	 = $this->db->validate_update($value_set);
 
-				$this->db->query("update fm_tts_tickets set $value_set where id='$id'", __LINE__, __FILE__);
+				$this->db->query("update fm_tts_tickets set $value_set where id={$id}", __LINE__, __FILE__);
 				$this->historylog->add('A', $id, $ticket['assignedto'], $oldassigned);
 			}
 
@@ -1612,7 +1642,7 @@
 				$value_set	 = array('group_id' => $ticket['group_id']);
 				$value_set	 = $this->db->validate_update($value_set);
 
-				$this->db->query("update fm_tts_tickets set $value_set where id='$id'", __LINE__, __FILE__);
+				$this->db->query("update fm_tts_tickets set $value_set where id={$id}", __LINE__, __FILE__);
 				$this->historylog->add('G', $id, $ticket['group_id'], $oldgroup_id);
 			}
 
@@ -1628,14 +1658,14 @@
 			{
 				$contact_id				 = (int)$ticket['contact_id'];
 				$this->fields_updated[]	 = 'contact_id';
-				$this->db->query("update fm_tts_tickets set contact_id={$contact_id} WHERE id=$id", __LINE__, __FILE__);
+				$this->db->query("update fm_tts_tickets set contact_id={$contact_id} WHERE id={$id}", __LINE__, __FILE__);
 			}
 
 			if ($ticket['cat_id'] && ( ($oldcat_id != $ticket['cat_id']) && $ticket['cat_id'] != 'ignore'))
 			{
 				$this->fields_updated[] = 'cat_id';
 				$this->db->query("update fm_tts_tickets set cat_id='" . $ticket['cat_id']
-					. "' where id='$id'", __LINE__, __FILE__);
+					. "' where id={$id}", __LINE__, __FILE__);
 				$this->historylog->add('T', $id, $ticket['cat_id'], $oldcat_id);
 			}
 
@@ -1793,6 +1823,8 @@
 
 					$order_template = createObject('property.soorder_template')->read_single((int)$ticket['order_template_id']);
 
+					$order_descr = !empty($ticket['order_descr']) ? "{$order_template['order_descr']}{$ticket['order_descr']}" : $order_template['order_descr'];
+
 					$ticket['vendor_id']			 = $order_template['vendor_id'];
 					$ticket['vendor_email']			 = (array)$order_template['mail_recipients'];
 					$ticket['contract_id']			 = $order_template['contract_id'];
@@ -1800,7 +1832,7 @@
 					$ticket['external_project_id']	 = $order_template['external_project_id'];
 					$ticket['unspsc_code']			 = $order_template['unspsc_code'];
 					$ticket['b_account_id']			 = $order_template['b_account_id'];
-					$ticket['order_descr']			 = $order_template['order_descr'];
+					$ticket['order_descr']			 = $order_descr;
 					$ticket['ecodimb']				 = $order_template['ecodimb'];
 					$ticket['branch_id']			 = $order_template['branch_id'];
 					$ticket['tax_code']				 = $order_template['tax_code'];
@@ -1836,10 +1868,10 @@
 
 					$this->db->query("SELECT sum(amount) AS budget FROM fm_tts_budget WHERE ticket_id = {$id}", __LINE__, __FILE__);
 					$this->db->next_record();
-					$old_budget	 = $this->db->f('budget');
+					$old_budget	 = (float)$this->db->f('budget');
 					$new_budget	 = (float) str_replace(array(' ', ','), array('', '.'), $ticket['budget']) + $old_budget;
 
-					$this->db->query("UPDATE fm_tts_tickets SET budget='{$new_budget}' WHERE id='$id'", __LINE__, __FILE__);
+					$this->db->query("UPDATE fm_tts_tickets SET budget='{$new_budget}' WHERE id={$id}", __LINE__, __FILE__);
 
 					$value_set_cost = array
 						(

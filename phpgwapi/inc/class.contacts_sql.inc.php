@@ -2611,7 +2611,7 @@
 //					$this->lock_table($this->location->table, '', true);
 				}
 			}
-			if (count($addr[0]) == 0)
+			if (count((array)$addr[0]) == 0)
 			{
 				$location['addr_preferred'] = 'Y';
 			}
@@ -4210,42 +4210,42 @@
 
 			//$time = gettimeofday();
 			$uid = $person[0]['contact_id'] . ':' . $person[0]['per_full_name'];
-			$dn = 'uid=' . utf8_encode($uid) . ',' . $GLOBALS['phpgw_info']['server']['ldap_contact_context'];
+			$dn = 'uid=' . mb_convert_encoding($uid, 'UTF-8', 'ISO-8859-1') . ',' . $GLOBALS['phpgw_info']['server']['ldap_contact_context'];
 
 			/* Requerid attributes */
 			$attributes['objectClass'][] = 'person';
 			$attributes['objectClass'][] = 'organizationalPerson';
 			$attributes['objectClass'][] = 'inetOrgPerson';
-			$attributes['cn'][] = utf8_encode($person[0]['per_full_name']) ? utf8_encode($person[0]['per_full_name']) : ' ';
-			$attributes['sn'][] = utf8_encode($person[0]['per_last_name']) ? utf8_encode($person[0]['per_last_name']) : ' ';
+			$attributes['cn'][] = mb_convert_encoding($person[0]['per_full_name'], 'UTF-8', 'ISO-8859-1') ? mb_convert_encoding($person[0]['per_full_name'], 'UTF-8', 'ISO-8859-1') : ' ';
+			$attributes['sn'][] = mb_convert_encoding($person[0]['per_last_name'], 'UTF-8', 'ISO-8859-1') ? mb_convert_encoding($person[0]['per_last_name'], 'UTF-8', 'ISO-8859-1') : ' ';
 			/* Optional attributes */
-			$attributes['uid'][] = utf8_encode($uid);
+			$attributes['uid'][] = mb_convert_encoding($uid, 'UTF-8', 'ISO-8859-1');
 			if ($person[0]['org_name'])
 			{
-				$attributes['o'][] = utf8_encode($person[0]['org_name']);
+				$attributes['o'][] = mb_convert_encoding($person[0]['org_name'], 'UTF-8', 'ISO-8859-1');
 			}
 			if ($person[0]['per_title'])
 			{
-				$attributes['title'][] = utf8_encode($person[0]['per_title']);
+				$attributes['title'][] = mb_convert_encoding($person[0]['per_title'], 'UTF-8', 'ISO-8859-1');
 			}
 			if ($person[0]['per_first_name'])
 			{
-				$attributes['givenName'][] = utf8_encode($person[0]['per_first_name']);
+				$attributes['givenName'][] = mb_convert_encoding($person[0]['per_first_name'], 'UTF-8', 'ISO-8859-1');
 			}
 			/* if($person[0]['per_last_name'])
 			  {
 			  } */
 			if ($person[0]['per_initials'])
 			{
-				$attributes['initials'][] = utf8_encode($person[0]['per_initials']);
+				$attributes['initials'][] = mb_convert_encoding($person[0]['per_initials'], 'UTF-8', 'ISO-8859-1');
 			}
 			if ($person[0]['per_department'])
 			{
-				$attributes['ou'][] = utf8_encode($person[0]['per_department']);
+				$attributes['ou'][] = mb_convert_encoding($person[0]['per_department'], 'UTF-8', 'ISO-8859-1');
 			}
 			if ($person[0]['contact_id'])
 			{
-				$attributes['employeeNumber'][] = utf8_encode($person[0]['contact_id']);
+				$attributes['employeeNumber'][] = mb_convert_encoding($person[0]['contact_id'], 'UTF-8', 'ISO-8859-1');
 			}
 			unset($person);
 
@@ -4253,25 +4253,25 @@
 
 			if ($address_pref[0]['addr_add1'] || $address_pref[0]['addr_add2'] || $address_pref[0]['addr_add3'])
 			{
-				$attributes['street'][] = utf8_encode($address_pref[0]['addr_add1'] .
+				$attributes['street'][] = mb_convert_encoding($address_pref[0]['addr_add1'] .
 					$address_pref[0]['addr_add2'] .
-					$address_pref[0]['addr_add3']);
-				$attributes['postalAddress'][] = utf8_encode($address_pref[0]['addr_add1'] .
+					$address_pref[0]['addr_add3'], 'UTF-8', 'ISO-8859-1');
+				$attributes['postalAddress'][] = mb_convert_encoding($address_pref[0]['addr_add1'] .
 					$address_pref[0]['addr_add2'] .
-					$address_pref[0]['addr_add3']);
+					$address_pref[0]['addr_add3'], 'UTF-8', 'ISO-8859-1');
 			}
 
 			if ($address_pref[0]['addr_state'])
 			{
-				$attributes['st'][] = utf8_encode($address_pref[0]['addr_state']);
+				$attributes['st'][] = mb_convert_encoding($address_pref[0]['addr_state'], 'UTF-8', 'ISO-8859-1');
 			}
 			if ($address_pref[0]['addr_postal_code'])
 			{
-				$attributes['postalCode'][] = utf8_encode($address_pref[0]['addr_postal_code']);
+				$attributes['postalCode'][] = mb_convert_encoding($address_pref[0]['addr_postal_code'], 'UTF-8', 'ISO-8859-1');
 			}
 			if ($address_pref[0]['addr_city'])
 			{
-				$attributes['l'][] = utf8_encode($address_pref[0]['addr_city']);
+				$attributes['l'][] = mb_convert_encoding($address_pref[0]['addr_city'], 'UTF-8', 'ISO-8859-1');
 			}
 			//$attributes['homePostalAddress'][]			= ''; //we can use the address with type home
 			unset($address_pref);
@@ -4307,11 +4307,11 @@
 					{
 						if ($comms[$i]['comm_preferred'] == 'Y' && count($attributes[$key]) > 0)
 						{
-							array_unshift($attributes[$key], utf8_encode($comms[$i]['comm_data']));
+							array_unshift($attributes[$key], mb_convert_encoding($comms[$i]['comm_data'], 'UTF-8', 'ISO-8859-1'));
 						}
 						else
 						{
-							$attributes[$key][] = utf8_encode($comms[$i]['comm_data']);
+							$attributes[$key][] = mb_convert_encoding($comms[$i]['comm_data'], 'UTF-8', 'ISO-8859-1');
 						}
 					}
 				}

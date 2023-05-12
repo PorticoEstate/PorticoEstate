@@ -11278,8 +11278,9 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
 	/**
-	* Update property version from 0.9.17.563 to 0.9.17.564
+	* Update property version from 0.9.17.564 to 0.9.17.565
 	* rename reserved columns
 	*
 	*/
@@ -11301,3 +11302,182 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.565 to 0.9.17.566
+	* rename reserved columns
+	*
+	*/
+	$test[] = '0.9.17.755';
+	function property_upgrade0_9_17_755()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request', 'proposed_measures', array(
+			'type' => 'text',
+			'nullable' => True
+			));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_request', 'remark', array(
+			'type' => 'text',
+			'nullable' => True
+			));
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_request SET proposed_measures = title");
+	//	$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_request SET descr = title");
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_request SET title = SUBSTRING (title, 1, 60) || '...' WHERE LENGTH (title) > 60");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.756';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.566 to 0.9.17.567
+	* add default tax-code to project
+	*
+	*/
+	$test[] = '0.9.17.756';
+	function property_upgrade0_9_17_756()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project', 'tax_code', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+			));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.757';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.557 to 0.9.17.558
+	* add account category to external projects
+	*
+	*/
+	$test[] = '0.9.17.757';
+	function property_upgrade0_9_17_757()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_external_project', 'b_account_category', array(
+			'type' => 'varchar',
+			'precision' => '255',
+			'nullable' => True
+			));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.758';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.558 to 0.9.17.559
+	* amount limits to fm_ecodimb_role
+	*
+	*/
+	$test[] = '0.9.17.758';
+	function property_upgrade0_9_17_758()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecodimb_role', 'amount', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+			));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.759';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.559 to 0.9.17.560
+	* configurable request probility and consequens
+	*
+	*/
+	$test[] = '0.9.17.759';
+	function property_upgrade0_9_17_759()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_request_probability',  array(
+				'fd' => array(
+					'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_request_consequence',  array(
+				'fd' => array(
+					'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False)
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$probability_comment[1]	 = ' - ' . lang('low probability');
+		$probability_comment[2]	 = ' - ' . lang('medium probability');
+		$probability_comment[3]	 = ' - ' . lang('high probability');
+		for ($i = 1; $i <= 3; $i++)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_probability (id, name) VALUES ({$i}, '{$i}{$probability_comment[$i]}')");
+		}
+
+		$consequence_comment[0]	 = ' - ' . lang('None Consequences');
+		$consequence_comment[1]	 = ' - ' . lang('Minor Consequences');
+		$consequence_comment[2]	 = ' - ' . lang('Medium Consequences');
+		$consequence_comment[3]	 = ' - ' . lang('Serious Consequences');
+		for ($i = 0; $i <= 3; $i++)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_consequence (id, name) VALUES ({$i}, '{$i}{$consequence_comment[$i]}')");
+		}
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.760';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+	/**
+	* Update property version from 0.9.17.560 to 0.9.17.561
+	* Rename column
+	*
+	*/
+	$test[] = '0.9.17.760';
+	function property_upgrade0_9_17_760()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('fm_ecodimb_role', 'amount', 'amount_limit');
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.761';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

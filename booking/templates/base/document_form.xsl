@@ -12,20 +12,20 @@
 				<fieldset>
 					<xsl:if test="document/id">
 						<div class="heading">
-							<legend>
+							<!--<legend>-->
 								<h3>
 									<xsl:value-of select="php:function('lang', 'Edit document')" />
 								</h3>
-							</legend>
+							<!--</legend>-->
 						</div>
 					</xsl:if>
 					<xsl:if test="not(document/id)">
 						<div class="heading">
-							<legend>
+							<!--<legend>-->
 								<h3>
 									<xsl:value-of select="php:function('lang', 'Upload document')" />
 								</h3>
-							</legend>
+							<!--</legend>-->
 						</div>
 					</xsl:if>
 					<xsl:if test="document/id">
@@ -39,7 +39,7 @@
 						<label for="field_name">
 							<xsl:value-of select="php:function('lang', 'Document')" />
 						</label>
-						<input name="name" id='field_name'>
+						<input name="name" id='field_name' class="pure-input-3-4">
 							<xsl:attribute name="value">
 								<xsl:value-of select="document/name"/>
 							</xsl:attribute>
@@ -67,7 +67,7 @@
 						<label for="field_description">
 							<xsl:value-of select="php:function('lang', 'Description')" />
 						</label>
-						<textarea name="description" id='field_description'>
+						<textarea name="description" id='field_description' class="pure-input-3-4">
 							<xsl:value-of select="document/description"/>
 						</textarea>
 					</div>
@@ -75,7 +75,7 @@
 						<label for="field_category">
 							<xsl:value-of select="php:function('lang', 'Category')" />
 						</label>
-						<select name='category' id='field_category'>
+						<select name='category' id='field_category' class="pure-input-3-4">
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
@@ -102,7 +102,7 @@
 						<label for="field_owner_name">
 							<xsl:value-of select="php:function('lang', string(document/owner_type_label))" />
 						</label>
-						<input id="field_owner_name" name="owner_name" type="text">
+						<input id="field_owner_name" name="owner_name" type="text" class="pure-input-3-4">
 							<xsl:attribute name="value">
 								<xsl:value-of select="document/owner_name"/>
 							</xsl:attribute>

@@ -1,4 +1,3 @@
-
 <?php
 	phpgw::import_class('booking.uievent');
 	phpgw::import_class('booking.uiapplication');
@@ -15,7 +14,7 @@
 			'show'	=> true
 		);
 
-		protected $application_ui;
+		protected $application_ui, $customer_name;
 
 		public function __construct()
 		{
@@ -25,6 +24,38 @@
 			$this->organization_bo = CreateObject('booking.boorganization');
 			$this->booking_bo = CreateObject('booking.bobooking');
 			$this->application_ui = new booking_uiapplication();
+		}
+
+		private function _is_event_owner( $event, $bouser, $skip_redirect = false )
+		{
+			$external_login_info = $bouser->validate_ssn_login(array('menuaction' => 'bookingfrontend.uievent.cancel',
+				'id' => $event['id'],
+				'resource_ids' => $event['resource_ids']), $skip_redirect);
+
+
+			if(!empty($event['application_id']))
+			{
+				$check_for_owner = $this->application_ui->bo->read_single($event['application_id']);
+			}
+			else
+			{
+				$check_for_owner = $event;
+			}
+
+			$event_owner_person = !empty($external_login_info['ssn']) && $check_for_owner['customer_ssn'] == $external_login_info['ssn'] ? true : false;
+			$event_owner_organization = $bouser->is_organization_admin($check_for_owner['customer_organization_id']);
+
+			if(!empty($external_login_info['ssn']))
+			{
+				$user_id = CreateObject('booking.souser')->get_user_id($external_login_info['ssn']);
+				if($user_id)
+				{
+					$customer = CreateObject('booking.bouser')->read_single($user_id);
+					$this->customer_name = $customer['name'];
+				}
+			}
+
+			return ( $event_owner_person || $event_owner_organization);
 		}
 
 		public function edit()
@@ -78,46 +109,44 @@
 			$activity = $this->organization_bo->so->get_resource_activity($resources);
 			$mailadresses = $this->building_users($event['building_id'], $split, $activity);
 
-			if (!$bouser->is_organization_admin($customer['customer_organization_id']))
+			if (!$this->_is_event_owner($event, $bouser))
 			{
 				$date = substr($event['from_'], 0, 10);
 				self::redirect(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $event['building_id'], 'date' => $date));
 			}
 
-			$currres = $event['resources'];
-
-			list($event, $errors) = $this->extract_and_validate($event);
-
-			if ($event['customer_organization_number'])
-			{
-				$orginfo = $this->bo->so->get_org($event['customer_organization_number']);
-				$event['customer_organization_id'] = $orginfo['id'];
-				$event['customer_organization_name'] = $orginfo['name'];
-			}
-
-			$orgdate = array();
-			foreach ($event['dates'] as $odate)
-			{
-				if (substr($odate['from_'], 0, 10) == substr($event['from_'], 0, 10))
-				{
-					$orgdate['from'] = $odate['from_'];
-					$orgdate['to'] = $odate['to_'];
-				}
-			}
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$test = $this->bo->read_single($event['id']);
+				$currres = $event['resources'];
 
 				$_POST['org_from'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['org_from']));
 				$_POST['org_to'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['org_to']));
 
 				$new_date['from_'] = substr($_POST['org_from'], 0, 11) . $_POST['from_'] . ":00";
 				$new_date['to_'] = substr($_POST['org_to'], 0, 11) . $_POST['to_'] . ":00";
+
 				array_set_default($_POST, 'resources', array());
 
-				if ($_POST['org_from'] <= $new_date['from_'] && $_POST['org_to'] >= $new_date['to_'])
+
+				$free_up_time = false;
+				$orgdate = array();
+				foreach ($event['dates'] as $odate)
+				{
+					if (substr($odate['from_'], 0, 10) == substr($event['from_'], 0, 10))
+					{
+						$orgdate['from'] = $odate['from_'];
+						$orgdate['to'] = $odate['to_'];
+					}
+				}
+
+				$test = $this->bo->read_single($event['id']);
+
+				$no_time_changes = false;
+
+//				if ($_POST['org_from'] <= $new_date['from_'] && $_POST['org_to'] >= $new_date['to_'])
+				if ($test['from_'] <= $new_date['from_'] && $test['to_'] >= $new_date['to_'])
 				{
 					if ($new_date['from_'] > $new_date['to_'])
 					{
@@ -125,13 +154,25 @@
 					}
 					else
 					{
+						if($test['from_'] == $new_date['from_'] && $test['to_'] == $new_date['to_'])
+						{
+							$no_time_changes = true;							
+						}
+						else if($test['from_'] < $new_date['from_'] || $test['to_'] > $new_date['to_'])
+						{
+							$free_up_time = true;
+						}
+
 						$event['from_'] = $new_date['from_'];
 						$event['to_'] = $new_date['to_'];
+						$_POST['from_'] = $new_date['from_'];
+						$_POST['to_'] = $new_date['to_'];
 					}
 				}
 				else
 				{
-					if ($_POST['org_from'] <= $new_date['from_'])
+//					if ($_POST['org_from'] <= $new_date['from_'])
+					if ($test['from_'] <= $new_date['from_'])
 					{
 						if ($new_date['from_'] > $new_date['to_'])
 						{
@@ -140,14 +181,20 @@
 						else
 						{
 							$event['from_'] = $new_date['from_'];
+							$_POST['from_'] = $new_date['from_'];
 						}
 					}
 					else
 					{
-						$event['from_'] = $_POST['org_from'];
+						$free_up_time = true;
+//						$event['from_'] = $_POST['org_from'];
+//						$_POST['from_'] = $_POST['org_from'];
+						$event['from_'] = $new_date['from_'];
+						$_POST['from_'] = $new_date['from_'];
 					}
 
-					if ($_POST['org_to'] >= $new_date['to_'])
+//					if ($_POST['org_to'] >= $new_date['to_'])
+					if ($test['to_'] >= $new_date['to_'])
 					{
 						if ($new_date['to_'] < $new_date['from_'])
 						{
@@ -156,19 +203,38 @@
 						else
 						{
 							$event['to_'] = $new_date['to_'];
+							$_POST['to_'] = $new_date['to_'];
 						}
 
 					}
 					else
 					{
-						$event['to_'] = $_POST['org_to'];
+						$free_up_time = true;
+//						$event['to_'] = $_POST['org_to'];
+//						$_POST['to_'] = $_POST['org_to'];
+						$event['to_'] = $new_date['to_'];
+						$_POST['to_'] = $new_date['to_'];
 					}
+				}
+
+				list($event, $errors) = $this->extract_and_validate($event);
+
+				if ($event['customer_organization_number'])
+				{
+					$orginfo = $this->bo->so->get_org($event['customer_organization_number']);
+					$event['customer_organization_id'] = $orginfo['id'];
+					$event['customer_organization_name'] = $orginfo['name'];
+				}
+
+				if(!$errors && !$no_time_changes)
+				{
 
 					if (!is_null($event['application_id']) && $event['application_id'] != '' && !$errors['start_time'] && !$errors['end_time'])
 					{
-						$comment = "ID: " . $event['id'] . " " . lang("User has made a request to increase time on existing booking") . ' ' . $new_date['from_'] . ' - ' . $new_date['to_'];
+						$comment = lang('event') ." #: " . $event['id'] . " " . lang("User has made a request to alter time on existing booking") . ' ' . $new_date['from_'] . ' - ' . $new_date['to_'];
 
-						$this->application_ui->add_comment_to_application($event['application_id'], $comment , True);
+						$change_status = $free_up_time ? false : 'PENDING';
+						$this->application_ui->add_comment_to_application($event['application_id'], $comment , $change_status, $this->customer_name);
 						phpgwapi_cache::message_set(lang('Request for changed time') . '</br>' . lang('Follow status' ));
 					}
 				}
@@ -180,7 +246,7 @@
 
 						$comment = "ID: " . $event['id'] . " " . lang("User has changed field for equipment") . ' ' . $event['equipment'];
 
-						$this->application_ui->add_comment_to_application($event['application_id'], $comment , false);
+						$this->application_ui->add_comment_to_application($event['application_id'], $comment , false, $this->customer_name);
 						phpgwapi_cache::message_set(lang('Request for equipment has been sent') . '</br>' . lang('Follow status' ));
 
 					}
@@ -200,9 +266,19 @@
 
 						$this->bo->send_notification(true, $event, $mailadresses, $orgdate);
 					}
-					$message = '';
-					$this->bo->send_admin_notification(true, $event, $message, $orgdate);
-					$this->bo->update($event);
+
+
+					if(!$no_time_changes)
+					{
+						$message = '';
+						$this->bo->send_admin_notification(true, $event, $message, $orgdate);
+					}
+
+					if($free_up_time)
+					{
+						$this->bo->update($event);
+					}
+
 					$date = substr($event['from_'], 0, 10);
 
 					if ($from_org && $event['customer_organization_id'] !== null)
@@ -216,6 +292,15 @@
 							'id' => $event['building_id'], 'date' => $date));
 					}
 				}
+			}
+
+			if ($errors['allocation'] && is_array($errors['allocation']))
+			{
+				$errors['allocation'] = lang('Overlaps with existing allocation %1. Remember to send a notification', " #" . implode(', #',$errors['allocation'][0]));
+			}
+			if ($errors['booking'] && is_array($errors['booking']))
+			{
+				$errors['booking'] = lang('Overlaps with existing booking %1. Remember to send a notification', " #" . implode(', #',$errors['booking'][0])) ;
 			}
 
 			$this->flash_form_errors($errors);
@@ -287,6 +372,13 @@
 			$config->read();
 
 			$event = $this->bo->read_single($id);
+
+			if(!$event)
+			{
+				// Redirect to the front page
+				self::redirect(array());
+			}
+
 			$from_org = phpgw::get_var('from_org', 'boolean', 'REQUEST', false);
 			$bouser = CreateObject('bookingfrontend.bouser');
 			$errors = array();
@@ -325,21 +417,7 @@
 
 				if ($cdate < $event['to_'])
 				{
-					$event_owner = false;
-
-					if($event['customer_identifier_type'] == 'ssn')
-					{
-						$external_login_info = $bouser->validate_ssn_login(array('menuaction' => 'bookingfrontend.uievent.cancel',
-							'id' => $event['id'],
-							'resource_ids' => $event['resource_ids']));
-						$event_owner = $event['customer_ssn'] == $external_login_info['ssn'] ? true : false;
-					}
-					else
-					{
-						$event_owner = $bouser->is_organization_admin($event['customer_organization_id']);
-					}
-
-					if ($event_owner)
+					if ($this->_is_event_owner($event, $bouser))
 					{
 						$resources = $event['resources'];
 						$activity = $this->organization_bo->so->get_resource_activity($resources);
@@ -358,6 +436,26 @@
 						{
 							$event['active'] = 0;
 							$this->bo->update($event);
+						}
+
+						if(!empty($event['application_id']))
+						{
+							$this->assoc_bo	 = new booking_boapplication_association();
+							$associations = $this->assoc_bo->so->read(array('filters' => array('application_id' => $event['application_id']),
+								'sort' => 'from_', 'dir' => 'asc', 'results' =>'all'));
+							$changeStatus = 'REJECTED';
+							foreach ($associations['results'] as $association)
+							{
+								if($association['id'] != $event['id'] && $association['active'] == 1)
+								{
+									$changeStatus = null;
+								}
+							}
+
+							foreach ($event['dates'] as $odate){}
+
+							$comment = lang('event') ." #: " . $event['id'] . " " . lang("User has made a request to cancel event") . ' ' . $odate['from_'] . ' - ' . $odate['to_'];
+							$this->application_ui->add_comment_to_application($event['application_id'], $comment , $changeStatus, $this->customer_name);
 						}
 
 						$date = substr($event['from_'], 0, 10);
@@ -385,7 +483,7 @@
 			}
 			$this->flash_form_errors($errors);
 			$date = substr($event['from_'], 0, 10);
-			self::add_javascript('bookingfrontend', 'base', 'event.js');
+
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
 
 			if ($from_org && $event['customer_organization_id'] !== null)
@@ -407,7 +505,7 @@
 			$event['from_'] = pretty_timestamp($event['from_']);
 			$event['to_'] = pretty_timestamp($event['to_']);
 
-			self::rich_text_editor('field-message');
+			self::rich_text_editor('field_message');
 
 			self::render_template_xsl('event_delete', array('event' => $event, 'activities' => $activities,
 				'can_delete_events' => $can_delete_events));
@@ -419,21 +517,21 @@
 			$organizations = $this->organization_bo->find_building_users($building_id, $type, $activities);
 			foreach ($organizations['results'] as $key => $org)
 			{
-				if ($org['email'] != '' && strstr($org['email'], '@'))
+				if (!empty($org['email']) && strstr($org['email'], '@'))
 				{
 					if (!in_array($org['email'], $contacts))
 					{
 						$contacts[] = $org['email'];
 					}
 				}
-				if ($org['contacts'][0]['email'] != '' && strstr($org['contacts'][0]['email'], '@'))
+				if (!empty($org['contacts'][0]['email']) && strstr($org['contacts'][0]['email'], '@'))
 				{
 					if (!in_array($org['contacts'][0]['email'], $contacts))
 					{
 						$contacts[] = $org['contacts'][0]['email'];
 					}
 				}
-				if ($org['contacts'][1]['email'] != '' && strstr($org['contacts'][1]['email'], '@'))
+				if (!empty($org['contacts'][1]['email']) && strstr($org['contacts'][1]['email'], '@'))
 				{
 					if (!in_array($org['contacts'][1]['email'], $contacts))
 					{
@@ -443,13 +541,13 @@
 				$grp_con = $this->booking_bo->so->get_group_contacts_of_organization($org['id']);
 				foreach ($grp_con as $grp)
 				{
-					if (!in_array($grp['email'], $contacts) && strstr($grp['email'], '@'))
+					if (!empty($grp['email']) && !in_array($grp['email'], $contacts) && strstr($grp['email'], '@'))
 					{
 						$contacts[] = $grp['email'];
 					}
 				}
 			}
-			return $contacts;
+			return array_unique($contacts);
 		}
 
 		public function resource_users( $resources )
@@ -567,7 +665,7 @@
 			}			
 			$event['when'] = $when;
 			$bouser = CreateObject('bookingfrontend.bouser');
-			if ($bouser->is_organization_admin($event['customer_organization_id']))
+			if ($this->_is_event_owner($event, $bouser, true))
 			{
 				if ($event['from_'] > Date('Y-m-d H:i:s'))
 				{

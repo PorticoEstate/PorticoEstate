@@ -207,6 +207,44 @@
 					);
 					break;
 
+				case 'e_lock_system':
+					$info	 = array(
+						'table'			 => 'bb_e_lock_system',
+						'id'			 => array('name' => 'id', 'type' => 'int'),
+						'fields'		 => array(
+							array(
+								'name'	 => 'name',
+								'descr'	 => lang('name'),
+								'type'	 => 'varchar'
+							),
+							array(
+								'name'	 => 'instruction',
+								'descr'	 => lang('receipt'),
+								'type'	 => 'html'
+							),
+							array(
+								'name'		 => 'sms_alert',
+								'descr'		 => lang('sms alert'),
+								'type'		 => 'checkbox',
+								'default'	 => 'checked',
+								'sortable'	 => true,
+							)
+						),
+						'edit_msg'		 => lang('edit'),
+						'add_msg'		 => lang('add'),
+						'name'			 => $GLOBALS['phpgw']->translation->translate('e_lock_system', array(), false, 'booking'),
+						'acl_app'		 => 'booking',
+						'acl_location'	 => '.admin',
+						'menu_selection' => 'booking::settings::e_lock_system',
+						'default'			 => array(
+							'user_id'		 => array('add' => '$this->account'),
+							'entry_date'	 => array('add' => 'time()'),
+							'modified_date'	 => array('edit' => 'time()'),
+						),
+						'check_grant'		 => false
+					);
+					break;
+
 // END BOOKING TABLES
 				default:
 					$message = lang('ERROR: illegal type %1', $type);
@@ -214,6 +252,8 @@
 //				throw new Exception(lang('ERROR: illegal type %1', $type));
 			}
 
+			$info['type']		 = $type;
+			$info['type_id']	 = $type_id;
 			$this->location_info = $info;
 			return $info;
 		}

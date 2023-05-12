@@ -7,11 +7,11 @@
 			<div id="event_settings" class="booking-container">
 				<fieldset>
 					<div class="heading">
-						<legend>
+						<!--<legend>-->
 							<h3>
 								<xsl:value-of select="php:function('lang', 'Application event settings')"/>
 							</h3>
-						</legend>
+						<!--</legend>-->
 					</div>
 					<div class="pure-control-group">
 						<label for="field_event_change_mail_subject">
@@ -105,11 +105,11 @@
 					</div>
 					<div class="pure-control-group">
 						<div class="heading">
-							<legend>
+							<!--<legend>-->
 								<h3>
 									<xsl:value-of select="php:function('lang', 'Cancel booking/allocation email settings')"/>
 								</h3>
-							</legend>
+							<!--</legend>-->
 						</div>
 					</div>
 					<div class="pure-control-group">

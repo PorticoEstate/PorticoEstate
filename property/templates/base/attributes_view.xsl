@@ -9,7 +9,7 @@
 	<script type="text/javascript">
 		help_Popup = function(requestUrl)
 		{
-		TINY.box.show({iframe:requestUrl, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		TINY.box.show({iframe:requestUrl, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		};
 	</script>
 	<xsl:variable name="lang_hour">
@@ -627,14 +627,16 @@
 	</xsl:variable>
 	<div class="pure-custom">
 		<xsl:for-each select="choice">
-			<xsl:choose>
-				<xsl:when test="checked='checked'">
-					<input id="id_{$name}_{id}" type="{input_type}" name="values_attribute[{$attrib_id}][value][]" value="{id}" checked="checked"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<input id="id_{$name}_{id}" type="{input_type}" name="values_attribute[{$attrib_id}][value][]" value="{id}"/>
-				</xsl:otherwise>
-			</xsl:choose>
+			<input id="id_{$name}_{id}" type="{input_type}" name="values_attribute[{$attrib_id}][value][]" value="{id}">
+				<xsl:if test="checked='checked'">
+					<xsl:attribute name="checked">
+						<xsl:text> checked</xsl:text>
+					</xsl:attribute>
+				</xsl:if>
+				<xsl:attribute name="disabled">
+					<xsl:text> disabled</xsl:text>
+				</xsl:attribute>
+			</input>
 			<xsl:value-of select="value"/>
 			<br></br>
 		</xsl:for-each>

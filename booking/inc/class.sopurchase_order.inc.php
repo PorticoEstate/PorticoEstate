@@ -296,7 +296,7 @@
 			return $order;
 		}
 
-		function get_purchase_order( $application_id = 0, $reservation_type = '', $reservation_id = 0)
+		function get_purchase_order( $application_id = 0, $reservation_type = '', $reservation_id = 0, $collection = false)
 		{
 
 			if(!$application_id && !($reservation_type && $reservation_id))
@@ -323,9 +323,13 @@
 			{
 				$filtermethod .= " AND bb_purchase_order.reservation_type = '{$reservation_type}' AND bb_purchase_order.reservation_id = " . (int) $reservation_id;
 			}
-			else if((int) $application_id)
+			else if((int) $application_id && $collection == false)
 			{
 				$filtermethod .= " AND bb_purchase_order.parent_id IS NULL AND bb_purchase_order.application_id = " . (int) $application_id;
+			}
+			else if((int) $application_id && $collection == true)
+			{
+				$filtermethod .= " AND bb_purchase_order.application_id = " . (int) $application_id;
 			}
 
 			$sql = "SELECT bb_purchase_order_line.* , bb_purchase_order.application_id, bb_article_mapping.article_code,"
@@ -404,6 +408,7 @@
 
 		public function copy_purchase_order_from_application( $reservation, $_reservation_id, $reservation_type = 'event' )
 		{
+			$purchase_order_id = null;
 			$application_id	 = (int)$reservation['application_id'];
 			$reservation_id	 = (int)$_reservation_id;
 
@@ -437,20 +442,23 @@
 				$this->db->next_record();
 
 				$order_id		 = (int)$this->db->f('id');
-				$customer_id	 = (int)$this->db->f('customer_id');
-				$valueset		 = array(
-					'parent_id'			 => $order_id,
-					'status'			 => (int)$this->db->f('status'),
-					'application_id'	 => $application_id,
-					'customer_id'		 => $customer_id ? $customer_id : null,
-					'reservation_type'	 => $reservation_type,
-					'reservation_id'	 => $reservation_id,
-				);
-				$insert_fields	 = implode(',', array_keys($valueset));
-				$insert_values	 = $this->db->validate_insert(array_values($valueset));
-				$this->db->query("INSERT INTO bb_purchase_order ({$insert_fields}) VALUES ({$insert_values})", __LINE__, __FILE__);
-				$purchase_order_id	 = $this->db->get_last_insert_id('bb_purchase_order', 'id');
-				$this->copy_order_lines($order_id, $purchase_order_id);
+				if($order_id)
+				{
+					$customer_id	 = (int)$this->db->f('customer_id');
+					$valueset		 = array(
+						'parent_id'			 => $order_id,
+						'status'			 => (int)$this->db->f('status'),
+						'application_id'	 => $application_id,
+						'customer_id'		 => $customer_id ? $customer_id : null,
+						'reservation_type'	 => $reservation_type,
+						'reservation_id'	 => $reservation_id,
+					);
+					$insert_fields	 = implode(',', array_keys($valueset));
+					$insert_values	 = $this->db->validate_insert(array_values($valueset));
+					$this->db->query("INSERT INTO bb_purchase_order ({$insert_fields}) VALUES ({$insert_values})", __LINE__, __FILE__);
+					$purchase_order_id	 = $this->db->get_last_insert_id('bb_purchase_order', 'id');
+					$this->copy_order_lines($order_id, $purchase_order_id);
+				}
 			}
 
 			return $purchase_order_id;

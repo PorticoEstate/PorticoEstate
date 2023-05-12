@@ -84,11 +84,11 @@
 								'text' => lang('Organization') . ':',
 								'list' => $this->bo->so->get_organizations(),
 							),
-							array(
-								'type' => 'link',
-								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
-							),
+//							array(
+//								'type' => 'link',
+//								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+//								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
+//							),
 						)
 					),
 				),
@@ -147,7 +147,14 @@
 				)
 			);
 
-			$data['datatable']['actions'][] = array();
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'toggle_inactive',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+				'text'		 => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+				'custom_code'	 => 'window.open("' .self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive')) . '", "_self");',
+			);
 			if ($this->bo->allow_create())
 			{
 				$data['datatable']['new_item'] = self::link(array('menuaction' => 'booking.uibooking.add'));
@@ -1106,6 +1113,8 @@
 			$activity_path = $this->activity_bo->get_path($booking['activity_id']);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
 
+			$booking['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show',
+					'id' => $booking['application_id']));
 			$booking['bookings_link'] = self::link(array('menuaction' => 'booking.uibooking.index'));
 			$booking['edit_link'] = self::link(array('menuaction' => 'booking.uibooking.edit',
 					'id' => $booking['id']));
@@ -1143,6 +1152,8 @@
 			{
 				$res_names[] = $res['name'];
 			}
+			$booking['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show',
+					'id' => $booking['application_id']));
 			$booking['resource_info'] = join(', ', $res_names);
 			$booking['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
 					'id' => $booking['resources'][0]['building_id']));

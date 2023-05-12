@@ -150,12 +150,12 @@
 
 
 			$custom_fields = false;
+			$location_id		 = $GLOBALS['phpgw']->locations->get_id($this->location_info['acl_app'], $this->location_info['acl_location']);
 			if ($GLOBALS['phpgw']->locations->get_attrib_table($this->location_info['acl_app'], $this->location_info['acl_location']))
 			{
 				$custom_fields		 = true;
 				$choice_table		 = 'phpgw_cust_choice';
 				$attribute_table	 = 'phpgw_cust_attribute';
-				$location_id		 = $GLOBALS['phpgw']->locations->get_id($this->location_info['acl_app'], $this->location_info['acl_location']);
 				$attribute_filter	 = " location_id = {$location_id}";
 
 				$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences'][$this->location_info['acl_app']]["generic_columns_{$this->type}_{$this->type_id}"]) ? $GLOBALS['phpgw_info']['user']['preferences'][$this->location_info['acl_app']]["generic_columns_{$this->type}_{$this->type_id}"] : '';
@@ -251,6 +251,7 @@
 				$ordermethod = " ORDER BY {$table}.{$this->location_info['id']['name']} ASC";
 			}
 
+			$querymethod = '';
 			if ($query)
 			{
 				if ($this->location_info['id']['type'] == 'auto' || $this->location_info['id']['type'] == 'int')
@@ -399,12 +400,19 @@
 			{
 				$this->get_location_info($data['type']);
 			}
-			$values = $this->read_single($data);
 
-			$ret = isset($values[$mapping['name']]) ? $values[$mapping['name']] : $values['title'];
-			$ret = $ret ? $ret : $values['descr'];
+			$test_ids = explode(',',trim($data['id'], ','));
 
-			return $ret;
+			$names = array();
+			foreach($test_ids as $id)
+			{
+				$values = $this->read_single(array('id' => $id));
+				$ret = isset($values[$mapping['name']]) ? $values[$mapping['name']] : $values['title'];
+				$ret = $ret ? $ret : $values['descr'];
+				$names[] = $ret;
+			}
+
+			return implode(', ', $names);
 		}
 
 		function read_single( $data, $values = array() )
@@ -459,7 +467,7 @@
 		{
 			$values = array();
 
-			$this->get_location_info($data['type'], $data['type_id']);
+			$this->get_location_info($data['type'], isset($data['type_id']) ? $data['type_id'] : 0);
 
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
@@ -655,7 +663,7 @@
 			{
 				foreach ($this->location_info['default'] as $field => $default)
 				{
-					if (isset($default['add']))
+					if (isset($default['add']) && !in_array($field, $cols))
 					{
 						$cols[] = $field;
 						eval('$vals[] = ' . $default['add'] . ';');
@@ -862,7 +870,7 @@
 		{
 			$values = array();
 
-			$this->get_location_info($data['type'], $data['type_id']);
+			$this->get_location_info($data['type'], isset($data['type_id']) ? $data['type_id'] : 0);
 
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
@@ -1018,7 +1026,7 @@
 		{
 			$children = array();
 
-			$this->get_location_info($data['type'], $data['type_id']);
+			$this->get_location_info($data['type'], isset($data['type_id']) ? $data['type_id'] : 0);
 
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
@@ -1067,7 +1075,7 @@
 			$parent_id	 = isset($data['node_id']) && $data['node_id'] ? (int)$data['node_id'] : 0;
 			$tree		 = array();
 
-			$this->get_location_info($data['type'], $data['type_id']);
+			$this->get_location_info($data['type'], isset($data['type_id']) ? $data['type_id'] : 0);
 
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
@@ -1140,7 +1148,7 @@
 		public function get_path( $data )
 		{
 
-			$this->get_location_info($data['type'], $data['type_id']);
+			$this->get_location_info($data['type'], isset($data['type_id']) ? $data['type_id'] : 0);
 
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{

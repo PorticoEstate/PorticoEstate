@@ -72,7 +72,7 @@ activate nowrap in yui-tables	preferences	no	Aktiver no-wrap i YUI-tabeller
 select the language of texts and messages within phpgroupware.<br>some languages may not contain all messages, in that case you will see an english message.	preferences	no	Velg språk for tekster og meldinger i BkBygg.<br/>Dersom en oversettelse mangler vil engelsk tekst/melding vises
 users choice	preferences	no	Brukers valg
 norwegian	preferences	no	Norsk Bokmål
-norwegian no	preferences	nn	Nynorsk
+norwegian no	preferences	no	Nynorsk
 english	preferences	no	Engelsk
 no default	preferences	no	Ingen standard
 no sidecontent	preferences	no	Ingen sideinnhold
@@ -190,3 +190,7 @@ Do you want av CSV download button for main tables?	preferences	no	Ønsker du en
 CSV download button	preferences	no	CSV nedlastingsknapp
 help off	preferences	no	Slå av hjelp
 %1 - Preferences	preferences	no	%1 - Innstillinger
+Your archive user id	preferences	no	Din bruker i arkivsystem
+Insert your archive user id	preferences	no	Angi din bruker i eksternt arkivsystem
+Your job title	preferences	no	Din jobbtittel
+Insert job title	preferences	no	Angi din jobbtittel

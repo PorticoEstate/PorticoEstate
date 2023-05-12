@@ -238,7 +238,7 @@ start upload	common	no	Start opplasting
 cancel upload	common	no	Stopp opplasting
 invalid file extension	common	no	Ugyldig filtype
 number files	common	no	Antall filer
-(filtered from _max_ total entries)	common	no	(filtrert fra _max_ poster)
+(filtered from _MAX_ total entries)	common	no	(filtrert fra _MAX_ poster)
 bim	common	no	Bim
 categories	common	no	Kategorier
 char	common	no	Char
@@ -352,3 +352,7 @@ please, check your password	common	no	Kontroller passord
 cellphone	common	no	Mobiltelefon
 missing membership: "%1" is not in the list	common	no	Feil med gruppetilhørighet: finner ikke "%1" i listen
 percent	common	no	Prosent
+choose "Log out" if you want to end the session	common	no	Velg "Logg ut" om du vil avslutte sesjonen.
+messages_saved_form	common	no	Data er lagret
+messages_form_error	common	no	Data er ikke lagret
+fatal error	common	no	Fatal feil

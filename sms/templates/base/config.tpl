@@ -1,6 +1,6 @@
 <!-- BEGIN header -->
 <form method="POST" action="{action_url}">
-	<table class="pure-table pure-table-bordered pure-table-striped">
+	<table class="pure-table pure-table-bordered pure-table-striped pure-form">
 		<tr class="th">
 			<td colspan="2"><font color="{th_text}">&nbsp;<b>{title}</b></font></td>
 		</tr>
@@ -32,8 +32,8 @@
 
 			<tr>
 				<td colspan="2" align="center">
-					<input type="submit" name="submit" value="{lang_submit}">
-					<input type="submit" name="cancel" value="{lang_cancel}">
+					<input type="submit" name="submit" value="{lang_submit}" class="pure-button"/>
+					<input type="submit" name="cancel" value="{lang_cancel}" class="pure-button"/>
 				</td>
 			</tr>
 		</tfoot>

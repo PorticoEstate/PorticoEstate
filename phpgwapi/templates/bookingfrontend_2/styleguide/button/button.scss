@@ -1,0 +1,93 @@
+.pe-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 1.25rem;
+  border: 2px solid $purple;
+  font-weight: 700;
+  border-radius: $rounded-large;
+
+  &:first-child:active:focus-visible {
+    box-shadow: $box-focus-shadow;
+  }
+
+  &:hover,
+  &:active {
+    border-color: $purple;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    border-color: $purple;
+    box-shadow: $box-focus-shadow;
+  }
+
+  &-primary {
+    background: $purple;
+    color: $white;
+
+    &:hover,
+    &:active {
+      background: $white;
+      color: $purple;
+    }
+
+    &:focus-visible {
+      background: $purple;
+      color: $white;
+    }
+
+  }
+
+  &-secondary {
+    color: $purple;
+    background: $white;
+
+    &:hover,
+    &:active {
+      background: $purple;
+      color: $white;
+    }
+    
+    &:focus-visible {
+      border-color: $purple;
+      background: $white;
+      color: $purple;
+    }
+  }
+
+  &--small {
+    font-size: 0.875rem;
+    padding: 0.344rem 1.25rem;
+  }
+
+  &--large {
+    padding: 0.657rem 1.25rem;
+    font-size: 1.125rem;
+  }
+
+  &--circle {
+    padding: 1rem;
+  }
+
+  &:disabled,
+  &[disabled] {
+    background: $grey-light;
+    color: $grey;
+    border-color: $grey;
+    opacity: 1;
+    pointer-events: none;
+  }
+
+  &--transparent {
+    background-color: transparent;
+    border: 0;
+    padding: 0.5rem;
+    min-width: 2.5rem;
+  }
+
+}
+

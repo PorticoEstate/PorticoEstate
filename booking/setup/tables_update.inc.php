@@ -5958,4 +5958,229 @@
 		}
 	}
 
+	/**
+	 * Update booking version from 0.2.83 to 0.2.84
+	 *
+	 */
+	$test[] = '0.2.83';
+	function booking_upgrade0_2_83()
+	{
+		//bb_resource_e_lock
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_wtemplate_alloc', 'articles',
+				array(
+					'type' => 'jsonb',
+					'nullable' => True
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.84';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.84 to 0.2.85
+	 *
+	 */
+	$test[] = '0.2.84';
+	function booking_upgrade0_2_84()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_e_lock_system', array(
+			'fd' => array(
+				'id'					 => array('type' => 'auto', 'nullable' => false),
+				'name'					 => array('type' => 'varchar', 'precision' => '200', 'nullable' => false),
+				'instruction'	 => array('type' => 'text', 'nullable' => true),
+				'sms_alert'				 => array('type' => 'int', 'precision' => 2, 'nullable' => true),
+				'user_id'				 => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'entry_date'			 => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'modified_date'			 => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array(),
+		));
+
+		$text = <<<HTML
+			<p>For å få tilgang til adgangskontrollsystemet SALTO - må den ansvarlige for bookingen laste ned en app til telefonen på forhånd.</p>
+			<p>Nøkkel vil bli pushet ut til appen ca 10 minutt før avtaletidspunktet.</p>
+			<p>Android:</p>
+			<a href="https://play.google.com/store/apps/details?id=com.saltosystems.justin&hl=no&gl=US" target="_blank" rel="noreferrer noopener">https://play.google.com/store/apps/details?id=com.saltosystems.justin&hl=no&gl=US</a>
+			<p>Apple:</p>
+			<a href="https://apps.apple.com/no/app/justin-mobile/id960998088" target="_blank" rel="noreferrer noopener">https://apps.apple.com/no/app/justin-mobile/id960998088</a>
+HTML;
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_e_lock_system (id, name, sms_alert) VALUES(1, 'STANLEY', 1)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_e_lock_system (id, name, sms_alert) VALUES(2, 'ARX', 1)");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_e_lock_system (id, name, instruction) VALUES(3, 'SALTO', '{$text}')");
+
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn(
+			'bb_office', 'entry_date',
+			array(
+				'type'		 => 'int',
+				'precision'	 => 8,
+				'nullable'	 => true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn(
+			'bb_office', 'modified_date',
+			array(
+				'type'		 => 'int',
+				'precision'	 => 8,
+				'nullable'	 => true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn(
+			'bb_office_user', 'entry_date',
+			array(
+				'type'		 => 'int',
+				'precision'	 => 8,
+				'nullable'	 => true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn(
+			'bb_office_user', 'modified_date',
+			array(
+				'type'		 => 'int',
+				'precision'	 => 8,
+				'nullable'	 => true
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.85';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.85 to 0.2.86
+	 *
+	 */
+	$test[] = '0.2.85';
+	function booking_upgrade0_2_85()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_article_mapping', 'deactivate_in_frontend',
+				array(
+					'type' => 'int',
+					'precision' => 2,
+					'nullable' => True
+				)
+			);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_article_price', 'active',
+				array(
+					'type' => 'int',
+					'precision' => 2,
+					'default' => 1,
+					'nullable' => True
+				)
+			);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_article_price', 'default_',
+				array(
+					'type' => 'int',
+					'precision' => 2,
+					'nullable' => True
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.86';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.86 to 0.2.87
+	 *
+	 */
+	$test[] = '0.2.86';
+
+	function booking_upgrade0_2_86()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM public.bb_resource_e_lock WHERE e_lock_name IS NULL");
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_resource_e_lock', 'e_lock_resource_id',
+			 array(
+				'type'		 => 'varchar',
+				'precision'	 => 200,
+				'nullable'	 => False
+		));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_resource_e_lock', 'e_lock_name',
+			 array(
+				'type'		 => 'varchar',
+				'precision'	 => 200,
+				'nullable'	 => False
+		));
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.87';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	/**
+	 * Update booking version from 0.2.87 to 0.2.88
+	 *
+	 */
+	$test[] = '0.2.87';
+	function booking_upgrade0_2_87()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'hidden_in_frontend',
+				array(
+					'type' => 'int',
+					'precision' => 2,
+					'default' => 0,
+					'nullable' => true
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.88';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.88 to 0.2.89
+	 *
+	 */
+	$test[] = '0.2.88';
+	function booking_upgrade0_2_88()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'activate_prepayment',
+				array(
+					'type' => 'int',
+					'precision' => 2,
+					'default' => 0,
+					'nullable' => true
+				)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.89';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

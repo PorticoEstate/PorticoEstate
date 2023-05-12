@@ -1,3 +1,4 @@
+read messages	messenger	nn	Les meldingar
 compose	messenger	nn	Ny melding
 compose global message	admin	nn	Ny global melding
 compose message	messenger	nn	Ny melding
@@ -12,6 +13,7 @@ global message	messenger	nn	Global Melding
 i can't find the username %1 on the system	messenger	nn	Finn ikkje brukar %1 i systemet
 inbox	messenger	nn	Innboks
 message from	messenger	nn	Melding fra
+messenger	common	nn	Postkasse
 new	messenger	nn	Ny
 read a list of messages.	messenger	nn	Les liste av meldingar.
 read a single message.	messenger	nn	Les ei enkelt melding.
@@ -31,7 +33,6 @@ you have %1 new messages	messenger	nn	Du har %1 nye meldingar
 you have no messages	messenger	nn	Du har ingen meldingar
 you must enter a subject	messenger	nn	Du må skrive ein tittel
 you must enter the username this message is for	messenger	nn	Du må velje ein addressat for meldingen
-messenger	messenger	nn	Meldingar
 compose	messenger	nn	Skriv ny
 compose groups	messenger	nn	Skriv ny til grupper
 compose global	messenger	nn	Skriv ny til global

@@ -24,7 +24,7 @@
 			$this->so       = createobject('admin.solog');
 		}
 
-		function list_log($account_id,$start,$order,$sort)
+		function list_log($account_id,$start,$order,$sort, $date= null)
 		{
 			if ($GLOBALS['phpgw']->acl->check('error_log_access',1,'admin'))
 			{
@@ -32,7 +32,7 @@
 			}
 			
 			$_records = array();
-			$records = $this->so->list_log($account_id, $start, $order, $sort);
+			$records = $this->so->list_log($account_id, $start, $order, $sort, $date);
 			if ( !isset($GLOBALS['phpgw']->log)
 				|| !is_object($GLOBALS['phpgw']->log) )
 			{
@@ -72,9 +72,9 @@
 			return $this->so->purge_log($account_id);
 		}
 
-		function total($account_id)
+		function total($account_id, $date = null)
 		{
-			return $this->so->total($account_id);
+			return $this->so->total($account_id, $date);
 		}
 
 	}

@@ -49,7 +49,26 @@
 		var $sub;
 		var $currentapp;
 		var $check_lst_time_span	 = array();
-		var $controller_helper;
+		var $acl, 
+		$controller_helper,
+		$account,
+		$bo,
+		$bocommon,
+		$soadmin_entity,
+		$district_id,
+		$status,
+		$location_code,
+		$p_num,
+		$category_dir,
+		$start_date,
+		$end_date,
+		$allrows,
+		$type,
+		$type_app,
+		$acl_location
+			
+		
+		;
 		var $public_functions	 = array(
 			'summary'					 => true,
 			'columns'					 => true,
@@ -80,7 +99,8 @@
 			'get_checklists'			 => true,
 			'get_cases_for_checklist'	 => true,
 			'handle_multi_upload_file'	 => true,
-			'build_multi_upload_file'	 => true
+			'build_multi_upload_file'	 => true,
+			'get_items_per_qr'			 => true
 		);
 
 		function __construct()
@@ -416,6 +436,7 @@
 				$loc1 = 'dummy';
 			}
 
+			$options = array();
 			$options['base_dir']	 = "{$this->category_dir}/{$loc1}/{$id}";
 			$options['upload_dir']	 = $GLOBALS['phpgw_info']['server']['files_dir'] . '/property/' . $options['base_dir'] . '/';
 			$options['script_url']	 = html_entity_decode($multi_upload_action);
@@ -644,7 +665,7 @@
 			foreach ($documents as $item)
 			{
 				$document_name	 = '<a href="' . self::link(array('menuaction' => 'property.uidocument.view_file',
-						'id'		 => $item['document_id'])) . '" target="_blank">' . $item['document_name'] . '</a>';
+						'id'		 => $item['id'])) . '" target="_blank">' . $item['document_name'] . '</a>';
 				$values[]		 = array('document_name' => $document_name, 'title' => $item['title']);
 			}
 
@@ -2390,7 +2411,7 @@
 
 				$related_def = array
 					(
-					array('key' => 'url', 'label' => lang('where'), 'sortable' => false, 'resizeable' => true)
+					array('key' => 'url', 'label' => lang('related'), 'sortable' => false, 'resizeable' => true)
 				);
 
 				$datatable_def[] = array
@@ -2701,7 +2722,7 @@ JS;
 				'validator'						 => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file')),
 				'content_images'				 => $content_images,
-				'get_files_java_url'			=> "{menuaction:'property.uientity.get_files',id:{$id},entity_id:{$this->entity_id},cat_id:{$this->cat_id},type:'{$this->type}',length:-1}",
+				'get_files_java_url'			=> "{menuaction:'property.uientity.get_files',id:'{$id}',entity_id:{$this->entity_id},cat_id:{$this->cat_id},type:'{$this->type}',length:-1}",
 			);
 
 			//print_r($data['location_data2']);die;
@@ -2710,7 +2731,7 @@ JS;
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
 
-			self::add_javascript('property', 'portico', 'entity.edit.js');
+			self::add_javascript('property', 'base', 'entity.edit.js');
 			phpgwapi_jquery::load_widget('glider');
 
 			$attribute_template = 'attributes_form';
@@ -3445,7 +3466,7 @@ JS;
 			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
 			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
 
-			self::add_javascript('property', 'portico', 'entity.edit_inventory.js');
+			self::add_javascript('property', 'base', 'entity.edit_inventory.js');
 
 			self::render_template_xsl(array('entity', 'attributes_form', 'files'), array(
 				'edit_inventory' => $data));
@@ -3589,6 +3610,19 @@ JS;
 		}
 
 
+		public function get_items_per_qr()
+		{
+			if (!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
+
+			$qr_code	 = phpgw::get_var('qr_code', 'string', 'GET');
+
+			return $this->bo->get_items_per_qr($qr_code);
+			
+		}
+
 		public function summary()
 		{
 			if (!$this->acl_read)
@@ -3615,14 +3649,20 @@ JS;
 
 			$tabs			 = array();
 			$tabs['main']	 = array(
-				'label'	 => $entity['name'],
+				'label'	 => lang('summary'),
 				'link'	 => '#main'
+			);
+			$tabs['scanner']	 = array(
+				'label'	 => 'scanner',
+				'link'	 => '#scanner'
 			);
 
 
 			$data = array(
 				'form_action'				 => self::link(array('menuaction' => "{$this->type_app[$this->type]}.uientity.summary", 'entity_id' => $this->entity_id)),
 				'cancel_url'				 => $GLOBALS['phpgw']->link('/home.php'),
+				'value_type'				 => $this->type,
+				'value_entity_id'			 => $this->entity_id,
 				'vendor_data'				 => $vendor_data,
 				'contact_data'				 => $contact_data,
 				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, 0),
@@ -3634,7 +3674,9 @@ JS;
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript($this->type_app[$this->type], 'portico', 'entity.summary.js');
+			self::add_javascript('phpgwapi', 'html5-qrcode', 'html5-qrcode.min.js');
+
+			self::add_javascript($this->type_app[$this->type], 'base', 'entity.summary.js');
 			self::render_template_xsl(array('entity'), array('summary' => $data));
 		}
 
@@ -3695,7 +3737,6 @@ JS;
 
 //				_debug_array($items);	die();
 
-				$count_uicols_name = count($name);
 
 				$header = array();
 

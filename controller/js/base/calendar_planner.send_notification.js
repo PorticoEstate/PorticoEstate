@@ -15,7 +15,7 @@ submitSendNotificationForm = function (e, form)
 				$(ok).each(function (i, obj)
 				{
 					$("#send_email_" + obj).attr('disabled', 'true');
-					$("#send_email_" + obj).closest('tr').addClass('badge-success');
+					$("#send_email_" + obj).closest('tr').addClass('bg-success');
 					$("#send_email_" + obj).hide();
 
 					//	console.log(obj);
@@ -25,7 +25,7 @@ submitSendNotificationForm = function (e, form)
 				var error = data.error || [];
 				$(error).each(function (i, obj)
 				{
-					$("#send_email_" + obj).closest('tr').addClass('badge-danger');
+					$("#send_email_" + obj).closest('tr').addClass('bg-danger');
 				});
 
 			}

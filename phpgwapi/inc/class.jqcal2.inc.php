@@ -160,6 +160,10 @@
 					startDate: {$start_value},
 					minDate:{$min_date},
 					$disabled_dates
+				}).keyup(function(e) {
+					if(e.keyCode == 8 || e.keyCode == 46) {
+						$( "#{$id}" ).val('');
+					}
 				});
 			});
 JS;

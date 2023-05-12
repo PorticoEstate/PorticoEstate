@@ -145,6 +145,10 @@
 			{
 				return floatval($value);
 			}
+			elseif ($type == 'string')
+			{
+				return $this->db->stripslashes($value);
+			}
 			return $value;
 		}
 

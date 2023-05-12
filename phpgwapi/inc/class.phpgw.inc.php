@@ -152,9 +152,10 @@
 				$base_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
 			}
 
-			require_once PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/htmlpurifier/HTMLPurifier.auto.php';
+			require_once PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/htmlpurifier/vendor/ezyang/htmlpurifier/library/HTMLPurifier.auto.php';
 
 		    $config = HTMLPurifier_Config::createDefault();
+			$config->set('Core', 'DefinitionCache', null);
 			$config->set('HTML.Doctype', 'HTML 4.01 Transitional');
 			$config->set('HTML.Allowed', 'u,p,b,i,span[style],p,strong,em,li,ul,ol,div[align],br,img');
 			$config->set('HTML.AllowedAttributes', 'class, src, height, width, alt, id, target, href, colspan');
@@ -167,7 +168,7 @@
 			}
 
 			$config->set('Attr.AllowedFrameTargets', array('_blank', '_self', '_parent', '_top'));
-			
+
 //			$config->set('Core', 'CollectErrors', true);
 			if (!empty($GLOBALS['phpgw_info']['flags']['allow_html_image']))
 			{
@@ -189,12 +190,12 @@
 		$purifier = new HTMLPurifier($config);
 
 			$clean_html = $purifier->purify($html);
-			
+
 //			if($html && ! $clean_html)
 //			{
 //				return $purifier->context->get('ErrorCollector')->getHTMLFormatted($config);
 //			}
-			
+
 
 			return $clean_html;
 		}
@@ -273,15 +274,22 @@
 		 */
 		public static function redirect($url = '')
 		{
-			$iis = strpos($_SERVER['SERVER_SOFTWARE'], 'IIS', 0) !== false;
-
 			if ( !$url )
 			{
 				$url = self::get_var('PHP_SELF', 'string', 'SERVER');
 			}
 
-			if ( $iis || headers_sent() )
+			if ( headers_sent($filename, $linenum) )
 			{
+
+				$GLOBALS['phpgw']->log->error(array(
+				'text'	=> 'Headers already sent in %1 on line %2.',
+				'p1'	=> $filename,
+				'p2'	=> $linenum,
+				'line'	=> $linenum,
+				'file'	=> $filename
+			));
+
 				echo "<html>\n<head>\n<title>Redirecting to $url</title>";
 				echo "\n<meta http-equiv=\"refresh\ content=\"0; URL=$url\">";
 				echo "\n</head>\n<body>";
@@ -401,6 +409,11 @@
 				else if ( $value !== 0 && ((is_null($value) || !$value) && !is_null($default) ))
 				{
 						return $default;
+				}
+
+				if($value_type === 'json')
+				{
+					return json_encode(self::clean_value($value, 'string', $default));
 				}
 
 				return self::clean_value($value, $value_type, $default);

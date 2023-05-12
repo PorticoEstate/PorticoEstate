@@ -35,6 +35,7 @@
 	class property_multiuploader extends UploadHandler
 	{
 
+		var $bofiles;
 		function __construct( $options = null, $initialize = true, $error_messages = null )
 		{
 			$fakebase = !empty($options['fakebase']) ? $options['fakebase'] : '/property';
@@ -280,7 +281,7 @@
 				$file->error = $uploadErrors[$error];
 				return false;
 			}
-			else if (!isset($uploaded_file) || !@is_uploaded_file($uploaded_file))
+			else if (!isset($uploaded_file) || !is_uploaded_file($uploaded_file))
 			{
 				$file->error = lang("Upload failed is_uploaded_file test.");
 				return false;

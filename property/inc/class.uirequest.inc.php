@@ -46,7 +46,34 @@
 		var $part_of_town_id;
 		var $sub;
 		var $currentapp;
-		var $nonavbar;
+		var $nonavbar,
+		$account,
+		$bo,
+		$boproject,
+		$bocommon,
+		$cats,
+		$bolocation,
+		$config,
+		$acl,
+		$acl_location,
+		$acl_read,
+		$acl_add,
+		$acl_edit,
+		$acl_delete,
+		$acl_manage,
+		$property_cat_id,
+		$status_id,
+		$degree_id,
+		$district_id,
+		$start_date,
+		$end_date,
+		$building_part,
+		$allrows,
+		$p_num,
+		$condition_survey_id,
+		$responsible_unit,
+		$recommended_year;
+
 		var $public_functions = array
 			(
 			'index'						 => true,
@@ -64,6 +91,7 @@
 			'build_multi_upload_file'	 => true,
 			'get_files'					 => true,
 			'view_image'				 => true,
+			'set_value'					 => true,
 		);
 
 		public function __construct()
@@ -272,6 +300,7 @@
 
 			phpgw::import_class('property.multiuploader');
 
+			$options = array();
 			$options['base_dir']	 = 'request/' . $id;
 			$options['upload_dir']	 = $GLOBALS['phpgw_info']['server']['files_dir'] . '/property/' . $options['base_dir'] . '/';
 			$options['script_url']	 = html_entity_decode(self::link(array('menuaction' => 'property.uirequest.handle_multi_upload_file',
@@ -846,14 +875,14 @@
 				'form'			 => array(
 					'toolbar' => array(
 						'item' => array(
-							array
-								(
-								'type'		 => 'link',
-								'value'		 => lang('Priority key'),
-								'href'		 => '#',
-								'class'		 => '',
-								'onclick'	 => "JqueryPortico.openPopup({menuaction:'property.uirequest.priority_key'})"
-							),
+//							array
+//								(
+//								'type'		 => 'link',
+//								'value'		 => lang('Priority key'),
+//								'href'		 => '#',
+//								'class'		 => '',
+//								'onclick'	 => "JqueryPortico.openPopup({menuaction:'property.uirequest.priority_key'})"
+//							),
 							array
 								(
 								'type'	 => 'date-picker',
@@ -1079,6 +1108,15 @@
 					);
 				}
 				unset($parameters);
+
+				$data['datatable']['actions'][] = array(
+					'my_name'		 => 'priority_key',
+					'className'		 => 'save',
+					'statustext'	 => lang('Priority key'),
+					'text'			 => lang('Priority key'),
+					'type'			 => 'custom',
+					'custom_code'	 => "JqueryPortico.openPopup({menuaction:'property.uirequest.priority_key'});"
+				);
 			}
 			else
 			{
@@ -1089,7 +1127,7 @@
 					'text'			 => $lang_update_relation,
 					'type'			 => 'custom',
 					'custom_code'	 => "
-											
+
 											var myChecks = $('.mychecks:checked');
 											if (myChecks.length == 0) {
 												alert('Any box selected');
@@ -1097,14 +1135,14 @@
 											}
 
 											for(i=0;i<myChecks.length;i++)
-				{
+											{
 												   $('<input>').attr({
 													   type: 'hidden',
 													   id: 'add_request[request_id][]',
 													   name: 'add_request[request_id][]',
 													   value: myChecks[i].value
-												   }).appendTo('#custom_values_form');			 
-			}
+												   }).appendTo('#custom_values_form');
+											}
 
 											var path_update = new Array();
 											path_update['menuaction'] = '{$update_menuaction}';
@@ -1121,7 +1159,7 @@
 				if (!empty($query))
 				{
 					$code = <<<JS
-						function initCompleteDatatable(oSettings, json, oTable) 
+						function initCompleteDatatable(oSettings, json, oTable)
 					{
 							setTimeout(function() {
 								var api = oTable.api();
@@ -1134,7 +1172,7 @@ JS;
 				}
 			}
 
-			self::add_javascript('property', 'portico', 'request.index.js');
+			self::add_javascript('property', 'base', 'request.index.js');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -1249,8 +1287,8 @@ JS;
 					$headers			 .= "Bcc: " . $coordinator_name . "<" . $coordinator_email . ">\r\n";
 					$headers			 .= "Content-type: text/plain; charset=iso-8859-1\r\n";
 
-					$subject = lang(notify) . ": " . $values['id'];
-					$message = lang(request) . " " . $values['id'] . " " . lang('is registered');
+					$subject = lang('notify') . ": " . $values['id'];
+					$message = lang('request') . " " . $values['id'] . " " . lang('is registered');
 
 					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 					{
@@ -1765,6 +1803,8 @@ JS;
 				'value_request_id'					 => $id,
 				'value_title'						 => $values['title'],
 				'value_descr'						 => $values['descr'],
+				'value_proposed_measures'			 => $values['proposed_measures'],
+				'value_remark'						 => $values['remark'],
 				'lang_score'						 => lang('Score'),
 				'value_score'						 => $values['score'],
 				'lang_done_statustext'				 => lang('Back to the list'),
@@ -1814,7 +1854,7 @@ JS;
 				'validator'							 => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file')),
 				'multiple_uploader'					 => !!$id,
-				
+
 				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uirequest.handle_multi_upload_file','id'	 => $id))
 
 			);
@@ -1823,7 +1863,7 @@ JS;
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			self::add_javascript('property', 'portico', 'request.edit.js');
+			self::add_javascript('property', 'base', 'request.edit.js');
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 
@@ -1988,4 +2028,52 @@ JS;
 			);
 			return phpgwapi_jquery::tabview_generate($tabs, $active_tab, 'request_tabview');
 		}
+
+		/**
+		 * Edit values for entity directly from table
+		 *
+		 * @param int  $id  id of entity
+		 * @param string  $value new title of entity
+		 *
+		 * @return string text to appear in ui as receipt on action
+		 */
+		public function set_value()
+		{
+			$id = phpgw::get_var('id', 'int', 'POST');
+
+			$field_name = phpgw::get_var('field_name');
+
+			if (!$this->acl_edit)
+			{
+				return lang('no access');
+			}
+
+			if ($id)
+			{
+				$values = $this->bo->read_single( $id);
+
+				try
+				{
+					if ($field_name == 'representative')
+					{
+						$values['representative'] = phpgw::get_var('value', 'float');
+						$this->bo->edit_representative($values);
+					}
+				}
+				catch (Exception $e)
+				{
+					if ($e)
+					{
+						echo $e->getMessage();
+					}
+				}
+				echo true;
+			}
+			else
+			{
+				echo "ERROR";
+			}
+		}
+
+
 	}

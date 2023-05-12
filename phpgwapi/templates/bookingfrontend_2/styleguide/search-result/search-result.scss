@@ -1,0 +1,31 @@
+.search-result {
+  &__warning {
+    width: 100%;
+    background-color: $beige;
+    border-radius: $rounded-large;
+    padding: 1rem 2rem;
+
+    @media (min-width: $media-medium) {
+      padding: 1.4rem 3rem;
+    }
+  }
+
+  &__data {
+    ul {
+      line-height: 1.5;
+    }
+  }
+}
+
+.opening-hours {
+  display: flex;
+
+  &-day {
+    min-width: 6rem;
+    padding-right: 1rem;
+  }
+  
+  &-time {
+    color: $purple;
+  }
+}

@@ -225,7 +225,7 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			self::add_javascript('property', 'portico', 'wo_hour.deviation.js');
+			self::add_javascript('property', 'base', 'wo_hour.deviation.js');
 			self::render_template_xsl(array('wo_hour', 'datatable_inline'), array('list_deviation' => $data));
 		}
 
@@ -1013,7 +1013,7 @@
 			$data['datatable']['table_sum']		 = $common_data['table_sum'][0];
 			$data['datatable']['workorder_data'] = $common_data['workorder_data'];
 
-			self::add_javascript('property', 'portico', 'wo_hour.index.js');
+			self::add_javascript('property', 'base', 'wo_hour.index.js');
 			self::render_template_xsl(array('wo_hour.index', 'datatable_inline'), $data);
 
 			//Title of Page
@@ -1152,11 +1152,11 @@
 
 			$address_element = array();
 
-			if ($common_data['workorder']['delivery_address'])
+			if (!empty($common_data['workorder']['delivery_address']) && !ctype_space((string)$common_data['workorder']['delivery_address']))
 			{
 				$address_element[] = array('value' => nl2br($common_data['workorder']['delivery_address']));
 			}
-			else if (isset($this->config->config_data['delivery_address']) && $this->config->config_data['delivery_address'])
+			else if (!empty($this->config->config_data['delivery_address']) && !ctype_space((string)$this->config->config_data['delivery_address']))
 			{
 				$address_element[] = array('value' => nl2br($this->config->config_data['delivery_address']));
 			}
@@ -2022,7 +2022,7 @@ HTML;
 			$function_msg									 = $this->boworkorder->order_sent_adress ? lang('ReSend order') : lang('Send order');
 			$GLOBALS['phpgw_info']['flags']['app_header']	 = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			self::add_javascript('property', 'portico', 'wo_hour.view.js');
+			self::add_javascript('property', 'base', 'wo_hour.view.js');
 			self::render_template_xsl(array('wo_hour', 'datatable_inline'), array(
 				'view' => $data));
 		}
@@ -2228,11 +2228,11 @@ HTML;
 
 			$delivery_address = lang('delivery address') . ':';
 
-			if ($common_data['workorder']['delivery_address'])
+			if (!empty($common_data['workorder']['delivery_address']) && !ctype_space((string)$common_data['workorder']['delivery_address']))
 			{
 				$delivery_address .= "\n{$common_data['workorder']['delivery_address']}";
 			}
-			else if (isset($this->config->config_data['delivery_address']) && $this->config->config_data['delivery_address'])
+			else if (!empty($this->config->config_data['delivery_address']) && !ctype_space((string)$this->config->config_data['delivery_address']))
 			{
 				$delivery_address .= "\n{$this->config->config_data['delivery_address']}";
 			}
@@ -2326,8 +2326,8 @@ HTML;
 			$pdf->ezSetDy(-20);
 
 			$pdf->ezText(lang('descr') . ':', 20);
-			$pdf->ezText($common_data['workorder']['descr'], 14);
-
+			
+			$pdf->ezText(str_replace(array('☐'), array('* '), $common_data['workorder']['descr']), 14);
 			if ($content)
 			{
 				$pdf->ezSetDy(-20);
@@ -2749,8 +2749,8 @@ HTML;
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			self::add_javascript('property', 'portico', 'wo_hour.index.js');
-			self::add_javascript('property', 'portico', 'wo_hour.prizebook.js');
+			self::add_javascript('property', 'base', 'wo_hour.index.js');
+			self::add_javascript('property', 'base', 'wo_hour.prizebook.js');
 			self::render_template_xsl(array('wo_hour.index', 'datatable_inline'), $data);
 		}
 
@@ -3099,8 +3099,8 @@ HTML;
 			// Title of Page
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			self::add_javascript('property', 'portico', 'wo_hour.index.js');
-			self::add_javascript('property', 'portico', 'wo_hour.template.js');
+			self::add_javascript('property', 'base', 'wo_hour.index.js');
+			self::add_javascript('property', 'base', 'wo_hour.template.js');
 			self::render_template_xsl(array('wo_hour.index', 'datatable_inline'), $data);
 
 			//$this->save_sessiondata();

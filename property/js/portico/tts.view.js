@@ -1,6 +1,16 @@
+/**
+ *
+ * Denne filen er midlertidig - til "base" katalogen slipper igjennom reverse-proxy i portalen i Bergen
+ */
 var d;
 var vendor_id = 0;
 var amount = 0;
+var sUrl_workorder = phpGWLink('index.php', {'menuaction': 'property.uiworkorder.edit'});
+
+formatLinkproject = function (key, oData)
+{
+	return "<a href=" + sUrl_workorder + "&id=" + oData[key] + ">" + oData[key] + "</a>";
+};
 
 
 this.local_DrawCallback4 = function (container)
@@ -267,7 +277,7 @@ this.fileuploader = function ()
 {
 	//JqueryPortico.openPopup(multi_upload_parans,{closeAction:'close'})
 	var sUrl = phpGWLink('index.php', multi_upload_parans);
-	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9), fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 		close: true,
 		closejs: function ()
 		{

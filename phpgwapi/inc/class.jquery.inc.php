@@ -61,10 +61,10 @@
 			}
 			else
 			{
-				$_jquery_core = 'jquery-3.6.0';
+				$_jquery_core = 'jquery-3.6.3';
 			}
 
-			$_jquery_ui	 = 'jquery-ui-1.13.1';
+			$_jquery_ui	 = 'jquery-ui-1.13.2';
 			$_type		 = '.min'; // save some download
 
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
@@ -76,28 +76,26 @@
 				$theme = 'base';
 			}
 			$load = array();
+
+			$GLOBALS['phpgw']->js->validate_file('jquery', "js/{$_jquery_core}{$_type}", 'phpgwapi', false, array('combine' => true ));
+
 			switch ($widget)
 			{
-				case 'core':
-					$load = array(
-						"js/{$_jquery_core}{$_type}",
-					);
-					break;
-
 				case 'datepicker':
 					$load = array(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						"ui/{$_jquery_ui}{$_type}",
 						"ui/i18n/datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}",
 					);
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui.min.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/theme.css");
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");
 					break;
 
 				case 'datetimepicker':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						'datetimepicker' => array(
 							"js/jquery.datetimepicker.full{$_type}",
 						//					"i18n/DateTimePicker-i18n"
@@ -109,7 +107,7 @@
 				case 'validator':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						'form-validator' => array("jquery.form-validator{$_type}")//, "lang/{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}")
 					);
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/form-validator/theme-default.css");
@@ -119,22 +117,24 @@
 				case 'autocomplete':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						"ui/{$_jquery_ui}{$_type}",
 					);
 
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui.min.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/theme.css");
 
 					break;
 
 				case 'tabview':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						//	"tabs/jquery.responsiveTabs",
 						"tabs/jquery.responsiveTabs{$_type}",
-						'common'
+		//				'common'
 					);
+					$GLOBALS['phpgw']->js->validate_file('jquery', "common", 'phpgwapi', false, array('combine' => true ));
 
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/tabs/css/responsive-tabs.css");
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/tabs/css/style.css");
@@ -143,7 +143,7 @@
 				case 'mmenu':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						"mmenu/src/js/jquery.mmenu.min.all"
 					);
 
@@ -154,7 +154,7 @@
 				case 'treeview':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						"treeview/jstree{$_type}"
 					);
 
@@ -164,7 +164,7 @@
 
 				case 'jqtree':
 					$load = array(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						"jqTree/tree.jquery",
 					);
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/jqTree/jqtree.css");
@@ -173,7 +173,7 @@
 				case 'numberformat':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						"number-format/jquery.number{$_type}"
 					);
 
@@ -181,16 +181,20 @@
 				case 'layout':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
-						"ui/{$_jquery_ui}{$_type}",
-						'layout' => array("jquery.layout{$_type}", "plugins/jquery.layout.state")
+		//				"js/{$_jquery_core}{$_type}",
+		//				"ui/{$_jquery_ui}{$_type}",
+		//				'layout' => array("jquery.layout{$_type}", "plugins/jquery.layout.state")
 					);
+					$GLOBALS['phpgw']->js->validate_file('jquery', "ui/{$_jquery_ui}{$_type}", 'phpgwapi', true, array('combine' => true ));
+					$GLOBALS['phpgw']->js->validate_file('layout', "jquery.layout{$_type}", 'phpgwapi', true, array('combine' => true ));
+					$GLOBALS['phpgw']->js->validate_file('layout', "plugins/jquery.layout.state", 'phpgwapi', true, array('combine' => true ));
+
 					break;
 
 				case 'contextMenu':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						'contextMenu' => array("jquery.contextMenu{$_type}")
 					);
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/contextMenu/jquery.contextMenu.min.css");
@@ -207,7 +211,7 @@
 				case 'print':
 					$load = array
 						(
-						"print/jQuery.print"
+						"print/jQuery.print.min"
 					);
 
 					break;
@@ -215,7 +219,7 @@
 				case 'file-upload':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						"ui/{$_jquery_ui}{$_type}",
 						"file-upload/js/tmpl{$_type}",
 						"file-upload/js/jquery.fileupload",
@@ -232,14 +236,11 @@
 				case 'file-upload-minimum':
 					$load = array
 						(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						"ui/{$_jquery_ui}{$_type}",
-						//					"file-upload/js/tmpl{$_type}",
 						"file-upload/js/jquery.fileupload",
 						"file-upload/js/jquery.fileupload-process",
 						"file-upload/js/jquery.fileupload-validate",
-						//					"file-upload/js/jquery.fileupload-ui",
-						//					"file-upload/js/jquery.fileupload-jquery-ui",
 					);
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload.css");
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload-ui.css");
@@ -249,18 +250,20 @@
 
 				case 'bootstrap-multiselect':
 					$load = array(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						'bootstrap-multiselect' => array("js/bootstrap-multiselect.min")
 					);
 
 					if ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] != 'bootstrap')
 					{
 						unset($load['bootstrap-multiselect']);//to be inserted last
-						$load['popper']					 = array("popper{$_type}");
-						$load['bootstrap']				 = array("js/bootstrap{$_type}");
+						$load['popper']					 = array("popper2.min");
+						$load['bootstrap5']				 = array("vendor/twbs/bootstrap/dist/js/bootstrap.min");
+
 						$load['bootstrap-multiselect']	 = array("js/bootstrap-multiselect.min");
 
-						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/bootstrap/css/bootstrap.min.css");
+						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css");
+
 					}
 
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/bootstrap-multiselect/css/bootstrap-multiselect.min.css");
@@ -268,15 +271,16 @@
 					break;
 				case 'select2':
 					$load = array(
-						"js/{$_jquery_core}{$_type}",
+		//				"js/{$_jquery_core}{$_type}",
 						'select2' => array("js/select2{$_type}", "js/i18n/{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}")
 					);
 
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/select2/css/select2{$_type}.css");
 
-					if (in_array($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'], array('bootstrap','bootstrap2', 'bookingfrontend', 'aalesund')))
+					if (in_array($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'], array('bootstrap','bootstrap2', 'bookingfrontend', 'mobilefrontend')))
 					{
-						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/select2/css/select2-bootstrap4{$_type}.css");
+//						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/select2/css/select2-bootstrap4{$_type}.css");
+						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/select2/css/select2-bootstrap-5-theme{$_type}.css");
 					}
 
 					break;
@@ -486,11 +490,10 @@ HTML;
 			JqueryPortico.render_tabs = function ()
 			{
 				$('#{$tab_set}').responsiveTabs({
-					startCollapsed: 'accordion',
+//					startCollapsed: 'accordion',
 					collapsible: 'accordion',
 					rotate: false,
 					disabled: {$disabled_js},
-					startCollapsed: 'accordion',
 					collapsible: 'accordion',
 					setHash: true,
 					activate: function(e, tab) {
@@ -509,7 +512,11 @@ HTML;
 							}
 							try
 							{
-								$($.fn.dataTable.tables(true)).DataTable().draw();
+				//				$($.fn.dataTable.tables(true)).DataTable().draw();
+								$.fn.dataTable.tables({
+									visible: true,
+									api: true
+								}).columns.adjust();
 							}
 							catch (err)
 							{
@@ -523,6 +530,7 @@ HTML;
 				{
 					$('#{$tab_set}').responsiveTabs('activate', {$selected});
 				}
+
 			};
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $js);
@@ -631,8 +639,6 @@ JS;
 				var toolbarOptions = [
                 ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],
-  //              ['fontname', ['fontname']],
-  //              ['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['table', ['table']],
                 ['insert', ['link', 'picture']],
@@ -650,8 +656,7 @@ JS;
 			  {$disableDragAndDrop}
 			  placeholder: '{$lang_placeholder}',
 			  height: 250,
-			  toolbar: toolbarOptions,
-//			  dialogsInBody: true
+			  toolbar: toolbarOptions
 			});
 		});
 JS;
@@ -684,21 +689,10 @@ JS;
 			var quill = {};
 			var toolbarOptions = [
 			  ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-//			  ['blockquote', 'code-block'],
-
-//			  [{ 'header': 1 }, { 'header': 2 }],               // custom button values
 			  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-//			  [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
 			  [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-//			  [{ 'direction': 'rtl' }],                         // text direction
-
-//			  [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
 			  [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-
-//			  [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-//			  [{ 'font': [] }],
 			  [{ 'align': [] }],
-
 			  ['clean']                                         // remove formatting button
 			];
 
@@ -715,9 +709,10 @@ JS;
 				   toolbar: toolbarOptions
 				 },
 			    table: true,
-				placeholder: '',
+				placeholder: 'Skriv her',
 			    theme: 'snow'
 			 });
+
 			quill.$target = editors.$target;
 
 		});

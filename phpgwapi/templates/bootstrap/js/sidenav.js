@@ -1,5 +1,115 @@
 $(document).ready(function ()
 {
+	var tree = $('#navbar'),
+		filter = $('#navbar_search'),
+		//	filtering = false,
+		thread = null;
+	var treemenu_data = {};
+
+
+	var oArgs = {menuaction: 'phpgwapi.menu_jqtree.get_menu'};
+	var some_url = phpGWLink('index.php', oArgs, true);
+	var tree = $('#navbar');
+	$.getJSON(
+		some_url,
+		function (data)
+		{
+			treemenu_data = data;
+			tree.tree({
+				data: data,
+				autoEscape: false,
+				dragAndDrop: false,
+				autoOpen: false,
+				saveState: false,
+				useContextMenu: false,
+				closedIcon: $('<i class="far fa-arrow-alt-circle-right"></i>'),
+				openedIcon: $('<i class="far fa-arrow-alt-circle-down"></i>'),
+				onCreateLi: function (node, $li)
+				{
+					tree.tree('removeFromSelection', node);
+					if (node.selected === 1)
+					{
+						$li.addClass('jqtree-selected');
+						tree.tree('addToSelection', node);
+						var parent = node.parent;
+						while (typeof (parent.element) !== 'undefined')
+						{
+							tree.tree('openNode', parent, false);
+							parent = parent.parent;
+						}
+					}
+
+					var title = $li.find('.jqtree-title'),
+						search = filter.val().toLowerCase(),
+						value = title.text().toLowerCase();
+					if (search !== '')
+					{
+						$li.hide();
+						if (value.indexOf(search) > -1)
+						{
+							$li.show();
+							var parent = node.parent;
+							while (typeof (parent.element) !== 'undefined')
+							{
+								$(parent.element)
+									.show()
+									.addClass('jqtree-filtered');
+								tree.tree('openNode', parent, false);
+								parent = parent.parent;
+							}
+						}
+//						if (!filtering)
+//						{
+//							filtering = true;
+//						}
+						if (!tree.hasClass('jqtree-filtered'))
+						{
+							tree.addClass('jqtree-filtered');
+						}
+					}
+					else
+					{
+//						if (filtering)
+//						{
+//							filtering = false;
+//						}
+//
+						if (tree.hasClass('jqtree-filtered'))
+						{
+							tree.removeClass('jqtree-filtered');
+						}
+					}
+				}
+			});
+		}
+	);
+
+	filter.keyup(function ()
+	{
+		clearTimeout(thread);
+		thread = setTimeout(function ()
+		{
+			tree.tree('loadData', treemenu_data);
+		}, 50);
+	});
+
+	$('#collapseNavbar').on('click', function ()
+	{
+		$(this).attr('href', 'javascript:;');
+
+		var $tree = $('#navbar');
+		var tree = $tree.tree('getTree');
+
+		tree.iterate(
+			function (node)
+			{
+				$tree.tree('closeNode', node, true);
+			}
+		);
+
+	});
+
+
 	$('#sidebarCollapse').on('click', function ()
 	{
 		$('#sidebar').toggleClass('active');
@@ -28,14 +138,24 @@ $(document).ready(function ()
 		callback: function (key, options)
 		{
 			var id = $(this).attr("id");
-
-			var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu', bookmark_candidate: id};
+			var icon = $(this).attr("icon");
+			var href = $(this).attr("href");
+			var location_id = $(this).attr("location_id");
+			var text = $(this).text();
+			var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu'};
 			var requestUrl = phpGWLink('index.php', oArgs, true);
+
+			if(key === 'open_in_new')
+			{
+				window.open(href, '_blank');
+				return;
+			}
 
 			$.ajax({
 				type: 'POST',
 				url: requestUrl,
 				dataType: 'json',
+				data:{bookmark_candidate: id, text: text, icon: icon, href: href, location_id: location_id},
 				success: function (data)
 				{
 					if (data)
@@ -47,7 +167,8 @@ $(document).ready(function ()
 			});
 		},
 		items: {
-			"edit": {name: "Bookmark", icon: "far fa-bookmark"}
+			"edit": {name: "Bookmark", icon: "far fa-bookmark"},
+			"open_in_new": {name: "Åpne i nytt vindu", icon: "fas fa-external-link-alt"}
 		}
 	});
 
@@ -75,15 +196,20 @@ $(document).ready(function ()
 
 });
 
+
+function strip_html(originalString)
+{
+	return originalString.replace(/(<([^>]+)>)/gi, "");
+}
+
 function get_messages()
 {
-	var profile_img = phpGWLink('phpgwapi/templates/bootstrap2/images/undraw_profile.svg', {}, false);
+//	var profile_img = phpGWLink('phpgwapi/templates/bootstrap/images/undraw_profile.svg', {}, false);
 
 	var htmlString = '';
 
 	var oArgs = {menuaction: 'messenger.uimessenger.index', status: 'N'};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
-
 	$.ajax({
 		type: 'GET',
 		url: requestUrl,
@@ -100,15 +226,15 @@ function get_messages()
 					{
 						font_class = 'font-weight-bold';
 					}
-					console.log(obj[i]);
+//					console.log(obj[i]);
 					htmlString += '<a class="dropdown-item d-flex align-items-center" href="' + obj[i].link + '">';
-					htmlString += '		<div class="dropdown-list-image mr-3">';
-					htmlString += '			<img class="rounded-circle" src="' + profile_img + '" alt="">';
-					htmlString += '			<div class="status-indicator bg-success"></div>';
-					htmlString += '		</div>';
+//					htmlString += '		<div class="dropdown-list-image me-3">';
+//					htmlString += '			<img class="rounded-circle" src="' + profile_img + '" alt="">';
+//					htmlString += '			<div class="status-indicator bg-success"></div>';
+//					htmlString += '		</div>';
 					htmlString += '		<div class="' + font_class + '">';
-					htmlString += '			<div class="text-truncate">' + obj[i].subject_text + '</div>';
-					htmlString += '<div class="small text-gray-500">' + obj[i].from + ' · ' + obj[i].date + '</div>';
+					htmlString += '			<div class="text-truncate">' + strip_html(obj[i].subject_text) + '</div>';
+					htmlString += '			<div class="small text-muted">' + strip_html(obj[i].from) + ' · ' + strip_html(obj[i].date) + '</div>';
 					htmlString += '		</div>';
 					htmlString += '</a>';
 				});

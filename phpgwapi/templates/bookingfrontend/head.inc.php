@@ -1,5 +1,5 @@
 <?php
-	$GLOBALS['phpgw_info']['server']['no_jscombine'] = true;
+	$GLOBALS['phpgw_info']['server']['no_jscombine'] = false;
 	phpgw::import_class('phpgwapi.jquery');
 	phpgw::import_class('phpgwapi.template_portico');
 
@@ -147,10 +147,6 @@ JS;
 
 	$GLOBALS['phpgw']->template->set_var('municipality', $municipality);
 
-//	$municipality_email = 'servicetorget@alesund.kommune.no';
-//	$GLOBALS['phpgw']->template->set_var( 'municipality_email', $municipality_email );
-
-
 	if (!empty($config_backend['support_address']))
 	{
 		$support_email = $config_backend['support_address'];
@@ -168,6 +164,13 @@ JS;
 	}
 	$GLOBALS['phpgw']->template->set_var('support_email', $support_email);
 
+	if (!empty($config_frontend['url_uustatus']))
+	{
+		$lang_uustatus = lang('uustatus');
+		$url_uustatus ="<span><a target='_blank' rel='noopener noreferrer'  href='{$config_frontend['url_uustatus']}'>{$lang_uustatus}</a></span>";
+		$GLOBALS['phpgw']->template->set_var('url_uustatus', $url_uustatus);
+	}
+
 //loads jquery
 	phpgwapi_jquery::load_widget('core');
 
@@ -182,16 +185,46 @@ JS;
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/custom.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/nb-NO.js";
 	$javascripts[]	 = "/phpgwapi/js/dateformat/dateformat.js";
-	foreach ($javascripts as $javascript)
+//	foreach ($javascripts as $javascript)
+//	{
+//		if (file_exists(PHPGW_SERVER_ROOT . $javascript))
+//		{
+//			$GLOBALS['phpgw']->template->set_var('javascript_uri', $webserver_url . $javascript . $cache_refresh_token);
+//			$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
+//		}
+//	}
+
+	if (!$GLOBALS['phpgw_info']['server']['no_jscombine'])
 	{
-		if (file_exists(PHPGW_SERVER_ROOT . $javascript))
+		$_jsfiles = array();
+		foreach ($javascripts as $javascript)
 		{
-			$GLOBALS['phpgw']->template->set_var('javascript_uri', $webserver_url . $javascript . $cache_refresh_token);
-			$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
+			if (file_exists(PHPGW_SERVER_ROOT . $javascript))
+			{
+				// Add file path to array and replace path separator with "--" for URL-friendlyness
+				$_jsfiles[] = str_replace('/', '--', ltrim($javascript, '/'));
+			}
+		}
+
+		$cachedir	 = urlencode("{$GLOBALS['phpgw_info']['server']['temp_dir']}/combine_cache");
+		$jsfiles	 = implode(',', $_jsfiles);
+		$GLOBALS['phpgw']->template->set_var('javascript_uri', "{$webserver_url}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files={$jsfiles}");
+		$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
+		unset($jsfiles);
+		unset($_jsfiles);
+	}
+	else
+	{
+		foreach ($javascripts as $javascript)
+		{
+			if (file_exists(PHPGW_SERVER_ROOT . $javascript))
+			{
+				$GLOBALS['phpgw']->template->set_var('javascript_uri', $webserver_url . $javascript . $cache_refresh_token);
+				$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
+			}
 		}
 	}
 
-	$config = CreateObject('phpgwapi.config', 'booking')->read();
 
 	$bodoc	 = CreateObject('booking.bodocumentation');
 	$manual	 = $bodoc->so->getFrontendDoc();
@@ -232,7 +265,7 @@ JS;
 	}
 	else
 	{
-		$keywords = '<meta name="keywords" content="phpGroupWare">';
+		$keywords = '<meta name="keywords" content="PorticoEstate">';
 	}
 	if (!empty($description))
 	{
@@ -240,19 +273,19 @@ JS;
 	}
 	else
 	{
-		$description = '<meta name="description" content="phpGroupWare">';
+		$description = '<meta name="description" content="PorticoEstate">';
 	}
-	if (!empty($config['metatag_author']))
+	if (!empty($config_frontend['metatag_author']))
 	{
-		$author = '<meta name="author" content="' . $config['metatag_author'] . '">';
+		$author = '<meta name="author" content="' . $config_frontend['metatag_author'] . '">';
 	}
 	else
 	{
-		$author = '<meta name="author" content="phpGroupWare http://www.phpgroupware.org">';
+		$author = '<meta name="author" content="PorticoEstate https://github.com/PorticoEstate/PorticoEstate">';
 	}
-	if (!empty($config['metatag_robots']))
+	if (!empty($config_frontend['metatag_robots']))
 	{
-		$robots = '<meta name="robots" content="' . $config['metatag_robots'] . '">';
+		$robots = '<meta name="robots" content="' . $config_frontend['metatag_robots'] . '">';
 	}
 	else
 	{
@@ -274,10 +307,6 @@ JS;
 
 	phpgwapi_cache::session_set('phpgwapi', 'footer_info', $footer_info);
 
-//$test = $GLOBALS['phpgw']->common->get_on_events();
-	$test	 = str_replace('window.onload = function()', '$(document).ready(function()', $test);
-	$test	 = str_replace("\n}\n", "\n})\n", $test);
-
 	$site_base = $app == 'bookingfrontend' ? "/{$app}/" : '/index.php';
 
 	$site_url			= $GLOBALS['phpgw']->link($site_base, array());
@@ -293,35 +322,46 @@ JS;
 	$separator = strpos($self_uri, '?') ? '&' : '?';
 	$self_uri = str_replace(array("{$separator}lang=no", "{$separator}lang=en"), '', $self_uri);
 
-switch($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
-{
-	case 'aalesund':
-		$selected_aalesund = ' selected = "selected"';
-		$selected_bookingfrontend = '';
-		break;
-	case 'bookingfrontend':
-		$selected_aalesund = '';
-		$selected_bookingfrontend = ' selected = "selected"';
-		break;
-}
-/*
-$template_selector = <<<HTML
+	switch($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
+	{
+		case 'bookingfrontend_2':
+			$selected_bookingfrontend_2 = ' selected = "selected"';
+			$selected_bookingfrontend = '';
+			break;
+		case 'bookingfrontend':
+			$selected_bookingfrontend_2 = '';
+			$selected_bookingfrontend = ' selected = "selected"';
+			break;
+	}
 
-	<li class="nav-item">
-	   <select id = "template_selector" class="btn btn-link btn-sm nav-link dropdown-toggle" style="padding-top: .315rem;-webkit-appearance: none;-moz-appearance: none;">
-		<option class="nav-link" value="bookingfrontend"{$selected_bookingfrontend}>AK V1</option>
-		<option class="nav-link" value="aalesund"{$selected_aalesund}>AK V2</option>
-	   </select>
-	</li>
+	if($config_frontend['develope_mode'])
+	{
+		$template_selector = <<<HTML
+		<li class="nav-item">
+		   <select id = "template_selector" class="btn btn-link btn-sm nav-link dropdown-toggle" style="padding-top: .315rem;-webkit-appearance: none;-moz-appearance: none;">
+			<option class="nav-link" value="bookingfrontend"{$selected_bookingfrontend}>AK V1</option>
+			<option class="nav-link" value="bookingfrontend_2"{$selected_bookingfrontend_2}>AK V2</option>
+		   </select>
+		</li>
 HTML;
-*/
-$template_selector = '';
+	}
+	else
+	{
+		$template_selector = '';
+	}
+
 	$nav = <<<HTML
 
 		<nav class="navbar navbar-default sticky-top navbar-expand-md navbar-light  header_borderline"   id="headcon">
-			<div class="container header-container my_class">
+			<div class="container-fluid header-container my_class">
+			<div>
 				<a class="navbar-brand brand-site-title" href="{$site_url}">{$site_title} </a>
 				<a href="{$site_url}"><img class="navbar-brand brand-site-img" src="{$headlogoimg}" alt="{$logo_title}"/></a>
+				</div>
+		    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+		 <div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<!-- Search Box -->
 				<!--div class="search-container">
 					<form id="navSearchForm" class="search-form">
@@ -329,8 +369,8 @@ $template_selector = '';
 						<button class="searchButton" type="submit" ><i class="fas fa-search"></i></button>
 					</form>
 				</div-->
-		</div>
-		<ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+
+		<ul class="navbar-nav flex-row ml-auto d-flex">
 				<li class="nav-item">
 					<a class="nav-link p-2" href="{$self_uri}{$separator}lang={$userlang}" aria-label="Norsk"><img src="{$flag_no}" alt="Norsk (Norway)" title="Norsk (Norway)" />
 					</a>
@@ -352,11 +392,51 @@ $template_selector = '';
 		</div>
         <div class="navbar-organization-select">
         </div>
+        </div>
+        </div>
 		</nav>
 		<div class="overlay">
             <div id="loading-img"><i class="fas fa-spinner fa-spin fa-3x"></i></div>
         </div>
 HTML;
+
+	if(!empty($config_frontend['tracker_matomo_url']))
+	{
+		$tracker_matomo_url = rtrim($config_frontend['tracker_matomo_url'], '/') . '/';
+		$tracker_matomo_id = (int)$config_frontend['tracker_matomo_id'];
+		$tracker_matomo_code = <<<JS
+
+	   <!-- Start Matomo Code -->
+			<script>
+			  var _paq = window._paq = window._paq || [];
+			  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+			  _paq.push(['trackPageView']);
+			  _paq.push(['enableLinkTracking']);
+			  (function() {
+				var u="//{$tracker_matomo_url}";
+				_paq.push(['setTrackerUrl', u+'osaka.php']);
+				_paq.push(['setSiteId', '{$tracker_matomo_id}']);
+				var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+				g.async=true; g.src=u+'osaka.js'; s.parentNode.insertBefore(g,s);
+			  })();
+			</script>
+		<!-- End Matomo Code -->
+
+JS;
+
+		/**
+		 * Alternative to avoid adblockers and no-script
+		 */
+
+//		$urlref = $_SERVER['HTTP_REFERER'];
+//
+//		$tracker_image = <<<HTML
+//			<!-- Matomo Image Tracker -->
+//			<img src="https://{$tracker_matomo_url}matomo.php?idsite={$tracker_matomo_id}&rec=1&urlref={$urlref}&send_image=0" style="border:0" alt="" />
+//			<!-- End Matomo Image Tracker-->
+//HTML;
+
+	}
 
 
 	$tpl_vars = array
@@ -370,7 +450,6 @@ HTML;
 		'site_url'				 => $GLOBALS['phpgw']->link($site_base, array()),
 		'eventsearch_url'        => $GLOBALS['phpgw']->link('/bookingfrontend/',array('menuaction'=>'bookingfrontend.uieventsearch.show')),
 		'webserver_url'			 => $webserver_url,
-		'win_on_events'			 => $test,
 		'metainfo_author'		 => $author,
 		'userlang'				 => $userlang,
 		'metainfo_keywords'		 => $keywords,
@@ -379,7 +458,9 @@ HTML;
 		'lbl_search'			 => lang('Search'),
 		'logofile'				 => $logofile_frontend,
 		'header_search_class'	 => 'hidden',//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
-		'nav'					 => empty($GLOBALS['phpgw_info']['flags']['noframework']) ? $nav : ''
+		'nav'					 => empty($GLOBALS['phpgw_info']['flags']['noframework']) ? $nav : '',
+		'tracker_code'			 => $tracker_matomo_code,
+//		'tracker_image'			 => $tracker_image
 	);
 
 
@@ -392,7 +473,7 @@ HTML;
 	 * Might be set wrong in the ui-class
 	 */
 	$xslt_app = !empty($GLOBALS['phpgw_info']['flags']['xslt_app']) ? true : false;
-	$org	 = CreateObject('bookingfrontend.uiorganization');
+	$org	 = CreateObject('booking.soorganization');
 	$GLOBALS['phpgw_info']['flags']['xslt_app'] = $xslt_app;
 
 	$user_url = $GLOBALS['phpgw']->link("/{$app}/", array('menuaction' => 'bookingfrontend.uiuser.show'));

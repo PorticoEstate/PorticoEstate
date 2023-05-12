@@ -111,6 +111,7 @@
 
 			phpgw::import_class('property.multiuploader');
 
+			$options = array();
 			$options['base_dir']	 = 'tenant_claim/' . $id;
 			$options['upload_dir']	 = $GLOBALS['phpgw_info']['server']['files_dir'] . '/property/' . $options['base_dir'] . '/';
 			$options['script_url']	 = html_entity_decode(self::link(array('menuaction' => 'property.uitts.handle_multi_upload_file',
@@ -119,7 +120,7 @@
 
 			if (!$id)
 			{
-				$response = array(files => array(array('error' => 'missing id in request')));
+				$response = array('files' => array(array('error' => 'missing id in request')));
 				$upload_handler->generate_response($response);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
@@ -481,9 +482,7 @@
 				'district_id'	 => $district_id
 			);
 
-			$result_objects	 = array();
-			$result_count	 = 0;
-			//
+
 			$values			 = $this->bo->read($params);
 			if ($export)
 			{
@@ -1173,7 +1172,7 @@
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 
-			self::add_javascript('property', 'portico', 'tenant_claim.edit.js');
+			self::add_javascript('property', 'base', 'tenant_claim.edit.js');
 
 			self::render_template_xsl(array('tenant_claim', 'datatable_inline', 'files', 'multi_upload_file_inline'), array(
 				'edit' => $data));

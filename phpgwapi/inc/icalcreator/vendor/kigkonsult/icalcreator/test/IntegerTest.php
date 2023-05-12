@@ -5,7 +5,7 @@
  * This file is a part of iCalcreator.
  *
  * @author    Kjell-Inge Gustafsson, kigkonsult <ical@kigkonsult.se>
- * @copyright 2007-2021 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
+ * @copyright 2007-2022 Kjell-Inge Gustafsson, kigkonsult, All rights reserved
  * @link      https://kigkonsult.se
  * @license   Subject matter of licence is the software iCalcreator.
  *            The above copyright, link, package and version notices,
@@ -28,9 +28,7 @@
  */
 namespace Kigkonsult\Icalcreator;
 
-use Kigkonsult\Icalcreator\Util\Util;
-use Kigkonsult\Icalcreator\Util\ParameterFactory;
-use Kigkonsult\Icalcreator\Util\StringFactory;
+use Kigkonsult\Icalcreator\Formatter\Property\Property;
 use Exception;
 
 /**
@@ -44,29 +42,35 @@ use Exception;
  */
 class IntegerTest extends DtBase
 {
-    private static $ERRFMT = "Error %sin case #%s, %s <%s>->%s";
-    private static $STCPAR = [ 'X-PARAM' => 'Y-vALuE' ];
+    use GetPropMethodNamesTrait;
+
+    /**
+     * @var string[]
+     */
+    private static array  $STCPAR = [ 'X-PARAM' => 'Y-vALuE' ];
 
     /**
      * integerTest provider
+     *
+     * @return mixed[]
      */
-    public function integerTestProvider()
+    public function integerTestProvider() : array
     {
         $dataArr = [];
 
         $dataArr[] = [
             1,
             [
-                Vcalendar::PERCENT_COMPLETE => [ Vcalendar::VTODO ],
-                Vcalendar::PRIORITY         => [ Vcalendar::VEVENT, Vcalendar::VTODO ],
-                Vcalendar::REPEAT           => [ Vcalendar::VALARM ],
+                IcalInterface::PERCENT_COMPLETE => [ IcalInterface::VTODO ],
+                IcalInterface::PRIORITY         => [ IcalInterface::VEVENT, IcalInterface::VTODO ],
+                IcalInterface::REPEAT           => [ IcalInterface::VALARM ],
             ],
             null,
             self::$STCPAR,
-            [
-                Util::$LCvalue  => '',
-                Util::$LCparams => []
-            ],
+            Pc::factory(
+                '',
+                []
+            ),
             ':'
         ];
 
@@ -74,15 +78,15 @@ class IntegerTest extends DtBase
         $dataArr[] = [
             5,
             [
-                Vcalendar::SEQUENCE => [ Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL ],
+                IcalInterface::SEQUENCE => [ IcalInterface::VEVENT, IcalInterface::VTODO, IcalInterface::VJOURNAL ],
             ],
             $value,
             self::$STCPAR,
-            [
-                Util::$LCvalue  => 0,
-                Util::$LCparams => self::$STCPAR
-            ],
-            ParameterFactory::createParams( self::$STCPAR ) .
+            Pc::factory(
+                0,
+                self::$STCPAR
+            ),
+            Property::formatParams( self::$STCPAR ) .
             ':0'
         ];
 
@@ -90,18 +94,18 @@ class IntegerTest extends DtBase
         $dataArr[] = [
             9,
             [
-                Vcalendar::PERCENT_COMPLETE => [ Vcalendar::VTODO ],
-                Vcalendar::PRIORITY         => [ Vcalendar::VEVENT, Vcalendar::VTODO ],
-                Vcalendar::SEQUENCE         => [ Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL ],
-                Vcalendar::REPEAT           => [ Vcalendar::VALARM ],
+                IcalInterface::PERCENT_COMPLETE => [ IcalInterface::VTODO ],
+                IcalInterface::PRIORITY         => [ IcalInterface::VEVENT, IcalInterface::VTODO ],
+                IcalInterface::SEQUENCE         => [ IcalInterface::VEVENT, IcalInterface::VTODO, IcalInterface::VJOURNAL ],
+                IcalInterface::REPEAT           => [ IcalInterface::VALARM ],
             ],
             $value,
             self::$STCPAR,
-            [
-                Util::$LCvalue  => $value,
-                Util::$LCparams => self::$STCPAR
-            ],
-            ParameterFactory::createParams( self::$STCPAR ) .
+            Pc::factory(
+                $value,
+                self::$STCPAR
+            ),
+            Property::formatParams( self::$STCPAR ) .
             ':' . $value
         ];
 
@@ -109,15 +113,15 @@ class IntegerTest extends DtBase
         $dataArr[] = [
             19,
             [
-                Vcalendar::SEQUENCE         => [ Vcalendar::VEVENT, Vcalendar::VTODO, Vcalendar::VJOURNAL ],
+                IcalInterface::SEQUENCE => [ IcalInterface::VEVENT, IcalInterface::VTODO, IcalInterface::VJOURNAL ],
             ],
             $value,
             self::$STCPAR,
-            [
-                Util::$LCvalue  => $value,
-                Util::$LCparams => self::$STCPAR
-            ],
-            ParameterFactory::createParams( self::$STCPAR ) .
+            Pc::factory(
+                $value,
+                self::$STCPAR
+            ),
+            Property::formatParams( self::$STCPAR ) .
             ':' . $value
         ];
 
@@ -125,15 +129,15 @@ class IntegerTest extends DtBase
         $dataArr[] = [
             109,
             [
-                Vcalendar::PERCENT_COMPLETE => [ Vcalendar::VTODO ],
+                IcalInterface::PERCENT_COMPLETE => [ IcalInterface::VTODO ],
             ],
             $value,
             self::$STCPAR,
-            [
-                Util::$LCvalue  => $value,
-                Util::$LCparams => self::$STCPAR
-            ],
-            ParameterFactory::createParams( self::$STCPAR ) .
+            Pc::factory(
+                $value,
+                self::$STCPAR
+            ),
+            Property::formatParams( self::$STCPAR ) .
             ':' . $value
         ];
 
@@ -145,72 +149,93 @@ class IntegerTest extends DtBase
      *
      * @test
      * @dataProvider integerTestProvider
-     * @param int    $case
-     * @param array  $propComps
-     * @param mixed  $value
-     * @param mixed  $params
-     * @param array  $expectedGet
-     * @param string $expectedString
+     * @param int     $case
+     * @param mixed[] $propComps
+     * @param mixed   $value
+     * @param mixed   $params
+     * @param Pc      $expectedGet
+     * @param string  $expectedString
+     * @throws Exception
      */
     public function integerTest(
-        $case,
-        $propComps,
-        $value,
-        $params,
-        $expectedGet,
-        $expectedString
-    ) {
-        $c = new Vcalendar();
+        int    $case,
+        array  $propComps,
+        mixed  $value,
+        mixed  $params,
+        Pc     $expectedGet,
+        string $expectedString
+    ) : void
+    {
+        $c       = new Vcalendar();
+        $pcInput = false;
         foreach( $propComps as $propName => $theComps ) {
-            $getMethod    = StringFactory::getGetMethodName( $propName );
-            $createMethod = StringFactory::getCreateMethodName( $propName );
-            $deleteMethod = StringFactory::getDeleteMethodName( $propName );
-            $setMethod    = StringFactory::getSetMethodName( $propName );
+            [ $createMethod, $deleteMethod, $getMethod, $isMethod, $setMethod ] = self::getPropMethodnames( $propName );
             foreach( $theComps as $theComp ) {
                 $newMethod = 'new' . $theComp;
-                if( Vcalendar::VALARM == $theComp ) {
+                if( IcalInterface::VALARM === $theComp ) {
                     $comp      = $c->newVevent()->{$newMethod}();
                 }
                 else {
                     $comp      = $c->{$newMethod}();
                 }
+                $this->assertFalse(
+                    $comp->{$isMethod}(),
+                    self::getErrMsg(  '1 ', $case, __FUNCTION__, $theComp, $isMethod )
+                );
                 try {
                     $comp->{$setMethod}( $value, $params );
                 }
                 catch( Exception $e ) {
                     $ok = false;
-                    if(( Vcalendar::SEQUENCE == $propName ) && ( $value > 9 )) {
+                    if(( IcalInterface::SEQUENCE === $propName ) && ( $value > 9 )) {
                         $ok = true;
                     }
-                    elseif(( Vcalendar::PERCENT_COMPLETE == $propName ) && ( $value > 100 )) {
+                    elseif(( IcalInterface::PERCENT_COMPLETE === $propName ) && ( $value > 100 )) {
                         $ok = true;
                     }
                     $this->assertTrue( $ok );
                     return;
-                }
+                } // end catch
+                $this->assertSame(
+                    ((( IcalInterface::SEQUENCE === $propName ) || // empty input updates seq.
+                        ( ! empty( $value ) || (( null !== $value ) && ( 0 === $value ))))),
+                    $comp->{$isMethod}(),
+                    self::getErrMsg(  '2 ', $case, __FUNCTION__, $theComp, $isMethod, $value )
+                );
                 $getValue = $comp->{$getMethod}( true );
-                if(( empty( $getValue[Util::$LCvalue] ) && Vcalendar::SEQUENCE == $propName )) {
-                    $expectedGet[Util::$LCvalue]  = 0;
-                    $expectedGet[Util::$LCparams] = self::$STCPAR;
+                if(( empty( $getValue->value ) && IcalInterface::SEQUENCE === $propName )) {
+                    $expectedGet->value  = 0;
+                    $expectedGet->params = self::$STCPAR;
                 }
                 $this->assertEquals(
                     $expectedGet,
                     $getValue,
-                    sprintf( self::$ERRFMT, null, $case, __FUNCTION__, $theComp, $getMethod )
+                    self::getErrMsg(  '3 ', $case, __FUNCTION__, $theComp, $getMethod )
                 );
                 $this->assertEquals(
                     strtoupper( $propName ) . $expectedString,
                     trim( $comp->{$createMethod}() ),
-                    sprintf( self::$ERRFMT, null, $case, __FUNCTION__, $theComp, $createMethod )
+                    self::getErrMsg(  '4 ', $case, __FUNCTION__, $theComp, $createMethod )
                 );
                 $comp->{$deleteMethod}();
                 $this->assertFalse(
-                    $comp->{$getMethod}(),
-                    sprintf( self::$ERRFMT, '(after delete) ', $case, __FUNCTION__, $theComp, $getMethod )
+                    $comp->{$isMethod}(),
+                    self::getErrMsg(  '5 (after delete) ', $case, __FUNCTION__, $theComp, $isMethod )
                 );
-                $comp->{$setMethod}( $value, $params );
-            } // end foreach
-        } // end foreach
+                $this->assertFalse(
+                    $comp->{$getMethod}(),
+                    self::getErrMsg(  ' 6 (after delete) ', $case, __FUNCTION__, $theComp, $getMethod )
+                );
+
+                if( $pcInput ) {
+                    $comp->{$setMethod}( Pc::factory( $value, $params ));
+                }
+                else {
+                    $comp->{$setMethod}( $value, $params );
+                }
+                $pcInput = ! $pcInput;
+            } // end foreach  component
+        } // end foreach,  $propName => $theComps
 
         $this->parseCalendarTest( $case, $c, $expectedString );
     }

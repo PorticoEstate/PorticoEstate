@@ -23,7 +23,7 @@
 			$this->customer_id = CreateObject('booking.customer_identifier');
 
 			parent::__construct('bb_completed_reservation', array(
-				'id' => array('type' => 'int'),
+				'id' => array('type' => 'int', 'query' => true),
 				'reservation_type' => array('type' => 'string', 'required' => True, 'nullable' => False),
 				'reservation_id' => array('type' => 'int', 'required' => True, 'nullable' => False),
 				'season_id' => array('type' => 'int'),
@@ -330,7 +330,7 @@
 				}
 				elseif ($organization['customer_identifier_type'] == 'organization_number')
 				{
-					$entity['customer_organization_number'] = $organization['customer_organization_number'];
+					$entity['customer_organization_number'] = $organization['customer_organization_number'] ? $organization['customer_organization_number'] : $organization['organization_number'];
 					$entity['customer_identifier_type'] = 'organization_number';
 				}
 				else
@@ -348,7 +348,7 @@
 				}
 				else
 				{
-					$entity['customer_organization_number'] = $organization['organization_number'];
+					$entity['customer_organization_number'] = $organization['customer_organization_number'] ? $organization['customer_organization_number'] : $organization['organization_number'];
 					$entity['customer_identifier_type'] = 'organization_number';
 				}
 			}

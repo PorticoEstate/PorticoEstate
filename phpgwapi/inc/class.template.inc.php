@@ -1112,7 +1112,7 @@
 
 		function haltmsg( $msg )
 		{
-			$msg = str_replace(PHPGW_SERVER_ROOT, '/path/to/phpgroupware', $msg);
+			$msg = str_replace(PHPGW_SERVER_ROOT, '/path/to/portico', $msg);
 			trigger_error("Template Error: {$msg}", E_USER_ERROR);
 		}
 

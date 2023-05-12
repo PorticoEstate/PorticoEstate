@@ -57,7 +57,7 @@
 			$stages = array(
 				0	 => 60 * 60 * 3, // 3 hours : send SMS and email as reminder
 				1	 => 60 * 15, // 15 minutes : request access
-				2	 => 60 * 10, // 5 minutes : get request status
+				2	 => 60 * 10, // 10 minutes : get request status
 			);
 
 			$so_resource = CreateObject('booking.soresource');
@@ -214,6 +214,11 @@
 												continue;
 											}
 
+											if(empty($e_lock['access_code_format']))
+											{
+												continue;
+											}
+
 											if ($custom_id == $status['custom_id'])
 											{
 												$status_call_ids[$custom_id] = true;
@@ -347,14 +352,15 @@
 
 		private function log( $what, $value = '' )
 		{
-			$GLOBALS['phpgw']->log->message(array(
-				'text'	 => "what: %1, <br/>value: %2",
-				'p1'	 => $what,
-				'p2'	 => $value ? $value : ' ',
-				'line'	 => __LINE__,
-				'file'	 => __FILE__
-			));
-			$GLOBALS['phpgw']->log->commit();
+			$log_args = array
+			(
+				'severity'	 => 'I',
+				'file'		 => __FILE__,
+				'line'		 => __LINE__,
+				'text'		 => "what: {$what}, <br/>value: {$value}"
+			);
+
+			$GLOBALS['phpgw']->log->info($log_args);
 		}
 
 		function round_to_next_hour( $dateString )

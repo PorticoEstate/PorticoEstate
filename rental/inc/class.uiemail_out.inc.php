@@ -130,7 +130,10 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript('rental', 'portico', 'email_out.index.js');
+			/**
+			 * FIXME - not found?
+			 */
+			self::add_javascript('rental', 'base', 'email_out.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -334,7 +337,7 @@
 			);
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript('rental', 'rental', 'email_out.edit.js');
+			self::add_javascript('rental', 'base', 'email_out.edit.js');
 			self::render_template_xsl(array('email_out', 'datatable_inline'), array($mode => $data));
 		}
 
@@ -358,7 +361,7 @@
 			return $email_out;
 		}
 
-		public function save()
+		public function save($ajax = false)
 		{
 			parent::save();
 		}

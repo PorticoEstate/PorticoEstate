@@ -32,7 +32,8 @@
 	$GLOBALS['phpgw']->hooks->process('login');
 
 	$bouser = CreateObject('bookingfrontend.bouser');
-	$bouser->change_org(phpgw::get_var('orgnumber', 'string'));
+	$session_org_id = phpgw::get_var('session_org_id', 'int', 'GET');
+	$bouser->change_org($session_org_id);
 
 	$after = str_replace('&amp;', '&', urldecode(phpgw::get_var('after', 'string')));
 	if (!$after)

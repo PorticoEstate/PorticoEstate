@@ -50,7 +50,7 @@ building name	booking	no	Bygg/anlegg
 building schedule	booking	no	Kalender
 buildings	booking	no	Bygg/anlegg
 bygning	booking	no	Bygg/anlegg
-cancel	booking	no	Avbryt
+cancel	booking	no	Tilbake
 cancelled	booking	no	Avbestilt
 case officer	booking	no	Saksbehandler
 category	booking	no	Kategori
@@ -133,7 +133,7 @@ new document	booking	no	Nye dokumenter
 new equipment	booking	no	Nytt utstyr
 new event	booking	no	Nytt arrangement
 new group	booking	no	Ny gruppe
-new organization	booking	no	Ny organisasjon
+new organization	booking	no	Opprett ny organisasjon/bedrift
 new resource	booking	no	Ny ressurs
 new root permission	booking	no	Nye systemrettigheter
 new season	booking	no	Ny sesong
@@ -147,7 +147,7 @@ number of participants	booking	no	Antall deltakere
 estimated number of participants	booking	no	Estimert antall deltakere
 of	booking	no	av
 officer	booking	no	Saksbehandler
-organization	booking	no	Organisasjon
+organization	booking	no	Organisasjon/bedrift
 organization number	booking	no	Organisasjonnummer
 organizations	booking	no	Organisasjoner
 other	booking	no	Annet
@@ -183,7 +183,7 @@ select category...	booking	no	Velg en kategori...
 select role...	booking	no	Velg rolle...
 select activity...	booking	no	Velg aktivitet...
 settings	booking	no	Innstillinger
-show only active	booking	no	Skjul
+show only active	booking	no	Vis aktive
 showing items	booking	no	Viser
 showing items {startRecord} - {endRecord} of {totalRecords}	booking	no	Viser {startRecord} - {endRecord} av {totalRecords}
 social security number	booking	no	Fødselsnummer (11 siffer)
@@ -472,7 +472,7 @@ E-mail address	booking	no	E-postadresse
 Confirm e-mail address	booking	no	Bekreft e-postadressen
 The e-mail addresses you entered do not match	booking	no	E-postadressene er ikke like
 Lengt of shortname is to long, max 11 characters long	booking	no	Kortnavn er for langt, maksimum 11 tegn
-Lengt of name is to long, max 50 characters long	booking	no	Navn er for langt, maksimum 50 tegn
+Lengt of name is to long, max %1 characters long	booking	no	Navn er for langt, maksimum %1 tegn
 The organization number is wrong or not present	booking	no	Det er ikke registrert fakturainformasjon på denne organisasjonen
 The resource number is wrong or not present	booking	no	Det er ikke registert et ressursnummer på denne organisasjonen
 Recurring allocation	booking	no	Gjenta tildelingen
@@ -913,3 +913,16 @@ remark	booking	no	Merknad
 article code	booking	no	Artikkelkode
 article id	booking	no	ID
 article mapping	booking	no	Artikkelmapping
+Reverse	booking	no	Reversér
+sms alert	booking	no	SMS-varsling
+e_lock_system	booking	no	Adgangskontrollsystem
+receipt	booking	no	Kvittering
+deactivate in frontend	booking	no	Deaktivert i frontend
+deleted	booking	no	Slettet
+sorry - insufficient rights	booking	no	Beklager, du er ikke autorisert for handlingen
+please choose at least 1 season	booking	no	Velg minst en sesong
+please enter a mail subject	booking	no	Angi en tittel
+please enter a mail body	booking	no	Angi innhold
+select at least one recipient	booking	no	Velg minst en adressat
+hidden in frontend	booking	no	Skjult i frontend
+activate prepayment	booking	no	Aktiver forhåndsbetaling (Vipps)

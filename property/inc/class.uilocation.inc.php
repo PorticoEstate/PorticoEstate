@@ -1554,7 +1554,7 @@ JS;
 
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
-			self::add_javascript('property', 'portico', 'location.responsiblility_role.js');
+			self::add_javascript('property', 'base', 'location.responsiblility_role.js');
 
 			$this->bo->get_responsible(array('user_id'	 => $user_id, 'role_id'	 => $role_id,
 				'type_id'	 => $type_id, 'allrows'	 => $this->allrows, 'dry_run'	 => true));
@@ -1755,7 +1755,7 @@ JS;
 					}
 
 					$values[]		 = array(
-						'id'			 => $item['document_id'],
+						'id'			 => $item['id'],
 						'type'			 => 'location',
 						'document_name'	 => "<a href='{$link}'>{$item['title']}</a>",
 						'title'			 => $item['title'],
@@ -1766,9 +1766,9 @@ JS;
 				}
 
 				$document_name	 = '<a href="' . self::link(array('menuaction' => 'property.uidocument.view_file',
-						'id'		 => $item['document_id'])) . '" target="_blank">' . $item['document_name'] . '</a>';
+						'id'		 => $item['id'])) . '" target="_blank">' . $item['document_name'] . '</a>';
 				$values[]		 = array(
-					'id'			 => $item['document_id'],
+					'id'			 => $item['id'],
 					'type'			 => 'location',
 					'document_name'	 => $document_name,
 					'title'			 => $item['title'],
@@ -1918,7 +1918,6 @@ JS;
 				'type_id'		 => $type_id,
 				'lookup_tenant'	 => $lookup_tenant
 			);
-
 
 			$lookup_type = ($mode == 'view') ? 'view' : 'form';
 
@@ -2238,7 +2237,7 @@ JS;
 							var oArgs = " . json_encode(array(
 							'menuaction' => 'property.uidocument.edit'
 						)) . ";
-							var parameters = " . json_encode(array('parameter' => array(array('name'	 => 'document_id',
+							var parameters = " . json_encode(array('parameter' => array(array('name'	 => 'id',
 									'source' => 'id')))) . ";
 							editDocument(oArgs, parameters);
 						"
@@ -2255,7 +2254,7 @@ JS;
 						)),
 						'parameters'	 => json_encode(array(
 							'parameter' => array(array(
-									'name'	 => 'document_id',
+									'name'	 => 'id',
 									'source' => 'id'
 									))))
 					);
@@ -2709,6 +2708,7 @@ JS;
 				'controller'					 => $_enable_controller && $location_code,
 				'roles'							 => $roles,
 				'edit'							 => ($mode == 'view') ? '' : true,
+				'mode'							 => $mode,
 				'lang_change_type'				 => lang('Change type'),
 				'lang_no_change_type'			 => lang('No Change type'),
 				'lang_change_type_statustext'	 => lang('Type of changes'),
@@ -2726,7 +2726,7 @@ JS;
 				'edit_part_of_town'				 => (isset($edit_part_of_town) ? $edit_part_of_town : ''),
 				'edit_owner'					 => (isset($edit_owner) ? $edit_owner : ''),
 				'select_name_part_of_town'		 => (isset($select_name_part_of_town) ? $select_name_part_of_town : ''),
-				'part_of_town_list'				 => (isset($part_of_town_list) ? $part_of_town_list : ''),
+				'part_of_town_list'				 => array('options' => $part_of_town_list),
 				'lang_town_statustext'			 => (isset($lang_town_statustext) ? $lang_town_statustext : ''),
 				'lang_part_of_town'				 => lang('Part of town'),
 				'lang_no_part_of_town'			 => lang('No part of town'),
@@ -2782,18 +2782,30 @@ JS;
 				'lang_expand_all'				 => lang('expand all'),
 				'lang_collapse_all'				 => lang('collapse all'),
 				'validator'						 => phpgwapi_jquery::formvalidator_generate(array('location',
-					'date', 'security', 'file'))
+					'date', 'security', 'file')),
+				'edit_link' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction'	 => 'property.uilocation.edit',
+					'location_code'	 => $location_code,
+					'type_id'		 => $type_id,
+					'lookup_tenant'	 => $lookup_tenant
+				))
 			);
 
 			//phpgwapi_jquery::load_widget('treeview');
 
 			$appname = lang('location');
 
-			self::add_javascript('property', 'portico', 'location.edit.js');
+			self::add_javascript('property', 'base', 'location.edit.js');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			self::render_template_xsl(array('location', 'datatable_inline', 'attributes_form'), array(
-				'edit' => $data));
+			self::render_template_xsl(array(
+				'location',
+				'datatable_inline',
+				$mode == 'view' ? 'attributes_view' : 'attributes_form'
+				),
+				 array(
+					'edit' => $data));
 		}
 
 		private function is_external_login()

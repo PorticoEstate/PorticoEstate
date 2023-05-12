@@ -8,7 +8,7 @@
 		function __construct()
 		{
 			parent::__construct('bb_resource', array(
-				'id' => array('type' => 'int'),
+				'id' => array('type' => 'int', 'query' => true),
 				'active' => array('type' => 'int', 'required' => true),
 				'sort' => array('type' => 'int', 'required' => false),
 //				'building_id'		 => array('type' => 'int', 'required' => true),
@@ -36,6 +36,8 @@
 				'booking_time_minutes' => array('type' => 'int', 'required' => false),
 				'booking_limit_number' => array('type' => 'int', 'required' => false),
 				'booking_limit_number_horizont' => array('type' => 'int', 'required' => false),
+				'hidden_in_frontend' => array('type' => 'int', 'required' => false),
+				'activate_prepayment' => array('type' => 'int', 'required' => false),
 
 				'building_id' => array(
 					'type' => 'int',
@@ -367,7 +369,7 @@
 			{
 				$values[] = array(
 					'id' => $this->db->f('id'),
-					'name' => $this->db->f('building_name') . '::' . $this->db->f('name')
+					'name' => $this->db->f('building_name',true) . '::' . $this->db->f('name',true)
 					);
 			}
 
@@ -417,7 +419,7 @@
 			(
 				1	=> array
 				(
-					'value'	=> $this->db->db_addslashes(substr($e_lock_name, 0, 20)),
+					'value'	=> $this->db->db_addslashes(substr($e_lock_name, 0, 200)),
 					'type'	=> PDO::PARAM_STR
 				),
 				2	=> array

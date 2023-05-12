@@ -1,33 +1,32 @@
-<?php return array (
-  'root' => 
-  array (
-    'pretty_version' => '1.0.0+no-version-set',
-    'version' => '1.0.0.0',
-    'aliases' => 
-    array (
+<?php return array(
+    'root' => array(
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'reference' => 'ce56cf7395b65448dd9919d01cc9373813137496',
+        'name' => '__root__',
+        'dev' => true,
     ),
-    'reference' => NULL,
-    'name' => '__root__',
-  ),
-  'versions' => 
-  array (
-    '__root__' => 
-    array (
-      'pretty_version' => '1.0.0+no-version-set',
-      'version' => '1.0.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => NULL,
+    'versions' => array(
+        '__root__' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'reference' => 'ce56cf7395b65448dd9919d01cc9373813137496',
+            'dev_requirement' => false,
+        ),
+        'kigkonsult/icalcreator' => array(
+            'pretty_version' => 'v2.41.71',
+            'version' => '2.41.71.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../kigkonsult/icalcreator',
+            'aliases' => array(),
+            'reference' => '591b63a76875d5d164c5e2986cc42afbb0524b47',
+            'dev_requirement' => false,
+        ),
     ),
-    'kigkonsult/icalcreator' => 
-    array (
-      'pretty_version' => 'v2.39.2',
-      'version' => '2.39.2.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '722e161d1a25c3ceec1692642d64a7f2cf5faee9',
-    ),
-  ),
 );

@@ -11,7 +11,7 @@
 					</a>
 				</span>
 				<span>
-					<a href="{group/organization_link}">
+					<a href="{group/cancel_link}">
 						<xsl:value-of select="group/organization_name"/>
 					</a>
 				</span>

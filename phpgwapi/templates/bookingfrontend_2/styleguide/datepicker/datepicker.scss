@@ -1,0 +1,205 @@
+.ui-datepicker {
+  box-shadow: $box-shadow-large;
+  border-radius: $rounded-small;
+  z-index: 2 !important;
+  margin-top: 0.5rem;
+  width: auto;
+
+  &.ui-widget {
+    border: 2px solid $purple;
+
+    &,
+    & select {
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      line-height: 1.75rem;
+      font-weight: $text-normal;
+    }
+
+    &-content {
+      background-image: none;
+      background-color: $white;
+      padding: 1rem;
+
+      @media (min-width: $media-small) {
+        padding: 1.5rem;
+      }
+    }
+
+    .ui-widget-header {
+      color: $black;
+      font-weight: $text-normal;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .ui-datepicker {
+    &-header {
+      border: 0;
+      padding: 0;
+      background: none;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      height: 36px;
+
+      @media (min-width: $media-small) {
+        height: 44px;
+      }
+    }
+
+    &-title {
+      margin: 0 3rem;
+    }
+
+    &-prev,
+    &-next {
+      display: flex;
+      background-color: $grey-light;
+      justify-content: center;
+      border-radius: $rounded-large;
+      position: absolute;
+      text-decoration: none;
+      align-items: center;
+
+      @media (min-width: $media-small) {
+        width: 2.75em;
+        height: 2.75em;
+      }
+
+      span {
+        display: none !important;
+      }
+
+      &,
+      &-hover {
+        top: 3px;
+
+        @media (min-width: $media-small) {
+          top: 0;
+        }
+      }
+
+      &::after {
+        content: "\f054";
+        font-size: 1em;
+        color: $black;
+        font-weight: 700;
+        font-family: "Font Awesome 5 Free";
+
+        @media (min-width: $media-small) {
+          font-size: 1.4em;
+        }
+      }
+
+      &:focus {
+        outline: none;
+      }
+
+      &:hover,
+      .ui-state-hover {
+        background-color: $purple-24;
+        background-image: none;
+        border: 0;
+        cursor: pointer;
+      }
+
+      &:focus-visible {
+        border: 0;
+        box-shadow: $box-focus-shadow;
+      }
+    }
+
+    &-prev {
+      left: 0;
+
+      &::after {
+        transform: rotate(180deg);
+      }
+    }
+
+    &-next {
+      right: 0;
+
+      &::after {
+        transform: rotate(0);
+      }
+    }
+  }
+
+  select.ui-datepicker-month, 
+  select.ui-datepicker-year {
+    width: auto;
+    border: 0;
+    margin: 0 0.25rem 0 0;
+    padding: 0.375rem;
+    border-radius: 0.25rem;
+    background: $grey-light;
+
+    
+    @media (min-width: $media-small) {
+      padding: 0.719rem;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus-visible {
+      box-shadow: $box-focus-shadow;
+    }
+  }
+
+  th {
+    font-weight: $text-normal;
+    font-size: 1rem;
+  }
+
+  td {
+    padding: 0.15rem;
+  }
+
+  .ui-state-default, 
+  .ui-widget-content .ui-state-default {
+    border: 2px solid $grey-light;
+    border-radius: 0.375rem;
+    font-weight: $text-normal;
+    color: $black;
+    background: $grey-light;
+    text-align: center;
+    font-size: 1rem;
+    padding: 0.25rem;
+
+    @media (min-width: $media-small) {
+      font-size: 1.125rem;
+      padding: 0.75rem;
+    }
+  
+    &:focus {
+      outline: none;
+    }
+
+    &:hover,
+    &.ui-state-hover {
+      &,
+      .ui-datepicker-days-cell-over & {
+      border-color: $purple;
+      background-color: $purple-24;
+      background-image: none;
+    }
+    }
+
+    &.ui-state-active {
+      background: $purple;
+      border-color: $purple;
+      color: $white;
+    }
+
+    &.ui-state-highlight {
+      background-color: $purple-24;
+      border-color: $purple-24;
+    }
+  }
+}

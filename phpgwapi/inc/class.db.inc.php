@@ -90,9 +90,18 @@
 		/**
 		* @var bool $auto_stripslashes automagically remove slashes from field values returned?
 		*/
+	
 		var $auto_stripslashes = false;
+	
+		/**
+		* @var integer $affected_rows number of rows affected by last update
+		*/
+		
+		var $affected_rows;
 
 		var $resultSet = array();
+
+		var $Record = array();
 
 		var $fetchmode = 'ASSOC';//'BOTH';
 

@@ -4,6 +4,11 @@
 	class booking_bouser extends booking_bocommon_authorized
 	{
 
+		public $public_functions = array(
+			'get_applications'	 => true,
+			'get_invoices'		 => true
+		);
+
 		const ROLE_ADMIN = 'user_admin';
 
 		function __construct()
@@ -15,6 +20,25 @@
 		public function anonymisation( $id )
 		{
 			return $this->so->anonymisation($id);
+		}
+
+		public function get_applications( $ssn = null)
+		{
+			if(!$ssn)
+			{
+				$ssn = phpgw::get_var('ssn', 'GET');
+			}
+
+			return $this->so->get_applications($ssn);
+		}
+
+		public function get_invoices( $ssn = null)
+		{
+			if(!$ssn)
+			{
+				$ssn = phpgw::get_var('ssn', 'GET');
+			}
+			return $this->so->get_invoices($ssn);
 		}
 
 		/**
@@ -139,7 +163,7 @@
 			}
 			else
 			{
-				throw new Exception('Kopling til folkergister er ikke konfigurert');
+				throw new Exception('Kopling til folkeregister er ikke konfigurert');
 			}
 
 			$get_persons_only = true;
@@ -172,7 +196,7 @@
 				}
 				else
 				{
-					phpgwapi_cache::message_set("{$customer['name']} validerer ikke, manlger komplett datasett", 'error');
+					phpgwapi_cache::message_set("{$customer['name']} validerer ikke, mangler komplett datasett", 'error');
 				}
 			}
 

@@ -78,9 +78,10 @@ $(document).ready(function ()
 
 //		update_schedule(target_date, control_id, serie_id, check_list_id, dragObjId, deadline_date_ts, assigned_to);
 
-		$("#" + dragObjId).removeClass('badge-primary');
-		$("#" + dragObjId).addClass('badge-warning');
-
+		$("#" + dragObjId).removeClass('bg-primary');
+		$("#" + dragObjId).addClass('bg-warning');
+		$("#" + dragObjId).removeClass('text-light');
+		$("#" + dragObjId).addClass('text-dark');
 	});
 });
 
@@ -110,9 +111,11 @@ function update_schedule(target_date, control_id, serie_id, check_list_id, item_
 			if (data)
 			{
 				console.log(data);
-				$("#" + item_id).removeClass('badge-primary');
-				$("#" + item_id).removeClass('badge-warning');
-				$("#" + item_id).addClass('badge-success');
+				$("#" + item_id).removeClass('bg-primary');
+				$("#" + item_id).removeClass('bg-warning');
+				$("#" + item_id).removeClass('text-dark');
+				$("#" + item_id).addClass('bg-success');
+				$("#" + item_id).addClass('text-light');
 
 				if (data.status === 'ok' && data.check_list_id)
 				{

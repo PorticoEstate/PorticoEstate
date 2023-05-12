@@ -13,7 +13,7 @@
 			<div id="documentation" class="booking-container">
 				<fieldset>
 					<div class="heading">
-						<legend>
+						<!--<legend>-->
 							<h3>
 								<xsl:if test="document/id">
 									<xsl:value-of select="php:function('lang', 'Edit manual')" />
@@ -22,7 +22,7 @@
 									<xsl:value-of select="php:function('lang', 'Upload manual')" />
 								</xsl:if>
 							</h3>
-						</legend>
+						<!--</legend>-->
 					</div>
 					<xsl:if test="document/id">
 						<!-- An update, add id column -->

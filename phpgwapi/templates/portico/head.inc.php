@@ -22,7 +22,7 @@
 	$GLOBALS['phpgw']->template->set_block('head', 'stylesheet', 'stylesheets');
 	$GLOBALS['phpgw']->template->set_block('head', 'javascript', 'javascripts');
 
-	$GLOBALS['phpgw_info']['server']['no_jscombine']=true;
+	$GLOBALS['phpgw_info']['server']['no_jscombine']=false;
 
 	$javascripts = array();
 
@@ -33,13 +33,16 @@
 
 	if( !isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{
-		$javascripts[] = "/phpgwapi/templates/portico/js/base.js";
+//		$javascripts[] = "/phpgwapi/templates/portico/js/base.js";
+		//https://medium.com/@fbnlsr/how-to-get-rid-of-the-flash-of-unstyled-content-d6b79bf5d75f
+		$GLOBALS['phpgw']->js->add_external_file("/phpgwapi/templates/portico/js/base.js", $end_of_page = true, array('combine' => true ));
 	}
 
 	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
 	{
 		phpgwapi_jquery::load_widget('layout');
 		phpgwapi_jquery::load_widget('jqtree');
+		phpgwapi_jquery::load_widget('contextMenu');
 
 		$GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] = 'ajax_menu';//ajax_menu|jsmenu
 		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
@@ -51,16 +54,14 @@
 
 
 	$stylesheets = array();
-//	$stylesheets[] = "/phpgwapi/js/materialize/css/materialize.min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
-//	$stylesheets[] = "/phpgwapi/templates/pure/css/demo_mmenu.css";
-	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/version_3/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
-	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
+	$stylesheets[] = "/phpgwapi/templates/pure/css/version_3/grids-responsive-min.css";
+
 	$stylesheets[] = "/phpgwapi/js/DataTables/DataTables/css/jquery.dataTables.min.css";
 	$stylesheets[] = "/phpgwapi/js/DataTables/DataTables/css/dataTables.jqueryui.min.css";
 	$stylesheets[] = "/phpgwapi/js/DataTables/Responsive/css/responsive.dataTables.min.css";
-//	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
 	$stylesheets[] = "/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
 
 	$stylesheets[] = "/phpgwapi/templates/base/css/base.css";

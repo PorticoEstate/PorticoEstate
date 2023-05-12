@@ -795,7 +795,8 @@ HTML;
 
 			$result = array();
 
-			$highestColumn		 = $spreadsheet->getActiveSheet()->getHighestColumn();
+			$calculate_highest_column_from = $get_identificator ? 2 : 1;
+			$highestColumn		 = $spreadsheet->getActiveSheet()->getHighestColumn($calculate_highest_column_from);
 			$highestColumnIndex	 = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
 			$rows				 = (int)$spreadsheet->getActiveSheet()->getHighestRow();
 

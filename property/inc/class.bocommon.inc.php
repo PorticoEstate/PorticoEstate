@@ -1460,25 +1460,12 @@
 			{
 				foreach ($parts as $entry)
 				{
-					if ($entry['id'] == $selected)
-					{
-						$part_of_town_list[] = array
-							(
-							'id'			 => $entry['id'],
-							'name'			 => $entry['name'],
-							'district_id'	 => $entry['district_id'],
-							'selected'		 => 'selected'
-						);
-					}
-					else
-					{
-						$part_of_town_list[] = array
-							(
-							'id'			 => $entry['id'],
-							'name'			 => $entry['name'],
-							'district_id'	 => $entry['district_id'],
-						);
-					}
+					$part_of_town_list[] = array(
+						'id'			 => $entry['id'],
+						'name'			 => $entry['name'],
+						'district_id'	 => $entry['district_id'],
+						'selected'		 => $entry['id'] == $selected ? 1 : 0
+					);
 				}
 			}
 
@@ -2107,13 +2094,13 @@
 		{
 			if (!isset($GLOBALS['phpgw_info']['server']['charset']) || $GLOBALS['phpgw_info']['server']['charset'] == 'utf-8')
 			{
-				if ($text == utf8_decode($text))
+				if ($text == mb_convert_encoding($text, 'ISO-8859-1', 'UTF-8'))
 				{
 					return $text;
 				}
 				else
 				{
-					return utf8_decode($text);
+					return mb_convert_encoding($text, 'ISO-8859-1', 'UTF-8');
 				}
 			}
 			else
@@ -2132,7 +2119,7 @@
 		{
 			if (!isset($GLOBALS['phpgw_info']['server']['charset']) || $GLOBALS['phpgw_info']['server']['charset'] == 'utf-8')
 			{
-				return utf8_encode($text);
+				return mb_convert_encoding($text, 'UTF-8', 'ISO-8859-1');
 			}
 			else
 			{
@@ -2251,12 +2238,14 @@
 			if (isset($origin) && $origin)
 			{
 				$interlink				 = CreateObject('property.interlink');
-				$values['origin_data']	 = array(
+				$values['origin_data'][] = array(
 					'location'	 => $origin,
 					'descr'		 => $interlink->get_location_name($origin),
 					'data'		 => array(
-						'id'	 => $origin_id,
-						'link'	 => $interlink->get_relation_link(array('location' => $origin), $origin_id)
+						array(
+							'id'	 => $origin_id,
+							'link'	 => $interlink->get_relation_link(array('location' => $origin), $origin_id)
+						)
 					)
 				);
 			}
@@ -2465,6 +2454,49 @@
 
 			return $values;
 
+		}
+		public function get_top_level_category_names( $data )
+		{
+			static $_cats = array();
+
+			$selected = array();
+			if(!empty($data['id']))
+			{
+				if(is_array($data['id']))
+				{
+					$selected = $data['id'];
+				}
+				else if(preg_match('/^\,|&\,/', $data['id']))
+				{
+					$selected = explode(',',trim($data['id'],','));
+				}
+				else
+				{
+					$selected[] = $data['id'];
+				}
+			}
+
+			if(!isset($_cats[$data['acl_location']]))
+			{
+				$cats							 = CreateObject('phpgwapi.categories', -1, 'property', $data['acl_location']);
+				$cats->supress_info				 = true;
+				$_cats[$data['acl_location']]	 = $cats->return_sorted_array(0, false, '', '', '', false, false);
+			}
+
+			$names = array();
+
+			if(is_array($_cats[$data['acl_location']]))
+			{
+				foreach ($_cats[$data['acl_location']] as $_cat)
+				{
+					if ($_cat['level'] == 0 && $_cat['active'] != 2 && in_array($_cat['id'], $selected))
+					{
+						$names[] = $_cat['name'];
+					}
+				}
+			}
+
+			return implode(', ', $names);
 		}
 
 		public function get_categories( $data )
@@ -2720,4 +2752,27 @@
 
 		}
 
+		public function get_users($query)
+		{
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts', $start, $sort, $order, $query, $offset);
+
+			$values = array();
+			foreach ($accounts as $account)
+			{
+				if ($account->enabled)
+				{
+					$values[] = array
+						(
+						'id'	 => $account->id,
+						'name'	 => $account->__toString(),
+					);
+				}
+			}
+			return array('ResultSet' => array('Result' => $values));
+		}
 	}

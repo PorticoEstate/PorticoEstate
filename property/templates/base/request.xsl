@@ -72,8 +72,10 @@
 	<div class="pure-control-group">
 		<label for="name">
 			<xsl:value-of select="name"/>
-			<xsl:text>::</xsl:text>
-			<xsl:value-of select="descr"/>
+			<xsl:if test="descr !=''">
+				<xsl:text>::</xsl:text>
+				<xsl:value-of select="descr"/>
+			</xsl:if>
 		</label>
 		<input type="text" size="3" name="values[priority_key][{id}]" value="{priority_key}">
 			<xsl:attribute name="title">
@@ -399,6 +401,28 @@
 						</label>
 						<textarea  class="pure-input-1-2" rows="6" name="values[descr]" title="{$lang_request_description}">
 							<xsl:value-of select="value_descr"/>
+						</textarea>
+					</div>
+					<div class="pure-control-group">
+						<xsl:variable name="lang_request_proposed_measures">
+							<xsl:value-of select="php:function('lang', 'proposed measures')"/>
+						</xsl:variable>
+						<label title="{$lang_request_proposed_measures}">
+							<xsl:value-of select="$lang_request_proposed_measures"/>
+						</label>
+						<textarea  class="pure-input-1-2" rows="6" name="values[proposed_measures]" title="{$lang_request_proposed_measures}">
+							<xsl:value-of select="value_proposed_measures"/>
+						</textarea>
+					</div>
+					<div class="pure-control-group">
+						<xsl:variable name="lang_request_remark">
+							<xsl:value-of select="php:function('lang', 'remark')"/>
+						</xsl:variable>
+						<label title="{$lang_request_remark}">
+							<xsl:value-of select="$lang_request_remark"/>
+						</label>
+						<textarea  class="pure-input-1-2" rows="6" name="values[remark]" title="{$lang_request_remark}">
+							<xsl:value-of select="value_remark"/>
 						</textarea>
 					</div>
 				</div>

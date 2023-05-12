@@ -106,7 +106,7 @@
 					$filter_clauses[] = "
 					(
 						(
-							((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
+							((NOT rental_contract.date_start > $availability_date_to AND (rental_contract.date_end IS NULL OR rental_contract.date_end = 0))
 							OR
 							(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))
 						)
@@ -136,7 +136,7 @@
 							(
 								NOT rental_contract_composite.contract_id IS NULL AND
 								NOT rental_contract.date_start IS NULL AND
-								((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
+								((NOT rental_contract.date_start > $availability_date_to AND (rental_contract.date_end IS NULL OR rental_contract.date_end = 0))
 								OR
 								(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))
 							)
@@ -214,7 +214,15 @@
 				$joins .= "	{$this->join} fm_location1 ON (fm_location1.loc1 = fm_locations.loc1)";
 				$joins .= "	{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id)";
 
-				$filter_clauses[] = "fm_part_of_town.district_id =" . (int)$filters['district_id'];
+				if(is_array($filters['district_id']))
+				{
+					$district_ids = $filters['district_id'];
+				}
+				else
+				{
+					$district_ids = array($filters['district_id']);
+				}
+				$filter_clauses[] = "fm_part_of_town.district_id IN ( " . implode(',', array_map('intval', $district_ids)) . ")";
 			}
 			if (count($filter_clauses))
 			{
@@ -253,7 +261,7 @@
 				NOT rental_contract_composite.contract_id IS NULL AND
 				NOT rental_contract.date_start IS NULL AND
 				NOT rental_contract.location_id = {$location_id_into} AND
-				((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
+				((NOT rental_contract.date_start > $availability_date_to AND (rental_contract.date_end IS NULL OR rental_contract.date_end = 0))
 		 		OR
 				(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))
 				)

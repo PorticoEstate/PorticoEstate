@@ -173,7 +173,7 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
 			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
 
-			self::add_javascript('property', 'portico', 'ajax_b_account_user.js');
+			self::add_javascript('property', 'base', 'ajax_b_account_user.js');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('b_account_user', 'datatable_inline'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('data' => $data));

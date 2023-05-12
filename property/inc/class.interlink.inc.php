@@ -271,7 +271,7 @@
 			}
 			else if ($type == '.document')
 			{
-				$link = array('menuaction' => 'property.uidocument.edit', 'document_id' => $id);
+				$link = array('menuaction' => 'property.uidocument.edit', 'id' => $id);
 			}
 			else if ($type == '.project.workorder')
 			{
@@ -492,23 +492,25 @@
 			$location1_id	 = $GLOBALS['phpgw']->locations->get_id($appname, $origin_location);
 			$location2_id	 = $GLOBALS['phpgw']->locations->get_id($appname, $target_location);
 
-			$sql = "SELECT entry_date, location2_item_id FROM phpgw_interlink WHERE location1_item_id = {$id} AND location1_id = {$location1_id} AND location2_id = {$location2_id}";
+			$sql = "SELECT entry_date, location2_item_id AS item_id, '{$target_location}' AS location FROM phpgw_interlink WHERE location1_item_id = {$id} AND location1_id = {$location1_id} AND location2_id = {$location2_id} ";
+			$sql .= "UNION "; 
+			$sql .= "SELECT entry_date, location1_item_id AS item_id, '{$target_location}' AS location FROM phpgw_interlink WHERE location2_item_id = {$id} AND location2_id = {$location1_id} AND location1_id = {$location2_id}";
 
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			$date_info = array();
 			while ($this->_db->next_record())
 			{
-				$date_info[] = array
-					(
+				$date_info[] = array(
 					'entry_date' => $GLOBALS['phpgw']->common->show_date($this->_db->f('entry_date'), $dateformat),
-					'target_id'	 => $this->_db->f('location2_item_id')
+					'item_id'	 => $this->_db->f('item_id'),
+					'location'	 => $this->_db->f('location')
 				);
 			}
 
 			foreach ($date_info as &$entry)
 			{
-				$entry['link'] = $this->get_relation_link(array('location' => $target_location), $entry['target_id']);
+				$entry['link'] = $this->get_relation_link(array('location' => $entry['location']), $entry['item_id']);
 				if ($cat_id)
 				{
 					$entry['descr'] = $this->soadmin_entity->read_category_name($entity_id, $cat_id);
@@ -518,8 +520,10 @@
 					$entry['descr'] = lang($target_location);
 				}
 			}
-			return array('date_info' => $date_info);
+			return $date_info;
 		}
+
+
 
 		/**
 		 * Add link to item

@@ -12,13 +12,24 @@
 	 * 				2) configurasjon for pålogging til ftp-server (IP/Login/Passord/envt katalog)
 	 *
 	 */
-	require_once PHPGW_API_INC . '/flysystem2/autoload.php';
 
+	require_once PHPGW_API_INC . '/flysystem2/autoload.php';
 	use League\Flysystem\Filesystem;
 	use League\Flysystem\PhpseclibV2\SftpConnectionProvider;
 	use League\Flysystem\PhpseclibV2\SftpAdapter;
 	use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
-	
+
+//  php 8 +
+//	require_once PHPGW_API_INC . '/flysystem3/vendor/autoload.php';
+//	use League\Flysystem\Filesystem;
+//	use League\Flysystem\PhpseclibV3\SftpConnectionProvider;
+//	use League\Flysystem\PhpseclibV3\SftpAdapter;
+//	use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
+
+
+
+
+
 	class export_agresso
 	{
 

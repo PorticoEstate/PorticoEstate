@@ -114,6 +114,7 @@
 			phpgw::import_class('property.multiuploader');
 
 
+			$options = array();
 			$options['base_dir']	 = "condition_survey/{$id}";
 			$options['upload_dir']	 = $GLOBALS['phpgw_info']['server']['files_dir'] . '/property/' . $options['base_dir'] . '/';
 			$options['script_url']	 = html_entity_decode($multi_upload_action);
@@ -570,6 +571,7 @@
 					'className'	 => 'center'),
 				array('key'		 => 'planned_year', 'label'		 => lang('planned year'), 'sortable'	 => true,
 					'className'	 => 'center'),
+				array('key' => 'representative', 'label' => lang('representative') . '*', 'sortable' => false , 'editor' => $mode == 'edit' ? true : false),
 				array('key' => 'related', 'label' => lang('related'), 'sortable' => false),
 			);
 
@@ -581,6 +583,7 @@
 				'ColumnDefs' => $related_def,
 				'config'	 => array(
 					array('allrows' => true),
+					array('editor_action' => self::link(array('menuaction' => 'property.uirequest.set_value')))//, 'phpgw_return_as'	 => 'json')))
 				)
 			);
 
@@ -607,8 +610,10 @@
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_2',
-				'requestUrl' => json_encode(self::link(array('menuaction'		 => 'property.uicondition_survey.get_summation',
-						'id'				 => $id, 'phpgw_return_as'	 => 'json'))),
+				'requestUrl' => json_encode(self::link(array(
+					'menuaction'		 => 'property.uicondition_survey.get_summation',
+					'ids'	 => $id,
+					'phpgw_return_as'	 => 'json'))),
 				'ColumnDefs' => $summation_def,
 				'config'	 => array(
 					array('disableFilter' => true),
@@ -639,24 +644,27 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
 
+			$data['multi_upload_parans'] = '""';
 			if ($mode == 'edit')
 			{
 				$GLOBALS['phpgw']->jqcal->add_listener('report_date');
 				phpgwapi_jquery::load_widget('core');
-				self::add_javascript('property', 'portico', 'condition_survey_edit.js');
+				self::add_javascript('property', 'base', 'condition_survey_edit.js', false, array('combine' => true ));
 				phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 					'file'));
-				$data['multi_upload_parans'] = "{menuaction:'property.uicondition_survey.build_multi_upload_file', id:'{$id}'}";
+//				$data['multi_upload_parans'] = "{menuaction:'property.uicondition_survey.build_multi_upload_file', id:'{$id}'}";
 				$data['multi_upload_action'] = $GLOBALS['phpgw']->link('/index.php',
-														   array('menuaction' => 'property.uicondition_survey.handle_multi_upload_file',
-						'id'		 => $id));
+														   array(
+															   'menuaction' => 'property.uicondition_survey.handle_multi_upload_file',
+																'id'		 => $id)
+					);
 			}
 
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
-			self::add_javascript('property', 'portico', 'condition_survey.js');
+			self::add_javascript('property', 'base', 'condition_survey.js', false, array('combine' => true ));
 
-			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
+			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js', false, array('combine' => true ));
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
 			self::render_template_xsl(array('condition_survey', 'files', 'multi_upload_file_inline', 'datatable_inline'), $data);
@@ -809,7 +817,7 @@
 		function get_summation()
 		{
 
-			$id		 = phpgw::get_var('id', 'int', 'REQUEST');
+			$ids		 = phpgw::get_var('ids', 'int', 'REQUEST');
 			$year	 = phpgw::get_var('year', 'int', 'REQUEST');
 
 			if (!$this->acl_read)
@@ -817,7 +825,7 @@
 				return;
 			}
 
-			$values = $this->bo->get_summation($id, $year);
+			$values = $this->bo->get_summation($ids, $year);
 
 			$total_records	 = count($values);
 			$num_rows		 = phpgw::get_var('length', 'int', 'REQUEST', 0);
@@ -1310,6 +1318,8 @@
 						'disable'	 => true);
 					$tabs['step_4']	 = array('label'		 => lang('choose columns'), 'link'		 => null,
 						'disable'	 => true);
+					$tabs['step_5']	 = array('label'		 => lang('completed'), 'link'		 => null,
+						'disable'	 => true);
 					break;
 				case 1:
 					$active_tab		 = 'step_2';
@@ -1321,6 +1331,8 @@
 					$tabs['step_3']	 = array('label'		 => lang('choose start line'), 'link'		 => null,
 						'disable'	 => true);
 					$tabs['step_4']	 = array('label'		 => lang('choose columns'), 'link'		 => null,
+						'disable'	 => true);
+					$tabs['step_5']	 = array('label'		 => lang('completed'), 'link'		 => null,
 						'disable'	 => true);
 					break;
 				case 2:
@@ -1334,6 +1346,8 @@
 							'sheet_id'	 => $sheet_id, 'start_line' => $start_line)));
 					$tabs['step_3']	 = array('label' => lang('choose start line'), 'link' => '#step_3');
 					$tabs['step_4']	 = array('label'		 => lang('choose columns'), 'link'		 => null,
+						'disable'	 => true);
+					$tabs['step_5']	 = array('label'		 => lang('completed'), 'link'		 => null,
 						'disable'	 => true);
 					break;
 				case 3:
@@ -1349,6 +1363,17 @@
 							'menuaction' => 'property.uicondition_survey.import', 'id'		 => $id, 'step'		 => 2,
 							'sheet_id'	 => $sheet_id, 'start_line' => $start_line)));
 					$tabs['step_4']	 = array('label' => lang('choose columns'), 'link' => '#step_4');
+					$tabs['step_5']	 = array('label'		 => lang('completed'), 'link'		 => null,
+						'disable'	 => true);
+					break;
+				case 4:
+					$active_tab		 = 'step_5';
+					$lang_submit	 = '';
+					$tabs['step_1']	 = array('label' => lang('choose file'), 'link' => null, 'disable'	 => true);
+					$tabs['step_2']	 = array('label'	 => lang('choose sheet'), 'link' => null, 'disable'	 => true);
+					$tabs['step_3']	 = array('label'	 => lang('choose start line'), 'link' => null, 'disable'	 => true);
+					$tabs['step_4']	 = array('label' => lang('choose columns'), 'link' => null, 'disable'	 => true);
+					$tabs['step_5']	 = array('label' => lang('completed'), 'link' => '#step_5');
 					break;
 				/*
 				  case 4://temporary
@@ -1393,7 +1418,7 @@
 
 					$spreadsheet->setActiveSheetIndex((int)$sheet_id);
 					$rows				 = $spreadsheet->getActiveSheet()->getHighestRow();
-					$highestColumn		 = $spreadsheet->getActiveSheet()->getHighestColumn();
+					$highestColumn		 = $spreadsheet->getActiveSheet()->getHighestColumn($start_line);
 					$highestColumnIndex	 = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
 				}
 				catch (Exception $e)
@@ -1455,13 +1480,15 @@
 			}
 			else if ($rows > 1 && $step == 3)
 			{
-				$_options = array
-					(
+				$_options = array(
 					'_skip_import_'				 => 'Utelates fra import/implisitt',
 					'import_type'				 => 'import type',
 					'building_part'				 => 'bygningsdels kode',
 					'descr'						 => 'Tilstandbeskrivelse',
 					'title'						 => 'Tiltak/overskrift',
+					'remark_1'					 => 'Tiltak/Merknad 1',
+					'remark_2'					 => 'Tiltak/Merknad 2',
+					'proposed_measures'			 => 'Tiltak/Foreslåtte tiltak',
 					'condition_degree'			 => 'Tilstandsgrad',
 					'condition_type'			 => 'Konsekvenstype',
 					'consequence'				 => 'Konsekvensgrad',
@@ -1543,8 +1570,7 @@
 			}
 
 			$bolocation		 = CreateObject('property.bolocation');
-			$location_data	 = $bolocation->initiate_ui_location(array
-				(
+			$location_data	 = $bolocation->initiate_ui_location(array(
 				'values'		 => $survey['location_data'],
 				'type_id'		 => 2,
 				'lookup_type'	 => 'view2',
@@ -1553,8 +1579,7 @@
 				'entity_data'	 => isset($survey['p']) ? $survey['p'] : ''
 			));
 
-			$data = array
-				(
+			$data = array(
 				'lang_submit'	 => $lang_submit,
 				'survey'		 => $survey,
 				'location_data2' => $location_data,
@@ -1762,8 +1787,7 @@
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.index'));
 			}
 
-			$params = array
-				(
+			$params = array(
 				'start'		 => 0,
 				'sort'		 => 'id',
 				'dir'		 => 'asc',
@@ -1774,16 +1798,6 @@
 			$survey_list = $this->bo->read($params);
 
 			$surveys	 = array();
-			$surveys[]	 = array
-				(
-				'id'	 => 0,
-				'name'	 => lang('select'),
-			);
-			$surveys[]	 = array
-				(
-				'id'	 => -1,
-				'name'	 => lang('all'),
-			);
 
 			foreach ($survey_list as $survey)
 			{
@@ -1792,8 +1806,7 @@
 					continue;
 				}
 
-				$surveys[] = array
-					(
+				$surveys[] = array(
 					'id'			 => $survey['id'],
 					'name'			 => $survey['title'],
 					'description'	 => $survey['address'],
@@ -1802,16 +1815,16 @@
 
 
 
-			$current_year = date('Y');
+			$current_year = date('Y') - 4;
 
 			$years = array();
 
-			for ($i = 0; $i < 6; $i++)
+			for ($i = 0; $i < 10; $i++)
 			{
-				$years[] = array
-					(
+				$years[] = array(
 					'id'	 => $current_year,
-					'name'	 => $current_year
+					'name'	 => $current_year,
+					'selected' => $current_year == date('Y') ? 1 : 0
 				);
 				$current_year++;
 			}
@@ -1840,8 +1853,9 @@
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_0',
-				'requestUrl' => json_encode(self::link(array('menuaction'		 => 'property.uicondition_survey.get_summation',
-						'id'				 => $id, 'phpgw_return_as'	 => 'json'))),
+				'requestUrl' => json_encode(self::link(array(
+						'menuaction'		 => 'property.uicondition_survey.get_summation',
+						'phpgw_return_as'	 => 'json'))),
 				'ColumnDefs' => $summation_def,
 //				'config' => array(
 //					array('disableFilter' => true),
@@ -1850,14 +1864,14 @@
 //				),
 			);
 
-			$data = array
-				(
+			$data = array(
 				'datatable_def'	 => $datatable_def,
 				'surveys'		 => array('options' => $surveys),
 				'years'			 => array('options' => $years),
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
+			phpgwapi_jquery::load_widget('bootstrap-multiselect');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('condition survey');
 

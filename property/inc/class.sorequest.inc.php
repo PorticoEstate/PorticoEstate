@@ -245,12 +245,12 @@
 			$sql = "SELECT DISTINCT fm_request.id as request_id,fm_request_status.descr as status,fm_request.building_part,"
 				. " fm_request.start_date,fm_request.closed_date,fm_request.in_progress_date,fm_request.category as cat_id,"
 				. " fm_request.delivered_date,fm_request.title as title,max(fm_request_condition.degree) as condition_degree,"
-				. " (fm_request.amount_investment * fm_request.multiplier) as amount_investment,"
-				. " (fm_request.amount_operation * fm_request.multiplier) as amount_operation,"
-				. " (fm_request.amount_potential_grants * fm_request.multiplier) as amount_potential_grants,"
+				. " (fm_request.amount_investment * fm_request.multiplier * fm_request.representative) as amount_investment,"
+				. " (fm_request.amount_operation * fm_request.multiplier * fm_request.representative) as amount_operation,"
+				. " (fm_request.amount_potential_grants * fm_request.multiplier * fm_request.representative) as amount_potential_grants,"
 				. " fm_request.score,"
 				. " fm_request.recommended_year,"
-				. " fm_request.start_date"
+				. " fm_request.start_date, representative"
 				. " FROM (( fm_request  LEFT JOIN fm_request_status ON fm_request.status = fm_request_status.id)"
 				. " LEFT JOIN fm_request_condition ON fm_request.id = fm_request_condition.request_id)"
 				. " {$filtermethod}"
@@ -295,6 +295,7 @@
 					'recommended_year'			 => $this->_db->f('recommended_year') ? $this->_db->f('recommended_year') : '',
 					'planned_year'				 => $this->_db->f('start_date') ? date('Y', $this->_db->f('start_date')) : '',
 					'cat_id'					 => $this->_db->f('cat_id'),
+					'representative'			 => (float)$this->_db->f('representative'),
 				);
 			}
 			return $values;
@@ -317,8 +318,8 @@
 			$list_descr			 = isset($data['list_descr']) ? $data['list_descr'] : '';
 			$dry_run			 = isset($data['dry_run']) ? $data['dry_run'] : '';
 			$p_num				 = isset($data['p_num']) ? $data['p_num'] : '';
-			$start_date			 = isset($data['start_date']) && $data['start_date'] ? phpgwapi_datetime::date_to_timestamp($data['start_date']) : 0;
-			$end_date			 = isset($data['end_date']) && $data['end_date'] ? phpgwapi_datetime::date_to_timestamp($data['end_date']) : 0;
+			$start_date			 = isset($data['start_date']) && $data['start_date'] ? $data['start_date'] : 0;
+			$end_date			 = isset($data['end_date']) && $data['end_date'] ? $data['end_date'] : 0;
 			$building_part		 = isset($data['building_part']) && $data['building_part'] ? (int)$data['building_part'] : 0;
 			$degree_id			 = $data['degree_id'];
 			$attrib_filter		 = $data['attrib_filter'] ? $data['attrib_filter'] : array();
@@ -372,7 +373,8 @@
 			$uicols['classname'][]	 = '';
 			$uicols['sortable'][]	 = true;
 
-			$cols			 .= ",$entity_table.start_date,$entity_table.entry_date,$entity_table.closed_date,$entity_table.in_progress_date,$entity_table.delivered_date";
+			$cols			 .= ",$entity_table.responsible_unit,$entity_table.start_date,$entity_table.entry_date,$entity_table.closed_date,$entity_table.in_progress_date,$entity_table.delivered_date";
+			$cols_return[]	 = "responsible_unit";
 			$cols_return[]	 = "start_date";
 			$cols_return[]	 = "entry_date";
 			$cols_return[]	 = "closed_date";
@@ -435,6 +437,19 @@
 			$uicols['name'][]		 = 'condition_degree';
 			$uicols['descr'][]		 = lang('condition degree');
 			$uicols['statustext'][]	 = lang('condition degree');
+			$uicols['exchange'][]	 = '';
+			$uicols['align'][]		 = '';
+			$uicols['datatype'][]	 = '';
+			$uicols['formatter'][]	 = '';
+			$uicols['classname'][]	 = '';
+			$uicols['sortable'][]	 = true;
+
+			$cols					 .= ", max(fm_request_condition.probability * fm_request_condition.consequence) as risk";
+			$cols_return[]			 = 'risk';
+			$uicols['input_type'][]	 = 'text';
+			$uicols['name'][]		 = 'risk';
+			$uicols['descr'][]		 = lang('risk');
+			$uicols['statustext'][]	 = lang('risk');
 			$uicols['exchange'][]	 = '';
 			$uicols['align'][]		 = '';
 			$uicols['datatype'][]	 = '';
@@ -701,10 +716,17 @@
 
 			if ($start_date)
 			{
-				$end_date	 = $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
 				$start_date	 = $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
 
-				$filtermethod	 .= " $where fm_request.start_date >= $start_date AND fm_request.start_date <= $end_date ";
+				$filtermethod	 .= " $where fm_request.start_date >= $start_date ";
+				$where			 = 'AND';
+			}
+
+			if ($end_date)
+			{
+				$end_date	 = $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
+
+				$filtermethod	 .= " $where fm_request.start_date <= $end_date ";
 				$where			 = 'AND';
 			}
 
@@ -843,7 +865,7 @@
 			{
 				$this->_db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
-			
+
 			$_datatype = array();
 			foreach ($this->uicols['name'] as $key => $_name)
 			{
@@ -857,7 +879,7 @@
 				{
 					$dataset[$j][$field] = array
 						(
-						'value'		 => $this->_db->f($field),
+						'value'		 => $this->_db->f($field, true),
 						'datatype'	 => $_datatype[$field],
 						'attrib_id'	 => $_attrib[$field]
 					);
@@ -908,6 +930,8 @@
 					'title'						 => $this->_db->f('title', true),
 					'location_code'				 => $this->_db->f('location_code'),
 					'descr'						 => $this->_db->f('descr', true),
+					'proposed_measures'			 => $this->_db->f('proposed_measures', true),
+					'remark'					 => $this->_db->f('remark', true),
 					'status'					 => $this->_db->f('status'),
 					'amount_investment'			 => $amount_investment,
 					'amount_operation'			 => $amount_operation,
@@ -1051,6 +1075,8 @@
 			$value_set['owner']						 = $this->account;
 			$value_set['category']					 = $request['cat_id'];
 			$value_set['descr']						 = $this->_db->db_addslashes($request['descr']);
+			$value_set['proposed_measures']			 = $this->_db->db_addslashes($request['proposed_measures']);
+			$value_set['remark']					 = $this->_db->db_addslashes($request['remark']);
 //			$value_set['location_code']				= $request['location_code'];
 			$value_set['entry_date']				 = time();
 			$value_set['amount_investment']			 = (int)$request['amount_investment'];
@@ -1209,6 +1235,8 @@
 				'end_date'					 => $request['end_date'],
 				'coordinator'				 => $request['coordinator'],
 				'descr'						 => $this->_db->db_addslashes($request['descr']),
+				'proposed_measures'			 => $this->_db->db_addslashes($request['proposed_measures']),
+				'remark'					 => $this->_db->db_addslashes($request['remark']),
 				'amount_investment'			 => (int)$request['amount_investment'],
 				'amount_operation'			 => (int)$request['amount_operation'],
 				'amount_potential_grants'	 => (int)$request['amount_potential_grants'],
@@ -1461,5 +1489,16 @@
 				);
 			}
 			return $values;
+		}
+
+		public function edit_representative( $values )
+		{
+			$id = (int) $values['id'];
+			$representative = (float) $values['representative'];
+
+			$sql = "UPDATE fm_request SET representative = '{$representative}'"
+				. " WHERE id =  {$id}";
+
+			return $this->_db->query($sql, __LINE__, __FILE__);
 		}
 	}

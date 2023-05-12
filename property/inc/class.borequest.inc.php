@@ -55,6 +55,9 @@
 			'delete'		 => true,
 		);
 
+		var $so, $bocommon, $solocation, $historylog, $cats, $custom, $use_session, $p_num, $condition_survey_id, $district_id, $property_cat_id,$status_id,
+		$degree_id, $uicols, $allrows, $start_date,$end_date, $total_records, $recommended_year, $building_part, $criteria_id;
+
 		function __construct( $session = false )
 		{
 			$this->so					 = CreateObject('property.sorequest');
@@ -236,6 +239,12 @@
 				'name'		 => lang('closed date'),
 				'sortable'	 => true
 			);
+			$columns['responsible_unit']		 = array
+				(
+				'id'		 => 'responsible_unit',
+				'name'		 => lang('responsible unit'),
+				'sortable'	 => true
+			);
 
 			return $columns;
 		}
@@ -270,6 +279,20 @@
 		{
 			$selected = $probability_value;
 
+			static $probability_list = array();
+
+			if(!$probability_list)
+			{
+				$probability_list = execMethod('property.bogeneric.get_list', array(
+					'type'	=> 'r_probability'));
+			}
+
+			foreach ($probability_list as & $entry)
+			{
+				$entry['selected'] = $entry['id'] == $selected ? 1 : 0;
+			}
+
+/*
 			$probability_comment[1]	 = ' - ' . lang('low probability');
 			$probability_comment[2]	 = ' - ' . lang('medium probability');
 			$probability_comment[3]	 = ' - ' . lang('high probability');
@@ -279,7 +302,7 @@
 				$probability_list[$i]['name']		 = $i . $probability_comment[$i];
 				$probability_list[$i]['selected']	 = $i == $selected ? 1 : 0;
 			}
-
+*/
 			return $probability_list;
 		}
 
@@ -384,6 +407,20 @@
 				$selected = $GLOBALS['phpgw_info']['user']['preferences']['property'][$consequencedefault_type];
 			}
 
+			static $consequence_list = array();
+
+			if(!$consequence_list)
+			{
+				$consequence_list = execMethod('property.bogeneric.get_list', array(
+					'type'	=> 'r_consequence'));
+			}
+
+			foreach ($consequence_list as & $entry)
+			{
+				$entry['selected'] = $entry['id'] == $selected ? 1 : 0;
+			}
+
+/*
 			$consequence_comment[0]	 = ' - ' . lang('None Consequences');
 			$consequence_comment[1]	 = ' - ' . lang('Minor Consequences');
 			$consequence_comment[2]	 = ' - ' . lang('Medium Consequences');
@@ -394,7 +431,7 @@
 				$consequence_list[$i]['name']		 = $i . $consequence_comment[$i];
 				$consequence_list[$i]['selected']	 = $i == $selected ? 1 : 0;
 			}
-
+*/
 			return $consequence_list;
 		}
 
@@ -512,6 +549,10 @@
 			$cols_extra					 = $this->so->cols_extra;
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns'] : array();
+
+			$request_responsible_unit = createObject('property.bogeneric');
+			$request_responsible_unit->get_location_info('request_responsible_unit');
 
 			foreach ($values as & $value)
 			{
@@ -531,10 +572,16 @@
 						$value[$cols_extra[$j]] = $location_data[$cols_extra[$j]];
 					}
 				}
+
+				if(!empty($value['responsible_unit']) && in_array('responsible_unit', $custom_cols))
+				{
+					$responsible_unit = $request_responsible_unit->read_single(array('location_info' => array('type' => 'request_responsible_unit'),'id' => $value['responsible_unit']));
+					$value['responsible_unit'] = $responsible_unit['name'];
+				}
+
 			}
 
 			$column_list = $this->get_column_list();
-			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['request_columns'] : array();
 			foreach ($custom_cols as $col_id)
 			{
 				$this->uicols['input_type'][]	 = 'text';
@@ -824,5 +871,10 @@
 				$files[$i]['file_name'] = urlencode($files[$i]['name']);
 			}
 			return $files;
+		}
+
+		public function edit_representative( $values )
+		{
+			return $this->so->edit_representative($values);
 		}
 	}

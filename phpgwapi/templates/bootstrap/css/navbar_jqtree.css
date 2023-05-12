@@ -1,0 +1,72 @@
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+ /*   background: #5971ca;
+    color: #fff;*/
+    transition: all 0.3s;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+#sidebar h1 {
+    font-size: 1.25rem;
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+	/*    background: #6d7fcc;*/
+    background: #e9ecef;
+}
+
+#sidebar ul.components {
+   /* padding: 20px 0;
+    border-bottom: 1px solid #47748b;*/
+}
+/*
+#sidebar ul p {
+    color: #fff;
+    padding: 10px;
+}
+*/
+#sidebar ul li a {
+ /*   padding-left: 10px;*/
+    font-size: 1.1em;
+    display: block;
+}
+/*
+#sidebar ul li a:hover {
+    color: #5971ca;
+    background: #fff;
+	text-decoration: none;
+}
+*/
+#sidebar ul li.active>a,
+a[aria-expanded="true"] {
+	font-weight: bold;
+	/*    color: #fff;*/
+    /*background: #6d7fcc;*/
+}
+
+#sidebar a[data-bs-toggle="collapse"] {
+    position: relative;
+}
+
+/*
+#sidebar .dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+*/
+.jqtree-selected
+{
+	font-weight:	bold;
+}

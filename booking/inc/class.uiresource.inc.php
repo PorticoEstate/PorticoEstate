@@ -73,6 +73,8 @@
 				'booking_month_horizon' => 'int',
 				'booking_day_horizon' => 'int',
 				'deactivate_application' => 'int',
+				'hidden_in_frontend' => 'int',
+				'activate_prepayment' => 'int',
 			);
 			self::set_active_menu('booking::buildings::resources::resources');
 			$this->display_name = lang('resources');
@@ -106,17 +108,21 @@
 									),
 								)
 							),
-							array(
-								'type' => 'link',
-								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
-							),
+//							array(
+//								'type' => 'link',
+//								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+//								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
+//							),
 						)
 					),
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'booking.uiresource.index', 'phpgw_return_as' => 'json')),
 					'field' => array(
+						array(
+							'key'	 => 'id',
+							'label'	 => lang('id'),
+						),
 						array(
 							'key' => 'name',
 							'label' => lang('Resource Name'),
@@ -166,11 +172,22 @@
 							'key' => 'simple_booking',
 							'label' => lang('Simple booking'),
 						),
+						array(
+							'key' => 'direct_booking',
+							'label' => lang('direct booking'),
+						),
 					)
 				)
 			);
 
-			$data['datatable']['actions'][] = array();
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'toggle_inactive',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+				'text'		 => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+				'custom_code'	 => 'window.open("' .self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive')) . '", "_self");',
+			);
 
 			if ($this->bo->allow_create())
 			{
@@ -182,7 +199,15 @@
 
 		public function query()
 		{
-			return $this->jquery_results($this->bo->populate_grid_data("booking.uiresource.show"));
+			$values = $this->bo->populate_grid_data("booking.uiresource.show");
+
+			foreach ($values['results'] as &$entry)
+			{
+				$entry['direct_booking'] = !empty($entry['direct_booking']) ? 1 : '';
+
+			}
+
+			return $this->jquery_results($values);
 		}
 
 		public function add()
@@ -843,7 +868,9 @@
 
 			$data = array(
 				'datatable_def' => self::get_datatable_def($id),
-				'resource' => $resource
+				'resource' => $resource,
+				'seasons'	=> $this->bo->so->get_seasons($id)
+
 			);
 			self::add_javascript('booking', 'base', 'resource_new.js'); // to render custom fields
 			self::render_template_xsl(array('resource', 'datatable_inline'), $data);

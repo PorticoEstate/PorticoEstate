@@ -158,27 +158,19 @@
 								'value' => '',
 								'text' => lang('To') . ':',
 							),
-							array(
-								'type' => 'link',
-								'value' => $_SESSION['show_all_completed_reservations'] ? lang('Show only unexported') : lang('Show all'),
-								'href' => $this->link_to('toggle_show_all_completed_reservations'),
-							),
-						)
-					),
-					'list_actions' => array(
-						'item' => array(
-							array(
-								'type' => 'button',
-								'name' => 'export',
-								'value' => lang('Export') . '...',
-								'onClick' => "export_completed_reservations();"
-							),
+//							array(
+//								'type' => 'link',
+//								'value' => $_SESSION['show_all_completed_reservations'] ? lang('Show only unexported') : lang('Show all'),
+//								'href' => $this->link_to('toggle_show_all_completed_reservations'),
+//							),
 						)
 					),
 				),
 				'datatable' => array(
 					'source' => $this->link_to('index', array('phpgw_return_as' => 'json')),
 					'sorted_by' => array('key' => 0, 'dir' => 'desc'),//id
+					'select_all'	=> true,
+					'allrows'		 => true,
 					'field' => array(
 						array(
 							'key' => 'id',
@@ -248,6 +240,11 @@
 							'label' => lang('Order id'),
 						),
 						array(
+							'key' => 'select',
+							'label' => lang('select'),
+							'formatter' => 'myFormatterCheck',
+						),
+						array(
 							'key' => 'link',
 							'hidden' => true
 						)
@@ -255,7 +252,38 @@
 				)
 			);
 
+			$FormatterCheck = <<<JS
+				var myFormatterCheck = function (key, oData)
+				{
+					if (isNaN(parseInt(oData['exported'].label)))
+					{
+						return  "<center><input type=\"checkbox\" class=\"mychecks\"  name=\"process[]\" value=\"" + oData['id'] + "\"/></center>";
+					}
+				};
+JS;
+
+			$GLOBALS['phpgw']->js->add_code('', $FormatterCheck, true);
+
 			$data['filters'] = $this->export_filters;
+
+			$data['datatable']['actions'][] = array
+				(
+				'my_name'		 => 'Export',
+				'type'			 => 'custom',
+				'className'		 => 'save',
+				'custom_code'	 => "export_completed_reservations();",
+				'text'			 => lang('Export') . '...',
+			);
+
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'toggle_inactive',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => $_SESSION['show_all_completed_reservations'] ? lang('Show only unexported') : lang('Show all'),
+				'text'		 => $_SESSION['show_all_completed_reservations'] ? lang('Show only unexported') : lang('Show all'),
+				'custom_code'	 => 'window.open("' . $this->link_to('toggle_show_all_completed_reservations') . '", "_self");',
+			);
+
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -362,7 +390,7 @@
 
 			if (!isset($_SESSION['show_all_completed_reservations']))
 			{
-				$filters['exported'] = '';
+				$filters['exported'] = null;
 			}
 
 			$params = array(
@@ -573,14 +601,25 @@
 			$reservation['from_'] = pretty_timestamp($reservation['from_']);
 			$reservation['to_'] = pretty_timestamp($reservation['to_']);
 			$reservation['cancel_link'] = self::link(array('menuaction' => 'booking.uicompleted_reservation.index'));
+			$reservation['resources_json'] = json_encode(array_map('intval', $reservation['resources']));
 
 			$tabs = array();
 			$tabs['completed_reservation'] = array('label' => lang('Reservation show'), 'link' => '#completed_reservation');
 			$active_tab = 'completed_reservation';
 
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+
+			if (!empty($config['activate_application_articles']))
+			{
+				self::add_javascript('bookingfrontend', 'base', 'purchase_order_show.js');
+			}
+
 			$reservation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			self::render_template_xsl('completed_reservation', array('reservation' => $reservation,
-				'show_edit_button' => $show_edit_button));
+			self::render_template_xsl('completed_reservation', array(
+				'reservation'		 => $reservation,
+				'show_edit_button'	 => $show_edit_button,
+				'config'			 => $config
+			));
 		}
 
 		protected function get_customer_identifier()
@@ -701,6 +740,11 @@
 
 						if(!empty($purchase_order['lines']))
 						{
+							if(empty($purchase_order['application_id']))
+							{
+								$purchase_order['application_id'] = -1;
+							}
+
 							$sopurchase_order = createObject('booking.sopurchase_order');
 							$purchase_order_id = $sopurchase_order->add_purchase_order($purchase_order);
 							$purchase_order_result =  $sopurchase_order->get_single_purchase_order($purchase_order_id);

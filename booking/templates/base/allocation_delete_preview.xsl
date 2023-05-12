@@ -8,11 +8,11 @@
 				<div id="allocation_delete" class="booking-container">
 					<fieldset>
 						<div class="heading">
-							<legend>
+							<!--<legend>-->
 								<h3>
 									<xsl:value-of select="php:function('lang', 'Delete Allocations')"/>
 								</h3>
-							</legend>
+							<!--</legend>-->
 						</div>
 					</fieldset>
 					<input type="hidden" name="organization_name" value="{allocation/organization_name}"/>

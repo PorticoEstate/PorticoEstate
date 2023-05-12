@@ -6,10 +6,11 @@
 
 <!-- New template-->
 <xsl:template xmlns:php="http://php.net/xsl" name="attributes_values">
+	<xsl:param name="class" />
 	<script type="text/javascript">
 		help_Popup = function(requestUrl)
 		{
-		TINY.box.show({iframe:requestUrl, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		TINY.box.show({iframe:requestUrl, boxid:"frameless",width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		};
 	</script>
 	<xsl:variable name="lang_hour">
@@ -47,6 +48,9 @@
 					</xsl:with-param>
 					<xsl:with-param name="textarearows">
 						<xsl:value-of select="$textarearows" />
+					</xsl:with-param>
+					<xsl:with-param name="class">
+						<xsl:value-of select="$class" />
 					</xsl:with-param>
 				</xsl:apply-templates>
 			</fieldset>

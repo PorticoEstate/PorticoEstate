@@ -30,10 +30,33 @@
 
 				$org_id = is_array($for_object) ? $for_object['customer_organization_id'] : (!is_null($for_object) ? $for_object : null);
 
+				$found_credentials = false;
 				if ($bouser->is_organization_admin($org_id))
 				{
 					$initial_roles[] = array('role' => self::ROLE_ADMIN);
+					$found_credentials = true;
 				}
+
+				$external_login_info = $bouser->validate_ssn_login(array(), true);
+
+				if (!$found_credentials && $for_object['customer_ssn'] == $external_login_info['ssn'])
+				{
+					$initial_roles[] = array('role' => self::ROLE_ADMIN);
+				}
+
+				//final check on parent object (application)
+				if(!$found_credentials && $for_object['application_id'])
+				{
+					$check_for_owner = CreateObject('booking.boapplication')->read_single($for_object['application_id']);
+					$application_owner_person = !empty($external_login_info['ssn']) && $check_for_owner['customer_ssn'] == $external_login_info['ssn'] ? true : false;
+					$application_owner_organization = $bouser->is_organization_admin($check_for_owner['customer_organization_id']);
+
+					if($application_owner_person || $application_owner_organization)
+					{
+						$initial_roles[] = array('role' => self::ROLE_ADMIN);
+					}
+				}
+
 			}
 			return parent::get_subject_roles($for_object, $initial_roles);
 		}
@@ -164,12 +187,13 @@
 				$freetime = pretty_timestamp($event['from_']) . ' til ' . pretty_timestamp($event['to_']) . "\n";
 			}
 
-			$body .= '</p><p>' . $event['customer_organization_name'] . ' har avbestilt tid i ' . $event['building_name'] . ':<br />';
+			$body .= '</p><p>' . $event['customer_organization_name'] ? $event['customer_organization_name'] : $event['contact_name'] . ' har avbestilt tid i ' . $event['building_name'] . ':<br />';
 			$body .= implode(", ", $this->so->get_resources(implode(",", $event['resources']))) . ' den ' . $freetime;
 			$body .= ' - <a href="' . $link . '">' . lang('Check calendar') . '</a></p>';
 			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
 
-			foreach ($mailadresses as $adr)
+			$_mailadresses = array_unique($mailadresses);
+			foreach ($_mailadresses as $adr)
 			{
 				try
 				{
@@ -187,8 +211,10 @@
 		 */
 		function send_admin_notification( $type, $event, $message = null, $orgdate = null )
 		{
-			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
+			if (empty($GLOBALS['phpgw_info']['server']['smtp_server']))
+			{
 				return;
+			}
 			$send = CreateObject('phpgwapi.send');
 
 			$config = CreateObject('phpgwapi.config', 'booking');
@@ -207,7 +233,7 @@
 				$subject = $config->config_data['event_edited_mail_subject'];
 			}
 
-			$body = '<b>Beksjed fra ' . $event['customer_organization_name'] . '</b><br />' . $message . '<br /><br/>';
+			$body = '<b>Beksjed fra ' . $event['customer_organization_name'] ? $event['customer_organization_name'] : $event['contact_name'] . '</b><br />' . $message . '<br /><br/>';
 			$body .= '<b>Kontaktperson:</b> ' . $event['contact_name'] . '<br />';
 			$body .= '<b>Epost:</b> ' . $event['contact_email'] . '<br />';
 			$body .= '<b>Telefon:</b> ' . $event['contact_phone'] . '<br /><br />';
@@ -263,12 +289,22 @@
 				$freetime = pretty_timestamp($event['from_']) . ' til ' . pretty_timestamp($event['to_']) . "\n";
 			}
 
-			$body .= '</p><p>' . $event['customer_organization_name'] . ' har avbestilt tid i ' . $event['building_name'] . ':<br />';
+			$body .= '</p><p>' . $event['customer_organization_name'] ? $event['customer_organization_name'] : $event['contact_name'] . ' har endret tid i ' . $event['building_name'] . ':<br />';
 			$body .= implode(", ", $this->so->get_resources(implode(",", $event['resources']))) . ' den ' . $freetime;
 			$body .= ' - <a href="' . $link . '">' . lang('Check calendar') . '</a></p>';
+
+			if($event['application_id'])
+			{
+				$link_application = $external_site_address . '/?menuaction=booking.uiapplication.show&id=';
+				$link_application .= $event['application_id'];
+
+				$body .= '<p> - <a href="' . $link_application . '">' . lang('Application') . '</a></p>';
+			}
+
 			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
 
-			foreach ($mailadresses as $adr)
+			$_mailadresses = array_unique($mailadresses);
+			foreach ($_mailadresses as $adr)
 			{
 				try
 				{

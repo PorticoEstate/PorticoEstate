@@ -235,7 +235,7 @@ JS;
 
 			$GLOBALS['phpgw']->js->add_code('', $code);
 
-			self::add_javascript('rental', 'rental', 'adjustment.index.js');
+			self::add_javascript('rental', 'base', 'adjustment.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);

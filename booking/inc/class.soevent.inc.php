@@ -108,7 +108,10 @@
 			$cost = $this->_marshal((float)$entry['cost'], 'decimal');
 			$id = (int)$entry['id'];
 
-			$sql = "UPDATE bb_completed_reservation SET cost = '{$cost}'"
+			$description = mb_substr($entry['from_'], 0, -3, 'UTF-8') . ' - ' . mb_substr($entry['to_'], 0, -3, 'UTF-8');
+
+			$sql = "UPDATE bb_completed_reservation SET cost = '{$cost}', from_ = '{$entry['from_']}',"
+			. " to_ = '{$entry['to_']}', description = '{$description}'"
 			. " WHERE reservation_type = 'event'"
 			. " AND reservation_id = {$id}"
 			. " AND export_file_id IS NULL";
@@ -687,8 +690,7 @@
 				    inner join
 				        bb_rescategory bbrc on br.rescategory_id = bbrc.id
 				where
-		        	bbe.from_ > current_date
-				  	AND bbe.from_ >= '$from_date' "
+				  	bbe.from_ >= '$from_date' "
 						.$to_date_sql
 						.$org_info_sql
 						.$building_id_sql

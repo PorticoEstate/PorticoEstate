@@ -2,32 +2,36 @@
     "packages": [
         {
             "name": "kigkonsult/icalcreator",
-            "version": "v2.39.2",
-            "version_normalized": "2.39.2.0",
+            "version": "v2.41.71",
+            "version_normalized": "2.41.71.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iCalcreator/iCalcreator.git",
-                "reference": "722e161d1a25c3ceec1692642d64a7f2cf5faee9"
+                "reference": "591b63a76875d5d164c5e2986cc42afbb0524b47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iCalcreator/iCalcreator/zipball/722e161d1a25c3ceec1692642d64a7f2cf5faee9",
-                "reference": "722e161d1a25c3ceec1692642d64a7f2cf5faee9",
+                "url": "https://api.github.com/repos/iCalcreator/iCalcreator/zipball/591b63a76875d5d164c5e2986cc42afbb0524b47",
+                "reference": "591b63a76875d5d164c5e2986cc42afbb0524b47",
                 "shasum": ""
             },
             "require": {
+                "ext-intl": "*",
+                "ext-mbstring": "*",
                 "ext-openssl": "*",
                 "ext-simplexml": "*",
                 "ext-zlib": "*",
-                "php": ">=7.0"
+                "php": ">=8.0"
             },
             "require-dev": {
+                "degraciamathieu/php-arguments-detector": ">=0.5.0",
+                "ext-xdebug": "*",
                 "phpcompatibility/php-compatibility": ">=9.3.5",
                 "phpstan/phpstan": ">=0.9.3",
                 "phpunit/phpunit": ">=6.5.13",
                 "squizlabs/php_codesniffer": ">=3.5.5"
             },
-            "time": "2021-06-28T09:19:24+00:00",
+            "time": "2022-12-04T10:48:48+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -52,17 +56,30 @@
                     "email": "ical@kigkonsult.se"
                 }
             ],
-            "description": "iCalcreator is the PHP implementation of rfc2445/rfc5545, management of calendar information",
+            "description": "iCalcreator is the PHP implementation of rfc2445/rfc5545 and rfc updates, management of calendar information",
             "keywords": [
                 "alarm",
+                "availability",
                 "calendar",
                 "daylight",
                 "event",
+                "ical",
+                "json",
+                "location",
                 "management",
+                "participant",
+                "resource",
                 "rfc2445",
                 "rfc5545",
+                "rfc5870",
                 "rfc6321",
+                "rfc6868",
+                "rfc7529",
+                "rfc7808",
+                "rfc7953",
                 "rfc7986",
+                "rfc9073",
+                "rfc9074",
                 "standard",
                 "todo",
                 "vCalendar",
@@ -71,11 +88,12 @@
                 "vfreebusy",
                 "vjournal",
                 "vtimezone",
-                "vtodo"
+                "vtodo",
+                "xml"
             ],
             "support": {
                 "issues": "https://github.com/iCalcreator/iCalcreator/issues",
-                "source": "https://github.com/iCalcreator/iCalcreator/tree/v2.39.2"
+                "source": "https://github.com/iCalcreator/iCalcreator/tree/v2.41.71"
             },
             "funding": [
                 {

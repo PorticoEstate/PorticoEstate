@@ -1,0 +1,222 @@
+
+$purple: #793C8A;
+$purple-light:#946DA8;
+$purple-80: #9463a1;
+$purple-64: #a982b4;
+$purple-56: #b492bd;
+$purple-40: #c9b1d0;
+$purple-24: #dfd0e3;
+$purple-16: #e9e0ec;
+$purple-8: #f4f0f6;
+$purple-4: #faf7fa;
+
+$blue: #28358B;
+$blue-80: #535da2;
+$blue-64: #767eb5;
+$blue-56: #868ebe;
+$blue-40: #a9aed1;
+$blue-24: #cccfe3;
+$blue-16: #dcdfec;
+$blue-8: #eeeff6;
+$blue-4: #f7f7fa;
+
+$black: #000000;
+$black-80: #333333;
+$black-64: #5c5c5c;
+$black-56: #707070;
+$black-40: #999999;
+$black-24: #c2c2c2;
+$black-16: #d6d6d6;
+$black-8: #ebebeb;
+$black-4: #f5f5f5;
+
+$beige-dark: #E6E3DB;
+$beige-dark-80: #ebe9e2;
+$beige-dark-64: #efede8;
+$beige-dark-56: #f1efeb;
+$beige-dark-40: #f5f4f1;
+$beige-dark-24: #f9f8f6;
+$beige-dark-16: #fbfaf9;
+$beige-dark-8: #fdfdfc;
+$beige-dark-4: #fefefe;
+
+$beige: #F7F5F0;
+$beige-80: #f9f7f3;
+$beige-64: #faf9f5;
+$beige-56: #fbf9f7;
+$beige-40: #fcfbf9;
+$beige-24: #fdfdfb;
+$beige-16: #fefdfd;
+$beige-8: #fefefe;
+$beige-4: #fffffe;
+
+$grey: #D6D6D6;
+$grey-80: #dedede;
+$grey-64: #e5e5e5;
+$grey-56: #e8e8e8;
+$grey-40: #efefef;
+$grey-24: #f5f5f5;
+$grey-16: #f8f8f8;
+$grey-8: #fcfcfc;
+$grey-4: #fdfdfd;
+
+$grey-light: #F5F5F5;
+$grey-light-80: #f7f7f7;
+$grey-light-64: #f9f9f9;
+$grey-light-56: #f9f9f9;
+$grey-light-40: #fbfbfb;
+$grey-light-24: #fdfdfd;
+$grey-light-16: #fdfdfd;
+$grey-light-8: #fefefe;
+$grey-light-4: #ffffff;
+
+$white: #FFFFFF;
+$green-light: #B0FF94;
+$red-light: #FF9494;
+$yellow-light: #FFEE94;
+
+
+$colorVariations : (
+  'purple' (
+    '100': $purple,
+    '80': $purple-80,
+    '64': $purple-64,
+    '56': $purple-56,
+    '40': $purple-40,
+    '24': $purple-24,
+    '16': $purple-16,
+    '8': $purple-8,
+    '4': $purple-4,
+  ),
+  'blue' (
+    '100': $blue,
+    '80': $blue-80,
+    '64': $blue-64,
+    '56': $blue-56,
+    '40': $blue-40,
+    '24': $blue-24,
+    '16': $blue-16,
+    '8': $blue-8,
+    '4': $blue-4,
+  ),
+  'black' (
+    '100': $black,
+    '80': $black-80,
+    '64': $black-64,
+    '56': $black-56,
+    '40': $black-40,
+    '24': $black-24,
+    '16': $black-16,
+    '8': $black-8,
+    '4': $black-4,
+  ),
+  'beige-dark' (
+    '100': $beige-dark,
+    '80': $beige-dark-80,
+    '64': $beige-dark-64,
+    '56': $beige-dark-56,
+    '40': $beige-dark-40,
+    '24': $beige-dark-24,
+    '16': $beige-dark-16,
+    '8': $beige-dark-8,
+    '4': $beige-dark-4,
+  ),
+  'beige' (
+    '100': $beige,
+    '80': $beige-80,
+    '64': $beige-64,
+    '56': $beige-56,
+    '40': $beige-40,
+    '24': $beige-24,
+    '16': $beige-16,
+    '8': $beige-8,
+    '4': $beige-4,
+  ),
+  'grey' (
+    '100': $grey,
+    '80': $grey-80,
+    '64': $grey-64,
+    '56': $grey-56,
+    '40': $grey-40,
+    '24': $grey-24,
+    '16': $grey-16,
+    '8': $grey-8,
+    '4': $grey-4,
+  ),
+  'grey-light' (
+    '100': $grey-light,
+    '80': $grey-light-80,
+    '64': $grey-light-64,
+    '56': $grey-light-56,
+    '40': $grey-light-40,
+    '24': $grey-light-24,
+    '16': $grey-light-16,
+    '8': $grey-light-8,
+    '4': $grey-light-4,
+  ),
+  'white' (
+    '100': $white,
+  ),
+  'green-light' (
+    '100': $green-light,
+  ),
+  'red-light' (
+    '100': $red-light,
+  ),
+  'yellow-light' (
+    '100': $yellow-light,
+  ),
+);
+
+$primary-color: $purple;
+$secondary-color: $blue;
+
+$opacities: (
+  '80' : 0.8,
+  '64' : 0.64,
+  '56' : 0.56,
+  '40' : 0.40,
+  '24' : 0.24,
+  '16' : 0.16,
+  '8' : 0.08,
+  '4' : 0.04,
+  );
+
+.text {
+  &-primary {
+    color: $primary-color !important;
+  }
+
+  &-secondary {
+    color: $secondary-color !important;
+  }
+}
+
+
+
+@each $mainColor, $tones in $colorVariations {
+
+  @each $tone, $value in $tones {
+    @if $tone == '100' {
+
+      .text-#{$mainColor} {
+        color: $value;
+      }
+
+      .bg-#{$mainColor} {
+        background-color: $value;
+      }
+
+      @each $opacity, $opacityValue in $opacities {
+        .bgo-#{$mainColor}-#{$opacity} {
+          background-color: rgba($value, $opacityValue);
+        }
+      }
+
+    } @else {
+      .bg-#{$mainColor}-#{$tone} {
+        background-color: $value;
+      }
+    }
+  }
+}

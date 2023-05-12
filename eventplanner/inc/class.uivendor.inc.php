@@ -167,7 +167,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript('eventplannerfrontend', 'portico', 'vendor.index.js');
+			self::add_javascript('eventplannerfrontend', 'base', 'vendor.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -292,8 +292,8 @@
 				'value_active_tab' => $active_tab
 			);
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript('eventplannerfrontend', 'portico', 'validate.js');
-			self::add_javascript($this->currentapp, 'portico', 'vendor.edit.js');
+			self::add_javascript('eventplannerfrontend', 'base', 'validate.js');
+			self::add_javascript($this->currentapp, 'base', 'vendor.edit.js');
 			self::render_template_xsl(array('vendor', 'datatable_inline'), array($mode => $data));
 		}
 

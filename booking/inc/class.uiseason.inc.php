@@ -39,8 +39,16 @@
 			$this->fields = array('name', 'building_id', 'building_name', 'status', 'from_',
 				'to_', 'resources', 'active', 'officer_id', 'officer_name');
 			$this->boundary_fields = array('wday', 'from_', 'to_');
-			$this->wtemplate_alloc_fields = array('id', 'organization_id', 'wday', 'cost',
-				'from_', 'to_', 'resources');
+			$this->wtemplate_alloc_fields = array(
+				'id'				 => 'int',
+				'organization_id'	 => 'int',
+				'wday'				 => 'int',
+				'cost'				 => 'float',
+				'from_'				 => 'string',
+				'to_'				 => 'string',
+				'resources'			 => 'int',
+				'articles'			 => 'string'
+			);
 			$this->display_name = lang('seasons');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
@@ -57,11 +65,11 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
-								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
-							),
+//							array(
+//								'type' => 'link',
+//								'value' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+//								'href' => self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive'))
+//							),
 						)
 					),
 				),
@@ -118,7 +126,14 @@
 				)
 			);
 
-			$data['datatable']['actions'][] = array();
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'toggle_inactive',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+				'text'		 => $_SESSION['showall'] ? lang('Show only active') : lang('Show all'),
+				'custom_code'	 => 'window.open("' .self::link(array('menuaction' => $this->url_prefix . '.toggle_show_inactive')) . '", "_self");',
+			);
 
 			if ($this->bo->allow_create())
 			{
@@ -140,7 +155,6 @@
 				$season['from_'] = pretty_timestamp($season['from_']);
 				$season['to_'] = pretty_timestamp($season['to_']);
 
-				$resources = $this->resource_bo->read_single($season['id']);
 				if (isset($season['resources']))
 				{
 					$filters['results'] = -1;
@@ -515,6 +529,11 @@
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
 				$alloc = extract_values($_POST, $this->wtemplate_alloc_fields);
+
+				if(!empty($alloc['articles']))
+				{
+					$alloc['articles'] = json_encode($alloc['articles']);
+				}
 				//$alloc['season_id'] = $season_id;
 				$alloc['season_id'] = phpgw::get_var('season_id', 'int');
 
@@ -568,6 +587,7 @@
 			$season['to_m'] = $array_to[1];
 
 			$resource_ids = phpgw::get_var('filter_id', 'int');
+			$season['resources_json'] = json_encode(array_map('intval', (array)$alloc['resources']));
 
 			$filters = null;
 			if (count($resource_ids) == 0)
@@ -603,9 +623,23 @@
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $jscode);
 
+			$config = CreateObject('phpgwapi.config', 'booking')->read();
+
+			if( !empty($config['activate_application_articles']))
+			{
+				self::add_javascript('phpgwapi', 'dateformatter', 'dateformatter.js');
+				self::add_javascript('booking', 'base', 'purchase_order_edit.js');
+				$GLOBALS['phpgw']->js->validate_file('alertify', 'alertify.min', 'phpgwapi');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
+			}
 			self::add_javascript('booking', 'base', 'season.wtemplate.js');
 
-			self::render_template_xsl('season_wtemplate_allocation', array('season' => $season));
+			self::render_template_xsl('season_wtemplate_allocation', array(
+				'season' => $season,
+				'tax_code_list'	 => json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
+				'config'		 => $config
+				));
 		}
 
 		public function generate()
@@ -628,8 +662,8 @@ JS;
 			$to = pretty_timestamp($season['to_']);
 			$interval = 1;
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'date');
-			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'date', strtotime( $season['from_']), array('readonly' => true));
+			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'date', strtotime( $season['to_']), array('readonly' => true));
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -684,9 +718,13 @@ JS;
 
 			  $season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab); */
 
-			self::render_template_xsl('season_generate', array('season' => $season,
-				'result' => $result, 'step' => $step,
-				'interval' => $interval,
-				'from_' => $from, 'to_' => $to));
+			self::render_template_xsl('season_generate', array(
+				'season'	 => $season,
+				'result'	 => $result,
+				'step'		 => $step,
+				'interval'	 => $interval,
+				'from_'		 => $from,
+				'to_'		 => $to
+				));
 		}
 	}

@@ -158,7 +158,7 @@
 			}
 			$def_text = ($def_text != '') ? lang('default') . ": $def_text" : '';
 		}
-		$t->set_var('row_value', "<input class=\"pure-input-1-2\" name=\"${GLOBALS['type']}[$name]\" value=\"" . htmlentities($default, ENT_COMPAT, 'UTF-8') . "\"$options />$def_text");
+		$t->set_var('row_value', "<input class=\"pure-input-1-2\" name=\"{$GLOBALS['type']}[$name]\" value=\"" . htmlentities($default, ENT_COMPAT, 'UTF-8') . "\"$options />$def_text");
 		$t->set_var('row_name', lang($label));
 		$GLOBALS['phpgw']->nextmatchs->template_alternate_row_class($t);
 
@@ -288,7 +288,7 @@
 			$def_text	 = $GLOBALS['phpgw']->preferences->default[$_appname][$name];
 			$def_text	 = $def_text != '' ? ' <i>' . lang('default') . ':&nbsp;' . (isset($values[$def_text]) ? $values[$def_text] : '') . '</i>' : '';
 		}
-		$t->set_var('row_value', "<select class=\"pure-input-1-2\" name=\"${GLOBALS['type']}[$name]\">$s</select>$def_text");
+		$t->set_var('row_value', "<select class=\"pure-input-1-2\" name=\"{$GLOBALS['type']}[$name]\">$s</select>$def_text");
 		$t->set_var('row_name', lang($label));
 		$GLOBALS['phpgw']->nextmatchs->template_alternate_row_class($t);
 
@@ -378,7 +378,7 @@
 			}
 			$def_text = $def_text != '' ? '<br><i><font size="-1"><b>' . lang('default') . '</b>:<br>' . nl2br($def_text) . '</font></i>' : '';
 		}
-		$t->set_var('row_value', "<textarea class=\"pure-input-1-2 pure-custom\" rows=\"$rows\" cols=\"$cols\" name=\"${GLOBALS['type']}[$name]\">" . htmlentities($default, ENT_QUOTES, isset($GLOBALS['phpgw_info']['server']['charset']) && $GLOBALS['phpgw_info']['server']['charset'] ? $GLOBALS['phpgw_info']['server']['charset'] : 'UTF-8') . "</textarea>$def_text");
+		$t->set_var('row_value', "<textarea class=\"pure-input-1-2 pure-custom\" rows=\"$rows\" cols=\"$cols\" name=\"{$GLOBALS['type']}[$name]\">" . htmlentities($default, ENT_QUOTES, isset($GLOBALS['phpgw_info']['server']['charset']) && $GLOBALS['phpgw_info']['server']['charset'] ? $GLOBALS['phpgw_info']['server']['charset'] : 'UTF-8') . "</textarea>$def_text");
 		$t->set_var('row_name', lang($label));
 		$GLOBALS['phpgw']->nextmatchs->template_alternate_row_class($t);
 

@@ -16,7 +16,6 @@
 <xsl:template xmlns:php="http://php.net/xsl" match="send_sms">
 	<script type="text/javascript">
 		self.name="first_Window";
-		var base_java_url = <xsl:value-of select="base_java_url"/>;
 		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address', 'select user')"/>
 	</script>
 
@@ -35,6 +34,12 @@
 					<div id="main">
 
 						<div class="pure-control-group">
+							<label for='location_name'>
+								<xsl:value-of select="php:function('lang', 'all')"/>
+							</label>
+							<input type="checkbox" id="send_sms_to_all" name="send_sms_to_all" value="__get_all__"/>
+						</div>
+						<div id="location_selector" class="pure-control-group">
 							<label for='location_name'>
 								<xsl:value-of select="php:function('lang', 'location')"/>
 							</label>
@@ -610,6 +615,7 @@
 									<xsl:with-param name="multi_upload_action">
 										<xsl:value-of select="multi_upload_action"/>
 									</xsl:with-param>
+									<xsl:with-param name="capture">camera</xsl:with-param>
 								</xsl:call-template>
 							</div>
 

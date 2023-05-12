@@ -19,6 +19,8 @@
 			'get_all_available_buildings' => true,
 			'autocomplete_resource_and_building' => true,
 			'get_all_towns' => true,
+            'get_search_data_location' => true,
+            'get_search_data_all' => true
 		);
 
 		function __construct()
@@ -38,8 +40,8 @@
 			phpgwapi_jquery::load_widget('daterangepicker');
 			phpgwapi_jquery::load_widget('timepicker');
 
-			self::add_javascript('bookingfrontend', 'base', 'search.js', 'text/javascript', true);
-			self::add_javascript('bookingfrontend', 'base', 'util.js', 'text/javascript', true);
+			self::add_javascript('bookingfrontend', 'base', 'search.js', true);
+			self::add_javascript('bookingfrontend', 'base', 'util.js', true);
 
 
 			$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
@@ -166,7 +168,6 @@
 
 			$params['top_levels'] = $top_levels;
 			$params['filter_tree'] = json_encode($filter_tree);
-
 
 			self::render_template_xsl('search', $params);
 		}
@@ -406,6 +407,16 @@
 
 		function get_all_towns()
 		{
-			 return execMethod('property.solocation.get_booking_part_of_towns');
+			return execMethod('property.solocation.get_booking_part_of_towns');
 		}
+
+        function get_search_data_location()
+		{
+			return execMethod('property.solocation.get_search_data_location');
+        }
+
+        function get_search_data_all()
+		{
+			return execMethod('property.solocation.get_search_data_all');
+        }
 	}

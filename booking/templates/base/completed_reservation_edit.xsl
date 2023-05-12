@@ -7,11 +7,14 @@
 			<div id="completed_reservation_edit" class="booking-container">
 				<fieldset>
 					<div class="heading">
-						<legend>
+						<!--<legend>-->
 							<h3>
 								<xsl:value-of select="php:function('lang', 'Edit completed reservation')"/>
 							</h3>
-						</legend>
+							<p>
+								<xsl:value-of select="php:function('lang', string(reservation/reservation_type))"/> #<xsl:value-of select="reservation/reservation_id"/>
+							</p>
+						<!--</legend>-->
 					</div>
 					<xsl:if test="config/activate_application_articles !=''">
 						<div id="dates-container">

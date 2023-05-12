@@ -71,7 +71,8 @@
 			'step_2_import'					 => true,
 			'step_3_clean_up'				 => true,
 			'view_file'						 => true,
-			'unzip_files'					 => true
+			'unzip_files'					 => true,
+			'set_value'						 => true
 		);
 
 		public function __construct()
@@ -154,32 +155,38 @@
 
 				$entry = $file_tags[$file_info['path_relative_filename']];
 				$entry['file_name'] = $file_info['path_relative_filename'];
-				$entry['document_category'] = !empty($entry['document_category']) ? implode("\n", $entry['document_category']) : '';
-				$entry['branch'] = !empty($entry['branch']) ? implode("\n", $entry['branch']) : '';
-				$entry['building_part'] = !empty($entry['building_part']) ? implode("\n", $entry['building_part']) : '';
+				$entry['document_category'] = !empty($entry['document_category']) ? implode("::", $entry['document_category']) : '';
+				$entry['branch'] = !empty($entry['branch']) ? implode("::", $entry['branch']) : '';
+				$entry['building_part'] = !empty($entry['building_part']) ? implode("::", $entry['building_part']) : '';
 
 				$values[] = $entry;
 
 			}
 
-			$name = array();
+			$name	 = array();
+			$descr	 = array();
 			$name[]	 = 'cadastral_unit';
+			$descr[] = lang('cadastral unit');
 			$name[]	 = 'building_number';
+			$descr[] = lang('building number');
 			$name[]	 = 'location_code';
+			$descr[] = lang('location code');
 			$name[]	 = 'branch';
+			$descr[] = lang('branch');
 			$name[]	 = 'building_part';
+			$descr[] = lang('building part');
 			$name[]	 = 'document_category';
+			$descr[] = lang('document categories');
 			$name[]	 = 'remark';
+			$descr[] = lang('remark');
 			$name[]	 = 'remark_detail';
+			$descr[] = lang('remark') . ' 2';
 			$name[]	 = 'file_name';
+			$descr[] = lang('file name');
 			$name[]	 = 'import_ok';
+			$descr[] = lang('import ok');
 			$name[]	 = 'import_failed';
-
-			$descr = array();
-			foreach ($name as $_entry)
-			{
-				$descr[] = lang(str_replace('_', ' ', $_entry));
-			}
+			$descr[] = lang('import failed');
 
 			$this->bocommon->download($values, $name, $descr);
 
@@ -260,11 +267,11 @@
 
 			$vendor_name = CreateObject('property.boinvoice')->get_vendor_name($vendor_id);
 			$location_code = $item['location_code'];
-			$location_data = @execMethod('property.bolocation.read_single', array('location_code' => $location_code,	'extra' => array('view' => true)));
+//			$location_data = execMethod('property.bolocation.read_single', array('location_code' => $location_code,	'extra' => array('view' => true)));
 
 			$gab_id = '';
 			$cadastral_unit = '';
-			$gabinfos = @execMethod('property.sogab.read', array(
+			$gabinfos = execMethod('property.sogab.read', array(
 				'location_code' => $location_code,
 				'allrows' => true)
 				);
@@ -396,7 +403,11 @@
 			$branch= phpgw::get_var('branch', 'string');
 			$building_part= phpgw::get_var('building_part', 'string');
 			$order_id = phpgw::get_var('order_id', 'int');
+			$cadastral_unit= phpgw::get_var('cadastral_unit', 'string');
+			$location_code= phpgw::get_var('location_code', 'string');
+			$building_number= phpgw::get_var('building_number', 'string');
 			$remark_detail= phpgw::get_var('remark_detail', 'string');
+
 
 			if(!$order_id)
 			{
@@ -439,7 +450,7 @@
 
 						if(!empty($file_tags[$file_info['path_relative_filename']]))
 						{
-							$file_tags[$file_info['path_relative_filename']] = null;
+							unset($file_tags[$file_info['path_relative_filename']]);
 						}
 					}
 				}
@@ -460,6 +471,19 @@
 					{
 						$file_tags[$file_name]['remark_detail'] = $remark_detail;
 					}
+					if($cadastral_unit)
+					{
+						$file_tags[$file_name]['cadastral_unit'] = $cadastral_unit;
+					}
+					if($location_code)
+					{
+						$file_tags[$file_name]['location_code'] = $location_code;
+					}
+					if($building_number)
+					{
+						$file_tags[$file_name]['building_number'] = $building_number;
+					}
+
 					if($document_category)
 					{
 						if(!empty($file_tags[$file_name]['document_category']))
@@ -510,6 +534,19 @@
 					{
 						$file_tags[$file_name]['remark_detail'] = '';
 					}
+					if($cadastral_unit)
+					{
+						$file_tags[$file_name]['cadastral_unit'] = $file_tags['common_data']['cadastral_unit'];
+					}
+					if($location_code)
+					{
+						$file_tags[$file_name]['location_code'] = $file_tags['common_data']['location_code'];
+					}
+					if($building_number)
+					{
+						$file_tags[$file_name]['location_code'] = $file_tags['common_data']['location_code'];
+					}
+
 					if($document_category)
 					{
 						if(!empty($file_tags[$file_name]['document_category']))
@@ -560,10 +597,10 @@
 			}
 
 			$order_id = phpgw::get_var('order_id', 'int');
-			$cadastral_unit= phpgw::get_var('cadastral_unit', 'string');
-			$location_code= phpgw::get_var('location_code', 'string');
-			$building_number= phpgw::get_var('building_number', 'string');
-			$remark= phpgw::get_var('remark', 'string');
+			$cadastral_unit_common= phpgw::get_var('cadastral_unit_common', 'string');
+			$location_code_common= phpgw::get_var('location_code_common', 'string');
+			$building_number_common= phpgw::get_var('building_number_common', 'string');
+			$remark_common= phpgw::get_var('remark_common', 'string');
 
 			if(!$order_id)
 			{
@@ -586,7 +623,18 @@
 				}
 			}
 
+			return $this->_set_common_metadata($order_id, $cadastral_unit_common, $location_code_common, $building_number_common, $remark_common);
+		}
+
+		private function _set_common_metadata( $order_id, $cadastral_unit_common = '', $location_code_common = '', $building_number_common = '', $remark_common ='' )
+		{
 			$file_tags = $this->_get_metadata($order_id);
+
+			$cadastral_unit = $cadastral_unit_common ? $cadastral_unit_common : $file_tags['common_data']['cadastral_unit'];
+			$location_code = $location_code_common ? $location_code_common : $file_tags['common_data']['location_code'];
+			$building_number = $building_number_common ? $building_number_common : $file_tags['common_data']['building_number'];
+			$remark = $remark_common ? $remark_common : $file_tags['common_data']['remark'];
+
 			$list_files = $this->_get_dir_contents($this->order_path_dir);
 			foreach ($list_files as $file_info)
 			{
@@ -597,25 +645,33 @@
 					continue;
 				}
 
-				if($cadastral_unit)
+				if($cadastral_unit && empty($file_tags[$file_name]['cadastral_unit']))
 				{
 					$file_tags[$file_name]['cadastral_unit'] = $cadastral_unit;
 				}
-				if($location_code)
+				if($location_code && empty($file_tags[$file_name]['location_code']))
 				{
 					$file_tags[$file_name]['location_code'] = $location_code;
 				}
-				if($building_number)
+				if($building_number && empty($file_tags[$file_name]['building_number']))
 				{
 					$file_tags[$file_name]['building_number'] = $building_number;
 				}
-				if($remark)
+				if($remark && empty($file_tags[$file_name]['remark']))
 				{
 					$file_tags[$file_name]['remark'] = $remark;
 				}
 			}
 
+			$file_tags['common_data'] = array(
+				'cadastral_unit' => $cadastral_unit,
+				'location_code' => $location_code,
+				'building_number' => $building_number,
+				'remark' => $remark
+			);
+
 			return $this->_set_metadata($order_id, $file_tags);
+
 		}
 
 		public function index()
@@ -697,33 +753,61 @@
 
 			$files_def = array
 			(
+				array('key'		 => 'id',
+					'label'		 => lang('id'),
+					'sortable'	 => true,
+					'resizeable' => true,
+					'hidden'	 => true
+					),
+
 				array('key'		 => 'file_link',
 					'label'		 => lang('filename'),
 					'sortable'	 => true,
 					'resizeable' => true
 					),
+
+				array('key'		 => 'cadastral_unit',
+					'label'		 => lang('cadastral unit'),
+					'sortable'	 => true,
+					'resizeable' => true,
+					'editor'	 => true
+					),
+				array('key'		 => 'building_number',
+					'label'		 => lang('building number'),
+					'sortable'	 => true,
+					'resizeable' => true,
+					'editor'	 => true
+					),
+				array('key'		 => 'location_code',
+					'label'		 => lang('location code'),
+					'sortable'	 => true,
+					'resizeable' => true,
+					'editor'	 => true
+					),
+
 				array('key'		 => 'remark_detail',
 					'label'		 => lang('remark'),
 					'sortable'	 => true,
-					'resizeable' => true
+					'resizeable' => true,
+					'editor'	 => true
 					),
 				array('key' => 'document_category',
 					'label' => lang('document categories'),
-					'sortable' => true,
+					'sortable' => false,
 					'resizeable' => true,
-					'formatter' => 'JqueryPortico.formatJsonArray'
+					'formatter' => 'JqueryPortico.formatJsonArrayData'
 					),
 				array('key' => 'branch',
 					'label' => lang('branch'),
-					'sortable' => true,
+					'sortable' => false,
 					'resizeable' => true,
-					'formatter' => 'JqueryPortico.formatJsonArray'
+					'formatter' => 'JqueryPortico.formatJsonArrayData'
 					),
 				array('key' => 'building_part',
 					'label' => lang('building part'),
-					'sortable' => true,
+					'sortable' => false,
 					'resizeable' => true,
-					'formatter' => 'JqueryPortico.formatJsonArray'
+					'formatter' => 'JqueryPortico.formatJsonArrayData'
 					),
 //				array('key'		 => 'select',
 //					'label'		 => '',
@@ -756,59 +840,60 @@
 			$datatable_def = array();
 
 			$buttons = array
-			(
+				(
 				array(
-					'action' => 'filter_tag',
-					'type'	 => 'buttons',
-					'name'	 => 'filter_tag',
-					'icon'	 => '<i class="fas fa-filter"></i>',
-					'label'	 => lang('filter tag'),
-					'funct'	 => 'onActionsClick_filter_files',
-					'classname'	=> 'enabled',
+					'action'		 => 'filter_tag',
+					'type'			 => 'buttons',
+					'name'			 => 'filter_tag',
+					'icon'			 => '<i class="fas fa-filter"></i>',
+					'label'			 => lang('filter tag'),
+					'funct'			 => 'onActionsClick_filter_files',
+					'classname'		 => 'enabled',
 					'value_hidden'	 => ""
-					),
+				),
 				array(
-					'action' => 'set_tag',
-					'type'	 => 'buttons',
-					'name'	 => 'set_tag',
-					'icon'	=> '<i class="far fa-save"></i>',
-					'label'	 => lang('set tag'),
-					'funct'	 => 'onActionsClick_files',
-					'classname'	=> '',
-					'value_hidden'	 => ""
-					),
-				array(
-					'action' => 'download',
-					'type'	 => 'buttons',
-					'name'	 => 'download_custom',
-					'icon'	=> '<i class="fas fa-download"></i>',
-					'label'	 => lang('download'),
-					'funct'	 => 'download',
-					'classname'	=> 'enabled',
-					'value_hidden'	 => ""
-					),
-				array(
-					'action' => 'delete_file',
-					'type'	 => 'buttons',
-					'name'	 => 'delete',
-					'icon'	=> '<i class="far fa-trash-alt"></i>',
-					'label'	 => lang('Delete file'),
-					'funct'	 => 'onActionsClick_files',
-					'classname'	 => 'record disabled delete_file',
+					'action'		 => 'set_tag',
+					'type'			 => 'buttons',
+					'name'			 => 'set_tag',
+					'icon'			 => '<i class="far fa-save"></i>',
+					'label'			 => lang('set tag'),
+					'funct'			 => 'onActionsClick_files',
+					'classname'		 => '',
 					'value_hidden'	 => "",
-					'confirm_msg'		=> "Vil du slette fil(er)"
-					),
+					'confirm_msg'	 => ""
+				),
 				array(
-					'action' => 'remove_tag',
-					'type'	 => 'buttons',
-					'name'	 => 'remove_tag',
-					'icon'	=> '<i class="far fa-trash-alt"></i>',
-					'label'	 => lang('remove tag'),
-					'funct'	 => 'onActionsClick_files',
-					'classname'	 => 'record disabled remove_tag',
+					'action'		 => 'remove_tag',
+					'type'			 => 'buttons',
+					'name'			 => 'remove_tag',
+					'icon'			 => '<i class="far fa-trash-alt"></i>',
+					'label'			 => lang('remove tag'),
+					'funct'			 => 'onActionsClick_files',
+					'classname'		 => 'record disabled remove_tag',
 					'value_hidden'	 => "",
-					'confirm_msg'		=> "Vil du slette tag fra fil(er)"
-					),
+					'confirm_msg'	 => "Vil du slette tag fra fil(er)"
+				),
+				array(
+					'action'		 => 'download',
+					'type'			 => 'buttons',
+					'name'			 => 'download_custom',
+					'icon'			 => '<i class="fas fa-download"></i>',
+					'label'			 => lang('download'),
+					'funct'			 => 'download',
+					'classname'		 => 'enabled',
+					'value_hidden'	 => ""
+				),
+				array(
+					'action'		 => 'delete_file',
+					'type'			 => 'buttons',
+					'name'			 => 'delete',
+					'icon'			 => '<i class="far fa-trash-alt"></i>',
+					'label'			 => lang('Delete file'),
+					'funct'			 => 'onActionsClick_files',
+					'classname'		 => 'record disabled delete_file',
+					'value_hidden'	 => "",
+					'confirm_msg'	 => "Vil du slette fil(er)"
+				),
 			);
 
 			$tabletools = array
@@ -844,18 +929,28 @@
 			$datatable_def[] = array
 				(
 				'container'	 => 'datatable-container_0',
-				'requestUrl' => "''",
+				'requestUrl' => json_encode(self::link(array(
+						'menuaction'		 => 'property.uiimport_documents.get_files',
+						'action'			 => 'get_files',
+						'order_id'			 => $order_id,
+						'secret'			 => $secret,
+						'phpgw_return_as'	 => 'json'
+						)
+					)),
 				'ColumnDefs' => $files_def,
 				'tabletools' => $tabletools,
 				'config'	 => array(
-					array('disablePagination' => true),
+					array('allrows' => true),
+//					array('responsive' => true),
+//					array('disablePagination' => true),
 //					array('disableFilter' => true),
 					array('scrollX' => false),
 					array('singleSelect' => true),
 //					array('scrollY' => 800),
 //					array('fixedColumns' => true),
 //					array('fixedColumns' => json_encode(array('leftColumns' => 1))),
-					array('order' => json_encode(array('0', 'asc')))
+					array('order' => json_encode(array('0', 'asc'))),
+					array('editor_action' => self::link(array('menuaction' => 'property.uiimport_documents.set_value')))
 				)
 			);
 
@@ -865,8 +960,7 @@
 			$branch_list = $import_document_files->get_branch_list();
 			$document_categories = $import_document_files->get_document_categories();
 
-			$data = array
-				(
+			$data = array(
 				'order_id'				 => $order_id,
 				'secret'				 => $secret,
 				'datatable_def'			 => $datatable_def,
@@ -881,7 +975,8 @@
 
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 			phpgwapi_jquery::load_widget('select2');
-			self::add_javascript('property', 'portico', 'import_documents.js');
+			phpgwapi_jquery::load_widget('bootstrap-multiselect');
+			self::add_javascript('property', 'base', 'import_documents.js');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('import documents');
 
 			self::render_template_xsl(array('import_documents', 'multi_upload_file_inline', 'datatable_inline'), $data);
@@ -901,6 +996,15 @@
 			{
 				return;
 			}
+
+			$search	 = phpgw::get_var('search');
+			$query	 = isset($search['value']) ? $search['value'] : '';
+			$order	 = phpgw::get_var('order');
+			$sort	 = phpgw::get_var('sort');
+			$columns = phpgw::get_var('columns');
+
+			$_order_column	 = is_array($order) ? $columns[$order[0]['column']]['data'] : $order;
+			$_dir			 = is_array($order) ? $order[0]['dir'] : $sort;
 
 			/**
 			 * '2' - means validate actual import
@@ -924,21 +1028,35 @@
 			}
 			unset($file_info);
 			$file_tags = $this->_get_metadata($order_id);
-			$lang_missing = lang('Missing value');
-			$error_list = array();
+
+			$sort_key	 = array();
+			$values		 = array();
 //			$debug = true;
-			$missing_value = array('<span style="color:red;">*</span>');
+			$missing_value ='<span style="color:red;">*</span>';
 			foreach ($list_files as &$file_info)
 			{
+
 				$file_name = $file_info['path_relative_filename'];
+
+				if($query && !preg_match("/$query/i", $file_name))
+				{
+					continue;
+				}
+
 				$encoded_file_name = urlencode($file_name);
 				$file_info['duplicate']	= $_duplicates[$file_info['file_name']] > 1 ?  $_duplicates[$file_info['file_name']] : '';
 				$file_info['select']	= "<input type='checkbox' class='mychecks'/>";
 				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$encoded_file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";
 				$file_info['remark_detail'] =  isset($file_tags[$file_name]['remark_detail']) ? $file_tags[$file_name]['remark_detail'] :'';
-				$file_info['document_category'] =  !empty($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : $missing_value;
-				$file_info['branch'] = !empty($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : $missing_value;
-				$file_info['building_part'] = !empty($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : $missing_value;
+				$file_info['cadastral_unit'] =  !empty($file_tags[$file_name]['cadastral_unit']) ? $file_tags[$file_name]['cadastral_unit'] : $missing_value;
+				$file_info['location_code'] =  !empty($file_tags[$file_name]['location_code']) ? $file_tags[$file_name]['location_code'] : $missing_value;
+				$file_info['building_number'] =  !empty($file_tags[$file_name]['building_number']) ? $file_tags[$file_name]['building_number'] : $missing_value;
+				$file_info['document_category'] =  !empty($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : '';
+				$file_info['branch'] = !empty($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : '';
+				$file_info['building_part'] = !empty($file_tags[$file_name]['building_part']) ? $file_tags[$file_name]['building_part'] : '';
+				$file_info['cadastral_unit_validate'] =  empty($file_tags[$file_name]['cadastral_unit']) ? false : true;
+				$file_info['location_code_validate'] =  empty($file_tags[$file_name]['location_code']) ? false : true;
+				$file_info['building_number_validate'] =  empty($file_tags[$file_name]['building_number']) ? false : true;
 				$file_info['document_category_validate'] =  empty($file_tags[$file_name]['document_category']) ? false : true;
 				$file_info['branch_validate'] = empty($file_tags[$file_name]['branch']) ?  false : true;
 				$file_info['building_part_validate'] = empty($file_tags[$file_name]['building_part']) ? false : true;
@@ -953,17 +1071,54 @@
 				}
 				$debug = false;
 
-				if(!$file_info['document_category_validate'] || !$file_info['branch_validate']  || !$file_info['building_part_validate'] || ($sub_step == 2 && !$file_info['import_ok_validate']))
+				if(!$file_info['document_category_validate']
+					|| !$file_info['branch_validate']
+					|| !$file_info['building_part_validate']
+					|| !$file_info['cadastral_unit_validate']
+					|| !$file_info['location_code_validate']
+					|| !$file_info['building_number_validate']
+					|| ($sub_step == 2 && !$file_info['import_ok_validate']))
 				{
-					$error_list[] = $file_info;
+					$values[] = $file_info;
+					$sort_key[] = $file_info[$_order_column];
 				}
 			}
 
-			$total_records = count($error_list);
+			if($_dir == 'asc')
+			{
+				array_multisort($sort_key, SORT_ASC, $values);
+			}
+			else
+			{
+				array_multisort($sort_key, SORT_DESC, $values);
+			}
 
-			return array
-				(
-				'data'				 => $error_list,
+//------ Start pagination
+
+			$start			 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$results		 = phpgw::get_var('length', 'int', 'REQUEST', 0);
+			$allrows		 = phpgw::get_var('length', 'int') == -1;
+
+			$total_records	 = count($values);
+
+			$maxmatchs = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])  ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
+
+			$num_rows = $results ? $results : $maxmatchs;
+			if ($allrows)
+			{
+				$out = $values;
+			}
+			else
+			{
+				$page		 = ceil(( $start / $num_rows));
+				$values_part = array_chunk($values, $num_rows);
+				$out		 = (array)$values_part[$page];
+			}
+
+//------ End pagination
+
+			return array(
+				'data'				 => $out,
 				'draw'				 => phpgw::get_var('draw', 'int'),
 				'recordsTotal'		 => $total_records,
 				'recordsFiltered'	 => $total_records
@@ -1018,6 +1173,15 @@
 				return false;
 			}
 
+			$search	 = phpgw::get_var('search');
+			$query	 = isset($search['value']) ? $search['value'] : '';
+			$order	 = phpgw::get_var('order');
+			$sort	 = phpgw::get_var('sort');
+			$columns = phpgw::get_var('columns');
+
+			$_order_column	 = is_array($order) ? $columns[$order[0]['column']]['data'] : $order;
+			$_dir			 = is_array($order) ? $order[0]['dir'] : $sort;
+
 			$order_id = phpgw::get_var('order_id', 'int');
 
 			$filter_document_category	 = phpgw::get_var('filter_document_category');
@@ -1032,37 +1196,48 @@
 			}
 			unset($file_info);
 
-			$link_file_data = array
-			(
+			$link_file_data	 = array
+				(
 				'menuaction' => 'property.uiimport_documents.view_file',
-				'order_id'	=> $order_id
+				'order_id'	 => $order_id
 			);
 			$link_view_file	 = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
-			$lang_view = lang('click to view file');
+			$lang_view		 = lang('click to view file');
 
-			$file_tags = $this->_get_metadata($order_id);
-			$values = array();
+			$file_tags	 = $this->_get_metadata($order_id);
+			$values		 = array();
+			$sort_key	 = array();
+
 			foreach ($list_files as $file_info)
 			{
 				$file_name = $file_info['path_relative_filename'];
 
-				if($filter_document_category && !array_intersect($filter_document_category, $file_tags[$file_name]['document_category']))
+				if($query && !preg_match("/$query/i", $file_name))
 				{
 					continue;
 				}
-				if($filter_branch && !array_intersect($filter_branch, $file_tags[$file_name]['branch']))
+
+				if($filter_document_category && (!isset($file_tags[$file_name]['document_category']) || !array_intersect($filter_document_category, $file_tags[$file_name]['document_category'])))
 				{
 					continue;
 				}
-				if($filter_building_part && !array_intersect($filter_building_part, $file_tags[$file_name]['building_part']))
+				if($filter_branch && (!isset($file_tags[$file_name]['branch']) || !array_intersect($filter_branch, $file_tags[$file_name]['branch'])))
+				{
+					continue;
+				}
+				if($filter_building_part && (!isset($file_tags[$file_name]['building_part']) || !array_intersect($filter_building_part, $file_tags[$file_name]['building_part'])))
 				{
 					continue;
 				}
 
 				$encoded_file_name = urlencode($file_name);
+
 				$file_info['duplicate']	= $_duplicates[$file_info['file_name']] > 1 ?  $_duplicates[$file_info['file_name']] : '';
 				$file_info['select']	= "<input type='checkbox' class='mychecks'/>";
 				$file_info['file_link'] = "<a href=\"{$link_view_file}&amp;file_name={$encoded_file_name}\" target=\"_blank\" title=\"{$lang_view}\">{$file_name}</a>";
+				$file_info['cadastral_unit'] =  isset($file_tags[$file_name]['cadastral_unit']) ? $file_tags[$file_name]['cadastral_unit'] :'';
+				$file_info['building_number'] =  isset($file_tags[$file_name]['building_number']) ? $file_tags[$file_name]['building_number'] :'';
+				$file_info['location_code'] =  isset($file_tags[$file_name]['location_code']) ? $file_tags[$file_name]['location_code'] :'';
 				$file_info['remark_detail'] =  isset($file_tags[$file_name]['remark_detail']) ? $file_tags[$file_name]['remark_detail'] :'';
 				$file_info['document_category'] =  isset($file_tags[$file_name]['document_category']) ? $file_tags[$file_name]['document_category'] : array();
 				$file_info['branch'] = isset($file_tags[$file_name]['branch']) ? $file_tags[$file_name]['branch'] : array();
@@ -1070,14 +1245,49 @@
 				$file_info['import_ok'] = isset($file_tags[$file_name]['import_ok']) ? $file_tags[$file_name]['import_ok'] : '';
 				$file_info['import_failed'] = isset($file_tags[$file_name]['import_failed']) ? $file_tags[$file_name]['import_failed'] : '';
 				unset($file_info['path_absolute']);
+				$file_info['id'] = urlencode("{$order_id}::{$file_name}");
 				$values[] = $file_info;
+				$sort_key[] = $file_info[$_order_column];
+
 			}
 
-			$total_records = count($list_files);
 
-			return array
-				(
-				'data'				 => $values,
+			if($_dir == 'asc')
+			{
+				array_multisort($sort_key, SORT_ASC, $values);
+			}
+			else
+			{
+				array_multisort($sort_key, SORT_DESC, $values);
+			}
+
+
+//------ Start pagination
+
+			$start			 = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$results		 = phpgw::get_var('length', 'int', 'REQUEST', 0);
+			$allrows		 = phpgw::get_var('length', 'int') == -1;
+
+			$total_records	 = count($values);
+
+			$maxmatchs = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])  ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
+
+			$num_rows = $results ? $results : $maxmatchs;
+			if ($allrows)
+			{
+				$out = $values;
+			}
+			else
+			{
+				$page		 = ceil(( $start / $num_rows));
+				$values_part = array_chunk($values, $num_rows);
+				$out		 = (array)$values_part[$page];
+			}
+
+//------ End pagination
+
+			return array(
+				'data'				 => $out,
 				'draw'				 => phpgw::get_var('draw', 'int'),
 				'recordsTotal'		 => $total_records,
 				'recordsFiltered'	 => $total_records
@@ -1174,7 +1384,7 @@
 			if(!$order_id)
 			{
 				$upload_handler			 = new property_multiuploader($options, false);
-				$response = array(files => array(array('error' => 'missing order_id in request')));
+				$response = array('files' => array(array('error' => 'missing order_id in request')));
 				$upload_handler->generate_response($response);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
@@ -1182,7 +1392,7 @@
 			if (($receipt['error']))
 			{
 				$upload_handler			 = new property_multiuploader($options, false);
-				$response = array(files => array(array('error' => $receipt['error'])));
+				$response = array('files' => array(array('error' => $receipt['error'])));
 				$upload_handler->generate_response($response);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
@@ -1218,6 +1428,7 @@
 			}
 
 			$upload_handler			 = new property_multiuploader($options, true, $error_messages);
+			$this->_set_common_metadata($order_id);
 		}
 
 		private function check_upload_dir($order_id)
@@ -1392,7 +1603,7 @@
 
 //------ End pagination
 
-			$result_data = array('results' => $out);
+			$result_data = array('results' => (array)$out);
 
 			$result_data['total_records']	 = $total_records;
 			$result_data['draw']			 = phpgw::get_var('draw', 'int');
@@ -1415,6 +1626,8 @@
 			}
 
 			$order_id = phpgw::get_var('order_id', 'int', 'GET');
+			$query = phpgw::get_var('query');
+
 			if(!$order_id)
 			{
 				return;
@@ -1426,7 +1639,21 @@
 				return false;
 			}
 
-			$list_files = $this->_get_dir_contents($this->order_path_dir);
+			$_list_files = $this->_get_dir_contents($this->order_path_dir);
+
+			$list_files = array();
+			foreach ($_list_files as $file_info)
+			{
+				$file_name = $file_info['path_relative_filename'];
+
+				if($query && !preg_match("/$query/i", $file_name))
+				{
+					continue;
+				}
+				$list_files[] = $file_info;
+			}
+
+			unset($file_info);
 
 			$total_records = count($list_files);
 
@@ -1434,23 +1661,31 @@
 
 			$i = 0;
 
+
 			foreach ($list_files as $file_info)
 			{
+				$file_name = $file_info['path_relative_filename'];
+
+				if($query && !preg_match("/$query/i", $file_name))
+				{
+					continue;
+				}
+
 				$i++;
 
-				$current_tag = $file_tags[$file_info['path_relative_filename']];
+				$current_tag = $file_tags[$file_name];
 
-				if (isset($file_tags[$file_info['path_relative_filename']]) && empty($current_tag['import_ok']))// && empty($current_tag['import_failed']))
+				if (isset($file_tags[$file_name]) && empty($current_tag['import_ok']))// && empty($current_tag['import_failed']))
 				{
 					if (empty($current_tag['import_ok']) && ( $current_tag['document_category'] && $current_tag['branch'] && $current_tag['branch'] ))
 					{
 						if ($import_document_files->process_file($file_info, $current_tag))
 						{
-							$file_tags[$file_info['path_relative_filename']]['import_ok'] = date('Y-m-d H:i:s');
+							$file_tags[$file_name]['import_ok'] = date('Y-m-d H:i:s');
 						}
 						else
 						{
-							$file_tags[$file_info['path_relative_filename']]['import_failed'] = date('Y-m-d H:i:s');
+							$file_tags[$file_name]['import_failed'] = date('Y-m-d H:i:s');
 						}
 
 						$this->_set_metadata($order_id, $file_tags);
@@ -1631,7 +1866,7 @@
 
 		private function _un_zip( $file, $dir )
 		{
-			@set_time_limit(5 * 60);
+			set_time_limit(5 * 60);
 
 			$zip = new ZipArchive;
 			if ($zip->open($file) === TRUE)
@@ -1663,7 +1898,7 @@
 
 		private function _un_rar( $file, $dir )
 		{
-			@set_time_limit(5 * 60);
+			set_time_limit(5 * 60);
 
 			$archive = RarArchive::open($file);
 			if ($archive === FALSE)
@@ -1689,4 +1924,88 @@
 
 			return true;
 		}
+
+		public function set_value()
+		{
+			if (!$this->acl_edit)
+			{
+				return;
+			}
+
+			$field_name = phpgw::get_var('field_name');
+			$id = urldecode(phpgw::get_var('id','raw'));
+
+			$id_arr = explode('::', $id);
+
+			$order_id = $id_arr[0];
+			$file_name = $id_arr[1];
+
+			$file_tags = $this->_get_metadata($order_id);
+
+
+			if(!empty($file_tags[$file_name]['import_ok']))
+			{
+				return;
+			}
+
+			switch ($field_name)
+			{
+				case 'remark_detail':
+				case 'cadastral_unit':
+				case 'location_code':
+				case 'building_number':
+					$value = phpgw::get_var('value');
+					$file_tags[$file_name][$field_name] = $value;
+					break;
+				case 'document_category':
+				case 'branch':
+				case 'building_part':
+					$value = phpgw::get_var('value');
+
+					if(!phpgw::get_var('checked', 'bool'))
+					{
+						if(!empty($file_tags[$file_name][$field_name]))
+						{
+							$file_tags[$file_name][$field_name] = array_diff($file_tags[$file_name][$field_name], $value);
+						}
+						else
+						{
+							$file_tags[$file_name][$field_name] = array();
+						}
+					}
+					else
+					{
+						if(!empty($file_tags[$file_name][$field_name]))
+						{
+							$file_tags[$file_name][$field_name] = array_unique(array_merge($value, $file_tags[$file_name][$field_name]));
+						}
+						else
+						{
+							$file_tags[$file_name][$field_name] = $value;
+						}
+
+					}
+
+					break;
+				default:
+					return;
+			}
+
+			$result = $this->_set_metadata($order_id, $file_tags);
+
+
+
+			$message = array();
+			if ($result)
+			{
+				$message['message'][] = array('msg' => lang('data has been saved'));
+			}
+			else
+			{
+				$message['error'][] = array('msg' => lang('data has not been saved'));
+			}
+
+			return $message;
+		}
+
 	}

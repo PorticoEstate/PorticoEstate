@@ -60,7 +60,7 @@
 
 			$this->account		 = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->acl			 = & $GLOBALS['phpgw']->acl;
-			$this->acl_location	 = '.ticket';
+			$this->acl_location	 = '.admin';
 			$this->acl_read		 = $this->acl->check($this->acl_location, PHPGW_ACL_READ, $this->currentapp);
 			$this->acl_add		 = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, $this->currentapp);
 			$this->acl_edit		 = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, $this->currentapp);
@@ -342,7 +342,7 @@
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript($this->currentapp, 'portico', 'order_template.edit.js');
+			self::add_javascript($this->currentapp, 'base', 'order_template.edit.js');
 			self::render_template_xsl(array('order_template', 'datatable_inline', 'cat_sub_select'), array(
 				'edit' => $data));
 		}

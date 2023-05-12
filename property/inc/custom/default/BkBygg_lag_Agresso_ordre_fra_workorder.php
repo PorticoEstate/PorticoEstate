@@ -211,7 +211,7 @@
 
 				$tjeneste	 = !empty($named_attributes['kostra_id']) ? $named_attributes['kostra_id'] : 9;
 				//Override from workorder
-				$tjeneste	 = $workorder['service_id'] ? (int)$workorder['service_id'] : (int)$tjeneste;
+				$tjeneste	 = $workorder['service_id'] && $workorder['service_id'] != 9 ? (int)$workorder['service_id'] : (int)$tjeneste;
 
 
 				//EBF
@@ -317,6 +317,7 @@
 					'order_id'		 => $workorder['id'],
 					'tax_code'		 => $tax_code,
 					'buyer'			 => $buyer,
+					'invoice_remark' => mb_substr($workorder['title'], 0, 50),
 					'lines'			 => array(
 						array(
 							'unspsc_code'	 => $workorder['unspsc_code'] ? $workorder['unspsc_code'] : 'UN-72000000',

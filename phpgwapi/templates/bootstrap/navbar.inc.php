@@ -35,7 +35,7 @@
 		$home_icon		= 'icon icon-home';
 		$about_url	= $GLOBALS['phpgw']->link('/about.php', array('app' => $GLOBALS['phpgw_info']['flags']['currentapp']) );
 		$about_text	= lang('about');
-		$var['logout_url']	= $GLOBALS['phpgw']->link('/logout.php');
+//		$var['logout_url']	= $GLOBALS['phpgw']->link('/logout.php');
 		$var['logout_text']	= lang('logout');
 		$var['user_fullname'] = $user_fullname;
 		$preferences_url = $GLOBALS['phpgw']->link('/preferences/index.php');
@@ -80,8 +80,7 @@ HTML;
 		$breadcrumbs = $breadcrumbs ? $breadcrumbs : array(); // first one
 
 
-
-		if($breadcrumbs[0]['id'] != $breadcrumb_selection)
+		if(empty($breadcrumbs) ||( isset($breadcrumbs[0]['id']) && $breadcrumbs[0]['id'] != $breadcrumb_selection))
 		{
 			array_unshift($breadcrumbs, $current_url);
 		}
@@ -91,6 +90,7 @@ HTML;
 		}
 		phpgwapi_cache::session_set('phpgwapi','breadcrumbs', $breadcrumbs);
 		$breadcrumbs = array_reverse($breadcrumbs);
+		phpgwapi_cache::session_set('navbar', 'menu_selection',$GLOBALS['phpgw_info']['flags']['menu_selection']);
 
 		$navigation = array();
 		if( !isset($GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar']) || $GLOBALS['phpgw_info']['user']['preferences']['property']['nonavbar'] != 'yes' )
@@ -116,15 +116,19 @@ HTML;
 //			_debug_array($bookmarks);
 			$lang_bookmarks = lang('bookmarks');
 
-			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
 			$_treemenu = '';
-			foreach($navbar as $app => $app_data)
+
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] !== 'ajax_menu')
 			{
-				if(!in_array($app, array('logout', 'about', 'preferences')))
+				$navigation = execMethod('phpgwapi.menu.get', 'navigation');
+				foreach($navbar as $app => $app_data)
 				{
-					$submenu = isset($navigation[$app]) ? render_submenu($app, $navigation[$app], $bookmarks, $app_data['text']) : '';
-					$node = render_item($app_data, "navbar::{$app}", $submenu, $bookmarks);
-					$_treemenu .= $node['node'];
+					if(!in_array($app, array('logout', 'about', 'preferences')))
+					{
+						$submenu = isset($navigation[$app]) ? render_submenu($app, $navigation[$app], $bookmarks, $app_data['text']) : '';
+						$node = render_item($app_data, "navbar::{$app}", $submenu, $bookmarks);
+						$_treemenu .= $node['node'];
+					}
 				}
 			}
 			$treemenu = <<<HTML
@@ -136,7 +140,7 @@ HTML;
 			{
 				$preferences_option .= <<<HTML
 				<a class="dropdown-item" href="{$preferences_url}">
-					<i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+					<i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>
 					{$preferences_text}
 				</a>
 HTML;
@@ -155,8 +159,9 @@ HTML;
 		if((phpgw::get_var('phpgw_return_as') != 'json'  && $breadcrumbs && is_array($breadcrumbs)) && !$nonavbar)// && isset($GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['show_breadcrumbs'])
 		{
 			$breadcrumb_html = <<<HTML
-				<nav aria-label="breadcrumb">
-				  <ol class="breadcrumb">
+			<div class="clearfix">
+			<nav aria-label="breadcrumb">
+				  <ol class="breadcrumb shadow ps-2 pt-2 pb-3">
 HTML;
 			$history_url = array();
 			for($i=0;$i< (count($breadcrumbs) -1); $i++)
@@ -167,13 +172,13 @@ HTML;
 			}
 
 			$breadcrumb_html .= <<<HTML
-				    <li class="breadcrumb-item active" aria-current="page">{$breadcrumbs[$i]['name']}</li>
+				    <li class="breadcrumb-item" aria-current="page">{$breadcrumbs[$i]['name']}</li>
 HTML;
 
 			$breadcrumb_html .= <<<HTML
 				</ol>
 			  </nav>
-
+		</div>
 HTML;
 
 		}
@@ -219,7 +224,7 @@ HTML;
 				));
 			$support_option = <<<HTML
 			<li class="nav-item">
-				<a href="$support_link" class="nav-link" data-toggle="modal" data-target="#popupModal">{$support_text}</a>
+				<a href="$support_link" class="nav-link" data-bs-toggle="modal" data-bs-target="#popupModal">{$support_text}</a>
 			</li>
 HTML;
 		}
@@ -241,42 +246,72 @@ HTML;
 			</li>
 HTML;
 		}
+		/**
+		 * Modal-version
+		 */
+//		$debug_option = '';
+//		if(isset($GLOBALS['phpgw_info']['server']['support_address']) && $GLOBALS['phpgw_info']['server']['support_address'])
+//		{
+//			$debug_text = lang('debug');
+//			$debug_link = $GLOBALS['phpgw']->link('/index.php', array
+//				(
+//					'menuaction'=> 'property.uidebug_json.index',
+//					'app' => $GLOBALS['phpgw_info']['flags']['currentapp'],
+//					'width' => 700,
+//					'height' => 800
+//				));
+//			$debug_option = <<<HTML
+//			<li class="nav-item">
+//				<a href="$debug_link" class="nav-link" data-bs-toggle="modal" data-bs-target="#popupModal">{$debug_text}</a>
+//			</li>
+//HTML;
+//		}
 
 
 		$bookmark_option = '';
-		$collected_bm = set_get_bookmarks();
+		$collected_bm = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
+
 		if($collected_bm)
 		{
 			$bookmark_option .= <<<HTML
 
 			<li class="nav-item dropdown no-arrow">
 				<a class="nav-link dropdown-toggle" href="#" id="bookmarkDropdown" role="button"
-					data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<span class="mr-2 d-none d-lg-inline">{$lang_bookmarks}</span>
+					data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<span class="me-2 d-none d-lg-inline">{$lang_bookmarks}</span>
 				</a>
 				<!-- Dropdown - bookmarks -->
-				<div id="_bookmark" class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+				<ul id="_bookmark" class="dropdown-menu"
 				aria-labelledby="bookmarkDropdown">
 HTML;
 
-				foreach($collected_bm as $entry)
+				foreach($collected_bm as $bookmark_id => $entry)
 				{
+					if(empty($entry['text']))
+					{
+						continue;
+					}
 					$seleced_bm = 'dropdown-item';
-					$icon = !empty($entry['icon']) ? "<i class='{$entry['icon']} mr-2 text-gray-400'></i>": '<i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>';
-					if( isset($entry['selected']) && $entry['selected'])
+					$icon = !empty($entry['icon']) ? "<i class='{$entry['icon']} me-2 text-gray-400'></i>": '<i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>';
+
+
+					if ( $bookmark_id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}"
+					|| ( !empty($entry['nav_location']) && $entry['nav_location'] == $GLOBALS['phpgw_info']['flags']['menu_selection'] ))
 					{
 						$seleced_bm .= ' active';
 					}
 
 					$bookmark_option .= <<<HTML
-					<a class="$seleced_bm" href="{$entry['url']}" id="bookmark_{$entry['bookmark_id']}">
-						{$icon}
-						{$entry['text']}
-					</a>
+					<li>
+						<a class="{$seleced_bm}" href="{$entry['href']}" id="bookmark_{$bookmark_id}">
+							{$icon}
+							{$entry['text']}
+						</a>
+					</li>
 HTML;
 
 				}
-				$bookmark_option .= '</div></li>';
+				$bookmark_option .= '</ul></li>';
 		}
 		else
 		{
@@ -297,7 +332,7 @@ HTML;
 			if ($total_messages > 0)
 			{
 				$new_messages		 = $total_messages;
-				$new_messages_alert	 = "<span class='badge badge-danger badge-counter'>{$new_messages}</span>";
+				$new_messages_alert	 = "<span class='badge bg-danger rounded-pill'>{$new_messages}</span>";
 			}
 			else
 			{
@@ -307,10 +342,13 @@ HTML;
 
 			$link_messages = $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'messenger.uimessenger.index' ));
 
+			$lang_messenger = $GLOBALS['phpgw']->translation->translate('messenger', array(), true);
+			$lang_read_messages = $GLOBALS['phpgw']->translation->translate('read messages', array(), false, 'messenger');
+
 			$messenger_option = <<<HTML
                         <li class="nav-item dropdown no-arrow mx-1" onClick="get_messages();">
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
                                 <!-- Counter - Messages -->
 								{$new_messages_alert}
@@ -318,10 +356,10 @@ HTML;
                             <!-- Dropdown - Messages -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
                                 <h6 class="dropdown-header">
-                                    Message Center
+									{$lang_messenger}
                                 </h6>
 								<div id="messages"></div>
-                                <a class="dropdown-item text-center small text-gray-500" href="{$link_messages}">Read More Messages</a>
+                                <a class="dropdown-item small text-muted" href="{$link_messages}">{$lang_read_messages}</a>
                             </div>
                         </li>
 HTML;
@@ -329,7 +367,7 @@ HTML;
 		$topmenu = <<<HTML
 
                     <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
+                    <ul class="navbar-nav ms-auto">
 					<li class="nav-item">
 						<a href="{$home_url}" class="nav-link">{$home_text}</a>
 					</li>
@@ -346,8 +384,8 @@ HTML;
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600">$user_fullname</span>
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="me-2 d-none d-lg-inline text-gray-600">$user_fullname</span>
                                 <img class="img-profile rounded-circle" style="height:2rem; width: 2rem;"
                                     src="{$undraw_profile}">
                             </a>
@@ -355,17 +393,17 @@ HTML;
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
                                 <!--a class="dropdown-item" href="#">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
                                     Profile
                                 </a-->
 								{$preferences_option}
                                 <!--a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    <i class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>
                                     Activity Log
                                 </a-->
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
                                     {$var['logout_text']}
                                 </a>
                             </div>
@@ -381,10 +419,39 @@ HTML;
 			$var['sidebar'] = '';
 			$var['top_panel'] = '';
 		}
-		else
+		else 
 		{
 
-			$var['sidebar'] = <<<HTML
+			if($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
+			{
+				$lang_collapse_all	= lang('collapse all');
+				$var['sidebar'] = <<<HTML
+					<nav id="sidebar" class="{menu_state} shadow">
+						<div class="sidebar-header">
+							<h1>{$user_fullname}</h1>
+						</div>
+						<div class="input-group">
+							<input class="form-control border-end-0 border" type="search" value="" id="navbar_search">
+							<span class="input-group-append">
+				                <button class="btn btn-outline-secondary bg-white border-start-0 border ms-n3">
+                				    <i class="fa fa-search"></i>
+               					</button>
+        					</span>
+						</div>
+
+						<div id="navtreecontrol" class="ms-4">
+							<a id="collapseNavbar" title="Collapse the entire tree below" href="#" style="white-space:nowrap; color:inherit; font-size: 1rem">
+								{$lang_collapse_all}
+							</a>
+						</div>
+						<div id="navbar" style="overflow: auto" class="ms-4"></div>
+					</nav>
+HTML;
+
+			}
+			else
+			{
+				$var['sidebar'] = <<<HTML
 				<nav id="sidebar" class="{menu_state}">
 					<div class="sidebar-header">
 						<h1>{$user_fullname}</h1>
@@ -394,20 +461,20 @@ HTML;
 					</div>
 				</nav>
 HTML;
+			}
+
+
 
 			$var['top_panel'] = <<<HTML
 				<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
-
 					<div class="container-fluid">
-
-						<button type="button" id="sidebarCollapse" class="btn btn-info">
+						<button id="sidebarCollapse" class="btn btn-info">
 							<i class="fas fa-align-left"></i>
 							<span>Sidemeny</span>
 						</button>
-						<button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+						<button class="btn btn-dark d-inline-block d-lg-none ms-auto" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 							<i class="fas fa-align-justify"></i>
 						</button>
-
 						<!-- Brand -->
 						<a class="navbar-brand" href="#">{$GLOBALS['phpgw_info']['server']['site_title']}</a>
 
@@ -464,7 +531,7 @@ HTML;
 		$current_class = 'nav-item';
 
 		if ( $id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}"
-		|| ( !empty($item['location_id']) && $item['location_id'] == $GLOBALS['phpgw_info']['flags']['menu_selection'] ))
+		|| ( !empty($item['nav_location']) && $item['nav_location'] == $GLOBALS['phpgw_info']['flags']['menu_selection'] ))
 		{
 			$current_class .= ' active';
 			$item['selected'] = true;
@@ -497,9 +564,9 @@ HTML;
 
 		if($children)
 		{
-		$ret = <<<HTML
-		$out
-		{$children}
+			$ret = <<<HTML
+			$out
+			{$children}
 			</li>
 HTML;
 
@@ -586,7 +653,7 @@ HTML;
 		{
 			$id ++;
 			$out = <<<HTML
-	          <a href="#_$id" data-toggle="collapse" aria-expanded="{$aria_expanded}" class="dropdown-toggle">{$parent_name}</a>
+	          <a href="#_$id" data-bs-toggle="collapse" aria-expanded="{$aria_expanded}" class="dropdown-toggle">{$parent_name}</a>
 				<ul class="{$ul_class}list-unstyled collapse" id = "_$id">
 					{$out}
 				</ul>
@@ -628,6 +695,9 @@ HTML;
 		$var = array
 		(
 	//		'user_fullname'	=> $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] )->__toString(),
+			'lang_logout_header' => lang('Choose "Log out" if you want to end the session'),
+			'logout_url'	=> $GLOBALS['phpgw']->link('/logout.php'),
+			'logout_text'	=> lang('logout'),
 			'powered_by'	=> $powered_by,
 			'lang_login'	=> lang('login'),
 			'javascript_end'=> $GLOBALS['phpgw']->common->get_javascript_end($cache_refresh_token)

@@ -92,7 +92,7 @@
 		*/
 		public function __construct()
 		{
-			$this->validate_file('core', 'base');
+			$this->validate_file('core', 'base', 'phpgwapi', false, array('combine' => true ));
 			$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
 			$this->webserver_url = $webserver_url;
 		}
@@ -157,9 +157,8 @@
 
 
 			$combine = true;
-			$combine = false; // Temporary
 
-			if (isset($GLOBALS['phpgw_info']['server']['no_jscombine']) && $GLOBALS['phpgw_info']['server']['no_jscombine'])
+			if (!empty($GLOBALS['phpgw_info']['server']['no_jscombine']))
 			{
 				$combine = false;
 			}
@@ -173,7 +172,20 @@
 					phpgwapi_cache::message_set($message, 'error');
 				}
 			}
+			
+			if($combine)
+			{
+				$cachedir = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/combine_cache";
+				
+				if(is_dir($GLOBALS['phpgw_info']['server']['temp_dir']) && !is_dir($cachedir))
+				{
+					mkdir($cachedir, 0770);
+				}
+			}
+
+
 			$links = "<!--JS Imports from phpGW javascript class -->\n";
+			$_links = '';
 			$jsfiles = array();
 			if (is_array($files) && count($files))
 			{
@@ -185,9 +197,9 @@
 						{
 							if (is_array($files) && count($files))
 							{
-								foreach ($files as $file => $type)
+								foreach ($files as $file => $config)
 								{
-									if($combine)
+									if($combine && !empty($config['combine']))
 									{
 										// Add file path to array and replace path separator with "--" for URL-friendlyness
 										$jsfiles[] = str_replace('/', '--', "{$app}/js/{$pkg}/{$file}.js");
@@ -195,33 +207,35 @@
 									else
 									{
 										//echo "file: {$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js <br>";
-										$links .= "<script ";
-										if($type != 'text/javascript')
+										$_links .= "<script ";
+										if($config['type'] != 'text/javascript')
 										{
-											$links .= "type=\"{$type}\" ";
+											$_links .= "type=\"{$config['type']}\" ";
 										}
-										$links .=  "src=\"{$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js{$cache_refresh_token}\">"
+										$_links .=  "src=\"{$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js{$cache_refresh_token}\">"
 									 	. "</script>\n";
 									}
 								}
+								unset($config);
 							}
 						}
 					}
 				}
 			}
 
+
 			if ( !empty($external_files) && is_array($external_files) )
 			{
-				foreach($external_files as $file => $dummy)
+				foreach($external_files as $file => $config)
 				{
-					if($combine)
+					if($combine && !empty($config['combine']))
 					{
 						// Add file path to array and replace path separator with "--" for URL-friendlyness
 						$jsfiles[] = str_replace('/', '--', ltrim($file,'/'));
 					}
 					else
 					{
-						$links .= <<<HTML
+						$_links .= <<<HTML
 						<script src="{$this->webserver_url}/{$file}{$cache_refresh_token}" >
 						</script>
 HTML;
@@ -229,15 +243,17 @@ HTML;
 				}
 			}
 
-			if($combine)
+			if($combine && $jsfiles)
 			{
-				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
-				$jsfiles = implode(',', $jsfiles);
+				$_cachedir = urlencode($cachedir);
+				$_jsfiles = implode(',', $jsfiles);
 				$links .= '<script '
-					. "src=\"{$this->webserver_url}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files={$jsfiles}\">"
+					. "src=\"{$this->webserver_url}/phpgwapi/inc/combine.php?cachedir={$_cachedir}&type=javascript&files={$_jsfiles}\">"
 					. "</script>\n";
 				unset($jsfiles);
+				unset($_jsfiles);
 			}
+			$links .= $_links;
 
 			return $links;
 		}
@@ -294,7 +310,7 @@ HTML;
 		*/
 		public function set_onunload($code)
 		{
-			$this->events['unload'][] = $code;
+			$this->win_events['unload'][] = $code;
 		}
 
 		/**
@@ -318,19 +334,46 @@ HTML;
 		* @param string $app application directory to search - default = phpgwapi
 		* @returns bool was the file found?
 		*/
-		public function validate_file($package, $file, $app='phpgwapi', $type ='text/javascript', $end_of_page = false)
+		public function validate_file($package, $file, $app ='phpgwapi', $end_of_page = false, $config = array())
 		{
+
+			if($end_of_page === "text/javascript")
+			{
+			
+				$bt = debug_backtrace();
+				$GLOBALS['phpgw']->log->error(array(
+					'text'	=> 'js::%1 Called from file: %2 line: %3',
+					'p1'	=> $bt[0]['function'],
+					'p2'	=> $bt[0]['file'],
+					'p3'	=> $bt[0]['line'],
+					'line'	=> __LINE__,
+					'file'	=> __FILE__
+				));
+				unset($bt);
+			}
+
+			if ($config === true)
+			{
+				$end_of_page = true;
+			}
+			
+			
+			if(empty($config['type']))
+			{
+				$config = array_merge((array)$config, array('type' => 'text/javascript'));
+			}
+
 			$template_set = $GLOBALS['phpgw_info']['server']['template_set'];
 
 			if(is_readable(PHPGW_INCLUDE_ROOT . "/$app/js/$template_set/$file.js"))
 			{
 				if($end_of_page)
 				{
-					$this->end_files[$app][$template_set][$file] = $type;
+					$this->end_files[$app][$template_set][$file] = $config;
 				}
 				else
 				{
-					$this->files[$app][$template_set][$file] = $type;
+					$this->files[$app][$template_set][$file] = $config;
 				}
 				return True;
 			}
@@ -338,11 +381,11 @@ HTML;
 			{
 				if($end_of_page)
 				{
-					$this->end_files[$app][$package][$file] = $type;
+					$this->end_files[$app][$package][$file] = $config;
 				}
 				else
 				{
-					$this->files[$app][$package][$file] = $type;
+					$this->files[$app][$package][$file] = $config;
 				}
 				return True;
 			}
@@ -352,11 +395,11 @@ HTML;
 				{
 					if($end_of_page)
 					{
-						$this->end_files['phpgwapi'][$package][$file] = $type;
+						$this->end_files['phpgwapi'][$package][$file] = $config;
 					}
 					else
 					{
-						$this->files['phpgwapi'][$package][$file] = $type;
+						$this->files['phpgwapi'][$package][$file] = $config;
 					}
 					return True;
 				}
@@ -390,18 +433,18 @@ HTML;
 		 *
 		 * @param string $file Full path to js file relative to root of phpgw install
 		 */
-		function add_external_file($file, $end_of_page = false)
+		function add_external_file($file, $end_of_page = false, $config = array())
 		{
 			$_file = ltrim($file, '/');
 			if ( is_file(PHPGW_SERVER_ROOT . "/$_file") )
 			{
 				if($end_of_page)
 				{
-					$this->external_end_files[$_file] = true;
+					$this->external_end_files[$_file] = $config;
 				}
 				else
 				{
-					$this->external_files[$_file] = true;
+					$this->external_files[$_file] = $config;
 				}
 			}
 		}

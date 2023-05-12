@@ -1,5 +1,6 @@
+read messages	messenger	no	Les meldinger
 compose	messenger	no	Ny melding
-compose global message	admin	en	Ny global melding
+compose global message	admin	no	Ny global melding
 compose message	messenger	no	Ny melding
 delete a message.	messenger	no	slett en melding.
 delete selected	messenger	no	Slett valgt
@@ -12,7 +13,7 @@ global message	messenger	no	Global Melding
 i can't find the username %1 on the system	messenger	no	Finner ikke bruker %1 i systemet
 inbox	messenger	no	Innboks
 message from	messenger	no	Melding fra
-messenger	common	en	Messenger
+messenger	common	no	Postkasse
 new	messenger	no	Ny
 read a list of messages.	messenger	no	Les liste av meldinger.
 read a single message.	messenger	no	Les en enkelt melding.
@@ -32,7 +33,6 @@ you have %1 new messages	messenger	no	Du har %1 nye meldinger
 you have no messages	messenger	no	Du har ingen meldinger
 you must enter a subject	messenger	no	Du må skrive en tittel
 you must enter the username this message is for	messenger	no	Du må velge en addressat for meldingen
-messenger	messenger	no	Meldinger
 compose	messenger	no	Skriv ny
 compose groups	messenger	no	Skriv ny til grupper
 compose global	messenger	no	Skriv ny til global

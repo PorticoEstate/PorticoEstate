@@ -11,7 +11,7 @@
 			'edit' => true,
 		);
 		protected $module;
-		private $ssn, $orgnr, $orgs, $external_login_info;
+		private $ssn, $orgnr,$org_id, $orgs, $external_login_info;
 
 		public function __construct()
 		{
@@ -22,39 +22,16 @@
 			 * check external login
 			 */
 			$bouser = CreateObject('bookingfrontend.bouser');
-			if($bouser->is_logged_in())
-			{
-				$this->orgs = (array)phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);
 
-				$orgs_map = array();
-				foreach ($this->orgs as $org)
-				{
-					$orgs_map[] = $org['orgnumber'];
-				}
+			$this->external_login_info = $bouser->validate_ssn_login(array(	'menuaction' => 'bookingfrontend.uiuser.show'));
 
-				$session_org_id = phpgw::get_var('session_org_id','string', 'GET');
-
-				if($session_org_id && in_array($session_org_id, $orgs_map))
-				{
-					try
-					{
-						$org_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($session_org_id);
-						if($org_number)
-						{
-							$bouser->change_org($org_number);
-						}
-					}
-					catch (sfValidatorError $e)
-					{
-						$session_org_id = -1;
-					}
-				}
-			}
-
-			$this->external_login_info = $bouser->validate_ssn_login(array('menuaction' => 'bookingfrontend.uiuser.show'));
 			$this->ssn = $this->external_login_info['ssn'];
+			$this->org_id = phpgw::get_var('session_org_id') ? phpgw::get_var('session_org_id') : $bouser->org_id;
 
-			$this->orgnr = phpgw::get_var('session_org_id') ? phpgw::get_var('session_org_id') : $bouser->orgnr;
+			if(!$bouser->is_logged_in())
+			{
+				$bouser->log_in();
+			}
 			
 			if(!$this->ssn)
 			{
@@ -89,6 +66,7 @@
 				array('key' => 'date', 'label' => lang('Date'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'lang_status', 'label' => lang('status'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'building_name', 'label' => lang('Where'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'resource_names', 'label' => lang('resources'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'customer_organization_number', 'label' => lang('organization number'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'contact_name', 'label' => lang('contact'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'link', 'label' => $lang_view, 'sortable' => false, 'resizeable' => true),
@@ -170,7 +148,7 @@
 			);
 
 
-			$delegate_data = $this->bo->so->get_delegate($this->ssn, $this->orgnr);
+			$delegate_data = $this->bo->so->get_delegate($this->ssn);
 
 			foreach ($delegate_data as &$entry)
 			{
@@ -237,7 +215,7 @@
 				list($user, $errors) = $this->extract_and_validate(array('active' => 1, 'customer_ssn' => $this->ssn));
 				if (strlen($_POST['name']) > 50)
 				{
-					$errors['name'] = lang('Lengt of name is to long, max 50 characters long');
+					$errors['name'] = lang('Lengt of name is to long, max %1 characters long', 50);
 				}
 				if (!$errors)
 				{
@@ -287,7 +265,7 @@
 				list($user, $errors) = $this->extract_and_validate($user);
 				if (strlen($_POST['name']) > 50)
 				{
-					$errors['name'] = lang('Lengt of name is to long, max 50 characters long');
+					$errors['name'] = lang('Lengt of name is to long, max %1 characters long', 50);
 				}
 				if ((strlen($_POST['customer_number']) != 5) && (strlen($_POST['customer_number']) != 6) && ($_POST['customer_number'] != ''))
 				{

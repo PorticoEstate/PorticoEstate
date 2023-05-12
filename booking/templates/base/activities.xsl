@@ -115,11 +115,11 @@
 					</div>
 				</form>
 				<div id="tree_container">
-					<legend>
+					<!--<legend>-->
 						<h3>
 							<xsl:value-of select="php:function('lang', 'Current Activities')" />
 						</h3>
-					</legend>
+					<!--</legend>-->
 					<script type="text/javascript">
 						var activities = null;
 						<xsl:if test="treedata != ''">

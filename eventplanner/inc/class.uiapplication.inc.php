@@ -210,7 +210,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript($this->currentapp, 'portico', 'application.index.js');
+			self::add_javascript($this->currentapp, 'base', 'application.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -547,7 +547,7 @@
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::load_widget('file-upload-minimum');
 			self::rich_text_editor('summary');
-			self::add_javascript($this->currentapp, 'portico', 'application.edit.js');
+			self::add_javascript($this->currentapp, 'base', 'application.edit.js');
 			self::render_template_xsl(array('application', 'datatable_inline','files' ,'multi_upload_file_inline'), array($mode => $data));
 		}
 
@@ -636,6 +636,7 @@
 
 			phpgw::import_class('property.multiuploader');
 
+			$options = array();
 			$options['fakebase'] = "/eventplanner";
 			$options['base_dir'] = "application/{$id}/{$section}";
 			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/eventplanner/'.$options['base_dir'].'/';

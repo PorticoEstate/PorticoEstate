@@ -29,8 +29,7 @@
 		function gw_send_sms( $mobile_sender, $sms_sender, $sms_to, $sms_msg, $gp_code = "", $uid = "", $smslog_id = "", $flash = false )
 		{
 			$result = array();
-//			$sms_msg = utf8_decode($sms_msg);
-
+			$sms_msg = mb_convert_encoding($sms_msg, 'ISO-8859-1', 'UTF-8');
 			$sms_to = ltrim($sms_to, '+');
 
 			if (strlen($sms_to) > 8)
@@ -43,7 +42,7 @@
 				'type' => '1', // text
 				'serviceid' => $this->carrot_param['serviceid'], //Unique identifier for service. Provided by Carrot.
 //				'servicename'		=> '',	//Unique identifier for service. Provided by Carrot.
-				'content' => utf8_decode($sms_msg),
+				'content' => $sms_msg,
 //				'uri'				=>  '',// Y if WAP push Used by WAP Push type, indicates the URL to be contained in wap push.
 				'originator' => $this->carrot_param['originator'], //$GLOBALS['phpgw_info']['sms_config']['common']['gateway_number'],//$sms_sender,
 				'originatortype' => $this->carrot_param['originatortype'], //$this->carrot_param['originatortype'], //'The originator type, e.g. alphanumeric 1 = International number (e.g. +4741915558) 2 = Alphanumeric (e.g. Carrot) max 11 chars 3 = Network specific (e.g. 1960) 4 = National number (e.g. 41915558)'

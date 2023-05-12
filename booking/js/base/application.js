@@ -24,8 +24,11 @@ $(document).ready(function ()
 	 */
 	$("#dates-container").on("change", ".datetime", function (event)
 	{
-		event.preventDefault();
-		post_handle_order_table();
+		if (typeof (post_handle_order_table) !== 'undefined')
+		{
+			event.preventDefault();
+			post_handle_order_table();
+		}
 
 	});
 
@@ -39,10 +42,15 @@ $(document).ready(function ()
 		/**
 		 * Wait for the time-set to be removed before re-calculate
 		 */
-		setTimeout(function ()
+
+		if (typeof (post_handle_order_table) !== 'undefined')
 		{
-			post_handle_order_table();
-		}, 500);
+			setTimeout(function ()
+			{
+				post_handle_order_table();
+			}, 500);
+		}
+
 	});
 
 	JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uibuilding.index'}, true),
@@ -165,9 +173,11 @@ $(window).on('load', function ()
 			reservation_id = '';
 		}
 
-		populateTableChkArticles([
-		], resources, application_id, reservation_type, reservation_id);
-
+		if (typeof (populateTableChkArticles) !== 'undefined')
+		{
+			populateTableChkArticles([
+			], resources, application_id, reservation_type, reservation_id);
+		}
 	});
 
 	$('#articles_container').on('change', '.quantity', function ()

@@ -24,7 +24,7 @@
 			<div id="organization_edit" class="booking-container">
 				<fieldset>
 					<div class="heading">
-						<legend>
+						<!--<legend>-->
 							<h3>
 								<xsl:if test="new_form">
 									<xsl:value-of select="php:function('lang', 'New Organization')" />
@@ -33,10 +33,10 @@
 									<xsl:value-of select="php:function('lang', 'Edit Organization')" />
 								</xsl:if>
 							</h3>
-						</legend>
+						<!--</legend>-->
 					</div>
 					<div class="pure-g">
-						<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4">
+						<div class="pure-u-1 pure-u-sm-1-2">
 							<div class="pure-control-group">
 								<label for="field_name">
 									<h4>
@@ -44,7 +44,7 @@
 									</h4>
 								</label>
 								<xsl:if test="currentapp = 'booking'">
-									<input id="inputs" name="name" type="text" class="pure-u-1">
+									<input id="inputs" name="name" type="text" class="pure-u-1 pure-u-lg-11-12">
 										<xsl:attribute name="value">
 											<xsl:value-of select="organization/name"/>
 										</xsl:attribute>
@@ -57,7 +57,7 @@
 									</input>
 								</xsl:if>
 								<xsl:if test="currentapp != 'booking'">
-									<input id="inputs" name="name" readonly="true" type="text" class="pure-u-1">
+									<input id="inputs" name="name" readonly="true" type="text" class="pure-u-1 pure-u-lg-11-12">
 										<xsl:attribute name="value">
 											<xsl:value-of select="organization/name"/>
 										</xsl:attribute>
@@ -69,14 +69,14 @@
 									<xsl:value-of select="php:function('lang', 'Organization shortname')" />
 								</label>
 								<xsl:if test="currentapp = 'booking'">
-									<input id="field_shortname" name="shortname" type="text" class="pure-u-1">
+									<input id="field_shortname" name="shortname" type="text" class="pure-u-1 pure-u-lg-11-12">
 										<xsl:attribute name="value">
 											<xsl:value-of select="organization/shortname"/>
 										</xsl:attribute>
 									</input>
 								</xsl:if>
 								<xsl:if test="currentapp != 'booking'">
-									<input id="field_shortname" name="shortname" readonly="true" type="text" class="pure-u-1">
+									<input id="field_shortname" name="shortname" readonly="true" type="text" class="pure-u-1 pure-u-lg-11-12">
 										<xsl:attribute name="value">
 											<xsl:value-of select="organization/shortname"/>
 										</xsl:attribute>
@@ -88,17 +88,17 @@
 									<xsl:value-of select="php:function('lang', 'Organization number')" />
 								</label>
 								<xsl:if test="currentapp = 'booking'">
-									<input id="field_organization_number" name="organization_number" type="text" value="{organization/organization_number}" class="pure-u-1"/>
+									<input id="field_organization_number" name="organization_number" type="text" value="{organization/organization_number}" class="pure-u-1 pure-u-lg-11-12"/>
 								</xsl:if>
 								<xsl:if test="currentapp != 'booking'">
-									<input id="field_organization_number" name="organization_number" type="text" readonly="true" value="{organization/organization_number}" class="pure-u-1"/>
+									<input id="field_organization_number" name="organization_number" type="text" readonly="true" value="{organization/organization_number}" class="pure-u-1 pure-u-lg-11-12"/>
 								</xsl:if>
 							</div>
 							<div class="pure-control-group">
 								<label for="field_homepage">
 									<xsl:value-of select="php:function('lang', 'Homepage')" />
 								</label>
-								<input id="field_homepage" name="homepage" type="text" class="pure-u-1">
+								<input id="field_homepage" name="homepage" type="text" class="pure-u-1 pure-u-lg-11-12">
 									<xsl:attribute name="value">
 										<xsl:value-of select="organization/homepage"/>
 									</xsl:attribute>
@@ -108,7 +108,7 @@
 								<label for="field_phone">
 									<xsl:value-of select="php:function('lang', 'Phone')" />
 								</label>
-								<input id="field_phone" name="phone" type="text" class="pure-u-1">
+								<input id="field_phone" name="phone" type="text" class="pure-u-1 pure-u-lg-11-12">
 									<xsl:attribute name="value">
 										<xsl:value-of select="organization/phone"/>
 									</xsl:attribute>
@@ -118,7 +118,7 @@
 								<label for="field_email">
 									<xsl:value-of select="php:function('lang', 'Email')" />
 								</label>
-								<input id="field_email" name="email" type="text" class="pure-u-1">
+								<input id="field_email" name="email" type="text" class="pure-u-1 pure-u-lg-11-12">
 									<xsl:attribute name="value">
 										<xsl:value-of select="organization/email"/>
 									</xsl:attribute>
@@ -126,7 +126,7 @@
 							</div>
                                                         
 						</div>
-						<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4">
+						<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-2 pure-u-lg-1-2">
 							<div class="pure-control-group">
 								<xsl:if test="currentapp = 'booking'">
 									<xsl:copy-of select="phpgw:booking_customer_identifier(organization)"/>
@@ -148,45 +148,45 @@
 									<xsl:value-of select="php:function('lang', 'Customer number')" />
 								</label>
 								<xsl:if test="currentapp = 'booking'">
-									<input name="customer_number" type="text" id="field_customer_number" value="{organization/customer_number}" class="pure-u-1"/>
+									<input name="customer_number" type="text" id="field_customer_number" value="{organization/customer_number}" class="pure-u-1 pure-u-lg-11-12"/>
 								</xsl:if>
 								<xsl:if test="currentapp != 'booking'">
-									<input name="customer_number" type="text" id="field_customer_number" readonly="true" value="{organization/customer_number}" class="pure-u-1"/>
+									<input name="customer_number" type="text" id="field_customer_number" readonly="true" value="{organization/customer_number}" class="pure-u-1 pure-u-lg-11-12"/>
 								</xsl:if>
 							</div>
 							<div class="pure-control-group">
 								<label for="field_co_address">
 									<xsl:value-of select="php:function('lang', 'co_address')"/>
 								</label>
-								<input id="field_co_address" name="co_address" type="text" value="{organization/co_address}" class="pure-u-1"/>
+								<input id="field_co_address" name="co_address" type="text" value="{organization/co_address}" class="pure-u-1 pure-u-lg-11-12"/>
 							</div>
 							<div class="pure-control-group">
 								<label for="field_street">
 									<xsl:value-of select="php:function('lang', 'Street')"/>
 								</label>
-								<input id="field_street" name="street" type="text" value="{organization/street}" class="pure-u-1"/>
+								<input id="field_street" name="street" type="text" value="{organization/street}" class="pure-u-1 pure-u-lg-11-12"/>
 							</div>
 							<div class="pure-control-group">
 								<label for="field_zip_code">
 									<xsl:value-of select="php:function('lang', 'Zip code')"/>
 								</label>
-								<input type="text" name="zip_code" id="field_zip_code" value="{organization/zip_code}" class="pure-u-1"/>
+								<input type="text" name="zip_code" id="field_zip_code" value="{organization/zip_code}" class="pure-u-1 pure-u-lg-11-12"/>
 							</div>
 							<div class="pure-control-group">
 								<label for="field_city">
 									<xsl:value-of select="php:function('lang', 'Postal City')"/>
 								</label>
-								<input type="text" name="city" id="field_city" value="{organization/city}" class="pure-u-1"/>
+								<input type="text" name="city" id="field_city" value="{organization/city}" class="pure-u-1 pure-u-lg-11-12"/>
 							</div>
 							<div class="pure-control-group">
 								<label for='field_district'>
 									<xsl:value-of select="php:function('lang', 'District')"/>
 								</label>
 								<xsl:if test="currentapp = 'booking'">
-									<input type="text" name="district" id="field_district" value="{organization/district}" class="pure-u-1"/>
+									<input type="text" name="district" id="field_district" value="{organization/district}" class="pure-u-1 pure-u-lg-11-12"/>
 								</xsl:if>
 								<xsl:if test="currentapp != 'booking'">
-									<input type="text" name="district" id="field_district" readonly="true" value="{organization/district}" class="pure-u-1"/>
+									<input type="text" name="district" id="field_district" readonly="true" value="{organization/district}" class="pure-u-1 pure-u-lg-11-12"/>
 								</xsl:if>
 							</div>
 							<div class="pure-control-group">
@@ -194,7 +194,7 @@
 									<label for="field_active">
 										<xsl:value-of select="php:function('lang', 'Active')"/>
 									</label>
-									<select id="field_active" name="active" class="pure-u-1">
+									<select id="field_active" name="active" class="pure-u-1 pure-u-lg-11-12">
 										<option value="1">
 											<xsl:if test="organization/active=1">
 												<xsl:attribute name="selected">checked</xsl:attribute>
@@ -242,75 +242,65 @@
 							</div>
 						</div>
 					</div>
-					<div class="pure-g">
-						<div class="pure-u-1">
-							<div class="pure-g">
-								<div class="pure-control-group pure-u-sm-1-1 pure-u-md-2-3 pure-u-lg-1-2">
-									<label for="field_activity">
-										<xsl:value-of select="php:function('lang', 'Activity')" />
-									</label>
-									<select name="activity_id" id="field_activity" class="pure-u-2-3">
-										<xsl:attribute name="data-validation">
-											<xsl:text>required</xsl:text>
+						<div class="pure-control-group">
+							<label for="field_activity">
+								<xsl:value-of select="php:function('lang', 'Activity')" />
+							</label>
+							<select name="activity_id" id="field_activity" class="pure-u-1">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'Please select an activity')" />
+								</xsl:attribute>
+								<option value="">
+									<xsl:value-of select="php:function('lang', '-- select an activity --')" />
+								</option>
+								<xsl:for-each select="activities">
+									<option>
+										<xsl:if test="../organization/activity_id = id">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
+										<xsl:attribute name="value">
+											<xsl:value-of select="id"/>
 										</xsl:attribute>
-										<xsl:attribute name="data-validation-error-msg">
-											<xsl:value-of select="php:function('lang', 'Please select an activity')" />
-										</xsl:attribute>
-										<option value="">
-											<xsl:value-of select="php:function('lang', '-- select an activity --')" />
-										</option>
-										<xsl:for-each select="activities">
-											<option>
-												<xsl:if test="../organization/activity_id = id">
-													<xsl:attribute name="selected">selected</xsl:attribute>
-												</xsl:if>
-												<xsl:attribute name="value">
-													<xsl:value-of select="id"/>
-												</xsl:attribute>
-												<xsl:value-of select="name"/>
-											</option>
-										</xsl:for-each>
-									</select>
-								</div>
-								<div class="pure-control-group pure-u-1">
-									<label for="field_description">
-										<xsl:value-of select="php:function('lang', 'Description')" />
-									</label>
-									<div style="max-width:650px;">
-										<textarea rows="4" id="field_description" name="description" type="text" class="pure-u-2-3">
-											<xsl:value-of select="organization/description"/>
-										</textarea>
-									</div>
-								</div>
+										<xsl:value-of select="name"/>
+									</option>
+								</xsl:for-each>
+							</select>
+						</div>
+						<div class="pure-control-group">
+							<label for="field_description">
+								<xsl:value-of select="php:function('lang', 'Description')" />
+							</label>
+							<div>
+								<textarea rows="4" id="field_description" name="description" type="text" class="pure-u-1">
+									<xsl:value-of select="organization/description"/>
+								</textarea>
 							</div>
 						</div>
-					</div>
 					<xsl:if test='new_form or organization/permission/write'>
 						<div class="pure-g">
-							<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4">
+							<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-2 pure-u-lg-1-2">
 								<div class="heading">
-									<legend>
+									<!--<legend>-->
 										<h3>
 											<xsl:value-of select="php:function('lang', 'Admin 1')" />
 										</h3>
-									</legend>
+									<!--</legend>-->
 								</div>
 								<div class="pure-control-group">
 									<label for="field_admin_name_1">
-										<h4>
-											<xsl:value-of select="php:function('lang', 'Name')" />
-										</h4>
+										<xsl:value-of select="php:function('lang', 'Name')" />
 									</label>
-									<input type='text' id='field_admin_name_1' name="contacts[0][name]" value='{organization/contacts[1]/name}' class="pure-u-1"/>
+									<input type='text' id='field_admin_name_1' name="contacts[0][name]" value='{organization/contacts[1]/name}' class="pure-u-1 pure-u-lg-11-12"/>
 									<input type="hidden" name="contacts[0][ssn]" value=""/>
 								</div>
 								<div class="pure-control-group">
 									<label for="field_admin_email_1">
-										<h4>
-											<xsl:value-of select="php:function('lang', 'Email')" />
-										</h4>
+										<xsl:value-of select="php:function('lang', 'Email')" />
 									</label>
-									<input type='text' id='field_admin_email_1' name="contacts[0][email]" value='{organization/contacts[1]/email}' class="pure-u-1" data-validation="email">
+									<input type='text' id='field_admin_email_1' name="contacts[0][email]" value='{organization/contacts[1]/email}' data-validation="email" class="pure-u-1 pure-u-lg-11-12">
 										<xsl:attribute name="data-validation-optional">
 											<xsl:text>true</xsl:text>
 										</xsl:attribute>
@@ -321,37 +311,31 @@
 								</div>
 								<div class="pure-control-group">
 									<label for="field_admin_phone_1">
-										<h4>
-											<xsl:value-of select="php:function('lang', 'Phone')" />
-										</h4>
+										<xsl:value-of select="php:function('lang', 'Phone')" />
 									</label>
-									<input type='text' id='field_admin_phone_1' name="contacts[0][phone]" value='{organization/contacts[1]/phone}' class="pure-u-1"/>
+									<input type='text' id='field_admin_phone_1' name="contacts[0][phone]" value='{organization/contacts[1]/phone}' class="pure-u-1 pure-u-lg-11-12"/>
 								</div>
 							</div>
-							<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4">
+							<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-2 pure-u-lg-1-2">
 								<div class="heading">
-									<legend>
+									<!--<legend>-->
 										<h3>
 											<xsl:value-of select="php:function('lang', 'Admin 2')" />
 										</h3>
-									</legend>
+									<!--</legend>-->
 								</div>
 								<div class="pure-control-group">
 									<label for="field_admin_name_2">
-										<h4>
-											<xsl:value-of select="php:function('lang', 'Name')" />
-										</h4>
+										<xsl:value-of select="php:function('lang', 'Name')" />
 									</label>
-									<input type='text' id='field_admin_name_2' name="contacts[1][name]" value='{organization/contacts[2]/name}' class="pure-u-1"/>
+									<input type='text' id='field_admin_name_2' name="contacts[1][name]" value='{organization/contacts[2]/name}' class="pure-u-1 pure-u-lg-11-12"/>
 									<input type="hidden" name="contacts[1][ssn]" value=""/>
 								</div>
 								<div class="pure-control-group">
 									<label for="field_admin_email_2">
-										<h4>
-											<xsl:value-of select="php:function('lang', 'Email')" />
-										</h4>
+										<xsl:value-of select="php:function('lang', 'Email')" />
 									</label>
-									<input type='text' id='field_admin_email_2' name="contacts[1][email]" value='{organization/contacts[2]/email}' class="pure-u-1" data-validation="email">
+									<input type='text' id='field_admin_email_2' name="contacts[1][email]" value='{organization/contacts[2]/email}' data-validation="email" class="pure-u-1 pure-u-lg-11-12">
 										<xsl:attribute name="data-validation-optional">
 											<xsl:text>true</xsl:text>
 										</xsl:attribute>
@@ -362,11 +346,9 @@
 								</div>
 								<div class="pure-control-group">
 									<label for="field_admin_phone_2">
-										<h4>
-											<xsl:value-of select="php:function('lang', 'Phone')" />
-										</h4>
+										<xsl:value-of select="php:function('lang', 'Phone')" />
 									</label>
-									<input type='text' id='field_admin_phone_2' name="contacts[1][phone]" value='{organization/contacts[2]/phone}' class="pure-u-1"/>
+									<input type='text' id='field_admin_phone_2' name="contacts[1][phone]" value='{organization/contacts[2]/phone}' class="pure-u-1 pure-u-lg-11-12"/>
 								</div>
 							</div>
 						</div>

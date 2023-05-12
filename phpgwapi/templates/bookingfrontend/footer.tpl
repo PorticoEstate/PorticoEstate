@@ -43,6 +43,7 @@
 				<span><a   target="_blank" rel="noopener noreferrer"   href="https://www.aktiv-kommune.no/">{textaboutmunicipality}</a></span>
 				<span><a   target="_blank" rel="noopener noreferrer"    href="https://www.aktiv-kommune.no/manual/">{manual}</a></span>
                 <span><a   target="_blank" rel="noopener noreferrer"    href="{footer_privacy_link}">{privacy}</a></span>
+				{url_uustatus}
 			</div>
 			<div class="col-md-6 order-md-4 col-lg-3 order-lg-4">
 				<h3>Logg inn</h3>

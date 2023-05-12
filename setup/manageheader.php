@@ -240,7 +240,7 @@ HTML;
 			if (version_compare(PHP_VERSION, '7.4.0') < 0)
 			{
 				$detected .= '<b><p align="center" class="msg">'
-					. lang('You appear to be using PHP %1, phpGroupWare requires version 7.4.0 or later', PHP_VERSION). "\n"
+					. lang('You appear to be using PHP %1, %2 requires %3 or later', PHP_VERSION, 'PorticoEstate', '7.4.0'). "\n"
 					. '</p></b><td></tr></table></body></html>';
 				die($detected);
 			}
@@ -462,6 +462,14 @@ HTML;
 			else
 			{
 				$detected .= '<li class="warn">' . lang('No support for shared memory found.') . "</li>\n";
+			}
+			if(extension_loaded('redis'))
+			{
+				$detected .= '<li>' . lang('You appear to have Redis enabled') . "</li>\n";
+			}
+			else
+			{
+				$detected .= '<li class="warn">' . lang('No Redis-DB support found. Disabling') . "</li>\n";
 			}
 
 			$supported_crypto_type = array();

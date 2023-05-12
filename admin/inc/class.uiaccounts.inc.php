@@ -1960,8 +1960,46 @@
 
 		function sync_accounts_contacts()
 		{
-			$GLOBALS['phpgw']->accounts->sync_accounts_contacts();
-			$GLOBALS['phpgw']->redirect_link('/admin/index.php');
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::sync_account';
+
+			if(!$this->_acl->check('run', phpgwapi_acl::READ, 'admin') )
+			{
+				phpgw::no_access();
+			}
+			if ( phpgw::get_var('cancel', 'bool', 'POST'))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uimainscreen.mainscreen'));
+			}
+
+			if (phpgw::get_var('confirm', 'bool', 'POST') )
+			{
+
+				$GLOBALS['phpgw']->accounts->sync_accounts_contacts();
+
+				$GLOBALS['phpgw']->redirect_link('/index.php',
+						array('menuaction' => 'admin.uimainscreen.mainscreen'));
+			}
+
+			$GLOBALS['phpgw']->xslttpl->set_root(PHPGW_APP_TPL);
+			$GLOBALS['phpgw']->xslttpl->add_file('confirm_delete');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration') . ': ' . lang('Sync Account-Contact');
+
+			$data = array
+			(
+				'form_action'				=> $GLOBALS['phpgw']->link('/index.php', array
+												(
+													'menuaction' => 'admin.uiaccounts.sync_accounts_contacts',
+												)),
+				'lang_yes'					=> lang('yes'),
+				'lang_no'					=> lang('no'),
+				'lang_confirm_msg'			=> lang('are you sure you want to sync account-contact')
+			);
+
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
+
+
+//			$GLOBALS['phpgw']->redirect_link('/admin/index.php');
 		}
 
 		/**
@@ -1996,12 +2034,14 @@
 				$GLOBALS['phpgw']->redirect_link('/admin/index.php');
 			}
 
-			if(phpgw::get_var('message', 'string'))
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::global_message';
+
+			if(phpgw::get_var('message', 'string') && phpgw::get_var('confirm', 'bool'))
 			{
 				phpgwapi_cache::system_set('phpgwapi', 'phpgw_global_message',phpgw::get_var('message', 'string'));			
 			}
 
-			if(phpgw::get_var('delete_message', 'bool'))
+			if(phpgw::get_var('delete_message', 'bool') && phpgw::get_var('confirm', 'bool'))
 			{
 				phpgwapi_cache::system_clear('phpgwapi', 'phpgw_global_message');
 			}
@@ -2028,43 +2068,46 @@
 
 		function home_screen_message()
 		{
-			if(	!$this->_acl->check('run', phpgwapi_acl::READ, 'admin') )
+			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin::home_screen_message';
+
+			if (!$this->_acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/admin/index.php');
 			}
-                        
-                        if(phpgw::get_var('msg_title', 'string'))
-                        {
-                                $msg_title = phpgw::get_var('msg_title', 'string');
-                        }
-                        else
-                        {
-                                $msg_title = lang("important message");
-                        }
-                        
-			if(phpgw::get_var('message', 'string'))
+
+			if (phpgw::get_var('msg_title', 'string'))
 			{
-                                phpgwapi_cache::system_set('phpgwapi', 'phpgw_home_screen_message_title',$msg_title);
-				phpgwapi_cache::system_set('phpgwapi', 'phpgw_home_screen_message',phpgw::get_var('message', 'html'));			
+				$msg_title = phpgw::get_var('msg_title', 'string');
+			}
+			else
+			{
+				$msg_title = lang("important message");
 			}
 
-			if(phpgw::get_var('delete_message', 'bool'))
+			if(phpgw::get_var('message', 'string') && phpgw::get_var('confirm', 'bool'))
 			{
-                                phpgwapi_cache::system_clear('phpgwapi', 'phpgw_home_screen_message_title');
+				phpgwapi_cache::system_set('phpgwapi', 'phpgw_home_screen_message_title', $msg_title);
+				phpgwapi_cache::system_set('phpgwapi', 'phpgw_home_screen_message', phpgw::get_var('message', 'html'));
+			}
+
+			if (phpgw::get_var('delete_message', 'bool') && phpgw::get_var('confirm', 'bool'))
+			{
+				phpgwapi_cache::system_clear('phpgwapi', 'phpgw_home_screen_message_title');
 				phpgwapi_cache::system_clear('phpgwapi', 'phpgw_home_screen_message');
 			}
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('administration');
 
-			$data = array
-			(
-                                'value_title'		=> phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message_title'),
-				'value_message'		=> phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message'),
-				'form_action'		=> $GLOBALS['phpgw']->link('/index.php',
-										array('menuaction' => 'admin.uiaccounts.home_screen_message')),
-				'lang_cancel'		=> lang('cancel'),
-				'lang_submit'		=> lang('submit')
+			$data = array(
+				'value_title'	 => phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message_title'),
+				'value_message'	 => phpgwapi_cache::system_get('phpgwapi', 'phpgw_home_screen_message'),
+				'form_action'	 => $GLOBALS['phpgw']->link('/index.php',
+											  array('menuaction' => 'admin.uiaccounts.home_screen_message')),
+				'lang_cancel'	 => lang('cancel'),
+				'lang_submit'	 => lang('submit')
 			);
+
+//			phpgwapi_jquery::init_quill('message');
 			$GLOBALS['phpgw']->xslttpl->add_file('home_screen_message');
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('home_screen_message' => $data));
 		}
@@ -2113,11 +2156,9 @@
 
 			if (phpgw::get_var('confirm', 'bool', 'POST') )
 			{
-				foreach($myfilearray as $delete_file)
-				{
-					unlink($delete_file['file_path']);
-				}
 				$myfilearray = array();
+
+				phpgwapi_cache::system_clear_all();
 
 				$GLOBALS['phpgw']->redirect_link('/index.php',
 						array('menuaction' => 'admin.uimainscreen.mainscreen'));

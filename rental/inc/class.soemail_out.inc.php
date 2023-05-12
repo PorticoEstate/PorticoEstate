@@ -111,7 +111,7 @@
 				. " {$this->join} rental_contract_party ON rental_contract_party.contract_id = rental_contract.id"
 				. " {$this->join} rental_party ON rental_contract_party.party_id = rental_party.id"
 				. " WHERE rental_contract_composite.composite_id = {$composite_id}"
-				. " AND rental_contract.date_start <= {$ts_query} AND ( rental_contract.date_end >= {$ts_query} OR rental_contract.date_end IS NULL)";
+				. " AND rental_contract.date_start <= {$ts_query} AND ( rental_contract.date_end >= {$ts_query} OR rental_contract.date_end IS NULL OR rental_contract.date_end = 0)";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			while ($this->db->next_record())

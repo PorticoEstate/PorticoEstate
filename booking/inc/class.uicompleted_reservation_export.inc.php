@@ -11,10 +11,11 @@
 
 		public $public_functions = array
 			(
-			'index' => true,
-			'query' => true,
-			'add' => true,
-			'show' => true
+			'index'	 => true,
+			'query'	 => true,
+			'add'	 => true,
+			'show'	 => true,
+			'delete' => true
 		);
 		protected
 			$module = 'booking',
@@ -377,7 +378,61 @@
 
 			$export['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
-			self::render_template_xsl('completed_reservation_export', array('export' => $export));
+			$reversible = true;
+			foreach ($export['export_configurations'] as $key => $export_configuration)
+			{
+				if($export_configuration['export_file_id'])
+				{
+					$reversible = false;
+					break;
+				}
+			}
+
+			if ($export['created_by'] ==  $this->current_account_id())
+			{
+				$show_delete_button = true;
+			}
+
+			$export['delete_link'] = self::link(array('menuaction' => 'booking.uicompleted_reservation_export.delete', 'id' => $id));
+
+			self::render_template_xsl('completed_reservation_export', array(
+				'export'			 => $export,
+				'reversible'		 => $reversible,
+				'show_delete_button' => $show_delete_button
+			));
+		}
+
+		function delete()
+		{
+			$id = phpgw::get_var('id', 'int');
+
+			if (!$id)
+			{
+				phpgw::no_access('booking', lang('missing id'));
+			}
+
+			$export = $this->bo->read_single($id);
+			$reversible = true;
+			foreach ($export['export_configurations'] as $key => $export_configuration)
+			{
+				if($export_configuration['export_file_id'])
+				{
+					$reversible = false;
+					break;
+				}
+			}
+
+			if ( $reversible && $export['created_by'] ==  $this->current_account_id())
+			{
+				$this->bo->so->reverse_reservation($id);
+			}
+			else
+			{
+				phpgwapi_cache::message_set(lang('Access denied'), 'error');
+			}
+
+			self::redirect(array('menuaction' => 'booking.uicompleted_reservation.index'));
+
 		}
 
 		protected function get_export_key()
@@ -419,13 +474,11 @@
 		public function add()
 		{
 			//Values passed in from the "Export"-action in uicompleted_reservation.index
-			$export = extract_values($_GET, $this->fields);
+			$export = extract_values($_POST, $this->fields);
+			$export['process'] = phpgw::get_var('process', 'int', 'POST');
 			$errors = array();
-			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			if (!phpgw::get_var('prevalidate', 'bool'))
 			{
-				$export = array();
-				$export = extract_values($_POST, $this->fields);
-
 				//Fill in a dummy value (so as to temporarily pass validation), this will then be
 				//automatically filled in by bo->add process later on.
 				$export['from_'] = date('Y-m-d H:i:s');
@@ -467,7 +520,6 @@
 
 			$export['cancel_link'] = $this->link_to('index', $cancel_params);
 			phpgwapi_jquery::load_widget('autocomplete');
-
 			self::render_template_xsl('completed_reservation_export_form', array('new_form' => true,
 				'export' => $export));
 		}

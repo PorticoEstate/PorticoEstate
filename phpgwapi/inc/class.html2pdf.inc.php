@@ -3,7 +3,7 @@
 	 * phpGroupWare
 	 *
 	 * @author Sigurd Nes <sigurdne@online.no>
-	 * @copyright Copyright (C) 2007-2018 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @copyright Copyright (C) 2007-2023 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	 * @package phpgroupware
 	 * @subpackage phpgwapi
@@ -37,4 +37,4 @@
 	* Include the html2pdf class
 	* @see html2pdf
 	*/
-	require_once PHPGW_API_INC . '/html2pdf/autoload.php';
+	require_once PHPGW_API_INC . '/html2pdf/vendor/autoload.php';

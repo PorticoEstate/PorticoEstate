@@ -6,10 +6,20 @@
 	include_class('rental', 'contract', 'inc/model/');
 	include_class('rental', 'billing', 'inc/model/');
 
-	require_once PHPGW_API_INC . '/flysystem/autoload.php';
 
+	require_once PHPGW_API_INC . '/flysystem2/autoload.php';
 	use League\Flysystem\Filesystem;
-	use League\Flysystem\Sftp\SftpAdapter;
+	use League\Flysystem\PhpseclibV2\SftpConnectionProvider;
+	use League\Flysystem\PhpseclibV2\SftpAdapter;
+	use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
+
+
+//  php 8 +
+//	require_once PHPGW_API_INC . '/flysystem3/vendor/autoload.php';
+//	use League\Flysystem\Filesystem;
+//	use League\Flysystem\PhpseclibV3\SftpConnectionProvider;
+//	use League\Flysystem\PhpseclibV3\SftpAdapter;
+//	use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 
 	class rental_uibilling extends rental_uicommon
 	{
@@ -350,7 +360,7 @@
 						var area_suffix = '{$this->area_suffix}';
 JS;
 						$GLOBALS['phpgw']->js->add_code('', $code);
-						self::add_javascript('rental', 'rental', 'billing.add.js');
+						self::add_javascript('rental', 'base', 'billing.add.js');
 						phpgwapi_jquery::load_widget('numberformat');
 						self::render_template_xsl(array('billing', 'datatable_inline'), array($template => $data));
 						return;
@@ -620,8 +630,13 @@ JS;
 					else
 					{
 						//... 1. Contracts following regular billing cycle
-						$filters = array('contracts_for_billing' => true, 'contract_type' => $contract_type,
-							'billing_term_id' => $billing_term, 'year' => $year, 'month' => $month);
+						$filters		 = array(
+							'contracts_for_billing'	 => true,
+							'contract_type'			 => $contract_type,
+							'billing_term_id'		 => $billing_term,
+							'year'					 => $year,
+							'month'					 => $month
+						);
 						$contracts = rental_socontract::get_instance()->get($start_index = 0, $num_of_objects = 0, $sort_field = '', (bool)$sort_ascending, (string)$search_for, (string)$search_type, $filters);
 						$filters2 = array('contract_ids_one_time' => true, 'billing_term_id' => $billing_term,
 							'year' => $year, 'month' => $month);
@@ -1026,7 +1041,7 @@ JS;
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $code);
 
-			self::add_javascript('rental', 'rental', 'billing.add.js');
+			self::add_javascript('rental', 'base', 'billing.add.js');
 			phpgwapi_jquery::load_widget('numberformat');
 			self::render_template_xsl(array('billing', 'datatable_inline'), array($template => $data));
 		}
@@ -1066,12 +1081,12 @@ JS;
 								'text' => lang('field_of_responsibility'),
 								'list' => $field_of_responsibility_options
 							),
-							array(
-								'type' => 'link',
-								'value' => lang('create_billing'),
-								'onclick' => 'onCreateBilling()',
-								'class' => 'new_item'
-							)
+//							array(
+//								'type' => 'link',
+//								'value' => lang('create_billing'),
+//								'onclick' => 'onCreateBilling()',
+//								'class' => 'new_item'
+//							)
 						)
 					)
 				),
@@ -1146,13 +1161,19 @@ JS;
 				)
 			);
 
-			$parameters = array
-				(
-				'parameter' => array
-					(
-					array
-						(
-						'name' => 'id',
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'create_billing',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => lang('create_billing'),
+				'text'		 => lang('create_billing'),
+				'custom_code'	 => 'onCreateBilling();',
+			);
+
+			$parameters = array(
+				'parameter' => array(
+					array(
+						'name'	 => 'id',
 						'source' => 'id'
 					)
 				)
@@ -1178,7 +1199,7 @@ JS;
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $code);
 
-			self::add_javascript('rental', 'rental', 'billing.index.js');
+			self::add_javascript('rental', 'base', 'billing.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 			self::render_template_xsl('datatable_jquery', $data);
 		}
@@ -1622,7 +1643,17 @@ JS;
 						unlink($tmpfname);
 						break;
 					case 'ssh';
-						$transfer_ok = $connection->write(basename($filename), $content);
+						try
+						{
+							$connection->write(basename($filename), $content);
+							$transfer_ok = true;
+						}
+						catch (FilesystemException | UnableToWriteFile $exception)
+						{
+							// handle the error
+							$transfer_ok = false;
+						}
+
 						break;
 					default:
 						$transfer_ok = false;
@@ -1666,14 +1697,34 @@ JS;
 					}
 					break;
 				case 'ssh';
-					$connection = new Filesystem(new SftpAdapter([
-						'host' => $server,
-						'port' => $port,
-						'username' => $user,
-						'password' => $password,
-						'root' => $basedir,
-						'timeout' => 10,
-					]));
+
+					$connection = new Filesystem(new SftpAdapter(
+						new SftpConnectionProvider(
+							$server, // host (required)
+							$user, // username (required)
+							$password, // password (optional, default: null) set to null if privateKey is used
+							null, // private key (optional, default: null) can be used instead of password, set to null if password is set
+							null, // passphrase (optional, default: null), set to null if privateKey is not used or has no passphrase
+							$port, // port (optional, default: 22)
+							false, // use agent (optional, default: false)
+							10, // timeout (optional, default: 10)
+							40, // max tries (optional, default: 4)
+							null, // host fingerprint (optional, default: null),
+							null, // connectivity checker (must be an implementation of 'League\Flysystem\PhpseclibV2\ConnectivityChecker' to check if a connection can be established (optional, omit if you don't need some special handling for setting reliable connections)
+						),
+						$basedir, // root path (required)
+						PortableVisibilityConverter::fromArray([
+							'file' => [
+								'public' => 0640,
+								'private' => 0604,
+							],
+							'dir' => [
+								'public' => 0740,
+								'private' => 7604,
+							],
+						])
+					));
+
 					break;
 			}
 			return $connection;

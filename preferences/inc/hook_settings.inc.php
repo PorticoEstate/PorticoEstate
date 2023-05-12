@@ -187,4 +187,5 @@
 
 	create_input_box('Your Cellphone', 'cellphone');
 	create_input_box('Your Email', 'email', 'Insert your email address');
-	create_input_box('Your archive user id', 'archive_user_id', 'Insert your user id');
+	create_input_box('Your archive user id', 'archive_user_id', 'Insert your archive user id');
+	create_input_box('Your job title', 'job_title', 'Insert job title');

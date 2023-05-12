@@ -131,6 +131,15 @@
 					try
 					{
 						$this->db = new PDO("pgsql:dbname={$this->Database};host={$this->Host};port={$this->Port}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $this->persistent));
+						/**
+						 * On first time create-attempt
+						 */
+						if($this->Database === 'postgres')
+						{
+							$this->User = $fall_back_user;
+							$this->Password = $fall_back_password;
+						}
+
 					}
 					catch(PDOException $e){}
 					break;
@@ -342,7 +351,9 @@
 			{
 				$host .= ":{$port}";
 			}
-			require_once PHPGW_API_INC . '/adodb/adodb.inc.php';
+
+			require_once PHPGW_API_INC . '/adodb/vendor/adodb/adodb-php/adodb.inc.php';
+
 			$this->adodb = ADOnewConnection($type);
 			$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
 			if($dsn)
@@ -680,7 +691,7 @@
 			if($GLOBALS['phpgw_info']['server']['db_type'] == 'mysql')
 			{
 				$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 1 );
-				$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 0 );	
+				$this->db->setAttribute( PDO::ATTR_AUTOCOMMIT, 0 );
 			}
 			$this->Transaction = $this->db->beginTransaction();
 			return $this->Transaction;
@@ -1203,10 +1214,17 @@
 			//Grant rights on the db
 			switch ($GLOBALS['phpgw_info']['server']['db_type'])
 			{
-				case 'mysql':
-					$this->db->exec("GRANT ALL ON {$this->Database}.*"
-							. " TO {$this->User}@'%'");
+				case 'postgres':
+					$this->query("SELECT * FROM pg_roles WHERE rolname = '{$this->User}'");
+					if(!$this->next_record())
+					{
+						$this->db->exec("CREATE ROLE {$this->User} LOGIN SUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION PASSWORD '{$this->Password}'");
+					}
 					break;
+				case 'mysql':
+						$this->db->exec("GRANT ALL ON {$this->Database}.*"
+								. " TO {$this->User}@'%'");
+						break;
 				case 'mssql':
 				case 'mssqlnative':
 					$this->query("SELECT * FROM master.sys.sql_logins WHERE name = '{$this->User}'");

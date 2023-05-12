@@ -503,13 +503,14 @@
 					if ($_status_filter)
 					{
 						$filtermethod .= " $where fm_project.status IN ('" . implode("','", $_status_filter) . "')";
+						$where = 'AND';
 					}
 				}
 				else
 				{
 					$filtermethod .= " $where fm_project.status='$status_id' ";
+					$where = 'AND';
 				}
-				$where = 'AND';
 			}
 
 			if ($project_type_id)
@@ -940,6 +941,7 @@
 					'inherit_location'		 => $this->db->f('inherit_location'),
 					'periodization_id'		 => $this->db->f('periodization_id'),
 					'delivery_address'		 => $this->db->f('delivery_address', true),
+					'tax_code'				 => $this->db->f('tax_code'),
 				);
 
 				if (isset($values['attributes']) && is_array($values['attributes']))
@@ -1000,7 +1002,7 @@
 		function project_workorder_data( $data = array() )
 		{
 			$start		 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$project_id	 = (int)$data['project_id'];
+			$project_ids = !empty($data['project_id']) && is_array($data['project_id']) ? implode(',', array_map('intval', $data['project_id'])) : (int)$data['project_id'] ;
 			$year		 = (int)$data['year'];
 			$sort		 = isset($data['sort']) ? $data['sort'] : 'DESC';
 			$order		 = isset($data['order']) ? $data['order'] : 'workorder_id';
@@ -1052,18 +1054,18 @@
 			$sql = "SELECT DISTINCT fm_workorder.id AS workorder_id, fm_workorder.title, fm_workorder.vendor_id, fm_workorder.addition,"
 				. " fm_workorder_status.descr as status, fm_workorder_status.closed, fm_workorder_status.canceled,"
 				. " fm_workorder.account_id AS b_account_id, fm_workorder.charge_tenant,"
-				. " fm_workorder.mail_recipients,fm_workorder_budget.year, order_sent"
+				. " fm_workorder.mail_recipients,fm_workorder_budget.year, order_sent, fm_workorder.end_date, fm_workorder.user_id"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
 				. " {$this->left_join} fm_vendor ON fm_vendor.id = fm_workorder.vendor_id"
-				. " WHERE project_id={$project_id} {$filter_year}{$filtermethod}{$ordermethod}";
+				. " WHERE project_id IN ({$project_ids}) {$filter_year}{$filtermethod}{$ordermethod}";
 
 			$this->db->query("SELECT count(*) AS cnt FROM (SELECT DISTINCT fm_workorder.id, fm_workorder_budget.year FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
 				. " {$this->left_join} fm_vendor ON fm_vendor.id = fm_workorder.vendor_id"
-				. " WHERE project_id={$project_id} {$filter_year}{$filtermethod}) as t", __LINE__, __FILE__);
+				. " WHERE project_id IN ({$project_ids}) {$filter_year}{$filtermethod}) as t", __LINE__, __FILE__);
 
 			$this->db->next_record();
 			$this->total_records = (int)$this->db->f('cnt');
@@ -1084,6 +1086,7 @@
 				$values[]	 = array(
 					'workorder_id'			 => $this->db->f('workorder_id'),
 					'title'					 => $this->db->f('title', true),
+					'user_id'				 => $this->db->f('user_id'),
 					'vendor_id'				 => $this->db->f('vendor_id'),
 					'charge_tenant'			 => $this->db->f('charge_tenant'),
 					'status'				 => $this->db->f('status'),
@@ -1098,7 +1101,8 @@
 					'obligation'			 => 0,
 					'actual_cost'			 => 0,
 					'year'					 => $this->db->f('year'),
-					'order_sent'			 => $this->db->f('order_sent')
+					'order_sent'			 => $this->db->f('order_sent'),
+					'end_date'				 => $this->db->f('end_date')
 				);
 				$_orders[]	 = $this->db->f('workorder_id');
 			}
@@ -1316,12 +1320,14 @@
 				$project['inherit_location'],
 				$project['budget_periodization'],
 				$project['delivery_address'],
+				$project['tax_code'],
 			);
 
 			$values = $this->db->validate_insert($values);
 
 			$this->db->query("INSERT INTO fm_project (id,project_type_id,external_project_id,name,access,category,entry_date,start_date,end_date,coordinator,status,"
-				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,b_account_id,contact_id,inherit_location,periodization_id,delivery_address $cols) "
+				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,b_account_id,"
+				. "contact_id,inherit_location,periodization_id,delivery_address,tax_code $cols) "
 				. "VALUES ($values $vals )", __LINE__, __FILE__);
 
 			/**
@@ -1529,6 +1535,7 @@
 				'contact_id'			 => $project['contact_id'],
 				'inherit_location'		 => $project['inherit_location'],
 				'delivery_address'		 => $project['delivery_address'],
+				'tax_code'				 => $project['tax_code'],
 			);
 
 			if (isset($project['budget_periodization']) && $project['budget_periodization'])
@@ -2186,17 +2193,17 @@
 
 			$periodization_id		 = (int)$periodization_id;
 			$periodization_outline	 = array();
-			$skip_period			 = 0;
+			$skip_period			 = array();
 
 			if ($periodization_id)
 			{
 				$this->db->query("SELECT month, value,dividend,divisor FROM fm_eco_periodization_outline WHERE periodization_id = {$periodization_id} ORDER BY month ASC", __LINE__, __FILE__);
 				while ($this->db->next_record())
 				{
-					$month = $this->db->f('month');
-					if ($month < date('n'))
+					$month = (int)$this->db->f('month');
+					if ($month < date('n') && $year == date('Y'))
 					{
-						$skip_period ++;
+						$skip_period[] = $month;
 					}
 					$periodization_outline[] = array
 						(
@@ -2205,10 +2212,6 @@
 						'dividend'	 => $this->db->f('dividend'),
 						'divisor'	 => $this->db->f('divisor')
 					);
-				}
-				if ($skip_period && $skip_period == count($periodization_outline))
-				{
-					$skip_period -= 1;
 				}
 			}
 			else
@@ -2225,22 +2228,23 @@
 			//reset skip in case of 'all'
 			if ($budget_periodization_all)
 			{
-				$skip_period = 0;
+				$skip_period = array();
 			}
 
 
-			$percentage_to_move = 0;
+			$sum_to_move = 0;
+			$count_periodization_outline = count($periodization_outline);
 			foreach ($periodization_outline as $_key => $outline)
 			{
-				if ($skip_period && $skip_period == ($_key + 1))
+				if (in_array( ( $outline['month']), $skip_period))
 				{
 					if ($outline['dividend'] && $outline['divisor'])
 					{
-						$percentage_to_move += $outline['dividend'] / $outline['divisor'];
+						$sum_to_move += ($budget * ($outline['dividend'] / $outline['divisor']));
 					}
 					else
 					{
-						$percentage_to_move += $outline['value'] / 100;
+						$sum_to_move += ($budget * ($outline['value'] /100));
 					}
 
 					continue;
@@ -2254,7 +2258,8 @@
 				{
 					$partial_budget = $budget * $outline['value'] / 100;
 				}
-				$partial_budget = $partial_budget * (1 + $percentage_to_move);
+
+				$partial_budget = $partial_budget + ($sum_to_move / ($count_periodization_outline - count($skip_period)));
 
 				$this->_update_budget($project_id, $year, $outline['month'], $partial_budget, $action, $activate);
 			}
@@ -3608,6 +3613,26 @@
 
 			$id = (int)$id;
 
+			$location_arr = explode('-', $location_code);
+
+			$location_arr_parent = $location_arr;
+			array_pop($location_arr_parent);
+
+			$filter_parent = '';
+			$filter_parent_arr = array();
+			$loops = count($location_arr_parent);
+
+			if($location_arr_parent)
+			{
+				for ($m = 0; $m < $loops; $m++)
+				{
+					$filter_parent_arr[] = implode('-', $location_arr_parent);
+					array_pop($location_arr_parent);
+				}
+
+				$filter_parent = " OR fm_workorder.location_code IN ('" . implode("', '", $filter_parent_arr) . "')" ;
+			}
+
 			$location_code = $this->db->db_addslashes($location_code);
 
 			$values = array();
@@ -3618,9 +3643,10 @@
 				. " FROM fm_project"
 				. " {$this->join} phpgw_accounts ON (fm_project.coordinator = phpgw_accounts.account_id)"
 				. " {$this->join} fm_project_status ON (fm_project.status = fm_project_status.id)"
-				. " WHERE location_code {$this->like} '{$location_code}%'"
+				. " {$this->join} fm_workorder ON (fm_workorder.project_id = fm_project.id)"
+				. " WHERE (fm_workorder.location_code {$this->like} '{$location_code}%' {$filter_parent})"
 				. " AND fm_project.id !={$id}"
-				. " ORDER BY fm_project.id DESC";
+				. " ORDER BY fm_project.location_code DESC, start_date DESC";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -3628,7 +3654,7 @@
 			{
 				$values[] = array(
 					'id'			 => $this->db->f('id', true),
-					'location_code'	 => $this->db->f('location_code', true),
+					'location_code'	 => $this->db->f('location_code'),
 					'start_date'	 => $this->db->f('start_date'),
 					'name'			 => $this->db->f('name', true),
 					'coordinator'	 => $this->db->f('coordinator', true),

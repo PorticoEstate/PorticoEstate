@@ -102,11 +102,43 @@
 		{
 			$this->db->transaction_begin();
 
+			$this->set_prizing_defaults($object->get_id());
 			$this->set_prizing($object->get_id());
-
 			parent::update($object);
 
 			return $this->db->transaction_commit();
+		}
+
+		private function set_prizing_defaults($article_mapping_id )
+		{
+			$price_table = phpgw::get_var('price_table', 'int');
+
+			if(!empty($price_table['active']))
+			{
+				$sql = 'UPDATE bb_article_price SET active = NULL WHERE article_mapping_id = ' . (int) $article_mapping_id;
+				$sql .= ' AND id NOT IN (' . implode(',', array_keys($price_table['active'])) . ')';
+				$this->db->query($sql, __LINE__, __FILE__);
+
+				$sql = 'UPDATE bb_article_price SET active = 1 WHERE article_mapping_id = ' . (int) $article_mapping_id;
+				$sql .= ' AND id IN (' . implode(',', array_keys($price_table['active'])) . ')';
+				$this->db->query($sql, __LINE__, __FILE__);
+			}
+
+			if(!empty($price_table['default_']))
+			{
+				$sql = 'UPDATE bb_article_price SET default_ = NULL WHERE article_mapping_id = ' . (int) $article_mapping_id;
+				$this->db->query($sql, __LINE__, __FILE__);
+
+				$sql = 'UPDATE bb_article_price SET default_ = 1 WHERE id = ' . (int) $price_table['default_'];
+				$this->db->query($sql, __LINE__, __FILE__);
+			}
+
+			if(!empty($price_table['delete']))
+			{
+				$sql = 'DELETE FROM bb_article_price WHERE id IN (' . implode(',', $price_table['delete']) . ')';
+				$this->db->query($sql, __LINE__, __FILE__);
+			}
+
 		}
 
 		private function set_prizing( $article_mapping_id )
@@ -121,7 +153,7 @@
 			$date_from	 = phpgwapi_datetime::date_to_timestamp($article_prizing['date_from']);
 			$price		 = floatval(str_replace(',', '.', str_replace('.', '', $article_prizing['price'])));
 
-			if ($price && $date_from)
+			if (($price || $price == 0) && $date_from)
 			{
 				$value_set = array
 					(
@@ -136,10 +168,17 @@
 			}
 		}
 
-		public function get_pricing( $article_mapping_id )
+		public function get_pricing( $article_mapping_id, $filter_active = false )
 		{
 			$pricing = array();
-			$this->db->query('SELECT *  FROM bb_article_price WHERE article_mapping_id = ' . (int)$article_mapping_id, __LINE__, __FILE__);
+
+			$sql = 'SELECT *  FROM bb_article_price WHERE article_mapping_id = ' . (int)$article_mapping_id;
+			if($filter_active)
+			{
+				$sql .= ' AND active = 1';
+			}
+
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
@@ -149,6 +188,8 @@
 					'price'				 => $this->db->f('price'),
 					'from_'				 => $this->db->f('from_'),
 					'remark'			 => $this->db->f('remark', true),
+					'active'			 => $this->db->f('active'),
+					'default_'			 => $this->db->f('default_'),
 				);
 			}
 			return $pricing;
@@ -192,7 +233,7 @@
 			$sql = "SELECT id, article_mapping_id FROM bb_article_price"
 				. " WHERE article_mapping_id IN ( " . implode (',',$article_mapping_ids) . ")"
 				. " AND from_ < '{$now}'"
-				. " ORDER BY from_ DESC";
+				. " ORDER BY default_ ASC, from_ DESC";
 
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -281,7 +322,8 @@
 				. " JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id)"
 				. " JOIN fm_ecomva ON (bb_article_mapping.tax_code = fm_ecomva.id)"
 				. " WHERE article_cat_id = 1"
-				. " AND bb_resource.active = 1 {$filter}";
+				. " AND bb_resource.active = 1 {$filter}"
+				. " ORDER BY bb_resource.name";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -308,6 +350,11 @@
 				 */
 				$filter		 = 'AND bb_resource_service.resource_id =' . $_article['resource_id'];
 
+				if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+				{
+					$filter .= ' AND deactivate_in_frontend IS NULL';
+				}
+
 				$sql = "SELECT bb_article_mapping.id AS mapping_id, concat( article_cat_id || '_' || article_id ) AS article_id,"
 					. " bb_service.name as name, bb_resource_service.resource_id, unit, percent_ AS tax_percent, bb_article_mapping.tax_code"
 					. " FROM bb_article_mapping JOIN bb_service ON (bb_article_mapping.article_id = bb_service.id)"
@@ -331,12 +378,12 @@
 				}
 			}
 
-			$now = date('Y-m-d');
 
 			foreach ($articles as &$article)
 			{
-				$sql = "SELECT price, remark FROM bb_article_price WHERE article_mapping_id = {$article['id']}"
-				. " AND from_ < '$now' ORDER BY from_ DESC";
+				$sql = "SELECT price, remark FROM bb_article_price WHERE article_mapping_id = {$article['id']} "
+				. " AND active = 1"
+				. " ORDER BY default_ ASC";
 				$this->db->query($sql, __LINE__, __FILE__);
 				$this->db->next_record();
 				$article['ex_tax_price'] = (float)$this->db->f('price');

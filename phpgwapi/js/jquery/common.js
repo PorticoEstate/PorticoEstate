@@ -256,16 +256,49 @@ JqueryPortico.show_picture_popup = function (img_url)
 JqueryPortico.formatJsonArray = function (key, oData)
 {
 	var string = "";
+	const elements = [];
 	if (oData[key])
 	{
 		var tags = oData[key];
 		$.each(tags, function (k, v)
 		{
-			string += v + '<br/>';
+			elements.push(v);
 		});
 
 	}
+	string = elements.join('<br/>');
+
 	return string;
+};
+
+JqueryPortico.formatJsonArrayData = function (key, oData)
+{
+	var string = "";
+	const elements = [];
+	if (oData[key])
+	{
+		var tags = oData[key];
+		$.each(tags, function (k, v)
+		{
+			elements.push(v);
+		});
+
+	}
+	string = elements.join('::');
+
+	/**
+	 * input field is placeholder for column width-calculation
+	 */
+	var ret;
+	ret = '<div data="' + string + '" class="' + key + '">';
+	ret += '<button style="text-align:left;" class="btn field_' + key + '">';
+	ret += '<span>';
+	ret += string.replaceAll('::', '<br/>');
+	ret += '</span>';
+	ret += '</button>';
+	ret += '</div>';
+
+	return ret;
 };
 
 JqueryPortico.FormatterAmount0 = function (key, oData)
@@ -795,10 +828,9 @@ JqueryPortico.autocompleteHelper = function (baseUrl, field, hidden, container, 
 JqueryPortico.openPopup = function (oArgs, options)
 {
 	options = options || {};
-	var width = options['width'] || 750;
-	var height = options['height'] || 450;
+	var width = options['width'] || Math.round($(window).width()*0.9);
+	var height = options['height'] || Math.round($(window).height()*0.9);
 	var closeAction = options['closeAction'] || false;
-
 
 	var requestUrl = phpGWLink('index.php', oArgs);
 	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width: width, height: height, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true, closejs: function ()
@@ -848,7 +880,7 @@ JqueryPortico.lightboxlogin = function ()
 
 JqueryPortico.showlightbox_history = function (sUrl)
 {
-	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 650, height: 400, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true});
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9), fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true});
 }
 
 JqueryPortico.checkAll = function (myclass)
@@ -1037,6 +1069,7 @@ function createTable(d, u, c, r, cl, l, callback)
 	var tableClass = (cl) ? cl : "table";
 
 	xTable.setAttribute('class', tableClass);
+	xTable.setAttribute('width', '100%');
 
 	$.each(c, function (i, v)
 	{
@@ -1865,6 +1898,7 @@ function backendScheduleDateColumn(data, col, date)
 	{
 		var id = data[k]['id'];
 		var name = (data[k]['shortname']) ? formatScheduleShorten(data[k]['shortname'], 9) : formatScheduleShorten(data[k]['name'], 9);
+		name = name ? name : formatScheduleShorten(data[k]['activity_name'], 9);
 		var type = data[k]['type'];
 		var colorCell = formatScheduleCellDateColumn(name, type);
 
