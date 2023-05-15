@@ -300,6 +300,16 @@
 				<td>{lang_email_domain}:</td>
 				<td><input name="newsettings[email_domain]" value="{value_email_domain}" class="pure-u-1"/></td>
 			</tr>
+			<tr>
+				<td>{lang_Enter_your_HTTP_proxy_server}:</td>
+				<td><input name="newsettings[httpproxy_server]" value="{value_httpproxy_server}" class="pure-u-1"/>
+			</tr>
+
+			<tr>
+				<td>{lang_Enter_your_HTTP_proxy_server_port}:</td>
+				<td><input name="newsettings[httpproxy_port]" value="{value_httpproxy_port}" class="pure-u-1"/>
+			</tr>
+
 
 			<!-- END body -->
 
