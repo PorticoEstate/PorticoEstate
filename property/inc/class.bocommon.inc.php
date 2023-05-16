@@ -35,6 +35,7 @@
 	class property_bocommon
 	{
 
+		var $socommon, $account, $async, $type_id, $uicols, $cols_return,$cols_extra, $cols_return_lookup, $acl_read;
 		var $start;
 		var $query;
 		var $filter;
@@ -2746,7 +2747,7 @@
 				'id'		 => $id,
 				'secret'	 => $secret,
 				'domain'	 => $GLOBALS['phpgw_info']['user']['domain']
-				), null);
+				));
 
 			return $documentation_url;
 
