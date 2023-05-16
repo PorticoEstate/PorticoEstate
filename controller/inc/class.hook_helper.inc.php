@@ -185,7 +185,6 @@
 			}
 
 			$my_planned_controls_HTML = <<<HTML
-				<div class='home_portal'>
 					<table class = "pure-table pure-table-bordered" width="100%">
 						<thead>
 							<tr>
@@ -245,14 +244,14 @@ HTML;
 				$my_planned_controls_HTML .= "<tr><td colspan=\"5\">No records found</td></tr>";
 			}
 
-			$my_planned_controls_HTML .= "</tbody></table></div>"; // home_portal
+			$my_planned_controls_HTML .= "</tbody></table>"; // home_portal
 
 			echo "<!-- BEGIN checklist info -->"
 			. "<div class=\"container\">"
-			. "<div class=\"row mt-4\">\n"
-			. "\n <h2 class='heading'>Mine planlagte kontroller</h2>"
-			. "<div class='home-box'>" . $my_planned_controls_HTML . "</div>\n"
-			. "</div>"
+			. "		<div class=\"row mt-4\">\n"
+			. "			\n <h2 class='heading'>Mine planlagte kontroller</h2>"
+			. "			<div class='home-box'>" . $my_planned_controls_HTML . "</div>\n"
+			. "		</div>"
 			. "</div>"
 			. '<!-- END checklist info -->' . "\n";
 			{
@@ -374,7 +373,6 @@ HTML;
 					'globals'	 => true, 'use_acl'	 => $this->_category_acl));
 
 				$my_assigned_controls_HTML = <<<HTML
-				<div class='home_portal'>
 					<table class = "pure-table pure-table-bordered" width="100%">
 						<thead>
 							<tr>
@@ -494,21 +492,17 @@ HTML;
 					$my_assigned_controls_HTML .= "<tr><td colspan=\"4\">No records found</td></tr>";
 				}
 
-				$my_assigned_controls_HTML .= "</tr>";
+				$my_assigned_controls_HTML .= "</tbody></table>"; // home_portal
 
-				echo "<!-- BEGIN checklist info -->"
+
+				echo "<!-- BEGIN assigned controls info -->"
 				. "<div class=\"container\">"
-				. "<div class=\"row mt-4\">\n"
-				. "\n <h2 class='heading'>Mine tildelte kontroller</h2>"
-				. "<div class='home-box'>" . $my_assigned_controls_HTML . "</div>\n"
-				. "</div>"
+				. "		<div class=\"row mt-4\">\n"
+				. "			\n <h2 class='heading'>Mine tildelte kontroller</h2>"
+				. "			<div class='home-box'>" . $my_assigned_controls_HTML . "</div>\n"
+				. "		</div>"
 				. "</div>\n"
-				. '<!-- END checklist info -->' . "\n";
-
-//				echo '<!-- BEGIN checklist info -->'
-//				. "\n <h2 class='heading'>Mine tildelte kontroller</h2>"
-//					. "<div class='home-box'>" . $my_assigned_controls_HTML . "</div>\n"
-//					. '<!-- END checklist info -->';
+				. '<!-- END assigned controls info -->' . "\n";
 			}
 		}
 
