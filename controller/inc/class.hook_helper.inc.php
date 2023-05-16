@@ -185,6 +185,19 @@
 			}
 
 			$my_planned_controls_HTML = <<<HTML
+				<style>
+				 span.link {
+				  background: none!important;
+				  border: none;
+				  padding: 0!important;
+				  /*optional*/
+				  font-family: arial, sans-serif;
+				  /*input has OS specific font-family*/
+				  color: #069;
+				  text-decoration: underline;
+				  cursor: pointer;
+				}
+				</style>
 					<table class = "pure-table pure-table-bordered" width="100%">
 						<thead>
 							<tr>
@@ -366,7 +379,7 @@ HTML;
 					}
 				}
 
-				// Sorts my_undone_controls by deadline date
+				// Sorts my_controls by deadline date
 				$cats				 = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 				$cats->supress_info	 = true;
 				$control_areas		 = $cats->formatted_xslt_list(array('format'	 => 'filter', 'selected'	 => '',
@@ -419,17 +432,28 @@ HTML;
 
 								$location_name = $this->get_location_name($location_code);
 
-								$link = $GLOBALS['phpgw']->link('/index.php', array(
+								$control_link_data =  array(
 									'menuaction'	 => 'controller.uicheck_list.add_check_list',
 									'type'			 => "location",
 									'control_id'	 => $my_control['id'],
+									'serie_id'		 => $my_control['serie_id'],
 									'location_code'	 => $location_code,
 									'deadline_ts'	 => $deadline_ts,
-									'assigned_to'	 => $GLOBALS['phpgw_info']['user']['account_id']
-								));
+									'assigned_to'	 => $GLOBALS['phpgw_info']['user']['account_id'],
+									'location_code'	 => $location_code,
+
+								);
+
+								$link = $GLOBALS['phpgw']->link('/index.php', $control_link_data);
+
+								$month = date('m', $deadline_ts);
+								$control_link = json_encode($control_link_data);
+								$_onclick = "perform_action(\"set_planning_month\", {$control_link}, {$month});";
+								$_link = "<span tabindex=\"0\" role='button' class=\"link\" onclick='{$_onclick}'>{$date_str}</span>";
 
 								$my_assigned_controls_HTML .= ""
-									. "<td><a href='$link'><div>{$date_str}</a></td>"
+					//				. "<td><a href='$link'><div>{$date_str}</a></td>"
+									. "<td>$_link</td>"
 									. "<td>{$my_control['title']}</td>"
 									. "<td>{$location_name}</td>"
 									. "<td>{$control_area_name}</td>";
@@ -448,18 +472,28 @@ HTML;
 									$location_name	 .= "::{$short_descr}";
 								}
 
-								$link = $GLOBALS['phpgw']->link('/index.php', array(
+								$control_link_data = array(
 									'menuaction'	 => 'controller.uicheck_list.add_check_list',
 									'type'			 => "component",
 									'control_id'	 => $my_control['id'],
 									'location_id'	 => $location_id,
 									'component_id'	 => $component_id,
 									'deadline_ts'	 => $deadline_ts,
-									'assigned_to'	 => $GLOBALS['phpgw_info']['user']['account_id']
-								));
+									'assigned_to'	 => $GLOBALS['phpgw_info']['user']['account_id'],
+									'location_code'	 => $location_code,
+									'serie_id'		 => $my_control['serie_id'],
+								);
+
+								$link = $GLOBALS['phpgw']->link('/index.php', $control_link_data);
+
+								$month = date('m', $deadline_ts);
+								$control_link = json_encode($control_link_data);
+								$_onclick = "perform_action(\"set_planning_month\", {$control_link}, {$month});";
+								$_link = "<span tabindex=\"0\" role='button' class=\"link\" onclick='{$_onclick}'>{$date_str}</span>";
 
 								$my_assigned_controls_HTML .= ""
-									. "<td><a href='$link'><div class='date'>{$date_str}</div></a></td>"
+//									. "<td><a href='$link'><div class='date'>{$date_str}</div></a></td>"
+									. "<td>$_link</td>"
 									. "<td>{$my_control['title']}</td>"
 									. "<td>{$location_name}</td>"
 									. "<td>{$control_area_name}</td>";
@@ -504,6 +538,124 @@ HTML;
 				. "</div>\n"
 				. '<!-- END assigned controls info -->' . "\n";
 			}
+
+			$this->set_planned_month();
+		}
+
+		private function set_planned_month()
+		{
+			$html = <<<HTML
+			<div id="dialog-set_planned_month" title="Sett planlagt måned">
+				<p>Angi ønsket planlagt måned</p>
+				<form id="form_set_planned_month">
+						<div class="pure-control-group">
+							<label>Måned</label>
+							<select id="planned_month" name="planned_month" class="pure-input-1" required='required'>
+								<option value="1">Januar</option>
+								<option value="2">Februar</option>
+								<option value="3">Mars</option>
+								<option value="4">April</option>
+								<option value="5">Mai</option>
+								<option value="6">Juni</option>
+								<option value="7">Juli</option>
+								<option value="8">August</option>
+								<option value="9">September</option>
+								<option value="10">Oktober</option>
+								<option value="11">November</option>
+								<option value="12">Desember</option>
+							</select>
+						</div>
+					<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+					</input>
+				</form>
+			</div>
+HTML;
+			echo $html;
+
+			$js = <<<JS
+			<script>
+				var global_args;
+				var initial_selected_month;
+				perform_action = function (name, oArgs, init_month)
+				{
+					if (name === 'set_planning_month')
+					{
+						global_args = oArgs;
+						initial_selected_month = init_month;
+						dialog2.dialog("open");
+
+					}
+				};
+
+				dialog2 = $("#dialog-set_planned_month").dialog({
+					autoOpen: false,
+					height: 250,
+					width: 350,
+					modal: true,
+					buttons: {
+						"Ok": get_planned_month,
+						Cancel: function ()
+						{
+							dialog2.dialog("close");
+						}
+					},
+					close: function ()
+					{
+						$('#form_set_planned_month').trigger("reset");
+						$("#planned_month").removeClass("ui-state-error");
+					},
+					open: function (event, ui)
+					{
+						var init_month = initial_selected_month;
+						$("#planned_month").each(function ()
+						{
+							$(this).find('option[value="' + init_month + '"]').prop('selected', true);
+						});
+					}
+				});
+
+				form2 = dialog2.find("form").on("submit", function (event)
+				{
+					event.preventDefault();
+					get_planned_month();
+				});
+
+				function get_planned_month()
+				{
+					var valid = true;
+					$("#planned_month").removeClass("ui-state-error");
+					planned_month = $("#planned_month").val();
+					dialog2.dialog("close");
+					submit_set_planned_month();
+					return valid;
+				}
+
+				submit_set_planned_month = function ()
+				{
+					global_args.menuaction = 'controller.uicheck_list.save_check_list';
+					var requestUrl = phpGWLink('index.php', global_args, true);
+					$.ajax({
+						type: 'POST',
+						data: {planned_month: planned_month},
+						dataType: 'json',
+						url: requestUrl,
+						success: function (data)
+						{
+							if (data !== null)
+							{
+								var message = data.message;
+								alert(message);
+								location.reload();
+							}
+						}
+					});
+				};
+			</script>
+
+JS;
+
+			echo $js;
+
 		}
 
 		private function get_controls( $app_id )
