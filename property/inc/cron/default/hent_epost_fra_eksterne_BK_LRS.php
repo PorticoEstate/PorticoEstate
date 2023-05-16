@@ -186,35 +186,40 @@
 
 			$filter_ulest = !empty($this->config->config_data['xPortico']['filter_ulest']) ? true : false;
 
-			$access_info = $this->get_accesskey();
-			$access_token = $access_info['access_token'];
-
-//			$client	 = new Client($host, $username, $password, $version);
-			$client	 = new Client($host, $version);
-			$client->authWithOauth2($access_token);
-
-// Impersonating the user
-			$ei = new ExchangeImpersonationType();
-			$sid = new ConnectingSIDType();
-			$sid->PrimarySmtpAddress = $assigneeEmail;
-			$ei->ConnectingSID = $sid;
-			$client->setImpersonation($ei);
-
-			if (!empty($GLOBALS['phpgw_info']['server']['httpproxy_server']))
+			if(!empty($this->config->config_data['xPortico']['client_id']))
 			{
-				$proxy = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
+				$access_info = $this->get_accesskey();
+				$access_token = $access_info['access_token'];
+				$client	 = new Client($host, $version);
+				$client->authWithOauth2($access_token);
+
+	// Impersonating the user
+				$ei = new ExchangeImpersonationType();
+				$sid = new ConnectingSIDType();
+				$sid->PrimarySmtpAddress = $assigneeEmail;
+				$ei->ConnectingSID = $sid;
+				$client->setImpersonation($ei);
+
+				if (!empty($GLOBALS['phpgw_info']['server']['httpproxy_server']))
+				{
+					$proxy = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
+				}
+				else
+				{
+					$proxy = null;
+				}
+
+				if($proxy)
+				{
+					$client->setCurlOptions(array(CURLOPT_PROXY => $proxy));
+				}
 			}
 			else
 			{
-				$proxy = null;
+				$client	 = new Client($host, $version);
+				$client->authWithUserAndPass($username, $password);
 			}
 
-			if($proxy)
-			{
-				$client->setCurlOptions(array(CURLOPT_PROXY => $proxy));
-			}
-
-//			$client->authWithUserAndPass($username, $password);
 
 			//move messages to this folder.
 
