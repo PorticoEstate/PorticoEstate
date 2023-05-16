@@ -3670,7 +3670,7 @@ JS;
 
 			if (!$delivery_address && !empty($location_data['loc1']))
 			{
-				$delivery_address = CreateObject('property.solocation')->get_delivery_address($_location_data['loc1']);
+				$delivery_address = CreateObject('property.solocation')->get_delivery_address($location_data['loc1']);
 			}
 
 			if(!$payment_info && $GLOBALS['phpgw_info']['user']['preferences']['property']['order_payment_info'])
@@ -4187,7 +4187,7 @@ JS;
 			{
 				$delivery_address = "\n{$ticket['delivery_address']}";
 			}
-			else if (isset($this->bo->config->config_data['delivery_address']) && $this->bo->config->config_data['delivery_address'])
+			else if (!empty($this->bo->config->config_data['delivery_address']) && !ctype_space((string)$this->bo->config->config_data['delivery_address']))
 			{
 				$delivery_address .= "\n{$this->bo->config->config_data['delivery_address']}";
 			}

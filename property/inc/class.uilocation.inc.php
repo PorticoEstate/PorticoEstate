@@ -1427,6 +1427,12 @@ JS;
 				$this->district_id		 = $default_district;
 			}
 
+			$searc_levels = array();
+			for ($i = 1; $i < $type_id; $i++)
+			{
+				$searc_levels[] = "loc{$i}";
+			}
+
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				if (phpgw::get_var('head'))
@@ -1603,11 +1609,6 @@ JS;
 
 			$count_uicols_name = count($uicols['name']);
 
-			$searc_levels = array();
-			for ($i = 1; $i < $type_id; $i++)
-			{
-				$searc_levels[] = "loc{$i}";
-			}
 
 			for ($k = 0; $k < $count_uicols_name; $k++)
 			{

@@ -115,13 +115,13 @@
 									<div class="building-card">
 										<div class="building-card-header">
 											<h3 class="building-card-title mb-0">
-												<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false">
+												<button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true">
 													<xsl:value-of select="php:function('lang', 'Building information')" />
 												</button>
 												<button data-toggle="collapse" data-target="#collapseOne" class="btn fas fa-plus float-right"></button>
 											</h3>
 										</div>
-										<div id="collapseOne" class="collapse">
+										<div id="collapseOne" class="collapse show">
 											<div class="card-body">
 												<xsl:value-of disable-output-escaping="yes" select="building/description"/>
 											</div>
