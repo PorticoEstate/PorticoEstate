@@ -57,7 +57,7 @@
 		private $so_check_list;
 		private $so_check_item;
 		private $location_finder;
-		var $type_id;
+		var $type_id, $district_id;
 		private $bo;
 		private $bocommon;
 		public $public_functions = array
