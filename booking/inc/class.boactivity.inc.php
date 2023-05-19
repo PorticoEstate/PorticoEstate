@@ -8,7 +8,7 @@
 
 	class booking_boactivity extends booking_bocommon_global_manager_authorized
 	{
-		var $so, $activity_so;
+		var $activity_so;
 
 		function __construct()
 		{

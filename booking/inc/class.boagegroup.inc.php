@@ -3,7 +3,6 @@
 
 	class booking_boagegroup extends booking_bocommon_global_manager_authorized
 	{
-		var $so;
 
 		function __construct()
 		{
