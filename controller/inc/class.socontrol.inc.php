@@ -147,6 +147,7 @@
 			$check_list_array = array();
 
 			$sql = "SELECT DISTINCT controller_check_list.location_code, controller_check_list.control_id, controller_check_list.id AS check_list_id,"
+				. " controller_check_list.serie_id,"
 				. " procedure_id,requirement_id,costresponsibility_id,description, controller_control.start_date, end_date,deadline,planned_date, completed_date,"
 				. " control_area_id, repeat_type,repeat_interval, title, controller_check_list.assigned_to"
 				. " FROM controller_check_list"
@@ -191,6 +192,7 @@
 				$check_list->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 				$check_list->set_assigned_to($this->unmarshal($this->db->f('assigned_to'), 'int'));
+				$check_list->set_serie_id($this->unmarshal($this->db->f('serie_id'), 'int'));
 
 				if ($return_type == "return_object")
 				{
@@ -232,6 +234,7 @@
 
 
 			$sql = "SELECT DISTINCT controller_check_list.location_code, controller_check_list.control_id, controller_check_list.id AS check_list_id,"
+				. "	controller_check_list.serie_id,"
 				. " controller_control.description, controller_control.start_date, end_date, deadline,planned_date, completed_date,"
 				. " control_area_id,controller_check_list.location_id,title,controller_check_list.component_id, controller_check_list.assigned_to"
 				. " FROM controller_check_list"
@@ -291,6 +294,7 @@
 				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date'), 'int'));
 				$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date'), 'int'));
 				$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+				$check_list->set_serie_id($this->unmarshal($this->db->f('serie_id'), 'int'));
 
 				if ($return_type == "return_object")
 				{
