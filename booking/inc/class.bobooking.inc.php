@@ -21,6 +21,11 @@
 	{
 
 		const ROLE_ADMIN = 'organization_admin';
+		var
+			$allocation_so,
+			$resource_so,
+			$event_so,
+			$season_bo;
 
 		function __construct()
 		{

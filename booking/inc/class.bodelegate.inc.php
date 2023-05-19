@@ -4,6 +4,7 @@
 	class booking_bodelegate extends booking_bocommon_authorized
 	{
 
+		var $org_bo;
 		function __construct()
 		{
 			parent::__construct();

@@ -5,7 +5,9 @@
 	{
 
 		protected
-			$building_bo;
+			$building_bo,
+			$activity_bo,
+			$facility_bo;
 
 		function __construct()
 		{

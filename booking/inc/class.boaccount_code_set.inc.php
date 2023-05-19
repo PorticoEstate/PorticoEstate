@@ -3,6 +3,7 @@
 
 	class booking_boaccount_code_set extends booking_bocommon_global_manager_authorized
 	{
+		var $so;
 
 		function __construct()
 		{
