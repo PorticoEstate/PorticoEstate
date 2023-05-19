@@ -39,6 +39,7 @@
 		var $sum_actual_cost_period	 = 0;
 		var $sum_actual_cost			 = 0;
 		var $sum_hits				 = 0;
+		var $db, $join, $left_join, $like,$account,$cats, $total_records;
 
 		function __construct()
 		{
@@ -106,6 +107,7 @@
 
 
 			$where = 'WHERE';
+			$filtermethod = '';
 
 			if ($district_id > 0)
 			{
@@ -225,6 +227,8 @@
 				$ordermethod = ' order by id DESC';
 			}
 
+			$filtermethod = '';
+			$querymethod = '';
 
 			$where = 'WHERE';
 
@@ -527,6 +531,7 @@
 			$org_unit_id		 = isset($data['org_unit_id']) && $data['org_unit_id'] ? (int)$data['org_unit_id'] : 0;
 			$direction			 = isset($data['direction']) && $data['direction'] ? $data['direction'] : 'expenses';
 			$results			 = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
+			$hits = array();
 
 			if (!$year)
 			{
@@ -1396,6 +1401,7 @@
 				$sql = "SELECT SUM(amount) as account_sum, b_account_id FROM fm_budget_cost $this->join fm_b_account ON fm_budget_cost.b_account_id = fm_b_account.id WHERE fm_b_account.category = '" . $basis['b_group'] . "' AND $year_condition group by b_account_id";
 				$this->db->query($sql, __LINE__, __FILE__);
 
+				$test_sum = 0;
 				while ($this->db->next_record())
 				{
 					$budget[] = array(

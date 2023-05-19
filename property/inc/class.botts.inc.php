@@ -550,7 +550,7 @@
 		{
 			if (!$selected)
 			{
-				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'] : $prioritylevels;
+				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['prioritydefault'] : 0;
 			}
 			return execMethod('property.bogeneric.get_list', array('type'		 => 'ticket_priority',
 				'selected'	 => $selected));

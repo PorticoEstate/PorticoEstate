@@ -79,6 +79,7 @@
 				$ordermethod = " ORDER BY {$table}.id DESC";
 			}
 
+			$filtermethod = '';
 			$where = 'WHERE';
 			if ($cat_id)
 			{

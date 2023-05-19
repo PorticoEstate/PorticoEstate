@@ -41,7 +41,7 @@
 		public $sum_potential_grants = 0;
 		public $uicols				 = array();
 		protected $global_lock		 = false;
-		public $soproject, $historylog, $bocommon, $interlink,$custom;
+		public $soproject, $historylog, $bocommon, $interlink,$custom, $cols_extra;
 
 		function __construct()
 		{
@@ -1067,6 +1067,33 @@
 			{
 				$this->_db->transaction_begin();
 			}
+
+
+			$_address = array();
+			if ($request['street_name'])
+			{
+				$_address[]	 = $request['street_name'];
+				$_address[]	 = $request['street_number'];
+			}
+
+			if (!$_address)
+			{
+				$_address[] = $request['location_name'];
+			}
+			if (!empty($request['additional_info']))
+			{
+				foreach ($request['additional_info'] as $key => $value)
+				{
+					if ($value)
+					{
+						$_address[] = "{$key}|{$value}";
+					}
+				}
+			}
+
+			$address	 = $this->db->db_addslashes(implode(" ", $_address));
+
+
 
 			$id = $this->next_id();
 

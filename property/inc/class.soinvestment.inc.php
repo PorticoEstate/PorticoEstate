@@ -33,6 +33,7 @@
 	 */
 	class property_soinvestment
 	{
+		var $db, $join, $left_join, $like, $total_records, $account;
 
 		function __construct()
 		{
@@ -191,9 +192,9 @@
 
 			$receipt = array();
 
-			if (is_array($document['location']))
+			if (is_array($values['location']))
 			{
-				foreach ($document['location'] as $input_name => $value)
+				foreach ($values['location'] as $input_name => $value)
 				{
 					if ($value)
 					{
@@ -203,9 +204,9 @@
 				}
 			}
 
-			if (is_array($document['extra']))
+			if (is_array($values['extra']))
 			{
-				foreach ($document['extra'] as $input_name => $value)
+				foreach ($values['extra'] as $input_name => $value)
 				{
 					if ($value)
 					{

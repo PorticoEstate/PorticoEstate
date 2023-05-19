@@ -29,15 +29,14 @@
 	class property_bodimb_role_user
 	{
 
-		var $public_functions = array
-			(
+		var $so, $account_id;
+		var $public_functions = array(
 		);
 
 		function __construct()
 		{
 			$this->account_id	 = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->so			 = CreateObject('property.sodimb_role_user');
-			$this->allrows		 = $this->bo->allrows;
 		}
 
 		public function read( $data )

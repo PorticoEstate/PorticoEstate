@@ -37,6 +37,8 @@
 	 */
 	class property_soevent
 	{
+		var $account, $_db, $_join, $_left_join, $_like;
+		var $total_records, $debug;
 
 		function __construct()
 		{
@@ -240,6 +242,8 @@
 			$order				 = isset($data['order']) ? $data['order'] : '';
 			$allrows			 = isset($data['allrows']) ? $data['allrows'] : '';
 			$results			 = isset($data['results']) ? (int)$data['results'] : 0;
+
+			$ordermethod = '';
 
 			if (!isset($data['location_item_id']) || !$data['location_item_id'])
 			{
