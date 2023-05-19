@@ -1393,6 +1393,9 @@
 
 			$resource_ids = array();
 			$event_ids = array();
+			$allocation_ids = array();
+			$booking_ids = array();
+
 			foreach ($resources['results'] as &$resource)
 			{
 				$resource_ids[] = $resource['id'];
@@ -1466,6 +1469,8 @@
 				if ($resource['simple_booking'] && empty($resource['skip_timeslot']))
 				{
 					$event_ids = array_merge($event_ids, $this->so->event_ids_for_resource($resource['id'], $_from, $to));
+					$allocation_ids	 = array_merge($allocation_ids, $this->so->allocation_ids_for_resource($resource_id, $from, $to));
+					$booking_ids	 = array_merge($booking_ids, $this->so->booking_ids_for_resource($resource_id, $from, $to));
 				}
 
 				$resource['from'] = $from;
@@ -1484,8 +1489,26 @@
 				$events = $this->event_so->read(array('filters' => array('id' => $event_ids),
 					'results' => -1));
 			}
+			if ($allocation_ids)
+			{
+				$allocations = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids),
+					'results' => -1));
+			}
+			if ($booking_ids)
+			{
+				$bookings = $this->so->read(array('filters' => array('id' => $booking_ids),
+					'results' => -1));
+			}
 
+			/**
+			 * Check for temporary reserved
+			 */
 			$this->get_partials( $events, $resource_ids);
+
+			/**
+			 * Combine variants of bookings
+			 */
+			$events['results'] = array_merge((array)$events['results'],(array)$allocations['results'],(array)$bookings['results']);
 
 			$availlableTimeSlots		 = array();
 			$defaultStartHour			 = 8;
