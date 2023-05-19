@@ -37,7 +37,7 @@
 		public $allrows;
 		public $method_id;
 
-		var $async, $so, $bocommon, $start,$query, $filter, $sort, $order, $config, $cat_id, $total_records;
+		var $async, $so, $bocommon, $start,$query, $filter, $sort, $order, $config, $cat_id, $total_records, $use_session,$owner,$send,$user;
 
 		function __construct( $session = '' )
 		{
@@ -465,6 +465,8 @@
 			{
 				$to = current($toarray);
 			}
+			$cc = '';
+			$bcc = '';
 
 			if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 			{
