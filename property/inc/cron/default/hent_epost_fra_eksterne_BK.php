@@ -32,7 +32,7 @@
 	 * @package property
 	 */
 	include_class('property', 'cron_parent', 'inc/cron/');
-	require_once PHPGW_SERVER_ROOT . '/phpgwapi/inc/ews/autoload.php';
+	require_once PHPGW_SERVER_ROOT . '/phpgwapi/inc/ews/vendor/autoload.php';
 
 	use \jamesiarmes\PhpEws\Client;
 	use \jamesiarmes\PhpEws\Request\FindItemType;
