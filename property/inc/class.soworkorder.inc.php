@@ -38,6 +38,8 @@
 		var $total_records	 = 0;
 		protected $global_lock	 = false;
 		protected $historylog;
+		var $db,$db2, $join, $left_join, $like, $account,$bocommon;
+		var $interlink,$acl,$grants,$uicols;
 
 		function __construct()
 		{
@@ -170,6 +172,9 @@
 
 			$GLOBALS['phpgw']->config->read();
 			$sql = $this->bocommon->fm_cache('sql_workorder' . !!$search_vendor . '_' . !!$wo_hour_cat_id . '_' . !!$b_group);
+			$joinmethod	 = '';
+			$paranthesis = '';
+
 			//echo $sql;
 			if (!$sql)
 			{
@@ -804,7 +809,7 @@
 
 							$criteria[0]['field'] = "cast({$criteria[0]['field']} as text)";
 						}
-						else if ($criteria[0]['type'] == 'bigint' && $field_info['matchtype'] != 'like')
+						else if ($criteria[0]['type'] == 'bigint' && $criteria[0]['matchtype'] != 'like')
 						{
 							$_query = 0;
 						}
@@ -1882,7 +1887,7 @@
 		public function get_user_list()
 		{
 			$values	 = array();
-			$users	 = $GLOBALS['phpgw']->accounts->get_list('accounts', $start	 = -1, $sort	 = 'ASC', $order	 = 'account_lastname', $query, $offset	 = -1);
+			$users	 = $GLOBALS['phpgw']->accounts->get_list('accounts', $start	 = -1, $sort	 = 'ASC', $order	 = 'account_lastname', $query='', $offset	 = -1);
 			$sql	 = 'SELECT DISTINCT user_id AS user_id FROM fm_workorder';
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -2379,6 +2384,7 @@
 //_debug_array($order_budget);die();
 //_debug_array($_start_period_remainig);die();
 //_debug_array($orders_paid_or_pending);die();
+			$_sum_year_remaining_cost = 0;
 			foreach ($orders_paid_or_pending as $_orders_paid_or_pending)
 			{
 

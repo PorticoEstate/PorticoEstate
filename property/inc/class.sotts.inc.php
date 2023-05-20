@@ -59,6 +59,9 @@
 			)
 		);
 
+		var $db, $join, $left_join, $like, $account,$historylog;
+		var $custom, $dateformat;
+
 		function __construct()
 		{
 			$this->account		 = (int)$GLOBALS['phpgw_info']['user']['account_id'];
@@ -2439,7 +2442,7 @@
 
 		function add_relation( $_add_relation, $id, $relation_type )
 		{
-
+			$ret = false;
 			if ($_add_relation && !is_array($_add_relation))
 			{
 				$add_relation					 = array();
@@ -2507,7 +2510,7 @@
 						);
 					}
 
-					$interlink->add($interlink_data);
+					$ret = $interlink->add($interlink_data);
 
 					if ($relation_type == 'request')
 					{
@@ -2526,7 +2529,7 @@
 				}
 			}
 			$this->db->transaction_commit();
-			return $receipt;
+			return $ret;
 		}
 
 		function get_ticket_from_order( $order_id )
@@ -2552,7 +2555,7 @@
 			{
 				$config		 = CreateObject('phpgwapi.config', 'property')->read();
 				$new_status	 = !empty($config['reopen_status']) ? $config['reopen_status'] : 'O';
-				$this->historylog->add('R', $id, $new_status, $old_status);
+				$this->historylog->add('R', $id, $new_status, $status);
 				$this->db->query("UPDATE fm_tts_tickets SET status='{$new_status}' WHERE id= {$id}", __LINE__, __FILE__);
 //				$this->db->query("UPDATE fm_tts_tickets SET priority = 1 WHERE id = {$id}", __LINE__, __FILE__);
 			}

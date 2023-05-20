@@ -35,11 +35,12 @@
 	{
 
 		var $type;
-		var $type_id;
+		var $type_id, $custom, $uicols;
 		var $location_info	 = array();
 		var $tree			 = array();
 		protected $table;
 		var $appname			 = 'property';
+		var $account, $_db, $_db2, $_join, $_left_join, $_like, $total_records;
 
 		function __construct( $type = '', $type_id = 0 )
 		{
@@ -457,12 +458,6 @@
 			return $values;
 		}
 
-		//deprecated
-		function select_generic_list( $data )
-		{
-			return $this->get_entity_list($data);
-		}
-
 		function get_list( $data )
 		{
 			$values = array();
@@ -499,6 +494,7 @@
 
 			if ($order)
 			{
+				$sort = 'ASC';
 				$ordermethod = " ORDER BY {$table}.{$order} {$sort}";
 			}
 			else
@@ -897,6 +893,7 @@
 
 			if ($order)
 			{
+				$sort = 'ASC';
 				$ordermethod = " ORDER BY {$table}.{$order} {$sort}";
 			}
 			else

@@ -34,6 +34,8 @@
 	class property_sojasper
 	{
 
+		var $db, $join, $left_join, $like, $total_records, $account, $grants;
+
 		function __construct()
 		{
 			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];

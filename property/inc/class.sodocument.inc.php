@@ -35,6 +35,8 @@
 	{
 
 		public $total_records = 0;
+		var $account, $db, $db2, $join, $left_join, $like;
+		var $bocommon, $historylog,$vfs, $fakebase, $cats, $uicols, $cols_extra;
 
 		function __construct()
 		{
@@ -139,6 +141,7 @@
 			$doc_types = $this->get_sub_doc_types($doc_type);
 
 //			$sql = $this->bocommon->fm_cache('sql_document_' . $entity_id);
+			$sql = '';
 
 			if (!$sql)
 			{
@@ -840,7 +843,7 @@
 		 * @param string $menuaction is used to make an url to the item
 		 * @return array $child Children
 		 */
-		protected function get_children( $dirname, $level, $maks_level = 0, $filter_level = 1, $filter = 'hei', $menuaction )
+		protected function get_children( $dirname, $level, $maks_level = 0, $filter_level = 1, $filter = '', $menuaction )
 		{
 			// prevent path traversal
 			if (preg_match('/\./', $dirname) || !is_dir($dirname))
@@ -874,7 +877,7 @@
 			{
 				if ($child['is_dir'] && $child['level'] < ($maks_level))
 				{
-					if ($_children = $this->get_children($child['path'], ($child['level'] + 1), $maks_level, $menuaction))
+					if ($_children = $this->get_children($child['path'], ($child['level'] + 1), $maks_level, $filter_level, $filter, $menuaction))
 					{
 						$child['children'] = $_children;
 					}

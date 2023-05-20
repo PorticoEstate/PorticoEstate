@@ -4,6 +4,7 @@
 	class booking_bogroup extends booking_bocommon_authorized
 	{
 
+		var $org_bo;
 		function __construct()
 		{
 			parent::__construct();

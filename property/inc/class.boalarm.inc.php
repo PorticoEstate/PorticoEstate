@@ -413,7 +413,7 @@
 
 			$current_user_lastname = 'System';
 
-			$current_user_name = $user_firstname . " " . $user_lastname;
+			$current_user_name =  $GLOBALS['phpgw']->accounts->get($alarm['owner'])->__toString();
 
 			$current_prefs_user		 = $this->bocommon->create_preferences('common', $alarm['owner']);
 			$current_user_address	 = $current_prefs_user['email'];
@@ -487,9 +487,6 @@
 				$receipt['error'][]	 = array('msg' => 'to: ' . $to);
 				$receipt['error'][]	 = array('msg' => 'subject: ' . $subject);
 				$receipt['error'][]	 = array('msg' => $body);
-//				$receipt['error'][] = array('msg'=> 'cc: ' . $cc);
-//				$receipt['error'][] = array('msg'=> 'bcc: '.$bcc);
-				$receipt['error'][]	 = array('msg' => 'group: ' . $group_name);
 				$receipt['error'][]	 = array('msg' => 'err_code: ' . $this->send->err['code']);
 				$receipt['error'][]	 = array('msg' => 'err_msg: ' . htmlspecialchars($this->send->err['msg']));
 				$receipt['error'][]	 = array('msg' => 'err_desc: ' . $this->send->err['desc']);

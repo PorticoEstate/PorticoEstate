@@ -4,6 +4,7 @@
 	class booking_boallocation extends booking_bocommon_authorized
 	{
 
+		var $season_bo;
 		function __construct()
 		{
 			parent::__construct();

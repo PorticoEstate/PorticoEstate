@@ -35,9 +35,10 @@
 	{
 
 		private $db;
-		private $join;
+		private $join, $left_join;
 		private $like;
 		private $account_id;
+		public $total_records;
 
 		function __construct()
 		{

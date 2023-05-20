@@ -37,6 +37,7 @@
 	 */
 	class property_sogallery
 	{
+		var $account, $_db, $_join, $_left_join, $_like, $total_records;
 
 		function __construct()
 		{

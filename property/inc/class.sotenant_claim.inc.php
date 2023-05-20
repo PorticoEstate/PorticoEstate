@@ -33,6 +33,8 @@
 	 */
 	class property_sotenant_claim
 	{
+		var $db, $join, $left_join, $like, $account,$total_records;
+		var $interlink;
 
 		function __construct()
 		{
@@ -241,6 +243,8 @@
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
+
+			$ordermethod = '';
 
 			$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 

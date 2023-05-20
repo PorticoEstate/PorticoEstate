@@ -34,7 +34,7 @@
 	class property_soentity
 	{
 
-		var $entity_id, $db, $db2,$bocommon, $custom, $join, $left_join, $like;
+		var $entity_id, $db, $db2,$bocommon, $custom, $join, $left_join, $like, $cols_return;
 		var $cat_id;
 		var $total_records	 = 0;
 		var $uicols;

@@ -409,7 +409,7 @@
 			$Kontakt->setOrganisasjonsnummer($application['customer_organization_number']);
 
 			$EnkelAdresseListe			 = new EnkelAdresseListe();
-			$EnkelAdresse				 = new EnkelAdresse();
+			$EnkelAdresse				 = new EnkelAdresse(new EnkelAdressetype(''));
 			$EnkelAdresse->setAdresselinje1(implode(', ', $organization['postadresse']['adresse']));
 			$PostadministrativeOmraader	 = new PostadministrativeOmraader();
 			$PostadministrativeOmraader->setPostnummer($organization['postadresse']['postnummer']);
@@ -570,7 +570,7 @@
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 				'accept: application/json',
 				'Content-Type: application/json',
-				'Content-Length: ' . strlen($data_json)
+				'Content-Length: 0'// . strlen($data_json)
 			));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

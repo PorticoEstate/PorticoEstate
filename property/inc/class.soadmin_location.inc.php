@@ -34,6 +34,8 @@
 	class property_soadmin_location
 	{
 
+		var $db,$oProc, $join, $left_join, $like,$category_name,$account, $total_records;
+
 		function __construct()
 		{
 			$this->account	 = isset($GLOBALS['phpgw_info']['user']['account_id']) ? (int)$GLOBALS['phpgw_info']['user']['account_id'] : -1;
