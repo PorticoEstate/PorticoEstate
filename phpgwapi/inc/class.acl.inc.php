@@ -140,6 +140,8 @@
 
 		protected $global_lock = false;
 
+		protected $_left_join;
+
 		/**
 		* ACL constructor for setting account id
 		*

@@ -85,6 +85,8 @@
 		*
 		* @return void
 		*/
+
+		protected $like,$join, $account_type;
 		public function __construct($account_id = null, $account_type = null)
 		{
 			$this->db =& $GLOBALS['phpgw']->db;
