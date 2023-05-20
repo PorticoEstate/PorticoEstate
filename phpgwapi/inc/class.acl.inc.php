@@ -142,6 +142,8 @@
 
 		protected $_left_join;
 
+		protected $soap_functions;
+
 		/**
 		* ACL constructor for setting account id
 		*
