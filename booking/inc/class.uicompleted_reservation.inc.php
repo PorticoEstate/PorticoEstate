@@ -243,6 +243,7 @@
 							'key' => 'select',
 							'label' => lang('select'),
 							'formatter' => 'myFormatterCheck',
+							'sortable' => false,
 						),
 						array(
 							'key' => 'link',
