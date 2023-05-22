@@ -69,6 +69,8 @@
 		var $location_info		 = array();
 		var $cached_events;
 		protected $event_functions	 = array();
+		var $so, $custom, $sbox, $asyncservice,$use_session,$location_id,$user_id, $allrows,$status_id,
+		$total_records,$uicols,$is_group, $debug,$repeating_events;
 		var $public_functions	 = array
 			(
 			'event_schedule_data'		 => true,
@@ -357,7 +359,7 @@
 						}
 						break;
 					case '5': //'Yearly'
-						$month = date(n, $data['start_date']);
+						$month = date('n', $data['start_date']);
 						if ($data['repeat_interval'])
 						{
 							$times = array('year' => "*/{$data['repeat_interval']}", 'month' => $month);
@@ -614,7 +616,7 @@
 			}
 			try
 			{
-				$GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
+				$GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc='', $bcc='', $coordinator_email, $coordinator_name, 'html');
 			}
 			catch (Exception $e)
 			{

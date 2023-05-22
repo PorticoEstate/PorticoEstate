@@ -41,6 +41,10 @@
 		var $order;
 		var $sub;
 		var $currentapp;
+
+		var $bo,$account,$cats, $nextmatchs,$allrows,$cat_id,$filter,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage,$_category_acl;
+
 		var $public_functions = array
 			(
 			'index'		 => true,

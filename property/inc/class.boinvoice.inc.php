@@ -41,6 +41,8 @@
 		public $allrows			 = false;
 		public $debug			 = false;
 		public $b_account;
+		var $so,$bocommon,$account_id,$use_session,$start,$query,$b_account_class,$district_id, $sort,
+		$filter, $order,$cat_id,$user_lid, $sub, $soXport;
 
 		/**
 		 *

@@ -46,7 +46,7 @@
 		var $part_of_town_id;
 		var $district_id;
 		var $sub;
-		var $currentapp;
+		var $currentapp,$bo, $cats,$entity_id,$location_code,$criteria_id;
 		var $public_functions = array
 			(
 			'addressbook'		 => true,

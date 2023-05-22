@@ -40,8 +40,8 @@
 		var $query;
 		var $sort;
 		var $order;
-		var $sub;
-		var $currentapp;
+		var $sub, $allrows;
+		var $currentapp, $nextmatchs, $account, $bo, $bocommon,$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage;
 		var $public_functions = array
 			(
 			'query'					 => true,

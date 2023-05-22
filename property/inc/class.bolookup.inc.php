@@ -41,6 +41,7 @@
 		public $order;
 		public $cat_id;
 		public $total_records = 0;
+		var $so,$solocation,$use_session,$district_id,$allrows;
 
 		function __construct( $session = false )
 		{
@@ -239,7 +240,7 @@
 						}
 						else
 						{
-							$filter[$field['name']] = phpgw::get_var($field_name);
+							$filter[$field['name']] = phpgw::get_var($field['name']);
 						}
 					}
 				}

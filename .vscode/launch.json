@@ -10,7 +10,7 @@
       "request": "launch",
       "port": 9003,
       "pathMappings": {
-      "/var/www/html/portico": "${workspaceFolder}"
+      "/home/hc483/public_html/github_trunk": "${workspaceFolder}"
       }
     },
     {

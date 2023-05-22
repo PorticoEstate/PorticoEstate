@@ -41,8 +41,10 @@
 		var $sort;
 		var $order;
 		var $sub;
-		var $currentapp;
 		var $location_info;
+		var $currentapp, $bo, $account, $bocommon, $custom, $location_id,$user_id,$status_id,$role,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage, $allrows;
+
 		var $public_functions = array
 			(
 			'query'			 => true,
@@ -694,7 +696,7 @@
 			});
 	}
 JS;
-				$GLOBALS['phpgw']->js->add_code($namespace, $code);
+				$GLOBALS['phpgw']->js->add_code($namespace = '', $code);
 
 				$plan_def = array
 					(

@@ -46,7 +46,9 @@
 		var $filter;
 		var $user_lid;
 		var $sub;
-		var $currentapp;
+		var $bo,$currentapp, $nextmatchs, $account, $bocommon, $config,$district_id,$allrows,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage, $_category_acl;
+
 		var $public_functions = array
 			(
 			'index'			 => true,

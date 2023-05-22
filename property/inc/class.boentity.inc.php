@@ -50,7 +50,8 @@
 		var $location_code;
 		var $results;
 		var $acl_location;
-		var $soadmin_entity, $so, $bocommon, $solocation, $entity_id, $category_dir, $criteria_id,$uicols,$total_records,$org_unit_id;
+		var $soadmin_entity, $so, $bocommon, $solocation, $entity_id, $category_dir,
+		 $criteria_id,$uicols,$total_records,$org_unit_id,$use_session,$table, $attrib_id_field;
 		public $org_units = array();
 		public $org_unit;
 		protected $xsl_rootdir;

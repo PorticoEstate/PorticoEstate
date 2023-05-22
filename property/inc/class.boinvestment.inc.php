@@ -41,7 +41,9 @@
 		var $sort;
 		var $order;
 		var $cat_id;
-//		var $part_of_town_id;
+		var $so, $bocommon, $socommon, $use_session,$part_of_town_id,$allrows,$total_records;
+
+		//		var $part_of_town_id;
 
 		var $public_functions = array
 			(
