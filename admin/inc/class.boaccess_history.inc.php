@@ -13,6 +13,7 @@
 
 	class boaccess_history
 	{
+		var $so;
 
 		function __construct()
 		{

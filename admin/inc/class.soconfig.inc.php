@@ -23,6 +23,7 @@
 		protected $db;
 		protected $location_id = 0;
 		protected $global_lock = false;
+		var $join, $left_join,$like, $total_records;
 
 		public function __construct($location_id = 0)
 		{

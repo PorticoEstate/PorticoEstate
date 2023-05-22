@@ -38,7 +38,7 @@
 		public static $tmpl_search_path;
 
 		protected
-			$filesArray;
+			$filesArray, $url_prefix,$acl, $locations;
 		public $dateFormat;
 		public $type_of_user;
 
@@ -309,10 +309,10 @@
 
 		/**
 		 *
-		 * @param type $app
-		 * @param type $pkg will always look within template set, then fallback to $pkg
-		 * @param type $name name of the javascript file to include
-		 * @return type
+		 * @param string $app
+		 * @param string $pkg will always look within template set, then fallback to $pkg
+		 * @param string $name name of the javascript file to include
+		 * @return bool
 		 */
 
 		public static function add_javascript( $app, $pkg, $name, $end_of_page = false, $config = array())

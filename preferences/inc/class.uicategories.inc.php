@@ -16,6 +16,7 @@
 	 */
 	class uicategories
 	{
+		var $nextmatchs,$account,$user;
 		/**
 		 * 
 		 * @var object

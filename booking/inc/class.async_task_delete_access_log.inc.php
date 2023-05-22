@@ -6,7 +6,7 @@
 	 */
 	class booking_async_task_delete_access_log extends booking_async_task
 	{
-
+		var $db;
 		public function __construct()
 		{
 			parent::__construct();

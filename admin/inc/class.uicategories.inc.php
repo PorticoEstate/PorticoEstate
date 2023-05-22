@@ -15,7 +15,7 @@
 	class admin_uicategories
 	{
 		var $bo;
-		var $nextmatchs;
+		var $nextmatchs, $allrows;
 		var $xslttpl;
 
 		var $start;

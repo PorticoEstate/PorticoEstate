@@ -557,8 +557,15 @@
 			//while (list($k, $v) = each($this->varvals))
 			foreach ($this->varvals as $k => $v)
 			{
-				$varvals_quoted[$k] = preg_replace(array('/\\\\/', '/\$/'), array('\\\\\\\\',
+				if($v)
+				{
+					$varvals_quoted[$k] = preg_replace(array('/\\\\/', '/\$/'), array('\\\\\\\\',
 					'\\\\$'), $v);
+				}
+				else
+				{
+					$varvals_quoted[$k] = '';
+				}
 				if (is_array($varvals_quoted[$k]))
 				{
 					$varvals_quoted[$k] = implode($varvals_quoted[$k]);

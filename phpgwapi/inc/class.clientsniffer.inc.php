@@ -249,12 +249,12 @@
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'hpux';
 			}
-			if(preg_match('/hp-ux/i',$this->UA) && preg_match('/10./',$this-UA))
+			if(preg_match('/hp-ux/i',$this->UA) && preg_match('/10./',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'hpux10';
 			}
-			elseif(preg_match('hp-ux',$this->UA) && preg_match('/09./',$this-UA))
+			elseif(preg_match('hp-ux',$this->UA) && preg_match('/09./',$this->UA))
 			{
 				$this->PLATFORM = 'Unix';
 				$this->OS = 'hpux9';

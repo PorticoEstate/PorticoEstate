@@ -26,7 +26,7 @@
 		var $order;
 		var $sub;
 		var $local_menu_selection = false;
-		var $menu_selection;
+		var $menu_selection, $bo, $appname,$location,$allrows, $nextmatchs, $account, $bolocation,$acl_location,$acl_read,$acl_add, $acl_edit,$acl_delete;
 		var $public_functions = array
 		(
 			'delete'				 => true,

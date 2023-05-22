@@ -31,7 +31,7 @@
 		var $submodule_id;
 		var $permission;
 		var $sub;
-		var $currentapp;
+		var $currentapp,$bo,$account,$acl_app,$location,$granting_group, $allrows;
 		/**
 		 * @var object $nextmatchss pager object
 		 */

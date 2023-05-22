@@ -39,7 +39,7 @@
 	class phpgwapi_vfs extends phpgwapi_vfs_shared
 	{
 		var $file_actions;
-		var $acl_default;
+		var $acl_default, $db, $db2,$fileoperation;
 
 		/**
 		 * constructor, sets up variables
@@ -1489,8 +1489,8 @@
 
 					$newdir = preg_replace("/^" . str_replace('/', '\/', $f->fake_full_path). "/", $t->fake_full_path, $entry['directory']);
 					$this->cp(array(
-							'from'	=> "{$entry[directory]}/{$entry[name]}",
-							'to'	=> "{$newdir}/{$entry[name]}",
+							'from'	=> "{$entry['directory']}/{$entry['name']}",
+							'to'	=> "{$newdir}/{$entry['name']}",
 							'relatives'	=> array($f->mask, $t->mask)
 						)
 					);
@@ -1765,8 +1765,8 @@
 					$newdir = preg_replace("/^" . str_replace('/', '\/', $f->fake_full_path). "/", $t->fake_full_path, $entry['directory']);
 
 					$this->cp(array(
-							'from'		=> "{$entry[directory]}/{$entry[name]}",
-							'to'		=> "{$newdir}/{$entry[name]}",
+							'from'		=> "{$entry['directory']}/{$entry['name']}",
+							'to'		=> "{$newdir}/{$entry['name']}",
 							'relatives'	=> array($f->mask, $t->mask)
 						)
 					);
@@ -2132,8 +2132,8 @@
 
 					$newdir = preg_replace("/^" . str_replace('/', '\/', $f->fake_full_path). "/", $t->fake_full_path, $entry['directory']);
 					$this->cp(array(
-							'from'	=> "{$entry[directory]}/{$entry[name]}",
-							'to'	=> "{$newdir}/{$entry[name]}",
+							'from'	=> "{$entry['directory']}/{$entry['name']}",
+							'to'	=> "{$newdir}/{$entry['name']}",
 							'relatives'	=> array($f->mask, $t->mask)
 						)
 					);
@@ -2368,10 +2368,10 @@
 						$newdir_clean = $this->clean_string(array('string' => $newdir));
 
 						$query = $this->db->query("UPDATE phpgw_vfs SET directory='{$newdir_clean}'"
-						. " WHERE file_id='{$entry[file_id]}'" . $this->extra_sql(array('query_type' => VFS_SQL_UPDATE)), __LINE__, __FILE__);
+						. " WHERE file_id='{$entry['file_id']}'" . $this->extra_sql(array('query_type' => VFS_SQL_UPDATE)), __LINE__, __FILE__);
 
 						$this->correct_attributes(array(
-								'string'	=> "{$newdir}/{$entry[name]}",
+								'string'	=> "{$newdir}/{$entry['name']}",
 								'relatives'	=> array($t->mask)
 							)
 						);
@@ -3427,7 +3427,7 @@
 
 					if( $record['mime_type'] )
 					{
-						$db2->query("UPDATE phpgw_vfs SET mime_type='{$record[$attribute]}'"
+						$db2->query("UPDATE phpgw_vfs SET mime_type='{$record['mime_type']}'"
 						. " WHERE directory='{$p->fake_leading_dirs_clean}' AND name='{$p->fake_name_clean}'"
 						. $this->extra_sql(array('query_type' => VFS_SQL_SELECT)), __LINE__, __FILE__);
 

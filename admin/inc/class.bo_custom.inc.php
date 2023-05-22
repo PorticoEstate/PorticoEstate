@@ -25,7 +25,7 @@
 		var $sort;
 		var $order;
 		var $location;
-		var $appname;
+		var $appname, $currentapp,$so,$use_session,$allrows,$total_records;
 
 		var $public_functions = array
 		(

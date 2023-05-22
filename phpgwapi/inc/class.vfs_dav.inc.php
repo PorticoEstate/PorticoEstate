@@ -56,6 +56,8 @@
 		var $dav_host = '';
 		var $dav_port = '80';
 		var $dav_root = '';
+		var $str_lock_arror;
+		var $str_dav_error;
 
 		/*
 		* Internal : the dav http client
