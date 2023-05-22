@@ -40,7 +40,7 @@
 		var $filter;
 		var $sort;
 		var $order;
-		var $cat_id;
+		var $cat_id, $so, $socommon,$bocommon,$use_session,$allrows, $total_records;
 		var $public_functions = array
 			(
 			'read'			 => true,

@@ -45,6 +45,8 @@
 		var $order;
 		var $cat_id;
 		var $location_info = array();
+		var$so,$mime_magic, $interlink, $use_session, $location_id, $user_id,$allrows,
+		$start_date,$end_date,$total_records,$mime_type;
 
 		function __construct( $session = false )
 		{

@@ -46,8 +46,10 @@
 		var $submodule_id;
 		var $permission;
 		var $sub;
-		var $currentapp;
 		var $acl_app;
+		var $currentapp, $nextmatchs, $account, $bo, $bocommon,$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage;
+		var $bopreferences, $location,$granting_group, $allrows;
+
 		var $public_functions = array
 			(
 			'list_acl'		 => true,

@@ -44,6 +44,7 @@
 		public $cat_id;
 		public $allrows;
 		protected $acl_location	 = '.admin';
+		var $so, $appname, $sort, $order, $cats,$dateformat;
 
 		/**
 		 * Constructor

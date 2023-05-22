@@ -42,6 +42,7 @@
 		 */
 		var $fakebase = '/property';
 		var $rootdir;
+		var $vfs;
 
 		/**
 		 * constructor
@@ -275,8 +276,8 @@
 
 		/**
 		 * Read a file and display its content chunk by chunk
-		 * @param type $filename
-		 * @param type $retbytes
+		 * @param string $filename
+		 * @param bool $retbytes
 		 * @return boolean
 		 */
 		function readfile_chunked( $filename, $retbytes = true )

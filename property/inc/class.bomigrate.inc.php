@@ -34,6 +34,7 @@
 
 		private $use_session;
 		public $start;
+		var $acl_location, $oProc;
 
 		public function __construct( $session = false )
 		{

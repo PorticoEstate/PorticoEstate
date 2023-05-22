@@ -65,9 +65,8 @@
 		$allrows,
 		$type,
 		$type_app,
-		$acl_location
-			
-		
+		$acl_location,
+		$criteria_id
 		;
 		var $public_functions	 = array(
 			'summary'					 => true,

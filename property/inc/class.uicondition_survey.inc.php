@@ -58,6 +58,9 @@
 			'handle_multi_upload_file'	 => true,
 			'build_multi_upload_file'	 => true
 		);
+		var $bocommon, $config,$allrows,$type, $type_app,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage;
+
 
 		public function __construct()
 		{

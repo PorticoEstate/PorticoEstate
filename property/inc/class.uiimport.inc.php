@@ -28,7 +28,9 @@
 		protected $fields		 = array();
 		protected $table;
 		protected $debug;
+		protected $db;
 		protected $identificator;
+		protected $filename_template;
 		// Label on the import button. Changes as we step through the import process.
 		protected $import_button_label;
 		protected $download_template_button_label;

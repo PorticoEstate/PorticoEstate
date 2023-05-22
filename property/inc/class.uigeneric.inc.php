@@ -46,6 +46,10 @@
 		var $sub;
 		var $currentapp;
 		var $location_info;
+		var $bo, $bocommon,$allrows,$user_id,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage,
+		$custom, $account,$type, $type_id;
+
 		var $public_functions = array
 			(
 			'query'			 => true,
@@ -1005,7 +1009,7 @@ JS;
 
 			$data = array
 				(
-				'base_java_url'	 => json_encode(array(menuaction => "{$this->call_appname}.uigeneric.attrib_history")),
+				'base_java_url'	 => json_encode(array('menuaction' => "{$this->call_appname}.uigeneric.attrib_history")),
 				'datatable_def'	 => $datatable_def,
 				'link_url'		 => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'img_path'		 => $GLOBALS['phpgw']->common->get_image_path('phpgwapi', 'default')

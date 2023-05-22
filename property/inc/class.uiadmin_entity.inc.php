@@ -67,6 +67,8 @@
 			'delete_choice_value'		 => true
 		);
 		private $bo;
+		var $account,$bocommon, $entity_id, $cat_id,$allrows,$type, $type_app,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage;
 
 		function __construct()
 		{

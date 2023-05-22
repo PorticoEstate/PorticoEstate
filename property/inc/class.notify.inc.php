@@ -283,7 +283,7 @@
 
 	}
 JS;
-			$GLOBALS['phpgw']->js->add_code($namespace, $code);
+			$GLOBALS['phpgw']->js->add_code($namespace = '', $code);
 
 			return array('datavalues' => $datavalues, 'column_defs' => $column_defs, 'tabletools' => $tabletools);
 		}

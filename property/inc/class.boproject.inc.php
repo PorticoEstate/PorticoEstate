@@ -45,6 +45,8 @@
 		var $allrows;
 		var $project_type_id;
 		var $acl_location	 = '.project';
+		var $so, $bocommon, $cats, $interlink, $custom,$use_session,$status_id,$user_id,$wo_hour_cat_id,
+		$district_id,$criteria_id,$total_records,$uicols;
 		var $public_functions = array
 			(
 			'read'				 => true,

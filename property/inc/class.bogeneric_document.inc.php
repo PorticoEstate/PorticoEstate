@@ -31,6 +31,7 @@
 	{
 
 		private $so;
+		var $bocommon, $total_records,$total_records_componentes;
 		var $public_functions = array
 			(
 			'read'							 => true,

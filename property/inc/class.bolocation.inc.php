@@ -44,7 +44,8 @@
 		var $lookup;
 		var $use_session;
 		var $location_code;
-		var $total_records;
+		var $total_records, $so,$soadmin_location,$bocommon, $part_of_town_id,$district_id,$status,
+		$allrows,$acl_location,$config,$location_types,$uicols;
 
 		/**
 		 * @var object $custom reference to custom fields object
@@ -996,10 +997,7 @@ JS;
 			}
 			else
 			{
-				if (!$receipt['error'])
-				{
-					$receipt = $this->so->add($location, $values_attribute, $type_id);
-				}
+				$receipt = $this->so->add($location, $values_attribute, $type_id);
 			}
 
 			$criteria = array

@@ -41,8 +41,10 @@
 		var $sort;
 		var $order;
 		var $sub;
-		var $currentapp;
 		var $location_info;
+		var $currentapp, $cat_id, $account, $bo, $bocommon,$mime_type,$allrows,$user_id,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage;
+
 		var $public_functions = array
 			(
 			'query'		 => true,

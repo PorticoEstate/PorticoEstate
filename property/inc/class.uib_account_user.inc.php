@@ -41,6 +41,9 @@
 			'query'	 => true,
 			'edit'	 => true,
 		);
+		var $bo,$account_id,$bocommon, $entity_id, $cat_id,$allrows,$type, $type_app,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage,
+		$start,$query,$status_id;
 
 		function __construct()
 		{

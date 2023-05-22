@@ -45,7 +45,7 @@
 		var $sort;
 		var $order;
 		var $filter;
-		var $cat_id;
+		var $cat_id, $config,$debug;
 		var $use_session		 = false;
 
 		function __construct( $session = false )

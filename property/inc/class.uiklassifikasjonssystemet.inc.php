@@ -37,6 +37,7 @@
 
 		private $config,
 			$webservicehost,
+			$acl,
 			$acl_location,
 			$acl_read,
 			$acl_add,
