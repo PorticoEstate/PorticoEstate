@@ -557,6 +557,11 @@
 			//while (list($k, $v) = each($this->varvals))
 			foreach ($this->varvals as $k => $v)
 			{
+				if(!$v)
+				{
+					continue;
+				}
+
 				$varvals_quoted[$k] = preg_replace(array('/\\\\/', '/\$/'), array('\\\\\\\\',
 					'\\\\$'), $v);
 				if (is_array($varvals_quoted[$k]))
