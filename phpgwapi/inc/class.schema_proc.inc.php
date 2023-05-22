@@ -23,7 +23,7 @@
 		var $m_oDeltaProc;
 		var $m_odb;
 		var $m_aTables;
-		var $m_bDeltaOnly;
+		var $m_bDeltaOnly, $dbms;
 
 		function __construct($dbms)
 		{
