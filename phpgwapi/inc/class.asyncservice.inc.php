@@ -35,6 +35,7 @@
 		var $db_table = 'phpgw_async';
 		var $debug = false;
 		protected $Exception_On_Error = false;
+		var $cronline, $only_fallback, $php_local, $other_cronlines,$php5;
 
 		/**
 		* Constructor

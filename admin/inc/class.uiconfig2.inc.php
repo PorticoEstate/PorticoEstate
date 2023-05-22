@@ -24,7 +24,7 @@
 		var $sort;
 		var $order;
 		var $sub;
-		var $currentapp;
+		var $currentapp, $nextmatchs, $account, $bo,$acl, $location_id, $acl_location, $allrows, $filter;
 
 		var $public_functions = array
 		(

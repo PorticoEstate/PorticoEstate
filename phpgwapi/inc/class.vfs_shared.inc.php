@@ -127,6 +127,7 @@
 	*/
 	class phpgwapi_vfs_shared
 	{
+		var $meta_types,$mime_magic,$session;
 		/*
 		 * All VFS classes must have some form of 'linked directories'.
 		 * Linked directories allow an otherwise disparate "real" directory
@@ -1733,11 +1734,11 @@
 				array ('name'	=> 'cp', 'params'	=> 2),
 				array ('name'	=> 'rm', 'params'	=> 1),
 				array ('name'	=> 'ls', 'params'	=> -1),
-				array ('name'	=> 'du', 'params'	=> 1, 'func'	=> get_size),
+				array ('name'	=> 'du', 'params'	=> 1, 'func'	=> 'get_size'),
 				array ('name'	=> 'cd', 'params'	=> 1),
 				array ('name'	=> 'pwd', 'params'	=> 0),
-				array ('name'	=> 'cat', 'params'	=> 1, 'func'	=> read),
-				array ('name'	=> 'file', 'params'	=> 1, 'func'	=> file_type),
+				array ('name'	=> 'cat', 'params'	=> 1, 'func'	=> 'read'),
+				array ('name'	=> 'file', 'params'	=> 1, 'func'	=> 'file_type'),
 				array ('name'	=> 'mkdir', 'params'	=> 1),
 				array ('name'	=> 'touch', 'params'	=> 1)
 			);
@@ -1763,6 +1764,8 @@
 
 			//reset ($args);
 			//while (list (,$arg_info) = each ($args))
+			$command_ok = false;
+			$param_count_ok = false;
 			foreach($args as $key => $arg_info)
 			{
 				if ($arg_info['name'] == $argv[0])

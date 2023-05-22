@@ -42,6 +42,7 @@
 	*/
 	class admin_uiaccounts extends phpgwapi_uicommon_jquery
 	{
+		var $sort, $order, $query;
 		/**
 		 * @var array $public_functions Publicly available methods
 		 */

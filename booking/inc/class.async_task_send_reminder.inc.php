@@ -11,6 +11,7 @@
 	{
 
 		const interval_length = '60'; // in minutes
+		var $db, $booking_bo, $building_bo, $event_bo,$group_bo,$send;
 
 		public function __construct()
 		{

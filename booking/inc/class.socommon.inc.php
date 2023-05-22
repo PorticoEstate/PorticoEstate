@@ -38,6 +38,8 @@
 
 		protected static $AUTO_FIELD_ACTIONS = array('add' => true, 'update' => true);
 
+		var $table_name,$fields, $join, $like, $account;
+
 		public function __construct( $table_name, $fields )
 		{
 			$this->table_name = $table_name;
