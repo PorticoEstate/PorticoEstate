@@ -142,6 +142,10 @@
 		{
 			return serialize(array($this->validator, $this->arguments, $this->code, $this->message));
 		}
+		public function __serialize()
+		{
+			return serialize(array($this->validator, $this->arguments, $this->code, $this->message));
+		}
 
 		/**
 		 * Unserializes a sfValidatorError instance.
@@ -150,6 +154,10 @@
 		 *
 		 */
 		public function unserialize( $serialized )
+		{
+			list($this->validator, $this->arguments, $this->code, $this->message) = unserialize($serialized);
+		}
+		public function __unserialize( $serialized )
 		{
 			list($this->validator, $this->arguments, $this->code, $this->message) = unserialize($serialized);
 		}
