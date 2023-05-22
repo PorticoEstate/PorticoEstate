@@ -907,7 +907,13 @@ HTML;
 			$GLOBALS['phpgw']->translation->set_userlang($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'], true);
 		}
 
-		$redirect = json_decode(phpgw::get_var('redirect','raw', 'COOKIE'), true);
+		$_redirect_data = phpgw::get_var('redirect','raw', 'COOKIE');
+		$redirect = array();
+		if($_redirect_data)
+		{
+			$redirect = json_decode($_redirect_data, true);
+		}
+//		$redirect = json_decode(phpgw::get_var('redirect','raw', 'COOKIE'), true);
 		if ( is_array($redirect) && count($redirect) && empty($_SESSION['skip_redirect_on_login']))
 		{
 
