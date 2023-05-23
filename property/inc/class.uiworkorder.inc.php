@@ -684,8 +684,8 @@
 
 		public function query()
 		{
-			$start_date	 = urldecode($this->start_date);
-			$end_date	 = urldecode($this->end_date);
+			$start_date	 = $this->start_date;
+			$end_date	 = $this->end_date;
 
 			if ($start_date && empty($end_date))
 			{
@@ -707,8 +707,8 @@
 				'order'		 => $columns[$order[0]['column']]['data'],
 				'sort'		 => $order[0]['dir'],
 				'allrows'	 => phpgw::get_var('length', 'int') == -1 || $export,
-				'start_date' => $start_date,
-				'end_date'	 => $end_date
+				'start_date'	 => $start_date ? urldecode($start_date) : '',
+				'end_date'		 => $end_date ? urldecode($end_date) : '',
 			);
 
 			$values = $this->bo->read($params);
@@ -744,8 +744,8 @@
 				$this->district_id		 = $default_district;
 			}
 
-			$start_date	 = urldecode($this->start_date);
-			$end_date	 = urldecode($this->end_date);
+			$start_date	 = $this->start_date ? urldecode($this->start_date) : null;
+			$end_date	 = $this->end_date ? urldecode($this->end_date) : null;
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
@@ -1852,7 +1852,7 @@
 
 				$values['location_data'] = $ticket['location_data'];
 			}
-			else if (preg_match("/(^.entity.|^.catch.)/i", $origin) && $origin_id)
+			else if ($origin && preg_match("/(^.entity.|^.catch.)/i", $origin) && $origin_id)
 			{
 				$_origin				 = explode('.', $origin);
 				$_boentity				 = CreateObject('property.boentity', false, $_origin[1], $_origin[2], $_origin[3]);

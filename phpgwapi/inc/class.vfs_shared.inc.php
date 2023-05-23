@@ -116,6 +116,8 @@
 		var $real_leading_dirs_clean;
 		var $real_extra_path_clean;
 		var $real_name_clean;
+		var $mask_clean;
+		var $outside_clean;
 	}
 
 
