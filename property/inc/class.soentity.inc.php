@@ -2510,7 +2510,7 @@
 			return $receipt;
 		}
 
-		public function _save_eav( $data = array(), $location_id )
+		public function _save_eav( array $data, $location_id )
 		{
 			$location_id = (int)$location_id;
 
@@ -2551,7 +2551,7 @@
 			return $id;
 		}
 
-		protected function _edit_eav( $data = array(), $location_id, $location_name, $id )
+		protected function _edit_eav( array $data, $location_id, $location_name, $id )
 		{
 			$location_id = (int)$location_id;
 			$id			 = (int)$id;

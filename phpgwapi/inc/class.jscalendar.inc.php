@@ -19,6 +19,7 @@
 	*/
 class jscalendar
 {
+	var $phpgw_js_url, $dateformat;
 	/**
 	 * @author ralfbecker
 	 * constructor of the class

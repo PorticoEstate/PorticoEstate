@@ -29,7 +29,7 @@
 		var $colormap;
 		var $hColor;
 		var $font;
-		var $temp_file;
+		var $temp_file, $gd,$temp_dir;
 
 		function __construct()
 		{
@@ -114,9 +114,13 @@
 			if ($x >= 0 && $x <= $this->width && $y >= 0 && $y <= $this->height)
 			{
 				if ($linestyle == 'dashed')
+				{
 					ImageDashedLine($this->hImage, $this->cur_x, $this->cur_y, $x, $y, $this->hColor);
+				}
 				else
+				{
 					ImageLine($this->hImage, $this->cur_x, $this->cur_y, $x, $y, $this->hColor);
+				}
 
 				$this->cur_x = $x;
 				$this->cur_y = $y;

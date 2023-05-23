@@ -69,6 +69,7 @@
 		var $elink = array();
 		var $ondebug;
 		var $table;
+		var $map;
 
 		function __construct( $table = '', $alias = '')
 		{
@@ -836,7 +837,7 @@
 		{
 			foreach ($entities as $entity_name)
 			{
-				$link = get_ilink($entity_name);
+				$link = $this->get_ilink($entity_name);
 				$fields_return[] = $link['ffalse'];
 			}
 			return $fields_return;

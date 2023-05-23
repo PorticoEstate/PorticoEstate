@@ -461,7 +461,8 @@
 		{
 			//Save the overrided locks in the session
 			$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->session = $GLOBALS['phpgw']->session->appsession ('vfs_shared',$app, base64_encode(serialize($this->override_locks)));
+//			$this->session = $GLOBALS['phpgw']->session->appsession ('vfs_shared',$app, base64_encode(serialize($this->override_locks)));
+			$this->session = phpgwapi_cache::session_set($app,'vfs_shared', base64_encode(serialize($this->override_locks)));
 		}	
 
 		/*
@@ -472,8 +473,9 @@
 		{
 			//Reload the overriden_locks
 			$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$session_data = base64_decode($GLOBALS['phpgw']->session->appsession ('vfs_shared',$app));
-			if ($session_data)
+//			$session_data = base64_decode($GLOBALS['phpgw']->session->appsession ('vfs_shared',$app));
+			$encoded_data = phpgwapi_cache::session_get($app, 'vfs_shared');
+			if($encoded_data && $session_data = base64_decode($encoded_data))
 			{
 				$this->override_locks = unserialize($session_data);
 			}
@@ -1611,7 +1613,8 @@
 				}
 				else
 				{
-					$currentdir = $GLOBALS['phpgw']->session->appsession('vfs','');
+				//	$currentdir = $GLOBALS['phpgw']->session->appsession('vfs','');
+					$currentdir = phpgwapi_cache::session_get('vfs', 'currentdir');
 					$basedir = $this->getabsolutepath (array(
 							'string'	=> $currentdir . $sep . $data['string'],
 							'mask'	=> array ($data['relatives'][0]),
@@ -1629,7 +1632,8 @@
 				);
 			}
 
-			$GLOBALS['phpgw']->session->appsession('vfs','',$basedir);
+		//	$GLOBALS['phpgw']->session->appsession('vfs','',$basedir);
+			phpgwapi_cache::session_set('vfs', 'currentdir',$basedir);
 
 			return True;
 		}
@@ -1656,7 +1660,9 @@
 
 			$data = array_merge ($this->default_values ($data, $default_values), $data);
 
-			$currentdir = $GLOBALS['phpgw']->session->appsession('vfs','');
+//			$currentdir = $GLOBALS['phpgw']->session->appsession('vfs','');
+			$currentdir = phpgwapi_cache::session_get('vfs', 'currentdir');
+
 
 			if (!$data['full'])
 			{

@@ -51,6 +51,8 @@
 	*/
 	class dav_parser {
 
+		var $url_name;
+
 		function davtree($branch)
 		{
 			$object = array();
@@ -258,6 +260,10 @@
 		var $dav_processor = NULL;
 		var $cached_propfind = array();
 		var $str_dav_error = '';
+		var $http_client;
+
+		var $dav_host;
+		var $dav_port, $server,$session;
 
 		function http_dav_client()
 		{

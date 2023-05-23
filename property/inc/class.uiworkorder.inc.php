@@ -45,7 +45,7 @@
 		$b_account,
 		$district_id,
 		$obligation,
-		$decimal_separator;
+		$decimal_separator,$type_id,$type;
 
 		var $cat_id;
 		var $start;

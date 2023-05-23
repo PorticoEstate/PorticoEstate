@@ -26,6 +26,7 @@
 		var $fk = array();
 		var $ix = array();
 		var $uc = array();
+		var $indexes_sql;
 
 		function __construct()
 		{

@@ -61,6 +61,8 @@
 	*/
 	class phpgwapi_sessions
 	{
+		var $reason, $variableNames,$soap_functions;
+		
 		/**
 		* @var integer $cd_reason contains the error code when checking sessions
 		*/

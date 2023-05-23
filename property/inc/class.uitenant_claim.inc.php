@@ -42,6 +42,9 @@
 		var $sort;
 		var $order;
 		var $filter;
+		var $bo,$bocommon,$account, $allrows,$acl,$acl_location,$acl_read,$acl_add,$acl_edit,$acl_delete,$acl_manage;
+		var $user_id,$status,$project_id,$district_id,$simple,$boproject,$botts,$decimal_separator;
+
 		var $public_functions = array
 			(
 			'query'						 => true,

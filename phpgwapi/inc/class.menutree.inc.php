@@ -84,7 +84,7 @@
 				$treefile = array();
 				while($buffer = fgets($fd, 4096))
 				{
-					$treefile[] = buffer;
+					$treefile[] = $buffer;
 				}
 				fclose($fd);
 			}

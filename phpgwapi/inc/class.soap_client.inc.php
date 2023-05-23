@@ -56,7 +56,7 @@
 		var $local_cert;
 		var $style; //   = SOAP_DOCUMENT;
 		var $use;   //   = SOAP_LITERAL;
-
+		var $location, $client;
 
 
 		/**
