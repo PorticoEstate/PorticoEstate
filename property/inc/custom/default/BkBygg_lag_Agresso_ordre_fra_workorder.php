@@ -37,6 +37,7 @@
 		{
 
 			var $debug = false;
+			var $cats;
 
 			public function __construct()
 			{

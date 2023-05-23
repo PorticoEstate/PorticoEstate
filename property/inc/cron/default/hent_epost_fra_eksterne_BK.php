@@ -71,7 +71,7 @@
 	{
 
 		var $items_to_move = array();
-		protected $config;
+		protected $config, $join;
 
 		public function __construct()
 		{
@@ -787,9 +787,14 @@
 		{
 			$request = new MoveItemType();
 
+			$request->ToFolderId = new \jamesiarmes\PhpEws\Type\TargetFolderIdType();
+			$request->ToFolderId->FolderId = new \jamesiarmes\PhpEws\Type\FolderIdType();
+
 			$request->ToFolderId->FolderId->Id			 = $folder_info['id'];
 			$request->ToFolderId->FolderId->ChangeKey	 = $folder_info['changekey'];
 
+			$request->ItemIds = new NonEmptyArrayOfBaseItemIdsType();
+			$request->ItemIds->ItemId = new ItemIdType();
 			$request->ItemIds->ItemId->Id		 = $item3->ItemId->Id;
 			$request->ItemIds->ItemId->ChangeKey = $item3->ItemId->ChangeKey;
 

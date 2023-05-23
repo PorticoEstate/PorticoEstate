@@ -35,6 +35,7 @@
 	class update_workorder_status extends property_cron_parent
 	{
 
+		var $bocommon,$date;
 		public function __construct()
 		{
 			parent::__construct();

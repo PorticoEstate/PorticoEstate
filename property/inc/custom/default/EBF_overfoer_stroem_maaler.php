@@ -127,7 +127,7 @@
 			$this->db->query("SELECT id"
 				. " FROM fm_bim_item"
 				. " WHERE location_id = {$location_id_meter_register}"
-				. " AND location_code='{$location_code}'"
+				. " AND location_code='{$values['location_code']}'"
 				. " AND json_representation->>'maaler_nr' = '{$maaler_nr}'"
 				. " AND json_representation->>'category' = '1'", __LINE__, __FILE__);
 

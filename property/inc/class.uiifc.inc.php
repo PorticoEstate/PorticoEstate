@@ -42,7 +42,7 @@
 		var $sub;
 		var $currentapp;
 
-		var $bo,$account,$cats, $nextmatchs,$allrows,$cat_id,$filter,
+		var $bo,$account,$cats, $nextmatchs,$allrows,$cat_id,$filter,$bocommon,
 		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage,$_category_acl;
 
 		var $public_functions = array
@@ -60,6 +60,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app']			 = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = 'property::ifc';
 			//	$this->currentapp		= $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->bocommon										 = CreateObject('property.bocommon');
 			$this->cats											 = CreateObject('phpgwapi.categories');
 			$this->nextmatchs									 = CreateObject('phpgwapi.nextmatchs');
 			$this->account										 = $GLOBALS['phpgw_info']['user']['account_id'];

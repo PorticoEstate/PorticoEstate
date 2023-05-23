@@ -55,6 +55,7 @@
 		protected $skip_email				 = false;
 		protected $export;
 		protected $skip_update_voucher_id	 = false;
+		var $responsible,$bocommon,$dateformat,$datetimeformat,$config,$send;
 
 		function __construct()
 		{

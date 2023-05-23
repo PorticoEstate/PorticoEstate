@@ -55,6 +55,7 @@
 		var $header			 = array('Bestilling', 'Fakt. Nr', 'Konto', 'Objekt', 'DIM 6', 'MVA',
 			'Belop [kr]');
 
+		var $db,$bocommon,$dateformat,$datetimeformat,$next_bilagsnr,$cats;
 		function __construct()
 		{
 			$this->db					 = clone($GLOBALS['phpgw']->db);

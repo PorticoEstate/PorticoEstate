@@ -195,6 +195,12 @@
 			$uicols		 = $this->get_uicols();
 			$content	 = array();
 
+			$lang_yes_no = array(
+				'yes'	 => lang('yes'),
+				'no'	 => lang('no'),
+				''		 => lang('no'),
+			);
+
 			if (isset($gab_list) && is_array($gab_list))
 			{
 				$j = 0;

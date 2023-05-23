@@ -38,6 +38,7 @@
 		var $function_name	 = 'import_epostlister_lrs';
 		var $debug			 = true;
 		protected $receipt		 = array();
+		var $config,$send,$updated_tickects_per_file;
 
 		function __construct()
 		{
@@ -560,6 +561,7 @@ SQL;
 	class helpdesk_account extends helpdesk_hook_helper
 	{
 
+		var $config;
 		public function __construct()
 		{
 			$this->config = CreateObject('phpgwapi.config', 'helpdesk')->read();

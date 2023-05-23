@@ -3,6 +3,7 @@
 	class import_conversion
 	{
 
+		var $account,$boinvoice,$soinvoice,$boworkorder,$soproject,$join,$config;
 		protected $botts
 			, $debug;
 		public $messages = array();

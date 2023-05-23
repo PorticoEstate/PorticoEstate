@@ -37,7 +37,7 @@
 	class oppdater_betalte_faktura_BK extends property_cron_parent
 	{
 
-		var $b_accounts;
+		var $b_accounts, $soap_url,$soap_username, $soap_password;
 		public function __construct()
 		{
 			parent::__construct();

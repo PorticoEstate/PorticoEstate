@@ -25,6 +25,7 @@
 		public $fields						 = array('BA', 'Bilagsnr', 'Bilagsdato', 'Periode', 'Art',
 			'AV', 'Netto beløp', 'Fakturanr', 'Ordrenr');
 		public $filename_template;
+		var $responsible,$bocommon,$dateformat, $datetimeformat,$receipt;
 
 		public function __construct( $location_id, $debug = false, $get_template = false )
 		{

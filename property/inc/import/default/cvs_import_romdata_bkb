@@ -8,6 +8,7 @@
 		public $warnings = array();
 		public $errors	 = array();
 		protected $debug = true;
+		var $solocation;
 
 		public function __construct()
 		{
@@ -201,6 +202,6 @@
 		 */
 		protected function is_null( $value )
 		{
-			return ((trim($value) == "") || ($data == "<NULL>") || ($data == "''"));
+			return ((trim($value) == "") || ($value == "<NULL>") || ($value == "''"));
 		}
 	}

@@ -48,6 +48,7 @@
 		var $mail_receipt			 = true;
 		var $function_name			 = 'import_from_scanner';
 		var $header					 = array('type', 'descr', 'target', 'user');
+		var $bocommon,$bofiles,$db,$bolocation,$receipt,$botts,$currentrecord,$account;
 
 		function __construct()
 		{

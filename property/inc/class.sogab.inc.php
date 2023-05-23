@@ -36,7 +36,7 @@
 
 		var $gab_insert_level;
 		var $payment_date = array();
-		var $custom, $bocommon, $config, $total_records, $uicols;
+		var $custom, $bocommon, $config, $total_records, $uicols,$cols_extra;
 		var $account, $db, $db2, $join, $left_join, $like;
 
 		function __construct()
