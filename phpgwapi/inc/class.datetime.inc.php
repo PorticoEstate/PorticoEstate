@@ -1043,12 +1043,12 @@
 
 			/* do strtotime calculations just once */
 
-			if (!ctype_digit($start_date))
+			if (!ctype_digit((string)$start_date))
 			{
 				$start_date = self::datetime_to_timestamp($start_date);
 			}
 
-			if (!ctype_digit($end_date))
+			if (!ctype_digit((string)$end_date))
 			{
 				$end_date = self::datetime_to_timestamp($end_date);
 			}

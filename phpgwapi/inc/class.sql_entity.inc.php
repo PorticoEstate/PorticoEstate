@@ -159,8 +159,8 @@
 			if ($this->alias)
 			{
 				$this->field_alias();
-				$this->fields = str_replace(PHPGW_SQL_EASS, $this->alias, $this->fields);
-				$this->criteria = str_replace(PHPGW_SQL_EASS, $this->alias, $this->criteria);
+				$this->fields = $this->fields ? str_replace(PHPGW_SQL_EASS, $this->alias, $this->fields) : null;
+				$this->criteria = $this->criteria ? str_replace(PHPGW_SQL_EASS, $this->alias, $this->criteria) : null;
 				$this->ldebug('run_alias', array('Fields' => $this->fields,
 					'Criteria' => $this->criteria,
 					'Alias' => $this->alias));

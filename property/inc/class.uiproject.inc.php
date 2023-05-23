@@ -1000,8 +1000,8 @@ JS;
 			$order		 = phpgw::get_var('order');
 			$draw		 = phpgw::get_var('draw', 'int');
 			$columns	 = phpgw::get_var('columns');
-			$start_date	 = urldecode(phpgw::get_var('start_date'));
-			$end_date	 = urldecode(phpgw::get_var('end_date'));
+			$start_date	 = phpgw::get_var('start_date');
+			$end_date	 = phpgw::get_var('end_date');
 			$skip_origin = phpgw::get_var('skip_origin', 'bool');
 			$export		 = phpgw::get_var('export', 'bool');
 
@@ -1018,7 +1018,8 @@ JS;
 				'order'			 => $columns[$order[0]['column']]['data'],
 				'sort'			 => $order[0]['dir'],
 				'allrows'		 => phpgw::get_var('length', 'int') == -1 || $export,
-				'start_date'	 => $start_date,
+				'start_date'	 => $start_date ? urldecode($start_date) : '',
+				'end_date'		 => $end_date ? urldecode($end_date) : '',
 				'end_date'		 => $end_date,
 				'skip_origin'	 => $skip_origin
 			);
