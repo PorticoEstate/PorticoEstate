@@ -72,7 +72,7 @@
 		$p_num,
 		$condition_survey_id,
 		$responsible_unit,
-		$recommended_year;
+		$recommended_year, $type,$type_id;
 
 		var $public_functions = array
 			(

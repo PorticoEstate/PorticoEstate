@@ -43,6 +43,10 @@
 		var $order;
 		var $filter;
 		var $currentapp;
+		var $acl,$acl_location,$acl_read,$acl_add,$acl_edit,$acl_delete,$acl_manage;
+		var $nextmatchs,$create_html,$account,
+		$bo,$boworkorder,$boproject,$bopricebook,$bocommon,$config,$chapter_id,
+		$allrows,$entity_id, $wo_hour_cat_id;
 		var $public_functions = array
 			(
 			'index'				 => true,
@@ -61,7 +65,7 @@
 			'import_calculation' => true,
 			//		'send_all_orders'	=> true
 		);
-
+		
 		function __construct()
 		{
 			parent::__construct();

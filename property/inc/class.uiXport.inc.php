@@ -46,7 +46,8 @@
 		var $sort;
 		var $order;
 		var $filter;
-		var $cat_id;
+		var $cat_id,$bocommon,$bo,$invoice,$contacts;
+		var $acl,$acl_location,$acl_read,$acl_add,$acl_edit,$acl_delete,$acl_manage;
 
 		function __construct()
 		{

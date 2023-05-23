@@ -21,10 +21,10 @@
 		var $packet_tx;
 		var $packet_rx;
 		var $packet_loss;
-		var $reponse_min;
-		var $reponse_max;
-		var $reponse_avg;
-		var $reponse_mdev;
+		var $response_min;
+		var $response_max;
+		var $response_avg;
+		var $response_mdev;
 
 		var $raw_array_of_data = array();
 
@@ -39,10 +39,10 @@
 			$this->packet_tx         = 0;
 			$this->packet_rx         = 0;
 			$this->packet_loss       = 0;
-			$this->reponse_min       = '';
-			$this->reponse_max       = '';
-			$this->reponse_avg       = '';
-			$this->reponse_mdev      = '';
+			$this->response_min       = '';
+			$this->response_max       = '';
+			$this->response_avg       = '';
+			$this->response_mdev      = '';
 			$this->raw_array_of_data = array();
 		}
 

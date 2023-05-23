@@ -12,6 +12,7 @@
 	class phpgwapi_jasper_wrapper
 	{
 
+		var $java_classpath, $db_user,$db_pass,$connection_string;
 		public function __construct()
 		{
 			if (stristr(PHP_OS, 'WIN')) 

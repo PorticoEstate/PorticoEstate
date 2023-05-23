@@ -39,6 +39,7 @@
 		var $external_from_value;
 		var $external_criteria_value;
 		var $_criteria_built = False;
+		var $false_path,$select_fields,$fields,$insert_entities,$order,$sql_inserts,$sql_updates,$sql_deletes;
 
 		/**
 		 * @var string $order_string the ORDER BY component of a SQL string
@@ -1185,6 +1186,7 @@
 			return;
 // 			}
 
+			$output = '';
 			$classname = '<strong>Class: ' . get_class($this) .
 				"\n<br>Function: $myfoo\n<br></strong>";
 			switch ($type)

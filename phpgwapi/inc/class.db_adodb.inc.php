@@ -362,11 +362,11 @@
 					$this->transaction_abort();
 					if($file)
 					{
-						trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $sql\n in File: $file\n on Line: $line\n", E_USER_ERROR);
+						trigger_error('Error: ' . $e->getMessage() . "<br>SQL: $Query_String\n in File: $file\n on Line: $line\n", E_USER_ERROR);
 					}
 					else
 					{
-						trigger_error("$sql\n". $e->getMessage(), E_USER_ERROR);
+						trigger_error("$Query_String\n". $e->getMessage(), E_USER_ERROR);
 					}
 					exit;
 				}

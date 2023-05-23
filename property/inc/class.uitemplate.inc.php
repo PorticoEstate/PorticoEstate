@@ -43,6 +43,10 @@
 		var $order;
 		var $filter;
 		var $currentapp;
+		var $bo,$bocommon,
+		$allrows,$acl,$acl_location,$acl_read,$acl_add,$acl_edit,$acl_delete,$acl_manage;
+		var $chapter_id,$bowo_hour;
+
 		var $public_functions = array
 			(
 			'query'			 => true,

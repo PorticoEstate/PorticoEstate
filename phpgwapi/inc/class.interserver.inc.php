@@ -34,6 +34,7 @@
 		var $authed = False;
 		var $sessionid = '';
 		var $kp3 = '';
+		var $server;
 
 		/* These are now entered as defaults if the admin forgot to enter the full URL */
 		var $urlparts = array();

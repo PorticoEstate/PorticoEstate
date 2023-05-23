@@ -42,6 +42,9 @@
 		var $sort;
 		var $order;
 		var $filter;
+		var $account,$bo,$bocommon,$allrows, $cats,$acl, $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete, $acl_manage;
+		var $role, $custom, $vendor_id, $member_id,$p_num,$status_id,$location_code;
+
 		var $public_functions = array
 			(
 			'query'					 => true,
