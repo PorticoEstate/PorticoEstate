@@ -74,7 +74,7 @@
 	{
 
 		var $items_to_move = array();
-		protected $config;
+		protected $config, $join;
 
 		public function __construct()
 		{

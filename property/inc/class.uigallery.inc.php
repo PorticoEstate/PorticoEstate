@@ -41,7 +41,7 @@
 		var $sort;
 		var $order;
 		var $sub;
-		var $location_info;
+		var $location_info,$location_id;
 		var $currentapp, $cat_id, $account, $bo, $bocommon,$mime_type,$allrows,$user_id,
 		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage;
 
@@ -118,7 +118,6 @@
 			$ch	 = curl_init($url);
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
 			$raw = curl_exec($ch);
 			curl_close($ch);
 			echo $raw;

@@ -37,6 +37,7 @@
 	{
 
 		var $b_accounts = array();
+		var $join, $connected;
 
 		public function __construct()
 		{
@@ -159,7 +160,7 @@ HTML;
 	class boei
 	{
 
-		protected $db;
+		protected $db,$connected;
 
 		function __construct()
 		{

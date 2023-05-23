@@ -5,6 +5,7 @@
 
 	class update_ticket_on_project_change extends property_boproject
 	{
+		var $historylog, $botts,$db, $like,$join, $left_join;
 
 		function __construct()
 		{

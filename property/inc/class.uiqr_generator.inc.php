@@ -33,7 +33,7 @@
 	class property_uiqr_generator extends phpgwapi_uicommon_jquery
 	{
 
-		private $bo;
+		var $acl_location, $acl_read;
 		public $public_functions = array
 		(
 			'index'					 => true,
@@ -150,7 +150,7 @@
 					$active_tab		 = 'step_2';
 					$lang_submit	 = lang('continue');
 					$tabs['step_1']	 = array('label'	 => lang('choose file'), 'link'	 => self::link(array(
-							'menuaction' => 'property.uiqr_generator.index', 'id'		 => $id, 'step'		 => 0,
+							'menuaction' => 'property.uiqr_generator.index', 'step'		 => 0,
 							'sheet_id'	 => $sheet_id, 'start_line' => $start_line)));
 					$tabs['step_2']	 = array('label' => lang('choose sheet'), 'link' => '#step_2');
 					$tabs['step_3']	 = array('label'		 => lang('choose start line'), 'link'		 => null,
@@ -164,10 +164,10 @@
 					$active_tab		 = 'step_3';
 					$lang_submit	 = lang('continue');
 					$tabs['step_1']	 = array('label'	 => lang('choose file'), 'link'	 => self::link(array(
-							'menuaction' => 'property.uiqr_generator.index', 'id'		 => $id, 'step'		 => 0,
+							'menuaction' => 'property.uiqr_generator.index', 'step'		 => 0,
 							'sheet_id'	 => $sheet_id, 'start_line' => $start_line)));
 					$tabs['step_2']	 = array('label'	 => lang('choose sheet'), 'link'	 => self::link(array(
-							'menuaction' => 'property.uiqr_generator.index', 'id'		 => $id, 'step'		 => 1,
+							'menuaction' => 'property.uiqr_generator.index', 'step'		 => 1,
 							'sheet_id'	 => $sheet_id, 'start_line' => $start_line)));
 					$tabs['step_3']	 = array('label' => lang('choose start line'), 'link' => '#step_3');
 					$tabs['step_4']	 = array('label'		 => lang('choose columns'), 'link'		 => null,
@@ -179,13 +179,13 @@
 					$active_tab		 = 'step_4';
 					$lang_submit	 = lang('import');
 					$tabs['step_1']	 = array('label'	 => lang('choose file'), 'link'	 => self::link(array(
-							'menuaction' => 'property.uiqr_generator.index', 'id'		 => $id, 'step'		 => 0,
+							'menuaction' => 'property.uiqr_generator.index', 'step'		 => 0,
 							'sheet_id'	 => $sheet_id, 'start_line' => $start_line)));
 					$tabs['step_2']	 = array('label'	 => lang('choose sheet'), 'link'	 => self::link(array(
-							'menuaction' => 'property.uiqr_generator.index', 'id'		 => $id, 'step'		 => 1,
+							'menuaction' => 'property.uiqr_generator.index', 'step'		 => 1,
 							'sheet_id'	 => $sheet_id, 'start_line' => $start_line)));
 					$tabs['step_3']	 = array('label'	 => lang('choose start line'), 'link'	 => self::link(array(
-							'menuaction' => 'property.uiqr_generator.index', 'id'		 => $id, 'step'		 => 2,
+							'menuaction' => 'property.uiqr_generator.index', 'step'		 => 2,
 							'sheet_id'	 => $sheet_id, 'start_line' => $start_line)));
 					$tabs['step_4']	 = array('label' => lang('choose columns'), 'link' => '#step_4');
 					$tabs['step_5']	 = array('label'		 => lang('completed'), 'link'		 => null,

@@ -41,6 +41,7 @@
 		protected $connection	 = false;
 		protected $receipt		 = array();
 		protected $type			 = '211';
+		var $join;
 
 		function __construct()
 		{

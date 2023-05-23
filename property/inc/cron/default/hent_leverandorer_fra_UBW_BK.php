@@ -37,6 +37,7 @@
 	{
 
 		var $b_accounts = array();
+		var $join;
 
 		public function __construct()
 		{

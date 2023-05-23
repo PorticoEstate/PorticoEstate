@@ -366,7 +366,7 @@
 			$id			 = $soentity->_save_eav($value_set, $location_id);
 
 			$historylog	 = CreateObject('property.historylog', 'entity_1_23');
-			$historylog->add('SO', $id, $date, false, $attrib_id = 2, time());
+			$historylog->add('SO', $id, 'Ny', false, $attrib_id = 2, time());
 			return $id;
 		}
 

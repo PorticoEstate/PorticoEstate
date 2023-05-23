@@ -34,7 +34,7 @@
 
 	class oppdater_utgaatt_objekt extends property_cron_parent
 	{
-
+		var $soadmin_location;
 		public function __construct()
 		{
 			parent::__construct();
@@ -52,6 +52,9 @@
 			$m = count($location_types);
 
 			$this->db->query("UPDATE fm_location" . $m . " set	status= 2  WHERE category='99'", __LINE__, __FILE__);
+
+			$joinmethod  = '';
+			$paranthesis  = '';
 
 			for ($type_id = $m; $type_id > 1; $type_id--)
 			{
@@ -136,7 +139,7 @@
 
 				$this->receipt['message'][] = array('msg' => lang('%1 location %2 has been updated to not active of %3 already not active', $j, $location_types[($type_id - 2)]['descr'], count($update)));
 
-				$log_msg .= lang('%1 location %2 has been updated to not active of %3 already not active', $j, $location_types[($type_id - 2)]['descr'], count($update));
+				$log_msg = lang('%1 location %2 has been updated to not active of %3 already not active', $j, $location_types[($type_id - 2)]['descr'], count($update));
 				unset($outdated);
 				unset($update);
 				unset($joinmethod);

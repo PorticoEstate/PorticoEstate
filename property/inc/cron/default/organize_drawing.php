@@ -42,9 +42,11 @@
 		var $suffix			 = 'dwg';
 		var $bypass			 = false; // bypass location check (only for debugging)
 		var $function_name	 = 'organize_drawing';
+		var $bocommon,$vfs,$rootdir,$fakebase,$db,$receipt,$account;
 
 		function __construct()
 		{
+			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon	 = CreateObject('property.bocommon');
 			$this->vfs		 = CreateObject('phpgwapi.vfs');
 			$this->rootdir	 = $this->vfs->basedir;
@@ -221,7 +223,7 @@
 			$dir_handle = @opendir($this->dir);
 
 			$i			 = 0;
-			$myfilearray = '';
+			$myfilearray = array();
 			while ($file		 = @readdir($dir_handle))
 			{
 				if ((strtolower(substr($file, -3, 3)) == $this->suffix) && is_file($this->dir . '/' . $file))
