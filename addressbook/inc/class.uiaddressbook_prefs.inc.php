@@ -21,7 +21,7 @@
   \**************************************************************************/
 class uiaddressbook_prefs 
 {
-	var $prefs; 
+	var $prefs, $cat_id,$select_fields, $cache_is_empty; 
  	var $template;
 	//@param selected_fields 
 	//@discussion transient selected fields. Allways holds what the fields

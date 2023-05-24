@@ -37,6 +37,7 @@
 		protected $field_of_responsibility_id;
 		protected $field_of_responsibility_name;
 		protected $permission_array;
+		protected $id;
 
 		public function __construct( int $id = null)
 		{

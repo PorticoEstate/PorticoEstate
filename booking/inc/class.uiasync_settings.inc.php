@@ -20,6 +20,7 @@
 			'booking_async_task_delete_access_log_enabled',
 			'booking_async_task_anonyminizer_enabled'
 		);
+		var $bo;
 
 		public function __construct()
 		{

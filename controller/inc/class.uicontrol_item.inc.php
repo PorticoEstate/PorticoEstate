@@ -63,6 +63,7 @@
 			'delete_item_list'				 => true,
 			'delete_regulation_reference'	 => true
 		);
+		var $so_control_item_list,$_category_acl;
 
 		public function __construct()
 		{

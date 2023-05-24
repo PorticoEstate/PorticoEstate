@@ -39,7 +39,7 @@
 	{
 
 		var $grants;
-		var $db;
+		var $db,$like,$join,$left_join,$acl_location,$custom,$uicols;
 		var $account;
 
 		/**

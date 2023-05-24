@@ -51,7 +51,7 @@
 			$permissions,
 			$called_class_arr,
 			$currentapp,
-			$bo;
+			$bo,$template;
 
 		public function __construct()
 		{

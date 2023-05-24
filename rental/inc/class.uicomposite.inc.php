@@ -33,6 +33,7 @@
 			'get_files' => true
 		);
 
+		var $acl_location, $acl_read,$acl_add,$acl_edit,$acl_delete;
 		public function __construct()
 		{
 			parent::__construct();

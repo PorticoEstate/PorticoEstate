@@ -10,8 +10,8 @@
 	class activitycalendar_uiactivities extends activitycalendar_uicommon
 	{
 
-		protected $so_org;
-		protected $so_group;
+		protected $bo_org,$so_org;
+		protected $bo_group,$so_group;
 		protected $so_contact;
 		protected $so_activity;
 		protected $so_arena;

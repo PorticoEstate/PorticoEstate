@@ -105,6 +105,7 @@
 		 */
 		private $acl_edit;
 
+		private $acl_delete;
 		/**
 		 * @var bool $allrows display all rows of result set?
 		 */
@@ -133,6 +134,7 @@
 			'no_access' => true
 		);
 
+		var $bocommon, $type,$type_id, $location_info, $_category_acl;
 		public function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
@@ -862,7 +864,7 @@
 				(
 				'name' => "0",
 				'values' => json_encode(array(array('key' => 'amount', 'label' => lang('amount'),
-						'sortable' => true, 'resizeable' => true, 'formatter' => FormatterRight),
+						'sortable' => true, 'resizeable' => true, 'formatter' => 'FormatterRight'),
 					array('key' => 'date', 'label' => lang('date'), 'sortable' => true, 'resizeable' => true),
 					array('key' => 'delete', 'label' => lang('delete'), 'sortable' => false, 'resizeable' => false)))
 			);

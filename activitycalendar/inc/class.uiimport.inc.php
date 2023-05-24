@@ -29,7 +29,7 @@
 			'index' => true,
 			'import_organizations' => true
 		);
-
+		var $path, $office;
 		public function __construct()
 		{
 			parent::__construct();

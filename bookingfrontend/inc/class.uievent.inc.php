@@ -15,6 +15,7 @@
 		);
 
 		protected $application_ui, $customer_name;
+		var $booking_bo, $resource_bo, $building_bo,$assoc_bo;
 
 		public function __construct()
 		{

@@ -16,6 +16,7 @@
 			'edit'	 => true
 		);
 
+		var $org_bo, $system_message_bo,$booking_bo,$allocation_so,$application_ui,$application_bo;
 		public function __construct()
 		{
 			parent::__construct();

@@ -27,7 +27,8 @@ class addressbook_uiaddressbook_persons extends phpgwapi_uicommon
 	var $prefs;
 	var $abc;
 	var $currentapp;
-	var $fields;
+	var $fields, $cats, $owner, $tab_main, $tab_main_persons, $tab_main_organizations,
+	$cat_id, $_category_acl;
 
 	var $debug = False;
 	

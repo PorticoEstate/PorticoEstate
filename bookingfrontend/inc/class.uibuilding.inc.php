@@ -15,6 +15,7 @@
 		);
 		protected $module;
 
+		var $booking_bo, $resource_bo;
 		public function __construct()
 		{
 			parent::__construct();

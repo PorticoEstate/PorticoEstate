@@ -52,6 +52,7 @@
 			$payment_methods,
 			$acl_location;
 		private $bo;
+		var $permissions, $config;
 
 		public function __construct()
 		{

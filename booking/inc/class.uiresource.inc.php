@@ -34,6 +34,8 @@
 			'add_paricipant_limit' => true
 		);
 
+		var $fields, $display_name, $sobuilding, $activity_bo,$facility_bo, $rescategory_bo;
+
 		public function __construct()
 		{
 			parent::__construct();

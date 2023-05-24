@@ -12,6 +12,7 @@
 			'edit' => true,
 		);
 
+		var $display_name,$fields;
 
 		public function __construct()
 		{

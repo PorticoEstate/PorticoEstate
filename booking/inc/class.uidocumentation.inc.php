@@ -23,6 +23,7 @@
 			'delete' => true,
 		);
 
+		var $fields, $display_name;
 		public function __construct()
 		{
 			parent::__construct();
