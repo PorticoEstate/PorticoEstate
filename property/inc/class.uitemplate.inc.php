@@ -800,7 +800,7 @@
 				'lang_no_tolerance'				 => lang('Select tolerance'),
 				'lang_tolerance_statustext'		 => lang('Select the tolerance for this activity.'),
 				'lang_grouping'					 => lang('grouping'),
-				'grouping_list'					 => $this->bo->get_grouping_list(isset($values['grouping_id']) ? $values['grouping_id'] : '', isset($template_id) ? $template_id : ''),
+				'grouping_list'					 => $this->bo->get_grouping_list(isset($template_id) ? $template_id : '', isset($values['grouping_id']) ? $values['grouping_id'] : ''),
 				'select_grouping'				 => 'values[grouping_id]',
 				'lang_no_grouping'				 => lang('Select grouping'),
 				'lang_grouping_statustext'		 => lang('Select the grouping for this activity.'),

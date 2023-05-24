@@ -29,7 +29,7 @@
 			$this->rowColor[1]	 = $GLOBALS['phpgw_info']['theme']['row_off'];
 		}
 
-		function section_item( $pref_link = '', $pref_text = '', $bgcolor )
+		function section_item( $pref_link = '', $pref_text = '', $bgcolor = '')
 		{
 			$this->t->set_var('row_link', $pref_link);
 			$this->t->set_var('row_text', $pref_text);

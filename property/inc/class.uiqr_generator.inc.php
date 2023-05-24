@@ -208,7 +208,10 @@
 			if (!$step)
 			{
 				phpgwapi_cache::session_clear('property', 'qr_generator_import_file');
-				unlink($cached_file);
+				if($cached_file)
+				{
+					unlink($cached_file);
+				}
 			}
 			else if ($cached_file)
 			{

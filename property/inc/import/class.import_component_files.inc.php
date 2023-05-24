@@ -5,7 +5,7 @@
 
 		private $receipt = array();
 		protected
-			$alc,
+			$acl,
 			$db,
 			$sogeneric_document,
 			$fakebase,
@@ -17,7 +17,9 @@
 			$last_files_added,
 			$list_component_id,
 			$paths_from_file,
-			$paths_empty;
+			$paths_empty,
+			$fields,
+			$identificator;
 
 		public function __construct()
 		{

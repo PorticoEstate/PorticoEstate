@@ -27,7 +27,9 @@
 			'edit_yes' => true,
 			'delete' => true,
 		);
-
+		var $nextmatchs, $account,$bo,
+		$bocommon,$sms, $acl,$acl_location, $start,$query, $sort,$order, $allrows,$db, $cat_id,$filter;
+   
 		function __construct()
 		{
 			//	$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
@@ -63,7 +65,7 @@
 
 			echo parse_navbar();
 
-			$err = urldecode(phpgw::get_var('err'));
+			$err = phpgw::get_var('err');
 
 			if ($err)
 			{
@@ -134,22 +136,28 @@
 
 			echo parse_navbar();
 
-			$board_id = urldecode(phpgw::get_var('board_id'));
+			$board_id = phpgw::get_var('board_id');
+			$board_code = '';
+			if($board_id)
+			{
+				$board_id = urldecode(phpgw::get_var('board_id'));
+				$sql = "SELECT board_code FROM phpgw_sms_featboard WHERE board_id='$board_id'";
+				$this->db->query($sql, __LINE__, __FILE__);
+				$this->db->next_record();
+				$board_code = $this->db->f('board_code');
+	
+			}
 
-			$sql = "SELECT board_code FROM phpgw_sms_featboard WHERE board_id='$board_id'";
-			$this->db->query($sql, __LINE__, __FILE__);
-			$this->db->next_record();
-			$board_code = $this->db->f('board_code');
 
 			if (!$board_code)
 			{
-				$board_code = $_GET[tag];
+				$board_code = $_GET['tag'];
 			}
 			if ($board_code)
 			{
 				$board_code = strtoupper($board_code);
-				$line = $_GET[line];
-				$type = $_GET[type];
+				$line = $_GET['line'];
+				$type = $_GET['type'];
 				switch ($type)
 				{
 					case "xml":
@@ -158,9 +166,9 @@
 						break;
 					case "html":
 					default:
-						$bodybgcolor = $_GET[bodybgcolor];
-						$oddbgcolor = $_GET[oddbgcolor];
-						$evenbgcolor = $_GET[evenbgcolor];
+						$bodybgcolor = $_GET['bodybgcolor'];
+						$oddbgcolor = $_GET['oddbgcolor'];
+						$evenbgcolor = $_GET['evenbgcolor'];
 						$content = $this->sms->outputtohtml($board_code, $line, $bodybgcolor, $oddbgcolor, $evenbgcolor);
 						echo $content;
 				}
@@ -194,7 +202,7 @@
 
 			echo parse_navbar();
 
-			$err = urldecode(phpgw::get_var('err'));
+			$err = phpgw::get_var('err');
 			$board_code = phpgw::get_var('board_code');
 			$email = phpgw::get_var('email', 'email');
 			$template = phpgw::get_var('template');
@@ -317,7 +325,7 @@
 
 			echo parse_navbar();
 
-			$err = urldecode(phpgw::get_var('err'));
+			$err = phpgw::get_var('err');
 			$board_id = phpgw::get_var('board_id');
 
 			if ($err)

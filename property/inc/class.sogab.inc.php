@@ -657,7 +657,7 @@
 			return $receipt;
 		}
 
-		function update( $gab_update, $values_attribute = array(), $receipt )
+		function update( $gab_update, $values_attribute = array(), $receipt = array())
 		{
 			$value_set = array();
 
