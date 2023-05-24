@@ -29,6 +29,7 @@
 			'get_persons_by_cat' => true
 		);
 		
+		var $cat, $contacts, $receipt;
 		function __construct()
 		{
 			parent::__construct();

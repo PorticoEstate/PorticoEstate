@@ -41,6 +41,7 @@
 			'import_regulations' => true
 		);
 
+		var $message;
 		public function __construct()
 		{
 			parent::__construct();

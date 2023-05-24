@@ -3492,9 +3492,9 @@ class calendar_boicalendar
 						$alarm_prior_min = substr($alarm_prior, 0, $string_pos);
 					}			
 
-					$imported_alarm[$a] = array(	time => mktime($ical['event'][$i]['dtstart']['hour'] - $alarm_prior_hours,$ical['event'][$i]['dtstart']['min'] - $alarm_prior_min + $offset_mins,$ical['event'][$i]['dtstart']['sec'],$ical['event'][$i]['dtstart']['month'],$ical['event'][$i]['dtstart']['mday'] - $alarm_prior_days,$ical['event'][$i]['dtstart']['year']),
-							owner => $GLOBALS['phpgw_info']['user']['account_id'],
-							enabled => 1
+					$imported_alarm[$a] = array(	'time' => mktime($ical['event'][$i]['dtstart']['hour'] - $alarm_prior_hours,$ical['event'][$i]['dtstart']['min'] - $alarm_prior_min + $offset_mins,$ical['event'][$i]['dtstart']['sec'],$ical['event'][$i]['dtstart']['month'],$ical['event'][$i]['dtstart']['mday'] - $alarm_prior_days,$ical['event'][$i]['dtstart']['year']),
+							'owner' => $GLOBALS['phpgw_info']['user']['account_id'],
+							'enabled' => 1
 							);
 				}
 				$so_event->add_attribute('alarm', $imported_alarm);
@@ -3664,25 +3664,25 @@ class calendar_boicalendar
 
 									switch ( $last_occurence_weekday )
 									{
-										case MO:
+										case 'MO':
 											$last_weekday = 1;
 											break;
-										case TU:
+										case 'TU':
 											$last_weekday = 2;
 											break;
-										case WE:
+										case 'WE':
 											$last_weekday = 3;
 											break;
-										case TH:
+										case 'TH':
 											$last_weekday = 4;
 											break;
-										case FR:
+										case 'FR':
 											$last_weekday = 5;
 											break;
-										case SA:
+										case 'SA':
 											$last_weekday = 6;
 											break;
-										case SU:
+										case 'SU':
 											$last_weekday = 7;
 											break;
 									}	

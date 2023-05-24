@@ -77,6 +77,7 @@
 			'get_controls_by_control_area' => true,
 			'get_control_details' => true
 		);
+		var $manage,$so_check_list,$district_id;
 
 		public function __construct()
 		{

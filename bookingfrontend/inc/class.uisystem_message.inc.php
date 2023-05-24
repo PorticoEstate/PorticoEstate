@@ -65,7 +65,7 @@
 
 				if (!$errors)
 				{
-					$system_message['title'] = $system_message['building_name'] . " - " . $system . $system_message['title'];
+					$system_message['title'] = $system_message['building_name'] . " - " . $system_message['title'];
 					$receipt = $this->bo->add($system_message);
 					self::redirect(array('menuaction' => $this->module . '.uibuilding.show.index',
 						'id' => $system_message['building_id']));

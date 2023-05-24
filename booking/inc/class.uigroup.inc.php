@@ -20,6 +20,8 @@
 		);
 		protected $module;
 
+		var $display_name,$activity_bo;
+
 		public function __construct()
 		{
 			parent::__construct();

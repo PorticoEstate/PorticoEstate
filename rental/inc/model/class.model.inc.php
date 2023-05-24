@@ -10,6 +10,9 @@
 		protected $field_of_responsibility_id;
 		protected $field_of_responsibility_name;
 		protected $permission_array;
+		protected $id;
+		protected $export_format;
+		protected $extra_adjustment;
 
 		public function __construct( int $id = null)
 		{

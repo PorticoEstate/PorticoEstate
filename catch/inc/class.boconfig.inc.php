@@ -23,7 +23,7 @@
 		var $filter;
 		var $sort;
 		var $order;
-		var $cat_id;
+		var $cat_id,$so,$bocommon,$use_session,$allrows,$total_records;
 
 		public function __construct($session=false)
 		{

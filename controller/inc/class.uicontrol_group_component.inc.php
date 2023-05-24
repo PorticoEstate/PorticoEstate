@@ -41,6 +41,7 @@
 		var $currentapp;
 		var $type_id;
 		var $location_code;
+		var $bo, $bocommon, $part_of_town_id,$district_id,$status,$allrows,$lookup,$_category_acl;
 		private $so_control_group;
 		private $so_control;
 		private $so_bim;

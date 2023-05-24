@@ -41,6 +41,7 @@
 
 		private $home_alternative;
 		private $skip_portalbox_controls;
+		var $_category_acl;
 
 		public function __construct()
 		{

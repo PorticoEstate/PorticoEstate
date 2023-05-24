@@ -19,7 +19,9 @@
 			$proxy,
 			$accesstoken,
 			$debug,
-			$client;
+			$client,
+			$base_url,
+			$msn;
 
 		public function __construct()
 		{

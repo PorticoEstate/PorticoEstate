@@ -45,6 +45,7 @@
 		protected $acl;
 		protected $relaxe_acl;
 		protected $account;
+		var $dateformat;
 
 		public function __construct( $table_name, $fields )
 		{

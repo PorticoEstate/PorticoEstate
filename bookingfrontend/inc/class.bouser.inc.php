@@ -30,6 +30,7 @@
 		 * @var bool
 		 */
 		public $debug = false;
+		var $db;
 
 		public function __construct($get_external_login_info = null)
 		{

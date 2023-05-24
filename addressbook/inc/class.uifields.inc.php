@@ -25,6 +25,7 @@
 			'delete' => true
 		);
 		
+		var $config, $per_custom_fields, $org_custom_fields;
 		private $receipt = array();
 
 		function __construct()
@@ -129,7 +130,7 @@
 			{
 				$page = ceil(( $start / $num_rows));
 				$files_part = array_chunk($values, $num_rows);
-				$out = $files_part[$page];
+				$out = (array)$files_part[$page];
 			}
 			
 			switch($order[0]['dir'])

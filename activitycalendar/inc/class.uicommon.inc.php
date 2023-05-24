@@ -45,7 +45,7 @@
 		const LOCATION_INTERNAL = '.RESPONSIBILITY.INTERNAL';
 
 		//public $dateFormat;
-		public $type_of_user;
+		public $type_of_user, $bo;
 		public $user_rows_per_page;
 
 		public function __construct()

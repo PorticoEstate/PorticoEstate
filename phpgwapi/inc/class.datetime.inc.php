@@ -432,7 +432,7 @@
 		* @param int $day the day to check
 		* @return int starting weekday
 		*/
-		function get_weekday_start($year, $month, $day)
+		public static function get_weekday_start($year, $month, $day)
 		{
 			$weekday = self::day_of_week($year, $month, $day);
 			switch($GLOBALS['phpgw_info']['user']['preferences']['calendar']['weekdaystarts'])
@@ -599,7 +599,7 @@
 		* @param int $year the year to test
 		* @return int the number of days in the month
 		*/
-		function days_in_month($month, $year)
+		public static function days_in_month($month, $year)
 		{
 			return cal_days_in_month(CAL_GREGORIAN, (int) $month, (int) $year);
 		}

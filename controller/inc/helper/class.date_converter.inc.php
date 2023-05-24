@@ -9,6 +9,8 @@
 		 * @param string $date the date to convert, must contain keys day, month & year
 		 * @return int unix timestamp
 		 */
+
+		var $dow_fullnames,$month_fullnames;
 		public static function date_to_timestamp( $datestr = '' )
 		{
 			if (!$datestr)

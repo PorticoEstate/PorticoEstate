@@ -55,6 +55,7 @@
 			$permissions,
 			$currentapp;
 
+		var $building_so, $resource_so;
 		public function __construct()
 		{
 			parent::__construct();
