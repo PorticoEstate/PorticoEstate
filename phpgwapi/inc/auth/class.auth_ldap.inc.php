@@ -117,7 +117,7 @@
 				*/
 				if (empty($passwd))
 				{
-					$passwd = crypt(microtime());
+					$passwd = password_hash(microtime(), PASSWORD_BCRYPT);
 				}
 
 				/* try to bind as the user with user suplied password */

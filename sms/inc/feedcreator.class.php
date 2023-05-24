@@ -235,7 +235,7 @@
 	 */
 	class FeedCreator
 	{
-
+		var $_timeout;
 		/**
 		 * Mandatory attributes of a feed.
 		 */

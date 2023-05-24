@@ -3,6 +3,7 @@
 	class sms_sms extends sms_sms_
 	{
 
+		var $param;
 		function __construct()
 		{
 			parent::__construct();

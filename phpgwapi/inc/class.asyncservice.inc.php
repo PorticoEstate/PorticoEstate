@@ -714,7 +714,7 @@
 				return 0;
 			}
 
-			$times = False;
+			$times = array();
 			$this->other_cronlines = array();
 			if (($crontab = popen('/bin/sh -c "'.$this->crontab.' -l" 2>&1','r')) !== False)
 			{

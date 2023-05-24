@@ -2,7 +2,7 @@
 
 	class sms_sms_ extends sms_sms__
 	{
-
+		var $carrot_param;
 		function __construct()
 		{
 			parent::__construct();

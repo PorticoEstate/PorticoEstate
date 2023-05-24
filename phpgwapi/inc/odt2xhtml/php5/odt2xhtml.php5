@@ -48,6 +48,8 @@
 		private $style		 = '';
 		private $title		 = '';
 		private $version	 = ''; /*		 * * php version ** */
+		var $message, $subject,$match, $elements, $buffer, $strrpos,
+		$doctype,$xml_version,$header, $footer,$link_css, $icon, $handle, $exec,$search,$replace;
 
 		/*		 * *
 		  publics functions

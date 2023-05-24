@@ -30,7 +30,9 @@
 			'delete' => true,
 			'status' => true,
 		);
-
+		var $nextmatchs, $account,$bo,
+		$bocommon,$sms, $acl,$acl_location, $start,$query, $sort,$order, $allrows,$db,$db2, $cat_id,$filter;
+   
 		function __construct()
 		{
 			$this->nextmatchs = CreateObject('phpgwapi.nextmatchs');
@@ -286,7 +288,7 @@
 
 					$this->db->query($sql, __LINE__, __FILE__);
 
-					$new_uid = $this->db->get_last_insert_id(phpgw_sms_featpoll, 'poll_id');
+					$new_uid = $this->db->get_last_insert_id('phpgw_sms_featpoll', 'poll_id');
 
 					$this->db->transaction_commit();
 
@@ -346,10 +348,10 @@
 
 					$this->db->query($sql, __LINE__, __FILE__);
 
-					$new_uid = $this->db->get_last_insert_id(phpgw_sms_featpoll_choice, 'choice_id');
+					$new_uid = $this->db->get_last_insert_id('phpgw_sms_featpoll_choice', 'choice_id');
 
 					$this->db->transaction_commit();
-					if (new_uid)
+					if ($new_uid)
 					{
 						$error_string = "Choice with code `$choice_code` has been added";
 					}
@@ -420,12 +422,13 @@
 
 			echo parse_navbar();
 
-			$err = urldecode(phpgw::get_var('err'));
+			$_err = phpgw::get_var('err');
 
 			$poll_id = phpgw::get_var('poll_id', 'int');
 
-			if ($err)
+			if ($_err)
 			{
+				$err = urldecode($_err);
 				$content = "<p><font color=red>$err</font><p>";
 			}
 
@@ -613,8 +616,8 @@
 			$total_voters = $this->db->num_rows();
 			if ($poll_id)
 			{
-				$mult = $_GET[mult];
-				$bodybgcolor = $_GET[bodybgcolor];
+				$mult = $_GET['mult'];
+				$bodybgcolor = $_GET['bodybgcolor'];
 				if (!isset($mult))
 				{
 					$mult = "2";

@@ -61,7 +61,7 @@
 	*/
 	class phpgwapi_sessions
 	{
-		var $reason, $variableNames,$soap_functions;
+		var $reason, $variableNames,$soap_functions,$sort_by,$sort_order;
 		
 		/**
 		* @var integer $cd_reason contains the error code when checking sessions
@@ -799,7 +799,7 @@
 			$GLOBALS['phpgw']->session->sort_by = $sort;
 			$GLOBALS['phpgw']->session->sort_order = $order;
 
-			uasort($data, array('self', 'session_sort'));
+			uasort($data, array($this, 'session_sort'));
 
 			$maxmatches = 25;
 			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])

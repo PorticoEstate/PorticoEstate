@@ -17,7 +17,7 @@
 	 */
 	class sms_socommand
 	{
-		var $db;
+		var $db, $like, $join,$total_records;
 		var $account;
 		var $command_data;
 

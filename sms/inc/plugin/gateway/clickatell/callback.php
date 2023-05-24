@@ -4,13 +4,13 @@
 	include "$apps_path[libs]/function.php";
 	chdir("plugin/gateway/clickatell/");
 
-	$cb_from = $_GET[from];
-	$cb_to = $_GET[to];
-	$cb_timestamp = $_GET[timestamp];
-	$cb_text = $_GET[text];
-	$cb_status = $_GET[status];
-	$cb_charge = $_GET[charge];
-	$cb_apimsgid = $_GET[apiMsgId];
+	$cb_from = $_GET['from'];
+	$cb_to = $_GET['to'];
+	$cb_timestamp = $_GET['timestamp'];
+	$cb_text = $_GET['text'];
+	$cb_status = $_GET['status'];
+	$cb_charge = $_GET['charge'];
+	$cb_apimsgid = $_GET['apiMsgId'];
 
 	/*
 	  $fc = "from: $cb_from - to: $cb_to - timestamp: $cb_timestamp - text: $cb_text - status: $cb_status - charge: $cb_charge - apimsgid: $cb_apimsgid\n";
@@ -51,8 +51,8 @@
     ";
 		$db_result = dba_query($db_query);
 		$db_row = dba_fetch_array($db_result);
-		$uid = $db_row[uid];
-		$smslog_id = $db_row[smslog_id];
+		$uid = $db_row['uid'];
+		$smslog_id = $db_row['smslog_id'];
 		if ($uid && $smslog_id)
 		{
 			$c_sms_status = 0;

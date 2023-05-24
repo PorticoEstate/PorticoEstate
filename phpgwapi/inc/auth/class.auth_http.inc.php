@@ -45,7 +45,7 @@
 			return isset($_SERVER['PHP_AUTH_USER']) && !!strlen($_SERVER['PHP_AUTH_USER']);
 		}
 
-		function change_password($old_passwd, $new_passwd)
+		function change_password($old_passwd, $new_passwd, $account_id = 0)
 		{
 			return False;
 		}
