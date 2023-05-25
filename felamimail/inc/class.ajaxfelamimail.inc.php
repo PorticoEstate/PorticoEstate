@@ -27,6 +27,8 @@
 		
 		// boolean if openConnection was successfull or not
 		var $_connectionStatus;
+
+		var $bofelamimail,$uiwidgets,$sessionDataAjax,$sessionData,$translation;
 		
 		function __construct()
 		{

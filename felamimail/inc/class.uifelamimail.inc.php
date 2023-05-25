@@ -42,6 +42,9 @@
 		// the object storing the data about the incoming imap server
 		var $icServerID=0;
 		
+		var $displayCharset,$bofelamimail,$bofilter,$bopreferences,$preferences,$botranslation,$sortReverse,
+		$t,$connectionStatus,$rowColor, $dataRowColor,$bosieve;
+
 		function __construct()
 		{
 			require_once(PHPGW_SERVER_ROOT.'/felamimail/inc/xajax.inc.php');

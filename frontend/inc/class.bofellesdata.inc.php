@@ -29,6 +29,7 @@
 		// Instance variable
 		protected static $bo;
 
+		protected $db;
 		/**
 		 * Get a static reference to the storage object associated with this model object
 		 *

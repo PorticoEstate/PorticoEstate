@@ -47,6 +47,7 @@
 	*/
 	class uiwidgets
 	{
+		var $template,$charset,$translation,$t,$displayCharset,$tableViewRows;
 		/**
 		* the contructor
 		*

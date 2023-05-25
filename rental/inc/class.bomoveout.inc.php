@@ -35,10 +35,8 @@
 
 	class rental_bomoveout extends phpgwapi_bocommon
 	{
-		protected static
-			$bo,
-			$fields,
-			$acl_location;
+		protected
+			$bo;
 
 		public function __construct()
 		{

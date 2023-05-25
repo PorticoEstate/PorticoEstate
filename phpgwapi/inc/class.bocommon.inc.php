@@ -30,7 +30,7 @@
 	abstract class phpgwapi_bocommon
 	{
 
-		protected static
+		protected 
 			$fields,
 			$acl_location;
 
@@ -183,7 +183,7 @@
 			}
 		}
 
-		function select_multi_list( $selected = array(), $list )
+		function select_multi_list( $selected = array(), $list = array() )
 		{
 			if (isset($list) && is_array($list) && isset($selected) && is_array($selected))
 			{

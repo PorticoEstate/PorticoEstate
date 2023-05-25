@@ -30,11 +30,13 @@
 		 *
 		 * @var array $public_functions contains all public method names
 		 */
-		var $public_functions = array('enablefolders' => true,
-																	'disablefolders' => true,
-																	'showfolders' => true
-																 );
+		var $public_functions = array(
+			'enablefolders' => true,
+			'disablefolders' => true,
+			'showfolders' => true
+			);
 
+		var $bofolders;
 		/**
 		 * constructor
 		 */

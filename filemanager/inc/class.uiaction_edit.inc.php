@@ -26,6 +26,7 @@
 		(
 			'edit' => True
 		);
+		var $bofilemanager,$action;
 
 		function __construct()
 		{

@@ -16,6 +16,7 @@
 			'index' => true
 		);
 
+		var $contract_filter,$contract_state;
 		public function __construct()
 		{
 			parent::__construct();

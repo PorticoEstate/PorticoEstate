@@ -21,6 +21,7 @@
 			'saveUserData'	=> True
 		);
 
+		var $t,$boemailadmin;
 		function __construct()
 		{
 			$this->t			=& CreateObject('phpgwapi.template',PHPGW_APP_TPL);

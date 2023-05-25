@@ -46,6 +46,8 @@
 		protected $relaxe_acl;
 		protected $account;
 		var $dateformat;
+		var $acl_location;
+		var $global_lock;
 
 		public function __construct( $table_name, $fields )
 		{
@@ -209,7 +211,7 @@
 		function read( $params )
 		{
 			$start = isset($params['start']) && $params['start'] ? (int)$params['start'] : 0;
-			$results = isset($params['results']) && $params['results'] ? (int)$params['results'] : 'null';//strtolower will not accept null 
+//			$results = isset($params['results']) && $params['results'] ? (int)$params['results'] : 'null';//strtolower will not accept null 
 			$sort = isset($params['sort']) && $params['sort'] ? $params['sort'] : null;
 			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'asc';
 			$query = isset($params['query']) && $params['query'] ? $params['query'] : null;
@@ -227,7 +229,19 @@
 			$this->db->next_record();
 			$total_records = (int)$this->db->f('count');
 
-			strtolower($results) === 'all' AND $results = $total_records; //TODO: Kept because of BC. Should be easy to remove this dependency?
+//			strtolower($results) === 'all' AND $results = $total_records; //TODO: Kept because of BC. Should be easy to remove this dependency?
+			$maxmatchs	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+
+			$results = isset($params['results']) && $params['results'] ? $params['results'] : $maxmatchs;
+
+			if($results == -1 || strtolower($results) ==='all' || (!empty($params['length']) && $params['length'] == -1))
+			{
+				$results = null;
+			}
+			else
+			{
+				$results = (int)$results;
+			}
 
 			/*
 			 * Due to problem on order with offset - we need to set an additional parameter in some cases
@@ -577,7 +591,7 @@
 					{
 						continue;
 					}
-					$clauses[] = strtr(join((array)$val, ' AND '), array('%%table%%' => $this->table_name));
+					$clauses[] = strtr(join(' AND ', (array)$val ), array('%%table%%' => $this->table_name));
 				}
 			}
 

@@ -49,6 +49,7 @@
 			'save_profile' => true
 		);
 
+		var $config, $location_id,$tab_selected,$tabs_data,$tabs,$tabs_content,$menu,$selected;
 		public function __construct()
 		{
 			parent::__construct();
@@ -547,8 +548,8 @@ HTML;
 			$parties = frontend_borental::get_all_parties();
 
 			$totals = frontend_borental::get_total_cost_and_area($parties);
-			$this->header_state['total_price'] = number_format($totals['sum_total_price'], 0, ",", " ") . " kr";
-			$this->header_state['total_area'] = number_format($totals['sum_total_area'], 0, ",", " ") . " kvm";
+			$this->header_state['total_price'] = number_format((float)$totals['sum_total_price'], 0, ",", " ") . " kr";
+			$this->header_state['total_area'] = number_format((float)$totals['sum_total_area'], 0, ",", " ") . " kvm";
 		}
 
 		function location_in_selection( $location_code, $property_locations )

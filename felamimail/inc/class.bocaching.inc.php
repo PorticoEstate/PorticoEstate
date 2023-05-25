@@ -30,6 +30,7 @@
 		var $unseen;		// the number of recent messages in the mailbox
 		var $uidnext;		// the next uid to be used in the mailbox
 		var $uidvalidity;	// the next uid to be used in the mailbox
+		var $socaching;
 		
 		function __construct($_hostname, $_accountname, $_foldername)
 		{

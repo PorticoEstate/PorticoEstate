@@ -133,6 +133,8 @@
 		 * a debug switch
 		 */
 		var $debug = false;
+
+		var $_isConnected,$sessionData,$loginType,$domainName, $isAdminConnection,$loginName,$_connectionErrorObject;
 		
 		/**
 		 * the construtor
@@ -326,7 +328,7 @@
 		 */
 		function getNameSpaces() 
 		{
-			if(!$this->_connected) {
+			if(!$this->_isConnected) {
 				return false;
 			}
 			$retrieveDefault = false;

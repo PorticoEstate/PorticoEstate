@@ -187,7 +187,7 @@ class egw_db
 	var $prepared_sql = array();	// sql is the index
 	
 	var $column_definitions;
-
+	var $adodb,$ADOdb, $ServerInfo, $app_data, $all_app_data;
 
 	/**
 	* Constructor
