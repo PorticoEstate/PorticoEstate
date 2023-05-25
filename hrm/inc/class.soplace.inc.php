@@ -18,8 +18,7 @@
 
 	class hrm_soplace
 	{
-		var $db;
-		var $account;
+		var $account,$db, $join, $like, $left_join, $total_records;
 
 		function __construct()
 		{

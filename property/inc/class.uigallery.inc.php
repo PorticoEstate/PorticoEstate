@@ -390,8 +390,8 @@
 
 		public function query()
 		{
-			$start_date	 = urldecode(phpgw::get_var('start_date'));
-			$end_date	 = urldecode(phpgw::get_var('end_date'));
+			$start_date	 = phpgw::get_var('start_date');
+			$end_date	 = phpgw::get_var('end_date');
 
 			$search	 = phpgw::get_var('search');
 			$order	 = phpgw::get_var('order');
@@ -416,8 +416,8 @@
 				'user_id'		 => $this->user_id,
 				'mime_type'		 => $this->mime_type,
 				'cat_id'		 => $this->cat_id,
-				'start_date'	 => $start_date,
-				'end_date'		 => $end_date
+				'start_date'	 => $start_date ? urldecode($start_date) : '',
+				'end_date'	 	 => $end_date ? urldecode($end_date) : '',
 			);
 
 			$result_objects	 = array();

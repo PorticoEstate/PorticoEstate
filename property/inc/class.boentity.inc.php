@@ -239,8 +239,12 @@
 			//$this->allrows		= $data['allrows'];
 		}
 
-		function column_list( $selected = '', $entity_id = '', $cat_id, $allrows = '' )
+		function column_list( $selected = '', $entity_id = '', $cat_id ='', $allrows = '' )
 		{
+			if(!$cat_id)
+			{
+				return array();
+			}
 			if (!$selected)
 			{
 				$selected = $GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"];
@@ -733,7 +737,7 @@ JS;
 			return $this->custom->get_attribute_groups($this->type_app[$this->type], $location, $attributes);
 		}
 
-		function save( $values, $values_attribute, $action = '', $entity_id, $cat_id )
+		function save( $values, $values_attribute, $action , $entity_id, $cat_id )
 		{
 			if (is_array($values['location']))
 			{

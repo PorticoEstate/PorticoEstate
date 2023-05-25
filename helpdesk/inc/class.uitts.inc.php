@@ -74,7 +74,9 @@
 		var $filter;
 		var $user_filter;
 		var $parent_cat_id;
-		var $group_id;
+		var $group_id, $account,$bo, $bocommon,$cats,$acl_location,$acl_read,$acl_add,$acl_edit,$acl_delete,
+		$acl_manage,$start,$query,$sort,$order,$status_id,$user_id,$tenant_id,$cat_id,$district_id,$allrows,$start_date,$end_date,
+		$location_code,$p_num,$type_id,$reported_by;
 
 		public function __construct()
 		{
@@ -949,7 +951,7 @@ HTML;
 			$values_combo_box = array();
 			$combos = array();
 
-			$values_combo_box[3] = $this->bo->filter(array('format' => $group_filters, 'filter' => $this->status_id,
+			$values_combo_box[3] = $this->bo->filter(array('filter' => $this->status_id,
 				'default' => 'O'));
 
 			if (isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'])

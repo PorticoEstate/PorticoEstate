@@ -86,7 +86,7 @@
 
 			$location_id = phpgw::get_var('location_id', 'int');
 			$this->get_locations = phpgw::get_var('get_locations', 'bool');
-			if ($this->is_location($location_id))
+			if ($location_id && $this->is_location($location_id))
 			{
 				$this->get_locations = true;
 			}
@@ -1695,7 +1695,7 @@
 			);
 		}
 
-		private function translate_calendar_info( $param, $year, $month, $filter_status = '', &$found_at_least_one = false, $keep_only_assigned_to, $location_code ='', &$control_link_data, $url_target)
+		private function translate_calendar_info( $param, $year, $month, $filter_status, &$found_at_least_one, $keep_only_assigned_to, $location_code, &$control_link_data, $url_target)
 		{
 			if (!isset($param['repeat_type']))
 			{
