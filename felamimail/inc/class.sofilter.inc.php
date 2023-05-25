@@ -24,6 +24,7 @@
 		*/
 		var $filter_table = 'egw_felamimail_displayfilter';	// only reference to table-prefix
 
+		var $accountid, $db, $sessionData;
 		function __construct()
 		{
 			$this->accountid	= $GLOBALS['phpgw_info']['user']['account_id'];

@@ -23,7 +23,7 @@
 		);
 		
 		// stores the users profile
-		var $profileData;
+		var $profileData, $boemailadmin;
 		
 		function __construct()
 		{

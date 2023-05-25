@@ -22,6 +22,8 @@
 		
 		var $attachments;	// Array of attachments
 		var $preferences;	// the prefenrences(emailserver, username, ...)
+		var $displayCharset,$bopreferences,$bosignatures, $bofelamimail, $botranslation,$preferencesArray,
+		$composeID,$sessionData,$errorInfo;
 
 		function __construct($_composeID = '', $_charSet = 'utf-8')
 		{

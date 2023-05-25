@@ -32,6 +32,7 @@
 		var $sieveHost;
 		
 		var $sievePort;
+		var $_connected,$loginType,$domainName;
 		
 		function addAccount($_hookValues) 
 		{

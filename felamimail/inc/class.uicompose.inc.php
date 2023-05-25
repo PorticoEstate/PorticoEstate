@@ -39,6 +39,8 @@
 			'folder'	=> 'folder'
 		);
 
+		var $displayCharset,$bocompose,$composeID,$bofelamimail,$t,$mailPreferences,$rowColor,$charset;
+
 		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;

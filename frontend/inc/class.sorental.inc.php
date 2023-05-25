@@ -61,6 +61,7 @@
 		 */
 		protected $_like;
 		protected $_global_lock = false;
+		protected $account;
 
 		public function __construct()
 		{

@@ -49,6 +49,9 @@
 		var $bosieve;
 		
 		var $errorStack;
+		var $scriptName,$displayCharset,$t,$botranslation,$bopreferences,
+		$mailPreferences,$felamimailConfig,$rowColor,$rules,$scriptToEdit,
+		$vacation,$sieve;
 
 		function __construct()
 		{
@@ -435,12 +438,12 @@
 				$newRule['regexp']	= get_var('regexp',array('POST'));
 				$newRule['unconditional'] = '0';		// what's this???
 				
-				$newRule[flg] = 0 ;
-				if( $newRule['continue'] ) { $newRule[flg] += 1; }
-				if( $newRule['gthan'] )    { $newRule[flg] += 2; }
-				if( $newRule['anyof'] )    { $newRule[flg] += 4; }
-				if( $newRule['keep'] )     { $newRule[flg] += 8; }
-				if( $newRule['regexp'] )   { $newRule[flg] += 128; }
+				$newRule['flg'] = 0 ;
+				if( $newRule['continue'] ) { $newRule['flg'] += 1; }
+				if( $newRule['gthan'] )    { $newRule['flg'] += 2; }
+				if( $newRule['anyof'] )    { $newRule['flg'] += 4; }
+				if( $newRule['keep'] )     { $newRule['flg'] += 8; }
+				if( $newRule['regexp'] )   { $newRule['flg'] += 128; }
 				
 				switch(get_var('action',array('POST')))
 				{
@@ -461,7 +464,7 @@
 						break;
 
 					case 'discard':
-						$newRule[action]	= 'discard';
+						$newRule['action']	= 'discard';
 						break;
 				}
 				if($newRule['action']) {
@@ -775,8 +778,8 @@
 
 				foreach ($this->rules as $ruleID => $rule)
 				{
-					$this->t->set_var('filter_status',lang($rule[status]));
-					if($rule[status] == 'ENABLED')
+					$this->t->set_var('filter_status',lang($rule['status']));
+					if($rule['status'] == 'ENABLED')
 					{
 						$this->t->set_var('ruleCSS','sieveRowActive');
 					}
@@ -1012,7 +1015,7 @@
 					{
 						foreach($ruleIDs as $ruleID)
 						{
-							$this->rules[$ruleID][status] = 'ENABLED';
+							$this->rules[$ruleID]['status'] = 'ENABLED';
 						}
 					}
 					break;
@@ -1022,7 +1025,7 @@
 					{
 						foreach($ruleIDs as $ruleID)
 						{
-							$this->rules[$ruleID][status] = 'DISABLED';
+							$this->rules[$ruleID]['status'] = 'DISABLED';
 						}
 					}
 					break;

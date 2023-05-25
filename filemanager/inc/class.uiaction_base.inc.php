@@ -20,6 +20,7 @@
 		(
 			'help' => True
 		);
+		var $bofilemanager,$bo;
 
 		function __construct()
 		{

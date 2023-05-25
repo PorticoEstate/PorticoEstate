@@ -23,6 +23,7 @@
 		
 		var $imapClass;				// holds the imap/pop3 class
 		var $smtpClass;				// holds the smtp class
+		var $soemailadmin, $profileData,$profileID,$displayCharset;
 		
 
 		function __construct($_profileID=-1,$_restoreSesssion=true)

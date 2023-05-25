@@ -33,9 +33,8 @@
 
 	class  rental_boapplication extends phpgwapi_bocommon
 	{
-		protected static
-			$bo,
-			$fields;
+		protected
+			$bo;
 
 		public function __construct()
 		{

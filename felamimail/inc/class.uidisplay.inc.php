@@ -56,6 +56,9 @@
 		// the permanent id of the message
 		var $uid;
 
+		var $displayCharset,$bopreferences,$bofelamimail,$t,$mailPreferences,$mailbox,$botranslation,
+		$rowColor,$sort,$partID,$charset;
+
 		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;

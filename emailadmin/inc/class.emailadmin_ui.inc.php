@@ -30,6 +30,7 @@
 		var $nextmatchs;
 		var $t;
 		var $boqmailldap;
+		var $boemailadmin;
 
 		function __construct()
 		{
