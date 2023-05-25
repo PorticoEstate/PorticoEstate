@@ -755,7 +755,7 @@
 
 			if($id)
 			{
-				$values			 = $this->bo->read_single_custom_function($appname, $location, $id);
+				$values			 = $this->bo->read_single_custom_function($id, $appname, $location);
 				$type_name		 = $values['custom_function_file'];
 				$function_msg	 = lang('edit custom function') . ': ' . $type_name;
 				$action			 = 'edit';
