@@ -696,13 +696,13 @@
 
 		public function query()
 		{
-			$start_date	 = urldecode($this->start_date);
-			$end_date	 = urldecode($this->end_date);
+			$start_date	 = $this->start_date;
+			$end_date	 = $this->end_date;
 
 			if ($start_date && empty($end_date))
 			{
 				$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-				$end_date	 = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), date("d"), date("Y")), $dateformat);
+				$end_date	 = urlencode($GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), date("d"), date("Y")), $dateformat));
 			}
 
 			$search	 = phpgw::get_var('search');
@@ -718,8 +718,8 @@
 				'order'		 => $columns[$order[0]['column']]['data'],
 				'sort'		 => $order[0]['dir'],
 				'allrows'	 => phpgw::get_var('length', 'int') == -1 || $export,
-				'start_date' => $start_date,
-				'end_date'	 => $end_date,
+				'start_date' => $start_date ? urldecode($start_date) : '',
+				'end_date' 	 => $end_date ? urldecode($end_date) : '',
 				'parent_location_id' => phpgw::get_var('parent_location_id', 'int'),
 				'parent_id' => phpgw::get_var('parent_id', 'int')
 			);

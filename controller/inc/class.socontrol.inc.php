@@ -1360,7 +1360,7 @@
 		}
 
 
-		function get_checklist_at_time_and_place( $part_of_town_id , $control_id = 0, $timestamp_start, $timestamp_end)
+		function get_checklist_at_time_and_place( $part_of_town_id , $control_id, $timestamp_start, $timestamp_end)
 		{
 
 			$checklist_item = array();

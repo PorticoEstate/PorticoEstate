@@ -28,7 +28,8 @@
 		/**
 		* @var bool return all rows for a search - not a limited subset
 		*/
-		public $allrows;
+		var $allrows,$use_session;
+		var $so, $socommon,$total_records;
 
 		var $public_functions = array
 		(

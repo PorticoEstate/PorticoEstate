@@ -72,8 +72,8 @@
 			$type_id	 = phpgw::get_var('type_id', 'int');
 			$user_id	 = phpgw::get_var('user_id', 'int');
 			$mime_type	 = phpgw::get_var('mime_type');
-			$start_date	 = urldecode(phpgw::get_var('start_date', 'string'));
-			$end_date	 = urldecode(phpgw::get_var('end_date', 'string'));
+			$start_date	 = phpgw::get_var('start_date', 'string');
+			$end_date	 = phpgw::get_var('end_date', 'string');
 
 
 			$this->start		 = $start ? $start : 0;
@@ -87,8 +87,8 @@
 			$this->allrows		 = isset($allrows) ? $allrows : false;
 			$this->mime_type	 = isset($_REQUEST['mime_type']) ? $mime_type : $this->mime_type;
 
-			$this->start_date	 = isset($_REQUEST['start_date']) ? $start_date : $this->start_date;
-			$this->end_date		 = isset($_REQUEST['end_date']) ? $end_date : $this->end_date;
+			$this->start_date	 = isset($_REQUEST['start_date']) ? urldecode($start_date) : $this->start_date;
+			$this->end_date		 = isset($_REQUEST['end_date']) ? urldecode($end_date) : $this->end_date;
 		}
 
 		public function save_sessiondata( $data )

@@ -369,8 +369,8 @@
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::economy::invoice::invoice';
 			}
 			//-- captura datos de URL
-			$start_date	 = urldecode($start_date);
-			$end_date	 = urldecode($end_date);
+			$start_date	 = $start_date ? urldecode($start_date) : '';
+			$end_date	 = $end_date ? urldecode($end_date) : '';
 
 			if (!$start_date)
 			{
@@ -1913,8 +1913,8 @@ JS;
 
 		public function query_consume()
 		{
-			$start_date		 = urldecode(phpgw::get_var('start_date'));
-			$end_date		 = urldecode(phpgw::get_var('end_date'));
+			$start_date		 = phpgw::get_var('start_date') ? urldecode(phpgw::get_var('start_date')) : '';
+			$end_date		 = phpgw::get_var('end_date') ? urldecode(phpgw::get_var('end_date')) : '';
 			$vendor_id		 = phpgw::get_var('vendor_id', 'int');
 			$workorder_id	 = phpgw::get_var('workorder_id', 'int');
 			$loc1			 = phpgw::get_var('loc1');
@@ -2210,8 +2210,8 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::economy::consume';
 
 			//-- captura datos de URL
-			$start_date	 = urldecode($start_date);
-			$end_date	 = urldecode($end_date);
+			$start_date	 = $start_date ? urldecode($start_date) : '';
+			$end_date	 = $end_date ? urldecode($end_date) : '';
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
@@ -2536,9 +2536,9 @@ JS;
 				$values['janitor']				 = phpgw::get_var('janitor');
 				$values['supervisor']			 = phpgw::get_var('supervisor');
 				$values['budget_responsible']	 = phpgw::get_var('budget_responsible');
-				$values['invoice_date']			 = urldecode(phpgw::get_var('invoice_date'));
+				$values['invoice_date']			 = phpgw::get_var('invoice_date') ? urldecode(phpgw::get_var('invoice_date')) : '';
 				$values['num_days']				 = phpgw::get_var('num_days', 'int');
-				$values['payment_date']			 = urldecode(phpgw::get_var('payment_date'));
+				$values['payment_date']			 = phpgw::get_var('payment_date') ? urldecode(phpgw::get_var('payment_date')) : '';
 				$values['sday']					 = phpgw::get_var('sday', 'int');
 				$values['smonth']				 = phpgw::get_var('smonth', 'int');
 				$values['syear']				 = phpgw::get_var('syear', 'int');
