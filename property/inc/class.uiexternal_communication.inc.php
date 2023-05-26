@@ -1309,22 +1309,6 @@ JS;
 				self::redirect(array('menuaction' => "{$this->currentapp}.uiexternal_communication.send_sms"));
 			}
 
-
-			if (isset($values['mail_recipients']) && is_array($values['mail_recipients']))
-			{
-				$_recipients_found = array();
-				foreach ($content_email as &$vendor_email)
-				{
-					if (in_array($vendor_email['value_email'], $values['mail_recipients']))
-					{
-						$vendor_email['value_select']	 = str_replace("type='checkbox'", "type='checkbox' checked='checked'", $vendor_email['value_select']);
-						$_recipients_found[]			 = $vendor_email['value_email'];
-					}
-				}
-				$value_extra_mail_address = implode(', ', array_diff($values['mail_recipients'], $_recipients_found));
-			}
-
-
 			$tabs			 = array();
 			$tabs['main']	 = array(
 				'label'	 => lang('SMS'),
