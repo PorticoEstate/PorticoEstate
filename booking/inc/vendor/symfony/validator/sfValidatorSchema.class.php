@@ -293,6 +293,7 @@
 		 *
 		 * @return bool true if the schema has a field with the given name, false otherwise
 		 */
+		#[\ReturnTypeWillChange]
 		public function offsetExists( $name )
 		{
 			return isset($this->fields[$name]);
@@ -305,6 +306,7 @@
 		 *
 		 * @return sfValidatorBase The sfValidatorBase instance associated with the given name, null if it does not exist
 		 */
+		#[\ReturnTypeWillChange]
 		public function offsetGet( $name )
 		{
 			return isset($this->fields[$name]) ? $this->fields[$name] : null;
@@ -316,6 +318,7 @@
 		 * @param string          $name       The field name
 		 * @param sfValidatorBase $validator  An sfValidatorBase instance
 		 */
+		#[\ReturnTypeWillChange]
 		public function offsetSet( $name, $validator )
 		{
 			if (!$validator instanceof sfValidatorBase)
@@ -331,6 +334,7 @@
 		 *
 		 * @param string $name
 		 */
+		#[\ReturnTypeWillChange]
 		public function offsetUnset( $name )
 		{
 			unset($this->fields[$name]);
