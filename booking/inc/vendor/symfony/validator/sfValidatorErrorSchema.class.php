@@ -186,6 +186,7 @@
 		 *
 		 * @return int The number of array
 		 */
+		#[\ReturnTypeWillChange]
 		public function count()
 		{
 			return count($this->errors);
@@ -194,6 +195,7 @@
 		/**
 		 * Reset the error array to the beginning (implements the Iterator interface).
 		 */
+		#[\ReturnTypeWillChange]
 		public function rewind()
 		{
 			reset($this->errors);
@@ -206,6 +208,7 @@
 		 *
 		 * @return string The key
 		 */
+		#[\ReturnTypeWillChange]
 		public function key()
 		{
 			return key($this->errors);
@@ -216,6 +219,7 @@
 		 *
 		 * @return mixed The escaped value
 		 */
+		#[\ReturnTypeWillChange]
 		public function current()
 		{
 			return current($this->errors);
@@ -224,6 +228,7 @@
 		/**
 		 * Moves to the next error (implements the Iterator interface).
 		 */
+		#[\ReturnTypeWillChange]
 		public function next()
 		{
 			next($this->errors);
@@ -236,6 +241,7 @@
 		 *
 		 * @return boolean The validity of the current element; true if it is valid
 		 */
+		#[\ReturnTypeWillChange]
 		public function valid()
 		{
 			return $this->count > 0;
@@ -248,6 +254,7 @@
 		 *
 		 * @return bool true if the error exists, false otherwise
 		 */
+		#[\ReturnTypeWillChange] 
 		public function offsetExists( $name )
 		{
 			return isset($this->errors[$name]);
@@ -260,6 +267,7 @@
 		 *
 		 * @return sfValidatorError A sfValidatorError instance
 		 */
+		#[\ReturnTypeWillChange]
 		public function offsetGet( $name )
 		{
 			return isset($this->errors[$name]) ? $this->errors[$name] : null;
@@ -273,6 +281,7 @@
 		 *
 		 * @throws LogicException
 		 */
+		#[\ReturnTypeWillChange]
 		public function offsetSet( $offset, $value )
 		{
 			throw new LogicException('Unable update an error.');
@@ -283,6 +292,7 @@
 		 *
 		 * @param string $offset  (ignored)
 		 */
+		#[\ReturnTypeWillChange]
 		public function offsetUnset( $offset )
 		{
 			
