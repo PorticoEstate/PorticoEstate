@@ -39,7 +39,8 @@
 		/**
 		 * @var object $_db Database connection
 		 */
-		protected $_db;
+		protected $_db,$_join;
+		var $boadmin_entity,$soadmin_entity;
 
 		/**
 		 * Constructor

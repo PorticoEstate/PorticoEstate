@@ -69,6 +69,7 @@
 		var $elink = array();
 		var $ondebug;
 		var $table;
+		var $map;
 
 		function __construct( $table = '', $alias = '')
 		{
@@ -158,8 +159,8 @@
 			if ($this->alias)
 			{
 				$this->field_alias();
-				$this->fields = str_replace(PHPGW_SQL_EASS, $this->alias, $this->fields);
-				$this->criteria = str_replace(PHPGW_SQL_EASS, $this->alias, $this->criteria);
+				$this->fields = $this->fields ? str_replace(PHPGW_SQL_EASS, $this->alias, $this->fields) : null;
+				$this->criteria = $this->criteria ? str_replace(PHPGW_SQL_EASS, $this->alias, $this->criteria) : null;
 				$this->ldebug('run_alias', array('Fields' => $this->fields,
 					'Criteria' => $this->criteria,
 					'Alias' => $this->alias));
@@ -836,7 +837,7 @@
 		{
 			foreach ($entities as $entity_name)
 			{
-				$link = get_ilink($entity_name);
+				$link = $this->get_ilink($entity_name);
 				$fields_return[] = $link['ffalse'];
 			}
 			return $fields_return;

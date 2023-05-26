@@ -1,6 +1,7 @@
 <?php
 	class socatalog_contact_comm_type
 	{
+		var $db;
 		function __construct()
 		{
 			$this->db = &$GLOBALS['phpgw']->db;

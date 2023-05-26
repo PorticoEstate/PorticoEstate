@@ -13,7 +13,8 @@
 			$customer_id,
 			$sequential_number_generator_so,
 			$config_data,
-			$sopurchase_order;
+			$sopurchase_order,
+			$event_so, $application_bo, $application_so,$allocation_bo,$booking_bo,$event_bo,$organization_bo;
 
 		function __construct()
 		{
@@ -408,7 +409,7 @@
 					if ($this->config_data['external_format'] == 'CSV')
 					{
 						return $this->build_export_result(
-								$export_format, count(array_filter($internal_reservations, array($this, 'not_free'))), $this->calculate_total_cost($internal_reservations), $this->format_csv($internal_reservations, $account_codes, $number_generator)
+								$export_format, count(array_filter($external_reservations, array($this, 'not_free'))), $this->calculate_total_cost($external_reservations), $this->format_csv($external_reservations, $account_codes, $number_generator)
 						);
 					}
 					elseif ($this->config_data['external_format'] == 'AGRESSO')

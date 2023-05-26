@@ -46,7 +46,8 @@
 		var $order;
 		var $filter;
 		var $type_id;
-		var $location_code;
+		var $location_code, $part_of_town_id,$status,$district_id,$allrows,$lookup,$_category_acl;
+
 		private $bo;
 		private $bocommon;
 		private $so_control;

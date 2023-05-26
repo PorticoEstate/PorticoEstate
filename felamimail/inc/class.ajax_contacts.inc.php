@@ -19,6 +19,7 @@
 	class ajax_contacts
 	{
 
+		var $charset,$translation;
 		function __construct()
 		{
 			$GLOBALS['phpgw']->session->commit_session();

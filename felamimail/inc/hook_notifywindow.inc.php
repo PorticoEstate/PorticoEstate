@@ -65,11 +65,11 @@
 			echo '<a href="JavaScript:CheckEmail();"><img src="'.$GLOBALS['phpgw']->common->image('felamimail','navbar').'" alt="email icon" border=0></a>'."\r\n";
 			echo "<td>\r\n";
 
-			if($folderStatus[recent]>0)
+			if($folderStatus['recent']>0)
 			{
-			 	echo '<a href="JavaScript:CheckEmail();"><b>'.lang('new').':</b> '.$folderStatus[recent].'</a><br>';
+			 	echo '<a href="JavaScript:CheckEmail();"><b>'.lang('new').':</b> '.$folderStatus['recent'].'</a><br>';
 			 	
-			 	if($oldUidNext != $folderStatus['uidnext'] || $folderStatus[recent]>0)
+			 	if($oldUidNext != $folderStatus['uidnext'] || $folderStatus['recent']>0)
 				{
 					$urgent = True;
 				}
@@ -79,16 +79,16 @@
 			 	echo '<a href="JavaScript:CheckEmail();"><b>'.lang('new').':</b> '.lang('None').'</a><br>'."\r\n";
 			}
 			
-			if($folderStatus[unseen]>0)
+			if($folderStatus['unseen']>0)
 			{
-			 	echo '<a href="JavaScript:CheckEmail();"><b>'.lang('unread').':</b> '.$folderStatus[unseen].'</a><br>'."\r\n";
+			 	echo '<a href="JavaScript:CheckEmail();"><b>'.lang('unread').':</b> '.$folderStatus['unseen'].'</a><br>'."\r\n";
 			}
 			else
 			{
 			 	echo '<a href="JavaScript:CheckEmail();"><b>'.lang('unread').':</b> '.lang('None').'</a><br>'."\r\n";
 			}
 
-		 	echo '<a href="JavaScript:CheckEmail();"><b>INBOX:</b> '.$folderStatus[messages].'</a>'."\r\n";
+		 	echo '<a href="JavaScript:CheckEmail();"><b>INBOX:</b> '.$folderStatus['messages'].'</a>'."\r\n";
 
 			if($urgent == True)
 			{

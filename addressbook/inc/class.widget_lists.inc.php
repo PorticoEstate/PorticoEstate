@@ -20,8 +20,13 @@
 	{
 		var $title;
 		var $form_name;
-		var $use_combos;
-		
+		var $use_combos,$template,$use_filter,$left_combo_title,$left_combo,
+		$right_combo_title,$right_combo,$selected_option_list,$all_option_list,$all_option_list_title,
+		$all_option_list_name,$selected_option_list_name,$selected_option_list_title,
+		$right_combo_link_opt,$right_combo_name,
+		$filter_option_list,$old_option_list, $left_combo_link_opt, $left_combo_name;
+
+
 		/**
 		* Set the parameters for the list box with all options
 		*	     

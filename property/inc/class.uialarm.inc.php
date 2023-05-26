@@ -37,12 +37,15 @@
 	{
 
 		var $grants;
-		var $cat_id;
 		var $start;
 		var $query;
 		var $sort;
 		var $order;
 		var $filter;
+		var $account,$bocommon, $entity_id, $cat_id,$allrows,$type, $type_app,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage;
+		var $boasync, $method_id;
+
 		var $public_functions = array
 			(
 			'query'		 => true,

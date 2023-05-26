@@ -75,6 +75,7 @@
 			'message'			=> 'message'
 		);
 
+		var $action,$fileman,$filehis,$history_path,$history_file,$path,$homedir,$config,$config_items;
 		function __construct()
 		{
 			$this->action			= CreateObject('filemanager.uiaction_base');

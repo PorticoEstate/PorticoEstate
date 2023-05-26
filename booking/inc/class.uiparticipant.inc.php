@@ -15,6 +15,7 @@
 		);
 		protected $module, $account;
 
+		var $display_name;
 		public function __construct()
 		{
 			parent::__construct();

@@ -3,7 +3,7 @@
 
 	class booking_soaccount_code_set extends booking_socommon
 	{
-
+		var $season_so, $resource_so;
 		function __construct()
 		{
 			$this->season_so = CreateObject('booking.soseason');

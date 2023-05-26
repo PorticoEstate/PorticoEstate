@@ -142,7 +142,7 @@
 			{
 				return (float)$value;
 			}
-			else if ($type == 'string')
+			else if ($value && $type == 'string')
 			{
 				return (string)str_replace('</ol></li>', '</ol>', $value);
 				//	return (string) $value;

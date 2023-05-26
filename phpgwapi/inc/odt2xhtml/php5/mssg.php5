@@ -102,4 +102,3 @@ class display_message {
 		else return $this->mssg."\n";
 	}
 }
-?>

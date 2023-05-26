@@ -5,6 +5,7 @@
 	{
 
 		private $activity_tree = array();
+		var $account;
 
 		function __construct()
 		{

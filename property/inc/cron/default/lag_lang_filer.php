@@ -35,6 +35,7 @@
 	{
 
 		var $function_name = 'lag_lang_filer';
+		var $bocommon, $db,$receipt;
 
 		function __construct()
 		{
@@ -110,6 +111,7 @@
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
+			$str = '';
 			$i = 0;
 			while ($this->db->next_record())
 			{

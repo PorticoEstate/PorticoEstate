@@ -14,10 +14,10 @@
 		$db_query = "SELECT apimsgid FROM phpgw_sms_gwmodclickatell_apidata WHERE smslog_id='$smslog_id'";
 		$db_result = dba_query($db_query);
 		$db_row = dba_fetch_array($db_result);
-		if ($apimsgid = $db_row[apimsgid])
+		if ($apimsgid = $db_row['apimsgid'])
 		{
-			$query_string = "getmsgcharge?api_id=" . $clktl_param[api_id] . "&user=" . $clktl_param[username] . "&password=" . $clktl_param[password] . "&apimsgid=$apimsgid";
-			$url = $clktl_param[send_url] . "/" . $query_string;
+			$query_string = "getmsgcharge?api_id=" . $clktl_param['api_id'] . "&user=" . $clktl_param['username'] . "&password=" . $clktl_param['password'] . "&apimsgid=$apimsgid";
+			$url = $clktl_param['send_url'] . "/" . $query_string;
 			$fd = @implode('', file($url));
 			if ($fd)
 			{
@@ -100,11 +100,11 @@
 		{
 			$gpid = "";
 			$gp_code = "";
-			$uid = $db_row[uid];
-			$smslog_id = $db_row[smslog_id];
-			$p_datetime = $db_row[p_datetime];
-			$p_update = $db_row[p_update];
-			$gpid = $db_row[p_gpid];
+			$uid = $db_row['uid'];
+			$smslog_id = $db_row['smslog_id'];
+			$p_datetime = $db_row['p_datetime'];
+			$p_update = $db_row['p_update'];
+			$gpid = $db_row['p_gpid'];
 			$gp_code = $GLOBALS['phpgw']->accounts->name2id($gpid);
 			clktl_gw_set_delivery_status($gp_code, $uid, $smslog_id, $p_datetime, $p_update);
 		}
@@ -145,13 +145,13 @@
 		if ($unicode)
 		{
 			$sms_msg = utf8_to_unicode($sms_msg);
-			$query_string = "sendmsg?api_id=" . $clktl_param[api_id] . "&user=" . $clktl_param[username] . "&password=" . $clktl_param[password] . "&to=$sms_to&msg_type=$sms_type&text=$sms_msg&deliv_ack=1&callback=3&unicode=$unicode&from=" . rawurlencode($sms_from);
+			$query_string = "sendmsg?api_id=" . $clktl_param['api_id'] . "&user=" . $clktl_param['username'] . "&password=" . $clktl_param['password'] . "&to=$sms_to&msg_type=$sms_type&text=$sms_msg&deliv_ack=1&callback=3&unicode=$unicode&from=" . rawurlencode($sms_from);
 		}
 		else
 		{
-			$query_string = "sendmsg?api_id=" . $clktl_param[api_id] . "&user=" . $clktl_param[username] . "&password=" . $clktl_param[password] . "&to=$sms_to&msg_type=$sms_type&text=" . rawurlencode($sms_msg) . "&deliv_ack=1&callback=3&unicode=$unicode&from=" . rawurlencode($sms_from);
+			$query_string = "sendmsg?api_id=" . $clktl_param['api_id'] . "&user=" . $clktl_param['username'] . "&password=" . $clktl_param['password'] . "&to=$sms_to&msg_type=$sms_type&text=" . rawurlencode($sms_msg) . "&deliv_ack=1&callback=3&unicode=$unicode&from=" . rawurlencode($sms_from);
 		}
-		$url = $clktl_param[send_url] . "/" . $query_string;
+		$url = $clktl_param['send_url'] . "/" . $query_string;
 		$fd = @implode('', file($url));
 		$ok = false;
 		// failed

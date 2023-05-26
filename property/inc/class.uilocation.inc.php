@@ -44,11 +44,14 @@
 		var $sort;
 		var $order;
 		var $filter;
-		var $currentapp;
 		var $type_id;
 		var $lookup;
 		var $location_code;
 		var $controller_helper;
+		var $bo,$currentapp, $part_of_town_id, $account, $bocommon, $status,$district_id,$allrows,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage, $soadmin_location,
+		$type,$entity_id,$role;
+
 		var $public_functions = array
 			(
 			'query'						 => true,

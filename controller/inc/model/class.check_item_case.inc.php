@@ -63,6 +63,8 @@
 		protected $condition_degree;
 		protected $consequence;
 		protected $case_files = array();
+		var $control_item_id;
+		var $error_msg_array;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside

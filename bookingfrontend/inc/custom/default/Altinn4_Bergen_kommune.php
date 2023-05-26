@@ -38,7 +38,7 @@
 	 */
 	class bookingfrontend_external_user extends bookingfrontend_bouser
 	{
-
+		var $db;
 		public function __construct()
 		{
 			parent::__construct();

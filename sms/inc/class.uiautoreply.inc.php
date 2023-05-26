@@ -30,7 +30,8 @@
 			'delete' => true,
 			'delete_scenario' => true
 		);
-
+		var $nextmatchs, $account,$bo,
+		 $bocommon,$sms, $acl,$acl_location, $start,$query, $sort,$order, $allrows,$db, $cat_id,$filter;
 		function __construct()
 		{
 			$this->nextmatchs = CreateObject('phpgwapi.nextmatchs');
@@ -270,7 +271,7 @@
 
 					$this->db->query($sql, __LINE__, __FILE__);
 
-					$new_uid = $this->db->get_last_insert_id(phpgw_sms_featautoreply, 'autoreply_id');
+					$new_uid = $this->db->get_last_insert_id('phpgw_sms_featautoreply', 'autoreply_id');
 
 					$this->db->transaction_commit();
 
@@ -419,7 +420,7 @@
 
 				$this->db->transaction_begin();
 				$this->db->query($sql, __LINE__, __FILE__);
-				$new_uid = $this->db->get_last_insert_id(phpgw_sms_featautoreply_scenario, 'autoreply_scenario_id');
+				$new_uid = $this->db->get_last_insert_id('phpgw_sms_featautoreply_scenario', 'autoreply_scenario_id');
 				$this->db->transaction_commit();
 
 				if ($new_uid)

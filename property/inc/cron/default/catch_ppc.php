@@ -36,6 +36,7 @@
 	class catch_ppc extends property_cron_parent
 	{
 
+		var $pickup_path, $category_dir;
 		public function __construct()
 		{
 			parent::__construct();

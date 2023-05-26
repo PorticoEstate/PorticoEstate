@@ -2,7 +2,7 @@
 
 	class sms_sms_ extends sms_sms__
 	{
-
+		var $pswin_param;
 		function __construct()
 		{
 			parent::__construct();

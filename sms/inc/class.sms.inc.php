@@ -66,6 +66,8 @@
 		var $apps_path;
 		var $generic_config;
 		protected $global_lock	 = false;
+		var $apps_config, $feat_command_path,$gateway_module_get,$gateway_module_send, $gateway_number, $web_title,
+		$email_service, $email_footer, $reserved_codes,$db, $db2,$init, $like, $dateformat, $datetimeformat, $time_format, $account;
 
 		function __construct()
 		{
@@ -131,10 +133,10 @@
 		{
 			if ($uid && $gp_code)
 			{
-				$db_query = "SELECT gpid FROM phpgw_sms_tblUserGroupPhonebook WHERE uid='$uid' AND gp_code='$gp_code'";
-				$db_result = dba_query($db_query);
-				$db_row = dba_fetch_array($db_result);
-				$gpid = $db_row[gpid];
+				$db_query = "SELECT gpid FROM phpgw_sms_tblUserGroupPhonebook WHERE uid='{$uid}' AND gp_code='{$gp_code}'";
+				$this->db->query($db_query);
+				$this->db->next_record();
+				$gpid = $this->db->f('gpid');
 			}
 			return $gpid;
 		}
@@ -367,7 +369,7 @@
 							$sms_sender = str_replace("\"", "", $sms_sender);
 							$sms_to = str_replace("\'", "", $sms_to);
 							$sms_to = str_replace("\"", "", $sms_to);
-							$send_code = md5(mktime() . $sms_to);
+							$send_code = md5(time() . $sms_to);
 							$db_query1 = "
 							INSERT INTO phpgw_sms_tblsmsoutgoing (uid,p_src,p_dst,p_footer,p_msg,p_datetime,p_gpid)
 							VALUES ('$uid','$mobile_sender','$sms_to','$sms_sender','$message','$datetime_now','$gpid')";
@@ -462,7 +464,7 @@
 
 					$this->db->query($db_query, __LINE__, __FILE__);
 
-					if ($cek_ok = $this->db->get_last_insert_id(phpgw_sms_tbluserinbox, 'in_id'))
+					if ($cek_ok = $this->db->get_last_insert_id('phpgw_sms_tbluserinbox', 'in_id'))
 					{
 						if ($email)
 						{
@@ -717,7 +719,7 @@
 
 			$this->db->transaction_begin();
 			$this->db->query($sql, __LINE__, __FILE__);
-			$new_id = $this->db->get_last_insert_id(phpgw_sms_featcommand_log, 'command_log_id');
+			$new_id = $this->db->get_last_insert_id('phpgw_sms_featcommand_log', 'command_log_id');
 			$this->db->transaction_commit();
 			if ($new_id)
 			{
@@ -757,7 +759,7 @@
 				";
 				$this->db->transaction_begin();
 				$this->db->query($sql, __LINE__, __FILE__);
-				$new_id = $this->db->get_last_insert_id(phpgw_sms_featcustom_log, 'custom_log_id');
+				$new_id = $this->db->get_last_insert_id('phpgw_sms_featcustom_log', 'custom_log_id');
 				$this->db->transaction_commit();
 				if ($new_id)
 				{
@@ -774,12 +776,14 @@
 			$ok = false;
 			$autoreply_request = $autoreply_code . " " . $autoreply_param;
 			$array_autoreply_request = explode(" ", $autoreply_request);
+			$tmp_autoreply_request ='';
 			for ($i = 0; $i < count($array_autoreply_request); $i++)
 			{
 				$autoreply_part[$i] = trim($array_autoreply_request[$i]);
 				$tmp_autoreply_request .= $array_autoreply_request[$i] . " ";
 			}
 			$autoreply_request = trim($tmp_autoreply_request);
+			$autoreply_scenario_param_list = '';
 			for ($i = 1; $i < 8; $i++)
 			{
 				$autoreply_scenario_param_list .= "autoreply_scenario_param$i='" . $autoreply_part[$i] . "' AND ";

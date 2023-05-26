@@ -84,6 +84,7 @@
 			'view_image'			=> true
 		);
 
+		var $so_case,$vfs;
 		function __construct()
 		{
 			parent::__construct();

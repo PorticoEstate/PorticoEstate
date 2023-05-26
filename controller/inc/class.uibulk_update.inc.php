@@ -31,7 +31,7 @@
 	class controller_uibulk_update extends phpgwapi_uicommon
 	{
 		var $currentapp;
-		var $bo;
+		var $bo,$so, $account,$acl_read,$acl_add, $acl_edit,$acl_delete;
 
 		var $public_functions = array(
 			'assign'  => true,

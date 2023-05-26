@@ -15,6 +15,7 @@
 	protected $localFile;
 	protected $error = false;
 	public $debug = false;
+	var $localfile;
 	
 		public function __construct($url = null, $verb = 'GET', $requestBody = null, $debug = false)
 	{

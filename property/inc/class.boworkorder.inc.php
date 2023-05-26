@@ -42,7 +42,9 @@
 		var $filter_year;
 		var $cat_id;
 		var $order_sent_adress; // in case we want to resend the order as an reminder
-		var $allrows;
+		var $allrows, $so, $bocommon, $cats, $interlink, $status_id,$wo_hour_cat_id,
+		$start_date,$end_date,$b_group, $ecodimb, $paid, $b_account, $district_id,
+		$criteria_id,$obligation, $total_records,$uicols;
 		var $public_functions = array
 			(
 			'read'			 => true,
@@ -873,8 +875,7 @@
 				$boclaim = CreateObject('property.botenant_claim');
 
 				$value_set = array
-					(
-					'workorder'	 => $target,
+				(
 					'project_id' => $workorder['project_id'],
 				);
 

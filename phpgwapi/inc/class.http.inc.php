@@ -22,6 +22,7 @@
 		var $host_port = 80;
 		var $proxy_host_name = '';
 		var $proxy_host_port = 80;
+		var $content_length_set;
 
 		var $request_method = 'GET';
 		var $user_agent;

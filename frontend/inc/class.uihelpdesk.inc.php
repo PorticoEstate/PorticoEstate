@@ -41,6 +41,7 @@
 			'query' => true
 		);
 
+		var $location_code;
 		public function __construct()
 		{
 			phpgwapi_cache::session_set('frontend', 'tab', $GLOBALS['phpgw']->locations->get_id('frontend', '.ticket'));

@@ -67,7 +67,7 @@
 			}
 		}
 
-		function return_array($filter_out = array(),$only_show = array(), $_orderby = '',$sort = '', $record_id)
+		function return_array($filter_out = array(),$only_show = array(), $_orderby = '',$sort = '', $record_id = 0)
 		{
 			$record_id = (int) $record_id;
 
@@ -130,7 +130,7 @@
 			return $return_values;
 		}
 
-		function return_html($filter_out,$orderby = '',$sort = '', $record_id)
+		function return_html($filter_out,$orderby = '',$sort = '', $record_id = 0)
 		{
 			$this->template   = createObject('phpgwapi.template',PHPGW_TEMPLATE_DIR);
 			$this->nextmatchs = createObject('phpgwapi.nextmatchs');

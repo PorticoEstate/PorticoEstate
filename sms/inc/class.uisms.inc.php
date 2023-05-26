@@ -24,7 +24,9 @@
 		var $sort;
 		var $order;
 		var $sub;
-		var $currentapp;
+		var $currentapp, $account, $bo, $bocommon,
+		 $config, $gateway_number, $acl,$allrows,
+		 $db,$nextmatchs,$cat_id,$filter;
 		var $public_functions = array
 			(
 			'index' => true,
@@ -636,9 +638,9 @@
 			{
 				$content = "<p><font color=red>$err</font><p>";
 			}
-			if ($gateway_number)
+			if ($this->gateway_number)
 			{
-				$sms_from = $gateway_number;
+				$sms_from = $this->gateway_number;
 			}
 			else
 			{
@@ -722,13 +724,13 @@
 
 		function sendsmstogr_yes()
 		{
-			$gp_code = $_POST[gp_code];
+			$gp_code = $_POST['gp_code'];
 			if (!$gp_code[0])
 			{
-				$gp_code = $_POST[gp_code_text];
+				$gp_code = $_POST['gp_code_text'];
 			}
-			$msg_flash = $_POST[msg_flash];
-			$message = $_POST[message];
+			$msg_flash = $_POST['msg_flash'];
+			$message = $_POST['message'];
 			if ($gp_code && $message)
 			{
 				$sms_type = "text";

@@ -13,6 +13,7 @@
 		);
 		protected $module;
 
+		var $resource_bo,$group_bo;
 		public function __construct()
 		{
 			parent::__construct();

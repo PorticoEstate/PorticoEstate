@@ -36,7 +36,10 @@
 		var $margin_left;
 		var $margin_bottom;
 		var $margin_right;
-		var $img;
+		var $img, $title_font_size, $line_font_size,
+		 $x_font_size,$legend_title, $num_lines_x, $num_lines_y,
+		  $split_val,$line_captions_y, $color_extra, $legend_bottom,
+		  $temp_file, $date_diff;
 	
 		function __construct($debug = False)
 		{
@@ -235,8 +238,8 @@
 			(
 				'date'				=> mktime(12,0,0,date('m',$sdate),date('d',$sdate),date('Y',$sdate)),
 				'date_formatted'	=> date('w',$sdate)==1?date('d/m',$sdate):date('d',$sdate),
-				'date_day'			=> substr(strftime ('%a',$sdate),0,1), //substr(date('D',$sdate),0,1),
-				'month'				=> strftime('%b',$sdate), //date('M',$sdate),
+				'date_day'			=> substr(date('D',$sdate),0,1),
+				'month'				=> date('M',$sdate),
 				'year'				=> date('Y',$sdate)
 			);
 
@@ -250,7 +253,7 @@
 				(
 					'date'				=> $curr_date,
 					'date_formatted'	=> date('w',$curr_date)==1?date('d/m',$curr_date):date('d',$curr_date),
-					'date_day'			=> substr(strftime ('%a',$curr_date),0,1)
+					'date_day'			=> substr(date('D',$curr_date),0,1)
 				);
 
 				/* if graph->height = 750 -> split_val > 13 */
@@ -260,7 +263,7 @@
 				}
 				else if(date('n',$pref_date) < date('n',$curr_date) || (date('n',$pref_date) > date('n',$curr_date) && date('Y',$pref_date) < date('Y',$curr_date)))
 				{
-					$this->line_captions_x[$i]['month'] = strftime('%b',$curr_date); //date('M',$curr_date);
+					$this->line_captions_x[$i]['month'] = date('M',$curr_date);
 				}
 
 				if(date('Y',$pref_date) < date('Y',$curr_date))
@@ -279,12 +282,12 @@
 				(
 					'date'				=> $curr_date,
 					'date_formatted'	=> date('w',$curr_date)==1?date('d/m',$curr_date):date('d',$curr_date),
-					'date_day'			=> substr(strftime ('%a',$curr_date),0,1)  //substr(date('D',$curr_date),0,1)
+					'date_day'			=> substr(date('D',$curr_date),0,1)
 				);
 
 				if(date('m',$pref_date) < date('m',$curr_date))
 				{
-					$this->line_captions_x[$this->date_diff+1]['month'] = strftime('%b',$curr_date);  //date('M',$curr_date);
+					$this->line_captions_x[$this->date_diff+1]['month'] = date('M',$curr_date);
 				}
 
 				if(date('Y',$pref_date) < date('Y',$curr_date))

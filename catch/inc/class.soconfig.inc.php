@@ -22,7 +22,7 @@
 		var $db;
 		var $db2;
 		var $account;
-		var $config_data;
+		var $config_data,$join,$left_join,$like,$total_records;
 
 		public function __construct()
 		{

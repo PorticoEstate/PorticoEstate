@@ -14,6 +14,7 @@
 			'read_single' => true
 		);
 
+		var $building_bo,$activity_bo;
 		public function __construct()
 		{
 			parent::__construct();

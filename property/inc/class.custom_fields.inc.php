@@ -39,7 +39,7 @@
 	 */
 	class property_custom_fields extends phpgwapi_custom_fields
 	{
-
+		var $_db2, $contacts;
 		/**
 		 * Constructor
 		 *

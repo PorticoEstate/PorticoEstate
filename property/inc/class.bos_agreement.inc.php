@@ -43,7 +43,8 @@
 		var $role;
 		var $member_id;
 		var $uicols = array();
-		var $location_code;
+		var $location_code, $so, $bocommon,$cats, $use_session,$p_num,
+		$status_id,$vendor_id,$allrows,$total_records;
 
 		/**
 		 * @var object $custom reference to custom fields object

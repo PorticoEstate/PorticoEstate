@@ -24,7 +24,8 @@
 		var $sort;
 		var $order;
 		var $sub;
-		var $currentapp;
+		var $currentapp,$nextmatchs,$account,$bo,
+		$bocommon,$acl,$acl_location,$menu,$allrows,$cat_id,$filter;
 
 		var $public_functions = array
 		(
@@ -417,7 +418,7 @@
 				if ($values['save'] || $values['apply'])
 				{
 
-					$values[type_id] = $type_id;
+					$values['type_id'] = $type_id;
 
 					if(!$values['name'])
 					{
@@ -677,6 +678,7 @@
 				return;
 			}
 
+			$id	= phpgw::get_var('id', 'int');
 			$type_id	= phpgw::get_var('type_id', 'int');
 			$attrib_id	= phpgw::get_var('attrib_id', 'int');
 			$values		= phpgw::get_var('values');
@@ -687,8 +689,8 @@
 			{
 				if ($values['save'] || $values['apply'])
 				{
-					$values[type_id] = $type_id;
-					$values[attrib_id] = $attrib_id;
+					$values['type_id'] = $type_id;
+					$values['attrib_id'] = $attrib_id;
 
 					if(!$values['value'] && !$id)
 					{
@@ -884,6 +886,7 @@
 				return;
 			}
 
+			$id	= phpgw::get_var('id', 'int');
 			$type_id	= phpgw::get_var('type_id', 'int');
 			$attrib_id	= phpgw::get_var('attrib_id', 'int');
 			$confirm	= phpgw::get_var('confirm', 'bool', 'POST');

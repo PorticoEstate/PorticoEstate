@@ -19,7 +19,7 @@
 
 	class forward_mail_as_sms extends property_cron_parent
 	{
-
+		var $bocommon;
 		function __construct()
 		{
 			parent::__construct();

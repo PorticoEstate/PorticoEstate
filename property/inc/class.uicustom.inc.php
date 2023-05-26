@@ -53,7 +53,9 @@
 			$acl_add,
 			$acl_edit,
 			$acl_delete,
-			$xsl_rootdir;
+			$xsl_rootdir,
+			$lang_app_name,
+			$config;
 		var $public_functions = array
 			(
 			'query'		 => true,

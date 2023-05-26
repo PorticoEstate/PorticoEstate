@@ -33,10 +33,8 @@
 
 	class eventplanner_boapplication extends phpgwapi_bocommon
 	{
-		protected static
-			$bo,
-			$fields,
-			$acl_location;
+		protected
+			$bo;
 
 		public $cats;
 

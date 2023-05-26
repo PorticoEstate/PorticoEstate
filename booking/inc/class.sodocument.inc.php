@@ -31,6 +31,8 @@
 			'application'
 		);
 
+		var $newFile;
+
 		function __construct()
 		{
 			$this->ownerType = substr(get_class($this), 19);

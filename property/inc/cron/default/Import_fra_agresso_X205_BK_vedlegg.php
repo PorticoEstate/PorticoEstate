@@ -36,6 +36,7 @@
 	{
 
 		protected $debug = false;
+		var $config;
 
 		function __construct()
 		{
@@ -174,7 +175,7 @@
 
 				if (!ftp_chdir($connection, $directory_remote))
 				{
-					echo ("Change Dir Failed: $dir<BR>\r\n");
+					echo ("Change Dir Failed: {$directory_remote}<BR>\r\n");
 					return false;
 				}
 

@@ -33,6 +33,7 @@
 			'menu'	=> true,
 		);
 
+		var $socommon, $account,$dateformat,$datetimeformat;
 
 		function __construct()
 		{

@@ -34,9 +34,10 @@
 	class property_import
 	{
 
-		var $public_functions = array
-			(
+		var $public_functions = array(
 		);
+
+		var $bocommon,$uicols2;
 
 		function __construct()
 		{
@@ -108,7 +109,7 @@
 			return $importfile;
 		}
 
-		function prepare_data( $importfile = '', $list = '', $uicols = '' )
+		function prepare_data( $importfile = '', $list = '', $uicols = array() )
 		{
 			$fields = array();
 			for ($i = 0; $i < count($uicols['input_type']); $i++)

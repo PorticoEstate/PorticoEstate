@@ -19,6 +19,7 @@
 		);
 		protected $module;
 
+		var $display_name, $allocation_bo, $db;
 		public function __construct()
 		{
 			parent::__construct();

@@ -4,6 +4,7 @@
 	class booking_soaudience extends booking_socommon
 	{
 
+		var $so;
 		function __construct()
 		{
 			parent::__construct('bb_targetaudience', array(

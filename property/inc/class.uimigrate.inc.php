@@ -90,6 +90,9 @@
 		/**
 		 * @var array $public_functions publicly available methods of the class
 		 */
+
+		var $nextmatchs,$acl_delete,$acl_manage;
+
 		public $public_functions = array
 			(
 			'index'		 => true,

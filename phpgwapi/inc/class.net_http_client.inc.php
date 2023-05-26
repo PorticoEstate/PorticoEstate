@@ -58,6 +58,7 @@
 	class net_http_client 
 	{
 
+		var $responseHeaders,$responseBody,$request;
 		// @private
 		/// array containg server URL, similar to array returned by parseurl()
 		var $url; 

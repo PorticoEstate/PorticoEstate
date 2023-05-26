@@ -95,7 +95,7 @@
 						case 'maaler_nr':
 							if ($entry['value'] && ($entry['value'] != $maaler_nr))
 							{
-								$this->soproject = CreateObject('property.soproject');
+								$soproject = CreateObject('property.soproject');
 								if ($values['street_name'])
 								{
 									$address = $this->db->db_addslashes($values['street_name'] . ' ' . $values['street_number']);
@@ -105,7 +105,7 @@
 									$address = $this->db->db_addslashes($values['location_name']);
 								}
 
-								$id = $this->soproject->update_power_meter($entry['value'], $values['location_code'], $address);
+								$id = $soproject->update_power_meter($entry['value'], $values['location_code'], $address);
 
 								$maaler_nr = $entry['value'];
 							}

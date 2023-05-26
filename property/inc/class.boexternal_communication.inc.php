@@ -35,7 +35,7 @@
 	class property_boexternal_communication  extends phpgwapi_bocommon
 	{
 
-		var $so, $historylog, $config, $bocommon, $preview_html, $dateformat, $currentapp;
+		var $so, $historylog, $config, $bocommon, $preview_html, $dateformat, $currentapp, $order_sent_adress;
 
 		public function __construct( $currentapp = 'property' )
 		{
@@ -440,7 +440,7 @@ HTML;
 
 			$body .= "<table class='details'>{$table_content}</table>\n";
 
-			$subject = "[PorticoTicket::{$ticket_id}::{$id}] {$location_code} {$message_info['subject']}({$i})";
+			$subject = "[PorticoTicket::{$ticket_id}::{$id}] {$message_info['subject']}({$i})";
 
 			$body = str_replace('__SUBJECT__', $subject, $body);
 

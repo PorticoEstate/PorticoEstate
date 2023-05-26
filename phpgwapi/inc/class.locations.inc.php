@@ -181,7 +181,7 @@
 							$GLOBALS['phpgw_info']['server']['db_type']);
 
 				$oProc->m_odb =& $this->_db;
-				$Proc->m_odb->Halt_On_Error = 'report';
+				$oProc->m_odb->Halt_On_Error = 'report';
 
 				$oProc->DropTable($tbl);
 			}

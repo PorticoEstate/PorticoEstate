@@ -837,7 +837,7 @@
 				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id $filtermethod $filtermethod2 $querymethod {$filtermethod_direction} GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
 
 			//_debug_array($sql);die();
-			$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
@@ -864,7 +864,7 @@
 
 
 			$sql = str_replace('budget', 'actual_cost', $sql);
-			$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())
 			{
@@ -994,7 +994,7 @@
 				. " WHERE $filtermethod $querymethod {$filtermethod_direction} GROUP BY fm_b_account.{$b_account_field},fm_s_agreement_budget.ecodimb";
 
 			//_debug_array($sql);die();
-			$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$_dummy_district = $filter_district_id ? $filter_district_id : 0;
 			while ($this->db->next_record())

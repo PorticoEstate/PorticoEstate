@@ -51,8 +51,8 @@
 			'get_sms_recipients'	 => true
 		);
 		var $acl, $historylog, $bo;
-		private $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete,
-			$botts, $bocommon, $config, $dateformat, $preview_html, $account;
+		private $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete, $receipt,
+			$botts, $bocommon, $config, $dateformat, $preview_html, $account,$cat_id;
 
 		public function __construct()
 		{

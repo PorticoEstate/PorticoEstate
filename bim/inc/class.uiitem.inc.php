@@ -22,6 +22,7 @@
     private $sogroup;
     private $bocommon;
     private $dry_run;
+    var $role, $bo;
     public $public_functions = array
     (
         'index' => true,

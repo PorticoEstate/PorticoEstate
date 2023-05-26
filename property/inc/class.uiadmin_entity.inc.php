@@ -67,6 +67,8 @@
 			'delete_choice_value'		 => true
 		);
 		private $bo;
+		var $account,$bocommon, $entity_id, $cat_id,$allrows,$type, $type_app,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage;
 
 		function __construct()
 		{
@@ -2320,7 +2322,7 @@
 
 			if ($id)
 			{
-				$values			 = $this->bo->read_single_custom_function($entity_id, $cat_id, $id);
+				$values			 = $this->bo->read_single_custom_function($id,$entity_id, $cat_id);
 				$type_name		 = $values['type_name'];
 				$function_msg	 = lang('edit custom function') . ' ' . lang($type_name);
 				$action			 = 'edit';

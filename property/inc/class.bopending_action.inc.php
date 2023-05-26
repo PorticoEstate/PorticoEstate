@@ -34,7 +34,7 @@
 	class property_bopending_action
 	{
 
-		var $so;
+		var $so, $account, $start,$order, $sort;
 		var $public_functions = array(
 			'get_pending_action_ajax'	 => true,
 			'cancel_pending_action'		 => true
@@ -100,7 +100,7 @@
 					"totalRecords"			 => $total_records,
 					"Result"				 => $values,
 					'recordsReturned'		 => count($values),
-					'pageSize'				 => $length,
+					'pageSize'				 => phpgw::get_var('length', 'int'),
 					'startIndex'			 => $this->start,
 					'sortKey'				 => $this->order,
 					'sortDir'				 => $this->sort,

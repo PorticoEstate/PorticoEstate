@@ -46,7 +46,7 @@
 			'save'					 => true,
 			'delete'				 => true,
 		);
-		var $acl, $bo;
+		var $acl, $bo,$receipt;
 		private $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete,
 			 $bocommon, $config, $dateformat, $account;
 

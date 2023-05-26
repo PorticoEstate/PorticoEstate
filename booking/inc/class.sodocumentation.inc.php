@@ -15,6 +15,8 @@
 			$uploadRootDir,
 			$ownerType = null;
 
+		var $newFile;
+
 		function __construct()
 		{
 			parent::__construct('bb_documentation', array(

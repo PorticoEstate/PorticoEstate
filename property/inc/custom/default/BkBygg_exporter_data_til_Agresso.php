@@ -53,7 +53,7 @@
 			var $order_id;
 			var $voucher_type;
 			var $voucher_id;
-			var $batchid;
+			var $batchid,$db,$soXport,$config;
 			protected $global_lock = false;
 
 			public function __construct( $param )

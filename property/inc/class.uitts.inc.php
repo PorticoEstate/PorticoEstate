@@ -80,7 +80,7 @@
 		var $user_filter,$bo, $cats,$acl, $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete, $acl_manage,
 		$district_id, $tenant_id, $account, $bocommon, $start, $query, $sort, $order, $status_id, $user_id, $group_id, $reported_by, $cat_id,
 		$allrows, $vendor_id, $start_date, $end_date, $location_code, $p_num, $show_finnish_date, $ecodimb,$b_account,
-		$building_part, $branch_id, $parent_cat_id;
+		$building_part, $branch_id, $parent_cat_id,$order_dim1,$decimal_separator;
 
 		public function __construct()
 		{
@@ -326,8 +326,8 @@ HTML;
 			$params					 = $this->get_params();
 			$params['start']		 = 0;
 			$params['results']		 = -1;
-			$params['start_date']	 = urldecode($this->start_date);
-			$params['end_date']		 = urldecode($this->end_date);
+			$params['start_date']	 = $this->start_date ? urldecode($this->start_date) : '';
+			$params['end_date']		 = $this->end_date ? urldecode($this->end_date) : '';
 			$params['download']		 = true;
 			$params['allrows']		 = true;
 			$params['external']		 = $external;
@@ -1023,8 +1023,8 @@ HTML;
 	//		self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 			self::add_javascript('property', 'portico', 'tts.index.js', false, array('combine' => true ));
 
-			$start_date	 = urldecode($this->start_date);
-			$end_date	 = urldecode($this->end_date);
+			$start_date	 = !empty($this->start_date) ? urldecode($this->start_date) : '';
+			$end_date	 = !empty($this->end_date) ? urldecode($this->end_date) : '';
 
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');

@@ -2526,7 +2526,7 @@
 
 				$_diff_start	 = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
 				$entry['diff']	 = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
-				if (abs($entry['actual_cost']) > 0 || $entry['period'] < date('Ym'))
+				if (abs((float)$entry['actual_cost']) > 0 || $entry['period'] < date('Ym'))
 				{
 					$_deviation		 = $entry['budget'] - $entry['actual_cost'];
 					$deviation		 = $_deviation;

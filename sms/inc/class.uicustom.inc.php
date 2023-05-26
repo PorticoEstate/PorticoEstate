@@ -26,7 +26,9 @@
 			'edit_yes' => true,
 			'delete' => true,
 		);
-
+		var $nextmatchs, $account,$bo,
+		$bocommon,$sms, $acl,$acl_location, $start,$query, $sort,$order, $allrows,$db, $cat_id,$filter;
+   
 		function __construct()
 		{
 			//	$this->nextmatchs			= CreateObject('phpgwapi.nextmatchs');
@@ -197,7 +199,7 @@
 
 					$this->db->query($sql, __LINE__, __FILE__);
 
-					$new_uid = $this->db->get_last_insert_id(phpgw_sms_featcustom, 'custom_id');
+					$new_uid = $this->db->get_last_insert_id('phpgw_sms_featcustom', 'custom_id');
 
 					$this->db->transaction_commit();
 

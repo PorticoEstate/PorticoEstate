@@ -31,7 +31,7 @@
 			$organization_bo,
 			$resource_bo,
 			$sopurchase_order,
-			$fields;
+			$fields,$display_name;
 
 		public function __construct()
 		{

@@ -34,6 +34,7 @@
 			'manager' => True
 		);
 
+		var $html;
 		function __construct()
 		{
 			$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');

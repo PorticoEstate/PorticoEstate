@@ -43,6 +43,7 @@
 		protected $suffix		 = 'pdf';
 		protected $cat_id		 = 80;
 		protected $function_name = 'organize_energy_pdf_bbb';
+		var $bocommon,$vfs, $rootdir,$fakebase,$db, $receipt;
 
 		function __construct()
 		{

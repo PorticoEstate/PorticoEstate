@@ -34,7 +34,7 @@
 	{
 
 		var $bocommon;
-		var $total_records;
+		var $total_records, $account,$db,$join,$left_join,$like;
 		protected $global_lock = false;
 
 		function __construct()

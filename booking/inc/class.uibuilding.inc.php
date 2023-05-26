@@ -22,6 +22,7 @@
 			'find_buildings_used_by' => true,
 		);
 		protected $module;
+		var $user_id, $bo_booking, $activity_bo, $fields,$display_name;
 
 		public function __construct()
 		{

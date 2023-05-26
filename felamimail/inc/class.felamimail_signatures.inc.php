@@ -23,6 +23,7 @@
 		var $fm_signature = NULL;
 		
 		var $fm_defaultsignature = NULL;
+		var $accountID;
 		
 		function __construct($_signatureID = NULL) {
 			$this->accountID = $GLOBALS['phpgw_info']['user']['account_id'];

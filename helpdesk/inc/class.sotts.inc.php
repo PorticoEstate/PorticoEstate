@@ -58,7 +58,7 @@
 				)
 			);
 
-
+		var $db,$db2,$like,$join,$left_join,$dateformat,$custom,$historylog,$grants,$total_records,$fields_updated;
 		function __construct()
 		{
 			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
@@ -1502,7 +1502,7 @@
 				$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
 				$new_status = !empty($config['reopen_status']) ? $config['reopen_status'] : 'O';
 				$this->fields_updated[] = 'status';
-				$this->historylog->add('R', (int)$id, $new_status, $old_status);
+				$this->historylog->add('R', (int)$id, $new_status, $status);
 				$this->db->query("UPDATE phpgw_helpdesk_tickets SET status='{$new_status}' WHERE id=" . (int)$id, __LINE__, __FILE__);
 				$this->db->query("UPDATE phpgw_helpdesk_tickets SET priority = 1 WHERE id =" . (int)$id, __LINE__, __FILE__);
 			}
@@ -1514,6 +1514,7 @@
 
 		public function get_assigned_groups2( $selected = 0)
 		{
+			$filtermethod = '';
 
 			$values = array();
 			$sql = "SELECT DISTINCT group_id as id , account_lastname, account_firstname FROM phpgw_helpdesk_tickets"

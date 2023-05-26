@@ -13,6 +13,7 @@
 			$service_id_strlen,
 			$project_id_strlen;
 
+		var $orders;
 		public function __construct( $billing_job = null)
 		{
 			if($billing_job)

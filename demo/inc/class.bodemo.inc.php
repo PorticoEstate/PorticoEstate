@@ -39,7 +39,7 @@
 		public $sort;
 		public $order;
 		public $cat_id;
-		public $allrows;
+		public $allrows, $total_records,$uicols;
 		private $acl_location;
 		private $currentapp;
 		private $so;

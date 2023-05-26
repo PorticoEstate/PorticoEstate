@@ -56,6 +56,7 @@
 			'hierarchy'			=> true,
 			'print_pdf'			=> true
 		);
+		var $nextmatchs, $account, $bo, $bocommon, $allrows, $bocategory, $acl;
 
 		public function __construct()
 		{

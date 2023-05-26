@@ -17,7 +17,7 @@
 	 */
 	class sms_sopoll
 	{
-		var $db;
+		var $db, $like, $join,$total_records;
 		var $account;
 		var $poll_data;
 

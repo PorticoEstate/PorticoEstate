@@ -41,7 +41,8 @@
 		var $sort;
 		var $order;
 		var $cat_id;
-		var $allrows;
+		var $allrows, $bocommon, $acl_location,$use_session,$dateformat,$datetimeformat,
+		$so, $total_records,$uicols;
 
 		/**
 		 * @var object $custom reference to custom fields object

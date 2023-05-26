@@ -39,7 +39,7 @@
 		var $filter;
 		var $sort;
 		var $order;
-		var $cat_id;
+		var $cat_id, $so, $bocommon, $use_session,$allrows,$chapter_id,$total_records;
 		var $public_functions = array
 			(
 			'read'			 => true,
@@ -181,7 +181,7 @@
 			return $tolerance_list;
 		}
 
-		function get_grouping_list( $selected = '', $workorder_id )
+		function get_grouping_list( $workorder_id, $selected = '' )
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file(array('grouping_select'));
 			$groupings = $this->so->get_grouping_list($workorder_id);

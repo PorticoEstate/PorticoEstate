@@ -37,6 +37,9 @@
 		 */
 		var $debug = false;
 	
+		var $displayCharset,$rules,$vacation,$emailNotification;
+
+
 		function __construct($_icServer=null)
 		{
 			parent::Net_Sieve();

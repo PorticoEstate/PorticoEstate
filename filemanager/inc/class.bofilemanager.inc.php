@@ -73,6 +73,7 @@
 
 		//var $debug = true;
 		var $debug = false;
+		var $todir,$pwd,$cwd,$lesspath,$files_array,$historylesspath,$bofilemanager,$file_size;
 
 		var $public_functions = array
 			(

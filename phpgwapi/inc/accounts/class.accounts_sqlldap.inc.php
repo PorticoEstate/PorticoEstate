@@ -35,6 +35,7 @@
 	 */
 	class phpgwapi_accounts_sqlldap extends phpgwapi_accounts_sql
 	{
+		var $data;
 		/**
 		  * @var object $ldap phpgwapi_accounts_ldap object for 
 		  * replicating changes to LDAP.
@@ -132,7 +133,7 @@
 		 */
 		public function add_account2group($account_id, $group_id)
 		{
-			if ( parent::add_account2Group($account_id, $group_id) )
+			if ( parent::add_user2group($account_id, $group_id) )
 			{
 				return $this->ldap->add_account2Group($account_id, $group_id);
 			}

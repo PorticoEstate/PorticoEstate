@@ -5,6 +5,7 @@
 
 		public static $pattern = '.ORG.BK';
 
+		var $location_id, $name, $description;
 		public function __construct( int $location_id, string $name, string $description )
 		{
 			$this->location_id = $location_id;

@@ -19,6 +19,7 @@
 		var $sieveHost;
 		
 		var $sievePort;
+		var $domainName;
 		
 		function addAccount($_hookValues) {
 			return $this->updateAccount($_hookValues);

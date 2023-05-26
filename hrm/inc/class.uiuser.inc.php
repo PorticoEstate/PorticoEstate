@@ -36,6 +36,8 @@
 			'view_cv'	=> true
 		);
 
+		var $nextmatchs, $account, $bo, $bocommon, $allrows, $bocategory;
+
 		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;

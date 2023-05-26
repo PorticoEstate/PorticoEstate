@@ -21,6 +21,7 @@
 			'flagMessages'		=> True
 		);
 
+		var $accountid,$bopreferences,$sofelamimail,$sofilter,$mailPreferences,$sessionData;
 		function __construct()
 		{
 			$this->accountid	= $GLOBALS['phpgw_info']['user']['account_id'];

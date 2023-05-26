@@ -31,6 +31,8 @@
 	{
 
 		private $so;
+		var $bocommon, $operators, $operators_equal,$operators_like, $operators_in,
+		 $operators_null,$total_records_reports,$total_records_dataset;
 		var $public_functions = array
 			(
 			'read'		 => true,
