@@ -721,7 +721,7 @@
 			// in case of backslash characters - as in path-references
 			foreach ($data as $_key => &$_value)
 			{
-				$_value = str_replace('\\', '/', $_value);
+				$_value = $_value ? str_replace('\\', '/', $_value) : $_value;
 			}
 			unset($_key);
 			unset($_value);
@@ -755,7 +755,8 @@
 						$data[$field['name']] = ',' . implode(',', $data[$field['name']]) . ',';
 					}
 				}
-				$value_set[$field['name']] = $this->_db->db_addslashes(html_entity_decode($data[$field['name']]));
+
+				$value_set[$field['name']] = $data[$field['name']] ? $this->_db->db_addslashes(html_entity_decode($data[$field['name']])) : '';
 
 				// keep hierarchy in order
 				if (isset($field['role']) && $field['role'] == 'parent')
