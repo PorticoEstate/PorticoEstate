@@ -469,6 +469,19 @@
 
 		public function edit_field( $data = array() )
 		{
+			$system_location = !empty($this->location_info['system_location']) ? $this->location_info['system_location'] : $this->location_info['acl_location'];
+			if ($GLOBALS['phpgw']->locations->get_attrib_table($this->location_info['acl_app'], $this->location_info['acl_location']))
+			{
+				$attributes	 = $this->custom->find($this->location_info['acl_app'], $system_location, 0, '', 'ASC', 'attrib_sort', true, true);
+				foreach($attributes as $attribute)
+				{
+					if($data['field_name'] == $attribute['name'] && $attribute['history'] == 1)
+					{
+						$data['attrib_id'] = $attribute['id'];
+						$data['history'] = 1;
+					}
+				}
+			}
 			return $this->so->edit_field($data);
 		}
 
