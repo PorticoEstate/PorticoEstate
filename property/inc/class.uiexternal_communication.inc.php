@@ -52,7 +52,7 @@
 		);
 		var $acl, $historylog, $bo;
 		private $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete, $receipt,
-			$botts, $bocommon, $config, $dateformat, $preview_html, $account,$cat_id;
+			$botts, $bocommon, $config, $dateformat, $preview_html, $account, $cat_id;
 
 		public function __construct()
 		{
@@ -88,7 +88,7 @@
 			$this->preview_html	 = $this->bo->preview_html;
 		}
 
-		function get_category_options( $selected = 0 )
+		function get_category_options()
 		{
 			$data			 = $this->botts->cats->formatted_xslt_list(array('format'	 => 'filter',
 				'selected'	 => $this->cat_id, 'globals'	 => true, 'use_acl'	 => false));
@@ -219,7 +219,7 @@
 			 */
 			$init_preview = phpgw::get_var('init_preview', 'bool');
 
-			if (!$error && (phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool') || $init_preview))
+			if (phpgw::get_var('save', 'bool') || phpgw::get_var('send', 'bool') || $init_preview)
 			{
 				$receipt = $this->save_ticket();
 				if ($init_preview)
@@ -245,43 +245,23 @@
 				'type'			 => 'form'
 			));
 
-			$contact_data = $this->bo->get_contact_data($ticket);
-
-			$content_email = $this->bocommon->get_vendor_email(isset($ticket['vendor_id']) ? $ticket['vendor_id'] : 0, 'mail_recipients');
-
-			if (isset($values['mail_recipients']) && is_array($values['mail_recipients']))
-			{
-				$_recipients_found = array();
-				foreach ($content_email as &$vendor_email)
-				{
-					if (in_array($vendor_email['value_email'], $values['mail_recipients']))
-					{
-						$vendor_email['value_select']	 = str_replace("type='checkbox'", "type='checkbox' checked='checked'", $vendor_email['value_select']);
-						$_recipients_found[]			 = $vendor_email['value_email'];
-					}
-				}
-				$value_extra_mail_address = implode(', ', array_diff($values['mail_recipients'], $_recipients_found));
-			}
-
 			$datatable_def = array();
 
-			$datatable_def[] = array
-				(
+			$datatable_def[] = array(
 				'container'	 => 'datatable-container_1',
 				'requestUrl' => "''",
 				'ColumnDefs' => array(array('key'		 => 'value_email', 'label'		 => lang('email'),
 						'sortable'	 => true, 'resizeable' => true),
 					array('key'		 => 'value_select', 'label'		 => lang('select'), 'sortable'	 => false,
 						'resizeable' => true)),
-				'data'		 => json_encode($content_email),
+				'data'		 => json_encode(array()),
 				'config'	 => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
 				)
 			);
 
-			$other_orders_def = array
-				(
+			$other_orders_def = array(
 				array('key' => 'url', 'label' => lang('id'), 'sortable' => true),
 				array('key' => 'location_code', 'label' => lang('location'), 'sortable' => true),
 				array('key' => 'name', 'label' => lang('name'), 'sortable' => false),
@@ -291,8 +271,7 @@
 				array('key' => 'select', 'label' => lang('select'), 'sortable' => false, 'formatter' => 'JqueryPortico.FormatterCenter'),
 			);
 
-			$datatable_def[] = array
-				(
+			$datatable_def[] = array(
 				'container'	 => 'datatable-container_2',
 				'requestUrl' => "''",
 				'data'		 => json_encode(array()),
@@ -305,8 +284,7 @@
 				)
 			);
 
-			$other_deviations_def = array
-				(
+			$other_deviations_def = array(
 				array('key' => 'url', 'label' => lang('id'), 'sortable' => true),
 				array('key' => 'location_code', 'label' => lang('location'), 'sortable' => true),
 				array('key' => 'subject', 'label' => lang('subject'), 'sortable' => false),
@@ -315,8 +293,7 @@
 				array('key' => 'status', 'label' => lang('status'), 'sortable' => true),
 			);
 
-			$datatable_def[] = array
-				(
+			$datatable_def[] = array(
 				'container'	 => 'datatable-container_3',
 				'requestUrl' => "''",
 				'data'		 => json_encode(array()),
@@ -336,8 +313,7 @@
 			);
 
 			$type_list	 = array();
-			$type_list	 = execMethod("{$this->currentapp}.bogeneric.get_list", array('type'		 => 'external_com_type',
-				'selected'	 => (int)$values['type_id']));
+			$type_list	 = execMethod("{$this->currentapp}.bogeneric.get_list", array('type' => 'external_com_type'));
 
 			if (count($type_list) > 1)
 			{
@@ -351,7 +327,6 @@
 				'form_action'		 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.add_deviation")),
 				'cancel_url'		 => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
 				'vendor_data'		 => $vendor_data,
-				'contact_data'		 => $contact_data,
 				'tabs'				 => phpgwapi_jquery::tabview_generate($tabs, 0),
 				'value_active_tab'	 => 0,
 				'base_java_url'		 => "{menuaction:'{$this->currentapp}.uitts.update_data'}"
@@ -1322,14 +1297,12 @@ JS;
 						{
 							$comment = 'SMS-melding er sendt til ' . $final_recipient;
 							phpgwapi_cache::message_set($comment, 'message');
-
 						}
 					}
 					catch (Exception $ex)
 					{
 						$error_message = 'SMS-melding feilet til ' . $final_recipient;
 						phpgwapi_cache::message_set($error_message, 'error');
-
 					}
 				}
 
@@ -1358,8 +1331,8 @@ JS;
 				'link'	 => '#main'
 			);
 
-			$default_message = "\n\n(Denne meldingen kan ikke besvares)";
-			$data= array(
+			$default_message								 = "\n\n(Denne meldingen kan ikke besvares)";
+			$data											 = array(
 				'form_action'		 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.send_sms")),
 				'cancel_url'		 => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
 				'tabs'				 => phpgwapi_jquery::tabview_generate($tabs, 0),
