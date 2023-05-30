@@ -21,7 +21,9 @@
 	*/
 	class phpgwapi_bojsaddressbook
 	{
-		var $soaddressbook;
+		var $contactsobject,
+		 $boaddressbook,
+		 $soaddressbook;
 		/**
 		* Private contacts object
 		* @var object phpgwapi.contacts object

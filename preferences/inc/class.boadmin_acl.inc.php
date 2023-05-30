@@ -24,7 +24,7 @@
 		var $sort;
 		var $order;
 		var $cat_id;
-		var $acl_app;
+		var $acl_app,$currentapp, $acl,$right, $use_session,$allrows,$location, $granting_group;
 
 		/**
 		* @var int $total_records the total number of records found during last search

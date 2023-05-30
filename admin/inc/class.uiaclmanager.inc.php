@@ -37,6 +37,7 @@
 
 	class admin_uiaclmanager
 	{
+		var $account_id;
 		/**
 		 * @var object $_template reference to global template object
 		 */

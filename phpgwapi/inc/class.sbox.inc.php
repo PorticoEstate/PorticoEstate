@@ -21,6 +21,10 @@
 	*/
 	class phpgwapi_sbox
 	{
+
+		function __construct()
+		{
+		}
 		/**
 		* Get a hour drop down list
 		*
@@ -353,7 +357,7 @@ HTML;
 HTML;
 			foreach ( $priorities as $id => $priority )
 			{
-				$slctd = $i == $selected ? ' selected' : '';
+				$slctd = $id == $selected ? ' selected' : '';
 				$html .= <<<HTML
 				<option value="{$id}"{$slctd}>$priority</option>
 

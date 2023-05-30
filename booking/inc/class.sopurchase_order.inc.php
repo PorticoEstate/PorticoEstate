@@ -7,6 +7,7 @@
 			$db2,
 			$join,
 			$like;
+		var $global_lock;
 
 		function __construct()
 		{

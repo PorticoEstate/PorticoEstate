@@ -32,7 +32,7 @@
 	 * @package property
 	 */
 	include_class('property', 'cron_parent', 'inc/cron/');
-	require_once PHPGW_SERVER_ROOT . '/phpgwapi/inc/ews/autoload.php';
+	require_once PHPGW_SERVER_ROOT . '/phpgwapi/inc/ews/vendor/autoload.php';
 
 	use \jamesiarmes\PhpEws\Client;
 	use \jamesiarmes\PhpEws\Request\FindItemType;
@@ -71,7 +71,7 @@
 	{
 
 		var $items_to_move = array();
-		protected $config;
+		protected $config, $join;
 
 		public function __construct()
 		{
@@ -115,17 +115,99 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 		}
 
+		function get_accesskey()
+		{
+
+			$client_id		 = !empty($this->config->config_data['xPortico']['client_id']) ? $this->config->config_data['xPortico']['client_id'] : '';
+			$client_secret	 = !empty($this->config->config_data['xPortico']['client_secret']) ? $this->config->config_data['xPortico']['client_secret'] : '';
+			$tenant_id		 = $this->config->config_data['xPortico']['tenant_id'];
+
+			$url= "https://login.microsoftonline.com/{$tenant_id}/oauth2/v2.0/token";
+
+			$param_post_curl = array(
+				'client_id'		 => $client_id,
+				'client_secret'	 => $client_secret,
+				'grant_type'	 => 'client_credentials',
+				'scope'			 => "https://outlook.office365.com/.default",
+			);
+
+
+			$ch=curl_init();
+			curl_setopt($ch,CURLOPT_URL,$url);
+
+			if (!empty($GLOBALS['phpgw_info']['server']['httpproxy_server']))
+			{
+				$proxy = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
+			}
+			else
+			{
+				$proxy = null;
+			}
+
+			if($proxy)
+			{
+				curl_setopt($ch, CURLOPT_PROXY, $proxy);
+			}
+
+			curl_setopt($ch, CURLOPT_POST, true);
+			curl_setopt($ch,CURLOPT_POSTFIELDS, http_build_query($param_post_curl));
+			curl_setopt($ch,CURLOPT_POST, 1);
+			curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
+
+			$result=curl_exec($ch);
+
+			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+
+			return json_decode($result, true);
+
+		}
+
 		function process_messages()
 		{
 			// Set connection information.
 			$host		 = !empty($this->config->config_data['xPortico']['ews_server']) ? $this->config->config_data['xPortico']['ews_server'] : 'epost.bergen.kommune.no';
 			$username	 = !empty($this->config->config_data['xPortico']['username']) ? $this->config->config_data['xPortico']['username'] : 'xPortico';
 			$password	 = $this->config->config_data['xPortico']['password'];
+			$assigneeEmail	 = $this->config->config_data['xPortico']['mailbox'];
+
 			$version	 = Client::VERSION_2016;
 
-			$client = new Client($host, $username, $password, $version);
+			if(!empty($this->config->config_data['xPortico']['client_id']))
+			{
+				$access_info = $this->get_accesskey();
+				$access_token = $access_info['access_token'];
+				$client	 = new Client($host, $version);
+				$client->authWithOauth2($access_token);
 
-			$folder_info											 = $this->find_folder($client);
+	// Impersonating the user
+				$ei = new ExchangeImpersonationType();
+				$sid = new ConnectingSIDType();
+				$sid->PrimarySmtpAddress = $assigneeEmail;
+				$ei->ConnectingSID = $sid;
+				$client->setImpersonation($ei);
+
+				if (!empty($GLOBALS['phpgw_info']['server']['httpproxy_server']))
+				{
+					$proxy = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
+				}
+				else
+				{
+					$proxy = null;
+				}
+
+				if($proxy)
+				{
+					$client->setCurlOptions(array(CURLOPT_PROXY => $proxy));
+				}
+			}
+			else
+			{
+				$client	 = new Client($host, $version);
+				$client->authWithUserAndPass($username, $password);
+			}
+
+			$folder_info											 = $this->find_folder($client, 'Behandlet');
 			$IsEqualTo_isread										 = new IsEqualToType();
 			$IsEqualTo_isread->FieldURI								 = new PathToUnindexedFieldType();
 			$IsEqualTo_isread->FieldURI->FieldURI					 = 'message:IsRead';
@@ -160,10 +242,12 @@
 				{
 					$code	 = $response_message->ResponseCode;
 					$message = $response_message->MessageText;
-					fwrite(
-						STDERR,
-	  "Failed to search for messages with \"$code: $message\"\n"
-					);
+					$GLOBALS['phpgw']->log->error(array(
+					'text'	=> 'Failed to search for messages with %1 : %2.',
+					'p1'	=> $code,
+					'p2'	=> $message,
+					'line'	=> __LINE__,
+					'file'	=> __FILE__));
 					continue;
 				}
 
@@ -196,7 +280,12 @@
 						{
 							$code	 = $response_message2->ResponseCode;
 							$message = $response_message2->MessageText;
-							fwrite(STDERR, "Failed to get message with \"$code: $message\"\n");
+							$GLOBALS['phpgw']->log->error(array(
+							'text'	=> 'Failed to search for messages with %1 : %2.',
+							'p1'	=> $code,
+							'p2'	=> $message,
+							'line'	=> __LINE__,
+							'file'	=> __FILE__));
 							continue;
 						}
 
@@ -248,7 +337,7 @@
 			}
 		}
 
-		function find_folder( $client )
+		function find_folder( $client, $folder_name = 'Behandlet' )
 		{
 			// Build the request.
 			$request						 = new FindFolderType();
@@ -271,7 +360,7 @@
 			$contains->FieldURI				 = new PathToUnindexedFieldType();
 			$contains->FieldURI->FieldURI	 = UnindexedFieldURIType::FOLDER_DISPLAY_NAME;
 			$contains->Constant				 = new ConstantValueType();
-			$contains->Constant->Value		 = 'Behandlet';
+			$contains->Constant->Value		 = $folder_name;
 			$contains->ContainmentComparison = ContainmentComparisonType::EXACT;
 			$contains->ContainmentMode		 = ContainmentModeType::EXACT_PHRASE;
 			$request->Restriction->Contains	 = $contains;
@@ -288,7 +377,13 @@
 				{
 					$code	 = $response_message->ResponseCode;
 					$message = $response_message->MessageText;
-					fwrite(STDERR, "Failed to find folders with \"$code: $message\"\n");
+					$GLOBALS['phpgw']->log->error(array(
+					'text'	=> 'Failed to find folders with %1 : %2.',
+					'p1'	=> $code,
+					'p2'	=> $message,
+					'line'	=> __LINE__,
+					'file'	=> __FILE__));
+//					fwrite(STDERR, "Failed to find folders with \"$code: $message\"\n");
 					continue;
 				}
 
@@ -787,9 +882,14 @@
 		{
 			$request = new MoveItemType();
 
+			$request->ToFolderId = new \jamesiarmes\PhpEws\Type\TargetFolderIdType();
+			$request->ToFolderId->FolderId = new \jamesiarmes\PhpEws\Type\FolderIdType();
+
 			$request->ToFolderId->FolderId->Id			 = $folder_info['id'];
 			$request->ToFolderId->FolderId->ChangeKey	 = $folder_info['changekey'];
 
+			$request->ItemIds = new NonEmptyArrayOfBaseItemIdsType();
+			$request->ItemIds->ItemId = new ItemIdType();
 			$request->ItemIds->ItemId->Id		 = $item3->ItemId->Id;
 			$request->ItemIds->ItemId->ChangeKey = $item3->ItemId->ChangeKey;
 
@@ -827,10 +927,12 @@
 				{
 					$code	 = $response_message2->ResponseCode;
 					$message = $response_message2->MessageText;
-					fwrite(
-						STDERR,
-	  "Failed to get attachment with \"$code: $message\"\n"
-					);
+					$GLOBALS['phpgw']->log->error(array(
+					'text'	=> 'Failed to search for messages with %1 : %2.',
+					'p1'	=> $code,
+					'p2'	=> $message,
+					'line'	=> __LINE__,
+					'file'	=> __FILE__));
 					continue;
 				}
 

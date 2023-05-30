@@ -22,6 +22,8 @@
 			'delete' => true,
 		);
 
+		var $fields, $display_name;
+
 		public function __construct()
 		{
 //			_debug_array('hei');

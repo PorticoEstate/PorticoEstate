@@ -40,7 +40,7 @@
 				$params['filters']['exported'] = null;
 			}
 
-			if (count($where_clauses) > O)
+			if (count($where_clauses) > 0)
 			{
 				$params['filters']['where'] = $where_clauses;
 			}
@@ -56,14 +56,14 @@
 		public function accessable_buildings( $user_id )
 		{
 			$buildings = array();
-			$this->db = & $GLOBALS['phpgw']->db;
+			$db = & $GLOBALS['phpgw']->db;
 
 			$sql = "select distinct bu.id
 					from bb_building bu
 					inner join bb_permission pe on pe.object_id = bu.id and pe.object_type = 'building'
 					where pe.subject_id = " . $user_id;
-			$this->db->query($sql);
-			$result = $this->db->resultSet;
+			$db->query($sql);
+			$result = $db->resultSet;
 
 			foreach ($result as $r)
 			{

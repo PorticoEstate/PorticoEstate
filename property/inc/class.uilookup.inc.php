@@ -46,7 +46,7 @@
 		var $part_of_town_id;
 		var $district_id;
 		var $sub;
-		var $currentapp;
+		var $currentapp,$bo, $cats,$entity_id,$location_code,$criteria_id;
 		var $public_functions = array
 			(
 			'addressbook'		 => true,
@@ -128,7 +128,7 @@
 					'results'	 => phpgw::get_var('length', 'int', 'REQUEST', 0),
 					'query'		 => $search['value'],
 					'order'		 => $order_field,
-					'sort'		 => strtoupper($order[0]['dir']),
+					'sort'		 => !empty($order[0]['dir']) ? strtoupper($order[0]['dir']) : null,
 					'dir'		 => $order[0]['dir'],
 					'allrows'	 => phpgw::get_var('length', 'int') == -1,
 					'filter'	 => '',

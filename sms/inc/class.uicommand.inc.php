@@ -26,7 +26,9 @@
 			'edit_command' => true,
 			'delete' => true,
 		);
-
+		var $nextmatchs, $account,$bo,
+		$bocommon,$sms, $acl,$acl_location, $start,$query, $sort,$order, $allrows,$db, $cat_id,$filter;
+   
 		function __construct()
 		{
 			$this->nextmatchs = CreateObject('phpgwapi.nextmatchs');

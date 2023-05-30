@@ -37,7 +37,7 @@
 	{
 
 		var $grants;
-		var $db;
+		var $db, $db2, $join, $left_join, $like, $acl;
 		var $account;
 		var $acl_location;
 		var $appname = 'property';

@@ -214,7 +214,15 @@
 				$joins .= "	{$this->join} fm_location1 ON (fm_location1.loc1 = fm_locations.loc1)";
 				$joins .= "	{$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id)";
 
-				$filter_clauses[] = "fm_part_of_town.district_id =" . (int)$filters['district_id'];
+				if(is_array($filters['district_id']))
+				{
+					$district_ids = $filters['district_id'];
+				}
+				else
+				{
+					$district_ids = array($filters['district_id']);
+				}
+				$filter_clauses[] = "fm_part_of_town.district_id IN ( " . implode(',', array_map('intval', $district_ids)) . ")";
 			}
 			if (count($filter_clauses))
 			{

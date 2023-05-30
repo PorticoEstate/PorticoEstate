@@ -2,6 +2,7 @@
 
 	class sms_sms_ extends sms_sms__
 	{
+		var $sms_param;
 
 		function __construct()
 		{

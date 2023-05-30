@@ -13,7 +13,8 @@
 			$customer_id,
 			$sequential_number_generator_so,
 			$config_data,
-			$sopurchase_order;
+			$sopurchase_order,
+			$event_so, $application_bo, $application_so,$allocation_bo,$booking_bo,$event_bo,$organization_bo;
 
 		function __construct()
 		{
@@ -408,7 +409,7 @@
 					if ($this->config_data['external_format'] == 'CSV')
 					{
 						return $this->build_export_result(
-								$export_format, count(array_filter($internal_reservations, array($this, 'not_free'))), $this->calculate_total_cost($internal_reservations), $this->format_csv($internal_reservations, $account_codes, $number_generator)
+								$export_format, count(array_filter($external_reservations, array($this, 'not_free'))), $this->calculate_total_cost($external_reservations), $this->format_csv($external_reservations, $account_codes, $number_generator)
 						);
 					}
 					elseif ($this->config_data['external_format'] == 'AGRESSO')
@@ -1816,7 +1817,7 @@
 							{
 								continue;
 							}
-							
+
 							if($order_line['parent_mapping_id'] == 0)
 							{
 								$article_name = $order_line['name']  . ' - ' . $reservation['description'];
@@ -2186,6 +2187,33 @@
 					$check_customer_identifier = $this->get_customer_identifier_value_for($reservation) . '::' . $customer_number;
 				}
 
+				$purchase_order = $this->sopurchase_order->get_purchase_order(0, $reservation['reservation_type'], $reservation['reservation_id']);
+				/**
+				 * For vipps kan det være flere krav, for etterfakturering vil det være ett
+				 */
+				$payments = $this->sopurchase_order->get_order_payments($purchase_order['order_id']);
+
+				if(isset($payments[0]))
+				{
+					$payment = $payments[0];
+
+					/**
+					 * Already paid for, or cancelled
+					 */
+					if(in_array($payment['status'], array( 'completed', 'voided', 'refunded')))
+					{
+						continue;
+					}
+
+					//FIXME: move method from soapplication
+					// status: new, pending, completed, voided, partially_refunded, refunded
+					$this->application_so->update_payment_status($payment['remote_id'], 'completed', 'RESERVE');
+
+					/**
+					 * sjekk status / opdater status
+					 */
+				}
+
 				if ($stored_header == array() || $stored_header['tekst4'] != $check_customer_identifier)
 				{
 					$order_id = $sequential_number_generator->increment()->get_current();
@@ -2308,7 +2336,11 @@
 					$header['trans_type'] = $trans_type;
 					$stored_header['trans_type'] = $trans_type;
 					$header['voucher_type'] = $voucher_type;
+
+					$output[] = implode('', str_replace(array("\n", "\r"), '', $header));
+
 					$stored_header['voucher_type'] = $voucher_type;
+
 
 					//item level
 					$item = $this->get_agresso_row_template();
@@ -2390,24 +2422,81 @@
 
 					$text['sequence_no'] = str_pad(intval($item['sequence_no']) + 1, 8, '0', STR_PAD_LEFT);
 
-					//Add to orders
-					//$orders[] = array('header' => $header, 'items' => array('item' => $item, 'text' => $text));
-					$output[] = implode('', str_replace(array("\n", "\r"), '', $header));
-					$output[] = implode('', str_replace(array("\n", "\r"), '', $item));
-					$output[] = implode('', str_replace(array("\n", "\r"), '', $text));
+					$line_no = 0;
+
+					if($purchase_order && !empty($purchase_order['lines']))
+					{
+						$line_no += 1;
+
+						$_item = $item;
+						$_text = $text;
+						foreach ($purchase_order['lines'] as $order_line)
+						{
+							if(empty($order_line['amount']))
+							{
+								continue;
+							}
+
+							if($order_line['parent_mapping_id'] == 0)
+							{
+								$article_name = $order_line['name']  . ' - ' . $reservation['description'];
+							}
+							else
+							{
+								$article_name = $order_line['name'];
+							}
+
+							if($order_line['tax_percent'])
+							{
+								$unit_tax = (float)$order_line['unit_price'] * $order_line['tax_percent'] / 100;
+							}
+							else
+							{
+								$unit_tax = 0;
+							}
+
+							$pris_inkl_mva = (float)$order_line['unit_price'] + $unit_tax;
+
+							$_item['art_descr'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 35), 35, ' '); //35 chars long
+							$_item['article'] = str_pad(substr(strtoupper($order_line['article_code']), 0, 15), 15, ' ');
+							$_item['amount'] = $this->format_cost(($order_line['amount']));
+					//		$_item['tax_code'] = str_pad($order_line['tax_code'], 2, ' ', STR_PAD_LEFT);
+							$_item['value_1'] = str_pad($order_line['quantity'] * 100, 17, 0, STR_PAD_LEFT); //Units. Multiplied by 100.
+							$item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
+
+							$_text['line_no'] = $item['line_no'];
+							$_text['short_info'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 60), 60, ' ');
+
+		//					$_fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
+		//					$_fakturalinje['Avgift']			 = $order_line['tax'];
+		//					$_fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 255);
+		//					$_fakturalinje['mvakode']			 = $order_line['tax_code'];
+		//					$_fakturalinje['antall']			 = $order_line['quantity'];
+		//					$_fakturalinje['enhetspris']		 = $order_line['unit_price'];
+
+							//Add to orders
+							$output[] = implode('', str_replace(array("\n", "\r"), '', $_item));
+							$output[] = implode('', str_replace(array("\n", "\r"), '', $_text));
+
+						}
+					}
+					else
+					{
+						//Add to orders
+						$output[] = implode('', str_replace(array("\n", "\r"), '', $item));
+						$output[] = implode('', str_replace(array("\n", "\r"), '', $text));
+
+					}
+
 
 					$log_order_id = $order_id;
 
 					if ($type == 'internal')
 					{
-//						$log_customer_nr = $header['tekst2'] . ' ' . $header['ext_ord_ref'];
-//						$log_customer_nr = $header['tekst3'] . ' ' . $header['ext_ord_ref'];
 						$log_customer_nr = $header['tekst4'] . ' ' . $header['ext_ord_ref'];
 					}
 					else
 					{
-//						$log_customer_nr = $header['tekst2'];
-//						$log_customer_nr = $header['tekst3'];
 						$log_customer_nr = $header['tekst4'];
 					}
 
@@ -2429,7 +2518,6 @@
 
 					$log[] = implode(';',  $line_field);
 
-//					$log[] = $reservation['id'] . ';' . $reservation['reservation_type'] . ';' . $log_order_id . ';' . $log_customer_name . ' - ' . $log_customer_nr . ';' . $log_varelinjer_med_dato . ';' . $log_buidling . ';' . $log_cost;
 				}
 				else
 				{
@@ -2506,10 +2594,71 @@
 
 					$text['sequence_no'] = str_pad(intval($item['sequence_no']) + 1, 8, '0', STR_PAD_LEFT);
 
-					//Add to orders
-					//$orders[] = array('header' => $header, 'items' => array('item' => $item, 'text' => $text));
-					$output[] = implode('', str_replace(array("\n", "\r"), '', $item));
-					$output[] = implode('', str_replace(array("\n", "\r"), '', $text));
+					$line_no -=1;
+
+					if($purchase_order && !empty($purchase_order['lines']))
+					{
+						$line_no += 1;
+
+						$_item = $item;
+						$_text = $text;
+						foreach ($purchase_order['lines'] as $order_line)
+						{
+							if(empty($order_line['amount']))
+							{
+								continue;
+							}
+
+							if($order_line['parent_mapping_id'] == 0)
+							{
+								$article_name = $order_line['name']  . ' - ' . $reservation['description'];
+							}
+							else
+							{
+								$article_name = $order_line['name'];
+							}
+
+							if($order_line['tax_percent'])
+							{
+								$unit_tax = (float)$order_line['unit_price'] * $order_line['tax_percent'] / 100;
+							}
+							else
+							{
+								$unit_tax = 0;
+							}
+
+							$pris_inkl_mva = (float)$order_line['unit_price'] + $unit_tax;
+
+							$_item['art_descr'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 35), 35, ' '); //35 chars long
+							$_item['article'] = str_pad(substr(strtoupper($order_line['article_code']), 0, 15), 15, ' ');
+							$_item['amount'] = $this->format_cost(($order_line['amount']));
+					//		$_item['tax_code'] = str_pad($order_line['tax_code'], 2, ' ', STR_PAD_LEFT);
+							$_item['value_1'] = str_pad($order_line['quantity'] * 100, 17, 0, STR_PAD_LEFT); //Units. Multiplied by 100.
+							$item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
+
+							$_text['line_no'] = $item['line_no'];
+							$_text['short_info'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 60), 60, ' ');
+
+		//					$_fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
+		//					$_fakturalinje['Avgift']			 = $order_line['tax'];
+		//					$_fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 255);
+		//					$_fakturalinje['mvakode']			 = $order_line['tax_code'];
+		//					$_fakturalinje['antall']			 = $order_line['quantity'];
+		//					$_fakturalinje['enhetspris']		 = $order_line['unit_price'];
+
+							//Add to orders
+							$output[] = implode('', str_replace(array("\n", "\r"), '', $_item));
+							$output[] = implode('', str_replace(array("\n", "\r"), '', $_text));
+
+						}
+					}
+					else
+					{
+						//Add to orders
+						$output[] = implode('', str_replace(array("\n", "\r"), '', $item));
+						$output[] = implode('', str_replace(array("\n", "\r"), '', $text));
+
+					}
 
 					$log_buidling = $reservation['building_name'];
 					$log_cost = $reservation['cost'];
@@ -2528,7 +2677,6 @@
 
 					$log[] = implode(';',  $line_field);
 
-			//		$log[] = $reservation['id'] . ';' . $reservation['reservation_type'] . ';' . $log_order_id . ';' . $log_customer_name . ' - ' . $log_customer_nr . ';' . $log_varelinjer_med_dato . ';' . $log_buidling . ';' . $log_cost;
 				}
 			}
 

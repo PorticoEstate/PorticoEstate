@@ -33,6 +33,8 @@
 	{
 
 		private $receipt		 = array();
+		var $bo,$bocommon,$operators,$operators_equal,$operators_like,$operators_in,$operators_null,$acl_read;
+
 		public $public_functions = array(
 			'query'				 => true,
 			'query_dataset'		 => true,

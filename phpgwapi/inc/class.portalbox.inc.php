@@ -27,7 +27,9 @@
 		var $down;
 		var $close;
 		var $question;
-		var $edit;
+		var $edit,$titlebgcolor,$innerbgcolor,
+		$outerwidth,$outerborderwidth,
+		$header_background_image;
 		
 		var $data = Array();
 

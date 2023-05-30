@@ -364,7 +364,10 @@ function update_form_values(line_id, voucher_id_orig)
 				{
 					var voucher_id_text = voucher[0].voucher_id;
 				}
-				$("#voucher_id_text").html(voucher_id_text);
+
+				var voucher_image_open = '<a href="javascript: load_voucher_image(\'' + voucher[0].image_url + '\');" title=\'Last bilde av faktura\'>' + voucher_id_text + '</a>';
+
+				$("#voucher_id_text").html(voucher_image_open);
 
 				var htmlString_split = " <a class=\"pure-button pure-button-primary\" style=\"color: white\" href=\"javascript:load_split(" + voucher[0].voucher_id + ");\" title=\"" + voucher_id_text + "\" >"
 					htmlString_split += "<i class=\"fas fa-share-alt\"></i> Splitt " + voucher_id_text + "</a>";
@@ -376,9 +379,8 @@ function update_form_values(line_id, voucher_id_orig)
 
 				if (voucher[0].order_id)
 				{
-					var oArgs_order = {menuaction: 'property.uiinvoice.view_order', order_id: voucher[0].order_id};
-					var requestUrl_order = phpGWLink('index.php', oArgs_order);
-//					var htmlString_order  =  " <a target= \"_blank\" href=\"" + requestUrl_order + "\" title=\"" + voucher[0].status + "\" > Bestilling</a>";
+//					var oArgs_order = {menuaction: 'property.uiinvoice.view_order', order_id: voucher[0].order_id};
+//					var requestUrl_order = phpGWLink('index.php', oArgs_order);
 
 					var htmlString_order = " <a href=\"javascript:load_order(" + voucher[0].order_id + ");\" title=\"" + voucher[0].status + "\" > Bestilling</a>";
 
@@ -647,7 +649,7 @@ function update_form_values(line_id, voucher_id_orig)
 					var obj = data['generic']['approve_list']['options'];
 					$.each(obj, function (i)
 					{
-						htmlString2 += "<th align=\"center\">" + obj[i].name + "</th>";
+						htmlString2 += "<th align=\"left\">" + obj[i].name + "</th>";
 					});
 					htmlString2 += "</tr><thead><tbody><tr>";
 					$.each(obj, function (i)
@@ -660,13 +662,14 @@ function update_form_values(line_id, voucher_id_orig)
 							checked = "checked = \"checked\"";
 						}
 						htmlString += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].name + "</option>";
-						htmlString2 += "<td align=\"center\"><input type =\"radio\" name=\"values[approve]\" value='" + obj[i].id + "'" + checked + "></input></td>";
+						htmlString2 += "<td align=\"left\"><input type =\"radio\" name=\"values[approve]\" value='" + obj[i].id + "'" + checked + "></input></td>";
 					});
 
 					htmlString2 += "</tr><tbody></table>";
 					$("#approve_as2").html(htmlString2);
-					//		$("#approve_as").html( htmlString );
 				}
+				$("#approve_all_lines").prop('checked', false);
+
 				var Url_email = email_base_url + '&voucher_id=' + voucher[0].voucher_id;
 
 				var email_buttons = "<input type=\"button\" class=\"pure-button pure-button-primary\" name=\"Kopier til utklippstavle\" onClick=\"copyToClipboard('" + Url_email + "');\" value=\"Kopier til utklippstavle\" title=\"Kopier til utklippstavle\">";
@@ -725,6 +728,16 @@ function load_order(id)
 		{
 			closeJS_local();
 		}});
+}
+function load_voucher_image(requestUrl)
+{
+	Window1 = window.open(requestUrl,"invoiceimage","left=50,top=100,width=1000,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+	Window1.focus();
+
+//	TINY.box.show({iframe: requestUrl, boxid:"frameless",width:Math.round($(window).width()*0.9),height:Math.round($(window).height()*0.9),fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true, closejs: function ()
+//		{
+//			closeJS_local();
+//		}});
 }
 
 function load_split(voucher_id)

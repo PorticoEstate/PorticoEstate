@@ -64,7 +64,7 @@
 			'save_group_and_item_order' => true,
 			'get_control_groups_by_control_area' => true
 		);
-
+		var $_category_acl;
 		public function __construct()
 		{
 			parent::__construct();
@@ -207,7 +207,7 @@
 
 			$status = false; //$this->so_control_item_list->delete($control_id, $control_item_id);
 
-			return status;
+			return $status;
 		}
 
 		public function edit()

@@ -46,6 +46,10 @@
 		var $sub;
 		var $currentapp;
 		var $location_info;
+		var $bo, $bocommon,$allrows,$user_id,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage,
+		$custom, $account,$type, $type_id;
+
 		var $public_functions = array
 			(
 			'query'			 => true,
@@ -97,7 +101,10 @@
 
 			if ($appname = $this->bo->appname)
 			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection']	 = str_replace('property', $appname, $GLOBALS['phpgw_info']['flags']['menu_selection']);
+				if($GLOBALS['phpgw_info']['flags']['menu_selection'])
+				{
+					$GLOBALS['phpgw_info']['flags']['menu_selection']	 = str_replace('property', $appname, $GLOBALS['phpgw_info']['flags']['menu_selection']);
+				}
 				$this->appname										 = $appname;
 			}
 
@@ -262,12 +269,7 @@
 						{
 							if(!is_array($_argument_value))
 							{
-								if (preg_match('/^##/', $_argument_value))
-								{
-									$_argument_value_name	 = trim($_argument_value, '#');
-									$_argument_value		 = $values[$_argument_value_name];
-								}
-								else if (preg_match('/^\$this->/', $_argument_value))
+								if (preg_match('/^\$this->/', $_argument_value))
 								{
 									$_argument_value_name	 = ltrim($_argument_value, '$this->');
 									$_argument_value		 = $this->$_argument_value_name;
@@ -763,7 +765,7 @@ JS;
 							if (!is_array($_argument_value) && preg_match('/^##/', $_argument_value))
 							{
 								$_argument_value_name	 = trim($_argument_value, '#');
-								$_argument_value		 = explode(',', trim($values[$_argument_value_name], ','));
+								$_argument_value		 = !empty($values[$_argument_value_name]) ? explode(',', trim($values[$_argument_value_name], ',')) : '';
 							}
 
 							if ($_argument == 'filter' && is_array($_argument_value))
@@ -949,32 +951,28 @@ JS;
 			}
 
 			$tabletools = array();
-			if ($edit && $this->acl->check($acl_location, PHPGW_ACL_DELETE, $this->type_app[$this->type]))
+			if ($edit && $this->acl->check($acl_location, PHPGW_ACL_DELETE, $this->call_appname))
 			{
+
 				$parameters = array
 					(
-					'parameter' => array
-						(
-						array
-							(
+					'parameter' => array(
+						array(
 							'name'	 => 'history_id',
 							'source' => 'id'
 						)
 					)
 				);
 
-				$tabletools[] = array
-					(
+				$tabletools[] = array(
 					'my_name'		 => 'delete',
 					'text'			 => lang('delete'),
 					'confirm_msg'	 => lang('do you really want to delete this entry'),
-					'action'		 => $GLOBALS['phpgw']->link('/index.php', array
-						(
+					'action'		 => $GLOBALS['phpgw']->link('/index.php', array	(
 						'menuaction'	 => "{$this->call_appname}.uigeneric.attrib_history",
 						'acl_location'	 => $acl_location,
 						'id'			 => $id,
 						'attrib_id'		 => $attrib_id,
-						'detail_id'		 => $detail_id,
 						'delete'		 => true,
 						'edit'			 => true,
 						'type'			 => $this->type
@@ -1003,20 +1001,19 @@ JS;
 				)
 			);
 
-			$data = array
-				(
-				'base_java_url'	 => json_encode(array(menuaction => "{$this->call_appname}.uigeneric.attrib_history")),
+			$data = array(
+				'base_java_url'	 => json_encode(array('menuaction' => "{$this->call_appname}.uigeneric.attrib_history")),
 				'datatable_def'	 => $datatable_def,
 				'link_url'		 => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'img_path'		 => $GLOBALS['phpgw']->common->get_image_path('phpgwapi', 'default')
 			);
 
 			$custom			 = createObject('phpgwapi.custom_fields');
-			$attrib_data	 = $custom->get($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $attrib_id);
+			$attrib_data	 = $custom->get($this->call_appname, $acl_location, $attrib_id);
 			$appname		 = $attrib_data['input_text'];
 			$function_msg	 = lang('history');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->call_appname) . ' - ' . $appname . ': ' . $function_msg;
 
 			self::render_template_xsl(array('attrib_history', 'datatable_inline'), array(
 				'attrib_history' => $data));
@@ -1139,8 +1136,7 @@ JS;
 			if ($id && $field_name)
 			{
 
-				$data = array
-					(
+				$data = array(
 					'id'		 => $id,
 					'field_name' => $field_name,
 					'value'		 => phpgw::get_var('value')

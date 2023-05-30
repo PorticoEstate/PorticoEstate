@@ -27,7 +27,7 @@
 		//constructor 
 		function __construct($title='', $primary='', $secondary='', $tertiary='')
 		{
-			$this->portalbox($title, $primary, $secondary, $tertiary);
+			parent::__construct($title, $primary, $secondary, $tertiary);
 			$this->setvar('outerwidth',400);
 			$this->setvar('innerwidth',400);
 		}

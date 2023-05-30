@@ -628,10 +628,15 @@
 	*/
 	class xmlnode extends xmltool
 	{
-		public function xmlnode($name)
+		public function __construct($name)
 		{
-			$this->xmltool('node',$name);
+			parent::__construct('node', $name);
 		}
+
+//		public function xmlnode($name)
+//		{
+//			$this->xmltool('node',$name);
+//		}
 	}
 
 
@@ -643,11 +648,17 @@
 	*/
 	class xmldoc extends xmltool
 	{
-		public function xmldoc($version = '1.0')
+		public function __construct($version = '1.0')
 		{
-			$this->xmltool('root');
+			parent::__construct('root');
 			$this->set_version($version);
 		}
+		
+//		public function xmldoc($version = '1.0')
+//		{
+//			$this->xmltool('root');
+//			$this->set_version($version);
+//		}
 
 		public function add_root($root_node)
 		{

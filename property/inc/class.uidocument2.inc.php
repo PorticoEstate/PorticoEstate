@@ -34,6 +34,9 @@
 
 		private $bo;
 		private $receipt		 = array();
+		var $currentapp, $nextmatchs, $account, $bocommon, $config,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage, $_category_acl;
+
 		public $public_functions = array
 			(
 			'query'						 => true,

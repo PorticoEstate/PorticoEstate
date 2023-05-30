@@ -32,7 +32,7 @@
 		var $title;
 		var $catalog_button_name;
 		var $num_cols;
-		var $key_edit_id;
+		var $key_edit_id,$nextmatchs, $template,$key_edit_name,$array_value,$key;
 
 		function __construct()
 		{

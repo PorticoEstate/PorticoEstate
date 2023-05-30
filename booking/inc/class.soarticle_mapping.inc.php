@@ -32,7 +32,7 @@
 	class booking_soarticle_mapping extends phpgwapi_socommon
 	{
 
-		protected static $so;
+		protected static $so,$acl_location;
 
 		public function __construct()
 		{

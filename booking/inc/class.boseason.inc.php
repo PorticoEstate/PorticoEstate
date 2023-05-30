@@ -5,6 +5,12 @@
 
 	class booking_boseason extends booking_bocommon_authorized
 	{
+		protected
+			$building_bo,
+			$bo_allocation,
+			$so_boundary,
+			$so_resource,
+			$so_wtemplate_alloc;
 
 		function __construct()
 		{

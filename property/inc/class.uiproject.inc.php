@@ -765,12 +765,12 @@
 					'hidden'	 => ($uicols['input_type'][$k] == 'hidden') ? true : false
 				);
 
-				if ($uicols['name'][$k] == 'project_id')
+				if ($uicols['name'][$k] == 'project_id' && !$lookup)
 				{
 					$params['formatter'] = 'JqueryPortico.formatProject';
 				}
 
-				if ($uicols['name'][$k] == 'ticket')
+				if ($uicols['name'][$k] == 'ticket' && !$lookup)
 				{
 					$params['formatter'] = 'formatLinkTicket';
 				}
@@ -1000,8 +1000,8 @@ JS;
 			$order		 = phpgw::get_var('order');
 			$draw		 = phpgw::get_var('draw', 'int');
 			$columns	 = phpgw::get_var('columns');
-			$start_date	 = urldecode(phpgw::get_var('start_date'));
-			$end_date	 = urldecode(phpgw::get_var('end_date'));
+			$start_date	 = phpgw::get_var('start_date');
+			$end_date	 = phpgw::get_var('end_date');
 			$skip_origin = phpgw::get_var('skip_origin', 'bool');
 			$export		 = phpgw::get_var('export', 'bool');
 
@@ -1018,7 +1018,8 @@ JS;
 				'order'			 => $columns[$order[0]['column']]['data'],
 				'sort'			 => $order[0]['dir'],
 				'allrows'		 => phpgw::get_var('length', 'int') == -1 || $export,
-				'start_date'	 => $start_date,
+				'start_date'	 => $start_date ? urldecode($start_date) : '',
+				'end_date'		 => $end_date ? urldecode($end_date) : '',
 				'end_date'		 => $end_date,
 				'skip_origin'	 => $skip_origin
 			);
@@ -1033,8 +1034,7 @@ JS;
 			$result_data					 = array('results' => $values);
 			$result_data['total_records']	 = $this->bo->total_records;
 			$result_data['draw']			 = $draw;
-			$link_data						 = array
-				(
+			$link_data						 = array(
 				'menuaction' => 'property.uiproject.edit'
 			);
 			array_walk($result_data['results'], array($this, '_add_links'), $link_data);
@@ -1957,7 +1957,8 @@ JS;
 
 			$sum_actual_cost = 0;
 			$sum_oblications = 0;
-			$rows_per_page	 = 10;
+			$maxmatchs = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$rows_per_page	 = $maxmatchs ? $maxmatchs : 10;
 			$initial_page	 = 1;
 
 			$s_budget		 = 0;
@@ -1980,7 +1981,7 @@ JS;
 					foreach ($content_budget as $key => $row)
 					{
 						$_year_count[$row['year']]	 += 1;
-						$rows_per_page				 = $_year_count[$row['year']];
+						$rows_per_page				 = max($_year_count[$row['year']], $maxmatchs);
 					}
 					$initial_page = floor(count($content_budget) / $rows_per_page);
 				}
@@ -2948,9 +2949,12 @@ JS;
 				'sort'			 => $order[0]['dir'],
 				'project_id' => $project_id,
 				'year'		 => phpgw::get_var('year', 'int'),
-				'results'	 => -1,
+//				'results'	 => phpgw::get_var('results', 'int'),
+				'start'			 => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results'		 => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				)
 			);
+
 			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($values as & $_order_entry)
 			{

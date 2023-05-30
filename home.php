@@ -65,6 +65,7 @@
 	{
 		phpgw::import_class('phpgwapi.jquery');
 		phpgwapi_jquery::load_widget('core');
+		phpgwapi_jquery::load_widget('autocomplete');
 		$GLOBALS['phpgw']->js->validate_file('jquery', 'common', 'phpgwapi', false, array('combine' => true ));
 		$GLOBALS['phpgw']->js->validate_file('tinybox2', 'packed', 'phpgwapi', false, array('combine' => true ));
 		$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
@@ -198,37 +199,6 @@ HTML;
 			unset($_app_string);
 		}
 	}
-
-	if (isset($GLOBALS['phpgw_info']['user']['apps']['notifywindow']) &&
-		$GLOBALS['phpgw_info']['user']['apps']['notifywindow'])
-	{
-		$notify_url = $GLOBALS['phpgw']->link('/notify.php');
-		$lang_open = lang('open notify window');
-		echo <<<HTML
-<script type="text/javascript">
-		var NotifyWindow;
-
-		function opennotifywindow()
-		{
-			if (NotifyWindow)
-			{
-				if (NotifyWindow.closed)
-				{
-					NotifyWindow.stop;
-					NotifyWindow.close;
-				}
-			}
-			NotifyWindow = window.open("{$notify_url}", "NotifyWindow", "width=300,height=35,location=no,menubar=no,directories=no,toolbar=no,scrollbars=yes,resizable=yes,status=yes");
-			if (NotifyWindow.opener == null)
-			{
-				NotifyWindow.opener = window;
-			}
-			return false;
-		}
-</script>
-<a href="#" onclick="return opennotifywindow();">{$lang_open}</a>
-HTML;
-		}
 
 	// This initializes the users portal_order preference if it does not exist.
 	if ( (!isset($GLOBALS['phpgw_info']['user']['preferences']['portal_order']) || !is_array($GLOBALS['phpgw_info']['user']['preferences']['portal_order']) )

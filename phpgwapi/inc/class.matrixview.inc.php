@@ -21,6 +21,7 @@
 	*/
 	class matrixview
 	{
+		var $items_color;
 		var $sumdays = 0;
 		var $month = 0;
 		var $monthname = '';

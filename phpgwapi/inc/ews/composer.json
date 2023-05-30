@@ -1,0 +1,11 @@
+{
+  "require": {
+    "php-ews/php-ews": "dev-master"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/facilioo/php-ews"
+    }
+  ]
+}

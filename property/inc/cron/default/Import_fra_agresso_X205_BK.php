@@ -49,6 +49,7 @@
 		protected $export;
 		protected $skip_update_voucher_id	 = false;
 		protected $order_id;
+		var $responsible,$bocommon,$dateformat,$datetimeformat,$config, $global_lock;
 
 		function __construct()
 		{

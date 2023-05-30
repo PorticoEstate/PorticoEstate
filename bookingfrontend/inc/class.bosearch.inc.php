@@ -13,7 +13,7 @@
 	    public $sobuilding;
 	    public $sobooking;
 	    public $soallocation;
-	    public $soresource;
+	    public $soresource, $soorganization,$borescategory, $boresource, $boactivity,$bofacility;
 
 		function __construct()
 		{

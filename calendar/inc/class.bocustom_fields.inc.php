@@ -35,6 +35,7 @@
 			'recure_type' => 'Repetition'
 		);
 
+		var $fields, $config;
 		public function __construct()
 		{
 			$this->config = CreateObject('phpgwapi.config','calendar');

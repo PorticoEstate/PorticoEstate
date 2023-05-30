@@ -37,6 +37,8 @@
 		var $bocommon;
 		var $total_records;
 		protected $global_lock = false;
+		var $db, $join, $left_join, $like, $custom, $account, $grants;
+		var $soadmin_location, $socommon, $uicols,$cols_return;
 
 		function __construct( $bocommon = '' )
 		{
@@ -359,6 +361,8 @@
 			$location_id			 = isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 			$filter_item			 = isset($data['filter_item']) && $data['filter_item'] ? (array)$data['filter_item'] : array();
 			$additional_fields		 = !empty($data['additional_fields']) ? (array)$data['additional_fields'] : array();
+			$criteria_id			 = isset($data['criteria_id']) ? $data['criteria_id'] : '';
+
 
 			if ($location_id && !$type_id)
 			{
@@ -1769,6 +1773,8 @@
 
 			$this->db->query("UPDATE fm_location" . $m . " set	status= 2  WHERE category='99'", __LINE__, __FILE__);
 
+			$joinmethod = '';
+			$paranthesis = '';
 			for ($type_id = $m; $type_id > 1; $type_id--)
 			{
 				$parent_table = 'fm_location' . ($type_id - 1);
@@ -2246,7 +2252,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$j			 = 0;
-			$cols_return = $uicols['name'];
+	//		$cols_return = $uicols['name'];
 			$dataset	 = array();
 			while ($this->db->next_record())
 			{
@@ -2269,7 +2275,7 @@
 
 		function get_tenant_location( $tenant_id = '' )
 		{
-			$location_code = '';
+			$location_code = array();
 
 			$location_level = $this->soadmin_location->read_config_single('tenant_id');
 

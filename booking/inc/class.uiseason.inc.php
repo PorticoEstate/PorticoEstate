@@ -27,6 +27,8 @@
 			'toggle_show_inactive' => true
 		);
 
+		var $fields, $display_name, $resource_bo, $boundary_fields,$wtemplate_alloc_fields;
+
 		public function __construct()
 		{
 			parent::__construct();
@@ -236,7 +238,7 @@
 			$season['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));
 
-			self::render_template_xsl('season_new', array('season' => $season, 'lang' => $lang));
+			self::render_template_xsl('season_new', array('season' => $season));
 		}
 
 		public function copy_season()
@@ -347,7 +349,7 @@
 			$season['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));
 
-			self::render_template_xsl('season_new', array('season' => $season, 'lang' => $lang));
+			self::render_template_xsl('season_new', array('season' => $season));
 		}
 
 		public function show()
@@ -395,7 +397,7 @@
 
 			$season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
-			self::render_template_xsl('season', array('season' => $season, 'lang' => $lang));
+			self::render_template_xsl('season', array('season' => $season));
 		}
 
 		public function boundaries()

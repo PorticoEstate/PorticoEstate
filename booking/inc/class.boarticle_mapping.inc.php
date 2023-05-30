@@ -33,10 +33,8 @@
 
 	class booking_boarticle_mapping extends phpgwapi_bocommon
 	{
-		protected static
-			$bo,
-			$fields,
-			$acl_location;
+		protected
+			$bo;
 
 		public function __construct()
 		{

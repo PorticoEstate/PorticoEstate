@@ -176,10 +176,10 @@
 
 		/**
 		 *
-		 * @param unknown_type $to
-		 * @param unknown_type $title
-		 * @param unknown_type $contract_message
-		 * @param unknown_type $from
+		 * @param string $to
+		 * @param string $title
+		 * @param string $contract_message
+		 * @param string $from
 		 */
 		public static function send_system_message( $to, $title, $contract_message, $from = 'noreply@bergen.kommune.no' )
 		{

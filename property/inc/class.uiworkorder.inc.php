@@ -37,7 +37,16 @@
 	{
 
 		private $receipt		 = array();
-		var $grants;
+		var $grants, $acl, $bo, $bocommon, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage, $cats;
+		var $status_id,	$wo_hour_cat_id,$start_date,$end_date,
+		$b_group,
+		$ecodimb,
+		$paid,
+		$b_account,
+		$district_id,
+		$obligation,
+		$decimal_separator,$type_id,$type;
+
 		var $cat_id;
 		var $start;
 		var $query;
@@ -379,7 +388,7 @@
 				$content_attachments[] = array(
 					'source'		 => $lang_workorder,
 					'file_id'		 => $_entry['file_id'],
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 				if (in_array($_entry['mime_type'], $img_types))
@@ -411,7 +420,7 @@
 
 				$content_attachments[] = array(
 					'source'		 => $lang_project,
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 
@@ -675,8 +684,8 @@
 
 		public function query()
 		{
-			$start_date	 = urldecode($this->start_date);
-			$end_date	 = urldecode($this->end_date);
+			$start_date	 = $this->start_date;
+			$end_date	 = $this->end_date;
 
 			if ($start_date && empty($end_date))
 			{
@@ -698,8 +707,8 @@
 				'order'		 => $columns[$order[0]['column']]['data'],
 				'sort'		 => $order[0]['dir'],
 				'allrows'	 => phpgw::get_var('length', 'int') == -1 || $export,
-				'start_date' => $start_date,
-				'end_date'	 => $end_date
+				'start_date'	 => $start_date ? urldecode($start_date) : '',
+				'end_date'		 => $end_date ? urldecode($end_date) : '',
 			);
 
 			$values = $this->bo->read($params);
@@ -735,8 +744,8 @@
 				$this->district_id		 = $default_district;
 			}
 
-			$start_date	 = urldecode($this->start_date);
-			$end_date	 = urldecode($this->end_date);
+			$start_date	 = $this->start_date ? urldecode($this->start_date) : null;
+			$end_date	 = $this->end_date ? urldecode($this->end_date) : null;
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
@@ -1843,7 +1852,7 @@
 
 				$values['location_data'] = $ticket['location_data'];
 			}
-			else if (preg_match("/(^.entity.|^.catch.)/i", $origin) && $origin_id)
+			else if ($origin && preg_match("/(^.entity.|^.catch.)/i", $origin) && $origin_id)
 			{
 				$_origin				 = explode('.', $origin);
 				$_boentity				 = CreateObject('property.boentity', false, $_origin[1], $_origin[2], $_origin[3]);
@@ -2808,7 +2817,8 @@ JS;
 			$lang_active	 = lang('Check to activate period');
 			$lang_fictive	 = lang('fictive');
 
-			$rows_per_page	 = 10;
+			$maxmatchs = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$rows_per_page	 = $maxmatchs ? $maxmatchs : 10;
 			$initial_page	 = 1;
 
 			if ($content_budget && $project['periodization_id'])
@@ -2817,7 +2827,7 @@ JS;
 				foreach ($content_budget as $key => $row)
 				{
 					$_year_count[$row['year']]	 += 1;
-					$rows_per_page				 = $_year_count[$row['year']];
+					$rows_per_page				 = max($_year_count[$row['year']], $maxmatchs);
 				}
 				$initial_page = floor(count($content_budget) / $rows_per_page);
 			}
@@ -3202,7 +3212,7 @@ JS;
 
 				$content_attachments[] = array(
 					'source'		 => $lang_workorder,
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 
@@ -3243,7 +3253,7 @@ JS;
 				}
 				$content_attachments[] = array(
 					'source'		 => $lang_project,
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 
@@ -3290,7 +3300,7 @@ JS;
 			{
 				$delivery_address = CreateObject('property.solocation')->get_delivery_address($_location_data['loc1']);
 			}
-			
+
 			$delivery_address = str_replace('__username__', $GLOBALS['phpgw_info']['user']['fullname'], $delivery_address);
 
 			$default_tax_code = (!empty($project['tax_code']) || $project['tax_code'] === 0) ? $project['tax_code'] : (int)$GLOBALS['phpgw_info']['user']['preferences']['property']['default_tax_code'];

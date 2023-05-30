@@ -61,6 +61,8 @@
 	*/
 	class phpgwapi_sessions
 	{
+		var $reason, $variableNames,$soap_functions,$sort_by,$sort_order;
+		
 		/**
 		* @var integer $cd_reason contains the error code when checking sessions
 		*/
@@ -797,7 +799,7 @@
 			$GLOBALS['phpgw']->session->sort_by = $sort;
 			$GLOBALS['phpgw']->session->sort_order = $order;
 
-			uasort($data, array('self', 'session_sort'));
+			uasort($data, array($this, 'session_sort'));
 
 			$maxmatches = 25;
 			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'])
@@ -1046,7 +1048,7 @@
 				'session_dla'		=> $now,
 				'session_action'	=> $_SERVER['PHP_SELF'],
 				'session_flags'		=> $session_flags,
-				'user_agent'		=> md5(phpgw::get_var('USER_AGENT', 'string', 'SERVER')),
+				'user_agent'		=> md5(phpgw::get_var('HTTP_USER_AGENT', 'string', 'SERVER')),
 				// we need the install-id to differ between serveral installs shareing one tmp-dir
 				'session_install_id'	=> $GLOBALS['phpgw_info']['server']['install_id']
 			);
@@ -1343,7 +1345,7 @@
 			}
 
 			// verify the user agent in an attempt to stop session hijacking
-			if ( $_SESSION['phpgw_session']['user_agent'] != md5(phpgw::get_var('USER_AGENT', 'string', 'SERVER')) )
+			if ( $_SESSION['phpgw_session']['user_agent'] != md5(phpgw::get_var('HTTP_USER_AGENT', 'string', 'SERVER')) )
 			{
 				if(is_object($GLOBALS['phpgw']->log))
 				{
@@ -1351,7 +1353,7 @@
 					$GLOBALS['phpgw']->log->message(array(
 						'text' => 'W-VerifySession, User agent hash %1 doesn\'t match user agent hash %2 in session',
 						'p1'   => $_SESSION['phpgw_session']['user_agent'],
-						'p2'   => md5(phpgw::get_var('USER_AGENT', 'string', 'SERVER')),
+						'p2'   => md5(phpgw::get_var('HTTP_USER_AGENT', 'string', 'SERVER')),
 						'line' => __LINE__,
 						'file' => __FILE__
 					));

@@ -21,6 +21,7 @@
 
 	class soaddressbook
 	{
+		var $contacts, $grants, $owner, $rights;
 		
 		/**
 		* @var array $addr_type the address types available

@@ -43,7 +43,7 @@
 		var $locales = array();
 		var $holidays;
 		var $cached_holidays;
-		var $locale;
+		var $locale,$order,$bo;
 		
 		public function __construct()
 		{
@@ -141,12 +141,12 @@
 					$days = phpgw::get_var('day', 'int', 'POST');
 					$months = phpgw::get_var('month', 'int', 'POST');
 					$occurances = phpgw::get_var('occurance', 'int', 'POST');
-					$dows = phpgw::get_var('dow', 'int', 'POST');
+					$dow = phpgw::get_var('dow', 'int', 'POST');
 					$observances = phpgw::get_var('observance', 'int', 'POST');
 					$fp = fopen($file, 'w');
 					for($i=0;$i<$c_holidays;$i++)
 					{
-						fwrite($fp, "{$this->locales[0]}\t{$names[$i]}\t{$days[$i]}\t{$months[$i]}\t{$occurences[$i]}\t{$dow[$i]}\t{$observances[$i]}\n");
+						fwrite($fp, "{$this->locales[0]}\t{$names[$i]}\t{$days[$i]}\t{$months[$i]}\t{$occurances[$i]}\t{$dow[$i]}\t{$observances[$i]}\n");
 					}
 					fclose($fp);
 				}

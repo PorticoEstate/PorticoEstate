@@ -20,7 +20,7 @@
 	*/
 	class phpgwapi_setup_translation extends phpgwapi_translation
 	{
-		var $langarray;
+		var $langarray,$lang;
 
 		/**
 		 * constructor for the class, loads all phrases into langarray

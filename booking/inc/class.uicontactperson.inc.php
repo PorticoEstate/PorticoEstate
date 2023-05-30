@@ -12,6 +12,8 @@
 		);
 		protected $module;
 
+		var $fields;
+
 		public function __construct()
 		{
 			parent::__construct();

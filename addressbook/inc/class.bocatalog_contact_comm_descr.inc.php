@@ -1,6 +1,7 @@
 <?php
 	class bocatalog_contact_comm_descr
 	{
+		var $so, $comm_type;
 		function __construct()
 		{
 			$this->so = CreateObject('addressbook.socatalog_contact_comm_descr');

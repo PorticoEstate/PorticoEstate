@@ -34,11 +34,12 @@
 	class property_uidebug_json
 	{
 
-		var $public_functions = array
-			(
+		var $public_functions = array(
 			'index' => true
 		);
-
+		
+		var $acl, $acl_location, $acl_read;
+		
 		public function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app']	 = false;

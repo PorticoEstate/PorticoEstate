@@ -57,6 +57,8 @@
 		 * @var array
 		 */
 		var $autoFolders = array('Drafts', 'Junk', 'Sent', 'Trash', 'Templates');
+		var $accountid,$bopreferences,$sofelamimail,$botranslation,$mailPreferences,$icServer,$ogServer,
+		$imapBaseDir,$errorMessage;
 		
 		function __construct($_displayCharset='utf-8')
 		{
@@ -82,7 +84,7 @@
 			$this->imapBaseDir	= '';
 
 			self::$displayCharset	= $_displayCharset;
-			if(function_exists(mb_decode_mimeheader)) {
+			if(function_exists('mb_decode_mimeheader')) {
 				mb_internal_encoding(self::$displayCharset);
 			}
 

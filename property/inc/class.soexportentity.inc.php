@@ -43,6 +43,9 @@
 		public $sum_budget		 = 0;
 		public $sum_actual_cost	 = 0;
 		protected $type			 = 'entity';
+		var $account, $db, $db2, $join, $left_join, $like, $allrows;
+		var $historylog, $dateformat,$acl;
+
 		public $soap_functions	 = array
 			(
 			'read' => array(

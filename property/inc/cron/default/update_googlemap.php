@@ -34,7 +34,7 @@
 
 	class update_googlemap extends property_cron_parent
 	{
-
+		var $bocommon,$db2;
 		public function __construct()
 		{
 			parent::__construct();

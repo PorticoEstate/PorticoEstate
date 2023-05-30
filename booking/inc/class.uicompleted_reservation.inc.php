@@ -29,6 +29,7 @@
 			$customer_id,
 			$export_filters = array();
 
+		var $db,$display_name;
 		public function __construct()
 		{
 			parent::__construct();
@@ -243,6 +244,7 @@
 							'key' => 'select',
 							'label' => lang('select'),
 							'formatter' => 'myFormatterCheck',
+							'sortable' => false,
 						),
 						array(
 							'key' => 'link',

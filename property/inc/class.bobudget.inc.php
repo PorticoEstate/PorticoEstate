@@ -34,6 +34,7 @@
 	class property_bobudget
 	{
 
+		var $so, $bocommon, $cats, $use_session, $direction, $dimb_id, $org_unit_id, $part_of_town_id, $month;
 		var $start;
 		var $query;
 		var $filter;

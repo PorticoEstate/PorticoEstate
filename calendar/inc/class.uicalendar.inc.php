@@ -98,6 +98,8 @@
 				'participants_popup'	=> true
 			);
 
+		var $always_app_header, $cat_colors,$fields,$custom_fields,$stock_fields,
+		$time_line_saved,$weekstarttime;
 		function __construct()
 		{
 			$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');

@@ -35,6 +35,7 @@
 	class synkroniser_med_boei extends property_cron_parent
 	{
 
+		var $bocommon, $db_boei,$db_boei2, $db2;
 		function __construct()
 		{
 			parent::__construct();
@@ -1743,13 +1744,15 @@ SQL;
 
 			//		$this->db->transaction_begin();
 
+			$i = 0;
 			while ($this->db->next_record())
 			{
 				$sql2 = "UPDATE fm_tenant SET "
 					. " oppsagtdato = '" . $this->db->f('oppsagtdato') . "'"
 					. " WHERE  id = " . (int)$this->db->f('id');
 
-				$this->db2->query($sql, __LINE__, __FILE__);
+				$this->db2->query($sql2, __LINE__, __FILE__);
+				$i ++;
 			}
 			//	$this->db->transaction_commit();
 

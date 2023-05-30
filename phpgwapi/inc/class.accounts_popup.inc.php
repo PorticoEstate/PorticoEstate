@@ -33,6 +33,7 @@
 		 * @var object $t reference to global template object
 		 */
 		private $t;
+		var $account_id, $total;
 
 		public function __construct()
 		{

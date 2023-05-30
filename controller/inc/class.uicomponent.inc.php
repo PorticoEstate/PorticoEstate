@@ -51,18 +51,20 @@
 	{
 
 		private
-			$so,
+			$so_check_list,
 			$_category_acl,
 			$read,
 			$add,
 			$edit,
 			$delete,
+			$manage,
 			$org_units,
 			$custom,
 			$get_locations,
 			$user_id,
 			$currentapp,
-			$config;
+			$config,$soadmin_entity;
+		var $account;
 		public $public_functions = array
 			(
 			'index' => true,
@@ -78,14 +80,13 @@
 			$this->edit = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4
 			$this->delete = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8
 			$this->manage = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
-//			$this->so					 = CreateObject('controller.socontrol');
 
 			$this->config = CreateObject('phpgwapi.config', 'controller')->read();
 			$this->_category_acl = isset($this->config['acl_at_control_area']) && $this->config['acl_at_control_area'] == 1 ? true : false;
 
 			$location_id = phpgw::get_var('location_id', 'int');
 			$this->get_locations = phpgw::get_var('get_locations', 'bool');
-			if ($this->is_location($location_id))
+			if ($location_id && $this->is_location($location_id))
 			{
 				$this->get_locations = true;
 			}
@@ -903,7 +904,7 @@
 			}
 
 			$so_control = CreateObject('controller.socontrol');
-			$this->so = CreateObject('controller.socheck_list');
+			$this->so_check_list = CreateObject('controller.socheck_list');
 
 			// Validates year. If year is not set, current year is chosen
 			$year = execMethod('controller.uicalendar.validate_year', $year);
@@ -1161,15 +1162,15 @@
 
 						$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_description}");
 
-						$component_with_check_lists = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);
+						$component_with_check_lists = $this->so_check_list->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);
 
 						$cl_criteria = new controller_check_list();
 						$cl_criteria->set_control_id($control->get_id());
 						$cl_criteria->set_component_id($component->get_id());
 						$cl_criteria->set_location_id($component->get_location_id());
 
-						$from_month = $this->get_start_month_for_control($control);
-						$to_month = $this->get_end_month_for_control($control);
+						$from_month = $this->get_start_month_for_control($control, $year);
+						$to_month = $this->get_end_month_for_control($control, $year);
 
 						// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
 						$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
@@ -1185,7 +1186,7 @@
 					{
 						$component->set_xml_short_desc(" {$location_type_name[$location_id]}</br>{$short_description}");
 
-						$component_with_check_lists = $this->so->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);// ,$user_id);
+						$component_with_check_lists = $this->so_check_list->get_check_lists_for_control_and_component($control_id, $component->get_location_id(), $component->get_id(), $from_date_ts, $to_date_ts, $repeat_type);// ,$user_id);
 
 						$check_lists_array = $component_with_check_lists["check_lists_array"];
 
@@ -1694,7 +1695,7 @@
 			);
 		}
 
-		private function translate_calendar_info( $param, $year, $month, $filter_status = '', &$found_at_least_one = false, $keep_only_assigned_to, $location_code ='', &$control_link_data, $url_target)
+		private function translate_calendar_info( $param, $year, $month, $filter_status, &$found_at_least_one, $keep_only_assigned_to, $location_code, &$control_link_data, $url_target)
 		{
 			if (!isset($param['repeat_type']))
 			{
@@ -2128,7 +2129,7 @@ HTML;
 			return $html;
 		}
 
-		function get_start_month_for_control( $control )
+		function get_start_month_for_control( $control, $year )
 		{
 			// Checks if control starts in the year that is displayed
 			if (date("Y", $control->get_start_date()) == $year)
@@ -2143,7 +2144,7 @@ HTML;
 			return $from_month;
 		}
 
-		function get_end_month_for_control( $control )
+		function get_end_month_for_control( $control, $year )
 		{
 			// Checks if control ends in the year that is displayed
 			if (date("Y", $control->get_end_date()) == $year)
@@ -2157,4 +2158,47 @@ HTML;
 
 			return $to_month;
 		}
+		// Generates array of aggregated number of open cases for each month in time period
+		function build_agg_open_cases_pr_month_array( $cl_criteria, $year, $from_month, $to_month )
+		{
+
+			$agg_open_cases_pr_month_array = array();
+
+			// Fetches aggregate value for open cases in each month in time period
+			for ($from_month; $from_month <= $to_month; $from_month++)
+			{
+				$month_start_ts = $this->get_month_start_ts($year, $from_month);
+				$month_end_ts = $this->get_month_start_ts($year, $from_month + 1);
+
+				$num_open_cases_for_control_array = array();
+
+				// Fetches aggregate value for open cases in a month from db
+				$num_open_cases_for_control_array = $this->so_check_list->get_num_open_cases_for_control($cl_criteria, $month_start_ts, $month_end_ts);
+
+				// If there is a aggregated value for the month, add aggregated status object to agg_open_cases_pr_month_array
+				if (!empty($num_open_cases_for_control_array))
+				{
+					$status_agg_month_info = new status_agg_month_info();
+					$status_agg_month_info->set_month_nr($from_month);
+					$status_agg_month_info->set_agg_open_cases($num_open_cases_for_control_array["count"]);
+					$agg_open_cases_pr_month_array[] = $status_agg_month_info;
+				}
+			}
+
+			return $agg_open_cases_pr_month_array;
+		}
+
+		function get_month_start_ts( $year, $month )
+		{
+			if ($month > 12)
+			{
+				$year = $year + 1;
+				$month = $month % 12;
+			}
+
+			return strtotime("$month/01/$year");
+		}
+
+
+
 	}

@@ -48,6 +48,7 @@
 		var $type_id;
 		var $location_code;
 		private $config;
+		var $account_id, $bo, $bocommon, $status_id,$allrows;
 		var $public_functions = array
 			(
 			'index'				 => true,

@@ -51,6 +51,9 @@
 			$role,
 			$debug,
 			$order_path_dir,
+			$bo,
+			$acl,
+			$acl_location,
 			$default_roles = array
 			(
 				self::ROLE_DEFAULT,
@@ -337,7 +340,7 @@
 			else if($search_level > $targe_level)
 			{
 				$temp_loc_arr = array();
-				for ($i = 0; $i < count($targe_level); $i++)
+				for ($i = 0; $i < $targe_level; $i++)
 				{
 					$temp_loc_arr[] = $location_arr[$i];
 				}

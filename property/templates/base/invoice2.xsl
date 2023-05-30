@@ -462,6 +462,18 @@
 		</td>
 	</tr>
 	<tr class ='row_off'>
+		<td class="th_text" align="left" valign="top" style="white-space: nowrap;" height="40">
+			<xsl:value-of select="php:function('lang', 'approve all lines')"/>
+		</td>
+		<td class="th_text" valign="top" align="left" height="40">
+			<input type="checkbox" id="approve_all_lines" name="values[approve_all_lines]" value="1">
+				<xsl:attribute name="title">
+					<xsl:value-of select="php:function('lang', 'approve all lines')"/>
+				</xsl:attribute>
+			</input>
+		</td>
+	</tr>
+	<tr class ='row_off'>
 		<td>
 		</td>
 		<td height="50">

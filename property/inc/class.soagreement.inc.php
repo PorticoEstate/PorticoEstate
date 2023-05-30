@@ -34,7 +34,8 @@
 	class property_soagreement
 	{
 
-		var $role;
+		var $role,$custom,$bocommon, $uicols;
+		var $db, $db2, $join, $left_join, $like,$account, $total_records;
 
 		function __construct()
 		{

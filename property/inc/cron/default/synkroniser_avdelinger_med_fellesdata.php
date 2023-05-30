@@ -162,6 +162,7 @@
 		private $soap_url,
 			$soap_username,
 			$soap_password;
+		var $config;
 
 		function __construct()
 		{

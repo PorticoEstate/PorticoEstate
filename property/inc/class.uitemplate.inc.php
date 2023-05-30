@@ -43,6 +43,10 @@
 		var $order;
 		var $filter;
 		var $currentapp;
+		var $bo,$bocommon,
+		$allrows,$acl,$acl_location,$acl_read,$acl_add,$acl_edit,$acl_delete,$acl_manage;
+		var $chapter_id,$bowo_hour;
+
 		var $public_functions = array
 			(
 			'query'			 => true,
@@ -796,7 +800,7 @@
 				'lang_no_tolerance'				 => lang('Select tolerance'),
 				'lang_tolerance_statustext'		 => lang('Select the tolerance for this activity.'),
 				'lang_grouping'					 => lang('grouping'),
-				'grouping_list'					 => $this->bo->get_grouping_list(isset($values['grouping_id']) ? $values['grouping_id'] : '', isset($template_id) ? $template_id : ''),
+				'grouping_list'					 => $this->bo->get_grouping_list(isset($template_id) ? $template_id : '', isset($values['grouping_id']) ? $values['grouping_id'] : ''),
 				'select_grouping'				 => 'values[grouping_id]',
 				'lang_no_grouping'				 => lang('Select grouping'),
 				'lang_grouping_statustext'		 => lang('Select the grouping for this activity.'),

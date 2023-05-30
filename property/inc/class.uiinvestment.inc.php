@@ -44,6 +44,10 @@
 		var $filter;
 		var $part_of_town_id;
 		var $currentapp;
+		var $bo, $bocommon,$allrows,$user_id,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage, $admin_invoice,
+		$custom, $account,$bolocation;
+
 		var $public_functions = array
 			(
 			'query'			 => true,
@@ -753,7 +757,7 @@
 				'lang_no_cat'						 => lang('Select'),
 				'lang_cat_statustext'				 => lang('Select the category the investment belongs to. To do not use a category select NO CATEGORY'),
 				'select_name'						 => 'values[period]',
-				'investment_type_id'				 => $investment['investment_type_id'],
+				'investment_type_id'				 => $values['investment_type_id'],
 				'tabs'								 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'validator'							 => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'))

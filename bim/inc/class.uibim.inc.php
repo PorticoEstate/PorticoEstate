@@ -28,9 +28,10 @@
 	/* @var $bocommon property_bocommon */
 	private $bocommon;
 	private $bimconverterUrl = "http://localhost:8080/bimconverter/rest/";
+	var $acl, $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete, $acl_manage,$filter;
 
-		public function __construct()
-		{
+	public function __construct()
+	{
 			parent::__construct();
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->acl_location = 'admin';

@@ -20,6 +20,7 @@
 		protected $module;
 		protected $customer_id;
 
+		var $activity_bo, $display_name;
 		public function __construct()
 		{
 			parent::__construct();

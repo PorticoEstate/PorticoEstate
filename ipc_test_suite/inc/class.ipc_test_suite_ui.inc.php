@@ -36,7 +36,7 @@
 		* @aaccess private
 		*/
 		var $ipcManager;
-		
+		var $error_report;
 
 		/**
 		* Constructor

@@ -30,6 +30,7 @@
 		var $sort;
 		var $order;
 		var $location_id = 0;
+		var $so,$allrows, $use_session,$total_records;
 
 
 		function list_methods($_type='xmlrpc')

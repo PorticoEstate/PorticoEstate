@@ -22,6 +22,7 @@
 		protected
 			$module = 'booking';
 
+		var $export_agresso, $display_name,$db;
 		public function __construct()
 		{
 			parent::__construct();

@@ -35,6 +35,7 @@
 		var $db_table = 'phpgw_async';
 		var $debug = false;
 		protected $Exception_On_Error = false;
+		var $cronline, $only_fallback, $php_local, $other_cronlines,$php5;
 
 		/**
 		* Constructor
@@ -713,7 +714,7 @@
 				return 0;
 			}
 
-			$times = False;
+			$times = array();
 			$this->other_cronlines = array();
 			if (($crontab = popen('/bin/sh -c "'.$this->crontab.' -l" 2>&1','r')) !== False)
 			{

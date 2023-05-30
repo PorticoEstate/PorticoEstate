@@ -51,6 +51,13 @@
 	*/
 	class phpgwapi_uijsaddressbook
 	{
+		var $bo,
+		$nameselect,
+		$querycommand,
+		$inquery,
+		$sel_all_cat,
+		$scrsize;
+		
 		var $public_functions=array ('show' => True,
 						 'show_mainframe' => True,
 						 'show_userdata' => True,
@@ -243,6 +250,7 @@
 		}
 		function debug_all()
 		{
+			$debstring='';
 			$debstring=$debstring. "<br>\n<b> All arround Values<br>\n";
 			$debstring=$debstring. "<br>\n\$this->get_order= ".$this->get_order;
 			$debstring=$debstring. "<br>\n\$this->hideto = ".$this->hideto ;
@@ -1052,6 +1060,7 @@
 			//print_r($ary);
 			//reset($ary);
 			//while(list($k,$v)=each($ary))
+			$ret = '';
 			foreach($ary as $k => $v)
 			{
 				if(is_array($v) && (count($v)>0))

@@ -4,7 +4,7 @@
 	class booking_sorescategory extends booking_socommon
 	{
 
-		protected $entity_tree;
+		protected $entity_tree, $activity_so;
 
 		function __construct()
 		{

@@ -53,6 +53,7 @@
 			)
 		);
 
+		var $so,$bocommon,$use_session, $allrows, $total_records;
 		function __construct($session=false)
 		{
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];

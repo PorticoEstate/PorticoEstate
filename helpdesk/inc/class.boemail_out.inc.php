@@ -33,10 +33,8 @@
 
 	class helpdesk_boemail_out extends phpgwapi_bocommon
 	{
-		protected static
-			$bo,
-			$fields,
-			$acl_location;
+		protected
+			$bo;
 
 		public function __construct()
 		{

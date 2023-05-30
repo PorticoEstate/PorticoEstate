@@ -44,11 +44,14 @@
 		var $sort;
 		var $order;
 		var $filter;
-		var $currentapp;
 		var $type_id;
 		var $lookup;
 		var $location_code;
 		var $controller_helper;
+		var $bo,$currentapp, $part_of_town_id, $account, $bocommon, $status,$district_id,$allrows,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage, $soadmin_location,
+		$type,$entity_id,$role;
+
 		var $public_functions = array
 			(
 			'query'						 => true,
@@ -1427,6 +1430,12 @@ JS;
 				$this->district_id		 = $default_district;
 			}
 
+			$searc_levels = array();
+			for ($i = 1; $i < $type_id; $i++)
+			{
+				$searc_levels[] = "loc{$i}";
+			}
+
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				if (phpgw::get_var('head'))
@@ -1603,11 +1612,6 @@ JS;
 
 			$count_uicols_name = count($uicols['name']);
 
-			$searc_levels = array();
-			for ($i = 1; $i < $type_id; $i++)
-			{
-				$searc_levels[] = "loc{$i}";
-			}
 
 			for ($k = 0; $k < $count_uicols_name; $k++)
 			{

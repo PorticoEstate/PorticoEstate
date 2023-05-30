@@ -21,6 +21,11 @@
 	{
 
 		const ROLE_ADMIN = 'organization_admin';
+		var
+			$allocation_so,
+			$resource_so,
+			$event_so,
+			$season_bo;
 
 		function __construct()
 		{
@@ -701,7 +706,7 @@
 				);
 			}
 
-			$allocations = $this->split_allocations($allocations, $bookings);
+			$allocations = $this->split_allocations2($allocations, $bookings);
 
 //			$event_ids	 = $this->so->event_ids_for_building($building_id, $from, $to);
 			$event_ids	 = $this->so->event_ids_for_resource($resource_ids, $from, $to);
@@ -1095,7 +1100,9 @@
 				foreach ($all_bookings as $b)
 				{
 					if ($b['allocation_id'] == $allocation['id'])
+					{
 						$bookings[] = $b;
+					}
 				}
 				$times = array($allocation['from_'], $allocation['to_']);
 
@@ -1112,7 +1119,9 @@
 					{
 
 						if (($b['from_'] >= $from_ && $b['from_'] < $to_) || ($b['to_'] > $from_ && $b['to_'] <= $to_) || ($b['from_'] <= $from_ && $b['to_'] >= $to_))
+						{
 							$resources = array_minus($resources, array($b['resource_id']));
+						}
 					}
 					if ($resources)
 					{
@@ -1389,6 +1398,9 @@
 
 			$resource_ids = array();
 			$event_ids = array();
+			$allocation_ids = array();
+			$booking_ids = array();
+
 			foreach ($resources['results'] as &$resource)
 			{
 				$resource_ids[] = $resource['id'];
@@ -1462,6 +1474,8 @@
 				if ($resource['simple_booking'] && empty($resource['skip_timeslot']))
 				{
 					$event_ids = array_merge($event_ids, $this->so->event_ids_for_resource($resource['id'], $_from, $to));
+					$allocation_ids	 = array_merge($allocation_ids, $this->so->allocation_ids_for_resource($resource_id, $from, $to));
+					$booking_ids	 = array_merge($booking_ids, $this->so->booking_ids_for_resource($resource_id, $from, $to));
 				}
 
 				$resource['from'] = $from;
@@ -1480,8 +1494,26 @@
 				$events = $this->event_so->read(array('filters' => array('id' => $event_ids),
 					'results' => -1));
 			}
+			if ($allocation_ids)
+			{
+				$allocations = $this->allocation_so->read(array('filters' => array('id' => $allocation_ids),
+					'results' => -1));
+			}
+			if ($booking_ids)
+			{
+				$bookings = $this->so->read(array('filters' => array('id' => $booking_ids),
+					'results' => -1));
+			}
 
+			/**
+			 * Check for temporary reserved
+			 */
 			$this->get_partials( $events, $resource_ids);
+
+			/**
+			 * Combine variants of bookings
+			 */
+			$events['results'] = array_merge((array)$events['results'],(array)$allocations['results'],(array)$bookings['results']);
 
 			$availlableTimeSlots		 = array();
 			$defaultStartHour			 = 8;

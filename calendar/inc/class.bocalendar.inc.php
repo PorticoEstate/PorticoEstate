@@ -141,6 +141,8 @@
 
 		protected $_jscal;
 
+		var $grants, $cat, $bo, $rpt_day,$rpt_type,$user,$fields,$custom_fields,$stock_fields;
+
 		public function __construct($session = false)
 		{
 			$this->cat = CreateObject('phpgwapi.categories');

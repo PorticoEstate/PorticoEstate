@@ -35,6 +35,7 @@
 	class property_bocommon
 	{
 
+		var $socommon, $account, $async, $type_id, $uicols, $cols_return,$cols_extra, $cols_return_lookup, $acl_read;
 		var $start;
 		var $query;
 		var $filter;
@@ -875,7 +876,7 @@
 				$job_id	 = "property{$data['location']}::{$data['item_id']}::{$data['name']}";
 				$job	 = execMethod('phpgwapi.asyncservice.read', $job_id);
 
-				$event['next']			 = $GLOBALS['phpgw']->common->show_date($job[$job_id]['next'], $dateformat);
+				$event['next']			 = $GLOBALS['phpgw']->common->show_date($job[$job_id]['next'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$event['lang_next_run']	 = lang('next run');
 
 				$criteria = array
@@ -2746,7 +2747,7 @@
 				'id'		 => $id,
 				'secret'	 => $secret,
 				'domain'	 => $GLOBALS['phpgw_info']['user']['domain']
-				), null);
+				));
 
 			return $documentation_url;
 
@@ -2759,7 +2760,7 @@
 				return;
 			}
 
-			$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts', $start, $sort, $order, $query, $offset);
+			$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts');
 
 			$values = array();
 			foreach ($accounts as $account)

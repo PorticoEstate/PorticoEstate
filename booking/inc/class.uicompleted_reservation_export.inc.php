@@ -22,6 +22,7 @@
 			$fields = array('season_id', 'season_name', 'building_id', 'building_name', 'from_',
 				'to_', 'export_configurations');
 
+		var $generated_files_bo,$display_name;
 		public function __construct()
 		{
 			parent::__construct();

@@ -46,8 +46,11 @@
 		var $filter;
 		var $part_of_town_id;
 		var $sub;
-		var $currentapp;
 		var $custom;
+
+		var $currentapp, $bolocation, $account, $bo, $bocommon,$config,$allrows,$gab_insert_level,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage;
+
 		var $public_functions = array
 			(
 			'index'			 => true,
@@ -191,6 +194,12 @@
 			$gab_list	 = $this->bo->read($params);
 			$uicols		 = $this->get_uicols();
 			$content	 = array();
+
+			$lang_yes_no = array(
+				'yes'	 => lang('yes'),
+				'no'	 => lang('no'),
+				''		 => lang('no'),
+			);
 
 			if (isset($gab_list) && is_array($gab_list))
 			{

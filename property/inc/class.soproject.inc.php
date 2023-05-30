@@ -40,6 +40,9 @@
 		private $vendor_list	 = array();
 		protected $historylog;
 
+		var $db, $db2, $join, $left_join, $like, $custom, $account, $bocommon, $acl,$grants;
+		var $interlink, $config, $cols_extra, $uicols;
+
 		function __construct()
 		{
 			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
@@ -2523,7 +2526,7 @@
 
 				$_diff_start	 = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
 				$entry['diff']	 = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
-				if (abs($entry['actual_cost']) > 0 || $entry['period'] < date('Ym'))
+				if (abs((float)$entry['actual_cost']) > 0 || $entry['period'] < date('Ym'))
 				{
 					$_deviation		 = $entry['budget'] - $entry['actual_cost'];
 					$deviation		 = $_deviation;
@@ -2703,6 +2706,7 @@
 
 		function add_request( $add_request, $id )
 		{
+			$ret = false;
 			for ($i = 0; $i < count($add_request['request_id']); $i++)
 			{
 				$project_id = $this->check_request($add_request['request_id'][$i]);
@@ -2718,7 +2722,7 @@
 						'account_id'		 => $this->account
 					);
 
-					$this->interlink->add($interlink_data);
+					$ret = $this->interlink->add($interlink_data);
 
 					$this->db->query("UPDATE fm_request SET project_id='$id' WHERE id='" . $add_request['request_id'][$i] . "'", __LINE__, __FILE__);
 
@@ -2739,7 +2743,7 @@
 				}
 			}
 
-			return $receipt;
+			return $ret;
 		}
 
 		function delete( $project_id )
@@ -3279,7 +3283,7 @@
 		public function get_user_list()
 		{
 			$values	 = array();
-			$users	 = $GLOBALS['phpgw']->accounts->get_list('accounts', $start	 = -1, $sort	 = 'ASC', $order	 = 'account_lastname', $query, $offset	 = -1);
+			$users	 = $GLOBALS['phpgw']->accounts->get_list('accounts', $start	 = -1, $sort	 = 'ASC', $order	 = 'account_lastname', $query='', $offset	 = -1);
 			$sql	 = 'SELECT DISTINCT coordinator AS user_id FROM fm_project';
 			$this->db->query($sql, __LINE__, __FILE__);
 

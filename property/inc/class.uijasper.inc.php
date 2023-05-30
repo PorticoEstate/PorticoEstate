@@ -40,7 +40,9 @@
 		var $query;
 		var $sort;
 		var $order;
-		var $allrows;
+		var $bo,$account,$cats, $bocommon,$allrows,$app,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage,$_category_acl;
+
 		var $public_functions = array
 			(
 			'query'		 => true,

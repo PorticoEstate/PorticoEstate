@@ -2,7 +2,7 @@
 
 	class sms_sms_ extends sms_sms__
 	{
-
+		var $gnokii_param;
 		function __construct()
 		{
 			parent::__construct();
@@ -17,12 +17,12 @@
 		function gw_set_incoming_action()
 		{
 			$response = array();
-			$handle = @opendir($this->gnokii_param[path] . "/cache/smsd");
+			$handle = @opendir($this->gnokii_param['path'] . "/cache/smsd");
 			while ($sms_in_file = @readdir($handle))
 			{
 				if (preg_match("/^ERR.in/i", $sms_in_file) && !preg_match("/^[.]/", $sms_in_file))
 				{
-					$fn = $this->gnokii_param[path] . "/cache/smsd/$sms_in_file";
+					$fn = $this->gnokii_param['path'] . "/cache/smsd/$sms_in_file";
 					$tobe_deleted = $fn;
 					$lines = @file($fn);
 					$sms_datetime = trim($lines[0]);

@@ -53,6 +53,7 @@
 			)
 		);
 
+		var $so, $bocommon, $use_session,$allrows,$total_records;
 		function __construct($session=false)
 		{
 		//	$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
@@ -136,7 +137,7 @@
 		function read($type='',$type_id='')
 		{
 			$category = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-											'type' => $type,type_id=>$type_id,'allrows'=>$this->allrows));
+											'type' => $type,'type_id'=>$type_id,'allrows'=>$this->allrows));
 
 			$this->total_records = $this->so->total_records;
 

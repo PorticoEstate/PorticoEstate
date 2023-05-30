@@ -24,6 +24,7 @@
 		var $folder_table = 'egw_felamimail_folderstatus';
 		var $hostname,$accountname,$foldername,$accountid,$host_account_folder;	// set by the constructor
 		
+		var $db,$to_address_size;
 		function __construct($_hostname, $_accountname, $_foldername, $_accountid)
 		{
 			$this->hostname		= $_hostname;

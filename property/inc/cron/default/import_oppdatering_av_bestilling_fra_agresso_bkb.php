@@ -40,6 +40,7 @@
 		protected $updated_tickects			 = array();
 		protected $updated_tickects_per_file = array();
 		protected $receipt					 = array();
+		var $sotts,$config,$send,$historylog;
 
 		function __construct()
 		{
@@ -168,7 +169,7 @@
 
 				if (!ftp_chdir($connection, $directory_remote))
 				{
-					echo ("Change Dir Failed: $dir<BR>\r\n");
+					echo ("Change Dir Failed: {$directory_remote}<BR>\r\n");
 					return false;
 				}
 

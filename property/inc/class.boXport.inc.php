@@ -45,7 +45,7 @@
 		var $sort;
 		var $order;
 		var $filter;
-		var $cat_id;
+		var $cat_id, $config,$debug;
 		var $use_session		 = false;
 
 		function __construct( $session = false )
@@ -128,7 +128,7 @@
 
 		function select_import_conv( $selected = '' )
 		{
-			$dir_handle	 = @opendir(PHPGW_SERVER_ROOT . "/property/inc/import/{$GLOBALS['phpgw_info']['user']['domain']}");
+			$dir_handle	 = opendir(PHPGW_SERVER_ROOT . "/property/inc/import/{$GLOBALS['phpgw_info']['user']['domain']}");
 			$i			 = 0;
 			$myfilearray = array();
 			while ($file		 = readdir($dir_handle))

@@ -25,7 +25,9 @@
 		* @internal I don't think this is really needed - skwashd nov07
 		*/
 		private $move_child = array();
-		
+		var $account,$db, $join, $like, $left_join;
+		var $level,$job_parent, $parent_gap,$job_id,$check_parent,$task_parent,$task_id,$move_task_child;
+	
 		public function __construct()
 		{
 			$this->account	= $GLOBALS['phpgw_info']['user']['account_id'];
@@ -411,6 +413,7 @@
 
 			$table = 'phpgw_hrm_quali_type';
 
+			$filtermethod = '';
 			if($query)
 			{
 				$query = preg_replace("/'/",'',$query);

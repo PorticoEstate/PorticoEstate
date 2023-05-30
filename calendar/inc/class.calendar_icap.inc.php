@@ -16,6 +16,7 @@ phpgw::import_class('calendar.calendar__');
 
 class calendar_calendar_ extends calendar_calendar__
 {
+	var $user, $stream,$event;
 	function open($calendar='',$user='',$passwd='',$options='')
 	{
 		global $phpgw, $phpgw_info;

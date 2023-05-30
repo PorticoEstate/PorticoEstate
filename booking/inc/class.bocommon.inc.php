@@ -3,6 +3,7 @@
 	class booking_bocommon
 	{
 
+		var $so;
 		public function __construct()
 		{
 			

@@ -3,6 +3,8 @@
 
 	class booking_boapplication extends booking_bocommon
 	{
+		var $activity_bo,
+		 $organization_bo;
 
 		function __construct()
 		{
@@ -813,6 +815,7 @@ HTML;
 	class booking_boapplication_association extends booking_bocommon
 	{
 
+		var $so;
 		function __construct()
 		{
 			parent::__construct();

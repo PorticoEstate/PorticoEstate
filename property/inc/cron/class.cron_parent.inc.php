@@ -40,7 +40,7 @@
 		protected $sub_location	 = 'sub_location';
 		protected $function_msg	 = 'function_msg';
 		protected $cron			 = false;
-		protected $db;
+		protected $db,$join,$left_join,$like;
 
 		function __construct()
 		{

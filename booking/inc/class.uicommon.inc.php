@@ -148,6 +148,7 @@
 		private
 			$config;
 
+		var $bo;
 		public function __construct()
 		{
 			parent::__construct();
@@ -216,11 +217,11 @@
 		{
 			if ($e instanceof booking_unauthorized_exception)
 			{
-				$message = htmlentities('HTTP/1.0 401 Unauthorized to ' . $e->get_operation(), null, self::encoding());
+				$message = htmlentities('HTTP/1.0 401 Unauthorized to ' . $e->get_operation(), ENT_COMPAT, self::encoding());
 				$exception_message = $e->getMessage();
 
 				if (!empty($exception_message))
-					$message .= ' - ' . htmlentities($exception_message, null, self::encoding());
+					$message .= ' - ' . htmlentities($exception_message, ENT_COMPAT, self::encoding());
 
 				header($message);
 				echo "<html><head><title>$message</title></head><body><strong>$message</strong></body></html>";

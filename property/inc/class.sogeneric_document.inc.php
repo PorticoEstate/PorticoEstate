@@ -32,6 +32,8 @@
 
 		protected
 			$perform_update_relation_path = false;
+		
+		var $vfs, $db, $join, $left_join, $like, $total_records, $total_records_componentes;
 
 		function __construct()
 		{
@@ -85,7 +87,7 @@
 			}
 
 			$filtermethod	 = "WHERE a.mime_type != 'Directory' AND a.mime_type != 'journal' AND a.mime_type != 'journal-deleted'";
-			$joinmethod		 .= " {$this->left_join} phpgw_vfs_filedata b ON ( a.file_id = b.file_id )";
+			$joinmethod		 = " {$this->left_join} phpgw_vfs_filedata b ON ( a.file_id = b.file_id )";
 
 			if ($cat_id)
 			{

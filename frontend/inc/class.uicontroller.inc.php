@@ -40,6 +40,7 @@
 			'query' => true
 		);
 
+		var $acl_location, $account,$acl_read,$location_code;
 		public function __construct()
 		{
 			$this->acl_location = '.controller';
@@ -57,7 +58,7 @@
 		/**
 		 * Get the sublevels of the org tree into one arry
 		 */
-		private function _get_children( $data = array(), &$_org_units )
+		private function _get_children( $data , &$_org_units )
 		{
 			foreach ($data as $entry)
 			{

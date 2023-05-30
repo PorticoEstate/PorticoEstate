@@ -24,6 +24,7 @@
 		);
 		var $bo;
 		var $cat;
+		var $browser;
 
 		function __construct()
 		{

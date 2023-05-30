@@ -23,8 +23,8 @@
 		var $filter;
 		var $sort;
 		var $order;
-		var $cat_id;
-		var $acl_location;
+		var $cat_id,$so, $bocommon, $use_session, $allrows, $total_records;
+		var $acl_location, $sms, $account;
 		var $public_functions = array
 			(
 			'read' => true,

@@ -2,6 +2,7 @@
 
 	class sms_sms extends sms_sms_
 	{
+		var $gnokii_param;
 
 		function __construct()
 		{
@@ -14,7 +15,7 @@
 			$sms_id = "$gp_code.$uid.$smslog_id";
 			if (empty($sms_id))
 			{
-				$sms_id = mktime();
+				$sms_id = time();
 			}
 			if ($sms_sender)
 			{
@@ -42,13 +43,13 @@
 			// 2 = failed
 			if ($gp_code)
 			{
-				$fn = $this->gnokii_param[path] . "/cache/smsd/out.$gp_code.$uid.$smslog_id";
-				$efn = $this->gnokii_param[path] . "/cache/smsd/ERR.out.$gp_code.$uid.$smslog_id";
+				$fn = $this->gnokii_param['path'] . "/cache/smsd/out.$gp_code.$uid.$smslog_id";
+				$efn = $this->gnokii_param['path'] . "/cache/smsd/ERR.out.$gp_code.$uid.$smslog_id";
 			}
 			else
 			{
-				$fn = $this->gnokii_param[path] . "/cache/smsd/out.PV.$uid.$smslog_id";
-				$efn = $this->gnokii_param[path] . "/cache/smsd/ERR.out.PV.$uid.$smslog_id";
+				$fn = $this->gnokii_param['path'] . "/cache/smsd/out.PV.$uid.$smslog_id";
+				$efn = $this->gnokii_param['path'] . "/cache/smsd/ERR.out.PV.$uid.$smslog_id";
 			}
 			// set delivered first
 			$p_status = 1;

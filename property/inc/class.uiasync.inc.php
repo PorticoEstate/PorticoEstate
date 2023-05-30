@@ -43,6 +43,9 @@
 		var $order;
 		var $sub;
 		var $currentapp;
+		var $bo,$account,$bocommon, $entity_id, $cat_id,$allrows,$type, $type_app,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage;
+
 		var $public_functions = array
 			(
 			'query'	 => true,

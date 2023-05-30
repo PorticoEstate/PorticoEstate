@@ -13,7 +13,7 @@
 
 	class defaultpop
 	{
-		var $profileData;
+		var $profileData,$mbAvailable;
 		
 		function __construct($_profileData)
 		{

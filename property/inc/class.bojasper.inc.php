@@ -42,6 +42,7 @@
 		var $cat_id;
 		var $grants;
 		var $app;
+		var $so, $use_session,$user_id,$allrows,$total_records;
 
 		function __construct( $session = false )
 		{

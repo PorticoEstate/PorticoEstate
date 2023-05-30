@@ -38,7 +38,7 @@
 		var $filter;
 		var $currentapp;
 		var $type_id;
-		var $location_code;
+		var $location_code, $account_id, $bo, $bocommon, $status_id,$allrows;
 		private $config;
 		var $public_functions = array
 			(

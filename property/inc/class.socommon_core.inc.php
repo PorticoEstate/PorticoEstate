@@ -69,6 +69,8 @@
 
 		public $custom;
 
+		var $account;
+
 		public function __construct()
 		{
 			$this->account		 = (int)$GLOBALS['phpgw_info']['user']['account_id'];

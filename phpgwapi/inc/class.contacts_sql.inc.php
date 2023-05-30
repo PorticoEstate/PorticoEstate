@@ -67,6 +67,10 @@
 		var $grants;
 		protected $global_lock = false;
 		protected $local_lock = false;
+		var $LDAPResource, $comm_descr,$comm_descr_flag,$comm_type,$comm_type_flag,
+		$addr_type,$addr_type_flag,$note_type,$note_type_flag,$contact_type_flag,
+		$other_fields,$hash_comms_import,$contact,$org,$person,$relations,$location,
+		$comm,$note,$others,$tab_main_persons,$tab_main_organizations;
 
 		/**
 		 * All exporteds fields
@@ -2429,7 +2433,7 @@
 		 * @param integer $action PHPGW_SQL_RETURN_SQL | PHPGW_SQL_RUN_SQL depending what we want
 		 * @return SQL insert string or nothing
 		 */
-		function add_org( $principal, $cid, $action = PHPGW_SQL_RETURN_SQL )
+		function add_org( $principal, $cid = '', $action = PHPGW_SQL_RETURN_SQL )
 		{
 			$this->org = createObject('phpgwapi.contact_org');
 			if ($action == PHPGW_SQL_RUN_SQL)

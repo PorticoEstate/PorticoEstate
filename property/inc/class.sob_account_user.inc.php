@@ -31,6 +31,7 @@
 	{
 
 		var $total_records = 0;
+		var $db, $join, $left_join, $like,$account_id;
 
 		function __construct()
 		{

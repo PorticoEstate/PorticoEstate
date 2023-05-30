@@ -7,6 +7,7 @@
 
 		protected static
 			$document_so_objects;
+		var $document_so;
 
 		function __construct()
 		{

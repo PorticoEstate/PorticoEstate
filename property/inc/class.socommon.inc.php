@@ -44,6 +44,7 @@
 		 * @var string $like the sql syntax to use for a case insensitive LIKE
 		 */
 		var $like = 'LIKE';
+		var $db, $account, $left_join;
 
 		function __construct()
 		{

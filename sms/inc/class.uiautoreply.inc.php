@@ -30,7 +30,8 @@
 			'delete' => true,
 			'delete_scenario' => true
 		);
-
+		var $nextmatchs, $account,$bo,
+		 $bocommon,$sms, $acl,$acl_location, $start,$query, $sort,$order, $allrows,$db, $cat_id,$filter;
 		function __construct()
 		{
 			$this->nextmatchs = CreateObject('phpgwapi.nextmatchs');
@@ -270,7 +271,7 @@
 
 					$this->db->query($sql, __LINE__, __FILE__);
 
-					$new_uid = $this->db->get_last_insert_id(phpgw_sms_featautoreply, 'autoreply_id');
+					$new_uid = $this->db->get_last_insert_id('phpgw_sms_featautoreply', 'autoreply_id');
 
 					$this->db->transaction_commit();
 
@@ -353,9 +354,9 @@
 			";
 			for ($i = 1; $i <= 7; $i++)
 			{
-				${"add_autoreply_scenario_param" . $i} = strtoupper(get_var("add_autoreply_scenario_param$i", array(
-					'POST', 'GET')));
-				$content .= "<p>SMS autoreply scenario param $i: <input type=text size=20 maxlength=20 name=add_autoreply_scenario_param$i value=\"" . ${"add_autoreply_scenario_param" . $i} . "\">\n";
+				$param_name = "add_autoreply_scenario_param{$i}";
+				$value = strtoupper(phpgw::get_var($param_name));
+				$content .= "<p>SMS autoreply scenario param $i: <input type=text size=20 maxlength=20 name={$param_name} value=\"" . $value . "\">\n";
 			}
 
 			$content .= "
@@ -393,11 +394,12 @@
 
 			$ok = 0;
 
+			$param_names = array();
 			for ($i = 1; $i <= 7; $i++)
 			{
-				${"add_autoreply_scenario_param" . $i} = strtoupper(get_var("add_autoreply_scenario_param$i", array(
-					'POST', 'GET')));
-				if (${"add_autoreply_scenario_param" . $i})
+				$param_names[$i] = "add_autoreply_scenario_param{$i}";
+
+				if (phpgw::get_var($param_names[$i], 'bool'))
 				{
 					$ok++;
 				}
@@ -406,11 +408,11 @@
 			{
 				for ($i = 1; $i <= 7; $i++)
 				{
-					$autoreply_scenario_param_list .= "autoreply_scenario_param$i,";
+					$autoreply_scenario_param_list .= "autoreply_scenario_param{$i},";
 				}
 				for ($i = 1; $i <= 7; $i++)
 				{
-					$autoreply_scenario_code_param_entry .= "'" . ${"add_autoreply_scenario_param" . $i} . "',";
+					$autoreply_scenario_code_param_entry .= "'" . $param_names[$i] . "',";
 				}
 				$sql = "
 				INSERT INTO phpgw_sms_featautoreply_scenario
@@ -418,7 +420,7 @@
 
 				$this->db->transaction_begin();
 				$this->db->query($sql, __LINE__, __FILE__);
-				$new_uid = $this->db->get_last_insert_id(phpgw_sms_featautoreply_scenario, 'autoreply_scenario_id');
+				$new_uid = $this->db->get_last_insert_id('phpgw_sms_featautoreply_scenario', 'autoreply_scenario_id');
 				$this->db->transaction_commit();
 
 				if ($new_uid)
@@ -503,13 +505,15 @@
 			$sql = "SELECT * FROM phpgw_sms_featautoreply_scenario WHERE autoreply_id='$autoreply_id' AND autoreply_scenario_id='$autoreply_scenario_id'";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
+			$edit_autoreply_scenario_params = array();
 			for ($i = 1; $i <= 7; $i++)
 			{
-				${"edit_autoreply_scenario_param" . $i} = $this->db->f("autoreply_scenario_param$i");
+				$edit_autoreply_scenario_params[$i] =  $this->db->f("autoreply_scenario_param{$i}", true);
+
 			}
 			for ($i = 1; $i <= 7; $i++)
 			{
-				$content .= "<p>SMS autoreply scenario param $i: <input type=text size=20 maxlength=20 name=edit_autoreply_scenario_param$i value=\"" . ${"edit_autoreply_scenario_param" . $i} . "\">\n";
+				$content .= "<p>SMS autoreply scenario param $i: <input type=text size=20 maxlength=20 name=edit_autoreply_scenario_param$i value=\"" . $edit_autoreply_scenario_params[$i] . "\">\n";
 			}
 			$edit_autoreply_scenario_result = $this->db->f('autoreply_scenario_result');
 			$content .= "
@@ -545,12 +549,12 @@
 			$autoreply_id = phpgw::get_var('autoreply_id');
 			$edit_autoreply_scenario_result = get_var('edit_autoreply_scenario_result', array(
 				'POST', 'GET'));
+			$edit_autoreply_scenario_params = array();
 
 			for ($i = 1; $i <= 7; $i++)
 			{
-				${"edit_autoreply_scenario_param" . $i} = strtoupper(get_var("edit_autoreply_scenario_param$i", array(
-					'POST', 'GET')));
-				if (${"edit_autoreply_scenario_param" . $i})
+				$edit_autoreply_scenario_params[$i] = strtoupper(phpgw::get_var("edit_autoreply_scenario_param$i"));
+				if ($edit_autoreply_scenario_params[$i])
 				{
 					$ok++;
 				}
@@ -560,7 +564,7 @@
 			{
 				for ($i = 1; $i <= 7; $i++)
 				{
-					$autoreply_scenario_param_list .= "autoreply_scenario_param$i='" . ${"edit_autoreply_scenario_param" . $i} . "',";
+					$autoreply_scenario_param_list .= "autoreply_scenario_param$i='" . $edit_autoreply_scenario_params[$i] . "',";
 				}
 				$sql = "
 				UPDATE phpgw_sms_featautoreply_scenario
@@ -598,8 +602,7 @@
 
 			for ($i = 1; $i <= 7; $i++)
 			{
-				$add_data["edit_autoreply_scenario_param" . $i] = strtoupper(get_var("edit_autoreply_scenario_param$i", array(
-					'POST')));
+				$add_data["edit_autoreply_scenario_param{$i}"] = strtoupper(phpgw::get_var("edit_autoreply_scenario_param{$i}"));
 			}
 
 			$GLOBALS['phpgw']->redirect_link('/index.php', $add_data);

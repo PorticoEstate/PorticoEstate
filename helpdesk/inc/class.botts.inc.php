@@ -51,7 +51,9 @@
 		var $group_id;
 		var $total_records;
 		var $use_session;
-		var $_simple, $_group_candidates, $_show_finnish_date, $account;
+		var $_simple, $_group_candidates, $_show_finnish_date, $account,$so,$custom,$bocommon,$historylog,
+		$config,$dateformat,$cats,$reported_by,$allrows,$show_finnish_date,$custom_filters,
+		$sum_budget,$sum_actual_cost,$sum_difference,$send,$order_sent_adress;
 
 		var $public_functions = array
 			(
@@ -314,7 +316,7 @@
 			return $custom_cols;
 		}
 
-		function filter($data=0)
+		function filter($data=array())
 		{
 			if(is_array($data))
 			{
@@ -324,12 +326,12 @@
 
 			switch($format)
 			{
-			case 'select':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('filter_select'));
-				break;
-			case 'filter':
-				$GLOBALS['phpgw']->xslttpl->add_file(array('filter_filter'));
-				break;
+				case 'select':
+					$GLOBALS['phpgw']->xslttpl->add_file(array('filter_select'));
+					break;
+				case 'filter':
+					$GLOBALS['phpgw']->xslttpl->add_file(array('filter_filter'));
+					break;
 			}
 
 			$_filters[0]['id']='all';

@@ -189,6 +189,11 @@
 		*/
 		public function translate($key, $vars = array(), $only_common = false , $force_app = '')
 		{
+			if(empty($key))
+			{
+				return;
+			}
+
 			if ( !$userlang = $this->userlang )
 			{
 				$userlang = 'en';

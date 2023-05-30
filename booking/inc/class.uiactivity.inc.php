@@ -12,6 +12,7 @@
 			'show' => true,
 			'edit' => true
 		);
+		var $bo;
 
 		public function __construct()
 		{

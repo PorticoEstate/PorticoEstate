@@ -39,7 +39,7 @@
 	class booking_e_lock_integration
 	{
 
-		private $debug, $webservicehost, $login, $password, $proxy;
+		private $debug, $webservicehost, $login, $password, $proxy, $config;
 
 		public function __construct()
 		{

@@ -5,6 +5,7 @@
 	{
 
 		public static $generators = array();
+		var $season_so, $resource_so;
 
 		function __construct()
 		{
