@@ -55,6 +55,7 @@ $stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/normalize.css";
 $stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/rubik-font.css";
 $stylesheets[] = "/phpgwapi/js/select2/css/select2.min.css";
 $stylesheets[] = "/phpgwapi/js/jquery/css/redmond/jquery-ui.min.css";
+$stylesheets[] = "/phpgwapi/js/pecalendar/pecalendar.css";
 
 foreach ($stylesheets as $stylesheet) {
     if (file_exists(PHPGW_SERVER_ROOT . $stylesheet)) {
@@ -84,6 +85,8 @@ $javascripts[] = "/phpgwapi/templates/bookingfrontend_2/js/common.js";
 $javascripts[] = "/phpgwapi/templates/bookingfrontend/js/custom.js";
 $javascripts[] = "/phpgwapi/templates/bookingfrontend/js/nb-NO.js";
 $javascripts[] = "/phpgwapi/js/dateformat/dateformat.js";
+$javascripts[] = "/phpgwapi/js/pecalendar/luxon.js";
+$javascripts[] = "/phpgwapi/js/pecalendar/pecalendar.js";
 
 foreach ($javascripts as $javascript) {
     if (file_exists(PHPGW_SERVER_ROOT . $javascript)) {

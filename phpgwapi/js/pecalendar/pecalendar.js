@@ -1,6 +1,7 @@
 let DateTime = luxon.DateTime;
 
 class PEcalendar {
+    dom_id = null;
     dom = null;
     currentDate = null;
     firstDayOfWeek = null;
@@ -19,14 +20,24 @@ class PEcalendar {
     buildings = null;
     resources = {};
     resource_id = null;
+    id_prefix = generateRandomString(10);
 
-    constructor(id, building_id) {
+    constructor(id, building_id, resource_id=null, dateString=null) {
+        this.dom_id = id;
         this.building_id = building_id;
+        this.resource_id = resource_id;
+        console.log("Loading", this.building_id, this.resource_id);
         this.loadBuildings();
 
         this.dom = document.getElementById(id);
-        this.setDate(DateTime.now())
+        if (dateString)
+            this.setDate(DateTime.fromJSDate(new Date(dateString)));
+        else
+            this.setDate(DateTime.now())
+    }
 
+    getId(id) {
+        return this.id_prefix+"-"+id;
     }
 
     setDate(currentDate) {
@@ -73,6 +84,8 @@ class PEcalendar {
 
     createCalendarDom() {
         if (!this.currentDate) return;
+        this.dom = document.getElementById(this.dom_id);
+        if (!this.dom) return;
         const self = this;
 
         // Fix css variables
@@ -83,7 +96,7 @@ class PEcalendar {
         const header = this.createCalendarHeader();
         // Creating days header
         const days = this.createElement("div", "days");
-        days.id = "days";
+        days.id = this.getId("days");
         for (let c = 0; c < 7; c++) {
             const day = this.firstDayOfWeek.plus({day: c});
             const dayEl = this.createElement("div", "day");
@@ -109,7 +122,7 @@ class PEcalendar {
 
         // Content
         const content = this.createElement("div", "content");
-        content.id = "content";
+        content.id = this.getId("content");
         content.style.cssText = `grid-template-rows: repeat(${(this.endHour - this.startHour) * this.hourParts}, calc(3rem/${this.hourParts}));`
 
         // Lines
@@ -155,27 +168,18 @@ class PEcalendar {
         }
         if (this.dom) {
             this.dom.replaceChildren(...[header, days, timeEl, content]);
-            const building = document.getElementById("building");
+            const building = document.getElementById(this.getId("building"));
             building.onchange = (option) => {
                 self.loadBuilding(+option.target.value);
             }
-            const resource = document.getElementById("resources");
+            const resource = document.getElementById(this.getId("resources"));
             resource.onchange = (option) => {
                 self.resource_id = +option.target.value;
-                console.log("Changing resource", self.resource_id);
                 self.createCalendarDom();
             }
-            jQuery('#datetimepicker').datetimepicker({
-                format: 'd.m.Y',
-                lang: 'no',
-                timepicker: false,
-                onSelectDate: (date) => {
-                    const d = DateTime.fromJSDate(date);
-                    self.setDate(d)
-                }
-            });
-
         }
+        updateSelectBasic();
+        updateDateBasic();
     }
 
     addInfoPopup(contentEl, dotsEl, event) {
@@ -184,7 +188,7 @@ class PEcalendar {
         const dateFrom = DateTime.fromISO(`${event.date}T${event.from}`);
         const dateTo = DateTime.fromISO(`${event.date}T${event.to}`);
         const info = this.createElement("div", "info");
-        info.id = `event-${event.id}`;
+        info.id = this.getId("event");
         info.innerHTML = `<p><b>${event.name}</b></p>
                 <p>Kl: ${dateFrom.toFormat("HH:mm")} - ${dateTo.toFormat("HH:mm")}</p>`
 
@@ -205,45 +209,60 @@ class PEcalendar {
         if (!this.currentDate) return;
         const self = this;
         const buildings = this.buildings;
+        console.log("Resources", this.building_id, this.resource_id, this.resources);
 
         const header = this.createElement("div", "header");
 
         header.insertAdjacentHTML(
             'afterbegin',
             `
-<div class="place">
-    <span class="hide-mobile">
-        Kalenderen viser:
-    </span>
+<div class="date">
+<div>
+      <fieldset>
+        <label class="filter">
+          <input type="radio" name="filter" value="day" checked/>
+            <span class="filter__radio">Dag</span>
+        </label>
+        <label class="filter">
+          <input type="radio" name="filter" value="week"/>
+            <span class="filter__radio">Uke</span>
+        </label>
+        <label class="filter">
+          <input type="radio" name="filter" value="moth"/>
+            <span class="filter__radio">Måned</span>
+        </label>
+      </fieldset>
+      </div>
+                <input id=${this.getId("datetimepicker")} class="js-basic-datepicker" type="text" value="${this.currentDate.toFormat('dd.LL.y')}">
+                </div>
     <div class="select_building_resource">
-        <select id="building" class="building">
-        ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name + '</option>').join("")}
-</select>
-        <select id="resources" class="resources">
-        ${this.resources ? Object.keys(this.resources).map(
-                resourceId => '<option value="' + this.resources[resourceId].id + '"' + (this.resources[resourceId].id === this.resource_id ? " selected" : "") + '>' + this.resources[resourceId].name + '</option>').join("") : ""}
-</select>
-<input id="datetimepicker" class="datetime" type="text" value="${this.currentDate.toFormat('dd.LL.y')}">
+        <div>
+            <select id=${this.getId("building")} class="js-select-basic">
+               ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name + '</option>').join("")}
+            </select>
+            <select id=${this.getId("resources")} class="js-select-basic">
+               ${this.resources ? Object.keys(this.resources).map(
+                resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id ? " selected" : "") + '>' + this.resources[resourceId].name + '</option>').join("") : ""}
+            </select>
+
+        </div>
+        <div>
+            <div class="type text-small">
+                <img class="event-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
+                Arrangement
+            </div>
+            <div class="type text-small">
+                <img class="booking-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
+                Interntildeling
+            </div>
+            <div class="type text-small">
+                <img class="allocation-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
+                Tildeling
+            </div>
+        </div>
     </div>
-</div>
-</div>
-<div class="infopart">
-    <div class="type">
-        <img class="event-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
-        Arrangement
-    </div>
-    <div class="type">
-        <img class="booking-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
-        Interntildeling
-    </div>
-    <div class="type">
-        <img class="allocation-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
-        Tildeling
-    </div>
-</div>
 `
         )
-
         return header;
     }
 
@@ -265,7 +284,7 @@ class PEcalendar {
                 const events = response?.ResultSet?.Result?.results?.schedule;
                 self.resources = response?.ResultSet?.Result?.results?.resources;
                 if (self.resources && Object.keys(self.resources).length > 0)
-                    self.resource_id = resource_id ? resource_id : self.resources[Object.keys(self.resources)[0]]?.id;
+                    self.resource_id = self.resource_id ? self.resource_id : self.resources[Object.keys(self.resources)[0]]?.id;
                 else
                     self.resource_id = 0;
                 self.setEvents(events ? events : [])
@@ -284,24 +303,8 @@ class PEcalendar {
             async: false,
             success: function (response) {
                 self.buildings = response.filter(r => r.type === 'anlegg');
-                self.createCalendarDom();
             }
         });
     }
 
 }
-
-$(window).scroll(function() {
-    // const days = $('#days');
-    // if (days) {
-    //     const val = days.offset().top - $(window).scrollTop();
-    //     if(val < 5 && val > 0) {
-    //
-    //     }
-    //     if (Math.abs(days.offset().top - $(window).scrollTop()) < 5) {
-    //         console.log('On Top', Date.now())
-    //     }
-    // }
-});
-
-new PEcalendar();

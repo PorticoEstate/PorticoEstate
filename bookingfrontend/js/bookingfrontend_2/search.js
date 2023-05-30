@@ -392,10 +392,12 @@ class BookingSearch {
     addInfoCards(el, resources) {
         const append = [];
         const okResources = [];
+        // const calendars = [];
         for (const resource of resources) {
             const buildings = this.getBuildingsFromResource(resource.id);
             const towns = this.getTownFromBuilding(buildings);
             if (towns.length > 0) {
+                const calendarId = `calendar-${resource.id}`;
                 okResources.push(resource);
                 append.push(`
     <div class="col-12 mb-4">
@@ -409,21 +411,22 @@ class BookingSearch {
         <div class="js-slidedown-content slidedown__content">
           <p>
             ${resource.description}
-            <ul>
-                <li></li>
-                <li></li>
-            </ul>
           </p> 
+            <div id="${calendarId}" class="calendar" data-building-id="${buildings[0].id}" data-resource-id="${resource.id}" data-date="${getDateFromSearch(this.data.date())}"></div>
         </div>
       </div>
     </div>
 `
                 )
+                console.log("Creating calendar", resource.id, buildings[0].id);
+                // const calendar = new PEcalendar(calendarId, buildings[0].id)
+                // calendars.push(calendar);
             }
         }
         this.data.result(okResources.slice(0, 50));
         el.append(append.join(""));
         fillSearchCount(okResources.slice(0, 50), okResources.length);
+        // calendars.map(calendar => calendar.createCalendarDom())
     }
 }
 
@@ -697,6 +700,11 @@ function getSearchDatetimeString(date) {
 
 function getIsoDateString(date) {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+}
+
+function getDateFromSearch(dateString) {
+    const parts = dateString.split(".");
+    return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
 }
 
 function getAllSubRowsIds(rows, id) {
