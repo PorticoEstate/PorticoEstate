@@ -59,6 +59,11 @@
 					$GLOBALS['phpgw']->common->phpgw_exit();
 				}
 			}
+			else
+			{
+				echo lang('Access denied');
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
 
 			$this->login = $GLOBALS['phpgw']->auth->get_username(true);
 

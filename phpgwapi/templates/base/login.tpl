@@ -91,7 +91,7 @@
 		<!-- BEGIN header_block -->
 		<div class="header">
 			<div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
-				<a class="pure-menu-heading" href="">{system} {lang_login}</a>
+				<a class="pure-menu-heading" href="">{system} - {lang_login}</a>
 
 				<ul class="pure-menu-list">
 					<li class="pure-menu-item pure-menu-selected"><span><a class="pure-menu-link" href="login.php?lang=no&lightbox={lightbox}"><img src="{flag_no}" alt="Norsk (Norway)" title="Norsk (Norway)" ></a></span></li>
