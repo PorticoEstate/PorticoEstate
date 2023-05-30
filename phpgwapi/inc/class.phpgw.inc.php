@@ -471,7 +471,14 @@
 				}
 
 				// Trim whitespace so it doesn't trip us up
-				$value = trim($value);
+				if( is_null($value))
+				{
+					return $default;
+				}
+				else
+				{
+					$value = trim($value);
+				}
 
 				// This won't be needed in PHP 5.4 and later as GPC magic quotes are being removed
 				if ( version_compare(PHP_VERSION, '5.3.7') <= 0 && get_magic_quotes_gpc() )

@@ -201,7 +201,7 @@
 		}
 
 		// array $filter_out
-		function return_array( $filter_out, $only_show, $_orderby = '', $sort = '', $record_id, $attrib_id = 0, $detail_id = 0 )
+		function return_array( $filter_out, $only_show, $_orderby = '', $sort = '', $record_id = 0, $attrib_id = 0, $detail_id = 0 )
 		{
 			$record_id	 = (int)$record_id;
 			$attrib_id	 = (int)$attrib_id;

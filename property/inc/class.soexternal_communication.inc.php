@@ -638,6 +638,14 @@
 					'query'		 => false,
 					'public'	 => true,
 					'required'	 => false,
+				),
+				'created_on'	 => array('action'	 => PHPGW_ACL_READ,
+					'type'		 => 'date',
+					'label'		 => 'date',
+					'sortable'	 => true,
+					'query'		 => false,
+					'public'	 => true,
+					'required'	 => false,
 				)
 			);
 

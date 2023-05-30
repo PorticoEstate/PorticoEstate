@@ -2281,8 +2281,7 @@
 								'descr'	 => lang('location level'),
 								'type'	 => 'varchar'
 							),
-							array
-								(
+							array(
 								'name'		 => 'responsibility_id',
 								'descr'		 => lang('responsibility'),
 								'type'		 => 'select',

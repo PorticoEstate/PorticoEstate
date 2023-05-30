@@ -4314,22 +4314,31 @@ JS;
 				}
 			}
 
-			$user_phone		 = str_replace(' ', '', $user_phone);
-			$contact_phone	 = str_replace(' ', '', $contact_phone);
-			$contact_phone2	 = str_replace(' ', '', $contact_phone2);
+			if ($user_phone)
+			{
+				$user_phone = str_replace(' ', '', $user_phone);
+				if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $user_phone, $matches))
+				{
+					$user_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				}
+			}
+			if ($contact_phone)
+			{
+				$contact_phone = str_replace(' ', '', $contact_phone);
+				if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone, $matches))
+				{
+					$contact_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				}
+			}
+			if ($contact_phone2)
+			{
+				$contact_phone2 = str_replace(' ', '', $contact_phone2);
+				if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone2, $matches))
+				{
+					$contact_phone2 = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				}
+			}
 
-			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $user_phone, $matches))
-			{
-				$user_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
-			}
-			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone, $matches))
-			{
-				$contact_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
-			}
-			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone2, $matches))
-			{
-				$contact_phone2 = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
-			}
 
 			if ($contact_name)
 			{
@@ -4702,22 +4711,31 @@ JS;
 				}
 			}
 
-			$user_phone		 = str_replace(' ', '', $user_phone);
-			$contact_phone	 = str_replace(' ', '', $contact_phone);
-			$contact_phone2	 = str_replace(' ', '', $contact_phone2);
+			if ($user_phone)
+			{
+				$user_phone = str_replace(' ', '', $user_phone);
+				if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $user_phone, $matches))
+				{
+					$user_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				}
+			}
+			if ($contact_phone)
+			{
+				$contact_phone = str_replace(' ', '', $contact_phone);
+				if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone, $matches))
+				{
+					$contact_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				}
+			}
+			if ($contact_phone2)
+			{
+				$contact_phone2 = str_replace(' ', '', $contact_phone2);
+				if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone2, $matches))
+				{
+					$contact_phone2 = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				}
+			}
 
-			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $user_phone, $matches))
-			{
-				$user_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
-			}
-			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone, $matches))
-			{
-				$contact_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
-			}
-			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone2, $matches))
-			{
-				$contact_phone2 = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
-			}
 
 			function nl2br2( $string )
 			{

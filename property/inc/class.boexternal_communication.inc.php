@@ -32,7 +32,7 @@
 	 * Description
 	 * @package property
 	 */
-	class property_boexternal_communication  extends phpgwapi_bocommon
+	class property_boexternal_communication extends phpgwapi_bocommon
 	{
 
 		var $so, $historylog, $config, $bocommon, $preview_html, $dateformat, $currentapp, $order_sent_adress;
@@ -46,26 +46,27 @@
 			$this->config		 = CreateObject('phpgwapi.config', $this->currentapp)->read();
 			$this->preview_html	 = phpgw::get_var('preview_html', 'bool');
 			$this->dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$this->fields = $this->so->get_fields();
-
+			$this->fields		 = $this->so->get_fields();
 		}
 
-		public function read($params)
+		public function read( $params )
 		{
-			$values =  $this->so->read($params);
-	//		$status_text = eventplanner_customer::get_status_list();
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$values		 = $this->so->read($params);
+			//		$status_text = eventplanner_customer::get_status_list();
+			$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($values['results'] as &$entry)
 			{
-	//				$entry['status'] = $status_text[$entry['status']];
-					$entry['created'] = $GLOBALS['phpgw']->common->show_date($entry['created']);
-					$entry['modified'] = $GLOBALS['phpgw']->common->show_date($entry['modified']);
+				//				$entry['status'] = $status_text[$entry['status']];
+				$entry['created_on'] = $GLOBALS['phpgw']->common->show_date($entry['created_on']);
+				$entry['created']	 = $GLOBALS['phpgw']->common->show_date($entry['created']);
+				$entry['modified']	 = $GLOBALS['phpgw']->common->show_date($entry['modified']);
 			}
 			return $values;
 		}
 
-		public function store($object)
+		public function store( $object )
 		{
+
 		}
 
 		function read_additional_notes( $id = 0 )
@@ -428,13 +429,13 @@ HTML;
 			$i = 0;
 			foreach ($additional_notes as $value)
 			{
-				if(!preg_match("/(<\/p>|<\/span>|<\/table>)/i", $value['value_note']))
+				if (!preg_match("/(<\/p>|<\/span>|<\/table>)/i", $value['value_note']))
 				{
-					$value['value_note'] = preg_replace("/[[:alpha:]]+:\/\/[^<>[:space:]]+[[:alnum:]\/]/","<a href=\"\\0\">\\0</a>", $value['value_note']);
+					$value['value_note'] = preg_replace("/[[:alpha:]]+:\/\/[^<>[:space:]]+[[:alnum:]\/]/", "<a href=\"\\0\">\\0</a>", $value['value_note']);
 					$value['value_note'] = nl2br($value['value_note']);
 				}
 
-				$table_content	 .= "<tr><td>{$value['value_count']}</td><td>{$value['value_date']}</td><td>{$value['value_user']}</td><td>{$value['value_note']}</td></tr>\n";
+				$table_content .= "<tr><td>{$value['value_count']}</td><td>{$value['value_date']}</td><td>{$value['value_user']}</td><td>{$value['value_note']}</td></tr>\n";
 				$i++;
 			}
 
@@ -443,7 +444,6 @@ HTML;
 			$subject = "[PorticoTicket::{$ticket_id}::{$id}] {$message_info['subject']}({$i})";
 
 			$body = str_replace('__SUBJECT__', $subject, $body);
-
 
 			$html = <<<HTML
 <!DOCTYPE html>
@@ -560,7 +560,6 @@ HTML;
 			</html>
 HTML;
 
-
 			return array
 				(
 				'html'			 => $html,
@@ -574,12 +573,12 @@ HTML;
 			if ((int)$ticket['assignedto'])
 			{
 //				$GLOBALS['phpgw']->preferences->set_account_id((int)$ticket['assignedto'], true);
-				$prefs	 = $this->bocommon->create_preferences('common', (int)$ticket['assignedto']);
+				$prefs = $this->bocommon->create_preferences('common', (int)$ticket['assignedto']);
 			}
 			else if ((int)$ticket['user_id'])
 			{
 //				$GLOBALS['phpgw']->preferences->set_account_id((int)$ticket['user_id'], true);
-				$prefs	 = $this->bocommon->create_preferences('common', (int)$ticket['user_id']);
+				$prefs = $this->bocommon->create_preferences('common', (int)$ticket['user_id']);
 			}
 
 			$organisation	 = '';
@@ -661,21 +660,30 @@ HTML;
 				}
 			}
 
-			$user_phone		 = str_replace(' ', '', $user_phone);
-			$contact_phone	 = str_replace(' ', '', $contact_phone);
-			$contact_phone2	 = str_replace(' ', '', $contact_phone2);
 
-			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $user_phone, $matches))
+			if ($user_phone)
 			{
-				$user_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				$user_phone = str_replace(' ', '', $user_phone);
+				if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $user_phone, $matches))
+				{
+					$user_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				}
 			}
-			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone, $matches))
+			if ($contact_phone)
 			{
-				$contact_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				$contact_phone = str_replace(' ', '', $contact_phone);
+				if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone, $matches))
+				{
+					$contact_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				}
 			}
-			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone2, $matches))
+			if ($contact_phone2)
 			{
-				$contact_phone2 = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				$contact_phone2 = str_replace(' ', '', $contact_phone2);
+				if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone2, $matches))
+				{
+					$contact_phone2 = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				}
 			}
 
 			return array(
@@ -693,9 +701,8 @@ HTML;
 			);
 		}
 
-		public function get_sms_recipients($location_code)
+		public function get_sms_recipients( $location_code )
 		{
 			return $this->so->get_sms_recipients($location_code);
 		}
-
 	}

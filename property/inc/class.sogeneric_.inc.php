@@ -721,7 +721,7 @@
 			// in case of backslash characters - as in path-references
 			foreach ($data as $_key => &$_value)
 			{
-				$_value = str_replace('\\', '/', $_value);
+				$_value = $_value ? str_replace('\\', '/', $_value) : $_value;
 			}
 			unset($_key);
 			unset($_value);
@@ -755,7 +755,8 @@
 						$data[$field['name']] = ',' . implode(',', $data[$field['name']]) . ',';
 					}
 				}
-				$value_set[$field['name']] = $this->_db->db_addslashes(html_entity_decode($data[$field['name']]));
+
+				$value_set[$field['name']] = $data[$field['name']] ? $this->_db->db_addslashes(html_entity_decode($data[$field['name']])) : '';
 
 				// keep hierarchy in order
 				if (isset($field['role']) && $field['role'] == 'parent')
@@ -1187,12 +1188,24 @@
 
 		public function edit_field( $data = array() )
 		{
+
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
 				return false;
 			}
 
+			$this->_db->transaction_begin();
+
 			$value_set = $this->_db->validate_update(array($data['field_name'] => $data['value']));
-			return $this->_db->query("UPDATE $table SET {$value_set} WHERE {$this->location_info['id']['name']} = '{$data['id']}'", __LINE__, __FILE__);
+			$this->_db->query("UPDATE $table SET {$value_set} WHERE {$this->location_info['id']['name']} = '{$data['id']}'", __LINE__, __FILE__);
+
+			if (!empty($data['history']) && !empty($data['attrib_id']))
+			{
+				$historylog = CreateObject('property.historylog', $this->location_info['acl_app'], $this->location_info['acl_location']);				
+				$historylog->add('SO', $data['id'], $data['value'],  null, $data['attrib_id']);
+			}
+
+			return 	$this->_db->transaction_commit();
+
 		}
 	}
