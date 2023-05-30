@@ -293,7 +293,7 @@
 			//var_dump($component_list); 
 
 
-			$results = array();
+			$results = array('results' => array());
 			foreach ($component_list as $component)
 			{
 				$component['checked'] = false;

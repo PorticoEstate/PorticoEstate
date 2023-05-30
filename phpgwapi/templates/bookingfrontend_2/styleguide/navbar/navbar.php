@@ -23,7 +23,7 @@
       <!-- Button trigger modal -->
       <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector" data-bs-toggle="modal" data-bs-target="#selectLanguage" aria-label="Velg språk">
         <img src="{$headlogopath}/norway.png" alt="Norsk flagg" class="">
-        <i class="fas fa-chevron-down"></i>
+        <span class="fas fa-chevron-down icon" aria-hidden="true"></span>
       </button>
 
       <!-- Modal -->
@@ -87,7 +87,7 @@
       <!-- Button trigger modal -->
       <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector" data-bs-toggle="modal" data-bs-target="#selectLanguage" aria-label="Velg språk">
         <img src="{$headlogopath}/norway.png" alt="Norsk flagg" class="">
-        <i class="fas fa-chevron-down"></i>
+        <span class="fas fa-chevron-down icon" aria-hidden="true"></span>
       </button>
 
       <!-- Modal -->
@@ -123,19 +123,19 @@
 
       <!-- Messages -->
       <button type="button" class="pe-btn pe-btn--transparent text-xl me-2" aria-label="Les meldinger">
-        <i class="far fa-envelope"></i>
+        <span class="far fa-envelope" title="Les meldinger"></span>
       </button>
       
       <!-- Notifications -->
       <button type="button" class="pe-btn pe-btn--transparent text-xl me-4" aria-label="Les meldinger">
-        <i class="far fa-bell"></i>
+        <span class="far fa-bell" title="Les varsler"></i>
       </button>
 
       <!-- User menu -->
       <div class="js-dropdown menu position-relative">
           <button class="js-dropdown-toggler pe-btn menu__toggler" type="button" aria-expanded="false">
             <span>Hans Hansen</span>
-            <i class="fas fa-play"></i>
+            <span class="fas fa-play icon" aria-hidden="true"></span>
           </button>
           <div class="js-dropdown-content menu__content menu__content--navbar">
             <ul class="list-unstyled">

@@ -15,7 +15,7 @@ $(document).ready(function () {
 <section class="container py-5">
   <div class="multisearch w-100 mb-5">
     <div class="multisearch__inner w-100">
-      <div class="row flex-column flex-md-row">
+      <div class="row flex-column flex-md-row flex-md-nowrap">
         <div class="col mb-3 mb-md-0">
           <div class="multisearch__inner__item">
             <label for="id_label_area">Område</label>
@@ -45,28 +45,34 @@ $(document).ready(function () {
       </div>
       <div class="w-100">
         <button type="button" class="pe-btn pe-btn-primary pe-btn--large w-100 mb-2 mt-md-3 d-md-none">Søk</button>
-        <button type="button" class="pe-btn pe-btn-primary pe-btn--circle d-none d-md-flex multisearch__inner__icon-button"><i class="fas fa-search"></i></button>
+        <button type="button" class="pe-btn pe-btn-primary pe-btn--circle d-none d-md-flex multisearch__inner__icon-button">
+          <span class="sr-only">Søk</span>  
+          <span class="fas fa-search" title="Søk"></span>
+        </button>
       </div>
     </div>
   </div>
   <div class="d-flex flex-column flex-md-row justify-content-between mb-4">
-    <div class="filter-group align-self-start mb-4 mb-md-0">
-      <label class="filter-group__item">
-        <input type="radio" name="type_group" value="booking" checked>
-        <span class="filter-group__item__radio">Leie</span>
-      </label>
-      <label class="filter-group__item">
-        <input type="radio" name="type_group" value="event">
-        <span class="filter-group__item__radio">Arrangement</span>
-      </label>
-      <label class="filter-group__item">
-        <input type="radio" name="type_group" value="organization">
-        <span class="filter-group__item__radio">Organisasjon</span>
-      </label>
-    </div>
+    <fieldset>
+      <legend class="mb-2 text-bold text-body">Velg kategori</legend>
+      <div class="filter-group align-self-start mb-4 mb-md-0">
+        <label class="filter-group__item">
+          <input type="radio" name="type_group" value="booking" checked>
+          <span class="filter-group__item__radio">Leie</span>
+        </label>
+        <label class="filter-group__item">
+          <input type="radio" name="type_group" value="event">
+          <span class="filter-group__item__radio">Arrangement</span>
+        </label>
+        <label class="filter-group__item">
+          <input type="radio" name="type_group" value="organization">
+          <span class="filter-group__item__radio">Organisasjon</span>
+        </label>
+      </div>
+    </fieldset>
     <button type="button" class="pe-btn pe-btn-secondary align-self-end d-none d-md-flex">
       Nullstill søk
-      <i class="fas fa-undo ms-2"></i>
+      <span class="fas fa-undo ms-2" aria-hidden="true"></span>
     </button>
   </div>
   <div class="multisearch w-100">
@@ -76,7 +82,7 @@ $(document).ready(function () {
         <div class="col col-md-6 col-lg-3 mb-3">
           <div class="multisearch__inner__item">
             <label for="search-event-text">Søk</label>
-            <input id="search-event--text" type="text" placeholder="Søk">
+            <input id="search-event-text" type="text" placeholder="Søk">
           </div>
         </div>
         <div class="col col-md-6 col-lg-3 mb-3 multisearch__inner--border">
@@ -170,7 +176,7 @@ $(document).ready(function () {
   <div class="d-flex d-md-none mt-3 justify-content-end">
     <button type="button" class="pe-btn pe-btn-secondary align-self-end">
       Nullstill søk
-      <i class="fas fa-undo ms-2"></i>
+      <span class="fas fa-undo ms-2" aria-hidden="true"></span>
     </button>
   </div>
 </section>
