@@ -1,13 +1,13 @@
 <script>
   $(document).ready(function () {
 
-    $('#js-select-basic').select2({ 
+    $('.js-select-basic').select2({ 
       theme: 'select-v2',
       width: '100%', 
     })
 
     /* Select 2 */
-    $("#js-select").select2({
+    $(".js-select").select2({
       width: '100%',
       templateResult: formatImageState,
     });
@@ -26,7 +26,7 @@
       return state;
     };
 
-    $("#js-select-image").select2({
+    $(".js-select-image").select2({
       theme: 'select-v2',
       width: '100%',
       templateResult: formatImageState,
@@ -35,7 +35,7 @@
     });
   
     /* Multiselect dropdown */
-    $('#js-select-multiple').select2({
+    $('.js-select-multiple-items').select2({
       theme: 'select-v2',
       width: '100%',
       placeholder: 'Velg en eller flere kommuner',
@@ -66,7 +66,7 @@
       },
     ];
 
-    $('#js-select-price').select2({
+    $('.js-select-price').select2({
         theme: 'select-v2',
         width: '100%',
         data: prices,
@@ -87,24 +87,24 @@
 <section class="container py-5">
   <div class="row">
     <div class="col-sm-6 mb-4">
-      <p class="mb-2 text-bold">Standard</p>
-      <select id="js-select-basic">
+      <label class="mb-2 text-bold" for="select-basic">Standard</label>
+      <select class="js-select-basic" id="select-basic">
         <option value="">Velg kommune</option>
         <option value="Stavanger kommune">Stavanger kommune</option>
         <option value="Bergen kommune">Bergen kommune</option>
       </select>
     </div>
     <div class="col-sm-6 mb-4">
-      <p class="mb-2 text-bold">Med bilde</p>
-      <select id="js-select-image">
+      <label class="mb-2 text-bold" for="select-image">Med bilde</label>
+      <select class="js-select-image" id="select-image">
         <option value="">Velg kommune</option>
         <option value="stavanger-kommune">Stavanger kommune</option>
         <option value="bergen-kommune">Bergen kommune</option>
       </select>
     </div>
     <div class="col-sm-6 mb-4">
-      <p class="mb-2 text-bold">Flere valg</p>
-      <select id="js-select-multiple" multiple="multiple">
+      <label class="mb-2 text-bold" for="select-multiple">Flere valg</label>
+      <select class="js-select-multiple-items" multiple="multiple" id="select-multiple">
         <option value="Alver">Alver</option>
         <option value="Bergen">Bergen</option>
         <option value="Bærum">Bærum</option>
@@ -123,14 +123,14 @@
       </select>
     </div>
     <div class="col-sm-6 mb-4">
-      <p class="mb-2 text-bold">Pris</p>
-      <select id="js-select-price">
+      <label class="mb-2 text-bold" for="select-price">Pris</label>
+      <select class="js-select-price" id="select-price">
         <option value="">Velg kommune</option>
       </select>
     </div>
     <div class="col-sm-6 mb-4">
-      <p class="mb-2 text-bold">Informasjon</p>
-      <div class="js-dropdown dropdown">
+      <p class="mb-2 text-bold" for="select-info">Informasjon</p>
+      <div class="js-dropdown dropdown" id="select-info">
         <button class="js-dropdown-toggler dropdown__toggler" type="button" aria-expanded="false">
           Informasjon
         </button>

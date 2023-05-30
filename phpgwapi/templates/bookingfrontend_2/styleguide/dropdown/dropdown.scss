@@ -251,7 +251,6 @@
       border-radius: 0;
     }
     
-
     &--single,
     &--multiple {
 
@@ -261,11 +260,23 @@
         font-size: 1.5rem;
         color: $purple;
 
-
         @media (min-width: $media-medium) {
-          right: 0rem;
+          right: 0;
           top: 0;
+          bottom: 0;
+          display: flex;
+          align-items: center;
           font-size: 1rem;
+        }
+      }
+    }
+
+    &--multiple {
+
+      &::after {
+        @media (min-width: $media-medium) {
+          top: auto;
+          bottom: 0.3rem;
         }
       }
     }
@@ -353,7 +364,6 @@
   border: 1px solid $grey;
   background-color: $white;
   box-shadow: $box-shadow-large;
-  //transition: border-radius 0.2s;
   
   &:focus-within {
     box-shadow: $box-shadow-large, $box-focus-shadow;
@@ -364,7 +374,6 @@
   }
 
   &.js-slidedown--open {
-    //border-radius: $rounded-medium;
     border: 1px solid transparent;
 
     .slidedown__toggler {

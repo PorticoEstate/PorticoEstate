@@ -832,7 +832,6 @@
 		{
 			$from_date = DateTime::createFromFormat('d.m.Y H:i:s', $params['from_date']);
 			$to_date = DateTime::createFromFormat('d.m.Y H:i:s', $params['to_date']);
-
 			$this->soresource->get_season_boundary($resources, $from_date, $to_date);
 
 			$is_time_set = false;
@@ -1000,6 +999,14 @@
 				}
 			}
 			return $available_resources;
+		}
+
+		function get_all_allocations_and_events_for_resource($resource_ids, $from_date, $to_date)
+		{
+			$result = array();
+			$result["allocations"] = $this->sobooking->get_all_allocations_and_events_for_resource($resource_ids, $from_date, $to_date);
+			$result["seasons"] = $this->soresource->get_season_boundary_interval($resource_ids, $from_date, $to_date);
+			return $result;
 		}
 
 
