@@ -757,8 +757,7 @@
 
 			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
-				$params = array
-					(
+				$params = array(
 					'key'		 => $uicols['name'][$k],
 					'label'		 => $uicols['descr'][$k],
 					'sortable'	 => ($uicols['sortable'][$k]) ? true : false,
@@ -806,24 +805,18 @@
 
 			if (!$lookup)
 			{
-				$parameters = array
-					(
-					'parameter' => array
-						(
-						array
-							(
+				$parameters = array(
+					'parameter' => array(
+						array(
 							'name'	 => 'id',
 							'source' => 'project_id'
 						),
 					)
 				);
 
-				$parameters2 = array
-					(
-					'parameter' => array
-						(
-						array
-							(
+				$parameters2 = array(
+					'parameter' => array(
+						array(
 							'name'	 => 'project_id',
 							'source' => 'project_id'
 						),
@@ -947,12 +940,9 @@
 
 			if ($make_relation)
 			{
-				$parameters3 = array
-					(
-					'parameter' => array
-						(
-						array
-							(
+				$parameters3 = array(
+					'parameter' => array(
+						array(
 							'name'	 => 'add_relation',
 							'source' => 'project_id'
 						),
@@ -2932,7 +2922,9 @@ JS;
 		public function get_orders()
 		{
 			$project_id = phpgw::get_var('project_id', 'int');
-			if (empty($project_id))
+			$order_id = phpgw::get_var('order_id', 'int');
+
+			if (empty($project_id) && empty($order_id))
 			{
 				$result_data					 = array('results' => array());
 				$result_data['total_records']	 = 0;
@@ -2948,6 +2940,7 @@ JS;
 				'order'			 => $columns[$order[0]['column']]['data'],
 				'sort'			 => $order[0]['dir'],
 				'project_id' => $project_id,
+				'order_id'	 => $order_id,
 				'year'		 => phpgw::get_var('year', 'int'),
 //				'results'	 => phpgw::get_var('results', 'int'),
 				'start'			 => phpgw::get_var('start', 'int', 'REQUEST', 0),

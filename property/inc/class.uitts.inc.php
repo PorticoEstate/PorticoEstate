@@ -2064,7 +2064,7 @@ HTML;
 			}
 
 			$relation_type = phpgw::get_var('relation_type');
-			if ($relation_type == 'project')
+			if (in_array($relation_type,array('project', 'workorder')))
 			{
 				$add_relation = phpgw::get_var('add_relation');
 				if ($add_relation)
@@ -3426,6 +3426,7 @@ JS;
 
 			$list_orders = false;
 			$project_ids = array();
+			$order_ids = array();
 			if(!empty($ticket['target']))
 			{
 				foreach ($ticket['target'] as $_targets)
@@ -3435,6 +3436,15 @@ JS;
 						foreach ($_targets['data'] as $_target_data)
 						{
 							$project_ids[] = $_target_data['id'];
+						}
+						$list_orders = true;
+						unset($_target_data);
+					}
+					if($_targets['location'] == '.project.workorder')
+					{
+						foreach ($_targets['data'] as $_target_data)
+						{
+							$order_ids[] = $_target_data['id'];
 						}
 						$list_orders = true;
 						unset($_target_data);
@@ -3456,6 +3466,15 @@ JS;
 						$list_orders = true;
 						unset($_target_data);
 					}
+					if($_targets['location'] == '.project.workorder')
+					{
+						foreach ($_targets['data'] as $_target_data)
+						{
+							$order_ids[] = $_target_data['id'];
+						}
+						$list_orders = true;
+						unset($_target_data);
+					}
 				}
 				unset($_targets);
 			}
@@ -3464,7 +3483,7 @@ JS;
 				(
 				'container'	 => 'datatable-container_10',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiproject.get_orders',
-						'project_id' => $project_ids, 'phpgw_return_as' => 'json'))),
+						'project_id' => $project_ids,'order_id' => $order_ids, 'phpgw_return_as' => 'json'))),
 //				'requestUrl' => "''",
 //				'data'		 => json_encode($_order_data),
 				'data'		 => json_encode(array()),
@@ -3574,6 +3593,10 @@ JS;
 				array(
 					'id'	 => 'property.uiproject.index',
 					'name'	 => lang('project')
+				),
+				array(
+					'id'	 => 'property.uiworkorder.index',
+					'name'	 => lang('workorder')
 				),
 //				array(
 //					'id'	=> 'property.uilookup.entity',
