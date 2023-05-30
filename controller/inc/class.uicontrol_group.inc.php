@@ -804,7 +804,7 @@
 			$object_count = $this->so->get_count($search_for, $search_type, $filters);
 			//var_dump($result_objects);
 
-			$results = array();
+			$results = array('results' => array());
 
 			foreach ($result_objects as $control_group_obj)
 			{
