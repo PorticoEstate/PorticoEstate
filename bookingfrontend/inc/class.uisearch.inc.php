@@ -20,7 +20,8 @@
 			'autocomplete_resource_and_building' => true,
 			'get_all_towns' => true,
             'get_search_data_location' => true,
-            'get_search_data_all' => true
+            'get_search_data_all' => true,
+			'search_available_resources' => true
 		);
 
 		function __construct()
@@ -372,6 +373,20 @@
 			return $this->bo->resquery_available_resources(array('rescategory_id' => $rescategory_id,
 				'part_of_town_id' => $multiids['part_of_town_id'], 'from_date' => $from_date,
 				'to_date' => $to_date, 'from_time' => $from_time, 'to_time' => $to_time,  'length' => $length));
+		}
+
+		function search_available_resources()
+		{
+			$_ids = explode(',', phpgw::get_var('resource_ids', 'string', 'REQUEST', ''));
+			$ids = array();
+			foreach ($_ids as $id)
+			{
+				$ids[] = (int)$id;
+			}
+			$from_date = DateTime::createFromFormat('d.m.Y H:i:s', phpgw::get_var('from_date', 'string', 'REQUEST', ''));
+			$to_date = DateTime::createFromFormat('d.m.Y H:i:s', phpgw::get_var('to_date', 'string', 'REQUEST', ''));
+			return $this->bo->get_all_allocations_and_events_for_resource($ids, $from_date, $to_date);
+//			return $this->bo->available_resources($ids, array('from_date' => $from_date, 'to_date' => $to_date));
 		}
 
 

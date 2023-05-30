@@ -235,7 +235,7 @@
 				}
 			}
 
-			$results = array();
+			$results = array('results' => array());
 			foreach ($components_arr as $component)
 			{
 				$component['checked'] = false;

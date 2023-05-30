@@ -1,15 +1,23 @@
-
 const createJsSlidedowns = () => {
     // Dropdown f.ex. search result
-    $(".js-slidedown").each(function(){
+    $(".js-slidedown").each(function () {
         var $toggler = $(this).find(".js-slidedown-toggler");
         var $dropDown = $(this).find(".js-slidedown-content");
+        let peCalendar = null;
+        let calendar = $(this).find(".calendar");
 
-        $($toggler).on("click", function(){
-            $dropDown.slideToggle('fast', function() {
+        $($toggler).on("click", function () {
+            $dropDown.slideToggle('fast', function () {
                 var isExpanded = $($toggler).attr("aria-expanded");
-                $($toggler).attr("aria-expanded", function() {
-                    if(isExpanded == "false") {
+                if (calendar && !peCalendar) {
+                    const id = calendar.attr('id');
+                    const buildingId = calendar.data('building-id');
+                    const resourceId = calendar.data('resource-id');
+                    const dateString = calendar.data('date');
+                    peCalendar = new PEcalendar(id, buildingId, resourceId, dateString);
+                }
+                $($toggler).attr("aria-expanded", function () {
+                    if (isExpanded == "false") {
                         $(this).closest('.js-slidedown').addClass('js-slidedown--open');
                         return "true";
                     } else {
@@ -23,43 +31,30 @@ const createJsSlidedowns = () => {
 }
 
 $(document).ready(function () {
-    /* Basic dropdown */
-     $('#js-select-basic').select2({
-        theme: 'select-v2',
-    });
+    updateSelectBasic();
 
     // Dropdown f.ex. information
-    $(document).on('click', function(event) {
+    $(document).on('click', function (event) {
         var container = $(".js-dropdown");
 
         //check if the clicked area is dropdown or not
         if (container.has(event.target).length === 0) {
-            $('.js-dropdown-toggler').attr("aria-expanded","false");
+            $('.js-dropdown-toggler').attr("aria-expanded", "false");
         }
     })
 
-    $(".js-dropdown-toggler").each(function(){
-        $(this).on("click", function(){
-            var isExpanded = $(this).attr("aria-expanded");        
-            $(this).attr("aria-expanded", function() {
-            return (isExpanded == "false") ? "true" : "false";
+    $(".js-dropdown-toggler").each(function () {
+        $(this).on("click", function () {
+            var isExpanded = $(this).attr("aria-expanded");
+            $(this).attr("aria-expanded", function () {
+                return (isExpanded == "false") ? "true" : "false";
             });
         });
     });
 
     createJsSlidedowns();
+    updateDateBasic();
 
-
-    //Datepicker
-    //Datepicker
-    $( ".js-basic-datepicker" ).datepicker({
-        dateFormat: "d.m.yy",
-        changeMonth: true,
-        changeYear: true
-    });
-
-
-    
     /* Dropdown multisearch */
     $('.js-select-multisearch').select2({
         theme: 'select-v2 select-v2--main-search',
@@ -76,3 +71,30 @@ $(document).ready(function () {
         }
     });
 });
+
+const updateSelectBasic = () => {
+    /* Basic dropdown */
+    $('.js-select-basic').select2({
+        theme: 'select-v2',
+    });
+}
+
+const updateDateBasic = () => {
+    //Datepicker
+    //Datepicker
+    $(".js-basic-datepicker").datepicker({
+        dateFormat: "d.m.yy",
+        changeMonth: true,
+        changeYear: true
+    });
+}
+
+function generateRandomString(length) {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}

@@ -7,10 +7,10 @@
         <span></span>
         <span></span>
       </button>
-      <div class="offcanvas offcanvas-start main-menu" tabindex="-1" id="offcanvasLeft" aria-labelledby="offcanvasLeftLabel">
+      <div class="offcanvas offcanvas-start main-menu" tabindex="-1" id="offcanvasLeft">
         <div class="offcanvas-header justify-content-end">
-          <button type="button" class="pe-btn pe-btn--transparent text-xl" data-bs-dismiss="offcanvas" aria-label="Close">
-            <i class="fas fa-times"></i>
+          <button type="button" class="pe-btn pe-btn--transparent text-xl" data-bs-dismiss="offcanvas" aria-label="Lukk meny">
+            <span class="fas fa-times" title="Lukk meny"></span>
           </button>
         </div>
         <div class="offcanvas-body">
@@ -60,8 +60,8 @@
       <p class="mb-2 text-bold">Meny for bruker</p>
       <div class="js-dropdown menu position-relative">
         <button class="js-dropdown-toggler pe-btn menu__toggler" type="button" aria-expanded="false">
-          <span>Hans Hansen</span>
-          <i class="fas fa-play"></i>
+          <span class="text">Hans Hansen</span>
+          <span class="fas fa-play icon" aria-hidden="true"></span>
         </button>
         <div class="js-dropdown-content menu__content">
           <ul class="list-unstyled">

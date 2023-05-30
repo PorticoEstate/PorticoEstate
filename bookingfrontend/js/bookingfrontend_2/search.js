@@ -1,3 +1,14 @@
+// Easier way of getting old value from KO on change
+ko.subscribable.fn.subscribeChanged = function (callback) {
+    let previousValue;
+    this.subscribe(function (_previousValue) {
+        previousValue = _previousValue;
+    }, undefined, 'beforeChange');
+    this.subscribe(function (latestValue) {
+        callback(latestValue, previousValue);
+    });
+};
+
 class OrganizationSearch {
     data = {
         activities: ko.observableArray([]),
@@ -44,7 +55,7 @@ class OrganizationSearch {
                 ids = [...new Set(ids)];
                 organizations = organizations.filter(o => ids.some(id => id === o.activity_id))
             }
-            this.addInfoCards(el, organizations);
+            this.addInfoCards(el, organizations.slice(0, 10), organizations.length);
         } else {
             fillSearchCount(null);
         }
@@ -52,7 +63,7 @@ class OrganizationSearch {
         createJsSlidedowns();
     }
 
-    addInfoCards = (el, organizations) => {
+    addInfoCards = (el, organizations, count) => {
         const append = [];
         for (const organization of organizations) {
             append.push(`
@@ -88,7 +99,7 @@ class OrganizationSearch {
             )
         }
         el.append(append.join(""));
-        fillSearchCount(organizations);
+        fillSearchCount(organizations, count);
     }
 }
 
@@ -112,10 +123,18 @@ class BookingSearch {
         selected_facilities: ko.observableArray([]),
         resource_facilities: ko.observableArray([]),
         text: ko.observable(""),
-        date: ko.observable("")
+        date: ko.observable(getSearchDateString(new Date())),
+        show_only_available: ko.observable(false),
+        result: ko.observableArray([]),
+        result_all: ko.observableArray([]),
+        available_resources: ko.observableArray([]),
+        taken_allocations: ko.observableArray([]),
+        seasons: ko.observableArray([]),
+        resources_with_available_time: ko.observableArray([])
     }
 
     activity_cache = {};
+    allocation_cache = {}
 
     constructor() {
         const bookingEl = document.getElementById("search-booking");
@@ -123,22 +142,34 @@ class BookingSearch {
         ko.applyBindings(this.data, bookingEl);
         this.updateBuildings(null);
 
-        this.data.text.subscribe(_ => this.search())
-        this.data.selected_buildings.subscribe(_ => this.search())
-        this.data.selected_resource_categories.subscribe(_ => this.search())
-        this.data.selected_facilities.subscribe(_ => this.search())
-        this.data.selected_activities.subscribe(_ => this.search())
+        this.data.text.subscribe(_ => this.searchFetch())
+        this.data.selected_buildings.subscribe(_ => this.searchFetch())
+        this.data.selected_resource_categories.subscribe(_ => this.searchFetch())
+        this.data.selected_facilities.subscribe(_ => this.searchFetch())
+        this.data.selected_activities.subscribe(_ => this.searchFetch())
+        this.data.show_only_available.subscribe(show => {
+            if (!show)
+                this.data.resources_with_available_time([])
+            this.searchFetch();
+        })
         this.data.towns.subscribe(_ => this.updateBuildings(null));
+        this.data.date.subscribe(date => {
+            if (date === "") {
+                this.data.date(getSearchDateString(new Date()));
+                return;
+            }
+            this.searchFetch()
+        })
 
         this.data.selected_town.subscribe(town => {
             this.updateBuildings(town);
-            this.search();
+            this.searchFetch();
         })
 
         this.data.towns_data.subscribe(towns => {
             this.data.towns(
                 [...new Set(towns.map(item => item.name))]
-                    .sort()
+                    .sort((a, b) => a.localeCompare(b, "no"))
                     .map(name => ({name: htmlDecode(name), id: towns.find(i => i.name === name).id}))
             )
         })
@@ -147,6 +178,72 @@ class BookingSearch {
             for (const activity of activities) {
                 this.activity_cache[activity.id] = getAllSubRowsIds(activities, activity.id);
             }
+        })
+
+        this.data.result_all.subscribeChanged((result, old) => {
+            // Only download new available resources if old data is different from new
+            if (arraysAreEqual(result.map(r => r.id).sort(), old.map(r => r.id).sort()))
+                return;
+            if (this.data.show_only_available())
+                this.fetchAvailableResources();
+        })
+    }
+
+    fetchAvailableResources() {
+        const onSuccess = (from_date) => {
+            this.data.available_resources([]);
+            this.data.taken_allocations(this.data.result_all().map(r => this.allocation_cache[from_date].allocations[r.id]).flat());
+            this.data.seasons(this.data.result_all().map(r => this.allocation_cache[from_date].seasons[r.id]).flat());
+            this.calculateAvailableResources();
+            this.search();
+
+        }
+        const from_date = `${this.data.date()} 00:00:00`;
+        const to_date = `${this.data.date()} 23:59:59`;
+        if (!(from_date in this.allocation_cache)) {
+            this.allocation_cache[from_date] = {};
+            this.allocation_cache[from_date].allocations = {};
+            this.allocation_cache[from_date].seasons = {};
+        }
+        const resource_ids = this.data.result_all().filter(r => !(r.id in this.allocation_cache[from_date].allocations)).map(r => r.id).join(",");
+        if (resource_ids.length === 0) {
+            onSuccess(from_date);
+            return;
+        }
+        const url = phpGWLink('bookingfrontend/', {
+            menuaction: 'bookingfrontend.uisearch.search_available_resources',
+            from_date,
+            to_date,
+            resource_ids,
+            length: -1
+        }, true);
+        $.ajax({
+            url,
+            success: response => {
+                // console.log("Res", response);
+                this.populate_allocation_cache(response, from_date, resource_ids);
+                onSuccess(from_date);
+            },
+            error: error => {
+                console.log(error);
+            }
+        })
+    }
+
+    populate_allocation_cache = (response, from_date, resource_ids) => {
+        const cache = this.allocation_cache[from_date];
+        resource_ids.split(",").map(id => {
+            if (!(id in cache.allocations))
+                cache.allocations[id] = [];
+            if (!(id in cache.seasons))
+                cache.seasons[id] = [];
+        })
+
+        response.allocations.map(allocation => {
+            cache.allocations[allocation.resource_id].push(allocation);
+        })
+        response.seasons.map(season => {
+            cache.seasons[season.resource_id].push(season);
         })
     }
 
@@ -157,12 +254,16 @@ class BookingSearch {
         $('#search-booking-resource_categories').val([]).trigger('change');
         $('#search-booking-facilities').val([]).trigger('change');
         this.data.text("");
-        this.data.date("");
+        this.data.date(getSearchDateString(new Date()));
     }
 
+    searchFetch() {
+        if (this.data.show_only_available())
+            this.fetchAvailableResources();
+        else this.search();
+    }
     search() {
         let resources = [];
-        const el = emptySearch();
         let hasSearch = false;
         if (this.data.selected_town() !== undefined ||
             this.data.selected_buildings().length > 0 ||
@@ -198,6 +299,10 @@ class BookingSearch {
         }
 
         if (hasSearch) {
+            this.data.result_all(resources);
+            if (this.data.show_only_available())
+                resources = resources.filter(r => this.data.resources_with_available_time().includes(r.id));
+            const el = emptySearch();
             this.addInfoCards(el, resources);
         } else {
             fillSearchCount(null);
@@ -205,15 +310,76 @@ class BookingSearch {
         createJsSlidedowns();
     }
 
+    calculateAvailableResources = () => {
+        const timeToNumber = (time) => {
+            const [hour, min, sec] = time.split(":");
+            return +sec + (+min * 60) + (+hour * 3600);
+        }
+        const numberToTime = (num) => {
+            const date = new Date(num * 1000);
+            return getFullTimeString(date);
+        }
+
+        const allocationFillsAllowed = (allocations, allowed) => {
+            allocations.sort((a, b) => a[0] - b[0]);
+            const mergedAllocations = [allocations[0]];
+
+            for (let i = 1; i < allocations.length; i++) {
+                const lastMerged = mergedAllocations[mergedAllocations.length - 1];
+                if (allocations[i][0] <= lastMerged[1]) {
+                    lastMerged[1] = Math.max(lastMerged[1], allocations[i][1]);
+                } else {
+                    mergedAllocations.push(allocations[i]);
+                }
+            }
+
+            const totalAllocatedSeconds = mergedAllocations.reduce((sum, allocation) => {
+                return sum + (allocation[1] - allocation[0]);
+            }, 0);
+
+            const totalAllowedSeconds = allowed.reduce((sum, range) => {
+                return sum + (range[1] - range[0]);
+            }, 0);
+
+            return totalAllocatedSeconds === totalAllowedSeconds;
+        }
+
+        const [day, month, year] = this.data.date().split(".");
+        const date = new Date(`${year}-${month}-${day}`);
+        const wday = date.getDay();
+        const resource_allocation = this.data.taken_allocations().reduce((acc, cur) => {
+            acc[cur.resource_id] = acc[cur.resource_id] || [];
+            acc[cur.resource_id].push([
+                timeToNumber(cur.from_.split(" ")[1]),
+                timeToNumber(cur.to_.split(" ")[1])
+            ]);
+            return acc;
+        }, {})
+        const resource_season = this.data.seasons().reduce((acc, cur) => {
+            if (cur.wday === wday) {
+                if (!(cur.resource_id in acc))
+                    acc[cur.resource_id] = [];
+                acc[cur.resource_id].push([timeToNumber(cur.from_time), timeToNumber(cur.to_time)]);
+            }
+            return acc;
+        }, {})
+        const available_ids = Object.keys(resource_season).filter(id => {
+            if (!(id in resource_allocation)) return true;
+            return !allocationFillsAllowed(resource_allocation[id], resource_season[id])
+        }).map(id => +id)
+        this.data.resources_with_available_time(available_ids);
+    }
+
     updateBuildings = (town = null) => {
         this.data.buildings(
             this.data.towns_data().filter(item => town ? town.id === item.id : true)
                 .map(item => ({id: item.b_id, name: htmlDecode(item.b_name)}))
+                .sort((a, b) => a.name?.localeCompare(b.name, "no"))
         )
     }
 
     getBuildingsFromResource = (resource_id) => {
-        const building_resources = this.data.building_resources().filter(br => br.resource_id===resource_id);
+        const building_resources = this.data.building_resources().filter(br => br.resource_id === resource_id);
         const ids = building_resources.map(br => br.building_id);
         return this.data.buildings().filter(b => ids.includes(b.id));
     }
@@ -225,10 +391,14 @@ class BookingSearch {
 
     addInfoCards(el, resources) {
         const append = [];
+        const okResources = [];
+        // const calendars = [];
         for (const resource of resources) {
             const buildings = this.getBuildingsFromResource(resource.id);
             const towns = this.getTownFromBuilding(buildings);
-            if (towns.length>0) {
+            if (towns.length > 0) {
+                const calendarId = `calendar-${resource.id}`;
+                okResources.push(resource);
                 append.push(`
     <div class="col-12 mb-4">
       <div class="js-slidedown slidedown">
@@ -241,20 +411,22 @@ class BookingSearch {
         <div class="js-slidedown-content slidedown__content">
           <p>
             ${resource.description}
-            <ul>
-                <li></li>
-                <li></li>
-            </ul>
           </p> 
+            <div id="${calendarId}" class="calendar" data-building-id="${buildings[0].id}" data-resource-id="${resource.id}" data-date="${getDateFromSearch(this.data.date())}"></div>
         </div>
       </div>
     </div>
 `
                 )
+                console.log("Creating calendar", resource.id, buildings[0].id);
+                // const calendar = new PEcalendar(calendarId, buildings[0].id)
+                // calendars.push(calendar);
             }
         }
+        this.data.result(okResources.slice(0, 50));
         el.append(append.join(""));
-        fillSearchCount(resources);
+        fillSearchCount(okResources.slice(0, 50), okResources.length);
+        // calendars.map(calendar => calendar.createCalendarDom())
     }
 }
 
@@ -286,8 +458,8 @@ class EventSearch {
     fetchEventOnDates() {
         const from = this.data.from_date()?.split(".");
         const to = this.data.to_date()?.split(".");
-        const fromDate = from && from.length > 1 ? `${from[2]}-${from[1]}-${from[0]}` : getIsoDateString(new Date()); // year-month-day
-        const toDate = to && to.length > 1 ? `${to[2]}-${to[1]}-${to[0]}` : "";
+        const fromDate = from && from.length > 1 ? `${from[2]}-${from[1]}-${from[0]}T00:00:00` : getIsoDateString(new Date()); // year-month-day
+        const toDate = to && to.length > 1 ? `${to[2]}-${to[1]}-${to[0]}T23:59:59` : `${from[2]}-${from[1]}-${from[0]}T23:59:59`;
         const buildingID = "";
         const facilityTypeID = "";
         const start = 0;
@@ -324,16 +496,18 @@ class EventSearch {
 
     search() {
         let events = this.data.events.slice(0, 5);
+        let count = this.data.events.length;
         const el = emptySearch();
         if (this.data.text() !== "") {
             const re = new RegExp(this.data.text(), 'i');
             events = this.data.events.filter(o => o.event_name.match(re) || o.location_name.match(re))
+            count = events.length;
         }
-        this.addInfoCards(el, events);
+        this.addInfoCards(el, events, count);
         createJsSlidedowns();
     }
 
-    addInfoCards(el, events) {
+    addInfoCards(el, events, count) {
         const append = [];
         for (const event of events) {
             append.push(`
@@ -343,8 +517,8 @@ class EventSearch {
           <span>${event.event_name}</span>
           <span class="slidedown__toggler__info">
           ${joinWithDot([
-                event.location_name, 
-                getSearchDatetimeString(new Date(event.from))+" - "+((new Date(event.from)).getDate()===(new Date(event.to)).getDate() ? getSearchTimeString(new Date(event.to)) : getSearchDatetimeString(new Date(event.to)))])}
+                event.location_name,
+                getSearchDatetimeString(new Date(event.from)) + " - " + ((new Date(event.from)).getDate() === (new Date(event.to)).getDate() ? getSearchTimeString(new Date(event.to)) : getSearchDatetimeString(new Date(event.to)))])}
           </span>
         </button>
         <div class="js-slidedown-content slidedown__content">
@@ -362,7 +536,7 @@ class EventSearch {
             )
         }
         el.append(append.join(""));
-        fillSearchCount(events);
+        fillSearchCount(events, count);
     }
 }
 
@@ -434,21 +608,30 @@ class Search {
                 self.data = {...self.data, ...response};
 
                 self.booking.data.building_resources(response.building_resources);
-                self.booking.data.towns_data(response.towns);
-                self.booking.data.activities(self.data.activities)
-                self.booking.data.resources(self.data.resources.map(r => ({...r, name: htmlDecode(r.name)})))
-                self.booking.data.facilities(self.data.facilities.map(f => ({...f, name: htmlDecode(f.name)})))
-                self.booking.data.resource_categories(self.data.resource_categories)
+                self.booking.data.towns_data(sortOnName(response.towns));
+                self.booking.data.activities(sortOnName(self.data.activities));
+                self.booking.data.resources(sortOnName(self.data.resources.map(resource => ({
+                    ...resource,
+                    name: htmlDecode(resource.name)
+                }))));
+                self.booking.data.facilities(sortOnName(self.data.facilities.map(facility => ({
+                    ...facility,
+                    name: htmlDecode(facility.name)
+                }))));
+                self.booking.data.resource_categories(sortOnName(self.data.resource_categories))
                 self.booking.data.resource_facilities(self.data.resource_facilities)
                 self.booking.data.resource_activities(self.data.resource_activities)
                 self.booking.data.resource_category_activity(self.data.resource_category_activity);
 
                 self.event.data.events(self.data.events);
 
-                self.organization.data.activities(self.data.activities.map(a => ({...a, name: htmlDecode(a.name)})))
-                self.organization.data.organizations(self.data.organizations.map(o => ({
-                    ...o,
-                    name: htmlDecode(o.name)
+                self.organization.data.activities(sortOnName(self.data.activities.map(activity => ({
+                    ...activity,
+                    name: htmlDecode(activity.name)
+                }))))
+                self.organization.data.organizations(self.data.organizations.map(organization => ({
+                    ...organization,
+                    name: htmlDecode(organization.name)
                 })));
             },
             error: error => {
@@ -507,12 +690,21 @@ function getSearchTimeString(date) {
     return `${("0" + date.getHours()).slice(-2)}:${("0" + date.getMinutes()).slice(-2)}`
 }
 
+function getFullTimeString(date) {
+    return `${("0" + date.getHours()).slice(-2)}:${("0" + date.getMinutes()).slice(-2)}:${("0" + date.getSeconds()).slice(-2)}`
+}
+
 function getSearchDatetimeString(date) {
     return `${getSearchDateString(date)} ${getSearchTimeString(date)}`;
 }
 
 function getIsoDateString(date) {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+}
+
+function getDateFromSearch(dateString) {
+    const parts = dateString.split(".");
+    return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
 }
 
 function getAllSubRowsIds(rows, id) {
@@ -529,11 +721,11 @@ function emptySearch() {
     return el;
 }
 
-function fillSearchCount(data) {
+function fillSearchCount(data, count = 0) {
     const el = $("#search-count");
     el.empty();
     if (data) {
-        el.append(`Antall treff: ${data.length}`);
+        el.append(`Antall treff: ${data.length}${count > 0 ? " av " + count : ""}`);
     }
 }
 
@@ -546,5 +738,25 @@ function htmlDecode(input) {
 }
 
 function joinWithDot(texts) {
-    return texts.map(t => t && t.length>0 ? `<span>${t}</span>` : null).filter(t => t).join(` <span className="slidedown__toggler__info__separator">&#8226;</span> `)
+    return texts.map(t => t && t.length > 0 ? `<span>${t}</span>` : null).filter(t => t).join(` <span className="slidedown__toggler__info__separator">&#8226;</span> `)
+}
+
+function sortOnField(data, field) {
+    return data.sort((a, b) => a[field]?.localeCompare(b[field], "no"))
+}
+
+function sortOnName(data) {
+    return sortOnField(data, 'name')
+}
+
+function arraysAreEqual(arr1, arr2) {
+    if (arr1.length !== arr2.length) {
+        return false;
+    }
+    for (let i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) {
+            return false;
+        }
+    }
+    return true;
 }
