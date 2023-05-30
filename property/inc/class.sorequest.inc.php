@@ -1091,9 +1091,7 @@
 				}
 			}
 
-			$address	 = $this->db->db_addslashes(implode(" ", $_address));
-
-
+			$address	 = $this->_db->db_addslashes(implode(" ", $_address));
 
 			$id = $this->next_id();
 
