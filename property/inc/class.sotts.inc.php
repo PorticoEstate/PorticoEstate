@@ -2464,6 +2464,9 @@
 				case 'project':
 					$acl_location	 = '.project';
 					break;
+				case 'workorder':
+					$acl_location	 = '.project.workorder';
+					break;
 
 				default:
 					$acl_location = '.project.request';
