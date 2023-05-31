@@ -322,7 +322,7 @@
 				}
 
 				$value = $entity->get_field($field);
-				if(!is_array($value))
+				if($value && !is_array($value))
 				{
 					$value = trim($value);
 				}

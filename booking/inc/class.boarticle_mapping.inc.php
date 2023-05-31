@@ -33,7 +33,7 @@
 
 	class booking_boarticle_mapping extends phpgwapi_bocommon
 	{
-		protected
+		protected static
 			$bo;
 
 		public function __construct()

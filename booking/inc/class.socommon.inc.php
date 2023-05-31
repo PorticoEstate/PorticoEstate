@@ -657,7 +657,7 @@
 			$this->db->next_record();
 			$total_records = (int)$this->db->f('count');
 
-			strtolower($results) === 'all' AND $results = $total_records; //TODO: Kept because of BC. Should be easy to remove this dependency?
+//			strtolower($results) === 'all' AND $results = $total_records; //TODO: Kept because of BC. Should be easy to remove this dependency?
 
 			/*
 			 * Due to problem on order with offset - we need to set an additional parameter in some cases
