@@ -51,7 +51,8 @@
 			$unit,
 			$tax_code,
 			$tax_code_name,
-			$deactivate_in_frontend;
+			$deactivate_in_frontend,
+			$building_id,$building_name;
 
 		protected $field_of_responsibility_name = '.article';
 
