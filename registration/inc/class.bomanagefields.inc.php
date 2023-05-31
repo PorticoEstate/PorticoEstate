@@ -163,7 +163,7 @@
 			{
 				/* Convert the stored database values into comma delimited form */
 
-				$field_values					 = unserialize(base64_decode($field_info['field_values']));
+				$field_values					 = !empty($field_info['field_values']) ? unserialize(base64_decode($field_info['field_values'])) : '';
 				$fields[$num]['field_values']	 = $field_values;
 
 				$rarray[$field_info['field_name']] = $fields[$num];

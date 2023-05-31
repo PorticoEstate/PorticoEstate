@@ -492,9 +492,11 @@ JS;
 				$this->tmpl->set_var('lang_return_sso_login', $variables['lang_additional_url']);
 				$this->tmpl->set_var('return_sso_login_url', $variables['additional_url']);
 			}
-
-			$this->tmpl->set_var('lang_new_user', lang('new user'));
-			$this->tmpl->set_var('lang_forgotten_password', lang('forgotten password'));
+			if(empty($variables['extra_vars']['create_mapping']))
+			{
+				$this->tmpl->set_var('lang_new_user', lang('new user'));
+				$this->tmpl->set_var('lang_forgotten_password', lang('forgotten password'));
+			}
 
 			if(isset($GLOBALS['phpgw_info']['server']['new_user_url']) && $GLOBALS['phpgw_info']['server']['new_user_url'])
 			{

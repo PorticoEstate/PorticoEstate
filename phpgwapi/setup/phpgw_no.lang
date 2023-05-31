@@ -196,8 +196,11 @@ password	login	no	Passord
 confirm password	login	no	Bekreft passord
 firstname	login	no	Fornavn
 lastname	login	no	Etternavn
-your account doesn't exist, please fill in infos !	login	no	Brukeren din er ny, venligst fyll ut informasjon
+this page let you build a mapping to an existing account !	login	no	Denne siden lar deg lage en kobling til en eksisterende brukerkonto
+your account doesn't exist, please fill in infos !	login	no	Brukeren din er ny, vennligst fyll ut informasjon
 new account and login	login	no	Registrer ny bruker, og logg inn
+new account	login	no	Registrer ny bruker
+new mapping and login	login	no	Registrer ny kobling, og logg inn
 sorry, your login has expired	login	no	Beklager, din bruker er utgått
 sorry, your session has expired	login	no	Beklager, sesjonen din er utløpt
 todays date, eg. %1	common	no	Dagens dato, %1
