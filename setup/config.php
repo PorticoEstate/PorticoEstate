@@ -37,7 +37,8 @@
 	}
 
 	$tpl_root = $GLOBALS['phpgw_setup']->html->setup_tpl_dir('setup');
-	$setup_tpl = CreateObject('phpgwapi.template',$tpl_root);
+	$setup_tpl = CreateObject('phpgwapi.template2',$tpl_root);
+	$setup_tpl->set_unknowns('keep');
 
 	/**
 	 * Test if $path lies within the webservers document-root
