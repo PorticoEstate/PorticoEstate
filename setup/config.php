@@ -37,7 +37,8 @@
 	}
 
 	$tpl_root = $GLOBALS['phpgw_setup']->html->setup_tpl_dir('setup');
-	$setup_tpl = CreateObject('phpgwapi.template',$tpl_root);
+	$setup_tpl = CreateObject('phpgwapi.template2',$tpl_root);
+	$setup_tpl->set_unknowns('keep');
 
 	/**
 	 * Test if $path lies within the webservers document-root
@@ -76,7 +77,7 @@
 
 	$setup_tpl->set_var('lang_cookies_must_be_enabled', lang('<b>NOTE:</b> You must have cookies enabled to use setup and header admin!') );
 
-	$css = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/version_3/pure-min.css");
+	$css = file_get_contents(dirname(__DIR__, 1) . "/phpgwapi/templates/pure/css/version_3/pure-min.css");
 	$setup_tpl->set_var('css', $css);
 	
 	// Following to ensure windows file paths are saved correctly
