@@ -2476,19 +2476,18 @@
 			foreach ($add_relation['request_id'] as $relation_id)
 			{
 				$target_id = false;
-//				if ($relation_type == 'request')
-//				{
-//					$target = $interlink->get_specific_relation('property', $acl_location, '.ticket', $relation_id, 'target');
-//				}
-//				else //reverse
-//				{
-//					$target = $interlink->get_specific_relation('property', '.ticket', $acl_location, $relation_id, 'origin');
-//				}
-//
-//				if ($target)
-//				{
-//					$target_id = $target[0];
-//				}
+
+				$test = $interlink->get_specific_relation('property', $acl_location, '.ticket', $relation_id, 'target');
+
+				if(!$test)
+				{
+					$test = $interlink->get_specific_relation('property', '.ticket', $acl_location, $relation_id, 'origin');
+				}
+
+				if ($test)
+				{
+					$target_id = $test[0];
+				}
 
 				if (!$target_id)
 				{
