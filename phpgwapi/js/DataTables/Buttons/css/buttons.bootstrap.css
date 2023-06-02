@@ -136,6 +136,7 @@ div.dt-button-collection {
   padding: 0.5rem;
   min-width: 200px;
 }
+div.dt-button-collection div.dropdown-menu,
 div.dt-button-collection ul.dropdown-menu {
   position: relative;
   display: block;
@@ -144,6 +145,7 @@ div.dt-button-collection ul.dropdown-menu {
   background-color: transparent;
   border: none;
   box-shadow: none;
+  margin: 2px 0;
   padding: 0;
   border-radius: 0;
 }
@@ -328,7 +330,7 @@ div.dt-buttons a.btn.processing:after {
   box-sizing: border-box;
   display: block;
   content: " ";
-  border: 2px solid #282828;
+  border: 2px solid rgb(40, 40, 40);
   border-radius: 50%;
   border-left-color: transparent;
   border-right-color: transparent;
@@ -350,7 +352,7 @@ div.dt-btn-split-wrapper:active:not(.disabled) button, div.dt-btn-split-wrapper.
 div.dt-btn-split-wrapper:active:not(.disabled) button.dt-btn-split-drop, div.dt-btn-split-wrapper.active:not(.disabled) button.dt-btn-split-drop {
   box-shadow: none;
   background-color: #fff;
-  border-color: #adadad;
+  border-color: rgb(173, 173, 173);
 }
 div.dt-btn-split-wrapper:active:not(.disabled) button:hover, div.dt-btn-split-wrapper.active:not(.disabled) button:hover {
   background-color: #e6e6e6;

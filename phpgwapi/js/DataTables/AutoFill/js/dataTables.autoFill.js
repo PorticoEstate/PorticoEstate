@@ -1,5 +1,5 @@
-/*! AutoFill 2.5.1
- * ©2008-2022 SpryMedia Ltd - datatables.net/license
+/*! AutoFill 2.5.3
+ * ©2008-2023 SpryMedia Ltd - datatables.net/license
  */
 
 (function( factory ){
@@ -11,26 +11,33 @@
 	}
 	else if ( typeof exports === 'object' ) {
 		// CommonJS
-		module.exports = function (root, $) {
-			if ( ! root ) {
-				// CommonJS environments without a window global must pass a
-				// root. This will give an error otherwise
-				root = window;
-			}
-
-			if ( ! $ ) {
-				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
-					require('jquery') :
-					require('jquery')( root );
-			}
-
+		var jq = require('jquery');
+		var cjsRequires = function (root, $) {
 			if ( ! $.fn.dataTable ) {
 				require('datatables.net')(root, $);
 			}
-
-
-			return factory( $, root, root.document );
 		};
+
+		if (typeof window !== 'undefined') {
+			module.exports = function (root, $) {
+				if ( ! root ) {
+					// CommonJS environments without a window global must pass a
+					// root. This will give an error otherwise
+					root = window;
+				}
+
+				if ( ! $ ) {
+					$ = jq( root );
+				}
+
+				cjsRequires( root, $ );
+				return factory( $, root, root.document );
+			};
+		}
+		else {
+			cjsRequires( window, jq );
+			module.exports = factory( jq, window, window.document );
+		}
 	}
 	else {
 		// Browser
@@ -45,7 +52,7 @@ var DataTable = $.fn.dataTable;
 /**
  * @summary     AutoFill
  * @description Add Excel like click and drag auto-fill options to DataTables
- * @version     2.5.1
+ * @version     2.5.3
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @copyright   SpryMedia Ltd.
  *
@@ -737,11 +744,12 @@ $.extend( AutoFill.prototype, {
 	 * @private
 	 */
 	_mousemove: function ( e )
-	{	
-		var that = this;
-		var dt = this.s.dt;
-		var target = !e.type.includes('touch') ? e.target : document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+	{
+		var target = e.touches && e.touches.length
+			? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY)
+			: e.target;
 		var name = target.nodeName.toLowerCase();
+
 		if ( name !== 'td' && name !== 'th' ) {
 			return;
 		}
@@ -1158,7 +1166,7 @@ AutoFill.actions = {
  * @static
  * @type      String
  */
-AutoFill.version = '2.5.1';
+AutoFill.version = '2.5.3';
 
 
 /**
@@ -1265,7 +1273,7 @@ $(document).on( 'preInit.dt.autofill', function (e, settings, json) {
 
 // Alias for access
 DataTable.AutoFill = AutoFill;
-DataTable.AutoFill = AutoFill;
+$.fn.DataTable.AutoFill = AutoFill;
 
 
 return DataTable;

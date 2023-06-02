@@ -350,7 +350,7 @@ div.dt-buttons a.btn.processing:after {
   box-sizing: border-box;
   display: block;
   content: " ";
-  border: 2px solid #282828;
+  border: 2px solid rgb(40, 40, 40);
   border-radius: 50%;
   border-left-color: transparent;
   border-right-color: transparent;
@@ -420,7 +420,7 @@ div.dt-btn-split-wrapper:active:not(.disabled) button, div.dt-btn-split-wrapper.
 }
 div.dt-btn-split-wrapper:active:not(.disabled) button.dt-button, div.dt-btn-split-wrapper.active:not(.disabled) button.dt-button, div.dt-btn-split-wrapper.is-active:not(.disabled) button.dt-button {
   box-shadow: none;
-  background-color: whitesmoke;
+  background-color: rgb(245, 245, 245);
   border-color: transparent;
 }
 div.dt-btn-split-wrapper:active:not(.disabled) button:hover, div.dt-btn-split-wrapper.active:not(.disabled) button:hover, div.dt-btn-split-wrapper.is-active:not(.disabled) button:hover {

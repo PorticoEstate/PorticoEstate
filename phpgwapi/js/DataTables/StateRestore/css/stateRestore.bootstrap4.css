@@ -176,13 +176,13 @@ div.dt-button-split-left div.dropdown-menu {
   padding-bottom: 4px;
 }
 div.dt-button-split-left div.dropdown-menu button.dt-btn-split-drop-button {
-  color: white;
+  color: rgb(255, 255, 255);
   border-radius: 4px;
-  background-color: #6b757d;
+  background-color: rgb(107, 117, 125);
   margin-top: 4px;
 }
 div.dt-button-split-left div.dropdown-menu button.dt-btn-split-drop-button:hover {
-  background-color: #5a6268;
+  background-color: rgb(90, 98, 104);
 }
 
 input.dtsr-input {

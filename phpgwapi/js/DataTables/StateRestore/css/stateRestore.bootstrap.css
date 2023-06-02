@@ -185,7 +185,7 @@ div.dt-button-split-left div.dropdown-menu {
 }
 div.dt-button-split-left div.dropdown-menu button.dt-btn-split-drop-button {
   background-color: white;
-  border: 1px solid #cccccc;
+  border: 1px solid rgb(204, 204, 204);
   border-radius: 4px;
   margin-top: 4px;
 }
