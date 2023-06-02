@@ -22,7 +22,7 @@
 			'toggle_show_inactive' => true,
 		);
 		protected
-			$bo, $organization_bo, $building_bo, $season_bo, $resource_bo, $sopurchase_order, $fields, $display_name;
+			$organization_bo, $building_bo, $season_bo, $resource_bo, $sopurchase_order, $fields, $display_name,$export_filters;
 		public function __construct()
 		{
 			parent::__construct();

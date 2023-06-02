@@ -382,8 +382,12 @@ HTML;
 					 */
 					if(!phpgw::get_var('OIDC_pid', 'string', 'SERVER'))
 					{
-						$OIDC_groups = mb_convert_encoding(mb_convert_encoding($_SERVER["OIDC_groups"], 'ISO-8859-1', 'UTF-8'), 'UTF-8', 'ISO-8859-1');
-						$ad_groups	= explode(",",$OIDC_groups);
+						$ad_groups = array();
+						if(!empty($_SERVER["OIDC_groups"]))
+						{
+							$OIDC_groups = mb_convert_encoding(mb_convert_encoding($_SERVER["OIDC_groups"], 'ISO-8859-1', 'UTF-8'), 'UTF-8', 'ISO-8859-1');
+							$ad_groups	= explode(",",$OIDC_groups);
+						}
 						$default_group_lid	 = !empty($GLOBALS['phpgw_info']['server']['default_group_lid']) ? $GLOBALS['phpgw_info']['server']['default_group_lid'] : 'Default';
 
 						if (!in_array($default_group_lid, $ad_groups))

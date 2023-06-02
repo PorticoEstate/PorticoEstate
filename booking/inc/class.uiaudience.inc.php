@@ -18,7 +18,7 @@
 			'active' => true,
 			'edit' => true
 		);
-		var $bo,$activity_bo;
+		var $activity_bo;
 
 		public function __construct()
 		{

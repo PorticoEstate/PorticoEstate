@@ -1,14 +1,18 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-	"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 	<head>
-
-		<meta name="AUTHOR" content="phpGroupWare http://www.phpgroupware.org">
-		<meta name="description" content="phpGroupWare">
-		<meta name="keywords" content="phpGroupWare">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="author" content="PorticoEstate https://github.com/PorticoEstate/PorticoEstate">
+		<meta name="description" content="Portico Estate">
+		<meta name="keywords" content="Portico Estate">
+		<meta name="robots" content="none">
 		<meta http-equiv="Pragma" content="no-cache">
 		<meta http-equiv="Cache-control" content="no-cache">
-		<meta http-equiv="content-type" content="text/html;charset=utf-8">
+		<style TYPE="text/css">
+			{css}
+		</style>
 		<style type="text/css">
 		<!-- 
 			/* FIXME move this to an external CSS file */

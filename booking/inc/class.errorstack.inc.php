@@ -25,6 +25,7 @@
 			return $flash_msgs;
 		}
 
+		#[\ReturnTypeWillChange] 
 		public function offsetSet( $field, $error )
 		{
 			if (!isset($this[$field]))

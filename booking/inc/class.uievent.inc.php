@@ -23,7 +23,6 @@
 		);
 		protected
 			$account,
-			$bo,
 			$customer_id,
 			$activity_bo,
 			$agegroup_bo,

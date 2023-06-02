@@ -734,7 +734,29 @@
 					'acl_location'	 => $this->acl_location));
 			}
 
-			$lookup = '';
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
+
+			$lookup			 = phpgw::get_var('lookup', 'bool');
+			$make_relation	 = phpgw::get_var('make_relation', 'bool');
+			$relation_id	 = phpgw::get_var('relation_id', 'int');
+			$relation_type	 = phpgw::get_var('relation_type');
+			if ($make_relation)
+			{
+				$lookup = true;
+			}
+
+			switch ($relation_type)
+			{
+				case 'ticket':
+					$update_menuaction		 = 'property.uitts.view';
+					$lang_update_relation	 = lang('update ticket');
+					break;
+				default:
+					break;
+			}
 
 			$default_district = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'] : '');
 
@@ -747,10 +769,7 @@
 			$start_date	 = $this->start_date ? urldecode($this->start_date) : null;
 			$end_date	 = $this->end_date ? urldecode($this->end_date) : null;
 
-			if (phpgw::get_var('phpgw_return_as') == 'json')
-			{
-				return $this->query();
-			}
+			$query = phpgw::get_var('query');
 
 			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
@@ -792,6 +811,10 @@
 				'datatable'		 => array(
 					'source'		 => self::link(array(
 						'menuaction'		 => 'property.uiworkorder.index',
+						'lookup'			 => $lookup,
+						'make_relation'		 => $make_relation,
+						'relation_id'		 => $relation_id,
+						'relation_type'		 => $relation_type,
 						'district_id'		 => $this->district_id,
 						'start_date'		 => $start_date,
 						'end_date'			 => $end_date,
@@ -819,7 +842,9 @@
 						'menuaction' => 'property.uiworkorder.add'
 					)),
 					'allrows'		 => true,
+					'select_all'	 => $make_relation,
 					'editor_action'	 => '',
+					'query'			 => $query,
 					'field'			 => array()
 				)
 			);
@@ -839,8 +864,7 @@
 			$uicols_count = count($uicols['name']);
 			for ($k = 0; $k < $uicols_count; $k++)
 			{
-				$params = array
-					(
+				$params = array(
 					'key'		 => $uicols['name'][$k],
 					'label'		 => $uicols['descr'][$k],
 					'sortable'	 => ($uicols['sortable'][$k]) ? true : false,
@@ -855,10 +879,16 @@
 				switch ($uicols['name'][$k])
 				{
 					case 'project_id':
-						$params['formatter'] = 'linktToProject';
+						if(!$lookup)
+						{
+							$params['formatter'] = 'linktToProject';
+						}
 						break;
 					case 'workorder_id':
-						$params['formatter'] = 'linktToOrder';
+						if(!$lookup)
+						{
+							$params['formatter'] = 'linktToOrder';
+						}
 						break;
 					case 'loc1':
 						$params['formatter'] = 'JqueryPortico.searchLink';
@@ -880,24 +910,18 @@
 			// NO pop-up
 			if (!$lookup)
 			{
-				$parameters = array
-					(
-					'parameter' => array
-						(
-						array
-							(
+				$parameters = array(
+					'parameter' => array(
+						array(
 							'name'	 => 'id',
 							'source' => 'workorder_id'
 						),
 					)
 				);
 
-				$parameters2 = array
-					(
-					'parameter' => array
-						(
-						array
-							(
+				$parameters2 = array(
+					'parameter' => array(
+						array(
 							'name'	 => 'workorder_id',
 							'source' => 'workorder_id'
 						),
@@ -997,6 +1021,42 @@
 					);
 				}
 				unset($parameters);
+			}
+/*
+			if ($lookup && !$make_relation)
+			{
+				$from = phpgw::get_var('from');
+
+				$oArg = "{menuaction: 'property.ui{$from}.edit',"
+					. "origin:'" . phpgw::get_var('origin') . "',"
+					. "origin_id:'" . phpgw::get_var('origin_id') . "',"
+					. "order_id: aData['workorder_id']}";
+
+				$data['left_click_action'] = "window.open(phpGWLink('index.php', {$oArg}),'_self');";
+			}
+*/
+			if ($make_relation)
+			{
+				$parameters3 = array(
+					'parameter' => array(
+						array(
+							'name'	 => 'add_relation',
+							'source' => 'workorder_id'
+						),
+					)
+				);
+
+				$data['datatable']['actions'][] = array(
+					'my_name'	 => 'update_ticket',
+					'text'		 => $lang_update_relation,
+					'action'	 => $GLOBALS['phpgw']->link('/index.php', array(
+						'menuaction'	 => $update_menuaction,
+						'id'			 => $relation_id,
+						'relation_type'	 => 'workorder',
+						)
+					),
+					'parameters' => json_encode($parameters3)
+				);
 			}
 
 			self::render_template_xsl('datatable_jquery', $data);

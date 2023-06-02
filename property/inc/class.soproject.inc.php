@@ -1006,6 +1006,7 @@
 		{
 			$start		 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$project_ids = !empty($data['project_id']) && is_array($data['project_id']) ? implode(',', array_map('intval', $data['project_id'])) : (int)$data['project_id'] ;
+			$order_ids = !empty($data['order_id']) && is_array($data['order_id']) ? implode(',', array_map('intval', $data['order_id'])) : (int)$data['order_id'] ;
 			$year		 = (int)$data['year'];
 			$sort		 = isset($data['sort']) ? $data['sort'] : 'DESC';
 			$order		 = isset($data['order']) ? $data['order'] : 'workorder_id';
@@ -1062,13 +1063,13 @@
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
 				. " {$this->left_join} fm_vendor ON fm_vendor.id = fm_workorder.vendor_id"
-				. " WHERE project_id IN ({$project_ids}) {$filter_year}{$filtermethod}{$ordermethod}";
+				. " WHERE (project_id IN ({$project_ids}) OR fm_workorder.id IN ($order_ids)) {$filter_year}{$filtermethod}{$ordermethod}";
 
 			$this->db->query("SELECT count(*) AS cnt FROM (SELECT DISTINCT fm_workorder.id, fm_workorder_budget.year FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
 				. " {$this->left_join} fm_vendor ON fm_vendor.id = fm_workorder.vendor_id"
-				. " WHERE project_id IN ({$project_ids}) {$filter_year}{$filtermethod}) as t", __LINE__, __FILE__);
+				. " WHERE ( project_id IN ({$project_ids}) OR fm_workorder.id IN ($order_ids)) {$filter_year}{$filtermethod}) as t", __LINE__, __FILE__);
 
 			$this->db->next_record();
 			$this->total_records = (int)$this->db->f('cnt');

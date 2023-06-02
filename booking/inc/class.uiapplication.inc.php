@@ -40,7 +40,7 @@
 		protected $building_so;
 		protected $errors = array();
 		private $acl_delete;
-		var $bo,$event_bo, $activity_bo,$audience_bo,$assoc_bo,$agegroup_bo,$resource_bo,$building_bo,$organization_bo,
+		var $event_bo, $activity_bo,$audience_bo,$assoc_bo,$agegroup_bo,$resource_bo,$building_bo,$organization_bo,
 		$document_building,$document_resource,$fields,$display_name;
 
 		public function __construct()
