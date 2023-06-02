@@ -1,5 +1,5 @@
-/*! StateRestore 1.2.0
- * 2019-2022 SpryMedia Ltd - datatables.net/license
+/*! StateRestore 1.2.2
+ * © SpryMedia Ltd - datatables.net/license
  */
 
 (function( factory ){
@@ -11,26 +11,33 @@
 	}
 	else if ( typeof exports === 'object' ) {
 		// CommonJS
-		module.exports = function (root, $) {
-			if ( ! root ) {
-				// CommonJS environments without a window global must pass a
-				// root. This will give an error otherwise
-				root = window;
-			}
-
-			if ( ! $ ) {
-				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
-					require('jquery') :
-					require('jquery')( root );
-			}
-
+		var jq = require('jquery');
+		var cjsRequires = function (root, $) {
 			if ( ! $.fn.dataTable ) {
 				require('datatables.net')(root, $);
 			}
-
-
-			return factory( $, root, root.document );
 		};
+
+		if (typeof window !== 'undefined') {
+			module.exports = function (root, $) {
+				if ( ! root ) {
+					// CommonJS environments without a window global must pass a
+					// root. This will give an error otherwise
+					root = window;
+				}
+
+				if ( ! $ ) {
+					$ = jq( root );
+				}
+
+				cjsRequires( root, $ );
+				return factory( $, root, root.document );
+			};
+		}
+		else {
+			cjsRequires( window, jq );
+			module.exports = factory( jq, window, window.document );
+		}
 	}
 	else {
 		// Browser
@@ -736,7 +743,7 @@ var DataTable = $.fn.dataTable;
                 sSearch: obj.search
             };
         };
-        StateRestore.version = '1.2.0';
+        StateRestore.version = '1.2.2';
         StateRestore.classes = {
             background: 'dtsr-background',
             closeButton: 'dtsr-popover-close',
@@ -1291,9 +1298,22 @@ var DataTable = $.fn.dataTable;
          */
         StateRestoreCollection.prototype._collectionRebuild = function () {
             var button = this.s.dt.button('SaveStateRestore:name');
-            var stateButtons = button[0] !== undefined && button[0].inst.c.buttons[0].buttons !== undefined ?
-                button[0].inst.c.buttons[0].buttons :
-                [];
+            var stateButtons = [];
+            // Need to get the original configuration object, so we can rebuild it
+            // It might be nested, so need to traverse down the tree
+            if (button[0]) {
+                var idxs = button.index().split('-');
+                stateButtons = button[0].inst.c.buttons;
+                for (var i = 0; i < idxs.length; i++) {
+                    if (stateButtons[idxs[i]].buttons) {
+                        stateButtons = stateButtons[idxs[i]].buttons;
+                    }
+                    else {
+                        stateButtons = [];
+                        break;
+                    }
+                }
+            }
             // remove any states from the previous rebuild - if they are still there they will be added later
             for (var i = 0; i < stateButtons.length; i++) {
                 if (stateButtons[i].extend === 'stateRestore') {
@@ -1855,8 +1875,8 @@ var DataTable = $.fn.dataTable;
         return StateRestoreCollection;
     }());
 
-    /*! StateRestore 1.2.0
-     * 2019-2022 SpryMedia Ltd - datatables.net/license
+    /*! StateRestore 1.2.2
+     * © SpryMedia Ltd - datatables.net/license
      */
     setJQuery$1($);
     setJQuery($);
@@ -2246,9 +2266,22 @@ var DataTable = $.fn.dataTable;
     function _stateRegen(dt, src) {
         var states = dt.stateRestore.states();
         var button = dt.button('SaveStateRestore:name');
-        var stateButtons = button[0] !== undefined && button[0].inst.c.buttons[0].buttons !== undefined ?
-            button[0].inst.c.buttons[0].buttons :
-            [];
+        var stateButtons = [];
+        // Need to get the original configuration object, so we can rebuild it
+        // It might be nested, so need to traverse down the tree
+        if (button[0]) {
+            var idxs = button.index().split('-');
+            stateButtons = button[0].inst.c.buttons;
+            for (var i = 0; i < idxs.length; i++) {
+                if (stateButtons[idxs[i]].buttons) {
+                    stateButtons = stateButtons[idxs[i]].buttons;
+                }
+                else {
+                    stateButtons = [];
+                    break;
+                }
+            }
+        }
         var stateRestoreOpts = dt.settings()[0]._stateRestore.c;
         // remove any states from the previous rebuild - if they are still there they will be added later
         for (var i = 0; i < stateButtons.length; i++) {

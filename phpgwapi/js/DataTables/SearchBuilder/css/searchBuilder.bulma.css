@@ -125,7 +125,7 @@ div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria div.dtsb-buttonContainer
     padding-top: 0em;
   }
   div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria select.dtsb-dropDown,
-div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria input.dtsb-input {
+  div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria input.dtsb-input {
     max-width: none;
     width: 100%;
     margin-bottom: 0.8em;

@@ -1,5 +1,5 @@
-/*! KeyTable 2.8.0
- * ©2009-2022 SpryMedia Ltd - datatables.net/license
+/*! KeyTable 2.9.0
+ * © SpryMedia Ltd - datatables.net/license
  */
 
 (function( factory ){
@@ -11,26 +11,33 @@
 	}
 	else if ( typeof exports === 'object' ) {
 		// CommonJS
-		module.exports = function (root, $) {
-			if ( ! root ) {
-				// CommonJS environments without a window global must pass a
-				// root. This will give an error otherwise
-				root = window;
-			}
-
-			if ( ! $ ) {
-				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
-					require('jquery') :
-					require('jquery')( root );
-			}
-
+		var jq = require('jquery');
+		var cjsRequires = function (root, $) {
 			if ( ! $.fn.dataTable ) {
 				require('datatables.net')(root, $);
 			}
-
-
-			return factory( $, root, root.document );
 		};
+
+		if (typeof window === 'undefined') {
+			module.exports = function (root, $) {
+				if ( ! root ) {
+					// CommonJS environments without a window global must pass a
+					// root. This will give an error otherwise
+					root = window;
+				}
+
+				if ( ! $ ) {
+					$ = jq( root );
+				}
+
+				cjsRequires( root, $ );
+				return factory( $, root, root.document );
+			};
+		}
+		else {
+			cjsRequires( window, jq );
+			module.exports = factory( jq, window, window.document );
+		}
 	}
 	else {
 		// Browser
@@ -45,11 +52,11 @@ var DataTable = $.fn.dataTable;
 /**
  * @summary     KeyTable
  * @description Spreadsheet like keyboard navigation for DataTables
- * @version     2.8.0
+ * @version     2.9.0
  * @file        dataTables.keyTable.js
  * @author      SpryMedia Ltd
  * @contact     datatables.net
- * @copyright   Copyright 2009-2022 SpryMedia Ltd.
+ * @copyright   Copyright SpryMedia Ltd.
  *
  * This source file is free software, available under the following license:
  *   MIT license - http://datatables.net/license/mit
@@ -692,8 +699,8 @@ $.extend( KeyTable.prototype, {
 	 */
 	_emitEvent: function ( name, args )
 	{
-		this.s.dt.iterator( 'table', function ( ctx, i ) {
-			$(ctx.nTable).triggerHandler( name, args );
+		return this.s.dt.iterator( 'table', function ( ctx, i ) {
+			return $(ctx.nTable).triggerHandler( name, args );
 		} );
 	},
 
@@ -785,6 +792,12 @@ $.extend( KeyTable.prototype, {
 		// not have been rendered (therefore can't use `:eq()` selector).
 		var cells = dt.cells( null, column, {search: 'applied', order: 'applied'} ).flatten();
 		var cell = dt.cell( cells[ row ] );
+
+		// Prefocus check - this event allows a focus action to be disallowed. 
+		var preFocus = this._emitEvent( 'key-prefocus', [ this.s.dt, cell, originalEvent || null ] );
+		if (preFocus.indexOf(false) !== -1) {
+			return;
+		}
 
 		if ( lastFocus ) {
 			// Don't trigger a refocus on the same cell
@@ -981,8 +994,10 @@ $.extend( KeyTable.prototype, {
 	 * @param {*} action Function to trigger when ready
 	 */
 	_keyAction: function (action) {
-		if (this.c.editor) {
-			this.c.editor.submit(action);
+		var editor = this.c.editor;
+
+		if (editor && editor.mode()) {
+			editor.submit(action);
 		}
 		else {
 			action();
@@ -1031,8 +1046,8 @@ $.extend( KeyTable.prototype, {
 			offset.top += parseInt( cell.closest('table').css('top'), 10 );
 		}
 
-		// Top correction
-		if ( offset.top < scrollTop ) {
+		// Top correction (partially in view)
+		if ( offset.top < scrollTop && offset.top + height > scrollTop - 5 ) {
 			scroller.scrollTop( offset.top );
 		}
 
@@ -1041,8 +1056,13 @@ $.extend( KeyTable.prototype, {
 			scroller.scrollLeft( offset.left );
 		}
 
-		// Bottom correction
-		if ( offset.top + height > scrollTop + containerHeight && height < containerHeight ) {
+		// Bottom correction plus in view correction. Note that the magic 5 is to allow
+		// for the edge just passing the bottom of the view
+		if (
+			offset.top + height > scrollTop + containerHeight &&
+			offset.top < scrollTop + containerHeight + 5 &&
+			height < containerHeight
+		) {
 			scroller.scrollTop( offset.top + height - containerHeight );
 		}
 
@@ -1305,7 +1325,7 @@ KeyTable.defaults = {
 
 
 
-KeyTable.version = "2.8.0";
+KeyTable.version = "2.9.0";
 
 
 $.fn.dataTable.KeyTable = KeyTable;

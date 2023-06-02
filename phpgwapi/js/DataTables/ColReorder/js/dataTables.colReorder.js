@@ -1,5 +1,5 @@
-/*! ColReorder 1.6.1
- * ©2010-2022 SpryMedia Ltd - datatables.net/license
+/*! ColReorder 1.6.2
+ * © SpryMedia Ltd - datatables.net/license
  */
 
 (function( factory ){
@@ -11,26 +11,33 @@
 	}
 	else if ( typeof exports === 'object' ) {
 		// CommonJS
-		module.exports = function (root, $) {
-			if ( ! root ) {
-				// CommonJS environments without a window global must pass a
-				// root. This will give an error otherwise
-				root = window;
-			}
-
-			if ( ! $ ) {
-				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
-					require('jquery') :
-					require('jquery')( root );
-			}
-
+		var jq = require('jquery');
+		var cjsRequires = function (root, $) {
 			if ( ! $.fn.dataTable ) {
 				require('datatables.net')(root, $);
 			}
-
-
-			return factory( $, root, root.document );
 		};
+
+		if (typeof window !== 'undefined') {
+			module.exports = function (root, $) {
+				if ( ! root ) {
+					// CommonJS environments without a window global must pass a
+					// root. This will give an error otherwise
+					root = window;
+				}
+
+				if ( ! $ ) {
+					$ = jq( root );
+				}
+
+				cjsRequires( root, $ );
+				return factory( $, root, root.document );
+			};
+		}
+		else {
+			cjsRequires( window, jq );
+			module.exports = factory( jq, window, window.document );
+		}
 	}
 	else {
 		// Browser
@@ -45,9 +52,9 @@ var DataTable = $.fn.dataTable;
 /**
  * @summary     ColReorder
  * @description Provide the ability to reorder columns in a DataTable
- * @version     1.6.1
- * @author      SpryMedia Ltd (www.sprymedia.co.uk)
- * @contact     www.sprymedia.co.uk
+ * @version     1.6.2
+ * @author      SpryMedia Ltd
+ * @contact     datatables.net
  * @copyright   SpryMedia Ltd.
  *
  * This source file is free software, available under the following license:
@@ -524,7 +531,7 @@ $.extend( ColReorder.prototype, {
 	fnEnable: function ( flag )
 	{
 		if ( flag === false ) {
-			return fnDisable();
+			return this.fnDisable();
 		}
 
 		this.s.enable = true;
@@ -1394,7 +1401,7 @@ ColReorder.defaults = {
  *  @type      String
  *  @default   As code
  */
-ColReorder.version = "1.6.1";
+ColReorder.version = "1.6.2";
 
 
 

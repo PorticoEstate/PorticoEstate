@@ -1,5 +1,5 @@
-/*! RowGroup 1.3.0
- * ©2017-2022 SpryMedia Ltd - datatables.net/license
+/*! RowGroup 1.3.1
+ * © SpryMedia Ltd - datatables.net/license
  */
 
 (function( factory ){
@@ -11,26 +11,33 @@
 	}
 	else if ( typeof exports === 'object' ) {
 		// CommonJS
-		module.exports = function (root, $) {
-			if ( ! root ) {
-				// CommonJS environments without a window global must pass a
-				// root. This will give an error otherwise
-				root = window;
-			}
-
-			if ( ! $ ) {
-				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
-					require('jquery') :
-					require('jquery')( root );
-			}
-
+		var jq = require('jquery');
+		var cjsRequires = function (root, $) {
 			if ( ! $.fn.dataTable ) {
 				require('datatables.net')(root, $);
 			}
-
-
-			return factory( $, root, root.document );
 		};
+
+		if (typeof window !== 'undefined') {
+			module.exports = function (root, $) {
+				if ( ! root ) {
+					// CommonJS environments without a window global must pass a
+					// root. This will give an error otherwise
+					root = window;
+				}
+
+				if ( ! $ ) {
+					$ = jq( root );
+				}
+
+				cjsRequires( root, $ );
+				return factory( $, root, root.document );
+			};
+		}
+		else {
+			cjsRequires( window, jq );
+			module.exports = factory( jq, window, window.document );
+		}
 	}
 	else {
 		// Browser
@@ -45,7 +52,7 @@ var DataTable = $.fn.dataTable;
 /**
  * @summary     RowGroup
  * @description RowGrouping for DataTables
- * @version     1.3.0
+ * @version     1.3.1
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     datatables.net
  * @copyright   SpryMedia Ltd.
@@ -423,7 +430,7 @@ RowGroup.defaults = {
 };
 
 
-RowGroup.version = "1.3.0";
+RowGroup.version = "1.3.1";
 
 
 $.fn.dataTable.RowGroup = RowGroup;
