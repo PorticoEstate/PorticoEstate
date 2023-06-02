@@ -9,7 +9,9 @@
 			$building_bo,
 			$bo_allocation,
 			$so_boundary,
-			$so_resource,
+			$so_resource;
+		
+		public			
 			$so_wtemplate_alloc;
 
 		function __construct()

@@ -12,7 +12,8 @@
 
 		public function get_schedule( $id, $module )
 		{
-			$date = new DateTime(phpgw::get_var('date'));
+			$date_input = phpgw::get_var('date');
+			$date = new DateTime($date_input ? $date_input : 'now');
 			// Make sure $from is a monday
 			if ($date->format('w') != 1)
 			{

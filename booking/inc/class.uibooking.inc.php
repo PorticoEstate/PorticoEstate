@@ -24,7 +24,7 @@
 			'toggle_show_inactive' => true,
 		);
 
-		var $bo, $activity_bo,$agegroup_bo, $audience_bo, $building_bo, $resource_bo,
+		var $activity_bo,$agegroup_bo, $audience_bo, $building_bo, $resource_bo,
 		$season_bo,$allocation_bo,$group_bo,$display_name,$fields,$export_filters;
 
 		public function __construct()
