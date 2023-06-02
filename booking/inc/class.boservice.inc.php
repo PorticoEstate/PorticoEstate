@@ -33,7 +33,7 @@
 
 	class booking_boservice extends phpgwapi_bocommon
 	{
-		protected
+		protected static
 			$bo;
 
 		public function __construct()

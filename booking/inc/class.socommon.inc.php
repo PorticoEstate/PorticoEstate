@@ -705,7 +705,10 @@
 				foreach ($this->fields as $field => $params)
 				{
 					$modifier = !empty($params['read_callback']) ? $params['read_callback']  : '';
-					$row[$field] = $this->_unmarshal($this->db->f($field, false), $params['type'], $modifier);
+					if(empty($params['manytomany']))
+					{
+						$row[$field] = $this->_unmarshal($this->db->f($field, false), $params['type'], $modifier);
+					}
 				}
 				$results[] = $row;
 			}

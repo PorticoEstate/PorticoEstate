@@ -200,7 +200,7 @@
 
 		private function _get_user_list( $selected )
 		{
-			$selected = abs($selected);
+			$selected = $selected ? abs($selected) : null;
 //			$users = $this->bo->so->get_user_list();
 			$users = createObject('booking.sopermission_building')->get_user_list();
 
@@ -262,7 +262,7 @@
 		{
 
 			$filter_part_of_town_id = phpgw::get_var('filter_part_of_town_id');
-			if (preg_match("/,/", $filter_part_of_town_id))
+			if ($filter_part_of_town_id && preg_match("/,/", $filter_part_of_town_id))
 			{
 				$_REQUEST['filter_part_of_town_id'] = explode(',', $filter_part_of_town_id);
 			}
