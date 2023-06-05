@@ -833,7 +833,7 @@
 					'id' => $booking['id']));
 			$booking['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show',
 					'id' => $booking['application_id']));
-			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
+			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity, $include_inactive = true);
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];

@@ -47,9 +47,9 @@
 						<div class="pure-u-1">
 							<div class="heading">
 								<!--<legend>-->
-									<h3>
-										<xsl:value-of select="php:function('lang', 'History and comments (%1)', count(comments/author))" />
-									</h3>
+								<h3>
+									<xsl:value-of select="php:function('lang', 'History and comments (%1)', count(comments/author))" />
+								</h3>
 								<!--</legend>-->
 							</div>
 							<xsl:for-each select="comments[author]">
@@ -66,9 +66,9 @@
 					</div>
 					<div class="heading">
 						<!--<legend>-->
-							<h3>
-								<xsl:value-of select="php:function('lang', 'Why')" />
-							</h3>
+						<h3>
+							<xsl:value-of select="php:function('lang', 'Why')" />
+						</h3>
 						<!--</legend>-->
 					</div>
 					<div class="pure-g">
@@ -182,9 +182,9 @@
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
 								<!--<legend>-->
-									<h3>
-										<xsl:value-of select="php:function('lang', 'Where')" />
-									</h3>
+								<h3>
+									<xsl:value-of select="php:function('lang', 'Where')" />
+								</h3>
 								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
@@ -228,9 +228,9 @@
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
 								<!--<legend>-->
-									<h3>
-										<xsl:value-of select="php:function('lang', 'When')" />
-									</h3>
+								<h3>
+									<xsl:value-of select="php:function('lang', 'When')" />
+								</h3>
 								<!--</legend>-->
 							</div>
 							<div id="dates-container">
@@ -276,9 +276,9 @@
 						<div class="pure-u-1 pure-u-md-1 pure-u-lg-1-3">
 							<div class="heading">
 								<!--<legend>-->
-									<h3>
-										<xsl:value-of select="php:function('lang', 'Who')" />
-									</h3>
+								<h3>
+									<xsl:value-of select="php:function('lang', 'Who')" />
+								</h3>
 								<!--</legend>-->
 							</div>
 							<div class="pure-g">
@@ -337,27 +337,29 @@
 												<xsl:variable name="id">
 													<xsl:value-of select="id"/>
 												</xsl:variable>
-												<tr>
-													<th>
-														<xsl:value-of select="name"/>
-													</th>
-													<td>
-														<input class="input50" type="text">
-															<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
-															<xsl:attribute name="value">
-																<xsl:value-of select="../event/agegroups/male[../agegroup_id = $id]"/>
-															</xsl:attribute>
-														</input>
-													</td>
-													<td>
-														<input class="input50" type="text">
-															<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
-															<xsl:attribute name="value">
-																<xsl:value-of select="../event/agegroups/female[../agegroup_id = $id]"/>
-															</xsl:attribute>
-														</input>
-													</td>
-												</tr>
+												<xsl:if test="active = 1 or (../event/agegroups/male[../agegroup_id = $id]) > 0 or (../event/agegroups/female[../agegroup_id = $id]) > 0">
+													<tr>
+														<th>
+															<xsl:value-of select="name"/>
+														</th>
+														<td>
+															<input class="input50" type="text">
+																<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
+																<xsl:attribute name="value">
+																	<xsl:value-of select="../event/agegroups/male[../agegroup_id = $id]"/>
+																</xsl:attribute>
+															</input>
+														</td>
+														<td>
+															<input class="input50" type="text">
+																<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
+																<xsl:attribute name="value">
+																	<xsl:value-of select="../event/agegroups/female[../agegroup_id = $id]"/>
+																</xsl:attribute>
+															</input>
+														</td>
+													</tr>
+												</xsl:if>
 											</xsl:for-each>
 										</tbody>
 									</table>
@@ -388,9 +390,9 @@
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
 								<!--<legend>-->
-									<h3>
-										<xsl:value-of select="php:function('lang', 'Contact information')" />
-									</h3>
+								<h3>
+									<xsl:value-of select="php:function('lang', 'Contact information')" />
+								</h3>
 								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
@@ -468,9 +470,9 @@
 							<div class="pure-u-1">
 								<div class="heading">
 									<!--<legend>-->
-										<h3>
-											<xsl:value-of select="php:function('lang', 'History of Cost (%1)', count(cost_history/author))" />
-										</h3>
+									<h3>
+										<xsl:value-of select="php:function('lang', 'History of Cost (%1)', count(cost_history/author))" />
+									</h3>
 									<!--</legend>-->
 								</div>
 								<xsl:for-each select="cost_history[author]">
@@ -490,9 +492,9 @@
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
 								<!--<legend>-->
-									<h3>
-										<xsl:value-of select="php:function('lang', 'Invoice information')" />
-									</h3>
+								<h3>
+									<xsl:value-of select="php:function('lang', 'Invoice information')" />
+								</h3>
 								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
@@ -524,9 +526,9 @@
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
 								<!--<legend>-->
-									<h3>
-										<xsl:value-of select="php:function('lang', 'send reminder for participants statistics')" />
-									</h3>
+								<h3>
+									<xsl:value-of select="php:function('lang', 'send reminder for participants statistics')" />
+								</h3>
 								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
@@ -610,9 +612,9 @@
 
 							<div class="heading">
 								<!--<legend>-->
-									<h3>
-										<xsl:value-of select="php:function('lang', 'participants')" />
-									</h3>
+								<h3>
+									<xsl:value-of select="php:function('lang', 'participants')" />
+								</h3>
 								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
@@ -633,11 +635,11 @@
 						<div class="pure-u-1">
 							<div class="heading">
 								<!--<legend>-->
-									<label for="field_mail">
-										<h3>
-											<xsl:value-of select="php:function('lang', 'Inform contact persons')" />
-										</h3>
-									</label>
+								<label for="field_mail">
+									<h3>
+										<xsl:value-of select="php:function('lang', 'Inform contact persons')" />
+									</h3>
+								</label>
 								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
