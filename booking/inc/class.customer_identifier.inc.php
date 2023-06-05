@@ -149,7 +149,7 @@
 
 		public function get_current_identifier_type( $data )
 		{
-			$identifier_field = trim($data[$this->identifier_type_field]);
+			$identifier_field = $data[$this->identifier_type_field] ? trim($data[$this->identifier_type_field]) : null;
 			return (empty($identifier_field) ? null : $identifier_field);
 		}
 
