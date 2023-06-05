@@ -843,7 +843,7 @@
 		 * @param string $menuaction is used to make an url to the item
 		 * @return array $child Children
 		 */
-		protected function get_children( $dirname, $level, $maks_level = 0, $filter_level = 1, $filter = '', $menuaction )
+		protected function get_children( $dirname, $level, $maks_level = 0, $filter_level = 1, $filter = '', $menuaction ='')
 		{
 			// prevent path traversal
 			if (preg_match('/\./', $dirname) || !is_dir($dirname))
@@ -896,7 +896,7 @@
 		 * @param string $menuaction is used to make an url to the item
 		 * @return array $child Children
 		 */
-		public function read_file_tree( $dirname = '', $maks_level = 2, $filter_level, $filter, $menuaction = '' )
+		public function read_file_tree( $dirname = '', $maks_level = 2, $filter_level =1, $filter ='', $menuaction = '' )
 		{
 			$dirname = $dirname ? $dirname : $GLOBALS['phpgw_info']['server']['temp_dir'];
 			// prevent path traversal

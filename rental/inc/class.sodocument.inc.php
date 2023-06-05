@@ -218,7 +218,7 @@
 		private function get_document_path( string $document_type, $id )
 		{
 			$root_directory = self::$ROOT_FOR_DOCUMENTS;
-			$type_directory;
+
 			if ($document_type == self::$PARTY_DOCUMENTS)
 			{
 				$type_directory = self::$PARTY_DOCUMENTS;
