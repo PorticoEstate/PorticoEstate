@@ -1,4 +1,4 @@
-/*! SearchBuilder 1.4.0
+/*! SearchBuilder 1.4.2
  * ©SpryMedia Ltd - datatables.net/license/mit
  */
 
@@ -11,26 +11,33 @@
 	}
 	else if ( typeof exports === 'object' ) {
 		// CommonJS
-		module.exports = function (root, $) {
-			if ( ! root ) {
-				// CommonJS environments without a window global must pass a
-				// root. This will give an error otherwise
-				root = window;
-			}
-
-			if ( ! $ ) {
-				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
-					require('jquery') :
-					require('jquery')( root );
-			}
-
+		var jq = require('jquery');
+		var cjsRequires = function (root, $) {
 			if ( ! $.fn.dataTable ) {
 				require('datatables.net')(root, $);
 			}
-
-
-			return factory( $, root, root.document );
 		};
+
+		if (typeof window !== 'undefined') {
+			module.exports = function (root, $) {
+				if ( ! root ) {
+					// CommonJS environments without a window global must pass a
+					// root. This will give an error otherwise
+					root = window;
+				}
+
+				if ( ! $ ) {
+					$ = jq( root );
+				}
+
+				cjsRequires( root, $ );
+				return factory( $, root, root.document );
+			};
+		}
+		else {
+			cjsRequires( window, jq );
+			module.exports = factory( jq, window, window.document );
+		}
 	}
 	else {
 		// Browser
@@ -66,10 +73,10 @@ var DataTable = $.fn.dataTable;
      */
     var Criteria = /** @class */ (function () {
         function Criteria(table, opts, topGroup, index, depth, serverData) {
-            var _this = this;
             if (index === void 0) { index = 0; }
             if (depth === void 0) { depth = 1; }
             if (serverData === void 0) { serverData = undefined; }
+            var _this = this;
             // Check that the required version of DataTables is included
             if (!dataTable$3 || !dataTable$3.versionCheck || !dataTable$3.versionCheck('1.10.0')) {
                 throw new Error('SearchPane requires DataTables 1.10 or newer');
@@ -350,7 +357,7 @@ var DataTable = $.fn.dataTable;
             }
             if (this.s.type.includes('num') && this.s.dt.page.info().serverSide) {
                 for (var i = 0; i < this.s.value.length; i++) {
-                    this.s.value[i] = this.s.value[i].replace(/[^0-9.]/g, '');
+                    this.s.value[i] = this.s.value[i].replace(/[^0-9.\-]/g, '');
                 }
             }
             return {
@@ -825,81 +832,33 @@ var DataTable = $.fn.dataTable;
             }
         };
         /**
-         * Populates the data select element
+         * Populates the data / column select element
          */
         Criteria.prototype._populateData = function () {
-            var _this = this;
+            var columns = this.s.dt.settings()[0].aoColumns;
+            var includeColumns = this.s.dt.columns(this.c.columns).indexes().toArray();
             this.dom.data.empty().append(this.dom.dataTitle);
-            // If there are no datas stored then we need to get them from the table
-            if (this.s.dataPoints.length === 0) {
-                this.s.dt.columns().every(function (index) {
-                    // Need to check that the column can be filtered on before adding it
-                    if (_this.c.columns === true ||
-                        _this.s.dt.columns(_this.c.columns).indexes().toArray().includes(index)) {
-                        var found = false;
-                        for (var _i = 0, _a = _this.s.dataPoints; _i < _a.length; _i++) {
-                            var val = _a[_i];
-                            if (val.index === index) {
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (!found) {
-                            var col = _this.s.dt.settings()[0].aoColumns[index];
-                            var opt = {
-                                index: index,
-                                origData: col.data,
-                                text: (col.searchBuilderTitle === undefined ?
-                                    col.sTitle :
-                                    col.searchBuilderTitle).replace(/(<([^>]+)>)/ig, '')
-                            };
-                            _this.s.dataPoints.push(opt);
-                            _this.dom.data.append($$3('<option>', {
-                                text: opt.text,
-                                value: opt.index
-                            })
-                                .addClass(_this.classes.option)
-                                .addClass(_this.classes.notItalic)
-                                .prop('origData', col.data)
-                                .prop('selected', _this.s.dataIdx === opt.index ? true : false));
-                            if (_this.s.dataIdx === opt.index) {
-                                _this.dom.dataTitle.removeProp('selected');
-                            }
-                        }
-                    }
-                });
-            }
-            // Otherwise we can just load them in
-            else {
-                var _loop_3 = function (data) {
-                    this_1.s.dt.columns().every(function (index) {
-                        var col = _this.s.dt.settings()[0].aoColumns[index];
-                        if ((col.searchBuilderTitle === undefined ?
-                            col.sTitle :
-                            col.searchBuilderTitle).replace(/(<([^>]+)>)/ig, '') === data.text) {
-                            data.index = index;
-                            data.origData = col.data;
-                        }
-                    });
-                    var newOpt = $$3('<option>', {
-                        text: data.text.replace(/(<([^>]+)>)/ig, ''),
-                        value: data.index
+            for (var index = 0; index < columns.length; index++) {
+                // Need to check that the column can be filtered on before adding it
+                if (this.c.columns === true || includeColumns.includes(index)) {
+                    var col = columns[index];
+                    var opt = {
+                        index: index,
+                        origData: col.data,
+                        text: (col.searchBuilderTitle || col.sTitle)
+                            .replace(/(<([^>]+)>)/ig, '')
+                    };
+                    this.dom.data.append($$3('<option>', {
+                        text: opt.text,
+                        value: opt.index
                     })
-                        .addClass(this_1.classes.option)
-                        .addClass(this_1.classes.notItalic)
-                        .prop('origData', data.origData);
-                    if (this_1.s.data === data.text) {
-                        this_1.s.dataIdx = data.index;
-                        this_1.dom.dataTitle.removeProp('selected');
-                        newOpt.prop('selected', true);
-                        this_1.dom.data.removeClass(this_1.classes.italic);
+                        .addClass(this.classes.option)
+                        .addClass(this.classes.notItalic)
+                        .prop('origData', col.data)
+                        .prop('selected', this.s.dataIdx === opt.index ? true : false));
+                    if (this.s.dataIdx === opt.index) {
+                        this.dom.dataTitle.removeProp('selected');
                     }
-                    this_1.dom.data.append(newOpt);
-                };
-                var this_1 = this;
-                for (var _i = 0, _a = this.s.dataPoints; _i < _a.length; _i++) {
-                    var data = _a[_i];
-                    _loop_3(data);
                 }
             }
         };
@@ -917,7 +876,7 @@ var DataTable = $.fn.dataTable;
             setTimeout(function () {
                 _this.dom.defaultValue.remove();
             }, 50);
-            var _loop_4 = function (val) {
+            var _loop_3 = function (val) {
                 // Timeout is annoying but because of IOS
                 setTimeout(function () {
                     if (val !== undefined) {
@@ -927,7 +886,7 @@ var DataTable = $.fn.dataTable;
             };
             for (var _i = 0, _a = this.dom.value; _i < _a.length; _i++) {
                 var val = _a[_i];
-                _loop_4(val);
+                _loop_3(val);
             }
             var children = this.dom.inputCont.children();
             if (children.length > 1) {
@@ -1340,6 +1299,7 @@ var DataTable = $.fn.dataTable;
             that.s.dt.one('draw.dtsb', function () {
                 that.s.topGroup.trigger('dtsb-redrawLogic');
             });
+            return [];
         };
         Criteria.init2Date = function (that, fn, preDefined) {
             var _this = this;
@@ -3637,7 +3597,7 @@ var DataTable = $.fn.dataTable;
                 _this.dom.clearAll.remove();
             });
         };
-        SearchBuilder.version = '1.4.0';
+        SearchBuilder.version = '1.4.2';
         SearchBuilder.classes = {
             button: 'dtsb-button',
             clearAll: 'dtsb-clearAll',
@@ -3743,7 +3703,7 @@ var DataTable = $.fn.dataTable;
         return SearchBuilder;
     }());
 
-    /*! SearchBuilder 1.4.0
+    /*! SearchBuilder 1.4.2
      * ©SpryMedia Ltd - datatables.net/license/mit
      */
     setJQuery($);

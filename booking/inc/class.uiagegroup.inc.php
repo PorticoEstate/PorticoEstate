@@ -9,13 +9,13 @@
 	class booking_uiagegroup extends booking_uicommon
 	{
 
-		public $public_functions = array
-			(
-			'index' => true,
-			'query' => true,
-			'add' => true,
-			'active' => true,
-			'edit' => true
+		public $public_functions = array(
+			'index'					 => true,
+			'query'					 => true,
+			'add'					 => true,
+			'active'				 => true,
+			'edit'					 => true,
+			'toggle_show_inactive'	 => true,
 		);
 		var $bo,$activity_bo;
 

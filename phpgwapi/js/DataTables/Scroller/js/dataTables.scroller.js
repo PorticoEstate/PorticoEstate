@@ -1,11 +1,58 @@
-/*! Scroller 2.0.7
- * ©2011-2022 SpryMedia Ltd - datatables.net/license
+/*! Scroller 2.1.1
+ * © SpryMedia Ltd - datatables.net/license
  */
+
+(function( factory ){
+	if ( typeof define === 'function' && define.amd ) {
+		// AMD
+		define( ['jquery', 'datatables.net'], function ( $ ) {
+			return factory( $, window, document );
+		} );
+	}
+	else if ( typeof exports === 'object' ) {
+		// CommonJS
+		var jq = require('jquery');
+		var cjsRequires = function (root, $) {
+			if ( ! $.fn.dataTable ) {
+				require('datatables.net')(root, $);
+			}
+		};
+
+		if (typeof window !== 'undefined') {
+			module.exports = function (root, $) {
+				if ( ! root ) {
+					// CommonJS environments without a window global must pass a
+					// root. This will give an error otherwise
+					root = window;
+				}
+
+				if ( ! $ ) {
+					$ = jq( root );
+				}
+
+				cjsRequires( root, $ );
+				return factory( $, root, root.document );
+			};
+		}
+		else {
+			cjsRequires( window, jq );
+			module.exports = factory( jq, window, window.document );
+		}
+	}
+	else {
+		// Browser
+		factory( jQuery, window, document );
+	}
+}(function( $, window, document, undefined ) {
+'use strict';
+var DataTable = $.fn.dataTable;
+
+
 
 /**
  * @summary     Scroller
  * @description Virtual rendering for DataTables
- * @version     2.0.7
+ * @version     2.1.1
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
  * @copyright   SpryMedia Ltd.
@@ -19,35 +66,6 @@
  *
  * For details please refer to: http://www.datatables.net
  */
-
-(function( factory ){
-	if ( typeof define === 'function' && define.amd ) {
-		// AMD
-		define( ['jquery', 'datatables.net'], function ( $ ) {
-			return factory( $, window, document );
-		} );
-	}
-	else if ( typeof exports === 'object' ) {
-		// CommonJS
-		module.exports = function (root, $) {
-			if ( ! root ) {
-				root = window;
-			}
-
-			if ( ! $ || ! $.fn.dataTable ) {
-				$ = require('datatables.net')(root, $).$;
-			}
-
-			return factory( $, root, root.document );
-		};
-	}
-	else {
-		// Browser
-		factory( jQuery, window, document );
-	}
-}(function( $, window, document, undefined ) {
-'use strict';
-var DataTable = $.fn.dataTable;
 
 
 /**
@@ -677,7 +695,8 @@ $.extend( Scroller.prototype, {
 			iTableHeight = $(this.s.dt.nTable).height(),
 			displayStart = this.s.dt._iDisplayStart,
 			displayLen = this.s.dt._iDisplayLength,
-			displayEnd = this.s.dt.fnRecordsDisplay();
+			displayEnd = this.s.dt.fnRecordsDisplay(),
+			viewportEndY = iScrollTop + heights.viewport;
 
 		// Disable the scroll event listener while we are updating the DOM
 		this.s.skip = true;
@@ -703,6 +722,17 @@ $.extend( Scroller.prototype, {
 		}
 		else if ( displayStart + displayLen >= displayEnd ) {
 			tableTop = heights.scroll - iTableHeight;
+		}
+		else {
+			var iTableBottomY = tableTop + iTableHeight;
+			if (iTableBottomY < viewportEndY) {
+				// The last row of the data is above the end of the viewport.
+				// This means the background is visible, which is not what the user expects.
+				var newTableTop = viewportEndY - iTableHeight;
+				var diffPx = newTableTop - tableTop;
+				this.s.baseScrollTop += diffPx + 1; // Update start row number in footer.
+				tableTop = newTableTop; // Move table so last line of data is at the bottom of the viewport.
+			}
 		}
 
 		this.dom.table.style.top = tableTop+'px';
@@ -1211,7 +1241,7 @@ Scroller.oDefaults = Scroller.defaults;
  *  @name      Scroller.version
  *  @static
  */
-Scroller.version = "2.0.7";
+Scroller.version = "2.1.1";
 
 
 
@@ -1318,5 +1348,6 @@ Api.register( 'scroller.page()', function() {
 	// undefined
 } );
 
-return Scroller;
+
+return DataTable;
 }));

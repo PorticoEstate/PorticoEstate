@@ -2426,7 +2426,6 @@
 
 					if($purchase_order && !empty($purchase_order['lines']))
 					{
-						$line_no += 1;
 
 						$_item = $item;
 						$_text = $text;
@@ -2436,6 +2435,8 @@
 							{
 								continue;
 							}
+
+							$line_no += 1;
 
 							if($order_line['parent_mapping_id'] == 0)
 							{
@@ -2598,7 +2599,6 @@
 
 					if($purchase_order && !empty($purchase_order['lines']))
 					{
-						$line_no += 1;
 
 						$_item = $item;
 						$_text = $text;
@@ -2608,6 +2608,7 @@
 							{
 								continue;
 							}
+							$line_no += 1;
 
 							if($order_line['parent_mapping_id'] == 0)
 							{

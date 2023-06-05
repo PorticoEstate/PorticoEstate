@@ -1,4 +1,4 @@
-/*! DateTime picker for DataTables.net v1.2.0
+/*! DateTime picker for DataTables.net v1.4.1
  *
  * © SpryMedia Ltd, all rights reserved.
  * License: MIT datatables.net/license/mit
@@ -13,22 +13,29 @@
 	}
 	else if ( typeof exports === 'object' ) {
 		// CommonJS
-		module.exports = function (root, $) {
-			if ( ! root ) {
-				// CommonJS environments without a window global must pass a
-				// root. This will give an error otherwise
-				root = window;
-			}
+		var jq = require('jquery');
+		var cjsRequires = function (root, $) {		};
 
-			if ( ! $ ) {
-				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
-					require('jquery') :
-					require('jquery')( root );
-			}
+		if (typeof window === 'undefined') {
+			module.exports = function (root, $) {
+				if ( ! root ) {
+					// CommonJS environments without a window global must pass a
+					// root. This will give an error otherwise
+					root = window;
+				}
 
+				if ( ! $ ) {
+					$ = jq( root );
+				}
 
-			return factory( $, root, root.document );
-		};
+				cjsRequires( root, $ );
+				return factory( $, root, root.document );
+			};
+		}
+		else {
+			cjsRequires( window, jq );
+			module.exports = factory( jq, window, window.document );
+		}
 	}
 	else {
 		// Browser
@@ -41,7 +48,7 @@
 
 /**
  * @summary     DateTime picker for DataTables.net
- * @version     1.2.0
+ * @version     1.4.1
  * @file        dataTables.dateTime.js
  * @author      SpryMedia Ltd
  * @contact     www.datatables.net/contact
@@ -70,6 +77,12 @@ var dateLib;
  * options based on the `DateTime.defaults` object.
  */
 var DateTime = function ( input, opts ) {
+	// Check if called with a window or jQuery object for DOM less applications
+	// This is for backwards compatibility with CommonJS loader
+	if (DateTime.factory(input, opts)) {
+		return DateTime;
+	}
+
 	// Attempt to auto detect the formatting library (if there is one). Having it in
 	// the constructor allows load order independence.
 	if (typeof dateLib === 'undefined') {
@@ -99,25 +112,16 @@ var DateTime = function ( input, opts ) {
 		this.c.maxDate = new Date(this.c.maxDate);
 	}
 
-	var timeBlock = function ( type ) {
-		return '<div class="'+classPrefix+'-timeblock">'+
-			'</div>';
-	};
-
-	var gap = function () {
-		return '<span>:</span>';
-	};
-
 	// DOM structure
 	var structure = $(
 		'<div class="'+classPrefix+'">'+
 			'<div class="'+classPrefix+'-date">'+
 				'<div class="'+classPrefix+'-title">'+
 					'<div class="'+classPrefix+'-iconLeft">'+
-						'<button type="button" title="'+i18n.previous+'">'+i18n.previous+'</button>'+
+						'<button type="button"></button>'+
 					'</div>'+
 					'<div class="'+classPrefix+'-iconRight">'+
-						'<button type="button" title="'+i18n.next+'">'+i18n.next+'</button>'+
+						'<button type="button"></button>'+
 					'</div>'+
 					'<div class="'+classPrefix+'-label">'+
 						'<span></span>'+
@@ -129,8 +133,8 @@ var DateTime = function ( input, opts ) {
 					'</div>'+
 				'</div>'+
 				'<div class="'+classPrefix+'-buttons">'+
-					'<a class="'+classPrefix+'-clear">'+i18n.clear+'</a>'+
-					'<a class="'+classPrefix+'-today">'+i18n.today+'</a>'+
+					'<a class="'+classPrefix+'-clear"></a>'+
+					'<a class="'+classPrefix+'-today"></a>'+
 				'</div>'+
 				'<div class="'+classPrefix+'-calendar"></div>'+
 			'</div>'+
@@ -150,9 +154,11 @@ var DateTime = function ( input, opts ) {
 		calendar:  structure.find( '.'+classPrefix+'-calendar' ),
 		time:      structure.find( '.'+classPrefix+'-time' ),
 		error:     structure.find( '.'+classPrefix+'-error' ),
-		buttons:     structure.find( '.'+classPrefix+'-buttons' ),
+		buttons:   structure.find( '.'+classPrefix+'-buttons' ),
 		clear:     structure.find( '.'+classPrefix+'-clear' ),
 		today:     structure.find( '.'+classPrefix+'-today' ),
+		previous:  structure.find( '.'+classPrefix+'-iconLeft' ),
+		next:      structure.find( '.'+classPrefix+'-iconRight' ),
 		input:     $(input)
 	};
 
@@ -283,25 +289,9 @@ $.extend( DateTime.prototype, {
 			this.s.d = this._dateToUtc(new Date());
 		}
 		else if ( typeof set === 'string' ) {
-			// luxon uses different method names so need to be able to call them
-			if(dateLib && dateLib == window.luxon) {
-				var luxDT = dateLib.DateTime.fromFormat(set, this.c.format)
-				this.s.d = luxDT.isValid ? luxDT.toJSDate() : null;
-			}
-			else if ( dateLib ) {
-				// Use moment, dayjs or luxon if possible (even for ISO8601 strings, since it
-				// will correctly handle 0000-00-00 and the like)
-				var m = dateLib.utc( set, this.c.format, this.c.locale, this.c.strict );
-				this.s.d = m.isValid() ? m.toDate() : null;
-			}
-			else {
-				// Else must be using ISO8601 without a date library (constructor would
-				// have thrown an error otherwise)
-				var match = set.match(/(\d{4})\-(\d{2})\-(\d{2})/ );
-				this.s.d = match ?
-					new Date( Date.UTC(match[1], match[2]-1, match[3]) ) :
-					null;
-			}
+			this.s.d = this._dateToUtc(
+				this._convert(set, this.c.format, null)
+			);
 		}
 
 		if ( write || write === undefined ) {
@@ -331,6 +321,25 @@ $.extend( DateTime.prototype, {
 		return this;
 	},
 
+	/**
+	 * Similar to `val()` but uses a given date / time format
+	 *
+	 * @param format Format to get the data as (getter) or that is input (setter)
+	 * @param val Value to write (if undefined, used as a getter)
+	 * @returns 
+	 */
+	valFormat: function (format, val) {
+		if (! val) {
+			return this._convert(this.val(), null, format);
+		}
+
+		// Convert from the format given here to the instance's configured format
+		this.val(
+			this._convert(val, format, null)
+		);
+
+		return this;
+	},
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Constructor
@@ -662,9 +671,73 @@ $.extend( DateTime.prototype, {
 	_compareDates: function( a, b ) {
 		// Can't use toDateString as that converts to local time
 		// luxon uses different method names so need to be able to call them
-		return dateLib && dateLib == window.luxon
-			? dateLib.DateTime.fromJSDate(a).toISODate() === dateLib.DateTime.fromJSDate(b).toISODate()
+		return this._isLuxon()
+			? dateLib.DateTime.fromJSDate(a).toUTC().toISODate() === dateLib.DateTime.fromJSDate(b).toUTC().toISODate()
 			: this._dateToUtcString(a) === this._dateToUtcString(b);
+	},
+
+	/**
+	 * Convert from one format to another
+	 *
+	 * @param {string|Date} val Value 
+	 * @param {string|null} from Format to convert from. If null a `Date` must be given
+	 * @param {string|null} to Format to convert to. If null a `Date` will be returned
+	 * @returns {string|Date} Converted value
+	 */
+	_convert: function(val, from, to) {
+		if (! val) {
+			return val;
+		}
+
+		if (! dateLib) {
+			// Note that in here from and to can either be null or YYYY-MM-DD
+			// They cannot be anything else
+			if ((! from && ! to) || (from && to)) {
+				// No conversion
+				return val;
+			}
+			else if (! from) {
+				// Date in, string back
+				return val.getUTCFullYear() +'-'+
+					this._pad(val.getUTCMonth() + 1) +'-'+
+					this._pad(val.getUTCDate());
+			}
+			else { // (! to)
+				// String in, date back
+				var match = val.match(/(\d{4})\-(\d{2})\-(\d{2})/ );
+				return match ?
+					new Date( match[1], match[2]-1, match[3] ) :
+					null;
+			}
+		}
+		else if (this._isLuxon()) {
+			// Luxon
+			var dtLux = val instanceof Date
+				? dateLib.DateTime.fromJSDate(val).toUTC()
+				: dateLib.DateTime.fromFormat(val, from);
+
+			if (! dtLux.isValid) {
+				return null;
+			}
+
+			return to
+				? dtLux.toFormat(to)
+				: dtLux.toJSDate();
+		}
+		else {
+			// Moment / DayJS
+			var dtMo = val instanceof Date
+				? dateLib.utc( val, undefined, this.c.locale, this.c.strict )
+				: dateLib( val, from, this.c.locale, this.c.strict );
+			
+			if (! dtMo.isValid()) {
+				return null;
+			}
+
+			return to
+				? dtMo.format(to)
+				: dtMo.toDate();
+		}
 	},
 
 	/**
@@ -714,6 +787,10 @@ $.extend( DateTime.prototype, {
 	 * @return {Date}   Shifted date
 	 */
 	_dateToUtc: function ( s ) {
+		if (! s) {
+			return s;
+		}
+
 		return new Date( Date.UTC(
 			s.getFullYear(), s.getMonth(), s.getDate(),
 			s.getHours(), s.getMinutes(), s.getSeconds()
@@ -728,8 +805,8 @@ $.extend( DateTime.prototype, {
 	 */
 	_dateToUtcString: function ( d ) {
 		// luxon uses different method names so need to be able to call them
-		return dateLib && dateLib == window.luxon
-			? dateLib.DateTime.fromJSDate(d).toISODate()
+		return this._isLuxon()
+			? dateLib.DateTime.fromJSDate(d).toUTC().toISODate()
 			: d.getUTCFullYear()+'-'+
 				this._pad(d.getUTCMonth()+1)+'-'+
 				this._pad(d.getUTCDate());
@@ -989,6 +1066,17 @@ $.extend( DateTime.prototype, {
 	},
 
 	/**
+	 * Determine if Luxon is being used
+	 *
+	 * @returns Flag for Luxon
+	 */
+	_isLuxon: function () {
+		return dateLib && dateLib.DateTime && dateLib.Duration && dateLib.Settings
+			? true
+			: false;
+	},
+
+	/**
 	 * Check if the instance has a date object value - it might be null.
 	 * If is doesn't set one to now.
 	 * @returns A Date object
@@ -1206,6 +1294,18 @@ $.extend( DateTime.prototype, {
 
 		this._options( 'month', this._range( 0, 11 ), i18n.months );
 		this._options( 'year', this._range( i, j ) );
+
+		// Set the language strings in case any have changed
+		this.dom.today.text(i18n.today).text(i18n.today);
+		this.dom.clear.text(i18n.clear).text(i18n.clear);
+		this.dom.previous
+			.attr('title', i18n.previous)
+			.children('button')
+			.text(i18n.previous);
+		this.dom.next
+			.attr('title', i18n.next)
+			.children('button')
+			.text(i18n.next);
 	},
 
 	/**
@@ -1342,8 +1442,8 @@ $.extend( DateTime.prototype, {
 		
 		// luxon uses different method names so need to be able to call them. This happens a few time later in this method too
 		var luxDT = null
-		if (dateLib && dateLib == window.luxon) {
-			luxDT = dateLib.DateTime.fromJSDate(d);
+		if (this._isLuxon()) {
+			luxDT = dateLib.DateTime.fromJSDate(d).toUTC();
 		}
 
 		var hours = luxDT != null
@@ -1452,17 +1552,8 @@ $.extend( DateTime.prototype, {
 		var date = this.s.d;
 		var out = '';
 
-		// Use moment, dayjs or luxon if possible - otherwise it must be ISO8601 (or the
-		// constructor would have thrown an error)
-		// luxon uses different method names so need to be able to call them.
 		if (date) {
-			out = dateLib && dateLib == window.luxon
-			? dateLib.DateTime.fromJSDate(this.s.d).toFormat(this.c.format)
-			: dateLib ?
-				dateLib.utc( date, undefined, this.c.locale, this.c.strict ).format( this.c.format ) :
-				date.getUTCFullYear() +'-'+
-					this._pad(date.getUTCMonth() + 1) +'-'+
-					this._pad(date.getUTCDate());
+			out = this._convert(date, null, this.c.format);
 		}
 
 		this.dom.input
@@ -1493,6 +1584,11 @@ DateTime.use = function (lib) {
  * @private
  */
 DateTime._instance = 0;
+
+/**
+ * To indicate to DataTables what type of library this is
+ */
+DateTime.type = 'DateTime';
 
 /**
  * Defaults for the date time picker
@@ -1559,11 +1655,40 @@ DateTime.defaults = {
 	yearRange: 25
 };
 
-DateTime.version = '1.2.0';
+DateTime.version = '1.4.1';
+
+/**
+ * CommonJS factory function pass through. Matches DataTables.
+ * @param {*} root Window
+ * @param {*} jq jQUery
+ * @returns {boolean} Indicator
+ */
+DateTime.factory = function (root, jq) {
+	var is = false;
+
+	// Test if the first parameter is a window object
+	if (root && root.document) {
+		window = root;
+		document = root.document;
+	}
+
+	// Test if the second parameter is a jQuery object
+	if (jq && jq.fn && jq.fn.jquery) {
+		$ = jq;
+		is = true;
+	}
+
+	return is;
+}
 
 // Global export - if no conflicts
 if (! window.DateTime) {
 	window.DateTime = DateTime;
+}
+
+// Global DataTable
+if (window.DataTable) {
+	window.DataTable.DateTime = DateTime;
 }
 
 // Make available via jQuery

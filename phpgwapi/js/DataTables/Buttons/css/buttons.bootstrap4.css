@@ -341,7 +341,7 @@ div.dt-buttons a.btn.processing:after {
   box-sizing: border-box;
   display: block;
   content: " ";
-  border: 2px solid #282828;
+  border: 2px solid rgb(40, 40, 40);
   border-radius: 50%;
   border-left-color: transparent;
   border-right-color: transparent;
@@ -387,7 +387,7 @@ div.dataTables_wrapper div.dt-buttons.btn-group div.btn-group:last-child:first-c
   border-bottom-right-radius: 4px !important;
 }
 div.dataTables_wrapper div.dt-buttons.btn-group div.btn-group button.dt-btn-split-drop:last-child {
-  border: 1px solid #6c757d;
+  border: 1px solid rgb(108, 117, 125);
 }
 div.dataTables_wrapper div.dt-buttons.btn-group div.btn-group div.dt-btn-split-wrapper {
   border: none;
@@ -414,7 +414,7 @@ div.dt-button-collection div.btn-group button:last-child:first-child {
   border-bottom-right-radius: 4px !important;
 }
 div.dt-button-collection div.btn-group button.dt-btn-split-drop:last-child {
-  border: 1px solid #6c757d;
+  border: 1px solid rgb(108, 117, 125);
 }
 div.dt-button-collection div.btn-group div.dt-btn-split-wrapper {
   border: none;

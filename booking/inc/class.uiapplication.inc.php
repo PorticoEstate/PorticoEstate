@@ -1362,7 +1362,7 @@
 			array_set_default($application, 'building_name', $_building['name']);
 			array_set_default($application, 'audience', array());
 
-			if (strstr($application['building_name'], "%"))
+			if ($application['building_name'] && strstr($application['building_name'], "%"))
 			{
 				$search = array('%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86', '%C3%A6');
 				$replace = array('Å', 'å', 'Ø', 'ø', 'Æ', 'æ');

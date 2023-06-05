@@ -335,7 +335,7 @@ div.dtsp-panesContainer button.dtsp-showAll:hover {
 }
 div.dtsp-panesContainer button.dtsp-disabledButton {
   cursor: default !important;
-  color: #7c7c7c;
+  color: rgb(124, 124, 124);
 }
 div.dtsp-panesContainer button.dtsp-disabledButton:hover {
   background-color: transparent;
@@ -354,8 +354,8 @@ div.dtsp-topRow.dtsp-bordered:hover input.dtsp-paneInputButton {
 
 @media screen and (max-width: 767px) {
   div.dtsp-columns-4,
-div.dtsp-columns-5,
-div.dtsp-columns-6 {
+  div.dtsp-columns-5,
+  div.dtsp-columns-6 {
     max-width: 31% !important;
     min-width: 31% !important;
   }
@@ -364,7 +364,6 @@ div.dtsp-columns-6 {
   div.dtsp-searchPanes {
     flex-direction: column !important;
   }
-
   div.dtsp-searchPane {
     max-width: 98% !important;
     min-width: 98% !important;

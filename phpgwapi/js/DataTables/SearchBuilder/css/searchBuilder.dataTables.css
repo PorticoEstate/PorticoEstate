@@ -125,7 +125,7 @@ div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria div.dtsb-buttonContainer
     padding-top: 0em;
   }
   div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria select.dtsb-dropDown,
-div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria input.dtsb-input {
+  div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria input.dtsb-input {
     max-width: none;
     width: 100%;
     margin-bottom: 0.8em;
@@ -162,8 +162,7 @@ div.dtsb-searchBuilder button.dtsb-button {
   color: black;
   white-space: nowrap;
   overflow: hidden;
-  background-color: rgba(0, 0, 0, 0.1);
-  /* Fallback */
+  background-color: rgba(0, 0, 0, 0.1); /* Fallback */
   background: linear-gradient(to bottom, rgba(230, 230, 230, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -179,8 +178,7 @@ div.dtsb-searchBuilder button.dtsb-button:hover {
 }
 div.dtsb-searchBuilder div.dtsb-logicContainer {
   border: 1px solid rgba(0, 0, 0, 0.3);
-  background-color: rgba(0, 0, 0, 0.1);
-  /* Fallback */
+  background-color: rgba(0, 0, 0, 0.1); /* Fallback */
   background: linear-gradient(to right, rgba(230, 230, 230, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
 }
 div.dtsb-searchBuilder div.dtsb-logicContainer button {
