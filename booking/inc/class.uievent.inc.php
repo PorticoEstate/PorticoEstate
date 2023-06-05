@@ -1390,7 +1390,7 @@
 			 */
 
 			$cost_history = $this->bo->so->get_ordered_costs($id);
-			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
+			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity, $include_inactive = true);
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
