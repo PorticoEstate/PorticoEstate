@@ -97,8 +97,6 @@
 			$equipment_remark,
 			$raider;
 
-		protected $field_of_responsibility_name = '.application';
-
 		public function __construct( int $id = null )
 		{
 			parent::__construct((int)$id);

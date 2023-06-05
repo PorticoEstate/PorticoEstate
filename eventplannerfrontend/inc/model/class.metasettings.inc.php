@@ -38,8 +38,6 @@
 			$metatag_robots,
 			$frontpagetext;
 
-		protected $field_of_responsibility_name = '.admin';
-
 		public function __construct( int $id = null )
 		{
 			parent::__construct((int)$id);

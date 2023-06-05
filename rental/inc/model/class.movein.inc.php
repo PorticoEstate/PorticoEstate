@@ -46,10 +46,7 @@
 			$account_id,
 			$comments,
 			$comment,
-			$attributes,// custom fields
-			$values_attribute;// custom fields
-
-		protected $field_of_responsibility_name = '.movein';
+			$attributes;// custom fields
 
 		public function __construct( int $id = null )
 		{

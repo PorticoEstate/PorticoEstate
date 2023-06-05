@@ -42,7 +42,6 @@
 			$active,
 			$description,
 			$owner_id;
-		protected $field_of_responsibility_name = '.article';
 
 		public function __construct( int $id = null )
 		{
