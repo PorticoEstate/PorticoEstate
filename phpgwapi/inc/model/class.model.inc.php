@@ -34,7 +34,7 @@
 		protected $field_of_responsibility_name;
 		protected $permission_array;
 		protected $appname;
-		var $values_attribute;
+		protected $values_attribute;
 
 		public function __construct( int $id )
 		{

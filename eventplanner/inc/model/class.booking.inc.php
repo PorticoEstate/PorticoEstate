@@ -60,7 +60,6 @@
 			$created,
 			$secret,
 			$process_update;
-		protected $field_of_responsibility_name = '.customer';
 
 		public function __construct( int $id = null )
 		{

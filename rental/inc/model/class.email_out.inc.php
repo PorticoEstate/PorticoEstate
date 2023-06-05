@@ -50,7 +50,6 @@
 			$modified;
 
 
-		protected $field_of_responsibility_name = '.email_out';
 
 		public function __construct( int $id = null )
 		{

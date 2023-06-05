@@ -63,8 +63,6 @@
 			$comments,
 			$comment;
 
-		protected $field_of_responsibility_name = '.vendor';
-
 		public function __construct( int $id = null )
 		{
 			parent::__construct((int)$id);

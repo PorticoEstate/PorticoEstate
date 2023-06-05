@@ -43,7 +43,6 @@
 			$created,
 			$json_representation;
 		static $custom_fields = array();
-		protected $field_of_responsibility_name = '.vendor_report';
 
 		public function __construct( int $id = null )
 		{
