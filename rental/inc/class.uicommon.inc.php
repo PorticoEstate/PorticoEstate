@@ -32,7 +32,6 @@
 		public $decimalPlaces;
 		public $currency_suffix;
 		public $area_suffix;
-		var $bo;
 
 		public function __construct()
 		{
