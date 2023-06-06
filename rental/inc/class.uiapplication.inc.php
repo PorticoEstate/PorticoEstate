@@ -51,7 +51,7 @@
 			$composite_types,
 			$payment_methods,
 			$acl_location;
-		private $bo;
+		public $bo;
 		var $permissions, $config;
 
 		public function __construct()

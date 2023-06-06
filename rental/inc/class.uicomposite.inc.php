@@ -1356,8 +1356,11 @@ JS;
 
 		public function schedule ()
 		{
+			self::set_active_menu('rental::schedule');
 			$composite_id = (int)phpgw::get_var('id');
-			$date = new DateTime(phpgw::get_var('date'));
+
+			$date_input = phpgw::get_var('date');
+			$date = new DateTime($date_input ? $date_input : 'now');
 			if ($date->format('w') != 1) {
 				$date->modify('last monday');
 			}
