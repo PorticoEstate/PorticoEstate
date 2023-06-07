@@ -1077,18 +1077,6 @@
 							$_article_code = $order_line['article_code'];
 						}
 
-						/**
-						 * Fra Factum
-						 */
-	//					$_fakturalinje['Varekode']			 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['article_code']);
-	//					$_fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
-	//					$_fakturalinje['Avgift']				 = $order_line['tax'];
-	//					$_fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 255);
-	//					$_fakturalinje['mvakode']			 = $order_line['tax_code'];
-	//					$_fakturalinje['antall']				 = $order_line['quantity'];
-	//					$_fakturalinje['enhetspris']			 = $order_line['unit_price'];
-
-
 
 						if($order_line['tax_percent'])
 						{
@@ -2297,21 +2285,15 @@
 					}
 
 					//Nøkkelfelt, kundens personnr/orgnr. - men differensiert for undergrupper innenfor samme orgnr
-//					$stored_header['tekst2'] = $check_customer_identifier;
-//					$stored_header['tekst3'] = $check_customer_identifier;
 					$stored_header['tekst4'] = $check_customer_identifier;
 
 					if ($type == 'internal')
 					{
-//						$header['tekst2'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
-//						$header['tekst3'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
 						$header['tekst4'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
 						$header['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
 					}
 					else
 					{
-//						$header['tekst2'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
-//						$header['tekst3'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
 						$header['tekst4'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
 						$header['ext_ord_ref'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $customer_number), 0, 15), 15, ' ');
 					}
@@ -2463,17 +2445,11 @@
 							$_item['amount'] = $this->format_cost(($order_line['amount']));
 					//		$_item['tax_code'] = str_pad($order_line['tax_code'], 2, ' ', STR_PAD_LEFT);
 							$_item['value_1'] = str_pad($order_line['quantity'] * 100, 17, 0, STR_PAD_LEFT); //Units. Multiplied by 100.
-							$item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
+							$_item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
 
-							$_text['line_no'] = $item['line_no'];
+							$_text['line_no'] = $_item['line_no'];
 							$_text['short_info'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 60), 60, ' ');
 
-		//					$_fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
-		//					$_fakturalinje['Avgift']			 = $order_line['tax'];
-		//					$_fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 255);
-		//					$_fakturalinje['mvakode']			 = $order_line['tax_code'];
-		//					$_fakturalinje['antall']			 = $order_line['quantity'];
-		//					$_fakturalinje['enhetspris']		 = $order_line['unit_price'];
 
 							//Add to orders
 							$output[] = implode('', str_replace(array("\n", "\r"), '', $_item));
@@ -2635,17 +2611,10 @@
 							$_item['amount'] = $this->format_cost(($order_line['amount']));
 					//		$_item['tax_code'] = str_pad($order_line['tax_code'], 2, ' ', STR_PAD_LEFT);
 							$_item['value_1'] = str_pad($order_line['quantity'] * 100, 17, 0, STR_PAD_LEFT); //Units. Multiplied by 100.
-							$item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
+							$_item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
 
-							$_text['line_no'] = $item['line_no'];
+							$_text['line_no'] = $_item['line_no'];
 							$_text['short_info'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 60), 60, ' ');
-
-		//					$_fakturalinje['SumPrisUtenAvgift']	 = $order_line['amount'];
-		//					$_fakturalinje['Avgift']			 = $order_line['tax'];
-		//					$_fakturalinje['Tilleggstekst']		 = substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 255);
-		//					$_fakturalinje['mvakode']			 = $order_line['tax_code'];
-		//					$_fakturalinje['antall']			 = $order_line['quantity'];
-		//					$_fakturalinje['enhetspris']		 = $order_line['unit_price'];
 
 							//Add to orders
 							$output[] = implode('', str_replace(array("\n", "\r"), '', $_item));
