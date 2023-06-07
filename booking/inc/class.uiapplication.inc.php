@@ -3230,15 +3230,24 @@
 				if($notify)
 				{
 					$log_msg = '';
-					$recipient = $this->bo->send_notification($application);
+					$_application = $application;
+					$_application['status'] = phpgw::get_var('status', 'string', 'POST');
+					$recipient = $this->bo->send_notification($_application);
 					if($recipient)
 					{
-						$log_msg .= "Epost er sendt til {$recipient}\n";
+						$log_msg .= "Epost er sendt til {$recipient}";
 					}
-					$log_msg .= "Status: ". strtolower(lang($application['status']));
-					phpgwapi_cache::message_set($log_msg);
-					$this->add_comment($application, $log_msg);
-					$this->bo->update($application);
+					if(phpgw::get_var('status', 'string', 'POST'))
+					{
+						$log_msg .= "\nStatus: ". strtolower(lang($application['status']));
+					}
+
+					if($log_msg)
+					{
+						phpgwapi_cache::message_set($log_msg);
+						$this->add_comment($application, $log_msg);
+						$this->bo->update($application);
+					}
 				}
 
 				self::redirect(array('menuaction' => $this->url_prefix . '.show', 'id' => $application['id'], 'return_after_action' => $return_after_action));
