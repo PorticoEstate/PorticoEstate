@@ -118,7 +118,8 @@ HTML;
 		}
 	}
 
-	$redirect = json_decode(phpgw::get_var('redirect', 'raw', 'COOKIE'), true);
+	$redirect_input = phpgw::get_var('redirect', 'raw', 'COOKIE');
+	$redirect = $redirect_input ? json_decode(phpgw::get_var('redirect', 'raw', 'COOKIE'), true) : null;
 
 	if (is_array($redirect) && count($redirect))
 	{

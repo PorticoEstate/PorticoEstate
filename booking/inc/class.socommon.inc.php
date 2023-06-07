@@ -1001,7 +1001,7 @@
 				}
 				else
 				{
-					$val = str_replace('&nbsp;', ' ', $val);
+					$val = str_replace('&nbsp;', ' ', (string)$val);
 					$values[$key] = trim($val);
 				}
 			}
@@ -1140,7 +1140,7 @@
 					continue;
 				}
 
-				$v = is_array($entity[$field]) ? $entity[$field] : trim($entity[$field]);
+				$v = is_array($entity[$field]) ? $entity[$field] : trim((string)$entity[$field]);
 				$empty = false;
 
 				if (isset($params['manytomany']) && isset($params['manytomany']['column']))

@@ -2717,7 +2717,7 @@
 			foreach ($copy as $f)
 			{
 //				$event[] = array($f, htmlentities(html_entity_decode($application[$f])), ENT_QUOTES | ENT_SUBSTITUTE);
-				$event[] = array($f, html_entity_decode($application[$f]));
+				$event[] = array($f, html_entity_decode((string)$application[$f]));
 			}
 			foreach ($application['agegroups'] as $ag)
 			{

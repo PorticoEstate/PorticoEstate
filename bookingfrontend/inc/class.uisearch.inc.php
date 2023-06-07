@@ -49,11 +49,11 @@
 			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/templates/base/css/rubik-font.css");
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
-			$searchterm = trim(phpgw::get_var('searchterm', 'string', 'REQUEST', null));
+			$searchterm = trim(phpgw::get_var('searchterm', 'string', 'REQUEST', ''));
 			$type = phpgw::get_var('type', 'string', 'REQUEST', null);
 			$activity_top_level = phpgw::get_var('activity_top_level', 'int', 'REQUEST', null);
 			$building_id = phpgw::get_var('building_id', 'int', 'REQUEST', null);
-			$filter_part_of_town = explode(',', phpgw::get_var('filter_part_of_town', 'string'));
+			$filter_part_of_town = explode(',', phpgw::get_var('filter_part_of_town', 'string', 'REQUEST', ''));
 			$imploded_filter_part_of_town = implode(',', $filter_part_of_town);
 			$search = null;
 
