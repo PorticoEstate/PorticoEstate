@@ -229,7 +229,7 @@ JS;
 	$bodoc	 = CreateObject('booking.bodocumentation');
 	$manual	 = $bodoc->so->getFrontendDoc();
 
-	$menuaction	 = phpgw::get_var('menuaction', 'GET');
+	$menuaction	 = phpgw::get_var('menuaction', 'GET', 'REQUEST', '');
 	$id			 = phpgw::get_var('id', 'GET');
 	if (strpos($menuaction, 'organization'))
 	{
