@@ -285,6 +285,8 @@
 			if ($changeStatus && $application['status'] != $changeStatus)
 			{
 				$application['status'] = $changeStatus;
+				$log_msg = "Status: ". strtolower(lang($application['status']));
+				$this->add_comment($application, $log_msg, 'comment', $customer_name);
 			}
 
 			$this->bo->send_admin_notification($application, $comment);
