@@ -205,7 +205,11 @@
 					}
 				}
 
-				if($test['from_'] < $new_date['from_'] && $test['to_'] > $new_date['to_'])
+				if (
+					($test['from_'] < $new_date['from_'] && $test['to_'] > $new_date['to_'])
+					|| ($test['from_'] == $new_date['from_'] && $test['to_'] > $new_date['to_'])
+					|| ($test['from_'] < $new_date['from_'] && $test['to_'] == $new_date['to_'])
+				)
 				{
 					$free_up_time = true;
 				}
