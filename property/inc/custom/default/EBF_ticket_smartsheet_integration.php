@@ -112,6 +112,7 @@
 			catch(Exception $e)
 			{
 				phpgwapi_cache::message_set($e->getMessage(), 'error');
+				$this->historylog->add('RM', (int)$data['id'], 'Overføring til EFU feilet');
 				return;
 			}
 
