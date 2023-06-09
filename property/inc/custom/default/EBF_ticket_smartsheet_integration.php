@@ -104,7 +104,16 @@
 			);
 
 			$smartsheetClient	 = new \Smartsheet\SmartsheetClient($config);
-			$sheets				 = $smartsheetClient->listSheets();
+
+			try
+			{
+				$sheets				 = $smartsheetClient->listSheets();
+			}
+			catch(Exception $e)
+			{
+				phpgwapi_cache::message_set($e->getMessage(), 'error');
+				return;
+			}
 
 			if (!$sheet_id)
 			{
@@ -144,10 +153,18 @@
 				'hyperlink'	 => $hyperlink
 			);
 
-			$sheet->addRow($rows);
-
-			$sql = "UPDATE fm_tts_tickets SET handyman_checklist_id = 1 WHERE id = " . (int)$data['id'];
-			$this->db->query($sql, __LINE__, __FILE__);
+			try
+			{
+				$sheet->addRow($rows);
+				$sql = "UPDATE fm_tts_tickets SET handyman_checklist_id = 1 WHERE id = " . (int)$data['id'];
+				$this->db->query($sql, __LINE__, __FILE__);
+				$this->historylog->add('RM', (int)$data['id'], 'Saken er meldt til EFU');
+			}
+			catch(Exception $e)
+			{
+				phpgwapi_cache::message_set($e->getMessage(), 'error');
+				$this->historylog->add('RM', (int)$data['id'], 'Overføring til EFU feilet');
+			}
 		}
 	}
 	$ticket_smartsheet = new EBF_ticket_smartsheet_integration();
