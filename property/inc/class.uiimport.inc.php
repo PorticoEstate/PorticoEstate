@@ -1,5 +1,6 @@
 <?php
 
+	phpgw::import_class('phpgwapi.datetime');
 	class property_uiimport
 	{
 
@@ -40,7 +41,7 @@
 
 		public function __construct()
 		{
-			$this->start_time = time();
+			$this->start_time = phpgwapi_datetime::user_localtime();
 			if (!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') && !$GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'property'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
@@ -248,7 +249,7 @@
 
 
 				echo "</ul>";
-				$end_time	 = time();
+				$end_time	 = phpgwapi_datetime::user_localtime();
 				$difference	 = ($end_time - $this->start_time) / 60;
 				$end		 = date("G:i:s", $end_time);
 				echo "<h3>Import ended at: {$end}. Import lasted {$difference} minutes.";
@@ -695,7 +696,7 @@ HTML;
 				}
 				catch (Exception $ex)
 				{
-					$this->errors[] = "Import of data failed. (" . (time() - $this->start_time) . " seconds)";
+					$this->errors[] = "Import of data failed. (" . (phpgwapi_datetime::user_localtime() - $this->start_time) . " seconds)";
 					$this->errors[] = $ex->getMessage();
 					$this->db->transaction_abort();
 					return false;
@@ -709,7 +710,7 @@ HTML;
 
 			if ($ok)
 			{
-				$this->messages[] = "Imported data. (" . (time() - $this->start_time) . " seconds)";
+				$this->messages[] = "Imported data. (" . (phpgwapi_datetime::user_localtime() - $this->start_time) . " seconds)";
 				if ($this->debug)
 				{
 					$this->db->transaction_abort();
@@ -727,7 +728,7 @@ HTML;
 			}
 			else
 			{
-				$this->errors[] = "Import of data failed. (" . (time() - $this->start_time) . " seconds)";
+				$this->errors[] = "Import of data failed. (" . (phpgwapi_datetime::user_localtime() - $this->start_time) . " seconds)";
 				$this->db->transaction_abort();
 				return false;
 			}
@@ -778,7 +779,7 @@ HTML;
 
 			fclose($handle);
 
-			$this->messages[]	 = "Read '{$path}' file in " . (time() - $this->start_time) . " seconds";
+			$this->messages[]	 = "Read '{$path}' file in " . (phpgwapi_datetime::user_localtime() - $this->start_time) . " seconds";
 			$this->messages[]	 = "'{$path}' contained " . count($result) . " lines";
 
 			return $result;
@@ -833,7 +834,7 @@ HTML;
 				$result[] = $_result;
 			}
 
-			$this->messages[]	 = "Read '{$path}' file in " . (time() - $this->start_time) . " seconds";
+			$this->messages[]	 = "Read '{$path}' file in " . (phpgwapi_datetime::user_localtime() - $this->start_time) . " seconds";
 			$this->messages[]	 = "'{$path}' contained " . count($result) . " lines";
 
 			return $result;
@@ -1162,7 +1163,7 @@ HTML;
 				//print_r($entity_categories_in_xml);
 
 				echo "</ul>";
-				$end_time	 = time();
+				$end_time	 = phpgwapi_datetime::user_localtime();
 				$difference	 = ($end_time - $this->start_time) / 60;
 				$end		 = date("G:i:s", $end_time);
 				echo "<h3>Import ended at: {$end}. Import lasted {$difference} minutes.";
