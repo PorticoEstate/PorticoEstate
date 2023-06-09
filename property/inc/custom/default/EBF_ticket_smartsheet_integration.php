@@ -33,14 +33,14 @@
 			$receipt_section = $this->custom_config->add_section(array
 				(
 				'name'	 => 'smartsheet_integration',
-				'descr'	 => 'smartsheet integration based on category'
+				'descr'	 => 'smartsheet integration based on ticket status'
 				)
 			);
 			$receipt		 = $this->custom_config->add_attrib(array(
 				'section_id' => $receipt_section['section_id'],
 				'input_type' => 'text',
-				'name'		 => 'category',
-				'descr'		 => 'commaseparated list of status that initiate post to smartsheet'
+				'name'		 => 'status',
+				'descr'		 => 'Ticket status that initiate post to smartsheet'
 				)
 			);
 			$receipt		 = $this->custom_config->add_attrib(array(
@@ -72,9 +72,9 @@
 
 		function check_category( $data )
 		{
-			$category_arr = explode(',', $this->_config['smartsheet_integration']['category']);
+			$status = $this->_config['smartsheet_integration']['status'];
 
-			if (in_array($data['cat_id'], $category_arr))
+			if ($data['status'] == $status)
 			{
 				$this->post_to_smartsheet($data);
 			}
