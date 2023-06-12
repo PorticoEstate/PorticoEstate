@@ -54,6 +54,8 @@
 			'view_file'					 => true,
 			'download'					 => true,
 		);
+		var $soadmin_entity, $bocommon,$allrows,$user_id,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage,$_category_acl;
 
 		public function __construct()
 		{

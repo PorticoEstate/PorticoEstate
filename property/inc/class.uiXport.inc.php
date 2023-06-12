@@ -46,7 +46,8 @@
 		var $sort;
 		var $order;
 		var $filter;
-		var $cat_id;
+		var $cat_id,$bocommon,$bo,$invoice,$contacts;
+		var $acl,$acl_location,$acl_read,$acl_add,$acl_edit,$acl_delete,$acl_manage;
 
 		function __construct()
 		{
@@ -97,9 +98,9 @@
 			$janitor			 = phpgw::get_var('janitor');
 			$supervisor			 = phpgw::get_var('supervisor');
 			$budget_responsible	 = phpgw::get_var('budget_responsible');
-			$invoice_date		 = urldecode(phpgw::get_var('invoice_date'));
+			$invoice_date		 = phpgw::get_var('invoice_date') ? urldecode(phpgw::get_var('invoice_date')) : '';
 			$num_days			 = phpgw::get_var('num_days', 'int');
-			$payment_date		 = urldecode(phpgw::get_var('payment_date'));
+			$payment_date		 = phpgw::get_var('payment_date') ? urldecode(phpgw::get_var('payment_date')) : '';
 			$cancel				 = phpgw::get_var('cancel', 'bool');
 			$convert			 = phpgw::get_var('convert', 'bool');
 			$conv_type			 = phpgw::get_var('conv_type');

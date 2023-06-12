@@ -193,12 +193,21 @@ your settings have been updated	common	no	Dine innstillinger har blitt oppdatert
 bad login or password	common	no	Ugyldig login eller passord
 login	login	no	Login
 password	login	no	Passord
+confirm password	login	no	Bekreft passord
+firstname	login	no	Fornavn
+lastname	login	no	Etternavn
+this page let you build a mapping to an existing account !	login	no	Denne siden lar deg lage en kobling til en eksisterende brukerkonto
+your account doesn't exist, please fill in infos !	login	no	Brukeren din er ny, vennligst fyll ut informasjon
+new account and login	login	no	Registrer ny bruker, og logg inn
+new account	login	no	Registrer ny bruker
+new mapping and login	login	no	Registrer ny kobling, og logg inn
 sorry, your login has expired	login	no	Beklager, din bruker er utgått
 sorry, your session has expired	login	no	Beklager, sesjonen din er utløpt
 todays date, eg. %1	common	no	Dagens dato, %1
 use cookies	login	no	use cookies
 username	common	no	Brukernavn
 new user	login	no	Ny bruker
+cellphone	login	no	Mobiltelefon
 forgotten password	login	no	Glemt passord eller brukernavn
 use a valid username and password to gain access to %1	login	no	Angi et gyldig brukernavn og passord for få tilgang til %1
 version	common	no	versjon
@@ -355,3 +364,4 @@ percent	common	no	Prosent
 choose "Log out" if you want to end the session	common	no	Velg "Logg ut" om du vil avslutte sesjonen.
 messages_saved_form	common	no	Data er lagret
 messages_form_error	common	no	Data er ikke lagret
+fatal error	common	no	Fatal feil

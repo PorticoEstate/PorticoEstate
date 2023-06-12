@@ -337,7 +337,7 @@
 		{
 			$GLOBALS['phpgw']->xslttpl->add_file('countries');
 
-			foreach(self::continent_array as $cname => $ctitle)
+			foreach(self::$continent_array as $cname => $ctitle)
 			{
 				$carray[] = array
 				(

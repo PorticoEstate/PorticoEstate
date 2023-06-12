@@ -39,7 +39,7 @@
 						<div class="pure-u-1">
 							<div class="heading">
 								<!--<legend>-->
-									<h3>1. <xsl:value-of select="php:function('lang', 'Why?')" /></h3>
+								<h3>1. <xsl:value-of select="php:function('lang', 'Why?')" /></h3>
 								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
@@ -136,7 +136,7 @@
 						<div class="pure-u-1">
 							<div class="heading">
 								<!--<legend>-->
-									<h3>2. <xsl:value-of select="php:function('lang', 'Where?')" /></h3>
+								<h3>2. <xsl:value-of select="php:function('lang', 'Where?')" /></h3>
 								<!--</legend>-->
 							</div>
 							<xsl:if test="config/application_where">
@@ -202,7 +202,7 @@
 						<div class="pure-u-1">
 							<div class="heading">
 								<!--<legend>-->
-									<h3>3. <xsl:value-of select="php:function('lang', 'When?')" /></h3>
+								<h3>3. <xsl:value-of select="php:function('lang', 'When?')" /></h3>
 								<!--</legend>-->
 							</div>
 							<xsl:if test="config/application_when">
@@ -299,7 +299,7 @@
 						<div class="pure-u-1">
 							<div class="heading">
 								<!--<legend>-->
-									<h3>4. <xsl:value-of select="php:function('lang', 'Who?')" /></h3>
+								<h3>4. <xsl:value-of select="php:function('lang', 'Who?')" /></h3>
 								<!--</legend>-->
 							</div>
 							<xsl:if test="config/application_who">
@@ -366,27 +366,30 @@
 												<xsl:variable name="id">
 													<xsl:value-of select="id"/>
 												</xsl:variable>
-												<tr>
-													<th>
-														<xsl:value-of select="name"/>
-													</th>
-													<td>
-														<input type="text" class="input50">
-															<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
-															<xsl:attribute name="value">
-																<xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/>
-															</xsl:attribute>
-														</input>
-													</td>
-													<td>
-														<input type="text" class="input50">
-															<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
-															<xsl:attribute name="value">
-																<xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/>
-															</xsl:attribute>
-														</input>
-													</td>
-												</tr>
+												<xsl:if test="active = 1 or (../application/agegroups/male[../agegroup_id = $id]) > 0 or (../application/agegroups/female[../agegroup_id = $id]) > 0">
+
+													<tr>
+														<th>
+															<xsl:value-of select="name"/>
+														</th>
+														<td>
+															<input type="text" class="input50">
+																<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
+																<xsl:attribute name="value">
+																	<xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/>
+																</xsl:attribute>
+															</input>
+														</td>
+														<td>
+															<input type="text" class="input50">
+																<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
+																<xsl:attribute name="value">
+																	<xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/>
+																</xsl:attribute>
+															</input>
+														</td>
+													</tr>
+												</xsl:if>
 											</xsl:for-each>
 										</tbody>
 									</table>
@@ -398,9 +401,9 @@
 						<div class="pure-u-1">
 							<div class="heading">
 								<!--<legend>-->
-									<h3>
-										<xsl:value-of select="php:function('lang', 'Contact information')" />
-									</h3>
+								<h3>
+									<xsl:value-of select="php:function('lang', 'Contact information')" />
+								</h3>
 								<!--</legend>-->
 							</div>
 							<xsl:if test="config/application_contact_information">
@@ -454,9 +457,9 @@
 						<div class="pure-u-1">
 							<div class="heading">
 								<!--<legend>-->
-									<h3>
-										<xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" />
-									</h3>
+								<h3>
+									<xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" />
+								</h3>
 								<!--</legend>-->
 							</div>
 							<div class="pure-control-group">
@@ -523,9 +526,9 @@
 								<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
 									<div class="heading">
 										<!--<legend>-->
-											<h3>
-												<xsl:value-of select="php:function('lang', 'Terms and conditions')" />
-											</h3>
+										<h3>
+											<xsl:value-of select="php:function('lang', 'Terms and conditions')" />
+										</h3>
 										<!--</legend>-->
 									</div>
 									<xsl:if test="config/application_terms">
@@ -550,9 +553,9 @@
 								<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
 									<div class="heading">
 										<!--<legend>-->
-											<h4>
-												<xsl:value-of select="php:function('lang', 'additional requirements')" />
-											</h4>
+										<h4>
+											<xsl:value-of select="php:function('lang', 'additional requirements')" />
+										</h4>
 										<!--</legend>-->
 									</div>
 									<textarea id="field_agreement_requirements" name="agreement_requirements">

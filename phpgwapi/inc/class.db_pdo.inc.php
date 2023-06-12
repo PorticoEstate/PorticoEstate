@@ -881,7 +881,7 @@
 		{
 			if($this->resultSet)
 			{
-				return $this->resultSet->fieldCount();
+				return count(current($this->resultSet));
 			}
 			return 0;
 		}

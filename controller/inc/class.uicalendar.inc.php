@@ -57,7 +57,7 @@
 		private $so_check_list;
 		private $so_check_item;
 		private $location_finder;
-		var $type_id;
+		var $type_id, $district_id;
 		private $bo;
 		private $bocommon;
 		public $public_functions = array
@@ -331,8 +331,8 @@
 						$cl_criteria->set_control_id($control->get_id());
 						$cl_criteria->set_location_code($location_code);
 
-						$from_month = $this->get_start_month_for_control($control);
-						$to_month = $this->get_end_month_for_control($control);
+						$from_month = $this->get_start_month_for_control($control, $year);
+						$to_month = $this->get_end_month_for_control($control, $year);
 
 						// Loops through controls and populates aggregate open cases pr month array.
 						$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
@@ -385,8 +385,8 @@
 							$cl_criteria->set_component_id($component->get_id());
 							$cl_criteria->set_location_id($component->get_location_id());
 
-							$from_month = $this->get_start_month_for_control($control);
-							$to_month = $this->get_end_month_for_control($control);
+							$from_month = $this->get_start_month_for_control($control, $year);
+							$to_month = $this->get_end_month_for_control($control, $year);
 
 							$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 
@@ -702,8 +702,8 @@
 					$cl_criteria->set_control_id($control->get_id());
 					$cl_criteria->set_location_code($location_code);
 
-					$from_month = $this->get_start_month_for_control($control);
-					$to_month = $this->get_end_month_for_control($control);
+					$from_month = $this->get_start_month_for_control($control, $year);
+					$to_month = $this->get_end_month_for_control($control, $year);
 
 					// Loops through controls and populates aggregate open cases pr month array.
 					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
@@ -871,8 +871,8 @@
 					$cl_criteria->set_control_id($control->get_id());
 					$cl_criteria->set_location_code($curr_location_code);
 
-					$from_month = $this->get_start_month_for_control($control);
-					$to_month = $this->get_end_month_for_control($control);
+					$from_month = $this->get_start_month_for_control($control, $year);
+					$to_month = $this->get_end_month_for_control($control, $year);
 
 					// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
 					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
@@ -921,8 +921,8 @@
 					$cl_criteria->set_component_id($component->get_id());
 					$cl_criteria->set_location_id($component->get_location_id());
 
-					$from_month = $this->get_start_month_for_control($control);
-					$to_month = $this->get_end_month_for_control($control);
+					$from_month = $this->get_start_month_for_control($control, $year);
+					$to_month = $this->get_end_month_for_control($control, $year);
 
 					// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
 					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
@@ -1313,7 +1313,7 @@
 			return $agg_open_cases_pr_month_array;
 		}
 
-		function get_start_month_for_control( $control )
+		function get_start_month_for_control( $control , $year = 0)
 		{
 			// Checks if control starts in the year that is displayed
 			if (date("Y", $control->get_start_date()) == $year)
@@ -1328,7 +1328,7 @@
 			return $from_month;
 		}
 
-		function get_end_month_for_control( $control )
+		function get_end_month_for_control( $control , $year = 0)
 		{
 			// Checks if control ends in the year that is displayed
 			if (date("Y", $control->get_end_date()) == $year)

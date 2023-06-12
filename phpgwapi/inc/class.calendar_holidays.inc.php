@@ -272,7 +272,7 @@
 	* @param integer $country Country for which to calculate the working days
 	* @param integer $federal_state Federal state of given country for which to calculate the working days
 	* @param integer $religion Religion for which to calculate the working days
-	* @return Number of holidays in start/end date range that are not on a saturday or sunday.
+	* @return integer Number of holidays in start/end date range that are not on a saturday or sunday.
 	* @static
 	*/
    function get_number_of_holidays($startday,$startmonth,$startyear,$endday,$endmonth,$endyear,$country,$federal_state,$religion)

@@ -33,6 +33,7 @@
 	 */
 	class property_sopricebook
 	{
+		var $db, $join, $left_join, $like, $custom, $account, $socommon, $total_records;
 
 		function __construct()
 		{
@@ -204,6 +205,7 @@
 				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 
+			$filtermethod = '';
 			//_debug_array($data);
 			if ($order)
 			{
@@ -316,6 +318,7 @@
 			{
 				$ordermethod = ' order by id asc';
 			}
+			$filtermethod = '';
 
 			$where = 'WHERE';
 
@@ -398,6 +401,7 @@
 			{
 				$ordermethod = ' order by index_count';
 			}
+			$filtermethod = '';
 
 			if ($cat_id > 0)
 			{
@@ -473,6 +477,7 @@
 			{
 				$ordermethod = " order by activity_id asc";
 			}
+			$filtermethod = '';
 
 			if ($cat_id > 0)
 			{
@@ -551,6 +556,8 @@
 			{
 				$ordermethod = " order by fm_vendor.org_name asc";
 			}
+			$filtermethod = '';
+
 
 			if ($cat_id > 0)
 			{

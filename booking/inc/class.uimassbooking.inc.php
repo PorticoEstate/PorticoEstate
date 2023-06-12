@@ -22,6 +22,7 @@
 			'find_buildings_used_by' => true,
 		);
 
+		var $display_name,$user_id;
 		public function __construct()
 		{
 			parent::__construct();

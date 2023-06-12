@@ -12,6 +12,7 @@
 		protected $entity_id = 4;
 		protected $cat_id	 = 1;
 		public $debug		 = true;
+		var $category_dir,$soentity;
 
 		public function __construct()
 		{

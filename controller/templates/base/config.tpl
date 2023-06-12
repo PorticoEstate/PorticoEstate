@@ -79,6 +79,16 @@
 				</select>
 			</td>
 		</tr>
+		<tr class="row_off">
+			<td>{lang_disable_auto_ticket_creation}</td>
+			<td>
+				<select name="newsettings[disable_auto_ticket_creation]" class="pure-u-1">
+					<option value="" {selected_disable_auto_ticket_creation_}>{lang_no}</option>
+					<option value="1" {selected_disable_auto_ticket_creation_1}>{lang_yes}</option>
+				</select>
+			</td>
+		</tr>
+
 		<tr class="row_on">
 			<td>{lang_document_category}:</td>
 			<td>

@@ -24,6 +24,7 @@
 			'dim_value_5', 'dim_value_6', 'dim_value_7');
 		protected $module = 'booking';
 
+
 		public function __construct()
 		{
 			parent::__construct();

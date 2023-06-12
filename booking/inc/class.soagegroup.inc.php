@@ -3,7 +3,7 @@
 
 	class booking_soagegroup extends booking_socommon
 	{
-
+		var $account;
 		function __construct()
 		{
 			parent::__construct('bb_agegroup', array(

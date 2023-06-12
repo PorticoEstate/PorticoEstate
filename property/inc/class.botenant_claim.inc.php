@@ -39,7 +39,8 @@
 		var $filter;
 		var $sort;
 		var $order;
-		var $cat_id;
+		var $cat_id, $bocommon, $so,$use_session,$district_id,$project_id,$user_id,$status,
+		$allrows,$total_records,$config;
 
 		function __construct( $session = false )
 		{

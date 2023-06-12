@@ -361,7 +361,7 @@
 			return $email_out;
 		}
 
-		public function save()
+		public function save($ajax = false)
 		{
 			parent::save();
 		}

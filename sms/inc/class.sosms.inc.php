@@ -18,7 +18,7 @@
 	class sms_sosms
 	{
 
-		var $db;
+		var $db, $like, $join,$total_records,$left_join;
 		var $account;
 
 		function __construct()

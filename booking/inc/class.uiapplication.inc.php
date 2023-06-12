@@ -40,6 +40,8 @@
 		protected $building_so;
 		protected $errors = array();
 		private $acl_delete;
+		var $event_bo, $activity_bo,$audience_bo,$assoc_bo,$agegroup_bo,$resource_bo,$building_bo,$organization_bo,
+		$document_building,$document_resource,$fields,$display_name;
 
 		public function __construct()
 		{
@@ -1360,7 +1362,7 @@
 			array_set_default($application, 'building_name', $_building['name']);
 			array_set_default($application, 'audience', array());
 
-			if (strstr($application['building_name'], "%"))
+			if ($application['building_name'] && strstr($application['building_name'], "%"))
 			{
 				$search = array('%C3%85', '%C3%A5', '%C3%98', '%C3%B8', '%C3%86', '%C3%A6');
 				$replace = array('Å', 'å', 'Ø', 'ø', 'Æ', 'æ');
@@ -2608,7 +2610,7 @@
 			$application['cancel_link'] = self::link(array('menuaction' => $current_app . '.uiapplication.index'));
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
-			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
+			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity, $include_inactive = true);
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
@@ -3294,7 +3296,7 @@
 			$this->set_case_officer($application);
 
 			//	$comments = array_reverse($application['comments']); //fixed in db
-			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
+			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity, $include_inactive = true);
 //			_debug_array($application);
 //			_debug_array($agegroups);
 			$agegroups = $agegroups['results'];

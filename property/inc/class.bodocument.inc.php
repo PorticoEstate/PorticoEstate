@@ -46,6 +46,8 @@
 		var $status_id;
 		var $allrows;
 		var $acl_location	 = '.document';
+		var $so, $bocommon, $solocation, $historylog, $contacts, $cats, $bofiles,
+		$use_session, $doc_type, $query_location,$total_records,$uicols;
 		var $public_functions = array
 			(
 			'read'			 => true,

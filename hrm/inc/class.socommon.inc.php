@@ -18,6 +18,8 @@
 
 	class hrm_socommon
 	{
+		var $account,$db, $join, $like, $left_join, $total_records;
+
 		function __construct()
 		{
 			//$GLOBALS['phpgw_info']['flags']['currentapp']	=	'hrm';

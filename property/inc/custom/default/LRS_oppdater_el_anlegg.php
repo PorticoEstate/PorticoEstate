@@ -6,6 +6,7 @@
 	class lrs_el_anlegg extends property_boentity
 	{
 
+		var $db, $debug;
 		function __construct()
 		{
 			parent::__construct();

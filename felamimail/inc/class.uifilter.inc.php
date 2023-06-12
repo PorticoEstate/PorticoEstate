@@ -22,6 +22,7 @@
 			'saveFilter'	=> 'True'
 		);
 
+		var $urlMailbox,$startMessage,$sort,$bofelamimail,$bofilter,$sessionData,$t,$rowColor;
 		function __construct()
 		{
 			

@@ -19,7 +19,7 @@
 
 	class addressbook_importer
 	{
-		var $record;
+		var $record,$record_set;
 		
 		function __construct()
 		{

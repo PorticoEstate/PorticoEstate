@@ -1562,7 +1562,7 @@ JS;
 			{
 				$type = 'faktura';
 			}
-			$date = date('Ymd', $stop);
+			$date = date('Ymd');
 			$config_rental = CreateObject('phpgwapi.config', 'rental')->read();
 			$organization = empty($config_rental['organization']) ? 'bergen' : $config_rental['organization'];
 			if($organization == 'nlsh')

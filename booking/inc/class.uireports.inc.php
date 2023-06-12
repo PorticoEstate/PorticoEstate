@@ -16,6 +16,8 @@
 			'get_custom' => true
 		);
 
+		var $building_bo, $activity_bo,$agegroup_bo, $audience_bo, $organization_bo, $resource_bo;
+
 		public function __construct()
 		{
 			parent::__construct();
@@ -533,7 +535,7 @@
 			$variable_horizontal = '';
 			foreach ($organized_fields as $group)
 			{
-				if ($group[id] > 0)
+				if ($group['id'] > 0)
 				{
 					$header_level = $group['level'] + 2;
 					if (isset($group['attributes']) && is_array($group['attributes']))

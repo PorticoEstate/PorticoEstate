@@ -1,0 +1,61 @@
+{
+    "packages": [
+        {
+            "name": "php-ews/php-ews",
+            "version": "dev-master",
+            "version_normalized": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/facilioo/php-ews.git",
+                "reference": "ba7bc900f48c5da64a0d7d8a5d5a7ea3b682442e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/facilioo/php-ews/zipball/ba7bc900f48c5da64a0d7d8a5d5a7ea3b682442e",
+                "reference": "ba7bc900f48c5da64a0d7d8a5d5a7ea3b682442e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-soap": "*",
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "mustache/mustache": "~2.0",
+                "phan/phan": "@stable",
+                "phpmd/phpmd": "@stable",
+                "squizlabs/php_codesniffer": "*"
+            },
+            "time": "2023-04-04T14:50:45+00:00",
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "jamesiarmes\\PhpEws\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "James Armes",
+                    "email": "jamesiarmes@gmail.com"
+                }
+            ],
+            "description": "Library for communicating with Exchange Web Services.",
+            "homepage": "http://jamesarmes.com/php-ews/",
+            "support": {
+                "source": "https://github.com/facilioo/php-ews/tree/master"
+            },
+            "install-path": "../php-ews/php-ews"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}

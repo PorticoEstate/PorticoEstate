@@ -20,7 +20,7 @@
 		var $db;
 		var $account;
 		var $autoreply_data;
-
+		var $join, $like, $total_records;
 		function __construct()
 		{
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
@@ -50,6 +50,7 @@
 
 			$table = 'phpgw_sms_featautoreply';
 
+			$filtermethod = '';
 			$where = 'WHERE';
 
 			$querymethod = '';

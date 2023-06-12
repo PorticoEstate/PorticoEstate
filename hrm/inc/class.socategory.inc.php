@@ -18,6 +18,8 @@
 
 	class hrm_socategory
 	{
+		var $account,$db, $join, $like, $total_records;
+
 		public function __construct()
 		{
 			$this->account		= $GLOBALS['phpgw_info']['user']['account_id'];

@@ -45,6 +45,10 @@
 		private $move_child		 = array();
 		public $category_tree	 = array();
 
+		var $db,$db2, $join, $left_join, $like,$category_name,$account, $total_records;
+		var $oProc, $level,$parent_gap, $category_parent, $category_id, $check_parent;
+
+
 		function __construct( $entity_id = '', $cat_id = '', $bocommon = '' )
 		{
 			$this->account	= isset($GLOBALS['phpgw_info']['user']['account_id']) ? (int)$GLOBALS['phpgw_info']['user']['account_id'] : -1;

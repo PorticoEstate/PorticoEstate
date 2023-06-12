@@ -10,9 +10,9 @@
 			$this->so = CreateObject('booking.soagegroup');
 		}
 
-		function fetch_age_groups( $top_level_activity = 0 )
+		function fetch_age_groups( $top_level_activity = 0, $include_inactive = false )
 		{
-			$filters = array('active' => '1');
+			$filters = $include_inactive ? array() : array('active' => '1');
 			if ($top_level_activity)
 			{
 				$filters['activity_id'] = $top_level_activity;

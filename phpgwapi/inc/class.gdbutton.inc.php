@@ -30,7 +30,7 @@
 
 		var $filename;
 
-		var $url_base;
+		var $url_base,$xspace, $yspace,$save_dir,$img_dir,$width,$height,$xpos,$ypos;
 
 		function __construct()
 		{

@@ -34,6 +34,7 @@
 		protected $field_of_responsibility_name;
 		protected $permission_array;
 		protected $appname;
+		protected $values_attribute;
 
 		public function __construct( int $id )
 		{
@@ -322,7 +323,7 @@
 				}
 
 				$value = $entity->get_field($field);
-				if(!is_array($value))
+				if($value && !is_array($value))
 				{
 					$value = trim($value);
 				}

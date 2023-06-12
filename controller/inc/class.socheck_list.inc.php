@@ -262,7 +262,7 @@
 			}
 		}
 
-		function get_check_list_for_control_by_date( $control_id, $deadline_ts, $status = null, $location_code, $location_id, $component_id, $type )
+		function get_check_list_for_control_by_date( $control_id, $deadline_ts, $status, $location_code, $location_id, $component_id, $type )
 		{
 			$sql = "SELECT * ";
 			$sql .= "FROM controller_check_list ";

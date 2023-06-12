@@ -22,7 +22,7 @@
 
 		var $reg_id;
 		var $db;
-		var $config;
+		var $config,$boaddressbook;
 
 		function __construct()
 		{

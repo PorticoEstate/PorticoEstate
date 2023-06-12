@@ -37,6 +37,7 @@
 
 		var $role;
 		var $uicols = array();
+		var $db, $db2, $join, $left_join, $like, $acl,$account,$socommon,$total_records;
 
 		function __construct()
 		{
@@ -89,6 +90,8 @@
 
 			$choice_table	 = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
+			$paranthesis = '';
+			$joinmethod = '';
 
 			if (!$detail)
 			{

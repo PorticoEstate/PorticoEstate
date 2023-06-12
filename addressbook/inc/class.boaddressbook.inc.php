@@ -40,7 +40,7 @@
 		var $filter;
 		var $cat_id;
 		var $total;
-		var $bday_internformat;
+		var $bday_internformat,$contact_type,$comm_descr,$negative_responses;
 		var $public_functions = array
 		(
 			'add_vcard' => true  // call from addressbook.uivcard.in to import a vcard

@@ -17,7 +17,8 @@
 	class bim_uibimitem extends phpgwapi_uicommon_jquery implements uibimitem
 	{
 
-	private $db;
+		private $db;
+		var $bocommon, $filter;
 
 		public function __construct()
 		{

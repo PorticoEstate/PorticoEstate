@@ -33,6 +33,7 @@
 	class export_agresso
 	{
 
+		var $db, $config;
 		function __construct()
 		{
 			$this->db = &$GLOBALS['phpgw']->db;

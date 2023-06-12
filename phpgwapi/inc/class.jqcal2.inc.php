@@ -59,7 +59,7 @@
 					$_type = 'date';
 					$dateformat = "{$this->dateformat}";
 			}
-			if(ctype_digit($value) && $value)
+			if(ctype_digit((string)$value) && $value)
 			{
 				$start_value = date('Y-m-d H:i', $value);
 			}
@@ -160,6 +160,10 @@
 					startDate: {$start_value},
 					minDate:{$min_date},
 					$disabled_dates
+				}).keyup(function(e) {
+					if(e.keyCode == 8 || e.keyCode == 46) {
+						$( "#{$id}" ).val('');
+					}
 				});
 			});
 JS;

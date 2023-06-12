@@ -39,7 +39,7 @@
 		var $currentapp;
 		var $type_id;
 		var $location_code;
-		var $config;
+		var $config,$bo, $bocommon, $status_id,$allrows;
 		private $so_control_area;
 		private $so_control;
 		private $so_check_list;

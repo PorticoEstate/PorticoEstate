@@ -35,7 +35,8 @@
 	class property_soXport
 	{
 
-		var $db				 = '';
+		var $db,$soinvoice, $join, $left_join, $like,$datetimeformat;
+
 		var $account_id		 = 0;
 		var $total_records	 = 0;
 		var $bilagsnr;
@@ -936,9 +937,6 @@
 		public function check_invoice_id( $vendor_id, $invoice_id )
 		{
 			$found = 0;
-
-			$values['fakturanr']	 = $values['invoice_id'];
-			$values['spvend_code']	 = $values['vendor_id'];
 
 			$sql = "SELECT bilagsnr FROM fm_ecobilag WHERE spvend_code= '{$vendor_id}' AND fakturanr='{$invoice_id}'";
 			$this->db->query($sql, __LINE__, __FILE__);

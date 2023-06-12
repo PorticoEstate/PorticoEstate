@@ -43,6 +43,7 @@
 		var $location_info	 = array();
 		var $appname;
 		var $allrows;
+		var $so, $custom, $bocommon, $dateformat, $cats, $type, $type_id, $total_records, $use_session;
 		public $acl_location	 = '.project.condition_survey';
 		var $public_functions = array
 			(

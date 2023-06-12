@@ -42,6 +42,7 @@
 		var $cat_id;
 		var $gab_insert_level;
 		var $custom;
+		var $solocation,$so,$allrows,$total_records,$payment_date,$uicols;
 		var $public_functions = array
 			(
 			'read'			 => true,
@@ -187,7 +188,7 @@
 
 			if ($values['location_code'])
 			{
-				$values['location_data'] = $this->solocation->read_single($gab['location_code']);
+				$values['location_data'] = $this->solocation->read_single($values['location_code']);
 			}
 
 			return $values;

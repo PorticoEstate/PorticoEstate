@@ -39,6 +39,7 @@
 	class bookingfrontend_external_user_name extends bookingfrontend_bouser
 	{
 
+		var $connected;
 		public function __construct()
 		{
 			parent::__construct();

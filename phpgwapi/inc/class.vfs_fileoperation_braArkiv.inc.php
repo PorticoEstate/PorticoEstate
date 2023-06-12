@@ -35,6 +35,7 @@
 		private $secKey;
 		private $db;
 		private $meta_types = array ('journal', 'journal-deleted');
+		var $config;
 
 		public function __construct()
 		{

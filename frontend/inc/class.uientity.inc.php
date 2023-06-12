@@ -42,6 +42,11 @@
 			'query' => true
 		);
 
+		var $acl_location,$account,$bo,$bocommon,$soadmin_entity,
+		$entity_id,$cat_id,$type,$type_id,$type_app,$location_code,$start,$query,$sort,$order,$filter,
+		$acl_read,$acl_add,$acl_edit,$acl_delete, $part_of_town_id,$district_id,$status,$p_num,
+		$start_date,$end_date,$allrows,$category_dir;
+
 		public function __construct()
 		{
 			parent::__construct();

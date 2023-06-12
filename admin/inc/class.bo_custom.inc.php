@@ -25,7 +25,7 @@
 		var $sort;
 		var $order;
 		var $location;
-		var $appname;
+		var $appname, $currentapp,$so,$use_session,$allrows,$total_records;
 
 		var $public_functions = array
 		(
@@ -365,7 +365,7 @@
 		 *
 		 * @return array the function values - null if not found
 		 */
-		function read_single_custom_function($appname, $location, $id)
+		function read_single_custom_function($id,$appname, $location)
 		{
 			return $GLOBALS['phpgw']->custom_functions->get($appname, $location, $id);
 		}

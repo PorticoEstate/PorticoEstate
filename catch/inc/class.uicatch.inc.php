@@ -102,6 +102,7 @@
 		* @var bool $acl_edit does the current user have edit access to the current location
 		*/
 		private $acl_edit;
+		private $acl_delete;
 
 		/**
 		* @var bool $allrows display all rows of result set?

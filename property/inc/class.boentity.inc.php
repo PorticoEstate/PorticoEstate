@@ -50,6 +50,8 @@
 		var $location_code;
 		var $results;
 		var $acl_location;
+		var $soadmin_entity, $so, $bocommon, $solocation, $entity_id, $category_dir,
+		 $criteria_id,$uicols,$total_records,$org_unit_id,$use_session,$table, $attrib_id_field;
 		public $org_units = array();
 		public $org_unit;
 		protected $xsl_rootdir;
@@ -237,8 +239,12 @@
 			//$this->allrows		= $data['allrows'];
 		}
 
-		function column_list( $selected = '', $entity_id = '', $cat_id, $allrows = '' )
+		function column_list( $selected = '', $entity_id = '', $cat_id ='', $allrows = '' )
 		{
+			if(!$cat_id)
+			{
+				return array();
+			}
 			if (!$selected)
 			{
 				$selected = $GLOBALS['phpgw_info']['user']['preferences'][$this->type_app[$this->type]]["{$this->type}_columns_{$this->entity_id}_{$this->cat_id}"];
@@ -731,7 +737,7 @@ JS;
 			return $this->custom->get_attribute_groups($this->type_app[$this->type], $location, $attributes);
 		}
 
-		function save( $values, $values_attribute, $action = '', $entity_id, $cat_id )
+		function save( $values, $values_attribute, $action , $entity_id, $cat_id )
 		{
 			if (is_array($values['location']))
 			{
@@ -1128,5 +1134,82 @@ JS;
 			}
 
 			return $result;
+		}
+
+		public function get_items_per_qr( $qr_code )
+		{
+
+			$attributes = $this->so->get_QR_attributes();
+
+			$attrib_filter = array();
+			$location_ids = array();
+			foreach ($attributes as $column_name => $_location_ids)
+			{
+				$attrib_filter[] = "json_representation->>'{$column_name}' = '{$qr_code}'";
+				$location_ids = array_merge($location_ids, $_location_ids);
+			}
+
+			$values = $this->so->get_items_per_qr($location_ids, $attrib_filter);
+
+
+			foreach ($values as &$entry)
+			{
+
+				$loc_arr	 = $GLOBALS['phpgw']->locations->get_name($entry['location_id']);
+				$type_arr	 = explode('.', $loc_arr['location']);
+
+				$type	 = $type_arr[1];
+				$entity_id	 = $type_arr[2];
+				$cat_id		 = $type_arr[3];
+
+				$entry['link'] = $GLOBALS['phpgw']->link('/index.php', array(
+					'menuaction' => 'property.uientity.view',
+					'type'	 => $type,
+					'entity_id'	 => $entity_id,
+					'cat_id'	 => $cat_id,
+					'id'		 => $entry['id']
+				));
+
+				$entry['register_name']  = $loc_arr['descr'];
+			}
+
+			$start			 = phpgw::get_var('startIndex', 'REQUEST', 'int', 0);
+			$total_records	 = count($values);
+
+			$num_rows = phpgw::get_var('length', 'int', 'REQUEST', 0);
+
+			if ($num_rows == -1)
+			{
+				$out = $values;
+			}
+			else
+			{
+				if ($total_records > $num_rows)
+				{
+					$page		 = ceil(( $start / $total_records ) * ($total_records / $num_rows));
+					$values_part = array_chunk($values, $num_rows);
+					$out		 = $values_part[$page];
+				}
+				else
+				{
+					$out = $values;
+				}
+			}
+
+
+
+			return array(
+				'ResultSet' => array(
+					"totalResultsAvailable"	 => $total_records,
+					"totalRecords"			 => $total_records,
+					'recordsReturned'		 => count($out),
+					'pageSize'				 => $num_rows,
+					'startIndex'			 => $start,
+					'sortKey'				 => $this->order,
+					'sortDir'				 => $this->sort,
+					"Result"				 => $out
+				)
+			);
+
 		}
 	}

@@ -41,6 +41,8 @@
 			'index' => true,
 		);
 
+		var $contract_state_identifier_doc,$contracts_per_location_identifier_doc,$form_url_doc,
+		$location_code,$contract_filter_doc,$contract_state_doc;
 		public function __construct()
 		{
 			parent::__construct();

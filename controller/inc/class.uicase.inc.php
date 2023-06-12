@@ -62,6 +62,7 @@
 		private $edit;
 		private $delete;
 		private $vfs;
+		var $type, $_category_acl;
 		var $public_functions = array
 			(
 			'add_case' => true,

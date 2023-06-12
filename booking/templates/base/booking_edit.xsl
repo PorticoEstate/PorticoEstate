@@ -215,9 +215,9 @@
 							<div>
 								<div class="heading">
 									<!--<legend>-->
-										<h3>
-											<xsl:value-of select="php:function('lang', 'History of Cost (%1)', count(cost_history/author))" />
-										</h3>
+									<h3>
+										<xsl:value-of select="php:function('lang', 'History of Cost (%1)', count(cost_history/author))" />
+									</h3>
 									<!--</legend>-->
 								</div>
 								<xsl:for-each select="cost_history[author]">
@@ -295,27 +295,29 @@
 													<xsl:variable name="id">
 														<xsl:value-of select="id"/>
 													</xsl:variable>
-													<tr>
-														<th>
-															<xsl:value-of select="name"/>
-														</th>
-														<td>
-															<input type="text" class="input50">
-																<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
-																<xsl:attribute name="value">
-																	<xsl:value-of select="../booking/agegroups/male[../agegroup_id = $id]"/>
-																</xsl:attribute>
-															</input>
-														</td>
-														<td>
-															<input type="text" class="input50">
-																<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
-																<xsl:attribute name="value">
-																	<xsl:value-of select="../booking/agegroups/female[../agegroup_id = $id]"/>
-																</xsl:attribute>
-															</input>
-														</td>
-													</tr>
+													<xsl:if test="active = 1 or (../booking/agegroups/male[../agegroup_id = $id]) > 0 or (../booking/agegroups/female[../agegroup_id = $id]) > 0">
+														<tr>
+															<th>
+																<xsl:value-of select="name"/>
+															</th>
+															<td>
+																<input type="text" class="input50">
+																	<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
+																	<xsl:attribute name="value">
+																		<xsl:value-of select="../booking/agegroups/male[../agegroup_id = $id]"/>
+																	</xsl:attribute>
+																</input>
+															</td>
+															<td>
+																<input type="text" class="input50">
+																	<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
+																	<xsl:attribute name="value">
+																		<xsl:value-of select="../booking/agegroups/female[../agegroup_id = $id]"/>
+																	</xsl:attribute>
+																</input>
+															</td>
+														</tr>
+													</xsl:if>
 												</xsl:for-each>
 											</tbody>
 										</table>

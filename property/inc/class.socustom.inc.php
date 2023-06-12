@@ -33,6 +33,7 @@
 	 */
 	class property_socustom
 	{
+		var $db, $join, $left_join, $like,$account,$total_records,$uicols;
 
 		function __construct()
 		{
@@ -67,6 +68,8 @@
 			{
 				$ordermethod = ' order by id DESC';
 			}
+
+			$filtermethod='';
 
 			$where = 'WHERE';
 			if ($cat_id > 0)

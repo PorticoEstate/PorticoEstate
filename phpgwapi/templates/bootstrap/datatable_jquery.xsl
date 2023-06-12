@@ -1588,9 +1588,12 @@
 				select.prop('selectedIndex',0);
 				try
 				{
-					$("#" + filter_selects[i]).multiselect('deselectAll', false);
-			//		$("#" + filter_selects[i]).multiselect({ buttonContainer: '' });
-					$("#" + filter_selects[i]).multiselect('refresh');
+					if($("#" + filter_selects[i]).attr('multiple'))
+					{
+						$("#" + filter_selects[i]).multiselect('deselectAll', false);
+			//			$("#" + filter_selects[i]).multiselect({ buttonContainer: '' });
+						$("#" + filter_selects[i]).multiselect('refresh');
+					}
 				}
 				catch(e)
 				{}
@@ -1603,7 +1606,7 @@
 				var test = $(this).val();
 				if ( !$(this).is('select') && $(this).attr('name') && test != null && test.constructor !== Array)
 				{
-					value = $(this).val('');
+//					value = $(this).val('');
 				}
 			});
 

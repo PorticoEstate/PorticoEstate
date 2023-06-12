@@ -20,7 +20,7 @@
 	{
 		var $grants;
 		private $db;
-		var $account;
+		var $account, $join, $like, $left_join, $total_records;
 
 		public function __construct()
 		{

@@ -29,6 +29,7 @@
 	class property_bob_account_user
 	{
 
+		var $account_id, $so;
 		var $public_functions = array
 			(
 		);

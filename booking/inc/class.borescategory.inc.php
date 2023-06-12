@@ -4,6 +4,8 @@
 	class booking_borescategory extends booking_bocommon_global_manager_authorized
 	{
 
+		protected $activity_bo;
+
 		function __construct()
 		{
 			parent::__construct();

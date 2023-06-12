@@ -24,6 +24,8 @@ class calendar_socalendar_ extends calendar_socalendar__
 	var $today = array('raw','day','month','year','full','dow','dm','bd');
 	protected $global_lock = false;
 
+	var $async;
+
 	function __construct()
 	{
 		parent::__construct();

@@ -246,7 +246,7 @@ path information	setup	nn	Path information
 path to user and group files has to be outside of the webservers document-root!!!	setup	nn	Path to user and group files HAS TO BE OUTSIDE of the webservers document-root!!!
 persistent connections	setup	nn	Persistent connections
 pgsqlinstr %1	setup	nn	Instructions for creating the database in PostgreSQL:<br>Start the postmaster<br><i>[user@server user]# postmaster -i -D /home/[username]/[dataDir]</i><br>Create the empty database -<br><i>[user@server user]# createdb %1</i>
-phpgroupware administration manual	setup	nn	phpGroupWare Administration Manual
+Portico Estate administration manual	setup	nn	Portico Estate Administration Manual
 please check for sql scripts within the application's directory	setup	nn	Please check for sql scripts within the application's directory
 please check read/write permissions on directories, or back up and use another option.	setup	nn	Please check read/write permissions on directories, or back up and use another option.
 please configure phpgroupware for your environment	setup	nn	Vennligst konfigurer systemet til ditt miljø

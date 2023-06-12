@@ -23,6 +23,8 @@
 			'ical'	=> true
 		);
 
+		var $organization_bo, $system_message_bo;
+
 		public function __construct()
 		{
 			parent::__construct();

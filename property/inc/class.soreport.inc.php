@@ -35,7 +35,9 @@
 			$operators_equal,
 			$operators_like,
 			$operators_in,
-			$operators_null;
+			$operators_null,
+			$total_records_reports,
+			$total_records_dataset;
 
 		protected 
 			$db,
@@ -116,6 +118,7 @@
 				$ordermethod = " ORDER BY a.id DESC";
 			}
 
+			$filtermethod = '';
 			$where = 'WHERE';
 
 			if ($dataset_id > 0)

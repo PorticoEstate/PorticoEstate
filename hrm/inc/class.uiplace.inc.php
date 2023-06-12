@@ -35,6 +35,8 @@
 			'delete' => true
 		);
 
+		var $nextmatchs, $account, $bo, $bocommon, $allrows, $cat_id, $filter;
+
 		function __construct()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;

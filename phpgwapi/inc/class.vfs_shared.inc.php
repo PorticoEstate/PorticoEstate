@@ -116,6 +116,8 @@
 		var $real_leading_dirs_clean;
 		var $real_extra_path_clean;
 		var $real_name_clean;
+		var $mask_clean;
+		var $outside_clean;
 	}
 
 
@@ -127,6 +129,7 @@
 	*/
 	class phpgwapi_vfs_shared
 	{
+		var $meta_types,$mime_magic,$session;
 		/*
 		 * All VFS classes must have some form of 'linked directories'.
 		 * Linked directories allow an otherwise disparate "real" directory
@@ -460,7 +463,8 @@
 		{
 			//Save the overrided locks in the session
 			$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$this->session = $GLOBALS['phpgw']->session->appsession ('vfs_shared',$app, base64_encode(serialize($this->override_locks)));
+//			$this->session = $GLOBALS['phpgw']->session->appsession ('vfs_shared',$app, base64_encode(serialize($this->override_locks)));
+			$this->session = phpgwapi_cache::session_set($app,'vfs_shared', base64_encode(serialize($this->override_locks)));
 		}	
 
 		/*
@@ -471,8 +475,9 @@
 		{
 			//Reload the overriden_locks
 			$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$session_data = base64_decode($GLOBALS['phpgw']->session->appsession ('vfs_shared',$app));
-			if ($session_data)
+//			$session_data = base64_decode($GLOBALS['phpgw']->session->appsession ('vfs_shared',$app));
+			$encoded_data = phpgwapi_cache::session_get($app, 'vfs_shared');
+			if($encoded_data && $session_data = base64_decode($encoded_data))
 			{
 				$this->override_locks = unserialize($session_data);
 			}
@@ -1610,7 +1615,8 @@
 				}
 				else
 				{
-					$currentdir = $GLOBALS['phpgw']->session->appsession('vfs','');
+				//	$currentdir = $GLOBALS['phpgw']->session->appsession('vfs','');
+					$currentdir = phpgwapi_cache::session_get('vfs', 'currentdir');
 					$basedir = $this->getabsolutepath (array(
 							'string'	=> $currentdir . $sep . $data['string'],
 							'mask'	=> array ($data['relatives'][0]),
@@ -1628,7 +1634,8 @@
 				);
 			}
 
-			$GLOBALS['phpgw']->session->appsession('vfs','',$basedir);
+		//	$GLOBALS['phpgw']->session->appsession('vfs','',$basedir);
+			phpgwapi_cache::session_set('vfs', 'currentdir',$basedir);
 
 			return True;
 		}
@@ -1655,7 +1662,9 @@
 
 			$data = array_merge ($this->default_values ($data, $default_values), $data);
 
-			$currentdir = $GLOBALS['phpgw']->session->appsession('vfs','');
+//			$currentdir = $GLOBALS['phpgw']->session->appsession('vfs','');
+			$currentdir = phpgwapi_cache::session_get('vfs', 'currentdir');
+
 
 			if (!$data['full'])
 			{
@@ -1733,11 +1742,11 @@
 				array ('name'	=> 'cp', 'params'	=> 2),
 				array ('name'	=> 'rm', 'params'	=> 1),
 				array ('name'	=> 'ls', 'params'	=> -1),
-				array ('name'	=> 'du', 'params'	=> 1, 'func'	=> get_size),
+				array ('name'	=> 'du', 'params'	=> 1, 'func'	=> 'get_size'),
 				array ('name'	=> 'cd', 'params'	=> 1),
 				array ('name'	=> 'pwd', 'params'	=> 0),
-				array ('name'	=> 'cat', 'params'	=> 1, 'func'	=> read),
-				array ('name'	=> 'file', 'params'	=> 1, 'func'	=> file_type),
+				array ('name'	=> 'cat', 'params'	=> 1, 'func'	=> 'read'),
+				array ('name'	=> 'file', 'params'	=> 1, 'func'	=> 'file_type'),
 				array ('name'	=> 'mkdir', 'params'	=> 1),
 				array ('name'	=> 'touch', 'params'	=> 1)
 			);
@@ -1763,6 +1772,8 @@
 
 			//reset ($args);
 			//while (list (,$arg_info) = each ($args))
+			$command_ok = false;
+			$param_count_ok = false;
 			foreach($args as $key => $arg_info)
 			{
 				if ($arg_info['name'] == $argv[0])

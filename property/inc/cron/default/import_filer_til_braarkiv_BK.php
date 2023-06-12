@@ -49,7 +49,7 @@
 			$classname,
 			$input_file,
 			$file_map,
-			$all_files;
+			$all_files,$join;
 
 		public function __construct()
 		{
@@ -344,6 +344,7 @@
 			$accepted_file_formats = array('xls', 'xlsx', 'ods', 'csv');
 
 			$dir_handle	 = opendir($path);
+			$input_file = '';
 			while ($file		 = readdir($dir_handle))
 			{
 				if ((substr($file, 0, 1) != '.') && is_file("{$path}/{$file}"))
@@ -533,8 +534,8 @@
 
 		/**
 		 * 	Initierer en ny overføring.
-		 * @param type $file
-		 * @param type $document_id
+		 * @param string $file
+		 * @param integer $document_id
 		 * @return boolean true on success
 		 */
 		public function write( $file, $document_id = 0 )

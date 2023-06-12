@@ -84,6 +84,7 @@
 			'view_image'			=> true
 		);
 
+		var $so_case,$vfs;
 		function __construct()
 		{
 			parent::__construct();
@@ -2061,6 +2062,20 @@
 
 		private function notify_supervisor($check_list)
 		{
+			/**
+			 * Maybe not...
+			 */
+
+			$config = CreateObject('phpgwapi.config', 'controller')->read();
+
+			if (!empty($config['disable_auto_ticket_creation']))
+			{
+				return array(
+					'status'	 => $check_list->get_status(),
+					'message'	 => ''
+				);
+			}
+
 			$message = '';
 			if($check_list->get_status() == controller_check_list::STATUS_DONE)
 			{

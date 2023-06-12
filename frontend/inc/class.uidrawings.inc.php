@@ -39,6 +39,7 @@
 			'query' => true
 		);
 
+		var $location_code,$start,$query,$sort,$order,$filter;
 		public function __construct()
 		{
 			phpgwapi_cache::session_set('frontend', 'tab', $GLOBALS['phpgw']->locations->get_id('frontend', '.drawings'));

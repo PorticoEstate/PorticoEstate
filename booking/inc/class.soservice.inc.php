@@ -33,6 +33,7 @@
 	{
 
 		protected static $so;
+		var $acl_location;
 
 		public function __construct()
 		{

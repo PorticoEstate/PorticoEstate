@@ -33,6 +33,7 @@
 	 */
 	class property_soasync
 	{
+		var $db, $join, $left_join, $like,$account, $total_records;
 
 		function __construct()
 		{

@@ -43,6 +43,7 @@
 
 		private $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete,
 			$so, $cats, $so_control;
+		var $receipt,$_category_acl;
 
 		public function __construct()
 		{

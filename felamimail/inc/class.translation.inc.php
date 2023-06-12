@@ -23,6 +23,7 @@
 class felamimail_translation
 {
 
+	var $mbstring,$system_charset;
 	/**
 	 * Constructor, sets up a copy of the db-object, gets the system-charset and tries to load the mbstring extension
 	 */

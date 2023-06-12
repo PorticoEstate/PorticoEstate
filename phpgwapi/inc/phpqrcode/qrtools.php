@@ -23,6 +23,7 @@
  */
 
     class QRtools {
+        var $frames;
     
         //----------------------------------------------------------------------
         public static function binarize($frame)

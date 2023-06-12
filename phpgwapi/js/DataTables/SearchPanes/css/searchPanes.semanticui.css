@@ -389,7 +389,7 @@ div.dtsp-searchPane div.ui.grid div.row {
 }
 
 div.dt-button-collection {
-  border: 1px solid #f0f0f0;
+  border: 1px solid rgb(240, 240, 240);
   border-radius: 3px;
 }
 div.dt-button-collection div.dtsp-panesContainer {

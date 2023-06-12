@@ -743,6 +743,8 @@
 																				<xsl:variable name="id">
 																					<xsl:value-of select="id"/>
 																				</xsl:variable>
+
+																				<xsl:if test="(../application/agegroups/male[../agegroup_id = $id]) > 0 or (../application/agegroups/female[../agegroup_id = $id]) > 0">
 																				<tr>
 																					<td>
 																						<xsl:value-of select="name"/>
@@ -754,6 +756,7 @@
 																						<xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/>
 																					</td>
 																				</tr>
+																				</xsl:if>
 																			</xsl:for-each>
 																		</tbody>
 																	</table>

@@ -14,6 +14,7 @@
 
 	class ajaxemailadmin
 	{
+		var $bo,$bofelamimail,$sessionDataAjax;
 		function __construct()
 		{
 			$this->bo		= new emailadmin_bo();

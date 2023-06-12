@@ -49,7 +49,25 @@
 		var $sub;
 		var $currentapp;
 		var $check_lst_time_span	 = array();
-		var $controller_helper;
+		var $acl, 
+		$controller_helper,
+		$account,
+		$bo,
+		$bocommon,
+		$soadmin_entity,
+		$district_id,
+		$status,
+		$location_code,
+		$p_num,
+		$category_dir,
+		$start_date,
+		$end_date,
+		$allrows,
+		$type,
+		$type_app,
+		$acl_location,
+		$criteria_id
+		;
 		var $public_functions	 = array(
 			'summary'					 => true,
 			'columns'					 => true,
@@ -80,7 +98,8 @@
 			'get_checklists'			 => true,
 			'get_cases_for_checklist'	 => true,
 			'handle_multi_upload_file'	 => true,
-			'build_multi_upload_file'	 => true
+			'build_multi_upload_file'	 => true,
+			'get_items_per_qr'			 => true
 		);
 
 		function __construct()
@@ -677,13 +696,13 @@
 
 		public function query()
 		{
-			$start_date	 = urldecode($this->start_date);
-			$end_date	 = urldecode($this->end_date);
+			$start_date	 = $this->start_date;
+			$end_date	 = $this->end_date;
 
 			if ($start_date && empty($end_date))
 			{
 				$dateformat	 = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-				$end_date	 = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), date("d"), date("Y")), $dateformat);
+				$end_date	 = urlencode($GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), date("d"), date("Y")), $dateformat));
 			}
 
 			$search	 = phpgw::get_var('search');
@@ -699,8 +718,8 @@
 				'order'		 => $columns[$order[0]['column']]['data'],
 				'sort'		 => $order[0]['dir'],
 				'allrows'	 => phpgw::get_var('length', 'int') == -1 || $export,
-				'start_date' => $start_date,
-				'end_date'	 => $end_date,
+				'start_date' => $start_date ? urldecode($start_date) : '',
+				'end_date' 	 => $end_date ? urldecode($end_date) : '',
 				'parent_location_id' => phpgw::get_var('parent_location_id', 'int'),
 				'parent_id' => phpgw::get_var('parent_id', 'int')
 			);
@@ -2391,7 +2410,7 @@
 
 				$related_def = array
 					(
-					array('key' => 'url', 'label' => lang('where'), 'sortable' => false, 'resizeable' => true)
+					array('key' => 'url', 'label' => lang('related'), 'sortable' => false, 'resizeable' => true)
 				);
 
 				$datatable_def[] = array
@@ -2702,7 +2721,7 @@ JS;
 				'validator'						 => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file')),
 				'content_images'				 => $content_images,
-				'get_files_java_url'			=> "{menuaction:'property.uientity.get_files',id:{$id},entity_id:{$this->entity_id},cat_id:{$this->cat_id},type:'{$this->type}',length:-1}",
+				'get_files_java_url'			=> "{menuaction:'property.uientity.get_files',id:'{$id}',entity_id:{$this->entity_id},cat_id:{$this->cat_id},type:'{$this->type}',length:-1}",
 			);
 
 			//print_r($data['location_data2']);die;
@@ -3590,6 +3609,19 @@ JS;
 		}
 
 
+		public function get_items_per_qr()
+		{
+			if (!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
+
+			$qr_code	 = phpgw::get_var('qr_code', 'string', 'GET');
+
+			return $this->bo->get_items_per_qr($qr_code);
+			
+		}
+
 		public function summary()
 		{
 			if (!$this->acl_read)
@@ -3616,14 +3648,20 @@ JS;
 
 			$tabs			 = array();
 			$tabs['main']	 = array(
-				'label'	 => $entity['name'],
+				'label'	 => lang('summary'),
 				'link'	 => '#main'
+			);
+			$tabs['scanner']	 = array(
+				'label'	 => 'scanner',
+				'link'	 => '#scanner'
 			);
 
 
 			$data = array(
 				'form_action'				 => self::link(array('menuaction' => "{$this->type_app[$this->type]}.uientity.summary", 'entity_id' => $this->entity_id)),
 				'cancel_url'				 => $GLOBALS['phpgw']->link('/home.php'),
+				'value_type'				 => $this->type,
+				'value_entity_id'			 => $this->entity_id,
 				'vendor_data'				 => $vendor_data,
 				'contact_data'				 => $contact_data,
 				'tabs'						 => phpgwapi_jquery::tabview_generate($tabs, 0),
@@ -3635,6 +3673,8 @@ JS;
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::formvalidator_generate(array());
+			self::add_javascript('phpgwapi', 'html5-qrcode', 'html5-qrcode.min.js');
+
 			self::add_javascript($this->type_app[$this->type], 'base', 'entity.summary.js');
 			self::render_template_xsl(array('entity'), array('summary' => $data));
 		}

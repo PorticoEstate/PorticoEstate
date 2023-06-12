@@ -22,7 +22,7 @@
 
 	class calendar_boalarm
 	{
-		var $so;
+		var $bo,$so;
 		var $cal;
 		var $cal_id;
 

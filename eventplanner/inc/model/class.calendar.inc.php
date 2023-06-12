@@ -61,7 +61,6 @@
 			$created,
 			$secret,
 			$process_update;
-		protected $field_of_responsibility_name = '.calendar';
 
 		public function __construct( int $id = null )
 		{

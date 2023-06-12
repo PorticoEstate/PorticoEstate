@@ -33,7 +33,7 @@
 		/* table name vars */
 		var $tbl_apps;
 		var $tbl_config;
-		var $tbl_hooks;
+		var $tbl_hooks,$translation;
 		private $hack_file_name;
 
 		public function __construct($html = False, $translation = False)

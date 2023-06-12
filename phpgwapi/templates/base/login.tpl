@@ -12,15 +12,7 @@
 		<title>{system} - {lang_login}</title>
 
 		<link rel="stylesheet" href="{responsive_css}" type="text/css">
-
-		<!--[if lte IE 8]>
-		   <link rel="stylesheet" href="{responsive_grid_old_ie_css}" type="text/css">
-		   <![endif]-->
-		<!--[if gt IE 8]><!-->
-
 		<link rel="stylesheet" href="{responsive_grid_css}" type="text/css">
-		<!--<![endif]-->
-
 		<link rel="stylesheet" href="{system_css}" type="text/css">
 		<link rel="stylesheet" href="{login_css}" type="text/css">
 		<link rel="stylesheet" href="{rounded_css}" type="text/css">
@@ -99,7 +91,7 @@
 		<!-- BEGIN header_block -->
 		<div class="header">
 			<div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
-				<a class="pure-menu-heading" href="">{system} {lang_login}</a>
+				<a class="pure-menu-heading" href="">{system} - {lang_login}</a>
 
 				<ul class="pure-menu-list">
 					<li class="pure-menu-item pure-menu-selected"><span><a class="pure-menu-link" href="login.php?lang=no&lightbox={lightbox}"><img src="{flag_no}" alt="Norsk (Norway)" title="Norsk (Norway)" ></a></span></li>
@@ -235,14 +227,16 @@
 			<!-- BEGIN footer_block -->
 			<div class="footer is-center">
 				<noscript>Warning! JavaScript must be enabled for proper operation of the Administrator back-end.</noscript>
-				<p class="copyright">
-					<a href="https://github.com/PorticoEstate/PorticoEstate" target="_blank">{system} {version}</a> is Free Software released under the <a href="http://www.gnu.org/licenses/gpl-2.0.html">GNU/GPL License</a>.
-				</p>
+				<div class="copyright pure-g">
+					<div class="pure-u-1 u-sm-1-2">
+						<p>
+							<a href="https://github.com/PorticoEstate/PorticoEstate" target="_blank">{system} {version}</a> is Free Software released under the <a href="http://www.gnu.org/licenses/gpl-2.0.html">GNU/GPL License</a>.
+						</p>
+					</div>
+				</div>
 			</div>
 			<!-- END footer_block -->
-
 		</div>
-
 	</body>
 	<!-- END login_form -->
 </html>

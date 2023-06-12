@@ -33,6 +33,8 @@
 	 */
 	class property_sowo_hour
 	{
+		var $db,$db2, $join, $left_join, $like, $account,$historylog;
+		var $total_records;
 
 		function __construct()
 		{
@@ -268,7 +270,7 @@
 				$id			 = (isset($data['workorder_id']) ? $data['workorder_id'] : 0);
 				$deviation	 = (isset($data['sum_deviation']) ? $data['sum_deviation'] : 0);
 			}
-			$this->db->query("UPDATE fm_workorder set deviation = $deviation WHERE id=$id", __LINE__, __FILE__);
+			$receipt = $this->db->query("UPDATE fm_workorder set deviation = $deviation WHERE id=$id", __LINE__, __FILE__);
 			return $receipt;
 		}
 
@@ -788,7 +790,7 @@
 				}
 			}
 
-			$this->db->transaction_commit();
+			$receipt = $this->db->transaction_commit();
 			return $receipt;
 		}
 	}

@@ -22,6 +22,7 @@
 
 	class addressbook_uicatalog_contact_addr_type extends phpgwapi_uicommon
 	{
+		var $template;
 		var $public_functions = array
 		(
 			'view' => True,

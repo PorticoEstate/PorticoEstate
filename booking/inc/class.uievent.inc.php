@@ -23,7 +23,6 @@
 		);
 		protected
 			$account,
-			$bo,
 			$customer_id,
 			$activity_bo,
 			$agegroup_bo,
@@ -31,7 +30,7 @@
 			$organization_bo,
 			$resource_bo,
 			$sopurchase_order,
-			$fields;
+			$fields,$display_name;
 
 		public function __construct()
 		{
@@ -1391,7 +1390,7 @@
 			 */
 
 			$cost_history = $this->bo->so->get_ordered_costs($id);
-			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
+			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity, $include_inactive = true);
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];

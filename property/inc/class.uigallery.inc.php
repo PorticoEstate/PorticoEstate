@@ -41,8 +41,10 @@
 		var $sort;
 		var $order;
 		var $sub;
-		var $currentapp;
-		var $location_info;
+		var $location_info,$location_id;
+		var $currentapp, $cat_id, $account, $bo, $bocommon,$mime_type,$allrows,$user_id,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage;
+
 		var $public_functions = array
 			(
 			'query'		 => true,
@@ -116,7 +118,6 @@
 			$ch	 = curl_init($url);
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
 			$raw = curl_exec($ch);
 			curl_close($ch);
 			echo $raw;
@@ -389,8 +390,8 @@
 
 		public function query()
 		{
-			$start_date	 = urldecode(phpgw::get_var('start_date'));
-			$end_date	 = urldecode(phpgw::get_var('end_date'));
+			$start_date	 = phpgw::get_var('start_date');
+			$end_date	 = phpgw::get_var('end_date');
 
 			$search	 = phpgw::get_var('search');
 			$order	 = phpgw::get_var('order');
@@ -415,8 +416,8 @@
 				'user_id'		 => $this->user_id,
 				'mime_type'		 => $this->mime_type,
 				'cat_id'		 => $this->cat_id,
-				'start_date'	 => $start_date,
-				'end_date'		 => $end_date
+				'start_date'	 => $start_date ? urldecode($start_date) : '',
+				'end_date'	 	 => $end_date ? urldecode($end_date) : '',
 			);
 
 			$result_objects	 = array();

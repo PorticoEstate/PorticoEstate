@@ -21,6 +21,8 @@
 		const SHOW_ALL_DASHBOARD_APPLICATIONS_SESSION_KEY = "show_all_dashboard_applications";
 		const SHOW_ALL_DASHBOARD_MESSAGES_SESSION_KEY = "show_all_dashboard_messages";
 
+		var $resource_bo, $system_message_bo, $display_name;
+
 		public function __construct()
 		{
 			parent::__construct();

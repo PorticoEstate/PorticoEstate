@@ -37,7 +37,16 @@
 	{
 
 		private $receipt		 = array();
-		var $grants;
+		var $grants, $acl, $bo, $bocommon, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage, $cats;
+		var $status_id,	$wo_hour_cat_id,$start_date,$end_date,
+		$b_group,
+		$ecodimb,
+		$paid,
+		$b_account,
+		$district_id,
+		$obligation,
+		$decimal_separator,$type_id,$type;
+
 		var $cat_id;
 		var $start;
 		var $query;
@@ -379,7 +388,7 @@
 				$content_attachments[] = array(
 					'source'		 => $lang_workorder,
 					'file_id'		 => $_entry['file_id'],
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 				if (in_array($_entry['mime_type'], $img_types))
@@ -411,7 +420,7 @@
 
 				$content_attachments[] = array(
 					'source'		 => $lang_project,
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 
@@ -675,8 +684,8 @@
 
 		public function query()
 		{
-			$start_date	 = urldecode($this->start_date);
-			$end_date	 = urldecode($this->end_date);
+			$start_date	 = $this->start_date;
+			$end_date	 = $this->end_date;
 
 			if ($start_date && empty($end_date))
 			{
@@ -698,8 +707,8 @@
 				'order'		 => $columns[$order[0]['column']]['data'],
 				'sort'		 => $order[0]['dir'],
 				'allrows'	 => phpgw::get_var('length', 'int') == -1 || $export,
-				'start_date' => $start_date,
-				'end_date'	 => $end_date
+				'start_date'	 => $start_date ? urldecode($start_date) : '',
+				'end_date'		 => $end_date ? urldecode($end_date) : '',
 			);
 
 			$values = $this->bo->read($params);
@@ -725,7 +734,29 @@
 					'acl_location'	 => $this->acl_location));
 			}
 
-			$lookup = '';
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
+
+			$lookup			 = phpgw::get_var('lookup', 'bool');
+			$make_relation	 = phpgw::get_var('make_relation', 'bool');
+			$relation_id	 = phpgw::get_var('relation_id', 'int');
+			$relation_type	 = phpgw::get_var('relation_type');
+			if ($make_relation)
+			{
+				$lookup = true;
+			}
+
+			switch ($relation_type)
+			{
+				case 'ticket':
+					$update_menuaction		 = 'property.uitts.view';
+					$lang_update_relation	 = lang('update ticket');
+					break;
+				default:
+					break;
+			}
 
 			$default_district = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'] : '');
 
@@ -735,13 +766,10 @@
 				$this->district_id		 = $default_district;
 			}
 
-			$start_date	 = urldecode($this->start_date);
-			$end_date	 = urldecode($this->end_date);
+			$start_date	 = $this->start_date ? urldecode($this->start_date) : null;
+			$end_date	 = $this->end_date ? urldecode($this->end_date) : null;
 
-			if (phpgw::get_var('phpgw_return_as') == 'json')
-			{
-				return $this->query();
-			}
+			$query = phpgw::get_var('query');
 
 			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
@@ -783,6 +811,10 @@
 				'datatable'		 => array(
 					'source'		 => self::link(array(
 						'menuaction'		 => 'property.uiworkorder.index',
+						'lookup'			 => $lookup,
+						'make_relation'		 => $make_relation,
+						'relation_id'		 => $relation_id,
+						'relation_type'		 => $relation_type,
 						'district_id'		 => $this->district_id,
 						'start_date'		 => $start_date,
 						'end_date'			 => $end_date,
@@ -810,7 +842,9 @@
 						'menuaction' => 'property.uiworkorder.add'
 					)),
 					'allrows'		 => true,
+					'select_all'	 => $make_relation,
 					'editor_action'	 => '',
+					'query'			 => $query,
 					'field'			 => array()
 				)
 			);
@@ -830,8 +864,7 @@
 			$uicols_count = count($uicols['name']);
 			for ($k = 0; $k < $uicols_count; $k++)
 			{
-				$params = array
-					(
+				$params = array(
 					'key'		 => $uicols['name'][$k],
 					'label'		 => $uicols['descr'][$k],
 					'sortable'	 => ($uicols['sortable'][$k]) ? true : false,
@@ -846,10 +879,16 @@
 				switch ($uicols['name'][$k])
 				{
 					case 'project_id':
-						$params['formatter'] = 'linktToProject';
+						if(!$lookup)
+						{
+							$params['formatter'] = 'linktToProject';
+						}
 						break;
 					case 'workorder_id':
-						$params['formatter'] = 'linktToOrder';
+						if(!$lookup)
+						{
+							$params['formatter'] = 'linktToOrder';
+						}
 						break;
 					case 'loc1':
 						$params['formatter'] = 'JqueryPortico.searchLink';
@@ -871,24 +910,18 @@
 			// NO pop-up
 			if (!$lookup)
 			{
-				$parameters = array
-					(
-					'parameter' => array
-						(
-						array
-							(
+				$parameters = array(
+					'parameter' => array(
+						array(
 							'name'	 => 'id',
 							'source' => 'workorder_id'
 						),
 					)
 				);
 
-				$parameters2 = array
-					(
-					'parameter' => array
-						(
-						array
-							(
+				$parameters2 = array(
+					'parameter' => array(
+						array(
 							'name'	 => 'workorder_id',
 							'source' => 'workorder_id'
 						),
@@ -988,6 +1021,42 @@
 					);
 				}
 				unset($parameters);
+			}
+/*
+			if ($lookup && !$make_relation)
+			{
+				$from = phpgw::get_var('from');
+
+				$oArg = "{menuaction: 'property.ui{$from}.edit',"
+					. "origin:'" . phpgw::get_var('origin') . "',"
+					. "origin_id:'" . phpgw::get_var('origin_id') . "',"
+					. "order_id: aData['workorder_id']}";
+
+				$data['left_click_action'] = "window.open(phpGWLink('index.php', {$oArg}),'_self');";
+			}
+*/
+			if ($make_relation)
+			{
+				$parameters3 = array(
+					'parameter' => array(
+						array(
+							'name'	 => 'add_relation',
+							'source' => 'workorder_id'
+						),
+					)
+				);
+
+				$data['datatable']['actions'][] = array(
+					'my_name'	 => 'update_ticket',
+					'text'		 => $lang_update_relation,
+					'action'	 => $GLOBALS['phpgw']->link('/index.php', array(
+						'menuaction'	 => $update_menuaction,
+						'id'			 => $relation_id,
+						'relation_type'	 => 'workorder',
+						)
+					),
+					'parameters' => json_encode($parameters3)
+				);
 			}
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -1843,7 +1912,7 @@
 
 				$values['location_data'] = $ticket['location_data'];
 			}
-			else if (preg_match("/(^.entity.|^.catch.)/i", $origin) && $origin_id)
+			else if ($origin && preg_match("/(^.entity.|^.catch.)/i", $origin) && $origin_id)
 			{
 				$_origin				 = explode('.', $origin);
 				$_boentity				 = CreateObject('property.boentity', false, $_origin[1], $_origin[2], $_origin[3]);
@@ -2808,7 +2877,8 @@ JS;
 			$lang_active	 = lang('Check to activate period');
 			$lang_fictive	 = lang('fictive');
 
-			$rows_per_page	 = 10;
+			$maxmatchs = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$rows_per_page	 = $maxmatchs ? $maxmatchs : 10;
 			$initial_page	 = 1;
 
 			if ($content_budget && $project['periodization_id'])
@@ -2817,7 +2887,7 @@ JS;
 				foreach ($content_budget as $key => $row)
 				{
 					$_year_count[$row['year']]	 += 1;
-					$rows_per_page				 = $_year_count[$row['year']];
+					$rows_per_page				 = max($_year_count[$row['year']], $maxmatchs);
 				}
 				$initial_page = floor(count($content_budget) / $rows_per_page);
 			}
@@ -3202,7 +3272,7 @@ JS;
 
 				$content_attachments[] = array(
 					'source'		 => $lang_workorder,
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 
@@ -3243,7 +3313,7 @@ JS;
 				}
 				$content_attachments[] = array(
 					'source'		 => $lang_project,
-					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>${_entry['name']}</a>",
+					'file_name'		 => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$_entry['name']}</a>",
 					'attach_file'	 => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 
@@ -3290,7 +3360,7 @@ JS;
 			{
 				$delivery_address = CreateObject('property.solocation')->get_delivery_address($_location_data['loc1']);
 			}
-			
+
 			$delivery_address = str_replace('__username__', $GLOBALS['phpgw_info']['user']['fullname'], $delivery_address);
 
 			$default_tax_code = (!empty($project['tax_code']) || $project['tax_code'] === 0) ? $project['tax_code'] : (int)$GLOBALS['phpgw_info']['user']['preferences']['property']['default_tax_code'];

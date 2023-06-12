@@ -34,9 +34,7 @@
 	class booking_boservice extends phpgwapi_bocommon
 	{
 		protected static
-			$bo,
-			$fields,
-			$acl_location;
+			$bo;
 
 		public function __construct()
 		{

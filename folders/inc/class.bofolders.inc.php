@@ -45,7 +45,7 @@
 		var $mid;
 		var $debug = false;
 
-
+		var $group,$bo;
 		function __construct()
 		{
 			$this->mid = new phpGWTreeMenu();

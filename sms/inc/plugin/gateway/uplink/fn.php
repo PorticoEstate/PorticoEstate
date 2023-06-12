@@ -50,8 +50,8 @@
 		}
 		if ($sms_to && $sms_msg)
 		{
-			$query_string = "ws.php?u=" . $uplink_param[username] . "&p=" . $uplink_param[password] . "&ta=pv&to=" . urlencode($sms_to) . "&from=" . urlencode($sms_from) . "&type=$sms_type&msg=" . urlencode($sms_msg);
-			$url = $uplink_param[master] . "/" . $query_string;
+			$query_string = "ws.php?u=" . $uplink_param['username'] . "&p=" . $uplink_param['password'] . "&ta=pv&to=" . urlencode($sms_to) . "&from=" . urlencode($sms_from) . "&type=$sms_type&msg=" . urlencode($sms_msg);
+			$url = $uplink_param['master'] . "/" . $query_string;
 			$fd = @implode('', file($url));
 			if ($fd)
 			{
@@ -100,10 +100,10 @@
 		$db_result = dba_query($db_query);
 		while ($db_row = dba_fetch_array($db_result))
 		{
-			$local_slid = $db_row[up_local_slid];
-			$remote_slid = $db_row[up_remote_slid];
-			$query_string = "ws.php?u=" . $uplink_param[username] . "&p=" . $uplink_param[password] . "&ta=ds&slid=" . $remote_slid;
-			$url = $uplink_param[master] . "/" . $query_string;
+			$local_slid = $db_row['up_local_slid'];
+			$remote_slid = $db_row['up_remote_slid'];
+			$query_string = "ws.php?u=" . $uplink_param['username'] . "&p=" . $uplink_param['password'] . "&ta=ds&slid=" . $remote_slid;
+			$url = $uplink_param['master'] . "/" . $query_string;
 			$response = @implode('', file($url));
 			switch ($response)
 			{

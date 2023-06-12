@@ -34,6 +34,7 @@
 			'submit'	=> True
 		);
 
+		var $sb;
 		public function __construct()
 		{
 			$GLOBALS['phpgw']->nextmatchs = CreateObject('phpgwapi.nextmatchs');

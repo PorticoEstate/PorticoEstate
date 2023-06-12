@@ -138,5 +138,26 @@
 			);
 			return $nm_data;
 		}
+
+		function show_hits($total_records = 0,$start = 0,$num_records = 0)
+		{
+			if ($total_records > $this->maxmatches && $total_records != $num_records)
+			{
+				if ($start + $this->maxmatches > $total_records)
+				{
+					$end = $total_records;
+				}
+				else
+				{
+					$end = $start + $this->maxmatches;
+				}
+				return lang('showing %1 - %2 of %3',($start + 1),$end,$total_records);
+			}
+			else
+			{
+				return lang('showing %1',$total_records);
+			}
+		}
+
 	}
 

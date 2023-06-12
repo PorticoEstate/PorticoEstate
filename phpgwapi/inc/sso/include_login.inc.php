@@ -492,9 +492,11 @@ JS;
 				$this->tmpl->set_var('lang_return_sso_login', $variables['lang_additional_url']);
 				$this->tmpl->set_var('return_sso_login_url', $variables['additional_url']);
 			}
-
-			$this->tmpl->set_var('lang_new_user', lang('new user'));
-			$this->tmpl->set_var('lang_forgotten_password', lang('forgotten password'));
+			if(empty($variables['extra_vars']['create_mapping']))
+			{
+				$this->tmpl->set_var('lang_new_user', lang('new user'));
+				$this->tmpl->set_var('lang_forgotten_password', lang('forgotten password'));
+			}
 
 			if(isset($GLOBALS['phpgw_info']['server']['new_user_url']) && $GLOBALS['phpgw_info']['server']['new_user_url'])
 			{
@@ -534,9 +536,8 @@ JS;
 			$this->tmpl->set_var('template_set', $GLOBALS['phpgw_info']['login_template_set']);
 
 
-			$responsive_css = "{$webserver_url}/phpgwapi/templates/pure/css/pure-min.css";
-			$responsive_grid_css = "{$webserver_url}/phpgwapi/templates/pure/css/grids-responsive-min.css";
-			$responsive_grid_old_ie_css = "{$webserver_url}/phpgwapi/templates/pure/css/grids-responsive-old-ie-min.css";
+			$responsive_css = "{$webserver_url}/phpgwapi/templates/pure/css/version_3/pure-min.css";
+			$responsive_grid_css = "{$webserver_url}/phpgwapi/templates/pure/css/version_3/grids-responsive-min.css";
 			$font_awesome = "{$webserver_url}/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
 
 
@@ -569,7 +570,6 @@ JS;
 
 			$this->tmpl->set_var('responsive_css', $responsive_css);
 			$this->tmpl->set_var('responsive_grid_css', $responsive_grid_css);
-			$this->tmpl->set_var('responsive_grid_old_ie_css', $responsive_grid_old_ie_css);
 			$this->tmpl->set_var('system_css', $system_css);
 			$this->tmpl->set_var('base_css', $base_css);
 			$this->tmpl->set_var('login_css', $login_css);

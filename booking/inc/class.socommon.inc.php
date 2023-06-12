@@ -38,6 +38,8 @@
 
 		protected static $AUTO_FIELD_ACTIONS = array('add' => true, 'update' => true);
 
+		var $table_name,$fields, $join, $like, $account;
+
 		public function __construct( $table_name, $fields )
 		{
 			$this->table_name = $table_name;
@@ -655,7 +657,7 @@
 			$this->db->next_record();
 			$total_records = (int)$this->db->f('count');
 
-			strtolower($results) === 'all' AND $results = $total_records; //TODO: Kept because of BC. Should be easy to remove this dependency?
+//			strtolower($results) === 'all' AND $results = $total_records; //TODO: Kept because of BC. Should be easy to remove this dependency?
 
 			/*
 			 * Due to problem on order with offset - we need to set an additional parameter in some cases
@@ -703,7 +705,10 @@
 				foreach ($this->fields as $field => $params)
 				{
 					$modifier = !empty($params['read_callback']) ? $params['read_callback']  : '';
-					$row[$field] = $this->_unmarshal($this->db->f($field, false), $params['type'], $modifier);
+					if(empty($params['manytomany']))
+					{
+						$row[$field] = $this->_unmarshal($this->db->f($field, false), $params['type'], $modifier);
+					}
 				}
 				$results[] = $row;
 			}

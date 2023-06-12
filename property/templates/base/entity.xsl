@@ -28,13 +28,16 @@
 				<xsl:value-of select="form_action"/>
 			</xsl:variable>
 
-			<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
-				<div id="tab-content">
-					<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+			<div id="tab-content">
+				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 
-					<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
+				<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
+				<input type="hidden" id="field_entity_id" name="entity_id" value="{value_entity_id}"/>
+				<input type="hidden" id="field_type" name="type" value="{value_type}"/>
 
-					<div id="main">
+
+				<div id="main">
+					<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 
 						<fieldset>
 							<legend>
@@ -54,32 +57,67 @@
 								<div id="location_container"/>
 							</div>
 						</fieldset>
-					</div>
+						<div id="submit_group_bottom" class="proplist-col">
+							<xsl:variable name="lang_save">
+								<xsl:value-of select="php:function('lang', 'create summary')"/>
+							</xsl:variable>
+							<input type="submit" class="pure-button pure-button-primary" name="save">
+								<xsl:attribute name="value">
+									<xsl:value-of select="$lang_save"/>
+								</xsl:attribute>
+								<xsl:attribute name="title">
+									<xsl:value-of select="$lang_save"/>
+								</xsl:attribute>
+							</input>
+							<xsl:variable name="cancel_url">
+								<xsl:value-of select="cancel_url"/>
+							</xsl:variable>
+							<input type="button" class="pure-button pure-button-primary" name="cancel" onClick="window.location = '{cancel_url}';">
+								<xsl:attribute name="value">
+									<xsl:value-of select="php:function('lang', 'cancel')"/>
+								</xsl:attribute>
+							</input>
+						</div>
+					</form>
 				</div>
-				<div id="submit_group_bottom" class="proplist-col">
-					<xsl:variable name="lang_save">
-						<xsl:value-of select="php:function('lang', 'create summary')"/>
-					</xsl:variable>
-					<input type="submit" class="pure-button pure-button-primary" name="save">
-						<xsl:attribute name="value">
-							<xsl:value-of select="$lang_save"/>
-						</xsl:attribute>
-						<xsl:attribute name="title">
-							<xsl:value-of select="$lang_save"/>
-						</xsl:attribute>
-					</input>
-					<xsl:variable name="cancel_url">
-						<xsl:value-of select="cancel_url"/>
-					</xsl:variable>
-					<input type="button" class="pure-button pure-button-primary" name="cancel" onClick="window.location = '{cancel_url}';">
-						<xsl:attribute name="value">
-							<xsl:value-of select="php:function('lang', 'cancel')"/>
-						</xsl:attribute>
-					</input>
+
+				<div id="scanner" class="pure-form pure-form-aligned">
+					<fieldset>
+						<div class="pure-control-group">
+							<label>
+								QR-code
+							</label>
+							<input type="text" id="filter_location" name="filter_location" class="pure-input-1-2">
+								<xsl:attribute name="title">
+									QR-code
+								</xsl:attribute>
+							</input>
+						</div>
+						<div style="width: 500px" id="reader_location"></div>
+
+						<div class="pure-control-group">
+							<input type="button" id="btn_search" name="btn_search" class="pure-button pure-button-primary">
+								<xsl:attribute name="value">
+									<xsl:value-of select="php:function('lang', 'search')"/>
+								</xsl:attribute>
+							</input>
+						</div>
+
+						<div id="qr_code_info_container"></div>
+
+					</fieldset>
+
 				</div>
-			</form>
+
+
+			</div>
 		</div>
 	</div>
+
+	<script type="text/javascript">
+		var lang = <xsl:value-of select="php:function('js_lang', 'Id', 'Name', 'Address', 'Register', 'Location')"/>;
+	</script>
+
 </xsl:template>
 
 <!-- edit inventory -->
@@ -378,7 +416,7 @@
 		var get_files_java_url = <xsl:value-of select="get_files_java_url"/>;
 		function set_tab(active_tab)
 		{
-			document.form.active_tab.value = active_tab;
+		document.form.active_tab.value = active_tab;
 		}
 		<xsl:choose>
 			<xsl:when test="mode = 'edit'">
@@ -786,26 +824,26 @@
 									</xsl:for-each>
 								</div>
 
-							<div class="pure-control-group ">
-								<label for="name">
-								</label>
-								<div class="wrapperForGlider" style="display:none;">
-									<div class="glider-contain">
-										<div class="glider">
-											<xsl:for-each select="content_images">
-												<xsl:if test="img_url">
-													<div>
-														<img data-src="{img_url}" alt="{file_name}"/>
-													</div>
-												</xsl:if>
-											</xsl:for-each>
+								<div class="pure-control-group ">
+									<label for="name">
+									</label>
+									<div class="wrapperForGlider" style="display:none;">
+										<div class="glider-contain">
+											<div class="glider">
+												<xsl:for-each select="content_images">
+													<xsl:if test="img_url">
+														<div>
+															<img data-src="{img_url}" alt="{file_name}"/>
+														</div>
+													</xsl:if>
+												</xsl:for-each>
+											</div>
+											<input type="button" role="button"  aria-label="Previous" class="glider-prev" value="«"></input>
+											<input type="button" role="button" aria-label="Next" class="glider-next" value="»"></input>
+											<div role="tablist" class="dots"></div>
 										</div>
-										<input type="button" role="button"  aria-label="Previous" class="glider-prev" value="«"></input>
-										<input type="button" role="button" aria-label="Next" class="glider-next" value="»"></input>
-										<div role="tablist" class="dots"></div>
 									</div>
 								</div>
-							</div>
 
 								<xsl:choose>
 									<xsl:when test="value_id!='' and fileupload = 1 and mode = 'edit'">

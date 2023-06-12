@@ -63,6 +63,9 @@
 			'delete'				 => true,
 			'delete_basis'			 => true
 		);
+		var $bo,$account,$bocommon, $entity_id, $cats,$allrows,$type, $type_app,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage,
+		$dimb_id,$district_id,$year, $month, $grouping,$revision,$details,$direction;
 
 		function __construct()
 		{
@@ -1214,10 +1217,10 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
-			$year[0]['id']	 = date(Y);
-			$year[1]['id']	 = date(Y) + 1;
-			$year[2]['id']	 = date(Y) + 2;
-			$year[3]['id']	 = date(Y) + 3;
+			$year[0]['id']	 = date('Y');
+			$year[1]['id']	 = date('Y') + 1;
+			$year[2]['id']	 = date('Y') + 2;
+			$year[3]['id']	 = date('Y') + 3;
 
 			$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array(
 				'ecodimb'		 => $values['ecodimb'],

@@ -27,6 +27,7 @@
 		protected $allow_all_permissions;
 		static protected $auth_enabled = true;
 
+		var $so;
 		function __construct()
 		{
 			parent::__construct();

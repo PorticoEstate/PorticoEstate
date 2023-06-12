@@ -36,6 +36,7 @@
 	{
 
 		public $total_records;
+		var $db, $account, $join, $left_join, $like;
 
 		/**
 		 * @var array valid responsible types

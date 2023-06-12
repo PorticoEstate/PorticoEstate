@@ -334,7 +334,7 @@
 
 			if ($messageStatus != null & $messageStatus == 'no_message_registered')
 			{
-				$sql .= " AND cic.location_item_id IS NULL";
+				$sql .= " AND (cic.location_item_id IS NULL OR cic.location_item_id = 0)";
 			}
 			else if ($messageStatus != null & $messageStatus == 'message_registered')
 			{

@@ -51,6 +51,7 @@
 		private $so_control_area;
 		private $so_control;
 		private $so_bim;
+		var $bo, $bocommon, $part_of_town_id,$district_id,$status,$allrows,$lookup;
 		var $public_functions = array(
 			'index' => true,
 			'add_component_to_control' => true,
@@ -292,7 +293,7 @@
 			//var_dump($component_list); 
 
 
-			$results = array();
+			$results = array('results' => array());
 			foreach ($component_list as $component)
 			{
 				$component['checked'] = false;

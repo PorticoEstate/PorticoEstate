@@ -9,15 +9,16 @@
 	class booking_uiaudience extends booking_uicommon
 	{
 
-		public $public_functions = array
-			(
-			'index' => true,
-			'query' => true,
-			'add' => true,
-			'show' => true,
-			'active' => true,
-			'edit' => true
+		public $public_functions = array(
+			'index'					 => true,
+			'query'					 => true,
+			'add'					 => true,
+			'show'					 => true,
+			'active'				 => true,
+			'edit'					 => true,
+			'toggle_show_inactive'	 => true,
 		);
+		var $activity_bo;
 
 		public function __construct()
 		{

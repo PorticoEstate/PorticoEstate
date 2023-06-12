@@ -1676,7 +1676,7 @@
 			$sql = "SELECT * FROM {$table} {$filtermthod} ORDER BY group_sort";
 
 			$this->_db2->query($sql, __LINE__, __FILE__);
-			$this->total_records = $this->_db2->num_rows();
+			$this->_total_records = $this->_db2->num_rows();
 
 			while($this->_db2->next_record())
 			{

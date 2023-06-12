@@ -22,7 +22,7 @@
 			'submited'  => True
 		);
 		
-		var $classname;
+		var $classname,$tpl,$html;
 		
 		public function __construct()
 		{

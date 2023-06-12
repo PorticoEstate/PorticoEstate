@@ -54,6 +54,10 @@
 
 		protected $read, $add, $edit, $delete, $so, $so_control, $dateformat;
 
+		var $so_check_item,$so_control_item,$so_control_group_list,
+		$so_control_item_list, $_nextmatches,$items,$_category_acl;
+
+
 		public $public_functions = array
 			(
 			'index'					 => true,
@@ -275,7 +279,7 @@
 		{
 			$part_of_town_id = (int)$part_of_town['id'];
 
-			$items = $this->get_items($year, $i, $control_id, 0, $part_of_town_id);
+			$items = $this->get_items($year, 0, $control_id, 0, $part_of_town_id);
 
 			$planned_status = array();
 			for ($i = 1; $i <= 12; $i++)

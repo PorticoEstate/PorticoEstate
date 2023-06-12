@@ -18,6 +18,7 @@
 	*/
 	class arrayfunctions
 	{
+		var $sort;
 		function __construct($vars='')
 		{
 		}

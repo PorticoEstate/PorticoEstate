@@ -33,6 +33,7 @@
 	 */
 	class property_soalarm
 	{
+		var $db, $join, $left_join, $like,$account, $total_records;
 
 		function __construct()
 		{
@@ -96,7 +97,7 @@
 
 			if ($order)
 			{
-				$ordermethod .= " ORDER BY $order $sort";
+				$ordermethod = " ORDER BY $order $sort";
 			}
 			else
 			{
@@ -166,44 +167,6 @@
 			return $jobs;
 		}
 
-		function read_org( $id = 0 )
-		{
-			$id = $this->db->db_addslashes($id);
-			if (strpos($id, '%') !== false || strpos($id, '_') !== false)
-			{
-				$where = "id $this->like '%$id%' AND id!='##last-check-run##'";
-			}
-			elseif (!$id)
-			{
-				$where = 'next<=' . time() . " AND id!='##last-check-run##'";
-			}
-			else
-			{
-				$where = "id='$id'";
-			}
-			$this->db->query($sql = "SELECT * FROM $this->db_table WHERE $where", __LINE__, __FILE__);
-
-			$jobs = array();
-			while ($this->db->next_record())
-			{
-				$id = $this->db->f('id');
-
-				$jobs[$id] = array(
-					'id'		 => $id,
-					'next'		 => $this->db->f('next'),
-					'times'		 => unserialize($this->db->f('times')),
-					'method'	 => $this->db->f('method'),
-					'data'		 => unserialize($this->db->f('data')),
-					'account_id' => $this->db->f('account_id')
-				);
-				//echo "job id='$id'<pre>"; print_r($jobs[$id]); echo "</pre>\n";
-			}
-			if (!count($jobs))
-			{
-				return false;
-			}
-			return $jobs;
-		}
 
 		function read_single( $owner_id )
 		{

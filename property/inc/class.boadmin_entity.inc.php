@@ -582,7 +582,7 @@
 			return $admin_custom->select_custom_function($selected, $this->type_app[$this->type]);
 		}
 
-		function read_single_custom_function( $entity_id = '', $cat_id = '', $id, $location = '' )
+		function read_single_custom_function( $id, $entity_id = '', $cat_id = '',  $location = '' )
 		{
 			if (!$location && $entity_id && $cat_id)
 			{

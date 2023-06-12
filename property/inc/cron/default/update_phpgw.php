@@ -20,6 +20,7 @@
 	class update_phpgw extends property_cron_parent
 	{
 
+		var $bocommon;
 		function __construct()
 		{
 			parent::__construct();

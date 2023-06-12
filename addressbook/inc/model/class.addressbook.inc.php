@@ -38,7 +38,6 @@
 		protected
 			$id;
 
-		protected $field_of_responsibility_name = '.addressbook';
 
 		public function __construct( int $id = null )
 		{

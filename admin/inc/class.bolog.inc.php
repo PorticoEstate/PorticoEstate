@@ -18,6 +18,7 @@
 			'list_log'		=> True,
 			'purge_log'		=> True
 		);
+		var $so;
 		
 		function __construct()
 		{

@@ -35,11 +35,12 @@
 	{
 
 		var $type;
-		var $type_id;
+		var $type_id, $custom, $uicols;
 		var $location_info	 = array();
 		var $tree			 = array();
 		protected $table;
 		var $appname			 = 'property';
+		var $account, $_db, $_db2, $_join, $_left_join, $_like, $total_records;
 
 		function __construct( $type = '', $type_id = 0 )
 		{
@@ -457,12 +458,6 @@
 			return $values;
 		}
 
-		//deprecated
-		function select_generic_list( $data )
-		{
-			return $this->get_entity_list($data);
-		}
-
 		function get_list( $data )
 		{
 			$values = array();
@@ -499,6 +494,7 @@
 
 			if ($order)
 			{
+				$sort = 'ASC';
 				$ordermethod = " ORDER BY {$table}.{$order} {$sort}";
 			}
 			else
@@ -725,7 +721,7 @@
 			// in case of backslash characters - as in path-references
 			foreach ($data as $_key => &$_value)
 			{
-				$_value = str_replace('\\', '/', $_value);
+				$_value = $_value ? str_replace('\\', '/', $_value) : $_value;
 			}
 			unset($_key);
 			unset($_value);
@@ -759,7 +755,8 @@
 						$data[$field['name']] = ',' . implode(',', $data[$field['name']]) . ',';
 					}
 				}
-				$value_set[$field['name']] = $this->_db->db_addslashes(html_entity_decode($data[$field['name']]));
+
+				$value_set[$field['name']] = $data[$field['name']] ? $this->_db->db_addslashes(html_entity_decode($data[$field['name']])) : '';
 
 				// keep hierarchy in order
 				if (isset($field['role']) && $field['role'] == 'parent')
@@ -897,6 +894,7 @@
 
 			if ($order)
 			{
+				$sort = 'ASC';
 				$ordermethod = " ORDER BY {$table}.{$order} {$sort}";
 			}
 			else
@@ -1190,12 +1188,24 @@
 
 		public function edit_field( $data = array() )
 		{
+
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
 			{
 				return false;
 			}
 
+			$this->_db->transaction_begin();
+
 			$value_set = $this->_db->validate_update(array($data['field_name'] => $data['value']));
-			return $this->_db->query("UPDATE $table SET {$value_set} WHERE {$this->location_info['id']['name']} = '{$data['id']}'", __LINE__, __FILE__);
+			$this->_db->query("UPDATE $table SET {$value_set} WHERE {$this->location_info['id']['name']} = '{$data['id']}'", __LINE__, __FILE__);
+
+			if (!empty($data['history']) && !empty($data['attrib_id']))
+			{
+				$historylog = CreateObject('property.historylog', $this->location_info['acl_app'], $this->location_info['acl_location']);				
+				$historylog->add('SO', $data['id'], $data['value'],  null, $data['attrib_id']);
+			}
+
+			return 	$this->_db->transaction_commit();
+
 		}
 	}

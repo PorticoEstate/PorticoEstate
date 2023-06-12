@@ -29,15 +29,15 @@
 	class property_bosubstitute
 	{
 
-		var $public_functions = array
-			(
+		var $public_functions = array(
 		);
+
+		var $so,$account_id;
 
 		function __construct()
 		{
 			$this->account_id	 = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->so			 = CreateObject('property.sosubstitute');
-			$this->allrows		 = $this->bo->allrows;
 		}
 
 		public function read( $data )

@@ -33,6 +33,8 @@
 			'getAttachment'		=> 'True'
 		);
 
+		var $t,$charset,$bofelamimail,$bopreferences,$uiwidgets,$rowColor,$selectedFolder;
+
 		function __construct()
 		{
 			require_once(PHPGW_SERVER_ROOT.'/felamimail/inc/xajax.inc.php');

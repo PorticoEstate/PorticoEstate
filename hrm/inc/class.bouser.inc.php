@@ -54,6 +54,7 @@
 				'out' => array()
 			)
 		);
+		var $so,$bocommon,$grants, $total_records, $boaddressbook;
 
 		function __construct($session=false)
 		{

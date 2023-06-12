@@ -34,6 +34,7 @@
 	 */
 	class property_soadmin
 	{
+		var $db, $join, $left_join, $like,$account, $total_records;
 
 		function __construct()
 		{

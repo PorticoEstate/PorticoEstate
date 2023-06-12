@@ -41,6 +41,7 @@
 		var $lookup;
 		var $use_session;
 		var $total_records = 0;
+		var $so,$status_id,$allrows,$acl_location,$location_code,$status,$uicols,$custom,$bocommon,$config;
 
 		/**
 		 * @var object $custom reference to custom fields object

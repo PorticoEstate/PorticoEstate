@@ -36,7 +36,8 @@
 
 		var $gab_insert_level;
 		var $payment_date = array();
-		var $custom;
+		var $custom, $bocommon, $config, $total_records, $uicols,$cols_extra;
+		var $account, $db, $db2, $join, $left_join, $like;
 
 		function __construct()
 		{
@@ -501,6 +502,7 @@
 		{
 			$location	 = explode('-', $gab['location_code']);
 			$next_type	 = count($location) + 1;
+			$where_condition = '';
 
 			//_debug_array($gab);
 
@@ -655,7 +657,7 @@
 			return $receipt;
 		}
 
-		function update( $gab_update, $values_attribute = array(), $receipt )
+		function update( $gab_update, $values_attribute = array(), $receipt = array())
 		{
 			$value_set = array();
 

@@ -40,6 +40,9 @@
 		private $vendor_list	 = array();
 		protected $historylog;
 
+		var $db, $db2, $join, $left_join, $like, $custom, $account, $bocommon, $acl,$grants;
+		var $interlink, $config, $cols_extra, $uicols;
+
 		function __construct()
 		{
 			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
@@ -1003,6 +1006,7 @@
 		{
 			$start		 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$project_ids = !empty($data['project_id']) && is_array($data['project_id']) ? implode(',', array_map('intval', $data['project_id'])) : (int)$data['project_id'] ;
+			$order_ids = !empty($data['order_id']) && is_array($data['order_id']) ? implode(',', array_map('intval', $data['order_id'])) : (int)$data['order_id'] ;
 			$year		 = (int)$data['year'];
 			$sort		 = isset($data['sort']) ? $data['sort'] : 'DESC';
 			$order		 = isset($data['order']) ? $data['order'] : 'workorder_id';
@@ -1059,13 +1063,13 @@
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
 				. " {$this->left_join} fm_vendor ON fm_vendor.id = fm_workorder.vendor_id"
-				. " WHERE project_id IN ({$project_ids}) {$filter_year}{$filtermethod}{$ordermethod}";
+				. " WHERE (project_id IN ({$project_ids}) OR fm_workorder.id IN ($order_ids)) {$filter_year}{$filtermethod}{$ordermethod}";
 
 			$this->db->query("SELECT count(*) AS cnt FROM (SELECT DISTINCT fm_workorder.id, fm_workorder_budget.year FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
 				. " {$this->left_join} fm_vendor ON fm_vendor.id = fm_workorder.vendor_id"
-				. " WHERE project_id IN ({$project_ids}) {$filter_year}{$filtermethod}) as t", __LINE__, __FILE__);
+				. " WHERE ( project_id IN ({$project_ids}) OR fm_workorder.id IN ($order_ids)) {$filter_year}{$filtermethod}) as t", __LINE__, __FILE__);
 
 			$this->db->next_record();
 			$this->total_records = (int)$this->db->f('cnt');
@@ -2523,7 +2527,7 @@
 
 				$_diff_start	 = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
 				$entry['diff']	 = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
-				if (abs($entry['actual_cost']) > 0 || $entry['period'] < date('Ym'))
+				if (abs((float)$entry['actual_cost']) > 0 || $entry['period'] < date('Ym'))
 				{
 					$_deviation		 = $entry['budget'] - $entry['actual_cost'];
 					$deviation		 = $_deviation;
@@ -2703,6 +2707,7 @@
 
 		function add_request( $add_request, $id )
 		{
+			$ret = false;
 			for ($i = 0; $i < count($add_request['request_id']); $i++)
 			{
 				$project_id = $this->check_request($add_request['request_id'][$i]);
@@ -2718,7 +2723,7 @@
 						'account_id'		 => $this->account
 					);
 
-					$this->interlink->add($interlink_data);
+					$ret = $this->interlink->add($interlink_data);
 
 					$this->db->query("UPDATE fm_request SET project_id='$id' WHERE id='" . $add_request['request_id'][$i] . "'", __LINE__, __FILE__);
 
@@ -2739,7 +2744,7 @@
 				}
 			}
 
-			return $receipt;
+			return $ret;
 		}
 
 		function delete( $project_id )
@@ -3279,7 +3284,7 @@
 		public function get_user_list()
 		{
 			$values	 = array();
-			$users	 = $GLOBALS['phpgw']->accounts->get_list('accounts', $start	 = -1, $sort	 = 'ASC', $order	 = 'account_lastname', $query, $offset	 = -1);
+			$users	 = $GLOBALS['phpgw']->accounts->get_list('accounts', $start	 = -1, $sort	 = 'ASC', $order	 = 'account_lastname', $query='', $offset	 = -1);
 			$sql	 = 'SELECT DISTINCT coordinator AS user_id FROM fm_project';
 			$this->db->query($sql, __LINE__, __FILE__);
 

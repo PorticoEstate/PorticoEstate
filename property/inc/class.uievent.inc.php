@@ -41,8 +41,10 @@
 		var $sort;
 		var $order;
 		var $sub;
-		var $currentapp;
 		var $location_info;
+		var $currentapp, $bo, $account, $bocommon, $custom, $location_id,$user_id,$status_id,$role,
+		$acl, $acl_location, $acl_read, $acl_add, $acl_edit,$acl_delete, $acl_manage, $allrows;
+
 		var $public_functions = array
 			(
 			'query'			 => true,
@@ -186,8 +188,6 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::scheduled_events";
 
 			$values		 = phpgw::get_var('values');
-			$start_date	 = urldecode(phpgw::get_var('start_date'));
-			$end_date	 = urldecode(phpgw::get_var('end_date'));
 
 			$receipt = array();
 			if ($values && $this->acl_edit)
@@ -380,8 +380,8 @@
 		{
 			$date1		 = phpgw::get_var('start_date');
 			$date2		 = phpgw::get_var('end_date');
-			$start_date	 = urldecode($date1);
-			$end_date	 = urldecode($date2);
+			$start_date	 = $date1;
+			$end_date	 = $date2;
 			$search		 = phpgw::get_var('search');
 			$order		 = phpgw::get_var('order');
 			$draw		 = phpgw::get_var('draw', 'int');
@@ -396,8 +396,8 @@
 				'order'			 => $columns[$order[0]['column']]['data'],
 				'sort'			 => $order[0]['dir'],
 				'allrows'		 => phpgw::get_var('length', 'int') == -1 || $export,
-				'start_date'	 => $start_date,
-				'end_date'		 => $end_date,
+				'start_date'	 => $start_date ? urldecode($start_date) : '',
+				'end_date'	 	 => $end_date ? urldecode($end_date) : '',
 				'location_id'	 => $this->location_id,
 				'user_id'		 => $this->user_id,
 				'status_id'		 => $this->status_id
@@ -694,7 +694,7 @@
 			});
 	}
 JS;
-				$GLOBALS['phpgw']->js->add_code($namespace, $code);
+				$GLOBALS['phpgw']->js->add_code($namespace = '', $code);
 
 				$plan_def = array
 					(

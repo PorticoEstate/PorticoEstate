@@ -80,7 +80,7 @@
 		var $user_filter,$bo, $cats,$acl, $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete, $acl_manage,
 		$district_id, $tenant_id, $account, $bocommon, $start, $query, $sort, $order, $status_id, $user_id, $group_id, $reported_by, $cat_id,
 		$allrows, $vendor_id, $start_date, $end_date, $location_code, $p_num, $show_finnish_date, $ecodimb,$b_account,
-		$building_part, $branch_id, $parent_cat_id;
+		$building_part, $branch_id, $parent_cat_id,$order_dim1,$decimal_separator;
 
 		public function __construct()
 		{
@@ -326,8 +326,8 @@ HTML;
 			$params					 = $this->get_params();
 			$params['start']		 = 0;
 			$params['results']		 = -1;
-			$params['start_date']	 = urldecode($this->start_date);
-			$params['end_date']		 = urldecode($this->end_date);
+			$params['start_date']	 = $this->start_date ? urldecode($this->start_date) : '';
+			$params['end_date']		 = $this->end_date ? urldecode($this->end_date) : '';
 			$params['download']		 = true;
 			$params['allrows']		 = true;
 			$params['external']		 = $external;
@@ -1023,8 +1023,8 @@ HTML;
 	//		self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 			self::add_javascript('property', 'portico', 'tts.index.js', false, array('combine' => true ));
 
-			$start_date	 = urldecode($this->start_date);
-			$end_date	 = urldecode($this->end_date);
+			$start_date	 = !empty($this->start_date) ? urldecode($this->start_date) : '';
+			$end_date	 = !empty($this->end_date) ? urldecode($this->end_date) : '';
 
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
@@ -1923,16 +1923,16 @@ HTML;
 			else if($action == 'set_tag' && $ids)
 			{
 				$bofiles->set_tags($ids, $tags);
-				
+
 			}
 			else if($action == 'remove_tag' && $ids)
 			{
 				$bofiles->remove_tags($ids, $tags);
-				
+
 			}
 
 			return $action;
-			
+
 		}
 
 		function get_files()
@@ -1973,11 +1973,11 @@ HTML;
 				else if($filter_tags && $_entry['tags'])
 				{
 					$filter_check = json_decode($_entry['tags'], true);
-					
+
 					if(!array_intersect($filter_check, $filter_tags))
 					{
 						continue;
-					}				
+					}
 				}
 				$datetime = new DateTime($_entry['created'], new DateTimeZone('UTC'));
 				$datetime->setTimeZone(new DateTimeZone($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']));
@@ -2064,7 +2064,7 @@ HTML;
 			}
 
 			$relation_type = phpgw::get_var('relation_type');
-			if ($relation_type == 'project')
+			if (in_array($relation_type,array('project', 'workorder')))
 			{
 				$add_relation = phpgw::get_var('add_relation');
 				if ($add_relation)
@@ -2109,7 +2109,7 @@ HTML;
 				$access_order = true;
 			}
 
-			if (!empty($values['save']) || !empty($values['send_order']))
+			if (!empty($values['save']) || !empty($values['apply']) || !empty($values['send_order']))
 			{
 				if (!$this->acl_edit)
 				{
@@ -2188,6 +2188,14 @@ HTML;
 							$receipt['error'][] = array('msg' => lang('budget') . ': ' . lang('Please enter a numeric value'));
 						}
 					}
+
+					if (isset($values['order_text']))
+					{
+						foreach ($values['order_text'] as $_text)
+						{
+							$values['order_descr'] .= "\n" . $GLOBALS['phpgw']->db->stripslashes($_text);
+						}
+					}
 				}
 
 				if (isset($values['takeover']) && $values['takeover'])
@@ -2257,6 +2265,27 @@ HTML;
 					$sms->websend2pv($this->account, $to_sms_phone, $values['response_text']);
 					$historylog->add('MS', $id, "{$to_sms_phone}::{$values['response_text']}");
 				}
+
+				if (!empty($values['send_order']))
+				{
+					$send_order_format		 = !empty($values['send_order_format']) ? $values['send_order_format'] : 'html';
+					$purchase_grant_checked	 = false;
+					$purchase_grant_error	 = !empty($values['purchase_grant_error']) ? true : false;
+
+					$_ticket = $this->bo->read_single($id);
+					$this->_send_order($_ticket, $send_order_format, $purchase_grant_checked, $purchase_grant_error);
+				}
+
+				if ((isset($values['save']) && $values['save']))
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitts.index'));
+				}
+				else
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitts.view',
+						'id'		 => $id, 'tab'		 => 'general'));
+				}
+
 			}
 
 			/* Preserve attribute values from post */
@@ -2624,15 +2653,6 @@ HTML;
 			// end approval
 			// -------- end order section
 
-			if (!empty($values['send_order']))
-			{
-				$send_order_format		 = !empty($values['send_order_format']) ? $values['send_order_format'] : 'html';
-				$purchase_grant_checked	 = !empty($values['purchase_grant_checked']) ? true : false;
-				$purchase_grant_error	 = !empty($values['purchase_grant_error']) ? true : false;
-
-				$this->_send_order($ticket, $send_order_format, $purchase_grant_checked, $purchase_grant_error);
-			}
-
 			$additional_notes	 = $this->bo->read_additional_notes($id);
 			$record_history		 = $this->bo->read_record_history($id);
 
@@ -2660,13 +2680,13 @@ HTML;
 			}
 			unset($_note);
 
-			if (isset($values['order_text']) && $ticket['order_id'])
-			{
-				foreach ($values['order_text'] as $_text)
-				{
-					$ticket['order_descr'] .= "\n" . $GLOBALS['phpgw']->db->stripslashes($_text);
-				}
-			}
+//			if (isset($values['order_text']) && $ticket['order_id'])
+//			{
+//				foreach ($values['order_text'] as $_text)
+//				{
+//					$ticket['order_descr'] .= "\n" . $GLOBALS['phpgw']->db->stripslashes($_text);
+//				}
+//			}
 
 			$note_def = array
 				(
@@ -2788,7 +2808,7 @@ HTML;
 					}
 					unset($tag);
 				}
-				
+
 				$content_files[] = array(
 					'tags'			 => $tags,
 					'file_id'		 => $_entry['file_id'],
@@ -2847,7 +2867,7 @@ HTML;
 					'sortable'	 => false, 'resizeable' => true, 'formatter'	 => 'FormatterCenter');
 			}
 //---file tagging
-			
+
 			$requestUrl	 = json_encode(self::link(array(
 				'menuaction' => 'property.uitts.update_file_data',
 				'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
@@ -2923,7 +2943,7 @@ HTML;
 						}
 						{$entry['funct']}('{$entry['action']}', ids);
 						"
-				);					
+				);
 			}
 
 			$code		 = <<<JS
@@ -2965,7 +2985,7 @@ HTML;
 				var strURL = phpGWLink('index.php', oArgs, true);
 
 				JqueryPortico.updateinlineTableHelper('datatable-container_2',strURL);
-				
+
 				if(action=='delete_file')
 				{
 					refresh_glider(strURL);
@@ -3406,6 +3426,7 @@ JS;
 
 			$list_orders = false;
 			$project_ids = array();
+			$order_ids = array();
 			if(!empty($ticket['target']))
 			{
 				foreach ($ticket['target'] as $_targets)
@@ -3415,6 +3436,15 @@ JS;
 						foreach ($_targets['data'] as $_target_data)
 						{
 							$project_ids[] = $_target_data['id'];
+						}
+						$list_orders = true;
+						unset($_target_data);
+					}
+					if($_targets['location'] == '.project.workorder')
+					{
+						foreach ($_targets['data'] as $_target_data)
+						{
+							$order_ids[] = $_target_data['id'];
 						}
 						$list_orders = true;
 						unset($_target_data);
@@ -3436,6 +3466,15 @@ JS;
 						$list_orders = true;
 						unset($_target_data);
 					}
+					if($_targets['location'] == '.project.workorder')
+					{
+						foreach ($_targets['data'] as $_target_data)
+						{
+							$order_ids[] = $_target_data['id'];
+						}
+						$list_orders = true;
+						unset($_target_data);
+					}
 				}
 				unset($_targets);
 			}
@@ -3444,14 +3483,14 @@ JS;
 				(
 				'container'	 => 'datatable-container_10',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiproject.get_orders',
-						'project_id' => $project_ids, 'phpgw_return_as' => 'json'))),
+						'project_id' => $project_ids,'order_id' => $order_ids, 'phpgw_return_as' => 'json'))),
 //				'requestUrl' => "''",
 //				'data'		 => json_encode($_order_data),
 				'data'		 => json_encode(array()),
 				'ColumnDefs' => $orders_def,
 				'config'	 => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true),
+//					array('disablePagination' => true),
 //					array('allrows' => true),
 					array('order' => json_encode(array(0, 'desc')))
 				)
@@ -3555,6 +3594,10 @@ JS;
 					'id'	 => 'property.uiproject.index',
 					'name'	 => lang('project')
 				),
+				array(
+					'id'	 => 'property.uiworkorder.index',
+					'name'	 => lang('workorder')
+				),
 //				array(
 //					'id'	=> 'property.uilookup.entity',
 //					'name'	=> 'Everything else'
@@ -3650,7 +3693,7 @@ JS;
 
 			if (!$delivery_address && !empty($location_data['loc1']))
 			{
-				$delivery_address = CreateObject('property.solocation')->get_delivery_address($_location_data['loc1']);
+				$delivery_address = CreateObject('property.solocation')->get_delivery_address($location_data['loc1']);
 			}
 
 			if(!$payment_info && $GLOBALS['phpgw_info']['user']['preferences']['property']['order_payment_info'])
@@ -3667,7 +3710,7 @@ JS;
 					$GLOBALS['phpgw_info']['user']['preferences']['property']['order_payment_info']
 					);
 			}
-			
+
 			$payment_info = $ticket['payment_info'] ? $ticket['payment_info'] : $payment_info;
 			$cats					 = CreateObject('phpgwapi.categories', -1, 'property', '.project');
 			$cats->supress_info	 = true;
@@ -4167,7 +4210,7 @@ JS;
 			{
 				$delivery_address = "\n{$ticket['delivery_address']}";
 			}
-			else if (isset($this->bo->config->config_data['delivery_address']) && $this->bo->config->config_data['delivery_address'])
+			else if (!empty($this->bo->config->config_data['delivery_address']) && !ctype_space((string)$this->bo->config->config_data['delivery_address']))
 			{
 				$delivery_address .= "\n{$this->bo->config->config_data['delivery_address']}";
 			}
@@ -4294,22 +4337,31 @@ JS;
 				}
 			}
 
-			$user_phone		 = str_replace(' ', '', $user_phone);
-			$contact_phone	 = str_replace(' ', '', $contact_phone);
-			$contact_phone2	 = str_replace(' ', '', $contact_phone2);
+			if ($user_phone)
+			{
+				$user_phone = str_replace(' ', '', $user_phone);
+				if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $user_phone, $matches))
+				{
+					$user_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				}
+			}
+			if ($contact_phone)
+			{
+				$contact_phone = str_replace(' ', '', $contact_phone);
+				if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone, $matches))
+				{
+					$contact_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				}
+			}
+			if ($contact_phone2)
+			{
+				$contact_phone2 = str_replace(' ', '', $contact_phone2);
+				if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone2, $matches))
+				{
+					$contact_phone2 = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				}
+			}
 
-			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $user_phone, $matches))
-			{
-				$user_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
-			}
-			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone, $matches))
-			{
-				$contact_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
-			}
-			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone2, $matches))
-			{
-				$contact_phone2 = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
-			}
 
 			if ($contact_name)
 			{
@@ -4536,7 +4588,7 @@ JS;
 
 		private function get_documentation_url( $id )
 		{
-			return  $this->bocommon->get_documentation_url($id);	
+			return  $this->bocommon->get_documentation_url($id);
 		}
 
 		private function _html_order( $id = 0, $preview = false, $show_cost = false )
@@ -4682,22 +4734,31 @@ JS;
 				}
 			}
 
-			$user_phone		 = str_replace(' ', '', $user_phone);
-			$contact_phone	 = str_replace(' ', '', $contact_phone);
-			$contact_phone2	 = str_replace(' ', '', $contact_phone2);
+			if ($user_phone)
+			{
+				$user_phone = str_replace(' ', '', $user_phone);
+				if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $user_phone, $matches))
+				{
+					$user_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				}
+			}
+			if ($contact_phone)
+			{
+				$contact_phone = str_replace(' ', '', $contact_phone);
+				if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone, $matches))
+				{
+					$contact_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				}
+			}
+			if ($contact_phone2)
+			{
+				$contact_phone2 = str_replace(' ', '', $contact_phone2);
+				if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone2, $matches))
+				{
+					$contact_phone2 = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
+				}
+			}
 
-			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $user_phone, $matches))
-			{
-				$user_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
-			}
-			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone, $matches))
-			{
-				$contact_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
-			}
-			if (preg_match('/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone2, $matches))
-			{
-				$contact_phone2 = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
-			}
 
 			function nl2br2( $string )
 			{
@@ -5242,7 +5303,14 @@ JS;
 
 				try
 				{
-					$purchase_grant_ok = $this->bo->validate_purchase_grant($ecodimb, $budget_amount, $order_id);
+					if($on_behalf_of_assigned)
+					{
+						$GLOBALS['phpgw']->preferences->set_account_id($ticket['user_id'], true);
+					}
+					$purchase_grant_ok = $this->bo->validate_purchase_grant($ticket['ecodimb'], $budget_amount, $order_id);
+
+					$GLOBALS['phpgw']->preferences->set_account_id($this->account, true);
+
 				}
 				catch (Exception $ex)
 				{

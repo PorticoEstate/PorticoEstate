@@ -50,7 +50,8 @@
 			$payment_methods,
 			$permissions,
 			$called_class_arr,
-			$currentapp;
+			$currentapp,
+			$bo,$template;
 
 		public function __construct()
 		{
@@ -283,9 +284,9 @@
 
 		/**
 		 * Called from  subclasses
-		 * @param type $fakebase
-		 * @param type $sub_module
-		 * @param type $id
+		 * @param string $fakebase
+		 * @param string $sub_module
+		 * @param int $id
 		 * @return type
 		 * @throws Exception
 		 */

@@ -41,6 +41,7 @@
 		var $order;
 		var $cat_id;
 		var $allrows;
+		var $so, $socommon, $use_session, $total_records;
 		var $public_functions = array
 			(
 			'read'			 => true,

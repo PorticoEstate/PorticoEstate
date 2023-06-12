@@ -22,6 +22,7 @@
 			$fields = array('season_id', 'season_name', 'building_id', 'building_name', 'from_',
 				'to_', 'export_configurations');
 
+		var $generated_files_bo,$display_name;
 		public function __construct()
 		{
 			parent::__construct();
@@ -210,7 +211,7 @@
 			}
 
 			$filters_to_array = extract_values($_GET, array("filter_to"));
-			$filters_to = strtotime($filters_to_array["filter_to"]);
+			$filters_to = $filters_to_array["filter_to"] ? strtotime($filters_to_array["filter_to"]) : time();
 			$data['filters'] = date("Y-m-d", $filters_to);
 
 			self::render_template_xsl('datatable_jquery', $data);

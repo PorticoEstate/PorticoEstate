@@ -152,9 +152,9 @@
 			$GLOBALS['phpgw']->template->set_var('lang_delete',lang('Delete'));
 
 			//while(list($key,$server) = @each($servers))
-                        if (is_array($servers))
-                        {
-                            foreach($servers as $key => $server)
+        if (is_array($servers))
+        {
+			foreach($servers as $key => $server)
 			{
 				$tr_color = $this->nextmatchs->alternate_row_class($tr_color);
 				$GLOBALS['phpgw']->template->set_var('tr_color',$tr_color);

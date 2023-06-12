@@ -9,6 +9,7 @@
 			'index' => true,
 		);
 
+		var $fields;
 		public function __construct()
 		{
 			$is_admin = $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin');
