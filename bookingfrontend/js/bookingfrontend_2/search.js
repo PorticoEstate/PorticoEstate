@@ -137,6 +137,7 @@ class BookingSearch {
     activity_cache = {};
     allocation_cache = {};
     easy_booking_available_cache = {};
+    easy_booking_not_available_cache = {};
 
     constructor() {
         const bookingEl = document.getElementById("search-booking");
@@ -196,8 +197,12 @@ class BookingSearch {
         const end_date = `${this.data.date()}`;
         if (!(start_date in this.easy_booking_available_cache)) {
             this.easy_booking_available_cache[start_date] = [];
+            this.easy_booking_not_available_cache[start_date] = [];
         }
-        const resource_ids = [...new Set(this.data.result_all().filter(r => !this.easy_booking_available_cache[start_date].includes(r)).map(r => r.id))];
+        const resource_ids = [...new Set(this.data.result_all()
+            .filter(r => !this.easy_booking_not_available_cache[start_date].includes(r.id) &&
+                !this.easy_booking_available_cache[start_date].includes(r.id))
+            .map(r => r.id))];
         if (resource_ids.length === 0) {
             finished()
             return;
@@ -214,7 +219,7 @@ class BookingSearch {
             url,
             success: response => {
                 // console.log("Res", response);
-                this.populate_easy_booking_available_cache(response, start_date);
+                this.populate_easy_booking_available_cache(response, start_date, resource_ids);
                 finished();
             },
             error: error => {
@@ -297,7 +302,7 @@ class BookingSearch {
         })
     }
 
-    populate_easy_booking_available_cache = (response, start_date) => {
+    populate_easy_booking_available_cache = (response, start_date, resource_ids) => {
         const cache = this.easy_booking_available_cache[start_date];
         Object.keys(response).map(resource_id => {
             response[resource_id].map(resource => {
@@ -307,11 +312,12 @@ class BookingSearch {
             })
         })
         this.easy_booking_available_cache[start_date] = [...new Set(cache)];
+        this.easy_booking_not_available_cache[start_date] = [...new Set(resource_ids.filter(id => !this.easy_booking_available_cache[start_date].includes(id)))];
     }
 
     reset() {
         this.data.selected_town(null);
-        $('#search-booking-activities').val([]).trigger('change');
+        $('#search-booking-activities').val([]).trigger('change')
         $('#search-booking-building').val([]).trigger('change');
         $('#search-booking-resource_categories').val([]).trigger('change');
         $('#search-booking-facilities').val([]).trigger('change');
@@ -442,7 +448,7 @@ class BookingSearch {
             return !allocationFillsAllowed(resource_allocation[id], resource_season[id])
         }).map(id => +id)
         this.data.resources_with_available_time([ ...new Set([...available_ids, ...this.easy_booking_available_cache[this.data.date()]])]);
-        console.log("Available ids", available_ids);
+        // console.log("Available ids", available_ids);
     }
 
     updateBuildings = (town = null) => {
