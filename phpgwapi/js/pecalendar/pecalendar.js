@@ -170,6 +170,7 @@ class PEcalendar {
             this.dom.replaceChildren(...[header, days, timeEl, content]);
             const building = document.getElementById(this.getId("building"));
             building.onchange = (option) => {
+                self.resource_id = null;
                 self.loadBuilding(+option.target.value);
             }
             const resource = document.getElementById(this.getId("resources"));
