@@ -32,7 +32,24 @@ $(document).ready(function ()
 
 	$("#voucher_id_filter").change(function ()
 	{
+		get_voucher_info($(this).val());
+	});
 
+
+	function check_if_preloaded_voucher()
+	{
+		var voucher_id = $("#voucher_id_filter").val();
+		if(voucher_id)
+		{
+			$("#query").val(voucher_id);
+			get_voucher_info(voucher_id);
+		}
+	}
+
+	check_if_preloaded_voucher();
+
+	function get_voucher_info(voucher_id)
+	{
 		$("#voucher_id").val('');
 		$("#voucher_id_text").html('');
 		$("#line_id").val('');
@@ -72,7 +89,7 @@ $(document).ready(function ()
 		$("#receipt").html('');
 		$("#email_link").html('');
 
-		var voucher_id = $(this).val();
+
 		var oArgs = {menuaction: 'property.uiinvoice2.get_first_line'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
@@ -84,7 +101,7 @@ $(document).ready(function ()
 			url: requestUrl + "&voucher_id=" + voucher_id,
 			success: function (data)
 			{
-				if (data != null)
+				if (data !== null)
 				{
 					line_id = data['line_id'];
 					var oArgs_table = {menuaction: 'property.uiinvoice2.query', line_id: line_id, voucher_id_filter: voucher_id};
@@ -94,7 +111,7 @@ $(document).ready(function ()
 				}
 			}
 		});
-	});
+	}
 
 	$(document).on("click", "#approve_line", function (e)
 	{
