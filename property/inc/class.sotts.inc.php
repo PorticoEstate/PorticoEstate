@@ -2481,7 +2481,11 @@
 
 				if(!$test)
 				{
-					$test = $interlink->get_specific_relation('property', '.ticket', $acl_location, $relation_id, 'origin');
+					$_test = $interlink->get_specific_relation('property', '.ticket', $acl_location, $relation_id, 'origin');
+					if(in_array($id, $_test))
+					{
+						$test = array($id);
+					}
 				}
 
 				if ($test)
