@@ -392,6 +392,8 @@
 			$grouping_descr_old	 = '';
 			$content			 = array();
 
+			$sum_hour = 0;
+			$sum_deviation = 0;
 			if (isset($hour_list) AND is_array($hour_list))
 			{
 				foreach ($hour_list as $hour)
@@ -1280,6 +1282,7 @@
 			}
 
 			$contract_list = $this->bocommon->get_vendor_contract($workorder['vendor_id'], $workorder['contract_id']);
+			$contract_name = '';
 			foreach ($contract_list as $contract)
 			{
 				if ($contract['selected'])
@@ -2135,7 +2138,7 @@ HTML;
 				}
 				else
 				{
-					$_ok = $this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb'], $project['id']);
+					$_ok = $this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $common_data['workorder']['ecodimb'], $project['id']);
 				}
 
 				if (!$_ok)
@@ -2151,7 +2154,7 @@ HTML;
 			{
 				try
 				{
-					$_validated = $this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb'], $project['id']);
+					$_validated = $this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $common_data['workorder']['ecodimb'], $project['id']);
 				}
 				catch (Exception $ex)
 				{
