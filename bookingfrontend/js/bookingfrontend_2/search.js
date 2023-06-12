@@ -480,10 +480,19 @@ class BookingSearch {
             if (towns.length > 0) {
                 const calendarId = `calendar-${resource.id}`;
                 okResources.push(resource);
-                const url = phpGWLink('bookingfrontend/', {
-                    menuaction: 'bookingfrontend.uiapplication.add',
-                    building_id: buildings[0].id,
-                }, false);
+                let url = "";
+                if (resource.simple_booking===1) {
+                    url = phpGWLink('bookingfrontend/', {
+                        menuaction: 'bookingfrontend.uiresource.show',
+                        building_id: buildings[0].id,
+                        id: resource.id
+                    }, false);
+                } else {
+                    url = phpGWLink('bookingfrontend/', {
+                        menuaction: 'bookingfrontend.uiapplication.add',
+                        building_id: buildings[0].id,
+                    }, false);
+                }
                 append.push(`
     <div class="col-12 mb-4">
       <div class="js-slidedown slidedown">
