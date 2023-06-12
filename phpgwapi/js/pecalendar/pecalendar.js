@@ -178,6 +178,11 @@ class PEcalendar {
                 self.resource_id = +option.target.value;
                 self.createCalendarDom();
             }
+            const date = document.getElementById(this.getId("datetimepicker"));
+            date.onchange = (option) => {
+                console.log("Changed", option.target.value);
+                self.setDate(DateTime.fromJSDate(self.getDateFromSearch(option.target.value)));
+            }
         }
         updateSelectBasic();
         updateDateBasic();
@@ -308,4 +313,8 @@ class PEcalendar {
         });
     }
 
+    getDateFromSearch(dateString) {
+        const parts = dateString.split(".");
+        return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+    }
 }
