@@ -239,11 +239,11 @@ class PEcalendar {
     <div class="select_building_resource">
         <div>
             <select id=${this.getId("building")} class="js-select-basic">
-               ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name + '</option>').join("")}
+               ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name.trim() + '</option>').join("")}
             </select>
             <select id=${this.getId("resources")} class="js-select-basic">
                ${this.resources ? Object.keys(this.resources).map(
-                resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id ? " selected" : "") + '>' + this.resources[resourceId].name + '</option>').join("") : ""}
+                resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id ? " selected" : "") + '>' + this.resources[resourceId].name.trim() + '</option>').join("") : ""}
             </select>
 
         </div>

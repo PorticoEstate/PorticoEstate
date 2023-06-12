@@ -55,6 +55,10 @@ $current-time-color: #ea4335;
 //  }
 //}
 
+#ui-datepicker-div {
+  z-index: 5 !important;
+}
+
 .calendar {
   display: grid;
   grid-template-rows: var(--header-height) $days-height auto;
@@ -70,6 +74,8 @@ $current-time-color: #ea4335;
   @media all and (min-width: 481px) and (max-width: 992px) {
     width: calc(300vw + var(--time-width));
   }
+
+
 
   .js-basic-datepicker {
     font-size: 1rem;
@@ -117,15 +123,12 @@ $current-time-color: #ea4335;
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
+      width: 50vw;
 
-      > div:nth-child(1) {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        height: fit-content;
+      >div:nth-child(1) {
+        width: 50vw;
       }
-
-      > div:nth-child(2) {
-        margin-left: 20px;
+      >div {
         display: flex;
         flex-direction: row;
       }

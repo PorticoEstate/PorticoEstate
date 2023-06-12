@@ -2235,6 +2235,10 @@ input[type=text]:hover {
   }
 }
 
+#ui-datepicker-div {
+  z-index: 5 !important;
+}
+
 .calendar {
   display: grid;
   grid-template-rows: var(--header-height) 3em auto;
@@ -2290,14 +2294,12 @@ input[type=text]:hover {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  width: 50vw;
 }
 .calendar .header .select_building_resource > div:nth-child(1) {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  height: fit-content;
+  width: 50vw;
 }
-.calendar .header .select_building_resource > div:nth-child(2) {
-  margin-left: 20px;
+.calendar .header .select_building_resource > div {
   display: flex;
   flex-direction: row;
 }

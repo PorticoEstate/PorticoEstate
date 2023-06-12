@@ -76,6 +76,7 @@ const updateSelectBasic = () => {
     /* Basic dropdown */
     $('.js-select-basic').select2({
         theme: 'select-v2',
+        width: '100%'
     });
 }
 
