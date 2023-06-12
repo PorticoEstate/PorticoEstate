@@ -19,6 +19,7 @@
 			'massupdate' => true,
 			'cancel' => true,
 			'get_freetime'=> true,
+			'get_freetime_limit' => true,
 			'ical'	=> true
 		);
 
@@ -57,6 +58,38 @@
 			try
 			{
 				$freetime = $this->bo->get_free_events($building_id, $resource_id, new DateTime(date('Y-m-d', $start_date)), new DateTime(date('Y-m-d', $end_date)), $weekdays);
+			}
+			catch (Exception $exc)
+			{
+				return "booking_bobooking::get_free_events() - " . $exc->getMessage();
+			}
+
+			return $freetime;
+		}
+
+		public function get_freetime_limit()
+		{
+			$building_id = phpgw::get_var('building_id', 'int');
+			$resource_id = phpgw::get_var('resource_id', 'int');
+			$all_simple_bookings = phpgw::get_var('all_simple_bookings', 'bool');
+			$_ids = explode(',', phpgw::get_var('resource_ids', 'string', 'REQUEST', ''));
+			$resource_ids = array();
+			foreach ($_ids as $id)
+			{
+				$resource_ids[] = (int)$id;
+			}
+			if ($resource_id)
+				$resource_ids[] = $resource_id;
+
+
+			$start_date = phpgw::get_var('start_date', 'date');
+			$end_date = phpgw::get_var('end_date', 'date');
+
+			$weekdays = array();
+
+			try
+			{
+				$freetime = $this->bo->get_free_events($building_id, $resource_ids, new DateTime(date('Y-m-d', $start_date)), new DateTime(date('Y-m-d', $end_date)), $weekdays, true, $all_simple_bookings);
 			}
 			catch (Exception $exc)
 			{

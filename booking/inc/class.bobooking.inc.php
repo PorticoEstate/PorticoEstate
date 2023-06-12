@@ -1345,7 +1345,7 @@
 			return array('total_records' => count($results), 'results' => $results);
 		}
 
-		function get_free_events( $building_id, $resource_id, $start_date, $end_date, $weekdays )
+		function get_free_events( $building_id, $resource_id, $start_date, $end_date, $weekdays, $stop_on_end_date=false, $all_simple_bookings=false )
 		{
 
 			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
@@ -1367,7 +1367,15 @@
 			$_to		 = clone $end_date;
 			$_to->setTime(23, 59, 59);
 
-			if ($resource_id)
+			if ($all_simple_bookings)
+			{
+				$resource_filters = array(
+					'active'			 => 1,
+					'rescategory_active' => 1,
+					'simple_booking'	 => 1
+				);
+			}
+			else if ($resource_id)
 			{
 				$resource_filters = array(
 					'active'			 => 1,
@@ -1568,6 +1576,8 @@
 
 					$test	 = $limitDate->format('Y-m-d');
 					$test	 = $checkDate->format('Y-m-d');
+					if ($stop_on_end_date)
+						$limitDate = clone $_to;
 
 					$active_seasons = $soseason->get_resource_seasons($resource['id'], $checkDate->format('Y-m-d'), $limitDate->format('Y-m-d'));
 

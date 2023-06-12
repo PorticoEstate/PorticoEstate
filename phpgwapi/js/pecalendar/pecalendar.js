@@ -26,7 +26,7 @@ class PEcalendar {
         this.dom_id = id;
         this.building_id = building_id;
         this.resource_id = resource_id;
-        console.log("Loading", this.building_id, this.resource_id);
+        // console.log("Loading", this.building_id, this.resource_id);
         this.loadBuildings();
 
         this.dom = document.getElementById(id);
@@ -142,10 +142,10 @@ class PEcalendar {
 
         // Add events
         if (this.events) {
-            for (let event of this.events.filter(e => e.resources.some(r => r.id === this.resource_id))) {
+            for (let event of this.events.filter(e => e.resources.some(r => r?.id === this.resource_id))) {
                 const dateFrom = DateTime.fromISO(`${event.date}T${event.from}`);
                 const dateTo = DateTime.fromISO(`${event.date}T${event.to}`);
-                const e = this.createElement("div", `event event-${event.type}`, `<div><div>${event.name}</div><div>${event.resources.map(r => r.name).join(" / ")}</div></div>`)
+                const e = this.createElement("div", `event event-${event.type}`, `<div><div>${event.name}</div><div>${event.resources.filter(r => r?.id).map(r => r.name).join(" / ")}</div></div>`)
                 const row = ((+(dateFrom.toFormat("H")) - this.startHour) * this.hourParts) + 1;
                 // Add 60/hourParts
                 const rowStartAdd = Math.floor(+(dateFrom.toFormat("m")) / (60 / this.hourParts));
@@ -220,11 +220,11 @@ class PEcalendar {
 <div>
       <fieldset>
         <label class="filter">
-          <input type="radio" name="filter" value="day" checked/>
+          <input type="radio" name="filter" value="day"/>
             <span class="filter__radio">Dag</span>
         </label>
         <label class="filter">
-          <input type="radio" name="filter" value="week"/>
+          <input type="radio" name="filter" value="week" checked/>
             <span class="filter__radio">Uke</span>
         </label>
         <label class="filter">

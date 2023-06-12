@@ -130,11 +130,13 @@ class BookingSearch {
         available_resources: ko.observableArray([]),
         taken_allocations: ko.observableArray([]),
         seasons: ko.observableArray([]),
-        resources_with_available_time: ko.observableArray([])
+        resources_with_available_time: ko.observableArray([]),
+        easy_booking_available_ids: ko.observableArray([])
     }
 
     activity_cache = {};
-    allocation_cache = {}
+    allocation_cache = {};
+    easy_booking_available_cache = {};
 
     constructor() {
         const bookingEl = document.getElementById("search-booking");
@@ -189,32 +191,79 @@ class BookingSearch {
         })
     }
 
-    fetchAvailableResources() {
-        const onSuccess = (from_date) => {
-            this.data.available_resources([]);
-            this.data.taken_allocations(this.data.result_all().map(r => this.allocation_cache[from_date].allocations[r.id]).flat());
-            this.data.seasons(this.data.result_all().map(r => this.allocation_cache[from_date].seasons[r.id]).flat());
-            this.calculateAvailableResources();
-            this.search();
-
+    fetchEasyBooking(finished) {
+        const start_date = `${this.data.date()}`;
+        const end_date = `${this.data.date()}`;
+        if (!(start_date in this.easy_booking_available_cache)) {
+            this.easy_booking_available_cache[start_date] = [];
         }
+        const resource_ids = [...new Set(this.data.result_all().filter(r => !this.easy_booking_available_cache[start_date].includes(r)).map(r => r.id))];
+        if (resource_ids.length === 0) {
+            finished()
+            return;
+        }
+
+        const url = phpGWLink('bookingfrontend/', {
+            menuaction: 'bookingfrontend.uibooking.get_freetime_limit',
+            start_date,
+            end_date,
+            resource_ids: resource_ids.join(","),
+            length: -1
+        }, true);
+        $.ajax({
+            url,
+            success: response => {
+                // console.log("Res", response);
+                this.populate_easy_booking_available_cache(response, start_date);
+                finished();
+            },
+            error: error => {
+                console.log(error);
+                finished();
+            }
+        })
+    }
+
+    fetchAvailableResources() {
+        let fetched_easy_booking = false;
+        let fetched_available_resource = false;
         const from_date = `${this.data.date()} 00:00:00`;
         const to_date = `${this.data.date()} 23:59:59`;
+        const onSuccess = () => {
+            if (fetched_easy_booking && fetched_available_resource) {
+                this.data.available_resources([]);
+                this.data.taken_allocations(this.data.result_all().filter(r => r.simple_booking !== 1).map(r => this.allocation_cache[from_date].allocations[r.id]).flat());
+                this.data.seasons(this.data.result_all().filter(r => r.simple_booking !== 1).map(r => this.allocation_cache[from_date].seasons[r.id]).flat());
+                this.calculateAvailableResources();
+                this.search();
+                // console.log("Easy Cache", this.easy_booking_available_cache)
+            }
+        }
+
+        this.fetchEasyBooking(() => {
+            fetched_easy_booking = true;
+                onSuccess()
+        })
+
+
         if (!(from_date in this.allocation_cache)) {
             this.allocation_cache[from_date] = {};
             this.allocation_cache[from_date].allocations = {};
             this.allocation_cache[from_date].seasons = {};
         }
-        const resource_ids = this.data.result_all().filter(r => !(r.id in this.allocation_cache[from_date].allocations)).map(r => r.id).join(",");
+        const resource_ids = [...new Set(this.data.result_all()
+            .filter(r => r.simple_booking!==1)
+            .filter(r => !(r.id in this.allocation_cache[from_date].allocations)).map(r => r.id))];
         if (resource_ids.length === 0) {
-            onSuccess(from_date);
+            fetched_available_resource = true;
+            onSuccess();
             return;
         }
         const url = phpGWLink('bookingfrontend/', {
             menuaction: 'bookingfrontend.uisearch.search_available_resources',
             from_date,
             to_date,
-            resource_ids,
+            resource_ids: resource_ids.join(","),
             length: -1
         }, true);
         $.ajax({
@@ -222,7 +271,8 @@ class BookingSearch {
             success: response => {
                 // console.log("Res", response);
                 this.populate_allocation_cache(response, from_date, resource_ids);
-                onSuccess(from_date);
+                fetched_available_resource = true;
+                onSuccess();
             },
             error: error => {
                 console.log(error);
@@ -232,7 +282,7 @@ class BookingSearch {
 
     populate_allocation_cache = (response, from_date, resource_ids) => {
         const cache = this.allocation_cache[from_date];
-        resource_ids.split(",").map(id => {
+        resource_ids.map(id => {
             if (!(id in cache.allocations))
                 cache.allocations[id] = [];
             if (!(id in cache.seasons))
@@ -245,6 +295,18 @@ class BookingSearch {
         response.seasons.map(season => {
             cache.seasons[season.resource_id].push(season);
         })
+    }
+
+    populate_easy_booking_available_cache = (response, start_date) => {
+        const cache = this.easy_booking_available_cache[start_date];
+        Object.keys(response).map(resource_id => {
+            response[resource_id].map(resource => {
+                if (!resource.overlap) {
+                    cache.push(resource.applicationLink.resource_id);
+                }
+            })
+        })
+        this.easy_booking_available_cache[start_date] = [...new Set(cache)];
     }
 
     reset() {
@@ -297,15 +359,16 @@ class BookingSearch {
             resources = resources.filter(resource => resource.name.match(re))
             hasSearch = true;
         }
+        const el = emptySearch();
 
         if (hasSearch) {
             this.data.result_all(resources);
             if (this.data.show_only_available())
                 resources = resources.filter(r => this.data.resources_with_available_time().includes(r.id));
-            const el = emptySearch();
             this.addInfoCards(el, resources);
         } else {
             fillSearchCount(null);
+            this.addInfoCards(el, [])
         }
         createJsSlidedowns();
     }
@@ -318,6 +381,18 @@ class BookingSearch {
         const numberToTime = (num) => {
             const date = new Date(num * 1000);
             return getFullTimeString(date);
+        }
+
+        const getApiDate = (dateString) => {
+            const [day, month, year] = this.data.date().split(".");
+            return new Date(`${year}-${month}-${day}`);
+        }
+
+        const isSameDate = (fromDateString, toDateString) => {
+            const from = new Date(fromDateString.split(" ")[0]);
+            const to = new Date(toDateString.split(" ")[0]);
+            const same = from.getDate() === to.getDate() && from.getMonth() === to.getMonth() && from.getFullYear() === to.getFullYear();
+            return same;
         }
 
         const allocationFillsAllowed = (allocations, allowed) => {
@@ -341,17 +416,16 @@ class BookingSearch {
                 return sum + (range[1] - range[0]);
             }, 0);
 
-            return totalAllocatedSeconds === totalAllowedSeconds;
+            return totalAllocatedSeconds >= totalAllowedSeconds;
         }
 
-        const [day, month, year] = this.data.date().split(".");
-        const date = new Date(`${year}-${month}-${day}`);
+        const date = getApiDate(this.data.date());
         const wday = date.getDay();
         const resource_allocation = this.data.taken_allocations().reduce((acc, cur) => {
             acc[cur.resource_id] = acc[cur.resource_id] || [];
             acc[cur.resource_id].push([
                 timeToNumber(cur.from_.split(" ")[1]),
-                timeToNumber(cur.to_.split(" ")[1])
+                !isSameDate(cur.from_, cur.to_) ? 86400 : timeToNumber(cur.to_.split(" ")[1])
             ]);
             return acc;
         }, {})
@@ -367,7 +441,8 @@ class BookingSearch {
             if (!(id in resource_allocation)) return true;
             return !allocationFillsAllowed(resource_allocation[id], resource_season[id])
         }).map(id => +id)
-        this.data.resources_with_available_time(available_ids);
+        this.data.resources_with_available_time([ ...new Set([...available_ids, ...this.easy_booking_available_cache[this.data.date()]])]);
+        console.log("Available ids", available_ids);
     }
 
     updateBuildings = (town = null) => {
@@ -399,6 +474,10 @@ class BookingSearch {
             if (towns.length > 0) {
                 const calendarId = `calendar-${resource.id}`;
                 okResources.push(resource);
+                const url = phpGWLink('bookingfrontend/', {
+                    menuaction: 'bookingfrontend.uiapplication.add',
+                    building_id: buildings[0].id,
+                }, false);
                 append.push(`
     <div class="col-12 mb-4">
       <div class="js-slidedown slidedown">
@@ -409,6 +488,7 @@ class BookingSearch {
             </span>
         </button>
         <div class="js-slidedown-content slidedown__content">
+        <button class="pe-btn pe-btn-primary" onclick="location.href=\'${url}\'">Søknad</button>
           <p>
             ${resource.description}
           </p> 
@@ -418,9 +498,6 @@ class BookingSearch {
     </div>
 `
                 )
-                console.log("Creating calendar", resource.id, buildings[0].id);
-                // const calendar = new PEcalendar(calendarId, buildings[0].id)
-                // calendars.push(calendar);
             }
         }
         this.data.result(okResources.slice(0, 50));
@@ -434,7 +511,7 @@ class EventSearch {
     data = {
         text: ko.observable(""),
         from_date: ko.observable(getSearchDateString(new Date())),
-        to_date: ko.observable(),
+        to_date: ko.observable(getSearchDateString(new Date(new Date().getTime() + (7* 86400 * 1000)))),
         events: ko.observableArray([])
     }
 
@@ -604,7 +681,7 @@ class Search {
         $.ajax({
             url,
             success: response => {
-                console.log(response);
+                // console.log(response);
                 self.data = {...self.data, ...response};
 
                 self.booking.data.building_resources(response.building_resources);
