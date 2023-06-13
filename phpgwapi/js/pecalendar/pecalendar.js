@@ -223,7 +223,7 @@ class PEcalendar {
             'afterbegin',
             `
 <div class="date">
-<div>
+    <div>
       <fieldset>
         <label class="filter">
           <input type="radio" name="filter" value="day"/>
@@ -238,35 +238,35 @@ class PEcalendar {
             <span class="filter__radio">Måned</span>
         </label>
       </fieldset>
-      </div>
-                <input id=${this.getId("datetimepicker")} class="js-basic-datepicker" type="text" value="${this.currentDate.toFormat('dd.LL.y')}">
-                </div>
-    <div class="select_building_resource">
-        <div>
-            <select id=${this.getId("building")} class="js-select-basic">
-               ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name.trim() + '</option>').join("")}
-            </select>
-            <select id=${this.getId("resources")} class="js-select-basic">
-               ${this.resources ? Object.keys(this.resources).map(
-                resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id ? " selected" : "") + '>' + this.resources[resourceId].name.trim() + '</option>').join("") : ""}
-            </select>
+    </div>
+    <input id=${this.getId("datetimepicker")} class="js-basic-datepicker" type="text" value="${this.currentDate.toFormat('dd.LL.y')}">
+</div>
+<div class="select_building_resource">
+    <div>
+        <select id=${this.getId("building")} class="js-select-basic">
+           ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name.trim() + '</option>').join("")}
+        </select>
+        <select id=${this.getId("resources")} class="js-select-basic">
+           ${this.resources ? Object.keys(this.resources).map(
+            resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id ? " selected" : "") + '>' + this.resources[resourceId].name.trim() + '</option>').join("") : ""}
+        </select>
 
+    </div>
+    <div>
+        <div class="type text-small">
+            <img class="event-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
+            Arrangement
         </div>
-        <div>
-            <div class="type text-small">
-                <img class="event-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
-                Arrangement
-            </div>
-            <div class="type text-small">
-                <img class="booking-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
-                Interntildeling
-            </div>
-            <div class="type text-small">
-                <img class="allocation-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
-                Tildeling
-            </div>
+        <div class="type text-small">
+            <img class="booking-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
+            Interntildeling
+        </div>
+        <div class="type text-small">
+            <img class="allocation-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
+            Tildeling
         </div>
     </div>
+</div>
 `
         )
         return header;

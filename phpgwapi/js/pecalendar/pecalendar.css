@@ -2236,7 +2236,7 @@ input[type=text]:hover {
 }
 
 #ui-datepicker-div {
-  z-index: 5 !important;
+  z-index: 20 !important;
 }
 
 .calendar {
@@ -2332,6 +2332,7 @@ input[type=text]:hover {
   position: sticky;
   position: -webkit-sticky;
   top: 0;
+  z-index: 11;
   line-height: 1rem;
   grid-row: 2/span 1;
   grid-column: 2/span 7;
