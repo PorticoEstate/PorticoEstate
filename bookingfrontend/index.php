@@ -49,7 +49,7 @@
 
 		$login		 = $config['anonymous_user'];
 		$logindomain = phpgw::get_var('domain', 'string', 'GET');
-		if (strstr($login, '#') === false && $logindomain)
+		if ($logindomain && strstr($login, '#') === false)
 		{
 			$login .= "#{$logindomain}";
 		}
