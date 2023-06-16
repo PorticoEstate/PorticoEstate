@@ -146,7 +146,6 @@
 
 				$no_time_changes = false;
 
-//				if ($_POST['org_from'] <= $new_date['from_'] && $_POST['org_to'] >= $new_date['to_'])
 				if ($test['from_'] <= $new_date['from_'] && $test['to_'] >= $new_date['to_'])
 				{
 					if ($new_date['from_'] > $new_date['to_'])
@@ -159,10 +158,6 @@
 						{
 							$no_time_changes = true;							
 						}
-						else if($test['from_'] < $new_date['from_'] || $test['to_'] > $new_date['to_'])
-						{
-							$free_up_time = true;
-						}
 
 						$event['from_'] = $new_date['from_'];
 						$event['to_'] = $new_date['to_'];
@@ -172,7 +167,6 @@
 				}
 				else
 				{
-//					if ($_POST['org_from'] <= $new_date['from_'])
 					if ($test['from_'] <= $new_date['from_'])
 					{
 						if ($new_date['from_'] > $new_date['to_'])
@@ -187,14 +181,10 @@
 					}
 					else
 					{
-						$free_up_time = true;
-//						$event['from_'] = $_POST['org_from'];
-//						$_POST['from_'] = $_POST['org_from'];
 						$event['from_'] = $new_date['from_'];
 						$_POST['from_'] = $new_date['from_'];
 					}
 
-//					if ($_POST['org_to'] >= $new_date['to_'])
 					if ($test['to_'] >= $new_date['to_'])
 					{
 						if ($new_date['to_'] < $new_date['from_'])
@@ -210,13 +200,20 @@
 					}
 					else
 					{
-						$free_up_time = true;
-//						$event['to_'] = $_POST['org_to'];
-//						$_POST['to_'] = $_POST['org_to'];
 						$event['to_'] = $new_date['to_'];
 						$_POST['to_'] = $new_date['to_'];
 					}
 				}
+
+				if (
+					($test['from_'] < $new_date['from_'] && $test['to_'] > $new_date['to_'])
+					|| ($test['from_'] == $new_date['from_'] && $test['to_'] > $new_date['to_'])
+					|| ($test['from_'] < $new_date['from_'] && $test['to_'] == $new_date['to_'])
+				)
+				{
+					$free_up_time = true;
+				}
+
 
 				list($event, $errors) = $this->extract_and_validate($event);
 

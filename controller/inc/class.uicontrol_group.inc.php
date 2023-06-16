@@ -369,6 +369,7 @@
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
 
+				$procedure_options = array();
 				foreach ($procedure_array as $procedure)
 				{
 					if ($control_group->get_procedure_id() && $procedure->get_id() == $control_group->get_procedure_id())
@@ -498,6 +499,7 @@
 				}
 
 
+				$procedure_options = array();
 				foreach ($procedure_array as $procedure)
 				{
 					$procedure_options[] = array

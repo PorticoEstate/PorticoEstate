@@ -57,9 +57,20 @@
 
 			$weekdays = array();
 
+			$timezone	 = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+
 			try
 			{
-				$freetime = $this->bo->get_free_events($building_id, $resource_id, new DateTime(date('Y-m-d', $start_date)), new DateTime(date('Y-m-d', $end_date)), $weekdays);
+				$DateTimeZone	 = new DateTimeZone($timezone);
+			}
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
+
+			try
+			{
+				$freetime = $this->bo->get_free_events($building_id, $resource_id, new DateTime(date('Y-m-d', $start_date),$DateTimeZone), new DateTime(date('Y-m-d', $end_date),$DateTimeZone), $weekdays);
 			}
 			catch (Exception $exc)
 			{

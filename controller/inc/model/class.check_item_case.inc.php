@@ -224,7 +224,11 @@
 
 		public function set_measurement( $measurement )
 		{
-			if(unserialize($measurement))
+			if(is_array($measurement))
+			{
+				$_measurement = $measurement;
+			}
+			else if(unserialize($measurement))
 			{
 				$_measurement = unserialize($measurement);
 			}

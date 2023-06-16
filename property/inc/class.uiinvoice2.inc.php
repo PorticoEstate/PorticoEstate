@@ -399,7 +399,10 @@
 				$voucher_list = $this->bo->get_vouchers(array('query' => $voucher_id, 'criteria' => 'voucher_id'));
 			}
 
-			array_unshift($voucher_list, array('id' => '', 'name' => lang('select')));
+			if(count($voucher_list) !== 1)
+			{
+				array_unshift($voucher_list, array('id' => '', 'name' => lang('select')));
+			}
 
 			foreach ($userlist_default as $default)
 			{

@@ -274,6 +274,11 @@
 									$_argument_value_name	 = ltrim($_argument_value, '$this->');
 									$_argument_value		 = $this->$_argument_value_name;
 								}
+								else if (preg_match('/^##/', $_argument_value))
+								{
+									$_argument_value_name	 = trim($_argument_value, '#');
+									$_argument_value		 = phpgw::get_var($_argument_value_name);
+								}
 							}
 							$method_input[$_argument] = $_argument_value;
 						}

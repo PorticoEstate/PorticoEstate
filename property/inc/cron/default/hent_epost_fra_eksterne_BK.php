@@ -57,6 +57,9 @@
 	use \jamesiarmes\PhpEws\Type\ItemChangeType;
 	use \jamesiarmes\PhpEws\Type\SetItemFieldType;
 	use \jamesiarmes\PhpEws\Type\MessageType;
+	use \jamesiarmes\PhpEws\Type\ExchangeImpersonationType;
+	use \jamesiarmes\PhpEws\Type\ConnectingSIDType;
+	use \jamesiarmes\PhpEws\ArrayType\NonEmptyArrayOfItemChangeDescriptionsType;
 	// Folder info
 	use \jamesiarmes\PhpEws\Request\FindFolderType;
 	use \jamesiarmes\PhpEws\Enumeration\ContainmentComparisonType;
@@ -85,7 +88,7 @@
 
 			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.admin'));
 
-			$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
+//			$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
 		}
 
 		function execute()
@@ -207,7 +210,9 @@
 				$client->authWithUserAndPass($username, $password);
 			}
 
-			$folder_info											 = $this->find_folder($client, 'Behandlet');
+			$folder_info											 = $this->find_folder($client, 'Importert til database');
+			_debug_array($folder_info);
+			die();
 			$IsEqualTo_isread										 = new IsEqualToType();
 			$IsEqualTo_isread->FieldURI								 = new PathToUnindexedFieldType();
 			$IsEqualTo_isread->FieldURI->FieldURI					 = 'message:IsRead';
@@ -351,9 +356,16 @@
 
 			// Search within the root folder. Combined with the traversal set above, this
 			// should search through all folders in the user's mailbox.
-			$parent												 = new DistinguishedFolderIdType();
-			$parent->Id											 = DistinguishedFolderIdNameType::ROOT;
-			$request->ParentFolderIds->DistinguishedFolderId[]	 = $parent;
+			$parent							 = new DistinguishedFolderIdType();
+			$parent->Id						 = DistinguishedFolderIdNameType::ROOT;
+
+			// New Properties:
+			$_mailbox						 = !empty($this->config->config_data['xPortico']['mailbox']) ? $this->config->config_data['xPortico']['mailbox'] : 'boligforvaltning@bergen.kommune.no';
+			$parent->Mailbox				 = new StdClass;
+			$parent->Mailbox->EmailAddress	 = $_mailbox;
+			// End of new Props.
+
+			$request->ParentFolderIds->DistinguishedFolderId[] = $parent;
 
 			// Build the restriction that will search for folders containing "Cal".
 			$contains						 = new \jamesiarmes\PhpEws\Type\ContainsExpressionType();
@@ -872,6 +884,7 @@
 			$field->Message				 = new MessageType();
 			$field->Message->IsRead		 = true;
 
+			$change->Updates = new NonEmptyArrayOfItemChangeDescriptionsType();
 			$change->Updates->SetItemField[] = $field;
 			$request->ItemChanges[]			 = $change;
 

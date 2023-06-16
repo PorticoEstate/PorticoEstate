@@ -242,7 +242,7 @@
 			{
 				if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
 				{
-					$file = '/path/to/phpgroupware' . substr($entry['file'], strlen(PHPGW_SERVER_ROOT) );
+					$file = '/path/to/portico/' . substr($entry['file'], strlen(PHPGW_SERVER_ROOT) );
 				}
 				else
 				{
@@ -349,7 +349,7 @@ _debug_array($error_line);
 
 		if ( !isset($GLOBALS['phpgw_info']['user']['apps']['admin']) )
 		{
-			$error_file = str_replace(PHPGW_SERVER_ROOT, '/path/to/phpgroupware', $error_file);
+			$error_file = str_replace(PHPGW_SERVER_ROOT, '/path/to/portico', $error_file);
 		}
 
 		$bt = debug_backtrace();
