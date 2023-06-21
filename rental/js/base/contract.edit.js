@@ -186,7 +186,7 @@ $(document).ready(function ()
 	{
 		var oArgs = {menuaction: 'rental.uicontract.get_contract_type_options', location_id: $(this).val()};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
-		var htmlString = "";
+		var htmlString;
 
 		$.ajax({
 			type: 'POST',
@@ -203,12 +203,45 @@ $(document).ready(function ()
 					}
 					var obj = data;
 
+					htmlString = "";
 					$.each(obj, function (i)
 					{
 						htmlString += "<option value='" + obj[i].id + "'>" + obj[i].name + "</option>";
 					});
 
 					$("#contract_type").html(htmlString);
+				}
+			}
+		});
+
+		requestUrl = phpGWLink('index.php', {
+			menuaction: 'rental.uicontract.get_executive_officer_options',
+			location_id: $(this).val(),
+			executive_officer: $("#executive_officer").val()
+		}, true);
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data != null)
+				{
+					var obj = data;
+
+					htmlString = "";
+					$.each(obj, function (i)
+					{
+						htmlString += "<option value='" + obj[i].id + "'";
+						if(obj[i].selected == 1)
+						{
+							htmlString += " selected='selected'";
+						}
+						htmlString += ">" + obj[i].name + "</option>";
+					});
+
+					$("#executive_officer").html(htmlString);
 				}
 			}
 		});

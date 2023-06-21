@@ -105,7 +105,7 @@
 								</xsl:choose>
 								<xsl:value-of select="value_field_of_responsibility"/>-->
 							</div>
-							<xsl:if test="count(list_contract_type/*) &gt; 1">
+							<!--<xsl:if test="count(list_contract_type/*) &gt; 1">-->
 								<div class="pure-control-group">
 									<label>
 										<xsl:value-of select="php:function('lang', 'contract_type')"/>
@@ -120,7 +120,7 @@
 										<xsl:apply-templates select="list_contract_type/options"/>
 									</select>
 								</div>
-							</xsl:if>
+							<!--</xsl:if>-->
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'executive_officer')"/>
@@ -396,7 +396,7 @@
 										</label>
 										<input type="text" id="composite_query" name="composite_query" value=""></input>
 										<xsl:text> </xsl:text>
-										<xsl:value-of select="php:function('lang', 'search_where')"/>
+										<xsl:value-of select="php:function('lang', 'search where')"/>
 										<xsl:text> </xsl:text>
 										<select id="composite_search_options" name="composite_search_options">
 											<xsl:apply-templates select="list_composite_search/options"/>
@@ -471,7 +471,7 @@
 										</label>
 										<input type="text" id="party_query" name="party_query" value=""></input>
 										<xsl:text> </xsl:text>
-										<xsl:value-of select="php:function('lang', 'search_where')"/>
+										<xsl:value-of select="php:function('lang', 'search where')"/>
 										<xsl:text> </xsl:text>
 										<select id="party_search_options" name="party_search_options">
 											<xsl:apply-templates select="list_party_search/options"/>
@@ -617,7 +617,7 @@
 										</label>
 										<input id="document_query" type="text" name="document_query" />
 										<xsl:text> </xsl:text>
-										<xsl:value-of select="php:function('lang', 'search_where')"/>
+										<xsl:value-of select="php:function('lang', 'search where')"/>
 										<xsl:text> </xsl:text>
 										<select id="document_search_option" name="document_search_option">
 											<xsl:apply-templates select="list_document_search/options"/>
@@ -1074,7 +1074,7 @@
 								</label>
 								<input id="document_query" type="text" name="document_query" />
 								<label>
-									<xsl:value-of select="php:function('lang', 'search_where')"/>
+									<xsl:value-of select="php:function('lang', 'search where')"/>
 								</label>
 								<select id="document_search_option" name="document_search_option">
 									<xsl:apply-templates select="list_document_search/options"/>

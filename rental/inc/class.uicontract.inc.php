@@ -24,30 +24,30 @@
 		private $pdf_templates = array();
 		private $config, $district_id, $part_of_town_id;
 
-		public $public_functions = array
-			(
-			'add' => true,
-			'add_from_composite' => true,
-			'copy_contract' => true,
-			'edit' => true,
-			'save' => true,
-			'index' => true,
-			'query' => true,
-			'view' => true,
-			'get'	=>  true,
-			'add_party' => true,
-			'remove_party' => true,
-			'add_composite' => true,
-			'remove_composite' => true,
-			'set_payer' => true,
-			'add_price_item' => true,
-			'remove_price_item' => true,
-			'reset_price_item' => true,
-			'add_notification' => true,
-			'download' => true,
-			'get_total_price' => true,
-			'notify_on_expire'	=> true,
-			'get_contract_type_options'	=> true
+		public $public_functions = array(
+			'add'							 => true,
+			'add_from_composite'			 => true,
+			'copy_contract'					 => true,
+			'edit'							 => true,
+			'save'							 => true,
+			'index'							 => true,
+			'query'							 => true,
+			'view'							 => true,
+			'get'							 => true,
+			'add_party'						 => true,
+			'remove_party'					 => true,
+			'add_composite'					 => true,
+			'remove_composite'				 => true,
+			'set_payer'						 => true,
+			'add_price_item'				 => true,
+			'remove_price_item'				 => true,
+			'reset_price_item'				 => true,
+			'add_notification'				 => true,
+			'download'						 => true,
+			'get_total_price'				 => true,
+			'notify_on_expire'				 => true,
+			'get_contract_type_options'		 => true,
+			'get_executive_officer_options'	 => true
 		);
 
 		public function __construct()
@@ -100,13 +100,13 @@
 						}
 					}
 				}
-				$filters[] = array
-					(
-					'type' => 'filter',
-					'name' => 'location_id',
-					'text' => lang('t_new_contract'),
-					'list' => $new_contract_options
-				);
+//				$filters[] = array
+//					(
+//					'type' => 'filter',
+//					'name' => 'location_id',
+//					'text' => lang('t_new_contract'),
+//					'list' => $new_contract_options
+//				);
 			}
 
 			$search_option = array
@@ -128,7 +128,7 @@
 				(
 				'type' => 'filter',
 				'name' => 'search_option',
-				'text' => lang('search_where'),
+				'text' => lang('search where'),
 				'list' => $search_option
 			);
 
@@ -1109,8 +1109,8 @@
 			$appname = lang('contracts');
 			$type = 'all_contracts';
 
-			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date_report');
-			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date_report');
+			$GLOBALS['phpgw']->jqcal2->add_listener('filter_start_date_report');
+			$GLOBALS['phpgw']->jqcal2->add_listener('filter_end_date_report');
 
 			$function_msg = lang('list %1', $appname);
 
@@ -1119,34 +1119,32 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array
-								(
+							array(
 								'type' => 'date-picker',
 								'id' => 'start_date_report',
 								'name' => 'start_date_report',
 								'value' => '',
 								'text' => 'Export ' . lang('from')
 							),
-							array
-								(
+							array(
 								'type' => 'date-picker',
 								'id' => 'end_date_report',
 								'name' => 'end_date_report',
 								'value' => '',
 								'text' => 'Export ' . lang('to')
 							),
-							array(
-								'type' => 'link',
-								'value' => lang('export_contracts'),
-								'onclick' => 'contract_export("all_contracts")',
-								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('export_contract_price_items'),
-								'onclick' => 'contract_export_price_items("all_contracts")',
-								'class' => 'new_item'
-							)
+//							array(
+//								'type' => 'link',
+//								'value' => lang('export_contracts'),
+//								'onclick' => 'contract_export("all_contracts")',
+//								'class' => 'new_item'
+//							),
+//							array(
+//								'type' => 'link',
+//								'value' => lang('export_contract_price_items'),
+//								'onclick' => 'contract_export_price_items("all_contracts")',
+//								'class' => 'new_item'
+//							)
 						)
 					)
 				),
@@ -1162,7 +1160,8 @@
 						'export' => true,
 						'allrows' => true
 					)),
-//					'new_item' => array('onclick' => 'onNew_contract()'),
+					'new_item' => array('onclick' => 'onNew_contract()'),
+//					'new_item' => self::link(array('menuaction' => 'rental.uiemail_out.add')),
 					'allrows' => true,
 					'editor_action' => '',
 					'query' => phpgw::get_var('search_for'),
@@ -1256,11 +1255,11 @@
 			$filters = $this->_get_Filters();
 			krsort($filters);
 
-			$filters[] = array('type' => 'link',
-								'value' => lang('new'),
-								'onclick' => 'onNew_contract()',
-								'class' => 'new_item'
-							);
+//			$filters[] = array('type' => 'link',
+//								'value' => lang('new'),
+//								'onclick' => 'onNew_contract()',
+//								'class' => 'new_item'
+//							);
 			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
@@ -1364,6 +1363,26 @@
 				}
 			}
 */
+
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'toggle_inactive',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => lang('export_contracts'),
+				'text'		 => lang('export_contracts'),
+				'custom_code'	 => 'contract_export("all_contracts")',
+			);
+
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'toggle_inactive',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => lang('export_contract_price_items'),
+				'text'		 => lang('export_contract_price_items'),
+				'custom_code'	 => 'contract_export_price_items("all_contracts")',
+			);
+
+
 			$code = <<<JS
 			var thousandsSeparator = '$this->thousandsSeparator';
 			var decimalSeparator = '$this->decimalSeparator';
@@ -1891,6 +1910,24 @@ JS;
 			return $contract_type_options;
 		}
 
+		public function get_executive_officer_options()
+		{
+			$executive_officer = (int)phpgw::get_var('executive_officer');
+			$location_id = (int)phpgw::get_var('location_id');
+			$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
+			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_ADD, $location_info['location'], 'rental');
+			$executive_officer_options[] = array('id' => '', 'name' => lang('nobody'), 'selected' => 0);
+			foreach ($accounts as $account)
+			{
+				$executive_officer_options[] = array(
+					'id' => $account['account_id'],
+					'name' => $GLOBALS['phpgw']->accounts->get($account['account_id'])->__toString(),
+					'selected' => ($account['account_id'] == $executive_officer) ? 1 : 0
+				);
+			}
+			return $executive_officer_options;
+		}
+
 
 		/**
 		 * Edit a contract
@@ -1959,7 +1996,7 @@ JS;
 
 			$responsibility_area = rental_socontract::get_instance()->get_responsibility_title($contract->get_location_id());
 			$current_contract_type_id = $contract->get_contract_type_id();
-			if (strcmp($responsibility_area, "contract_type_eksternleie") != 0)
+			if (!$responsibility_area || strcmp($responsibility_area, "contract_type_eksternleie") != 0)
 			{
 				$contract_type_options[] = array(
 					'id' => '',
@@ -2073,9 +2110,10 @@ JS;
 			$end_date = ($contract->get_contract_date() && $contract->get_contract_date()->has_end_date()) ? date($this->dateFormat, $contract->get_contract_date()->get_end_date()) : '';
 			$due_date = ($contract->get_due_date()) ? date($this->dateFormat, $contract->get_due_date()) : '';
 
-			if ($start_date == "") {
+			if ($start_date == "")
+			{
 				$date = phpgw::get_var('start_date');
-				$date = str_replace("-", "/", $date);
+//				$date = str_replace("-", "/", $date);
 
 				$start_date = ($date) ? ($date) : '';
 			}
@@ -2390,6 +2428,12 @@ JS;
 					}
 				}
 			}
+
+			if(!$contract->get_id())
+			{
+				array_unshift($new_contract_options, array('id' => '', 'name' => lang('select')));
+			}
+
 			$data = array
 			(
 				'valid_contract_types' => array('options' => $new_contract_options),
@@ -2478,7 +2522,7 @@ JS;
 		public function add()
 		{
 			$location_id = phpgw::get_var('location_id');
-			if (isset($location_id) && $location_id > 0)
+//			if (isset($location_id) && $location_id > 0)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit',
 					'location_id' => $location_id));
