@@ -268,7 +268,7 @@
 
 			foreach ( $vars as $key => $val )
 			{
-				$ret = preg_replace( "/%$ndx/", $val, $ret );
+				$ret = preg_replace( "/%$ndx/", (string)$val, $ret );
 				++$ndx;
 			}
 			return $ret;

@@ -30,7 +30,7 @@
 			$this->bofacility = CreateObject('booking.bofacility');
 		}
 
-		function search( $searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria = array() , $length)
+		function search( $searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria = array() , $length = null)
 		{
 			$building_filter = array(-1);
 			$filter_top_level = $filter_top_level ? $filter_top_level : array(-1);
@@ -604,7 +604,7 @@
 			return $data;
 		}
 
-		function search_available_resources($searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria = array(), $length, $params)
+		function search_available_resources($searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria = array(), $length = null, $params = array())
 		{
 			$returnres = array(
 				'buildings'   => array(),

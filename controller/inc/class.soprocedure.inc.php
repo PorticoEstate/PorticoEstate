@@ -364,6 +364,8 @@
 				. " {$filter_procedure} ORDER BY title ASC";
 			$this->db->query($sql);
 
+			$procedures_array = array();
+
 			while ($this->db->next_record())
 			{
 				$procedure = new controller_procedure($this->unmarshal($this->db->f('id'), 'int'));

@@ -33,14 +33,14 @@
 			$receipt_section = $this->custom_config->add_section(array
 				(
 				'name'	 => 'smartsheet_integration',
-				'descr'	 => 'smartsheet integration based on category'
+				'descr'	 => 'smartsheet integration based on ticket status'
 				)
 			);
 			$receipt		 = $this->custom_config->add_attrib(array(
 				'section_id' => $receipt_section['section_id'],
 				'input_type' => 'text',
-				'name'		 => 'category',
-				'descr'		 => 'commaseparated list of status that initiate post to smartsheet'
+				'name'		 => 'status',
+				'descr'		 => 'Ticket status that initiate post to smartsheet'
 				)
 			);
 			$receipt		 = $this->custom_config->add_attrib(array(
@@ -72,9 +72,9 @@
 
 		function check_category( $data )
 		{
-			$category_arr = explode(',', $this->_config['smartsheet_integration']['category']);
+			$status = $this->_config['smartsheet_integration']['status'];
 
-			if (in_array($data['cat_id'], $category_arr))
+			if ($data['status'] == $status)
 			{
 				$this->post_to_smartsheet($data);
 			}
@@ -104,7 +104,17 @@
 			);
 
 			$smartsheetClient	 = new \Smartsheet\SmartsheetClient($config);
-			$sheets				 = $smartsheetClient->listSheets();
+
+			try
+			{
+				$sheets				 = $smartsheetClient->listSheets();
+			}
+			catch(Exception $e)
+			{
+				phpgwapi_cache::message_set($e->getMessage(), 'error');
+				$this->historylog->add('RM', (int)$data['id'], 'Overføring til EFU feilet');
+				return;
+			}
 
 			if (!$sheet_id)
 			{
@@ -144,10 +154,18 @@
 				'hyperlink'	 => $hyperlink
 			);
 
-			$sheet->addRow($rows);
-
-			$sql = "UPDATE fm_tts_tickets SET handyman_checklist_id = 1 WHERE id = " . (int)$data['id'];
-			$this->db->query($sql, __LINE__, __FILE__);
+			try
+			{
+				$sheet->addRow($rows);
+				$sql = "UPDATE fm_tts_tickets SET handyman_checklist_id = 1 WHERE id = " . (int)$data['id'];
+				$this->db->query($sql, __LINE__, __FILE__);
+				$this->historylog->add('RM', (int)$data['id'], 'Saken er meldt til EFU');
+			}
+			catch(Exception $e)
+			{
+				phpgwapi_cache::message_set($e->getMessage(), 'error');
+				$this->historylog->add('RM', (int)$data['id'], 'Overføring til EFU feilet');
+			}
 		}
 	}
 	$ticket_smartsheet = new EBF_ticket_smartsheet_integration();

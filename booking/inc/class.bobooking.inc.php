@@ -1368,9 +1368,6 @@
 				throw $ex;
 			}
 			
-			$start_date->setTimezone($DateTimeZone);
-			$end_date->setTimezone($DateTimeZone);
-
 			$_from	 = clone $start_date;
 			$_from->setTime(0, 0, 0);
 			$_to		 = clone $end_date;
@@ -1418,8 +1415,7 @@
 				{
 					$simple_booking_start_date = new DateTime(date('Y-m-d H:i', $resource['simple_booking_start_date']), $DateTimeZone);
 
-					$now = new DateTime();
-					$now->setTimezone($DateTimeZone);
+					$now = new DateTime('now',$DateTimeZone);
 
 					if($simple_booking_start_date > $now)
 					{
@@ -1808,8 +1804,13 @@
 
 		function month_shifter( DateTime $aDate, $months, $DateTimeZone )
 		{
-			$now = new DateTime();
-			$now->setTimezone($DateTimeZone);
+
+			$now = new DateTime('now', $DateTimeZone);
+
+			/**
+			 * Fake transition
+			 */
+//			$now = new DateTime('2023-05-31 23:59', $DateTimeZone);
 
 			/**
 			 * wait for desired time within day
@@ -1817,13 +1818,14 @@
 			$start_of_month = clone($aDate);
 			$start_of_month->modify('first day of this month');
 
-			if($start_of_month > $now && $months > 1)
+			if($start_of_month > $now && $months > 0)
 			{
 				$months -=1;
 			}
 			$check_limit = clone($aDate);
+			$check_limit->setTime(23, 59, 59);
 			$check_limit->modify('last day of this month');
-			if($check_limit > $now && $months > 1)
+			if($check_limit > $now && $months > 0)
 			{
 				$months -=1;
 			}
