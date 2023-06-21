@@ -362,16 +362,30 @@ class BookingSearch {
             if (!hasSearch)
                 resources = this.data.resources();
             const re = new RegExp(this.data.text(), 'i');
-            resources = resources.filter(resource => resource.name.match(re))
+            let buildings_resources = [];
+            // Find all buildings matching so we can filter on later
+            if (this.data.selected_buildings().length === 0) {
+                const buildings = this.data.buildings().filter(building => building.name.match(re));
+                buildings_resources = this.getResourcesFromBuildings(buildings);
+            }
+            resources = resources.filter(resource => resource.name.match(re) || buildings_resources.some(r => r.id===resource.id))
+
             hasSearch = true;
         }
         const el = emptySearch();
 
         if (hasSearch) {
+            // Remove duplicates
+            resources = resources.reduce((accumulator, current) => {
+                if (accumulator.findIndex(item => item.id === current.id) === -1) {
+                    accumulator.push(current);
+                }
+                return accumulator;
+            }, []);
             this.data.result_all(resources);
             if (this.data.show_only_available())
                 resources = resources.filter(r => this.data.resources_with_available_time().includes(r.id));
-            this.addInfoCards(el, resources);
+            this.addInfoCards(el, resources.sort((a,b) => a.name.localeCompare(b.name)));
         } else {
             fillSearchCount(null);
             this.addInfoCards(el, [])
@@ -459,6 +473,14 @@ class BookingSearch {
         )
     }
 
+    getResourcesFromBuildings = (buildings) => {
+        const building_ids = buildings.map(building => building.id);
+        return this.data.building_resources()
+            .filter(resource => building_ids.includes(resource.building_id))
+            .map(resource => this.data.resources().find(res => res.id === resource.resource_id))
+            .filter(r => !!r);
+    }
+
     getBuildingsFromResource = (resource_id) => {
         const building_resources = this.data.building_resources().filter(br => br.resource_id === resource_id);
         const ids = building_resources.map(br => br.building_id);
@@ -497,16 +519,18 @@ class BookingSearch {
     <div class="col-12 mb-4">
       <div class="js-slidedown slidedown">
         <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="false">
-          <span>${resource.name}</span>
+            <span>${resource.name}</span>
             <span class="slidedown__toggler__info">
                 ${joinWithDot([...towns.map(t => t.name), ...buildings.map(b => b.name)])}
             </span>
         </button>
         <div class="js-slidedown-content slidedown__content">
-        <button class="pe-btn pe-btn-primary" onclick="location.href=\'${url}\'">Søknad</button>
-          <p>
-            ${resource.description}
-          </p> 
+            <div>
+                <button class="pe-btn pe-btn-primary" onclick="location.href=\'${url}\'">Søknad</button>
+                <p>
+                    ${resource.description}
+                </p> 
+            </div>
             <div id="${calendarId}" class="calendar" data-building-id="${buildings[0].id}" data-resource-id="${resource.id}" data-date="${getDateFromSearch(this.data.date())}"></div>
         </div>
       </div>

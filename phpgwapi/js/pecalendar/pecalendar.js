@@ -4,7 +4,8 @@ class PEcalendar {
     dom_id = null;
     dom = null;
     currentDate = null;
-    firstDayOfWeek = null;
+    firstDayOfCalendar = null;
+    lastDayOfCalendar = null;
     startHour = 10;
     endHour = 22;
 
@@ -22,7 +23,7 @@ class PEcalendar {
     resource_id = null;
     id_prefix = generateRandomString(10);
 
-    constructor(id, building_id, resource_id=null, dateString=null) {
+    constructor(id, building_id, resource_id = null, dateString = null) {
         this.dom_id = id;
         this.building_id = building_id;
         this.resource_id = resource_id;
@@ -37,12 +38,12 @@ class PEcalendar {
     }
 
     getId(id) {
-        return this.id_prefix+"-"+id;
+        return this.id_prefix + "-" + id;
     }
 
     setDate(currentDate) {
         this.currentDate = currentDate.setLocale("no");
-        this.setFirstDayOfWeek();
+        this.setDaysOfCalendar();
         this.loadBuilding(this.building_id);
     }
 
@@ -51,8 +52,9 @@ class PEcalendar {
         this.endHour = end;
     }
 
-    setFirstDayOfWeek() {
-        this.firstDayOfWeek = this.currentDate.startOf("week");
+    setDaysOfCalendar() {
+        this.firstDayOfCalendar = this.currentDate.startOf("week");
+        this.lastDayOfCalendar = this.firstDayOfCalendar.plus({days: 7});
     }
 
     setEvents(events) {
@@ -98,7 +100,7 @@ class PEcalendar {
         const days = this.createElement("div", "days");
         days.id = this.getId("days");
         for (let c = 0; c < 7; c++) {
-            const day = this.firstDayOfWeek.plus({day: c});
+            const day = this.firstDayOfCalendar.plus({day: c});
             const dayEl = this.createElement("div", "day");
             dayEl.insertAdjacentHTML(
                 'afterbegin',
@@ -145,25 +147,30 @@ class PEcalendar {
             for (let event of this.events.filter(e => e.resources.some(r => r?.id === this.resource_id))) {
                 const dateFrom = DateTime.fromISO(`${event.date}T${event.from}`);
                 const dateTo = DateTime.fromISO(`${event.date}T${event.to}`);
-                const e = this.createElement("div", `event event-${event.type}`, `<div><div>${event.name}</div><div>${event.resources.filter(r => r?.id).map(r => r.name).join(" / ")}</div></div>`)
-                const row = ((+(dateFrom.toFormat("H")) - this.startHour) * this.hourParts) + 1;
-                // Add 60/hourParts
-                const rowStartAdd = Math.floor(+(dateFrom.toFormat("m")) / (60 / this.hourParts));
-                const span = (+dateTo.toFormat("H") - dateFrom.toFormat("H")) * this.hourParts;
-                const rowStopAdd = Math.floor(+(dateTo.toFormat("m")) / (60 / this.hourParts));
-                e.style.gridColumn = `${+dateFrom.toFormat("c")} / span 1`;
-                e.style.gridRow = `${row + rowStartAdd} / span ${span - rowStartAdd + rowStopAdd}`
-                // console.log(`${+dateFrom.toFormat("c")+1} / span 1`, `${row} / span ${span}`)
+                const dates = event?.dates ? this.getIntervals(event.dates, this.startHour, this.endHour) : [{from: dateFrom, to: dateTo}];
+                for(let date of dates) {
+                    if (date.from<this.firstDayOfCalendar ||date.from>this.lastDayOfCalendar) continue;
 
-                // Add dots
-                const dots = this.createElement("button", "dots-container")
+                    const e = this.createElement("div", `event event-${event.type}`, `<div><div>${event.name}</div><div>${event.resources.filter(r => r?.id).map(r => r.name).join(" / ")}</div></div>`)
+                    const row = ((+(date.from.toFormat("H")) - this.startHour) * this.hourParts) + 1;
+                    // Add 60/hourParts
+                    const rowStartAdd = Math.floor(+(date.from.toFormat("m")) / (60 / this.hourParts));
+                    const span = (+date.to.toFormat("H") - date.from.toFormat("H")) * this.hourParts;
+                    const rowStopAdd = Math.floor(+(date.to.toFormat("m")) / (60 / this.hourParts));
+                    e.style.gridColumn = `${+date.from.toFormat("c")} / span 1`;
+                    e.style.gridRow = `${row + rowStartAdd} / span ${span - rowStartAdd + rowStopAdd}`
+                    // console.log(`${+dateFrom.toFormat("c")+1} / span 1`, `${row} / span ${span}`)
 
-                let img = this.createElement('img', 'dots');
-                img.src = phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false);
-                dots.appendChild(img);
-                e.appendChild(dots);
-                content.appendChild(e);
-                this.addInfoPopup(content, dots, event);
+                    // Add dots
+                    const dots = this.createElement("button", "dots-container")
+
+                    let img = this.createElement('img', 'dots');
+                    img.src = phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false);
+                    dots.appendChild(img);
+                    e.appendChild(dots);
+                    content.appendChild(e);
+                    this.addInfoPopup(content, dots, event);
+                }
             }
         }
         if (this.dom) {
@@ -222,51 +229,51 @@ class PEcalendar {
         header.insertAdjacentHTML(
             'afterbegin',
             `
-<div class="date">
-    <div>
-      <fieldset>
-        <label class="filter">
-          <input type="radio" name="filter" value="day"/>
-            <span class="filter__radio">Dag</span>
-        </label>
-        <label class="filter">
-          <input type="radio" name="filter" value="week" checked/>
-            <span class="filter__radio">Uke</span>
-        </label>
-        <label class="filter">
-          <input type="radio" name="filter" value="moth"/>
-            <span class="filter__radio">Måned</span>
-        </label>
-      </fieldset>
-    </div>
-    <input id=${this.getId("datetimepicker")} class="js-basic-datepicker" type="text" value="${this.currentDate.toFormat('dd.LL.y')}">
-</div>
-<div class="select_building_resource">
-    <div>
-        <select id=${this.getId("building")} class="js-select-basic">
-           ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name.trim() + '</option>').join("")}
-        </select>
-        <select id=${this.getId("resources")} class="js-select-basic">
-           ${this.resources ? Object.keys(this.resources).map(
-            resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id ? " selected" : "") + '>' + this.resources[resourceId].name.trim() + '</option>').join("") : ""}
-        </select>
-
-    </div>
-    <div>
-        <div class="type text-small">
-            <img class="event-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
-            Arrangement
+    <div class="date">
+        <div>
+          <fieldset>
+            <label class="filter">
+              <input type="radio" name="filter" value="day"/>
+                <span class="filter__radio">Dag</span>
+            </label>
+            <label class="filter">
+              <input type="radio" name="filter" value="week" checked/>
+                <span class="filter__radio">Uke</span>
+            </label>
+            <label class="filter">
+              <input type="radio" name="filter" value="moth"/>
+                <span class="filter__radio">Måned</span>
+            </label>
+          </fieldset>
         </div>
-        <div class="type text-small">
-            <img class="booking-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
-            Interntildeling
+        <input id=${this.getId("datetimepicker")} class="js-basic-datepicker" type="text" value="${this.currentDate.toFormat('dd.LL.y')}">
+    </div>
+    <div class="select_building_resource">
+        <div>
+            <select id=${this.getId("building")} class="js-select-basic">
+               ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name.trim() + '</option>').join("")}
+            </select>
+            <select id=${this.getId("resources")} class="js-select-basic">
+               ${this.resources ? Object.keys(this.resources).map(
+                    resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id ? " selected" : "") + '>' + this.resources[resourceId].name.trim() + '</option>').join("") : ""}
+            </select>
+    
         </div>
-        <div class="type text-small">
-            <img class="allocation-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
-            Tildeling
+        <div>
+            <div class="type text-small">
+                <img class="event-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
+                Arrangement
+            </div>
+            <div class="type text-small">
+                <img class="booking-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
+                Interntildeling
+            </div>
+            <div class="type text-small">
+                <img class="allocation-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
+                Tildeling
+            </div>
         </div>
     </div>
-</div>
 `
         )
         return header;
@@ -316,5 +323,37 @@ class PEcalendar {
     getDateFromSearch(dateString) {
         const parts = dateString.split(".");
         return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+    }
+
+    getIntervals(dates, startHour, endHour) {
+        const intervals = [];
+
+        for (let date of dates) {
+            let fromDate = DateTime.fromISO(date.from_.replace(" ", "T"));
+            const toDate = DateTime.fromISO(date.to_.replace(" ", "T"));
+            console.log("Date", date, fromDate, toDate);
+
+            while (fromDate < toDate) {
+                let from = fromDate;
+                let to = fromDate.set({hour: endHour, minute: 0, second: 0});
+
+                if (fromDate.hour < startHour) {
+                    from = fromDate.set({hour: startHour, minute: 0, second: 0});
+                }
+
+                if (toDate < to) {
+                    to = toDate;
+                }
+
+                intervals.push({
+                    from: from,
+                    to: to
+                });
+
+                fromDate = fromDate.set({hour: endHour, minute: 0, second: 0}).plus({days: 1}).set({hour: startHour, minute: 0, second: 0});
+            }
+        }
+        console.log("Intervals", intervals);
+        return intervals;
     }
 }

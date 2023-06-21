@@ -60,6 +60,7 @@ $current-time-color: #ea4335;
 }
 
 .calendar {
+  overflow-x: scroll;
   display: grid;
   grid-template-rows: var(--header-height) $days-height auto;
   border-width: 10px 10px 10px 10px;
@@ -67,9 +68,9 @@ $current-time-color: #ea4335;
   box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
   font-size: 1.5rem;
   grid-template-columns: var(--time-width) repeat(7, 1fr);
-  @media all and (max-width: 480px) {
-    width: calc(500vw + var(--time-width));
-  }
+  //@media all and (max-width: 480px) {
+  //  width: calc(500vw + var(--time-width));
+  //}
 
   @media all and (min-width: 481px) and (max-width: 992px) {
     width: calc(300vw + var(--time-width));
