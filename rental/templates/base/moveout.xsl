@@ -34,9 +34,9 @@
 				<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 				<div id="first_tab">
 					<fieldset>
-						<legend>
+						<h1>
 							<xsl:value-of select="php:function('lang', 'basis data')"/>
-						</legend>
+						</h1>
 						<xsl:if test="moveout/id > 0">
 							<div class="pure-control-group">
 								<label>
@@ -89,9 +89,9 @@
 					</fieldset>
 
 					<fieldset>
-						<legend>
+						<h1>
 							<xsl:value-of select="php:function('lang', 'report')"/>
-						</legend>
+						</h1>
 
 						<xsl:call-template name="attributes_values"/>
 

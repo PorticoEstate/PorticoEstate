@@ -240,7 +240,7 @@
 										</label>
 										<input type="text" id="contract_query" name="contract_query" value=""></input>
 										<label>
-											<xsl:value-of select="php:function('lang', 'search_where')"/>
+											<xsl:value-of select="php:function('lang', 'search where')"/>
 										</label>
 										<select id="contract_search_options" name="contract_search_options">
 											<xsl:apply-templates select="list_search_contract/options"/>
@@ -324,7 +324,7 @@
 									<div class="pure-control-group">
 										<input id="document_query" type="text" name="document_query" class="pure-input-1-2"/>
 										<label>
-											<xsl:value-of select="php:function('lang', 'search_where')"/>
+											<xsl:value-of select="php:function('lang', 'search where')"/>
 										</label>
 									</div>
 									<select id="document_search_option" name="document_search_option" class="pure-input-1-2">
@@ -530,7 +530,7 @@
 								</label>
 								<input type="text" id="contract_query" name="contract_query" value=""></input>
 								<label>
-									<xsl:value-of select="php:function('lang', 'search_where')"/>
+									<xsl:value-of select="php:function('lang', 'search where')"/>
 								</label>
 								<select id="contract_search_options" name="contract_search_options">
 									<xsl:apply-templates select="list_search_contract/options"/>
@@ -585,7 +585,7 @@
 								</label>
 								<input id="document_query" type="text" name="document_query" />
 								<label>
-									<xsl:value-of select="php:function('lang', 'search_where')"/>
+									<xsl:value-of select="php:function('lang', 'search where')"/>
 								</label>
 								<select id="document_search_option" name="document_search_option">
 									<xsl:apply-templates select="list_document_search/options"/>

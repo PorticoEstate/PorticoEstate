@@ -1,6 +1,7 @@
 function onNew_contract()
 {
-	var oArgs = {menuaction: 'rental.uicontract.add', location_id: document.getElementById('location_id').value};
+//	var oArgs = {menuaction: 'rental.uicontract.add', location_id: document.getElementById('location_id').value};
+	var oArgs = {menuaction: 'rental.uicontract.add'};
 	var sUrl = phpGWLink('index.php', oArgs);
 	window.location = sUrl;
 }
@@ -20,6 +21,13 @@ function formatterPrice(key, oData)
 
 function contract_export(ctype)
 {
+	var test = confirm("Sikker?");
+	
+	if(!test)
+	{
+		return;
+	}
+
 	var typeselect = document.getElementById('contract_type');
 	var typeoption = typeselect.options[typeselect.selectedIndex].value;
 
@@ -53,6 +61,12 @@ function contract_export(ctype)
 
 function contract_export_price_items(ctype)
 {
+	var test = confirm("Sikker?");
+
+	if(!test)
+	{
+		return;
+	}
 	var typeselect = document.getElementById('contract_type');
 	var typeoption = typeselect.options[typeselect.selectedIndex].value;
 
