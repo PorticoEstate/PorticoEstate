@@ -56,9 +56,9 @@
 
 		$template_selector = <<<HTML
 
-	   <select id = "template_selector" class="btn btn-link btn-sm nav-item dropdown no-arrow nav-link dropdown-toggle" style="height:2rem;">
-		<option class="nav-link" value="bootstrap"{$selecte_bootstrap}>Bootstrap</option>
-		<option value="portico"{$selecte_portico}>Portico</option>
+	   <select id = "template_selector" class="btn btn-link btn-sm nav-item dropdown no-arrow nav-link text-white dropdown-toggle" style="height:2rem;margin-top:3px">
+		<option class="nav-link text-white" value="bootstrap"{$selecte_bootstrap}>Bootstrap</option>
+		<option class="nav-link text-white" value="portico"{$selecte_portico}>Portico</option>
 	   </select>
 HTML;
 
@@ -139,8 +139,8 @@ HTML;
 			if ( $GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, 'preferences') )
 			{
 				$preferences_option .= <<<HTML
-				<a class="dropdown-item" href="{$preferences_url}">
-					<i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>
+				<a class="dropdown-item text-white" href="{$preferences_url}">
+					<i class="fas fa-cogs fa-sm fa-fw me-2 text-white"></i>
 					{$preferences_text}
 				</a>
 HTML;
@@ -204,7 +204,7 @@ HTML;
 				$help_text = lang('help');
 				$manual_option .= <<<HTML
 				<li class="nav-item">
-					<a href="{$help_url}" class="nav-link">{$help_text}</a>
+					<a href="{$help_url}" class="nav-link text-white">{$help_text}</a>
 				</li>
 HTML;
 			}
@@ -224,7 +224,7 @@ HTML;
 				));
 			$support_option = <<<HTML
 			<li class="nav-item">
-				<a href="$support_link" class="nav-link" data-bs-toggle="modal" data-bs-target="#popupModal">{$support_text}</a>
+				<a href="$support_link" class="nav-link text-white" data-bs-toggle="modal" data-bs-target="#popupModal">{$support_text}</a>
 			</li>
 HTML;
 		}
@@ -242,7 +242,7 @@ HTML;
 			$debug_text = lang('debug');
 			$debug_option = <<<HTML
 			<li class="nav-item">
-				<a href="{$debug_url}" class="nav-link">{$debug_text}</a>
+				<a href="{$debug_url}" class="nav-link text-white">{$debug_text}</a>
 			</li>
 HTML;
 		}
@@ -276,7 +276,7 @@ HTML;
 			$bookmark_option .= <<<HTML
 
 			<li class="nav-item dropdown no-arrow">
-				<a class="nav-link dropdown-toggle" href="#" id="bookmarkDropdown" role="button"
+				<a class="nav-link dropdown-toggle text-white" href="#" id="bookmarkDropdown" role="button"
 					data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<span class="me-2 d-none d-lg-inline">{$lang_bookmarks}</span>
 				</a>
@@ -292,7 +292,7 @@ HTML;
 						continue;
 					}
 					$seleced_bm = 'dropdown-item';
-					$icon = !empty($entry['icon']) ? "<i class='{$entry['icon']} me-2 text-gray-400'></i>": '<i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>';
+					$icon = !empty($entry['icon']) ? "<i class='{$entry['icon']} me-2 text-white'></i>": '<i class="fas fa-cogs fa-sm fa-fw me-2 text-white"></i>';
 
 
 					if ( $bookmark_id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}"
@@ -318,7 +318,7 @@ HTML;
 			$bookmark_option .= <<<HTML
 
 			<li class="nav-item disabled">
-				<a href="#" class="nav-link">{$lang_bookmarks}</a>
+				<a href="#" class="nav-link text-white">{$lang_bookmarks}</a>
 			</li>
 HTML;
 
@@ -347,7 +347,7 @@ HTML;
 
 			$messenger_option = <<<HTML
                         <li class="nav-item dropdown no-arrow mx-1" onClick="get_messages();">
-                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="messagesDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
                                 <!-- Counter - Messages -->
@@ -355,11 +355,11 @@ HTML;
                             </a>
                             <!-- Dropdown - Messages -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
-                                <h6 class="dropdown-header">
+                                <h6 class="dropdown-header text-white">
 									{$lang_messenger}
                                 </h6>
 								<div id="messages"></div>
-                                <a class="dropdown-item small text-muted" href="{$link_messages}">{$lang_read_messages}</a>
+                                <a class="dropdown-item small text-white" href="{$link_messages}">{$lang_read_messages}</a>
                             </div>
                         </li>
 HTML;
@@ -369,7 +369,7 @@ HTML;
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ms-auto">
 					<li class="nav-item">
-						<a href="{$home_url}" class="nav-link">{$home_text}</a>
+						<a href="{$home_url}" class="nav-link text-white">{$home_text}</a>
 					</li>
 						{$template_selector}
  						{$manual_option}
@@ -383,9 +383,9 @@ HTML;
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="userDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="me-2 d-none d-lg-inline text-gray-600">$user_fullname</span>
+                                <span class="me-2 d-none d-lg-inline">$user_fullname</span>
                                 <img class="img-profile rounded-circle" style="height:2rem; width: 2rem;"
                                     src="{$undraw_profile}">
                             </a>
@@ -393,17 +393,17 @@ HTML;
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
                                 <!--a class="dropdown-item" href="#">
-                                    <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
+                                    <i class="fas fa-user fa-sm fa-fw me-2 text-white"></i>
                                     Profile
                                 </a-->
 								{$preferences_option}
                                 <!--a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>
+                                    <i class="fas fa-list fa-sm fa-fw me-2 text-white"></i>
                                     Activity Log
                                 </a-->
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
+                                <a class="dropdown-item text-white" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-white"></i>
                                     {$var['logout_text']}
                                 </a>
                             </div>
@@ -466,7 +466,7 @@ HTML;
 
 
 			$var['top_panel'] = <<<HTML
-				<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+				<nav class="navbar navbar-expand-lg fixed-top bg-dark" data-bs-theme="dark">
 					<div class="container-fluid">
 						<button id="sidebarCollapse" class="btn btn-info">
 							<i class="fas fa-align-left"></i>
@@ -575,7 +575,7 @@ HTML;
 		{
 			$ret = <<<HTML
 			$out
-			<a href="{$item['url']}" class="nav-link context-menu-nav" id="{$id}" {$target}>{$bookmark}{$item['text']}</a>
+			<a href="{$item['url']}" class="nav-link text-white context-menu-nav" id="{$id}" {$target}>{$bookmark}{$item['text']}</a>
 			</li>
 HTML;
 		}

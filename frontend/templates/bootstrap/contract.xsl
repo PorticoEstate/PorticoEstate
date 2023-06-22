@@ -210,12 +210,12 @@
 
 												<xsl:choose>
 													<xsl:when test="normalize-space(address)">
-														<div class="text-uppercase text-muted small">
+														<div class="text-uppercase text-body-secondary small">
 															<xsl:value-of select="address"/>
 														</div>
 													</xsl:when>
 													<xsl:when test="normalize-space(address1)">
-														<div class="text-uppercase text-muted small">
+														<div class="text-uppercase text-body-secondary small">
 															<xsl:value-of select="address1"/>
 															<br/>
 															<xsl:value-of select="address2"/>
@@ -225,7 +225,7 @@
 														</div>
 													</xsl:when>
 													<xsl:when test="normalize-space(department)">
-														<div class="text-uppercase text-muted small">
+														<div class="text-uppercase text-body-secondary small">
 															<xsl:value-of select="department"/>
 														</div>
 													</xsl:when>
@@ -251,7 +251,7 @@
 												</div>
 
 												<xsl:if test="normalize-space(address)">
-													<div class="text-uppercase text-muted small">
+													<div class="text-uppercase text-body-secondary small">
 														<xsl:value-of select="address" disable-output-escaping="yes"/>
 													</div>
 												</xsl:if>
