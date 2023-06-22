@@ -21,6 +21,7 @@ class PEcalendar {
     buildings = null;
     resources = {};
     resource_id = null;
+    seasons = null;
     id_prefix = generateRandomString(10);
 
     constructor(id, building_id, resource_id = null, dateString = null) {
@@ -147,9 +148,13 @@ class PEcalendar {
             for (let event of this.events.filter(e => e.resources.some(r => r?.id === this.resource_id))) {
                 const dateFrom = DateTime.fromISO(`${event.date}T${event.from}`);
                 const dateTo = DateTime.fromISO(`${event.date}T${event.to}`);
-                const dates = event?.dates ? this.getIntervals(event.dates, this.startHour, this.endHour) : [{from: dateFrom, to: dateTo}];
-                for(let date of dates) {
-                    if (date.from<this.firstDayOfCalendar ||date.from>this.lastDayOfCalendar) continue;
+                console.log("event", event);
+                const dates = event?.dates ? this.getIntervals(event.dates, this.startHour, this.endHour) : [{
+                    from: dateFrom,
+                    to: dateTo
+                }];
+                for (let date of dates) {
+                    if (date.from < this.firstDayOfCalendar || date.from > this.lastDayOfCalendar) continue;
 
                     const e = this.createElement("div", `event event-${event.type}`, `<div><div>${event.name}</div><div>${event.resources.filter(r => r?.id).map(r => r.name).join(" / ")}</div></div>`)
                     const row = ((+(date.from.toFormat("H")) - this.startHour) * this.hourParts) + 1;
@@ -187,7 +192,6 @@ class PEcalendar {
             }
             const date = document.getElementById(this.getId("datetimepicker"));
             date.onchange = (option) => {
-                console.log("Changed", option.target.value);
                 self.setDate(DateTime.fromJSDate(self.getDateFromSearch(option.target.value)));
             }
         }
@@ -196,16 +200,15 @@ class PEcalendar {
     }
 
     addInfoPopup(contentEl, dotsEl, event) {
-        return;
         // Add info popup
         const dateFrom = DateTime.fromISO(`${event.date}T${event.from}`);
         const dateTo = DateTime.fromISO(`${event.date}T${event.to}`);
         const info = this.createElement("div", "info");
         info.id = this.getId("event");
-        info.innerHTML = `<p><b>${event.name}</b></p>
-                <p>Kl: ${dateFrom.toFormat("HH:mm")} - ${dateTo.toFormat("HH:mm")}</p>`
+        info.innerHTML = `<div><b>${event.name}</b></div>
+                <div>Kl: ${dateFrom.toFormat("HH:mm")} - ${dateTo.toFormat("HH:mm")}</div>`
 
-        const popper = Popper.createPopper(dotsEl, info, {
+        const popper = new Popper(dotsEl, info, {
             placement: 'left',
         });
         dotsEl.onclick = () => {
@@ -222,7 +225,6 @@ class PEcalendar {
         if (!this.currentDate) return;
         const self = this;
         const buildings = this.buildings;
-        console.log("Resources", this.building_id, this.resource_id, this.resources);
 
         const header = this.createElement("div", "header");
 
@@ -255,7 +257,7 @@ class PEcalendar {
             </select>
             <select id=${this.getId("resources")} class="js-select-basic">
                ${this.resources ? Object.keys(this.resources).map(
-                    resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id ? " selected" : "") + '>' + this.resources[resourceId].name.trim() + '</option>').join("") : ""}
+                resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id ? " selected" : "") + '>' + this.resources[resourceId].name.trim() + '</option>').join("") : ""}
             </select>
     
         </div>
@@ -296,10 +298,12 @@ class PEcalendar {
                 // console.log(response);
                 const events = response?.ResultSet?.Result?.results?.schedule;
                 self.resources = response?.ResultSet?.Result?.results?.resources;
+                self.seasons = response?.ResultSet?.Result?.results?.seasons;
                 if (self.resources && Object.keys(self.resources).length > 0)
                     self.resource_id = self.resource_id ? self.resource_id : self.resources[Object.keys(self.resources)[0]]?.id;
                 else
                     self.resource_id = 0;
+                self.calculateStartEndHours();
                 self.setEvents(events ? events : [])
             }
         });
@@ -331,7 +335,6 @@ class PEcalendar {
         for (let date of dates) {
             let fromDate = DateTime.fromISO(date.from_.replace(" ", "T"));
             const toDate = DateTime.fromISO(date.to_.replace(" ", "T"));
-            console.log("Date", date, fromDate, toDate);
 
             while (fromDate < toDate) {
                 let from = fromDate;
@@ -350,10 +353,38 @@ class PEcalendar {
                     to: to
                 });
 
-                fromDate = fromDate.set({hour: endHour, minute: 0, second: 0}).plus({days: 1}).set({hour: startHour, minute: 0, second: 0});
+                fromDate = fromDate.set({hour: endHour, minute: 0, second: 0}).plus({days: 1}).set({
+                    hour: startHour,
+                    minute: 0,
+                    second: 0
+                });
             }
         }
         console.log("Intervals", intervals);
         return intervals;
+    }
+
+    calculateStartEndHours() {
+        const getInclusiveHourFromTimeString = (timeString, isEndTime) => {
+            const date = new Date(`1970-01-01T${timeString}Z`);
+            const hour = date.getUTCHours();
+            const minutes = date.getUTCMinutes();
+            const seconds = date.getUTCSeconds();
+
+            if (isEndTime && (minutes > 0 || seconds > 0)) {
+                return hour + 1;
+            }
+
+            return hour;
+        }
+
+        if (!this.seasons) return;
+        let minTime = 24;
+        let maxTime = 0;
+        for (let season of this.seasons) {
+            minTime = Math.min(minTime, getInclusiveHourFromTimeString(season.from_, false));
+            maxTime = Math.max(maxTime, getInclusiveHourFromTimeString(season.to_, true));
+        }
+        this.setHours(minTime, maxTime);
     }
 }

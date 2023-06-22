@@ -604,7 +604,9 @@
                 );
             }
 
-            return array('total_records' => count($results), 'results' => array("schedule" => $results, "resources" => $resources_id));
+			$soseason = CreateObject('booking.soseason');
+			$seasons = $soseason->get_building_seasons($building_id, $from->format('Y-m-d'), $to->format('Y-m-d'));
+            return array('total_records' => count($results), 'results' => array("schedule" => $results, "resources" => $resources_id, "seasons" => $seasons));
         }
 
 		/**
