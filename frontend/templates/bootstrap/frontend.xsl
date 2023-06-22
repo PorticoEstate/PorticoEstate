@@ -255,7 +255,7 @@
 											<div class="text-value-xl">
 												<xsl:value-of select="number_of_locations"/>
 											</div>
-											<div class="text-uppercase text-muted small">
+											<div class="text-uppercase text-body-secondary small">
 												<xsl:value-of select="php:function('lang', 'number_of_units')"/>
 											</div>
 										</div>
@@ -265,7 +265,7 @@
 											<div class="text-value-xl">
 												<xsl:value-of select="total_area"/>
 											</div>
-											<div class="text-uppercase text-muted small">
+											<div class="text-uppercase text-body-secondary small">
 												<xsl:value-of select="php:function('lang', 'total_area_internal')"/>
 											</div>
 										</div>
@@ -275,7 +275,7 @@
 											<div class="text-value-xl">
 												<xsl:value-of select="total_price"/>
 											</div>
-											<div class="text-uppercase text-muted small">
+											<div class="text-uppercase text-body-secondary small">
 												<xsl:value-of select="php:function('lang', 'total_price_internal')"/>
 											</div>
 										</div>
@@ -379,7 +379,7 @@
 											<div class="text-value-xl">
 												<xsl:value-of select="selected_total_area"/>
 											</div>
-											<div class="text-uppercase text-muted small">
+											<div class="text-uppercase text-body-secondary small">
 												<xsl:value-of select="php:function('lang', 'total_area_internal')"/>
 											</div>
 										</div>
@@ -389,7 +389,7 @@
 											<div class="text-value-xl">
 												<xsl:value-of select="selected_total_price"/>
 											</div>
-											<div class="text-uppercase text-muted small">
+											<div class="text-uppercase text-body-secondary small">
 												<xsl:value-of select="php:function('lang', 'total_price_internal')"/>
 											</div>
 

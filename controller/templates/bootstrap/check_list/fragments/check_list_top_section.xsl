@@ -122,7 +122,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 		<!-- ==================  CHECKLIST TAB MENU  ===================== -->
-		<nav class="navbar bg-dark navbar-dark">
+		<nav class="navbar bg-dark" data-bs-theme="dark">
 
 			<!-- LOGO -->
 			<a class="navbar-brand" href="#" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
