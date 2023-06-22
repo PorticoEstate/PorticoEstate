@@ -298,7 +298,7 @@ HTML;
 					if ( $bookmark_id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}"
 					|| ( !empty($entry['nav_location']) && $entry['nav_location'] == $GLOBALS['phpgw_info']['flags']['menu_selection'] ))
 					{
-						$seleced_bm .= ' active';
+						$seleced_bm .= ' text-white';
 					}
 
 					$bookmark_option .= <<<HTML
@@ -653,7 +653,7 @@ HTML;
 		{
 			$id ++;
 			$out = <<<HTML
-	          <a href="#_$id" data-bs-toggle="collapse" aria-expanded="{$aria_expanded}" class="dropdown-toggle">{$parent_name}</a>
+	          <a href="#_$id" data-bs-toggle="collapse text-white" aria-expanded="{$aria_expanded}" class="dropdown-toggle">{$parent_name}</a>
 				<ul class="{$ul_class}list-unstyled collapse" id = "_$id">
 					{$out}
 				</ul>
