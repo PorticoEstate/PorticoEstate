@@ -8,6 +8,17 @@ $(document).ready(function () {
         theme: 'select-v2 select-v2--main-search',
         width: '100%',
     });
+
+    $("#js-toggle-filter").click(function() {
+        $(this).toggleClass("toggle-filter--show")
+        $(".filter-element").toggleClass("d-block");
+        
+        if($(this).hasClass('toggle-filter--show')){
+          $(this).text('Se færre filter');         
+        } else {
+          $(this).text('Se flere filter');
+        }
+    });
 });
 
 </script>
@@ -123,7 +134,7 @@ $(document).ready(function () {
             <input type="text" id="label_datepicker_large" class="js-datepicker" placeholder="Velg">
           </div>
         </div>
-        <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0">
+        <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 filter-element">
           <div class="multisearch__inner__item ">
             <label for="id_label_activity_large">Aktivitet</label>
             <select class="js-select-multisearch" id="id_label_activity_large">
@@ -133,7 +144,7 @@ $(document).ready(function () {
             </select>
           </div>
         </div>
-        <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
+        <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border filter-element">
           <div class="multisearch__inner__item">
             <label for="id_label_category_large">Ressurskategori</label>
             <select class="js-select-multisearch" id="id_label_category_large">
@@ -143,7 +154,7 @@ $(document).ready(function () {
             </select>
           </div>
         </div>
-        <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
+        <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border filter-element">
           <div class="multisearch__inner__item">
             <label for="id_label_res_large">Ressurser</label>
             <select class="js-select-multisearch" id="id_label_res_large">
@@ -153,7 +164,7 @@ $(document).ready(function () {
             </select>
           </div>
         </div>
-        <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
+        <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border filter-element">
           <div class="multisearch__inner__item">
             <label for="id_label_fas_large">Fasiliteter</label>
             <select class="js-select-multisearch" id="id_label_fas_large">
@@ -162,6 +173,11 @@ $(document).ready(function () {
               <option value="Bergen kommune">Bergen kommune</option>
             </select>
           </div>
+        </div>
+        <div class="d-flex d-md-none justify-content-end">
+          <button id="js-toggle-filter" class="pe-btn pe-btn-secondary align-self-end toggle-filter">
+            Se flere filter 
+          </button>
         </div>
       </div>
     </div>
