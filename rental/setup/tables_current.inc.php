@@ -173,6 +173,8 @@
 				'publish_comment' => array('type' => 'bool', 'nullable' => true, 'default' => 'false'), //skal kommentar vises i frontend
 				'notify_on_expire' => array('type' => 'int','precision' => 2,'nullable' => true),
 				'notified_time' => array('type' => 'int','precision' => 8,'nullable' => true),
+				'cancelled' => array('type' => 'int', 'precision' => '8', 'nullable' => true), // timestamp
+				'cancelled_by' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(

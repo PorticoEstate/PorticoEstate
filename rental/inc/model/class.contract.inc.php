@@ -82,6 +82,8 @@
 		protected $total_price_current_year;
 		protected $notify_on_expire;
 		protected $notified_time;
+		protected $cancelled;
+		protected $cancelled_by;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -1248,6 +1250,24 @@
 		public function set_notified_time( $notified_time )
 		{
 			$this->notified_time = (int)$notified_time;
+		}
+		public function get_cancelled()
+		{
+			return (int)$this->cancelled;
+		}
+
+		public function set_cancelled( $cancelled )
+		{
+			$this->cancelled = (int)$cancelled;
+		}
+		public function get_cancelled_by()
+		{
+			return (int)$this->cancelled_by;
+		}
+
+		public function set_cancelled_by( $cancelled_by )
+		{
+			$this->cancelled_by = (int)$cancelled_by;
 		}
 
 

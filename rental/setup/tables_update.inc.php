@@ -1051,3 +1051,27 @@
 		}
 	}
 
+	$test[] = '0.1.0.41';
+	function rental_upgrade0_1_0_41()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_contract', 'cancelled', array(
+			'type' => 'int',
+			'precision' => 8,
+			'nullable' => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_contract', 'cancelled_by', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.42';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}

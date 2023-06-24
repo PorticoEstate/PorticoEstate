@@ -23,6 +23,7 @@
 
 		private $pdf_templates = array();
 		private $config, $district_id, $part_of_town_id;
+		private $account_id;
 
 		public $public_functions = array(
 			'add'							 => true,
@@ -61,6 +62,7 @@
 			$this->config->read();
 			$this->district_id		 = phpgw::get_var('district_id', 'int');
 			$this->part_of_town_id	 = phpgw::get_var('part_of_town_id', 'int');
+			$this->account_id = $GLOBALS['phpgw_info']['user']['account_id'];
 
 		}
 
@@ -132,16 +134,30 @@
 				'list' => $search_option
 			);
 
-			$status_option = array
-				(
+			$filters[] = array(
+								'type' => 'date-picker',
+								'id' => 'end_date_report',
+								'name' => 'end_date_report',
+								'value' => '',
+								'text' => 'Export ' . lang('to')
+							);
+			$filters[] = array(
+								'type' => 'date-picker',
+								'id' => 'start_date_report',
+								'name' => 'start_date_report',
+								'value' => '',
+								'text' => 'Export ' . lang('from')
+							);
+
+			$status_option = array(
 				array('id' => 'all', 'name' => lang('all')),
 				array('id' => 'under_planning', 'name' => lang('under_planning')),
 				array('id' => 'active', 'name' => lang('active_plural')),
 				array('id' => 'under_dismissal', 'name' => lang('under_dismissal')),
-				array('id' => 'ended', 'name' => lang('ended'))
+				array('id' => 'ended', 'name' => lang('ended')),
+				array('id' => 'cancelled', 'name' => lang('cancelled'))
 			);
-			$filters[] = array
-				(
+			$filters[] = array(
 				'type' => 'filter',
 				'name' => 'contract_status',
 				'text' => lang('status'),
@@ -939,7 +955,7 @@
 						'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('status_date'));
 					break;
 				case 'contracts_for_executive_officer':  // Contracts for this executive officer
-					$filters = array('executive_officer' => $GLOBALS['phpgw_info']['user']['account_id']);
+					$filters = array('executive_officer' => $this->account_id);
 					break;
 				case 'ending_contracts':
 				case 'ended_contracts':
@@ -1119,20 +1135,20 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'date-picker',
-								'id' => 'start_date_report',
-								'name' => 'start_date_report',
-								'value' => '',
-								'text' => 'Export ' . lang('from')
-							),
-							array(
-								'type' => 'date-picker',
-								'id' => 'end_date_report',
-								'name' => 'end_date_report',
-								'value' => '',
-								'text' => 'Export ' . lang('to')
-							),
+//							array(
+//								'type' => 'date-picker',
+//								'id' => 'start_date_report',
+//								'name' => 'start_date_report',
+//								'value' => '',
+//								'text' => 'Export ' . lang('from')
+//							),
+//							array(
+//								'type' => 'date-picker',
+//								'id' => 'end_date_report',
+//								'name' => 'end_date_report',
+//								'value' => '',
+//								'text' => 'Export ' . lang('to')
+//							),
 //							array(
 //								'type' => 'link',
 //								'value' => lang('export_contracts'),
@@ -1253,7 +1269,7 @@
 			);
 
 			$filters = $this->_get_Filters();
-			krsort($filters);
+//			krsort($filters);
 
 //			$filters[] = array('type' => 'link',
 //								'value' => lang('new'),
@@ -1499,6 +1515,8 @@ JS;
 				$contract->set_adjustment_share(phpgw::get_var('adjustment_share'));
 				$contract->set_adjustable(phpgw::get_var('adjustable') == 'on' ? true : false);
 				$contract->set_publish_comment(phpgw::get_var('publish_comment') == 'on' ? true : false);
+				$contract->set_cancelled(phpgw::get_var('cancelled') == 1 ? time() : false);
+				$contract->set_cancelled_by(phpgw::get_var('cancelled') == 1 ? $this->account_id : false);
 				$validated_numeric = $contract->validate_numeric();
 
 				if ($validated_numeric)
@@ -1637,7 +1655,7 @@ JS;
 
 			if (!$executive_officer = $contract->get_executive_officer_id())
 			{
-				$executive_officer = $GLOBALS['phpgw_info']['user']['account_id'];
+				$executive_officer = $this->account_id;
 			}
 
 			if (!$current_term_id = $contract->get_term_id())
@@ -1859,6 +1877,8 @@ JS;
 				'value_override_adjustment_start' => $contract->get_override_adjustment_start(),
 				'value_comment' => $contract->get_comment(),
 				'value_publish_comment' => $contract->get_publish_comment(),
+				'value_cancelled' => $contract->get_cancelled(),
+				'value_cancelled_by' => $contract->get_cancelled_by(),
 				'location_id' => $contract->get_location_id(),
 				'contract_id' => $contract_id,
 				'mode' => $mode,
@@ -1965,7 +1985,7 @@ JS;
 				if ($this->isAdministrator() || $this->isExecutiveOfficer())
 				{
 					$created = date($this->dateFormat, strtotime('now'));
-					$created_by = $GLOBALS['phpgw']->accounts->id2name($GLOBALS['phpgw_info']['user']['account_id']);
+					$created_by = $GLOBALS['phpgw']->accounts->id2name($this->account_id);
 
 					$contract = new rental_contract();
 					$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
@@ -1980,7 +2000,7 @@ JS;
 
 			if (!$executive_officer = $contract->get_executive_officer_id())
 			{
-				$executive_officer = $GLOBALS['phpgw_info']['user']['account_id'];
+				$executive_officer = $this->account_id;
 			}
 
 			if (!$current_term_id = $contract->get_term_id())
@@ -2296,10 +2316,10 @@ JS;
 					'name' => lang('weekly'), 'selected' => 0);
 
 				$accounts_users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'rental');
-				$users[] = array('id' => $GLOBALS['phpgw_info']['user']['account_id'], 'name' => lang('target_me'));
+				$users[] = array('id' => $this->account_id, 'name' => lang('target_me'));
 				foreach ($accounts_users as $account)
 				{
-					if ($account['account_id'] != $GLOBALS['phpgw_info']['user']['account_id'])
+					if ($account['account_id'] != $this->account_id)
 					{
 						$users[] = array('id' => $account['account_id'], 'name' => $GLOBALS['phpgw']->accounts->get($account['account_id'])->__toString());
 					}
@@ -2477,6 +2497,8 @@ JS;
 				'value_override_adjustment_start' => $override_adjustment_start ? $override_adjustment_start : '',
 				'value_comment' => $contract->get_comment(),
 				'value_publish_comment' => $contract->get_publish_comment(),
+				'value_cancelled' => $contract->get_cancelled(),
+				'value_cancelled_by_name' => $contract->get_cancelled_by() ? $GLOBALS['phpgw']->accounts->get($contract->get_cancelled_by())->__toString() : '',
 				'location_id' => $contract->get_location_id(),
 				'contract_id' => $contract_id,
 				'mode' => $mode,
@@ -2538,7 +2560,7 @@ JS;
 			$contract->set_location_id(phpgw::get_var('responsibility_id'));
 			$contract->set_account_in(rental_socontract::get_instance()->get_default_account($contract->get_location_id(), true));
 			$contract->set_account_out(rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false));
-			$contract->set_executive_officer_id($GLOBALS['phpgw_info']['user']['account_id']);
+			$contract->set_executive_officer_id($this->account_id);
 
 			/* $config	= CreateObject('phpgwapi.config','rental');
 			  $config->read(); */
