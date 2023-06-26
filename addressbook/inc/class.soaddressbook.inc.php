@@ -835,7 +835,7 @@
 //			$this->unlock();
 		}
 
-		function upgrade_others($add_others=array(), $del_others=array(), $edit_others=array(), $data=array(), $contact_id)
+		function upgrade_others($add_others=array(), $del_others=array(), $edit_others=array(), $data=array(), $contact_id=null)
 		{
 			if(!is_array($data))
 			{
@@ -857,6 +857,11 @@
 							  array('other_value' => $value), 
 							  PHPGW_SQL_RUN_SQL);
 				}
+			}
+
+			if(!$contact_id)
+			{
+				return;
 			}
 
 			foreach($add_others as $key => $fields)
