@@ -450,7 +450,18 @@
 															<xsl:when test="type = 'control_item_type_5'">
 
 																<input name="type" type="hidden" value="control_item_type_5" />
-																<input name="status" type="hidden" value="1" />
+																<!--<input name="status" type="hidden" value="1" />-->
+																<div class="form-group">
+																	<label>Status</label>
+																	<select name="status" class="form-select">
+																		<option value="0" SELECTED="SELECTED">Åpen</option>
+																		<option value="1" >Lukket</option>
+																		<option value="2" >Venter på tilbakemelding</option>
+																		<option value="3" >
+																			<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+																		</option>
+																	</select>
+																</div>
 
 																<div class="form-group">
 																	<label class="pure-checkbox">Velg verdi fra lister</label>

@@ -85,7 +85,7 @@
 
 		function get_location_level( $location_code )
 		{
-			$level = count(explode('-', $location_code));
+			$level = $location_code ? count(explode('-', $location_code)) : 0;
 
 			return $level;
 		}
