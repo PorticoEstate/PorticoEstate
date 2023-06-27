@@ -47,6 +47,7 @@
 			$this->function_msg	 = 'Sjekk manglende ordreregistering i Agresso fra Portico';
 			$this->db			 = & $GLOBALS['phpgw']->db;
 			$this->join			 = & $this->db->join;
+			$this->account		 = $GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
 		function execute()
@@ -245,8 +246,12 @@ HTML;
 HTML;
 
 			$subject = 'Manglende ordreregistering i Agresso fra Portico';
-
-			$toarray = array('hc483@bergen.kommune.no');
+		
+			$toarray = array($GLOBALS['phpgw_info']['user']['preferences']['common']['email']);
+			if(!$toarray)
+			{
+				$toarray = array('hc483@bergen.kommune.no');
+			}
 			$to		 = implode(';', $toarray);
 
 			try
