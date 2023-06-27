@@ -2096,6 +2096,7 @@
 			$log_customer_name = '';
 			$log_customer_nr = '';
 			$log_buidling = '';
+			$customer_number = '';
 
 			$internal = false;
 
@@ -2404,10 +2405,9 @@
 
 					$text['sequence_no'] = str_pad(intval($item['sequence_no']) + 1, 8, '0', STR_PAD_LEFT);
 
-					$line_no = 0;
-
 					if($purchase_order && !empty($purchase_order['lines']))
 					{
+						$line_no -=1;
 
 						$_item = $item;
 						$_text = $text;
@@ -2571,10 +2571,10 @@
 
 					$text['sequence_no'] = str_pad(intval($item['sequence_no']) + 1, 8, '0', STR_PAD_LEFT);
 
-					$line_no -=1;
 
 					if($purchase_order && !empty($purchase_order['lines']))
 					{
+						$line_no -=1;
 
 						$_item = $item;
 						$_text = $text;
