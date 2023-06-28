@@ -99,7 +99,7 @@
 			}
 		}
 
-		function fetch_groups( $parent_id = 0, $organization_id )
+		function fetch_groups( $parent_id, $organization_id )
 		{
 			$groups = $this->so->read(array('results' => -1, 'filters' => array('organization_id' => $organization_id )));
 			$groups = $groups['results'];
