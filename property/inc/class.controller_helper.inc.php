@@ -288,18 +288,30 @@ HTML;
 
 
 				$_value_arr = array();
+				
+				$value = $case['measurement'];
 
-				if ($case['measurement'])
+				if ($value)
 				{
-					$_value_arr[] = $case['measurement'];
+
+					$_value = unserialize($value);
+
+					if(is_array($_value))
+					{
+						$_value_arr = array_merge($_value_arr, $_value);
+					}
+					else
+					{
+						$_value_arr[] = $value;
+					}
 				}
+
 				if ($case['descr'])
 				{
 					$_value_arr[] = $case['descr'];
 				}
 
-				$_cases[] = array
-					(
+				$_cases[] = array(
 					'url'		 => "<a href=\"{$_link}\" > {$case['check_list_id']}</a>",
 					'type'		 => $_control_name,
 					'title'		 => "<a href=\"{$_link}\" > {$case['title']}</a>",
@@ -377,9 +389,18 @@ HTML;
 					);
 					$_value_arr	 = array();
 
-					if ($case->get_measurement())
+					$value = $case->get_measurement();
+
+					if ($value)
 					{
-						$_value_arr[] = $case->get_measurement();
+						if(is_array($value))
+						{
+							$_value_arr = array_merge($_value_arr, $value);
+						}
+						else
+						{
+							$_value_arr[] = $value;							
+						}
 					}
 					if ($case->get_descr())
 					{
@@ -666,8 +687,7 @@ HTML;
 
 			$so_control = CreateObject('controller.socontrol');
 
-			$values	 = array
-				(
+			$values	 = array(
 				'ids'				 => phpgw::get_var('ids', 'int'),
 				'action'			 => phpgw::get_var('action', 'string'),
 				'assigned_to'		 => phpgw::get_var('control_responsible', 'int'),
@@ -681,8 +701,7 @@ HTML;
 
 			if ($ret)
 			{
-				$result = array
-					(
+				$result = array(
 					'status_kode'	 => 'ok',
 					'status'		 => 'Ok',
 					'msg'			 => lang('updated')
@@ -690,8 +709,7 @@ HTML;
 			}
 			else
 			{
-				$result = array
-					(
+				$result = array(
 					'status_kode'	 => 'error',
 					'status'		 => lang('error'),
 					'msg'			 => 'Noe gikk galt'

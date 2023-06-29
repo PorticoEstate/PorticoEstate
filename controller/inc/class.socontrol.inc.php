@@ -1737,6 +1737,7 @@
 			$action = $data['action'];
 			$value_set = array();
 			$add_history = false;
+			$ret = 0;
 			switch ($action)
 			{
 				case 'enable':
@@ -1772,6 +1773,19 @@
 						$value_set['service_time'] = $data['service_time'];
 					}
 					break;
+				case 'delete':
+					$value_set['enabled'] = 0;
+					foreach ($ids as $serie_id)
+					{
+						$this->db->query("SELECT id FROM controller_check_list WHERE serie_id = {$serie_id}", __LINE__, __FILE__);
+						if(!$this->db->next_record())
+						{
+							$this->db->query("DELETE FROM controller_control_serie_history WHERE serie_id = {$serie_id}", __LINE__, __FILE__);
+							$this->db->query("DELETE FROM controller_control_serie WHERE id = {$serie_id}", __LINE__, __FILE__);
+							$ret = PHPGW_ACL_DELETE;
+						}
+					}
+					break;
 				default:
 					throw new Exception("controller_socontrol::update_control_serie - not av valid action: '{$action}'");
 					break;
@@ -1803,8 +1817,10 @@
 					}
 				}
 
-				return PHPGW_ACL_EDIT; // Bit - edit
+				$ret =  $ret | PHPGW_ACL_EDIT; // Bit - edit
 			}
+
+			return $ret;
 		}
 
 		function get_next_start_date($start_date, $repeat_type, $repeat_interval)

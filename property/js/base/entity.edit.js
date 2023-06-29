@@ -1,4 +1,4 @@
-/* global get_files_java_url */
+/* global get_files_java_url, location_id, item_id */
 
 this.fileuploader = function ()
 {
@@ -111,6 +111,11 @@ this.onActionsClick = function (action)
 
 	if (ids.length > 0)
 	{
+		if (action === 'delete')
+		{
+			alert('Sletter dersom det ikke er tilknyttet historikk');
+		}
+
 		var data = {ids: ids, action: action};
 		data.repeat_interval = $("#repeat_interval").val();
 		data.controle_time = $("#controle_time").val();
