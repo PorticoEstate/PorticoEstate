@@ -34,13 +34,13 @@
 		<tr class="row_on">
 			<td>Antall planlagte kontroller som skal vises.</td>
 			<td>
-				<input type="text" name="newsettings[no_of_planned_controls]" value="{value_no_of_planned_controls}" class="pure-u-1"/>
+				<input type="number" name="newsettings[no_of_planned_controls]" value="{value_no_of_planned_controls}" class="pure-u-1"/>
 			</td>
 		</tr>
 		<tr class="row_off">
 			<td>Antall tildelte kontroller som skal vises</td>
 			<td>
-				<input type="text" name="newsettings[no_of_assigned_controls]" value="{value_no_of_assigned_controls}" class="pure-u-1"/>
+				<input type="number" name="newsettings[no_of_assigned_controls]" value="{value_no_of_assigned_controls}" class="pure-u-1"/>
 			</td>
 		</tr>
 		<tr class="row_on">
