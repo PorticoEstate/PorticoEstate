@@ -392,6 +392,7 @@ class BookingSearch {
             this.addInfoCards(el, [])
         }
         createJsSlidedowns();
+
     }
 
     calculateAvailableResources = () => {
