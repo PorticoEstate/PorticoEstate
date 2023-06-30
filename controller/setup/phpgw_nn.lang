@@ -475,3 +475,5 @@ performed	controller	nn	Utført
 not performed	controller	nn	Ikkje utført
 check list status	controller	nn	Status for heile kontrollen
 performed without deviation	controller	nn	Utført utan avvik
+perform control	controller	nn	utfør kontroll
+perform control on selected	controller	nn	Utfør kontroll på valt utstyr
