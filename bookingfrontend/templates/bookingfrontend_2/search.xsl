@@ -43,7 +43,7 @@
                                     <input type="text" id="search-booking-datepicker" placeholder="dd.mm.yyyy" class="js-basic-datepicker" data-bind="textInput: date"/>
                                 </div>
                             </div>
-                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
+                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border filter-element">
                                 <div class="multisearch__inner__item ">
                                     <label class="text-bold text-primary" for="search-booking-activities">Aktivitet
                                     </label>
@@ -57,7 +57,7 @@
                             </div>
                         </div>
                         <div class="row flex-column flex-md-row">
-                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0">
+                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 filter-element">
                                 <div class="multisearch__inner__item">
                                     <label for="search-booking-area">Område</label>
                                     <select class="js-select-multisearch" id="search-booking-area" aria-label="Bydel"
@@ -68,7 +68,7 @@
 
                                 </div>
                             </div>
-                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
+                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border filter-element">
                                 <div class="multisearch__inner__item">
                                     <label for="search-booking-building">Lokale</label>
                                     <select class="js-select-multisearch" id="search-booking-building"
@@ -81,7 +81,7 @@
                                 </div>
                             </div>
 
-                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
+                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border filter-element">
                                 <div class="multisearch__inner__item">
                                     <label class="text-bold text-primary" for="search-booking-resource_categories">
                                         Ressurskategori
@@ -94,7 +94,7 @@
             "/>
                                 </div>
                             </div>
-                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
+                            <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border filter-element">
                                 <div class="multisearch__inner__item">
                                     <label class="text-bold text-primary" for="search-booking-facilities">Fasiliteter
                                     </label>
@@ -105,6 +105,11 @@
             selectedOptions: selected_facilities
             "/>
                                 </div>
+                            </div>
+                            <div class="d-flex d-md-none justify-content-end">
+                                <button id="js-toggle-filter" class="pe-btn pe-btn-secondary align-self-end toggle-filter">
+                                    Se flere filter
+                                </button>
                             </div>
                         </div>
                     </div>

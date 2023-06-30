@@ -247,7 +247,7 @@ class BookingSearch {
 
         this.fetchEasyBooking(() => {
             fetched_easy_booking = true;
-                onSuccess()
+            onSuccess()
         })
 
 
@@ -257,7 +257,7 @@ class BookingSearch {
             this.allocation_cache[from_date].seasons = {};
         }
         const resource_ids = [...new Set(this.data.result_all()
-            .filter(r => r.simple_booking!==1)
+            .filter(r => r.simple_booking !== 1)
             .filter(r => !(r.id in this.allocation_cache[from_date].allocations)).map(r => r.id))];
         if (resource_ids.length === 0) {
             fetched_available_resource = true;
@@ -330,6 +330,7 @@ class BookingSearch {
             this.fetchAvailableResources();
         else this.search();
     }
+
     search() {
         let resources = [];
         let hasSearch = false;
@@ -368,7 +369,7 @@ class BookingSearch {
                 const buildings = this.data.buildings().filter(building => building.name.match(re));
                 buildings_resources = this.getResourcesFromBuildings(buildings);
             }
-            resources = resources.filter(resource => resource.name.match(re) || buildings_resources.some(r => r.id===resource.id))
+            resources = resources.filter(resource => resource.name.match(re) || buildings_resources.some(r => r.id === resource.id))
 
             hasSearch = true;
         }
@@ -385,7 +386,7 @@ class BookingSearch {
             this.data.result_all(resources);
             if (this.data.show_only_available())
                 resources = resources.filter(r => this.data.resources_with_available_time().includes(r.id));
-            this.addInfoCards(el, resources.sort((a,b) => a.name.localeCompare(b.name)));
+            this.addInfoCards(el, resources.sort((a, b) => a.name.localeCompare(b.name)));
         } else {
             fillSearchCount(null);
             this.addInfoCards(el, [])
@@ -461,7 +462,7 @@ class BookingSearch {
             if (!(id in resource_allocation)) return true;
             return !allocationFillsAllowed(resource_allocation[id], resource_season[id])
         }).map(id => +id)
-        this.data.resources_with_available_time([ ...new Set([...available_ids, ...this.easy_booking_available_cache[this.data.date()]])]);
+        this.data.resources_with_available_time([...new Set([...available_ids, ...this.easy_booking_available_cache[this.data.date()]])]);
         // console.log("Available ids", available_ids);
     }
 
@@ -503,7 +504,7 @@ class BookingSearch {
                 const calendarId = `calendar-${resource.id}`;
                 okResources.push(resource);
                 let url = "";
-                if (resource.simple_booking===1) {
+                if (resource.simple_booking === 1) {
                     url = phpGWLink('bookingfrontend/', {
                         menuaction: 'bookingfrontend.uiresource.show',
                         building_id: buildings[0].id,
@@ -544,13 +545,21 @@ class BookingSearch {
         fillSearchCount(okResources.slice(0, 50), okResources.length);
         // calendars.map(calendar => calendar.createCalendarDom())
     }
+
+    adjustMobilePositionOnSearch() {
+        let searchBox = document.getElementById("search-booking");
+        setTimeout(function () {
+            // Scroll the search box to the top of the screen
+            window.scrollTo(0, searchBox.getBoundingClientRect().top);
+        }, 200);
+    }
 }
 
 class EventSearch {
     data = {
         text: ko.observable(""),
         from_date: ko.observable(getSearchDateString(new Date())),
-        to_date: ko.observable(getSearchDateString(new Date(new Date().getTime() + (7* 86400 * 1000)))),
+        to_date: ko.observable(getSearchDateString(new Date(new Date().getTime() + (7 * 86400 * 1000)))),
         events: ko.observableArray([])
     }
 

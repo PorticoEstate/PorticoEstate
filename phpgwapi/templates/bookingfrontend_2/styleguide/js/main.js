@@ -70,6 +70,17 @@ $(document).ready(function () {
             $(this).find('#datepicker').datepicker("hide");
         }
     });
+
+    $("#js-toggle-filter").click(function() {
+        $(this).toggleClass("toggle-filter--show")
+        $(".filter-element").toggleClass("d-block");
+
+        if($(this).hasClass('toggle-filter--show')){
+            $(this).text('Se færre filter');
+        } else {
+            $(this).text('Se flere filter');
+        }
+    });
 });
 
 const updateSelectBasic = () => {
