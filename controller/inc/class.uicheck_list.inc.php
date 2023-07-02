@@ -3486,28 +3486,6 @@ HTML;
 			$report_data['title'] = $report_info['control']->get_title();
 
 
-			$inspectors = createObject('controller.sosettings')->get_inspectors($check_list_id);
-
-			$selected_inspectors = array();
-			foreach ($inspectors as $inspector)
-			{
-				if($inspector['selected'])
-				{
-					$prefs =CreateObject('phpgwapi.preferences',$inspector['id'])->read();
-
-					$inspector_name = $inspector['name'];
-
-					if(!empty($prefs['controller']['certificate']))
-					{
-						$inspector_name .= " ( {$prefs['controller']['certificate']} )";
-					}
-
-					$selected_inspectors[] = $inspector_name;
-				}
-			}
-			unset($inspector);
-
-			$report_data['inspectors'] = $selected_inspectors;
 			$report_data['check_list_id'] = $check_list_id;
 			$report_data['completed_date'] = $GLOBALS['phpgw']->common->show_date($completed_date, $dateformat);
 			$report_data['where'] = $report_info['component_array']['xml_short_desc'];
@@ -3591,6 +3569,7 @@ HTML;
 			$include_condition_degree = 0;
 			$location_identificator_fallback = 0;
 			$data_case = array();
+			$users = array();
 			foreach ($report_info['open_check_items_and_cases'] as $check_item)
 			{
 
@@ -3618,8 +3597,7 @@ HTML;
 
 				foreach ($check_item->get_cases_array() as $case)
 				{
-//						_debug_array($case);
-
+					$users[] = $case->get_modified_by();
 					if(isset($findings_map[$case->get_control_item_id()]) && $check_item->get_control_item()->get_report_summary())
 					{
 
@@ -3966,6 +3944,41 @@ HTML;
 			$report_data['return_as_pdf'] = phpgw::get_var('return_as_pdf', 'bool');
 
 //			_debug_array($report_data['findings']);die();
+
+			$selected_inspectors = array();
+			$case_users = array();
+			foreach ($users as $user_id)
+			{
+				$case_users[] = array(
+					'id' => $user_id,
+					 'name' => $GLOBALS['phpgw']->accounts->get($user_id)->__toString(),
+					 'selected' => 1
+				);
+			}
+
+			$inspectors = createObject('controller.sosettings')->get_inspectors($check_list_id);
+
+			$inspectors = array_merge($case_users, $inspectors);
+
+			foreach ($inspectors as $inspector)
+			{
+				if($inspector['selected'])
+				{
+					$prefs =CreateObject('phpgwapi.preferences',$inspector['id'])->read();
+
+					$inspector_name = $inspector['name'];
+
+					if(!empty($prefs['controller']['certificate']))
+					{
+						$inspector_name .= " ( {$prefs['controller']['certificate']} )";
+					}
+
+					$selected_inspectors[] = $inspector_name;
+				}
+			}
+			unset($inspector);
+
+			$report_data['inspectors'] = array_unique($selected_inspectors);
 
 			$this->render_report($report_data);
 		}
