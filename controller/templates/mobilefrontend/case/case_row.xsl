@@ -306,7 +306,7 @@
 												<xsl:when test="status = 0">
 													<option value="0" SELECTED="SELECTED">Åpen</option>
 													<option value="1" >Lukket</option>
-													<option value="2">Venter på tilbakemelding</option>
+													<!-- <option value="2">Venter på tilbakemelding</option> -->
 													<option value="3">
 														<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 													</option>
@@ -314,7 +314,7 @@
 												<xsl:when test="status = 1">
 													<option value="0">Åpen</option>
 													<option value="1" SELECTED="SELECTED">Lukket</option>
-													<option value="2">Venter på tilbakemelding</option>
+													<!-- <option value="2">Venter på tilbakemelding</option> -->
 													<option value="3">
 														<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 													</option>
@@ -330,7 +330,7 @@
 												<xsl:when test="status = 3">
 													<option value="0">Åpen</option>
 													<option value="1" >Lukket</option>
-													<option value="2">Venter på tilbakemelding</option>
+													<!-- <option value="2">Venter på tilbakemelding</option> -->
 													<option value="3" SELECTED="SELECTED">
 														<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 													</option>
