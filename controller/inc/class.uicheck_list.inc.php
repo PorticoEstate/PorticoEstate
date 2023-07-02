@@ -3710,11 +3710,26 @@ HTML;
 					}
 
 
-					$entry[] = array
-					(
-						'text' => 'Verdi',//lang('measurement'),
-						'value' => $case->get_measurement()
-					);
+					$measurement = $case->get_measurement();
+
+					if($measurement && is_array($measurement))
+					{
+						$entry[] = array
+						(
+							'text' => 'Verdi',//lang('measurement'),
+							'value' => implode(', ', $measurement)
+						);
+					}
+					else
+					{
+						$entry[] = array
+						(
+							'text' => 'Verdi',//lang('measurement'),
+							'value' => $measurement
+						);
+	
+					}
+
 
 					if($case->get_regulation_reference())
 					{
