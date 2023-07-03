@@ -28,6 +28,18 @@
 					<!--xsl:value-of select="control_item/type" /-->
 				</span>
 
+				<xsl:variable name="include_condition_degree">
+					<xsl:value-of select="control_item/include_condition_degree"/>
+				</xsl:variable>
+
+				<xsl:variable name="include_counter_measure">
+					<xsl:value-of select="control_item/include_counter_measure"/>
+				</xsl:variable>
+
+				<xsl:variable name="include_regulation_reference">
+					<xsl:value-of select="control_item/include_regulation_reference"/>
+				</xsl:variable>
+
 				<ul>
 					<xsl:for-each select="cases_array">
 						<xsl:variable name="case_id">
@@ -120,26 +132,29 @@
 										</span>
 									</div>
 
-									<div class="row">
-										<label>Tilstandsgrad:</label>
-										<span class="case_condition_degree">
-											<xsl:for-each select="//degree_list/options">
-												<xsl:if test="$condition_degree = id">
-													<xsl:value-of disable-output-escaping="yes" select="name"/>
-												</xsl:if>
-											</xsl:for-each>
-										</span>
-									</div>
-									<div class="row">
-										<label>Konsekvens:</label>
-										<span class="case_consequence">
-											<xsl:for-each select="//consequence_list/options">
-												<xsl:if test="$consequence = id">
-													<xsl:value-of disable-output-escaping="yes" select="name"/>
-												</xsl:if>
-											</xsl:for-each>
-										</span>
-									</div>
+									<xsl:if test="$include_condition_degree= 1">
+										<div class="row">
+											<label>Tilstandsgrad:
+											</label>
+											<span class="case_condition_degree">
+												<xsl:for-each select="//degree_list/options">
+													<xsl:if test="$condition_degree = id">
+														<xsl:value-of disable-output-escaping="yes" select="name"/>
+													</xsl:if>
+												</xsl:for-each>
+											</span>
+										</div>
+										<div class="row">
+											<label>Konsekvens:</label>
+											<span class="case_consequence">
+												<xsl:for-each select="//consequence_list/options">
+													<xsl:if test="$consequence = id">
+														<xsl:value-of disable-output-escaping="yes" select="name"/>
+													</xsl:if>
+												</xsl:for-each>
+											</span>
+										</div>
+									</xsl:if>
 
 									<xsl:if test="$control_item_type = 'control_item_type_2' or $control_item_type = 'control_item_type_3' or $control_item_type = 'control_item_type_4' or $control_item_type = 'control_item_type_5'">
 
@@ -162,12 +177,16 @@
 										</div>
 									</xsl:if>
 
-									<div class="row">
-										<label>Hjemmel:</label>
-										<span class="regulation_reference">
-											<xsl:value-of select="regulation_reference"/>
-										</span>
-									</div>
+
+									<xsl:if test="$include_regulation_reference= 1">
+										<div class="row">
+											<label>Hjemmel:</label>
+											<span class="regulation_reference">
+												<xsl:value-of select="regulation_reference"/>
+											</span>
+										</div>
+									</xsl:if>
+
 
 									<!--  DESCRIPTION -->
 									<div class="row">
@@ -176,16 +195,19 @@
 									<div class="case_descr">
 										<xsl:value-of select="descr"/>
 									</div>
+									
+									<xsl:if test="$include_counter_measure= 1">
+										<div class="row">
+											<label>
+												<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
+												<xsl:text>:</xsl:text>
+											</label>
+										</div>
+										<div class="proposed_counter_measure">
+											<xsl:value-of select="proposed_counter_measure"/>
+										</div>
+									</xsl:if>
 
-									<div class="row">
-										<label>
-											<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
-											<xsl:text>:</xsl:text>
-										</label>
-									</div>
-									<div class="proposed_counter_measure">
-										<xsl:value-of select="proposed_counter_measure"/>
-									</div>
 									<xsl:if test="case_files/child::node()">
 										<div class="row">
 											<label>
@@ -335,7 +357,7 @@
 												<xsl:when test="status = 0">
 													<option value="0" SELECTED="SELECTED">Åpen</option>
 													<option value="1" >Lukket</option>
-													<option value="2">Venter på tilbakemelding</option>
+													<!-- <option value="2">Venter på tilbakemelding</option> -->
 													<option value="3">
 														<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 													</option>
@@ -343,7 +365,7 @@
 												<xsl:when test="status = 1">
 													<option value="0">Åpen</option>
 													<option value="1" SELECTED="SELECTED">Lukket</option>
-													<option value="2">Venter på tilbakemelding</option>
+													<!-- <option value="2">Venter på tilbakemelding</option> -->
 													<option value="3">
 														<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 													</option>
@@ -359,7 +381,7 @@
 												<xsl:when test="status = 3">
 													<option value="0">Åpen</option>
 													<option value="1" >Lukket</option>
-													<option value="2">Venter på tilbakemelding</option>
+													<!-- <option value="2">Venter på tilbakemelding</option> -->
 													<option value="3" SELECTED="SELECTED">
 														<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 													</option>
