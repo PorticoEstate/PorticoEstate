@@ -28,7 +28,7 @@
 	$stylesheets = array();
 
 	phpgw::import_class('phpgwapi.jquery');
-	phpgwapi_jquery::load_widget('core');
+	phpgwapi_jquery::load_widget('ui');
 
 	$javascripts[]	 = "/phpgwapi/js/popper/popper2.min.js";
 	$javascripts[]	 = "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js";
