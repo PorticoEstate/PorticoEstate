@@ -1421,8 +1421,16 @@
 			// Apply the search
 			oTable.api().columns().eq(0).each(function(colIdx)
 			{
+				var lastSearcCallback = 0;
+				var delay = 200;
 				$('input', oTable.api().column(colIdx).header()).on('keyup change', function()
 				{
+					if (lastSearcCallback >= (Date.now() - delay))
+					{
+						 return;
+					}
+					lastSearcCallback = Date.now();
+
 					oTable.api()
 						.column(colIdx)
 						.search(this.value)

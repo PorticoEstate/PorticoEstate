@@ -961,12 +961,31 @@
 						case 'street_name':
 							$filtermethod	 .= " {$where} fm_streetaddress.descr $this->like '%{$value}%'";
 							break;
+						case 'category_text':
+							$filtermethod	 .= " {$where} fm_location{$type_id}_category.descr $this->like '%{$value}%'";
+							break;
 						default:
-							$filtermethod	 .= " {$where} {$key} $this->like '%{$value}%'";
+							$metadata	 = $this->db->metadata("fm_location{$type_id}");
+
+							if(isset($metadata[$key]))
+							{
+								if(in_array($metadata[$key]->type, array('varchar', 'text')))
+								{
+									$filtermethod	 .= " {$where} fm_location{$type_id}.{$key} $this->like '%{$value}%'";
+								}
+								else if($metadata[$key]->type == 'numeric')
+								{
+									$filtermethod	 .= " {$where} fm_location{$type_id}.{$key} = '" . (float)$value . "'";
+								}
+								if(in_array($metadata[$key]->type, array('int2','int4', 'int8')))
+								{
+									$filtermethod	 .= " {$where} fm_location{$type_id}.{$key} = " . (int)$value;
+								}
+							}
 							break;
 					}
 
-					$where			 = 'AND';
+					$where	 = 'AND';
 				}
 				unset($key);
 			}

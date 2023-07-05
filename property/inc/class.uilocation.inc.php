@@ -1186,6 +1186,8 @@ JS;
 
 				switch ($uicols['name'][$k])
 				{
+
+					case "loc{$type_id}_name":
 					case 'first_name':
 					case 'last_name':
 					case 'street_name':
