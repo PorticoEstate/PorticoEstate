@@ -772,7 +772,8 @@ JS;
 				'district_id'			 => $this->district_id,
 				'status'				 => $this->status,
 				'part_of_town_id'		 => $this->part_of_town_id,
-				'location_code'			 => $this->location_code
+				'location_code'			 => $this->location_code,
+				'column_search'			 => !empty($data['column_search']) ? (array)$data['column_search'] : array()
 			));
 
 			$this->total_records = $this->so->total_records;

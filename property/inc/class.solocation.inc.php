@@ -362,6 +362,7 @@
 			$filter_item			 = isset($data['filter_item']) && $data['filter_item'] ? (array)$data['filter_item'] : array();
 			$additional_fields		 = !empty($data['additional_fields']) ? (array)$data['additional_fields'] : array();
 			$criteria_id			 = isset($data['criteria_id']) ? $data['criteria_id'] : '';
+			$column_search			 = !empty($data['column_search']) ? (array)$data['column_search'] : array();
 
 
 			if ($location_id && !$type_id)
@@ -939,6 +940,37 @@
 				$filtermethod	 .= " {$where} fm_location{$type_id}.id IN (" . implode(', ', $filter_item) . ')';
 				$where			 = 'AND';
 			}
+
+			if ($column_search)
+			{
+				foreach ($column_search as $key => $value)
+				{
+					switch ($key)
+					{
+						case 'contact_phone':
+						case 'first_name':
+						case 'last_name':
+							$filtermethod	 .= " {$where} fm_tenant.{$key} $this->like '%{$value}%'";
+							break;
+						case 'boareal':
+							$filtermethod	 .= " {$where} boareal >= " . (int)$value;
+							break;
+						case 'antallrom':
+							$filtermethod	 .= " {$where} antallrom = " . (int)$value;
+							break;
+						case 'street_name':
+							$filtermethod	 .= " {$where} fm_streetaddress.descr $this->like '%{$value}%'";
+							break;
+						default:
+							$filtermethod	 .= " {$where} {$key} $this->like '%{$value}%'";
+							break;
+					}
+
+					$where			 = 'AND';
+				}
+				unset($key);
+			}
+
 			if ($filter > 0)
 			{
 				//cramirez.r@ccfirst.com 16/09/08 	validacion is added to avoid notice
@@ -981,7 +1013,7 @@
 
 			if ($location_code)
 			{
-				$filtermethod	 .= " {$where} fm_location{$type_id}.location_code $this->like '{$location_code}%'";
+				$filtermethod	 .= " {$where} fm_location{$type_id}.location_code {$this->like} '{$location_code}%'";
 				$where			 = 'AND';
 			}
 

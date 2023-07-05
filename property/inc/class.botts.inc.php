@@ -1147,7 +1147,7 @@
 			$file_input_name = isset($data['file_input_name']) && $data['file_input_name'] ? $data['file_input_name'] : 'file';
 
 			$file_name = @str_replace(' ', '_', $_FILES[$file_input_name]['name']);
-			if (!$cancel_attachment && $file_name && $result['id'])
+			if (!$cancel_attachment && $file_name && $result['id'] && !empty($_FILES[$file_input_name]['tmp_name']))
 			{
 				$bofiles = CreateObject('property.bofiles');
 				$to_file = "{$bofiles->fakebase}/fmticket/{$result['id']}/{$file_name}";

@@ -36,6 +36,7 @@
 
 		var number_of_toolbar_items = 0;
 		var filter_selects = {};
+		var lang = <xsl:value-of select="php:function('js_lang', 'Search')"/>;
 	</script>
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<xsl:apply-templates select="form" />
@@ -512,7 +513,20 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:if>
-			orderable:		<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
+			orderable:	<xsl:value-of select="phpgw:conditional(not(sortable = 0), 'true', 'false')"/>,
+			<xsl:choose>
+				<xsl:when test="searchable">
+					<xsl:if test="searchable = 0">
+						searchable:	false,
+					</xsl:if>
+					<xsl:if test="searchable = 1">
+						searchable:	true,
+					</xsl:if>
+				</xsl:when>
+				<xsl:otherwise>
+					searchable:	false,
+				</xsl:otherwise>
+			</xsl:choose>
 			<xsl:choose>
 				<xsl:when test="hidden">
 					<xsl:if test="hidden =0">
@@ -1206,18 +1220,30 @@
 					return true;
 				},
 				fnServerParams: function ( aoData ) {
+					var _columns = aoData.columns;
+					delete aoData.columns;
+					aoData.columns = {};
+
 					if(typeof(aoData.order[0]) != 'undefined')
 					{
 						var column = aoData.order[0].column;
 						var dir = aoData.order[0].dir;
-						var column_to_keep = aoData.columns[column];
-						delete aoData.columns;
-						aoData.columns = {};
+						var column_to_keep = _columns[column];
+
 						if(JqueryPortico.columns[column]['orderable'] == true)
 						{
 							aoData.columns[column] = column_to_keep;
 						}
 					}
+					
+					for ( var i=0 ; i < _columns.length ; i++ )
+					{
+					   if(_columns[i].searchable && _columns[i].search.value !=="")
+					   {
+						   aoData.columns[i] = _columns[i];
+					   }
+					}
+
 					active_filters_html = [];
 					var select = null;
 					for (var i in filter_selects)
@@ -1377,6 +1403,37 @@
 						}
 					}
 			   } );
+
+
+			//---- START column search ----
+			// Setup - add a text input to each header cell
+			$('#datatable-container thead th').each(function(colIdx)
+			{
+				if(oTable.api().settings()[0].aoColumns[colIdx].bSearchable)
+				{
+					var title = $(this).text();
+					var search_value = oTable.api().column(colIdx).search();
+					$(this).html('<input type="text" placeholder="' + lang['Search'] + ' ' + title + '" value="' + search_value + '" title="' + title + '"/>');
+				}
+
+			});
+
+			// Apply the search
+			oTable.api().columns().eq(0).each(function(colIdx)
+			{
+				$('input', oTable.api().column(colIdx).header()).on('keyup change', function()
+				{
+					oTable.api()
+						.column(colIdx)
+						.search(this.value)
+						.draw();
+				});
+
+				$('input', oTable.api().column(colIdx).header()).on('click', function(e) {
+					e.stopPropagation();
+				});
+			});
+			//---- END column search ----
 
 			if(InitContextMenu === true)
 			{
