@@ -2625,6 +2625,17 @@ HTML;
 				}
 				else
 				{
+
+					$purchase_grant_ok = true;
+					foreach ($check_purchase as $purchase_grant)
+					{
+						if ($purchase_grant['required'])
+						{
+							$purchase_grant_ok = false;
+						}
+					}
+					unset($purchase_grant);
+
 					foreach ($check_purchase as $purchase_grant)
 					{
 						if ($purchase_grant['is_user'] || ( $purchase_grant['required'] && $purchase_grant['approved']))
