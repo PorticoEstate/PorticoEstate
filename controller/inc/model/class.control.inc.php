@@ -69,6 +69,7 @@
 		// Array that contains error messages. Is populted in function validate
 		protected $error_msg_array;
 		protected $ticket_cat_id;
+		protected $location_code;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -99,6 +100,15 @@
 		public function get_title()
 		{
 			return $this->title;
+		}
+		public function set_location_code( $location_code )
+		{
+			$this->location_code = $location_code;
+		}
+
+		public function get_location_code()
+		{
+			return $this->location_code;
 		}
 
 		public function set_description( $description )

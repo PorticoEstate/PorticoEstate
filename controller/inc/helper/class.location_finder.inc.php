@@ -41,7 +41,10 @@
 
 		function get_responsibilities( $data = array() )
 		{
-			$data['filter_role_on_contact'] = $GLOBALS['phpgw']->accounts->get($data['user_id'])->person_id;
+			if(empty($data['bypass_responsibility']))
+			{
+				$data['filter_role_on_contact'] = $GLOBALS['phpgw']->accounts->get($data['user_id'])->person_id;
+			}
 			$locations = $this->so->read($data);
 
 			$total_records = $this->so->total_records;

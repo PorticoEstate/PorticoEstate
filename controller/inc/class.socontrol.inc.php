@@ -261,15 +261,16 @@
 			}
 			else
 			{
-				$sql .= " AND (planned_date > $from_date AND planned_date <= $to_date AND controller_control.end_date IS NULL) ";
+				$sql .= " AND (planned_date >= $from_date AND planned_date <= $to_date)";// AND controller_control.end_date IS NULL) ";
 			}
 
+			$sql .= " ORDER BY planned_date";
 
 			$start = 0;
+
 			if($limit_no_of_planned)
 			{
-				$order_method = ' ORDER BY planned_date';
-				$this->db->limit_query($sql . $order_method, $start, __LINE__, __FILE__, $limit_no_of_planned);
+				$this->db->limit_query($sql, $start, __LINE__, __FILE__, $limit_no_of_planned);
 			}
 			else
 			{
@@ -328,12 +329,19 @@
 
 			$controls_array = array();
 
+			$filter_location = "cll.location_code LIKE '$location_code%'";
+
+			if(is_array($location_code))
+			{
+				$filter_location = "cll.location_code IN ('" . implode("','", $location_code) . "')";
+			}
+
 			$sql = "SELECT distinct c.*, fm_responsibility_role.name AS responsibility_name,location_code ";
 			$sql .= "FROM controller_control_location_list cll ";
 			$sql .= "LEFT JOIN controller_control c on cll.control_id=c.id ";
 			$sql .= "LEFT JOIN fm_responsibility_role ON fm_responsibility_role.id = c.responsibility_id ";
 			//		$sql .= "WHERE cll.location_code = '$location_code' ";
-			$sql .= "WHERE cll.location_code LIKE '$location_code%' ";
+			$sql .= "WHERE {$filter_location} ";
 			if ($repeat_type)
 			{
 				$sql .= "AND c.repeat_type = $repeat_type ";
@@ -368,6 +376,7 @@
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
+				$control->set_location_code($_location_code);
 
 				if ($return_type == "return_object")
 				{
@@ -549,6 +558,7 @@
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
+				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
 
 				if ($return_type == "return_object")
 				{
@@ -583,6 +593,119 @@
 			}
 		}
 
+		/**
+		 * 
+		 * @param integer $to_date
+		 * @param string $return_type
+		 * @param array $user_ids
+		 * @return \controller_component
+		 */
+		public function get_controls_by_serie( $to_date,  $return_type = "return_object", $user_ids = array() )
+		{
+			$controls_array = array();
+
+			if($user_ids)
+			{
+				$user_filter = "AND controller_control_serie.assigned_to IN (" . implode(',', array_map('intval', $user_ids)) . ')';
+			}
+
+			$sql = "SELECT DISTINCT c.id as control_id, c.*, bim_item.type as component_type, bim_item.id as component_id,
+				bim_item.location_code, bim_item.address, cl.location_id,fm_responsibility_role.name AS responsibility_name
+			FROM controller_control_component_list cl
+			JOIN fm_bim_item bim_item on cl.component_id = bim_item.id
+			JOIN fm_bim_type bim_type on cl.location_id = bim_type.location_id AND bim_item.type = bim_type.id
+			JOIN controller_control c on cl.control_id = c.id
+			JOIN fm_responsibility_role ON fm_responsibility_role.id = c.responsibility_id
+			JOIN controller_control_serie ON (cl.id = controller_control_serie.control_relation_id
+				AND controller_control_serie.control_relation_type = 'component')
+				{$user_filter}
+				AND controller_control_serie.enabled = 1
+				AND controller_control_serie.start_date <= {$to_date}
+				ORDER BY bim_item.id";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$component_id = 0;
+			$component = null;
+			while ($this->db->next_record())
+			{
+				if ($this->db->f('component_id') != $component_id)
+				{
+					if ($component_id != 0)
+					{
+						$component->set_controls_array($controls_array);
+						$controls_array = array();
+
+						if ($return_type == "return_array")
+						{
+							$components_array[] = $component->toArray();
+						}
+						else
+						{
+							$components_array[] = $component;
+						}
+					}
+
+					$component = new controller_component();
+					$component->set_type($this->unmarshal($this->db->f('component_type'), 'int'));
+					$component->set_id($this->unmarshal($this->db->f('component_id'), 'int'));
+					$component->set_location_id($this->unmarshal($this->db->f('location_id'), 'int'));
+					$component->set_guid($this->unmarshal($this->db->f('guid', true), 'string'));
+					$component->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+					$component->set_loc_1($this->unmarshal($this->db->f('loc_1', true), 'string'));
+					$component->set_address($this->unmarshal($this->db->f('address', true), 'string'));
+				}
+
+				$control = new controller_control($this->unmarshal($this->db->f('control_id'), 'int'));
+				$control->set_title($this->unmarshal($this->db->f('title', true), 'string'));
+				$control->set_description($this->unmarshal($this->db->f('description', true), 'string'));
+				$control->set_start_date($this->unmarshal($this->db->f('start_date'), 'int'));
+				$control->set_end_date($this->unmarshal($this->db->f('end_date'), 'int'));
+				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
+				$control->set_procedure_name($this->unmarshal($this->db->f('procedure_name', true), 'string'));
+				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'int'));
+				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id'), 'int'));
+				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id'), 'int'));
+				$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
+				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+				$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
+				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
+				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
+				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
+				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+
+				if ($return_type == "return_object")
+				{
+					$controls_array[] = $control;
+				}
+				else
+				{
+					$controls_array[] = $control->toArray();
+				}
+
+				$component_id = $component->get_id();
+			}
+
+			if ($component != null)
+			{
+				$component->set_controls_array($controls_array);
+
+				if ($return_type == "return_array")
+				{
+					$components_array[] = $component->toArray();
+				}
+				else
+				{
+					$components_array[] = $component;
+				}
+
+				return $components_array;
+			}
+			else
+			{
+				return null;
+			}
+		}
 		/**
 		 * Get controls with a control area
 		 *
@@ -1737,6 +1860,7 @@
 			$action = $data['action'];
 			$value_set = array();
 			$add_history = false;
+			$ret = 0;
 			switch ($action)
 			{
 				case 'enable':
@@ -1772,6 +1896,19 @@
 						$value_set['service_time'] = $data['service_time'];
 					}
 					break;
+				case 'delete':
+					$value_set['enabled'] = 0;
+					foreach ($ids as $serie_id)
+					{
+						$this->db->query("SELECT id FROM controller_check_list WHERE serie_id = {$serie_id}", __LINE__, __FILE__);
+						if(!$this->db->next_record())
+						{
+							$this->db->query("DELETE FROM controller_control_serie_history WHERE serie_id = {$serie_id}", __LINE__, __FILE__);
+							$this->db->query("DELETE FROM controller_control_serie WHERE id = {$serie_id}", __LINE__, __FILE__);
+							$ret = PHPGW_ACL_DELETE;
+						}
+					}
+					break;
 				default:
 					throw new Exception("controller_socontrol::update_control_serie - not av valid action: '{$action}'");
 					break;
@@ -1803,8 +1940,10 @@
 					}
 				}
 
-				return PHPGW_ACL_EDIT; // Bit - edit
+				$ret =  $ret | PHPGW_ACL_EDIT; // Bit - edit
 			}
+
+			return $ret;
 		}
 
 		function get_next_start_date($start_date, $repeat_type, $repeat_interval)

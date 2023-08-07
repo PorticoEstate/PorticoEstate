@@ -147,7 +147,7 @@
 			$rows									 = array();
 			$rows['SakID']							 = $data['id'];
 			$rows['Beskrivelse av sak/reklamasjon']	 = $ticket['details'];
-			$rows['Type sak']						 = 'reklamasjon';
+			$rows['Type sak']						 = 'Reklamasjon';
 			$rows['Hvor']							 = $ticket['location_code'] . ' : ' . $ticket['address'];
 			$rows['Referanse']						 = array(
 				'value'		 => 'Link til saken i Portico',

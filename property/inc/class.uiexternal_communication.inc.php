@@ -235,6 +235,12 @@
 				{
 					$this->_send($receipt['id']);
 				}
+				else if (phpgw::get_var('save', 'bool') && !empty($receipt['id']))
+				{
+					self::redirect(array('menuaction'	 => "{$this->currentapp}.uiexternal_communication.edit",
+						'id'			 => $receipt['id'])
+					);
+				}
 
 				self::redirect(array('menuaction' => "{$this->currentapp}.uiexternal_communication.add_deviation"));
 			}

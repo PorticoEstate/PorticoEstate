@@ -72,12 +72,13 @@
 			</h5>-->
 
 			<!-- MODAL INSPECT EQUIPMENT START -->
-			<div class="modal fade" id="inspectObject">
+			<div class="modal fade" id="inspectObject" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" >
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<!-- Modal Header -->
 						<div class="modal-header">
 							<h4 id="inspection_title" class="modal-title">Utfør kontroll</h4>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<!-- Modal body -->
 						<div class="modal-body">
@@ -209,7 +210,7 @@
 																	<select name="status" class="form-select">
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
-																		<option value="2" >Venter på tilbakemelding</option>
+																		<!-- <option value="2" >Venter på tilbakemelding</option> -->
 																		<option value="3" >
 																			<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 																		</option>
@@ -259,7 +260,7 @@
 																	<select name="status" class="form-select">
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
-																		<option value="2" >Venter på tilbakemelding</option>
+																		<!-- <option value="2" >Venter på tilbakemelding</option> -->
 																		<option value="3" >
 																			<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 																		</option>
@@ -322,7 +323,7 @@
 																	<select name="status" class="form-select">
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
-																		<option value="2" >Venter på tilbakemelding</option>
+																		<!-- <option value="2" >Venter på tilbakemelding</option> -->
 																		<option value="3" >
 																			<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 																		</option>
@@ -389,7 +390,7 @@
 																	<select name="status" class="form-select">
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
-																		<option value="2" >Venter på tilbakemelding</option>
+																		<!-- <option value="2" >Venter på tilbakemelding</option> -->
 																		<option value="3" >
 																			<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 																		</option>
@@ -456,7 +457,7 @@
 																	<select name="status" class="form-select">
 																		<option value="0" SELECTED="SELECTED">Åpen</option>
 																		<option value="1" >Lukket</option>
-																		<option value="2" >Venter på tilbakemelding</option>
+																		<!-- <option value="2" >Venter på tilbakemelding</option> -->
 																		<option value="3" >
 																			<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 																		</option>

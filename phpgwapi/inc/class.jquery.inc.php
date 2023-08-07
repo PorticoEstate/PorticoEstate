@@ -81,6 +81,13 @@
 
 			switch ($widget)
 			{
+				case 'ui':
+					$load = array(
+						"ui/{$_jquery_ui}{$_type}",
+					);
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui.min.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/theme.css");
+					break;
 				case 'datepicker':
 					$load = array(
 		//				"js/{$_jquery_core}{$_type}",

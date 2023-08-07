@@ -745,17 +745,17 @@
 																				</xsl:variable>
 
 																				<xsl:if test="(../application/agegroups/male[../agegroup_id = $id]) > 0 or (../application/agegroups/female[../agegroup_id = $id]) > 0">
-																				<tr>
-																					<td>
-																						<xsl:value-of select="name"/>
-																					</td>
-																					<td>
-																						<xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/>
-																					</td>
-																					<td>
-																						<xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/>
-																					</td>
-																				</tr>
+																					<tr>
+																						<td>
+																							<xsl:value-of select="name"/>
+																						</td>
+																						<td>
+																							<xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/>
+																						</td>
+																						<td>
+																							<xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/>
+																						</td>
+																					</tr>
 																				</xsl:if>
 																			</xsl:for-each>
 																		</tbody>
@@ -964,7 +964,7 @@
 																</script>
 																<div class="pure-control-group">
 																	<label>&nbsp;</label>
-																	<select name="create" onchange="if(this.selectedIndex==1) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}]);">
+																	<select name="create" onchange="if(this.selectedIndex==1) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uibooking.add', eventParams[{id}]); if(this.selectedIndex==3) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}]);">
 																		<xsl:if test="not(../case_officer/is_current_user)">
 																			<xsl:attribute name="disabled">disabled</xsl:attribute>
 																		</xsl:if>
@@ -974,6 +974,9 @@
 																			</option>
 																			<option>
 																				<xsl:value-of select="php:function('lang', 'Create allocation')" />
+																			</option>
+																			<option>
+																				<xsl:value-of select="php:function('lang', 'Create booking')" />
 																			</option>
 																			<option>
 																				<xsl:value-of select="php:function('lang', 'Create event')" />
@@ -1111,9 +1114,9 @@
 											</div>
 											<div class="panel-body">
 												<!--<legend>-->
-													<h4>
-														<xsl:value-of select="php:function('lang', 'additional requirements')" />
-													</h4>
+												<h4>
+													<xsl:value-of select="php:function('lang', 'additional requirements')" />
+												</h4>
 												<!--</legend>-->
 												<xsl:value-of disable-output-escaping="yes" select="application/agreement_requirements"/>
 											</div>
@@ -1258,21 +1261,21 @@
 		var colDefsAttachmentsResource = [{key: 'name', label: lang['Name'], formatter: genericLink}];
 		createTable('attachments_container', attachmentsResourceURL, colDefsAttachmentsResource, '', 'pure-table pure-table-bordered');
 
-	var colDefsPayment = [
+		var colDefsPayment = [
 		{
-			label: lang['Select'],
-			attrs: [{name: 'class', value: "align-middle"}],
-			object: [
-				{
-					type: 'input',
-					attrs: [
-						{name: 'type', value: 'radio'},
-						{name: 'name', value: 'order_selector'},
-						{name: 'class', value: 'order_selector'},
-						{name: 'onClick', value: 'show_order(this);'}
-					]
-				}
-			], value: 'order_id'
+		label: lang['Select'],
+		attrs: [{name: 'class', value: "align-middle"}],
+		object: [
+		{
+		type: 'input',
+		attrs: [
+		{name: 'type', value: 'radio'},
+		{name: 'name', value: 'order_selector'},
+		{name: 'class', value: 'order_selector'},
+		{name: 'onClick', value: 'show_order(this);'}
+		]
+		}
+		], value: 'order_id'
 		},
 		{key: 'order_id', label: lang['order id']},
 		{key: 'created_value', label: lang['created']},
@@ -1282,7 +1285,7 @@
 		{key: 'status_text', label: lang['status']},
 		{key: 'payment_method', label: lang['payment method']},
 		{key: 'actions', label: lang['Actions'], formatter: genericLink2({name: 'delete', label: lang['refund']}, {name: 'edit', label: lang['cancel']})}
-	];
+		];
 
 		createTable('payments_container', paymentURL, colDefsPayment,'', 'pure-table pure-table-bordered');
 

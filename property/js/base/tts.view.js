@@ -294,6 +294,7 @@ this.refresh_files = function ()
 
 this.make_relation = function (id)
 {
+	var loc1=location_code.split('-')[0]; //defined in xsl
 	var oArgs = null;
 	relation_type = $('#make_relation').val();
 	if (relation_type)
@@ -305,7 +306,7 @@ this.make_relation = function (id)
 				make_relation: true,
 				relation_id: id,
 				relation_type: 'ticket',
-				query: location_code, //defined in xsl
+				query: loc1,
 				clear_state: 1
 			};
 			var strURL = phpGWLink('index.php', oArgs);

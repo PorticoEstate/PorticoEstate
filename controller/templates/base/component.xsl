@@ -17,6 +17,60 @@
 </func:function>
 
 <xsl:template match="data">
+
+<style>
+
+	@media print {
+	li {page-break-inside: avoid;}
+	h1, h2, h3, h4, h5 {
+	page-break-after: avoid;
+
+
+	 @page {
+		 margin: 0;
+		 size: A4 landscape;
+		 }
+ 	 div .content { margin: 1.0cm; }
+
+	}
+
+	}
+
+
+	@page:left{
+	@bottom-left {
+	content: "Page " counter(page) " of " counter(pages);
+	}
+	}
+	@media print
+	{
+	.btn
+	{
+	display: none !important;
+	}
+	nav {
+            display: none !important;
+        }
+	footer {
+            display: none !important;
+        }
+
+	#queryForm {
+            display: none !important;
+        }
+	div .content {
+    visibility: visible;
+    position: absolute;
+    left: 0;
+    top: 0;
+	print-color-adjust: exact; 
+  }
+
+	}
+
+
+</style>
+<button class="btn btn-secondary" onclick="window.print();">Utskrift</button>
 	<h2>
 		<xsl:value-of select="datatable_name"/>
 	</h2>

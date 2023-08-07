@@ -139,6 +139,18 @@
 			$columns = phpgw::get_var('columns');
 			$export	 = phpgw::get_var('export', 'bool');
 
+			$column_search = array();
+			if($columns && is_array($columns))
+			{
+				foreach ($columns as $column)
+				{
+					if(!empty($column['search']['value']))
+					{
+						$column_search[$column['data']] = $column['search']['value'];
+					}
+				}
+			}
+
 			$params = array(
 				'start'			 => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results'		 => phpgw::get_var('length', 'int', 'REQUEST', 0),
@@ -148,7 +160,8 @@
 				'dir'			 => $order[0]['dir'],
 				'allrows'		 => phpgw::get_var('length', 'int') == -1 || $export,
 				'lookup_tenant'	 => $lookup_tenant,
-				'dry_run'		 => false
+				'dry_run'		 => false,
+				'column_search' => $column_search
 			);
 
 			$values = $this->bo->read($params);
@@ -1168,12 +1181,31 @@ JS;
 				else if (isset($uicols['cols_return_extra'][$k]) && ($uicols['cols_return_extra'][$k] != 'T' || $uicols['cols_return_extra'][$k] != 'CH'))
 				{
 					$params['sortable'] = true;
+					$params['searchable'] = true;
+				}
+
+				switch ($uicols['name'][$k])
+				{
+
+					case "loc{$type_id}_name":
+					case 'first_name':
+					case 'last_name':
+					case 'street_name':
+					case 'street_number':
+					case 'contact_phone':
+						$params['searchable'] = true;
+						break;
+					case 'googlemap':
+						$params['searchable'] = 0;
+						break;
+					default:
+						break;
 				}
 
 				array_push($data['datatable']['field'], $params);
 			}
 
-
+//			_debug_array($data['datatable']['field']);
 			if (!$lookup)
 			{
 				$parameters = array
