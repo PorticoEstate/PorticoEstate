@@ -1098,11 +1098,6 @@ JS;
 						'phpgw_return_as'	 => 'json'
 					)),
 					"columns"		 => array('onclick' => "JqueryPortico.openPopup({menuaction:'property.uilocation.columns', type_id:'{$type_id}',parent:'{$this->location_code}'}, {closeAction:'reload'})"),
-					'new_item'		 => self::link(array(
-						'menuaction' => 'property.uilocation.add',
-						'type_id'	 => $type_id,
-						'parent'	 => $this->location_code
-					)),
 					'download'		 => self::link(array('menuaction'	 => 'property.uilocation.download',
 						'type_id'		 => $type_id,
 						'lookup'		 => $lookup,
@@ -1119,11 +1114,11 @@ JS;
 
 			if (!$lookup)
 			{
-				$data['actions']['form']['toolbar']['item'][] = array
-					(
-					'type'	 => 'button',
-					'id'	 => 'btn_new',
-					'value'	 => lang('add')
+				$data['datatable']['new_item'] =  self::link(array(
+						'menuaction' => 'property.uilocation.add',
+						'type_id'	 => $type_id,
+						'parent'	 => $this->location_code
+					)
 				);
 			}
 
