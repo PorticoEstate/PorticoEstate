@@ -98,12 +98,12 @@
 		 */
 		public function home_backend()
 		{
-			$this->home_workorder_overdue_tender();
-			$this->home_project_overdue_end_date();
+//			$this->home_workorder_overdue_tender();
+//			$this->home_project_overdue_end_date();
 			$this->home_tenant_claims();
 			$this->home_ticket();
 	//		$this->home_project();
-	//		$this->home_workorder();
+			$this->home_workorder();
 		}
 
 		/**
@@ -685,6 +685,7 @@ JS;
 		 */
 		public function home_workorder()
 		{
+			$config				 = CreateObject('phpgwapi.config', 'property')->read();
 			$accound_id															 = $GLOBALS['phpgw_info']['user']['account_id'];
 			$save_app															 = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$GLOBALS['phpgw_info']['flags']['currentapp']						 = 'property';
@@ -966,8 +967,14 @@ JS;
 
 				echo '<div id="my_responsibility_approval_info_container"></div>';
 
-				$lang = js_lang('responsible', 'id', 'date');
+				$lang = js_lang('responsible', 'id', 'date', 'cancel', 'user');
 
+				$location_filter = '&location[]=.project&location[]=.ticket';
+
+				if($config['approval_level'] == 'order')
+				{
+					$location_filter .= '&location[]=.project.workorder';
+				}
 				$js = <<<JS
 					<script type="text/javascript">
 					var building_id = 1;
@@ -984,7 +991,7 @@ JS;
 						result:10
 						}, true);
 
-						approval_infoURL += '&location[]=.project&location[]=.ticket&location[]=.project.workorder';
+						approval_infoURL += '{$location_filter}';
 						approval_infoURL += '{$responsible_filter}';
 
 					var rApproval_info = [{n: 'ResultSet'},{n: 'Result'}];
@@ -992,8 +999,9 @@ JS;
 					var colDefsApproval_info = [
 						{key: 'id', label: lang['id'], formatter: genericLink},
 						{key: 'responsible_name', label: lang['responsible']},
-						{key: 'requested_date', label: lang['date']}
-
+						{key: 'requested_date', label: lang['date']},
+						{key: 'created_by_name', label: lang['user']},
+						{key: 'dellink', label: lang['cancel'], formatter: genericLink2}
 						];
 
 					var paginatorTableMyApproval_info = new Array();

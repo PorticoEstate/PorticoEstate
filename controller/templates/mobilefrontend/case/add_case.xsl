@@ -1,6 +1,6 @@
 <!-- $Id: choose_control_items.xsl 8267 2011-12-11 12:27:18Z sigurdne $ -->
 <xsl:template match="data"
-	xmlns:php="http://php.net/xsl">
+			  xmlns:php="http://php.net/xsl">
 	<xsl:variable name="session_url">
 		<xsl:text>&amp;</xsl:text>
 		<xsl:value-of select="php:function('get_phpgw_session_url')" />
@@ -64,12 +64,13 @@
 			</h5>
 
 			<!-- MODAL INSPECT EQUIPMENT START -->
-			<div class="modal fade" id="inspectObject">
+			<div class="modal fade" id="inspectObject" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" >
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<!-- Modal Header -->
 						<div class="modal-header">
 							<h4 id="inspection_title" class="modal-title">Utfør kontroll</h4>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<!-- Modal body -->
 						<div class="modal-body">
@@ -196,7 +197,7 @@
 															<select name="status" class="form-select">
 																<option value="0" SELECTED="SELECTED">Åpen</option>
 																<option value="1">Lukket</option>
-																<option value="2">Venter på tilbakemelding</option>
+																<!-- <option value="2">Venter på tilbakemelding</option> -->
 																<option value="3">
 																	<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 																</option>
@@ -242,7 +243,7 @@
 															<select name="status" class="form-select">
 																<option value="0" SELECTED="SELECTED">Åpen</option>
 																<option value="1">Lukket</option>
-																<option value="2">Venter på tilbakemelding</option>
+																<!-- <option value="2">Venter på tilbakemelding</option> -->
 																<option value="3">
 																	<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 																</option>
@@ -299,7 +300,7 @@
 															<select name="status" class="form-select">
 																<option value="0" SELECTED="SELECTED">Åpen</option>
 																<option value="1">Lukket</option>
-																<option value="2">Venter på tilbakemelding</option>
+																<!-- <option value="2">Venter på tilbakemelding</option> -->
 																<option value="3">
 																	<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 																</option>
@@ -361,7 +362,7 @@
 															<select name="status" class="form-select">
 																<option value="0" SELECTED="SELECTED">Åpen</option>
 																<option value="1">Lukket</option>
-																<option value="2">Venter på tilbakemelding</option>
+																<!-- <option value="2">Venter på tilbakemelding</option> -->
 																<option value="3">
 																	<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 																</option>
@@ -416,7 +417,18 @@
 														<xsl:when test="type = 'control_item_type_5'">
 
 															<input name="type" type="hidden" value="control_item_type_5" />
-															<input name="status" type="hidden" value="1" />
+															<!--<input name="status" type="hidden" value="1" />-->
+															<div class="form-group">
+																<label>Status</label>
+																<select name="status" class="form-select">
+																	<option value="0" SELECTED="SELECTED">Åpen</option>
+																	<option value="1" >Lukket</option>
+																	<!-- <option value="2" >Venter på tilbakemelding</option> -->
+																	<option value="3" >
+																		<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+																	</option>
+																</select>
+															</div>
 
 															<label>Velg verdi fra lister</label>
 															<!--<br/>-->
@@ -555,7 +567,7 @@
 			<xsl:attribute name="selected" value="selected" />
 		</xsl:if>
 		<xsl:value-of select="id"/>
- -		<xsl:value-of disable-output-escaping="yes" select="short_description"/>
+		-		<xsl:value-of disable-output-escaping="yes" select="short_description"/>
 	</option>
 </xsl:template>
 
@@ -569,7 +581,7 @@
 </xsl:template>
 
 <xsl:template name="regulation_reference"
-	xmlns:php="http://php.net/xsl">
+			  xmlns:php="http://php.net/xsl">
 	<xsl:param name="control_item_id" />
 	<xsl:param name="lang_regulation_reference" />
 	<xsl:param name="lang_new_value" />

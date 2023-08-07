@@ -511,24 +511,24 @@
 															<h5 class="mb-1">
 																<xsl:value-of select="php:function('lang', 'Email')" />
 															</h5>
-															<small class="text-muted"></small>
+															<small class="text-body-secondary"></small>
 														</div>
 														<p class="mb-1 font-weight-bold">
 															<xsl:value-of select="application/contact_email"/>
 														</p>
-														<small class="text-muted"></small>
+														<small class="text-body-secondary"></small>
 													</div>
 													<div href="#" class="list-group-item flex-column align-items-start">
 														<div class="d-flex w-100 justify-content-between">
 															<h5 class="mb-1">
 																<xsl:value-of select="php:function('lang', 'Phone')" />
 															</h5>
-															<small class="text-muted"></small>
+															<small class="text-body-secondary"></small>
 														</div>
 														<p class="mb-1 font-weight-bold">
 															<xsl:value-of select="application/contact_phone"/>
 														</p>
-														<small class="text-muted"></small>
+														<small class="text-body-secondary"></small>
 													</div>
 												</div>
 											</div>
@@ -566,12 +566,12 @@
 																	<h5 class="mb-1">
 																		<xsl:value-of select="php:function('lang', 'organization number')" />
 																	</h5>
-																	<small class="text-muted"></small>
+																	<small class="text-body-secondary"></small>
 																</div>
 																<p class="mb-1 font-weight-bold">
 																	<xsl:value-of select="application/customer_organization_number"/>
 																</p>
-																<small class="text-muted"></small>
+																<small class="text-body-secondary"></small>
 															</div>
 														</xsl:if>
 														<div href="#" class="list-group-item flex-column align-items-start">
@@ -579,7 +579,7 @@
 																<h5 class="mb-1">
 																	<xsl:value-of select="php:function('lang', 'in tax register')"/>
 																</h5>
-																<small class="text-muted">Hentet fra brukerinput</small>
+																<small class="text-body-secondary">Hentet fra brukerinput</small>
 															</div>
 															<p class="mb-1 font-weight-bold">
 																<xsl:choose>
@@ -591,7 +591,7 @@
 																	</xsl:otherwise>
 																</xsl:choose>
 															</p>
-															<small class="text-muted"></small>
+															<small class="text-body-secondary"></small>
 														</div>
 													</div>
 												</div>
@@ -617,12 +617,12 @@
 																<h5 class="mb-1">
 																	<xsl:value-of select="php:function('lang', 'organization number')" />
 																</h5>
-																<small class="text-muted"></small>
+																<small class="text-body-secondary"></small>
 															</div>
 															<p class="mb-1 font-weight-bold">
 																<xsl:value-of select="application/customer_organization_number"/>
 															</p>
-															<small class="text-muted"></small>
+															<small class="text-body-secondary"></small>
 														</div>
 													</xsl:if>
 													<xsl:if test="application/customer_identifier_type = 'ssn'">
@@ -632,13 +632,13 @@
 																<h5 class="mb-1">
 																	<xsl:value-of select="php:function('lang', 'Date of birth or SSN')" />
 																</h5>
-																<small class="text-muted">Hentet fra ID-Porten</small>
+																<small class="text-body-secondary">Hentet fra ID-Porten</small>
 															</div>
 															<p class="mb-1 font-weight-bold">
 																<xsl:value-of select="substring (application/customer_ssn ,1, 6 )"/>
 																<xsl:text>*****</xsl:text>
 															</p>
-															<small class="text-muted"></small>
+															<small class="text-body-secondary"></small>
 														</div>
 													</xsl:if>
 													<div href="#" class="list-group-item flex-column align-items-start">
@@ -646,36 +646,36 @@
 															<h5 class="mb-1">
 																<xsl:value-of select="php:function('lang', 'Street')"/>
 															</h5>
-															<small class="text-muted">Hentet fra brukerinput</small>
+															<small class="text-body-secondary">Hentet fra brukerinput</small>
 														</div>
 														<p class="mb-1 font-weight-bold">
 															<xsl:value-of select="application/responsible_street"/>
 														</p>
-														<small class="text-muted"></small>
+														<small class="text-body-secondary"></small>
 													</div>
 													<div href="#" class="list-group-item flex-column align-items-start">
 														<div class="d-flex w-100 justify-content-between">
 															<h5 class="mb-1">
 																<xsl:value-of select="php:function('lang', 'Zip code')"/>
 															</h5>
-															<small class="text-muted">Hentet fra brukerinput</small>
+															<small class="text-body-secondary">Hentet fra brukerinput</small>
 														</div>
 														<p class="mb-1 font-weight-bold">
 															<xsl:value-of select="application/responsible_zip_code"/>
 														</p>
-														<small class="text-muted"></small>
+														<small class="text-body-secondary"></small>
 													</div>
 													<div href="#" class="list-group-item flex-column align-items-start">
 														<div class="d-flex w-100 justify-content-between">
 															<h5 class="mb-1">
 																<xsl:value-of select="php:function('lang', 'Postal City')"/>
 															</h5>
-															<small class="text-muted">Hentet fra brukerinput</small>
+															<small class="text-body-secondary">Hentet fra brukerinput</small>
 														</div>
 														<p class="mb-1 font-weight-bold">
 															<xsl:value-of select="application/responsible_city"/>
 														</p>
-														<small class="text-muted"></small>
+														<small class="text-body-secondary"></small>
 													</div>
 												</div>
 											</div>
@@ -745,17 +745,17 @@
 																				</xsl:variable>
 
 																				<xsl:if test="(../application/agegroups/male[../agegroup_id = $id]) > 0 or (../application/agegroups/female[../agegroup_id = $id]) > 0">
-																				<tr>
-																					<td>
-																						<xsl:value-of select="name"/>
-																					</td>
-																					<td>
-																						<xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/>
-																					</td>
-																					<td>
-																						<xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/>
-																					</td>
-																				</tr>
+																					<tr>
+																						<td>
+																							<xsl:value-of select="name"/>
+																						</td>
+																						<td>
+																							<xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/>
+																						</td>
+																						<td>
+																							<xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/>
+																						</td>
+																					</tr>
 																				</xsl:if>
 																			</xsl:for-each>
 																		</tbody>
@@ -964,7 +964,7 @@
 																</script>
 																<div class="pure-control-group">
 																	<label>&nbsp;</label>
-																	<select name="create" onchange="if(this.selectedIndex==1) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}]);">
+																	<select name="create" onchange="if(this.selectedIndex==1) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uibooking.add', eventParams[{id}]); if(this.selectedIndex==3) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}]);">
 																		<xsl:if test="not(../case_officer/is_current_user)">
 																			<xsl:attribute name="disabled">disabled</xsl:attribute>
 																		</xsl:if>
@@ -974,6 +974,9 @@
 																			</option>
 																			<option>
 																				<xsl:value-of select="php:function('lang', 'Create allocation')" />
+																			</option>
+																			<option>
+																				<xsl:value-of select="php:function('lang', 'Create booking')" />
 																			</option>
 																			<option>
 																				<xsl:value-of select="php:function('lang', 'Create event')" />
@@ -1111,9 +1114,9 @@
 											</div>
 											<div class="panel-body">
 												<!--<legend>-->
-													<h4>
-														<xsl:value-of select="php:function('lang', 'additional requirements')" />
-													</h4>
+												<h4>
+													<xsl:value-of select="php:function('lang', 'additional requirements')" />
+												</h4>
 												<!--</legend>-->
 												<xsl:value-of disable-output-escaping="yes" select="application/agreement_requirements"/>
 											</div>
@@ -1149,14 +1152,14 @@
 									<h5 class="mb-1">
 										<xsl:value-of select="php:function('date', $date_format, number(datetime))"/>
 									</h5>
-									<small class="text-muted">
+									<small class="text-body-secondary">
 										<xsl:value-of select="owner"/>
 									</small>
 								</div>
 								<p class="mb-1 font-weight-bold">
 									<xsl:value-of select="new_value" disable-output-escaping="yes"/>
 								</p>
-								<small class="text-muted"></small>
+								<small class="text-body-secondary"></small>
 							</div>
 						</div>
 					</div>
@@ -1177,14 +1180,14 @@
 									<h5 class="mb-1">
 										<xsl:value-of select="php:function('pretty_timestamp', time)"/>
 									</h5>
-									<small class="text-muted">
+									<small class="text-body-secondary">
 										<xsl:value-of select="author"/>
 									</small>
 								</div>
 								<p class="mb-1 font-weight-bold">
 									<xsl:value-of select="comment" disable-output-escaping="yes"/>
 								</p>
-								<small class="text-muted"></small>
+								<small class="text-body-secondary"></small>
 							</div>
 						</div>
 					</div>
@@ -1258,21 +1261,21 @@
 		var colDefsAttachmentsResource = [{key: 'name', label: lang['Name'], formatter: genericLink}];
 		createTable('attachments_container', attachmentsResourceURL, colDefsAttachmentsResource, '', 'pure-table pure-table-bordered');
 
-	var colDefsPayment = [
+		var colDefsPayment = [
 		{
-			label: lang['Select'],
-			attrs: [{name: 'class', value: "align-middle"}],
-			object: [
-				{
-					type: 'input',
-					attrs: [
-						{name: 'type', value: 'radio'},
-						{name: 'name', value: 'order_selector'},
-						{name: 'class', value: 'order_selector'},
-						{name: 'onClick', value: 'show_order(this);'}
-					]
-				}
-			], value: 'order_id'
+		label: lang['Select'],
+		attrs: [{name: 'class', value: "align-middle"}],
+		object: [
+		{
+		type: 'input',
+		attrs: [
+		{name: 'type', value: 'radio'},
+		{name: 'name', value: 'order_selector'},
+		{name: 'class', value: 'order_selector'},
+		{name: 'onClick', value: 'show_order(this);'}
+		]
+		}
+		], value: 'order_id'
 		},
 		{key: 'order_id', label: lang['order id']},
 		{key: 'created_value', label: lang['created']},
@@ -1282,7 +1285,7 @@
 		{key: 'status_text', label: lang['status']},
 		{key: 'payment_method', label: lang['payment method']},
 		{key: 'actions', label: lang['Actions'], formatter: genericLink2({name: 'delete', label: lang['refund']}, {name: 'edit', label: lang['cancel']})}
-	];
+		];
 
 		createTable('payments_container', paymentURL, colDefsPayment,'', 'pure-table pure-table-bordered');
 
@@ -1402,7 +1405,7 @@
 									</option>
 									<xsl:apply-templates select="user_list/options"/>
 								</select>
-								<small id="case_officer_help" class="form-text text-muted">velg ny saksbehandler</small>
+								<small id="case_officer_help" class="form-text text-body-secondary">velg ny saksbehandler</small>
 							</div>
 						</xsl:if>
 					</div>

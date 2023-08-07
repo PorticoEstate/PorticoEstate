@@ -47,7 +47,7 @@
 
 		}
 
-		function get_pending_action_ajax( $data = array() )
+		function get_pending_action_ajax()
 		{
 			$search	 = phpgw::get_var('search');
 			$order	 = phpgw::get_var('order');
@@ -55,8 +55,7 @@
 			$draw	 = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 
-			$data = array
-				(
+			$data = array(
 				'start'				 => phpgw::get_var('startIndex', 'int', 'REQUEST', 0),
 				'results'			 => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query'				 => $search['value'],
@@ -84,9 +83,10 @@
 			{
 				$entry['id']				 = $entry['item_id'];
 				$entry['responsible_name']	 = $entry['responsible'] ? $GLOBALS['phpgw']->accounts->get($entry['responsible'])->__toString() : '';
+				$entry['created_by_name']	 = $entry['created_by'] ? $GLOBALS['phpgw']->accounts->get($entry['created_by'])->__toString() : '';
 				$entry['requested_date']	 = $GLOBALS['phpgw']->common->show_date($entry['action_requested']);//, $dateFormat);
 				$entry['link']				 = $entry['url'];
-				$entry['dellink']			 = $this->account == $entry['created_by'] ? $GLOBALS['phpgw']->link(
+				$entry['dellink']			 = $this->account == $entry['created_by'] || $this->account == $entry['responsible'] ? $GLOBALS['phpgw']->link(
 						'/index.php', array(
 						'menuaction'	 => 'property.bopending_action.cancel_pending_action',
 						'item_id'		 => $entry['item_id'],

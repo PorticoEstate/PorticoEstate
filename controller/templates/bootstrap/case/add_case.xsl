@@ -62,12 +62,13 @@
 			</h5>
 
 			<!-- MODAL INSPECT EQUIPMENT START -->
-			<div class="modal fade" id="inspectObject">
+			<div class="modal fade" id="inspectObject" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" >
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<!-- Modal Header -->
 						<div class="modal-header">
 							<h4 id="inspection_title" class="modal-title">Utfør kontroll</h4>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<!-- Modal body -->
 						<div class="modal-body">
@@ -140,7 +141,7 @@
 													<xsl:choose>
 														<xsl:when test="what_to_do !=''">
 															<div class="form-group what-to-do">
-																<label>Hva skal sjekkes:</label>
+																<label class="form-label">Hva skal sjekkes:</label>
 																<div>
 																	<xsl:value-of disable-output-escaping="yes" select="what_to_do"/>
 																</div>
@@ -160,8 +161,8 @@
 													</xsl:choose>
 													<xsl:if test="include_condition_degree = 1">
 
-														<div class="form-group">
-															<label>
+														<div>
+															<label class="form-label">
 																<xsl:attribute name="title">
 																	<xsl:text>Tilstandsgrad iht NS 3424</xsl:text>
 																</xsl:attribute>
@@ -174,8 +175,8 @@
 																<xsl:apply-templates select="//degree_list/options"/>
 															</select>
 														</div>
-														<div class="form-group">
-															<label>
+														<div>
+															<label class="form-label">
 																<xsl:attribute name="title">
 																	<xsl:value-of select="php:function('lang', 'consequence')"/>
 																</xsl:attribute>
@@ -194,19 +195,19 @@
 														<xsl:when test="type = 'control_item_type_1'">
 															<input type="hidden" name="status" value="0" />
 															<input type="hidden" name="type" value="control_item_type_1" />
-															<div class="form-group">
-																<label>Status</label>
+															<div class="">
+																<label class="form-label">Status</label>
 																<select name="status" class="form-select">
 																	<option value="0" SELECTED="SELECTED">Åpen</option>
 																	<option value="1" >Lukket</option>
-																	<option value="2" >Venter på tilbakemelding</option>
+																	<!-- <option value="2" >Venter på tilbakemelding</option> -->
 																	<option value="3" >
 																		<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 																	</option>
 																</select>
 															</div>
 															<div class="form-group">
-																<label>Beskrivelse av sak</label>
+																<label class="form-label">Beskrivelse av sak</label>
 																<textarea name="case_descr" class="form-control">
 																	<xsl:if test="required = 1">
 																		<xsl:attribute name="class" >
@@ -218,8 +219,8 @@
 																</textarea>
 															</div>
 															<xsl:if test="include_counter_measure = 1">
-																<div class="form-group">
-																	<label>
+																<div>
+																	<label class="form-label">
 																		<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
 																	</label>
 																	<textarea name="proposed_counter_measure" class="form-control">
@@ -245,19 +246,19 @@
 														<xsl:when test="type = 'control_item_type_2'">
 															<input name="type" type="hidden" value="control_item_type_2" />
 
-															<div class="form-group">
-																<label>Status</label>
+															<div>
+																<label class="form-label">Status</label>
 																<select name="status" class="form-select">
 																	<option value="0" SELECTED="SELECTED">Åpen</option>
 																	<option value="1" >Lukket</option>
-																	<option value="2" >Venter på tilbakemelding</option>
+																	<!-- <option value="2" >Venter på tilbakemelding</option> -->
 																	<option value="3" >
 																		<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 																	</option>
 																</select>
 															</div>
-															<div class="form-group">
-																<label>Registrer målingsverdi</label>
+															<div >
+																<label class="form-label">Registrer målingsverdi</label>
 																<input class="form-control">
 																	<xsl:if test="required = 1">
 																		<xsl:attribute name="class" >
@@ -272,15 +273,15 @@
 																	</xsl:attribute>
 																</input>
 															</div>
-															<div class="form-group">
-																<label>Beskrivelse av sak</label>
+															<div>
+																<label class="form-label">Beskrivelse av sak</label>
 																<textarea name="case_descr" class="form-control">
 																	<xsl:value-of select="comment"/>
 																</textarea>
 															</div>
 															<xsl:if test="include_counter_measure = 1">
 																<div>
-																	<label>
+																	<label class="form-label">
 																		<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
 																	</label>
 																	<textarea name="proposed_counter_measure" class="form-control">
@@ -309,19 +310,19 @@
 														<xsl:when test="type = 'control_item_type_3'">
 															<input name="type" type="hidden" value="control_item_type_3" />
 
-															<div class="form-group">
-																<label>Status</label>
+															<div>
+																<label class="form-label">Status</label>
 																<select name="status" class="form-select">
 																	<option value="0" SELECTED="SELECTED">Åpen</option>
 																	<option value="1" >Lukket</option>
-																	<option value="2" >Venter på tilbakemelding</option>
+																	<!-- <option value="2" >Venter på tilbakemelding</option> -->
 																	<option value="3" >
 																		<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 																	</option>
 																</select>
 															</div>
-															<div class="form-group">
-																<label>Velg verdi fra liste</label>
+															<div>
+																<label class="form-label">Velg verdi fra liste</label>
 																<select name="option_value" class="form-select">
 																	<xsl:if test="required = 1">
 																		<xsl:attribute name="class" >
@@ -339,15 +340,15 @@
 																	</xsl:for-each>
 																</select>
 															</div>
-															<div class="form-group">
-																<label>Beskrivelse av sak</label>
+															<div>
+																<label class="form-label">Beskrivelse av sak</label>
 																<textarea name="case_descr" class="form-control">
 																	<xsl:value-of select="comment"/>
 																</textarea>
 															</div>
 															<xsl:if test="include_counter_measure = 1">
-																<div class="form-group">
-																	<label>
+																<div>
+																	<label class="form-label">
 																		<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
 																	</label>
 																	<textarea name="proposed_counter_measure" class="form-control">
@@ -377,19 +378,19 @@
 
 															<input name="type" type="hidden" value="control_item_type_4" />
 
-															<div class="form-group">
-																<label>Status</label>
+															<div>
+																<label class="form-label">Status</label>
 																<select name="status" class="form-select">
 																	<option value="0" SELECTED="SELECTED">Åpen</option>
 																	<option value="1" >Lukket</option>
-																	<option value="2" >Venter på tilbakemelding</option>
+																	<!-- <option value="2" >Venter på tilbakemelding</option> -->
 																	<option value="3" >
 																		<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
 																	</option>
 																</select>
 															</div>
-															<div class="form-group">
-																<label>Velg verdi fra lister</label>
+															<div>
+																<label class="form-label">Velg verdi fra lister</label>
 																<select name="option_value" class="form-select">
 																	<xsl:if test="required = 1">
 																		<xsl:attribute name="class" >
@@ -407,8 +408,8 @@
 																	</xsl:for-each>
 																</select>
 															</div>
-															<div class="form-group">
-																<label>Beskrivelse av sak</label>
+															<div>
+																<label class="form-label">Beskrivelse av sak</label>
 																<textarea name="case_descr" class="form-control">
 																	<xsl:value-of select="comment"/>
 																</textarea>
@@ -444,9 +445,20 @@
 														<xsl:when test="type = 'control_item_type_5'">
 
 															<input name="type" type="hidden" value="control_item_type_5" />
-															<input name="status" type="hidden" value="1" />
+															<!--<input name="status" type="hidden" value="1" />-->
+															<div>
+																<label class="form-label">Status</label>
+																<select name="status" class="form-select">
+																	<option value="0" SELECTED="SELECTED">Åpen</option>
+																	<option value="1" >Lukket</option>
+																	<!-- <option value="2" >Venter på tilbakemelding</option> -->
+																	<option value="3" >
+																		<xsl:value-of select="php:function('lang', 'corrected on controll')"/>
+																	</option>
+																</select>
+															</div>
 
-															<label>Velg verdi fra lister</label>
+															<label class="form-label">Velg verdi fra lister</label>
 															<!--<br/>-->
 															<div class="form-check">
 																<xsl:if test="required = 1">
@@ -463,7 +475,7 @@
 																</xsl:for-each>
 															</div>
 															<div class="form-group mt-3">
-																<label>
+																<label class="form-label">
 																	<xsl:value-of select="php:function('lang', 'comment')" />
 																</label>
 																<textarea name="case_descr" class="form-control">
@@ -471,8 +483,8 @@
 																</textarea>
 															</div>
 															<xsl:if test="include_counter_measure = 1">
-																<div class="form-group">
-																	<label>
+																<div>
+																	<label class="form-label">
 																		<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
 																	</label>
 																	<textarea name="proposed_counter_measure" class="form-control">
@@ -493,8 +505,8 @@
 															</xsl:call-template>
 
 															<xsl:if test="include_regulation_reference = 1">
-																<div class="form-group">
-																	<label>
+																<div>
+																	<label class="form-label">
 																		<xsl:attribute name="title">
 																			<xsl:value-of select="php:function('lang', 'regulation reference')"/>
 																		</xsl:attribute>
@@ -542,7 +554,7 @@
 															<div class="pure-custom" name="picture_container"/>
 														</div>
 														<div id="new_picture" class="form-group">
-															<div class="input-group">
+															<div>
 																<div class="custom-file">
 																	<input type="file" id="case_picture_file" name="file" class="custom-file-input" aria-describedby="submit_update_component">
 																		<xsl:attribute name="accept">image/*</xsl:attribute>

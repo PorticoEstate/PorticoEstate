@@ -106,7 +106,7 @@ HTML;
 						<div class="card shadow h-100 mb-2">
 							<div class="card-block text-center">
 								<h1 class="p-3">
-									<i class="{$icon}"></i>
+									<i class="{$icon} text-secondary"></i>
 								</h1>
 							</div>
 							<div class="card-footer text-center">{$bookmark_data['text']}</div>

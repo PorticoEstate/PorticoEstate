@@ -40,6 +40,19 @@
 													<xsl:value-of select="control_item/title"/>
 												</span>
 											</h4>
+
+											<xsl:variable name="include_condition_degree">
+												<xsl:value-of select="control_item/include_condition_degree"/>
+											</xsl:variable>
+
+													<xsl:variable name="include_counter_measure">
+														<xsl:value-of select="control_item/include_counter_measure"/>
+													</xsl:variable>
+
+													<xsl:variable name="include_regulation_reference">
+														<xsl:value-of select="control_item/include_regulation_reference"/>
+													</xsl:variable>
+
 											<ul>
 												<xsl:for-each select="cases_array">
 													<xsl:variable name="case_id">
@@ -54,6 +67,7 @@
 													<xsl:variable name="consequence">
 														<xsl:value-of select="consequence"/>
 													</xsl:variable>
+
 													<li>
 														<!--  ==================== COL1: ORDERNR ===================== -->
 														<div class="col_1">
@@ -96,26 +110,29 @@
 																		</xsl:for-each>
 																	</span>
 																</div>
-																<div class="row">
-																	<label>Tilstandsgrad:</label>
-																	<span class="case_condition_degree">
-																		<xsl:for-each select="//degree_list/options">
-																			<xsl:if test="$condition_degree = id">
-																				<xsl:value-of disable-output-escaping="yes" select="name"/>
-																			</xsl:if>
-																		</xsl:for-each>
-																	</span>
-																</div>
-																<div class="row">
-																	<label>Konsekvens:</label>
-																	<span class="case_consequence">
-																		<xsl:for-each select="//consequence_list/options">
-																			<xsl:if test="$consequence = id">
-																				<xsl:value-of disable-output-escaping="yes" select="name"/>
-																			</xsl:if>
-																		</xsl:for-each>
-																	</span>
-																</div>
+																<xsl:if test="$include_condition_degree= 1">
+																	<div class="row">
+																		<label>Tilstandsgrad:</label>
+																		<span class="case_condition_degree">
+																			<xsl:for-each select="//degree_list/options">
+																				<xsl:if test="$condition_degree = id">
+																					<xsl:value-of disable-output-escaping="yes" select="name"/>
+																				</xsl:if>
+																			</xsl:for-each>
+																		</span>
+																	</div>
+																	<div class="row">
+																		<label>Konsekvens:</label>
+																		<span class="case_consequence">
+																			<xsl:for-each select="//consequence_list/options">
+																				<xsl:if test="$consequence = id">
+																					<xsl:value-of disable-output-escaping="yes" select="name"/>
+																				</xsl:if>
+																			</xsl:for-each>
+																		</span>
+																	</div>
+																</xsl:if>
+
 
 																<xsl:if test="measurement !=''">
 																	<!--  MEASUREMENT -->
@@ -148,15 +165,32 @@
 																<div class="case_descr">
 																	<xsl:value-of select="descr"/>
 																</div>
+
+																<xsl:if test="$include_counter_measure= 1">
 																<div class="row">
 																	<label>
 																		<xsl:value-of select="php:function('lang', 'proposed counter measure')"/>
 																		<xsl:text>:</xsl:text>
 																	</label>
 																</div>
+
 																<div class="case_descr">
 																	<xsl:value-of select="proposed_counter_measure"/>
 																</div>
+																</xsl:if>
+																<xsl:if test="$include_regulation_reference= 1">
+																<div class="row">
+																	<label>
+																		Hjemmel
+																		<xsl:text>:</xsl:text>
+																	</label>
+																</div>
+
+																<div class="case_descr">
+																	<xsl:value-of select="regulation_reference"/>
+																</div>
+																</xsl:if>
+
 																<xsl:if test="case_files/child::node()">
 																	<div class="row">
 																		<label>

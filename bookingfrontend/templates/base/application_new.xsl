@@ -238,7 +238,7 @@
 						</textarea>
 					</div>
 
-					<xsl:if test="config/application_equipment !=''">
+					<xsl:if test="direct_booking !=1 and config/application_equipment !=''">
 						<div class="form-group">
 							<label>
 								<xsl:value-of select="config/application_equipment"/>

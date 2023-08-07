@@ -1900,24 +1900,24 @@
 
 			$lang_plan = lang('plan');
 			$lang_ok = lang('ok');
-			$lang_deviation = lang('deviation');
+			$lang_deviation = lang('perform control');
 			if ($param['status'] == 'CONTROL_REGISTERED')
 			{
 				$row['action_button'] = <<<HTML
 			<div class="block">
 				<div class="centered">
 					<div>
-						<button class="save_check_list pure-button pure-button-primary" type="submit" name="save_check_list" onclick = 'perform_action("save_check_list", {$control_link});'>
+						<button class="save_check_list pure-button pure-button-primary" type="submit" name="save_check_list" onclick = 'perform_action("set_planning_month", {$control_link}, {$_month});'>
 							<i class="fa fa-floppy-o" aria-hidden="true"></i>
 							{$lang_plan}
 						</button>
 					</div>
-					<div>
+					<!--div>
 						<button class="submit_ok pure-button pure-button-primary"  type="submit" name="submit_ok" onclick = 'perform_action("submit_ok", {$control_link});'>
 							<i class="fa fa-check-square-o" aria-hidden="true"></i>
 							{$lang_ok}
 						</button>
-					</div>
+					</div-->
 					<div>
 						<button class="submit_deviation pure-button pure-button-primary" type="submit" name="submit_deviation" onclick = 'perform_action("submit_deviation", {$control_link});'>
 							<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
@@ -1933,12 +1933,12 @@ HTML;
 				$row['action_button'] = <<<HTML
 			<div class="block">
 				<div class="centered">
-					<div>
+					<!--div>
 						<button class="submit_ok pure-button pure-button-primary"  type="submit" name="submit_ok" onclick = 'perform_action("submit_ok", {$control_link});'>
 							<i class="fa fa-check-square-o" aria-hidden="true"></i>
 							{$lang_ok}
 						</button>
-					</div>
+					</div-->
 					<div>
 						<button class="submit_deviation pure-button pure-button-primary" type="submit" name="submit_deviation" onclick = 'perform_action("submit_deviation", {$control_link});'>
 							<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>

@@ -26,32 +26,30 @@
 	 * @package eventplannerfrontend
 	 * @version $Id: index.php 14959 2016-04-30 21:09:01Z sigurdne $
 	 */
-
-	$GLOBALS['phpgw_info']['flags'] = array
+	$GLOBALS['phpgw_info']['flags']					 = array
 		(
-		'noheader' => true,
-		'nonavbar' => true,
+		'noheader'	 => true,
+		'nonavbar'	 => true,
 		'currentapp' => 'login', // To stop functions.inc.php from validating the session
 	);
-	$GLOBALS['phpgw_info']['flags']['session_name'] = 'eventplannerfrontendsession';
-	$GLOBALS['phpgw_remote_user_fallback'] = 'sql';
+	$GLOBALS['phpgw_info']['flags']['session_name']	 = 'eventplannerfrontendsession';
+	$GLOBALS['phpgw_remote_user_fallback']			 = 'sql';
 	include_once('../header.inc.php');
 
 	// Make sure we're always logged in
 	if (!phpgw::get_var(session_name(), 'string', 'COOKIE') || !$GLOBALS['phpgw']->session->verify())
 	{
-		$c = createobject('phpgwapi.config', 'eventplannerfrontend');
-		$c->read();
-		$config = $c->config_data;
+		$config = createobject('phpgwapi.config', 'eventplannerfrontend')->read();
 
-		$login = $c->config_data['anonymous_user'];
-		$passwd = $c->config_data['anonymous_passwd'];
-		$_POST['submitit'] = "";
-		$domain = phpgw::get_var('domain', 'string', 'GET');
-		if (strstr($login, '#') === false && $domain)
+		$login		 = $config['anonymous_user'];
+		$logindomain = phpgw::get_var('domain', 'string', 'GET');
+		if ($logindomain && strstr($login, '#') === false)
 		{
-			$login .= "#{$domain}";
+			$login .= "#{$logindomain}";
 		}
+
+		$passwd				 = $config['anonymous_passwd'];
+		$_POST['submitit']	 = "";
 
 		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 		if (!$GLOBALS['sessionid'])
@@ -69,8 +67,8 @@ HTML;
 		ExecMethod('phpgwapi.menu.clear');
 	}
 
-	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'eventplannerfrontend';
-	$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] = 'frontend';
+	$GLOBALS['phpgw_info']['flags']['currentapp']							 = 'eventplannerfrontend';
+	$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']	 = 'frontend';
 
 /////////////////////////////////////////////////////////////////////////////
 // BEGIN Stuff copied from functions.inc.php
@@ -108,14 +106,14 @@ HTML;
 	$GLOBALS['phpgw']->preferences->verify_basic_settings();
 
 	/*	 * ******* Optional classes, which can be disabled for performance increases ******** */
-	if(is_array($GLOBALS['phpgw_info']['flags']))
+	if (is_array($GLOBALS['phpgw_info']['flags']))
 	{
 		foreach ($GLOBALS['phpgw_info']['flags'] as $phpgw_class_name => $dummy)
 		{
 			if (preg_match('/enable_/', $phpgw_class_name))
 			{
-				$enable_class = str_replace('enable_', '', $phpgw_class_name);
-				$enable_class = str_replace('_class', '', $enable_class);
+				$enable_class					 = str_replace('enable_', '', $phpgw_class_name);
+				$enable_class					 = str_replace('_class', '', $enable_class);
 				$GLOBALS['phpgw']->$enable_class = createObject("phpgwapi.{$enable_class}");
 			}
 		}
@@ -128,8 +126,8 @@ HTML;
 	  \************************************************************************ */
 	if (!isset($GLOBALS['phpgw_info']['flags']['disable_Template_class']) || !$GLOBALS['phpgw_info']['flags']['disable_Template_class'])
 	{
-		$GLOBALS['phpgw']->template = createObject('phpgwapi.template', PHPGW_APP_TPL);
-		$GLOBALS['phpgw']->xslttpl = createObject('phpgwapi.xslttemplates', PHPGW_APP_TPL);
+		$GLOBALS['phpgw']->template	 = createObject('phpgwapi.template', PHPGW_APP_TPL);
+		$GLOBALS['phpgw']->xslttpl	 = createObject('phpgwapi.xslttemplates', PHPGW_APP_TPL);
 	}
 
 	/*	 * ***********************************************************************\
@@ -140,10 +138,10 @@ HTML;
 		if (!$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $GLOBALS['phpgw_info']['flags']['currentapp']))
 		{
 			$GLOBALS['phpgw']->common->phpgw_header(true);
-			$GLOBALS['phpgw']->log->write(array('text' => 'W-Permissions, Attempted to access %1 from %2',
-				'p1' => $GLOBALS['phpgw_info']['flags']['currentapp'],
-				'p2'=> phpgw::get_ip_address()
-				));
+			$GLOBALS['phpgw']->log->write(array('text'	 => 'W-Permissions, Attempted to access %1 from %2',
+				'p1'	 => $GLOBALS['phpgw_info']['flags']['currentapp'],
+				'p2'	 => phpgw::get_ip_address()
+			));
 
 			$lang_denied = lang('Access not permitted');
 			echo <<<HTML

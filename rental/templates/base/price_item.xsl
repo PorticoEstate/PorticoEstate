@@ -35,7 +35,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'title')"/>
 							</label>
-							<input type="text" name="title" id="title" value="{value_title}">
+							<input type="text" name="title" id="title" value="{value_title}" class="pure-input-1-2" >
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -45,18 +45,27 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
 							</label>
-							<xsl:choose>
+							<select id="status_id" name="responsibility_id" class="pure-input-1-2" >
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
+								</xsl:attribute>
+								<xsl:apply-templates select="responsibility_list/options"/>
+							</select>
+<!--							<xsl:choose>
 								<xsl:when test="price_item_id = 0 or price_item_id = ''">
 									<input type="hidden" name="responsibility_id" id="responsibility_id" value="{responsibility_id}"/>
 								</xsl:when>
 							</xsl:choose>							
-							<xsl:value-of select="value_field_of_responsibility"/>
+							<xsl:value-of select="value_field_of_responsibility"/>-->
 						</div>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'agresso_id')"/>
 							</label>
-							<input type="text" name="agresso_id" id="agresso_id" value="{value_agresso_id}">
+							<input type="text" name="agresso_id" id="agresso_id" value="{value_agresso_id}" class="pure-input-1-2" >
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -89,7 +98,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'type')"/>
 							</label>
-							<select id="price_type_id" name="price_type_id">
+							<select id="price_type_id" name="price_type_id" class="pure-input-1-2" >
 								<xsl:apply-templates select="list_type/options"/>
 							</select>
 						</div>
@@ -97,7 +106,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'price')"/>
 							</label>
-							<input type="text" name="price" id="price" value="{value_price}"/>
+							<input type="text" name="price" id="price" value="{value_price}" class="pure-input-1-2" />
 						</div>
 						<div class="pure-control-group">
 							<label>
@@ -302,4 +311,13 @@
 			</xsl:for-each>
 		</div>
 	</div>
+</xsl:template>
+
+<xsl:template match="options">
+	<option value="{id}">
+		<xsl:if test="selected != 0">
+			<xsl:attribute name="selected" value="selected"/>
+		</xsl:if>
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
 </xsl:template>

@@ -105,22 +105,22 @@
 								</xsl:choose>
 								<xsl:value-of select="value_field_of_responsibility"/>-->
 							</div>
-							<xsl:if test="count(list_contract_type/*) &gt; 1">
-								<div class="pure-control-group">
-									<label>
+							<!--<xsl:if test="count(list_contract_type/*) &gt; 1">-->
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'contract_type')"/>
+								</label>
+								<select id="contract_type" name="contract_type" class="pure-input-1-2">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
 										<xsl:value-of select="php:function('lang', 'contract_type')"/>
-									</label>
-									<select id="contract_type" name="contract_type" class="pure-input-1-2">
-										<xsl:attribute name="data-validation">
-											<xsl:text>required</xsl:text>
-										</xsl:attribute>
-										<xsl:attribute name="data-validation-error-msg">
-											<xsl:value-of select="php:function('lang', 'contract_type')"/>
-										</xsl:attribute>
-										<xsl:apply-templates select="list_contract_type/options"/>
-									</select>
-								</div>
-							</xsl:if>
+									</xsl:attribute>
+									<xsl:apply-templates select="list_contract_type/options"/>
+								</select>
+							</div>
+							<!--</xsl:if>-->
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'executive_officer')"/>
@@ -361,6 +361,21 @@
 									</div>
 								</xsl:when>
 							</xsl:choose>
+
+							<div class="pure-control-group">
+								<label for="field_cancelled">
+									<xsl:value-of select="php:function('lang', 'cancelled')"/>
+								</label>
+								<input type="checkbox" name="cancelled" id="field_cancelled" value="1">
+									<xsl:if test="value_cancelled &gt; 0">
+										<xsl:attribute name="checked" value="checked"/>
+										<xsl:attribute name="title">
+											<xsl:value-of select="value_cancelled_by_name"/>
+										</xsl:attribute>
+									</xsl:if>
+								</input>
+							</div>
+
 						</div>
 					</div>
 				</div>
@@ -396,7 +411,7 @@
 										</label>
 										<input type="text" id="composite_query" name="composite_query" value=""></input>
 										<xsl:text> </xsl:text>
-										<xsl:value-of select="php:function('lang', 'search_where')"/>
+										<xsl:value-of select="php:function('lang', 'search where')"/>
 										<xsl:text> </xsl:text>
 										<select id="composite_search_options" name="composite_search_options">
 											<xsl:apply-templates select="list_composite_search/options"/>
@@ -471,7 +486,7 @@
 										</label>
 										<input type="text" id="party_query" name="party_query" value=""></input>
 										<xsl:text> </xsl:text>
-										<xsl:value-of select="php:function('lang', 'search_where')"/>
+										<xsl:value-of select="php:function('lang', 'search where')"/>
 										<xsl:text> </xsl:text>
 										<select id="party_search_options" name="party_search_options">
 											<xsl:apply-templates select="list_party_search/options"/>
@@ -617,7 +632,7 @@
 										</label>
 										<input id="document_query" type="text" name="document_query" />
 										<xsl:text> </xsl:text>
-										<xsl:value-of select="php:function('lang', 'search_where')"/>
+										<xsl:value-of select="php:function('lang', 'search where')"/>
 										<xsl:text> </xsl:text>
 										<select id="document_search_option" name="document_search_option">
 											<xsl:apply-templates select="list_document_search/options"/>
@@ -672,7 +687,7 @@
 										</label>
 										<input type="text" id="date_notification" name="date_notification" size="10" value="" readonly="readonly"/>												
 										<xsl:text> </xsl:text>
-											<xsl:value-of select="php:function('lang', 'recurrence')"/>
+										<xsl:value-of select="php:function('lang', 'recurrence')"/>
 										<xsl:text> </xsl:text>
 										<select id="notification_recurrence" name="notification_recurrence">
 											<xsl:apply-templates select="list_notification_recurrence/options"/>
@@ -695,7 +710,7 @@
 											<xsl:apply-templates select="list_notification_user_group/option_group"/>
 										</select>
 										<xsl:text> </xsl:text>
-											<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
+										<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
 										<xsl:text> </xsl:text>
 										<select id="notification_location" name="notification_location">
 											<option value=''>
@@ -1074,7 +1089,7 @@
 								</label>
 								<input id="document_query" type="text" name="document_query" />
 								<label>
-									<xsl:value-of select="php:function('lang', 'search_where')"/>
+									<xsl:value-of select="php:function('lang', 'search where')"/>
 								</label>
 								<select id="document_search_option" name="document_search_option">
 									<xsl:apply-templates select="list_document_search/options"/>

@@ -92,7 +92,7 @@
 								(
 								'type' => 'filter',
 								'name' => 'search_option',
-								'text' => lang('search_where'),
+								'text' => lang('search where'),
 								'list' => array
 									(
 									array('id' => 'unit_name', 'name' => lang('unit_name')),

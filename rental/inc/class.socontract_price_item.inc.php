@@ -46,7 +46,14 @@
 			{
 				$id = $this->marshal($filters['contract_id'], 'int');
 				$filter_clauses[] = "contract_id = {$id}";
+				$join_contract = '';
 			}
+			else
+			{
+				$filter_clauses[] = "(rental_contract.cancelled IS NULL OR rental_contract.cancelled = 0)";
+				$join_contract =  "{$this->join} rental_contract ON rental_contract.id = rental_contract_price_item.contract_id";
+			}
+
 			if (isset($filters['contract_ids_one_time']))
 			{
 				if($filters['credits'])
@@ -88,8 +95,8 @@
 					$timestamp_end = strtotime('+1 month', $timestamp_end); // The first day in the month after the one to bill for
 
 					$filter_clauses[] = "is_one_time";
-					$filter_clauses[] = "date_start < {$timestamp_end}";
-					$filter_clauses[] = "date_start >= {$timestamp_start}";
+					$filter_clauses[] = "rental_contract_price_item.date_start < {$timestamp_end}";
+					$filter_clauses[] = "rental_contract_price_item.date_start >= {$timestamp_start}";
 				}
 			}
 			if (isset($filters['one_time']) && $filters['include_billed'])
@@ -138,7 +145,7 @@
 
 			$tables = "rental_contract_price_item";
 //		$joins = "";
-			$joins = "{$this->join} rental_price_item ON (rental_price_item.id = rental_contract_price_item.price_item_id)";
+			$joins = "{$join_contract} {$this->join} rental_price_item ON (rental_price_item.id = rental_contract_price_item.price_item_id)";
 
 			//var_dump("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";

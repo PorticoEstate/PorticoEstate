@@ -1050,7 +1050,7 @@ HTML;
 					"columns"		 => array('onclick' => "JqueryPortico.openPopup({menuaction:'property.uitts.columns'}, {closeAction:'reload', height: 500})"),
 					'allrows'		 => true,
 					'new_item'		 => self::link(array('menuaction' => 'property.uitts.add')),
-					'editor_action'	 => self::link(array('menuaction' => 'property.uitts.edit_survey_title')),
+					'editor_action' => '',
 					'field'			 => $this->_get_fields(),
 					'query'			 => phpgw::get_var('query')
 				)

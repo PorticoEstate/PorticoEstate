@@ -2509,6 +2509,13 @@
 										add_control();"
 						),
 						array(
+							'my_name'		 => 'edit',
+							'text'			 => lang('edit'),
+							'type'			 => 'custom',
+							'custom_code'	 => "
+										onActionsClick('edit');"
+						),
+						array(
 							'my_name'		 => 'enable',
 							'text'			 => lang('enable'),
 							'type'			 => 'custom',
@@ -2523,11 +2530,11 @@
 										onActionsClick('disable');"
 						),
 						array(
-							'my_name'		 => 'edit',
-							'text'			 => lang('edit'),
+							'my_name'		 => 'delete',
+							'text'			 => lang('delete'),
 							'type'			 => 'custom',
 							'custom_code'	 => "
-										onActionsClick('edit');"
+										onActionsClick('delete');"
 						)
 					);
 

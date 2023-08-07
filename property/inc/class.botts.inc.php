@@ -1147,7 +1147,7 @@
 			$file_input_name = isset($data['file_input_name']) && $data['file_input_name'] ? $data['file_input_name'] : 'file';
 
 			$file_name = @str_replace(' ', '_', $_FILES[$file_input_name]['name']);
-			if (!$cancel_attachment && $file_name && $result['id'])
+			if (!$cancel_attachment && $file_name && $result['id'] && !empty($_FILES[$file_input_name]['tmp_name']))
 			{
 				$bofiles = CreateObject('property.bofiles');
 				$to_file = "{$bofiles->fakebase}/fmticket/{$result['id']}/{$file_name}";
@@ -2281,7 +2281,6 @@ HTML;
 
 				if (isset($sodimb_role_users[$ecodimb][$dimb_role_id]) && is_array($sodimb_role_users[$ecodimb][$dimb_role_id]))
 				{
-					$default_found	 = false;
 					$first_hit		 = false;
 
 					foreach ($sodimb_role_users[$ecodimb][$dimb_role_id] as $supervisor_id => $entry)
@@ -2297,10 +2296,10 @@ HTML;
 							'id'		 => $supervisor_id,
 							'substitute' => $substitute ? $substitute : null,
 							'required'	 => $first_hit == false ? true : false,
-							'default'	 => false
+						//	'required'	 => true,// all these cadidates has approval-right at this level
+							'default'	 => $entry['default_user'] ? true : false
 						);
 
-						$default_found	 = $default_found || $entry['default_user'] ? true : false;
 						$first_hit		 = true;
 					}
 				}
@@ -2630,19 +2629,40 @@ HTML;
 				}
 				else
 				{
+
 					$purchase_grant_ok = true;
+
+					foreach ($check_purchase as &$purchase_grant)
+					{
+						if ($purchase_grant['approved'])
+						{
+							$purchase_grant_ok = false;
+						}
+					}
+					unset($purchase_grant);
 
 					foreach ($check_purchase as $purchase_grant)
 					{
-						if (!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
+						if ($purchase_grant['is_user'] ||  $purchase_grant['approved'])
+						{
+							$purchase_grant_ok = true;
+							break;
+						}
+					}
+					unset($purchase_grant);
+
+					foreach ($check_purchase as $purchase_grant)
+					{
+						if (!$purchase_grant_ok && !$purchase_grant['is_user']  && !$purchase_grant['approved'])
 						{
 							$purchase_grant_ok = false;
 							phpgwapi_cache::message_set(lang('approval from %1 is required for order %2',
 											  $GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString(), $order_id),
 													'error'
 							);
+							break;
 						}
-						else if ($purchase_grant['is_user'] && ( $purchase_grant['required'] && !$purchase_grant['approved']))
+						else if (!$purchase_grant_ok && $purchase_grant['is_user'] && !$purchase_grant['approved'])
 						{
 							$action_params = array(
 								'appname'			 => 'property',
@@ -2688,6 +2708,5 @@ HTML;
 		function reset_views( $id )
 		{
 			return $this->so->reset_views($id);
-			;
 		}
 	}

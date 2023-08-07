@@ -23,31 +23,32 @@
 
 		private $pdf_templates = array();
 		private $config, $district_id, $part_of_town_id;
+		private $account_id;
 
-		public $public_functions = array
-			(
-			'add' => true,
-			'add_from_composite' => true,
-			'copy_contract' => true,
-			'edit' => true,
-			'save' => true,
-			'index' => true,
-			'query' => true,
-			'view' => true,
-			'get'	=>  true,
-			'add_party' => true,
-			'remove_party' => true,
-			'add_composite' => true,
-			'remove_composite' => true,
-			'set_payer' => true,
-			'add_price_item' => true,
-			'remove_price_item' => true,
-			'reset_price_item' => true,
-			'add_notification' => true,
-			'download' => true,
-			'get_total_price' => true,
-			'notify_on_expire'	=> true,
-			'get_contract_type_options'	=> true
+		public $public_functions = array(
+			'add'							 => true,
+			'add_from_composite'			 => true,
+			'copy_contract'					 => true,
+			'edit'							 => true,
+			'save'							 => true,
+			'index'							 => true,
+			'query'							 => true,
+			'view'							 => true,
+			'get'							 => true,
+			'add_party'						 => true,
+			'remove_party'					 => true,
+			'add_composite'					 => true,
+			'remove_composite'				 => true,
+			'set_payer'						 => true,
+			'add_price_item'				 => true,
+			'remove_price_item'				 => true,
+			'reset_price_item'				 => true,
+			'add_notification'				 => true,
+			'download'						 => true,
+			'get_total_price'				 => true,
+			'notify_on_expire'				 => true,
+			'get_contract_type_options'		 => true,
+			'get_executive_officer_options'	 => true
 		);
 
 		public function __construct()
@@ -61,6 +62,7 @@
 			$this->config->read();
 			$this->district_id		 = phpgw::get_var('district_id', 'int');
 			$this->part_of_town_id	 = phpgw::get_var('part_of_town_id', 'int');
+			$this->account_id = $GLOBALS['phpgw_info']['user']['account_id'];
 
 		}
 
@@ -100,13 +102,13 @@
 						}
 					}
 				}
-				$filters[] = array
-					(
-					'type' => 'filter',
-					'name' => 'location_id',
-					'text' => lang('t_new_contract'),
-					'list' => $new_contract_options
-				);
+//				$filters[] = array
+//					(
+//					'type' => 'filter',
+//					'name' => 'location_id',
+//					'text' => lang('t_new_contract'),
+//					'list' => $new_contract_options
+//				);
 			}
 
 			$search_option = array
@@ -128,20 +130,34 @@
 				(
 				'type' => 'filter',
 				'name' => 'search_option',
-				'text' => lang('search_where'),
+				'text' => lang('search where'),
 				'list' => $search_option
 			);
 
-			$status_option = array
-				(
+			$filters[] = array(
+								'type' => 'date-picker',
+								'id' => 'end_date_report',
+								'name' => 'end_date_report',
+								'value' => '',
+								'text' => 'Export ' . lang('to')
+							);
+			$filters[] = array(
+								'type' => 'date-picker',
+								'id' => 'start_date_report',
+								'name' => 'start_date_report',
+								'value' => '',
+								'text' => 'Export ' . lang('from')
+							);
+
+			$status_option = array(
 				array('id' => 'all', 'name' => lang('all')),
 				array('id' => 'under_planning', 'name' => lang('under_planning')),
 				array('id' => 'active', 'name' => lang('active_plural')),
 				array('id' => 'under_dismissal', 'name' => lang('under_dismissal')),
-				array('id' => 'ended', 'name' => lang('ended'))
+				array('id' => 'ended', 'name' => lang('ended')),
+				array('id' => 'cancelled', 'name' => lang('cancelled'))
 			);
-			$filters[] = array
-				(
+			$filters[] = array(
 				'type' => 'filter',
 				'name' => 'contract_status',
 				'text' => lang('status'),
@@ -939,7 +955,7 @@
 						'contract_type' => phpgw::get_var('contract_type'), 'status_date_hidden' => phpgw::get_var('status_date'));
 					break;
 				case 'contracts_for_executive_officer':  // Contracts for this executive officer
-					$filters = array('executive_officer' => $GLOBALS['phpgw_info']['user']['account_id']);
+					$filters = array('executive_officer' => $this->account_id);
 					break;
 				case 'ending_contracts':
 				case 'ended_contracts':
@@ -1109,8 +1125,8 @@
 			$appname = lang('contracts');
 			$type = 'all_contracts';
 
-			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date_report');
-			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date_report');
+			$GLOBALS['phpgw']->jqcal2->add_listener('filter_start_date_report');
+			$GLOBALS['phpgw']->jqcal2->add_listener('filter_end_date_report');
 
 			$function_msg = lang('list %1', $appname);
 
@@ -1119,34 +1135,32 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array
-								(
-								'type' => 'date-picker',
-								'id' => 'start_date_report',
-								'name' => 'start_date_report',
-								'value' => '',
-								'text' => 'Export ' . lang('from')
-							),
-							array
-								(
-								'type' => 'date-picker',
-								'id' => 'end_date_report',
-								'name' => 'end_date_report',
-								'value' => '',
-								'text' => 'Export ' . lang('to')
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('export_contracts'),
-								'onclick' => 'contract_export("all_contracts")',
-								'class' => 'new_item'
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('export_contract_price_items'),
-								'onclick' => 'contract_export_price_items("all_contracts")',
-								'class' => 'new_item'
-							)
+//							array(
+//								'type' => 'date-picker',
+//								'id' => 'start_date_report',
+//								'name' => 'start_date_report',
+//								'value' => '',
+//								'text' => 'Export ' . lang('from')
+//							),
+//							array(
+//								'type' => 'date-picker',
+//								'id' => 'end_date_report',
+//								'name' => 'end_date_report',
+//								'value' => '',
+//								'text' => 'Export ' . lang('to')
+//							),
+//							array(
+//								'type' => 'link',
+//								'value' => lang('export_contracts'),
+//								'onclick' => 'contract_export("all_contracts")',
+//								'class' => 'new_item'
+//							),
+//							array(
+//								'type' => 'link',
+//								'value' => lang('export_contract_price_items'),
+//								'onclick' => 'contract_export_price_items("all_contracts")',
+//								'class' => 'new_item'
+//							)
 						)
 					)
 				),
@@ -1162,7 +1176,8 @@
 						'export' => true,
 						'allrows' => true
 					)),
-//					'new_item' => array('onclick' => 'onNew_contract()'),
+					'new_item' => array('onclick' => 'onNew_contract()'),
+//					'new_item' => self::link(array('menuaction' => 'rental.uiemail_out.add')),
 					'allrows' => true,
 					'editor_action' => '',
 					'query' => phpgw::get_var('search_for'),
@@ -1254,13 +1269,13 @@
 			);
 
 			$filters = $this->_get_Filters();
-			krsort($filters);
+//			krsort($filters);
 
-			$filters[] = array('type' => 'link',
-								'value' => lang('new'),
-								'onclick' => 'onNew_contract()',
-								'class' => 'new_item'
-							);
+//			$filters[] = array('type' => 'link',
+//								'value' => lang('new'),
+//								'onclick' => 'onNew_contract()',
+//								'class' => 'new_item'
+//							);
 			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
@@ -1364,6 +1379,26 @@
 				}
 			}
 */
+
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'toggle_inactive',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => lang('export_contracts'),
+				'text'		 => lang('export_contracts'),
+				'custom_code'	 => 'contract_export("all_contracts")',
+			);
+
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'toggle_inactive',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => lang('export_contract_price_items'),
+				'text'		 => lang('export_contract_price_items'),
+				'custom_code'	 => 'contract_export_price_items("all_contracts")',
+			);
+
+
 			$code = <<<JS
 			var thousandsSeparator = '$this->thousandsSeparator';
 			var decimalSeparator = '$this->decimalSeparator';
@@ -1480,6 +1515,8 @@ JS;
 				$contract->set_adjustment_share(phpgw::get_var('adjustment_share'));
 				$contract->set_adjustable(phpgw::get_var('adjustable') == 'on' ? true : false);
 				$contract->set_publish_comment(phpgw::get_var('publish_comment') == 'on' ? true : false);
+				$contract->set_cancelled(phpgw::get_var('cancelled') == 1 ? time() : false);
+				$contract->set_cancelled_by(phpgw::get_var('cancelled') == 1 ? $this->account_id : false);
 				$validated_numeric = $contract->validate_numeric();
 
 				if ($validated_numeric)
@@ -1618,7 +1655,7 @@ JS;
 
 			if (!$executive_officer = $contract->get_executive_officer_id())
 			{
-				$executive_officer = $GLOBALS['phpgw_info']['user']['account_id'];
+				$executive_officer = $this->account_id;
 			}
 
 			if (!$current_term_id = $contract->get_term_id())
@@ -1840,6 +1877,8 @@ JS;
 				'value_override_adjustment_start' => $contract->get_override_adjustment_start(),
 				'value_comment' => $contract->get_comment(),
 				'value_publish_comment' => $contract->get_publish_comment(),
+				'value_cancelled' => $contract->get_cancelled(),
+				'value_cancelled_by' => $contract->get_cancelled_by(),
 				'location_id' => $contract->get_location_id(),
 				'contract_id' => $contract_id,
 				'mode' => $mode,
@@ -1891,6 +1930,24 @@ JS;
 			return $contract_type_options;
 		}
 
+		public function get_executive_officer_options()
+		{
+			$executive_officer = (int)phpgw::get_var('executive_officer');
+			$location_id = (int)phpgw::get_var('location_id');
+			$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
+			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_ADD, $location_info['location'], 'rental');
+			$executive_officer_options[] = array('id' => '', 'name' => lang('nobody'), 'selected' => 0);
+			foreach ($accounts as $account)
+			{
+				$executive_officer_options[] = array(
+					'id' => $account['account_id'],
+					'name' => $GLOBALS['phpgw']->accounts->get($account['account_id'])->__toString(),
+					'selected' => ($account['account_id'] == $executive_officer) ? 1 : 0
+				);
+			}
+			return $executive_officer_options;
+		}
+
 
 		/**
 		 * Edit a contract
@@ -1928,7 +1985,7 @@ JS;
 				if ($this->isAdministrator() || $this->isExecutiveOfficer())
 				{
 					$created = date($this->dateFormat, strtotime('now'));
-					$created_by = $GLOBALS['phpgw']->accounts->id2name($GLOBALS['phpgw_info']['user']['account_id']);
+					$created_by = $GLOBALS['phpgw']->accounts->id2name($this->account_id);
 
 					$contract = new rental_contract();
 					$fields = rental_socontract::get_instance()->get_fields_of_responsibility();
@@ -1943,7 +2000,7 @@ JS;
 
 			if (!$executive_officer = $contract->get_executive_officer_id())
 			{
-				$executive_officer = $GLOBALS['phpgw_info']['user']['account_id'];
+				$executive_officer = $this->account_id;
 			}
 
 			if (!$current_term_id = $contract->get_term_id())
@@ -1959,7 +2016,7 @@ JS;
 
 			$responsibility_area = rental_socontract::get_instance()->get_responsibility_title($contract->get_location_id());
 			$current_contract_type_id = $contract->get_contract_type_id();
-			if (strcmp($responsibility_area, "contract_type_eksternleie") != 0)
+			if (!$responsibility_area || strcmp($responsibility_area, "contract_type_eksternleie") != 0)
 			{
 				$contract_type_options[] = array(
 					'id' => '',
@@ -2073,9 +2130,10 @@ JS;
 			$end_date = ($contract->get_contract_date() && $contract->get_contract_date()->has_end_date()) ? date($this->dateFormat, $contract->get_contract_date()->get_end_date()) : '';
 			$due_date = ($contract->get_due_date()) ? date($this->dateFormat, $contract->get_due_date()) : '';
 
-			if ($start_date == "") {
+			if ($start_date == "")
+			{
 				$date = phpgw::get_var('start_date');
-				$date = str_replace("-", "/", $date);
+//				$date = str_replace("-", "/", $date);
 
 				$start_date = ($date) ? ($date) : '';
 			}
@@ -2258,10 +2316,10 @@ JS;
 					'name' => lang('weekly'), 'selected' => 0);
 
 				$accounts_users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'rental');
-				$users[] = array('id' => $GLOBALS['phpgw_info']['user']['account_id'], 'name' => lang('target_me'));
+				$users[] = array('id' => $this->account_id, 'name' => lang('target_me'));
 				foreach ($accounts_users as $account)
 				{
-					if ($account['account_id'] != $GLOBALS['phpgw_info']['user']['account_id'])
+					if ($account['account_id'] != $this->account_id)
 					{
 						$users[] = array('id' => $account['account_id'], 'name' => $GLOBALS['phpgw']->accounts->get($account['account_id'])->__toString());
 					}
@@ -2390,6 +2448,12 @@ JS;
 					}
 				}
 			}
+
+			if(!$contract->get_id())
+			{
+				array_unshift($new_contract_options, array('id' => '', 'name' => lang('select')));
+			}
+
 			$data = array
 			(
 				'valid_contract_types' => array('options' => $new_contract_options),
@@ -2433,6 +2497,8 @@ JS;
 				'value_override_adjustment_start' => $override_adjustment_start ? $override_adjustment_start : '',
 				'value_comment' => $contract->get_comment(),
 				'value_publish_comment' => $contract->get_publish_comment(),
+				'value_cancelled' => $contract->get_cancelled(),
+				'value_cancelled_by_name' => $contract->get_cancelled_by() ? $GLOBALS['phpgw']->accounts->get($contract->get_cancelled_by())->__toString() : '',
 				'location_id' => $contract->get_location_id(),
 				'contract_id' => $contract_id,
 				'mode' => $mode,
@@ -2478,7 +2544,7 @@ JS;
 		public function add()
 		{
 			$location_id = phpgw::get_var('location_id');
-			if (isset($location_id) && $location_id > 0)
+//			if (isset($location_id) && $location_id > 0)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit',
 					'location_id' => $location_id));
@@ -2494,7 +2560,7 @@ JS;
 			$contract->set_location_id(phpgw::get_var('responsibility_id'));
 			$contract->set_account_in(rental_socontract::get_instance()->get_default_account($contract->get_location_id(), true));
 			$contract->set_account_out(rental_socontract::get_instance()->get_default_account($contract->get_location_id(), false));
-			$contract->set_executive_officer_id($GLOBALS['phpgw_info']['user']['account_id']);
+			$contract->set_executive_officer_id($this->account_id);
 
 			/* $config	= CreateObject('phpgwapi.config','rental');
 			  $config->read(); */

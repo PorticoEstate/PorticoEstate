@@ -41,7 +41,10 @@
 
 		function get_responsibilities( $data = array() )
 		{
-			$data['filter_role_on_contact'] = $GLOBALS['phpgw']->accounts->get($data['user_id'])->person_id;
+			if(empty($data['bypass_responsibility']))
+			{
+				$data['filter_role_on_contact'] = $GLOBALS['phpgw']->accounts->get($data['user_id'])->person_id;
+			}
 			$locations = $this->so->read($data);
 
 			$total_records = $this->so->total_records;
@@ -85,7 +88,7 @@
 
 		function get_location_level( $location_code )
 		{
-			$level = count(explode('-', $location_code));
+			$level = $location_code ? count(explode('-', $location_code)) : 0;
 
 			return $level;
 		}

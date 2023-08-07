@@ -434,6 +434,13 @@
 				$season = $this->season_bo->read_single(phpgw::get_var('season_id','int', 'POST'));
 				$booking['organization_id'] = phpgw::get_var('organization_id','int', 'POST');
 				$booking['organization_name'] = phpgw::get_var('organization_name','string', 'POST');
+
+				if(phpgw::get_var('customer_organization_id','int', 'POST'))
+				{
+					$_POST['organization_id'] = $_POST['customer_organization_id'];
+					$_POST['organization_name'] = $_POST['customer_organization_name'];
+				}
+
 				if($application_id && empty($booking['organization_id']))
 				{
 					$application = createObject('booking.boapplication')->read_single($application_id);
@@ -639,7 +646,7 @@
 			unset($errors['cost']);
 			self::add_javascript('booking', 'base', 'booking.js');
 
-			if (phpgw::get_var('resource') == 'null')
+			if (phpgw::get_var('resource') == null)
 			{
 				array_set_default($application, 'resources', array());
 			}

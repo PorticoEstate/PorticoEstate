@@ -468,7 +468,8 @@
 					$bofiles->resize_image($_FILES['file']['tmp_name'], $_FILES['file']['tmp_name'], $thumb_size = 800);
 				}
 
-				$file_name = str_replace(' ', '_', $_FILES['file']['name']);
+				$ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+				$file_name = date('Y-m-d_H-i-s', phpgwapi_datetime::user_localtime()) . ".{$ext}";
 
 				$to_file = "{$bofiles->fakebase}/{$case_id}/{$file_name}";
 
@@ -551,7 +552,9 @@
 					$bofiles->resize_image($_FILES['file']['tmp_name'], $_FILES['file']['tmp_name'], $thumb_size = 800);
 				}
 
-				$file_name = str_replace(' ', '_', $_FILES['file']['name']);
+				$ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+				$file_name = date('Y-m-d_H-i-s', phpgwapi_datetime::user_localtime()) . ".{$ext}";
+
 				$to_file = "{$bofiles->fakebase}/{$category_dir}/{$loc1}/{$id}/{$file_name}";
 				
 				$pathinfo = pathinfo($to_file);

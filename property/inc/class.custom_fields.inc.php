@@ -438,8 +438,7 @@ JS;
 
 					if ($attributes['datatype'] == 'CH')
 					{
-//						$attributes['value'] = unserialize($attributes['value']);
-						$attributes['value'] = explode(',', trim($attributes['value'], ','));
+						$attributes['value'] = $attributes['value'] ? explode(',', trim($attributes['value'], ',')) : null;
 
 						if (isset($attributes['choice']) AND is_array($attributes['choice']))
 						{

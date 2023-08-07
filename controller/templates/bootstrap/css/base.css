@@ -1875,13 +1875,6 @@ li.check_item_case ul li .col_3 {
 
 /* ===============================  FORM REGISTER CASE  ============================= */
 
-.frm_register_case input[type="text"]{
- 	width: 170px;  
-}
-
-.frm_register_case select {
-  width: 184px;
-}
 
 .frm_register_case textarea {
   display: block;
@@ -1891,11 +1884,6 @@ li.check_item_case ul li .col_3 {
   width: 98.5%;
 }
 
-.frm_register_case label {
-  display: inline-block;
-  width: 18%;
-  /*margin-left: 50px;*/
-}
 
 .frm_register_case .what-to-do, .frm_register_case .how-to-do {
   line-height: 20px;
