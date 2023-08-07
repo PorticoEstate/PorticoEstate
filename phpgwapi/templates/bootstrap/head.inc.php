@@ -233,7 +233,7 @@ JS;
 	if( isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{
 //		echo '<body style="margin-left: 35px;">';
-		echo '<body class="container">';
+		echo '<body class="container-fluid">';
 		register_shutdown_function('parse_footer_end_noframe');
 	}
 
