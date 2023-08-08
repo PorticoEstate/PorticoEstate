@@ -1457,6 +1457,7 @@
 			$lang_date		 = lang('date');
 			$lang_user		 = lang('user');
 			$lang_note		 = lang('note');
+			$table_lines = array();
 			$table_content	 = <<<HTML
 		<thead>
 			<tr>
@@ -1475,15 +1476,17 @@
 			</tr>
 		</thead>
 HTML;
-			$table_content	 .= "<tr><td>{$i}</td><td>{$entry_date}</td><td>{$ticket['user_name']}</td><td>{$ticket['details']}</td></tr>";
+			$table_lines[] = "<tr><td>{$i}</td><td>{$entry_date}</td><td>{$ticket['user_name']}</td><td>{$ticket['details']}</td></tr>";
 
 			$additional_notes = $this->read_additional_notes($id);
 
 			foreach ($additional_notes as $value)
 			{
-				$table_content .= "<tr><td>{$value['value_count']}</td><td>{$value['value_date']}</td><td>{$value['value_user']}</td><td>{$value['value_note']}</td></tr>";
+				$table_lines[] = "<tr><td>{$value['value_count']}</td><td>{$value['value_date']}</td><td>{$value['value_user']}</td><td>{$value['value_note']}</td></tr>";
 				$i++;
 			}
+
+			$table_content .= implode("\n", array_reverse($table_lines));
 
 			$body .= "<table border='1' class='pure-table pure-table-bordered pure-table-striped'>{$table_content}</table>";
 
@@ -1494,7 +1497,7 @@ HTML;
 				return array('subject' => $subject, 'body' => $body);
 			}
 
-			$css = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/pure-min.css");
+			$css = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/version_3/pure-min.css");
 
 			$html = <<<HTML
 <html>
