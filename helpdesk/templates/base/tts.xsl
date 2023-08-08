@@ -32,7 +32,7 @@
 						<div class="card h-100 mb-2">
 							<div class="card-block text-center">
 								<h1 class="p-3">
-									<i class="{icon}"></i>
+									<i class="{icon} text-secondary"></i>
 								</h1>
 							</div>
 							<div class="card-footer text-center">
@@ -42,7 +42,6 @@
 					</a>
 				</div>
 			</xsl:for-each>
-
 		</div>
 
 	</div>
