@@ -266,11 +266,11 @@
 			<html>
 				<head>
 					<title>{$ticket['subject']}</title>
-					<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/pure/css/pure-min.css" type="text/css" rel="StyleSheet">
+					<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/pure/css/version_3/pure-min.css" type="text/css" rel="StyleSheet">
 				</head>
 				<body>
 					<script type="text/javascript">
-							document.write("<form><input type=button "
+							document.write("<form><input type='button' class='pure-button' "
 							+"value=\"{$lang_print}\" onClick=\"window.print();\"></form>");
 					</script>
 					<H2>{$ticket['subject']}</H2>
