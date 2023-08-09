@@ -1321,7 +1321,9 @@ JS;
 				'link'	 => '#main'
 			);
 
-			$default_message								 = "\n\n(Denne meldingen kan ikke besvares)";
+
+			$default_message								 = "\n\n{$this->config['org_name']}";
+			$default_message								 .= "\n(Denne meldingen kan ikke besvares)";
 			$data											 = array(
 				'form_action'		 => self::link(array('menuaction' => "{$this->currentapp}.uiexternal_communication.send_sms")),
 				'cancel_url'		 => self::link(array('menuaction' => "{$this->currentapp}.uitts.index")),
