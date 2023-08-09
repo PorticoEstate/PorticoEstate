@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "77147a6c0b3ca6013084c170425058dd",
+    "content-hash": "5d01040e72cd4cff2e148f50c001d605",
     "packages": [
         {
             "name": "rospdf/pdf-php",
