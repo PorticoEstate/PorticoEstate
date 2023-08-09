@@ -644,7 +644,14 @@
 								}
 								else
 								{
-									$_query = (int)$query;
+									if (ctype_digit($query))
+									{
+										$_query = (int)$query;
+									}
+									else
+									{
+										$_query = -1;
+									}
 								}
 							}
 							else

@@ -1,5 +1,5 @@
 /*! Bulma integration for DataTables' Buttons
- * ©2021 SpryMedia Ltd - datatables.net/license
+ * © SpryMedia Ltd - datatables.net/license
  */
 
 (function( factory ){
@@ -22,7 +22,7 @@
 			}
 		};
 
-		if (typeof window !== 'undefined') {
+		if (typeof window === 'undefined') {
 			module.exports = function (root, $) {
 				if ( ! root ) {
 					// CommonJS environments without a window global must pass a
@@ -53,7 +53,7 @@ var DataTable = $.fn.dataTable;
 
 
 
-$.extend( true, DataTable.Buttons.defaults, {
+$.extend(true, DataTable.Buttons.defaults, {
 	dom: {
 		container: {
 			className: 'dt-buttons field is-grouped'
@@ -64,53 +64,67 @@ $.extend( true, DataTable.Buttons.defaults, {
 			disabled: 'is-disabled'
 		},
 		collection: {
-			tag: 'div',
-			closeButton: false,
-			className: 'dropdown-content',
+			action: {
+				tag: 'div',
+				className: 'dropdown-content',
+				dropHtml: ''
+			},
 			button: {
 				tag: 'a',
 				className: 'dt-button dropdown-item',
-				active: 'is-active',
-				disabled: 'is-disabled'
+				active: 'dt-button-active',
+				disabled: 'is-disabled',
+				spacer: {
+					className: 'dropdown-divider',
+					tag: 'hr'
+				}
+			},
+			closeButton: false,
+			container: {
+				className: 'dt-button-collection dropdown-menu',
+				content: {
+					className: 'dropdown-content'
+				}
 			}
 		},
-		splitWrapper: {
-			tag: 'div',
-			className: 'dt-btn-split-wrapper dropdown-trigger buttons has-addons',
-			closeButton: false
-		},
-		splitDropdownButton: {
-			tag: 'button',
-			className: 'dt-btn-split-drop-button button is-light',
-			closeButton: false
-		},
-		splitDropdown: {
-			tag: 'button',
-			text: '&#x25BC;',
-			className: 'button is-light',
-			closeButton: false,
-			align: 'split-left',
-			splitAlignClass: 'dt-button-split-left'
+		split: {
+			action: {
+				tag: 'button',
+				className: 'dt-button-split-drop-button button is-light',
+				closeButton: false
+			},
+			dropdown: {
+				tag: 'button',
+				dropHtml: '<i class="fa fa-angle-down" aria-hidden="true"></i>',
+				className: 'button is-light',
+				closeButton: false,
+				align: 'split-left',
+				splitAlignClass: 'dt-button-split-left'
+			},
+			wrapper: {
+				tag: 'div',
+				className: 'dt-button-split dropdown-trigger buttons has-addons',
+				closeButton: false
+			}
 		}
 	},
-	buttonCreated: function ( config, button ) {
+	buttonCreated: function (config, button) {
 		// For collections
 		if (config.buttons) {
 			// Wrap the dropdown content in a menu element
-			config._collection = $('<div class="dropdown-menu"/>')
-				.append(config._collection);
-			
+			config._collection = $('<div class="dropdown-menu"/>').append(config._collection);
+
 			// And add the collection dropdown icon
 			$(button).append(
 				'<span class="icon is-small">' +
 					'<i class="fa fa-angle-down" aria-hidden="true"></i>' +
-				'</span>'
+					'</span>'
 			);
 		}
 
 		return button;
 	}
-} );
+});
 
 
 return DataTable;
