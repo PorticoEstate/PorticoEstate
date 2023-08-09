@@ -1,4 +1,4 @@
-/*! StateRestore 1.2.2
+/*! StateRestore 1.3.0
  * © SpryMedia Ltd - datatables.net/license
  */
 
@@ -18,7 +18,7 @@
 			}
 		};
 
-		if (typeof window !== 'undefined') {
+		if (typeof window === 'undefined') {
 			module.exports = function (root, $) {
 				if ( ! root ) {
 					// CommonJS environments without a window global must pass a
@@ -84,7 +84,7 @@ var DataTable = $.fn.dataTable;
             };
             this.dom = {
                 background: $$2('<div class="' + this.classes.background + '"/>'),
-                closeButton: $$2('<div class="' + this.classes.closeButton + '">x</div>'),
+                closeButton: $$2('<div class="' + this.classes.closeButton + '">&times;</div>'),
                 confirmation: $$2('<div class="' + this.classes.confirmation + '"/>'),
                 confirmationButton: $$2('<button class="' + this.classes.confirmationButton + ' ' + this.classes.dtButton + '">'),
                 confirmationTitleRow: $$2('<div class="' + this.classes.confirmationTitleRow + '"></div>'),
@@ -743,7 +743,7 @@ var DataTable = $.fn.dataTable;
                 sSearch: obj.search
             };
         };
-        StateRestore.version = '1.2.2';
+        StateRestore.version = '1.3.0';
         StateRestore.classes = {
             background: 'dtsr-background',
             closeButton: 'dtsr-popover-close',
@@ -1875,7 +1875,7 @@ var DataTable = $.fn.dataTable;
         return StateRestoreCollection;
     }());
 
-    /*! StateRestore 1.2.2
+    /*! StateRestore 1.3.0
      * © SpryMedia Ltd - datatables.net/license
      */
     setJQuery$1($);

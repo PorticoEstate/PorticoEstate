@@ -1,4 +1,4 @@
-/*! DateTime picker for DataTables.net v1.4.1
+/*! DateTime picker for DataTables.net v1.5.1
  *
  * © SpryMedia Ltd, all rights reserved.
  * License: MIT datatables.net/license/mit
@@ -48,7 +48,7 @@
 
 /**
  * @summary     DateTime picker for DataTables.net
- * @version     1.4.1
+ * @version     1.5.1
  * @file        dataTables.dateTime.js
  * @author      SpryMedia Ltd
  * @contact     www.datatables.net/contact
@@ -197,6 +197,8 @@ var DateTime = function ( input, opts ) {
 		.append( this.dom.buttons )
 		.append( this.dom.calendar );
 
+	this.dom.input.addClass('dt-datetime');
+
 	this._constructor();
 };
 
@@ -212,8 +214,31 @@ $.extend( DateTime.prototype, {
 		this._hide(true);
 		this.dom.container.off().empty();
 		this.dom.input
+			.removeClass('dt-datetime')
 			.removeAttr('autocomplete')
 			.off('.datetime');
+	},
+
+	display: function (year, month) {
+		if (year !== undefined) {
+			this.s.display.setUTCFullYear(year);
+		}
+
+		if (month !== undefined) {
+			this.s.display.setUTCMonth(month - 1);
+		}
+
+		if (year !== undefined || month !== undefined) {
+			this._setTitle();
+			this._setCalander();
+
+			return this;
+		}
+
+		return {
+			month: this.s.display.getUTCMonth() + 1,
+			year: this.s.display.getUTCFullYear()
+		};
 	},
 
 	errorMsg: function ( msg ) {
@@ -431,6 +456,15 @@ $.extend( DateTime.prototype, {
 					that.val( that.dom.input.val(), false );
 				}
 			} );
+
+		// Want to prevent the focus bubbling up the document to account for
+		// focus capture in modals (e.g. Editor and Bootstrap). They can see
+		// the focus as outside the modal and thus immediately blur focus on
+		// the picker. Need to use a native addEL since jQuery changes the
+		// focusin to focus for some reason! focusin bubbles, focus does not.
+		this.dom.container[0].addEventListener('focusin', function (e) {
+			e.stopPropagation();
+		});
 
 		// Main event handlers for input in the widget
 		this.dom.container
@@ -1551,21 +1585,25 @@ $.extend( DateTime.prototype, {
 	_writeOutput: function ( focus ) {
 		var date = this.s.d;
 		var out = '';
+		var input = this.dom.input;
 
 		if (date) {
 			out = this._convert(date, null, this.c.format);
 		}
 
-		this.dom.input
-			.val( out )
-			.trigger('change', {write: date});
+		input.val( out );
+
+		// Create a DOM synthetic event. Can't use $().trigger() as
+		// that doesn't actually trigger non-jQuery event listeners
+		var event = new Event('change', {bubbles: true});
+		input[0].dispatchEvent(event);
 		
-		if ( this.dom.input.attr('type') === 'hidden' ) {
+		if ( input.attr('type') === 'hidden' ) {
 			this.val(out, false);
 		}
 
 		if ( focus ) {
-			this.dom.input.focus();
+			input.focus();
 		}
 	}
 } );
@@ -1655,7 +1693,7 @@ DateTime.defaults = {
 	yearRange: 25
 };
 
-DateTime.version = '1.4.1';
+DateTime.version = '1.5.1';
 
 /**
  * CommonJS factory function pass through. Matches DataTables.
