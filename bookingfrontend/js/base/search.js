@@ -884,10 +884,24 @@ function setTownData(towns)
 		towns.sort(compare);
 		for (let i = 0; i < towns.length; i++)
 		{
-			let lower = towns[i].name.toLowerCase();
+			let nameparts = towns[i].name.split('/');
+			let name = '';
+
+			for (let j = 0; j < nameparts.length; j++)
+			{
+				if(name)
+				{
+					name += ' / ';
+				}
+
+				name += nameparts[j].trim().charAt(0).toUpperCase() + nameparts[j].trim().slice(1).toLowerCase();
+			}
+
+//			let lower = towns[i].name.toLowerCase();
 
 			viewmodel.towns.push({
-				name: towns[i].name.charAt(0) + lower.slice(1),
+//				name: towns[i].name.charAt(0) + lower.slice(1),
+				name: name,
 				id: towns[i].id
 			});
 		}
