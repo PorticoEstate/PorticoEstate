@@ -609,7 +609,6 @@
 		</xsl:if>
 
 		var download_url = '<xsl:value-of select="download"/>';
-		var exclude_colvis = [];
 		var editor_cols = [];
 		var editor_action = '<xsl:value-of select="editor_action"/>';
 		var disablePagination = '<xsl:value-of select="disablePagination"/>';
@@ -621,13 +620,6 @@
 		var button_def = [];
 		var group_buttons = false;
 
-				//button_def.push({
-		//		extend: 'colvis',
-		//		exclude: exclude_colvis,
-		//		text: function ( dt, button, config ) {
-		//		return dt.i18n( 'buttons.show_hide', 'Show / hide columns' );
-		//	}
-		//});
 		<xsl:choose>
 			<xsl:when test="new_item">
 				<xsl:choose>
@@ -974,13 +966,6 @@
 			}
 
 			<![CDATA[
-			for(i=0;i < JqueryPortico.columns.length;i++)
-			{
-				if (JqueryPortico.columns[i]['visible'] != 'undefined' && JqueryPortico.columns[i]['visible'] == false)
-				{
-					exclude_colvis.push(i);
-				}
-			}
 
 			for(i=0;i < JqueryPortico.columns.length;i++)
 			{
@@ -1396,6 +1381,10 @@
 			init_table();
 
 			$('#datatable-container tbody').on( 'click', 'tr', function () {
+					if($(this).hasClass('child'))
+					{
+						return;
+					}
 					$(this).toggleClass('selected');
 					var api = oTable.api();
 //					alert( api.rows('.selected').data().length +' row(s) selected' );
