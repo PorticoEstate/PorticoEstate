@@ -284,7 +284,6 @@
 
 		var ajax_url = '<xsl:value-of select="source"/>';
 		var download_url = '<xsl:value-of select="download"/>';
-		var exclude_colvis = [];
 		var editor_cols = [];
 		var editor_action = '<xsl:value-of select="editor_action"/>';
 			
@@ -292,13 +291,6 @@
 			<xsl:choose>
 				<xsl:when test="//datatable/actions">
 					var button_def = [
-//									{
-//										extend: 'colvis',
-//										exclude: exclude_colvis,
-//										text: function ( dt, button, config ) {
-//											return dt.i18n( 'buttons.show_hide', 'Show / hide columns' );
-//										}
-//									},
 									{
 										extend: 'copy',
 										text: "<xsl:value-of select="php:function('lang', 'copy')"/>"

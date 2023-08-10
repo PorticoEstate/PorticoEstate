@@ -114,7 +114,6 @@
 			self::add_javascript('phpgwapi', 'DataTables', 'Responsive/js/dataTables.responsive.js', false, array('combine' => true ));
 			//Buttons
 			self::add_javascript('phpgwapi', 'DataTables', 'Buttons/js/dataTables.buttons.min.js', false, array('combine' => true ));
-			self::add_javascript('phpgwapi', 'DataTables', 'Buttons/js/buttons.colVis.min.js', false, array('combine' => true ));
 			self::add_javascript('phpgwapi', 'DataTables', 'Buttons/js/buttons.flash.js', false, array('combine' => true ));
 			self::add_javascript('phpgwapi', 'DataTables', 'Buttons/js/buttons.html5.js', false, array('combine' => true ));
 			self::add_javascript('phpgwapi', 'jszip', 'jszip.min.js', false, array('combine' => true ));
