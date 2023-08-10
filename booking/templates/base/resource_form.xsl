@@ -498,55 +498,88 @@
 						<xsl:variable name="lang_access_code_format">
 							<xsl:value-of select="php:function('lang', 'access code format')"/>
 						</xsl:variable>
+						<xsl:variable name="lang_access_instruction">
+							<xsl:value-of select="php:function('lang', 'access instruction')"/>
+						</xsl:variable>
 
-						<input type="text" id="e_lock_system_id" name="e_lock_system_id">
-							<xsl:attribute name="placeholder">
-								<xsl:value-of select="$lang_system_id"/>
-							</xsl:attribute>
-							<xsl:attribute name="title">
-								<xsl:value-of select="$lang_system_id"/>
-							</xsl:attribute>
-						</input>
-						<input type="text" id="e_lock_resource_id" name="e_lock_resource_id">
-							<xsl:attribute name="title">
-								<xsl:value-of select="$lang_resource_id"/>
-							</xsl:attribute>
-							<xsl:attribute name="placeholder">
-								<xsl:value-of select="$lang_resource_id"/>
-							</xsl:attribute>
-						</input>
-						<input type="text" id="e_lock_name" name="e_lock_name">
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'name')"/>
-							</xsl:attribute>
-							<xsl:attribute name="placeholder">
-								<xsl:value-of select="php:function('lang', 'name')"/>
-							</xsl:attribute>
-						</input>
-						<input type="text" id="access_code_format" name="access_code_format">
-							<xsl:attribute name="title">
-								<xsl:value-of select="$lang_access_code_format"/>
-							</xsl:attribute>
-							<xsl:attribute name="placeholder">
-								<xsl:value-of select="$lang_access_code_format"/>
-							</xsl:attribute>
-						</input>
-						<xsl:if test="resource/permission/write">
-							<a class='btn btn-info'>
-								<xsl:attribute name="onClick">
-									<xsl:text>addELock()</xsl:text>
-								</xsl:attribute>
-								<xsl:value-of select="php:function('lang', 'Add')" />
-							</a>
-							<xsl:text> | </xsl:text>
-							<a class='btn btn-info'>
-								<xsl:attribute name="onClick">
-									<xsl:text>removeELock()</xsl:text>
-								</xsl:attribute>
-								<xsl:value-of select="php:function('lang', 'Delete')" />
-							</a>
-						</xsl:if>
+						<table class = 'pure-u-md-1-2'>
+							<tr>
+								<td>
+									<input type="text" id="e_lock_system_id" name="e_lock_system_id">
+										<xsl:attribute name="placeholder">
+											<xsl:value-of select="$lang_system_id"/>
+										</xsl:attribute>
+										<xsl:attribute name="title">
+											<xsl:value-of select="$lang_system_id"/>
+										</xsl:attribute>
+									</input>
+								</td>
+								<td>
+									<input type="text" id="e_lock_resource_id" name="e_lock_resource_id">
+										<xsl:attribute name="title">
+											<xsl:value-of select="$lang_resource_id"/>
+										</xsl:attribute>
+										<xsl:attribute name="placeholder">
+											<xsl:value-of select="$lang_resource_id"/>
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="text" id="e_lock_name" name="e_lock_name">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'name')"/>
+										</xsl:attribute>
+										<xsl:attribute name="placeholder">
+											<xsl:value-of select="php:function('lang', 'name')"/>
+										</xsl:attribute>
+									</input>
+								</td>
+								<td>
 
+									<input type="text" id="access_code_format" name="access_code_format">
+										<xsl:attribute name="title">
+											<xsl:value-of select="$lang_access_code_format"/>
+										</xsl:attribute>
+										<xsl:attribute name="placeholder">
+											<xsl:value-of select="$lang_access_code_format"/>
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<input type="text" id="access_instruction" name="access_instruction" class="pure-input-1">
+										<xsl:attribute name="title">
+											<xsl:value-of select="$lang_access_instruction"/>
+										</xsl:attribute>
+										<xsl:attribute name="placeholder">
+											<xsl:value-of select="$lang_access_instruction"/>
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+							<xsl:if test="resource/permission/write">
+								<tr>
+									<td>
+										<a class='btn btn-info' role="button">
+											<xsl:attribute name="onClick">
+												<xsl:text>addELock()</xsl:text>
+											</xsl:attribute>
+											<xsl:value-of select="php:function('lang', 'Add')" />
+										</a>
+										<xsl:text> | </xsl:text>
+										<a class='btn btn-info' role="button">
+											<xsl:attribute name="onClick">
+												<xsl:text>removeELock()</xsl:text>
+											</xsl:attribute>
+											<xsl:value-of select="php:function('lang', 'Delete')" />
+										</a>
+									</td>
+								</tr>
+							</xsl:if>
+						</table>
 					</div>
 				</div>
 				<div class="pure-control-group">

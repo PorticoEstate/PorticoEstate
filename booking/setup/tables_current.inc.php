@@ -267,6 +267,7 @@
 				'e_lock_resource_id' => array('type' => 'varchar', 'precision' => 200, 'nullable' => False),
 				'e_lock_name' => array('type' => 'varchar', 'precision' => 200, 'nullable' => true),
 				'access_code_format' => array('type' => 'varchar', 'precision' => 20, 'nullable' => true),
+				'access_instruction' => array('type' => 'text', 'nullable' => true),
 				'active' => array('type' => 'int', 'nullable' => False, 'precision' => 2, 'default' => 1),
 				'modified_on' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
 				'modified_by' => array('type' => 'int', 'precision' => '4', 'nullable' => False),

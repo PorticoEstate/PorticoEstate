@@ -541,6 +541,7 @@
 				array('key' => 'e_lock_resource_id', 'label' => lang('resource id'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'e_lock_name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'access_code_format', 'label' => lang('access code format'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'access_instruction', 'label' => lang('access instruction'), 'sortable' => false, 'resizeable' => true),
 			);
 			return $columns;
 		}
@@ -651,6 +652,9 @@
 			$e_lock_resource_id = phpgw::get_var('e_lock_resource_id', 'string');
 			$e_lock_name = phpgw::get_var('e_lock_name', 'string');
 			$access_code_format = phpgw::get_var('access_code_format', 'string');
+			$access_instruction = phpgw::get_var('access_instruction', 'string');
+
+
 
 			if (!$e_lock_system_id || !$e_lock_resource_id )
 			{
@@ -663,7 +667,7 @@
 			try
 			{
 				$resource = $this->bo->read_single($resource_id);
-				$receipt = $this->bo->add_e_lock($resource, $resource_id, $e_lock_system_id, $e_lock_resource_id,$e_lock_name, $access_code_format);
+				$receipt = $this->bo->add_e_lock($resource, $resource_id, $e_lock_system_id, $e_lock_resource_id,$e_lock_name, $access_code_format, $access_instruction);
 				$msg = $receipt == 1 ? lang('added') : lang('updated');
 			}
 			catch (booking_unauthorized_exception $e)
