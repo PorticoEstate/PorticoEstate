@@ -108,10 +108,6 @@ HTML;
 		if (!$nonavbar)
 		{
 
-			$navbar_state = execMethod('phpgwapi.template_portico.retrieve_local', 'menu_state');
-
-			$var['menu_state'] = isset($navbar_state['menu_state']) ? $navbar_state['menu_state'] : null;
-
 			$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
 //			_debug_array($bookmarks);
 			$lang_bookmarks = lang('bookmarks');
@@ -421,12 +417,14 @@ HTML;
 		}
 		else 
 		{
+			$navbar_state = execMethod('phpgwapi.template_portico.retrieve_local', 'menu_state');
+			$menu_state = isset($navbar_state['menu_state']) ? $navbar_state['menu_state'] : 'shadow';
 
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
 			{
 				$lang_collapse_all	= lang('collapse all');
 				$var['sidebar'] = <<<HTML
-					<nav id="sidebar" class="{menu_state} shadow">
+					<nav id="sidebar" class="{$menu_state}">
 						<div class="sidebar-header">
 							<h1>{$user_fullname}</h1>
 						</div>
@@ -452,7 +450,7 @@ HTML;
 			else
 			{
 				$var['sidebar'] = <<<HTML
-				<nav id="sidebar" class="{menu_state}">
+				<nav id="sidebar" class="{$menu_state}">
 					<div class="sidebar-header">
 						<h1>{$user_fullname}</h1>
 					</div>
