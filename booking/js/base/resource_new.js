@@ -190,12 +190,19 @@ addELock = function ()
 	var e_lock_system_id = $("#e_lock_system_id").val();
 	var e_lock_resource_id = $("#e_lock_resource_id").val();
 	var e_lock_name = $("#e_lock_name").val();
-
-
 	var access_code_format = $("#access_code_format").val();
+	var access_instruction = $("#access_instruction").val();
+
 	$.ajax({
 		type: 'POST',
-		data: {e_lock_system_id: e_lock_system_id, e_lock_resource_id: e_lock_resource_id, e_lock_name: e_lock_name, access_code_format: access_code_format, resource_id: resource_id},
+		data: {
+			e_lock_system_id: e_lock_system_id,
+			e_lock_resource_id: e_lock_resource_id,
+			e_lock_name: e_lock_name,
+			access_code_format: access_code_format,
+			"resource_id": resource_id,
+			access_instruction:access_instruction
+		},
 		dataType: 'JSON',
 		url: requestUrl,
 		success: function (data)
@@ -207,6 +214,7 @@ addELock = function ()
 				$("#e_lock_resource_id").val('');
 				$("#e_lock_name").val('');
 				$("#access_code_format").val('');
+				$("#access_instruction").val('');
 			}
 			if (data.msg !== '')
 			{

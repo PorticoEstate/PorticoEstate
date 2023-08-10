@@ -241,6 +241,11 @@
 													. "Du har fått tilgang til {$resource['name']} i tidsrommet {$reservation['from_']} - {$reservation['to_']}.\n "
 													. "Koden for {$e_lock_name} er: {$e_loc_key}";
 
+												if ($e_lock['access_instruction'])
+												{
+													$sms_text .= "\n{$e_lock['access_instruction']}";
+												}
+
 												try
 												{
 													$sms_res = $sms_service->websend2pv($this->account, $reservation['contact_phone'], $sms_text);
