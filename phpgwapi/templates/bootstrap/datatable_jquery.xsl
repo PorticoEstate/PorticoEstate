@@ -1368,6 +1368,7 @@
 				tabIndex:		1,
 				"search": initial_search,
 				"order": order_def,
+				autoWidth: true,
 				buttons: JqueryPortico.buttons
 			});
 			};
