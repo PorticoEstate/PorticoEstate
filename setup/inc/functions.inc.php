@@ -34,15 +34,10 @@
 		require_once('../header.inc.php');
 	}
 
-	if (version_compare(phpversion(), '5.2.0', '<'))
+	if (version_compare(phpversion(), '7.4.0', '<'))
 	{
-		die('<h1>You appear to be using PHP ' . PHP_VERSION . " phpGroupWare requires 5.2.0 or later <br>\n"
+		die('<h1>You appear to be using PHP ' . PHP_VERSION . " Portico requires 7.4.0 or later <br>\n"
 			. 'Please contact your System Administrator</h1>');
-	}
-
-	if ( !function_exists('json_encode') ) // Some distributions have removed the standard JSON extension as of PHP 5.5rc2 due to a license conflict
-	{
-		die('<h1>You have to install php5-json</h1>');
 	}
 
 	/*  If we included the header.inc.php, but it is somehow broken, cover ourselves... */
