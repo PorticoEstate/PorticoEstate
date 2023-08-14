@@ -20,6 +20,8 @@
 	/**
 	* phpGroupWare Information level "error"
 	*/
+//	error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+
 	define('PHPGW_E_INFO', -512);
 
 	/**
@@ -227,7 +229,7 @@
 
 		$log =& $GLOBALS['phpgw']->log;
 
-		$error_file = '/path/to/phpgroupware' . substr($error_file, strlen(PHPGW_SERVER_ROOT) );
+		$error_file = '/path/to/portico/' . substr(ltrim($error_file, '/'), strlen(PHPGW_SERVER_ROOT) );
 
 		$bt = debug_backtrace();
 
