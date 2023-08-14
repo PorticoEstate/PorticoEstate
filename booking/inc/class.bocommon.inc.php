@@ -70,13 +70,17 @@
 		protected function build_default_read_params()
 		{
 			/*
-			 * Sigurd: Temporary est for new datatables
+			 * Sigurd: Temporary test for new datatables
 			 */
-			if ($columns = phpgw::get_var('columns'))
+			if (phpgw::get_var('columns') || isset($_POST['start']))
 			{
 				return $this->build_default_read_params_new();
 			}
 
+
+			/*
+			 * startIndex is used in createTable() in js/jquery/common.js
+			 */
 			$start = phpgw::get_var('startIndex', 'int', 'REQUEST', 0);
 			$results = phpgw::get_var('results', 'int', 'REQUEST', null);
 			$query = phpgw::get_var('query');
