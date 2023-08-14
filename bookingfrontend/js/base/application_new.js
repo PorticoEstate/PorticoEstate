@@ -269,7 +269,7 @@ $(document).ready(function ()
 		{
 			for (var i = 0; i < result.results.length; i++)
 			{
-				if (result.results[i].building_id == urlParams['building_id'])
+				if (result.results[i].deactivate_application !== 1 && result.results[i].building_id == urlParams['building_id'])
 				{
 					var tempSelected = false;
 					if ($.inArray(result.results[i].id, initialSelection) > -1)
