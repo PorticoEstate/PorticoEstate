@@ -1309,6 +1309,7 @@
 				(
 				'my_name' => 'copy',
 				'text' => lang('copy'),
+				'confirm_msg' => lang('copy'),
 				'action' => self::link(array(
 					'menuaction' => 'rental.uicontract.copy_contract'
 				)),
