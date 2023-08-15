@@ -28,7 +28,7 @@
 
 
 <xsl:template name="datatable">
-	<script type="text/javascript">
+	<script>
 		var show_filter_group = false;
 		<xsl:if test="form/toolbar/show_filter_group = '1'">
 			show_filter_group = true;
@@ -71,7 +71,7 @@
 					<fieldset>
 						<div class="row mb-2">
 							<xsl:for-each select="item">
-								<script type="text/javascript">
+								<script>
 									number_of_toolbar_items += 1;
 								</script>
 								<div>
@@ -128,7 +128,7 @@
 											</input>
 											<div id="filter_{name}_container"/>
 											<!--/div-->
-											<script type="text/javascript">
+											<script>
 												$(document).ready(function() {
 												var app = "<xsl:value-of select="app"/>";
 												app = app || 'booking';
@@ -203,7 +203,7 @@
 											<xsl:variable name="name">
 												<xsl:value-of select="name"/>
 											</xsl:variable>
-											<script type="text/javascript">
+											<script>
 												filter_selects['<xsl:value-of select="text"/>'] = '<xsl:value-of select="$name"/>';
 											</script>
 											<select id="{$name}" name="{$name}" class="form-select">
@@ -450,24 +450,26 @@
 </xsl:template>
 
 <xsl:template name="datasource-definition">
-	<table id="datatable-container" class="cell-border table-sm nowrap" style="width:100%">
+	<table id="datatable-container" class="cell-border table-sm" style="width:100%">
 		<thead>
-			<xsl:for-each select="//datatable/field">
-				<xsl:choose>
-					<xsl:when test="hidden">
-						<xsl:if test="hidden =0">
+			<tr>
+				<xsl:for-each select="//datatable/field">
+					<xsl:choose>
+						<xsl:when test="hidden">
+							<xsl:if test="hidden =0">
+								<th>
+									<xsl:value-of select="label"/>
+								</th>
+							</xsl:if>
+						</xsl:when>
+						<xsl:otherwise>
 							<th>
 								<xsl:value-of select="label"/>
 							</th>
-						</xsl:if>
-					</xsl:when>
-					<xsl:otherwise>
-						<th>
-							<xsl:value-of select="label"/>
-						</th>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:for-each>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
+			</tr>
 		</thead>
 		<tfoot>
 			<tr>
@@ -586,7 +588,7 @@
 	</script>
 
 
-	<script type="text/javascript" class="init">
+	<script class="init">
 		var lang_ButtonText_columns = "<xsl:value-of select="php:function('lang', 'columns')"/>";
 
 		var oTable = null;

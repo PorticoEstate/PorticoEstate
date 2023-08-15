@@ -110,28 +110,6 @@ $(document).ready(function ()
 	});
 
 
-	$('#sidebarCollapse').on('click', function ()
-	{
-		$('#sidebar').toggleClass('active');
-
-		var oArgs = {menuaction: 'phpgwapi.template_portico.store', location: 'menu_state'};
-		var requestUrl = phpGWLink('index.php', oArgs, true);
-
-		var state_data = {menu_state: $("#sidebar").attr("class")};
-		$.ajax({
-			type: 'POST',
-			url: requestUrl,
-			data: {data: JSON.stringify(state_data)},
-			dataType: "json",
-			success: function (data)
-			{
-				if (data)
-				{
-					console.log(data);
-				}
-			}
-		});
-	});
 
 	$.contextMenu({
 		selector: '.context-menu-nav',
