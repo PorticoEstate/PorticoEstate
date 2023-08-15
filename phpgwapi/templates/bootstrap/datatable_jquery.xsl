@@ -1349,7 +1349,7 @@
 				fnInitComplete: function (oSettings, json)
 				{
 					$(".btn-group").addClass('w-100');
-					$(".dropdown-menu").addClass('w-100');
+				//	$(".dropdown-menu").addClass('w-100');
 					$(".multiselect ").addClass('form-control');
 					$(".multiselect").removeClass('btn');
 					$(".multiselect").removeClass('btn-default');
