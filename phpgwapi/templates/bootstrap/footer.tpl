@@ -1,11 +1,19 @@
 
-			</div>
+						</div>
+					</div>
+				</div>
+			</main>
+
+			<!--footer class="font-small text-center fixed-bottom bg-light text-gray border-top border-gray-light">
+					<p>{powered_by}</p>
+			</footer-->
+
+			<footer class="py-4 bg-light mt-auto">
+				 <div class="container-fluid px-4">
+						<div class="text-gray text-center">{powered_by}</div>
+				 </div>
+			 </footer>
 		</div>
-
-		<footer class="page-footer font-small text-center fixed-bottom bg-light text-gray border-top border-gray-light">
-
-				<p>{powered_by}</p>
-		</footer>
 	</div>
 
 	<div id="popupBox"></div>
@@ -29,7 +37,7 @@
         </div>
     </div>
 
-	<div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-labelledby="popupModalLabel" aria-hidden="true">
+	<div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-header bg-dark">
@@ -90,6 +98,32 @@
 				$(link).removeClass("disabledouble");
 			}, 1000);
 		});
+
+	$('#sidebarToggle').on('click', function ()
+	{
+		document.body.classList.toggle('sb-sidenav-toggled');
+
+		var oArgs = {menuaction: 'phpgwapi.template_portico.store', location: 'menu_state'};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		var state_data = {menu_state: document.body.classList.contains('sb-sidenav-toggled')};
+
+
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			data: {data: JSON.stringify(state_data)},
+			dataType: "json",
+			success: function (data)
+			{
+				if (data)
+				{
+					console.log(data);
+				}
+			}
+		});
+	});
+
 
 	</script>
 
