@@ -1,14 +1,19 @@
-<body>
-	<div class="wrapper">
-		<!-- Sidebar  -->
-		{sidebar}
+<body class="{menu_state}">
+	{top_panel}
 
-		<!-- Page Content  -->
-        <div id="page_content">
-			{top_panel}
-			{breadcrumb}
+	<!-- Page Content  -->
+	<div id="layoutSidenav">
+		<div id="layoutSidenav_nav">
+			<!-- Sidebar  -->
+			{sidebar}
+                
+		</div>
+		<div id="layoutSidenav_content">
+			<main id = 'page_content'>
+				<div class="container-fluid">
+					<h1 class="mt-2">{current_app_title}</h1>
+					{breadcrumb}
+					<div class="card mb-4 shadow">
+						<div class="card-body pt-2">
 
-			<div class="shadow mb-4 px-2 pb-2">
-				<div class="card-body">
-					<h1 class="card-title">{current_app_title}</h1>
 
