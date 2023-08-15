@@ -164,6 +164,7 @@
 		$GLOBALS['phpgw_setup']->db->transaction_commit();		
 		
 		// Add cleaning of app_sessions per skeeter, but with a check for the table being there, just in case
+		$tables = array();
 		foreach ( (array) $GLOBALS['phpgw_setup']->db->table_names() as $key => $val)
 		{
 			$tables[] = $val;

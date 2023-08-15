@@ -86,6 +86,8 @@
 	if($app != 'frontend')
 	{
 		$stylesheets[] = "/phpgwapi/templates/bootstrap/css/base.css";
+		$stylesheets[] = "/phpgwapi/templates/bootstrap/css/sidebar.css";
+
 		if($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
 		{
 			$stylesheets[] = "/phpgwapi/templates/bootstrap/css/navbar_jqtree.css";
@@ -94,6 +96,8 @@
 		{
 			$stylesheets[] = "/phpgwapi/templates/bootstrap/css/navbar_bootstrap.css";
 		}
+
+
 	}
 
 
@@ -233,7 +237,7 @@ JS;
 	if( isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{
 //		echo '<body style="margin-left: 35px;">';
-		echo '<body class="container">';
+		echo '<body class="container-fluid">';
 		register_shutdown_function('parse_footer_end_noframe');
 	}
 
@@ -248,7 +252,7 @@ JS;
 
 		$footer = <<<HTML
 
-			<div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-labelledby="popupModalLabel" aria-hidden="true">
+			<div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
 					<div class="modal-content">
 						<div class="modal-header bg-dark">

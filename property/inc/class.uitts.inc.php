@@ -266,11 +266,11 @@
 			<html>
 				<head>
 					<title>{$ticket['subject']}</title>
-					<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/pure/css/pure-min.css" type="text/css" rel="StyleSheet">
+					<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/pure/css/version_3/pure-min.css" type="text/css" rel="StyleSheet">
 				</head>
 				<body>
 					<script type="text/javascript">
-							document.write("<form><input type=button "
+							document.write("<form><input type='button' class='pure-button' "
 							+"value=\"{$lang_print}\" onClick=\"window.print();\"></form>");
 					</script>
 					<H2>{$ticket['subject']}</H2>
@@ -2392,7 +2392,7 @@ HTML;
 				'values'		 => $ticket['location_data'],
 				'type_id'		 => $type_id,
 				'no_link'		 => false, // disable lookup links for location type less than type_id
-				'tenant'		 => (isset($ticket['location_data']['tenant_id']) ? $ticket['location_data']['tenant_id'] : ''),
+				'tenant'		 => empty($this->bo->config->config_data['suppress_tenant']) ? true : false,
 				'lookup_type'	 => $lookup_type,
 				'lookup_entity'	 => $this->bocommon->get_lookup_entity('ticket'),
 				'entity_data'	 => (isset($ticket['p']) ? $ticket['p'] : '')

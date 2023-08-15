@@ -1,6 +1,6 @@
 	<xsl:template name="jquery_phpgw_i18n">
 		<xsl:if test="jquery_phpgw_i18n">
-			<script type="text/javascript">
+			<script>
 				JqueryPortico.i18n = {
 				<xsl:for-each select="jquery_phpgw_i18n/*">
 					<xsl:value-of select="local-name()"/>: function(cfg)

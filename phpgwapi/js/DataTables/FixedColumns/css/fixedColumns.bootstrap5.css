@@ -18,6 +18,21 @@ div.dtfc-right-top-blocker {
   background-color: white;
 }
 
+html.dark table.dataTable thead tr > .dtfc-fixed-left,
+html.dark table.dataTable thead tr > .dtfc-fixed-right,
+html.dark table.dataTable tfoot tr > .dtfc-fixed-left,
+html.dark table.dataTable tfoot tr > .dtfc-fixed-right {
+  background-color: var(--dt-html-background);
+}
+html.dark table.dataTable tbody tr > .dtfc-fixed-left,
+html.dark table.dataTable tbody tr > .dtfc-fixed-right {
+  background-color: var(--dt-html-background);
+}
+html.dark div.dtfc-left-top-blocker,
+html.dark div.dtfc-right-top-blocker {
+  background-color: var(--dt-html-background);
+}
+
 div.dtfc-right-top-blocker,
 div.dtfc-left-top-blocker {
   margin-top: 6px;
@@ -39,4 +54,26 @@ div.dataTables_scrollBody {
 div.dataTables_scrollFootInner table.table-bordered tr th:first-child,
 div.dataTables_scrollHeadInner table.table-bordered tr th:first-child {
   border-left: 1px solid #ddd !important;
+}
+
+html[data-bs-theme=dark] table.dataTable thead tr > .dtfc-fixed-left,
+html[data-bs-theme=dark] table.dataTable thead tr > .dtfc-fixed-right,
+html[data-bs-theme=dark] table.dataTable tfoot tr > .dtfc-fixed-left,
+html[data-bs-theme=dark] table.dataTable tfoot tr > .dtfc-fixed-right {
+  background-color: var(--bs-body-bg);
+}
+html[data-bs-theme=dark] table.dataTable tbody tr > .dtfc-fixed-left,
+html[data-bs-theme=dark] table.dataTable tbody tr > .dtfc-fixed-right {
+  background-color: var(--bs-body-bg);
+}
+html[data-bs-theme=dark] div.dtfc-left-top-blocker,
+html[data-bs-theme=dark] div.dtfc-right-top-blocker {
+  background-color: var(--bs-body-bg);
+}
+html[data-bs-theme=dark] div.dataTables_scrollBody {
+  border-left-color: var(--bs-border-color) !important;
+}
+html[data-bs-theme=dark] div.dataTables_scrollFootInner table.table-bordered tr th:first-child,
+html[data-bs-theme=dark] div.dataTables_scrollHeadInner table.table-bordered tr th:first-child {
+  border-left-color: var(--bs-border-color) !important;
 }

@@ -138,7 +138,7 @@
 					'manytomany' => array(
 						'table' => 'bb_resource_e_lock',
 						'key' => 'resource_id',
-						'column' => array('e_lock_system_id', 'e_lock_resource_id', 'e_lock_name','access_code_format', 'active', 'modified_on', 'modified_by'),
+						'column' => array('e_lock_system_id', 'e_lock_resource_id', 'e_lock_name','access_code_format','access_instruction', 'active', 'modified_on', 'modified_by'),
 					)),
 				)
 			);
@@ -385,14 +385,15 @@
 			while ($this->db->next_record())
 			{
 				$values[] = array(
-					'resource_id' => $this->db->f('resource_id'),
-					'e_lock_system_id' => $this->db->f('e_lock_system_id'),
+					'resource_id'		 => $this->db->f('resource_id'),
+					'e_lock_system_id'	 => $this->db->f('e_lock_system_id'),
 					'e_lock_resource_id' => $this->db->f('e_lock_resource_id', true),
-					'e_lock_name' => $this->db->f('e_lock_name',true),
-					'access_code_format' => $this->db->f('access_code_format',true),
-					'active' => $this->db->f('active'),
-					'modified_on' => $this->db->f('modified_on'),
-					'modified_by' => $this->db->f('modified_by'),
+					'e_lock_name'		 => $this->db->f('e_lock_name', true),
+					'access_code_format' => $this->db->f('access_code_format', true),
+					'access_instruction' => $this->db->f('access_instruction', true),
+					'active'			 => $this->db->f('active'),
+					'modified_on'		 => $this->db->f('modified_on'),
+					'modified_by'		 => $this->db->f('modified_by'),
 				);
 			}
 
@@ -405,7 +406,7 @@
 			);
 		}
 
-		function add_e_lock( $resource_id, $e_lock_system_id, $e_lock_resource_id, $e_lock_name = '', $access_code_format = '' )
+		function add_e_lock( $resource_id, $e_lock_system_id, $e_lock_resource_id, $e_lock_name = '', $access_code_format = '', $access_instruction = '' )
 		{
 			$ret = 0;
 			if (!$resource_id || !$e_lock_system_id || !$e_lock_resource_id)
@@ -429,25 +430,30 @@
 				),
 				3	=> array
 				(
-					'value'	=> date($this->db->datetime_format()),
+					'value'	=> $access_instruction,
 					'type'	=> PDO::PARAM_STR
 				),
 				4	=> array
 				(
-					'value'	=> (int)$GLOBALS['phpgw_info']['user']['account_id'],
-					'type'	=> PDO::PARAM_INT
+					'value'	=> date($this->db->datetime_format()),
+					'type'	=> PDO::PARAM_STR
 				),
 				5	=> array
 				(
-					'value'	=> $resource_id,
+					'value'	=> (int)$GLOBALS['phpgw_info']['user']['account_id'],
 					'type'	=> PDO::PARAM_INT
 				),
 				6	=> array
 				(
-					'value'	=> $e_lock_system_id,
+					'value'	=> $resource_id,
 					'type'	=> PDO::PARAM_INT
 				),
 				7	=> array
+				(
+					'value'	=> $e_lock_system_id,
+					'type'	=> PDO::PARAM_INT
+				),
+				8	=> array
 				(
 					'value'	=> $e_lock_resource_id,
 					'type'	=> PDO::PARAM_STR
@@ -463,7 +469,7 @@
 
 			if ($this->db->next_record())
 			{
-				$update_sql = "UPDATE bb_resource_e_lock SET e_lock_name = ?, access_code_format = ?, modified_on = ?, modified_by = ? WHERE resource_id = ? AND e_lock_system_id = ? AND e_lock_resource_id = ?";
+				$update_sql = "UPDATE bb_resource_e_lock SET e_lock_name = ?, access_code_format = ?, access_instruction = ?, modified_on = ?, modified_by = ? WHERE resource_id = ? AND e_lock_system_id = ? AND e_lock_resource_id = ?";
 				if( $this->db->insert($update_sql, $insert_update, __LINE__, __FILE__))
 				{
 					$ret = 2;
@@ -471,8 +477,8 @@
 			}
 			else
 			{
-				$add_sql = "INSERT INTO bb_resource_e_lock (e_lock_name, access_code_format, modified_on, modified_by, resource_id, e_lock_system_id, e_lock_resource_id)"
-					. " VALUES (?, ?, ?, ?, ? ,? ,?)";
+				$add_sql = "INSERT INTO bb_resource_e_lock (e_lock_name, access_code_format, access_instruction, modified_on, modified_by, resource_id, e_lock_system_id, e_lock_resource_id)"
+					. " VALUES (?, ?, ?, ?, ? ,? ,? ,?)";
 				if( $this->db->insert($add_sql, $insert_update, __LINE__, __FILE__))
 				{
 					$ret = 1;

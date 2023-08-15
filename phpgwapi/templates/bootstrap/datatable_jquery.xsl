@@ -28,7 +28,7 @@
 
 
 <xsl:template name="datatable">
-	<script type="text/javascript">
+	<script>
 		var show_filter_group = false;
 		<xsl:if test="form/toolbar/show_filter_group = '1'">
 			show_filter_group = true;
@@ -71,7 +71,7 @@
 					<fieldset>
 						<div class="row mb-2">
 							<xsl:for-each select="item">
-								<script type="text/javascript">
+								<script>
 									number_of_toolbar_items += 1;
 								</script>
 								<div>
@@ -128,7 +128,7 @@
 											</input>
 											<div id="filter_{name}_container"/>
 											<!--/div-->
-											<script type="text/javascript">
+											<script>
 												$(document).ready(function() {
 												var app = "<xsl:value-of select="app"/>";
 												app = app || 'booking';
@@ -203,7 +203,7 @@
 											<xsl:variable name="name">
 												<xsl:value-of select="name"/>
 											</xsl:variable>
-											<script type="text/javascript">
+											<script>
 												filter_selects['<xsl:value-of select="text"/>'] = '<xsl:value-of select="$name"/>';
 											</script>
 											<select id="{$name}" name="{$name}" class="form-select">
@@ -450,26 +450,26 @@
 </xsl:template>
 
 <xsl:template name="datasource-definition">
-	<!--<table id="datatable-container" class="display cell-border compact responsive no-wrap">-->
-	<table id="datatable-container" class="responsive cell-border no-wrap" width="100%">
-	<!--<table id="datatable-container" class="table table-bordered" width="99%" style="float: left;" cellspacing="0">-->
+	<table id="datatable-container" class="cell-border table-sm" style="width:100%">
 		<thead>
-			<xsl:for-each select="//datatable/field">
-				<xsl:choose>
-					<xsl:when test="hidden">
-						<xsl:if test="hidden =0">
+			<tr>
+				<xsl:for-each select="//datatable/field">
+					<xsl:choose>
+						<xsl:when test="hidden">
+							<xsl:if test="hidden =0">
+								<th>
+									<xsl:value-of select="label"/>
+								</th>
+							</xsl:if>
+						</xsl:when>
+						<xsl:otherwise>
 							<th>
 								<xsl:value-of select="label"/>
 							</th>
-						</xsl:if>
-					</xsl:when>
-					<xsl:otherwise>
-						<th>
-							<xsl:value-of select="label"/>
-						</th>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:for-each>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
+			</tr>
 		</thead>
 		<tfoot>
 			<tr>
@@ -588,7 +588,7 @@
 	</script>
 
 
-	<script type="text/javascript" class="init">
+	<script class="init">
 		var lang_ButtonText_columns = "<xsl:value-of select="php:function('lang', 'columns')"/>";
 
 		var oTable = null;
@@ -600,7 +600,6 @@
 		</xsl:if>
 
 		var download_url = '<xsl:value-of select="download"/>';
-		var exclude_colvis = [];
 		var editor_cols = [];
 		var editor_action = '<xsl:value-of select="editor_action"/>';
 		var disablePagination = '<xsl:value-of select="disablePagination"/>';
@@ -612,13 +611,6 @@
 		var button_def = [];
 		var group_buttons = false;
 
-		//button_def.push({
-		//		extend: 'colvis',
-		//		exclude: exclude_colvis,
-		//		text: function ( dt, button, config ) {
-		//		return dt.i18n( 'buttons.show_hide', 'Show / hide columns' );
-		//	}
-		//});
 		<xsl:choose>
 			<xsl:when test="new_item">
 				<xsl:choose>
@@ -963,13 +955,6 @@
 			}
 
 		<![CDATA[
-			for(i=0;i < JqueryPortico.columns.length;i++)
-			{
-				if (JqueryPortico.columns[i]['visible'] != 'undefined' && JqueryPortico.columns[i]['visible'] == false)
-				{
-					exclude_colvis.push(i);
-				}
-			}
 
 			for(i=0;i < JqueryPortico.columns.length;i++)
 			{
@@ -1103,9 +1088,20 @@
 				};
 			}
 
+			var select = false;
+
+			if(select_all)
+			{
+				select = {style: 'multi'};
+			}
+			else
+			{
+				select = true;
+			}
+
 			init_table = function()
 			{
-			oTable = $('#datatable-container').dataTable({
+				oTable = $('#datatable-container').dataTable({
 				paginate:		disablePagination ? false : true,
 				pagingType:		"input",
 				processing:		true,
@@ -1116,7 +1112,7 @@
 										type: ''
 									}
 								},
-				select: select_all ? { style: 'multi' } : true,
+				select: select,
 				deferRender:	true,
 				ajax:{
 					url: ajax_url,
@@ -1374,6 +1370,7 @@
 				tabIndex:		1,
 				"search": initial_search,
 				"order": order_def,
+				autoWidth: true,
 				buttons: JqueryPortico.buttons
 			});
 			};
@@ -1382,6 +1379,10 @@
 
 
 			$('#datatable-container tbody').on( 'click', 'tr', function () {
+					if($(this).hasClass('child'))
+					{
+						return;
+					}
 					$(this).toggleClass('selected');
 					var api = oTable.api();
 //					alert( api.rows('.selected').data().length +' row(s) selected' );

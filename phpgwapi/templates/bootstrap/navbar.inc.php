@@ -56,7 +56,7 @@
 
 		$template_selector = <<<HTML
 
-	   <select id = "template_selector" class="btn btn-link btn-sm nav-item dropdown no-arrow nav-link text-white dropdown-toggle" style="height:2rem;margin-top:3px">
+	   <select id = "template_selector" class="btn btn-link btn-sm nav-item dropdown no-arrow nav-link text-white dropdown-toggle" style="height:2rem;margin-top:5px">
 		<option class="nav-link text-white" value="bootstrap"{$selecte_bootstrap}>Bootstrap</option>
 		<option class="nav-link text-white" value="portico"{$selecte_portico}>Portico</option>
 	   </select>
@@ -108,10 +108,6 @@ HTML;
 		if (!$nonavbar)
 		{
 
-			$navbar_state = execMethod('phpgwapi.template_portico.retrieve_local', 'menu_state');
-
-			$var['menu_state'] = isset($navbar_state['menu_state']) ? $navbar_state['menu_state'] : null;
-
 			$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
 //			_debug_array($bookmarks);
 			$lang_bookmarks = lang('bookmarks');
@@ -139,8 +135,8 @@ HTML;
 			if ( $GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, 'preferences') )
 			{
 				$preferences_option .= <<<HTML
-				<a class="dropdown-item text-white" href="{$preferences_url}">
-					<i class="fas fa-cogs fa-sm fa-fw me-2 text-white"></i>
+				<a class="dropdown-item" href="{$preferences_url}">
+					<i class="fas fa-cogs fa-sm fa-fw me-2"></i>
 					{$preferences_text}
 				</a>
 HTML;
@@ -203,7 +199,7 @@ HTML;
 
 				$help_text = lang('help');
 				$manual_option .= <<<HTML
-				<li class="nav-item">
+				<li class="nav-item mt-1">
 					<a href="{$help_url}" class="nav-link text-white">{$help_text}</a>
 				</li>
 HTML;
@@ -223,7 +219,7 @@ HTML;
 					'height' => 540
 				));
 			$support_option = <<<HTML
-			<li class="nav-item">
+			<li class="nav-item mt-1">
 				<a href="$support_link" class="nav-link text-white" data-bs-toggle="modal" data-bs-target="#popupModal">{$support_text}</a>
 			</li>
 HTML;
@@ -241,7 +237,7 @@ HTML;
 
 			$debug_text = lang('debug');
 			$debug_option = <<<HTML
-			<li class="nav-item">
+			<li class="nav-item mt-1">
 				<a href="{$debug_url}" class="nav-link text-white">{$debug_text}</a>
 			</li>
 HTML;
@@ -275,7 +271,7 @@ HTML;
 		{
 			$bookmark_option .= <<<HTML
 
-			<li class="nav-item dropdown no-arrow">
+			<li class="nav-item dropdown no-arrow mt-1">
 				<a class="nav-link dropdown-toggle text-white" href="#" id="bookmarkDropdown" role="button"
 					data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<span class="me-2 d-none d-lg-inline">{$lang_bookmarks}</span>
@@ -292,13 +288,13 @@ HTML;
 						continue;
 					}
 					$seleced_bm = 'dropdown-item';
-					$icon = !empty($entry['icon']) ? "<i class='{$entry['icon']} me-2 text-white'></i>": '<i class="fas fa-cogs fa-sm fa-fw me-2 text-white"></i>';
+					$icon = !empty($entry['icon']) ? "<i class='{$entry['icon']} me-2'></i>": '<i class="fas fa-cogs fa-sm fa-fw me-2"></i>';
 
 
 					if ( $bookmark_id == "navbar::{$GLOBALS['phpgw_info']['flags']['menu_selection']}"
 					|| ( !empty($entry['nav_location']) && $entry['nav_location'] == $GLOBALS['phpgw_info']['flags']['menu_selection'] ))
 					{
-						$seleced_bm .= ' text-white';
+						$seleced_bm .= ' text-secondary';
 					}
 
 					$bookmark_option .= <<<HTML
@@ -317,7 +313,7 @@ HTML;
 		{
 			$bookmark_option .= <<<HTML
 
-			<li class="nav-item disabled">
+			<li class="nav-item disabled mt-1">
 				<a href="#" class="nav-link text-white">{$lang_bookmarks}</a>
 			</li>
 HTML;
@@ -346,7 +342,7 @@ HTML;
 			$lang_read_messages = $GLOBALS['phpgw']->translation->translate('read messages', array(), false, 'messenger');
 
 			$messenger_option = <<<HTML
-                        <li class="nav-item dropdown no-arrow mx-1" onClick="get_messages();">
+                        <li class="nav-item dropdown no-arrow mt-1" onClick="get_messages();">
                             <a class="nav-link dropdown-toggle text-white" href="#" id="messagesDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
@@ -355,11 +351,11 @@ HTML;
                             </a>
                             <!-- Dropdown - Messages -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
-                                <h6 class="dropdown-header text-white">
+                                <h6 class="dropdown-header">
 									{$lang_messenger}
                                 </h6>
 								<div id="messages"></div>
-                                <a class="dropdown-item small text-white" href="{$link_messages}">{$lang_read_messages}</a>
+                                <a class="dropdown-item small" href="{$link_messages}">{$lang_read_messages}</a>
                             </div>
                         </li>
 HTML;
@@ -368,7 +364,7 @@ HTML;
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ms-auto">
-					<li class="nav-item">
+					<li class="nav-item  mt-1">
 						<a href="{$home_url}" class="nav-link text-white">{$home_text}</a>
 					</li>
 						{$template_selector}
@@ -379,7 +375,6 @@ HTML;
                         <!-- Nav Item - Alerts -->
                          <!-- Nav Item - Messages -->
 						{$messenger_option}
-                        <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
@@ -393,17 +388,17 @@ HTML;
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
                                 <!--a class="dropdown-item" href="#">
-                                    <i class="fas fa-user fa-sm fa-fw me-2 text-white"></i>
+                                    <i class="fas fa-user fa-sm fa-fw me-2"></i>
                                     Profile
                                 </a-->
 								{$preferences_option}
                                 <!--a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw me-2 text-white"></i>
+                                    <i class="fas fa-list fa-sm fa-fw me-2"></i>
                                     Activity Log
                                 </a-->
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item text-white" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-white"></i>
+                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw me-2"></i>
                                     {$var['logout_text']}
                                 </a>
                             </div>
@@ -421,12 +416,17 @@ HTML;
 		}
 		else 
 		{
+			$navbar_state = execMethod('phpgwapi.template_portico.retrieve_local', 'menu_state');
+			$var['menu_state'] = !empty($navbar_state['menu_state']) ? 'sb-sidenav-toggled' : '';
 
 			if($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
 			{
 				$lang_collapse_all	= lang('collapse all');
 				$var['sidebar'] = <<<HTML
-					<nav id="sidebar" class="{menu_state} shadow">
+               <nav class="sb-sidenav accordion sb-sidenav-light" id="sidebar">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+						</div>
 						<div class="sidebar-header">
 							<h1>{$user_fullname}</h1>
 						</div>
@@ -445,14 +445,20 @@ HTML;
 							</a>
 						</div>
 						<div id="navbar" style="overflow: auto" class="ms-4"></div>
-					</nav>
+
+                    </div>
+                    <!--div class="sb-sidenav-footer">
+                        <div class="small">Logged in as:</div>
+                        {$user_fullname}
+                    </div-->
+                </nav>
 HTML;
 
 			}
 			else
 			{
 				$var['sidebar'] = <<<HTML
-				<nav id="sidebar" class="{menu_state}">
+				<nav id="sidebar" class="{$menu_state}">
 					<div class="sidebar-header">
 						<h1>{$user_fullname}</h1>
 					</div>
@@ -463,27 +469,15 @@ HTML;
 HTML;
 			}
 
-
-
 			$var['top_panel'] = <<<HTML
-				<nav class="navbar navbar-expand-lg fixed-top bg-dark" data-bs-theme="dark">
-					<div class="container-fluid">
-						<button id="sidebarCollapse" class="btn btn-info">
-							<i class="fas fa-align-left"></i>
-							<span>Sidemeny</span>
-						</button>
-						<button class="btn btn-dark d-inline-block d-lg-none ms-auto" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-							<i class="fas fa-align-justify"></i>
-						</button>
-						<!-- Brand -->
-						<a class="navbar-brand" href="#">{$GLOBALS['phpgw_info']['server']['site_title']}</a>
-
-						<div class="collapse navbar-collapse" id="navbarSupportedContent">
-							{$topmenu}
-						</div>
-					</div>
-				</nav>
-
+	        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+	            <!-- Sidebar Toggle-->
+		        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" ><i class="fas fa-bars"></i></button>
+		        <!--  Brand-->
+				<a class="navbar-brand ps-3" href="#">{$GLOBALS['phpgw_info']['server']['site_title']}</a>
+		        <!-- Navbar-->
+				{$topmenu}
+			</nav>
 HTML;
 		}
 
