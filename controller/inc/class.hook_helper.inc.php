@@ -1034,9 +1034,12 @@ HTML;
 
 			$role_ids = array();
 			$user_ids = array($GLOBALS['phpgw_info']['user']['account_id']);
-			if(!empty($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']))
+
+			$substitute_users	 = CreateObject('property.sosubstitute')->get_users_for_substitute($user_ids[0]);
+
+			foreach ($substitute_users as $user_for_substitute)
 			{
-				$user_ids[] = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+				$user_ids[] = $user_for_substitute;
 			}
 
 			/**
