@@ -384,14 +384,7 @@
 				$procedures_array[] = $procedure->toArray();
 			}
 
-			if (count($procedures_array) > 0)
-			{
-				return $procedures_array;
-			}
-			else
-			{
-				return null;
-			}
+			return $procedures_array;
 		}
 
 		function get_procedures( $start = 0, $results = 0, $sort = null, $dir = '', $query = null, $search_option = null, $filters = array() )
