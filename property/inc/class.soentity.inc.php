@@ -1153,8 +1153,7 @@
 
 				foreach ($cache_attributes[$location_id] as $key => $attribute)
 				{
-//					$description_value = $xml->getElementsByTagName($attribute['name'])->item(0)->nodeValue;
-					$description_value = $jsondata[$attribute['name']];
+					$description_value = $this->db->stripslashes($jsondata[$attribute['name']]);
 
 					if (isset($cache_attributes[$location_id][$key]['choice']) && $cache_attributes[$location_id][$key]['choice'])
 					{
