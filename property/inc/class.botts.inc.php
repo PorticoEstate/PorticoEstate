@@ -2240,7 +2240,7 @@ HTML;
 						'default'	 => true
 					);
 
-					$prefs = $this->bocommon->create_preferences('common', $supervisor_id);
+					$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
 
 					if (!empty($prefs['approval_from']) && empty($supervisors[$prefs['approval_from']]))
 					{

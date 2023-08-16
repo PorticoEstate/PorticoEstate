@@ -138,14 +138,37 @@
 
 	$account_list = $acc->get_list('accounts', -1, 'ASC', 'account_lastname');
 
+	$account_id = phpgw::get_var('account_id', 'int', 'POST', $GLOBALS['phpgw_info']['user']['account_id']);
+	$prefs = CreateObject('property.socommon')->create_preferences('property', $account_id);
+	$_accounts = array();
+
 	foreach ($account_list as $entry)
 	{
-		if ($entry->enabled == true)
+		if ($entry->enabled == true || $prefs['assigntodefault'] == $entry->id)
 		{
 			$_accounts[$entry->id] = $entry->__toString();
+			if ($entry->enabled == false )
+			{
+				$_accounts[$entry->id] .= ' (' . lang('inactive') . ')';
+			}
 		}
 	}
+	unset($entry);
 	create_select_box('Default assign to TTS', 'assigntodefault', $_accounts, 'The default user to assign a ticket in Helpdesk-submodule');
+
+	$_accounts = array();
+	foreach ($account_list as $entry)
+	{
+		if ($entry->enabled == true || $prefs['approval_from'] == $entry->id)
+		{
+			$_accounts[$entry->id] = $entry->__toString();
+
+			if ($entry->enabled == false )
+			{
+				$_accounts[$entry->id] .= ' (' . lang('inactive') . ')';
+			}
+		}
+	}
 
 	$priority_list_tts = execMethod('property.botts.get_priority_list');
 
