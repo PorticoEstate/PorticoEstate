@@ -13,7 +13,7 @@
 				<div class="container-fluid">
 					<h1 class="mt-2">{current_app_title}</h1>
 					{breadcrumb}
-					<div class="card mb-4 shadow">
+					<div class="card mb-2 shadow">
 						<div class="card-body pt-2">
 
 

@@ -462,42 +462,6 @@
 							<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
 						</xsl:call-template>
 					</div>
-					<xsl:choose>
-						<xsl:when test="need_approval='1'">
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'approval')"/>
-								</label>
-								<div id="approval_container" class="pure-custom  pure-input-3-4">
-								</div>
-							</div>
-						</xsl:when>
-					</xsl:choose>
-					<!--xsl:choose>
-						<xsl:when test="value_workorder_id!= 0">
-							<div class="pure-control-group">
-								<label for="name">
-									<xsl:value-of select="php:function('lang', 'approved')"/>
-								</label>
-								<input type="hidden" name="values[approved_orig]" value="{value_approved}"/>
-								<input type="checkbox" name="values[approved]" value="1">
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'approved')"/>
-									</xsl:attribute>
-									<xsl:if test="value_approved = '1'">
-										<xsl:attribute name="checked">
-											<xsl:text>checked</xsl:text>
-										</xsl:attribute>
-									</xsl:if>
-									<xsl:if test="mode != 'edit'">
-										<xsl:attribute name="disabled">
-											<xsl:text>disabled</xsl:text>
-										</xsl:attribute>
-									</xsl:if>
-								</input>
-							</div>
-						</xsl:when>
-					</xsl:choose-->
 					<div class="pure-control-group">
 						<label for="name">
 							<xsl:value-of select="lang_remark"/>
@@ -1112,6 +1076,17 @@
 							</xsl:attribute>
 						</input>
 					</div>
+					<xsl:choose>
+						<xsl:when test="need_approval='1'">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'approval')"/>
+								</label>
+								<div id="approval_container" class="pure-custom  pure-input-3-4">
+								</div>
+							</div>
+						</xsl:when>
+					</xsl:choose>
 					<!--xsl:choose>
 						<xsl:when test="value_workorder_id!= 0 and mode='edit'">
 							<div class="pure-control-group">

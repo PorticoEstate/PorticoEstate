@@ -1106,12 +1106,13 @@
 				pagingType:		"input",
 				processing:		true,
 				serverSide:		true,
-				responsive:		{
-									details: {
-										display: $.fn.dataTable.Responsive.display.childRowImmediate,
-										type: ''
-									}
-								},
+				responsive:		true,
+//				responsive:		{
+//									details: {
+//										display: $.fn.dataTable.Responsive.display.childRowImmediate,
+//										type: ''
+//									}
+//								},
 				select: select,
 				deferRender:	true,
 				ajax:{
@@ -1349,7 +1350,7 @@
 				fnInitComplete: function (oSettings, json)
 				{
 					$(".btn-group").addClass('w-100');
-					$(".dropdown-menu").addClass('w-100');
+				//	$(".dropdown-menu").addClass('w-100');
 					$(".multiselect ").addClass('form-control');
 					$(".multiselect").removeClass('btn');
 					$(".multiselect").removeClass('btn-default');

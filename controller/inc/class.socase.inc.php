@@ -173,8 +173,7 @@
 			$sql = "SELECT controller_check_item_case.*, check_list_id, controller_control_item.title FROM controller_check_item_case "
 				. " {$this->join} controller_check_item ON controller_check_item_case.check_item_id = controller_check_item.id"
 				. " {$this->join} controller_control_item ON controller_control_item.id = controller_check_item.control_item_id"
-				. " WHERE controller_check_item_case.component_location_id = {$component_location_id} AND controller_check_item_case.component_id = {$component_id}"
-				. " ORDER BY controller_check_item_case.id";
+				. " WHERE controller_check_item_case.component_location_id = {$component_location_id} AND controller_check_item_case.component_id = {$component_id}";
 
 			if ($control_item_id)
 			{
@@ -185,6 +184,8 @@
 			{
 				$sql .= " AND check_list_id = {$check_list_id}";
 			}
+
+			$sql .= " ORDER BY controller_check_item_case.id";
 
 			$this->db->query($sql);
 
