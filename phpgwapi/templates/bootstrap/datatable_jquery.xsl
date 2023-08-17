@@ -1106,12 +1106,13 @@
 				pagingType:		"input",
 				processing:		true,
 				serverSide:		true,
-				responsive:		{
-									details: {
-										display: $.fn.dataTable.Responsive.display.childRowImmediate,
-										type: ''
-									}
-								},
+				responsive:		true,
+//				responsive:		{
+//									details: {
+//										display: $.fn.dataTable.Responsive.display.childRowImmediate,
+//										type: ''
+//									}
+//								},
 				select: select,
 				deferRender:	true,
 				ajax:{
