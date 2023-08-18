@@ -608,6 +608,16 @@
 			order_def.push([<xsl:value-of select="sorted_by/key"/>, '<xsl:value-of select="sorted_by/dir"/>']);
 		</xsl:if>
 
+		var responsive = true;
+		<xsl:if test="responsive_show_details = 1">
+			responsive =	{
+								details: {
+										display: $.fn.dataTable.Responsive.display.childRowImmediate,
+										type: ''
+									}
+							};
+		</xsl:if>
+
 		var download_url = '<xsl:value-of select="download"/>';
 		var editor_cols = [];
 		var editor_action = '<xsl:value-of select="editor_action"/>';
@@ -1098,6 +1108,16 @@
 					}, ms || 0);
 				};
 			}
+			var select = false;
+
+			if(select_all)
+			{
+				select = {style: 'multi'};
+			}
+			else
+			{
+				select = true;
+			}
 
 			init_table = function()
 			{
@@ -1105,13 +1125,8 @@
 				paginate:		disablePagination ? false : true,
 				processing:		true,
 				serverSide:		true,
-				responsive:		{
-									details: {
-										display: $.fn.dataTable.Responsive.display.childRowImmediate,
-										type: ''
-									}
-								},
-				select: select_all ? { style: 'multi' } : true,
+				responsive:		responsive,
+				select: select,
 				deferRender:	true,
 				ajax:{
 					url: ajax_url,
