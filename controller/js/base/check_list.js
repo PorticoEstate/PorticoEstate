@@ -1,14 +1,139 @@
 $(document).ready(function ()
 {
+	update_geolocation = function (location_id, component_id)
+	{
+		if (navigator.geolocation)
+		{
+			navigator.geolocation.getCurrentPosition((position) => {
+				showPosition(position, location_id, component_id);
+			}, showError);
+		}
+		else
+		{
+			alert("Geolocation is not supported by this browser.");
+		}
+	};
+
+	function showPosition(position, location_id, component_id)
+	{
+		var latitude = position.coords.latitude;
+		var longitude = position.coords.longitude;
+		alert("Latitude : " + latitude + " Longitude: " + longitude);
+		alert("location_id : " + location_id + " component_id: " + component_id);
+
+		var coordinates = latitude + ',' + longitude;
+		//	var url = "https://www.google.com.sa/maps/@" + coordinates + ",12.21z?hl=en";
+		//	https://www.google.com.sa/maps/@61.3560914,15.4156856,10z?hl=en&entry=ttu
+
+		//	window.open(url, '_blank');
+
+		var attribution = new ol.control.Attribution({
+			collapsible: false
+		});
+
+		var map = new ol.Map({
+			controls: ol.control.defaults({attribution: false}).extend([attribution]),
+			layers: [
+				new ol.layer.Tile({
+					source: new ol.source.OSM({
+						url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+//						attributions: [
+//							ol.source.OSM.ATTRIBUTION, 'Tiles courtesy of <a href="https://geo6.be/">GEO-6</a>'
+//						],
+						maxZoom: 18
+					})
+				})
+			],
+			target: 'map',
+			view: new ol.View({
+				center: ol.proj.fromLonLat([longitude, latitude]),
+				maxZoom: 18,
+				zoom: 12
+			})
+		});
+
+		var layer = new ol.layer.Vector({
+			source: new ol.source.Vector({
+				features: [
+					new ol.Feature({
+						geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude]))
+					})
+				]
+			})
+		});
+		map.addLayer(layer);
+
+		var container = document.getElementById('popup');
+		var content = document.getElementById('popup-content');
+		var closer = document.getElementById('popup-closer');
+
+		var overlay = new ol.Overlay({
+			element: container,
+			autoPan: true,
+			autoPanAnimation: {
+				duration: 250
+			}
+		});
+		map.addOverlay(overlay);
+
+		closer.onclick = function ()
+		{
+			overlay.setPosition(undefined);
+			closer.blur();
+			return false;
+		};
+
+		map.on('singleclick', function (event)
+		{
+			if (map.hasFeatureAtPixel(event.pixel) === true)
+			{
+				var coordinate = event.coordinate;
+
+				content.innerHTML = '<b>Hello world!</b><br />I am a popup.';
+				overlay.setPosition(coordinate);
+			}
+			else
+			{
+				overlay.setPosition(undefined);
+				closer.blur();
+			}
+		});
+
+		content.innerHTML = '<b>Her står jeg.';
+		overlay.setPosition(ol.proj.fromLonLat([longitude, latitude]));
+
+
+	}
+
+	function showError(error)
+	{
+		switch (error.code)
+		{
+			case error.PERMISSION_DENIED:
+				alert("User denied the request for Geolocation.");
+				break;
+			case error.POSITION_UNAVAILABLE:
+				alert("Location information is unavailable.");
+				break;
+			case error.TIMEOUT:
+				alert("The request to get user location timed out.");
+				break;
+			case error.UNKNOWN_ERROR:
+				alert("An unknown error occurred.");
+				break;
+		}
+	}
+
 	$("#choose-child-on-component").select2({
 		placeholder: lang['Select'],
 		language: "no",
 		width: '75%'
 	});
 
-	$('#choose-child-on-component').on('select2:open', function (e) {
+	$('#choose-child-on-component').on('select2:open', function (e)
+	{
 
-		$(".select2-search__field").each(function()
+		$(".select2-search__field").each(function ()
 		{
 			if ($(this).attr("aria-controls") == 'select2-choose-child-on-component-results')
 			{
@@ -137,7 +262,7 @@ $(document).ready(function ()
 		var statusFieldVal = $("#status").val();
 
 		// Cancelled
-		if(statusFieldVal == 3 || statusFieldVal == 0)
+		if (statusFieldVal == 3 || statusFieldVal == 0)
 		{
 			$("#completed_date").val('');
 		}
