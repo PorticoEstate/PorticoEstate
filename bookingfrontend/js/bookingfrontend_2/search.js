@@ -347,10 +347,10 @@ class BookingSearch {
                 resources = resources.filter(resource => this.data.building_resources().some(br => this.data.selected_buildings().some(sb => sb.id === br.building_id && resource.id === br.resource_id)));
             }
             if (this.data.selected_facilities().length > 0) {
-                resources = resources.filter(resource => this.data.resource_facilities().some(rf => this.data.selected_facilities().some(sf => sf.id === rf.facility_id && resource.id === rf.resource_id)));
+                resources = resources.filter(resource => this.data.selected_facilities().map(f => f.id).every(id => this.data.resource_facilities().some(rf => rf.resource_id === resource.id && rf.facility_id === id)));
             }
             if (this.data.selected_activities().length > 0) {
-                resources = resources.filter(resource => this.data.resource_activities().some(ra => this.data.selected_activities().some(sa => this.activity_cache[sa.id].includes(ra.activity_id) && resource.id === ra.resource_id)));
+                resources = resources.filter(resource => this.data.selected_activities().map(f => f.id).every(id => this.data.resource_activities().some(ra => this.activity_cache[id].includes(ra.activity_id) && resource.id === ra.resource_id)));
             }
             if (this.data.selected_resource_categories().length > 0) {
                 const activities = [...new Set(this.data.resource_category_activity().filter(activity => this.data.selected_resource_categories().some(rc => rc.id === activity.rescategory_id)).map(a => a.activity_id))];
