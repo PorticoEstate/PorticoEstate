@@ -234,18 +234,18 @@ class PEcalendar {
     <div class="date">
         <div>
           <fieldset>
-            <label class="filter">
+<!--            <label class="filter">
               <input type="radio" name="filter" value="day"/>
                 <span class="filter__radio">Dag</span>
-            </label>
+            </label> -->
             <label class="filter">
               <input type="radio" name="filter" value="week" checked/>
                 <span class="filter__radio">Uke</span>
             </label>
-            <label class="filter">
+<!--            <label class="filter">
               <input type="radio" name="filter" value="moth"/>
                 <span class="filter__radio">Måned</span>
-            </label>
+            </label> -->
           </fieldset>
         </div>
         <input id=${this.getId("datetimepicker")} class="js-basic-datepicker" type="text" value="${this.currentDate.toFormat('dd.LL.y')}">
@@ -253,8 +253,9 @@ class PEcalendar {
     <div class="select_building_resource">
         <div>
             <select id=${this.getId("building")} class="js-select-basic">
-               ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name.trim() + '</option>').join("")}
-            </select>
+<!--               ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name.trim() + '</option>').join("")} -->
+                <option value="${this.building_id}" selected>${buildings.find(b => b.id === this.building_id).name.trim()}</option>
+            </select> 
             <select id=${this.getId("resources")} class="js-select-basic">
                ${this.resources ? Object.keys(this.resources).map(
                 resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id ? " selected" : "") + '>' + this.resources[resourceId].name.trim() + '</option>').join("") : ""}
