@@ -2,6 +2,10 @@ $(document).ready(function ()
 {
 	update_geolocation = function (location_id, component_id)
 	{
+		//reset the map div
+		$("#map").html('<div id="popup" class="ol-popup"><a href="#" id="popup-closer" class="ol-popup-closer"></a><div id="popup-content"></div></div><div id="map" class="map"></div>');
+//		showPosition(null, location_id, component_id);
+
 		if (navigator.geolocation)
 		{
 			navigator.geolocation.getCurrentPosition((position) => {
@@ -16,39 +20,24 @@ $(document).ready(function ()
 
 	function showPosition(position, location_id, component_id)
 	{
+		$("#map").show();
 		var latitude = position.coords.latitude;
 		var longitude = position.coords.longitude;
-		alert("Latitude : " + latitude + " Longitude: " + longitude);
-		alert("location_id : " + location_id + " component_id: " + component_id);
 
-		var coordinates = latitude + ',' + longitude;
-		//	var url = "https://www.google.com.sa/maps/@" + coordinates + ",12.21z?hl=en";
-		//	https://www.google.com.sa/maps/@61.3560914,15.4156856,10z?hl=en&entry=ttu
-
-		//	window.open(url, '_blank');
-
-		var attribution = new ol.control.Attribution({
-			collapsible: false
-		});
+//		var latitude = '60.39139349373546';
+//		var longitude = '5.3289891';
+		alert("Geolocation : " + latitude + ", " + longitude);
 
 		var map = new ol.Map({
-			controls: ol.control.defaults({attribution: false}).extend([attribution]),
+			target: 'map',
 			layers: [
 				new ol.layer.Tile({
-					source: new ol.source.OSM({
-						url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-//						attributions: [
-//							ol.source.OSM.ATTRIBUTION, 'Tiles courtesy of <a href="https://geo6.be/">GEO-6</a>'
-//						],
-						maxZoom: 18
-					})
+					source: new ol.source.OSM()
 				})
 			],
-			target: 'map',
 			view: new ol.View({
 				center: ol.proj.fromLonLat([longitude, latitude]),
-				maxZoom: 18,
-				zoom: 12
+				zoom: 18
 			})
 		});
 
@@ -56,16 +45,34 @@ $(document).ready(function ()
 			source: new ol.source.Vector({
 				features: [
 					new ol.Feature({
-						geometry: new ol.geom.Point(ol.proj.fromLonLat([longitude, latitude]))
+						geometry: new ol.geom.Point(ol.proj.fromLonLat([
+							longitude, latitude]))
 					})
 				]
 			})
 		});
+
 		map.addLayer(layer);
 
 		var container = document.getElementById('popup');
 		var content = document.getElementById('popup-content');
 		var closer = document.getElementById('popup-closer');
+
+		//	content.innerHTML = '<b>Her står jeg.</b>';
+		// add a bold text to the content element
+		var text = document.createElement('b');
+		text.appendChild(document.createTextNode('Her står jeg.'));
+		content.appendChild(text);
+		content.appendChild(document.createElement('br'));
+
+		//add action button to popup
+		var action = document.createElement('a');
+		// set action onclick
+
+		action.setAttribute('onclick', 'set_geolocation(' + location_id + ',' + component_id + ',' + latitude + ',' + longitude+ ')');
+		action.setAttribute('class', 'btn btn-primary btn-sm');
+		action.innerHTML = 'Oppdater posisjon';
+		content.appendChild(action);
 
 		var overlay = new ol.Overlay({
 			element: container,
@@ -85,21 +92,36 @@ $(document).ready(function ()
 
 		map.on('singleclick', function (event)
 		{
-			if (map.hasFeatureAtPixel(event.pixel) === true)
-			{
-				var coordinate = event.coordinate;
+			var coordinate = event.coordinate;
+			// get the longitude and latitude out of the coordinate array
+			var lonlat = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
+			var longitude = lonlat[0];
+			var latitude = lonlat[1];
+	//		alert("Latitude : " + latitude + " Longitude: " + longitude);
 
-				content.innerHTML = '<b>Hello world!</b><br />I am a popup.';
-				overlay.setPosition(coordinate);
-			}
-			else
-			{
-				overlay.setPosition(undefined);
-				closer.blur();
-			}
+			content.innerHTML = '<b>Flytter hit</b><br>';
+			action.setAttribute('onclick', 'set_geolocation(' + location_id + ',' + component_id + ',' + latitude + ',' + longitude+ ')');
+			action.setAttribute('class', 'btn btn-primary btn-sm');
+			action.innerHTML = 'Oppdater posisjon';
+			content.appendChild(action);
+	
+
+			overlay.setPosition(coordinate);
+			map.removeLayer(layer);
+			layer = new ol.layer.Vector({
+				source: new ol.source.Vector({
+					features: [
+						new ol.Feature({
+							geometry: new ol.geom.Point(ol.proj.fromLonLat([
+								longitude, latitude]))
+						})
+					]
+				})
+			});
+			map.addLayer(layer);
+
 		});
 
-		content.innerHTML = '<b>Her står jeg.';
 		overlay.setPosition(ol.proj.fromLonLat([longitude, latitude]));
 
 
@@ -123,6 +145,42 @@ $(document).ready(function ()
 				break;
 		}
 	}
+
+	set_geolocation = function (location_id, component_id, latitude, longitude)
+	{
+		var oArgs = {
+			menuaction: 'property.boentity.set_geolocation',
+			location_id: location_id,
+			component_id: component_id,
+			latitude: latitude,
+			longitude: longitude
+		};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+//		alert(requestUrl);
+		// make ajax call
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			success: function (data)	// on success..
+			{
+				if (data)
+				{
+					var status = data.status;
+					if (status === 'ok')
+					{
+						alert('ok');
+						show_parent_component_information(location_id, component_id, true);
+					}
+					else
+					{
+						alert('error');
+					}
+				}
+			}
+		});
+	}
+
+
 
 	$("#choose-child-on-component").select2({
 		placeholder: lang['Select'],

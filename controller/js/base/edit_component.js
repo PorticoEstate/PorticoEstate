@@ -19,12 +19,14 @@ $(document).ready(function ()
 {
 
 	// EDIT COMPONENT
-	show_parent_component_information = function (location_id, component_id)
+	show_parent_component_information = function (location_id, component_id, refresh)
 	{
+		refresh = refresh||false;
+
 		var x = document.getElementById("form_parent_component_2");
 
 		var y = document.getElementById("new_picture_parent");
-		if (x.style.display === "block")
+		if (x.style.display === "block" && !refresh)
 		{
 			x.style.display = "none";
 			y.style.display = "none";

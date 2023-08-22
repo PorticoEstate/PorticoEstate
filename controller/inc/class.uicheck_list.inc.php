@@ -81,7 +81,8 @@
 			'add_billable_hours'	=> true,
 			'set_inspector'			=> true,
 			'set_category'			=> true,
-			'view_image'			=> true
+			'view_image'			=> true,
+			'set_geolocation'		=> true,
 		);
 
 		var $so_case,$vfs;
@@ -226,6 +227,7 @@
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
+
 
 		/**
 		 * Public function for displaying the add check list form
