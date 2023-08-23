@@ -123,6 +123,13 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
 			phpgwapi_jquery::load_widget('select2');
+
+			//add javascript
+			self::add_javascript('phpgwapi', 'openlayers', 'js/ol.js', false, array('combine' => true ));
+			//add css
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/openlayers/css/ol.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/openlayers/css/popup.css');
+
 		}
 
 		function add_regulation_option()

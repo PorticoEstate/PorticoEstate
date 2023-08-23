@@ -99,91 +99,18 @@
 									</label>
 								</div>
 							</div>
-							<!--							<button id = "submit_update_component_parent" type="submit" class="btn btn-primary btn-lg me-3 mt-3" style="display:none">
-								<xsl:value-of select="php:function('lang', 'add picture')" />
-							</button>-->
 						</div>
 					</div>
-
 				</form>
 
 				<button id = "update_geolocation" type="button" class="mt-2 mb-2 btn btn-info btn-block" onclick="update_geolocation({component_array/location_id}, {component_array/id});">
 					<xsl:value-of select="php:function('lang', 'update geolocation')" />
 				</button>
-				<div id="map" style="width: 600px; height: 400px; display: none;"></div>
-				<div id="popup" class="ol-popup">
+				<div id="map" class="mb-2" style="width: 600px; height: 400px; display: none;"></div>
+				<div id="popup" class="ol-popup" style="display: none;">
 					<a href="#" id="popup-closer" class="ol-popup-closer"></a>
 					<div id="popup-content"></div>
 				</div>
-			   <style>
-					.ol-attribution.ol-logo-only,
-					.ol-attribution.ol-uncollapsible {
-						max-width: calc(100% - 3em) !important;
-						height: 1.5em !important;
-					}
-
-					.ol-control button,
-					.ol-attribution,
-					.ol-scale-line-inner {
-						font-family: 'Lucida Grande', Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif !important;
-					}
-
-					.ol-popup {
-						font-family: 'Lucida Grande', Verdana, Geneva, Lucida, Arial, Helvetica, sans-serif !important;
-						font-size: 12px;
-						position: absolute;
-						background-color: white;
-						-webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
-						filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
-						padding: 15px;
-						border-radius: 10px;
-						border: 1px solid #cccccc;
-						bottom: 12px;
-						left: -50px;
-						min-width: 100px;
-					}
-
-					.ol-popup:after,
-					.ol-popup:before {
-						top: 100%;
-						border: solid transparent;
-						content: " ";
-						height: 0;
-						width: 0;
-						position: absolute;
-						pointer-events: none;
-					}
-
-					.ol-popup:after {
-						border-top-color: white;
-						border-width: 10px;
-						left: 48px;
-						margin-left: -10px;
-					}
-
-					.ol-popup:before {
-						border-top-color: #cccccc;
-						border-width: 11px;
-						left: 48px;
-						margin-left: -11px;
-					}
-
-					.ol-popup-closer {
-						text-decoration: none;
-						position: absolute;
-						top: 2px;
-						right: 8px;
-					}
-
-					.ol-popup-closer:after {
-						content: "✖";
-						color: #c3c3c3;
-					}
-				</style>
-
-				<script src="https://cdn.jsdelivr.net/npm/ol@v7.5.1/dist/ol.js"></script>
-				<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.5.1/ol.css"></link>
-
 				<div id = "form_parent_component_2">
 				</div>
 			</xsl:when>

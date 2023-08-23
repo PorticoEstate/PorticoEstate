@@ -552,6 +552,14 @@
 		 */
 		function edit_check_list( $check_list = null )
 		{
+			//add javascript
+			self::add_javascript('phpgwapi', 'openlayers', 'js/ol.js', false, array('combine' => true ));
+			//add css
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/openlayers/css/ol.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/openlayers/css/popup.css');
+
+
+			
 			if ($check_list == null)
 			{
 				$check_list_id = phpgw::get_var('check_list_id');
