@@ -795,8 +795,10 @@
 				}
 				else
 				{
-					$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
-						'id' => $component_id));
+					$component_arr = createObject('property.soentity')->read_single_eav(
+						array('location_id' => $location_id,'id' => $component_id),
+						array('attributes' => array(array('column_name'=>'geolocation')))
+						);
 
 					$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
 
@@ -808,6 +810,18 @@
 				$component->set_xml_short_desc($short_desc);
 				$component->set_id($component_id);
 				$component->set_location_id($location_id);
+
+				if(!empty($component_arr['attributes']))
+				{
+					foreach ($component_arr['attributes'] as $attribute)
+					{
+						if($attribute['column_name'] == 'geolocation')
+						{
+							$component->set_geolocation($attribute['value']);
+						}
+					}
+				}
+
 				$component_array = $component->toArray();
 
 				$type = 'component';

@@ -37,6 +37,7 @@
 		protected $location_id;
 		protected $guid;
 		protected $xml;
+		protected $geolocation;
 		// Not a table column
 		protected $xml_short_desc;
 		protected $type_str;
@@ -82,6 +83,15 @@
 		public function get_location_id()
 		{
 			return $this->location_id;
+		}
+		public function set_geolocation( $geolocation )
+		{
+			$this->geolocation = $geolocation;
+		}
+
+		public function get_geolocation()
+		{
+			return $this->geolocation;
 		}
 
 		public function set_guid( $guid )

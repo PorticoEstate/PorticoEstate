@@ -1,5 +1,8 @@
 
-/* global enable_add_case */
+/* global enable_add_case, geolocation */
+var latitude;
+var longitude;
+
 
 downloadComponents = function (parent_location_id, parent_id, location_id)
 {
@@ -19,14 +22,12 @@ $(document).ready(function ()
 {
 	update_geolocation = function (location_id, component_id)
 	{
-		//reset the map div
-		$("#map").html('<div id="popup" class="ol-popup"><a href="#" id="popup-closer" class="ol-popup-closer"></a><div id="popup-content"></div></div><div id="map" class="map"></div>');
-	//	showPosition(null, location_id, component_id); return;
+		//	getPosition(null, location_id, component_id); return;
 
 		if (navigator.geolocation)
 		{
 			navigator.geolocation.getCurrentPosition((position) => {
-				showPosition(position, location_id, component_id);
+				getPosition(position, location_id, component_id);
 			}, showError);
 		}
 		else
@@ -35,23 +36,28 @@ $(document).ready(function ()
 		}
 	};
 
-	showPosition = function(position, location_id, component_id)
+	getPosition = function (position, location_id, component_id)
 	{
 		$("#map").show();
-		var latitude = position.coords.latitude;
-		var longitude = position.coords.longitude;
+		latitude = position.coords.latitude;
+		longitude = position.coords.longitude;
+		showPosition(latitude, longitude, location_id, component_id);
+	};
 
-//		var latitude = '60.39139349373546';
-//		var longitude = '5.3289891';
-//		alert("Geolocation : " + latitude + ", " + longitude);
+	showPosition = function (latitude, longitude, location_id, component_id)
+	{
+		//reset the map div
+		$("#map").html('<div id="popup" class="ol-popup"><a href="#" id="popup-closer" class="ol-popup-closer"></a><div id="popup-content"></div></div><div id="map" class="map"></div>');
+		location_id = location_id || null;
+		component_id = component_id || null;
 
 		var map = new ol.Map({
-		// add fullscreen control
+			// add fullscreen control
 			controls: ol.control.defaults.defaults({
 				zoom: true,
 				attribution: true,
 				rotate: false,
-			  }).extend([new ol.control.FullScreen()]),
+			}).extend([new ol.control.FullScreen()]),
 
 			target: 'map',
 			layers: [
@@ -82,21 +88,32 @@ $(document).ready(function ()
 		var content = document.getElementById('popup-content');
 		var closer = document.getElementById('popup-closer');
 
-		//	content.innerHTML = '<b>Her står jeg.</b>';
+//		content.innerHTML = '<b>Registrert posisjon.</b>';
 		// add a bold text to the content element
-		var text = document.createElement('b');
-		text.appendChild(document.createTextNode('Her står jeg.'));
-		content.appendChild(text);
-		content.appendChild(document.createElement('br'));
 
-		//add action button to popup
-		var action = document.createElement('a');
-		// set action onclick
+		if (component_id)
+		{
+			var text = document.createElement('b');
+			text.appendChild(document.createTextNode('Her står jeg.'));
+			content.appendChild(text);
+			content.appendChild(document.createElement('br'));
 
-		action.setAttribute('onclick', 'set_geolocation(' + location_id + ',' + component_id + ',' + latitude + ',' + longitude + ')');
-		action.setAttribute('class', 'btn btn-primary btn-sm');
-		action.innerHTML = 'Oppdater posisjon';
-		content.appendChild(action);
+			//add action button to popup
+			var action = document.createElement('a');
+			// set action onclick
+
+			action.setAttribute('onclick', 'set_geolocation(' + location_id + ',' + component_id + ',' + latitude + ',' + longitude + ')');
+			action.setAttribute('class', 'btn btn-primary btn-sm');
+			action.innerHTML = 'Oppdater posisjon';
+			content.appendChild(action);
+		}
+		else
+		{
+			var text = document.createElement('b');
+			text.appendChild(document.createTextNode('Registrert posisjon.'));
+			content.appendChild(text);
+			content.appendChild(document.createElement('br'));
+		}
 
 		var overlay = new ol.Overlay({
 			element: container,
@@ -114,44 +131,47 @@ $(document).ready(function ()
 			return false;
 		};
 
-		map.on('singleclick', function (event)
+		if (component_id)
 		{
-			var coordinate = event.coordinate;
-			// get the longitude and latitude out of the coordinate array
-			var lonlat = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
-			var longitude = lonlat[0];
-			var latitude = lonlat[1];
-	//		alert("Latitude : " + latitude + " Longitude: " + longitude);
+			map.on('singleclick', function (event)
+			{
+				var coordinate = event.coordinate;
+				// get the longitude and latitude out of the coordinate array
+				var lonlat = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
+				var longitude = lonlat[0];
+				var latitude = lonlat[1];
+//						alert("Latitude : " + latitude + " Longitude: " + longitude);
 
-			content.innerHTML = '<b>Flytter hit</b><br>';
-			action.setAttribute('onclick', 'set_geolocation(' + location_id + ',' + component_id + ',' + latitude + ',' + longitude+ ')');
-			action.setAttribute('class', 'btn btn-primary btn-sm');
-			action.innerHTML = 'Oppdater posisjon';
-			content.appendChild(action);
+				content.innerHTML = '<b>Flytter hit</b><br>';
+				action.setAttribute('onclick', 'set_geolocation(' + location_id + ',' + component_id + ',' + latitude + ',' + longitude + ')');
+				action.setAttribute('class', 'btn btn-primary btn-sm');
+				action.innerHTML = 'Oppdater posisjon';
+				content.appendChild(action);
 
 
-			overlay.setPosition(coordinate);
-			map.removeLayer(layer);
-			layer = new ol.layer.Vector({
-				source: new ol.source.Vector({
-					features: [
-						new ol.Feature({
-							geometry: new ol.geom.Point(ol.proj.fromLonLat([
-								longitude, latitude]))
-						})
-					]
-				})
+				overlay.setPosition(coordinate);
+//				console.log(coordinate);
+				map.removeLayer(layer);
+				layer = new ol.layer.Vector({
+					source: new ol.source.Vector({
+						features: [
+							new ol.Feature({
+								geometry: new ol.geom.Point(ol.proj.fromLonLat([
+									longitude, latitude]))
+							})
+						]
+					})
+				});
+				map.addLayer(layer);
+
 			});
-			map.addLayer(layer);
-
-		});
+		}
 
 		overlay.setPosition(ol.proj.fromLonLat([longitude, latitude]));
 
-
 	};
 
-	showError = function(error)
+	showError = function (error)
 	{
 		switch (error.code)
 		{
@@ -192,8 +212,8 @@ $(document).ready(function ()
 					var status = data.status;
 					if (status === 'ok')
 					{
-						alert('ok');
-						show_parent_component_information(location_id, component_id, true);
+						showPosition(latitude, longitude);
+//						show_parent_component_information(location_id, component_id, true);
 					}
 					else
 					{
@@ -204,11 +224,19 @@ $(document).ready(function ()
 		});
 	};
 
+	if (geolocation)
+	{
+		$("#map").show();
+		$("#popup").show();
+		latitude = geolocation.split(',')[0];
+		longitude = geolocation.split(',')[1];
+		showPosition(latitude.trim(), longitude.trim());
+	}
 
 	// EDIT COMPONENT
 	show_parent_component_information = function (location_id, component_id, refresh)
 	{
-		refresh = refresh||false;
+		refresh = refresh || false;
 
 		var x = document.getElementById("form_parent_component_2");
 

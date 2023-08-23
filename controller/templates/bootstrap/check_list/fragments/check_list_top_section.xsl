@@ -65,6 +65,9 @@
 
 		<xsl:choose>
 			<xsl:when test="type = 'component'">
+				<script>
+					var geolocation = '<xsl:value-of select="component_array/geolocation"/>';
+				</script>
 				<h2>
 					<xsl:value-of select="component_array/xml_short_desc"/>
 				</h2>
