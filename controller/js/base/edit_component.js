@@ -17,14 +17,203 @@ downloadComponents = function (parent_location_id, parent_id, location_id)
 
 $(document).ready(function ()
 {
+	update_geolocation = function (location_id, component_id)
+	{
+		//reset the map div
+		$("#map").html('<div id="popup" class="ol-popup"><a href="#" id="popup-closer" class="ol-popup-closer"></a><div id="popup-content"></div></div><div id="map" class="map"></div>');
+	//	showPosition(null, location_id, component_id); return;
+
+		if (navigator.geolocation)
+		{
+			navigator.geolocation.getCurrentPosition((position) => {
+				showPosition(position, location_id, component_id);
+			}, showError);
+		}
+		else
+		{
+			alert("Geolocation is not supported by this browser.");
+		}
+	};
+
+	showPosition = function(position, location_id, component_id)
+	{
+		$("#map").show();
+		var latitude = position.coords.latitude;
+		var longitude = position.coords.longitude;
+
+//		var latitude = '60.39139349373546';
+//		var longitude = '5.3289891';
+//		alert("Geolocation : " + latitude + ", " + longitude);
+
+		var map = new ol.Map({
+		// add fullscreen control
+			controls: ol.control.defaults.defaults({
+				zoom: true,
+				attribution: true,
+				rotate: false,
+			  }).extend([new ol.control.FullScreen()]),
+
+			target: 'map',
+			layers: [
+				new ol.layer.Tile({
+					source: new ol.source.OSM()
+				})
+			],
+			view: new ol.View({
+				center: ol.proj.fromLonLat([longitude, latitude]),
+				zoom: 18
+			})
+		});
+
+		var layer = new ol.layer.Vector({
+			source: new ol.source.Vector({
+				features: [
+					new ol.Feature({
+						geometry: new ol.geom.Point(ol.proj.fromLonLat([
+							longitude, latitude]))
+					})
+				]
+			})
+		});
+
+		map.addLayer(layer);
+
+		var container = document.getElementById('popup');
+		var content = document.getElementById('popup-content');
+		var closer = document.getElementById('popup-closer');
+
+		//	content.innerHTML = '<b>Her står jeg.</b>';
+		// add a bold text to the content element
+		var text = document.createElement('b');
+		text.appendChild(document.createTextNode('Her står jeg.'));
+		content.appendChild(text);
+		content.appendChild(document.createElement('br'));
+
+		//add action button to popup
+		var action = document.createElement('a');
+		// set action onclick
+
+		action.setAttribute('onclick', 'set_geolocation(' + location_id + ',' + component_id + ',' + latitude + ',' + longitude + ')');
+		action.setAttribute('class', 'btn btn-primary btn-sm');
+		action.innerHTML = 'Oppdater posisjon';
+		content.appendChild(action);
+
+		var overlay = new ol.Overlay({
+			element: container,
+			autoPan: true,
+			autoPanAnimation: {
+				duration: 250
+			}
+		});
+		map.addOverlay(overlay);
+
+		closer.onclick = function ()
+		{
+			overlay.setPosition(undefined);
+			closer.blur();
+			return false;
+		};
+
+		map.on('singleclick', function (event)
+		{
+			var coordinate = event.coordinate;
+			// get the longitude and latitude out of the coordinate array
+			var lonlat = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
+			var longitude = lonlat[0];
+			var latitude = lonlat[1];
+	//		alert("Latitude : " + latitude + " Longitude: " + longitude);
+
+			content.innerHTML = '<b>Flytter hit</b><br>';
+			action.setAttribute('onclick', 'set_geolocation(' + location_id + ',' + component_id + ',' + latitude + ',' + longitude+ ')');
+			action.setAttribute('class', 'btn btn-primary btn-sm');
+			action.innerHTML = 'Oppdater posisjon';
+			content.appendChild(action);
+
+
+			overlay.setPosition(coordinate);
+			map.removeLayer(layer);
+			layer = new ol.layer.Vector({
+				source: new ol.source.Vector({
+					features: [
+						new ol.Feature({
+							geometry: new ol.geom.Point(ol.proj.fromLonLat([
+								longitude, latitude]))
+						})
+					]
+				})
+			});
+			map.addLayer(layer);
+
+		});
+
+		overlay.setPosition(ol.proj.fromLonLat([longitude, latitude]));
+
+
+	};
+
+	showError = function(error)
+	{
+		switch (error.code)
+		{
+			case error.PERMISSION_DENIED:
+				alert("User denied the request for Geolocation.");
+				break;
+			case error.POSITION_UNAVAILABLE:
+				alert("Location information is unavailable.");
+				break;
+			case error.TIMEOUT:
+				alert("The request to get user location timed out.");
+				break;
+			case error.UNKNOWN_ERROR:
+				alert("An unknown error occurred.");
+				break;
+		}
+	};
+
+	set_geolocation = function (location_id, component_id, latitude, longitude)
+	{
+		var oArgs = {
+			menuaction: 'property.boentity.set_geolocation',
+			location_id: location_id,
+			component_id: component_id,
+			latitude: latitude,
+			longitude: longitude
+		};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+//		alert(requestUrl);
+		// make ajax call
+		$.ajax({
+			type: 'POST',
+			url: requestUrl,
+			success: function (data)	// on success..
+			{
+				if (data)
+				{
+					var status = data.status;
+					if (status === 'ok')
+					{
+						alert('ok');
+						show_parent_component_information(location_id, component_id, true);
+					}
+					else
+					{
+						alert('error');
+					}
+				}
+			}
+		});
+	};
+
 
 	// EDIT COMPONENT
-	show_parent_component_information = function (location_id, component_id)
+	show_parent_component_information = function (location_id, component_id, refresh)
 	{
+		refresh = refresh||false;
+
 		var x = document.getElementById("form_parent_component_2");
 
 		var y = document.getElementById("new_picture_parent");
-		if (x.style.display === "block")
+		if (x.style.display === "block" && !refresh)
 		{
 			x.style.display = "none";
 			y.style.display = "none";

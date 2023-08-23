@@ -99,6 +99,14 @@
 				</div>
 
 			</form>
+			<button id = "update_geolocation" type="button" class="mt-2 mb-2 btn btn-info btn-block" onclick="update_geolocation({component_array/location_id}, {component_array/id});">
+				<xsl:value-of select="php:function('lang', 'update geolocation')" />
+			</button>
+			<div id="map" class="mb-2" style="width: 600px; height: 400px; display: none;"></div>
+			<div id="popup" class="ol-popup" style="display: none;">
+				<a href="#" id="popup-closer" class="ol-popup-closer"></a>
+				<div id="popup-content"></div>
+			</div>
 
 			<div id = "form_parent_component_2">
 			</div>
