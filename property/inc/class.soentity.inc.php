@@ -68,6 +68,49 @@
 			return $this->type_app;
 		}
 
+		/**
+		 * Method for setting geolocation on an entity
+		 * @param $location_id int location id
+		 * @param $component_id int component id
+		 * @param $lat float latitude
+		 * @param $lng float longitude
+		 * @return bool
+		 */
+		function set_geolocation($location_id, $component_id, $lat, $lng)
+		{
+			//check for eav
+			$location_info	 = $GLOBALS['phpgw']->locations->get_name($location_id);
+			$location_arr	 = explode('.', $location_info['location']);
+			if (count($location_arr) != 4)
+			{
+				return false;
+			}
+
+			$type			 = $location_arr[1];
+			$entity_id		 = $location_arr[2];
+			$cat_id			 = $location_arr[3];
+			$category = CreateObject('property.soadmin_entity')->read_single_category($entity_id, $cat_id);
+
+			$this->db->query("SELECT column_name FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND column_name = 'geolocation'", __LINE__, __FILE__);
+			if (!$this->db->next_record())
+			{
+				return false;
+			}
+
+			if ($category['is_eav'])
+			{
+				$sql = "UPDATE fm_bim_item SET json_representation = jsonb_set(json_representation, '{geolocation}', '\"{$lat}, {$lng}\"', true) WHERE location_id = {$location_id} AND id = {$component_id}";
+			}
+			else
+			{
+				$entity_table = "fm_{$type}_{$entity_id}_{$cat_id}";
+				$sql = "UPDATE {$entity_table} SET geolocation = '{$lat}, {$lng}' WHERE location_id = {$location_id} AND id = {$component_id}";
+			}
+
+			return $this->db->query($sql, __LINE__, __FILE__);
+		}
+
+
 		function select_status_list( $entity_id, $cat_id )
 		{
 			if (!$entity_id || !$cat_id)

@@ -68,7 +68,8 @@
 			'delete'				 => true,
 			'add_control'			 => true,
 			'update_control_serie'	 => true,
-			'get_attributes'		 => true
+			'get_attributes'		 => true,
+			'set_geolocation'		 => true,
 		);
 		var $type_app				 = array();
 		var $type;
@@ -238,6 +239,30 @@
 
 			//$this->allrows		= $data['allrows'];
 		}
+
+		/**
+		 * Public function for set_geolocation
+		 * @return array
+		 */
+		function set_geolocation()
+		{
+			$location_id = phpgw::get_var('location_id', 'int');
+			$component_id = phpgw::get_var('component_id', 'int');
+			$latitude = phpgw::get_var('latitude', 'float');
+			$longitude = phpgw::get_var('longitude', 'float');
+
+			$ok = false;
+			
+			if($GLOBALS['phpgw']->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property'))
+			{
+				$ok = $this->so->set_geolocation($location_id,$component_id, $latitude, $longitude);
+			}
+
+			return array(
+				'status' => $ok ? 'ok' : 'error'
+			);
+		}
+
 
 		function column_list( $selected = '', $entity_id = '', $cat_id ='', $allrows = '' )
 		{

@@ -1,14 +1,16 @@
 $(document).ready(function ()
 {
+
 	$("#choose-child-on-component").select2({
 		placeholder: lang['Select'],
 		language: "no",
 		width: '75%'
 	});
 
-	$('#choose-child-on-component').on('select2:open', function (e) {
+	$('#choose-child-on-component').on('select2:open', function (e)
+	{
 
-		$(".select2-search__field").each(function()
+		$(".select2-search__field").each(function ()
 		{
 			if ($(this).attr("aria-controls") == 'select2-choose-child-on-component-results')
 			{
@@ -137,7 +139,7 @@ $(document).ready(function ()
 		var statusFieldVal = $("#status").val();
 
 		// Cancelled
-		if(statusFieldVal == 3 || statusFieldVal == 0)
+		if (statusFieldVal == 3 || statusFieldVal == 0)
 		{
 			$("#completed_date").val('');
 		}
