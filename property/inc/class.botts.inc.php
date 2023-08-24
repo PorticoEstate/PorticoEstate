@@ -2633,7 +2633,7 @@ HTML;
 				else
 				{
 
-					$purchase_grant_ok = true;
+//					$purchase_grant_ok = true;
 
 					foreach ($check_purchase as &$purchase_grant)
 					{
