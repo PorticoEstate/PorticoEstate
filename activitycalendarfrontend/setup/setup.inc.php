@@ -22,7 +22,7 @@
 	$setup_info['activitycalendarfrontend']['depends'][] = array(
 		'appname' => 'booking',
 		'versions' => array(
-			'0.2.85', '0.2.86', '0.2.87', '0.2.88', '0.2.89', '0.2.90')
+			'0.2.85', '0.2.86', '0.2.87', '0.2.88', '0.2.89', '0.2.90', '0.2.91')
 	);
 
 	$setup_info['activitycalendarfrontend']['depends'][] = array(

@@ -6207,3 +6207,95 @@ HTML;
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+	/**
+	 * Update booking version from 0.2.89 to 0.2.90
+	 *
+	 */
+	$test[] = '0.2.90';
+	function booking_upgrade0_2_90()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_building', 'email',
+			 array(
+				'type'		 => 'varchar',
+				'precision'	 => 255,
+				'nullable'	 => true
+		));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_building', 'tilsyn_email',
+			 array(
+				'type'		 => 'varchar',
+				'precision'	 => 255,
+				'nullable'	 => true
+		));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_building', 'tilsyn_email2',
+			 array(
+				'type'		 => 'varchar',
+				'precision'	 => 255,
+				'nullable'	 => true
+		));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_contact_person', 'email',
+			 array(
+				'type'		 => 'varchar',
+				'precision'	 => 255,
+				'nullable'	 => true
+		));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_organization', 'email',
+			 array(
+				'type'		 => 'varchar',
+				'precision'	 => 255,
+				'nullable'	 => true
+		));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_user', 'email',
+			 array(
+				'type'		 => 'varchar',
+				'precision'	 => 255,
+				'nullable'	 => true
+		));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_delegate', 'email',
+			 array(
+				'type'		 => 'varchar',
+				'precision'	 => 255,
+				'nullable'	 => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_organization_contact', 'email',
+			 array(
+				'type'		 => 'varchar',
+				'precision'	 => 255,
+				'nullable'	 => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_group_contact', 'email',
+			 array(
+				'type'		 => 'varchar',
+				'precision'	 => 255,
+				'nullable'	 => true
+		));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_event', 'contact_email',
+			 array(
+				'type'		 => 'varchar',
+				'precision'	 => 255,
+				'nullable'	 => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_system_message', 'email',
+			 array(
+				'type'		 => 'varchar',
+				'precision'	 => 255,
+				'nullable'	 => true
+		));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_participant', 'email',
+			 array(
+				'type'		 => 'varchar',
+				'precision'	 => 255,
+				'nullable'	 => true
+		));
+
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.91';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
