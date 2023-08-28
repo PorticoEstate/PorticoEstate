@@ -311,6 +311,8 @@
 		 * @param string $app
 		 * @param string $pkg will always look within template set, then fallback to $pkg
 		 * @param string $name name of the javascript file to include
+		 * @param bool $end_of_page
+		 * @param array $config
 		 * @return bool
 		 */
 

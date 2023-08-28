@@ -598,6 +598,15 @@
 		<xsl:if test="sorted_by/key">
 			order_def.push([<xsl:value-of select="sorted_by/key"/>, '<xsl:value-of select="sorted_by/dir"/>']);
 		</xsl:if>
+		var responsive = true;
+		<xsl:if test="responsive_show_details = 1">
+			responsive =	{
+								details: {
+										display: $.fn.dataTable.Responsive.display.childRowImmediate,
+										type: ''
+									}
+							};
+		</xsl:if>
 
 		var download_url = '<xsl:value-of select="download"/>';
 		var editor_cols = [];
@@ -1106,13 +1115,7 @@
 				pagingType:		"input",
 				processing:		true,
 				serverSide:		true,
-				responsive:		true,
-//				responsive:		{
-//									details: {
-//										display: $.fn.dataTable.Responsive.display.childRowImmediate,
-//										type: ''
-//									}
-//								},
+				responsive:		responsive,
 				select: select,
 				deferRender:	true,
 				ajax:{

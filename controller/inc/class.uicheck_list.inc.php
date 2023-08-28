@@ -81,7 +81,8 @@
 			'add_billable_hours'	=> true,
 			'set_inspector'			=> true,
 			'set_category'			=> true,
-			'view_image'			=> true
+			'view_image'			=> true,
+			'set_geolocation'		=> true,
 		);
 
 		var $so_case,$vfs;
@@ -226,6 +227,7 @@
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
+
 
 		/**
 		 * Public function for displaying the add check list form
@@ -550,6 +552,14 @@
 		 */
 		function edit_check_list( $check_list = null )
 		{
+			//add javascript
+			self::add_javascript('phpgwapi', 'openlayers', 'js/ol.js', false, array('combine' => true ));
+			//add css
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/openlayers/css/ol.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/openlayers/css/popup.css');
+
+
+			
 			if ($check_list == null)
 			{
 				$check_list_id = phpgw::get_var('check_list_id');
@@ -669,8 +679,11 @@
 				}
 				else
 				{
-					$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
-						'id' => $component_id));
+					$component_arr = createObject('property.soentity')->read_single_eav(
+						array('location_id' => $location_id,'id' => $component_id),
+						array('attributes' => array(array('column_name'=>'geolocation')))
+						);
+
 					$location_code = $component_arr['location_code'];
 					$location_name = execMethod('property.bolocation.get_location_name', $location_code);
 
@@ -684,6 +697,16 @@
 				$component->set_location_id($location_id);
 				$component->set_location_code($component_arr['location_code']);
 				$component->set_xml_short_desc($short_desc);
+				if(!empty($component_arr['attributes']))
+				{
+					foreach ($component_arr['attributes'] as $attribute)
+					{
+						if($attribute['column_name'] == 'geolocation')
+						{
+							$component->set_geolocation($attribute['value']);
+						}
+					}
+				}
 				$component_array = $component->toArray();
 
 				$type = 'component';

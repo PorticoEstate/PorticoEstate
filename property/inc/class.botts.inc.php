@@ -2637,7 +2637,7 @@ HTML;
 
 					foreach ($check_purchase as &$purchase_grant)
 					{
-						if ($purchase_grant['approved'])
+						if ($purchase_grant['required'])
 						{
 							$purchase_grant_ok = false;
 						}
