@@ -162,9 +162,11 @@ $(document).ready(function ()
 		}
 	});
 
-	bc = new ApplicationsCartModel();
-	ko.applyBindings(bc, document.getElementById("applications-cart-content"));
-	GetApplicationsCartItems(bc);
+	if (document.getElementById("applications-cart-content")) {
+		bc = new ApplicationsCartModel();
+		ko.applyBindings(bc, document.getElementById("applications-cart-content"));
+		GetApplicationsCartItems(bc);
+	}
 
 	$(document).on('click', '.scheduler-base-icon-next', function ()
 	{

@@ -171,14 +171,19 @@ HTML;
 	switch ($template_set)
 	{
 		case 'bookingfrontend_2':
+			if (str_ends_with(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), 'bookingfrontend/') &&
+				!$_GET['menuaction']
+			) {
+				$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] = $template_set;
+				break;
+			}
 		case 'bookingfrontend':
-			$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']	 = $template_set;
+			$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']	 = 'bookingfrontend';
 			break;
 		default:
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']	 = 'bookingfrontend';
 			break;
 	}
-
 
 	/* A few hacker resistant constants that will be used throught the program */
 	define('PHPGW_TEMPLATE_DIR', ExecMethod('phpgwapi.phpgw.common.get_tpl_dir', 'phpgwapi'));

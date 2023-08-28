@@ -1988,8 +1988,9 @@ input[type=text]:hover {
   flex-direction: column;
   background: #FFFFFF;
   border-radius: 3.125rem;
-  padding: 1rem 1rem 1rem 2rem;
+  padding: 0.75rem 1rem 0.35rem 2rem;
   width: 100%;
+  font-size: 1rem;
 }
 @media (max-width: 767px) {
   .multisearch__inner__item {
@@ -2004,6 +2005,8 @@ input[type=text]:hover {
 }
 @media (min-width: 768px) {
   .multisearch__inner__item {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
     background: transparent;
     padding: 0;
     border-radius: 0;
@@ -2013,8 +2016,13 @@ input[type=text]:hover {
 .multisearch__inner__item label {
   color: #793C8A;
   font-weight: 900;
-  font-size: 1rem;
+  font-size: 0.875rem;
   line-height: 1.2em;
+}
+@media (min-width: 768px) {
+  .multisearch__inner__item label {
+    font-size: 1rem;
+  }
 }
 .multisearch__inner__icon-button {
   font-size: 1.75rem;
@@ -2044,6 +2052,47 @@ input[type=text]:hover {
 @media (min-width: 768px) {
   .multisearch input[type=text]:hover {
     border-color: #793C8A;
+  }
+}
+
+.toggle-filter {
+  position: relative;
+  padding-right: 3rem;
+}
+.toggle-filter::after {
+  content: "\f078";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 700;
+  position: absolute;
+  right: 1.5rem;
+  top: 0.5rem;
+  transform: rotate(0);
+  transition: all 0.3s;
+  font-size: 1rem;
+  color: #000000;
+  color: #793C8A;
+  right: 1.25rem !important;
+  top: 0.5rem;
+  transition: color 0s;
+}
+@media (min-width: 576px) {
+  .toggle-filter::after {
+    right: 2rem;
+  }
+}
+.toggle-filter:hover::after {
+  color: #FFFFFF;
+}
+.toggle-filter--show::after {
+  transform: rotate(180deg);
+}
+
+.filter-element {
+  display: none;
+}
+@media (min-width: 768px) {
+  .filter-element {
+    display: block;
   }
 }
 
@@ -2220,4 +2269,12 @@ input[type=text]:hover {
 }
 .opening-hours-time {
   color: #793C8A;
+}
+
+.footer-site-logo {
+  width: 180px;
+}
+.footer-border-top {
+  border-top: 1px solid #89266a;
+  width: 100%;
 }/*# sourceMappingURL=main.css.map */
