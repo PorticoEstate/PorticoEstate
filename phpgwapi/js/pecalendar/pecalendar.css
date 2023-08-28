@@ -1988,8 +1988,9 @@ input[type=text]:hover {
   flex-direction: column;
   background: #FFFFFF;
   border-radius: 3.125rem;
-  padding: 1rem 1rem 1rem 2rem;
+  padding: 0.75rem 1rem 0.35rem 2rem;
   width: 100%;
+  font-size: 1rem;
 }
 @media (max-width: 767px) {
   .multisearch__inner__item {
@@ -2004,6 +2005,8 @@ input[type=text]:hover {
 }
 @media (min-width: 768px) {
   .multisearch__inner__item {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
     background: transparent;
     padding: 0;
     border-radius: 0;
@@ -2013,8 +2016,13 @@ input[type=text]:hover {
 .multisearch__inner__item label {
   color: #793C8A;
   font-weight: 900;
-  font-size: 1rem;
+  font-size: 0.875rem;
   line-height: 1.2em;
+}
+@media (min-width: 768px) {
+  .multisearch__inner__item label {
+    font-size: 1rem;
+  }
 }
 .multisearch__inner__icon-button {
   font-size: 1.75rem;
@@ -2044,6 +2052,47 @@ input[type=text]:hover {
 @media (min-width: 768px) {
   .multisearch input[type=text]:hover {
     border-color: #793C8A;
+  }
+}
+
+.toggle-filter {
+  position: relative;
+  padding-right: 2.5rem;
+}
+.toggle-filter::after {
+  content: "\f078";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 700;
+  position: absolute;
+  right: 1.5rem;
+  top: 0.5rem;
+  transform: rotate(0);
+  transition: all 0.3s;
+  font-size: 1rem;
+  color: #000000;
+  color: #793C8A;
+  right: 1.25rem !important;
+  top: 0.5rem;
+  transition: color 0s;
+}
+@media (min-width: 576px) {
+  .toggle-filter::after {
+    right: 2rem;
+  }
+}
+.toggle-filter:hover::after {
+  color: #FFFFFF;
+}
+.toggle-filter--show::after {
+  transform: rotate(180deg);
+}
+
+.filter-element {
+  display: none;
+}
+@media (min-width: 768px) {
+  .filter-element {
+    display: block;
   }
 }
 
@@ -2222,6 +2271,14 @@ input[type=text]:hover {
   color: #793C8A;
 }
 
+.footer-site-logo {
+  width: 180px;
+}
+.footer-border-top {
+  border-top: 1px solid #89266a;
+  width: 100%;
+}
+
 :root {
   --day-width: 1fr;
   --time-width: 3em;
@@ -2235,7 +2292,12 @@ input[type=text]:hover {
   }
 }
 
+#ui-datepicker-div {
+  z-index: 20 !important;
+}
+
 .calendar {
+  overflow-x: scroll;
   display: grid;
   grid-template-rows: var(--header-height) 3em auto;
   border-width: 10px 10px 10px 10px;
@@ -2243,11 +2305,6 @@ input[type=text]:hover {
   box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
   font-size: 1.5rem;
   grid-template-columns: var(--time-width) repeat(7, 1fr);
-}
-@media all and (max-width: 480px) {
-  .calendar {
-    width: calc(500vw + var(--time-width));
-  }
 }
 @media all and (min-width: 481px) and (max-width: 992px) {
   .calendar {
@@ -2290,14 +2347,12 @@ input[type=text]:hover {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  width: 50vw;
 }
 .calendar .header .select_building_resource > div:nth-child(1) {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  height: fit-content;
+  width: 50vw;
 }
-.calendar .header .select_building_resource > div:nth-child(2) {
-  margin-left: 20px;
+.calendar .header .select_building_resource > div {
   display: flex;
   flex-direction: row;
 }
@@ -2330,6 +2385,7 @@ input[type=text]:hover {
   position: sticky;
   position: -webkit-sticky;
   top: 0;
+  z-index: 11;
   line-height: 1rem;
   grid-row: 2/span 1;
   grid-column: 2/span 7;
@@ -2491,6 +2547,7 @@ input[type=text]:hover {
   z-index: 10;
   width: 10rem;
   cursor: pointer;
+  font-size: 1rem;
 }
 .calendar .info[data-show] {
   display: block;

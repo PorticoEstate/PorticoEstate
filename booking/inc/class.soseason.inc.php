@@ -131,6 +131,47 @@
 			return $seasons;
 		}
 
+		public function get_building_seasons( $building_id, $from_ = null, $to_ = null )
+		{
+			$now = date('Y-m-d');
+
+			if (!$from_) $from_ = $now;
+			if (!$to_) $to_ = $now;
+			$filter = "AND s.to_ >= '$from_ 00:00' AND s.from_ <= '$to_ 23:59'";
+
+			$sql = "SELECT s.id,
+       					s.building_id,
+					   s.name,
+					   s.from_ as sfrom,
+					   s.to_   as sto,
+					   sb.wday,
+					   sb.from_,
+					   sb.to_"
+				. " FROM bb_season s, bb_season_boundary sb"
+				. " WHERE s.status = 'PUBLISHED' and s.active=1"
+				. " {$filter}"
+				. " and sb.season_id = s.id"
+				. " AND building_id=" . (int) $building_id;
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$seasons = array();
+			while($this->db->next_record())
+			{
+				$seasons[] = array(
+					'id' => (int)$this->db->f('id'),
+					'building_id' => (int)$this->db->f('building_id'),
+					'name' => $this->db->f('name'),
+					'sfrom' => $this->db->f('sfrom'),
+					'sto' => $this->db->f('sto'),
+					'wday' => (int)$this->db->f('wday'),
+					'from_' => $this->db->f('from_'),
+					'to_' => $this->db->f('to_')
+				);
+			}
+
+			return $seasons;
+		}
+
 		/**
 		 * Checks if a specific timespan falls within the timespan of a season
 		 *
