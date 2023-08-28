@@ -354,7 +354,10 @@ class BookingSearch {
             }
             if (this.data.selected_resource_categories().length > 0) {
                 const activities = [...new Set(this.data.resource_category_activity().filter(activity => this.data.selected_resource_categories().some(rc => rc.id === activity.rescategory_id)).map(a => a.activity_id))];
+                // console.log(activities, this.data.resource_activities())
                 resources = resources.filter(resource => this.data.resource_activities().some(ra => activities.some(sa => this.activity_cache[sa].includes(ra.activity_id) && resource.id === ra.resource_id)));
+                // resources = resources.filter(resource => activities.every(id => this.data.resource_activities().some(ra => this.activity_cache[id].includes(ra.activity_id) && resource.id === ra.resource_id)));
+
             }
 
             hasSearch = true;
@@ -517,6 +520,10 @@ class BookingSearch {
                         building_id: buildings[0].id,
                     }, false);
                 }
+                const locationUrl = phpGWLink('bookingfrontend/', {
+                    menuaction: 'bookingfrontend.uibuilding.show',
+                    id: buildings[0].id
+                })
                 append.push(`
     <div class="col-12 mb-4">
       <div class="js-slidedown slidedown">
@@ -528,7 +535,10 @@ class BookingSearch {
         </button>
         <div class="js-slidedown-content slidedown__content">
             <div>
-                <button class="pe-btn pe-btn-primary" onclick="location.href=\'${url}\'">Søknad</button>
+                <div class="d-flex">
+                    <button class="pe-btn pe-btn-primary" style="margin-right: 8px;" onclick="location.href=\'${url}\'">Søknad</button>
+                    <button class="pe-btn pe-btn-primary" onclick="location.href=\'${locationUrl}\'">${buildings[0].name}</button>
+                </div>
                 <p>
                     ${resource.description}
                 </p> 
