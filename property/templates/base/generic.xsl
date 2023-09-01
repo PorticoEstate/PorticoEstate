@@ -119,8 +119,8 @@
 								</label>
 								<xsl:choose>
 									<xsl:when test="type='text' or type='html'">
-										<div class="pure-custom pure-input-3-4" >
-											<textarea cols="{//textareacols}" rows="{//textarearows}" name="values[{name}]" id="{name}">
+										<div class="pure-custom pure-input-3-4">
+											<textarea cols="{//textareacols}" rows="{//textarearows}" name="values[{name}]" id="{name}" class="pure-input-1" >
 												<xsl:choose>
 													<xsl:when test="nullable!='1' or required=1">
 														<xsl:attribute name="data-validation">
