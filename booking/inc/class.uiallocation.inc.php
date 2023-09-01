@@ -383,22 +383,28 @@
 						$to_time = $to_date_arr[0];
 					}
 
-					$allocation['from_'] = strftime("%Y-%m-%d %H:%M", phpgwapi_datetime::date_to_timestamp($from_date_arr[0] . " " . $from_time));
-					$allocation['to_'] = strftime("%Y-%m-%d %H:%M", phpgwapi_datetime::date_to_timestamp($from_date_arr[0] . " " . $to_time));
+//					$allocation['from_'] = strftime("%Y-%m-%d %H:%M", phpgwapi_datetime::date_to_timestamp($from_date_arr[0] . " " . $from_time));
+					$allocation['from_'] = date('Y-m-d H:i', phpgwapi_datetime::date_to_timestamp($from_date_arr[0] . " " . $from_time));
+//					$allocation['to_'] = strftime("%Y-%m-%d %H:%M", phpgwapi_datetime::date_to_timestamp($from_date_arr[0] . " " . $to_time));
+					$allocation['to_'] = date('Y-m-d H:i', phpgwapi_datetime::date_to_timestamp($from_date_arr[0] . " " . $to_time));
 				}
 				else
 				{
 					$from_time = $_POST['from_'];
 					$to_time = $_POST['to_'];
-					$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($weekday . " " . $from_time));
-					$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($weekday . " " . $to_time));
+//					$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($weekday . " " . $from_time));
+					$allocation['from_'] = date('Y-m-d H:i', strtotime($weekday . " " . $from_time));
+//					$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($weekday . " " . $to_time));
+					$allocation['to_'] = date('Y-m-d H:i', strtotime($weekday . " " . $to_time));
 
 					if (($weekday != 'sunday' && date('w') > date('w', strtotime($weekday))) || (date('w') == '0' && date('w') < date('w', strtotime($weekday))))
 					{
 						if (!phpgw::get_var('weekday', 'string', 'POST'))
 						{
-							$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($weekday . " " . $from_date_arr[1]) - 60 * 60 * 24 * 7);
-							$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($weekday . " " . $to_date_arr[1]) - 60 * 60 * 24 * 7);
+//							$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($weekday . " " . $from_date_arr[1]) - 60 * 60 * 24 * 7);
+//							$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($weekday . " " . $to_date_arr[1]) - 60 * 60 * 24 * 7);
+							$allocation['from_'] = date('Y-m-d H:i', strtotime($weekday . " " . $from_date_arr[1]) - 60 * 60 * 24 * 7);
+							$allocation['to_'] = date('Y-m-d H:i', strtotime($weekday . " " . $to_date_arr[1]) - 60 * 60 * 24 * 7);
 						}
 					}
 				}
@@ -828,7 +834,7 @@
 
 			$purchase_order = $this->sopurchase_order->get_purchase_order(0, 'allocation', $allocation['id']);
 
-			
+
 			$completed_reservations = CreateObject('booking.socompleted_reservation')->read(array(
 				'filters'	 => array(
 					'reservation_type'	 => 'allocation',

@@ -148,7 +148,7 @@
 					$allocation['from_']		 = $date->format("Y-m-d") . ' ' . $talloc['from_'];
 					$allocation['to_']			 = $date->format("Y-m-d") . ' ' . $talloc['to_'];
 					$allocation['building_name'] = $season['building_name'];
-					$allocation['completed']	 = 1;
+					$allocation['completed']	 = '0';
 					$allocation['articles']		 = !empty($talloc['articles']) ? $talloc['articles'] : array();
 
 					$errors						 = $this->bo_allocation->validate($allocation);
