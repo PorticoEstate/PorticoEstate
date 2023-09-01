@@ -518,6 +518,7 @@ class BookingSearch {
                     url = phpGWLink('bookingfrontend/', {
                         menuaction: 'bookingfrontend.uiapplication.add',
                         building_id: buildings[0].id,
+                        resource_id: resource.id
                     }, false);
                 }
                 const locationUrl = phpGWLink('bookingfrontend/', {
