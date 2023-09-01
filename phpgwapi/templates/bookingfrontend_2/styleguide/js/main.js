@@ -70,12 +70,24 @@ $(document).ready(function () {
             $(this).find('#datepicker').datepicker("hide");
         }
     });
+
+    $("#js-toggle-filter").click(function() {
+        $(this).toggleClass("toggle-filter--show")
+        $(".filter-element").toggleClass("d-block");
+
+        if($(this).hasClass('toggle-filter--show')){
+            $(this).text('Se færre filter');
+        } else {
+            $(this).text('Se flere filter');
+        }
+    });
 });
 
 const updateSelectBasic = () => {
     /* Basic dropdown */
     $('.js-select-basic').select2({
         theme: 'select-v2',
+        width: '100%'
     });
 }
 
@@ -85,7 +97,14 @@ const updateDateBasic = () => {
     $(".js-basic-datepicker").datepicker({
         dateFormat: "d.m.yy",
         changeMonth: true,
-        changeYear: true
+        changeYear: true,
+        dayNames: [ "Søndag", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag" ],
+        dayNamesMin: [ "Sø", "Ma", "Ti", "On", "To", "Fr", "Lø" ],
+        dayNamesShort: [ "Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør" ],
+        monthNames: [ "Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember" ],
+        monthNamesShort: [ "Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des" ],
+        firstDay: 1
+
     });
 }
 

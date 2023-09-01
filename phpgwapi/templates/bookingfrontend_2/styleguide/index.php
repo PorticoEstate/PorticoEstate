@@ -111,6 +111,11 @@
             'folder' => 'shortcut',
             'filename' => 'shortcut',
           ),
+          'Footer' => array(
+            'name' => 'Footer',
+            'folder' => 'footer',
+            'filename' => 'footer',
+          ),
         );
 
         echo '<ul class="list-unstyled d-flex flex-wrap">';

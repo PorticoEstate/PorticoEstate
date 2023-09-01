@@ -4,7 +4,8 @@ class PEcalendar {
     dom_id = null;
     dom = null;
     currentDate = null;
-    firstDayOfWeek = null;
+    firstDayOfCalendar = null;
+    lastDayOfCalendar = null;
     startHour = 10;
     endHour = 22;
 
@@ -20,13 +21,14 @@ class PEcalendar {
     buildings = null;
     resources = {};
     resource_id = null;
+    seasons = null;
     id_prefix = generateRandomString(10);
 
-    constructor(id, building_id, resource_id=null, dateString=null) {
+    constructor(id, building_id, resource_id = null, dateString = null) {
         this.dom_id = id;
         this.building_id = building_id;
         this.resource_id = resource_id;
-        console.log("Loading", this.building_id, this.resource_id);
+        // console.log("Loading", this.building_id, this.resource_id);
         this.loadBuildings();
 
         this.dom = document.getElementById(id);
@@ -37,12 +39,12 @@ class PEcalendar {
     }
 
     getId(id) {
-        return this.id_prefix+"-"+id;
+        return this.id_prefix + "-" + id;
     }
 
     setDate(currentDate) {
         this.currentDate = currentDate.setLocale("no");
-        this.setFirstDayOfWeek();
+        this.setDaysOfCalendar();
         this.loadBuilding(this.building_id);
     }
 
@@ -51,8 +53,9 @@ class PEcalendar {
         this.endHour = end;
     }
 
-    setFirstDayOfWeek() {
-        this.firstDayOfWeek = this.currentDate.startOf("week");
+    setDaysOfCalendar() {
+        this.firstDayOfCalendar = this.currentDate.startOf("week");
+        this.lastDayOfCalendar = this.firstDayOfCalendar.plus({days: 7});
     }
 
     setEvents(events) {
@@ -98,7 +101,7 @@ class PEcalendar {
         const days = this.createElement("div", "days");
         days.id = this.getId("days");
         for (let c = 0; c < 7; c++) {
-            const day = this.firstDayOfWeek.plus({day: c});
+            const day = this.firstDayOfCalendar.plus({day: c});
             const dayEl = this.createElement("div", "day");
             dayEl.insertAdjacentHTML(
                 'afterbegin',
@@ -142,34 +145,44 @@ class PEcalendar {
 
         // Add events
         if (this.events) {
-            for (let event of this.events.filter(e => e.resources.some(r => r.id === this.resource_id))) {
+            for (let event of this.events.filter(e => e.resources.some(r => r?.id === this.resource_id))) {
                 const dateFrom = DateTime.fromISO(`${event.date}T${event.from}`);
                 const dateTo = DateTime.fromISO(`${event.date}T${event.to}`);
-                const e = this.createElement("div", `event event-${event.type}`, `<div><div>${event.name}</div><div>${event.resources.map(r => r.name).join(" / ")}</div></div>`)
-                const row = ((+(dateFrom.toFormat("H")) - this.startHour) * this.hourParts) + 1;
-                // Add 60/hourParts
-                const rowStartAdd = Math.floor(+(dateFrom.toFormat("m")) / (60 / this.hourParts));
-                const span = (+dateTo.toFormat("H") - dateFrom.toFormat("H")) * this.hourParts;
-                const rowStopAdd = Math.floor(+(dateTo.toFormat("m")) / (60 / this.hourParts));
-                e.style.gridColumn = `${+dateFrom.toFormat("c")} / span 1`;
-                e.style.gridRow = `${row + rowStartAdd} / span ${span - rowStartAdd + rowStopAdd}`
-                // console.log(`${+dateFrom.toFormat("c")+1} / span 1`, `${row} / span ${span}`)
+                console.log("event", event);
+                const dates = event?.dates ? this.getIntervals(event.dates, this.startHour, this.endHour) : [{
+                    from: dateFrom,
+                    to: dateTo
+                }];
+                for (let date of dates) {
+                    if (date.from < this.firstDayOfCalendar || date.from > this.lastDayOfCalendar) continue;
 
-                // Add dots
-                const dots = this.createElement("button", "dots-container")
+                    const e = this.createElement("div", `event event-${event.type}`, `<div><div>${event.name}</div><div>${event.resources.filter(r => r?.id).map(r => r.name).join(" / ")}</div></div>`)
+                    const row = ((+(date.from.toFormat("H")) - this.startHour) * this.hourParts) + 1;
+                    // Add 60/hourParts
+                    const rowStartAdd = Math.floor(+(date.from.toFormat("m")) / (60 / this.hourParts));
+                    const span = (+date.to.toFormat("H") - date.from.toFormat("H")) * this.hourParts;
+                    const rowStopAdd = Math.floor(+(date.to.toFormat("m")) / (60 / this.hourParts));
+                    e.style.gridColumn = `${+date.from.toFormat("c")} / span 1`;
+                    e.style.gridRow = `${row + rowStartAdd} / span ${span - rowStartAdd + rowStopAdd}`
+                    // console.log(`${+dateFrom.toFormat("c")+1} / span 1`, `${row} / span ${span}`)
 
-                let img = this.createElement('img', 'dots');
-                img.src = phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false);
-                dots.appendChild(img);
-                e.appendChild(dots);
-                content.appendChild(e);
-                this.addInfoPopup(content, dots, event);
+                    // Add dots
+                    const dots = this.createElement("button", "dots-container")
+
+                    let img = this.createElement('img', 'dots');
+                    img.src = phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false);
+                    dots.appendChild(img);
+                    e.appendChild(dots);
+                    content.appendChild(e);
+                    this.addInfoPopup(content, dots, event);
+                }
             }
         }
         if (this.dom) {
             this.dom.replaceChildren(...[header, days, timeEl, content]);
             const building = document.getElementById(this.getId("building"));
             building.onchange = (option) => {
+                self.resource_id = null;
                 self.loadBuilding(+option.target.value);
             }
             const resource = document.getElementById(this.getId("resources"));
@@ -177,22 +190,25 @@ class PEcalendar {
                 self.resource_id = +option.target.value;
                 self.createCalendarDom();
             }
+            const date = document.getElementById(this.getId("datetimepicker"));
+            date.onchange = (option) => {
+                self.setDate(DateTime.fromJSDate(self.getDateFromSearch(option.target.value)));
+            }
         }
         updateSelectBasic();
         updateDateBasic();
     }
 
     addInfoPopup(contentEl, dotsEl, event) {
-        return;
         // Add info popup
         const dateFrom = DateTime.fromISO(`${event.date}T${event.from}`);
         const dateTo = DateTime.fromISO(`${event.date}T${event.to}`);
         const info = this.createElement("div", "info");
         info.id = this.getId("event");
-        info.innerHTML = `<p><b>${event.name}</b></p>
-                <p>Kl: ${dateFrom.toFormat("HH:mm")} - ${dateTo.toFormat("HH:mm")}</p>`
+        info.innerHTML = `<div><b>${event.name}</b></div>
+                <div>Kl: ${dateFrom.toFormat("HH:mm")} - ${dateTo.toFormat("HH:mm")}</div>`
 
-        const popper = Popper.createPopper(dotsEl, info, {
+        const popper = new Popper(dotsEl, info, {
             placement: 'left',
         });
         dotsEl.onclick = () => {
@@ -209,42 +225,42 @@ class PEcalendar {
         if (!this.currentDate) return;
         const self = this;
         const buildings = this.buildings;
-        console.log("Resources", this.building_id, this.resource_id, this.resources);
 
         const header = this.createElement("div", "header");
 
         header.insertAdjacentHTML(
             'afterbegin',
             `
-<div class="date">
-<div>
-      <fieldset>
-        <label class="filter">
-          <input type="radio" name="filter" value="day" checked/>
-            <span class="filter__radio">Dag</span>
-        </label>
-        <label class="filter">
-          <input type="radio" name="filter" value="week"/>
-            <span class="filter__radio">Uke</span>
-        </label>
-        <label class="filter">
-          <input type="radio" name="filter" value="moth"/>
-            <span class="filter__radio">Måned</span>
-        </label>
-      </fieldset>
-      </div>
-                <input id=${this.getId("datetimepicker")} class="js-basic-datepicker" type="text" value="${this.currentDate.toFormat('dd.LL.y')}">
-                </div>
+    <div class="date">
+        <div>
+          <fieldset>
+<!--            <label class="filter">
+              <input type="radio" name="filter" value="day"/>
+                <span class="filter__radio">Dag</span>
+            </label> -->
+            <label class="filter">
+              <input type="radio" name="filter" value="week" checked/>
+                <span class="filter__radio">Uke</span>
+            </label>
+<!--            <label class="filter">
+              <input type="radio" name="filter" value="moth"/>
+                <span class="filter__radio">Måned</span>
+            </label> -->
+          </fieldset>
+        </div>
+        <input id=${this.getId("datetimepicker")} class="js-basic-datepicker" type="text" value="${this.currentDate.toFormat('dd.LL.y')}">
+    </div>
     <div class="select_building_resource">
         <div>
             <select id=${this.getId("building")} class="js-select-basic">
-               ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name + '</option>').join("")}
-            </select>
+<!--               ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name.trim() + '</option>').join("")} -->
+                <option value="${this.building_id}" selected>${buildings.find(b => b.id === this.building_id).name.trim()}</option>
+            </select> 
             <select id=${this.getId("resources")} class="js-select-basic">
                ${this.resources ? Object.keys(this.resources).map(
-                resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id ? " selected" : "") + '>' + this.resources[resourceId].name + '</option>').join("") : ""}
+                resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id ? " selected" : "") + '>' + this.resources[resourceId].name.trim() + '</option>').join("") : ""}
             </select>
-
+    
         </div>
         <div>
             <div class="type text-small">
@@ -283,10 +299,12 @@ class PEcalendar {
                 // console.log(response);
                 const events = response?.ResultSet?.Result?.results?.schedule;
                 self.resources = response?.ResultSet?.Result?.results?.resources;
+                self.seasons = response?.ResultSet?.Result?.results?.seasons;
                 if (self.resources && Object.keys(self.resources).length > 0)
                     self.resource_id = self.resource_id ? self.resource_id : self.resources[Object.keys(self.resources)[0]]?.id;
                 else
                     self.resource_id = 0;
+                self.calculateStartEndHours();
                 self.setEvents(events ? events : [])
             }
         });
@@ -307,4 +325,67 @@ class PEcalendar {
         });
     }
 
+    getDateFromSearch(dateString) {
+        const parts = dateString.split(".");
+        return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+    }
+
+    getIntervals(dates, startHour, endHour) {
+        const intervals = [];
+
+        for (let date of dates) {
+            let fromDate = DateTime.fromISO(date.from_.replace(" ", "T"));
+            const toDate = DateTime.fromISO(date.to_.replace(" ", "T"));
+
+            while (fromDate < toDate) {
+                let from = fromDate;
+                let to = fromDate.set({hour: endHour, minute: 0, second: 0});
+
+                if (fromDate.hour < startHour) {
+                    from = fromDate.set({hour: startHour, minute: 0, second: 0});
+                }
+
+                if (toDate < to) {
+                    to = toDate;
+                }
+
+                intervals.push({
+                    from: from,
+                    to: to
+                });
+
+                fromDate = fromDate.set({hour: endHour, minute: 0, second: 0}).plus({days: 1}).set({
+                    hour: startHour,
+                    minute: 0,
+                    second: 0
+                });
+            }
+        }
+        console.log("Intervals", intervals);
+        return intervals;
+    }
+
+    calculateStartEndHours() {
+        const getInclusiveHourFromTimeString = (timeString, isEndTime) => {
+            const date = new Date(`1970-01-01T${timeString}Z`);
+            const hour = date.getUTCHours();
+            const minutes = date.getUTCMinutes();
+            const seconds = date.getUTCSeconds();
+
+            if (isEndTime && (minutes > 0 || seconds > 0)) {
+                return hour + 1;
+            }
+
+            return hour;
+        }
+
+        if (!this.seasons) return;
+        let minTime = 24;
+        let maxTime = 0;
+        for (let season of this.seasons) {
+            minTime = Math.min(minTime, getInclusiveHourFromTimeString(season.from_, false));
+            maxTime = Math.max(maxTime, getInclusiveHourFromTimeString(season.to_, true));
+        }
+        this.setHours(minTime, maxTime);
+    }
 }

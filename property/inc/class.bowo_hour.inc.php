@@ -463,7 +463,7 @@
 
 			foreach ($email_list as &$email_entry)
 			{
-				$email_entry['selected'] = trim($email_entry['email']) == trim($selected) ? 1 : 0;
+				$email_entry['selected'] = trim($email_entry['email']) == trim((string)$selected) ? 1 : 0;
 			}
 
 			return $email_list;

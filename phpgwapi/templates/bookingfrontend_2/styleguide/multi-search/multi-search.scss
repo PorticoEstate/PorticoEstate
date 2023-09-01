@@ -44,8 +44,9 @@
       flex-direction: column;
       background: $white;
       border-radius: $rounded-large;
-      padding: 1rem 1rem 1rem 2rem;
+      padding: 0.75rem 1rem 0.35rem 2rem;
       width: 100%;
+      font-size: $text-body;
 
       @media (max-width: ($media-medium - 1)) {
         box-shadow: $box-shadow-large;
@@ -60,6 +61,8 @@
       }
 
       @media (min-width: $media-medium) {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
         background: transparent;
         padding: 0;
         border-radius: 0;
@@ -69,8 +72,12 @@
       label {
         color: $purple;
         font-weight: $text-bolder;
-        font-size: 1rem;
+        font-size: $text-small;
         line-height: 1.2em;
+
+        @media (min-width: $media-medium) {
+          font-size: $text-body;
+        }
       }
 
     }
@@ -115,5 +122,36 @@
         border-color: $purple;
       }
     }
+  }
+}
+
+.toggle-filter {
+  position: relative;
+  padding-right: 2.5rem;
+  
+  &::after {
+    @include dropdown-arrow;
+    color: $purple;
+    right: 1.25rem !important;
+    top: 0.5rem; 
+    transition: color 0s;
+  }
+
+  &:hover::after {
+    color: $white;
+  }
+
+  &--show {
+    &::after {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.filter-element {
+  display: none;
+
+  @media (min-width: $media-medium) {
+    display: block;
   }
 }
