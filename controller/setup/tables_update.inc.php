@@ -1635,6 +1635,33 @@
 	}
 
 
+	$test[] = '0.1.72';
+	function controller_upgrade0_1_72()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
+		$sql = "SELECT id, completed_date FROM controller_check_list WHERE completed_date IS NOT NULL";
+		$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
 
+		$check_list = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$check_list[] = array
+			(
+				'id'		=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'completed_ts'	=> $GLOBALS['phpgw_setup']->oProc->f('completed_date')
+			);
+		}
 
+		foreach ($check_list as $entry)
+		{
+			$sql = "UPDATE controller_check_list_completed_item SET completed_ts = {$entry['completed_ts']} WHERE check_list_id = {$entry['id']} ";
+			$GLOBALS['phpgw_setup']->oProc->query($sql,__LINE__,__FILE__);
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['controller']['currentver'] = '0.1.73';
+			return $GLOBALS['setup_info']['controller']['currentver'];
+		}
+	}
