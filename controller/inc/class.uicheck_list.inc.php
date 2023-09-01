@@ -3593,6 +3593,8 @@ HTML;
 			$location_identificator_fallback = 0;
 			$data_case = array();
 			$users = array();
+			$findings_options = array();
+
 			foreach ($report_info['open_check_items_and_cases'] as $check_item)
 			{
 
@@ -3606,13 +3608,15 @@ HTML;
 				{
 
 					$_temp_options = $check_item->get_control_item()->get_options_array();
-					$findings_options = array();
 
 					if($_temp_options)
 					{
 						foreach ($_temp_options as $option_entry)
 						{
-							$findings_options[$check_item->get_control_item()->get_title()][$option_entry->get_option_value()] = 0;
+							if(empty($findings_options[$check_item->get_control_item()->get_title()][$option_entry->get_option_value()]))
+							{
+								$findings_options[$check_item->get_control_item()->get_title()][$option_entry->get_option_value()] = 0;
+							}
 						}
 					}
 				}
@@ -3633,11 +3637,6 @@ HTML;
 							}
 						}
 						unset($value);
-
-//					_debug_array($findings_map);
-//	_debug_array($findings_options);
-//	die();
-
 					}
 
 					$n = 1;
@@ -4241,6 +4240,8 @@ HTML;
 
 
 			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, '', null, $case_location_code);
+			$open_old_cases =  $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, 'open_or_waiting_old', null, $case_location_code, $component_id);
+			$open_check_items_and_cases = array_merge($open_check_items_and_cases, $open_old_cases);
 
 			if ($buildings_on_property)
 			{
