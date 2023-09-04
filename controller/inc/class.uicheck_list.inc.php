@@ -3594,6 +3594,7 @@ HTML;
 			$data_case = array();
 			$users = array();
 			$findings_options = array();
+			$lang_date = lang('date');
 
 			foreach ($report_info['open_check_items_and_cases'] as $check_item)
 			{
@@ -3621,7 +3622,6 @@ HTML;
 					}
 				}
 
-
 				foreach ($check_item->get_cases_array() as $case)
 				{
 					$users[] = $case->get_modified_by();
@@ -3645,10 +3645,15 @@ HTML;
 
 					$entry[] = array
 					(
-						'text' => "#{$i}",
+						'text' => "#{$i} - " . $case->get_id(),
 						'value' => $check_item->get_control_item()->get_title(),
 					);
 
+					$entry[] = array
+					(
+						'text' => $lang_date,
+						'value' => $GLOBALS['phpgw']->common->show_date($case->get_entry_date() , $this->dateFormat)
+					);
 
 					if($case->get_component_child_item_id())
 					{
