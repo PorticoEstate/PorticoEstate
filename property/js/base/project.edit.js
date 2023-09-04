@@ -464,7 +464,7 @@ $(document).ready(function ()
 					}
 				}
 
-				if (ecodimb_id !== $('#ecodimb').val())
+				if (ecodimb_id && ecodimb_id !== $('#ecodimb').val())
 				{
 
 					var oArgs = {menuaction: 'property.uiproject.get_ecodimb', query: ecodimb_id};
