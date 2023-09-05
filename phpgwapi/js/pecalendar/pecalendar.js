@@ -363,9 +363,10 @@ class PEcalendar {
         // Event Listener for mousedown
         content.addEventListener('mousedown', (e) => {
             isDragging = true;
+            dragEnd = null;
             dragStart = this.getDateTimeFromMouseEvent(e, content);  // Assume getDateTimeFromMouseEvent is a function to get date/time from mouse event
-           tempEvent = this.addTemporaryEvent(content, dragStart.time, dragStart.time, dragStart.date);
-
+            // tempEvent = this.addTemporaryEvent(content, dragStart.time, dragStart.time, dragStart.date);
+            tempEvent = this.createTemporaryEvent(dragStart.time, dragStart.time, dragStart.date);
         });
 
 
@@ -381,9 +382,12 @@ class PEcalendar {
         content.addEventListener('mouseup', (e) => {
             if (isDragging) {
                 isDragging = false;
-                dragEnd = this.getDateTimeFromMouseEvent(e, content);
-                this.updateTemporaryEvent(content, tempEvent, dragStart.time, dragEnd.time);
-                // TODO: redirect to next page
+                if(dragEnd) {
+                    dragEnd = this.getDateTimeFromMouseEvent(e, content);
+                    this.updateTemporaryEvent(content, tempEvent, dragStart.time, dragEnd.time);
+                    // TODO: redirect to next page
+                }
+
             }
         });
         let isTouchTap = true;
