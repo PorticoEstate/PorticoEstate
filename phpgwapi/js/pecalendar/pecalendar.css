@@ -81,7 +81,7 @@
   color: #28358B;
 }
 
-.bg-blue, .calendar .calendar-body .event-event {
+.bg-blue, .calendar .calendar-body .event-temporary, .calendar .calendar-body .event-event {
   background-color: #28358B;
 }
 
@@ -509,7 +509,7 @@
   background-color: #ffffff;
 }
 
-.text-white, .calendar .calendar-body .event-event {
+.text-white, .calendar .calendar-body .event-temporary, .calendar .calendar-body .event-event {
   color: #FFFFFF;
 }
 
@@ -2531,6 +2531,20 @@ input[type=text]:hover {
   justify-content: space-between;
 }
 .calendar .calendar-body .event-event .dots {
+  height: 16px;
+  width: 16px;
+  filter: invert(100%);
+}
+.calendar .calendar-body .event-temporary {
+  border-color: #FFF;
+  z-index: 4;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin-left: 2rem;
+  opacity: 0.75;
+}
+.calendar .calendar-body .event-temporary .dots {
   height: 16px;
   width: 16px;
   filter: invert(100%);

@@ -351,6 +351,23 @@ $current-time-color: #ea4335;
         filter: invert(100%);
       }
     }
+    .event-temporary {
+      @extend .bg-blue;
+      border-color: #FFF;
+      z-index: 4;
+      @extend .text-white;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      margin-left: 2rem;
+      opacity: 0.75;
+
+      .dots {
+        height: 16px;
+        width: 16px;
+        filter: invert(100%);
+      }
+    }
 
     .info {
       background: #FFF;
