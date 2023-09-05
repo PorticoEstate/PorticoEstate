@@ -97,6 +97,11 @@ class PEcalendar {
 
         // Creating header
         const header = this.createCalendarHeader();
+
+
+        // Create Calendar body container
+        const body = this.createElement("div", "calendar-body");
+
         // Creating days header
         const days = this.createElement("div", "days");
         days.id = this.getId("days");
@@ -179,7 +184,8 @@ class PEcalendar {
             }
         }
         if (this.dom) {
-            this.dom.replaceChildren(...[header, days, timeEl, content]);
+            body.replaceChildren(...[days, timeEl, content])
+            this.dom.replaceChildren(...[header, body]);
             const building = document.getElementById(this.getId("building"));
             building.onchange = (option) => {
                 self.resource_id = null;
@@ -227,7 +233,6 @@ class PEcalendar {
         const buildings = this.buildings;
 
         const header = this.createElement("div", "header");
-
         header.insertAdjacentHTML(
             'afterbegin',
             `
