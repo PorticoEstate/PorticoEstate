@@ -60,12 +60,16 @@ $current-time-color: #ea4335;
 }
 
 .calendar {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 8px;
 
   .header {
     display: flex;
     flex-direction: column;
-    width: 100%;
     margin-top: 10px;
+    gap: 8px;
     //display: grid;
     //grid-template-columns: var(--time-width) repeat(7, 1fr);
     //background: #F5F5F5;
@@ -76,12 +80,34 @@ $current-time-color: #ea4335;
     //grid-row: 1 /span 1;
     //grid-column: 1 / span 8;
     //z-index: 12;
-    @media all and (max-width: 480px) {
-      width: 500vw;
-    }
 
-    @media all and (min-width: 481px) and (max-width: 992px) {
-      width: 300vw;
+    .date {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 8px;
+      fieldset {
+        justify-content: center;
+        margin-left: 10px;
+        margin-right: 10px;
+        display: flex;
+        flex-direction: row;
+        label {
+          display: block;
+        }
+      }
+      input {
+      }
+    }
+    @media screen and (max-width: 480px) {
+      .date {
+        fieldset {
+          flex-grow: 1;
+        }
+        input {
+          flex-grow: 1;
+        }
+      }
     }
 
     .select_building_resource {
@@ -90,15 +116,17 @@ $current-time-color: #ea4335;
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
-      width: 50vw;
-
-      > div:nth-child(1) {
-        width: 50vw;
-      }
+      flex-wrap: wrap;
+      gap: 8px;
 
       > div {
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .info-types{
+        flex-wrap: nowrap;
       }
     }
 
@@ -137,19 +165,6 @@ $current-time-color: #ea4335;
 
     .js-basic-datepicker {
       font-size: 1rem;
-    }
-
-    .date {
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-
-      fieldset {
-        margin-left: 10px;
-        margin-right: 10px;
-        display: flex;
-        flex-direction: row;
-      }
     }
 
 
@@ -387,23 +402,23 @@ $current-time-color: #ea4335;
       display: block;
     }
 
-    .event-filter {
-      filter: invert(16%) sepia(22%) saturate(6235%) hue-rotate(219deg) brightness(105%) contrast(91%);
-    }
 
-    .booking-filter {
-      filter: invert(65%) sepia(11%) saturate(712%) hue-rotate(195deg) brightness(97%) contrast(87%);
-    }
 
-    .allocation-filter {
-      filter: invert(84%) sepia(12%) saturate(111%) hue-rotate(6deg) brightness(108%) contrast(90%);
-    }
-
-    .hide-mobile {
-      @media screen and (max-width: 480px) {
-        display: none;
-      }
-    }
+  }
+  .event-filter {
+    filter: invert(16%) sepia(22%) saturate(6235%) hue-rotate(219deg) brightness(105%) contrast(91%);
   }
 
+  .booking-filter {
+    filter: invert(65%) sepia(11%) saturate(712%) hue-rotate(195deg) brightness(97%) contrast(87%);
+  }
+
+  .allocation-filter {
+    filter: invert(84%) sepia(12%) saturate(111%) hue-rotate(6deg) brightness(108%) contrast(90%);
+  }
+  .hide-mobile {
+    @media screen and (max-width: 480px) {
+      display: none;
+    }
+  }
 }

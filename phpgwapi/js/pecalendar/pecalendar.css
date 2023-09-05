@@ -2296,20 +2296,40 @@ input[type=text]:hover {
   z-index: 20 !important;
 }
 
+.calendar {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 8px;
+}
 .calendar .header {
   display: flex;
   flex-direction: column;
-  width: 100%;
   margin-top: 10px;
+  gap: 8px;
 }
-@media all and (max-width: 480px) {
-  .calendar .header {
-    width: 500vw;
+.calendar .header .date {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.calendar .header .date fieldset {
+  justify-content: center;
+  margin-left: 10px;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: row;
+}
+.calendar .header .date fieldset label {
+  display: block;
+}
+@media screen and (max-width: 480px) {
+  .calendar .header .date fieldset {
+    flex-grow: 1;
   }
-}
-@media all and (min-width: 481px) and (max-width: 992px) {
-  .calendar .header {
-    width: 300vw;
+  .calendar .header .date input {
+    flex-grow: 1;
   }
 }
 .calendar .header .select_building_resource {
@@ -2318,14 +2338,17 @@ input[type=text]:hover {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 50vw;
-}
-.calendar .header .select_building_resource > div:nth-child(1) {
-  width: 50vw;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 .calendar .header .select_building_resource > div {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.calendar .header .select_building_resource .info-types {
+  flex-wrap: nowrap;
 }
 .calendar .header .type {
   display: flex;
@@ -2354,17 +2377,6 @@ input[type=text]:hover {
 }
 .calendar .calendar-body .js-basic-datepicker {
   font-size: 1rem;
-}
-.calendar .calendar-body .date {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-}
-.calendar .calendar-body .date fieldset {
-  margin-left: 10px;
-  margin-right: 10px;
-  display: flex;
-  flex-direction: row;
 }
 .calendar .calendar-body .title {
   background: #217346;
@@ -2564,17 +2576,17 @@ input[type=text]:hover {
 .calendar .calendar-body .info[data-show] {
   display: block;
 }
-.calendar .calendar-body .event-filter {
+.calendar .event-filter {
   filter: invert(16%) sepia(22%) saturate(6235%) hue-rotate(219deg) brightness(105%) contrast(91%);
 }
-.calendar .calendar-body .booking-filter {
+.calendar .booking-filter {
   filter: invert(65%) sepia(11%) saturate(712%) hue-rotate(195deg) brightness(97%) contrast(87%);
 }
-.calendar .calendar-body .allocation-filter {
+.calendar .allocation-filter {
   filter: invert(84%) sepia(12%) saturate(111%) hue-rotate(6deg) brightness(108%) contrast(90%);
 }
 @media screen and (max-width: 480px) {
-  .calendar .calendar-body .hide-mobile {
+  .calendar .hide-mobile {
     display: none;
   }
 }

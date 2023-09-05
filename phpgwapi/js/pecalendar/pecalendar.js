@@ -450,22 +450,20 @@ class PEcalendar {
             'afterbegin',
             `
     <div class="date">
-        <div>
           <fieldset>
-<!--            <label class="filter">
+           <label class="filter invisible">
               <input type="radio" name="filter" value="day"/>
                 <span class="filter__radio">Dag</span>
-            </label> -->
+            </label> 
             <label class="filter">
               <input type="radio" name="filter" value="week" checked/>
                 <span class="filter__radio">Uke</span>
             </label>
-<!--            <label class="filter">
-              <input type="radio" name="filter" value="moth"/>
+            <label class="filter invisible">
+              <input type="radio" name="filter" value="month"/>
                 <span class="filter__radio">Måned</span>
-            </label> -->
+            </label> 
           </fieldset>
-        </div>
         <input id=${this.getId("datetimepicker")} class="js-basic-datepicker" type="text" value="${this.currentDate.toFormat('dd.LL.y')}">
     </div>
     <div class="select_building_resource">
@@ -480,7 +478,7 @@ class PEcalendar {
             </select>
     
         </div>
-        <div>
+        <div class="info-types">
             <div class="type text-small">
                 <img class="event-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
                 Arrangement
