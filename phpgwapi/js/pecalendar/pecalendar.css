@@ -2541,7 +2541,7 @@ input[type=text]:hover {
   position: relative;
   display: flex;
   justify-content: space-between;
-  margin-left: 2rem;
+  margin-left: 1.5rem;
   opacity: 0.75;
 }
 .calendar .calendar-body .event-temporary .dots {

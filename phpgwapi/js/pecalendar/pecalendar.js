@@ -87,8 +87,8 @@ class PEcalendar {
 
     getDateTimeFromMouseEvent(e, content) {
         const rect = content.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        const x = ('clientX' in e ? e.clientX : e.touches[0].clientX) - rect.left;
+        const y = ('clientY' in e ? e.clientY : e.touches[0].clientY) - rect.top;
         const columnWidth = rect.width / 7;
         const rowHeight = rect.height / ((this.endHour - this.startHour + 1) * this.hourParts);
 
@@ -152,7 +152,7 @@ class PEcalendar {
         return {
             type: "temporary",
             id: "temp_" + Date.now(),  // Unique temporary ID
-            name: "Placeholder",
+            name: "Ny søknad",
             from,
             to,
             date
@@ -199,12 +199,22 @@ class PEcalendar {
         return event?.dates ? this.getIntervals(event.dates, this.startHour, this.endHour) : [{from: dateFrom, to: dateTo}];
     }
 
+    addHourToTime(timeString) {
+        const [hour, minute, second] = timeString.split(":").map(Number);
+        const newHour = (hour + 1) % 24;  // Add 1 to the hour, wrap around to 0 if it goes beyond 23
+
+        // Convert back to string format, making sure to pad single-digit numbers with a leading zero
+        const newTimeString = `${newHour < 10 ? '0' : ''}${newHour}:${minute < 10 ? '0' : ''}${minute}:${second < 10 ? '0' : ''}${second}`;
+
+        return newTimeString;
+    }
+
     isDateInRange(date) {
         return date >= this.firstDayOfCalendar && date <= this.lastDayOfCalendar;
     }
 
     createEventElement(event, date) {
-        const e = this.createElement("div", `event event-${event.type}`, `<div><div>${event.name}</div><div>${event.resources?.filter(r => r?.id).map(r => r.name).join(" / ")}</div></div>`);
+        const e = this.createElement("div", `event event-${event.type}`, `<div><div>${event.name}${event.resources && `</div><div>${event.resources?.filter(r => r?.id).map(r => r.name).join(" / ")}</div></div>` || ''}`);
 
         const { row, rowStartAdd, span, rowStopAdd } = this.calculateEventGridPosition(date);
         e.id=`event-${event.id}`
@@ -227,9 +237,13 @@ class PEcalendar {
         const oldEventElement = content.querySelector(`#event-${temporaryEvent.id}`);
         if (oldEventElement) oldEventElement.remove();
 
+
         // Update the properties of the existing temporary event object
-        temporaryEvent.from = newFrom;
-        temporaryEvent.to = newTo;
+        temporaryEvent.to = newFrom > newTo ? newFrom : newTo;
+        temporaryEvent.from = newFrom > newTo ? newTo : newFrom;
+        temporaryEvent.name = `${temporaryEvent.from.substring(0, 5)} - ${temporaryEvent.to.substring(0, 5)}`;
+
+
         // temporaryEvent.date = newDate;
 
         // Re-render the updated temporary event
@@ -372,7 +386,35 @@ class PEcalendar {
                 // TODO: redirect to next page
             }
         });
+        let isTouchTap = true;
 
+        // For Mobile Touch (No Drag)
+        content.addEventListener('touchstart', (e) => {
+            // e.preventDefault();  // Prevent mouse event from firing as well
+            isTouchTap = true;
+            const touchTime = this.getDateTimeFromMouseEvent(e, content);  // Assume getDateTimeFromTouchEvent is a function to get date/time from touch event
+
+            // Round down minutes to 0
+            const roundedTime = touchTime.time.split(":")[0] + ":00:00";
+
+            // Assume addHourToTime is a function that adds an hour to the given time
+            const oneHourLater = this.addHourToTime(roundedTime);
+            tempEvent = this.createTemporaryEvent(roundedTime, oneHourLater, touchTime.date);
+
+            // Create a temporary event lasting one hour from the tapped time
+            // tempEvent = this.addTemporaryEvent(content, roundedTime, oneHourLater, touchTime.date);
+        });
+        content.addEventListener('touchmove', (e) => {
+            // e.preventDefault();  // Prevent mouse event from firing as well
+            isTouchTap = false;  // Unset the flag because movement means it's not a simple tap
+        });
+        content.addEventListener('touchend', (e) => {
+            e.preventDefault();  // Prevent mouse event from firing as well
+            if(isTouchTap) {
+                this.renderSingleEvent(content, tempEvent);
+            }
+            // TODO: redirect to next page or do other tasks
+        });
 
     }
 
