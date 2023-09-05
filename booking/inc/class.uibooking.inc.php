@@ -666,7 +666,7 @@
 				$application['building_name'] = str_replace($search, $replace, $application['building_name']);
 			}
 
-			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
+			$booking['resources_json'] = json_encode(array_map('intval', (array)$booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uimassbooking.index'));
 
 			$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', -1);
@@ -835,7 +835,7 @@
 
 			$this->flash_form_errors($errors);
 			self::add_javascript('booking', 'base', 'booking.js');
-			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
+			$booking['resources_json'] = json_encode(array_map('intval', (array)$booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibooking.show',
 					'id' => $booking['id']));
 			$booking['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show',
@@ -996,7 +996,7 @@
 			$booking['from_'] = pretty_timestamp($booking['from_']);
 			$booking['to_'] = pretty_timestamp($booking['to_']);
 
-			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
+			$booking['resources_json'] = json_encode(array_map('intval', (array)$booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibooking.show',
 					'id' => $booking['id']));
 			$booking['booking_link'] = self::link(array('menuaction' => 'booking.uibooking.show',

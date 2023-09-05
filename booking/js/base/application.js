@@ -67,8 +67,8 @@ $(document).ready(function ()
 			populateTableChkResources(building_id, initialSelection);
 		}
 
-		var oArgs = {menuaction: 'bookingfrontend.uiapplication.get_activity_data', activity_id: $(this).val()};
-		var requestUrl = phpGWLink('bookingfrontend/', oArgs, true);
+		var oArgs = {menuaction: 'booking.uiapplication.get_activity_data', activity_id: $(this).val()};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
 
 		$.ajax({
 			type: 'POST',

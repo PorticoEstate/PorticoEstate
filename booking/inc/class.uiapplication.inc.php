@@ -31,7 +31,8 @@
 			'cancel_payment'			 => true,
 			'refund_payment'			 => true,
 			'get_purchase_order'		 => true,
-			'delete'					 => true
+			'delete'					 => true,
+			'get_activity_data'			 => true
 		);
 		protected $customer_id,
 			$default_module = 'bookingfrontend',
