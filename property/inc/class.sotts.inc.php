@@ -200,6 +200,8 @@
 			$include_location_parent = !empty($data['include_location_parent']) ? true : false;
 
 
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+
 			$result_order_field	 = array();
 			$order_join			 = " {$this->join} phpgw_accounts ON fm_tts_tickets.user_id=phpgw_accounts.account_id";
 
@@ -476,6 +478,11 @@
 						$user_ids[] = $user_for_substitute;
 					}
 					$_membership = $GLOBALS['phpgw']->accounts->membership(abs($user_id));
+
+					$order_join	 .= " {$this->left_join} phpgw_notification ON "
+					. "( phpgw_notification.location_id = $location_id"
+						. " AND phpgw_notification.location_item_id = fm_tts_tickets.id)";
+
 				}
 
 				foreach ($_membership as $_key => $group_member)
@@ -491,7 +498,18 @@
 				{
 					$filtermethod	 .= " {$where} (assignedto IN (" . implode(', ', $user_ids) . ')';
 					$where			 = 'AND';
-					$filtermethod	 .= ' OR ((assignedto IS NULL OR assignedto = 0) AND fm_tts_tickets.group_id IN (' . implode(',', $membership) . ')))';
+					$filtermethod	 .= ' OR ((assignedto IS NULL OR assignedto = 0) AND fm_tts_tickets.group_id IN (' . implode(',', $membership) . '))';
+
+					if ($user_id < 0)
+					{
+						$this->db->query("SELECT person_id as contact_id FROM phpgw_accounts WHERE account_id = $this->account", __LINE__, __FILE__);
+						$this->db->next_record();
+						$_contact_id = (int)$this->db->f('contact_id');
+
+						$filtermethod .= " OR phpgw_notification.contact_id ={$_contact_id}";
+					}
+
+					$filtermethod	 .= ')';
 				}
 			}
 
@@ -622,7 +640,6 @@
 				$where			 = 'AND';
 			}
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
 
 			$querymethod = '';
 			if ($query)
