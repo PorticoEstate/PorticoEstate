@@ -122,13 +122,17 @@ $current-time-color: #ea4335;
       > div {
         display: flex;
         flex-direction: row;
-        flex-wrap: wrap;
+
         gap: 8px;
+        @media screen and (max-width: 480px) {
+          flex-wrap: wrap;
+        }
       }
       .info-types{
         flex-wrap: nowrap;
       }
     }
+
 
     .type {
       display: flex;

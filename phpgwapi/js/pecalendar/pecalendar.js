@@ -225,7 +225,6 @@ class PEcalendar {
         e.appendChild(dots);
 
         this.addInfoPopup(e, dots, event);
-        console.log(event)
 
         return e;
     }
@@ -332,7 +331,9 @@ class PEcalendar {
             content.appendChild(time);
         }
 
+        // Add events
         this.renderEvents(content);
+
         if (this.dom) {
             body.replaceChildren(...[days, timeEl, content])
             this.dom.replaceChildren(...[header, body]);
@@ -386,6 +387,8 @@ class PEcalendar {
                     dragEnd = this.getDateTimeFromMouseEvent(e, content);
                     this.updateTemporaryEvent(content, tempEvent, dragStart.time, dragEnd.time);
                     // TODO: redirect to next page
+                    this.timeSlotSelected(tempEvent.date, tempEvent.from, tempEvent.to)
+
                 }
 
             }
@@ -415,11 +418,26 @@ class PEcalendar {
         content.addEventListener('touchend', (e) => {
             e.preventDefault();  // Prevent mouse event from firing as well
             if(isTouchTap) {
-                this.renderSingleEvent(content, tempEvent);
+                // this.renderSingleEvent(content, tempEvent);
+                this.timeSlotSelected(tempEvent.date, tempEvent.from, tempEvent.to)
             }
             // TODO: redirect to next page or do other tasks
         });
 
+    }
+
+    timeSlotSelected(date, start, end) {
+
+        const unixDates = this.getUnixTimestamps(date, start, end);
+        const url = phpGWLink('bookingfrontend/', {
+            menuaction: 'bookingfrontend.uiapplication.add',
+            building_id: this.building_id,
+            resource_id: this.resource_id,
+            start: unixDates.startTimestamp,
+            end:unixDates.endTimestamp
+        }, false);
+
+        window.location.href = url;
     }
 
     addInfoPopup(contentEl, dotsEl, event) {
@@ -584,6 +602,19 @@ class PEcalendar {
         console.log("Intervals", intervals);
         return intervals;
     }
+
+    getUnixTimestamps(date, timeStart, timeEnd) {
+        // Create a Date object for the start time
+        const startDateTime = new Date(`${date}T${timeStart}`);
+        const startTimestamp = startDateTime.getTime();
+
+        // Create a Date object for the end time
+        const endDateTime = new Date(`${date}T${timeEnd}`);
+        const endTimestamp = endDateTime.getTime();
+
+        return { startTimestamp, endTimestamp };
+    }
+
 
     calculateStartEndHours() {
         const getInclusiveHourFromTimeString = (timeString, isEndTime) => {

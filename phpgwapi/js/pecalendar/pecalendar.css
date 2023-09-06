@@ -2344,8 +2344,12 @@ input[type=text]:hover {
 .calendar .header .select_building_resource > div {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   gap: 8px;
+}
+@media screen and (max-width: 480px) {
+  .calendar .header .select_building_resource > div {
+    flex-wrap: wrap;
+  }
 }
 .calendar .header .select_building_resource .info-types {
   flex-wrap: nowrap;
