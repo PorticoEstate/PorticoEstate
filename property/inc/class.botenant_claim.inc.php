@@ -284,6 +284,8 @@
 				{
 					case 'S': $type = lang('Status changed');
 						break;
+					case 'A': $type = lang('Amount');
+						break;
 					default:
 				}
 
@@ -306,7 +308,8 @@
 				}
 				else
 				{
-					$record_history[$i]['value_new_value'] = '';
+					$record_history[$i]['value_old_value'] = $value['old_value'];
+					$record_history[$i]['value_new_value'] = $value['new_value'];
 				}
 
 				$i++;
