@@ -470,6 +470,11 @@
 				else if ($user_id < 0)
 				{
 					$user_ids	 = array((int)abs($user_id));
+					$substitute_users	 = CreateObject('property.sosubstitute')->get_users_for_substitute($user_ids[0]);
+					foreach ($substitute_users as $user_for_substitute)
+					{
+						$user_ids[] = $user_for_substitute;
+					}
 					$_membership = $GLOBALS['phpgw']->accounts->membership(abs($user_id));
 				}
 
