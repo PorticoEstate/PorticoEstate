@@ -85,6 +85,189 @@ class PEcalendar {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
+    getDateTimeFromMouseEvent(e, content) {
+        const rect = content.getBoundingClientRect();
+        const x = ('clientX' in e ? e.clientX : e.touches[0].clientX) - rect.left;
+        const y = ('clientY' in e ? e.clientY : e.touches[0].clientY) - rect.top;
+        const columnWidth = rect.width / 7;
+        const rowHeight = rect.height / ((this.endHour - this.startHour + 1) * this.hourParts);
+
+        const columnIndex = Math.floor(x / columnWidth);
+        const rowIndex = Math.floor(y / rowHeight);
+
+        const date = this.firstDayOfCalendar.plus({days: columnIndex}).toISODate();
+        const timeInMinutes = ((rowIndex / this.hourParts) + this.startHour) * 60;
+        const hour = Math.floor(timeInMinutes / 60);
+        const minute = timeInMinutes % 60;
+        const time = `${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}:00`;
+
+        return {date, time};
+    }
+
+
+
+    renderEvents(content, eventIdToUpdate = null) {
+        if (eventIdToUpdate) {
+            // Update a single event
+            this.updateSingleEvent(content, eventIdToUpdate);
+        } else {
+            // Update all events
+            this.clearEvents(content);
+            this.addEventsToContent(content);
+        }
+    }
+    addEventsToContent(content) {
+        if (!this.events) return;
+
+        for (let event of this.filteredEvents()) {
+            const dates = this.getEventDates(event);
+            for (let date of dates) {
+                if (this.isDateInRange(date.from)) {
+                    const eventElement = this.createEventElement(event, date);
+                    content.appendChild(eventElement);
+                }
+            }
+        }
+    }
+
+    updateSingleEvent(content, eventId) {
+        const event = this.events.find(e => e.id === eventId);
+        if (!event) return;
+
+        // Remove the old event element
+        const oldEventElement = content.querySelector(`#event-${eventId}`);
+        if (oldEventElement) oldEventElement.remove();
+
+        // Create and add the new event element
+        const dates = this.getEventDates(event);
+        for (let date of dates) {
+            if (this.isDateInRange(date.from)) {
+                const eventElement = this.createEventElement(event, date);
+                content.appendChild(eventElement);
+            }
+        }
+    }
+    // Function to create a temporary placeholder event
+    createTemporaryEvent(from, to, date) {
+        return {
+            type: "temporary",
+            id: "temp_" + Date.now(),  // Unique temporary ID
+            name: "Ny søknad",
+            from,
+            to,
+            date
+        };
+    }
+
+    // Function to add a temporary event to the content
+    addTemporaryEvent(content, from, to, date) {
+        const temporaryEvent = this.createTemporaryEvent(from, to, date);
+        this.renderSingleEvent(content, temporaryEvent);
+        return temporaryEvent;
+    }
+
+    // Function to render a single event (temporary or otherwise)
+    renderSingleEvent(content, event) {
+        const dates = this.getEventDates(event);
+        for (let date of dates) {
+            if (this.isDateInRange(date.from)) {
+                const eventElement = this.createEventElement(event, date);
+                if (event.type === "temporary") {
+                    eventElement.classList.add("temporary-event");
+                }
+                content.appendChild(eventElement);
+            }
+        }
+    }
+
+
+// Clear all events from the content
+    clearEvents(content) {
+        const events = content.querySelectorAll('.event');
+        events.forEach(event => event.remove());
+    }
+
+
+
+    filteredEvents() {
+        return this.events.filter(e => e.resources.some(r => r?.id === this.resource_id));
+    }
+
+    getEventDates(event) {
+        const dateFrom = DateTime.fromISO(`${event.date}T${event.from}`);
+        const dateTo = DateTime.fromISO(`${event.date}T${event.to}`);
+        return event?.dates ? this.getIntervals(event.dates, this.startHour, this.endHour) : [{from: dateFrom, to: dateTo}];
+    }
+
+    addHourToTime(timeString) {
+        const [hour, minute, second] = timeString.split(":").map(Number);
+        const newHour = (hour + 1) % 24;  // Add 1 to the hour, wrap around to 0 if it goes beyond 23
+
+        // Convert back to string format, making sure to pad single-digit numbers with a leading zero
+        const newTimeString = `${newHour < 10 ? '0' : ''}${newHour}:${minute < 10 ? '0' : ''}${minute}:${second < 10 ? '0' : ''}${second}`;
+
+        return newTimeString;
+    }
+
+    isDateInRange(date) {
+        return date >= this.firstDayOfCalendar && date <= this.lastDayOfCalendar;
+    }
+
+    createEventElement(event, date) {
+        const e = this.createElement("div", `event event-${event.type}`, `<div><div>${event.name}${event.resources && `</div><div>${event.resources?.filter(r => r?.id).map(r => r.name).join(" / ")}</div></div>` || ''}`);
+
+        const { row, rowStartAdd, span, rowStopAdd } = this.calculateEventGridPosition(date);
+        e.id=`event-${event.id}`
+        e.style.gridColumn = `${+date.from.toFormat("c")} / span 1`;
+        e.style.gridRow = `${row + rowStartAdd} / span ${span - rowStartAdd + rowStopAdd}`;
+
+        const dots = this.createDotsElement();
+        e.appendChild(dots);
+
+        this.addInfoPopup(e, dots, event);
+
+        return e;
+    }
+
+    // Function to update a temporary event
+    updateTemporaryEvent(content, temporaryEvent, newFrom, newTo) {
+        // TODO: if from time is later than to, swap
+        // Remove the old event element
+        const oldEventElement = content.querySelector(`#event-${temporaryEvent.id}`);
+        if (oldEventElement) oldEventElement.remove();
+
+
+        // Update the properties of the existing temporary event object
+        temporaryEvent.to = newFrom > newTo ? newFrom : newTo;
+        temporaryEvent.from = newFrom > newTo ? newTo : newFrom;
+        temporaryEvent.name = `${temporaryEvent.from.substring(0, 5)} - ${temporaryEvent.to.substring(0, 5)}`;
+
+
+        // temporaryEvent.date = newDate;
+
+        // Re-render the updated temporary event
+        this.renderSingleEvent(content, temporaryEvent);
+    }
+
+    calculateEventGridPosition(date) {
+        const row = ((+(date.from.toFormat("H")) - this.startHour) * this.hourParts) + 1;
+        const rowStartAdd = Math.floor(+(date.from.toFormat("m")) / (60 / this.hourParts));
+        const span = (+date.to.toFormat("H") - date.from.toFormat("H")) * this.hourParts;
+        const rowStopAdd = Math.floor(+(date.to.toFormat("m")) / (60 / this.hourParts));
+
+        return { row, rowStartAdd, span, rowStopAdd };
+    }
+
+    createDotsElement() {
+        const dots = this.createElement("button", "dots-container");
+        let img = this.createElement('img', 'dots');
+        img.src = phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false);
+        dots.appendChild(img);
+
+        return dots;
+    }
+
+
     createCalendarDom() {
         if (!this.currentDate) return;
         this.dom = document.getElementById(this.dom_id);
@@ -97,6 +280,11 @@ class PEcalendar {
 
         // Creating header
         const header = this.createCalendarHeader();
+
+
+        // Create Calendar body container
+        const body = this.createElement("div", "calendar-body");
+
         // Creating days header
         const days = this.createElement("div", "days");
         days.id = this.getId("days");
@@ -144,42 +332,11 @@ class PEcalendar {
         }
 
         // Add events
-        if (this.events) {
-            for (let event of this.events.filter(e => e.resources.some(r => r?.id === this.resource_id))) {
-                const dateFrom = DateTime.fromISO(`${event.date}T${event.from}`);
-                const dateTo = DateTime.fromISO(`${event.date}T${event.to}`);
-                console.log("event", event);
-                const dates = event?.dates ? this.getIntervals(event.dates, this.startHour, this.endHour) : [{
-                    from: dateFrom,
-                    to: dateTo
-                }];
-                for (let date of dates) {
-                    if (date.from < this.firstDayOfCalendar || date.from > this.lastDayOfCalendar) continue;
+        this.renderEvents(content);
 
-                    const e = this.createElement("div", `event event-${event.type}`, `<div><div>${event.name}</div><div>${event.resources.filter(r => r?.id).map(r => r.name).join(" / ")}</div></div>`)
-                    const row = ((+(date.from.toFormat("H")) - this.startHour) * this.hourParts) + 1;
-                    // Add 60/hourParts
-                    const rowStartAdd = Math.floor(+(date.from.toFormat("m")) / (60 / this.hourParts));
-                    const span = (+date.to.toFormat("H") - date.from.toFormat("H")) * this.hourParts;
-                    const rowStopAdd = Math.floor(+(date.to.toFormat("m")) / (60 / this.hourParts));
-                    e.style.gridColumn = `${+date.from.toFormat("c")} / span 1`;
-                    e.style.gridRow = `${row + rowStartAdd} / span ${span - rowStartAdd + rowStopAdd}`
-                    // console.log(`${+dateFrom.toFormat("c")+1} / span 1`, `${row} / span ${span}`)
-
-                    // Add dots
-                    const dots = this.createElement("button", "dots-container")
-
-                    let img = this.createElement('img', 'dots');
-                    img.src = phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false);
-                    dots.appendChild(img);
-                    e.appendChild(dots);
-                    content.appendChild(e);
-                    this.addInfoPopup(content, dots, event);
-                }
-            }
-        }
         if (this.dom) {
-            this.dom.replaceChildren(...[header, days, timeEl, content]);
+            body.replaceChildren(...[days, timeEl, content])
+            this.dom.replaceChildren(...[header, body]);
             const building = document.getElementById(this.getId("building"));
             building.onchange = (option) => {
                 self.resource_id = null;
@@ -197,6 +354,90 @@ class PEcalendar {
         }
         updateSelectBasic();
         updateDateBasic();
+
+        // Variables to hold drag status and event details
+        let isDragging = false;
+        let dragStart = null;
+        let dragEnd = null;
+        let tempEvent = null;
+
+        // Event Listener for mousedown
+        content.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            dragEnd = null;
+            dragStart = this.getDateTimeFromMouseEvent(e, content);  // Assume getDateTimeFromMouseEvent is a function to get date/time from mouse event
+            // tempEvent = this.addTemporaryEvent(content, dragStart.time, dragStart.time, dragStart.date);
+            tempEvent = this.createTemporaryEvent(dragStart.time, dragStart.time, dragStart.date);
+        });
+
+
+        // Event Listener for mousemove
+        content.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                dragEnd = this.getDateTimeFromMouseEvent(e, content);
+                this.updateTemporaryEvent(content, tempEvent, dragStart.time, dragEnd.time);
+            }
+        });
+
+        // Event Listener for mouseup
+        content.addEventListener('mouseup', (e) => {
+            if (isDragging) {
+                isDragging = false;
+                if(dragEnd) {
+                    dragEnd = this.getDateTimeFromMouseEvent(e, content);
+                    this.updateTemporaryEvent(content, tempEvent, dragStart.time, dragEnd.time);
+                    // TODO: redirect to next page
+                    this.timeSlotSelected(tempEvent.date, tempEvent.from, tempEvent.to)
+
+                }
+
+            }
+        });
+        let isTouchTap = true;
+
+        // For Mobile Touch (No Drag)
+        content.addEventListener('touchstart', (e) => {
+            // e.preventDefault();  // Prevent mouse event from firing as well
+            isTouchTap = true;
+            const touchTime = this.getDateTimeFromMouseEvent(e, content);  // Assume getDateTimeFromTouchEvent is a function to get date/time from touch event
+
+            // Round down minutes to 0
+            const roundedTime = touchTime.time.split(":")[0] + ":00:00";
+
+            // Assume addHourToTime is a function that adds an hour to the given time
+            const oneHourLater = this.addHourToTime(roundedTime);
+            tempEvent = this.createTemporaryEvent(roundedTime, oneHourLater, touchTime.date);
+
+            // Create a temporary event lasting one hour from the tapped time
+            // tempEvent = this.addTemporaryEvent(content, roundedTime, oneHourLater, touchTime.date);
+        });
+        content.addEventListener('touchmove', (e) => {
+            // e.preventDefault();  // Prevent mouse event from firing as well
+            isTouchTap = false;  // Unset the flag because movement means it's not a simple tap
+        });
+        content.addEventListener('touchend', (e) => {
+            e.preventDefault();  // Prevent mouse event from firing as well
+            if(isTouchTap) {
+                // this.renderSingleEvent(content, tempEvent);
+                this.timeSlotSelected(tempEvent.date, tempEvent.from, tempEvent.to)
+            }
+            // TODO: redirect to next page or do other tasks
+        });
+
+    }
+
+    timeSlotSelected(date, start, end) {
+
+        const unixDates = this.getUnixTimestamps(date, start, end);
+        const url = phpGWLink('bookingfrontend/', {
+            menuaction: 'bookingfrontend.uiapplication.add',
+            building_id: this.building_id,
+            resource_id: this.resource_id,
+            start: unixDates.startTimestamp,
+            end:unixDates.endTimestamp
+        }, false);
+
+        window.location.href = url;
     }
 
     addInfoPopup(contentEl, dotsEl, event) {
@@ -227,27 +468,24 @@ class PEcalendar {
         const buildings = this.buildings;
 
         const header = this.createElement("div", "header");
-
         header.insertAdjacentHTML(
             'afterbegin',
             `
     <div class="date">
-        <div>
           <fieldset>
-<!--            <label class="filter">
+           <label class="filter invisible">
               <input type="radio" name="filter" value="day"/>
                 <span class="filter__radio">Dag</span>
-            </label> -->
+            </label> 
             <label class="filter">
               <input type="radio" name="filter" value="week" checked/>
                 <span class="filter__radio">Uke</span>
             </label>
-<!--            <label class="filter">
-              <input type="radio" name="filter" value="moth"/>
+            <label class="filter invisible">
+              <input type="radio" name="filter" value="month"/>
                 <span class="filter__radio">Måned</span>
-            </label> -->
+            </label> 
           </fieldset>
-        </div>
         <input id=${this.getId("datetimepicker")} class="js-basic-datepicker" type="text" value="${this.currentDate.toFormat('dd.LL.y')}">
     </div>
     <div class="select_building_resource">
@@ -262,7 +500,7 @@ class PEcalendar {
             </select>
     
         </div>
-        <div>
+        <div class="info-types">
             <div class="type text-small">
                 <img class="event-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
                 Arrangement
@@ -364,6 +602,19 @@ class PEcalendar {
         console.log("Intervals", intervals);
         return intervals;
     }
+
+    getUnixTimestamps(date, timeStart, timeEnd) {
+        // Create a Date object for the start time
+        const startDateTime = new Date(`${date}T${timeStart}`);
+        const startTimestamp = startDateTime.getTime();
+
+        // Create a Date object for the end time
+        const endDateTime = new Date(`${date}T${timeEnd}`);
+        const endTimestamp = endDateTime.getTime();
+
+        return { startTimestamp, endTimestamp };
+    }
+
 
     calculateStartEndHours() {
         const getInclusiveHourFromTimeString = (timeString, isEndTime) => {

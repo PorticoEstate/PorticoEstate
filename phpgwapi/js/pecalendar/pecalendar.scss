@@ -60,46 +60,16 @@ $current-time-color: #ea4335;
 }
 
 .calendar {
-  overflow-x: scroll;
-  display: grid;
-  grid-template-rows: var(--header-height) $days-height auto;
-  border-width: 10px 10px 10px 10px;
-  border-radius: 20px 20px 20px 20px;
-  box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
-  font-size: 1.5rem;
-  grid-template-columns: var(--time-width) repeat(7, 1fr);
-  //@media all and (max-width: 480px) {
-  //  width: calc(500vw + var(--time-width));
-  //}
-
-  @media all and (min-width: 481px) and (max-width: 992px) {
-    width: calc(300vw + var(--time-width));
-  }
-
-
-
-  .js-basic-datepicker {
-    font-size: 1rem;
-  }
-
-  .date {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-
-    fieldset {
-      margin-left: 10px;
-      margin-right: 10px;
-      display: flex;
-      flex-direction: row;
-    }
-  }
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 8px;
 
   .header {
     display: flex;
     flex-direction: column;
-    width: 100%;
     margin-top: 10px;
+    gap: 8px;
     //display: grid;
     //grid-template-columns: var(--time-width) repeat(7, 1fr);
     //background: #F5F5F5;
@@ -110,12 +80,34 @@ $current-time-color: #ea4335;
     //grid-row: 1 /span 1;
     //grid-column: 1 / span 8;
     //z-index: 12;
-    @media all and (max-width: 480px) {
-      width: 500vw;
-    }
 
-    @media all and (min-width: 481px) and (max-width: 992px) {
-      width: 300vw;
+    .date {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 8px;
+      fieldset {
+        justify-content: center;
+        margin-left: 10px;
+        margin-right: 10px;
+        display: flex;
+        flex-direction: row;
+        label {
+          display: block;
+        }
+      }
+      input {
+      }
+    }
+    @media screen and (max-width: 480px) {
+      .date {
+        fieldset {
+          flex-grow: 1;
+        }
+        input {
+          flex-grow: 1;
+        }
+      }
     }
 
     .select_building_resource {
@@ -124,16 +116,23 @@ $current-time-color: #ea4335;
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
-      width: 50vw;
+      flex-wrap: wrap;
+      gap: 8px;
 
-      >div:nth-child(1) {
-        width: 50vw;
-      }
-      >div {
+      > div {
         display: flex;
         flex-direction: row;
+
+        gap: 8px;
+        @media screen and (max-width: 480px) {
+          flex-wrap: wrap;
+        }
+      }
+      .info-types{
+        flex-wrap: nowrap;
       }
     }
+
 
     .type {
       display: flex;
@@ -148,222 +147,268 @@ $current-time-color: #ea4335;
     }
   }
 
-  .title {
-    background: #217346;
-    text-align: center;
-    display: grid;
-    place-content: center;
-    color: #fff;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
 
-  .days {
-    background: #FFFFFF;
+  .calendar-body {
+
+    overflow-x: scroll;
     display: grid;
-    place-content: center;
-    text-align: center;
-    grid-template-columns: repeat(7, 1fr);
-    position: sticky;
-    position: -webkit-sticky;
-    top: 0;
-    z-index: 11;
-    line-height: 1rem;
-    grid-row: 2 / span 1;
-    grid-column: 2 / span 7;
-    @media all and (max-width: 480px) {
-      width: 500vw;
-    }
+    grid-template-rows: $days-height auto;
+    border-width: 10px 10px 10px 10px;
+    border-radius: 20px 20px 20px 20px;
+    box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.1);
+    font-size: 1.5rem;
+    grid-template-columns: var(--time-width) repeat(7, 1fr);
+    //@media all and (max-width: 480px) {
+    //  width: calc(500vw + var(--time-width));
+    //}
 
     @media all and (min-width: 481px) and (max-width: 992px) {
-      width: 300vw;
-    }
-  }
-
-  .day {
-    font-weight: bold;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: $days-height;
-    background-color: #F5F5F5;
-    margin-right: 1px;
-
-    :nth-child(2) {
-      font-weight: normal;
-      font-size: 0.8rem;
-    }
-  }
-
-  .day:last-child {
-    margin-right: 0;
-  }
-
-  .time-container {
-    display: grid;
-    grid-row: 3 / span var(--calendar-rows);
-    grid-column: 1 / span 1;
-    position: sticky;
-    position: -webkit-sticky;
-    left: 0;
-    z-index: 10;
-    background-color: #FFF;
-    height: 100%;
-  }
-
-  .content {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-row: 3 / span 1;
-    grid-column: 2 / span 7;
-    @media all and (max-width: 480px) {
-      width: 500vw;
+      width: calc(300vw + var(--time-width));
     }
 
-    @media all and (min-width: 481px) and (max-width: 992px) {
-      width: 300vw;
+
+    .js-basic-datepicker {
+      font-size: 1rem;
     }
 
-  }
 
-  .time {
-    grid-column: 1;
-    text-align: right;
-    align-self: end;
-    position: relative;
-    bottom: -1ex;
-    color: #70757a;
-    padding-right: 2px;
-    height: 12px;
 
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 1rem;
-    line-height: 1px;
-  }
+    .title {
+      background: #217346;
+      text-align: center;
+      display: grid;
+      place-content: center;
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
 
-  .col {
-    border-right: 1px solid $grid-color;
-  }
+    .days {
+      background: #FFFFFF;
+      display: grid;
+      place-content: center;
+      text-align: center;
+      grid-template-columns: repeat(7, 1fr);
+      position: sticky;
+      //position: -webkit-sticky;
+      top: 0;
+      z-index: 11;
+      line-height: 1rem;
+      grid-row: 1 / span 1;
+      grid-column: 2 / span 7;
+      @media all and (max-width: 480px) {
+        width: 500vw;
+      }
 
-  .filler-col {
-    grid-row: 1 / -1;
-    grid-column: 2;
-    border-right: 1px solid $grid-color;
-  }
+      @media all and (min-width: 481px) and (max-width: 992px) {
+        width: 300vw;
+      }
+    }
 
-  .row {
-    grid-column: 1 / -1;
-    border-bottom: 1px solid $grid-color;
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .event {
-    border-radius: 5px;
-    padding: 5px;
-    font-weight: normal;
-    font-size: 1rem;
-    border: 1px solid #FFF;
-    line-height: 1rem;
-
-    > div:first-child {
+    .day {
+      font-weight: bold;
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      height: $days-height;
+      background-color: #F5F5F5;
+      margin-right: 1px;
 
-      div:nth-child(1) {
-        @extend .text-bold;
-      }
-
-      div:nth-child(2) {
-        font-size: 0.5rem;
+      :nth-child(2) {
+        font-weight: normal;
+        font-size: 0.8rem;
       }
     }
 
-    button {
-      height: 24px;
-      background-color: transparent;
-      border: none;
+    .day:last-child {
+      margin-right: 0;
+    }
+
+    .time-container {
+      display: grid;
+      grid-row: 3 / span var(--calendar-rows);
+      grid-column: 1 / span 1;
+      position: sticky;
+      //position: -webkit-sticky;
+      left: 0;
+      z-index: 10;
+      background-color: #FFF;
+      height: 100%;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      grid-row: 3 / span 1;
+      grid-column: 2 / span 7;
+      @media all and (max-width: 480px) {
+        width: 500vw;
+      }
+
+      @media all and (min-width: 481px) and (max-width: 992px) {
+        width: 300vw;
+      }
+
+    }
+
+    .time {
+      grid-column: 1;
+      text-align: right;
+      align-self: end;
+      position: relative;
+      bottom: -1ex;
+      color: #70757a;
+      padding-right: 2px;
+      height: 12px;
+
+      font-family: 'Open Sans';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 1rem;
+      line-height: 1px;
+    }
+
+    .col {
+      border-right: 1px solid $grid-color;
+    }
+
+    .filler-col {
+      grid-row: 1 / -1;
+      grid-column: 2;
+      border-right: 1px solid $grid-color;
+    }
+
+    .row {
+      grid-column: 1 / -1;
+      border-bottom: 1px solid $grid-color;
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    .event {
+      border-radius: 5px;
+      padding: 5px;
+      font-weight: normal;
+      font-size: 1rem;
+      border: 1px solid #FFF;
+      line-height: 1rem;
+
+      > div:first-child {
+        display: flex;
+        flex-direction: column;
+
+        div:nth-child(1) {
+          @extend .text-bold;
+        }
+
+        div:nth-child(2) {
+          font-size: 0.5rem;
+        }
+      }
+
+      button {
+        height: 24px;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+      }
+    }
+
+    .weekend {
+      background-color: #f1f3f4;
+    }
+
+    .current {
+      font-weight: bold;
+    }
+
+    .event-allocation {
+      background-color: #E6E3DB;;
+      border-color: #FFF;
+      z-index: 2;
+      @extend .text-black;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+
+      .dots {
+        height: 16px;
+        width: 16px;
+        fill: #000;
+      }
+    }
+
+    .event-booking {
+      background-color: #999EC1;
+      border-color: #FFF;
+      z-index: 3;
+      @extend .text-black;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+
+      .dots {
+        height: 16px;
+        width: 16px;
+        fill: #000;
+      }
+    }
+
+    .event-event {
+      @extend .bg-blue;
+      border-color: #FFF;
+      z-index: 4;
+      @extend .text-white;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+
+      .dots {
+        height: 16px;
+        width: 16px;
+        filter: invert(100%);
+      }
+    }
+    .event-temporary {
+      @extend .bg-blue;
+      border-color: #FFF;
+      z-index: 4;
+      @extend .text-white;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      margin-left: 1.5rem;
+      opacity: 0.75;
+
+      .dots {
+        height: 16px;
+        width: 16px;
+        filter: invert(100%);
+      }
+    }
+
+    .info {
+      background: #FFF;
+      @extend .text-black;
+      padding: 4px 8px;
+      border-radius: 5px;
+      border: 1px solid #000;
+      min-height: 100px;
+      display: none;
+      z-index: 10;
+      width: 10rem;
       cursor: pointer;
+      font-size: 1rem;
     }
-  }
 
-  .weekend {
-    background-color: #f1f3f4;
-  }
-
-  .current {
-    font-weight: bold;
-  }
-
-  .event-allocation {
-    background-color: #E6E3DB;;
-    border-color: #FFF;
-    z-index: 2;
-    @extend .text-black;
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-
-    .dots {
-      height: 16px;
-      width: 16px;
-      fill: #000;
+    .info[data-show] {
+      display: block;
     }
+
+
+
   }
-
-  .event-booking {
-    background-color: #999EC1;
-    border-color: #FFF;
-    z-index: 3;
-    @extend .text-black;
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-
-    .dots {
-      height: 16px;
-      width: 16px;
-      fill: #000;
-    }
-  }
-
-  .event-event {
-    @extend .bg-blue;
-    border-color: #FFF;
-    z-index: 4;
-    @extend .text-white;
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-
-    .dots {
-      height: 16px;
-      width: 16px;
-      filter: invert(100%);
-    }
-  }
-
-  .info {
-    background: #FFF;
-    @extend .text-black;
-    padding: 4px 8px;
-    border-radius: 5px;
-    border: 1px solid #000;
-    min-height: 100px;
-    display: none;
-    z-index: 10;
-    width: 10rem;
-    cursor: pointer;
-    font-size: 1rem;
-  }
-
-  .info[data-show] {
-    display: block;
-  }
-
   .event-filter {
     filter: invert(16%) sepia(22%) saturate(6235%) hue-rotate(219deg) brightness(105%) contrast(91%);
   }
@@ -375,7 +420,6 @@ $current-time-color: #ea4335;
   .allocation-filter {
     filter: invert(84%) sepia(12%) saturate(111%) hue-rotate(6deg) brightness(108%) contrast(90%);
   }
-
   .hide-mobile {
     @media screen and (max-width: 480px) {
       display: none;
