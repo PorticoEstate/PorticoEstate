@@ -387,10 +387,11 @@
 
 			$this->db->transaction_begin();
 
-			$this->db->query("select status from fm_tenant_claim where id=" . (int)$claim['claim_id'], __LINE__, __FILE__);
+			$this->db->query("SELECT status,amount FROM fm_tenant_claim WHERE id=" . (int)$claim['claim_id'], __LINE__, __FILE__);
 			$this->db->next_record();
 
 			$old_status = $this->db->f('status');
+			$old_amount = (float)$this->db->f('amount');
 
 			$claim['name']	 = $this->db->db_addslashes($claim['name']);
 			$claim['amount'] = str_replace(",", ".", $claim['amount']);
@@ -413,6 +414,11 @@
 			{
 
 				$historylog->add('S', $claim_id, $claim['status'], $old_status);
+			}
+			if ($old_amount != (float)$claim['amount'])
+			{
+
+				$historylog->add('A', $claim_id, (float)$claim['amount'], $old_amount);
 			}
 
 			$this->interlink->delete_from_target('property', '.tenant_claim', $claim_id, $this->db);
