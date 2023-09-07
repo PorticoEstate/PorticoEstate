@@ -1213,7 +1213,8 @@
 
 					if ($description_value)
 					{
-						$_short_description_multiple[] = "{$attribute['input_text']}: {$description_value}";
+//						$_short_description_multiple[] = "{$attribute['input_text']}: {$description_value}";
+						$_short_description_multiple[] = $description_value;
 						$_short_description = $description_value;
 					}
 				}
@@ -2335,7 +2336,8 @@
 
 				if ($description_value)
 				{
-					$_short_description[] = "{$attribute['input_text']}: {$description_value}";
+//					$_short_description[] = "{$attribute['input_text']}: {$description_value}";
+					$_short_description[] = $description_value;
 				}
 			}
 
