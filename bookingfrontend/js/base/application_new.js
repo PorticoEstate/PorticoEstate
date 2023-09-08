@@ -267,6 +267,7 @@ $(document).ready(function ()
 		getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiresource.index_json", filter_building_id: urlParams['building_id'], sort: "name", phpgw_return_as: "json"}, true);
 		$.getJSON(getJsonURL, function (result)
 		{
+			let direct_booking = 0;
 			for (var i = 0; i < result.results.length; i++)
 			{
 				if (result.results[i].deactivate_application !== 1 && result.results[i].building_id == urlParams['building_id'])
@@ -297,11 +298,18 @@ $(document).ready(function ()
 						if(result.results[i].direct_booking && result.results[i].direct_booking < now)
 						{
 							resource_name += ' *';
+							direct_booking +=1;
 						}
 						bookableresource.push({id: result.results[i].id, name: resource_name, selected: ko.observable(tempSelected)});
 					}
 				}
 			}
+
+			if(direct_booking == 0)
+			{
+				$("#application_equipment").show();
+			}
+
 		});
 
 		var parameter = {
