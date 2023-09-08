@@ -537,7 +537,7 @@ class BookingSearch {
         <div class="js-slidedown-content slidedown__content">
             <div>
                 <div class="d-flex">
-                    <button class="pe-btn pe-btn-primary" style="margin-right: 8px;" onclick="location.href=\'${url}\'">Søknad</button>
+                    <!--<button class="pe-btn pe-btn-primary" style="margin-right: 8px;" onclick="location.href=\'${url}\'">Søknad</button>-->
                     <button class="pe-btn pe-btn-primary" onclick="location.href=\'${locationUrl}\'">${buildings[0].name}</button>
                 </div>
                 <p>

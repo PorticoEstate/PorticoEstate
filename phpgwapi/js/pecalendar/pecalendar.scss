@@ -126,6 +126,12 @@ $current-time-color: #ea4335;
         gap: 8px;
         @media screen and (max-width: 480px) {
           flex-wrap: wrap;
+          > button {
+            flex-grow: 1;
+          }
+        }
+        > span {
+          min-width: 15rem;
         }
       }
       .info-types{
