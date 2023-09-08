@@ -35,10 +35,11 @@ class PEcalendar {
         this.loadBuildings();
 
         this.dom = document.getElementById(id);
-        if (dateString)
+        if (dateString) {
             this.setDate(DateTime.fromJSDate(new Date(dateString)));
-        else
+        } else {
             this.setDate(DateTime.now())
+        }
     }
 
     getId(id) {
@@ -237,7 +238,6 @@ class PEcalendar {
 
     // Function to update a temporary event
     updateTemporaryEvent(content, temporaryEvent, newFrom, newTo) {
-        // TODO: if from time is later than to, swap
         // Remove the old event element
         const oldEventElement = content.querySelector(`#event-${temporaryEvent.id}`);
         if (oldEventElement) oldEventElement.remove();
@@ -354,14 +354,34 @@ class PEcalendar {
             this.dom.replaceChildren(...[header, body, this.modalElem]);
 
             const building = document.getElementById(this.getId("building"));
-            building.onchange = (option) => {
-                self.resource_id = null;
-                self.loadBuilding(+option.target.value);
+            if(building) {
+                building.onchange = (option) => {
+                    self.resource_id = null;
+                    self.loadBuilding(+option.target.value);
+                }
             }
             const resource = document.getElementById(this.getId("resources"));
             resource.onchange = (option) => {
                 self.resource_id = +option.target.value;
                 self.createCalendarDom();
+            }
+            const applicationButton = document.getElementById(this.getId("application"));
+            applicationButton.onclick = (event) => {
+                let resource = self.resources[self.resource_id];
+                let url = phpGWLink('bookingfrontend/', {
+                    menuaction: 'bookingfrontend.uiapplication.add',
+                    building_id: self.building_id,
+                    resource_id: self.resource_id
+                }, false);
+                if (resource.simple_booking === 1) {
+                    url = phpGWLink('bookingfrontend/', {
+                        menuaction: 'bookingfrontend.uiresource.show',
+                        building_id: self.building_id,
+                        id: self.resource_id
+                    }, false);
+                }
+                event.preventDefault();
+                location.href = url;
             }
             const date = document.getElementById(this.getId("datetimepicker"));
             date.onchange = (option) => {
@@ -520,14 +540,18 @@ class PEcalendar {
     </div>
     <div class="select_building_resource">
         <div>
-            <select id=${this.getId("building")} class="js-select-basic">
-<!--               ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name.trim() + '</option>').join("")} -->
-                <option value="${this.building_id}" selected>${buildings.find(b => b.id === this.building_id).name.trim()}</option>
-            </select> 
+           ${``
+                // <select id=${this.getId("building")} class="js-select-basic">
+                //    ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name.trim() + '</option>').join("")} -->
+                //     <option value="${this.building_id}" selected>${buildings.find(b => b.id === this.building_id).name.trim()}</option>
+                // </select> 
+            }
             <select id=${this.getId("resources")} class="js-select-basic">
                ${this.resources ? Object.keys(this.resources).map(
                 resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id ? " selected" : "") + '>' + this.resources[resourceId].name.trim() + '</option>').join("") : ""}
             </select>
+            <button id=${this.getId("application")} class="pe-btn pe-btn-primary">Søknad</button>
+            
     
         </div>
         <div class="info-types">

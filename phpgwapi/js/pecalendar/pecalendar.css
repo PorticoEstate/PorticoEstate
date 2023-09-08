@@ -2350,6 +2350,12 @@ input[type=text]:hover {
   .calendar .header .select_building_resource > div {
     flex-wrap: wrap;
   }
+  .calendar .header .select_building_resource > div > button {
+    flex-grow: 1;
+  }
+}
+.calendar .header .select_building_resource > div > span {
+  min-width: 15rem;
 }
 .calendar .header .select_building_resource .info-types {
   flex-wrap: nowrap;
