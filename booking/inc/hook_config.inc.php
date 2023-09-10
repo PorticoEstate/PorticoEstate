@@ -76,3 +76,35 @@ HTML;
 		}
 		return $out;
 	}
+
+	/**
+	 * Get HTML checkbox with sections for landing page
+	 *
+	 * @param array $config
+	 * @return string HTML checkboxes to be placed in a table
+	 */
+	function landing_sections( $config )
+	{
+		$sections = array(
+			array('id' => 'booking', 'name' => lang('booking')),
+			array('id' => 'event', 'name' => lang('event')),
+			array('id' => 'organization', 'name' => lang('organization'))
+		);
+
+		$section_assigned	 = isset($config['landing_sections']) ? $config['landing_sections'] : array();
+		$out			 = '';
+		foreach ($sections as $dummy => $section)
+		{
+			$checked = '';
+			if (in_array($section['id'], $section_assigned))
+			{
+				$checked = ' checked';
+			}
+
+			$out .= <<<HTML
+			<tr><td><input type="checkbox" name="newsettings[landing_sections][]" value="{$section['id']}" {$checked}><label>{$section['name']}</label></td></tr>
+HTML;
+		}
+		return $out;
+	}
+
