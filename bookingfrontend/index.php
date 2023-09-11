@@ -165,6 +165,13 @@ HTML;
 
 	$template_set = phpgw::get_var('template_set', 'string', 'COOKIE');
 
+    /**
+     *  converted menuactions
+     */
+    $availableMenuActions = (object) [
+        'bookingfrontend.uiapplication.add' => true,
+    ];
+
 	/**
 	 * we want the "bookingfrontend" for now
 	 */
@@ -172,7 +179,7 @@ HTML;
 	{
 		case 'bookingfrontend_2':
 			if (str_ends_with(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), 'bookingfrontend/') &&
-				!$_GET['menuaction']
+				(!$_GET['menuaction'] || $availableMenuActions->{$_GET['menuaction']} && !$_GET['simple'])
 			) {
 				$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] = $template_set;
 				break;
