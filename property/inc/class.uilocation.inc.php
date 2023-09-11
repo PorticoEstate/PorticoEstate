@@ -1169,14 +1169,20 @@ JS;
 				{
 					$params['sortable'] = true;
 				}
-				else if (!$lookup && $uicols['name'][$k] == 'contact_phone')
-				{
-					$params['editor'] = true;
-				}
 				else if (isset($uicols['cols_return_extra'][$k]) && ($uicols['cols_return_extra'][$k] != 'T' || $uicols['cols_return_extra'][$k] != 'CH'))
 				{
 					$params['sortable'] = true;
 					$params['searchable'] = true;
+				}
+
+				if (!$lookup && $uicols['name'][$k] == 'contact_phone')
+				{
+					$params['editor'] = true;
+				}
+
+				if ($this->acl_manage && !$lookup && !preg_match('/^loc/i', $uicols['name'][$k]) && in_array($uicols['datatype'][$k], array('V', 'I')))
+				{
+					$params['editor'] = true;
 				}
 
 				switch ($uicols['name'][$k])
@@ -1203,12 +1209,9 @@ JS;
 //			_debug_array($data['datatable']['field']);
 			if (!$lookup)
 			{
-				$parameters = array
-					(
-					'parameter' => array
-						(
-						array
-							(
+				$parameters = array(
+					'parameter' => array(
+						array(
 							'name'	 => 'location_code',
 							'source' => 'location_code'
 						),
@@ -3305,7 +3308,9 @@ JS;
 
 		public function edit_field()
 		{
+			$type_id	 = phpgw::get_var('type_id', 'int', 'GET');
 			$id			 = phpgw::get_var('id', 'int', 'POST');
+
 			$field_name	 = phpgw::get_var('field_name', 'string', 'GET');
 
 			if (!$this->acl_edit)
@@ -3314,7 +3319,7 @@ JS;
 			}
 
 
-			if ($field_name != 'contact_phone')
+			if (!$this->acl_manage && $field_name != 'contact_phone')
 			{
 				return "ERROR";
 			}
@@ -3322,8 +3327,8 @@ JS;
 			if ($id && $field_name)
 			{
 
-				$data = array
-					(
+				$data = array(
+					'type_id'	 => $type_id,
 					'id'		 => $id,
 					'field_name' => $field_name,
 					'value'		 => phpgw::get_var('value')
@@ -3340,8 +3345,9 @@ JS;
 						echo $e->getMessage();
 					}
 				}
+
 				return;
-				true;
+
 			}
 			else
 			{
