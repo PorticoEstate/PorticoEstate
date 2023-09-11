@@ -109,7 +109,21 @@ $current-time-color: #ea4335;
         }
       }
     }
-
+    .row2{
+      margin-top: 5px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .info-types{
+      flex-wrap: nowrap;
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+    }
     .select_building_resource {
       margin-top: 5px;
       display: flex;
@@ -134,9 +148,7 @@ $current-time-color: #ea4335;
           min-width: 15rem;
         }
       }
-      .info-types{
-        flex-wrap: nowrap;
-      }
+
     }
 
 

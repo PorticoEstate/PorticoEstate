@@ -2332,6 +2332,21 @@ input[type=text]:hover {
     flex-grow: 1;
   }
 }
+.calendar .header .row2 {
+  margin-top: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.calendar .header .info-types {
+  flex-wrap: nowrap;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
 .calendar .header .select_building_resource {
   margin-top: 5px;
   display: flex;
@@ -2356,9 +2371,6 @@ input[type=text]:hover {
 }
 .calendar .header .select_building_resource > div > span {
   min-width: 15rem;
-}
-.calendar .header .select_building_resource .info-types {
-  flex-wrap: nowrap;
 }
 .calendar .header .type {
   display: flex;
