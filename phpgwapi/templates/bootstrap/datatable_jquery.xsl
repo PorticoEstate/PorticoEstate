@@ -1331,6 +1331,9 @@
 							fnOnEdited: function(status, sOldValue, sNewCellDisplayValue, aPos0, aPos1, aPos2)
 							{
 								document.getElementById("message").innerHTML += '<br/>' + status;
+								setTimeout(function(){
+									document.getElementById("message").innerHTML = '';
+								}, 1000);
 							},
 							oUpdateParameters: {
 								"id": function(){ return id; }
