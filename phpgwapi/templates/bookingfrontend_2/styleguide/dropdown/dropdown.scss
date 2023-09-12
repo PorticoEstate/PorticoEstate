@@ -159,7 +159,7 @@
   }
 
   .select2-dropdown {
-    padding: 1rem 2rem 1rem 1.5rem;
+    padding: 1rem 1.5rem;
     font-size: 0.875rem;
     border: 0;
     box-shadow: 0px -3px 0px 0px $white, 0px 0px 0px 2px $purple;
@@ -187,6 +187,12 @@
     }
 
     .select2-results { 
+      max-height: 16rem;
+      overflow-y: auto;
+
+      @media (min-width: $media-medium) {
+        max-height: 32rem;
+      }
 
       &__option {
         padding: 0.75rem 1rem;
