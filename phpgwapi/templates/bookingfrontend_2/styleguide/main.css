@@ -1430,7 +1430,7 @@ input[type=text]:hover {
   color: #000000;
 }
 .select2-container--select-v2 .select2-dropdown {
-  padding: 1rem 2rem 1rem 1.5rem;
+  padding: 1rem 1.5rem;
   font-size: 0.875rem;
   border: 0;
   box-shadow: 0px -3px 0px 0px #FFFFFF, 0px 0px 0px 2px #793C8A;
@@ -1450,6 +1450,10 @@ input[type=text]:hover {
 .select2-container--select-v2 .select2-dropdown .select2-search__field:focus-visible {
   outline: 0;
   box-shadow: 0 0 1px 1px rgb(0, 0, 0);
+}
+.select2-container--select-v2 .select2-dropdown .select2-results {
+  max-height: 18rem;
+  overflow-y: auto;
 }
 .select2-container--select-v2 .select2-dropdown .select2-results__option {
   padding: 0.75rem 1rem;
@@ -2057,7 +2061,7 @@ input[type=text]:hover {
 
 .toggle-filter {
   position: relative;
-  padding-right: 3rem;
+  padding-right: 2.5rem;
 }
 .toggle-filter::after {
   content: "\f078";
