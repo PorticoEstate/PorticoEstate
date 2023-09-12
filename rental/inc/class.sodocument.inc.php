@@ -281,12 +281,9 @@
 			$vfs = CreateObject('phpgwapi.vfs');
 			$vfs->override_acl = 1;
 			$path .= "/{$name}";
-			$file = array('string' => $path, 'relatives' => array( RELATIVE_NONE));
 
-			return $vfs->write
-					(
-					array
-						(
+			return $vfs->write(
+					array(
 						'string' => $path,
 						'relatives' => array( RELATIVE_NONE),
 						'content' => file_get_contents($temporary_name)
