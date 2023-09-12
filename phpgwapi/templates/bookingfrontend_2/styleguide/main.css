@@ -1452,8 +1452,13 @@ input[type=text]:hover {
   box-shadow: 0 0 1px 1px rgb(0, 0, 0);
 }
 .select2-container--select-v2 .select2-dropdown .select2-results {
-  max-height: 18rem;
+  max-height: 16rem;
   overflow-y: auto;
+}
+@media (min-width: 768px) {
+  .select2-container--select-v2 .select2-dropdown .select2-results {
+    max-height: 32rem;
+  }
 }
 .select2-container--select-v2 .select2-dropdown .select2-results__option {
   padding: 0.75rem 1rem;

@@ -187,8 +187,12 @@
     }
 
     .select2-results { 
-      max-height: 18rem;
+      max-height: 16rem;
       overflow-y: auto;
+
+      @media (min-width: $media-medium) {
+        max-height: 32rem;
+      }
 
       &__option {
         padding: 0.75rem 1rem;
