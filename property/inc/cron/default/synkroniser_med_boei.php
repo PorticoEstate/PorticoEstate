@@ -1514,7 +1514,7 @@ SQL;
 
 				$this->db2->query($sql2, __LINE__, __FILE__);
 			}
-			
+
 		}
 
 
@@ -1652,7 +1652,7 @@ SQL;
 
 		function oppdater_boa_objekt()
 		{
-			$sql = " SELECT boei_objekt.objekt_id,bydel_id,tjenestested,navn,boei_objekt.eier_id"
+			$sql = " SELECT boei_objekt.objekt_id,bydel_id,tjenestested,navn,boei_objekt.eier_id, kostra_id"
 				. " FROM boei_objekt JOIN fm_location1 ON boei_objekt.objekt_id = fm_location1.loc1"
 				. " WHERE boei_objekt.navn != fm_location1.loc1_name"
 				. " OR  boei_objekt.bydel_id != fm_location1.part_of_town_id"
@@ -1663,13 +1663,14 @@ SQL;
 			while ($this->db->next_record())
 			{
 				$tjenestested = (int)$this->db->f('tjenestested');
+				$kostra_id = (int)$this->db->f('kostra_id');
 				$loc1		  = $this->db->f('objekt_id');
 
 				$mva = 75;
-				if(in_array($tjenestested, array(26550, 26555)))
+				if(in_array($tjenestested, array(26550, 26555)) && $kostra_id != $tjenestested)
 				{
 					$mva = 0;
-					$this->alert_messages[] = "Oppdatert objekt {$loc1} i Portico med tjeneste {$tjenestested}";
+					$this->alert_messages[] = "Objekt {$loc1} i Portico endret tjeneste fra {$kostra_id} til {$tjenestested}";
 				}
 
 				$sql2 = " UPDATE fm_location1 SET "
