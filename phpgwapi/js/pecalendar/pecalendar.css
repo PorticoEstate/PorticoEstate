@@ -2324,6 +2324,18 @@ input[type=text]:hover {
 .calendar .header .date fieldset label {
   display: block;
 }
+.calendar .header .date .date-selector {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+.calendar .header .date .date-selector .pe-btn--circle {
+  border-radius: 50%;
+  padding: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+}
 @media screen and (max-width: 480px) {
   .calendar .header .date fieldset {
     flex-grow: 1;

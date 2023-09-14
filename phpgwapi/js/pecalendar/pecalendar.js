@@ -387,6 +387,16 @@ class PEcalendar {
             date.onchange = (option) => {
                 self.setDate(DateTime.fromJSDate(self.getDateFromSearch(option.target.value)));
             }
+            const nextButton = document.getElementById(this.getId("prevButton"));
+            nextButton.onclick = (e) => {
+                e.stopPropagation();
+                self.setDate(self.currentDate.minus({weeks:1}));
+            }
+            const prevButton = document.getElementById(this.getId("nextButton"));
+            prevButton.onclick = (e) => {
+                e.stopPropagation();
+                self.setDate(self.currentDate.plus({weeks:1}));
+            }
         }
         updateSelectBasic();
         updateDateBasic();
@@ -555,7 +565,17 @@ class PEcalendar {
                 <span class="filter__radio">Måned</span>
             </label> 
           </fieldset>
-        <input id=${this.getId("datetimepicker")} class="js-basic-datepicker" type="text" value="${this.currentDate.toFormat('dd.LL.y')}">
+          <div class="date-selector">
+              <button type="button" id=${this.getId("prevButton")} class="pe-btn  pe-btn-secondary pe-btn--circle">
+                  <span class="sr-only">Forrige</span>
+                  <span class="fas fa-chevron-left" title="Forrige"></span>
+              </button>
+              <input id=${this.getId("datetimepicker")} class="js-basic-datepicker" type="text" value="${this.currentDate.toFormat('dd.LL.y')}">
+              <button type="button" id=${this.getId("nextButton")} class="pe-btn  pe-btn-secondary pe-btn--circle">
+                  <span class="sr-only">Neste</span>
+                  <span class="fas fa-chevron-right" title="Neste"></span>
+              </button>
+          </div>
         
     </div>
     <div class="info-types">

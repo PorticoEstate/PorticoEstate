@@ -98,6 +98,18 @@ $current-time-color: #ea4335;
       }
       input {
       }
+      .date-selector {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+        .pe-btn--circle {
+          border-radius: 50%;
+          padding: 0;
+          width: 2.5rem;
+          height: 2.5rem;
+        }
+      }
     }
     @media screen and (max-width: 480px) {
       .date {
