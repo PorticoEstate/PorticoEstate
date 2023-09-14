@@ -120,6 +120,27 @@ $(document).ready(function ()
 
 });
 
+getRequestData = function (dataSelected, parameters)
+{
+
+	var data = {};
+
+	$.each(parameters.parameter, function (i, val)
+	{
+		data[val.name] = {};
+	});
+
+	var n = 0;
+	for (var n = 0; n < dataSelected.length; ++n)
+	{
+		$.each(parameters.parameter, function (i, val)
+		{
+			data[val.name][n] = dataSelected[n][val.source];
+		});
+	}
+
+	return data;
+};
 
 removeDocument = function (oArgs, parameters)
 {
@@ -141,7 +162,7 @@ removeDocument = function (oArgs, parameters)
 	{
 
 		JqueryPortico.show_message(nTable, result);
-		oTable8.fnDraw();
+		oTable1.fnDraw();
 
 	}, data, 'POST', 'JSON');
 };
