@@ -2141,6 +2141,7 @@
 					$org = $this->organization_bo->read_single($reservation['organization_id']);
 					$log_customer_name = $org['name'];
 					$customer_number =  $org['customer_number'];
+					$payer_organization_number = $org['customer_organization_number'];
 				}
 				else
 				{
@@ -2295,7 +2296,16 @@
 					}
 					else
 					{
-						$header['tekst4'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
+						if (!empty($this->config_data['differentiate_org_payer']) && !empty($payer_organization_number))
+						{
+							$header['tekst3'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
+							$header['tekst4'] = $payer_organization_number;
+						}
+						else
+						{
+							$header['tekst4'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
+						}
+
 						$header['ext_ord_ref'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $customer_number), 0, 15), 15, ' ');
 					}
 
