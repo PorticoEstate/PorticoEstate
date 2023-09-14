@@ -215,6 +215,18 @@
 							</xsl:attribute>
 						</input>
 					</div>
+
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'differentiate org payer')"/>
+						</label>
+						<input type="checkbox" id="field_differentiate_org_payer" name="differentiate_org_payer" value="1">
+							<xsl:if test="config_data/differentiate_org_payer = 1">
+								<xsl:attribute name="checked">checked</xsl:attribute>
+							</xsl:if>
+						</input>
+					</div>
+
 				</fieldset>
 
 				<fieldsset>
