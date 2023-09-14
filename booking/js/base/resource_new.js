@@ -254,7 +254,7 @@ removeELock = function ()
 
 add_participant_limit = function ()
 {
-	var oArgs = {menuaction: 'booking.uiresource.add_paricipant_limit'};
+	var oArgs = {menuaction: 'booking.uiresource.add_participant_limit'};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	var limit_from = $("#participant_limit_from").val();
 	var limit_quantity = $("#participant_limit_quantity").val();
