@@ -34,7 +34,7 @@
 			$reservation_id		 = phpgw::get_var('reservation_id', 'int');
 
 			$reservation = createObject("booking.bo{$reservation_type}")->read_single($reservation_id);
-			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($reservation['resources'], true);
+			$resource_participant_limit_gross = CreateObject('booking.soresource')->get_participant_limit($reservation['resources'], true);
 
 			$resources = $this->resource_bo->so->read(array('filters' => array('id' => $reservation['resources']),'sort' => 'name'));
 			$res_names = array();
@@ -60,26 +60,26 @@
 
 
 
-			$resource_paricipant_limit = false;
+			$resource_participant_limit = false;
 
-			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
+			if(!empty($resource_participant_limit_gross['results'][0]['quantity']))
 			{
-				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];
+				$resource_participant_limit = $resource_participant_limit_gross['results'][0]['quantity'];
 			}
 
 			if(!empty($reservation['participant_limit']))
 			{
-				$resource_paricipant_limit = $reservation['participant_limit'];
+				$resource_participant_limit = $reservation['participant_limit'];
 			}
 			else
 			{
-				$resource_paricipant_limit = $resource_paricipant_limit ? $resource_paricipant_limit : (int)$config['participant_limit'];
+				$resource_participant_limit = $resource_participant_limit ? $resource_participant_limit : (int)$config['participant_limit'];
 			}
 
 			$description = "<h1>{$reservation['resource_info']}</h1>";
 			$description .= !empty($config['participanttext'])? $config['participanttext'] :'';
 
-			if($resource_paricipant_limit)
+			if($resource_participant_limit)
 			{
 				$external_site_address = !empty($config['external_site_address'])? $config['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
 
@@ -141,7 +141,7 @@ ICAL;
 			$participant['reservation_id']	 = $reservation_id;
 
 			$reservation = createObject("booking.bo{$reservation_type}")->read_single($reservation_id);
-			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($reservation['resources'], true);
+			$resource_participant_limit_gross = CreateObject('booking.soresource')->get_participant_limit($reservation['resources'], true);
 
 			$resources = $this->resource_bo->so->read(array('filters' => array('id' => $reservation['resources']),'sort' => 'name'));
 			$res_names = array();
@@ -157,14 +157,14 @@ ICAL;
 				$reservation['group'] = $this->group_bo->read_single($reservation['group_id']);
 			}
 
-			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
+			if(!empty($resource_participant_limit_gross['results'][0]['quantity']))
 			{
-				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];
+				$resource_participant_limit = $resource_participant_limit_gross['results'][0]['quantity'];
 			}
 
 			if(!$reservation['participant_limit'])
 			{
-				$reservation['participant_limit'] = $resource_paricipant_limit ? $resource_paricipant_limit : (int)$config['participant_limit'];
+				$reservation['participant_limit'] = $resource_participant_limit ? $resource_participant_limit : (int)$config['participant_limit'];
 			}
 
 			$reservation['participant_limit'] = $reservation['participant_limit'] ? $reservation['participant_limit'] : (int)$config['participant_limit'];

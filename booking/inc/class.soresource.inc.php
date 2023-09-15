@@ -522,7 +522,7 @@
 		}
 
 
-		function get_paricipant_limit( $resource, $check_current = false)
+		function get_participant_limit( $resource, $check_current = false)
 		{
 
 			$resource_ids = array(-1); // in case of empty: don't  break the query
@@ -580,7 +580,7 @@
 			);
 		}
 
-		function add_paricipant_limit( $resource_id, $_limit_from, $limit_quantity )
+		function add_participant_limit( $resource_id, $_limit_from, $limit_quantity )
 		{
 			$ret = 0;
 			if (!$resource_id || !$_limit_from)

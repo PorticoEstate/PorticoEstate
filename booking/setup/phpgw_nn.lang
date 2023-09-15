@@ -927,3 +927,4 @@ select at least one recipient	booking	nn	Velg minst ein adressat
 hidden in frontend	booking	nn	Skjult i frontend
 activate prepayment	booking	nn	Aktiver forhåndsbetaling (Vipps)
 access instruction	booking	nn	informasjon for tilgang
+differentiate org payer	booking	nn	Differensier mellom organisasjon og betaler
