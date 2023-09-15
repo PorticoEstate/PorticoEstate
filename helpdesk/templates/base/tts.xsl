@@ -188,7 +188,7 @@
 									<xsl:value-of select="$lang_reverse_alternative"/>
 								</label>
 								<input type="hidden" id="set_user_alternative_lid" name="values[set_user_alternative_lid]" />
-								<input type="text" id="set_user_alternative_name" name="values[set_user_alternative_name]" class="pure-input-3-4">
+								<input type="text" id="set_user_alternative_name" name="values[set_user_alternative_name]" class="pure-input-3-4" title="Ressursnr eller alias">
 								</input>
 								<div class="pure-custom"  id="set_user_container_alternative"/>
 							</div>
