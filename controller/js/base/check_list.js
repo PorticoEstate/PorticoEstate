@@ -1,6 +1,19 @@
 $(document).ready(function ()
 {
 
+	forward_to_case = function (check_list_id)
+	{
+		var check_list_id = $("#check_list_id").val();
+		
+		var oArgs = {
+			menuaction: 'controller.uicase.add_case',
+			check_list_id: check_list_id
+		};
+		var requestUrl = phpGWLink('index.php', oArgs);
+		//open a new window with the url
+		window.open(requestUrl, '_self');	
+	}
+	
 	$("#choose-child-on-component").select2({
 		placeholder: lang['Select'],
 		language: "no",
