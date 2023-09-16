@@ -1022,6 +1022,7 @@
 
 		function add_case()
 		{
+			$set_completet_checklist = phpgw::get_var('set_completet_checklist', 'bool');
 			$config = CreateObject('phpgwapi.config', 'controller');
 			$config->read();
 			$mandatory_location = $config->config_data['control_mandatory_location'];
@@ -1149,6 +1150,7 @@
 			
 			$js = <<<JS
 				var enable_add_case = true;
+				var set_completet_checklist = {$set_completet_checklist};
 
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $js);

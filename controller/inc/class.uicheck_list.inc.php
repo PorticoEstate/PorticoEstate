@@ -492,11 +492,15 @@
 
 			if($this->edit)
 			{
+				$set_completet_checklist = !$item_string && !$location_code ? true : false;
 				$this->so->set_completed_item($check_list_id, $location_id, $item_id);
 			}
 
-			self::redirect(array('menuaction' => 'controller.uicase.add_case',
-					'check_list_id' => $check_list_id));
+			self::redirect(array(
+				'menuaction' => 'controller.uicase.add_case',
+				'check_list_id' => $check_list_id,
+				'set_completet_checklist' => $set_completet_checklist
+			));
 
 		}
 
