@@ -1,3 +1,5 @@
+/* global set_completet_checklist */
+
 $(document).ready(function ()
 {
 
@@ -19,7 +21,7 @@ $(document).ready(function ()
 
 	});
 
-	if(set_completet_checklist == 1)
+	if(typeof(set_completet_checklist) !== 'undefined' && set_completet_checklist == 1)
 	{
 		
 		if ($("#update-check-list-status-value").val() == 1)
