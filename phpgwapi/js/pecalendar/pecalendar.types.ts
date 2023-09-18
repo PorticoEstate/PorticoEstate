@@ -1,5 +1,5 @@
 interface IEvent {
-    type: string
+    type: 'booking' | 'allocation' | 'event' | 'temporary'
     id: number
     id_string?: string
     active: number

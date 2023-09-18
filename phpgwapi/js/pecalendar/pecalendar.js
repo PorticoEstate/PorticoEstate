@@ -277,7 +277,6 @@ class PEcalendar {
     }
 
 
-
     /**
      * Renders events in the calendar. Can either update a specific event or refresh all events.
      *
@@ -332,7 +331,7 @@ class PEcalendar {
     updateSingleEvent(content, eventId) {
         // Locate the event using the provided eventId
         let event = this.events.find(e => e.id === eventId);
-        if(!event) event = this.tempEvents.find(e => e.id === eventId);
+        if (!event) event = this.tempEvents.find(e => e.id === eventId);
         if (!event) return;
 
         // Remove the existing DOM representation of the event
@@ -369,7 +368,7 @@ class PEcalendar {
          * @type {Partial<IEvent> & {id: string}} - An array of event objects.
          */
         const tempEvent = {
-            id: `temp-${this.tempEvents.length + 1}`,
+            id: `temp-${Date.now()}`,
             name: 'Ny søknad',
             from: startTime,
             to: endTime,
@@ -385,9 +384,6 @@ class PEcalendar {
 
         return tempEvent;
     }
-
-
-
 
 
     // Function to add a temporary event to the content
@@ -456,8 +452,6 @@ class PEcalendar {
     }
 
 
-
-
     /**
      * Adds one hour to the provided time string and returns the updated time string.
      *
@@ -506,7 +500,7 @@ class PEcalendar {
 
         // If the event is temporary, ensure it has a minimum height equivalent to 1 hour
         if (event.type === "temporary" && span < this.hourParts) {
-            span = this.hourParts -1;
+            span = this.hourParts - 1;
         }
 
         // Set the id and grid properties of the event element
@@ -559,10 +553,8 @@ class PEcalendar {
     }
 
 
-
-
     /**
-     * Removes a temporary event from the content.
+     * Removes a temporary event from the content and the tempEvents array.
      *
      * @param {Partial<IEvent>} tempEvent - The temporary event object containing an ID.
      */
@@ -572,6 +564,9 @@ class PEcalendar {
 
         // Remove the element if found
         if (oldEventElement) oldEventElement.remove();
+
+        // Remove the event from the tempEvents array
+        this.tempEvents = this.tempEvents.filter(event => event.id !== tempEvent.id);
     }
 
 
@@ -697,7 +692,7 @@ class PEcalendar {
             this.dom.replaceChildren(...[header, body, this.modalElem]);
 
             const building = document.getElementById(this.getId("building"));
-            if(building) {
+            if (building) {
                 building.onchange = (option) => {
                     self.resource_id = null;
                     self.loadBuilding(+option.target.value);
@@ -733,17 +728,61 @@ class PEcalendar {
             const nextButton = document.getElementById(this.getId("prevButton"));
             nextButton.onclick = (e) => {
                 e.stopPropagation();
-                self.setDate(self.currentDate.minus({weeks:1}));
+                self.setDate(self.currentDate.minus({weeks: 1}));
             }
             const prevButton = document.getElementById(this.getId("nextButton"));
             prevButton.onclick = (e) => {
                 e.stopPropagation();
-                self.setDate(self.currentDate.plus({weeks:1}));
+                self.setDate(self.currentDate.plus({weeks: 1}));
             }
         }
         updateSelectBasic();
         updateDateBasic();
         this.setupEventInteractions();
+    }
+
+    /**
+     * Checks if two date-time ranges overlap on the same date and have overlapping resources.
+     *
+     * @param {Partial<IEvent>} event1 - The first event.
+     * @param {Partial<IEvent>} event2 - The second event.
+     * @returns {boolean} - Returns true if the two date-time ranges overlap on the same date and have overlapping resources, false otherwise.
+     */
+    doesEventsOverlap(event1, event2) {
+        if (event1.id === event2.id) {
+            return false;
+        }
+        if (event1.date !== event2.date) {
+            // Different days, no overlap
+            return false;
+        }
+        if(event2.type === 'allocation' || event2.type === 'booking') {
+            return false;
+        }
+
+        const isTimeOverlapping = (event1.from < event2.to && event1.to > event2.from);
+        const isResourceOverlapping = event1.resources.some(resource1 =>
+            event2.resources.some(resource2 => resource1.id === resource2.id)
+        );
+
+        return isTimeOverlapping && isResourceOverlapping;
+    }
+
+
+    /**
+     * Checks if a new temporary event can be created without overlapping existing events.
+     *
+     * @param {Partial<IEvent>} newEvent - The new temporary event.
+     * @returns {boolean} - Returns true if the new event can be created without overlaps, false otherwise.
+     */
+    canCreateTemporaryEvent(newEvent) {
+        for (let event of [...this.events, ...this.tempEvents]) {
+            if (this.doesEventsOverlap(newEvent, event)) {
+                console.log("OVERLAP", newEvent, event);
+                return false;  // There's an overlap
+            }
+        }
+        return true;  // No overlaps found
     }
 
 
@@ -772,36 +811,43 @@ class PEcalendar {
                 dragStart = {date: tempEvent.date, time: tempEvent.from};  // Get date/time from mouse event
                 dragEnd = {date: tempEvent.date, time: tempEvent.to};  // Get date/time from mouse event
 
-                if (e.clientY - rect.top < 10) { // 10px threshold for top edge
-                    isResizing = true;
-                    resizeDirection = 'top';
-                } else if (rect.bottom - e.clientY < 10) { // 10px threshold for bottom edge
+                // if (e.clientY - rect.top < 32) { // 32px threshold for top edge
+                //     isResizing = true;
+                //     resizeDirection = 'top';
+                if (rect.bottom - e.clientY < 32) { // 32px threshold for bottom edge
                     isResizing = true;
                     resizeDirection = 'bottom';
                 }
                 return;
             }
 
-            isDragging = true;
             dragEnd = null;
             dragStart = this.getDateTimeFromMouseEvent(e, this.content);  // Get date/time from mouse event
             dragStart.time = dragStart.time.split(":")[0] + ":00:00";
             const thirtyMinutesLater = dragStart.time.split(":")[0] + ":30:00";
+            tempEvent = this.createTemporaryEvent(dragStart.time, thirtyMinutesLater, dragStart.date);
+
+            if (!this.canCreateTemporaryEvent(tempEvent)) {
+                console.log("CANT")
+                dragStart = null
+                this.removeTempEvent(tempEvent);
+                return;
+            }
+            isDragging = true;
 
             // Create a temporary event for the current drag start time
-            tempEvent = this.createTemporaryEvent(dragStart.time, thirtyMinutesLater, dragStart.date);
         });
 
         // Event Listener for mousemove - To track the drag movement and update event time
         this.content.addEventListener('mousemove', (e) => {
-            if (isResizing) {
+            if (isResizing || isDragging) {
                 dragEnd = this.getDateTimeFromMouseEvent(e, this.content);
-                this.updateTemporaryEvent(this.content, tempEvent, dragStart.time, dragEnd.time);
-                return;
-            }
-            if (isDragging) {
-                dragEnd = this.getDateTimeFromMouseEvent(e, this.content);
-                this.updateTemporaryEvent(this.content, tempEvent, dragStart.time, dragEnd.time);
+                if (this.canCreateTemporaryEvent({...tempEvent,
+                    from: dragStart.time > dragEnd.time ? dragEnd.time : dragStart.time,
+                    to: dragStart.time > dragEnd.time ? dragStart.time : dragEnd.time,
+                })) {
+                    this.updateTemporaryEvent(this.content, tempEvent, dragStart.time, dragEnd.time);
+                }
             }
         });
 
@@ -816,9 +862,14 @@ class PEcalendar {
                 isDragging = false;
                 if (dragEnd) {
                     dragEnd = this.getDateTimeFromMouseEvent(e, this.content);
-                    this.updateTemporaryEvent(this.content, tempEvent, dragStart.time, dragEnd.time);
+                    if (this.canCreateTemporaryEvent({...tempEvent,
+                        from: dragStart.time > dragEnd.time ? dragEnd.time : dragStart.time,
+                        to: dragStart.time > dragEnd.time ? dragStart.time : dragEnd.time,
+                    })) {
+                        this.updateTemporaryEvent(this.content, tempEvent, dragStart.time, dragEnd.time);
+                    }
                     // Redirect or perform further actions after the event has been created/updated
-                    this.timeSlotSelected(tempEvent);
+                    // this.timeSlotSelected(tempEvent);
                 }
             }
         });
@@ -1187,7 +1238,6 @@ class PEcalendar {
     }
 
 
-
     /**
      * Calculates the start and end hours for the calendar based on the available seasons.
      * The method determines the minimum start hour and the maximum end hour from the seasons and
@@ -1235,7 +1285,7 @@ class PEcalendar {
      */
     updateModal(date, from, to) {
         // Exit early if modalElem doesn't exist
-        if(!this.modalElem) {
+        if (!this.modalElem) {
             return;
         }
 
@@ -1259,7 +1309,8 @@ class PEcalendar {
      *
      * @returns {HTMLElement} - The modal element.
      */
-    createModal() {``
+    createModal() {
+        ``
         // If modalElem already exists, return it
         if (this.modalElem) {
             return this.modalElem;
