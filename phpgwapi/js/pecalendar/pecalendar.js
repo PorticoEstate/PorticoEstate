@@ -760,8 +760,6 @@ class PEcalendar {
         let tempEvent = null;
         let isResizing = false;
         let resizeDirection = null;
-        const oneHourHeight = parseFloat(getComputedStyle(this.content).getPropertyValue('--one-hour-height')); // assuming you have a CSS variable `--one-hour-height` that defines the height of one hour
-        const stepHeight = oneHourHeight / this.hourParts;
         // Event Listener for mousedown - To initiate the drag process
         this.content.addEventListener('mousedown', (e) => {
 
