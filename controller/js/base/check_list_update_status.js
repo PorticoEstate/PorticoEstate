@@ -15,7 +15,24 @@ $(document).ready(function ()
 			}
 		}
 
-		var thisForm = $(this);
+		update_check_list_status(this);
+
+	});
+
+	if(set_completet_checklist == 1)
+	{
+		
+		if ($("#update-check-list-status-value").val() == 1)
+		{
+			$("#update-check-list-status").submit();
+		}
+
+	}
+
+	// UPDATE CHECKLIST STATUS
+	function update_check_list_status(form)
+	{
+		var thisForm = form;//$(this);
 		var requestUrl = $(thisForm).attr("action");
 		var submitBnt = $(thisForm).find("input[type='submit']");
 
@@ -79,7 +96,7 @@ $(document).ready(function ()
 				}
 			}
 		});
-	});
+	}
 });
 
 
