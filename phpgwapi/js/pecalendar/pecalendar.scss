@@ -410,6 +410,8 @@ $current-time-color: #ea4335;
       justify-content: space-between;
       margin-left: 1.5rem;
       opacity: 0.75;
+      resize: vertical;
+      overflow: auto;
 
       .dots {
         height: 16px;
