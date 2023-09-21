@@ -606,6 +606,8 @@ class PEcalendar {
     updateTempEventPill(event) {
         const pill = document.getElementById(`#pill-${event.id}`);
 
+        console.log(pill);
+
         if (pill) {
             pill.querySelector('.start-end').innerHTML = `${event.from} to ${event.to}`;
         }
@@ -931,28 +933,46 @@ class PEcalendar {
 
 
     /**
-     * * Checks if a new temporary event can be created without overlapping existing events and is not in the past.
-     * *
+     * Checks if a new temporary event can be created without overlapping existing events
+     * and is within the allowed hours.
+     *
      * @param {Partial<IEvent>} newEvent - The new temporary event.
-     * * @returns {boolean} - Returns true if the new event can be created without overlaps and is not in the past, false otherwise.
+     * @returns {boolean} - Returns true if the new event can be created without overlaps
+     *                      and is within the allowed hours, false otherwise.
      */
     canCreateTemporaryEvent(newEvent) {
+        // Parse the hours and minutes from the from and to properties of the new event
+        const [startHour, startMinute] = newEvent.from.split(':').map(Number);
+        const [endHour, endMinute] = newEvent.to.split(':').map(Number);
 
-        // Check if the event is in the past
-        const currentDateTime = new Date();
-        const newEventDateTime = new Date(newEvent.date + 'T' + newEvent.from);
-        if (newEventDateTime < currentDateTime) {
-            return false; // The event is in the past
+        // Construct DateTime objects for start and end of the event
+        const eventStart = luxon.DateTime.fromObject({ hour: startHour, minute: startMinute });
+        const eventEnd = luxon.DateTime.fromObject({ hour: endHour, minute: endMinute });
+
+        // Construct DateTime objects for allowed start and end hours
+        const allowedStart = luxon.DateTime.fromObject({ hour: this.startHour, minute: 0 });
+        const allowedEnd = luxon.DateTime.fromObject({ hour: this.endHour, minute: 0 });
+
+        // Check if the event is within the allowed hours
+        if (eventStart < allowedStart || eventEnd > allowedEnd) {
+            return false; // Event is outside of allowed hours
+        }
+        // Check if the event is in the future
+        const currentDate = luxon.DateTime.local();
+        const eventDate = luxon.DateTime.fromISO(newEvent.date);
+        if (eventDate < currentDate || (eventDate.equals(currentDate) && endHour <= currentDate.hour)) {
+            return false; // Event is in the past
         }
 
+        // Check for overlaps with existing events
         for (let event of [...this.events, ...this.tempEvents]) {
             if (this.doesEventsOverlap(newEvent, event)) {
-                console.log("OVERLAP", newEvent, event);
-                return false;  // There's an overlap
+                return false; // There's an overlap with an existing event
             }
         }
-        return true;  // No overlaps found
+        return true; // No overlaps found and is within the allowed hours
     }
+
 
 
     /**
