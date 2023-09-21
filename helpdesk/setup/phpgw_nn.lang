@@ -258,3 +258,4 @@ Asynchronous Tasks	helpdesk	nn	Systemjobbar
 helpdesk_async_task_anonyminizer_enabled	helpdesk	nn	Anonymiser data
 entry time	helpdesk	nn	Registrert tid
 date closed	helpdesk	nn	Avslutta dato
+close ticket	helpdesk	nn	Avslutt sak med notat

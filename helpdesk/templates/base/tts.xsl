@@ -448,7 +448,7 @@
 		var location_item_id = '<xsl:value-of select="location_item_id"/>';
 
 		//	var initialSelection = <xsl:value-of select="resources_json"/>;
-		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address')"/>
+		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address', 'Note')"/>
 
 		var parent_cat_id = <xsl:value-of select="parent_cat_id"/>;
 
@@ -473,6 +473,34 @@
 		display: inline-block;
 		}
 
+        .button-success,
+        .button-error,
+        .button-warning,
+        .button-secondary {
+            color: white;
+            border-radius: 4px;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-success {
+            background: rgb(28, 184, 65);
+            /* this is a green */
+        }
+
+        .button-error {
+            background: rgb(202, 60, 60);
+            /* this is a maroon */
+        }
+
+        .button-warning {
+            background: rgb(223, 117, 20);
+            /* this is an orange */
+        }
+
+        .button-secondary {
+            background: rgb(66, 184, 221);
+            /* this is a light blue */
+        }
 
 	</style>
 	<dl>
