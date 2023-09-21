@@ -868,12 +868,20 @@ class PEcalendar {
 
 
     /**
-     * Checks if a new temporary event can be created without overlapping existing events.
-     *
+     * * Checks if a new temporary event can be created without overlapping existing events and is not in the past.
+     * *
      * @param {Partial<IEvent>} newEvent - The new temporary event.
-     * @returns {boolean} - Returns true if the new event can be created without overlaps, false otherwise.
+     * * @returns {boolean} - Returns true if the new event can be created without overlaps and is not in the past, false otherwise.
      */
     canCreateTemporaryEvent(newEvent) {
+
+        // Check if the event is in the past
+        const currentDateTime = new Date();
+        const newEventDateTime = new Date(newEvent.date + 'T' + newEvent.from);
+        if (newEventDateTime < currentDateTime) {
+            return false; // The event is in the past
+        }
+
         for (let event of [...this.events, ...this.tempEvents]) {
             if (this.doesEventsOverlap(newEvent, event)) {
                 console.log("OVERLAP", newEvent, event);
