@@ -121,7 +121,7 @@ $current-time-color: #ea4335;
         }
       }
     }
-    .row2{
+    .calendar-settings {
       margin-top: 5px;
       display: flex;
       flex-direction: row;
@@ -130,6 +130,21 @@ $current-time-color: #ea4335;
       flex-wrap: wrap;
       gap: 8px;
     }
+    .temp-event-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;  /* space between pills */
+      .temp-event-pill {
+        padding: 0px 10px;
+        border-radius: 15px;
+        //background-color: #EFEFEF;
+        display: flex;
+        align-items: center;
+        gap: 5px; /* space between text and 'x' */
+      }
+    }
+
+
     .info-types{
       flex-wrap: nowrap;
       display: flex;
@@ -179,7 +194,7 @@ $current-time-color: #ea4335;
 
 
   .calendar-body {
-
+    user-select: none;
     overflow-x: scroll;
     display: grid;
     grid-template-rows: $days-height auto;
@@ -410,6 +425,19 @@ $current-time-color: #ea4335;
       justify-content: space-between;
       margin-left: 1.5rem;
       opacity: 0.75;
+      //resize: vertical;
+      //overflow: auto;
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 10px;  /* Define the height of the resizable area at the bottom */
+        cursor: ns-resize;  /* Two-sided vertical arrow */
+        z-index: 2;  /* Ensure it's on top */
+      }
 
       .dots {
         height: 16px;

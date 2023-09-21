@@ -2344,7 +2344,7 @@ input[type=text]:hover {
     flex-grow: 1;
   }
 }
-.calendar .header .row2 {
+.calendar .header .calendar-settings {
   margin-top: 5px;
   display: flex;
   flex-direction: row;
@@ -2352,6 +2352,18 @@ input[type=text]:hover {
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
+}
+.calendar .header .temp-event-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* space between pills */
+}
+.calendar .header .temp-event-pills .temp-event-pill {
+  padding: 0px 10px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* space between text and 'x' */
 }
 .calendar .header .info-types {
   flex-wrap: nowrap;
@@ -2395,6 +2407,7 @@ input[type=text]:hover {
   height: 14px;
 }
 .calendar .calendar-body {
+  user-select: none;
   overflow-x: scroll;
   display: grid;
   grid-template-rows: 3em auto;
@@ -2589,6 +2602,17 @@ input[type=text]:hover {
   justify-content: space-between;
   margin-left: 1.5rem;
   opacity: 0.75;
+}
+.calendar .calendar-body .event-temporary::after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 10px; /* Define the height of the resizable area at the bottom */
+  cursor: ns-resize; /* Two-sided vertical arrow */
+  z-index: 2; /* Ensure it's on top */
 }
 .calendar .calendar-body .event-temporary .dots {
   height: 16px;
