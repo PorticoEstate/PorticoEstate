@@ -382,6 +382,7 @@ class PEcalendar {
         // Append the event to the tempEvents array
         this.tempEvents.push(tempEvent);
 
+        this.createTempEventPill(tempEvent);
         return tempEvent;
     }
 
@@ -550,7 +551,63 @@ class PEcalendar {
 
         // Render the updated event
         this.renderSingleEvent(container, updatedEvent);
+        this.updateTempEventPill(tempEvent);
     }
+
+    /**
+     * Updates the content of a pill representing a temporary event.
+     *
+     * @param {Partial<IEvent>} event - The temporary event whose details need to be displayed on the pill.
+     */
+    updateTempEventPill(event) {
+        const pill = document.getElementById(`#pill-${event.id}`);
+
+        if (pill) {
+            pill.querySelector('.start-end').innerHTML = `${event.from} to ${event.to}`;
+        }
+    }
+
+    formatDateTimeInterval(currentDate, from, to) {
+        const dateObj = DateTime.fromISO(currentDate, { locale: 'nb' });
+        const fromTime = DateTime.fromISO(`${currentDate}T${from}`, { locale: 'nb' });
+        const toTime = DateTime.fromISO(`${currentDate}T${to}`, { locale: 'nb' });
+
+        const formattedDate = dateObj.toFormat('d. LLL');
+        const formattedFromTime = fromTime.toFormat('HHmm');
+        const formattedToTime = toTime.toFormat('HHmm');
+
+        return `${formattedDate} ${formattedFromTime}-${formattedToTime}`;
+    }
+
+    /**
+     * Creates a pill in the header representing a temporary event.
+     * The pill contains the event's time range and a button to remove the event.
+     *
+     * @param {Partial<IEvent>} event - The temporary event to be represented by the pill.
+     */
+    createTempEventPill(event) {
+        const container = document.getElementById(this.getId("tempEventPills"))
+        // Create a new pill element
+        const pill = this.createElement('span', 'temp-event-pill filter-group',
+            `
+                ${event.resources[0].name} <span class="start-end">${this.formatDateTimeInterval(event.date, event.from, event.to)}</span>
+            `
+        );
+        pill.id = `pill-${event.id}`;
+        const closeButton = this.createElement('button', 'close pe-btn  pe-btn--transparent');
+        closeButton.type = "button";
+        closeButton.innerHTML = '<span aria-hidden="true">&times;</span>';
+        closeButton.addEventListener('click', () => {
+            this.removeTempEvent(event);
+            pill.remove();
+        });
+        // Attach a click event to the 'x' to remove the event
+        pill.appendChild(closeButton)
+        // Append the pill to the header
+        container.appendChild(pill);
+    }
+
+
 
 
     /**
@@ -799,9 +856,16 @@ class PEcalendar {
         let tempEvent = null;
         let isResizing = false;
         let resizeDirection = null;
+
+        // Flag to determine if the touch event is a simple tap
+        let isTouchTap = false;
+
         // Event Listener for mousedown - To initiate the drag process
         this.content.addEventListener('mousedown', (e) => {
-
+            if(isTouchTap) {
+                return;
+            }
+            console.log("ISCLICK")
             const target = e.target;
 
             // Check if the clicked element is the top or bottom of the temporary event
@@ -825,14 +889,25 @@ class PEcalendar {
             dragStart = this.getDateTimeFromMouseEvent(e, this.content);  // Get date/time from mouse event
             dragStart.time = dragStart.time.split(":")[0] + ":00:00";
             const thirtyMinutesLater = dragStart.time.split(":")[0] + ":30:00";
-            tempEvent = this.createTemporaryEvent(dragStart.time, thirtyMinutesLater, dragStart.date);
+            const resource = this.resources[this.resource_id];
 
-            if (!this.canCreateTemporaryEvent(tempEvent)) {
+            const testEvent = {
+                id: `TOTEST`,
+                from: dragStart.time,
+                to: thirtyMinutesLater,
+                date: dragStart.date,
+                resources: [
+                    resource
+                ]
+            };
+
+            if (!this.canCreateTemporaryEvent(testEvent)) {
                 console.log("CANT")
                 dragStart = null
-                this.removeTempEvent(tempEvent);
                 return;
             }
+            tempEvent = this.createTemporaryEvent(dragStart.time, thirtyMinutesLater, dragStart.date);
+
             isDragging = true;
 
             // Create a temporary event for the current drag start time
@@ -874,8 +949,7 @@ class PEcalendar {
             }
         });
 
-        // Flag to determine if the touch event is a simple tap
-        let isTouchTap = true;
+
 
         // For Mobile Touch (No Drag)
         this.content.addEventListener('touchstart', (e) => {
@@ -898,6 +972,7 @@ class PEcalendar {
             e.preventDefault();
             if (isTouchTap) {
                 this.timeSlotSelected(tempEvent);
+                isTouchTap = false;
             }
         });
     }
@@ -1001,7 +1076,7 @@ class PEcalendar {
         header.insertAdjacentHTML(
             'afterbegin',
             `
-<div class="select_building_resource">
+    <div class="select_building_resource">
         <div>
            ${``
                 // <select id=${this.getId("building")} class="js-select-basic">
@@ -1017,51 +1092,51 @@ class PEcalendar {
             
     
         </div>
-        
     </div>
-    <div class="row2">
-    <div class="date">
-          <fieldset>
-           <label class="filter invisible">
-              <input type="radio" name="filter" value="day"/>
-                <span class="filter__radio">Dag</span>
-            </label> 
-            <label class="filter">
-              <input type="radio" name="filter" value="week" checked/>
-                <span class="filter__radio">Uke</span>
-            </label>
-            <label class="filter invisible">
-              <input type="radio" name="filter" value="month"/>
-                <span class="filter__radio">Måned</span>
-            </label> 
-          </fieldset>
-          <div class="date-selector">
-              <button type="button" id=${this.getId("prevButton")} class="pe-btn  pe-btn-secondary pe-btn--circle">
-                  <span class="sr-only">Forrige</span>
-                  <span class="fas fa-chevron-left" title="Forrige"></span>
-              </button>
-              <input id=${this.getId("datetimepicker")} class="js-basic-datepicker" type="text" value="${this.currentDate.toFormat('dd.LL.y')}">
-              <button type="button" id=${this.getId("nextButton")} class="pe-btn  pe-btn-secondary pe-btn--circle">
-                  <span class="sr-only">Neste</span>
-                  <span class="fas fa-chevron-right" title="Neste"></span>
-              </button>
-          </div>
-        
-    </div>
-    <div class="info-types">
-            <div class="type text-small">
-                <img class="event-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
-                Arrangement
-            </div>
-            <div class="type text-small">
-                <img class="booking-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
-                Interntildeling
-            </div>
-            <div class="type text-small">
-                <img class="allocation-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
-                Tildeling
-            </div>
+    <div  id=${this.getId("tempEventPills")} class="temp-event-pills"></div>
+    <div class="calendar-settings">
+        <div class="date">
+              <fieldset>
+               <label class="filter invisible">
+                  <input type="radio" name="filter" value="day"/>
+                    <span class="filter__radio">Dag</span>
+                </label> 
+                <label class="filter">
+                  <input type="radio" name="filter" value="week" checked/>
+                    <span class="filter__radio">Uke</span>
+                </label>
+                <label class="filter invisible">
+                  <input type="radio" name="filter" value="month"/>
+                    <span class="filter__radio">Måned</span>
+                </label> 
+              </fieldset>
+              <div class="date-selector">
+                  <button type="button" id=${this.getId("prevButton")} class="pe-btn  pe-btn-secondary pe-btn--circle">
+                      <span class="sr-only">Forrige</span>
+                      <span class="fas fa-chevron-left" title="Forrige"></span>
+                  </button>
+                  <input id=${this.getId("datetimepicker")} class="js-basic-datepicker" type="text" value="${this.currentDate.toFormat('dd.LL.y')}">
+                  <button type="button" id=${this.getId("nextButton")} class="pe-btn  pe-btn-secondary pe-btn--circle">
+                      <span class="sr-only">Neste</span>
+                      <span class="fas fa-chevron-right" title="Neste"></span>
+                  </button>
+              </div>
+            
         </div>
+        <div class="info-types">
+                <div class="type text-small">
+                    <img class="event-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
+                    Arrangement
+                </div>
+                <div class="type text-small">
+                    <img class="booking-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
+                    Interntildeling
+                </div>
+                <div class="type text-small">
+                    <img class="allocation-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
+                    Tildeling
+                </div>
+            </div>
     </div>
     
     
