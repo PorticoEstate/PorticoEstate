@@ -318,6 +318,10 @@ $current-time-color: #ea4335;
       border-right: 1px solid $grid-color;
     }
 
+    .past-day, .past-hour {
+      background-color: #eaeaea;
+    }
+
     .filler-col {
       grid-row: 1 / -1;
       grid-column: 2;
@@ -439,10 +443,13 @@ $current-time-color: #ea4335;
         z-index: 2;  /* Ensure it's on top */
       }
 
-      .dots {
+      .dots-container {
         height: 16px;
         width: 16px;
-        filter: invert(100%);
+        i {
+          color: white;
+        }
+
       }
     }
 

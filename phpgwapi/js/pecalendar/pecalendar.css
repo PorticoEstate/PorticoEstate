@@ -2518,6 +2518,9 @@ input[type=text]:hover {
 .calendar .calendar-body .col {
   border-right: 1px solid #dadce0;
 }
+.calendar .calendar-body .past-day, .calendar .calendar-body .past-hour {
+  background-color: #eaeaea;
+}
 .calendar .calendar-body .filler-col {
   grid-row: 1/-1;
   grid-column: 2;
@@ -2614,10 +2617,12 @@ input[type=text]:hover {
   cursor: ns-resize; /* Two-sided vertical arrow */
   z-index: 2; /* Ensure it's on top */
 }
-.calendar .calendar-body .event-temporary .dots {
+.calendar .calendar-body .event-temporary .dots-container {
   height: 16px;
   width: 16px;
-  filter: invert(100%);
+}
+.calendar .calendar-body .event-temporary .dots-container i {
+  color: white;
 }
 .calendar .calendar-body .info {
   background: #FFF;

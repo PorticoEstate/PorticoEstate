@@ -543,15 +543,24 @@ class PEcalendar {
         e.style.gridColumn = `${+date.from.toFormat("c")} / span 1`;
         e.style.gridRow = `${row + rowStartAdd} / span ${span - rowStartAdd + rowStopAdd}`;
 
-        // Create a "dots" button inside the event element
-        const dots = this.createDotsElement();
-        e.appendChild(dots);
 
-        // Associate an info popup with the event element
-        this.addInfoPopup(e, dots, event);
+        if(event.type === 'temporary') {
+            // Create a "dots" button inside the event element
+            const editElement = this.createEditElement();
+            e.appendChild(editElement);
+        } else {
+            // Create a "dots" button inside the event element
+            const dots = this.createDotsElement();
+            e.appendChild(dots);
 
-        // Return the constructed event element
+            // Associate an info popup with the event element
+            this.addInfoPopup(e, dots, event);
+
+            // Return the constructed event element
+        }
         return e;
+
+
     }
 
 
@@ -707,6 +716,28 @@ class PEcalendar {
         return dots;
     }
 
+    /**
+     * Creates and returns a button element with a pen icon.
+     *
+     * @returns {HTMLButtonElement} - Returns a button element containing the dots image.
+     */
+    createEditElement() {
+        // Create a button element with the class "dots-container"
+        const btn = this.createElement("button", "dots-container");
+
+        // Create an image element with the class "dots"
+        let icon = this.createElement('i', 'fas fa-pen');
+
+        // Set the source of the image to a specific path
+        // img.src = phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false);
+
+        // Append the image to the button element
+        btn.appendChild(icon);
+
+        // Return the button element
+        return btn;
+    }
+
 
     createCalendarDom() {
         if (!this.currentDate) return;
@@ -757,19 +788,50 @@ class PEcalendar {
         content.id = this.getId("content");
         content.style.cssText = `grid-template-rows: repeat(${(this.endHour - this.startHour) * this.hourParts}, calc(3rem/${this.hourParts}));`
 
-        // Lines
-        // Columns
-        for (let column = 1; column <= 7; column++) {
-            const col = this.createElement("div", "col");
-            col.style.gridColumn = `${column} / span 1`;
-            col.style.gridRow = `1 / span ${(this.endHour - this.startHour + 1) * this.hourParts}`
-            content.appendChild(col);
-        }
+
+        const currentDate = luxon.DateTime.local();
+        const now = luxon.DateTime.local();
+
+
+        //Lines
         // Rows
         for (let hour = this.startHour; hour < this.endHour; hour++) {
             const time = this.createElement("div", "row");
             time.style.gridRow = `${((hour - this.startHour) * this.hourParts) + 1} / span ${this.hourParts}`;
             content.appendChild(time);
+        }
+
+        // Columns
+        for (let column = 1; column <= 7; column++) {
+            const colDate = this.firstDayOfCalendar.plus({ days: column - 1 });
+            const col = this.createElement("div", "col");
+
+            // Compare colDate to the current date and add a class or style if it's in the past
+            if (colDate < currentDate.startOf('day')) {
+                col.classList.add('past-day');
+            }
+            col.style.gridColumn = `${column} / span 1`;
+            col.style.gridRow = `1 / span ${(this.endHour - this.startHour + 1) * this.hourParts}`
+            content.appendChild(col);
+
+            if(!colDate.hasSame(now, 'day')) {
+                continue;
+            }
+
+            // Looping through the rows (hours) for each column (day)
+            for (let hour = this.startHour; hour < this.endHour; hour++) {
+                const rowTime = colDate.set({ hour });
+                const cell = this.createElement("div", "cell");
+
+                // If the cell represents a time in the past on the current day, set its background color to gray
+                if (rowTime < now) {
+                    cell.classList.add('past-hour');
+                }
+
+                cell.style.gridRow = `${((hour - this.startHour) * this.hourParts) + 1} / span ${this.hourParts}`;
+                cell.style.gridColumn = `${column} / span 1`;
+                content.appendChild(cell);
+            }
         }
 
         // Add events
@@ -1096,11 +1158,13 @@ class PEcalendar {
         });
 
         // Configure click behaviors for dotsEl and info elements
-        dotsEl.onclick = () => {
+        dotsEl.onclick = (e) => {
+            e.stopPropagation()
             info.setAttribute('data-show', '');
             popper.update();
         }
-        info.onclick = () => {
+        info.onclick = (e) => {
+            e.stopPropagation()
             info.removeAttribute('data-show');
         }
 
