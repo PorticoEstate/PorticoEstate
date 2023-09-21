@@ -319,6 +319,28 @@ class PEcalendar {
             }
         }
     }
+    /**
+     * Adds pills to the provided content container.
+     *
+     */
+    addPillsToContent() {
+        // If there are no events, exit early
+        if (!this.tempEvents) return;
+
+        // Iterate over the filtered events
+        for (let event of this.tempEvents) {
+            // Retrieve the event's dates
+            const dates = this.getEventDates(event);
+
+            // For each date, check if it's in the current date range
+            for (let date of dates) {
+                if (this.isDateInRange(date.from)) {
+                    // Create an event pill element and append to the content
+                    this.createTempEventPill(event);
+                }
+            }
+        }
+    }
 
 
     /**
@@ -420,6 +442,18 @@ class PEcalendar {
 
         // Iterate over each event element and remove it from the DOM
         events.forEach(event => event.remove());
+    }
+    /**
+     * Removes all pill elements from the provided content element.
+     *
+     * @param {HTMLElement} content - The content element from which events should be removed.
+     */
+    clearPills() {
+        // Query all elements with the class .temp-event-pill within the content
+        const pills = document.querySelectorAll('.temp-event-pill');
+
+        // Iterate over each event element and remove it from the DOM
+        pills.forEach(pill => pill.remove());
     }
 
     /**
@@ -793,8 +827,15 @@ class PEcalendar {
                 self.setDate(self.currentDate.plus({weeks: 1}));
             }
         }
+        // Update all pills
+        this.clearPills();
+        this.addPillsToContent()
+
+        // Selectors
         updateSelectBasic();
         updateDateBasic();
+
+        // Mouse/touch
         this.setupEventInteractions();
     }
 
