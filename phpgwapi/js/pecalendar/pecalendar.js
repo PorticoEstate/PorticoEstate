@@ -533,16 +533,16 @@ class PEcalendar {
         // Determine the grid position (rows) of the event based on the date
         let {row, rowStartAdd, span, rowStopAdd} = this.calculateEventGridPosition(date);
 
-        // If the event is temporary, ensure it has a minimum height equivalent to 1 hour
-        if (event.type === "temporary" && span < this.hourParts) {
-            span = this.hourParts - 1;
-        }
+
 
         // Set the id and grid properties of the event element
         e.id = `event-${event.id}`;
         e.style.gridColumn = `${+date.from.toFormat("c")} / span 1`;
         e.style.gridRow = `${row + rowStartAdd} / span ${span - rowStartAdd + rowStopAdd}`;
-
+        // If the event is temporary, ensure it has a minimum height equivalent to 1 hour
+        if (event.type === "temporary" && span < this.hourParts) {
+            e.style.gridRow = `${row + rowStartAdd} / span ${this.hourParts }`;
+        }
 
         if(event.type === 'temporary') {
             // Create a "dots" button inside the event element
@@ -576,9 +576,10 @@ class PEcalendar {
         const updatedEvent = {
             ...tempEvent,
             name: `${startTime.substring(0, 5)} - ${endTime.substring(0, 5)}`,
-            from: startTime > endTime ? endTime : startTime,
+            from: startTime < endTime ? startTime : endTime,
             to: startTime > endTime ? startTime : endTime,
         };
+        updatedEvent.name = `${updatedEvent.from.substring(0, 5)} - ${updatedEvent.to.substring(0, 5)}`;
 
         // Locate the event in the array
         const index = this.tempEvents.findIndex(event => event.id === tempEvent.id);
