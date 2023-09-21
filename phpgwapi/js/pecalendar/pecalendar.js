@@ -595,21 +595,18 @@ class PEcalendar {
 
         // Render the updated event
         this.renderSingleEvent(container, updatedEvent);
-        this.updateTempEventPill(tempEvent);
     }
 
     /**
      * Updates the content of a pill representing a temporary event.
      *
-     * @param {Partial<IEvent>} event - The temporary event whose details need to be displayed on the pill.
+     * @param {string} eventId - The temporary event whose details need to be displayed on the pill.
      */
-    updateTempEventPill(event) {
-        const pill = document.getElementById(`#pill-${event.id}`);
-
-        console.log(pill);
-
+    updateTempEventPill(eventId) {
+        const event = this.tempEvents.find(a => a.id === eventId);
+        const pill = document.getElementById(`pill-${event.id}`);
         if (pill) {
-            pill.querySelector('.start-end').innerHTML = `${event.from} to ${event.to}`;
+            pill.querySelector('.start-end').innerText = `${event.from} to ${event.to}`;
         }
     }
 
@@ -1063,6 +1060,7 @@ class PEcalendar {
             if (isResizing) {
                 isResizing = false;
                 resizeDirection = null;
+                this.updateTempEventPill(tempEvent.id);
                 return;
             }
             if (isDragging) {
@@ -1074,6 +1072,7 @@ class PEcalendar {
                         to: dragStart.time > dragEnd.time ? dragStart.time : dragEnd.time,
                     })) {
                         this.updateTemporaryEvent(this.content, tempEvent, dragStart.time, dragEnd.time);
+                        this.updateTempEventPill(tempEvent.id);
                     }
                     // Redirect or perform further actions after the event has been created/updated
                     // this.timeSlotSelected(tempEvent);
@@ -1104,6 +1103,7 @@ class PEcalendar {
             e.preventDefault();
             if (isTouchTap) {
                 this.timeSlotSelected(tempEvent);
+                this.updateTempEventPill(tempEvent.id);
                 isTouchTap = false;
             }
         });
