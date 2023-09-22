@@ -2344,7 +2344,7 @@ input[type=text]:hover {
     flex-grow: 1;
   }
 }
-.calendar .header .row2 {
+.calendar .header .calendar-settings {
   margin-top: 5px;
   display: flex;
   flex-direction: row;
@@ -2352,6 +2352,18 @@ input[type=text]:hover {
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
+}
+.calendar .header .temp-event-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* space between pills */
+}
+.calendar .header .temp-event-pills .temp-event-pill {
+  padding: 0px 10px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* space between text and 'x' */
 }
 .calendar .header .info-types {
   flex-wrap: nowrap;
@@ -2395,6 +2407,7 @@ input[type=text]:hover {
   height: 14px;
 }
 .calendar .calendar-body {
+  user-select: none;
   overflow-x: scroll;
   display: grid;
   grid-template-rows: 3em auto;
@@ -2505,6 +2518,9 @@ input[type=text]:hover {
 .calendar .calendar-body .col {
   border-right: 1px solid #dadce0;
 }
+.calendar .calendar-body .past-day, .calendar .calendar-body .past-hour {
+  background-color: #eaeaea;
+}
 .calendar .calendar-body .filler-col {
   grid-row: 1/-1;
   grid-column: 2;
@@ -2601,10 +2617,12 @@ input[type=text]:hover {
   cursor: ns-resize; /* Two-sided vertical arrow */
   z-index: 2; /* Ensure it's on top */
 }
-.calendar .calendar-body .event-temporary .dots {
+.calendar .calendar-body .event-temporary .dots-container {
   height: 16px;
   width: 16px;
-  filter: invert(100%);
+}
+.calendar .calendar-body .event-temporary .dots-container i {
+  color: white;
 }
 .calendar .calendar-body .info {
   background: #FFF;

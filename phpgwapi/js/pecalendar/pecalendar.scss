@@ -121,7 +121,7 @@ $current-time-color: #ea4335;
         }
       }
     }
-    .row2{
+    .calendar-settings {
       margin-top: 5px;
       display: flex;
       flex-direction: row;
@@ -130,6 +130,21 @@ $current-time-color: #ea4335;
       flex-wrap: wrap;
       gap: 8px;
     }
+    .temp-event-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;  /* space between pills */
+      .temp-event-pill {
+        padding: 0px 10px;
+        border-radius: 15px;
+        //background-color: #EFEFEF;
+        display: flex;
+        align-items: center;
+        gap: 5px; /* space between text and 'x' */
+      }
+    }
+
+
     .info-types{
       flex-wrap: nowrap;
       display: flex;
@@ -179,7 +194,7 @@ $current-time-color: #ea4335;
 
 
   .calendar-body {
-
+    user-select: none;
     overflow-x: scroll;
     display: grid;
     grid-template-rows: $days-height auto;
@@ -303,6 +318,10 @@ $current-time-color: #ea4335;
       border-right: 1px solid $grid-color;
     }
 
+    .past-day, .past-hour {
+      background-color: #eaeaea;
+    }
+
     .filler-col {
       grid-row: 1 / -1;
       grid-column: 2;
@@ -424,10 +443,13 @@ $current-time-color: #ea4335;
         z-index: 2;  /* Ensure it's on top */
       }
 
-      .dots {
+      .dots-container {
         height: 16px;
         width: 16px;
-        filter: invert(100%);
+        i {
+          color: white;
+        }
+
       }
     }
 
