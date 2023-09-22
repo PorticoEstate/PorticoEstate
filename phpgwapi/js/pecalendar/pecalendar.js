@@ -533,25 +533,34 @@ class PEcalendar {
         // Determine the grid position (rows) of the event based on the date
         let {row, rowStartAdd, span, rowStopAdd} = this.calculateEventGridPosition(date);
 
-        // If the event is temporary, ensure it has a minimum height equivalent to 1 hour
-        if (event.type === "temporary" && span < this.hourParts) {
-            span = this.hourParts - 1;
-        }
+
 
         // Set the id and grid properties of the event element
         e.id = `event-${event.id}`;
         e.style.gridColumn = `${+date.from.toFormat("c")} / span 1`;
         e.style.gridRow = `${row + rowStartAdd} / span ${span - rowStartAdd + rowStopAdd}`;
+        // If the event is temporary, ensure it has a minimum height equivalent to 1 hour
+        if (event.type === "temporary" && span < this.hourParts) {
+            e.style.gridRow = `${row + rowStartAdd} / span ${this.hourParts }`;
+        }
 
-        // Create a "dots" button inside the event element
-        const dots = this.createDotsElement();
-        e.appendChild(dots);
+        if(event.type === 'temporary') {
+            // Create a "dots" button inside the event element
+            const editElement = this.createEditElement();
+            e.appendChild(editElement);
+        } else {
+            // Create a "dots" button inside the event element
+            const dots = this.createDotsElement();
+            e.appendChild(dots);
 
-        // Associate an info popup with the event element
-        this.addInfoPopup(e, dots, event);
+            // Associate an info popup with the event element
+            this.addInfoPopup(e, dots, event);
 
-        // Return the constructed event element
+            // Return the constructed event element
+        }
         return e;
+
+
     }
 
 
@@ -567,9 +576,10 @@ class PEcalendar {
         const updatedEvent = {
             ...tempEvent,
             name: `${startTime.substring(0, 5)} - ${endTime.substring(0, 5)}`,
-            from: startTime > endTime ? endTime : startTime,
+            from: startTime < endTime ? startTime : endTime,
             to: startTime > endTime ? startTime : endTime,
         };
+        updatedEvent.name = `${updatedEvent.from.substring(0, 5)} - ${updatedEvent.to.substring(0, 5)}`;
 
         // Locate the event in the array
         const index = this.tempEvents.findIndex(event => event.id === tempEvent.id);
@@ -585,19 +595,18 @@ class PEcalendar {
 
         // Render the updated event
         this.renderSingleEvent(container, updatedEvent);
-        this.updateTempEventPill(tempEvent);
     }
 
     /**
      * Updates the content of a pill representing a temporary event.
      *
-     * @param {Partial<IEvent>} event - The temporary event whose details need to be displayed on the pill.
+     * @param {string} eventId - The temporary event whose details need to be displayed on the pill.
      */
-    updateTempEventPill(event) {
-        const pill = document.getElementById(`#pill-${event.id}`);
-
+    updateTempEventPill(eventId) {
+        const event = this.tempEvents.find(a => a.id === eventId);
+        const pill = document.getElementById(`pill-${event.id}`);
         if (pill) {
-            pill.querySelector('.start-end').innerHTML = `${event.from} to ${event.to}`;
+            pill.querySelector('.start-end').innerText = `${event.from} to ${event.to}`;
         }
     }
 
@@ -707,6 +716,28 @@ class PEcalendar {
         return dots;
     }
 
+    /**
+     * Creates and returns a button element with a pen icon.
+     *
+     * @returns {HTMLButtonElement} - Returns a button element containing the dots image.
+     */
+    createEditElement() {
+        // Create a button element with the class "dots-container"
+        const btn = this.createElement("button", "dots-container");
+
+        // Create an image element with the class "dots"
+        let icon = this.createElement('i', 'fas fa-pen');
+
+        // Set the source of the image to a specific path
+        // img.src = phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false);
+
+        // Append the image to the button element
+        btn.appendChild(icon);
+
+        // Return the button element
+        return btn;
+    }
+
 
     createCalendarDom() {
         if (!this.currentDate) return;
@@ -757,19 +788,50 @@ class PEcalendar {
         content.id = this.getId("content");
         content.style.cssText = `grid-template-rows: repeat(${(this.endHour - this.startHour) * this.hourParts}, calc(3rem/${this.hourParts}));`
 
-        // Lines
-        // Columns
-        for (let column = 1; column <= 7; column++) {
-            const col = this.createElement("div", "col");
-            col.style.gridColumn = `${column} / span 1`;
-            col.style.gridRow = `1 / span ${(this.endHour - this.startHour + 1) * this.hourParts}`
-            content.appendChild(col);
-        }
+
+        const currentDate = luxon.DateTime.local();
+        const now = luxon.DateTime.local();
+
+
+        //Lines
         // Rows
         for (let hour = this.startHour; hour < this.endHour; hour++) {
             const time = this.createElement("div", "row");
             time.style.gridRow = `${((hour - this.startHour) * this.hourParts) + 1} / span ${this.hourParts}`;
             content.appendChild(time);
+        }
+
+        // Columns
+        for (let column = 1; column <= 7; column++) {
+            const colDate = this.firstDayOfCalendar.plus({ days: column - 1 });
+            const col = this.createElement("div", "col");
+
+            // Compare colDate to the current date and add a class or style if it's in the past
+            if (colDate < currentDate.startOf('day')) {
+                col.classList.add('past-day');
+            }
+            col.style.gridColumn = `${column} / span 1`;
+            col.style.gridRow = `1 / span ${(this.endHour - this.startHour + 1) * this.hourParts}`
+            content.appendChild(col);
+
+            if(!colDate.hasSame(now, 'day')) {
+                continue;
+            }
+
+            // Looping through the rows (hours) for each column (day)
+            for (let hour = this.startHour; hour < this.endHour; hour++) {
+                const rowTime = colDate.set({ hour });
+                const cell = this.createElement("div", "cell");
+
+                // If the cell represents a time in the past on the current day, set its background color to gray
+                if (rowTime < now) {
+                    cell.classList.add('past-hour');
+                }
+
+                cell.style.gridRow = `${((hour - this.startHour) * this.hourParts) + 1} / span ${this.hourParts}`;
+                cell.style.gridColumn = `${column} / span 1`;
+                content.appendChild(cell);
+            }
         }
 
         // Add events
@@ -868,20 +930,46 @@ class PEcalendar {
 
 
     /**
-     * Checks if a new temporary event can be created without overlapping existing events.
+     * Checks if a new temporary event can be created without overlapping existing events
+     * and is within the allowed hours.
      *
      * @param {Partial<IEvent>} newEvent - The new temporary event.
-     * @returns {boolean} - Returns true if the new event can be created without overlaps, false otherwise.
+     * @returns {boolean} - Returns true if the new event can be created without overlaps
+     *                      and is within the allowed hours, false otherwise.
      */
     canCreateTemporaryEvent(newEvent) {
+        // Parse the hours and minutes from the from and to properties of the new event
+        const [startHour, startMinute] = newEvent.from.split(':').map(Number);
+        const [endHour, endMinute] = newEvent.to.split(':').map(Number);
+
+        // Construct DateTime objects for start and end of the event
+        const eventStart = luxon.DateTime.fromObject({ hour: startHour, minute: startMinute });
+        const eventEnd = luxon.DateTime.fromObject({ hour: endHour, minute: endMinute });
+
+        // Construct DateTime objects for allowed start and end hours
+        const allowedStart = luxon.DateTime.fromObject({ hour: this.startHour, minute: 0 });
+        const allowedEnd = luxon.DateTime.fromObject({ hour: this.endHour, minute: 0 });
+
+        // Check if the event is within the allowed hours
+        if (eventStart < allowedStart || eventEnd > allowedEnd) {
+            return false; // Event is outside of allowed hours
+        }
+        // Check if the event is in the future
+        const currentDate = luxon.DateTime.local();
+        const eventDate = luxon.DateTime.fromISO(newEvent.date);
+        if (eventDate < currentDate || (eventDate.equals(currentDate) && endHour <= currentDate.hour)) {
+            return false; // Event is in the past
+        }
+
+        // Check for overlaps with existing events
         for (let event of [...this.events, ...this.tempEvents]) {
             if (this.doesEventsOverlap(newEvent, event)) {
-                console.log("OVERLAP", newEvent, event);
-                return false;  // There's an overlap
+                return false; // There's an overlap with an existing event
             }
         }
-        return true;  // No overlaps found
+        return true; // No overlaps found and is within the allowed hours
     }
+
 
 
     /**
@@ -972,6 +1060,7 @@ class PEcalendar {
             if (isResizing) {
                 isResizing = false;
                 resizeDirection = null;
+                this.updateTempEventPill(tempEvent.id);
                 return;
             }
             if (isDragging) {
@@ -983,6 +1072,7 @@ class PEcalendar {
                         to: dragStart.time > dragEnd.time ? dragStart.time : dragEnd.time,
                     })) {
                         this.updateTemporaryEvent(this.content, tempEvent, dragStart.time, dragEnd.time);
+                        this.updateTempEventPill(tempEvent.id);
                     }
                     // Redirect or perform further actions after the event has been created/updated
                     // this.timeSlotSelected(tempEvent);
@@ -1013,6 +1103,7 @@ class PEcalendar {
             e.preventDefault();
             if (isTouchTap) {
                 this.timeSlotSelected(tempEvent);
+                this.updateTempEventPill(tempEvent.id);
                 isTouchTap = false;
             }
         });
@@ -1088,11 +1179,13 @@ class PEcalendar {
         });
 
         // Configure click behaviors for dotsEl and info elements
-        dotsEl.onclick = () => {
+        dotsEl.onclick = (e) => {
+            e.stopPropagation()
             info.setAttribute('data-show', '');
             popper.update();
         }
-        info.onclick = () => {
+        info.onclick = (e) => {
+            e.stopPropagation()
             info.removeAttribute('data-show');
         }
 
