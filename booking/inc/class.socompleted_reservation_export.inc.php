@@ -2296,17 +2296,17 @@
 					}
 					else
 					{
-						if (!empty($this->config_data['differentiate_org_payer']) && !empty($payer_organization_number))
-						{
-							$header['tekst3'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
-							$header['tekst4'] = $payer_organization_number;
-						}
-						else
-						{
-							$header['tekst4'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
-						}
-
+						$header['tekst4'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
 						$header['ext_ord_ref'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $customer_number), 0, 15), 15, ' ');
+					}
+
+					/**
+					 * Skille mellom hoved-organisasjonen og betalende underliggende organisasjon
+					 */
+					if (!empty($this->config_data['differentiate_org_payer']) && !empty($payer_organization_number))
+					{
+						$header['tekst3'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
+						$header['tekst4'] = $payer_organization_number;
 					}
 
 					$header['line_no'] = '0000'; //Nothing here according to example file but spec. says so
