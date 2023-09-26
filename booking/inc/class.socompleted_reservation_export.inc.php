@@ -2306,7 +2306,7 @@
 					if (!empty($this->config_data['differentiate_org_payer']) && !empty($payer_organization_number))
 					{
 						$header['tekst3'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
-						$header['tekst4'] = $payer_organization_number;
+						$header['tekst4'] = str_pad(substr($payer_organization_number, 0, 12), 12, ' ');
 					}
 
 					$header['line_no'] = '0000'; //Nothing here according to example file but spec. says so
