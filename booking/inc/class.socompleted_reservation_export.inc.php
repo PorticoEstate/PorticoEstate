@@ -2140,12 +2140,14 @@
 				{
 					$org = $this->organization_bo->read_single($reservation['organization_id']);
 					$log_customer_name = $org['name'];
+					$organization_number =  $org['organization_number'];
 					$customer_number =  $org['customer_number'];
 					$payer_organization_number = $org['customer_organization_number'];
 				}
 				else
 				{
 					$data = $this->event_so->get_org($reservation['customer_organization_number']);
+					$payer_organization_number = $data['customer_organization_number'];
 					if (!empty($data['id']))
 					{
 						$log_customer_name = $data['name'];
@@ -2303,9 +2305,9 @@
 					/**
 					 * Skille mellom hoved-organisasjonen og betalende underliggende organisasjon
 					 */
-					if (!empty($this->config_data['differentiate_org_payer']) && !empty($payer_organization_number))
+					if (!empty($this->config_data['differentiate_org_payer']) && !empty($organization_number))
 					{
-						$header['tekst3'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
+						$header['tekst3'] = str_pad(substr($organization_number, 0, 12), 12, ' ');
 						$header['tekst4'] = str_pad(substr($payer_organization_number, 0, 12), 12, ' ');
 					}
 
@@ -2771,6 +2773,7 @@
 				{
 					$org = $this->organization_bo->read_single($reservation['organization_id']);
 					$reservation['organization_name'] = $org['name'];
+					$payer_organization_number = $org['customer_organization_number'];
 				}
 				else
 				{
@@ -2778,6 +2781,7 @@
 					if (!empty($data['id']))
 					{
 						$reservation['organization_name'] = $data['name'];
+						$payer_organization_number = $data['customer_organization_number'];
 					}
 					else
 					{
