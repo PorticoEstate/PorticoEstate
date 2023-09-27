@@ -329,16 +329,16 @@ class PEcalendar {
 
         // Iterate over the filtered events
         for (let event of this.tempEvents) {
-            // Retrieve the event's dates
-            const dates = this.getEventDates(event);
-
-            // For each date, check if it's in the current date range
-            for (let date of dates) {
-                if (this.isDateInRange(date.from)) {
+            // // Retrieve the event's dates
+            // const dates = this.getEventDates(event);
+            //
+            // // For each date, check if it's in the current date range
+            // for (let date of dates) {
+            //     if (this.isDateInRange(date.from)) {
                     // Create an event pill element and append to the content
                     this.createTempEventPill(event);
-                }
-            }
+                // }
+            // }
         }
     }
 
@@ -606,7 +606,7 @@ class PEcalendar {
         const event = this.tempEvents.find(a => a.id === eventId);
         const pill = document.getElementById(`pill-${event.id}`);
         if (pill) {
-            pill.querySelector('.start-end').innerText = `${event.from} to ${event.to}`;
+            pill.querySelector('.start-end').innerText = this.formatDateTimeInterval(event.date, event.from, event.to);
         }
     }
 
@@ -616,8 +616,8 @@ class PEcalendar {
         const toTime = DateTime.fromISO(`${currentDate}T${to}`, { locale: 'nb' });
 
         const formattedDate = dateObj.toFormat('d. LLL');
-        const formattedFromTime = fromTime.toFormat('HHmm');
-        const formattedToTime = toTime.toFormat('HHmm');
+        const formattedFromTime = fromTime.toFormat('HH:mm');
+        const formattedToTime = toTime.toFormat('HH:mm');
 
         return `${formattedDate} ${formattedFromTime}-${formattedToTime}`;
     }
@@ -1036,6 +1036,7 @@ class PEcalendar {
                 return;
             }
             tempEvent = this.createTemporaryEvent(dragStart.time, thirtyMinutesLater, dragStart.date);
+            this.updateTemporaryEvent(this.content, tempEvent, dragStart.time, thirtyMinutesLater);
 
             isDragging = true;
 
@@ -1327,6 +1328,7 @@ class PEcalendar {
                 self.calculateStartEndHours();
 
                 // Update the calendar's events
+
                 self.setEvents(results?.schedule || []);
             }
         });
