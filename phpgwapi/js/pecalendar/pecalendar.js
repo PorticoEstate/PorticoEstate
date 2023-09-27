@@ -329,16 +329,16 @@ class PEcalendar {
 
         // Iterate over the filtered events
         for (let event of this.tempEvents) {
-            // Retrieve the event's dates
-            const dates = this.getEventDates(event);
-
-            // For each date, check if it's in the current date range
-            for (let date of dates) {
-                if (this.isDateInRange(date.from)) {
+            // // Retrieve the event's dates
+            // const dates = this.getEventDates(event);
+            //
+            // // For each date, check if it's in the current date range
+            // for (let date of dates) {
+            //     if (this.isDateInRange(date.from)) {
                     // Create an event pill element and append to the content
                     this.createTempEventPill(event);
-                }
-            }
+                // }
+            // }
         }
     }
 
@@ -1328,6 +1328,7 @@ class PEcalendar {
                 self.calculateStartEndHours();
 
                 // Update the calendar's events
+
                 self.setEvents(results?.schedule || []);
             }
         });
