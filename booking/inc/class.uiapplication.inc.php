@@ -1371,7 +1371,34 @@
 				$application['building_name'] = str_replace($search, $replace, $application['building_name']);
 			}
 
-			if (phpgw::get_var('from_', 'string'))
+            if (phpgw::get_var('dates', 'string'))
+            {
+                $dates_input = explode(',', phpgw::get_var('dates', 'string'));
+                $timezone = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+
+                try
+                {
+                    $DateTimeZone = new DateTimeZone($timezone);
+                }
+                catch (Exception $ex)
+                {
+                    throw $ex;
+                }
+
+                $combined_dates = [];
+                foreach ($dates_input as $date_pair_str)
+                {
+                    list($start_timestamp, $end_timestamp) = explode('_', $date_pair_str);
+                    $_start_time = new DateTime(date('Y-m-d H:i:s', $start_timestamp));
+                    $_end_time = new DateTime(date('Y-m-d H:i:s', $end_timestamp));
+                    $_start_time->setTimezone($DateTimeZone);
+                    $_end_time->setTimezone($DateTimeZone);
+
+                    $combined_dates[] = $this->_combine_dates($_start_time->format('Y-m-d H:i:s'), $_end_time->format('Y-m-d H:i:s'));
+                }
+
+                $default_dates = $combined_dates;
+            } else if (phpgw::get_var('from_', 'string'))
 			{
 				$default_dates = array_map(array($this, '_combine_dates'), phpgw::get_var('from_', 'string'), phpgw::get_var('to_', 'string'));
 			}
