@@ -319,6 +319,7 @@ class PEcalendar {
             }
         }
     }
+
     /**
      * Adds pills to the provided content container.
      *
@@ -335,9 +336,9 @@ class PEcalendar {
             // // For each date, check if it's in the current date range
             // for (let date of dates) {
             //     if (this.isDateInRange(date.from)) {
-                    // Create an event pill element and append to the content
-                    this.createTempEventPill(event);
-                // }
+            // Create an event pill element and append to the content
+            this.createTempEventPill(event);
+            // }
             // }
         }
     }
@@ -443,6 +444,7 @@ class PEcalendar {
         // Iterate over each event element and remove it from the DOM
         events.forEach(event => event.remove());
     }
+
     /**
      * Removes all pill elements from the provided content element.
      *
@@ -534,17 +536,16 @@ class PEcalendar {
         let {row, rowStartAdd, span, rowStopAdd} = this.calculateEventGridPosition(date);
 
 
-
         // Set the id and grid properties of the event element
         e.id = `event-${event.id}`;
         e.style.gridColumn = `${+date.from.toFormat("c")} / span 1`;
         e.style.gridRow = `${row + rowStartAdd} / span ${span - rowStartAdd + rowStopAdd}`;
         // If the event is temporary, ensure it has a minimum height equivalent to 1 hour
         if (event.type === "temporary" && span < this.hourParts) {
-            e.style.gridRow = `${row + rowStartAdd} / span ${this.hourParts }`;
+            e.style.gridRow = `${row + rowStartAdd} / span ${this.hourParts}`;
         }
 
-        if(event.type === 'temporary') {
+        if (event.type === 'temporary') {
             // Create a "dots" button inside the event element
             const editElement = this.createEditElement();
             e.appendChild(editElement);
@@ -611,9 +612,9 @@ class PEcalendar {
     }
 
     formatDateTimeInterval(currentDate, from, to) {
-        const dateObj = DateTime.fromISO(currentDate, { locale: 'nb' });
-        const fromTime = DateTime.fromISO(`${currentDate}T${from}`, { locale: 'nb' });
-        const toTime = DateTime.fromISO(`${currentDate}T${to}`, { locale: 'nb' });
+        const dateObj = DateTime.fromISO(currentDate, {locale: 'nb'});
+        const fromTime = DateTime.fromISO(`${currentDate}T${from}`, {locale: 'nb'});
+        const toTime = DateTime.fromISO(`${currentDate}T${to}`, {locale: 'nb'});
 
         const formattedDate = dateObj.toFormat('d. LLL');
         const formattedFromTime = fromTime.toFormat('HH:mm');
@@ -649,8 +650,6 @@ class PEcalendar {
         // Append the pill to the header
         container.appendChild(pill);
     }
-
-
 
 
     /**
@@ -803,7 +802,7 @@ class PEcalendar {
 
         // Columns
         for (let column = 1; column <= 7; column++) {
-            const colDate = this.firstDayOfCalendar.plus({ days: column - 1 });
+            const colDate = this.firstDayOfCalendar.plus({days: column - 1});
             const col = this.createElement("div", "col");
 
             // Compare colDate to the current date and add a class or style if it's in the past
@@ -814,13 +813,13 @@ class PEcalendar {
             col.style.gridRow = `1 / span ${(this.endHour - this.startHour + 1) * this.hourParts}`
             content.appendChild(col);
 
-            if(!colDate.hasSame(now, 'day')) {
+            if (!colDate.hasSame(now, 'day')) {
                 continue;
             }
 
             // Looping through the rows (hours) for each column (day)
             for (let hour = this.startHour; hour < this.endHour; hour++) {
-                const rowTime = colDate.set({ hour });
+                const rowTime = colDate.set({hour});
                 const cell = this.createElement("div", "cell");
 
                 // If the cell represents a time in the past on the current day, set its background color to gray
@@ -859,11 +858,22 @@ class PEcalendar {
             const applicationButton = document.getElementById(this.getId("application"));
             applicationButton.onclick = (event) => {
                 let resource = self.resources[self.resource_id];
-                let url = phpGWLink('bookingfrontend/', {
+
+                const dateRanges = self.tempEvents.map(tempEvent => {
+                    const unixDates = this.getUnixTimestamps(tempEvent.date, tempEvent.from, tempEvent.to);
+                    return `${Math.floor(unixDates.startTimestamp / 1000)}_${Math.floor(unixDates.endTimestamp / 1000)}`;
+
+                }).join(',');
+                const reqParams = {
                     menuaction: 'bookingfrontend.uiapplication.add',
                     building_id: self.building_id,
-                    resource_id: self.resource_id
-                }, false);
+                    resource_id: self.resource_id,
+                    dates: dateRanges
+                }
+                if (this.tempEvents.length === 0) {
+                    delete reqParams.dates;
+                }
+                let url = phpGWLink('bookingfrontend/', reqParams, false);
                 if (resource.simple_booking === 1) {
                     url = phpGWLink('bookingfrontend/', {
                         menuaction: 'bookingfrontend.uiresource.show',
@@ -916,7 +926,7 @@ class PEcalendar {
             // Different days, no overlap
             return false;
         }
-        if(event2.type === 'allocation' || event2.type === 'booking') {
+        if (event2.type === 'allocation' || event2.type === 'booking') {
             return false;
         }
 
@@ -943,12 +953,12 @@ class PEcalendar {
         const [endHour, endMinute] = newEvent.to.split(':').map(Number);
 
         // Construct DateTime objects for start and end of the event
-        const eventStart = luxon.DateTime.fromObject({ hour: startHour, minute: startMinute });
-        const eventEnd = luxon.DateTime.fromObject({ hour: endHour, minute: endMinute });
+        const eventStart = luxon.DateTime.fromObject({hour: startHour, minute: startMinute});
+        const eventEnd = luxon.DateTime.fromObject({hour: endHour, minute: endMinute});
 
         // Construct DateTime objects for allowed start and end hours
-        const allowedStart = luxon.DateTime.fromObject({ hour: this.startHour, minute: 0 });
-        const allowedEnd = luxon.DateTime.fromObject({ hour: this.endHour, minute: 0 });
+        const allowedStart = luxon.DateTime.fromObject({hour: this.startHour, minute: 0});
+        const allowedEnd = luxon.DateTime.fromObject({hour: this.endHour, minute: 0});
 
         // Check if the event is within the allowed hours
         if (eventStart < allowedStart || eventEnd > allowedEnd) {
@@ -971,7 +981,6 @@ class PEcalendar {
     }
 
 
-
     /**
      * Sets up event listeners to handle drag-and-drop and touch interactions
      * for creating and updating events within the calendar.
@@ -991,7 +1000,7 @@ class PEcalendar {
 
         // Event Listener for mousedown - To initiate the drag process
         this.content.addEventListener('mousedown', (e) => {
-            if(isTouchTap) {
+            if (isTouchTap) {
                 return;
             }
             console.log("ISCLICK")
@@ -1047,7 +1056,8 @@ class PEcalendar {
         this.content.addEventListener('mousemove', (e) => {
             if (isResizing || isDragging) {
                 dragEnd = this.getDateTimeFromMouseEvent(e, this.content);
-                if (this.canCreateTemporaryEvent({...tempEvent,
+                if (this.canCreateTemporaryEvent({
+                    ...tempEvent,
                     from: dragStart.time > dragEnd.time ? dragEnd.time : dragStart.time,
                     to: dragStart.time > dragEnd.time ? dragStart.time : dragEnd.time,
                 })) {
@@ -1068,7 +1078,8 @@ class PEcalendar {
                 isDragging = false;
                 if (dragEnd) {
                     dragEnd = this.getDateTimeFromMouseEvent(e, this.content);
-                    if (this.canCreateTemporaryEvent({...tempEvent,
+                    if (this.canCreateTemporaryEvent({
+                        ...tempEvent,
                         from: dragStart.time > dragEnd.time ? dragEnd.time : dragStart.time,
                         to: dragStart.time > dragEnd.time ? dragStart.time : dragEnd.time,
                     })) {
@@ -1080,7 +1091,6 @@ class PEcalendar {
                 }
             }
         });
-
 
 
         // For Mobile Touch (No Drag)
