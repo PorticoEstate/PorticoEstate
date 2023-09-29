@@ -2396,6 +2396,15 @@ input[type=text]:hover {
 .calendar .header .select_building_resource > div > span {
   min-width: 15rem;
 }
+.calendar .header .select_building_resource select {
+  /* Style when the select is disabled */
+}
+.calendar .header .select_building_resource select:disabled + * {
+  opacity: 0.5; /* Reduced opacity to indicate disabled state */
+}
+.calendar .header .select_building_resource select:disabled + * .select2-selection--single {
+  cursor: not-allowed !important; /* Cursor indicating action is not allowed */
+}
 .calendar .header .type {
   display: flex;
   flex-direction: column;
