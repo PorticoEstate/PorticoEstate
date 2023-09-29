@@ -1001,9 +1001,20 @@ class PEcalendar {
         // Check if the event is in the future
         const currentDate = luxon.DateTime.local();
         const eventDate = luxon.DateTime.fromISO(newEvent.date);
-        if (eventDate < currentDate || (eventDate.equals(currentDate) && endHour <= currentDate.hour)) {
+
+        // Check if the event's date and time are in the past
+        if (eventDate.startOf('day').plus({ hour: endHour, minute: endMinute }) <= currentDate) {
             return false; // Event is in the past
         }
+
+        // If the event is on the current day, ensure its hours are within the allowed range
+        if (eventDate.hasSame(currentDate, 'day')) {
+            if (eventStart < allowedStart || eventEnd > allowedEnd || eventStart <= currentDate) {
+                return false; // Event is outside of allowed hours or in the past on the current day
+            }
+        }
+
+
 
         // Check for overlaps with existing events
         for (let event of [...this.events, ...this.tempEvents]) {
