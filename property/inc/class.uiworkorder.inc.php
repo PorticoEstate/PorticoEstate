@@ -2020,6 +2020,8 @@
 
 				if ($project['start_date'] && !$values['start_date'])
 				{
+					$_start_date = max(time(), phpgwapi_datetime::date_to_timestamp($project['start_date']));
+					$values['start_date'] = $GLOBALS['phpgw']->common->show_date($_start_date, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 					if ($project['project_type_id'] == 1)//operation
 					{
 						phpgw::import_class('phpgwapi.datetime');
@@ -2027,15 +2029,6 @@
 						{
 							$values['start_date'] = $project['end_date'];
 						}
-						else
-						{
-							$_start_date = max(time(), phpgwapi_datetime::date_to_timestamp($project['start_date']));
-							$values['start_date'] = $GLOBALS['phpgw']->common->show_date($_start_date, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-						}
-					}
-					else
-					{
-						$values['start_date'] = $project['start_date'];
 					}
 				}
 
