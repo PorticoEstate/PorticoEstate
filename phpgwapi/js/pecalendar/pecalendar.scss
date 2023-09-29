@@ -176,6 +176,17 @@ $current-time-color: #ea4335;
         }
       }
 
+      select {
+        /* Style when the select is disabled */
+        &:disabled + * {
+          opacity: 0.5;         /* Reduced opacity to indicate disabled state */
+          //background-color: #f3f3f3; /* Light gray background */
+          .select2-selection--single {
+            cursor: not-allowed !important;  /* Cursor indicating action is not allowed */
+          }
+        }
+      }
+
     }
 
 

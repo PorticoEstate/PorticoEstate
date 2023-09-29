@@ -294,6 +294,27 @@ class PEcalendar {
         }
     }
 
+    /**
+     * Updates the state (enabled/disabled) of the resource <select> element based on the contents of the tempEvents array.
+     *
+     * - If the tempEvents array has content, the select element will be disabled.
+     * - If the tempEvents array is empty, the select element will be enabled.
+     *
+     * @private
+     */
+    updateResourceSelectState() {
+        // Obtain the <select> element using its ID
+        const selectElem = document.getElementById(this.getId("resources"));
+
+        // If tempEvents has content, disable the <select> element
+        if (this.tempEvents.length > 0) {
+            selectElem.setAttribute("disabled", "disabled");
+        }
+        // If tempEvents is empty, enable the <select> element
+        else {
+            selectElem.removeAttribute("disabled");
+        }
+    }
 
     /**
      * Adds events to the provided content container.
@@ -406,6 +427,7 @@ class PEcalendar {
         this.tempEvents.push(tempEvent);
 
         this.createTempEventPill(tempEvent);
+        this.updateResourceSelectState();
         return tempEvent;
     }
 
@@ -549,6 +571,13 @@ class PEcalendar {
             // Create a "dots" button inside the event element
             const editElement = this.createEditElement();
             e.appendChild(editElement);
+
+            editElement.onclick = (e) => {
+                e.stopPropagation()
+                this.removeTempEvent(event)
+            }
+
+
         } else {
             // Create a "dots" button inside the event element
             const dots = this.createDotsElement();
@@ -643,7 +672,6 @@ class PEcalendar {
         closeButton.innerHTML = '<span aria-hidden="true">&times;</span>';
         closeButton.addEventListener('click', () => {
             this.removeTempEvent(event);
-            pill.remove();
         });
         // Attach a click event to the 'x' to remove the event
         pill.appendChild(closeButton)
@@ -666,6 +694,12 @@ class PEcalendar {
 
         // Remove the event from the tempEvents array
         this.tempEvents = this.tempEvents.filter(event => event.id !== tempEvent.id);
+
+        this.updateResourceSelectState();
+
+        // Update all pills
+        this.clearPills();
+        this.addPillsToContent()
     }
 
 
@@ -725,7 +759,7 @@ class PEcalendar {
         const btn = this.createElement("button", "dots-container");
 
         // Create an image element with the class "dots"
-        let icon = this.createElement('i', 'fas fa-pen');
+        let icon = this.createElement('i', 'fas fa-times');
 
         // Set the source of the image to a specific path
         // img.src = phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false);
