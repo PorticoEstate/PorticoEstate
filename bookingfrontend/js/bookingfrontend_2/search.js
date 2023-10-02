@@ -781,6 +781,10 @@ class Search {
     updateHeaderTexts = (type) => {
         switch (type) {
             case "booking":
+                if(!landing_sections.booking) {
+                    this.updateHeaderTexts();
+                    break;
+                }
                 this.ko_search.header_text("Lei lokale, anlegg eller utstyr");
                 this.ko_search.header_sub("Bruk filtrene til å finne de leieobjekter som du ønsker å leie");
                 $("#search-booking").show();
@@ -790,6 +794,10 @@ class Search {
                 window.location.hash = '#booking';
                 break;
             case "event":
+                if(!landing_sections.event) {
+                    this.updateHeaderTexts();
+                    break;
+                }
                 this.ko_search.header_text("Finn arrangement eller aktivitet");
                 this.ko_search.header_sub("Bruk filtrene til å finne ut hva som skjer i dag, eller til helgen");
                 $("#search-event").show();
@@ -802,6 +810,10 @@ class Search {
                 window.location.hash = '#event';
                 break;
             case "organization":
+                if(!landing_sections.organization) {
+                    this.updateHeaderTexts();
+                    break;
+                }
                 this.ko_search.header_text("Finn lag eller organisasjon");
                 this.ko_search.header_sub("Er du på jakt etter noen som er interessert i det samme som deg? Søk på navn til lag eller organisasjon, eller filtrer på aktivitet eller område");
                 $("#search-organization").show();
@@ -811,7 +823,16 @@ class Search {
                 window.location.hash = '#organization';
                 break;
             default:
-                this.ko_search.type_group("booking")
+                if(landing_sections.booking) {
+                    this.ko_search.type_group("booking")
+                    break;
+                }
+                if(landing_sections.event) {
+                    this.ko_search.type_group("event")
+                    break;
+                }
+                this.ko_search.type_group("organization")
+
         }
     }
 

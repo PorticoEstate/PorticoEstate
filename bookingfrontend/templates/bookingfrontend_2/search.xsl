@@ -3,26 +3,38 @@
         <div id="search-header">
             <H1 class="text-primary text-md-start text-center mb-0" data-bind="text: header_text"></H1>
             <p class="mb-4 text-primary" data-bind="text: header_sub"></p>
+            <xsl:variable name="enabledCount" select="sum(landing_sections/booking | landing_sections/event | landing_sections/organization)" />
+            <xsl:if test="$enabledCount != 1">
             <div class="d-flex flex-column flex-md-row justify-content-between mb-4">
                 <div class="filter-group align-self-start mb-4 mb-md-0">
-                    <label class="filter-group__item">
-                        <input type="radio" name="type_group" value="booking" data-bind="checked: type_group"/>
-                        <span class="filter-group__item__radio">Leie</span>
-                    </label>
-                    <label class="filter-group__item">
-                        <input type="radio" name="type_group" value="event" data-bind="checked: type_group"/>
-                        <span class="filter-group__item__radio">Arrangement</span>
-                    </label>
-                    <label class="filter-group__item">
-                        <input type="radio" name="type_group" value="organization" data-bind="checked: type_group"/>
-                        <span class="filter-group__item__radio">Organisasjon</span>
-                    </label>
+                    <xsl:if test="landing_sections/booking = 1">
+                        <label class="filter-group__item" id="type_group-booking">
+                            <input type="radio" name="type_group" value="booking" data-bind="checked: type_group"/>
+                            <span class="filter-group__item__radio">Leie</span>
+                        </label>
+                    </xsl:if>
+                    <!-- Event radio button -->
+                    <xsl:if test="landing_sections/event = 1">
+                        <label class="filter-group__item" id="type_group-event">
+                            <input type="radio" name="type_group" value="event"  data-bind="checked: type_group"/>
+                            <span class="filter-group__item__radio">Arrangement</span>
+                        </label>
+                    </xsl:if>
+
+                    <!-- Organization radio button -->
+                    <xsl:if test="landing_sections/organization = 1">
+                        <label class="filter-group__item" id="type_group-organization">
+                            <input type="radio" name="type_group" value="organization"  data-bind="checked: type_group"/>
+                            <span class="filter-group__item__radio">Organisasjon</span>
+                        </label>
+                    </xsl:if>
                 </div>
                 <button type="button" class="pe-btn pe-btn-secondary align-self-end" id="id-reset-filter">
                     Nullstill søk
                     <i class="fas fa-undo ms-2"></i>
                 </button>
             </div>
+            </xsl:if>
         </div>
 
         <div id="search-booking">
@@ -33,14 +45,16 @@
                             <div class="col col-md-6 col-lg-6 mb-3 mb-lg-0">
                                 <div class="multisearch__inner__item">
                                     <label for="search-booking-text">Søk</label>
-                                    <input id="search-booking-text" type="text" placeholder="Søk" data-bind="textInput: text"></input>
+                                    <input id="search-booking-text" type="text" placeholder="Søk"
+                                           data-bind="textInput: text"></input>
                                 </div>
                             </div>
 
                             <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border">
                                 <div class="multisearch__inner__item">
                                     <label for="search-booking-datepicker">Dato</label>
-                                    <input type="text" id="search-booking-datepicker" placeholder="dd.mm.yyyy" class="js-basic-datepicker" data-bind="textInput: date"/>
+                                    <input type="text" id="search-booking-datepicker" placeholder="dd.mm.yyyy"
+                                           class="js-basic-datepicker" data-bind="textInput: date"/>
                                 </div>
                             </div>
                             <div class="col col-md-6 col-lg-3 mb-3 mb-lg-0 multisearch__inner--border filter-element">
@@ -107,7 +121,8 @@
                                 </div>
                             </div>
                             <div class="d-flex d-md-none justify-content-end">
-                                <button id="js-toggle-filter" class="pe-btn pe-btn-secondary align-self-end toggle-filter">
+                                <button id="js-toggle-filter"
+                                        class="pe-btn pe-btn-secondary align-self-end toggle-filter">
                                     Se flere filter
                                 </button>
                             </div>
@@ -191,5 +206,8 @@
         <div id="search-count" class="pt-3"></div>
         <div id="search-result" class="pt-3"></div>
     </div>
+    <script>
+        const landing_sections = JSON.parse(`<xsl:value-of select="landing_sections_json" />`)
+    </script>
 </xsl:template>
 
