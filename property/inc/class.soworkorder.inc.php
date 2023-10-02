@@ -791,7 +791,7 @@
 								$_query = $query;
 							}
 
-							$_querymethod[] = "{$field_info['field']} {$matchtypes[$field_info['matchtype']]} '{$field_info['front']}{$_query}{$field_info['back']}'";
+							$_querymethod[] = "{$field_info['field']} {$matchtypes[$field_info['matchtype']]} {$field_info['front']}{$_query}{$field_info['back']}";
 						}
 						$querymethod = $where . ' (' . implode(' OR ', $_querymethod) . ')';
 						unset($_querymethod);
@@ -818,7 +818,7 @@
 							$_query = $query;
 						}
 
-						$querymethod = "{$where} {$criteria[0]['field']} {$matchtypes[$criteria[0]['matchtype']]} '{$criteria[0]['front']}{$_query}{$criteria[0]['back']}'";
+						$querymethod = "{$where} {$criteria[0]['field']} {$matchtypes[$criteria[0]['matchtype']]} {$criteria[0]['front']}{$_query}{$criteria[0]['back']}";
 					}
 				}
 				$where = 'AND';
