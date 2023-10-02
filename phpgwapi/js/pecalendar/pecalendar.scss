@@ -502,3 +502,23 @@ $current-time-color: #ea4335;
     }
   }
 }
+
+.expansion-panel {
+  .expansion-header {
+    display: inline-block;
+    cursor: pointer;
+    // Additional styles for the header
+
+    .badge {
+      background-color: #f3f3f3;
+      padding: 0.2em 0.5em;
+      border-radius: 10px;
+      // Additional styles for the badge
+    }
+  }
+
+  .expansion-content {
+    display: none;
+    // Additional styles for the content
+  }
+}
