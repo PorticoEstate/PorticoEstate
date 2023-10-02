@@ -489,8 +489,8 @@
 				'field'		 => 'fm_workorder.contract_id',
 				'type'		 => 'varchar',
 				'matchtype'	 => 'like',
-				'front'		 => '',
-				'back'		 => '%'
+				'front'		 => "'",
+				'back'		 => "%'"
 			);
 
 
