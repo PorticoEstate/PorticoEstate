@@ -1430,7 +1430,7 @@ input[type=text]:hover {
   color: #000000;
 }
 .select2-container--select-v2 .select2-dropdown {
-  padding: 1rem 2rem 1rem 1.5rem;
+  padding: 1rem 1.5rem;
   font-size: 0.875rem;
   border: 0;
   box-shadow: 0px -3px 0px 0px #FFFFFF, 0px 0px 0px 2px #793C8A;
@@ -1450,6 +1450,15 @@ input[type=text]:hover {
 .select2-container--select-v2 .select2-dropdown .select2-search__field:focus-visible {
   outline: 0;
   box-shadow: 0 0 1px 1px rgb(0, 0, 0);
+}
+.select2-container--select-v2 .select2-dropdown .select2-results {
+  max-height: 16rem;
+  overflow-y: auto;
+}
+@media (min-width: 768px) {
+  .select2-container--select-v2 .select2-dropdown .select2-results {
+    max-height: 32rem;
+  }
 }
 .select2-container--select-v2 .select2-dropdown .select2-results__option {
   padding: 0.75rem 1rem;
@@ -2324,6 +2333,18 @@ input[type=text]:hover {
 .calendar .header .date fieldset label {
   display: block;
 }
+.calendar .header .date .date-selector {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+.calendar .header .date .date-selector .pe-btn--circle {
+  border-radius: 50%;
+  padding: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+}
 @media screen and (max-width: 480px) {
   .calendar .header .date fieldset {
     flex-grow: 1;
@@ -2331,6 +2352,33 @@ input[type=text]:hover {
   .calendar .header .date input {
     flex-grow: 1;
   }
+}
+.calendar .header .calendar-settings {
+  margin-top: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.calendar .header .temp-event-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* space between pills */
+}
+.calendar .header .temp-event-pills .temp-event-pill {
+  padding: 0px 10px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* space between text and 'x' */
+}
+.calendar .header .info-types {
+  flex-wrap: nowrap;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
 }
 .calendar .header .select_building_resource {
   margin-top: 5px;
@@ -2350,9 +2398,21 @@ input[type=text]:hover {
   .calendar .header .select_building_resource > div {
     flex-wrap: wrap;
   }
+  .calendar .header .select_building_resource > div > button {
+    flex-grow: 1;
+  }
 }
-.calendar .header .select_building_resource .info-types {
-  flex-wrap: nowrap;
+.calendar .header .select_building_resource > div > span {
+  min-width: 15rem;
+}
+.calendar .header .select_building_resource select {
+  /* Style when the select is disabled */
+}
+.calendar .header .select_building_resource select:disabled + * {
+  opacity: 0.5; /* Reduced opacity to indicate disabled state */
+}
+.calendar .header .select_building_resource select:disabled + * .select2-selection--single {
+  cursor: not-allowed !important; /* Cursor indicating action is not allowed */
 }
 .calendar .header .type {
   display: flex;
@@ -2365,6 +2425,7 @@ input[type=text]:hover {
   height: 14px;
 }
 .calendar .calendar-body {
+  user-select: none;
   overflow-x: scroll;
   display: grid;
   grid-template-rows: 3em auto;
@@ -2475,6 +2536,9 @@ input[type=text]:hover {
 .calendar .calendar-body .col {
   border-right: 1px solid #dadce0;
 }
+.calendar .calendar-body .past-day, .calendar .calendar-body .past-hour {
+  background-color: #eaeaea;
+}
 .calendar .calendar-body .filler-col {
   grid-row: 1/-1;
   grid-column: 2;
@@ -2560,10 +2624,23 @@ input[type=text]:hover {
   margin-left: 1.5rem;
   opacity: 0.75;
 }
-.calendar .calendar-body .event-temporary .dots {
+.calendar .calendar-body .event-temporary::after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 10px; /* Define the height of the resizable area at the bottom */
+  cursor: ns-resize; /* Two-sided vertical arrow */
+  z-index: 2; /* Ensure it's on top */
+}
+.calendar .calendar-body .event-temporary .dots-container {
   height: 16px;
   width: 16px;
-  filter: invert(100%);
+}
+.calendar .calendar-body .event-temporary .dots-container i {
+  color: white;
 }
 .calendar .calendar-body .info {
   background: #FFF;
@@ -2593,6 +2670,19 @@ input[type=text]:hover {
   .calendar .hide-mobile {
     display: none;
   }
+}
+
+.expansion-panel .expansion-header {
+  display: inline-block;
+  cursor: pointer;
+}
+.expansion-panel .expansion-header .badge {
+  background-color: #f3f3f3;
+  padding: 0.2em 0.5em;
+  border-radius: 10px;
+}
+.expansion-panel .expansion-content {
+  display: none;
 }
 
 /*# sourceMappingURL=pecalendar.css.map */
