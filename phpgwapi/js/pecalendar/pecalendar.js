@@ -317,6 +317,35 @@ class PEcalendar {
     }
 
     /**
+     * Initializes event listeners for the expansion panel.
+     */
+    initializeExpansionPanel() {
+        const headerElem = document.querySelector('.expansion-header');
+        if (headerElem) {
+            headerElem.addEventListener('click', (e) => {
+                e.preventDefault();
+                const content = headerElem.nextElementSibling;
+                if (content.style.display === "none" || content.style.display === "") {
+                    content.style.display = "block";
+                } else {
+                    content.style.display = "none";
+                }
+            });
+        }
+    }
+
+    /**
+     * Updates the badge count based on the current length of the tempEvents array.
+     */
+    updateBadgeCount() {
+        const badgeElem = document.getElementById(this.getId("badgeCount"));
+        if (badgeElem) {
+            badgeElem.textContent = this.tempEvents.length;
+        }
+    }
+
+
+    /**
      * Adds events to the provided content container.
      *
      * @param {HTMLElement} content - The DOM container where events should be appended.
@@ -428,6 +457,7 @@ class PEcalendar {
 
         this.createTempEventPill(tempEvent);
         this.updateResourceSelectState();
+        this.updateBadgeCount();  // Update the badge count
         return tempEvent;
     }
 
@@ -700,6 +730,8 @@ class PEcalendar {
         // Update all pills
         this.clearPills();
         this.addPillsToContent()
+
+        this.updateBadgeCount();  // Update the badge count
     }
 
 
@@ -943,6 +975,9 @@ class PEcalendar {
 
         // Mouse/touch
         this.setupEventInteractions();
+
+        // Make expansion panels "expandable"
+        this.initializeExpansionPanel();
     }
 
     /**
@@ -1283,7 +1318,16 @@ class PEcalendar {
     
         </div>
     </div>
-    <div  id=${this.getId("tempEventPills")} class="temp-event-pills"></div>
+    <div class="expansion-panel">
+        <a class="expansion-header link-button" id=${this.getId("expansionHeader")}>
+            Bestillinger
+            <span class="badge" id=${this.getId("badgeCount")}>0</span>
+        </a>
+        <div class="expansion-content">
+            <div  id=${this.getId("tempEventPills")} class="temp-event-pills"></div>
+        </div>
+    </div>
+
     <div class="calendar-settings">
         <div class="date">
               <fieldset>
