@@ -815,7 +815,7 @@
 			$serie_id = (int)$serie_id;
 			$user_id = (int)$user_id;
 
-			$controls_array = array();
+			$components_array = array();
 
 			$sql = "SELECT DISTINCT ccl.control_id, ccl.component_id as component_id,"
 				. " ccl.location_id as location_id, ccs.id as serie_id, ccs.assigned_to, ccs.start_date,"
@@ -945,10 +945,7 @@
 				$filter_assigned_to = "AND (controller_control_serie.assigned_to = {$assigned_to}  OR controller_check_list.assigned_to = {$assigned_to})";
 			}
 
-			$location_id = (int)$location_id;
-			$component_id = (int)$component_id;
 			$control_id = (int)$control_id;
-
 
 			$sql = "SELECT  distinct controller_control_component_list.component_id, controller_control_component_list.location_id"
 				. " FROM controller_control_component_list"
@@ -1639,7 +1636,7 @@
 			$condition = join(' AND ', $clauses);
 
 			$tables = "controller_control";
-			$joins .= " {$this->left_join} controller_procedure ON (controller_control.procedure_id = controller_procedure.id)";
+			$joins = " {$this->left_join} controller_procedure ON (controller_control.procedure_id = controller_procedure.id)";
 			$joins .= " {$this->left_join} fm_responsibility_role ON (controller_control.responsibility_id = fm_responsibility_role.id)";
 
 			if ($return_count)
@@ -1703,7 +1700,7 @@
 		{
 			$id = (int)$id;
 
-			$joins .= " {$this->left_join} controller_procedure ON (c.procedure_id = controller_procedure.id)";
+			$joins = " {$this->left_join} controller_procedure ON (c.procedure_id = controller_procedure.id)";
 			$joins .= " {$this->left_join} fm_responsibility_role ON (c.responsibility_id = fm_responsibility_role.id)";
 
 			$sql = "SELECT c.*, controller_procedure.title AS procedure_name, fm_responsibility_role.name AS responsibility_name ";

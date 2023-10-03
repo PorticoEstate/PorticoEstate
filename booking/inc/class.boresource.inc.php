@@ -299,11 +299,11 @@
 			return false;
 		}
 
-		function add_paricipant_limit( $entity, $resource_id, $limit_from, $limit_quantity )
+		function add_participant_limit( $entity, $resource_id, $limit_from, $limit_quantity )
 		{
 			if ($this->authorize_write($entity))
 			{
-				return parent::add_paricipant_limit($resource_id, $limit_from, $limit_quantity);
+				return parent::add_participant_limit($resource_id, $limit_from, $limit_quantity);
 			}
 			return false;
 		}

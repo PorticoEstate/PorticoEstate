@@ -62,7 +62,7 @@
 			</h5>
 
 			<!-- MODAL INSPECT EQUIPMENT START -->
-			<div class="modal fade" id="inspectObject" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" >
+			<div class="modal modal-lg fade" id="inspectObject" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" >
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<!-- Modal Header -->

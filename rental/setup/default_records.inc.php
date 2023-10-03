@@ -281,6 +281,7 @@
 	$oProc->query("INSERT INTO rental_document_types (title) VALUES ('contracts')");
 	$oProc->query("INSERT INTO rental_document_types (title) VALUES ('fire_drawings')");
 	$oProc->query("INSERT INTO rental_document_types (title) VALUES ('calculations_internal_investment')");
+	$oProc->query("INSERT INTO rental_document_types (title) VALUES ('notes')");
 
 	$asyncservice = CreateObject('phpgwapi.asyncservice');
 	$asyncservice->delete('rental_populate_workbench_notifications');

@@ -120,6 +120,53 @@ $(document).ready(function ()
 
 });
 
+getRequestData = function (dataSelected, parameters)
+{
+
+	var data = {};
+
+	$.each(parameters.parameter, function (i, val)
+	{
+		data[val.name] = {};
+	});
+
+	var n = 0;
+	for (var n = 0; n < dataSelected.length; ++n)
+	{
+		$.each(parameters.parameter, function (i, val)
+		{
+			data[val.name][n] = dataSelected[n][val.source];
+		});
+	}
+
+	return data;
+};
+
+removeDocument = function (oArgs, parameters)
+{
+
+	var api = $('#datatable-container_1').dataTable().api();
+	var selected = api.rows({selected: true}).data();
+	var nTable = 1;
+
+	if (selected.length == 0)
+	{
+		alert('None selected');
+		return false;
+	}
+
+	var data = getRequestData(selected, parameters);
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
+
+		JqueryPortico.show_message(nTable, result);
+		oTable1.fnDraw();
+
+	}, data, 'POST', 'JSON');
+};
+
 function filterDataContract(param, value)
 {
 	oTable0.dataTableSettings[0]['ajax']['data'][param] = value;

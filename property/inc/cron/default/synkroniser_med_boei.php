@@ -36,6 +36,7 @@
 	{
 
 		var $bocommon, $db_boei,$db_boei2, $db2;
+		var $alert_messages = array();
 		function __construct()
 		{
 			parent::__construct();
@@ -105,6 +106,7 @@
 			$this->update_obskode();
 			$this->update_hemmelig_adresse();
 			$this->oppdater_namssakstatus_pr_leietaker();
+			$this->alert();
 
 			$msg						 = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
 			$this->cron_log($msg, $cron);
@@ -112,6 +114,31 @@
 			$this->receipt['message'][]	 = array('msg' => $msg);
 		}
 
+		function alert()
+		{
+			if($this->alert_messages)
+			{
+				$subject = 'Oppdateringer fra BOEI til Portico';
+
+				$toarray = array(
+					'hc483@bergen.kommune.no',
+					'Kvale, Silje <Silje.Kvale@bergen.kommune.no>'
+					);
+				$to		 = implode(';', $toarray);
+
+				$html = implode('</br>', $this->alert_messages);
+
+				try
+				{
+					$rc	 = CreateObject('phpgwapi.send')->msg('email', $to, $subject, $html, '', $cc	 = '', $bcc = '', 'hc483@bergen.kommune.no', 'Ikke svar', 'html');
+				}
+				catch (Exception $e)
+				{
+					$this->receipt['error'][] = array('msg' => $e->getMessage());
+				}
+
+			}
+		}
 		function cron_log( $receipt = '' )
 		{
 
@@ -928,7 +955,7 @@ SQL;
 				$owners[]	 = array
 					(
 					'id'		 => (int)$this->db->f('id'),
-					'category'	 => $category == 0 ? 4 : $category
+					'category'	 => $category == 0 ? 5 : $category
 				);
 			}
 			$this->db->transaction_begin();
@@ -957,7 +984,7 @@ SQL;
 					'id'		 => $this->db->f('eier_id'),
 					'org_name'	 => $this->db->f('org_name'),
 					'remark'	 => $this->db->f('org_name'),
-					'category'	 => $category == 0 ? 4 : $category,
+					'category'	 => $category == 0 ? 5 : $category,
 					'entry_date' => time(),
 					'owner_id'	 => 6
 				);
@@ -1096,16 +1123,33 @@ SQL;
 			$objekt_latin = array();
 			while ($this->db->next_record())
 			{
+				$tjenestested = (int)$this->db->f('tjenestested');
+				$loc1		  = $this->db->f('objekt_id');
+/*
+ * Alle kostraid’er skal ha mva/AV-kode 75
+ * Bortsett fra
+ * 26550 som jeg ønsker varsel på,
+ * og 26555 som ikke finnes enda, men som kanskje blir opprettet på innleieboliger.
+*/
+
+				$mva = 75;
+				if(in_array($tjenestested, array(26550, 26555)))
+				{
+					$mva = 0;
+					$this->alert_messages[] = "Opprettet objekt {$loc1} i Portico med tjeneste {$tjenestested}";
+				}
+
 				$objekt_latin[] = array
 				(
-					'location_code'		 => $this->db->f('objekt_id'),
-					'loc1'				 => $this->db->f('objekt_id'),
+					'location_code'		 => $loc1,
+					'loc1'				 => $loc1,
 					'loc1_name'			 => $this->db->f('navn'),
 					'part_of_town_id'	 => $this->db->f('bydel_id'),
 					'owner_id'			 => $this->db->f('eier_id'),
-					'kostra_id'			 => $this->db->f('tjenestested'),
+					'kostra_id'			 => $tjenestested,
 					'zip_code'			 => $this->db->f('postnr_id'),
-					'category'			 => 1
+					'category'			 => 1,
+					'mva'				 => $mva
 				);
 			}
 
@@ -1115,7 +1159,7 @@ SQL;
 			foreach ($objekt_latin as $objekt)
 			{
 
-				$sql2 = "INSERT INTO fm_location1 (location_code, loc1, loc1_name, part_of_town_id, owner_id, kostra_id, zip_code, category) "
+				$sql2 = "INSERT INTO fm_location1 (location_code, loc1, loc1_name, part_of_town_id, owner_id, kostra_id, zip_code, category, mva) "
 					. "VALUES (" . $this->db->validate_insert($objekt) . ")";
 
 				$this->db->query($sql2, __LINE__, __FILE__);
@@ -1470,7 +1514,7 @@ SQL;
 
 				$this->db2->query($sql2, __LINE__, __FILE__);
 			}
-			
+
 		}
 
 
@@ -1608,7 +1652,7 @@ SQL;
 
 		function oppdater_boa_objekt()
 		{
-			$sql = " SELECT boei_objekt.objekt_id,bydel_id,tjenestested,navn,boei_objekt.eier_id"
+			$sql = " SELECT boei_objekt.objekt_id,bydel_id,tjenestested,navn,boei_objekt.eier_id, kostra_id"
 				. " FROM boei_objekt JOIN fm_location1 ON boei_objekt.objekt_id = fm_location1.loc1"
 				. " WHERE boei_objekt.navn != fm_location1.loc1_name"
 				. " OR  boei_objekt.bydel_id != fm_location1.part_of_town_id"
@@ -1618,12 +1662,32 @@ SQL;
 
 			while ($this->db->next_record())
 			{
+				$tjenestested = (int)$this->db->f('tjenestested');
+				$kostra_id = (int)$this->db->f('kostra_id');
+				$loc1		  = $this->db->f('objekt_id');
+
+				$mva = 75;
+				if(in_array($tjenestested, array(26550, 26555)) && $kostra_id != $tjenestested)
+				{
+					$mva = 0;
+					$this->alert_messages[] = "Objekt {$loc1} i Portico endret tjeneste fra {$kostra_id} til {$tjenestested}";
+				}
+
 				$sql2 = " UPDATE fm_location1 SET "
 					. " loc1_name = '" . $this->db->f('navn') . "',"
 					. " part_of_town_id = " . (int)$this->db->f('bydel_id') . ","
 					. " owner_id = " . (int)$this->db->f('eier_id') . ","
-					. " kostra_id = " . (int)$this->db->f('tjenestested')
+					. " mva = " . $mva . ","
+					. " kostra_id = " . $tjenestested
 					. " WHERE  loc1 = '" . $this->db->f('objekt_id') . "'";
+
+/*
+ * Alle kostraid’er skal ha mva/AV-kode 75
+ * Bortsett fra
+ * 26550 som jeg ønsker varsel på,
+ * og 26555 som ikke finnes enda, men som kanskje blir opprettet på innleieboliger.
+*/
+
 
 				$this->db2->query($sql2, __LINE__, __FILE__);
 			}

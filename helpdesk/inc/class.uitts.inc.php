@@ -57,7 +57,8 @@
 				'handle_multi_upload_file' => true,
 				'build_multi_upload_file' => true,
 				'custom_ajax'			=> true,
-				'get_user_list_ajax'	=> true
+				'get_user_list_ajax'	=> true,
+			'close_ticket_with_comment'	=> true
 			);
 
 		/**
@@ -629,6 +630,50 @@ HTML;
 			$receipt 	= $this->bo->take_over($id);
 			return lang('assignment has been changed for %1', $id);
 		}
+
+		function close_ticket_with_comment( )
+		{
+			if(!$this->acl_edit)
+			{
+				return array(
+					'status' => 'error',
+					'message' => lang('sorry - insufficient rights'));
+			}
+
+			$new_status = 'X';
+			$new_note = phpgw::get_var('note', 'string', 'POST');
+
+			$id		 = phpgw::get_var('id', 'int');
+
+			if(is_array($id))
+			{
+				$ids = $id;
+			}
+			else
+			{
+				$ids = arrray($id);
+
+			}
+
+			foreach ($ids as $_id)
+			{
+				$receipt = $this->bo->update_status(
+					array(
+					'status' => $new_status,
+					'note' => $new_note
+					),
+					$_id
+				);
+
+				if (!empty($this->bo->config->config_data['mailnotification']) )
+				{
+					$receipt = $this->bo->mail_ticket($_id, $this->bo->fields_updated, $receipt, false, true);
+				}
+
+			}
+			return array('status' => 'ok');
+		}
+
 		function edit_status()
 		{
 			if(!$this->acl_edit)
@@ -1461,10 +1506,25 @@ JS;
 				);
 			}
 
+			$data['datatable']['actions'][] = array
+				(
+				'my_name' => 'delete',
+				'text' => lang('close ticket'),
+				'type' => 'custom',
+				'custom_code' => "
+					var parameters = " . json_encode(array('parameter' => array(array('name' => 'id',
+							'source' => 'id')))) . ";
+					close_ticket_with_comment(parameters);
+				"
+			);
+
 			if (count($data['datatable']['actions']) < 10)
 			{
 				$data['datatable']['group_buttons'] = false;
 			}
+			$GLOBALS['phpgw']->js->validate_file('alertify', 'alertify.min', 'phpgwapi');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
 
 //			$GLOBALS['phpgw_info']['flags']['app_header'] = $this->parent_category_name ? $this->parent_category_name : $this->lang_app_name;
 			$GLOBALS['phpgw_info']['flags']['app_header'] =  $this->lang_app_name;

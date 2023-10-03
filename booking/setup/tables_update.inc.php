@@ -6299,3 +6299,30 @@ HTML;
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.90 to 0.2.91
+	 *
+	 */
+	$test[] = '0.2.91';
+	function booking_upgrade0_2_91()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$sql = "UPDATE bb_allocation SET completed = 0 WHERE id IN (
+		SELECT bb_allocation.id
+		FROM bb_allocation LEFT OUTER JOIN bb_completed_reservation
+		ON  bb_allocation.id = reservation_id AND  reservation_type = 'allocation'
+		WHERE reservation_id IS NULL
+		AND completed = 1)";
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query($sql, __LINE__, __FILE__);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.92';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+

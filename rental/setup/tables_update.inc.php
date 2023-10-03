@@ -1075,3 +1075,17 @@
 			return $GLOBALS['setup_info']['rental']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.0.42';
+	function rental_upgrade0_1_0_42()
+	{
+		//transaction begin
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO rental_document_types (title) VALUES ('notes')");
+		//transaction commit
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.43';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}

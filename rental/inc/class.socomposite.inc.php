@@ -252,7 +252,7 @@
 					  rental_composite.is_active, rental_composite.area, rental_composite.description,
 					  rental_composite.furnish_type_id, rental_composite.standard_id,rental_composite.composite_type_id,rental_composite.status_id,
 					  rental_composite.part_of_town_id, rental_composite.custom_price_factor, rental_composite.custom_price, rental_composite.price_type_id,";
-				$cols .= "rental_contract.id AS contract_id, rental_contract.date_start, rental_contract.date_end, rental_contract.old_contract_id, ";
+				$cols .= "rental_contract.id AS contract_id, rental_contract.date_start, rental_contract.date_end, rental_contract.old_contract_id,rental_contract.cancelled, ";
 				$cols .= "rental_application.id AS application_id, rental_application.date_start AS application_date_start, rental_application.date_end AS application_date_end, ";
 				$cols .= "
 			CASE WHEN
@@ -260,6 +260,7 @@
 				(
 				NOT rental_contract_composite.contract_id IS NULL AND
 				NOT rental_contract.date_start IS NULL AND
+				rental_contract.cancelled IS NULL AND
 				NOT rental_contract.location_id = {$location_id_into} AND
 				((NOT rental_contract.date_start > $availability_date_to AND (rental_contract.date_end IS NULL OR rental_contract.date_end = 0))
 		 		OR
@@ -299,7 +300,10 @@
 					break;
 			}
 
-//	    _debug_array("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
+//			if(!$return_count)
+//			{
+//			    _debug_array("SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}");
+//			}
 
 			return "SELECT {$cols} FROM {$tables} {$joins} WHERE {$condition} {$order}";
 		}
@@ -353,12 +357,13 @@
 			{
 				$contract = new rental_contract($contract_id);
 
-				$start_date = $this->unmarshal($this->db->f('date_start', true), 'int');
-				$end_date = $this->unmarshal($this->db->f('date_end', true), 'int');
+				$start_date = $this->unmarshal($this->db->f('date_start'), 'int');
+				$end_date = $this->unmarshal($this->db->f('date_end'), 'int');
 				$old_contract_id = $this->unmarshal($this->db->f('old_contract_id', true), 'string');
+				$cancelled = $this->unmarshal($this->db->f('cancelled'), 'int');
 
 				// Adds contract if end date is not specified or greater than todays date
-				if ($end_date == 0 || $end_date > time())
+				if (!$cancelled && ($end_date == 0 || $end_date > time()))
 				{
 					$contract_date = new rental_contract_date($start_date, $end_date);
 					$contract->set_contract_date($contract_date);

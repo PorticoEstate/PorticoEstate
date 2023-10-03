@@ -2864,22 +2864,54 @@
 
 		function edit_field( $data )
 		{
+			$type_id	 = (int)$data['type_id'];
 			$id			 = (int)$data['id'];
 			$field_name	 = $data['field_name'];
 			$value		 = $this->db->db_addslashes($data['value']);
 
-			if ($field_name != 'contact_phone')
+			if (in_array($field_name,array('id')) || preg_match('/^loc/i', $field_name))
 			{
 				return;
 			}
 
-			$this->db->query("SELECT tenant_id FROM fm_location4"
-				. " WHERE id = {$id}", __LINE__, __FILE__);
-			$this->db->next_record();
-			$tenant_id = $this->db->f('tenant_id');
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
 
-			return $this->db->query("UPDATE fm_tenant SET contact_phone = '{$value}'"
-					. " WHERE id = {$tenant_id}", __LINE__, __FILE__);
+			$this->db->query("SELECT * FROM phpgw_cust_attribute WHERE location_id = {$location_id} AND datatype IN ('I', 'V')");
+
+			$cols = array();
+			while ($this->db->next_record())
+			{
+				$cols[] = $this->db->f('column_name');
+			}
+
+			if (in_array($field_name, $cols))
+			{
+				$table = "fm_location{$type_id}";
+				$this->db->query("UPDATE fm_location{$type_id} SET $field_name = '{$value}'"
+				. " WHERE id = {$id}", __LINE__, __FILE__);
+				return;
+			}
+			else if($field_name == 'contact_phone')
+			{
+				$this->db->query("SELECT tenant_id FROM fm_location{$type_id}"
+					. " WHERE id = {$id}", __LINE__, __FILE__);
+				$this->db->next_record();
+				$tenant_id = $this->db->f('tenant_id');
+
+				return $this->db->query("UPDATE fm_tenant SET contact_phone = '{$value}'"
+						. " WHERE id = {$tenant_id}", __LINE__, __FILE__);
+			}
+			else if($field_name == 'street_name')
+			{
+				$this->db->query("SELECT street_id FROM fm_location{$type_id}"
+					. " WHERE id = {$id}", __LINE__, __FILE__);
+				$this->db->next_record();
+				$street_id = $this->db->f('street_id');
+
+				return $this->db->query("UPDATE fm_streetaddress SET descr = '{$value}'"
+						. " WHERE id = {$street_id}", __LINE__, __FILE__);
+			}
+
 		}
 
 		function get_zip_info($location_code)

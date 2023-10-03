@@ -497,16 +497,16 @@
 
 			$allocation['ical_link'] = self::link(array('menuaction' => 'bookingfrontend.uiparticipant.ical','reservation_type' => 'allocation','reservation_id' => $allocation['id']));
 
-			$resource_paricipant_limit_gross = $this->resource_bo->so->get_paricipant_limit($allocation['resources'], true);
+			$resource_participant_limit_gross = $this->resource_bo->so->get_participant_limit($allocation['resources'], true);
 
-			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
+			if(!empty($resource_participant_limit_gross['results'][0]['quantity']))
 			{
-				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];
+				$resource_participant_limit = $resource_participant_limit_gross['results'][0]['quantity'];
 			}
 
 			if(!$allocation['participant_limit'])
 			{
-				$allocation['participant_limit'] = $resource_paricipant_limit ? $resource_paricipant_limit : (int)$config['participant_limit'];
+				$allocation['participant_limit'] = $resource_participant_limit ? $resource_participant_limit : (int)$config['participant_limit'];
 			}
 
 			$allocation['participant_limit'] = $allocation['participant_limit'] ? $allocation['participant_limit'] : (int)$config['participant_limit'];
@@ -573,16 +573,16 @@
 			$allocation['participant_registration_link'] = $participant_registration_link;
 			$allocation['participanttext'] = !empty($config['participanttext'])? $config['participanttext'] :'';
 
-			$resource_paricipant_limit_gross = $this->resource_bo->so->get_paricipant_limit($allocation['resources'], true);
+			$resource_participant_limit_gross = $this->resource_bo->so->get_participant_limit($allocation['resources'], true);
 
-			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
+			if(!empty($resource_participant_limit_gross['results'][0]['quantity']))
 			{
-				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];
+				$resource_participant_limit = $resource_participant_limit_gross['results'][0]['quantity'];
 			}
 
 			if(!$allocation['participant_limit'])
 			{
-				$allocation['participant_limit'] = $resource_paricipant_limit ? $resource_paricipant_limit : (int)$config['participant_limit'];
+				$allocation['participant_limit'] = $resource_participant_limit ? $resource_participant_limit : (int)$config['participant_limit'];
 			}
 
 			$allocation['participant_limit'] = $allocation['participant_limit'] ? $allocation['participant_limit'] : (int)$config['participant_limit'];

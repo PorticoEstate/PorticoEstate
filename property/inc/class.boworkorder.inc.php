@@ -352,57 +352,50 @@
 
 		function get_criteria_list( $selected = '' )
 		{
-			$criteria = array
-				(
-				array
-					(
+			$criteria = array(
+				array(
 					'id'	 => '1',
 					'name'	 => lang('project group')
 				),
-				array
-					(
+				array(
 					'id'	 => '2',
 					'name'	 => lang('project id')
 				),
-				array
-					(
+				array(
 					'id'	 => '3',
 					'name'	 => lang('workorder id')
 				),
-				array
-					(
+				array(
 					'id'	 => '4',
 					'name'	 => lang('address')
 				),
-				array
-					(
+				array(
 					'id'	 => '5',
 					'name'	 => lang('location code')
 				),
-				array
-					(
+				array(
 					'id'	 => '6',
 					'name'	 => lang('title')
 				),
-				array
-					(
+				array(
 					'id'	 => '7',
 					'name'	 => lang('vendor')
 				),
-				array
-					(
+				array(
 					'id'	 => '8',
 					'name'	 => lang('vendor id')
 				),
-				array
-					(
+				array(
 					'id'	 => '9',
 					'name'	 => lang('accounting dim b')
 				),
-				array
-					(
+				array(
 					'id'	 => '10',
 					'name'	 => lang('budget account group')
+				),
+				array(
+					'id'	 => '11',
+					'name'	 => lang('contract')
 				)
 			);
 			return $this->bocommon->select_list($selected, $criteria);
@@ -491,6 +484,15 @@
 				'front'		 => '',
 				'back'		 => ''
 			);
+			$criteria[11]	 = array
+				(
+				'field'		 => 'fm_workorder.contract_id',
+				'type'		 => 'varchar',
+				'matchtype'	 => 'like',
+				'front'		 => "'",
+				'back'		 => "%'"
+			);
+
 
 			if ($id)
 			{

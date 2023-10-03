@@ -965,6 +965,7 @@
 				$status_options[] = array('id' => 'under_dismissal', 'name' => lang('under_dismissal'),
 					'selected' => 0);
 				$status_options[] = array('id' => 'ended', 'name' => lang('ended'), 'selected' => 0);
+				$status_options[] = array('id' => 'cancelled', 'name' => lang('cancelled'), 'selected' => 0);
 
 				$fields_of_responsibility_options[] = array('id' => 'all', 'name' => lang('all'),
 					'selected' => 0);

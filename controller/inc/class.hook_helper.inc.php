@@ -567,9 +567,14 @@ HTML;
 						{
 							if (data !== null)
 							{
-								var message = data.message;
-								alert(message);
-								location.reload();
+								if(data.status !== 'ok')
+								{
+									alert(data.message);
+								}
+								else
+								{
+									location.reload();
+								}
 							}
 						}
 					});

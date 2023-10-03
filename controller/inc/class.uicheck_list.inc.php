@@ -492,11 +492,15 @@
 
 			if($this->edit)
 			{
+				$set_completet_checklist = !$item_string && !$location_code ? true : false;
 				$this->so->set_completed_item($check_list_id, $location_id, $item_id);
 			}
 
-			self::redirect(array('menuaction' => 'controller.uicase.add_case',
-					'check_list_id' => $check_list_id));
+			self::redirect(array(
+				'menuaction' => 'controller.uicase.add_case',
+				'check_list_id' => $check_list_id,
+				'set_completet_checklist' => $set_completet_checklist
+			));
 
 		}
 
@@ -1993,7 +1997,7 @@
 			$ok = true;
 
 			$required_actual_hours = isset($config->config_data['required_actual_hours']) && $config->config_data['required_actual_hours'] ? $config->config_data['required_actual_hours'] : false;
-			if ($check_list_status == controller_check_list::STATUS_DONE && $required_actual_hours && $check_list->get_billable_hours() == 0)
+			if ($check_list_status == controller_check_list::STATUS_DONE && $required_actual_hours && (int)$check_list->get_billable_hours() == 0)
 			{
 				phpgwapi_cache::message_set(lang("Please enter billable hours"), 'error');
 				$ok = false;
@@ -3593,6 +3597,9 @@ HTML;
 			$location_identificator_fallback = 0;
 			$data_case = array();
 			$users = array();
+			$findings_options = array();
+			$lang_date = lang('date');
+
 			foreach ($report_info['open_check_items_and_cases'] as $check_item)
 			{
 
@@ -3606,17 +3613,18 @@ HTML;
 				{
 
 					$_temp_options = $check_item->get_control_item()->get_options_array();
-					$findings_options = array();
 
 					if($_temp_options)
 					{
 						foreach ($_temp_options as $option_entry)
 						{
-							$findings_options[$check_item->get_control_item()->get_title()][$option_entry->get_option_value()] = 0;
+							if(empty($findings_options[$check_item->get_control_item()->get_title()][$option_entry->get_option_value()]))
+							{
+								$findings_options[$check_item->get_control_item()->get_title()][$option_entry->get_option_value()] = 0;
+							}
 						}
 					}
 				}
-
 
 				foreach ($check_item->get_cases_array() as $case)
 				{
@@ -3633,11 +3641,6 @@ HTML;
 							}
 						}
 						unset($value);
-
-//					_debug_array($findings_map);
-//	_debug_array($findings_options);
-//	die();
-
 					}
 
 					$n = 1;
@@ -3646,10 +3649,15 @@ HTML;
 
 					$entry[] = array
 					(
-						'text' => "#{$i}",
+						'text' => "#{$i} - " . $case->get_id(),
 						'value' => $check_item->get_control_item()->get_title(),
 					);
 
+					$entry[] = array
+					(
+						'text' => $lang_date,
+						'value' => $GLOBALS['phpgw']->common->show_date($case->get_entry_date() , $this->dateFormat)
+					);
 
 					if($case->get_component_child_item_id())
 					{
@@ -4241,6 +4249,8 @@ HTML;
 
 
 			$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, '', null, $case_location_code);
+			$open_old_cases =  $this->so_check_item->get_check_items_with_cases($check_list_id, $_type = null, 'open_or_waiting_old', null, $case_location_code, $component_id);
+			$open_check_items_and_cases = array_merge($open_check_items_and_cases, $open_old_cases);
 
 			if ($buildings_on_property)
 			{

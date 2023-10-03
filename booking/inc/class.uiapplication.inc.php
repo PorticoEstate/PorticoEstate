@@ -31,7 +31,8 @@
 			'cancel_payment'			 => true,
 			'refund_payment'			 => true,
 			'get_purchase_order'		 => true,
-			'delete'					 => true
+			'delete'					 => true,
+			'get_activity_data'			 => true
 		);
 		protected $customer_id,
 			$default_module = 'bookingfrontend',
@@ -2527,11 +2528,11 @@
 				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
 			}
 
-			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($application['resources'], true);
-			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
+			$resource_participant_limit_gross = CreateObject('booking.soresource')->get_participant_limit($application['resources'], true);
+			if(!empty($resource_participant_limit_gross['results'][0]['quantity']) && $resource_participant_limit_gross['results'][0]['quantity'] > 0)
 			{
-				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];
-				phpgwapi_cache::message_set(lang('overridden participant limit is set to %1', $resource_paricipant_limit),'message');
+				$resource_participant_limit = $resource_participant_limit_gross['results'][0]['quantity'];
+				phpgwapi_cache::message_set(lang('overridden participant limit is set to %1', $resource_participant_limit),'message');
 			}
 
 			$activity_path = $this->activity_bo->get_path($application['activity_id']);
@@ -3088,11 +3089,11 @@
 				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
 			}
 
-			$resource_paricipant_limit_gross = CreateObject('booking.soresource')->get_paricipant_limit($application['resources'], true);
-			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
+			$resource_participant_limit_gross = CreateObject('booking.soresource')->get_participant_limit($application['resources'], true);
+			if(!empty($resource_participant_limit_gross['results'][0]['quantity']) && $resource_participant_limit_gross['results'][0]['quantity'] > 0)
 			{
-				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];
-				phpgwapi_cache::message_set(lang('overridden participant limit is set to %1', $resource_paricipant_limit),'message');
+				$resource_participant_limit = $resource_participant_limit_gross['results'][0]['quantity'];
+				phpgwapi_cache::message_set(lang('overridden participant limit is set to %1', $resource_participant_limit),'message');
 			}
 
 			$activity_path = $this->activity_bo->get_path($application['activity_id']);

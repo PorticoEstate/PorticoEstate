@@ -203,7 +203,8 @@
 				//Create a document object
 				$document = new rental_document();
 				$document->set_title(phpgw::get_var('document_title'));
-				$document->set_name($_FILES["file_path"]["name"]);
+				$file_name = str_replace(array('"', "'", ' ', ','), '_', $_FILES["file_path"]["name"]);
+				$document->set_name($file_name);
 				$document->set_type_id(phpgw::get_var('document_type'));
 				$document->set_contract_id($contract_id);
 				$document->set_party_id($party_id);
@@ -214,7 +215,7 @@
 				// Move file from temporary storage to vfs
 				$result = rental_sodocument::get_instance()->write_document_to_vfs
 					(
-					$document_properties['document_type'], $_FILES["file_path"]["tmp_name"], $document_properties['id'], $_FILES["file_path"]["name"]
+					$document_properties['document_type'], $_FILES["file_path"]["tmp_name"], $document_properties['id'], $file_name
 				);
 
 				if ($result)

@@ -1531,16 +1531,16 @@
 
 			$booking['ical_link'] = self::link(array('menuaction' => 'bookingfrontend.uiparticipant.ical','reservation_type' => 'booking','reservation_id' => $booking['id']));
 
-			$resource_paricipant_limit_gross = $this->resource_bo->so->get_paricipant_limit($booking['resources'], true);
+			$resource_participant_limit_gross = $this->resource_bo->so->get_participant_limit($booking['resources'], true);
 			
-			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
+			if(!empty($resource_participant_limit_gross['results'][0]['quantity']))
 			{
-				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];	
+				$resource_participant_limit = $resource_participant_limit_gross['results'][0]['quantity'];	
 			}
 
 			if(!$booking['participant_limit'])
 			{
-				$booking['participant_limit'] = $resource_paricipant_limit ? $resource_paricipant_limit : (int)$config['participant_limit'];
+				$booking['participant_limit'] = $resource_participant_limit ? $resource_participant_limit : (int)$config['participant_limit'];
 			}
 
 			$booking['participant_limit'] = $booking['participant_limit'] ? $booking['participant_limit'] : (int)$config['participant_limit'];
@@ -1660,16 +1660,16 @@
 
 			$booking['participant_registration_link'] = $participant_registration_link;
 
-			$resource_paricipant_limit_gross = $this->resource_bo->so->get_paricipant_limit($booking['resources'], true);
+			$resource_participant_limit_gross = $this->resource_bo->so->get_participant_limit($booking['resources'], true);
 			
-			if(!empty($resource_paricipant_limit_gross['results'][0]['quantity']))
+			if(!empty($resource_participant_limit_gross['results'][0]['quantity']))
 			{
-				$resource_paricipant_limit = $resource_paricipant_limit_gross['results'][0]['quantity'];	
+				$resource_participant_limit = $resource_participant_limit_gross['results'][0]['quantity'];	
 			}
 
 			if(!$booking['participant_limit'])
 			{
-				$booking['participant_limit'] = $resource_paricipant_limit ? $resource_paricipant_limit : (int)$config['participant_limit'];
+				$booking['participant_limit'] = $resource_participant_limit ? $resource_participant_limit : (int)$config['participant_limit'];
 			}
 
 			$booking['participant_limit'] = $booking['participant_limit'] ? $booking['participant_limit'] : (int)$config['participant_limit'];
