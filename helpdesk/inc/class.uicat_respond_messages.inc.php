@@ -36,12 +36,16 @@
 	{
 
 		var $public_functions = array
-		(
-			'edit'			=> true,
+			(
+			'edit' => true,
 		);
-
-		private $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete,
-			$bo, $cats,$receipt;
+		protected
+			$acl_location,
+			$acl_read,
+			$acl_add,
+			$acl_edit,
+			$acl_delete,
+			$bo, $cats, $receipt;
 
 		public function __construct()
 		{
@@ -178,7 +182,7 @@
 
 		}
 
-		public function save($init_preview = null )
+		public function save($ajax = null )
 		{
 			$values = phpgw::get_var('values', 'html');
 			
