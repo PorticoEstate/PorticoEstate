@@ -878,12 +878,12 @@
 			}
 			return $status;
 		}
-		function update_status($ticket,$id = 0)
+		function update_status($ticket,$id)
 		{
 			$id = (int) $id;
 			$receipt = array();
 			// DB Content is fresher than http posted value.
-			$this->db->query("select * from phpgw_helpdesk_tickets where id='$id'",__LINE__,__FILE__);
+			$this->db->query("SELECT status FROM phpgw_helpdesk_tickets WHERE id = $id",__LINE__,__FILE__);
 			$this->db->next_record();
 			$old_status  		= $this->db->f('status');
 
@@ -929,6 +929,11 @@
 					$this->db->query("UPDATE phpgw_helpdesk_tickets SET status='{$ticket['status']}' WHERE id={$id}",__LINE__,__FILE__);
 				}
 				$this->check_pending_action($ticket, $id);
+			}
+
+			if(!empty($ticket['note']))
+			{
+				$this->historylog->add('C', $id, $ticket['note']);
 			}
 
 			$this->db->transaction_commit();

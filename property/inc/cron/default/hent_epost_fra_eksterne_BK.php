@@ -210,9 +210,10 @@
 				$client->authWithUserAndPass($username, $password);
 			}
 
-			$folder_info											 = $this->find_folder($client, 'Importert til database');
-			_debug_array($folder_info);
-			die();
+			$movet_to_folder_info									 = $this->find_folder($client,'ImportertTilDatabase'); //'Portico_Leverador-meldinger';
+//			_debug_array($movet_to_folder_info);
+//			die();
+
 			$IsEqualTo_isread										 = new IsEqualToType();
 			$IsEqualTo_isread->FieldURI								 = new PathToUnindexedFieldType();
 			$IsEqualTo_isread->FieldURI->FieldURI					 = 'message:IsRead';
@@ -220,21 +221,30 @@
 			$IsEqualTo_isread->FieldURIOrConstant->Constant			 = new ConstantValueType();
 			$IsEqualTo_isread->FieldURIOrConstant->Constant->Value	 = "false";
 
+			//read messages from this folder
+			$root_folder = $this->find_folder($client, 'Portico_Leverador-meldinger');
+
 			$request					 = new FindItemType();
 			$request->ParentFolderIds	 = new NonEmptyArrayOfBaseFolderIdsType();
 
+			$filter_ulest = !empty($this->config->config_data['xPortico']['filter_ulest']) ? true : false;
 			// Build the restriction.
-			$request->Restriction			 = new RestrictionType();
-			$request->Restriction->IsEqualTo = $IsEqualTo_isread;
+			if ($filter_ulest)
+			{
+				$request->Restriction			 = new RestrictionType();
+				$request->Restriction->IsEqualTo = $IsEqualTo_isread;
+			}
 
 			// Return all message properties.
 			$request->ItemShape				 = new ItemResponseShapeType();
 			$request->ItemShape->BaseShape	 = DefaultShapeNamesType::ALL_PROPERTIES;
 
-			// Search in the user's inbox.
-			$folder_id											 = new DistinguishedFolderIdType();
-			$folder_id->Id										 = DistinguishedFolderIdNameType::INBOX;
-			$request->ParentFolderIds->DistinguishedFolderId[]	 = $folder_id;
+			// Search in another user's inbox.
+			$folder_id				 = new jamesiarmes\PhpEws\Type\FolderIdType();
+			$folder_id->ChangeKey	 = $root_folder['changekey'];
+			$folder_id->Id			 = $root_folder['id'];
+
+			$request->ParentFolderIds->FolderId[] = $folder_id;
 
 			$response = $client->FindItem($request);
 
@@ -333,7 +343,7 @@
 						foreach ($this->items_to_move as $item4)
 						{
 							$this->update_message($client, $item4);
-							$this->move_message($client, $item4, $folder_info);
+							$this->move_message($client, $item4, $movet_to_folder_info);
 						}
 
 						$this->items_to_move = array();
@@ -342,7 +352,7 @@
 			}
 		}
 
-		function find_folder( $client, $folder_name = 'Behandlet' )
+		function find_folder( $client, $folder_name = 'ImportertTilDatabase' )
 		{
 			// Build the request.
 			$request						 = new FindFolderType();
@@ -891,15 +901,15 @@
 			$response = $client->UpdateItem($request);
 		}
 
-		function move_message( $client, $item3, $folder_info )
+		function move_message( $client, $item3, $movet_to_folder_info )
 		{
 			$request = new MoveItemType();
 
 			$request->ToFolderId = new \jamesiarmes\PhpEws\Type\TargetFolderIdType();
 			$request->ToFolderId->FolderId = new \jamesiarmes\PhpEws\Type\FolderIdType();
 
-			$request->ToFolderId->FolderId->Id			 = $folder_info['id'];
-			$request->ToFolderId->FolderId->ChangeKey	 = $folder_info['changekey'];
+			$request->ToFolderId->FolderId->Id			 = $movet_to_folder_info['id'];
+			$request->ToFolderId->FolderId->ChangeKey	 = $movet_to_folder_info['changekey'];
 
 			$request->ItemIds = new NonEmptyArrayOfBaseItemIdsType();
 			$request->ItemIds->ItemId = new ItemIdType();

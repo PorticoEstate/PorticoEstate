@@ -1157,6 +1157,10 @@
 			$date_start = $this->get_contract_date()->get_start_date();
 			$date_end = $this->get_contract_date()->get_end_date();
 
+			if (!empty($this->get_cancelled()))
+			{
+				return lang("cancelled");
+			}
 			if (isset($date_start) && ($ts < $date_start || $date_start == ''))
 			{
 				// If contract has start date AND (today is before start date OR empty start date)

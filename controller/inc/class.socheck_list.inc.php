@@ -1061,7 +1061,7 @@
 				$this->db->query($sql, __LINE__, __FILE__);
 				if ($this->db->next_record())
 				{
-					$sql = "UPDATE {$table} SET completed_ts = {$now}, modified_by = {$account_id}";
+					$sql = "UPDATE {$table} SET completed_ts = {$now}, modified_by = {$account_id} WHERE check_list_id  = {$check_list_id} AND location_id = {$location_id} AND item_id = {$item_id}";
 				}
 				else
 				{

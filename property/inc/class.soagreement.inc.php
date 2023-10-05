@@ -1231,12 +1231,11 @@
 
 			$now = phpgwapi_datetime::date_to_timestamp(date($dateformat));
 
-			$filter_status = "status = 'active'"
-				. " AND start_date <= {$now}";
+			$filter_status = "status = 'active' AND (start_date <= {$now} AND end_date >= {$now})";
 
 			if($selceted)
 			{
-				$filter_status = "((status = 'active'AND start_date <= {$now}) OR contract_id = '{$selceted}')";
+				$filter_status = "((status = 'active'AND start_date <= {$now} AND end_date >= {$now}) OR contract_id = '{$selceted}')";
 			}
 
 			$this->db->query("SELECT contract_id, name FROM fm_agreement WHERE {$filter_status} AND contract_id IS NOT NULL AND vendor_id = {$vendor_id}", __LINE__, __FILE__);

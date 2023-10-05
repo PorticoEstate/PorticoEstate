@@ -35,6 +35,9 @@
 						unset($config->config_data[$dim]);
 					}
 				}
+
+				$config->config_data['differentiate_org_payer'] = phpgw::get_var('differentiate_org_payer', 'int','POST');
+
 				$config->save_repository();
 			}
 

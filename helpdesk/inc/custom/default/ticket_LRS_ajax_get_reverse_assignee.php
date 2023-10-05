@@ -215,7 +215,7 @@
 
 				if($search_options == 'ressurs_nr')
 				{
-					$filtermethod =	"RESSURSNR = '{$query}'";
+					$filtermethod =	"RESSURSNR = '{$query}' OR BRUKERNAVN = '{$query}'";
 				}
 				else if($search_options == 'resultat_enhet')
 				{

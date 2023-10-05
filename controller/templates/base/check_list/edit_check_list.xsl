@@ -216,7 +216,7 @@
 									<xsl:value-of select="php:function('lang', 'performed without deviation')" />
 								</button>
 							</xsl:if>
-							<button id="submit_deviation" class="submit_deviation pure-button pure-button-primary" type="submit" name="submit_deviation" value="1">
+							<button id="submit_deviation" class="submit_deviation pure-button pure-button-primary" type="button" onclick="forward_to_case();" name="submit_deviation" value="1">
 								<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
 								<xsl:text> </xsl:text>
 								<xsl:value-of select="php:function('lang', 'deviation')" />

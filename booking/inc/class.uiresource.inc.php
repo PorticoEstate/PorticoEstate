@@ -30,8 +30,8 @@
 			'get_e_locks'	=> true,
 			'add_e_lock'	=> true,
 			'remove_e_lock'	=> true,
-			'get_paricipant_limit' => true,
-			'add_paricipant_limit' => true
+			'get_participant_limit' => true,
+			'add_participant_limit' => true
 		);
 
 		var $fields, $display_name, $sobuilding, $activity_bo,$facility_bo, $rescategory_bo;
@@ -528,7 +528,7 @@
 			return array(
 				self::get_building_datatable_def($id),
 				self::get_e_lock_datatable_def($id),
-				self::get_paricipant_limit_datatable_def($id),
+				self::get_participant_limit_datatable_def($id),
 			);
 		}
 
@@ -572,7 +572,7 @@
 			return $this->jquery_results($lock_result);
 		}
 
-		private static function get_paricipant_limit_columns()
+		private static function get_participant_limit_columns()
 		{
 
 			$columns = array
@@ -582,14 +582,14 @@
 			);
 			return $columns;
 		}
-		private static function get_paricipant_limit_datatable_def( $id )
+		private static function get_participant_limit_datatable_def( $id )
 		{
 			return	array
 			(
 				'container' => 'datatable-container_2',
-				'requestUrl' => json_encode(self::link(array('menuaction' => 'booking.uiresource.get_paricipant_limit',
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'booking.uiresource.get_participant_limit',
 						'resource_id' => $id, 'phpgw_return_as' => 'json'))),
-				'ColumnDefs' => self::get_paricipant_limit_columns(),
+				'ColumnDefs' => self::get_participant_limit_columns(),
 				'data' => json_encode(array()),
 				'config' => array
 				(
@@ -599,11 +599,11 @@
 			);
 		}
 
-		public function get_paricipant_limit()
+		public function get_participant_limit()
 		{
 			$resource_id = phpgw::get_var('resource_id', 'int');
 
-			$result = $this->bo->so->get_paricipant_limit($resource_id);
+			$result = $this->bo->so->get_participant_limit($resource_id);
 
 			$dateFormat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($result['results'] as &$entry)
@@ -713,7 +713,7 @@
 			);
 		}
 
-		public function add_paricipant_limit()
+		public function add_participant_limit()
 		{
 			$resource_id = phpgw::get_var('resource_id', 'int');
 			$limit_from = phpgw::get_var('limit_from', 'date');
@@ -730,7 +730,7 @@
 			try
 			{
 				$resource = $this->bo->read_single($resource_id);
-				$receipt = $this->bo->add_paricipant_limit($resource, $resource_id, $limit_from, $limit_quantity);
+				$receipt = $this->bo->add_participant_limit($resource, $resource_id, $limit_from, $limit_quantity);
 				$msg = $receipt == 1 ? lang('added') : lang('updated');
 			}
 			catch (booking_unauthorized_exception $e)

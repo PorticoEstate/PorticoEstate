@@ -31,7 +31,7 @@ this.confirm_session = function (action)
 		}
 	}
 
-	if ( action === 'external_communication')
+	if (action === 'external_communication')
 	{
 		$("#send_email").prop("checked", false);
 	}
@@ -117,7 +117,7 @@ function SmsCountKeyDown(maxChar)
 this.fileuploader = function ()
 {
 	var sUrl = phpGWLink('index.php', multi_upload_parans);
-	TINY.box.show({iframe: sUrl, boxid: 'frameless', width:Math.round($(window).width()*0.9), height:Math.round($(window).height()*0.9), fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: Math.round($(window).width() * 0.9), height: Math.round($(window).height() * 0.9), fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 		close: true,
 		closejs: function ()
 		{
@@ -135,9 +135,9 @@ this.refresh_files = function ()
 	{
 		refresh_glider(strURL);
 	}
-	catch(e)
+	catch (e)
 	{
-		
+
 	}
 
 	JqueryPortico.updateinlineTableHelper(oTable2, strURL);

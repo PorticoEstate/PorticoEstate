@@ -357,14 +357,17 @@ $current-time-color: #ea4335;
       > div:first-child {
         display: flex;
         flex-direction: column;
-
-        div:nth-child(1) {
+        >div {
+          font-size: 0.8rem;
+          display: flex;
+          flex-direction: column;
+        }
+        >div:nth-child(1) {
+          font-size: 1rem;
           @extend .text-bold;
         }
 
-        div:nth-child(2) {
-          font-size: 0.5rem;
-        }
+
       }
 
       button {
@@ -453,6 +456,50 @@ $current-time-color: #ea4335;
         cursor: ns-resize;  /* Two-sided vertical arrow */
         z-index: 2;  /* Ensure it's on top */
       }
+
+      .dots-container {
+        height: 16px;
+        width: 16px;
+        i {
+          color: white;
+        }
+
+      }
+    }
+
+    .available-slot {
+      @extend .bg-yellow-light;
+      border-color: #FFF;
+      z-index: 4;
+      @extend .text-black;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+
+      &.first-day {
+        margin-left: 1.5rem;
+      }
+      &.second-day {
+        margin-right: 1.5rem;
+      }
+
+      &.selected {
+        @extend .bg-green-light;
+        //margin-left: 1.5rem;
+        opacity: 0.75;
+
+      }
+      &.disabled {
+        @extend .bg-grey-light;
+        //margin-left: 1.5rem;
+        cursor: not-allowed;
+        opacity: 0.75;
+      }
+
+      //
+      //resize: vertical;
+      //overflow: auto;
 
       .dots-container {
         height: 16px;

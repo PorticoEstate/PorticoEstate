@@ -238,8 +238,8 @@
 						</textarea>
 					</div>
 
-					<xsl:if test="direct_booking !=1 and config/application_equipment !=''">
-						<div class="form-group">
+					<xsl:if test="config/application_equipment !=''">
+						<div id="application_equipment" class="form-group" style="display: none;" >
 							<label>
 								<xsl:value-of select="config/application_equipment"/>
 							</label>

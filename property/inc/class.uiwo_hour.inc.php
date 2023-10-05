@@ -2356,33 +2356,36 @@ HTML;
 				));
 			}
 
-			$sms_location_id = $GLOBALS['phpgw']->locations->get_id('sms', 'run');
-			$config_sms		 = CreateObject('admin.soconfig', $sms_location_id);
-			phpgw::import_class('phpgwapi.phpqrcode');
-			$code_text		 = "SMSTO:{$config_sms->config_data['common']['gateway_number']}: STATUS {$workorder_id} ";
-			$filename		 = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . md5($code_text) . '.png';
-			QRcode::png($code_text, $filename);
-			$pdf->ezSetDy(-20);
-			//		$pdf->ezImage($filename,$pad = 0,$width = 0,$resize = '',$just = 'left',$border = '');
-			//		$pdf->ezText(lang('status code') .': 1 => ' . lang('performed'). ', 2 => ' . lang('No access') . ', 3 => I arbeid',10);
+			if ($this->config->config_data['wo_status_sms'])
+			{
+				$sms_location_id = $GLOBALS['phpgw']->locations->get_id('sms', 'run');
+				$config_sms		 = CreateObject('admin.soconfig', $sms_location_id);
+				phpgw::import_class('phpgwapi.phpqrcode');
+				$code_text		 = "SMSTO:{$config_sms->config_data['common']['gateway_number']}: STATUS {$workorder_id} ";
+				$filename		 = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . md5($code_text) . '.png';
+				QRcode::png($code_text, $filename);
+				$pdf->ezSetDy(-20);
+				//		$pdf->ezImage($filename,$pad = 0,$width = 0,$resize = '',$just = 'left',$border = '');
+				//		$pdf->ezText(lang('status code') .': 1 => ' . lang('performed'). ', 2 => ' . lang('No access') . ', 3 => I arbeid',10);
 
-			$data = array(
-				array('col1' => "<C:showimage:{$filename} 90>", 'col2' => "\n" . lang('status code') . ":\n\n 1 => " . lang('performed') . "\n 2 => " . lang('No access') . "\n 3 => I arbeid")
-			);
+				$data = array(
+					array('col1' => "<C:showimage:{$filename} 90>", 'col2' => "\n" . lang('status code') . ":\n\n 1 => " . lang('performed') . "\n 2 => " . lang('No access') . "\n 3 => I arbeid")
+				);
 
 
-			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array(
-				'showHeadings'	 => 0,
-				'shaded'		 => 0,
-				'xPos'			 => 'left',
-				'xOrientation'	 => 'right',
-				'width'			 => 500,
-				'gridlines'		 => EZ_GRIDLINE_ALL,
-				'cols'			 => array(
-					'col1'	 => array('width' => 150, 'justification' => 'left'),
-					'col2'	 => array('width' => 350, 'justification' => 'left'),
-				)
-			));
+				$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array(
+					'showHeadings'	 => 0,
+					'shaded'		 => 0,
+					'xPos'			 => 'left',
+					'xOrientation'	 => 'right',
+					'width'			 => 500,
+					'gridlines'		 => EZ_GRIDLINE_ALL,
+					'cols'			 => array(
+						'col1'	 => array('width' => 150, 'justification' => 'left'),
+						'col2'	 => array('width' => 350, 'justification' => 'left'),
+					)
+				));
+			}
 
 			$location_exceptions = createObject('property.solocation')->get_location_exception($location_code, $alert_vendor		 = true);
 

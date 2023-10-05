@@ -73,7 +73,7 @@ billing_start	rental	no	Fakturastart
 billing_end	rental	no	Fakturastopp
 billing_term	rental	no	Termin
 billing_terms	rental	no	Terminer
-billing_unit	rental	no	Ansvar-/tjenestested	
+billing_unit	rental	no	Ansvar-/tjenestested
 billing_removed_KF_contract	rental	no	Fjernet KF-kontrakt med id
 billing_removed_contract_part_1	rental	no	Fjernet kontrakt
 billing_removed_contract_part_2	rental	no	med total pris lik 0 kroner
@@ -552,7 +552,7 @@ sync_parties_fellesdata_id	rental	no	Synkronisering: Organisasjonsidentifikator
 sync_org_name_fellesdata	rental	no	Foretak i Fellesdata
 sync_org_email_fellesdata	rental	no	Epost i Fellesdata
 sync_org_unit_leader_fellesdata	rental	no	Enhetsleder i Fellesdata
-sync_org_department_fellesdata	rental	no	Avdeling i Fellesdata 
+sync_org_department_fellesdata	rental	no	Avdeling i Fellesdata
 syncronize_party	rental	no	Synkroniser kontraktspart
 System setting for project id can not be more than 6 characters.	rental	no	Systeminnstilling for prosjektnummer kan ikke være mer enn seks tegn.
 System setting for responsibility id for the current user must be 6 characters.	rental	no	Systeminnstilling for ansvar må være seks tegn.
@@ -694,3 +694,4 @@ missing customer id.	rental	no	Mangler kundenr.
 contract %1 has no parties	rental	no	Kontrakt %1 har ikke tilknyttet kunde
 part of town	rental	no	Bydel
 cancelled	rental	no	Kansellert
+notes	rental	no	Notater

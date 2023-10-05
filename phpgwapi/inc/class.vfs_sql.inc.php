@@ -890,6 +890,19 @@
 				)
 			);
 
+			if(!$this->fileoperation->check_target_directory($p))
+			{
+				$GLOBALS['phpgw']->log->error(array(
+					'text' => 'vfs::write() : missing target directory %1',
+					'p1'   => $p->real_leading_dirs,
+					'p2'	 => '',
+					'line' => __LINE__,
+					'file' => __FILE__
+				));
+
+				return false;
+			}
+
 			if($this->file_exists(array(
 					'string'	=> $p->fake_full_path,
 					'relatives'	=> array($p->mask)
