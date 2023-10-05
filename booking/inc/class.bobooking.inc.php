@@ -493,7 +493,8 @@
                     'id' => $resource['id'],
                     'activity_id' => $resource['activity_id'],
                     'activity_name' => $resource['activity_name'],
-                    'name' => $resource['name']
+                    'name' => $resource['name'],
+                    'simple_booking' => $resource['simple_booking']
                 );
             }
 
