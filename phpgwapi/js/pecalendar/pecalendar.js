@@ -721,7 +721,6 @@ class PEcalendar {
 
         const onClick = (ev) => {
             ev.stopPropagation();
-            console.log(slot);
             const selected = this.selectedTimeSlots.find(s => s.id === dataId);
             if (selected) {
                 slots.forEach(e => e.classList.remove('selected'));
@@ -729,8 +728,12 @@ class PEcalendar {
             } else {
                 slots.forEach(e => e.classList.add('selected'));
                 // this.selectedTimeSlots.push({id: e.id, slot}) // FOR MULTISELECT
-                this.selectedTimeSlots = [{id: dataId, slot}] // FOR SINGLESELECT
+                this.selectedTimeSlots.forEach(selected => {
+                    const elements = document.querySelectorAll(`[data-id="${selected.id}"]`);
+                    elements.forEach(c => c.classList.remove('selected'));
+                })
 
+                this.selectedTimeSlots = [{id: dataId, slot}] // FOR SINGLESELECT
             }
             this.updateResourceSelectState();
 
@@ -743,7 +746,10 @@ class PEcalendar {
 
         // First day slot
         const firstDaySlotTo = originalDateFrom.endOf('day');
-        slots.push(this.createSingleDaySlotElement(originalDateFrom, firstDaySlotTo, slot,onClick, canCreate));
+        if(this.isDateInRange(originalDateFrom)) {
+            slots.push(this.createSingleDaySlotElement(originalDateFrom, firstDaySlotTo, slot,onClick, canCreate));
+
+        }
 
         // If the slot spans into the next day, create a second slot element
         if (originalDateTo.day > originalDateFrom.day) {
@@ -838,12 +844,12 @@ class PEcalendar {
         if (this.availableTimeSlots && this.availableTimeSlots[this.resource_id]) {
             this.availableTimeSlots[this.resource_id].forEach((slot) => {
 
-                if (this.isDateInRange(DateTime.fromMillis(parseInt(slot.start)))) {
+                // if (this.isDateInRange(DateTime.fromMillis(parseInt(slot.start)))) {
                     // Ensure the slot has necessary data
                     // if (slot && slot.from && slot.to) {
                     const slotElements = this.createTimeSlotElement(slot);
                     slotElements.forEach((e) => contentElement.appendChild(e));
-                }
+                // }
             });
         }
     }
@@ -1693,7 +1699,7 @@ class PEcalendar {
         // Update the building ID
         this.building_id = building_id;
 
-        const startDate = this.firstDayOfCalendar.toFormat('dd/LL-yyyy');
+        const startDate = this.firstDayOfCalendar.minus({weeks: 1}).toFormat('dd/LL-yyyy');
         const endDate = this.lastDayOfCalendar.toFormat('dd/LL-yyyy');
 
         // Construct the URL for fetching building schedule information
