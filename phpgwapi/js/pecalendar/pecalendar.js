@@ -1163,7 +1163,6 @@ class PEcalendar {
         for (let column = 1; column <= 7; column++) {
             const colDate = this.firstDayOfCalendar.plus({days: column - 1});
             const col = this.createElement("div", "col");
-
             // Compare colDate to the current date and add a class or style if it's in the past
             if (colDate < currentDate.startOf('day')) {
                 col.classList.add('past-day');
@@ -1171,8 +1170,12 @@ class PEcalendar {
             col.style.gridColumn = `${column} / span 1`;
             col.style.gridRow = `1 / span ${(this.endHour - this.startHour + 1) * this.hourParts}`
             content.appendChild(col);
+            const dayOpeningHours = this.seasons.find(season => season.wday === colDate.weekday); // assuming 0 = Monday
 
-            if (!colDate.hasSame(now, 'day')) {
+            const seasonStartHour = parseInt(dayOpeningHours.from_.split(':')[0]);
+            const seasonEndHour = parseInt(dayOpeningHours.to_.split(':')[0]);
+
+            if (!colDate.hasSame(now, 'day') && (!dayOpeningHours || seasonStartHour >= this.endHour || seasonEndHour <= this.startHour)) {
                 continue;
             }
 
@@ -1182,7 +1185,7 @@ class PEcalendar {
                 const cell = this.createElement("div", "cell");
 
                 // If the cell represents a time in the past on the current day, set its background color to gray
-                if (rowTime < now) {
+                if (rowTime < now || hour < seasonStartHour || hour >= seasonEndHour) {
                     cell.classList.add('past-hour');
                 }
 
@@ -1326,10 +1329,18 @@ class PEcalendar {
         // Construct DateTime objects for start and end of the event
         const eventStart = luxon.DateTime.fromObject({hour: startHour, minute: startMinute});
         const eventEnd = luxon.DateTime.fromObject({hour: endHour, minute: endMinute});
+        const eventDate = luxon.DateTime.fromISO(newEvent.date);
 
         // Construct DateTime objects for allowed start and end hours
-        const allowedStart = luxon.DateTime.fromObject({hour: this.startHour, minute: 0});
-        const allowedEnd = luxon.DateTime.fromObject({hour: this.endHour, minute: 0});
+        let allowedStart = luxon.DateTime.fromObject({hour: this.startHour, minute: 0});
+        let allowedEnd = luxon.DateTime.fromObject({hour: this.endHour, minute: 0});
+        const dayOpeningHours = this.seasons.find(season => season.wday === eventDate.weekday);
+
+        // If dayOpeningHours is defined, adjust allowedStart and allowedEnd accordingly
+        if (dayOpeningHours) {
+            allowedStart = eventStart.set({ hour: parseInt(dayOpeningHours.from_.split(':')[0]), minute: parseInt(dayOpeningHours.from_.split(':')[1]), second: 0 });
+            allowedEnd = eventStart.set({ hour: parseInt(dayOpeningHours.to_.split(':')[0]), minute: parseInt(dayOpeningHours.to_.split(':')[1]), second: 0 });
+        }
 
         // Check if the event is within the allowed hours
         if (eventStart < allowedStart || eventEnd > allowedEnd) {
@@ -1337,7 +1348,6 @@ class PEcalendar {
         }
         // Check if the event is in the future
         const currentDate = luxon.DateTime.local();
-        const eventDate = luxon.DateTime.fromISO(newEvent.date);
 
         // Check if the event's date and time are in the past
         if (eventDate.startOf('day').plus({hour: endHour, minute: endMinute}) <= currentDate) {
@@ -1892,7 +1902,7 @@ class PEcalendar {
         // Initialize values for minimum and maximum time
         let minTime = 24;
         let maxTime = 0;
-
+        console.log(this.seasons);
         // Determine the minimum and maximum hours based on the seasons' data
         for (let season of this.seasons) {
             minTime = Math.min(minTime, getInclusiveHourFromTimeString(season.from_, false));
