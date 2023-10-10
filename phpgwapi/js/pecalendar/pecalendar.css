@@ -149,7 +149,7 @@
   background-color: #f7f7fa;
 }
 
-.text-black, .calendar .calendar-body .info, .calendar .calendar-body .event-booking, .calendar .calendar-body .event-allocation {
+.text-black, .calendar .calendar-body .info, .calendar .calendar-body .available-slot, .calendar .calendar-body .event-booking, .calendar .calendar-body .event-allocation {
   color: #000000;
 }
 
@@ -441,7 +441,7 @@
   color: #F5F5F5;
 }
 
-.bg-grey-light {
+.bg-grey-light, .calendar .calendar-body .available-slot.disabled {
   background-color: #F5F5F5;
 }
 
@@ -553,7 +553,7 @@
   color: #B0FF94;
 }
 
-.bg-green-light {
+.bg-green-light, .calendar .calendar-body .available-slot.selected {
   background-color: #B0FF94;
 }
 
@@ -633,7 +633,7 @@
   color: #FFEE94;
 }
 
-.bg-yellow-light {
+.bg-yellow-light, .calendar .calendar-body .available-slot {
   background-color: #FFEE94;
 }
 
@@ -824,7 +824,7 @@ h4, .h4 {
 .text-normal {
   font-weight: 400;
 }
-.text-bold, .calendar .calendar-body .event > div:first-child div:nth-child(1) {
+.text-bold, .calendar .calendar-body .event > div:first-child > div:nth-child(1) {
   font-weight: 700;
 }
 .text-bolder {
@@ -2562,8 +2562,13 @@ input[type=text]:hover {
   display: flex;
   flex-direction: column;
 }
-.calendar .calendar-body .event > div:first-child div:nth-child(2) {
-  font-size: 0.5rem;
+.calendar .calendar-body .event > div:first-child > div {
+  font-size: 0.8rem;
+  display: flex;
+  flex-direction: column;
+}
+.calendar .calendar-body .event > div:first-child > div:nth-child(1) {
+  font-size: 1rem;
 }
 .calendar .calendar-body .event button {
   height: 24px;
@@ -2640,6 +2645,34 @@ input[type=text]:hover {
   width: 16px;
 }
 .calendar .calendar-body .event-temporary .dots-container i {
+  color: white;
+}
+.calendar .calendar-body .available-slot {
+  border-color: #FFF;
+  z-index: 4;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.calendar .calendar-body .available-slot.first-day {
+  margin-left: 1.5rem;
+}
+.calendar .calendar-body .available-slot.second-day {
+  margin-right: 1.5rem;
+}
+.calendar .calendar-body .available-slot.selected {
+  opacity: 0.75;
+}
+.calendar .calendar-body .available-slot.disabled {
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+.calendar .calendar-body .available-slot .dots-container {
+  height: 16px;
+  width: 16px;
+}
+.calendar .calendar-body .available-slot .dots-container i {
   color: white;
 }
 .calendar .calendar-body .info {

@@ -362,18 +362,33 @@ class BookingSearch {
 
             hasSearch = true;
         }
+
         if (this.data.text() !== "") {
             if (!hasSearch)
                 resources = this.data.resources();
             const re = new RegExp(this.data.text(), 'i');
             let buildings_resources = [];
+            let activity_resources = [];
             // Find all buildings matching so we can filter on later
             if (this.data.selected_buildings().length === 0) {
                 const buildings = this.data.buildings().filter(building => building.name.match(re));
                 buildings_resources = this.getResourcesFromBuildings(buildings);
             }
-            resources = resources.filter(resource => resource.name.match(re) || buildings_resources.some(r => r.id === resource.id))
+            if (this.data.selected_activities().length === 0) {
+                const matchingActivities = this.data.activities().filter(activity => activity.name.match(re));
+                const activitySets = matchingActivities.map(activity => this.activity_cache[activity.id]);
+                const resourceActivities = this.data.resource_activities();
+                const resourceIdsSet = new Set(
+                    activitySets.flatMap(
+                        actIds => actIds.flatMap(
+                            a => resourceActivities.filter(ref => ref.activity_id === a)
+                        )
+                    ).map(act => act.resource_id)
+                );
+                activity_resources = this.data.resources().filter(resource => resourceIdsSet.has(resource.id));
 
+            }
+            resources = [...resources.filter(resource => resource.name.match(re) || buildings_resources.some(r => r.id === resource.id)), ...activity_resources]
             hasSearch = true;
         }
         const el = emptySearch();
@@ -781,7 +796,7 @@ class Search {
     updateHeaderTexts = (type) => {
         switch (type) {
             case "booking":
-                if(!landing_sections.booking) {
+                if (!landing_sections.booking) {
                     this.updateHeaderTexts();
                     break;
                 }
@@ -794,7 +809,7 @@ class Search {
                 window.location.hash = '#booking';
                 break;
             case "event":
-                if(!landing_sections.event) {
+                if (!landing_sections.event) {
                     this.updateHeaderTexts();
                     break;
                 }
@@ -810,7 +825,7 @@ class Search {
                 window.location.hash = '#event';
                 break;
             case "organization":
-                if(!landing_sections.organization) {
+                if (!landing_sections.organization) {
                     this.updateHeaderTexts();
                     break;
                 }
@@ -823,11 +838,11 @@ class Search {
                 window.location.hash = '#organization';
                 break;
             default:
-                if(landing_sections.booking) {
+                if (landing_sections.booking) {
                     this.ko_search.type_group("booking")
                     break;
                 }
-                if(landing_sections.event) {
+                if (landing_sections.event) {
                     this.ko_search.type_group("event")
                     break;
                 }
