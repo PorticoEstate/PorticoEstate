@@ -101,6 +101,17 @@ class PEcalendar {
     tempEvents = [];
 
     /**
+     * @type {Array<{id: string, slot: IFreeTimeSlot}>} - Events to be created.
+     */
+    selectedTimeSlots = [];
+
+
+    /**
+     * @type {Record<string, IFreeTimeSlot>} - Events to be created.
+     */
+    availableTimeSlots;
+
+    /**
      * Initializes the PEcalendar instance.
      *
      * @param {string} id - The DOM element ID for the calendar.
@@ -291,6 +302,7 @@ class PEcalendar {
             // Update all events
             this.clearEvents(content);
             this.addEventsToContent(content);
+            this.addTimeSlotsToContent(content)
         }
     }
 
@@ -307,7 +319,7 @@ class PEcalendar {
         const selectElem = document.getElementById(this.getId("resources"));
 
         // If tempEvents has content, disable the <select> element
-        if (this.tempEvents.length > 0) {
+        if (this.tempEvents.length > 0 || this.selectedTimeSlots.length > 0) {
             selectElem.setAttribute("disabled", "disabled");
         }
         // If tempEvents is empty, enable the <select> element
@@ -340,7 +352,7 @@ class PEcalendar {
     updateBadgeCount() {
         const badgeElem = document.getElementById(this.getId("badgeCount"));
         if (badgeElem) {
-            badgeElem.textContent = this.tempEvents.length;
+            badgeElem.textContent = this.tempEvents.length + this.selectedTimeSlots.length;
         }
     }
 
@@ -380,16 +392,11 @@ class PEcalendar {
 
         // Iterate over the filtered events
         for (let event of this.tempEvents) {
-            // // Retrieve the event's dates
-            // const dates = this.getEventDates(event);
-            //
-            // // For each date, check if it's in the current date range
-            // for (let date of dates) {
-            //     if (this.isDateInRange(date.from)) {
-            // Create an event pill element and append to the content
             this.createTempEventPill(event);
-            // }
-            // }
+        }
+
+        for (let selected of this.selectedTimeSlots) {
+            this.createTimeSlotPill(selected);
         }
     }
 
@@ -451,6 +458,7 @@ class PEcalendar {
                 resource
             ]
         };
+
 
         // Append the event to the tempEvents array
         this.tempEvents.push(tempEvent);
@@ -623,6 +631,229 @@ class PEcalendar {
 
     }
 
+    /**
+     * Create a DOM element representing an available time slot.
+     *
+     * @param {IFreeTimeSlot} slot - An object representing an available time slot.
+     * @returns {HTMLElement} - The created DOM element representing the time slot.
+     */
+    createTimeSlotElementOLD(slot) {
+        // Example: Assume slot has 'date', 'from', 'to' properties
+        const dateFrom = DateTime.fromMillis(parseInt(slot.start));
+        const dateTo = DateTime.fromMillis(parseInt(slot.end));
+        const time = {
+            date: dateFrom.toFormat('yyyy-MM-dd'),
+            from: dateFrom.toFormat('HH:mm:ss'),
+            to: dateTo.toFormat('HH:mm:ss')
+        }
+        const canCreate = this.canCreateTemporaryEvent(time)
+        let subtext = 'Ledig';
+        if (!canCreate) {
+            subtext = '';
+        }
+        if (slot.overlap !== false) {
+            subtext = 'Reservert'
+        }
+
+
+        const e = this.createElement("div", `event available-slot`, `<div><div>${this.formatDateTimeInterval(time.date, time.from, time.to)}</div><div>${subtext}</div></div>`);
+
+        let {row, rowStartAdd, span, rowStopAdd} = this.calculateEventGridPosition({from: dateFrom, to: dateTo});
+
+
+        e.id = `timeslot-${slot.start}-${slot.end}`;
+        if (this.selectedTimeSlots.find(s => s.id === e.id)) {
+            e.classList.add('selected');
+        }
+
+        // Positioning and other styling (Adapt according to your application's logic and CSS)
+        e.style.gridColumn = `${+dateFrom.toFormat("c")} / span 1`;
+        e.style.gridRow = `${row + rowStartAdd} / span ${span - rowStartAdd + rowStopAdd}`;
+
+        // Event Listener for slot selection
+        if (canCreate && slot.overlap === false) {
+            e.addEventListener('click', (ev) => {
+                console.log(slot);
+                const selected = this.selectedTimeSlots.find(s => s.id === e.id);
+                if (selected) {
+                    e.classList.remove('selected');
+                    this.selectedTimeSlots = this.selectedTimeSlots.filter(s => s.id !== e.id)
+                } else {
+                    e.classList.add('selected');
+                    this.selectedTimeSlots.push({id: e.id, slot})
+                }
+                this.updateResourceSelectState();
+
+                // Update all pills
+                this.clearPills();
+                this.addPillsToContent()
+
+                this.updateBadgeCount();  // Update the badge count
+            });
+        } else {
+            e.classList.add('disabled')
+        }
+
+        // Return the created element
+        return e;
+    }
+
+
+    /**
+     * Create DOM elements representing an available time slot, potentially split across multiple days.
+     *
+     * @param {IFreeTimeSlot} slot - An object representing an available time slot.
+     * @returns {HTMLElement[]} - An array of created DOM elements representing the time slot.
+     */
+    createTimeSlotElement(slot) {
+        // Convert Unix timestamps to DateTime objects
+        const originalDateFrom = DateTime.fromMillis(parseInt(slot.start));
+        const originalDateTo = DateTime.fromMillis(parseInt(slot.end));
+        const time = {
+            date: originalDateFrom.toFormat('yyyy-MM-dd'),
+            from: originalDateFrom.toFormat('HH:mm:ss'),
+            to: originalDateTo.toFormat('HH:mm:ss')
+        }
+        // Slots array to hold all elements (in case of multi-day slots)
+        const slots = [];
+        const canCreate = this.canCreateTemporaryEvent(time)
+        const dataId= `timeslot-${slot.start}-${slot.end}`;
+
+        const onClick = (ev) => {
+            ev.stopPropagation();
+            const selected = this.selectedTimeSlots.find(s => s.id === dataId);
+            if (selected) {
+                slots.forEach(e => e.classList.remove('selected'));
+                this.selectedTimeSlots = this.selectedTimeSlots.filter(s => s.id !== dataId)
+            } else {
+                slots.forEach(e => e.classList.add('selected'));
+                // this.selectedTimeSlots.push({id: e.id, slot}) // FOR MULTISELECT
+                this.selectedTimeSlots.forEach(selected => {
+                    const elements = document.querySelectorAll(`[data-id="${selected.id}"]`);
+                    elements.forEach(c => c.classList.remove('selected'));
+                })
+
+                this.selectedTimeSlots = [{id: dataId, slot}] // FOR SINGLESELECT
+            }
+            this.updateResourceSelectState();
+
+            // Update all pills
+            this.clearPills();
+            this.addPillsToContent()
+
+            this.updateBadgeCount();  // Update the badge count
+        }
+
+        // First day slot
+        const firstDaySlotTo = originalDateFrom.endOf('day');
+        if(this.isDateInRange(originalDateFrom)) {
+            slots.push(this.createSingleDaySlotElement(originalDateFrom, firstDaySlotTo, slot,onClick, canCreate));
+
+        }
+
+        // If the slot spans into the next day, create a second slot element
+        if (originalDateTo.day > originalDateFrom.day) {
+            const secondDaySlotFrom = originalDateTo.startOf('day');
+            if (this.isDateInRange(originalDateTo)) {
+                slots.push(this.createSingleDaySlotElement(secondDaySlotFrom, originalDateTo, slot,onClick, canCreate, true));
+            }
+        }
+
+        return slots;
+    }
+
+    /**
+     * Create a single DOM element representing a portion of a time slot within a single day.
+     *
+     * @param {DateTime} dateFrom - The start DateTime of the slot element.
+     * @param {DateTime} dateTo - The end DateTime of the slot element.
+     * @param {IFreeTimeSlot} originalSlot - The original slot data.
+     * @param {function} onClick - clickcallback.
+     * @param {boolean} canCreate - has collision or in past.
+     * @param {boolean} second_day - second day.
+     * @returns {HTMLElement} - The created DOM element representing the time slot.
+     */
+    createSingleDaySlotElement(dateFrom, dateTo, originalSlot,onClick, canCreate = true, second_day = false) {
+        // ... Your logic to create a single slot element ...
+        // Positioning logic, event listeners, etc. will be here
+        // Ensure to test thoroughly and adapt as per your application's requirements
+        // Format date and time as per your requirements
+        // const time = {
+        //     date: dateFrom.toFormat('yyyy-MM-dd'),
+        //     from: dateFrom.toFormat('HH:mm:ss'),
+        //     to: dateTo.toFormat('HH:mm:ss')
+        // }
+        let subtext = 'Ledig';
+        if (!canCreate) {
+            subtext = '';
+        }
+        if (originalSlot.overlap !== false) {
+            subtext = 'Reservert'
+        }
+        // Create slot element
+        const e = this.createElement("div", `event available-slot ${second_day ? 'second-day' : 'first-day'}`, `<div><div>${subtext}</div><div>${this.formatUnixTimeInterval(DateTime.fromMillis(parseInt(originalSlot.start)), DateTime.fromMillis(parseInt(originalSlot.end)))}</div></div>`);
+
+        // Calculate grid positioning
+        const {row, rowStartAdd, span, rowStopAdd} = this.calculateEventGridPosition({from: dateFrom, to: dateTo});
+
+        // Apply grid positioning to the element
+        e.style.gridColumn = `${+dateFrom.toFormat("c")} / span 1`;
+        e.style.gridRow = `${row + rowStartAdd} / span ${span - rowStartAdd + rowStopAdd}`;
+        e.setAttribute('data-id', `timeslot-${originalSlot.start}-${originalSlot.end}`);
+
+
+        // Event Listener for slot selection
+        if (canCreate && originalSlot.overlap === false) {
+            // Event Listener for slot selection
+            e.addEventListener('click', onClick);
+
+            // e.addEventListener('click', (ev) => {
+            //     console.log(slot);
+            //     const selected = this.selectedTimeSlots.find(s => s.id === e.id);
+            //     if (selected) {
+            //         e.classList.remove('selected');
+            //         this.selectedTimeSlots = this.selectedTimeSlots.filter(s => s.id !== e.id)
+            //     } else {
+            //         e.classList.add('selected');
+            //         this.selectedTimeSlots.push({id: e.id, slot})
+            //     }
+            //     this.updateResourceSelectState();
+            //
+            //     // Update all pills
+            //     this.clearPills();
+            //     this.addPillsToContent()
+            //
+            //     this.updateBadgeCount();  // Update the badge count
+            // });
+        } else {
+            e.classList.add('disabled')
+        }
+
+        // Return the created element
+        return e;
+
+    }
+
+    /**
+     * Add available time slots to the content element on the calendar.
+     *
+     * @param {HTMLElement} contentElement - The DOM element to which the time slots should be added.
+     */
+    addTimeSlotsToContent(contentElement) {
+        // Ensure availableSlots is defined and not empty
+        if (this.availableTimeSlots && this.availableTimeSlots[this.resource_id]) {
+            this.availableTimeSlots[this.resource_id].forEach((slot) => {
+
+                // if (this.isDateInRange(DateTime.fromMillis(parseInt(slot.start)))) {
+                    // Ensure the slot has necessary data
+                    // if (slot && slot.from && slot.to) {
+                    const slotElements = this.createTimeSlotElement(slot);
+                    slotElements.forEach((e) => contentElement.appendChild(e));
+                // }
+            });
+        }
+    }
+
 
     /**
      * Updates a temporary event's attributes and re-renders it within the provided container.
@@ -681,6 +912,24 @@ class PEcalendar {
 
         return `${formattedDate} ${formattedFromTime}-${formattedToTime}`;
     }
+    /**
+     * Updates a temporary event's attributes and re-renders it within the provided container.
+     *
+     * @param {DateTime} dateFrom - The container where the event should be rendered.
+     * @param {DateTime} dateTo - The temporary event to be updated.
+     * @return {string} - formatted html.
+     */
+    formatUnixTimeInterval(dateFrom, dateTo) {
+        // const fromTime = DateTime.fromISO(`${currentDate}T${from}`, {locale: 'nb'});
+        // const toTime = DateTime.fromISO(`${currentDate}T${to}`, {locale: 'nb'});
+
+        const formattedDateFrom = dateFrom.setLocale('nb').toFormat('d. LLL');
+        const formattedDateTo = dateTo.setLocale('nb').toFormat('d. LLL');
+        const formattedFromTime = dateFrom.setLocale('nb').toFormat('HH:mm');
+        const formattedToTime = dateTo.setLocale('nb').toFormat('HH:mm');
+
+        return `<span>${formattedDateFrom} ${formattedFromTime}</span>-<span>${formattedDateTo !== formattedDateFrom ? `${formattedDateTo} `: ''}${formattedToTime}</span>`;
+    }
 
     /**
      * Creates a pill in the header representing a temporary event.
@@ -702,6 +951,50 @@ class PEcalendar {
         closeButton.innerHTML = '<span aria-hidden="true">&times;</span>';
         closeButton.addEventListener('click', () => {
             this.removeTempEvent(event);
+        });
+        // Attach a click event to the 'x' to remove the event
+        pill.appendChild(closeButton)
+        // Append the pill to the header
+        container.appendChild(pill);
+    }
+
+    /**
+     * Creates a pill in the header representing a selected time slot.
+     * The pill contains the event's time range and a button to remove the event.
+     *
+     * @param {id: string, slot: IFreeTimeSlot} data - The temporary event to be represented by the pill.
+     */
+    createTimeSlotPill({id, slot}) {
+        const container = document.getElementById(this.getId("tempEventPills"))
+        const dateFrom = DateTime.fromMillis(parseInt(slot.start));
+        const dateTo = DateTime.fromMillis(parseInt(slot.end));
+        // const time = {
+        //     date: dateFrom.toFormat('yyyy-MM-dd'),
+        //     from: dateFrom.toFormat('HH:mm:ss'),
+        //     to: dateTo.toFormat('HH:mm:ss')
+        // }
+        // Create a new pill element
+        const pill = this.createElement('span', 'temp-event-pill filter-group',
+            `
+                ${this.resources[this.resource_id].name} <span class="start-end">${this.formatUnixTimeInterval(dateFrom, dateTo)}</span>
+            `
+        );
+        pill.id = `pill-${id}`;
+        const closeButton = this.createElement('button', 'close pe-btn  pe-btn--transparent');
+        closeButton.type = "button";
+        closeButton.innerHTML = '<span aria-hidden="true">&times;</span>';
+        closeButton.addEventListener('click', () => {
+            this.selectedTimeSlots = this.selectedTimeSlots.filter(s => s.id !== id);
+            const elements = document.querySelectorAll(`[data-id="${id}"]`);
+            elements.forEach(c => c.classList.remove('selected'));
+
+            this.updateResourceSelectState();
+
+            // Update all pills
+            this.clearPills();
+            this.addPillsToContent()
+
+            this.updateBadgeCount();  // Update the badge count
         });
         // Attach a click event to the 'x' to remove the event
         pill.appendChild(closeButton)
@@ -870,7 +1163,6 @@ class PEcalendar {
         for (let column = 1; column <= 7; column++) {
             const colDate = this.firstDayOfCalendar.plus({days: column - 1});
             const col = this.createElement("div", "col");
-
             // Compare colDate to the current date and add a class or style if it's in the past
             if (colDate < currentDate.startOf('day')) {
                 col.classList.add('past-day');
@@ -878,8 +1170,12 @@ class PEcalendar {
             col.style.gridColumn = `${column} / span 1`;
             col.style.gridRow = `1 / span ${(this.endHour - this.startHour + 1) * this.hourParts}`
             content.appendChild(col);
+            const dayOpeningHours = this.seasons.find(season => season.wday === colDate.weekday); // assuming 0 = Monday
 
-            if (!colDate.hasSame(now, 'day')) {
+            const seasonStartHour = parseInt(dayOpeningHours.from_.split(':')[0]);
+            const seasonEndHour = parseInt(dayOpeningHours.to_.split(':')[0]);
+
+            if (!colDate.hasSame(now, 'day') && (!dayOpeningHours || seasonStartHour >= this.endHour || seasonEndHour <= this.startHour)) {
                 continue;
             }
 
@@ -889,7 +1185,7 @@ class PEcalendar {
                 const cell = this.createElement("div", "cell");
 
                 // If the cell represents a time in the past on the current day, set its background color to gray
-                if (rowTime < now) {
+                if (rowTime < now || hour < seasonStartHour || hour >= seasonEndHour) {
                     cell.classList.add('past-hour');
                 }
 
@@ -925,7 +1221,7 @@ class PEcalendar {
             applicationButton.onclick = (event) => {
                 let resource = self.resources[self.resource_id];
 
-                const dateRanges = self.tempEvents.map(tempEvent => {
+                let dateRanges = self.tempEvents.map(tempEvent => {
                     const unixDates = this.getUnixTimestamps(tempEvent.date, tempEvent.from, tempEvent.to);
                     return `${Math.floor(unixDates.startTimestamp / 1000)}_${Math.floor(unixDates.endTimestamp / 1000)}`;
 
@@ -941,12 +1237,21 @@ class PEcalendar {
                 }
                 let url = phpGWLink('bookingfrontend/', reqParams, false);
                 if (resource.simple_booking === 1) {
+                    dateRanges = self.selectedTimeSlots.map(selected => {
+                        return `${Math.floor(selected.slot.start / 1000)}_${Math.floor(selected.slot.end / 1000)}`;
+
+                    }).join(',');
+
                     url = phpGWLink('bookingfrontend/', {
-                        menuaction: 'bookingfrontend.uiresource.show',
+                        menuaction: 'bookingfrontend.uiapplication.add',
                         building_id: self.building_id,
-                        id: self.resource_id
+                        resource_id: self.resource_id,
+                        simple: true,
+                        dates: dateRanges
                     }, false);
                 }
+                console.log(resource, url);
+
                 event.preventDefault();
                 location.href = url;
             }
@@ -1024,10 +1329,18 @@ class PEcalendar {
         // Construct DateTime objects for start and end of the event
         const eventStart = luxon.DateTime.fromObject({hour: startHour, minute: startMinute});
         const eventEnd = luxon.DateTime.fromObject({hour: endHour, minute: endMinute});
+        const eventDate = luxon.DateTime.fromISO(newEvent.date);
 
         // Construct DateTime objects for allowed start and end hours
-        const allowedStart = luxon.DateTime.fromObject({hour: this.startHour, minute: 0});
-        const allowedEnd = luxon.DateTime.fromObject({hour: this.endHour, minute: 0});
+        let allowedStart = luxon.DateTime.fromObject({hour: this.startHour, minute: 0});
+        let allowedEnd = luxon.DateTime.fromObject({hour: this.endHour, minute: 0});
+        const dayOpeningHours = this.seasons.find(season => season.wday === eventDate.weekday);
+
+        // If dayOpeningHours is defined, adjust allowedStart and allowedEnd accordingly
+        if (dayOpeningHours) {
+            allowedStart = eventStart.set({ hour: parseInt(dayOpeningHours.from_.split(':')[0]), minute: parseInt(dayOpeningHours.from_.split(':')[1]), second: 0 });
+            allowedEnd = eventStart.set({ hour: parseInt(dayOpeningHours.to_.split(':')[0]), minute: parseInt(dayOpeningHours.to_.split(':')[1]), second: 0 });
+        }
 
         // Check if the event is within the allowed hours
         if (eventStart < allowedStart || eventEnd > allowedEnd) {
@@ -1035,10 +1348,9 @@ class PEcalendar {
         }
         // Check if the event is in the future
         const currentDate = luxon.DateTime.local();
-        const eventDate = luxon.DateTime.fromISO(newEvent.date);
 
         // Check if the event's date and time are in the past
-        if (eventDate.startOf('day').plus({ hour: endHour, minute: endMinute }) <= currentDate) {
+        if (eventDate.startOf('day').plus({hour: endHour, minute: endMinute}) <= currentDate) {
             return false; // Event is in the past
         }
 
@@ -1048,7 +1360,6 @@ class PEcalendar {
                 return false; // Event is outside of allowed hours or in the past on the current day
             }
         }
-
 
 
         // Check for overlaps with existing events
@@ -1067,6 +1378,10 @@ class PEcalendar {
      * Utilizes mouse and touch events to achieve this functionality.
      */
     setupEventInteractions() {
+        if (this.resources[this.resource_id].simple_booking === 1) {
+            return;
+        }
+
         // Variables to hold drag status and event details
         let isDragging = false;
         let dragStart = null;
@@ -1394,28 +1709,38 @@ class PEcalendar {
         // Update the building ID
         this.building_id = building_id;
 
+        const startDate = this.firstDayOfCalendar.minus({weeks: 1}).toFormat('dd/LL-yyyy');
+        const endDate = this.lastDayOfCalendar.toFormat('dd/LL-yyyy');
+
         // Construct the URL for fetching building schedule information
-        let url = phpGWLink('bookingfrontend/', {
+        let urlBuildingSchedule = phpGWLink('bookingfrontend/', {
             menuaction: 'bookingfrontend.uibooking.building_schedule_pe',
             building_id,
             date: this.currentDate.toFormat("y-MM-dd")
         }, true);
-
         const self = this;
 
-        // Make an AJAX GET request to the constructed URL
-        $.ajax({
-            url: url,
-            type: 'GET',
-            async: false,
-            success: function (response) {
+        let urlFreeTime = phpGWLink('bookingfrontend/', {
+            menuaction: 'bookingfrontend.uibooking.get_freetime',
+            building_id,
+            start_date: startDate,
+            end_date: endDate
+        }, true);
+
+
+        Promise.all([
+            fetch(urlFreeTime).then(response => response.json()),
+            fetch(urlBuildingSchedule).then(response => response.json())
+        ])
+            .then(([availableSlotsData, buildingScheduleData]) => {
                 // Extract scheduling results from the response
                 /** @type {SchedulingResults} */
-                const results = response?.ResultSet?.Result?.results;
+                const buildingScheduleResults = buildingScheduleData?.ResultSet?.Result?.results;
 
                 // Update the events, resources, and seasons based on the response
-                self.resources = results?.resources;
-                self.seasons = results?.seasons;
+                self.resources = buildingScheduleResults?.resources;
+                self.seasons = buildingScheduleResults?.seasons;
+                this.availableTimeSlots = availableSlotsData;
 
                 // Set the resource ID based on either the provided value or the first available resource's ID
                 if (self.resources && Object.keys(self.resources).length > 0)
@@ -1428,9 +1753,11 @@ class PEcalendar {
 
                 // Update the calendar's events
 
-                self.setEvents(results?.schedule || []);
-            }
-        });
+                self.setEvents(buildingScheduleResults?.schedule || []);
+
+                this.createCalendarDom();  // Re-render the calendar to display new data
+            })
+            .catch(error => console.error('Error fetching data:', error));
     }
 
 
@@ -1575,7 +1902,7 @@ class PEcalendar {
         // Initialize values for minimum and maximum time
         let minTime = 24;
         let maxTime = 0;
-
+        console.log(this.seasons);
         // Determine the minimum and maximum hours based on the seasons' data
         for (let season of this.seasons) {
             minTime = Math.min(minTime, getInclusiveHourFromTimeString(season.from_, false));
