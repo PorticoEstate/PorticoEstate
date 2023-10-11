@@ -37,6 +37,7 @@ export interface IBuildingResource {
     activity_id: number
     activity_name: string
     name: string
+    simple_booking: 0 | 1
 }
 
 export interface IEventDate {
@@ -82,4 +83,22 @@ export interface Season {
     wday: number
     from_: string
     to_: string
+}
+
+
+export interface IFreeTimeSlot {
+    when: string
+    start: string
+    end: string
+    overlap: false | number
+    applicationLink: ApplicationLink
+}
+
+export interface ApplicationLink {
+    menuaction: string
+    resource_id: number
+    building_id: number
+    "from_[]": string
+    "to_[]": string
+    simple: boolean
 }
