@@ -2,10 +2,10 @@
 	<div class="content">
 		<xsl:for-each select="pathway">
 			<ul class="pathway">
-				<li>yrdy
+				<li>
 					<a>
 						<xsl:attribute name="href">
-							<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
+							<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/', '')"/>
 						</xsl:attribute>
 						<xsl:value-of select="php:function('lang', 'Home')" />
 					</a>
