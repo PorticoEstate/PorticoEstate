@@ -2452,7 +2452,7 @@
 
 							$pris_inkl_mva = (float)$order_line['unit_price'] + $unit_tax;
 
-							$_item['art_descr'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 35), 35, ' '); //35 chars long
+							$_item['art_descr'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 0, 35), 35, ' '); //35 chars long
 							$_item['article'] = str_pad(substr(strtoupper($order_line['article_code']), 0, 15), 15, ' ');
 							$_item['amount'] = $this->format_cost(($order_line['amount']));
 							$_item['tax_code'] = str_pad($order_line['tax_code'], 2, ' ', STR_PAD_LEFT);
@@ -2460,7 +2460,7 @@
 							$_item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
 
 							$_text['line_no'] = $_item['line_no'];
-							$_text['short_info'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 60), 60, ' ');
+							$_text['short_info'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']), 0, 60), 60, ' ');
 
 
 							//Add to orders
@@ -2618,7 +2618,7 @@
 
 							$pris_inkl_mva = (float)$order_line['unit_price'] + $unit_tax;
 
-							$_item['art_descr'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 35), 35, ' '); //35 chars long
+							$_item['art_descr'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 0, 35), 35, ' '); //35 chars long
 							$_item['article'] = str_pad(substr(strtoupper($order_line['article_code']), 0, 15), 15, ' ');
 							$_item['amount'] = $this->format_cost(($order_line['amount']));
 							$_item['tax_code'] = str_pad($order_line['tax_code'], 2, ' ', STR_PAD_LEFT);
@@ -2626,7 +2626,7 @@
 							$_item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
 
 							$_text['line_no'] = $_item['line_no'];
-							$_text['short_info'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 60), 60, ' ');
+							$_text['short_info'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']), 0, 60), 60, ' ');
 
 							//Add to orders
 							$output[] = implode('', str_replace(array("\n", "\r"), '', $_item));
