@@ -75,10 +75,15 @@
   }
 }
 
-input[type="text"] {
+input[type="text"], textarea {
   @include pill;
   box-shadow: $box-shadow;
   -webkit-appearance: none;
+}
+
+textarea {
+  border-radius: 1rem;
+  padding: 0.713rem 0.715rem;
 }
 
 .input-icon {
