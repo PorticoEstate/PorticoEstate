@@ -498,10 +498,10 @@
 								</input>
 							</div>
 							<div class="pure-control-group">
-								<label for="field_contact_mail">
+								<label for="field_contact_email">
 									<xsl:value-of select="php:function('lang', 'Email')" />
 								</label>
-								<input id="field_contact_mail" name="contact_email" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
+								<input id="field_contact_email" name="contact_email" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
 									<xsl:attribute name="value">
 										<xsl:value-of select="event/contact_email"/>
 									</xsl:attribute>
