@@ -255,6 +255,12 @@
 									'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiservice.index')),
 									'image'	=> array('property', 'service'),
 						),
+						'article_group'		 => array
+							(
+							'text'	 => lang('article group'),
+							'url'	 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uigeneric.index',
+								'type'		 => 'article_group'))
+						),
 						'accounting_tax'		 => array
 							(
 							'text'	 => lang('tax code'),
