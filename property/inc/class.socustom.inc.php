@@ -98,6 +98,7 @@
 				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
+			$customs = array();
 			while ($this->db->next_record())
 			{
 				$customs[] = array
