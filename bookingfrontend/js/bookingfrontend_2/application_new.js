@@ -71,16 +71,25 @@ function applicationModel()
 
 //	console.log(urlParams);
 
+
 	self.bookingDate = ko.observable("");
 	self.bookingStartTime = ko.observable("");
 	self.bookingEndTime = ko.observable("");
-	self.bookingAddFilledDate = ko.computed(function ()
-	{
-		if (self.bookingEndTime() != "" && self.bookingStartTime() != "" && self.bookingDate() != "")
-		{
-			self.addDate();
-		}
-	});
+
+	// self.bookingDate.subscribe(function(newDate) {
+	// 	console.log('New date selected:', newDate);
+	// 	// Further logic as needed...
+	// 	// am.bookingDate(newDate); // equivalent to this line in the YUI code
+	// }, self);
+
+
+	// self.bookingAddFilledDate = ko.computed(function ()
+	// {
+	// 	if (self.bookingEndTime() != "" && self.bookingStartTime() != "" && self.bookingDate() != "")
+	// 	{
+	// 		self.addDate();
+	// 	}
+	// });
 	self.bookableResource = bookableresource;
 	self.selectedResources = ko.observableArray(0);
 	self.isResourceSelected = ko.computed(function ()
@@ -142,60 +151,50 @@ function applicationModel()
 	}).extend({required: true});
 	self.audiences = audiences;
 	self.audienceSelectedValue = ko.observable();
-	self.audienceSelected = (function (e)
-	{
-		$("#audienceDropdownBtn").text(e.name);
-		self.audienceSelectedValue(e.id);
-	});
+
 	self.activityId = ko.observable();
 	self.date = ko.observableArray();
 	self.addDate = function ()
 	{
-
 		if (self.bookingDate() && self.bookingStartTime() && self.bookingEndTime())
 		{
-			var start = new Date(self.bookingDate());
-			start.setHours(new Date(self.bookingStartTime()).getHours());
-			start.setMinutes(new Date(self.bookingStartTime()).getMinutes());
-			var end = new Date(self.bookingDate());
-			end.setHours(new Date(self.bookingEndTime()).getHours());
-			end.setMinutes(new Date(self.bookingEndTime()).getMinutes());
+			var date = luxon.DateTime.fromFormat(self.bookingDate(), "dd.MM.yyyy");
+			var startTime = luxon.DateTime.fromJSDate(new Date(self.bookingStartTime()));
+			var endTime = luxon.DateTime.fromJSDate(new Date(self.bookingEndTime()));
+			var start = date.set({hour: startTime.hour, minute: startTime.minute});
+			var end = date.set({hour: endTime.hour, minute: endTime.minute});
+			var now = luxon.DateTime.local();
 
-			if (start.getTime() < end.getTime())
-			{
-				var match = ko.utils.arrayFirst(self.date(), function (item)
-				{
-					return item.id === [start, end].join("");
+			console.log("UI called!!!", self.bookingDate(), start, end);
+
+			if (start < now || end < now) {
+				$(".applicationSelectedDates").html("Tidspunktet må være i fremtiden");
+			} else if (start >= end) {
+				$(".applicationSelectedDates").html("Starttid må være tidligere enn sluttid");
+			} else {
+				var match = ko.utils.arrayFirst(self.date(), function(item) {
+					return item.id === [start.toISO(), end.toISO()].join("");
 				});
 
-				if (!match)
-				{
-					//			if (direct_booking == 0 || (direct_booking == 1 && self.date().length < 1))
-					{
-						self.date.push({id: [start, end
-							].join(""), from_: formatSingleDate(start), to_: formatSingleDate(end), formatedPeriode: formatDate(start, end)});  /*repeat: self.repeat(),*/
-					}
+				if (!match) {
+					self.date.push({
+						id: [start.toISO(), end.toISO()].join(""),
+						from_: start.toFormat('dd/MM/yyyy HH:mm'),
+						to_: end.toFormat('dd/MM/yyyy HH:mm'),
+						formatedPeriode: start.toFormat('dd/MM/yyyy HH:mm') + ' - ' + end.toFormat('HH:mm')
+					});
 
-					setTimeout(function ()
-					{
+					setTimeout(function() {
 						self.bookingDate("");
 						self.bookingStartTime("");
 						self.bookingEndTime("");
 						$(".applicationSelectedDates").html("");
-						if( typeof(post_handle_order_table) === 'function')
-						{
+						if (typeof(post_handle_order_table) === 'function') {
 							post_handle_order_table();
 						}
-
-					}, 500); //self.repeat(false);
-
+					}, 500);
 				}
 			}
-			else if (start.getTime() >= end.getTime())
-			{
-				$(".applicationSelectedDates").html("Starttid m&aring; v&aelig;re tidligere enn sluttid");
-			}
-
 		}
 	};
 
@@ -481,37 +480,37 @@ var dateformat_datepicker = dateformat_backend.replace(/d/gi, "%d").replace(/m/g
 
 var d = new Date();
 var strDate = $.datepicker.formatDate('mm/dd/yy', new Date());
-
-YUI({lang: 'nb-no'}).use(
-	'aui-datepicker',
-	function (Y)
-	{
-		new Y.DatePicker(
-		{
-			trigger: '.datepicker-btn',
-			popover: {
-				zIndex: 99999
-			},
-			//        mask: '%d/%m/%G',
-			mask: dateformat_datepicker,
-			calendar: {
-				minimumDate: new Date(strDate)
-			},
-			disabledDatesRule: 'minimumDate',
-			on: {
-				selectionChange: function (event)
-				{
-					new Date(event.newSelection);
-				//	console.log(event.newSelection);
-					$(".datepicker-btn").val(event.newSelection);
-					am.bookingDate(event.newSelection);
-					return false;
-				}
-			}
-		}
-		);
-	}
-);
+//
+// YUI({lang: 'nb-no'}).use(
+// 	'aui-datepicker',
+// 	function (Y)
+// 	{
+// 		new Y.DatePicker(
+// 		{
+// 			trigger: '.datepicker-btn',
+// 			popover: {
+// 				zIndex: 99999
+// 			},
+// 			//        mask: '%d/%m/%G',
+// 			mask: dateformat_datepicker,
+// 			calendar: {
+// 				minimumDate: new Date(strDate)
+// 			},
+// 			disabledDatesRule: 'minimumDate',
+// 			on: {
+// 				selectionChange: function (event)
+// 				{
+// 					new Date(event.newSelection);
+// 				//	console.log(event.newSelection);
+// 					$(".datepicker-btn").val(event.newSelection);
+// 					am.bookingDate(event.newSelection);
+// 					return false;
+// 				}
+// 			}
+// 		}
+// 		);
+// 	}
+// );
 
 YUI({lang: 'nb-no'}).use(
 	'aui-timepicker',
@@ -780,12 +779,14 @@ window.onload = function ()
 		})
 	}
 
-	const validateTargetAudience = function ()
-	{
-		const targetAudienceBtn = document.getElementById("audienceDropdownBtn")
+	const validateTargetAudience = function () {
+		const targetAudienceSelect = document.getElementById("audienceDropdown");
 
-		!targetAudience.value ? targetAudienceBtn.classList.add("is-invalid") : targetAudienceBtn.classList.replace("is-invalid", "is-valid") || targetAudienceBtn.classList.add("is-valid")
-	}
+		// If no value is selected, add 'is-invalid' class, else add 'is-valid' class
+		!targetAudienceSelect.value ?
+			targetAudienceSelect.classList.add("is-invalid") :
+			targetAudienceSelect.classList.add("is-valid");
+	};
 
 	const validateInputs = function ()
 	{
@@ -793,6 +794,25 @@ window.onload = function ()
 
 		!organizerName.value ? organizerName.classList.add("is-invalid") : organizerName.classList.replace("is-invalid", "is-valid") || organizerName.classList.add("is-valid")
 	}
+
+	const submitDateIfNeeded = function() {
+		// Check if all date fields are filled
+		if (am.bookingDate() && am.bookingStartTime() && am.bookingEndTime()) {
+
+			// Check if this date was already submitted
+			var isAlreadySubmitted = am.date().some(function(submittedDate) {
+				return submittedDate.from_ === am.bookingDate() &&
+					submittedDate.to_ === am.bookingStartTime() &&
+					submittedDate.formatedPeriode === am.bookingEndTime();
+			});
+
+			// If not submitted, submit it
+			if (!isAlreadySubmitted) {
+				am.addDate();
+			}
+		}
+	};
+
 
 	form.addEventListener("submit", function (e)
 	{
@@ -802,6 +822,7 @@ window.onload = function ()
 			e.stopPropagation();
 			validateInputs();
 			validateTargetAudience();
+			submitDateIfNeeded();
 			error.style.display = "block";
 			setTimeout(function ()
 			{

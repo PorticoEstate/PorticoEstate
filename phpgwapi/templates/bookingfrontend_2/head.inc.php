@@ -150,10 +150,16 @@ JS;
 		}
 	}
 
-	if (!empty($GLOBALS['phpgw_info']['server']['bakcground_image']))
+	if (!empty($GLOBALS['phpgw_info']['server']['logo_url']))
 	{
-		$footer_logo_url = $GLOBALS['phpgw_info']['server']['bakcground_image'];
-		$GLOBALS['phpgw']->template->set_var('footer_logo_url', $footer_logo_url);
+		$footerlogoimg = $GLOBALS['phpgw_info']['server']['logo_url'];
+		$GLOBALS['phpgw']->template->set_var('footer_logo_img', $footerlogoimg);
+	}
+	else
+	{
+
+		$footerlogoimg = $webserver_url . "/phpgwapi/templates/bookingfrontend/img/Aktiv-kommune-footer-logo.png";
+		$GLOBALS['phpgw']->template->set_var('logoimg', $footerlogoimg);
 	}
 
 

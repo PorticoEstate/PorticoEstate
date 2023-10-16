@@ -34,16 +34,15 @@
 	{
 
 		public $public_functions = array(
-			'add' => true,
-			'index' => true,
-			'query' => true,
-			'query_relaxed'=> true,
-			'view' => true,
-			'edit' => true,
-			'save' => true,
-			'get_list' => true
+			'add'			 => true,
+			'index'			 => true,
+			'query'			 => true,
+			'query_relaxed'	 => true,
+			'view'			 => true,
+			'edit'			 => true,
+			'save'			 => true,
+			'get_list'		 => true
 		);
-
 		protected
 			$fields,
 			$composite_types,
@@ -51,7 +50,8 @@
 			$permissions,
 			$called_class_arr,
 			$currentapp,
-			$bo,$template;
+			$bo,
+			$template;
 
 		public function __construct()
 		{

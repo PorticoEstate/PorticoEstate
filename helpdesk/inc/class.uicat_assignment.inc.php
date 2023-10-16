@@ -40,8 +40,15 @@
 			'edit'			=> true,
 		);
 
-		private $acl_location, $acl_read, $acl_add, $acl_edit, $acl_delete,
-			$bo, $cats, $receipt;
+		protected
+			$acl_location,
+			$acl_read,
+			$acl_add,
+			$acl_edit,
+			$acl_delete,
+			$bo,
+			$cats,
+			$receipt;
 
 		public function __construct()
 		{
