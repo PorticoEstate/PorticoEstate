@@ -43,8 +43,11 @@ $(document).ready(function ()
 	 */
 	$("#dates-container").on("change", ".datetime", function (event)
 	{
-		event.preventDefault();
-		post_handle_order_table();
+		if (typeof (post_handle_order_table) !== 'undefined')
+		{
+			event.preventDefault();
+			post_handle_order_table();
+		}
 
 	});
 
@@ -200,6 +203,13 @@ $(window).on('load', function ()
 					document.getElementById("field_customer_identifier_type").selectedIndex = "2";
 					$("#field_customer_ssn").hide();
 					$("#field_customer_organization_number").show();
+				}
+
+				if(typeof(organization.contacts[0]) !=='undefined')
+				{
+					$("#field_contact_name").val(organization.contacts[0].name);
+					$("#field_contact_email").val(organization.contacts[0].email);
+					$("#field_contact_phone").val(organization.contacts[0].phone);
 				}
 			}
 
