@@ -6326,3 +6326,41 @@ HTML;
 	}
 
 
+	/**
+	 * Update booking version from 0.2.90 to 0.2.91
+	 *
+	 */
+	$test[] = '0.2.92';
+	function booking_upgrade0_2_92()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_article_group', array(
+			'fd' => array(
+				'id'					 => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'name'					 => array('type' => 'varchar', 'precision' => '100', 'nullable' => false),
+				'remark'				 => array('type' => 'text',  'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array(),
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("INSERT INTO bb_article_group  (id, name, remark ) VALUES (1, 'Gruppe 1', 'Gruppering av artikler' )");
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_article_mapping', 'group_id',
+				array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => 1),
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.93';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+

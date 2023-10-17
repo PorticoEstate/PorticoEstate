@@ -318,10 +318,12 @@
 			 */
 			$sql = "SELECT bb_article_mapping.id AS mapping_id,"
 				. " concat( article_cat_id || '_' || article_id ) AS article_id,"
-				. " bb_resource.name as name ,article_id AS resource_id, unit, percent_ AS tax_percent, tax_code"
+				. " bb_resource.name as name ,article_id AS resource_id, unit, percent_ AS tax_percent, tax_code,"
+				. " bb_article_mapping.group_id, bb_article_group.name AS article_group_name"
 				. " FROM bb_article_mapping"
 				. " JOIN bb_resource ON (bb_article_mapping.article_id = bb_resource.id)"
 				. " JOIN fm_ecomva ON (bb_article_mapping.tax_code = fm_ecomva.id)"
+				. " JOIN bb_article_group ON (bb_article_mapping.group_id = bb_article_group.id)"
 				. " WHERE article_cat_id = 1"
 				. " AND bb_resource.active = 1 {$filter}"
 				. " ORDER BY bb_resource.name";
@@ -340,6 +342,8 @@
 					'unit'				 => $this->db->f('unit', true),
 					'tax_code'			 => $this->db->f('tax_code'),
 					'tax_percent'		 => (int)$this->db->f('tax_percent'),
+					'group_id'			 => (int)$this->db->f('group_id'),
+					'article_group_name' => $this->db->f('article_group_name', true),
 				);
 			}
 
@@ -357,10 +361,12 @@
 				}
 
 				$sql = "SELECT bb_article_mapping.id AS mapping_id, concat( article_cat_id || '_' || article_id ) AS article_id,"
-					. " bb_service.name as name, bb_resource_service.resource_id, unit, percent_ AS tax_percent, bb_article_mapping.tax_code"
+					. " bb_service.name as name, bb_resource_service.resource_id, unit, percent_ AS tax_percent,"
+					. " bb_article_mapping.tax_code, bb_article_mapping.group_id, bb_article_group.name AS article_group_name"
 					. " FROM bb_article_mapping JOIN bb_service ON (bb_article_mapping.article_id = bb_service.id)"
 					. " JOIN bb_resource_service ON (bb_service.id = bb_resource_service.service_id)"
 					. " JOIN fm_ecomva ON (bb_article_mapping.tax_code = fm_ecomva.id)"
+					. " JOIN bb_article_group ON (bb_article_mapping.group_id = bb_article_group.id)"
 					. " WHERE article_cat_id = 2 {$filter}"
 					. " ORDER BY bb_resource_service.resource_id, bb_service.name";
 				$this->db->query($sql, __LINE__, __FILE__);
@@ -375,6 +381,8 @@
 						'unit'				 => $this->db->f('unit', true),
 						'tax_code'			 => $this->db->f('tax_code'),
 						'tax_percent'		 => (int)$this->db->f('tax_percent'),
+						'group_id'			 => (int)$this->db->f('group_id'),
+						'article_group_name' => $this->db->f('article_group_name', true),
 					);
 				}
 			}

@@ -1251,6 +1251,7 @@
 				'tax_code' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
 				'deactivate_in_frontend' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'owner_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'group_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => 1),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -1259,6 +1260,17 @@
 			),
 			'ix' => array(),
 			'uc' => array('article_cat_id', 'article_id')
+		),
+		'bb_article_group' => array(
+			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false ),
+				'remark' => array('type' => 'text',  'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
 		),
 		'bb_purchase_order_line' => array(
 			'fd' => array(
