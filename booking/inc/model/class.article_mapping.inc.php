@@ -53,7 +53,9 @@
 			$tax_code_name,
 			$deactivate_in_frontend,
 			$building_id,
-			$building_name;
+			$building_name,
+			$article_group,
+			$group_id;
 
 		public function __construct( int $id = null )
 		{
@@ -158,6 +160,25 @@
 					'required'	 => true,
 					'label'		 => 'unit',
 					'public'	 => true
+				),
+				'group_id'			 => array(
+					'action'	 => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type'		 => 'int',
+					'required'	 => true,
+					'public'	 => true
+				),
+				'article_group'		 => array(
+					'action' => PHPGW_ACL_READ,
+					'type'	 => 'string',
+					'query'	 => true,
+					'label'	 => 'article group',
+					'public'	 => true,
+					'join'	 => array(
+						'table'	 => 'bb_article_group',
+						'fkey'	 => 'group_id',
+						'key'	 => 'id',
+						'column' => 'name'
+					)
 				),
 				'tax_code'			 => array(
 					'action'	 => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
