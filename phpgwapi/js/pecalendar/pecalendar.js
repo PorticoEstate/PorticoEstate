@@ -1416,14 +1416,14 @@ class PEcalendar {
             // Check if the clicked element is the top or bottom of the temporary event
             if (target.classList.contains('event-temporary')) {
                 const rect = target.getBoundingClientRect();
-                tempEvent = this.tempEvents.find(e => `event-${e.id}` === target.id)
-                dragStart = {date: tempEvent.date, time: tempEvent.from};  // Get date/time from mouse event
-                dragEnd = {date: tempEvent.date, time: tempEvent.to};  // Get date/time from mouse event
+                tempEvent = this.tempEvents.find((e) => `event-${e.id}` === target.id);
+                dragStart = { date: tempEvent.date, time: tempEvent.from };
+                dragEnd = { date: tempEvent.date, time: tempEvent.to };
 
-                // if (e.clientY - rect.top < 32) { // 32px threshold for top edge
-                //     isResizing = true;
-                //     resizeDirection = 'top';
-                if (rect.bottom - e.clientY < 32) { // 32px threshold for bottom edge
+                if (e.clientY - rect.top < 32) { // 32px threshold for top edge
+                    isResizing = true;
+                    resizeDirection = 'top';
+                } else if (rect.bottom - e.clientY < 32) { // 32px threshold for bottom edge
                     isResizing = true;
                     resizeDirection = 'bottom';
                 }
@@ -1462,12 +1462,22 @@ class PEcalendar {
         // Event Listener for mousemove - To track the drag movement and update event time
         this.content.addEventListener('mousemove', (e) => {
             if (isResizing || isDragging) {
-                dragEnd = this.getDateTimeFromMouseEvent(e, this.content);
+
+                let newVal = this.getDateTimeFromMouseEvent(e, this.content);;
+                if (resizeDirection === 'top') {
+                    // When resizing from the top, update the 'from' time
+                    dragStart = newVal;
+                } else {
+                    // When resizing from the bottom, update the 'to' time
+                    dragEnd = newVal;
+                }
+
                 if (this.canCreateTemporaryEvent({
                     ...tempEvent,
                     from: dragStart.time > dragEnd.time ? dragEnd.time : dragStart.time,
                     to: dragStart.time > dragEnd.time ? dragStart.time : dragEnd.time,
                 })) {
+
                     this.updateTemporaryEvent(this.content, tempEvent, dragStart.time, dragEnd.time);
                 }
             }
