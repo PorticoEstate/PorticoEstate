@@ -142,7 +142,7 @@
 				$filename = "PE_{$type}_{$date}.{$file_ending}";
 
 				header("Content-Disposition: attachment; filename={$filename}");
-				$content =  $this->bo->get_customer_list();
+				$content =  $this->bo->get_customer_list(false, true);
 
 				$export_agresso = CreateObject('booking.export_agresso');
 				$export_agresso->transfer_customer_list( $content, $filename);
