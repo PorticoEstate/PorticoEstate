@@ -717,7 +717,7 @@ class PEcalendar {
         // Slots array to hold all elements (in case of multi-day slots)
         const slots = [];
         const canCreate = this.canCreateTemporaryEvent(time)
-        const dataId= `timeslot-${slot.start}-${slot.end}`;
+        const dataId = `timeslot-${slot.start}-${slot.end}`;
 
         const onClick = (ev) => {
             ev.stopPropagation();
@@ -746,8 +746,8 @@ class PEcalendar {
 
         // First day slot
         const firstDaySlotTo = originalDateFrom.endOf('day');
-        if(this.isDateInRange(originalDateFrom)) {
-            slots.push(this.createSingleDaySlotElement(originalDateFrom, firstDaySlotTo, slot,onClick, canCreate));
+        if (this.isDateInRange(originalDateFrom)) {
+            slots.push(this.createSingleDaySlotElement(originalDateFrom, firstDaySlotTo, slot, onClick, canCreate));
 
         }
 
@@ -755,7 +755,7 @@ class PEcalendar {
         if (originalDateTo.day > originalDateFrom.day) {
             const secondDaySlotFrom = originalDateTo.startOf('day');
             if (this.isDateInRange(originalDateTo)) {
-                slots.push(this.createSingleDaySlotElement(secondDaySlotFrom, originalDateTo, slot,onClick, canCreate, true));
+                slots.push(this.createSingleDaySlotElement(secondDaySlotFrom, originalDateTo, slot, onClick, canCreate, true));
             }
         }
 
@@ -773,7 +773,7 @@ class PEcalendar {
      * @param {boolean} second_day - second day.
      * @returns {HTMLElement} - The created DOM element representing the time slot.
      */
-    createSingleDaySlotElement(dateFrom, dateTo, originalSlot,onClick, canCreate = true, second_day = false) {
+    createSingleDaySlotElement(dateFrom, dateTo, originalSlot, onClick, canCreate = true, second_day = false) {
         // ... Your logic to create a single slot element ...
         // Positioning logic, event listeners, etc. will be here
         // Ensure to test thoroughly and adapt as per your application's requirements
@@ -845,10 +845,10 @@ class PEcalendar {
             this.availableTimeSlots[this.resource_id].forEach((slot) => {
 
                 // if (this.isDateInRange(DateTime.fromMillis(parseInt(slot.start)))) {
-                    // Ensure the slot has necessary data
-                    // if (slot && slot.from && slot.to) {
-                    const slotElements = this.createTimeSlotElement(slot);
-                    slotElements.forEach((e) => contentElement.appendChild(e));
+                // Ensure the slot has necessary data
+                // if (slot && slot.from && slot.to) {
+                const slotElements = this.createTimeSlotElement(slot);
+                slotElements.forEach((e) => contentElement.appendChild(e));
                 // }
             });
         }
@@ -912,6 +912,7 @@ class PEcalendar {
 
         return `${formattedDate} ${formattedFromTime}-${formattedToTime}`;
     }
+
     /**
      * Updates a temporary event's attributes and re-renders it within the provided container.
      *
@@ -928,7 +929,7 @@ class PEcalendar {
         const formattedFromTime = dateFrom.setLocale('nb').toFormat('HH:mm');
         const formattedToTime = dateTo.setLocale('nb').toFormat('HH:mm');
 
-        return `<span>${formattedDateFrom} ${formattedFromTime}</span>-<span>${formattedDateTo !== formattedDateFrom ? `${formattedDateTo} `: ''}${formattedToTime}</span>`;
+        return `<span>${formattedDateFrom} ${formattedFromTime}</span>-<span>${formattedDateTo !== formattedDateFrom ? `${formattedDateTo} ` : ''}${formattedToTime}</span>`;
     }
 
     /**
@@ -1170,14 +1171,17 @@ class PEcalendar {
             col.style.gridColumn = `${column} / span 1`;
             col.style.gridRow = `1 / span ${(this.endHour - this.startHour + 1) * this.hourParts}`
             content.appendChild(col);
+
+            console.log(this.endHour, this.startHour)
             const dayOpeningHours = this.seasons.find(season => season.wday === colDate.weekday); // assuming 0 = Monday
 
-            const seasonStartHour = parseInt(dayOpeningHours.from_.split(':')[0]);
-            const seasonEndHour = parseInt(dayOpeningHours.to_.split(':')[0]);
+            const seasonStartHour = dayOpeningHours && parseInt(dayOpeningHours.from_.split(':')[0]);
+            const seasonEndHour = dayOpeningHours && parseInt(dayOpeningHours.to_.split(':')[0]);
 
             if (!colDate.hasSame(now, 'day') && (!dayOpeningHours || seasonStartHour >= this.endHour || seasonEndHour <= this.startHour)) {
                 continue;
             }
+
 
             // Looping through the rows (hours) for each column (day)
             for (let hour = this.startHour; hour < this.endHour; hour++) {
@@ -1338,8 +1342,16 @@ class PEcalendar {
 
         // If dayOpeningHours is defined, adjust allowedStart and allowedEnd accordingly
         if (dayOpeningHours) {
-            allowedStart = eventStart.set({ hour: parseInt(dayOpeningHours.from_.split(':')[0]), minute: parseInt(dayOpeningHours.from_.split(':')[1]), second: 0 });
-            allowedEnd = eventStart.set({ hour: parseInt(dayOpeningHours.to_.split(':')[0]), minute: parseInt(dayOpeningHours.to_.split(':')[1]), second: 0 });
+            allowedStart = eventStart.set({
+                hour: parseInt(dayOpeningHours.from_.split(':')[0]),
+                minute: parseInt(dayOpeningHours.from_.split(':')[1]),
+                second: 0
+            });
+            allowedEnd = eventStart.set({
+                hour: parseInt(dayOpeningHours.to_.split(':')[0]),
+                minute: parseInt(dayOpeningHours.to_.split(':')[1]),
+                second: 0
+            });
         }
 
         // Check if the event is within the allowed hours
@@ -1628,9 +1640,7 @@ class PEcalendar {
                ${this.resources ? Object.keys(this.resources).map(
                 resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id ? " selected" : "") + '>' + this.resources[resourceId].name.trim() + '</option>').join("") : ""}
             </select>
-            <button id=${this.getId("application")} class="pe-btn pe-btn-primary">Søknad</button>
-            
-    
+            <a id=${this.getId("application")} class="pe-btn pe-btn-primary">Søknad</a>
         </div>
     </div>
     <div class="expansion-panel">
@@ -1902,7 +1912,6 @@ class PEcalendar {
         // Initialize values for minimum and maximum time
         let minTime = 24;
         let maxTime = 0;
-        console.log(this.seasons);
         // Determine the minimum and maximum hours based on the seasons' data
         for (let season of this.seasons) {
             minTime = Math.min(minTime, getInclusiveHourFromTimeString(season.from_, false));

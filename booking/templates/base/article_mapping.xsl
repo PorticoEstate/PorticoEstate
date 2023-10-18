@@ -82,6 +82,20 @@
 							</div>
 							<div class="pure-control-group">
 								<label>
+									<xsl:value-of select="php:function('lang', 'article group')"/>
+								</label>
+								<select id="group_id" name="group_id" class="pure-input-1-2" required="required">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<option value="">
+										<xsl:value-of select="php:function('lang', 'select')"/>
+									</option>
+									<xsl:apply-templates select="article_group_list/options"/>
+								</select>
+							</div>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="php:function('lang', 'tax code')"/>
 								</label>
 								<select id="tax_code" name="tax_code" class="pure-input-1-2" required="required">

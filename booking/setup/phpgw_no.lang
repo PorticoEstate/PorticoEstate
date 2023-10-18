@@ -928,3 +928,4 @@ hidden in frontend	booking	no	Skjult i frontend
 activate prepayment	booking	no	Aktiver forhåndsbetaling (Vipps)
 access instruction	booking	no	informasjon for tilgang
 differentiate org payer	booking	no	Differensier mellom organisasjon og betaler
+article group	booking	no	Artikkelgruppe

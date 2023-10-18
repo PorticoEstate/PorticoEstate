@@ -572,6 +572,7 @@ JS;
 				'article_categories'	 => array('options' => $this->get_category_options($article->article_cat_id)),
 				'unit_list'				 => array('options' => $this->get_unit_list($article->unit)),
 				'tax_code_list'			 => array('options' => execMethod('booking.bogeneric.get_list', array('type' => 'tax', 'order' => 'id', 'selected' => $article->tax_code))),
+				'article_group_list'	 => array('options' => execMethod('booking.bogeneric.get_list', array('type' => 'article_group', 'order' => 'id', 'selected' => $article->group_id))),
 				'service_list'			 => ( $id && $article->article_cat_id == 2 ) ? array('options' => $this->get_services($article->article_id)) : array(),
 				'mode'					 => $mode,
 				'tabs'					 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
