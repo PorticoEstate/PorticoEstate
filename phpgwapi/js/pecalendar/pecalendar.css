@@ -2386,28 +2386,24 @@ textarea {
   gap: 8px;
 }
 .calendar .header .select_building_resource {
-  margin-top: 5px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
   gap: 8px;
 }
-.calendar .header .select_building_resource > div {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-}
-@media screen and (max-width: 480px) {
-  .calendar .header .select_building_resource > div {
+@media screen and (max-width: 840px) {
+  .calendar .header .select_building_resource {
+    display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
   }
-  .calendar .header .select_building_resource > div > button {
+  .calendar .header .select_building_resource > button {
     flex-grow: 1;
   }
 }
-.calendar .header .select_building_resource > div > span {
+.calendar .header .select_building_resource > div {
+  width: 100%;
+}
+.calendar .header .select_building_resource > span {
   min-width: 15rem;
 }
 .calendar .header .select_building_resource select {
@@ -2715,14 +2711,15 @@ textarea {
   }
 }
 
+.badge {
+  background-color: #28358B;
+  padding: 0.2em 0.5em;
+  border-radius: 10px;
+}
+
 .expansion-panel .expansion-header {
   display: inline-block;
   cursor: pointer;
-}
-.expansion-panel .expansion-header .badge {
-  background-color: #f3f3f3;
-  padding: 0.2em 0.5em;
-  border-radius: 10px;
 }
 .expansion-panel .expansion-content {
   display: none;
