@@ -2386,28 +2386,24 @@ textarea {
   gap: 8px;
 }
 .calendar .header .select_building_resource {
-  margin-top: 5px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
   gap: 8px;
 }
-.calendar .header .select_building_resource > div {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-}
-@media screen and (max-width: 480px) {
-  .calendar .header .select_building_resource > div {
+@media screen and (max-width: 840px) {
+  .calendar .header .select_building_resource {
+    display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
   }
-  .calendar .header .select_building_resource > div > button {
+  .calendar .header .select_building_resource > button {
     flex-grow: 1;
   }
 }
-.calendar .header .select_building_resource > div > span {
+.calendar .header .select_building_resource > div {
+  width: 100%;
+}
+.calendar .header .select_building_resource > span {
   min-width: 15rem;
 }
 .calendar .header .select_building_resource select {
@@ -2634,16 +2630,21 @@ textarea {
   margin-left: 1.5rem;
   opacity: 0.75;
 }
-.calendar .calendar-body .event-temporary::after {
+.calendar .calendar-body .event-temporary::before, .calendar .calendar-body .event-temporary::after {
   content: "";
   display: block;
   position: absolute;
-  bottom: 0;
   left: 0;
   right: 0;
-  height: 10px; /* Define the height of the resizable area at the bottom */
+  height: 10px; /* Define the height of the resizable area at the top and bottom */
   cursor: ns-resize; /* Two-sided vertical arrow */
-  z-index: 2; /* Ensure it's on top */
+  z-index: 2; /* Ensure they are on top */
+}
+.calendar .calendar-body .event-temporary::before {
+  top: 0; /* Position the ::before element at the top */
+}
+.calendar .calendar-body .event-temporary::after {
+  bottom: 0; /* Position the ::after element at the bottom */
 }
 .calendar .calendar-body .event-temporary .dots-container {
   height: 16px;
@@ -2710,14 +2711,15 @@ textarea {
   }
 }
 
+.badge {
+  background-color: #28358B;
+  padding: 0.2em 0.5em;
+  border-radius: 10px;
+}
+
 .expansion-panel .expansion-header {
   display: inline-block;
   cursor: pointer;
-}
-.expansion-panel .expansion-header .badge {
-  background-color: #f3f3f3;
-  padding: 0.2em 0.5em;
-  border-radius: 10px;
 }
 .expansion-panel .expansion-content {
   display: none;
