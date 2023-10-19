@@ -511,6 +511,7 @@
 					. " WHERE length(bb_user.customer_ssn) = 11"
 					. " AND substring(bb_user.customer_ssn, 1, 4) != '0000'"
 					. " AND customer_identifier_type = 'ssn'"
+					. " AND cost > 0"
 					. " AND exported IS NOT NULL"
 					. " AND export_file_id IS NULL";
 	
@@ -550,6 +551,7 @@
 					. " JOIN bb_completed_reservation ON bb_completed_reservation.customer_organization_number = bb_organization.customer_organization_number"
 					. " WHERE length(bb_organization.customer_organization_number) = 9"
 					. " AND bb_completed_reservation.customer_identifier_type = 'organization_number'"
+					. " AND cost > 0"
 					. " AND exported IS NOT NULL"
 					. " AND export_file_id IS NULL";
 

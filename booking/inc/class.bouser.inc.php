@@ -385,7 +385,7 @@
 				. sprintf("%-2s", $this->apar_gr_id)  //  3	apar_gr_id, Gyldig reskontrogruppe i Agresso.Hvis blank benyttes parameterverdi.
 				. sprintf("%9s", $counter)   //  4	apar_id, sequence number, right justified
 				. sprintf("%9s", '')  //  5	apar_id_ref
-				. sprintf("%-50.50s", iconv("UTF-8", "ISO-8859-1", $name)) //  6	apar_name
+				. sprintf("%-50.50s", iconv("UTF-8", "ISO-8859-1//TRANSLIT", $name)) //  6	apar_name
 				. 'R'  //  7	apar_type (key):P - Supplier (Payable)R - Customer (Receivable
 				. sprintf("%-35s", '') //  8	bank_account
 				. sprintf("%-4s", '') //  9	bonus_gr
@@ -419,8 +419,8 @@
 				. sprintf("%-2s", '') // 37	terms_id
 				. sprintf("%-1s", '') // 38	terms_set
 				. sprintf("%-25s", '') // 39	vat_reg_no
-				. sprintf("%-40.40s", iconv("UTF-8", "ISO-8859-1", $address1)) // 40	address1
-				. sprintf("%-40.40s", iconv("UTF-8", "ISO-8859-1", $address2)) // 40	address2
+				. sprintf("%-40.40s", iconv("UTF-8", "ISO-8859-1//TRANSLIT", $address1)) // 40	address1
+				. sprintf("%-40.40s", iconv("UTF-8", "ISO-8859-1//TRANSLIT", $address2)) // 40	address2
 				. sprintf("%-40.40s", '')   // 40	address3
 				. sprintf("%-40.40s", '')   // 40	address4
 				. '1'  // 41	address_type
@@ -428,9 +428,9 @@
 				. sprintf("%-255s", '') // 43	cc_name
 				. sprintf("%-3.3s", $country_code) // 44	country_code
 				. sprintf("%-50s", '') // 45	description
-				. sprintf("%-40.40s", iconv("UTF-8", "ISO-8859-1", $postal_place)) // 46	place
+				. sprintf("%-40.40s", iconv("UTF-8", "ISO-8859-1//TRANSLIT", $postal_place)) // 46	place
 				. sprintf("%-40s", '') // 47	province
-				. sprintf("%-35.35s", $phone)  // 48	telephone_1
+				. sprintf("%-35.35s", iconv("utf-8", "ISO-8859-1//TRANSLIT", $phone))  // 48	telephone_1
 				. sprintf("%-35s", '') // 49	telephone_2
 				. sprintf("%-35s", '') // 50	telephone_3
 				. sprintf("%-35s", '') // 51	telephone_4
