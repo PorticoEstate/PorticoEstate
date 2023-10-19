@@ -86,23 +86,28 @@ $current-time-color: #ea4335;
       flex-direction: row;
       flex-wrap: wrap;
       gap: 8px;
+
       fieldset {
         justify-content: center;
         margin-left: 10px;
         margin-right: 10px;
         display: flex;
         flex-direction: row;
+
         label {
           display: block;
         }
       }
+
       input {
       }
+
       .date-selector {
         display: flex;
         flex-direction: row;
         align-items: center;
         gap: 0.5rem;
+
         .pe-btn--circle {
           border-radius: 50%;
           padding: 0;
@@ -111,16 +116,19 @@ $current-time-color: #ea4335;
         }
       }
     }
+
     @media screen and (max-width: 480px) {
       .date {
         fieldset {
           flex-grow: 1;
         }
+
         input {
           flex-grow: 1;
         }
       }
     }
+
     .calendar-settings {
       margin-top: 5px;
       display: flex;
@@ -130,10 +138,11 @@ $current-time-color: #ea4335;
       flex-wrap: wrap;
       gap: 8px;
     }
+
     .temp-event-pills {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;  /* space between pills */
+      gap: 10px; /* space between pills */
       .temp-event-pill {
         padding: 0px 10px;
         border-radius: 15px;
@@ -145,44 +154,49 @@ $current-time-color: #ea4335;
     }
 
 
-    .info-types{
+    .info-types {
       flex-wrap: nowrap;
       display: flex;
       flex-direction: row;
       gap: 8px;
     }
-    .select_building_resource {
-      margin-top: 5px;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
 
-      > div {
+    .select_building_resource {
+      //margin-top: 5px;
+      //display: flex;
+      //flex-direction: row;
+      //justify-content: space-between;
+      //align-items: center;
+      //flex-wrap: wrap;
+      //gap: 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+
+
+      gap: 8px;
+      @media screen and (max-width: 840px) {
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
+        > button {
+          flex-grow: 1;
+        }
+      }
+      > div {
+        width: 100%;
+      }
 
-        gap: 8px;
-        @media screen and (max-width: 480px) {
-          flex-wrap: wrap;
-          > button {
-            flex-grow: 1;
-          }
-        }
-        > span {
-          min-width: 15rem;
-        }
+      > span {
+        min-width: 15rem;
       }
 
       select {
         /* Style when the select is disabled */
         &:disabled + * {
-          opacity: 0.5;         /* Reduced opacity to indicate disabled state */
+          opacity: 0.5; /* Reduced opacity to indicate disabled state */
           //background-color: #f3f3f3; /* Light gray background */
           .select2-selection--single {
-            cursor: not-allowed !important;  /* Cursor indicating action is not allowed */
+            cursor: not-allowed !important; /* Cursor indicating action is not allowed */
           }
         }
       }
@@ -226,7 +240,6 @@ $current-time-color: #ea4335;
     .js-basic-datepicker {
       font-size: 1rem;
     }
-
 
 
     .title {
@@ -357,12 +370,14 @@ $current-time-color: #ea4335;
       > div:first-child {
         display: flex;
         flex-direction: column;
-        >div {
+
+        > div {
           font-size: 0.8rem;
           display: flex;
           flex-direction: column;
         }
-        >div:nth-child(1) {
+
+        > div:nth-child(1) {
           font-size: 1rem;
           @extend .text-bold;
         }
@@ -433,6 +448,7 @@ $current-time-color: #ea4335;
         filter: invert(100%);
       }
     }
+
     .event-temporary {
       @extend .bg-blue;
       border-color: #FFF;
@@ -445,21 +461,30 @@ $current-time-color: #ea4335;
       opacity: 0.75;
       //resize: vertical;
       //overflow: auto;
+      &::before,
       &::after {
         content: '';
         display: block;
         position: absolute;
-        bottom: 0;
         left: 0;
         right: 0;
-        height: 10px;  /* Define the height of the resizable area at the bottom */
-        cursor: ns-resize;  /* Two-sided vertical arrow */
-        z-index: 2;  /* Ensure it's on top */
+        height: 10px; /* Define the height of the resizable area at the top and bottom */
+        cursor: ns-resize; /* Two-sided vertical arrow */
+        z-index: 2; /* Ensure they are on top */
+      }
+
+      &::before {
+        top: 0; /* Position the ::before element at the top */
+      }
+
+      &::after {
+        bottom: 0; /* Position the ::after element at the bottom */
       }
 
       .dots-container {
         height: 16px;
         width: 16px;
+
         i {
           color: white;
         }
@@ -480,6 +505,7 @@ $current-time-color: #ea4335;
       &.first-day {
         margin-left: 1.5rem;
       }
+
       &.second-day {
         margin-right: 1.5rem;
       }
@@ -490,6 +516,7 @@ $current-time-color: #ea4335;
         opacity: 0.75;
 
       }
+
       &.disabled {
         @extend .bg-grey-light;
         //margin-left: 1.5rem;
@@ -504,6 +531,7 @@ $current-time-color: #ea4335;
       .dots-container {
         height: 16px;
         width: 16px;
+
         i {
           color: white;
         }
@@ -530,8 +558,8 @@ $current-time-color: #ea4335;
     }
 
 
-
   }
+
   .event-filter {
     filter: invert(16%) sepia(22%) saturate(6235%) hue-rotate(219deg) brightness(105%) contrast(91%);
   }
@@ -543,11 +571,19 @@ $current-time-color: #ea4335;
   .allocation-filter {
     filter: invert(84%) sepia(12%) saturate(111%) hue-rotate(6deg) brightness(108%) contrast(90%);
   }
+
   .hide-mobile {
     @media screen and (max-width: 480px) {
       display: none;
     }
   }
+}
+
+.badge {
+  background-color: #28358B;
+  padding: 0.2em 0.5em;
+  border-radius: 10px;
+  // Additional styles for the badge
 }
 
 .expansion-panel {
@@ -556,12 +592,7 @@ $current-time-color: #ea4335;
     cursor: pointer;
     // Additional styles for the header
 
-    .badge {
-      background-color: #f3f3f3;
-      padding: 0.2em 0.5em;
-      border-radius: 10px;
-      // Additional styles for the badge
-    }
+
   }
 
   .expansion-content {
