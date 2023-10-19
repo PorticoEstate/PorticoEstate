@@ -103,6 +103,7 @@
 			$GLOBALS['phpgw']->template->set_var('left',$this->nextmatchs->left('/index.php',$start,$total,'menuaction=admin.uiapplications.get_list'));
 			$GLOBALS['phpgw']->template->set_var('right',$this->nextmatchs->right('index.php',$start,$total,'menuaction=admin.uiapplications.get_list'));
 
+			$GLOBALS['phpgw']->template->set_var('lang_version',lang('version'));
 			$GLOBALS['phpgw']->template->set_var('lang_edit',lang('Edit'));
 			$GLOBALS['phpgw']->template->set_var('lang_delete',lang('Delete'));
 			$GLOBALS['phpgw']->template->set_var('lang_enabled',lang('Enabled'));
@@ -131,6 +132,7 @@
 
 				$GLOBALS['phpgw']->template->set_var('tr_color',$tr_color);
 				$GLOBALS['phpgw']->template->set_var('name',$name);
+				$GLOBALS['phpgw']->template->set_var('version',$app['version']);
 
 				$GLOBALS['phpgw']->template->set_var('edit','<a href="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'admin.uiapplications.edit','app_name'=>urlencode($app['name']))) . '"> ' . lang('Edit') . ' </a>');
 				$GLOBALS['phpgw']->template->set_var('delete','<a href="' . $GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'admin.uiapplications.delete','app_name'=>urlencode($app['name']))) . '"> ' . lang('Delete') . ' </a>');

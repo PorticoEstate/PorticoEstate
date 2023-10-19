@@ -38,7 +38,7 @@
 
 		function get_list()
 		{
-			$this->db->query('SELECT * FROM phpgw_applications WHERE app_enabled<3',__LINE__,__FILE__);
+			$this->db->query('SELECT * FROM phpgw_applications WHERE app_enabled < 3',__LINE__,__FILE__);
 			if($this->db->num_rows())
 			{
 				while ($this->db->next_record())
@@ -46,7 +46,8 @@
 					$apps[$this->db->f('app_name')] = array(
 						'title'		=> str_replace('- ','-',ucwords(str_replace('_','- ',$this->db->f('app_name')))),
 						'name'   => $this->db->f('app_name'),
-						'status' => $this->db->f('app_enabled')
+						'status' => $this->db->f('app_enabled'),
+						'version' => $this->db->f('app_version')
 					);
 				}
 			}
