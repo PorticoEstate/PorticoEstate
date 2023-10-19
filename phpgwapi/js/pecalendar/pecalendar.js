@@ -332,18 +332,36 @@ class PEcalendar {
      * Initializes event listeners for the expansion panel.
      */
     initializeExpansionPanel() {
-        const headerElem = document.querySelector('.expansion-header');
-        if (headerElem) {
-            headerElem.addEventListener('click', (e) => {
-                e.preventDefault();
-                const content = headerElem.nextElementSibling;
-                if (content.style.display === "none" || content.style.display === "") {
-                    content.style.display = "block";
-                } else {
-                    content.style.display = "none";
-                }
+        $(document).on('click', function (event) {
+            var container = $(".js-dropdown");
+
+            //check if the clicked area is dropdown or not
+            if (container.has(event.target).length === 0) {
+                $('.js-dropdown-toggler').attr("aria-expanded", "false");
+            }
+        })
+
+        $(".js-dropdown-toggler").each(function () {
+            $(this).on("click", function () {
+                var isExpanded = $(this).attr("aria-expanded");
+                $(this).attr("aria-expanded", function () {
+                    return (isExpanded == "false") ? "true" : "false";
+                });
             });
-        }
+        });
+
+        // const headerElem = document.querySelector('.expansion-header');
+        // if (headerElem) {
+        //     headerElem.addEventListener('click', (e) => {
+        //         e.preventDefault();
+        //         const content = headerElem.nextElementSibling;
+        //         if (content.style.display === "none" || content.style.display === "") {
+        //             content.style.display = "block";
+        //         } else {
+        //             content.style.display = "none";
+        //         }
+        //     });
+        // }
     }
 
     /**
@@ -1416,14 +1434,14 @@ class PEcalendar {
             // Check if the clicked element is the top or bottom of the temporary event
             if (target.classList.contains('event-temporary')) {
                 const rect = target.getBoundingClientRect();
-                tempEvent = this.tempEvents.find(e => `event-${e.id}` === target.id)
-                dragStart = {date: tempEvent.date, time: tempEvent.from};  // Get date/time from mouse event
-                dragEnd = {date: tempEvent.date, time: tempEvent.to};  // Get date/time from mouse event
+                tempEvent = this.tempEvents.find((e) => `event-${e.id}` === target.id);
+                dragStart = {date: tempEvent.date, time: tempEvent.from};
+                dragEnd = {date: tempEvent.date, time: tempEvent.to};
 
-                // if (e.clientY - rect.top < 32) { // 32px threshold for top edge
-                //     isResizing = true;
-                //     resizeDirection = 'top';
-                if (rect.bottom - e.clientY < 32) { // 32px threshold for bottom edge
+                if (e.clientY - rect.top < 32) { // 32px threshold for top edge
+                    isResizing = true;
+                    resizeDirection = 'top';
+                } else if (rect.bottom - e.clientY < 32) { // 32px threshold for bottom edge
                     isResizing = true;
                     resizeDirection = 'bottom';
                 }
@@ -1462,12 +1480,23 @@ class PEcalendar {
         // Event Listener for mousemove - To track the drag movement and update event time
         this.content.addEventListener('mousemove', (e) => {
             if (isResizing || isDragging) {
-                dragEnd = this.getDateTimeFromMouseEvent(e, this.content);
+
+                let newVal = this.getDateTimeFromMouseEvent(e, this.content);
+                ;
+                if (resizeDirection === 'top') {
+                    // When resizing from the top, update the 'from' time
+                    dragStart = newVal;
+                } else {
+                    // When resizing from the bottom, update the 'to' time
+                    dragEnd = newVal;
+                }
+
                 if (this.canCreateTemporaryEvent({
                     ...tempEvent,
                     from: dragStart.time > dragEnd.time ? dragEnd.time : dragStart.time,
                     to: dragStart.time > dragEnd.time ? dragStart.time : dragEnd.time,
                 })) {
+
                     this.updateTemporaryEvent(this.content, tempEvent, dragStart.time, dragEnd.time);
                 }
             }
@@ -1627,80 +1656,102 @@ class PEcalendar {
         // Insert the HTML template for the calendar header into the created element
         header.insertAdjacentHTML(
             'afterbegin',
+            // language=HTML
             `
-    <div class="select_building_resource">
-        <div>
-           ${``
-                // <select id=${this.getId("building")} class="js-select-basic">
-                //    ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name.trim() + '</option>').join("")} -->
-                //     <option value="${this.building_id}" selected>${buildings.find(b => b.id === this.building_id).name.trim()}</option>
-                // </select> 
-            }
-            <select id=${this.getId("resources")} class="js-select-basic">
-               ${this.resources ? Object.keys(this.resources).map(
-                resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id ? " selected" : "") + '>' + this.resources[resourceId].name.trim() + '</option>').join("") : ""}
-            </select>
-            <a id=${this.getId("application")} class="pe-btn pe-btn-primary">Søknad</a>
-        </div>
-    </div>
-    <div class="expansion-panel">
-        <a class="expansion-header link-button" id=${this.getId("expansionHeader")}>
-            Bestillinger
-            <span class="badge" id=${this.getId("badgeCount")}>0</span>
-        </a>
-        <div class="expansion-content">
-            <div  id=${this.getId("tempEventPills")} class="temp-event-pills"></div>
-        </div>
-    </div>
+                <div class="select_building_resource">
+                    <div>
+                        ${``
+                                // <select id=${this.getId("building")} class="js-select-basic">
+                                //    ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name.trim() + '</option>').join("")} -->
+                                //     <option value="${this.building_id}" selected>${buildings.find(b => b.id === this.building_id).name.trim()}</option>
+                                // </select> 
+                        }
+                        <select id=${this.getId("resources")} class="js-select-basic">
+                            ${this.resources ? Object.keys(this.resources).map(
+                                    resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id ? " selected" : "") + '>' + this.resources[resourceId].name.trim() + '</option>').join("") : ""}
+                        </select>
+                    </div>
+                    <!--                    <div class="expansion-panel">-->
+                        <!--                        <a class="expansion-header link-button" id=${this.getId("expansionHeader")}
+                        >-->
+                    <!--                            Bestillinger-->
+                        <!--                            <span class="badge" id=${this.getId("badgeCount")}>0</span>-->
+                    <!--                        </a>-->
+                    <!--                        <div class="expansion-content">-->
+                        <!--                            <div id=${this.getId("tempEventPills")}
+                         class="temp-event-pills"></div>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                        <div class="js-dropdown dropdown" id="select-info">
+                            <button class="js-dropdown-toggler dropdown__toggler" data-toggle="dropdown" type="button"
+                                    aria-expanded="false">
+                                Bestillinger <span class="badge" id=${this.getId("badgeCount")}>0</span>
+                            </button>
+                            <div class="js-dropdown-content dropdown__content" style="width: 100%">
+                                <div id=${this.getId("tempEventPills")} class="temp-event-pills"></div>
+                            </div>
+                        </div>
+                    <a id=${this.getId("application")} class="pe-btn pe-btn-primary">Søknad</a>
+                </div>
 
-    <div class="calendar-settings">
-        <div class="date">
-              <fieldset>
-               <label class="filter invisible">
-                  <input type="radio" name="filter" value="day"/>
-                    <span class="filter__radio">Dag</span>
-                </label> 
-                <label class="filter">
-                  <input type="radio" name="filter" value="week" checked/>
-                    <span class="filter__radio">Uke</span>
-                </label>
-                <label class="filter invisible">
-                  <input type="radio" name="filter" value="month"/>
-                    <span class="filter__radio">Måned</span>
-                </label> 
-              </fieldset>
-              <div class="date-selector">
-                  <button type="button" id=${this.getId("prevButton")} class="pe-btn  pe-btn-secondary pe-btn--circle">
-                      <span class="sr-only">Forrige</span>
-                      <span class="fas fa-chevron-left" title="Forrige"></span>
-                  </button>
-                  <input id=${this.getId("datetimepicker")} class="js-basic-datepicker" type="text" value="${this.currentDate.toFormat('dd.LL.y')}">
-                  <button type="button" id=${this.getId("nextButton")} class="pe-btn  pe-btn-secondary pe-btn--circle">
-                      <span class="sr-only">Neste</span>
-                      <span class="fas fa-chevron-right" title="Neste"></span>
-                  </button>
-              </div>
-            
-        </div>
-        <div class="info-types">
-                <div class="type text-small">
-                    <img class="event-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
-                    Arrangement
+
+                <div class="calendar-settings">
+                    <div class="date">
+                        <fieldset>
+                            <label class="filter invisible">
+                                <input type="radio" name="filter" value="day"/>
+                                <span class="filter__radio">Dag</span>
+                            </label>
+                            <label class="filter">
+                                <input type="radio" name="filter" value="week" checked/>
+                                <span class="filter__radio">Uke</span>
+                            </label>
+                            <label class="filter invisible">
+                                <input type="radio" name="filter" value="month"/>
+                                <span class="filter__radio">Måned</span>
+                            </label>
+                        </fieldset>
+                        <div class="date-selector">
+                            <button type="button" id=${this.getId("prevButton")}
+                                    class="pe-btn  pe-btn-secondary pe-btn--circle">
+                                <span class="sr-only">Forrige</span>
+                                <span class="fas fa-chevron-left" title="Forrige"></span>
+                            </button>
+                            <input id=${this.getId("datetimepicker")} class="js-basic-datepicker" type="text"
+                                   value="${this.currentDate.toFormat('dd.LL.y')}">
+                            <button type="button" id=${this.getId("nextButton")}
+                                    class="pe-btn  pe-btn-secondary pe-btn--circle">
+                                <span class="sr-only">Neste</span>
+                                <span class="fas fa-chevron-right" title="Neste"></span>
+                            </button>
+                        </div>
+
+                    </div>
+                    <div class="info-types">
+                        <div class="type text-small">
+                            <img class="event-filter"
+                                 src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}"
+                                 alt="ellipse">
+                            Arrangement
+                        </div>
+                        <div class="type text-small">
+                            <img class="booking-filter"
+                                 src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}"
+                                 alt="ellipse">
+                            Interntildeling
+                        </div>
+                        <div class="type text-small">
+                            <img class="allocation-filter"
+                                 src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}"
+                                 alt="ellipse">
+                            Tildeling
+                        </div>
+                    </div>
                 </div>
-                <div class="type text-small">
-                    <img class="booking-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
-                    Interntildeling
-                </div>
-                <div class="type text-small">
-                    <img class="allocation-filter" src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}" alt="ellipse">
-                    Tildeling
-                </div>
-            </div>
-    </div>
-    
-    
-    
-`
+
+
+
+            `
         )
         return header;
     }
