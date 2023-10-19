@@ -169,7 +169,7 @@ HTML;
      *  converted menuactions
      */
     $availableMenuActions = (object) [
-        'bookingfrontend.uiapplication.add' => true,
+        'bookingfrontend.uiapplication.add' => false,
     ];
 
 	/**
