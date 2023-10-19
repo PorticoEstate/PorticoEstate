@@ -1372,7 +1372,34 @@
 				$application['building_name'] = str_replace($search, $replace, $application['building_name']);
 			}
 
-			if (phpgw::get_var('from_', 'string'))
+            if (phpgw::get_var('dates', 'string'))
+            {
+                $dates_input = explode(',', phpgw::get_var('dates', 'string'));
+                $timezone = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['timezone']) ? $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'] : 'UTC';
+
+                try
+                {
+                    $DateTimeZone = new DateTimeZone($timezone);
+                }
+                catch (Exception $ex)
+                {
+                    throw $ex;
+                }
+
+                $combined_dates = [];
+                foreach ($dates_input as $date_pair_str)
+                {
+                    list($start_timestamp, $end_timestamp) = explode('_', $date_pair_str);
+                    $_start_time = new DateTime(date('Y-m-d H:i:s', $start_timestamp));
+                    $_end_time = new DateTime(date('Y-m-d H:i:s', $end_timestamp));
+                    $_start_time->setTimezone($DateTimeZone);
+                    $_end_time->setTimezone($DateTimeZone);
+
+                    $combined_dates[] = $this->_combine_dates($_start_time->format('Y-m-d H:i:s'), $_end_time->format('Y-m-d H:i:s'));
+                }
+
+                $default_dates = $combined_dates;
+            } else if (phpgw::get_var('from_', 'string'))
 			{
 				$default_dates = array_map(array($this, '_combine_dates'), phpgw::get_var('from_', 'string'), phpgw::get_var('to_', 'string'));
 			}
@@ -1635,7 +1662,19 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
 
 			$articles = CreateObject('booking.soarticle_mapping')->get_articles($resource_ids);
-
+//            _debug_array(array(
+//                'add_action'	 => self::link(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'resource_id' => $resource_id, 'simple' => $simple)),
+//                'application'	 => $application,
+//                'activities'	 => $activities,
+//                'agegroups'		 => $agegroups,
+//                'audience'		 => $audience,
+//                'resource_list'	 => array('options' => $resources),
+//                'direct_booking' => $direct_booking,
+//                'config'		 => $config,
+//                'articles'		 => $articles,
+//                'has_articles'	 => !!$articles,
+//                'tax_code_list'	 => json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
+//            ));die();
 			self::render_template_xsl($template, array(
 				'add_action'	 => self::link(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'resource_id' => $resource_id, 'simple' => $simple)),
 				'application'	 => $application,

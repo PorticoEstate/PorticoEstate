@@ -2140,12 +2140,14 @@
 				{
 					$org = $this->organization_bo->read_single($reservation['organization_id']);
 					$log_customer_name = $org['name'];
+					$organization_number =  $org['organization_number'];
 					$customer_number =  $org['customer_number'];
 					$payer_organization_number = $org['customer_organization_number'];
 				}
 				else
 				{
 					$data = $this->event_so->get_org($reservation['customer_organization_number']);
+					$payer_organization_number = $data['customer_organization_number'];
 					if (!empty($data['id']))
 					{
 						$log_customer_name = $data['name'];
@@ -2296,17 +2298,17 @@
 					}
 					else
 					{
-						if (!empty($this->config_data['differentiate_org_payer']) && !empty($payer_organization_number))
-						{
-							$header['tekst3'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
-							$header['tekst4'] = $payer_organization_number;
-						}
-						else
-						{
-							$header['tekst4'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
-						}
-
+						$header['tekst4'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
 						$header['ext_ord_ref'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $customer_number), 0, 15), 15, ' ');
+					}
+
+					/**
+					 * Skille mellom hoved-organisasjonen og betalende underliggende organisasjon
+					 */
+					if (!empty($this->config_data['differentiate_org_payer']) && !empty($organization_number))
+					{
+						$header['tekst3'] = str_pad(substr($organization_number, 0, 12), 12, ' ');
+						$header['tekst4'] = str_pad(substr($payer_organization_number, 0, 12), 12, ' ');
 					}
 
 					$header['line_no'] = '0000'; //Nothing here according to example file but spec. says so
@@ -2450,15 +2452,15 @@
 
 							$pris_inkl_mva = (float)$order_line['unit_price'] + $unit_tax;
 
-							$_item['art_descr'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 35), 35, ' '); //35 chars long
+							$_item['art_descr'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']), 0, 35), 35, ' '); //35 chars long
 							$_item['article'] = str_pad(substr(strtoupper($order_line['article_code']), 0, 15), 15, ' ');
 							$_item['amount'] = $this->format_cost(($order_line['amount']));
-					//		$_item['tax_code'] = str_pad($order_line['tax_code'], 2, ' ', STR_PAD_LEFT);
+							$_item['tax_code'] = str_pad($order_line['tax_code'], 2, ' ', STR_PAD_LEFT);
 							$_item['value_1'] = str_pad($order_line['quantity'] * 100, 17, 0, STR_PAD_LEFT); //Units. Multiplied by 100.
 							$_item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
 
 							$_text['line_no'] = $_item['line_no'];
-							$_text['short_info'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 60), 60, ' ');
+							$_text['short_info'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 0, 60), 60, ' ');
 
 
 							//Add to orders
@@ -2616,15 +2618,15 @@
 
 							$pris_inkl_mva = (float)$order_line['unit_price'] + $unit_tax;
 
-							$_item['art_descr'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 35), 35, ' '); //35 chars long
+							$_item['art_descr'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']), 0, 35), 35, ' '); //35 chars long
 							$_item['article'] = str_pad(substr(strtoupper($order_line['article_code']), 0, 15), 15, ' ');
 							$_item['amount'] = $this->format_cost(($order_line['amount']));
-					//		$_item['tax_code'] = str_pad($order_line['tax_code'], 2, ' ', STR_PAD_LEFT);
+							$_item['tax_code'] = str_pad($order_line['tax_code'], 2, ' ', STR_PAD_LEFT);
 							$_item['value_1'] = str_pad($order_line['quantity'] * 100, 17, 0, STR_PAD_LEFT); //Units. Multiplied by 100.
 							$_item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
 
 							$_text['line_no'] = $_item['line_no'];
-							$_text['short_info'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 0, 60), 60, ' ');
+							$_text['short_info'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 0, 60), 60, ' ');
 
 							//Add to orders
 							$output[] = implode('', str_replace(array("\n", "\r"), '', $_item));
@@ -2771,6 +2773,7 @@
 				{
 					$org = $this->organization_bo->read_single($reservation['organization_id']);
 					$reservation['organization_name'] = $org['name'];
+					$payer_organization_number = $org['customer_organization_number'];
 				}
 				else
 				{
@@ -2778,6 +2781,7 @@
 					if (!empty($data['id']))
 					{
 						$reservation['organization_name'] = $data['name'];
+						$payer_organization_number = $data['customer_organization_number'];
 					}
 					else
 					{

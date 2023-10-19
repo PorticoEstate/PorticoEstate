@@ -1646,13 +1646,13 @@ HTML;
 					{
 						$img	= $this->image('phpgwapi','msgbox_good');
 						$alt	= lang('OK');
-						$class  = 'msg_good';
+						$class  = 'msg_good alert-success';
 					}
 					else
 					{
 						$img	= $this->image('phpgwapi','msgbox_bad');
 						$alt	= lang('ERROR');
-						$class  = 'error';
+						$class  = 'error alert-danger';
 					}
 
 					$data[] = array

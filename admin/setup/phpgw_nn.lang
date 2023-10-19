@@ -141,3 +141,5 @@ color selector	admin	nn	Farge velger
 would you like to check for a new version when admins login	admin	nn	Vil du sjekke om det finnes ny versjon når administratorer logger inn
 view error log	common	nn	Vis feilmeldingslogg
 please set a site name in admin &gt; siteconfig	common	nn	Vennligst angi tittelen for systemet i Administrasjon &gt; Admin &gt; Global konfigurasjon
+redis host	admin	nn	Redis server
+redis database	admin	nn	Redis database

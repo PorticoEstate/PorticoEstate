@@ -489,7 +489,13 @@
 			$this->db->transaction_commit();
 		}
 
-		public function get_customer_list( $get_persons_only = false)
+		/**
+		 *
+		 * @param bool $get_persons_only - skip organizations
+		 * @param bool $next_billing - only those due for next billing
+		 * @return array
+		 */
+		public function get_customer_list( $get_persons_only = false, $next_billing = false)
 		{
 
 			$sf_validator = createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array(
@@ -497,6 +503,19 @@
 			$sf_validator->setOption('required', true);
 
 			$sql = "SELECT * FROM bb_user WHERE length(bb_user.customer_ssn) = 11 AND substring(bb_user.customer_ssn, 1, 4) != '0000'";
+
+			if($next_billing)
+			{
+				$sql = "SELECT DISTINCT bb_user.* FROM bb_user"
+					. " JOIN bb_completed_reservation ON bb_completed_reservation.customer_ssn = bb_user.customer_ssn"
+					. " WHERE length(bb_user.customer_ssn) = 11"
+					. " AND substring(bb_user.customer_ssn, 1, 4) != '0000'"
+					. " AND customer_identifier_type = 'ssn'"
+					. " AND cost > 0"
+					. " AND exported IS NOT NULL"
+					. " AND export_file_id IS NULL";
+	
+			}
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$values = array();
@@ -524,6 +543,19 @@
 				. " name, phone, email,co_address, street, zip_code, city, customer_internal"
 				. " FROM bb_organization WHERE length(bb_organization.customer_organization_number) = 9"
 				. " AND active = 1";
+
+			if($next_billing)
+			{
+				$sql = "SELECT DISTINCT bb_organization.*"
+					. " FROM bb_organization"
+					. " JOIN bb_completed_reservation ON bb_completed_reservation.customer_organization_number = bb_organization.customer_organization_number"
+					. " WHERE length(bb_organization.customer_organization_number) = 9"
+					. " AND bb_completed_reservation.customer_identifier_type = 'organization_number'"
+					. " AND cost > 0"
+					. " AND exported IS NOT NULL"
+					. " AND export_file_id IS NULL";
+
+			}
 
 			$this->db->query($sql, __LINE__, __FILE__);
 

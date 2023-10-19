@@ -58,7 +58,8 @@
 			$search = null;
 
 			$criteria = phpgw::get_var('criteria');
-//			_debug_array($criteria);die();
+//			_debug_array($config->config_data['landing_sections']);die();
+
 
 			if ($config->config_data['frontpagetitle'] != '')
 			{
@@ -96,7 +97,28 @@
 				$filterboxtitle = lang('Choose categories');
 			}
 
-			$params = array(
+            // Sample object structure
+            $landing_sections = (object) [
+                'booking' => true,
+                'organization' => true,
+                'event' => true
+            ];
+            // If the 'landing_sections' key is not set or its array is empty, set all to true
+            if (!isset($config->config_data['landing_sections']) || empty($config->config_data['landing_sections'])) {
+                $landing_sections->booking = true;
+                $landing_sections->organization = true;
+                $landing_sections->event = true;
+            } else {
+                // Otherwise, set only those present in the array to true and others to false
+                $landing_sections->booking = in_array('booking', $config->config_data['landing_sections']);
+                $landing_sections->organization = in_array('organization', $config->config_data['landing_sections']);
+                $landing_sections->event = in_array('event', $config->config_data['landing_sections']);
+            }
+
+
+            $params = array(
+                'landing_sections' => $landing_sections,
+                'landing_sections_json' => json_encode($landing_sections),
 				'baseurl' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}",
 				'filterboxtitle' => $filterboxtitle,
 				'frontimage' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/bkbooking/images/newlayout/forsidebilde.jpg",

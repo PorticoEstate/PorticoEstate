@@ -58,35 +58,44 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 		{//3
 			key: 'unit',
 			label: lang['unit'],
-			attrs: [{name: 'class', value: "unit"},{name: 'style', value: "display:none;"}
+			attrs: [
+				{name: 'class', value: "unit"}, {name: 'style', value: "display:none;"}
 			]
 		},
 		{//4
 			key: 'lang_unit',
 			label: lang['unit'],
-			attrs: [{name: 'class', value: "align-middle"},{name: 'style', value: "text-align:center;"}]
+			attrs: [
+				{name: 'class', value: "align-middle"}, {name: 'style', value: "text-align:center;"}
+			]
 		},
 		{//5
 			key: 'tax_code',
 			label: lang['tax code'],
-			attrs: [{name: 'class', value: "align-middle"},{name: 'style', value: "text-align:center;"}]
+			attrs: [
+				{name: 'class', value: "align-middle"}, {name: 'style', value: "text-align:center;"}
+			]
 		},
 		{//6
 			key: 'tax_percent',
 			label: lang['percent'],
-			attrs: [{name: 'class', value: "align-middle"},{name: 'style', value: "text-align:center;"}]
+			attrs: [
+				{name: 'class', value: "align-middle"}, {name: 'style', value: "text-align:center;"}
+			]
 		},
 		{//7
 			key: 'ex_tax_price',
 			label: lang['unit cost'],
 			attrs: [
-				{name: 'class', value: "align-middle"},{name: 'style', value: "text-align:right;"}
+				{name: 'class', value: "align-middle"}, {name: 'style', value: "text-align:right;"}
 			]
 		},
 		{//8
 			key: 'tax',
 			label: lang['tax'],
-			attrs: [{name: 'class', value: "text-right align-middle"},{name: 'style', value: "text-align:right;"}]
+			attrs: [
+				{name: 'class', value: "text-right align-middle"}, {name: 'style', value: "text-align:right;"}
+			]
 		},
 		{//9
 			key: 'quantity',
@@ -106,7 +115,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 			key: 'selected_quantity',
 			label: lang['Selected'],
 			attrs: [
-				{name: 'class', value: "selected_quantity text-right align-middle"},{name: 'style', value: "text-align:right;"}
+				{name: 'class', value: "selected_quantity text-right align-middle"}, {name: 'style', value: "text-align:right;"}
 			]
 		},
 		{//11
@@ -124,7 +133,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 			key: 'selected_sum',
 			label: lang['Sum'],
 			attrs: [
-				{name: 'class', value: "text-right align-middle selected_sum"},{name: 'style', value: "text-align:right;"}
+				{name: 'class', value: "text-right align-middle selected_sum"}, {name: 'style', value: "text-align:right;"}
 			]
 		},
 		{//13
@@ -180,7 +189,7 @@ function populateTableChkArticles(selection, resources, application_id, reservat
 $(document).ready(function ()
 {
 	var resources = initialSelection;
-	if (resources.length > 0)
+	if (resources.length >= 0)
 	{
 		if (typeof (application_id) === 'undefined')
 		{
@@ -282,7 +291,7 @@ function set_mandatory(xTable)
 //		sum_days += Math.ceil(sum_hours / 24);
 
 		day = new Date(from).toISOString().split('T')[0];
-		if(!days.includes(day) )
+		if (!days.includes(day))
 		{
 			sum_days += Math.ceil((to - from) / one_day);
 			days.push(day);
@@ -290,7 +299,7 @@ function set_mandatory(xTable)
 
 		j++;
 		j++;
-		
+
 	}
 
 	//alternative for time (season)
@@ -522,9 +531,9 @@ function set_basket(tr)
 	{
 		tax_code = 0;
 	}
-	var ex_tax_price =tr.childNodes[7].innerHTML;
+	var ex_tax_price = tr.childNodes[7].innerHTML;
 	var target = tr.childNodes[11].childNodes[0];
-	if(selected_quantity === 0)
+	if (selected_quantity === 0)
 	{
 		target.value = null;
 	}
@@ -709,7 +718,7 @@ function empty_from_bastet(element)
 function populateTableArticles(url, container, colDefs)
 {
 	var table_class = '';
-	if(template_set === 'bootstrap')
+	if (template_set === 'bootstrap')
 	{
 		table_class = 'table table-bordered table-hover table-sm table-responsive';
 	}
@@ -739,9 +748,9 @@ if (!alertify.myAlert)
 	alertify.dialog('myAlert', function factory()
 	{
 		return{
-			main: function (tax_code_element)
+			main: function (select_options)
 			{
-				this.setContent(tax_code_element);
+				this.setContent(select_options);
 			},
 			setup: function ()
 			{
@@ -775,6 +784,8 @@ if (!alertify.myAlert)
 					],
 					focus: {element: 0},
 					options: {
+						title: 'Endre mva eller pris', // Set your custom title here
+						message: 'Endre mva eller pris',
 						onclose: function ()
 						{
 //							console.log($('#tax_code_select'));

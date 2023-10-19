@@ -115,6 +115,14 @@
 				</select>
 			</td>
 		</tr>
+		<tr>
+			<td>{lang_landing_sections}:</td>
+			<td>
+				<table class='table'>
+					{hook_landing_sections}
+				</table>
+			</td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->

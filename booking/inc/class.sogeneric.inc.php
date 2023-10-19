@@ -244,6 +244,30 @@
 						'check_grant'		 => false
 					);
 					break;
+				case 'article_group':
+					$info	 = array(
+						'table'			 => 'bb_article_group',
+						'id'			 => array('name' => 'id', 'type' => 'int'),
+						'fields'		 => array(
+							array(
+								'name'	 => 'name',
+								'descr'	 => lang('name'),
+								'type'	 => 'varchar'
+							),
+							array(
+								'name'	 => 'remark',
+								'descr'	 => lang('remark'),
+								'type'	 => 'text'
+							)
+						),
+						'edit_msg'		 => lang('edit'),
+						'add_msg'		 => lang('add'),
+						'name'			 => lang('article group'),
+						'acl_app'		 => 'booking',
+						'acl_location'	 => '.admin',
+						'menu_selection' => 'booking::commerce::article_group'
+					);
+					break;
 
 // END BOOKING TABLES
 				default:

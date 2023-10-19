@@ -15,6 +15,7 @@
 		<thead>
 			<tr>
 				<th> {sort_title} </th>
+				<th> {lang_version} </th>
 				<th>{lang_edit}</th>
 				<th>{lang_delete}</th>
 				<th>{lang_enabled}</th>
@@ -44,6 +45,7 @@
 <!-- BEGIN row -->
 <tr>
 	<td>{name}</td>
+	<td width="5%">{version}</td>
 	<td width="5%">{edit}</td>
 	<td width="5%">{delete}</td>
 	<td width="5%">{status}</td>
