@@ -210,10 +210,16 @@
 			return $this->so->collect_users();
 		}
 
-		public function get_customer_list()
+		/**
+		 *
+		 * @param bool $get_persons_only - skip organizations
+		 * @param bool $next_billing - only those due for next billing
+		 * @return array
+		 */
+		public function get_customer_list($get_persons_only = false, $next_billing = false)
 		{
 			$config		 = CreateObject('phpgwapi.config', 'booking')->read();
-			$customers	 = $this->so->get_customer_list();
+			$customers	 = $this->so->get_customer_list($get_persons_only, $next_billing );
 
 			if ($config['customer_list_format'] == 'AGRESSO')
 			{
