@@ -1675,7 +1675,9 @@
 //                'has_articles'	 => !!$articles,
 //                'tax_code_list'	 => json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
 //            ));die();
-			self::render_template_xsl($template, array(
+            self::add_external_css_with_search($template . '.css', false);
+
+            self::render_template_xsl($template, array(
 				'add_action'	 => self::link(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'resource_id' => $resource_id, 'simple' => $simple)),
 				'application'	 => $application,
 				'activities'	 => $activities,

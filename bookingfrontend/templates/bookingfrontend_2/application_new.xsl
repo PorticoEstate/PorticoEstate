@@ -1,31 +1,4 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <style>
-        .dropdownContainer {
-        position: relative;
-        display: inline-block;
-        }
-
-        .timeDropdown {
-        z-index: 1;
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        border: 1px solid #ccc;
-        background-color: #fff;
-        width: 100%;
-        max-height: 150px;
-        overflow-y: auto;
-        }
-
-        .timeDropdown div {
-        padding: 5px;
-        cursor: pointer;
-        }
-        .timeDropdown div:hover {
-        background-color: #eee;
-        }
-    </style>
     <div class="container new-application-page" id="new-application-page">
         <form action="{add_action}" data-bind='' method="POST" id='application_form' enctype='multipart/form-data'
               name="form" novalidate="true" class="needs-validationm">

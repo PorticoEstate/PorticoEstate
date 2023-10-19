@@ -80,5 +80,93 @@ a {
       font-weight: $text-bold;
       font-family: "Font Awesome 5 Free";
     }
+
+    &:first-child:active:focus-visible {
+      box-shadow: $box-focus-shadow;
+    }
+
+    &:hover,
+    &:active {
+      border-color: $purple;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus-visible {
+      border-color: $purple;
+      box-shadow: $box-focus-shadow;
+    }
+
+    &-primary {
+      background-color: $purple;
+      color: $white;
+      &::after {
+        color: $white;
+      }
+
+      &:hover,
+      &:active {
+        background-color: $white;
+        color: $purple;
+        &::after {
+          color: $purple;
+        }
+      }
+
+      &:focus-visible {
+        background-color: $purple;
+        color: $white;
+      }
+
+    }
+
+    &-secondary {
+      color: $purple;
+      background-color: $white;
+
+      &:hover,
+      &:active {
+        background-color: $purple;
+        color: $white;
+      }
+
+      &:focus-visible {
+        border-color: $purple;
+        background-color: $white;
+        color: $purple;
+      }
+    }
+
+    &--small {
+      font-size: 0.875rem;
+      padding: 0.344rem 1.25rem;
+    }
+
+    &--large {
+      padding: 0.657rem 1.25rem;
+      font-size: 1.125rem;
+    }
+
+    &--circle {
+      padding: 1rem;
+    }
+
+    &:disabled,
+    &[disabled] {
+      background-color: $grey-light;
+      color: $grey;
+      border-color: $grey;
+      opacity: 1;
+      pointer-events: none;
+    }
+
+    &--transparent {
+      background-color: transparent;
+      border: 0;
+      padding: 0.5rem;
+      min-width: 2.5rem;
+    }
   }
 }

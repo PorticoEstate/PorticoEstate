@@ -148,7 +148,7 @@ ko.components.register('time-picker', {
         </input>
     </label>
     <div class="timeDropdown" style="display: none;" data-bind="foreach: timeOptions">
-        <div data-bind="text: $data, click: $component.selectTime"></div>
+        <div data-bind="text: $data, click: $component.selectTime, css: { 'active': $data === $component.selectedTime() }"></div>
     </div>
 </div>
 

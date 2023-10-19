@@ -996,6 +996,74 @@ a.link-button::after {
   font-weight: 700;
   font-family: "Font Awesome 5 Free";
 }
+a.link-button:first-child:active:focus-visible {
+  box-shadow: 0 0 0 0.25rem #946da8;
+}
+a.link-button:hover, a.link-button:active {
+  border-color: #793C8A;
+}
+a.link-button:focus {
+  outline: none;
+}
+a.link-button:focus-visible {
+  border-color: #793C8A;
+  box-shadow: 0 0 0 0.25rem #946da8;
+}
+a.link-button-primary {
+  background-color: #793C8A;
+  color: #FFFFFF;
+}
+a.link-button-primary::after {
+  color: #FFFFFF;
+}
+a.link-button-primary:hover, a.link-button-primary:active {
+  background-color: #FFFFFF;
+  color: #793C8A;
+}
+a.link-button-primary:hover::after, a.link-button-primary:active::after {
+  color: #793C8A;
+}
+a.link-button-primary:focus-visible {
+  background-color: #793C8A;
+  color: #FFFFFF;
+}
+a.link-button-secondary {
+  color: #793C8A;
+  background-color: #FFFFFF;
+}
+a.link-button-secondary:hover, a.link-button-secondary:active {
+  background-color: #793C8A;
+  color: #FFFFFF;
+}
+a.link-button-secondary:focus-visible {
+  border-color: #793C8A;
+  background-color: #FFFFFF;
+  color: #793C8A;
+}
+a.link-button--small {
+  font-size: 0.875rem;
+  padding: 0.344rem 1.25rem;
+}
+a.link-button--large {
+  padding: 0.657rem 1.25rem;
+  font-size: 1.125rem;
+}
+a.link-button--circle {
+  padding: 1rem;
+}
+a.link-button:disabled, a.link-button[disabled] {
+  background-color: #F5F5F5;
+  color: #D6D6D6;
+  border-color: #D6D6D6;
+  opacity: 1;
+  pointer-events: none;
+}
+a.link-button--transparent {
+  background-color: transparent;
+  border: 0;
+  padding: 0.5rem;
+  min-width: 2.5rem;
+}
 
 .choice {
   position: relative;
