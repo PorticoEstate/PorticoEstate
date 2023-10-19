@@ -6208,7 +6208,7 @@ HTML;
 		}
 	}
 	/**
-	 * Update booking version from 0.2.89 to 0.2.90
+	 * Update booking version from 0.2.90 to 0.2.91
 	 *
 	 */
 	$test[] = '0.2.90';
@@ -6301,7 +6301,7 @@ HTML;
 	}
 
 	/**
-	 * Update booking version from 0.2.90 to 0.2.91
+	 * Update booking version from 0.2.91 to 0.2.92
 	 *
 	 */
 	$test[] = '0.2.91';
@@ -6327,7 +6327,7 @@ HTML;
 
 
 	/**
-	 * Update booking version from 0.2.90 to 0.2.91
+	 * Update booking version from 0.2.92 to 0.2.93
 	 *
 	 */
 	$test[] = '0.2.92';
@@ -6359,6 +6359,142 @@ HTML;
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.93';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.93 to 0.2.94
+	 *
+	 */
+	$test[] = '0.2.93';
+	function booking_upgrade0_2_93()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$sql = <<<SQL
+		SELECT * FROM bb_completed_reservation WHERE id IN (
+		WITH DuplicateRows AS (
+		  SELECT *,
+				 ROW_NUMBER() OVER (PARTITION BY reservation_type, reservation_id ORDER BY cost DESC ) AS rn
+		  FROM bb_completed_reservation
+		)
+		SELECT id
+		FROM DuplicateRows
+		WHERE rn > 1)
+		ORDER BY from_ DESC, reservation_type, reservation_id
+SQL;
+
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query($sql, __LINE__, __FILE__);
+
+		$billing_ids = array();
+		$billing_entries = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$billing_ids[]		 = $GLOBALS['phpgw_setup']->oProc->f('id');
+			$billing_entries[]	 = array(
+				'reservation_type'				 => $GLOBALS['phpgw_setup']->oProc->f('reservation_type'),
+				'reservation_id'				 => $GLOBALS['phpgw_setup']->oProc->f('reservation_id'),
+				'cost'							 => $GLOBALS['phpgw_setup']->oProc->f('cost'),
+				'from_'							 => $GLOBALS['phpgw_setup']->oProc->f('from_'),
+				'to_'							 => $GLOBALS['phpgw_setup']->oProc->f('to_'),
+				'customer_identifier_type'		 => $GLOBALS['phpgw_setup']->oProc->f('customer_identifier_type'),
+				'customer_organization_number'	 => $GLOBALS['phpgw_setup']->oProc->f('customer_organization_number'),
+				'customer_ssn'					 => $GLOBALS['phpgw_setup']->oProc->f('customer_ssn'),
+				'article_description'			 => $GLOBALS['phpgw_setup']->oProc->f('article_description'),
+				'exported'						 => $GLOBALS['phpgw_setup']->oProc->f('exported'),
+				'export_file_id'				 => $GLOBALS['phpgw_setup']->oProc->f('export_file_id'),
+				'invoice_file_order_id'			 => $GLOBALS['phpgw_setup']->oProc->f('invoice_file_order_id')
+			);
+		}
+
+		$global_log_level = $GLOBALS['phpgw_info']['server']['log_levels']['global_level'];
+		$GLOBALS['phpgw_info']['server']['log_levels']['global_level'] = 'I';
+
+		// File path where the CSV file will be saved
+		$csv_file_path = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/Duplicate_billing.csv';
+
+		// Open the CSV file in write mode
+		$csv_file = fopen($csv_file_path, 'w');
+
+		// Loop through the data and write it to the CSV file
+
+		$i = 0;
+		foreach ($billing_entries as $billing_entry)
+		{
+			if ($i === 0)
+			{
+				fputcsv($csv_file, array_keys($billing_entry));
+				$i = 1;
+			}
+			fputcsv($csv_file, array_values($billing_entry));
+
+			if(!$billing_entry['export_file_id'])
+			{
+				continue;
+			}
+
+			$log_args = array(
+					'severity'	 => 'I',
+					'file'		 => __FILE__,
+					'line'		 => __LINE__,
+					'text'		 => "Duplicate billing<br/>" . print_r($billing_entry, true)
+			);
+			$GLOBALS['phpgw']->log->info($log_args);
+		}
+
+		// Close the CSV file
+		fclose($csv_file);
+
+		$GLOBALS['phpgw_info']['server']['log_levels']['global_level'] = $global_log_level;
+
+		$attachments[] = array(
+			'file'	 => $csv_file_path,
+			'name'	 => basename($csv_file_path),
+			'type'	 => 'text/csv'
+		);
+
+		$config_system		 = CreateObject('phpgwapi.config', 'phpgwapi')->read();
+
+		if ($billing_ids)
+		{
+			$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_completed_reservation_resource"
+				. " WHERE completed_reservation_id IN (" . implode(', ', $billing_ids) . ")", __LINE__, __FILE__);
+
+			$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_completed_reservation"
+				. " WHERE id IN (" . implode(', ', $billing_ids) . ")", __LINE__, __FILE__);
+
+			$send		 = CreateObject('phpgwapi.send');
+			$to			 = "Sigurd.Nes@bergen.kommune.no";
+			$subject	 = 'Rydding av duplikater i fakturagrunnlag::' . $config_system['site_title'];
+			$body		 = 'Vedlegg';
+			$config		 = CreateObject('phpgwapi.config', 'booking')->read();
+			$from_email	 = isset($config['email_sender']) && $config['email_sender'] ? $config['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+
+			try
+			{
+				$rcpt		 = $send->msg('email', $to, $subject, $body, '', $cc			 = '', $bcc		 = '', $from_email, $from_name	 = 'Sigurd', 'html', '', $attachments);
+				if (!$rcpt)
+				{
+					$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_abort();
+					echo "SEND::Noe gikk feil, eposten ble ikke sendt<br/>";
+				}
+			}
+			catch (Exception $e)
+			{
+				$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_abort();
+				echo "CATCH::Noe gikk feil, eposten ble ikke sendt<br/>";
+			}
+
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_completed_reservation"
+			. " ADD CONSTRAINT bb_completed_reservation_reservation_type_reservation_id_key UNIQUE (reservation_type, reservation_id)");
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->get_transaction() && $GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.94';
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}

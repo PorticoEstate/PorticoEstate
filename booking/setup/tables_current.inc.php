@@ -1031,7 +1031,7 @@
 				'bb_completed_reservation_export_file' => array('export_file_id' => 'id'),
 			),
 			'ix' => array(),
-			'uc' => array()
+			'uc' => array('reservation_type', 'reservation_id')
 		),
 		'bb_completed_reservation_resource' => array(
 			'fd' => array(
