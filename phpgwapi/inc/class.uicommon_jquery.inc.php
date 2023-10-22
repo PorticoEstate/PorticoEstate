@@ -202,10 +202,10 @@
         {
             $css_search_path = array();
             // Modify the search path as needed
-            array_push($css_search_path, 'phpgwapi/templates/base');
-            array_push($css_search_path, 'phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
-            array_push($css_search_path, $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/base');
-            array_push($css_search_path, $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/' . $GLOBALS['phpgw_info']['server']['template_set']);
+            array_push($css_search_path, 'phpgwapi/templates/base/css');
+            array_push($css_search_path, 'phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set'] . '/css');
+            array_push($css_search_path, $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/base/css');
+            array_push($css_search_path, $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/' . $GLOBALS['phpgw_info']['server']['template_set'] . '/css');
 
             return $css_search_path;
         }

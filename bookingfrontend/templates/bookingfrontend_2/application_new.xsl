@@ -29,22 +29,68 @@
                     <!-- Retaining the original formstage -->
                     <input name="formstage" value="partial1" hidden="hidden"/>
 
-
-                    <div class="form-group">
-                        <div class=" mb-4">
-                            <ul class="row py-2 d-flex g-2 list-unstyled" data-bind="foreach: bookableresource">
-                                <li>
-                                    <label class="choice user-select-none">
-                                        <input type="checkbox" name="resources[]"
-                                               data-bind="textInput: id, checked: selected"
-                                               class="form-check-input choosenResource"/>
-                                        <span class="label-text" data-bind="html: name"></span>
-                                        <span class="choice__check"></span>
-                                    </label>
-                                </li>
-                            </ul>
-                        </div>
+<div class="row">
+    <div class="col-md-7">
+        <div class="form-group">
+            <div class=" mb-4">
+                <ul class="row py-2 d-flex g-2 list-unstyled" data-bind="foreach: bookableresource">
+                    <li>
+                        <label class="choice user-select-none">
+                            <input type="checkbox" name="resources[]"
+                                   data-bind="textInput: id, checked: selected"
+                                   class="form-check-input choosenResource"/>
+                            <span class="label-text" data-bind="html: name"></span>
+                            <span class="choice__check"></span>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <!-- TODO:  missing priser-->
+        <div class="row mb-5">
+            <div class="row gx-3 pb-3">
+                <div class="col d-flex ">
+                    <div class=" col bg-white rounded-small border p-2 d-flex flex-column">
+                        <h4 class="mb-1">Bygg</h4>
+                        <span><xsl:value-of select="building/street"/></span>
+                        <span><xsl:value-of select="building/zip_code"/></span>
                     </div>
+                </div>
+            </div>
+            <div class="row gx-3">
+                <!--                            <div class="col d-flex ">-->
+                <!--                                <div class=" col bg-white rounded-small border p-2">-->
+                <!--                                    <h4 class="mb-1">Priser</h4>-->
+                <!--                                    <p>Disse varierer avhengig av hvilken aktivitet som skal utføres og hvem som skal arrangerer-->
+                <!--                                        dette-->
+                <!--                                    </p>-->
+                <!--                                    <button class="w-100 pe-btn pe-btn-primary ">Se priser</button>-->
+                <!--                                </div>-->
+                <!--                            </div>-->
+                <div class="col  d-flex ">
+                    <div class="col bg-white rounded-small border p-2">
+                        <h4 class="mb-1">Fasiliteter</h4>
+                        <ul class="pl-1" data-bind="foreach: selectedResourcesWithFacilities">
+                            <li data-bind="foreach: facilities, visible: $parent.selectedResourcesWithFacilities().length === 1">
+                                <span data-bind="text: name"></span>
+                            </li>
+
+                            <li data-bind="visible: $parent.selectedResourcesWithFacilities().length > 1">
+                                <strong data-bind="text: resourceName"></strong>
+                                <ul data-bind="foreach: facilities">
+                                    <li data-bind="text: name"></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
                     <!--                    <div id="dropdownContainer">-->
                     <!--                        <input type="text" id="timeInput" data-bind="value: selectedTime" placeholder="Choose time..." />-->
@@ -101,12 +147,13 @@
                     <!--					</div>-->
 
 
+
                     <div class="form-group">
 
                         <div class="form-group">
                             <div class="row  pt-4">
                                 <h2>
-                                    Periode
+                                    Leieperiode
                                 </h2>
                             </div>
                             <!-- Display Time Chosen -->
@@ -248,8 +295,8 @@
                        optionsCaption: '{php:function('lang', 'Choose target audience')}'">
                             <!-- KnockoutJS will populate this select element based on the 'audiences' array -->
                         </select>
-                        <input class="form-control" id="inputTargetAudience" required="true" type="text"
-                               style="display: none" name="audience[]" data-bind="value: audienceSelectedValue"/>
+<!--                        <input class="form-control" id="inputTargetAudience" required="true" type="text"-->
+<!--                               style="display: none" name="audience[]" data-bind="value: audienceSelectedValue"/>-->
                     </div>
 
 
