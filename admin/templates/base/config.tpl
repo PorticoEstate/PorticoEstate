@@ -98,8 +98,12 @@
 				</td>
 			</tr>
 			<tr>
-				<td>{lang_redis_host}:</td>
+				<td>{lang_redis_host}: (port 6379)</td>
 				<td><input size="8" name="newsettings[redis_host]" value="{value_redis_host}" class="pure-u-1"/></td>
+			</tr>
+			<tr>
+				<td>{lang_redis_database}: (0 - 15)</td>
+				<td><input type="number" min="0" max="15" name="newsettings[redis_database]" value="{value_redis_database}" class="pure-u-1"/></td>
 			</tr>
 
 			<tr class="th">

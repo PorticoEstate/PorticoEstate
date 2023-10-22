@@ -379,28 +379,59 @@
 					</div>
 					<div class="pure-g">
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+							<div class="pure-control-group">
+								<div id="participant_container"/>
+							</div>
+
+						</div>
+					</div>
+					<div class="pure-g">
+
+						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
-								<!--<legend>-->
 								<h3>
 									<xsl:value-of select="php:function('lang', 'Cost')" />
 								</h3>
-								<!--</legend>-->
 							</div>
+
 							<div class="pure-control-group">
 								<label style="margin-top:10px;">&nbsp;</label>
 								<input id="field_cost" name="cost" type="text">
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Please enter a cost')" />
-									</xsl:attribute>
+
+									<xsl:choose>
+										<xsl:when test="config/activate_application_articles">
+											<xsl:attribute name="readonly">
+												<xsl:text>readonly</xsl:text>
+											</xsl:attribute>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:attribute name="data-validation">
+												<xsl:text>required</xsl:text>
+											</xsl:attribute>
+											<xsl:attribute name="data-validation-error-msg">
+												<xsl:value-of select="php:function('lang', 'Please enter a cost')" />
+											</xsl:attribute>
+										</xsl:otherwise>
+									</xsl:choose>
+
 									<xsl:attribute name="value">
 										<xsl:value-of select="event/cost"/>
 									</xsl:attribute>
 								</input>
 							</div>
+							<div class="pure-control-group">
+								<label for="articles_container">
+									<xsl:value-of select="php:function('lang', 'Articles')" />
+								</label>
+								<div id="articles_container" style="display:inline-block;">
+									<span class="select_first_text">
+										<xsl:value-of select="php:function('lang', 'Select a resource first')" />
+									</span>
+								</div>
+							</div>
 						</div>
+					</div>
+					<div class="pure-g">
 
 						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
 							<div class="heading">
@@ -498,10 +529,10 @@
 								</input>
 							</div>
 							<div class="pure-control-group">
-								<label for="field_contact_mail">
+								<label for="field_contact_email">
 									<xsl:value-of select="php:function('lang', 'Email')" />
 								</label>
-								<input id="field_contact_mail" name="contact_email" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
+								<input id="field_contact_email" name="contact_email" type="text" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
 									<xsl:attribute name="value">
 										<xsl:value-of select="event/contact_email"/>
 									</xsl:attribute>
@@ -555,9 +586,12 @@
 		</div>
 	</form>
 	<script type="text/javascript">
+		var template_set = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|template_set')" />';
+		var date_format = '<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />';
+		var tax_code_list = <xsl:value-of select="tax_code_list"/>;
 		$('#field_customer_identifier_type,#field_customer_ssn,#field_customer_organization_number').removeClass('pure-input-1').addClass('pure-u-1 pure-u-sm-1-2 pure-u-md-1');
 		var initialSelection = <xsl:value-of select="event/resources_json"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'From', 'To', 'Resource Type')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'From', 'To', 'Resource Type','article', 'Select', 'price', 'unit', 'tax', 'unit cost', 'quantity', 'Selected', 'Delete', 'Sum', 'tax code', 'percent')"/>;
 		$('#field_customer_identifier_type').attr("data-validation","customer_identifier").attr("data-validation-error-msg","<xsl:value-of select="php:function('lang', 'There is set a cost, but no invoice data is filled inn')" />");
 	</script>
 </xsl:template>

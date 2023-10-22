@@ -8,6 +8,7 @@ var urlParams = [];
 CreateUrlParams(window.location.search);
 
 var bookableresource = ko.observableArray();
+var globalFacilitiesList = ko.observable({});
 var bookingDates = ko.observableArray();
 var agegroup = ko.observableArray();
 var audiences = ko.observableArray();
@@ -66,10 +67,6 @@ ko.components.register('time-picker', {
             const index = timeOptionsArray.indexOf(selectedTimeValue); // Get the index of the currently selected time or '14:30' if none is selected
 
             dropdown.scrollTo({top: timeslotHeight * index}); // Scroll to the position of the selected time or '14:30'
-
-
-
-
         };
 
 
@@ -148,7 +145,7 @@ ko.components.register('time-picker', {
         </input>
     </label>
     <div class="timeDropdown" style="display: none;" data-bind="foreach: timeOptions">
-        <div data-bind="text: $data, click: $component.selectTime"></div>
+        <div data-bind="text: $data, click: $component.selectTime, css: { 'active': $data === $component.selectedTime() }"></div>
     </div>
 </div>
 
@@ -219,7 +216,6 @@ function applicationModel() {
         });
     }
 
-//	console.log(urlParams);
 
 
     self.bookingDate = ko.observable('')
@@ -227,11 +223,6 @@ function applicationModel() {
     self.bookingEndTime = ko.observable('');
 
 
-    // self.bookingDate.subscribe(function(newDate) {
-    // 	console.log('New date selected:', newDate);
-    // 	// Further logic as needed...
-    // 	// am.bookingDate(newDate); // equivalent to this line in the YUI code
-    // }, self);
 
     self.bookableResource = bookableresource;
     self.selectedResources = ko.observableArray(0);
@@ -343,6 +334,25 @@ function applicationModel() {
     self.agegroupList = agegroup;
     self.specialRequirements = ko.observable("");
     self.attachment = ko.observable();
+
+    self.selectedResourcesWithFacilities = ko.computed(function() {
+        var selectedResources = ko.utils.arrayFilter(self.bookableResource(), function(resource) {
+            return resource.selected();
+        });
+
+        var result = [];
+        for (var i = 0; i < selectedResources.length; i++) {
+            var facilities = globalFacilitiesList()[selectedResources[i].id.toString()] || [];
+            result.push({
+                resourceName: selectedResources[i].name,  // Only pushing the name
+                facilities: facilities
+            });
+
+        }
+        console.log(result);
+        return result;
+    });
+
 }
 
 $(document).ready(function () {
@@ -396,35 +406,48 @@ $(document).ready(function () {
         }, true);
         $.getJSON(getJsonURL, function (result) {
             for (var i = 0; i < result.results.length; i++) {
-                if (result.results[i].deactivate_application !== 1 && result.results[i].building_id == urlParams['building_id']) {
+                var currentResource = result.results[i];
+                if (currentResource.deactivate_application !== 1 && currentResource.building_id == urlParams['building_id']) {
                     var tempSelected = false;
-                    if ($.inArray(result.results[i].id, initialSelection) > -1) {
+                    if ($.inArray(currentResource.id, initialSelection) > -1) {
                         tempSelected = true;
                     }
                     if (typeof urlParams['resource_id'] !== "undefined" && initialSelection.length == 0) {
-                        if (urlParams['resource_id'] == result.results[i].id) {
+                        if (urlParams['resource_id'] == currentResource.id) {
                             tempSelected = true;
                         }
                     }
-                    var resource_name = result.results[i].name;
+                    var resource_name = currentResource.name;
 
                     var now = Math.floor(Date.now() / 1000);
 
-                    if ((result.results[i].simple_booking && result.results[i].simple_booking_start_date < now) || result.results[i].hidden_in_frontend == 1) {
+                    if ((currentResource.simple_booking && currentResource.simple_booking_start_date < now) || currentResource.hidden_in_frontend == 1) {
                         //skip this one
                         resource_name += ' *';
                     } else {
-                        if (result.results[i].direct_booking && result.results[i].direct_booking < now) {
+                        if (currentResource.direct_booking && currentResource.direct_booking < now) {
                             resource_name += ' *';
                         }
                         bookableresource.push({
-                            id: result.results[i].id,
+                            id: currentResource.id,
                             name: resource_name,
                             selected: ko.observable(tempSelected)
                         });
                     }
                 }
+
+                // Save facilities for the current resource to the globalFacilitiesList observable
+                if (currentResource.facilities_list && Array.isArray(currentResource.facilities_list)) {
+                    var resourceId = currentResource.id.toString();
+                    if (!globalFacilitiesList()[resourceId]) {
+                        globalFacilitiesList()[resourceId] = [];
+                    }
+                    for (var j = 0; j < currentResource.facilities_list.length; j++) {
+                        globalFacilitiesList()[resourceId].push(currentResource.facilities_list[j]);
+                    }
+                }
             }
+            globalFacilitiesList.valueHasMutated();
         });
 
         var parameter = {
@@ -577,172 +600,10 @@ function populateApplicationDate() {
     }
 }
 
-function validate() {
 
-}
-
-var dateformat_datepicker = dateformat_backend.replace(/d/gi, "%d").replace(/m/gi, "%m").replace(/y/gi, "%Y");
 
 var d = new Date();
-var strDate = $.datepicker.formatDate('mm/dd/yy', new Date());
 //
-// YUI({lang: 'nb-no'}).use(
-// 	'aui-datepicker',
-// 	function (Y)
-// 	{
-// 		new Y.DatePicker(
-// 		{
-// 			trigger: '.datepicker-btn',
-// 			popover: {
-// 				zIndex: 99999
-// 			},
-// 			//        mask: '%d/%m/%G',
-// 			mask: dateformat_datepicker,
-// 			calendar: {
-// 				minimumDate: new Date(strDate)
-// 			},
-// 			disabledDatesRule: 'minimumDate',
-// 			on: {
-// 				selectionChange: function (event)
-// 				{
-// 					new Date(event.newSelection);
-// 				//	console.log(event.newSelection);
-// 					$(".datepicker-btn").val(event.newSelection);
-// 					am.bookingDate(event.newSelection);
-// 					return false;
-// 				}
-// 			}
-// 		}
-// 		);
-// 	}
-// );
-//
-// YUI({lang: 'nb-no'}).use(
-// 	'aui-timepicker',
-// 	function (Y)
-// 	{
-// 		new Y.TimePicker(
-// 		{
-// 			trigger: '.bookingStartTime',
-// 			popover: {
-// 				zIndex: 99999
-// 			},
-// 			values: timepickerValues,
-// 			mask: 'kl. %H:%M',
-// 			popoverCssClass: "timepicker-popover yui3-widget popover yui3-widget-positioned yui3-widget-modal yui3-widget-stacked bookingStartTime-popover",
-// 			on: {
-// 				selectionChange: function (event)
-// 				{
-// 					new Date(event.newSelection);
-// 					$(this).val(event.newSelection);
-// 			//		console.log(event.newSelection);
-// 					am.bookingStartTime(event.newSelection);
-// 					//am.bookingDate(event.newSelection);
-// 				}
-// 			}
-// 		}
-// 		);
-// 	}
-// );
-//
-// YUI({lang: 'nb-no'}).use(
-// 	'aui-timepicker',
-// 	function (Y)
-// 	{
-// 		new Y.TimePicker(
-// 		{
-// 			trigger: '.bookingEndTime',
-// 			popover: {
-// 				zIndex: 99999
-// 			},
-// 			values: timepickerValues,
-// 			mask: 'kl. %H:%M',
-// 			popoverCssClass: "timepicker-popover yui3-widget popover yui3-widget-positioned yui3-widget-modal yui3-widget-stacked bookingEndTime-popover",
-// 			on: {
-// 				selectionChange: function (event)
-// 				{
-// 					new Date(event.newSelection);
-// 					$(this).val(event.newSelection);
-// 					am.bookingEndTime(event.newSelection);
-// 					//am.bookingDate(event.newSelection);
-// 				}
-// 			}
-// 		}
-// 		);
-// 	}
-// );
-
-var startTimeScrollTopValue = 800;
-var endTimeScrollTopValue = 825;
-// $(document).ready(function ()
-// {
-// 	document.addEventListener('scroll', function (event)
-// 	{
-// 		if (typeof event.target.className !== "undefined")
-// 		{
-// 			if (!$(".bookingStartTime-popover").hasClass("popover-hidden"))
-// 			{
-//
-// 				if ((event.target.className).indexOf("popover-content") > 0)
-// 				{
-// 					startTimeScrollTopValue = (event.target.scrollTop);
-// 				}
-// 			}
-// 			else if (!$(".bookingEndTime-popover").hasClass("popover-hidden"))
-// 			{
-//
-// 				if ((event.target.className).indexOf("popover-content") > 0)
-// 				{
-// 					endTimeScrollTopValue = (event.target.scrollTop);
-// 				}
-// 			}
-//
-// 		}
-// 	}, true);
-// });
-//
-// $(".bookingStartTime").on("click", function ()
-// {
-// 	setTimeout(function ()
-// 	{
-// 		//var topPos = ($('.yui3-aclist-item')[32]).offsetTop;
-// 		if (am.bookingEndTime() != "")
-// 		{
-// 			if (startTimeScrollTopValue > endTimeScrollTopValue)
-// 			{
-// 				$(".popover-content").scrollTop(endTimeScrollTopValue - 100);
-// 				return;
-// 			}
-// 			$(".popover-content").scrollTop(startTimeScrollTopValue);
-// 		}
-// 		else
-// 		{
-// 			$(".popover-content").scrollTop(startTimeScrollTopValue);
-// 		}
-//
-// 	}, 200);
-// });
-//
-// $(".bookingEndTime").on("click", function ()
-// {
-// 	setTimeout(function ()
-// 	{
-// 		if (am.bookingStartTime() != "")
-// 		{
-// 			if (endTimeScrollTopValue < startTimeScrollTopValue)
-// 			{
-// 				$(".popover-content").scrollTop(startTimeScrollTopValue + 100);
-// 				return;
-// 			}
-// 			$(".popover-content").scrollTop(endTimeScrollTopValue);
-// 		}
-// 		else
-// 		{
-// 			$(".popover-content").scrollTop(endTimeScrollTopValue);
-// 		}
-//
-// 	}, 200);
-// });
 
 
 // Grab attachment elements
