@@ -193,7 +193,47 @@
 			self::store_flash_msgs();
 		}
 
-		protected static function session_set( $key, $data )
+        /**
+         * Get the CSS search path.
+         *
+         * @return array
+         */
+        private static function get_css_search_path()
+        {
+            $css_search_path = array();
+            // Modify the search path as needed
+            array_push($css_search_path, 'phpgwapi/templates/base/css');
+            array_push($css_search_path, 'phpgwapi/templates/' . $GLOBALS['phpgw_info']['server']['template_set'] . '/css');
+            array_push($css_search_path, $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/base/css');
+            array_push($css_search_path, $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/' . $GLOBALS['phpgw_info']['server']['template_set'] . '/css');
+
+            return $css_search_path;
+        }
+
+        /**
+         * Search for an external CSS file using the template search path.
+         *
+         * @param string $filename The name of the CSS file to include.
+         * @param bool $required @throws Exception if the CSS file is not found in the search path.
+         */
+        public static function add_external_css_with_search($filename, $required=false)
+        {
+            $css_search_path = self::get_css_search_path();
+
+            foreach (array_reverse($css_search_path) as $path) {
+                $fullPath = $path . '/' . $filename;
+                if (file_exists(PHPGW_SERVER_ROOT . '/' . $fullPath)) {
+                    $GLOBALS['phpgw']->css->add_external_file($fullPath);
+                    return;
+                }
+            }
+            if($required) {
+                throw new Exception("CSS file $filename not found in search path: " . print_r($css_search_path, true));
+            }
+        }
+
+
+        protected static function session_set( $key, $data )
 		{
 			return phpgwapi_cache::session_set(self::get_ui_session_key(), $key, $data);
 		}
