@@ -16,13 +16,13 @@
 	$setup_info['eventplanner']['enable'] = 1;
 	$setup_info['eventplanner']['app_group'] = 'office';
 
-	$setup_info['eventplanner']['author'] = array
+	$setup_info['eventplanner']['author'][] = array
 		(
 		'name' => 'Sigurd Nes',
 		'email' => 'sigurdne@online.no'
 	);
 
-	$setup_info['eventplanner']['maintainer'] = array
+	$setup_info['eventplanner']['maintainer'][] = array
 		(
 		'name' => 'Sigurd Nes',
 		'email' => 'sigurdne@online.no'

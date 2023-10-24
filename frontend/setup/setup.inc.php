@@ -14,8 +14,8 @@
 		'email' => 'info@bouvet.no'
 	);
 
-	$setup_info['property']['maintainer'] = array
-		(
+	$setup_info['frontend']['maintainer'][] = array
+	(
 		'name' => 'Sigurd Nes',
 		'email' => 'sigurd.nes@bergen.kommune.no'
 	);
