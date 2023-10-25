@@ -1421,7 +1421,6 @@ JS;
 							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 						}
 
-						$action_params['responsible']	 = $_account_id;
 						$from_name						 = $GLOBALS['phpgw_info']['user']['fullname'];
 						$from_email						 = $GLOBALS['phpgw_info']['user']['preferences']['common']['email'];
 
@@ -1430,6 +1429,7 @@ JS;
 								'id'		 => $id), false, true) . '">' . lang('project %1 needs approval', $id) . '</a>';
 
 						$bcc = '';//$from_email;
+						$cc = '';//$from_email;
 
 						$action_params = array
 							(
@@ -1693,10 +1693,7 @@ JS;
 
 				if ($p_entity_id && $p_cat_id)
 				{
-					if (!is_object($boadmin_entity))
-					{
-						$boadmin_entity = CreateObject('property.boadmin_entity');
-					}
+					$boadmin_entity = CreateObject('property.boadmin_entity');
 
 					$entity_category						 = $boadmin_entity->read_single_category($p_entity_id, $p_cat_id);
 					$values['p'][$p_entity_id]['p_cat_name'] = $entity_category['name'];
@@ -2753,7 +2750,6 @@ JS;
 				'lang_no_workorders'				 => lang('No workorder budget'),
 				'workorder_link'					 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit')),
 				'record_history'					 => $record_history,
-				'table_header_history'				 => $table_header_history,
 				'lang_history'						 => lang('History'),
 				'lang_no_history'					 => lang('No history'),
 				'lang_start_date_statustext'		 => lang('Select the estimated end date for the Project'),
@@ -2848,7 +2844,6 @@ JS;
 				'lang_no_key_deliver'				 => lang('Where to deliver the key'),
 				'lang_key_deliver'					 => lang('key deliver location'),
 				'lang_key_deliver_statustext'		 => lang('Select where to deliver the key'),
-				'need_approval'						 => $need_approval,
 				'lang_ask_approval'					 => lang('Ask for approval'),
 				'lang_ask_approval_statustext'		 => lang('Check this to send a mail to your supervisor for approval'),
 				'currency'							 => $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],

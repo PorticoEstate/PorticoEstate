@@ -307,7 +307,7 @@
 					continue 2; //switch is a looping structure in php - see php.net/continue - skwashd jan08
 
 				case 'tables':
-					$tblcnt = count($setup_info[$detail][$key]);
+					$tblcnt = count((array)$setup_info[$detail][$key]);
 					if(is_array($val))
 					{
 						$table_names = $GLOBALS['phpgw_setup']->db->table_names();
