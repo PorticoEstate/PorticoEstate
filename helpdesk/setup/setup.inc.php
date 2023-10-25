@@ -17,13 +17,13 @@
 	$setup_info['helpdesk']['enable']		= 1;
 	$setup_info['helpdesk']['app_group']	= 'office';
 
-	$setup_info['helpdesk']['author'] = array
+	$setup_info['helpdesk']['author'][] = array
 	(
 		'name'	=> 'Sigurd Nes',
 		'email'	=> 'sigurdne@online.no'
 	);
 
-	$setup_info['helpdesk']['maintainer'] = array
+	$setup_info['helpdesk']['maintainer'][] = array
 	(
 		'name'	=> 'Sigurd Nes',
 		'email'	=> 'sigurdne@online.no'

@@ -18,13 +18,13 @@
 	$setup_info['emailadmin']['app_order'] = 10;
 	$setup_info['emailadmin']['enable']    = 2;
 
-	$setup_info['emailadmin']['author'] = 'Lars Kneschke';
+	$setup_info['emailadmin']['author'][] = array('name' => 'Lars Kneschke');
 	$setup_info['emailadmin']['license']  = 'GPL';
 	$setup_info['emailadmin']['description'] =
 		'A central Mailserver management application for EGroupWare - ported to phpGroupWare';
 	$setup_info['emailadmin']['note'] =
 		'';
-	$setup_info['emailadmin']['maintainer'] = array(
+	$setup_info['emailadmin']['maintainer'][] = array(
 		'name'  => 'Leithoff, Klaus',
 		'email' => 'kl@stylite.de'
 	);

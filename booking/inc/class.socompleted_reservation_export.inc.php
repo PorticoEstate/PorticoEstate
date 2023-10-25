@@ -317,7 +317,7 @@
 				return $reservations['results'];
 			}
 
-			return null;
+			return array();
 		}
 
 		protected function update_completed_reservations_exported_state( $entity, &$reservations )

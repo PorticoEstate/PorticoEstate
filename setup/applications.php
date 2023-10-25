@@ -85,26 +85,29 @@
 	 */
 	function parsedep($depends,$main=True)
 	{
-		$depstring = '';
+		$ret = array();
 		foreach($depends as $b)
 		{
+			$depstring = '';
 			foreach($b as $c => $d)
 			{
 				if (is_array($d))
 				{
-					$depstring .= "($c : " . implode(', ',$d) . ')';
+					$depstring.= "($c : " . implode(', ',$d) . ')';
 					$depver[] = $d;
 				}
 				else
 				{
-					$depstring .= "<br>\n$d ";
+					$depstring.= $d . " ";
 					$depapp[] = $d;
 				}
 			}
+			$ret[] = $depstring;
+
 		}
 		if ($main)
 		{
-			return $depstring;
+			return implode("<br/>\n", $ret);
 		}
 		else
 		{
@@ -287,7 +290,6 @@
 		$name = lang($setup_info[$detail]['name']);
 		$setup_tpl->set_var('description', "<h2>{$name}</h2>\n<ul>\n");
 		$setup_tpl->pparse('out','header');
-		$setup_tpl->pparse('out','detail');
 	
 		$i = 1;
 		foreach($setup_info[$detail] as $key => $val)
@@ -308,16 +310,35 @@
 					$tblcnt = count($setup_info[$detail][$key]);
 					if(is_array($val))
 					{
+						$table_names = $GLOBALS['phpgw_setup']->db->table_names();
+						$tables = array();
+
 						$key = '<a href="sqltoarray.php?appname=' . $detail . '&amp;submit=True">' . $key . '(' . $tblcnt . ')</a>';
+
+						foreach ($val as &$_val)
+						{
+							if(!in_array($_val, $table_names))
+							{
+								$_val .= " <b>(missing)</b>";
+							}
+						}
 						$val = implode(',<br>', $val);
 					}
 					break;
 				case 'hooks':
 				case 'views':
+					$table_names = $GLOBALS['phpgw_setup']->db->table_names( true);
 					$tblcnt = count($setup_info[$detail][$key]);
 					if(is_array($val))
 					{
 						$key =  $key . '(' . $tblcnt . ')';
+						foreach ($val as &$_val)
+						{
+							if($key == 'views' && !in_array($_val, $table_names))
+							{
+								$_val .= " <b>(missing)</b>";
+							}
+						}
 						$val = implode(',<br>', $val);
 					}
 					break;
@@ -327,7 +348,28 @@
 					break;
 
 				case 'hooks':
-				default:
+					if (is_array($val))
+					{
+						$val = implode(', ', $val);
+					}
+				case 'author':
+				case 'maintainer':
+					if (is_array($val))
+					{
+						$authors = $val;
+						$_authors = array();
+						foreach ($authors as $author)
+						{
+							$author_str = $author['name'];
+							if(!empty($author['email']))
+							{
+								$author_str .= " <{$author['email']}>";
+							}
+							$_authors[] = htmlentities($author_str);
+						}
+						$val = implode(', ', $_authors);
+					}
+				default :
 					if (is_array($val))
 					{
 						$val = implode(', ', $val);
