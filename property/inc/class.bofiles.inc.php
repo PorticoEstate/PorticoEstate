@@ -423,8 +423,21 @@
 				'--'), $file_name);
 		}
 
+		function convert_heic_to_jpg( $source )
+		{
+			require_once PHPGW_API_INC . '/heic_to_jpg/vendor/autoload.php';
+			$dest = str_ireplace('.heic', '.jpg', $source);
+			Maestroerror\HeicToJpg::convert($source)->saveAs($dest);
+			return $dest;
+		}
+
 		function resize_image( $source, $dest, $target_height = 800 )
 		{
+			if(preg_match('/\.heic$/i', $source))
+			{
+	//			$source = $this->convert_heic_to_jpg($source);
+			}
+
 			$imgInfo = getimagesize($source);
 
 			$width = $imgInfo[0];
@@ -473,19 +486,32 @@
 			// Verifies that a file is an image
 			if ($fileName !== '.' && $fileName !== '..')
 			{
-				@$imgInfo = getimagesize($fileName);
+				$imgInfo =  exif_imagetype($fileName);
 
 				$imgType = array
-					(
+				(
 					IMAGETYPE_JPEG,
 					IMAGETYPE_GIF,
 					IMAGETYPE_PNG,
 				);
 
-				if (in_array($imgInfo[2], $imgType))
+				if (in_array($imgInfo, $imgType))
 				{
 					return true;
 				}
+
+				if(!$imgInfo && preg_match('/\.heic$/i', $fileName))
+				{
+					// Create a new Imagick object
+			//		$image = new Imagick($fileName);
+					// Get the image format
+			//		$imageFormat = $image->getImageFormat();
+			//		if($imageFormat === 'HEIC')
+					{
+			//			return true;
+					}
+				}
+
 				return false;
 			}
 		}

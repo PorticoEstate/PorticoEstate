@@ -343,7 +343,7 @@
 					'delete_file'	 => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
 					'attach_file'	 => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
 				);
-				if (in_array($_entry['mime_type'], $img_types))
+				if (in_array($_entry['mime_type'], $img_types))// || (preg_match('/\.heic$/i', $_entry['name'])))
 				{
 					$content_files[$z]['file_name']		 = $_entry['name'];
 					$content_files[$z]['img_id']		 = $_entry['file_id'];
