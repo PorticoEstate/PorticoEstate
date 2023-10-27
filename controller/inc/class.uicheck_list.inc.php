@@ -4053,41 +4053,39 @@ HTML;
 		public function makePDF($stringData)
 		{
 
-			phpgw::import_class('phpgwapi.html2pdf');
-			$html2pdf = new \Spipu\Html2Pdf\Html2Pdf('P', 'A4', 'no');
-			$html2pdf->writeHTML($stringData);
-			$html2pdf->output();
+//			phpgw::import_class('phpgwapi.html2pdf');
+//			$html2pdf = new \Spipu\Html2Pdf\Html2Pdf('P', 'A4', 'no');
+//			$html2pdf->writeHTML($stringData);
+//			$html2pdf->output();
 
-//			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyMedia.php';
-//			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyPdf.php';
-//			$tmp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
-//			$myFile = $tmp_dir . "/temp_report_" . strtotime(date('Y-m-d')) . ".html";
-//			$fh = fopen($myFile, 'w') or die("can't open file");
-//			fwrite($fh, $stringData);
-//			fclose($fh);
-//
-//			$pdf_file_name = $tmp_dir . "/temp_contract_" . strtotime(date('Y-m-d')) . ".pdf";
-//
-//			//var_dump($config->config_data['path_to_wkhtmltopdf']);
-//			//var_dump($GLOBALS['phpgw_info']);
-//			$wkhtmltopdf_executable = '/usr/local/bin/wkhtmltopdf';
-//			if (!is_file($wkhtmltopdf_executable))
-//			{
-//				throw new Exception('wkhtmltopdf not configured correctly');
-//			}
-//			$snappy = new SnappyPdf();
-//			$snappy->setExecutable($wkhtmltopdf_executable); // or whatever else
-//			$snappy->save($myFile, $pdf_file_name);
-//
-//			if (!is_file($pdf_file_name))
-//			{
-//				throw new Exception('pdf-file not produced');
-//			}
-//			$filesize = filesize($pdf_file_name);
-//			$browser = CreateObject('phpgwapi.browser');
-//			$browser->content_header('report.pdf', 'application/pdf', $filesize);
-//
-//			readfile($pdf_file_name);
+			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyMedia.php';
+			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyPdf.php';
+			$tmp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
+			$myFile = $tmp_dir . "/temp_report_" . strtotime(date('Y-m-d')) . ".html";
+			$fh = fopen($myFile, 'w') or die("can't open file");
+			fwrite($fh, $stringData);
+			fclose($fh);
+
+			$pdf_file_name = $tmp_dir . "/temp_contract_" . strtotime(date('Y-m-d')) . ".pdf";
+
+			$wkhtmltopdf_executable = !empty($config->config_data['path_to_wkhtmltopdf']) ? $config->config_data['path_to_wkhtmltopdf'] :'/usr/bin/wkhtmltopdf';
+			if (!is_file($wkhtmltopdf_executable))
+			{
+				throw new Exception('wkhtmltopdf not configured correctly');
+			}
+			$snappy = new SnappyPdf();
+			$snappy->setExecutable($wkhtmltopdf_executable); // or whatever else
+			$snappy->save($myFile, $pdf_file_name);
+
+			if (!is_file($pdf_file_name))
+			{
+				throw new Exception('pdf-file not produced');
+			}
+			$filesize = filesize($pdf_file_name);
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header('report.pdf', 'application/pdf', $filesize);
+
+			readfile($pdf_file_name);
 
 		}
 		function view_image()
