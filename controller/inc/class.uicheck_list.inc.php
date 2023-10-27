@@ -3504,10 +3504,14 @@ HTML;
 
 			$javascripts = array();
 			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/popper/popper2.min.js");
+			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/jquery/js/jquery-3.7.1.min.js");
 			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js");
+			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/core/base.js");
+			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/controller/js/base/report.js");
 
 			$report_data['stylesheets'] = $stylesheets;
 			$report_data['javascripts'] = $javascripts;
+			$report_data['str_base_url'] = $GLOBALS['phpgw']->link('/', array(), true);
 			$report_data['inline_images'] = $inline_images;
 			$report_data['control_area_name'] = $report_info['control']->get_control_area_name();
 			$report_data['title'] = $report_info['control']->get_title();

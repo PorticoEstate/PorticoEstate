@@ -21,7 +21,7 @@
 
 			<!-- Bootstrap CSS -->
 			<xsl:for-each select="stylesheets">
-				<!--				<link rel="stylesheet" type="text/css">
+				<!--<link rel="stylesheet" type="text/css">
 					<xsl:attribute name="href">
 						<xsl:value-of select="node()"/>
 					</xsl:attribute>
@@ -33,12 +33,15 @@
 
 			<xsl:for-each select="javascripts">
 				<script>
-					<!--					<xsl:attribute name="src">-->
-					<xsl:value-of select="node()"/>
-					<!--					</xsl:attribute>-->
+					<!--<xsl:attribute name="src">-->
+						<xsl:value-of select="node()"/>
+					<!--</xsl:attribute>-->
 				</script>
 			</xsl:for-each>
-
+			<script>
+				var strBaseURL = '<xsl:value-of select="str_base_url"/>';
+				var check_list_id = '<xsl:value-of select="check_list_id"/>';
+			</script>
 			<title>
 				<xsl:value-of select="control_area_name"/>
 				<xsl:text> / </xsl:text>
@@ -88,7 +91,7 @@
 				</button>
 			</xsl:if>
 			<xsl:if test = "return_as_pdf !=1 and report_email !=''">
-				<button class="ms-2 btn btn-secondary" onClick="report_email();" title="{report_email}">
+				<button class="ms-2 btn btn-secondary" onClick="send_email();" title="{report_email}">
 					<xsl:value-of select="php:function('lang', 'send email')" />
 				</button>
 			</xsl:if>
