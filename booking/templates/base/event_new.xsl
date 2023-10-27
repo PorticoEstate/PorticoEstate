@@ -419,16 +419,18 @@
 									</xsl:attribute>
 								</input>
 							</div>
-							<div class="pure-control-group">
-								<label for="articles_container">
-									<xsl:value-of select="php:function('lang', 'Articles')" />
-								</label>
-								<div id="articles_container" style="display:inline-block;">
-									<span class="select_first_text">
-										<xsl:value-of select="php:function('lang', 'Select a resource first')" />
-									</span>
+							<xsl:if test="config/activate_application_articles">
+								<div class="pure-control-group">
+									<label for="articles_container">
+										<xsl:value-of select="php:function('lang', 'Articles')" />
+									</label>
+									<div id="articles_container" style="display:inline-block;">
+										<span class="select_first_text">
+											<xsl:value-of select="php:function('lang', 'Select a resource first')" />
+										</span>
+									</div>
 								</div>
-							</div>
+							</xsl:if>
 						</div>
 					</div>
 					<div class="pure-g">

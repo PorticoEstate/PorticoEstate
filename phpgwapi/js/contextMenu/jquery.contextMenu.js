@@ -4,7 +4,7 @@
  * Version: v2.9.2
  *
  * Authors: Björn Brala (SWIS.nl), Rodney Rehm, Addy Osmani (patches for FF)
- * Web: http://swisnl.github.io/jQuery-contextMenu/
+ * Web: https://github.com/swisnl/jQuery-contextMenu
  *
  * Copyright (c) 2011-2020 SWIS BV and contributors
  *
