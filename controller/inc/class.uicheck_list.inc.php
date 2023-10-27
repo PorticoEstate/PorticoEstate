@@ -3969,6 +3969,7 @@ HTML;
 
 			$report_data['responsible_organization'] = $report_info['control']->get_responsible_organization();//'Barnas Byrom - Forvaltningsavdelingen - Bymiljøetaten';
 			$report_data['responsible_logo'] = $report_info['control']->get_responsible_logo();
+			$report_data['responsible_logo_data'] = $inline_images ? base64_encode(file_get_contents($report_data['responsible_logo'])) : '';
 
 			$report_data['findings'] = array_merge($report_data['findings'],$findings);
 

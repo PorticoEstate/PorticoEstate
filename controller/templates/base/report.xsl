@@ -21,7 +21,7 @@
 
 			<!-- Bootstrap CSS -->
 			<xsl:for-each select="stylesheets">
-<!--				<link rel="stylesheet" type="text/css">
+				<!--				<link rel="stylesheet" type="text/css">
 					<xsl:attribute name="href">
 						<xsl:value-of select="node()"/>
 					</xsl:attribute>
@@ -33,9 +33,9 @@
 
 			<xsl:for-each select="javascripts">
 				<script>
-<!--					<xsl:attribute name="src">-->
-						<xsl:value-of select="node()"/>
-<!--					</xsl:attribute>-->
+					<!--					<xsl:attribute name="src">-->
+					<xsl:value-of select="node()"/>
+					<!--					</xsl:attribute>-->
 				</script>
 			</xsl:for-each>
 
@@ -98,7 +98,14 @@
 					<div class="col-md-6 align-left">
 						<xsl:choose>
 							<xsl:when test="responsible_logo !=''">
-								<img src="{responsible_logo}" width="200"/>
+								<xsl:choose>
+									<xsl:when test="$inline_images =1">
+										<img src="data:image/jpg;base64,{responsible_logo_data}" width="200"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<img src="{responsible_logo}" width="200"/>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:when>
 						</xsl:choose>
 					</div>
