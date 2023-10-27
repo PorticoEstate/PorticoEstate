@@ -1680,7 +1680,7 @@
 				$webserver_url = '/';
 			}
 
-			$webserver_url = '/';
+//			$webserver_url = '/';
 
 			session_set_cookie_params(
 				array(
