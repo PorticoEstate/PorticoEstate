@@ -210,7 +210,7 @@
 				case 'chart':
 					$load = array
 						(
-						'chart' => array("chart{$_type}")
+						'chart' => array("chart.umd{$_type}")
 					);
 
 					break;
