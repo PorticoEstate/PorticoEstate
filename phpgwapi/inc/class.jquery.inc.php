@@ -61,7 +61,7 @@
 			}
 			else
 			{
-				$_jquery_core = 'jquery-3.7.0';
+				$_jquery_core = 'jquery-3.7.1';
 			}
 
 			$_jquery_ui	 = 'jquery-ui-1.13.2';
