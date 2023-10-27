@@ -87,6 +87,11 @@
 					<xsl:value-of select="php:function('lang', 'print')" />
 				</button>
 			</xsl:if>
+			<xsl:if test = "return_as_pdf !=1 and report_email !=''">
+				<button class="ms-2 btn btn-secondary" onClick="report_email();" title="{report_email}">
+					<xsl:value-of select="php:function('lang', 'send email')" />
+				</button>
+			</xsl:if>
 		
 			<div class="container small">
 				<div class="mt-5 row">

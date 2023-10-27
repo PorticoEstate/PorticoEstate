@@ -3456,7 +3456,7 @@ HTML;
 		{
 			$inline_images = phpgw::get_var('inline_images', 'bool');
 
-			$config = createObject('phpgwapi.config', 'property')->read();
+			$config = createObject('phpgwapi.config', 'controller')->read();
 
 			if(!$check_list_id)
 			{
@@ -4010,6 +4010,8 @@ HTML;
 			unset($inspector);
 
 			$report_data['inspectors'] = array_unique($selected_inspectors);
+			$report_data['report_email'] = !empty($config['report_email']) ? $config['report_email'] : '';
+			$report_data['return_as_pdf'] = !empty($config['report_as_pdf']) ? true : false;
 
 			$this->render_report($report_data);
 		}
