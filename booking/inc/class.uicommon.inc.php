@@ -861,10 +861,10 @@ JS;
 				$html = 'var html = "<div class=\'date-container\'>"+
                             "<a class=\'btnclose\' href=\'javascript:void(0);\'>' . $lang_remove . '</a>"+
                             "<div class=\'form-group\'><label for=\'new_start_date_"+this.counter+"\'>' . $lang_from . '</label>"+
-                            "<input class=\'new_datepicker datetime form-control\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
+                            "<input class=\'new_datepicker start-date datetime form-control\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
                             "</input></div>"+
                             "<div class=\'form-group\'><label for=\'new_end_date_"+this.counter+"\' >' . $lang_to . '</label>"+
-                            "<input class=\'new_datepicker datetime form-control\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
+                            "<input class=\'new_datepicker end-date datetime form-control\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
                             "</input></div>"+
                         "</div>"';
 			}
@@ -874,12 +874,12 @@ JS;
 						"<a href=\"javascript:void(0);\" class=\"close-btn btnclose\">-</a>"+
 						"<div class=\'pure-control-group\'>"+
 							"<label for=\'new_start_date_"+this.counter+"\'><h4>' . $lang_from . '</h4></label>"+
-							"<input class=\'new_datepicker datetime pure-input-2-3\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
+							"<input class=\'new_datepicker start-date datetime pure-input-2-3\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
 							"</input>"+
 						"</div>"+
 						"<div class=\'pure-control-group\'>"+
 							"<label for=\'new_end_date_"+this.counter+"\' ><h4>' . $lang_to . '</h4></label>"+
-							"<input class=\'new_datepicker datetime pure-input-2-3\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
+							"<input class=\'new_datepicker end-date datetime pure-input-2-3\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
 							"</input>"+
 						"</div>"+
 				 	"</div>"';
@@ -895,8 +895,15 @@ JS;
 
 			$(function() {
 
-				var logic = function( currentDateTime ){
-						console.log(currentDateTime);
+				var logic = function( currentDateTime,  element)
+				{
+		//			console.log(currentDateTime);
+		//			console.log(element);
+					if ($(element).hasClass('start-date'))
+					{
+						$(element).parent().parent().find('.end-date').datetimepicker('setOptions', {minDate: currentDateTime});
+						$(element).parent().parent().find('.end-date').val($(element).val());
+					}
 
 				};
 
@@ -925,9 +932,16 @@ JS;
 
 					if (!this.counter) { this.counter = 0; }
 
-                    {$html}
+					{$html}	
+
+					// get the end date of the last date container
+					var lastEndDate = $('#dates-container .date-container:last .end-date').val();
 
 					add.parent().parent().children('#dates-container').append(html);
+
+					// set the start date of the new date container to be the same as the last end date
+					$('#dates-container .date-container:last .start-date').val(lastEndDate);
+
 
 					$( ".new_datepicker" ).datetimepicker(
 					{
