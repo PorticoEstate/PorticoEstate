@@ -3452,6 +3452,64 @@ HTML;
 			$pdf->ezStream(array('compress' => 0));
 		}
 
+
+		/*
+		 * Scale images to maxwidth 800px. Use imagick. If imagick is not installed, use GD. Take imagepath as input and return content.
+		 * write the new image to a temporary file and return the content of the file.delete the file after use.
+		 * @param string $imagepath
+		 * @param int $width
+		 * @return string
+		 */
+		function scale_image($imagepath, $width = 800)
+		{
+			$imagick = false;
+			if (extension_loaded('imagick'))
+			{
+				$imagick = true;
+			}
+
+			if ($imagick)
+			{
+				$image = new Imagick($imagepath);
+				if ($image->getImageWidth() > $width)
+				{
+					$image->scaleImage($width, 0);
+				}
+				$image->setImageFormat('jpeg');
+				$image->setImageCompression(Imagick::COMPRESSION_JPEG);
+				$image->setImageCompressionQuality(80);
+				$image->stripImage();
+				$image->setInterlaceScheme(Imagick::INTERLACE_PLANE);
+				$image->setBackgroundColor('white');
+				$image->flattenImages();
+				$tempfile = tempnam(sys_get_temp_dir(), 'img');
+				$image->writeImage($tempfile);
+				$image->destroy();
+				$content = file_get_contents($tempfile);
+				unlink($tempfile);
+			}
+			else
+			{
+				$image = imagecreatefromjpeg($imagepath);
+				$orig_width = imagesx($image);
+				$orig_height = imagesy($image);
+				if ($orig_width > $width)
+				{
+					$new_height = floor($orig_height * ($width / $orig_width));
+					$tmp_image = imagecreatetruecolor($width, $new_height);
+					imagecopyresampled($tmp_image, $image, 0, 0, 0, 0, $width, $new_height, $orig_width, $orig_height);
+					$image = $tmp_image;
+				}
+				$tempfile = tempnam(sys_get_temp_dir(), 'img');
+				imagejpeg($image, $tempfile, 80);
+				imagedestroy($image);
+				$content = file_get_contents($tempfile);
+				unlink($tempfile);
+			}
+			return $content;
+		}
+
+		
 		function get_report($check_list_id = null)
 		{
 			$inline_images = phpgw::get_var('inline_images', 'bool');
@@ -3547,7 +3605,8 @@ HTML;
 
 			if($file && $inline_images)
 			{
-				$report_data['image_data'] = base64_encode(file_get_contents("{$this->vfs->basedir}/{$file['directory']}/{$file['name']}"));
+//				$report_data['image_data'] = base64_encode(file_get_contents("{$this->vfs->basedir}/{$file['directory']}/{$file['name']}"));
+				$report_data['image_data'] = base64_encode($this->scale_image("{$this->vfs->basedir}/{$file['directory']}/{$file['name']}"));
 			}
 
 			$report_data['report_intro'] = $report_intro;
@@ -3771,7 +3830,7 @@ HTML;
 						$case_file['link'] = self::link(array('menuaction' => 'controller.uicheck_list.view_image', 'img_id' => $case_file['file_id']));
 						if($inline_images)
 						{
-							$case_file['image_data'] = base64_encode(file_get_contents("{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']}"));
+							$case_file['image_data'] = base64_encode($this->scale_image("{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']}"));
 						}
 						$n ++;
 					}
@@ -3910,7 +3969,7 @@ HTML;
 						'location_id' => $component_child['location_id'],
 						'name'	=> $component_child['short_description'],
 						'image_link' => $file ? self::link(array('menuaction'=>'controller.uicase.get_image', 'component' => "{$component_child['location_id']}_{$component_child['id']}")) : '',
-						'image_data' => $inline_images ? base64_encode(file_get_contents("{$this->vfs->basedir}/{$file['directory']}/{$file['name']}")) : '',
+						'image_data' => $inline_images ? base64_encode($this->scale_image("{$this->vfs->basedir}/{$file['directory']}/{$file['name']}")) : '',
 						'data' => $data,
 						'cases' => $data_case[$location_identificator]
 						);
