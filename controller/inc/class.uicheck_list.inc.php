@@ -83,6 +83,7 @@
 			'set_category'			=> true,
 			'view_image'			=> true,
 			'set_geolocation'		=> true,
+			'send_report'			=> true,
 		);
 
 		var $so_case,$vfs;
@@ -3509,8 +3510,70 @@ HTML;
 			return $content;
 		}
 
-		
-		function get_report($check_list_id = null)
+		function send_report()
+		{
+			$check_list_id = phpgw::get_var('check_list_id');
+			$report_file_path = $this->get_report($check_list_id, true);
+
+			$attachments = array();
+
+			if($report_file_path)
+			{
+				$attachments[] = array(
+					'file'	 => $report_file_path,
+					'name'	 => basename($report_file_path),
+					'type'	 => 'application/pdf'
+				);
+			}
+	
+			$config		 = createObject('phpgwapi.config', 'controller')->read();
+			$send		 = CreateObject('phpgwapi.send');
+			$to			 = 	$config['report_email'];
+			$subject	 = 'Avviksrapport::' . $GLOBALS['phpgw_info']['server']['site_title'];
+			$body		 = 'Sjå vedlegg';
+			$from_email	 = isset($config['email_sender']) && $config['email_sender'] ? $config['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+			$from_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
+
+			$error = false;
+			try
+			{
+				$rcpt = $send->msg('email', $to, $subject, $body, '', $cc = '', $bcc	 = '', $from_email, $from_name, 'html', '', $attachments);
+				if (!$rcpt)
+				{
+					$error = true;
+				}
+			}
+			catch (Exception $e)
+			{
+				$error = true;
+			}
+
+			//clean up
+			foreach ($attachments as $attachment)
+			{
+				unlink($attachment['file']);
+			}
+
+			if (!$error)
+			{
+				return array
+				(
+					'status' => 'ok',
+					'message' => "SEND::Eposten ble sendt til {$to}"
+				);
+			}
+			else
+			{
+				return array
+				(
+					'status' => 'error',
+					'message' => "SEND::Eposten ble ikke sendt"
+				);
+			}
+
+		}
+
+		function get_report($check_list_id = null, $return_as_pdf = null)
 		{
 			$inline_images = phpgw::get_var('inline_images', 'bool');
 
@@ -4075,13 +4138,13 @@ HTML;
 
 			$report_data['inspectors'] = array_unique($selected_inspectors);
 			$report_data['report_email'] = !empty($config['report_email']) ? $config['report_email'] : '';
-			$report_data['return_as_pdf'] = !empty($config['report_as_pdf']) ? true : false;
+			$report_data['return_as_pdf'] = !empty($config['report_as_pdf']) || $return_as_pdf ? true : false;
 
-			$this->render_report($report_data);
+			return $this->render_report($report_data, $return_as_pdf);
 		}
 
 
-		function render_report($report_data)
+		function render_report($report_data, $return_as_pdf = false)
 		{
 			$xslttemplates = CreateObject('phpgwapi.xslttemplates');
 			$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/report'));
@@ -4105,7 +4168,7 @@ HTML;
 
 			if($report_data['return_as_pdf'])
 			{
-				$this->makePDF($html);
+				return $this->makePDF($html, $return_as_pdf);
 			}
 			else
 			{
@@ -4114,7 +4177,7 @@ HTML;
 			}
 		}
 
-		public function makePDF($stringData)
+		public function makePDF($stringData, $return_as_pdf = false)
 		{
 
 //			phpgw::import_class('phpgwapi.html2pdf');
@@ -4145,13 +4208,22 @@ HTML;
 			{
 				throw new Exception('pdf-file not produced');
 			}
-			$filesize = filesize($pdf_file_name);
-			$browser = CreateObject('phpgwapi.browser');
-			$browser->content_header('report.pdf', 'application/pdf', $filesize);
 
-			readfile($pdf_file_name);
-
+			if(!$return_as_pdf)
+			{
+				$filesize = filesize($pdf_file_name);
+				$browser = CreateObject('phpgwapi.browser');
+				$browser->content_header('report.pdf', 'application/pdf', $filesize);
+				readfile($pdf_file_name);
+				unlink($pdf_file_name);
+			}
+			else
+			{
+				return $pdf_file_name;
+			}
 		}
+
+
 		function view_image()
 		{
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;

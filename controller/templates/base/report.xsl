@@ -86,13 +86,13 @@
 		<body>
 						
 			<xsl:if test = "return_as_pdf !=1">
-				<button class="btn btn-secondary" onClick="window.print();">
+				<button class="btn mt-1 btn-secondary" onClick="window.print();">
 					<xsl:value-of select="php:function('lang', 'print')" />
 				</button>
 			</xsl:if>
 			<xsl:if test = "return_as_pdf !=1 and report_email !=''">
-				<button class="ms-2 btn btn-secondary" onClick="send_email();" title="{report_email}">
-					<xsl:value-of select="php:function('lang', 'send email')" />
+				<button class="ms-2 mt-1 btn btn-secondary" onClick="send_report();" title="{report_email}">
+					<xsl:value-of select="php:function('lang', 'send report')" />
 				</button>
 			</xsl:if>
 		
