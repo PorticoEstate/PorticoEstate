@@ -717,8 +717,8 @@
 				$date['to_'] = pretty_timestamp($date['to_']);
 			}
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime');
-			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime', phpgwapi_datetime::user_localtime(), array('min_date' => phpgwapi_datetime::user_localtime()));
+			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime', phpgwapi_datetime::user_localtime(), array('min_date' => phpgwapi_datetime::user_localtime()));
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Event New'), 'link' => '#event_new');

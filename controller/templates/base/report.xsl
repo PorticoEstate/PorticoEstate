@@ -21,7 +21,7 @@
 
 			<!-- Bootstrap CSS -->
 			<xsl:for-each select="stylesheets">
-<!--				<link rel="stylesheet" type="text/css">
+				<!--<link rel="stylesheet" type="text/css">
 					<xsl:attribute name="href">
 						<xsl:value-of select="node()"/>
 					</xsl:attribute>
@@ -33,12 +33,15 @@
 
 			<xsl:for-each select="javascripts">
 				<script>
-<!--					<xsl:attribute name="src">-->
+					<!--<xsl:attribute name="src">-->
 						<xsl:value-of select="node()"/>
-<!--					</xsl:attribute>-->
+					<!--</xsl:attribute>-->
 				</script>
 			</xsl:for-each>
-
+			<script>
+				var strBaseURL = '<xsl:value-of select="str_base_url"/>';
+				var check_list_id = '<xsl:value-of select="check_list_id"/>';
+			</script>
 			<title>
 				<xsl:value-of select="control_area_name"/>
 				<xsl:text> / </xsl:text>
@@ -83,8 +86,13 @@
 		<body>
 						
 			<xsl:if test = "return_as_pdf !=1">
-				<button class="btn btn-secondary" onClick="window.print();">
+				<button class="btn mt-1 btn-secondary" onClick="window.print();">
 					<xsl:value-of select="php:function('lang', 'print')" />
+				</button>
+			</xsl:if>
+			<xsl:if test = "return_as_pdf !=1 and report_email !=''">
+				<button class="ms-2 mt-1 btn btn-secondary" onClick="send_report();" title="{report_email}">
+					<xsl:value-of select="php:function('lang', 'send report')" />
 				</button>
 			</xsl:if>
 		
@@ -93,7 +101,14 @@
 					<div class="col-md-6 align-left">
 						<xsl:choose>
 							<xsl:when test="responsible_logo !=''">
-								<img src="{responsible_logo}" width="200"/>
+								<xsl:choose>
+									<xsl:when test="$inline_images =1">
+										<img src="data:image/jpg;base64,{responsible_logo_data}" width="200"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<img src="{responsible_logo}" width="200"/>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:when>
 						</xsl:choose>
 					</div>
