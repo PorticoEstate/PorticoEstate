@@ -899,10 +899,12 @@ JS;
 				{
 		//			console.log(currentDateTime);
 		//			console.log(element);
-					if ($(element).hasClass('start-date'))
+					if (currentDateTime && $(element).hasClass('start-date'))
 					{
+						var minutesToAdd = 15;
+						var new_end_date = new Date(currentDateTime.getTime() + minutesToAdd * 60000);
 						$(element).parent().parent().find('.end-date').datetimepicker('setOptions', {minDate: currentDateTime});
-						$(element).parent().parent().find('.end-date').val($(element).val());
+						$(element).parent().parent().find('.end-date').datetimepicker('setOptions', {startDate: new Date(new_end_date)});
 					}
 
 				};
@@ -935,13 +937,8 @@ JS;
 					{$html}	
 
 					// get the end date of the last date container
-					var lastEndDate = $('#dates-container .date-container:last .end-date').val();
-
+					var lastEndDate = $('#dates-container .date-container:last .end-date').datetimepicker('getValue');
 					add.parent().parent().children('#dates-container').append(html);
-
-					// set the start date of the new date container to be the same as the last end date
-					$('#dates-container .date-container:last .start-date').val(lastEndDate);
-
 
 					$( ".new_datepicker" ).datetimepicker(
 					{
@@ -955,6 +952,8 @@ JS;
 						onChangeDateTime:logic
 					});
 					this.counter++;
+					// set the start date of the new date container to be the same as the last end date
+					$('#dates-container .date-container:last .start-date').datetimepicker('setOptions', {startDate: new Date(lastEndDate)});
 				});
 			});
 

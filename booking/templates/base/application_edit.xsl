@@ -227,7 +227,7 @@
 													<label for="start_date_{$index}">
 														<xsl:value-of select="php:function('lang', 'From')" />
 													</label>
-													<input class="newaddedpicker datetime pure-input-2-3" id="start_date_{$index}" type="text" name="from_[]">
+													<input class="newaddedpicker start-date datetime pure-input-2-3" id="start_date_{$index}" type="text" name="from_[]">
 														<!--input id="field_{position()}_from" name="from_[]" type="text"-->
 														<xsl:attribute name="value">
 															<xsl:value-of select="from_"/>
@@ -242,7 +242,7 @@
 													<label for="end_date">
 														<xsl:value-of select="php:function('lang', 'To')" />
 													</label>
-													<input class="newaddedpicker datetime pure-input-2-3" id="end_date_{$index}" type="text" name="to_[]">
+													<input class="newaddedpicker end-date datetime pure-input-2-3" id="end_date_{$index}" type="text" name="to_[]">
 														<xsl:attribute name="value">
 															<xsl:value-of select="to_"/>
 														</xsl:attribute>
