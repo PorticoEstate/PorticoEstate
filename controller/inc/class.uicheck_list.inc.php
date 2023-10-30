@@ -3528,7 +3528,7 @@ HTML;
 			
 			switch ($extension)
 			{
-				case 'pfd':
+				case 'pdf':
 					$mime_type = 'application/pdf';
 					break;
 				case 'html':
@@ -4246,7 +4246,7 @@ HTML;
 			$snappy = new SnappyPdf();
 			$snappy->setExecutable($wkhtmltopdf_executable); // or whatever else
 			$snappy->save($myFile, $pdf_file_name);
-
+			unlink($myFile);
 			if (!is_file($pdf_file_name))
 			{
 				throw new Exception('pdf-file not produced');
