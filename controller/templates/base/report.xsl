@@ -101,7 +101,7 @@
 							<xsl:when test="responsible_logo !=''">
 								<xsl:choose>
 									<xsl:when test="$inline_images =1">
-										<img src="data:image/jpg;base64,{responsible_logo_data}" width="200"/>
+										<img src="data:image/png;base64,{responsible_logo_data}" width="200"/>
 									</xsl:when>
 									<xsl:otherwise>
 										<img src="{responsible_logo}" width="200"/>
