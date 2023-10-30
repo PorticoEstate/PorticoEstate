@@ -1018,7 +1018,8 @@ class PEcalendar {
         const closeButton = this.createElement('button', 'close pe-btn  pe-btn--transparent');
         closeButton.type = "button";
         closeButton.innerHTML = '<span aria-hidden="true">&times;</span>';
-        closeButton.addEventListener('click', () => {
+        closeButton.addEventListener('click', (e) => {
+            e.stopPropagation();
             this.removeTempEvent(event);
         });
         // Attach a click event to the 'x' to remove the event
