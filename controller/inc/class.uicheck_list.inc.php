@@ -3520,34 +3520,50 @@ HTML;
 			$check_list_id = phpgw::get_var('check_list_id');
 			$report_file_path = $this->get_report($check_list_id, true);
 
-			$attachments = array();
+			if(!is_file($report_file_path))
+			{
+				return array
+				(
+					'status' => 'error',
+					'message' => "SEND::Eposten ble ikke sendt, fil ikke produsert"
+				);
+			}
+
 
 			$extension = pathinfo($report_file_path, PATHINFO_EXTENSION);
 			$date = date("Y-m-d");
-			$file_name = "checklist_{$check_list_id}_{$date}.{$extension}";
+			$archive_file_name = "checklist_{$check_list_id}_{$date}.{$extension}";
+			$file_name = "checklist_{$check_list_id}_{$date}.zip";
+			//compress the file with widows-compatible zip
+			$zip = new ZipArchive();
+			$zip->open($report_file_path . '.zip', ZipArchive::CREATE);
+			$zip->addFile($report_file_path, $archive_file_name);
+			$zip->close();
+			$report_file_path = $report_file_path . '.zip';
 			
-			switch ($extension)
-			{
-				case 'pdf':
-					$mime_type = 'application/pdf';
-					break;
-				case 'html':
-					$mime_type = 'text/html';
-					break;
-				default:
-					return array
-					(
-						'status' => 'error',
-						'message' => "SEND::Eposten ble ikke sendt, fil ikke produsert"
-					);
-			}
+			// switch ($extension)
+			// {
+			// 	case 'pdf':
+			// 		$mime_type = 'application/pdf';
+			// 		break;
+			// 	case 'html':
+			// 		$mime_type = 'text/html';
+			// 		break;
+			// 	default:
+			// 		return array
+			// 		(
+			// 			'status' => 'error',
+			// 			'message' => "SEND::Eposten ble ikke sendt, fil ikke produsert"
+			// 		);
+			// }
 
+			$attachments = array();
 			if($report_file_path)
 			{
 				$attachments[] = array(
 					'file'	 => $report_file_path,
 					'name'	 => $file_name,
-					'type'	 => $mime_type
+					'type'	 => 'application/zip',
 				);
 			}
 
@@ -3577,6 +3593,7 @@ HTML;
 			foreach ($attachments as $attachment)
 			{
 				unlink($attachment['file']);
+				unlink($attachment['file'] . '.zip');
 			}
 
 			if (!$error)
@@ -4163,6 +4180,7 @@ HTML;
 			$report_data['report_email'] = !empty($config['report_email']) ? $config['report_email'] : '';
 			$report_data['return_as_pdf'] = !empty($config['report_as_pdf']) ? true : false;
 			$report_data['return_as_pdf'] = $report_data['return_as_pdf'] ? $report_data['return_as_pdf'] : phpgw::get_var('return_as_pdf', 'bool');
+			$report_data['return_as_file'] = $return_as_file;
 
 			return $this->render_report($report_data, $return_as_file);
 		}
