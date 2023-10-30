@@ -3517,15 +3517,35 @@ HTML;
 
 			$attachments = array();
 
+			$extension = pathinfo($report_file_path, PATHINFO_EXTENSION);
+			$date = date("Y-m-d");
+			$file_name = "checklist_{$check_list_id}_{$date}.{$extension}";
+			
+			switch ($extension)
+			{
+				case 'pfd':
+					$mime_type = 'application/pdf';
+					break;
+				case 'html':
+					$mime_type = 'text/html';
+					break;
+				default:
+					return array
+					(
+						'status' => 'error',
+						'message' => "SEND::Eposten ble ikke sendt, fil ikke produsert"
+					);
+			}
+
 			if($report_file_path)
 			{
 				$attachments[] = array(
 					'file'	 => $report_file_path,
-					'name'	 => basename($report_file_path),
-					'type'	 => 'application/pdf'
+					'name'	 => $file_name,
+					'type'	 => $mime_type
 				);
 			}
-	
+
 			$config		 = createObject('phpgwapi.config', 'controller')->read();
 			$send		 = CreateObject('phpgwapi.send');
 			$to			 = 	$config['report_email'];
@@ -3573,9 +3593,9 @@ HTML;
 
 		}
 
-		function get_report($check_list_id = null, $return_as_pdf = null)
+		function get_report($check_list_id = null, $return_as_file = null)
 		{
-			$inline_images = phpgw::get_var('inline_images', 'bool');
+			$inline_images = phpgw::get_var('inline_images', 'bool') || $return_as_file ? true : false;
 
 			$config = createObject('phpgwapi.config', 'controller')->read();
 
@@ -4099,8 +4119,6 @@ HTML;
 
 			$report_data['findings'] = array_merge($report_data['findings'],$findings);
 
-			$report_data['return_as_pdf'] = phpgw::get_var('return_as_pdf', 'bool');
-
 //			_debug_array($report_data['findings']);die();
 
 			$selected_inspectors = array();
@@ -4138,13 +4156,14 @@ HTML;
 
 			$report_data['inspectors'] = array_unique($selected_inspectors);
 			$report_data['report_email'] = !empty($config['report_email']) ? $config['report_email'] : '';
-			$report_data['return_as_pdf'] = !empty($config['report_as_pdf']) || $return_as_pdf ? true : false;
+			$report_data['return_as_pdf'] = !empty($config['report_as_pdf']) ? true : false;
+			$report_data['return_as_pdf'] = $report_data['return_as_pdf'] ? $report_data['return_as_pdf'] : phpgw::get_var('return_as_pdf', 'bool');
 
-			return $this->render_report($report_data, $return_as_pdf);
+			return $this->render_report($report_data, $return_as_file);
 		}
 
 
-		function render_report($report_data, $return_as_pdf = false)
+		function render_report($report_data, $return_as_file = false)
 		{
 			$xslttemplates = CreateObject('phpgwapi.xslttemplates');
 			$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/report'));
@@ -4166,18 +4185,36 @@ HTML;
 
 			$html = trim($proc->transformToXML($xml));
 
-			if($report_data['return_as_pdf'])
+			$wkhtmltopdf_executable = !empty($config->config_data['path_to_wkhtmltopdf']) ? $config->config_data['path_to_wkhtmltopdf'] :'/usr/bin/wkhtmltopdf';
+			$return_as_pdf = false;
+			if (is_file($wkhtmltopdf_executable))
 			{
-				return $this->makePDF($html, $return_as_pdf);
+				$return_as_pdf = true;
+			}
+
+			if($return_as_pdf && $report_data['return_as_pdf'])
+			{
+				return $this->makePDF($html, $return_as_file);
 			}
 			else
 			{
-				echo $html;
+				if(!$return_as_file)
+				{
+					echo $html;
+				}
+				else
+				{
+					$tempfile = tempnam(sys_get_temp_dir(), 'html');
+					$fh = fopen($tempfile, 'w') or die("can't open file");
+					fwrite($fh, $html);
+					fclose($fh);
+					return $tempfile;
+				}
 
 			}
 		}
 
-		public function makePDF($stringData, $return_as_pdf = false)
+		public function makePDF($stringData, $return_as_file = false)
 		{
 
 //			phpgw::import_class('phpgwapi.html2pdf');
@@ -4193,7 +4230,7 @@ HTML;
 			fwrite($fh, $stringData);
 			fclose($fh);
 
-			$pdf_file_name = $tmp_dir . "/temp_contract_" . strtotime(date('Y-m-d')) . ".pdf";
+			$pdf_file_name = $tmp_dir . "/temp_checklist_" . strtotime(date('Y-m-d')) . ".pdf";
 
 			$wkhtmltopdf_executable = !empty($config->config_data['path_to_wkhtmltopdf']) ? $config->config_data['path_to_wkhtmltopdf'] :'/usr/bin/wkhtmltopdf';
 			if (!is_file($wkhtmltopdf_executable))
@@ -4209,7 +4246,7 @@ HTML;
 				throw new Exception('pdf-file not produced');
 			}
 
-			if(!$return_as_pdf)
+			if(!$return_as_file)
 			{
 				$filesize = filesize($pdf_file_name);
 				$browser = CreateObject('phpgwapi.browser');
