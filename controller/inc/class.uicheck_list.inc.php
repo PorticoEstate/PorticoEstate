@@ -1868,8 +1868,6 @@
 			{
 				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control->get_id(), $control_group->get_id());
 
-				$control_item = $this->so_control_item->get_single($control_item_id);
-
 				$saved_groups_with_items_array[] = array("control_group" => $control_group->toArray(),
 					"control_items" => $saved_control_items);
 			}
@@ -1902,8 +1900,6 @@
 			foreach ($control_groups as $control_group)
 			{
 				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control->get_id(), $control_group->get_id());
-
-				$control_item = $this->so_control_item->get_single($control_item_id);
 
 				$saved_groups_with_items_array[] = array(
 					'control_group' => $control_group->toArray(),
@@ -3348,7 +3344,7 @@ HTML;
 							$_value = implode(',', $_choice);
 						}
 
-						if ($attributes['datatype'] == 'CH')
+						if ($attribute['datatype'] == 'CH')
 						{
 							$_selected = explode(',', trim($_value, ','));
 
@@ -4208,7 +4204,7 @@ HTML;
 
 			$html = trim($proc->transformToXML($xml));
 
-			$wkhtmltopdf_executable = !empty($config->config_data['path_to_wkhtmltopdf']) ? $config->config_data['path_to_wkhtmltopdf'] :'/usr/bin/wkhtmltopdf';
+			$wkhtmltopdf_executable = '/usr/bin/wkhtmltopdf';
 			$pdf_enabled = false;
 			if (is_file($wkhtmltopdf_executable))
 			{
