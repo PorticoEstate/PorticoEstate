@@ -3463,6 +3463,11 @@ HTML;
 		 */
 		function scale_image($imagepath, $width = 800)
 		{
+			if(!is_file($imagepath))
+			{
+				return;
+			}
+
 			$imagick = false;
 			if (extension_loaded('imagick'))
 			{
@@ -4204,7 +4209,8 @@ HTML;
 				}
 				else
 				{
-					$tempfile = tempnam(sys_get_temp_dir(), 'html');
+					$tmp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
+					$tempfile = $tmp_dir . "/temp_report_" . strtotime(date('Y-m-d')) . ".html";
 					$fh = fopen($tempfile, 'w') or die("can't open file");
 					fwrite($fh, $html);
 					fclose($fh);
