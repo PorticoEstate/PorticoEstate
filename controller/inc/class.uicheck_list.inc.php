@@ -3461,7 +3461,7 @@ HTML;
 		 * @param int $width
 		 * @return string
 		 */
-		function scale_image($imagepath, $width = 800)
+		function scale_image($imagepath, $width = 800, $limit_width = 1080)
 		{
 			if(!is_file($imagepath))
 			{
@@ -3477,7 +3477,7 @@ HTML;
 			if ($imagick)
 			{
 				$image = new Imagick($imagepath);
-				if ($image->getImageWidth() > $width)
+				if ($image->getImageWidth() > $limit_width)
 				{
 					$image->scaleImage($width, 0);
 				}
@@ -3499,7 +3499,7 @@ HTML;
 				$image = imagecreatefromjpeg($imagepath);
 				$orig_width = imagesx($image);
 				$orig_height = imagesy($image);
-				if ($orig_width > $width)
+				if ($orig_width > $limit_width)
 				{
 					$new_height = floor($orig_height * ($width / $orig_width));
 					$tmp_image = imagecreatetruecolor($width, $new_height);
