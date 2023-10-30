@@ -3461,8 +3461,13 @@ HTML;
 		 * @param int $width
 		 * @return string
 		 */
-		function scale_image($imagepath, $width = 800)
+		function scale_image($imagepath, $width = 800, $limit_width = 1080)
 		{
+			if(!is_file($imagepath))
+			{
+				return;
+			}
+
 			$imagick = false;
 			if (extension_loaded('imagick'))
 			{
@@ -3472,7 +3477,7 @@ HTML;
 			if ($imagick)
 			{
 				$image = new Imagick($imagepath);
-				if ($image->getImageWidth() > $width)
+				if ($image->getImageWidth() > $limit_width)
 				{
 					$image->scaleImage($width, 0);
 				}
@@ -3494,7 +3499,7 @@ HTML;
 				$image = imagecreatefromjpeg($imagepath);
 				$orig_width = imagesx($image);
 				$orig_height = imagesy($image);
-				if ($orig_width > $width)
+				if ($orig_width > $limit_width)
 				{
 					$new_height = floor($orig_height * ($width / $orig_width));
 					$tmp_image = imagecreatetruecolor($width, $new_height);
@@ -3515,17 +3520,53 @@ HTML;
 			$check_list_id = phpgw::get_var('check_list_id');
 			$report_file_path = $this->get_report($check_list_id, true);
 
-			$attachments = array();
+			if(!is_file($report_file_path))
+			{
+				return array
+				(
+					'status' => 'error',
+					'message' => "SEND::Eposten ble ikke sendt, fil ikke produsert"
+				);
+			}
 
+
+			$extension = pathinfo($report_file_path, PATHINFO_EXTENSION);
+			$date = date("Y-m-d");
+			$archive_file_name = "checklist_{$check_list_id}_{$date}.{$extension}";
+			$file_name = "checklist_{$check_list_id}_{$date}.zip";
+			//compress the file with widows-compatible zip
+			$zip = new ZipArchive();
+			$zip->open($report_file_path . '.zip', ZipArchive::CREATE);
+			$zip->addFile($report_file_path, $archive_file_name);
+			$zip->close();
+			$report_file_path = $report_file_path . '.zip';
+			
+			// switch ($extension)
+			// {
+			// 	case 'pdf':
+			// 		$mime_type = 'application/pdf';
+			// 		break;
+			// 	case 'html':
+			// 		$mime_type = 'text/html';
+			// 		break;
+			// 	default:
+			// 		return array
+			// 		(
+			// 			'status' => 'error',
+			// 			'message' => "SEND::Eposten ble ikke sendt, fil ikke produsert"
+			// 		);
+			// }
+
+			$attachments = array();
 			if($report_file_path)
 			{
 				$attachments[] = array(
 					'file'	 => $report_file_path,
-					'name'	 => basename($report_file_path),
-					'type'	 => 'application/pdf'
+					'name'	 => $file_name,
+					'type'	 => 'application/zip',
 				);
 			}
-	
+
 			$config		 = createObject('phpgwapi.config', 'controller')->read();
 			$send		 = CreateObject('phpgwapi.send');
 			$to			 = 	$config['report_email'];
@@ -3552,6 +3593,7 @@ HTML;
 			foreach ($attachments as $attachment)
 			{
 				unlink($attachment['file']);
+				unlink($attachment['file'] . '.zip');
 			}
 
 			if (!$error)
@@ -3573,9 +3615,9 @@ HTML;
 
 		}
 
-		function get_report($check_list_id = null, $return_as_pdf = null)
+		function get_report($check_list_id = null, $return_as_file = null)
 		{
-			$inline_images = phpgw::get_var('inline_images', 'bool');
+			$inline_images = phpgw::get_var('inline_images', 'bool') || $return_as_file ? true : false;
 
 			$config = createObject('phpgwapi.config', 'controller')->read();
 
@@ -4099,8 +4141,6 @@ HTML;
 
 			$report_data['findings'] = array_merge($report_data['findings'],$findings);
 
-			$report_data['return_as_pdf'] = phpgw::get_var('return_as_pdf', 'bool');
-
 //			_debug_array($report_data['findings']);die();
 
 			$selected_inspectors = array();
@@ -4138,13 +4178,15 @@ HTML;
 
 			$report_data['inspectors'] = array_unique($selected_inspectors);
 			$report_data['report_email'] = !empty($config['report_email']) ? $config['report_email'] : '';
-			$report_data['return_as_pdf'] = !empty($config['report_as_pdf']) || $return_as_pdf ? true : false;
+			$report_data['return_as_pdf'] = !empty($config['report_as_pdf']) ? true : false;
+			$report_data['return_as_pdf'] = $report_data['return_as_pdf'] ? $report_data['return_as_pdf'] : phpgw::get_var('return_as_pdf', 'bool');
+			$report_data['return_as_file'] = $return_as_file;
 
-			return $this->render_report($report_data, $return_as_pdf);
+			return $this->render_report($report_data, $return_as_file);
 		}
 
 
-		function render_report($report_data, $return_as_pdf = false)
+		function render_report($report_data, $return_as_file = false)
 		{
 			$xslttemplates = CreateObject('phpgwapi.xslttemplates');
 			$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/report'));
@@ -4166,18 +4208,37 @@ HTML;
 
 			$html = trim($proc->transformToXML($xml));
 
-			if($report_data['return_as_pdf'])
+			$wkhtmltopdf_executable = !empty($config->config_data['path_to_wkhtmltopdf']) ? $config->config_data['path_to_wkhtmltopdf'] :'/usr/bin/wkhtmltopdf';
+			$pdf_enabled = false;
+			if (is_file($wkhtmltopdf_executable))
 			{
-				return $this->makePDF($html, $return_as_pdf);
+				$pdf_enabled = true;
+			}
+
+			if($return_as_file && $pdf_enabled && $report_data['return_as_pdf'])
+			{
+				return $this->makePDF($html, $return_as_file);
 			}
 			else
 			{
-				echo $html;
+				if(!$return_as_file)
+				{
+					echo $html;
+				}
+				else
+				{
+					$tmp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
+					$tempfile = $tmp_dir . "/temp_report_" . strtotime(date('Y-m-d')) . ".html";
+					$fh = fopen($tempfile, 'w') or die("can't open file");
+					fwrite($fh, $html);
+					fclose($fh);
+					return $tempfile;
+				}
 
 			}
 		}
 
-		public function makePDF($stringData, $return_as_pdf = false)
+		public function makePDF($stringData, $return_as_file = false)
 		{
 
 //			phpgw::import_class('phpgwapi.html2pdf');
@@ -4193,7 +4254,7 @@ HTML;
 			fwrite($fh, $stringData);
 			fclose($fh);
 
-			$pdf_file_name = $tmp_dir . "/temp_contract_" . strtotime(date('Y-m-d')) . ".pdf";
+			$pdf_file_name = $tmp_dir . "/temp_checklist_" . strtotime(date('Y-m-d')) . ".pdf";
 
 			$wkhtmltopdf_executable = !empty($config->config_data['path_to_wkhtmltopdf']) ? $config->config_data['path_to_wkhtmltopdf'] :'/usr/bin/wkhtmltopdf';
 			if (!is_file($wkhtmltopdf_executable))
@@ -4203,13 +4264,13 @@ HTML;
 			$snappy = new SnappyPdf();
 			$snappy->setExecutable($wkhtmltopdf_executable); // or whatever else
 			$snappy->save($myFile, $pdf_file_name);
-
+			unlink($myFile);
 			if (!is_file($pdf_file_name))
 			{
 				throw new Exception('pdf-file not produced');
 			}
 
-			if(!$return_as_pdf)
+			if(!$return_as_file)
 			{
 				$filesize = filesize($pdf_file_name);
 				$browser = CreateObject('phpgwapi.browser');

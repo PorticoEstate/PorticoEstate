@@ -85,12 +85,10 @@
 
 		<body>
 						
-			<xsl:if test = "return_as_pdf !=1">
+			<xsl:if test = "return_as_file !=1">
 				<button class="btn mt-1 btn-secondary" onClick="window.print();">
 					<xsl:value-of select="php:function('lang', 'print')" />
 				</button>
-			</xsl:if>
-			<xsl:if test = "return_as_pdf !=1 and report_email !=''">
 				<button class="ms-2 mt-1 btn btn-secondary" onClick="send_report();" title="{report_email}">
 					<xsl:value-of select="php:function('lang', 'send report')" />
 				</button>
@@ -103,7 +101,7 @@
 							<xsl:when test="responsible_logo !=''">
 								<xsl:choose>
 									<xsl:when test="$inline_images =1">
-										<img src="data:image/jpg;base64,{responsible_logo_data}" width="200"/>
+										<img src="data:image/png;base64,{responsible_logo_data}" width="200"/>
 									</xsl:when>
 									<xsl:otherwise>
 										<img src="{responsible_logo}" width="200"/>
