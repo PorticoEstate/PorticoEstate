@@ -4191,13 +4191,13 @@ HTML;
 			$html = trim($proc->transformToXML($xml));
 
 			$wkhtmltopdf_executable = !empty($config->config_data['path_to_wkhtmltopdf']) ? $config->config_data['path_to_wkhtmltopdf'] :'/usr/bin/wkhtmltopdf';
-			$return_as_pdf = false;
+			$pdf_enabled = false;
 			if (is_file($wkhtmltopdf_executable))
 			{
-				$return_as_pdf = true;
+				$pdf_enabled = true;
 			}
 
-			if($return_as_pdf && $report_data['return_as_pdf'])
+			if($return_as_file && $pdf_enabled && $report_data['return_as_pdf'])
 			{
 				return $this->makePDF($html, $return_as_file);
 			}
