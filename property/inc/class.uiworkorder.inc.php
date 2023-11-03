@@ -2158,7 +2158,7 @@
 				));
 			}
 
-			if (isset($project['contact_phone']))
+			if (!empty($project['contact_phone']))
 			{
 				for ($i = 0; $i < count($location_data['location']); $i++)
 				{
