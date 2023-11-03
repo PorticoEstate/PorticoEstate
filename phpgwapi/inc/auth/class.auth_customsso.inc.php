@@ -77,8 +77,9 @@
 			$headers = getallheaders();
 			$ssn = $headers['uid'];
 
-			$remote_user = explode('@', $headers['REMOTE_USER']);
-			$username  = $remote_user[0];
+			$remote_user = $headers['REMOTE_USER'] ? $headers['REMOTE_USER'] : $headers['upn'];
+			$username_arr  = explode('@', $remote_user);
+			$username = $username_arr[0];
 
 			/**
 			 * Shibboleth from inside firewall

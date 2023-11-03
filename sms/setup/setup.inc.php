@@ -15,13 +15,13 @@
 	$setup_info['sms']['app_group'] = 'office';
 	$setup_info['sms']['description'] = 'sms gateway';
 
-	$setup_info['sms']['author'] = array
+	$setup_info['sms']['author'][] = array
 		(
 		'name' => 'Sigurd Nes',
 		'email' => 'sigurdne@online.no'
 	);
 
-	$setup_info['sms']['maintainer'] = array
+	$setup_info['sms']['maintainer'][] = array
 		(
 		'name' => 'Sigurd Nes',
 		'email' => 'sigurdne@online.no'

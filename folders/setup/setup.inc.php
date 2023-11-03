@@ -17,12 +17,15 @@
 	$setup_info['folders']['enable']    = 2;
 	$setup_info['folders']['app_group']	= 'accessories';
 
-	$setup_info['folders']['author']           = 'probusiness AG';
+	$setup_info['folders']['author'][]         = array('name' => 'probusiness AG');
 	$setup_info['folders']['note']             = 'The Folder Preferences manages user level control';
 	$setup_info['folders']['license']          = 'GPL';
 	$setup_info['folders']['description']      = 'The Folder List view has a tree structure for navigation between application categories';
-	$setup_info['folders']['maintainer']       = 'Philipp Kamps (fips)';
-	$setup_info['folders']['maintainer_email'] = 'fips@phpgroupware.org';
+	$setup_info['folders']['maintainer'][] 	= array
+	(
+		'name'	 => 'Philipp Kamps (fips)',
+		'email'  => 'fips@phpgroupware.org'
+	);
 
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['folders']['hooks']['getFolderContent'] = 'folders.folders_service.getFolderContent';

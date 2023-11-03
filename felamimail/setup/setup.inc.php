@@ -16,12 +16,14 @@
 	$setup_info['felamimail']['app_order'] 		= 2;
 	$setup_info['felamimail']['enable']    		= 1;
 
-	$setup_info['felamimail']['author']		= 'Lars Kneschke';
+	$setup_info['felamimail']['author'][]		= array('name' => 'Lars Kneschke');
 	$setup_info['felamimail']['license']		= 'GPL';
-	$setup_info['felamimail']['description']	=
-		'IMAP emailclient for eGroupWare';
-	$setup_info['felamimail']['maintainer'] 	= 'Klaus Leithoff';
-	$setup_info['felamimail']['maintainer_email'] 	= 'kl@leithoff.net';
+	$setup_info['felamimail']['description']	= 'IMAP emailclient for eGroupWare';
+	$setup_info['felamimail']['maintainer'][] 	= array
+	(
+		'name'	 => 'Klaus Leithoff',
+		'email'  => 'kl@leithoff.net'
+	);
 
 	$setup_info['felamimail']['tables']    = array(
 		'egw_felamimail_displayfilter',

@@ -83,6 +83,7 @@
 			'set_category'			=> true,
 			'view_image'			=> true,
 			'set_geolocation'		=> true,
+			'send_report'			=> true,
 		);
 
 		var $so_case,$vfs;
@@ -1867,8 +1868,6 @@
 			{
 				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control->get_id(), $control_group->get_id());
 
-				$control_item = $this->so_control_item->get_single($control_item_id);
-
 				$saved_groups_with_items_array[] = array("control_group" => $control_group->toArray(),
 					"control_items" => $saved_control_items);
 			}
@@ -1901,8 +1900,6 @@
 			foreach ($control_groups as $control_group)
 			{
 				$saved_control_items = $this->so_control_item_list->get_control_items_by_control_and_group($control->get_id(), $control_group->get_id());
-
-				$control_item = $this->so_control_item->get_single($control_item_id);
 
 				$saved_groups_with_items_array[] = array(
 					'control_group' => $control_group->toArray(),
@@ -3347,7 +3344,7 @@ HTML;
 							$_value = implode(',', $_choice);
 						}
 
-						if ($attributes['datatype'] == 'CH')
+						if ($attribute['datatype'] == 'CH')
 						{
 							$_selected = explode(',', trim($_value, ','));
 
@@ -3452,11 +3449,173 @@ HTML;
 			$pdf->ezStream(array('compress' => 0));
 		}
 
-		function get_report($check_list_id = null)
-		{
-			$inline_images = phpgw::get_var('inline_images', 'bool');
 
-			$config = createObject('phpgwapi.config', 'property')->read();
+		/*
+		 * Scale images to maxwidth 800px. Use imagick. If imagick is not installed, use GD. Take imagepath as input and return content.
+		 * write the new image to a temporary file and return the content of the file.delete the file after use.
+		 * @param string $imagepath
+		 * @param int $width
+		 * @return string
+		 */
+		function scale_image($imagepath, $width = 800, $limit_width = 1080)
+		{
+			if(!is_file($imagepath))
+			{
+				return;
+			}
+
+			$imagick = false;
+			if (extension_loaded('imagick'))
+			{
+				$imagick = true;
+			}
+
+			if ($imagick)
+			{
+				$image = new Imagick($imagepath);
+				if ($image->getImageWidth() > $limit_width)
+				{
+					$image->scaleImage($width, 0);
+				}
+				$image->setImageFormat('jpeg');
+				$image->setImageCompression(Imagick::COMPRESSION_JPEG);
+				$image->setImageCompressionQuality(80);
+				$image->stripImage();
+				$image->setInterlaceScheme(Imagick::INTERLACE_PLANE);
+				$image->setBackgroundColor('white');
+				$image->flattenImages();
+				$tempfile = tempnam(sys_get_temp_dir(), 'img');
+				$image->writeImage($tempfile);
+				$image->destroy();
+				$content = file_get_contents($tempfile);
+				unlink($tempfile);
+			}
+			else
+			{
+				$image = imagecreatefromjpeg($imagepath);
+				$orig_width = imagesx($image);
+				$orig_height = imagesy($image);
+				if ($orig_width > $limit_width)
+				{
+					$new_height = floor($orig_height * ($width / $orig_width));
+					$tmp_image = imagecreatetruecolor($width, $new_height);
+					imagecopyresampled($tmp_image, $image, 0, 0, 0, 0, $width, $new_height, $orig_width, $orig_height);
+					$image = $tmp_image;
+				}
+				$tempfile = tempnam(sys_get_temp_dir(), 'img');
+				imagejpeg($image, $tempfile, 80);
+				imagedestroy($image);
+				$content = file_get_contents($tempfile);
+				unlink($tempfile);
+			}
+			return $content;
+		}
+
+		function send_report()
+		{
+			$check_list_id = phpgw::get_var('check_list_id');
+			$report_file_path = $this->get_report($check_list_id, true);
+
+			if(!is_file($report_file_path))
+			{
+				return array
+				(
+					'status' => 'error',
+					'message' => "SEND::Eposten ble ikke sendt, fil ikke produsert"
+				);
+			}
+
+
+			$extension = pathinfo($report_file_path, PATHINFO_EXTENSION);
+			$date = date("Y-m-d");
+			$archive_file_name = "checklist_{$check_list_id}_{$date}.{$extension}";
+			$file_name = "checklist_{$check_list_id}_{$date}.zip";
+			//compress the file with widows-compatible zip
+			$zip = new ZipArchive();
+			$zip->open($report_file_path . '.zip', ZipArchive::CREATE);
+			$zip->addFile($report_file_path, $archive_file_name);
+			$zip->close();
+			$report_file_path = $report_file_path . '.zip';
+			
+			// switch ($extension)
+			// {
+			// 	case 'pdf':
+			// 		$mime_type = 'application/pdf';
+			// 		break;
+			// 	case 'html':
+			// 		$mime_type = 'text/html';
+			// 		break;
+			// 	default:
+			// 		return array
+			// 		(
+			// 			'status' => 'error',
+			// 			'message' => "SEND::Eposten ble ikke sendt, fil ikke produsert"
+			// 		);
+			// }
+
+			$attachments = array();
+			if($report_file_path)
+			{
+				$attachments[] = array(
+					'file'	 => $report_file_path,
+					'name'	 => $file_name,
+					'type'	 => 'application/zip',
+				);
+			}
+
+			$config		 = createObject('phpgwapi.config', 'controller')->read();
+			$send		 = CreateObject('phpgwapi.send');
+			$to			 = 	$config['report_email'];
+			$subject	 = 'Avviksrapport::' . $GLOBALS['phpgw_info']['server']['site_title'];
+			$body		 = 'Sjå vedlegg';
+			$from_email	 = isset($config['email_sender']) && $config['email_sender'] ? $config['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+			$from_name	 = $GLOBALS['phpgw_info']['user']['fullname'];
+
+			$error = false;
+			try
+			{
+				$rcpt = $send->msg('email', $to, $subject, $body, '', $cc = '', $bcc	 = '', $from_email, $from_name, 'html', '', $attachments);
+				if (!$rcpt)
+				{
+					$error = true;
+				}
+			}
+			catch (Exception $e)
+			{
+				$error = true;
+			}
+
+			//clean up
+			foreach ($attachments as $attachment)
+			{
+				unlink($attachment['file']);
+				unlink($attachment['file'] . '.zip');
+			}
+
+			if (!$error)
+			{
+				return array
+				(
+					'status' => 'ok',
+					'message' => "SEND::Eposten ble sendt til {$to}"
+				);
+			}
+			else
+			{
+				return array
+				(
+					'status' => 'error',
+					'message' => "SEND::Eposten ble ikke sendt"
+				);
+			}
+
+		}
+
+		function get_report($check_list_id = null, $return_as_file = null)
+		{
+			$inline_images = phpgw::get_var('inline_images', 'bool') || $return_as_file ? true : false;
+
+			$config = createObject('phpgwapi.config', 'controller')->read();
 
 			if(!$check_list_id)
 			{
@@ -3504,10 +3663,14 @@ HTML;
 
 			$javascripts = array();
 			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/popper/popper2.min.js");
+			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/jquery/js/jquery-3.7.1.min.js");
 			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js");
+			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/js/core/base.js");
+			$javascripts[] = file_get_contents(PHPGW_SERVER_ROOT . "/controller/js/base/report.js");
 
 			$report_data['stylesheets'] = $stylesheets;
 			$report_data['javascripts'] = $javascripts;
+			$report_data['str_base_url'] = $GLOBALS['phpgw']->link('/', array(), true);
 			$report_data['inline_images'] = $inline_images;
 			$report_data['control_area_name'] = $report_info['control']->get_control_area_name();
 			$report_data['title'] = $report_info['control']->get_title();
@@ -3543,7 +3706,8 @@ HTML;
 
 			if($file && $inline_images)
 			{
-				$report_data['image_data'] = base64_encode(file_get_contents("{$this->vfs->basedir}/{$file['directory']}/{$file['name']}"));
+//				$report_data['image_data'] = base64_encode(file_get_contents("{$this->vfs->basedir}/{$file['directory']}/{$file['name']}"));
+				$report_data['image_data'] = base64_encode($this->scale_image("{$this->vfs->basedir}/{$file['directory']}/{$file['name']}"));
 			}
 
 			$report_data['report_intro'] = $report_intro;
@@ -3767,7 +3931,7 @@ HTML;
 						$case_file['link'] = self::link(array('menuaction' => 'controller.uicheck_list.view_image', 'img_id' => $case_file['file_id']));
 						if($inline_images)
 						{
-							$case_file['image_data'] = base64_encode(file_get_contents("{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']}"));
+							$case_file['image_data'] = base64_encode($this->scale_image("{$this->vfs->basedir}/{$case_file['directory']}/{$case_file['name']}"));
 						}
 						$n ++;
 					}
@@ -3906,7 +4070,7 @@ HTML;
 						'location_id' => $component_child['location_id'],
 						'name'	=> $component_child['short_description'],
 						'image_link' => $file ? self::link(array('menuaction'=>'controller.uicase.get_image', 'component' => "{$component_child['location_id']}_{$component_child['id']}")) : '',
-						'image_data' => $inline_images ? base64_encode(file_get_contents("{$this->vfs->basedir}/{$file['directory']}/{$file['name']}")) : '',
+						'image_data' => $inline_images ? base64_encode($this->scale_image("{$this->vfs->basedir}/{$file['directory']}/{$file['name']}")) : '',
 						'data' => $data,
 						'cases' => $data_case[$location_identificator]
 						);
@@ -3969,10 +4133,9 @@ HTML;
 
 			$report_data['responsible_organization'] = $report_info['control']->get_responsible_organization();//'Barnas Byrom - Forvaltningsavdelingen - Bymiljøetaten';
 			$report_data['responsible_logo'] = $report_info['control']->get_responsible_logo();
+			$report_data['responsible_logo_data'] = $inline_images ? base64_encode(file_get_contents($report_data['responsible_logo'])) : '';
 
 			$report_data['findings'] = array_merge($report_data['findings'],$findings);
-
-			$report_data['return_as_pdf'] = phpgw::get_var('return_as_pdf', 'bool');
 
 //			_debug_array($report_data['findings']);die();
 
@@ -4010,12 +4173,16 @@ HTML;
 			unset($inspector);
 
 			$report_data['inspectors'] = array_unique($selected_inspectors);
+			$report_data['report_email'] = !empty($config['report_email']) ? $config['report_email'] : '';
+			$report_data['return_as_pdf'] = !empty($config['report_as_pdf']) ? true : false;
+			$report_data['return_as_pdf'] = $report_data['return_as_pdf'] ? $report_data['return_as_pdf'] : phpgw::get_var('return_as_pdf', 'bool');
+			$report_data['return_as_file'] = $return_as_file;
 
-			$this->render_report($report_data);
+			return $this->render_report($report_data, $return_as_file);
 		}
 
 
-		function render_report($report_data)
+		function render_report($report_data, $return_as_file = false)
 		{
 			$xslttemplates = CreateObject('phpgwapi.xslttemplates');
 			$xslttemplates->add_file(array(PHPGW_SERVER_ROOT . '/controller/templates/base/report'));
@@ -4037,57 +4204,83 @@ HTML;
 
 			$html = trim($proc->transformToXML($xml));
 
-			if($report_data['return_as_pdf'])
+			$wkhtmltopdf_executable = '/usr/bin/wkhtmltopdf';
+			$pdf_enabled = false;
+			if (is_file($wkhtmltopdf_executable))
 			{
-				$this->makePDF($html);
+				$pdf_enabled = true;
+			}
+
+			if($return_as_file && $pdf_enabled && $report_data['return_as_pdf'])
+			{
+				return $this->makePDF($html, $return_as_file);
 			}
 			else
 			{
-				echo $html;
+				if(!$return_as_file)
+				{
+					echo $html;
+				}
+				else
+				{
+					$tmp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
+					$tempfile = $tmp_dir . "/temp_report_" . strtotime(date('Y-m-d')) . ".html";
+					$fh = fopen($tempfile, 'w') or die("can't open file");
+					fwrite($fh, $html);
+					fclose($fh);
+					return $tempfile;
+				}
 
 			}
 		}
 
-		public function makePDF($stringData)
+		public function makePDF($stringData, $return_as_file = false)
 		{
 
-			phpgw::import_class('phpgwapi.html2pdf');
-			$html2pdf = new \Spipu\Html2Pdf\Html2Pdf('P', 'A4', 'no');
-			$html2pdf->writeHTML($stringData);
-			$html2pdf->output();
+//			phpgw::import_class('phpgwapi.html2pdf');
+//			$html2pdf = new \Spipu\Html2Pdf\Html2Pdf('P', 'A4', 'no');
+//			$html2pdf->writeHTML($stringData);
+//			$html2pdf->output();
 
-//			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyMedia.php';
-//			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyPdf.php';
-//			$tmp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
-//			$myFile = $tmp_dir . "/temp_report_" . strtotime(date('Y-m-d')) . ".html";
-//			$fh = fopen($myFile, 'w') or die("can't open file");
-//			fwrite($fh, $stringData);
-//			fclose($fh);
-//
-//			$pdf_file_name = $tmp_dir . "/temp_contract_" . strtotime(date('Y-m-d')) . ".pdf";
-//
-//			//var_dump($config->config_data['path_to_wkhtmltopdf']);
-//			//var_dump($GLOBALS['phpgw_info']);
-//			$wkhtmltopdf_executable = '/usr/local/bin/wkhtmltopdf';
-//			if (!is_file($wkhtmltopdf_executable))
-//			{
-//				throw new Exception('wkhtmltopdf not configured correctly');
-//			}
-//			$snappy = new SnappyPdf();
-//			$snappy->setExecutable($wkhtmltopdf_executable); // or whatever else
-//			$snappy->save($myFile, $pdf_file_name);
-//
-//			if (!is_file($pdf_file_name))
-//			{
-//				throw new Exception('pdf-file not produced');
-//			}
-//			$filesize = filesize($pdf_file_name);
-//			$browser = CreateObject('phpgwapi.browser');
-//			$browser->content_header('report.pdf', 'application/pdf', $filesize);
-//
-//			readfile($pdf_file_name);
+			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyMedia.php';
+			include PHPGW_SERVER_ROOT . '/rental/inc/SnappyPdf.php';
+			$tmp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
+			$myFile = $tmp_dir . "/temp_report_" . strtotime(date('Y-m-d')) . ".html";
+			$fh = fopen($myFile, 'w') or die("can't open file");
+			fwrite($fh, $stringData);
+			fclose($fh);
 
+			$pdf_file_name = $tmp_dir . "/temp_checklist_" . strtotime(date('Y-m-d')) . ".pdf";
+
+			$wkhtmltopdf_executable = !empty($config->config_data['path_to_wkhtmltopdf']) ? $config->config_data['path_to_wkhtmltopdf'] :'/usr/bin/wkhtmltopdf';
+			if (!is_file($wkhtmltopdf_executable))
+			{
+				throw new Exception('wkhtmltopdf not configured correctly');
+			}
+			$snappy = new SnappyPdf();
+			$snappy->setExecutable($wkhtmltopdf_executable); // or whatever else
+			$snappy->save($myFile, $pdf_file_name);
+			unlink($myFile);
+			if (!is_file($pdf_file_name))
+			{
+				throw new Exception('pdf-file not produced');
+			}
+
+			if(!$return_as_file)
+			{
+				$filesize = filesize($pdf_file_name);
+				$browser = CreateObject('phpgwapi.browser');
+				$browser->content_header('report.pdf', 'application/pdf', $filesize);
+				readfile($pdf_file_name);
+				unlink($pdf_file_name);
+			}
+			else
+			{
+				return $pdf_file_name;
+			}
 		}
+
+
 		function view_image()
 		{
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;

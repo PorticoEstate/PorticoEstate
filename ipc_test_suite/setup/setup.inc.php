@@ -16,11 +16,14 @@
 	$setup_info['ipc_test_suite']['app_order'] = '21';
 	$setup_info['ipc_test_suite']['enable']    = 1;
 
-	$setup_info['ipc_test_suite']['author'] = 'Dirk Schaller';
+	$setup_info['ipc_test_suite']['author'][] = array('name' => 'Dirk Schaller');
 	$setup_info['ipc_test_suite']['license']  = 'GPL';
 	$setup_info['ipc_test_suite']['description'] = 'IPC Test Suite';
-	$setup_info['ipc_test_suite']['maintainer'] = 'Dirk Schaller';
-	$setup_info['ipc_test_suite']['maintainer_email'] = 'dschaller@probusiness.de';
+	$setup_info['ipc_test_suite']['maintainer'][] 	= array
+	(
+		'name'	 => 'Dirk Schaller',
+		'email'  => 'dschaller@probusiness.de'
+	);
 
 	/* The tables this app creates */
 	//$setup_info['ipc_test_suite']['tables']	= array();

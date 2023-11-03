@@ -36,7 +36,7 @@
 		'email'	=> 'ceb@phpgroupware.org'
 	);
 
-	$setup_info['todo']['maintainer'] = array
+	$setup_info['todo']['maintainer'][] = array
 	(
 		'name'	=> 'Bettina Gille',
 		'email'	=> 'ceb@phpgroupware.org'

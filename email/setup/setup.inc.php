@@ -20,13 +20,13 @@
 	
 	$setup_info['email']['tables']    = array('phpgw_anglemail');
 
-	$setup_info['email']['author'] = '&quot;Angles&quot; Angelo Tony Puglisi';
+	$setup_info['email']['author'][] = array('name' => '&quot;Angles&quot; Angelo Tony Puglisi');
 	$setup_info['email']['license']  = 'GPL';
 	$setup_info['email']['description'] =
 		'phpGroupWare Email reader with multiple accounts and mailbox filtering.';
 	$setup_info['email']['globals_checked'] = True;
 
-        $setup_info['email']['maintainer'] = array(
+        $setup_info['email']['maintainer'][] = array(
 		'name'  => 'Dave Hall',
 		'email' => 'skwashd at phpgroupware.org'
 	);

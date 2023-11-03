@@ -808,6 +808,13 @@
 									$__querymethod	 = array(); // remove block
 								}
 								break;
+							case 'QR_code':
+								if (!$criteria_id)
+								{
+									$_querymethod[]	 = "json_representation->>'{$_column_name}' {$this->like} '{$query}%'";
+									$__querymethod	 = array(); // remove block
+								}
+								break;
 							case 'CH':
 								if (!$criteria_id)
 								{

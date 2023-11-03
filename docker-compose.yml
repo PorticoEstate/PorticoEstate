@@ -55,6 +55,7 @@ services:
 #    image: sigurdne/portico_estate_webserver_oracle:latest
     ports:
       - 8080:80
+      - 443:443
     environment:
       XDEBUG_CONFIG: client_host=$XDEBUG_IP_ADDRESS
     volumes:
