@@ -89,18 +89,18 @@ ko.components.register('time-picker', {
         	const validFormats = /^(\d{1,2})(?:[.: ]*(\d{2}))?$/;
         	const match = time.match(validFormats);
 
-        	if (match) {
-        		const hours = parseInt(match[1]);
-        		const minutes = match[2] ? parseInt(match[2]) : 0;
+            if (match) {
+                const hours = parseInt(match[1]);
+                const minutes = match[2] ? parseInt(match[2]) : 0;
 
-        		if (hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60) {
-        			self.selectedTime(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
-        		} else {
-        			self.selectedTime('');
-        		}
-        	} else {
-        		self.selectedTime('');
-        	}
+                if (hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60) {
+                    self.selectedTime(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
+                } else {
+                    self.selectedTime('');
+                }
+            } else {
+                self.selectedTime('');
+            }
         };
         self.afterRender = function (container) {
             const timeInput = container.querySelector(".timeInput");
@@ -112,18 +112,18 @@ ko.components.register('time-picker', {
             timeInput.addEventListener('focus', self.showDropdown);
             timeInput.addEventListener('blur', self.formatTime);
 
-            dropdown.addEventListener('click', function(event) {
-            	if (event.target.matches('.timeDropdown > div')) {
-            		self.selectTime(event.target.textContent);
-            	}
+            dropdown.addEventListener('click', function (event) {
+                if (event.target.matches('.timeDropdown > div')) {
+                    self.selectTime(event.target.textContent);
+                }
             });
 
-            timeInput.addEventListener('keydown', function(event) {
-            	if (event.keyCode === 13) {
-            		self.selectedTime(timeInput.value);
+            timeInput.addEventListener('keydown', function (event) {
+                if (event.keyCode === 13) {
+                    self.selectedTime(timeInput.value);
                     self.formatTime();
-            		event.preventDefault();
-            	}
+                    event.preventDefault();
+                }
             });
 
         };
@@ -221,7 +221,7 @@ function applicationModel() {
     self.bookingDate = ko.observable('')
     self.bookingStartTime = ko.observable('');
     self.bookingEndTime = ko.observable('');
-
+    self.selectedResources = ko.observable('');
 
 
     self.bookableResource = bookableresource;
@@ -279,7 +279,13 @@ function applicationModel() {
     self.date = ko.observableArray();
     self.addDate = function () {
         if (self.bookingDate() && self.bookingStartTime() && self.bookingEndTime()) {
-            var date = luxon.DateTime.fromFormat(self.bookingDate(), "dd.MM.yyyy");
+            let dateStr = self.bookingDate();
+            let dateParts = dateStr.split(".");
+            if(dateParts[0].length === 1) {
+                dateParts[0] = "0" + dateParts[0];
+                dateStr = dateParts.join(".");
+            }
+            let date = DateTime.fromFormat(dateStr, "dd.MM.yyyy");
             var startTimeParts = self.bookingStartTime().split(":");
             var endTimeParts = self.bookingEndTime().split(":");
 
@@ -287,8 +293,6 @@ function applicationModel() {
             var end = date.set({hour: parseInt(endTimeParts[0]), minute: parseInt(endTimeParts[1])});
 
             var now = luxon.DateTime.local();
-
-            console.log("UI called!!!", self.bookingDate(), start, end);
 
             if (start < now || end < now) {
                 $(".applicationSelectedDates").html("Tidspunktet må være i fremtiden");
@@ -306,6 +310,7 @@ function applicationModel() {
                         to_: end.toFormat('dd/MM/yyyy HH:mm'),
                         formatedPeriode: start.toFormat('dd/MM/yyyy HH:mm') + ' - ' + end.toFormat('HH:mm')
                     });
+
 
                     setTimeout(function () {
                         self.bookingDate("");
@@ -335,8 +340,8 @@ function applicationModel() {
     self.specialRequirements = ko.observable("");
     self.attachment = ko.observable();
 
-    self.selectedResourcesWithFacilities = ko.computed(function() {
-        var selectedResources = ko.utils.arrayFilter(self.bookableResource(), function(resource) {
+    self.selectedResourcesWithFacilities = ko.computed(function () {
+        var selectedResources = ko.utils.arrayFilter(self.bookableResource(), function (resource) {
             return resource.selected();
         });
 
@@ -349,7 +354,6 @@ function applicationModel() {
             });
 
         }
-        console.log(result);
         return result;
     });
 
@@ -599,7 +603,6 @@ function populateApplicationDate() {
         $(".datepicker-btn").val(`${da}/${mo}/${ye}`);
     }
 }
-
 
 
 var d = new Date();
