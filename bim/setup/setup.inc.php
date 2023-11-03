@@ -16,13 +16,13 @@
 	$setup_info['bim']['enable']		= 2;
 	$setup_info['bim']['app_group']		= 'office';
 
-	$setup_info['bim']['author'] = array
+	$setup_info['bim']['author'][] = array
 	(
 		'name'	=> 'Petur Bjørn Thorsteinsson',
 		'email'	=> 'petur-bjorn.Thorsteinsson@capgemini.com'
 	);
 
-	$setup_info['bim']['maintainer'] = array
+	$setup_info['bim']['maintainer'][] = array
 	(
 		'name'	=> 'Sigurd Nes',
 		'email'	=> 'sigurdne@online.no'

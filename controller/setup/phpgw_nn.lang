@@ -478,3 +478,4 @@ performed without deviation	controller	nn	Utført utan avvik
 perform control	controller	nn	utfør kontroll
 perform control on selected	controller	nn	Utfør kontroll på valt utstyr
 update geolocation	controller	nn	Oppdater geolokasjon
+send report	controller	nn	Send rapport

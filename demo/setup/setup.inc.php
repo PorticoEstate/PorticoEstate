@@ -17,13 +17,13 @@
 	$setup_info['demo']['globals_checked'] = True;
 	$setup_info['demo']['app_group'] = 'office';
 
-	$setup_info['demo']['author'] = array
+	$setup_info['demo']['author'][] = array
 		(
 		'name' => 'Sigurd Nes',
 		'email' => 'sigurdne@online.no'
 	);
 
-	$setup_info['demo']['maintainer'] = array
+	$setup_info['demo']['maintainer'][] = array
 		(
 		'name' => 'Sigurd Nes',
 		'email' => 'sigurdne@online.no'

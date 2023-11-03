@@ -328,13 +328,23 @@ JS;
 			return $content;
 		}
 
+		/**
+		 * 
+		 * @param int $location_id
+		 * @param int $location_item_id
+		 * @param int $contact_id
+		 * @param string $type
+		 * @param bool $notify
+		 * @param array $ids
+		 * @return array
+		 */
 		function refresh_notify_contact_2($location_id, $location_item_id, $contact_id, $type = '', $notify = false, $ids = array() )
 		{
 			$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 
 			if (!$GLOBALS['phpgw']->acl->check($location_info['location'], PHPGW_ACL_EDIT, $location_info['appname']))
 			{
-				return;
+				return array();
 			}
 
 			$update	 = false;

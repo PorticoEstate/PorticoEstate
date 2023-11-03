@@ -19,12 +19,14 @@
 	$setup_info['ftp']['enable']    = 1;
 	$setup_info['ftp']['app_group']	= 'internet';
 
-	$setup_info['ftp']['author'] = 'Joseph Engo';
+	$setup_info['ftp']['author'][] = array('name' => 'Joseph Engo');
 	$setup_info['ftp']['license']  = 'GPL';
-	$setup_info['ftp']['description'] =
-		'FTP client.';
-	$setup_info['ftp']['maintainer'] = 'phpGroupWare Coordination Team';
-	$setup_info['ftp']['maintainer_email'] = 'phpgwroupware-developers@gnu.org';
+	$setup_info['ftp']['description'] =	'FTP client.';
+	$setup_info['ftp']['maintainer'][] 	= array
+	(
+		'name'	 => 'phpGroupWare Coordination Team',
+		'email'  => 'phpgwroupware-developers@gnu.org'
+	);
 
 	/* Dependencies for this app to work */
 	$setup_info['ftp']['depends'][] = array(

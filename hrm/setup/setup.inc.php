@@ -18,13 +18,13 @@
 	$setup_info['hrm']['globals_checked']    = True;
 	$setup_info['hrm']['app_group']	= 'office';
 
-	$setup_info['hrm']['author'] = array
+	$setup_info['hrm']['author'][] = array
 	(
 		'name'	=> 'Sigurd Nes',
 		'email'	=> 'sigurdne@online.no'
 	);
 
-	$setup_info['hrm']['maintainer'] = array
+	$setup_info['hrm']['maintainer'][] = array
 	(
 		'name'	=> 'Sigurd Nes',
 		'email'	=> 'sigurdne@online.no'

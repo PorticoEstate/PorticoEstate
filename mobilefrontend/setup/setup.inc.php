@@ -16,16 +16,16 @@
 	$setup_info['mobilefrontend']['enable'] = 1;
 	$setup_info['mobilefrontend']['app_group'] = 'office';
 
-	$setup_info['property']['author'] = array
+	$setup_info['property']['author'][] = array
 		(
-//		'name'	=> 'Sigurd Nes',
-//		'email'	=> 'sigurdne@online.no'
+		'name'	=> 'Sigurd Nes',
+		'email'	=> 'sigurdne@online.no'
 	);
 
-	$setup_info['mobilefrontend']['maintainer'] = array
+	$setup_info['mobilefrontend']['maintainer'][] = array
 		(
-//		'name'	=> 'Sigurd Nes',
-//		'email'	=> 'sigurdne@online.no'
+		'name'	=> 'Sigurd Nes',
+		'email'	=> 'sigurdne@online.no'
 	);
 
 	$setup_info['mobilefrontend']['license'] = 'GPL';

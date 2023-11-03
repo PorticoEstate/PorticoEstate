@@ -7,7 +7,7 @@
  *
  * @package   Html2pdf
  * @author    Laurent MINGUET <webmaster@html2pdf.fr>
- * @copyright 2017 Laurent MINGUET
+ * @copyright 2023 Laurent MINGUET
  */
 
 namespace Spipu\Html2Pdf;
@@ -247,7 +247,7 @@ class Html2Pdf
         return array(
             'major'     => 5,
             'minor'     => 2,
-            'revision'  => 7
+            'revision'  => 8
         );
     }
 
@@ -5779,16 +5779,8 @@ class Html2Pdf
         $this->parsingCss->setPosition();
         $this->parsingCss->fontSet();
 
-        try
-		{
-			$res = $this->_drawImage($src, isset($param['sub_li']));
-		}
-		catch (ImageException $e)
-		{
-			$res = null;
-		}
-
-		if (!$res) {
+        $res = $this->_drawImage($src, isset($param['sub_li']));
+        if (!$res) {
             return $res;
         }
 

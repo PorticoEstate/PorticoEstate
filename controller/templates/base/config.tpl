@@ -112,6 +112,20 @@
 			<td><input name="newsettings[from_email]" value="{value_from_email}" class="pure-u-1"/>
 			</td>
 		</tr>
+		<tr>
+			<td>{lang_report_email}: </td>
+			<td><input name="newsettings[report_email]" value="{value_report_email}" class="pure-u-1"/>
+			</td>
+		</tr>
+		<tr class="row_off">
+			<td>{lang_report_as_pdf}</td>
+			<td>
+				<select name="newsettings[report_as_pdf]" class="pure-u-1">
+					<option value="" {selected_report_as_pdf_}>{lang_no}</option>
+					<option value="1" {selected_report_as_pdf_1}>{lang_yes}</option>
+				</select>
+			</td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->

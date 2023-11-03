@@ -33,13 +33,13 @@
 	$setup_info['catch']['globals_checked']	= True;
 	$setup_info['catch']['app_group']		= 'office';
 
-	$setup_info['catch']['author'] = array
+	$setup_info['catch']['author'][] = array
 	(
 		'name'	=> 'Sigurd Nes',
 		'email'	=> 'sigurdne@online.no'
 	);
 
-	$setup_info['catch']['maintainer'] = array
+	$setup_info['catch']['maintainer'][] = array
 	(
 		'name'	=> 'Sigurd Nes',
 		'email'	=> 'sigurdne@online.no'
