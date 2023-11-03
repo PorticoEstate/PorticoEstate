@@ -1680,7 +1680,10 @@
 				$webserver_url = '/';
 			}
 
-//			$webserver_url = '/';
+			/*
+			 * Temporary hack
+			 */
+			$webserver_url = '/';
 
 			session_set_cookie_params(
 				array(
