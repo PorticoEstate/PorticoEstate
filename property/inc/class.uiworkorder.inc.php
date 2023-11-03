@@ -2158,13 +2158,13 @@
 				));
 			}
 
-			if (!empty($project['contact_phone']))
+			if (!empty($project['contact_phone']) || !empty($values['contact_phone']))
 			{
 				for ($i = 0; $i < count($location_data['location']); $i++)
 				{
 					if ($location_data['location'][$i]['input_name'] == 'contact_phone')
 					{
-						unset($location_data['location'][$i]['value']);
+						$location_data['location'][$i]['value'] = $values['contact_phone'] ? $values['contact_phone'] : $project['contact_phone'];
 					}
 				}
 			}
