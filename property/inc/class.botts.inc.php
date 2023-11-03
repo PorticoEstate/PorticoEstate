@@ -1508,6 +1508,7 @@ HTML;
 		</style>
 	</head>
 	<body>
+		<H2>{$subject}</H2>
 		{$body}
 	</body>
 </html>

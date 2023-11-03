@@ -18,7 +18,7 @@
 	$setup_info['addressbook']['enable']    = 1;
 	$setup_info['addressbook']['app_group']	= 'office';
 
-	$setup_info['addressbook']['author'] = 'Step One Group';
+	$setup_info['addressbook']['author'][] = array('name' => 'Step One Group');
 	$setup_info['addressbook']['note']   = 'The phpgwapi manages contact data.  Addressbook manages servers for its remote capability.';
 	$setup_info['addressbook']['license']  = 'GPL';
 	$setup_info['addressbook']['description'] =
@@ -27,8 +27,11 @@
 		It makes use of the phpgroupware contacts class to store and retrieve 
 		contact information via SQL (with the option of data being availble read only via LDAP).';
 
-	$setup_info['addressbook']['maintainer'] = 'phpGroupWare coreteam';
-	$setup_info['addressbook']['maintainer_email'] = 'phpgroupware-developers@gnu.org';
+	$setup_info['addressbook']['maintainer'][] = array
+	(
+		'name' => 'phpGroupWare coreteam',
+		'email' => 'phpgroupware-developers@gnu.org'
+	);
 
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['addressbook']['hooks'][] = 'add_def_pref';

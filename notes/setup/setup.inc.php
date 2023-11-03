@@ -43,7 +43,7 @@
 		'email'	=> 'ceb@phpgroupware.org'
 	);
 
-	$setup_info['notes']['maintainer'] = array
+	$setup_info['notes']['maintainer'][] = array
 	(
 		'name'	=> 'Bettina Gille',
 		'email'	=> 'ceb@phpgroupware.org'

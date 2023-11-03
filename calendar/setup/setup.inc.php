@@ -17,7 +17,7 @@
 	$setup_info['calendar']['enable']  = 1;
 	$setup_info['calendar']['app_group']	= 'office';
 
-	$setup_info['calendar']['author'] = 'Mark Peters';
+	$setup_info['calendar']['author'][] = array('name' =>'Mark Peters');
 	$setup_info['calendar']['license']  = 'GPL';
 	$setup_info['calendar']['description'] =
 		'Powerful calendar with meeting request system and ACL security.';
@@ -26,7 +26,7 @@
 		<b>More information</b> about the calendar and the current development-status can be found on the 
 		<a href="http://docs.phpgroupware.org/wiki/calendar" target="_blank">Calendar page in our Wiki</a> or
 		<a href="http://docs.phpgroupware.org/wiki/calendarFAQs" target="_blank">Calendar FAQs</a>.';
-	$setup_info['calendar']['maintainer'] = array(
+	$setup_info['calendar']['maintainer'][] = array(
 		'name'  => 'Dave Hall',
 		'email' => 'skwashd@phpgroupware.org'
 	);
