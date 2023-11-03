@@ -1871,7 +1871,7 @@ JS;
 			);
 
 
-			if (isset($values['contact_phone']))
+			if (!empty($values['contact_phone']))
 			{
 				for ($i = 0; $i < count($location_data['location']); $i++)
 				{

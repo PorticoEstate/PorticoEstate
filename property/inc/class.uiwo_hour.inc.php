@@ -1173,9 +1173,9 @@
 				{
 					$address_element[] = array('text' => lang('tenant'), 'value' => "{$project['location_data']['first_name']} {$project['location_data']['last_name']}");
 				}
-				if (!empty($project['contact_phone']))
+				if (!empty($common_data['workorder']['contact_phone']))
 				{
-					$address_element[] = array('text' => lang('Contact phone'), 'value' => $project['contact_phone']);
+					$address_element[] = array('text' => lang('Contact phone'), 'value' => $common_data['workorder']['contact_phone']);
 				}
 			}
 
