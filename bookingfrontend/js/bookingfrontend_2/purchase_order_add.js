@@ -1,5 +1,16 @@
 /* global date_format, lang, initialSelection */
 
+ko.bindingHandlers.collapse = {
+    init: function(element, valueAccessor) {
+        var value = valueAccessor();
+        $(element).collapse(ko.unwrap(value) ? 'show' : 'hide');
+    },
+    update: function(element, valueAccessor) {
+        var value = valueAccessor();
+        $(element).collapse(ko.unwrap(value) ? 'show' : 'hide');
+    }
+};
+
 
 /**
  * ArticleTableViewModel class to manage article table state and behavior.
@@ -37,6 +48,11 @@ class ArticleTableViewModel {
     handleResourceChange(newValue) {
         console.log('Selected resources changed:', newValue);
         this.fetchArticles();
+    }
+
+
+    toggleCollapse(resource) {
+        resource.isCollapsed(!resource.isCollapsed());
     }
 
     /**
@@ -153,7 +169,8 @@ class ArticleTableViewModel {
                 // item.selected_quantity = ko.observable(Math.max(item.selected_quantity || 0, 0));
                 resources[item.id] = {
                     info: item,
-                    groups: {}
+                    groups: {},
+                    isCollapsed: ko.observable(true)  // Add the isCollapsed observable here
                 };
             }
         });
@@ -270,8 +287,7 @@ ko.components.register('article-table', {
                 <th data-bind="text: 'Total: ' + (resource.info.selected_quantity() * resource.info.price).toFixed(2)"></th>
                 <th>
                     <button class="btn btn-link" type="button" data-toggle="collapse"
-                            data-bind="attr: {'data-target': '#resource' + resource.info.resource_id}"
-                            aria-expanded="true">
+                            data-bind="click: function() { $parent.toggleCollapse(resource) }, text: resource.isCollapsed() ? 'Show' : 'Hide'">                            aria-expanded="true">
                         Toggle
                     </button>
                 </th>
@@ -290,7 +306,7 @@ ko.components.register('article-table', {
                 </td>
             </tr>
             </thead>
-            <tbody data-bind="attr: {id: 'resource' + resource.info.resource_id}, collapse: true">
+            <tbody data-bind="visible: !resource.isCollapsed(),attr: {id: 'resource' + resource.info.resource_id}">
             <!-- ko foreach: { data: Object.keys(resource.groups), as: 'groupName' } -->
             <tr>
                 <td colspan="5" class="font-weight-bold" data-bind="text: groupName"></td>

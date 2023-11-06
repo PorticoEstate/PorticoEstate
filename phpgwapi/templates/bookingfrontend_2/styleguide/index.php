@@ -51,6 +51,11 @@
             'folder' => 'button',
             'filename' => 'button',
           ),
+          'Pill' => array(
+            'name' => 'Piller',
+            'folder' => 'pill',
+            'filename' => 'pill',
+          ),
           'Link' => array(
             'name' => 'Lenke',
             'folder' => 'link',
