@@ -213,13 +213,13 @@
 		/**
 		 *
 		 * @param bool $get_persons_only - skip organizations
-		 * @param bool $next_billing - only those due for next billing
+		 * @param bool $last_billing - only those billed last time
 		 * @return array
 		 */
-		public function get_customer_list($get_persons_only = false, $next_billing = false)
+		public function get_customer_list($get_persons_only = false, $last_billing = false)
 		{
 			$config		 = CreateObject('phpgwapi.config', 'booking')->read();
-			$customers	 = $this->so->get_customer_list($get_persons_only, $next_billing );
+			$customers	 = $this->so->get_customer_list($get_persons_only, $last_billing );
 
 			if ($config['customer_list_format'] == 'AGRESSO')
 			{
@@ -317,7 +317,7 @@
 
 	class agresso_cs15
 	{
-		private $client, $apar_gr_id, $pay_method;
+		private $client, $apar_gr_id, $pay_method, $first_name_first;
 
 
 		public function __construct($config)
@@ -325,6 +325,7 @@
 			$this->client = !empty($config['voucher_client']) ? $config['voucher_client'] : 'BY';
 			$this->apar_gr_id = !empty($config['apar_gr_id']) ? $config['apar_gr_id'] : '10';
 			$this->pay_method = !empty($config['pay_method']) ? $config['pay_method'] : 'IP';//'BG';//'IP'
+			$this->first_name_first = !empty($config['first_name_first']) ? true : false;
 		}
 
 
@@ -334,6 +335,12 @@
 			$counter = 1; // set to 1 initially to satisfy agresso requirements
 			foreach ($customers as $entry) // Runs through all parties
 			{
+				if($entry['customer_internal'])
+				{
+					phpgwapi_cache::message_set("{$entry['name']} er intern kunde", 'message');
+					continue;
+				}
+
 				if(empty($entry['zip_code']))
 				{
 					phpgwapi_cache::message_set("{$entry['name']} mangler PostNr", 'error');
@@ -360,6 +367,14 @@
 				 *	B - Both
 				 */
 
+				if($this->first_name_first && $customer_type == 'P')
+				{
+					// I have $entry['name'] like this: "Nordmann Ole Stein" and I want to get "Ole Stein Nordmann"
+					$parts = explode(' ', $entry['name']);
+					$last_name = array_shift($parts);
+					$first_name = implode(' ', $parts);
+					$entry['name'] = "{$first_name} {$last_name}";
+				}
 
 				$lines[] = $this->get_line_agresso_cs15($entry['name'], $identifier, $entry['street'], $entry['city'], $country_code, $place, $entry['phone'], $entry['zip_code'] , $counter, $customer_type);
 				$counter++;
