@@ -299,7 +299,7 @@ JS;
 			break;
 	}
 	$about	 = "https://www.aktiv-kommune.no/";
-	$faq	 = "https://www.aktiv-kommune.no/hva-er-aktivkommune/";
+	$faq	 = "https://www.aktiv-kommune.no/manual/";
 
 	if ($config_frontend['develope_mode'])
 	{
