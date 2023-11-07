@@ -291,6 +291,15 @@
 				</div>
 				<div class="pure-control-group">
 					<label>
+						<xsl:value-of select="php:function('lang', 'buffer deadline')"/>
+							&nbsp;
+						(<xsl:value-of select="php:function('lang', 'minutes')"/>)
+					</label>
+					<xsl:value-of select="resource/booking_buffer_deadline"/>
+				</div>
+
+				<div class="pure-control-group">
+					<label>
 						<xsl:value-of select="php:function('lang', 'limit number')"/>
 					</label>
 					<xsl:value-of select="resource/booking_limit_number"/>
