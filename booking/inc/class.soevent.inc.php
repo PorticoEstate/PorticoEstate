@@ -215,25 +215,32 @@
 		function get_contact_mail( $id, $type )
 		{
 			$id = (int) $id;
-			$mail = array();
+			$data = array();
 			if ($type == 'allocation')
 			{
-				$sql = "SELECT bb_organization_contact.email FROM bb_organization_contact WHERE organization_id IN (SELECT bb_allocation.organization_id FROM bb_allocation WHERE id=$id)";
+				$sql = "SELECT bb_organization_contact.email, bb_organization_contact.phone"
+					. " FROM bb_organization_contact"
+					. " WHERE organization_id IN (SELECT bb_allocation.organization_id FROM bb_allocation WHERE id=$id)";
 			}
 			else
 			{
-				$sql = "SELECT bb_group_contact.email FROM bb_group_contact WHERE group_id IN (SELECT bb_booking.group_id FROM bb_booking WHERE id=$id)";
+				$sql = "SELECT bb_group_contact.email, bb_group_contact.phone"
+					. " FROM bb_group_contact"
+					. " WHERE group_id IN (SELECT bb_booking.group_id FROM bb_booking WHERE id=$id)";
 			}
 			$this->db->query($sql, __LINE__, __FILE__);
 			if ($result = $this->db->resultSet)
 			{
 				foreach ($result as $res)
 				{
-					$mail[] = $res['email'];
+					$data[] = array(
+						'email' => $res['email'],
+						'phone'	=> $res['phone'],
+					);
 				}
 			}
 
-			return $mail;
+			return $data;
 		}
 
 		public function update_comment( $allids )
