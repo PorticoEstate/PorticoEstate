@@ -1097,6 +1097,7 @@ JS;
 						'block_query'		 => $block_query,
 						'phpgw_return_as'	 => 'json'
 					)),
+					"column_search"		 => array('onclick' => "init_column_search();"),
 					"columns"		 => array('onclick' => "JqueryPortico.openPopup({menuaction:'property.uilocation.columns', type_id:'{$type_id}',parent:'{$this->location_code}'}, {closeAction:'reload'})"),
 					'download'		 => self::link(array('menuaction'	 => 'property.uilocation.download',
 						'type_id'		 => $type_id,

@@ -492,10 +492,10 @@
 		/**
 		 *
 		 * @param bool $get_persons_only - skip organizations
-		 * @param bool $next_billing - only those due for next billing
+		 * @param bool $last_billing - only those billed last time
 		 * @return array
 		 */
-		public function get_customer_list( $get_persons_only = false, $next_billing = false)
+		public function get_customer_list( $get_persons_only = false, $last_billing = false)
 		{
 
 			$sf_validator = createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array(
@@ -504,16 +504,21 @@
 
 			$sql = "SELECT * FROM bb_user WHERE length(bb_user.customer_ssn) = 11 AND substring(bb_user.customer_ssn, 1, 4) != '0000'";
 
-			if($next_billing)
+			if($last_billing)
 			{
+				$this->db->query("SELECT id FROM bb_completed_reservation_export_file"
+					. " WHERE type = 'external' ORDER BY id DESC LIMIT 1", __LINE__, __FILE__);
+				$this->db->next_record();
+				$export_file_id = (int)$this->db->f('id');
+
 				$sql = "SELECT DISTINCT bb_user.* FROM bb_user"
 					. " JOIN bb_completed_reservation ON bb_completed_reservation.customer_ssn = bb_user.customer_ssn"
 					. " WHERE length(bb_user.customer_ssn) = 11"
 					. " AND substring(bb_user.customer_ssn, 1, 4) != '0000'"
 					. " AND customer_identifier_type = 'ssn'"
 					. " AND cost > 0"
-					. " AND exported IS NOT NULL"
-					. " AND export_file_id IS NULL";
+//					. " AND exported IS NOT NULL"
+					. " AND export_file_id = {$export_file_id}";
 	
 			}
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -544,7 +549,7 @@
 				. " FROM bb_organization WHERE length(bb_organization.customer_organization_number) = 9"
 				. " AND active = 1";
 
-			if($next_billing)
+			if($last_billing)
 			{
 				$sql = "SELECT DISTINCT bb_organization.*"
 					. " FROM bb_organization"
@@ -552,8 +557,8 @@
 					. " WHERE length(bb_organization.customer_organization_number) = 9"
 					. " AND bb_completed_reservation.customer_identifier_type = 'organization_number'"
 					. " AND cost > 0"
-					. " AND exported IS NOT NULL"
-					. " AND export_file_id IS NULL";
+//					. " AND exported IS NOT NULL"
+					. " AND export_file_id = {$export_file_id}";
 
 			}
 
@@ -574,7 +579,7 @@
 				$values[] = array(
 					'organization_number' => $organization_number,
 					'customer_ssn' => $this->db->f('customer_ssn'),
-					'name' => $this->db->f('name', true),
+					'name' => $this->mb_ucfirst(mb_convert_case($this->db->f('name', true), MB_CASE_LOWER)),
 					'phone' => $this->db->f('phone'),
 					'email' => $this->db->f('email', true),
 					'co_address' => $this->db->f('co_address', true),
@@ -587,4 +592,13 @@
 
 			return $values;
 		}
+
+		private function mb_ucfirst($string)
+		{
+			$encoding = 'UTF-8';
+			$firstChar = mb_substr($string, 0, 1, $encoding);
+			$then = mb_substr($string, 1, null, $encoding);
+			return mb_strtoupper($firstChar, $encoding) . $then;
+		}
+
 	}
