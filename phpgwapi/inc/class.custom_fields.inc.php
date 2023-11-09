@@ -183,7 +183,7 @@
 				'name'			=> $this->_db->db_addslashes(strtolower($group['group_name'])),
 				'descr'			=> $this->_db->db_addslashes($group['descr']),
 				'remark'		=> $this->_db->db_addslashes($group['remark']),
-				'group_sort'	=> 0,
+				'group_sort'	=> $group['group_sort'] ? $group['group_sort'] : null,
 				'parent_id'		=> $group['parent_id']
 			);
 
@@ -221,7 +221,7 @@
 
 			$this->_db->query($sql, __LINE__, __FILE__);
 			$this->_db->next_record();
-			$values['group_sort']	= (int) $this->_db->f('max_sort') + 1;
+			$values['group_sort']	= !is_null($values['group_sort']) ? $values['group_sort'] : (int) $this->_db->f('max_sort') + 1;
 
 			$cols = implode(', ', array_keys($values));
 			$vals = $this->_db->validate_insert($values);
@@ -948,7 +948,14 @@
 				}
 			}
 
-			if(isset($attrib['new_choice']) && $attrib['new_choice'] && !$doubled )
+			if(!empty($attrib['new_choice']) && is_array($attrib['new_choice']) && !$doubled )
+			{
+				foreach($attrib['new_choice'] as $new_choice)
+				{
+					$this->add_choice($location_id, $attrib_id, $new_choice['value'], $new_choice['id'], $new_choice['title'], $new_choice['sort']);
+				}
+			}
+			else if(!empty($attrib['new_choice']) && !$doubled )
 			{
 				$this->add_choice($location_id, $attrib_id, $attrib['new_choice'], $attrib['new_choice_id'], $attrib['new_title_choice']);
 			}
@@ -1010,7 +1017,7 @@
 		 * @param integer $choice_id
 
 		 */
-		public function add_choice($location_id, $attrib_id, $value, $choice_id = 0, $title = '')
+		public function add_choice($location_id, $attrib_id, $value, $choice_id = 0, $title = '', $choice_sort = null)
 		{
 			$location_id = (int) $location_id;
 			$attrib_id = (int) $attrib_id;
@@ -1050,7 +1057,7 @@
 
 			$this->_db->query("SELECT count(id) as cnt FROM phpgw_cust_choice WHERE location_id = {$location_id} AND attrib_id = {$attrib_id}",__LINE__,__FILE__);
 			$this->_db->next_record();
-			$choice_sort = (int)$this->_db->f('cnt') +1;
+			$choice_sort = !is_null($choice_sort) ? $choice_sort : (int)$this->_db->f('cnt') +1;
 
 			$values= array(
 				$location_id,
@@ -1575,6 +1582,7 @@
 											)
 			);
 
+			$datatype = $this->_db->f('datatype');
 			/**
 			 * Fetch current value if missing from meta.
 			 */
@@ -1591,7 +1599,7 @@
 
 			if ( $inc_choices )
 			{
-				switch ( $this->_db->f('datatype') )
+				switch ( $datatype )
 				{
 					default:
 						// bail out quickly
