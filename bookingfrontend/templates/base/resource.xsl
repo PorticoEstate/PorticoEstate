@@ -184,6 +184,12 @@
 												</span>
 											</li>
 										</div>
+										<div data-bind="if: overlap == 3">
+											<li class="list-group-item">
+												<i class="far fa-clock mr-2 pt-1 text-secondary"></i>
+												<span class="text-secondary" data-bind="html: when"></span>
+											</li>
+										</div>
 
 										<div data-bind="if: overlap == false">
 											<li class="list-group-item">

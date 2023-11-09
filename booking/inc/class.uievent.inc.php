@@ -360,28 +360,41 @@
 					$resource = $this->bo->so->get_resource_info($res);
 					$_mymail = $this->bo->so->get_contact_mail($e, 'allocation');
 
-					$a = $_mymail[0];
-					if (array_key_exists($a, $data))
+					$a = $_mymail[0]['email'];
+
+					if(!empty($a))
 					{
-						$data[$a][] = array('date' => $date, 'building' => $event['building_name'],
-							'resource' => $resource['name'], 'start' => $start, 'end' => $end);
-					}
-					else
-					{
-						$data[$a] = array(array('date' => $date, 'building' => $event['building_name'],
-								'resource' => $resource['name'], 'start' => $start, 'end' => $end));
-					}
-					if ($_mymail[1])
-					{
-						$b = $_mymail[1];
 						if (array_key_exists($a, $data))
 						{
-							$data[$b][] = array('date' => $date, 'building' => $event['building_name'],
+							$data[$a][] = array(
+								'phone' => $_mymail[0]['phone'],
+								'date' => $date, 'building' => $event['building_name'],
 								'resource' => $resource['name'], 'start' => $start, 'end' => $end);
 						}
 						else
 						{
-							$data[$b] = array(array('date' => $date, 'building' => $event['building_name'],
+							$data[$a] = array(array(
+								'phone' => $_mymail[0]['phone'],
+								'date' => $date, 'building' => $event['building_name'],
+									'resource' => $resource['name'], 'start' => $start, 'end' => $end));
+						}
+					}
+
+					if ($_mymail[1]['email'])
+					{
+						$b = $_mymail[1]['email'];
+						if (array_key_exists($b, $data))
+						{
+							$data[$b][] = array(
+								'phone' => $_mymail[1]['phone'],
+								'date' => $date, 'building' => $event['building_name'],
+								'resource' => $resource['name'], 'start' => $start, 'end' => $end);
+						}
+						else
+						{
+							$data[$b] = array(array(
+								'phone' => $_mymail[1]['phone'],
+								'date' => $date, 'building' => $event['building_name'],
 									'resource' => $resource['name'], 'start' => $start, 'end' => $end));
 						}
 					}
@@ -408,29 +421,42 @@
 					$resource = $this->bo->so->get_resource_info($res);
 					$_mymail = $this->bo->so->get_contact_mail($e, 'booking');
 
-					$a = $_mymail[0];
-					if (array_key_exists($a, $data))
+					$a = $_mymail[0]['email'];
+
+					if(!empty($a))
 					{
-						$data[$a][] = array('date' => $date, 'building' => $event['building_name'],
-							'resource' => $resource['name'], 'start' => $start, 'end' => $end);
-					}
-					else
-					{
-						$data[$a] = array(array('date' => $date, 'building' => $event['building_name'],
-								'resource' => $resource['name'], 'start' => $start, 'end' => $end));
-					}
-					if ($_mymail[1])
-					{
-						$b = $_mymail[1];
 						if (array_key_exists($a, $data))
 						{
-							$data[$b][] = array('date' => $date, 'building' => $event['building_name'],
+							$data[$a][] = array(
+								'phone' => $_mymail[0]['phone'],
+								'date' => $date, 'building' => $event['building_name'],
 								'resource' => $resource['name'], 'start' => $start, 'end' => $end);
 						}
 						else
 						{
-							$data[$b] = array(array('date' => $date, 'building' => $event['building_name'],
+							$data[$a] = array(array(
+								'phone' => $_mymail[0]['phone'],
+								'date' => $date, 'building' => $event['building_name'],
 									'resource' => $resource['name'], 'start' => $start, 'end' => $end));
+						}
+					}
+
+					if ($_mymail[1]['email'])
+					{
+						$b = $_mymail[1];
+						if (array_key_exists($b, $data))
+						{
+							$data[$b][] = array(
+								'phone' => $_mymail[1]['phone'],
+								'date' => $date, 'building' => $event['building_name'],
+								'resource' => $resource['name'], 'start' => $start, 'end' => $end);
+						}
+						else
+						{
+							$data[$b] = array(array(
+								'phone' => $_mymail[1]['phone'],
+								'date' => $date, 'building' => $event['building_name'],
+								'resource' => $resource['name'], 'start' => $start, 'end' => $end));
 						}
 					}
 				}
@@ -745,6 +771,65 @@
 				'config'	 => CreateObject('phpgwapi.config', 'booking')->read()
 				)
 			);
+		}
+
+		/**
+		 * 
+		 * @param array $receiver
+		 * @param string $subject
+		 * @param string $body
+		 */
+		private function send_sms_notification( $receiver, $subject, $body )
+		{
+			$sms_service = CreateObject('sms.sms');
+			//html -> text..
+			$html2text			 = createObject('phpgwapi.html2text', "{$subject}<br/>{$body}");
+			$text				 = $html2text->getText();
+
+			if(is_array($receiver))
+			{
+				$receivers = $receiver;
+			}
+			else
+			{
+				$receivers = array($receiver);
+			}
+
+			$final_recipients = array_unique($receivers);
+
+			$account_id = $this->current_account_id();
+			$log_success = array();
+			$log_error = array();
+			foreach ($final_recipients as $final_recipient)
+			{
+				try
+				{
+					$sms_res = $sms_service->websend2pv($account_id, $final_recipient, $text);
+					if (empty($sms_res[0][0]))
+					{
+						$log_error[] = $final_recipient;
+					}
+					else
+					{
+						$log_success[] = $final_recipient;
+
+					}
+				}
+				catch (Exception $ex)
+				{
+					$log_error[] = $final_recipient;
+				}
+			}
+			if($log_error)
+			{
+				$GLOBALS['phpgw']->log->error(array(
+					'text'	 => "SMS to %1 failed <br/>content: %2",
+					'p1'	 => implode(', ', $log_error),
+					'p2'	 => $text,
+					'line'	 => __LINE__,
+					'file'	 => __FILE__
+				));
+			}
 		}
 
 		private function send_mailnotification( $receiver, $subject, $body )
@@ -1067,13 +1152,19 @@
 									$mailbody = '';
 									$comment_text_log = "Reserverasjoner som har blitt overskrevet: \n";
 									$mail_sendt_to[] = $mail;
+									$sms_resipients = array();
 									foreach ($maildata[$mail] as $data)
 									{
 										$comment_text_log .= $data['date'] . ', ' . $data['building'] . ', ' . $data['resource'] . ', Kl. ' . $data['start'] . ' - ' . $data['end'] . " \n";
+										if(!empty($data['phone']))
+										{
+											$sms_resipients[] = $data['phone'];
+										}
 									}
 									$mailbody .= $body . "<pre>" . $comment_text_log . "</pre>";
 									$sendt++;
 									$this->send_mailnotification($mail, $subject, $mailbody);
+									$this->send_sms_notification(array_unique($sms_resipients), $subject, $mailbody);
 								}
 								if ($sendt)
 								{

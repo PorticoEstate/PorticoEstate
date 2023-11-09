@@ -1608,7 +1608,9 @@
 					$test	 = $limitDate->format('Y-m-d');
 					$test	 = $checkDate->format('Y-m-d');
 					if ($stop_on_end_date)
+					{
 						$limitDate = clone $_to;
+					}
 
 					$active_seasons = $soseason->get_resource_seasons($resource['id'], $checkDate->format('Y-m-d'), $limitDate->format('Y-m-d'));
 
@@ -1701,7 +1703,7 @@
 						}
 						if($within_season)
 						{
-							$overlap = $this->check_if_resurce_is_taken($resource['id'], $StartTime, $endTime, $events);
+							$overlap = $this->check_if_resurce_is_taken($resource, $StartTime, $endTime, $events);
 							$availlableTimeSlots[$resource['id']][] = [
 								'when'				 => $StartTime->format($datetimeformat) . ' - ' . $endTime->format($datetimeformat),
 								'start'				 => $StartTime->getTimestamp() . '000',
@@ -1776,11 +1778,26 @@
 			}
 		}
 
-		function check_if_resurce_is_taken( $resource_id, $StartTime, $endTime, $events )
+		function check_if_resurce_is_taken( $resource, $StartTime, $endTime, $events)
 		{
 			$timezone		 = $GLOBALS['phpgw_info']['user']['preferences']['common']['timezone'];
 			$DateTimeZone	 = new DateTimeZone($timezone);
 			$overlap = false;
+
+			$resource_id = $resource['id'];
+			$booking_buffer_deadline = $resource['booking_buffer_deadline'];
+
+			$now = new DateTime("now", $DateTimeZone);
+
+			if($booking_buffer_deadline)
+			{
+				$now->modify($booking_buffer_deadline. ' Minute');
+			}
+
+			if ($StartTime <= $now)
+			{
+				return $overlap = 3; // disabled
+			}
 
 			foreach ($events['results'] as $event)
 			{
@@ -1789,8 +1806,6 @@
 					$event_start = new DateTime($event['from_'], $DateTimeZone);
 					$event_end	 = new DateTime($event['to_'], $DateTimeZone);
 					if (
-//						($StartTime >= $event_start && $StartTime <= $event_end) ||
-//						($event_start >= $StartTime && $event_start <= $endTime)
                        ($event_start <= $StartTime AND $event_end > $StartTime)
                       || ($event_start > $StartTime AND $event_end < $endTime)
                       || ($event_start < $endTime AND $event_end >= $endTime)

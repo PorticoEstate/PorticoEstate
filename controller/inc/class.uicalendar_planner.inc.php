@@ -1309,7 +1309,11 @@ HTML;
 
 				}
 
-				$open_check_items_and_cases = $this->so_check_item->get_check_items_with_cases($entry['id'], $_type = null, '', null, '');
+				$component_id = $entry['component_id'];
+
+				$open_check_items_and_cases	 = $this->so_check_item->get_check_items_with_cases($entry['id'], $_type = null, '', null, '');
+				$open_old_cases				 = $this->so_check_item->get_check_items_with_cases($entry['id'], $_type = null, 'open_or_waiting_old', null, '', $component_id);
+				$open_check_items_and_cases	 = array_merge($open_check_items_and_cases, $open_old_cases);
 
 				foreach ($open_check_items_and_cases as $check_item)
 				{
