@@ -816,6 +816,10 @@
 				$values['id']	 = $id;
 				$action			 = 'edit';
 			}
+			else
+			{
+				$action			 = 'add';
+			}
 
 			if (!$this->receipt['error'])
 			{

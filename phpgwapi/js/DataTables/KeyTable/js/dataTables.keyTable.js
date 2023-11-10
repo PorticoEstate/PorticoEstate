@@ -1,4 +1,4 @@
-/*! KeyTable 2.10.0
+/*! KeyTable 2.11.0
  * © SpryMedia Ltd - datatables.net/license
  */
 
@@ -52,7 +52,7 @@ var DataTable = $.fn.dataTable;
 /**
  * @summary     KeyTable
  * @description Spreadsheet like keyboard navigation for DataTables
- * @version     2.10.0
+ * @version     2.11.0
  * @file        dataTables.keyTable.js
  * @author      SpryMedia Ltd
  * @contact     datatables.net
@@ -84,6 +84,9 @@ var KeyTable = function (dt, opts) {
 	this.s = {
 		/** @type {DataTable.Api} DataTables' API instance */
 		dt: new DataTable.Api(dt),
+
+		/** Indicate when the DataTable is redrawing - take no action on key presses */
+		dtDrawing: false,
 
 		enable: true,
 
@@ -212,8 +215,11 @@ $.extend(KeyTable.prototype, {
 
 		// Key events
 		$(document).on('keydown' + namespace, function (e) {
-			if (!editorBlock) {
+			if (!editorBlock && !that.s.dtDrawing) {
 				that._key(e);
+			}
+			else {
+				e.preventDefault();
 			}
 		});
 
@@ -221,7 +227,7 @@ $.extend(KeyTable.prototype, {
 		if (this.c.blurable) {
 			$(document).on('mousedown' + namespace, function (e) {
 				// Click on the search input will blur focus
-				if ($(e.target).parents('.dataTables_filter').length) {
+				if ($(e.target).parents('.dataTables_filter, .dt-search').length) {
 					that._blur();
 				}
 
@@ -338,8 +344,17 @@ $.extend(KeyTable.prototype, {
 			}
 		});
 
+		// When the table is about to do a draw we need to block key
+		// handling. This is only important for async draws - i.e.
+		// server-side processing.
+		dt.on('preDraw' + namespace + ' scroller-will-draw' + namespace, function (e) {
+			that.s.dtDrawing = true;
+		});
+
 		// Redraw - retain focus on the current cell
 		dt.on('draw' + namespace, function (e) {
+			that.s.dtDrawing = false;
+
 			that._tabInput();
 
 			if (that.s.focusDraw) {
@@ -351,9 +366,15 @@ $.extend(KeyTable.prototype, {
 			if (lastFocus) {
 				var relative = that.s.lastFocus.relative;
 				var info = dt.page.info();
-				var row = relative.row + info.start;
+				var row = relative.row;
 
 				if (info.recordsDisplay === 0) {
+					return;
+				}
+
+				// If the refocus is outside the current draw zone -
+				// don't attempt to refocus onto it
+				if (row < info.start || row > info.start + info.length) {
 					return;
 				}
 
@@ -808,11 +829,13 @@ $.extend(KeyTable.prototype, {
 		}
 
 		// Event and finish
+		var info = dt.page.info();
+
 		this.s.lastFocus = {
 			cell: cell,
 			node: cell.node(),
 			relative: {
-				row: dt.rows({ page: 'current' }).indexes().indexOf(cell.index().row),
+				row: info.start + dt.rows({ page: 'current' }).indexes().indexOf(cell.index().row),
 				column: cell.index().column
 			}
 		};
@@ -832,6 +855,12 @@ $.extend(KeyTable.prototype, {
 		// do nothing for this new key press.
 		if (this.s.waitingForDraw) {
 			e.preventDefault();
+			return;
+		}
+
+		// Ignore key presses in an Editor inline create row - it is not navigatable
+		// by KeyTable
+		if ($(e.target).closest('.dte-inlineAdd').length) {
 			return;
 		}
 
@@ -1060,7 +1089,6 @@ $.extend(KeyTable.prototype, {
 	 * @private
 	 */
 	_shift: function (e, direction, keyBlurable) {
-		var that = this;
 		var dt = this.s.dt;
 		var pageInfo = dt.page.info();
 		var rows = pageInfo.recordsDisplay;
@@ -1288,7 +1316,7 @@ KeyTable.defaults = {
 	tabIndex: null
 };
 
-KeyTable.version = '2.10.0';
+KeyTable.version = '2.11.0';
 
 $.fn.dataTable.KeyTable = KeyTable;
 $.fn.DataTable.KeyTable = KeyTable;
