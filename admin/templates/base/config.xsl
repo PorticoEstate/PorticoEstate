@@ -343,7 +343,7 @@
 	<xsl:template match="edit_section">
 		<div align="left">
 		<xsl:variable name="form_action"><xsl:value-of select="form_action"/></xsl:variable>
-		<form method="post" action="{$form_action}">
+		<form method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 		<table cellpadding="2" cellspacing="2" width="80%" align="center">
 			<xsl:choose>
 				<xsl:when test="msgbox_data != ''">
@@ -371,7 +371,7 @@
 					<xsl:value-of select="lang_name"/>
 				</td>
 				<td>
-					<input type="text" size="20" name="values[name]" value="{value_name}">
+					<input type="text" size="20" name="values[name]" value="{value_name}" class="pure-input-3-4">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_name_status_text"/>
 						</xsl:attribute>
@@ -383,7 +383,7 @@
 					<xsl:value-of select="lang_descr"/>
 				</td>
 				<td>
-					<textarea cols="60" rows="10" name="values[descr]" wrap="virtual">
+					<textarea cols="60" rows="10" name="values[descr]" wrap="virtual" class="pure-input-3-4">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_descr_status_text"/>
 						</xsl:attribute>

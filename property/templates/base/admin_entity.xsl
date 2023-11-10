@@ -473,14 +473,12 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'parent')"/>
 								</label>
-								<label valign="top">
-									<select id="parent_id" name="values[parent_id]">
+									<select id="parent_id" name="values[parent_id]" class="pure-input-3-4">
 										<option value="">
 											<xsl:value-of select="php:function('lang', 'select parent')"/>
 										</option>
 										<xsl:apply-templates select="parent_list"/>
 									</select>
-								</label>
 							</div>
 						</xsl:when>
 					</xsl:choose>
@@ -499,7 +497,7 @@
 							<xsl:value-of select="php:function('lang', 'name')"/>
 						</label>
 
-						<input type="text" data-validation="required" name="values[name]" value="{value_name}">
+						<input type="text" data-validation="required" name="values[name]" value="{value_name}" class="pure-input-3-4">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_name_standardtext"/>
 							</xsl:attribute>
@@ -510,7 +508,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'descr')"/>
 						</label>
-						<textarea cols="60" rows="10" name="values[descr]">
+						<textarea cols="60" rows="10" name="values[descr]" class="pure-input-3-4">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_descr_standardtext"/>
 							</xsl:attribute>
@@ -573,7 +571,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'prefix')"/>
 								</label>
-								<input type="text" name="values[prefix]" value="{value_prefix}">
+								<input type="text" name="values[prefix]" value="{value_prefix}" class="pure-input-3-4">
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_prefix_standardtext"/>
 									</xsl:attribute>
@@ -804,7 +802,7 @@
 								<label>
 									<xsl:value-of select="lang_location_level"/>
 								</label>
-								<select name="values[location_level]" class="forms">
+								<select name="values[location_level]" class="pure-input-3-4">
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_location_level_statustext"/>
 									</xsl:attribute>
@@ -821,7 +819,7 @@
 								<xsl:variable name="lang_location_link_level_statustext">
 									<xsl:value-of select="lang_location_link_level_statustext"/>
 								</xsl:variable>
-								<select name="values[location_link_level]" title="{$lang_location_link_level_statustext}">
+								<select name="values[location_link_level]" title="{$lang_location_link_level_statustext}" class="pure-input-3-4">
 									<option value="">
 										<xsl:value-of select="lang_no_location_link_level"/>
 									</option>
@@ -837,7 +835,7 @@
 						<label>
 							<xsl:value-of select="$lang_entity_group"/>
 						</label>
-						<select name="values[entity_group_id]" title="$lang_entity_group">
+						<select name="values[entity_group_id]" title="$lang_entity_group" class="pure-input-3-4">
 							<xsl:apply-templates select="entity_group_list/options"/>
 						</select>
 					</div>
@@ -876,7 +874,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'template')"/>
 								</label>
-								<select id="category_template" name="values[category_template]" onChange="get_template_attributes()">
+								<select id="category_template" name="values[category_template]" onChange="get_template_attributes()" class="pure-input-3-4">
 									<option value="">
 										<xsl:value-of select="php:function('lang', 'select template')"/>
 									</option>
@@ -1293,7 +1291,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'parent')"/>
 							</label>
-							<select id="parent_id" name="values[parent_id]">
+							<select id="parent_id" name="values[parent_id]" class="pure-input-3-4">
 								<option value="">
 									<xsl:value-of select="php:function('lang', 'select parent')"/>
 								</option>
@@ -1307,11 +1305,9 @@
 					<label>
 						<xsl:value-of select="lang_group_name"/>
 					</label>
-					<input type="text" data-validation="required" name="values[group_name]" value="{value_group_name}" maxlength="100">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
+					<input type="text" data-validation="required" name="values[group_name]" value="{value_group_name}" maxlength="100" class="pure-input-3-4">
+						<xsl:attribute name="title">
 							<xsl:value-of select="lang_group_name_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
 				</div>
@@ -1319,11 +1315,9 @@
 					<label>
 						<xsl:value-of select="lang_descr"/>
 					</label>
-					<input type="text" data-validation="required" name="values[descr]" value="{value_descr}" size="60" maxlength="150">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
+					<input type="text" data-validation="required" name="values[descr]" value="{value_descr}" size="60" maxlength="150" class="pure-input-3-4">
+						<xsl:attribute name="title">
 							<xsl:value-of select="lang_descr_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
 				</div>
@@ -1331,11 +1325,9 @@
 					<label>
 						<xsl:value-of select="lang_remark"/>
 					</label>
-					<textarea cols="60" rows="10" name="values[remark]">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
+					<textarea cols="60" rows="10" name="values[remark]" class="pure-input-3-4">
+						<xsl:attribute name="title">
 							<xsl:value-of select="lang_remark_statustext"/>
-							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 						<xsl:value-of select="value_remark"/>
 					</textarea>
@@ -1424,7 +1416,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'column name')"/>
 							</label>
-							<input type="text" name="values[column_name]" value="{value_column_name}" maxlength="50">
+							<input type="text" name="values[column_name]" value="{value_column_name}" maxlength="50" class="pure-input-3-4">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'enter the name for the column')"/>
 								</xsl:attribute>
@@ -1434,7 +1426,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'input text')"/>
 							</label>
-							<input type="text" name="values[input_text]" value="{value_input_text}" size="60" maxlength="255">
+							<input type="text" name="values[input_text]" value="{value_input_text}" size="60" maxlength="255" class="pure-input-3-4">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'enter the input text for records')"/>
 								</xsl:attribute>
@@ -1444,7 +1436,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'statustext')"/>
 							</label>
-							<textarea cols="60" rows="10" name="values[statustext]" maxlength="255">
+							<textarea cols="60" rows="10" name="values[statustext]" maxlength="255" class="pure-input-3-4">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'enter a statustext for the inputfield in forms')"/>
 								</xsl:attribute>
@@ -1455,7 +1447,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'group')"/>
 							</label>
-							<select name="values[group_id]" class="forms">
+							<select name="values[group_id]" class="pure-input-3-4">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'select a group')"/>
 								</xsl:attribute>
@@ -1469,7 +1461,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'datatype')"/>
 							</label>
-							<select name="values[column_info][type]" class="forms">
+							<select name="values[column_info][type]" class="pure-input-3-4">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'select a datatype')"/>
 								</xsl:attribute>
@@ -1483,7 +1475,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'precision')"/>
 							</label>
-							<input type="text" name="values[column_info][precision]" value="{value_precision}">
+							<input type="text" name="values[column_info][precision]" value="{value_precision}" class="pure-input-3-4">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'enter the record length')"/>
 								</xsl:attribute>
@@ -1493,7 +1485,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'scale')"/>
 							</label>
-							<input type="text" name="values[column_info][scale]" value="{value_scale}">
+							<input type="text" name="values[column_info][scale]" value="{value_scale}" class="pure-input-3-4">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'enter the scale if type is decimal')"/>
 								</xsl:attribute>
@@ -1503,7 +1495,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'default')"/>
 							</label>
-							<input type="text" name="values[column_info][default]" value="{value_default}">
+							<input type="text" name="values[column_info][default]" value="{value_default}" class="pure-input-3-4">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'enter the default value')"/>
 								</xsl:attribute>
@@ -1513,7 +1505,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'nullable')"/>
 							</label>
-							<select name="values[column_info][nullable]">
+							<select name="values[column_info][nullable]" class="pure-input-3-4">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'chose if this column is nullable')"/>
 								</xsl:attribute>
@@ -1588,7 +1580,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'short description')"/>
 							</label>
-							<input type="text" name="values[short_description]" value="{value_short_description}" size = "2" maxlength= "2">
+							<input type="number" name="values[short_description]" value="{value_short_description}" min = "0" max= "20" class="pure-input-3-4">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'optional order of field in a short description')"/>
 								</xsl:attribute>
@@ -1599,7 +1591,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'help message')"/>
 							</label>
-							<textarea cols="60" rows="10" name="values[helpmsg]">
+							<textarea cols="60" rows="10" name="values[helpmsg]" class="pure-input-3-4">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'enables help message for this attribute')"/>
 								</xsl:attribute>
@@ -1933,11 +1925,9 @@
 						<label>
 							<xsl:value-of select="lang_descr"/>
 						</label>
-						<textarea cols="60" rows="10" name="values[descr]">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
+						<textarea cols="60" rows="10" name="values[descr]" class="pure-input-3-4">
+							<xsl:attribute name="title">
 								<xsl:value-of select="lang_descr_custom_functiontext"/>
-								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 							<xsl:value-of select="value_descr"/>
 						</textarea>
@@ -1949,7 +1939,7 @@
 						<xsl:variable name="lang_custom_function_statustext">
 							<xsl:value-of select="lang_custom_function_statustext"/>
 						</xsl:variable>
-						<select name="values[custom_function_file]" class="forms" onMouseover="window.status='{$lang_custom_function_statustext}'; return true;">
+						<select name="values[custom_function_file]" tile="{$lang_custom_function_statustext}" class="pure-input-3-4">
 							<option value="">
 								<xsl:value-of select="lang_no_custom_function"/>
 							</option>
@@ -1963,19 +1953,15 @@
 						<xsl:choose>
 							<xsl:when test="value_active = 1">
 								<input type="checkbox" name="values[active]" value="1" checked="checked">
-									<xsl:attribute name="onMouseover">
-										<xsl:text>window.status='</xsl:text>
+									<xsl:attribute name="title">
 										<xsl:value-of select="lang_active_statustext"/>
-										<xsl:text>'; return true;</xsl:text>
 									</xsl:attribute>
 								</input>
 							</xsl:when>
 							<xsl:otherwise>
 								<input type="checkbox" name="values[active]" value="1">
-									<xsl:attribute name="onMouseover">
-										<xsl:text>window.status='</xsl:text>
+									<xsl:attribute name="title">
 										<xsl:value-of select="lang_active_statustext"/>
-										<xsl:text>'; return true;</xsl:text>
 									</xsl:attribute>
 								</input>
 							</xsl:otherwise>

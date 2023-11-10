@@ -155,6 +155,14 @@
 			return null;
 		}
 
+		private function mb_ucfirst($string)
+		{
+			$encoding = 'UTF-8';
+			$firstChar = mb_substr($string, 0, 1, $encoding);
+			$then = mb_substr($string, 1, null, $encoding);
+			return mb_strtoupper($firstChar, $encoding) . $then;
+		}
+
 		/**
 		 * Add a group for custom fields/attributes
 		 *
@@ -179,8 +187,8 @@
 			$values = array
 			(
 				'location_id'	=> $location_id,
-				'id'			=> 0,
-				'name'			=> $this->_db->db_addslashes(strtolower($group['group_name'])),
+				'id'			=> !empty($group['id']) ? $group['id'] : 0,
+				'name'			=> $this->_db->db_addslashes($this->mb_ucfirst($group['group_name'])),
 				'descr'			=> $this->_db->db_addslashes($group['descr']),
 				'remark'		=> $this->_db->db_addslashes($group['remark']),
 				'group_sort'	=> $group['group_sort'] ? $group['group_sort'] : null,
@@ -197,23 +205,15 @@
 
 			$this->_db->transaction_begin();
 
-/*
-			$sql = "SELECT id FROM phpgw_cust_attribute_group"
-				. " WHERE location_id = {$values['location_id']}"
-					. " AND name = '{$values['name']}'";
-			$this->_db->query($sql, __LINE__, __FILE__);
-			if ( $this->_db->next_record() )
+			if(!$values['id'])
 			{
-				return -1;
+				$sql = 'SELECT MAX(id) AS current_id'
+					. ' FROM phpgw_cust_attribute_group '
+					. " WHERE location_id ='{$values['location_id']}'";
+				$this->_db->query($sql, __LINE__, __FILE__);
+				$this->_db->next_record();
+				$values['id']	= (int) $this->_db->f('current_id') + 1;
 			}
-*/
-
-			$sql = 'SELECT MAX(id) AS current_id'
-				. ' FROM phpgw_cust_attribute_group '
-				. " WHERE location_id ='{$values['location_id']}'";
-			$this->_db->query($sql, __LINE__, __FILE__);
-			$this->_db->next_record();
-			$values['id']	= (int) $this->_db->f('current_id') + 1;
 
 			$sql = 'SELECT MAX(group_sort) AS max_sort'
 				. ' FROM phpgw_cust_attribute_group '
@@ -960,7 +960,7 @@
 				$this->add_choice($location_id, $attrib_id, $attrib['new_choice'], $attrib['new_choice_id'], $attrib['new_title_choice']);
 			}
 
-			if ( isset($attrib['new_choice']) && is_array($attrib['edit_choice'])  && !$doubled )
+			if ( isset($attrib['edit_choice']) && is_array($attrib['edit_choice'])  && !$doubled )
 			{
 				foreach ($attrib['edit_choice'] as $choice_id => $value)
 				{
@@ -1040,7 +1040,7 @@
 				 */
 				$sql = "SELECT s.i AS choice_id FROM generate_series(1,89) s(i)"
 					. " LEFT OUTER JOIN phpgw_cust_choice ON (phpgw_cust_choice.id = s.i AND location_id = {$location_id} AND attrib_id = {$attrib_id})"
-					. " WHERE phpgw_cust_choice.id IS NULL";
+					. " WHERE phpgw_cust_choice.id IS NULL ORDER BY choice_id ASC LIMIT 1";
 
 				$this->_db->query($sql,__LINE__,__FILE__);
 				$this->_db->next_record();

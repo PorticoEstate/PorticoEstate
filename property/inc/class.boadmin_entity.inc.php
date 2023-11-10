@@ -291,8 +291,8 @@
 
 			foreach ($attrib_group_list as $attrib_group)
 			{
-				$group = array
-					(
+				$group = array(
+					'id'		 => $attrib_group['id'],
 					'appname'	 => $this->type_app[$this->type],
 					'location'	 => ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}",
 					'group_name' => $attrib_group['name'],
@@ -329,14 +329,14 @@
 					unset($attrib['choice']);
 				}
 
-				$id = $this->custom->add($attrib);
+				$id = $this->custom->add($attrib); // $id is recalculated in add()
 				$attrib['id'] = $id;
 				if ($choices)
 				{
 					foreach ($choices as $choice)
 					{
 						$attrib['new_choice'][]	 = array(
-							'id'	 => $choice['id'],
+							'id'	 => (int)$choice['id'] < 89 ? 0 : (int)$choice['id'],
 							'value'	 => $choice['value'],
 							'title'	 => $choice['title'],
 							'sort'	 => $choice['order']
@@ -413,14 +413,14 @@
 			}
 			$attrib				 = $this->custom->find(
 				$this->type_app[$this->type],
-	".{$this->type}.{$data['entity_id']}.{$data['cat_id']}",
-	$data['start'], $data['query'],
-	$data['sort'],
-	$data['order'],
-	$this->allrows,
-	false,
-	array(),
-	(int)$data['results']
+				".{$this->type}.{$data['entity_id']}.{$data['cat_id']}",
+				$data['start'], $data['query'],
+				$data['sort'],
+				$data['order'],
+				$this->allrows,
+				false,
+				array(),
+				(int)$data['results']
 			);
 			$this->total_records = $this->custom->total_records;
 			return $attrib;
