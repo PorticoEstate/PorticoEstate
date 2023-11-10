@@ -1060,6 +1060,7 @@
 			*/
 			var table_url = JqueryPortico.parseURL(window.location.href);
 			var menuaction = 'dummy';
+			var	column_search_is_initated = false;
 
 			try
 			{
@@ -1308,7 +1309,7 @@
 					}
 					var search_value = $('.dataTables_filter input[aria-controls="datatable-container"]').val();
 
-					if(active_filters_html.length > 0 || search_value)
+					if(active_filters_html.length > 0 || search_value || column_search_is_initated)
 					{
 						$('#reset_filter').show();
 					}
@@ -1404,6 +1405,32 @@
 
 			init_table();
 
+			clean_column_search_on_init = function()
+			{
+				var reset_column_search = false;
+
+				//find all headers within $('#datatable-container) with input with the class 'column_search'
+				$('#datatable-container thead th:has(input.column_search)').each(function(colIdx)
+				{
+					if($(this).find('input.column_search').val())
+					{
+						reset_column_search = true;
+						$(this).find('input.column_search').val('');
+						//remove the cached search value
+						oTable.api()
+							.column(colIdx)
+							.search('');
+					}
+
+				});
+				if(reset_column_search == true)
+				{
+					oTable.fnDraw();
+				}
+			};
+
+			clean_column_search_on_init();
+
 
 			$('#datatable-container tbody').on( 'click', 'tr', function () {
 					if($(this).hasClass('child'))
@@ -1432,22 +1459,28 @@
 					}
 			   } );
 
-
-			
 			
 			var colunm_search = false;
-
+			var hidden_columns = [];
 
 			remove_column_search = function()
 			{
+				//show hidden columns
+				for (var i = 0; i < hidden_columns.length; i++)
+				{
+					oTable.api().column(hidden_columns[i]).visible(true);
+				}
+				hidden_columns = [];
+
+				//remove search input from header
 				$('#datatable-container thead th').each(function(colIdx)
 				{
 					if(oTable.api().settings()[0].aoColumns[colIdx].bSearchable)
 					{
 						//remove the cached search value
-						oTable.api()
-							.column(colIdx)
-							.search('');
+//						oTable.api()
+//							.column(colIdx)
+//							.search('');
 
 						var placeholder = $(this).find('input.column_search').attr('placeholder');
 						$(this).html(placeholder.split(lang['Search'] + ' ')[1]);
@@ -1456,8 +1489,9 @@
 					}
 
 				});
+
 				colunm_search = false;
-				oTable.fnDraw();
+//				oTable.fnDraw();
 				oTable.api().responsive.recalc();
 			};
 
@@ -1471,9 +1505,19 @@
 				}
 				
 				colunm_search = true;
+				let reset_filter_is_visible = false;
+				if ($('#reset_filter').is(':visible'))
+				{
+					// The #reset_filter button is visible
+					reset_filter_is_visible = true;
+				}
 
 				oTable.fnDraw();
 				oTable.api().responsive.recalc();
+				if(reset_filter_is_visible == true)
+				{
+					$('#reset_filter').show();
+				}
 				
 				// Setup - add a text input to each header cell
 				$('#datatable-container thead th').each(function(colIdx)
@@ -1483,6 +1527,11 @@
 						var title = $(this).text();
 						var search_value = oTable.api().column(colIdx).search();
 						$(this).html('<input class="column_search" type="text" placeholder="' + lang['Search'] + ' ' + title + '" value="' + search_value + '" title="' + title + '"/>');
+					}
+					else //hide the column from table
+					{
+						oTable.api().column(colIdx).visible(false);
+						hidden_columns.push(colIdx);
 					}
 
 				});
@@ -1494,6 +1543,8 @@
 					var delay = 200;
 					$('input', oTable.api().column(colIdx).header()).on('keyup change', function()
 					{
+						column_search_is_initated = true;
+
 						if (lastSearcCallback >= (Date.now() - delay))
 						{
 							return;
@@ -1504,6 +1555,9 @@
 							.column(colIdx)
 							.search(this.value)
 							.draw();
+
+						$('#reset_filter').show();
+
 					});
 
 					$('input', oTable.api().column(colIdx).header()).on('click', function(e) {
@@ -1729,6 +1783,9 @@
 			//			$("#" + filter_selects[i]).multiselect({ buttonContainer: '' });
 						$("#" + filter_selects[i]).multiselect('refresh');
 					}
+
+					clean_column_search_on_init();
+					column_search_is_initated = false;
 				}
 				catch(e)
 				{}
