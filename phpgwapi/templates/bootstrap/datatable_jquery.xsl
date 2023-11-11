@@ -1405,17 +1405,16 @@
 
 			init_table();
 
-			clean_column_search_on_init = function()
+			clean_column_search_on_init = function(refresh)
 			{
 				var reset_column_search = false;
 
-				//find all headers within $('#datatable-container) with input with the class 'column_search'
-				$('#datatable-container thead th:has(input.column_search)').each(function(colIdx)
+				$('#datatable-container thead th').each(function(colIdx)
 				{
-					if($(this).find('input.column_search').val())
+					oTable.api().column(colIdx).visible(true);
+					if(oTable.api().column(colIdx).search())
 					{
 						reset_column_search = true;
-						$(this).find('input.column_search').val('');
 						//remove the cached search value
 						oTable.api()
 							.column(colIdx)
@@ -1423,13 +1422,13 @@
 					}
 
 				});
-				if(reset_column_search == true)
+				if(reset_column_search == true && refresh == true)
 				{
 					oTable.fnDraw();
 				}
 			};
 
-			clean_column_search_on_init();
+			clean_column_search_on_init(true);
 
 
 			$('#datatable-container tbody').on( 'click', 'tr', function () {
@@ -1477,21 +1476,18 @@
 				{
 					if(oTable.api().settings()[0].aoColumns[colIdx].bSearchable)
 					{
-						//remove the cached search value
-//						oTable.api()
-//							.column(colIdx)
-//							.search('');
-
-						var placeholder = $(this).find('input.column_search').attr('placeholder');
-						$(this).html(placeholder.split(lang['Search'] + ' ')[1]);
-						//remove text input from header by classname
-			            $(this).find('input.column_search').remove();
+						if($(this).find('input.column_search').length > 0)
+						{
+							var placeholder = $(this).find('input.column_search').attr('placeholder');
+							$(this).html(placeholder.split(lang['Search'] + ' ')[1]);
+							//remove text input from header by classname
+							$(this).find('input.column_search').remove();
+						}
 					}
 
 				});
 
 				colunm_search = false;
-//				oTable.fnDraw();
 				oTable.api().responsive.recalc();
 			};
 
@@ -1784,7 +1780,6 @@
 						$("#" + filter_selects[i]).multiselect('refresh');
 					}
 
-					clean_column_search_on_init();
 					column_search_is_initated = false;
 				}
 				catch(e)
@@ -1805,6 +1800,8 @@
 			api.state.clear();
 			api.destroy();
 			init_table();
+			clean_column_search_on_init(false);
+			remove_column_search();
 			$('#reset_filter').hide();
 			$('#active_filters').html("");
 		}
