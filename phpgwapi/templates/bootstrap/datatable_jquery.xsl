@@ -1195,8 +1195,19 @@
 						{
 						}
 					}
-				//	console.log(oData);
-				//	console.log(params);
+//					console.log(oData);
+					//traverse oData.columns and remove search value
+				//	if (clear_state == true)
+					{
+						for (var attrname in oData.columns)
+						{
+							if(typeof(oData.columns[attrname].search) != 'undefined')
+							{
+								delete oData.columns[attrname].search;
+							}
+						}
+					}
+					//	console.log(params);
 					if(params !== null)
 					{
 						oControls.each(function() {
@@ -1412,20 +1423,7 @@
 				$('#datatable-container thead th').each(function(colIdx)
 				{
 					oTable.api().column(colIdx).visible(true);
-					if(oTable.api().column(colIdx).search())
-					{
-						reset_column_search = true;
-						//remove the cached search value
-						oTable.api()
-							.column(colIdx)
-							.search('');
-					}
-
 				});
-				if(reset_column_search == true && refresh == true)
-				{
-					oTable.fnDraw();
-				}
 			};
 
 			clean_column_search_on_init(true);
@@ -1508,7 +1506,7 @@
 					reset_filter_is_visible = true;
 				}
 
-				oTable.fnDraw();
+//				oTable.fnDraw();
 				oTable.api().responsive.recalc();
 				if(reset_filter_is_visible == true)
 				{
@@ -1799,6 +1797,7 @@
 
 			api.state.clear();
 			api.destroy();
+			clear_state = true;
 			init_table();
 			clean_column_search_on_init(false);
 			remove_column_search();
