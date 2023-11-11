@@ -1416,17 +1416,15 @@
 
 			init_table();
 
-			clean_column_search_on_init = function(refresh)
+			restore_temporary_hidden_columns = function()
 			{
-				var reset_column_search = false;
-
 				$('#datatable-container thead th').each(function(colIdx)
 				{
 					oTable.api().column(colIdx).visible(true);
 				});
 			};
 
-			clean_column_search_on_init(true);
+			restore_temporary_hidden_columns();
 
 
 			$('#datatable-container tbody').on( 'click', 'tr', function () {
@@ -1799,7 +1797,7 @@
 			api.destroy();
 			clear_state = true;
 			init_table();
-			clean_column_search_on_init(false);
+			restore_temporary_hidden_columns();
 			remove_column_search();
 			$('#reset_filter').hide();
 			$('#active_filters').html("");
