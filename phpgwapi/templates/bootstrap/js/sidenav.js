@@ -7,82 +7,109 @@ $(document).ready(function ()
 	var treemenu_data = {};
 
 
-	var oArgs = {menuaction: 'phpgwapi.menu_jqtree.get_menu'};
-	var some_url = phpGWLink('index.php', oArgs, true);
 	var tree = $('#navbar');
-	$.getJSON(
-		some_url,
-		function (data)
-		{
-			treemenu_data = data;
-			tree.tree({
-				data: data,
-				autoEscape: false,
-				dragAndDrop: false,
-				autoOpen: false,
-				saveState: false,
-				useContextMenu: false,
-				closedIcon: $('<i class="far fa-arrow-alt-circle-right"></i>'),
-				openedIcon: $('<i class="far fa-arrow-alt-circle-down"></i>'),
-				onCreateLi: function (node, $li)
+
+	renter_tree = function (data)
+	{
+		tree.tree({
+			data: data,
+			autoEscape: false,
+			dragAndDrop: false,
+			autoOpen: false,
+			saveState: true,
+			useContextMenu: false,
+			closedIcon: $('<i class="far fa-arrow-alt-circle-right"></i>'),
+			openedIcon: $('<i class="far fa-arrow-alt-circle-down"></i>'),
+			onCreateLi: function (node, $li)
+			{
+				tree.tree('removeFromSelection', node);
+				node.selected = 0;
+				if (node.id == menu_selection || 'navbar::' + node.id == menu_selection)
 				{
-					tree.tree('removeFromSelection', node);
-					if (node.selected === 1)
+					console.log(node.id);
+					node.selected = 1;
+				}
+	
+				$li.removeClass('jqtree-selected');
+
+				if (node.selected === 1)
+				{
+					$li.addClass('jqtree-selected');
+					tree.tree('addToSelection', node);
+					var parent = node.parent;
+					while (typeof (parent.element) !== 'undefined')
 					{
-						$li.addClass('jqtree-selected');
-						tree.tree('addToSelection', node);
+						tree.tree('openNode', parent, false);
+						parent = parent.parent;
+					}
+				}
+
+				var title = $li.find('.jqtree-title'),
+					search = filter.val().toLowerCase(),
+					value = title.text().toLowerCase();
+				if (search !== '')
+				{
+					$li.hide();
+					if (value.indexOf(search) > -1)
+					{
+						$li.show();
 						var parent = node.parent;
 						while (typeof (parent.element) !== 'undefined')
 						{
+							$(parent.element)
+								.show()
+								.addClass('jqtree-filtered');
 							tree.tree('openNode', parent, false);
 							parent = parent.parent;
 						}
 					}
-
-					var title = $li.find('.jqtree-title'),
-						search = filter.val().toLowerCase(),
-						value = title.text().toLowerCase();
-					if (search !== '')
-					{
-						$li.hide();
-						if (value.indexOf(search) > -1)
-						{
-							$li.show();
-							var parent = node.parent;
-							while (typeof (parent.element) !== 'undefined')
-							{
-								$(parent.element)
-									.show()
-									.addClass('jqtree-filtered');
-								tree.tree('openNode', parent, false);
-								parent = parent.parent;
-							}
-						}
 //						if (!filtering)
 //						{
 //							filtering = true;
 //						}
-						if (!tree.hasClass('jqtree-filtered'))
-						{
-							tree.addClass('jqtree-filtered');
-						}
-					}
-					else
+					if (!tree.hasClass('jqtree-filtered'))
 					{
+						tree.addClass('jqtree-filtered');
+					}
+				}
+				else
+				{
 //						if (filtering)
 //						{
 //							filtering = false;
 //						}
 //
-						if (tree.hasClass('jqtree-filtered'))
-						{
-							tree.removeClass('jqtree-filtered');
-						}
+					if (tree.hasClass('jqtree-filtered'))
+					{
+						tree.removeClass('jqtree-filtered');
 					}
 				}
-			});
-		}
-	);
+			}
+		});
+	}
+
+	//get the tree object from local storage
+	var tree_json = localStorage.getItem('menu_tree');
+	if (tree_json)
+	{
+		renter_tree(JSON.parse(tree_json));
+	}
+	else
+	{				
+			var oArgs = {menuaction: 'phpgwapi.menu_jqtree.get_menu'};
+			var some_url = phpGWLink('index.php', oArgs, true);
+			$.getJSON(
+			some_url,
+			function (data)
+			{
+				treemenu_data = data;
+				renter_tree(data);
+				// store the tree object to use later in local storage
+				localStorage.setItem('menu_tree', tree.tree('toJson'));
+
+			}
+		);
+	}
 
 	filter.keyup(function ()
 	{
@@ -103,9 +130,13 @@ $(document).ready(function ()
 		tree.iterate(
 			function (node)
 			{
+				node.selected = 0;
+				$tree.tree('removeFromSelection', node);
 				$tree.tree('closeNode', node, true);
 			}
 		);
+
+		localStorage.setItem('menu_tree', tree.tree('toJson'));
 
 	});
 

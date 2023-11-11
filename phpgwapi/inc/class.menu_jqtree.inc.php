@@ -196,7 +196,7 @@
 
 			$ret = array(
 				'name'		 => "<a id='{$id}' href='{$item['url']}' {$link_class} icon='{$item['icon']}' nav_location='{$item['nav_location']}' style='white-space:nowrap; color:inherit;'{$target}>{$item['text']}</a>",
-				'id'		 => $node_id,
+				'id'		 => !empty($item['nav_location']) ? $item['nav_location'] : $id,
 				'text'		 => $item['text'],
 				'selected'	 => $selected ? 1 : 0,
 				'icon'		 => isset($item['icon']) ? $item['icon'] : null
