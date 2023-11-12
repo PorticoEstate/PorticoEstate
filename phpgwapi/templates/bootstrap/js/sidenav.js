@@ -1,51 +1,53 @@
-$(document).ready(function ()
-{
-	var tree = $('#navbar'),
-		filter = $('#navbar_search'),
-		//	filtering = false,
-		thread = null;
-	var treemenu_data = {};
+class SideNav {
 
+   constructor() {
+        this.treemenu_data = {};
+        this.thread = null;
+        $(document).ready(() => this.init());
+    }
 
-	var tree = $('#navbar');
+    init() {
+        this.tree = $('#navbar');
+        this.filter = $('#navbar_search');
+		this.loadTree();
+		this.setupFilter();
+		this.setupCollapseNavbar();
+		this.setupContextMenu();
+    }
 
-	renter_tree = function (data)
-	{
-		tree.tree({
+	renderTree(data) {
+		this.treemenu_data = data;
+		this.tree.tree({
 			data: data,
 			autoEscape: false,
 			dragAndDrop: false,
 			autoOpen: false,
-			saveState: true,
+			saveState: false,
 			useContextMenu: false,
 			closedIcon: $('<i class="far fa-arrow-alt-circle-right"></i>'),
 			openedIcon: $('<i class="far fa-arrow-alt-circle-down"></i>'),
-			onCreateLi: function (node, $li)
-			{
-				tree.tree('removeFromSelection', node);
+			onCreateLi: (node, $li) => {
+				this.tree.tree('removeFromSelection', node);
 				node.selected = 0;
-				if (node.id == menu_selection || 'navbar::' + node.id == menu_selection)
-				{
+				if (node.id == menu_selection || 'navbar::' + node.id == menu_selection) {
 					node.selected = 1;
 				}
-	
+
 				$li.removeClass('jqtree-selected');
 
-				if (node.selected === 1)
-				{
+				if (node.selected === 1) {
 					$li.addClass('jqtree-selected');
-					tree.tree('addToSelection', node);
+					this.tree.tree('addToSelection', node);
 					var parent = node.parent;
-					while (typeof (parent.element) !== 'undefined')
-					{
-						tree.tree('openNode', parent, false);
+					while (typeof (parent.element) !== 'undefined') {
+						this.tree.tree('openNode', parent, false);
 						parent = parent.parent;
 					}
 				}
 
 				var title = $li.find('.jqtree-title'),
-					search = filter.val().toLowerCase(),
-					value = title.text().toLowerCase();
+				search = this.filter.val().toLowerCase(),
+				value = title.text().toLowerCase();
 				if (search !== '')
 				{
 					$li.hide();
@@ -58,128 +60,111 @@ $(document).ready(function ()
 							$(parent.element)
 								.show()
 								.addClass('jqtree-filtered');
-							tree.tree('openNode', parent, false);
+							this.tree.tree('openNode', parent, false);
 							parent = parent.parent;
 						}
 					}
-//						if (!filtering)
-//						{
-//							filtering = true;
-//						}
-					if (!tree.hasClass('jqtree-filtered'))
+					if (!this.tree.hasClass('jqtree-filtered'))
 					{
-						tree.addClass('jqtree-filtered');
+						this.tree.addClass('jqtree-filtered');
 					}
 				}
 				else
 				{
-//						if (filtering)
-//						{
-//							filtering = false;
-//						}
-//
-					if (tree.hasClass('jqtree-filtered'))
+					if (this.tree.hasClass('jqtree-filtered'))
 					{
-						tree.removeClass('jqtree-filtered');
+						this.tree.removeClass('jqtree-filtered');
 					}
 				}
+
 			}
+			
 		});
 	}
 
-	//get the tree object from local storage
-	var tree_json = localStorage.getItem('menu_tree');
-	if (tree_json)
-	{
-		renter_tree(JSON.parse(tree_json));
-	}
-	else
-	{				
+	loadTree() {
+		var tree_json = localStorage.getItem('menu_tree');
+		if (tree_json) {
+			this.renderTree(JSON.parse(tree_json));
+		} else {
 			var oArgs = {menuaction: 'phpgwapi.menu_jqtree.get_menu'};
 			var some_url = phpGWLink('index.php', oArgs, true);
-			$.getJSON(
-			some_url,
-			function (data)
-			{
-				treemenu_data = data;
-				renter_tree(data);
-				// store the tree object to use later in local storage
-				localStorage.setItem('menu_tree', tree.tree('toJson'));
-
-			}
-		);
+			$.getJSON(some_url, (data) => {
+				this.renderTree(data);
+				localStorage.setItem('menu_tree', this.tree.tree('toJson'));
+			});
+		}
 	}
 
-	filter.keyup(function ()
-	{
-		clearTimeout(thread);
-		thread = setTimeout(function ()
-		{
-			tree.tree('loadData', treemenu_data);
-		}, 50);
-	});
+	setupFilter() {
+		this.filter.keyup(() => {
+			clearTimeout(this.thread);
+			this.thread = setTimeout(() => {
+				this.tree.tree('loadData', this.treemenu_data);
+			}, 50);
+		});
+	}
 
-	$('#collapseNavbar').on('click', function ()
-	{
-		$(this).attr('href', 'javascript:;');
-
-		var $tree = $('#navbar');
-		var tree = $tree.tree('getTree');
-
-		tree.iterate(
-			function (node)
-			{
+	setupCollapseNavbar() {
+		$('#collapseNavbar').on('click', () => {
+			var $tree = $('#navbar');
+			var tree = $tree.tree('getTree');	
+			tree.iterate((node) => {
 				node.selected = 0;
 				$tree.tree('removeFromSelection', node);
 				$tree.tree('closeNode', node, true);
-			}
-		);
-
-		localStorage.setItem('menu_tree', tree.tree('toJson'));
-
-	});
-
-
-
-	$.contextMenu({
-		selector: '.context-menu-nav',
-		callback: function (key, options)
-		{
-			var id = $(this).attr("id");
-			var icon = $(this).attr("icon");
-			var href = $(this).attr("href");
-			var location_id = $(this).attr("location_id");
-			var text = $(this).text();
-			var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu'};
-			var requestUrl = phpGWLink('index.php', oArgs, true);
-
-			if(key === 'open_in_new')
-			{
-				window.open(href, '_blank');
-				return;
-			}
-
-			$.ajax({
-				type: 'POST',
-				url: requestUrl,
-				dataType: 'json',
-				data:{bookmark_candidate: id, text: text, icon: icon, href: href, location_id: location_id},
-				success: function (data)
-				{
-					if (data)
-					{
-						alert(data.status);
-						location.reload();
-					}
-				}
 			});
-		},
-		items: {
-			"edit": {name: "Bookmark", icon: "far fa-bookmark"},
-			"open_in_new": {name: "Åpne i nytt vindu", icon: "fas fa-external-link-alt"}
-		}
-	});
+			console.log($tree.tree('toJson'));
+			localStorage.setItem('menu_tree', $tree.tree('toJson'));
+		});
+	}
 
+	setupContextMenu() {
+		$.contextMenu({
+			selector: '.context-menu-nav',
+			callback: function (key, options)
+			{
+				var id = $(this).attr("id");
+				var icon = $(this).attr("icon");
+				var href = $(this).attr("href");
+				var location_id = $(this).attr("location_id");
+				var text = $(this).text();
+				var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu'};
+				var requestUrl = phpGWLink('index.php', oArgs, true);
+	
+				if(key === 'open_in_new')
+				{
+					window.open(href, '_blank');
+					return;
+				}
+	
+				$.ajax({
+					type: 'POST',
+					url: requestUrl,
+					dataType: 'json',
+					data:{bookmark_candidate: id, text: text, icon: icon, href: href, location_id: location_id},
+					success: function (data)
+					{
+						if (data)
+						{
+							alert(data.status);
+							location.reload();
+						}
+					}
+				});
+			},
+			items: {
+				"edit": {name: "Bookmark", icon: "far fa-bookmark"},
+				"open_in_new": {name: "Åpne i nytt vindu", icon: "fas fa-external-link-alt"}
+			}
+		});
+	}
+}
+
+// Usage
+var sideNav = new SideNav();
+$(document).ready(function ()
+{
 	$("#template_selector").change(function ()
 	{
 
@@ -234,12 +219,7 @@ function get_messages()
 					{
 						font_class = 'font-weight-bold';
 					}
-//					console.log(obj[i]);
 					htmlString += '<a class="dropdown-item d-flex align-items-center" href="' + obj[i].link + '">';
-//					htmlString += '		<div class="dropdown-list-image me-3">';
-//					htmlString += '			<img class="rounded-circle" src="' + profile_img + '" alt="">';
-//					htmlString += '			<div class="status-indicator bg-success"></div>';
-//					htmlString += '		</div>';
 					htmlString += '		<div class="' + font_class + '">';
 					htmlString += '			<div class="text-truncate">' + strip_html(obj[i].subject_text) + '</div>';
 					htmlString += '			<div class="small text-muted">' + strip_html(obj[i].from) + ' · ' + strip_html(obj[i].date) + '</div>';
