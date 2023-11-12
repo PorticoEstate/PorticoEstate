@@ -32,7 +32,7 @@ class SideNav {
 			onCreateLi: (node, $li) => {
 				this.navbar.tree('removeFromSelection', node);
 				node.selected = 0;
-				if (node.id == menu_selection || 'navbar::' + node.id == menu_selection)
+				if (node.id === menu_selection || 'navbar::' + node.id === menu_selection)
 				{
 					node.selected = 1;
 				}
@@ -89,7 +89,7 @@ class SideNav {
 
 	loadTree()
 	{
-		var tree_json = localStorage.getItem('menu_tree');
+		var tree_json = localStorage.getItem('menu_tree_' + sessionid);
 		if (tree_json)
 		{
 			this.renderTree(JSON.parse(tree_json));
@@ -100,7 +100,7 @@ class SideNav {
 			var some_url = phpGWLink('index.php', oArgs, true);
 			$.getJSON(some_url, (data) => {
 				this.renderTree(data);
-				localStorage.setItem('menu_tree', this.navbar.tree('toJson'));
+				localStorage.setItem('menu_tree_' + sessionid, this.navbar.tree('toJson'));
 			});
 		}
 	}
@@ -121,7 +121,7 @@ class SideNav {
 			var tree = this.navbar.tree('getTree');
 	//		console.log(tree);
 			this.iterateNodes(tree);
-			localStorage.setItem('menu_tree', this.navbar.tree('toJson'));
+			localStorage.setItem('menu_tree_' + sessionid, this.navbar.tree('toJson'));
 		});
 	}
 
