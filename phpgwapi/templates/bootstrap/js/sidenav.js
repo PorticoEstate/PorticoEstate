@@ -26,7 +26,6 @@ $(document).ready(function ()
 				node.selected = 0;
 				if (node.id == menu_selection || 'navbar::' + node.id == menu_selection)
 				{
-					console.log(node.id);
 					node.selected = 1;
 				}
 	
