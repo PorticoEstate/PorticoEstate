@@ -1,8 +1,8 @@
 $(document).ready(function ()
 {
 	var tree = $('#navbar'),
-	var	filter = $('#navbar_search'),
-	var	thread = null;
+		filter = $('#navbar_search'),
+		thread = null;
 	var treemenu_data = {};
 
 
@@ -27,7 +27,7 @@ $(document).ready(function ()
 				{
 					node.selected = 1;
 				}
-	
+
 				$li.removeClass('jqtree-selected');
 
 				if (node.selected === 1)
@@ -84,10 +84,10 @@ $(document).ready(function ()
 		renter_tree(JSON.parse(tree_json));
 	}
 	else
-	{				
-			var oArgs = {menuaction: 'phpgwapi.menu_jqtree.get_menu'};
-			var some_url = phpGWLink('index.php', oArgs, true);
-			$.getJSON(
+	{
+		var oArgs = {menuaction: 'phpgwapi.menu_jqtree.get_menu'};
+		var some_url = phpGWLink('index.php', oArgs, true);
+		$.getJSON(
 			some_url,
 			function (data)
 			{
@@ -143,7 +143,7 @@ $(document).ready(function ()
 			var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu'};
 			var requestUrl = phpGWLink('index.php', oArgs, true);
 
-			if(key === 'open_in_new')
+			if (key === 'open_in_new')
 			{
 				window.open(href, '_blank');
 				return;
@@ -153,7 +153,7 @@ $(document).ready(function ()
 				type: 'POST',
 				url: requestUrl,
 				dataType: 'json',
-				data:{bookmark_candidate: id, text: text, icon: icon, href: href, location_id: location_id},
+				data: {bookmark_candidate: id, text: text, icon: icon, href: href, location_id: location_id},
 				success: function (data)
 				{
 					if (data)
@@ -185,7 +185,7 @@ $(document).ready(function ()
 			url: requestUrl,
 			success: function (data)
 			{
-		//		console.log(data);
+				//		console.log(data);
 				location.reload(true);
 			}
 		});
