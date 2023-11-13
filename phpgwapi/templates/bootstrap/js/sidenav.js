@@ -1,53 +1,58 @@
 class SideNav {
 
-   constructor() {
-        this.treemenu_data = {};
-        this.thread = null;
-        $(document).ready(() => this.init());
-    }
+	constructor()
+	{
+		this.treemenu_data = {};
+		this.thread = null;
+		$(document).ready(() => this.init());
+	}
 
-    init() {
-        this.tree = $('#navbar');
-        this.filter = $('#navbar_search');
+	init()
+	{
+		this.navbar = $('#navbar');
+		this.filter = $('#navbar_search');
 		this.loadTree();
 		this.setupFilter();
 		this.setupCollapseNavbar();
 		this.setupContextMenu();
-    }
+	}
 
-	renderTree(data) {
+	renderTree(data)
+	{
 		this.treemenu_data = data;
-		this.tree.tree({
+		this.navbar.tree({
 			data: data,
 			autoEscape: false,
 			dragAndDrop: false,
 			autoOpen: false,
-			saveState: false,
+			saveState: true,
 			useContextMenu: false,
 			closedIcon: $('<i class="far fa-arrow-alt-circle-right"></i>'),
 			openedIcon: $('<i class="far fa-arrow-alt-circle-down"></i>'),
 			onCreateLi: (node, $li) => {
-				this.tree.tree('removeFromSelection', node);
+				this.navbar.tree('removeFromSelection', node);
 				node.selected = 0;
-				if (node.id == menu_selection || 'navbar::' + node.id == menu_selection) {
+				if (node.id == menu_selection || 'navbar::' + node.id == menu_selection)
+				{
 					node.selected = 1;
 				}
 
 				$li.removeClass('jqtree-selected');
-
-				if (node.selected === 1) {
+				if (node.selected === 1)
+				{
 					$li.addClass('jqtree-selected');
-					this.tree.tree('addToSelection', node);
+					this.navbar.tree('addToSelection', node);
 					var parent = node.parent;
-					while (typeof (parent.element) !== 'undefined') {
-						this.tree.tree('openNode', parent, false);
+					while (typeof (parent.element) !== 'undefined')
+					{
+						this.navbar.tree('openNode', parent, false);
 						parent = parent.parent;
 					}
 				}
 
 				var title = $li.find('.jqtree-title'),
-				search = this.filter.val().toLowerCase(),
-				value = title.text().toLowerCase();
+					search = this.filter.val().toLowerCase(),
+					value = title.text().toLowerCase();
 				if (search !== '')
 				{
 					$li.hide();
@@ -60,66 +65,85 @@ class SideNav {
 							$(parent.element)
 								.show()
 								.addClass('jqtree-filtered');
-							this.tree.tree('openNode', parent, false);
+							this.navbar.tree('openNode', parent, false);
 							parent = parent.parent;
 						}
 					}
-					if (!this.tree.hasClass('jqtree-filtered'))
+					if (!this.navbar.hasClass('jqtree-filtered'))
 					{
-						this.tree.addClass('jqtree-filtered');
+						this.navbar.addClass('jqtree-filtered');
 					}
 				}
 				else
 				{
-					if (this.tree.hasClass('jqtree-filtered'))
+					if (this.navbar.hasClass('jqtree-filtered'))
 					{
-						this.tree.removeClass('jqtree-filtered');
+						this.navbar.removeClass('jqtree-filtered');
 					}
 				}
 
 			}
-			
+
 		});
 	}
 
-	loadTree() {
+	loadTree()
+	{
 		var tree_json = localStorage.getItem('menu_tree');
-		if (tree_json) {
+		if (tree_json)
+		{
 			this.renderTree(JSON.parse(tree_json));
-		} else {
+		}
+		else
+		{
 			var oArgs = {menuaction: 'phpgwapi.menu_jqtree.get_menu'};
 			var some_url = phpGWLink('index.php', oArgs, true);
 			$.getJSON(some_url, (data) => {
 				this.renderTree(data);
-				localStorage.setItem('menu_tree', this.tree.tree('toJson'));
+				localStorage.setItem('menu_tree', this.navbar.tree('toJson'));
 			});
 		}
 	}
 
-	setupFilter() {
+	setupFilter()
+	{
 		this.filter.keyup(() => {
 			clearTimeout(this.thread);
 			this.thread = setTimeout(() => {
-				this.tree.tree('loadData', this.treemenu_data);
+				this.navbar.tree('loadData', this.treemenu_data);
 			}, 50);
 		});
 	}
 
-	setupCollapseNavbar() {
+	setupCollapseNavbar()
+	{
 		$('#collapseNavbar').on('click', () => {
-			var $tree = $('#navbar');
-			var tree = $tree.tree('getTree');	
-			tree.iterate((node) => {
-				node.selected = 0;
-				$tree.tree('removeFromSelection', node);
-				$tree.tree('closeNode', node, true);
-			});
-			console.log($tree.tree('toJson'));
-			localStorage.setItem('menu_tree', $tree.tree('toJson'));
+			var tree = this.navbar.tree('getTree');
+	//		console.log(tree);
+			this.iterateNodes(tree);
+			localStorage.setItem('menu_tree', this.navbar.tree('toJson'));
 		});
 	}
 
-	setupContextMenu() {
+	// Define a recursive function to iterate over all nodes
+	iterateNodes(node)
+	{
+		// Iterate over child nodes
+		if (node.children)
+		{
+			node.selected = 0;
+			this.navbar.tree('removeFromSelection', node);
+			this.navbar.tree('closeNode', node, true);
+
+			for (var i = 0; i < node.children.length; i++)
+			{
+				this.iterateNodes(node.children[i]);
+			}
+		}
+	}
+
+	setupContextMenu()
+	{
 		$.contextMenu({
 			selector: '.context-menu-nav',
 			callback: function (key, options)
@@ -131,18 +155,17 @@ class SideNav {
 				var text = $(this).text();
 				var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu'};
 				var requestUrl = phpGWLink('index.php', oArgs, true);
-	
-				if(key === 'open_in_new')
+				if (key === 'open_in_new')
 				{
 					window.open(href, '_blank');
 					return;
 				}
-	
+
 				$.ajax({
 					type: 'POST',
 					url: requestUrl,
 					dataType: 'json',
-					data:{bookmark_candidate: id, text: text, icon: icon, href: href, location_id: location_id},
+					data: {bookmark_candidate: id, text: text, icon: icon, href: href, location_id: location_id},
 					success: function (data)
 					{
 						if (data)
@@ -163,6 +186,7 @@ class SideNav {
 
 // Usage
 var sideNav = new SideNav();
+
 $(document).ready(function ()
 {
 	$("#template_selector").change(function ()
@@ -172,7 +196,6 @@ $(document).ready(function ()
 		//user[template_set] = template;
 		var oArgs = {appname: 'preferences', type: 'user'};
 		var requestUrl = phpGWLink('preferences/preferences.php', oArgs, true);
-
 		$.ajax({
 			type: 'POST',
 			dataType: 'json',
@@ -180,15 +203,12 @@ $(document).ready(function ()
 			url: requestUrl,
 			success: function (data)
 			{
-		//		console.log(data);
+				//		console.log(data);
 				location.reload(true);
 			}
 		});
-
 	});
-
 });
-
 
 function strip_html(originalString)
 {
@@ -200,7 +220,6 @@ function get_messages()
 //	var profile_img = phpGWLink('phpgwapi/templates/bootstrap/images/undraw_profile.svg', {}, false);
 
 	var htmlString = '';
-
 	var oArgs = {menuaction: 'messenger.uimessenger.index', status: 'N'};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	$.ajax({
@@ -227,9 +246,7 @@ function get_messages()
 					htmlString += '</a>';
 				});
 				$('#messages').html(htmlString);
-
 			}
 		}
 	});
-
 }
