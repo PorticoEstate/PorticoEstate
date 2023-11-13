@@ -2463,7 +2463,7 @@ JS;
 							$_config_section_data['url']		 = htmlspecialchars_decode($_config_section_data['url']);
 						}
 
-						$_config_section_data['parametres']	 = htmlspecialchars_decode($_config_section_data['parametres']);
+						$_config_section_data['parametres']	 = !empty($_config_section_data['parametres']) ? htmlspecialchars_decode($_config_section_data['parametres']) : '';
 
 						/*
 						 * 'parametres' In the form:
