@@ -1,5 +1,5 @@
 
-/* global enable_add_case, geolocation */
+/* global enable_add_case, geolocation, ol */
 var latitude;
 var longitude;
 
@@ -135,14 +135,17 @@ $(document).ready(function ()
 		{
 			// on both singleclick and doubleclick...
 			map.on('singleclick', function(event) {
-				handleMapClick(map, event);
+				console.log('singleclick');
+				handleMapClick(map, event, layer, content, action, overlay, ol, location_id , component_id);
 			});
 			map.on('dblclick', function(event) {
-				handleMapClick(map, event);
+				console.log('dblclick');
+				handleMapClick(map, event, layer, content, action, overlay, ol, location_id , component_id);
 			});
 			map.on('contextmenu', function (event) {
+				console.log('contextmenu');
 				event.preventDefault();
-				handleMapClick(map, event);
+				handleMapClick(map, event, layer, content, action, overlay, ol, location_id , component_id);
 			});
 						
 // 			map.on('singleclick', function (event)
@@ -183,7 +186,7 @@ $(document).ready(function ()
 
 	};
 
-	handleMapClick = function(map, event)
+	handleMapClick = function(map, event, layer, content, action, overlay, ol, location_id , component_id)
 	{
 		var coordinate = event.coordinate;
 		var lonlat = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
@@ -209,7 +212,7 @@ $(document).ready(function ()
 			})
 		});
 		map.addLayer(layer);
-	}
+	};
 
 	showError = function (error)
 	{
