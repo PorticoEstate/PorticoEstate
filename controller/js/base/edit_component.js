@@ -136,16 +136,16 @@ $(document).ready(function ()
 			// on both singleclick and doubleclick...
 			map.on('singleclick', function(event) {
 				console.log('singleclick');
-				handleMapClick(map, event, content, action, overlay, ol);
+				handleMapClick(map, event, content, action, overlay, ol, location_id , component_id);
 			});
 			map.on('dblclick', function(event) {
 				console.log('dblclick');
-				handleMapClick(map, event);
+				handleMapClick(map, event, content, action, overlay, ol, location_id , component_id);
 			});
 			map.on('contextmenu', function (event) {
 				console.log('contextmenu');
 				event.preventDefault();
-				handleMapClick(map, event);
+				handleMapClick(map, event, content, action, overlay, ol, location_id , component_id);
 			});
 						
 // 			map.on('singleclick', function (event)
