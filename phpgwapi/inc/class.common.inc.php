@@ -1619,6 +1619,22 @@ HTML;
 		*/
 		public function msgbox($text = '', $type = True, $base = '')
 		{
+			switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'])
+			{
+				case 'bookingfrontend':
+				case 'bookingfrontend_2':
+				case 'portico':
+				case 'bootstrap':
+					$class_error = 'alert alert-danger';
+					$class_success = 'alert alert-success';
+					break;
+
+				default:
+					$class_error = 'error';
+					$class_success = 'msg_good';
+					break;
+			}
+
 			if ($text=='' && @isset($GLOBALS['phpgw_info']['flags']['msgbox_data']))
 			{
 				$text = $GLOBALS['phpgw_info']['flags']['msgbox_data'];
@@ -1646,13 +1662,13 @@ HTML;
 					{
 						$img	= $this->image('phpgwapi','msgbox_good');
 						$alt	= lang('OK');
-						$class  = 'msg_good alert-success';
+						$class  = $class_success;
 					}
 					else
 					{
 						$img	= $this->image('phpgwapi','msgbox_bad');
 						$alt	= lang('ERROR');
-						$class  = 'error alert-danger';
+						$class  = $class_error;
 					}
 
 					$data[] = array
@@ -1671,11 +1687,13 @@ HTML;
 				{
 					$img	= $this->image('phpgwapi','msgbox_good');
 					$alt	= lang('OK');
+					$class  = $class_success;
 				}
 				else
 				{
 					$img	= $this->image('phpgwapi','msgbox_bad');
 					$alt	= lang('ERROR');
+					$class  = $class_error;
 				}
 
 				$data = array
@@ -1683,7 +1701,8 @@ HTML;
 					'msgbox_text'				=> lang($text),
 					'msgbox_img'				=> $img,
 					'msgbox_img_alt'			=> $alt,
-					'lang_msgbox_statustext'	=> $alt
+					'lang_msgbox_statustext'	=> $alt,
+					'msgbox_class'				=> $class
 				);
 			}
 

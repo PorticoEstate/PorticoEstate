@@ -12,7 +12,7 @@
 			foreach ($msgbox_data as & $message)
 			{
 				echo "<div class='alert {$message['msgbox_class']}' role='alert'>";
-				echo "<p class='msgbox_text'>" . $message['msgbox_text'] . "</p>";
+				echo $message['msgbox_text'];
 				echo '</div>';
 			}
 		}
