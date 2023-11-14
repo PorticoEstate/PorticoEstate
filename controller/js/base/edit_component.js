@@ -136,16 +136,16 @@ $(document).ready(function ()
 			// on both singleclick and doubleclick...
 			map.on('singleclick', function(event) {
 				console.log('singleclick');
-				handleMapClick(map, event, content, action, overlay, ol, location_id , component_id);
+				handleMapClick(map, event, layer, content, action, overlay, ol, location_id , component_id);
 			});
 			map.on('dblclick', function(event) {
 				console.log('dblclick');
-				handleMapClick(map, event, content, action, overlay, ol, location_id , component_id);
+				handleMapClick(map, event, layer, content, action, overlay, ol, location_id , component_id);
 			});
 			map.on('contextmenu', function (event) {
 				console.log('contextmenu');
 				event.preventDefault();
-				handleMapClick(map, event, content, action, overlay, ol, location_id , component_id);
+				handleMapClick(map, event, layer, content, action, overlay, ol, location_id , component_id);
 			});
 						
 // 			map.on('singleclick', function (event)
@@ -186,7 +186,7 @@ $(document).ready(function ()
 
 	};
 
-	handleMapClick = function(map, event, content, action, overlay, ol, location_id , component_id)
+	handleMapClick = function(map, event, layer, content, action, overlay, ol, location_id , component_id)
 	{
 		var coordinate = event.coordinate;
 		var lonlat = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
