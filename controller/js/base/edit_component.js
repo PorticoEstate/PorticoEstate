@@ -186,7 +186,7 @@ $(document).ready(function ()
 
 	};
 
-	handleMapClick = function(map, event, content, action, overlay, ol)
+	handleMapClick = function(map, event, content, action, overlay, ol, location_id , component_id)
 	{
 		var coordinate = event.coordinate;
 		var lonlat = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
