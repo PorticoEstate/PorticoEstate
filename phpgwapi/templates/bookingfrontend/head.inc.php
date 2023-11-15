@@ -339,8 +339,8 @@ JS;
 		$template_selector = <<<HTML
 		<li class="nav-item">
 		   <select id = "template_selector" class="btn btn-link btn-sm nav-link dropdown-toggle" style="padding-top: .315rem;-webkit-appearance: none;-moz-appearance: none;">
-			<option class="nav-link" value="bookingfrontend"{$selected_bookingfrontend}>AK V1</option>
-			<option class="nav-link" value="bookingfrontend_2"{$selected_bookingfrontend_2}>AK V2</option>
+			<option class="nav-link" value="bookingfrontend"{$selected_bookingfrontend}>Original</option>
+			<option class="nav-link" value="bookingfrontend_2"{$selected_bookingfrontend_2}>Ny</option>
 		   </select>
 		</li>
 HTML;

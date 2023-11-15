@@ -27,6 +27,8 @@ div.dts div.dataTables_scrollBody table {
   background-color: white;
   z-index: 2;
 }
+div.dts div.dt-length,
+div.dts div.dt-paging,
 div.dts div.dataTables_paginate,
 div.dts div.dataTables_length {
   display: none;

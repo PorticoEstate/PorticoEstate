@@ -344,6 +344,7 @@
 					'tax_code'			 => $this->db->f('tax_code'),
 					'tax_percent'		 => (int)$this->db->f('tax_percent'),
 					'group_id'			 => (int)$this->db->f('group_id'),
+					'article_remark'	 => '',
 					'article_group_name' => $this->db->f('article_group_name', true),
 					'article_group_remark' => $this->db->f('article_group_remark', true),
 				);
@@ -363,7 +364,7 @@
 				}
 
 				$sql = "SELECT bb_article_mapping.id AS mapping_id, concat( article_cat_id || '_' || article_id ) AS article_id,"
-					. " bb_service.name as name, bb_resource_service.resource_id, unit, percent_ AS tax_percent,"
+					. " bb_service.name as name, bb_service.description as article_remark, bb_resource_service.resource_id, unit, percent_ AS tax_percent,"
 					. " bb_article_mapping.tax_code, bb_article_mapping.group_id, bb_article_group.name AS article_group_name,"
 					. " bb_article_group.remark AS article_group_remark"
 					. " FROM bb_article_mapping JOIN bb_service ON (bb_article_mapping.article_id = bb_service.id)"
@@ -385,6 +386,7 @@
 						'tax_code'				 => $this->db->f('tax_code'),
 						'tax_percent'			 => (int)$this->db->f('tax_percent'),
 						'group_id'				 => (int)$this->db->f('group_id'),
+						'article_remark'		 => $this->db->f('article_remark', true),
 						'article_group_name'	 => $this->db->f('article_group_name', true),
 						'article_group_remark'	 => $this->db->f('article_group_remark', true),
 					);

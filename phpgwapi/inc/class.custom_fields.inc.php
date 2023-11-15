@@ -155,6 +155,14 @@
 			return null;
 		}
 
+		private function mb_ucfirst($string)
+		{
+			$encoding = 'UTF-8';
+			$firstChar = mb_substr($string, 0, 1, $encoding);
+			$then = mb_substr($string, 1, null, $encoding);
+			return mb_strtoupper($firstChar, $encoding) . $then;
+		}
+
 		/**
 		 * Add a group for custom fields/attributes
 		 *
@@ -179,11 +187,11 @@
 			$values = array
 			(
 				'location_id'	=> $location_id,
-				'id'			=> 0,
-				'name'			=> $this->_db->db_addslashes(strtolower($group['group_name'])),
+				'id'			=> !empty($group['id']) ? $group['id'] : 0,
+				'name'			=> $this->_db->db_addslashes($this->mb_ucfirst($group['group_name'])),
 				'descr'			=> $this->_db->db_addslashes($group['descr']),
 				'remark'		=> $this->_db->db_addslashes($group['remark']),
-				'group_sort'	=> 0,
+				'group_sort'	=> $group['group_sort'] ? $group['group_sort'] : null,
 				'parent_id'		=> $group['parent_id']
 			);
 
@@ -197,23 +205,15 @@
 
 			$this->_db->transaction_begin();
 
-/*
-			$sql = "SELECT id FROM phpgw_cust_attribute_group"
-				. " WHERE location_id = {$values['location_id']}"
-					. " AND name = '{$values['name']}'";
-			$this->_db->query($sql, __LINE__, __FILE__);
-			if ( $this->_db->next_record() )
+			if(!$values['id'])
 			{
-				return -1;
+				$sql = 'SELECT MAX(id) AS current_id'
+					. ' FROM phpgw_cust_attribute_group '
+					. " WHERE location_id ='{$values['location_id']}'";
+				$this->_db->query($sql, __LINE__, __FILE__);
+				$this->_db->next_record();
+				$values['id']	= (int) $this->_db->f('current_id') + 1;
 			}
-*/
-
-			$sql = 'SELECT MAX(id) AS current_id'
-				. ' FROM phpgw_cust_attribute_group '
-				. " WHERE location_id ='{$values['location_id']}'";
-			$this->_db->query($sql, __LINE__, __FILE__);
-			$this->_db->next_record();
-			$values['id']	= (int) $this->_db->f('current_id') + 1;
 
 			$sql = 'SELECT MAX(group_sort) AS max_sort'
 				. ' FROM phpgw_cust_attribute_group '
@@ -221,7 +221,7 @@
 
 			$this->_db->query($sql, __LINE__, __FILE__);
 			$this->_db->next_record();
-			$values['group_sort']	= (int) $this->_db->f('max_sort') + 1;
+			$values['group_sort']	= !is_null($values['group_sort']) ? $values['group_sort'] : (int) $this->_db->f('max_sort') + 1;
 
 			$cols = implode(', ', array_keys($values));
 			$vals = $this->_db->validate_insert($values);
@@ -948,12 +948,19 @@
 				}
 			}
 
-			if(isset($attrib['new_choice']) && $attrib['new_choice'] && !$doubled )
+			if(!empty($attrib['new_choice']) && is_array($attrib['new_choice']) && !$doubled )
+			{
+				foreach($attrib['new_choice'] as $new_choice)
+				{
+					$this->add_choice($location_id, $attrib_id, $new_choice['value'], $new_choice['id'], $new_choice['title'], $new_choice['sort']);
+				}
+			}
+			else if(!empty($attrib['new_choice']) && !$doubled )
 			{
 				$this->add_choice($location_id, $attrib_id, $attrib['new_choice'], $attrib['new_choice_id'], $attrib['new_title_choice']);
 			}
 
-			if ( isset($attrib['new_choice']) && is_array($attrib['edit_choice'])  && !$doubled )
+			if ( isset($attrib['edit_choice']) && is_array($attrib['edit_choice'])  && !$doubled )
 			{
 				foreach ($attrib['edit_choice'] as $choice_id => $value)
 				{
@@ -1010,7 +1017,7 @@
 		 * @param integer $choice_id
 
 		 */
-		public function add_choice($location_id, $attrib_id, $value, $choice_id = 0, $title = '')
+		public function add_choice($location_id, $attrib_id, $value, $choice_id = 0, $title = '', $choice_sort = null)
 		{
 			$location_id = (int) $location_id;
 			$attrib_id = (int) $attrib_id;
@@ -1033,7 +1040,7 @@
 				 */
 				$sql = "SELECT s.i AS choice_id FROM generate_series(1,89) s(i)"
 					. " LEFT OUTER JOIN phpgw_cust_choice ON (phpgw_cust_choice.id = s.i AND location_id = {$location_id} AND attrib_id = {$attrib_id})"
-					. " WHERE phpgw_cust_choice.id IS NULL";
+					. " WHERE phpgw_cust_choice.id IS NULL ORDER BY choice_id ASC LIMIT 1";
 
 				$this->_db->query($sql,__LINE__,__FILE__);
 				$this->_db->next_record();
@@ -1050,7 +1057,7 @@
 
 			$this->_db->query("SELECT count(id) as cnt FROM phpgw_cust_choice WHERE location_id = {$location_id} AND attrib_id = {$attrib_id}",__LINE__,__FILE__);
 			$this->_db->next_record();
-			$choice_sort = (int)$this->_db->f('cnt') +1;
+			$choice_sort = !is_null($choice_sort) ? $choice_sort : (int)$this->_db->f('cnt') +1;
 
 			$values= array(
 				$location_id,
@@ -1575,6 +1582,7 @@
 											)
 			);
 
+			$datatype = $this->_db->f('datatype');
 			/**
 			 * Fetch current value if missing from meta.
 			 */
@@ -1591,7 +1599,7 @@
 
 			if ( $inc_choices )
 			{
-				switch ( $this->_db->f('datatype') )
+				switch ( $datatype )
 				{
 					default:
 						// bail out quickly
