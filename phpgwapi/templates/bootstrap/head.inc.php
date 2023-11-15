@@ -218,22 +218,23 @@ JS;
 	}
 
 	$tpl_vars = array
-	(
-		'noheader'		=> isset($GLOBALS['phpgw_info']['flags']['noheader_xsl']) && $GLOBALS['phpgw_info']['flags']['noheader_xsl'] ? 'true' : 'false',
-		'nofooter'		=> isset($GLOBALS['phpgw_info']['flags']['nofooter']) && $GLOBALS['phpgw_info']['flags']['nofooter'] ? 'true' : 'false',
-		'css'			=> $GLOBALS['phpgw']->common->get_css($cache_refresh_token),
-		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript($cache_refresh_token),
-		'img_icon'  => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
-		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
-		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
-		'webserver_url'	=> $webserver_url,
-		'userlang'		=> $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'],
-		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
-		'navbar_config' => $_navbar_config,
-		'menu_selection' => "navbar::{$menu_selection}",
-		'lang_collapse_all'	=> lang('collapse all'),
-		'lang_expand_all'	=> lang('expand all'),
-		'concent_script'	=> $concent_script
+		(
+		'noheader'			 => isset($GLOBALS['phpgw_info']['flags']['noheader_xsl']) && $GLOBALS['phpgw_info']['flags']['noheader_xsl'] ? 'true' : 'false',
+		'nofooter'			 => isset($GLOBALS['phpgw_info']['flags']['nofooter']) && $GLOBALS['phpgw_info']['flags']['nofooter'] ? 'true' : 'false',
+		'css'				 => $GLOBALS['phpgw']->common->get_css($cache_refresh_token),
+		'javascript'		 => $GLOBALS['phpgw']->common->get_javascript($cache_refresh_token),
+		'img_icon'			 => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
+		'site_title'		 => "{$GLOBALS['phpgw_info']['server']['site_title']}",
+		'str_base_url'		 => $GLOBALS['phpgw']->link('/', array(), true),
+		'webserver_url'		 => $webserver_url,
+		'userlang'			 => $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'],
+		'win_on_events'		 => $GLOBALS['phpgw']->common->get_on_events(),
+		'navbar_config'		 => $_navbar_config,
+		'menu_selection'	 => "navbar::{$menu_selection}",
+		'lang_collapse_all'	 => lang('collapse all'),
+		'lang_expand_all'	 => lang('expand all'),
+		'concent_script'	 => $concent_script,
+		'sessionid'			 => $GLOBALS['phpgw_info']['user']['sessionid']
 	);
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
