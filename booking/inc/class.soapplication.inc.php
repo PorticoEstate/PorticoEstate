@@ -118,6 +118,7 @@
 
 		protected function doValidate( $entity, booking_errorstack $errors )
 		{
+			$now = new DateTime('now');
 			$valid_dates = array();
 			$valid_timespan = 0;
 			$soseason = CreateObject('booking.soseason');
@@ -126,6 +127,12 @@
 			{
 				$from_	 = new DateTime($date['from_']);
 				$to_	 = new DateTime($date['to_']);
+
+				if($from_ < $now)
+				{
+					$errors['from_'] = lang('Invalid from date');
+				}
+	
 				if ($from_ > $to_ || $from_ == $to_)
 				{
 					$errors['from_'] = lang('Invalid from date');
