@@ -2245,6 +2245,11 @@ JS;
 					}
 				}
 
+				if(!$this->acl_edit)
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.index', 'parent_cat_id' => $this->parent_cat_id));
+					phpgw::no_access();
+				}
 				if ($GLOBALS['phpgw']->session->is_repost())
 				{
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.index', 'parent_cat_id' => $this->parent_cat_id));
