@@ -1971,6 +1971,10 @@
 			/**
 			 * hack
 			 */
+			if(isset($errors['from_']) && is_array($errors['from_']))
+			{
+				$errors['from_'] = implode(', ', $errors['from_']);
+			}
 			if(isset($errors['customer_organization_number']) && is_array($errors['customer_organization_number']))
 			{
 				$errors['customer_organization_number'] = implode(', ', $errors['customer_organization_number']);

@@ -1,5 +1,5 @@
 
-/* global enable_add_case, geolocation */
+/* global enable_add_case, geolocation, ol */
 var latitude;
 var longitude;
 
@@ -133,42 +133,85 @@ $(document).ready(function ()
 
 		if (component_id)
 		{
-			map.on('singleclick', function (event)
-			{
-				var coordinate = event.coordinate;
-				// get the longitude and latitude out of the coordinate array
-				var lonlat = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
-				var longitude = lonlat[0];
-				var latitude = lonlat[1];
-//						alert("Latitude : " + latitude + " Longitude: " + longitude);
-
-				content.innerHTML = '<b>Flytter hit</b><br>';
-				action.setAttribute('onclick', 'set_geolocation(' + location_id + ',' + component_id + ',' + latitude + ',' + longitude + ')');
-				action.setAttribute('class', 'btn btn-primary btn-sm');
-				action.innerHTML = 'Oppdater posisjon';
-				content.appendChild(action);
-
-
-				overlay.setPosition(coordinate);
-//				console.log(coordinate);
-				map.removeLayer(layer);
-				layer = new ol.layer.Vector({
-					source: new ol.source.Vector({
-						features: [
-							new ol.Feature({
-								geometry: new ol.geom.Point(ol.proj.fromLonLat([
-									longitude, latitude]))
-							})
-						]
-					})
-				});
-				map.addLayer(layer);
-
+			// on both singleclick and doubleclick...
+			map.on('singleclick', function(event) {
+				console.log('singleclick');
+				handleMapClick(map, event, layer, content, action, overlay, ol, location_id , component_id);
 			});
+			map.on('dblclick', function(event) {
+				console.log('dblclick');
+				handleMapClick(map, event, layer, content, action, overlay, ol, location_id , component_id);
+			});
+			map.on('contextmenu', function (event) {
+				console.log('contextmenu');
+				event.preventDefault();
+				handleMapClick(map, event, layer, content, action, overlay, ol, location_id , component_id);
+			});
+						
+// 			map.on('singleclick', function (event)
+// 			{
+// 				var coordinate = event.coordinate;
+// 				// get the longitude and latitude out of the coordinate array
+// 				var lonlat = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
+// 				var longitude = lonlat[0];
+// 				var latitude = lonlat[1];
+// //						alert("Latitude : " + latitude + " Longitude: " + longitude);
+
+// 				content.innerHTML = '<b>Flytter hit</b><br>';
+// 				action.setAttribute('onclick', 'set_geolocation(' + location_id + ',' + component_id + ',' + latitude + ',' + longitude + ')');
+// 				action.setAttribute('class', 'btn btn-primary btn-sm');
+// 				action.innerHTML = 'Oppdater posisjon';
+// 				content.appendChild(action);
+
+
+// 				overlay.setPosition(coordinate);
+// //				console.log(coordinate);
+// 				map.removeLayer(layer);
+// 				layer = new ol.layer.Vector({
+// 					source: new ol.source.Vector({
+// 						features: [
+// 							new ol.Feature({
+// 								geometry: new ol.geom.Point(ol.proj.fromLonLat([
+// 									longitude, latitude]))
+// 							})
+// 						]
+// 					})
+// 				});
+// 				map.addLayer(layer);
+
+// 			});
 		}
 
 		overlay.setPosition(ol.proj.fromLonLat([longitude, latitude]));
 
+	};
+
+	handleMapClick = function(map, event, layer, content, action, overlay, ol, location_id , component_id)
+	{
+		var coordinate = event.coordinate;
+		var lonlat = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
+		var longitude = lonlat[0];
+		var latitude = lonlat[1];
+
+		content.innerHTML = '<b>Flytter hit</b><br>';
+		action.setAttribute('onclick', 'set_geolocation(' + location_id + ',' + component_id + ',' + latitude + ',' + longitude + ')');
+		action.setAttribute('class', 'btn btn-primary btn-sm');
+		action.innerHTML = 'Oppdater posisjon';
+		content.appendChild(action);
+
+		overlay.setPosition(coordinate);
+		map.removeLayer(layer);
+		layer = new ol.layer.Vector({
+			source: new ol.source.Vector({
+				features: [
+					new ol.Feature({
+						geometry: new ol.geom.Point(ol.proj.fromLonLat([
+							longitude, latitude]))
+					})
+				]
+			})
+		});
+		map.addLayer(layer);
 	};
 
 	showError = function (error)

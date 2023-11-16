@@ -486,7 +486,7 @@ HTML;
 
 		if( phpgw::get_var('phpgw_return_as') != 'json' && $global_message = phpgwapi_cache::system_get('phpgwapi', 'phpgw_global_message'))
 		{
-			echo "<div class='msg_good'>";
+			echo "<div class='text-center alert alert-success' role='alert'>";
 			echo nl2br($global_message);
 			echo '</div>';
 		}
@@ -499,7 +499,7 @@ HTML;
 			$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 			foreach($msgbox_data as & $message)
 			{
-				echo "<div class='{$message['msgbox_class']}'>";
+				echo "<div class='text-center {$message['msgbox_class']}' role='alert'>";
 				echo $message['msgbox_text'];
 				echo '</div>';
 			}

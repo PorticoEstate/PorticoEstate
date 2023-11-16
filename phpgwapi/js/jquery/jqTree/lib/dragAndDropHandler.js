@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.HitAreasGenerator = exports.DragAndDropHandler = void 0;
 var _node = require("./node");
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
@@ -22,14 +22,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-var DragAndDropHandler = /*#__PURE__*/function () {
+var DragAndDropHandler = exports.DragAndDropHandler = /*#__PURE__*/function () {
   function DragAndDropHandler(treeWidget) {
     _classCallCheck(this, DragAndDropHandler);
     _defineProperty(this, "hitAreas", void 0);
     _defineProperty(this, "isDragging", void 0);
     _defineProperty(this, "currentItem", void 0);
     _defineProperty(this, "hoveredArea", void 0);
-    _defineProperty(this, "positionInfo", void 0);
     _defineProperty(this, "treeWidget", void 0);
     _defineProperty(this, "dragElement", void 0);
     _defineProperty(this, "previousGhost", void 0);
@@ -39,7 +38,6 @@ var DragAndDropHandler = /*#__PURE__*/function () {
     this.hitAreas = [];
     this.isDragging = false;
     this.currentItem = null;
-    this.positionInfo = null;
   }
   _createClass(DragAndDropHandler, [{
     key: "mouseCapture",
@@ -74,7 +72,6 @@ var DragAndDropHandler = /*#__PURE__*/function () {
       var node = this.currentItem.node;
       this.dragElement = new DragElement(node.name, positionInfo.pageX - left, positionInfo.pageY - top, this.treeWidget.element, (_this$treeWidget$opti = this.treeWidget.options.autoEscape) !== null && _this$treeWidget$opti !== void 0 ? _this$treeWidget$opti : true);
       this.isDragging = true;
-      this.positionInfo = positionInfo;
       this.currentItem.$element.addClass("jqtree-moving");
       return true;
     }
@@ -85,7 +82,6 @@ var DragAndDropHandler = /*#__PURE__*/function () {
         return false;
       }
       this.dragElement.move(positionInfo.pageX, positionInfo.pageY);
-      this.positionInfo = positionInfo;
       var area = this.findHoveredArea(positionInfo.pageX, positionInfo.pageY);
       if (area && this.canMoveToArea(area)) {
         if (!area.node.isFolder()) {
@@ -128,7 +124,6 @@ var DragAndDropHandler = /*#__PURE__*/function () {
         this.currentItem = null;
       }
       this.isDragging = false;
-      this.positionInfo = null;
       if (!this.hoveredArea && currentItem) {
         if (this.treeWidget.options.onDragStop) {
           this.treeWidget.options.onDragStop(currentItem.node, positionInfo.originalEvent);
@@ -212,6 +207,9 @@ var DragAndDropHandler = /*#__PURE__*/function () {
       while (low < high) {
         var mid = low + high >> 1;
         var area = this.hitAreas[mid];
+        if (!area) {
+          return null;
+        }
         if (y < area.top) {
           high = mid;
         } else if (y > area.bottom) {
@@ -327,7 +325,6 @@ var DragAndDropHandler = /*#__PURE__*/function () {
   }]);
   return DragAndDropHandler;
 }();
-exports.DragAndDropHandler = DragAndDropHandler;
 var VisibleNodeIterator = /*#__PURE__*/function () {
   function VisibleNodeIterator(tree) {
     _classCallCheck(this, VisibleNodeIterator);
@@ -364,10 +361,16 @@ var VisibleNodeIterator = /*#__PURE__*/function () {
         if (mustIterateInside) {
           var childrenLength = node.children.length;
           node.children.forEach(function (_, i) {
-            if (i === childrenLength - 1) {
-              _iterateNode(node.children[i], null);
-            } else {
-              _iterateNode(node.children[i], node.children[i + 1]);
+            var child = node.children[i];
+            if (child) {
+              if (i === childrenLength - 1) {
+                _iterateNode(child, null);
+              } else {
+                var nextChild = node.children[i + 1];
+                if (nextChild) {
+                  _iterateNode(child, nextChild);
+                }
+              }
             }
           });
           if (node.is_open && $element) {
@@ -380,7 +383,7 @@ var VisibleNodeIterator = /*#__PURE__*/function () {
   }]);
   return VisibleNodeIterator;
 }();
-var HitAreasGenerator = /*#__PURE__*/function (_VisibleNodeIterator) {
+var HitAreasGenerator = exports.HitAreasGenerator = /*#__PURE__*/function (_VisibleNodeIterator) {
   _inherits(HitAreasGenerator, _VisibleNodeIterator);
   var _super = _createSuper(HitAreasGenerator);
   function HitAreasGenerator(tree, currentNode, treeBottom) {
@@ -406,7 +409,8 @@ var HitAreasGenerator = /*#__PURE__*/function (_VisibleNodeIterator) {
   }, {
     key: "generateHitAreas",
     value: function generateHitAreas(positions) {
-      var previousTop = -1;
+      var _positions$0$top, _positions$;
+      var previousTop = (_positions$0$top = (_positions$ = positions[0]) === null || _positions$ === void 0 ? void 0 : _positions$.top) !== null && _positions$0$top !== void 0 ? _positions$0$top : 0;
       var group = [];
       var hitAreas = [];
       var _iterator = _createForOfIteratorHelper(positions),
@@ -415,9 +419,7 @@ var HitAreasGenerator = /*#__PURE__*/function (_VisibleNodeIterator) {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var position = _step.value;
           if (position.top !== previousTop && group.length) {
-            if (group.length) {
-              this.generateHitAreasForGroup(hitAreas, group, previousTop, position.top);
-            }
+            this.generateHitAreasForGroup(hitAreas, group, previousTop, position.top);
             previousTop = position.top;
             group = [];
           }
@@ -436,6 +438,16 @@ var HitAreasGenerator = /*#__PURE__*/function (_VisibleNodeIterator) {
     value: function handleOpenFolder(node, $element) {
       if (node === this.currentNode) {
         // Cannot move inside current item
+
+        // Dnd over the current element is not possible: add a position with type None for the top and the bottom.
+        var top = this.getTop($element);
+        var height = $element.height() || 0;
+        this.addPosition(node, _node.Position.None, top);
+        if (height > 5) {
+          // Subtract 5 pixels to allow more space for the next element.
+          this.addPosition(node, _node.Position.None, top + height - 5);
+        }
+
         // Stop iterating
         return false;
       }
@@ -526,12 +538,14 @@ var HitAreasGenerator = /*#__PURE__*/function (_VisibleNodeIterator) {
       var i = 0;
       while (i < positionCount) {
         var position = positionsInGroup[i];
-        hitAreas.push({
-          top: areaTop,
-          bottom: areaTop + areaHeight,
-          node: position.node,
-          position: position.position
-        });
+        if (position && position.position !== _node.Position.None) {
+          hitAreas.push({
+            top: areaTop,
+            bottom: areaTop + areaHeight,
+            node: position.node,
+            position: position.position
+          });
+        }
         areaTop += areaHeight;
         i += 1;
       }
@@ -539,7 +553,6 @@ var HitAreasGenerator = /*#__PURE__*/function (_VisibleNodeIterator) {
   }]);
   return HitAreasGenerator;
 }(VisibleNodeIterator);
-exports.HitAreasGenerator = HitAreasGenerator;
 var DragElement = /*#__PURE__*/function () {
   function DragElement(nodeName, offsetX, offsetY, $tree, autoEscape) {
     _classCallCheck(this, DragElement);

@@ -151,7 +151,8 @@ describe("addChild", function () {
     })]));
   });
   it("sets the parent of the child", function () {
-    expect(given.node.children[0].parent).toEqual(given.node);
+    var _given$node$children$;
+    expect((_given$node$children$ = given.node.children[0]) === null || _given$node$children$ === void 0 ? void 0 : _given$node$children$.parent).toEqual(given.node);
   });
 });
 describe("addChildAtPosition", function () {
@@ -317,6 +318,9 @@ describe("constructor", function () {
       });
       expect(given.node).not.toHaveProperty("id");
     });
+    it("sets isEmptyFolder to false", function () {
+      expect(given.node.isEmptyFolder).toBe(false);
+    });
   });
   context("with an object with a name property", function () {
     given("params", function () {
@@ -374,7 +378,6 @@ describe("constructor", function () {
         name: "n1",
         url: "/"
       });
-      // todo: match object?
       expect(given.node).not.toHaveProperty("label");
       expect(given.node.children).toHaveLength(0);
       expect(given.node.parent).toBeNull();
@@ -400,9 +403,22 @@ describe("constructor", function () {
       };
     });
     it("doesn't set the children", function () {
-      // todo: match object?
       expect(given.node.name).toBe("n1");
       expect(given.node.children).toHaveLength(0);
+    });
+    it("sets isEmptyFolder to false", function () {
+      expect(given.node.isEmptyFolder).toBe(false);
+    });
+  });
+  context("when the data contains an empty children attribute", function () {
+    given("params", function () {
+      return {
+        name: "n1",
+        children: []
+      };
+    });
+    it("sets isEmptyFolder to true", function () {
+      expect(given.node.isEmptyFolder).toBe(true);
     });
   });
 });
@@ -486,13 +502,15 @@ describe("getLastChild", function () {
     context("when its last child is open and has children", function () {
       beforeEach(function () {
         var child2 = given.node.children[1];
-        child2.append("child2a");
-        child2.append("child2b");
+        child2 === null || child2 === void 0 || child2.append("child2a");
+        child2 === null || child2 === void 0 || child2.append("child2b");
       });
       context("and the last child is open", function () {
         beforeEach(function () {
           var child2 = given.node.children[1];
-          child2.is_open = true;
+          if (child2) {
+            child2.is_open = true;
+          }
         });
         it("returns the last child of that child", function () {
           expect(given.node.getLastChild()).toMatchObject({
@@ -939,12 +957,9 @@ describe("iterate", function () {
   });
 });
 describe("loadFromData", function () {
-  var given = (0, _givens["default"])();
-  given("tree", function () {
-    return new _node.Node().loadFromData(_exampleData["default"]);
-  });
   it("creates a tree", function () {
-    expect(given.tree.children).toEqual([expect.objectContaining({
+    var tree = new _node.Node().loadFromData(_exampleData["default"]);
+    expect(tree.children).toEqual([expect.objectContaining({
       id: 123,
       intProperty: 1,
       name: "node1",
@@ -966,6 +981,29 @@ describe("loadFromData", function () {
         name: "node3"
       })]
     })]);
+  });
+  it("sets isEmptyFolder to true for a node when it is has an empty children attribute", function () {
+    var data = [{
+      name: "test1",
+      children: []
+    }];
+    var tree = new _node.Node().loadFromData(data);
+    expect(tree.children[0].isEmptyFolder).toBe(true);
+  });
+  it("sets isEmptyFolder to false for a node when it doesn't have a children attribute", function () {
+    var data = [{
+      name: "test1"
+    }];
+    var tree = new _node.Node().loadFromData(data);
+    expect(tree.children[0].isEmptyFolder).toBe(false);
+  });
+  it("sets isEmptyFolder to false for a node when it has a children attribute that is not empty", function () {
+    var data = [{
+      name: "test1",
+      children: ["child1"]
+    }];
+    var tree = new _node.Node().loadFromData(data);
+    expect(tree.children[0].isEmptyFolder).toBe(false);
   });
 });
 describe("moveNode", function () {
@@ -1109,6 +1147,13 @@ describe("prepend", function () {
         })]
       });
     });
+  });
+  it("sets the isEmptyFolder attribute to true when the node data has empty children", function () {
+    given.node.prepend({
+      name: "test1",
+      children: []
+    });
+    expect(given.node.children[0].isEmptyFolder).toBe(true);
   });
 });
 describe("remove", function () {

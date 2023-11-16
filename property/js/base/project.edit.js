@@ -710,11 +710,11 @@ window.get_location_exception = function (location_code)
 				{
 					if (v.alert_vendor == 1)
 					{
-						htmlString += "<div class=\"error\">";
+						htmlString += "<div class=\"text-center alert alert-danger\" role=\"alert\">";
 					}
 					else
 					{
-						htmlString += "<div class=\"msg_good\">";
+						htmlString += "<div class=\"text-center alert alert-success\" role=\"alert\">";
 					}
 					htmlString += v.severity + ": " + v.category_text;
 					if (v.location_descr)

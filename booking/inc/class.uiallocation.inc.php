@@ -987,7 +987,7 @@
 			$allocation['from_'] = pretty_timestamp($allocation['from_']);
 			$allocation['to_'] = pretty_timestamp($allocation['to_']);
 
-			$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
+			$allocation['resources_json'] = json_encode(array_map('intval', (array)$allocation['resources']));
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.show',
 					'id' => $allocation['id']));
 			$allocation['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show',

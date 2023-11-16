@@ -28,8 +28,10 @@
 		<script>
 		<!--
 			var navbar_config = {navbar_config};
+			var menu_selection = '{menu_selection}';
 			var noheader = {noheader};
 			var nofooter = {nofooter};
+			var sessionid = '{sessionid}';
 		//-->
 		</script>
 		<!-- BEGIN javascript -->

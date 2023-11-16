@@ -439,6 +439,19 @@
 						</xsl:attribute>
 					</input>
 				</div>
+
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'buffer deadline')"/>
+							&nbsp;
+						(<xsl:value-of select="php:function('lang', 'minutes')"/>)
+					</label>
+					<input type="number" min="0" id="booking_buffer_deadline" name="booking_buffer_deadline" value="{resource/booking_buffer_deadline}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'minutes')"/>
+						</xsl:attribute>
+					</input>
+				</div>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'limit number')"/>

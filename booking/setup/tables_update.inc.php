@@ -6524,3 +6524,24 @@ SQL;
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.95 to 0.2.96
+	 *
+	 */
+	$test[] = '0.2.95';
+	function booking_upgrade0_2_95()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_resource', 'booking_buffer_deadline',
+				array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => 0)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.96';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+

@@ -27,5 +27,7 @@
 		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
 		{tracker_code}
 	</head>
+	<body>
 	{tracker_image}
 	{nav}
+		<div class="container">

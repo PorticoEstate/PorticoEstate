@@ -211,6 +211,7 @@
 				'booking_time_default_start' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => -1),
 				'booking_time_default_end' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => -1),
 				'booking_time_minutes' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => -1),
+				'booking_buffer_deadline' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => 0),
 				'booking_limit_number' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => -1),
 				'booking_limit_number_horizont' => array('type' => 'int', 'precision' => 4, 'nullable' => True, 'default' => -1),
 				'simple_booking_start_date' => array('type' => 'int', 'nullable' => true, 'precision' => 8),
