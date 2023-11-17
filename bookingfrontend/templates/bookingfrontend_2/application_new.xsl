@@ -3,7 +3,7 @@
         <form action="{add_action}" data-bind='' method="POST" id='application_form' enctype='multipart/form-data'
               name="form" novalidate="true" class="needs-validationm">
             <div class="row">
-                <div class="col-md-8 offset-md-2">
+                <div class="col-md-10 offset-md-1">
 
                     <!-- New top part -->
                     <div class="pb-3">
@@ -28,7 +28,24 @@
 
                     <!-- Retaining the original formstage -->
                     <input name="formstage" value="partial1" hidden="hidden"/>
-
+                    <div class="col-sm-6 mb-4">
+                        <label class="mb-2 text-bold" for="select-multiple">Flere valg</label>
+                        <select class="js-select-multiple-items" data-bind="options: bookableresource,
+           optionsText: 'name', optionsValue: 'id', selectedOptions: selectedResources"
+                                multiple="multiple" id="select-multiple">
+                        </select>
+                    </div>
+                    <div data-bind="foreach: selectedResources">
+                        <div class="pill pill--secondary">
+<!--                            <div class="pill-date" data-bind="text: $data"></div>-->
+<!--                            <div class="pill-divider"></div>-->
+                            <div class="pill-content" data-bind="text: $data"></div>
+                            <button class="pill-icon" data-bind="click: $parent.removeDate">&#215;</button>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb-4">
+                        <label class="mb-2 text-bold" for="select-multiple">Flere valg</label>
+                    </div>
                     <div class="row">
                         <div class="col-md-7">
                             <div class="form-group">
