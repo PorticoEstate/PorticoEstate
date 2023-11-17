@@ -631,7 +631,7 @@
 		var group_buttons = false;
 
 		<xsl:choose>
-			<xsl:when test="new_item">
+			<xsl:when test="string-length(new_item) > 0">
 				<xsl:choose>
 					<xsl:when test="new_item/onclick">
 					button_def.push({

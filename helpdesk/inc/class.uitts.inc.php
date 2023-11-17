@@ -1294,7 +1294,7 @@ HTML;
 						)),
 					'allrows' => true,
 					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'helpdesk.uitts.columns'}, {closeAction:'reload'})"),
-					'new_item' => self::link(array('menuaction' => 'helpdesk.uitts.add', 'parent_cat_id' => $this->parent_cat_id)),
+					'new_item' => !$this->acl_add ? '' : self::link(array('menuaction' => 'helpdesk.uitts.add', 'parent_cat_id' => $this->parent_cat_id)),
 					'bigmenubutton' => true,
 					'responsive_show_details' => true,
 					'editor_action' => '',
