@@ -158,18 +158,19 @@
                                     Leieperiode
                                 </h2>
                             </div>
+
                             <!-- Display Time Chosen -->
                             <div class="form-group mb-2 ">
                                 <span class="font-weight-bold d-block span-label">
                                     <xsl:value-of select="php:function('lang', 'Chosen rent period')"/>
                                 </span>
                                 <div data-bind="foreach: date" class="d-flex flex-row gap-1 flex-wrap">
-
+                                    <input class="datetime" required="true" name="from_[]" hidden="hidden"
+                                           data-bind="value: from_"/>
+                                    <input class="datetime" required="true" name="to_[]" hidden="hidden"
+                                           data-bind="value: to_"/>
                                     <div class="pill pill--secondary">
-                                        <input class="datetime" required="true" name="from_[]" hidden="hidden"
-                                               data-bind="value: from_"/>
-                                        <input class="datetime" required="true" name="to_[]" hidden="hidden"
-                                               data-bind="value: to_"/>
+
                                         <div class="pill-date" data-bind="text: $parent.formatDate($data)"></div>
                                         <div class="pill-divider"></div>
                                         <div class="pill-content" data-bind="text: $parent.formatTimePeriod($data)"></div>
@@ -531,5 +532,14 @@
         var building_id = '<xsl:value-of select="application/building_id"/>';
         var lang =<xsl:value-of select="php:function('js_lang', 'article', 'Select', 'price', 'unit', 'quantity',
 		 'Selected', 'Delete', 'Sum', 'unit cost')"/>;
+
+
+        /* Multiselect dropdown */
+        $('.js-select-multiple-items').select2({
+        theme: 'select-v2',
+        width: '100%',
+        placeholder: 'Velg en eller flere kommuner',
+        closeOnSelect: false
+        });
     </script>
 </xsl:template>
