@@ -917,6 +917,8 @@
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 //_debug_array($project_values['workorder_budget']);
+			$sumaBudget = 0;
+			$sumactualcost = 0;
 			for ($d = 0; $d < count($project_values['workorder_budget']); $d++)
 			{
 				if ($project_values['workorder_budget'][$d]['charge_tenant'] == 1)
@@ -1059,6 +1061,8 @@
 					array('disablePagination' => true)
 				)
 			);
+
+			self::add_javascript('phpgwapi', 'autonumeric', 'autoNumeric.min.js');
 
 			$data = array
 				(

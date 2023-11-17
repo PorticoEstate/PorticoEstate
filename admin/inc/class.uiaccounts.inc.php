@@ -2134,6 +2134,9 @@
 			$dir = new DirectoryIterator($GLOBALS['phpgw_info']['server']['temp_dir']); 
 			$myfilearray = array();
 
+			$number_of_files = 0;
+			$file_size = 0;
+
 			if ( is_object($dir) )
 			{
 				foreach ( $dir as $file )
@@ -2145,13 +2148,14 @@
  					{
 						continue;
 					}
-					$file_name = $file->getFilename();
+					$file_size += $file->getSize();
+					$number_of_files ++;
 
-					$myfilearray[] = array
-					(
-						'last_modified'=> date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$file->getMTime()),
-						'file_path'=> $file->getPathname(),
-					);
+//					$myfilearray[] = array
+//					(
+//						'last_modified'=> date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'],$file->getMTime()),
+//						'file_path'=> $file->getPathname(),
+//					);
 				}
 			}
 
@@ -2165,9 +2169,26 @@
 						array('menuaction' => 'admin.uimainscreen.mainscreen'));
 			}
 
-			if($myfilearray)
+			if($number_of_files)
 			{
-				_debug_array($myfilearray);
+				$number_of_files = number_format($number_of_files, 0, ',', ' ');
+				$file_size = number_format(($file_size/1024)/1024, 2, ',', ' ') . ' MB';
+
+
+				$html = <<<HTML
+				<div class="text-center alert" role="alert">
+					<table class="pure-table">
+						<tr>
+							<th>Number</th>
+							<th>Size</th>
+						</tr>
+						<tr>
+							<td>{$number_of_files}</td>
+							<td>{$file_size}</td>
+						</tr>
+					</table
+				</div>
+HTML;
 			}
 
 			$GLOBALS['phpgw']->xslttpl->set_root(PHPGW_APP_TPL);
@@ -2183,7 +2204,8 @@
 												)),
 				'lang_yes'					=> lang('yes'),
 				'lang_no'					=> lang('no'),
-				'lang_confirm_msg'			=> lang('are you sure you want to clear cache')
+				'lang_confirm_msg'			=> lang('are you sure you want to clear cache'),
+				'message'					=> $html
 			);
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
