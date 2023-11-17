@@ -407,16 +407,6 @@ class PEcalendar {
         // }
     }
 
-    /**
-     * Updates the badge count based on the current length of the tempEvents array.
-     */
-    updateBadgeCount() {
-        const badgeElem = document.getElementById(this.getId("badgeCount"));
-        if (badgeElem) {
-            badgeElem.textContent = this.tempEvents().length + this.selectedTimeSlots().length;
-        }
-    }
-
 
     /**
      * Adds events to the provided content container.
@@ -526,7 +516,6 @@ class PEcalendar {
 
         this.createTempEventPill(tempEvent);
         this.updateResourceSelectState();
-        this.updateBadgeCount();  // Update the badge count
         return tempEvent;
     }
 
@@ -749,7 +738,6 @@ class PEcalendar {
                 this.clearPills();
                 this.addPillsToContent()
 
-                this.updateBadgeCount();  // Update the badge count
             });
         } else {
             e.classList.add('disabled')
@@ -809,7 +797,6 @@ class PEcalendar {
             this.clearPills();
             this.addPillsToContent()
 
-            this.updateBadgeCount();  // Update the badge count
         }
 
         // First day slot
@@ -891,7 +878,6 @@ class PEcalendar {
             //     this.clearPills();
             //     this.addPillsToContent()
             //
-            //     this.updateBadgeCount();  // Update the badge count
             // });
         } else {
             e.classList.add('disabled')
@@ -1064,7 +1050,6 @@ class PEcalendar {
             this.clearPills();
             this.addPillsToContent()
 
-            this.updateBadgeCount();  // Update the badge count
         });
         // Attach a click event to the 'x' to remove the event
         pill.appendChild(closeButton)
@@ -1094,7 +1079,6 @@ class PEcalendar {
         this.clearPills();
         this.addPillsToContent()
 
-        this.updateBadgeCount();  // Update the badge count
     }
 
 
@@ -1382,8 +1366,8 @@ class PEcalendar {
         }
 
         const isTimeOverlapping = (event1.from < event2.to && event1.to > event2.from);
-        const isResourceOverlapping = event1.resources.some(resource1 =>
-            event2.resources.some(resource2 => resource1.id === resource2.id)
+        const isResourceOverlapping = event1.resources?.some(resource1 =>
+            event2.resources?.some(resource2 => resource1.id === resource2.id)
         );
 
         return isTimeOverlapping && isResourceOverlapping;
@@ -1726,21 +1710,11 @@ class PEcalendar {
                                     resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id() ? " selected" : "") + '>' + this.resources[resourceId].name.trim() + '</option>').join("") : ""}
                         </select>
                     </div>
-                    <!--                    <div class="expansion-panel">-->
-                        <!--                        <a class="expansion-header link-button" id=${this.getId("expansionHeader")}
-                        >-->
-                    <!--                            Bestillinger-->
-                        <!--                            <span class="badge" id=${this.getId("badgeCount")}>0</span>-->
-                    <!--                        </a>-->
-                    <!--                        <div class="expansion-content">-->
-                        <!--                            <div id=${this.getId("tempEventPills")}
-                         class="temp-event-pills"></div>-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
                     <div class="js-dropdown dropdown" id="select-info">
                         <button class="js-dropdown-toggler dropdown__toggler" data-toggle="dropdown" type="button"
                                 aria-expanded="false">
-                            Bestillinger <span class="badge" id=${this.getId("badgeCount")}>0</span>
+                            Bestillinger <span class="badge" id=${this.getId("badgeCount")} data-bind="text: tempEvents().length + selectedTimeSlots().length"></span>
+                            
                         </button>
                         <div class="js-dropdown-content dropdown__content" style="width: 100%">
                             <div id=${this.getId("tempEventPills")} class="temp-event-pills"></div>
@@ -1857,6 +1831,8 @@ class PEcalendar {
                 // Update the events, resources, and seasons based on the response
                 self.resources = buildingScheduleResults?.resources;
                 self.seasons = buildingScheduleResults?.seasons;
+
+                /** @type {Record<string, IFreeTimeSlot>} */
                 this.availableTimeSlots = availableSlotsData;
 
                 self.resource_id(

@@ -1,5 +1,6 @@
-@import '../../templates/bookingfrontend_2/styleguide/main';
-
+@import '../../templates/bookingfrontend_2/styleguide/colors/colors.scss';
+@import '../../templates/bookingfrontend_2/styleguide/custom.scss';
+@import '../../templates/bookingfrontend_2/styleguide/typography/typography.scss';
 :root {
   --day-width: 1fr;
   --time-width: 3em;

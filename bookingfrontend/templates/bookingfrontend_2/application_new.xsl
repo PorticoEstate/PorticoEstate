@@ -158,23 +158,27 @@
                                     Leieperiode
                                 </h2>
                             </div>
+
                             <!-- Display Time Chosen -->
                             <div class="form-group mb-2 ">
                                 <span class="font-weight-bold d-block span-label">
                                     <xsl:value-of select="php:function('lang', 'Chosen rent period')"/>
                                 </span>
-                                <div data-bind="foreach: date">
-                                    <div class="d-block">
-                                        <input class="datetime" required="true" name="from_[]" hidden="hidden"
-                                               data-bind="value: from_"/>
-                                        <input class="datetime" required="true" name="to_[]" hidden="hidden"
-                                               data-bind="value: to_"/>
-                                        <span data-bind='text: formatedPeriode'></span>
-<!--                                        <pre data-bind="text: ko.toJSON($data)"></pre>-->
-                                        <button class="ml-2" data-bind="click: $parent.removeDate">
-                                            <i class="fas fa-minus-circle"></i>
-                                        </button>
+                                <div data-bind="foreach: date" class="d-flex flex-row gap-1 flex-wrap">
+                                    <input class="datetime" required="true" name="from_[]" hidden="hidden"
+                                           data-bind="value: from_"/>
+                                    <input class="datetime" required="true" name="to_[]" hidden="hidden"
+                                           data-bind="value: to_"/>
+                                    <div class="pill pill--secondary">
+
+                                        <div class="pill-date" data-bind="text: $parent.formatDate($data)"></div>
+                                        <div class="pill-divider"></div>
+                                        <div class="pill-content" data-bind="text: $parent.formatTimePeriod($data)"></div>
+                                        <button class="pill-icon" data-bind="click: $parent.removeDate">&#215;</button>
+
                                     </div>
+<!--                                    <pre data-bind="text: ko.toJSON($data)"></pre>-->
+
                                 </div>
                                 <span id="inputTime" data-bind="if: date().length == 0"
                                       class="validationMessage applicationSelectedDates">
@@ -266,11 +270,9 @@
                                 <xsl:value-of select="php:function('lang', 'Please choose at least 1 Article')"/>
                             </xsl:attribute>
                         </input>
-                        <article-table params="selectedResources: selectedResources, date: date,selectedResources: selectedResources"></article-table>
+                        <article-table
+                                params="selectedResources: selectedResources, date: date,selectedResources: selectedResources"></article-table>
                     </xsl:if>
-
-
-
 
 
                     <!-- Information About Event -->
@@ -508,7 +510,7 @@
             </div>
         </form>
 
-                <pre data-bind="text: ko.toJSON(am, null, 2)"></pre>
+        <pre data-bind="text: ko.toJSON(am, null, 2)"></pre>
 
         <div class="push"></div>
     </div>
@@ -530,5 +532,14 @@
         var building_id = '<xsl:value-of select="application/building_id"/>';
         var lang =<xsl:value-of select="php:function('js_lang', 'article', 'Select', 'price', 'unit', 'quantity',
 		 'Selected', 'Delete', 'Sum', 'unit cost')"/>;
+
+
+        /* Multiselect dropdown */
+        $('.js-select-multiple-items').select2({
+        theme: 'select-v2',
+        width: '100%',
+        placeholder: 'Velg en eller flere kommuner',
+        closeOnSelect: false
+        });
     </script>
 </xsl:template>

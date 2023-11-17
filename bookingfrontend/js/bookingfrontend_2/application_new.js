@@ -224,6 +224,21 @@ function applicationModel() {
     self.selectedResources = ko.observable('');
 
 
+    self.formatDate = function(date) {
+       const from = DateTime.fromFormat(date.from_, "dd/MM/yyyy HH:mm");
+        var day = from.day;
+        var months = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'];
+        var month = months[from.month-1];
+        return day + '. ' + month;
+    };
+
+    self.formatTimePeriod = function(date) {
+        var fromTime = date.from_.split(' ')[1];
+        var toTime = date.to_.split(' ')[1];
+        return fromTime + '-' + toTime;
+    };
+
+
     self.bookableResource = bookableresource;
     self.selectedResources = ko.observableArray(0);
     self.isResourceSelected = ko.computed(function () {
@@ -285,6 +300,11 @@ function applicationModel() {
                 dateParts[0] = "0" + dateParts[0];
                 dateStr = dateParts.join(".");
             }
+            if(dateParts[1].length === 1) {
+                dateParts[1] = "0" + dateParts[1];
+                dateStr = dateParts.join(".");
+            }
+
             let date = DateTime.fromFormat(dateStr, "dd.MM.yyyy");
             var startTimeParts = self.bookingStartTime().split(":");
             var endTimeParts = self.bookingEndTime().split(":");
@@ -566,6 +586,17 @@ function setDoc(data) {
     }
     $("#regulation_documents").html(child);
 }
+function formatDateToDateTimeString(date) {
+    const pad = (num) => (num < 10 ? '0' + num : num.toString());
+
+    let day = pad(date.getDate());
+    let month = pad(date.getMonth() + 1); // getMonth() returns 0-11
+    let year = date.getFullYear();
+    let hours = pad(date.getHours());
+    let minutes = pad(date.getMinutes());
+
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+}
 
 
 function PopulatePostedDate() {
@@ -574,8 +605,8 @@ function PopulatePostedDate() {
             var from_ = (initialDates[i].from_).replace(" ", "T");
             var to_ = (initialDates[i].to_).replace(" ", "T");
             am.date.push({
-                from_: formatSingleDate(new Date(from_)),
-                to_: formatSingleDate(new Date(to_)),
+                from_: formatDateToDateTimeString(new Date(from_)),
+                to_: formatDateToDateTimeString(new Date(to_)),
                 formatedPeriode: formatDate(new Date(from_), new Date(to_))
             });
         }
@@ -583,8 +614,8 @@ function PopulatePostedDate() {
         if (typeof urlParams['start'] !== "undefined" && typeof urlParams['end'] !== "undefined") {
             if (urlParams['start'].length > 0 && urlParams['end'].length > 0) {
                 am.date.push({
-                    from_: formatSingleDate(new Date(parseInt(urlParams['start']))),
-                    to_: formatSingleDate(new Date(parseInt(urlParams['end']))), /*repeat: false,*/
+                    from_: formatDateToDateTimeString(new Date(parseInt(urlParams['start']))),
+                    to_: formatDateToDateTimeString(new Date(parseInt(urlParams['end']))), /*repeat: false,*/
                     formatedPeriode: formatDate(new Date(parseInt(urlParams['start'])), new Date(parseInt(urlParams['end'])))
                 });
             }
