@@ -207,7 +207,6 @@
 JS;
 	}
 
-	$app = lang($app);
 	if (phpgw::get_var('phpgw_return_as') == 'json')
 	{
 		$menu_selection = phpgwapi_cache::session_get('navbar', 'menu_selection');

@@ -25,7 +25,7 @@ class SideNav {
 			autoEscape: false,
 			dragAndDrop: false,
 			autoOpen: false,
-			saveState: true,
+			saveState: false,
 			useContextMenu: false,
 			closedIcon: $('<i class="far fa-arrow-alt-circle-right"></i>'),
 			openedIcon: $('<i class="far fa-arrow-alt-circle-down"></i>'),
