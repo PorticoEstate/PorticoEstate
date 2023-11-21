@@ -4,7 +4,7 @@ class SideNav {
 	{
 		this.treemenu_data = {};
 		this.thread = null;
-		$(document).ready(() => this.init());
+		window.onload = () => this.init();
 	}
 
 	init()
