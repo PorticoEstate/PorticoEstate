@@ -363,6 +363,8 @@ $current-time-color: #ea4335;
     }
 
     .event {
+      z-index: auto;
+      position: relative;
       border-radius: 5px;
       padding: 5px;
       font-weight: normal;
@@ -407,7 +409,6 @@ $current-time-color: #ea4335;
     .event-allocation {
       background-color: #E6E3DB;;
       border-color: #FFF;
-      z-index: 2;
       @extend .text-black;
       position: relative;
       display: flex;
@@ -423,7 +424,6 @@ $current-time-color: #ea4335;
     .event-booking {
       background-color: #999EC1;
       border-color: #FFF;
-      z-index: 3;
       @extend .text-black;
       position: relative;
       display: flex;
@@ -439,7 +439,6 @@ $current-time-color: #ea4335;
     .event-event {
       @extend .bg-blue;
       border-color: #FFF;
-      z-index: 4;
       @extend .text-white;
       position: relative;
       display: flex;
@@ -455,7 +454,6 @@ $current-time-color: #ea4335;
     .event-temporary {
       @extend .bg-blue;
       border-color: #FFF;
-      z-index: 4;
       @extend .text-white;
       position: relative;
       display: flex;
@@ -557,6 +555,7 @@ $current-time-color: #ea4335;
         position: relative;
       }
       display: none;
+      z-index: 12;
     }
 
     .info[data-show] {
