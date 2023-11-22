@@ -1,6 +1,7 @@
 @import '../../templates/bookingfrontend_2/styleguide/colors/colors.scss';
 @import '../../templates/bookingfrontend_2/styleguide/custom.scss';
 @import '../../templates/bookingfrontend_2/styleguide/typography/typography.scss';
+
 :root {
   --day-width: 1fr;
   --time-width: 3em;
@@ -183,6 +184,7 @@ $current-time-color: #ea4335;
           flex-grow: 1;
         }
       }
+
       > div {
         width: 100%;
       }
@@ -541,17 +543,20 @@ $current-time-color: #ea4335;
     }
 
     .info {
-      background: #FFF;
-      @extend .text-black;
-      padding: 4px 8px;
-      border-radius: 5px;
-      border: 1px solid #000;
-      min-height: 100px;
+      .info-inner {
+        background: #FFF;
+        @extend .text-black;
+        padding: 4px 8px;
+        border-radius: 5px;
+        border: 1px solid #000;
+        min-height: 100px;
+        z-index: 12;
+        width: 10rem;
+        cursor: pointer;
+        font-size: 1rem;
+        position: relative;
+      }
       display: none;
-      z-index: 10;
-      width: 10rem;
-      cursor: pointer;
-      font-size: 1rem;
     }
 
     .info[data-show] {
