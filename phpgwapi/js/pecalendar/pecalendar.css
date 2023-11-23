@@ -149,7 +149,7 @@
   background-color: #f7f7fa;
 }
 
-.text-black, .calendar .calendar-body .info, .calendar .calendar-body .available-slot, .calendar .calendar-body .event-booking, .calendar .calendar-body .event-allocation {
+.text-black, .calendar .calendar-body .info .info-inner, .calendar .calendar-body .available-slot, .calendar .calendar-body .event-booking, .calendar .calendar-body .event-allocation {
   color: #000000;
 }
 
@@ -1068,6 +1068,8 @@ h4, .h4 {
   margin-right: 0;
 }
 .calendar .calendar-body .event {
+  z-index: auto;
+  position: relative;
   border-radius: 5px;
   padding: 5px;
   font-weight: normal;
@@ -1102,7 +1104,6 @@ h4, .h4 {
 .calendar .calendar-body .event-allocation {
   background-color: #E6E3DB;
   border-color: #FFF;
-  z-index: 2;
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -1115,7 +1116,6 @@ h4, .h4 {
 .calendar .calendar-body .event-booking {
   background-color: #999EC1;
   border-color: #FFF;
-  z-index: 3;
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -1127,7 +1127,6 @@ h4, .h4 {
 }
 .calendar .calendar-body .event-event {
   border-color: #FFF;
-  z-index: 4;
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -1139,7 +1138,6 @@ h4, .h4 {
 }
 .calendar .calendar-body .event-temporary {
   border-color: #FFF;
-  z-index: 4;
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -1198,16 +1196,20 @@ h4, .h4 {
   color: white;
 }
 .calendar .calendar-body .info {
+  display: none;
+  z-index: 12;
+}
+.calendar .calendar-body .info .info-inner {
   background: #FFF;
   padding: 4px 8px;
   border-radius: 5px;
   border: 1px solid #000;
   min-height: 100px;
-  display: none;
-  z-index: 10;
+  z-index: 12;
   width: 10rem;
   cursor: pointer;
   font-size: 1rem;
+  position: relative;
 }
 .calendar .calendar-body .info[data-show] {
   display: block;

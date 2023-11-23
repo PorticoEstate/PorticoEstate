@@ -1,6 +1,7 @@
 @import '../../templates/bookingfrontend_2/styleguide/colors/colors.scss';
 @import '../../templates/bookingfrontend_2/styleguide/custom.scss';
 @import '../../templates/bookingfrontend_2/styleguide/typography/typography.scss';
+
 :root {
   --day-width: 1fr;
   --time-width: 3em;
@@ -183,6 +184,7 @@ $current-time-color: #ea4335;
           flex-grow: 1;
         }
       }
+
       > div {
         width: 100%;
       }
@@ -361,6 +363,8 @@ $current-time-color: #ea4335;
     }
 
     .event {
+      z-index: auto;
+      position: relative;
       border-radius: 5px;
       padding: 5px;
       font-weight: normal;
@@ -405,7 +409,6 @@ $current-time-color: #ea4335;
     .event-allocation {
       background-color: #E6E3DB;;
       border-color: #FFF;
-      z-index: 2;
       @extend .text-black;
       position: relative;
       display: flex;
@@ -421,7 +424,6 @@ $current-time-color: #ea4335;
     .event-booking {
       background-color: #999EC1;
       border-color: #FFF;
-      z-index: 3;
       @extend .text-black;
       position: relative;
       display: flex;
@@ -437,7 +439,6 @@ $current-time-color: #ea4335;
     .event-event {
       @extend .bg-blue;
       border-color: #FFF;
-      z-index: 4;
       @extend .text-white;
       position: relative;
       display: flex;
@@ -453,7 +454,6 @@ $current-time-color: #ea4335;
     .event-temporary {
       @extend .bg-blue;
       border-color: #FFF;
-      z-index: 4;
       @extend .text-white;
       position: relative;
       display: flex;
@@ -541,17 +541,21 @@ $current-time-color: #ea4335;
     }
 
     .info {
-      background: #FFF;
-      @extend .text-black;
-      padding: 4px 8px;
-      border-radius: 5px;
-      border: 1px solid #000;
-      min-height: 100px;
+      .info-inner {
+        background: #FFF;
+        @extend .text-black;
+        padding: 4px 8px;
+        border-radius: 5px;
+        border: 1px solid #000;
+        min-height: 100px;
+        z-index: 12;
+        width: 10rem;
+        cursor: pointer;
+        font-size: 1rem;
+        position: relative;
+      }
       display: none;
-      z-index: 10;
-      width: 10rem;
-      cursor: pointer;
-      font-size: 1rem;
+      z-index: 12;
     }
 
     .info[data-show] {

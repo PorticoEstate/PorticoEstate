@@ -111,7 +111,6 @@ class PEcalendar {
     availableTimeSlots;
 
 
-
     applicationURL = null;
 
     /**
@@ -1151,8 +1150,6 @@ class PEcalendar {
     }
 
 
-
-
     createCalendarDom() {
         if (!this.currentDate) return;
         this.dom = document.getElementById(this.dom_id);
@@ -1470,6 +1467,11 @@ class PEcalendar {
             console.log("ISCLICK")
             const target = e.target;
 
+            if (target.classList.contains('dots') || target.classList.contains('info')) {
+                return;
+            }
+            console.log(target);
+
             // Check if the clicked element is the top or bottom of the temporary event
             if (target.classList.contains('event-temporary')) {
                 const rect = target.getBoundingClientRect();
@@ -1654,29 +1656,38 @@ class PEcalendar {
         const dateTo = DateTime.fromISO(`${event.date}T${event.to}`);
 
         // Create a new div element to display the event's information
-        const info = this.createElement("div", "info");
+        const infoContainer = this.createElement("div", "info");
+        const info = this.createElement("div", "info-inner");
         info.id = this.getId("event");
         info.innerHTML = `<div><b>${event.name}</b></div>
             <div>Kl: ${dateFrom.toFormat("HH:mm")} - ${dateTo.toFormat("HH:mm")}</div>`;
 
+        infoContainer.appendChild(info);
+
         // Associate the info element with the dotsEl using Popper.js
-        const popper = new Popper(dotsEl, info, {
+        const popper = new Popper(dotsEl, infoContainer, {
             placement: 'left',
         });
-
+        let listener = () => {
+            infoContainer.removeAttribute('data-show');
+            window.removeEventListener('mousedown', listener)
+        }
         // Configure click behaviors for dotsEl and info elements
         dotsEl.onclick = (e) => {
-            e.stopPropagation()
-            info.setAttribute('data-show', '');
+            e.preventDefault();
+            infoContainer.setAttribute('data-show', '');
             popper.update();
+
+            listener = window.addEventListener('mousedown', listener)
         }
-        info.onclick = (e) => {
+        infoContainer.onclick = (e) => {
             e.stopPropagation()
             info.removeAttribute('data-show');
+            window.removeEventListener('mousedown', listener)
         }
 
         // Append the info element to the provided contentEl
-        contentEl.appendChild(info);
+        contentEl.appendChild(infoContainer);
     }
 
     /**
@@ -1713,8 +1724,9 @@ class PEcalendar {
                     <div class="js-dropdown dropdown" id="select-info">
                         <button class="js-dropdown-toggler dropdown__toggler" data-toggle="dropdown" type="button"
                                 aria-expanded="false">
-                            Bestillinger <span class="badge" id=${this.getId("badgeCount")} data-bind="text: tempEvents().length + selectedTimeSlots().length"></span>
-                            
+                            Bestillinger <span class="badge" id=${this.getId("badgeCount")}
+                                               data-bind="text: tempEvents().length + selectedTimeSlots().length"></span>
+
                         </button>
                         <div class="js-dropdown-content dropdown__content" style="width: 100%">
                             <div id=${this.getId("tempEventPills")} class="temp-event-pills"></div>
