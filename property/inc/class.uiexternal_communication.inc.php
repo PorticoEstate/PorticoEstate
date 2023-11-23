@@ -453,9 +453,21 @@
 
 		public function edit( $values = array(), $mode = 'edit', $error = false )
 		{
-			if (!$this->acl_add || !$this->acl_edit)
+
+
+			if($mode == 'view')
 			{
-				phpgw::no_access();
+				if (!$this->acl_add )
+				{
+					phpgw::no_access();
+				}
+			}
+			else
+			{
+				if (!$this->acl_add || !$this->acl_edit)
+				{
+					phpgw::no_access();
+				}
 			}
 
 			/**

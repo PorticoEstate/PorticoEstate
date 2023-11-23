@@ -2773,7 +2773,7 @@ JS;
 			$external_messages = createObject('helpdesk.soexternal_communication')->get_at_ticket($id);
 
 
-			if($this->_simple)
+			if($this->_simple || !$this->acl_edit)
 			{
 				$menuaction_external_message = 'helpdesk.uiexternal_communication.view';
 			}
