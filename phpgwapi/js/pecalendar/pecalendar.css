@@ -901,16 +901,76 @@ h4, .h4 {
   flex-direction: row;
   gap: 8px;
 }
+.calendar .header .pending-row {
+  display: flex;
+  flex-direction: row;
+  max-height: 2.75rem;
+  justify-content: space-between;
+}
+.calendar .header .pending-row .pills {
+  display: none;
+}
+@media screen and (min-width: 840px) {
+  .calendar .header .pending-row .pills {
+    overflow-x: hidden;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    display: flex;
+    flex-direction: row;
+    gap: 0.275rem;
+  }
+}
+.calendar .header .pending-row .showall-btn {
+  flex-grow: 1;
+  min-width: 20rem;
+  max-width: 25rem;
+}
+.calendar .header .pending-row .showall-btn button {
+  max-height: 2.75rem;
+  padding-top: 0.34375rem;
+  padding-bottom: 0.34375rem;
+}
+.calendar .header .pending-row .showall-btn button:after {
+  top: 0.375rem;
+}
+@media screen and (max-width: 840px) {
+  .calendar .header .pending-row .showall-btn {
+    max-width: unset;
+    min-width: unset;
+  }
+}
 .calendar .header .select_building_resource {
-  display: grid;
-  grid-template-columns: 1fr 1fr auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
   gap: 8px;
+}
+.calendar .header .select_building_resource .resource-switch {
+  max-width: 34rem;
+}
+@media screen and (max-width: 840px) {
+  .calendar .header .select_building_resource .resource-switch {
+    max-width: unset;
+  }
+}
+.calendar .header .select_building_resource .application-button {
+  max-width: 9rem;
+  max-height: 2.75rem;
+}
+@media screen and (max-width: 840px) {
+  .calendar .header .select_building_resource .application-button {
+    max-width: unset;
+  }
 }
 @media screen and (max-width: 840px) {
   .calendar .header .select_building_resource {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: wrap;
+  }
+  .calendar .header .select_building_resource .resource-switch {
+    max-width: 34rem;
   }
   .calendar .header .select_building_resource > button {
     flex-grow: 1;
