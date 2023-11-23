@@ -237,6 +237,7 @@ $(document).ready(function ()
 		$('input[type=password]').attr('disabled', 'disabled');
 		$('input[type=hidden]').attr('disabled', 'disabled');
 		$('input[type=search]').attr('disabled', 'disabled');
+
 		//remove disabled from id = "cancel_button" and "print_button"
 		$('#cancel_button').removeAttr('disabled');
 		$('#print_button').removeAttr('disabled');

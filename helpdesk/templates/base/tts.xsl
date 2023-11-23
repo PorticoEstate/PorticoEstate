@@ -447,7 +447,7 @@
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
 		var location_item_id = '<xsl:value-of select="location_item_id"/>';
 
-		var acl_edit = '<xsl:value-of select="acl_edit"/>';
+		var acl_edit = <xsl:value-of select="acl_edit"/>;
 
 		//	var initialSelection = <xsl:value-of select="resources_json"/>;
 		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address', 'Note')"/>
