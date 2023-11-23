@@ -457,14 +457,14 @@
 
 			if($mode == 'view')
 			{
-				if (!$this->acl_add )
+				if (!$this->acl_read )
 				{
 					phpgw::no_access();
 				}
 			}
 			else
 			{
-				if (!$this->acl_add || !$this->acl_edit)
+				if (!$this->acl_add && !$this->acl_edit)
 				{
 					phpgw::no_access();
 				}
@@ -480,7 +480,6 @@
 				$this->save($init_preview);
 			}
 
-			$id = phpgw::get_var('id', 'int');
 			if ($this->preview_html)
 			{
 				$this->_send($id);
