@@ -3046,7 +3046,8 @@ JS;
 				'parent_cat_id' => $this->parent_cat_id,
 				'cat_change_list' => $cat_change_list,
 				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.handle_multi_upload_file', 'id' => $id)),
-				'content_files'	=> $content_files
+				'content_files'	=> $content_files,
+				'acl_edit' => $this->acl_edit
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
