@@ -470,6 +470,8 @@
 				}
 			}
 
+			$id = phpgw::get_var('id', 'int');
+
 			/**
 			 * Save first, then preview - first pass
 			 */
