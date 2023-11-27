@@ -98,12 +98,12 @@ class PEcalendar {
     /**
      * @type {KnockoutObservableArray<Partial<IEvent>>} - Events to be created.
      */
-    tempEvents = null;
+    tempEvents = ko.observableArray([]);
 
     /**
      * @type {KnockoutObservableArray<{id: string, slot: IFreeTimeSlot}>} - Events to be created.
      */
-    selectedTimeSlots = null;
+    selectedTimeSlots = ko.observableArray([]);
 
     /**
      * @type {Record<string, IFreeTimeSlot>} - Events to be created.
@@ -167,8 +167,8 @@ class PEcalendar {
 
     createListeners() {
         var self = this;
-        this.tempEvents = ko.observableArray([]);
-        this.selectedTimeSlots = ko.observableArray([]);
+        // this.tempEvents = ko.observableArray([]);
+        // this.selectedTimeSlots = ko.observableArray([]);
         this.applicationURL = ko.computed(() => {
             let resource = this.resources[this.resource_id()];
             let dateRanges = this.tempEvents().map(tempEvent => {
@@ -336,7 +336,8 @@ class PEcalendar {
 
         // Calculate the width of a column and the height of a row in the content element
         const columnWidth = rect.width / 7;
-        const rowHeight = rect.height / ((this.endHour - this.startHour + 1) * this.hourParts);
+        const rowHeight = rect.height / ((this.endHour - this.startHour) * this.hourParts);
+        console.log(rect.height, rowHeight, this.endHour, this.startHour, this.hourParts)
 
         // Determine the column and row indices based on the relative x and y positions
         const columnIndex = Math.floor(x / columnWidth);
