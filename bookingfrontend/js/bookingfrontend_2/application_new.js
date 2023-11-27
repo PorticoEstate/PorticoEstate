@@ -8,6 +8,7 @@ var urlParams = [];
 CreateUrlParams(window.location.search);
 
 var bookableresource = ko.observableArray();
+var globalFacilitiesList = ko.observable({});
 var bookingDates = ko.observableArray();
 var agegroup = ko.observableArray();
 var audiences = ko.observableArray();
@@ -66,10 +67,6 @@ ko.components.register('time-picker', {
             const index = timeOptionsArray.indexOf(selectedTimeValue); // Get the index of the currently selected time or '14:30' if none is selected
 
             dropdown.scrollTo({top: timeslotHeight * index}); // Scroll to the position of the selected time or '14:30'
-
-
-
-
         };
 
 
@@ -92,18 +89,18 @@ ko.components.register('time-picker', {
         	const validFormats = /^(\d{1,2})(?:[.: ]*(\d{2}))?$/;
         	const match = time.match(validFormats);
 
-        	if (match) {
-        		const hours = parseInt(match[1]);
-        		const minutes = match[2] ? parseInt(match[2]) : 0;
+            if (match) {
+                const hours = parseInt(match[1]);
+                const minutes = match[2] ? parseInt(match[2]) : 0;
 
-        		if (hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60) {
-        			self.selectedTime(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
-        		} else {
-        			self.selectedTime('');
-        		}
-        	} else {
-        		self.selectedTime('');
-        	}
+                if (hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60) {
+                    self.selectedTime(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
+                } else {
+                    self.selectedTime('');
+                }
+            } else {
+                self.selectedTime('');
+            }
         };
         self.afterRender = function (container) {
             const timeInput = container.querySelector(".timeInput");
@@ -115,18 +112,18 @@ ko.components.register('time-picker', {
             timeInput.addEventListener('focus', self.showDropdown);
             timeInput.addEventListener('blur', self.formatTime);
 
-            dropdown.addEventListener('click', function(event) {
-            	if (event.target.matches('.timeDropdown > div')) {
-            		self.selectTime(event.target.textContent);
-            	}
+            dropdown.addEventListener('click', function (event) {
+                if (event.target.matches('.timeDropdown > div')) {
+                    self.selectTime(event.target.textContent);
+                }
             });
 
-            timeInput.addEventListener('keydown', function(event) {
-            	if (event.keyCode === 13) {
-            		self.selectedTime(timeInput.value);
+            timeInput.addEventListener('keydown', function (event) {
+                if (event.keyCode === 13) {
+                    self.selectedTime(timeInput.value);
                     self.formatTime();
-            		event.preventDefault();
-            	}
+                    event.preventDefault();
+                }
             });
 
         };
@@ -148,7 +145,7 @@ ko.components.register('time-picker', {
         </input>
     </label>
     <div class="timeDropdown" style="display: none;" data-bind="foreach: timeOptions">
-        <div data-bind="text: $data, click: $component.selectTime"></div>
+        <div data-bind="text: $data, click: $component.selectTime, css: { 'active': $data === $component.selectedTime() }"></div>
     </div>
 </div>
 
@@ -219,19 +216,28 @@ function applicationModel() {
         });
     }
 
-//	console.log(urlParams);
 
 
     self.bookingDate = ko.observable('')
     self.bookingStartTime = ko.observable('');
     self.bookingEndTime = ko.observable('');
+    self.selectedResources = ko.observable('');
 
 
-    // self.bookingDate.subscribe(function(newDate) {
-    // 	console.log('New date selected:', newDate);
-    // 	// Further logic as needed...
-    // 	// am.bookingDate(newDate); // equivalent to this line in the YUI code
-    // }, self);
+    self.formatDate = function(date) {
+       const from = DateTime.fromFormat(date.from_, "dd/MM/yyyy HH:mm");
+        var day = from.day;
+        var months = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'];
+        var month = months[from.month-1];
+        return day + '. ' + month;
+    };
+
+    self.formatTimePeriod = function(date) {
+        var fromTime = date.from_.split(' ')[1];
+        var toTime = date.to_.split(' ')[1];
+        return fromTime + '-' + toTime;
+    };
+
 
     self.bookableResource = bookableresource;
     self.selectedResources = ko.observableArray(0);
@@ -288,7 +294,18 @@ function applicationModel() {
     self.date = ko.observableArray();
     self.addDate = function () {
         if (self.bookingDate() && self.bookingStartTime() && self.bookingEndTime()) {
-            var date = luxon.DateTime.fromFormat(self.bookingDate(), "dd.MM.yyyy");
+            let dateStr = self.bookingDate();
+            let dateParts = dateStr.split(".");
+            if(dateParts[0].length === 1) {
+                dateParts[0] = "0" + dateParts[0];
+                dateStr = dateParts.join(".");
+            }
+            if(dateParts[1].length === 1) {
+                dateParts[1] = "0" + dateParts[1];
+                dateStr = dateParts.join(".");
+            }
+
+            let date = DateTime.fromFormat(dateStr, "dd.MM.yyyy");
             var startTimeParts = self.bookingStartTime().split(":");
             var endTimeParts = self.bookingEndTime().split(":");
 
@@ -296,8 +313,6 @@ function applicationModel() {
             var end = date.set({hour: parseInt(endTimeParts[0]), minute: parseInt(endTimeParts[1])});
 
             var now = luxon.DateTime.local();
-
-            console.log("UI called!!!", self.bookingDate(), start, end);
 
             if (start < now || end < now) {
                 $(".applicationSelectedDates").html("Tidspunktet må være i fremtiden");
@@ -315,6 +330,7 @@ function applicationModel() {
                         to_: end.toFormat('dd/MM/yyyy HH:mm'),
                         formatedPeriode: start.toFormat('dd/MM/yyyy HH:mm') + ' - ' + end.toFormat('HH:mm')
                     });
+
 
                     setTimeout(function () {
                         self.bookingDate("");
@@ -343,6 +359,24 @@ function applicationModel() {
     self.agegroupList = agegroup;
     self.specialRequirements = ko.observable("");
     self.attachment = ko.observable();
+
+    self.selectedResourcesWithFacilities = ko.computed(function () {
+        var selectedResources = ko.utils.arrayFilter(self.bookableResource(), function (resource) {
+            return resource.selected();
+        });
+
+        var result = [];
+        for (var i = 0; i < selectedResources.length; i++) {
+            var facilities = globalFacilitiesList()[selectedResources[i].id.toString()] || [];
+            result.push({
+                resourceName: selectedResources[i].name,  // Only pushing the name
+                facilities: facilities
+            });
+
+        }
+        return result;
+    });
+
 }
 
 $(document).ready(function () {
@@ -396,35 +430,48 @@ $(document).ready(function () {
         }, true);
         $.getJSON(getJsonURL, function (result) {
             for (var i = 0; i < result.results.length; i++) {
-                if (result.results[i].deactivate_application !== 1 && result.results[i].building_id == urlParams['building_id']) {
+                var currentResource = result.results[i];
+                if (currentResource.deactivate_application !== 1 && currentResource.building_id == urlParams['building_id']) {
                     var tempSelected = false;
-                    if ($.inArray(result.results[i].id, initialSelection) > -1) {
+                    if ($.inArray(currentResource.id, initialSelection) > -1) {
                         tempSelected = true;
                     }
                     if (typeof urlParams['resource_id'] !== "undefined" && initialSelection.length == 0) {
-                        if (urlParams['resource_id'] == result.results[i].id) {
+                        if (urlParams['resource_id'] == currentResource.id) {
                             tempSelected = true;
                         }
                     }
-                    var resource_name = result.results[i].name;
+                    var resource_name = currentResource.name;
 
                     var now = Math.floor(Date.now() / 1000);
 
-                    if ((result.results[i].simple_booking && result.results[i].simple_booking_start_date < now) || result.results[i].hidden_in_frontend == 1) {
+                    if ((currentResource.simple_booking && currentResource.simple_booking_start_date < now) || currentResource.hidden_in_frontend == 1) {
                         //skip this one
                         resource_name += ' *';
                     } else {
-                        if (result.results[i].direct_booking && result.results[i].direct_booking < now) {
+                        if (currentResource.direct_booking && currentResource.direct_booking < now) {
                             resource_name += ' *';
                         }
                         bookableresource.push({
-                            id: result.results[i].id,
+                            id: currentResource.id,
                             name: resource_name,
                             selected: ko.observable(tempSelected)
                         });
                     }
                 }
+
+                // Save facilities for the current resource to the globalFacilitiesList observable
+                if (currentResource.facilities_list && Array.isArray(currentResource.facilities_list)) {
+                    var resourceId = currentResource.id.toString();
+                    if (!globalFacilitiesList()[resourceId]) {
+                        globalFacilitiesList()[resourceId] = [];
+                    }
+                    for (var j = 0; j < currentResource.facilities_list.length; j++) {
+                        globalFacilitiesList()[resourceId].push(currentResource.facilities_list[j]);
+                    }
+                }
             }
+            globalFacilitiesList.valueHasMutated();
         });
 
         var parameter = {
@@ -539,6 +586,17 @@ function setDoc(data) {
     }
     $("#regulation_documents").html(child);
 }
+function formatDateToDateTimeString(date) {
+    const pad = (num) => (num < 10 ? '0' + num : num.toString());
+
+    let day = pad(date.getDate());
+    let month = pad(date.getMonth() + 1); // getMonth() returns 0-11
+    let year = date.getFullYear();
+    let hours = pad(date.getHours());
+    let minutes = pad(date.getMinutes());
+
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+}
 
 
 function PopulatePostedDate() {
@@ -547,8 +605,8 @@ function PopulatePostedDate() {
             var from_ = (initialDates[i].from_).replace(" ", "T");
             var to_ = (initialDates[i].to_).replace(" ", "T");
             am.date.push({
-                from_: formatSingleDate(new Date(from_)),
-                to_: formatSingleDate(new Date(to_)),
+                from_: formatDateToDateTimeString(new Date(from_)),
+                to_: formatDateToDateTimeString(new Date(to_)),
                 formatedPeriode: formatDate(new Date(from_), new Date(to_))
             });
         }
@@ -556,8 +614,8 @@ function PopulatePostedDate() {
         if (typeof urlParams['start'] !== "undefined" && typeof urlParams['end'] !== "undefined") {
             if (urlParams['start'].length > 0 && urlParams['end'].length > 0) {
                 am.date.push({
-                    from_: formatSingleDate(new Date(parseInt(urlParams['start']))),
-                    to_: formatSingleDate(new Date(parseInt(urlParams['end']))), /*repeat: false,*/
+                    from_: formatDateToDateTimeString(new Date(parseInt(urlParams['start']))),
+                    to_: formatDateToDateTimeString(new Date(parseInt(urlParams['end']))), /*repeat: false,*/
                     formatedPeriode: formatDate(new Date(parseInt(urlParams['start'])), new Date(parseInt(urlParams['end'])))
                 });
             }
@@ -577,172 +635,9 @@ function populateApplicationDate() {
     }
 }
 
-function validate() {
-
-}
-
-var dateformat_datepicker = dateformat_backend.replace(/d/gi, "%d").replace(/m/gi, "%m").replace(/y/gi, "%Y");
 
 var d = new Date();
-var strDate = $.datepicker.formatDate('mm/dd/yy', new Date());
 //
-// YUI({lang: 'nb-no'}).use(
-// 	'aui-datepicker',
-// 	function (Y)
-// 	{
-// 		new Y.DatePicker(
-// 		{
-// 			trigger: '.datepicker-btn',
-// 			popover: {
-// 				zIndex: 99999
-// 			},
-// 			//        mask: '%d/%m/%G',
-// 			mask: dateformat_datepicker,
-// 			calendar: {
-// 				minimumDate: new Date(strDate)
-// 			},
-// 			disabledDatesRule: 'minimumDate',
-// 			on: {
-// 				selectionChange: function (event)
-// 				{
-// 					new Date(event.newSelection);
-// 				//	console.log(event.newSelection);
-// 					$(".datepicker-btn").val(event.newSelection);
-// 					am.bookingDate(event.newSelection);
-// 					return false;
-// 				}
-// 			}
-// 		}
-// 		);
-// 	}
-// );
-//
-// YUI({lang: 'nb-no'}).use(
-// 	'aui-timepicker',
-// 	function (Y)
-// 	{
-// 		new Y.TimePicker(
-// 		{
-// 			trigger: '.bookingStartTime',
-// 			popover: {
-// 				zIndex: 99999
-// 			},
-// 			values: timepickerValues,
-// 			mask: 'kl. %H:%M',
-// 			popoverCssClass: "timepicker-popover yui3-widget popover yui3-widget-positioned yui3-widget-modal yui3-widget-stacked bookingStartTime-popover",
-// 			on: {
-// 				selectionChange: function (event)
-// 				{
-// 					new Date(event.newSelection);
-// 					$(this).val(event.newSelection);
-// 			//		console.log(event.newSelection);
-// 					am.bookingStartTime(event.newSelection);
-// 					//am.bookingDate(event.newSelection);
-// 				}
-// 			}
-// 		}
-// 		);
-// 	}
-// );
-//
-// YUI({lang: 'nb-no'}).use(
-// 	'aui-timepicker',
-// 	function (Y)
-// 	{
-// 		new Y.TimePicker(
-// 		{
-// 			trigger: '.bookingEndTime',
-// 			popover: {
-// 				zIndex: 99999
-// 			},
-// 			values: timepickerValues,
-// 			mask: 'kl. %H:%M',
-// 			popoverCssClass: "timepicker-popover yui3-widget popover yui3-widget-positioned yui3-widget-modal yui3-widget-stacked bookingEndTime-popover",
-// 			on: {
-// 				selectionChange: function (event)
-// 				{
-// 					new Date(event.newSelection);
-// 					$(this).val(event.newSelection);
-// 					am.bookingEndTime(event.newSelection);
-// 					//am.bookingDate(event.newSelection);
-// 				}
-// 			}
-// 		}
-// 		);
-// 	}
-// );
-
-var startTimeScrollTopValue = 800;
-var endTimeScrollTopValue = 825;
-// $(document).ready(function ()
-// {
-// 	document.addEventListener('scroll', function (event)
-// 	{
-// 		if (typeof event.target.className !== "undefined")
-// 		{
-// 			if (!$(".bookingStartTime-popover").hasClass("popover-hidden"))
-// 			{
-//
-// 				if ((event.target.className).indexOf("popover-content") > 0)
-// 				{
-// 					startTimeScrollTopValue = (event.target.scrollTop);
-// 				}
-// 			}
-// 			else if (!$(".bookingEndTime-popover").hasClass("popover-hidden"))
-// 			{
-//
-// 				if ((event.target.className).indexOf("popover-content") > 0)
-// 				{
-// 					endTimeScrollTopValue = (event.target.scrollTop);
-// 				}
-// 			}
-//
-// 		}
-// 	}, true);
-// });
-//
-// $(".bookingStartTime").on("click", function ()
-// {
-// 	setTimeout(function ()
-// 	{
-// 		//var topPos = ($('.yui3-aclist-item')[32]).offsetTop;
-// 		if (am.bookingEndTime() != "")
-// 		{
-// 			if (startTimeScrollTopValue > endTimeScrollTopValue)
-// 			{
-// 				$(".popover-content").scrollTop(endTimeScrollTopValue - 100);
-// 				return;
-// 			}
-// 			$(".popover-content").scrollTop(startTimeScrollTopValue);
-// 		}
-// 		else
-// 		{
-// 			$(".popover-content").scrollTop(startTimeScrollTopValue);
-// 		}
-//
-// 	}, 200);
-// });
-//
-// $(".bookingEndTime").on("click", function ()
-// {
-// 	setTimeout(function ()
-// 	{
-// 		if (am.bookingStartTime() != "")
-// 		{
-// 			if (endTimeScrollTopValue < startTimeScrollTopValue)
-// 			{
-// 				$(".popover-content").scrollTop(startTimeScrollTopValue + 100);
-// 				return;
-// 			}
-// 			$(".popover-content").scrollTop(endTimeScrollTopValue);
-// 		}
-// 		else
-// 		{
-// 			$(".popover-content").scrollTop(endTimeScrollTopValue);
-// 		}
-//
-// 	}, 200);
-// });
 
 
 // Grab attachment elements

@@ -90,7 +90,7 @@ export interface IFreeTimeSlot {
     when: string
     start: string
     end: string
-    overlap: false | number
+    overlap: false | 1 | 2 | 3 // false = ledig | 1 = påbegynt/reservert | 2 = bestilt av ein anna | 3 = fortid
     applicationLink: ApplicationLink
 }
 

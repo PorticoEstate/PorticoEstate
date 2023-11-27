@@ -5,7 +5,7 @@
     );
 
     $buttonModifiers = array(
-      'normal', 'small', 'large', 'circle', 'transparent'
+      'normal', 'small', 'large', 'circle', 'transparent', 'small-circle'
     );
 
     foreach ($buttonModifiers as $buttonModifier) {
@@ -17,7 +17,13 @@
         $modifierClass = ' pe-btn--'.$buttonModifier;
         $contentType = '<span>pe-btn '.$typeClass.'</span>';
         $contentModifier = '<span>'.$modifierClass.'</span>';
-        
+
+        $content = (($buttonModifier == 'circle' || $buttonModifier == 'transparent') ? '<span class="sr-only">Søk</span><span class="fas fa-search" title="Søk"></span>' : 'Knapp');
+
+        if($buttonModifier == 'small-circle') {
+            $content = '<i class="fas fa-plus fa-fw"></i>';
+        }
+
         if($buttonModifier == 'normal') {
           $modifierClass = '';
           $contentModifier = '';
@@ -34,7 +40,7 @@
 
         echo '<div class="col-6 col-sm-4 d-flex flex-column align-items-center mb-4">
                 <button type="button" class="pe-btn '.$typeClass.$modifierClass.'" '.(($buttonType == 'disabled') ? 'disabled' : '').'>
-                '.(($buttonModifier == 'circle' || $buttonModifier == 'transparent') ? '<span class="sr-only">Søk</span><span class="fas fa-search" title="Søk"></span>' : 'Knapp').'</button>
+                '. $content .'</button>
                 <div class="d-flex flex-column mt-2 text-center">
                   '. $contentType.$contentModifier .'
                 </div>

@@ -89,5 +89,50 @@
     min-width: 2.5rem;
   }
 
+  &--small-circle {
+    display: inline-block;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    padding: 0;
+    font-weight: 400;
+
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    &:hover,
+    &:active {
+      background: $purple-16;
+      color: $purple;
+    }
+
+    &:focus-visible {
+      border-color: $purple;
+      background: $white;
+      color: $purple;
+    }
+    &.pe-btn-secondary {
+      color: $black;
+      background: $purple-16;
+
+      &:hover,
+      &:active {
+        background: $purple;
+        color: $white;
+      }
+
+      &:focus-visible {
+        border-color: $purple;
+        background: $white;
+        color: $purple;
+      }
+    }
+
+    //&:hover {
+    //  background-color: $color-y; /* Color Y on hover */
+    //}
+  }
+
 }
 

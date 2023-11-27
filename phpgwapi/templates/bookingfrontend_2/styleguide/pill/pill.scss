@@ -1,0 +1,123 @@
+.pill {
+  --main-bg-color: #{$purple};
+  --main-divider-color: #{$purple-light};
+  --main-text-color: #{$white};
+  ----main-hightlight-opacity: 100%;
+  //align-items: center;
+
+  color: var(--main-text-color);
+  height: 2.5rem; // Fixed height for the pill
+  display: grid;
+  grid-template-areas: "date divider summary action";
+  grid-template-columns: auto min-content auto min-content;
+  align-items: stretch;
+  width: max-content;
+
+  &--secondary {
+    --main-divider-opacity: 20%;
+    --main-bg-color: #{$purple-40};
+    --main-divider-color: #{$purple};
+    --main-text-color: #{$black};
+  }
+
+  &--success {
+    --main-divider-opacity: 20%;
+
+    --main-bg-color: #{$green-light};
+    --main-divider-color: #{$purple};
+    --main-text-color: #{$black};
+  }
+
+  &--error {
+    --main-divider-opacity: 20%;
+
+    --main-bg-color: #{$red-light};
+    --main-divider-color: #{$purple};
+    --main-text-color: #{$black};
+  }
+
+  &--warning {
+    --main-divider-opacity: 20%;
+
+    --main-bg-color: #{$yellow-light};
+    --main-divider-color: #{$purple};
+    --main-text-color: #{$black};
+  }
+
+
+  .pill-date, .pill-divider, .pill-content, .pill-icon {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: var(--main-bg-color); // A custom purple background
+    display: flex;
+    align-items: center;
+  }
+
+  & > :first-child {
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+    padding-left: 15px; /* Adjust padding if necessary */
+  }
+
+  .pill-date {
+    min-width: 5rem;
+    padding-left: 15px;
+    grid-area: date;
+    padding-right: 10px;
+    font-weight: bold;
+  }
+
+
+  .pill-divider {
+    grid-area: divider;
+    position: relative; // Added for absolute positioning of ::after
+    width: 1px; // This width is for layout purposes
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    //background-color: transparent; // Make the actual div transparent
+
+    &::after {
+      content: ''; // Required for ::after
+      position: absolute;
+      left: 0;
+      top: 10px; // Align with the padding-top value
+      height: calc(100% - 20px); // Adjust height considering the padding
+      width: 100%; // ::after should take the full width of the parent
+      background-color: var(--main-divider-color); // Use the CSS variable for color
+      opacity: var(--main-divider-opacity);
+    }
+  }
+
+  .pill-content {
+    grid-area: summary;
+    padding-right: 10px;
+    padding-left: 10px;
+    flex-grow: 1;
+
+  }
+
+  .pill-icon {
+    padding-right: 15px;
+    display: inline-block;
+    grid-area: action;
+
+    padding-left: 10px;
+    cursor: pointer;
+    font-size: 1.2rem; // Size of the cross icon
+    border: none; // Remove the border
+    outline: none; // Remove focus outline
+    -webkit-appearance: none; // Remove default styling for iOS buttons
+    appearance: none;
+    color: inherit; // Inherit the text color from the parent
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+
+    &:hover {
+      background-color: var(--main-bg-color);
+      filter: brightness(120%); // Adjust the percentage to get the desired brightness
+    }
+
+  }
+
+}
