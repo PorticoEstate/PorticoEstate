@@ -2,7 +2,7 @@
     <div class="container py-4 md:px-4 footer-border-top mt-4">
         <div class="row">
             <div class="col-12 col-sm-6 col-md-3 d-flex flex-column mb-4">
-                <a target="_blank" rel="noopener noreferrer" href=""><img class="footer-site-logo" src="{footer_logo_img}" alt="Logo"></a>
+                <a target="_blank" rel="noopener noreferrer" href="{footer_logo_url}"><img class="footer-site-logo" src="{footer_logo_img}" alt="Logo"></a>
             </div>
             <div class="col-12 col-sm-6 col-md-3 d-flex flex-column mb-4">
                 <h4 class="text-body mb-1">Kontakt</h4>
