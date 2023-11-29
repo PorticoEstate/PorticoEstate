@@ -131,12 +131,12 @@ JS;
 	$javascripts[]	 = "/phpgwapi/js/popper/popper.min.js";
 	$javascripts[]	 = "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js";
 	$javascripts[]	 = "/phpgwapi/js/select2/js/select2.min.js";
-	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/knockout-min.js";
-	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/knockout.validation.js";
-	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/jquery.autocompleter.js";
+	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend_2/js/knockout-min.js";
+	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend_2/js/knockout.validation.js";
+	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend_2/js/jquery.autocompleter.js";
 	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend_2/js/common.js";
-	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/custom.js";
-	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend/js/nb-NO.js";
+	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend_2/js/custom.js";
+	$javascripts[]	 = "/phpgwapi/templates/bookingfrontend_2/js/nb-NO.js";
 	$javascripts[]	 = "/phpgwapi/js/dateformat/dateformat.js";
 	$javascripts[]	 = "/phpgwapi/js/pecalendar/luxon.js";
 	$javascripts[]	 = "/phpgwapi/js/pecalendar/pecalendar.js";
@@ -158,10 +158,15 @@ JS;
 	else
 	{
 
-		$footerlogoimg = $webserver_url . "/phpgwapi/templates/bookingfrontend/img/Aktiv-kommune-footer-logo.png";
+		$footerlogoimg = $webserver_url . "/phpgwapi/templates/bookingfrontend_2/img/Aktiv-kommune-footer-logo.png";
 		$GLOBALS['phpgw']->template->set_var('logoimg', $footerlogoimg);
 	}
 
+	if (!empty($GLOBALS['phpgw_info']['server']['bakcground_image']))
+	{
+		$footer_logo_url = $GLOBALS['phpgw_info']['server']['bakcground_image'];
+		$GLOBALS['phpgw']->template->set_var('footer_logo_url', $footer_logo_url);
+	}
 
 	$bodoc	 = CreateObject('booking.bodocumentation');
 	$manual	 = $bodoc->so->getFrontendDoc();

@@ -1,36 +1,9 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    <style>
-        .dropdownContainer {
-        position: relative;
-        display: inline-block;
-        }
-
-        .timeDropdown {
-        z-index: 1;
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        border: 1px solid #ccc;
-        background-color: #fff;
-        width: 100%;
-        max-height: 150px;
-        overflow-y: auto;
-        }
-
-        .timeDropdown div {
-        padding: 5px;
-        cursor: pointer;
-        }
-        .timeDropdown div:hover {
-        background-color: #eee;
-        }
-    </style>
     <div class="container new-application-page" id="new-application-page">
         <form action="{add_action}" data-bind='' method="POST" id='application_form' enctype='multipart/form-data'
               name="form" novalidate="true" class="needs-validationm">
             <div class="row">
-                <div class="col-md-8 offset-md-2">
+                <div class="col-md-10 offset-md-1">
 
                     <!-- New top part -->
                     <div class="pb-3">
@@ -55,23 +28,90 @@
 
                     <!-- Retaining the original formstage -->
                     <input name="formstage" value="partial1" hidden="hidden"/>
-
-
-                    <div class="form-group">
-                        <div class=" mb-4">
-                            <ul class="row py-2 d-flex g-2 list-unstyled" data-bind="foreach: bookableresource">
-                                <li>
-                                    <label class="choice user-select-none">
-                                        <input type="checkbox" name="resources[]"
-                                               data-bind="textInput: id, checked: selected"
-                                               class="form-check-input choosenResource"/>
-                                        <span class="label-text" data-bind="html: name"></span>
-                                        <span class="choice__check"></span>
-                                    </label>
-                                </li>
-                            </ul>
+                    <div class="col-sm-6 mb-4">
+                        <label class="mb-2 text-bold" for="select-multiple">Flere valg</label>
+                        <select class="js-select-multiple-items" data-bind="options: bookableresource,
+           optionsText: 'name', optionsValue: 'id', selectedOptions: selectedResources"
+                                multiple="multiple" id="select-multiple">
+                        </select>
+                    </div>
+                    <div data-bind="foreach: selectedResources">
+                        <div class="pill pill--secondary">
+<!--                            <div class="pill-date" data-bind="text: $data"></div>-->
+<!--                            <div class="pill-divider"></div>-->
+                            <div class="pill-content" data-bind="text: $data"></div>
+                            <button class="pill-icon" data-bind="click: $parent.removeDate">&#215;</button>
                         </div>
                     </div>
+                    <div class="col-sm-6 mb-4">
+                        <label class="mb-2 text-bold" for="select-multiple">Flere valg</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="form-group">
+                                <div class=" mb-4">
+                                    <ul class="row py-2 d-flex g-2 list-unstyled" data-bind="foreach: bookableresource">
+                                        <li>
+                                            <label class="choice user-select-none">
+                                                <input type="checkbox" name="resources[]"
+                                                       data-bind="textInput: id, checked: selected"
+                                                       class="form-check-input choosenResource"/>
+                                                <span class="label-text" data-bind="html: name"></span>
+                                                <span class="choice__check"></span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <!-- TODO:  missing priser-->
+                            <div class="row mb-5">
+                                <div class="row gx-3 pb-3">
+                                    <div class="col d-flex ">
+                                        <div class=" col bg-white rounded-small border p-2 d-flex flex-column">
+                                            <h4 class="mb-1">Bygg</h4>
+                                            <span>
+                                                <xsl:value-of select="building/street"/>
+                                            </span>
+                                            <span>
+                                                <xsl:value-of select="building/zip_code"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row gx-3">
+                                    <!--                            <div class="col d-flex ">-->
+                                    <!--                                <div class=" col bg-white rounded-small border p-2">-->
+                                    <!--                                    <h4 class="mb-1">Priser</h4>-->
+                                    <!--                                    <p>Disse varierer avhengig av hvilken aktivitet som skal utføres og hvem som skal arrangerer-->
+                                    <!--                                        dette-->
+                                    <!--                                    </p>-->
+                                    <!--                                    <button class="w-100 pe-btn pe-btn-primary ">Se priser</button>-->
+                                    <!--                                </div>-->
+                                    <!--                            </div>-->
+                                    <div class="col  d-flex ">
+                                        <div class="col bg-white rounded-small border p-2">
+                                            <h4 class="mb-1">Fasiliteter</h4>
+                                            <ul class="pl-1" data-bind="foreach: selectedResourcesWithFacilities">
+                                                <li data-bind="foreach: facilities, visible: $parent.selectedResourcesWithFacilities().length === 1">
+                                                    <span data-bind="text: name"></span>
+                                                </li>
+
+                                                <li data-bind="visible: $parent.selectedResourcesWithFacilities().length > 1">
+                                                    <strong data-bind="text: resourceName"></strong>
+                                                    <ul data-bind="foreach: facilities">
+                                                        <li data-bind="text: name"></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <!--                    <div id="dropdownContainer">-->
                     <!--                        <input type="text" id="timeInput" data-bind="value: selectedTime" placeholder="Choose time..." />-->
@@ -127,32 +167,35 @@
                     <!--						</div>-->
                     <!--					</div>-->
 
-
                     <div class="form-group">
 
                         <div class="form-group">
                             <div class="row  pt-4">
                                 <h2>
-                                    Periode
+                                    Leieperiode
                                 </h2>
                             </div>
+
                             <!-- Display Time Chosen -->
                             <div class="form-group mb-2 ">
                                 <span class="font-weight-bold d-block span-label">
                                     <xsl:value-of select="php:function('lang', 'Chosen rent period')"/>
                                 </span>
-                                <div data-bind="foreach: date">
-                                    <div class="d-block">
-                                        <input class="datetime" required="true" name="from_[]" hidden="hidden"
-                                               data-bind="value: from_"/>
-                                        <input class="datetime" required="true" name="to_[]" hidden="hidden"
-                                               data-bind="value: to_"/>
-                                        <span data-bind='text: formatedPeriode'></span>
+                                <div data-bind="foreach: date" class="d-flex flex-row gap-1 flex-wrap">
+                                    <input class="datetime" required="true" name="from_[]" hidden="hidden"
+                                           data-bind="value: from_"/>
+                                    <input class="datetime" required="true" name="to_[]" hidden="hidden"
+                                           data-bind="value: to_"/>
+                                    <div class="pill pill--secondary">
 
-                                        <button class="ml-2" data-bind="click: $parent.removeDate">
-                                            <i class="fas fa-minus-circle"></i>
-                                        </button>
+                                        <div class="pill-date" data-bind="text: $parent.formatDate($data)"></div>
+                                        <div class="pill-divider"></div>
+                                        <div class="pill-content" data-bind="text: $parent.formatTimePeriod($data)"></div>
+                                        <button class="pill-icon" data-bind="click: $parent.removeDate">&#215;</button>
+
                                     </div>
+<!--                                    <pre data-bind="text: ko.toJSON($data)"></pre>-->
+
                                 </div>
                                 <span id="inputTime" data-bind="if: date().length == 0"
                                       class="validationMessage applicationSelectedDates">
@@ -238,22 +281,16 @@
                             <!--							</div>-->
                         </div>
                     </div>
-
-
                     <xsl:if test="config/activate_application_articles !=''">
-                        <div class="form-group">
-                            <!--							<label>-->
-                            <!--								<xsl:value-of select="php:function('lang', 'Articles')" />-->
-                            <!--							</label>-->
-                            <input type="hidden" data-validation="application_articles">
-                                <xsl:attribute name="data-validation-error-msg">
-                                    <xsl:value-of select="php:function('lang', 'Please choose at least 1 Article')"/>
-                                </xsl:attribute>
-                            </input>
-                            <div id="articles_container" style="display:inline-block;">
-                            </div>
-                        </div>
+                        <input type="hidden" data-validation="application_articles">
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:value-of select="php:function('lang', 'Please choose at least 1 Article')"/>
+                            </xsl:attribute>
+                        </input>
+                        <article-table
+                                params="selectedResources: selectedResources, date: date,selectedResources: selectedResources"></article-table>
                     </xsl:if>
+
 
                     <!-- Information About Event -->
                     <div class="mt-5 mb-5"/>
@@ -275,8 +312,8 @@
                        optionsCaption: '{php:function('lang', 'Choose target audience')}'">
                             <!-- KnockoutJS will populate this select element based on the 'audiences' array -->
                         </select>
-                        <input class="form-control" id="inputTargetAudience" required="true" type="text"
-                               style="display: none" name="audience[]" data-bind="value: audienceSelectedValue"/>
+                        <!--                        <input class="form-control" id="inputTargetAudience" required="true" type="text"-->
+                        <!--                               style="display: none" name="audience[]" data-bind="value: audienceSelectedValue"/>-->
                     </div>
 
 
@@ -457,7 +494,7 @@
                     </div>
 
 
-                    <hr class="mt-5 mb-5"></hr>
+                    <!--                    <hr class="mt-5 mb-5"></hr>-->
                     <!-- Submit -->
                     <div id="submitContainer" class="form-group float-right text-center">
                         <button id="submitBtn" class="btn btn-light" type="submit">
@@ -512,5 +549,14 @@
         var building_id = '<xsl:value-of select="application/building_id"/>';
         var lang =<xsl:value-of select="php:function('js_lang', 'article', 'Select', 'price', 'unit', 'quantity',
 		 'Selected', 'Delete', 'Sum', 'unit cost')"/>;
+
+
+        /* Multiselect dropdown */
+        $('.js-select-multiple-items').select2({
+        theme: 'select-v2',
+        width: '100%',
+        placeholder: 'Velg en eller flere kommuner',
+        closeOnSelect: false
+        });
     </script>
 </xsl:template>
