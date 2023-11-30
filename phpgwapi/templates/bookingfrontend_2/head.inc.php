@@ -162,6 +162,11 @@ JS;
 		$GLOBALS['phpgw']->template->set_var('logoimg', $footerlogoimg);
 	}
 
+	if (!empty($GLOBALS['phpgw_info']['server']['bakcground_image']))
+	{
+		$footer_logo_url = $GLOBALS['phpgw_info']['server']['bakcground_image'];
+		$GLOBALS['phpgw']->template->set_var('footer_logo_url', $footer_logo_url);
+	}
 
 	$bodoc	 = CreateObject('booking.bodocumentation');
 	$manual	 = $bodoc->so->getFrontendDoc();
