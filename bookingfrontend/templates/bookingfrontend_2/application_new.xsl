@@ -28,27 +28,38 @@
 
                     <!-- Retaining the original formstage -->
                     <input name="formstage" value="partial1" hidden="hidden"/>
-                    <div class="col-sm-6 mb-4">
+
+
+                    <div class="col-sm-12 mb-4">
                         <label class="mb-2 text-bold" for="select-multiple">Flere valg</label>
-                        <select class="js-select-multiple-items" data-bind="options: bookableresource,
-           optionsText: 'name', optionsValue: 'id', selectedOptions: selectedResources"
-                                multiple="multiple" id="select-multiple">
-                        </select>
-                    </div>
-                    <div data-bind="foreach: selectedResources">
-                        <div class="pill pill--secondary">
-<!--                            <div class="pill-date" data-bind="text: $data"></div>-->
-<!--                            <div class="pill-divider"></div>-->
-                            <div class="pill-content" data-bind="text: $data"></div>
-                            <button class="pill-icon" data-bind="click: $parent.removeDate">&#215;</button>
+
+                        <div data-bind="foreach: bookableResource"
+                             class="d-flex flex-row gap-1 flex-wrap pb-2 w-100">
+                            <div class="pill pill--secondary" data-bind="visible: $data.selected">
+                                <!--                            <div class="pill-date" data-bind="text: $data"></div>-->
+                                <!--                            <div class="pill-divider"></div>-->
+                                <div class="pill-content" data-bind="text: $data.name"></div>
+                                <button class="pill-icon" data-bind="click: $parent.removeRessource">&#215;</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <select class="js-select-multiple-items" data-bind="foreach: bookableresource"
+                                    id="select-multiple">
+                                <option data-bind="text: name,
+                       value: id,
+                       attr: {{ 'aria-selected': selected }}
+                       "/>
+                            </select>
                         </div>
                     </div>
-                    <div class="col-sm-6 mb-4">
-                        <label class="mb-2 text-bold" for="select-multiple">Flere valg</label>
-                    </div>
+                    <div class=".selected-items-display"></div>
+
+
+                    <!--                    <span data-bind="text: ko.toJSON(bookableresource)"></span>-->
+
                     <div class="row">
                         <div class="col-md-7">
-                            <div class="form-group">
+                            <div class="form-group" style="display:none">
                                 <div class=" mb-4">
                                     <ul class="row py-2 d-flex g-2 list-unstyled" data-bind="foreach: bookableresource">
                                         <li>
@@ -64,7 +75,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-5" style="display:none">
                             <!-- TODO:  missing priser-->
                             <div class="row mb-5">
                                 <div class="row gx-3 pb-3">
@@ -190,11 +201,12 @@
 
                                         <div class="pill-date" data-bind="text: $parent.formatDate($data)"></div>
                                         <div class="pill-divider"></div>
-                                        <div class="pill-content" data-bind="text: $parent.formatTimePeriod($data)"></div>
+                                        <div class="pill-content"
+                                             data-bind="text: $parent.formatTimePeriod($data)"></div>
                                         <button class="pill-icon" data-bind="click: $parent.removeDate">&#215;</button>
 
                                     </div>
-<!--                                    <pre data-bind="text: ko.toJSON($data)"></pre>-->
+                                    <!--                                    <pre data-bind="text: ko.toJSON($data)"></pre>-->
 
                                 </div>
                                 <span id="inputTime" data-bind="if: date().length == 0"
@@ -288,7 +300,7 @@
                             </xsl:attribute>
                         </input>
                         <article-table
-                                params="selectedResources: selectedResources, date: date,selectedResources: selectedResources"></article-table>
+                                params="selectedResources: selectedResourcesOld, date: date"></article-table>
                     </xsl:if>
 
 
@@ -551,12 +563,5 @@
 		 'Selected', 'Delete', 'Sum', 'unit cost')"/>;
 
 
-        /* Multiselect dropdown */
-        $('.js-select-multiple-items').select2({
-        theme: 'select-v2',
-        width: '100%',
-        placeholder: 'Velg en eller flere kommuner',
-        closeOnSelect: false
-        });
     </script>
 </xsl:template>

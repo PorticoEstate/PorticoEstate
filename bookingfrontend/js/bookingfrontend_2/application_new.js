@@ -58,7 +58,7 @@ ko.components.register('time-picker', {
         let dropdown;
 
 
-        self.showDropdown = function() {
+        self.showDropdown = function () {
             dropdown.style.display = 'block';
             const timeslotHeight = dropdown.children[0].offsetHeight; // Assuming all timeslot divs are of the same height
             const selectedTimeValue = self.selectedTime() || '14:30'; // Use '14:30' as default if no time is selected
@@ -70,13 +70,13 @@ ko.components.register('time-picker', {
         };
 
 
-        self.hideDropdown = function() {
-        	dropdown.style.display = 'none';
+        self.hideDropdown = function () {
+            dropdown.style.display = 'none';
         };
 
         // Add a slight delay before hiding dropdown to allow for selectTime to run
-        self.delayedHideDropdown = function() {
-        	setTimeout(self.hideDropdown, 150);
+        self.delayedHideDropdown = function () {
+            setTimeout(self.hideDropdown, 150);
         };
 
         self.selectTime = function (time) {
@@ -84,10 +84,10 @@ ko.components.register('time-picker', {
             self.hideDropdown();
         };
 
-        self.formatTime = function() {
-        	const time = self.selectedTime();
-        	const validFormats = /^(\d{1,2})(?:[.: ]*(\d{2}))?$/;
-        	const match = time.match(validFormats);
+        self.formatTime = function () {
+            const time = self.selectedTime();
+            const validFormats = /^(\d{1,2})(?:[.: ]*(\d{2}))?$/;
+            const match = time.match(validFormats);
 
             if (match) {
                 const hours = parseInt(match[1]);
@@ -217,22 +217,20 @@ function applicationModel() {
     }
 
 
-
     self.bookingDate = ko.observable('')
     self.bookingStartTime = ko.observable('');
     self.bookingEndTime = ko.observable('');
-    self.selectedResources = ko.observable('');
 
 
-    self.formatDate = function(date) {
-       const from = DateTime.fromFormat(date.from_, "dd/MM/yyyy HH:mm");
+    self.formatDate = function (date) {
+        const from = DateTime.fromFormat(date.from_, "dd/MM/yyyy HH:mm");
         var day = from.day;
         var months = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'];
-        var month = months[from.month-1];
+        var month = months[from.month - 1];
         return day + '. ' + month;
     };
 
-    self.formatTimePeriod = function(date) {
+    self.formatTimePeriod = function (date) {
         var fromTime = date.from_.split(' ')[1];
         var toTime = date.to_.split(' ')[1];
         return fromTime + '-' + toTime;
@@ -240,7 +238,7 @@ function applicationModel() {
 
 
     self.bookableResource = bookableresource;
-    self.selectedResources = ko.observableArray(0);
+    self.selectedResourcesOld = ko.observableArray(0);
     self.isResourceSelected = ko.computed(function () {
         var checkedResources = [];
         var k = 0;
@@ -248,13 +246,13 @@ function applicationModel() {
             if (self.bookableResource()[i].selected()) {
                 checkedResources.push(self.bookableResource()[i].id);
 
-                if (self.selectedResources.indexOf(self.bookableResource()[i].id) < 0) {
-                    self.selectedResources.push(self.bookableResource()[i].id);
+                if (self.selectedResourcesOld.indexOf(self.bookableResource()[i].id) < 0) {
+                    self.selectedResourcesOld.push(self.bookableResource()[i].id);
                 }
                 k++;
             } else {
-                if (self.selectedResources.indexOf(self.bookableResource()[i].id) > -1) {
-                    self.selectedResources.splice(self.selectedResources.indexOf(self.bookableResource()[i].id), 1);
+                if (self.selectedResourcesOld.indexOf(self.bookableResource()[i].id) > -1) {
+                    self.selectedResourcesOld.splice(self.selectedResourcesOld.indexOf(self.bookableResource()[i].id), 1);
                 }
             }
         }
@@ -296,11 +294,11 @@ function applicationModel() {
         if (self.bookingDate() && self.bookingStartTime() && self.bookingEndTime()) {
             let dateStr = self.bookingDate();
             let dateParts = dateStr.split(".");
-            if(dateParts[0].length === 1) {
+            if (dateParts[0].length === 1) {
                 dateParts[0] = "0" + dateParts[0];
                 dateStr = dateParts.join(".");
             }
-            if(dateParts[1].length === 1) {
+            if (dateParts[1].length === 1) {
                 dateParts[1] = "0" + dateParts[1];
                 dateStr = dateParts.join(".");
             }
@@ -355,6 +353,9 @@ function applicationModel() {
 
         }
     };
+    self.removeRessource = function () {
+        this.selected(false);
+    };
     self.aboutArrangement = ko.observable("");
     self.agegroupList = agegroup;
     self.specialRequirements = ko.observable("");
@@ -375,6 +376,78 @@ function applicationModel() {
 
         }
         return result;
+    });
+
+    self.selectedResourcesOld.subscribe(function (currentSelectedResources) {
+        // Iterate over all bookable resources
+        self.bookableResource().forEach(function (resource) {
+            var isSelected = currentSelectedResources.includes(resource.id);
+            // Update aria-selected attribute
+            var element = $(`#select2-select-multiple-results [id*='${resource.id}']`);
+            $(this).attr('aria-selected', 'false');
+            $(this).attr('aria-fake-selected', isSelected ? 'true' : 'false');
+        });
+    });
+
+
+    $(document).ready(function () {
+        /* Multiselect dropdown */
+        var $select = $('#select-multiple'); // Replace with your select element's ID
+        var $displayContainer = $('.selected-items-display'); // The container where you want to display the selected items
+        console.log($displayContainer);
+        $select.select2({
+            theme: 'select-v2',
+            width: '100%',
+            placeholder: 'Velg en eller flere kommuner',
+            closeOnSelect: false,
+        })
+
+        const updateSelected = () => {
+            $(".select2-results__option[id^='select2-select-multiple-result-']").each(function () {
+                var splitElementid = this.id.split("-"); // Get the item's ID
+                const itemId = splitElementid[splitElementid.length - 1]
+                console.log(itemId);
+                var isSelected = self.selectedResourcesOld().includes(+itemId)/* your logic to determine if the item should be selected */;
+
+                // Set aria-selected attribute based on your condition
+                $(this).attr('aria-selected', 'false');
+                $(this).attr('aria-fake-selected', isSelected ? 'true' : 'false');
+            });
+        }
+
+        $select.on('select2:open', function () {
+            // Use setTimeout to ensure the operations happen after the Select2 dropdown is fully rendered
+            setTimeout(function () {
+                updateSelected();
+            }, 0);
+        });
+
+
+        function handleSelectUnselect(e) {
+            var data = e.params.data;
+            console.log("Item selected/unselected: ", +data.id);
+            var resource = self.bookableResource().find(function (r) {
+                return r.id === +data.id;
+            });
+
+            console.log(self.bookableResource());
+            console.log(resource);
+
+            if (resource) {
+                resource.selected(!resource.selected()); // Toggle the selected state
+            }
+            console.log($(this))
+
+            // Reset the value and trigger change to refresh the Select2 display
+            $(this).val(null).trigger('change');
+            setTimeout(function () {
+                updateSelected();
+            }, 0);
+        }
+
+
+        $select.on('select2:select', handleSelectUnselect);
+        $select.on('select2:unselect', handleSelectUnselect);
     });
 
 }
@@ -586,6 +659,7 @@ function setDoc(data) {
     }
     $("#regulation_documents").html(child);
 }
+
 function formatDateToDateTimeString(date) {
     const pad = (num) => (num < 10 ? '0' + num : num.toString());
 
