@@ -1025,6 +1025,7 @@
 					</label>
 					<xsl:call-template name="cat_select" data-validation="required" >
 						<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+						<xsl:with-param name="id">cat_id</xsl:with-param>
 					</xsl:call-template>
 				</div>
 				<div class="pure-control-group">
@@ -1114,6 +1115,26 @@
 			</input>
 		</form>
 	</div>
+
+	<script>
+
+		$("#cat_id").select2({
+		placeholder: "",
+		width: '75%'
+		});
+
+		$('#cat_id').on('select2:open', function (e) {
+
+		$(".select2-search__field").each(function()
+		{
+		if ($(this).attr("aria-controls") == 'select2-cat_id-results')
+		{
+		$(this)[0].focus();
+		}
+		});
+		});
+
+	</script>
 </xsl:template>
 
 <!-- New template-->
