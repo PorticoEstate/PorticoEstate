@@ -1801,6 +1801,15 @@
 			remove_column_search();
 			$('#reset_filter').hide();
 			$('#active_filters').html("");
+			// Deselect all selected options in Select2 and select the first option
+			$('.select2').each(function() {
+				var $select = $(this);
+				$select.val('0');
+				$select.trigger('change');
+			// Update the displayed text in Select2
+				var $selection = $select.find('.select2-selection__rendered');
+				$selection.text('');
+			});
 		}
 
 
