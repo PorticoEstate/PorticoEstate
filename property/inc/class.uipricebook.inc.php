@@ -1579,6 +1579,7 @@
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			phpgwapi_jquery::load_widget('select2');
 
 			$data = array
 				(
