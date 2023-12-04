@@ -398,7 +398,7 @@ function applicationModel() {
         $select.select2({
             theme: 'select-v2',
             width: '100%',
-            placeholder: 'Velg en eller flere kommuner',
+            placeholder: 'Velg leieobjekt',
             closeOnSelect: false,
         })
 
