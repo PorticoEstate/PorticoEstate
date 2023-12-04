@@ -201,6 +201,9 @@
         &[aria-selected=true] {
           background-color: $purple-24;
         }
+        &[aria-fake-selected=true] {
+          background-color: $purple-24;
+        }
         
         &--highlighted{
           background-color: $grey-light;

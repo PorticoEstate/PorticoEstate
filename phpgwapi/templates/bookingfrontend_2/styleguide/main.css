@@ -1574,6 +1574,9 @@ textarea {
 .select2-container--select-v2 .select2-dropdown .select2-results__option[aria-selected=true] {
   background-color: #dfd0e3;
 }
+.select2-container--select-v2 .select2-dropdown .select2-results__option[aria-fake-selected=true] {
+  background-color: #dfd0e3;
+}
 .select2-container--select-v2 .select2-dropdown .select2-results__option--highlighted {
   background-color: #F5F5F5;
 }
