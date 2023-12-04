@@ -2097,12 +2097,15 @@ HTML;
 
 		function pdf_order( $workorder_id = '', $show_cost = false )
 		{
+			$redirect_on_error = false;
 			if (!$this->acl_read)
 			{
 				phpgw::no_access();
 			}
 			if (!$workorder_id)
 			{
+				$redirect_on_error = true;
+
 				$workorder_id								 = phpgw::get_var('workorder_id'); // in case of bigint
 				$show_cost									 = phpgw::get_var('show_cost', 'bool');
 				$GLOBALS['phpgw_info']['flags']['noheader']	 = true;
@@ -2143,10 +2146,16 @@ HTML;
 
 				if (!$_ok)
 				{
-					throw new Exception(lang('order %1 is not approved', $workorder_id) );
-//					phpgwapi_cache::message_set(lang('order is not approved'), 'error');
-//					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiwo_hour.view',
-//						'workorder_id' => $workorder_id, 'from' => phpgw::get_var('from')));
+					phpgwapi_cache::message_set(lang('order %1 is not approved', $workorder_id), 'error');
+					if($redirect_on_error)
+					{
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiwo_hour.view',
+							'workorder_id' => $workorder_id, 'from' => phpgw::get_var('from')));
+					}
+					else
+					{
+						throw new Exception(lang('order %1 is not approved', $workorder_id) );
+					}
 				}
 				unset($_ok);
 			}

@@ -65,7 +65,7 @@
 				execMethod('property.soworkorder.get_budget', $order_id);
 			}
 
-			$sql = "UPDATE fm_project_budget SET closed = 1 WHERE year =" . date('Y') . ' AND ( month > 0 AND month <= ' . date('n') . ')';
+			$sql = "UPDATE fm_project_budget SET closed = 1 WHERE year =" . date('Y') . ' AND ( month > 0 AND month < ' . date('n') . ')';
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$count_orders = count($orders);

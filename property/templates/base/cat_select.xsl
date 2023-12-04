@@ -3,6 +3,7 @@
 <xsl:template name="cat_select">
 	<xsl:param name="class" />
 	<xsl:param name="mode" />
+	<xsl:param name="id" />
 	<xsl:variable name="lang_cat_statustext">
 		<xsl:value-of select="lang_cat_statustext"/>
 	</xsl:variable>
@@ -29,7 +30,13 @@
 			<xsl:attribute name="disabled">
 				<xsl:text>disabled</xsl:text>
 			</xsl:attribute>
-		</xsl:if>e		<option value="">
+		</xsl:if>
+		<xsl:if test="$id != ''">
+			<xsl:attribute name="id">
+				<xsl:value-of select="$id"/>
+			</xsl:attribute>
+		</xsl:if>
+		<option value="">
 			<xsl:value-of select="lang_no_cat"/>
 		</option>
 		<xsl:apply-templates select="cat_list"/>

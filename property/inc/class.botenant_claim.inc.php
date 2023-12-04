@@ -206,7 +206,8 @@
 
 		function save( $claim )
 		{
-
+			$claim['amount'] = str_replace(array(',', ' '), array('.', ''), $claim['amount']);
+			
 			if ($claim['claim_id'])
 			{
 				if ($claim['claim_id'] != 0)
@@ -305,6 +306,11 @@
 				{
 					$record_history[$i]['value_new_value']	 = $status_text[$value['new_value']];
 					$record_history[$i]['value_old_value']	 = $status_text[$value['old_value']];
+				}
+				else if ($value['status'] == 'A')
+				{
+					$record_history[$i]['value_old_value'] = number_format($value['old_value'], 2, ',', ' ');
+					$record_history[$i]['value_new_value'] = number_format($value['new_value'], 2, ',', ' ');
 				}
 				else
 				{
