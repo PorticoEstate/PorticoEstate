@@ -363,107 +363,6 @@ class ArticleTableViewModel {
 }
 
 
-ko.components.register('article-table-old', {
-    viewModel: {
-        createViewModel: (params) => new ArticleTableViewModel(params)
-    },
-    // language=HTML
-    template: `
-        <!-- ko foreach: { data: articles, as: 'resource' } -->
-        <div class="article-table-wrapper">
-            <div class="resource-header">
-                <table class="table article-table resource-table" data-bind="css: { 'collapsed-head': resource.isCollapsed() }">
-                    <thead>
-                    <tr>
-                        <th class="resource-name" data-bind="text: resource.info.name"></th>
-                        <th class="resource-price"
-                            data-bind="text: $parent.getPriceUnit(resource)+': ' + $parent.toLocale(resource.info.price)"></th>
-                        <th class="resource-hours"
-                            data-bind="text: $parent.getPriceName(resource)+': ' + resource.info.selected_quantity()"></th>
-                        <th class="resource-total"
-                            data-bind="text: 'Total: ' + $parent.calculateTotal(resource)"></th>
-                        <th class="resource-expand"
-                            data-bind="click: function() { $parent.toggleCollapse(resource) }">
-                            <button class="btn btn-subtle" type="button" data-toggle="collapse"
-                                    data-bind="//click: function() { $parent.toggleCollapse(resource) }"
-                                    aria-expanded="true">
-                                <!-- ko if: resource.isCollapsed() -->
-                                <div><i class="fas fa-angle-down"></i></div>
-                                <!-- /ko -->
-                                <!-- ko ifnot: resource.isCollapsed() -->
-                                <div><i class="fas fa-angle-up"></i></div>
-                                <!-- /ko -->
-                            </button>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr style="display: none;">
-                        <td colspan="8">
-                            <!-- Hidden inputs for resource -->
-                            <input type="hidden" data-bind="value: resource.info.id" name="resource_ids[]">
-                            <input type="hidden" data-bind="value: resource.info.selected_quantity"
-                                   name="resource_quantities[]">
-                            <input type="hidden" data-bind="value: resource.info.mandatory" name="resource_mandatory[]">
-                            <!-- Add other hidden fields as needed -->
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div data-bind="visible: !resource.isCollapsed(), attr: {id: 'resource' + resource.info.resource_id}"
-                 class="collapsible-part">
-                <!-- ko foreach: { data: Object.keys(resource.groups), as: 'groupName' } -->
-                <table class="table article-table child-table ">
-                    <thead>
-                    <tr>
-                        <th colspan="5" class="font-weight-bold group-name" data-bind="html: groupName + $parents[1].getRemark(resource.groups[groupName])"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!-- ko foreach: { data: resource.groups[groupName], as: 'item' } -->
-                    <tr>
-                        <td class="item-name" data-bind="text: item.name"></td>
-                        <td class="item-description" data-bind="text: $parents[2].cleanText(item.article_remark)"></td>
-                        <td class="item-price"
-                            data-bind="text: $parents[2].toLocale(item.price) + (item.unit === 'each' ? '/stk' : '/' + item.unit)"></td>
-                        <!--                            <td class="item-quantity">-->
-                        <!--                                <input type="number" class="form-control" min="0"-->
-                        <!--                                       data-bind="value: item.selected_quantity, event: { change: $parent.updateQuantity }">-->
-                        <!--                            </td>-->
-                        <td class="item-quantity">
-                            <button type="button" class=" pe-btn pe-btn-secondary pe-btn--small-circle "
-                                    data-bind="click: function(data, event) { $parents[2].decrementQuantity(item)  }">
-                                <i class="fas fa-minus fa-fw"></i>
-                            </button>
-                            <span style="display: inline-block;min-width: 20px; text-align: center" data-bind="text: item.selected_quantity"></span>
-                            <button type="button" class=" pe-btn pe-btn-secondary pe-btn--small-circle " data-bind="click: function() { $parents[2].incrementQuantity(item) }">
-                                <i class="fas fa-plus fa-fw"></i>
-                            </button>
-                        </td>
-                        <td class="item-sum" data-bind="text: $parents[2].toLocale(item.selected_sum(), 2)"></td>
-                        <td class="hidden-inputs" style="display: none;">
-                            <!-- Hidden inputs for each item -->
-                            <input type="hidden" data-bind="value: item.id">
-                            <input type="hidden" data-bind="value: item.mandatory" name="mandatory_items[]">
-                            <input type="hidden" data-bind="value: item.selected_quantity"
-                                   name="selected_quantities[]">
-                            <input type="hidden" data-bind="value: item.parent_mapping_id"
-                                   name="parent_mapping_ids[]">
-                        </td>
-                    </tr>
-                    <!-- /ko -->
-                    </tbody>
-                </table>
-                <!-- /ko -->
-            </div>
-        </div>
-        <!-- /ko -->
-    `
-});
-
-
-
 ko.components.register('article-table', {
     viewModel: {
         createViewModel: (params) => new ArticleTableViewModel(params)
@@ -523,8 +422,12 @@ ko.components.register('article-table', {
                         <!-- ko foreach: { data: resource.groups[groupName], as: 'item' } -->
                         <div class="category-article-row">
                             <div class="item-name" data-bind="text: item.name"></div>
+                            <div class="desc-title">Beskrivelse</div>
+                            
                             <div class="item-description"
                                  data-bind="text: $parents[2].cleanText(item.article_remark)"></div>
+                            <div class="price-title">Pris pr enhet</div>
+                            
                             <div class="item-price"
                                  data-bind="text: $parents[2].toLocale(item.price) + (item.unit === 'each' ? '/stk' : '/' + item.unit)"></div>
                             <!--                            <td class="item-quantity">-->
@@ -543,6 +446,7 @@ ko.components.register('article-table', {
                                     <i class="fas fa-plus fa-fw"></i>
                                 </button>
                             </div>
+                            <div class="sum-title">Total</div>
                             <div class="item-sum" data-bind="text: $parents[2].toLocale(item.selected_sum(), 2)"></div>
                             <div class="hidden-inputs" style="display: none;">
                                 <!-- Hidden inputs for each item -->

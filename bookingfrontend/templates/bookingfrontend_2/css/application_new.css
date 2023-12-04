@@ -753,6 +753,15 @@
   border-top-left-radius: 0.5rem;
   align-items: center;
 }
+@media all and (max-width: 992px) {
+  .article-table-wrapper .article-table-header {
+    grid-template-columns: 2fr 1fr 1fr 3rem;
+    grid-template-areas: "name hours total expand";
+  }
+  .article-table-wrapper .article-table-header .resource-price {
+    display: none;
+  }
+}
 .article-table-wrapper .article-table-header.collapsed-head {
   border-bottom-right-radius: 0.5rem;
   border-bottom-left-radius: 0.5rem;
@@ -793,9 +802,23 @@
   padding: 0.5rem;
   background-color: #dfd0e3;
 }
+@media all and (max-width: 992px) {
+  .article-table-wrapper .category-table .category-header {
+    grid-template-columns: 2fr 1fr 3rem;
+    grid-template-areas: "group-title group-title group-title expand";
+  }
+  .article-table-wrapper .category-table .category-header .category-header-unit-price, .article-table-wrapper .category-table .category-header .category-header-count, .article-table-wrapper .category-table .category-header .category-header-total, .article-table-wrapper .category-table .category-header .category-header-description {
+    display: none;
+  }
+}
 .article-table-wrapper .category-table .category-header .category-name {
   margin-left: 3rem;
   grid-area: group-title;
+}
+@media all and (max-width: 992px) {
+  .article-table-wrapper .category-table .category-header .category-name {
+    margin-left: 0;
+  }
 }
 .article-table-wrapper .category-table .category-header .category-header-description {
   grid-area: head-desc;
@@ -814,9 +837,38 @@
   grid-template-areas: "name desc price quantity sum unused";
   padding: 0.5rem;
 }
+@media all and (max-width: 992px) {
+  .article-table-wrapper .category-table .category-articles .category-article-row {
+    padding: 1rem;
+    grid-template-columns: 3fr 2fr;
+    grid-template-areas: "name quantity" "desc-title desc" "price-title price" "sum-title sum";
+  }
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .desc-title, .article-table-wrapper .category-table .category-articles .category-article-row .price-title, .article-table-wrapper .category-table .category-articles .category-article-row .sum-title {
+  align-self: center;
+}
+@media all and (min-width: 992px) {
+  .article-table-wrapper .category-table .category-articles .category-article-row .desc-title, .article-table-wrapper .category-table .category-articles .category-article-row .price-title, .article-table-wrapper .category-table .category-articles .category-article-row .sum-title {
+    display: none;
+  }
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .desc-title {
+  grid-area: desc-title;
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .price-title {
+  grid-area: price-title;
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .sum-title {
+  grid-area: sum-title;
+}
 .article-table-wrapper .category-table .category-articles .category-article-row .item-name {
   margin-left: 3rem;
   grid-area: name;
+}
+@media all and (max-width: 992px) {
+  .article-table-wrapper .category-table .category-articles .category-article-row .item-name {
+    margin-left: 0;
+  }
 }
 .article-table-wrapper .category-table .category-articles .category-article-row .item-description {
   grid-area: desc;
