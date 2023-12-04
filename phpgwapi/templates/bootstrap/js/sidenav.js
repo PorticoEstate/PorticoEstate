@@ -1,155 +1,194 @@
-$(document).ready(function ()
-{
-	var tree = $('#navbar'),
-		filter = $('#navbar_search'),
-		//	filtering = false,
-		thread = null;
-	var treemenu_data = {};
+class SideNav {
 
+	constructor()
+	{
+		this.treemenu_data = {};
+		this.thread = null;
+		$(document).ready(() => this.init());
+	}
 
-	var oArgs = {menuaction: 'phpgwapi.menu_jqtree.get_menu'};
-	var some_url = phpGWLink('index.php', oArgs, true);
-	var tree = $('#navbar');
-	$.getJSON(
-		some_url,
-		function (data)
-		{
-			treemenu_data = data;
-			tree.tree({
-				data: data,
-				autoEscape: false,
-				dragAndDrop: false,
-				autoOpen: false,
-				saveState: false,
-				useContextMenu: false,
-				closedIcon: $('<i class="far fa-arrow-alt-circle-right"></i>'),
-				openedIcon: $('<i class="far fa-arrow-alt-circle-down"></i>'),
-				onCreateLi: function (node, $li)
+	init()
+	{
+		this.navbar = $('#navbar');
+		this.filter = $('#navbar_search');
+		this.loadTree();
+		this.setupFilter();
+		this.setupCollapseNavbar();
+		this.setupContextMenu();
+	}
+
+	renderTree(data)
+	{
+		this.treemenu_data = data;
+		this.navbar.tree({
+			data: data,
+			autoEscape: false,
+			dragAndDrop: false,
+			autoOpen: false,
+			saveState: true,
+			useContextMenu: false,
+			closedIcon: $('<i class="far fa-arrow-alt-circle-right"></i>'),
+			openedIcon: $('<i class="far fa-arrow-alt-circle-down"></i>'),
+			onCreateLi: (node, $li) => {
+				this.navbar.tree('removeFromSelection', node);
+				node.selected = 0;
+				if (node.id === menu_selection || 'navbar::' + node.id === menu_selection)
 				{
-					tree.tree('removeFromSelection', node);
-					if (node.selected === 1)
+					node.selected = 1;
+				}
+
+				$li.removeClass('jqtree-selected');
+				if (node.selected === 1)
+				{
+					$li.addClass('jqtree-selected');
+					this.navbar.tree('addToSelection', node);
+					var parent = node.parent;
+					while (typeof (parent.element) !== 'undefined')
 					{
-						$li.addClass('jqtree-selected');
-						tree.tree('addToSelection', node);
+						this.navbar.tree('openNode', parent, false);
+						parent = parent.parent;
+					}
+				}
+
+				var title = $li.find('.jqtree-title'),
+					search = this.filter.val().toLowerCase(),
+					value = title.text().toLowerCase();
+				if (search !== '')
+				{
+					$li.hide();
+					if (value.indexOf(search) > -1)
+					{
+						$li.show();
 						var parent = node.parent;
 						while (typeof (parent.element) !== 'undefined')
 						{
-							tree.tree('openNode', parent, false);
+							$(parent.element)
+								.show()
+								.addClass('jqtree-filtered');
+							this.navbar.tree('openNode', parent, false);
 							parent = parent.parent;
 						}
 					}
-
-					var title = $li.find('.jqtree-title'),
-						search = filter.val().toLowerCase(),
-						value = title.text().toLowerCase();
-					if (search !== '')
+					if (!this.navbar.hasClass('jqtree-filtered'))
 					{
-						$li.hide();
-						if (value.indexOf(search) > -1)
-						{
-							$li.show();
-							var parent = node.parent;
-							while (typeof (parent.element) !== 'undefined')
-							{
-								$(parent.element)
-									.show()
-									.addClass('jqtree-filtered');
-								tree.tree('openNode', parent, false);
-								parent = parent.parent;
-							}
-						}
-//						if (!filtering)
-//						{
-//							filtering = true;
-//						}
-						if (!tree.hasClass('jqtree-filtered'))
-						{
-							tree.addClass('jqtree-filtered');
-						}
-					}
-					else
-					{
-//						if (filtering)
-//						{
-//							filtering = false;
-//						}
-//
-						if (tree.hasClass('jqtree-filtered'))
-						{
-							tree.removeClass('jqtree-filtered');
-						}
+						this.navbar.addClass('jqtree-filtered');
 					}
 				}
-			});
-		}
-	);
-
-	filter.keyup(function ()
-	{
-		clearTimeout(thread);
-		thread = setTimeout(function ()
-		{
-			tree.tree('loadData', treemenu_data);
-		}, 50);
-	});
-
-	$('#collapseNavbar').on('click', function ()
-	{
-		$(this).attr('href', 'javascript:;');
-
-		var $tree = $('#navbar');
-		var tree = $tree.tree('getTree');
-
-		tree.iterate(
-			function (node)
-			{
-				$tree.tree('closeNode', node, true);
-			}
-		);
-
-	});
-
-
-
-	$.contextMenu({
-		selector: '.context-menu-nav',
-		callback: function (key, options)
-		{
-			var id = $(this).attr("id");
-			var icon = $(this).attr("icon");
-			var href = $(this).attr("href");
-			var location_id = $(this).attr("location_id");
-			var text = $(this).text();
-			var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu'};
-			var requestUrl = phpGWLink('index.php', oArgs, true);
-
-			if(key === 'open_in_new')
-			{
-				window.open(href, '_blank');
-				return;
-			}
-
-			$.ajax({
-				type: 'POST',
-				url: requestUrl,
-				dataType: 'json',
-				data:{bookmark_candidate: id, text: text, icon: icon, href: href, location_id: location_id},
-				success: function (data)
+				else
 				{
-					if (data)
+					if (this.navbar.hasClass('jqtree-filtered'))
 					{
-						alert(data.status);
-						location.reload();
+						this.navbar.removeClass('jqtree-filtered');
 					}
 				}
-			});
-		},
-		items: {
-			"edit": {name: "Bookmark", icon: "far fa-bookmark"},
-			"open_in_new": {name: "Åpne i nytt vindu", icon: "fas fa-external-link-alt"}
-		}
-	});
 
+			}
+
+		});
+	}
+
+	loadTree()
+	{
+		var tree_json = localStorage.getItem('menu_tree_' + sessionid);
+		if (tree_json)
+		{
+			this.renderTree(JSON.parse(tree_json));
+		}
+		else
+		{
+			var oArgs = {menuaction: 'phpgwapi.menu_jqtree.get_menu'};
+			var some_url = phpGWLink('index.php', oArgs, true);
+			$.getJSON(some_url, (data) => {
+				this.renderTree(data);
+				localStorage.setItem('menu_tree_' + sessionid, this.navbar.tree('toJson'));
+			});
+		}
+	}
+
+	setupFilter()
+	{
+		this.filter.keyup(() => {
+			clearTimeout(this.thread);
+			this.thread = setTimeout(() => {
+				this.navbar.tree('loadData', this.treemenu_data);
+			}, 50);
+		});
+	}
+
+	setupCollapseNavbar()
+	{
+		$('#collapseNavbar').on('click', () => {
+			var tree = this.navbar.tree('getTree');
+	//		console.log(tree);
+			this.iterateNodes(tree);
+			localStorage.setItem('menu_tree_' + sessionid, this.navbar.tree('toJson'));
+		});
+	}
+
+	// Define a recursive function to iterate over all nodes
+	iterateNodes(node)
+	{
+		// Iterate over child nodes
+		if (node.children)
+		{
+			node.selected = 0;
+			this.navbar.tree('removeFromSelection', node);
+			this.navbar.tree('closeNode', node, true);
+
+			for (var i = 0; i < node.children.length; i++)
+			{
+				this.iterateNodes(node.children[i]);
+			}
+		}
+	}
+
+	setupContextMenu()
+	{
+		$.contextMenu({
+			selector: '.context-menu-nav',
+			callback: function (key, options)
+			{
+				var id = $(this).attr("id");
+				var icon = $(this).attr("icon");
+				var href = $(this).attr("href");
+				var location_id = $(this).attr("location_id");
+				var text = $(this).text();
+				var oArgs = {menuaction: 'phpgwapi.menu.update_bookmark_menu'};
+				var requestUrl = phpGWLink('index.php', oArgs, true);
+				if (key === 'open_in_new')
+				{
+					window.open(href, '_blank');
+					return;
+				}
+
+				$.ajax({
+					type: 'POST',
+					url: requestUrl,
+					dataType: 'json',
+					data: {bookmark_candidate: id, text: text, icon: icon, href: href, location_id: location_id},
+					success: function (data)
+					{
+						if (data)
+						{
+							alert(data.status);
+							location.reload();
+						}
+					}
+				});
+			},
+			items: {
+				"edit": {name: "Bookmark", icon: "far fa-bookmark"},
+				"open_in_new": {name: "Åpne i nytt vindu", icon: "fas fa-external-link-alt"}
+			}
+		});
+	}
+}
+
+// Usage
+var sideNav = new SideNav();
+
+$(document).ready(function ()
+{
 	$("#template_selector").change(function ()
 	{
 
@@ -157,7 +196,6 @@ $(document).ready(function ()
 		//user[template_set] = template;
 		var oArgs = {appname: 'preferences', type: 'user'};
 		var requestUrl = phpGWLink('preferences/preferences.php', oArgs, true);
-
 		$.ajax({
 			type: 'POST',
 			dataType: 'json',
@@ -165,15 +203,12 @@ $(document).ready(function ()
 			url: requestUrl,
 			success: function (data)
 			{
-		//		console.log(data);
+				//		console.log(data);
 				location.reload(true);
 			}
 		});
-
 	});
-
 });
-
 
 function strip_html(originalString)
 {
@@ -185,7 +220,6 @@ function get_messages()
 //	var profile_img = phpGWLink('phpgwapi/templates/bootstrap/images/undraw_profile.svg', {}, false);
 
 	var htmlString = '';
-
 	var oArgs = {menuaction: 'messenger.uimessenger.index', status: 'N'};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	$.ajax({
@@ -204,12 +238,7 @@ function get_messages()
 					{
 						font_class = 'font-weight-bold';
 					}
-//					console.log(obj[i]);
 					htmlString += '<a class="dropdown-item d-flex align-items-center" href="' + obj[i].link + '">';
-//					htmlString += '		<div class="dropdown-list-image me-3">';
-//					htmlString += '			<img class="rounded-circle" src="' + profile_img + '" alt="">';
-//					htmlString += '			<div class="status-indicator bg-success"></div>';
-//					htmlString += '		</div>';
 					htmlString += '		<div class="' + font_class + '">';
 					htmlString += '			<div class="text-truncate">' + strip_html(obj[i].subject_text) + '</div>';
 					htmlString += '			<div class="small text-muted">' + strip_html(obj[i].from) + ' · ' + strip_html(obj[i].date) + '</div>';
@@ -217,9 +246,7 @@ function get_messages()
 					htmlString += '</a>';
 				});
 				$('#messages').html(htmlString);
-
 			}
 		}
 	});
-
 }

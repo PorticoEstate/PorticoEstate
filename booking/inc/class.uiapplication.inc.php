@@ -32,7 +32,8 @@
 			'refund_payment'			 => true,
 			'get_purchase_order'		 => true,
 			'delete'					 => true,
-			'get_activity_data'			 => true
+			'get_activity_data'			 => true,
+			'get_applications'			 => true
 		);
 		protected $customer_id,
 			$default_module = 'bookingfrontend',
@@ -98,6 +99,19 @@
 			$this->display_name = lang('application');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
 		}
+
+		public function get_applications()
+		{
+			if(!$GLOBALS['phpgw']->acl->check('.application', PHPGW_ACL_READ, 'booking'))
+			{
+				phpgw::no_access();
+			}
+			$ssn =  phpgw::get_var('ssn', 'string');
+			$application_data = CreateObject('booking.souser')->get_applications($ssn);
+			return $application_data;
+		}
+
+
 		// --- SIGURD::START EXAMPLE -- //
 
 		/**
@@ -1957,6 +1971,10 @@
 			/**
 			 * hack
 			 */
+			if(isset($errors['from_']) && is_array($errors['from_']))
+			{
+				$errors['from_'] = implode(', ', $errors['from_']);
+			}
 			if(isset($errors['customer_organization_number']) && is_array($errors['customer_organization_number']))
 			{
 				$errors['customer_organization_number'] = implode(', ', $errors['customer_organization_number']);

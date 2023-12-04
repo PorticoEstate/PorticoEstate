@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
 
  
-    <script src="../../../../phpgwapi/js/jquery/js/jquery-3.6.3.min.js"></script>
+    <script src="../../../../phpgwapi/js/jquery/js/jquery-3.7.1.min.js"></script>
     <script src="../../../../phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="../../../../phpgwapi/js/jquery/ui/jquery-ui-1.13.2.min.js"></script>
     <script src="../../../js/select2/js/select2.min.js"></script>
@@ -50,6 +50,11 @@
             'name' => 'Knapper',
             'folder' => 'button',
             'filename' => 'button',
+          ),
+          'Pill' => array(
+            'name' => 'Piller',
+            'folder' => 'pill',
+            'filename' => 'pill',
           ),
           'Link' => array(
             'name' => 'Lenke',

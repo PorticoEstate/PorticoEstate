@@ -249,6 +249,16 @@
 							</xsl:attribute>
 						</input>
 					</div>
+					<div class="pure-control-group">
+						<label>
+							Fornavn først
+						</label>
+						<input type="checkbox" id="field_first_name_first" name="first_name_first" value="1">
+							<xsl:if test="config_data/first_name_first = 1">
+								<xsl:attribute name="checked">checked</xsl:attribute>
+							</xsl:if>
+						</input>
+					</div>
 
 				</fieldsset>
 

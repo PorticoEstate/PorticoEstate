@@ -279,16 +279,25 @@
 			$template_entity_id	 = $template_info[0];
 			$template_cat_id	 = $template_info[1];
 
-			$attrib_group_list = $this->read_attrib_group(array('entity_id'	 => $template_entity_id,
-				'cat_id'	 => $template_cat_id, 'allrows'	 => true));
+			$attrib_group_list = $this->read_attrib_group(array(
+				'entity_id'	 => $template_entity_id,
+				'cat_id'	 => $template_cat_id,
+				'allrows'	 => true,
+				'start'	 => 0,
+				'query'	 => '',
+				'sort'	 => 'ASC',
+				'order'	 => 'id'
+			));
 
 			foreach ($attrib_group_list as $attrib_group)
 			{
-				$group = array
-					(
+				$group = array(
+					'id'		 => $attrib_group['id'],
 					'appname'	 => $this->type_app[$this->type],
 					'location'	 => ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}",
 					'group_name' => $attrib_group['name'],
+					'group_sort' => $attrib_group['group_sort'],
+					'parent_id'	 => $attrib_group['parent_id'],
 					'descr'		 => $attrib_group['descr'],
 					'remark'	 => $attrib_group['remark']
 				);
@@ -306,6 +315,7 @@
 					$template_attribs[] = $this->read_single_attrib($template_entity_id, $template_cat_id, $attrib['id']);
 				}
 			}
+			unset($attrib);
 
 			foreach ($template_attribs as $attrib)
 			{
@@ -319,15 +329,20 @@
 					unset($attrib['choice']);
 				}
 
-				$id = $this->custom->add($attrib);
+				$id = $this->custom->add($attrib); // $id is recalculated in add()
+				$attrib['id'] = $id;
 				if ($choices)
 				{
 					foreach ($choices as $choice)
 					{
-						$attrib['new_choice']	 = $choice['value'];
-						$attrib['id']			 = $id;
-						$this->custom->edit($attrib);
+						$attrib['new_choice'][]	 = array(
+							'id'	 => (int)$choice['id'] < 89 ? 0 : (int)$choice['id'],
+							'value'	 => $choice['value'],
+							'title'	 => $choice['title'],
+							'sort'	 => $choice['order']
+						);
 					}
+					$this->custom->edit($attrib);
 				}
 			}
 		}
@@ -398,14 +413,14 @@
 			}
 			$attrib				 = $this->custom->find(
 				$this->type_app[$this->type],
-	".{$this->type}.{$data['entity_id']}.{$data['cat_id']}",
-	$data['start'], $data['query'],
-	$data['sort'],
-	$data['order'],
-	$this->allrows,
-	false,
-	array(),
-	(int)$data['results']
+				".{$this->type}.{$data['entity_id']}.{$data['cat_id']}",
+				$data['start'], $data['query'],
+				$data['sort'],
+				$data['order'],
+				$this->allrows,
+				false,
+				array(),
+				(int)$data['results']
 			);
 			$this->total_records = $this->custom->total_records;
 			return $attrib;

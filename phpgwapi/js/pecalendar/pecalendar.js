@@ -111,7 +111,6 @@ class PEcalendar {
     availableTimeSlots;
 
 
-
     applicationURL = null;
 
     /**
@@ -155,7 +154,21 @@ class PEcalendar {
     }
 
 
+    formatPillDate(event) {
+
+        const dateTimeFrom = DateTime.fromISO(`${event.date}T${event.from}`);
+        const dateTimeTo = DateTime.fromISO(`${event.date}T${event.to}`);
+        var day = dateTimeFrom.day;
+        var months = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'];
+        var month = months[dateTimeFrom.month - 1];
+        return day + '. ' + month;
+    };
+
+
     createListeners() {
+        var self = this;
+        // this.tempEvents = ko.observableArray([]);
+        // this.selectedTimeSlots = ko.observableArray([]);
         this.applicationURL = ko.computed(() => {
             let resource = this.resources[this.resource_id()];
             let dateRanges = this.tempEvents().map(tempEvent => {
@@ -192,6 +205,20 @@ class PEcalendar {
 
             return url;
         });
+
+
+        // Function to remove a temporary event
+        this.removeTempEventPill = function (event) {
+            // this.tempEvents.remove(event);
+            self.removeTempEvent(event);
+        };
+
+        // Function to remove a selected time slot
+        this.removeTimeSlotPill = function (slot) {
+            // this.selectedTimeSlots.remove(slot);
+            console.log("remove-slot", slot);
+
+        };
     }
 
     /**
@@ -309,7 +336,8 @@ class PEcalendar {
 
         // Calculate the width of a column and the height of a row in the content element
         const columnWidth = rect.width / 7;
-        const rowHeight = rect.height / ((this.endHour - this.startHour + 1) * this.hourParts);
+        const rowHeight = rect.height / ((this.endHour - this.startHour) * this.hourParts);
+        console.log(rect.height, rowHeight, this.endHour, this.startHour, this.hourParts)
 
         // Determine the column and row indices based on the relative x and y positions
         const columnIndex = Math.floor(x / columnWidth);
@@ -407,16 +435,6 @@ class PEcalendar {
         // }
     }
 
-    /**
-     * Updates the badge count based on the current length of the tempEvents array.
-     */
-    updateBadgeCount() {
-        const badgeElem = document.getElementById(this.getId("badgeCount"));
-        if (badgeElem) {
-            badgeElem.textContent = this.tempEvents().length + this.selectedTimeSlots().length;
-        }
-    }
-
 
     /**
      * Adds events to the provided content container.
@@ -425,7 +443,7 @@ class PEcalendar {
      */
     addEventsToContent(content) {
         // If there are no events, exit early
-        if (!this.events || !this.tempEvents()) return;
+        if (!this.events || !this.tempEvents || !this.tempEvents()) return;
 
         // Iterate over the filtered events
         for (let event of this.filteredEvents()) {
@@ -526,7 +544,6 @@ class PEcalendar {
 
         this.createTempEventPill(tempEvent);
         this.updateResourceSelectState();
-        this.updateBadgeCount();  // Update the badge count
         return tempEvent;
     }
 
@@ -749,7 +766,6 @@ class PEcalendar {
                 this.clearPills();
                 this.addPillsToContent()
 
-                this.updateBadgeCount();  // Update the badge count
             });
         } else {
             e.classList.add('disabled')
@@ -809,7 +825,6 @@ class PEcalendar {
             this.clearPills();
             this.addPillsToContent()
 
-            this.updateBadgeCount();  // Update the badge count
         }
 
         // First day slot
@@ -891,7 +906,6 @@ class PEcalendar {
             //     this.clearPills();
             //     this.addPillsToContent()
             //
-            //     this.updateBadgeCount();  // Update the badge count
             // });
         } else {
             e.classList.add('disabled')
@@ -981,6 +995,18 @@ class PEcalendar {
         return `${formattedDate} ${formattedFromTime}-${formattedToTime}`;
     }
 
+    formatPillTimeInterval(currentDate, from, to) {
+        const dateObj = DateTime.fromISO(currentDate, {locale: 'nb'});
+        const fromTime = DateTime.fromISO(`${currentDate}T${from}`, {locale: 'nb'});
+        const toTime = DateTime.fromISO(`${currentDate}T${to}`, {locale: 'nb'});
+
+        const formattedDate = dateObj.toFormat('d. LLL');
+        const formattedFromTime = fromTime.toFormat('HH:mm');
+        const formattedToTime = toTime.toFormat('HH:mm');
+
+        return `${formattedFromTime}-${formattedToTime}`;
+    }
+
     /**
      * Updates a temporary event's attributes and re-renders it within the provided container.
      *
@@ -1064,7 +1090,6 @@ class PEcalendar {
             this.clearPills();
             this.addPillsToContent()
 
-            this.updateBadgeCount();  // Update the badge count
         });
         // Attach a click event to the 'x' to remove the event
         pill.appendChild(closeButton)
@@ -1094,7 +1119,6 @@ class PEcalendar {
         this.clearPills();
         this.addPillsToContent()
 
-        this.updateBadgeCount();  // Update the badge count
     }
 
 
@@ -1165,8 +1189,6 @@ class PEcalendar {
         // Return the button element
         return btn;
     }
-
-
 
 
     createCalendarDom() {
@@ -1292,44 +1314,7 @@ class PEcalendar {
                 self.resource_id(option.target.value);
                 self.createCalendarDom();
             }
-            // const applicationButton = document.getElementById(this.getId("application"));
-            // applicationButton.onclick = (event) => {
-            //     let resource = self.resources[self.resource_id];
-            //
-            //     let dateRanges = self.tempEvents.map(tempEvent => {
-            //         const unixDates = this.getUnixTimestamps(tempEvent.date, tempEvent.from, tempEvent.to);
-            //         return `${Math.floor(unixDates.startTimestamp / 1000)}_${Math.floor(unixDates.endTimestamp / 1000)}`;
-            //
-            //     }).join(',');
-            //     const reqParams = {
-            //         menuaction: 'bookingfrontend.uiapplication.add',
-            //         building_id: self.building_id,
-            //         resource_id: self.resource_id,
-            //         dates: dateRanges
-            //     }
-            //     if (this.tempEvents.length === 0) {
-            //         delete reqParams.dates;
-            //     }
-            //     let url = phpGWLink('bookingfrontend/', reqParams, false);
-            //     if (resource.simple_booking === 1) {
-            //         dateRanges = self.selectedTimeSlots.map(selected => {
-            //             return `${Math.floor(selected.slot.start / 1000)}_${Math.floor(selected.slot.end / 1000)}`;
-            //
-            //         }).join(',');
-            //
-            //         url = phpGWLink('bookingfrontend/', {
-            //             menuaction: 'bookingfrontend.uiapplication.add',
-            //             building_id: self.building_id,
-            //             resource_id: self.resource_id,
-            //             simple: true,
-            //             dates: dateRanges
-            //         }, false);
-            //     }
-            //     console.log(resource, url);
-            //
-            //     event.preventDefault();
-            //     location.href = url;
-            // }
+
             this.createListeners();
             ko.applyBindings(this, header);
             const date = document.getElementById(this.getId("datetimepicker"));
@@ -1382,8 +1367,8 @@ class PEcalendar {
         }
 
         const isTimeOverlapping = (event1.from < event2.to && event1.to > event2.from);
-        const isResourceOverlapping = event1.resources.some(resource1 =>
-            event2.resources.some(resource2 => resource1.id === resource2.id)
+        const isResourceOverlapping = event1.resources?.some(resource1 =>
+            event2.resources?.some(resource2 => resource1.id === resource2.id)
         );
 
         return isTimeOverlapping && isResourceOverlapping;
@@ -1485,6 +1470,11 @@ class PEcalendar {
             }
             console.log("ISCLICK")
             const target = e.target;
+
+            if (target.classList.contains('dots') || target.classList.contains('info')) {
+                return;
+            }
+            console.log(target);
 
             // Check if the clicked element is the top or bottom of the temporary event
             if (target.classList.contains('event-temporary')) {
@@ -1598,6 +1588,11 @@ class PEcalendar {
         // Event Listener for touchmove - To determine if the touch is a drag or a simple tap
         this.content.addEventListener('touchmove', (e) => {
             isTouchTap = false;
+            if (tempEvent) {
+                console.log("should end touchtap")
+                this.removeTempEvent(tempEvent)
+                tempEvent = undefined;
+            }
         });
 
         // Event Listener for touchend - To handle the touch tap and create/update the event
@@ -1670,29 +1665,38 @@ class PEcalendar {
         const dateTo = DateTime.fromISO(`${event.date}T${event.to}`);
 
         // Create a new div element to display the event's information
-        const info = this.createElement("div", "info");
+        const infoContainer = this.createElement("div", "info");
+        const info = this.createElement("div", "info-inner");
         info.id = this.getId("event");
         info.innerHTML = `<div><b>${event.name}</b></div>
             <div>Kl: ${dateFrom.toFormat("HH:mm")} - ${dateTo.toFormat("HH:mm")}</div>`;
 
+        infoContainer.appendChild(info);
+
         // Associate the info element with the dotsEl using Popper.js
-        const popper = new Popper(dotsEl, info, {
+        const popper = new Popper(dotsEl, infoContainer, {
             placement: 'left',
         });
-
+        let listener = () => {
+            infoContainer.removeAttribute('data-show');
+            window.removeEventListener('mousedown', listener)
+        }
         // Configure click behaviors for dotsEl and info elements
         dotsEl.onclick = (e) => {
-            e.stopPropagation()
-            info.setAttribute('data-show', '');
+            e.preventDefault();
+            infoContainer.setAttribute('data-show', '');
             popper.update();
+
+            listener = window.addEventListener('mousedown', listener)
         }
-        info.onclick = (e) => {
+        infoContainer.onclick = (e) => {
             e.stopPropagation()
             info.removeAttribute('data-show');
+            window.removeEventListener('mousedown', listener)
         }
 
         // Append the info element to the provided contentEl
-        contentEl.appendChild(info);
+        contentEl.appendChild(infoContainer);
     }
 
     /**
@@ -1714,43 +1718,41 @@ class PEcalendar {
             // language=HTML
             `
                 <div class="select_building_resource">
-                    <div>
-                        ${``
-                                // <select id=${this.getId("building")} class="js-select-basic">
-                                //    ${buildings?.map(building => '<option value="' + building.id + '"' + (building.id === this.building_id ? " selected" : "") + '>' + building.name.trim() + '</option>').join("")} -->
-                                //     <option value="${this.building_id}" selected>${buildings.find(b => b.id === this.building_id).name.trim()}</option>
-                                // </select> 
-                        }
+                    <div class="resource-switch">
                         <select id=${this.getId("resources")} class="js-select-basic">
                             ${this.resources ? Object.keys(this.resources).map(
                                     resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id() ? " selected" : "") + '>' + this.resources[resourceId].name.trim() + '</option>').join("") : ""}
                         </select>
                     </div>
-                    <!--                    <div class="expansion-panel">-->
-                        <!--                        <a class="expansion-header link-button" id=${this.getId("expansionHeader")}
-                        >-->
-                    <!--                            Bestillinger-->
-                        <!--                            <span class="badge" id=${this.getId("badgeCount")}>0</span>-->
-                    <!--                        </a>-->
-                    <!--                        <div class="expansion-content">-->
-                        <!--                            <div id=${this.getId("tempEventPills")}
-                         class="temp-event-pills"></div>-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
-                    <div class="js-dropdown dropdown" id="select-info">
-                        <button class="js-dropdown-toggler dropdown__toggler" data-toggle="dropdown" type="button"
+                    <a id=${this.getId("application")} class="application-button link-button link-button-primary"
+                       data-bind="attr: { href: applicationURL }">Søknad</a>
+                </div>
+                <div class="pending-row">
+
+                    <div id="tempEventPills" class="pills" data-bind="foreach: tempEvents()">
+                        <div class="pill pill--secondary">
+                            <div class="pill-date" data-bind="text: $parent.formatPillDate($data)">2. nov</div>
+                            <div class="pill-divider"></div>
+                            <div class="pill-content"
+                                 data-bind="text: $parent.formatPillTimeInterval(date, from, to)"></div>
+                            <button class="pill-icon" data-bind="click: $parent.removeTempEventPill">&#215;</button>
+                        </div>
+                        <!--        <span class="start-end" data-bind="text: formatDateTimeInterval(date, from, to)"></span>-->
+                        <!--        data-bind="text: formatUnixTimeInterval(start, end)"-->
+                    </div>
+
+                    <div class="js-dropdown dropdown showall-btn" id="select-info">
+                        <button class="js-dropdown-toggler dropdown__toggler " data-toggle="dropdown" type="button"
                                 aria-expanded="false">
-                            Bestillinger <span class="badge" id=${this.getId("badgeCount")}>0</span>
+                            Alle Bestillinger <span class="badge" id=${this.getId("badgeCount")}
+                                                    data-bind="visible: (tempEvents().length + selectedTimeSlots().length) > 0, 
+        text: tempEvents().length + selectedTimeSlots().length"></span>
                         </button>
                         <div class="js-dropdown-content dropdown__content" style="width: 100%">
                             <div id=${this.getId("tempEventPills")} class="temp-event-pills"></div>
                         </div>
                     </div>
-                    <a id=${this.getId("application")} class="link-button link-button-primary"
-                       data-bind="attr: { href: applicationURL }">Søknad</a>
                 </div>
-
-
                 <div class="calendar-settings">
                     <div class="date">
                         <fieldset>
@@ -1781,7 +1783,6 @@ class PEcalendar {
                                 <span class="fas fa-chevron-right" title="Neste"></span>
                             </button>
                         </div>
-
                     </div>
                     <div class="info-types">
                         <div class="type text-small">
@@ -1804,7 +1805,6 @@ class PEcalendar {
                         </div>
                     </div>
                 </div>
-
 
 
             `
@@ -1857,6 +1857,8 @@ class PEcalendar {
                 // Update the events, resources, and seasons based on the response
                 self.resources = buildingScheduleResults?.resources;
                 self.seasons = buildingScheduleResults?.seasons;
+
+                /** @type {Record<string, IFreeTimeSlot>} */
                 this.availableTimeSlots = availableSlotsData;
 
                 self.resource_id(

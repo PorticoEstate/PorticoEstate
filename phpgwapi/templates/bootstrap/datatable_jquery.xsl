@@ -767,6 +767,26 @@
 			</xsl:when>
 		</xsl:choose>
 		<xsl:choose>
+			<xsl:when test="column_search">
+				button_def.push({
+				<xsl:choose>
+					<xsl:when test="column_search/name">
+						text: "<xsl:value-of select="column_search/name"/>",
+						titleAttr: "<xsl:value-of select="column_search/name"/>",
+					</xsl:when>
+					<xsl:otherwise>
+						text: "<xsl:value-of select="php:function('lang', 'column search')"/>",
+						titleAttr: "<xsl:value-of select="php:function('lang', 'column search')"/>",
+					</xsl:otherwise>
+				</xsl:choose>
+				className: 'download',
+				action: function (e, dt, node, config) {
+				<xsl:value-of select="column_search/onclick"/>;
+				}
+				});
+			</xsl:when>
+		</xsl:choose>
+		<xsl:choose>
 			<xsl:when test="//datatable/actions">
 				<xsl:choose>
 					<xsl:when test="//datatable/actions != ''">
@@ -1040,6 +1060,7 @@
 			*/
 			var table_url = JqueryPortico.parseURL(window.location.href);
 			var menuaction = 'dummy';
+			var	column_search_is_initated = false;
 
 			try
 			{
@@ -1174,8 +1195,19 @@
 						{
 						}
 					}
-				//	console.log(oData);
-				//	console.log(params);
+//					console.log(oData);
+					//traverse oData.columns and remove search value
+				//	if (clear_state == true)
+					{
+						for (var attrname in oData.columns)
+						{
+							if(typeof(oData.columns[attrname].search) != 'undefined')
+							{
+								delete oData.columns[attrname].search;
+							}
+						}
+					}
+					//	console.log(params);
 					if(params !== null)
 					{
 						oControls.each(function() {
@@ -1288,7 +1320,7 @@
 					}
 					var search_value = $('.dataTables_filter input[aria-controls="datatable-container"]').val();
 
-					if(active_filters_html.length > 0 || search_value)
+					if(active_filters_html.length > 0 || search_value || column_search_is_initated)
 					{
 						$('#reset_filter').show();
 					}
@@ -1384,6 +1416,16 @@
 
 			init_table();
 
+			restore_temporary_hidden_columns = function()
+			{
+				$('#datatable-container thead th').each(function(colIdx)
+				{
+					oTable.api().column(colIdx).visible(true);
+				});
+			};
+
+			restore_temporary_hidden_columns();
+
 
 			$('#datatable-container tbody').on( 'click', 'tr', function () {
 					if($(this).hasClass('child'))
@@ -1412,44 +1454,110 @@
 					}
 			   } );
 
+			
+			var colunm_search = false;
+			var hidden_columns = [];
+
+			remove_column_search = function()
+			{
+				//show hidden columns
+				for (var i = 0; i < hidden_columns.length; i++)
+				{
+					oTable.api().column(hidden_columns[i]).visible(true);
+				}
+				hidden_columns = [];
+
+				//remove search input from header
+				$('#datatable-container thead th').each(function(colIdx)
+				{
+					if(oTable.api().settings()[0].aoColumns[colIdx].bSearchable)
+					{
+						if($(this).find('input.column_search').length > 0)
+						{
+							var placeholder = $(this).find('input.column_search').attr('placeholder');
+							$(this).html(placeholder.split(lang['Search'] + ' ')[1]);
+							//remove text input from header by classname
+							$(this).find('input.column_search').remove();
+						}
+					}
+
+				});
+
+				colunm_search = false;
+				oTable.api().responsive.recalc();
+			};
 
 			//---- START column search ----
-			// Setup - add a text input to each header cell
-			$('#datatable-container thead th').each(function(colIdx)
+			init_column_search = function()
 			{
-				if(oTable.api().settings()[0].aoColumns[colIdx].bSearchable)
+				if(colunm_search == true)
 				{
-					var title = $(this).text();
-					var search_value = oTable.api().column(colIdx).search();
-					$(this).html('<input type="text" placeholder="' + lang['Search'] + ' ' + title + '" value="' + search_value + '" title="' + title + '"/>');
+					remove_column_search();
+					return false;
+				}
+				
+				colunm_search = true;
+				let reset_filter_is_visible = false;
+				if ($('#reset_filter').is(':visible'))
+				{
+					// The #reset_filter button is visible
+					reset_filter_is_visible = true;
 				}
 
-			});
-
-			// Apply the search
-			oTable.api().columns().eq(0).each(function(colIdx)
-			{
-				var lastSearcCallback = 0;
-				var delay = 200;
-				$('input', oTable.api().column(colIdx).header()).on('keyup change', function()
+//				oTable.fnDraw();
+				oTable.api().responsive.recalc();
+				if(reset_filter_is_visible == true)
 				{
-					if (lastSearcCallback >= (Date.now() - delay))
+					$('#reset_filter').show();
+				}
+				
+				// Setup - add a text input to each header cell
+				$('#datatable-container thead th').each(function(colIdx)
+				{
+					if(oTable.api().settings()[0].aoColumns[colIdx].bSearchable)
 					{
-						 return;
+						var title = $(this).text();
+						var search_value = oTable.api().column(colIdx).search();
+						$(this).html('<input class="column_search" type="text" placeholder="' + lang['Search'] + ' ' + title + '" value="' + search_value + '" title="' + title + '"/>');
 					}
-					lastSearcCallback = Date.now();
+					else //hide the column from table
+					{
+						oTable.api().column(colIdx).visible(false);
+						hidden_columns.push(colIdx);
+					}
 
-					oTable.api()
-						.column(colIdx)
-						.search(this.value)
-						.draw();
 				});
 
-				$('input', oTable.api().column(colIdx).header()).on('click', function(e) {
-					e.stopPropagation();
+				// Apply the search
+				oTable.api().columns().eq(0).each(function(colIdx)
+				{
+					var lastSearcCallback = 0;
+					var delay = 200;
+					$('input', oTable.api().column(colIdx).header()).on('keyup change', function()
+					{
+						column_search_is_initated = true;
+
+						if (lastSearcCallback >= (Date.now() - delay))
+						{
+							return;
+						}
+						lastSearcCallback = Date.now();
+
+						oTable.api()
+							.column(colIdx)
+							.search(this.value)
+							.draw();
+
+						$('#reset_filter').show();
+
+					});
+
+					$('input', oTable.api().column(colIdx).header()).on('click', function(e) {
+						e.stopPropagation();
+					});
 				});
-			});
-			//---- END column search ----
+				//---- END column search ----
+			};
 
 			if(InitContextMenu === true)
 			{
@@ -1667,6 +1775,8 @@
 			//			$("#" + filter_selects[i]).multiselect({ buttonContainer: '' });
 						$("#" + filter_selects[i]).multiselect('refresh');
 					}
+
+					column_search_is_initated = false;
 				}
 				catch(e)
 				{}
@@ -1685,7 +1795,10 @@
 
 			api.state.clear();
 			api.destroy();
+			clear_state = true;
 			init_table();
+			restore_temporary_hidden_columns();
+			remove_column_search();
 			$('#reset_filter').hide();
 			$('#active_filters').html("");
 		}

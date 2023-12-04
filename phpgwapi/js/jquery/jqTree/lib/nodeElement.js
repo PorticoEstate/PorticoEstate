@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.NodeElement = exports.FolderElement = exports.BorderDropHint = void 0;
 var _node = require("./node");
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
@@ -19,7 +19,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-var NodeElement = /*#__PURE__*/function () {
+var NodeElement = exports.NodeElement = /*#__PURE__*/function () {
   function NodeElement(node, treeWidget) {
     _classCallCheck(this, NodeElement);
     _defineProperty(this, "node", void 0);
@@ -57,9 +57,9 @@ var NodeElement = /*#__PURE__*/function () {
       var _this$treeWidget$opti;
       var $li = this.getLi();
       $li.addClass("jqtree-selected");
-      $li.attr("aria-selected", "true");
       var $span = this.getSpan();
       $span.attr("tabindex", (_this$treeWidget$opti = this.treeWidget.options.tabIndex) !== null && _this$treeWidget$opti !== void 0 ? _this$treeWidget$opti : null);
+      $span.attr("aria-selected", "true");
       if (mustSetFocus) {
         $span.trigger("focus");
       }
@@ -69,10 +69,10 @@ var NodeElement = /*#__PURE__*/function () {
     value: function deselect() {
       var $li = this.getLi();
       $li.removeClass("jqtree-selected");
-      $li.attr("aria-selected", "false");
       var $span = this.getSpan();
       $span.removeAttr("tabindex");
-      $span.blur();
+      $span.attr("aria-selected", "false");
+      $span.trigger("blur");
     }
   }, {
     key: "getUl",
@@ -97,8 +97,7 @@ var NodeElement = /*#__PURE__*/function () {
   }]);
   return NodeElement;
 }();
-exports.NodeElement = NodeElement;
-var FolderElement = /*#__PURE__*/function (_NodeElement) {
+var FolderElement = exports.FolderElement = /*#__PURE__*/function (_NodeElement) {
   _inherits(FolderElement, _NodeElement);
   var _super = _createSuper(FolderElement);
   function FolderElement() {
@@ -120,14 +119,17 @@ var FolderElement = /*#__PURE__*/function (_NodeElement) {
       $button.html("");
       var buttonEl = $button.get(0);
       if (buttonEl) {
-        var icon = this.treeWidget.renderer.openedIconElement.cloneNode(true);
-        buttonEl.appendChild(icon);
+        var openedIconElement = this.treeWidget.renderer.openedIconElement;
+        if (openedIconElement) {
+          var icon = openedIconElement.cloneNode(true);
+          buttonEl.appendChild(icon);
+        }
       }
       var doOpen = function doOpen() {
         var $li = _this.getLi();
         $li.removeClass("jqtree-closed");
-        var $span = _this.getSpan();
-        $span.attr("aria-expanded", "true");
+        var $titleSpan = _this.getSpan();
+        $titleSpan.attr("aria-expanded", "true");
         if (onFinished) {
           onFinished(_this.node);
         }
@@ -157,14 +159,17 @@ var FolderElement = /*#__PURE__*/function (_NodeElement) {
       $button.html("");
       var buttonEl = $button.get(0);
       if (buttonEl) {
-        var icon = this.treeWidget.renderer.closedIconElement.cloneNode(true);
-        buttonEl.appendChild(icon);
+        var closedIconElement = this.treeWidget.renderer.closedIconElement;
+        if (closedIconElement) {
+          var icon = closedIconElement.cloneNode(true);
+          buttonEl.appendChild(icon);
+        }
       }
       var doClose = function doClose() {
         var $li = _this2.getLi();
         $li.addClass("jqtree-closed");
-        var $span = _this2.getSpan();
-        $span.attr("aria-expanded", "false");
+        var $titleSpan = _this2.getSpan();
+        $titleSpan.attr("aria-expanded", "false");
         _this2.treeWidget._triggerEvent("tree.close", {
           node: _this2.node
         });
@@ -189,8 +194,7 @@ var FolderElement = /*#__PURE__*/function (_NodeElement) {
   }]);
   return FolderElement;
 }(NodeElement);
-exports.FolderElement = FolderElement;
-var BorderDropHint = /*#__PURE__*/function () {
+var BorderDropHint = exports.BorderDropHint = /*#__PURE__*/function () {
   function BorderDropHint($element, scrollLeft) {
     _classCallCheck(this, BorderDropHint);
     _defineProperty(this, "$hint", void 0);
@@ -214,7 +218,6 @@ var BorderDropHint = /*#__PURE__*/function () {
   }]);
   return BorderDropHint;
 }();
-exports.BorderDropHint = BorderDropHint;
 var GhostDropHint = /*#__PURE__*/function () {
   function GhostDropHint(node, $element, position) {
     _classCallCheck(this, GhostDropHint);
@@ -254,7 +257,8 @@ var GhostDropHint = /*#__PURE__*/function () {
   }, {
     key: "moveInsideOpenFolder",
     value: function moveInsideOpenFolder() {
-      var childElement = this.node.children[0].element;
+      var _this$node$children$;
+      var childElement = (_this$node$children$ = this.node.children[0]) === null || _this$node$children$ === void 0 ? void 0 : _this$node$children$.element;
       if (childElement) {
         jQuery(childElement).before(this.$ghost);
       }

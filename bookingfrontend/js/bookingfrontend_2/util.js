@@ -18,6 +18,26 @@ $(document).ready(function () {
                 location.reload(true);
             }
         });
-    })
+    });
+
+	$("input[type=radio][name=select_language]").change(function () {
+        var lang = $(this).val();
+        var oArgs = {
+            menuaction: 'bookingfrontend.preferences.set'
+        };
+
+        var requestUrl = phpGWLink('bookingfrontend/', oArgs, true);
+
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            data: {lang: lang},
+            url: requestUrl,
+            success: function (data)
+            {
+                location.reload(true);
+            }
+        });
+    });
 });
 

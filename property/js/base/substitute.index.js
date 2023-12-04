@@ -63,7 +63,7 @@ $(document).ready(function ()
 					{
 						for (var i = 0; i < data['receipt']['error'].length; ++i)
 						{
-							htmlString += "<div class=\"error\">";
+							htmlString += "<div class=\"text-center alert alert-danger\" role=\"alert\">";
 							htmlString += data['receipt']['error'][i]['msg'];
 							htmlString += '</div>';
 						}
@@ -73,7 +73,7 @@ $(document).ready(function ()
 					{
 						for (var i = 0; i < data['receipt']['message'].length; ++i)
 						{
-							htmlString += "<div class=\"msg_good\">";
+							htmlString += "<div class=\"text-center alert alert-success\" role=\"alert\">";
 							htmlString += data['receipt']['message'][i]['msg'];
 							htmlString += '</div>';
 						}

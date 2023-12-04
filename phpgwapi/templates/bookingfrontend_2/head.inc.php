@@ -162,6 +162,11 @@ JS;
 		$GLOBALS['phpgw']->template->set_var('logoimg', $footerlogoimg);
 	}
 
+	if (!empty($GLOBALS['phpgw_info']['server']['bakcground_image']))
+	{
+		$footer_logo_url = $GLOBALS['phpgw_info']['server']['bakcground_image'];
+		$GLOBALS['phpgw']->template->set_var('footer_logo_url', $footer_logo_url);
+	}
 
 	$bodoc	 = CreateObject('booking.bodocumentation');
 	$manual	 = $bodoc->so->getFrontendDoc();
@@ -257,6 +262,32 @@ JS;
 	$flag_no	 = "{$webserver_url}/phpgwapi/templates/base/images/flag_no.gif";
 	$flag_en	 = "{$webserver_url}/phpgwapi/templates/base/images/flag_en.gif";
 
+	if (phpgw::get_var('lang', 'bool', 'GET'))
+	{
+		$selected_lang = phpgw::get_var('lang', 'string', 'GET');
+	}
+	else
+	{
+		$selected_lang = phpgw::get_var('selected_lang', 'string', 'COOKIE', $userlang);
+	}
+	
+	$selected_english = '';
+	$selected_norwegian = '';
+
+	switch ($selected_lang)
+	{
+		case 'no':
+		case 'nn':
+		$selected_norwegian = 'checked';
+			break;
+		case 'en':
+		$selected_english = 'checked';
+			break;
+		default:
+			break;
+	}
+
+
 	$self_uri	 = $_SERVER['REQUEST_URI'];
 	$separator	 = strpos($self_uri, '?') ? '&' : '?';
 	$self_uri	 = str_replace(array("{$separator}lang=no", "{$separator}lang=en"), '', $self_uri);
@@ -272,8 +303,8 @@ JS;
 			$selected_bookingfrontend	 = ' checked';
 			break;
 	}
-	$about	 = "";
-	$faq	 = "";
+	$about	 = "https://www.aktiv-kommune.no/";
+	$faq	 = "https://www.aktiv-kommune.no/manual/";
 
 	if ($config_frontend['develope_mode'])
 	{
@@ -335,16 +366,15 @@ HTML;
                 <p>Hvilket språk ønsker du?</p>
                 <form class="d-flex flex-column">
                   <label class="choice mb-3">
-                    <input type="radio" name="select_language" value="norwegian" checked />
+                    <input type="radio" name="select_language" value="{$userlang}" {$selected_norwegian} />
                     <img src="{$headlogopath}/norway.png" alt="Norsk flagg" class=""> Norsk
                     <span class="choice__radio"></span>
                   </label>
                   <label class="choice mb-5">
-                    <input type="radio" name="select_language" value="english" />
+                    <input type="radio" name="select_language" value="en" {$selected_english}/>
                     <img src="{$headlogopath}/united-kingdom.png" alt="Engelsk flagg" class=""> English
                     <span class="choice__radio"></span>
                   </label>
-                  <button type="button" class="pe-btn pe-btn-primary w-auto">Lagre</button>
                 </form>
               </div>
             </div>
@@ -387,12 +417,12 @@ HTML;
                 <p>Hvilket språk ønsker du?</p>
                 <form class="d-flex flex-column">
                   <label class="choice mb-3">
-                    <input type="radio" name="select_language" value="norwegian" checked />
+                    <input type="radio" name="select_language" value="{$userlang}" {$selected_norwegian} />
                     <img src="{$headlogopath}/norway.png" alt="Norsk flagg" class=""> Norsk
                     <span class="choice__radio"></span>
                   </label>
                   <label class="choice mb-5">
-                    <input type="radio" name="select_language" value="english" />
+                    <input type="radio" name="select_language" value="en" {$selected_english}/>
                     <img src="{$headlogopath}/united-kingdom.png" alt="Engelsk flagg" class=""> English
                     <span class="choice__radio"></span>
                   </label>

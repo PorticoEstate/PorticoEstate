@@ -776,6 +776,26 @@
 				});
 			</xsl:when>
 		</xsl:choose>
+		<xsl:choose>
+			<xsl:when test="column_search">
+				button_def.push({
+				<xsl:choose>
+					<xsl:when test="column_search/name">
+						text: "<xsl:value-of select="column_search/name"/>",
+						titleAttr: "<xsl:value-of select="column_search/name"/>",
+					</xsl:when>
+					<xsl:otherwise>
+						text: "<xsl:value-of select="php:function('lang', 'column search')"/>",
+						titleAttr: "<xsl:value-of select="php:function('lang', 'column search')"/>",
+					</xsl:otherwise>
+				</xsl:choose>
+				className: 'download',
+				action: function (e, dt, node, config) {
+				<xsl:value-of select="column_search/onclick"/>;
+				}
+				});
+			</xsl:when>
+		</xsl:choose>
 
 		<xsl:choose>
 			<xsl:when test="//datatable/actions">
@@ -1425,44 +1445,82 @@
 					}
 			   } );
 
+			var colunm_search = false;
+
+
+			remove_column_search = function()
+			{
+				$('#datatable-container thead th').each(function(colIdx)
+				{
+					if(oTable.api().settings()[0].aoColumns[colIdx].bSearchable)
+					{
+						//remove the cached search value
+						oTable.api()
+							.column(colIdx)
+							.search('');
+
+						var placeholder = $(this).find('input.column_search').attr('placeholder');
+						$(this).html(placeholder.split(lang['Search'] + ' ')[1]);
+						//remove text input from header by classname
+			            $(this).find('input.column_search').remove();
+					}
+				});
+				colunm_search = false;
+				oTable.fnDraw();
+				oTable.api().responsive.recalc();
+			};
 
 			//---- START column search ----
-			// Setup - add a text input to each header cell
-			$('#datatable-container thead th').each(function(colIdx)
+			init_column_search = function()
 			{
-				if(oTable.api().settings()[0].aoColumns[colIdx].bSearchable)
+				if(colunm_search == true)
 				{
-					var title = $(this).text();
-					var search_value = oTable.api().column(colIdx).search();
-					$(this).html('<input type="text" placeholder="' + lang['Search'] + ' ' + title + '" value="' + search_value + '" title="' + title + '"/>');
+					remove_column_search();
+					return false;
 				}
+				
+				colunm_search = true;
 
-			});
+				oTable.fnDraw();
+				oTable.api().responsive.recalc();
 
-			// Apply the search
-			oTable.api().columns().eq(0).each(function(colIdx)
-			{
-				var lastSearcCallback = 0;
-				var delay = 200;
-				$('input', oTable.api().column(colIdx).header()).on('keyup change', function()
+				// Setup - add a text input to each header cell
+				$('#datatable-container thead th').each(function(colIdx)
 				{
-					if (lastSearcCallback >= (Date.now() - delay))
+					if(oTable.api().settings()[0].aoColumns[colIdx].bSearchable)
 					{
-						 return;
+						var title = $(this).text();
+						var search_value = oTable.api().column(colIdx).search();
+						$(this).html('<input class="column_search" type="text" placeholder="' + lang['Search'] + ' ' + title + '" value="' + search_value + '" title="' + title + '"/>');
 					}
-					lastSearcCallback = Date.now();
 
-					oTable.api()
-						.column(colIdx)
-						.search(this.value)
-						.draw();
 				});
 
-				$('input', oTable.api().column(colIdx).header()).on('click', function(e) {
-					e.stopPropagation();
+				// Apply the search
+				oTable.api().columns().eq(0).each(function(colIdx)
+				{
+					var lastSearcCallback = 0;
+					var delay = 200;
+					$('input', oTable.api().column(colIdx).header()).on('keyup change', function()
+					{
+						if (lastSearcCallback >= (Date.now() - delay))
+						{
+							return;
+						}
+						lastSearcCallback = Date.now();
+
+						oTable.api()
+							.column(colIdx)
+							.search(this.value)
+							.draw();
+					});
+
+					$('input', oTable.api().column(colIdx).header()).on('click', function(e) {
+						e.stopPropagation();
+					});
 				});
-			});
 			//---- END column search ----
+			};
 
 			if(InitContextMenu === true)
 			{

@@ -1075,6 +1075,7 @@
 			}
 
 			$this->db->query("DELETE FROM fm_{$this->type}_category WHERE entity_id= {$entity_id} AND id= {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM phpgw_cust_choice WHERE location_id = {$location_id}", __LINE__, __FILE__);
 			$this->db->query("DELETE FROM phpgw_cust_attribute WHERE location_id = {$location_id}", __LINE__, __FILE__);
 			$this->db->query("DELETE FROM phpgw_locations WHERE location_id  = {$location_id}", __LINE__, __FILE__);
 			$this->db->query("DELETE FROM phpgw_acl WHERE  location_id  = {$location_id}", __LINE__, __FILE__);
