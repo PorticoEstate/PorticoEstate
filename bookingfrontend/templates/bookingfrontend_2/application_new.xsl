@@ -6,22 +6,33 @@
                 <div class="col-md-10 offset-md-1">
 
                     <!-- New top part -->
-                    <div class="pb-3">
-                        <a class="exitBtn text-decoration-none" href="{application/frontpage_link}">
-                            &lt;
-                            <xsl:value-of select="php:function('lang', 'Exit to homepage')"/>
-                        </a>
-                        <h1 class="text-primary text-md-start text-center mb-0 pt-3">
-                            <xsl:value-of select="php:function('lang', 'New application')"/>
-                        </h1>
-                    </div>
+                    <!--                    <div class="pb-3">-->
+                    <!--                        <a class="exitBtn text-decoration-none" href="{application/frontpage_link}">-->
+                    <!--                            &lt;-->
+                    <!--                            <xsl:value-of select="php:function('lang', 'Exit to homepage')"/>-->
+                    <!--                        </a>-->
+                    <!--                        <h1 class="text-primary text-md-start text-center mb-0 pt-3">-->
+                    <!--                            <xsl:value-of select="php:function('lang', 'New application')"/>-->
+                    <!--                        </h1>-->
+                    <!--                    </div>-->
                     <!-- Heading replaced with building name -->
-                    <h2 class="font-weight-bold mb-4">
-                        <xsl:value-of select="application/building_name"/>
-                    </h2>
 
+                    <div class="row gx-3">
+                        <div class="col d-flex flex-column">
+                            <div class="font-weight-bold gap-3 d-flex align-items-center">
+                                <h2 class="fas fa-building text-primary"></h2>
+                                <h2>
+                                    <xsl:value-of select="application/building_name"/>
+                                </h2>
+                            </div>
+                            <span>
+                                <xsl:value-of select="building/street"/>,
+                                <xsl:value-of select="building/zip_code"/>
+                            </span>
+                        </div>
+                    </div>
                     <!-- Retaining the msgbox and hidden input -->
-                    <div class="mb-4">
+                    <div class="mb-2">
                         <xsl:call-template name="msgbox"/>
                     </div>
                     <input type="text" hidden="hidden" name="activity_id" data-bind="value: activityId"/>
@@ -29,9 +40,44 @@
                     <!-- Retaining the original formstage -->
                     <input name="formstage" value="partial1" hidden="hidden"/>
 
+                    <!-- Modal -->
+                    <div class="modal fade" id="facilities" tabindex="-1" aria-labelledby="facilities"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-md">
+                            <div class="modal-content">
+
+                                <div class="modal-body d-flex flex-column pt-0 pb-4">
+                                    <h2 class="mb-1" style="font-weight:400">Fasiliteter</h2>
+                                    <p  class="mb-1 small">Fasiliteter som er tilgjengelige på utleieobjektene du har valgt. </p>
+                                    <div data-bind="foreach: selectedResourcesWithFacilities">
+                                        <div class="">
+                                            <div class="border-bottom p-2" style="font-size: 1.25rem" data-bind="text: resourceName"></div>
+                                            <div data-bind="foreach: facilities">
+                                                <div class="border-bottom p-2" style="padding-left: 1.5rem!important" data-bind="text: name"></div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer border-0">
+                                        <button type="button" class="pe-btn pe-btn-primary text-grey-light" data-bs-dismiss="modal"
+                                                aria-label="Close">Ok</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="col-sm-12 mb-4">
-                        <label class="mb-2 text-bold" for="select-multiple">Flere valg</label>
+                        <label class="mb-2 text-bold d-flex align-items-center" for="select-multiple">Valgte
+                            leieobjekt     <!-- Button trigger modal -->
+                            <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector"
+                                    data-bs-toggle="modal" data-bs-target="#facilities" aria-label="Velg språk">
+                                <span class="info-icon">
+                                    <i class="fas fa-info"></i>
+                                </span>
+                            </button>
+                        </label>
 
                         <div data-bind="foreach: bookableResource"
                              class="d-flex flex-row gap-1 flex-wrap pb-2 w-100">
@@ -42,9 +88,10 @@
                                 <button class="pill-icon" data-bind="click: $parent.removeRessource">&#215;</button>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <select class="js-select-multiple-items" data-bind="foreach: bookableresource"
+                        <div class="col-md-6 resource-select">
+                            <select class="js-select-multiple-items " data-bind="foreach: bookableresource"
                                     id="select-multiple">
+                                <option></option>
                                 <option data-bind="text: name,
                        value: id,
                        attr: {{ 'aria-selected': selected }}
@@ -75,118 +122,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-5" style="display:none">
-                            <!-- TODO:  missing priser-->
-                            <div class="row mb-5">
-                                <div class="row gx-3 pb-3">
-                                    <div class="col d-flex ">
-                                        <div class=" col bg-white rounded-small border p-2 d-flex flex-column">
-                                            <h4 class="mb-1">Bygg</h4>
-                                            <span>
-                                                <xsl:value-of select="building/street"/>
-                                            </span>
-                                            <span>
-                                                <xsl:value-of select="building/zip_code"/>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row gx-3">
-                                    <!--                            <div class="col d-flex ">-->
-                                    <!--                                <div class=" col bg-white rounded-small border p-2">-->
-                                    <!--                                    <h4 class="mb-1">Priser</h4>-->
-                                    <!--                                    <p>Disse varierer avhengig av hvilken aktivitet som skal utføres og hvem som skal arrangerer-->
-                                    <!--                                        dette-->
-                                    <!--                                    </p>-->
-                                    <!--                                    <button class="w-100 pe-btn pe-btn-primary ">Se priser</button>-->
-                                    <!--                                </div>-->
-                                    <!--                            </div>-->
-                                    <div class="col  d-flex ">
-                                        <div class="col bg-white rounded-small border p-2">
-                                            <h4 class="mb-1">Fasiliteter</h4>
-                                            <ul class="pl-1" data-bind="foreach: selectedResourcesWithFacilities">
-                                                <li data-bind="foreach: facilities, visible: $parent.selectedResourcesWithFacilities().length === 1">
-                                                    <span data-bind="text: name"></span>
-                                                </li>
-
-                                                <li data-bind="visible: $parent.selectedResourcesWithFacilities().length > 1">
-                                                    <strong data-bind="text: resourceName"></strong>
-                                                    <ul data-bind="foreach: facilities">
-                                                        <li data-bind="text: name"></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
-
-                    <!--                    <div id="dropdownContainer">-->
-                    <!--                        <input type="text" id="timeInput" data-bind="value: selectedTime" placeholder="Choose time..." />-->
-                    <!--                        <div id="timeDropdown" data-bind="foreach: timeOptions" style="display: none;">-->
-                    <!--                            <div data-bind="text: $data, click: $root.selectTime"></div>-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
-
-                    <!--                    <time-picker params="selectedTime: startTime"></time-picker>-->
-
-
-                    <!-- Select Time and Date Section -->
-                    <!--					<div class="form-group">-->
-                    <!--						&lt;!&ndash; Display Time Chosen &ndash;&gt;-->
-                    <!--						<div class="form-group">-->
-                    <!--							<span class="font-weight-bold d-block mt-2 span-label">-->
-                    <!--								<xsl:value-of select="php:function('lang', 'Chosen rent period')" />-->
-                    <!--							</span>-->
-                    <!--							<div data-bind="foreach: date">-->
-                    <!--								<div class="d-block">-->
-                    <!--									<input class="datetime" required="true" name="from_[]" hidden="hidden" data-bind="value: from_"/>-->
-                    <!--									<input class="datetime" required="true" name="to_[]" hidden="hidden" data-bind="value: to_"/>-->
-                    <!--									<span data-bind='text: formatedPeriode'></span>-->
-
-                    <!--									<button class="ml-2" data-bind="click: $parent.removeDate">-->
-                    <!--										<i class="fas fa-minus-circle"></i>-->
-                    <!--									</button>-->
-                    <!--								</div>-->
-                    <!--							</div>-->
-                    <!--							<span id="inputTime" data-bind="if: date().length == 0" class="validationMessage applicationSelectedDates">-->
-                    <!--								<xsl:value-of select="php:function('lang', 'Select a date and time')" />-->
-                    <!--							</span>-->
-                    <!--						</div>-->
-                    <!--						<div class="form-group">-->
-                    <!--							<div class="row">-->
-                    <!--								&lt;!&ndash; Date Pick &ndash;&gt;-->
-                    <!--								<div class="form-group col-lg-5 col-sm-12 col-12">-->
-                    <!--									<div class="input-group">-->
-                    <!--										<div class="input-group-prepend">-->
-                    <!--											<span class="input-group-text">-->
-                    <!--												<i class="far fa-calendar-alt"></i>-->
-                    <!--											</span>-->
-                    <!--										</div>-->
-                    <!--										<input type="text" onkeydown="return false" class="bookingDate form-control datepicker-btn" data-bind="textInput: bookingDate">-->
-                    <!--											<xsl:attribute name="placeholder">-->
-                    <!--												<xsl:value-of select="php:function('lang', 'Date')"/>-->
-                    <!--											</xsl:attribute>-->
-                    <!--										</input>-->
-                    <!--									</div>-->
-                    <!--								</div>-->
-
-                    <!--							</div>-->
-                    <!--						</div>-->
-                    <!--					</div>-->
 
                     <div class="form-group">
 
                         <div class="form-group">
-                            <div class="row  pt-4">
+                            <div class="font-weight-bold gap-3 d-flex align-items-center">
+                                <h2 class="fas fa-calendar-alt text-primary"></h2>
                                 <h2>
                                     Leieperiode
                                 </h2>
                             </div>
-
                             <!-- Display Time Chosen -->
                             <div class="form-group mb-2 ">
                                 <span class="font-weight-bold d-block span-label">
@@ -227,9 +174,11 @@
                                                    class="js-basic-datepicker bookingDate"
                                                    placeholder="Velg dato" id="standard-datepicker"
                                                    data-bind="textInput: bookingDate">
-                                                <xsl:attribute name="placeholder">
-                                                    <xsl:value-of select="php:function('lang', 'Date')"/>
-                                                </xsl:attribute>
+                                                <!--                                                <xsl:attribute name="placeholder">-->
+                                                <!--                                                    <xsl:value-of select="php:function('lang', 'Choose date')"/>-->
+                                                <!--                                                </xsl:attribute>-->
+                                                Velg dato
+
                                             </input>
                                         </label>
                                     </div>
@@ -299,8 +248,20 @@
                                 <xsl:value-of select="php:function('lang', 'Please choose at least 1 Article')"/>
                             </xsl:attribute>
                         </input>
+                        <div class="row gx-3">
+                            <div class="col d-flex flex-column">
+                                <div class="font-weight-bold gap-3 d-flex align-items-center">
+                                    <h2 class="fas fa-shapes text-primary"></h2>
+                                    <h2>
+                                        Artikkler
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
                         <article-table
                                 params="selectedResources: selectedResourcesOld, date: date"></article-table>
+<!--                        <article-table-old-->
+<!--                                params="selectedResources: selectedResourcesOld, date: date"></article-table-old>-->
                     </xsl:if>
 
 
@@ -539,7 +500,7 @@
             </div>
         </form>
 
-        <pre data-bind="text: ko.toJSON(am, null, 2)"></pre>
+<!--        <pre data-bind="text: ko.toJSON(am, null, 2)"></pre>-->
 
         <div class="push"></div>
     </div>
