@@ -59,7 +59,7 @@
 				<xsl:variable name="lang_download">
 					<xsl:value-of select="lang_download"/>
 				</xsl:variable>
-				<a href="javascript:var w=window.open('{$link_download}','','left=50,top=100')" onMouseOver="overlib('{$lang_download_help}', CAPTION, '{$lang_download}')" onMouseOut="nd()">
+				<a href="javascript:var w=window.open('{$link_download}','','')" onMouseOver="overlib('{$lang_download_help}', CAPTION, '{$lang_download}')" onMouseOut="nd()">
 					<xsl:value-of select="lang_download"/>
 				</a>
 			</td>
@@ -589,7 +589,7 @@
 				<xsl:variable name="lang_download">
 					<xsl:value-of select="lang_download"/>
 				</xsl:variable>
-				<a href="javascript:var w=window.open('{$link_download}','','left=50,top=100')" onMouseOver="overlib('{$lang_download_help}', CAPTION, '{$lang_download}')" onMouseOut="nd()">
+				<a href="javascript:var w=window.open('{$link_download}','','')" onMouseOver="overlib('{$lang_download_help}', CAPTION, '{$lang_download}')" onMouseOut="nd()">
 					<xsl:value-of select="lang_download"/>
 				</a>
 			</td>

@@ -160,7 +160,7 @@ class PEcalendar {
         const dateTimeTo = DateTime.fromISO(`${event.date}T${event.to}`);
         var day = dateTimeFrom.day;
         var months = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'];
-        var month = months[dateTimeFrom.month-1];
+        var month = months[dateTimeFrom.month - 1];
         return day + '. ' + month;
     };
 
@@ -1588,6 +1588,11 @@ class PEcalendar {
         // Event Listener for touchmove - To determine if the touch is a drag or a simple tap
         this.content.addEventListener('touchmove', (e) => {
             isTouchTap = false;
+            if (tempEvent) {
+                console.log("should end touchtap")
+                this.removeTempEvent(tempEvent)
+                tempEvent = undefined;
+            }
         });
 
         // Event Listener for touchend - To handle the touch tap and create/update the event
@@ -1723,16 +1728,17 @@ class PEcalendar {
                        data-bind="attr: { href: applicationURL }">Søknad</a>
                 </div>
                 <div class="pending-row">
-                                            
+
                     <div id="tempEventPills" class="pills" data-bind="foreach: tempEvents()">
                         <div class="pill pill--secondary">
                             <div class="pill-date" data-bind="text: $parent.formatPillDate($data)">2. nov</div>
                             <div class="pill-divider"></div>
-                            <div class="pill-content"  data-bind="text: $parent.formatPillTimeInterval(date, from, to)"></div>
+                            <div class="pill-content"
+                                 data-bind="text: $parent.formatPillTimeInterval(date, from, to)"></div>
                             <button class="pill-icon" data-bind="click: $parent.removeTempEventPill">&#215;</button>
                         </div>
-                                <!--        <span class="start-end" data-bind="text: formatDateTimeInterval(date, from, to)"></span>-->
-                                <!--        data-bind="text: formatUnixTimeInterval(start, end)"-->
+                        <!--        <span class="start-end" data-bind="text: formatDateTimeInterval(date, from, to)"></span>-->
+                        <!--        data-bind="text: formatUnixTimeInterval(start, end)"-->
                     </div>
 
                     <div class="js-dropdown dropdown showall-btn" id="select-info">
