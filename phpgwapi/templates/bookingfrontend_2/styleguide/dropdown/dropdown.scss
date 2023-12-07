@@ -460,14 +460,28 @@
       font-size: $text-small;
       color: $black;
       font-weight: $text-normal;
-
       @media (min-width: $media-medium) {
         font-size: $text-body;
       }
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+
 
       &__separator {
-        padding: 0 0.25rem;
-        font-weight: $text-bolder;
+        display: flex;
+        align-items: center;
+        .fa-circle{
+          font-size: 0.375rem;
+        }
+        //display: none;
+        //display: inline-block;
+        //vertical-align: middle;
+        //width: 1em; /* Width of a normal character */
+        //height: 1em; /* Height of the font */
+        //border-radius: 50%;
+        //background-color: #000; /* Change the color as needed */
       }
     }
   }

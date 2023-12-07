@@ -197,7 +197,7 @@
           <span>Sandnes idrettspark</span>
           <span class="slidedown__toggler__info">
             <?php
-              echo implode(' <span class="slidedown__toggler__info__separator">&#8226;</span> ', $toggerInfo);
+              echo implode('<span class="slidedown__toggler__info__separator"><i class="fa-solid fa-circle"></i></span>', $toggerInfo);
             ?>
           </span>
         </button>
