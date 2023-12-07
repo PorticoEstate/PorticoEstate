@@ -876,8 +876,16 @@ function getIsoDateString(date) {
 }
 
 function getDateFromSearch(dateString) {
-    const parts = dateString.split(".");
-    return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+    // Normalize the divider to a hyphen
+    const normalizedDateStr = dateString.replace(/[.\/]/g, '-');
+
+    // Split the date into its components
+    const [day, month, year] = normalizedDateStr.split('-').map(num => parseInt(num, 10));
+
+    // Create a DateTime object
+    const dt = DateTime.local(year, month, day);
+
+    return dt.toJSDate();
 }
 
 function getAllSubRowsIds(rows, id) {
