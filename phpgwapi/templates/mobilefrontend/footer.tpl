@@ -3,6 +3,7 @@
 		<p>{site_title}</p>
 </footer-->
 </div>
+</div>
 
 <div id="popupBox"></div>
 <div id="curtain"></div>

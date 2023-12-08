@@ -5,7 +5,7 @@
 		{sidebar}
 
 		<!-- Page Content  -->
-        <div id="page_content">
+        <div id="page_content" class="container-fluid">
 			<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
 
 				<div class="container-fluid">
