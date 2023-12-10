@@ -272,6 +272,10 @@ button.dt-button.disabled, div.dt-button.disabled, a.dt-button.disabled
 .tablePaginatorText {margin: 0 15px;}
 
 
+.dataTables_wrapper .dataTables_length select {
+	padding: 4px 36px 4px 8px;
+}
+
 .pastable{
 	transition: box-shadow ease .3s;
 }
