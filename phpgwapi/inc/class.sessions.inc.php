@@ -660,7 +660,7 @@
 				$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
 			}
 
-			if ( isset($GLOBALS['phpgw_info']['server']['enforce_ssl'])
+			if ($external && isset($GLOBALS['phpgw_info']['server']['enforce_ssl'])
 				&& $GLOBALS['phpgw_info']['server']['enforce_ssl'])
 			{
 				if(substr($url, 0, 4) != 'http')
