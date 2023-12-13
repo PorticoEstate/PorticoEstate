@@ -91,7 +91,7 @@
 				'id'		 => $data['id']
 			);
 
-			$hyperlink = $GLOBALS['phpgw']->link('/index.php', $link_data, false, true);
+			$hyperlink = str_replace("&amp;", "&", $GLOBALS['phpgw']->link('/index.php', $link_data, false, true));
 
 			require_once PHPGW_API_INC . '/smartsheet/vendor/autoload.php';
 
