@@ -884,9 +884,6 @@ HTML;
 				$cookietime = time() + 60;
 
 				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect', json_encode($_GET),$cookietime);
-				$GLOBALS['phpgw']->session->phpgw_setcookie('test_cookie_1', 'testverdi_1',$cookietime);
-				$GLOBALS['phpgw']->session->phpgw_setcookie('test_cookie_2', 'testverdi_2',$cookietime);
-				$GLOBALS['phpgw']->session->phpgw_setcookie('test_cookie_3', 'testverdi_3',$cookietime);
 			}
 
 			if(phpgw::get_var('phpgw_return_as', 'string') == 'json')
