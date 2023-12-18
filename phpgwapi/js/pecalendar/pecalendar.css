@@ -904,15 +904,19 @@ h4, .h4 {
 .calendar .header .pending-row {
   display: flex;
   flex-direction: row;
-  max-height: 2.75rem;
   justify-content: space-between;
 }
 .calendar .header .pending-row .pills {
   display: none;
 }
+.calendar .header .pending-row .pills.collapsed {
+  max-height: 2.75rem;
+}
 @media screen and (min-width: 840px) {
   .calendar .header .pending-row .pills {
-    overflow-x: hidden;
+    min-height: 2.75rem;
+    overflow-y: hidden;
+    flex-wrap: wrap;
     border-top-right-radius: 50px;
     border-bottom-right-radius: 50px;
     display: flex;
@@ -920,24 +924,11 @@ h4, .h4 {
     gap: 0.275rem;
   }
 }
-.calendar .header .pending-row .showall-btn {
-  flex-grow: 1;
-  min-width: 20rem;
-  max-width: 25rem;
-}
-.calendar .header .pending-row .showall-btn button {
-  max-height: 2.75rem;
-  padding-top: 0.34375rem;
-  padding-bottom: 0.34375rem;
-}
-.calendar .header .pending-row .showall-btn button:after {
-  top: 0.375rem;
-}
-@media screen and (max-width: 840px) {
-  .calendar .header .pending-row .showall-btn {
-    max-width: unset;
-    min-width: unset;
-  }
+.calendar .header .pending-row .show-more {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  min-width: 10rem;
+  align-self: flex-start;
 }
 .calendar .header .select_building_resource {
   display: flex;

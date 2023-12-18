@@ -838,6 +838,14 @@ h4, .h4 {
   box-shadow: 3px 3px 50px 0px rgba(0, 0, 0, 0.1);
 }
 
+.divider {
+  height: 1px;
+  border-color: rgba(40, 53, 139, 0.2);
+}
+.divider-primary {
+  border-color: rgba(121, 60, 138, 0.2);
+}
+
 .rounded-mini {
   border-radius: 0.5rem;
 }
@@ -905,6 +913,21 @@ h4, .h4 {
   border-color: #793C8A;
   background: #FFFFFF;
   color: #793C8A;
+}
+.pe-btn-colour-secondary {
+  border: 2px solid #28358B;
+  color: #28358B;
+  background: #FFFFFF;
+}
+.pe-btn-colour-secondary:hover, .pe-btn-colour-secondary:active {
+  background: #28358B !important;
+  color: #FFFFFF !important;
+  border: 2px solid #28358B;
+}
+.pe-btn-colour-secondary:focus-visible {
+  border-color: #28358B;
+  background: #FFFFFF;
+  color: #28358B;
 }
 .pe-btn--small {
   font-size: 0.875rem;
@@ -991,6 +1014,28 @@ a.arrow::after {
   transform: rotate(-30deg);
   right: 0;
   top: -0.1rem;
+}
+a.link-text {
+  text-decoration: none;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+a.link-text.underline {
+  text-decoration: underline;
+}
+a.link-text-primary {
+  color: #793C8A;
+}
+a.link-text-primary:hover {
+  color: #28358B;
+}
+a.link-text-secondary {
+  color: #28358B;
+}
+a.link-text-secondary:hover {
+  color: #793C8A;
 }
 a.link-button {
   padding: 0.713rem 1.5rem;
@@ -1825,6 +1870,10 @@ textarea {
   font-size: 0.875rem;
   color: #000000;
   font-weight: 400;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
 }
 @media (min-width: 768px) {
   .slidedown__toggler__info {
@@ -1832,8 +1881,11 @@ textarea {
   }
 }
 .slidedown__toggler__info__separator {
-  padding: 0 0.25rem;
-  font-weight: 900;
+  display: flex;
+  align-items: center;
+}
+.slidedown__toggler__info__separator .fa-circle {
+  font-size: 0.375rem;
 }
 .slidedown__content {
   padding: 1rem 2rem 1rem 1.5rem;

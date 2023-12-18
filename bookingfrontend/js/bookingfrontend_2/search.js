@@ -512,6 +512,18 @@ class BookingSearch {
         return this.data.towns_data().filter(t => ids.includes(+t.b_id));
     }
 
+    cleanTownName = (townName) => {
+        return townName.split('\n').map(line => {
+            // Check if 'Bydel' is in the line
+            if (line.toLowerCase().includes('bydel')) {
+                // Remove 'Bydel'
+                line = line.replace(/bydel/gi, '').trim();
+            }
+            // Capitalize first letter of each word
+            return line.charAt(0).toUpperCase() + line.slice(1).toLowerCase();
+        }).join('\n');
+    }
+
     addInfoCards(el, resources) {
         const append = [];
         const okResources = [];
@@ -540,35 +552,52 @@ class BookingSearch {
                     menuaction: 'bookingfrontend.uibuilding.show',
                     id: buildings[0].id
                 })
+                // language=HTML
                 append.push(`
-    <div class="col-12 mb-4">
-      <div class="js-slidedown slidedown">
-        <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="false">
-            <span>${resource.name}</span>
-            <span class="slidedown__toggler__info">
-                ${joinWithDot([...towns.map(t => t.name), ...buildings.map(b => b.name)])}
+                            <div class="col-12 mb-4">
+                                <div class="js-slidedown slidedown">
+                                    <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="false">
+                                        <span><div class="fa-solid fa-layer-group"></div> ${resource.name}</span>
+                                        <span class="slidedown__toggler__info">
+                ${joinWithDot([`<span class="text-primary">Bydel:</span> ${joinWithDot(towns.map(t => this.cleanTownName(t.name)))}`, ...buildings.map(b => {
+                    const buildingUrl = phpGWLink('bookingfrontend/', {
+                        menuaction: 'bookingfrontend.uibuilding.show',
+                        id: b.id
+                    })
+                    return `<a href="${buildingUrl}" class="link-text link-text-secondary"><i class="fa-solid fa-location-dot"></i>${b.name}<i class="fa-solid fa-arrow-right"></i></a>`
+                })])}
             </span>
-        </button>
-        <div class="js-slidedown-content slidedown__content">
-            <div>
-                <div class="d-flex">
-                    <!--<button class="pe-btn pe-btn-primary" style="margin-right: 8px;" onclick="location.href=\'${url}\'">Søknad</button>-->
-                    <button class="pe-btn pe-btn-secondary" onclick="location.href=\'${locationUrl}\'">${buildings[0].name}</button>
-                </div>
-                <p>
-                    ${resource.description}
-                </p> 
-            </div>
-            <div id="${calendarId}" class="calendar" data-building-id="${buildings[0].id}" data-resource-id="${resource.id}" data-date="${getDateFromSearch(this.data.date())}"></div>
-        </div>
-      </div>
-    </div>
-`
+                                    </button>
+                                    <div class="js-slidedown-content slidedown__content">
+                                        <div>
+                                            <div class="d-flex">
+                                                    <!--<button class="pe-btn pe-btn-primary" style="margin-right: 8px;" onclick="location.href=\'${url}
+                                                    \'">Søknad</button>-->
+                                                <button class="pe-btn pe-btn-secondary"
+                                                        onclick="location.href=\'${locationUrl}\'">${buildings[0].name}
+                                                </button>
+                                            </div>
+                                            <p>
+                                                ${resource.description}
+                                            </p>
+                                        </div>
+                                        <div id="${calendarId}" class="calendar" data-building-id="${buildings[0].id}"
+                                             data-resource-id="${resource.id}"
+                                             data-date="${getDateFromSearch(this.data.date())}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                    `
                 )
             }
         }
         this.data.result(okResources.slice(0, 50));
         el.append(append.join(""));
+        el.find('a.link-text').on('click', function(event) {
+            event.stopPropagation();
+            // If you need to follow the link, uncomment the following line
+            // window.location.href = $(this).attr('href');
+        });
         fillSearchCount(okResources.slice(0, 50), okResources.length);
         // calendars.map(calendar => calendar.createCalendarDom())
     }
@@ -919,7 +948,7 @@ function htmlDecode(input) {
 }
 
 function joinWithDot(texts) {
-    return texts.map(t => t && t.length > 0 ? `<span>${t}</span>` : null).filter(t => t).join(` <span className="slidedown__toggler__info__separator">&#8226;</span> `)
+    return texts.map(t => t && t.length > 0 ? `<span>${t}</span>` : null).filter(t => t).join(`<span class="slidedown__toggler__info__separator"><i class="fa-solid fa-circle"></i></span>`)
 }
 
 function sortOnField(data, field) {

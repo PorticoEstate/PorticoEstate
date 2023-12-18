@@ -38,4 +38,13 @@
       </div>
     </div>
   </div>
+  <div class="row">
+      <div class="col-md-6 p-2 box-shadow">
+          <hr class="divider divider-primary" />
+          <div class="d-flex flex-column ps-3 ">
+              <span>Delelinje</span>
+              <span>&lt;hr class="divider-primary" /&gt;</span>
+          </div>
+      </div>
+  </div>
 </section>
