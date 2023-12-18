@@ -838,6 +838,14 @@ h4, .h4 {
   box-shadow: 3px 3px 50px 0px rgba(0, 0, 0, 0.1);
 }
 
+.divider {
+  height: 1px;
+  border-color: rgba(40, 53, 139, 0.2);
+}
+.divider-primary {
+  border-color: rgba(121, 60, 138, 0.2);
+}
+
 .rounded-mini {
   border-radius: 0.5rem;
 }
@@ -905,6 +913,21 @@ h4, .h4 {
   border-color: #793C8A;
   background: #FFFFFF;
   color: #793C8A;
+}
+.pe-btn-colour-secondary {
+  border: 2px solid #28358B;
+  color: #28358B;
+  background: #FFFFFF;
+}
+.pe-btn-colour-secondary:hover, .pe-btn-colour-secondary:active {
+  background: #28358B !important;
+  color: #FFFFFF !important;
+  border: 2px solid #28358B;
+}
+.pe-btn-colour-secondary:focus-visible {
+  border-color: #28358B;
+  background: #FFFFFF;
+  color: #28358B;
 }
 .pe-btn--small {
   font-size: 0.875rem;

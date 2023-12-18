@@ -520,7 +520,7 @@ class BookingSearch {
                 line = line.replace(/bydel/gi, '').trim();
             }
             // Capitalize first letter of each word
-            return line.toLowerCase().replace(/\b\w/g, letter => letter.toUpperCase());
+            return line.charAt(0).toUpperCase() + line.slice(1).toLowerCase();
         }).join('\n');
     }
 
@@ -557,14 +557,14 @@ class BookingSearch {
                             <div class="col-12 mb-4">
                                 <div class="js-slidedown slidedown">
                                     <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="false">
-                                        <span><div class="fa-solid fa-door-open"></div> ${resource.name}</span>
+                                        <span><div class="fa-solid fa-layer-group"></div> ${resource.name}</span>
                                         <span class="slidedown__toggler__info">
                 ${joinWithDot([`<span class="text-primary">Bydel:</span> ${joinWithDot(towns.map(t => this.cleanTownName(t.name)))}`, ...buildings.map(b => {
                     const buildingUrl = phpGWLink('bookingfrontend/', {
                         menuaction: 'bookingfrontend.uibuilding.show',
                         id: b.id
                     })
-                    return `<a href="${buildingUrl}" class="link-text link-text-secondary"><i class="fa-solid fa-building"></i>${b.name}<i class="fa-solid fa-arrow-right"></i></a>`
+                    return `<a href="${buildingUrl}" class="link-text link-text-secondary"><i class="fa-solid fa-location-dot"></i>${b.name}<i class="fa-solid fa-arrow-right"></i></a>`
                 })])}
             </span>
                                     </button>

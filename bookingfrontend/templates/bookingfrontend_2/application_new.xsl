@@ -20,7 +20,7 @@
                     <div class="row gx-3">
                         <div class="col d-flex flex-column">
                             <div class="font-weight-bold gap-3 d-flex align-items-center">
-                                <h2 class="fas fa-building text-primary"></h2>
+                                <h2 class="fas fa-location-dot text-primary"></h2>
                                 <h2>
                                     <xsl:value-of select="application/building_name"/>
                                 </h2>

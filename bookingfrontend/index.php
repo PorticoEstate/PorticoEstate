@@ -170,6 +170,7 @@ HTML;
      */
     $availableMenuActions = (object) [
         'bookingfrontend.uiapplication.add' => true,
+        'bookingfrontend.uibuilding.show' => true,
     ];
 
 	/**

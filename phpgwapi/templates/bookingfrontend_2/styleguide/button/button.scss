@@ -59,6 +59,28 @@
     }
   }
 
+  &-colour {
+    &-secondary {
+      border: 2px solid $blue;
+
+      color: $blue;
+      background: $white;
+
+      &:hover,
+      &:active {
+        background: $blue!important;
+        color: $white!important;
+        border: 2px solid $blue;
+      }
+
+      &:focus-visible {
+        border-color: $blue;
+        background: $white;
+        color: $blue;
+      }
+    }
+  }
+
   &--small {
     font-size: 0.875rem;
     padding: 0.344rem 1.25rem;

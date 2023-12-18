@@ -7,20 +7,184 @@ var availlableTimeSlots = {};
 var date = new Date();
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 var urlParams = [];
-$(".bookable-resource-link-href").attr('data-bind', "attr: {'href': resourceItemLink }");
-$(".bookable-timeslots-link-href").attr('data-bind', "attr: {'href': applicationLink }");
+var imageArray = ko.observableArray();
+ko.components.register('light-box', {
+	viewModel: function(params) {
+		var self = this;
+		self.images = params.images; // This is an observable array
+		self.currentIndex = ko.observable(0);
+
+		self.hasImages = ko.computed(function() {
+			return self.images().length > 0;
+		});
+
+		self.currentImage = ko.computed(function() {
+			return self.hasImages() ? self.images()[self.currentIndex()] : {};
+		});
+
+		self.openModal = function(index) {
+			if (self.hasImages()) {
+				self.currentIndex(index);
+				$("#lightboxModal").modal('show');
+				self.attachArrowKeyHandlers();
+				$('#lightboxModal').on('hidden.bs.modal', function () {
+					self.closeModal()
+				});
+			}
+		};
+
+		self.closeModal = function() {
+			// $("#lightboxModal").modal('hide');
+			self.detachArrowKeyHandlers();
+		};
+
+		self.next = function() {
+			if (self.hasImages()) {
+				var nextIndex = self.currentIndex() < self.images().length - 1 ? self.currentIndex() + 1 : 0;
+				self.currentIndex(nextIndex);
+			}
+		};
+
+		self.prev = function() {
+			if (self.hasImages()) {
+				var prevIndex = self.currentIndex() > 0 ? self.currentIndex() - 1 : self.images().length - 1;
+				self.currentIndex(prevIndex);
+			}
+		};
+
+		self.attachArrowKeyHandlers = function() {
+			$(document).on('keydown', function(e) {
+				if (e.keyCode === 37) { // Left arrow key
+					self.prev();
+				}
+				if (e.keyCode === 39) { // Right arrow key
+					self.next();
+				}
+			}).detach();
+		};
+		self.additionalImageCount = ko.computed(function() {
+			var count = self.images().length - 4;
+			return count > 0 ? count : 0;
+		});
+
+		self.detachArrowKeyHandlers = function() {
+			$(document).off('keydown');
+		};
+	},
+	template: `
+        <div class="modal fade" id="lightboxModal" tabindex="-1" role="dialog" aria-labelledby="lightboxModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <!-- Conditional content based on whether images are available -->
+                    <!-- ko if: hasImages -->
+                    <div class="modal-header">
+                        <h5 class="modal-title" data-bind="text: currentImage().alt"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <img data-bind="attr: { src: currentImage().src, alt: currentImage().alt }" class="img-fluid" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bind="click: prev">Previous</button>
+                        <button type="button" class="btn btn-secondary" data-bind="click: next">Next</button>
+                    </div>
+                    <!-- /ko -->
+                    <!-- ko ifnot: hasImages -->
+                    <div class="modal-body">
+                        <p>No images available.</p>
+                    </div>
+                    <!-- /ko -->
+                </div>
+            </div>
+        </div>
+
+         <!-- Only display if there are images -->
+        <!-- ko if: hasImages -->
+        <div class="row">
+            <!-- Iterate over the first four images or all if less than four -->
+            <!-- ko foreach: images.slice(0, 4) -->
+            <div class="col-md-3">
+                <div class="img-container-building">
+					<img data-bind="attr: { src: src, alt: alt }, click: function() { $parent.openModal($index()) }" class="img-thumbnail-building cursor-pointer" />
+	
+					<!-- If it's the fourth image and there are additional images, show overlay -->
+					<!-- ko if: $index() === 3 && $parent.additionalImageCount() > 0 -->
+					<div class="overlay" data-bind="click: function() { $parent.openModal($index()) }">
+						<span class="additional-count">+<!-- ko text: $parent.additionalImageCount --><!-- /ko --></span>
+					</div>
+					<!-- /ko -->
+                </div>
+            </div>
+            <!-- /ko -->
+        </div>
+        <!-- /ko -->
+
+        <!-- Display message if there are no images -->
+        <!-- ko ifnot: hasImages -->
+        <div class="col-12">
+            <p class="text-center">No images available.</p>
+        </div>
+        <!-- /ko -->
+    `
+});
+document.addEventListener('DOMContentLoaded', function() {
+	const collapsibleContent = document.querySelector('.collapsible-content');
+	const toggleButton = document.querySelector('.toggle-button'); // Replace with your actual button selector
+
+	// Function to check the content height
+	function checkContentHeight() {
+		if (collapsibleContent.scrollHeight <= collapsibleContent.offsetHeight) {
+			// Content fits within the height, hide the button and remove fade
+			toggleButton.style.display = 'none'; // Hide the button
+			collapsibleContent.classList.remove('collapsed'); // Remove the collapsed class
+		} else {
+			toggleButton.style.display = ''; // Ensure the button is visible
+		}
+	}
+
+	// Run the check on page load
+	checkContentHeight();
+
+	// Optional: If the content can change dynamically, you might want to recheck when it does
+	// For example, after AJAX content load or window resize
+	window.addEventListener('resize', checkContentHeight);
+});
 
 
-
-function BuildingModel()
-{
-	var self = this;
-	self.bookableResource = bookableResources;
-	self.items = events;
+/**
+ * Represents a model for building management, encapsulating resources and events.
+ */
+class BuildingModel {
+	constructor() {
+		this.bookableResource = bookableResources;
+		this.imageArray = imageArray;
+		this.items = events;
+		this.resourcesExpanded = ko.observable(false);
+		this.descriptionExpanded = ko.observable(false);
+		this.toggleResources = this.toggleResources.bind(this);
+		this.toggleDescription = this.toggleDescription.bind(this);
+	}
+	/**
+	 * Toggles the visibility of additional resources.
+	 */
+	toggleResources() {
+		this.resourcesExpanded(!this.resourcesExpanded());
+	}
+	/**
+	 * Toggles the visibility of the description.
+	 */
+	toggleDescription() {
+		this.descriptionExpanded(!this.descriptionExpanded());
+	}
 }
 
-buildingModel = new BuildingModel();
-ko.applyBindings(buildingModel, document.getElementById("building-page-content"));
+const buildingModel = new BuildingModel();
+ko.applyBindings(buildingModel, document.getElementById('building-page-content'));
+
+
+
 $(document).ready(function ()
 {
 	//urlParams = new URLSearchParams(window.location.search); //not ie supported
@@ -215,6 +379,9 @@ function getFreetime(urlParams)
 	});
 }
 
+
+
+
 function PopulateBuildingData(urlParams)
 {
 
@@ -224,17 +391,21 @@ function PopulateBuildingData(urlParams)
 		var mainPictureFound = false;
 		if (result.ResultSet.Result.length > 0)
 		{
+			let images = [];
 			for (var i = 0; i < result.ResultSet.Result.length; i++)
 			{
 				var src = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_building.download", id: result.ResultSet.Result[i].id, filter_owner_id: urlParams['id']}, false);
 				var imgTag = '<img id="modal-img-' + i + '" src="' + src + '" data-toggle="modal" data-target="#lightbox" class="img-thumbnail m-1" alt=""></img>';
 				$(".building-images").append(imgTag);
+				images.push({src, alt: ''})
 				if (result.ResultSet.Result[i].category == 'picture_main' && !mainPictureFound)
 				{
 					mainPictureFound = true;
 					$("#item-main-picture").attr("src", src);
 				}
 			}
+			// imageArray([...images, ...images, ...images]);
+			imageArray(images);
 		}
 		else
 		{
