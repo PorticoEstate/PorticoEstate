@@ -96,6 +96,11 @@ class PEcalendar {
 
 
     /**
+     * @type {KnockoutObservable<boolean>} - Expanded view of temp event pills.
+     */
+    showAll = ko.observable(false);
+
+    /**
      * @type {KnockoutObservableArray<Partial<IEvent>>} - Events to be created.
      */
     tempEvents = ko.observableArray([]);
@@ -205,6 +210,15 @@ class PEcalendar {
 
             return url;
         });
+
+
+        // Function to remove a temporary event
+        this.toggleShowAll = function (event) {
+            console.log("TOGGLE!!!")
+            this.showAll(!this.showAll());
+            // // this.tempEvents.remove(event);
+            // self.removeTempEvent(event);
+        };
 
 
         // Function to remove a temporary event
@@ -1033,7 +1047,7 @@ class PEcalendar {
      * @param {Partial<IEvent>} event - The temporary event to be represented by the pill.
      */
     createTempEventPill(event) {
-        const container = document.getElementById(this.getId("tempEventPills"))
+        // const container = document.getElementById(this.getId("tempEventPills"))
         // Create a new pill element
         const pill = this.createElement('span', 'temp-event-pill filter-group',
             `
@@ -1051,7 +1065,7 @@ class PEcalendar {
         // Attach a click event to the 'x' to remove the event
         pill.appendChild(closeButton)
         // Append the pill to the header
-        container.appendChild(pill);
+        // container.appendChild(pill);
     }
 
     /**
@@ -1061,7 +1075,7 @@ class PEcalendar {
      * @param {id: string, slot: IFreeTimeSlot} data - The temporary event to be represented by the pill.
      */
     createTimeSlotPill({id, slot}) {
-        const container = document.getElementById(this.getId("tempEventPills"))
+        // const container = document.getElementById(this.getId("tempEventPills"))
         const dateFrom = DateTime.fromMillis(parseInt(slot.start));
         const dateTo = DateTime.fromMillis(parseInt(slot.end));
         // const time = {
@@ -1094,7 +1108,7 @@ class PEcalendar {
         // Attach a click event to the 'x' to remove the event
         pill.appendChild(closeButton)
         // Append the pill to the header
-        container.appendChild(pill);
+        // container.appendChild(pill);
     }
 
 
@@ -1729,7 +1743,7 @@ class PEcalendar {
                 </div>
                 <div class="pending-row">
 
-                    <div id="tempEventPills" class="pills" data-bind="foreach: tempEvents()">
+                    <div id="tempEventPills" class="pills" data-bind="foreach: tempEvents(), css: {'collapsed': !showAll()}">
                         <div class="pill pill--secondary">
                             <div class="pill-date" data-bind="text: $parent.formatPillDate($data)">2. nov</div>
                             <div class="pill-divider"></div>
@@ -1740,18 +1754,22 @@ class PEcalendar {
                         <!--        <span class="start-end" data-bind="text: formatDateTimeInterval(date, from, to)"></span>-->
                         <!--        data-bind="text: formatUnixTimeInterval(start, end)"-->
                     </div>
-
-                    <div class="js-dropdown dropdown showall-btn" id="select-info">
-                        <button class="js-dropdown-toggler dropdown__toggler " data-toggle="dropdown" type="button"
-                                aria-expanded="false">
-                            Alle Bestillinger <span class="badge" id=${this.getId("badgeCount")}
-                                                    data-bind="visible: (tempEvents().length + selectedTimeSlots().length) > 0, 
-        text: tempEvents().length + selectedTimeSlots().length"></span>
-                        </button>
-                        <div class="js-dropdown-content dropdown__content" style="width: 100%">
-                            <div id=${this.getId("tempEventPills")} class="temp-event-pills"></div>
-                        </div>
-                    </div>
+                    <button class="pe-btn  pe-btn--transparent text-secondary gap-3 show-more" data-bind="click: toggleShowAll, visible: tempEvents().length > 1">
+                        <span data-bind="text: (showAll() ? 'Vis mindre' : 'Vis mer')"></span>
+                        <i class="fa"
+                           data-bind="css: {'fa-chevron-up': showAll(), 'fa-chevron-down': !showAll()}"></i>
+                    </button>
+   <!--                    <div class="js-dropdown dropdown showall-btn" id="select-info">-->
+   <!--                        <button class="js-dropdown-toggler dropdown__toggler " data-toggle="dropdown" type="button"-->
+   <!--                                aria-expanded="false">-->
+   <!--                            Alle Bestillinger <span class="badge" id=${this.getId("badgeCount")}-->
+   <!--                                                    data-bind="visible: (tempEvents().length + selectedTimeSlots().length) > 0, -->
+   <!--        text: tempEvents().length + selectedTimeSlots().length"></span>-->
+   <!--                        </button>-->
+   <!--                        <div class="js-dropdown-content dropdown__content" style="width: 100%">-->
+   <!--                            <div id=${this.getId("tempEventPills")} class="temp-event-pills"></div>-->
+   <!--                        </div>-->
+   <!--                    </div>-->
                 </div>
                 <div class="calendar-settings">
                     <div class="date">
