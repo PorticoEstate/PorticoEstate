@@ -912,7 +912,7 @@ function getDateFromSearch(dateString) {
     const [day, month, year] = normalizedDateStr.split('-').map(num => parseInt(num, 10));
 
     // Create a DateTime object
-    const dt = DateTime.local(year, month, day);
+    const dt = luxon.DateTime.local(year, month, day);
 
     return dt.toJSDate();
 }

@@ -49,8 +49,9 @@
                         </h1>
                     </div>
                     <span>
-                        <xsl:value-of select="building/street"/>,
-                        <xsl:value-of select="building/zip_code"/>
+                        <span id="buildingStreet"><xsl:value-of select="building/street"/></span>,
+                        <span id="buildingZipCode"><xsl:value-of select="building/zip_code"/></span>
+                        <span id="buildingCity" style="display:none"><xsl:value-of select="building/city"/></span>
                     </span>
                 </div>
             </div>
