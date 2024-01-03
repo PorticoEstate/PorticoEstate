@@ -63,7 +63,7 @@
                 </div>
             </div>
             <hr class="divider divider-primary my-4"/>
-            <div class="row">
+            <div class="row mb-4">
                 <div class="col-sm-12">
                     <h3 class="">
                         Beskrivelse
@@ -86,8 +86,28 @@
                     </button>
                 </div>
             </div>
+            <div class="row  mb-4">
+                <div class="col-sm-12">
+                    <h3 class="">
+                        <xsl:value-of select="php:function('lang', 'Facilities')"/>
+                    </h3>
+                </div>
+                <div class="col-sm-12 d-flex flex-row flex-wrap">
+                    <xsl:for-each select="resource/facilities_list">
+                        <div class="col-12 col-sm-6 col-md-3">
+                            <xsl:value-of select="name"/>
+                        </div>
+                    </xsl:for-each>
+                </div>
+
+            </div>
             <!--            <hr class="divider divider-primary my-4"/>-->
             <div class="row">
+                <div class="col-sm-12">
+                    <h3 class="">
+                        Bookingkalender - <xsl:value-of select="resource/name"/>
+                    </h3>
+                </div>
                 <div id="calendar" class="calendar"></div>
             </div>
             <div class="row">

@@ -170,7 +170,7 @@
 
 
             self::add_external_css_with_search($template . '.css', false);
-
+//            _debug_array($data);die();
 			self::render_template_xsl($template, $data);
 		}
 
