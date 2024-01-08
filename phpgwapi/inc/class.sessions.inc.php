@@ -627,6 +627,11 @@
 
 			$request_scheme = empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off' ? 'http' : 'https';
 
+			/*
+			 * Behind reverse-proxy
+			 */
+			$request_scheme = !empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' ? 'https' : $request_scheme;
+
 			if($external || $GLOBALS['phpgw_info']['server']['webserver_url'] == '/')
 			{
 				$server_port = !empty($GLOBALS['phpgw_info']['server']['enforce_ssl']) ? 443 : phpgw::get_var('SERVER_PORT', 'int','SERVER');
@@ -655,7 +660,7 @@
 				$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
 			}
 
-			if ( isset($GLOBALS['phpgw_info']['server']['enforce_ssl'])
+			if ($external && isset($GLOBALS['phpgw_info']['server']['enforce_ssl'])
 				&& $GLOBALS['phpgw_info']['server']['enforce_ssl'])
 			{
 				if(substr($url, 0, 4) != 'http')

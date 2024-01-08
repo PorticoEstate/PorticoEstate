@@ -43,3 +43,16 @@ this.refresh_files = function ()
 	var strURL = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper('datatable-container_1', strURL);
 };
+
+// wait for the DOM to be loaded
+$(document).ready(function ()
+{
+	//trigger autoNumeric
+	var	anElement = new AutoNumeric('.amount',{
+		caretPositionOnFocus: "decimalRight",
+		decimalCharacter: ",",
+		digitGroupSeparator: " "
+	});
+	console.log(anElement);
+});
+

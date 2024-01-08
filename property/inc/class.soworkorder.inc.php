@@ -1039,6 +1039,7 @@
 					'order_received'			 => $this->db->f('order_received'),
 					'order_received_amount'		 => (float)$this->db->f('order_received_amount'),
 					'delivery_address'			 => $this->db->f('delivery_address', true),
+					'verified_transfered'		 => $this->db->f('verified_transfered')
 				);
 
 				$file_attachments				 = trim($this->db->f('file_attachments'), ',');

@@ -59,7 +59,7 @@
 				<xsl:variable name="lang_download">
 					<xsl:value-of select="lang_download"/>
 				</xsl:variable>
-				<a href="javascript:var w=window.open('{$link_download}','','left=50,top=100')" onMouseOver="overlib('{$lang_download_help}', CAPTION, '{$lang_download}')" onMouseOut="nd()">
+				<a href="javascript:var w=window.open('{$link_download}','','')" onMouseOver="overlib('{$lang_download_help}', CAPTION, '{$lang_download}')" onMouseOut="nd()">
 					<xsl:value-of select="lang_download"/>
 				</a>
 			</td>
@@ -589,7 +589,7 @@
 				<xsl:variable name="lang_download">
 					<xsl:value-of select="lang_download"/>
 				</xsl:variable>
-				<a href="javascript:var w=window.open('{$link_download}','','left=50,top=100')" onMouseOver="overlib('{$lang_download_help}', CAPTION, '{$lang_download}')" onMouseOut="nd()">
+				<a href="javascript:var w=window.open('{$link_download}','','')" onMouseOver="overlib('{$lang_download_help}', CAPTION, '{$lang_download}')" onMouseOut="nd()">
 					<xsl:value-of select="lang_download"/>
 				</a>
 			</td>
@@ -1013,7 +1013,7 @@
 					<label>
 						<xsl:value-of select="lang_num"/>
 					</label>
-					<input type="text" data-validation="required" name="values[num]" value="{value_num}">
+					<input type="text" data-validation="required" name="values[num]" value="{value_num}" class="pure-input-3-4">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_num_statustext"/>
 						</xsl:attribute>
@@ -1023,13 +1023,16 @@
 					<label>
 						<xsl:value-of select="lang_category"/>
 					</label>
-					<xsl:call-template name="cat_select" data-validation="required" />
+					<xsl:call-template name="cat_select" data-validation="required" >
+						<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+						<xsl:with-param name="id">cat_id</xsl:with-param>
+					</xsl:call-template>
 				</div>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="lang_descr"/>
 					</label>
-					<textarea cols="60" rows="4" name="values[descr]">
+					<textarea cols="60" rows="4" name="values[descr]" class="pure-input-3-4">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_descr_statustext"/>
 						</xsl:attribute>
@@ -1040,7 +1043,7 @@
 					<label>
 						<xsl:value-of select="lang_base_descr"/>
 					</label>
-					<textarea cols="60" rows="4" name="values[base_descr]">
+					<textarea cols="60" rows="4" name="values[base_descr]" class="pure-input-3-4">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_base_descr_statustext"/>
 						</xsl:attribute>
@@ -1051,19 +1054,25 @@
 					<label>
 						<xsl:value-of select="lang_unit"/>
 					</label>
-					<xsl:call-template name="unit_select"/>
+					<xsl:call-template name="unit_select">
+						<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+					</xsl:call-template>
 				</div>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="lang_dim_d"/>
 					</label>
-					<xsl:call-template name="dim_d_select"/>
+					<xsl:call-template name="dim_d_select">
+						<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+					</xsl:call-template>
 				</div>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="lang_branch"/>
 					</label>
-					<xsl:call-template name="branch_select"/>
+					<xsl:call-template name="branch_select">
+						<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+					</xsl:call-template>
 				</div>
 				<div class="pure-control-group">
 					<label>
@@ -1071,7 +1080,7 @@
 							<xsl:value-of select="lang_ns3420"/>
 						</a>
 					</label>
-					<input type="text" name="ns3420_id" value="{value_ns3420_id}" onClick="ns3420_lookup();" readonly="readonly">
+					<input type="text" name="ns3420_id" value="{value_ns3420_id}" onClick="ns3420_lookup();" readonly="readonly" class="pure-input-3-4">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_ns3420_statustext"/>
 						</xsl:attribute>
@@ -1106,6 +1115,26 @@
 			</input>
 		</form>
 	</div>
+
+	<script>
+
+		$("#cat_id").select2({
+		placeholder: "",
+		width: '75%'
+		});
+
+		$('#cat_id').on('select2:open', function (e) {
+
+		$(".select2-search__field").each(function()
+		{
+		if ($(this).attr("aria-controls") == 'select2-cat_id-results')
+		{
+		$(this)[0].focus();
+		}
+		});
+		});
+
+	</script>
 </xsl:template>
 
 <!-- New template-->

@@ -38,6 +38,9 @@
 								<xsl:text>pure-input-1</xsl:text>
 							</xsl:attribute>
 						</xsl:if>
+						<xsl:if test="input_name = 'contact_phone'">
+							<xsl:attribute name="maxlength">20</xsl:attribute>
+						</xsl:if>
 						<xsl:if test="readonly=1">
 							<xsl:attribute name="class">
 								<xsl:text>readonly</xsl:text>

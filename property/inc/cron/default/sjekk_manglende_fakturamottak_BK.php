@@ -31,6 +31,12 @@
 	 * example cron : /usr/local/bin/php -q /var/www/html/phpgroupware/property/inc/cron/cron.php default sjekk_manglende_fakturamottak_BK
 	 * @package property
 	 */
+	require_once PHPGW_API_INC . '/flysystem3/vendor/autoload.php';
+
+	use League\Flysystem\Filesystem;
+	use League\Flysystem\Ftp\FtpAdapter;
+	use League\Flysystem\Ftp\FtpConnectionOptions;
+
 	include_class('property', 'cron_parent', 'inc/cron/');
 	phpgw::import_class('phpgwapi.datetime');
 
@@ -268,12 +274,49 @@ SQL;
 				switch ($this->config_invoice->config_data['common']['method'])
 				{
 					case 'ftp';
-						$tmp		 = tmpfile();
-						fwrite($tmp, $content);
-						rewind($tmp);
-						$transfer_ok = ftp_fput($connection, $remote_file, $tmp, FTP_BINARY);
-						fclose($tmp);
-						//	$transfer_ok = ftp_put($connection, $remote_file, $filename, FTP_BINARY);
+//						$tmp		 = tmpfile();
+//						fwrite($tmp, $content);
+//						rewind($tmp);
+//						$transfer_ok = ftp_fput($connection, $remote_file, $tmp, FTP_BINARY);
+//						fclose($tmp);
+
+						$server		 = $this->config_invoice->config_data['common']['host'];
+						$user		 = $this->config_invoice->config_data['common']['user'];
+						$password	 = $this->config_invoice->config_data['common']['password'];
+						// The internal adapter
+						$adapter = new FtpAdapter(
+							// Connection options
+							FtpConnectionOptions::fromArray([
+								'host' => $server, // required
+								'root' => '/agrfdv/', // required
+								'username' => $user, // required
+								'password' => $password, // required
+								'port' => 21,
+								'ssl' => false,
+								'timeout' => 90,
+								'utf8' => true,
+								'passive' => true,
+								'transferMode' => FTP_BINARY,
+								'systemType' => null, // 'windows' or 'unix'
+								'ignorePassiveAddress' => null, // true or false
+								'timestampsOnUnixListingsEnabled' => false, // true or false
+								'recurseManually' => true // true
+							])
+						);
+
+						// The FilesystemOperator
+						$filesystem = new Filesystem($adapter);
+						try
+						{
+							$filesystem->write(basename($remote_file), $content);
+							$transfer_ok = true;
+						}
+						catch (FilesystemError $exception)
+						{
+//								_debug_array($exception);
+							$transfer_ok = false;
+						}
+
 						break;
 					case 'ssh';
 						$sftp		 = ssh2_sftp($connection);

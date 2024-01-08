@@ -30,6 +30,8 @@
 			var navbar_config = {navbar_config};
 			var noheader = {noheader};
 			var nofooter = {nofooter};
+			var menu_selection = '{menu_selection}';
+			var sessionid = '{sessionid}';
 		//-->
 		</script>
 		<!-- BEGIN javascript -->

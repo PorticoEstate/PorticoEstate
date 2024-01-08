@@ -1835,7 +1835,8 @@
 				}
 				$partial2['agegroups'] = array(array('agegroup_id' => 1, 'male' => 1, 'female' => 1));
 				$partial2['audience']  = array(1);
-				$partial2['dates']     = array(array('from_' => '2018-01-01 00:00:00', 'to_' => '2018-01-01 01:00:00'));
+				//dummy-dates in the future, to pass the temporary validation
+				$partial2['dates']     = array(array('from_' => '2099-01-01 00:00:00', 'to_' => '2099-01-01 01:00:00'));
 				$partial2['resources'] = array(-1);
 
 				$errors = array_merge($this->errors, $this->validate($partial2));

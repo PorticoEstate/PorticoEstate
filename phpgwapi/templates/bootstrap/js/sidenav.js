@@ -4,7 +4,7 @@ class SideNav {
 	{
 		this.treemenu_data = {};
 		this.thread = null;
-		$(document).ready(() => this.init());
+		window.onload = () => this.init();
 	}
 
 	init()
@@ -25,7 +25,7 @@ class SideNav {
 			autoEscape: false,
 			dragAndDrop: false,
 			autoOpen: false,
-			saveState: true,
+			saveState: false,
 			useContextMenu: false,
 			closedIcon: $('<i class="far fa-arrow-alt-circle-right"></i>'),
 			openedIcon: $('<i class="far fa-arrow-alt-circle-down"></i>'),
@@ -89,6 +89,20 @@ class SideNav {
 
 	loadTree()
 	{
+		// check for items in localstorage with name beginning with menu_tree_ and delete if not named with current sessionid
+		for (var i = 0; i < localStorage.length; i++)
+		{
+			var key = localStorage.key(i);
+			if (key.startsWith('menu_tree_'))
+			{
+				var key_sessionid = key.replace('menu_tree_', '');
+				if (key_sessionid !== sessionid)
+				{
+					localStorage.removeItem(key);
+				}
+			}
+		}
+
 		var tree_json = localStorage.getItem('menu_tree_' + sessionid);
 		if (tree_json)
 		{

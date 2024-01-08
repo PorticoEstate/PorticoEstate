@@ -1,8 +1,12 @@
-<!--footer class="page-footer font-small text-center fixed-bottom bg-light text-gray border-top border-gray-light">
 
-		<p>{site_title}</p>
-</footer-->
-</div>
+    </main>
+	<footer class="py-4 bg-light mt-auto">
+		 <div class="container-fluid px-4">
+				<div class="text-gray text-center">{site_title}</div>
+		 </div>
+	 </footer>
+
+
 
 <div id="popupBox"></div>
 <div id="curtain"></div>
