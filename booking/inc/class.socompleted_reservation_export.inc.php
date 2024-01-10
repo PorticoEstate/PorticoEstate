@@ -2290,6 +2290,7 @@
 
 					//Nøkkelfelt, kundens personnr/orgnr. - men differensiert for undergrupper innenfor samme orgnr
 					$stored_header['tekst4'] = $check_customer_identifier;
+					$stored_header['tekst3'] = $check_customer_identifier;
 
 					if ($type == 'internal')
 					{
