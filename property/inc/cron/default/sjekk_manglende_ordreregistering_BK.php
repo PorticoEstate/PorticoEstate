@@ -64,7 +64,7 @@
 				. " fm_workorder.account_id as kostnadsart,"
 				. " to_char(to_timestamp(fm_workorder.order_sent ),'DD/MM-YYYY') as overfort_dato, "
 				. " fm_workorder.combined_cost as budget,fm_workorder.project_id,"
-				. " account_firstname, account_lastname"
+				. " account_firstname, account_lastname, fm_workorder.category as aktivitet"
 				. " FROM fm_workorder JOIN fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " JOIN phpgw_accounts ON fm_workorder.user_id = phpgw_accounts.account_id"
 				. " JOIN fm_vendor ON fm_workorder.vendor_id = fm_vendor.id"
@@ -92,6 +92,7 @@
 					'budget'			 => $this->db->f('budget'),
 					'account_lastname'	 => $this->db->f('account_lastname'),
 					'account_firstname'	 => $this->db->f('account_firstname'),
+					'aktivitet'			 => $this->db->f('aktivitet'),
 				);
 			}
 
@@ -102,7 +103,7 @@
 				fm_tts_tickets.b_account_id as kostnadsart,
 				to_char(to_timestamp(fm_tts_tickets.order_sent ),'DD/MM-YYYY') as overfort_dato,
 				fm_tts_tickets.budget,
-				account_firstname, account_lastname
+				account_firstname, account_lastname, fm_tts_tickets.order_cat_id as aktivitet
 				FROM fm_tts_tickets
 				JOIN phpgw_accounts ON fm_tts_tickets.assignedto = phpgw_accounts.account_id
 				WHERE fm_tts_tickets.order_id IS NOT NULL
@@ -129,6 +130,7 @@ SQL;
 					'budget'			 => $this->db->f('budget'),
 					'account_lastname'	 => $this->db->f('account_lastname'),
 					'account_firstname'	 => $this->db->f('account_firstname'),
+					'aktivitet'			 => $this->db->f('aktivitet'),
 				);
 			}
 
@@ -159,6 +161,7 @@ SQL;
 						<th>Overskrift</th>
 						<th>Status</th>
 						<th>Bestiller</th>
+						<th>Aktivitet</th>
 						<th>#</th>
 					</tr>
 HTML;
@@ -233,6 +236,7 @@ HTML;
 						<td>{$entry['title']}</td>
 						<td>{$entry['status']}</td>
 						<td>{$entry['account_lastname']}, {$entry['account_firstname']}</td>
+						<td>{$entry['aktivitet']}</td>
 						<td>{$i}</td>
 					</tr>
 HTML;
