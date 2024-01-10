@@ -134,7 +134,7 @@
 			$ret['mellomnavn']		 = ucwords(mb_convert_case($ret['mellomnavn'],  MB_CASE_TITLE), "'");
 			$ret['etternavn']		 = ucwords(mb_convert_case($ret['etternavn'],  MB_CASE_TITLE), "'");
 
-			$poststed = explode(' ', end($ret['postadresse']));
+			$poststed = explode(' ', end((array)$ret['postadresse']));
 
 			$data['first_name']		 = $ret['fornavn'];
 			$data['middle_name']	 = $ret['mellomnavn'];
