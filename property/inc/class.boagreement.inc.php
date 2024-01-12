@@ -331,7 +331,7 @@
 			//_debug_array($values);
 			$values['m_cost']		 = str_replace(",", ".", $values['m_cost']);
 			$values['w_cost']		 = str_replace(",", ".", $values['w_cost']);
-			$values['total_cost']	 = $values['m_cost'] + $values['w_cost'];
+			$values['total_cost']	 = (float)$values['m_cost'] + (float)$values['w_cost'];
 
 			if ($values['index_count'] > 0)
 			{
