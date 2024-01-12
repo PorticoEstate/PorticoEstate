@@ -64,10 +64,7 @@
 				return;
 			}
 
-
-	//		$apikey = '45EHWEdJMU4db2bFYbbUXp58hx6Tzs2MPdGgs4ckC9CQEgTK7vL3FqXUBafErxFA5gJgf35YgAD8AqdjEu';
-
-			$fiks = new fiks();//$apikey, $webservicehost = 'http://10.120.17.10:8210/get.php', true);
+			$fiks = new fiks();
 			
 //			_debug_array(date('Y-m-d G:i:s'));
 			$valueset	 = array();
