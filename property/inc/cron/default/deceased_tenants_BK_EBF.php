@@ -61,7 +61,7 @@
 			$yesterday = time() - (24 * 3600);
 			if($timestamp && $timestamp > $yesterday)
 			{
-				return;
+				return $timestamp;
 			}
 
 			$fiks = new fiks();
@@ -200,7 +200,9 @@
 
 			}
 //			_debug_array(date('Y-m-d G:i:s'));
-		
+
+			return 0;
+
 		}
 
 		function get_deceased( $checklist )
@@ -289,12 +291,18 @@
 
 		function execute()
 		{
-			$start = time();
-
 			$this->boei	 = new boei();
 			$checklist	 = $this->boei->get_checklist();
 
-			$this->populate_database($checklist);
+			$timestamp = $this->populate_database($checklist);
+
+			$yesterday = time() - (24 * 3600);
+			if($timestamp && $timestamp > $yesterday)
+			{
+				return $timestamp;
+			}
+
+
 			$this->handle_deceased($checklist);
 			$this->handle_shielded();
 
