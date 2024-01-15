@@ -302,7 +302,6 @@
 				return $timestamp;
 			}
 
-
 			$this->handle_deceased($checklist);
 			$this->handle_shielded();
 
@@ -419,7 +418,11 @@ HTML;
 			{
 				if($entry['hemmeligadresse'] && empty($entry['adressebeskyttelse']))
 				{
-					$entry['adressebeskyttelse'] = 'Skjermet kun i BOEI';
+					$entry['adressebeskyttelse'] = "<table border='0'><tr><td>Folkeregister</td><td>: Ugradert</tr><tr><td>BOEI</td><td>: Hemmelig adresse</td></tr></table>";
+				}
+				else if($entry['hemmeligadresse'] && !empty($entry['adressebeskyttelse']))
+				{
+					$entry['adressebeskyttelse'] = "<table border='0'><tr><td>Folkeregister</td><td>: <b>{$entry['adressebeskyttelse']}</b></tr><tr><td>BOEI</td><td>: Hemmelig adresse</td></tr></table>";
 				}
 			}
 
@@ -434,6 +437,7 @@ HTML;
 					<style>
 					table, th, td {
 						border: 1px solid black;
+						border-collapse: collapse;
 					}
 					th, td {
 						padding: 10px;
