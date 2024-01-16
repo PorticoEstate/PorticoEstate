@@ -424,6 +424,11 @@ HTML;
 				{
 					$entry['adressebeskyttelse'] = "<table border='0'><tr><td>Folkeregister</td><td>: <b>{$entry['adressebeskyttelse']}</b></tr><tr><td>BOEI</td><td>: Hemmelig adresse</td></tr></table>";
 				}
+
+				if($entry['adressebeskyttelse'] == 'strengtFortrolig')
+				{
+					$entry['beste_adresse'] = 'Hemmelig';
+				}
 			}
 
 
