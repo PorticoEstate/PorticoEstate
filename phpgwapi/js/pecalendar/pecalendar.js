@@ -120,6 +120,13 @@ class PEcalendar {
      */
     availableTimeSlots;
 
+    /**
+     * Defines the display mode for the Calendar UI.
+     * 'calendar' (default) shows the regular calendar interface.
+     * 'list' shows a list of available time slots.
+     * @type ko.Observable<string>
+     */
+    displayMode = ko.observable('calendar');
 
     applicationURL = null;
 
@@ -1850,6 +1857,8 @@ class PEcalendar {
         // Update the building ID
         this.building_id = building_id;
 
+        const currDate = DateTime.fromJSDate(new Date());
+        const maxEndDate = currDate.plus({ months: BOOKING_MONTH_HORIZON }).endOf('month');
         const startDate = this.firstDayOfCalendar.minus({weeks: 1}).toFormat('dd/LL-yyyy');
         const endDate = this.lastDayOfCalendar.toFormat('dd/LL-yyyy');
 
@@ -1864,8 +1873,8 @@ class PEcalendar {
         let urlFreeTime = phpGWLink('bookingfrontend/', {
             menuaction: 'bookingfrontend.uibooking.get_freetime',
             building_id,
-            start_date: startDate,
-            end_date: endDate
+            start_date: currDate.toFormat('dd/LL-yyyy'),
+            end_date: maxEndDate.toFormat('dd/LL-yyyy')
         }, true);
 
 
