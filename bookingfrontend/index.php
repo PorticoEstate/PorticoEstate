@@ -181,7 +181,7 @@ HTML;
 	{
 		case 'bookingfrontend_2':
 			if (str_ends_with(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), 'bookingfrontend/') &&
-				(!$_GET['menuaction'] || $availableMenuActions->{$_GET['menuaction']} && !$_GET['simple'])
+				(!$_GET['menuaction'] || $availableMenuActions->{$_GET['menuaction']})
 			) {
 				$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] = $template_set;
 				break;
