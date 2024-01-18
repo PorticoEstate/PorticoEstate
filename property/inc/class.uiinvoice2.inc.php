@@ -745,35 +745,37 @@
 
 //---------start forward
 				//temporary hardcoded for NLSH
-				switch ($voucher[0]['b_account_id'])
-				{
-					case '5900':
-					case '5930':
-					case '6300':
-					case '6420':
-					case '6490':
-					case '6840':
-					case '6841':
-					case '7040':
-					case '7140':
-					case '7149':
-					case '7400':
-					case '7500':
-					case '7710':
-					case '7794':
-						$default_tax_code = 0;
-						break;
+//				switch ($voucher[0]['b_account_id'])
+//				{
+//					case '5900':
+//					case '5930':
+//					case '6300':
+//					case '6420':
+//					case '6490':
+//					case '6840':
+//					case '6841':
+//					case '7040':
+//					case '7140':
+//					case '7149':
+//					case '7400':
+//					case '7500':
+//					case '7710':
+//					case '7794':
+//						$default_tax_code = 0;
+//						break;
+//
+//					case '4100':
+//						$default_tax_code = 23;
+//						break;
+//
+//					default:
+//						$default_tax_code = 22;
+//						break;
+//				}
 
-					case '4100':
-						$default_tax_code = 23;
-						break;
-
-					default:
-						$default_tax_code = 22;
-						break;
-				}
-
-				$selected_tax_code = isset($voucher[0]['tax_code']) && ($voucher[0]['tax_code'] || $voucher[0]['tax_code'] === 0) ? $voucher[0]['tax_code'] : $default_tax_code;
+//				$selected_tax_code = isset($voucher[0]['tax_code']) && ($voucher[0]['tax_code'] || $voucher[0]['tax_code'] === 0) ? $voucher[0]['tax_code'] : $default_tax_code;
+				$selected_tax_code = !empty($voucher[0]['tax_code']) ? $voucher[0]['tax_code'] : 0;
+				$default_tax_code = $selected_tax_code;
 
 				if (isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 				{

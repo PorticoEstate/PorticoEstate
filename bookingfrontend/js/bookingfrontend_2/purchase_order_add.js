@@ -112,8 +112,8 @@ class ArticleTableViewModel {
     updateMandatoryQuantities(dates) {
         let totalMilliseconds = 0;
         dates.forEach((dateRange) => {
-            const from = DateTime.fromFormat(dateRange.from_, "dd/MM/yyyy HH:mm");
-            const to = DateTime.fromFormat(dateRange.to_, "dd/MM/yyyy HH:mm");
+            const from = luxon.DateTime.fromFormat(dateRange.from_, "dd/MM/yyyy HH:mm");
+            const to = luxon.DateTime.fromFormat(dateRange.to_, "dd/MM/yyyy HH:mm");
 
             // Check if 'from' and 'to' are valid Luxon DateTime objects
             if (from.isValid && to.isValid) {

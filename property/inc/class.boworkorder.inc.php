@@ -925,7 +925,7 @@
 					'project_id' => $workorder['project_id'],
 				);
 
-				$claim	 = $boclaim->read(array('project_id' => $workorder['project_id']));
+				$claim	 = $boclaim->read(array('project_id' => $workorder['project_id'],'status' => 'all'));
 				$target	 = array();
 				if ($claim)
 				{

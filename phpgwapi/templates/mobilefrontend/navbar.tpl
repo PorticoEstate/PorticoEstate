@@ -1,28 +1,26 @@
 <body>
-	<div class="wrapper">
-		<!-- Start sidebar  -->
 
-		{sidebar}
+    <header class="bg-dark text-white p-2">
+        <a class="navbar-brand" href="{home_url}">{site_title} / {user_fullname}</a>
+        <!-- Top Menu -->
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+			 {topmenu}
+            </div>
+        </nav>
+    </header>
 
-		<!-- Page Content  -->
-        <div id="page_content">
-			<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+	{sidebar_button}
 
-				<div class="container-fluid">
- 					{sidebar_button}
-                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <i class="fas fa-align-justify"></i>
-                    </button>
+    <!-- Offcanvas Sidebar -->
+	{sidebar}
 
-					<!-- Brand -->
-					<a class="navbar-brand" href="#">{site_title}</a>
+   <!-- Main Content -->
+    <main role="main" class="container-fluid">
+       {breadcrumb}
 
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-						{topmenu}
-					</div>
-				</div>
-			</nav>
-			{breadcrumb}
-
-			<h1 id="top">{current_app_title}</h1>
+		<h1 id="top">{current_app_title}</h1>
 			{landing}

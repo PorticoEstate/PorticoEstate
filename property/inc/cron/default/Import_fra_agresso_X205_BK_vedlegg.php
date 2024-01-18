@@ -31,6 +31,11 @@
 	 * @package property
 	 */
 	include_class('property', 'cron_parent', 'inc/cron/');
+	require_once PHPGW_API_INC . '/flysystem3/vendor/autoload.php';
+
+	use League\Flysystem\Filesystem;
+	use League\Flysystem\Ftp\FtpAdapter;
+	use League\Flysystem\Ftp\FtpConnectionOptions;
 
 	class Import_fra_agresso_X205_BK_vedlegg extends property_cron_parent
 	{
@@ -153,79 +158,131 @@
 			$directory_remote	 = rtrim($this->config->config_data['import']['remote_basedir'], '/');
 			$directory_local	 = rtrim($this->config->config_data['import']['local_path'], '/');
 
+			$adapter = new FtpAdapter(
+				// Connection options
+				FtpConnectionOptions::fromArray([
+					'host' => $server, // required
+					'root' => $directory_remote, // required
+					'username' => $user, // required
+					'password' => $password, // required
+					'port' => 21,
+					'ssl' => false,
+					'timeout' => 90,
+					'utf8' => true,
+					'passive' => true,
+					'transferMode' => FTP_BINARY,
+					'systemType' => null, // 'windows' or 'unix'
+					'ignorePassiveAddress' => null, // true or false
+					'timestampsOnUnixListingsEnabled' => false, // true or false
+					'recurseManually' => true // true
+				])
+			);
 
+			// The FilesystemOperator
+			$filesystem = new Filesystem($adapter);
 			try
 			{
-				$connection = ftp_connect($server);
+				$listing = $filesystem->listContents('');
 			}
-			catch (Exception $e)
+			catch (Exception $exc)
 			{
-				$this->receipt['error'][] = array('msg' => $e->getMessage());
+				$this->receipt['error'][] = array('msg' => $exc->getMessage());
+				return;
 			}
 
-			// try to authenticate with username root, password secretpassword
-			if (!ftp_login($connection, $user, $password))
-			{
-				echo "fail: unable to authenticate\n";
-			}
-			else
-			{
-				// allright, we're in!
-				echo "okay: logged in...<br/>";
 
-				if (!ftp_chdir($connection, $directory_remote))
+			// allright, we're in!
+			echo "okay: logged in...<br/>\n";
+
+			// Scan directory
+			$empty_files = array();
+			$files = array();
+			echo "Scanning {$directory_remote}<br/>\n";
+
+			foreach ($listing as $object)
+			{
+				$file = $object->path();
+
+				if ($object->type() == 'dir')
 				{
-					echo ("Change Dir Failed: {$directory_remote}<BR>\r\n");
-					return false;
+					echo "Directory: $file<br/>\n";
+					continue;
 				}
 
-				// Scan directory
-				$files = array();
-				echo "Scanning {$directory_remote}<br/>";
-
-				$files = ftp_nlist($connection, '.');
+				$size = $filesystem->fileSize($file);
+				echo "File $file Size: $size<br/>\n";
 
 				if ($this->debug)
 				{
-					_debug_array($files);
+					$contents = $filesystem->read($file);
+					echo "CONTENTS: $contents<br/><br/>\n\n";
 				}
 
+				$files[] = $file;
+			}
+
+			if ($this->debug)
+			{
+				_debug_array($files);
+			}
+			else
+			{
 				foreach ($files as $file_name)
 				{
-					if ($this->debug)
-					{
-						_debug_array('preg_match("/xml$/i",' . $file_name . ': ' . preg_match('/xml$/i', $file_name));
-					}
-
 					if (preg_match('/^Portico/i', (string)$file_name))
 					{
 						$file_remote = $file_name;
 						$file_local	 = "{$directory_local}/{$file_name}";
 
-						if (ftp_get($connection, $file_local, $file_remote, FTP_ASCII))
+						$contents = $filesystem->read($file_name);
+
+						if(strlen($contents) == 0)
 						{
-							ftp_delete($connection, "arkiv/{$file_remote}");
-							if (ftp_rename($connection, $file_remote, "arkiv/{$file_remote}"))
+							$empty_files[] = $file_name;
+						}
+
+						$fp = fopen($file_local, "wb");
+						fwrite($fp, $contents);
+
+						if (fclose($fp))
+						{
+							echo "File remote: {$file_remote} was copied to local: $file_local<br/>";
+							if ($filesystem->fileExists("arkiv/{$file_name}")	)
 							{
-								echo "File remote: {$file_remote} was moved to archive: arkiv/{$file_remote}<br/>";
-								echo "File remote: {$file_remote} was copied to local: $file_local<br/>";
+								try
+								{
+									$filesystem->delete("arkiv/{$file_name}");
+									echo "Deleted duplicate File remote: {$directory_remote}/arkiv/{$file_name}<br/>";
+								}
+								catch (FilesystemException | UnableToDeleteFile $exception)
+								{
+									// handle the error
+								}
 							}
-							else
+
+							try
 							{
-								echo "ERROR! File remote: {$file_remote} failed to move from remote: {$directory_remote}/arkiv/{$file_name}<br/>";
+								$filesystem->move($file_remote, "arkiv/{$file_name}");
+								echo "File remote: {$file_remote} was moved to remote: {$directory_remote}/arkiv/{$file_name}<br/>";
+							}
+							catch (FilesystemException | UnableToDeleteFile $exception)
+							{
+								// handle the error
+								echo "ERROR! File remote: {$file_remote} failed to move to remote: {$directory_remote}/arkiv/{$file_name}<br/>";
 								if (unlink($file_local))
 								{
 									echo "Lokal file was deleted: {$file_local}<br/>";
 								}
 							}
 						}
-						else
-						{
-							echo "Feiler på ftp_fget()<br/>";
-						}
+					}
+					else
+					{
+						echo "skip {$file_name}<br/>";
 					}
 				}
 			}
+
 		}
 
 

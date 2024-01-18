@@ -32,6 +32,8 @@
 		}
 
 		$site_url	= $GLOBALS['phpgw']->link('/home.php', array());
+
+		$var['home_url'] = $site_url;
 		$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 
 		$controller_text = lang('controller');
@@ -68,11 +70,12 @@
 HTML;
 
 		$app_menu = '';
+		$lang_home = lang('home');
 
 		$topmenu = <<<HTML
-			<ul class="nav navbar-nav ml-auto">
+			<ul class="nav navbar-nav ms-auto">
 				<li class="nav-item">
-					<a href="{$site_url}" class="nav-link"><i class="fa fa-home fa-fw" aria-hidden="true"></i>{$user_fullname}</a>
+					<a href="{$site_url}" class="nav-link"><i class="fa fa-home fa-fw" aria-hidden="true"></i>{$lang_home}</a>
 				</li>
 HTML;
 
@@ -347,16 +350,16 @@ HTML;
 
 			$sidebar_content = <<<HTML
 
-			<ul id="menutree" class="list-unstyled components">
+			<ul id="menutree" class="nav flex-column">
 HTML;
-			if ( $GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, 'preferences') )
+			if (false)// $GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, 'preferences') )
 			{
 				$preferences_url = $GLOBALS['phpgw']->link('/preferences/index.php');
 				$preferences_text = lang('preferences');
 				$sidebar_content .= <<<HTML
 
 				<li class="nav-item">
-					<a href="{$preferences_url}">{$preferences_text}</a>
+					<a href="{$preferences_url}" class="nav-link">{$preferences_text}</a>
 				</li>
 HTML;
 			}
@@ -374,22 +377,28 @@ HTML;
 		if(!$nonavbar)
 		{
 			$navbar_state = execMethod('phpgwapi.template_portico.retrieve_local', 'menu_state');
+		$app_name = lang($GLOBALS['phpgw_info']['flags']['currentapp']);
 
 			$var['sidebar'] = <<<HTML
-			<nav id="sidebar" class="{$navbar_state['menu_state']}">
-				<div class="sidebar-header">
-			        <h1>{$user_fullname}</h1>
-			    </div>
-				<div class="sidebar-sticky">
-					{$sidebar_content}
-				</div>
-			</nav>
+
+			<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
+				 <div class="offcanvas-header">
+					 <span class="offcanvas-title" id="sidebarMenuLabel">{$app_name}</span>
+					 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+				 </div>
+				 <div id="sidebar" class="offcanvas-body">
+					 {$sidebar_content}
+				 </div>
+			 </div>
+
 HTML;
 			$var['sidebar_button'] = <<<HTML
-				<button type="button" id="sidebarCollapse" class="btn btn-info">
-				<i class="fas fa-align-left"></i>
-				<span>Sidemeny</span>
-			</button>
+			<nav class="navbar navbar-light bg-light">
+				<button class="btn btn-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+			</nav>
+
 HTML;
 		}
 
@@ -399,7 +408,7 @@ HTML;
 		{
 			$breadcrumb_html = <<<HTML
 				<nav aria-label="breadcrumb">
-				  <ol class="breadcrumb">
+				  <ol class="breadcrumb mt-2">
 HTML;
 			$history_url = array();
 			for($i=0;$i< (count($breadcrumbs) -1); $i++)
@@ -455,7 +464,7 @@ HTML;
 				$menu[$i]['this'] = true;
 				if (isset($menu[$i]['children']))
 				{
-					$menu[$i]['children'] = $this->get_sub_menu($menu[$i]['children'], $selection, $level);
+					$menu[$i]['children'] = get_sub_menu($menu[$i]['children'], $selection, $level);
 				}
 			}
 			else
@@ -494,8 +503,9 @@ HTML;
 		}
 
 		$ret = <<<HTML
+
 			<li class="{$current_class}">
-			<a href="{$item['url']}" class="nav-link context-menu-nav" bookmark_id="{$id}" {$target}>{$bookmark}{$item['text']}</a>
+				<a href="{$item['url']}" class="nav-link" {$target}>{$item['text']}</a>
 			</li>
 HTML;
 

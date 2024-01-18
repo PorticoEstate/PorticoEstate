@@ -91,17 +91,26 @@
 				'id'		 => $data['id']
 			);
 
-			$hyperlink = $GLOBALS['phpgw']->link('/index.php', $link_data, false, true);
+			$hyperlink = str_replace(array("http:","&amp;"), array("https:","&"), $GLOBALS['phpgw']->link('/index.php', $link_data, false, true));
 
 			require_once PHPGW_API_INC . '/smartsheet/vendor/autoload.php';
 
-			$proxy = 'http://proxy.bergen.kommune.no:8080';
-
 			$config			 = array('token' => $access_token);
-			$config['proxy'] = array(
-				'http'	 => $proxy,
-				'https'	 => $proxy
-			);
+
+			if (!empty($GLOBALS['phpgw_info']['server']['httpproxy_server']))
+			{
+				$proxy = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
+				$config['proxy'] = array(
+					'http'	 => $proxy,
+					'https'	 => $proxy
+				);
+			}
+//			$proxy = 'http://proxy.bergen.kommune.no:8080';
+//
+//			$config['proxy'] = array(
+//					'http'	 => $proxy,
+//					'https'	 => $proxy
+//				);
 
 			$smartsheetClient	 = new \Smartsheet\SmartsheetClient($config);
 
@@ -142,6 +151,8 @@
 			  Beskrivelse av sak/reklamasjon
 			  Type sak
 			  Beskrivelse av utførte tiltak for å utbedre
+			 Meldt til EBF
+			 Meldt EFU
 
 			 */
 			$rows									 = array();
@@ -153,6 +164,8 @@
 				'value'		 => 'Link til saken i Portico',
 				'hyperlink'	 => $hyperlink
 			);
+			$rows['Meldt til EBF']						 = date('Y-m-d\TH:i:sp', $ticket['timestamp']);// ISO 8601 date format
+			$rows['Meldt EFU']							 = date('Y-m-d\TH:i:sp');
 
 			try
 			{

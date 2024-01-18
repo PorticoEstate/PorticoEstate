@@ -153,11 +153,25 @@
 				'pathway' => $pathway,
 				'config_data' => $config->config_data
 			);
+            if ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bookingfrontend_2') {
+                phpgwapi_jquery::load_widget("datetimepicker");
+                self::add_javascript('phpgwapi', 'pecalendar', 'luxon.js');
+                self::add_javascript('bookingfrontend', 'bookingfrontend_2', 'components/light-box.js', true);
 
+                $GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/pecalendar/pecalendar.css");
+                $GLOBALS['phpgw']->css->add_external_file("bookingfrontend/js/bookingfrontend_2/components/light-box.css");
+
+            } else {
+                $GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
+            }
 			self::add_javascript('bookingfrontend', 'base', 'resource.js', true);
-			$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
 
-			self::render_template_xsl('resource', $data);
+            $template = 'resource';
+
+
+            self::add_external_css_with_search($template . '.css', false);
+//            _debug_array($data);die();
+			self::render_template_xsl($template, $data);
 		}
 
 		private function get_location()

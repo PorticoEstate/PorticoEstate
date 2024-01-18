@@ -1762,7 +1762,7 @@ HTML;
 					'ticket_id' => $id
 				);
 
-				$claim	 = $boclaim->read(array('ticket_id' => $id));
+				$claim	 = $boclaim->read(array('ticket_id' => $id, 'status' => 'all'));
 				$target	 = array();
 				if ($claim)
 				{

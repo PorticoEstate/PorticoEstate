@@ -1589,7 +1589,7 @@
 				{
 					foreach ($entry as $col => &$value)
 					{
-						if(!is_array($value))
+						if($value && !is_array($value))
 						{
 							$html2text->setHTML($value);
 							$value = trim($html2text->getText());
@@ -1889,7 +1889,7 @@
 					{
 						if (!isset($input_type[$i]) || $input_type[$i] != 'hidden')
 						{
-							$row[] = preg_replace("/\r\n/", ' ', $entry[$name[$i]]);
+							$row[] = preg_replace("/\r\n/", ' ', (string)$entry[$name[$i]]);
 						}
 					}
 					$writer->writeSheetRow('Sheet1', $row);

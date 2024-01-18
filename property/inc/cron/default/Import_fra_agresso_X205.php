@@ -680,7 +680,7 @@
 					$buffer[$i]['mvakode']	 = $this->soXport->tax_vendor_override($buffer[$i]['mvakode'], $vendor_id);
 				}
 
-				if(!empty($order_info['tax_code']))
+				if(!empty($order_info['tax_code']) || $order_info['tax_code'] === '0')
 				{
 					$buffer[$i]['mvakode']	 = $order_info['tax_code'];
 				}

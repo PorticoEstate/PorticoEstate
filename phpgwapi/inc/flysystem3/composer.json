@@ -1,6 +1,7 @@
 {
     "require": {
         "league/flysystem": "^3.0",
-        "league/flysystem-sftp-v3": "^3.0"
+        "league/flysystem-sftp-v3": "^3.0",
+		"league/flysystem-ftp": "^3.0"
     }
 }

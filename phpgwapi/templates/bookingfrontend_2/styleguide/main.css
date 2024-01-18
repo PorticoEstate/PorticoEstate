@@ -914,6 +914,9 @@ h4, .h4 {
   background: #FFFFFF;
   color: #793C8A;
 }
+.pe-btn i.fa-solid {
+  font-size: 1.5rem;
+}
 .pe-btn-colour-secondary {
   border: 2px solid #28358B;
   color: #28358B;

@@ -236,6 +236,7 @@
 	create_select_box('Send order receipt as email ', 'order_email_rcpt', $yes_and_no, 'Send the order as BCC to the user');
 	create_select_box('Notify owner of project/order on change', 'notify_project_owner', $yes_and_no, 'By email');
 	create_select_box('request an email receipt', 'request_order_email_rcpt', $yes_and_no, 'request a confirmation email when your email is opened by the recipient');
+	create_select_box('send workorder as pdf', 'send_workorder_as_pdf', $yes_and_no, 'send workorder as pdf attachment');
 
 	$default_start_page = array
 		(

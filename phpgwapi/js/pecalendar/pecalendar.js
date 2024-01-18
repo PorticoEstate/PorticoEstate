@@ -12,6 +12,11 @@ class PEcalendar {
     dom = null;
 
     /**
+     * @type {boolean} - disable resource switching.
+     */
+    disableResourceSwap = false;
+
+    /**
      * @type {luxon.DateTime} - Represents the current date in the calendar.
      */
     currentDate = null;
@@ -115,6 +120,13 @@ class PEcalendar {
      */
     availableTimeSlots;
 
+    /**
+     * Defines the display mode for the Calendar UI.
+     * 'calendar' (default) shows the regular calendar interface.
+     * 'list' shows a list of available time slots.
+     * @type ko.Observable<string>
+     */
+    displayMode = ko.observable('calendar');
 
     applicationURL = null;
 
@@ -126,11 +138,12 @@ class PEcalendar {
      * @param {number|null} [resource_id=null] - The ID of the resource (default is null).
      * @param {string|null} [dateString=null] - The date string for initializing the calendar (default is current date).
      */
-    constructor(id, building_id, resource_id = null, dateString = null) {
+    constructor(id, building_id, resource_id = null, dateString = null, disableResourceSwap = false) {
         // Set instance properties based on provided arguments
         this.dom_id = id;
         this.building_id = building_id;
         this.resource_id(resource_id);
+        this.disableResourceSwap = disableResourceSwap;
 
         // Fetch building data
         this.loadBuildings();
@@ -1732,7 +1745,7 @@ class PEcalendar {
             // language=HTML
             `
                 <div class="select_building_resource">
-                    <div class="resource-switch">
+                    <div class="resource-switch" style="visibility: ${this.disableResourceSwap ? 'hidden': 'initial'}">
                         <select id=${this.getId("resources")} class="js-select-basic">
                             ${this.resources ? Object.keys(this.resources).map(
                                     resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id() ? " selected" : "") + '>' + this.resources[resourceId].name.trim() + '</option>').join("") : ""}
@@ -1844,6 +1857,8 @@ class PEcalendar {
         // Update the building ID
         this.building_id = building_id;
 
+        const currDate = DateTime.fromJSDate(new Date());
+        const maxEndDate = currDate.plus({ months: BOOKING_MONTH_HORIZON }).endOf('month');
         const startDate = this.firstDayOfCalendar.minus({weeks: 1}).toFormat('dd/LL-yyyy');
         const endDate = this.lastDayOfCalendar.toFormat('dd/LL-yyyy');
 
@@ -1858,8 +1873,8 @@ class PEcalendar {
         let urlFreeTime = phpGWLink('bookingfrontend/', {
             menuaction: 'bookingfrontend.uibooking.get_freetime',
             building_id,
-            start_date: startDate,
-            end_date: endDate
+            start_date: currDate.toFormat('dd/LL-yyyy'),
+            end_date: maxEndDate.toFormat('dd/LL-yyyy')
         }, true);
 
 

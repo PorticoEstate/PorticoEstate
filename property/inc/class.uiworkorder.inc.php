@@ -582,7 +582,7 @@
 			$values_combo_box[1] = array();
 			foreach ($_cats as $_cat)
 			{
-				if ($_cat['level'] == 0)
+				if ($_cat['level'] == 0 && $_cat['active'] != 2)
 				{
 					$values_combo_box[1][] = $_cat;
 				}

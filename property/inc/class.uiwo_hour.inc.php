@@ -1984,6 +1984,7 @@ HTML;
 				'to_email'							 => $to_email,
 				'email_list'						 => $email_list,
 				'requst_email_receipt'				 => isset($GLOBALS['phpgw']->preferences->data['request_order_email_rcpt']) && $GLOBALS['phpgw']->preferences->data['property']['request_order_email_rcpt'] == 1 ? 1 : 0,
+				'send_as_pdf'						 => !empty($GLOBALS['phpgw_info']['user']['preferences']['property']['send_workorder_as_pdf']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['send_workorder_as_pdf'] == 1 ? true: false,
 				'lang_select_email'					 => lang('Select email'),
 				'send_order_action'					 => $GLOBALS['phpgw']->link('/index.php', array(
 					'menuaction'	 => 'property.uiwo_hour.view',

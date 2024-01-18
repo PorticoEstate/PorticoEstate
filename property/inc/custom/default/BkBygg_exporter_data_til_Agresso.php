@@ -35,6 +35,13 @@
 	 *
 	 * @author Sigurd Nes
 	 */
+
+	require_once PHPGW_API_INC . '/flysystem3/vendor/autoload.php';
+
+	use League\Flysystem\Filesystem;
+	use League\Flysystem\Ftp\FtpAdapter;
+	use League\Flysystem\Ftp\FtpConnectionOptions;
+
 	if (!class_exists("BkBygg_exporter_data_til_Agresso"))
 	{
 
@@ -271,11 +278,6 @@
 						$this->db->transaction_begin();
 					}
 
-					if (!$connection = $this->connection)
-					{
-						$connection = $this->phpftp_connect();
-					}
-
 					$basedir = $this->config->config_data['export']['remote_basedir'];
 					if ($basedir)
 					{
@@ -288,15 +290,52 @@
 
 					switch ($this->config->config_data['common']['method'])
 					{
-						case 'ftp';
-							$tmp		 = tmpfile();
-							fwrite($tmp, $content);
-							rewind($tmp);
-							$transfer_ok = ftp_fput($connection, $remote_file, $tmp, FTP_BINARY);
-							fclose($tmp);
-							//	$transfer_ok = ftp_put($connection, $remote_file, $filename, FTP_BINARY);
+						case 'ftp':
+
+							$server		 = $this->config->config_data['common']['host'];
+							$user		 = $this->config->config_data['common']['user'];
+							$password	 = $this->config->config_data['common']['password'];
+							// The internal adapter
+							$adapter = new FtpAdapter(
+								// Connection options
+								FtpConnectionOptions::fromArray([
+									'host' => $server, // required
+									'root' => '/agrfdv/', // required
+									'username' => $user, // required
+									'password' => $password, // required
+									'port' => 21,
+									'ssl' => false,
+									'timeout' => 90,
+									'utf8' => true,
+									'passive' => true,
+									'transferMode' => FTP_BINARY,
+									'systemType' => null, // 'windows' or 'unix'
+									'ignorePassiveAddress' => null, // true or false
+									'timestampsOnUnixListingsEnabled' => false, // true or false
+									'recurseManually' => true // true 
+								])
+							);
+
+							// The FilesystemOperator
+							$filesystem = new Filesystem($adapter);
+							try
+							{
+								$filesystem->write(basename($remote_file), $content);
+								$transfer_ok = true;
+							}
+							catch (FilesystemError $exception)
+							{
+//								_debug_array($exception);
+								$transfer_ok = false;
+							}
+
 							break;
-						case 'ssh';
+						case 'ssh':
+							$connection = $this->connection;
+							if (!$connection)
+							{
+								$connection = $this->phpftp_connect();
+							}
 							$sftp		 = ssh2_sftp($connection);
 							$stream		 = @fopen("ssh2.sftp://$sftp$remote_file", 'w');
 							fwrite($stream, $content);
@@ -348,9 +387,10 @@
 				switch ($this->config->config_data['common']['method'])
 				{
 					case 'ftp';
-						if ($connection = ftp_connect($server))
+						$connection = ftp_connect($server);
+						if ($connection)
 						{
-							ftp_login($connection, $user, $password);
+							$login_result = ftp_login($connection, $user, $password);
 						}
 						break;
 					case 'ssh';
@@ -358,7 +398,8 @@
 						{
 							die("function ssh2_connect doesn't exist");
 						}
-						if (!($connection = ssh2_connect("$server", $port)))
+						$connection = ssh2_connect("$server", $port);
+						if (!$connection)
 						{
 							$message = "fail: unable to establish connection";
 							_debug_array($message);

@@ -49,7 +49,7 @@
 		protected $connection		 = false;
 		protected $global_lock		 = false;
 		protected $orders_affected	 = array();
-		protected $min_period;
+		protected $min_period,$currentapp,$join,$db,$cats,$config,$soXport;
 
 		function __construct()
 		{

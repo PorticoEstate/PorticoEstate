@@ -412,6 +412,9 @@
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'Send pdf as attachment to email')"/>
 						</xsl:attribute>
+						<xsl:if test="send_as_pdf = 1">
+							<xsl:attribute name="checked" value="checked"/>
+						</xsl:if>
 					</input>
 				</div>
 				<div class="pure-control-group">

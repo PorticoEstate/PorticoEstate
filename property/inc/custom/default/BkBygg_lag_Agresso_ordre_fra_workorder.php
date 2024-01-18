@@ -52,7 +52,7 @@
 				/**
 				 * Make sure it doesn't send files from development/test
 				 */
-				if( $GLOBALS['phpgw_info']['server']['hostname'] !=='porticoebf.srv.bergenkom.no')
+				if( $GLOBALS['phpgw_info']['server']['hostname'] !=='fdvapp01e.srv.bergenkom.no')
 				{
 					return 2;
 				}

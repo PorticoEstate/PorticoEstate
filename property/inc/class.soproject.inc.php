@@ -1350,7 +1350,7 @@
 			}
 			else
 			{
-				$this->update_budget($id, $project['budget_year'], $project['budget_periodization'], $project['budget'], $project['budget_periodization_all'], 'update', $project['budget_periodization_activate']);
+				$this->update_budget($id, $project['budget_year'], $project['budget_periodization'], (int)$project['budget'], $project['budget_periodization_all'], 'update', $project['budget_periodization_activate']);
 			}
 
 			if ($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
@@ -1677,7 +1677,7 @@
 
 				if ($project['budget'])
 				{
-					$this->update_budget($project['id'], $project['budget_year'], $project['budget_periodization'], $project['budget'], $project['budget_periodization_all'], 'update', $project['budget_periodization_activate']);
+					$this->update_budget($project['id'], $project['budget_year'], $project['budget_periodization'], (int)$project['budget'], $project['budget_periodization_all'], 'update', $project['budget_periodization_activate']);
 				}
 
 				$this->db->query("SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE active = 1 AND project_id = " . (int)$project['id'], __LINE__, __FILE__);

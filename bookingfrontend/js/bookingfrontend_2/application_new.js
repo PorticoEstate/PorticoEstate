@@ -223,7 +223,7 @@ function applicationModel() {
 
 
     self.formatDate = function (date) {
-        const from = DateTime.fromFormat(date.from_, "dd/MM/yyyy HH:mm");
+        const from = luxon.DateTime.fromFormat(date.from_, "dd/MM/yyyy HH:mm");
         var day = from.day;
         var months = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'];
         var month = months[from.month - 1];
@@ -303,7 +303,7 @@ function applicationModel() {
                 dateStr = dateParts.join(".");
             }
 
-            let date = DateTime.fromFormat(dateStr, "dd.MM.yyyy");
+            let date = luxon.DateTime.fromFormat(dateStr, "dd.MM.yyyy");
             var startTimeParts = self.bookingStartTime().split(":");
             var endTimeParts = self.bookingEndTime().split(":");
 

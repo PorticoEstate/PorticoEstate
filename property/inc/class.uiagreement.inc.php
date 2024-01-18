@@ -2244,12 +2244,25 @@
 //					array('disablePagination'	=> true)
 				)
 			);
-			//---datatable2 settings---------------------------------------------------
-			$link_view_file	 = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
 
-			for ($z = 0; $z < count($agreement['files']); $z++)
+
+			//---datatable2 settings---------------------------------------------------
+			$content_files = array();
+			if (isset($agreement['files']) && $agreement['files'])
 			{
-				$content_files[$z]['file_name'] = '<a href="' . $link_view_file . '&amp;file_id=' . $agreement['files'][$z]['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $agreement['files'][$z]['name'] . '</a>';
+				$link_view_file	 = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+				$lang_view_file = lang('click to view file');
+
+				foreach ($agreement['files'] as $_entry)
+				{
+					if ( in_array($_entry['mime_type'], $img_types))
+					{
+						$content_files[] = array(
+							'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . $lang_view_file . '">' . $_entry['name'] . '</a>'
+						);
+					}
+				}
+
 			}
 
 			$myColumnDefs2 = array
