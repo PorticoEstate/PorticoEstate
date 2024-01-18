@@ -376,7 +376,6 @@ HTML;
 			$toarray = array(
 				'hc483@bergen.kommune.no',
 				'Bjørvik, Ole Christian <Ole.Bjorvik@bergen.kommune.no>',
-				'Lillestrøm Synneve <Synneve.Lillestrom@bergen.kommune.no>'
 				);
 			$to		 = implode(';', $toarray);
 
@@ -499,7 +498,6 @@ HTML;
 			$toarray = array(
 				'hc483@bergen.kommune.no',
 				'Bjørvik, Ole Christian <Ole.Bjorvik@bergen.kommune.no>',
-				'Lillestrøm Synneve <Synneve.Lillestrom@bergen.kommune.no>'
 				);
 			$to		 = implode(';', $toarray);
 
