@@ -353,11 +353,7 @@ class BookingSearch {
                 resources = resources.filter(resource => this.data.selected_activities().map(f => f.id).every(id => this.data.resource_activities().some(ra => this.activity_cache[id].includes(ra.activity_id) && resource.id === ra.resource_id)));
             }
             if (this.data.selected_resource_categories().length > 0) {
-                const activities = [...new Set(this.data.resource_category_activity().filter(activity => this.data.selected_resource_categories().some(rc => rc.id === activity.rescategory_id)).map(a => a.activity_id))];
-                // console.log(activities, this.data.resource_activities())
-                resources = resources.filter(resource => this.data.resource_activities().some(ra => activities.some(sa => this.activity_cache[sa].includes(ra.activity_id) && resource.id === ra.resource_id)));
-                // resources = resources.filter(resource => activities.every(id => this.data.resource_activities().some(ra => this.activity_cache[id].includes(ra.activity_id) && resource.id === ra.resource_id)));
-
+                resources = (resources.filter(res => this.data.selected_resource_categories().some(cat => cat.id === res.rescategory_id)));
             }
 
             hasSearch = true;
@@ -593,7 +589,7 @@ class BookingSearch {
         }
         this.data.result(okResources.slice(0, 50));
         el.append(append.join(""));
-        el.find('a.link-text').on('click', function(event) {
+        el.find('a.link-text').on('click', function (event) {
             event.stopPropagation();
             // If you need to follow the link, uncomment the following line
             // window.location.href = $(this).attr('href');
