@@ -1156,6 +1156,9 @@ h4, .h4 {
 .calendar .calendar-body .dots-container {
   z-index: 11;
 }
+.calendar .calendar-body .dots-container i {
+  color: white;
+}
 .calendar .calendar-body .event-allocation {
   background-color: #E6E3DB;
   border-color: #FFF;
@@ -1198,6 +1201,9 @@ h4, .h4 {
   justify-content: space-between;
   margin-left: 1.5rem;
   z-index: 11; /* Ensure they are on top */
+}
+.calendar .calendar-body .event-temporary.current-temp {
+  z-index: auto;
 }
 .calendar .calendar-body .event-temporary::before, .calendar .calendar-body .event-temporary::after {
   content: "";

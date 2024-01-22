@@ -2554,5 +2554,184 @@ textarea {
   background-color: var(--main-bg-color);
   filter: brightness(120%);
 }
+.pill > *:only-child {
+  border-radius: 50px;
+}
+
+.remark {
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
+.info-icon {
+  border: 2px solid black;
+  border-radius: 50%;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.info-icon i {
+  font-size: 0.75rem;
+}
+
+.article-table-wrapper {
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+}
+.article-table-wrapper .article-table-header, .article-table-wrapper .category-header, .article-table-wrapper .category-article-row {
+  grid-template-columns: 4.25fr 3.75fr 3fr 3fr 2fr 3rem;
+  gap: 1rem;
+}
+.article-table-wrapper .article-table-header {
+  display: grid;
+  grid-template-areas: "name unused price hours total expand";
+  background-color: #9463a1;
+  color: #FFFFFF;
+  padding: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+  align-items: center;
+}
+@media all and (max-width: 992px) {
+  .article-table-wrapper .article-table-header {
+    grid-template-columns: 2fr 1fr 1fr 3rem;
+    grid-template-areas: "name hours total expand";
+  }
+  .article-table-wrapper .article-table-header .resource-price {
+    display: none;
+  }
+}
+.article-table-wrapper .article-table-header.collapsed-head {
+  border-bottom-right-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+.article-table-wrapper .article-table-header .resource-name {
+  grid-area: name;
+}
+.article-table-wrapper .article-table-header .resource-price {
+  grid-area: price;
+}
+.article-table-wrapper .article-table-header .resource-hours {
+  grid-area: hours;
+}
+.article-table-wrapper .article-table-header .resource-total {
+  grid-area: total;
+}
+.article-table-wrapper .article-table-header .resource-expand {
+  grid-area: expand;
+  text-align: center;
+  cursor: pointer;
+}
+.article-table-wrapper .article-table-header .resource-expand button {
+  color: #FFFFFF;
+}
+.article-table-wrapper .category-table {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+@media all and (max-width: 992px) {
+  .article-table-wrapper .category-table:last-child {
+    border-bottom-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+  }
+}
+@media all and (min-width: 992px) {
+  .article-table-wrapper .category-table {
+    border-bottom-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .article-table-wrapper .category-table ~ .category-table .category-header {
+    border-top-right-radius: 0.5rem;
+    border-top-left-radius: 0.5rem;
+  }
+}
+.article-table-wrapper .category-table .category-header {
+  display: grid;
+  grid-template-areas: "group-title head-desc head-unit head-count head-total unused";
+  padding: 0.5rem;
+  background-color: #dfd0e3;
+}
+@media all and (max-width: 992px) {
+  .article-table-wrapper .category-table .category-header {
+    grid-template-columns: 2fr 1fr 3rem;
+    grid-template-areas: "group-title group-title group-title expand";
+  }
+  .article-table-wrapper .category-table .category-header .category-header-unit-price, .article-table-wrapper .category-table .category-header .category-header-count, .article-table-wrapper .category-table .category-header .category-header-total, .article-table-wrapper .category-table .category-header .category-header-description {
+    display: none;
+  }
+}
+.article-table-wrapper .category-table .category-header .category-name {
+  margin-left: 3rem;
+  grid-area: group-title;
+}
+@media all and (max-width: 992px) {
+  .article-table-wrapper .category-table .category-header .category-name {
+    margin-left: 0;
+  }
+}
+.article-table-wrapper .category-table .category-header .category-header-description {
+  grid-area: head-desc;
+}
+.article-table-wrapper .category-table .category-header .category-header-unit-price {
+  grid-area: head-unit;
+}
+.article-table-wrapper .category-table .category-header .category-header-count {
+  grid-area: head-count;
+}
+.article-table-wrapper .category-table .category-header .category-header-total {
+  grid-area: head-total;
+}
+.article-table-wrapper .category-table .category-articles .category-article-row {
+  display: grid;
+  grid-template-areas: "name desc price quantity sum unused";
+  padding: 0.5rem;
+}
+@media all and (max-width: 992px) {
+  .article-table-wrapper .category-table .category-articles .category-article-row {
+    padding: 1rem;
+    grid-template-columns: 3fr 2fr;
+    grid-template-areas: "name quantity" "desc-title desc" "price-title price" "sum-title sum";
+  }
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .desc-title, .article-table-wrapper .category-table .category-articles .category-article-row .price-title, .article-table-wrapper .category-table .category-articles .category-article-row .sum-title {
+  align-self: center;
+}
+@media all and (min-width: 992px) {
+  .article-table-wrapper .category-table .category-articles .category-article-row .desc-title, .article-table-wrapper .category-table .category-articles .category-article-row .price-title, .article-table-wrapper .category-table .category-articles .category-article-row .sum-title {
+    display: none;
+  }
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .desc-title {
+  grid-area: desc-title;
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .price-title {
+  grid-area: price-title;
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .sum-title {
+  grid-area: sum-title;
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .item-name {
+  margin-left: 3rem;
+  grid-area: name;
+}
+@media all and (max-width: 992px) {
+  .article-table-wrapper .category-table .category-articles .category-article-row .item-name {
+    margin-left: 0;
+  }
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .item-description {
+  grid-area: desc;
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .item-price {
+  grid-area: price;
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .item-quantity {
+  grid-area: quantity;
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .item-sum {
+  grid-area: sum;
+}
 
 /*# sourceMappingURL=main.css.map */
