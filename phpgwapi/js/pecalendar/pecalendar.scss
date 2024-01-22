@@ -462,6 +462,9 @@ $current-time-color: #ea4335;
 
     .dots-container{
       z-index: 11;
+      i {
+        color: white;
+      }
     }
 
     .event-allocation {
@@ -518,6 +521,9 @@ $current-time-color: #ea4335;
       justify-content: space-between;
       margin-left: 1.5rem;
       z-index: 11; /* Ensure they are on top */
+      &.current-temp {
+        z-index: auto;
+      }
 
       //opacity: 0.75;
       //resize: vertical;
