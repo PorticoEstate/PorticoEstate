@@ -1,4 +1,4 @@
-if(!globalThis['DateTime']) {
+if (!globalThis['DateTime']) {
     globalThis['DateTime'] = luxon.DateTime;
 }
 if (globalThis['ko'] && 'bindingHandlers' in ko && !ko.bindingHandlers.withAfterRender) {
@@ -196,6 +196,29 @@ class PECalendar {
         }
         return slots;
     });
+
+    /**
+     * Generates Unix timestamps for the provided start and end times on a given date.
+     *
+     * @param {string} date - The specified date in the format "YYYY-MM-DD".
+     * @param {string} timeStart - The start time in the format "HH:mm:ss".
+     * @param {string} timeEnd - The end time in the format "HH:mm:ss".
+     * @returns {{
+     *     startTimestamp: number,
+     *     endTimestamp: number
+     * }} - Returns an object containing Unix timestamps for the start and end times.
+     */
+    getUnixTimestamps(date, timeStart, timeEnd) {
+        // Create a Date object for the start time
+        const startDateTime = new Date(`${date}T${timeStart}`);
+        const startTimestamp = startDateTime.getTime();
+
+        // Create a Date object for the end time
+        const endDateTime = new Date(`${date}T${timeEnd}`);
+        const endTimestamp = endDateTime.getTime();
+
+        return {startTimestamp, endTimestamp};
+    }
 
     applicationURL = ko.computed(() => {
         if (!this.resource_id() || !this.resources()) {
@@ -511,7 +534,13 @@ class PECalendar {
             for (let date of dates) {
                 if (this.isDateInRange(date.from)) {
                     // Create an event element and append to the content
-                    all.push({event, date});
+                    const props = {}
+
+                    props[`event-${event.type}`] = true;
+                    if (this.tempEvent()) {
+                        props[`current-temp`] = event.id === this.tempEvent().id;
+                    }
+                    all.push({event, date, props});
                     // const eventElement = this.createEventElement(event, date);
                     // content.appendChild(eventElement);
                 }
@@ -689,7 +718,6 @@ class PECalendar {
     }
 
     handleMouseDown = (_allProps, event) => {
-        console.log(event);
         if (!(event.target.className === 'calendar-cell' || event.target.classList.contains('event-temporary'))) {
             return;
         }
@@ -702,20 +730,17 @@ class PECalendar {
             const bottomBoundary = rect.bottom - threshold;
 
             const targetEvent = this.tempEvents().find(e => e.id === event.target.dataset.id);
-            console.log(event.target.dataset.id, this.tempEvents());
             // Check if the click is near the top or bottom of the element
             if (event.clientY < topBoundary) {
                 this.tempEvent(targetEvent);
                 this.isDragging(true);
                 this.dragStart(targetEvent.to);
                 this.tempEvents(this.tempEvents().filter(e => e.id !== event.target.dataset.id));
-                console.log('Clicked near the top of the element');
             } else if (event.clientY > bottomBoundary) {
                 this.tempEvent(targetEvent);
                 this.isDragging(true);
                 this.dragStart(targetEvent.from);
                 this.tempEvents(this.tempEvents().filter(e => e.id !== event.target.dataset.id));
-                console.log('Clicked near the bottom of the element');
             }
             return;
         }
@@ -757,7 +782,6 @@ class PECalendar {
         };
 
         if (!this.canCreateTemporaryEvent(testEvent)) {
-            console.log("CANT")
             this.dragStart(null)
             this.isDragging(false);
             return;
@@ -776,7 +800,6 @@ class PECalendar {
     handleMouseMove = (cellProps, event) => {
         if (!this.isDragging()) return;
         if (event.target.className !== 'calendar-cell') {
-            console.log(event);
             return;
         }
         //
@@ -832,7 +855,6 @@ class PECalendar {
 
     // Method to update a temporary event
     updateTemporaryEvent(tempEvent, startTime, endTime) {
-        console.log(tempEvent, startTime, endTime);
 
         const updatedEvent = {
             ...tempEvent,
@@ -874,35 +896,57 @@ class PECalendar {
         const fromTime = DateTime.fromISO(`${event.date}T${event.from}`, {locale: 'nb'});
         const toTime = DateTime.fromISO(`${event.date}T${event.to}`, {locale: 'nb'});
 
-        const formattedDate = dateObj.toFormat('d. LLL');
         const formattedFromTime = fromTime.toFormat('HH:mm');
         const formattedToTime = toTime.toFormat('HH:mm');
 
-        return `${formattedDate} ${formattedFromTime}-${formattedToTime}`;
+        return `${formattedFromTime}-${formattedToTime}`;
+    }
+    /**
+     * @param {Partial<IEvent>} event - The new temporary event.
+     * @returns {string} - Returns formatted date string
+     */
+    formatPillDateInterval(event) {
+        const dateObj = DateTime.fromISO(event.date, {locale: 'nb'});
+
+        const formattedDate = dateObj.toFormat('d. LLL');
+
+        return `${formattedDate}`;
     }
 
     /**
      * Formats the given Unix timestamps into a date range string.
+     * @param {boolean} useYear - forces the use of year
      * @param {number} startTimestamp - The start Unix timestamp.
      * @param {number} endTimestamp - The end Unix timestamp.
      * @returns {string} - Formatted date range string.
      */
-    formatDateRange(startTimestamp, endTimestamp) {
-        const startDate = new Date(parseInt(startTimestamp));
-        const endDate = new Date(parseInt(endTimestamp));
+    formatDateRange(useYear, startTimestamp, endTimestamp) {
+        let startDate;
+        let endDate;
+        if (startTimestamp) {
+            startDate = new Date(parseInt(startTimestamp))
+        } else {
+            startDate = this.firstDayOfCalendar().toJSDate()
+        }
+        if (endTimestamp) {
+            endDate = new Date(parseInt(endTimestamp))
+        } else {
+            endDate = this.lastDayOfCalendar().toJSDate()
+        }
+
         const options = {day: 'numeric', month: 'long'};
 
         // Check if the start and end dates are in the same month
         if (startDate.getMonth() === endDate.getMonth() && startDate.getFullYear() === endDate.getFullYear() && startDate.getDate() === endDate.getDate()) {
-            return `${endDate.toLocaleDateString('no', options)}`;
+            return `${endDate.toLocaleDateString('no', options)} ${useYear ? endDate.getFullYear() : ''}`;
 
         } else if (startDate.getMonth() === endDate.getMonth() && startDate.getFullYear() === endDate.getFullYear()) {
-            return `${startDate.toLocaleDateString('no', {day: 'numeric'}).slice(0, -1)} - ${endDate.toLocaleDateString('no', options)}`;
+            return `${startDate.toLocaleDateString('no', {day: 'numeric'}).slice(0, -1)} - ${endDate.toLocaleDateString('no', options)} ${useYear ? endDate.getFullYear() : ''}`;
         } else {
             return `${startDate.toLocaleDateString('no', {
                 day: 'numeric',
                 month: 'short'
-            }).slice(0, -1)} - ${endDate.toLocaleDateString('no', options)}`;
+            }).slice(0, -1)} - ${endDate.toLocaleDateString('no', options)} ${useYear ? endDate.getFullYear() : ''}`;
         }
     }
 
@@ -953,6 +997,34 @@ class PECalendar {
         $(e).select2({
             theme: 'select-v2',
             width: '100%'
+        });
+    }
+
+
+    togglePopper(e, clickEvent) {
+        let popperInfo;
+        if(clickEvent.currentTarget.className === 'dots-container'){
+            console.log('gotDots', clickEvent)
+            popperInfo = clickEvent.currentTarget.nextElementSibling;
+        } else if(clickEvent.currentTarget.className === 'info') {
+            popperInfo = clickEvent.currentTarget
+        }
+        if(!popperInfo) {
+            return
+        }
+
+        if(popperInfo.hasAttribute('data-show')){
+            popperInfo.removeAttribute('data-show')
+        } else {
+            popperInfo.setAttribute('data-show', '')
+        }
+        console.log(clickEvent);
+    }
+
+    addPopperAfterRender(e) {
+
+        const popper = new Popper(e, e.nextElementSibling, {
+            placement: 'left',
         });
     }
 
@@ -1033,20 +1105,20 @@ class PECalendar {
         // });
     }
 
+
     combinedTempEvents = ko.computed(() => {
         // Start with the array of existing temp events
         let combined = [...this.tempEvents()];
 
-        // If there's a current temp event, add it to the array
-        if (this.tempEvent()) {
-            combined = [(this.tempEvent()), ...combined];
-        }
+        // // If there's a current temp event, add it to the array
+        // if (this.tempEvent()) {
+        //     combined = [(this.tempEvent()), ...combined];
+        // }
 
         return combined;
     });
 
     removeTempEventPill = (e) => {
-        console.log("Remove event")
         this.tempEvents(this.tempEvents().filter(event => event.id !== e.id));
     }
 
@@ -1104,7 +1176,7 @@ if (globalThis['ko']) {
                         <div id="tempEventPills" class="pills"
                              data-bind="foreach: combinedTempEvents(), css: {'collapsed': !showAllTempEventPills()}">
                             <div class="pill pill--secondary">
-                                <div class="pill-date" data-bind="text: $parent.formatPillTimeInterval($data)">2. nov
+                                <div class="pill-date" data-bind="text: $parent.formatPillDateInterval($data)">2. nov
                                 </div>
                                 <div class="pill-divider"></div>
                                 <div class="pill-content"
@@ -1143,7 +1215,7 @@ if (globalThis['ko']) {
                                     <span class="fas fa-chevron-left" title="Forrige"></span>
                                 </button>
                                 <input class="js-basic-datepicker-2" type="text"
-                                       data-bind="value: datePickerValue, valueUpdate: 'afterkeydown', event: { change: changeDate }, withAfterRender: { afterRender: updateDatePickerAfterRender}">
+                                       data-bind="value: formatDateRange(true), valueUpdate: 'afterkeydown', event: { change: changeDate }, withAfterRender: { afterRender: updateDatePickerAfterRender}">
                                 <button type="button" class="pe-btn  pe-btn-secondary pe-btn--circle"
                                         data-bind="click: () => currentDate(currentDate().plus({weeks: 1}))">
                                     <span class="sr-only">Neste</span>
@@ -1210,7 +1282,7 @@ if (globalThis['ko']) {
                         <!-- Events -->
                         <!-- ko foreach: calendarEvents -->
                         <div class="event"
-                             data-bind="css: 'event-' + $data.event.type, style: { gridRow: $parent.getGridRow($data.date, $data.event), gridColumn: $parent.getGridColumn($data.date) }, attr: { 'data-id': $data.event.id }">
+                             data-bind="css: $data.props, style: { gridRow: $parent.getGridRow($data.date, $data.event), gridColumn: $parent.getGridColumn($data.date) }, attr: { 'data-id': $data.event.id }">
                             <div>
                                 <div data-bind="text: $data.event.name"></div>
                                 <!-- ko if: $data.event.resources -->
@@ -1225,12 +1297,20 @@ if (globalThis['ko']) {
                             </button>
                             <!-- /ko -->
                             <!-- ko if: $data.event.type !== 'temporary' -->
-
-                            <button class="dots-container">
-                                <img
-                                        data-bind="attr: {src: phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false)}"
-                                        class="dots"/>
+                            <button class="dots-container"  
+                                    data-bind="withAfterRender: { afterRender: $parent.addPopperAfterRender}, click: $parent.togglePopper">
+                                <!--                                <img-->
+                                <!--                                        data-bind="attr: {src: phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false)}"-->
+                                <!--                                        class="dots"/>-->
+                                <i class="fas fa-info-circle"></i>
                             </button>
+                            <div class="info" data-bind="click: $parent.togglePopper" >
+                                <div class="info-inner">
+                                    <div><b data-bind="text: $data.event.name"></b></div>
+                                    <div data-bind="text: 'Kl: ' + $parent.formatPillTimeInterval($data.event)">Kl: FROM - TO</div>
+                                </div>
+
+                            </div>
                             <!-- /ko -->
 
                         </div>
@@ -1258,7 +1338,7 @@ if (globalThis['ko']) {
                         <!-- Date and time section -->
                         <div class="time-slot-date-time">
                             <div class="text-primary text-bold"
-                                 data-bind="text: $parent.formatDateRange($data.start, $data.end)"></div>
+                                 data-bind="text: $parent.formatDateRange(false, $data.start, $data.end)"></div>
                             <div data-bind="text: $parent.formatTimeRange($data.start, $data.end)"></div>
                         </div>
 
