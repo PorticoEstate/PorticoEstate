@@ -56,7 +56,28 @@
 			return $resource;
 		}
 
-		public function show()
+
+        function removeInitialEmptyHtmlTags($html) {
+            // Regular expression to match empty tags
+            $emptyTagRegex = '/<(\w+)(?:\s+[^>]*)?>\s*(<br\s*\/?>|\s|<\/\w+>)*<\/\1>/i';
+
+            // Split HTML into segments at the first non-empty tag
+            $segments = preg_split('/(<\w+[^>]*>[^<\s])/', $html, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+
+            // Process only the first segment to remove empty tags
+            $firstSegment = array_shift($segments) ?: '';
+            $previousHtml = null;
+            do {
+                $previousHtml = $firstSegment;
+                $firstSegment = preg_replace($emptyTagRegex, '', $firstSegment);
+            } while ($firstSegment !== $previousHtml);
+
+            // Reassemble the HTML
+            return $firstSegment . implode('', $segments);
+        }
+
+
+        public function show()
 		{
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
@@ -160,6 +181,8 @@
 
                 $GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/pecalendar/pecalendar.css");
                 $GLOBALS['phpgw']->css->add_external_file("bookingfrontend/js/bookingfrontend_2/components/light-box.css");
+                $resource['description'] = self::removeInitialEmptyHtmlTags($resource['description']);
+
 
             } else {
                 $GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
