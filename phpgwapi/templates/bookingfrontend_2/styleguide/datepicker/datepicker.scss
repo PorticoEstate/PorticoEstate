@@ -5,6 +5,10 @@
   margin-top: 0.5rem;
   width: auto;
 
+  th.ui-datepicker-week-col {
+    visibility: hidden;
+  }
+
   &.ui-widget {
     border: 2px solid $purple;
 
@@ -129,7 +133,7 @@
     }
   }
 
-  select.ui-datepicker-month, 
+  select.ui-datepicker-month,
   select.ui-datepicker-year {
     width: auto;
     border: 0;
@@ -138,7 +142,7 @@
     border-radius: 0.25rem;
     background: $grey-light;
 
-    
+
     @media (min-width: $media-small) {
       padding: 0.719rem;
     }
@@ -161,7 +165,7 @@
     padding: 0.15rem;
   }
 
-  .ui-state-default, 
+  .ui-state-default,
   .ui-widget-content .ui-state-default {
     border: 2px solid $grey-light;
     border-radius: 0.375rem;
@@ -176,7 +180,7 @@
       font-size: 1.125rem;
       padding: 0.75rem;
     }
-  
+
     &:focus {
       outline: none;
     }

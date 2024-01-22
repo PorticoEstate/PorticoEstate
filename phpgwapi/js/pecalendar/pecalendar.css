@@ -1106,6 +1106,7 @@ h4, .h4 {
 }
 .calendar .calendar-body .past-day, .calendar .calendar-body .past-hour {
   background-color: #eaeaea;
+  z-index: auto;
 }
 .calendar .calendar-body .filler-col {
   grid-row: 1/-1;
@@ -1152,6 +1153,9 @@ h4, .h4 {
 .calendar .calendar-body .current {
   font-weight: bold;
 }
+.calendar .calendar-body .dots-container {
+  z-index: 11;
+}
 .calendar .calendar-body .event-allocation {
   background-color: #E6E3DB;
   border-color: #FFF;
@@ -1193,7 +1197,7 @@ h4, .h4 {
   display: flex;
   justify-content: space-between;
   margin-left: 1.5rem;
-  opacity: 0.75;
+  z-index: 11; /* Ensure they are on top */
 }
 .calendar .calendar-body .event-temporary::before, .calendar .calendar-body .event-temporary::after {
   content: "";
@@ -1203,7 +1207,7 @@ h4, .h4 {
   right: 0;
   height: 10px; /* Define the height of the resizable area at the top and bottom */
   cursor: ns-resize; /* Two-sided vertical arrow */
-  z-index: 2; /* Ensure they are on top */
+  z-index: 12; /* Ensure they are on top */
 }
 .calendar .calendar-body .event-temporary::before {
   top: 0; /* Position the ::before element at the top */
@@ -1292,6 +1296,58 @@ h4, .h4 {
 }
 .expansion-panel .expansion-content {
   display: none;
+}
+
+.calendar-cell {
+  z-index: 10;
+}
+
+.time-slot-card {
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: 6.375rem 1fr auto;
+  min-height: 5rem;
+  align-items: center;
+}
+.time-slot-card .time-slot-status {
+  border-radius: 0.5rem 0 0 0.5rem;
+  border: 1px solid #dfd0e3;
+  border-right: 0;
+  padding-left: 1rem;
+  font-weight: bold;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+}
+.time-slot-card .time-slot-status.green {
+  background-color: #B0FF94;
+}
+.time-slot-card .time-slot-status.yellow {
+  background-color: #FFEE94;
+}
+.time-slot-card .time-slot-status.red {
+  background-color: #FF9494;
+}
+.time-slot-card .time-slot-date-time {
+  flex-direction: column;
+  align-self: stretch;
+  border: 1px solid #dfd0e3;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  border-right: 0;
+  border-left: 0;
+  display: flex;
+  justify-content: center;
+}
+.time-slot-card .time-slot-button {
+  padding-right: 1rem;
+  padding-left: 1rem;
+  display: flex;
+  border: 1px solid #dfd0e3;
+  border-left: 0;
+  align-self: stretch;
+  align-items: center;
+  border-radius: 0 0.5rem 0.5rem 0;
 }
 
 /*# sourceMappingURL=pecalendar.css.map */

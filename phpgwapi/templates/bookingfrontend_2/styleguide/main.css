@@ -1291,6 +1291,9 @@ textarea {
   margin-top: 0.5rem;
   width: auto;
 }
+.ui-datepicker th.ui-datepicker-week-col {
+  visibility: hidden;
+}
 .ui-datepicker.ui-widget {
   border: 2px solid #793C8A;
 }

@@ -102,14 +102,23 @@
 
             </div>
             <!--            <hr class="divider divider-primary my-4"/>-->
-            <div class="row mb-4">
+            <div class="row mb-4 mycal">
                 <div class="col-sm-12">
                     <h3 class="">
                         Bookingkalender -
                         <xsl:value-of select="resource/name"/>
                     </h3>
                 </div>
-                <div id="calendar" class="calendar"></div>
+<!--                <div id="calendar" class="calendar"></div>-->
+                <pe-calendar>
+                    <xsl:attribute name="params">
+                        <xsl:text>building_id: </xsl:text>
+                        <xsl:value-of select="building/id"/>
+                        <xsl:text>, resource_id: </xsl:text>
+                        <xsl:value-of select="resource/id"/>
+<!--                        <xsl:text>, disableResourceSwap: true</xsl:text>-->
+                    </xsl:attribute>
+                </pe-calendar>
             </div>
             <div class="row mb-4">
                 <light-box params="images: imageArray"></light-box>
@@ -147,14 +156,12 @@
         </div>
     </div>
     <script>
-        const calendar = new PEcalendar('calendar',<xsl:value-of select="building/id"/>,<xsl:value-of
-            select="resource/id"/>, null, true);
+<!--        const calendar = new PEcalendar('calendar',<xsl:value-of select="building/id"/>,<xsl:value-of-->
+<!--            select="resource/id"/>, null, true);-->
 
         var lang =<xsl:value-of select="php:function('js_lang', 'new application', 'Resource (2018)')"/>;
         var resourcename = '<xsl:value-of select="resource/name"/>';
-        var deactivate_application =
-        <xsl:value-of select="building/deactivate_application"/>
-        +<xsl:value-of select="resource/deactivate_application"/>;
+        var deactivate_application =<xsl:value-of select="building/deactivate_application"/>+<xsl:value-of select="resource/deactivate_application"/>;
         var deactivate_calendar =<xsl:value-of select="building/deactivate_calendar"/>;
         var building_id = "<xsl:value-of select="building/id"/>";
         var simple_booking = "<xsl:value-of select="resource/simple_booking"/>";
