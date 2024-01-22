@@ -291,20 +291,23 @@
 
 		function execute()
 		{
-			$this->boei	 = new boei();
-			$checklist	 = $this->boei->get_checklist();
 
-			$timestamp = $this->populate_database($checklist);
-
-			$yesterday = time() - (24 * 3600);
-			if($timestamp && $timestamp > $yesterday)
+			// max. once each day
+			if ((int)$GLOBALS['phpgw_info']['server']['last_executed_get_tenenants_time'] < (time() - (3600 * 24)))
 			{
-				return $timestamp;
+				$config = createObject('phpgwapi.config', 'phpgwapi');
+				$config->read_repository();
+				$config->value('last_executed_get_tenenants_time', time());
+				$config->save_repository();
+
+				$this->boei	 = new boei();
+				$checklist	 = $this->boei->get_checklist();
+
+				$this->populate_database($checklist);
+				$this->handle_deceased($checklist);
+				$this->handle_shielded();
+
 			}
-
-			$this->handle_deceased($checklist);
-			$this->handle_shielded();
-
 		}
 
 		function handle_deceased($checklist)
