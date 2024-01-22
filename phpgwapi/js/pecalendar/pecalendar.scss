@@ -400,6 +400,7 @@ $current-time-color: #ea4335;
 
     .past-day, .past-hour {
       background-color: #eaeaea;
+      z-index: auto;
     }
 
     .filler-col {
@@ -459,6 +460,13 @@ $current-time-color: #ea4335;
       font-weight: bold;
     }
 
+    .dots-container{
+      z-index: 11;
+      i {
+        color: white;
+      }
+    }
+
     .event-allocation {
       background-color: #E6E3DB;;
       border-color: #FFF;
@@ -512,7 +520,12 @@ $current-time-color: #ea4335;
       display: flex;
       justify-content: space-between;
       margin-left: 1.5rem;
-      opacity: 0.75;
+      z-index: 11; /* Ensure they are on top */
+      &.current-temp {
+        z-index: auto;
+      }
+
+      //opacity: 0.75;
       //resize: vertical;
       //overflow: auto;
       &::before,
@@ -524,7 +537,7 @@ $current-time-color: #ea4335;
         right: 0;
         height: 10px; /* Define the height of the resizable area at the top and bottom */
         cursor: ns-resize; /* Two-sided vertical arrow */
-        z-index: 2; /* Ensure they are on top */
+        z-index: 12; /* Ensure they are on top */
       }
 
       &::before {
@@ -659,3 +672,61 @@ $current-time-color: #ea4335;
     // Additional styles for the content
   }
 }
+
+
+.calendar-cell {
+  z-index: 10;
+}
+
+.time-slot-card {
+  //border: 1px solid #ddd;
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: 6.375rem 1fr auto;
+  min-height: 5rem;
+  align-items: center;
+
+  .time-slot-status {
+    border-radius: 0.5rem 0 0 0.5rem ;
+    border: 1px solid $purple-24;
+    border-right: 0;
+
+    padding-left: 1rem;
+    font-weight: bold;
+
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    &.green { background-color: $green-light; }
+    &.yellow { background-color: $yellow-light; }
+    &.red { background-color: $red-light; }
+  }
+
+  .time-slot-date-time {
+    flex-direction: column;
+    align-self: stretch;
+    border: 1px solid $purple-24;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    border-right: 0;
+    border-left: 0;
+    display: flex;
+    justify-content: center;
+
+  }
+
+  .time-slot-button {
+  padding-right: 1rem;
+  padding-left: 1rem;
+    display: flex;
+    border: 1px solid $purple-24;
+    border-left: 0;
+
+    align-self: stretch;
+    align-items: center;
+
+    border-radius:0  0.5rem 0.5rem 0 ;
+
+  }
+}
+

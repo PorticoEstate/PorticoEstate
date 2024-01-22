@@ -3,18 +3,34 @@ const createJsSlidedowns = () => {
     $(".js-slidedown").each(function () {
         var $toggler = $(this).find(".js-slidedown-toggler");
         var $dropDown = $(this).find(".js-slidedown-content");
-        let peCalendar = null;
+        // let peCalendar = null;
         let calendar = $(this).find(".calendar");
 
         $($toggler).on("click", function () {
             $dropDown.slideToggle('fast', function () {
                 var isExpanded = $($toggler).attr("aria-expanded");
-                if (calendar && !peCalendar) {
+
+                if (calendar && calendar.children().length === 0) {
                     const id = calendar.attr('id');
                     const buildingId = calendar.data('building-id');
                     const resourceId = calendar.data('resource-id');
                     const dateString = calendar.data('date');
-                    peCalendar = new PEcalendar(id, buildingId, resourceId, dateString);
+
+
+                    // Create and append the new child element to the calendar
+                    let newCalendarChild = $('<pe-calendar>', {
+                        'params': `building_id: ${buildingId}, resource_id: ${resourceId}, dateString: '${dateString}'`
+                    });
+
+                    calendar.append(newCalendarChild);
+
+                    function SearchViewModel() {
+
+                    }
+                    const searchRes = document.getElementById(id);
+                    console.log(searchRes);
+                    ko.applyBindings(new SearchViewModel(), searchRes);
+
                 }
                 $($toggler).attr("aria-expanded", function () {
                     if (isExpanded == "false") {

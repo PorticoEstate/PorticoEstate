@@ -1,0 +1,265 @@
+<xsl:template match="data" xmlns:php="http://php.net/xsl">
+    <div class="container new-application-page" id="new-application-page">
+        <form action="{add_action}" method="POST" id='application_form' enctype='multipart/form-data'
+              name="form" novalidate="true" class="needs-validationm">
+            <div class="row">
+                <div class="col-md-10 offset-md-1">
+                    <!-- Heading with building name -->
+                    <div class="row gx-3">
+                        <div class="col d-flex flex-column">
+                            <div class="font-weight-bold gap-3 d-flex align-items-center">
+                                <h2 class="fas fa-location-dot text-primary"></h2>
+                                <h2>
+                                    <xsl:value-of select="application/building_name"/>
+                                </h2>
+                            </div>
+                            <span>
+                                <xsl:value-of select="building/street"/>,
+                                <xsl:value-of select="building/zip_code"/>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Message Box and Hidden Input -->
+                    <div class="mb-2">
+                        <xsl:call-template name="msgbox"/>
+                    </div>
+                    <input type="text" hidden="hidden" name="activity_id" data-bind="value: activityId"/>
+                    <input name="formstage" value="partial2" hidden="hidden"/>
+
+                    <!--                    &lt;!&ndash; Resource Selection Section &ndash;&gt;-->
+                    <!--                    <div class="col-sm-12 mb-4">-->
+                    <!--                        &lt;!&ndash; Add resource selection logic here &ndash;&gt;-->
+                    <!--                    </div>-->
+                    <div id="resource_list" class="form-group">
+                        <label>
+                            <xsl:value-of select="php:function('lang', 'resources')"/>
+                        </label>
+                        <select id="resource_id" name="resources[]" class="form-control text-left w-100 custom-select"
+                                required="true">
+                            <xsl:attribute name="title">
+                                <xsl:value-of select="php:function('lang', 'Choose resource')"/>
+                            </xsl:attribute>
+                            <xsl:if test="count(resource_list/options) > 1 ">
+                                <option value="">
+                                    <xsl:value-of select="php:function('lang', 'No rent object chosen')"/>
+                                </option>
+                            </xsl:if>
+                            <xsl:apply-templates select="resource_list/options"/>
+                        </select>
+                    </div>
+                    <div class="col-12 mt-4" id="item-description">
+                    </div>
+                    <!-- Select Time and Date Section -->
+                    <div class="form-group">
+
+                        <div class="form-group">
+                            <div class="font-weight-bold gap-3 d-flex align-items-center">
+                                <h2 class="fas fa-calendar-alt text-primary"></h2>
+                                <h2>
+                                    Leieperiode
+                                </h2>
+                            </div>
+                            <!-- Display Time Chosen -->
+                            <div class="form-group mb-2 ">
+                                <span class="font-weight-bold d-block span-label">
+                                    <xsl:value-of select="php:function('lang', 'Chosen rent period')"/>
+                                </span>
+
+                                <!--                                <span class="selectedItems" id="selected_period"></span>-->
+                                <input class="datetime" id="from_" type="hidden" required="true" name="from_[]"/>
+                                <input class="datetime" id="to_" type="hidden" required="true" name="to_[]"/>
+                                <div class="pill pill--secondary">
+
+                                    <div class="pill-content" id="selected_period"></div>
+                                    <!--                                    <div class="pill-divider"></div>-->
+                                    <!--                                    <div class="pill-content"-->
+                                    <!--                                         data-bind="text: $parent.formatTimePeriod($data)"></div>-->
+                                    <!--                                    <button class="pill-icon" data-bind="click: $parent.removeDate">&#215;</button>-->
+
+                                </div>
+                                <!--                                    <pre data-bind="text: ko.toJSON($data)"></pre>-->
+
+                                <!--                     -->
+                            </div>
+
+                            <div class="form-group">
+                                <div id="time_select" class="row" style="display: none">
+                                    <!-- Date Pick -->
+                                    <div class="form-group col-lg-5 col-sm-12 col-12">
+                                        <span id="lang_date" class="mb-2" style="font-weight: bold; color: #cc3300">
+                                            <xsl:value-of select="php:function('lang', 'Date')"/>
+                                        </span>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="far fa-calendar-alt"></i>
+                                                </span>
+                                            </div>
+                                            <input id="start_date" type="text" onkeydown="return false"
+                                                   class="bookingDate form-control datepicker-btn">
+                                                <xsl:attribute name="placeholder">
+                                                    <xsl:value-of select="php:function('lang', 'Date')"/>
+                                                </xsl:attribute>
+                                            </input>
+                                        </div>
+                                    </div>
+                                    <!-- From Time Pick -->
+                                    <div class="form-group col-lg-3 col-sm-6 col-6">
+                                        <span id="lang_checkin" class="mb-2" style="font-weight: bold; color: #cc3300">
+                                            Innsjekk
+                                        </span>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="far fa-clock"></i>
+                                                </span>
+                                            </div>
+                                            <input type="text" id="bookingStartTime" onkeydown="return false"
+                                                   disabled="disabled" class="form-control mr-2">
+                                                <xsl:attribute name="placeholder">
+                                                    <xsl:value-of select="php:function('lang', 'from')"/>
+                                                </xsl:attribute>
+                                            </input>
+                                        </div>
+                                    </div>
+                                    <!-- To Time Pick -->
+                                    <div class="form-group col-lg-3 col-sm-6 col-6">
+                                        <span id="lang_checkout" class="mb-2" style="font-weight: bold; color: #cc3300">
+                                            Utsjekk
+                                        </span>
+
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="far fa-clock"></i>
+                                                </span>
+                                            </div>
+                                            <input type="text" id="bookingEndTime" onkeydown="return false"
+                                                   disabled="disabled" class="form-control">
+                                                <xsl:attribute name="placeholder">
+                                                    <xsl:value-of select="php:function('lang', 'to')"/>
+                                                </xsl:attribute>
+                                            </input>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <xsl:if test="config/activate_application_articles !=''">
+                        <input type="hidden" data-validation="application_articles">
+                            <xsl:attribute name="data-validation-error-msg">
+                                <xsl:value-of select="php:function('lang', 'Please choose at least 1 Article')"/>
+                            </xsl:attribute>
+                        </input>
+                        <div class="row gx-3">
+                            <div class="col d-flex flex-column">
+                                <div class="font-weight-bold gap-3 d-flex align-items-center">
+                                    <h2 class="fas fa-shapes text-primary"></h2>
+                                    <h2>
+                                        Artikkler
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <article-table
+                                params="selectedResources: selectedResources, date: date"></article-table>
+                        <!--                        <article-table-old-->
+                        <!--                                params="selectedResources: selectedResourcesOld, date: date"></article-table-old>-->
+                    </xsl:if>
+
+
+                    <!-- Target Audience Section-->
+                    <input id="inputTargetAudience" required="true" type="hidden" name="audience[]"/>
+
+                    <!-- Estimated Number of Participants -->
+                    <div data-bind="foreach: agegroup">
+                        <input type="hidden" class="form-input sm-input maleInput" data-bind=""/>
+                        <input type="hidden" class="form-input sm-input femaleInput" data-bind=""/>
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div class="form-group border-bottom border-2 border-top pt-4 pb-4 mt-4">
+                        <div class="row pt-2 pb-2">
+                            <h2>
+                                <xsl:value-of select="php:function('lang', 'legal condition')"/>
+                            </h2>
+                        </div>
+                        <div class="row">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-12 mb-4"  data-bind="foreach: termAcceptDocs">
+                                        <div class="checkbox col-12 mb-4">
+                                            <label class="choice d-inline d-flex gap-2 align-items-center">
+                                                <input id="termsInput" type="checkbox" data-bind="checked: checkedStatus"/>
+                                                <!-- Placeholder for label text, populated by data binding -->
+                                                <span class="choice__check" data-bind=""></span>
+                                                <a class="d-inline termAcceptDocsUrl" target="_blank" data-bind=""></a>
+                                                <i class="fas fa-external-link-alt"></i>
+                                            </label>
+
+                                        </div>
+                                        <span class="validationMessage" style="display: none">
+                                            <xsl:value-of select="config/application_terms2"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+
+
+                    <!-- Submit -->
+                    <div id="submitContainer" class="form-group float-right text-center">
+                        <button id="submitBtn" class="btn btn-light" type="submit">
+                            <xsl:value-of select="php:function('lang', 'Next step')"/>
+                        </button>
+                        <div id="submit-error" style="display: none">Vennligst fyll inn alle feltene!</div>
+                    </div>
+                    <!-- Submit Button -->
+                    <div id="submitContainer" class="form-group float-right text-center">
+                        <button id="submitBtn" class="btn btn-light" type="submit">
+                            <xsl:value-of select="php:function('lang', 'Next step')"/>
+                        </button>
+                        <div id="submit-error" style="display: none">
+                            <xsl:value-of select="php:function('lang', 'Please fill all fields')"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Additional Script -->
+        <script>
+            var date_format = '<xsl:value-of
+                select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')"/>';
+            var initialAcceptAllTerms = false;
+            var initialSelection =<xsl:value-of select="application/resources_json"/>;
+            var initialAudience =<xsl:value-of select="application/audience_json"/>;
+            var initialDates =<xsl:value-of select="application/dates_json"/>;
+            var initialAgegroups =<xsl:value-of select="application/agegroups_json"/>;
+            var initialAcceptedDocs =<xsl:value-of select="application/accepted_documents_json"/>;
+            var errorAcceptedDocs = '<xsl:value-of select="config/application_terms2"/>';
+            var cache_refresh_token = "<xsl:value-of
+                select="php:function('get_phpgw_info', 'server|cache_refresh_token')"/>";
+            var lang =<xsl:value-of
+                select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.', 'article', 'Select', 'price', 'unit', 'quantity', 'Selected', 'Delete', 'Sum', 'unit cost')"/>
+            ;
+        </script>
+
+        <div class="push"></div>
+    </div>
+</xsl:template>
+
+
+<xsl:template match="options">
+<option value="{id}">
+    <xsl:if test="selected != 0">
+        <xsl:attribute name="selected" value="selected"/>
+    </xsl:if>
+    <xsl:value-of disable-output-escaping="yes" select="name"/>
+</option>
+</xsl:template>
+
