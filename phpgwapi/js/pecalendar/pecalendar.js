@@ -74,17 +74,59 @@ class PECalendar {
     currentDate = ko.observable(null);
 
 
-    /**
-     * Represents first day of the calendar.
-     * @type {KnockoutComputed<luxon.DateTime>}
-     */
-    firstDayOfCalendar = ko.computed(() => this.currentDate()?.startOf("week"));
+    noTimeSlotsMessage = ko.computed(() => {
+        if (!this.currentDate()) return null;
+
+        switch (this.calendarRange() || 'week') {
+            case 'day':
+                return 'Ingen ledige tidspunkter denne dagen.';
+            case 'week':
+                return 'Ingen ledige tidspunkter denne uken.';
+            case 'month':
+                return 'Ingen ledige tidspunkter denne måneden.';
+            default:
+                return 'Ingen ledige tidspunkter.'; // Default message
+        }
+    });
+
 
     /**
      * Represents first day of the calendar.
      * @type {KnockoutComputed<luxon.DateTime>}
      */
-    lastDayOfCalendar = ko.computed(() => this.firstDayOfCalendar()?.plus({days: 7}));
+    firstDayOfCalendar =ko.computed(() => {
+        if (!this.currentDate()) return null;
+
+        switch (this.calendarRange()) {
+            case 'day':
+                return this.currentDate().startOf('day');
+            case 'week':
+                return this.currentDate().startOf('week');
+            case 'month':
+                return this.currentDate().startOf('month');
+            default:
+                return this.currentDate().startOf('week'); // Default case, you can adjust as needed
+        }
+    });
+
+    /**
+     * Represents first day of the calendar.
+     * @type {KnockoutComputed<luxon.DateTime>}
+     */
+    lastDayOfCalendar = ko.computed(() => {
+        if (!this.firstDayOfCalendar()) return null;
+
+        switch (this.calendarRange()) {
+            case 'day':
+                return this.firstDayOfCalendar().endOf('day');
+            case 'week':
+                return this.firstDayOfCalendar().endOf('week');
+            case 'month':
+                return this.firstDayOfCalendar().endOf('month');
+            default:
+                return this.firstDayOfCalendar().plus({ days: 7 }); // Default case, adjust as needed
+        }
+    });
 
 
     /**
@@ -230,7 +272,6 @@ class PECalendar {
             return '';
         }
 
-        console.log(resource, this.resources(), this.resource_id());
         let dateRanges = this.tempEvents().map(tempEvent => {
             const unixDates = this.getUnixTimestamps(tempEvent.date, tempEvent.from, tempEvent.to);
             return `${Math.floor(unixDates.startTimestamp / 1000)}_${Math.floor(unixDates.endTimestamp / 1000)}`;
@@ -359,11 +400,10 @@ class PECalendar {
 
     }
 
-    hasTimeSlotsInCurrentWeek = ko.computed(() => {
+    hasTimeSlotsInCurrentCalendarRange = ko.computed(() => {
         const slots = this.availableTimeSlots()[this.resource_id()];
         if (!slots) return false;
-        console.log(slots.filter(slot => slot.overlap !== 3 && this.isWithinCurrentWeek(slot.start, slot.end)))
-        return slots.some(slot => slot.overlap !== 3 && this.isWithinCurrentWeek(slot.start, slot.end));
+        return slots.some(slot => slot.overlap !== 3 && this.isWithinCurrentCalendarRange(slot.start, slot.end));
     });
 
 
@@ -1105,6 +1145,22 @@ class PECalendar {
         // });
     }
 
+    changeDateByRange(direction) {
+        let amount = direction; // -1 for previous, 1 for next
+
+        switch (this.calendarRange()) {
+            case 'day':
+                this.currentDate(this.currentDate().plus({ days: amount }));
+                break;
+            case 'week':
+                this.currentDate(this.currentDate().plus({ weeks: amount }));
+                break;
+            case 'month':
+                this.currentDate(this.currentDate().plus({ months: amount }));
+                break;
+            // You can add more cases if needed
+        }
+    };
 
     combinedTempEvents = ko.computed(() => {
         // Start with the array of existing temp events
@@ -1128,7 +1184,7 @@ class PECalendar {
      * @param {string} endTimestamp - End Unix timestamp.
      * @returns {boolean} - True if the time slot is within the current week, false otherwise.
      */
-    isWithinCurrentWeek(startTimestamp, endTimestamp) {
+    isWithinCurrentCalendarRange(startTimestamp, endTimestamp) {
         const startDate = DateTime.fromMillis(parseInt(startTimestamp));
         const endDate = DateTime.fromMillis(parseInt(endTimestamp));
         const firstDay = this.firstDayOfCalendar();
@@ -1195,29 +1251,29 @@ if (globalThis['ko']) {
                     <div class="calendar-settings">
                         <div class="date">
                             <fieldset>
-                                <label class="filter invisible">
-                                    <input type="radio" name="filter" value="day"/>
+                                <label class="filter" data-bind="css: { 'invisible': resources()[resource_id()] && resources()[resource_id()].simple_booking !== 1 }">
+                                    <input type="radio" name="filter" value="day" data-bind="checked: calendarRange"/>
                                     <span class="filter__radio">Dag</span>
                                 </label>
                                 <label class="filter">
-                                    <input type="radio" name="filter" value="week" checked/>
+                                    <input type="radio" name="filter" value="week" data-bind="checked: calendarRange"/>
                                     <span class="filter__radio">Uke</span>
                                 </label>
                                 <label class="filter invisible">
-                                    <input type="radio" name="filter" value="month"/>
+                                    <input type="radio" name="filter" value="month" data-bind="checked: calendarRange"/>
                                     <span class="filter__radio">Måned</span>
                                 </label>
                             </fieldset>
                             <div class="date-selector">
                                 <button type="button" class="pe-btn  pe-btn-secondary pe-btn--circle"
-                                        data-bind="click: () => currentDate(currentDate().minus({weeks: 1}))">
+                                        data-bind="click: () => changeDateByRange(-1)">
                                     <span class="sr-only">Forrige</span>
                                     <span class="fas fa-chevron-left" title="Forrige"></span>
                                 </button>
                                 <input class="js-basic-datepicker-2" type="text"
                                        data-bind="value: formatDateRange(true), valueUpdate: 'afterkeydown', event: { change: changeDate }, withAfterRender: { afterRender: updateDatePickerAfterRender}">
                                 <button type="button" class="pe-btn  pe-btn-secondary pe-btn--circle"
-                                        data-bind="click: () => currentDate(currentDate().plus({weeks: 1}))">
+                                        data-bind="click: () => changeDateByRange(1)">
                                     <span class="sr-only">Neste</span>
                                     <span class="fas fa-chevron-right" title="Neste"></span>
                                 </button>
@@ -1325,9 +1381,9 @@ if (globalThis['ko']) {
 
                 <!-- ko if: resources()[resource_id()] && resources()[resource_id()].simple_booking === 1 -->
                 <div class="simple-booking">
-                    <!-- ko if: hasTimeSlotsInCurrentWeek -->
+                    <!-- ko if: hasTimeSlotsInCurrentCalendarRange -->
                     <!-- ko foreach: availableTimeSlots()[resource_id()] -->
-                    <!-- ko if: $data.overlap !== 3 && $parent.isWithinCurrentWeek($data.start, $data.end) -->
+                    <!-- ko if: $data.overlap !== 3 && $parent.isWithinCurrentCalendarRange($data.start, $data.end) -->
                     <div class="time-slot-card">
                         <!-- Status section -->
                         <div class="time-slot-status"
@@ -1355,9 +1411,9 @@ if (globalThis['ko']) {
                     <!-- /ko -->
                     <!-- /ko -->
                     <!-- /ko -->
-                    <!-- ko ifnot: hasTimeSlotsInCurrentWeek -->
+                    <!-- ko ifnot: hasTimeSlotsInCurrentCalendarRange -->
                     <div class="no-time-slots-message">
-                        <p>Ingen ledige tidspunkter denne uken.</p>
+                        <p data-bind="text: noTimeSlotsMessage"></p>
                     </div>
                     <!-- /ko -->
                 </div>
