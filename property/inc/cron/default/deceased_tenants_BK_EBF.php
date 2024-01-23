@@ -418,6 +418,11 @@ HTML;
 
 			foreach ($shielded as $_person_nr => &$entry)
 			{
+				if($entry['adressebeskyttelse'] == 'strengtFortrolig')
+				{
+					$entry['beste_adresse'] = 'Hemmelig';
+				}
+
 				if($entry['hemmeligadresse'] && empty($entry['adressebeskyttelse']))
 				{
 					$entry['adressebeskyttelse'] = "<table border='0'><tr><td>Folkeregister</td><td>: Ugradert</tr><tr><td>BOEI</td><td>: Hemmelig adresse</td></tr></table>";
@@ -427,10 +432,6 @@ HTML;
 					$entry['adressebeskyttelse'] = "<table border='0'><tr><td>Folkeregister</td><td>: <b>{$entry['adressebeskyttelse']}</b></tr><tr><td>BOEI</td><td>: Hemmelig adresse</td></tr></table>";
 				}
 
-				if($entry['adressebeskyttelse'] == 'strengtFortrolig')
-				{
-					$entry['beste_adresse'] = 'Hemmelig';
-				}
 			}
 
 
