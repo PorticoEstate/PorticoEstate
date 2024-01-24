@@ -2587,7 +2587,7 @@ textarea {
 .article-table-wrapper .article-table-header {
   display: grid;
   grid-template-areas: "name unused price hours total expand";
-  background-color: #9463a1;
+  background-color: #707070;
   color: #FFFFFF;
   padding: 0.5rem;
   border-top-right-radius: 0.5rem;
@@ -2651,7 +2651,7 @@ textarea {
   display: grid;
   grid-template-areas: "group-title head-desc head-unit head-count head-total unused";
   padding: 0.5rem;
-  background-color: #dfd0e3;
+  background-color: #c2c2c2;
 }
 @media all and (max-width: 992px) {
   .article-table-wrapper .category-table .category-header {

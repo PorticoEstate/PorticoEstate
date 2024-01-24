@@ -39,7 +39,8 @@
       }
     }
 
-    background-color: #{$purple-80};
+    //background-color: #{$purple-80};
+    background-color: #{$black-56};
     color: #{$white};
     padding: 0.5rem;
 
@@ -108,7 +109,8 @@
       display: grid;
       grid-template-areas: "group-title head-desc head-unit head-count head-total unused";
       padding: 0.5rem;
-      background-color: #{$purple-24};
+      //background-color: #{$purple-24};
+      background-color: #{$black-24};
       @media all and (max-width: 992px) {
         grid-template-columns: 2fr 1fr 3rem;
         grid-template-areas: "group-title group-title group-title expand";
