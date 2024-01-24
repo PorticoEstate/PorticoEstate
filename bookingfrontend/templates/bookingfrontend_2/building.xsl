@@ -136,8 +136,27 @@
             </div>
             <hr class="divider divider-primary my-4"/>
 
-            <div class="row">
+            <div class="row mb-4">
                 <light-box params="images: imageArray"></light-box>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+<!--                                [phone] => 55561106
+            [email] => fana-ytrebygda.kulturkontor@bergen.kommune.no-->
+                    <h3 class="">
+                        <xsl:value-of select="php:function('lang', 'contact information')"/>
+                    </h3>
+                </div>
+                <div class="col-sm-12 d-flex flex-column">
+                        <xsl:if test="building/phone">
+                            <div>Telefon: <xsl:value-of select="building/phone"/></div>
+                        </xsl:if>
+                        <xsl:if test="building/email">
+                            <div>Epost: <xsl:value-of select="building/email"/></div>
+                        </xsl:if>
+
+
+                </div>
             </div>
         </div>
 
