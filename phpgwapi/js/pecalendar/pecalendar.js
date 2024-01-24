@@ -132,12 +132,12 @@ class PECalendar {
     /**
      * @type {KnockoutObservable<number>} - Represents the start hour for the calendar.
      */
-    startHour = ko.observable(10);
+    startHour = ko.observable(0);
 
     /**
      * @type {KnockoutObservable<number>} - Represents the end hour for the calendar.
      */
-    endHour = ko.observable(22);
+    endHour = ko.observable(24);
 
     /**
      * @type {KnockoutObservable<number>} - Number of parts an hour is divided into. Represents time intervals.
@@ -391,10 +391,12 @@ class PECalendar {
             if (maxTime < end)
                 maxTime = (end);
         }
-        if (minTime !== this.startHour()) {
+
+
+        if (minTime !== this.startHour() && minTime !==24) {
             this.startHour(minTime);
         }
-        if (maxTime !== this.endHour()) {
+        if (maxTime !== this.endHour() && maxTime !== 0) {
             this.endHour(maxTime);
         }
 
