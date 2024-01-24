@@ -94,7 +94,7 @@ class PECalendar {
      * Represents first day of the calendar.
      * @type {KnockoutComputed<luxon.DateTime>}
      */
-    firstDayOfCalendar =ko.computed(() => {
+    firstDayOfCalendar = ko.computed(() => {
         if (!this.currentDate()) return null;
 
         switch (this.calendarRange()) {
@@ -124,7 +124,7 @@ class PECalendar {
             case 'month':
                 return this.firstDayOfCalendar().endOf('month');
             default:
-                return this.firstDayOfCalendar().plus({ days: 7 }); // Default case, adjust as needed
+                return this.firstDayOfCalendar().plus({days: 7}); // Default case, adjust as needed
         }
     });
 
@@ -941,6 +941,7 @@ class PECalendar {
 
         return `${formattedFromTime}-${formattedToTime}`;
     }
+
     /**
      * @param {Partial<IEvent>} event - The new temporary event.
      * @returns {string} - Returns formatted date string
@@ -1043,17 +1044,17 @@ class PECalendar {
 
     togglePopper(e, clickEvent) {
         let popperInfo;
-        if(clickEvent.currentTarget.className === 'dots-container'){
+        if (clickEvent.currentTarget.className === 'dots-container') {
             console.log('gotDots', clickEvent)
             popperInfo = clickEvent.currentTarget.nextElementSibling;
-        } else if(clickEvent.currentTarget.className === 'info') {
+        } else if (clickEvent.currentTarget.className === 'info') {
             popperInfo = clickEvent.currentTarget
         }
-        if(!popperInfo) {
+        if (!popperInfo) {
             return
         }
 
-        if(popperInfo.hasAttribute('data-show')){
+        if (popperInfo.hasAttribute('data-show')) {
             popperInfo.removeAttribute('data-show')
         } else {
             popperInfo.setAttribute('data-show', '')
@@ -1150,13 +1151,13 @@ class PECalendar {
 
         switch (this.calendarRange()) {
             case 'day':
-                this.currentDate(this.currentDate().plus({ days: amount }));
+                this.currentDate(this.currentDate().plus({days: amount}));
                 break;
             case 'week':
-                this.currentDate(this.currentDate().plus({ weeks: amount }));
+                this.currentDate(this.currentDate().plus({weeks: amount}));
                 break;
             case 'month':
-                this.currentDate(this.currentDate().plus({ months: amount }));
+                this.currentDate(this.currentDate().plus({months: amount}));
                 break;
             // You can add more cases if needed
         }
@@ -1251,7 +1252,8 @@ if (globalThis['ko']) {
                     <div class="calendar-settings">
                         <div class="date">
                             <fieldset>
-                                <label class="filter" data-bind="css: { 'invisible': resources()[resource_id()] && resources()[resource_id()].simple_booking !== 1 }">
+                                <label class="filter"
+                                       data-bind="css: { 'invisible': resources()[resource_id()] && resources()[resource_id()].simple_booking !== 1 }">
                                     <input type="radio" name="filter" value="day" data-bind="checked: calendarRange"/>
                                     <span class="filter__radio">Dag</span>
                                 </label>
@@ -1353,17 +1355,19 @@ if (globalThis['ko']) {
                             </button>
                             <!-- /ko -->
                             <!-- ko if: $data.event.type !== 'temporary' -->
-                            <button class="dots-container"  
+                            <button class="dots-container"
                                     data-bind="withAfterRender: { afterRender: $parent.addPopperAfterRender}, click: $parent.togglePopper">
                                 <!--                                <img-->
                                 <!--                                        data-bind="attr: {src: phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false)}"-->
                                 <!--                                        class="dots"/>-->
                                 <i class="fas fa-info-circle"></i>
                             </button>
-                            <div class="info" data-bind="click: $parent.togglePopper" >
+                            <div class="info" data-bind="click: $parent.togglePopper">
                                 <div class="info-inner">
                                     <div><b data-bind="text: $data.event.name"></b></div>
-                                    <div data-bind="text: 'Kl: ' + $parent.formatPillTimeInterval($data.event)">Kl: FROM - TO</div>
+                                    <div data-bind="text: 'Kl: ' + $parent.formatPillTimeInterval($data.event)">Kl: FROM
+                                        - TO
+                                    </div>
                                 </div>
 
                             </div>
