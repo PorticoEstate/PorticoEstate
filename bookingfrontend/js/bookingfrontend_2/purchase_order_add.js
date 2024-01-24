@@ -268,6 +268,8 @@ class ArticleTableViewModel {
             item.selected_sum = ko.pureComputed(function () {
                 return (item.selected_quantity() * parseFloat(item.price)).toFixed(2);
             });
+
+
             if (item.parent_mapping_id) {
                 // Check if the parent actually exists
                 if (resources[item.parent_mapping_id]) {
@@ -281,6 +283,12 @@ class ArticleTableViewModel {
                     // You might want to handle this situation differently, depending on your needs.
                 }
             }
+            // Add a computed observable for computedString
+            item.computed_selected_article = ko.pureComputed(function () {
+                const val = `${item.id}_${item.selected_quantity()}_x_x_${item.parent_mapping_id || 'null'}`
+                console.log('computed_selected_article', val);
+                return `${item.id}_${item.selected_quantity()}_x_x_${item.parent_mapping_id || 'null'}`;
+            });
         });
 
         return resources;
@@ -401,6 +409,7 @@ ko.components.register('article-table', {
                     <input type="hidden" data-bind="value: resource.info.selected_quantity"
                            name="resource_quantities[]">
                     <input type="hidden" data-bind="value: resource.info.mandatory" name="resource_mandatory[]">
+                    <input type="hidden" name="selected_articles[]" data-bind="value: resource.info.computed_selected_article">
                     <!-- Add other hidden fields as needed -->
                 </td>
             </div>
@@ -456,6 +465,8 @@ ko.components.register('article-table', {
                                        name="selected_quantities[]">
                                 <input type="hidden" data-bind="value: item.parent_mapping_id"
                                        name="parent_mapping_ids[]">
+                                <input type="text" name="selected_articles[]" data-bind="value: item.computed_selected_article">
+                                
                             </div>
                         </div>
                         <!-- /ko -->
