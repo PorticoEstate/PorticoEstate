@@ -46,7 +46,7 @@
 		var $project_type_id;
 		var $acl_location	 = '.project';
 		var $so, $bocommon, $cats, $interlink, $custom,$use_session,$status_id,$user_id,$wo_hour_cat_id,
-		$district_id,$criteria_id,$total_records,$uicols;
+		$district_id,$criteria_id,$total_records,$uicols, $b_account_id;
 		var $public_functions = array
 			(
 			'read'				 => true,
@@ -99,6 +99,7 @@
 			$filter			 = phpgw::get_var('filter', 'int');
 			$filter_year	 = phpgw::get_var('filter_year', 'string', 'REQUEST', $default_filter_year);
 			$cat_id			 = phpgw::get_var('cat_id', 'int');
+			$b_account_id	 = phpgw::get_var('b_account_id', 'string');
 			$status_id		 = phpgw::get_var('status_id');
 			$user_id		 = phpgw::get_var('user_id', 'int');
 			$wo_hour_cat_id	 = phpgw::get_var('wo_hour_cat_id', 'int');
@@ -130,6 +131,10 @@
 			if (isset($_POST['cat_id']) || isset($_GET['cat_id']))
 			{
 				$this->cat_id = $cat_id;
+			}
+			if (isset($_POST['b_account_id']) || isset($_GET['b_account_id']))
+			{
+				$this->b_account_id = $b_account_id;
 			}
 			if (isset($_POST['status_id']) || isset($_GET['status_id']))
 			{
@@ -578,7 +583,8 @@
 				'district_id'		 => $this->district_id,
 				'criteria'			 => $this->get_criteria($this->criteria_id),
 				'project_type_id'	 => $this->project_type_id,
-				'filter_year'		 => $this->filter_year
+				'filter_year'		 => $this->filter_year,
+				'b_account_id'		 => $this->b_account_id
 			));
 
 			$this->total_records = $this->so->total_records;

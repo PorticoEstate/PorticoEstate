@@ -118,6 +118,7 @@
 			$sort			 = isset($data['sort']) ? $data['sort'] : 'DESC';
 			$order			 = isset($data['order']) ? $data['order'] : 'project_id';
 			$cat_id			 = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+			$b_account_id	 = !empty($data['b_account_id']) ? $data['b_account_id'] : false;
 			$status_id		 = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'open';
 			$start_date		 = isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
 			$end_date		 = isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : 0;
@@ -490,6 +491,12 @@
 				$filtermethod .= " {$where} fm_project.category IN (" . implode(',', $cat_filter) . ')';
 
 				$where = 'AND';
+			}
+
+			if($b_account_id)
+			{
+				$filtermethod	 .= " $where fm_project.b_account_id = '{$b_account_id}'";
+				$where			 = 'AND';
 			}
 
 			if ($status_id && $status_id != 'all')
