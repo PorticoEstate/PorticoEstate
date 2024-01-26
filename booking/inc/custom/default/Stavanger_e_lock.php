@@ -80,7 +80,7 @@
 			{
 				curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
 			}
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json Accept: application/json'));
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
 			curl_setopt($ch, CURLOPT_FAILONERROR, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -120,7 +120,7 @@
 			{
 				curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
 			}
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json Accept: application/json'));
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
 			curl_setopt($ch, CURLOPT_FAILONERROR, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -165,7 +165,7 @@
 			{
 				curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
 			}
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json Accept: application/json'));
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json'));
 			curl_setopt($ch, CURLOPT_FAILONERROR, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
