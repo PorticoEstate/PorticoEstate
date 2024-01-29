@@ -421,6 +421,7 @@ HTML;
 				if($entry['adressebeskyttelse'] == 'strengtFortrolig')
 				{
 					$entry['beste_adresse'] = 'Hemmelig';
+					$checklist[$_person_nr]['beste_adresse'] = 'Hemmelig';
 				}
 
 				if($entry['hemmeligadresse'] && empty($entry['adressebeskyttelse']))
@@ -469,7 +470,7 @@ HTML;
 					</tr>
 HTML;
 
-			foreach ($shielded as &$entry)
+			foreach ($shielded as $entry)
 			{
 				$entry	 = array_merge($entry, $checklist[$entry['person_nr']]);
 				$html	 .= <<<HTML
