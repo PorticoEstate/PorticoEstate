@@ -22,7 +22,7 @@
 			'pk' => array('id'),
 			'fk' => array(),
 			'ix' => array(),
-			'uc' => array('name')
+			'uc' => array(array('name'), array('location_id'))
 		),
 		'fm_bim_model' => array(
 			'fd' => array(
@@ -70,7 +70,7 @@
 					'phpgw_locations' => array('location_id' => 'location_id')
 				),
 			'ix' => array(),
-			'uc' => array('guid')
+			'uc' => array('guid', array('location_id', 'id'))
 		),
 		'fm_bim_item_inventory' => array(
 			'fd' => array(
