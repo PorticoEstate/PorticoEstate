@@ -127,7 +127,7 @@
 				unset($contacts);
 
 
-				if (phpgw::get_var('on_behalf_of_assigned', 'bool') && isset($_ticket['assignedto_name']))
+				if ($resend_order || (phpgw::get_var('on_behalf_of_assigned', 'bool') && isset($_ticket['assignedto_name'])))
 				{
 					$user_name										 = $_ticket['assignedto_name'];
 					$GLOBALS['phpgw']->preferences->set_account_id($_ticket['assignedto'], true);
