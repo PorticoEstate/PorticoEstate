@@ -190,7 +190,7 @@
 					'phpgw_helpdesk_email_out_recipient_set' => array('set_id' => 'id'),
 				),
 				'ix' => array(),
-				'uc' => array('set_id', 'email')
+				'uc' => array(array('set_id', 'email'))
 		));
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(

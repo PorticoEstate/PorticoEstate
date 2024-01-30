@@ -326,7 +326,7 @@
 			'pk' => array('id'),
 			'fk' => array('bb_organization' => array('organization_id' => 'id')),
 			'ix' => array(),
-			'uc' => array('organization_id', 'ssn')
+			'uc' => array(array('organization_id', 'ssn'))
 		),
 		'bb_season' => array(
 			'fd' => array(
@@ -630,7 +630,7 @@
 			'fk' => array(
 				'bb_application' => array('application_id' => 'id')),
 			'ix' => array(),
-			'uc' => array('application_id', 'from_', 'to_')
+			'uc' => array(array('application_id', 'from_', 'to_'))
 		),
 		'bb_application_targetaudience' => array(
 			'fd' => array(
@@ -773,7 +773,7 @@
 				'phpgw_accounts' => array('subject_id' => 'account_id'),
 			),
 			'ix' => array(array('object_id', 'object_type'), array('object_type')),
-			'uc' => array('subject_id', 'role', 'object_type', 'object_id'),
+			'uc' => array(array('subject_id', 'role', 'object_type', 'object_id')),
 		),
 		'bb_permission_root' => array(
 			'fd' => array(
@@ -786,7 +786,7 @@
 				'phpgw_accounts' => array('subject_id' => 'account_id'),
 			),
 			'ix' => array(),
-			'uc' => array('subject_id', 'role'),
+			'uc' => array(array('subject_id', 'role')),
 		),
 		'bb_organization_contact' => array(
 			'fd' => array(
@@ -939,7 +939,7 @@
 			'fk' => array(
 				'bb_event' => array('event_id' => 'id')),
 			'ix' => array(),
-			'uc' => array('event_id', 'from_', 'to_')
+			'uc' => array(array('event_id', 'from_', 'to_'))
 		),
 		'bb_event_cost' => array(
 			'fd' => array(
@@ -1032,7 +1032,7 @@
 				'bb_completed_reservation_export_file' => array('export_file_id' => 'id'),
 			),
 			'ix' => array(),
-			'uc' => array('reservation_type', 'reservation_id')
+			'uc' => array(array('reservation_type', 'reservation_id'))
 		),
 		'bb_completed_reservation_resource' => array(
 			'fd' => array(
@@ -1260,7 +1260,7 @@
 				'fm_ecomva' => array('tax_code' => 'id'),
 			),
 			'ix' => array(),
-			'uc' => array('article_cat_id', 'article_id')
+			'uc' => array(array('article_cat_id', 'article_id'))
 		),
 		'bb_article_group' => array(
 			'fd' => array(

@@ -1554,7 +1554,7 @@
 				'pk' => array('table_id'),
 				'fk' => array(),
 				'ix' => array(),
-				'uc' => array('appname','location')
+				'uc' => array(array('appname','location'))
 				)
 		);
 
@@ -2819,7 +2819,7 @@
 				'pk' => array('section_id','attrib_id','id'),
 				'fk' => array(),
 				'ix' => array(),
-				'uc' => array('section_id','attrib_id','value')
+				'uc' => array(array('section_id','attrib_id','value'))
 			)
 		);
 		$GLOBALS['phpgw_setup']->oProc->CreateTable('phpgw_config2_value', array(

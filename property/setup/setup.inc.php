@@ -11,7 +11,7 @@
 	 * @version $Id$
 	*/
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.762';
+	$setup_info['property']['version']		= '0.9.17.761';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -248,9 +248,6 @@
 		'fm_view_dataset_report',
 		'fm_handyman_documents',
 		'fm_handyman_log',
-		'fm_bim_item_checklist',
-		'fm_bim_item_checklist_stage',
-		'fm_bim_item_checklist_data',
 	);
 
 	/* The hooks this app includes, needed for hooks registration */

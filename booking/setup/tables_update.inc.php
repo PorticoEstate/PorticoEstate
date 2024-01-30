@@ -484,7 +484,7 @@
 			'fk' => array(
 				'bb_application' => array('application_id' => 'id')),
 			'ix' => array(),
-			'uc' => array('application_id', 'from_', 'to_')
+			'uc' => array(array('application_id', 'from_', 'to_'))
 		));
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
@@ -666,7 +666,7 @@
 				'bb_organization' => array('organization_id' => 'id')
 			),
 			'ix' => array(),
-			'uc' => array('season_id', 'wday', 'from_')
+			'uc' => array(array('season_id', 'wday', 'from_'))
 			)
 		);
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
@@ -995,7 +995,7 @@
 				'bb_season' => array('season_id' => 'id')
 			),
 			'ix' => array(),
-			'uc' => array('season_id', 'wday')
+			'uc' => array(array('season_id', 'wday'))
 			)
 		);
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_season', 'status', array('type' => 'varchar',
@@ -2264,7 +2264,7 @@
 			'fk' => array(
 				'bb_event' => array('event_id' => 'id')),
 			'ix' => array(),
-			'uc' => array('event_id', 'from_', 'to_')
+			'uc' => array(array('event_id', 'from_', 'to_'))
 		));
 
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
@@ -3613,7 +3613,7 @@
 				'pk' => array('id'),
 				'fk' => array('bb_organization' => array('organization_id' => 'id')),
 				'ix' => array(),
-				'uc' => array('organization_id', 'ssn')
+				'uc' => array(array('organization_id', 'ssn'))
 			)
 		);
 
@@ -5443,7 +5443,7 @@
 				'fm_ecomva' => array('tax_code' => 'id'),
 			),
 			'ix' => array(),
-			'uc' => array('article_cat_id', 'article_id')
+			'uc' => array(array('article_cat_id', 'article_id'))
 		));
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(

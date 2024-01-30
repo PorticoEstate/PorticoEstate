@@ -690,6 +690,7 @@
 		function _GetUC($aFields, &$sUCSQL)
 		{
 			$sUCSQL = '';
+			$sUCSQLarr = array();
 			if(count($aFields) < 1)
 			{
 				return True;
@@ -697,25 +698,39 @@
 
 			$sFields = '';
 			reset($aFields);
-			foreach($aFields as $key => $sField)
+
+			foreach($aFields as $sField)
 			{
 				if($this->dbms == 'oracle')
 				{
-					$sField = strtoupper("\"{$sField}\"");
-				}
-				if($sFields != '')
-				{
-					$sFields .= ',';
+					if(is_array($sField))
+					{
+						foreach($sField as & $_sField)
+						{
+							$_sField = strtoupper("\"{$_sField}\"");
+						}
+					}
+					else
+					{
+						$sField = strtoupper("\"{$sField}\"");
+					}
 				}
 
 				if(is_array($sField))
 				{
-					$sField = implode(',', $sField);
+					$sFields = implode(',', $sField);
 				}
-				$sFields .= $sField;
-			}
+				else
+				{
+					$sFields = $sField;
+				}
 
-			$sUCSQL = $this->m_oTranslator->GetUCSQL($sFields);
+				$sUCSQLarr[] = $this->m_oTranslator->GetUCSQL($sFields);
+			}
+			if(isset($sUCSQLarr[0]) && $sUCSQLarr[0])
+			{
+				$sUCSQL = implode(",\n",$sUCSQLarr);
+			}
 
 			return True;
 		}
