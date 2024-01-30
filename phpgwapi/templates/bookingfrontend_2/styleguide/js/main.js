@@ -133,3 +133,56 @@ function generateRandomString(length) {
     }
     return result;
 }
+
+
+
+/**
+ * Formats the given Unix timestamps into a date range string.
+ * @param {boolean} useYear - forces the use of year
+ * @param {number} startTimestamp - The start Unix timestamp.
+ * @param {number} endTimestamp - The end Unix timestamp.
+ * @returns {string} - Formatted date range string.
+ */
+function FormatDateRange(start, end, useYear) {
+    let startDate;
+    let endDate;
+    if (startTimestamp) {
+        startDate = new Date(parseInt(startTimestamp))
+    } else {
+        startDate = this.firstDayOfCalendar().toJSDate()
+    }
+    if (endTimestamp) {
+        endDate = new Date(parseInt(endTimestamp))
+    } else {
+        endDate = this.lastDayOfCalendar().toJSDate()
+    }
+
+    const options = {day: 'numeric', month: 'long'};
+
+    // Check if the start and end dates are in the same month
+    if (startDate.getMonth() === endDate.getMonth() && startDate.getFullYear() === endDate.getFullYear() && startDate.getDate() === endDate.getDate()) {
+        return `${endDate.toLocaleDateString('no', options)} ${useYear ? endDate.getFullYear() : ''}`;
+
+    } else if (startDate.getMonth() === endDate.getMonth() && startDate.getFullYear() === endDate.getFullYear()) {
+        return `${startDate.toLocaleDateString('no', {day: 'numeric'}).slice(0, -1)} - ${endDate.toLocaleDateString('no', options)} ${useYear ? endDate.getFullYear() : ''}`;
+    } else {
+        return `${startDate.toLocaleDateString('no', {
+            day: 'numeric',
+            month: 'short'
+        }).slice(0, -1)} - ${endDate.toLocaleDateString('no', options)} ${useYear ? endDate.getFullYear() : ''}`;
+    }
+}
+
+
+
+function formatDateToDateTimeString(date) {
+    const pad = (num) => (num < 10 ? '0' + num : num.toString());
+
+    let day = pad(date.getDate());
+    let month = pad(date.getMonth() + 1); // getMonth() returns 0-11
+    let year = date.getFullYear();
+    let hours = pad(date.getHours());
+    let minutes = pad(date.getMinutes());
+
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+}

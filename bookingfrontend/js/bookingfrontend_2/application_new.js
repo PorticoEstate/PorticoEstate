@@ -660,18 +660,6 @@ function setDoc(data) {
     $("#regulation_documents").html(child);
 }
 
-function formatDateToDateTimeString(date) {
-    const pad = (num) => (num < 10 ? '0' + num : num.toString());
-
-    let day = pad(date.getDate());
-    let month = pad(date.getMonth() + 1); // getMonth() returns 0-11
-    let year = date.getFullYear();
-    let hours = pad(date.getHours());
-    let minutes = pad(date.getMinutes());
-
-    return `${day}/${month}/${year} ${hours}:${minutes}`;
-}
-
 
 function PopulatePostedDate() {
     if (initialDates != null) {

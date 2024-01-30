@@ -1,3 +1,5 @@
+// import {DateTime as DT} from './luxon.js';
+
 if (!globalThis['DateTime']) {
     globalThis['DateTime'] = luxon.DateTime;
 }
@@ -14,7 +16,6 @@ if (globalThis['ko'] && 'bindingHandlers' in ko && !ko.bindingHandlers.withAfter
         }
     };
 }
-
 
 class PECalendar {
     BOOKING_MONTH_HORIZON = 2;
@@ -152,7 +153,7 @@ class PECalendar {
 
     /**
      * @type {KnockoutObservable<'day' | 'week' | 'month'>} - Should the calendar show a week, day or a full month
-     * Currently only applies to simple_booking.
+     * Currently only applies to timeslots.
      */
     calendarRange = ko.observable('week');
 
@@ -300,7 +301,7 @@ class PECalendar {
                 building_id: this.building_id(),
                 resource_id: this.resource_id(),
                 simple: true,
-                // dates: dateRanges
+                dates: dateRanges
             }, false);
         }
 
@@ -977,7 +978,7 @@ class PECalendar {
             endDate = this.lastDayOfCalendar().toJSDate()
         }
 
-        const options = {day: 'numeric', month: 'long'};
+        const options = {day: 'numeric', month: 'short'};
 
         // Check if the start and end dates are in the same month
         if (startDate.getMonth() === endDate.getMonth() && startDate.getFullYear() === endDate.getFullYear() && startDate.getDate() === endDate.getDate()) {
@@ -1083,69 +1084,7 @@ class PECalendar {
             monthNames: ["Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember"],
             monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des"],
             firstDay: 1,
-            // beforeShow: function (elem, ui) {
-            //     $(ui.dpDiv).on('click', 'tbody .ui-datepicker-week-col', function () {
-            //         $(elem).val('Week ' + $(this).text()).datepicker("hide");
-            //     });
-            // },
-            // onSelect: function (dateText, inst) {
-            //     var selectedDate = new DateTime.fromJSDate(new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay));
-            //     console.log(selectedDate.weekNumber);
-            // }
-
         });
-        // $(e).datepicker({
-        //     dateFormat: "d.m.yy",
-        //     changeMonth: true,
-        //     changeYear: true,
-        //     dayNames: ["Søndag", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag"],
-        //     dayNamesMin: ["Sø", "Ma", "Ti", "On", "To", "Fr", "Lø"],
-        //     dayNamesShort: ["Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"],
-        //     monthNames: ["Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember"],
-        //     monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des"],
-        //     firstDay: 1,
-        //     showOtherMonths: true,
-        //     selectOtherMonths: true,
-        //
-        //     // Custom function to highlight the entire week
-        //     beforeShowDay: function(date) {
-        //         var dateText = jQuery.datepicker.formatDate('yy-mm-dd', date);
-        //         var weekStart = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay());
-        //         var weekEnd = new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate() + 6);
-        //         var $td = $('td[data-date="' + dateText + '"]');
-        //         var hasSelected = $td.hasClass('ui-datepicker-current-day');
-        //
-        //         if (!hasSelected) {
-        //             return [true, ""];
-        //         }
-        //
-        //         $('.ui-datepicker-calendar tr').each(function() {
-        //             var $tr = $(this);
-        //             $tr.find('td').each(function() {
-        //                 var currentTdDate = $(this).data('date');
-        //                 if (currentTdDate) {
-        //                     var currentDate = new Date(currentTdDate);
-        //                     if (currentDate >= weekStart && currentDate <= weekEnd) {
-        //                         $(this).addClass('ui-datepicker-current-week');
-        //                     }
-        //                 }
-        //             });
-        //         });
-        //
-        //         return [true, ""];
-        //     },
-        //
-        //     // Custom function to handle week selection
-        //     onSelect: function(dateText, inst) {
-        //         var selectedDate = new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay);
-        //         var weekStart = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() - selectedDate.getDay());
-        //         var weekEnd = new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate() + 6);
-        //
-        //         // You can now use weekStart and weekEnd as the selected week range
-        //         console.log('Week Start: ', weekStart);
-        //         console.log('Week End: ', weekEnd);
-        //     }
-        // });
     }
 
     changeDateByRange(direction) {
@@ -1164,6 +1103,14 @@ class PECalendar {
             // You can add more cases if needed
         }
     };
+
+    hasTimeSlots = ko.computed(() => {
+        return (this.availableTimeSlots()[this.resource_id()] || []).length > 0;
+    });
+
+    loaded = ko.computed(() => {
+        return !!this.resource_id() && Object.values(this.availableTimeSlots()).length > 0;
+    });
 
     combinedTempEvents = ko.computed(() => {
         // Start with the array of existing temp events
@@ -1225,7 +1172,7 @@ if (globalThis['ko']) {
                             <!-- /ko -->
 
                         </div>
-                        <!-- ko ifnot: resources()[resource_id()]?.simple_booking === 1 -->
+                        <!-- ko ifnot: hasTimeSlots() -->
                         <a class="application-button link-button link-button-primary"
                            data-bind="attr: { href: applicationURL }">Søknad</a>
                         <!-- /ko -->
@@ -1255,7 +1202,7 @@ if (globalThis['ko']) {
                         <div class="date">
                             <fieldset>
                                 <label class="filter"
-                                       data-bind="css: { 'invisible': resources()[resource_id()] && resources()[resource_id()].simple_booking !== 1 }">
+                                       data-bind="css: { 'invisible': !hasTimeSlots() }">
                                     <input type="radio" name="filter" value="day" data-bind="checked: calendarRange"/>
                                     <span class="filter__radio">Dag</span>
                                 </label>
@@ -1305,7 +1252,8 @@ if (globalThis['ko']) {
                         </div>
                     </div>
                 </div>
-                <!-- ko ifnot: resources()[resource_id()] && resources()[resource_id()].simple_booking === 1 -->
+                <!-- ko if: loaded() -->
+                <!-- ko ifnot: hasTimeSlots() -->
 
                 <div class="calendar-body">
                     <!-- Days Header -->
@@ -1385,8 +1333,8 @@ if (globalThis['ko']) {
                 <!-- /ko -->
 
 
-                <!-- ko if: resources()[resource_id()] && resources()[resource_id()].simple_booking === 1 -->
-                <div class="simple-booking">
+                <!-- ko if: hasTimeSlots() -->
+                <div class="time-slot-body">
                     <!-- ko if: hasTimeSlotsInCurrentCalendarRange -->
                     <!-- ko foreach: availableTimeSlots()[resource_id()] -->
                     <!-- ko if: $data.overlap !== 3 && $parent.isWithinCurrentCalendarRange($data.start, $data.end) -->
@@ -1424,6 +1372,7 @@ if (globalThis['ko']) {
                     <!-- /ko -->
                 </div>
 
+                <!-- /ko -->
                 <!-- /ko -->
 
 

@@ -247,7 +247,27 @@ function PopulatePostedDate() {
         $('#item-description').html('');
         $('#selected_period').html('<b>Velg leieobjekt</b>');
     }
-
+    if (initialDates != null) {
+        for (var i = 0; i < initialDates.length; i++) {
+            var from_ = (initialDates[i].from_).replace(" ", "T");
+            var to_ = (initialDates[i].to_).replace(" ", "T");
+            am.date.push({
+                from_: formatDateToDateTimeString(new Date(from_)),
+                to_: formatDateToDateTimeString(new Date(to_)),
+                formatedPeriode: formatDate(new Date(from_), new Date(to_))
+            });
+        }
+    } else {
+        if (typeof urlParams['start'] !== "undefined" && typeof urlParams['end'] !== "undefined") {
+            if (urlParams['start'].length > 0 && urlParams['end'].length > 0) {
+                am.date.push({
+                    from_: formatDateToDateTimeString(new Date(parseInt(urlParams['start']))),
+                    to_: formatDateToDateTimeString(new Date(parseInt(urlParams['end']))), /*repeat: false,*/
+                    formatedPeriode: formatDate(new Date(parseInt(urlParams['start'])), new Date(parseInt(urlParams['end'])))
+                });
+            }
+        }
+    }
     if (initialDates != null) {
         for (var i = 0; i < initialDates.length; i++) {
             var from_ = (initialDates[i].from_).replace(" ", "T") + 'Z';

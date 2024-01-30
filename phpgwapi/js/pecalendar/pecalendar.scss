@@ -685,6 +685,7 @@ $current-time-color: #ea4335;
   grid-template-columns: 6.375rem 1fr auto;
   min-height: 5rem;
   align-items: center;
+  max-width: 450px;
 
   .time-slot-status {
     border-radius: 0.5rem 0 0 0.5rem ;
