@@ -372,7 +372,7 @@
 					(
 						'value'		 => $this->_db->f($field, $stripslashes),
 						'datatype'	 => $uicols['datatype'][$key],
-						'attrib_id'	 => $uicols['attrib_id'][$key]
+						'attrib_id'	 => isset($uicols['attrib_id'][$key]) ? $uicols['attrib_id'][$key] : null
 					);
 				}
 				$j++;
