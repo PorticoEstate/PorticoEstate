@@ -177,7 +177,7 @@
 					$uicols['descr'][]		 = $this->_db->f('input_text');
 					$uicols['statustext'][]	 = $this->_db->f('statustext');
 					$uicols['datatype'][$i]	 = $this->_db->f('datatype');
-					$uicols['attib_id'][$i]	 = $this->_db->f('id');
+					$uicols['attrib_id'][$i]	 = $this->_db->f('id');
 					$uicols['formatter'][$i] = $this->_db->f('datatype') == 'I' ? 'FormatterRight' : '';
 					$cols_return_extra[]	 = array(
 						'name'		 => $this->_db->f('column_name'),
@@ -372,7 +372,7 @@
 					(
 						'value'		 => $this->_db->f($field, $stripslashes),
 						'datatype'	 => $uicols['datatype'][$key],
-						'attrib_id'	 => $uicols['attib_id'][$key]
+						'attrib_id'	 => $uicols['attrib_id'][$key]
 					);
 				}
 				$j++;
@@ -507,10 +507,10 @@
 				$fields[] = $field['name'];
 			}
 
+			$id_in_name = 'id';
 			// Add extra info to name
 			if (isset($data['id_in_name']) && $data['id_in_name'])
 			{
-				$id_in_name = 'id';
 				if (in_array($data['id_in_name'], $fields))
 				{
 					$id_in_name = $data['id_in_name'];
