@@ -286,7 +286,6 @@ class ArticleTableViewModel {
             // Add a computed observable for computedString
             item.computed_selected_article = ko.pureComputed(function () {
                 const val = `${item.id}_${item.selected_quantity()}_x_x_${item.parent_mapping_id || 'null'}`
-                console.log('computed_selected_article', val);
                 return `${item.id}_${item.selected_quantity()}_x_x_${item.parent_mapping_id || 'null'}`;
             });
         });
