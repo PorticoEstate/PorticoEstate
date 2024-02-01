@@ -1661,6 +1661,11 @@ JS;
 			// This value represents the type
 			$location_id = $GLOBALS['phpgw']->locations->get_id("controller", ".checklist");
 
+			if($short_desc)
+			{
+				$message_title .= " {$short_desc}";
+			}
+
 			$ticket = array
 			(
 				'location_code' => $location_code,

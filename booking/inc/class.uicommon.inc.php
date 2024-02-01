@@ -861,10 +861,10 @@ JS;
 				$html = 'var html = "<div class=\'date-container\'>"+
                             "<a class=\'btnclose\' href=\'javascript:void(0);\'>' . $lang_remove . '</a>"+
                             "<div class=\'form-group\'><label for=\'new_start_date_"+this.counter+"\'>' . $lang_from . '</label>"+
-                            "<input class=\'new_datepicker start-date datetime form-control\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
+                            "<input autocomplete=\'off\' class=\'new_datepicker start-date datetime form-control\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
                             "</input></div>"+
                             "<div class=\'form-group\'><label for=\'new_end_date_"+this.counter+"\' >' . $lang_to . '</label>"+
-                            "<input class=\'new_datepicker end-date datetime form-control\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
+                            "<input autocomplete=\'off\' class=\'new_datepicker end-date datetime form-control\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
                             "</input></div>"+
                         "</div>"';
 			}
@@ -874,12 +874,12 @@ JS;
 						"<a href=\"javascript:void(0);\" class=\"close-btn btnclose\">-</a>"+
 						"<div class=\'pure-control-group\'>"+
 							"<label for=\'new_start_date_"+this.counter+"\'><h4>' . $lang_from . '</h4></label>"+
-							"<input class=\'new_datepicker start-date datetime pure-input-2-3\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
+							"<input autocomplete=\'off\' class=\'new_datepicker start-date datetime pure-input-2-3\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
 							"</input>"+
 						"</div>"+
 						"<div class=\'pure-control-group\'>"+
 							"<label for=\'new_end_date_"+this.counter+"\' ><h4>' . $lang_to . '</h4></label>"+
-							"<input class=\'new_datepicker end-date datetime pure-input-2-3\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
+							"<input autocomplete=\'off\' class=\'new_datepicker end-date datetime pure-input-2-3\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
 							"</input>"+
 						"</div>"+
 				 	"</div>"';

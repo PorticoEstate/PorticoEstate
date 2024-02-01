@@ -291,20 +291,23 @@
 
 		function execute()
 		{
-			$this->boei	 = new boei();
-			$checklist	 = $this->boei->get_checklist();
 
-			$timestamp = $this->populate_database($checklist);
-
-			$yesterday = time() - (24 * 3600);
-			if($timestamp && $timestamp > $yesterday)
+			// max. once each day
+			if ((int)$GLOBALS['phpgw_info']['server']['last_executed_get_tenenants_time'] < (time() - (3600 * 24)))
 			{
-				return $timestamp;
+				$config = createObject('phpgwapi.config', 'phpgwapi');
+				$config->read_repository();
+				$config->value('last_executed_get_tenenants_time', time());
+				$config->save_repository();
+
+				$this->boei	 = new boei();
+				$checklist	 = $this->boei->get_checklist();
+
+				$this->populate_database($checklist);
+				$this->handle_deceased($checklist);
+				$this->handle_shielded();
+
 			}
-
-			$this->handle_deceased($checklist);
-			$this->handle_shielded();
-
 		}
 
 		function handle_deceased($checklist)
@@ -415,6 +418,12 @@ HTML;
 
 			foreach ($shielded as $_person_nr => &$entry)
 			{
+				if($entry['adressebeskyttelse'] == 'strengtFortrolig')
+				{
+					$entry['beste_adresse'] = 'Hemmelig';
+					$checklist[$_person_nr]['beste_adresse'] = 'Hemmelig';
+				}
+
 				if($entry['hemmeligadresse'] && empty($entry['adressebeskyttelse']))
 				{
 					$entry['adressebeskyttelse'] = "<table border='0'><tr><td>Folkeregister</td><td>: Ugradert</tr><tr><td>BOEI</td><td>: Hemmelig adresse</td></tr></table>";
@@ -424,10 +433,6 @@ HTML;
 					$entry['adressebeskyttelse'] = "<table border='0'><tr><td>Folkeregister</td><td>: <b>{$entry['adressebeskyttelse']}</b></tr><tr><td>BOEI</td><td>: Hemmelig adresse</td></tr></table>";
 				}
 
-				if($entry['adressebeskyttelse'] == 'strengtFortrolig')
-				{
-					$entry['beste_adresse'] = 'Hemmelig';
-				}
 			}
 
 
@@ -465,7 +470,7 @@ HTML;
 					</tr>
 HTML;
 
-			foreach ($shielded as &$entry)
+			foreach ($shielded as $entry)
 			{
 				$entry	 = array_merge($entry, $checklist[$entry['person_nr']]);
 				$html	 .= <<<HTML
