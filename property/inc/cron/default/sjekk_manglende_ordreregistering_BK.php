@@ -64,10 +64,11 @@
 				. " fm_workorder.account_id as kostnadsart,"
 				. " to_char(to_timestamp(fm_workorder.order_sent ),'DD/MM-YYYY') as overfort_dato, "
 				. " fm_workorder.combined_cost as budget,fm_workorder.project_id,"
-				. " account_firstname, account_lastname"
+				. " account_firstname, account_lastname, phpgw_categories.cat_name as aktivitet"
 				. " FROM fm_workorder JOIN fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " JOIN phpgw_accounts ON fm_workorder.user_id = phpgw_accounts.account_id"
 				. " JOIN fm_vendor ON fm_workorder.vendor_id = fm_vendor.id"
+				. " JOIN phpgw_categories ON fm_workorder.category = phpgw_categories.cat_id"
 				. " WHERE (order_sent IS NOT NULL OR canceled IS NULL )"
 				. " AND fm_workorder.id > 45000000"
 				. " AND verified_transfered IS NULL"
@@ -80,6 +81,8 @@
 			$orderserie = array();
 			while ($this->db->next_record())
 			{
+				$aktivitet	 = $this->db->f('aktivitet', true);
+				$_aktivitet = trim(explode("-", $aktivitet)[0]);
 				$orderserie[] = array(
 					'type'				 => 'workorder',
 					'project_id'		 => $this->db->f('project_id'),
@@ -92,6 +95,7 @@
 					'budget'			 => $this->db->f('budget'),
 					'account_lastname'	 => $this->db->f('account_lastname'),
 					'account_firstname'	 => $this->db->f('account_firstname'),
+					'aktivitet'			 => $_aktivitet,
 				);
 			}
 
@@ -102,9 +106,10 @@
 				fm_tts_tickets.b_account_id as kostnadsart,
 				to_char(to_timestamp(fm_tts_tickets.order_sent ),'DD/MM-YYYY') as overfort_dato,
 				fm_tts_tickets.budget,
-				account_firstname, account_lastname
+				account_firstname, account_lastname, phpgw_categories.cat_name as aktivitet
 				FROM fm_tts_tickets
 				JOIN phpgw_accounts ON fm_tts_tickets.assignedto = phpgw_accounts.account_id
+				JOIN phpgw_categories ON fm_tts_tickets.order_cat_id = phpgw_categories.cat_id
 				WHERE fm_tts_tickets.order_id IS NOT NULL
 				AND (order_sent IS NOT NULL)
 				AND verified_transfered IS NULL
@@ -116,6 +121,8 @@ SQL;
 
 			while ($this->db->next_record())
 			{
+				$aktivitet	 = $this->db->f('aktivitet', true);
+				$_aktivitet = trim(explode("-", $aktivitet)[0]);
 				$orderserie[] = array(
 					'type'				 => 'ticket',
 					'ticket_id'			 => $this->db->f('ticket_id'),
@@ -129,6 +136,7 @@ SQL;
 					'budget'			 => $this->db->f('budget'),
 					'account_lastname'	 => $this->db->f('account_lastname'),
 					'account_firstname'	 => $this->db->f('account_firstname'),
+					'aktivitet'			 => $_aktivitet,
 				);
 			}
 
@@ -159,6 +167,7 @@ SQL;
 						<th>Overskrift</th>
 						<th>Status</th>
 						<th>Bestiller</th>
+						<th>Aktivitet</th>
 						<th>#</th>
 					</tr>
 HTML;
@@ -233,6 +242,7 @@ HTML;
 						<td>{$entry['title']}</td>
 						<td>{$entry['status']}</td>
 						<td>{$entry['account_lastname']}, {$entry['account_firstname']}</td>
+						<td>{$entry['aktivitet']}</td>
 						<td>{$i}</td>
 					</tr>
 HTML;
