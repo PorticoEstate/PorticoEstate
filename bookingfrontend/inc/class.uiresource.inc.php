@@ -97,11 +97,13 @@
 			$lang_home = lang('home');
 			$buildinginfo = array();
 			$building_fields = array('id', 'city', 'deactivate_application', 'deactivate_calendar',
-				'email', 'homepage', 'name', 'opening_hours', 'phone', 'street', 'zip_code');
+				'email', 'homepage', 'name', 'opening_hours', 'phone', 'street', 'zip_code', 'part_of_town');
 			foreach ($resource['buildings'] as $building_id)
 			{
 				$building = $this->building_bo->read_single($building_id);
 				$building_link = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $building['id']));
+                $building['part_of_town'] = self::cleanTownName(execMethod('property.solocation.get_part_of_town', $building['location_code'])['part_of_town']);
+
 				$pathway[] = array(
 					'lang_home' => $lang_home,
 					'building_name' => $building['name'],

@@ -831,6 +831,39 @@ h4, .h4 {
   font-weight: 900;
 }
 
+.line-height-h1 {
+  line-height: 1.75;
+}
+@media (min-width: 768px) {
+  .line-height-h1 {
+    line-height: 1.75;
+  }
+}
+.line-height-h2 {
+  line-height: 2.2;
+}
+@media (min-width: 768px) {
+  .line-height-h2 {
+    line-height: 1.75;
+  }
+}
+.line-height-h3 {
+  line-height: 1.4;
+}
+@media (min-width: 768px) {
+  .line-height-h3 {
+    line-height: 2.2;
+  }
+}
+.line-height-h4 {
+  line-height: 1.4;
+}
+@media (min-width: 768px) {
+  .line-height-h4 {
+    line-height: 1.4;
+  }
+}
+
 .box-shadow {
   box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15);
 }

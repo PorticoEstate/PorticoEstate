@@ -952,9 +952,9 @@ class PECalendar {
     formatPillDateInterval(event) {
         const dateObj = DateTime.fromISO(event.date, {locale: 'nb'});
 
-        const formattedDate = dateObj.toFormat('d. LLL');
+        const formattedDate = FormatDateRange(dateObj);
 
-        return `${formattedDate}`;
+        return formattedDate;
     }
 
     /**
@@ -965,33 +965,7 @@ class PECalendar {
      * @returns {string} - Formatted date range string.
      */
     formatDateRange(useYear, startTimestamp, endTimestamp) {
-        let startDate;
-        let endDate;
-        if (startTimestamp) {
-            startDate = new Date(parseInt(startTimestamp))
-        } else {
-            startDate = this.firstDayOfCalendar().toJSDate()
-        }
-        if (endTimestamp) {
-            endDate = new Date(parseInt(endTimestamp))
-        } else {
-            endDate = this.lastDayOfCalendar().toJSDate()
-        }
-
-        const options = {day: 'numeric', month: 'short'};
-
-        // Check if the start and end dates are in the same month
-        if (startDate.getMonth() === endDate.getMonth() && startDate.getFullYear() === endDate.getFullYear() && startDate.getDate() === endDate.getDate()) {
-            return `${endDate.toLocaleDateString('no', options)} ${useYear ? endDate.getFullYear() : ''}`;
-
-        } else if (startDate.getMonth() === endDate.getMonth() && startDate.getFullYear() === endDate.getFullYear()) {
-            return `${startDate.toLocaleDateString('no', {day: 'numeric'}).slice(0, -1)} - ${endDate.toLocaleDateString('no', options)} ${useYear ? endDate.getFullYear() : ''}`;
-        } else {
-            return `${startDate.toLocaleDateString('no', {
-                day: 'numeric',
-                month: 'short'
-            }).slice(0, -1)} - ${endDate.toLocaleDateString('no', options)} ${useYear ? endDate.getFullYear() : ''}`;
-        }
+       return FormatDateRange(startTimestamp ? Number(startTimestamp) :  this.firstDayOfCalendar(),endTimestamp ? Number(endTimestamp) :  this.lastDayOfCalendar(), undefined, useYear)
     }
 
     /**
