@@ -30,7 +30,7 @@
             </div>
 
             <div class="row pb-3">
-                <div class="col-md-4 d-flex gap-3">
+                <div class="col-md d-flex gap-3">
                     <span class="d-flex gap-1">
                         <span class="">Bydel:</span>
                         <xsl:value-of select="building/part_of_town"/>
@@ -71,9 +71,8 @@
                 </div>
                 <div class="col-sm-12 d-flex flex-column collapsible-content collapsed-description"
                      data-bind="css: {{'collapsed-description': !descriptionExpanded()}}">
-                    <p>
-                        <xsl:value-of disable-output-escaping="yes"
-                                      select="resource/description"/>
+                    <p data-bind="html: resourceDescription">
+
                     </p>
 
                 </div>
@@ -165,5 +164,6 @@
         var deactivate_calendar =<xsl:value-of select="building/deactivate_calendar"/>;
         var building_id = "<xsl:value-of select="building/id"/>";
         var simple_booking = "<xsl:value-of select="resource/simple_booking"/>";
+        var initialDesc = `<xsl:value-of select="resource/description"/>`
     </script>
 </xsl:template>

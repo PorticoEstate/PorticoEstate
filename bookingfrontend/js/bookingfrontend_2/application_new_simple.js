@@ -56,6 +56,51 @@ function applicationModel() {
     self.specialRequirements = ko.observable("");
     self.attachment = ko.observable();
     self.termAcceptDocs = ko.observableArray();
+
+
+    self.selectedResource = ko.observable();
+    self.descriptionExpanded = ko.observable(false);
+
+    self.toggleDescription = () => {
+        self.descriptionExpanded(!self.descriptionExpanded())
+    }
+
+    self.resourceDescription = ko.computed(() => {
+        const initialDesc = self.selectedResource()?.description;
+        if (!initialDesc) {
+            return;
+        }
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(initialDesc, 'text/html');
+
+        // Function to determine if an element is effectively empty
+        const isEmptyElement = (element) => {
+            return !element.innerHTML.trim() || element.innerHTML.trim() === '<br>' || /^(&nbsp;|\s)*$/.test(element.innerHTML);
+        };
+
+        // Function to recursively remove empty elements
+        const removeEmptyElements = (node) => {
+            [...node.childNodes].forEach(child => {
+                if (child.nodeType === 1) {
+                    if (isEmptyElement(child)) {
+                        child.remove();
+                    } else {
+                        removeEmptyElements(child);
+                    }
+                }
+            });
+        };
+
+        // Start the cleaning process
+        removeEmptyElements(doc.body);
+
+        return doc.body.innerHTML;
+    });
+
+
+
+    // self.selectedResource.subscribe((v) => console.log('aaa', v));
     self.termAccept = ko.computed(function () {
         var notAccepted = ko.utils.arrayFirst(self.termAcceptDocs(), function (current) {
             return current.checkedStatus() == false;
@@ -100,7 +145,9 @@ function applicationModel() {
 $(document).ready(function () {
 
     var activityId;
-
+    am = new applicationModel();
+    am.activityId(activityId);
+    ko.applyBindings(am, document.getElementById("new-application-page"));
     getJsonURL = phpGWLink('bookingfrontend/', {
         menuaction: "bookingfrontend.uiapplication.add",
         building_id: urlParams['building_id'],
@@ -152,7 +199,7 @@ $(document).ready(function () {
                 // console.log(result.results[i])
                 console.log($("#resource_id"));
                 if ($("#resource_id").val() == result.results[i].id) {
-                    console.log("innter")
+                    am.selectedResource(result.results[i])
 
                     if (result.results[i].booking_day_default_lenght && result.results[i].booking_day_default_lenght != -1) {
                         day_default_lenght = result.results[i].booking_day_default_lenght;
@@ -163,7 +210,7 @@ $(document).ready(function () {
                     if (result.results[i].booking_time_default_start && result.results[i].booking_time_default_start != -1) {
                         time_default_start = result.results[i].booking_time_default_start;
                     }
-                    $('#item-description').html('<b>' + result.results[i].name + '</b>' + result.results[i].description);
+                    // $('#item-description').html('<b>' + result.results[i].name + '</b>' + result.results[i].description);
                     $('#resource_list').hide();
 
 //					set_conditional_translation(result.results[i].type);
@@ -207,9 +254,7 @@ $(document).ready(function () {
         }
 
     }).done(function () {
-        am = new applicationModel();
-        am.activityId(activityId);
-        ko.applyBindings(am, document.getElementById("new-application-page"));
+
         if (typeof initialAudience !== "undefined" && initialAudience != null) {
             $("#inputTargetAudience").val(initialAudience);
         }

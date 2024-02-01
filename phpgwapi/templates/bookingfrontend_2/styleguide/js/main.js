@@ -27,6 +27,7 @@ const createJsSlidedowns = () => {
                     function SearchViewModel() {
 
                     }
+
                     const searchRes = document.getElementById(id);
                     console.log(searchRes);
                     ko.applyBindings(new SearchViewModel(), searchRes);
@@ -87,11 +88,11 @@ $(document).ready(function () {
         }
     });
 
-    $("#js-toggle-filter").click(function() {
+    $("#js-toggle-filter").click(function () {
         $(this).toggleClass("toggle-filter--show")
         $(".filter-element").toggleClass("d-block");
 
-        if($(this).hasClass('toggle-filter--show')){
+        if ($(this).hasClass('toggle-filter--show')) {
             $(this).text('Se færre filter');
         } else {
             $(this).text('Se flere filter');
@@ -107,6 +108,8 @@ const updateSelectBasic = () => {
     });
 }
 
+const monthNamesShort = ["Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des"];
+
 const updateDateBasic = () => {
     //Datepicker
     //Datepicker
@@ -114,11 +117,11 @@ const updateDateBasic = () => {
         dateFormat: "d.m.yy",
         changeMonth: true,
         changeYear: true,
-        dayNames: [ "Søndag", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag" ],
-        dayNamesMin: [ "Sø", "Ma", "Ti", "On", "To", "Fr", "Lø" ],
-        dayNamesShort: [ "Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør" ],
-        monthNames: [ "Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember" ],
-        monthNamesShort: [ "Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des" ],
+        dayNames: ["Søndag", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag"],
+        dayNamesMin: ["Sø", "Ma", "Ti", "On", "To", "Fr", "Lø"],
+        dayNamesShort: ["Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"],
+        monthNames: ["Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember"],
+        monthNamesShort: monthNamesShort,
         firstDay: 1
 
     });
@@ -135,44 +138,42 @@ function generateRandomString(length) {
 }
 
 
-
 /**
- * Formats the given Unix timestamps into a date range string.
- * @param {boolean} useYear - forces the use of year
- * @param {number} startTimestamp - The start Unix timestamp.
- * @param {number} endTimestamp - The end Unix timestamp.
- * @returns {string} - Formatted date range string.
+ * Formats a date range string.
+ *
+ * @param {boolean} useYear - forces the use of the year in formatted output.
+ *
+ * @param {number | Date | DateTime} start - The start date of the range, can be a Unix timestamp in ms,
+ * a JavaScript Date object or a Luxon DateTime object.
+ *
+ * @param {number | Date | DateTime | undefined} end - The end date of the range, can be a Unix timestamp in ms,
+ * a JavaScript Date object or a Luxon DateTime object.
+ *
+ * @returns {string} - Formatted date range string in Norwegian ('no') locale.
  */
 function FormatDateRange(start, end, useYear) {
-    let startDate;
-    let endDate;
-    if (startTimestamp) {
-        startDate = new Date(parseInt(startTimestamp))
-    } else {
-        startDate = this.firstDayOfCalendar().toJSDate()
+    const toDate = value => {
+        if (typeof value === 'number') {
+            return new Date(value);
+        }
+        if (value instanceof DateTime) {
+            return value.toJSDate();
+        }
+        return value;
     }
-    if (endTimestamp) {
-        endDate = new Date(parseInt(endTimestamp))
-    } else {
-        endDate = this.lastDayOfCalendar().toJSDate()
-    }
+    const startDate = toDate(start);
 
-    const options = {day: 'numeric', month: 'long'};
+    const endDate = toDate(end);
 
-    // Check if the start and end dates are in the same month
-    if (startDate.getMonth() === endDate.getMonth() && startDate.getFullYear() === endDate.getFullYear() && startDate.getDate() === endDate.getDate()) {
-        return `${endDate.toLocaleDateString('no', options)} ${useYear ? endDate.getFullYear() : ''}`;
+    if (!endDate || (startDate.getMonth() === endDate.getMonth() && startDate.getFullYear() === endDate.getFullYear() && startDate.getDate() === endDate.getDate())) {
+        return `${startDate.getDate()}. ${monthNamesShort[startDate.getMonth()].toLowerCase()} ${useYear ? startDate.getFullYear() : ''}`;
 
     } else if (startDate.getMonth() === endDate.getMonth() && startDate.getFullYear() === endDate.getFullYear()) {
-        return `${startDate.toLocaleDateString('no', {day: 'numeric'}).slice(0, -1)} - ${endDate.toLocaleDateString('no', options)} ${useYear ? endDate.getFullYear() : ''}`;
+        return `${startDate.getDate()}. - ${endDate.getDate()}. ${monthNamesShort[endDate.getMonth()].toLowerCase()} ${useYear ? endDate.getFullYear() : ''}`;
     } else {
-        return `${startDate.toLocaleDateString('no', {
-            day: 'numeric',
-            month: 'short'
-        }).slice(0, -1)} - ${endDate.toLocaleDateString('no', options)} ${useYear ? endDate.getFullYear() : ''}`;
+        return `${startDate.getDate()}. ${monthNamesShort[startDate.getMonth()].toLowerCase()} - ${endDate.getDate()}. ${monthNamesShort[endDate.getMonth()].toLowerCase()} ${useYear ? endDate.getFullYear() : ''}`;
     }
 }
-
 
 
 function formatDateToDateTimeString(date) {

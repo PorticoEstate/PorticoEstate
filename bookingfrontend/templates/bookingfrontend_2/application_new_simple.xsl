@@ -8,50 +8,41 @@
                     <div class="row gx-3">
                         <div class="col d-flex flex-column">
                             <div class="font-weight-bold gap-3 d-flex align-items-center">
-                                <h2 class="fas fa-location-dot text-primary"></h2>
-                                <h2>
-                                    <xsl:value-of select="application/building_name"/>
-                                </h2>
+                                <h1>
+                                    Ny bestilling
+                                </h1>
                             </div>
-                            <span>
-                                <xsl:value-of select="building/street"/>,
-                                <xsl:value-of select="building/zip_code"/>
-                            </span>
                         </div>
                     </div>
 
-                    <!-- Message Box and Hidden Input -->
-                    <div class="mb-2">
-                        <xsl:call-template name="msgbox"/>
-                    </div>
-                    <input type="text" hidden="hidden" name="activity_id" data-bind="value: activityId"/>
-                    <input name="formstage" value="partial2" hidden="hidden"/>
 
-                    <!--                    &lt;!&ndash; Resource Selection Section &ndash;&gt;-->
-                    <!--                    <div class="col-sm-12 mb-4">-->
-                    <!--                        &lt;!&ndash; Add resource selection logic here &ndash;&gt;-->
-                    <!--                    </div>-->
-                    <div id="resource_list" class="form-group">
-                        <label>
-                            <xsl:value-of select="php:function('lang', 'resources')"/>
-                        </label>
-                        <select id="resource_id" name="resources[]" class="form-control text-left w-100 custom-select"
-                                required="true">
-                            <xsl:attribute name="title">
-                                <xsl:value-of select="php:function('lang', 'Choose resource')"/>
-                            </xsl:attribute>
-                            <xsl:if test="count(resource_list/options) > 1 ">
-                                <option value="">
-                                    <xsl:value-of select="php:function('lang', 'No rent object chosen')"/>
-                                </option>
-                            </xsl:if>
-                            <xsl:apply-templates select="resource_list/options"/>
-                        </select>
+                    <div class="row gx-3  mb-4">
+                        <div class="col d-flex flex-column">
+                            <div class="font-weight-bold gap-3 d-flex mb-1">
+                                <H3 class="m-0 fa-solid fa-layer-group line-height-h3"></H3>
+                                <div>
+                                    <H3 class="m-0 text-bold" data-bind="text: selectedResource()?.name">
+                                    </H3>
+                                    <div>
+                                        <xsl:value-of select="building/street"/>,
+                                        <xsl:value-of select="building/zip_code"/>
+                                    </div>
+                                    <div>
+                                        <xsl:value-of select="building/part_of_town"/>
+                                    </div>
+                                    <div class="text-primary d-flex gap-2 align-items-center text-bold">
+                                        <span class="fas fa-location-dot"></span>
+                                        <xsl:value-of select="building/name"/>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
                     </div>
-                    <div class="col-12 mt-4" id="item-description">
-                    </div>
+
                     <!-- Select Time and Date Section -->
-                    <div class="form-group">
+                    <div class="form-group  mb-4">
 
                         <div class="form-group">
                             <div class="font-weight-bold gap-3 d-flex align-items-center">
@@ -148,27 +139,85 @@
 
                         </div>
                     </div>
+
                     <xsl:if test="config/activate_application_articles !=''">
-                        <input type="hidden" data-validation="application_articles">
-                            <xsl:attribute name="data-validation-error-msg">
-                                <xsl:value-of select="php:function('lang', 'Please choose at least 1 Article')"/>
-                            </xsl:attribute>
-                        </input>
-                        <div class="row gx-3">
-                            <div class="col d-flex flex-column">
-                                <div class="font-weight-bold gap-3 d-flex align-items-center">
-                                    <h2 class="fas fa-shapes text-primary"></h2>
-                                    <h2>
-                                        Artikkler
-                                    </h2>
+                        <div class="mb-3">
+                            <input type="hidden" data-validation="application_articles">
+                                <xsl:attribute name="data-validation-error-msg">
+                                    <xsl:value-of select="php:function('lang', 'Please choose at least 1 Article')"/>
+                                </xsl:attribute>
+                            </input>
+                            <div class="row gx-3">
+                                <div class="col d-flex flex-column">
+                                    <div class="font-weight-bold gap-3 d-flex align-items-center">
+                                        <h2 class="fas fa-shapes text-primary"></h2>
+                                        <h2>
+                                            Artikkler
+                                        </h2>
+                                    </div>
                                 </div>
                             </div>
+                            <article-table
+                                    params="selectedResources: selectedResources, date: date"></article-table>
+                            <!--                        <article-table-old-->
+                            <!--                                params="selectedResources: selectedResourcesOld, date: date"></article-table-old>-->
                         </div>
-                        <article-table
-                                params="selectedResources: selectedResources, date: date"></article-table>
-                        <!--                        <article-table-old-->
-                        <!--                                params="selectedResources: selectedResourcesOld, date: date"></article-table-old>-->
                     </xsl:if>
+
+
+                    <!-- Message Box and Hidden Input -->
+                    <div class="mb-2">
+                        <xsl:call-template name="msgbox"/>
+                    </div>
+                    <input type="text" hidden="hidden" name="activity_id" data-bind="value: activityId"/>
+                    <input name="formstage" value="partial2" hidden="hidden"/>
+
+                    <!--                    &lt;!&ndash; Resource Selection Section &ndash;&gt;-->
+                    <!--                    <div class="col-sm-12 mb-4">-->
+                    <!--                        &lt;!&ndash; Add resource selection logic here &ndash;&gt;-->
+                    <!--                    </div>-->
+                    <div id="resource_list" class="form-group">
+                        <label>
+                            <xsl:value-of select="php:function('lang', 'resources')"/>
+                        </label>
+                        <select id="resource_id" name="resources[]" class="form-control text-left w-100 custom-select"
+                                required="true">
+                            <xsl:attribute name="title">
+                                <xsl:value-of select="php:function('lang', 'Choose resource')"/>
+                            </xsl:attribute>
+                            <xsl:if test="count(resource_list/options) > 1 ">
+                                <option value="">
+                                    <xsl:value-of select="php:function('lang', 'No rent object chosen')"/>
+                                </option>
+                            </xsl:if>
+                            <xsl:apply-templates select="resource_list/options"/>
+                        </select>
+                    </div>
+                    <div class="col-12 mt-4" id="item-description" data-bind="text: ">
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-sm-12">
+                            <h3 class="">
+                                Beskrivelse
+                            </h3>
+                        </div>
+                        <div class="col-sm-12 d-flex flex-column collapsible-content collapsed-description"
+                             data-bind="css: {{'collapsed-description': !descriptionExpanded()}}">
+                            <p data-bind="html: resourceDescription">
+
+                            </p>
+
+                        </div>
+                        <div class="col-sm-12">
+                            <button class="pe-btn  pe-btn--transparent text-secondary d-flex gap-3"
+                                    data-bind="click: toggleDescription">
+                                <span data-bind="text: descriptionExpanded() ? 'Vis mindre' : 'Vis mer'"></span>
+                                <i class="fa"
+                                   data-bind="css: {{'fa-chevron-up': descriptionExpanded(), 'fa-chevron-down': !descriptionExpanded()}}"></i>
+                            </button>
+                        </div>
+                    </div>
 
 
                     <!-- Target Audience Section-->
@@ -190,10 +239,11 @@
                         <div class="row">
                             <fieldset>
                                 <div class="row">
-                                    <div class="col-12 mb-4"  data-bind="foreach: termAcceptDocs">
+                                    <div class="col-12 mb-4" data-bind="foreach: termAcceptDocs">
                                         <div class="checkbox col-12 mb-4">
                                             <label class="choice d-inline d-flex gap-2 align-items-center">
-                                                <input id="termsInput" type="checkbox" data-bind="checked: checkedStatus"/>
+                                                <input id="termsInput" type="checkbox"
+                                                       data-bind="checked: checkedStatus"/>
                                                 <!-- Placeholder for label text, populated by data binding -->
                                                 <span class="choice__check" data-bind=""></span>
                                                 <a class="d-inline termAcceptDocsUrl" target="_blank" data-bind=""></a>
@@ -244,8 +294,9 @@
             var errorAcceptedDocs = '<xsl:value-of select="config/application_terms2"/>';
             var cache_refresh_token = "<xsl:value-of
                 select="php:function('get_phpgw_info', 'server|cache_refresh_token')"/>";
-            var lang =<xsl:value-of
-                select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.', 'article', 'Select', 'price', 'unit', 'quantity', 'Selected', 'Delete', 'Sum', 'unit cost')"/>
+            var lang =
+            <xsl:value-of
+                    select="php:function('js_lang', 'From', 'To', 'Resource Type', 'Name', 'Accepted', 'Document', 'You must accept to follow all terms and conditions of lease first.', 'article', 'Select', 'price', 'unit', 'quantity', 'Selected', 'Delete', 'Sum', 'unit cost')"/>
             ;
         </script>
 

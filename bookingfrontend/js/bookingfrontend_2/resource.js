@@ -10,6 +10,7 @@ var baseURL = strBaseURL.split('?')[0] + "bookingfrontend/";
 var availlableTimeSlots = ko.observableArray();
 $(".bookable-timeslots-link-href").attr('data-bind', "attr: {'href': applicationLink }");
 var imageArray = ko.observableArray();
+var selectedDescription = ko.observable();
 
 
 
@@ -21,10 +22,43 @@ class ResourceModel {
 		this.availlableTimeSlots = availlableTimeSlots;
 		this.imageArray = imageArray;
 		this.items = events;
+		this.selectedDescription = selectedDescription;
 		this.resourcesExpanded = ko.observable(false);
 		this.descriptionExpanded = ko.observable(false);
 		this.toggleResources = this.toggleResources.bind(this);
 		this.toggleDescription = this.toggleDescription.bind(this);
+
+		this.resourceDescription = ko.computed(() => {
+			const initialDesc = this.selectedDescription();
+			if (!initialDesc) {
+				return;
+			}
+
+			const parser = new DOMParser();
+			const doc = parser.parseFromString(initialDesc, 'text/html');
+
+			// Function to determine if an element is effectively empty
+			const isEmptyElement = (element) => {
+				return !element.innerHTML.trim() || element.innerHTML.trim() === '<br>' || /^(&nbsp;|\s)*$/.test(element.innerHTML);
+			};
+
+			// Function to recursively remove empty elements
+			const removeEmptyElements = (node) => {
+				[...node.childNodes].forEach(child => {
+					if (child.nodeType === 1) {
+						if (isEmptyElement(child)) {
+							child.remove();
+						} else {
+							removeEmptyElements(child);
+						}
+					}
+				});
+			};
+
+			// Start the cleaning process
+			removeEmptyElements(doc.body);
+			return doc.body.innerHTML;
+		});
 	}
 	/**
 	 * Toggles the visibility of additional resources.
@@ -32,6 +66,9 @@ class ResourceModel {
 	toggleResources() {
 		this.resourcesExpanded(!this.resourcesExpanded());
 	}
+
+
+
 	/**
 	 * Toggles the visibility of the description.
 	 */
@@ -57,6 +94,7 @@ $(document).ready(function ()
 	{
 		getFreetime(urlParams);
 	}
+	selectedDescription(initialDesc);
 
 
 	PopulateResourceData();
