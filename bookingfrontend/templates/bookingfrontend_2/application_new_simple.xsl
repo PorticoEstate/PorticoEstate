@@ -19,10 +19,10 @@
                     <div class="row gx-3  mb-4">
                         <div class="col d-flex flex-column">
                             <div class="font-weight-bold gap-3 d-flex mb-1">
-                                <H3 class="m-0 fa-solid fa-layer-group line-height-h3"></H3>
+                                <h3 class="m-0 fa-solid fa-layer-group line-height-h3"></h3>
                                 <div>
-                                    <H3 class="m-0 text-bold" data-bind="text: selectedResource()?.name">
-                                    </H3>
+                                    <h3 class="m-0 text-bold" data-bind="text: selectedResource()?.name">
+                                    </h3>
                                     <div>
                                         <xsl:value-of select="building/street"/>,
                                         <xsl:value-of select="building/zip_code"/>
@@ -46,10 +46,10 @@
 
                         <div class="form-group">
                             <div class="font-weight-bold gap-3 d-flex align-items-center">
-                                <h2 class="fas fa-calendar-alt text-primary"></h2>
-                                <h2>
+                                <h3 class="fas fa-calendar-alt m-0 text-bold"></h3>
+                                <h3 class="m-0 text-bold">
                                     Leieperiode
-                                </h2>
+                                </h3>
                             </div>
                             <!-- Display Time Chosen -->
                             <div class="form-group mb-2 ">
@@ -60,13 +60,19 @@
                                 <!--                                <span class="selectedItems" id="selected_period"></span>-->
                                 <input class="datetime" id="from_" type="hidden" required="true" name="from_[]"/>
                                 <input class="datetime" id="to_" type="hidden" required="true" name="to_[]"/>
-                                <div class="pill pill--secondary">
+                                <div data-bind="foreach: date" class="d-flex flex-row gap-1 flex-wrap">
+                                    <input class="datetime" required="true" name="from_[]" hidden="hidden"
+                                           data-bind="value: from_"/>
+                                    <input class="datetime" required="true" name="to_[]" hidden="hidden"
+                                           data-bind="value: to_"/>
+                                    <div class="pill pill--secondary">
 
-                                    <div class="pill-content" id="selected_period"></div>
-                                    <!--                                    <div class="pill-divider"></div>-->
-                                    <!--                                    <div class="pill-content"-->
-                                    <!--                                         data-bind="text: $parent.formatTimePeriod($data)"></div>-->
-                                    <!--                                    <button class="pill-icon" data-bind="click: $parent.removeDate">&#215;</button>-->
+                                        <div class="pill-date" data-bind="text: $parent.formatDate($data)"></div>
+                                        <div class="pill-divider"></div>
+                                        <div class="pill-content last-child"
+                                             data-bind="text: $parent.formatTimePeriod($data)"></div>
+                                    </div>
+                                    <!--                                    <pre data-bind="text: ko.toJSON($data)"></pre>-->
 
                                 </div>
                                 <!--                                    <pre data-bind="text: ko.toJSON($data)"></pre>-->
@@ -150,10 +156,10 @@
                             <div class="row gx-3">
                                 <div class="col d-flex flex-column">
                                     <div class="font-weight-bold gap-3 d-flex align-items-center">
-                                        <h2 class="fas fa-shapes text-primary"></h2>
-                                        <h2>
+                                        <h3 class="fas fa-shapes m-0 text-bold"></h3>
+                                        <h3 class="m-0 text-bold">
                                             Artikkler
-                                        </h2>
+                                        </h3>
                                     </div>
                                 </div>
                             </div>
@@ -218,8 +224,23 @@
                             </button>
                         </div>
                     </div>
+                    <div class="row mb-4">
+                        <light-box params="images: imageArray"></light-box>
+                    </div>
+                    <div class="row  mb-4">
+                        <div class="col-sm-12">
+                            <h3 class="">
+                                <xsl:value-of select="php:function('lang', 'Facilities')"/>
+                            </h3>
+                        </div>
+                        <div class="col-sm-12 d-flex flex-row flex-wrap"
+                             data-bind="foreach: selectedResource()?.facilities_list">
+                            <div class="col-12 col-sm-6 col-md-3" data-bind="text: name">
 
+                            </div>
+                        </div>
 
+                    </div>
                     <!-- Target Audience Section-->
                     <input id="inputTargetAudience" required="true" type="hidden" name="audience[]"/>
 
@@ -230,7 +251,7 @@
                     </div>
 
                     <!-- Terms and Conditions -->
-                    <div class="form-group border-bottom border-2 border-top pt-4 pb-4 mt-4">
+                    <div class="form-group pt-4 pb-4 mt-4">
                         <div class="row pt-2 pb-2">
                             <h2>
                                 <xsl:value-of select="php:function('lang', 'legal condition')"/>
@@ -262,21 +283,36 @@
 
 
                     <!-- Submit -->
-                    <div id="submitContainer" class="form-group float-right text-center">
-                        <button id="submitBtn" class="btn btn-light" type="submit">
-                            <xsl:value-of select="php:function('lang', 'Next step')"/>
-                        </button>
-                        <div id="submit-error" style="display: none">Vennligst fyll inn alle feltene!</div>
-                    </div>
+                    <!--                    <div id="submitContainer" class="form-group float-right text-center">-->
+                    <!--                        <button id="submitBtn" class="btn btn-light" type="submit">-->
+                    <!--                            <xsl:value-of select="php:function('lang', 'Next step')"/>-->
+                    <!--                        </button>-->
+                    <!--                        <div id="submit-error" style="display: none">Vennligst fyll inn alle feltene!</div>-->
+                    <!--                    </div>-->
                     <!-- Submit Button -->
-                    <div id="submitContainer" class="form-group float-right text-center">
-                        <button id="submitBtn" class="btn btn-light" type="submit">
-                            <xsl:value-of select="php:function('lang', 'Next step')"/>
+
+                    <div id="submitContainer" class="d-flex gap-4 justify-content-end">
+                        <a class="link-text link-text-primary pe-btn pe-btn-secondary  d-flex align-items-center gap-2" style="width: fit-content" href="{application/frontpage_link}">
+                            <div class="text-normal">
+                                <xsl:value-of select="php:function('lang', 'Cancel')"/>
+                            </div>
+                        </a>
+                        <button id="submitBtn"
+                                class=" pe-btn pe-btn-primary pe-btn--large d-flex align-items-center gap-2"
+                                type="submit">
+                            <div class="text-normal">
+                                <xsl:value-of select="php:function('lang', 'Next step')"/>
+                            </div>
+                            <div class="text-normal d-flex align-items-center">
+                                <i class="fa-solid fa-arrow-right-long"></i>
+                            </div>
                         </button>
                         <div id="submit-error" style="display: none">
                             <xsl:value-of select="php:function('lang', 'Please fill all fields')"/>
                         </div>
                     </div>
+
+
                 </div>
             </div>
         </form>

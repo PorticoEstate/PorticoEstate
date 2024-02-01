@@ -793,7 +793,7 @@ h4, .h4 {
   font-size: 0.875rem;
   line-height: 1.75rem;
 }
-.text-body {
+.text-body, .text-normal {
   font-size: 1rem;
   line-height: 1.75rem;
 }
@@ -2589,6 +2589,10 @@ textarea {
 }
 .pill > *:only-child {
   border-radius: 50px;
+}
+.pill .last-child {
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
 }
 
 .remark {

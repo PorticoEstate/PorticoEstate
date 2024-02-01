@@ -120,9 +120,13 @@
 
   }
 
-  > *:only-child {
+  > *:only-child  {
     border-radius: 50px;
 
+  }
+  .last-child {
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
   }
 
 }

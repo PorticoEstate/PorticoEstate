@@ -56,14 +56,51 @@ function applicationModel() {
     self.specialRequirements = ko.observable("");
     self.attachment = ko.observable();
     self.termAcceptDocs = ko.observableArray();
+    self.imageArray = ko.observableArray();
 
 
     self.selectedResource = ko.observable();
     self.descriptionExpanded = ko.observable(false);
 
+    self.formatDate = function (date) {
+        const from = luxon.DateTime.fromFormat(date.from_, "dd/MM/yyyy HH:mm");
+        const to = luxon.DateTime.fromFormat(date.to_, "dd/MM/yyyy HH:mm");
+
+        return FormatDateRange(from, to);
+    };
+
+    self.formatTimePeriod = function (date) {
+
+        const from = luxon.DateTime.fromFormat(date.from_, "dd/MM/yyyy HH:mm");
+        const to = luxon.DateTime.fromFormat(date.to_, "dd/MM/yyyy HH:mm");
+
+        return FormatTimeRange(from, to);
+
+    };
+
+
     self.toggleDescription = () => {
         self.descriptionExpanded(!self.descriptionExpanded())
     }
+
+
+    self.selectedResource.subscribe(newDate => {
+        const loadResourceData = () => {
+            getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_resource.index_images", filter_owner_id: self.selectedResource().id, length:-1}, true);
+            $.getJSON(getJsonURL, function (result)
+            {
+                if (result.ResultSet.Result.length > 0)
+                {
+                    self.imageArray(result.ResultSet.Result.map((img, indx) => {
+                        var src = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_resource.download", id: img.id, filter_owner_id: self.selectedResource().id}, false);
+                        // images.push({src, alt: ''})
+                        return {src, alt: img.description}
+                    }));
+                }
+            });
+        }
+        loadResourceData();
+    });
 
     self.resourceDescription = ko.computed(() => {
         const initialDesc = self.selectedResource()?.description;
@@ -368,7 +405,7 @@ function PopulatePostedDate() {
         $('#from_').val(formatSingleDate(StartTime));
         $('#to_').val(formatSingleDate(EndTime));
         $('#start_date').val(formatSingleDateWithoutHours(StartTime));
-        $('#selected_period').html(formatPeriodeHours(StartTime, EndTime));
+        // $('#selected_period').html(formatPeriodeHours(StartTime, EndTime));
         $('#start_date').prop('disabled', true);
 
         if (typeof (post_handle_order_table) === 'function') {
