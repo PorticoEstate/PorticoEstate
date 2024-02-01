@@ -119,17 +119,35 @@
 //        )
 //)
 //
+
+
+			if(!empty($ret['postadresse']) && count($ret['postadresse']) > 2)
+			{
+				$street	 = $this->mb_ucfirst(mb_convert_case($ret['postadresse'][0], MB_CASE_TITLE)) . ', '. $this->mb_ucfirst(mb_convert_case($ret['postadresse'][1], MB_CASE_LOWER));
+			}
+			else
+			{
+				$street	 = $this->mb_ucfirst(mb_convert_case($ret['postadresse'][0], MB_CASE_LOWER));
+			}
+
 			$ret['fornavn']			 = ucwords(mb_convert_case($ret['fornavn'],  MB_CASE_TITLE), "'");
 			$ret['mellomnavn']		 = ucwords(mb_convert_case($ret['mellomnavn'],  MB_CASE_TITLE), "'");
 			$ret['etternavn']		 = ucwords(mb_convert_case($ret['etternavn'],  MB_CASE_TITLE), "'");
 
-			$poststed = explode(' ', $ret['postadresse'][1]);
+			if(!empty($ret['postadresse']))
+			{
+				$poststed = explode(' ', end($ret['postadresse']));
+			}
+			else
+			{
+				$poststed = array('','');
+			}
 
 			$data['first_name']		 = $ret['fornavn'];
 			$data['middle_name']	 = $ret['mellomnavn'];
 			$data['last_name']		 = $ret['etternavn'];
 			$data['name']			 = empty($ret['mellomnavn']) ? "{$ret['fornavn']} {$ret['etternavn']}" : "{$ret['fornavn']} {$ret['mellomnavn']} {$ret['etternavn']}";
-			$data['street']			 = $this->mb_ucfirst(mb_convert_case($ret['postadresse'][0], MB_CASE_LOWER));
+			$data['street']			 = $street;
 			$data['zip_code']		 = $poststed[0];
 			$data['city']			 = mb_convert_case($poststed[1],  MB_CASE_TITLE);
 			$data['address_type']	 = $ret['adressegradering'];//"fortrolig"

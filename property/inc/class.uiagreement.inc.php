@@ -1813,7 +1813,7 @@
 				(
 				array('key'		 => 'activity_id', 'label'		 => lang('Activity ID'), 'sortable'	 => false,
 					'resizeable' => true),
-				array('key' => 'm_cost', label => lang('m_cost'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'm_cost', 'label' => lang('m_cost'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'w_cost', 'label' => lang('w_cost'), 'sortable' => false, 'resizeable' => true),
 				array('key'		 => 'total_cost', 'label'		 => lang('Total Cost'), 'sortable'	 => false,
 					'resizeable' => true),

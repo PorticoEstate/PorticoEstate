@@ -57,7 +57,7 @@
 		var $bypass_error	 = false;
 		var $account, $bo, $bocommon, $cats, $custom,$acl,$acl_location, $acl_read,$acl_add, $acl_edit,
 		$acl_delete, $acl_manage, $status_id, $wo_hour_cat_id, $user_id, $filter_year, $decimal_separator,
-		$type_id;
+		$type_id, $config;
 		var $public_functions = array
 			(
 			'query'							 => true,
@@ -122,6 +122,8 @@
 			$this->project_type_id	 = $this->bo->project_type_id;
 			$this->filter_year		 = $this->bo->filter_year;
 			$this->decimal_separator = ',';
+			$this->config				 = CreateObject('phpgwapi.config', 'property')->read();
+
 		}
 
 		function save_sessiondata()
@@ -623,6 +625,25 @@
 				'list'	 => $values_combo_box[7]
 			);
 
+			if (isset($this->config['budget_account_at_project']) && $this->config['budget_account_at_project'])
+			{
+				$values_combo_box[8]		 = execMethod('property.bogeneric.get_list', array(
+					'type' => 'budget_account',
+					'filter' => array('active' => 1),
+					'selected' => ''
+					));
+
+				$default_value		 = array('id' => '', 'name' => lang('select'));
+				array_unshift($values_combo_box[8], $default_value);
+				$combos[]			 = array
+					(
+					'type'	 => 'filter',
+					'name'	 => 'b_account_id',
+					'text'	 => lang('budget account'),
+					'list'	 => $values_combo_box[8]
+				);
+			}
+
 			return $combos;
 		}
 
@@ -1082,9 +1103,6 @@ JS;
 //			$values['ecodimb'] = phpgw::get_var('ecodimb');
 			$values['contact_id']	 = phpgw::get_var('contact', 'int', 'POST');
 
-			$config = CreateObject('phpgwapi.config', 'property');
-			$config->read();
-
 			$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record', 'property');
 
 			$insert_record_entity = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}", 'property');
@@ -1127,7 +1145,7 @@ JS;
 						'msg' => lang('Please select a valid budget account !'));
 				}
 			}
-			if (isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
+			if (isset($this->config['invoice_acl']) && $this->config['invoice_acl'] == 'dimb')
 			{
 				if (!$this->acl_manage)
 				{
@@ -1211,7 +1229,7 @@ JS;
 				$error_id					 = true;
 			}
 
-			if (!isset($config->config_data['project_optional_category']) || !$config->config_data['project_optional_category'])
+			if (!isset($this->config['project_optional_category']) || !$this->config['project_optional_category'])
 			{
 				if (!$values['cat_id'])
 				{
@@ -1303,11 +1321,11 @@ JS;
 				}
 			}
 
-			if ($values['approval'] && $values['mail_address'] && $config->config_data['project_approval'])
+			if ($values['approval'] && $values['mail_address'] && $this->config['project_approval'])
 			{
-				if (isset($config->config_data['project_approval_status']) && $config->config_data['project_approval_status'])
+				if (isset($this->config['project_approval_status']) && $this->config['project_approval_status'])
 				{
-					$values['status'] = $config->config_data['project_approval_status'];
+					$values['status'] = $this->config['project_approval_status'];
 				}
 			}
 
@@ -1376,9 +1394,7 @@ JS;
 
 			$id					 = phpgw::get_var('id', 'int');
 			$values_attribute	 = phpgw::get_var('values_attribute');
-			$config				 = CreateObject('phpgwapi.config', 'property');
 			$location_id		 = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
-			$config->read();
 
 			$values = $this->_populate();
 			if ($id)
@@ -1484,7 +1500,7 @@ JS;
 						if (isset($this->receipt['notice_owner']) && is_array($this->receipt['notice_owner']))
 						{
 							if ($this->account != $values['coordinator'] && isset($GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['notify_project_owner']
-							//							 && $config->config_data['mailnotification']
+							//							 && $this->config['mailnotification']
 							)
 							{
 								$prefs_coordinator = $this->bocommon->create_preferences('common', $values['coordinator']);
@@ -1720,8 +1736,6 @@ JS;
 			// end origin
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
-			$config		 = CreateObject('phpgwapi.config', 'property');
-			$config->read();
 
 			$record_history = array();
 			if ($this->bypass_error || ((!$this->receipt['error'] || $add_request) && !$bypass) && $id)
@@ -1821,7 +1835,7 @@ JS;
 
 			$b_account_data	 = array();
 			$ecodimb_data	 = array();
-			if (isset($config->config_data['budget_at_project']) && $config->config_data['budget_at_project'])
+			if (isset($this->config['budget_at_project']) && $this->config['budget_at_project'])
 			{
 				$b_account_group_data = $this->bocommon->initiate_ui_budget_account_lookup(array
 					(
@@ -1835,7 +1849,7 @@ JS;
 
 				$b_account_data = array();
 
-				if (isset($config->config_data['budget_account_at_project']) && $config->config_data['budget_account_at_project'])
+				if (isset($this->config['budget_account_at_project']) && $this->config['budget_account_at_project'])
 				{
 					$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array
 						(
@@ -2202,7 +2216,7 @@ JS;
 				)
 			);
 
-			$_formatter_voucher_link = isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'formatLink_invoicehandler_2' : '';//formatLink_voucher';
+			$_formatter_voucher_link = isset($this->config['invoicehandler']) && $this->config['invoicehandler'] == 2 ? 'formatLink_invoicehandler_2' : '';//formatLink_voucher';
 
 			$invoice_def = array(
 				array('key' => 'workorder_id', 'label' => lang('Workorder'), 'sortable' => true,
@@ -2647,7 +2661,7 @@ JS;
 
 			//----------------------------------------------datatable settings--------
 
-			$suppresscoordination = isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
+			$suppresscoordination = isset($this->config['project_suppresscoordination']) && $this->config['project_suppresscoordination'] ? 1 : '';
 
 			$year	 = date('Y') - 1;
 			$limit	 = $year + 8;
@@ -2717,7 +2731,7 @@ JS;
 				'ticket_link'						 => $GLOBALS['phpgw']->link('/index.php', $ticket_link_data),
 				'inherit_location'					 => $id ? $values['inherit_location'] : 1,
 				'mode'								 => $mode,
-				'suppressmeter'						 => isset($config->config_data['project_suppressmeter']) && $config->config_data['project_suppressmeter'] ? 1 : '',
+				'suppressmeter'						 => isset($this->config['project_suppressmeter']) && $this->config['project_suppressmeter'] ? 1 : '',
 				'suppresscoordination'				 => $suppresscoordination,
 				'custom_attributes'					 => array('attributes' => $values['attributes']),
 				'lookup_functions'					 => isset($values['lookup_functions']) ? $values['lookup_functions'] : '',
@@ -2862,7 +2876,7 @@ JS;
 				'street_number'						 => $values['location_data']['street_number'],
 				'image_list'						 => $image_list,
 				'tag_list'							 => array('options' => $bofiles->get_all_tags()),
-				'collect_tax_code'						 => !empty($config->config_data['workorder_require_tax_code']),
+				'collect_tax_code'						 => !empty($this->config['workorder_require_tax_code']),
 				'tax_code_list'							 => array('options' => $this->bocommon->select_category_list(
 					array(
 						'type' => 'tax',
@@ -3000,14 +3014,12 @@ JS;
 				);
 
 //			$invoices			 = array_merge($active_invoices, $historical_invoices);
-			$config				 = CreateObject('phpgwapi.config', 'property');
-			$config->read();
 
 			$values = array();
 			foreach ($invoices as $entry)
 			{
 
-				if (isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2)
+				if (isset($this->config['invoicehandler']) && $this->config['invoicehandler'] == 2)
 				{
 					$voucher_id = $entry['transfer_time'] ? -1 * $entry['voucher_id'] : $entry['voucher_id'];
 				}

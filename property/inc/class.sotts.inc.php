@@ -1482,6 +1482,8 @@
 			$old_payment_type		 = (int)$this->db->f('payment_type');
 
 			$ticket['tenant_id']= $this->db->f('tenant_id');
+			$ticket['order_sent']= $order_sent;
+			$ticket['verified_transfered']= $this->db->f('verified_transfered');
 
 			if ($oldcat_id == 0)
 			{
