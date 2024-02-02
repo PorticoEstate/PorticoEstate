@@ -48,20 +48,26 @@
 
                                 <div class="modal-body d-flex flex-column pt-0 pb-4">
                                     <h2 class="mb-1" style="font-weight:400">Fasiliteter</h2>
-                                    <p  class="mb-1 small">Fasiliteter som er tilgjengelige på utleieobjektene du har valgt. </p>
+                                    <p class="mb-1 small">Fasiliteter som er tilgjengelige på utleieobjektene du har
+                                        valgt.
+                                    </p>
                                     <div data-bind="foreach: selectedResourcesWithFacilities">
                                         <div class="">
-                                            <div class="border-bottom p-2" style="font-size: 1.25rem" data-bind="text: resourceName"></div>
+                                            <div class="border-bottom p-2" style="font-size: 1.25rem"
+                                                 data-bind="text: resourceName"></div>
                                             <div data-bind="foreach: facilities">
-                                                <div class="border-bottom p-2" style="padding-left: 1.5rem!important" data-bind="text: name"></div>
+                                                <div class="border-bottom p-2" style="padding-left: 1.5rem!important"
+                                                     data-bind="text: name"></div>
                                             </div>
 
                                         </div>
 
                                     </div>
                                     <div class="modal-footer border-0">
-                                        <button type="button" class="pe-btn pe-btn-primary text-grey-light" data-bs-dismiss="modal"
-                                                aria-label="Close">Ok</button>
+                                        <button type="button" class="pe-btn pe-btn-primary text-grey-light"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close">Ok
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -186,11 +192,11 @@
                                 <div class="row">
 
                                     <time-picker
-                                            class="col-5 mb-4 d-flex flex-column align-items-center"
+                                            class="col-6 mb-4 d-flex flex-column align-items-center"
                                             params="selectedTime: bookingStartTime, placeholderText: '{php:function('lang', 'from')}'"></time-picker>
 
                                     <time-picker
-                                            class="col-5 mb-4 d-flex flex-column align-items-center"
+                                            class="col-6 mb-4 d-flex flex-column align-items-center"
                                             params="selectedTime: bookingEndTime, placeholderText: '{php:function('lang', 'to')}'"></time-picker>
                                     <!-- From Time Pick -->
                                     <!--                                <div class="col-5 mb-4 d-flex flex-column align-items-center">-->
@@ -216,9 +222,13 @@
                                     <!--                                            </input>-->
                                     <!--                                        </label>-->
                                     <!--                                    </div>-->
-                                    <div class="col-2 d-flex justify-content-center">
+                                </div>
+                                <div class="row">
+                                    <div class="d-flex justify-content-end">
                                         <div>
-                                            <button class="btn btn-success" data-bind="click: addDate">+</button>
+                                            <button class="pe-btn pe-btn-secondary" data-bind="click: addDate">+ Legg
+                                                til leieperiode
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -260,8 +270,8 @@
                         </div>
                         <article-table
                                 params="selectedResources: selectedResourcesOld, date: date"></article-table>
-<!--                        <article-table-old-->
-<!--                                params="selectedResources: selectedResourcesOld, date: date"></article-table-old>-->
+                        <!--                        <article-table-old-->
+                        <!--                                params="selectedResources: selectedResourcesOld, date: date"></article-table-old>-->
                     </xsl:if>
 
 
@@ -500,7 +510,7 @@
             </div>
         </form>
 
-<!--        <pre data-bind="text: ko.toJSON(am, null, 2)"></pre>-->
+        <!--        <pre data-bind="text: ko.toJSON(am, null, 2)"></pre>-->
 
         <div class="push"></div>
     </div>
