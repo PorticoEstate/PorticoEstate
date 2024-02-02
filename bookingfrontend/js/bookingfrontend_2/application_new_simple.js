@@ -60,7 +60,6 @@ function applicationModel() {
 
 
     self.selectedResource = ko.observable();
-    self.descriptionExpanded = ko.observable(false);
 
     self.formatDate = function (date) {
         const from = luxon.DateTime.fromFormat(date.from_, "dd/MM/yyyy HH:mm");
@@ -79,6 +78,7 @@ function applicationModel() {
     };
 
 
+    self.descriptionExpanded = ko.observable(false);
     self.toggleDescription = () => {
         self.descriptionExpanded(!self.descriptionExpanded())
     }
