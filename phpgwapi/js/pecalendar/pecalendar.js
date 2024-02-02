@@ -809,15 +809,28 @@ class PECalendar {
         //                     resizeDirection = 'bottom';
         //                 }
         //                 return;
-        //             }
+        //
+        //            }
+        let endTime;
+        if(event.type === 'touchend') {
+            //1 hour later
+            const parts = startTime.split(':');
+            let hours = parseInt(parts[0], 10);
+            const minutes = parts[1];
+            const seconds = parts[2];
+            hours += 1;
+            endTime = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
+        } else {
+            // 30 minutes later
+            endTime = startTime.split(":")[0] + ":30:00";
+        }
 
-        const thirtyMinutesLater = startTime.split(":")[0] + ":30:00";
         const resource = this.resources()[this.resource_id()];
 
         const testEvent = {
             id: `TOTEST`,
             from: startTime,
-            to: thirtyMinutesLater,
+            to: endTime,
             date: date,
             resources: [
                 resource
@@ -831,10 +844,17 @@ class PECalendar {
         }
 
         // console.log(testEvent);
-        this.tempEvent(this.createTemporaryEvent(this.dragStart(), thirtyMinutesLater, date));
+        this.tempEvent(this.createTemporaryEvent(this.dragStart(), endTime, date));
         //
         //
-        this.updateTemporaryEvent(this.tempEvent(), this.dragStart(), thirtyMinutesLater);
+        this.updateTemporaryEvent(this.tempEvent(), this.dragStart(), endTime);
+
+        if(event.type === 'touchend') {
+            this.isDragging(false);
+
+            // Finalize the temporary event
+            this.finalizeTemporaryEvent();
+        }
 
         // Create a temporary event at the start time
         // this.tempEvent(this.createTemporaryEvent(startTime));
@@ -1156,8 +1176,7 @@ if (globalThis['ko']) {
                         <div id="tempEventPills" class="pills"
                              data-bind="foreach: combinedTempEvents(), css: {'collapsed': !showAllTempEventPills()}">
                             <div class="pill pill--secondary">
-                                <div class="pill-date" data-bind="text: $parent.formatPillDateInterval($data)">2. nov
-                                </div>
+                                <div class="pill-date" data-bind="text: $parent.formatPillDateInterval($data)"></div>
                                 <div class="pill-divider"></div>
                                 <div class="pill-content"
                                      data-bind="text: $parent.formatPillTimeInterval($data)"></div>
@@ -1243,7 +1262,7 @@ if (globalThis['ko']) {
                         <div class="time text-body" data-bind="text: timeLabel, style: { 'gridRow': gridRowStyle }"></div>
                     </div>
                     <div class="content"
-                         data-bind="style: {'grid-template-rows': 'repeat(' + (endHour() - startHour()) * hourParts() + ', calc(3rem/' + hourParts() + '))'}, event: {mousedown: $component.handleMouseDown, mousemove: $component.handleMouseMove, mouseup: $component.handleMouseUp}">
+                         data-bind="style: {'grid-template-rows': 'repeat(' + (endHour() - startHour()) * hourParts() + ', calc(3rem/' + hourParts() + '))'}, event: {mousedown: $component.handleMouseDown, touchend: $component.handleMouseDown, mousemove: $component.handleMouseMove, mouseup: $component.handleMouseUp}">
                         <!-- Rows -->
                         <!-- ko foreach: rows -->
                         <div class="row" data-bind="attr: { style: gridRowStyle }"></div>
