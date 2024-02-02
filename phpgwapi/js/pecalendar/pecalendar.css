@@ -771,7 +771,7 @@ h4, .h4 {
   font-size: 0.875rem;
   line-height: 1.75rem;
 }
-.text-body {
+.text-body, .text-normal {
   font-size: 1rem;
   line-height: 1.75rem;
 }

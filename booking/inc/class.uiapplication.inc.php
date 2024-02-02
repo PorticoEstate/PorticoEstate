@@ -1664,7 +1664,14 @@
 					self::add_javascript('booking', 'base', 'purchase_order_edit.js');
 				}
 			}
-			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && !$simple)
+
+            if ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bookingfrontend_2') {
+                self::add_javascript('bookingfrontend', 'bookingfrontend_2', 'components/light-box.js', true);
+                $GLOBALS['phpgw']->css->add_external_file("bookingfrontend/js/bookingfrontend_2/components/light-box.css");
+
+            }
+
+            if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && !$simple)
 			{
 				$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
 				self::add_javascript('bookingfrontend', 'base', 'application_new.js', true);

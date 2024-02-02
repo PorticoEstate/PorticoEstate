@@ -141,13 +141,13 @@ function generateRandomString(length) {
 /**
  * Formats a date range string.
  *
- * @param {boolean} useYear - forces the use of the year in formatted output.
- *
  * @param {number | Date | DateTime} start - The start date of the range, can be a Unix timestamp in ms,
  * a JavaScript Date object or a Luxon DateTime object.
  *
  * @param {number | Date | DateTime | undefined} end - The end date of the range, can be a Unix timestamp in ms,
  * a JavaScript Date object or a Luxon DateTime object.
+ *
+ * @param {boolean?} useYear - forces the use of the year in formatted output.
  *
  * @returns {string} - Formatted date range string in Norwegian ('no') locale.
  */
@@ -175,6 +175,32 @@ function FormatDateRange(start, end, useYear) {
     }
 }
 
+
+/**
+ * Formats the given Unix timestamps, JavaScript Date objects or Luxon DateTime objects into a time range string.
+ * @param {number | Date | DateTime} start - The start Unix timestamp
+ * a JavaScript Date object or a Luxon DateTime object.
+ * @param {number | Date | DateTime} end - The end Unix timestamp
+ * a JavaScript Date object or a Luxon DateTime object.
+ * @returns {string} - Formatted time range string.
+ */
+function FormatTimeRange(start, end) {
+    const toDate = value => {
+        if (typeof value === 'number') {
+            return new Date(value);
+        }
+        if (value instanceof DateTime) {
+            return value.toJSDate();
+        }
+        return value;
+    }
+
+    const startTime = toDate(start);
+    const endTime = toDate(end);
+    const options = {hour: '2-digit', minute: '2-digit'};
+
+    return `${startTime.toLocaleTimeString('no', options).replace(':', '.')} - ${endTime.toLocaleTimeString('no', options).replace(':', '.')}`;
+}
 
 function formatDateToDateTimeString(date) {
     const pad = (num) => (num < 10 ? '0' + num : num.toString());
