@@ -99,13 +99,13 @@
 		'fm_bim_item_checklist' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
-				'item_location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'type_location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => 150, 'nullable' => False),
 				'active' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
 			),
 			'pk' => array('id'),
-			'fk' => array('fm_bim_type' => array('item_location_id' => 'location_id')),
+			'fk' => array('fm_bim_type' => array('type_location_id' => 'location_id')),
 			'ix' => array(),
 			'ix' => array(),
 			'uc' => array()
@@ -127,7 +127,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
 				'checklist_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
-				'item_location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'type_location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'stage_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'json_representation' => array('type' => 'jsonb', 'nullable' => False),
@@ -135,7 +135,7 @@
 			'pk' => array('id'),
 			'fk' => array(
 				'fm_bim_item_checklist' => array('checklist_id' => 'id'),
-				'fm_bim_item' => array('item_id' => 'id', 'item_location_id' => 'location_id'),
+				'fm_bim_item' => array('item_id' => 'id', 'type_location_id' => 'location_id'),
 				'fm_bim_item_checklist_stage' => array('stage_id' => 'id'),
 				),
 			'ix' => array(),

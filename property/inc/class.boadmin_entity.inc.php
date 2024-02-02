@@ -89,7 +89,7 @@
 			'get_category_list'	 => true,
 			'get_attrib_list'	 => true
 		);
-		var $type_app,$bocommon,$so,$allrows;
+		var $type_app,$bocommon,$so,$allrows,$location_id, $acl_location;
 
 		function __construct()
 		{
@@ -105,6 +105,22 @@
 			$allrows	 = phpgw::get_var('allrows', 'bool');
 			$entity_id	 = phpgw::get_var('entity_id', 'int');
 
+			$location_id = phpgw::get_var('location_id', 'int');
+			if ($location_id)
+			{
+				$loc_arr	 = $GLOBALS['phpgw']->locations->get_name($location_id);
+				$type_arr	 = explode('.', $loc_arr['location']);
+				if (count($type_arr) != 4)
+				{
+					return array();
+				}
+
+				$type		 = $type_arr[1];
+				$entity_id	 = $type_arr[2];
+				$cat_id		 = $type_arr[3];
+			}
+
+
 			$this->so		 = CreateObject('property.soadmin_entity', '', '', $this->bocommon);
 			$this->type_app	 = $this->so->get_type_app();
 
@@ -115,7 +131,28 @@
 			$this->type		 = isset($type) && $type && isset($this->type_app[$type]) ? $type : 'entity';
 			$this->cat_id	 = isset($cat_id) && $cat_id ? $cat_id : '';
 			$this->entity_id = isset($entity_id) && $entity_id ? $entity_id : '';
-			$this->allrows	 = phpgw::get_var('allrows', 'bool');
+			$this->acl_location	 = '.admin.entity';
+
+			if(!$location_id)
+			{
+				if($this->cat_id)
+				{
+					$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
+				}
+				else if($this->entity_id)
+				{
+					$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}");
+				}
+				else
+				{
+					$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location);
+
+				}
+			}
+
+			$this->location_id = !empty($location_id) ? $location_id : null;
+
+			$this->allrows	 = $allrows;
 			$this->so->type	 = $this->type;
 		}
 
@@ -424,6 +461,13 @@
 			);
 			$this->total_records = $this->custom->total_records;
 			return $attrib;
+		}
+
+		function read_checklist( $data )
+		{
+			$values = $this->so->read_checklist($data);
+			$this->total_records = $this->so->total_records;
+			return $values;
 		}
 
 		function read_single_attrib( $entity_id, $cat_id, $id )

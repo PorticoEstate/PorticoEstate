@@ -64,7 +64,8 @@
 			'save_category'				 => true,
 			'add_choice_value'			 => true,
 			'delete_choice_value'		 => true,
-			'list_checklist'			 => true
+			'list_checklist'			 => true,
+			'edit_checklist'			 => true,
 		);
 		private $bo;
 		var $account,$bocommon, $entity_id, $cat_id,$allrows,$type, $type_app,
@@ -90,14 +91,14 @@
 			$this->type			 = $this->bo->type;
 			$this->type_app		 = $this->bo->type_app;
 			$this->acl			 = & $GLOBALS['phpgw']->acl;
-			$this->acl_location	 = '.admin.entity';
+			$this->acl_location	 = $this->bo->acl_location;
 			$this->acl_read		 = $this->acl->check($this->acl_location, PHPGW_ACL_READ, $this->type_app[$this->type]);
 			$this->acl_add		 = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, $this->type_app[$this->type]);
 			$this->acl_edit		 = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, $this->type_app[$this->type]);
 			$this->acl_delete	 = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, $this->type_app[$this->type]);
 			$this->acl_manage	 = $this->acl->check($this->acl_location, 16, $this->type_app[$this->type]);
 
-			$location_id = phpgw::get_var('location_id', 'int');
+			$location_id 		 = $this->bo->location_id;
 
 			if(!$location_id)
 			{
@@ -279,7 +280,8 @@
 				'order'		 => $columns[$order[0]['column']]['data'],
 				'allrows'	 => phpgw::get_var('length', 'int') == -1 || $export,
 				'entity_id'	 => $entity_id,
-				'cat_id'	 => $cat_id
+				'cat_id'	 => $cat_id,
+				'location_id' => $this->location_id,
 			);
 
 			$result_objects	 = array();
@@ -291,7 +293,7 @@
 					$values	 = $this->bo->read_category($params);
 					break;
 				case 'list_checklist':
-					$values	 = $this->bo->read_attrib($params);
+					$values	 = $this->bo->read_checklist($params);
 					break;
 				case 'list_attribute':
 					$values	 = $this->bo->read_attrib($params);
@@ -325,7 +327,7 @@
 			{
 				case 'list_checklist':
 					$variable	 = array(
-						'menuaction'	 => 'property.uiadmin_entity.list_checklist',
+						'menuaction'	 => 'property.uiadmin_entity.edit_checklist',
 						'allrows'		 => $this->allrows,
 						'location_id'	 => $this->location_id
 					);
@@ -2402,6 +2404,14 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
 		}
 
+		function edit_checklist()
+		{
+			if (!$this->acl_edit)
+			{
+				phpgw::no_access();
+			}
+
+		}
 		function list_checklist()
 		{
 			if (!$this->acl_read)
@@ -2439,11 +2449,6 @@
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				if ($resort)
-				{
-					$this->bo->resort_attrib($id, $resort);
-				}
-
 				return $this->query(array(
 						'method'	 => 'list_checklist'
 						)
@@ -2480,14 +2485,12 @@
 				),
 				'datatable'		 => array(
 					'source'		 => self::link(array(
-						'menuaction'		 => 'property.uiadmin_entity.list_attribute',
-						'entity_id'			 => $entity_id,
-						'cat_id'			 => $cat_id,
-						'type'				 => $this->type,
+						'menuaction'		 => 'property.uiadmin_entity.list_checklist',
+						'location_id' 		 => $this->location_id,
 						'phpgw_return_as'	 => 'json'
 					)),
 					'new_item'		 => self::link(array(
-						'menuaction' => 'property.uiadmin_entity.edit_attrib',
+						'menuaction' => 'property.uiadmin_entity.edit_checklist',
 						'entity_id'	 => $entity_id,
 						'cat_id'	 => $cat_id,
 						'type'		 => $this->type
@@ -2496,58 +2499,21 @@
 					'editor_action'	 => '',
 					'field'			 => array(
 						array(
-							'key'		 => 'column_name',
+							'key'		 => 'id',
+							'label'		 => lang('ID'),
+							'sortable'	 => true,
+							'formatter' => 'JqueryPortico.formatLink'
+						),
+						array(
+							'key'		 => 'name',
 							'label'		 => lang('Name'),
 							'sortable'	 => true
 						),
 						array(
-							'key'		 => 'input_text',
-							'label'		 => lang('Descr'),
+							'key'		 => 'location_id',
+							'label'		 => lang('location id'),
 							'sortable'	 => false
 						),
-						array(
-							'key'		 => 'trans_datatype',
-							'label'		 => lang('Datatype'),
-							'sortable'	 => false
-						),
-						array(
-							'key'		 => 'group_id',
-							'label'		 => lang('group'),
-							'sortable'	 => false
-						),
-						array(
-							'key'		 => 'attrib_sort',
-							'label'		 => lang('sorting'),
-							'sortable'	 => true
-						),
-						array(
-							'key'		 => 'up',
-							'label'		 => lang('up'),
-							'sortable'	 => false,
-							'formatter'	 => 'JqueryPortico.formatLinkGenericLlistAttribute'
-						),
-						array(
-							'key'		 => 'down',
-							'label'		 => lang('down'),
-							'sortable'	 => false,
-							'formatter'	 => 'JqueryPortico.formatLinkGenericLlistAttribute'
-						),
-						array(
-							'key'		 => 'search',
-							'label'		 => lang('search'),
-							'sortable'	 => false
-						),
-						array(
-							'key'		 => 'id',
-							'label'		 => lang('id'),
-							'sortable'	 => false,
-							'hidden'	 => true
-						),
-						array(
-							'key'		 => 'short_description',
-							'label'		 => lang('short description'),
-							'sortable'	 => false
-						)
 					)
 				)
 			);
