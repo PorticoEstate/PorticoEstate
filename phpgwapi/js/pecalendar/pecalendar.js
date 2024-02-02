@@ -1240,7 +1240,7 @@ if (globalThis['ko']) {
                     <!-- Time Slots Sidebar -->
                     <div class="time-container"
                          data-bind="foreach: calendarTimeSlots, style: {'grid-template-rows': 'repeat(' + (endHour() - startHour()) * hourParts() + ', calc(3rem/' + hourParts() + '))'}">
-                        <div class="time" data-bind="text: timeLabel, style: { 'gridRow': gridRowStyle }"></div>
+                        <div class="time text-body" data-bind="text: timeLabel, style: { 'gridRow': gridRowStyle }"></div>
                     </div>
                     <div class="content"
                          data-bind="style: {'grid-template-rows': 'repeat(' + (endHour() - startHour()) * hourParts() + ', calc(3rem/' + hourParts() + '))'}, event: {mousedown: $component.handleMouseDown, mousemove: $component.handleMouseMove, mouseup: $component.handleMouseUp}">
