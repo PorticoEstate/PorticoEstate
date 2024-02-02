@@ -70,6 +70,7 @@ ko.components.register('time-picker', {
         };
 
 
+
         self.hideDropdown = function () {
             dropdown.style.display = 'none';
         };
@@ -215,11 +216,22 @@ function applicationModel() {
             return bc.applicationCartItems();
         });
     }
+    self.formStep = ko.observable(0)
 
 
     self.bookingDate = ko.observable('')
     self.bookingStartTime = ko.observable('');
     self.bookingEndTime = ko.observable('');
+    
+    self.goNext = () => {
+        self.formStep(self.formStep() + 1);
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    self.goPrev = () => {
+        self.formStep(self.formStep() - 1);
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
 
 
     self.formatDate = function (date) {

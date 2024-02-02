@@ -294,7 +294,7 @@
                     <div id="submitContainer" class="d-flex gap-4 justify-content-end">
                         <a class="link-text link-text-primary pe-btn pe-btn-secondary  d-flex align-items-center gap-2" style="width: fit-content" href="{application/frontpage_link}">
                             <div class="text-normal">
-                                <xsl:value-of select="php:function('lang', 'Cancel')"/>
+                                <xsl:value-of select="php:function('lang', 'exit to homepage')"/>
                             </div>
                         </a>
                         <button id="submitBtn"
