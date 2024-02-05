@@ -1520,6 +1520,7 @@
 					$entry = array_merge($entry, $order_info);
 				}
 
+
 				if ($search)
 				{
 					$pattern = str_replace('/', '\/', $search);
@@ -1528,8 +1529,7 @@
 						&& !preg_match("/$pattern/i", $entry['vendor_name'])
 						&& !preg_match("/$pattern/", $entry['cadastral_unit'])
 						&& !preg_match("/$pattern/i", $entry['location_code'])
-						&& !preg_match("/$pattern/", $entry['building_number'])
-
+						&& !preg_match("/$pattern/", implode(', ',(array)$entry['building_number']))
 						)
 					{
 						continue;
