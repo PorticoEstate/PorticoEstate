@@ -66,6 +66,7 @@
 			'delete_choice_value'		 => true,
 			'list_checklist'			 => true,
 			'edit_checklist'			 => true,
+			'save_checklist'			 => true
 		);
 		private $bo;
 		var $account,$bocommon, $entity_id, $cat_id,$allrows,$type, $type_app,
@@ -293,6 +294,7 @@
 					$values	 = $this->bo->read_category($params);
 					break;
 				case 'list_checklist':
+					$params['type_location_id'] = $this->location_id;
 					$values	 = $this->bo->read_checklist($params);
 					break;
 				case 'list_attribute':
@@ -329,7 +331,6 @@
 					$variable	 = array(
 						'menuaction'	 => 'property.uiadmin_entity.edit_checklist',
 						'allrows'		 => $this->allrows,
-						'location_id'	 => $this->location_id
 					);
 					array_walk($result_data['results'], array($this, '_add_links'), $variable);
 					break;
@@ -2411,7 +2412,186 @@
 				phpgw::no_access();
 			}
 
+			$type_location_id	 = phpgw::get_var('type_location_id', 'int');
+			$location_id		 = $this->location_id;
+			$id				 = phpgw::get_var('id', 'int');
+			$values			 = phpgw::get_var('values');
+			$template_attrib = phpgw::get_var('template_attrib');
+
+			$tabs			 = array();
+			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
+			$active_tab		 = 'general';
+
+			if ($template_attrib)
+			{
+				$values['template_attrib'] = array_values(explode(',', $template_attrib));
+			}
+
+			if ($id)
+			{
+				$values			 = $this->bo->read_single_checklist($id);
+				$function_msg	 = lang('edit checklist');
+				$action			 = 'edit';
+			}
+			else
+			{
+				$function_msg	 = lang('add checklist');
+				$action			 = 'add';
+			}
+
+
+			$link_data = array(
+				'menuaction'		 => 'property.uiadmin_entity.save_checklist',
+				'type_location_id'	 => $type_location_id,
+				'id'				 => $id
+			);
+
+			$checklist_list = $this->bo->read_checklist(array($type_location_id));
+
+
+			$myColumnDefs = array(
+				array('key'		 => 'attrib_id', 'label'		 => lang('id'), 'sortable'	 => false,
+					'resizeable' => true,
+					'hidden'	 => false),
+				array('key' => 'name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
+				array('key'		 => 'datatype', 'label'		 => lang('datatype'), 'sortable'	 => false,
+					'resizeable' => true),
+				array('key'		 => 'select', 'label'		 => lang('select'), 'sortable'	 => false,
+					'resizeable' => false,
+					'formatter'	 => 'myFormatterCheck', 'width'		 => 30)
+			);
+
+			$datatable_def = array();
+
+			$datatable_def[] = array(
+				'container'	 => 'datatable-container_0',
+				'requestUrl' => "''",
+				'ColumnDefs' => $myColumnDefs,
+				'data'		 => json_encode(array()),
+				'config'	 => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+
+			$msgbox_data		 = $this->bocommon->msgbox_data($this->receipt);
+
+			$loc_arr	 = $GLOBALS['phpgw']->locations->get_name($type_location_id);
+
+			$data = array(
+				'entity_name'							 => $loc_arr['descr'],
+				'datatable_def'							 => $datatable_def,
+				'msgbox_data'							 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'form_action'							 => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'done_action'							 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.list_checklist',
+																'location_id'	 => $type_location_id)),
+				'base_java_url'							 => json_encode(array('menuaction' => "property.uiadmin_entity.get_template_attributes")),
+				'value_id'								 => $id,
+				'value_name'							 => $values['name'],
+				'type_location_id'						 => $type_location_id,
+				'location_id'							 => $location_id,
+				'value_descr'							 => $values['descr'],
+				'checklist_list'						 => array('options' => $checklist_list),
+				'fileupload'							 => true,
+				'value_fileupload'						 => $values['fileupload'],
+				'tabs'									 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'validator'								 => phpgwapi_jquery::formvalidator_generate()
+			);
+
+			$appname = lang('entity');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
+
+			phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('numberformat');
+
+			self::add_javascript('property', 'base', 'admin_entity.edit_checklist.js');
+
+			self::render_template_xsl(array('admin_entity', 'datatable_inline', 'nextmatchs'), array(
+				'edit_checklist' => $data));
+		
+	
 		}
+
+		public function save_checklist()
+		{
+			if (!$this->acl_add)
+			{
+				phpgw::no_access();
+			}
+			if (!$_POST)
+			{
+				return $this->edit_category();
+			}
+
+			$type_location_id	 = phpgw::get_var('type_location_id', 'int');
+			$id					 = phpgw::get_var('id', 'int');
+			$values				 = phpgw::get_var('values');
+			$template_attrib	 = phpgw::get_var('template_attrib');
+
+			if ($template_attrib)
+			{
+				$values['template_attrib'] = array_values(explode(',', $template_attrib));
+			}
+
+			$values['type_location_id'] = $type_location_id;
+
+			if (!$values['name'])
+			{
+				$this->receipt['error'][] = array('msg' => lang('Name not entered!'));
+			}
+			if (!$values['type_location_id'])
+			{
+				$this->receipt['error'][] = array('msg' => lang('Entity not chosen'));
+			}
+
+			if ($id)
+			{
+				$values['id']	 = $id;
+				$action			 = 'edit';
+			}
+			else
+			{
+				$action			 = 'add';
+			}
+
+			if (!$this->receipt['error'])
+			{
+				try
+				{
+					$this->receipt = $this->bo->save_checklist($values, $action);
+					if (!$id)
+					{
+						$id = $this->receipt['id'];
+					}
+				}
+				catch (Exception $e)
+				{
+					if ($e)
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error');
+						$this->edit_category($values);
+						return;
+					}
+				}
+
+				$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+				$message	 = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+
+				phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
+				$GLOBALS['phpgw']->redirect_link('/index.php', array(
+					'menuaction' => 'property.uiadmin_entity.edit_checklist',
+					'id'		 => $id
+					)
+				);
+			}
+			else
+			{
+				$this->receipt['error'][] = array('msg' => lang('checklist has NOT been saved'));
+				$this->edit_category($values);
+			}
+		}
+
 		function list_checklist()
 		{
 			if (!$this->acl_read)
@@ -2486,14 +2666,12 @@
 				'datatable'		 => array(
 					'source'		 => self::link(array(
 						'menuaction'		 => 'property.uiadmin_entity.list_checklist',
-						'location_id' 		 => $this->location_id,
+						'location_id'		 => $this->location_id,
 						'phpgw_return_as'	 => 'json'
 					)),
 					'new_item'		 => self::link(array(
-						'menuaction' => 'property.uiadmin_entity.edit_checklist',
-						'entity_id'	 => $entity_id,
-						'cat_id'	 => $cat_id,
-						'type'		 => $this->type
+						'menuaction'	 => 'property.uiadmin_entity.edit_checklist',
+						'type_location_id'	 => $this->location_id,
 					)),
 					'allrows'		 => true,
 					'editor_action'	 => '',
@@ -2502,7 +2680,7 @@
 							'key'		 => 'id',
 							'label'		 => lang('ID'),
 							'sortable'	 => true,
-							'formatter' => 'JqueryPortico.formatLink'
+							'formatter'	 => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key'		 => 'name',

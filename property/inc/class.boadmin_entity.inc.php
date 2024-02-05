@@ -264,6 +264,16 @@
 			return $this->so->read_single_category($entity_id, $cat_id);
 		}
 
+		/**
+		 * 
+		 * @param int $id
+		 * @return array checklist
+		 */
+		function read_single_checklist( $id )
+		{
+			return $this->so->read_single_checklist($id);
+		}
+
 		function save( $values, $action = '' )
 		{
 			if ($action == 'edit')
@@ -309,6 +319,35 @@
 			}
 			return $receipt;
 		}
+
+		function save_checklist( $values, $action = '' )
+		{
+			if ($action == 'edit')
+			{
+				if ($values['id'] != '')
+				{
+					$receipt = $this->so->edit_checklist($values);
+				}
+			}
+			else
+			{
+				$receipt = $this->so->add_checklist($values);
+				if (!empty($values['checklist_template']) && isset($receipt['id']) && $receipt['id'])
+				{
+					$values2 = array(
+						'entity_id'			 => $values['entity_id'],
+						'cat_id'			 => $receipt['id'],
+						'category_template'	 => $values['category_template'],
+						'selected'			 => $values['template_attrib']
+					);
+
+//					$this->_add_attrib_from_template($values2);
+				}
+			}
+			return $receipt;
+		}
+
+
 
 		protected function _add_attrib_from_template( $values )
 		{

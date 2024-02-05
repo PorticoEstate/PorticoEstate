@@ -1263,8 +1263,8 @@
 
 		function read_checklist( $data )	
 		{
-			$location_id = (int) $data['location_id'];
-			$sql = "SELECT * FROM fm_bim_item_checklist WHERE type_location_id = {$location_id} ORDER BY id ASC";
+			$type_location_id = (int) $data['type_location_id'];
+			$sql = "SELECT * FROM fm_bim_item_checklist WHERE type_location_id = {$type_location_id} ORDER BY id ASC";
 			$this->db->query($sql, __LINE__, __FILE__);
 			
 			$values = array();
