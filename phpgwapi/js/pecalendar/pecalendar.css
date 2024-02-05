@@ -1379,6 +1379,17 @@ h4, .h4 {
   display: flex;
   justify-content: center;
 }
+.time-slot-card .time-slot-date-time .time-slot-date-container .single-date {
+  display: flex;
+  gap: 0.25rem;
+  flex-direction: column;
+}
+.time-slot-card .time-slot-date-time .time-slot-date-container .multi-date {
+  display: flex;
+  gap: 0.25rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
 .time-slot-card .time-slot-button {
   padding-right: 1rem;
   padding-left: 1rem;

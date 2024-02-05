@@ -2526,7 +2526,7 @@ textarea {
   --main-divider-color: #793C8A;
   --main-text-color: #000000;
 }
-.pill .pill-date, .pill .pill-divider, .pill .pill-content, .pill .pill-icon {
+.pill .pill-date, .pill .pill-divider, .pill .pill-content, .pill .pill-icon, .pill .pill-time {
   padding-top: 5px;
   padding-bottom: 5px;
   background-color: var(--main-bg-color);
@@ -2562,7 +2562,7 @@ textarea {
   background-color: var(--main-divider-color);
   opacity: var(--main-divider-opacity);
 }
-.pill .pill-content {
+.pill .pill-content, .pill .pill-time {
   grid-area: summary;
   padding-right: 10px;
   padding-left: 10px;
@@ -2593,6 +2593,20 @@ textarea {
 .pill .last-child {
   border-top-right-radius: 50px;
   border-bottom-right-radius: 50px;
+}
+.pill .multi-date {
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
+  background-color: var(--main-bg-color);
+  padding-right: 15px; /* Adjust padding if necessary */
+  align-items: center;
+}
+.pill .multi-date .date {
+  grid-area: date;
+}
+.pill .multi-date .time {
+  grid-area: summary;
 }
 
 .remark {

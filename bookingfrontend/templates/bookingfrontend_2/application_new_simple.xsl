@@ -65,13 +65,8 @@
                                            data-bind="value: from_"/>
                                     <input class="datetime" required="true" name="to_[]" hidden="hidden"
                                            data-bind="value: to_"/>
-                                    <div class="pill pill--secondary">
+                                    <time-slot-pill params="date: $data"></time-slot-pill>
 
-                                        <div class="pill-date" data-bind="text: $parent.formatDate($data)"></div>
-                                        <div class="pill-divider"></div>
-                                        <div class="pill-content last-child"
-                                             data-bind="text: $parent.formatTimePeriod($data)"></div>
-                                    </div>
                                     <!--                                    <pre data-bind="text: ko.toJSON($data)"></pre>-->
 
                                 </div>

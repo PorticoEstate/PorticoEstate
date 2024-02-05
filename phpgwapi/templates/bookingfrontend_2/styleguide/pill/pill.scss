@@ -45,7 +45,7 @@
   }
 
 
-  .pill-date, .pill-divider, .pill-content, .pill-icon {
+  .pill-date, .pill-divider, .pill-content, .pill-icon, .pill-time {
     padding-top: 5px;
     padding-bottom: 5px;
     background-color: var(--main-bg-color); // A custom purple background
@@ -89,7 +89,7 @@
     }
   }
 
-  .pill-content {
+  .pill-content, .pill-time {
     grid-area: summary;
     padding-right: 10px;
     padding-left: 10px;
@@ -127,6 +127,24 @@
   .last-child {
     border-top-right-radius: 50px;
     border-bottom-right-radius: 50px;
+  }
+
+
+
+  .multi-date {
+    display: flex;
+    flex-direction: row;
+    gap: 0.25rem;
+    background-color: var(--main-bg-color); // A custom purple background
+    padding-right: 15px; /* Adjust padding if necessary */
+    align-items: center;
+
+    .date {
+      grid-area: date;
+    }
+    .time {
+      grid-area: summary;
+    }
   }
 
 }

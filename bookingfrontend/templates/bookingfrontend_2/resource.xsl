@@ -1,7 +1,7 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
     <div class="info-content" id="resource-page-content">
-        <div class="container mx-3">
-            <div class="row">
+        <div class="container">
+            <div class="row pb-2">
                 <div class="col-md-2">
                     <a class=" pe-btn pe-btn-colour-secondary link-text link-text-secondary d-flex gap-3  pe-btn--small">
                         <xsl:attribute name="href">
@@ -71,7 +71,7 @@
                 </div>
                 <div class="col-sm-12 d-flex flex-column collapsible-content collapsed-description"
                      data-bind="css: {{'collapsed-description': !descriptionExpanded()}}">
-                    <p data-bind="html: resourceDescription">
+                    <p data-bind="html: selectedDescription">
 
                     </p>
 

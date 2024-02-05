@@ -74,6 +74,8 @@ class PECalendar {
      */
     currentDate = ko.observable(null);
 
+    touchMoving = ko.observable(false);
+
 
     noTimeSlotsMessage = ko.computed(() => {
         if (!this.currentDate()) return null;
@@ -394,7 +396,7 @@ class PECalendar {
         }
 
 
-        if (minTime !== this.startHour() && minTime !==24) {
+        if (minTime !== this.startHour() && minTime !== 24) {
             this.startHour(minTime);
         }
         if (maxTime !== this.endHour() && maxTime !== 0) {
@@ -760,7 +762,23 @@ class PECalendar {
         return tempEvent;
     }
 
+    handleTouchEvent = (_props, event) => {
+        if (event.type === 'touchstart') {
+            this.touchMoving(false);
+            console.log("touchStart", event);
+
+        }
+        if(event.type === 'touchmove') {
+            this.touchMoving(true);
+            console.log("touchMove", event);
+        }
+    }
+
     handleMouseDown = (_allProps, event) => {
+        if(this.touchMoving()) {
+            console.log("touchMoving");
+            return;
+        }
         if (!(event.target.className === 'calendar-cell' || event.target.classList.contains('event-temporary'))) {
             return;
         }
@@ -812,7 +830,7 @@ class PECalendar {
         //
         //            }
         let endTime;
-        if(event.type === 'touchend') {
+        if (event.type === 'touchend') {
             //1 hour later
             const parts = startTime.split(':');
             let hours = parseInt(parts[0], 10);
@@ -849,7 +867,7 @@ class PECalendar {
         //
         this.updateTemporaryEvent(this.tempEvent(), this.dragStart(), endTime);
 
-        if(event.type === 'touchend') {
+        if (event.type === 'touchend') {
             this.isDragging(false);
 
             // Finalize the temporary event
@@ -985,7 +1003,7 @@ class PECalendar {
      * @returns {string} - Formatted date range string.
      */
     formatDateRange(useYear, startTimestamp, endTimestamp) {
-       return FormatDateRange(startTimestamp ? Number(startTimestamp) :  this.firstDayOfCalendar(),endTimestamp ? Number(endTimestamp) :  this.lastDayOfCalendar(), undefined, useYear)
+        return FormatDateRange(startTimestamp ? Number(startTimestamp) : this.firstDayOfCalendar(), endTimestamp ? Number(endTimestamp) : this.lastDayOfCalendar(), undefined, useYear)
     }
 
     /**
@@ -1000,6 +1018,20 @@ class PECalendar {
         const options = {hour: '2-digit', minute: '2-digit'};
 
         return `${startTime.toLocaleTimeString('no', options).replace(':', '.')} - ${endTime.toLocaleTimeString('no', options).replace(':', '.')}`;
+    }
+
+    /**
+     * Formats the given date range into a formatted html string.
+     * @param {number} startTimestamp - The start Unix timestamp.
+     * @param {number} endTimestamp - The end Unix timestamp.
+     * @returns {string} - Formatted time range string.
+     */
+    generateDate(startTimestamp, endTimestamp) {
+        const startTime = new Date(parseInt(startTimestamp));
+        const endTime = new Date(parseInt(endTimestamp));
+
+
+        return GenerateDateTime(startTime, endTime);
     }
 
 
@@ -1259,10 +1291,11 @@ if (globalThis['ko']) {
                     <!-- Time Slots Sidebar -->
                     <div class="time-container"
                          data-bind="foreach: calendarTimeSlots, style: {'grid-template-rows': 'repeat(' + (endHour() - startHour()) * hourParts() + ', calc(3rem/' + hourParts() + '))'}">
-                        <div class="time text-body" data-bind="text: timeLabel, style: { 'gridRow': gridRowStyle }"></div>
+                        <div class="time text-body"
+                             data-bind="text: timeLabel, style: { 'gridRow': gridRowStyle }"></div>
                     </div>
                     <div class="content"
-                         data-bind="style: {'grid-template-rows': 'repeat(' + (endHour() - startHour()) * hourParts() + ', calc(3rem/' + hourParts() + '))'}, event: {mousedown: $component.handleMouseDown, touchend: $component.handleMouseDown, mousemove: $component.handleMouseMove, mouseup: $component.handleMouseUp}">
+                         data-bind="style: {'grid-template-rows': 'repeat(' + (endHour() - startHour()) * hourParts() + ', calc(3rem/' + hourParts() + '))'}, event: {mousedown: $component.handleMouseDown, touchend: $component.handleMouseDown, touchstart: $component.handleTouchEvent, touchmove: $component.handleTouchEvent, mousemove: $component.handleMouseMove, mouseup: $component.handleMouseUp}">
                         <!-- Rows -->
                         <!-- ko foreach: rows -->
                         <div class="row" data-bind="attr: { style: gridRowStyle }"></div>
@@ -1340,9 +1373,8 @@ if (globalThis['ko']) {
 
                         <!-- Date and time section -->
                         <div class="time-slot-date-time">
-                            <div class="text-primary text-bold"
-                                 data-bind="text: $parent.formatDateRange(false, $data.start, $data.end)"></div>
-                            <div data-bind="text: $parent.formatTimeRange($data.start, $data.end)"></div>
+                            <div class="time-slot-date-container" data-bind="html: $parent.generateDate($data.start, $data.end)"></div>
+             
                         </div>
 
                         <!-- Button section -->
