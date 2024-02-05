@@ -310,8 +310,8 @@ JS;
 	{
 		$template_selector = <<<HTML
               <div>
-                <h3>Template valg</h3>
-                <p>Hvilken template ønsker du?</p>
+                <h3>Versjon valg</h3>
+                <p>Hvilken versjon ønsker du?</p>
                 <form class="d-flex flex-column">
                   <label class="choice mb-3">
                     <input type="radio" id="template_bookingfrontend" name="select_template" value="bookingfrontend" {$selected_bookingfrontend} />
@@ -382,7 +382,7 @@ HTML;
         </div>
       </div>
             <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector" data-bs-toggle="modal" data-bs-target="#selectTemplate" aria-label="Velg template">
-        Template
+        Versjon
         <i class="fas fa-chevron-down"></i>
       </button>
             <div class="modal fade" id="selectTemplate" tabindex="-1" aria-labelledby="selectTemplate" aria-hidden="true">
