@@ -425,10 +425,10 @@
 					(
 					'app_title' => $perm['translated_name'],
 					'checkbox_name' => "account_permissions[{$perm['app_name']}]",
-					'checked' => in_array($perm['app_name'], $user['reg_info']['account_permissions']) ? 1 : 0,
+					'checked' => in_array($perm['app_name'], (array)$user['reg_info']['account_permissions']) ? 1 : 0,
 					'checkbox_name_admin' => "account_permissions_admin[{$perm['app_name']}]",
-					'checked_admin' => in_array($perm['app_name'], $user['reg_info']['account_permissions_admin']) ? 1 : 0,
-					'i_am_admin' => in_array($perm['app_name'], $valid_apps) ? 1 : 0,
+					'checked_admin' => in_array($perm['app_name'], (array)$user['reg_info']['account_permissions_admin']) ? 1 : 0,
+					'i_am_admin' => in_array($perm['app_name'], (array)$valid_apps) ? 1 : 0,
 				);
 			}
 
