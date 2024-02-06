@@ -334,7 +334,7 @@
 				'fk' => array('fm_bim_type' => array('type_location_id' => 'location_id')),
 				'ix' => array(),
 				'ix' => array(),
-				'uc' => array()
+				'uc' => array('location_id')
 			)
 		);
 

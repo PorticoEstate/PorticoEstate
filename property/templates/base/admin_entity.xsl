@@ -1024,6 +1024,21 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'active')"/>
+						</label>
+						<input type="checkbox" name="values[active]" value="1">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'active')"/>
+							</xsl:attribute>
+							<xsl:if test="value_active = '1'">
+								<xsl:attribute name="checked">
+									<xsl:text>checked</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
+						</input>
+					</div>
 
 					<xsl:choose>
 						<xsl:when test="value_id = ''">

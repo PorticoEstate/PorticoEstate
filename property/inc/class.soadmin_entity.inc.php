@@ -642,8 +642,7 @@
 			}
 
 
-			$values_insert = array
-				(
+			$values_insert = array(
 				$location_id,
 				$values['entity_id'],
 				$values['id'],
@@ -703,6 +702,7 @@
 
 			$pk[] = 'id';
 
+			$fk = array();
 			$ix = array();
 
 			if ($this->type == 'entity')
@@ -1178,8 +1178,7 @@
 					{
 
 						$location_id	 = $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$category['entity_id']}.{$category['id']}");
-						$values_insert	 = array
-							(
+						$values_insert	 = array(
 							'location_id'	 => $location_id,
 							'name'			 => ".{$this->type}.{$category['entity_id']}.{$category['id']}::{$category['name']}",
 							'description'	 => $category['descr'],
@@ -1275,11 +1274,114 @@
 					'id' => (int) $this->db->f('id'),
 					'type_location_id' => (int) $this->db->f('type_location_id'),
 					'location_id' => (int) $this->db->f('location_id'),
-					'name' => $this->db->f('type_location_id', true),
+					'name' => $this->db->f('name', true),
 					'active' => (int)$this->db->f('active'),
 				);
 			}
 			return $values;
+		}
+
+		function add_checklist( $data )
+		{
+			$this->db->transaction_begin();
+
+			$name = $this->db->db_addslashes($data['name']);
+
+			$loc_arr	 = $GLOBALS['phpgw']->locations->get_name((int)$data['type_location_id']);
+			$type_arr	 = explode('.', $loc_arr['location']);
+			if (count($type_arr) != 4)
+			{
+				return array();
+			}
+
+			$type		 = $type_arr[1];
+			$entity_id	 = $type_arr[2];
+			$cat_id		 = $type_arr[3];
+
+
+			$values = array(
+				$data['type_location_id'],
+				-1,
+				$name,
+				$this->db->db_addslashes($data['descr']),
+				$data['active']
+			);
+			$values = $this->db->validate_insert($values);
+			$this->db->query("INSERT INTO fm_bim_item_checklist (type_location_id, location_id, name, descr, active)"
+			 . " VALUES ($values)", __LINE__, __FILE__);
+
+			//last insert id
+			$receipt['id'] = $this->db->get_last_insert_id('fm_bim_item_checklist', 'id'); 
+
+			$location_id	 = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$entity_id}.{$cat_id}.checklist.{$receipt['id']}", $data['name'], $this->type_app[$this->type], true, $custom_tbl = null, $c_function = false, $c_attrib = true);
+
+			$this->db->query("UPDATE fm_bim_item_checklist SET location_id = {$location_id} WHERE id = " . (int)$receipt['id'], __LINE__, __FILE__);
+
+			$this->db->transaction_commit();
+
+			$receipt['message'][] = array('msg' => lang('checklist has been added'));
+			return $receipt;
+
+		}
+
+		function edit_checklist( $data )
+		{
+			if (!$data['name'])
+			{
+				$receipt['error'][] = array('msg' => lang('Name not entered!'));
+			}
+
+			if (!$data['error'])
+			{
+				$table = "fm_bim_item_checklist";
+
+				$data['name']	 = $this->db->db_addslashes($data['name']);
+				$data['descr'] = $this->db->db_addslashes($data['descr']);
+
+				$value_set = array(
+					'name'			 => $data['name'],
+					'descr'			 => $data['descr'],
+					'active'		 => $data['active']
+				);
+
+				$value_set = $this->db->validate_update($value_set);
+
+				$this->db->transaction_begin();
+
+				$this->db->query("UPDATE $table SET {$value_set} WHERE id=" . (int)$data['id'], __LINE__, __FILE__);
+
+				$GLOBALS['phpgw']->locations->update_description2($data['location_id'],$data['name']);
+
+				$this->db->transaction_commit();
+
+				$receipt['message'][] = array('msg' => lang('entity has been edited'));
+			}
+			else
+			{
+				$receipt['error'][] = array('msg' => lang('entity has NOT been edited'));
+			}
+
+			return $receipt;
+		}
+
+		function read_single_checklist( $id )
+		{
+			$values = array();
+			$sql = "SELECT * FROM fm_bim_item_checklist WHERE id = " . (int)$id;
+			$this->db->query($sql, __LINE__, __FILE__);
+			if ($this->db->next_record())
+			{
+				$values = array(
+					'id' => (int) $this->db->f('id'),
+					'type_location_id' => (int) $this->db->f('type_location_id'),
+					'location_id' => (int) $this->db->f('location_id'),
+					'name' => $this->db->f('name', true),
+					'descr' => $this->db->f('descr', true),
+					'active' => (int)$this->db->f('active'),
+				);
+			}
+			return $values;
+
 		}
 		
 	}

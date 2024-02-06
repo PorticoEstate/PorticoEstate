@@ -393,6 +393,24 @@
 		}
 
 		/**
+		 * Update the description of a location based on location_id
+		 *
+		 * @param int $location_id location within application
+		 * @param string $descr    the description of the location - seen by users
+		 *
+		 * @return boolean was the record updated?
+		 */
+		public function update_description2($location_id, $descr)
+		{
+		 	$location_id = (int) $location_id;
+			$descr		= $this->_db->db_addslashes($descr);
+
+		 	$this->_db->query("UPDATE phpgw_locations SET descr = '{$descr}'"
+					. " WHERE phpgw_locations.location_id = {$location_id}", __LINE__, __FILE__);
+			return $this->_db->affected_rows() == 1;
+		}
+
+		/**
 		* Check that top level location are present for installed apps
 		* If the location is missing - it will be inserted
 		*

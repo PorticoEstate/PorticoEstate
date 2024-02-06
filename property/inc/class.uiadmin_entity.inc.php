@@ -515,8 +515,7 @@
 				'my_name'	 => 'attribute_groups',
 				'statustext' => lang('attribute groups'),
 				'text'		 => lang('attribute groups'),
-				'action'	 => $GLOBALS['phpgw']->link('/index.php', array
-					(
+				'action'	 => $GLOBALS['phpgw']->link('/index.php', array(
 					'menuaction' => 'property.uiadmin_entity.list_attribute_group',
 					'type'		 => $this->type
 				)),
@@ -527,8 +526,7 @@
 				'my_name'	 => 'attributes',
 				'statustext' => lang('attributes'),
 				'text'		 => lang('Attributes'),
-				'action'	 => $GLOBALS['phpgw']->link('/index.php', array
-					(
+				'action'	 => $GLOBALS['phpgw']->link('/index.php', array(
 					'menuaction' => 'property.uiadmin_entity.list_attribute',
 					'type'		 => $this->type
 				)),
@@ -539,8 +537,7 @@
 				'my_name'	 => 'config',
 				'statustext' => lang('config'),
 				'text'		 => lang('config'),
-				'action'	 => $GLOBALS['phpgw']->link('/index.php', array
-					(
+				'action'	 => $GLOBALS['phpgw']->link('/index.php', array(
 					'menuaction' => 'admin.uiconfig2.index'
 				)),
 				'parameters' => json_encode($parameters4)
@@ -559,8 +556,7 @@
 				'my_name'	 => 'custom functions',
 				'statustext' => lang('custom functions'),
 				'text'		 => lang('Custom functions'),
-				'action'	 => $GLOBALS['phpgw']->link('/index.php', array
-					(
+				'action'	 => $GLOBALS['phpgw']->link('/index.php', array(
 					'menuaction' => 'property.uiadmin_entity.list_custom_function',
 					'type'		 => $this->type
 				)),
@@ -571,8 +567,7 @@
 				'my_name'	 => 'edit',
 				'statustext' => lang('edit'),
 				'text'		 => lang('edit'),
-				'action'	 => $GLOBALS['phpgw']->link('/index.php', array
-					(
+				'action'	 => $GLOBALS['phpgw']->link('/index.php', array(
 					'menuaction' => 'property.uiadmin_entity.edit_category',
 					'type'		 => $this->type
 				)),
@@ -584,8 +579,7 @@
 				'statustext'	 => lang('delete'),
 				'text'			 => lang('delete'),
 				'confirm_msg'	 => lang('do you really want to delete this entry'),
-				'action'		 => $GLOBALS['phpgw']->link('/index.php', array
-					(
+				'action'		 => $GLOBALS['phpgw']->link('/index.php', array(
 					'menuaction' => 'property.uiadmin_entity.delete',
 					'type'		 => $this->type
 				)),
@@ -2362,14 +2356,8 @@
 		function convert_to_eav()
 		{
 			$GLOBALS['phpgw_info']['flags']['menu_selection']	 = "admin::{$this->type_app[$this->type]}::entity::convert_to_eav";
-			$function											 = 'list_attribute';
-			if ($custom_function_id)
-			{
-				$function = 'list_custom_function';
-			}
 
-			$redirect_args = array
-				(
+			$redirect_args = array(
 				'menuaction' => 'admin.uimainscreen.mainscreen'
 			);
 
@@ -2386,13 +2374,11 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('delete'));
 
-			$link_data = array
-				(
+			$link_data = array(
 				'menuaction' => 'property.uiadmin_entity.convert_to_eav',
 			);
 
-			$data = array
-				(
+			$data = array(
 				'delete_url'		 => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'lang_confirm_msg'	 => lang('do you really want to convert to eav?'),
 				'lang_delete'		 => lang('yes'),
@@ -2405,7 +2391,7 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
 		}
 
-		function edit_checklist()
+		function edit_checklist($values = array())
 		{
 			if (!$this->acl_edit)
 			{
@@ -2415,7 +2401,7 @@
 			$type_location_id	 = phpgw::get_var('type_location_id', 'int');
 			$location_id		 = $this->location_id;
 			$id				 = phpgw::get_var('id', 'int');
-			$values			 = phpgw::get_var('values');
+			$values			 = $values ? $values  : phpgw::get_var('values');
 			$template_attrib = phpgw::get_var('template_attrib');
 
 			$tabs			 = array();
@@ -2430,6 +2416,7 @@
 			if ($id)
 			{
 				$values			 = $this->bo->read_single_checklist($id);
+				$type_location_id = $values['type_location_id'];
 				$function_msg	 = lang('edit checklist');
 				$action			 = 'edit';
 			}
@@ -2446,8 +2433,7 @@
 				'id'				 => $id
 			);
 
-			$checklist_list = $this->bo->read_checklist(array($type_location_id));
-
+			$checklist_list = $this->bo->read_checklist(array('type_location_id' => $type_location_id));
 
 			$myColumnDefs = array(
 				array('key'		 => 'attrib_id', 'label'		 => lang('id'), 'sortable'	 => false,
@@ -2489,8 +2475,9 @@
 				'value_id'								 => $id,
 				'value_name'							 => $values['name'],
 				'type_location_id'						 => $type_location_id,
-				'location_id'							 => $location_id,
+//				'location_id'							 => $location_id,
 				'value_descr'							 => $values['descr'],
+				'value_active'							 => $values['active'],
 				'checklist_list'						 => array('options' => $checklist_list),
 				'fileupload'							 => true,
 				'value_fileupload'						 => $values['fileupload'],
@@ -2521,7 +2508,7 @@
 			}
 			if (!$_POST)
 			{
-				return $this->edit_category();
+				return $this->edit_checklist();
 			}
 
 			$type_location_id	 = phpgw::get_var('type_location_id', 'int');
@@ -2540,10 +2527,6 @@
 			{
 				$this->receipt['error'][] = array('msg' => lang('Name not entered!'));
 			}
-			if (!$values['type_location_id'])
-			{
-				$this->receipt['error'][] = array('msg' => lang('Entity not chosen'));
-			}
 
 			if ($id)
 			{
@@ -2552,6 +2535,10 @@
 			}
 			else
 			{
+				if (!$values['type_location_id'])
+				{
+					$this->receipt['error'][] = array('msg' => lang('Entity not chosen'));
+				}
 				$action			 = 'add';
 			}
 
@@ -2570,7 +2557,7 @@
 					if ($e)
 					{
 						phpgwapi_cache::message_set($e->getMessage(), 'error');
-						$this->edit_category($values);
+						$this->edit_checklist($values);
 						return;
 					}
 				}
@@ -2588,7 +2575,7 @@
 			else
 			{
 				$this->receipt['error'][] = array('msg' => lang('checklist has NOT been saved'));
-				$this->edit_category($values);
+				$this->edit_checklist($values);
 			}
 		}
 
@@ -2624,8 +2611,6 @@
 //			$entity		 = $this->bo->read_single($entity_id);
 			$category	 = $this->bo->read_single_category($entity_id, $cat_id);
 
-			$id		 = phpgw::get_var('id');
-			$resort	 = phpgw::get_var('resort');
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
@@ -2638,9 +2623,8 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
-			$appname		 = lang('attribute');
-			$function_msg	 = lang('list entity attribute');
-			$function_msg	 .= " ({$category['name']})";
+			$appname		 = lang('checklist');
+			$function_msg	 = " ({$category['name']})";
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
@@ -2689,7 +2673,7 @@
 						),
 						array(
 							'key'		 => 'location_id',
-							'label'		 => lang('location id'),
+							'label'		 => 'location id',
 							'sortable'	 => false
 						),
 					)
@@ -2708,11 +2692,16 @@
 			$parameters2 = array(
 				'parameter' => array(
 					array(
-						'name'	 => 'attrib_id',
+						'name'	 => 'location_id',
+						'source' => 'location_id'
+					),
+					array(
+						'name'	 => 'id',
 						'source' => 'id'
 					),
 				)
 			);
+
 
 			$data['datatable']['actions'][] = array
 				(
@@ -2721,13 +2710,20 @@
 				'text'		 => lang('Edit'),
 				'action'	 => $GLOBALS['phpgw']->link(
 					'/index.php', array(
-					'menuaction' => 'property.uiadmin_entity.edit_attrib',
-					'entity_id'	 => $entity_id,
-					'cat_id'	 => $cat_id,
-					'type'		 => $this->type
+					'menuaction' => 'property.uiadmin_entity.edit_checklist'
 					)
 				),
 				'parameters' => json_encode($parameters)
+			);
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'attributes',
+				'statustext' => lang('attributes'),
+				'text'		 => lang('Attributes'),
+				'action'	 => $GLOBALS['phpgw']->link('/index.php', array(
+					'menuaction' => 'admin.ui_custom.list_attribute',
+					'appname'		 => $this->type_app[$this->type]
+				)),
+				'parameters' => json_encode($parameters2)
 			);
 
 			$data['datatable']['actions'][] = array(
