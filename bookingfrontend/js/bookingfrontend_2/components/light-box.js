@@ -18,14 +18,13 @@ ko.components.register('light-box', {
                 $("#lightboxModal").modal('show');
                 self.attachArrowKeyHandlers();
                 $('#lightboxModal').on('hidden.bs.modal', function () {
-                    self.closeModal()
+                    self.detachArrowKeyHandlers();
                 });
             }
         };
 
         self.closeModal = function() {
-            // $("#lightboxModal").modal('hide');
-            self.detachArrowKeyHandlers();
+            $("#lightboxModal").modal('hide');
         };
 
         self.next = function() {
@@ -69,7 +68,7 @@ ko.components.register('light-box', {
                     <!-- ko if: hasImages -->
                     <div class="modal-header">
                         <h5 class="modal-title" data-bind="text: currentImage().alt"></h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-bind="click: () => closeModal()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
