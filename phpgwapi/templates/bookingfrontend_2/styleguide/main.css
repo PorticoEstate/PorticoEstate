@@ -990,38 +990,55 @@ h4, .h4 {
   min-width: 2.5rem;
 }
 .pe-btn--small-circle {
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   border-radius: 50%;
-  width: 25px;
-  height: 25px;
+  width: 24px;
+  height: 24px;
   padding: 0;
-  font-weight: 400;
-  font-size: 0.75rem;
+  font-size: 12px;
   cursor: pointer;
   transition: background-color 0.3s;
+}
+.pe-btn--small-circle i {
+  display: flex; /* Ensure the icon itself is also flex */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  width: 100%; /* Make the icon fill the button to center it properly */
+}
+.pe-btn--small-circle i::before {
+  display: inline-block; /* Allows for text-centering within the flex item */
+  text-align: center;
+  width: 100%; /* Ensures the pseudo-element covers the flex item's area */
 }
 .pe-btn--small-circle:hover, .pe-btn--small-circle:active {
   background: #e9e0ec;
   color: #793C8A;
+  fill: #793C8A;
 }
 .pe-btn--small-circle:focus-visible {
   border-color: #793C8A;
   background: #FFFFFF;
   color: #793C8A;
+  fill: #793C8A;
 }
 .pe-btn--small-circle.pe-btn-secondary {
   color: #000000;
+  fill: #000000;
   background: #e9e0ec;
 }
 .pe-btn--small-circle.pe-btn-secondary:hover, .pe-btn--small-circle.pe-btn-secondary:active {
   background: #793C8A;
   color: #FFFFFF;
+  fill: #FFFFFF;
 }
 .pe-btn--small-circle.pe-btn-secondary:focus-visible {
   border-color: #793C8A;
   background: #FFFFFF;
   color: #793C8A;
+  fill: #793C8A;
 }
 
 a, a:link, a:visited {
@@ -2526,7 +2543,7 @@ textarea {
   --main-divider-color: #793C8A;
   --main-text-color: #000000;
 }
-.pill .pill-date, .pill .pill-divider, .pill .pill-content, .pill .pill-icon {
+.pill .pill-date, .pill .pill-divider, .pill .pill-content, .pill .pill-icon, .pill .pill-time {
   padding-top: 5px;
   padding-bottom: 5px;
   background-color: var(--main-bg-color);
@@ -2562,7 +2579,7 @@ textarea {
   background-color: var(--main-divider-color);
   opacity: var(--main-divider-opacity);
 }
-.pill .pill-content {
+.pill .pill-content, .pill .pill-time {
   grid-area: summary;
   padding-right: 10px;
   padding-left: 10px;
@@ -2593,6 +2610,20 @@ textarea {
 .pill .last-child {
   border-top-right-radius: 50px;
   border-bottom-right-radius: 50px;
+}
+.pill .multi-date {
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
+  background-color: var(--main-bg-color);
+  padding-right: 15px; /* Adjust padding if necessary */
+  align-items: center;
+}
+.pill .multi-date .date {
+  grid-area: date;
+}
+.pill .multi-date .time {
+  grid-area: summary;
 }
 
 .remark {
@@ -2765,6 +2796,9 @@ textarea {
   grid-area: price;
 }
 .article-table-wrapper .category-table .category-articles .category-article-row .item-quantity {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
   grid-area: quantity;
 }
 .article-table-wrapper .category-table .category-articles .category-article-row .item-sum {

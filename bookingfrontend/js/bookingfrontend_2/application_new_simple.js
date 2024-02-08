@@ -61,21 +61,14 @@ function applicationModel() {
 
     self.selectedResource = ko.observable();
 
-    self.formatDate = function (date) {
-        const from = luxon.DateTime.fromFormat(date.from_, "dd/MM/yyyy HH:mm");
-        const to = luxon.DateTime.fromFormat(date.to_, "dd/MM/yyyy HH:mm");
-
-        return FormatDateRange(from, to);
-    };
-
-    self.formatTimePeriod = function (date) {
-
-        const from = luxon.DateTime.fromFormat(date.from_, "dd/MM/yyyy HH:mm");
-        const to = luxon.DateTime.fromFormat(date.to_, "dd/MM/yyyy HH:mm");
-
-        return FormatTimeRange(from, to);
-
-    };
+    // self.formatTimePeriod = function (date) {
+    //
+    //     const from = luxon.DateTime.fromFormat(date.from_, "dd/MM/yyyy HH:mm");
+    //     const to = luxon.DateTime.fromFormat(date.to_, "dd/MM/yyyy HH:mm");
+    //
+    //     return FormatTimeRange(from, to);
+    //
+    // };
 
 
     self.descriptionExpanded = ko.observable(false);
@@ -183,7 +176,6 @@ $(document).ready(function () {
 
     var activityId;
     am = new applicationModel();
-    am.activityId(activityId);
     ko.applyBindings(am, document.getElementById("new-application-page"));
     getJsonURL = phpGWLink('bookingfrontend/', {
         menuaction: "bookingfrontend.uiapplication.add",
@@ -193,6 +185,7 @@ $(document).ready(function () {
     $.getJSON(getJsonURL, function (result) {
         $("#inputTargetAudience").val(result.audience[0].id);
         activityId = result.application.activity_id;
+        am.activityId(activityId);
         for (var i = 0; i < result.agegroups.length; i++) {
             agegroup.push({
                 name: result.agegroups[i].name, agegroupLabel: result.agegroups[i].name,

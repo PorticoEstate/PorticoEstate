@@ -49,6 +49,7 @@ ko.bindingHandlers.withAfterRender = {
     }
 };
 
+
 ko.components.register('time-picker', {
     viewModel: function (params) {
         const self = this;
@@ -68,7 +69,6 @@ ko.components.register('time-picker', {
 
             dropdown.scrollTo({top: timeslotHeight * index}); // Scroll to the position of the selected time or '14:30'
         };
-
 
 
         self.hideDropdown = function () {
@@ -222,7 +222,7 @@ function applicationModel() {
     self.bookingDate = ko.observable('')
     self.bookingStartTime = ko.observable('');
     self.bookingEndTime = ko.observable('');
-    
+
     self.goNext = () => {
         self.formStep(self.formStep() + 1);
         window.scrollTo({top: 0, behavior: 'smooth'});
@@ -241,6 +241,7 @@ function applicationModel() {
         var month = months[from.month - 1];
         return day + '. ' + month;
     };
+
 
     self.formatTimePeriod = function (date) {
         var fromTime = date.from_.split(' ')[1];
