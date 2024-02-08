@@ -28,7 +28,6 @@ ko.components.register('light-box', {
             this.carouselOptions = (() => this.setOptionsFromSettings(bootstrap.Carousel.Default))();
 
             this.hasImages = ko.computed(() => {
-                console.log(this.images())
                 return this.images().length > 0;
             });
             this.additionalImageCount = ko.computed(() => {
