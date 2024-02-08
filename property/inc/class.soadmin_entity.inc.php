@@ -1383,5 +1383,18 @@
 			return $values;
 
 		}
+
+		function delete_checklist( $id )
+		{
+			$this->db->transaction_begin();
+			$checklist = $this->read_single_checklist($id);
+			$location_id = $checklist['location_id'];
+			$id = (int)$id;
+			$this->db->query("DELETE FROM fm_bim_item_checklist_data WHERE checklist_id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_bim_item_checklist_stage WHERE checklist_id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_bim_item_checklist WHERE id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM phpgw_locations WHERE location_id = {$location_id}", __LINE__, __FILE__);
+			return $this->db->transaction_commit();
+		}
 		
 	}

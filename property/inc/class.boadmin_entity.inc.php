@@ -347,6 +347,17 @@
 			return $receipt;
 		}
 
+		//delete_checklist
+		/**
+		 * 
+		 * @param int $id
+		 * @return array
+		 */
+		function delete_checklist( $id )
+		{
+			return $this->so->delete_checklist($id);
+		}
+
 
 
 		protected function _add_attrib_from_template( $values )

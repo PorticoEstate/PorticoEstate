@@ -66,7 +66,11 @@
 			'delete_choice_value'		 => true,
 			'list_checklist'			 => true,
 			'edit_checklist'			 => true,
-			'save_checklist'			 => true
+			'save_checklist'			 => true,
+			'delete_checklist'			 => true,
+			'list_checklist_stage'		 => true,
+			'edit_checklist_stage'		 => true,
+			'save_checklist_stage'		 => true,
 		);
 		private $bo;
 		var $account,$bocommon, $entity_id, $cat_id,$allrows,$type, $type_app,
@@ -297,6 +301,11 @@
 					$params['type_location_id'] = $this->location_id;
 					$values	 = $this->bo->read_checklist($params);
 					break;
+				case 'list_checklist_stage':
+					$params['checklist_id'] = $data['checklist_id'];
+					$values	 = $this->bo->read_checklist_stage($params);
+					break;
+	
 				case 'list_attribute':
 					$values	 = $this->bo->read_attrib($params);
 					break;
@@ -334,6 +343,14 @@
 					);
 					array_walk($result_data['results'], array($this, '_add_links'), $variable);
 					break;
+				case 'list_checklist_stage':
+					$variable	 = array(
+						'menuaction'	 => 'property.uiadmin_entity.edit_checklist_stage',
+						'allrows'		 => $this->allrows,
+					);
+					array_walk($result_data['results'], array($this, '_add_links'), $variable);
+					break;
+	
 				case 'list_attribute':
 					$variable	 = array(
 						'menuaction' => 'property.uiadmin_entity.list_attribute',
@@ -2695,10 +2712,6 @@
 						'name'	 => 'location_id',
 						'source' => 'location_id'
 					),
-					array(
-						'name'	 => 'id',
-						'source' => 'id'
-					),
 				)
 			);
 
@@ -2727,25 +2740,55 @@
 			);
 
 			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'stage',
+				'statustext' => lang('stage'),
+				'text'		 => lang('stage'),
+				'action'	 => $GLOBALS['phpgw']->link('/index.php', array(
+					'menuaction' => 'property.uiadmin_entity.list_checklist_stage'
+				)),
+				'parameters' => json_encode($parameters)
+			);
+
+			$data['datatable']['actions'][] = array(
 				'my_name'		 => 'delete',
 				'statustext'	 => lang('Delete'),
 				'text'			 => lang('Delete'),
 				'confirm_msg'	 => lang('do you really want to delete this entry'),
 				'action'		 => $GLOBALS['phpgw']->link(
 					'/index.php', array(
-					'menuaction' => 'property.uiadmin_entity.delete',
-					'entity_id'	 => $entity_id,
-					'cat_id'	 => $cat_id,
-					'type'		 => $this->type
+					'menuaction' => 'property.uiadmin_entity.delete_checklist'
 					)
 				),
-				'parameters'	 => json_encode($parameters2)
+				'parameters'	 => json_encode($parameters)
 			);
 
 			unset($parameters);
 			unset($parameters2);
 
 			self::render_template_xsl('datatable_jquery', $data);
+		}
+
+		/**
+		 * Delete checklist
+		 * @return array
+		 */
+		function delete_checklist()
+		{
+			if (!$this->acl_delete)
+			{
+				phpgw::no_access();
+			}
+
+			$id = phpgw::get_var('id', 'int');
+
+			$ok = $this->bo->delete_checklist($id);
+
+			$receipt = array(
+				'status' => $ok ? 'ok' : 'fail',
+				'message' => $ok ? 'ok' : lang('value is used in records'),
+			);
+
+			return $receipt;
 		}
 
 	}

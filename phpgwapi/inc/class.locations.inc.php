@@ -302,6 +302,26 @@
 		}
 
 		/**
+		 * Get the text-representation of a location
+		 * @param integer $location_id the location id to look up
+		 * @return string the location - empty if not found
+		 */
+		public function get_location($location_id)
+		{
+			$location_id = (int) $location_id;
+
+			$sql = "SELECT phpgw_locations.name as location"
+					. " FROM phpgw_locations  WHERE phpgw_locations.location_id = {$location_id}";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			if ( $this->_db->next_record() )
+			{
+				return  $this->_db->f('location', true);
+			}
+
+			return false;
+		}
+
+		/**
 		 * Get a list of sub locations for a give location
 		 *
 		 * @param string $appname  the name of the module being looked up
