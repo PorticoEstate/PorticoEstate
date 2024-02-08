@@ -144,27 +144,32 @@
     &:active {
       background: $purple-16;
       color: $purple;
+      fill: $purple;
     }
 
     &:focus-visible {
       border-color: $purple;
       background: $white;
       color: $purple;
+      fill: $purple;
     }
     &.pe-btn-secondary {
       color: $black;
+      fill: $black;
       background: $purple-16;
 
       &:hover,
       &:active {
         background: $purple;
         color: $white;
+        fill: $white;
       }
 
       &:focus-visible {
         border-color: $purple;
         background: $white;
         color: $purple;
+        fill: $purple;
       }
     }
 

@@ -1016,24 +1016,29 @@ h4, .h4 {
 .pe-btn--small-circle:hover, .pe-btn--small-circle:active {
   background: #e9e0ec;
   color: #793C8A;
+  fill: #793C8A;
 }
 .pe-btn--small-circle:focus-visible {
   border-color: #793C8A;
   background: #FFFFFF;
   color: #793C8A;
+  fill: #793C8A;
 }
 .pe-btn--small-circle.pe-btn-secondary {
   color: #000000;
+  fill: #000000;
   background: #e9e0ec;
 }
 .pe-btn--small-circle.pe-btn-secondary:hover, .pe-btn--small-circle.pe-btn-secondary:active {
   background: #793C8A;
   color: #FFFFFF;
+  fill: #FFFFFF;
 }
 .pe-btn--small-circle.pe-btn-secondary:focus-visible {
   border-color: #793C8A;
   background: #FFFFFF;
   color: #793C8A;
+  fill: #793C8A;
 }
 
 a, a:link, a:visited {
