@@ -17,6 +17,15 @@ $rounded-small: 1rem;
 $rounded-medium: 2rem;
 $rounded-large: 3.125rem;
 
+.divider {
+  height: 1px;
+  border-color: rgba($blue, 0.2);
+
+  &-primary {
+    border-color: rgba($purple, 0.2);
+  }
+}
+
 .rounded {
   &-mini {
     border-radius: $rounded-mini;

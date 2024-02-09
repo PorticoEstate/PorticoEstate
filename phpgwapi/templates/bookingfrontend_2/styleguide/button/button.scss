@@ -58,6 +58,31 @@
       color: $purple;
     }
   }
+  i.fa-solid {
+    font-size: 1.5rem;
+  }
+
+  &-colour {
+    &-secondary {
+      border: 2px solid $blue;
+
+      color: $blue;
+      background: $white;
+
+      &:hover,
+      &:active {
+        background: $blue!important;
+        color: $white!important;
+        border: 2px solid $blue;
+      }
+
+      &:focus-visible {
+        border-color: $blue;
+        background: $white;
+        color: $blue;
+      }
+    }
+  }
 
   &--small {
     font-size: 0.875rem;
@@ -90,42 +115,61 @@
   }
 
   &--small-circle {
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: none;
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
+    width: 24px;
+    height: 24px;
     padding: 0;
-    font-weight: 400;
 
-    font-size: 0.75rem;
+    font-size: 12px;
     cursor: pointer;
     transition: background-color 0.3s;
+
+    i {
+      display: flex; /* Ensure the icon itself is also flex */
+      align-items: center; /* Center vertically */
+      justify-content: center; /* Center horizontally */
+      width: 100%; /* Make the icon fill the button to center it properly */
+      &::before {
+        display: inline-block; /* Allows for text-centering within the flex item */
+        text-align: center;
+        width: 100%; /* Ensures the pseudo-element covers the flex item's area */
+      }
+
+    }
     &:hover,
     &:active {
       background: $purple-16;
       color: $purple;
+      fill: $purple;
     }
 
     &:focus-visible {
       border-color: $purple;
       background: $white;
       color: $purple;
+      fill: $purple;
     }
     &.pe-btn-secondary {
       color: $black;
+      fill: $black;
       background: $purple-16;
 
       &:hover,
       &:active {
         background: $purple;
         color: $white;
+        fill: $white;
       }
 
       &:focus-visible {
         border-color: $purple;
         background: $white;
         color: $purple;
+        fill: $purple;
       }
     }
 

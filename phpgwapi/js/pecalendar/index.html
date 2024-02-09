@@ -2,14 +2,43 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-    <link rel="stylesheet" href="pecalendar.css">
-    <link rel="stylesheet" href="../datetimepicker/css/jquery.datetimepicker.css">
-
+    <meta charset="utf-8">
     <script src="luxon.js"></script>
-    <script src="../jquery/js/jquery-3.6.1.min.js"></script>
+    <script src="../jquery/js/jquery-3.7.1.min.js"></script>
+    <script src="../jquery/ui/jquery-ui-1.13.2.min.js"></script>
+    <script src="../select2/js/select2.full.min.js"></script>
+    <script src="../../templates/bookingfrontend_2/js/knockout-min.js"></script>
+    <script src="../../templates/bookingfrontend_2/styleguide/js/main.js"></script>
     <script src="../core/base.js"></script>
+    <script src="../bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="../popper/popper2.min.js"></script>
+    <script src="../popper/popper.min.js"></script>
     <script src="../datetimepicker/js/jquery.datetimepicker.full.js"></script>
+    <link href="../bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css?n=102" type="text/css" rel="StyleSheet">
+    <link href="../../templates/base/css/fontawesome/css/all.min.css?n=102" type="text/css" rel="StyleSheet">
+    <link href="../../templates/bookingfrontend/css/jquery.autocompleter.css?n=102" type="text/css" rel="StyleSheet">
+    <link href="../../templates/bookingfrontend/css/normalize.css?n=102" type="text/css" rel="StyleSheet">
+    <link href="../../templates/bookingfrontend/css/rubik-font.css?n=102" type="text/css" rel="StyleSheet">
+    <link href="../select2/css/select2.min.css?n=102" type="text/css" rel="StyleSheet">
+    <link href="../jquery/css/redmond/jquery-ui.min.css?n=102" type="text/css" rel="StyleSheet">
+    <link href="../pecalendar/pecalendar.css?n=102" type="text/css" rel="StyleSheet">
+    <!--CSS Imports from phpGW css class -->
+    <link href="../contextMenu/jquery.contextMenu.min.css?n=102" type="text/css" rel="stylesheet">
+    <link href="../DataTables/DataTables/css/jquery.dataTables.min.css?n=102" type="text/css" rel="stylesheet">
+    <link href="../DataTables/Responsive/css/responsive.dataTables.min.css?n=102" type="text/css" rel="stylesheet">
+    <link href="../DataTables/Buttons/css/buttons.dataTables.css?n=102" type="text/css" rel="stylesheet">
+    <link href="../DataTables/DataTables/css/dataTables.bootstrap5.min.css?n=102" type="text/css" rel="stylesheet">
+    <link href="../DataTables/Buttons/css/buttons.bootstrap5.min.css?n=102" type="text/css" rel="stylesheet">
+    <link href="../DataTables/Select/css/select.bootstrap5.min.css?n=102" type="text/css" rel="stylesheet">
+    <link href="../DataTables/Scroller/css/scroller.bootstrap5.min.css?n=102" type="text/css" rel="stylesheet">
+    <link href="../DataTables/FixedColumns/css/fixedColumns.bootstrap5.min.css?n=102" type="text/css" rel="stylesheet">
+    <link href="../tinybox2/style.css?n=102" type="text/css" rel="stylesheet">
+    <link href="../jquery/css/redmond/jquery-ui.min.css?n=102" type="text/css" rel="stylesheet">
+    <link href="../jquery/css/redmond/theme.css?n=102" type="text/css" rel="stylesheet">
+    <link href="../jquery/treeview/themes/default/style.min.css?n=102" type="text/css" rel="stylesheet">
+    <link href="../daterangepicker/css/daterangepicker.css?n=102" type="text/css" rel="stylesheet">
+    <link href="../timepicker/css/jquery.timepicker.min.css?n=102" type="text/css" rel="stylesheet">
+    <link href="../../templates/bookingfrontend_2/styleguide/main.css" rel="stylesheet">
     <script>
         let pathname = window.location.pathname;
         let pathname_parts = pathname.split('/');
@@ -29,9 +58,19 @@
         strBaseURL +=  '/?click_history=1111';
     </script>
     <script src="pecalendar.js"></script>
+    <script src="pecalendar2.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans" type="text/css" rel="StyleSheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&amp;display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="over-ting">Over kalenderen</div>
+    <div class="container">
+        <pe-calendar params="building_id: 10, resource_id: 125"/> <!-- Kultursalen -->
+<!--        <pe-calendar params="building_id: 46, resource_id: 452"/> &lt;!&ndash; TUBAKUBA &ndash;&gt;-->
+
+    </div>
+    <div class="over-ting">Gammel</div>
+
     <div class="container">
         <div id="calendar" class="calendar">
 
@@ -39,7 +78,11 @@
     </div>
     <div class="under-ting">Under kalenderen</div>
     <script>
-        let cal = new PEcalendar("calendar", 6);
+        function AppViewModel() {
+
+        }
+        ko.applyBindings(new AppViewModel());
+        let cal = new PEcalendar("calendar", 46, 452);
         cal.createCalendarDom();
 
 

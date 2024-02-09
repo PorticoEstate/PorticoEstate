@@ -84,7 +84,7 @@ h4, .h4 {
     line-height: 1.75rem; //28px
   }
 
-  &-body {
+  &-body, &-normal {
     font-size: $text-body; //16px
     line-height: 1.75rem; //28px
   }
@@ -130,5 +130,32 @@ h4, .h4 {
 
   &-bolder {
     font-weight: $text-bolder;
+  }
+}
+
+.line-height {
+  &-h1 {
+    line-height: $h2-lineheight;
+    @media (min-width: $media-medium) {
+      line-height: $h1-lineheight; //64px
+    }
+  }
+  &-h2 {
+    line-height: $h3-lineheight;
+    @media (min-width: $media-medium) {
+      line-height: $h2-lineheight; //48px
+    }
+  }
+  &-h3 {
+    line-height: $h4-lineheight;
+    @media (min-width: $media-medium) {
+      line-height: $h3-lineheight; //48px
+    }
+  }
+  &-h4 {
+    line-height: $h4-lineheight;
+    @media (min-width: $media-medium) {
+      line-height: $h4-lineheight; //48px
+    }
   }
 }
