@@ -30,10 +30,15 @@
                                     <div>
                                         <xsl:value-of select="building/part_of_town"/>
                                     </div>
-                                    <div class="text-primary d-flex gap-2 align-items-center text-bold">
-                                        <span class="fas fa-location-dot"></span>
-                                        <xsl:value-of select="building/name"/>
-                                    </div>
+                                    <a class="link-text link-text-secondary">
+                                        <xsl:attribute name="href">
+                                            <xsl:value-of select="building/link"/>
+                                        </xsl:attribute>
+                                        <i class="fa-solid fa-location-dot"></i>
+                                        <xsl:value-of
+                                                select="building/name"/>
+                                        <!--<i class="fa-solid fa-arrow-right"></i>-->
+                                    </a>
                                 </div>
 
                             </div>
@@ -287,7 +292,8 @@
                     <!-- Submit Button -->
 
                     <div id="submitContainer" class="d-flex gap-4 justify-content-end">
-                        <a class="link-text link-text-primary pe-btn pe-btn-secondary  d-flex align-items-center gap-2" style="width: fit-content" href="{application/frontpage_link}">
+                        <a class="link-text link-text-primary pe-btn pe-btn-secondary  d-flex align-items-center gap-2"
+                           style="width: fit-content" href="{application/frontpage_link}">
                             <div class="text-normal">
                                 <xsl:value-of select="php:function('lang', 'exit to homepage')"/>
                             </div>

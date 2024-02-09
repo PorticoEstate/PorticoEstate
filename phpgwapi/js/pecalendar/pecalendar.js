@@ -1225,7 +1225,7 @@ if (globalThis['ko']) {
                     <!-- /ko -->
                     <div class="calendar-settings">
                         <div class="date">
-                            <fieldset>
+                            <fieldset   data-bind="css: { 'd-none': !hasTimeSlots() }">
                                 <label class="filter"
                                        data-bind="css: { 'invisible': !hasTimeSlots() }">
                                     <input type="radio" name="filter" value="day" data-bind="checked: calendarRange"/>
@@ -1254,7 +1254,7 @@ if (globalThis['ko']) {
                                     <span class="fas fa-chevron-right" title="Neste"></span>
                                 </button>
                             </div>
-                        </div>
+                        </div data-bind="css: { 'invisible': !hasTimeSlots() }">
                         <div class="info-types">
                             <div class="type text-small">
                                 <img class="event-filter"
