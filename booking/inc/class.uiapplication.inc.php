@@ -1683,6 +1683,7 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
 
             $_building['part_of_town'] = self::cleanTownName(execMethod('property.solocation.get_part_of_town', $_building['location_code'])['part_of_town']);
+            $_building['link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $_building['id']));
 
 
             $articles = CreateObject('booking.soarticle_mapping')->get_articles($resource_ids);
