@@ -824,9 +824,9 @@
 
 				if($values['project_id'])
 				{
-					$workorder['selected']		 = in_array($workorder['workorder_id'], $values['workorders']);
+					$workorder['selected']		 = in_array($workorder['workorder_id'], (array)$values['workorders']);
 				}
-				$workorder['claim_issued']	 = in_array($workorder['workorder_id'], $values['claim_issued']);
+				$workorder['claim_issued']	 = in_array($workorder['workorder_id'], (array)$values['claim_issued']);
 			}
 
 

@@ -1921,7 +1921,7 @@
 
 					$this->db->query("SELECT sum(amount) AS actual_cost FROM fm_tts_payments WHERE ticket_id = {$id}", __LINE__, __FILE__);
 					$this->db->next_record();
-					$old_actual_cost = $this->db->f('actual_cost');
+					$old_actual_cost = (float) $this->db->f('actual_cost');
 					$new_actual_cost =  (float) str_replace(array(' ', ','), array('', '.'), $ticket['actual_cost']) + $old_actual_cost;
 
 					$this->db->query("UPDATE fm_tts_tickets SET actual_cost='{$new_actual_cost}' WHERE id='$id'", __LINE__, __FILE__);

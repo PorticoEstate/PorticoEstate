@@ -6465,27 +6465,27 @@ SQL;
 			$GLOBALS['phpgw_setup']->oProc->m_odb->query("DELETE FROM bb_completed_reservation"
 				. " WHERE id IN (" . implode(', ', $billing_ids) . ")", __LINE__, __FILE__);
 
-			$send		 = CreateObject('phpgwapi.send');
-			$to			 = "Sigurd.Nes@bergen.kommune.no";
-			$subject	 = 'Rydding av duplikater i fakturagrunnlag::' . $config_system['site_title'];
-			$body		 = 'Vedlegg';
-			$config		 = CreateObject('phpgwapi.config', 'booking')->read();
-			$from_email	 = isset($config['email_sender']) && $config['email_sender'] ? $config['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
-
-			try
-			{
-				$rcpt		 = $send->msg('email', $to, $subject, $body, '', $cc			 = '', $bcc		 = '', $from_email, $from_name	 = 'Sigurd', 'html', '', $attachments);
-				if (!$rcpt)
-				{
-					$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_abort();
-					echo "SEND::Noe gikk feil, eposten ble ikke sendt<br/>";
-				}
-			}
-			catch (Exception $e)
-			{
-				$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_abort();
-				echo "CATCH::Noe gikk feil, eposten ble ikke sendt<br/>";
-			}
+//			$send		 = CreateObject('phpgwapi.send');
+//			$to			 = "Sigurd.Nes@bergen.kommune.no";
+//			$subject	 = 'Rydding av duplikater i fakturagrunnlag::' . $config_system['site_title'];
+//			$body		 = 'Vedlegg';
+//			$config		 = CreateObject('phpgwapi.config', 'booking')->read();
+//			$from_email	 = isset($config['email_sender']) && $config['email_sender'] ? $config['email_sender'] : "noreply<noreply@{$GLOBALS['phpgw_info']['server']['hostname']}>";
+//
+//			try
+//			{
+//				$rcpt		 = $send->msg('email', $to, $subject, $body, '', $cc			 = '', $bcc		 = '', $from_email, $from_name	 = 'Sigurd', 'html', '', $attachments);
+//				if (!$rcpt)
+//				{
+//					$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_abort();
+//					echo "SEND::Noe gikk feil, eposten ble ikke sendt<br/>";
+//				}
+//			}
+//			catch (Exception $e)
+//			{
+//				$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_abort();
+//				echo "CATCH::Noe gikk feil, eposten ble ikke sendt<br/>";
+//			}
 
 		}
 

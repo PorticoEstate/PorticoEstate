@@ -131,7 +131,7 @@
 			$add_approval = array();
 			foreach ($data['pending_users_orig'] as $id)
 			{
-				if (!in_array($id, $data['pending_users']))
+				if (!in_array($id, (array)$data['pending_users']))
 				{
 					$delete_approval[] = $id;
 				}
@@ -139,7 +139,7 @@
 
 			foreach ($data['pending_users'] as $id)
 			{
-				if (!in_array($id, $data['pending_users_orig']))
+				if (!in_array($id, (array)$data['pending_users_orig']))
 				{
 					$add_approval[] = $id;
 				}
@@ -173,7 +173,7 @@
 				if ($this->db->next_record())
 				{
 					$reg_info = unserialize(base64_decode($this->db->f('reg_info')));
-					$reg_info['location_code'] = implode('-', $values['location']);
+					$reg_info['location_code'] = implode('-', (array)$values['location']);
 
 					if ($values['account_permissions'] && is_array($values['account_permissions']))
 					{
