@@ -44,9 +44,7 @@ class BuildingModel {
 		this.imageArray = imageArray;
 		this.items = events;
 		this.resourcesExpanded = ko.observable(false);
-		this.descriptionExpanded = ko.observable(false);
 		this.toggleResources = this.toggleResources.bind(this);
-		this.toggleDescription = this.toggleDescription.bind(this);
 	}
 	/**
 	 * Toggles the visibility of additional resources.
@@ -54,12 +52,7 @@ class BuildingModel {
 	toggleResources() {
 		this.resourcesExpanded(!this.resourcesExpanded());
 	}
-	/**
-	 * Toggles the visibility of the description.
-	 */
-	toggleDescription() {
-		this.descriptionExpanded(!this.descriptionExpanded());
-	}
+
 }
 
 const buildingModel = new BuildingModel();

@@ -24,9 +24,7 @@ class ResourceModel {
 		this.items = events;
 		this.selectedDescription = selectedDescription;
 		this.resourcesExpanded = ko.observable(false);
-		this.descriptionExpanded = ko.observable(false);
 		this.toggleResources = this.toggleResources.bind(this);
-		this.toggleDescription = this.toggleDescription.bind(this);
 
 	}
 	/**
@@ -34,15 +32,6 @@ class ResourceModel {
 	 */
 	toggleResources() {
 		this.resourcesExpanded(!this.resourcesExpanded());
-	}
-
-
-
-	/**
-	 * Toggles the visibility of the description.
-	 */
-	toggleDescription() {
-		this.descriptionExpanded(!this.descriptionExpanded());
 	}
 }
 

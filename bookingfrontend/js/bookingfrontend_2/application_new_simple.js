@@ -71,10 +71,7 @@ function applicationModel() {
     // };
 
 
-    self.descriptionExpanded = ko.observable(false);
-    self.toggleDescription = () => {
-        self.descriptionExpanded(!self.descriptionExpanded())
-    }
+
 
 
     self.selectedResource.subscribe(newDate => {

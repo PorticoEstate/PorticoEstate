@@ -69,21 +69,9 @@
                         Beskrivelse
                     </h3>
                 </div>
-                <div class="col-sm-12 d-flex flex-column collapsible-content collapsed-description"
-                     data-bind="css: {{'collapsed-description': !descriptionExpanded()}}">
-                    <p data-bind="html: selectedDescription">
+                <collapsable-text params="{{ content: selectedDescription }}">
 
-                    </p>
-
-                </div>
-                <div class="col-sm-12">
-                    <button class="pe-btn  pe-btn--transparent text-secondary d-flex gap-3"
-                            data-bind="click: toggleDescription">
-                        <span data-bind="text: descriptionExpanded() ? 'Vis mindre' : 'Vis mer'"></span>
-                        <i class="fa"
-                           data-bind="css: {{'fa-chevron-up': descriptionExpanded(), 'fa-chevron-down': !descriptionExpanded()}}"></i>
-                    </button>
-                </div>
+                </collapsable-text>
             </div>
             <div class="row  mb-4">
                 <div class="col-sm-12">

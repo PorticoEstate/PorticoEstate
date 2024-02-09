@@ -1146,7 +1146,6 @@
 				$active_tab = 'generic';
 				$booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			}
-
 			self::render_template_xsl('booking', array('booking' => $booking, 'cost_history' => $cost_history));
 		}
 
@@ -1177,7 +1176,8 @@
 					'id' => $booking['id']));
 
 			$booking['when'] = pretty_timestamp($booking['from_']) . ' - ' . pretty_timestamp($booking['to_']);
-			self::render_template_xsl('booking_info', array('booking' => $booking));
+
+            self::render_template_xsl('booking_info', array('booking' => $booking));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
 		}
 
