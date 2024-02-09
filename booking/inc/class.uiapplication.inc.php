@@ -1664,7 +1664,14 @@
 					self::add_javascript('booking', 'base', 'purchase_order_edit.js');
 				}
 			}
-			if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && !$simple)
+
+            if ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bookingfrontend_2') {
+                self::add_javascript('bookingfrontend', 'bookingfrontend_2', 'components/light-box.js', true);
+                $GLOBALS['phpgw']->css->add_external_file("bookingfrontend/js/bookingfrontend_2/components/light-box.css");
+
+            }
+
+            if($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend' && !$simple)
 			{
 				$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
 				self::add_javascript('bookingfrontend', 'base', 'application_new.js', true);
@@ -1675,8 +1682,24 @@
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/alertify.min.css');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/alertify/css/themes/bootstrap.min.css');
 
-			$articles = CreateObject('booking.soarticle_mapping')->get_articles($resource_ids);
+            $_building['part_of_town'] = self::cleanTownName(execMethod('property.solocation.get_part_of_town', $_building['location_code'])['part_of_town']);
 
+
+            $articles = CreateObject('booking.soarticle_mapping')->get_articles($resource_ids);
+//            _debug_array(array(
+//                    'add_action'	 => self::link(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'resource_id' => $resource_id, 'simple' => $simple)),
+//                    'application'	 => $application,
+//                    'activities'	 => $activities,
+//                    'agegroups'		 => $agegroups,
+//                    'audience'		 => $audience,
+//                    'building'	     => $_building,
+//                    'resource_list'	 => array('options' => $resources),
+//                    'direct_booking' => $direct_booking,
+//                    'config'		 => $config,
+//                    'has_articles'	 => !!$articles,
+//                    'tax_code_list'	 => json_encode(execMethod('booking.bogeneric.read', array('location_info' => array('type' => 'tax', 'order' => 'id')))),
+//                )
+//            );die();
             self::add_external_css_with_search($template . '.css', false);
             self::render_template_xsl($template, array(
 				'add_action'	 => self::link(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'resource_id' => $resource_id, 'simple' => $simple)),

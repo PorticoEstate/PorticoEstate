@@ -56,7 +56,28 @@
 			return $resource;
 		}
 
-		public function show()
+
+        function removeInitialEmptyHtmlTags($html) {
+            // Regular expression to match empty tags
+            $emptyTagRegex = '/<(\w+)(?:\s+[^>]*)?>\s*(<br\s*\/?>|\s|<\/\w+>)*<\/\1>/i';
+
+            // Split HTML into segments at the first non-empty tag
+            $segments = preg_split('/(<\w+[^>]*>[^<\s])/', $html, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+
+            // Process only the first segment to remove empty tags
+            $firstSegment = array_shift($segments) ?: '';
+            $previousHtml = null;
+            do {
+                $previousHtml = $firstSegment;
+                $firstSegment = preg_replace($emptyTagRegex, '', $firstSegment);
+            } while ($firstSegment !== $previousHtml);
+
+            // Reassemble the HTML
+            return $firstSegment . implode('', $segments);
+        }
+
+
+        public function show()
 		{
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
@@ -76,11 +97,13 @@
 			$lang_home = lang('home');
 			$buildinginfo = array();
 			$building_fields = array('id', 'city', 'deactivate_application', 'deactivate_calendar',
-				'email', 'homepage', 'name', 'opening_hours', 'phone', 'street', 'zip_code');
+				'email', 'homepage', 'name', 'opening_hours', 'phone', 'street', 'zip_code', 'part_of_town');
 			foreach ($resource['buildings'] as $building_id)
 			{
 				$building = $this->building_bo->read_single($building_id);
 				$building_link = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $building['id']));
+                $building['part_of_town'] = self::cleanTownName(execMethod('property.solocation.get_part_of_town', $building['location_code'])['part_of_town']);
+
 				$pathway[] = array(
 					'lang_home' => $lang_home,
 					'building_name' => $building['name'],
@@ -153,11 +176,27 @@
 				'pathway' => $pathway,
 				'config_data' => $config->config_data
 			);
+            if ($GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] == 'bookingfrontend_2') {
+                phpgwapi_jquery::load_widget("datetimepicker");
+                self::add_javascript('phpgwapi', 'pecalendar', 'luxon.js');
+                self::add_javascript('bookingfrontend', 'bookingfrontend_2', 'components/light-box.js', true);
 
+                $GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/pecalendar/pecalendar.css");
+                $GLOBALS['phpgw']->css->add_external_file("bookingfrontend/js/bookingfrontend_2/components/light-box.css");
+                $resource['description'] = self::removeInitialEmptyHtmlTags($resource['description']);
+
+
+            } else {
+                $GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
+            }
 			self::add_javascript('bookingfrontend', 'base', 'resource.js', true);
-			$GLOBALS['phpgw']->js->add_external_file("phpgwapi/templates/bookingfrontend/js/build/aui/aui-min.js");
 
-			self::render_template_xsl('resource', $data);
+            $template = 'resource';
+
+
+            self::add_external_css_with_search($template . '.css', false);
+//            _debug_array($data);die();
+			self::render_template_xsl($template, $data);
 		}
 
 		private function get_location()

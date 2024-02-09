@@ -793,7 +793,7 @@ h4, .h4 {
   font-size: 0.875rem;
   line-height: 1.75rem;
 }
-.text-body {
+.text-body, .text-normal {
   font-size: 1rem;
   line-height: 1.75rem;
 }
@@ -831,11 +831,52 @@ h4, .h4 {
   font-weight: 900;
 }
 
+.line-height-h1 {
+  line-height: 1.75;
+}
+@media (min-width: 768px) {
+  .line-height-h1 {
+    line-height: 1.75;
+  }
+}
+.line-height-h2 {
+  line-height: 2.2;
+}
+@media (min-width: 768px) {
+  .line-height-h2 {
+    line-height: 1.75;
+  }
+}
+.line-height-h3 {
+  line-height: 1.4;
+}
+@media (min-width: 768px) {
+  .line-height-h3 {
+    line-height: 2.2;
+  }
+}
+.line-height-h4 {
+  line-height: 1.4;
+}
+@media (min-width: 768px) {
+  .line-height-h4 {
+    line-height: 1.4;
+  }
+}
+
 .box-shadow {
   box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15);
 }
 .box-shadow--large {
   box-shadow: 3px 3px 50px 0px rgba(0, 0, 0, 0.1);
+}
+
+.divider {
+  height: 1px;
+  border-color: rgba(40, 53, 139, 0.2);
+}
+.divider-primary {
+  border-color: rgba(121, 60, 138, 0.2);
 }
 
 .rounded-mini {
@@ -906,6 +947,24 @@ h4, .h4 {
   background: #FFFFFF;
   color: #793C8A;
 }
+.pe-btn i.fa-solid {
+  font-size: 1.5rem;
+}
+.pe-btn-colour-secondary {
+  border: 2px solid #28358B;
+  color: #28358B;
+  background: #FFFFFF;
+}
+.pe-btn-colour-secondary:hover, .pe-btn-colour-secondary:active {
+  background: #28358B !important;
+  color: #FFFFFF !important;
+  border: 2px solid #28358B;
+}
+.pe-btn-colour-secondary:focus-visible {
+  border-color: #28358B;
+  background: #FFFFFF;
+  color: #28358B;
+}
 .pe-btn--small {
   font-size: 0.875rem;
   padding: 0.344rem 1.25rem;
@@ -931,38 +990,55 @@ h4, .h4 {
   min-width: 2.5rem;
 }
 .pe-btn--small-circle {
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   border-radius: 50%;
-  width: 25px;
-  height: 25px;
+  width: 24px;
+  height: 24px;
   padding: 0;
-  font-weight: 400;
-  font-size: 0.75rem;
+  font-size: 12px;
   cursor: pointer;
   transition: background-color 0.3s;
+}
+.pe-btn--small-circle i {
+  display: flex; /* Ensure the icon itself is also flex */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  width: 100%; /* Make the icon fill the button to center it properly */
+}
+.pe-btn--small-circle i::before {
+  display: inline-block; /* Allows for text-centering within the flex item */
+  text-align: center;
+  width: 100%; /* Ensures the pseudo-element covers the flex item's area */
 }
 .pe-btn--small-circle:hover, .pe-btn--small-circle:active {
   background: #e9e0ec;
   color: #793C8A;
+  fill: #793C8A;
 }
 .pe-btn--small-circle:focus-visible {
   border-color: #793C8A;
   background: #FFFFFF;
   color: #793C8A;
+  fill: #793C8A;
 }
 .pe-btn--small-circle.pe-btn-secondary {
   color: #000000;
+  fill: #000000;
   background: #e9e0ec;
 }
 .pe-btn--small-circle.pe-btn-secondary:hover, .pe-btn--small-circle.pe-btn-secondary:active {
   background: #793C8A;
   color: #FFFFFF;
+  fill: #FFFFFF;
 }
 .pe-btn--small-circle.pe-btn-secondary:focus-visible {
   border-color: #793C8A;
   background: #FFFFFF;
   color: #793C8A;
+  fill: #793C8A;
 }
 
 a, a:link, a:visited {
@@ -991,6 +1067,28 @@ a.arrow::after {
   transform: rotate(-30deg);
   right: 0;
   top: -0.1rem;
+}
+a.link-text {
+  text-decoration: none;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+a.link-text.underline {
+  text-decoration: underline;
+}
+a.link-text-primary {
+  color: #793C8A;
+}
+a.link-text-primary:hover {
+  color: #28358B;
+}
+a.link-text-secondary {
+  color: #28358B;
+}
+a.link-text-secondary:hover {
+  color: #793C8A;
 }
 a.link-button {
   padding: 0.713rem 1.5rem;
@@ -1242,6 +1340,9 @@ textarea {
   z-index: 2 !important;
   margin-top: 0.5rem;
   width: auto;
+}
+.ui-datepicker th.ui-datepicker-week-col {
+  visibility: hidden;
 }
 .ui-datepicker.ui-widget {
   border: 2px solid #793C8A;
@@ -1825,6 +1926,10 @@ textarea {
   font-size: 0.875rem;
   color: #000000;
   font-weight: 400;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
 }
 @media (min-width: 768px) {
   .slidedown__toggler__info {
@@ -1832,8 +1937,11 @@ textarea {
   }
 }
 .slidedown__toggler__info__separator {
-  padding: 0 0.25rem;
-  font-weight: 900;
+  display: flex;
+  align-items: center;
+}
+.slidedown__toggler__info__separator .fa-circle {
+  font-size: 0.375rem;
 }
 .slidedown__content {
   padding: 1rem 2rem 1rem 1.5rem;
@@ -2413,9 +2521,9 @@ textarea {
 }
 .pill--secondary {
   --main-divider-opacity: 20%;
-  --main-bg-color: #c9b1d0;
+  --main-bg-color: #dfd0e3;
   --main-divider-color: #793C8A;
-  --main-text-color: #000000;
+  --main-text-color: #793C8A;
 }
 .pill--success {
   --main-divider-opacity: 20%;
@@ -2435,7 +2543,7 @@ textarea {
   --main-divider-color: #793C8A;
   --main-text-color: #000000;
 }
-.pill .pill-date, .pill .pill-divider, .pill .pill-content, .pill .pill-icon {
+.pill .pill-date, .pill .pill-divider, .pill .pill-content, .pill .pill-icon, .pill .pill-time {
   padding-top: 5px;
   padding-bottom: 5px;
   background-color: var(--main-bg-color);
@@ -2471,7 +2579,7 @@ textarea {
   background-color: var(--main-divider-color);
   opacity: var(--main-divider-opacity);
 }
-.pill .pill-content {
+.pill .pill-content, .pill .pill-time {
   grid-area: summary;
   padding-right: 10px;
   padding-left: 10px;
@@ -2495,6 +2603,206 @@ textarea {
 .pill .pill-icon:hover {
   background-color: var(--main-bg-color);
   filter: brightness(120%);
+}
+.pill > *:only-child {
+  border-radius: 50px;
+}
+.pill .last-child {
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+}
+.pill .multi-date {
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
+  background-color: var(--main-bg-color);
+  padding-right: 15px; /* Adjust padding if necessary */
+  align-items: center;
+}
+.pill .multi-date .date {
+  grid-area: date;
+}
+.pill .multi-date .time {
+  grid-area: summary;
+}
+
+.remark {
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
+.info-icon {
+  border: 2px solid black;
+  border-radius: 50%;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.info-icon i {
+  font-size: 0.75rem;
+}
+
+.article-table-wrapper {
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+}
+.article-table-wrapper .article-table-header, .article-table-wrapper .category-header, .article-table-wrapper .category-article-row {
+  grid-template-columns: 4.25fr 3.75fr 3fr 3fr 2fr 3rem;
+  gap: 1rem;
+}
+.article-table-wrapper .article-table-header {
+  display: grid;
+  grid-template-areas: "name unused price hours total expand";
+  background-color: #707070;
+  color: #FFFFFF;
+  padding: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+  align-items: center;
+}
+@media all and (max-width: 992px) {
+  .article-table-wrapper .article-table-header {
+    grid-template-columns: 2fr 1fr 1fr 3rem;
+    grid-template-areas: "name hours total expand";
+  }
+  .article-table-wrapper .article-table-header .resource-price {
+    display: none;
+  }
+}
+.article-table-wrapper .article-table-header.collapsed-head {
+  border-bottom-right-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+.article-table-wrapper .article-table-header .resource-name {
+  grid-area: name;
+}
+.article-table-wrapper .article-table-header .resource-price {
+  grid-area: price;
+}
+.article-table-wrapper .article-table-header .resource-hours {
+  grid-area: hours;
+}
+.article-table-wrapper .article-table-header .resource-total {
+  grid-area: total;
+}
+.article-table-wrapper .article-table-header .resource-expand {
+  grid-area: expand;
+  text-align: center;
+  cursor: pointer;
+}
+.article-table-wrapper .article-table-header .resource-expand button {
+  color: #FFFFFF;
+}
+.article-table-wrapper .category-table {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+@media all and (max-width: 992px) {
+  .article-table-wrapper .category-table:last-child {
+    border-bottom-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+  }
+}
+@media all and (min-width: 992px) {
+  .article-table-wrapper .category-table {
+    border-bottom-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .article-table-wrapper .category-table ~ .category-table .category-header {
+    border-top-right-radius: 0.5rem;
+    border-top-left-radius: 0.5rem;
+  }
+}
+.article-table-wrapper .category-table .category-header {
+  display: grid;
+  grid-template-areas: "group-title head-desc head-unit head-count head-total unused";
+  padding: 0.5rem;
+  background-color: #c2c2c2;
+}
+@media all and (max-width: 992px) {
+  .article-table-wrapper .category-table .category-header {
+    grid-template-columns: 2fr 1fr 3rem;
+    grid-template-areas: "group-title group-title group-title expand";
+  }
+  .article-table-wrapper .category-table .category-header .category-header-unit-price, .article-table-wrapper .category-table .category-header .category-header-count, .article-table-wrapper .category-table .category-header .category-header-total, .article-table-wrapper .category-table .category-header .category-header-description {
+    display: none;
+  }
+}
+.article-table-wrapper .category-table .category-header .category-name {
+  margin-left: 3rem;
+  grid-area: group-title;
+}
+@media all and (max-width: 992px) {
+  .article-table-wrapper .category-table .category-header .category-name {
+    margin-left: 0;
+  }
+}
+.article-table-wrapper .category-table .category-header .category-header-description {
+  grid-area: head-desc;
+}
+.article-table-wrapper .category-table .category-header .category-header-unit-price {
+  grid-area: head-unit;
+}
+.article-table-wrapper .category-table .category-header .category-header-count {
+  grid-area: head-count;
+}
+.article-table-wrapper .category-table .category-header .category-header-total {
+  grid-area: head-total;
+}
+.article-table-wrapper .category-table .category-articles .category-article-row {
+  display: grid;
+  grid-template-areas: "name desc price quantity sum unused";
+  padding: 0.5rem;
+}
+@media all and (max-width: 992px) {
+  .article-table-wrapper .category-table .category-articles .category-article-row {
+    padding: 1rem;
+    grid-template-columns: 3fr 2fr;
+    grid-template-areas: "name quantity" "desc-title desc" "price-title price" "sum-title sum";
+  }
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .desc-title, .article-table-wrapper .category-table .category-articles .category-article-row .price-title, .article-table-wrapper .category-table .category-articles .category-article-row .sum-title {
+  align-self: center;
+}
+@media all and (min-width: 992px) {
+  .article-table-wrapper .category-table .category-articles .category-article-row .desc-title, .article-table-wrapper .category-table .category-articles .category-article-row .price-title, .article-table-wrapper .category-table .category-articles .category-article-row .sum-title {
+    display: none;
+  }
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .desc-title {
+  grid-area: desc-title;
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .price-title {
+  grid-area: price-title;
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .sum-title {
+  grid-area: sum-title;
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .item-name {
+  margin-left: 3rem;
+  grid-area: name;
+}
+@media all and (max-width: 992px) {
+  .article-table-wrapper .category-table .category-articles .category-article-row .item-name {
+    margin-left: 0;
+  }
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .item-description {
+  grid-area: desc;
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .item-price {
+  grid-area: price;
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .item-quantity {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+  grid-area: quantity;
+}
+.article-table-wrapper .category-table .category-articles .category-article-row .item-sum {
+  grid-area: sum;
 }
 
 /*# sourceMappingURL=main.css.map */

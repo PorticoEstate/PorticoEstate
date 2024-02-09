@@ -112,8 +112,8 @@ class ArticleTableViewModel {
     updateMandatoryQuantities(dates) {
         let totalMilliseconds = 0;
         dates.forEach((dateRange) => {
-            const from = DateTime.fromFormat(dateRange.from_, "dd/MM/yyyy HH:mm");
-            const to = DateTime.fromFormat(dateRange.to_, "dd/MM/yyyy HH:mm");
+            const from = luxon.DateTime.fromFormat(dateRange.from_, "dd/MM/yyyy HH:mm");
+            const to = luxon.DateTime.fromFormat(dateRange.to_, "dd/MM/yyyy HH:mm");
 
             // Check if 'from' and 'to' are valid Luxon DateTime objects
             if (from.isValid && to.isValid) {
@@ -268,6 +268,8 @@ class ArticleTableViewModel {
             item.selected_sum = ko.pureComputed(function () {
                 return (item.selected_quantity() * parseFloat(item.price)).toFixed(2);
             });
+
+
             if (item.parent_mapping_id) {
                 // Check if the parent actually exists
                 if (resources[item.parent_mapping_id]) {
@@ -281,6 +283,11 @@ class ArticleTableViewModel {
                     // You might want to handle this situation differently, depending on your needs.
                 }
             }
+            // Add a computed observable for computedString
+            item.computed_selected_article = ko.pureComputed(function () {
+                const val = `${item.id}_${item.selected_quantity()}_x_x_${item.parent_mapping_id || 'null'}`
+                return `${item.id}_${item.selected_quantity()}_x_x_${item.parent_mapping_id || 'null'}`;
+            });
         });
 
         return resources;
@@ -401,6 +408,8 @@ ko.components.register('article-table', {
                     <input type="hidden" data-bind="value: resource.info.selected_quantity"
                            name="resource_quantities[]">
                     <input type="hidden" data-bind="value: resource.info.mandatory" name="resource_mandatory[]">
+                    <input type="hidden" name="selected_articles[]"
+                           data-bind="value: resource.info.computed_selected_article">
                     <!-- Add other hidden fields as needed -->
                 </td>
             </div>
@@ -423,11 +432,11 @@ ko.components.register('article-table', {
                         <div class="category-article-row">
                             <div class="item-name" data-bind="text: item.name"></div>
                             <div class="desc-title">Beskrivelse</div>
-                            
+
                             <div class="item-description"
                                  data-bind="text: $parents[2].cleanText(item.article_remark)"></div>
                             <div class="price-title">Pris pr enhet</div>
-                            
+
                             <div class="item-price"
                                  data-bind="text: $parents[2].toLocale(item.price) + (item.unit === 'each' ? '/stk' : '/' + item.unit)"></div>
                             <!--                            <td class="item-quantity">-->
@@ -437,13 +446,22 @@ ko.components.register('article-table', {
                             <div class="item-quantity">
                                 <button type="button" class=" pe-btn pe-btn-secondary pe-btn--small-circle "
                                         data-bind="click: function(data, event) { $parents[2].decrementQuantity(item)  }">
-                                    <i class="fas fa-minus fa-fw"></i>
+                                    <svg viewBox="0 0 48 48"
+                                         xmlns="http://www.w3.org/2000/svg" ml-update="aware">
+                                        <path class="horizontal" d="M32,26H16a2,2,0,0,1,0-4H32A2,2,0,0,1,32,26Z"/>
+                                    </svg>
                                 </button>
                                 <span style="display: inline-block;min-width: 20px; text-align: center"
                                       data-bind="text: item.selected_quantity"></span>
                                 <button type="button" class=" pe-btn pe-btn-secondary pe-btn--small-circle "
                                         data-bind="click: function() { $parents[2].incrementQuantity(item) }">
-                                    <i class="fas fa-plus fa-fw"></i>
+                                    <svg viewBox="0 0 48 48"
+                                         xmlns="http://www.w3.org/2000/svg" ml-update="aware">
+                                        <path class="horizontal" d="M32,26H16a2,2,0,0,1,0-4H32A2,2,0,0,1,32,26Z"/>
+                                        <path class="vertical"
+                                              d="M24,34a2,2,0,0,1-2-2V16a2,2,0,0,1,4,0V32A2,2,0,0,1,24,34Z"
+                                        />
+                                    </svg>
                                 </button>
                             </div>
                             <div class="sum-title">Total</div>
@@ -456,6 +474,9 @@ ko.components.register('article-table', {
                                        name="selected_quantities[]">
                                 <input type="hidden" data-bind="value: item.parent_mapping_id"
                                        name="parent_mapping_ids[]">
+                                <input type="text" name="selected_articles[]"
+                                       data-bind="value: item.computed_selected_article">
+
                             </div>
                         </div>
                         <!-- /ko -->

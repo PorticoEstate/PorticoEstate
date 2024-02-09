@@ -713,6 +713,10 @@
   table-layout: fixed; /* This helps to ensure that all columns follow the width strictly */
 }
 
+.resource-select .select2-container--select-v2 .select2-selection {
+  border-radius: 0.5rem;
+}
+
 .remark {
   font-weight: 400;
   font-size: 0.8rem;
@@ -729,10 +733,6 @@
 }
 .info-icon i {
   font-size: 0.75rem;
-}
-
-.resource-select .select2-container--select-v2 .select2-selection {
-  border-radius: 0.5rem;
 }
 
 .article-table-wrapper {

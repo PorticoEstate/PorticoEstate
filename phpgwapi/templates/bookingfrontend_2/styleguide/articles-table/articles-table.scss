@@ -1,206 +1,3 @@
-@import '../../../../phpgwapi/templates/bookingfrontend_2/styleguide/colors/colors.scss';
-
-.dropdownContainer {
-  position: relative;
-  display: inline-block;
-}
-
-.timeDropdown {
-  z-index: 1;
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  width: 100%;
-  max-height: 150px;
-  overflow-y: auto;
-
-  div {
-    padding: 5px;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #eee;
-    }
-
-    &.active {
-      background-color: #eee;
-    }
-  }
-}
-
-
-//.article-table {
-//  margin: 0;
-//  padding: 0;
-//
-//  border-spacing: 0;
-//  border-collapse: separate;
-//  border-radius: 0.5rem;
-//
-//  & + table {
-//    margin-top: 0;
-//  }
-//
-//  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-//  // 16 parts
-//  &.resource-table {
-//    &.collapsed-head {
-//      .resource {
-//        &-name {
-//          border-bottom-left-radius: 0.5rem;
-//
-//        }
-//
-//        &-expand {
-//          border-bottom-right-radius: 0.5rem;
-//        }
-//      }
-//    }
-//
-//    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-//
-//    .resource {
-//
-//      &-name {
-//        border-top-left-radius: 0.5rem;
-//        width: calc(100% / 16 * 5);
-//
-//      }
-//
-//      &-price {
-//        width: calc(100% / 16 * 6);
-//        text-align: end;
-//      }
-//
-//      &-hours {
-//        width: calc(100% / 16 * 3);
-//        text-align: end;
-//
-//      }
-//
-//      &-total {
-//        width: calc(100% / 16 * 3);
-//        text-align: end;
-//
-//      }
-//
-//      &-expand {
-//        border-top-right-radius: 0.5rem;
-//        width: calc(100% / 16 * 1);
-//        text-align: center;
-//
-//        cursor: pointer;
-//
-//        button {
-//          color: $white;
-//        }
-//      }
-//
-//    }
-//
-//    --bs-table-bg: #{$purple-80};
-//    --bs-table-color-state: #{$white};
-//
-//    th {
-//      vertical-align: middle;
-//
-//    }
-//  }
-//
-//  &.child-table {
-//    &:not(:last-of-type) {
-//      margin-bottom: 1rem;
-//    }
-//
-//    &:not(:first-of-type) {
-//      margin-bottom: 1rem;
-//
-//      thead {
-//        th {
-//          border-top-left-radius: 0.5rem;
-//          border-top-right-radius: 0.5rem;
-//        }
-//      }
-//    }
-//
-//    thead {
-//      th {
-//
-//        text-align: start;
-//        width: calc(100% / 16 * 15);
-//        padding-left: calc(100% / 16 * 1);
-//      }
-//
-//      --bs-table-bg: #{$purple-24};
-//    }
-//
-//    tr:last-child {
-//      td:first-child {
-//        border-bottom-left-radius: 0.5rem;
-//
-//      }
-//
-//      td:last-child {
-//        border-bottom-right-radius: 0.5rem;
-//
-//      }
-//    }
-//
-//    .item {
-//      &-name {
-//        width: calc(100% / 16 * 3);
-//        padding-left: calc(100% / 16 * 1);
-//      }
-//
-//      &-description {
-//        width: calc(100% / 16 * 3);
-//      }
-//
-//      &-price {
-//        width: calc(100% / 16 * 3);
-//      }
-//
-//      &-quantity {
-//        width: calc(100% / 16 * 3);
-//      }
-//
-//      &-sum {
-//        width: calc(100% / 16 * 3);
-//      }
-//    }
-//
-//
-//  }
-//
-//
-//}
-
-.hidden-inputs {
-  display: none;
-}
-
-/* Ensures that the input fields fit within the designated column width */
-.form-control {
-  width: 100%;
-  box-sizing: border-box; /* Makes sure padding doesn't affect overall width */
-}
-
-/* Make sure tables take up the full width of the container */
-.table {
-  width: 100%;
-  table-layout: fixed; /* This helps to ensure that all columns follow the width strictly */
-}
-
-
-.resource-select {
-  .select2-container--select-v2 .select2-selection {
-    border-radius: 0.5rem;
-  }
-}
-
 
 .remark {
   font-weight: 400;
@@ -242,7 +39,8 @@
       }
     }
 
-    background-color: #{$purple-80};
+    //background-color: #{$purple-80};
+    background-color: #{$black-56};
     color: #{$white};
     padding: 0.5rem;
 
@@ -311,7 +109,8 @@
       display: grid;
       grid-template-areas: "group-title head-desc head-unit head-count head-total unused";
       padding: 0.5rem;
-      background-color: #{$purple-24};
+      //background-color: #{$purple-24};
+      background-color: #{$black-24};
       @media all and (max-width: 992px) {
         grid-template-columns: 2fr 1fr 3rem;
         grid-template-areas: "group-title group-title group-title expand";
@@ -395,6 +194,9 @@
         }
 
         .item-quantity {
+          display: flex;
+          gap: 0.25rem;
+          align-items: center;
           grid-area: quantity;
         }
 

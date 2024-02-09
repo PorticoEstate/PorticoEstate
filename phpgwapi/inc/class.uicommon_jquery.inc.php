@@ -384,7 +384,6 @@
 		 */
 		public static function add_template_file( $tmpl )
 		{
-
 			$tmpl_search_path = self::get_tmpl_search_path();
 
 			if (is_array($tmpl))
@@ -517,6 +516,27 @@
 			self::add_template_file('helpers');
 		}
 
+        function cleanTownName($townName) {
+            $lines = explode("\n", $townName);
+            $cleanedLines = array();
+
+            foreach ($lines as $line) {
+                // Check if 'Bydel' is in the line
+                if (strpos(strtolower($line), 'bydel') !== false) {
+                    // Remove 'Bydel'
+                    $line = preg_replace("/bydel/i", "", $line);
+                    $line = trim($line);
+                }
+
+                // Capitalize first letter of each word
+                $line = ucwords(strtolower($line));
+                array_push($cleanedLines, $line);
+            }
+
+            return implode("\n", $cleanedLines);
+        }
+
+
 		public static function render_template_xsl( $files, $data, $xsl_rootdir = '' , $base = 'data')
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
@@ -561,6 +581,7 @@
 			$output = phpgw::get_var('output', 'string', 'REQUEST', 'html');
 			$GLOBALS['phpgw']->xslttpl->set_output($output);
 			self::add_template_file($files);
+
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array($base => $data));
 		}
 

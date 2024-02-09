@@ -166,12 +166,17 @@ $current-time-color: #ea4335;
     .pending-row {
       display: flex;
       flex-direction: row;
-      max-height: 2.75rem;
       justify-content: space-between;
       .pills{
+        &.collapsed {
+          max-height: 2.75rem;
+        }
         display: none;
         @media screen and (min-width: 840px) {
-          overflow-x: hidden;
+          min-height: 2.75rem;
+
+          overflow-y: hidden;
+          flex-wrap: wrap;
           border-top-right-radius: 50px;
           border-bottom-right-radius: 50px;
           display: flex;
@@ -179,23 +184,11 @@ $current-time-color: #ea4335;
           gap: 0.275rem;
         }
       }
-      .showall-btn {
-        flex-grow: 1;
-        button {
-          max-height: 2.75rem;
-          padding-top: 0.34375rem;
-          padding-bottom: 0.34375rem;
-          &:after {
-            top: 0.375rem;
-          }
-        }
-        min-width: 20rem;
-
-        max-width: 25rem;
-        @media screen and (max-width: 840px) {
-          max-width: unset;
-          min-width: unset;
-        }
+      .show-more {
+        flex-wrap: nowrap;
+        white-space: nowrap;
+        min-width: 10rem;
+        align-self: flex-start;
       }
 
     }
@@ -407,6 +400,7 @@ $current-time-color: #ea4335;
 
     .past-day, .past-hour {
       background-color: #eaeaea;
+      z-index: auto;
     }
 
     .filler-col {
@@ -466,6 +460,13 @@ $current-time-color: #ea4335;
       font-weight: bold;
     }
 
+    .dots-container{
+      z-index: 11;
+      i {
+        color: white;
+      }
+    }
+
     .event-allocation {
       background-color: #E6E3DB;;
       border-color: #FFF;
@@ -519,7 +520,12 @@ $current-time-color: #ea4335;
       display: flex;
       justify-content: space-between;
       margin-left: 1.5rem;
-      opacity: 0.75;
+      z-index: 11; /* Ensure they are on top */
+      &.current-temp {
+        z-index: auto;
+      }
+
+      //opacity: 0.75;
       //resize: vertical;
       //overflow: auto;
       &::before,
@@ -531,7 +537,7 @@ $current-time-color: #ea4335;
         right: 0;
         height: 10px; /* Define the height of the resizable area at the top and bottom */
         cursor: ns-resize; /* Two-sided vertical arrow */
-        z-index: 2; /* Ensure they are on top */
+        z-index: 12; /* Ensure they are on top */
       }
 
       &::before {
@@ -666,3 +672,75 @@ $current-time-color: #ea4335;
     // Additional styles for the content
   }
 }
+
+
+.calendar-cell {
+  z-index: 10;
+}
+
+.time-slot-card {
+  //border: 1px solid #ddd;
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: 6.375rem 1fr auto;
+  min-height: 5rem;
+  align-items: center;
+  max-width: 450px;
+
+  .time-slot-status {
+    border-radius: 0.5rem 0 0 0.5rem ;
+    border: 1px solid $purple-24;
+    border-right: 0;
+
+    padding-left: 1rem;
+    font-weight: bold;
+
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    &.green { background-color: $green-light; }
+    &.yellow { background-color: $yellow-light; }
+    &.red { background-color: $red-light; }
+  }
+
+  .time-slot-date-time {
+    flex-direction: column;
+    align-self: stretch;
+    border: 1px solid $purple-24;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    border-right: 0;
+    border-left: 0;
+    display: flex;
+    justify-content: center;
+  //  d-flex flex-wrap gap-1
+    .time-slot-date-container {
+      .single-date {
+        display: flex;
+        gap: 0.25rem;
+        flex-direction: column;
+      }
+      .multi-date {
+        display: flex;
+        gap: 0.25rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+    }
+  }
+
+  .time-slot-button {
+  padding-right: 1rem;
+  padding-left: 1rem;
+    display: flex;
+    border: 1px solid $purple-24;
+    border-left: 0;
+
+    align-self: stretch;
+    align-items: center;
+
+    border-radius:0  0.5rem 0.5rem 0 ;
+
+  }
+}
+
