@@ -1396,5 +1396,142 @@
 			$this->db->query("DELETE FROM phpgw_locations WHERE location_id = {$location_id}", __LINE__, __FILE__);
 			return $this->db->transaction_commit();
 		}
+
+		//read_checklist_stage
+		function read_checklist_stage( $data )
+		{
+			$checklist_id = (int) $data['checklist_id'];
+			$sql = "SELECT * FROM fm_bim_item_checklist_stage WHERE checklist_id = {$checklist_id} ORDER BY id ASC";
+			$this->db->query($sql, __LINE__, __FILE__);
+			
+			$values = array();
+			
+			while ($this->db->next_record())
+			{
+				$values[] = array(
+					'id' => (int) $this->db->f('id'),
+					'checklist_id' => (int) $this->db->f('checklist_id'),
+					'name' => $this->db->f('name', true),
+					'active' => (int)$this->db->f('active'),
+				);
+			}
+			return $values;
+		}
+
+		/**
+		 * read_single_checklist_stage
+		 * @param int $id
+		 * @return array
+		 */
+		function read_single_checklist_stage( $id )
+		{
+			$values = array();
+			$sql = "SELECT * FROM fm_bim_item_checklist_stage WHERE id = " . (int)$id;
+			$this->db->query($sql, __LINE__, __FILE__);
+			if ($this->db->next_record())
+			{
+				$values = array(
+					'id' => (int) $this->db->f('id'),
+					'checklist_id' => (int) $this->db->f('checklist_id'),
+					'name' => $this->db->f('name', true),
+					'active' => (int)$this->db->f('active'),
+					'active_attribs' => json_decode($this->db->f('active_attribs'), true),
+				);
+			}
+			return $values;
+
+		}
+
+		/**
+		 * add_checklist_stage
+		 * @param array $data
+		 * @return array
+		 */
+		function add_checklist_stage( $data )
+		{
+			$this->db->transaction_begin();
+
+			$name = $this->db->db_addslashes($data['name']);
+
+			$values = array(
+				$data['checklist_id'],
+				$name,
+				$data['active'],
+				json_encode($data['active_attribs'])
+			);
+			$values = $this->db->validate_insert($values);
+			$this->db->query("INSERT INTO fm_bim_item_checklist_stage (checklist_id, name, active, active_attribs)"
+			 . " VALUES ($values)", __LINE__, __FILE__);
+
+			//last insert id
+			$receipt['id'] = $this->db->get_last_insert_id('fm_bim_item_checklist_stage', 'id'); 
+
+			$this->db->transaction_commit();
+
+			$receipt['message'][] = array('msg' => lang('checklist stage has been added'));
+			return $receipt;
+
+		}
+
+		/**
+		 * edit_checklist_stage
+		 * @param array $data
+		 * @return array
+		 */
+		function edit_checklist_stage( $data )
+		{
+			if (!$data['name'])
+			{
+				$receipt['error'][] = array('msg' => lang('Name not entered!'));
+			}
+
+			if (!$data['error'])
+			{
+				$table = "fm_bim_item_checklist_stage";
+
+				$data['name']	 = $this->db->db_addslashes($data['name']);
+
+				$value_set = array(
+					'name'			 => $data['name'],
+					'active'		 => $data['active'],
+					'active_attribs' => json_encode($data['active_attribs'])
+				);
+
+				$value_set = $this->db->validate_update($value_set);
+
+				$this->db->transaction_begin();
+
+				$this->db->query("UPDATE $table SET {$value_set} WHERE id=" . (int)$data['id'], __LINE__, __FILE__);
+
+				$this->db->transaction_commit();
+
+				$receipt['message'][] = array('msg' => lang('checklist stage has been edited'));
+			}
+			else
+			{
+				$receipt['error'][] = array('msg' => lang('checklist stage has NOT been edited'));
+			}
+
+			$receipt['id'] = $data['id'];
+
+			return $receipt;
+		}
+
+		/**
+		 * delete_checklist_stage
+		 * @param int $id
+		 * @return bool
+		 */
+		function delete_checklist_stage( $id )
+		{
+			$this->db->transaction_begin();
+			$id = (int)$id;
+			//delete all checklist data
+			$this->db->query("DELETE FROM fm_bim_item_checklist_data WHERE stage_id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_bim_item_checklist_stage WHERE id = {$id}", __LINE__, __FILE__);
+			return $this->db->transaction_commit();
+		}
+
+
 		
 	}

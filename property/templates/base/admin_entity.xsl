@@ -21,6 +21,9 @@
 		<xsl:when test="edit_checklist">
 			<xsl:apply-templates select="edit_checklist"/>
 		</xsl:when>
+		<xsl:when test="edit_checklist_stage">
+			<xsl:apply-templates select="edit_checklist_stage"/>
+		</xsl:when>
 		<xsl:when test="list_config">
 			<xsl:apply-templates select="list_config"/>
 		</xsl:when>
@@ -939,6 +942,168 @@
 
 <!-- add / edit checklist  -->
 <xsl:template xmlns:php="http://php.net/xsl" match="edit_checklist">
+	<script type="text/javascript">
+		self.name="first_Window";
+		<xsl:value-of select="lookup_functions"/>
+		var base_java_url = <xsl:value-of select="base_java_url"/>;
+	</script>
+
+	<xsl:choose>
+		<xsl:when test="msgbox_data != ''">
+			<dl>
+				<dt>
+					<xsl:call-template name="msgbox"/>
+				</dt>
+			</dl>
+		</xsl:when>
+	</xsl:choose>
+	<xsl:variable name="form_action">
+		<xsl:value-of select="form_action"/>
+	</xsl:variable>
+	<form name="form" class="pure-form pure-form-aligned" method="post" id="form" action="{$form_action}">
+		<div id="tab-content">
+			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+			<div id="general">
+				<fieldset>
+
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'entity')"/>
+						</label>
+						<label>
+							<xsl:value-of select="entity_name"/>
+						</label>
+					</div>
+					<xsl:choose>
+						<xsl:when test="value_id > 0">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'id')"/>
+								</label>
+								<xsl:value-of select="value_id"/>
+							</div>
+						</xsl:when>
+					</xsl:choose>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'name')"/>
+						</label>
+
+						<input type="text" data-validation="required" name="values[name]" value="{value_name}" class="pure-input-3-4">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_name_standardtext"/>
+							</xsl:attribute>
+						</input>
+
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'descr')"/>
+						</label>
+						<textarea cols="60" rows="10" name="values[descr]" class="pure-input-3-4">
+							<xsl:attribute name="title">
+								<xsl:value-of select="lang_descr_standardtext"/>
+							</xsl:attribute>
+							<xsl:value-of select="value_descr"/>
+						</textarea>
+					</div>
+					
+					<xsl:choose>
+						<xsl:when test="fileupload != ''">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'enable file upload')"/>
+								</label>
+								<input type="checkbox" name="values[fileupload]" value="1">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'If files can be uploaded for this category')"/>
+									</xsl:attribute>
+									<xsl:if test="value_fileupload = '1'">
+										<xsl:attribute name="checked">
+											<xsl:text>checked</xsl:text>
+										</xsl:attribute>
+									</xsl:if>
+								</input>
+							</div>
+						</xsl:when>
+					</xsl:choose>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'active')"/>
+						</label>
+						<input type="checkbox" name="values[active]" value="1">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'active')"/>
+							</xsl:attribute>
+							<xsl:if test="value_active = '1'">
+								<xsl:attribute name="checked">
+									<xsl:text>checked</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
+						</input>
+					</div>
+
+					<xsl:choose>
+						<xsl:when test="value_id = ''">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'template')"/>
+								</label>
+								<select id="checklist_template" name="values[checklist_template]" onChange="get_template_attributes()" class="pure-input-3-4">
+									<option value="">
+										<xsl:value-of select="php:function('lang', 'select template')"/>
+									</option>
+									<xsl:apply-templates select="checklist_list/options"/>
+								</select>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'attributes')"/>
+								</label>
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_0'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl'/>
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+											<xsl:with-param name="data" select ='data'/>
+											<xsl:with-param name="config" select ='config'/>
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
+						</xsl:when>
+					</xsl:choose>
+				</fieldset>
+			</div>
+		</div>
+	</form>
+
+	<div class="pure-controls">
+		<input type="hidden" name="template_attrib" value=""/>
+		<input type="button" class="pure-button pure-button-primary" name="values[save]" value="{php:function('lang', 'save')}" onClick="onActionsClick();">
+			<xsl:attribute name="title">
+				<xsl:value-of select="php:function('lang', 'save')"/>
+			</xsl:attribute>
+		</input>
+		<xsl:variable name="done_action">
+			<xsl:value-of select="done_action"/>
+		</xsl:variable>
+		<xsl:variable name="lang_done">
+			<xsl:value-of select="php:function('lang', 'done')"/>
+		</xsl:variable>
+		<form method="post" action="{$done_action}">
+			<input type="submit" class="pure-button pure-button-primary" name="done" value="{$lang_done}">
+				<xsl:attribute name="title">
+					<xsl:value-of select="php:function('lang', 'done')"/>
+				</xsl:attribute>
+			</input>
+		</form>
+	</div>
+</xsl:template>
+
+<!-- add / edit checklist stage  -->
+<xsl:template xmlns:php="http://php.net/xsl" match="edit_checklist_stage">
 	<script type="text/javascript">
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>

@@ -71,6 +71,8 @@
 			'list_checklist_stage'		 => true,
 			'edit_checklist_stage'		 => true,
 			'save_checklist_stage'		 => true,
+			'delete_checklist_stage'	 => true,
+			
 		);
 		private $bo;
 		var $account,$bocommon, $entity_id, $cat_id,$allrows,$type, $type_app,
@@ -2650,17 +2652,6 @@
 				'form'			 => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type'	 => 'link',
-								'value'	 => lang('cancel'),
-								'href'	 => self::link(array(
-									'menuaction' => 'property.uiadmin_entity.category',
-									'entity_id'	 => $entity_id,
-									'type'		 => $this->type
-									)
-								),
-								'class'	 => 'new_item'
-							)
 						)
 					)
 				),
@@ -2715,6 +2706,15 @@
 				)
 			);
 
+			$parameters3 = array(
+				'parameter' => array(
+					array(
+						'name'	 => 'checklist_id',
+						'source' => 'id'
+					),
+				)
+			);
+
 
 			$data['datatable']['actions'][] = array
 				(
@@ -2746,7 +2746,7 @@
 				'action'	 => $GLOBALS['phpgw']->link('/index.php', array(
 					'menuaction' => 'property.uiadmin_entity.list_checklist_stage'
 				)),
-				'parameters' => json_encode($parameters)
+				'parameters' => json_encode($parameters3)
 			);
 
 			$data['datatable']['actions'][] = array(
@@ -2765,7 +2765,335 @@
 			unset($parameters);
 			unset($parameters2);
 
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'toggle_inactive',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => lang('cancel'),
+				'text'		 => lang('cancel'),
+				'custom_code'	 => 'window.open("' . self::link(array(
+					'menuaction' => 'property.uiadmin_entity.category',
+					'entity_id'	 => $entity_id,
+					'type'		 => $this->type
+					)
+				) . '", "_self");',
+			);
+
+			
+
 			self::render_template_xsl('datatable_jquery', $data);
+		}
+
+		// list_checklist_stage
+		function list_checklist_stage()
+		{
+			if (!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
+
+			// checklist_id
+			$checklist_id = phpgw::get_var('checklist_id', 'int');
+			$checklist = $this->bo->read_single_checklist($checklist_id);
+			$type_location_id = $checklist['type_location_id'];
+			if ($type_location_id)
+			{
+				$loc_arr	 = $GLOBALS['phpgw']->locations->get_name($type_location_id);
+				$type_arr	 = explode('.', $loc_arr['location']);
+				if (count($type_arr) != 4)
+				{
+					return array();
+				}
+
+				$type			 = $type_arr[1];
+				$entity_id	 = $type_arr[2];
+				$cat_id		 = $type_arr[3];
+			}
+
+			if (!$entity_id || !$cat_id)
+			{
+				return array();
+			}
+
+			$category	 = $this->bo->read_single_category($entity_id, $cat_id);
+
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query(array(
+						'method'	 => 'list_checklist_stage',
+						'checklist_id' => $checklist_id
+						)
+				);
+			}
+
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
+			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+
+			$appname		 = lang('checklist stage');
+			$function_msg	 = " ({$category['name']} / {$checklist['name']})";
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+			$data = array(
+				'datatable_name' => $appname,
+				'form'			 => array(
+					'toolbar' => array(
+						'item' => array(
+						)
+					)
+				),
+				'datatable'		 => array(
+					'source'		 => self::link(array(
+						'menuaction'		 => 'property.uiadmin_entity.list_checklist_stage',
+						'checklist_id'		 => $checklist_id,
+						'phpgw_return_as'	 => 'json'
+					)),
+					'new_item'		 => self::link(array(
+						'menuaction'	 => 'property.uiadmin_entity.edit_checklist_stage',
+						'checklist_id'		 => $checklist_id,
+					)),
+					'allrows'		 => true,
+					'editor_action'	 => '',
+					'field'			 => array(
+						array(
+							'key'		 => 'id',
+							'label'		 => lang('ID'),
+							'sortable'	 => true,
+							'formatter'	 => 'JqueryPortico.formatLink'
+						),
+						array(
+							'key'		 => 'name',
+							'label'		 => lang('Name'),
+							'sortable'	 => true
+						),
+						array(
+							'key'		 => 'location_id',
+							'label'		 => 'location id',
+							'sortable'	 => false
+						),
+					)
+				)
+			);
+
+			$parameters = array(
+				'parameter' => array(
+					array(
+						'name'	 => 'id',
+						'source' => 'id'
+					),
+				)
+			);
+
+
+			$data['datatable']['actions'][] = array
+				(
+				'my_name'	 => 'edit',
+				'statustext' => lang('Edit'),
+				'text'		 => lang('Edit'),
+				'action'	 => $GLOBALS['phpgw']->link(
+					'/index.php', array(
+					'menuaction' => 'property.uiadmin_entity.edit_checklist_stage'
+					)
+				),
+				'parameters' => json_encode($parameters)
+			);
+
+			$data['datatable']['actions'][] = array(
+				'my_name'		 => 'delete',
+				'statustext'	 => lang('Delete'),
+				'text'			 => lang('Delete'),
+				'confirm_msg'	 => lang('do you really want to delete this entry'),
+				'action'		 => $GLOBALS['phpgw']->link(
+					'/index.php', array(
+					'menuaction' => 'property.uiadmin_entity.delete_checklist_stage'
+					)
+				),
+				'parameters'	 => json_encode($parameters)
+			);
+
+			$data['datatable']['actions'][] = array(
+				'my_name'	 => 'toggle_inactive',
+				'className'	 => 'save',
+				'type'		 => 'custom',
+				'statustext' => lang('cancel'),
+				'text'		 => lang('cancel'),
+				'custom_code'	 => 'window.open("' . self::link(array(
+					'menuaction' => 'property.uiadmin_entity.list_checklist',
+					'location_id'	 => $type_location_id)) . '", "_self");',
+			);
+
+			unset($parameters);
+
+			self::render_template_xsl('datatable_jquery', $data);
+		}
+
+		/**
+		 * edit_checklist_stage
+		 */
+		function edit_checklist_stage($values = array())
+		{
+			if (!$this->acl_edit)
+			{
+				phpgw::no_access();
+			}
+
+			$checklist_id	 = phpgw::get_var('checklist_id', 'int');
+			$id				 = phpgw::get_var('id', 'int');
+			$values			 = $values ? $values  : phpgw::get_var('values');
+
+			$tabs			 = array();
+			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
+			$active_tab		 = 'general';
+
+			if ($id)
+			{
+				$values			 = $this->bo->read_single_checklist_stage($id);
+				$checklist_id	 = $values['checklist_id'];
+				$function_msg	 = lang('edit checklist stage');
+				$action			 = 'edit';
+			}
+			else
+			{
+				$function_msg	 = lang('add checklist stage');
+				$action			 = 'add';
+			}
+
+
+			$link_data = array(
+				'menuaction'		 => 'property.uiadmin_entity.save_checklist_stage',
+				'checklist_id'		 => $checklist_id,
+				'id'				 => $id
+			);
+
+
+			$msgbox_data		 = $this->bocommon->msgbox_data($this->receipt);
+
+
+			$data = array(
+				'msgbox_data'							 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'form_action'							 => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'done_action'							 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_entity.list_checklist_stage',
+																'checklist_id'	 => $checklist_id)),
+				'value_id'								 => $id,
+				'value_name'							 => $values['name'],
+				'checklist_id'							 => $checklist_id,
+				'value_descr'							 => $values['descr'],
+				'value_active'							 => $values['active'],
+				'attrib_list'							 => array('options' => $attrib_list),
+				'tabs'									 => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'validator'								 => phpgwapi_jquery::formvalidator_generate()
+			);
+
+			$appname = lang('entity');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
+
+			phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('numberformat');
+
+			self::add_javascript('property', 'base', 'admin_entity.edit_checklist.js');
+
+			self::render_template_xsl(array('admin_entity', 'datatable_inline'), array(
+				'edit_checklist_stage' => $data));
+		
+	
+		}
+
+		/**
+		 * save_checklist_stage
+		 */
+		public function save_checklist_stage()
+		{
+			if (!$this->acl_add)
+			{
+				phpgw::no_access();
+			}
+			if (!$_POST)
+			{
+				return $this->edit_checklist_stage();
+			}
+
+			$checklist_id	 = phpgw::get_var('checklist_id', 'int');
+			$id				 = phpgw::get_var('id', 'int');
+			$values			 = phpgw::get_var('values');
+
+			$values['checklist_id'] = $checklist_id;
+
+
+			if (!$values['name'])
+			{
+				$this->receipt['error'][] = array('msg' => lang('Name not entered!'));
+			}
+
+			if ($id)
+			{
+				$values['id']	 = $id;
+				$action			 = 'edit';
+			}
+			else
+			{
+				if (!$values['checklist_id'])
+				{
+					$this->receipt['error'][] = array('msg' => lang('Checklist not chosen'));
+				}
+				$action			 = 'add';
+			}
+
+			if (!$this->receipt['error'])
+			{
+				try
+				{
+					$this->receipt = $this->bo->save_checklist_stage($values, $action);
+					if (!$id)
+					{
+						$id = $this->receipt['id'];
+					}
+				}
+				catch (Exception $e)
+				{
+					if ($e)
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error');
+						$this->edit_checklist_stage($values);
+						return;
+					}
+				}
+
+				$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
+				$message	 = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+
+				phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
+				$GLOBALS['phpgw']->redirect_link('/index.php', array(
+					'menuaction' => 'property.uiadmin_entity.edit_checklist_stage',
+					'id'		 => $id
+					)
+				);
+			}
+			else
+			{
+				$this->receipt['error'][] = array('msg' => lang('checklist stage has NOT been saved'));
+				$this->edit_checklist_stage($values);
+			}
+		}
+		// delete_checklist_stage
+		function delete_checklist_stage()
+		{
+			if (!$this->acl_delete)
+			{
+				phpgw::no_access();
+			}
+
+			$id = phpgw::get_var('id', 'int');
+
+			$ok = $this->bo->delete_checklist_stage($id);
+
+			$receipt = array(
+				'status' => $ok ? 'ok' : 'fail',
+				'message' => $ok ? 'ok' : lang('value is used in records'),
+			);
+
+			return $receipt;
 		}
 
 		/**

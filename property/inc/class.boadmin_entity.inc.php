@@ -358,8 +358,58 @@
 			return $this->so->delete_checklist($id);
 		}
 
+		/**
+		 * 
+		 * @param array $data
+		 * @return array
+		 */
+		function read_checklist_stage( $data )
+		{
+			return $this->so->read_checklist_stage($data);
+		}
 
+		/**
+		 * read_single_checklist_stage
+		 * @param int $id
+		 * @return array
+		 */
+		function read_single_checklist_stage( $id )
+		{
+			return $this->so->read_single_checklist_stage($id);
+		}
 
+		/**
+		 * save_checklist_stage
+		 * @param array $values
+		 * @param string $action
+		 * @return array
+		 */
+		function save_checklist_stage( $values, $action = '' )
+		{
+			if ($action == 'edit')
+			{
+				if ($values['id'] != '')
+				{
+					$receipt = $this->so->edit_checklist_stage($values);
+				}
+			}
+			else
+			{
+				$receipt = $this->so->add_checklist_stage($values);
+			}
+			return $receipt;
+		}
+
+		/**
+		 * delete_checklist_stage
+		 * @param int $id
+		 * @return array
+		 */
+		function delete_checklist_stage( $id )
+		{
+			return $this->so->delete_checklist_stage($id);
+		}
+		
 		protected function _add_attrib_from_template( $values )
 		{
 			$template_info		 = explode('_', $values['category_template']);
