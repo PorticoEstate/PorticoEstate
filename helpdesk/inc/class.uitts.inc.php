@@ -1294,7 +1294,7 @@ HTML;
 						)),
 					'allrows' => true,
 					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'helpdesk.uitts.columns'}, {closeAction:'reload'})"),
-					'new_item' => self::link(array('menuaction' => 'helpdesk.uitts.add', 'parent_cat_id' => $this->parent_cat_id)),
+					'new_item' => !$this->acl_add ? '' : self::link(array('menuaction' => 'helpdesk.uitts.add', 'parent_cat_id' => $this->parent_cat_id)),
 					'bigmenubutton' => true,
 					'responsive_show_details' => true,
 					'editor_action' => '',
@@ -2245,6 +2245,12 @@ JS;
 					}
 				}
 
+				if(!$this->acl_edit)
+				{
+					phpgwapi_cache::message_set(lang('no access'), 'error');
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.index', 'parent_cat_id' => $this->parent_cat_id));
+					phpgw::no_access();
+				}
 				if ($GLOBALS['phpgw']->session->is_repost())
 				{
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.index', 'parent_cat_id' => $this->parent_cat_id));
@@ -2767,7 +2773,7 @@ JS;
 			$external_messages = createObject('helpdesk.soexternal_communication')->get_at_ticket($id);
 
 
-			if($this->_simple)
+			if($this->_simple || !$this->acl_edit)
 			{
 				$menuaction_external_message = 'helpdesk.uiexternal_communication.view';
 			}
@@ -3040,7 +3046,8 @@ JS;
 				'parent_cat_id' => $this->parent_cat_id,
 				'cat_change_list' => $cat_change_list,
 				'multi_upload_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.handle_multi_upload_file', 'id' => $id)),
-				'content_files'	=> $content_files
+				'content_files'	=> $content_files,
+				'acl_edit' => $this->acl_edit
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');

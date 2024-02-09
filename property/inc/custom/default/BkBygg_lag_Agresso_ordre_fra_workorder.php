@@ -47,11 +47,19 @@
 				$this->debug				 = empty($config->config_data['export']['activate_transfer']) ? true : false;
 			}
 
-			public function transfer( $workorder )
+			public function transfer( $workorder, $transfer_action )
 			{
+				/**
+				 * Make sure it doesn't send files from development/test
+				 */
+				if( $GLOBALS['phpgw_info']['server']['hostname'] !=='fdvapp01e.srv.bergenkom.no')
+				{
+					return 2;
+				}
+
 				$project = createObject('property.boproject')->read_single($workorder['project_id'], array(), true);
 
-				if (!$this->debug && $workorder['order_sent'])
+				if (!$this->debug && $workorder['order_sent'] && $transfer_action !== 'resend_workorder')
 				{
 					$transfer_time = $GLOBALS['phpgw']->common->show_date($workorder['order_sent']);
 					phpgwapi_cache::message_set("Info: Ordre #{$workorder['id']} er allerede overført til Agresso {$transfer_time}");
@@ -432,12 +440,12 @@
 		}
 	}
 
-	if (!empty($transfer_action) && $transfer_action == 'workorder')
+	if (!empty($transfer_action) && ($transfer_action == 'workorder' || $transfer_action == 'resend_workorder'))
 	{
 		$exporter_ordre = new lag_agresso_ordre_fra_workorder();
 		try
 		{
-			$exporter_ordre->transfer($workorder);
+			$exporter_ordre->transfer($workorder, $transfer_action );
 		}
 		catch (Exception $exc)
 		{

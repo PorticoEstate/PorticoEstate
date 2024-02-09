@@ -1229,7 +1229,9 @@
 
 			$dateformat =$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			$now = phpgwapi_datetime::date_to_timestamp(date($dateformat));
+			$now = phpgwapi_datetime::date_to_timestamp(date($dateformat)); //1 pm
+
+			$now += 3600 * 10; // 11 pm
 
 			$filter_status = "status = 'active' AND (start_date <= {$now} AND end_date >= {$now})";
 

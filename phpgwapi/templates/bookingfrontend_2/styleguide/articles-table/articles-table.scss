@@ -1,0 +1,210 @@
+
+.remark {
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
+.info-icon {
+  border: 2px solid black;
+  border-radius: 50%;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  i {
+    font-size: 0.75rem;
+  }
+}
+
+.article-table-wrapper {
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+
+  .article-table-header, .category-header, .category-article-row {
+    grid-template-columns: 4.25fr 3.75fr 3fr 3fr 2fr 3rem;
+    gap: 1rem;
+  }
+
+  .article-table-header {
+    display: grid;
+    grid-template-areas: "name unused price hours total expand";
+
+    @media all and (max-width: 992px) {
+      grid-template-columns: 2fr 1fr 1fr 3rem;
+      grid-template-areas: "name hours total expand";
+      .resource-price {
+        display: none;
+      }
+    }
+
+    //background-color: #{$purple-80};
+    background-color: #{$black-56};
+    color: #{$white};
+    padding: 0.5rem;
+
+    border-top-right-radius: 0.5rem;
+    border-top-left-radius: 0.5rem;
+
+    &.collapsed-head {
+      border-bottom-right-radius: 0.5rem;
+      border-bottom-left-radius: 0.5rem;
+    }
+
+    align-items: center;
+
+    .resource-name {
+      grid-area: name;
+    }
+
+    .resource-price {
+      grid-area: price;
+    }
+
+    .resource-hours {
+      grid-area: hours;
+    }
+
+    .resource-total {
+      grid-area: total;
+    }
+
+    .resource-expand {
+      grid-area: expand;
+      text-align: center;
+
+      cursor: pointer;
+
+      button {
+        color: $white;
+      }
+    }
+  }
+
+  .category-table {
+    &:last-child {
+      @media all and (max-width: 992px) {
+        border-bottom-right-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
+      }
+    }
+
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+    @media all and (min-width: 992px) {
+      border-bottom-right-radius: 0.5rem;
+      border-bottom-left-radius: 0.5rem;
+      margin-bottom: 1rem;
+      ~ .category-table {
+        .category-header {
+          border-top-right-radius: 0.5rem;
+          border-top-left-radius: 0.5rem;
+        }
+      }
+    }
+
+
+    .category-header {
+      display: grid;
+      grid-template-areas: "group-title head-desc head-unit head-count head-total unused";
+      padding: 0.5rem;
+      //background-color: #{$purple-24};
+      background-color: #{$black-24};
+      @media all and (max-width: 992px) {
+        grid-template-columns: 2fr 1fr 3rem;
+        grid-template-areas: "group-title group-title group-title expand";
+        .category-header-unit-price, .category-header-count, .category-header-total, .category-header-description {
+          display: none;
+        }
+      }
+
+      .category-name {
+        margin-left: 3rem;
+        grid-area: group-title;
+        @media all and (max-width: 992px) {
+          margin-left: 0;
+        }
+      }
+
+      .category-header-description {
+        grid-area: head-desc;
+      }
+
+      .category-header-unit-price {
+        grid-area: head-unit;
+      }
+
+      .category-header-count {
+        grid-area: head-count;
+      }
+
+      .category-header-total {
+        grid-area: head-total;
+      }
+    }
+
+    .category-articles {
+
+      .category-article-row {
+        display: grid;
+        grid-template-areas: "name desc price quantity sum unused";
+        padding: 0.5rem;
+        @media all and (max-width: 992px) {
+          padding: 1rem;
+
+          grid-template-columns: 3fr 2fr;
+          grid-template-areas: "name quantity" "desc-title desc" "price-title price" "sum-title sum";
+        }
+
+        .desc-title, .price-title, .sum-title {
+          align-self: center;
+          @media all and (min-width: 992px) {
+            display: none;
+          }
+        }
+
+        .desc-title {
+          grid-area: desc-title;
+
+        }
+
+        .price-title {
+          grid-area: price-title;
+        }
+
+        .sum-title {
+          grid-area: sum-title;
+        }
+
+        .item-name {
+          margin-left: 3rem;
+          grid-area: name;
+          @media all and (max-width: 992px) {
+            margin-left: 0;
+          }
+        }
+
+        .item-description {
+          grid-area: desc;
+        }
+
+        .item-price {
+          grid-area: price;
+        }
+
+        .item-quantity {
+          display: flex;
+          gap: 0.25rem;
+          align-items: center;
+          grid-area: quantity;
+        }
+
+        .item-sum {
+          grid-area: sum;
+        }
+      }
+    }
+
+  }
+}

@@ -118,6 +118,7 @@
 			$sort			 = isset($data['sort']) ? $data['sort'] : 'DESC';
 			$order			 = isset($data['order']) ? $data['order'] : 'project_id';
 			$cat_id			 = isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id'] : 0;
+			$b_account_id	 = !empty($data['b_account_id']) ? $data['b_account_id'] : false;
 			$status_id		 = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'open';
 			$start_date		 = isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
 			$end_date		 = isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : 0;
@@ -490,6 +491,12 @@
 				$filtermethod .= " {$where} fm_project.category IN (" . implode(',', $cat_filter) . ')';
 
 				$where = 'AND';
+			}
+
+			if($b_account_id)
+			{
+				$filtermethod	 .= " $where fm_project.b_account_id = '{$b_account_id}'";
+				$where			 = 'AND';
 			}
 
 			if ($status_id && $status_id != 'all')
@@ -1350,7 +1357,7 @@
 			}
 			else
 			{
-				$this->update_budget($id, $project['budget_year'], $project['budget_periodization'], $project['budget'], $project['budget_periodization_all'], 'update', $project['budget_periodization_activate']);
+				$this->update_budget($id, $project['budget_year'], $project['budget_periodization'], (int)$project['budget'], $project['budget_periodization_all'], 'update', $project['budget_periodization_activate']);
 			}
 
 			if ($project['extra']['contact_phone'] && $project['extra']['tenant_id'])
@@ -1677,7 +1684,7 @@
 
 				if ($project['budget'])
 				{
-					$this->update_budget($project['id'], $project['budget_year'], $project['budget_periodization'], $project['budget'], $project['budget_periodization_all'], 'update', $project['budget_periodization_activate']);
+					$this->update_budget($project['id'], $project['budget_year'], $project['budget_periodization'], (int)$project['budget'], $project['budget_periodization_all'], 'update', $project['budget_periodization_activate']);
 				}
 
 				$this->db->query("SELECT sum(budget) AS sum_budget FROM fm_project_budget WHERE active = 1 AND project_id = " . (int)$project['id'], __LINE__, __FILE__);

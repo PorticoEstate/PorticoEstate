@@ -2290,11 +2290,14 @@
 
 					//Nøkkelfelt, kundens personnr/orgnr. - men differensiert for undergrupper innenfor samme orgnr
 					$stored_header['tekst4'] = $check_customer_identifier;
+					$stored_header['tekst3'] = $check_customer_identifier;
 
 					if ($type == 'internal')
 					{
 						$header['tekst4'] = str_pad(substr($this->config_data['organization_value'], 0, 12), 12, ' ');
-						$header['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
+						//referansenr/customer_number
+						$header['ext_ord_ref'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $customer_number), 0, 15), 15, ' ');
+	//					$header['ext_ord_ref'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 15), 15, ' ');
 					}
 					else
 					{
@@ -2417,6 +2420,9 @@
 
 					$text['sequence_no'] = str_pad(intval($item['sequence_no']) + 1, 8, '0', STR_PAD_LEFT);
 
+					$log_cost = 0;
+					$log_cost2 = 0;
+
 					if($purchase_order && !empty($purchase_order['lines']))
 					{
 						$line_no -=1;
@@ -2452,16 +2458,18 @@
 
 							$pris_inkl_mva = (float)$order_line['unit_price'] + $unit_tax;
 
-							$_item['art_descr'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']), 0, 35), 35, ' '); //35 chars long
-							$_item['article'] = str_pad(substr(strtoupper($order_line['article_code']), 0, 15), 15, ' ');
-							$_item['amount'] = $this->format_cost(($order_line['amount']));
-							$_item['tax_code'] = str_pad($order_line['tax_code'], 2, ' ', STR_PAD_LEFT);
-							$_item['value_1'] = str_pad($order_line['quantity'] * 100, 17, 0, STR_PAD_LEFT); //Units. Multiplied by 100.
-							$_item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
+							$_item['art_descr']	 = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']), 0, 35), 35, ' '); //35 chars long
+							$_item['article']	 = str_pad(substr(strtoupper($order_line['article_code']), 0, 15), 15, ' ');
+							$_item['amount']	 = $this->format_cost(($order_line['amount']));
+							$_item['tax_code']	 = str_pad($order_line['tax_code'], 2, ' ', STR_PAD_LEFT);
+							$_item['value_1']	 = str_pad($order_line['quantity'] * 100, 17, 0, STR_PAD_LEFT); //Units. Multiplied by 100.
+							$_item['line_no']	 = str_pad($line_no, 4, 0, STR_PAD_LEFT);
 
-							$_text['line_no'] = $_item['line_no'];
+							$_text['line_no']	 = $_item['line_no'];
 							$_text['short_info'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 0, 60), 60, ' ');
 
+							$log_cost	 += $order_line['amount'];
+							$log_cost2	 += $order_line['tax'];
 
 							//Add to orders
 							$output[] = implode('', str_replace(array("\n", "\r"), '', $_item));
@@ -2471,6 +2479,7 @@
 					}
 					else
 					{
+						$log_cost	 = $reservation['cost'];
 						//Add to orders
 						$output[] = implode('', str_replace(array("\n", "\r"), '', $item));
 						$output[] = implode('', str_replace(array("\n", "\r"), '', $text));
@@ -2491,7 +2500,7 @@
 
 
 					$log_buidling = $reservation['building_name'];
-					$log_cost = $reservation['cost'];
+
 					$log_varelinjer_med_dato = $reservation['article_description'] . ' - ' . $reservation['description'];
 
 					$line_field = array();
@@ -2503,7 +2512,8 @@
 					$line_field[] = "\"{$log_customer_nr}\"";
 					$line_field[] = "\"{$log_varelinjer_med_dato}\"";
 					$line_field[] = "\"{$log_buidling}\"";
-					$line_field[] = "\"{$log_cost}\"";
+					$line_field[] = '"' . number_format($log_cost, 2, ",", '') . '"';
+					$line_field[] = '"' . number_format($log_cost2, 2, ",", '') . '"';
 
 					$log[] = implode(';',  $line_field);
 
@@ -2584,6 +2594,9 @@
 					$text['sequence_no'] = str_pad(intval($item['sequence_no']) + 1, 8, '0', STR_PAD_LEFT);
 
 
+					$log_cost = 0;
+					$log_cost2 = 0;
+
 					if($purchase_order && !empty($purchase_order['lines']))
 					{
 						$line_no -=1;
@@ -2618,15 +2631,18 @@
 
 							$pris_inkl_mva = (float)$order_line['unit_price'] + $unit_tax;
 
-							$_item['art_descr'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']), 0, 35), 35, ' '); //35 chars long
-							$_item['article'] = str_pad(substr(strtoupper($order_line['article_code']), 0, 15), 15, ' ');
-							$_item['amount'] = $this->format_cost(($order_line['amount']));
-							$_item['tax_code'] = str_pad($order_line['tax_code'], 2, ' ', STR_PAD_LEFT);
-							$_item['value_1'] = str_pad($order_line['quantity'] * 100, 17, 0, STR_PAD_LEFT); //Units. Multiplied by 100.
-							$_item['line_no'] = str_pad($line_no, 4, 0, STR_PAD_LEFT);
+							$_item['art_descr']	 = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $order_line['name']), 0, 35), 35, ' '); //35 chars long
+							$_item['article']	 = str_pad(substr(strtoupper($order_line['article_code']), 0, 15), 15, ' ');
+							$_item['amount']	 = $this->format_cost(($order_line['amount']));
+							$_item['tax_code']	 = str_pad($order_line['tax_code'], 2, ' ', STR_PAD_LEFT);
+							$_item['value_1']	 = str_pad($order_line['quantity'] * 100, 17, 0, STR_PAD_LEFT); //Units. Multiplied by 100.
+							$_item['line_no']	 = str_pad($line_no, 4, 0, STR_PAD_LEFT);
 
-							$_text['line_no'] = $_item['line_no'];
+							$_text['line_no']	 = $_item['line_no'];
 							$_text['short_info'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 0, 60), 60, ' ');
+
+							$log_cost			 += $order_line['amount'];
+							$log_cost2			 += $order_line['tax'];
 
 							//Add to orders
 							$output[] = implode('', str_replace(array("\n", "\r"), '', $_item));
@@ -2636,6 +2652,7 @@
 					}
 					else
 					{
+						$log_cost	 = $reservation['cost'];
 						//Add to orders
 						$output[] = implode('', str_replace(array("\n", "\r"), '', $item));
 						$output[] = implode('', str_replace(array("\n", "\r"), '', $text));
@@ -2643,7 +2660,6 @@
 					}
 
 					$log_buidling = $reservation['building_name'];
-					$log_cost = $reservation['cost'];
 					$log_varelinjer_med_dato = $reservation['article_description'] . ' - ' . $reservation['description'];
 
 					$line_field = array();
@@ -2655,7 +2671,8 @@
 					$line_field[] = "\"{$log_customer_nr}\"";
 					$line_field[] = "\"{$log_varelinjer_med_dato}\"";
 					$line_field[] = "\"{$log_buidling}\"";
-					$line_field[] = "\"{$log_cost}\"";
+					$line_field[] = '"' . number_format($log_cost, 2, ",", '') . '"';
+					$line_field[] = '"' . number_format($log_cost2, 2, ",", '') . '"';
 
 					$log[] = implode(';',  $line_field);
 

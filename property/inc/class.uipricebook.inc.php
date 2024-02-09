@@ -1001,8 +1001,7 @@
 
 			$list = $this->bo->read_activities_pr_agreement_group();
 
-			$name = array
-				(
+			$name = array(
 				'activity_id',
 				'base_descr',
 				'num',
@@ -1013,8 +1012,7 @@
 				'unit',
 			);
 
-			$descr = array
-				(
+			$descr = array(
 				'ID',
 				lang('Base'),
 				lang('Activity Num'),
@@ -1035,7 +1033,7 @@
 			$combos				 = array();
 
 			$values_combo_box[0] = $this->bo->get_agreement_group_list('filter', $this->cat_id);
-			$default_value		 = array('id' => '', 'name' => lang('select agreement_group'));
+			$default_value		 = array('id' => '0', 'name' => lang('select agreement_group'));
 			array_unshift($values_combo_box[0], $default_value);
 			$combos[]			 = array
 				(
@@ -1100,6 +1098,7 @@
 
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
+			phpgwapi_jquery::load_widget('select2');
 
 			$appname		 = lang('pricebook');
 			$function_msg	 = lang('list activities per agreement_group');
@@ -1168,10 +1167,8 @@
 
 			$parameters = array
 				(
-				'parameter' => array
-					(
-					array
-						(
+				'parameter' => array(
+					array(
 						'name'	 => 'activity_id',
 						'source' => 'activity_id'
 					)
@@ -1242,6 +1239,27 @@
 			);
 
 			unset($parameters);
+			$js = <<<JS
+				$("#cat_id").select2({
+					placeholder: "",
+					width: '75%'
+				});
+
+				$('#cat_id').on('select2:open', function (e)
+				{
+
+					$(".select2-search__field").each(function ()
+					{
+						if ($(this).attr("aria-controls") == 'select2-cat_id-results')
+						{
+							$(this)[0].focus();
+						}
+					});
+				});
+JS;
+
+
+			$GLOBALS['phpgw']->js->add_code('', $js, true);
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
@@ -1579,6 +1597,7 @@
 			);
 
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
+			phpgwapi_jquery::load_widget('select2');
 
 			$data = array
 				(

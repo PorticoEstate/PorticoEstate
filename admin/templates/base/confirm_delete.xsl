@@ -16,6 +16,7 @@
 		</xsl:choose>
 
 			<h1><xsl:value-of select="lang_confirm_msg"/></h1>
+			<xsl:value-of select="message" disable-output-escaping="yes" />
 			<div class="button_group">
 				<form method="post" action="{form_action}">
 					<xsl:choose>
@@ -33,17 +34,17 @@
 							</select>
 						</xsl:when>
 					</xsl:choose>
-					<input type="submit" name="cancel" value="{lang_no}" title="{lang_no_statustext}"/>
+					<input type="submit" name="cancel" value="{lang_no}" title="{lang_no_statustext}" class="pure-button"/>
 					<xsl:choose>
 						<xsl:when test="show_done">
 							<xsl:choose>
 								<xsl:when test="show_done = ''">
-									<input type="submit" name="confirm" value="{lang_yes}" title="{lang_yes_statustext}"/>
+									<input type="submit" name="confirm" value="{lang_yes}" title="{lang_yes_statustext}" class="pure-button"/>
 								</xsl:when>
 							</xsl:choose>
 						</xsl:when>
 						<xsl:otherwise>
-							<input type="submit" name="confirm" value="{lang_yes}" title="{lang_yes_statustext}"/>
+							<input type="submit" name="confirm" value="{lang_yes}" title="{lang_yes_statustext}" class="pure-button"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</form>

@@ -53,7 +53,7 @@ $(document).ready(function ()
 
 	});
 
-	JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uibuilding.index'}, true),
+	JqueryPortico.autocompleteHelper(phpGWLink('index.php/', {menuaction: 'booking.uibuilding.index'}, true),
 		'field_building_name', 'field_building_id', 'building_container');
 
 	JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction: 'booking.uiorganization.index'}, true),

@@ -3748,7 +3748,7 @@ JS;
 			if (!empty($ticket['charge_tenant']))
 			{
 				$claim = execMethod('property.sotenant_claim.read', array(
-					'ticket_id' => $id));
+					'ticket_id' => $id, 'status' => 'all'));
 				if ($claim)
 				{
 					$link_claim = $GLOBALS['phpgw']->link('/index.php', array(

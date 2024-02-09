@@ -582,7 +582,7 @@
 			$values_combo_box[1] = array();
 			foreach ($_cats as $_cat)
 			{
-				if ($_cat['level'] == 0)
+				if ($_cat['level'] == 0 && $_cat['active'] != 2)
 				{
 					$values_combo_box[1][] = $_cat;
 				}
@@ -679,6 +679,22 @@
 				'text'	 => lang('User'),
 				'list'	 => $values_combo_box[6]
 			);
+			$values_combo_box[7]		 = execMethod('property.bogeneric.get_list', array(
+				'type' => 'budget_account',
+				'filter' => array('active' => 1),
+				'selected' => ''
+				));
+
+			$default_value		 = array('id' => '', 'name' => lang('select'));
+			array_unshift($values_combo_box[7], $default_value);
+			$combos[]			 = array
+				(
+				'type'	 => 'filter',
+				'name'	 => 'b_account',
+				'text'	 => lang('budget account'),
+				'list'	 => $values_combo_box[7]
+			);
+
 			return $combos;
 		}
 

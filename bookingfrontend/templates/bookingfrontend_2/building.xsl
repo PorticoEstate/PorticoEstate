@@ -1,312 +1,174 @@
-<xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<style>
-		.modal-dialog,
-		.modal-content {
-		/* 80% of window height */
-		height: 80%;
-		}
+<xsl:template match="data" xmlns:php="http://php.net/xsl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <style>
+        .modal-dialog,
+        .modal-content {
+        /* 80% of window height */
+        height: 80%;
+        }
 
-		.modal-body {
-		/* 100% = dialog height, 120px = header + footer */
-		max-height: calc(100vh - 210px);
-		overflow-y: auto;
-		}
-		/*
-		.modal {
-		max-height: 100vh;
-		.modal-dialog {
-		.modal-content {
-		.modal-body {
-		max-height: calc(80vh - 140px);
-		overflow-y: auto;
-		}
-		}
-		}
-		}
+        .modal-body {
+        /* 100% = dialog height, 120px = header + footer */
+        max-height: calc(100vh - 210px);
+        overflow-y: auto;
+        }
+        /*
+        .modal {
+        max-height: 100vh;
+        .modal-dialog {
+        .modal-content {
+        .modal-body {
+        max-height: calc(80vh - 140px);
+        overflow-y: auto;
+        }
+        }
+        }
+        }
 
-		*/
-	</style>
-	<div id="building-page-content">
-		<div class="info-content">
-			<div class="container wrapper">
-				<div class="location">
-					<span>
-						<a>
-							<xsl:attribute name="href">
-								<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/', '')"/>
-							</xsl:attribute>
-							<xsl:value-of select="php:function('lang', 'Home')" />
-						</a>
-					</span>
-				</div>
-				<div class="row p-3">
-					<div class="col-lg-6">
-						<div class="row">
-							<div class="col-xl-4 col-lg-5 mb-4 col-item-img">
-								<img class="img-fluid image-circle" id="item-main-picture" src="#" alt="Bygning" />
-							</div>
-							<div class="col-xl-6 col-lg-7 col-xs-12 building-place-info">
-								<h1 id="building_name">
-									<xsl:value-of select="building/name"/>
-								</h1>
-								<xsl:if test="building/active=0">
-									<p class="error">
-										<xsl:value-of select="php:function('lang', 'It is currently not possible to rent anything here')" />
-									</p>
-								</xsl:if>
-								<button class="mapBtn" data-toggle="modal" data-target="#mapModal">
-									<i class="fas fa-map-marker-alt fa-xs d-inline"> </i>
-									<div class="building-place-adr">
-										<span id="buildingStreet">
-											<xsl:value-of select="building/street" />
-										</span>
-										<br></br>
-										<span id="buildingZipCode">
-											<xsl:value-of select="building/zip_code"/>
-										</span>
-										<span id="buildingCity">
-											<xsl:value-of select="building/city" />
-										</span>
-									</div>
-									<p>Trykk for å se kart</p>
-								</button>
+        */
+    </style>
+    <div id="building-page-content">
+        <div class="container mx-3">
+            <div class="row">
+                <div class="col-md-2">
+                    <a class=" pe-btn pe-btn-colour-secondary link-text link-text-secondary d-flex gap-3  pe-btn--small">
+                        <xsl:attribute name="href">
+                            <xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/', '')"/>
+                        </xsl:attribute>
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <xsl:value-of select="php:function('lang', 'Homepage')"/>
+                    </a>
+                </div>
 
-
-								<!-- Map Modal -->
-								<div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-hidden="true">
-									<div class="modal-dialog modal-lg" role="document">
-										<div class="modal-content">
-											<div class="modal-header text-center">
-												<h2 class="modal-title w-100">
-													<xsl:value-of select="building/name"/>
-												</h2>
-												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-													<span aria-hidden="true">
-														<i class="fas fa-times"></i>
-													</span>
-												</button>
-											</div>
-											<div class="modal-body">
-												<div style="width: 100%">
-													<iframe id ="iframeMap" src="" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
-												</div>
-												<br />
-											</div>
-											<div class="modal-footer">
-												<button type="button" class="btn btn-secondary w-100" data-dismiss="modal">Lukk vindu</button>
-											</div>
-										</div>
-									</div>
-								</div>
-
-							</div>
-							<xsl:if test="building/deactivate_calendar=0">
-								<div class="col-auto">
-									<div>
-										<button class="btn btn-light goToCal">
-											<i class="fa fa-calendar"></i>&#160;
-											<xsl:value-of select="php:function('lang', 'Calendar')" />
-										</button>
-									</div>
-								</div>
-							</xsl:if>
-							<div class="building-accordion">
-								<xsl:if test="building/description and normalize-space(building/description)">
-									<div class="building-card">
-										<div class="building-card-header">
-											<h3 class="building-card-title mb-0">
-												<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false">
-													<xsl:value-of select="php:function('lang', 'Building information')" />
-												</button>
-												<button data-toggle="collapse" data-target="#collapseOne" class="btn fas fa-plus float-right"></button>
-											</h3>
-										</div>
-										<div id="collapseOne" class="collapse">
-											<div class="card-body">
-												<xsl:value-of disable-output-escaping="yes" select="building/description"/>
-											</div>
-										</div>
-									</div>
-								</xsl:if>
-								<div class="building-card card-img-thumbs">
-									<div class="building-card-header">
-										<h3 class="building-card-title mb-0">
-											<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false">
-												<xsl:value-of select="php:function('lang', 'Pictures')" />
-											</button>
-											<button data-toggle="collapse" data-target="#collapseTwo" class="btn fas fa-plus float-right"></button>
-										</h3>
-									</div>
-									<div id="collapseTwo" class="collapse">
-										<div class="card-body building-images" id="list-img-thumbs">
-										</div>
-									</div>
-								</div>
-								<xsl:if test="building/opening_hours and normalize-space(building/opening_hours)">
-									<div class="building-card">
-										<div class="building-card-header">
-											<h5 class="mb-0">
-												<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false">
-													<xsl:value-of select="php:function('lang', 'Opening hours')" />
-												</button>
-												<button data-toggle="collapse" data-target="#collapseThree" class="btn fas fa-plus float-right"></button>
-											</h5>
-										</div>
-										<div id="collapseThree" class="collapse">
-											<div class="card-body">
-												<xsl:value-of disable-output-escaping="yes" select="building/opening_hours"/>
-											</div>
-										</div>
-									</div>
-								</xsl:if>
-								<xsl:if test="building/contact_info and normalize-space(building/contact_info)">
-									<div class="building-card">
-										<div class="building-card-header">
-											<h5 class="mb-0">
-												<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false">
-													<xsl:value-of select="php:function('lang', 'contact information')" />
-												</button>
-												<button data-toggle="collapse" data-target="#collapseFour" class="btn fas fa-plus float-right"></button>
-											</h5>
-										</div>
-										<div id="collapseFour" class="collapse">
-											<div class="card-body">
-												<xsl:value-of disable-output-escaping="yes" select="building/contact_info"/>
-												<xsl:if test="building/deactivate_sendmessage=0">
-													<button class="btn btn-light" onclick="window.location.href='{building/message_link}'">
-														<i class="fas fa-envelope"></i>&#160;
-														<xsl:value-of select="php:function('lang', 'Send message')" />
-													</button>
-													- <xsl:value-of select="php:function('lang', 'Send message to case officer for building')" />
-												</xsl:if>
-											</div>
-										</div>
-									</div>
-								</xsl:if>
-							</div>
-						</div>
-					</div>
-					<xsl:if test="building/active=1">
-						<div class="col-lg-6">
-							<h2 class="">
-								<xsl:value-of select="php:function('lang', 'For rent')" />
-							</h2>
-							<div data-bind="foreach: bookableResource">
-								<div class="custom-card">
-									<!--<a class="bookable-resource-link-href" href="" data-bind="">
-											<span data-bind="html: name"></span>
-									</a>-->
-
-									<div data-bind="if: resourceItemLink != false">
-										<a class="bookable-resource-link-href" href="" data-bind="">
-
-											<b>
-												<span data-bind="html: name"></span>
-											</b>
-											<div data-bind="foreach: activitiesList">
-												<span class="tagTitle" data-bind="if: $index() == 0">
-													<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>:
-												</span>
-												<span class="mr-2 textTagsItems" data-bind="html: $data"></span>
-											</div>
-											<div class="mt-2" data-bind="foreach: facilitiesList">
-												<span class="tagTitle" data-bind="if: $index() == 0">
-													<xsl:value-of select="php:function('lang', 'Facilities')"/>:
-												</span>
-												<span class="textTagsItems" data-bind="html: $data"></span>
-											</div>
-										</a>
-									</div>
-									<div data-bind="if: resourceItemLink == false">
-										<span data-bind="html: name"></span>
-										<div data-bind="foreach: activitiesList">
-											<span class="tagTitle" data-bind="if: $index() == 0">
-												<xsl:value-of select="php:function('lang', 'Activities (2018)')"/>:
-											</span>
-											<span class="mr-2 textTagsItems" data-bind="html: $data"></span>
-										</div>
-										<div class="mt-2" data-bind="foreach: facilitiesList">
-											<span class="tagTitle" data-bind="if: $index() == 0">
-												<xsl:value-of select="php:function('lang', 'Facilities')"/>:
-											</span>
-											<span class="textTagsItems" data-bind="html: $data"></span>
-										</div>
-									</div>
+            </div>
+            <div class="row gx-3">
+                <div class="col d-flex flex-column">
+                    <div class="font-weight-bold gap-3 d-flex align-items-center mb-1">
+                        <h1 class="m-0 fa-solid fa-location-dot" style="font-size:32px"></h1>
+                        <h1 class="m-0">
+                            <xsl:value-of select="building/name"/>
+                        </h1>
+                    </div>
+                    <span>
+                        <span id="buildingStreet"><xsl:value-of select="building/street"/></span>,
+                        <span id="buildingZipCode"><xsl:value-of select="building/zip_code"/></span>
+                        <span id="buildingCity" style="display:none"><xsl:value-of select="building/city"/></span>
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 d-flex gap-3">
+                    <span class="d-flex gap-1">
+                        <span class="">Type:</span>
+                        Bygg
+                    </span>
+                    <span class="slidedown__toggler__info__separator">
+                        <i class="fa-solid fa-circle"></i>
+                    </span>
+                    <span class="d-flex gap-1">
+                        <span class="">Bydel:</span>
+                        <xsl:value-of select="building/part_of_town"/>
+                    </span>
+                    <span class="slidedown__toggler__info__separator">
+                        <i class="fa-solid fa-circle"></i>
+                    </span>
+                    <span class="d-flex gap-1">
+                        <span class="">Utleieressurser:</span>
+                        <span data-bind="text: bookableResource().length"/>
+                    </span>
+                </div>
+            </div>
+            <hr class="divider divider-primary my-4"/>
 
 
-									<div class="mt-2" data-bind="foreach: availlableTimeSlots">
-										<!--<pre data-bind="text: ko.toJSON(when, null, 2)"></pre>-->
-										<ul class="list-group list-group-flush">
-											<div data-bind="if: overlap">
-												<li class="list-group-item">
-													<i class="far fa-clock mr-2 pt-1" style="color: #ff3333;"></i>
-													<span data-bind="html: when"></span>
-													<span class="ml-2" style="font-weight: bold; color: #ff3333;">
-														<xsl:value-of select="php:function('lang', 'leased')"/>
-													</span>
-												</li>
-											</div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 class="">
+                        Utleieressurser
+                    </h3>
+                </div>
+                <div class="col-md-10 col-sm-12 d-flex gap-2 flex-wrap bookable-resources-container"
+                     data-bind="foreach: bookableResource,  css: {{ 'expanded': resourcesExpanded }}">
+                    <div data-bind="if: resourceItemLink != false">
+                        <a class="pe-btn pe-btn-colour-secondary link-text link-text-secondary d-flex gap-3 pe-btn--small"
+                           href="" data-bind="attr: {{'href': resourceItemLink }}">
+                            <i class="fa-solid fa-layer-group"></i>
+                            <span data-bind="html: name"></span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div data-bind="if: resourceItemLink == false">
+                        <span class="pe-btn pe-btn-colour-secondary link-text link-text-secondary d-flex gap-3 pe-btn--small">
+                            <i class="fa-solid fa-layer-group"></i>
+                            <span data-bind="html: name"></span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+                    </div>
+                </div>
 
-											<div data-bind="if: overlap == false">
+                <div class="col-md-2 col-sm-12 d-flex justify-content-end align-items-start">
+                    <button class="pe-btn  pe-btn--transparent text-secondary d-flex gap-3"
+                            data-bind="click: toggleResources">
+                        <span data-bind="text: resourcesExpanded() ? 'Vis mindre' : 'Vis mer'"></span>
+                        <i class="fa"
+                           data-bind="css: {{'fa-chevron-up': resourcesExpanded(), 'fa-chevron-down': !resourcesExpanded()}}"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 class="">
+                        Beskrivelse
+                    </h3>
+                </div>
+                <div class="col-sm-12 d-flex flex-column collapsible-content collapsed-description"
+                     data-bind="css: {{'collapsed-description': !descriptionExpanded()}}">
+                    <p><xsl:value-of disable-output-escaping="yes"
+                                  select="building/description"/></p>
 
-												<li class="list-group-item">
-													<i class="far fa-clock mr-2 pt-1" style="color: #1a8f65;"></i>
-													<a class="bookable-timeslots-link-href" data-bind="" href="">
-														<span data-bind="html: when"></span>
-													</a>
-													<span class="ml-2" style="font-weight: bold; color: #1a8f65;">
-														<xsl:value-of select="php:function('lang', 'available')"/>
-													</span>
-												</li>
-											</div>
-										</ul>
-									</div>
-								</div>
-							</div>
-							<div>
-								*) Forenklet booking uten manuell saksbehandling
-							</div>
-						</div>
-					</xsl:if>
-				</div>
-			</div>
-		</div>
-		<div class="container wrapper calendar-content">
-			<xsl:if test="building/deactivate_application=0 and config_data/help_calendar_book and normalize-space(config_data/help_calendar_book)">
-				<div class="row margin-top-and-bottom">
-					<div class="col">
-						<xsl:value-of select="config_data/help_calendar_book"/>
-					</div>
-				</div>
-			</xsl:if>
-			<div class="row margin-top-and-bottom">
-				<div class="over-ting">Over kalenderen</div>
-				<div class="container">
-					<div id="calendar" class="calendar">
+                </div>
+                <div class="col-sm-12">
+                    <button class="pe-btn  pe-btn--transparent text-secondary d-flex gap-3" data-bind="click: toggleDescription">
+                        <span data-bind="text: descriptionExpanded() ? 'Vis mindre' : 'Vis mer'"></span>
+                        <i class="fa"
+                           data-bind="css: {{'fa-chevron-up': descriptionExpanded(), 'fa-chevron-down': !descriptionExpanded()}}"></i>
+                    </button>
+                </div>
+            </div>
+            <hr class="divider divider-primary my-4"/>
 
-					</div>
-				</div>
-				<div class="under-ting">Under kalenderen</div>
+            <div class="row mb-4">
+                <light-box params="images: imageArray"></light-box>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+<!--                                [phone] => 55561106
+            [email] => fana-ytrebygda.kulturkontor@bergen.kommune.no-->
+                    <h3 class="">
+                        <xsl:value-of select="php:function('lang', 'contact information')"/>
+                    </h3>
+                </div>
+                <div class="col-sm-12 d-flex flex-column">
+                        <xsl:if test="building/phone">
+                            <div>Telefon: <xsl:value-of select="building/phone"/></div>
+                        </xsl:if>
+                        <xsl:if test="building/email">
+                            <div>Epost: <xsl:value-of select="building/email"/></div>
+                        </xsl:if>
 
-			</div>
-			<div class="push"></div>
-		</div>
-		<div id="lightbox" class="modal hide" tabindex="-1" role="dialog">
-			<div class="modal-dialog">
-				<div class="modal-body lightbox-body">
-					<a href="#" class="close">&#215;</a>
-					<img src="" alt="" />
-				</div>
-			</div>
-		</div>
-	</div>
-	<script>
-		var lang = <xsl:value-of select="php:function('js_lang', 'new application', 'Resource (2018)')" />;
-		var deactivate_application = <xsl:value-of select="building/deactivate_application" />;
-		/**
-		* Hardcoded: Disable calendar at this level
-		**/
-		var deactivate_calendar = '<xsl:value-of select="building/deactivate_calendar" />';
-		var active_building = Number(<xsl:value-of select="building/active" />);
-	</script>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <script>
+        var lang =<xsl:value-of select="php:function('js_lang', 'new application', 'Resource (2018)')"/>;
+        var deactivate_application =<xsl:value-of select="building/deactivate_application"/>;
+        /**
+        * Hardcoded: Disable calendar at this level
+        **/
+        var deactivate_calendar = '<xsl:value-of select="building/deactivate_calendar"/>';
+        var active_building = Number(<xsl:value-of select="building/active"/>);
+    </script>
 </xsl:template>

@@ -49,6 +49,7 @@ ko.bindingHandlers.withAfterRender = {
     }
 };
 
+
 ko.components.register('time-picker', {
     viewModel: function (params) {
         const self = this;
@@ -215,20 +216,32 @@ function applicationModel() {
             return bc.applicationCartItems();
         });
     }
+    self.formStep = ko.observable(0)
 
 
     self.bookingDate = ko.observable('')
     self.bookingStartTime = ko.observable('');
     self.bookingEndTime = ko.observable('');
 
+    self.goNext = () => {
+        self.formStep(self.formStep() + 1);
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    self.goPrev = () => {
+        self.formStep(self.formStep() - 1);
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
 
     self.formatDate = function (date) {
-        const from = DateTime.fromFormat(date.from_, "dd/MM/yyyy HH:mm");
+        const from = luxon.DateTime.fromFormat(date.from_, "dd/MM/yyyy HH:mm");
         var day = from.day;
         var months = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'];
         var month = months[from.month - 1];
         return day + '. ' + month;
     };
+
 
     self.formatTimePeriod = function (date) {
         var fromTime = date.from_.split(' ')[1];
@@ -303,7 +316,7 @@ function applicationModel() {
                 dateStr = dateParts.join(".");
             }
 
-            let date = DateTime.fromFormat(dateStr, "dd.MM.yyyy");
+            let date = luxon.DateTime.fromFormat(dateStr, "dd.MM.yyyy");
             var startTimeParts = self.bookingStartTime().split(":");
             var endTimeParts = self.bookingEndTime().split(":");
 
@@ -398,7 +411,7 @@ function applicationModel() {
         $select.select2({
             theme: 'select-v2',
             width: '100%',
-            placeholder: 'Velg en eller flere kommuner',
+            placeholder: 'Velg leieobjekt',
             closeOnSelect: false,
         })
 
@@ -658,18 +671,6 @@ function setDoc(data) {
 
     }
     $("#regulation_documents").html(child);
-}
-
-function formatDateToDateTimeString(date) {
-    const pad = (num) => (num < 10 ? '0' + num : num.toString());
-
-    let day = pad(date.getDate());
-    let month = pad(date.getMonth() + 1); // getMonth() returns 0-11
-    let year = date.getFullYear();
-    let hours = pad(date.getHours());
-    let minutes = pad(date.getMinutes());
-
-    return `${day}/${month}/${year} ${hours}:${minutes}`;
 }
 
 

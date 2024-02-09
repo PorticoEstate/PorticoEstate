@@ -206,7 +206,9 @@
 					<label>
 						<xsl:value-of select="lang_status"/>
 					</label>
-					<xsl:call-template name="status_select"/>
+					<xsl:call-template name="status_select">
+						<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+					</xsl:call-template>
 				</div>
 				<div class="pure-control-group">
 					<label>
@@ -231,7 +233,7 @@
 					<label>
 						<xsl:value-of select="lang_amount"/>
 					</label>
-					<input type="text" name="values[amount]" value="{value_amount}">
+					<input type="text" name="values[amount]" value="{value_amount}" class="amount pure-input-3-4">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_amount_statustext"/>
 						</xsl:attribute>
@@ -247,13 +249,15 @@
 					<label>
 						<xsl:value-of select="lang_category"/>
 					</label>
-					<xsl:call-template name="cat_select"/>
+					<xsl:call-template name="cat_select">
+						<xsl:with-param name="class">pure-input-3-4</xsl:with-param>
+					</xsl:call-template>
 				</div>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="lang_remark"/>
 					</label>
-					<textarea cols="60" rows="6" name="values[remark]">
+					<textarea cols="60" rows="6" name="values[remark]" class="pure-input-3-4">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_remark_statustext"/>
 						</xsl:attribute>
@@ -349,8 +353,8 @@
 		</div>
 	</form>
 	<script type="text/javascript">
-		var property_js = <xsl:value-of select="property_js"/>;
-		var base_java_url = <xsl:value-of select="base_java_url"/>;
+		var property_js = '<xsl:value-of select="property_js"/>';
+		var base_java_url = '<xsl:value-of select="base_java_url"/>';
 		var datatable = new Array();
 		var myColumnDefs = new Array();
 

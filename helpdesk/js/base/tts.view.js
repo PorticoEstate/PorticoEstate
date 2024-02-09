@@ -220,6 +220,30 @@ upload_canvas = function ()
 
 $(document).ready(function ()
 {
+	if (acl_edit !== 1)
+	{
+		//disable all input fields
+		$('input').attr('disabled', 'disabled');
+		$('select').attr('disabled', 'disabled');
+		$('textarea').attr('disabled', 'disabled');
+		$('button').attr('disabled', 'disabled');
+		$('input[type=checkbox]').attr('disabled', 'disabled');
+		$('input[type=radio]').attr('disabled', 'disabled');
+		$('input[type=submit]').attr('disabled', 'disabled');
+		$('input[type=button]').attr('disabled', 'disabled');
+		$('input[type=reset]').attr('disabled', 'disabled');
+		$('input[type=image]').attr('disabled', 'disabled');
+		$('input[type=file]').attr('disabled', 'disabled');
+		$('input[type=password]').attr('disabled', 'disabled');
+		$('input[type=hidden]').attr('disabled', 'disabled');
+		$('input[type=search]').attr('disabled', 'disabled');
+
+		//remove disabled from id = "cancel_button" and "print_button"
+		$('#cancel_button').removeAttr('disabled');
+		$('#print_button').removeAttr('disabled');
+
+	}
+
 
 	$("#publish_text").change(function ()
 	{

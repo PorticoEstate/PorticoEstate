@@ -48,10 +48,19 @@
 				$this->debug				 = empty($config->config_data['export']['activate_transfer']) ? true : false;
 			}
 
-			public function transfer( $id )
+			public function transfer( $id, $resend_order = null)
 			{
+				/**
+				 * Make sure it doesn't send files from development/test
+				 */
+				if( $GLOBALS['phpgw_info']['server']['hostname'] !=='fdvapp01e.srv.bergenkom.no')
+				{
+					return 2;
+				}
+
 				$_ticket = ExecMethod('property.sotts.read_single', $id);
-				if (!$this->debug && $_ticket['order_sent'])
+
+				if (!$this->debug && $_ticket['order_sent'] && !$resend_order)
 				{
 					return 2;
 				}
@@ -118,7 +127,7 @@
 				unset($contacts);
 
 
-				if (phpgw::get_var('on_behalf_of_assigned', 'bool') && isset($_ticket['assignedto_name']))
+				if ($resend_order || (phpgw::get_var('on_behalf_of_assigned', 'bool') && isset($_ticket['assignedto_name'])))
 				{
 					$user_name										 = $_ticket['assignedto_name'];
 					$GLOBALS['phpgw']->preferences->set_account_id($_ticket['assignedto'], true);
@@ -303,14 +312,24 @@
 		}
 	}
 
-		//if (false)
-	if (!empty($data['order_id']) && !empty($data['send_order']) && !empty($data['vendor_email'][0]))
+
+	if($data['order_sent'] && ! $data['verified_transfered'])
+	{
+		$resend_order = true;
+	}
+	else
+	{
+		$resend_order = false;
+	}
+
+
+	if ((!empty($data['order_id']) && (!empty($data['send_order']) && !empty($data['vendor_email'][0]))) || $resend_order)
 	{
 		$exporter_ordre					 = new lag_agresso_ordre_fra_melding();
 
 		try
 		{
-			$data['purchase_grant_error']	 = $exporter_ordre->transfer($id) == 3 ? true : false;
+			$data['purchase_grant_error']	 = $exporter_ordre->transfer($id, $resend_order) == 3 ? true : false;
 			$data['purchase_grant_checked']	 = true;
 		}
 		catch (Exception $exc)

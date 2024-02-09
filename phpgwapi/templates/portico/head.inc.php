@@ -156,7 +156,14 @@ HTML;
 
 	$_navbar_config			= json_encode($navbar_config);
 
-	$app = lang($app);
+	if (phpgw::get_var('phpgw_return_as') == 'json')
+	{
+		$menu_selection = phpgwapi_cache::session_get('navbar', 'menu_selection');
+	}
+	else
+	{
+		$menu_selection = $GLOBALS['phpgw_info']['flags']['menu_selection'];
+	}
 	$tpl_vars = array
 	(
 		'noheader'		=> isset($GLOBALS['phpgw_info']['flags']['noheader_xsl']) && $GLOBALS['phpgw_info']['flags']['noheader_xsl'] ? 'true' : 'false',
@@ -171,9 +178,11 @@ HTML;
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
 		'border_layout_config' => $_border_layout_config,
 		'navbar_config' => $_navbar_config,
+		'menu_selection'	 => "navbar::{$menu_selection}",
 		'lang_collapse_all'	=> lang('collapse all'),
 		'lang_expand_all'	=> lang('expand all'),
-		'template_selector'	=> $template_selector
+		'template_selector'	=> $template_selector,
+		'sessionid'			 => $GLOBALS['phpgw_info']['user']['sessionid']
 	);
 
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);

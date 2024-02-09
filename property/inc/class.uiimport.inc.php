@@ -54,8 +54,7 @@
 			$this->db		 = & $GLOBALS['phpgw']->db;
 			$this->table	 = phpgw::get_var('table');
 
-			$this->valid_tables = array
-				(
+			$this->valid_tables = array(
 				'fm_zip_code'				 => array('name'		 => 'fm_zip_code (' . lang('zip code') . ')',
 					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_streetaddress'				 => array('name'		 => 'fm_streetaddress (' . lang('street name') . ')',
@@ -80,10 +79,6 @@
 					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_ecodimd'					 => array('name' => 'fm_ecodimd', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'phpgw_categories'				 => array('name'		 => 'phpgw_categories (' . lang('categories') . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'bb_building'				 => array('name'		 => 'bb_building (' . 'Ressursgruppe' . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'bb_resource'				 => array('name'		 => 'bb_resource (' . 'Ressurser' . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'bb_building_resource'		 => array('name'		 => 'bb_building_resource (' . 'Ressurskobling' . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
-				'bb_organization'		 => array('name'		 => 'bb_organization (' . 'Organisasjoner' . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 				'fm_building_part'	 => array('name'		 => 'fm_building_part (' . 'Bygningsdel' . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
 			);
 
@@ -96,6 +91,18 @@
 					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT);
 				$this->valid_tables["fm_location{$location_type['id']}_category"]	 = array('name'		 => "fm_location{$location_type['id']}_category ({$location_type['name']} {$lang_category})",
 					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT);
+			}
+
+			if (isset($GLOBALS['phpgw_info']['user']['apps']['booking']))
+			{
+				$booking_tables = array(
+					'bb_building'				 => array('name'		 => 'bb_building (' . 'Ressursgruppe' . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+					'bb_resource'				 => array('name'		 => 'bb_resource (' . 'Ressurser' . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+					'bb_building_resource'		 => array('name'		 => 'bb_building_resource (' . 'Ressurskobling' . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+					'bb_organization'		 => array('name'		 => 'bb_organization (' . 'Organisasjoner' . ')', 'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT),
+				);
+
+				$this->valid_tables = array_merge($this->valid_tables, $booking_tables);
 			}
 
 			if ($this->table && !in_array($this->table, array_keys($this->valid_tables)))

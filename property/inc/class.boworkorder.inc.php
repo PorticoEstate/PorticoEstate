@@ -847,6 +847,49 @@
 			return $record_history;
 		}
 
+		
+		function update_custom_action( $receipt )
+		{
+			$workorder_id	 = $receipt['id'];
+			$workorder		 = $this->read_single($workorder_id);
+
+			if(!$workorder['order_sent'])
+			{
+				return;
+			}
+			if( $workorder['verified_transfered'])
+			{
+				return;
+			}
+
+			$transfer_action = 'resend_workorder';
+
+			$criteria = array(
+				'appname'	 => 'property',
+				'location'	 => '.project.workorder.transfer',
+				'allrows'	 => true
+			);
+
+
+			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+			foreach ($custom_functions as $entry)
+			{
+				// prevent path traversal
+				if (preg_match('/\.\./', $entry['file_name']))
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				if ($entry['active'] && is_file($file) && !$entry['client_side'] && !$entry['pre_commit'])
+				{
+					require $file;
+				}
+			}
+
+		}
+
 		function save( $workorder, $action = '' )
 		{
 			$workorder['start_date']				 = $this->bocommon->date_to_timestamp($workorder['start_date']);
@@ -859,6 +902,7 @@
 			if ($action == 'edit')
 			{
 				$receipt = $this->so->edit($workorder);
+				$this->update_custom_action($receipt);
 			}
 			else
 			{
@@ -881,7 +925,7 @@
 					'project_id' => $workorder['project_id'],
 				);
 
-				$claim	 = $boclaim->read(array('project_id' => $workorder['project_id']));
+				$claim	 = $boclaim->read(array('project_id' => $workorder['project_id'],'status' => 'all'));
 				$target	 = array();
 				if ($claim)
 				{

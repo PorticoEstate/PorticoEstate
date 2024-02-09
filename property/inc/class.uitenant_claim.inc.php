@@ -824,9 +824,9 @@
 
 				if($values['project_id'])
 				{
-					$workorder['selected']		 = in_array($workorder['workorder_id'], $values['workorders']);
+					$workorder['selected']		 = in_array($workorder['workorder_id'], (array)$values['workorders']);
 				}
-				$workorder['claim_issued']	 = in_array($workorder['workorder_id'], $values['claim_issued']);
+				$workorder['claim_issued']	 = in_array($workorder['workorder_id'], (array)$values['claim_issued']);
 			}
 
 
@@ -917,6 +917,8 @@
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 
 //_debug_array($project_values['workorder_budget']);
+			$sumaBudget = 0;
+			$sumactualcost = 0;
 			for ($d = 0; $d < count($project_values['workorder_budget']); $d++)
 			{
 				if ($project_values['workorder_budget'][$d]['charge_tenant'] == 1)
@@ -1059,6 +1061,8 @@
 					array('disablePagination' => true)
 				)
 			);
+
+			self::add_javascript('phpgwapi', 'autonumeric', 'autoNumeric.min.js');
 
 			$data = array
 				(

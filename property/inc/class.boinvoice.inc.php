@@ -409,7 +409,7 @@
 
 		function tax_code_list( $selected = '', $tax_codes = array() )
 		{
-			if (!$selected && $selected !== '0')
+			if (!$selected && $selected === '')
 			{
 				$selected = '#';
 			}

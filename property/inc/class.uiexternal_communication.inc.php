@@ -453,10 +453,24 @@
 
 		public function edit( $values = array(), $mode = 'edit', $error = false )
 		{
-			if (!$this->acl_add || !$this->acl_edit)
+
+
+			if($mode == 'view')
 			{
-				phpgw::no_access();
+				if (!$this->acl_read )
+				{
+					phpgw::no_access();
+				}
 			}
+			else
+			{
+				if (!$this->acl_add && !$this->acl_edit)
+				{
+					phpgw::no_access();
+				}
+			}
+
+			$id = phpgw::get_var('id', 'int');
 
 			/**
 			 * Save first, then preview - first pass
@@ -468,7 +482,6 @@
 				$this->save($init_preview);
 			}
 
-			$id = phpgw::get_var('id', 'int');
 			if ($this->preview_html)
 			{
 				$this->_send($id);

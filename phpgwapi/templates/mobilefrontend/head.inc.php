@@ -22,12 +22,13 @@
 	$GLOBALS['phpgw']->template->set_block('head', 'stylesheet', 'stylesheets');
 	$GLOBALS['phpgw']->template->set_block('head', 'javascript', 'javascripts');
 
-	$GLOBALS['phpgw_info']['server']['no_jscombine']=true;
+	$GLOBALS['phpgw_info']['server']['no_jscombine']=false;
 
 	$javascripts = array();
 	$stylesheets = array();
 
 	phpgw::import_class('phpgwapi.jquery');
+	phpgwapi_jquery::load_widget('core');
 	phpgwapi_jquery::load_widget('ui');
 
 	$javascripts[]	 = "/phpgwapi/js/popper/popper2.min.js";
@@ -62,12 +63,34 @@
 		}
 	}
 
-	foreach ( $javascripts as $javascript )
+	if (!$GLOBALS['phpgw_info']['server']['no_jscombine'])
 	{
-		if( file_exists( PHPGW_SERVER_ROOT . $javascript ) )
+		$_jsfiles = array();
+		foreach ($javascripts as $javascript)
 		{
-			$GLOBALS['phpgw']->template->set_var( 'javascript_uri', $webserver_url . $javascript . $cache_refresh_token );
-			$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
+			if (file_exists(PHPGW_SERVER_ROOT . $javascript))
+			{
+				// Add file path to array and replace path separator with "--" for URL-friendlyness
+				$_jsfiles[] = str_replace('/', '--', ltrim($javascript, '/'));
+			}
+		}
+
+		$cachedir	 = urlencode("{$GLOBALS['phpgw_info']['server']['temp_dir']}/combine_cache");
+		$jsfiles	 = implode(',', $_jsfiles);
+		$GLOBALS['phpgw']->template->set_var('javascript_uri', "{$webserver_url}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files={$jsfiles}");
+		$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
+		unset($jsfiles);
+		unset($_jsfiles);
+	}
+	else
+	{
+		foreach ( $javascripts as $javascript )
+		{
+			if( file_exists( PHPGW_SERVER_ROOT . $javascript ) )
+			{
+				$GLOBALS['phpgw']->template->set_var( 'javascript_uri', $webserver_url . $javascript . $cache_refresh_token );
+				$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
+			}
 		}
 	}
 

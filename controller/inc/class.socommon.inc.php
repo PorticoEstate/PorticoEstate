@@ -110,6 +110,11 @@
 			}
 			else if ($type == 'string' && $value && is_array($value))
 			{
+				foreach ($value as &$_value)
+				{
+					$_value = $this->db->stripslashes($_value);
+				}
+
 				return "'" . $this->db->db_addslashes(serialize($value)) . "'";
 			}
 

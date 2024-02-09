@@ -1670,6 +1670,10 @@ SQL;
 				if(in_array($tjenestested, array(26550, 26555)) && $kostra_id != $tjenestested)
 				{
 					$mva = 0;
+				}
+
+				if($kostra_id != $tjenestested)
+				{
 					$this->alert_messages[] = "Objekt {$loc1} i Portico endret tjeneste fra {$kostra_id} til {$tjenestested}";
 				}
 

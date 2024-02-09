@@ -95,7 +95,9 @@
 		function send_admin_notification( $allocation, $maildata, $system_message )
 		{
 			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
+			{
 				return;
+			}
 			$send = CreateObject('phpgwapi.send');
 
 			$config = CreateObject('phpgwapi.config', 'booking');
