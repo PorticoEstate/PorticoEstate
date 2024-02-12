@@ -208,21 +208,10 @@
                                 Beskrivelse
                             </h3>
                         </div>
-                        <div class="col-sm-12 d-flex flex-column collapsible-content collapsed-description"
-                             data-bind="css: {{'collapsed-description': !descriptionExpanded()}}">
-                            <p data-bind="html: resourceDescription">
 
-                            </p>
+                        <collapsable-text params="{{ content: resourceDescription }}">
 
-                        </div>
-                        <div class="col-sm-12">
-                            <button class="pe-btn  pe-btn--transparent text-secondary d-flex gap-3"
-                                    data-bind="click: toggleDescription">
-                                <span data-bind="text: descriptionExpanded() ? 'Vis mindre' : 'Vis mer'"></span>
-                                <i class="fa"
-                                   data-bind="css: {{'fa-chevron-up': descriptionExpanded(), 'fa-chevron-down': !descriptionExpanded()}}"></i>
-                            </button>
-                        </div>
+                        </collapsable-text>
                     </div>
                     <div class="row mb-4">
                         <light-box params="images: imageArray"></light-box>
@@ -245,7 +234,7 @@
                     <input id="inputTargetAudience" required="true" type="hidden" name="audience[]"/>
 
                     <!-- Estimated Number of Participants -->
-                    <div data-bind="foreach: agegroup">
+                    <div data-bind="foreach: agegroupList">
                         <input type="hidden" class="form-input sm-input maleInput" data-bind=""/>
                         <input type="hidden" class="form-input sm-input femaleInput" data-bind=""/>
                     </div>

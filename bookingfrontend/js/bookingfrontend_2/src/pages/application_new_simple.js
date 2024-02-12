@@ -1,3 +1,4 @@
+import '../components/light-box'
 /* global lang */
 
 var booking_month_horizon = 3;
@@ -21,10 +22,8 @@ var baseURL = document.location.origin + "/" + window.location.pathname.split('/
 $(".termAcceptDocsUrl").attr('data-bind', "text: docName, attr: {'href': itemLink }");
 $(".maleInput").attr('data-bind', "textInput: inputCountMale, attr: {'name': malename }, value: 1");
 $(".femaleInput").attr('data-bind', "textInput: inputCountFemale, attr: {'name': femalename }, value: 1");
-var urlParams = [];
-CreateUrlParams(window.location.search);
+var urlParams = CreateUrlParams(window.location.search);
 
-var agegroup = ko.observableArray();
 ko.validation.locale('nb-NO');
 var am;
 
@@ -51,7 +50,7 @@ function applicationModel() {
     self.date = ko.observableArray();
 
     self.aboutArrangement = ko.observable("");
-    self.agegroupList = agegroup;
+    self.agegroupList =  ko.observableArray();
     self.disabledDatesList = ko.observableArray();
     self.specialRequirements = ko.observable("");
     self.attachment = ko.observable();
@@ -71,15 +70,12 @@ function applicationModel() {
     // };
 
 
-    self.descriptionExpanded = ko.observable(false);
-    self.toggleDescription = () => {
-        self.descriptionExpanded(!self.descriptionExpanded())
-    }
+
 
 
     self.selectedResource.subscribe(newDate => {
         const loadResourceData = () => {
-            getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_resource.index_images", filter_owner_id: self.selectedResource().id, length:-1}, true);
+            let getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_resource.index_images", filter_owner_id: self.selectedResource().id, length:-1}, true);
             $.getJSON(getJsonURL, function (result)
             {
                 if (result.ResultSet.Result.length > 0)
@@ -177,7 +173,7 @@ $(document).ready(function () {
     var activityId;
     am = new applicationModel();
     ko.applyBindings(am, document.getElementById("new-application-page"));
-    getJsonURL = phpGWLink('bookingfrontend/', {
+    let getJsonURL = phpGWLink('bookingfrontend/', {
         menuaction: "bookingfrontend.uiapplication.add",
         building_id: urlParams['building_id'],
         phpgw_return_as: "json"
@@ -187,7 +183,7 @@ $(document).ready(function () {
         activityId = result.application.activity_id;
         am.activityId(activityId);
         for (var i = 0; i < result.agegroups.length; i++) {
-            agegroup.push({
+            am.agegroupList.push({
                 name: result.agegroups[i].name, agegroupLabel: result.agegroups[i].name,
                 inputCountMale: ko.observable("").extend({number: true}),
                 inputCountFemale: ko.observable("").extend({number: true}),
@@ -199,7 +195,7 @@ $(document).ready(function () {
         if (initialAgegroups != null) {
             for (var i = 0; i < initialAgegroups.length; i++) {
                 var id = initialAgegroups[i].agegroup_id;
-                var find = ko.utils.arrayFirst(agegroup(), function (current) {
+                var find = ko.utils.arrayFirst(am.agegroupList(), function (current) {
                     return current.id == id;
                 });
                 if (find) {

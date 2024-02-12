@@ -1,38 +1,16 @@
+import '../components/light-box'
+
 var booking_month_horizon = 2;
 $(".navbar-search").removeClass("d-none");
 var bookableResources = ko.observableArray();
 var events = ko.observableArray();
+var imageArray = ko.observableArray();
 var resourceIds = [];
 var availlableTimeSlots = {};
 var date = new Date();
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
-var urlParams = [];
-var imageArray = ko.observableArray();
+var urlParams = 	CreateUrlParams(window.location.search);
 
-
-
-document.addEventListener('DOMContentLoaded', function() {
-	const collapsibleContent = document.querySelector('.collapsible-content');
-	const toggleButton = document.querySelector('.toggle-button'); // Replace with your actual button selector
-
-	// Function to check the content height
-	function checkContentHeight() {
-		if (collapsibleContent.scrollHeight <= collapsibleContent.offsetHeight) {
-			// Content fits within the height, hide the button and remove fade
-			toggleButton.style.display = 'none'; // Hide the button
-			collapsibleContent.classList.remove('collapsed'); // Remove the collapsed class
-		} else {
-			toggleButton.style.display = ''; // Ensure the button is visible
-		}
-	}
-
-	// Run the check on page load
-	checkContentHeight();
-
-	// Optional: If the content can change dynamically, you might want to recheck when it does
-	// For example, after AJAX content load or window resize
-	window.addEventListener('resize', checkContentHeight);
-});
 
 
 /**
@@ -44,9 +22,7 @@ class BuildingModel {
 		this.imageArray = imageArray;
 		this.items = events;
 		this.resourcesExpanded = ko.observable(false);
-		this.descriptionExpanded = ko.observable(false);
 		this.toggleResources = this.toggleResources.bind(this);
-		this.toggleDescription = this.toggleDescription.bind(this);
 	}
 	/**
 	 * Toggles the visibility of additional resources.
@@ -54,12 +30,7 @@ class BuildingModel {
 	toggleResources() {
 		this.resourcesExpanded(!this.resourcesExpanded());
 	}
-	/**
-	 * Toggles the visibility of the description.
-	 */
-	toggleDescription() {
-		this.descriptionExpanded(!this.descriptionExpanded());
-	}
+
 }
 
 const buildingModel = new BuildingModel();
@@ -70,7 +41,6 @@ ko.applyBindings(buildingModel, document.getElementById('building-page-content')
 $(document).ready(function ()
 {
 	//urlParams = new URLSearchParams(window.location.search); //not ie supported
-	CreateUrlParams(window.location.search);
 	if (typeof urlParams['date'] !== "undefined")
 	{
 		date = new Date(urlParams['date']);
@@ -180,21 +150,4 @@ function EventsOptionsChanged(resource, checkValue)
 	});
 }
 
-
-
-// Init Google map
-window.onload = function ()
-{
-	let address = {
-		street: document.getElementById("buildingStreet").textContent,
-		zip: document.getElementById("buildingZipCode").textContent,
-		city: document.getElementById("buildingCity").textContent
-	};
-
-	const fullAddress = address.street + ' ' + address.zip + ' ' + address.city;
-
-	let iurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&output=embed&geocode=&q=' + fullAddress;
-
-	document.getElementById("iframeMap").setAttribute("src", iurl);
-};
 
