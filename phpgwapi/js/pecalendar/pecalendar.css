@@ -709,95 +709,115 @@ fieldset {
 
 body {
   font-family: "Roboto", sans-serif;
-  font-size: 16px;
-  line-height: 1.75rem;
   font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.75rem;
+}
+@media (max-width: 1024px) {
+  body {
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+  }
 }
 
 h1, .h1 {
-  font-size: 1.75rem;
-  line-height: 1.75;
-  margin-top: 0;
   font-weight: 900;
+  margin-top: 0;
+  font-size: 3.5rem;
+  line-height: 4.25rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   h1, .h1 {
-    font-size: 2.25rem;
-    line-height: 1.75;
+    font-size: 2.125rem;
+    line-height: 2.75rem;
   }
 }
 
 h2, .h2 {
-  font-size: 1.375rem;
-  line-height: 2.2;
   font-weight: 900;
+  font-size: 2.25rem;
+  line-height: 2.75rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   h2, .h2 {
-    font-size: 1.75rem;
-    line-height: 1.75;
+    font-size: 1.5rem;
+    line-height: 1.875rem;
   }
 }
 
 h3, .h3 {
+  font-weight: 700;
   font-size: 1.25rem;
-  line-height: 1.4;
-  font-weight: 900;
+  line-height: 1.625rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   h3, .h3 {
-    font-size: 1.375rem;
-    line-height: 2.2;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
   }
 }
 
 h4, .h4 {
+  font-weight: 500;
   font-size: 1.125rem;
-  line-height: 1.4;
-  font-weight: 900;
+  line-height: 1.75rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   h4, .h4 {
-    font-size: 1.25rem;
-    line-height: 1.4;
+    font-size: 1rem;
+    line-height: 1.375rem;
   }
 }
 
-.text {
-  /* SIZE */
-  /* WEIGHT */
-}
 .text-small {
   font-size: 0.875rem;
-  line-height: 1.75rem;
+  line-height: 1.25rem;
 }
-.text-body, .text-normal {
+@media (max-width: 1024px) {
+  .text-small {
+    font-size: 0.75rem;
+    line-height: 1.125rem;
+  }
+}
+.text-body, .text-normal, .text-medium, .text-lg {
   font-size: 1rem;
   line-height: 1.75rem;
 }
-.text-medium {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-}
-.text-lg {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
+@media (max-width: 1024px) {
+  .text-body, .text-normal, .text-medium, .text-lg {
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+  }
 }
 .text-xl {
-  font-size: 1.375rem;
-  line-height: 3rem;
+  font-size: 1.25rem;
+  line-height: 1.625rem;
+}
+@media (max-width: 1024px) {
+  .text-xl {
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+  }
 }
 .text-2xl {
-  font-size: 1.75rem;
-  line-height: 3rem;
-}
-.text-3xl {
   font-size: 2.25rem;
-  line-height: 4rem;
+  line-height: 2.75rem;
 }
-.text-4xl {
+@media (max-width: 1024px) {
+  .text-2xl {
+    font-size: 1.5rem;
+    line-height: 1.875rem;
+  }
+}
+.text-3xl, .text-4xl {
   font-size: 3.5rem;
-  line-height: 4.5rem;
+  line-height: 4.25rem;
+}
+@media (max-width: 1024px) {
+  .text-3xl, .text-4xl {
+    font-size: 2.125rem;
+    line-height: 2.75rem;
+  }
 }
 .text-normal {
   font-weight: 400;
@@ -810,35 +830,43 @@ h4, .h4 {
 }
 
 .line-height-h1 {
-  line-height: 1.75;
+  font-size: 2.25rem;
+  line-height: 2.75rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   .line-height-h1 {
-    line-height: 1.75;
+    font-size: 1.5rem;
+    line-height: 1.875rem;
   }
 }
 .line-height-h2 {
-  line-height: 2.2;
+  font-size: 1.25rem;
+  line-height: 1.625rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   .line-height-h2 {
-    line-height: 1.75;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
   }
 }
 .line-height-h3 {
-  line-height: 1.4;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   .line-height-h3 {
-    line-height: 2.2;
+    font-size: 1rem;
+    line-height: 1.375rem;
   }
 }
 .line-height-h4 {
-  line-height: 1.4;
+  font-size: 1rem;
+  line-height: 1.25rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   .line-height-h4 {
-    line-height: 1.4;
+    font-size: 0.875rem;
+    line-height: 1.125rem;
   }
 }
 

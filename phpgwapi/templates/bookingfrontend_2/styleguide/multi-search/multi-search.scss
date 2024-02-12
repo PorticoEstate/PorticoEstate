@@ -46,7 +46,8 @@
       border-radius: $rounded-large;
       padding: 0.75rem 1rem 0.35rem 2rem;
       width: 100%;
-      font-size: $text-body;
+      font-size: getFontDef($desktop, 'body', 'size');
+
 
       @media (max-width: ($media-medium - 1)) {
         box-shadow: $box-shadow-large;
@@ -72,18 +73,14 @@
       label {
         color: $purple;
         font-weight: $text-bolder;
-        font-size: $text-small;
-        line-height: 1.2em;
-
-        @media (min-width: $media-medium) {
-          font-size: $text-body;
-        }
+        @include applyFontProperties('body');
       }
 
     }
 
     &__icon-button {
-      font-size: $text-2xl;
+      @include applyFontSize('headline');
+
       position: absolute;
       right: 1rem;
       top: 1rem;
