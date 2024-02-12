@@ -48,11 +48,19 @@
                             <xsl:value-of select="building/name"/>
                         </h1>
                     </div>
-                    <span>
-                        <span id="buildingStreet"><xsl:value-of select="building/street"/></span>,
-                        <span id="buildingZipCode"><xsl:value-of select="building/zip_code"/></span>
-                        <span id="buildingCity" style="display:none"><xsl:value-of select="building/city"/></span>
-                    </span>
+                    <div>
+                        <button type="button" class="pe-btn pe-btn--transparent link-text link-text-secondary p-0"
+                                data-bs-toggle="modal" data-bs-target="#mapModal">
+                            <div class="text-primary d-flex gap-1 align-items-center">
+                                <i class="fa-solid fa-map-pin" style="font-size: 1rem"></i>
+                                <span>
+                                    <xsl:value-of select="building/street"/>,
+                                    <xsl:value-of select="building/zip_code"/>
+                                </span>
+                            </div>
+
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -114,6 +122,36 @@
                     </button>
                 </div>
             </div>
+
+            <div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModal"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header border-0">
+                            <button type="button" class="btn-close text-grey-light" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body d-flex justify-content-center pt-0 pb-4">
+                            <div style="display: flex; justify-content: center; align-items: stretch; width: 100%">
+                                <iframe id="iframeMap" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+                                        style="width: 100%;">
+                                    <xsl:attribute name="src">
+                                        <xsl:text>https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=no&amp;output=embed&amp;geocode=&amp;q=</xsl:text>
+                                        <xsl:value-of select="building/street"/>
+                                        <xsl:text>,</xsl:text>
+                                        <xsl:value-of select="building/zip_code"/>
+                                        <xsl:text>,</xsl:text>
+                                        <xsl:value-of select="building/city"/>
+                                    </xsl:attribute>
+                                </iframe>
+                            </div>
+                            <br/>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-sm-12">
                     <h3 class="">
@@ -132,19 +170,23 @@
             </div>
             <div class="row">
                 <div class="col-sm-12">
-<!--                                [phone] => 55561106
-            [email] => fana-ytrebygda.kulturkontor@bergen.kommune.no-->
+                    <!--                                [phone] => 55561106
+                                [email] => fana-ytrebygda.kulturkontor@bergen.kommune.no-->
                     <h3 class="">
                         <xsl:value-of select="php:function('lang', 'contact information')"/>
                     </h3>
                 </div>
                 <div class="col-sm-12 d-flex flex-column">
-                        <xsl:if test="building/phone">
-                            <div>Telefon: <xsl:value-of select="building/phone"/></div>
-                        </xsl:if>
-                        <xsl:if test="building/email">
-                            <div>Epost: <xsl:value-of select="building/email"/></div>
-                        </xsl:if>
+                    <xsl:if test="building/phone">
+                        <div>Telefon:
+                            <xsl:value-of select="building/phone"/>
+                        </div>
+                    </xsl:if>
+                    <xsl:if test="building/email">
+                        <div>Epost:
+                            <xsl:value-of select="building/email"/>
+                        </div>
+                    </xsl:if>
 
 
                 </div>
