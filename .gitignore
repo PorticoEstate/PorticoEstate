@@ -16,4 +16,4 @@ compose.yml
 composer.lock
 PorticoEstate.iml
 /docker-compose.override.yml
-/.tmp
+/tmp/
