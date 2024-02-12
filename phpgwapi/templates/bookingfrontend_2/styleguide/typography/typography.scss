@@ -60,14 +60,10 @@ $mobile: (
 }
 
 
-@mixin body-text {
-  @include applyFontProperties('body');
-}
-
 body {
   font-family: 'Roboto', sans-serif;
   font-weight: $text-normal;
-  @include body-text;
+  @include applyFontProperties('body');
 }
 
 h1, .h1 {
@@ -94,6 +90,11 @@ h4, .h4 {
 .text {
   &-small {
     @include applyFontProperties('caption');
+  }
+
+  &-overline {
+    @include applyFontProperties('overline');
+    text-transform: uppercase;
   }
 
   &-body, &-normal, &-medium, &-lg {
