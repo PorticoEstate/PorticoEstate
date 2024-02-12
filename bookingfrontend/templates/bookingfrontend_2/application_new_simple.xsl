@@ -234,7 +234,7 @@
                     <input id="inputTargetAudience" required="true" type="hidden" name="audience[]"/>
 
                     <!-- Estimated Number of Participants -->
-                    <div data-bind="foreach: agegroup">
+                    <div data-bind="foreach: agegroupList">
                         <input type="hidden" class="form-input sm-input maleInput" data-bind=""/>
                         <input type="hidden" class="form-input sm-input femaleInput" data-bind=""/>
                     </div>

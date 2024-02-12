@@ -98,7 +98,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6 resource-select">
-                                <select class="js-select-multiple-items " data-bind="foreach: bookableresource"
+                                <select class="js-select-multiple-items " data-bind="foreach: bookableResource"
                                         id="select-multiple">
                                     <option></option>
                                     <option data-bind="text: name,
@@ -118,7 +118,7 @@
                                 <div class="form-group" style="display:none">
                                     <div class=" mb-4">
                                         <ul class="row py-2 d-flex g-2 list-unstyled"
-                                            data-bind="foreach: bookableresource">
+                                            data-bind="foreach: bookableResource">
                                             <li>
                                                 <label class="choice user-select-none">
                                                     <input type="checkbox" name="resources[]"
@@ -397,7 +397,7 @@
                                     </div>
 
                                     <!-- Data Binding Iteration -->
-                                    <div data-bind="foreach: agegroup">
+                                    <div data-bind="foreach: agegroupList">
                                         <div class="row mb-2">
                                             <span data-bind="text: id, visible: false"></span>
                                             <div class="col-3">

@@ -1,211 +1,26 @@
+import '../components/time-picker';
+
 /* global direct_booking */
 var application;
 $(".navbar-search").removeClass("d-none");
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 $(".maleInput").attr('data-bind', "textInput: inputCountMale, attr: {'name': malename }");
 $(".femaleInput").attr('data-bind', "textInput: inputCountFemale, attr: {'name': femalename }");
-var urlParams = [];
-CreateUrlParams(window.location.search);
-
-var bookableresource = ko.observableArray();
+var urlParams = CreateUrlParams(window.location.search);
 var globalFacilitiesList = ko.observable({});
-var bookingDates = ko.observableArray();
-var agegroup = ko.observableArray();
-var audiences = ko.observableArray();
 ko.validation.locale('nb-NO');
 var am;
 
 
-var timepickerValues = [];
-setTimePickerValues();
 var lastcheckedResources = [];
 console.log(ko.version);
 console.log("Registering component");
 
-function generateTimeOptions() {
-    let times = [];
-    for (let h = 0; h < 24; h++) {
-        for (let m = 0; m < 60; m += 15) {
-            let hour = h.toString().padStart(2, '0');
-            let minute = m.toString().padStart(2, '0');
-            times.push(`${hour}:${minute}`);
-        }
-    }
-    return times;
-}
-
-var timeOptions = ko.observableArray(generateTimeOptions());
 
 
-ko.bindingHandlers.withAfterRender = {
-    init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
-        var value = valueAccessor();
-
-        ko.applyBindingsToNode(element, {visible: true}, bindingContext);
-        if (value.afterRender) {
-            value.afterRender(element);
-        }
-
-    }
-};
 
 
-ko.components.register('time-picker', {
-    viewModel: function (params) {
-        const self = this;
 
-        self.selectedTime = params.selectedTime || ko.observable('');
-        self.placeholderText = params.placeholderText || "Choose time..."; // Default to "Choose time..." if not provided
-        let dropdown;
-
-
-        self.showDropdown = function () {
-            dropdown.style.display = 'block';
-            const timeslotHeight = dropdown.children[0].offsetHeight; // Assuming all timeslot divs are of the same height
-            const selectedTimeValue = self.selectedTime() || '14:30'; // Use '14:30' as default if no time is selected
-            const timeOptionsArray = ko.unwrap(timeOptions); // Convert observable array to regular array
-
-            const index = timeOptionsArray.indexOf(selectedTimeValue); // Get the index of the currently selected time or '14:30' if none is selected
-
-            dropdown.scrollTo({top: timeslotHeight * index}); // Scroll to the position of the selected time or '14:30'
-        };
-
-
-        self.hideDropdown = function () {
-            dropdown.style.display = 'none';
-        };
-
-        // Add a slight delay before hiding dropdown to allow for selectTime to run
-        self.delayedHideDropdown = function () {
-            setTimeout(self.hideDropdown, 150);
-        };
-
-        self.selectTime = function (time) {
-            self.selectedTime(time);
-            self.hideDropdown();
-        };
-
-        self.formatTime = function () {
-            const time = self.selectedTime();
-            const validFormats = /^(\d{1,2})(?:[.: ]*(\d{2}))?$/;
-            const match = time.match(validFormats);
-
-            if (match) {
-                const hours = parseInt(match[1]);
-                const minutes = match[2] ? parseInt(match[2]) : 0;
-
-                if (hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60) {
-                    self.selectedTime(`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
-                } else {
-                    self.selectedTime('');
-                }
-            } else {
-                self.selectedTime('');
-            }
-        };
-        self.afterRender = function (container) {
-            const timeInput = container.querySelector(".timeInput");
-            dropdown = container.querySelector(".timeDropdown");
-
-
-            container.addEventListener('focus', self.showDropdown, true);
-            container.addEventListener('blur', self.delayedHideDropdown, true);
-            timeInput.addEventListener('focus', self.showDropdown);
-            timeInput.addEventListener('blur', self.formatTime);
-
-            dropdown.addEventListener('click', function (event) {
-                if (event.target.matches('.timeDropdown > div')) {
-                    self.selectTime(event.target.textContent);
-                }
-            });
-
-            timeInput.addEventListener('keydown', function (event) {
-                if (event.keyCode === 13) {
-                    self.selectedTime(timeInput.value);
-                    self.formatTime();
-                    event.preventDefault();
-                }
-            });
-
-        };
-    },
-    template: `
-<!--  	<div class="dropdownContainer"  data-bind="withAfterRender: { afterRender: $component.afterRender}">-->
-<!--        <input type="text" class="timeInput" placeholder="Choose time..." data-bind="value: selectedTime">-->
-<!--        <div class="timeDropdown" data-bind="foreach: timeOptions" style="display: none;">-->
-<!--            <div data-bind="text: $data, click: $component.selectTime"></div>-->
-<!--        </div>-->
-<!--    </div>-->
-<div class="dropdownContainer d-flex flex-column align-items-center align-self-stretch" data-bind="withAfterRender: { afterRender: $component.afterRender}">
-    <label class="input-icon w-100" aria-labelledby="input-text-icon">
-        <span class="far fa-clock icon" aria-hidden="true"></span>
-        <input type="text" 
-               class="form-control bookingStartTime mr-2 timeInput" 
-               placeholder="" 
-               data-bind="value: selectedTime, attr: { placeholder: placeholderText }">
-        </input>
-    </label>
-    <div class="timeDropdown" style="display: none;" data-bind="foreach: timeOptions">
-        <div data-bind="text: $data, click: $component.selectTime, css: { 'active': $data === $component.selectedTime() }"></div>
-    </div>
-</div>
-
-    `
-});
-
-
-function setTimePickerValues() {
-    let fromHour = (typeof urlParams['fromTime'] !== "undefined") ? parseInt(urlParams['fromTime'].substr(0, 2)) : 0;
-    let fromMinute = (typeof urlParams['fromTime'] !== "undefined") ? parseInt(urlParams['fromTime'].substr(3, 2)) : 0;
-
-    let toHour = (typeof urlParams['toTime'] !== "undefined") ? parseInt(urlParams['toTime'].substr(0, 2)) : 23;
-    let toMinute = (typeof urlParams['toTime'] !== "undefined") ? parseInt(urlParams['toTime'].substr(3, 2)) : 45;
-
-    if (toMinute === 59) {
-        toMinute = 45;
-    }
-
-    let configurableFromMinute = 0;
-    let configurableToMinute = 60;
-    let firstIteration = true;
-    for (let hour = fromHour; hour <= toHour; hour++) {
-        if (firstIteration) {
-            configurableFromMinute = fromMinute;
-        } else {
-            configurableFromMinute = 0;
-        }
-
-        if (hour === toHour) {
-            configurableToMinute = toMinute + 15;
-        }
-
-        for (minute = configurableFromMinute; minute < configurableToMinute; minute += 15) {
-            var value = ("00" + hour).substr(-2) + ":" + ("00" + minute).substr(-2);
-            timepickerValues.push(value);
-        }
-    }
-}
-
-function parseTime(input) {
-    if (input === undefined) {
-        return input;
-    }
-    // Remove any non-digit characters
-    let sanitizedInput = input.replace(/[^0-9]/g, '');
-
-    // For formats like "1300"
-    if (sanitizedInput.length === 4) {
-        return sanitizedInput.slice(0, 2) + ':' + sanitizedInput.slice(2, 4);
-    }
-
-    // For formats like "13"
-    if (sanitizedInput.length === 2) {
-        return sanitizedInput + ':00';
-    }
-
-    // Default to return the input as is (assumes "13:00" format is entered correctly)
-    return input;
-}
 
 function applicationModel() {
     var self = this;
@@ -250,7 +65,7 @@ function applicationModel() {
     };
 
 
-    self.bookableResource = bookableresource;
+    self.bookableResource = ko.observableArray();
     self.selectedResourcesOld = ko.observableArray(0);
     self.isResourceSelected = ko.computed(function () {
         var checkedResources = [];
@@ -298,7 +113,7 @@ function applicationModel() {
         }
         return false;
     }).extend({required: true});
-    self.audiences = audiences;
+    self.audiences = ko.observableArray();
     self.audienceSelectedValue = ko.observable();
 
     self.activityId = ko.observable();
@@ -370,7 +185,7 @@ function applicationModel() {
         this.selected(false);
     };
     self.aboutArrangement = ko.observable("");
-    self.agegroupList = agegroup;
+    self.agegroupList = ko.observableArray();
     self.specialRequirements = ko.observable("");
     self.attachment = ko.observable();
 
@@ -471,8 +286,9 @@ $(document).ready(function () {
     if (typeof urlParams['building_id'] === 'undefined') {
         urlParams['building_id'] = building_id;
     }
+    am = new applicationModel();
 
-    getJsonURL = phpGWLink('bookingfrontend/', {
+    let getJsonURL = phpGWLink('bookingfrontend/', {
         menuaction: "bookingfrontend.uiapplication.add",
         building_id: urlParams['building_id'],
         phpgw_return_as: "json"
@@ -480,7 +296,7 @@ $(document).ready(function () {
     $.getJSON(getJsonURL, function (result) {
         activityId = result.application.activity_id;
         for (var i = 0; i < result.agegroups.length; i++) {
-            agegroup.push({
+            am.agegroupList.push({
                 name: result.agegroups[i].name, agegroupLabel: result.agegroups[i].name,
                 inputCountMale: ko.observable("").extend({number: true}),
                 inputCountFemale: ko.observable("").extend({number: true}),
@@ -492,7 +308,7 @@ $(document).ready(function () {
         if (initialAgegroups != null) {
             for (var i = 0; i < initialAgegroups.length; i++) {
                 var id = initialAgegroups[i].agegroup_id;
-                var find = ko.utils.arrayFirst(agegroup(), function (current) {
+                var find = ko.utils.arrayFirst(am.agegroupList(), function (current) {
                     return current.id == id;
                 });
                 if (find) {
@@ -505,7 +321,7 @@ $(document).ready(function () {
             if ($.inArray(result.audience[i].id, initialAudience) > -1) {
                 $("#audienceDropdownBtn").text(result.audience[i].name);
             }
-            audiences.push({id: result.audience[i].id, name: result.audience[i].name})
+            am.audiences.push({id: result.audience[i].id, name: result.audience[i].name})
         }
 
         getJsonURL = phpGWLink('bookingfrontend/', {
@@ -538,7 +354,7 @@ $(document).ready(function () {
                         if (currentResource.direct_booking && currentResource.direct_booking < now) {
                             resource_name += ' *';
                         }
-                        bookableresource.push({
+                        am.bookableResource.push({
                             id: currentResource.id,
                             name: resource_name,
                             selected: ko.observable(tempSelected)
@@ -576,7 +392,6 @@ $(document).ready(function () {
         });
 
     }).done(function () {
-        am = new applicationModel();
         am.activityId(activityId);
         console.log("Applying bindings");
         ko.applyBindings(am, document.getElementById("new-application-page"));

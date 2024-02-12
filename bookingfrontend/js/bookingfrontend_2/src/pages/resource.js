@@ -1,10 +1,11 @@
+import '../components/light-box'
+
 var booking_month_horizon = 2;
 $(".navbar-search").removeClass("d-none");
 var events = ko.observableArray();
 var date = new Date();
 //var urlParams = new URLSearchParams(window.location.search);
-var urlParams = [];
-CreateUrlParams(window.location.search);
+var urlParams = CreateUrlParams(window.location.search);
 //var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 var baseURL = strBaseURL.split('?')[0] + "bookingfrontend/";
 var availlableTimeSlots = ko.observableArray();
@@ -85,7 +86,7 @@ $(document).ready(function ()
 
 function PopulateResourceData()
 {
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_resource.index_images", filter_owner_id: urlParams['id'], length:-1}, true);
+	const getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_resource.index_images", filter_owner_id: urlParams['id'], length:-1}, true);
 	$.getJSON(getJsonURL, function (result)
 	{
 		var mainPictureFound = false;
@@ -167,7 +168,7 @@ function roundMinutes(date)
 	var date = new Date(date);
 	if (date.getMinutes <= 7 || date.getMinutes >= 53)
 	{
-		date.setMinutes(00);
+		date.setMinutes(0);
 	}
 	else if (date.getMinutes >= 8 || date.getMinutes <= 22)
 	{
