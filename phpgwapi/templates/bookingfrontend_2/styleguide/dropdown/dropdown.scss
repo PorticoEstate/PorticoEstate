@@ -1,32 +1,31 @@
+@mixin dropdown {
+  border-radius: $rounded-large;
+  padding: 0.438rem 3.5rem 0.438rem 1.5rem;
+  font-size: 1rem;
+  border: 1px solid $grey;
+  height: auto;
+  background-color: $white;
+}
 
-  @mixin dropdown {
-    border-radius: $rounded-large;
-    padding: 0.438rem 3.5rem 0.438rem 1.5rem;
-    font-size: 1rem;
-    border: 1px solid $grey;
-    height: auto;
-    background-color: $white;
+@mixin dropdown-arrow {
+  content: "\f078";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 700;
+  position: absolute;
+  right: 1.5rem;
+  top: 0.5rem;
+  transform: rotate(0);
+  transition: all 0.3s;
+  font-size: 1rem;
+  color: $black;
+
+  @media (min-width: $media-small) {
+    right: 2rem;
   }
-
-  @mixin dropdown-arrow {
-    content: "\f078";
-    font-family: "Font Awesome 5 Free";
-    font-weight: 700;
-    position: absolute;
-    right: 1.5rem;
-    top: 0.5rem;
-    transform: rotate(0);
-    transition: all 0.3s;
-    font-size: 1rem;
-    color: $black;
-
-    @media (min-width: $media-small) {
-      right: 2rem;
-    }
-  }
+}
 
 
- .select2-container--select-v2 {
+.select2-container--select-v2 {
   box-shadow: $box-shadow-large;
   border-radius: $rounded-large;
 
@@ -46,8 +45,8 @@
       outline: none;
     }
   }
-  &:hover 
-  {
+
+  &:hover {
     .select2-selection {
       box-shadow: $box-focus-shadow-purple;
     }
@@ -66,7 +65,7 @@
         border-bottom: 0;
       }
 
-      &::after{
+      &::after {
         transform: rotate(-180deg);
       }
     }
@@ -76,8 +75,8 @@
       border-top-right-radius: $rounded-medium;
     }
   }
- 
-  .select2-selection {  
+
+  .select2-selection {
     @include dropdown;
 
     &--single,
@@ -100,17 +99,17 @@
           flex-wrap: wrap;
           list-style: none;
         }
-    
+
         &__arrow {
           height: auto;
           width: auto;
           position: absolute;
-    
+
           b {
             display: none;
           }
         }
-        
+
         &__clear {
           padding: 0 0.5rem 0 0.5rem;
           font-size: 1rem;
@@ -146,7 +145,7 @@
 
         &__field {
           margin: 0;
-          
+
           &::-webkit-input-placeholder, /* Chrome/Opera/Safari */
           &::-moz-placeholder, /* Firefox 19+ */
           &:-ms-input-placeholder, /* IE 10+ */
@@ -163,7 +162,7 @@
     font-size: 0.875rem;
     border: 0;
     box-shadow: 0px -3px 0px 0px $white, 0px 0px 0px 2px $purple;
-  
+
     &--below {
       border-bottom-left-radius: $rounded-medium;
       border-bottom-right-radius: $rounded-medium;
@@ -178,15 +177,15 @@
         padding: 0.75rem 1rem;
         border: 1px solid $grey;
         border-radius: $rounded-large;
-    
+
         &:focus-visible {
           outline: 0;
-          box-shadow:0 0 1px 1px rgba(0, 0, 0, 1)
+          box-shadow: 0 0 1px 1px rgba(0, 0, 0, 1)
         }
       }
     }
 
-    .select2-results { 
+    .select2-results {
       max-height: 16rem;
       overflow-y: auto;
 
@@ -201,11 +200,12 @@
         &[aria-selected=true] {
           background-color: $purple-24;
         }
+
         &[aria-fake-selected=true] {
           background-color: $purple-24;
         }
-        
-        &--highlighted{
+
+        &--highlighted {
           background-color: $grey-light;
         }
       }
@@ -220,7 +220,7 @@
   &.select2-container--focus {
     .select2-selection {
       box-shadow: none;
-      
+
       @media (min-width: $media-medium) {
         border-color: $purple-light;
       }
@@ -230,7 +230,7 @@
   &:hover {
     .select2-selection {
       box-shadow: none;
-      
+
       @media (min-width: $media-medium) {
         border-color: $purple;
       }
@@ -259,7 +259,7 @@
     @media (min-width: $media-medium) {
       border-radius: 0;
     }
-    
+
     &--single,
     &--multiple {
 
@@ -293,7 +293,7 @@
 }
 
 .js-dropdown, .js-slidedown {
-  &-toggler[aria-expanded="true"] ~ &-content{
+  &-toggler[aria-expanded="true"] ~ &-content {
     display: block;
   }
 
@@ -307,7 +307,7 @@
   box-shadow: $box-shadow-large;
   border-radius: $rounded-large;
 
-  &__toggler[aria-expanded="true"]{
+  &__toggler[aria-expanded="true"] {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border-top-left-radius: $rounded-medium;
@@ -318,13 +318,13 @@
     &:focus-visible {
       box-shadow: 0px 0px 0px 2px $purple;
     }
-    
+
     &::after {
       transform: rotate(-180deg);
     }
   }
 
-  &__toggler[aria-expanded="true"] ~ &-content{
+  &__toggler[aria-expanded="true"] ~ &-content {
     border-top: 0;
   }
 
@@ -373,7 +373,7 @@
   border: 1px solid $grey;
   background-color: $white;
   box-shadow: $box-shadow-large;
-  
+
   &:focus-within {
     box-shadow: $box-shadow-large, $box-focus-shadow;
   }
@@ -390,7 +390,7 @@
       border-bottom-right-radius: 0;
       border-top-left-radius: $rounded-large;
       border-top-right-radius: $rounded-large;
-      
+
       &::after {
         transform: rotate(-180deg);
       }
@@ -407,7 +407,8 @@
     background: transparent;
     border-radius: $rounded-large;
     color: $purple;
-    font-size: $text-body;
+    @include applyFontSize('subtitle');
+
     text-align: left;
     position: relative;
     font-weight: 900;
@@ -416,7 +417,6 @@
     border: 0;
 
     @media (min-width: $media-medium) {
-      font-size: $text-lg;
       padding: 1.4rem 4rem 1.4rem 2rem;
     }
 
@@ -437,7 +437,7 @@
       right: 1.8rem;
       display: flex;
       align-items: center;
-          
+
       @media (min-width: $media-small) {
         font-size: 1.4rem;
       }
@@ -445,7 +445,7 @@
 
     &--large {
       @media (min-width: $media-large) {
-        font-size: $text-xl;
+        font-size: getFontDef($desktop, 'title', 'size');
       }
 
       &::after {
@@ -456,13 +456,9 @@
     }
 
     &__info {
+      @include applyFontSize('body');
       margin-top: 0.5rem;
-      font-size: $text-small;
       color: $black;
-      font-weight: $text-normal;
-      @media (min-width: $media-medium) {
-        font-size: $text-body;
-      }
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -472,9 +468,11 @@
       &__separator {
         display: flex;
         align-items: center;
-        .fa-circle{
+
+        .fa-circle {
           font-size: 0.375rem;
         }
+
         //display: none;
         //display: inline-block;
         //vertical-align: middle;
@@ -520,7 +518,7 @@
       outline: none;
       box-shadow: $box-focus-shadow;
     }
-  
+
     &:hover {
       &::after {
         color: $purple;
@@ -540,7 +538,7 @@
       right: 0.5rem;
       top: 1.05rem;
     }
-    
+
     &[aria-expanded="true"] {
       &::after {
         color: $purple;

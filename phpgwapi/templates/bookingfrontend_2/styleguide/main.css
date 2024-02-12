@@ -731,95 +731,115 @@ fieldset {
 
 body {
   font-family: "Roboto", sans-serif;
-  font-size: 16px;
-  line-height: 1.75rem;
   font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.75rem;
+}
+@media (max-width: 1024px) {
+  body {
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+  }
 }
 
 h1, .h1 {
-  font-size: 1.75rem;
-  line-height: 1.75;
-  margin-top: 0;
   font-weight: 900;
+  margin-top: 0;
+  font-size: 3.5rem;
+  line-height: 4.25rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   h1, .h1 {
-    font-size: 2.25rem;
-    line-height: 1.75;
+    font-size: 2.125rem;
+    line-height: 2.75rem;
   }
 }
 
 h2, .h2 {
-  font-size: 1.375rem;
-  line-height: 2.2;
   font-weight: 900;
+  font-size: 2.25rem;
+  line-height: 2.75rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   h2, .h2 {
-    font-size: 1.75rem;
-    line-height: 1.75;
+    font-size: 1.5rem;
+    line-height: 1.875rem;
   }
 }
 
 h3, .h3 {
+  font-weight: 700;
   font-size: 1.25rem;
-  line-height: 1.4;
-  font-weight: 900;
+  line-height: 1.625rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   h3, .h3 {
-    font-size: 1.375rem;
-    line-height: 2.2;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
   }
 }
 
 h4, .h4 {
+  font-weight: 500;
   font-size: 1.125rem;
-  line-height: 1.4;
-  font-weight: 900;
+  line-height: 1.75rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   h4, .h4 {
-    font-size: 1.25rem;
-    line-height: 1.4;
+    font-size: 1rem;
+    line-height: 1.375rem;
   }
 }
 
-.text {
-  /* SIZE */
-  /* WEIGHT */
-}
 .text-small {
   font-size: 0.875rem;
-  line-height: 1.75rem;
+  line-height: 1.25rem;
 }
-.text-body, .text-normal {
+@media (max-width: 1024px) {
+  .text-small {
+    font-size: 0.75rem;
+    line-height: 1.125rem;
+  }
+}
+.text-body, .text-normal, .text-medium, .text-lg {
   font-size: 1rem;
   line-height: 1.75rem;
 }
-.text-medium {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-}
-.text-lg {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
+@media (max-width: 1024px) {
+  .text-body, .text-normal, .text-medium, .text-lg {
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+  }
 }
 .text-xl {
-  font-size: 1.375rem;
-  line-height: 3rem;
+  font-size: 1.25rem;
+  line-height: 1.625rem;
+}
+@media (max-width: 1024px) {
+  .text-xl {
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+  }
 }
 .text-2xl {
-  font-size: 1.75rem;
-  line-height: 3rem;
-}
-.text-3xl {
   font-size: 2.25rem;
-  line-height: 4rem;
+  line-height: 2.75rem;
 }
-.text-4xl {
+@media (max-width: 1024px) {
+  .text-2xl {
+    font-size: 1.5rem;
+    line-height: 1.875rem;
+  }
+}
+.text-3xl, .text-4xl {
   font-size: 3.5rem;
-  line-height: 4.5rem;
+  line-height: 4.25rem;
+}
+@media (max-width: 1024px) {
+  .text-3xl, .text-4xl {
+    font-size: 2.125rem;
+    line-height: 2.75rem;
+  }
 }
 .text-normal {
   font-weight: 400;
@@ -832,35 +852,43 @@ h4, .h4 {
 }
 
 .line-height-h1 {
-  line-height: 1.75;
+  font-size: 2.25rem;
+  line-height: 2.75rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   .line-height-h1 {
-    line-height: 1.75;
+    font-size: 1.5rem;
+    line-height: 1.875rem;
   }
 }
 .line-height-h2 {
-  line-height: 2.2;
+  font-size: 1.25rem;
+  line-height: 1.625rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   .line-height-h2 {
-    line-height: 1.75;
+    font-size: 1.125rem;
+    line-height: 1.5rem;
   }
 }
 .line-height-h3 {
-  line-height: 1.4;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   .line-height-h3 {
-    line-height: 2.2;
+    font-size: 1rem;
+    line-height: 1.375rem;
   }
 }
 .line-height-h4 {
-  line-height: 1.4;
+  font-size: 1rem;
+  line-height: 1.25rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   .line-height-h4 {
-    line-height: 1.4;
+    font-size: 0.875rem;
+    line-height: 1.125rem;
   }
 }
 
@@ -1860,7 +1888,7 @@ textarea {
   background: transparent;
   border-radius: 3.125rem;
   color: #793C8A;
-  font-size: 1rem;
+  font-size: 1.125rem;
   text-align: left;
   position: relative;
   font-weight: 900;
@@ -1868,9 +1896,13 @@ textarea {
   padding: 1rem 3rem 1rem 2rem;
   border: 0;
 }
+@media (max-width: 1024px) {
+  .slidedown__toggler {
+    font-size: 1rem;
+  }
+}
 @media (min-width: 768px) {
   .slidedown__toggler {
-    font-size: 1.25rem;
     padding: 1.4rem 4rem 1.4rem 2rem;
   }
 }
@@ -1913,7 +1945,7 @@ textarea {
 }
 @media (min-width: 992px) {
   .slidedown__toggler--large {
-    font-size: 1.375rem;
+    font-size: 1.25rem;
   }
 }
 @media (min-width: 992px) {
@@ -1922,18 +1954,17 @@ textarea {
   }
 }
 .slidedown__toggler__info {
+  font-size: 1rem;
   margin-top: 0.5rem;
-  font-size: 0.875rem;
   color: #000000;
-  font-weight: 400;
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 0.5rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   .slidedown__toggler__info {
-    font-size: 1rem;
+    font-size: 0.875rem;
   }
 }
 .slidedown__toggler__info__separator {
@@ -2243,19 +2274,25 @@ textarea {
 .multisearch__inner__item label {
   color: #793C8A;
   font-weight: 900;
-  font-size: 0.875rem;
-  line-height: 1.2em;
+  font-size: 1rem;
+  line-height: 1.75rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 1024px) {
   .multisearch__inner__item label {
-    font-size: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.5rem;
   }
 }
 .multisearch__inner__icon-button {
-  font-size: 1.75rem;
+  font-size: 2.25rem;
   position: absolute;
   right: 1rem;
   top: 1rem;
+}
+@media (max-width: 1024px) {
+  .multisearch__inner__icon-button {
+    font-size: 1.5rem;
+  }
 }
 .multisearch .select2-container--select-v2 .select2-selection--single .select2-selection__rendered {
   padding: 0.25rem 0;
