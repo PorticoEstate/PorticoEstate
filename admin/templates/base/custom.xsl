@@ -27,11 +27,9 @@
 				<xsl:value-of select="lang_add"/>
 			</xsl:variable>
 			<form method="post" action="{$add_action}">
-				<input type="submit" name="add" value="{$lang_add}" onMouseout="window.status='';return true;">
-					<xsl:attribute name="onMouseover">
-						<xsl:text>window.status='</xsl:text>
+				<input type="submit" name="add" value="{$lang_add}" class="pure-button pure-button-primary">
+					<xsl:attribute name="title">
 						<xsl:value-of select="lang_add_standardtext"/>
-						<xsl:text>'; return true;</xsl:text>
 					</xsl:attribute>
 				</input>
 			</form>
@@ -44,11 +42,9 @@
 				<xsl:value-of select="lang_done"/>
 			</xsl:variable>
 			<form method="post" action="{$done_action}">
-				<input type="submit" name="add" value="{$lang_done}" onMouseout="window.status='';return true;">
-					<xsl:attribute name="onMouseover">
-						<xsl:text>window.status='</xsl:text>
+				<input type="submit" name="add" value="{$lang_done}" class="pure-button pure-button-primary">
+					<xsl:attribute name="title">
 						<xsl:value-of select="lang_add_standardtext"/>
-						<xsl:text>'; return true;</xsl:text>
 					</xsl:attribute>
 				</input>
 			</form>

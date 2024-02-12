@@ -1434,6 +1434,7 @@
 					'id' => (int) $this->db->f('id'),
 					'checklist_id' => (int) $this->db->f('checklist_id'),
 					'name' => $this->db->f('name', true),
+					'descr' => $this->db->f('descr', true),
 					'active' => (int)$this->db->f('active'),
 					'active_attribs' => json_decode($this->db->f('active_attribs'), true),
 				);
@@ -1451,16 +1452,15 @@
 		{
 			$this->db->transaction_begin();
 
-			$name = $this->db->db_addslashes($data['name']);
-
 			$values = array(
-				$data['checklist_id'],
-				$name,
-				$data['active'],
+				(int)$data['checklist_id'],
+				$this->db->db_addslashes($data['name']),
+				$this->db->db_addslashes($data['descr']),
+				(int)$data['active'],
 				json_encode($data['active_attribs'])
 			);
 			$values = $this->db->validate_insert($values);
-			$this->db->query("INSERT INTO fm_bim_item_checklist_stage (checklist_id, name, active, active_attribs)"
+			$this->db->query("INSERT INTO fm_bim_item_checklist_stage (checklist_id, name, descr, active, active_attribs)"
 			 . " VALUES ($values)", __LINE__, __FILE__);
 
 			//last insert id
@@ -1489,11 +1489,10 @@
 			{
 				$table = "fm_bim_item_checklist_stage";
 
-				$data['name']	 = $this->db->db_addslashes($data['name']);
-
 				$value_set = array(
-					'name'			 => $data['name'],
-					'active'		 => $data['active'],
+					'name'			 => $this->db->db_addslashes($data['name']),
+					'descr'			 => $this->db->db_addslashes($data['descr']),
+					'active'		 => (int)$data['active'],
 					'active_attribs' => json_encode($data['active_attribs'])
 				);
 
@@ -1501,7 +1500,7 @@
 
 				$this->db->transaction_begin();
 
-				$this->db->query("UPDATE $table SET {$value_set} WHERE id=" . (int)$data['id'], __LINE__, __FILE__);
+				$this->db->query("UPDATE {$table} SET {$value_set} WHERE id=" . (int)$data['id'], __LINE__, __FILE__);
 
 				$this->db->transaction_commit();
 

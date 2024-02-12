@@ -87,8 +87,7 @@
 			}
 			else
 			{
-
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::admin::{$this->appname}";
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::{$this->appname}";
 				$this->local_menu_selection = true;
 			}
 		}
@@ -122,7 +121,7 @@
 
 			if($this->local_menu_selection)
 			{
-				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_atrribs';
+	//			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_atrribs';
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
