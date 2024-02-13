@@ -1066,22 +1066,39 @@
 			$template_entity_id	 = $template_info[0];
 			$template_cat_id	 = $template_info[1];
 
-			$attrib_list = $this->bo->read_attrib(array('entity_id'	 => $template_entity_id,
-				'cat_id'	 => $template_cat_id, 'allrows'	 => true));
+			if($template_info && $template_info[0] && $template_info[1])
+			{
+				$attrib_list = $this->bo->read_attrib(array('entity_id'	 => $template_entity_id,
+					'cat_id'	 => $template_cat_id, 'allrows'	 => true));
+			}
+			else if($checklist_id = phpgw::get_var('checklist_template', 'int', 'GET'))
+			{
+				$checklist			 = $this->bo->read_single_checklist($checklist_id);
+				$location_id = $checklist['location_id'];
+
+				$location = $GLOBALS['phpgw']->locations->get_location($location_id);
+				$type_arr	 = explode('.', $location);
+				$type		 = $type_arr[1];
+				$attrib_list = CreateObject('admin.bo_custom')->get_attribs($this->type_app[$type], $location, true);
+			}
+			else
+			{
+				$attrib_list = array();
+			}
+
+
 
 			$content = array();
 			foreach ($attrib_list as $_entry)
 			{
-				$content[] = array
-					(
+				$content[] = array(
 					'attrib_id'	 => $_entry['id'],
 					'name'		 => $_entry['input_text'],
 					'datatype'	 => $_entry['trans_datatype'],
 				);
 			}
 
-			$result_data = array
-				(
+			$result_data = array(
 				'results'		 => $content,
 				'total_records'	 => count($content),
 				'draw'			 => phpgw::get_var('draw', 'int')
@@ -2375,8 +2392,6 @@
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
 
-//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit_custom_function' => $data));
-
 			self::render_template_xsl(array('admin_entity', 'datatable_inline', 'nextmatchs'), array(
 				'edit_custom_function' => $data));
 		}
@@ -2693,6 +2708,16 @@
 							'label'		 => 'location id',
 							'sortable'	 => false
 						),
+						array(
+							'key'		 => 'fileupload',
+							'label'		 => lang('fileupload'),
+							'sortable'	 => false
+						),
+						array(
+							'key'		 => 'active',
+							'label'		 => lang('active'),
+							'sortable'	 => false
+						),
 					)
 				)
 			);
@@ -2983,7 +3008,17 @@
 			$type_arr	 = explode('.', $location);
 			$type		 = $type_arr[1];
 
-			$attrib_list = CreateObject('admin.bo_custom')->get_attribs($this->type_app[$type], $location);
+			$attrib_list_raw = CreateObject('admin.bo_custom')->get_attribs($this->type_app[$type], $location);
+
+			$attrib_list = array();
+			foreach ($attrib_list_raw as $key => $value)
+			{
+				$attrib_list[] = array(
+					'id' => $key,
+					'name' => $value['name'],
+					'selected' => in_array($key, (array)$values['active_attribs']) ? 1 : 0
+				);
+			}
 
 			$link_data = array(
 				'menuaction'		 => 'property.uiadmin_entity.save_checklist_stage',
@@ -2991,9 +3026,7 @@
 				'id'				 => $id
 			);
 
-
 			$msgbox_data		 = $this->bocommon->msgbox_data($this->receipt);
-
 
 			$data = array(
 				'msgbox_data'							 => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -3015,7 +3048,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
 
 			phpgwapi_jquery::load_widget('core');
-			phpgwapi_jquery::load_widget('numberformat');
+			phpgwapi_jquery::load_widget('select2');
 
 			self::add_javascript('property', 'base', 'admin_entity.edit_checklist.js');
 

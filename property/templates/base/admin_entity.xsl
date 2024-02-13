@@ -1104,11 +1104,6 @@
 
 <!-- add / edit checklist stage  -->
 <xsl:template xmlns:php="http://php.net/xsl" match="edit_checklist_stage">
-	<script type="text/javascript">
-		self.name="first_Window";
-		<xsl:value-of select="lookup_functions"/>
-		var base_java_url = <xsl:value-of select="base_java_url"/>;
-	</script>
 
 	<xsl:choose>
 		<xsl:when test="msgbox_data != ''">
@@ -1170,25 +1165,6 @@
 						</textarea>
 					</div>
 					
-					<xsl:choose>
-						<xsl:when test="fileupload != ''">
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'enable file upload')"/>
-								</label>
-								<input type="checkbox" name="values[fileupload]" value="1">
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'If files can be uploaded for this category')"/>
-									</xsl:attribute>
-									<xsl:if test="value_fileupload = '1'">
-										<xsl:attribute name="checked">
-											<xsl:text>checked</xsl:text>
-										</xsl:attribute>
-									</xsl:if>
-								</input>
-							</div>
-						</xsl:when>
-					</xsl:choose>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'active')"/>
@@ -1205,44 +1181,23 @@
 						</input>
 					</div>
 
-					<xsl:choose>
-						<xsl:when test="value_id = ''">
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'template')"/>
-								</label>
-								<select id="checklist_template" name="values[checklist_template]" onChange="get_template_attributes()" class="pure-input-3-4">
-									<option value="">
-										<xsl:value-of select="php:function('lang', 'select template')"/>
-									</option>
-									<xsl:apply-templates select="checklist_list/options"/>
-								</select>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'attributes')"/>
-								</label>
-								<xsl:for-each select="datatable_def">
-									<xsl:if test="container = 'datatable-container_0'">
-										<xsl:call-template name="table_setup">
-											<xsl:with-param name="container" select ='container'/>
-											<xsl:with-param name="requestUrl" select ='requestUrl'/>
-											<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-											<xsl:with-param name="data" select ='data'/>
-											<xsl:with-param name="config" select ='config'/>
-										</xsl:call-template>
-									</xsl:if>
-								</xsl:for-each>
-							</div>
-						</xsl:when>
-					</xsl:choose>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'attributes')"/>
+						</label>
+						<select id="active_attribs" name="values[active_attribs][]" multiple="true" class="pure-input-3-4">
+							<option value="">
+								<xsl:value-of select="php:function('lang', 'select attributes')"/>
+							</option>
+							<xsl:apply-templates select="attrib_list/options"/>
+						</select>
+					</div>
 				</fieldset>
 			</div>
 		</div>
 	</form>
 
 	<div class="pure-controls">
-		<input type="hidden" name="template_attrib" value=""/>
 		<input type="button" class="pure-button pure-button-primary" name="values[save]" value="{php:function('lang', 'save')}" onClick="onActionsClick();">
 			<xsl:attribute name="title">
 				<xsl:value-of select="php:function('lang', 'save')"/>
@@ -1262,6 +1217,19 @@
 			</input>
 		</form>
 	</div>
+
+	<script>
+//		$(document).ready(function() {
+			$("#active_attribs").select2({
+				placeholder: '<xsl:value-of select="php:function('lang', 'select')"/>',
+				language: "no",
+				multiple: true,
+				width: '75%',
+				closeOnSelect: false
+			});
+
+//		});
+	</script>
 </xsl:template>
 
 

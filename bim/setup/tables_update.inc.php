@@ -329,6 +329,7 @@
 					'name' => array('type' => 'varchar', 'precision' => 150, 'nullable' => False),
 					'descr' => array('type' => 'text', 'nullable' => True),
 					'active' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
+					'fileupload' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
 				),
 				'pk' => array('id'),
 				'fk' => array('fm_bim_type' => array('type_location_id' => 'location_id')),

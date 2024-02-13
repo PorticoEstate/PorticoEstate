@@ -1276,6 +1276,7 @@
 					'location_id' => (int) $this->db->f('location_id'),
 					'name' => $this->db->f('name', true),
 					'active' => (int)$this->db->f('active'),
+					'fileupload' => (int)$this->db->f('fileupload'),
 				);
 			}
 			return $values;
@@ -1304,10 +1305,11 @@
 				-1,
 				$name,
 				$this->db->db_addslashes($data['descr']),
-				$data['active']
+				(int)$data['active'],
+				(int) $data['fileupload']
 			);
 			$values = $this->db->validate_insert($values);
-			$this->db->query("INSERT INTO fm_bim_item_checklist (type_location_id, location_id, name, descr, active)"
+			$this->db->query("INSERT INTO fm_bim_item_checklist (type_location_id, location_id, name, descr, active, fileupload)"
 			 . " VALUES ($values)", __LINE__, __FILE__);
 
 			//last insert id
@@ -1341,7 +1343,8 @@
 				$value_set = array(
 					'name'			 => $data['name'],
 					'descr'			 => $data['descr'],
-					'active'		 => $data['active']
+					'active'		 => (int)$data['active'],
+					'fileupload'	 => (int)$data['fileupload'],
 				);
 
 				$value_set = $this->db->validate_update($value_set);
@@ -1378,6 +1381,7 @@
 					'name' => $this->db->f('name', true),
 					'descr' => $this->db->f('descr', true),
 					'active' => (int)$this->db->f('active'),
+					'fileupload' => $this->db->f('fileupload'),
 				);
 			}
 			return $values;

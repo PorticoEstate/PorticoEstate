@@ -44,10 +44,7 @@ this.onActionsClick = function ()
 
 this.get_template_attributes = function ()
 {
-	if (document.getElementById('checklist_template').value)
-	{
-		base_java_url['checklist_template'] = document.getElementById('checklist_template').value;
-	}
+	base_java_url['checklist_template'] = document.getElementById('checklist_template').value;
 
 	if (document.getElementById('checklist_template').value != checklist_template)
 	{
