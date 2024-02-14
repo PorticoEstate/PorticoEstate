@@ -717,6 +717,7 @@
 				'loc1_name'				 => 'fm_location1.loc1_name',
 				'ecodimb'				 => 'fm_tts_tickets.ecodimb',
 				'order_dim1'			 => 'fm_tts_tickets.order_dim1',
+				'order_cat_id'			 => 'fm_tts_tickets.order_cat_id',
 				'external_project_id'	 => 'fm_tts_tickets.external_project_id',
 				'contract_id'			 => 'fm_tts_tickets.contract_id',
 				'service_id'			 => 'fm_tts_tickets.service_id',
@@ -944,6 +945,7 @@
 						'details'					 => $this->db->f('details', true),
 						'mail_recipients'			 => $this->db->f('mail_recipients', true),
 						'external_communication_id'	 => $this->db->f('external_communication_id'),
+						'order_cat_id'				=> $this->db->f('order_cat_id'),
 					);
 
 					foreach ($custom_cols as $custom_col)
