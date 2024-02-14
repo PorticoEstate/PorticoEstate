@@ -263,11 +263,17 @@
 					'name'	 => lang('difference')
 				);
 
+				$columns['order_cat_id']	 = array(
+					'id'	 => 'order_cat_id',
+					'name'	 => lang('activity')
+				);
+
 				$columns['order_dim1']			 = array
 					(
 					'id'	 => 'order_dim1',
-					'name'	 => lang('order_dim1')
+					'name'	 => lang('activity') . ' 2'
 				);
+
 				$columns['external_project_id']	 = array
 					(
 					'id'	 => 'external_project_id',
@@ -586,9 +592,14 @@
 
 		function read( $data = array() )
 		{
+			$project_cats				 = CreateObject('phpgwapi.categories', -1, 'property', '.project');
+			$project_cats->supress_info	 = true;
+
 			static $category_name	 = array();
 			static $account			 = array();
 			static $vendor_cache	 = array();
+			static $dim6_cache		 = array();
+
 
 			$interlink			 = CreateObject('property.interlink');
 			$data['start_date']	 = $this->bocommon->date_to_timestamp($data['start_date']);
@@ -675,6 +686,22 @@
 				if ($ticket['order_dim1'])
 				{
 					$ticket['order_dim1'] = $order_dim1_arr[$ticket['order_dim1']];
+				}
+
+				if ($ticket['order_cat_id'])
+				{
+					if(!empty($dim6_cache[$ticket['order_cat_id']]))
+					{
+						$ticket['order_cat_id'] = $dim6_cache[$ticket['order_cat_id']];
+					}
+					else
+					{
+						$project_category		 = $project_cats->return_single($ticket['order_cat_id']);
+						$project_category_arr	 = explode('-', $project_category[0]['name']);
+						$dim6			 = trim($project_category_arr[0]);
+						$dim6_cache[$ticket['order_cat_id']] = $dim6;
+						$ticket['order_cat_id'] = $dim6;
+					}
 				}
 
 				if (!isset($account[$ticket['user_id']]))
