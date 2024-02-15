@@ -30,6 +30,20 @@ var myFormatterCheck = function (key, oData)
 
 this.onActionsClick = function ()
 {
+	conf = {
+		modules: 'location, date, security, file',
+		validateOnBlur: false,
+		scrollToTopOnError: true,
+		errorMessagePosition: 'top'
+	};
+	var test = $('form').isValid(false, conf);
+	if (!test)
+	{
+		return;
+	}
+
+	values_tophp = [];
+
 	$(".mychecks:checked").each(function ()
 	{
 		values_tophp.push($(this).val());

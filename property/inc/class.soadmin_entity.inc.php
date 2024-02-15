@@ -1316,6 +1316,7 @@
 			$receipt['id'] = $this->db->get_last_insert_id('fm_bim_item_checklist', 'id'); 
 
 			$location_id	 = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$entity_id}.{$cat_id}.checklist.{$receipt['id']}", $data['name'], $this->type_app[$this->type], true, $custom_tbl = null, $c_function = false, $c_attrib = true);
+			$receipt['location_id'] = $location_id;
 
 			$this->db->query("UPDATE fm_bim_item_checklist SET location_id = {$location_id} WHERE id = " . (int)$receipt['id'], __LINE__, __FILE__);
 
@@ -1391,13 +1392,18 @@
 		function delete_checklist( $id )
 		{
 			$this->db->transaction_begin();
-			$checklist = $this->read_single_checklist($id);
+
+			$checklist	 = $this->read_single_checklist($id);
 			$location_id = $checklist['location_id'];
-			$id = (int)$id;
+			$id			 = (int)$id;
+
 			$this->db->query("DELETE FROM fm_bim_item_checklist_data WHERE checklist_id = {$id}", __LINE__, __FILE__);
 			$this->db->query("DELETE FROM fm_bim_item_checklist_stage WHERE checklist_id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM phpgw_cust_choice WHERE location_id = {$location_id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM phpgw_cust_attribute WHERE location_id = {$location_id}", __LINE__, __FILE__);
 			$this->db->query("DELETE FROM fm_bim_item_checklist WHERE id = {$id}", __LINE__, __FILE__);
-			$this->db->query("DELETE FROM phpgw_locations WHERE location_id = {$location_id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM phpgw_locations WHERE location_id  = {$location_id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM phpgw_acl WHERE  location_id  = {$location_id}", __LINE__, __FILE__);
 			return $this->db->transaction_commit();
 		}
 

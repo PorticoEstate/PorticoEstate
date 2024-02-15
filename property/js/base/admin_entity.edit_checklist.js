@@ -9,7 +9,7 @@ $(document).ready(function ()
 		var api = oTable0.api();
 		api.on('draw', add_checkall);
 	}
-	catch(err)
+	catch (err)
 	{
 
 	}
@@ -30,12 +30,25 @@ var myFormatterCheck = function (key, oData)
 
 this.onActionsClick = function ()
 {
+	conf = {
+		modules: 'location, date, security, file',
+		validateOnBlur: false,
+		scrollToTopOnError: true,
+		errorMessagePosition: 'top'
+	};
+	var test = $('form').isValid(false, conf);
+	if (!test)
+	{
+		return;
+	}
+
+	values_tophp = [];
 	$(".mychecks:checked").each(function ()
 	{
 		values_tophp.push($(this).val());
 	});
 
-	if(values_tophp.length > 0)
+	if (values_tophp.length > 0)
 	{
 		document.form.template_attrib.value = values_tophp;
 	}

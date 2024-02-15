@@ -177,8 +177,15 @@
 			$appname	= $group['appname'];
 			$location	= $group['location'];
 
+			if(!empty($group['location_id']))
+			{
+				$location_id = $group['location_id'];
+			}
+			else
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
+			}
 			// don't continue if the location is invalid
-			$location_id = $GLOBALS['phpgw']->locations->get_id($appname, $location);
 			if ( !$location_id )
 			{
 				return 0;

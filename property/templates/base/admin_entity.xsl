@@ -1077,10 +1077,10 @@
 				</fieldset>
 			</div>
 		</div>
+		<input type="hidden" id="template_attrib" name="template_attrib" value=""/>
 	</form>
 
 	<div class="pure-controls">
-		<input type="hidden" name="template_attrib" value=""/>
 		<input type="button" class="pure-button pure-button-primary" name="values[save]" value="{php:function('lang', 'save')}" onClick="onActionsClick();">
 			<xsl:attribute name="title">
 				<xsl:value-of select="php:function('lang', 'save')"/>
