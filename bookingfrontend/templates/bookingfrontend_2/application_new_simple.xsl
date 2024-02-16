@@ -9,7 +9,7 @@
                         <div class="col d-flex flex-column">
                             <div class="font-weight-bold gap-3 d-flex align-items-center">
                                 <h1>
-                                    Ny bestilling
+                                    Ny søknad
                                 </h1>
                             </div>
                         </div>
@@ -19,10 +19,10 @@
                     <div class="row gx-3  mb-4">
                         <div class="col d-flex flex-column">
                             <div class="font-weight-bold gap-3 d-flex mb-1">
-                                <h3 class="m-0 fa-solid fa-layer-group line-height-h3"></h3>
+                                <h2 class="m-0 fa-solid fa-layer-group line-height-h1"></h2>
                                 <div>
-                                    <h3 class="m-0 text-bold" data-bind="text: selectedResource()?.name">
-                                    </h3>
+                                    <h2 class="m-0" data-bind="text: selectedResource()?.name">
+                                    </h2>
                                     <div>
                                         <xsl:value-of select="building/street"/>,
                                         <xsl:value-of select="building/zip_code"/>
@@ -47,7 +47,7 @@
                     </div>
 
                     <!-- Select Time and Date Section -->
-                    <div class="form-group  mb-4">
+                    <div class="form-group mb-3">
 
                         <div class="form-group">
                             <div class="font-weight-bold gap-3 d-flex align-items-center">
