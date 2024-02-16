@@ -51,6 +51,14 @@ $mobile: (
     }
 }
 
+@mixin applyLineHeights($type) {
+    line-height: getFontDef($desktop, $type, 'height');
+
+    @include small-screen {
+        line-height: getFontDef($mobile, $type, 'height');
+    }
+}
+
 @mixin applyFontSize($type) {
     font-size: getFontDef($desktop, $type, 'size');
 
@@ -67,13 +75,14 @@ body {
 }
 
 h1, .h1 {
-  font-weight: $text-bolder;
+  font-weight: $text-normal;
   margin-top: 0;
+  margin-bottom: 2rem;
   @include applyFontProperties('display');
 }
 
 h2, .h2 {
-  font-weight: $text-bolder;
+  font-weight: $text-normal;
   @include applyFontProperties('headline');
 }
 
@@ -128,18 +137,18 @@ h4, .h4 {
 
 .line-height {
   &-h1 {
-    @include applyFontProperties('headline');
+    @include applyLineHeights('headline');
   }
 
   &-h2 {
-    @include applyFontProperties('title');
+    @include applyLineHeights('title');
   }
 
   &-h3 {
-    @include applyFontProperties('subtitle');
+    @include applyLineHeights('subtitle');
   }
 
   &-h4 {
-    @include applyFontProperties('label');
+    @include applyLineHeights('label');
   }
 }

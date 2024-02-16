@@ -1,4 +1,6 @@
 import '../components/light-box'
+import '../components/collapsable-text'
+
 /* global lang */
 
 var booking_month_horizon = 3;
