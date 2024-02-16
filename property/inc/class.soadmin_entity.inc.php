@@ -468,6 +468,7 @@
 		 */
 		function get_single_category( $location_id, $bypass = false )
 		{
+			$location_id = (int) $location_id;
 			static $map = array();
 
 			if (isset($map[$location_id]))
@@ -490,13 +491,22 @@
 
 			$sql = "SELECT * FROM fm_{$type}_category WHERE location_id =" . (int)$location_id;
 
+			$sql = "SELECT fm_{$type}_category.* , COUNT(fm_bim_item_checklist.type_location_id) AS checklist_count"
+				. " FROM fm_{$type}_category"
+				. " LEFT JOIN fm_bim_item_checklist ON fm_{$type}_category.location_id = fm_bim_item_checklist.type_location_id"
+				. " WHERE fm_{$type}_category.location_id = $location_id"
+				. " GROUP BY"
+				. " fm_{$type}_category.location_id,fm_{$type}_category.entity_group_id,fm_{$type}_category.id,fm_{$type}_category.org_unit,fm_{$type}_category.enable_controller,fm_{$type}_category.entity_id,"
+				. " fm_{$type}_category.lookup_tenant,fm_{$type}_category.location_level,fm_{$type}_category.tracking,fm_{$type}_category.fileupload,fm_{$type}_category.loc_link,"
+				. " fm_{$type}_category.start_project,fm_{$type}_category.start_ticket,fm_{$type}_category.jasperupload,fm_{$type}_category.parent_id,fm_{$type}_category.level,fm_{$type}_category.location_link_level,"
+				. " fm_{$type}_category.is_eav,fm_{$type}_category.location_id,fm_{$type}_category.enable_bulk,fm_{$type}_category.name,fm_{$type}_category.descr,fm_{$type}_category.prefix";
+
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$category = array();
 			if ($this->db->next_record())
 			{
-				$category = array
-					(
+				$category = array(
 					'id'					 => $this->db->f('id'),
 					'entity_id'				 => $this->db->f('entity_id'),
 					'name'					 => $this->db->f('name', true),
@@ -518,7 +528,8 @@
 					'level'					 => $this->db->f('level'),
 					'org_unit'				 => $this->db->f('org_unit'),
 					'entity_group_id'		 => $this->db->f('entity_group_id'),
-					'location_id'			 => $location_id
+					'location_id'			 => $location_id,
+					'checklist_count'		 => $this->db->f('checklist_count'),
 				);
 			}
 			if (!$bypass) //inherited settings
@@ -1263,7 +1274,7 @@
 		function read_checklist( $data )	
 		{
 			$start				 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$query				 = isset($data['query']) ? $data['query'] : '';
+			$query				 = isset($data['query']) ? $this->db->db_addslashes($data['query']) : '';
 			$sort				 = isset($data['sort']) ? $data['sort'] : 'DESC';
 			$order				 = isset($data['order']) ? $data['order'] : '';
 			$allrows			 = isset($data['allrows']) ? $data['allrows'] : '';
@@ -1278,8 +1289,14 @@
 				$ordermethod = ' ORDER BY id ASC';
 			}
 
+			$filtermethod = '';
+			if($query)
+			{
+				$filtermethod = "AND (name ilike '%$query%' OR descr ilike '%$query%')";
+			}
+
 			$type_location_id = (int) $data['type_location_id'];
-			$sql = "SELECT * FROM fm_bim_item_checklist WHERE type_location_id = {$type_location_id}";
+			$sql = "SELECT * FROM fm_bim_item_checklist WHERE type_location_id = {$type_location_id} {$filtermethod}";
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$this->total_records = $this->db->num_rows();
@@ -1520,7 +1537,7 @@
 		function read_checklist_stage( $data )
 		{
 			$start				 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
-			$query				 = isset($data['query']) ? $data['query'] : '';
+			$query				 = isset($data['query']) ? $this->db->db_addslashes($data['query']) : '';
 			$sort				 = isset($data['sort']) ? $data['sort'] : 'DESC';
 			$order				 = isset($data['order']) ? $data['order'] : '';
 			$allrows			 = isset($data['allrows']) ? $data['allrows'] : '';
@@ -1535,8 +1552,14 @@
 				$ordermethod = ' ORDER BY stage_sort ASC';
 			}
 
+			$filtermethod = '';
+			if($query)
+			{
+				$filtermethod = "AND (name ilike '%$query%' OR descr ilike '%$query%')";
+			}
+
 			$checklist_id = (int) $data['checklist_id'];
-			$sql = "SELECT * FROM fm_bim_item_checklist_stage WHERE checklist_id = {$checklist_id}";
+			$sql = "SELECT * FROM fm_bim_item_checklist_stage WHERE checklist_id = {$checklist_id} {$filtermethod}";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 

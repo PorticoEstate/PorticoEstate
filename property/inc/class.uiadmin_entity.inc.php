@@ -391,12 +391,10 @@
 		{
 			if (!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
-					'perm'			 => 1, 'acl_location'	 => $this->acl_location));
+				phpgw::no_access();
 			}
 
 			$entity_id											 = phpgw::get_var('entity_id', 'int');
-//			$GLOBALS['phpgw_info']['flags']['menu_selection']	 .= "::entity_{$entity_id}";
 
 			$entity = $this->bo->read_single($entity_id);
 
@@ -479,6 +477,11 @@
 						array(
 							'key'		 => 'entity_group_id',
 							'label'		 => lang('entity group'),
+							'sortable'	 => false
+						),
+						array(
+							'key'		 => 'checklist_count',
+							'label'		 => lang('checklist'),
 							'sortable'	 => false
 						)
 					)
