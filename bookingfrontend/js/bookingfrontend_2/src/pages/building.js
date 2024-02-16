@@ -1,5 +1,7 @@
 import '../components/light-box'
 import '../components/collapsable-text'
+import '../helpers/util';
+
 
 var booking_month_horizon = 2;
 $(".navbar-search").removeClass("d-none");

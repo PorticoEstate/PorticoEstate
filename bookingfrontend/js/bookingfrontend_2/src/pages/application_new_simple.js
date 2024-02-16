@@ -1,5 +1,7 @@
 import '../components/light-box'
 import '../components/collapsable-text'
+import '../helpers/util';
+
 
 /* global lang */
 

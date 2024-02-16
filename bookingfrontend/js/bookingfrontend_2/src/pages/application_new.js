@@ -1,4 +1,5 @@
 import '../components/time-picker';
+import '../helpers/util';
 
 /* global direct_booking */
 var application;
