@@ -365,7 +365,9 @@
 		 */
 		function read_checklist_stage( $data )
 		{
-			return $this->so->read_checklist_stage($data);
+			$values = $this->so->read_checklist_stage($data);
+			$this->total_records = $this->so->total_records;
+			return $values;
 		}
 
 		/**
@@ -653,6 +655,12 @@
 		{
 			$this->custom->resort($id, $resort, $this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
 		}
+
+		function resort_checklist_stage( $id, $resort )
+		{
+			$this->so->resort_checklist_stage($id, $resort);
+		}
+
 
 		public function save_attrib_group( $group, $action = '' )
 		{

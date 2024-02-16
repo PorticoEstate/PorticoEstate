@@ -347,7 +347,7 @@
 					break;
 				case 'list_checklist_stage':
 					$variable	 = array(
-						'menuaction'	 => 'property.uiadmin_entity.edit_checklist_stage',
+						'menuaction'	 => 'property.uiadmin_entity.list_checklist_stage',
 						'allrows'		 => $this->allrows,
 					);
 					array_walk($result_data['results'], array($this, '_add_links'), $variable);
@@ -1213,8 +1213,7 @@
 		{
 			if (!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
-					'perm'			 => 1, 'acl_location'	 => $this->acl_location));
+				phpgw::no_access();
 			}
 
 			$entity_id	 = $this->entity_id;
@@ -2826,6 +2825,14 @@
 				phpgw::no_access();
 			}
 
+			$id		 = phpgw::get_var('id', 'int');
+			$resort	 = phpgw::get_var('resort');
+
+			if ($resort)
+			{
+				$this->bo->resort_checklist_stage($id, $resort);
+			}
+
 			// checklist_id
 			$checklist_id = phpgw::get_var('checklist_id', 'int');
 			$checklist = $this->bo->read_single_checklist($checklist_id);
@@ -2910,6 +2917,23 @@
 							'key'		 => 'active',
 							'label'		 => lang('active'),
 							'sortable'	 => false
+						),
+						array(
+							'key'		 => 'stage_sort',
+							'label'		 => lang('sorting'),
+							'sortable'	 => true
+						),
+						array(
+							'key'		 => 'up',
+							'label'		 => lang('up'),
+							'sortable'	 => false,
+							'formatter'	 => 'JqueryPortico.formatLinkGenericLlistAttribute'
+						),
+						array(
+							'key'		 => 'down',
+							'label'		 => lang('down'),
+							'sortable'	 => false,
+							'formatter'	 => 'JqueryPortico.formatLinkGenericLlistAttribute'
 						),
 					)
 				)

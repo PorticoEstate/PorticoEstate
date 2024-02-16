@@ -1262,9 +1262,36 @@
 
 		function read_checklist( $data )	
 		{
+			$start				 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query				 = isset($data['query']) ? $data['query'] : '';
+			$sort				 = isset($data['sort']) ? $data['sort'] : 'DESC';
+			$order				 = isset($data['order']) ? $data['order'] : '';
+			$allrows			 = isset($data['allrows']) ? $data['allrows'] : '';
+			$results			 = isset($data['results']) ? (int)$data['results'] : 0;
+
+			if ($order)
+			{
+				$ordermethod = " ORDER BY {$order} {$sort}";
+			}
+			else
+			{
+				$ordermethod = ' ORDER BY id ASC';
+			}
+
 			$type_location_id = (int) $data['type_location_id'];
-			$sql = "SELECT * FROM fm_bim_item_checklist WHERE type_location_id = {$type_location_id} ORDER BY id ASC";
+			$sql = "SELECT * FROM fm_bim_item_checklist WHERE type_location_id = {$type_location_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
+
+			$this->total_records = $this->db->num_rows();
+
+			if (!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
+			}
 			
 			$values = array();
 			
@@ -1324,6 +1351,88 @@
 
 			$receipt['message'][] = array('msg' => lang('checklist has been added'));
 			return $receipt;
+
+		}
+
+		function resort_checklist_stage( $id, $resort )
+		{
+			$id		= (int) $id;
+
+			if ( $resort == 'down' )
+			{
+				$resort = 'down';
+			}
+			else
+			{
+				$resort	= 'up';
+			}
+
+
+			$stage = $this->read_single_checklist_stage($id);
+			$checklist_id = $stage['checklist_id'];
+
+			$this->db->transaction_begin();
+
+			$sql = "SELECT stage_sort FROM fm_bim_item_checklist_stage "
+				. " WHERE checklist_id = {$checklist_id} AND id = {$id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$stage_sort	= (int) $this->db->f('stage_sort');
+
+			$sql = "SELECT MAX(stage_sort) AS max_sort FROM fm_bim_item_checklist_stage "
+				. " WHERE checklist_id = {$checklist_id}";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			$max_sort	= (int) $this->db->f('max_sort');
+
+			$update = false;
+			switch($resort)
+			{
+				case 'down':
+					if($max_sort > $stage_sort)
+					{
+						$new_sort = $stage_sort + 1;
+						$update = true;
+					}
+					break;
+
+				case 'up':
+				default:
+					if($stage_sort > 1)
+					{
+						$new_sort = $stage_sort - 1;
+						$update = true;
+					}
+					else if($stage_sort === 0)
+					{
+						$sql = "UPDATE fm_bim_item_checklist_stage SET stage_sort = stage_sort + 2"
+							. " WHERE checklist_id = {$checklist_id} AND id != {$id}";
+						$this->db->query($sql, __LINE__, __FILE__);
+						$sql = "UPDATE fm_bim_item_checklist_stage SET stage_sort = 1"
+							. " WHERE checklist_id = {$checklist_id} AND id = {$id}";
+						$this->db->query($sql, __LINE__, __FILE__);
+						return $this->db->transaction_commit();
+					}
+					break;
+			}
+
+			if ( !$update )
+			{
+				// nothing to do
+				return true;
+			}
+
+			$sql = "UPDATE fm_bim_item_checklist_stage SET stage_sort = {$stage_sort}"
+				. " WHERE checklist_id = {$checklist_id} AND stage_sort = {$new_sort}";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$sql = "UPDATE fm_bim_item_checklist_stage SET stage_sort = {$new_sort}"
+				. " WHERE checklist_id = {$checklist_id} AND id = {$id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			return $this->db->transaction_commit();
+
 
 		}
 
@@ -1410,10 +1519,36 @@
 		//read_checklist_stage
 		function read_checklist_stage( $data )
 		{
+			$start				 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query				 = isset($data['query']) ? $data['query'] : '';
+			$sort				 = isset($data['sort']) ? $data['sort'] : 'DESC';
+			$order				 = isset($data['order']) ? $data['order'] : '';
+			$allrows			 = isset($data['allrows']) ? $data['allrows'] : '';
+			$results			 = isset($data['results']) ? (int)$data['results'] : 0;
+
+			if ($order)
+			{
+				$ordermethod = " ORDER BY {$order} {$sort}";
+			}
+			else
+			{
+				$ordermethod = ' ORDER BY stage_sort ASC';
+			}
+
 			$checklist_id = (int) $data['checklist_id'];
-			$sql = "SELECT * FROM fm_bim_item_checklist_stage WHERE checklist_id = {$checklist_id} ORDER BY id ASC";
+			$sql = "SELECT * FROM fm_bim_item_checklist_stage WHERE checklist_id = {$checklist_id}";
 			$this->db->query($sql, __LINE__, __FILE__);
-			
+			$this->total_records = $this->db->num_rows();
+
+			if (!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
+			}
+
 			$values = array();
 			
 			while ($this->db->next_record())
@@ -1423,6 +1558,7 @@
 					'checklist_id' => (int) $this->db->f('checklist_id'),
 					'name' => $this->db->f('name', true),
 					'active' => (int)$this->db->f('active'),
+					'stage_sort' => (int)$this->db->f('stage_sort'),
 				);
 			}
 			return $values;
@@ -1441,11 +1577,12 @@
 			if ($this->db->next_record())
 			{
 				$values = array(
-					'id' => (int) $this->db->f('id'),
-					'checklist_id' => (int) $this->db->f('checklist_id'),
-					'name' => $this->db->f('name', true),
-					'descr' => $this->db->f('descr', true),
-					'active' => (int)$this->db->f('active'),
+					'id'			 => (int)$this->db->f('id'),
+					'checklist_id'	 => (int)$this->db->f('checklist_id'),
+					'name'			 => $this->db->f('name', true),
+					'descr'			 => $this->db->f('descr', true),
+					'active'		 => (int)$this->db->f('active'),
+					'stage_sort'	 => (int)$this->db->f('stage_sort'),
 					'active_attribs' => json_decode($this->db->f('active_attribs'), true),
 				);
 			}
@@ -1462,15 +1599,24 @@
 		{
 			$this->db->transaction_begin();
 
+			$sql = "SELECT MAX(stage_sort) AS max_sort FROM fm_bim_item_checklist_stage "
+				. " WHERE checklist_id =" .(int)$data['checklist_id'];
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			$max_sort	= (int) $this->db->f('max_sort');
+
+			$stage_sort = $max_sort + 1;
 			$values = array(
 				(int)$data['checklist_id'],
 				$this->db->db_addslashes($data['name']),
 				$this->db->db_addslashes($data['descr']),
+				$stage_sort,
 				(int)$data['active'],
 				json_encode($data['active_attribs'])
 			);
 			$values = $this->db->validate_insert($values);
-			$this->db->query("INSERT INTO fm_bim_item_checklist_stage (checklist_id, name, descr, active, active_attribs)"
+			$this->db->query("INSERT INTO fm_bim_item_checklist_stage (checklist_id, name, descr, stage_sort, active, active_attribs)"
 			 . " VALUES ($values)", __LINE__, __FILE__);
 
 			//last insert id

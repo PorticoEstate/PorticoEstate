@@ -346,6 +346,7 @@
 					'checklist_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 					'name' => array('type' => 'varchar', 'precision' => 50, 'nullable' => False),
 					'descr' => array('type' => 'text', 'nullable' => True),
+					'stage_sort' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 					'active' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
 					'active_attribs' => array('type' => 'jsonb', 'nullable' => true),
 				),
