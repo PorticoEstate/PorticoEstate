@@ -7,6 +7,7 @@
 
 		private $account, $config, $e_lock_integration;
 		var	$cleanup_old_reservations = array();
+		var	$e_lock_host_map = array();
 
 		public function __construct()
 		{
@@ -152,6 +153,8 @@
 											continue;
 										}
 
+										$webservicehost = $e_lock['webservicehost'];
+
 										$post_data = array
 											(
 											'id'		 => 0,
@@ -165,7 +168,7 @@
 											'to'		 => $to->format('Y-m-d\TH:i:s.v') . 'Z',
 										);
 
-										$http_code = $e_lock_integration->resources_create($post_data);
+										$http_code = $e_lock_integration->resources_create($post_data, $webservicehost);
 
 										if($http_code == 200)
 										{
@@ -192,9 +195,12 @@
 											'system'	 => (int)$e_lock['e_lock_system_id'],
 										);
 
-										$status_arr = $e_lock_integration->get_status($get_data);
+										$webservicehost = $e_lock['webservicehost'];
+
+										$status_arr = $e_lock_integration->get_status($get_data, $webservicehost);
 
 										$this->cleanup_old_reservations["{$get_data['system']}_{$get_data['resid']}"] = $status_arr;
+										$this->e_lock_host_map[$get_data['system']] = $webservicehost;
 
 										$log_data	 = _debug_array($get_data, false);
 										$this->log('get_data', $log_data);
@@ -310,6 +316,11 @@
 			foreach ($this->cleanup_old_reservations as $key => $status_arr)
 			{
 
+				$system_arr = explode('_', $key);
+				$e_lock_system = $system_arr[0];
+
+				$webservicehost = $this->e_lock_host_map[$e_lock_system];
+
 				$now = time() - 7*24*3600; // a week old
 
 				foreach ($status_arr as $entry)
@@ -323,7 +334,7 @@
 							'deleterequest'		 =>  1,
 						);
 
-						$http_code = $this->e_lock_integration->resources_delete($delete_data);
+						$http_code = $this->e_lock_integration->resources_delete($delete_data, $webservicehost);
 					}
 				}
 			}

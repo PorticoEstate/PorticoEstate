@@ -139,7 +139,7 @@
 					'manytomany' => array(
 						'table' => 'bb_resource_e_lock',
 						'key' => 'resource_id',
-						'column' => array('e_lock_system_id', 'e_lock_resource_id', 'e_lock_name','access_code_format','access_instruction', 'active', 'modified_on', 'modified_by'),
+						'column' => array('e_lock_system_id', 'e_lock_resource_id', 'e_lock_name','access_code_format','access_instruction','webservicehost', 'active', 'modified_on', 'modified_by'),
 					)),
 				)
 			);
