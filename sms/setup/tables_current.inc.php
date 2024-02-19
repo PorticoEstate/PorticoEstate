@@ -231,7 +231,7 @@
 				'p_gateway' => array('type' => 'varchar', 'precision' => 100, 'nullable' => False),
 				'p_src' => array('type' => 'varchar', 'precision' => 100, 'nullable' => true),
 				'p_dst' => array('type' => 'varchar', 'precision' => 100, 'nullable' => False),
-				'p_footer' => array('type' => 'varchar', 'precision' => 11, 'nullable' => true),
+				'p_footer' => array('type' => 'varchar', 'precision' => 50, 'nullable' => true),
 				'p_msg' => array('type' => 'text', 'nullable' => False),
 				'p_datetime' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
 				'p_update' => array('type' => 'timestamp', 'precision' => 20, 'nullable' => true),
