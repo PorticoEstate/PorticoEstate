@@ -180,6 +180,7 @@
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'name' => array('type' => 'varchar', 'precision' => '200', 'nullable' => false),
 				'instruction' => array('type' => 'text', 'nullable' => true),
+				'webservicehost' => array('type' => 'text', 'nullable' => true),
 				'sms_alert' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
 				'user_id' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
