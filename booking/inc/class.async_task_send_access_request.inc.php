@@ -14,6 +14,14 @@
 			parent::__construct();
 			$this->account	 = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->config	 = CreateObject('phpgwapi.config', 'booking')->read();
+
+			$bogeneric = createObject('booking.bogeneric');
+			$lock_systems = $bogeneric->read(array('location_info' => array('type' => 'e_lock_system')));
+
+			foreach ($lock_systems as $lock_system)
+			{
+				$this->e_lock_host_map[$lock_system['id']] = $lock_system['webservicehost'];
+			}
 		}
 
 		public function get_default_times()
@@ -200,7 +208,6 @@
 										$status_arr = $e_lock_integration->get_status($get_data, $webservicehost);
 
 										$this->cleanup_old_reservations["{$get_data['system']}_{$get_data['resid']}"] = $status_arr;
-										$this->e_lock_host_map[$get_data['system']] = $webservicehost;
 
 										$log_data	 = _debug_array($get_data, false);
 										$this->log('get_data', $log_data);
