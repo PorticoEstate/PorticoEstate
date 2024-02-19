@@ -651,3 +651,23 @@
 		}
 	}
 
+	/**
+	 * Update sms version from 0.9.17.515 to 0.9.17.516
+	 *
+	 */
+	$test[] = '0.9.17.515';
+
+	function sms_upgrade0_9_17_515()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_tblsmsoutgoing', 'p_footer', array(
+			'type' => 'varchar', 'precision' => 50, 'nullable' => true));
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.516';
+			return $GLOBALS['setup_info']['sms']['currentver'];
+		}
+	}
+

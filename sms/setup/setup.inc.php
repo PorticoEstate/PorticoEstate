@@ -9,7 +9,7 @@
 	 * @version $Id$
 	 */
 	$setup_info['sms']['name'] = 'sms';
-	$setup_info['sms']['version'] = '0.9.17.515';
+	$setup_info['sms']['version'] = '0.9.17.516';
 	$setup_info['sms']['app_order'] = 8;
 	$setup_info['sms']['enable'] = 1;
 	$setup_info['sms']['app_group'] = 'office';
