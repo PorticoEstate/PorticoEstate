@@ -123,8 +123,12 @@
 
 				}
 			}
+
 			$this->location_id = $location_id;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin#{$location_id}";
+
+			phpgwapi_cache::session_clear('phpgwapi','ui_custom_referer');
+
 		}
 
 		function index()
@@ -2769,9 +2773,10 @@
 				'statustext' => lang('attributes'),
 				'text'		 => lang('Attributes'),
 				'action'	 => $GLOBALS['phpgw']->link('/index.php', array(
-					'menuaction' => 'admin.ui_custom.list_attribute',
-					'appname'		 => $this->type_app[$this->type],
-					'menu_selection' => "admin#{$location_id}"
+					'menuaction'		 => 'admin.ui_custom.list_attribute',
+					'appname'			 => $this->type_app[$this->type],
+					'menu_selection'	 => "admin#{$location_id}",
+					'return_to_referer'	 => true
 				)),
 				'parameters' => json_encode($parameters2)
 			);

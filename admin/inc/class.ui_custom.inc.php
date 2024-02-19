@@ -26,7 +26,20 @@
 		var $order;
 		var $sub;
 		var $local_menu_selection = false;
-		var $menu_selection, $bo, $appname,$location,$allrows, $nextmatchs, $account, $bolocation,$acl_location,$acl_read,$acl_add, $acl_edit,$acl_delete;
+		var $menu_selection,
+			$bo,
+			$appname,
+			$location,
+			$allrows,
+			$nextmatchs,
+			$account,
+			$bolocation,
+			$acl_location,
+			$acl_read,
+			$acl_add,
+			$acl_edit,
+			$acl_delete,
+			$from;
 		var $public_functions = array
 		(
 			'delete'				 => true,
@@ -90,6 +103,13 @@
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::{$this->appname}";
 				$this->local_menu_selection = true;
 			}
+
+			if(phpgw::get_var('return_to_referer', 'bool'))
+			{
+				$referer = $_SERVER['HTTP_REFERER'];
+				phpgwapi_cache::session_set('phpgwapi','ui_custom_referer', $referer);
+			}
+
 		}
 
 		function save_sessiondata()
@@ -211,6 +231,18 @@
 			);
 
 
+			$referer =	phpgwapi_cache::session_get('phpgwapi','ui_custom_referer');
+
+			if($referer)
+			{
+				$done_action = $referer;
+			}
+			else
+			{
+				$done_action	 = $GLOBALS['phpgw']->link('/admin/index.php');
+
+			}
+
 			$table_add[] = array
 			(
 				'lang_add'				=> lang('add'),
@@ -219,7 +251,7 @@
 					'appname' => $appname, 'location' => $location, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
 				'lang_done'				=> lang('done'),
 				'lang_done_attribtext'	=> lang('Return to admin'),
-				'done_action'			=> $GLOBALS['phpgw']->link('/admin/index.php'),
+				'done_action'			=> $done_action,
 			);
 
 			if(!$this->allrows)
@@ -416,6 +448,9 @@
 
 			$msgbox_data = (isset($receipt) ? $GLOBALS['phpgw']->common->msgbox_data($receipt) : '');
 
+			$done_action	 = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
+				'appname' => $appname, 'location' => $location, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']));
+
 			$data = array
 			(
 				'appname'							=> $appname,
@@ -431,9 +466,8 @@
 				'lang_value'						=> lang('value'),
 				'lang_delete_choice_statustext'		=> lang('Delete this value from the list of multiple choice'),
 				'msgbox_data'						=> $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'form_action'			 => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'done_action'			 => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
-					'appname' => $appname, 'location' => $location, 'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection'])),
+				'form_action'						 => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'done_action'						 => $done_action,
 				'lang_entity_type'					=> lang('Entity type'),
 				'lang_no_entity_type'				=> lang('No entity type'),
 				'lang_save'							=> lang('save'),
