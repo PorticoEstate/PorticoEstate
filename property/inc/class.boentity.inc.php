@@ -59,7 +59,7 @@
 		/**
 		 * @var object $custom reference to custom fields object
 		 */
-		protected $custom;
+		public $custom;
 		var $public_functions		 = array
 			(
 			'read'					 => true,

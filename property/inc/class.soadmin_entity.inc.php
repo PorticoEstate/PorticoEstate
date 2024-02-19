@@ -1279,6 +1279,7 @@
 			$order				 = isset($data['order']) ? $data['order'] : '';
 			$allrows			 = isset($data['allrows']) ? $data['allrows'] : '';
 			$results			 = isset($data['results']) ? (int)$data['results'] : 0;
+			$active				 = !empty($data['active']) ? true : false;
 
 			if ($order)
 			{
@@ -1290,13 +1291,32 @@
 			}
 
 			$filtermethod = '';
-			if($query)
-			{
-				$filtermethod = "AND (name ilike '%$query%' OR descr ilike '%$query%')";
-			}
 
 			$type_location_id = (int) $data['type_location_id'];
-			$sql = "SELECT * FROM fm_bim_item_checklist WHERE type_location_id = {$type_location_id} {$filtermethod}";
+			$where = 'WHERE';
+
+			if($type_location_id)
+			{
+				$filtermethod .= " $where type_location_id = {$type_location_id}";
+				$where = 'AND';
+
+			}
+
+			if($active)
+			{
+				$filtermethod .= " $where fm_bim_item_checklist.active = 1";
+				$where = 'AND';
+			}
+
+			if($query)
+			{
+				$filtermethod .= " {$where} (fm_bim_item_checklist.name ilike '%$query%' OR fm_bim_item_checklist.descr ilike '%$query%')";
+				$where = 'AND';
+			}
+
+			$sql = "SELECT fm_bim_item_checklist.* , phpgw_locations.descr FROM fm_bim_item_checklist "
+				. " JOIN phpgw_locations ON fm_bim_item_checklist.type_location_id = phpgw_locations.location_id"
+				. " {$filtermethod}";
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$this->total_records = $this->db->num_rows();
@@ -1315,12 +1335,13 @@
 			while ($this->db->next_record())
 			{
 				$values[] = array(
-					'id' => (int) $this->db->f('id'),
-					'type_location_id' => (int) $this->db->f('type_location_id'),
-					'location_id' => (int) $this->db->f('location_id'),
-					'name' => $this->db->f('name', true),
-					'active' => (int)$this->db->f('active'),
-					'fileupload' => (int)$this->db->f('fileupload'),
+					'id'				 => (int)$this->db->f('id'),
+					'type_location_id'	 => (int)$this->db->f('type_location_id'),
+					'location_id'		 => (int)$this->db->f('location_id'),
+					'name'				 => $this->db->f('name', true),
+					'type_descr'		 => $this->db->f('descr', true),
+					'active'			 => (int)$this->db->f('active'),
+					'fileupload'		 => (int)$this->db->f('fileupload'),
 				);
 			}
 			return $values;
@@ -1542,6 +1563,7 @@
 			$order				 = isset($data['order']) ? $data['order'] : '';
 			$allrows			 = isset($data['allrows']) ? $data['allrows'] : '';
 			$results			 = isset($data['results']) ? (int)$data['results'] : 0;
+			$active				 = !empty($data['active']) ? true : false;
 
 			if ($order)
 			{
@@ -1553,9 +1575,15 @@
 			}
 
 			$filtermethod = '';
+
+			if($active)
+			{
+				$filtermethod .= " AND fm_bim_item_checklist_stage.active = 1";
+			}
+
 			if($query)
 			{
-				$filtermethod = "AND (name ilike '%$query%' OR descr ilike '%$query%')";
+				$filtermethod .= " AND (name ilike '%$query%' OR descr ilike '%$query%')";
 			}
 
 			$checklist_id = (int) $data['checklist_id'];
@@ -1582,6 +1610,7 @@
 					'name' => $this->db->f('name', true),
 					'active' => (int)$this->db->f('active'),
 					'stage_sort' => (int)$this->db->f('stage_sort'),
+					'active_attribs' => json_decode($this->db->f('active_attribs'), true),
 				);
 			}
 			return $values;

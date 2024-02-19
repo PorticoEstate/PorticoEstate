@@ -957,6 +957,40 @@
 						</div>
 					</xsl:when>
 				</xsl:choose>
+
+				<xsl:choose>
+					<xsl:when test="checklist_count != 0">
+						<div id="checklist">
+							<fieldset>
+								<div class="pure-control-group">
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_3'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
+								<xsl:choose>
+									<xsl:when test="value_id!='' and mode = 'edit'">
+										<xsl:variable name="lang_add_inventory">
+											<xsl:value-of select="php:function('lang', 'add inventory')"/>
+										</xsl:variable>
+										<a href="javascript:showlightbox_add_inventory({value_location_id},{value_id})" title="{$lang_add_inventory}">
+											<xsl:value-of select="$lang_add_inventory"/>
+										</a>
+									</xsl:when>
+								</xsl:choose>
+							</fieldset>
+						</div>
+					</xsl:when>
+				</xsl:choose>
+
 			</div>
 			<xsl:choose>
 				<xsl:when test="mode = 'edit'">

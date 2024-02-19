@@ -2482,7 +2482,15 @@
 				'id'				 => $id
 			);
 
-			$checklist_list = $this->bo->read_checklist(array('type_location_id' => $type_location_id));
+			$checklist_list = $this->bo->read_checklist(array(
+				'allrows' => true,
+				'type_location_id' => 0//$type_location_id
+				));
+
+			foreach ($checklist_list as &$checklist_list_item)
+			{
+				$checklist_list_item['name'] = "{$checklist_list_item['type_descr']}::{$checklist_list_item['name']}";
+			}
 
 			$myColumnDefs = array(
 				array('key'		 => 'attrib_id', 'label'		 => lang('id'), 'sortable'	 => false,

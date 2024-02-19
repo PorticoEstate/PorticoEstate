@@ -66,8 +66,9 @@
 		$type,
 		$type_app,
 		$acl_location,
-		$criteria_id
-		;
+		$criteria_id,
+		$custom;
+
 		var $public_functions	 = array(
 			'summary'					 => true,
 			'columns'					 => true,
@@ -136,6 +137,7 @@
 			$this->type				 = $this->bo->type;
 			$this->type_app			 = $this->bo->type_app;
 			$this->acl				 = & $GLOBALS['phpgw']->acl;
+			$this->custom			 = $this->bo->custom;
 
 			$this->acl_location = ".{$this->type}.$this->entity_id";
 			if ($this->cat_id)
@@ -2379,6 +2381,33 @@
 					$tabs['related'] = array('label' => lang('log'), 'link' => '#related', 'disable' => 0);
 				}
 
+				if ($category['checklist_count'])
+				{
+					$tabs['checklist'] = array('label' => lang('checklist'), 'link' => '#checklist', 'disable' => 0);
+
+					$checklist_list = $this->soadmin_entity->read_checklist(array(
+						'allrows' => true,
+						'active' => true,
+						'type_location_id' => $category['location_id']
+						));
+	//				_debug_array($checklist_list);
+
+					foreach ($checklist_list as $checklist_list_item)
+					{
+						$checklist_list_attribs = $this->custom->find2($checklist_list_item['location_id'], 0, '', 'ASC', 'attrib_sort', true, true);
+						$checklist_list_stages = $this->soadmin_entity->read_checklist_stage(array(
+						'allrows' => true,
+						'active' => true,
+						'checklist_id' => $checklist_list_item['id']
+						));
+
+	//					_debug_array($checklist_list_stages);
+						break;
+
+					}
+
+				}
+
 				$target_def = array
 					(
 					array('key' => 'url', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true),
@@ -2665,6 +2694,7 @@ JS;
 				'lang_start_ticket'				 => lang('start ticket'),
 				'ticket_link'					 => $GLOBALS['phpgw']->link('/index.php', $ticket_link_data),
 				'fileupload'					 => $category['fileupload'],
+				'checklist_count'				 => $category['checklist_count'],
 				//		'jasperupload'					=> $category['jasperupload'],
 				'link_view_file'				 => $GLOBALS['phpgw']->link('/index.php', $link_file_data),
 				//		'link_to_files'					=> $link_to_files,
