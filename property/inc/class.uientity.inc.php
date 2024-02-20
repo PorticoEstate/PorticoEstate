@@ -2392,21 +2392,49 @@
 						));
 	//				_debug_array($checklist_list);
 
+					$checklists = array();
+
 					foreach ($checklist_list as $checklist_list_item)
 					{
 						$checklist_list_attribs = $this->custom->find2($checklist_list_item['location_id'], 0, '', 'ASC', 'attrib_sort', true, true);
-						$checklist_list_stages = $this->soadmin_entity->read_checklist_stage(array(
+						$checklist_stages = $this->soadmin_entity->read_checklist_stage(array(
 						'allrows' => true,
 						'active' => true,
 						'checklist_id' => $checklist_list_item['id']
 						));
 
-	//					_debug_array($checklist_list_stages);
-						break;
 
+						$stages = array();
+						foreach ($checklist_stages as &$checklist_stage)
+						{
+							$checklist_stage['attributes'] =array();
+
+							foreach ($checklist_list_attribs as $checklist_list_attrib)
+							{
+
+								if(!in_array($checklist_list_attrib['id'], $checklist_stage['active_attribs']))
+								{
+									$checklist_list_attrib['disabled'] = 1;
+								}
+
+								$checklist_stage['attributes'][] = $checklist_list_attrib;
+
+							}
+
+							$stages[] = $checklist_stage;
+
+						}
+						$checklists[] = array(
+							'name'	=> $checklist_list_item['name'],
+							'descr'	=> $checklist_list_item['descr'],
+							'stages' => $stages,
+
+						);
 					}
-
 				}
+
+//				_debug_array($checklist_stages);
+
 
 				$target_def = array
 					(
@@ -2672,8 +2700,8 @@ JS;
 				}
 			}
 
-			$data = array
-				(
+			$data = array(
+				'checklists'					 => $checklists,
 				'datatable_def'					 => $datatable_def,
 				'repeat_types'					 => array('options' => $repeat_types),
 				'controller'					 => $_enable_controller && $id,

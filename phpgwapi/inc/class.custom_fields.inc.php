@@ -1296,6 +1296,7 @@
 				(
 					'id'					=> $id,
 					//'attrib_id'			=> $this->_db->f('id'), // FIXME
+					'location_id'			=> $location_id,
 					'entity_type'			=> $this->_db->f('type_id'),
 					'group_id'				=> (int) $this->_db->f('group_id'),
 					'attrib_sort'			=> (int) $this->_db->f('attrib_sort'),

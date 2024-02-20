@@ -1314,7 +1314,7 @@
 				$where = 'AND';
 			}
 
-			$sql = "SELECT fm_bim_item_checklist.* , phpgw_locations.descr FROM fm_bim_item_checklist "
+			$sql = "SELECT fm_bim_item_checklist.* , phpgw_locations.descr as type_descr FROM fm_bim_item_checklist "
 				. " JOIN phpgw_locations ON fm_bim_item_checklist.type_location_id = phpgw_locations.location_id"
 				. " {$filtermethod}";
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -1339,7 +1339,8 @@
 					'type_location_id'	 => (int)$this->db->f('type_location_id'),
 					'location_id'		 => (int)$this->db->f('location_id'),
 					'name'				 => $this->db->f('name', true),
-					'type_descr'		 => $this->db->f('descr', true),
+					'descr'				 => $this->db->f('descr', true),
+					'type_descr'		 => $this->db->f('type_descr', true),
 					'active'			 => (int)$this->db->f('active'),
 					'fileupload'		 => (int)$this->db->f('fileupload'),
 				);
@@ -1605,12 +1606,13 @@
 			while ($this->db->next_record())
 			{
 				$values[] = array(
-					'id' => (int) $this->db->f('id'),
-					'checklist_id' => (int) $this->db->f('checklist_id'),
-					'name' => $this->db->f('name', true),
-					'active' => (int)$this->db->f('active'),
-					'stage_sort' => (int)$this->db->f('stage_sort'),
-					'active_attribs' => json_decode($this->db->f('active_attribs'), true),
+					'id'			 => (int)$this->db->f('id'),
+					'checklist_id'	 => (int)$this->db->f('checklist_id'),
+					'name'			 => $this->db->f('name', true),
+					'descr'			 => $this->db->f('descr', true),
+					'active'		 => (int)$this->db->f('active'),
+					'stage_sort'	 => (int)$this->db->f('stage_sort'),
+					'active_attribs' => (array)json_decode($this->db->f('active_attribs')),
 				);
 			}
 			return $values;
@@ -1635,7 +1637,7 @@
 					'descr'			 => $this->db->f('descr', true),
 					'active'		 => (int)$this->db->f('active'),
 					'stage_sort'	 => (int)$this->db->f('stage_sort'),
-					'active_attribs' => json_decode($this->db->f('active_attribs'), true),
+					'active_attribs' => (array)json_decode($this->db->f('active_attribs')),
 				);
 			}
 			return $values;
