@@ -17,7 +17,7 @@
       font-family: 'Roboto', sans-serif;
       font-size: 16px;
       line-height: 1.75rem;
-      font-weight: $text-normal;
+      font-weight: $text-regular;
     }
 
     &-content {
@@ -32,7 +32,7 @@
 
     .ui-widget-header {
       color: $black;
-      font-weight: $text-normal;
+      font-weight: $text-regular;
       margin-bottom: 1rem;
     }
   }
@@ -157,7 +157,7 @@
   }
 
   th {
-    font-weight: $text-normal;
+    font-weight: $text-regular;
     font-size: 1rem;
   }
 
@@ -169,7 +169,7 @@
   .ui-widget-content .ui-state-default {
     border: 2px solid $grey-light;
     border-radius: 0.375rem;
-    font-weight: $text-normal;
+    font-weight: $text-regular;
     color: $black;
     background: $grey-light;
     text-align: center;

@@ -1,7 +1,7 @@
 $medium-screen: 1024px;
 
-$text-normal: 400;
-$medium-weight: 500;
+$text-regular: 400;
+$text-medium: 500;
 $text-bold: 700;
 $text-bolder: 900;
 
@@ -70,13 +70,13 @@ $mobile: (
 
 body {
   font-family: 'Roboto', sans-serif;
-  font-weight: $text-normal;
+  font-weight: $text-regular;
   @include applyFontProperties('body');
 }
 
 h1, .h1 {
   font-family: "Poppins", sans-serif;
-  font-weight: $text-normal;
+  font-weight: $text-regular;
   margin-top: 0;
   margin-bottom: 2rem;
   @include applyFontProperties('display');
@@ -84,7 +84,7 @@ h1, .h1 {
 
 h2, .h2 {
   font-family: "Poppins", sans-serif;
-  font-weight: $text-normal;
+  font-weight: $text-regular;
   @include applyFontProperties('headline');
 }
 
@@ -94,8 +94,38 @@ h3, .h3 {
 }
 
 h4, .h4 {
-  font-weight: $medium-weight;
+  font-weight: $text-medium;
   @include applyFontProperties('subtitle');
+}
+
+.font-size {
+  &-h1 {
+    height: getFontDef($desktop, 'display', 'height');
+    @include small-screen {
+      height: getFontDef($mobile, 'display', 'height');
+    }
+  }
+
+  &-h2 {
+    height: getFontDef($desktop, 'headline', 'height');
+    @include small-screen {
+      height: getFontDef($mobile, 'headline', 'height');
+    }
+  }
+
+  &-h3 {
+    height: getFontDef($desktop, 'title', 'height');
+    @include small-screen {
+      height: getFontDef($mobile, 'title', 'height');
+    }
+  }
+
+  &-h4 {
+    height: getFontDef($desktop, 'subtitle', 'height');
+    @include small-screen {
+      height: getFontDef($mobile, 'subtitle', 'height');
+    }
+  }
 }
 
 .text {
@@ -125,7 +155,7 @@ h4, .h4 {
   }
 
   &-normal {
-    font-weight: $text-normal;
+    font-weight: $text-regular;
   }
 
   &-bold {

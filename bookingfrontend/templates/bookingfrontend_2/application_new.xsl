@@ -18,18 +18,54 @@
                     <!-- Heading replaced with building name -->
                     <div data-bind="visible: formStep() === 0">
 
+                        <!-- Heading with title -->
                         <div class="row gx-3">
                             <div class="col d-flex flex-column">
                                 <div class="font-weight-bold gap-3 d-flex align-items-center">
-                                    <h2 class="fas fa-location-dot text-primary"></h2>
-                                    <h2>
-                                        <xsl:value-of select="application/building_name"/>
-                                    </h2>
+                                    <h1>
+                                        <xsl:value-of
+                                                select="php:function('lang', 'New application')"/>
+                                    </h1>
                                 </div>
-                                <span>
-                                    <xsl:value-of select="building/street"/>,
-                                    <xsl:value-of select="building/zip_code"/>
-                                </span>
+                            </div>
+                        </div>
+
+                        <div class="row gx-3  mb-4">
+                            <div class="col d-flex flex-column">
+                                <div class="font-weight-bold gap-3 d-flex mb-1">
+                                    <h2 class="m-0 fa-solid fa-layer-group line-height-h1"></h2>
+                                    <div>
+                                        <h2 class="m-0">
+                                            <xsl:value-of select="building/name"/>
+                                        </h2>
+                                        <map-modal>
+                                            <span>
+                                                <xsl:value-of select="building/street"/>,
+                                            </span>
+                                            <span>
+                                                <xsl:value-of select="building/zip_code"/>
+                                            </span>
+                                            <span style="display: none">
+                                                <xsl:value-of select="building/city"/>
+                                            </span>
+                                        </map-modal>
+                                        <div class="text-overline">
+                                            <xsl:value-of select="building/part_of_town"/>
+                                        </div>
+                                        <a class="link-text link-text-secondary" target="_blank">
+                                            <xsl:attribute name="href">
+                                                <xsl:value-of select="building/link"/>
+                                            </xsl:attribute>
+                                            <i class="fa-solid fa-location-dot"></i>
+                                            <xsl:value-of
+                                                    select="building/name"/>
+                                            <!--<i class="fa-solid fa-arrow-right"></i>-->
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
                             </div>
                         </div>
                         <!-- Retaining the msgbox and hidden input -->
@@ -77,14 +113,18 @@
                         </div>
 
                         <div class="col-sm-12 mb-4">
-                            <label class="mb-2 text-bold d-flex align-items-center" for="select-multiple">Valgte
-                                leieobjekt     <!-- Button trigger modal -->
+                            <label class="mb-2 d-flex align-items-center" for="select-multiple">
+                                <h4 class="m-0">
+                                    <xsl:value-of
+                                            select="php:function('lang', 'Chosen rent object')"/>
+                                </h4>    <!-- Button trigger modal -->
                                 <button type="button"
-                                        class="pe-btn pe-btn--transparent navbar__section__language-selector"
+                                        class="pe-btn pe-btn--transparent navbar__section__language-selector p-0"
                                         data-bs-toggle="modal" data-bs-target="#facilities" aria-label="Velg språk">
-                                    <span class="info-icon">
-                                        <i class="fas fa-info"></i>
-                                    </span>
+                                    <svg viewBox="0 0 48 48" class="font-size-h4" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M0 0h48v48h-48z" fill="none"/>
+                                        <path d="M22 34h4v-12h-4v12zm2-30c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16zm-2-22h4v-4h-4v4z"/>
+                                    </svg>
                                 </button>
                             </label>
 
@@ -93,7 +133,7 @@
                                 <div class="pill pill--secondary" data-bind="visible: $data.selected">
                                     <!--                            <div class="pill-date" data-bind="text: $data"></div>-->
                                     <!--                            <div class="pill-divider"></div>-->
-                                    <div class="pill-content" data-bind="text: $data.name"></div>
+                                    <div class="pill-date" data-bind="text: $data.name"></div>
                                     <button class="pill-icon" data-bind="click: $parent.removeRessource">&#215;</button>
                                 </div>
                             </div>
@@ -146,15 +186,18 @@
                                 </div>
                                 <!-- Display Time Chosen -->
                                 <div class="form-group mb-2 ">
-                                    <span class="font-weight-bold d-block span-label">
-                                        <xsl:value-of select="php:function('lang', 'Chosen rent period')"/>
+                                    <span class="d-block span-label">
+                                        <h4>
+                                            <xsl:value-of select="php:function('lang', 'Chosen rent period')"/>
+                                        </h4>
                                     </span>
                                     <div data-bind="foreach: date" class="d-flex flex-row gap-1 flex-wrap">
                                         <input class="datetime" required="true" name="from_[]" hidden="hidden"
                                                data-bind="value: from_"/>
                                         <input class="datetime" required="true" name="to_[]" hidden="hidden"
                                                data-bind="value: to_"/>
-                                        <time-slot-pill params="date: $data, removeDate: $parent.removeDate"></time-slot-pill>
+                                        <time-slot-pill
+                                                params="date: $data, removeDate: $parent.removeDate"></time-slot-pill>
 
                                         <!--                                    <pre data-bind="text: ko.toJSON($data)"></pre>-->
 
@@ -221,7 +264,7 @@
                                         <!--                                    </div>-->
                                     </div>
                                     <div class="row">
-                                        <div class="d-flex justify-content-end">
+                                        <div class="d-flex justify-content-start">
                                             <div>
                                                 <button class="pe-btn pe-btn-secondary" data-bind="click: addDate">+
                                                     Legg
@@ -493,7 +536,7 @@
                             <button id="backBTN"
                                     class=" pe-btn pe-btn-secondary pe-btn--large align-items-center gap-2"
                                     data-bind="visible: formStep() !== 0, click: () => goPrev()">
-                                <div class="text-normal">
+                                <div class="text-bold">
                                     <xsl:value-of select="php:function('lang', 'cancel')"/>
                                 </div>
                             </button>
@@ -501,27 +544,27 @@
                         <div class="d-flex gap-4 justify-content-end">
                             <a class="link-text link-text-primary pe-btn pe-btn-secondary  d-flex align-items-center gap-2"
                                style="width: fit-content" href="{application/frontpage_link}">
-                                <div class="text-normal">
+                                <div class="text-bold">
                                     <xsl:value-of select="php:function('lang', 'exit to homepage')"/>
                                 </div>
                             </a>
                             <button id="submitBtn"
                                     class=" pe-btn pe-btn-primary pe-btn--large  align-items-center gap-2"
                                     type="submit" data-bind="visible: formStep() === 1">
-                                <div class="text-normal">
+                                <div class="text-bold">
                                     <xsl:value-of select="php:function('lang', 'Next step')"/>
                                 </div>
-                                <div class="text-normal d-flex align-items-center">
+                                <div class="text-bold d-flex align-items-center">
                                     <i class="fa-solid fa-arrow-right-long"></i>
                                 </div>
                             </button>
                             <button id="nextBTN"
                                     class=" pe-btn pe-btn-primary pe-btn--large align-items-center gap-2"
                                     data-bind="visible: formStep() !== 1, click: () => goNext()">
-                                <div class="text-normal">
+                                <div class="text-bold">
                                     <xsl:value-of select="php:function('lang', 'Next step')"/>
                                 </div>
-                                <div class="text-normal d-flex align-items-center">
+                                <div class="text-bold d-flex align-items-center">
                                     <i class="fa-solid fa-arrow-right-long"></i>
                                 </div>
                             </button>
