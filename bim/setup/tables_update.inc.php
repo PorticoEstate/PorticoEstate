@@ -361,7 +361,6 @@
 			'fm_bim_item_checklist_data', array(
 				'fd' => array(
 					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
-					'checklist_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 					'item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 					'type_location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 					'stage_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
@@ -371,7 +370,6 @@
 				),
 				'pk' => array('id'),
 				'fk' => array(
-					'fm_bim_item_checklist' => array('checklist_id' => 'id'),
 					'fm_bim_item' => array('item_id' => 'id', 'type_location_id' => 'location_id'),
 					'fm_bim_item_checklist_stage' => array('stage_id' => 'id'),
 					),

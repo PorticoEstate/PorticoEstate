@@ -502,6 +502,9 @@
 						</xsl:attribute>
 					</xsl:when>
 				</xsl:choose>
+				<xsl:attribute name="disabled">
+					<xsl:text>disabled</xsl:text>
+				</xsl:attribute>
 			</input>
 		</xsl:when>
 		<xsl:when test="datatype='link'">

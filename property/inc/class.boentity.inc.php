@@ -762,6 +762,16 @@ JS;
 			return $this->custom->get_attribute_groups($this->type_app[$this->type], $location, $attributes);
 		}
 
+		function save_checklist( $item_id, $values_checklist_stage, &$receipt )
+		{
+			foreach ($values_checklist_stage as $stage_id => $values_attribute)
+			{
+				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
+				$this->so->save_checklist($item_id, $stage_id, $values_attribute, $receipt);
+			}
+		}
+
+
 		function save( $values, $values_attribute, $action , $entity_id, $cat_id )
 		{
 			if (is_array($values['location']))

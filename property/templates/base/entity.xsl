@@ -987,7 +987,7 @@
 											<div class="pure-u-1-{$count_stages}" style="text-align: left;">
 												<xsl:variable name="dataset">
 													<!-- Concatenate strings -->
-													<xsl:text>values_attribute_checklist_stage[</xsl:text>
+													<xsl:text>values_checklist_stage[</xsl:text>
 													<!-- Get value from another element -->
 													<xsl:value-of select="id"/>
 													<!-- Add a constant string -->
@@ -1010,8 +1010,6 @@
 											</div>
 										</xsl:for-each>
 									</div>
-
-
 								</fieldset>
 							</xsl:for-each>
 						</div>

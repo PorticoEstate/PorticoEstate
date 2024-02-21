@@ -300,7 +300,7 @@
 				}
 			}
 
-			$values['attributes'] = $values_attribute;
+			$values['checklist_stage'] = $values_checklist_stage;
 
 			foreach ($data as $key => $original_value)
 			{
@@ -867,6 +867,13 @@
 				{
 					$receipt		 = $this->bo->save($values, $attributes, $action, $this->entity_id, $this->cat_id);
 					$values['id']	 = $receipt['id'];
+					$values_checklist_stage = phpgw::get_var('values_checklist_stage');
+
+					if($values_checklist_stage)
+					{
+						$this->bo->save_checklist($receipt['id'], $values_checklist_stage, $receipt);
+					}
+
 					$this->receipt	 = $receipt;
 					if (phpgw::get_var('phpgw_return_as') == 'json')
 					{
