@@ -174,8 +174,8 @@ function applicationModel() {
         }
     };
 
-    self.removeDate = function () {
-        self.date.remove(this);
+    self.removeDate = function (data) {
+        self.date.remove(data);
         if (typeof (post_handle_order_table) === 'function') {
             setTimeout(function () {
                 post_handle_order_table();
