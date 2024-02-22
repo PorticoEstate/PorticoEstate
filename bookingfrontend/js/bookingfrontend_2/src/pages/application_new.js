@@ -1,4 +1,6 @@
 import '../components/time-picker';
+import '../components/map-modal';
+import '../helpers/util';
 
 /* global direct_booking */
 var application;

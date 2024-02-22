@@ -1255,6 +1255,8 @@ if (globalThis['ko']) {
                                 </button>
                             </div>
                         </div data-bind="css: { 'invisible': !hasTimeSlots() }">
+                        <!-- ko ifnot: hasTimeSlots() -->
+                        
                         <div class="info-types">
                             <div class="type text-small">
                                 <img class="event-filter"
@@ -1275,6 +1277,7 @@ if (globalThis['ko']) {
                                 Tildeling
                             </div>
                         </div>
+                        <!-- /ko -->
                     </div>
                 </div>
                 <!-- ko if: loaded() -->

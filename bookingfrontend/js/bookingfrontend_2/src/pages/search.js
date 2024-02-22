@@ -1,3 +1,5 @@
+import '../helpers/util';
+
 // Easier way of getting old value from KO on change
 ko.subscribable.fn.subscribeChanged = function (callback) {
     let previousValue;

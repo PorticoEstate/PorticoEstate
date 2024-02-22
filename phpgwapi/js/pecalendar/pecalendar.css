@@ -729,6 +729,7 @@ body {
 }
 
 h1, .h1 {
+  font-family: "Poppins", sans-serif;
   font-weight: 400;
   margin-top: 0;
   margin-bottom: 2rem;
@@ -743,6 +744,7 @@ h1, .h1 {
 }
 
 h2, .h2 {
+  font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-size: 2.25rem;
   line-height: 2.75rem;
@@ -775,6 +777,39 @@ h4, .h4 {
   h4, .h4 {
     font-size: 1rem;
     line-height: 1.375rem;
+  }
+}
+
+.font-size-h1 {
+  height: 4.25rem;
+}
+@media (max-width: 1024px) {
+  .font-size-h1 {
+    height: 2.75rem;
+  }
+}
+.font-size-h2 {
+  height: 2.75rem;
+}
+@media (max-width: 1024px) {
+  .font-size-h2 {
+    height: 1.875rem;
+  }
+}
+.font-size-h3 {
+  height: 1.625rem;
+}
+@media (max-width: 1024px) {
+  .font-size-h3 {
+    height: 1.5rem;
+  }
+}
+.font-size-h4 {
+  height: 1.75rem;
+}
+@media (max-width: 1024px) {
+  .font-size-h4 {
+    height: 1.375rem;
   }
 }
 

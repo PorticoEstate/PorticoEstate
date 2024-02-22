@@ -4,12 +4,13 @@
               name="form" novalidate="true" class="needs-validationm">
             <div class="row">
                 <div class="col-md-10 offset-md-1">
-                    <!-- Heading with building name -->
+                    <!-- Heading with title -->
                     <div class="row gx-3">
                         <div class="col d-flex flex-column">
                             <div class="font-weight-bold gap-3 d-flex align-items-center">
                                 <h1>
-                                    Ny søknad
+                                    <xsl:value-of
+                                            select="php:function('lang', 'New application')"/>
                                 </h1>
                             </div>
                         </div>
