@@ -1005,8 +1005,7 @@
 													<xsl:with-param name="dataset">
 														<xsl:value-of select="$dataset" />
 													</xsl:with-param>
-													<xsl:with-param name="class" select="'pure-input-1-2'">
-														
+													<xsl:with-param name="class" select="'pure-input-1-4'">														
 													</xsl:with-param>
 
 												</xsl:apply-templates>
