@@ -42,6 +42,7 @@
 		var $cols_return_lookup;
 		var $type			 = 'entity';
 		protected $sql;
+		protected $global_lock	 = false;
 		protected $type_app		 = array
 			(
 			'entity' => 'property',
@@ -2488,7 +2489,14 @@
 			$admin_entity->type	 = $this->type;
 			$category			 = $admin_entity->read_single_category($entity_id, $cat_id);
 
-			$this->db->transaction_begin();
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 			if (isset($values_insert['p_num']) && $values_insert['p_num'])
 			{
@@ -2553,7 +2561,10 @@
 				}
 			}
 
-			$this->db->transaction_commit();
+			if (!$this->global_lock)
+			{
+				$this->db->transaction_commit();
+			}
 
 			$receipt				 = array();
 			$receipt['id']			 = $values['id'];
@@ -2785,7 +2796,14 @@
 				}
 			}
 
-			$this->db->transaction_begin();
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 
 			if (isset($value_set['p_num']) && $value_set['p_num'])
@@ -2835,7 +2853,10 @@
 				}
 			}
 
-			$this->db->transaction_commit();
+			if (!$this->global_lock)
+			{
+				$this->db->transaction_commit();
+			}
 
 			$receipt['id']			 = $values['id'];
 			$receipt['message'][]	 = array('msg' => lang('entity %1 has been edited', $values['num']));
@@ -2855,6 +2876,8 @@
 			$category			 = $admin_entity->read_single_category($entity_id, $cat_id);
 
 			$this->db->transaction_begin();
+
+			$this->db->query("DELETE FROM fm_bim_item_checklist_data WHERE type_location_id ={$location_id} AND item_id = {$id}", __LINE__, __FILE__);
 
 			if ($category['is_eav'])
 			{
@@ -3370,7 +3393,7 @@
 				//update
 				$id = (int)$this->db->f('id');
 
-				$jsondata = json_decode($this->db->f('json_representation'));
+				$jsondata = json_decode($this->db->f('json_representation'), true);
 
 				foreach ($values_attribute as $entry)
 				{

@@ -865,6 +865,7 @@
 			{
 				try
 				{
+					$GLOBALS['phpgw']->db->transaction_begin();
 					$receipt		 = $this->bo->save($values, $attributes, $action, $this->entity_id, $this->cat_id);
 					$values['id']	 = $receipt['id'];
 					$values_checklist_stage = phpgw::get_var('values_checklist_stage');
@@ -873,6 +874,7 @@
 					{
 						$this->bo->save_checklist($receipt['id'], $values_checklist_stage, $receipt);
 					}
+					$GLOBALS['phpgw']->db->transaction_commit();
 
 					$this->receipt	 = $receipt;
 					if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -888,6 +890,7 @@
 				{
 					if ($e)
 					{
+						$GLOBALS['phpgw']->db->transaction_abort();
 
 						if (phpgw::get_var('phpgw_return_as') == 'json')
 						{
@@ -2388,61 +2391,6 @@
 					$tabs['related'] = array('label' => lang('log'), 'link' => '#related', 'disable' => 0);
 				}
 
-				if ($category['checklist_count'])
-				{
-					$tabs['checklist'] = array('label' => lang('checklist'), 'link' => '#checklist', 'disable' => 0);
-
-					$checklist_list = $this->soadmin_entity->read_checklist(array(
-						'allrows' => true,
-						'active' => true,
-						'type_location_id' => $category['location_id']
-						));
-	//				_debug_array($checklist_list);
-
-					$checklists = array();
-
-					foreach ($checklist_list as $checklist_list_item)
-					{
-						$checklist_list_attribs = $this->custom->find2($checklist_list_item['location_id'], 0, '', 'ASC', 'attrib_sort', true, true);
-						$checklist_stages = $this->soadmin_entity->read_checklist_stage(array(
-						'allrows' => true,
-						'active' => true,
-						'checklist_id' => $checklist_list_item['id']
-						));
-
-
-						$stages = array();
-						foreach ($checklist_stages as &$checklist_stage)
-						{
-							$checklist_stage['attributes'] =array();
-
-							foreach ($checklist_list_attribs as $checklist_list_attrib)
-							{
-
-								if(!in_array($checklist_list_attrib['id'], $checklist_stage['active_attribs']))
-								{
-									$checklist_list_attrib['disabled'] = 1;
-								}
-
-								$checklist_stage['attributes'][] = $checklist_list_attrib;
-
-							}
-
-							$stages[] = $checklist_stage;
-
-						}
-						$checklists[] = array(
-							'name'	=> $checklist_list_item['name'],
-							'descr'	=> $checklist_list_item['descr'],
-							'stages' => $stages,
-
-						);
-					}
-				}
-
-//				_debug_array($checklist_stages);
-
-
 				$target_def = array
 					(
 					array('key' => 'url', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true),
@@ -2671,6 +2619,13 @@
 				}
 			}
 
+			if ($category['checklist_count'])
+			{
+				$tabs['checklist'] = array('label' => lang('checklist'), 'link' => '#checklist', 'disable' => 0);
+
+				$location_checklists = $this->get_location_checklists($category['location_id'], $id, $mode);
+			}
+
 			//$category['org_unit'] =1;
 			if ($category['org_unit'] && $mode == 'edit')
 			{
@@ -2708,7 +2663,7 @@ JS;
 			}
 
 			$data = array(
-				'checklists'					 => $checklists,
+				'location_checklists'			 => $location_checklists,
 				'datatable_def'					 => $datatable_def,
 				'repeat_types'					 => array('options' => $repeat_types),
 				'controller'					 => $_enable_controller && $id,
@@ -4235,5 +4190,82 @@ JS;
 		function get_assigned_history()
 		{
 			return $this->controller_helper->get_assigned_history();
+		}
+
+		function get_location_checklists( $location_id, $item_id, $mode )
+		{
+
+			$checklist_data = $this->bo->get_checklist_data($location_id, $item_id);
+			$location_checklists = array();
+
+			$checklist_list = $this->soadmin_entity->read_checklist(array(
+				'allrows'			 => true,
+				'active'			 => true,
+				'type_location_id'	 => $location_id
+			));
+
+			if(isset($checklist_list[0]['location_id']))
+			{
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
+			}
+
+
+
+			foreach ($checklist_list as $checklist_list_item)
+			{
+				$checklist_list_attribs	 = $this->custom->find2($checklist_list_item['location_id'], 0, '', 'ASC', 'attrib_sort', true, true);
+				$checklist_stages		 = $this->soadmin_entity->read_checklist_stage(array(
+					'allrows'		 => true,
+					'active'		 => true,
+					'checklist_id'	 => $checklist_list_item['id']
+				));
+
+				$stages = array();
+				foreach ($checklist_stages as &$checklist_stage)
+				{
+					$stage_id = $checklist_stage['id'];
+
+					$checklist_stage['attributes'] = array();
+
+					foreach ($checklist_list_attribs as $checklist_list_attrib)
+					{
+
+						if (!in_array($checklist_list_attrib['id'], $checklist_stage['active_attribs']))
+						{
+							$checklist_list_attrib['disabled'] = 1;
+						}
+
+						if(isset($checklist_data[$stage_id][$checklist_list_attrib['name']]))
+						{
+							$checklist_list_attrib['value'] = $checklist_data[$stage_id][$checklist_list_attrib['name']];
+						}
+
+						$checklist_stage['attributes'][] = $checklist_list_attrib;
+					}
+
+					$checklist_stage = $this->custom->prepare($checklist_stage, $location_info['appname'], $location_info['location'], $mode=='view' ? true : false);
+
+					foreach ($checklist_stage['attributes'] as &$attributes)
+					{
+						unset($attributes['add_img']);
+						unset($attributes['delete_img']);
+
+					}
+
+//					_debug_array($checklist_stage);
+					
+					$stages[] = $checklist_stage;
+
+				}
+				$location_checklists[] = array(
+					'name'	 => $checklist_list_item['name'],
+					'descr'	 => $checklist_list_item['descr'],
+					'stages' => $stages,
+				);
+			}
+//			_debug_array($checklist_data);
+//			_debug_array($location_checklists);
+
+			return $location_checklists;
 		}
 	}

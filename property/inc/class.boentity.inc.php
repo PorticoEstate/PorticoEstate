@@ -1247,4 +1247,9 @@ JS;
 			);
 
 		}
+
+		function get_checklist_data($type_location_id, $item_id )
+		{
+			return $this->so->get_checklist_data($type_location_id, $item_id );
+		}
 	}

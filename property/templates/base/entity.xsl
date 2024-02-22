@@ -968,8 +968,7 @@
 
 							</style>
 
-
-							<xsl:for-each select="checklists">
+							<xsl:for-each select="location_checklists">
 								<h1>
 									<xsl:value-of select="name"/>
 								</h1>
@@ -1006,6 +1005,10 @@
 													<xsl:with-param name="dataset">
 														<xsl:value-of select="$dataset" />
 													</xsl:with-param>
+													<xsl:with-param name="class" select="'pure-input-1-2'">
+														
+													</xsl:with-param>
+
 												</xsl:apply-templates>
 											</div>
 										</xsl:for-each>
