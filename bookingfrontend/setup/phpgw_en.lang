@@ -77,7 +77,8 @@ contact person	bookingfrontend	en	Contact person
 contact information	bookingfrontend	en	Contact information
 cost	bookingfrontend	en	Cost
 choose rent object and rentperiod	bookingfrontend	en	Choose rent object and rentperiod
-chosen rent object	bookingfrontend	en	Chosen rent object
+rent object	bookingfrontend	en	Rent object
+chosen rent object	bookingfrontend	en	Chosen resources
 chosen rent period	bookingfrontend	en	Chosen rent period
 choose rent period	bookingfrontend	en	Choose rent period
 choose target audience	bookingfrontend	en	Choose target audience

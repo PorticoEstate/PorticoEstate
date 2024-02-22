@@ -77,7 +77,8 @@ contact person	bookingfrontend	nn	Kontaktperson
 contact information	bookingfrontend	nn	Kontaktinformasjon
 cost	bookingfrontend	nn	Pris
 choose rent object and rentperiod	bookingfrontend	nn	Vel leigeobjekt og leigeperiode
-chosen rent object	bookingfrontend	nn	Valde leigeobjekter
+rent object	bookingfrontend	nn	Leigeobjekt
+chosen rent object	bookingfrontend	nn	Valde ressursar
 chosen rent period	bookingfrontend	nn	Valde leigeperioder
 choose rent period	bookingfrontend	nn	Velg leigeperiode
 choose target audience	bookingfrontend	nn	Vel målgruppe for arrangement / aktiviteten

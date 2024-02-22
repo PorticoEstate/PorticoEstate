@@ -33,8 +33,8 @@
                         <div class="row gx-3  mb-4">
                             <div class="col d-flex flex-column">
                                 <div class="font-weight-bold gap-3 d-flex mb-1">
-                                    <h2 class="m-0 fa-solid fa-layer-group line-height-h1"></h2>
-                                    <div>
+                                    <h3 class="m-0 fa-solid fa-location-dot line-height-h1"></h3>
+                                    <div class="d-flex flex-column gap-1">
                                         <h2 class="m-0">
                                             <xsl:value-of select="building/name"/>
                                         </h2>
@@ -52,16 +52,6 @@
                                         <div class="text-overline">
                                             <xsl:value-of select="building/part_of_town"/>
                                         </div>
-                                        <a class="link-text link-text-secondary" target="_blank">
-                                            <xsl:attribute name="href">
-                                                <xsl:value-of select="building/link"/>
-                                            </xsl:attribute>
-                                            <i class="fa-solid fa-location-dot"></i>
-                                            <xsl:value-of
-                                                    select="building/name"/>
-                                            <!--<i class="fa-solid fa-arrow-right"></i>-->
-                                        </a>
-
                                     </div>
 
                                 </div>
@@ -113,6 +103,13 @@
                         </div>
 
                         <div class="col-sm-12 mb-4">
+                            <div class="font-weight-bold gap-3 d-flex align-items-center">
+                                <h3 class="fas fa-calendar-alt m-0 text-bold"></h3>
+                                <h3 class="m-0 text-bold">
+                                    <xsl:value-of
+                                            select="php:function('lang', 'rent object')"/>
+                                </h3>
+                            </div>
                             <label class="mb-2 d-flex align-items-center" for="select-multiple">
                                 <h4 class="m-0">
                                     <xsl:value-of
@@ -179,10 +176,10 @@
 
                             <div class="form-group">
                                 <div class="font-weight-bold gap-3 d-flex align-items-center">
-                                    <h2 class="fas fa-calendar-alt text-primary"></h2>
-                                    <h2>
+                                    <h3 class="fas fa-calendar-alt m-0 text-bold"></h3>
+                                    <h3 class="m-0 text-bold">
                                         Leieperiode
-                                    </h2>
+                                    </h3>
                                 </div>
                                 <!-- Display Time Chosen -->
                                 <div class="form-group mb-2 ">

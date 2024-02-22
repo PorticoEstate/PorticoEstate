@@ -68,8 +68,9 @@ case officer	bookingfrontend	no	Saksbehandler
 category	bookingfrontend	no	Kategori
 choose a date	bookingfrontend	no	Velg dato
 choose file	bookingfrontend	no	Velg dokument
+rent object	bookingfrontend	no	Leieobjekt
 choose rent object and rentperiod	bookingfrontend	no	Velg leieobjekt og leieperiode
-chosen rent object	bookingfrontend	no	Valgte leieobjekter
+chosen rent object	bookingfrontend	no	Valgte ressurser
 chosen rent period	bookingfrontend	no	Valgte leieperioder
 choose rent period	bookingfrontend	no	Velg leieperiode
 choose target audience	bookingfrontend	no	Velg målgruppe for arrangement / aktiviteten
