@@ -194,7 +194,7 @@
                                         <input class="datetime" required="true" name="to_[]" hidden="hidden"
                                                data-bind="value: to_"/>
                                         <time-slot-pill
-                                                params="date: $data, removeDate: $parent.removeDate"></time-slot-pill>
+                                                params="date: $data, removeDate: () => $parent.removeDate($data)"></time-slot-pill>
 
                                         <!--                                    <pre data-bind="text: ko.toJSON($data)"></pre>-->
 
