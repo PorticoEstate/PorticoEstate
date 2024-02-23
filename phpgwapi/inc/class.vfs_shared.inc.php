@@ -1402,6 +1402,11 @@
 				)
 			);
 
+			if(!$string)
+			{
+				throw new Exception('Invalid path: ' . $data['string']);
+			}
+
 			if ($fake)
 			{
 				$base_sep = '/';
