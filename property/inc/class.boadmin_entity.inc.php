@@ -89,7 +89,7 @@
 			'get_category_list'	 => true,
 			'get_attrib_list'	 => true
 		);
-		var $type_app,$bocommon,$so,$allrows;
+		var $type_app,$bocommon,$so,$allrows,$location_id, $acl_location;
 
 		function __construct()
 		{
@@ -105,6 +105,22 @@
 			$allrows	 = phpgw::get_var('allrows', 'bool');
 			$entity_id	 = phpgw::get_var('entity_id', 'int');
 
+			$location_id = phpgw::get_var('location_id', 'int');
+			if ($location_id)
+			{
+				$loc_arr	 = $GLOBALS['phpgw']->locations->get_name($location_id);
+				$type_arr	 = explode('.', $loc_arr['location']);
+				if (count($type_arr) != 4)
+				{
+					return array();
+				}
+
+				$type		 = $type_arr[1];
+				$entity_id	 = $type_arr[2];
+				$cat_id		 = $type_arr[3];
+			}
+
+
 			$this->so		 = CreateObject('property.soadmin_entity', '', '', $this->bocommon);
 			$this->type_app	 = $this->so->get_type_app();
 
@@ -115,7 +131,28 @@
 			$this->type		 = isset($type) && $type && isset($this->type_app[$type]) ? $type : 'entity';
 			$this->cat_id	 = isset($cat_id) && $cat_id ? $cat_id : '';
 			$this->entity_id = isset($entity_id) && $entity_id ? $entity_id : '';
-			$this->allrows	 = phpgw::get_var('allrows', 'bool');
+			$this->acl_location	 = '.admin.entity';
+
+			if(!$location_id)
+			{
+				if($this->cat_id)
+				{
+					$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
+				}
+				else if($this->entity_id)
+				{
+					$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$this->entity_id}");
+				}
+				else
+				{
+					$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location);
+
+				}
+			}
+
+			$this->location_id = !empty($location_id) ? $location_id : null;
+
+			$this->allrows	 = $allrows;
 			$this->so->type	 = $this->type;
 		}
 
@@ -227,6 +264,16 @@
 			return $this->so->read_single_category($entity_id, $cat_id);
 		}
 
+		/**
+		 * 
+		 * @param int $id
+		 * @return array checklist
+		 */
+		function read_single_checklist( $id )
+		{
+			return $this->so->read_single_checklist($id);
+		}
+
 		function save( $values, $action = '' )
 		{
 			if ($action == 'edit')
@@ -273,28 +320,135 @@
 			return $receipt;
 		}
 
+		function save_checklist( $values, $action = '' )
+		{
+			if ($action == 'edit')
+			{
+				if ($values['id'] != '')
+				{
+					$receipt = $this->so->edit_checklist($values);
+				}
+			}
+			else
+			{
+				$receipt = $this->so->add_checklist($values);
+				if (!empty($values['checklist_template']) && isset($receipt['id']) && $receipt['id'])
+				{
+					$checklist_template = $this->read_single_checklist((int)$values['checklist_template']);
+					$values2 = array(
+						'location_id'			 => $receipt['location_id'],
+						'template_location_id'	 => $checklist_template['location_id'],
+						'selected'				 => $values['template_attrib']
+					);
+
+					$this->_add_attrib_from_template($values2);
+				}
+			}
+			return $receipt;
+		}
+
+		//delete_checklist
+		/**
+		 * 
+		 * @param int $id
+		 * @return array
+		 */
+		function delete_checklist( $id )
+		{
+			return $this->so->delete_checklist($id);
+		}
+
+		/**
+		 * 
+		 * @param array $data
+		 * @return array
+		 */
+		function read_checklist_stage( $data )
+		{
+			$values = $this->so->read_checklist_stage($data);
+			$this->total_records = $this->so->total_records;
+			return $values;
+		}
+
+		/**
+		 * read_single_checklist_stage
+		 * @param int $id
+		 * @return array
+		 */
+		function read_single_checklist_stage( $id )
+		{
+			return $this->so->read_single_checklist_stage($id);
+		}
+
+		/**
+		 * save_checklist_stage
+		 * @param array $values
+		 * @param string $action
+		 * @return array
+		 */
+		function save_checklist_stage( $values, $action = '' )
+		{
+			if ($action == 'edit')
+			{
+				if ($values['id'] != '')
+				{
+					$receipt = $this->so->edit_checklist_stage($values);
+				}
+			}
+			else
+			{
+				$receipt = $this->so->add_checklist_stage($values);
+			}
+			return $receipt;
+		}
+
+		/**
+		 * delete_checklist_stage
+		 * @param int $id
+		 * @return array
+		 */
+		function delete_checklist_stage( $id )
+		{
+			return $this->so->delete_checklist_stage($id);
+		}
+		
 		protected function _add_attrib_from_template( $values )
 		{
 			$template_info		 = explode('_', $values['category_template']);
 			$template_entity_id	 = $template_info[0];
 			$template_cat_id	 = $template_info[1];
+			$location_id		 = !empty($values['location_id']) ? $values['location_id'] : null;
+			$template_location_id = !empty($values['template_location_id']) ? $values['template_location_id'] : null;
 
 			$attrib_group_list = $this->read_attrib_group(array(
-				'entity_id'	 => $template_entity_id,
-				'cat_id'	 => $template_cat_id,
-				'allrows'	 => true,
-				'start'	 => 0,
-				'query'	 => '',
-				'sort'	 => 'ASC',
-				'order'	 => 'id'
+				'location_id'	 => $template_location_id,
+				'entity_id'		 => $template_entity_id,
+				'cat_id'		 => $template_cat_id,
+				'allrows'		 => true,
+				'start'			 => 0,
+				'query'			 => '',
+				'sort'			 => 'ASC',
+				'order'			 => 'id'
 			));
+
+			if (!empty($location_id))
+			{
+				$location_info	 = $GLOBALS['phpgw']->locations->get_name($location_id);
+				$location		 = $location_info['location'];
+				$appname		 = $location_info['appname'];
+			}
+			else
+			{
+				$location	 = ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}";
+				$appname	 = $this->type_app[$this->type];
+			}
 
 			foreach ($attrib_group_list as $attrib_group)
 			{
 				$group = array(
 					'id'		 => $attrib_group['id'],
-					'appname'	 => $this->type_app[$this->type],
-					'location'	 => ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}",
+					'appname'	 => $appname,
+					'location'	 => $location,
 					'group_name' => $attrib_group['name'],
 					'group_sort' => $attrib_group['group_sort'],
 					'parent_id'	 => $attrib_group['parent_id'],
@@ -304,23 +458,46 @@
 				$this->custom->add_group($group);
 			}
 
-			$attrib_list = $this->read_attrib(array('entity_id'	 => $template_entity_id, 'cat_id'	 => $template_cat_id,
-				'allrows'	 => true));
+			$attrib_list = $this->read_attrib(array(
+				'location_id'	 => $template_location_id,
+				'entity_id'		 => $template_entity_id,
+				'cat_id'		 => $template_cat_id,
+				'allrows'		 => true)
+			);
+
+			if (!empty($template_location_id))
+			{
+				$template_location_info	 = $GLOBALS['phpgw']->locations->get_name($template_location_id);
+				$template_location		 = $template_location_info['location'];
+				$template_appname		 = $template_location_info['appname'];
+			}
+			else
+			{
+				$template_location	 = ".{$this->type}.{$template_entity_id}.{$template_cat_id}";
+				$template_appname	 = $this->type_app[$this->type];
+			}
 
 			$template_attribs = array();
 			foreach ($attrib_list as $attrib)
 			{
 				if (in_array($attrib['id'], $values['selected']))
 				{
-					$template_attribs[] = $this->read_single_attrib($template_entity_id, $template_cat_id, $attrib['id']);
+					if (!empty($template_location_id))
+					{
+						$template_attribs[] = $this->custom->get($template_appname, $template_location, $attrib['id'], true);
+					}
+					else
+					{
+						$template_attribs[] = $this->read_single_attrib($template_entity_id, $template_cat_id, $attrib['id']);
+					}
 				}
 			}
 			unset($attrib);
 
 			foreach ($template_attribs as $attrib)
 			{
-				$attrib['appname']	 = $this->type_app[$this->type];
-				$attrib['location']	 = ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}";
+				$attrib['appname']	 = $appname;
+				$attrib['location']	 = $location;
 
 				$choices = array();
 				if (isset($attrib['choice']) && $attrib['choice'])
@@ -398,7 +575,19 @@
 				$this->allrows = $data['allrows'];
 			}
 
-			$attrib = $this->custom->find_group($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", $data['start'], $data['query'], $data['sort'], $data['order'], $this->allrows);
+			if(!empty($data['location_id']))
+			{
+				$location_info = $GLOBALS['phpgw']->locations->get_name($data['location_id']);
+				$location = $location_info['location'];
+				$appname = $location_info['appname'];
+			}
+			else
+			{
+				$location	= ".{$this->type}.{$entity_id}.{$cat_id}";
+				$appname = $this->type_app[$this->type];
+			}
+
+			$attrib = $this->custom->find_group($appname, $location, $data['start'], $data['query'], $data['sort'], $data['order'], $this->allrows);
 
 			$this->total_records = $this->custom->total_records;
 
@@ -411,9 +600,23 @@
 			{
 				$this->allrows = $data['allrows'];
 			}
-			$attrib				 = $this->custom->find(
-				$this->type_app[$this->type],
-				".{$this->type}.{$data['entity_id']}.{$data['cat_id']}",
+
+			if (!empty($data['location_id']))
+			{
+				$location_info	 = $GLOBALS['phpgw']->locations->get_name($data['location_id']);
+				$location		 = $location_info['location'];
+				$appname		 = $location_info['appname'];
+			}
+			else
+			{
+				$location	 = ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}";
+				$appname	 = $this->type_app[$this->type];
+			}
+
+
+			$attrib = $this->custom->find(
+				$appname,
+				$location,
 				$data['start'], $data['query'],
 				$data['sort'],
 				$data['order'],
@@ -424,6 +627,13 @@
 			);
 			$this->total_records = $this->custom->total_records;
 			return $attrib;
+		}
+
+		function read_checklist( $data )
+		{
+			$values = $this->so->read_checklist($data);
+			$this->total_records = $this->so->total_records;
+			return $values;
 		}
 
 		function read_single_attrib( $entity_id, $cat_id, $id )
@@ -445,6 +655,12 @@
 		{
 			$this->custom->resort($id, $resort, $this->type_app[$this->type], ".{$this->type}.{$this->entity_id}.{$this->cat_id}");
 		}
+
+		function resort_checklist_stage( $id, $resort )
+		{
+			$this->so->resort_checklist_stage($id, $resort);
+		}
+
 
 		public function save_attrib_group( $group, $action = '' )
 		{

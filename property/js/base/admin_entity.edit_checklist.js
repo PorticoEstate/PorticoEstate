@@ -1,4 +1,4 @@
-var category_template = 0;
+var checklist_template = 0;
 var values_tophp = [];
 /********************************************************************************/
 
@@ -9,7 +9,7 @@ $(document).ready(function ()
 		var api = oTable0.api();
 		api.on('draw', add_checkall);
 	}
-	catch(err)
+	catch (err)
 	{
 
 	}
@@ -43,13 +43,12 @@ this.onActionsClick = function ()
 	}
 
 	values_tophp = [];
-
 	$(".mychecks:checked").each(function ()
 	{
 		values_tophp.push($(this).val());
 	});
 
-	if(values_tophp.length > 0)
+	if (values_tophp.length > 0)
 	{
 		document.form.template_attrib.value = values_tophp;
 	}
@@ -58,17 +57,14 @@ this.onActionsClick = function ()
 
 this.get_template_attributes = function ()
 {
-	if (document.getElementById('category_template').value)
-	{
-		base_java_url['category_template'] = document.getElementById('category_template').value;
-	}
+	base_java_url['checklist_template'] = document.getElementById('checklist_template').value;
 
-	if (document.getElementById('category_template').value != category_template)
+	if (document.getElementById('checklist_template').value != checklist_template)
 	{
 		var oArgs = base_java_url;
 		var strURL = phpGWLink('index.php', oArgs, true);
 		JqueryPortico.updateinlineTableHelper(oTable0, strURL);
-		category_template = document.getElementById('category_template').value;
+		checklist_template = document.getElementById('checklist_template').value;
 	}
 }
 

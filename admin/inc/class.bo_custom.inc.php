@@ -72,6 +72,7 @@
 			$order		= phpgw::get_var('order');
 			$filter		= phpgw::get_var('filter');
 			$location	= phpgw::get_var('location');
+			$location_id= phpgw::get_var('location_id', 'int');
 			$allrows	= phpgw::get_var('allrows', 'bool');
 			$appname	= phpgw::get_var('appname');
 
@@ -91,6 +92,15 @@
 			$this->location = $location;
 			$this->appname = $appname;
 			$this->allrows = $allrows;
+			//find the location from the location_id
+			if($location_id && !$location)
+			{
+				$this->location = $GLOBALS['phpgw']->locations->get_location($location_id);
+			}
+
+
+
+
 		}
 
 		function save_sessiondata($data)

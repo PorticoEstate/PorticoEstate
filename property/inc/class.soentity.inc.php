@@ -42,6 +42,7 @@
 		var $cols_return_lookup;
 		var $type			 = 'entity';
 		protected $sql;
+		protected $global_lock	 = false;
 		protected $type_app		 = array
 			(
 			'entity' => 'property',
@@ -2488,7 +2489,14 @@
 			$admin_entity->type	 = $this->type;
 			$category			 = $admin_entity->read_single_category($entity_id, $cat_id);
 
-			$this->db->transaction_begin();
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 			if (isset($values_insert['p_num']) && $values_insert['p_num'])
 			{
@@ -2553,7 +2561,10 @@
 				}
 			}
 
-			$this->db->transaction_commit();
+			if (!$this->global_lock)
+			{
+				$this->db->transaction_commit();
+			}
 
 			$receipt				 = array();
 			$receipt['id']			 = $values['id'];
@@ -2785,7 +2796,14 @@
 				}
 			}
 
-			$this->db->transaction_begin();
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 
 			if (isset($value_set['p_num']) && $value_set['p_num'])
@@ -2835,7 +2853,10 @@
 				}
 			}
 
-			$this->db->transaction_commit();
+			if (!$this->global_lock)
+			{
+				$this->db->transaction_commit();
+			}
 
 			$receipt['id']			 = $values['id'];
 			$receipt['message'][]	 = array('msg' => lang('entity %1 has been edited', $values['num']));
@@ -2855,6 +2876,8 @@
 			$category			 = $admin_entity->read_single_category($entity_id, $cat_id);
 
 			$this->db->transaction_begin();
+
+			$this->db->query("DELETE FROM fm_bim_item_checklist_data WHERE type_location_id ={$location_id} AND item_id = {$id}", __LINE__, __FILE__);
 
 			if ($category['is_eav'])
 			{
@@ -3346,6 +3369,78 @@
 				);
 			}
 
+			return $values;
+		}
+
+		function save_checklist( $item_id, $stage_id, $values_attribute, &$receipt )
+		{
+		
+			// get stage from soadmin_entity
+			$admin_entity = CreateObject('property.soadmin_entity');
+			$stage = $admin_entity->read_single_checklist_stage($stage_id);
+			$checklist_id = $stage['checklist_id'];
+			//get checklist from soadmin_entity
+			$checklist = $admin_entity->read_single_checklist($checklist_id);
+			$type_location_id = $checklist['type_location_id'];
+
+			//check if checklist is already saved
+			$sql = "SELECT id, json_representation FROM fm_bim_item_checklist_data" 
+			. " WHERE item_id = {$item_id} AND stage_id = {$stage_id} AND type_location_id = {$type_location_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			if ($this->db->next_record())
+			{
+				//update
+				$id = (int)$this->db->f('id');
+
+				$jsondata = json_decode($this->db->f('json_representation'), true);
+
+				foreach ($values_attribute as $entry)
+				{
+					$jsondata[$entry['name']] = $entry['value'];
+				}
+				$value_set = array(
+					'json_representation' => json_encode($jsondata)
+				);
+				$value_set = $this->db->validate_update($value_set);
+				$this->db->query("UPDATE fm_bim_item_checklist_data set $value_set WHERE id = {$id}", __LINE__, __FILE__);
+			}
+			else
+			{
+
+				//insert
+				$jsondata = array();
+				foreach ($values_attribute as $entry)
+				{
+					$jsondata[$entry['name']] = $entry['value'];
+				}
+
+				$value_set = array(
+					'item_id' => $item_id,
+					'stage_id' => $stage_id,
+					'type_location_id' => $type_location_id,
+					'created_on' => time(),
+					'created_by' => $this->account,
+					'json_representation' => json_encode($jsondata)
+				);
+
+				$this->db->query("INSERT INTO fm_bim_item_checklist_data (" . implode(',', array_keys($value_set)) . ') VALUES ('
+				. $this->db->validate_insert(array_values($value_set)) . ')', __LINE__, __FILE__);
+
+			}
+
+		}
+
+		function get_checklist_data($type_location_id, $item_id )
+		{
+			$sql = "SELECT DISTINCT stage_id, json_representation FROM fm_bim_item_checklist_data"
+			. " WHERE item_id = {$item_id} AND type_location_id = {$type_location_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$values = array();
+			while($this->db->next_record())
+			{
+				$values[$this->db->f('stage_id')] = (array)json_decode($this->db->f('json_representation'), true);
+			}
 			return $values;
 		}
 	}
