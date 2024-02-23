@@ -101,14 +101,12 @@
                            href="" data-bind="attr: {{'href': resourceItemLink }}">
                             <i class="fa-solid fa-layer-group"></i>
                             <span data-bind="html: name"></span>
-                            <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>
                     <div data-bind="if: resourceItemLink == false">
                         <span class="pe-btn pe-btn-colour-secondary link-text link-text-secondary d-flex gap-3 pe-btn--small">
                             <i class="fa-solid fa-layer-group"></i>
                             <span data-bind="html: name"></span>
-                            <i class="fa-solid fa-arrow-right"></i>
                         </span>
                     </div>
                 </div>

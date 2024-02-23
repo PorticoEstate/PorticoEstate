@@ -136,6 +136,7 @@ h4, .h4 {
   &-overline {
     @include applyFontProperties('overline');
     text-transform: uppercase;
+    font-weight: $text-regular;
   }
 
   &-body, &-normal, &-medium, &-lg {
