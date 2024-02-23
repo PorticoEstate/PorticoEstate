@@ -557,24 +557,24 @@ class BookingSearch {
                                     <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="false">
                                         <span><div class="fa-solid fa-layer-group"></div> ${resource.name}</span>
                                         <span class="slidedown__toggler__info">
-                ${joinWithDot([`<span class="text-primary">Bydel:</span> ${joinWithDot(towns.map(t => this.cleanTownName(t.name)))}`, ...buildings.map(b => {
+                ${joinWithDot([`<span class="text-overline">${joinWithDot(towns.map(t => this.cleanTownName(t.name)))}</span>`, ...buildings.map(b => {
                     const buildingUrl = phpGWLink('bookingfrontend/', {
                         menuaction: 'bookingfrontend.uibuilding.show',
                         id: b.id
                     })
-                    return `<a href="${buildingUrl}" class="link-text link-text-secondary"><i class="fa-solid fa-location-dot"></i>${b.name}<i class="fa-solid fa-arrow-right"></i></a>`
+                    return `<a href="${buildingUrl}" class="link-text link-text-primary"><i class="fa-solid fa-location-dot"></i>${b.name}</a>`
                 })])}
             </span>
                                     </button>
                                     <div class="js-slidedown-content slidedown__content">
                                         <div>
-<!--                                            <div class="d-flex">-->
-                                                    <!--<button class="pe-btn pe-btn-primary" style="margin-right: 8px;" onclick="location.href=\'${url}
+                                            <!--                                            <div class="d-flex">-->
+                                                <!--<button class="pe-btn pe-btn-primary" style="margin-right: 8px;" onclick="location.href=\'${url}
                                                     \'">Søknad</button>-->
-                                                    <!--<button class="pe-btn pe-btn-secondary"
+                                                <!--<button class="pe-btn pe-btn-secondary"
                                                         onclick="location.href=\'${locationUrl}\'">${buildings[0].name}
                                                 </button>-->
-<!--                                            </div>-->
+                                            <!--                                            </div>-->
                                             <p>
                                                 ${resource.description}
                                             </p>
@@ -946,7 +946,7 @@ function htmlDecode(input) {
 }
 
 function joinWithDot(texts) {
-    return texts.map(t => t && t.length > 0 ? `<span>${t}</span>` : null).filter(t => t).join(`<span class="slidedown__toggler__info__separator"><i class="fa-solid fa-circle"></i></span>`)
+    return texts.map(t => t && t.length > 0 ? `<span class="d-flex align-items-center">${t}</span>` : null).filter(t => t).join(`<span class="slidedown__toggler__info__separator"><i class="fa-solid fa-circle"></i></span>`)
 }
 
 function sortOnField(data, field) {

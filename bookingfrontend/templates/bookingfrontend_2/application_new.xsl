@@ -422,8 +422,12 @@
                             <div class="row">
                                 <div class="col-12 mb-4">
                                     <!-- Headers for Male/Female -->
-                                    <div class="row">
-                                        <div class="col-4"></div>
+                                    <div class="row  mb-3">
+                                        <div class="col-3">
+                                            <span class="text-bold">
+                                                <xsl:value-of select="php:function('lang', 'agegroup')"/>
+                                            </span>
+                                        </div>
                                         <div class="col-4">
                                             <span class="text-bold">
                                                 <xsl:value-of select="php:function('lang', 'number of')"/>
@@ -435,8 +439,8 @@
                                     <div data-bind="foreach: agegroupList">
                                         <div class="row mb-2">
                                             <span data-bind="text: id, visible: false"></span>
-                                            <div class="col-4">
-                                                <span class="mt-2" data-bind="text: agegroupLabel"></span>
+                                            <div class="col-3 d-flex align-items-center">
+                                                <span data-bind="text: agegroupLabel"></span>
                                             </div>
                                             <div class="col-md-4 col-8">
                                                 <input type="text" class="w-100 sm-input maleInput" data-bind=""/>

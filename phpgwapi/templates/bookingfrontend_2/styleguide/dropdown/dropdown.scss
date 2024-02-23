@@ -406,12 +406,12 @@
     flex-direction: column;
     background: transparent;
     border-radius: $rounded-large;
-    color: $purple;
-    @include applyFontSize('subtitle');
+    color: $black-80;
+    @include applyFontSize('title');
 
     text-align: left;
     position: relative;
-    font-weight: 900;
+    font-weight: $text-bold;
     width: 100%;
     padding: 1rem 3rem 1rem 2rem;
     border: 0;

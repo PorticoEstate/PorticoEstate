@@ -57,7 +57,6 @@
                             <span>
                                 <xsl:value-of select="building/name"/>
                             </span>
-                            <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>
                 </div>
