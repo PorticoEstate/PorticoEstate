@@ -461,7 +461,7 @@ _debug_array($error_line);
 
 //		$log->fatal($log_args);
 
-		$log->error(array(
+		$log->fatal(array(
 			'text'	=> "<b>Uncaught Exception:</b>\n". $e->getMessage() . "\n" . $e->getTraceAsString(),
 			'line'	=> $e->getline(),
 			'file'	=> $e->getfile()

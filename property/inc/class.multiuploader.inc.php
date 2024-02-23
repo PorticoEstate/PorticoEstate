@@ -137,7 +137,7 @@
 					{
 						
 						$_file_name = $file_name ? $file_name : $upload['name'][$index];
-						
+										
 						if(in_array($_file_name, $unique_names))
 						{
 							$file		 = new \stdClass();
@@ -339,6 +339,12 @@
 		private function upload_file( $save_path, $uploaded_file, &$file )
 		{
 			$to_file = "{$this->bofiles->fakebase}/{$save_path}/{$file->name}";
+
+			if(!$this->bofiles->vfs->securitycheck(array('string' => $to_file)))
+			{
+				$file->error = lang('Invalid file name !');
+				return false;
+			}
 
 			// Validate that we won't over-write an existing file
 			if ($this->bofiles->vfs->file_exists(array(

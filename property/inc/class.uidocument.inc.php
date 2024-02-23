@@ -722,8 +722,7 @@
 		{
 			if (!$this->acl_add && !$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction'	 => 'property.uilocation.stop',
-					'perm'			 => 2, 'acl_location'	 => $this->acl_location));
+				phpgw::no_access();
 			}
 
 			$_from	 = phpgw::get_var('from');
@@ -820,6 +819,11 @@
 				if ((!$values['document_name'] && !$values['document_name_orig']) && !$values['link'])
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a file to upload !'));
+				}
+
+				if (!$this->bofiles->vfs->securitycheck(array('string' => $values['document_name'])))
+				{
+					$receipt['error'][] = array('msg' => lang('Invalid file name !'));
 				}
 
 				if (!$values['doc_type'])
@@ -1102,11 +1106,18 @@
 			$options['script_url']	 = html_entity_decode(self::link(array('menuaction' => 'property.uidocument.handle_multi_upload_file',
 					'id'		 => $id)));
 			$upload_handler			 = new property_multiuploader($options, false);
-
+			
+			if(!$this->bofiles->vfs->securitycheck(array('string' => "/property/{$options['base_dir']}/" . $_FILES['files']['name'][0])))
+			{
+				$response = array('files' => array(array('error' => lang('Invalid file name !'))));
+				$upload_handler->generate_response($response);
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+		
 			$old_file = $this->bo->get_file($id);
 
 			if ($old_file == "/property/{$options['base_dir']}/" . $_FILES['files']['name'][0])
-			{
+			{				
 				$this->bofiles->vfs->override_acl = 1;
 
 				if (!$this->bofiles->vfs->rm(array(
