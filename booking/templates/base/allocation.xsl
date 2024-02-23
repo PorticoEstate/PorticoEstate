@@ -11,6 +11,29 @@
 				</h1>
 				<div class="pure-control-group">
 					<label>
+						<input type="checkbox" value="1" name="active" >
+							<xsl:if test="allocation/active=1">
+								<xsl:attribute name="checked">checked</xsl:attribute>
+							</xsl:if>
+							<xsl:attribute name="disabled">disabled</xsl:attribute>
+						</input>
+					</label>
+					<xsl:value-of select="php:function('lang', 'active')"/>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<input type="checkbox" value="1" name="skip_bas" >
+							<xsl:if test="allocation/skip_bas=1">
+								<xsl:attribute name="checked">checked</xsl:attribute>
+							</xsl:if>
+							<xsl:attribute name="disabled">disabled</xsl:attribute>
+						</input>
+					</label>
+					<xsl:value-of select="php:function('lang', 'skip bas')"/>
+				</div>
+
+				<div class="pure-control-group">
+					<label>
 						<xsl:value-of select="php:function('lang', 'From')" />
 					</label>
 					<xsl:value-of select="php:function('pretty_timestamp', allocation/from_)"/>

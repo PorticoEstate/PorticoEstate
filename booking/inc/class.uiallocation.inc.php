@@ -37,7 +37,7 @@
 				'building_id', 'building_name',
 				'season_id', 'season_name',
 				'organization_id', 'organization_name',
-				'organization_shortname', 'from_', 'to_', 'active');
+				'organization_shortname', 'from_', 'to_', 'active', 'skip_bas');
 
 			$this->display_name = lang('allocations');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
@@ -351,6 +351,7 @@
 				}
 
 				$allocation = extract_values($_POST, $this->fields);
+				$allocation['skip_bas'] = (int)phpgw::get_var('skip_bas', 'int');
 				if ($_POST['cost'])
 				{
 					$this->add_cost_history($allocation, phpgw::get_var('cost_comment'), phpgw::get_var('cost', 'float'));
@@ -775,6 +776,7 @@
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+				$allocation['skip_bas'] = (int)phpgw::get_var('skip_bas', 'int');
 				$_POST['from_'] = ($_POST['from_']) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_'])) : $_POST['from_'];
 				$_POST['to_'] = ($_POST['to_']) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_'])) : $_POST['to_'];
 				array_set_default($_POST, 'resources', array());

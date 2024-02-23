@@ -10,6 +10,16 @@
 			<div id="event_new" class="booking-container">
 				<fieldset>
 					<input type="hidden" name="application_id" value="{event/application_id}"/>
+					<div class="pure-control-group">
+						<label>
+							<input type="checkbox" value="1" name="skip_bas" >
+								<xsl:if test="event/skip_bas=1">
+									<xsl:attribute name="checked">checked</xsl:attribute>
+								</xsl:if>
+							</input>
+							<xsl:value-of select="php:function('lang', 'skip bas')"/>
+						</label>
+					</div>
 					<div class="heading">
 						<!--<legend>-->
 						<h3>
