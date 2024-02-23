@@ -11,7 +11,7 @@
  	* @version $Id: setup.inc.php 6982 2011-02-14 20:01:17Z sigurdne $
 	*/
 	$setup_info['bim']['name']			= 'bim';
-	$setup_info['bim']['version']		= '0.9.17.511';
+	$setup_info['bim']['version']		= '0.9.17.512';
 	$setup_info['bim']['app_order']		= 8;
 	$setup_info['bim']['enable']		= 2;
 	$setup_info['bim']['app_group']		= 'office';
@@ -34,7 +34,10 @@
 		'fm_bim_type',
 		'fm_bim_model',
 		'fm_bim_item',
-		'fm_bim_item_inventory'
+		'fm_bim_item_inventory',
+		'fm_bim_item_checklist',
+		'fm_bim_item_checklist_stage',
+		'fm_bim_item_checklist_data',
 	);
 
 	/* The hooks this app includes, needed for hooks registration */

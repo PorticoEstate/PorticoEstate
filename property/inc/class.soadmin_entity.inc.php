@@ -468,6 +468,7 @@
 		 */
 		function get_single_category( $location_id, $bypass = false )
 		{
+			$location_id = (int) $location_id;
 			static $map = array();
 
 			if (isset($map[$location_id]))
@@ -490,13 +491,22 @@
 
 			$sql = "SELECT * FROM fm_{$type}_category WHERE location_id =" . (int)$location_id;
 
+			$sql = "SELECT fm_{$type}_category.* , COUNT(fm_bim_item_checklist.type_location_id) AS checklist_count"
+				. " FROM fm_{$type}_category"
+				. " LEFT JOIN fm_bim_item_checklist ON fm_{$type}_category.location_id = fm_bim_item_checklist.type_location_id"
+				. " WHERE fm_{$type}_category.location_id = $location_id"
+				. " GROUP BY"
+				. " fm_{$type}_category.location_id,fm_{$type}_category.entity_group_id,fm_{$type}_category.id,fm_{$type}_category.org_unit,fm_{$type}_category.enable_controller,fm_{$type}_category.entity_id,"
+				. " fm_{$type}_category.lookup_tenant,fm_{$type}_category.location_level,fm_{$type}_category.tracking,fm_{$type}_category.fileupload,fm_{$type}_category.loc_link,"
+				. " fm_{$type}_category.start_project,fm_{$type}_category.start_ticket,fm_{$type}_category.jasperupload,fm_{$type}_category.parent_id,fm_{$type}_category.level,fm_{$type}_category.location_link_level,"
+				. " fm_{$type}_category.is_eav,fm_{$type}_category.location_id,fm_{$type}_category.enable_bulk,fm_{$type}_category.name,fm_{$type}_category.descr,fm_{$type}_category.prefix";
+
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$category = array();
 			if ($this->db->next_record())
 			{
-				$category = array
-					(
+				$category = array(
 					'id'					 => $this->db->f('id'),
 					'entity_id'				 => $this->db->f('entity_id'),
 					'name'					 => $this->db->f('name', true),
@@ -518,7 +528,8 @@
 					'level'					 => $this->db->f('level'),
 					'org_unit'				 => $this->db->f('org_unit'),
 					'entity_group_id'		 => $this->db->f('entity_group_id'),
-					'location_id'			 => $location_id
+					'location_id'			 => $location_id,
+					'checklist_count'		 => $this->db->f('checklist_count'),
 				);
 			}
 			if (!$bypass) //inherited settings
@@ -642,8 +653,7 @@
 			}
 
 
-			$values_insert = array
-				(
+			$values_insert = array(
 				$location_id,
 				$values['entity_id'],
 				$values['id'],
@@ -703,6 +713,7 @@
 
 			$pk[] = 'id';
 
+			$fk = array();
 			$ix = array();
 
 			if ($this->type == 'entity')
@@ -1178,8 +1189,7 @@
 					{
 
 						$location_id	 = $GLOBALS['phpgw']->locations->get_id('property', ".{$this->type}.{$category['entity_id']}.{$category['id']}");
-						$values_insert	 = array
-							(
+						$values_insert	 = array(
 							'location_id'	 => $location_id,
 							'name'			 => ".{$this->type}.{$category['entity_id']}.{$category['id']}::{$category['name']}",
 							'description'	 => $category['descr'],
@@ -1260,4 +1270,477 @@
 			}
 			return $this->db->transaction_commit();
 		}
+
+		function read_checklist( $data )	
+		{
+			$start				 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query				 = isset($data['query']) ? $this->db->db_addslashes($data['query']) : '';
+			$sort				 = isset($data['sort']) ? $data['sort'] : 'DESC';
+			$order				 = isset($data['order']) ? $data['order'] : '';
+			$allrows			 = isset($data['allrows']) ? $data['allrows'] : '';
+			$results			 = isset($data['results']) ? (int)$data['results'] : 0;
+			$active				 = !empty($data['active']) ? true : false;
+
+			if ($order)
+			{
+				$ordermethod = " ORDER BY {$order} {$sort}";
+			}
+			else
+			{
+				$ordermethod = ' ORDER BY id ASC';
+			}
+
+			$filtermethod = '';
+
+			$type_location_id = (int) $data['type_location_id'];
+			$where = 'WHERE';
+
+			if($type_location_id)
+			{
+				$filtermethod .= " $where type_location_id = {$type_location_id}";
+				$where = 'AND';
+
+			}
+
+			if($active)
+			{
+				$filtermethod .= " $where fm_bim_item_checklist.active = 1";
+				$where = 'AND';
+			}
+
+			if($query)
+			{
+				$filtermethod .= " {$where} (fm_bim_item_checklist.name ilike '%$query%' OR fm_bim_item_checklist.descr ilike '%$query%')";
+				$where = 'AND';
+			}
+
+			$sql = "SELECT fm_bim_item_checklist.* , phpgw_locations.descr as type_descr FROM fm_bim_item_checklist "
+				. " JOIN phpgw_locations ON fm_bim_item_checklist.type_location_id = phpgw_locations.location_id"
+				. " {$filtermethod}";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$this->total_records = $this->db->num_rows();
+
+			if (!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
+			}
+			
+			$values = array();
+			
+			while ($this->db->next_record())
+			{
+				$values[] = array(
+					'id'				 => (int)$this->db->f('id'),
+					'type_location_id'	 => (int)$this->db->f('type_location_id'),
+					'location_id'		 => (int)$this->db->f('location_id'),
+					'name'				 => $this->db->f('name', true),
+					'descr'				 => $this->db->f('descr', true),
+					'type_descr'		 => $this->db->f('type_descr', true),
+					'active'			 => (int)$this->db->f('active'),
+					'fileupload'		 => (int)$this->db->f('fileupload'),
+				);
+			}
+			return $values;
+		}
+
+		function add_checklist( $data )
+		{
+			$this->db->transaction_begin();
+
+			$name = $this->db->db_addslashes($data['name']);
+
+			$loc_arr	 = $GLOBALS['phpgw']->locations->get_name((int)$data['type_location_id']);
+			$type_arr	 = explode('.', $loc_arr['location']);
+			if (count($type_arr) != 4)
+			{
+				return array();
+			}
+
+			$type		 = $type_arr[1];
+			$entity_id	 = $type_arr[2];
+			$cat_id		 = $type_arr[3];
+
+
+			$values = array(
+				$data['type_location_id'],
+				-1,
+				$name,
+				$this->db->db_addslashes($data['descr']),
+				(int)$data['active'],
+				(int) $data['fileupload']
+			);
+			$values = $this->db->validate_insert($values);
+			$this->db->query("INSERT INTO fm_bim_item_checklist (type_location_id, location_id, name, descr, active, fileupload)"
+			 . " VALUES ($values)", __LINE__, __FILE__);
+
+			//last insert id
+			$receipt['id'] = $this->db->get_last_insert_id('fm_bim_item_checklist', 'id'); 
+
+			$location_id	 = $GLOBALS['phpgw']->locations->add(".{$this->type}.{$entity_id}.{$cat_id}.checklist.{$receipt['id']}", $data['name'], $this->type_app[$this->type], true, $custom_tbl = null, $c_function = false, $c_attrib = true);
+			$receipt['location_id'] = $location_id;
+
+			$this->db->query("UPDATE fm_bim_item_checklist SET location_id = {$location_id} WHERE id = " . (int)$receipt['id'], __LINE__, __FILE__);
+
+			$this->db->transaction_commit();
+
+			$receipt['message'][] = array('msg' => lang('checklist has been added'));
+			return $receipt;
+
+		}
+
+		function resort_checklist_stage( $id, $resort )
+		{
+			$id		= (int) $id;
+
+			if ( $resort == 'down' )
+			{
+				$resort = 'down';
+			}
+			else
+			{
+				$resort	= 'up';
+			}
+
+
+			$stage = $this->read_single_checklist_stage($id);
+			$checklist_id = $stage['checklist_id'];
+
+			$this->db->transaction_begin();
+
+			$sql = "SELECT stage_sort FROM fm_bim_item_checklist_stage "
+				. " WHERE checklist_id = {$checklist_id} AND id = {$id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$stage_sort	= (int) $this->db->f('stage_sort');
+
+			$sql = "SELECT MAX(stage_sort) AS max_sort FROM fm_bim_item_checklist_stage "
+				. " WHERE checklist_id = {$checklist_id}";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			$max_sort	= (int) $this->db->f('max_sort');
+
+			$update = false;
+			switch($resort)
+			{
+				case 'down':
+					if($max_sort > $stage_sort)
+					{
+						$new_sort = $stage_sort + 1;
+						$update = true;
+					}
+					break;
+
+				case 'up':
+				default:
+					if($stage_sort > 1)
+					{
+						$new_sort = $stage_sort - 1;
+						$update = true;
+					}
+					else if($stage_sort === 0)
+					{
+						$sql = "UPDATE fm_bim_item_checklist_stage SET stage_sort = stage_sort + 2"
+							. " WHERE checklist_id = {$checklist_id} AND id != {$id}";
+						$this->db->query($sql, __LINE__, __FILE__);
+						$sql = "UPDATE fm_bim_item_checklist_stage SET stage_sort = 1"
+							. " WHERE checklist_id = {$checklist_id} AND id = {$id}";
+						$this->db->query($sql, __LINE__, __FILE__);
+						return $this->db->transaction_commit();
+					}
+					break;
+			}
+
+			if ( !$update )
+			{
+				// nothing to do
+				return true;
+			}
+
+			$sql = "UPDATE fm_bim_item_checklist_stage SET stage_sort = {$stage_sort}"
+				. " WHERE checklist_id = {$checklist_id} AND stage_sort = {$new_sort}";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$sql = "UPDATE fm_bim_item_checklist_stage SET stage_sort = {$new_sort}"
+				. " WHERE checklist_id = {$checklist_id} AND id = {$id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			return $this->db->transaction_commit();
+
+
+		}
+
+		function edit_checklist( $data )
+		{
+			if (!$data['name'])
+			{
+				$receipt['error'][] = array('msg' => lang('Name not entered!'));
+			}
+
+			if (!$data['error'])
+			{
+				$table = "fm_bim_item_checklist";
+
+				$data['name']	 = $this->db->db_addslashes($data['name']);
+				$data['descr'] = $this->db->db_addslashes($data['descr']);
+
+				$value_set = array(
+					'name'			 => $data['name'],
+					'descr'			 => $data['descr'],
+					'active'		 => (int)$data['active'],
+					'fileupload'	 => (int)$data['fileupload'],
+				);
+
+				$value_set = $this->db->validate_update($value_set);
+
+				$this->db->transaction_begin();
+
+				$this->db->query("UPDATE $table SET {$value_set} WHERE id=" . (int)$data['id'], __LINE__, __FILE__);
+
+				$GLOBALS['phpgw']->locations->update_description2($data['location_id'],$data['name']);
+
+				$this->db->transaction_commit();
+
+				$receipt['message'][] = array('msg' => lang('entity has been edited'));
+			}
+			else
+			{
+				$receipt['error'][] = array('msg' => lang('entity has NOT been edited'));
+			}
+
+			return $receipt;
+		}
+
+		function read_single_checklist( $id )
+		{
+			$values = array();
+			$sql = "SELECT * FROM fm_bim_item_checklist WHERE id = " . (int)$id;
+			$this->db->query($sql, __LINE__, __FILE__);
+			if ($this->db->next_record())
+			{
+				$values = array(
+					'id' => (int) $this->db->f('id'),
+					'type_location_id' => (int) $this->db->f('type_location_id'),
+					'location_id' => (int) $this->db->f('location_id'),
+					'name' => $this->db->f('name', true),
+					'descr' => $this->db->f('descr', true),
+					'active' => (int)$this->db->f('active'),
+					'fileupload' => $this->db->f('fileupload'),
+				);
+			}
+			return $values;
+
+		}
+
+		function delete_checklist( $id )
+		{
+			$this->db->transaction_begin();
+
+			$checklist	 = $this->read_single_checklist($id);
+			$location_id = $checklist['location_id'];
+			$id			 = (int)$id;
+
+			$this->db->query("DELETE FROM fm_bim_item_checklist_data WHERE checklist_id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_bim_item_checklist_stage WHERE checklist_id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM phpgw_cust_choice WHERE location_id = {$location_id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM phpgw_cust_attribute WHERE location_id = {$location_id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_bim_item_checklist WHERE id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM phpgw_locations WHERE location_id  = {$location_id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM phpgw_acl WHERE  location_id  = {$location_id}", __LINE__, __FILE__);
+			return $this->db->transaction_commit();
+		}
+
+		//read_checklist_stage
+		function read_checklist_stage( $data )
+		{
+			$start				 = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query				 = isset($data['query']) ? $this->db->db_addslashes($data['query']) : '';
+			$sort				 = isset($data['sort']) ? $data['sort'] : 'DESC';
+			$order				 = isset($data['order']) ? $data['order'] : '';
+			$allrows			 = isset($data['allrows']) ? $data['allrows'] : '';
+			$results			 = isset($data['results']) ? (int)$data['results'] : 0;
+			$active				 = !empty($data['active']) ? true : false;
+
+			if ($order)
+			{
+				$ordermethod = " ORDER BY {$order} {$sort}";
+			}
+			else
+			{
+				$ordermethod = ' ORDER BY stage_sort ASC';
+			}
+
+			$filtermethod = '';
+
+			if($active)
+			{
+				$filtermethod .= " AND fm_bim_item_checklist_stage.active = 1";
+			}
+
+			if($query)
+			{
+				$filtermethod .= " AND (name ilike '%$query%' OR descr ilike '%$query%')";
+			}
+
+			$checklist_id = (int) $data['checklist_id'];
+			$sql = "SELECT * FROM fm_bim_item_checklist_stage WHERE checklist_id = {$checklist_id} {$filtermethod}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->total_records = $this->db->num_rows();
+
+			if (!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
+			}
+
+			$values = array();
+			
+			while ($this->db->next_record())
+			{
+				$values[] = array(
+					'id'			 => (int)$this->db->f('id'),
+					'checklist_id'	 => (int)$this->db->f('checklist_id'),
+					'name'			 => $this->db->f('name', true),
+					'descr'			 => $this->db->f('descr', true),
+					'active'		 => (int)$this->db->f('active'),
+					'stage_sort'	 => (int)$this->db->f('stage_sort'),
+					'active_attribs' => (array)json_decode($this->db->f('active_attribs')),
+				);
+			}
+			return $values;
+		}
+
+		/**
+		 * read_single_checklist_stage
+		 * @param int $id
+		 * @return array
+		 */
+		function read_single_checklist_stage( $id )
+		{
+			$values = array();
+			$sql = "SELECT * FROM fm_bim_item_checklist_stage WHERE id = " . (int)$id;
+			$this->db->query($sql, __LINE__, __FILE__);
+			if ($this->db->next_record())
+			{
+				$values = array(
+					'id'			 => (int)$this->db->f('id'),
+					'checklist_id'	 => (int)$this->db->f('checklist_id'),
+					'name'			 => $this->db->f('name', true),
+					'descr'			 => $this->db->f('descr', true),
+					'active'		 => (int)$this->db->f('active'),
+					'stage_sort'	 => (int)$this->db->f('stage_sort'),
+					'active_attribs' => (array)json_decode($this->db->f('active_attribs')),
+				);
+			}
+			return $values;
+
+		}
+
+		/**
+		 * add_checklist_stage
+		 * @param array $data
+		 * @return array
+		 */
+		function add_checklist_stage( $data )
+		{
+			$this->db->transaction_begin();
+
+			$sql = "SELECT MAX(stage_sort) AS max_sort FROM fm_bim_item_checklist_stage "
+				. " WHERE checklist_id =" .(int)$data['checklist_id'];
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			$max_sort	= (int) $this->db->f('max_sort');
+
+			$stage_sort = $max_sort + 1;
+			$values = array(
+				(int)$data['checklist_id'],
+				$this->db->db_addslashes($data['name']),
+				$this->db->db_addslashes($data['descr']),
+				$stage_sort,
+				(int)$data['active'],
+				json_encode($data['active_attribs'])
+			);
+			$values = $this->db->validate_insert($values);
+			$this->db->query("INSERT INTO fm_bim_item_checklist_stage (checklist_id, name, descr, stage_sort, active, active_attribs)"
+			 . " VALUES ($values)", __LINE__, __FILE__);
+
+			//last insert id
+			$receipt['id'] = $this->db->get_last_insert_id('fm_bim_item_checklist_stage', 'id'); 
+
+			$this->db->transaction_commit();
+
+			$receipt['message'][] = array('msg' => lang('checklist stage has been added'));
+			return $receipt;
+
+		}
+
+		/**
+		 * edit_checklist_stage
+		 * @param array $data
+		 * @return array
+		 */
+		function edit_checklist_stage( $data )
+		{
+			if (!$data['name'])
+			{
+				$receipt['error'][] = array('msg' => lang('Name not entered!'));
+			}
+
+			if (!$data['error'])
+			{
+				$table = "fm_bim_item_checklist_stage";
+
+				$value_set = array(
+					'name'			 => $this->db->db_addslashes($data['name']),
+					'descr'			 => $this->db->db_addslashes($data['descr']),
+					'active'		 => (int)$data['active'],
+					'active_attribs' => json_encode($data['active_attribs'])
+				);
+
+				$value_set = $this->db->validate_update($value_set);
+
+				$this->db->transaction_begin();
+
+				$this->db->query("UPDATE {$table} SET {$value_set} WHERE id=" . (int)$data['id'], __LINE__, __FILE__);
+
+				$this->db->transaction_commit();
+
+				$receipt['message'][] = array('msg' => lang('checklist stage has been edited'));
+			}
+			else
+			{
+				$receipt['error'][] = array('msg' => lang('checklist stage has NOT been edited'));
+			}
+
+			$receipt['id'] = $data['id'];
+
+			return $receipt;
+		}
+
+		/**
+		 * delete_checklist_stage
+		 * @param int $id
+		 * @return bool
+		 */
+		function delete_checklist_stage( $id )
+		{
+			$this->db->transaction_begin();
+			$id = (int)$id;
+			//delete all checklist data
+			$this->db->query("DELETE FROM fm_bim_item_checklist_data WHERE stage_id = {$id}", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_bim_item_checklist_stage WHERE id = {$id}", __LINE__, __FILE__);
+			return $this->db->transaction_commit();
+		}
+
+
+		
 	}

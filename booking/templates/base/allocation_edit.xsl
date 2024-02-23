@@ -57,6 +57,17 @@
 						</select>
 					</div>
 					<div class="pure-control-group">
+						<label>
+							<input type="checkbox" value="1" name="skip_bas" >
+								<xsl:if test="allocation/skip_bas=1">
+									<xsl:attribute name="checked">checked</xsl:attribute>
+								</xsl:if>
+							</input>
+						</label>
+						<xsl:value-of select="php:function('lang', 'skip bas')"/>
+					</div>
+
+					<div class="pure-control-group">
 						<label style="vertical-align:top;">
 							<xsl:value-of select="php:function('lang', 'Season')" />
 						</label>

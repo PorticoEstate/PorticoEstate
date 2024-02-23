@@ -247,7 +247,7 @@
 		'fm_view_dataset',
 		'fm_view_dataset_report',
 		'fm_handyman_documents',
-		'fm_handyman_log'
+		'fm_handyman_log',
 	);
 
 	/* The hooks this app includes, needed for hooks registration */

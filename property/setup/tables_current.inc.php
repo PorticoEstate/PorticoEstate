@@ -1722,7 +1722,7 @@
 			'pk' => array('id'),
 			'ix' => array(),
 			'fk' => array('fm_eco_periodization' => array('periodization_id' => 'id')),
-			'uc' => array('periodization_id', 'month')
+			'uc' => array(array('periodization_id', 'month'))
 		),
 		'fm_eco_period_transition' => array(
 			'fd' => array(
@@ -1825,7 +1825,7 @@
 			'pk' => array('id'),
 			'fk' => array(),
 			'ix' => array(),
-			'uc' => array('location_id', 'location_item_id', 'attrib_id')
+			'uc' => array(array('location_id', 'location_item_id', 'attrib_id'))
 		),
 		'fm_event_exception' => array(
 			'fd' => array(
@@ -2801,7 +2801,7 @@
 			'pk' => array('id'),
 			'fk' => array(),
 			'ix' => array(),
-			'uc' => array('year', 'b_group', 'district_id', 'revision')
+			'uc' => array(array('year', 'b_group', 'district_id', 'revision'))
 		),
 		'fm_budget' => array(
 			'fd' => array(
@@ -2821,7 +2821,7 @@
 			'pk' => array('id'),
 			'fk' => array(),
 			'ix' => array(),
-			'uc' => array('year', 'b_account_id', 'district_id', 'revision')
+			'uc' => array(array('year', 'b_account_id', 'district_id', 'revision'))
 		),
 		'fm_budget_period' => array(
 			'fd' => array(
@@ -2850,7 +2850,7 @@
 			'pk' => array('id'),
 			'fk' => array(),
 			'ix' => array(),
-			'uc' => array('year', 'month', 'b_account_id')
+			'uc' => array(array('year', 'month', 'b_account_id'))
 		),
 		'fm_responsibility' => array(
 			'fd' => array(
@@ -3066,7 +3066,7 @@
 			'fk' => array('fm_locations' => array('location_code' => 'location_code'), 'phpgw_contact' => array(
 					'contact_id' => 'contact_id')),
 			'ix' => array(),
-			'uc' => array('contact_id', 'location_code')
+			'uc' => array(array('contact_id', 'location_code'))
 		),
 		'fm_view_dataset' => array(
 			'fd' => array(
@@ -3165,6 +3165,7 @@
 				'hs_checklist_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
 			),
 			'pk' => array('id'),
+			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
 		),
@@ -3177,7 +3178,8 @@
 				'num_of_messages' => array('type' => 'int', 'precision' => 4)
 			),
 			'pk' => array('id'),
+			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
-		)
+		),
 	);

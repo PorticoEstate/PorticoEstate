@@ -16,6 +16,28 @@
 							<a href="{booking/application_link}">#<xsl:value-of select="booking/application_id"/></a>
 						</xsl:if>
 					</div>
+					<div class="pure-control-group">
+						<label>
+							<input type="checkbox" value="1" name="active" >
+								<xsl:if test="booking/active=1">
+									<xsl:attribute name="checked">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
+							</input>
+						</label>
+						<xsl:value-of select="php:function('lang', 'active')"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<input type="checkbox" value="1" name="skip_bas" >
+								<xsl:if test="booking/skip_bas=1">
+									<xsl:attribute name="checked">checked</xsl:attribute>
+								</xsl:if>
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
+							</input>
+						</label>
+						<xsl:value-of select="php:function('lang', 'skip bas')"/>
+					</div>
 
 					<div class="pure-control-group">
 						<label>

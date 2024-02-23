@@ -41,6 +41,16 @@
 								</select>
 							</div>
 							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'skip bas')"/>
+								</label>
+								<input type="checkbox" value="1" name="skip_bas" >
+									<xsl:if test="booking/skip_bas=1">
+										<xsl:attribute name="checked">checked</xsl:attribute>
+									</xsl:if>
+								</input>
+							</div>
+							<div class="pure-control-group">
 								<label for="field_activity">
 									<xsl:value-of select="php:function('lang', 'Activity')" />
 								</label>

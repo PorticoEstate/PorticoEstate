@@ -930,3 +930,4 @@ access instruction	booking	no	informasjon for tilgang
 differentiate org payer	booking	no	Differensier mellom organisasjon og betaler
 article group	booking	no	Artikkelgruppe
 buffer deadline	booking	no	Buffer/frist
+skip bas	booking	no	Ikke trigge SD-anlegg

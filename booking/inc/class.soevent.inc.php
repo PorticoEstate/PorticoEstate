@@ -12,6 +12,7 @@
 				'id_string' => array('type' => 'string', 'required' => false, 'default' => '0',
 					'query' => true),
 				'active' => array('type' => 'int', 'required' => true),
+				'skip_bas' => array('type' => 'int', 'required' => true),
 				'activity_id' => array('type' => 'int', 'required' => true),
 				'application_id' => array('type' => 'int', 'required' => false),
 				'name' => array('type' => 'string', 'query' => true, 'required' => true),

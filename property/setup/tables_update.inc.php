@@ -1218,7 +1218,7 @@
 				'pk' => array('id'),
 				'fk' => array(),
 				'ix' => array(),
-			'uc' => array('year', 'b_group', 'district_id', 'revision')
+			'uc' => array(array('year', 'b_group', 'district_id', 'revision'))
 			)
 		);
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
@@ -1238,7 +1238,7 @@
 				'pk' => array('id'),
 				'fk' => array(),
 				'ix' => array(),
-			'uc' => array('year', 'b_account_id', 'district_id', 'revision')
+			'uc' => array(array('year', 'b_account_id', 'district_id', 'revision'))
 			)
 		);
 
@@ -1274,7 +1274,7 @@
 				'pk' => array('id'),
 				'fk' => array(),
 				'ix' => array(),
-			'uc' => array('year', 'month', 'b_account_id')
+			'uc' => array(array('year', 'month', 'b_account_id'))
 			)
 		);
 
@@ -3290,7 +3290,7 @@
 				'pk' => array('id'),
 				'fk' => array(),
 				'ix' => array(),
-				'uc' => array('location_id', 'location_item_id', 'attrib_id')
+				'uc' => array(array('location_id', 'location_item_id', 'attrib_id'))
 			)
 		);
 
@@ -6232,7 +6232,7 @@
 			'fk' => array('fm_locations' => array('location_code' => 'location_code'), 'phpgw_contact' => array(
 					'contact_id' => 'contact_id')),
 				'ix' => array(),
-				'uc' => array('contact_id', 'location_code')
+				'uc' => array(array('contact_id', 'location_code'))
 			)
 		);
 
@@ -6663,7 +6663,7 @@
 				'pk' => array('id'),
 				'ix' => array(),
 			'fk' => array('fm_eco_periodization' => array('periodization_id' => 'id')),
-				'uc' => array('periodization_id', 'month')
+				'uc' => array(array('periodization_id', 'month'))
 			)
 		);
 

@@ -87,6 +87,18 @@
 	<xsl:param name="textarearows" />
 	<xsl:param name="supress_history_date" />
 	<xsl:param name="class" />
+	<xsl:param name="dataset" />
+
+	<xsl:variable name="_dataset">
+		<xsl:choose>
+			<xsl:when test="$dataset !=''">
+				<xsl:value-of select="$dataset"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>values_attribute</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 
 	<xsl:choose>
 		<xsl:when test="datatype='section'">
@@ -131,6 +143,9 @@
 										</xsl:with-param>
 										<xsl:with-param name="supress_history_date">
 											<xsl:value-of select="$supress_history_date" />
+										</xsl:with-param>
+										<xsl:with-param name="dataset">
+											<xsl:value-of select="$_dataset" />
 										</xsl:with-param>
 									</xsl:call-template>
 								</xsl:when>
@@ -180,7 +195,9 @@
 							<xsl:with-param name="class">
 								<xsl:value-of select="$class" />
 							</xsl:with-param>
-
+							<xsl:with-param name="dataset">
+								<xsl:value-of select="$_dataset" />
+							</xsl:with-param>
 						</xsl:call-template>
 
 					</xsl:when>
@@ -234,25 +251,36 @@
 	<xsl:param name="textarearows" />
 	<xsl:param name="supress_history_date" />
 	<xsl:param name="class" />
+	<xsl:param name="dataset" />
 
-	<input type="hidden" name="values_attribute[{id}][name]" value="{name}"/>
-	<input type="hidden" name="values_attribute[{id}][datatype]" value="{datatype}"/>
-	<input type="hidden" name="values_attribute[{id}][precision]" value="{precision}"/>
-	<input type="hidden" name="values_attribute[{id}][history]" value="{history}"/>
-	<input type="hidden" name="values_attribute[{id}][attrib_id]" value="{id}"/>
-	<input type="hidden" name="values_attribute[{id}][nullable]" value="{nullable}"/>
-	<input type="hidden" name="values_attribute[{id}][input_text]" value="{input_text}"/>
-	<input type="hidden" name="values_attribute[{id}][disabled]" value="{disabled}"/>
+
+	<input type="hidden" name="{$dataset}[{id}][name]" value="{name}"/>
+	<input type="hidden" name="{$dataset}[{id}][datatype]" value="{datatype}"/>
+	<input type="hidden" name="{$dataset}[{id}][precision]" value="{precision}"/>
+	<input type="hidden" name="{$dataset}[{id}][history]" value="{history}"/>
+	<input type="hidden" name="{$dataset}[{id}][attrib_id]" value="{id}"/>
+	<input type="hidden" name="{$dataset}[{id}][nullable]" value="{nullable}"/>
+	<input type="hidden" name="{$dataset}[{id}][input_text]" value="{input_text}"/>
+	<input type="hidden" name="{$dataset}[{id}][disabled]" value="{disabled}"/>
 	<xsl:choose>
 		<xsl:when test="datatype='R'">
-			<xsl:call-template name="choice"/>
+			<xsl:call-template name="choice">
+				<xsl:with-param name="dataset">
+					<xsl:value-of select="$dataset" />
+				</xsl:with-param>
+			</xsl:call-template>
 		</xsl:when>
 		<xsl:when test="datatype='CH'">
-			<xsl:call-template name="choice"/>
+			<xsl:call-template name="choice">
+				<xsl:with-param name="dataset">
+					<xsl:value-of select="$dataset" />
+				</xsl:with-param>
+			</xsl:call-template>
 		</xsl:when>
+
 		<xsl:when test="datatype='LB'">
 			<div  class="{$class} pure-custom">
-				<select id="id_{name}" name="values_attribute[{id}][value]" title="{$statustext}" class="pure-input-1" >
+				<select id="id_{name}" name="{$dataset}[{id}][value]" title="{$statustext}" class="pure-input-1" >
 					<xsl:choose>
 						<xsl:when test="disabled!=''">
 							<xsl:attribute name="disabled">
@@ -277,24 +305,26 @@
 						</option>
 					</xsl:for-each>
 				</select>
-				<br/>
-				<br/>
-				<a id="add_new_value_{name}" href="#" onClick="addNewValueToCustomAttribute('id_{name}', {location_id}, {id}, '{input_text}', '{lang_new_value}');">
-					<img src="{add_img}" width="23"/>
-					<xsl:text> </xsl:text>
-					<xsl:value-of select="lang_new_value"/>
-					<xsl:text> (</xsl:text>
-					<xsl:value-of select="input_text"/>
-					<xsl:text>)</xsl:text>
-				</a>
-				<a id="delete_value_{name}" href="#" onClick="deleteValueFromCustomAttribute('id_{name}', {location_id}, {id});">
-					<img src="{delete_img}" width="23"/>
-					<xsl:text> </xsl:text>
-					<xsl:value-of select="php:function('lang', 'delete')"/>
-					<xsl:text> (</xsl:text>
-					<xsl:value-of select="input_text"/>
-					<xsl:text>)</xsl:text>
-				</a>
+				<xsl:if test="add_img">
+					<br/>
+					<br/>
+					<a id="add_new_value_{name}" href="#" onClick="addNewValueToCustomAttribute('id_{name}', {location_id}, {id}, '{input_text}', '{lang_new_value}');">
+						<img src="{add_img}" width="23"/>
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="lang_new_value"/>
+						<xsl:text> (</xsl:text>
+						<xsl:value-of select="input_text"/>
+						<xsl:text>)</xsl:text>
+					</a>
+					<a id="delete_value_{name}" href="#" onClick="deleteValueFromCustomAttribute('id_{name}', {location_id}, {id});">
+						<img src="{delete_img}" width="23"/>
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="php:function('lang', 'delete')"/>
+						<xsl:text> (</xsl:text>
+						<xsl:value-of select="input_text"/>
+						<xsl:text>)</xsl:text>
+					</a>
+				</xsl:if>
 
 			</div>
 		</xsl:when>
@@ -428,7 +458,7 @@
 			</input>
 		</xsl:when>
 		<xsl:when test="datatype='custom1'">
-			<select name="values_attribute[{id}][value]" class="{$class}">
+			<select name="{$dataset}[{id}][value]" class="{$class}">
 				<xsl:choose>
 					<xsl:when test="disabled!=''">
 						<xsl:attribute name="disabled">
@@ -513,7 +543,7 @@
 				<xsl:text>_container</xsl:text>
 			</xsl:variable>
 
-			<input id="{$custom_id}" name="values_attribute[{id}][value]" type="hidden" value="{value}">
+			<input id="{$custom_id}" name="{$dataset}[{id}][value]" type="hidden" value="{value}">
 				<xsl:choose>
 					<xsl:when test="nullable!='1'">
 						<xsl:attribute name="data-validation">
@@ -568,7 +598,7 @@
 			</input>
 		</xsl:when>
 		<xsl:when test="datatype='D'">
-			<input type="text" id="values_attribute_{id}" name="values_attribute[{id}][value]" value="{value}" size="12" maxlength="12">
+			<input type="text" id="{$dataset}_{id}" name="{$dataset}[{id}][value]" value="{value}" size="12" maxlength="12">
 				<xsl:attribute name="readonly">
 					<xsl:text> readonly</xsl:text>
 				</xsl:attribute>
@@ -596,7 +626,7 @@
 			<table>
 				<tr>
 					<td>
-						<input type="text" id="values_attribute_{id}" name="values_attribute[{id}][value][date]" value="{value/date}" size="12" maxlength="12">
+						<input type="text" id="{$dataset}_{id}" name="{$dataset}[{id}][value][date]" value="{value/date}" size="12" maxlength="12">
 							<xsl:attribute name="readonly">
 								<xsl:text> readonly</xsl:text>
 							</xsl:attribute>
@@ -615,7 +645,7 @@
 						</input>
 					</td>
 					<td>
-						<input type="text" id="values_attribute_{id}_hour" name="values_attribute[{id}][value][hour]" value="{value/hour}" size="2" maxlength="2" title="{$lang_hour}">
+						<input type="text" id="{$dataset}_{id}_hour" name="{$dataset}[{id}][value][hour]" value="{value/hour}" size="2" maxlength="2" title="{$lang_hour}">
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -629,7 +659,7 @@
 						<xsl:text> : </xsl:text>
 					</td>
 					<td>
-						<input type="text" id="values_attribute_{id}_min" name="values_attribute[{id}][value][min]" value="{value/min}" size="2" maxlength="2" title="{$lang_min}">
+						<input type="text" id="{$dataset}_{id}_min" name="{$dataset}[{id}][value][min]" value="{value/min}" size="2" maxlength="2" title="{$lang_min}">
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -654,7 +684,7 @@
 			</table>
 		</xsl:when>
 		<xsl:when test="datatype='T'">
-			<textarea id="id_{name}"  name="values_attribute[{id}][value]" class="{$class}">
+			<textarea id="id_{name}"  name="{$dataset}[{id}][value]" class="{$class}">
 				<xsl:choose>
 					<xsl:when test="disabled!=''">
 						<xsl:attribute name="disabled">
@@ -691,7 +721,7 @@
 			</textarea>
 		</xsl:when>
 		<xsl:when test="datatype='pwd'">
-			<input type="password" name="values_attribute[{id}][value]" size="30">
+			<input type="password" name="{$dataset}[{id}][value]" size="30">
 				<xsl:choose>
 					<xsl:when test="disabled!=''">
 						<xsl:attribute name="disabled">
@@ -705,7 +735,7 @@
 					</xsl:when>
 				</xsl:choose>
 			</input>
-			<input type="password" name="values_attribute[{id}][value2]" size="30">
+			<input type="password" name="{$dataset}[{id}][value2]" size="30">
 				<xsl:choose>
 					<xsl:when test="disabled!=''">
 						<xsl:attribute name="disabled">
@@ -721,8 +751,13 @@
 			</input>
 		</xsl:when>
 		<xsl:when test="datatype='bolean'">
-			<input id="id_{name}" type="checkbox" name="values_attribute[{id}][value]" value="1">
+			<input id="id_{name}" type="checkbox" name="{$dataset}[{id}][value]" value="1">
 				<xsl:choose>
+					<xsl:when test="disabled!=''">
+						<xsl:attribute name="disabled">
+							<xsl:text>disabled</xsl:text>
+						</xsl:attribute>
+					</xsl:when>
 					<xsl:when test="value!=''">
 						<xsl:attribute name="checked">
 							<xsl:text>checked</xsl:text>
@@ -732,7 +767,7 @@
 			</input>
 		</xsl:when>
 		<xsl:when test="datatype='link'">
-			<input type="text" name="values_attribute[{id}][value]" value="{value}" size="30" class="{$class}">
+			<input type="text" name="{$dataset}[{id}][value]" value="{value}" size="30" class="{$class}">
 				<xsl:choose>
 					<xsl:when test="disabled!=''">
 						<xsl:attribute name="disabled">
@@ -800,7 +835,7 @@
 			</xsl:choose>
 		</xsl:when>
 		<xsl:when test="datatype='I'">
-			<input data-validation="number" data-validation-allowing="negative" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30" class="{$class}">
+			<input data-validation="number" data-validation-allowing="negative" id="id_{name}" type="text" name="{$dataset}[{id}][value]" value="{value}" size="30" class="{$class}">
 				<xsl:choose>
 					<xsl:when test="disabled!=''">
 						<xsl:attribute name="disabled">
@@ -816,7 +851,7 @@
 			</input>
 		</xsl:when>
 		<xsl:when test="datatype='N'">
-			<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30" class="{$class}">
+			<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." id="id_{name}" type="text" name="{$dataset}[{id}][value]" value="{value}" size="30" class="{$class}">
 				<xsl:choose>
 					<xsl:when test="disabled!=''">
 						<xsl:attribute name="disabled">
@@ -832,7 +867,7 @@
 			</input>
 		</xsl:when>
 		<xsl:when test="datatype='email'">
-			<input data-validation="email" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30" class="{$class}">
+			<input data-validation="email" id="id_{name}" type="text" name="{$dataset}[{id}][value]" value="{value}" size="30" class="{$class}">
 				<xsl:choose>
 					<xsl:when test="disabled!=''">
 						<xsl:attribute name="disabled">
@@ -848,7 +883,7 @@
 			</input>
 		</xsl:when>
 		<xsl:otherwise>
-			<input id="id_{name}" type="text" name="values_attribute[{id}][value]" size="30" class="{$class}">
+			<input id="id_{name}" type="text" name="{$dataset}[{id}][value]" size="30" class="{$class}">
 				<xsl:attribute name="value">
 					<xsl:choose>
 						<xsl:when test="value!=''">
@@ -896,7 +931,7 @@
 		<xsl:otherwise>
 			<xsl:choose>
 				<xsl:when test="history=1 and $supress_history_date !=1">
-					<input type="text" id="values_attribute_{id}_date" name="values_attribute[{id}][date]" value="" size="12" maxlength="10" readonly="readonly">
+					<input type="text" id="{$dataset}_{id}_date" name="{$dataset}[{id}][date]" value="" size="12" maxlength="10" readonly="readonly">
 					</input>
 					<xsl:variable name="link_history">
 						<xsl:value-of select="link_history"/>
@@ -920,6 +955,8 @@
 
 <!-- New template-->
 <xsl:template name="choice">
+	<xsl:param name="dataset"/>
+
 	<xsl:variable name="attrib_id">
 		<xsl:value-of select="id"/>
 	</xsl:variable>
@@ -928,14 +965,20 @@
 	</xsl:variable>
 	<div class="pure-custom">
 		<xsl:for-each select="choice">
-			<xsl:choose>
-				<xsl:when test="checked='checked'">
-					<input id="id_{$name}_{id}" type="{input_type}" name="values_attribute[{$attrib_id}][value][]" value="{id}" checked="checked"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<input id="id_{$name}_{id}" type="{input_type}" name="values_attribute[{$attrib_id}][value][]" value="{id}"/>
-				</xsl:otherwise>
-			</xsl:choose>
+			<input id="{$dataset}id_{$name}_{id}" type="{input_type}" name="{$dataset}[{$attrib_id}][value][]" value="{id}">
+				<xsl:choose>
+					<xsl:when test="disabled!=''">
+						<xsl:attribute name="disabled">
+							<xsl:text>disabled</xsl:text>
+						</xsl:attribute>
+					</xsl:when>
+					<xsl:when test="checked='checked'">
+						<xsl:attribute name="checked">
+							<xsl:text>checked</xsl:text>
+						</xsl:attribute>
+					</xsl:when>
+				</xsl:choose>
+			</input>
 			<xsl:value-of select="value"/>
 			<br></br>
 		</xsl:for-each>

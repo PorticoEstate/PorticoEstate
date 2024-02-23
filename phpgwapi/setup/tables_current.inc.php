@@ -747,7 +747,7 @@
 			'pk' => array('section_id','attrib_id','id'),
 			'fk' => array(),
 			'ix' => array(),
-			'uc' => array('section_id','attrib_id','value')
+			'uc' => array(array('section_id','attrib_id','value'))
 		),
 		'phpgw_config2_value' => array(
 			'fd' => array(
