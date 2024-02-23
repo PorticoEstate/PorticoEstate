@@ -729,7 +729,7 @@
 				}
 				else
 				{
-					trigger_error(lang('column %1 for table %2 will be added as NULLABLE with DEFAULT value %3', $classname, $sTableName, $aColumnDef['default']), E_USER_WARNING);
+					trigger_error(lang('column %1 for table %2 will be added as NULLABLE with DEFAULT value %3', $sColumnName, $sTableName, $aColumnDef['default']), E_USER_WARNING);
 				}
 			}
 
