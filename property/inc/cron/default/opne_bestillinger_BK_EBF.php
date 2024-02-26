@@ -37,6 +37,7 @@
 	{
 
 		var $b_accounts = array();
+		var $username, $password;
 
 		public function __construct()
 		{
@@ -47,6 +48,10 @@
 			$this->function_msg	 = 'Hent opne bestillinger som er løpende, og skal kunne motta flere fakturaer';
 			$this->db			 = & $GLOBALS['phpgw']->db;
 			$this->join			 = & $this->db->join;
+
+			$config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.admin'));
+			$this->username	 = $config->config_data['UBW']['username'];
+			$this->password	 = $config->config_data['UBW']['password'];
 		}
 
 		function execute()
@@ -268,8 +273,11 @@ HTML;
 		{
 			$order_id		 = $order['order_id'];
 			//Data, connection, auth
-			$soapUser		 = "WEBSER";  //  username
-			$soapPassword	 = "wser10"; // password
+//			$soapUser		 = "WEBSER";  //  username
+//			$soapPassword	 = "wser10"; // password
+			$soapUser		 = $this->username;
+			$soapPassword	 = $this->password;
+
 			$CLIENT			 = 'BY';
 			$TemplateId		 = '10771'; //Spørring bilag_Portico ordrer
 			// xml post structure

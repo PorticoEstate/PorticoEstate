@@ -38,6 +38,8 @@
 	{
 
 		var $b_accounts, $soap_url,$soap_username, $soap_password;
+		var $username, $password;
+
 		public function __construct()
 		{
 			parent::__construct();
@@ -48,10 +50,15 @@
 			/**
 			 * Bruker konffigurasjon fra '.ticket' - fordi denne definerer oppslaget mot fullmaktsregisteret ved bestilling.
 			 */
-			$config				 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
-			$this->soap_url		 = $config->config_data['external_register']['url'];
-			$this->soap_username = $config->config_data['external_register']['username'];
-			$this->soap_password = $config->config_data['external_register']['password'];
+			$config1				 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
+			$this->soap_url		 = $config1->config_data['external_register']['url'];
+			$this->soap_username = $config1->config_data['external_register']['username'];
+			$this->soap_password = $config1->config_data['external_register']['password'];
+
+			$config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.admin'));
+			$this->username	 = $config->config_data['UBW']['username'];
+			$this->password	 = $config->config_data['UBW']['password'];
+
 		}
 
 		function execute()
@@ -370,8 +377,8 @@
 		{
 			require_once PHPGW_SERVER_ROOT . '/property/inc/soap_client/agresso/autoload.php';
 			static $first_connect	 = false;
-			$username				 = 'WEBSER';
-			$password				 = 'wser10';
+			$username	 = $this->username;
+			$password	 = $this->password;
 			$client					 = 'BY';
 			$TemplateId				 = '11176'; //Spørring bilag_Portico ordrer
 			$periode_end			 = date('Y') . '12';
@@ -483,8 +490,10 @@
 		function get_payment( $bilagsnr )
 		{
 			//Data, connection, auth
-			$soapUser		 = "WEBSER";  //  username
-			$soapPassword	 = "wser10"; // password
+//			$soapUser		 = "WEBSER";  //  username
+//			$soapPassword	 = "wser10"; // password
+			$soapUser		 = $this->username;
+			$soapPassword	 = $this->password;
 			$CLIENT			 = 'BY';
 			$periode_end			 = date('Y') . '12';
 
