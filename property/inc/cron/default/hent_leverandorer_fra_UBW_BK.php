@@ -38,6 +38,7 @@
 
 		var $b_accounts = array();
 		var $join;
+		var $username, $password;
 
 		public function __construct()
 		{
@@ -48,6 +49,10 @@
 			$this->function_msg	 = 'Hent leverandører fra UBW (Agresso) til Portico';
 			$this->db			 = & $GLOBALS['phpgw']->db;
 			$this->join			 = & $this->db->join;
+
+			$config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.admin'));
+			$this->username	 = $config->config_data['UBW']['username'];
+			$this->password	 = $config->config_data['UBW']['password'];
 		}
 
 		function execute()
@@ -331,8 +336,10 @@ SQL;
 		function get_vendors()
 		{
 			static $first_connect	 = false;
-			$username				 = 'WEBSER';
-			$password				 = 'wser10';
+//			$username				 = 'WEBSER';
+//			$password				 = 'wser10';
+			$username				 = $this->username;
+			$password				 = $this->password;
 			$client					 = 'BY';
 			$TemplateId				 = '6039'; //Spørring på leverandører
 
@@ -446,8 +453,10 @@ SQL;
 		function get_vendors_ny()
 		{
 			//Data, connection, auth
-			$soapUser		 = "WEBSER";  //  username
-			$soapPassword	 = "wser10"; // password
+//			$soapUser		 = "WEBSER";  //  username
+//			$soapPassword	 = "wser10"; // password
+			$soapUser		 = $this->username;
+			$soapPassword	 = $this->password;
 			$CLIENT			 = 'BY';
 			$TemplateId		 = '6039'; //Spørring bilag_Portico ordrer
 			// xml post structure
@@ -601,9 +610,9 @@ SQL;
 				</ns1:SearchCriteriaPropertiesList>
 			</ns1:input>
 			<ns1:credentials>
-				<ns1:Username>WEBSER</ns1:Username>
+				<ns1:Username>{$soapUser}</ns1:Username>
 				<ns1:Client>BY</ns1:Client>
-				<ns1:Password>wser10</ns1:Password>
+				<ns1:Password>{$soapPassword}</ns1:Password>
 			</ns1:credentials>
 		</ns1:GetTemplateResultAsDataSet>
 	</SOAP-ENV:Body>

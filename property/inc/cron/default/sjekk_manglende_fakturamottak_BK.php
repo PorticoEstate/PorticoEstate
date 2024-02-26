@@ -51,6 +51,7 @@
 			$bocommon,
 			$boworkorder,
 			$botts;
+		var $username, $password;
 
 		public function __construct()
 		{
@@ -65,6 +66,10 @@
 			$this->soap_url			 = 'https://agrpweb.adm.bgo/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101';
 			$this->config_invoice	 = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			require_once PHPGW_SERVER_ROOT . '/property/inc/soap_client/agresso/autoload.php';
+
+			$config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.admin'));
+			$this->username	 = $config->config_data['UBW']['username'];
+			$this->password	 = $config->config_data['UBW']['password'];
 		}
 
 		function execute()
@@ -381,8 +386,8 @@ SQL;
 		{
 			$this->debug = false;
 
-			$username	 = 'WEBSER';
-			$password	 = 'wser10';
+			$username	 = $this->username;
+			$password	 = $this->password;
 			$client		 = 'BY';
 
 			$TemplateId = '12770'; //Spørring på varemottak
