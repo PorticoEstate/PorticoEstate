@@ -301,7 +301,6 @@
 			}
 
 			$values['attributes']	   = $values_attribute;
-			$values['checklist_stage'] = $values_checklist_stage;
 
 			foreach ($data as $key => $original_value)
 			{
