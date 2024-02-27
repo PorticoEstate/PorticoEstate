@@ -353,12 +353,14 @@
 					case 'CH':
 						$__querymethod	 = array(); // remove block
 //						$_querymethod[] = "xmlexists('//{$attribute_name}[contains(.,'',{$condition['value']},'')]' PASSING BY REF xml_representation)";
-						$_querymethod[]	 = "json_representation->>'{$attribute_name}' {$this->like} '%,{$condition['value']},%'";
+						$_condition_value = $this->db->stripslashes($condition['value']);
+						$_querymethod[]	 = "json_representation->>'{$attribute_name}' {$this->like} '%,{$_condition_value},%'";
 
 						break;
 					default:
 //						$_querymethod[] = "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
-						$_querymethod[]	 = "json_representation->>'{$attribute_name}' = '{$condition['value']}'";
+						$_condition_value = $this->db->stripslashes($condition['value']);
+						$_querymethod[]	 = "json_representation->>'{$attribute_name}' = '{$_condition_value}'";
 						$__querymethod	 = array(); // remove block
 				}
 			}
@@ -805,7 +807,7 @@
 							case 'T':
 								if (!$criteria_id)
 								{
-									$_querymethod[]	 = "json_representation->>'{$_column_name}' {$this->like} '%{$query}%'";
+									$_querymethod[]	 = "json_representation->>'{$_column_name}' {$this->like} '%" . $this->db->stripslashes($query). "%'";
 									$__querymethod	 = array(); // remove block
 								}
 								break;
@@ -904,7 +906,7 @@
 							default:
 								if (!$criteria_id)
 								{
-									$_querymethod[]	 = "json_representation->>'{$_column_name}' = '{$query}'";
+									$_querymethod[]	 = "json_representation->>'{$_column_name}' = '" . $this->db->stripslashes($query) . "'";
 									$__querymethod	 = array(); // remove block
 								}
 						}
@@ -2590,13 +2592,18 @@
 				$guid = sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
 			}
 
-			$values_insert = array
-				(
+			$json_data = array();
+			foreach ($data as $key => $value)
+			{
+				$json_data[$key] = $this->db->stripslashes($value);
+			}
+
+			$values_insert = array(
 				'id'					 => $id,
 				'location_id'			 => $location_id,
 				'type'					 => $type,
 				'guid'					 => $guid,
-				'json_representation'	 => json_encode($data),
+				'json_representation'	 => json_encode($json_data),
 				'model'					 => 0,
 				'p_location_id'			 => isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
 				'p_id'					 => isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
@@ -2630,7 +2637,7 @@
 
 			foreach ($data as $key => $value)
 			{
-				$jsondata[$key] = $value;
+				$jsondata[$key] = $this->db->stripslashes($value);
 			}
 
 			$value_set = array
@@ -3311,8 +3318,8 @@
 			$location_id = (int) $location_id;
 			$item_id = (int) $item_id;
 			$attribute = $this->db->db_addslashes($attribute);
-			$value = $this->db->db_addslashes($value);
 
+			$value = $this->db->db_addslashes($this->db->stripslashes($value));
 			$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{{$attribute}}', '\"{$value}\"', true)"
 				. " WHERE location_id = {$location_id}"
 				. " AND id={$item_id}";
@@ -3397,7 +3404,7 @@
 
 				foreach ($values_attribute as $entry)
 				{
-					$jsondata[$entry['name']] = $entry['value'];
+					$jsondata[$entry['name']] = $this->db->stripslashes($entry['value']);
 				}
 				$value_set = array(
 					'json_representation' => json_encode($jsondata)
@@ -3412,7 +3419,7 @@
 				$jsondata = array();
 				foreach ($values_attribute as $entry)
 				{
-					$jsondata[$entry['name']] = $entry['value'];
+					$jsondata[$entry['name']] = $this->db->stripslashes($entry['value']);
 				}
 
 				$value_set = array(
