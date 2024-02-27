@@ -67,6 +67,7 @@
 				array('key' => 'lang_status', 'label' => lang('status'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'building_name', 'label' => lang('Where'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'resource_names', 'label' => lang('resources'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'from_', 'label' => lang('from'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'customer_organization_number', 'label' => lang('organization number'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'contact_name', 'label' => lang('contact'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'link', 'label' => $lang_view, 'sortable' => false, 'resizeable' => true),
