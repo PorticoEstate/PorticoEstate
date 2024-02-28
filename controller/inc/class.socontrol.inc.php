@@ -610,7 +610,8 @@
 			}
 
 			$sql = "SELECT DISTINCT c.id as control_id, c.control_area_id, c.procedure_id,c.description,
-				controller_control_serie.repeat_type, controller_control_serie.repeat_interval, controller_control_serie.start_date,
+				controller_control_serie.id as serie_id, controller_control_serie.repeat_type, controller_control_serie.repeat_interval,
+				controller_control_serie.start_date,
 				bim_item.type as component_type, bim_item.id as component_id, bim_item.guid,
 				bim_item.location_code, bim_item.address, bim_item.loc1 as loc_1, cl.location_id,fm_responsibility_role.name AS responsibility_name
 			FROM controller_control_component_list cl
@@ -675,6 +676,8 @@
 				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
 				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+				$control->set_serie_id($this->unmarshal($this->db->f('serie_id'), 'int'));
+
 
 				if ($return_type == "return_object")
 				{

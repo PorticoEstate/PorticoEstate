@@ -70,6 +70,7 @@
 		protected $error_msg_array;
 		protected $ticket_cat_id;
 		protected $location_code;
+		protected $serie_id;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -109,6 +110,16 @@
 		public function get_location_code()
 		{
 			return $this->location_code;
+		}
+
+		public function set_serie_id( $serie_id )
+		{
+			$this->serie_id = $serie_id;
+		}
+
+		public function get_serie_id()
+		{
+			return $this->serie_id;
 		}
 
 		public function set_description( $description )
