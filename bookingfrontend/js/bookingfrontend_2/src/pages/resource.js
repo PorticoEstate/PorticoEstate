@@ -1,10 +1,14 @@
+import '../components/light-box'
+import '../components/collapsable-text'
+import '../helpers/util';
+
+
 var booking_month_horizon = 2;
 $(".navbar-search").removeClass("d-none");
 var events = ko.observableArray();
 var date = new Date();
 //var urlParams = new URLSearchParams(window.location.search);
-var urlParams = [];
-CreateUrlParams(window.location.search);
+var urlParams = CreateUrlParams(window.location.search);
 //var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 var baseURL = strBaseURL.split('?')[0] + "bookingfrontend/";
 var availlableTimeSlots = ko.observableArray();
@@ -24,9 +28,7 @@ class ResourceModel {
 		this.items = events;
 		this.selectedDescription = selectedDescription;
 		this.resourcesExpanded = ko.observable(false);
-		this.descriptionExpanded = ko.observable(false);
 		this.toggleResources = this.toggleResources.bind(this);
-		this.toggleDescription = this.toggleDescription.bind(this);
 
 	}
 	/**
@@ -34,15 +36,6 @@ class ResourceModel {
 	 */
 	toggleResources() {
 		this.resourcesExpanded(!this.resourcesExpanded());
-	}
-
-
-
-	/**
-	 * Toggles the visibility of the description.
-	 */
-	toggleDescription() {
-		this.descriptionExpanded(!this.descriptionExpanded());
 	}
 }
 
@@ -96,7 +89,7 @@ $(document).ready(function ()
 
 function PopulateResourceData()
 {
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_resource.index_images", filter_owner_id: urlParams['id'], length:-1}, true);
+	const getJsonURL = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uidocument_resource.index_images", filter_owner_id: urlParams['id'], length:-1}, true);
 	$.getJSON(getJsonURL, function (result)
 	{
 		var mainPictureFound = false;
@@ -178,7 +171,7 @@ function roundMinutes(date)
 	var date = new Date(date);
 	if (date.getMinutes <= 7 || date.getMinutes >= 53)
 	{
-		date.setMinutes(00);
+		date.setMinutes(0);
 	}
 	else if (date.getMinutes >= 8 || date.getMinutes <= 22)
 	{

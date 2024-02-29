@@ -333,8 +333,8 @@ HTML;
 	}
 
 	$nav = <<<HTML
-<div class="border-top border-2 py-5">
-  <nav class="navbar mb-5">
+<div class="border-top border-2 pt-5 pb-2r">
+  <nav class="navbar">
     <a href="{$site_url}" class="navbar__logo">
       <img src="{$headlogopath}/logo_aktiv_kommune_horizontal.png" alt="Aktiv kommune logo" class="navbar__logo__img">
       <img src="{$headlogopath}/logo_aktiv_kommune.png" alt="Aktiv kommune logo" class="navbar__logo__img--desktop">

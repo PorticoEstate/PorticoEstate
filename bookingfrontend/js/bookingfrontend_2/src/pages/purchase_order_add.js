@@ -1,3 +1,5 @@
+import '../helpers/util';
+
 /* global date_format, lang, initialSelection */
 
 ko.bindingHandlers.collapse = {

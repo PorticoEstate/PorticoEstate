@@ -77,8 +77,9 @@
 
 input[type="text"], textarea {
   @include pill;
-  box-shadow: $box-shadow;
+  //box-shadow: $box-shadow;
   -webkit-appearance: none;
+  border-radius: 0.25rem;
 }
 
 textarea {

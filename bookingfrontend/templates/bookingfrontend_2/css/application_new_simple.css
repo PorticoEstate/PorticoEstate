@@ -6,37 +6,4 @@
   max-height: none;
 }
 
-.column {
-  position: relative; /* Needed for absolute positioning of the overlay */
-}
-
-.collapsible-content {
-  line-height: 1.5em;
-  overflow: hidden;
-  position: relative;
-  padding-right: 1em; /* To ensure text does not go behind the button */
-}
-.collapsible-content br {
-  height: 20px;
-  min-height: 20px;
-}
-
-.collapsed-description {
-  max-height: 9em; /* 3 lines */
-}
-.collapsed-description::after {
-  content: "";
-  width: 100%;
-  height: 2.5em;
-  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.56) 50%);
-  position: absolute;
-  bottom: 0;
-  right: 0;
-}
-
-.last-visible {
-  /* Your specific styles for the last visible paragraph */
-  filter: blur(1.1px);
-}
-
 /*# sourceMappingURL=application_new_simple.css.map */
