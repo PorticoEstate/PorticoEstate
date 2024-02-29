@@ -1,3 +1,4 @@
+@use "sass:math";
 $medium-screen: 1024px;
 
 $text-regular: 400;
@@ -98,6 +99,10 @@ h4, .h4 {
   @include applyFontProperties('subtitle');
 }
 
+@function strip-unit($value) {
+  @return math.div($value, ($value * 0 + 1));
+}
+
 .font-size {
   &-h1 {
     height: getFontDef($desktop, 'display', 'height');
@@ -126,7 +131,16 @@ h4, .h4 {
       height: getFontDef($mobile, 'subtitle', 'height');
     }
   }
+  &-small {
+    $desktop-height: strip-unit(getFontDef($desktop, 'caption', 'height')) * 0.75 + rem;
+    height: $desktop-height;
+    @include small-screen {
+      $mobile-height: strip-unit(getFontDef($mobile, 'caption', 'height')) * 0.75 + rem;
+      height: $mobile-height;
+    }
+  }
 }
+
 
 .text {
   &-small {
@@ -145,6 +159,7 @@ h4, .h4 {
 
   &-label {
     @include applyFontProperties('label');
+    font-weight: $text-bold;
   }
 
   &-xl {

@@ -75,6 +75,29 @@
   }
 }
 
+.checkbox-fa {
+  display: none;
+
+  & + label {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    .checked-icon {
+      display: none;
+    }
+  }
+
+  &:checked + label {
+    .unchecked-icon {
+      display: none;
+    }
+
+    .checked-icon {
+      display: initial;
+    }
+  }
+}
+
 input[type="text"], textarea {
   @include pill;
   //box-shadow: $box-shadow;
