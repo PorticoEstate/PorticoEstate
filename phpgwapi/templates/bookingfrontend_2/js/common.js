@@ -123,14 +123,15 @@ function GetApplicationsCartItems(bc)
 }
 
 
-function CreateUrlParams(params)
-{
+function CreateUrlParams(params) {
 	var allParams = params.split("&");
+	const urlParams = [];
 	for (var i = 0; i < allParams.length; i++)
 	{
 		var splitParam = allParams[i].split("=");
 		urlParams[splitParam[0]] = splitParam[1];
 	}
+	return urlParams;
 }
 
 Date.prototype.getWeek = function ()

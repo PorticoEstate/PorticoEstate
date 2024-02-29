@@ -130,13 +130,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 d-flex justify-content-end my-4 mb-md-0">
-                <label class="choice text-purple text-bolder">
-                    <input type="checkbox" name="show_only_available" data-bind="checked: show_only_available"/>
-                    Vis kun tilgjengelige
-                    <span class="choice__check"></span>
-                </label>
-            </div>
+
         </div>
 
         <div id="search-event">
@@ -204,6 +198,13 @@
             </div>
         </div>
         <div id="search-count" class="pt-3"></div>
+        <div class="col-12 d-flex justify-content-start my-4 mb-md-0">
+            <label class="choice text-purple text-bolder">
+                <input type="checkbox" name="show_only_available" data-bind="checked: show_only_available"/>
+                Vis kun tilgjengelige
+                <span class="choice__check"></span>
+            </label>
+        </div>
         <div id="search-result" class="pt-3"></div>
     </div>
     <script>

@@ -1,127 +1,166 @@
-$text-normal: 400;
+$medium-screen: 1024px;
+
+$text-regular: 400;
+$text-medium: 500;
 $text-bold: 700;
 $text-bolder: 900;
 
-$text-small: 0.875rem; //14px
-$text-body: 1rem; //16px
-$text-medium: 1.125rem; //18px
-$text-lg: 1.25rem; //20px
-$text-xl: 1.375rem; //22px 
-$text-2xl: 1.75rem; //28px 
-$text-3xl: 2.25rem; //36px 
-$text-4xl: 3.5rem; //56px 
+@mixin small-screen {
+  @media (max-width: $medium-screen) {
+    @content;
+  }
+}
 
-$h1-text: $text-3xl; //36px 
-$h1-lineheight: 1.75;
+@function getFontDef($device-map, $type, $size-or-height) {
+  @return nth(map-get($device-map, $type), if($size-or-height == 'size', 1, 2));
+}
 
-$h2-text: $text-2xl; //28px 
-$h2-lineheight: 1.75;
 
-$h3-text: $text-xl; //22px 
-$h3-lineheight: 2.2;
 
-$h4-text: $text-lg; //20px
-$h4-lineheight: 1.4;
+// name: (SIZE, HEIGHT)
+$desktop: (
+    display: (3.5rem, 4.25rem),
+    headline: (2.25rem, 2.75rem),
+    title: (1.25rem, 1.625rem),
+    subtitle: (1.125rem, 1.75rem),
+    label: (1rem, 1.25rem),
+    overline: (0.75rem, 1.375rem),
+    body: (1rem, 1.75rem),
+    caption: (0.875rem, 1.25rem)
+);
+
+$mobile: (
+    display: (2.125rem, 2.75rem),
+    headline: (1.5rem, 1.875rem),
+    title: (1.125rem, 1.5rem),
+    subtitle: (1rem, 1.375rem),
+    label: (0.875rem, 1.125rem),
+    overline: (0.625rem, 1.25rem),
+    body: (0.875rem, 1.5rem),
+    caption: (0.75rem, 1.125rem)
+);
+
+
+@mixin applyFontProperties($type) {
+    font-size: getFontDef($desktop, $type, 'size');
+    line-height: getFontDef($desktop, $type, 'height');
+
+    @include small-screen {
+        font-size: getFontDef($mobile, $type, 'size');
+        line-height: getFontDef($mobile, $type, 'height');
+    }
+}
+
+@mixin applyLineHeights($type) {
+    line-height: getFontDef($desktop, $type, 'height');
+
+    @include small-screen {
+        line-height: getFontDef($mobile, $type, 'height');
+    }
+}
+
+@mixin applyFontSize($type) {
+    font-size: getFontDef($desktop, $type, 'size');
+
+    @include small-screen {
+        font-size: getFontDef($mobile, $type, 'size');
+    }
+}
 
 
 body {
   font-family: 'Roboto', sans-serif;
-  font-size: 16px;
-  line-height: 1.75rem;
-  font-weight: $text-normal;
+  font-weight: $text-regular;
+  @include applyFontProperties('body');
 }
 
 h1, .h1 {
-  font-size: $h2-text;
-  line-height: $h2-lineheight;
+  font-family: "Poppins", sans-serif;
+  font-weight: $text-regular;
   margin-top: 0;
-  font-weight: $text-bolder;
-
-  @media (min-width: $media-medium) {
-    font-size: $h1-text; //36px
-    line-height: $h1-lineheight; //64px
-  }
+  margin-bottom: 2rem;
+  @include applyFontProperties('display');
 }
 
 h2, .h2 {
-  font-size: $h3-text;
-  line-height: $h3-lineheight;
-  font-weight: $text-bolder;
-
-  @media (min-width: $media-medium) {
-    font-size: $h2-text; //28px
-    line-height: $h2-lineheight; //48px
-  }
+  font-family: "Poppins", sans-serif;
+  font-weight: $text-regular;
+  @include applyFontProperties('headline');
 }
 
 h3, .h3 {
-  font-size: $h4-text;
-  line-height: $h4-lineheight;
-  font-weight: $text-bolder;
-
-  @media (min-width: $media-medium) {
-    font-size: $h3-text; //22px
-    line-height: $h3-lineheight; //48px
-  }
+  font-weight: $text-bold;
+  @include applyFontProperties('title');
 }
 
 h4, .h4 {
-  font-size: $text-medium;
-  line-height: $h4-lineheight;
-  font-weight: $text-bolder;
+  font-weight: $text-medium;
+  @include applyFontProperties('subtitle');
+}
 
-  @media (min-width: $media-medium) {
-    font-size: $h4-text; //20px
-    line-height: $h4-lineheight; //28px
+.font-size {
+  &-h1 {
+    height: getFontDef($desktop, 'display', 'height');
+    @include small-screen {
+      height: getFontDef($mobile, 'display', 'height');
+    }
+  }
+
+  &-h2 {
+    height: getFontDef($desktop, 'headline', 'height');
+    @include small-screen {
+      height: getFontDef($mobile, 'headline', 'height');
+    }
+  }
+
+  &-h3 {
+    height: getFontDef($desktop, 'title', 'height');
+    @include small-screen {
+      height: getFontDef($mobile, 'title', 'height');
+    }
+  }
+
+  &-h4 {
+    height: getFontDef($desktop, 'subtitle', 'height');
+    @include small-screen {
+      height: getFontDef($mobile, 'subtitle', 'height');
+    }
   }
 }
 
 .text {
-  /* SIZE */ 
-
   &-small {
-    font-size: $text-small; //14px
-    line-height: 1.75rem; //28px
+    @include applyFontProperties('caption');
   }
 
-  &-body, &-normal {
-    font-size: $text-body; //16px
-    line-height: 1.75rem; //28px
+  &-overline {
+    @include applyFontProperties('overline');
+    text-transform: uppercase;
+    font-weight: $text-regular;
   }
 
-  &-medium {
-    font-size: $text-medium; //18px
-    line-height: 1.75rem; //28px
+  &-body, &-normal, &-medium, &-lg {
+    @include applyFontProperties('body');
   }
 
-  &-lg {
-    font-size: $text-lg; //20px
-    line-height: 1.75rem; //28px
+  &-label {
+    @include applyFontProperties('label');
   }
 
   &-xl {
-    font-size: $text-xl; //22px 
-    line-height: 3rem; //48px
+    @include applyFontProperties('title');
   }
 
   &-2xl {
-    font-size: $text-2xl; //28px 
-    line-height: 3rem; //48px
+    @include applyFontProperties('headline');
   }
 
-  &-3xl {
-    font-size: $text-3xl; //36px 
-    line-height: 4rem; //64px
+  &-3xl, &-4xl {
+    @include applyFontProperties('display');
   }
 
-  &-4xl {
-    font-size: $text-4xl; //56px 
-    line-height: 4.5rem; //72px
-  }
-
-  /* WEIGHT */
   &-normal {
-    font-weight: $text-normal;
+    font-weight: $text-regular;
   }
 
   &-bold {
@@ -135,27 +174,18 @@ h4, .h4 {
 
 .line-height {
   &-h1 {
-    line-height: $h2-lineheight;
-    @media (min-width: $media-medium) {
-      line-height: $h1-lineheight; //64px
-    }
+    @include applyLineHeights('headline');
   }
+
   &-h2 {
-    line-height: $h3-lineheight;
-    @media (min-width: $media-medium) {
-      line-height: $h2-lineheight; //48px
-    }
+    @include applyLineHeights('title');
   }
+
   &-h3 {
-    line-height: $h4-lineheight;
-    @media (min-width: $media-medium) {
-      line-height: $h3-lineheight; //48px
-    }
+    @include applyLineHeights('subtitle');
   }
+
   &-h4 {
-    line-height: $h4-lineheight;
-    @media (min-width: $media-medium) {
-      line-height: $h4-lineheight; //48px
-    }
+    @include applyLineHeights('label');
   }
 }

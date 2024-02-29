@@ -4,12 +4,13 @@
               name="form" novalidate="true" class="needs-validationm">
             <div class="row">
                 <div class="col-md-10 offset-md-1">
-                    <!-- Heading with building name -->
+                    <!-- Heading with title -->
                     <div class="row gx-3">
                         <div class="col d-flex flex-column">
                             <div class="font-weight-bold gap-3 d-flex align-items-center">
                                 <h1>
-                                    Ny bestilling
+                                    <xsl:value-of
+                                            select="php:function('lang', 'New application')"/>
                                 </h1>
                             </div>
                         </div>
@@ -19,10 +20,10 @@
                     <div class="row gx-3  mb-4">
                         <div class="col d-flex flex-column">
                             <div class="font-weight-bold gap-3 d-flex mb-1">
-                                <h3 class="m-0 fa-solid fa-layer-group line-height-h3"></h3>
+                                <h2 class="m-0 fa-solid fa-layer-group line-height-h1"></h2>
                                 <div>
-                                    <h3 class="m-0 text-bold" data-bind="text: selectedResource()?.name">
-                                    </h3>
+                                    <h2 class="m-0" data-bind="text: selectedResource()?.name">
+                                    </h2>
                                     <div>
                                         <xsl:value-of select="building/street"/>,
                                         <xsl:value-of select="building/zip_code"/>
@@ -30,10 +31,15 @@
                                     <div>
                                         <xsl:value-of select="building/part_of_town"/>
                                     </div>
-                                    <div class="text-primary d-flex gap-2 align-items-center text-bold">
-                                        <span class="fas fa-location-dot"></span>
-                                        <xsl:value-of select="building/name"/>
-                                    </div>
+                                    <a class="link-text link-text-secondary">
+                                        <xsl:attribute name="href">
+                                            <xsl:value-of select="building/link"/>
+                                        </xsl:attribute>
+                                        <i class="fa-solid fa-location-dot"></i>
+                                        <xsl:value-of
+                                                select="building/name"/>
+                                        <!--<i class="fa-solid fa-arrow-right"></i>-->
+                                    </a>
                                 </div>
 
                             </div>
@@ -42,7 +48,7 @@
                     </div>
 
                     <!-- Select Time and Date Section -->
-                    <div class="form-group  mb-4">
+                    <div class="form-group mb-3">
 
                         <div class="form-group">
                             <div class="font-weight-bold gap-3 d-flex align-items-center">
@@ -203,21 +209,10 @@
                                 Beskrivelse
                             </h3>
                         </div>
-                        <div class="col-sm-12 d-flex flex-column collapsible-content collapsed-description"
-                             data-bind="css: {{'collapsed-description': !descriptionExpanded()}}">
-                            <p data-bind="html: resourceDescription">
 
-                            </p>
+                        <collapsable-text params="{{ content: resourceDescription }}">
 
-                        </div>
-                        <div class="col-sm-12">
-                            <button class="pe-btn  pe-btn--transparent text-secondary d-flex gap-3"
-                                    data-bind="click: toggleDescription">
-                                <span data-bind="text: descriptionExpanded() ? 'Vis mindre' : 'Vis mer'"></span>
-                                <i class="fa"
-                                   data-bind="css: {{'fa-chevron-up': descriptionExpanded(), 'fa-chevron-down': !descriptionExpanded()}}"></i>
-                            </button>
-                        </div>
+                        </collapsable-text>
                     </div>
                     <div class="row mb-4">
                         <light-box params="images: imageArray"></light-box>
@@ -240,7 +235,7 @@
                     <input id="inputTargetAudience" required="true" type="hidden" name="audience[]"/>
 
                     <!-- Estimated Number of Participants -->
-                    <div data-bind="foreach: agegroup">
+                    <div data-bind="foreach: agegroupList">
                         <input type="hidden" class="form-input sm-input maleInput" data-bind=""/>
                         <input type="hidden" class="form-input sm-input femaleInput" data-bind=""/>
                     </div>
@@ -287,7 +282,8 @@
                     <!-- Submit Button -->
 
                     <div id="submitContainer" class="d-flex gap-4 justify-content-end">
-                        <a class="link-text link-text-primary pe-btn pe-btn-secondary  d-flex align-items-center gap-2" style="width: fit-content" href="{application/frontpage_link}">
+                        <a class="link-text link-text-primary pe-btn pe-btn-secondary  d-flex align-items-center gap-2"
+                           style="width: fit-content" href="{application/frontpage_link}">
                             <div class="text-normal">
                                 <xsl:value-of select="php:function('lang', 'exit to homepage')"/>
                             </div>

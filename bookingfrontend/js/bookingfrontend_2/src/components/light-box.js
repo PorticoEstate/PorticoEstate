@@ -105,17 +105,6 @@ ko.components.register('light-box', {
 
         }
 
-        openModal(index) {
-            if (this.hasImages()) {
-                this.currentIndex(index);
-                $("#lightboxModal").modal('show');
-                this.attachArrowKeyHandlers();
-                $('#lightboxModal').on('hidden.bs.modal', function () {
-                    this.detachArrowKeyHandlers();
-                });
-            }
-        };
-
         next = function() {
             if (this.hasImages()) {
                 var nextIndex = this.currentIndex() < this.images().length - 1 ? this.currentIndex() + 1 : 0;
@@ -145,6 +134,17 @@ ko.components.register('light-box', {
             $(document).off('keydown');
         };
 
+
+        openModal(index) {
+            if (this.hasImages()) {
+                this.currentIndex(index);
+                $("#lightboxModal").modal('show');
+                this.attachArrowKeyHandlers();
+                $('#lightboxModal').on('hidden.bs.modal', function () {
+                    this.detachArrowKeyHandlers();
+                });
+            }
+        };
         closeModal() {
             $("#lightboxModal").modal('hide');
         };
