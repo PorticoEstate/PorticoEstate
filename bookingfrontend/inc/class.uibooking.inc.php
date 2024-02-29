@@ -115,31 +115,72 @@
         public function building_schedule_pe()
         {
             $dates = phpgw::get_var('dates');
-            if(!$dates || !is_array($dates))
-            {
+            $dates_csv = phpgw::get_var('dates_csv', 'string');
+            if ($dates_csv) {
+                $dates = explode(',', $dates_csv);
+            } elseif (!$dates || !is_array($dates)) {
                 $dates = array(phpgw::get_var('date'));
             }
 
+            // Initialize arrays for results, resources, and seasons
             $results = array();
+            $allResources = array();
+            $allSeasons = array();
 
+            // Filter out dates to ensure one fetch per week
+            $uniqueWeeks = array();
             foreach ($dates as $date) {
                 $_date = new DateTime($date);
-                $bookings = $this->bo->building_schedule_pe(phpgw::get_var('building_id', 'int'), $_date);
-                foreach ($bookings['results'] as &$booking) {
-                    $results = array_merge($results, $bookings);
+                // Adjust to the start of the week, considering Monday as the first day of the week
+                $_date->modify('Monday this week');
+                $weekStart = $_date->format('Y-m-d');
+                if (!in_array($weekStart, $uniqueWeeks)) {
+                    $uniqueWeeks[] = $weekStart;
                 }
             }
-            $data = array
-            (
+
+            // Process each unique week
+            foreach ($uniqueWeeks as $weekStart) {
+                $_date = new DateTime($weekStart);
+                $bookings = $this->bo->building_schedule_pe(phpgw::get_var('building_id', 'int'), $_date);
+                if (isset($bookings['results']['schedule']) && is_array($bookings['results']['schedule'])) {
+                    $results = array_merge($results, $bookings['results']['schedule']);
+                }
+                if (isset($bookings['results']['resources']) && is_array($bookings['results']['resources'])) {
+                    foreach ($bookings['results']['resources'] as $id => $resource) {
+                        $allResources[$id] = $resource;
+                    }
+                }
+                if (isset($bookings['results']['seasons']) && is_array($bookings['results']['seasons'])) {
+                    foreach ($bookings['results']['seasons'] as $season) {
+                        $uniqueKey = sprintf('%s-%d-%s-%s', $season['id'], $season['wday'], $season['from_'], $season['to_']);
+                        $allSeasons[$uniqueKey] = $season;
+                    }
+                }
+            }
+
+            // Prepare the final data structure
+            $data = array(
+                'dates' => $uniqueWeeks,
                 'ResultSet' => array(
-                    "totalResultsAvailable" =>  count($results),
-                    "Result" => $results
+                    "totalResultsAvailable" => count($results),
+                    "Result" => array(
+                        "total_records" => count($results),
+                        "results" => array(
+                            "schedule" => $results,
+                            "resources" => $allResources,
+                            "seasons" => array_values($allSeasons)
+                        )
+                    )
                 )
             );
+
             return $data;
         }
 
-		public function building_schedule()
+
+
+        public function building_schedule()
 		{
 			$dates = phpgw::get_var('dates');
 			if(!$dates || !is_array($dates))

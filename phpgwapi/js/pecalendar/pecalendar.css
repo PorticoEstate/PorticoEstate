@@ -629,6 +629,46 @@
   background-color: rgba(255, 148, 148, 0.04);
 }
 
+.text-red-error {
+  color: #B00020;
+}
+
+.bg-red-error {
+  background-color: #B00020;
+}
+
+.bgo-red-error-80 {
+  background-color: rgba(176, 0, 32, 0.8);
+}
+
+.bgo-red-error-64 {
+  background-color: rgba(176, 0, 32, 0.64);
+}
+
+.bgo-red-error-56 {
+  background-color: rgba(176, 0, 32, 0.56);
+}
+
+.bgo-red-error-40 {
+  background-color: rgba(176, 0, 32, 0.4);
+}
+
+.bgo-red-error-24 {
+  background-color: rgba(176, 0, 32, 0.24);
+}
+
+.bgo-red-error-16 {
+  background-color: rgba(176, 0, 32, 0.16);
+}
+
+.bgo-red-error-8 {
+  background-color: rgba(176, 0, 32, 0.08);
+}
+
+.bgo-red-error-4 {
+  background-color: rgba(176, 0, 32, 0.04);
+}
+
 .text-yellow-light {
   color: #FFEE94;
 }
@@ -812,6 +852,14 @@ h4, .h4 {
     height: 1.375rem;
   }
 }
+.font-size-small {
+  height: 0.9375rem;
+}
+@media (max-width: 1024px) {
+  .font-size-small {
+    height: 0.84375rem;
+  }
+}
 
 .text-small {
   font-size: 0.875rem;
@@ -848,6 +896,7 @@ h4, .h4 {
 .text-label {
   font-size: 1rem;
   line-height: 1.25rem;
+  font-weight: 700;
 }
 @media (max-width: 1024px) {
   .text-label {
