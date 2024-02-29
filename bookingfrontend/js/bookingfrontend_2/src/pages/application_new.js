@@ -1,4 +1,5 @@
 import '../components/time-picker';
+import '../components/time-slot-pill';
 import '../components/map-modal';
 import '../helpers/util';
 
@@ -15,8 +16,6 @@ var am;
 
 
 var lastcheckedResources = [];
-console.log(ko.version);
-console.log("Registering component");
 
 
 
@@ -26,6 +25,7 @@ console.log("Registering component");
 
 function applicationModel() {
     var self = this;
+    self.building_id = ko.observable();
     self.showErrorMessages = ko.observable(false);
     if (document.getElementById("applications-cart-content")) {
 
@@ -191,6 +191,53 @@ function applicationModel() {
     self.specialRequirements = ko.observable("");
     self.attachment = ko.observable();
 
+    self.schedule = ko.observableArray();
+
+    self.loadBuildingData  = async () => {
+        try {
+            if (!self.building_id() || !self.date() || self.date().length === 0) {
+                return;
+            }
+            // const currDate = DateTime.fromJSDate(new Date());
+            // const maxEndDate = currDate.plus({months: this.BOOKING_MONTH_HORIZON}).endOf('month');
+
+
+            // Construct URLs for fetching data
+            // Construct the URL for fetching building schedule information
+            let urlBuildingSchedule = phpGWLink('bookingfrontend/', {
+                menuaction: 'bookingfrontend.uibooking.building_schedule_pe',
+                building_id: self.building_id(),
+                dates_csv: self.date().map(a => a.from_.split(" ")[0].replaceAll('/', '-'))
+            }, true);
+            // console.log(urlBuildingSchedule);
+
+            const [buildingData] = await Promise.all([
+                fetch(urlBuildingSchedule).then(async res => (await res.json())?.ResultSet?.Result?.results)
+            ]);
+            // this.resources(buildingData.resources);
+            // this.seasons(buildingData.seasons);
+            self.schedule(buildingData?.schedule || []);
+            // console.log(buildingData.schedule);
+            // this.calculateStartEndHours();
+        } catch (error) {
+            console.error('Error loading building data:', error);
+        }
+    }
+    self.building_id.subscribe(newBuildingId => {
+        self.loadBuildingData();
+    });
+    self.date.subscribe(date => {
+        self.loadBuildingData();
+    });
+
+    self.selectedResources = ko.computed(() => {
+        return ko.utils.arrayFilter(self.bookableResource(), function (resource) {
+            return resource.selected();
+        });
+
+    })
+
+
     self.selectedResourcesWithFacilities = ko.computed(function () {
         var selectedResources = ko.utils.arrayFilter(self.bookableResource(), function (resource) {
             return resource.selected();
@@ -289,6 +336,7 @@ $(document).ready(function () {
         urlParams['building_id'] = building_id;
     }
     am = new applicationModel();
+    am.building_id(urlParams['building_id'])
 
     let getJsonURL = phpGWLink('bookingfrontend/', {
         menuaction: "bookingfrontend.uiapplication.add",
