@@ -1,4 +1,5 @@
 import '../components/light-box'
+import '../components/time-slot-pill'
 import '../components/collapsable-text'
 import '../helpers/util';
 

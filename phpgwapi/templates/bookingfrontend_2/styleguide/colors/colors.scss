@@ -73,6 +73,7 @@ $grey-light-4: #ffffff;
 $white: #FFFFFF;
 $green-light: #B0FF94;
 $red-light: #FF9494;
+$red-error: #B00020;
 $yellow-light: #FFEE94;
 
 
@@ -162,6 +163,9 @@ $colorVariations : (
   ),
   'red-light' (
     '100': $red-light,
+  ),
+  'red-error' (
+    '100': $red-error,
   ),
   'yellow-light' (
     '100': $yellow-light,

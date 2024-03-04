@@ -216,63 +216,6 @@ function formatDateToDateTimeString(date) {
 
 
 
-ko.components.register('time-slot-pill', {
-    viewModel: function (params) {
-        const self = this;
-
-        self.date = params.date
-        self.options = {hour: '2-digit', minute: '2-digit'};
-        self.startTime = ko.computed(() => luxon.DateTime.fromFormat(self.date.from_, "dd/MM/yyyy HH:mm").toJSDate())
-        self.endTime = ko.computed(() => luxon.DateTime.fromFormat(self.date.to_, "dd/MM/yyyy HH:mm").toJSDate())
-
-        self.toDateStr = (d) => `${d.getDate()}. ${monthNamesShort[d.getMonth()].toLowerCase()}`
-        self.toTimeStr = (start, end) => {
-            if(end) {
-                return `${start.toLocaleTimeString('no', self.options).replace(':', '.')} -
-                ${end.toLocaleTimeString('no', self.options).replace(':', '.')}`
-            }
-            return start.toLocaleTimeString('no', self.options).replace(':', '.')
-
-        }
-
-        // Assuming `removeDate` is a function passed in via params
-        self.removeDate = params.removeDate;
-    },
-    // language=HTML
-    template: `
-        <div class="pill pill--secondary">
-            <!-- ko if: startTime().getMonth() === endTime().getMonth() && startTime().getFullYear() === endTime().getFullYear() && startTime().getDate() === endTime().getDate() -->
-            <div class="pill-date">
-                <span className="text-primary text-bold" data-bind="text: toDateStr(startTime())"></span>
-            </div>
-            <div class="pill-divider"></div>
-            <div class="pill-time"
-                 data-bind="text: toTimeStr(startTime(), endTime()), css: {'last-child': !removeDate}">
-
-            </div>
-            <!-- /ko -->
-            <!-- ko ifnot: (startTime().getMonth() === endTime().getMonth() && startTime().getFullYear() === endTime().getFullYear() && startTime().getDate() === endTime().getDate()) -->
-            <div class="pill-content gap-1">
-                <div class="date"><span class="text-primary text-bold" data-bind="text: toDateStr(startTime())"></span>
-                    <span data-bind="text: toTimeStr(startTime())"></span>
-                </div>
-                <span> - </span>
-                <div class="time"><span class="text-primary text-bold" data-bind="text: toDateStr(endTime())"></span>
-                    <span data-bind="text: toTimeStr(endTime())"></span>
-                </div>
-            </div>
-
-            <!-- /ko -->
-
-            <!-- ko if: !!removeDate -->
-            <button class="pill-icon" data-bind="click: removeDate">&#215;</button>
-            <!-- /ko -->
-
-        </div>
-    `
-});
-
-
 function GenerateDateTime(start, end) {
     const toDate = value => {
         if (typeof value === 'number') {
