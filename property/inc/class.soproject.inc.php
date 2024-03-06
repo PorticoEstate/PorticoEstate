@@ -2965,10 +2965,10 @@
 				switch ($type)
 				{
 					case 'project':
-						$filter	 .= "AND fm_{$type}.coordinator = $coordinator";
+						$filter	 .= " AND fm_{$type}.coordinator = $coordinator";
 						break;
 					case 'workorder':
-						$filter	 .= "AND fm_{$type}.user_id = $coordinator";
+						$filter	 .= " AND fm_{$type}.user_id = $coordinator";
 						break;
 				}
 			}
@@ -2976,7 +2976,7 @@
 			if ($ecodimb)
 			{
 				$ecodimb = (int)$ecodimb;
-				$filter	 .= "AND fm_{$type}.ecodimb = $ecodimb";
+				$filter	 .= " AND fm_{$type}.ecodimb = $ecodimb";
 			}
 
 			if ($status_filter)
@@ -3010,7 +3010,7 @@
 					$sql			 = "SELECT DISTINCT {$table}.id,{$table}.coordinator,{$status_table}.closed, {$status_table}.descr as status ,{$title_field},{$table}.start_date,{$table}.project_type_id, count(project_id) as num_open FROM {$table}"
 						. " {$this->join} {$status_table} ON  {$table}.status = {$status_table}.id "
 						. " {$this->left_join} fm_open_workorder_view ON {$table}.id = fm_open_workorder_view.project_id "
-						. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} OR {$table}.start_date IS NULL)  {$filter}"
+						. " WHERE ({$table}.start_date > {$start_date} AND {$table}.start_date < {$end_date} OR {$table}.start_date IS NULL) {$filter}"
 						. " GROUP BY {$table}.id,{$table}.coordinator, {$status_table}.closed, {$status_table}.descr ,{$table}.name, {$table}.start_date,project_type_id"
 						. " ORDER BY {$table}.id DESC";
 
@@ -3073,8 +3073,7 @@
 
 			while ($this->db->next_record())
 			{
-				$values[] = array
-					(
+				$values[] = array(
 					'id'				 => $this->db->f('id'),
 					'project_id'		 => $this->db->f('project_id'),
 					'coordinator'		 => $this->db->f('coordinator'),
