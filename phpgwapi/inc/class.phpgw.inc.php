@@ -518,8 +518,7 @@
 				{
 					case 'string':
 					default:
-						$value = str_replace(array(';','(', ')', '=', '--'),array('&#59;','&#40;', '&#41;', '&#61;','&#8722;&#8722;'), $value); // prevent SQL-injection
-						$value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8', true);
+						$value = self::clean_string($value);
 						break;
 
 					case 'boolean':
@@ -639,7 +638,29 @@
 							$value -= phpgwapi_datetime::user_timezone();
 						}
 						break;
+					case 'csv':
+						if($value)
+						{
+							$value = explode(',', $value);
+							if ( is_array($value) )
+							{
+								foreach ( $value as &$val )
+								{
+									$val = self::clean_string($val);
+								}
+							}
+						}
+						break;
 				}
+				return $value;
+			}
+
+
+			// prevent SQL-injection
+			private static function clean_string( $value = '')
+			{
+				$value = str_replace(array(';','(', ')', '=', '--'),array('&#59;','&#40;', '&#41;', '&#61;','&#8722;&#8722;'), $value); 
+				$value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8', true);
 				return $value;
 			}
 

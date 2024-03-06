@@ -4113,7 +4113,7 @@ JS;
 			$contract_list	 = $this->bocommon->get_vendor_contract($vendor_id, $selected);
 			$config			 = CreateObject('phpgwapi.config', 'property')->read();
 
-			if ($contract_list)
+			if ($contract_list || !empty($config['alternative_to_contract_1']))
 			{
 				if (!empty($config['alternative_to_contract_1']))
 				{

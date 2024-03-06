@@ -318,14 +318,20 @@ class PECalendar {
             }
             const currDate = DateTime.fromJSDate(new Date());
             const maxEndDate = currDate.plus({months: this.BOOKING_MONTH_HORIZON}).endOf('month');
-
+            const weeksToFetch = [
+                this.firstDayOfCalendar().toFormat("y-MM-dd"), // current Week
+                this.firstDayOfCalendar().plus({week: 1}).toFormat("y-MM-dd"), // next week
+            ];
+            if(this.firstDayOfCalendar() > currDate) {
+                weeksToFetch.push(this.firstDayOfCalendar().minus({week: 1}).toFormat("y-MM-dd")) // last week
+            }
 
             // Construct URLs for fetching data
             // Construct the URL for fetching building schedule information
             let urlBuildingSchedule = phpGWLink('bookingfrontend/', {
                 menuaction: 'bookingfrontend.uibooking.building_schedule_pe',
                 building_id: this.building_id(),
-                date: this.currentDate().toFormat("y-MM-dd")
+                dates_csv: weeksToFetch
             }, true);
 
             let urlFreeTime = phpGWLink('bookingfrontend/', {
@@ -594,6 +600,8 @@ class PECalendar {
         }, [])
         return calEvents;
     });
+
+
 
     getGridColumn(date) {
         // Assuming your week starts on Monday and using Luxon's week numbering
