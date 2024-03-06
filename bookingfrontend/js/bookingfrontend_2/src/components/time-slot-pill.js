@@ -26,7 +26,7 @@ ko.components.register('time-slot-pill', {
 
         self.error = ko.computed(() => {
             if (!self.schedule || !self.selectedResources) {
-                return "Missing schedule or resources.";
+                return false;
             }
 
             // Convert current time slot to the expected format for comparison

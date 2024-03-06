@@ -12,6 +12,7 @@
 			'resource_schedule' => true,
 			'organization_schedule' => true,
 			'info' => true,
+			'info_json' => true,
 			'add' => true,
 			'show' => true,
 			'edit' => true,
@@ -1589,8 +1590,111 @@
 			self::render_template_xsl('booking_info', array('booking' => $booking, 'user_can_delete_bookings' => $user_can_delete_bookings));
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
 		}
+        public function info_json() {
+            $config = CreateObject('phpgwapi.config', 'booking')->read();
+            $user_can_delete_bookings = $config['user_can_delete_bookings'] === 'yes' ? 1 : 0;
 
-		function ical()
+            // Retrieve multiple booking IDs
+            $ids = phpgw::get_var('ids', 'string');
+            if ($ids) {
+                $ids = explode(',', $ids);
+            } elseif (!$ids || !is_array($ids)) {
+                $ids = array(phpgw::get_var('id'));
+            }
+            $bookings_info = [];
+            foreach ($ids as $id) {
+                $booking = $this->bo->read_single($id);
+                if(!$booking) {
+                    continue;
+                }
+                $booking['info_group'] = $this->group_bo->read_single($booking['group_id']);
+                $booking['info_resource_info'] = $this->calculate_resource_info($booking['resources']);
+                $booking['info_building_link'] = self::link([
+                    'menuaction' => 'bookingfrontend.uibuilding.show',
+                    'id' => $booking['building_id']
+                ]);
+                $booking['info_group_link'] = self::link([
+                    'menuaction' => 'bookingfrontend.uigroup.show',
+                    'id' => $booking['group']['id']
+                ]);
+                $booking['info_when'] = $this->info_format_booking_time($booking['from_'], $booking['to_']);
+                $booking['info_participant_limit'] = $this->info_calculate_participant_limit($booking, $config);
+                $booking['info_edit_link'] = $this->info_determine_edit_link($booking, $user_can_delete_bookings);
+                $booking['info_cancel_link'] = $this->info_determine_cancel_link($booking, $user_can_delete_bookings);
+                $booking['info_ical_link'] = self::link([
+                    'menuaction' => 'bookingfrontend.uiparticipant.ical',
+                    'reservation_type' => 'booking',
+                    'reservation_id' => $booking['id']
+                ]);
+
+                $booking['info_show_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show',
+                    'id' => $booking['id']));
+                $bookings_info[$id] = $booking;
+            }
+
+            return ['bookings' => $bookings_info, 'info_user_can_delete_bookings' => $user_can_delete_bookings];
+        }
+
+
+
+        private function calculate_resource_info($resourceIds) {
+            $resources = $this->resource_bo->so->read([
+                'filters' => ['id' => $resourceIds],
+                'sort' => 'name'
+            ]);
+            $resNames = array_map(function($res) {
+                return $res['name'];
+            }, $resources['results']);
+
+            return join(', ', $resNames);
+        }
+
+
+        private function info_format_booking_time($from, $to) {
+            $interval = (new DateTime($from))->diff(new DateTime($to));
+            $when = "";
+            if($interval->days > 0) {
+                $when = pretty_timestamp($from) . ' - ' . pretty_timestamp($to);
+            } else {
+                $end = new DateTime($to);
+                $when = pretty_timestamp($from) . ' - ' . $end->format('H:i');
+            }
+            return $when;
+        }
+
+        private function info_calculate_participant_limit($booking, $config) {
+            $resource_participant_limit_gross = $this->resource_bo->so->get_participant_limit($booking['resources'], true);
+            $resource_participant_limit = !empty($resource_participant_limit_gross['results'][0]['quantity']) ? $resource_participant_limit_gross['results'][0]['quantity'] : 0;
+            return !$booking['participant_limit'] ? ($resource_participant_limit ?: (int)$config['participant_limit']) : $booking['participant_limit'];
+        }
+
+        private function info_determine_edit_link($booking, $user_can_delete_bookings) {
+            if ($booking['from_'] > Date('Y-m-d H:i:s')) {
+                return self::link([
+                    'menuaction' => 'bookingfrontend.uibooking.edit',
+                    'id' => $booking['id'],
+                    'resource_ids' => $booking['resource_ids'],
+                    'from_org' => phpgw::get_var('from_org', 'boolean', 'REQUEST', false)
+                ]);
+            }
+            return null; // No edit link if condition not met
+        }
+
+        private function info_determine_cancel_link($booking, $user_can_delete_bookings) {
+            if ($booking['from_'] > Date('Y-m-d H:i:s') && $user_can_delete_bookings) {
+                return self::link([
+                    'menuaction' => 'bookingfrontend.uibooking.cancel',
+                    'id' => $booking['id'],
+                    'resource_ids' => $booking['resource_ids'],
+                    'from_org' => phpgw::get_var('from_org', 'boolean', 'REQUEST', false)
+                ]);
+            }
+            return null; // No cancel link if condition not met
+        }
+
+
+
+        function ical()
 		{
 			$booking	 = $this->bo->read_single(phpgw::get_var('id', 'int'));
 			$GLOBALS['phpgw_info']['flags']['noheader']	 = true;

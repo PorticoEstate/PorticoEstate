@@ -1435,7 +1435,7 @@ h4, .h4 {
   border: 1px solid #000;
   min-height: 100px;
   z-index: 12;
-  width: 10rem;
+  width: max-content;
   cursor: pointer;
   font-size: 1rem;
   position: relative;
