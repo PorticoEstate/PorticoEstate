@@ -304,3 +304,84 @@
 			return $GLOBALS['setup_info']['bim']['currentver'];
 		}
 	}
+
+	/**
+	* Update bim version from 0.9.17.511 to 0.9.17.512
+	*/
+	$test[] = '0.9.17.511';
+
+	function bim_upgrade0_9_17_511()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE fm_bim_item
+		ADD CONSTRAINT fm_bim_item_id_location_id_key UNIQUE (id, location_id)");
+
+		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE fm_bim_type
+		ADD CONSTRAINT fm_bim_type_location_id_key UNIQUE (location_id)");
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_bim_item_checklist', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+					'type_location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 150, 'nullable' => False),
+					'descr' => array('type' => 'text', 'nullable' => True),
+					'active' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
+					'fileupload' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array('fm_bim_type' => array('type_location_id' => 'location_id')),
+				'ix' => array(),
+				'ix' => array(),
+				'uc' => array('location_id')
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_bim_item_checklist_stage', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+					'checklist_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 50, 'nullable' => False),
+					'descr' => array('type' => 'text', 'nullable' => True),
+					'stage_sort' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'active' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
+					'active_attribs' => array('type' => 'jsonb', 'nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array('fm_bim_item_checklist' => array('checklist_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_bim_item_checklist_data', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+					'item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'type_location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'stage_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => False),
+					'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'json_representation' => array('type' => 'jsonb', 'nullable' => False),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'fm_bim_item' => array('item_id' => 'id', 'type_location_id' => 'location_id'),
+					'fm_bim_item_checklist_stage' => array('stage_id' => 'id'),
+					),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['bim']['currentver'] = '0.9.17.512';
+			return $GLOBALS['setup_info']['bim']['currentver'];
+		}
+	}

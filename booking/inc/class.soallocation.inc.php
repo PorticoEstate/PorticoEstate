@@ -21,6 +21,7 @@
 				'id_string' => array('type' => 'string', 'required' => false, 'default' => '0',
 					'query' => true),
 				'active' => array('type' => 'int', 'required' => true),
+				'skip_bas' => array('type' => 'int', 'required' => true),
 				'application_id' => array('type' => 'int', 'required' => false),
 				'organization_id' => array('type' => 'int', 'required' => true),
 				'building_name' => array('type' => 'string', 'required' => true, 'query' => true),

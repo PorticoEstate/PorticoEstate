@@ -2406,7 +2406,7 @@
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$child_level}");
 
-			$this->db->query("SELECT $id_field AS id, {$field_name} AS name, id AS item_id, location_code"
+			$this->db->query("SELECT $id_field AS id, {$field_name} AS name, fm_location{$child_level}.id AS item_id, location_code"
 			. " FROM fm_location{$child_level} {$join_method} WHERE location_code {$this->like} '{$location_code}%' {$filtermethod} ORDER BY {$field_name} ASC", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
@@ -2418,7 +2418,7 @@
 					'id'			 => $this->db->f('id'),
 					'name'			 => $name ? $name : $location_code,
 					'item_id'		 => $this->db->f('item_id'),
-					'location_id'	 =>$location_id,
+					'location_id'	 => $location_id,
 				);
 			}
 			return $values;

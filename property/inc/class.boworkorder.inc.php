@@ -44,7 +44,7 @@
 		var $order_sent_adress; // in case we want to resend the order as an reminder
 		var $allrows, $so, $bocommon, $cats, $interlink, $status_id,$wo_hour_cat_id,
 		$start_date,$end_date,$b_group, $ecodimb, $paid, $b_account, $district_id,
-		$criteria_id,$obligation, $total_records,$uicols;
+		$criteria_id,$obligation, $total_records,$uicols,$config;
 		var $public_functions = array
 			(
 			'read'			 => true,
@@ -100,6 +100,8 @@
 			$this->criteria_id		 = phpgw::get_var('criteria_id', 'int');
 			$this->allrows			 = phpgw::get_var('allrows', 'bool');
 			$this->obligation		 = phpgw::get_var('obligation', 'bool');
+
+			$this->config			 = CreateObject('phpgwapi.config', 'property')->read();
 		}
 
 		/**
@@ -284,6 +286,12 @@
 				(
 				'id'		 => 'category',
 				'name'		 => lang('category'),
+				'sortable'	 => true
+			);
+			$columns['contract_id']			 = array
+				(
+				'id'		 => 'contract_id',
+				'name'		 => lang('contract'),
 				'sortable'	 => true
 			);
 			return $columns;
@@ -559,6 +567,21 @@
 				$this->uicols['sortable'][]		 = $column_list[$col_id]['sortable'];
 			}
 
+			$dummy_contracts = array();
+
+			if(!empty($this->config['alternative_to_contract_1']))
+			{
+				$dummy_contracts[-1] = $this->config['alternative_to_contract_1'];
+			}
+			if(!empty($this->config['alternative_to_contract_2']))
+			{
+				$dummy_contracts[-2] = $this->config['alternative_to_contract_2'];
+			}
+			if(!empty($this->config['alternative_to_contract_3']))
+			{
+				$dummy_contracts[-3] = $this->config['alternative_to_contract_3'];
+			}
+
 			foreach ($workorder as &$entry)
 			{
 				$entry['user_lid'] = $GLOBALS['phpgw']->accounts->id2name($GLOBALS['phpgw']->accounts->name2id($entry['user_lid']));
@@ -572,6 +595,7 @@
 				$entry['tender_deadline']			 = $GLOBALS['phpgw']->common->show_date($entry['tender_deadline'], $dateformat);
 				$entry['tender_received']			 = $GLOBALS['phpgw']->common->show_date($entry['tender_received'], $dateformat);
 				$entry['inspection_on_completion']	 = $GLOBALS['phpgw']->common->show_date($entry['inspection_on_completion'], $dateformat);
+				$entry['contract_id']				 = $entry['contract_id'] < 0 ?  $dummy_contracts[$entry['contract_id']] : $entry['contract_id'];
 			}
 
 			return $workorder;
@@ -621,9 +645,7 @@
 
 			$workorder['b_account_name'] = $this->so->get_b_account_name($workorder['b_account_id']);
 
-			$config						 = CreateObject('phpgwapi.config', 'property');
-			$config->read();
-			$tax						 = 1 + ($config->config_data['fm_tax']) / 100;
+			$tax						 = 1 + ((int)$this->config['fm_tax']) / 100;
 			$workorder['calculation']	 = $workorder['calculation'] * $tax;
 
 			$vfs				 = CreateObject('phpgwapi.vfs');

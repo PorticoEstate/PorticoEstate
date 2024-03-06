@@ -2099,15 +2099,15 @@
 						unset($application['frontend_modified']);
 						// Add the contact data from partial2
 						// Update status fields
-						$application['status'] = 'NEW';
-						$application['created'] = 'now';
-						$application['modified'] = 'now';
-						$application['session_id'] = null;
 
 
 						$GLOBALS['phpgw']->db->transaction_begin();
 
-						$receipt = $this->bo->update($application);
+//						$application['status'] = 'NEW';
+//						$application['created'] = 'now';
+//						$application['modified'] = 'now';
+//						$application['session_id'] = null;
+//						$receipt = $this->bo->update($application);
 
 						/**
 						 * Start direct booking
@@ -2226,6 +2226,12 @@
 						 */
 						else
 						{
+							$application['status'] = 'NEW';
+							$application['created'] = 'now';
+							$application['modified'] = 'now';
+							$application['session_id'] = null;
+							$receipt = $this->bo->update($application);
+
 							CreateObject('booking.souser')->collect_users($application['customer_ssn']);
 							$GLOBALS['phpgw']->db->transaction_commit();
 							$this->bo->send_notification($application, true);

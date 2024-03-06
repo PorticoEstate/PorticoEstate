@@ -609,8 +609,11 @@
 				$user_filter = "AND controller_control_serie.assigned_to IN (" . implode(',', array_map('intval', $user_ids)) . ')';
 			}
 
-			$sql = "SELECT DISTINCT c.id as control_id, c.*, bim_item.type as component_type, bim_item.id as component_id,
-				bim_item.location_code, bim_item.address, cl.location_id,fm_responsibility_role.name AS responsibility_name
+			$sql = "SELECT DISTINCT c.id as control_id, c.control_area_id, c.procedure_id,c.description,
+				controller_control_serie.id as serie_id, controller_control_serie.repeat_type, controller_control_serie.repeat_interval,
+				controller_control_serie.start_date,
+				bim_item.type as component_type, bim_item.id as component_id, bim_item.guid,
+				bim_item.location_code, bim_item.address, bim_item.loc1 as loc_1, cl.location_id,fm_responsibility_role.name AS responsibility_name
 			FROM controller_control_component_list cl
 			JOIN fm_bim_item bim_item on cl.component_id = bim_item.id
 			JOIN fm_bim_type bim_type on cl.location_id = bim_type.location_id AND bim_item.type = bim_type.id
@@ -622,7 +625,7 @@
 				AND controller_control_serie.enabled = 1
 				AND controller_control_serie.start_date <= {$to_date}
 				ORDER BY bim_item.id";
-
+//			_debug_array($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$component_id = 0;
@@ -664,15 +667,17 @@
 				$control->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 				$control->set_procedure_name($this->unmarshal($this->db->f('procedure_name', true), 'string'));
 				$control->set_requirement_id($this->unmarshal($this->db->f('requirement_id'), 'int'));
-				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id'), 'int'));
+				$control->set_costresponsibility_id($this->unmarshal($this->db->f('costresponsibility_id'), 'int'));// empty
 				$control->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id'), 'int'));
 				$control->set_responsibility_name($this->unmarshal($this->db->f('responsibility_name', true), 'string'));
 				$control->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
-				$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));
+				$control->set_control_area_name($this->unmarshal($this->db->f('control_area_name', true), 'string'));//empty
 				$control->set_repeat_type($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_type_label($this->unmarshal($this->db->f('repeat_type'), 'int'));
 				$control->set_repeat_interval($this->unmarshal($this->db->f('repeat_interval'), 'int'));
 				$control->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
+				$control->set_serie_id($this->unmarshal($this->db->f('serie_id'), 'int'));
+
 
 				if ($return_type == "return_object")
 				{

@@ -302,6 +302,26 @@
 		}
 
 		/**
+		 * Get the text-representation of a location
+		 * @param integer $location_id the location id to look up
+		 * @return string the location - empty if not found
+		 */
+		public function get_location($location_id)
+		{
+			$location_id = (int) $location_id;
+
+			$sql = "SELECT phpgw_locations.name as location"
+					. " FROM phpgw_locations  WHERE phpgw_locations.location_id = {$location_id}";
+			$this->_db->query($sql, __LINE__, __FILE__);
+			if ( $this->_db->next_record() )
+			{
+				return  $this->_db->f('location', true);
+			}
+
+			return false;
+		}
+
+		/**
 		 * Get a list of sub locations for a give location
 		 *
 		 * @param string $appname  the name of the module being looked up
@@ -386,6 +406,24 @@
 		 	$appname	= $this->_db->db_addslashes($appname);
 		 	
 		 	$location_id = $this->get_id($appname, $location);
+
+		 	$this->_db->query("UPDATE phpgw_locations SET descr = '{$descr}'"
+					. " WHERE phpgw_locations.location_id = {$location_id}", __LINE__, __FILE__);
+			return $this->_db->affected_rows() == 1;
+		}
+
+		/**
+		 * Update the description of a location based on location_id
+		 *
+		 * @param int $location_id location within application
+		 * @param string $descr    the description of the location - seen by users
+		 *
+		 * @return boolean was the record updated?
+		 */
+		public function update_description2($location_id, $descr)
+		{
+		 	$location_id = (int) $location_id;
+			$descr		= $this->_db->db_addslashes($descr);
 
 		 	$this->_db->query("UPDATE phpgw_locations SET descr = '{$descr}'"
 					. " WHERE phpgw_locations.location_id = {$location_id}", __LINE__, __FILE__);

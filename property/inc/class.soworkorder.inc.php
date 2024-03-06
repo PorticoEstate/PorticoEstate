@@ -245,6 +245,8 @@
 
 				$cols			 .= ",fm_project.external_project_id";
 				$cols_return[]	 = 'external_project_id';
+				$cols			 .= ",fm_workorder.contract_id";
+				$cols_return[]	 = 'contract_id';
 				$cols			 .= ",fm_project.ecodimb";
 				$cols_return[]	 = 'ecodimb';
 				$cols			 .= ",fm_workorder.service_id";

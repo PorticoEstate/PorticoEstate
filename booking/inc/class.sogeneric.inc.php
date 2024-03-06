@@ -218,6 +218,11 @@
 								'type'	 => 'varchar'
 							),
 							array(
+								'name'	 => 'webservicehost',
+								'descr'	 => 'WebServiceHost',
+								'type'	 => 'varchar'
+							),
+							array(
 								'name'	 => 'instruction',
 								'descr'	 => lang('receipt'),
 								'type'	 => 'html'

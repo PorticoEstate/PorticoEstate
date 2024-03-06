@@ -61,7 +61,7 @@
 				'pk' => array('type_id','attrib_id','id'),
 				'fk' => array(),
 				'ix' => array(),
-				'uc' => array('type_id','attrib_id','value')
+				'uc' => array(array('type_id','attrib_id','value'))
 			)
 		);
 
@@ -76,7 +76,7 @@
 				'pk' => array('type_id','attrib_id','id'),
 				'fk' => array(),
 				'ix' => array(),
-				'uc' => array('type_id','attrib_id','value')
+				'uc' => array(array('type_id','attrib_id','value'))
 			)
 		);
 

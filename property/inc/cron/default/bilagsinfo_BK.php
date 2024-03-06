@@ -38,6 +38,7 @@
 
 		var $b_accounts = array();
 		var $join;
+		var $username, $password;
 
 		public function __construct()
 		{
@@ -48,6 +49,10 @@
 			$this->function_msg	 = 'Hent bilagsinformasjon fra Agresso - og oppdatere Portico';
 			$this->db			 = & $GLOBALS['phpgw']->db;
 			$this->join			 = & $this->db->join;
+
+			$config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.admin'));
+			$this->username	 = $config->config_data['UBW']['username'];
+			$this->password	 = $config->config_data['UBW']['password'];
 		}
 
 		function execute()
@@ -269,8 +274,11 @@
 		function get_bilag_old( $bilagsnr )
 		{
 			static $first_connect	 = false;
-			$username				 = 'WEBSER';
-			$password				 = 'wser10';
+//			$username				 = 'WEBSER';
+//			$password				 = 'wser10';
+			$username				 = $this->username;
+			$password				 = $this->password;
+
 			$client					 = 'BY';
 			$TemplateId				 = '11176'; //Spørring bilag_Portico ordrer
 
@@ -352,8 +360,10 @@
 		function get_bilag( $bilagsnr )
 		{
 			//Data, connection, auth
-			$soapUser		 = "WEBSER";  //  username
-			$soapPassword	 = "wser10"; // password
+//			$soapUser		 = "WEBSER";  //  username
+//			$soapPassword	 = "wser10"; // password
+			$soapUser		 = $this->username;
+			$soapPassword	 = $this->password;
 			$CLIENT			 = 'BY';
 
 			// xml post structure

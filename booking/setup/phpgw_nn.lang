@@ -931,3 +931,4 @@ access instruction	booking	nn	informasjon for tilgang
 differentiate org payer	booking	nn	Differensier mellom organisasjon og betaler
 article group	booking	nn	Artikkelgruppe
 buffer deadline	booking	nn	Buffer/frist
+skip bas	booking	nn	Ikkje trigge SD-anlegg

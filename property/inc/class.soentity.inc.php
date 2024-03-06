@@ -42,6 +42,7 @@
 		var $cols_return_lookup;
 		var $type			 = 'entity';
 		protected $sql;
+		protected $global_lock	 = false;
 		protected $type_app		 = array
 			(
 			'entity' => 'property',
@@ -352,12 +353,14 @@
 					case 'CH':
 						$__querymethod	 = array(); // remove block
 //						$_querymethod[] = "xmlexists('//{$attribute_name}[contains(.,'',{$condition['value']},'')]' PASSING BY REF xml_representation)";
-						$_querymethod[]	 = "json_representation->>'{$attribute_name}' {$this->like} '%,{$condition['value']},%'";
+						$_condition_value = $this->db->stripslashes($condition['value']);
+						$_querymethod[]	 = "json_representation->>'{$attribute_name}' {$this->like} '%,{$_condition_value},%'";
 
 						break;
 					default:
 //						$_querymethod[] = "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
-						$_querymethod[]	 = "json_representation->>'{$attribute_name}' = '{$condition['value']}'";
+						$_condition_value = $this->db->stripslashes($condition['value']);
+						$_querymethod[]	 = "json_representation->>'{$attribute_name}' = '{$_condition_value}'";
 						$__querymethod	 = array(); // remove block
 				}
 			}
@@ -804,7 +807,7 @@
 							case 'T':
 								if (!$criteria_id)
 								{
-									$_querymethod[]	 = "json_representation->>'{$_column_name}' {$this->like} '%{$query}%'";
+									$_querymethod[]	 = "json_representation->>'{$_column_name}' {$this->like} '%" . $this->db->stripslashes($query). "%'";
 									$__querymethod	 = array(); // remove block
 								}
 								break;
@@ -903,7 +906,7 @@
 							default:
 								if (!$criteria_id)
 								{
-									$_querymethod[]	 = "json_representation->>'{$_column_name}' = '{$query}'";
+									$_querymethod[]	 = "json_representation->>'{$_column_name}' = '" . $this->db->stripslashes($query) . "'";
 									$__querymethod	 = array(); // remove block
 								}
 						}
@@ -2488,7 +2491,14 @@
 			$admin_entity->type	 = $this->type;
 			$category			 = $admin_entity->read_single_category($entity_id, $cat_id);
 
-			$this->db->transaction_begin();
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 			if (isset($values_insert['p_num']) && $values_insert['p_num'])
 			{
@@ -2553,7 +2563,10 @@
 				}
 			}
 
-			$this->db->transaction_commit();
+			if (!$this->global_lock)
+			{
+				$this->db->transaction_commit();
+			}
 
 			$receipt				 = array();
 			$receipt['id']			 = $values['id'];
@@ -2579,13 +2592,18 @@
 				$guid = sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
 			}
 
-			$values_insert = array
-				(
+			$json_data = array();
+			foreach ($data as $key => $value)
+			{
+				$json_data[$key] = $this->db->stripslashes($value);
+			}
+
+			$values_insert = array(
 				'id'					 => $id,
 				'location_id'			 => $location_id,
 				'type'					 => $type,
 				'guid'					 => $guid,
-				'json_representation'	 => json_encode($data),
+				'json_representation'	 => json_encode($json_data),
 				'model'					 => 0,
 				'p_location_id'			 => isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
 				'p_id'					 => isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
@@ -2619,7 +2637,7 @@
 
 			foreach ($data as $key => $value)
 			{
-				$jsondata[$key] = $value;
+				$jsondata[$key] = $this->db->stripslashes($value);
 			}
 
 			$value_set = array
@@ -2785,7 +2803,14 @@
 				}
 			}
 
-			$this->db->transaction_begin();
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 
 			if (isset($value_set['p_num']) && $value_set['p_num'])
@@ -2835,7 +2860,10 @@
 				}
 			}
 
-			$this->db->transaction_commit();
+			if (!$this->global_lock)
+			{
+				$this->db->transaction_commit();
+			}
 
 			$receipt['id']			 = $values['id'];
 			$receipt['message'][]	 = array('msg' => lang('entity %1 has been edited', $values['num']));
@@ -2855,6 +2883,8 @@
 			$category			 = $admin_entity->read_single_category($entity_id, $cat_id);
 
 			$this->db->transaction_begin();
+
+			$this->db->query("DELETE FROM fm_bim_item_checklist_data WHERE type_location_id ={$location_id} AND item_id = {$id}", __LINE__, __FILE__);
 
 			if ($category['is_eav'])
 			{
@@ -3288,8 +3318,8 @@
 			$location_id = (int) $location_id;
 			$item_id = (int) $item_id;
 			$attribute = $this->db->db_addslashes($attribute);
-			$value = $this->db->db_addslashes($value);
 
+			$value = $this->db->db_addslashes($this->db->stripslashes($value));
 			$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{{$attribute}}', '\"{$value}\"', true)"
 				. " WHERE location_id = {$location_id}"
 				. " AND id={$item_id}";
@@ -3346,6 +3376,78 @@
 				);
 			}
 
+			return $values;
+		}
+
+		function save_checklist( $item_id, $stage_id, $values_attribute, &$receipt )
+		{
+		
+			// get stage from soadmin_entity
+			$admin_entity = CreateObject('property.soadmin_entity');
+			$stage = $admin_entity->read_single_checklist_stage($stage_id);
+			$checklist_id = $stage['checklist_id'];
+			//get checklist from soadmin_entity
+			$checklist = $admin_entity->read_single_checklist($checklist_id);
+			$type_location_id = $checklist['type_location_id'];
+
+			//check if checklist is already saved
+			$sql = "SELECT id, json_representation FROM fm_bim_item_checklist_data" 
+			. " WHERE item_id = {$item_id} AND stage_id = {$stage_id} AND type_location_id = {$type_location_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			if ($this->db->next_record())
+			{
+				//update
+				$id = (int)$this->db->f('id');
+
+				$jsondata = json_decode($this->db->f('json_representation'), true);
+
+				foreach ($values_attribute as $entry)
+				{
+					$jsondata[$entry['name']] = $this->db->stripslashes($entry['value']);
+				}
+				$value_set = array(
+					'json_representation' => json_encode($jsondata)
+				);
+				$value_set = $this->db->validate_update($value_set);
+				$this->db->query("UPDATE fm_bim_item_checklist_data set $value_set WHERE id = {$id}", __LINE__, __FILE__);
+			}
+			else
+			{
+
+				//insert
+				$jsondata = array();
+				foreach ($values_attribute as $entry)
+				{
+					$jsondata[$entry['name']] = $this->db->stripslashes($entry['value']);
+				}
+
+				$value_set = array(
+					'item_id' => $item_id,
+					'stage_id' => $stage_id,
+					'type_location_id' => $type_location_id,
+					'created_on' => time(),
+					'created_by' => $this->account,
+					'json_representation' => json_encode($jsondata)
+				);
+
+				$this->db->query("INSERT INTO fm_bim_item_checklist_data (" . implode(',', array_keys($value_set)) . ') VALUES ('
+				. $this->db->validate_insert(array_values($value_set)) . ')', __LINE__, __FILE__);
+
+			}
+
+		}
+
+		function get_checklist_data($type_location_id, $item_id )
+		{
+			$sql = "SELECT DISTINCT stage_id, json_representation FROM fm_bim_item_checklist_data"
+			. " WHERE item_id = {$item_id} AND type_location_id = {$type_location_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$values = array();
+			while($this->db->next_record())
+			{
+				$values[$this->db->f('stage_id')] = (array)json_decode($this->db->f('json_representation'), true);
+			}
 			return $values;
 		}
 	}

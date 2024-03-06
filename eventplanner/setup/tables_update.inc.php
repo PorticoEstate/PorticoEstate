@@ -174,7 +174,7 @@
 					'phpgw_accounts' => array('subject_id' => 'account_id'),
 				),
 				'ix' => array(array('object_id', 'object_type'), array('object_type')),
-				'uc' => array('subject_id', 'permission', 'object_type', 'object_id'),
+				'uc' => array(array('subject_id', 'permission', 'object_type', 'object_id'))
 			)
 		);
 

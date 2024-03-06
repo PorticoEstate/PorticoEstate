@@ -484,7 +484,7 @@
 			'fk' => array(
 				'bb_application' => array('application_id' => 'id')),
 			'ix' => array(),
-			'uc' => array('application_id', 'from_', 'to_')
+			'uc' => array(array('application_id', 'from_', 'to_'))
 		));
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
@@ -666,7 +666,7 @@
 				'bb_organization' => array('organization_id' => 'id')
 			),
 			'ix' => array(),
-			'uc' => array('season_id', 'wday', 'from_')
+			'uc' => array(array('season_id', 'wday', 'from_'))
 			)
 		);
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
@@ -995,7 +995,7 @@
 				'bb_season' => array('season_id' => 'id')
 			),
 			'ix' => array(),
-			'uc' => array('season_id', 'wday')
+			'uc' => array(array('season_id', 'wday'))
 			)
 		);
 		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_season', 'status', array('type' => 'varchar',
@@ -2264,7 +2264,7 @@
 			'fk' => array(
 				'bb_event' => array('event_id' => 'id')),
 			'ix' => array(),
-			'uc' => array('event_id', 'from_', 'to_')
+			'uc' => array(array('event_id', 'from_', 'to_'))
 		));
 
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
@@ -3613,7 +3613,7 @@
 				'pk' => array('id'),
 				'fk' => array('bb_organization' => array('organization_id' => 'id')),
 				'ix' => array(),
-				'uc' => array('organization_id', 'ssn')
+				'uc' => array(array('organization_id', 'ssn'))
 			)
 		);
 
@@ -5443,7 +5443,7 @@
 				'fm_ecomva' => array('tax_code' => 'id'),
 			),
 			'ix' => array(),
-			'uc' => array('article_cat_id', 'article_id')
+			'uc' => array(array('article_cat_id', 'article_id'))
 		));
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
@@ -6541,6 +6541,53 @@ SQL;
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.96';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	/**
+	 * Update booking version from 0.2.96 to 0.2.97
+	 *
+	 */
+	$test[] = '0.2.96';
+	function booking_upgrade0_2_96()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_e_lock_system', 'webservicehost',
+				array('type' => 'text', 'nullable' => true)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.97';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.97 to 0.2.98
+	 *
+	 */
+	$test[] = '0.2.97';
+	function booking_upgrade0_2_97()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_allocation', 'skip_bas',
+				array('type' => 'int', 'nullable' => False, 'precision' => '2', 'default' => 0),//Building Automation System" (BAS)
+			);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_booking', 'skip_bas',
+				array('type' => 'int', 'nullable' => False, 'precision' => '2', 'default' => 0),
+			);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_event', 'skip_bas',
+				array('type' => 'int', 'nullable' => False, 'precision' => '2', 'default' => 0),
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.98';
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}

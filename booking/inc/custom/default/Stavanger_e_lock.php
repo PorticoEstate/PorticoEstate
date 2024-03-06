@@ -65,11 +65,18 @@
 
 		 * @return array
 		 */
-		function get_status( $get_data )
+		function get_status( $get_data, $webservicehost = '' )
 		{
 			$get_string = http_build_query($get_data);
 
-			$url = "{$this->webservicehost}?{$get_string}";
+			if($webservicehost)
+			{
+				$url = "{$webservicehost}?{$get_string}";
+			}
+			else
+			{
+				$url = "{$this->webservicehost}?{$get_string}";
+			}
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -105,11 +112,18 @@
 
 		 * @return array
 		 */
-		function resources_delete( $delete_data )
+		function resources_delete( $delete_data, $webservicehost = '' )
 		{
 			$post_string = json_encode($delete_data);
 
-			$url = "{$this->webservicehost}";//_custom_update";
+			if($webservicehost)
+			{
+				$url = "{$webservicehost}";
+			}
+			else
+			{
+				$url = "{$this->webservicehost}";
+			}
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -150,11 +164,18 @@
 
 		 * @return int
 		 */
-		function resources_create( $post_data )
+		function resources_create( $post_data, $webservicehost = '' )
 		{
 			$post_string = json_encode($post_data);
 
-			$url = "{$this->webservicehost}";
+			if($webservicehost)
+			{
+				$url = "{$webservicehost}";
+			}
+			else
+			{
+				$url = "{$this->webservicehost}";
+			}
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);

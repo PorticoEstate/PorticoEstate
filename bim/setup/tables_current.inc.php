@@ -22,7 +22,7 @@
 			'pk' => array('id'),
 			'fk' => array(),
 			'ix' => array(),
-			'uc' => array('name')
+			'uc' => array(array('name'), array('location_id'))
 		),
 		'fm_bim_model' => array(
 			'fd' => array(
@@ -70,7 +70,7 @@
 					'phpgw_locations' => array('location_id' => 'location_id')
 				),
 			'ix' => array(),
-			'uc' => array('guid')
+			'uc' => array(array('guid'), array('location_id', 'id'))
 		),
 		'fm_bim_item_inventory' => array(
 			'fd' => array(
@@ -93,6 +93,55 @@
 			),
 			'pk' => array('id'),
 			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_bim_item_checklist' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'type_location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 150, 'nullable' => False),
+				'descr' => array('type' => 'text', 'nullable' => True),
+				'active' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
+				'fileupload' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array('fm_bim_type' => array('type_location_id' => 'location_id')),
+			'ix' => array(),
+			'ix' => array(),
+			'uc' => array('location_id')
+		),
+		'fm_bim_item_checklist_stage' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'checklist_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 50, 'nullable' => False),
+				'descr' => array('type' => 'text', 'nullable' => True),
+				'stage_sort' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'active' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
+				'active_attribs' => array('type' => 'jsonb', 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array('fm_bim_item_checklist' => array('checklist_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_bim_item_checklist_data' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'type_location_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'item_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'stage_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'created_on' => array('type' => 'int', 'precision' => 8, 'nullable' => False),
+				'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'json_representation' => array('type' => 'jsonb', 'nullable' => False),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'fm_bim_item' => array('item_id' => 'id', 'type_location_id' => 'location_id'),
+				'fm_bim_item_checklist_stage' => array('stage_id' => 'id'),
+				),
 			'ix' => array(),
 			'uc' => array()
 		),

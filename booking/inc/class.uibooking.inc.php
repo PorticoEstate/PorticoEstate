@@ -47,7 +47,7 @@
 				'building_id', 'building_name', 'application_id',
 				'season_id', 'season_name',
 				'group_id', 'group_name', 'group_shortname', 'organization_id', 'organization_name',
-				'from_', 'to_', 'audience', 'active', 'cost', 'reminder', 'sms_total');
+				'from_', 'to_', 'audience', 'active', 'skip_bas', 'cost', 'reminder', 'sms_total');
 
 			$this->display_name = lang('bookings');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$this->display_name}";
@@ -460,6 +460,7 @@
 
 				$today = getdate();
 				$booking = extract_values($_POST, $this->fields);
+				$booking['skip_bas'] = (int)phpgw::get_var('skip_bas', 'int');
 				if ($_POST['cost'])
 				{
 					$this->add_cost_history($booking, phpgw::get_var('cost_comment'), phpgw::get_var('cost', 'float'));
@@ -801,6 +802,7 @@
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+				$booking['skip_bas'] = (int)phpgw::get_var('skip_bas', 'int');
 
 				$_POST['from_'] = ($_POST['from_']) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_'])) : $_POST['from_'];
 				$_POST['to_'] = ($_POST['to_']) ? date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_'])) : $_POST['to_'];

@@ -49,7 +49,7 @@
 				'resources', 'cost', 'application_id',
 				'building_id', 'building_name',
 				'contact_name', 'contact_email', 'contact_phone',
-				'from_', 'to_', 'active', 'audience', 'reminder',
+				'from_', 'to_', 'active', 'skip_bas', 'audience', 'reminder',
 				'is_public', 'sms_total', 'participant_limit','customer_internal', 'include_in_list',
 				'customer_organization_name','customer_organization_id');
 
@@ -475,6 +475,8 @@
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+				$event['skip_bas'] = (int)phpgw::get_var('skip_bas', 'int');
+
 				array_set_default($_POST, 'from_', array());
 				array_set_default($_POST, 'to_', array());
 
@@ -1018,6 +1020,7 @@
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
+				$event['skip_bas'] = (int)phpgw::get_var('skip_bas', 'int');
 				$_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
 				$_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
 			}

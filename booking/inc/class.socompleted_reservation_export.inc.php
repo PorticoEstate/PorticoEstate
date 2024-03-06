@@ -1069,7 +1069,8 @@
 						if($order_line['parent_mapping_id'] == 0)
 						{
 							$article_name = $order_line['name']  . ' - ' . $reservation['description'];
-							$_article_code = $account_codes['article'];
+					//		$_article_code = $account_codes['article'];
+							$_article_code = $order_line['article_code'];
 						}
 						else
 						{

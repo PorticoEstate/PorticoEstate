@@ -1,4 +1,5 @@
 import '../components/light-box'
+import '../components/map-modal'
 import '../components/collapsable-text'
 import '../helpers/util';
 

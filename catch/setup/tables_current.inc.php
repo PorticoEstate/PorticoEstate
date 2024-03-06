@@ -136,7 +136,7 @@
 			'pk' => array('type_id','attrib_id','id'),
 			'fk' => array(),
 			'ix' => array(),
-			'uc' => array('type_id','attrib_id','value')
+			'uc' => array(array('type_id','attrib_id','value'))
 		),
 		'fm_catch_1_1' => array(
 			'fd' => array(

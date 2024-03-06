@@ -957,6 +957,67 @@
 						</div>
 					</xsl:when>
 				</xsl:choose>
+
+				<xsl:choose>
+					<xsl:when test="checklist_count != 0">
+						<div id="checklist">
+							<style>
+								.pure-g > div:not(:last-child) {
+								border-right: 1px solid #ccc; /* Add right border to separate columns */
+								}
+
+							</style>
+
+							<xsl:for-each select="location_checklists">
+								<h1>
+									<xsl:value-of select="name"/>
+								</h1>
+								<p>
+									<xsl:value-of select="descr"/>
+								</p>
+
+								<fieldset>
+									<div class="pure-g">
+										<xsl:variable name="count_stages">
+											<xsl:value-of select="count(stages)"/>
+										</xsl:variable>
+
+										<xsl:for-each select="stages">
+											<div class="pure-u-1-{$count_stages}" style="text-align: left;">
+												<xsl:variable name="dataset">
+													<!-- Concatenate strings -->
+													<xsl:text>values_checklist_stage[</xsl:text>
+													<!-- Get value from another element -->
+													<xsl:value-of select="id"/>
+													<!-- Add a constant string -->
+													<xsl:text>]</xsl:text>
+												</xsl:variable>
+												<xsl:variable name="checklist_id">
+													<xsl:value-of select="checklist_id"/>
+												</xsl:variable>
+												<h2>
+													<xsl:value-of select="name"/>
+												</h2>
+												<p>
+													<xsl:value-of select="descr"/>
+												</p>
+												<xsl:apply-templates select="attributes">
+													<xsl:with-param name="dataset">
+														<xsl:value-of select="$dataset" />
+													</xsl:with-param>
+													<xsl:with-param name="class" select="'pure-input-1-4'">														
+													</xsl:with-param>
+
+												</xsl:apply-templates>
+											</div>
+										</xsl:for-each>
+									</div>
+								</fieldset>
+							</xsl:for-each>
+						</div>
+					</xsl:when>
+				</xsl:choose>
+
 			</div>
 			<xsl:choose>
 				<xsl:when test="mode = 'edit'">

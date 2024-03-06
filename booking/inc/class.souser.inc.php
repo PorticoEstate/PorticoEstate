@@ -121,6 +121,8 @@
 					}
 				}
 				$application['resource_names'] = implode(', ', $resource_names);
+
+				$application['from_'] = $application['dates'][0]['from_'];
 			}
 
 			return $applications['results'];
