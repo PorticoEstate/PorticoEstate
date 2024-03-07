@@ -50,6 +50,7 @@
 			$this->fields = array(
 				'name'							 => 'string',
 				'description'					 => 'html',
+				'description_json'				 => 'html',
 				'opening_hours'					 => 'html',
 				'contact_info'					 => 'html',
 				'activity_id'					 => 'int',
@@ -248,6 +249,21 @@
 			self::add_javascript('booking', 'base', 'resource_new.js');
 			phpgwapi_jquery::load_widget('autocomplete');
 
+			$_langs = $GLOBALS['phpgw']->translation->get_installed_langs();
+			$langs = array();
+
+			foreach ($_langs as $key => $name)	// if we have a translation use it
+			{
+				$trans = mb_convert_case(lang($name), MB_CASE_LOWER);
+				$langs[] = array(
+					'lang' => $key,
+					'name' => $trans != "!$name" ? $trans : $name,
+					'description' =>!empty($resource['description_json'][$key]) ? $resource['description_json'][$key] : ''
+				);
+
+				self::rich_text_editor(array("field_description_json_{$key}"));
+			}
+
 			self::rich_text_editor(array('field_description', 'field_opening_hours', 'field_contact_info'));
 			$activity_data = $this->activity_bo->fetch_activities();
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
@@ -263,8 +279,11 @@
 			$resource['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));
 
-			self::render_template_xsl('resource_form', array('resource' => $resource, 'activitydata' => $activity_data,
-				'new_form' => true));
+			self::render_template_xsl('resource_form', array(
+				'resource'	   => $resource,
+				'activitydata' => $activity_data,
+				'langs'		   => $langs,
+				'new_form'	   => true));
 		}
 
 
@@ -320,9 +339,25 @@
 			}
 
 			$this->flash_form_errors($errors);
+
+			$_langs = $GLOBALS['phpgw']->translation->get_installed_langs();
+			$langs = array();
+
+			foreach ($_langs as $key => $name)	// if we have a translation use it
+			{
+				$trans = mb_convert_case(lang($name), MB_CASE_LOWER);
+				$langs[] = array(
+					'lang' => $key,
+					'name' => $trans != "!$name" ? $trans : $name,
+					'description' =>!empty($resource['description_json'][$key]) ? $resource['description_json'][$key] : ''
+				);
+
+				self::rich_text_editor(array("field_description_json_{$key}"));
+			}
+
 			self::add_javascript('booking', 'base', 'resource_new.js');
 			phpgwapi_jquery::load_widget('autocomplete');
-			self::rich_text_editor(array('field_description', 'field_opening_hours', 'field_contact_info'));
+			self::rich_text_editor(array('field_opening_hours', 'field_contact_info'));
 			$activity_data = $this->activity_bo->fetch_activities();
 			foreach ($activity_data['results'] as $acKey => $acValue)
 			{
@@ -345,13 +380,14 @@
 			$GLOBALS['phpgw']->jqcal2->add_listener('participant_limit_from', 'date');
 
 			self::render_template_xsl(array('resource_form', 'datatable_inline'),
-				array(
-					'datatable_def' => self::get_datatable_def($id),
-					'resource' => $resource,
-					'activitydata' => $activity_data,
+									  array(
+					'datatable_def'	  => self::get_datatable_def($id),
+					'resource'		  => $resource,
+					'activitydata'	  => $activity_data,
 					'rescategorydata' => $rescategory_data,
-					'seasons'	=> $this->bo->so->get_seasons($id)
-				));
+					'seasons'		  => $this->bo->so->get_seasons($id),
+					'langs'			  => $langs
+			));
 		}
 
 		private function get_location()
@@ -849,6 +885,8 @@
 				$facilitynames[] = $facility['name'];
 			}
 			$resource['facilities_names'] = implode(', ', $facilitynames);
+			$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+			$resource['description']		 = isset($resource['description_json'][$userlang]) ? $resource['description_json'][$userlang] : '';
 
 			$resource['edit_link'] = self::link(array('menuaction' => 'booking.uiresource.edit',
 					'id' => $resource['id']));

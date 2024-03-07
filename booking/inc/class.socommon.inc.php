@@ -320,9 +320,15 @@
 			}
 			else if ($type == 'json')
 			{
-				$_value = $this->db->stripslashes($value);
-				$__value = trim($_value, '"');
-				return json_decode($__value, true);
+
+				$_value = json_decode($value, true);
+				if(!is_array($_value))
+				{
+					$this->db->stripslashes($_value);
+					$_value = trim($_value, '"');
+				}
+					
+				return $_value;
 			}
 			else if ($type == 'string')
 			{
@@ -983,6 +989,19 @@
 			);
 		}
 
+		function sanitize_and_prepare_for_json( $value )
+		{
+			if (is_array($value))
+			{
+				array_walk_recursive($value, function ( &$item, $key )
+				{
+					$item = htmlspecialchars($item);
+				});
+				return $value;
+			}
+			return $value;
+		}
+
 		function update( $entry )
 		{
 			if (!isset($entry['id']))
@@ -995,6 +1014,11 @@
 			$values = $this->get_table_values($entry, __FUNCTION__);
 			foreach ($values as $key => $val)
 			{
+				if($this->fields[$key]['type'] == 'json')
+				{
+					$val = $this->sanitize_and_prepare_for_json($val);
+				}
+
 				if (is_array($val))
 				{
 					$values[$key] = $val;

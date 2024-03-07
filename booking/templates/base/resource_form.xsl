@@ -595,7 +595,9 @@
 						</table>
 					</div>
 				</div>
-				<div class="pure-control-group">
+
+
+<!--				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Description')" />
 					</label>
@@ -604,7 +606,25 @@
 							<xsl:value-of select="resource/description"/>
 						</textarea>
 					</div>
-				</div>
+				</div>-->
+				<xsl:for-each select="langs">
+					<xsl:variable name="lang">
+						<xsl:value-of select="lang"/>
+					</xsl:variable>
+					<div class="pure-control-group">
+						<label for="field_description_json_{$lang}">
+							<xsl:value-of select="php:function('lang', 'Description')" />
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="name"/>
+						</label>
+						<div class="custom-container pure-input-3-4">
+							<textarea id="field_description_json_no" name="description_json[{$lang}]" type="text" class="pure-input-1" >
+								<xsl:value-of disable-output-escaping="yes" select="description"/>
+							</textarea>
+						</div>
+					</div>
+				</xsl:for-each>
+
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Opening hours')" />
