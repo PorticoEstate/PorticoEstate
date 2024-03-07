@@ -429,8 +429,8 @@
 			{
 				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
 			}
-			$user_lang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
-			$building['description']		 = isset($building['description_json'][$user_lang]) ? $building['description_json'][$user_lang] : '';
+			$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+			$building['description']		 = isset($building['description_json'][$userlang]) ? $building['description_json'][$userlang] : '';
 			$building['buildings_link']		 = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['edit_link']			 = self::link(array('menuaction' => 'booking.uibuilding.edit',
 					'id'		 => $building['id']));
