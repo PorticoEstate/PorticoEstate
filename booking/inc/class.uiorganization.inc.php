@@ -462,7 +462,8 @@
 				$organization['homepage'] = 'http://' . $organization['homepage'];
 			}
 
-			$organization['description'] = $organization['description_json'][$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']];
+			$user_lang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+			$organization['description']		 = isset($organization['description_json'][$user_lang]) ? $organization['description_json'][$user_lang] : '';
 
 			$organization['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
 			$organization['edit_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.edit',

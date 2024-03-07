@@ -885,7 +885,8 @@
 				$facilitynames[] = $facility['name'];
 			}
 			$resource['facilities_names'] = implode(', ', $facilitynames);
-			$resource['description'] = $resource['description_json'][$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']];
+			$user_lang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+			$resource['description']		 = isset($resource['description_json'][$user_lang]) ? $resource['description_json'][$user_lang] : '';
 
 			$resource['edit_link'] = self::link(array('menuaction' => 'booking.uiresource.edit',
 					'id' => $resource['id']));

@@ -106,6 +106,14 @@
 		}
 
 		/**
+		* Get the user's selected language
+		*/
+		public function get_userlang()
+		{
+			return $this->userlang;
+		}
+
+		/**
 		* Read a lang file and return it as an array
 		*
 		* @param string $fn the filename parse
