@@ -2470,7 +2470,12 @@
 		{
             $values = array(
 				'activities'			=> $this->get_rows_as_array("SELECT * from bb_activity where active=1"),
-				'buildings'				=> $this->get_rows_as_array("SELECT * from bb_building where active=1"),
+//				'buildings'				=> $this->get_rows_as_array("SELECT * from bb_building where active=1"),
+				'buildings'				=> $this->get_rows_as_array("SELECT id, activity_id, deactivate_calendar, deactivate_application,"
+					. " deactivate_sendmessage, extra_kalendar, name, homepage, location_code, phone, email, tilsyn_name, tilsyn_phone,"
+					. " tilsyn_email, tilsyn_name2, tilsyn_phone2, tilsyn_email2, street, zip_code, district, city, calendar_text, opening_hours"
+					. " FROM bb_building WHERE active=1"),
+
 				'building_resources'	=> $this->get_rows_as_array("SELECT * from bb_building_resource"),
 				'facilities'			=> $this->get_rows_as_array("SELECT * from bb_facility where active=1"),
 				'resources'				=> $this->get_rows_as_array("SELECT * from bb_resource where active=1 and hidden_in_frontend=0 and deactivate_calendar=0"),
@@ -2479,7 +2484,10 @@
 				'resource_categories'	=> $this->get_rows_as_array("SELECT * from bb_rescategory where active=1"),
 				'resource_category_activity' => $this->get_rows_as_array("SELECT * from bb_rescategory_activity"),
 				'towns'					=> $this->get_search_data_location(),
-				'organizations'			=> $this->get_rows_as_array("SELECT * from bb_organization where active=1")
+//				'organizations'			=> $this->get_rows_as_array("SELECT * from bb_organization where active=1"),
+				'organizations'			=> $this->get_rows_as_array("SELECT id, organization_number, name, homepage, phone, email, co_address,"
+					. " street, zip_code, district, city, activity_id, show_in_portal"
+					. " FROM bb_organization WHERE active=1"),
 			);
 
             return $values;
