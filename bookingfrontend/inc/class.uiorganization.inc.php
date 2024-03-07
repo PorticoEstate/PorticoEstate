@@ -199,6 +199,8 @@
 			$organization['start'] = self::link(array('menuaction' => 'bookingfrontend.uisearch.index',
 					'type' => "organization"));
 
+			$organization['description'] = $organization['description_json'][$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']];
+
 			$organization['contact_info'] = "";
 			$contactdata = array();
 			foreach (array('homepage','email','phone') as $field)

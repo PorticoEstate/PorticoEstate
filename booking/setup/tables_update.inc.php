@@ -6592,3 +6592,54 @@ SQL;
 		}
 	}
 
+	/**
+	 * Update booking version from 0.2.98 to 0.2.99
+	 *
+	 */
+	$test[] = '0.2.98';
+	function booking_upgrade0_2_98()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$tables = array(
+			'bb_building',
+			'bb_resource',
+			'bb_organization'
+			);
+		
+		foreach ($tables as $table)
+		{
+
+			$GLOBALS['phpgw_setup']->oProc->AddColumn($table, 'description_json',
+					array('type' => 'jsonb', 'nullable' => True),//array of translations
+				);
+
+			$GLOBALS['phpgw_setup']->oProc->m_odb->query("SELECT id, description FROM {$table}", __LINE__, __FILE__);
+			$descriptions = array();
+
+			while ($GLOBALS['phpgw_setup']->oProc->next_record())
+			{
+				$descriptions[] = array(
+					'id'			 => (int)$GLOBALS['phpgw_setup']->oProc->f('id'),
+					'description'	 => $GLOBALS['phpgw_setup']->oProc->f('description', true)
+				);
+			}
+
+			foreach ($descriptions as $entry)
+			{
+				$json_data = json_encode(array('no' =>htmlspecialchars( $entry['description'])));
+	//			_debug_array($table);
+	//			_debug_array($entry['id']);
+				$GLOBALS['phpgw_setup']->oProc->m_odb->query("UPDATE {$table} SET description_json = '{$json_data}' WHERE id = {$entry['id']}");
+			}
+			unset($entry);
+		}
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.99';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+

@@ -12,6 +12,7 @@
 				'homepage' => array('type' => 'string', 'required' => true),
 				'calendar_text' => array('type' => 'string'),
 				'description' => array('type' => 'string'),
+				'description_json' => array('type' => 'json'),
 				'opening_hours' => array('type' => 'string'),
 				'phone' => array('type' => 'string'),
 				'email' => array('type' => 'string'),

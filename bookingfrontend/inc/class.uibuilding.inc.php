@@ -353,6 +353,7 @@ class bookingfrontend_uibuilding extends booking_uibuilding
             $building['contact_info'] = sprintf('<p>%s</p>', join('<br/>', $contactdata));
         }
 //        _debug_array(json.encode());
+		$building['description']		 = $building['description_json'][$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']];
 
         $building['schedule_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
             'id' => $building['id']));

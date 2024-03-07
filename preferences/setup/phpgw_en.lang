@@ -65,3 +65,6 @@ you do not have permission to set acl's in this mode!	preferences	en	You do not 
 you must enter a password	preferences	en	You must enter a password
 your current theme is: %1	preferences	en	your current theme is: %1
 your preferences	preferences	en	Your Preferences
+norwegian	common	en	Norwegian
+norwegian nn	common	en	Norwegian NN
+english	common	en	English
