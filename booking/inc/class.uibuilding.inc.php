@@ -40,6 +40,7 @@
 				'name'					 => 'string',
 				'homepage'				 => 'url',
 				'description'			 => 'html',
+				'description_json'		 => 'html',
 				'opening_hours'			 => 'html',
 				'email'					 => 'email',
 				'tilsyn_name'			 => 'string',
@@ -295,6 +296,21 @@
 			$building['cancel_link']	 = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$activity_data				 = $this->activity_bo->get_top_level();
 
+			$_langs = $GLOBALS['phpgw']->translation->get_installed_langs();
+			$langs = array();
+
+			foreach ($_langs as $key => $name)	// if we have a translation use it
+			{
+				$trans = mb_convert_case(lang($name), MB_CASE_LOWER);
+				$langs[] = array(
+					'lang' => $key,
+					'name' => $trans != "!$name" ? $trans : $name,
+					'description' =>!empty($building['description_json'][$key]) ? $building['description_json'][$key] : ''
+				);
+
+				self::rich_text_editor(array("field_description_json_{$key}"));
+			}
+
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::rich_text_editor(array('field_description', 'field_opening_hours'));
 
@@ -307,7 +323,10 @@
 					'date', 'security', 'file'));
 
 			self::add_javascript('booking', 'base', 'building.add.js');
-			self::render_template_xsl('building_form', array('building'		 => $building, 'activitydata'	 => $activity_data,
+			self::render_template_xsl('building_form', array(
+				'building'		 => $building,
+				'activitydata'	 => $activity_data,
+				'langs'			 => $langs,
 				'new_form'		 => true));
 		}
 
@@ -364,6 +383,21 @@
 
 			$this->flash_form_errors($errors);
 
+			$_langs = $GLOBALS['phpgw']->translation->get_installed_langs();
+			$langs = array();
+
+			foreach ($_langs as $key => $name)	// if we have a translation use it
+			{
+				$trans = mb_convert_case(lang($name), MB_CASE_LOWER);
+				$langs[] = array(
+					'lang' => $key,
+					'name' => $trans != "!$name" ? $trans : $name,
+					'description' =>!empty($building['description_json'][$key]) ? $building['description_json'][$key] : ''
+				);
+
+				self::rich_text_editor(array("field_description_json_{$key}"));
+			}
+
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::rich_text_editor(array('field_description', 'field_opening_hours'));
 
@@ -376,7 +410,11 @@
 					'date', 'security', 'file'));
 
 			self::add_javascript('booking', 'base', 'building.add.js');
-			self::render_template_xsl('building_form', array('building' => $building, 'activitydata' => $activity_data));
+			self::render_template_xsl('building_form', array(
+				'building'	   => $building,
+				'activitydata' => $activity_data,
+				'langs'		   => $langs
+			));
 		}
 
 		public function show()
@@ -391,6 +429,8 @@
 			{
 				phpgw::no_access('booking', lang('missing entry. Id %1 is invalid', $id));
 			}
+			$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+			$building['description']		 = isset($building['description_json'][$userlang]) ? $building['description_json'][$userlang] : '';
 			$building['buildings_link']		 = self::link(array('menuaction' => 'booking.uibuilding.index'));
 			$building['edit_link']			 = self::link(array('menuaction' => 'booking.uibuilding.edit',
 					'id'		 => $building['id']));

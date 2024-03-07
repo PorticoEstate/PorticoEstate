@@ -110,16 +110,14 @@
 			{
 				$loc_arr	 = $GLOBALS['phpgw']->locations->get_name($location_id);
 				$type_arr	 = explode('.', $loc_arr['location']);
-				if (count($type_arr) != 4)
+				if (count($type_arr) == 4 && in_array($type_arr[1], array('entity', 'catch')))
 				{
-					return array();
+					$type		 = $type_arr[1];
+					$entity_id	 = $type_arr[2];
+					$cat_id		 = $type_arr[3];
 				}
 
-				$type		 = $type_arr[1];
-				$entity_id	 = $type_arr[2];
-				$cat_id		 = $type_arr[3];
 			}
-
 
 			$this->so		 = CreateObject('property.soadmin_entity', '', '', $this->bocommon);
 			$this->type_app	 = $this->so->get_type_app();

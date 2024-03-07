@@ -44,6 +44,7 @@
 				'district' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'city' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'description' => array('type' => 'text', 'nullable' => True),
+				'description_json' => array('type' => 'jsonb', 'nullable' => True),//array of translations
 				'calendar_text' => array('type' => 'text', 'nullable' => True),
 				'opening_hours' => array('type' => 'text', 'nullable' => True),
 			),
@@ -97,6 +98,7 @@
 				'district' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'city' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'description' => array('type' => 'text', 'nullable' => True),
+				'description_json' => array('type' => 'jsonb', 'nullable' => True),//array of translations
 				'activity_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'customer_identifier_type' => array('type' => 'varchar', 'precision' => '255',
 					'nullable' => True),
@@ -197,6 +199,7 @@
 				'active' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 				'name' => array('type' => 'varchar', 'precision' => '150', 'nullable' => False),
 				'description' => array('type' => 'text', 'nullable' => True),
+				'description_json' => array('type' => 'jsonb', 'nullable' => True),//array of translations
 				'activity_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'sort' => array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
 				'organizations_ids' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),

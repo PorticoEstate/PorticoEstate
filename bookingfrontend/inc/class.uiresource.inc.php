@@ -162,6 +162,8 @@
 			}
 
 //			$resource['building']		 = ExecMethod('booking.bobuilding.read_single', $resource['building_id']);
+			$userlang = $GLOBALS['phpgw']->translation->get_userlang();
+			$resource['description'] = !empty($resource['description_json'][$userlang]) ? $resource['description_json'][$userlang] : $resource['description_json']['no'];
 			$resource['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
 					'id' => $resource['building_id']));
 			$resource['buildings_link'] = self::link(array('menuaction' => 'bookingfrontend.uisearch.index',

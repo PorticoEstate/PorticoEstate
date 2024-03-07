@@ -25,14 +25,14 @@
 				<fieldset>
 					<div class="heading">
 						<!--<legend>-->
-							<h3>
-								<xsl:if test="new_form">
-									<xsl:value-of select="php:function('lang', 'New Organization')" />
-								</xsl:if>
-								<xsl:if test="not(new_form)">
-									<xsl:value-of select="php:function('lang', 'Edit Organization')" />
-								</xsl:if>
-							</h3>
+						<h3>
+							<xsl:if test="new_form">
+								<xsl:value-of select="php:function('lang', 'New Organization')" />
+							</xsl:if>
+							<xsl:if test="not(new_form)">
+								<xsl:value-of select="php:function('lang', 'Edit Organization')" />
+							</xsl:if>
+						</h3>
 						<!--</legend>-->
 					</div>
 					<div class="pure-g">
@@ -242,51 +242,71 @@
 							</div>
 						</div>
 					</div>
-						<div class="pure-control-group">
-							<label for="field_activity">
-								<xsl:value-of select="php:function('lang', 'Activity')" />
-							</label>
-							<select name="activity_id" id="field_activity" class="pure-u-1">
-								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-error-msg">
-									<xsl:value-of select="php:function('lang', 'Please select an activity')" />
-								</xsl:attribute>
-								<option value="">
-									<xsl:value-of select="php:function('lang', '-- select an activity --')" />
+					<div class="pure-control-group">
+						<label for="field_activity">
+							<xsl:value-of select="php:function('lang', 'Activity')" />
+						</label>
+						<select name="activity_id" id="field_activity" class="pure-u-1">
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please select an activity')" />
+							</xsl:attribute>
+							<option value="">
+								<xsl:value-of select="php:function('lang', '-- select an activity --')" />
+							</option>
+							<xsl:for-each select="activities">
+								<option>
+									<xsl:if test="../organization/activity_id = id">
+										<xsl:attribute name="selected">selected</xsl:attribute>
+									</xsl:if>
+									<xsl:attribute name="value">
+										<xsl:value-of select="id"/>
+									</xsl:attribute>
+									<xsl:value-of select="name"/>
 								</option>
-								<xsl:for-each select="activities">
-									<option>
-										<xsl:if test="../organization/activity_id = id">
-											<xsl:attribute name="selected">selected</xsl:attribute>
-										</xsl:if>
-										<xsl:attribute name="value">
-											<xsl:value-of select="id"/>
-										</xsl:attribute>
-										<xsl:value-of select="name"/>
-									</option>
-								</xsl:for-each>
-							</select>
+							</xsl:for-each>
+						</select>
+					</div>
+					<!--						<div class="pure-control-group">
+						<label for="field_description">
+							<xsl:value-of select="php:function('lang', 'Description')" />
+						</label>
+						<div>
+							<textarea rows="4" id="field_description" name="description" type="text" class="pure-u-1">
+								<xsl:value-of select="organization/description"/>
+							</textarea>
 						</div>
+					</div>-->
+					<xsl:for-each select="langs">
+						<xsl:variable name="lang">
+							<xsl:value-of select="lang"/>
+						</xsl:variable>
 						<div class="pure-control-group">
-							<label for="field_description">
+							<label for="field_description_json_{$lang}">
 								<xsl:value-of select="php:function('lang', 'Description')" />
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="name"/>
 							</label>
-							<div>
-								<textarea rows="4" id="field_description" name="description" type="text" class="pure-u-1">
-									<xsl:value-of select="organization/description"/>
+							<div class="custom-container pure-input-3-4">
+								<textarea id="field_description_json_no" name="description_json[{$lang}]" type="text" class="pure-input-1" >
+									<xsl:value-of disable-output-escaping="yes" select="description"/>
 								</textarea>
 							</div>
 						</div>
+
+					</xsl:for-each>
+
+
 					<xsl:if test='new_form or organization/permission/write'>
 						<div class="pure-g">
 							<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-2 pure-u-lg-1-2">
 								<div class="heading">
 									<!--<legend>-->
-										<h3>
-											<xsl:value-of select="php:function('lang', 'Admin 1')" />
-										</h3>
+									<h3>
+										<xsl:value-of select="php:function('lang', 'Admin 1')" />
+									</h3>
 									<!--</legend>-->
 								</div>
 								<div class="pure-control-group">
@@ -319,9 +339,9 @@
 							<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-2 pure-u-lg-1-2">
 								<div class="heading">
 									<!--<legend>-->
-										<h3>
-											<xsl:value-of select="php:function('lang', 'Admin 2')" />
-										</h3>
+									<h3>
+										<xsl:value-of select="php:function('lang', 'Admin 2')" />
+									</h3>
 									<!--</legend>-->
 								</div>
 								<div class="pure-control-group">
