@@ -1388,7 +1388,7 @@ if (globalThis['ko']) {
 <!--                            <div data-bind="text: ko.toJSON($parent.popperData)"></div>-->
                             <!-- ko if: $data.event.type !== 'temporary' && $parent.popperData()?.bookings?.[$data.event.id] -->
                             <button class="dots-container"
-                                    data-bind="withAfterRender: { afterRender: $parent.addPopperAfterRender}, click: $parent.togglePopper">
+                                    data-bind="withAfterRender: { afterRender: $parent.addPopperAfterRender}, click: $parent.togglePopper, css: {'z-auto': $parent.tempEvent()}">
                                 <!--                                <img-->
                                 <!--                                        data-bind="attr: {src: phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false)}"-->
                                 <!--                                        class="dots"/>-->
