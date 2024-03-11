@@ -2291,7 +2291,7 @@
 
 					//Nøkkelfelt, kundens personnr/orgnr. - men differensiert for undergrupper innenfor samme orgnr
 					$stored_header['tekst4'] = $check_customer_identifier;
-					$stored_header['tekst3'] = $check_customer_identifier;
+					$header['tekst3'] = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 12), 12, ' ');
 
 					if ($type == 'internal')
 					{

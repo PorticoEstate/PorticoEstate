@@ -519,6 +519,7 @@
 				$cancel_params['export_key'] = $export_key;
 			}
 
+			$export['building_name'] = html_entity_decode($export['building_name']);
 			$export['cancel_link'] = $this->link_to('index', $cancel_params);
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::render_template_xsl('completed_reservation_export_form', array('new_form' => true,
