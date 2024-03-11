@@ -38,6 +38,11 @@ class PECalendar {
      * @type {KnockoutObservable<Record<string, IBuildingResource>>}
      */
     resources = ko.observable({});
+    /**
+     * A mapping of event IDs to their corresponding booking info.
+     * @type {KnockoutObservable<any>}
+     */
+    popperData = ko.observable({});
 
     /**
      * @type {KnockoutObservableArray<IEvent>} - An array of event objects.
@@ -199,7 +204,7 @@ class PECalendar {
         this.currentDate.subscribe(newDate => {
             this.loadBuildingData();
         });
-
+        this.calendarEvents.subscribe(newData => this.loadPopperData())
 
         this.disableResourceSwap(disableResourceSwap)
         this.building_id(building_id);
@@ -325,7 +330,6 @@ class PECalendar {
             if(this.firstDayOfCalendar() > currDate) {
                 weeksToFetch.push(this.firstDayOfCalendar().minus({week: 1}).toFormat("y-MM-dd")) // last week
             }
-
             // Construct URLs for fetching data
             // Construct the URL for fetching building schedule information
             let urlBuildingSchedule = phpGWLink('bookingfrontend/', {
@@ -1078,25 +1082,46 @@ class PECalendar {
         });
     }
 
+    clickBubbler(d,click) {
+        return true;
+    }
 
     togglePopper(e, clickEvent) {
+        console.log(clickEvent)
+        // Identify if the event target or any of its ancestors is an <a> element
+        let isLink = false;
+        for (let elem = clickEvent.target; elem !== clickEvent.currentTarget; elem = elem.parentNode) {
+            if (elem.tagName === 'A') {
+                isLink = true;
+                break; // Stop loop if an <a> tag is found
+            }
+        }
+
+        // If the click is on a link, allow default behavior (navigation)
+        if (isLink) {
+            return; // Exit the function early
+        }
+
+        // Proceed with toggling the popper for non-link clicks
+        console.log(clickEvent.currentTarget);
+
         let popperInfo;
-        if (clickEvent.currentTarget.className === 'dots-container') {
-            console.log('gotDots', clickEvent)
+        if (clickEvent.currentTarget.className.includes('dots-container')) {
+            console.log('gotDots', clickEvent);
             popperInfo = clickEvent.currentTarget.nextElementSibling;
-        } else if (clickEvent.currentTarget.className === 'info') {
-            popperInfo = clickEvent.currentTarget
+        } else if (clickEvent.currentTarget.className.includes('info')) {
+            popperInfo = clickEvent.currentTarget;
         }
         if (!popperInfo) {
-            return
+            return;
         }
 
         if (popperInfo.hasAttribute('data-show')) {
-            popperInfo.removeAttribute('data-show')
+            popperInfo.removeAttribute('data-show');
         } else {
-            popperInfo.setAttribute('data-show', '')
+            popperInfo.setAttribute('data-show', '');
         }
-        console.log(clickEvent);
+
     }
 
     addPopperAfterRender(e) {
@@ -1105,6 +1130,19 @@ class PECalendar {
             placement: 'left',
         });
     }
+
+    async loadPopperData() {
+        if (!this.calendarEvents || !this.calendarEvents() || this.calendarEvents().length === 0) {
+            return;
+        }
+        let url = phpGWLink('bookingfrontend/', {
+            menuaction: 'bookingfrontend.uibooking.info_json',
+            ids: this.calendarEvents().map(e => e.event.id),
+        }, true);
+        const res = await fetch(url);
+        this.popperData(await res.json());
+    }
+
 
     updateDatePickerAfterRender(e) {
         $(e).datepicker({
@@ -1145,6 +1183,12 @@ class PECalendar {
     loaded = ko.computed(() => {
         return !!this.resource_id() && Object.values(this.availableTimeSlots()).length > 0;
     });
+
+    cleanUrl(url) {
+        const parseResult = new DOMParser().parseFromString(url, "text/html");
+        const parsedUrl = parseResult.documentElement.textContent;
+        return parsedUrl;
+    }
 
     combinedTempEvents = ko.computed(() => {
         // Start with the array of existing temp events
@@ -1341,19 +1385,63 @@ if (globalThis['ko']) {
                                 <i class="fas fa-times"></i>
                             </button>
                             <!-- /ko -->
-                            <!-- ko if: $data.event.type !== 'temporary' -->
+<!--                            <div data-bind="text: ko.toJSON($parent.popperData)"></div>-->
+                            <!-- ko if: $data.event.type !== 'temporary' && $parent.popperData()?.bookings?.[$data.event.id] -->
                             <button class="dots-container"
-                                    data-bind="withAfterRender: { afterRender: $parent.addPopperAfterRender}, click: $parent.togglePopper">
+                                    data-bind="withAfterRender: { afterRender: $parent.addPopperAfterRender}, click: $parent.togglePopper, css: {'z-auto': $parent.tempEvent()}">
                                 <!--                                <img-->
                                 <!--                                        data-bind="attr: {src: phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false)}"-->
                                 <!--                                        class="dots"/>-->
                                 <i class="fas fa-info-circle"></i>
                             </button>
-                            <div class="info" data-bind="click: $parent.togglePopper">
+                            <div class="info" data-bind="click: $parent.togglePopper, with: $parent.popperData()?.bookings?.[$data.event.id], as: 'booking'">
                                 <div class="info-inner">
-                                    <div><b data-bind="text: $data.event.name"></b></div>
-                                    <div data-bind="text: 'Kl: ' + $parent.formatPillTimeInterval($data.event)">Kl: FROM
-                                        - TO
+                                    <!-- Booking ID -->
+                                    <div>
+                                        <b data-bind="text: '#' + booking.id"></b>
+                                    </div>
+                                    <!-- Group Organization Name -->
+                                    <div>
+                                        <b data-bind="text: booking.info_group.organization_name"></b>
+                                    </div>
+                                    <!-- Group (2018) and Group Name -->
+                                    <div class="mb-3">
+                                        <span class="text-bold"><trans>booking:group (2018)</trans>:</span>
+                                        <a data-bind="attr: { href: booking.group_link }, text: booking.info_group.name"></a>
+                                    </div>
+                                    <!-- Booking Time -->
+                                    <div data-bind="text: 'Kl: ' + $component.formatPillTimeInterval($parent.event)">
+                                        Kl: FROM - TO
+                                    </div>
+                                    <!-- Place and Building Name -->
+                                    <div>
+                                        <span class="text-bold"><trans>bookingfrontend:place</trans>:</span>
+                                        <a data-bind="attr: { href: booking.building_link }, text: booking.building_name"></a>
+                                        (<span data-bind="text: booking.info_resource_info"></span>)
+                                    </div>
+                                    <!-- Participant Limit -->
+                                    <!-- ko if: booking.info_participant_limit > 0 -->
+                                    <div>
+                                        <span class="text-bold"><trans>booking:participant limit</trans>:</span>
+                                        <span data-bind="text: booking.info_participant_limit"></span>
+                                    </div>
+                                    <!-- /ko -->
+                                    <!-- Actions -->
+                                    <div class="actions">
+                                        <!-- Register Participants Link -->
+                                        <a data-bind="attr: { href: $component.cleanUrl(booking.info_show_link), target: '_blank', },click: $component.clickBubbler, clickBubble: false" class="btn btn-light mt-4"><trans>booking:register participants</trans></a>
+                                        <!-- Edit Booking Link -->
+                                        <!-- ko if: booking.info_edit_link -->
+                                        <a data-bind="attr: { href: $component.cleanUrl(booking.info_edit_link), target: '_blank', }, click: $component.clickBubbler, clickBubble: false" class="btn btn-light mt-4"><trans>bookingfrontend:edit booking</trans></a>
+                                        <!-- /ko -->
+                                        <!-- Cancel Booking Link -->
+                                        <!-- ko if: $component.popperData()?.user_can_delete_bookings -->
+                                        <a data-bind="attr: { href: $component.cleanUrl(booking.info_cancel_link), target: '_blank', },click: $component.clickBubbler, clickBubble: false" class="btn btn-light mt-4"><trans>bookingfrontend:cancel booking</trans></a>
+                                        <!-- /ko -->
+                                        <!-- iCal Link -->
+                                        <!-- ko if: booking.info_ical_link -->
+                                        <a data-bind="attr: { href: $component.cleanUrl(booking.info_ical_link), target: '_blank', }, text: 'iCal',click: $component.clickBubbler, clickBubble: false" class="btn btn-light mt-4"></a>
+                                        <!-- /ko -->
                                     </div>
                                 </div>
 
@@ -1378,8 +1466,8 @@ if (globalThis['ko']) {
                     <div class="time-slot-card">
                         <!-- Status section -->
                         <div class="time-slot-status"
-                             data-bind="css: { 'green': $data.overlap === false, 'yellow': $data.overlap === 1, 'red': $data.overlap === 2 }">
-                            <span data-bind="text: $data.overlap === false ? 'Ledig' : ($data.overlap === 1 ? 'Reservert' : 'Opptatt')"></span>
+                             data-bind="css: { 'green': $data.overlap === false, 'yellow': $data.overlap === 2, 'red': $data.overlap === 1 }">
+                            <span data-bind="text: $data.overlap === false ? 'Ledig' : ($data.overlap === 2 ? 'Reservert' : 'Opptatt')"></span>
                         </div>
 
                         <!-- Date and time section -->

@@ -1,4 +1,5 @@
 /* global monthList, months */
+import './translation';
 
 var Util = function ()
 {

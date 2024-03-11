@@ -1435,7 +1435,7 @@ h4, .h4 {
   border: 1px solid #000;
   min-height: 100px;
   z-index: 12;
-  width: 10rem;
+  width: max-content;
   cursor: pointer;
   font-size: 1rem;
   position: relative;
@@ -1534,6 +1534,10 @@ h4, .h4 {
   align-self: stretch;
   align-items: center;
   border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.z-auto {
+  z-index: auto !important;
 }
 
 /*# sourceMappingURL=pecalendar.css.map */
