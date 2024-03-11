@@ -1536,4 +1536,8 @@ h4, .h4 {
   border-radius: 0 0.5rem 0.5rem 0;
 }
 
+.z-auto {
+  z-index: auto !important;
+}
+
 /*# sourceMappingURL=pecalendar.css.map */
