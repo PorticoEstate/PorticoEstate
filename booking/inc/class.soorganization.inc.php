@@ -21,6 +21,7 @@
 				'email' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array(
 						'invalid' => '%field% is invalid'))),
 				'description' => array('type' => 'string', 'query' => True),
+				'description_json' => array('type' => 'json', 'required' => false),
 				'co_address' => array('type' => 'string'),
 				'street' => array('type' => 'string'),
 				'zip_code' => array('type' => 'string'),

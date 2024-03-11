@@ -42,6 +42,7 @@
 				'city'							 => 'string',
 				'district'						 => 'string',
 				'description'					 => 'html',
+				'description_json'				 => 'html',
 				'contacts'						 => 'string',
 				'active'						 => 'int',
 				'organization_number'			 => 'string',
@@ -301,6 +302,22 @@
 			self::rich_text_editor('field_description');
 			phpgwapi_jquery::load_widget('select2');
 
+
+			$_langs = $GLOBALS['phpgw']->translation->get_installed_langs();
+			$langs = array();
+
+			foreach ($_langs as $key => $name)	// if we have a translation use it
+			{
+				$trans = mb_convert_case(lang($name), MB_CASE_LOWER);
+				$langs[] = array(
+					'lang' => $key,
+					'name' => $trans != "!$name" ? $trans : $name,
+					'description' =>!empty($organization['description_json'][$key]) ? $organization['description_json'][$key] : ''
+				);
+
+				self::rich_text_editor(array("field_description_json_{$key}"));
+			}
+
 			$this->add_template_helpers();
 
 			$tabs = array();
@@ -320,6 +337,7 @@
 				'activities'	 => $activities,
 				'currentapp'	 => $GLOBALS['phpgw_info']['flags']['currentapp'],
 				'noframework'	 => empty($GLOBALS['phpgw_info']['flags']['noframework']) ? false : true,
+				'langs'			 => $langs,
 			));
 		}
 
@@ -387,6 +405,23 @@
 			$activities = $activities['results'];
 
 			$this->install_customer_identifier_ui($organization);
+
+			$_langs = $GLOBALS['phpgw']->translation->get_installed_langs();
+			$langs = array();
+
+			foreach ($_langs as $key => $name)	// if we have a translation use it
+			{
+				$trans = mb_convert_case(lang($name), MB_CASE_LOWER);
+				$langs[] = array(
+					'lang' => $key,
+					'name' => $trans != "!$name" ? $trans : $name,
+					'description' =>!empty($organization['description_json'][$key]) ? $organization['description_json'][$key] : ''
+				);
+
+				self::rich_text_editor(array("field_description_json_{$key}"));
+			}
+
+
 			self::rich_text_editor('field_description');
 			phpgwapi_jquery::load_widget('select2');
 
@@ -399,6 +434,7 @@
 				"contact_form_link"		 => $contact_form_link,
 				'activities'			 => $activities,
 				'currentapp'			 => $GLOBALS['phpgw_info']['flags']['currentapp'],
+				'langs'					 => $langs,
 			));
 		}
 
@@ -425,6 +461,10 @@
 			{
 				$organization['homepage'] = 'http://' . $organization['homepage'];
 			}
+
+			$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+			$organization['description']		 = isset($organization['description_json'][$userlang]) ? $organization['description_json'][$userlang] : '';
+
 			$organization['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
 			$organization['edit_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.edit',
 					'id' => $organization['id']));

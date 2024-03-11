@@ -2255,7 +2255,7 @@
 
 				foreach ($agreement['files'] as $_entry)
 				{
-					if ( in_array($_entry['mime_type'], $img_types))
+			//		if ( in_array($_entry['mime_type'], $img_types))
 					{
 						$content_files[] = array(
 							'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . $lang_view_file . '">' . $_entry['name'] . '</a>'

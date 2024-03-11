@@ -71,9 +71,9 @@ should history navigation urls as breadcrumbs	preferences	nn	Vis historisk navig
 activate nowrap in yui-tables	preferences	nn	Aktiver no-wrap i YUI-tabeller
 select the language of texts and messages within phpgroupware.<br>some languages may not contain all messages, in that case you will see an english message.	preferences	nn	Velg språk for tekster og meldinger i BkBygg.<br/>Dersom en oversettelse mangler vil engelsk tekst/melding vises
 users choice	preferences	nn	Brukers valg
-norwegian	preferences	nn	Norsk Bokmål
-norwegian nn	preferences	nn	Nynorsk
-english	preferences	nn	Engelsk
+norwegian	common	nn	Norsk Bokmål
+norwegian nn	common	nn	Nynorsk
+english	common	nn	Engelsk
 no default	preferences	nn	Ingen standard
 no sidecontent	preferences	nn	Ingen sideinnhold
 choose property filter	preferences	nn	Velg eiendomsfilter
