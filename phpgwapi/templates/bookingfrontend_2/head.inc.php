@@ -354,6 +354,7 @@ HTML;
 				break;
 		}
 
+		$_selected_lang = $selected_lang == $key ? 'checked' : '';
 		$lang_selector .= <<<HTML
 		  <label class="choice mb-3">
 			<input type="radio" name="select_language" value="{$key}" {$_selected_lang} />
