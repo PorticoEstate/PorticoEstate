@@ -366,3 +366,5 @@ messages_saved_form	common	no	Data er lagret
 messages_form_error	common	no	Data er ikke lagret
 fatal error	common	no	Fatal feil
 column search	common	no	Kolonnesøk
+choose language	common	no	Velg språk
+which language do you want?	common	no	Hvilket språk ønsker du?
