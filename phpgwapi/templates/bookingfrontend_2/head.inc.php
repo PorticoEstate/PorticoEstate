@@ -367,6 +367,9 @@ HTML;
 
 	$selected_lang_trans = $installed_langs[$selected_lang];
 
+	$choose_lang_trans = lang('choose language');
+	$choose_lang_trans2 = lang('Which language do you want?');
+
 
 	$nav = <<<HTML
 <div class="border-top border-2 pt-5 pb-2r">
@@ -384,7 +387,7 @@ HTML;
     </div>
     <div class="navbar__section navbar__section--right d-none d-lg-flex">
       <!-- Button trigger modal -->
-      <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector" data-bs-toggle="modal" data-bs-target="#selectLanguage" aria-label="Velg språk">
+      <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector" data-bs-toggle="modal" data-bs-target="#selectLanguage" aria-label="{$choose_lang_trans}">
 		<i class="fi {$selected_flag_class}" title="{$selected_lang_trans}"></i>
         <i class="fas fa-chevron-down"></i>
       </button>
@@ -398,8 +401,8 @@ HTML;
             </div>
             <div class="modal-body d-flex justify-content-center pt-0 pb-4">
               <div>
-                <h3>Velg språk</h3>
-                <p>Hvilket språk ønsker du?</p>
+                <h3>{$choose_lang_trans}</h3>
+                <p>{$choose_lang_trans2}</p>
                 <form class="d-flex flex-column">
 					{$lang_selector}
                 </form>
@@ -440,8 +443,8 @@ HTML;
           </div>
           <div class="offcanvas-body">
                <div>
-                <h3>Velg språk</h3>
-                <p>Hvilket språk ønsker du?</p>
+                <h3>{$choose_lang_trans}</h3>
+                <p>$choose_lang_trans2</p>
                 <form class="d-flex flex-column">
 					{$lang_selector}
                 </form>

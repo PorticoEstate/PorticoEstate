@@ -345,3 +345,5 @@ messages_saved_form	common	nn	Data er lagra
 messages_form_error	common	nn	Data er ikkje lagra
 fatal error	common	nn	Fatal feil
 column search	common	nn	Kolonnesøk
+choose language	common	nn	Byt språk
+which language do you want?	common	nn	Kva for språk ynskjer du?
