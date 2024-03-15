@@ -13,7 +13,6 @@
 				'sort' => array('type' => 'int', 'required' => false),
 //				'building_id'		 => array('type' => 'int', 'required' => true),
 				'name' => array('type' => 'string', 'query' => true, 'required' => true),
-				'description' => array('type' => 'string', 'required' => false),
 				'description_json' => array('type' => 'json', 'required' => false),
 				'deactivate_application' => array('type' => 'int'),
 				'opening_hours' => array('type' => 'string'),
@@ -150,7 +149,7 @@
 		function get_metainfo( $id )
 		{
 			$id = (int)$id;
-			$sql = "SELECT bb_resource.name, bb_building.name as building, bb_building.city, bb_building.district, bb_resource.description"
+			$sql = "SELECT bb_resource.name, bb_building.name as building, bb_building.city, bb_building.district, bb_resource.description_json"
 				. " FROM bb_resource JOIN bb_building_resource ON  bb_resource.id =bb_building_resource.resource_id"
 				. " JOIN bb_building ON bb_building_resource.building_id = bb_building.id"
 				. " WHERE bb_resource.id={$id}";
@@ -164,7 +163,7 @@
 				'building' => $this->db->f('building', true),
 				'district' => $this->db->f('district', true),
 				'city' => $this->db->f('city', true),
-				'description' => $this->db->f('description', true));
+				'description_json' => json_decode($this->db->f('description_json'),true));
 		}
 
 

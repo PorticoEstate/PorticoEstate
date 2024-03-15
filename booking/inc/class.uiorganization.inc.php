@@ -41,7 +41,6 @@
 				'zip_code'						 => 'string',
 				'city'							 => 'string',
 				'district'						 => 'string',
-				'description'					 => 'html',
 				'description_json'				 => 'html',
 				'contacts'						 => 'string',
 				'active'						 => 'int',
@@ -299,7 +298,6 @@
 			$activities = $activities['results'];
 
 			$this->install_customer_identifier_ui($organization);
-			self::rich_text_editor('field_description');
 			phpgwapi_jquery::load_widget('select2');
 
 
