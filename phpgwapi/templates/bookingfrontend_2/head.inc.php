@@ -53,6 +53,7 @@ JS;
 	$stylesheets	 = array();
 	$stylesheets[]	 = "/phpgwapi/js/bootstrap5/vendor/twbs/bootstrap/dist/css/bootstrap.min.css";
 	$stylesheets[]	 = "/phpgwapi/templates/base/css/fontawesome/css/all.min.css";
+	$stylesheets[]	 = "/phpgwapi/templates/base/css/flag-icons.min.css";
 	$stylesheets[]	 = "/phpgwapi/templates/bookingfrontend/css/jquery.autocompleter.css";
 	$stylesheets[]	 = "/phpgwapi/templates/bookingfrontend/css/normalize.css";
 	$stylesheets[]	 = "/phpgwapi/templates/bookingfrontend/css/rubik-font.css";
@@ -75,7 +76,7 @@ JS;
 		$site_title = $GLOBALS['phpgw_info']['server']['site_title'];
 	}
 
-	$headlogopath = $webserver_url . "/phpgwapi/templates/bookingfrontend_2/styleguide/gfx/";
+	$headlogopath = $webserver_url . "/phpgwapi/templates/bookingfrontend_2/styleguide/gfx";
 
 	$langmanual = lang('Manual');
 	$GLOBALS['phpgw']->template->set_var('manual', $langmanual);
@@ -271,19 +272,17 @@ JS;
 		$selected_lang = phpgw::get_var('selected_lang', 'string', 'COOKIE', $userlang);
 	}
 	
-	$selected_english = '';
-	$selected_norwegian = '';
-
 	switch ($selected_lang)
 	{
 		case 'no':
 		case 'nn':
-		$selected_norwegian = 'checked';
+			$selected_flag_class = 'fi-no';
 			break;
 		case 'en':
-		$selected_english = 'checked';
+			$selected_flag_class = 'fi-gb';
 			break;
 		default:
+			$selected_flag_class = "fi-{$key}";
 			break;
 	}
 
@@ -332,6 +331,46 @@ HTML;
 		$template_selector = '';
 	}
 
+	$installed_langs = $GLOBALS['phpgw']->translation->get_installed_langs();
+	$langs = array();
+
+	$lang_selector = '';
+	foreach ($installed_langs as $key => $name)
+	{
+		$trans = lang($name);
+		$installed_langs[$key] = $trans;
+
+		switch ($key)
+		{
+			case 'no':
+			case 'nn':
+				$flag_class = 'fi-no';
+				break;
+			case 'en':
+				$flag_class = 'fi-gb';
+				break;
+			default:
+				$flag_class = "fi-{$key}";
+				break;
+		}
+
+		$_selected_lang = $selected_lang == $key ? 'checked' : '';
+		$lang_selector .= <<<HTML
+		  <label class="choice mb-3">
+			<input type="radio" name="select_language" value="{$key}" {$_selected_lang} />
+			<i class="fi {$flag_class}" title="{$key}"></i> {$trans}
+			<span class="choice__radio"></span>
+		  </label>
+HTML;
+
+	}
+
+	$selected_lang_trans = $installed_langs[$selected_lang];
+
+	$choose_lang_trans = lang('choose language');
+	$choose_lang_trans2 = lang('Which language do you want?');
+
+
 	$nav = <<<HTML
 <div class="border-top border-2 pt-5 pb-2r">
   <nav class="navbar">
@@ -348,8 +387,8 @@ HTML;
     </div>
     <div class="navbar__section navbar__section--right d-none d-lg-flex">
       <!-- Button trigger modal -->
-      <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector" data-bs-toggle="modal" data-bs-target="#selectLanguage" aria-label="Velg språk">
-        <img src="{$headlogopath}/norway.png" alt="Norsk flagg" class="">
+      <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector" data-bs-toggle="modal" data-bs-target="#selectLanguage" aria-label="{$choose_lang_trans}">
+		<i class="fi {$selected_flag_class}" title="{$selected_lang_trans}"></i>
         <i class="fas fa-chevron-down"></i>
       </button>
 
@@ -362,19 +401,10 @@ HTML;
             </div>
             <div class="modal-body d-flex justify-content-center pt-0 pb-4">
               <div>
-                <h3>Velg språk</h3>
-                <p>Hvilket språk ønsker du?</p>
+                <h3>{$choose_lang_trans}</h3>
+                <p>{$choose_lang_trans2}</p>
                 <form class="d-flex flex-column">
-                  <label class="choice mb-3">
-                    <input type="radio" name="select_language" value="{$userlang}" {$selected_norwegian} />
-                    <img src="{$headlogopath}/norway.png" alt="Norsk flagg" class=""> Norsk
-                    <span class="choice__radio"></span>
-                  </label>
-                  <label class="choice mb-5">
-                    <input type="radio" name="select_language" value="en" {$selected_english}/>
-                    <img src="{$headlogopath}/united-kingdom.png" alt="Engelsk flagg" class=""> English
-                    <span class="choice__radio"></span>
-                  </label>
+					{$lang_selector}
                 </form>
               </div>
             </div>
@@ -413,19 +443,10 @@ HTML;
           </div>
           <div class="offcanvas-body">
                <div>
-                <h3>Velg språk</h3>
-                <p>Hvilket språk ønsker du?</p>
+                <h3>{$choose_lang_trans}</h3>
+                <p>$choose_lang_trans2</p>
                 <form class="d-flex flex-column">
-                  <label class="choice mb-3">
-                    <input type="radio" name="select_language" value="{$userlang}" {$selected_norwegian} />
-                    <img src="{$headlogopath}/norway.png" alt="Norsk flagg" class=""> Norsk
-                    <span class="choice__radio"></span>
-                  </label>
-                  <label class="choice mb-5">
-                    <input type="radio" name="select_language" value="en" {$selected_english}/>
-                    <img src="{$headlogopath}/united-kingdom.png" alt="Engelsk flagg" class=""> English
-                    <span class="choice__radio"></span>
-                  </label>
+					{$lang_selector}
                 </form>
               </div>
               <div>
