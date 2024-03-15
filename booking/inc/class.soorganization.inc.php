@@ -20,7 +20,6 @@
 				'phone' => array('type' => 'string'),
 				'email' => array('type' => 'string', 'sf_validator' => createObject('booking.sfValidatorEmail', array(), array(
 						'invalid' => '%field% is invalid'))),
-				'description' => array('type' => 'string', 'query' => True),
 				'description_json' => array('type' => 'json', 'required' => false),
 				'co_address' => array('type' => 'string'),
 				'street' => array('type' => 'string'),
@@ -75,7 +74,7 @@
 
 		function get_metainfo( $id )
 		{
-			$this->db->limit_query("SELECT name, shortname, district, city, description FROM bb_organization where id=" . intval($id), 0, __LINE__, __FILE__, 1);
+			$this->db->limit_query("SELECT name, shortname, district, city, description_json FROM bb_organization where id=" . intval($id), 0, __LINE__, __FILE__, 1);
 			if (!$this->db->next_record())
 			{
 				return False;
@@ -84,7 +83,7 @@
 				'shortname' => $this->db->f('shortname', true),
 				'district' => $this->db->f('district', true),
 				'city' => $this->db->f('city', true),
-				'description' => $this->db->f('description', true));
+				'description_json' => json_decode($this->db->f('description_json'),true));
 		}
 
 		function get_orgid( $orgnr, $customer_ssn = null )

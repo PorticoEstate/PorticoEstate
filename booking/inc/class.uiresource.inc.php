@@ -49,7 +49,6 @@
 			$this->rescategory_bo = CreateObject('booking.borescategory');
 			$this->fields = array(
 				'name'							 => 'string',
-				'description'					 => 'html',
 				'description_json'				 => 'html',
 				'opening_hours'					 => 'html',
 				'contact_info'					 => 'html',
@@ -264,7 +263,7 @@
 				self::rich_text_editor(array("field_description_json_{$key}"));
 			}
 
-			self::rich_text_editor(array('field_description', 'field_opening_hours', 'field_contact_info'));
+			self::rich_text_editor(array('field_opening_hours', 'field_contact_info'));
 			$activity_data = $this->activity_bo->fetch_activities();
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
 			$tabs = array();

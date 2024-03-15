@@ -178,7 +178,7 @@ JS;
 	{
 		$boorganization	 = CreateObject('booking.boorganization');
 		$metainfo		 = $boorganization->so->get_metainfo($id);
-		$description	 = preg_replace('/\s+/', ' ', strip_tags($metainfo['description']));
+		$description	 = preg_replace('/\s+/', ' ', strip_tags(html_entity_decode($metainfo['description_json']['no'])));
 		$keywords		 = $metainfo['name'] . "," . $metainfo['shortname'] . "," . $metainfo['district'] . "," . $metainfo['city'];
 	}
 	elseif (strpos($menuaction, 'group'))
@@ -192,14 +192,14 @@ JS;
 	{
 		$bobuilding	 = CreateObject('booking.bobuilding');
 		$metainfo	 = $bobuilding->so->get_metainfo($id);
-		$description = preg_replace('/\s+/', ' ', strip_tags($metainfo['description']));
+		$description = preg_replace('/\s+/', ' ', strip_tags(html_entity_decode($metainfo['description_json']['no'])));
 		$keywords	 = $metainfo['name'] . "," . $metainfo['district'] . "," . $metainfo['city'];
 	}
 	elseif (strpos($menuaction, 'resource'))
 	{
 		$boresource	 = CreateObject('booking.boresource');
 		$metainfo	 = $boresource->so->get_metainfo($id);
-		$description = preg_replace('/\s+/', ' ', strip_tags($metainfo['description']));
+		$description = preg_replace('/\s+/', ' ', strip_tags(html_entity_decode($metainfo['description_json']['no'])));
 		$keywords	 = $metainfo['name'] . "," . $metainfo['building'] . "," . $metainfo['district'] . "," . $metainfo['city'];
 	}
 	if ($keywords != '')
