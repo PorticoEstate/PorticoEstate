@@ -662,7 +662,7 @@
 		 AS
 		 SELECT bb_resource.id,
 			bb_building.name {$concat_symbol} '::' {$concat_symbol} bb_resource.name as name,
-			bb_resource.description,
+			'Ressurs' || bb_resource.name as description,
 			bb_resource.active,
 			1 AS article_cat_id
 		   FROM bb_resource

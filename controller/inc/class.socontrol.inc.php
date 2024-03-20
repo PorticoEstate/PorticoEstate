@@ -1905,8 +1905,13 @@
 						$this->db->query("SELECT id FROM controller_check_list WHERE serie_id = {$serie_id}", __LINE__, __FILE__);
 						if(!$this->db->next_record())
 						{
+							$this->db->query("SELECT control_relation_id FROM controller_control_serie WHERE id = {$serie_id}", __LINE__, __FILE__);
+							$this->db->next_record();
+							$control_relation_id = (int)$this->db->f('control_relation_id');
+
 							$this->db->query("DELETE FROM controller_control_serie_history WHERE serie_id = {$serie_id}", __LINE__, __FILE__);
 							$this->db->query("DELETE FROM controller_control_serie WHERE id = {$serie_id}", __LINE__, __FILE__);
+							$this->db->query("DELETE FROM controller_control_component_list WHERE id = {$control_relation_id}", __LINE__, __FILE__);
 							$ret = PHPGW_ACL_DELETE;
 						}
 					}

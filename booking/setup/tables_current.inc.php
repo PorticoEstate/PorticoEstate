@@ -43,7 +43,6 @@
 				'zip_code' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'district' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'city' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
-				'description' => array('type' => 'text', 'nullable' => True),
 				'description_json' => array('type' => 'jsonb', 'nullable' => True),//array of translations
 				'calendar_text' => array('type' => 'text', 'nullable' => True),
 				'opening_hours' => array('type' => 'text', 'nullable' => True),
@@ -97,7 +96,6 @@
 				'zip_code' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'district' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'city' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
-				'description' => array('type' => 'text', 'nullable' => True),
 				'description_json' => array('type' => 'jsonb', 'nullable' => True),//array of translations
 				'activity_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'customer_identifier_type' => array('type' => 'varchar', 'precision' => '255',
@@ -198,7 +196,6 @@
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'active' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 				'name' => array('type' => 'varchar', 'precision' => '150', 'nullable' => False),
-				'description' => array('type' => 'text', 'nullable' => True),
 				'description_json' => array('type' => 'jsonb', 'nullable' => True),//array of translations
 				'activity_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'sort' => array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
@@ -439,7 +436,7 @@
 				'id_string' => array('type' => 'varchar', 'precision' => '20', 'nullable' => False,
 					'default' => '0'),
 				'active' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
-				'skip_bas' => array('type' => 'int', 'nullable' => False, 'precision' => '2', 'default' => 0),//Building Automation System" (BAS)
+				'skip_bas' => array('type' => 'int', 'nullable' => true, 'precision' => '2', 'default' => 0),//Building Automation System" (BAS)
 				'building_name' => array('type' => 'varchar', 'precision' => 150, 'nullable' => False,
 					'default' => 'changeme'),
 				'application_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
