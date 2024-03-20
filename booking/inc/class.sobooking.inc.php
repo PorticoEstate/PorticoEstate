@@ -13,7 +13,7 @@
 			parent::__construct('bb_booking', array(
 				'id' => array('type' => 'int', 'query' => true),
 				'active' => array('type' => 'int', 'required' => true),
-				'skip_bas' => array('type' => 'int', 'required' => true),
+				'skip_bas' => array('type' => 'int', 'required' => false),
 				'allocation_id' => array('type' => 'int', 'required' => false),
 				'application_id' => array('type' => 'int', 'required' => false),
 				'activity_id' => array('type' => 'int', 'required' => true),
