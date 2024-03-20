@@ -2,11 +2,21 @@
 @import '../../templates/bookingfrontend_2/styleguide/custom.scss';
 @import '../../templates/bookingfrontend_2/styleguide/typography/typography.scss';
 
+$days-height: 3em;
+$time-width: 3em;
+$time-height: 3em;
+$grid-color: #dadce0;
+$current-time-color: #ea4335;
+
+$column-width: 12; // how many columns in a given timeslot
+
+
 :root {
   --day-width: 1fr;
   --time-width: 3em;
   --calendar-rows: 1;
   --header-height: 110px;
+  --day-columns: #{$column-width};
 
   @media all and (max-width: 480px) {
     --time-width: 2em;
@@ -14,11 +24,6 @@
   }
 }
 
-$days-height: 3em;
-$time-width: 3em;
-$time-height: 3em;
-$grid-color: #dadce0;
-$current-time-color: #ea4335;
 
 //* {
 //  box-sizing: border-box;
@@ -167,10 +172,12 @@ $current-time-color: #ea4335;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      .pills{
+
+      .pills {
         &.collapsed {
           max-height: 2.75rem;
         }
+
         display: none;
         @media screen and (min-width: 840px) {
           min-height: 2.75rem;
@@ -184,6 +191,7 @@ $current-time-color: #ea4335;
           gap: 0.275rem;
         }
       }
+
       .show-more {
         flex-wrap: nowrap;
         white-space: nowrap;
@@ -192,7 +200,6 @@ $current-time-color: #ea4335;
       }
 
     }
-
 
 
     .select_building_resource {
@@ -214,14 +221,15 @@ $current-time-color: #ea4335;
       .resource-switch {
         max-width: 34rem;
         @media screen and (max-width: 840px) {
-            max-width: unset;
+          max-width: unset;
         }
       }
+
       .application-button {
         max-width: 9rem;
         max-height: 2.75rem;
         @media screen and (max-width: 840px) {
-            max-width: unset;
+          max-width: unset;
         }
       }
 
@@ -364,7 +372,7 @@ $current-time-color: #ea4335;
 
     .content {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      grid-template-columns: repeat(7 * $column-width, 1fr);
       grid-row: 3 / span 1;
       grid-column: 2 / span 7;
       @media all and (max-width: 480px) {
@@ -425,20 +433,21 @@ $current-time-color: #ea4335;
       font-size: 1rem;
       border: 1px solid #FFF;
       line-height: 1rem;
+      display: grid;
+      grid-template-columns: 1fr 1.5rem;
 
-      > div:first-child {
+      .event-text {
         display: flex;
         flex-direction: column;
+        overflow: hidden;
 
-        > div {
-          font-size: 0.8rem;
-          display: flex;
-          flex-direction: column;
-        }
 
-        > div:nth-child(1) {
-          font-size: 1rem;
-          @extend .text-bold;
+        .event-title {
+          @include applyFontProperties('label');
+          font-weight: $text-medium;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
         }
 
 
@@ -460,8 +469,9 @@ $current-time-color: #ea4335;
       font-weight: bold;
     }
 
-    .dots-container{
+    .dots-container {
       z-index: 11;
+
       i {
         color: white;
       }
@@ -472,8 +482,6 @@ $current-time-color: #ea4335;
       border-color: #FFF;
       @extend .text-black;
       position: relative;
-      display: flex;
-      justify-content: space-between;
 
       .dots {
         height: 16px;
@@ -487,8 +495,6 @@ $current-time-color: #ea4335;
       border-color: #FFF;
       @extend .text-black;
       position: relative;
-      display: flex;
-      justify-content: space-between;
 
       .dots {
         height: 16px;
@@ -502,8 +508,6 @@ $current-time-color: #ea4335;
       border-color: #FFF;
       @extend .text-white;
       position: relative;
-      display: flex;
-      justify-content: space-between;
 
       .dots {
         height: 16px;
@@ -513,13 +517,11 @@ $current-time-color: #ea4335;
     }
 
     .event-temporary {
-      @extend .bg-blue;
+      @extend .bg-purple;
+      opacity: 85%;
       border-color: #FFF;
       @extend .text-white;
       position: relative;
-      display: flex;
-      justify-content: space-between;
-      margin-left: 1.5rem;
       z-index: 11; /* Ensure they are on top */
       &.current-temp {
         z-index: auto;
@@ -551,6 +553,53 @@ $current-time-color: #ea4335;
       .dots-container {
         height: 16px;
         width: 16px;
+
+        i {
+          color: white;
+        }
+
+      }
+    }
+
+
+    .event-small {
+      padding-top: 0;
+      padding-bottom: 0;
+      padding-right: 10px;
+      @include applyFontProperties('tiny');
+      border-width: 0;
+      border-radius: 2px;
+      z-index: 1000;
+
+      > div:first-child {
+        display: flex;
+        flex-direction: row;
+
+
+        > div {
+          font-size: inherit;
+          display: flex;
+          flex-direction: row;
+
+          &:not(:last-child) {
+            &:after {
+              content: ","; /* Insert a comma as content */
+              margin-right: .25em; /* Add margin after the content */
+            }
+          }
+        }
+
+        > div:nth-child(1) {
+          font-size: inherit;
+          //@extend .text-bold;
+        }
+
+
+      }
+
+      .dots-container {
+        height: 10px;
+        width: 10px;
 
         i {
           color: white;
@@ -688,7 +737,7 @@ $current-time-color: #ea4335;
   max-width: 450px;
 
   .time-slot-status {
-    border-radius: 0.5rem 0 0 0.5rem ;
+    border-radius: 0.5rem 0 0 0.5rem;
     border: 1px solid $purple-24;
     border-right: 0;
 
@@ -698,9 +747,18 @@ $current-time-color: #ea4335;
     align-self: stretch;
     display: flex;
     align-items: center;
-    &.green { background-color: $green-light; }
-    &.yellow { background-color: $yellow-light; }
-    &.red { background-color: $red-light; }
+
+    &.green {
+      background-color: $green-light;
+    }
+
+    &.yellow {
+      background-color: $yellow-light;
+    }
+
+    &.red {
+      background-color: $red-light;
+    }
   }
 
   .time-slot-date-time {
@@ -713,13 +771,14 @@ $current-time-color: #ea4335;
     border-left: 0;
     display: flex;
     justify-content: center;
-  //  d-flex flex-wrap gap-1
+    //  d-flex flex-wrap gap-1
     .time-slot-date-container {
       .single-date {
         display: flex;
         gap: 0.25rem;
         flex-direction: column;
       }
+
       .multi-date {
         display: flex;
         gap: 0.25rem;
@@ -730,8 +789,8 @@ $current-time-color: #ea4335;
   }
 
   .time-slot-button {
-  padding-right: 1rem;
-  padding-left: 1rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
     display: flex;
     border: 1px solid $purple-24;
     border-left: 0;
@@ -739,12 +798,12 @@ $current-time-color: #ea4335;
     align-self: stretch;
     align-items: center;
 
-    border-radius:0  0.5rem 0.5rem 0 ;
+    border-radius: 0 0.5rem 0.5rem 0;
 
   }
 }
 
 
 .z-auto {
-  z-index: auto!important;
+  z-index: auto !important;
 }

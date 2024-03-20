@@ -121,7 +121,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <h3 class="">
-                        Beskrivelse
+                        <xsl:value-of select="php:function('lang', 'description')"/>
                     </h3>
                 </div>
                 <collapsable-text params="{{ context: $context }}">
