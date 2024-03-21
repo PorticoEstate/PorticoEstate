@@ -131,7 +131,7 @@ JS;
 	$GLOBALS['phpgw']->template->set_var('privacy', $privacy);
 
 
-	$textaboutmunicipality = lang('About Active kommune');
+	$textaboutmunicipality = lang('About Aktive kommune');
 	$GLOBALS['phpgw']->template->set_var('textaboutmunicipality', $textaboutmunicipality);
 
 	$SIGNINN = lang('sign in');
