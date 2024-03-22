@@ -6866,7 +6866,7 @@ SQL;
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_booking', 'skip_bas',
 			 array('type' => 'int', 'nullable' => true, 'precision' => '2', 'default' => 0)//Building Automation System" (BAS)
 		);
-		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_allocation', 'bb_event',
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_allocation', 'skip_bas',
 			 array('type' => 'int', 'nullable' => true, 'precision' => '2', 'default' => 0)//Building Automation System" (BAS)
 		);
 
