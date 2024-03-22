@@ -738,8 +738,8 @@ class Search {
 
     ko_search = {
         type_group: ko.observable(null),
-        header_text: ko.observable(""),
-        header_sub: ko.observable("")
+        header_text_kword: ko.observable({}),
+        header_sub_kword: ko.observable({})
     }
 
     constructor() {
@@ -827,8 +827,8 @@ class Search {
                     this.updateHeaderTexts();
                     break;
                 }
-                this.ko_search.header_text("Lei lokale, anlegg eller utstyr");
-                this.ko_search.header_sub("Bruk filtrene til å finne de leieobjekter som du ønsker å leie");
+                this.ko_search.header_text_kword({tag: 'rent_premises_facilities_equipment', group: 'bookingfrontend'});
+                this.ko_search.header_sub_kword({tag: 'use_filters_to_find_rental_objects', group: 'bookingfrontend'});
                 $("#search-booking").show();
                 $("#search-event").hide();
                 $("#search-organization").hide();
@@ -840,8 +840,8 @@ class Search {
                     this.updateHeaderTexts();
                     break;
                 }
-                this.ko_search.header_text("Finn arrangement eller aktivitet");
-                this.ko_search.header_sub("Bruk filtrene til å finne ut hva som skjer i dag, eller til helgen");
+                this.ko_search.header_text_kword({tag: 'find_event_or_activity', group: 'bookingfrontend'});
+                this.ko_search.header_sub_kword({tag: 'use_filters_to_find_todays_events', group: 'bookingfrontend'});
                 $("#search-event").show();
                 $("#search-booking").hide();
                 $("#search-organization").hide();
@@ -856,8 +856,8 @@ class Search {
                     this.updateHeaderTexts();
                     break;
                 }
-                this.ko_search.header_text("Finn lag eller organisasjon");
-                this.ko_search.header_sub("Er du på jakt etter noen som er interessert i det samme som deg? Søk på navn til lag eller organisasjon, eller filtrer på aktivitet eller område");
+                this.ko_search.header_text_kword({tag: 'find_team_or_organization', group: 'bookingfrontend'});
+                this.ko_search.header_sub_kword({tag: 'search_for_like_minded_people', group: 'bookingfrontend'});
                 $("#search-organization").show();
                 $("#search-booking").hide();
                 $("#search-event").hide();

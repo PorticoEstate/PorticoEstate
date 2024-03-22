@@ -1,32 +1,245 @@
-attachment	bookingfrontend	nn	Vedlegg
-remove date	bookingfrontend	nn	Fjern dato
-please enter a descripction	bookingfrontend	nn	Lag ei skildring
-please choose at least 1 resource	common	nn	Vel minst ein ressurs
-you must accept to follow all terms and conditions of lease first	common	nn	Stadfest at du har lese vilkåra
-invalid date	common	nn	Ugyldig dato
-please enter a contact name	bookingfrontend	nn	Registrer namn på kontaktperson
-please enter a contact email	bookingfrontend	nn	Skriv inn ei e-postadresse
-customer identifier type is required	bookingfrontend	nn	Oppgi identifikasjon
-number of participants is required	bookingfrontend	nn	Skriv kor mange som kan delta
-please choose at least 1 target audience	bookingfrontend	nn	Kven er målgruppa
-part of town	common	nn	Namn på område/bydel
-fetching data	bookingfrontend	nn	Henter data…
-please wait	bookingfrontend	nn	Vent litt…
-I am feeling lucky	bookingfrontend	nn	Eg prøver lukka
-reset	bookingfrontend	nn	Nullstill
-current activities	bookingfrontend	nn	Nåværande aktivitetar
+%1 bookings were updated.	bookingfrontend	nn	%1 interntildelingar vart oppdatert.
+%1 bookings will be updated.	bookingfrontend	nn	%1 interntildelingar vil bli oppdatert.
 -- select an activity --	bookingfrontend	nn	Vel ein aktivitet
-where?	bookingfrontend	nn	Kvar?
-when?	bookingfrontend	nn	Når?
-who?	bookingfrontend	nn	Kven?
-how many?	bookingfrontend	nn	Kor mange?
+1 week	bookingfrontend	nn	1 veke
+2 weeks	bookingfrontend	nn	2 veker
+3 weeks	bookingfrontend	nn	3 veker
+4 weeks	bookingfrontend	nn	4 veker
+A Case officer will review your application as soon as possible.	bookingfrontend	nn	Ein sakshandsamar vil handsame søknaden din så fort som mogleg.
+About Aktive kommune	bookingfrontend	nn	Om Aktiv kommune
+About the service	bookingfrontend	nn	Om tjenesten
+Access denied	bookingfrontend	nn	Ingen tilgang
+Account Codes	bookingfrontend	nn	konterings-streng
+Activities (2018)	bookingfrontend	nn	Tilrettelagt for
+Add application	bookingfrontend	nn	Legg til søknad
+Add group	bookingfrontend	nn	Ny gruppe
+Agegroups kan not be larger than 9999 peoples	bookingfrontend	nn	Det estimerte talet på deltakarar kan ikkje vere høgare enn 9999
+Allocation deleted on	bookingfrontend	nn	Tildeling slette på
+Allocations deleted on	bookingfrontend	nn	Tildelingar slette på
+Application basket	bookingfrontend	nn	Søknadskorg
+Application cart	bookingfrontend	nn	Handlekurv
+Apply filter	bookingfrontend	nn	Aktiver filter
+Apply for time	bookingfrontend	nn	Søk om tid
+Article	bookingfrontend	nn	artikkel
+Associated bookings	bookingfrontend	nn	Tilhørende tildelinger/arrangementer
+Back to user list	booking	nn	Attende til brukarlista
+Book resource	bookingfrontend	nn	Søknad
+Booking Cancel information	bookingfrontend	nn	Skal du avbestille interntildeling på valt dato, vel Avbestill-knappen nedst Skal tida bli vist som ledig i kalenderen kryssar du av for slett tildeling.
+Booking Cancel information2	bookingfrontend	nn	Skal du avbestille fleire kan du velje Ut sesong eller Avbestill til og velje ein dato, du kan også velje intervall (til dømes annan kvar veke).
+Booking Delete information	bookingfrontend	nn	Skal du slette interntildeling på valt dato, vel Slett-knappen nedst.
+Booking Delete information2	bookingfrontend	nn	Skal du slette fleire kan du velje Ut sesong eller Slett til og velje ein dato, du kan også velje intervall (til dømes annan kvar veke).
+Booking Delete information3	bookingfrontend	nn	Skal tida bli ledig i kalenderen må du krysse av for slett tildeling.
+Booking and allocations deleted on	bookingfrontend	nn	Interntildeling og tildeling er sletta på
+Booking deleted on	bookingfrontend	nn	Interntildeling er sletta på
+Bookings and allocations deleted on	bookingfrontend	nn	Interntildelingar og tildelingar er sletta på
+Bookings deleted on	bookingfrontend	nn	Interntildelingar er sletta på
+Bookings that can be created	bookingfrontend	nn	Interntildelingar du kan lage
+Building information	bookingfrontend	nn	Informasjon
+Building or facility name	bookingfrontend	nn	Bygning/anleggsnavn
+Building users	bookingfrontend	nn	Brukarar av bygg/anlegg
+CONFIRMED	bookingfrontend	nn	STADFESTA
+Can not create a booking in the past	bookingfrontend	nn	Du kan ikkje opprette ei interntildeling i fortida.
+Can not repeat from a date in the past	bookingfrontend	nn	Du kan ikkje repetere frå ein dato i fortida.
+Cancel allocation	bookingfrontend	nn	Avbestill tildelingar
+Cancel allocation also	bookingfrontend	nn	Avbestill følgjande
+Cancel allocations	bookingfrontend	nn	Avbestill tildelingar
+Cancel booking	bookingfrontend	nn	Avbestill
+Cancel bookings	bookingfrontend	nn	Avbestill bookingar
+Cancel information	bookingfrontend	nn	Skal du berre avbestille tildeling på valt dato, vel Avbestill-knappen nede for å vise tida som ledig og tiden blir vist som ledig i kalenderen, og kan tildeles andre klubber/org.
+Cancel information2	bookingfrontend	nn	Skal du Avbestille flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
+Cancel until	bookingfrontend	nn	Avbestill til
+Cancelation of allocation from	bookingfrontend	nn	Avbestilling av tildeling frå
+Cancelation of booking and allocation from	bookingfrontend	nn	Avbestilling av interntildeling og tildeling frå
+Cancelation of booking from	bookingfrontend	nn	Avbestilling frå
+Cancelation of bookings and allocations from	bookingfrontend	nn	Avbestilling av interntildelingar og tildelingar frå
+Cancelation of bookings from	bookingfrontend	nn	Avbestilling av interntildelingar frå
+Cannot change end time	bookingfrontend	nn	Endring av sluttidspunkt feilet. Sluttdato kan ikke være før startdato
+Cannot change start time	bookingfrontend	nn	Endring av startidspunkt feilet. Startdato kan ikke være senere enn sluttdato
+Change organization	common	nn	Bytt organisasjon
+Change the allocation	bookingfrontend	nn	Endre tildeling
+Check calendar	bookingfrontend	nn	Sjekk kalendar
+Choose another building	bookingfrontend	nn	Velg annet anlegg
+Choose atleast one object	bookingfrontend	nn	Vel minst eitt leigeobjekt
+Choose categories	bookingfrontend	nn	Velg kategorier
+Choose date	bookingfrontend	nn	Velg dato
+Choose date-range	bookingfrontend	nn	Velg dato-område
+Choose resources	bookingfrontend	nn	Velg lokaler
+Close	bookingfrontend	nn	Lukke
+Collects users from all applications and events	booking	nn	Haustar brukarar frå alle søknader og arrangement
+Complete applications	bookingfrontend	nn	Fullfør søknad
+Confirm e-mail address	bookingfrontend	nn	Stadfest e-postadressa
+Contact information name is to long. max 50 characters	bookingfrontend	nn	Namnet i kontaktinformasjonen er for langt, maksimalt 50 teikn.
+Could not delete allocation due to a booking still use it	bookingfrontend	nn	Kan ikkje slette denne interntildelinga fordi ei interntildeling framleis brukar ho
+Could not find application id. Contact case officer with allocation id	bookingfrontend	nn	Kunne ikke finne tihørende søknad. For å øke tid må du kontakte saksbehandler med tildeling:
+Create new booking	bookingfrontend	nn	Lag ny interntildeling
+Customer number	bookingfrontend	nn	Referansenummer
+Date	bookingfrontend	nn	Dato
+Date of birth or SSN	bookingfrontend	nn	Fødselsdato eller fødselsnummer
+Decrease of from time overlap with existing booking	bookingfrontend	nn	Kan ikke endre dato. Starttidspunkt overlapper med eksisterende interntildeling
+Decrease of to time overlap with existing booking	bookingfrontend	nn	Kan ikke endre dato. Sluttidspunkt overlapper med eksisterende interntildeling
+Delete Event	bookingfrontend	nn	Slett arrangement
+Delete information	bookingfrontend	nn	Skal du berre slette tildeling på valt dato, vel Slett-knappen nede slik at tida blir vist som ledig og blir tilgjengeleg for andre klubbar/orgaisasjonar.
+Delete information2	bookingfrontend	nn	Skal du slette fleire kan du velje Ut sesong eller Slett til og vel ein dato, du kan også velje intervall (til dømes annan kvar veke).
+Deleted on	bookingfrontend	nn	Avbestilling i
+Do you really want to collect users	booking	nn	Vil du legge til brukarar?
+Do you want to delete application?	bookingfrontend	nn	Er du sikker på at du vil slette søknad fra handlekurv?
+E-mail address	bookingfrontend	nn	E-postadresse
+Edit Events	bookingfrontend	nn	Rediger arrangement
+Edit Group	bookingfrontend	nn	Rediger gruppe
+Edit System Message	bookingfrontend	nn	Rediger systemmelding
+Edit allocation information	bookingfrontend	nn	Skal du berre endra tildeling på valt dato, vel Endre-knappen nede for å vise tida som ledig og tiden blir vist som ledig i kalenderen, og kan tildeles andre klubber/org.
+Edit allocation information2	bookingfrontend	nn	Skal du endra fleire kan du velge 'Ut sesong' eller 'Endre til' og velg en dato, du kan også velge intervall (f.eks. annankvar veke).
+Edit until	bookingfrontend	nn	Endre til
+Equipment text	bookingfrontend	nn	I feltet under skriver du inn om du har spesielle behov tilknyttet aktiviteten
+Event Delete Information	bookingfrontend	nn	Fjerning av arrangement er permanent
+Event Delete Information2	bookingfrontend	nn	Arrangement blir sett inaktivt
+Event was created	booking	nn	Arrangementet vart oppretta
+Event/activity description	bookingfrontend	nn	Kort beskrivelse av arrangementet / aktiviteten
+Event/activity homepage	bookingfrontend	nn	Heimeside for arrangementet / aktiviteten
+Facilities	bookingfrontend	nn	Fasiliteter
+Field %1 is required	bookingfrontend	nn	Feltet '%1' må fylles ut
+Field %1: Invalid format	bookingfrontend	nn	Feltet '%1': ugyldig format
+Find available	bookingfrontend	nn	Finn tilgjengelig
+Find available resources	bookingfrontend	nn	Søk etter leieobjekter
+Follow status	bookingfrontend	nn	Du kan følge med på status under Min side --> Søknader
+For rent	bookingfrontend	nn	Til leige
+From time	bookingfrontend	nn	Fra kl
+Go back	bookingfrontend	nn	Tilbake
+Go back to calendar	bookingfrontend	nn	Tilbake til kalendar
+Go to allocation	bookingfrontend	nn	Gå til tildeling
+Group shortname	bookingfrontend	nn	Kortnamn
+Happening in Bergen	bookingfrontend	nn	Dette skjer i Bergen kommune
+I am feeling lucky	bookingfrontend	nn	Eg prøver lukka
+In order to send the invoice we need information about either customer organization number or norwegian social security number	bookingfrontend	nn	For å kunne sende ein eventuell faktura treng vi opplysningar om organisasjonsnr. eller fødselsnr. Organisasjonsnr. finn du her: www.brreg.no
+Information about the event	bookingfrontend	nn	Informasjon om arrangementet
+Information about the event (edit)	bookingfrontend	nn	Informasjon om arrangementet
+Internal Customer	bookingfrontend	nn	Intern kunde
+Interval	bookingfrontend	nn	intervall
+Invalid from date	bookingfrontend	nn	Ugyldig frådato
+Invoice Instruction	bookingfrontend	nn	Topptekst til faktura
+It is currently not possible to rent anything here	bookingfrontend	nn	NB! Det er for tida ikkje mogeleg å leige noko her
+Layout	bookingfrontend	nn	Frontend design
+Lengt of name is to long, max %1 characters long	bookingfrontend	nn	Namnet er for langt, maksimalt %1 teikn
+Lengt of shortname is to long, max 11 characters long	bookingfrontend	nn	Kortnamnet er for langt, maksimalt 11 teikn
+Link to website	bookingfrontend	nn	Link til heimeside
+Loading...	bookingfrontend	nn	Lastar inn…
+Mass update	bookingfrontend	nn	Masseoppdatering
+Message	bookingfrontend	nn	Melding
+Minimum 8 digits	bookingfrontend	nn	Minimum 8 tal
+Missing rights	bookingfrontend	nn	Mangler rettigheter
+Name for event/activity	bookingfrontend	nn	Namn på arrangementet / aktiviteten
+Needed for the return from the external logout	bookingfrontend	nn	Nødvendig for retur frå ekstern logg ut
+New message	bookingfrontend	nn	Ny melding
+New system message	bookingfrontend	nn	Ny systemmelding
+Next step	bookingfrontend	nn	Gå vidare
+No available options	bookingfrontend	nn	Ingen tilgjengelige valg
+No rent object chosen	bookingfrontend	nn	Ingen leieobjekt er valgt
+No valid identification returned from login	common	nn	Ingen gyldig identifikasjon returnert frå innlogging.
+Object No.	bookingfrontend	nn	objektnummer
+Official organization	bookingfrontend	nn	Registrert i Brønnøysund
+Organization shortname	bookingfrontend	nn	Kortnamn
+Out season	bookingfrontend	nn	Ut denne sesongen
+Overlaps other organizations allocation	bookingfrontend	nn	Overlappar med ein annan organisasjonstildeling
+Overlaps with existing allocation	bookingfrontend	nn	Overlappar med eksisterande tildeling
+Overlaps with existing booking	bookingfrontend	nn	Overlappar med eksisterande interntildeling
+Overlaps with existing event	bookingfrontend	nn	Overlappar med eksisterande arrangement
+Part of town (2018)	bookingfrontend	nn	Bydel
+Pending	bookingfrontend	nn	Under handsaming
+Phone is already registered	bookingfrontend	nn	Telefonnummeret er alt registrert
+Pictures	bookingfrontend	nn	Bilder
+Place	bookingfrontend	nn	Sted
+Please check your Spam Filter if you are missing mail.	bookingfrontend	nn	Vi gjer merksam på at e-postsvar blir automatisk generert og kan ende i spamfilter/nettsøppel.
+Please enter correct numbers for the event	bookingfrontend	nn	Oppgi riktig deltakartal
+Please fill all fields	bookingfrontend	nn	Vennlegst fyll ut alle obligatoriske felt!
+Please update the data and click the Next-button.	bookingfrontend	nn	Ver grei og oppdater data og klikk på Neste-knappen.
+Print as PDF	bookingfrontend	nn	Skriv ut som PDF
+Privacy	bookingfrontend	nn	Personvern
+Privacy statement	bookingfrontend	nn	Personvern
+Private event	bookingfrontend	nn	Privat arrangement
+Project No.	bookingfrontend	nn	Prosjektnummar
+Public schedule	bookingfrontend	nn	Publikumsbading
+Recurring allocation cancelation	bookingfrontend	nn	Avbestill i intervall
+Recurring allocation edit	bookingfrontend	nn	Endre i intervall
+Recurring booking	bookingfrontend	nn	Gjenta interntildeling
+Redirect is computed if url ends with	bookingfrontend	nn	Omdirigering blir kalkulert om url slutter med
+Repeat until	bookingfrontend	nn	Gjenta til
+Report numbers	bookingfrontend	nn	Rapporter deltakartal
+Request for changed time	bookingfrontend	nn	Forespørsel om å endre tid er registrert
+Request for equipment	bookingfrontend	nn	Ønske om nødvendig utstyr på tildeling:
+Request for equipment has been sent	bookingfrontend	nn	Ønske om nødvendig utstyr er sendt til saksbehandler
+Request to increase time on existing booking	bookingfrontend	nn	Ønske om å øke tildelt tid på tildeling:
+Reset filter	bookingfrontend	nn	Nullstill søk
+Reset filters	bookingfrontend	nn	Nullstill filter
+Resources type	bookingfrontend	nn	Lokaler
+Responsible Code	bookingfrontend	nn	Ansvarsstad
+SSN not registred	common	nn	Du er ikkje registrert i Frivilligregisteret eller organisasjonen manglar organisasjonsnummer i AktivKommune
+Sa	bookingfrontend	nn	laurdag
+Search available resources	bookingfrontend	nn	Søk etter tilgjengelige lokaler
+Search building, resource, organization	bookingfrontend	nn	Søk anlegg, lokale, organisasjon
+Search results	bookingfrontend	nn	Søkeresultat
+See	bookingfrontend	nn	Se
+Select a group	bookingfrontend	nn	Vel gruppe/lag
+Send	bookingfrontend	nn	Send
+Send message	bookingfrontend	nn	Send melding
+Send message to case officer for building	bookingfrontend	nn	Melding til saksbehandler for anlegget
+Service	bookingfrontend	nn	Teneste
+Short description. For public events, activities and training under the direction of organizations and clubs, this information will be displayed on the internet	bookingfrontend	nn	Skriv ei kort skildring av arrangementet. Informasjon om opne arrangement, aktivitetar og trening i regi av organisasjonar og klubbar blir synleg på internett
+Show more results	bookingfrontend	nn	Last inn flere resultater
+Ssn	bookingfrontend	nn	Fødselsnummer (11 siffer)
+Successfully changed end time	bookingfrontend	nn	Endring av sluttidspunkt er vellykket. Nytt sluttidspunkt for tildeling er:
+Successfully changed start time	bookingfrontend	nn	Endring av startidspunkt er vellykket. Nytt startidspunkt for tildeling er:
+System message	bookingfrontend	nn	Systemmelding
+System messages	bookingfrontend	nn	Systemmeldingar
+Thank you	bookingfrontend	nn	Takk
+The booking uses resources not in the containing allocation	bookingfrontend	nn	Interntildelinga brukar ressursar som ikkje finst i tildelinga
+The data was successfully updated	bookingfrontend	nn	Dataene vart oppdatert utan feil
+The e-mail addresses you entered do not match	bookingfrontend	nn	E-postadressene er ulike
+The user has accepted the document under point 8.	bookingfrontend	nn	Brukaren har akseptert dokumenta under punkt 8.
+The user has accepted the following documents	bookingfrontend	nn	Brukaren har akseptert følgjande dokument:
+This booking is not connected to a season	bookingfrontend	nn	Denne interntildelinga er ikkje kopla mot ein sesong
+This booking is outside the organization's allocated time	bookingfrontend	nn	Denne interntildelinga ligg utanfor den tildelte tida til organisasjonen
+Tilsynsvakt email	bookingfrontend	nn	E-post til tilsynsvakt
+Tilsynsvakt name	bookingfrontend	nn	Namn på tilsynsvakt
+Tilsynsvakt telephone	bookingfrontend	nn	Telefonnummar til tilsynsvakt
+Time is set wrong	bookingfrontend	nn	Eitt av klokkesletta er feil
+To application site	bookingfrontend	nn	Til søknadsside
+To borrow premises you must verify that you have read terms and conditions	bookingfrontend	nn	For å kunne låne lokale må du først stadfeste at du har lese dei juridiske vilkåra
+To cancel allocation use this link	bookingfrontend	nn	For å slette tildelingen: bruk lenka
+To cancel booking use this link	bookingfrontend	nn	For å slette interntildelinga: bruk lenka
+To time	bookingfrontend	nn	Til kl
+Town part	bookingfrontend	nn	Område/bydel
+Unable to fill report	bookingfrontend	nn	Klarte ikkje å fylle ut rapport
+Unit No.	bookingfrontend	nn	fagavdelingsnummar
+Unit Prefix	bookingfrontend	nn	fagavdelingskode (for buntnummer)
+Upcomming Events	bookingfrontend	nn	Kommande arrangement
+Update	bookingfrontend	nn	Oppdater
+Upload Attachment	bookingfrontend	nn	Last opp vedlegg som kan gi nyttig informasjon om søknaden
+Used buildings	bookingfrontend	nn	Bygg/anlegg du kan bruke
+Used buildings (2018)	bookingfrontend	nn	Anlegg du kan bruke
+User	bookingfrontend	nn	Brukar
+User has changed field for equipment	bookingfrontend	nn	Endring av felt for nødvendig utstyr:
+User has made a request to alter time on existing booking	bookingfrontend	nn	Ynskjer å endre tida for booking. Ny tid:
+User has made a request to cancel event	bookingfrontend	nn	Kunde har avbestilt arrangement.
+View all events	bookingfrontend	nn	Se alle arrangement
+When clicking the Next-button you will be presented to a list of bookings that will be updated.	bookingfrontend	nn	Etter at du har klikka på Neste-knappen får du ei oversikt over kva for bookingar som blir oppdatert.
+You are now about to update all bookings from this date and to the end of the season.	bookingfrontend	nn	Du er nå i ferd med å oppdatere alle bookingar frå datoen i dag og ut sesongen.
+You can't cancel event that has started, for help contacts site admin	bookingfrontend	nn	Du kan ikkje slette arrangement som er over
+You can't change resources to the event, for that contact administrator	bookingfrontend	nn	Du kan ikkje endre på ressursar. Då må du ta kontakt med sakshandsamar
+You can't extend the event, for that contact administrator	bookingfrontend	nn	Du kan ikkje sjølv utvide lengda på eit arrangement. Då må du ta kontakt med sakshandsamar.
+You cant edit a booking that is older than 2 weeks	bookingfrontend	nn	Du kan ikkje redigere ei booking som er eldre enn 2 veker.
+You must accept to follow all terms and conditions of lease first.	bookingfrontend	nn	Du må akseptere dei juridiske vilkåra først
+Your application has now been processed and a confirmation email has been sent to you.	bookingfrontend	nn	Søknaden din er godkjent, og en bekreftelse er sendt til deg på e-post.
+Your application has now been registered and a confirmation email has been sent to you.	bookingfrontend	nn	Søknaden er sendt. Du får ei stadfesting på e-post.
+Your applications have now been processed and confirmation emails have been sent to you.	bookingfrontend	nn	Søknadene dine er godkjent, og en bekreftelse er sendt til deg på e-post.
 accept application	bookingfrontend	nn	Godta søknad
 accepted	bookingfrontend	nn	Akseptert
 account	bookingfrontend	nn	Brukar
+account status	bookingfrontend	nn	konto status
 actions	bookingfrontend	nn	Handling
 active	bookingfrontend	nn	Aktiv
 active applications	bookingfrontend	nn	Aktive søknadar
 activity	bookingfrontend	nn	Aktivitet
+activity_id	bookingfrontend	nn	Aktivitet
 add a comment	bookingfrontend	nn	Legg til ein kommentar
 add another date	bookingfrontend	nn	Legg til ein dato
 add boundary	bookingfrontend	nn	Legg til rammetid
@@ -34,26 +247,38 @@ add comment	bookingfrontend	nn	Legg til kommentar
 add document	bookingfrontend	nn	Legg til dokument
 add new event	bookingfrontend	nn	Legg til arrangement
 add permission	bookingfrontend	nn	Legg til løyve
+added %1 users	booking	nn	Lagt til %1 brukarar
 address	bookingfrontend	nn	Besøksadresse
 admin 1	bookingfrontend	nn	Bookingansvarleg 1
 admin 2	bookingfrontend	nn	Bookingansvarleg 2
 admins	bookingfrontend	nn	Bookingansvarlege
+again	booking	nn	Igjen
 age group	bookingfrontend	nn	Aldersgruppe
 agegroup	bookingfrontend	nn	Aldersgruppe
 allocation	bookingfrontend	nn	Tildeling
+allocation show	bookingfrontend	nn	Tildeling
 allocations	bookingfrontend	nn	Tildelingar
 allocations colliding with existing bookings or allocations (%1)	bookingfrontend	nn	Dobbel-booking - blir ikkje lagra
 allocations that can be created (%1)	bookingfrontend	nn	Tildelingar du kan lage
+anonymous password	bookingfrontend	nn	Anonymt passord
+anonymous user	bookingfrontend	nn	Anonym brukar
 application	bookingfrontend	nn	Søknad
+application add	bookingfrontend	nn	søknad
 applications	bookingfrontend	nn	Søknadar
 apr	bookingfrontend	nn	april
 archived	bookingfrontend	nn	Arkivert
+attachment	bookingfrontend	nn	Vedlegg
 audience	bookingfrontend	nn	Målgruppe/publikum
 aug	bookingfrontend	nn	august
+available	bookingfrontend	nn	Ledig
+back	bookingfrontend	nn	tilbake
 bookable resources	bookingfrontend	nn	Ressursar du kan booke
 booking	bookingfrontend	nn	Interntildeling
 booking district	bookingfrontend	nn	Område/bydel
 booking name	bookingfrontend	nn	Namn på interntildeling
+booking show	bookingfrontend	nn	Interntildeling
+bookingfrontend host	bookingfrontend	nn	Bookingfrontend vert
+bookingfrontend settings	bookingfrontend	nn	Bookingfrontend innstillingar
 bookings	bookingfrontend	nn	Interntildelingar
 boundaries	bookingfrontend	nn	Rammetid
 building	bookingfrontend	nn	Bygg/anlegg
@@ -61,86 +286,155 @@ building name	bookingfrontend	nn	Namn på bygg/anlegg
 building schedule	bookingfrontend	nn	Kalender
 buildings	bookingfrontend	nn	Bygg/anlegg
 bygning	bookingfrontend	nn	Bygg/anlegg
+calendar view	bookingfrontend	nn	Dags-/ukesvisning
 cancel	bookingfrontend	nn	Avbryt
+cancel event	bookingfrontend	nn	Avbestill
 cancelled	bookingfrontend	nn	Avbestilt
 case officer	bookingfrontend	nn	Sakshandsamar
 category	bookingfrontend	nn	Kategori
 choose a date	bookingfrontend	nn	Vel ein dato
 choose file	bookingfrontend	nn	Vel fil du vil leggja til
+choose rent object and rentperiod	bookingfrontend	nn	Vel leigeobjekt og leigeperiode
+choose rent period	bookingfrontend	nn	Velg leigeperiode
+choose target audience	bookingfrontend	nn	Vel målgruppe for arrangement / aktiviteten
+chosen rent object	bookingfrontend	nn	Valde ressursar
+chosen rent period	bookingfrontend	nn	Valde leigeperioder
 city	bookingfrontend	nn	Poststad
 click to sort ascending	bookingfrontend	nn	Klikk for å sortere stigande
 click to sort descending	bookingfrontend	nn	Klikk for å sortere synkande
+collect users	booking	nn	Legg til brukarar
 contact	bookingfrontend	nn	Kontakt
 contact 1	bookingfrontend	nn	Kontakt 1
 contact 2	bookingfrontend	nn	Kontakt 2
-contact person	bookingfrontend	nn	Kontaktperson
 contact information	bookingfrontend	nn	Kontaktinformasjon
+contact person	bookingfrontend	nn	Kontaktperson
+contact_email	bookingfrontend	nn	E-post
+contact_name	bookingfrontend	nn	Namn
+contacts[0][email] contains an invalid email	bookingfrontend	nn	Ugyldig e-post under ansvarleg gruppeleiar 1
+contacts[1][email] contains an invalid email	bookingfrontend	nn	Ugyldig e-post under ansvarleg gruppeleiar 2
+cookie domain for sessions	bookingfrontend	nn	Cookiedomene for sesjoner
 cost	bookingfrontend	nn	Pris
-choose rent object and rentperiod	bookingfrontend	nn	Vel leigeobjekt og leigeperiode
-rent object	bookingfrontend	nn	Leigeobjekt
-chosen rent object	bookingfrontend	nn	Valde ressursar
-chosen rent period	bookingfrontend	nn	Valde leigeperioder
-choose rent period	bookingfrontend	nn	Velg leigeperiode
-choose target audience	bookingfrontend	nn	Vel målgruppe for arrangement / aktiviteten
+cost is set	booking	nn	Ny pris er definert
 create	bookingfrontend	nn	Lagre
 created	bookingfrontend	nn	Oppretta
+current activities	bookingfrontend	nn	Nåværande aktivitetar
+custom login url	bookingfrontend	nn	Egendefinert logg inn url
+custom login url parameter	bookingfrontend	nn	Egendefinert logg inn url parameter
+customer identifier type is required	bookingfrontend	nn	Oppgi identifikasjon
+customer_identifier_type	bookingfrontend	nn	Fakturainformasjon
+customer_organization_number is invalid	bookingfrontend	nn	Organisasjonsnummer er ugyldig
+customer_ssn contains an invalid Norwegian social security number (6 or 11 digits)	bookingfrontend	nn	Fødselsdato/fødselsnummer er ikkje gyldig. Nummeret må bestå av 6 eller 11 siffer
 dashboard	bookingfrontend	nn	Skrivebord
+dates	bookingfrontend	nn	Frå/Til
+day	bookingfrontend	nn	Dag
 day of the week	bookingfrontend	nn	Vekedag
 dec	bookingfrontend	nn	desember
+delegate from	bookingfrontend	nn	Delegert frå
 description	bookingfrontend	nn	Skildring
 district	bookingfrontend	nn	Område
+do you really want to collect users again	booking	nn	Vil du legge til brukarar på nytt?
 document	bookingfrontend	nn	Dokument
-documents	bookingfrontend	nn	Dokument
 document name	bookingfrontend	nn	Dokumentnamn
+documents	bookingfrontend	nn	Dokument
+download to your calendar	bookingfrontend	nn	Last ned til din kalendar
 drawing	bookingfrontend	nn	Teikning
+each	bookingfrontend	nn	Stk
 edit	bookingfrontend	nn	Rediger
+edit Audience group	bookingfrontend	nn	Rediger målgruppe
 edit agegroup group	bookingfrontend	nn	Rediger aldersgruppe
 edit allocation	bookingfrontend	nn	Rediger tildeling
-edit Audience group	bookingfrontend	nn	Rediger målgruppe
 edit booking	bookingfrontend	nn	Rediger interntildeling
+edit data	bookingfrontend	nn	Endre data
 edit event	bookingfrontend	nn	Rediger arrangement
 edit organization	bookingfrontend	nn	Rediger organisasjon
 editer	bookingfrontend	nn	Rediger
+entity %1 has been saved	bookingfrontend	nn	Post %1 er lagra
+entity %1 has been updated	bookingfrontend	nn	Post %1 er oppdatert
 equipment	bookingfrontend	nn	Utstyr
 equipment name	bookingfrontend	nn	Namn på utstyr
+estimated number of participants	bookingfrontend	nn	Estimert tal på deltakarar
 event	bookingfrontend	nn	Arrangement
+event show	bookingfrontend	nn	Arrangement
 events	bookingfrontend	nn	Arrangement
+every	bookingfrontend	nn	hver
+executiveofficer	bookingfrontend	nn	Saksbehandler
+expired for edit	bookingfrontend	nn	Utløpt
 feb	bookingfrontend	nn	februar
 female	bookingfrontend	nn	kvinne
+fetching data	bookingfrontend	nn	Henter data…
 filnavn	bookingfrontend	nn	Dokument
+find_event_or_activity	bookingfrontend	nn	Finn arrangement eller aktivitet
+find_team_or_organization	bookingfrontend	nn	Finn lag eller organisasjon
+footer info	bookingfrontend	nn	Botntekst informasjon
+footer privacy link	bookingfrontend	nn	Footer: Lenke til personvern
+for allocations until	bookingfrontend	nn	for tildelinger frem til:
+for remaining season	bookingfrontend	nn	for gjenværende sesong
 found %1 results	bookingfrontend	nn	%1 treff
+found none	booking	nn	Fann ingen
 fr	bookingfrontend	nn	fr.
+free	bookingfrontend	nn	Ledig
 from	bookingfrontend	nn	Frå
 generate allocations	bookingfrontend	nn	Lag tildeling
 generate allocations from week template	bookingfrontend	nn	Lag tildeling frå vekeplan
+get name from external source	bookingfrontend	nn	Hent navn frå ekstern kilde (som Gule Sider)
 go back to the template week	bookingfrontend	nn	Gå tilbake til vekeplan
+google tracker id	bookingfrontend	nn	Goggle sporar id
 group	bookingfrontend	nn	Gruppe/lag
+group_id	bookingfrontend	nn	Gruppe/Lag
 history and comments (%1)	bookingfrontend	nn	Historikk (%1)
 hms document	bookingfrontend	nn	HMS-dokument
 homepage	bookingfrontend	nn	Heimeside
-Event/activity homepage	bookingfrontend	nn	Heimeside for arrangementet / aktiviteten
+hour	bookingfrontend	nn	Time
+how many?	bookingfrontend	nn	Kor mange?
 id	bookingfrontend	nn	ID
+if same as framework leave empty	bookingfrontend	nn	la dette feltet stå tomt om det er det same som for rammeverket
 inactivate	bookingfrontend	nn	Inaktivert
 inactive	bookingfrontend	nn	Inaktiv
+invalid date	common	nn	Ugyldig dato
+invoice	bookingfrontend	nn	Faktura
 invoice information	bookingfrontend	nn	Fakturainformasjon
-responsible applicant	bookingfrontend	nn	Ansvarleg søkjar
 jan	bookingfrontend	nn	januar
 jul	bookingfrontend	nn	juli
 jun	bookingfrontend	nn	juni
+kg	bookingfrontend	nn	Kg
+last login	bookingfrontend	nn	siste innlogging
 last modified	bookingfrontend	nn	Sist endra
+last password change	bookingfrontend	nn	siste passordendring
+leased	bookingfrontend	nn	Opptatt
 location	bookingfrontend	nn	Lokale
-log on	bookingfrontend	nn	Innlogging for lag/ organisasjonar
+locations	bookingfrontend	nn	Lokaler
 log off	bookingfrontend	nn	Logg ut
+log on	bookingfrontend	nn	Innlogging for lag/ organisasjonar
 login	common	nn	Logg inn
+login apikey	bookingfrontend	nn	Login apikey
+login header key	bookingfrontend	nn	Innloggingsoverskrift:
+login header regular expression	bookingfrontend	nn	Innloggingsoverskrift vanleg uttrykk
+login role id	bookingfrontend	nn	Login Rolle-ID
+login soap client encoding	bookingfrontend	nn	Login soap klient tegnsett
+login soap client location	bookingfrontend	nn	Login soap klient location
+login soap client login	bookingfrontend	nn	Login soap klient login
+login soap client password	bookingfrontend	nn	Login soap klient passord
+login soap client proxy host	bookingfrontend	nn	Login soap klient proxyserver
+login soap client proxy port	bookingfrontend	nn	Login soap klient proxyport
+login soap client uri	bookingfrontend	nn	Login soap klient uri
+login soap client wsdl	bookingfrontend	nn	Login soap klient wsdl
+login webservicehost	bookingfrontend	nn	Login webservicehost
 logout	common	nn	Logg ut
-SSN not registred	common	nn	Du er ikkje registrert i Frivilligregisteret eller organisasjonen manglar organisasjonsnummer i AktivKommune
-No valid identification returned from login	common	nn	Ingen gyldig identifikasjon returnert frå innlogging.
+m	bookingfrontend	nn	Meter
+m2	bookingfrontend	nn	Kvadratmeter
 male	bookingfrontend	nn	Mann
+manual	bookingfrontend	nn	Manual
+manual	common	nn	Brukarrettleiing
 mar	bookingfrontend	nn	mars
 may	bookingfrontend	nn	mai
+metadata settings	bookingfrontend	nn	Metadata innstillingar
+meter	bookingfrontend	nn	Meter
+minute	bookingfrontend	nn	Minutt
 mo	bookingfrontend	nn	mån
 modified	bookingfrontend	nn	Endra
+more	bookingfrontend	nn	flere
 more info	bookingfrontend	nn	Meir informasjon
+my page	bookingfrontend	nn	Mi side
 name	bookingfrontend	nn	Namn
 new	bookingfrontend	nn	Ny
 new activity	bookingfrontend	nn	Ny aktivitet
@@ -166,42 +460,68 @@ no Data.	bookingfrontend	nn	Ingen treff
 no description yet	bookingfrontend	nn	Skildring manglar
 no parents	bookingfrontend	nn	Ingen overordna
 no records found.	bookingfrontend	nn	Ingen treff
-no records found.	bookingfrontend	nn	Ingen treff
 nov	bookingfrontend	nn	november
 number of participants	bookingfrontend	nn	Tal på deltakarar
-estimated number of participants	bookingfrontend	nn	Estimert tal på deltakarar
+number of participants is required	bookingfrontend	nn	Skriv kor mange som kan delta
 oct	bookingfrontend	nn	oktober
 of	bookingfrontend	nn	av
 officer	bookingfrontend	nn	Sakshandsamar
+optional	booking	nn	(Valfri)
 organization	bookingfrontend	nn	Organisasjon/bedrift
-organization number	bookingfrontend	nn	Organisasjonsnummer
-organizations	bookingfrontend	nn	Organisasjonar
+_organization	bookingfrontend	nn	Organisasjon
 organization index	bookingfrontend	nn	Organisasjonsoversikt
-other	bookingfrontend	nn	Anna
+organization number	bookingfrontend	nn	Organisasjonsnummer
+organization type	bookingfrontend	nn	Organisasjonstype
+organizations	bookingfrontend	nn	Organisasjonar
 organizer/responsible seeker	bookingfrontend	nn	Namn på arrangør eller ansvarleg søkjar
+other	bookingfrontend	nn	Anna
 parent activity	bookingfrontend	nn	Overordna kategori
 parent id	bookingfrontend	nn	Overordna id
+part of town	common	nn	Namn på område/bydel
 permissions	bookingfrontend	nn	Rettigheitar
+personal group	bookingfrontend	nn	Ikkje registrert i Brønnøysund
 phone	bookingfrontend	nn	Telefon
 picture	bookingfrontend	nn	Bilete
 planning	bookingfrontend	nn	Planlegging
+please choose at least 1 resource	common	nn	Vel minst ein ressurs
+please choose at least 1 target audience	bookingfrontend	nn	Kven er målgruppa
+please enter a building name	bookingfrontend	nn	Oppgi namn på bygningen
+please enter a contact email	bookingfrontend	nn	Skriv inn ei e-postadresse
+please enter a contact name	bookingfrontend	nn	Registrer namn på kontaktperson
+please enter a descripction	bookingfrontend	nn	Lag ei skildring
+please select an activity	bookingfrontend	nn	Vel ein aktivitet
+please wait	bookingfrontend	nn	Vent litt…
+postal city	bookingfrontend	nn	Poststad
 prev	bookingfrontend	nn	Siste
 preview	bookingfrontend	nn	Førehandsvisning
+price	bookingfrontend	nn	Pris
 price list	bookingfrontend	nn	Prisliste
 primary admin	bookingfrontend	nn	Kontaktperson 1
 primary contact	bookingfrontend	nn	Kontaktperson 1
 published	bookingfrontend	nn	Publisert
+quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days	bookingfrontend	nn	Maksimumgrense (%1) overskreden for %2: maks %3 gonger innanfor ein periode på %4 dagar
+registration	bookingfrontend	nn	Registrering
+regulation	bookingfrontend	nn	Reglement
 reject application	bookingfrontend	nn	Avslå søknad
 rejected	bookingfrontend	nn	Avvist
+remote authentication	bookingfrontend	nn	Ekstern autentisering
+remove date	bookingfrontend	nn	Fjern dato
+rent object	bookingfrontend	nn	Leigeobjekt
+rent	bookingfrontend	nn	Leige
+rent_premises_facilities_equipment	bookingfrontend	nn	Leig lokale, anlegg eller utstyr
+reserved	bookingfrontend	nn	Reservert
+reset	bookingfrontend	nn	Nullstill
 resource	bookingfrontend	nn	Ressurs
 resource name	bookingfrontend	nn	Namn på ressurs
 resource schedule	bookingfrontend	nn	Ressurskalendar
 resource type	bookingfrontend	nn	Type
 resources	bookingfrontend	nn	Ressursar
+responsible applicant	bookingfrontend	nn	Ansvarleg søkjar
 role	bookingfrontend	nn	Rolle
 root permissions	bookingfrontend	nn	Systemrettar
-Sa	bookingfrontend	nn	laurdag
+saved data	bookingfrontend	nn	Lagra data
 schedule	bookingfrontend	nn	Vekeplan
+search_for_like_minded_people	bookingfrontend	nn	Er du på jakt etter nokon som er interessert i det same som deg? Søk på namn til lag eller organisasjon, eller filtrer på aktivitet eller område
 season	bookingfrontend	nn	Sesong
 season name	bookingfrontend	nn	Namn på sesong
 seasons	bookingfrontend	nn	Sesongar
@@ -209,13 +529,18 @@ secondary admin	bookingfrontend	nn	Kontaktperson 3
 select a building first	bookingfrontend	nn	Vel først bygg/anlegg
 select a grooup	bookingfrontend	nn	Vel ei gruppe
 select category...	bookingfrontend	nn	Vel ein kategori
+select date	bookingfrontend	nn	Vel dato
+select method	bookingfrontend	nn	Vel ein metode
 select role...	bookingfrontend	nn	Vel rolle
+selected	bookingfrontend	nn	Valgt
 sep	bookingfrontend	nn	september
 settings	bookingfrontend	nn	Innstillingar
 show only active	bookingfrontend	nn	Skjul
 showing items	bookingfrontend	nn	Viser
 showing items {startRecord} - {endRecord} of {totalRecords}	bookingfrontend	nn	Viser {startRecord} - {endRecord} av {totalRecords}
+site title	bookingfrontend	nn	Tittel på sida
 social security number	bookingfrontend	nn	Fødselsnummer (11 siffer)
+square meter	bookingfrontend	nn	Kvadratmeter
 status	bookingfrontend	nn	Status
 street	bookingfrontend	nn	Gate
 su	bookingfrontend	nn	sun
@@ -223,14 +548,33 @@ submit	bookingfrontend	nn	Lagre
 successfully created (%1) allocations:	bookingfrontend	nn	(%1) tildelingar lagra
 surname	bookingfrontend	nn	Etternamn
 target audience	bookingfrontend	nn	Målgruppe
+team leader 1	bookingfrontend	nn	Ansvarlege gruppeleiar 1
+team leader 2	bookingfrontend	nn	Ansvarlege gruppeleiar 2
+team leaders	bookingfrontend	nn	Ansvarlege gruppeleiar
 telephone	bookingfrontend	nn	Telefon
 terms and conditions	bookingfrontend	nn	Juridiske vilkår
+test organization	bookingfrontend	nn	Test organisasjon
 th	bookingfrontend	nn	tor
+this application is not within a valid season	bookingfrontend	nn	Denne søknaden er utanfor gyldig åpningstid
+title	bookingfrontend	nn	Tittel
 to	bookingfrontend	nn	Til
 tu	bookingfrontend	nn	tys
+unit	bookingfrontend	nn	Enhet
+unit cost	bookingfrontend	nn	Eining pris
+update results	bookingfrontend	nn	Oppdater søkeresultat
 upload document	bookingfrontend	nn	Last opp dokument
+url to external logout	bookingfrontend	nn	Url for ekstern logg ut
+use cookies to pass sessionid	bookingfrontend	nn	Bruk cookie til å handtere sesjonar
+use_filters_to_find_rental_objects	bookingfrontend	nn	Bruk filtra til å finne dei leigeobjekta som du ønskjer å leige
+use_filters_to_find_todays_events	bookingfrontend	nn	Bruk filtra til å finne ut kva som skjer i dag, eller til helga
 user	bookingfrontend	nn	Brukar
+uustatus	bookingfrontend	nn	Tilgjengelegheitserklæring
+validate	bookingfrontend	nn	Kontrollér
+view allocation	bookingfrontend	nn	Vis tildeling
+view booking	bookingfrontend	nn	Vis interntildeling
+view event	bookingfrontend	nn	Vis arrangement
 we	bookingfrontend	nn	ons
+week	bookingfrontend	nn	uke
 week template	bookingfrontend	nn	Vekeplan
 when	bookingfrontend	nn	Når
 when?	bookingfrontend	nn	Når?
@@ -240,338 +584,13 @@ who	bookingfrontend	nn	Kven
 who?	bookingfrontend	nn	Kven?
 why	bookingfrontend	nn	Kvifor
 why?	bookingfrontend	nn	Kvifor?
+you must accept to follow all terms and conditions of lease first	common	nn	Stadfest at du har lese vilkåra
 zip code	bookingfrontend	nn	Postnummer
-postal city	bookingfrontend	nn	Poststad
-team leaders	bookingfrontend	nn	Ansvarlege gruppeleiar
-team leader 1	bookingfrontend	nn	Ansvarlege gruppeleiar 1
-team leader 2	bookingfrontend	nn	Ansvarlege gruppeleiar 2
-regulation	bookingfrontend	nn	Reglement
-Object No.	bookingfrontend	nn	objektnummer
-Article	bookingfrontend	nn	artikkel
-Unit No.	bookingfrontend	nn	fagavdelingsnummar
-Unit Prefix	bookingfrontend	nn	fagavdelingskode (for buntnummer)
-Invoice Instruction	bookingfrontend	nn	Topptekst til faktura
-Responsible Code	bookingfrontend	nn	Ansvarsstad
-Service	bookingfrontend	nn	Teneste
-Project No.	bookingfrontend	nn	Prosjektnummar
-Account Codes	bookingfrontend	nn	konterings-streng
-Account Codes	bookingfrontend	nn	konterings-streng
-Field %1 is required	bookingfrontend	nn	Feltet '%1' må fylles ut
-Field %1: Invalid format	bookingfrontend	nn	Feltet '%1': ugyldig format
-Building users	bookingfrontend	nn	Brukarar av bygg/anlegg
-Ssn	bookingfrontend	nn	Fødselsnummer (11 siffer)
-Date of birth or SSN	bookingfrontend	nn	Fødselsdato eller fødselsnummer
-Interval	bookingfrontend	nn	intervall
-Recurring booking	bookingfrontend	nn	Gjenta interntildeling
-Repeat until	bookingfrontend	nn	Gjenta til
-1 week	bookingfrontend	nn	1 veke
-2 weeks	bookingfrontend	nn	2 veker
-3 weeks	bookingfrontend	nn	3 veker
-4 weeks	bookingfrontend	nn	4 veker
-Select a group	bookingfrontend	nn	Vel gruppe/lag
-Bookings that can be created	bookingfrontend	nn	Interntildelingar du kan lage
-Please enter correct numbers for the event	bookingfrontend	nn	Oppgi riktig deltakartal
-Report numbers	bookingfrontend	nn	Rapporter deltakartal
-Thank you	bookingfrontend	nn	Takk
-The data was successfully updated	bookingfrontend	nn	Dataene vart oppdatert utan feil
-Close	bookingfrontend	nn	Lukke
-Create new booking	bookingfrontend	nn	Lag ny interntildeling
-You must accept to follow all terms and conditions of lease first.	bookingfrontend	nn	Du må akseptere dei juridiske vilkåra først
-Invalid from date	bookingfrontend	nn	Ugyldig frådato
-The user has accepted the following documents	bookingfrontend	nn	Brukaren har akseptert følgjande dokument:
-Send	bookingfrontend	nn	Send
-Go back	bookingfrontend	nn	Tilbake
-Your application has now been registered and a confirmation email has been sent to you.	bookingfrontend	nn	Søknaden er sendt. Du får ei stadfesting på e-post.
-A Case officer will review your application as soon as possible.	bookingfrontend	nn	Ein sakshandsamar vil handsame søknaden din så fort som mogleg.
-Please check your Spam Filter if you are missing mail.	bookingfrontend	nn	Vi gjer merksam på at e-postsvar blir automatisk generert og kan ende i spamfilter/nettsøppel.
-Loading...	bookingfrontend	nn	Lastar inn…
-customer_ssn contains an invalid Norwegian social security number (6 or 11 digits)	bookingfrontend	nn	Fødselsdato/fødselsnummer er ikkje gyldig. Nummeret må bestå av 6 eller 11 siffer
-customer_organization_number is invalid	bookingfrontend	nn	Organisasjonsnummer er ugyldig
-Used buildings	bookingfrontend	nn	Bygg/anlegg du kan bruke
-Add group	bookingfrontend	nn	Ny gruppe
-Internal Customer	bookingfrontend	nn	Intern kunde
-Customer number	bookingfrontend	nn	Referansenummer
-activity_id	bookingfrontend	nn	Aktivitet
-contact_email	bookingfrontend	nn	E-post
-contact_name	bookingfrontend	nn	Namn
-customer_identifier_type	bookingfrontend	nn	Fakturainformasjon
-group_id	bookingfrontend	nn	Gruppe/Lag
-dates	bookingfrontend	nn	Frå/Til
-Information about the event	bookingfrontend	nn	Informasjon om arrangementet
-Short description. For public events, activities and training under the direction of organizations and clubs, this information will be displayed on the internet	bookingfrontend	nn	Skriv ei kort skildring av arrangementet. Informasjon om opne arrangement, aktivitetar og trening i regi av organisasjonar og klubbar blir synleg på internett
-To borrow premises you must verify that you have read terms and conditions	bookingfrontend	nn	For å kunne låne lokale må du først stadfeste at du har lese dei juridiske vilkåra
-In order to send the invoice we need information about either customer organization number or norwegian social security number	bookingfrontend	nn	For å kunne sende ein eventuell faktura treng vi opplysningar om organisasjonsnr. eller fødselsnr. Organisasjonsnr. finn du her: www.brreg.no
-Private event	bookingfrontend	nn	Privat arrangement
-Mass update	bookingfrontend	nn	Masseoppdatering
-You are now about to update all bookings from this date and to the end of the season.	bookingfrontend	nn	Du er nå i ferd med å oppdatere alle bookingar frå datoen i dag og ut sesongen.
-Please update the data and click the Next-button.	bookingfrontend	nn	Ver grei og oppdater data og klikk på Neste-knappen.
-When clicking the Next-button you will be presented to a list of bookings that will be updated.	bookingfrontend	nn	Etter at du har klikka på Neste-knappen får du ei oversikt over kva for bookingar som blir oppdatert.
-Update	bookingfrontend	nn	Oppdater
-%1 bookings will be updated.	bookingfrontend	nn	%1 interntildelingar vil bli oppdatert.
-%1 bookings were updated.	bookingfrontend	nn	%1 interntildelingar vart oppdatert.
-Access denied	bookingfrontend	nn	Ingen tilgang
-Print as PDF	bookingfrontend	nn	Skriv ut som PDF
-Out season	bookingfrontend	nn	Ut denne sesongen
-Can not repeat from a date in the past	bookingfrontend	nn	Du kan ikkje repetere frå ein dato i fortida.
-Can not create a booking in the past	bookingfrontend	nn	Du kan ikkje opprette ei interntildeling i fortida.
-Overlaps with existing event	bookingfrontend	nn	Overlappar med eksisterande arrangement
-Overlaps with existing allocation	bookingfrontend	nn	Overlappar med eksisterande tildeling
-Overlaps with existing booking	bookingfrontend	nn	Overlappar med eksisterande interntildeling
-Overlaps other organizations allocation	bookingfrontend	nn	Overlappar med ein annan organisasjonstildeling
-The booking uses resources not in the containing allocation	bookingfrontend	nn	Interntildelinga brukar ressursar som ikkje finst i tildelinga
-CONFIRMED	bookingfrontend	nn	STADFESTA
-Pending	bookingfrontend	nn	Under handsaming
-This booking is not connected to a season	bookingfrontend	nn	Denne interntildelinga er ikkje kopla mot ein sesong
-The user has accepted the document under point 8.	bookingfrontend	nn	Brukaren har akseptert dokumenta under punkt 8.
-Organization shortname	bookingfrontend	nn	Kortnamn
-Group shortname	bookingfrontend	nn	Kortnamn
-Edit Group	bookingfrontend	nn	Rediger gruppe
-contacts[0][email] contains an invalid email	bookingfrontend	nn	Ugyldig e-post under ansvarleg gruppeleiar 1
-contacts[1][email] contains an invalid email	bookingfrontend	nn	Ugyldig e-post under ansvarleg gruppeleiar 2
-This booking is outside the organization's allocated time	bookingfrontend	nn	Denne interntildelinga ligg utanfor den tildelte tida til organisasjonen
-Time is set wrong	bookingfrontend	nn	Eitt av klokkesletta er feil
-title	bookingfrontend	nn	Tittel
-Message	bookingfrontend	nn	Melding
-New system message	bookingfrontend	nn	Ny systemmelding
-New message	bookingfrontend	nn	Ny melding
-System message	bookingfrontend	nn	Systemmelding
-System messages	bookingfrontend	nn	Systemmeldingar
-Edit System Message	bookingfrontend	nn	Rediger systemmelding
-Send message	bookingfrontend	nn	Send melding
-E-mail address	bookingfrontend	nn	E-postadresse
-Confirm e-mail address	bookingfrontend	nn	Stadfest e-postadressa
-The e-mail addresses you entered do not match	bookingfrontend	nn	E-postadressene er ulike
-Lengt of shortname is to long, max 11 characters long	bookingfrontend	nn	Kortnamnet er for langt, maksimalt 11 teikn
-Lengt of name is to long, max %1 characters long	bookingfrontend	nn	Namnet er for langt, maksimalt %1 teikn
-Go back to calendar	bookingfrontend	nn	Tilbake til kalendar
-Agegroups kan not be larger than 9999 peoples	bookingfrontend	nn	Det estimerte talet på deltakarar kan ikkje vere høgare enn 9999
-Contact information name is to long. max 50 characters	bookingfrontend	nn	Namnet i kontaktinformasjonen er for langt, maksimalt 50 teikn.
-Unable to fill report	bookingfrontend	nn	Klarte ikkje å fylle ut rapport
-Cancel until	bookingfrontend	nn	Avbestill til
-Cancel booking	bookingfrontend	nn	Avbestill
-Cancel bookings	bookingfrontend	nn	Avbestill bookingar
-Cancel allocation also	bookingfrontend	nn	Avbestill følgjande
-Recurring allocation cancelation	bookingfrontend	nn	Avbestill i intervall
-Cancel allocations	bookingfrontend	nn	Avbestill tildelingar
-Cancelation of allocation from	bookingfrontend	nn	Avbestilling av tildeling frå
-Cancelation of booking from	bookingfrontend	nn	Avbestilling av interntildeling frå
-To cancel booking use this link	bookingfrontend	nn	For å slette interntildelinga: bruk lenka
-To cancel allocation use this link	bookingfrontend	nn	For å slette tildelingen: bruk lenka
-manual	common	nn	Brukarrettleiing
-Change organization	common	nn	Bytt organisasjon
-Cancel allocation	bookingfrontend	nn	Avbestill tildelingar
-Allocations deleted on	bookingfrontend	nn	Tildelingar slette på
-Allocation deleted on	bookingfrontend	nn	Tildeling slette på
-Booking and allocations deleted on	bookingfrontend	nn	Interntildeling og tildeling er sletta på
-Booking deleted on	bookingfrontend	nn	Interntildeling er sletta på
-Bookings and allocations deleted on	bookingfrontend	nn	Interntildelingar og tildelingar er sletta på
-Bookings deleted on	bookingfrontend	nn	Interntildelingar er sletta på
-Cancelation of booking and allocation from	bookingfrontend	nn	Avbestilling av interntildeling og tildeling frå
-Cancelation of booking from	bookingfrontend	nn	Avbestilling av interntildeling frå
-Cancelation of bookings and allocations from	bookingfrontend	nn	Avbestilling av interntildelingar og tildelingar frå
-Cancelation of bookings from	bookingfrontend	nn	Avbestilling av interntildelingar frå
-Layout	bookingfrontend	nn	Frontend design
-Delete information	bookingfrontend	nn	Skal du berre slette tildeling på valt dato, vel Slett-knappen nede slik at tida blir vist som ledig og blir tilgjengeleg for andre klubbar/orgaisasjonar.
-Delete information2	bookingfrontend	nn	Skal du slette fleire kan du velje Ut sesong eller Slett til og vel ein dato, du kan også velje intervall (til dømes annan kvar veke).
-Booking Delete information	bookingfrontend	nn	Skal du slette interntildeling på valt dato, vel Slett-knappen nedst.
-Booking Delete information3	bookingfrontend	nn	Skal tida bli ledig i kalenderen må du krysse av for slett tildeling.
-Booking Delete information2	bookingfrontend	nn	Skal du slette fleire kan du velje Ut sesong eller Slett til og velje ein dato, du kan også velje intervall (til dømes annan kvar veke).
-Cancel information	bookingfrontend	nn	Skal du berre avbestille tildeling på valt dato, vel Avbestill-knappen nede for å vise tida som ledig og tiden blir vist som ledig i kalenderen, og kan tildeles andre klubber/org.
-Cancel information2	bookingfrontend	nn	Skal du Avbestille flere kan du velge Ut sesong eller Slett til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
-Booking Cancel information	bookingfrontend	nn	Skal du avbestille interntildeling på valt dato, vel Avbestill-knappen nedst Skal tida bli vist som ledig i kalenderen kryssar du av for slett tildeling.
-Booking Cancel information2	bookingfrontend	nn	Skal du avbestille fleire kan du velje Ut sesong eller Avbestill til og velje ein dato, du kan også velje intervall (til dømes annan kvar veke).
-You cant edit a booking that is older than 2 weeks	bookingfrontend	nn	Du kan ikkje redigere ei booking som er eldre enn 2 veker.
-Tilsynsvakt name	bookingfrontend	nn	Namn på tilsynsvakt
-Tilsynsvakt email	bookingfrontend	nn	E-post til tilsynsvakt
-Tilsynsvakt telephone	bookingfrontend	nn	Telefonnummar til tilsynsvakt
-Public schedule	bookingfrontend	nn	Publikumsbading
-Apply for time	bookingfrontend	nn	Søk om tid
-Could not delete allocation due to a booking still use it	bookingfrontend	nn	Kan ikkje slette denne interntildelinga fordi ei interntildeling framleis brukar ho
-Event Delete Information	bookingfrontend	nn	Fjerning av arrangement er permanent
-Event Delete Information2	bookingfrontend	nn	Arrangement blir sett inaktivt
-Name for event/activity	bookingfrontend	nn	Namn på arrangementet / aktiviteten
-Edit Events	bookingfrontend	nn	Rediger arrangement
-Delete Event	bookingfrontend	nn	Slett arrangement
-Check calendar	bookingfrontend	nn	Sjekk kalendar
-You can't cancel event that has started, for help contacts site admin	bookingfrontend	nn	Du kan ikkje slette arrangement som er over
-You can't extend the event, for that contact administrator	bookingfrontend	nn	Du kan ikkje sjølv utvide lengda på eit arrangement. Då må du ta kontakt med sakshandsamar.
-You can't change resources to the event, for that contact administrator	bookingfrontend	nn	Du kan ikkje endre på ressursar. Då må du ta kontakt med sakshandsamar
-Cancelation of booking from	bookingfrontend	nn	Avbestilling frå
-Deleted on	bookingfrontend	nn	Avbestilling i
-entity %1 has been saved	bookingfrontend	nn	Post %1 er lagra
-entity %1 has been updated	bookingfrontend	nn	Post %1 er oppdatert
-minute	bookingfrontend	nn	Minutt
-please enter a building name	bookingfrontend	nn	Oppgi namn på bygningen
-please select an activity	bookingfrontend	nn	Vel ein aktivitet
-select date	bookingfrontend	nn	Vel dato
-cancel event	bookingfrontend	nn	Avbestill
-free	bookingfrontend	nn	Ledig
-bookingfrontend settings	bookingfrontend	nn	Bookingfrontend innstillingar
-site title	bookingfrontend	nn	Tittel på sida
-footer info	bookingfrontend	nn	Botntekst informasjon
-remote authentication	bookingfrontend	nn	Ekstern autentisering
-select method	bookingfrontend	nn	Vel ein metode
-use cookies to pass sessionid	bookingfrontend	nn	Bruk cookie til å handtere sesjonar
-cookie domain for sessions	bookingfrontend	nn	Cookiedomene for sesjoner
-if same as framework leave empty	bookingfrontend	nn	la dette feltet stå tomt om det er det same som for rammeverket
-anonymous user	bookingfrontend	nn	Anonym brukar
-anonymous password	bookingfrontend	nn	Anonymt passord
-custom login url	bookingfrontend	nn	Egendefinert logg inn url
-custom login url parameter	bookingfrontend	nn	Egendefinert logg inn url parameter
-login apikey	bookingfrontend	nn	Login apikey
-login role id	bookingfrontend	nn	Login Rolle-ID
-login webservicehost	bookingfrontend	nn	Login webservicehost
-login header key	bookingfrontend	nn	Innloggingsoverskrift:
-login header regular expression	bookingfrontend	nn	Innloggingsoverskrift vanleg uttrykk
-login soap client location	bookingfrontend	nn	Login soap klient location
-login soap client uri	bookingfrontend	nn	Login soap klient uri
-login soap client proxy host	bookingfrontend	nn	Login soap klient proxyserver
-login soap client proxy port	bookingfrontend	nn	Login soap klient proxyport
-login soap client encoding	bookingfrontend	nn	Login soap klient tegnsett
-login soap client login	bookingfrontend	nn	Login soap klient login
-login soap client password	bookingfrontend	nn	Login soap klient passord
-login soap client wsdl	bookingfrontend	nn	Login soap klient wsdl
-test organization	bookingfrontend	nn	Test organisasjon
-google tracker id	bookingfrontend	nn	Goggle sporar id
-url to external logout	bookingfrontend	nn	Url for ekstern logg ut
-Redirect is computed if url ends with	bookingfrontend	nn	Omdirigering blir kalkulert om url slutter med
-bookingfrontend host	bookingfrontend	nn	Bookingfrontend vert
-Needed for the return from the external logout	bookingfrontend	nn	Nødvendig for retur frå ekstern logg ut
-metadata settings	bookingfrontend	nn	Metadata innstillingar
-User	bookingfrontend	nn	Brukar
-account status	bookingfrontend	nn	konto status
-last login	bookingfrontend	nn	siste innlogging
-last password change	bookingfrontend	nn	siste passordendring
-About the service	bookingfrontend	nn	Om tjenesten
-Activities (2018)	bookingfrontend	nn	Tilrettelagt for
-Add application	bookingfrontend	nn	Legg til søknad
-Next step	bookingfrontend	nn	Gå vidare
-application add	bookingfrontend	nn	søknad
-Application cart	bookingfrontend	nn	Handlekurv
-Application basket	bookingfrontend	nn	Søknadskorg
-back	bookingfrontend	nn	tilbake
-Building information	bookingfrontend	nn	Informasjon
-Choose another building	bookingfrontend	nn	Velg annet anlegg
-Choose categories	bookingfrontend	nn	Velg kategorier
-Choose resources	bookingfrontend	nn	Velg lokaler
-Complete applications	bookingfrontend	nn	Fullfør søknad
-Date	bookingfrontend	nn	Dato
-Do you want to delete application?	bookingfrontend	nn	Er du sikker på at du vil slette søknad fra handlekurv?
-footer privacy link	bookingfrontend	nn	Footer: Lenke til personvern
-Information about the event (edit)	bookingfrontend	nn	Informasjon om arrangementet
-more	bookingfrontend	nn	flere
-Part of town (2018)	bookingfrontend	nn	Bydel
-Pictures	bookingfrontend	nn	Bilder
-Place	bookingfrontend	nn	Sted
-Privacy statement	bookingfrontend	nn	Personvern
-Search building, resource, organization	bookingfrontend	nn	Søk anlegg, lokale, organisasjon
-Search results	bookingfrontend	nn	Søkeresultat
-See	bookingfrontend	nn	Se
-Send message to case officer for building	bookingfrontend	nn	Melding til saksbehandler for anlegget
-update results	bookingfrontend	nn	Oppdater søkeresultat
-Used buildings (2018)	bookingfrontend	nn	Anlegg du kan bruke
-About Active kommune	bookingfrontend	nn	Om Aktiv kommune
-Book resource	bookingfrontend	nn	Søknad
-executiveofficer	bookingfrontend	nn	Saksbehandler
-Privacy	bookingfrontend	nn	Personvern
-manual	bookingfrontend	nn	Manual
-collect users	booking	nn	Legg til brukarar
-do you really want to collect users again	booking	nn	Vil du legge til brukarar på nytt?
-again	booking	nn	Igjen
-Do you really want to collect users	booking	nn	Vil du legge til brukarar?
-Back to user list	booking	nn	Attende til brukarlista
-Collects users from all applications and events	booking	nn	Haustar brukarar frå alle søknader og arrangement
-added %1 users	booking	nn	Lagt til %1 brukarar
-found none	booking	nn	Fann ingen
-optional	booking	nn	(Valfri)
-get name from external source	bookingfrontend	nn	Hent navn frå ekstern kilde (som Gule Sider)
-Event/activity description	bookingfrontend	nn	Kort beskrivelse av arrangementet / aktiviteten
-Upload Attachment	bookingfrontend	nn	Last opp vedlegg som kan gi nyttig informasjon om søknaden
-No rent object chosen	bookingfrontend	nn	Ingen leieobjekt er valgt
-For rent	bookingfrontend	nn	Til leige
-Choose atleast one object	bookingfrontend	nn	Vel minst eitt leigeobjekt
-Please fill all fields	bookingfrontend	nn	Vennlegst fyll ut alle obligatoriske felt!
-available	bookingfrontend	nn	Ledig
-leased	bookingfrontend	nn	Opptatt
-It is currently not possible to rent anything here	bookingfrontend	nn	NB! Det er for tida ikkje mogeleg å leige noko her
-my page	bookingfrontend	nn	Mi side
-invoice	bookingfrontend	nn	Faktura
-delegate from	bookingfrontend	nn	Delegert frå
-saved data	bookingfrontend	nn	Lagra data
-edit data	bookingfrontend	nn	Endre data
-Minimum 8 digits	bookingfrontend	nn	Minimum 8 tal
-view event	bookingfrontend	nn	Vis arrangement
-view allocation	bookingfrontend	nn	Vis tildeling
-view booking	bookingfrontend	nn	Vis interntildeling
-Phone is already registered	bookingfrontend	nn	Telefonnummeret er alt registrert
-registration	bookingfrontend	nn	Registrering
-download to your calendar	bookingfrontend	nn	Last ned til din kalendar
-Find available resources	bookingfrontend	nn	Søk etter leieobjekter
-Search available resources	bookingfrontend	nn	Søk etter tilgjengelige lokaler
-Choose date	bookingfrontend	nn	Velg dato
-Find available	bookingfrontend	nn	Finn tilgjengelig
-Happening in Bergen	bookingfrontend	nn	Dette skjer i Bergen kommune
-View all events	bookingfrontend	nn	Se alle arrangement
-From time	bookingfrontend	nn	Fra kl
-To time	bookingfrontend	nn	Til kl
-Town part	bookingfrontend	nn	Område/bydel
-No available options	bookingfrontend	nn	Ingen tilgjengelige valg
-Facilities	bookingfrontend	nn	Fasiliteter
-Apply filter	bookingfrontend	nn	Aktiver filter
-Reset filter	bookingfrontend	nn	Nullstill søk
-Reset filters	bookingfrontend	nn	Nullstill filter
-To application site	bookingfrontend	nn	Til søknadsside
-locations	bookingfrontend	nn	Lokaler
-User has made a request to alter time on existing booking	bookingfrontend	nn	Ynskjer å endre tida for booking. Ny tid:
-User has made a request to cancel event	bookingfrontend	nn	Kunde har avbestilt arrangement.
-User has changed field for equipment	bookingfrontend	nn	Endring av felt for nødvendig utstyr:
-Request for changed time	bookingfrontend	nn	Forespørsel om å endre tid er registrert
-Follow status	bookingfrontend	nn	Du kan følge med på status under Min side --> Søknader
-for remaining season	bookingfrontend	nn	for gjenværende sesong
-for allocations until	bookingfrontend	nn	for tildelinger frem til:
-every	bookingfrontend	nn	hver
-week	bookingfrontend	nn	uke
-Could not find application id. Contact case officer with allocation id	bookingfrontend	nn	Kunne ikke finne tihørende søknad. For å øke tid må du kontakte saksbehandler med tildeling:
-Decrease of from time overlap with existing booking	bookingfrontend	nn	Kan ikke endre dato. Starttidspunkt overlapper med eksisterende interntildeling
-Decrease of to time overlap with existing booking	bookingfrontend	nn	Kan ikke endre dato. Sluttidspunkt overlapper med eksisterende interntildeling
-Successfully changed start time	bookingfrontend	nn	Endring av startidspunkt er vellykket. Nytt startidspunkt for tildeling er:
-Successfully changed end time	bookingfrontend	nn	Endring av sluttidspunkt er vellykket. Nytt sluttidspunkt for tildeling er:
-Cannot change start time	bookingfrontend	nn	Endring av startidspunkt feilet. Startdato kan ikke være senere enn sluttdato
-Cannot change end time	bookingfrontend	nn	Endring av sluttidspunkt feilet. Sluttdato kan ikke være før startdato
-Edit allocation information	bookingfrontend	nn	Skal du berre endra tildeling på valt dato, vel Endre-knappen nede for å vise tida som ledig og tiden blir vist som ledig i kalenderen, og kan tildeles andre klubber/org.
-Edit allocation information2	bookingfrontend	nn	Skal du endra fleire kan du velge "Ut sesong" eller "Endre til" og velg en dato, du kan også velge intervall (f.eks. annankvar veke).
-Change the allocation	bookingfrontend	nn	Endre tildeling
-Recurring allocation edit	bookingfrontend	nn	Endre i intervall
-Edit until	bookingfrontend	nn	Endre til
-Request to increase time on existing booking	bookingfrontend	nn	Ønske om å øke tildelt tid på tildeling:
-Go to allocation	bookingfrontend	nn	Gå til tildeling
-Equipment text	bookingfrontend	nn	I feltet under skriver du inn om du har spesielle behov tilknyttet aktiviteten
-Request for equipment	bookingfrontend	nn	Ønske om nødvendig utstyr på tildeling:
-Request for equipment has been sent	bookingfrontend	nn	Ønske om nødvendig utstyr er sendt til saksbehandler
-Resources type	bookingfrontend	nn	Lokaler
-Upcomming Events	bookingfrontend	nn	Kommande arrangement
-expired for edit	bookingfrontend	nn	Utløpt
-Missing rights	bookingfrontend	nn	Mangler rettigheter
-allocation show	bookingfrontend	nn	Tildeling
-booking show	bookingfrontend	nn	Interntildeling
-event show	bookingfrontend	nn	Arrangement
-Associated bookings	bookingfrontend	nn	Tilhørende tildelinger/arrangementer
-Building or facility name	bookingfrontend	nn	Bygning/anleggsnavn
-reserved	bookingfrontend	nn	Reservert
-calendar view	bookingfrontend	nn	Dags-/ukesvisning
-Show more results	bookingfrontend	nn	Last inn flere resultater
-quantity limit (%1) exceeded for %2: maximum %3 times within a period of %4 days	bookingfrontend	nn	Maksimumgrense (%1) overskreden for %2:<br/> maks %3 gonger innanfor ein periode på %4 dagar
-validate	bookingfrontend	nn	Kontrollér
-cost is set	booking	nn	Ny pris er definert
-Event was created	booking	nn	Arrangementet vart oppretta
-Link to website	bookingfrontend	nn	Link til heimeside
-uustatus	bookingfrontend	nn	Tilgjengelegheitserklæring
-each	bookingfrontend	nn	Stk
-kg	bookingfrontend	nn	Kg
-meter	bookingfrontend	nn	Meter
-square meter	bookingfrontend	nn	Kvadratmeter
-m	bookingfrontend	nn	Meter
-m2	bookingfrontend	nn	Kvadratmeter
-hour	bookingfrontend	nn	Time
-day	bookingfrontend	nn	Dag
-this application is not within a valid season	bookingfrontend	nn	Denne søknaden er utanfor gyldig åpningstid
+see_more_filters	bookingfrontend	nn	Sjå fleire filter
+event_building	bookingfrontend	nn	Arrangement / bygning
+enter_team_organization_name	bookingfrontend	nn	Skriv namn på lag/organisasjon
+show_only_available	bookingfrontend	nn	Vis berre tilgjengelege
+version_choice	bookingfrontend	nn	Versjonsval
+which_version_do_you_want	bookingfrontend	nn	Kva versjon ønsker du?
+old	bookingfrontend	nn	Gammal
+what_is_aktiv_kommune	bookingfrontend	nn	Kva er Aktiv kommune?

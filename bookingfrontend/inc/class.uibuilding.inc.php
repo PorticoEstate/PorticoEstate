@@ -364,7 +364,7 @@ class bookingfrontend_uibuilding extends booking_uibuilding
             'building_id' => $building['id'], 'building_name' => $building['name']));
         $building['start'] = self::link(array('menuaction' => 'bookingfrontend.uisearch.index',
             'type' => "building"));
-        $building['part_of_town'] = self::cleanTownName(execMethod('property.solocation.get_part_of_town', $building['location_code'])['part_of_town']);
+        $building['part_of_town'] = execMethod('property.solocation.get_part_of_town', $building['location_code'])['part_of_town'];
 
         if (trim($building['homepage']) != '' && !preg_match("/^http|https:\/\//", trim($building['homepage']))) {
             $building['homepage'] = 'http://' . $building['homepage'];
