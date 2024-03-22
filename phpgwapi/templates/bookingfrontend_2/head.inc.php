@@ -85,11 +85,14 @@ JS;
 	$GLOBALS['phpgw']->template->set_var('privacy', $privacy);
 
 
-	$textaboutmunicipality = lang('About Active kommune');
+	$textaboutmunicipality = lang('About Aktive kommune');
 	$GLOBALS['phpgw']->template->set_var('textaboutmunicipality', $textaboutmunicipality);
 
-	$sign_in = 'Logg inn';//lang('sign in');
+	$sign_in = lang('login');//lang('sign in');
 	$GLOBALS['phpgw']->template->set_var('sign_in', $sign_in);
+
+	$contact = lang('contact');//lang('sign in');
+	$GLOBALS['phpgw']->template->set_var('contact', $contact);
 
 	$executiveofficer = lang('executiveofficer');
 	$GLOBALS['phpgw']->template->set_var('executiveofficer', $executiveofficer);
@@ -307,19 +310,23 @@ JS;
 
 	if ($config_frontend['develope_mode'])
 	{
+        $version_title = lang('version_choice');
+        $version_ingress = lang('which_version_do_you_want');
+        $version_old = lang('old');
+        $version_new = lang('new');
 		$template_selector = <<<HTML
               <div>
-                <h3>Versjon valg</h3>
-                <p>Hvilken versjon ønsker du?</p>
+                <h3>{$version_title}</h3>
+                <p>{$version_ingress}</p>
                 <form class="d-flex flex-column">
                   <label class="choice mb-3">
                     <input type="radio" id="template_bookingfrontend" name="select_template" value="bookingfrontend" {$selected_bookingfrontend} />
-                    Gammel
+                    {$version_old}
                     <span class="choice__radio"></span>
                   </label>
                   <label class="choice mb-5">
                     <input type="radio" id="template_bookingfrontend_2" name="select_template" value="bookingfrontend_2" {$selected_bookingfrontend_2} />
-                    Ny
+                    {$version_new}
                     <span class="choice__radio"></span>
                   </label>
                 </form>
@@ -371,6 +378,10 @@ HTML;
 	$choose_lang_trans2 = lang('Which language do you want?');
 
 
+	$version_trans = lang('version');
+    $what_is_aktiv_kommune = lang('what_is_aktiv_kommune');
+
+
 	$nav = <<<HTML
 <div class="border-top border-2 pt-5 pb-2r">
   <nav class="navbar">
@@ -412,7 +423,7 @@ HTML;
         </div>
       </div>
             <button type="button" class="pe-btn pe-btn--transparent navbar__section__language-selector" data-bs-toggle="modal" data-bs-target="#selectTemplate" aria-label="Velg template">
-        Versjon
+        {$version_trans}
         <i class="fas fa-chevron-down"></i>
       </button>
             <div class="modal fade" id="selectTemplate" tabindex="-1" aria-labelledby="selectTemplate" aria-hidden="true">
@@ -428,7 +439,7 @@ HTML;
         </div>
       </div>
       <ul class="list-unstyled navbar__section__links">
-        <li><a href="{$about}">Hva er Aktiv kommune?</a></li>
+        <li><a href="{$about}">{$what_is_aktiv_kommune}</a></li>
         <li><a href="{$faq}">FAQ</a></li>
       </ul>
       <!--button type="button" class="pe-btn pe-btn-primary py-3">Logg inn</button-->
@@ -451,7 +462,7 @@ HTML;
               </div>
               <div>
 <ul class="list-unstyled">
-        <li><a href="{$about}">Hva er Aktiv kommune?</a></li>
+        <li><a href="{$about}">{$what_is_aktiv_kommune}</a></li>
         <li><a href="{$faq}">FAQ</a></li>
       </ul>
       </div>

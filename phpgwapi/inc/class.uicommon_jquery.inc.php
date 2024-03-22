@@ -516,27 +516,6 @@
 			self::add_template_file('helpers');
 		}
 
-        function cleanTownName($townName) {
-            $lines = explode("\n", $townName);
-            $cleanedLines = array();
-
-            foreach ($lines as $line) {
-                // Check if 'Bydel' is in the line
-                if (strpos(strtolower($line), 'bydel') !== false) {
-                    // Remove 'Bydel'
-                    $line = preg_replace("/bydel/i", "", $line);
-                    $line = trim($line);
-                }
-
-                // Capitalize first letter of each word
-                $line = ucwords(strtolower($line));
-                array_push($cleanedLines, $line);
-            }
-
-            return implode("\n", $cleanedLines);
-        }
-
-
 		public static function render_template_xsl( $files, $data, $xsl_rootdir = '' , $base = 'data')
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;

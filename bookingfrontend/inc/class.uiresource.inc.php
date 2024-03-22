@@ -102,7 +102,7 @@
 			{
 				$building = $this->building_bo->read_single($building_id);
 				$building_link = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show', 'id' => $building['id']));
-                $building['part_of_town'] = self::cleanTownName(execMethod('property.solocation.get_part_of_town', $building['location_code'])['part_of_town']);
+                $building['part_of_town'] = execMethod('property.solocation.get_part_of_town', $building['location_code'])['part_of_town'];
 
 				$pathway[] = array(
 					'lang_home' => $lang_home,

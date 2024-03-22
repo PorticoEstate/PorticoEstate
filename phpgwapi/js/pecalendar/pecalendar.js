@@ -3,18 +3,36 @@
 if (!globalThis['DateTime']) {
     globalThis['DateTime'] = luxon.DateTime;
 }
-if (globalThis['ko'] && 'bindingHandlers' in ko && !ko.bindingHandlers.withAfterRender) {
-    ko.bindingHandlers.withAfterRender = {
-        init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
-            var value = valueAccessor();
+if (globalThis['ko'] && 'bindingHandlers' in ko) {
+    if (!ko.bindingHandlers.withAfterRender) {
+        ko.bindingHandlers.withAfterRender = {
+            init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+                var value = valueAccessor();
 
-            ko.applyBindingsToNode(element, {visible: true}, bindingContext);
-            if (value.afterRender) {
-                value.afterRender(element);
+                ko.applyBindingsToNode(element, {visible: true}, bindingContext);
+                if (value.afterRender) {
+                    value.afterRender(element);
+                }
+
             }
+        };
+    }
+    if (!ko.bindingHandlers.assignHeight) {
+        ko.bindingHandlers.assignHeight = {
+            update: function (element, valueAccessor, allBindings) {
+                const observable = valueAccessor();
+                const remSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+                const elementHeight = element.offsetHeight;
+                const heightInRem = elementHeight / remSize;
 
-        }
-    };
+                // Update the observable based on the condition
+                observable(heightInRem);
+            }
+        };
+
+
+    }
+
 }
 
 class PECalendar {
@@ -150,7 +168,12 @@ class PECalendar {
     /**
      * @type {KnockoutObservable<number>} - Number of parts an hour is divided into. Represents time intervals.
      */
-    hourParts = ko.observable(4); // 15 minutes intervals
+    hourParts = ko.observable(1); // 1 = 1 per hour, 4 = 15 minutes intervals
+
+    /**
+     * @type {KnockoutObservable<number>} - Number of css grid column parts for a given day.
+     */
+    dayColumnSpan = ko.observable(4); // 15 minutes intervals
 
     /**
      * @type {KnockoutObservable<Record<string, IFreeTimeSlot>>} - Available time slots for simple booking.
@@ -204,12 +227,16 @@ class PECalendar {
         this.currentDate.subscribe(newDate => {
             this.loadBuildingData();
         });
-        this.calendarEvents.subscribe(newData => this.loadPopperData())
+        this.sizedEvents.subscribe(newData => this.loadPopperData())
 
         this.disableResourceSwap(disableResourceSwap)
         this.building_id(building_id);
         this.resource_id(resource_id);
         this.loadBuildingData();
+
+        this.dayColumnSpan(+getComputedStyle(document.documentElement)
+            .getPropertyValue('--day-columns'))
+
     }
 
     toggleShowAllTempEventPills(event) {
@@ -241,7 +268,7 @@ class PECalendar {
         for (let hour = this.startHour(); hour < this.endHour(); hour++) {
             slots.push({
                 timeLabel: `${hour < 10 ? '0' + hour : hour}:00`,
-                gridRowStyle: `${((hour - this.startHour()) * this.hourParts()) + 1} / span 1`
+                gridRowStyle: `${((hour - this.startHour()) * 4) + 1} / span 1`
             });
         }
         return slots;
@@ -327,7 +354,7 @@ class PECalendar {
                 this.firstDayOfCalendar().toFormat("y-MM-dd"), // current Week
                 this.firstDayOfCalendar().plus({week: 1}).toFormat("y-MM-dd"), // next week
             ];
-            if(this.firstDayOfCalendar() > currDate) {
+            if (this.firstDayOfCalendar() > currDate) {
                 weeksToFetch.push(this.firstDayOfCalendar().minus({week: 1}).toFormat("y-MM-dd")) // last week
             }
             // Construct URLs for fetching data
@@ -443,7 +470,13 @@ class PECalendar {
             const colDate = this.firstDayOfCalendar().plus({days: column - 1});
             const isPastDay = colDate < luxon.DateTime.local().startOf('day');
             columnElements.push({
-                gridColumnStyle: `grid-area: 1 / ${column} / span ${(this.endHour() - this.startHour() + 1) * this.hourParts} / span 1;`,
+                // gridColumnStyle: `grid-area: 1 / ${column} / span ${(this.endHour() - this.startHour() + 1) * this.hourParts} / span 1;`,
+                gridColumnStyle: `
+                grid-row-start: 1;
+                grid-row-end: span ${(this.endHour() - this.startHour() + 1) * this.hourParts()};
+                grid-column-start: ${(column === 1 ? column : ((column - 1) * this.dayColumnSpan() + 1))};
+                grid-column-end: span ${this.dayColumnSpan()};
+                    `,
                 isPastDay: isPastDay
             });
         }
@@ -473,7 +506,13 @@ class PECalendar {
                 if (isPastOrInactiveHour) {
                     // Past or inactive hours are full-hour cells
                     gridCells.push({
-                        cellStyle: `grid-area: ${((hour - this.startHour()) * this.hourParts() + 1)} / ${column} / span ${this.hourParts()} / span 1;`,
+                        // cellStyle: `grid-area: ${((hour - this.startHour()) * this.hourParts() + 1)} / ${column} / span ${this.hourParts()} / span 1;`,
+                        cellStyle: `
+                            grid-row-start: ${((hour - this.startHour()) * this.hourParts() + 1)};
+                            grid-row-end: span ${this.hourParts()};
+                            grid-column-start: ${(column === 1 ? column : (column - 1) * this.dayColumnSpan() + 1)};
+                            grid-column-end: span ${this.dayColumnSpan()};
+                        `,
                         isPastHour: true,
                         time: `${formattedHour}:00:00`, // Add time property
                         day: column
@@ -483,7 +522,12 @@ class PECalendar {
                     for (let part = 0; part < this.hourParts(); part++) {
                         const minutes = (part * (60 / this.hourParts())).toString().padStart(2, '0');
                         gridCells.push({
-                            cellStyle: `grid-area: ${((hour - this.startHour()) * this.hourParts() + part + 1)} / ${column} / span 1 / span 1;`,
+                            cellStyle: `
+                                grid-row-start: ${((hour - this.startHour()) * this.hourParts() + part + 1)};
+                                grid-row-end: span 1;
+                                grid-column-start: ${(column === 1 ? column : (column - 1) * this.dayColumnSpan() + 1)};
+                                grid-column-end: span ${this.dayColumnSpan()};
+                            `,
                             isPastHour: false,
                             time: `${formattedHour}:${minutes}:00`, // Add time property
                             day: column
@@ -569,8 +613,13 @@ class PECalendar {
 
     resourceEvents = ko.computed(() => {
         // Filter events where any of the associated resources has an id that matches this.resource_id
-        return [...this.events(), ...this.tempEvents(), this.tempEvent()].filter(event => event?.resources.some(resource => resource?.id === this.resource_id()));
+        const allocationIds = this.events().map(event => event.allocation_id); // comment out this to test overlaps
+        // const allocationIds = [];
+        const filteredEvents = this.events().filter(event => !allocationIds.includes(event.id));
+
+        return filteredEvents.filter(event => event?.resources.some(resource => resource?.id === this.resource_id()));
     });
+
 
     /**
      * Checks if a given date falls within the range of firstDayOfCalendar and lastDayOfCalendar.
@@ -583,34 +632,240 @@ class PECalendar {
         return date >= this.firstDayOfCalendar() && date <= this.lastDayOfCalendar();
     }
 
-    calendarEvents = ko.computed(() => {
-        const calEvents = this.resourceEvents().reduce((all, event) => {
-            const dates = this.getEventDates(event);
-            for (let date of dates) {
-                if (this.isDateInRange(date.from)) {
-                    // Create an event element and append to the content
-                    const props = {}
+// Assuming events is an array of events for a single day, each with a start and end time.
+    allocateColumns(events) {
+        // 1. Create a sorted list of all start and end times (unique time points)
+        let timePoints = new Set();
+        events.forEach(event => {
+            timePoints.add(event.date.from.ts);
+            timePoints.add(event.date.to.ts);
+        });
+        let sortedTimePoints = Array.from(timePoints).sort((a, b) => a - b);
 
-                    props[`event-${event.type}`] = true;
-                    if (this.tempEvent()) {
-                        props[`current-temp`] = event.id === this.tempEvent().id;
+        // 2. For each segment between time points, find overlapping events
+        let segments = [];
+        for (let i = 0; i < sortedTimePoints.length - 1; i++) {
+            let segmentStart = sortedTimePoints[i];
+            let segmentEnd = sortedTimePoints[i + 1];
+            let activeEvents = events.filter(event =>
+                event.date.from.ts < segmentEnd && event.date.to.ts > segmentStart
+            );
+
+            segments.push({
+                start: segmentStart,
+                end: segmentEnd,
+                activeEvents: activeEvents,
+                // Divide the space evenly among active events
+                columnAllocation: activeEvents.length > 0 ? Math.floor(12 / activeEvents.length) : 12
+            });
+        }
+
+        // 3. Assign the calculated column span to each event based on its active segments
+        events.forEach(event => {
+            let eventSegments = segments.filter(segment =>
+                segment.activeEvents.includes(event)
+            );
+            let minAllocation = eventSegments.reduce((min, segment) =>
+                Math.min(min, segment.columnAllocation), 12
+            );
+            event.columnSpan = minAllocation;
+        });
+
+        return events;
+    }
+
+    allocateEvents(events) {
+        if (!events) {
+            return [];
+        }
+        const DBG = events[0].date.from.toISODate() === '2024-03-24';
+
+        // Assuming the day starts at 00:00 and ends at 24:00, creating intervals based on hourParts
+        let intervals = new Array(24 * this.hourParts()).fill(null).map(() => []);
+
+        // Populate intervals with events
+        events.forEach(event => {
+            let start = this.convertToStartIntervalIndex(event.date.from);
+            let end = this.convertToEndIntervalIndex(event.date.to);
+
+            for (let i = start; i < end; i++) {
+                if (!intervals[i]) {
+                    intervals[i] = [];
+                }
+                intervals[i].push(event);
+            }
+        });
+
+
+        // Initialize occupied space for each interval
+        let occupiedSpace = new Map();
+
+        // Populate the map with empty arrays for each interval
+        for (let i = 0; i < intervals.length; i++) {
+            occupiedSpace.set(i, new Array(12).fill(false));
+        }
+
+        // Allocate columns based on overlaps within each interval
+        events.forEach(event => {
+            let startInterval = this.convertToStartIntervalIndex(event.date.from);
+            let endInterval = this.convertToEndIntervalIndex(event.date.to);
+            let overlapCount = 0;
+
+            // Find the maximum overlap for this event
+            for (let i = startInterval; i < endInterval; i++) {
+                overlapCount = Math.max(overlapCount, intervals[i].length);
+            }
+
+            // Calculate column span
+            event.columnSpan = Math.floor(12 / overlapCount);
+
+            // Allocate a start column that is not occupied
+            let space = occupiedSpace.get(startInterval);
+            for (let i = 0; i < space.length; i += event.columnSpan) {
+                if (space.slice(i, i + event.columnSpan).every(x => !x)) {
+                    // Found space for the event
+                    event.startColumn = i;
+                    for (let j = startInterval; j < endInterval; j++) {
+                        // Mark space as occupied for the duration of the event
+                        let jSpace = occupiedSpace.get(j);
+                        jSpace.fill(true, i, i + event.columnSpan);
+                        occupiedSpace.set(j, jSpace);
                     }
-                    all.push({event, date, props});
-                    // const eventElement = this.createEventElement(event, date);
-                    // content.appendChild(eventElement);
+                    break;
                 }
             }
-            return all;
-        }, [])
+        });
+
+
+        for (let i = 0; i < intervals.length; i++) {
+            let intervalEvents = intervals[i];
+            if (intervalEvents.length > 0) {
+                let totalSpan = intervalEvents.reduce((acc, curr) => acc + curr.columnSpan, 0);
+                // Check if total span does not equal 12 and events do not overlap with other intervals
+                if (totalSpan !== 12) {
+                    let uniqueEvents = intervalEvents.filter(event => {
+                        // Check if this event exists only in the current interval
+                        let startInterval = this.convertToStartIntervalIndex(event.date.from);
+                        let endInterval = this.convertToEndIntervalIndex(event.date.to);
+                        return startInterval === i && endInterval === i + 1;
+                    });
+
+
+                    // If unique events found
+                    if (uniqueEvents.length > 0) {
+
+                        let remainingSpans = 12 - totalSpan;
+
+                        let additionalSpanPerEvent = Math.floor(remainingSpans / uniqueEvents.length);
+                        let additionalSpanRemainder = remainingSpans % uniqueEvents.length;
+
+                        // Evenly distribute remaining spans among events
+                        uniqueEvents.forEach((event, index) => {
+                            event.columnSpan += additionalSpanPerEvent;
+                            if (index < additionalSpanRemainder) {
+                                event.columnSpan += 1; // Distribute any remainder
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
+        if (DBG) {
+            console.log(intervals);
+        }
+        return events;
+    }
+
+
+    convertToStartIntervalIndex(dateTime) {
+        // Round down for start index
+        return (dateTime.hour * this.hourParts()) + Math.floor(dateTime.minute / (60 / this.hourParts()));
+    }
+
+    convertToEndIntervalIndex(dateTime) {
+        // Round up for end index
+        return (dateTime.hour * this.hourParts()) + Math.ceil(dateTime.minute / (60 / this.hourParts()));
+    }
+
+    sizedEvents = ko.computed(() => {
+        // Organize events by day
+        let eventsByDay = this.resourceEvents().reduce((days, event) => {
+            const dates = this.getEventDates(event);
+            dates.forEach(date => {
+                if (this.isDateInRange(date.from)) {
+                    const dayKey = date.from.toISODate(); // Assuming 'from' is a luxon.DateTime object
+                    if (!days[dayKey]) {
+                        days[dayKey] = [];
+                    }
+                    days[dayKey].push({
+                        event,
+                        date,
+                    });
+                }
+            });
+            return days;
+        }, {});
+
+        // Allocate events for each day
+        Object.keys(eventsByDay).forEach(dayKey => {
+            eventsByDay[dayKey] = this.allocateEvents(eventsByDay[dayKey]);
+        });
+
+
+        // Rebuild the array for the computed observable
+        const calEvents = [];
+        Object.entries(eventsByDay).forEach(([dayKey, events]) => {
+            events.forEach(({event, date, columnSpan, startColumn}) => {
+                // Add more properties as needed
+                const props = {
+                    [`event-${event.type}`]: true,
+                    columnSpan: columnSpan, // Use the calculated columnSpan
+                    startColumn: startColumn, // Use the calculated columnSpan
+                };
+
+                const heightREM = ko.observable(100); // Adjust as needed based on event details
+                const popper = ko.observable(null); // Adjust as needed based on event details
+
+                calEvents.push({event, date, props, heightREM, popper});
+            });
+        });
+
         return calEvents;
     });
 
+    calendarEvents = ko.computed(() => {
+        const temps = [...this.tempEvents(), this.tempEvent()].filter(event => event?.resources.some(resource => resource?.id === this.resource_id()))
+
+        const mappedTempEvents  = temps.map((event) => {
+            // Add more properties as needed
+            const props = {
+                [`event-${event.type}`]: true,
+                columnSpan: 11, // Use the calculated columnSpan
+                startColumn: 1, // Use the calculated columnSpan
+            };
+
+            if (this.tempEvent()) {
+                props[`current-temp`] = event.id === this.tempEvent().id;
+            }
+
+            const heightREM = ko.observable(100); // Adjust as needed based on event details
+            const popper = ko.observable(null); // Adjust as needed based on event details
+
+            return {event, date: this.getEventDates(event)[0], props, heightREM, popper};
+        });
+        return [...this.sizedEvents(), ...mappedTempEvents]
+    })
 
 
-    getGridColumn(date) {
+    getGridColumn(date, eventData) {
         // Assuming your week starts on Monday and using Luxon's week numbering
+        let startColumn = eventData?.props?.startColumn || 0;
+        let columnSpan = eventData?.props?.columnSpan || this.dayColumnSpan();
         let dayOfWeek = date.from.weekday;
-        return dayOfWeek; // Column number based on the day of the week
+        const gridColumnStart = (dayOfWeek === 1 ? 1 : ((dayOfWeek - 1) * this.dayColumnSpan() + 1)) + (startColumn); // Adjust if your startColumn is 1-indexed
+        // return dayOfWeek === 1 ? dayOfWeek : (dayOfWeek - 1) * this.dayColumnSpan(); // Column number based on the day of the week
+        return `${gridColumnStart} / span ${columnSpan}`; // Column number based on the day of the week
     }
 
 
@@ -621,26 +876,30 @@ class PECalendar {
      * @returns {string} - Grid row span.
      */
     getGridRow(date, event) {
-        // Calculate the starting row of the event
-        const row = ((+(date.from.toFormat("H")) - this.startHour()) * this.hourParts()) + 1;
+        // Assuming hourParts = 1 for simplicity, but the logic can be adapted for different values
 
-        // Compute the additional rows to be added to the starting row
-        const rowStartAdd = Math.floor(+(date.from.toFormat("m")) / (60 / this.hourParts()));
+        // Calculate the starting hour and adjust the start time to the beginning of the hour
+        const startHour = date.from.toFormat("H");
+        // Start minute fraction is always rounded down to the nearest hour
+        const startMinuteFraction = 0; // No rounding necessary with hourParts = 1, always start at the hour
 
-        // Calculate the total number of rows the event will span
-        const span = (+date.to.toFormat("H") - date.from.toFormat("H")) * this.hourParts();
+        // Calculate the end time and adjust to cover until the end of the hour if there are any minutes past
+        const endHour = date.to.toFormat("H");
+        const endMinute = date.to.toFormat("m");
+        // If there are any minutes past the hour in the end time, round up to the next hour
+        const endMinuteFraction = (endMinute > 0) ? 1 : 0;
 
-        // Compute the additional rows to be added to the ending row
-        const rowStopAdd = Math.floor(+(date.to.toFormat("m")) / (60 / this.hourParts()));
+        // Calculate grid row start, considering the calendar's starting hour
+        const calendarStartHour = this.startHour(); // Assuming this.startHour() is defined and returns the first hour displayed on the calendar
+        const gridRowStart = (startHour - calendarStartHour) * this.hourParts() + startMinuteFraction + 1; // "+ 1" because CSS grid rows start at 1
 
+        // Calculate grid row end
+        const gridRowEnd = ((endHour - calendarStartHour) + endMinuteFraction) * this.hourParts() + 1; // Adjust end position for partial hours
 
-        // Calculate start row
-        if (event.type === "temporary" && span < this.hourParts()) {
-            return `${row + rowStartAdd} / span ${this.hourParts()}`;
+        // Span is simply the difference
+        const gridRowSpan = gridRowEnd - gridRowStart;
 
-        }
-        return `${row + rowStartAdd} / span ${span - rowStartAdd + rowStopAdd}`;
-
+        return `${gridRowStart} / span ${gridRowSpan}`;
     }
 
 
@@ -780,14 +1039,14 @@ class PECalendar {
             console.log("touchStart", event);
 
         }
-        if(event.type === 'touchmove') {
+        if (event.type === 'touchmove') {
             this.touchMoving(true);
             console.log("touchMove", event);
         }
     }
 
     handleMouseDown = (_allProps, event) => {
-        if(this.touchMoving()) {
+        if (this.touchMoving()) {
             console.log("touchMoving");
             return;
         }
@@ -824,23 +1083,6 @@ class PECalendar {
         const date = this.firstDayOfCalendar().plus({days: event.target.dataset.dayofweek - 1}).toISODate();
 
 
-        //  // Check if the clicked element is the top or bottom of the temporary event
-        //             if (target.classList.contains('event-temporary')) {
-        //                 const rect = target.getBoundingClientRect();
-        //                 tempEvent = this.tempEvents().find((e) => `event-${e.id}` === target.id);
-        //                 dragStart = {date: tempEvent.date, time: tempEvent.from};
-        //                 dragEnd = {date: tempEvent.date, time: tempEvent.to};
-        //
-        //                 if (e.clientY - rect.top < 32) { // 32px threshold for top edge
-        //                     isResizing = true;
-        //                     resizeDirection = 'top';
-        //                 } else if (rect.bottom - e.clientY < 32) { // 32px threshold for bottom edge
-        //                     isResizing = true;
-        //                     resizeDirection = 'bottom';
-        //                 }
-        //                 return;
-        //
-        //            }
         let endTime;
         if (event.type === 'touchend') {
             //1 hour later
@@ -851,8 +1093,22 @@ class PECalendar {
             hours += 1;
             endTime = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
         } else {
-            // 30 minutes later
-            endTime = startTime.split(":")[0] + ":30:00";
+            // 1 hourParts later
+            const parts = startTime.split(':');
+            let hours = parseInt(parts[0], 10);
+            let minutes = parseInt(parts[1], 10);
+            const seconds = parts[2];
+
+            const minutesToAdd = 60 / this.hourParts(); // Calculate minutes to add based on hourParts
+            minutes += minutesToAdd;
+
+            if (minutes >= 60) {
+                hours += 1; // Increment hour if minutes exceed 59
+                minutes -= 60; // Adjust minutes to new value
+            }
+
+            endTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds}`;
+            console.log(endTime)
         }
 
         const resource = this.resources()[this.resource_id()];
@@ -895,49 +1151,58 @@ class PECalendar {
         if (event.target.className !== 'calendar-cell') {
             return;
         }
-        //
+
         const currentTime = event.target.dataset.time;
-        const startTime = this.dragStart()
+        const startTime = this.dragStart();
         let endTime = currentTime;
 
-        if (startTime < endTime) {
-            const split = endTime.split(":");
-            let minute = +split[1];
-            let hour = +split[0];
-            minute += 15;
-            if (minute >= 60) {
-                minute = 0;
-                hour++;
-            }
-            endTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00`
-        }
+        // Calculate minute interval based on hourParts
+        const minuteInterval = 60 / this.hourParts(); // Assuming this.hourParts() is a method that returns the number of parts an hour is divided into
 
-        if (startTime > endTime) {
-            const split = endTime.split(":");
-            let minute = +split[1];
-            let hour = +split[0];
-            minute -= 15;
-            if (minute < 0) {
-                minute = 45;
-                hour--;
-            }
-            endTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00`
+        // Split current time into hours and minutes
+        const splitCurrent = currentTime.split(":");
+        let currentHour = +splitCurrent[0];
+        let currentMinute = +splitCurrent[1];
+
+        // Convert current time and start time to minutes for calculation
+        let currentTotalMinutes = currentHour * 60 + currentMinute;
+        const splitStart = startTime.split(":");
+        let startHour = +splitStart[0];
+        let startMinute = +splitStart[1];
+        let startTotalMinutes = startHour * 60 + startMinute;
+
+        // Check if dragging backwards or forwards and adjust accordingly
+        if (currentTotalMinutes < startTotalMinutes) {
+            // Dragging backwards, set end time to start time and adjust start time backwards
+            // endTime = startTime; // Switch the logic for start and end time
+            startTotalMinutes = currentTotalMinutes - minuteInterval; // Move start time back by one interval
+            if (startTotalMinutes < 0) startTotalMinutes = 0; // Prevent negative time
+            // Update start time to the new calculated time
+            startHour = Math.floor(startTotalMinutes / 60);
+            startMinute = startTotalMinutes % 60;
+            endTime = (`${startHour.toString().padStart(2, '0')}:${startMinute.toString().padStart(2, '0')}:00`);
+        } else {
+            // Dragging forwards, ensure at least one interval difference
+            currentTotalMinutes = Math.max(currentTotalMinutes, startTotalMinutes + minuteInterval);
+            // Calculate new end time
+            let endHour = Math.floor(currentTotalMinutes / 60);
+            let endMinute = currentTotalMinutes % 60;
+            endTime = `${endHour.toString().padStart(2, '0')}:${endMinute.toString().padStart(2, '0')}:00`;
         }
 
         if (!this.canCreateTemporaryEvent({
             ...this.tempEvent(),
-            // name: `${startTime.substring(0, 5)} - ${endTime.substring(0, 5)}`,
-            from: startTime < endTime ? startTime : endTime,
-            to: startTime > endTime ? startTime : endTime,
+            from: this.dragStart() > endTime ? this.dragStart() : endTime,
+            to: this.dragStart() > endTime ?  endTime : this.dragStart(),
         })) {
             return;
         }
 
-        this.dragEnd(endTime);
+        this.dragEnd(this.dragStart() > endTime ? this.dragStart() : endTime);
 
         // Update the temporary event's end time
         this.updateTemporaryEvent(this.tempEvent(), this.dragStart(), endTime);
-    }
+    };
 
     handleMouseUp = (cellProps, event) => {
         this.isDragging(false);
@@ -957,27 +1222,9 @@ class PECalendar {
         };
         updatedEvent.name = `${updatedEvent.from.substring(0, 5)} - ${updatedEvent.to.substring(0, 5)}`;
 
-        // Locate the event in the array
-        // this.tempEvents(this.tempEvents().filter(event => event.id !== tempEvent.id));
-        // if (index !== -1) {
-        //     console.log(this.tempEvents());
-        //     console.log("deleting event");
-        //     console.log(this.tempEvents.splice(index, 1, updatedEvent));
-        //     console.log(this.tempEvents());
-        // } else {
-        //     console.log("no delete");
-        // }
 
         this.tempEvent(updatedEvent);
-        // // Remove the existing visual representation of the event
-        // const existingEventElem = container.querySelector(`#event-${tempEvent.id}`);
-        // if (existingEventElem) {
-        //     container.removeChild(existingEventElem);
 
-        // }
-        // Render the updated event
-        // this.renderSingleEvent(container, updatedEvent);
-        // Update the temporary event with new times
     }
 
     /**
@@ -1082,12 +1329,11 @@ class PECalendar {
         });
     }
 
-    clickBubbler(d,click) {
+    clickBubbler(d, click) {
         return true;
     }
 
     togglePopper(e, clickEvent) {
-        console.log(clickEvent)
         // Identify if the event target or any of its ancestors is an <a> element
         let isLink = false;
         for (let elem = clickEvent.target; elem !== clickEvent.currentTarget; elem = elem.parentNode) {
@@ -1111,10 +1357,18 @@ class PECalendar {
             popperInfo = clickEvent.currentTarget.nextElementSibling;
         } else if (clickEvent.currentTarget.className.includes('info')) {
             popperInfo = clickEvent.currentTarget;
+        } else if (clickEvent.currentTarget.className.includes('event-small')) {
+            const clickEventChildren = Array.from(clickEvent.currentTarget.children);
+
+            popperInfo = clickEventChildren.find(child =>
+                child.nodeName.toLowerCase() === 'button' &&
+                child.classList.contains('dots-container')
+            ).nextElementSibling;
         }
         if (!popperInfo) {
             return;
         }
+
 
         if (popperInfo.hasAttribute('data-show')) {
             popperInfo.removeAttribute('data-show');
@@ -1122,22 +1376,38 @@ class PECalendar {
             popperInfo.setAttribute('data-show', '');
         }
 
+        if (e.popper && e.popper()) {
+            e.popper().update()
+        }
+
     }
 
-    addPopperAfterRender(e) {
+    addPopperAfterRender(elem, data) {
+        const firstDay = this.firstDayOfCalendar();
+        const lastDay = this.lastDayOfCalendar();
+        const elementDay = data.date.from;
 
-        const popper = new Popper(e, e.nextElementSibling, {
-            placement: 'left',
+
+        // Calculate the midpoint timestamp
+        const midpointTs = (firstDay.ts + lastDay.ts) / 2;
+
+        // Determine placement based on comparison of elementDay timestamp with midpoint
+        const placement = elementDay.ts < midpointTs ? 'right' : 'left';
+
+        // Create Popper with dynamic placement
+        const popper = new Popper(elem, elem.nextElementSibling, {
+            placement: placement,
         });
+        data.popper(popper);
     }
 
     async loadPopperData() {
-        if (!this.calendarEvents || !this.calendarEvents() || this.calendarEvents().length === 0) {
+        if (!this.sizedEvents || !this.sizedEvents() || this.sizedEvents().length === 0) {
             return;
         }
         let url = phpGWLink('bookingfrontend/', {
             menuaction: 'bookingfrontend.uibooking.info_json',
-            ids: this.calendarEvents().map(e => e.event.id),
+            ids: this.sizedEvents().map(e => e.event.id),
         }, true);
         const res = await fetch(url);
         this.popperData(await res.json());
@@ -1277,7 +1547,7 @@ if (globalThis['ko']) {
                     <!-- /ko -->
                     <div class="calendar-settings">
                         <div class="date">
-                            <fieldset   data-bind="css: { 'd-none': !hasTimeSlots() }">
+                            <fieldset data-bind="css: { 'd-none': !hasTimeSlots() }">
                                 <label class="filter"
                                        data-bind="css: { 'invisible': !hasTimeSlots() }">
                                     <input type="radio" name="filter" value="day" data-bind="checked: calendarRange"/>
@@ -1308,7 +1578,7 @@ if (globalThis['ko']) {
                             </div>
                         </div data-bind="css: { 'invisible': !hasTimeSlots() }">
                         <!-- ko ifnot: hasTimeSlots() -->
-                        
+
                         <div class="info-types">
                             <div class="type text-small">
                                 <img class="event-filter"
@@ -1345,7 +1615,7 @@ if (globalThis['ko']) {
                     </div>
                     <!-- Time Slots Sidebar -->
                     <div class="time-container"
-                         data-bind="foreach: calendarTimeSlots, style: {'grid-template-rows': 'repeat(' + (endHour() - startHour()) * hourParts() + ', calc(3rem/' + hourParts() + '))'}">
+                         data-bind="foreach: calendarTimeSlots, style: {'grid-template-rows': 'repeat(' + (endHour() - startHour()) * 4 + ', calc(3rem/' + 4 + '))'}">
                         <div class="time text-body"
                              data-bind="text: timeLabel, style: { 'gridRow': gridRowStyle }"></div>
                     </div>
@@ -1371,11 +1641,20 @@ if (globalThis['ko']) {
                         <!-- Events -->
                         <!-- ko foreach: calendarEvents -->
                         <div class="event"
-                             data-bind="css: $data.props, style: { gridRow: $parent.getGridRow($data.date, $data.event), gridColumn: $parent.getGridColumn($data.date) }, attr: { 'data-id': $data.event.id }">
-                            <div>
-                                <div data-bind="text: $data.event.name"></div>
+                             data-bind="
+                                 css: Object.assign($data.props, {'event-small': $data.heightREM() < 1}), 
+                                 style: {
+                                        gridRow: $parent.getGridRow($data.date, $data.event),
+                                        gridColumn: $parent.getGridColumn($data.date, $data)
+                                 }, 
+                                 attr: { 'data-id': $data.event.id }, 
+                                 assignHeight: $data.heightREM, 
+                                 click: $data.heightREM() < 1 && $data.event.type !== 'temporary' && $parent.popperData()?.bookings?.[$data.event.id] ? $parent.togglePopper : undefined
+                            ">
+                            <div class="event-text">
+                                <span class="event-title" data-bind="text: $data.event.name"></span>
                                 <!-- ko if: $data.event.resources -->
-                                <div data-bind="text: $data.event.resources.filter(r => r.id).map(r => r.name).join(' / ')"></div>
+                                <!--                                <div data-bind="text: $data.event.resources.filter(r => r.id).map(r => r.name).join(' / ')"></div>-->
                                 <!-- /ko -->
                             </div>
                             <!-- ko if: $data.event.type === 'temporary' -->
@@ -1385,16 +1664,19 @@ if (globalThis['ko']) {
                                 <i class="fas fa-times"></i>
                             </button>
                             <!-- /ko -->
-<!--                            <div data-bind="text: ko.toJSON($parent.popperData)"></div>-->
+                            <!--                            <div data-bind="text: ko.toJSON($parent.popperData)"></div>-->
                             <!-- ko if: $data.event.type !== 'temporary' && $parent.popperData()?.bookings?.[$data.event.id] -->
+
                             <button class="dots-container"
-                                    data-bind="withAfterRender: { afterRender: $parent.addPopperAfterRender}, click: $parent.togglePopper, css: {'z-auto': $parent.tempEvent()}">
+                                    data-bind="withAfterRender: { afterRender: (e) => $parent.addPopperAfterRender(e, $data)}, click: $parent.togglePopper, css: {'z-auto': $parent.tempEvent()}">
                                 <!--                                <img-->
                                 <!--                                        data-bind="attr: {src: phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false)}"-->
                                 <!--                                        class="dots"/>-->
                                 <i class="fas fa-info-circle"></i>
                             </button>
-                            <div class="info" data-bind="click: $parent.togglePopper, with: $parent.popperData()?.bookings?.[$data.event.id], as: 'booking'">
+
+                            <div class="info"
+                                 data-bind="click: $parent.togglePopper, with: $parent.popperData()?.bookings?.[$data.event.id], as: 'booking'">
                                 <div class="info-inner">
                                     <!-- Booking ID -->
                                     <div>
@@ -1429,18 +1711,28 @@ if (globalThis['ko']) {
                                     <!-- Actions -->
                                     <div class="actions">
                                         <!-- Register Participants Link -->
-                                        <a data-bind="attr: { href: $component.cleanUrl(booking.info_show_link), target: '_blank', },click: $component.clickBubbler, clickBubble: false" class="btn btn-light mt-4"><trans>booking:register participants</trans></a>
+                                        <a data-bind="attr: { href: $component.cleanUrl(booking.info_show_link), target: '_blank', },click: $component.clickBubbler, clickBubble: false"
+                                           class="btn btn-light mt-4">
+                                            <trans>booking:register participants</trans>
+                                        </a>
                                         <!-- Edit Booking Link -->
                                         <!-- ko if: booking.info_edit_link -->
-                                        <a data-bind="attr: { href: $component.cleanUrl(booking.info_edit_link), target: '_blank', }, click: $component.clickBubbler, clickBubble: false" class="btn btn-light mt-4"><trans>bookingfrontend:edit booking</trans></a>
+                                        <a data-bind="attr: { href: $component.cleanUrl(booking.info_edit_link), target: '_blank', }, click: $component.clickBubbler, clickBubble: false"
+                                           class="btn btn-light mt-4">
+                                            <trans>bookingfrontend:edit booking</trans>
+                                        </a>
                                         <!-- /ko -->
                                         <!-- Cancel Booking Link -->
                                         <!-- ko if: $component.popperData()?.user_can_delete_bookings -->
-                                        <a data-bind="attr: { href: $component.cleanUrl(booking.info_cancel_link), target: '_blank', },click: $component.clickBubbler, clickBubble: false" class="btn btn-light mt-4"><trans>bookingfrontend:cancel booking</trans></a>
+                                        <a data-bind="attr: { href: $component.cleanUrl(booking.info_cancel_link), target: '_blank', },click: $component.clickBubbler, clickBubble: false"
+                                           class="btn btn-light mt-4">
+                                            <trans>bookingfrontend:cancel booking</trans>
+                                        </a>
                                         <!-- /ko -->
                                         <!-- iCal Link -->
                                         <!-- ko if: booking.info_ical_link -->
-                                        <a data-bind="attr: { href: $component.cleanUrl(booking.info_ical_link), target: '_blank', }, text: 'iCal',click: $component.clickBubbler, clickBubble: false" class="btn btn-light mt-4"></a>
+                                        <a data-bind="attr: { href: $component.cleanUrl(booking.info_ical_link), target: '_blank', }, text: 'iCal',click: $component.clickBubbler, clickBubble: false"
+                                           class="btn btn-light mt-4"></a>
                                         <!-- /ko -->
                                     </div>
                                 </div>
@@ -1472,8 +1764,9 @@ if (globalThis['ko']) {
 
                         <!-- Date and time section -->
                         <div class="time-slot-date-time">
-                            <div class="time-slot-date-container" data-bind="html: $parent.generateDate($data.start, $data.end)"></div>
-             
+                            <div class="time-slot-date-container"
+                                 data-bind="html: $parent.generateDate($data.start, $data.end)"></div>
+
                         </div>
 
                         <!-- Button section -->
