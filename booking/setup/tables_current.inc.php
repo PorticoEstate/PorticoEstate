@@ -484,7 +484,7 @@
 				'allocation_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'season_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'active' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '1'),
-				'skip_bas' => array('type' => 'int', 'nullable' => False, 'precision' => '2', 'default' => 0),//Building Automation System" (BAS)
+				'skip_bas' => array('type' => 'int', 'nullable' => true, 'precision' => '2', 'default' => 0),//Building Automation System" (BAS)
 				'activity_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'completed' => array('type' => 'int', 'precision' => 4, 'nullable' => False,
 					'default' => '0'),
@@ -828,7 +828,7 @@
 				'id_string' => array('type' => 'varchar', 'precision' => '20', 'nullable' => False,
 					'default' => '0'),
 				'active' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '1'),
-				'skip_bas' => array('type' => 'int', 'nullable' => False, 'precision' => '2', 'default' => 0),//Building Automation System" (BAS)
+				'skip_bas' => array('type' => 'int', 'nullable' => true, 'precision' => '2', 'default' => 0),//Building Automation System" (BAS)
 				'activity_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'organizer' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),

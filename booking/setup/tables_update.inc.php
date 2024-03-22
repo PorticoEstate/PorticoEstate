@@ -6853,3 +6853,26 @@ SQL;
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+	/**
+	 * Update booking version from 0.2.100 to 0.2.101
+	 *
+	 */
+	$test[] = '0.2.100';
+
+	function booking_upgrade0_2_100()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_booking', 'skip_bas',
+			 array('type' => 'int', 'nullable' => true, 'precision' => '2', 'default' => 0)//Building Automation System" (BAS)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_allocation', 'skip_bas',
+			 array('type' => 'int', 'nullable' => true, 'precision' => '2', 'default' => 0)//Building Automation System" (BAS)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.101';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
