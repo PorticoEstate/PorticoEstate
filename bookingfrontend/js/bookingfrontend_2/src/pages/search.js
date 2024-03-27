@@ -140,8 +140,11 @@ class BookingSearch {
     allocation_cache = {};
     easy_booking_available_cache = {};
     easy_booking_not_available_cache = {};
+    lang = 'no';
 
     constructor() {
+        this.lang = getCookie("ConfigLang") || 'no';
+
         const bookingEl = document.getElementById("search-booking");
         ko.cleanNode(bookingEl);
         ko.applyBindings(this.data, bookingEl);
@@ -532,6 +535,11 @@ class BookingSearch {
             if (towns.length > 0) {
                 const calendarId = `calendar-${resource.id}`;
                 okResources.push(resource);
+                const description_json = JSON.parse(resource.description_json);
+                const description_text = new DOMParser()
+                    .parseFromString(description_json[this.lang] || description_json['no'], "text/html")
+                    .documentElement.textContent;
+
                 let url = "";
                 if (resource.simple_booking === 1) {
                     url = phpGWLink('bookingfrontend/', {
@@ -576,7 +584,7 @@ class BookingSearch {
                                                 </button>-->
                                             <!--                                            </div>-->
                                             <p>
-                                                ${resource.description}
+                                                ${description_text}
                                             </p>
                                         </div>
                                         <div id="${calendarId}" class="calendar" data-building-id="${buildings[0].id}"
@@ -967,4 +975,20 @@ function arraysAreEqual(arr1, arr2) {
         }
     }
     return true;
+}
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
 }
