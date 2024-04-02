@@ -194,12 +194,14 @@ class PECalendar {
     tempEvent = ko.observable(null);
 
     constructor({building_id, resource_id = null, dateString = null, disableResourceSwap = false}) {
+        luxon.Settings.defaultLocale = getCookie("selected_lang") || 'no';
+
 
         // Initialize the date of the instance
         if (dateString) {
-            this.currentDate(DateTime.fromJSDate(new Date(dateString)).setLocale("no"));
+            this.currentDate(DateTime.fromJSDate(new Date(dateString)).setLocale(luxon.Settings.defaultLocale));
         } else {
-            this.currentDate(DateTime.now().setLocale("no"));
+            this.currentDate(DateTime.now().setLocale(luxon.Settings.defaultLocale));
         }
 
         //
@@ -1909,4 +1911,20 @@ function GetDateFromSearch(dateString) {
 function CapitalizeFirstLetter(inputString) {
     // Get the first character, capitalize it, and concatenate with the rest of the string
     return inputString.charAt(0).toUpperCase() + inputString.slice(1);
+}
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
 }
