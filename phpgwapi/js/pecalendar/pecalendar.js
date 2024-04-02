@@ -222,10 +222,6 @@ class PECalendar {
         //     }
         // })
 
-        this.resource_id.subscribe((val) => console.log("Set Resource ID to ", val));
-        this.events.subscribe((val) => console.log("Events set to len ", (val || []).length));
-        this.sizedEvents.subscribe((val) => console.log("sizedEvents set to len ", (val || []).length));
-        this.resourceEvents.subscribe((val) => console.log("resourceEvents set to len ", (val || []).length));
 
         this.building_id.subscribe(newBuildingId => {
             this.loadBuildingData();
