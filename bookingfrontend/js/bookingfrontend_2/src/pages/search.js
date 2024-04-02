@@ -143,7 +143,7 @@ class BookingSearch {
     lang = 'no';
 
     constructor() {
-        this.lang = getCookie("ConfigLang") || 'no';
+        this.lang = getCookie("selected_lang") || 'no';
 
         const bookingEl = document.getElementById("search-booking");
         ko.cleanNode(bookingEl);
