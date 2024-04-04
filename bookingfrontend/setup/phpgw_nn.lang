@@ -591,6 +591,8 @@ event_building	bookingfrontend	nn	Arrangement / bygning
 enter_team_organization_name	bookingfrontend	nn	Skriv namn på lag/organisasjon
 show_only_available	bookingfrontend	nn	Vis berre tilgjengelege
 version_choice	bookingfrontend	nn	Versjonsval
+version	bookingfrontend	nn	Versjon
 which_version_do_you_want	bookingfrontend	nn	Kva versjon ønsker du?
 old	bookingfrontend	nn	Gammal
+new	bookingfrontend	nn	Ny
 what_is_aktiv_kommune	bookingfrontend	nn	Kva er Aktiv kommune?

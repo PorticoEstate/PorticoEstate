@@ -591,6 +591,8 @@ event_building	bookingfrontend	en	Event / Building
 enter_team_organization_name	bookingfrontend	en	Enter team/organization name
 show_only_available	bookingfrontend	en	Show only available
 version_choice	bookingfrontend	en	Choose version
+version	bookingfrontend	en	Version
 which_version_do_you_want	bookingfrontend	en	Which version do you want?
 old	bookingfrontend	en	Old
+new	bookingfrontend	en	New
 what_is_aktiv_kommune	bookingfrontend	en	What is Aktiv kommune?
