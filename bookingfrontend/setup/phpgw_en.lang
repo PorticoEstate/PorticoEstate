@@ -540,6 +540,8 @@ selected	bookingfrontend	en	Selected
 sep	bookingfrontend	en	September
 settings	bookingfrontend	en	Settings
 show only active	bookingfrontend	en	Show only active
+show_more	bookingfrontend	en	Show more
+show_less	bookingfrontend	en	Show less
 showing items	bookingfrontend	en	Showing items
 showing items {startRecord} - {endRecord} of {totalRecords}	bookingfrontend	en	Showing items {startrecord} - {endrecord} of {totalrecords}
 site title	bookingfrontend	en	Site title

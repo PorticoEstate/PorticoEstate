@@ -540,6 +540,8 @@ selected	bookingfrontend	no	Valgt
 sep	bookingfrontend	no	september
 settings	bookingfrontend	no	Innstillinger
 show only active	bookingfrontend	no	Skjul
+show_more	bookingfrontend	no	Vis mer
+show_less	bookingfrontend	no	Vis mindre
 showing items	bookingfrontend	no	Viser
 showing items {startRecord} - {endRecord} of {totalRecords}	bookingfrontend	no	Viser {startRecord} - {endRecord} av {totalRecords}
 site title	bookingfrontend	no	Tittel på siden
