@@ -132,6 +132,7 @@ Needed for the return from the external logout	bookingfrontend	en	Needed for the
 New message	bookingfrontend	en	New message
 New system message	bookingfrontend	en	New system message
 Next step	bookingfrontend	en	Next step
+Previous step	bookingfrontend	en	Previous step
 No available options	bookingfrontend	en	No available options
 No rent object chosen	bookingfrontend	en	No rent object chosen
 No valid identification returned from login	common	en	No valid identification returned from login
@@ -269,9 +270,11 @@ apr	bookingfrontend	en	April
 archived	bookingfrontend	en	Archived
 attachment	bookingfrontend	en	Attachment
 audience	bookingfrontend	en	Audience
+amount	bookingfrontend	en	Amount
 aug	bookingfrontend	en	August
 available	bookingfrontend	en	Available
 back	bookingfrontend	en	Back
+price_unit	bookingfrontend	en	Price/unit
 bookable resources	bookingfrontend	en	Bookable resources
 booking	bookingfrontend	en	Booking
 booking district	bookingfrontend	en	Booking district
@@ -299,6 +302,7 @@ choose rent period	bookingfrontend	en	Choose rent period
 choose target audience	bookingfrontend	en	Choose target audience
 chosen rent object	bookingfrontend	en	Chosen resources
 chosen rent period	bookingfrontend	en	Chosen rent period
+rent period	bookingfrontend	en	Rent period
 city	bookingfrontend	en	City
 click to sort ascending	bookingfrontend	en	Click to sort ascending
 click to sort descending	bookingfrontend	en	Click to sort descending
@@ -596,3 +600,11 @@ which_version_do_you_want	bookingfrontend	en	Which version do you want?
 old	bookingfrontend	en	Old
 new	bookingfrontend	en	New
 what_is_aktiv_kommune	bookingfrontend	en	What is Aktiv kommune?
+add_rental_period	bookingfrontend	en	Add rental period
+minute_rate	bookingfrontend	en	Minute rate
+hourly_rate	bookingfrontend	en	Hourly rate
+daily_rate	bookingfrontend	en	Daily rate
+hours	bookingfrontend	en	Hours
+total	bookingfrontend	en	Total
+minute	bookingfrontend	en	Minute
+days	bookingfrontend	en	Days
