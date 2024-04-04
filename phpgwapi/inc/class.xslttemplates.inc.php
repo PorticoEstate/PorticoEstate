@@ -390,6 +390,9 @@ XSLT;
 			}
 
 			$xml = new DOMDocument;
+
+			$this->xmldata = preg_replace('/[\x00-\x1F\x7F]/', '', $this->xmldata); // remove unsupported characters
+
 			$xml->loadXML($this->xmldata);
 
 			$xsl = new DOMDocument;
