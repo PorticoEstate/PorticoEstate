@@ -10,7 +10,7 @@ About Aktive kommune	bookingfrontend	en	About Aktive Kommune
 About the service	bookingfrontend	en	About the service
 Access denied	bookingfrontend	en	Access denied
 Account Codes	bookingfrontend	en	Account codes
-Activities (2018)	bookingfrontend	en	Activities (2018)
+Activities (2018)	bookingfrontend	en	Activities
 Add application	bookingfrontend	en	Add application
 Add group	bookingfrontend	en	Add group
 Agegroups kan not be larger than 9999 peoples	bookingfrontend	en	Agegroups kan not be larger than 9999 peoples
@@ -24,6 +24,7 @@ Article	bookingfrontend	en	Article
 Associated bookings	bookingfrontend	en	Associated allocations/events
 Back to user list	booking	en	Back to user list
 Book resource	bookingfrontend	en	Book resource
+booking_calendar	bookingfrontend	en	Bookingcalendar
 Booking Cancel information	bookingfrontend	en	Booking cancel information
 Booking Cancel information2	bookingfrontend	en	Booking cancel information2
 Booking Delete information	bookingfrontend	en	Booking delete information
@@ -313,7 +314,7 @@ contact 1	bookingfrontend	en	Contact 1
 contact 2	bookingfrontend	en	Contact 2
 contact information	bookingfrontend	en	Contact information
 contact person	bookingfrontend	en	Contact person
-contact_email	bookingfrontend	en	Contact email
+contact_email	bookingfrontend	en	Email
 contact_name	bookingfrontend	en	Contact name
 contacts[0][email] contains an invalid email	bookingfrontend	en	Contacts[0][email] contains an invalid email
 contacts[1][email] contains an invalid email	bookingfrontend	en	Contacts[1][email] contains an invalid email
@@ -514,6 +515,7 @@ remove date	bookingfrontend	en	Remove date
 rent object	bookingfrontend	en	Rent object
 rent	bookingfrontend	en	Rent
 rent_premises_facilities_equipment	bookingfrontend	en	Rent premises, facilities, or equipment
+rental_resources	bookingfrontend	en	Rental resources
 reserved	bookingfrontend	en	Reserved
 reset	bookingfrontend	en	Reset
 resource	bookingfrontend	en	Resource
@@ -566,6 +568,7 @@ this application is not within a valid season	bookingfrontend	en	This applicatio
 title	bookingfrontend	en	Title
 to	bookingfrontend	en	To
 tu	bookingfrontend	en	Tu
+type	bookingfrontend	en	Type
 unit	bookingfrontend	en	Unit
 unit cost	bookingfrontend	en	Unit cost
 update results	bookingfrontend	en	Update results

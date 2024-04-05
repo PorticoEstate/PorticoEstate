@@ -24,6 +24,7 @@ Article	bookingfrontend	nn	artikkel
 Associated bookings	bookingfrontend	nn	Tilhørende tildelinger/arrangementer
 Back to user list	booking	nn	Attende til brukarlista
 Book resource	bookingfrontend	nn	Søknad
+booking_calendar	bookingfrontend	nn	Bookingkalendar
 Booking Cancel information	bookingfrontend	nn	Skal du avbestille interntildeling på valt dato, vel Avbestill-knappen nedst Skal tida bli vist som ledig i kalenderen kryssar du av for slett tildeling.
 Booking Cancel information2	bookingfrontend	nn	Skal du avbestille fleire kan du velje Ut sesong eller Avbestill til og velje ein dato, du kan også velje intervall (til dømes annan kvar veke).
 Booking Delete information	bookingfrontend	nn	Skal du slette interntildeling på valt dato, vel Slett-knappen nedst.
@@ -514,6 +515,7 @@ remove date	bookingfrontend	nn	Fjern dato
 rent object	bookingfrontend	nn	Leigeobjekt
 rent	bookingfrontend	nn	Leige
 rent_premises_facilities_equipment	bookingfrontend	nn	Leig lokale, anlegg eller utstyr
+rental_resources	bookingfrontend	nn	Utleigeressursar
 reserved	bookingfrontend	nn	Reservert
 reset	bookingfrontend	nn	Nullstill
 resource	bookingfrontend	nn	Ressurs
@@ -566,6 +568,7 @@ this application is not within a valid season	bookingfrontend	nn	Denne søknaden
 title	bookingfrontend	nn	Tittel
 to	bookingfrontend	nn	Til
 tu	bookingfrontend	nn	tys
+type	bookingfrontend	nn	Type
 unit	bookingfrontend	nn	Enhet
 unit cost	bookingfrontend	nn	Eining pris
 update results	bookingfrontend	nn	Oppdater søkeresultat
