@@ -1415,7 +1415,7 @@ class PECalendar {
         }
         const bookings = new Set();
         const events = new Set();
-
+        const allocations = new Set();
         for (const sizedEvent of this.sizedEvents()) {
             switch (sizedEvent.event.type) {
                 case 'booking':
@@ -1423,6 +1423,9 @@ class PECalendar {
                     break;
                 case 'event':
                     events.add(sizedEvent.event.id);
+                    break;
+                case 'allocation':
+                    allocations.add(sizedEvent.event.id);
                     break;
             }
         }
@@ -1435,12 +1438,17 @@ class PECalendar {
             menuaction: 'bookingfrontend.uievent.info_json',
             ids: [...events],
         }, true);
+        let allocationUrl = phpGWLink('bookingfrontend/', {
+            menuaction: 'bookingfrontend.uiallocation.info_json',
+            ids: [...allocations],
+        }, true);
 
         const res = await Promise.all([
             (await fetch(bookingUrl)).json(),
-            (await fetch(eventUrl)).json()
+            (await fetch(eventUrl)).json(),
+            (await fetch(allocationUrl)).json()
         ]);
-        this.popperData({...res[0], ...res[1]});
+        this.popperData({...res[0], ...res[1], ...res[2]});
     }
 
     eventPopperDataEntry(event) {
@@ -1449,6 +1457,8 @@ class PECalendar {
                 return this.popperData()?.bookings?.[event.id];
             case 'event':
                 return this.popperData()?.events?.[event.id];
+            case 'allocation':
+                return this.popperData()?.allocations?.[event.id];
         }
         return undefined;
     }
@@ -1457,9 +1467,10 @@ class PECalendar {
         switch (event.type) {
             case 'booking':
                 return this.popperData()?.info_user_can_delete_bookings;
-
             case 'event':
                 return this.popperData()?.info_user_can_delete_events;
+            case 'allocation':
+                return this.popperData()?.user_can_delete_allocations;
 
         }
         return false;
@@ -1732,11 +1743,11 @@ if (globalThis['ko']) {
                             <div class="info"
                                  data-bind="click: $parent.togglePopper, with: $parent.eventPopperDataEntry($data.event), as: 'infoData'">
                                 <div class="info-inner">
-                                    <!-- infoData ID -->
+                                    <!-- Display ID for all types -->
                                     <div>
                                         <b data-bind="text: '#' + infoData.id"></b>
                                     </div>
-                                    <!-- Dynamically display Group Organization Name or Event Name based on type -->
+                                    <!-- Dynamically display Name or Organization Name based on type -->
                                     <div>
                                         <!-- ko if: $parent.event.type === 'booking' -->
                                         <b data-bind="text: infoData.info_group.organization_name"></b>
@@ -1744,8 +1755,11 @@ if (globalThis['ko']) {
                                         <!-- ko if: $parent.event.type === 'event' -->
                                         <b data-bind="text: infoData.name"></b>
                                         <!-- /ko -->
+                                        <!-- ko if: $parent.event.type === 'allocation' -->
+                                        <b data-bind="text: infoData.organization_name"></b>
+                                        <!-- /ko -->
                                     </div>
-                                    <!-- Group (2018) and Group Name for bookings or Organizer for events -->
+                                    <!-- Group (2018) and Group Name for bookings, Organizer for events, or Display nothing specific for allocations -->
                                     <!-- ko if: $parent.event.type === 'booking' -->
                                     <div class="mb-3">
                                         <span class="text-bold"><trans>booking:group (2018)</trans>:</span>
@@ -1758,35 +1772,33 @@ if (globalThis['ko']) {
                                         <span data-bind="text: infoData.organizer"></span>
                                     </div>
                                     <!-- /ko -->
-                                    <!-- infoData Time -->
-                                    <!-- Modify to support event timing if different from booking -->
+                                    <!-- Event/Booking/Allocation Time -->
                                     <div>
                                         <span class="text-bold"><trans>bookingfrontend:clock_short</trans>:</span>
                                         <span data-bind="text: $component.formatPillTimeInterval($parent.event)"></span>
                                     </div>
-                                    <!-- Place and Building Name -->
+                                    <!-- Place and Building Name, common for all types -->
                                     <div>
                                         <span class="text-bold"><trans>bookingfrontend:place</trans>:</span>
                                         <a data-bind="attr: { href: infoData.building_link }, text: infoData.building_name"></a>
                                         (<span data-bind="text: infoData.info_resource_info"></span>)
                                     </div>
-                                    <!-- Participant Limit (check if applicable to events, otherwise conditionally display for bookings) -->
+                                    <!-- Participant Limit (common for all types if applicable) -->
                                     <!-- ko if: infoData.info_participant_limit > 0 -->
                                     <div>
                                         <span class="text-bold"><trans>booking:participant limit</trans>:</span>
                                         <span data-bind="text: infoData.info_participant_limit"></span>
                                     </div>
                                     <!-- /ko -->
-                                    <!-- Actions -->
+                                    <!-- Actions (Register, Edit, Cancel, iCal, Add for allocation) -->
                                     <div class="actions">
-                                        <!-- Register Participants Link (if applicable to events) -->
-                                        <a data-bind="attr: { href: $component.cleanUrl(infoData.info_show_link), target: '_blank', }, click: $component.clickBubbler, clickBubble: false"
+                                        <a data-bind="attr: { href: $component.cleanUrl(infoData.info_show_link), target: '_blank' }, click: $component.clickBubbler, clickBubble: false"
                                            class="btn btn-light mt-4">
                                             <trans>booking:register participants</trans>
                                         </a>
-                                        <!-- Edit infoData Link -->
+                                        <!-- Edit Link -->
                                         <!-- ko if: infoData.info_edit_link -->
-                                        <a data-bind="attr: { href: $component.cleanUrl(infoData.info_edit_link), target: '_blank', }, click: $component.clickBubbler, clickBubble: false"
+                                        <a data-bind="attr: { href: $component.cleanUrl(infoData.info_edit_link), target: '_blank' }, click: $component.clickBubbler, clickBubble: false"
                                            class="btn btn-light mt-4">
                                             <!-- Conditional text based on type -->
                                             <!-- ko if: $parent.event.type === 'booking' -->
@@ -1795,11 +1807,14 @@ if (globalThis['ko']) {
                                             <!-- ko if: $parent.event.type === 'event' -->
                                             <trans>bookingfrontend:edit event</trans>
                                             <!-- /ko -->
+                                            <!-- ko if: $parent.event.type === 'allocation' -->
+                                            <trans>allocationfrontend:edit allocation</trans>
+                                            <!-- /ko -->
                                         </a>
                                         <!-- /ko -->
-                                        <!-- Cancel infoData Link -->
+                                        <!-- Cancel Link -->
                                         <!-- ko if: $component.userCanEdit($parent.event) -->
-                                        <a data-bind="attr: { href: $component.cleanUrl(infoData.info_cancel_link), target: '_blank', },click: $component.clickBubbler, clickBubble: false"
+                                        <a data-bind="attr: { href: $component.cleanUrl(infoData.info_cancel_link), target: '_blank' },click: $component.clickBubbler, clickBubble: false"
                                            class="btn btn-light mt-4">
                                             <!-- Conditional text based on type -->
                                             <!-- ko if: $parent.event.type === 'booking' -->
@@ -1808,12 +1823,19 @@ if (globalThis['ko']) {
                                             <!-- ko if: $parent.event.type === 'event' -->
                                             <trans>bookingfrontend:cancel event</trans>
                                             <!-- /ko -->
+                                            <!-- ko if: $parent.event.type === 'allocation' -->
+                                            <trans>allocationfrontend:cancel allocation</trans>
+                                            <!-- /ko -->
                                         </a>
                                         <!-- /ko -->
                                         <!-- iCal Link -->
                                         <!-- ko if: infoData.info_ical_link -->
-                                        <a data-bind="attr: { href: $component.cleanUrl(infoData.info_ical_link), target: '_blank', }, text: 'iCal',click: $component.clickBubbler, clickBubble: false"
+                                        <a data-bind="attr: { href: $component.cleanUrl(infoData.info_ical_link), target: '_blank' }, text: 'iCal',click: $component.clickBubbler, clickBubble: false"
                                            class="btn btn-light mt-4"></a>
+                                        <!-- /ko -->
+                                        <!-- Additional Actions for Allocations -->
+                                        <!-- ko if: $parent.event.type === 'allocation' -->
+                                        <!-- Additional action buttons specific to allocations could go here -->
                                         <!-- /ko -->
                                     </div>
                                 </div>
