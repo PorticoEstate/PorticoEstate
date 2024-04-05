@@ -305,6 +305,7 @@ chosen rent period	bookingfrontend	nn	Valde leigeperioder
 rent period	bookingfrontend	nn	Leigeperiode
 city	bookingfrontend	nn	Poststad
 click to sort ascending	bookingfrontend	nn	Klikk for å sortere stigande
+clock_short	bookingfrontend	nn	Kl
 click to sort descending	bookingfrontend	nn	Klikk for å sortere synkande
 collect users	booking	nn	Legg til brukarar
 contact	bookingfrontend	nn	Kontakt
