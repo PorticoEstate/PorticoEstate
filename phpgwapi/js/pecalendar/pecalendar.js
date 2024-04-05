@@ -1813,7 +1813,7 @@ if (globalThis['ko']) {
                                         </a>
                                         <!-- /ko -->
                                         <!-- Cancel Link -->
-                                        <!-- ko if: $component.userCanEdit($parent.event) -->
+                                        <!-- ko if: $component.userCanEdit($parent.event) && infoData.info_cancel_link -->
                                         <a data-bind="attr: { href: $component.cleanUrl(infoData.info_cancel_link), target: '_blank' },click: $component.clickBubbler, clickBubble: false"
                                            class="btn btn-light mt-4">
                                             <!-- Conditional text based on type -->
