@@ -21,6 +21,7 @@ Application cart	bookingfrontend	no	Handlekurv
 Apply filter	bookingfrontend	no	Aktiver filter
 Apply for time	bookingfrontend	no	Søk om tid
 Article	bookingfrontend	no	artikkel
+articles	bookingfrontend	no	artikkler
 Associated bookings	bookingfrontend	no	Tilhørende tildelinger/arrangementer
 Back to user list	booking	no	Tilbake til brukerlisten
 Book resource	bookingfrontend	no	Søknad
