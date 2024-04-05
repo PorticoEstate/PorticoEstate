@@ -807,7 +807,7 @@
         private function info_determine_edit_link($event) {
             $bouser = CreateObject('bookingfrontend.bouser');
 
-            if ($this->_is_event_owner($event, $bouser) && $event['from_'] > Date('Y-m-d H:i:s')) {
+            if ($bouser->is_logged_in() && $this->_is_event_owner($event, $bouser) && $event['from_'] > Date('Y-m-d H:i:s')) {
                 return self::link([
                     'menuaction' => 'bookingfrontend.uievent.edit',
                     'id' => $event['id'],
@@ -821,7 +821,7 @@
         private function info_determine_cancel_link($event, $user_can_delete_events) {
             $bouser = CreateObject('bookingfrontend.bouser');
 
-            if ($this->_is_event_owner($event, $bouser) && $event['from_'] > Date('Y-m-d H:i:s') && $user_can_delete_events) {
+            if ($bouser->is_logged_in() && $this->_is_event_owner($event, $bouser) && $event['from_'] > Date('Y-m-d H:i:s') && $user_can_delete_events) {
                 return self::link([
                     'menuaction' => 'bookingfrontend.uievent.cancel',
                     'id' => $event['id'],
