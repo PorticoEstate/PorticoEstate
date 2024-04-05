@@ -1784,7 +1784,7 @@ if (globalThis['ko']) {
                                         (<span data-bind="text: infoData.info_resource_info"></span>)
                                     </div>
                                     <!-- Participant Limit (common for all types if applicable) -->
-                                    <!-- ko if: infoData.info_participant_limit > 0 -->
+                                    <!-- ko if: infoData.info_participant_limit !== 0 -->
                                     <div>
                                         <span class="text-bold"><trans>booking:participant limit</trans>:</span>
                                         <span data-bind="text: infoData.info_participant_limit"></span>

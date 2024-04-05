@@ -32,14 +32,14 @@
             <div class="row pb-3">
                 <div class="col-md d-flex gap-3">
                     <span class="d-flex gap-1">
-                        <span class="">Bydel:</span>
+                        <span class=""><xsl:value-of select="php:function('lang', 'district')"/>:</span>
                         <xsl:value-of select="building/part_of_town"/>
                     </span>
                     <span class="slidedown__toggler__info__separator">
                         <i class="fa-solid fa-circle"></i>
                     </span>
                     <span class="d-flex gap-1">
-                        <span class="">Bygg:</span>
+                        <span class=""><xsl:value-of select="php:function('lang', 'building')"/>:</span>
                         <xsl:value-of select="building/name"/>
                     </span>
                 </div>
@@ -92,7 +92,7 @@
             <div class="row mb-4 mycal">
                 <div class="col-sm-12">
                     <h3 class="">
-                        Bookingkalender -
+                        <xsl:value-of select="php:function('lang', 'booking_calendar')"/> -
                         <xsl:value-of select="resource/name"/>
                     </h3>
                 </div>
