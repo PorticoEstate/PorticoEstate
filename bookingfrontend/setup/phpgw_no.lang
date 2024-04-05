@@ -305,6 +305,7 @@ chosen rent period	bookingfrontend	no	Valgte leieperioder
 rent period	bookingfrontend	no	Leieperiode
 city	bookingfrontend	no	Poststed
 click to sort ascending	bookingfrontend	no	Klikk for å sortere stigende
+clock_short	bookingfrontend	no	Kl
 click to sort descending	bookingfrontend	no	Klikk for å sortere synkende
 collect users	booking	no	Samle brukere
 contact	bookingfrontend	no	Kontakt
