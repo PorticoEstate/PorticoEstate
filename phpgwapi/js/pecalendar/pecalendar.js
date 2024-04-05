@@ -1797,7 +1797,7 @@ if (globalThis['ko']) {
                                             <trans>booking:register participants</trans>
                                         </a>
                                         <!-- Edit Link -->
-                                        <!-- ko if: infoData.info_edit_link -->
+                                        <!-- ko if: infoData.info_edit_link && $component.userCanEdit($parent.event) -->
                                         <a data-bind="attr: { href: $component.cleanUrl(infoData.info_edit_link), target: '_blank' }, click: $component.clickBubbler, clickBubble: false"
                                            class="btn btn-light mt-4">
                                             <!-- Conditional text based on type -->
@@ -1808,7 +1808,7 @@ if (globalThis['ko']) {
                                             <trans>bookingfrontend:edit event</trans>
                                             <!-- /ko -->
                                             <!-- ko if: $parent.event.type === 'allocation' -->
-                                            <trans>allocationfrontend:edit allocation</trans>
+                                            <trans>bookingfrontend:edit allocation</trans>
                                             <!-- /ko -->
                                         </a>
                                         <!-- /ko -->
@@ -1824,7 +1824,7 @@ if (globalThis['ko']) {
                                             <trans>bookingfrontend:cancel event</trans>
                                             <!-- /ko -->
                                             <!-- ko if: $parent.event.type === 'allocation' -->
-                                            <trans>allocationfrontend:cancel allocation</trans>
+                                            <trans>bookingfrontend:cancel allocation</trans>
                                             <!-- /ko -->
                                         </a>
                                         <!-- /ko -->
