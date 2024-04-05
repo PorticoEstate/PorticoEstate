@@ -1760,8 +1760,9 @@ if (globalThis['ko']) {
                                     <!-- /ko -->
                                     <!-- infoData Time -->
                                     <!-- Modify to support event timing if different from booking -->
-                                    <div data-bind="text: 'Kl: ' + $component.formatPillTimeInterval($parent.event)">
-                                        Kl: FROM - TO
+                                    <div>
+                                        <span class="text-bold"><trans>bookingfrontend:clock_short</trans>:</span>
+                                        <span data-bind="text: $component.formatPillTimeInterval($parent.event)"></span>
                                     </div>
                                     <!-- Place and Building Name -->
                                     <div>
@@ -1792,7 +1793,7 @@ if (globalThis['ko']) {
                                             <trans>bookingfrontend:edit booking</trans>
                                             <!-- /ko -->
                                             <!-- ko if: $parent.event.type === 'event' -->
-                                            <trans>eventfrontend:edit event</trans>
+                                            <trans>bookingfrontend:edit event</trans>
                                             <!-- /ko -->
                                         </a>
                                         <!-- /ko -->
@@ -1805,7 +1806,7 @@ if (globalThis['ko']) {
                                             <trans>bookingfrontend:cancel booking</trans>
                                             <!-- /ko -->
                                             <!-- ko if: $parent.event.type === 'event' -->
-                                            <trans>eventfrontend:cancel event</trans>
+                                            <trans>bookingfrontend:cancel event</trans>
                                             <!-- /ko -->
                                         </a>
                                         <!-- /ko -->
