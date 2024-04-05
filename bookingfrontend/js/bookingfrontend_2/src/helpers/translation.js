@@ -75,7 +75,9 @@ if (!globalThis['trans']) {
                 }
             }
             translationTagParts = translationTagParts.map(text => text.trim())
-            if(translationTagParts.length > 0) {
+
+            // Adjust to handle the case where translationTagParts might not have both parts due to splitting by ':'
+            if(translationTagParts.length >= 2) {
                 this.tag = ko.observable(translationTagParts[1]);
                 this.group = ko.observable(translationTagParts[0]);
             } else {
@@ -83,16 +85,19 @@ if (!globalThis['trans']) {
                 this.group = typeof params.group === 'function' ? params.group : ko.observable(params.group);
             }
 
+            // Accepting suffix parameter
+            this.suffix = ko.observable(params.suffix || ''); // Default to empty if not provided
 
             this.args = ko.observable(params.args);
             this.translations = globalThis['translations'];
+            this.translated = ko.computed(() => {
+                if (self.translations && self.translations() && Object.keys(self.translations()).length > 0 && this.group && this.tag) {
+                    let translation = globalThis['trans'](this.group(), this.tag(), this.args());
+                    // Apply suffix if it exists
+                    return translation + this.suffix();
+                }
+            })
         }
-        translated = ko.computed(() => {
-            if (self.translations && self.translations() && Object.keys(self.translations()).length > 0) {
-                return globalThis['trans'](this.group(), this.tag(), this.args())
-            }
-        })
-
     }
     ko.components.register('trans', {
         viewModel: {

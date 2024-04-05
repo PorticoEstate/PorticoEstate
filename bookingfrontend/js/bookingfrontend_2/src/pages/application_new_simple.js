@@ -97,7 +97,15 @@ function applicationModel() {
     });
 
     self.resourceDescription = ko.computed(() => {
-        const initialDesc = self.selectedResource()?.description;
+        const resource = self.selectedResource();
+        if(!resource) {
+            return;
+        }
+        const lang = getCookie("selected_lang") || 'no';
+        const description_json = resource.description_json;
+        const initialDesc = new DOMParser()
+            .parseFromString(description_json[lang] || description_json['no'], "text/html")
+            .documentElement.textContent;
         if (!initialDesc) {
             return;
         }

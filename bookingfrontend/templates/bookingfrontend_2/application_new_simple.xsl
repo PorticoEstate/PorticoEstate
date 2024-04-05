@@ -54,7 +54,8 @@
                             <div class="font-weight-bold gap-3 d-flex align-items-center">
                                 <h3 class="fas fa-calendar-alt m-0 text-bold"></h3>
                                 <h3 class="m-0 text-bold">
-                                    Leieperiode
+                                    <xsl:value-of
+                                            select="php:function('lang', 'rent period')"/>
                                 </h3>
                             </div>
                             <!-- Display Time Chosen -->
@@ -159,7 +160,7 @@
                                     <div class="font-weight-bold gap-3 d-flex align-items-center">
                                         <h3 class="fas fa-shapes m-0 text-bold"></h3>
                                         <h3 class="m-0 text-bold">
-                                            Artikkler
+                                            <xsl:value-of select="php:function('lang', 'Articles')"/>
                                         </h3>
                                     </div>
                                 </div>
@@ -206,7 +207,8 @@
                     <div class="row mb-4">
                         <div class="col-sm-12">
                             <h3 class="">
-                                Beskrivelse
+                                <xsl:value-of
+                                        select="php:function('lang', 'description')"/>
                             </h3>
                         </div>
 

@@ -18,13 +18,9 @@ var am;
 var lastcheckedResources = [];
 
 
-
-
-
-
-
 function applicationModel() {
     var self = this;
+    self.translationObservable = globalThis['translations'];
     self.building_id = ko.observable();
     self.showErrorMessages = ko.observable(false);
     if (document.getElementById("applications-cart-content")) {
@@ -41,6 +37,12 @@ function applicationModel() {
     self.bookingEndTime = ko.observable('');
 
     self.goNext = () => {
+
+        // If user forgets to click add button, handle it automagically
+        if (self.bookingDate() && self.bookingStartTime() && self.bookingEndTime()) {
+            self.addDate();
+        }
+
         self.formStep(self.formStep() + 1);
         window.scrollTo({top: 0, behavior: 'smooth'});
     }
@@ -193,7 +195,7 @@ function applicationModel() {
 
     self.schedule = ko.observableArray();
 
-    self.loadBuildingData  = async () => {
+    self.loadBuildingData = async () => {
         try {
             if (!self.building_id() || !self.date() || self.date().length === 0) {
                 return;
@@ -271,19 +273,19 @@ function applicationModel() {
         /* Multiselect dropdown */
         var $select = $('#select-multiple'); // Replace with your select element's ID
         var $displayContainer = $('.selected-items-display'); // The container where you want to display the selected items
-        console.log($displayContainer);
+        // console.log($displayContainer);
         $select.select2({
             theme: 'select-v2',
             width: '100%',
-            placeholder: 'Velg leieobjekt',
             closeOnSelect: false,
         })
+
 
         const updateSelected = () => {
             $(".select2-results__option[id^='select2-select-multiple-result-']").each(function () {
                 var splitElementid = this.id.split("-"); // Get the item's ID
                 const itemId = splitElementid[splitElementid.length - 1]
-                console.log(itemId);
+                console.log('updateSelected', itemId);
                 var isSelected = self.selectedResourcesOld().includes(+itemId)/* your logic to determine if the item should be selected */;
 
                 // Set aria-selected attribute based on your condition

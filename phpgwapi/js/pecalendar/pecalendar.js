@@ -1576,7 +1576,7 @@ if (globalThis['ko']) {
                         </div>
                         <!-- ko ifnot: hasTimeSlots() -->
                         <a class="application-button link-button link-button-primary"
-                           data-bind="attr: { href: applicationURL }">Søknad</a>
+                           data-bind="attr: { href: applicationURL }"><trans>bookingfrontend:application</trans></a>
                         <!-- /ko -->
                     </div>
                     <!-- ko if: combinedTempEvents().length -->
@@ -1638,19 +1638,19 @@ if (globalThis['ko']) {
                                 <img class="event-filter"
                                      src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}"
                                      alt="ellipse">
-                                Arrangement
+                                <trans>bookingfrontend:event</trans>
                             </div>
                             <div class="type text-small">
                                 <img class="booking-filter"
                                      src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}"
                                      alt="ellipse">
-                                Interntildeling
+                                <trans>bookingfrontend:booking</trans>
                             </div>
                             <div class="type text-small">
                                 <img class="allocation-filter"
                                      src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}"
                                      alt="ellipse">
-                                Tildeling
+                                <trans>bookingfrontend:allocation</trans>
                             </div>
                         </div>
                         <!-- /ko -->

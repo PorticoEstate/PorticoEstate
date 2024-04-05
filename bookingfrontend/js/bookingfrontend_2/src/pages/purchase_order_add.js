@@ -60,11 +60,14 @@ class ArticleTableViewModel {
     getPriceUnit(resource) {
         switch (resource.info.unit) {
             case 'minute':
-                return "Minuttpris"
+                // return "Minuttpris"
+                return "minute_rate"
             case 'hour':
-                return "Timepris"
+                // return "Timepris"
+                return "hourly_rate"
             case 'day':
-                return "Dagspris"
+                // return "Dagspris"
+                return "daily_rate"
             default:
                 // If the unit doesn't match minute, hour, or day, log an error or set a default
                 console.error('Unknown unit type for mandatory item:', resource.info.unit);
@@ -76,11 +79,11 @@ class ArticleTableViewModel {
         const plural = resource.info.selected_quantity() !== 1;
         switch (resource.info.unit) {
             case 'minute':
-                return "Minutt"
+                return "minute"
             case 'hour':
-                return "Timer"
+                return "hours"
             case 'day':
-                return "Dager"
+                return "days"
             default:
                 // If the unit doesn't match minute, hour, or day, log an error or set a default
                 console.error('Unknown unit type for mandatory item:', resource.info.unit);
@@ -303,14 +306,6 @@ class ArticleTableViewModel {
         return ''
     }
 
-    /**
-     * Gets static JSON data for the articles.
-     * @returns {Object} The parsed JSON data.
-     */
-    getStaticTableData() {
-        return JSON.parse(`{"data":[{"id":700,"parent_mapping_id":null,"resource_id":482,"article_id":"1_482","name":"Anretning","unit":"hour","tax_code":9,"tax_percent":25,"group_id":1,"article_group_name":"Andre","ex_tax_price":"136.99","tax":"34.25","price":"171.24","unit_price":"0.00","mandatory":1,"lang_unit":"Time","selected_quantity":1,"selected_article_quantity":"700_1_9_136.99_","selected_sum":"171.24"},{"id":860,"parent_mapping_id":700,"article_id":"2_3","name":"- Gulrotkake","unit":"kg","tax_code":9,"tax_percent":25,"group_id":2,"article_group_name":"Kake","ex_tax_price":"996.99","tax":"249.25","price":"1246.24","unit_price":"0.00","mandatory":"","lang_unit":"Kg","selected_quantity":"","selected_article_quantity":"","selected_sum":""},{"id":859,"parent_mapping_id":700,"article_id":"2_2","name":"- Utvask","unit":"each","tax_code":9,"tax_percent":25,"group_id":1,"article_group_name":"Andre","ex_tax_price":"125.00","tax":"31.25","price":"156.25","unit_price":"0.00","mandatory":"","lang_unit":"Stk","selected_quantity":"","selected_article_quantity":"","selected_sum":""},{"id":129,"parent_mapping_id":null,"resource_id":106,"article_id":"1_106","name":"Småsalen","unit":"hour","tax_code":9,"tax_percent":25,"group_id":1,"article_group_name":"Andre","ex_tax_price":"0.00","tax":"0.00","price":"0.00","unit_price":"0.00","mandatory":1,"lang_unit":"Time","selected_quantity":1,"selected_article_quantity":"129_1_9_0.00_","selected_sum":"0.00"},{"id":860,"parent_mapping_id":129,"article_id":"2_3","name":"- Gulrotkake","unit":"kg","tax_code":9,"tax_percent":25,"group_id":2,"article_group_name":"Kake","ex_tax_price":"996.99","tax":"249.25","price":"1246.24","unit_price":"0.00","mandatory":"","lang_unit":"Kg","selected_quantity":"","selected_article_quantity":"","selected_sum":""},{"id":859,"parent_mapping_id":129,"article_id":"2_2","name":"- Utvask","unit":"each","tax_code":9,"tax_percent":25,"group_id":1,"article_group_name":"Andre","ex_tax_price":"125.00","tax":"31.25","price":"156.25","unit_price":"0.00","mandatory":"","lang_unit":"Stk","selected_quantity":"","selected_article_quantity":"","selected_sum":""}]}`);
-
-    }
 
     /**
      * Fetches article data from the server and updates the articles observable.
@@ -383,12 +378,18 @@ ko.components.register('article-table', {
             <div class="article-table-header" data-bind="css: { 'collapsed-head': resource.isCollapsed() }">
                 <!--                <div class="table article-table resource-table" data-bind="css: { 'collapsed-head': resource.isCollapsed() }">-->
                 <div class="resource-name" data-bind="text: resource.info.name"></div>
-                <div class="resource-price"
-                     data-bind="text: $parent.getPriceUnit(resource)+': ' + $parent.toLocale(resource.info.price)"></div>
-                <div class="resource-hours"
-                     data-bind="text: $parent.getPriceName(resource)+': ' + resource.info.selected_quantity()"></div>
-                <div class="resource-total"
-                     data-bind="text: 'Total: ' + $parent.calculateTotal(resource)"></div>
+                <div class="resource-price">
+                    <trans params="group: 'bookingfrontend',tag: $parent.getPriceUnit(resource), suffix: ':'"></trans>
+                    <!--ko text: $parent.toLocale(resource.info.price)--><!--/ko-->
+                </div>
+                <div class="resource-hours">
+                    <trans params="group: 'bookingfrontend',tag: $parent.getPriceName(resource), suffix: ':'"></trans>
+                    <!--ko text: resource.info.selected_quantity()--><!--/ko-->
+                </div>
+                <div class="resource-total">
+                    <trans params="group: 'bookingfrontend',tag: 'total', suffix: ':'"></trans>
+                    <!--ko text:  $parent.calculateTotal(resource)--><!--/ko-->
+                </div>
                 <div class="resource-expand"
                      data-bind="click: function() { $parent.toggleCollapse(resource) }">
                     <button class="btn btn-subtle" type="button" data-toggle="collapse"
@@ -424,20 +425,20 @@ ko.components.register('article-table', {
                             <span class="category-name-title" data-bind="text: groupName"></span>
                             <span data-bind="html: $parents[1].getRemark(resource.groups[groupName])"></span>
                         </div>
-                        <div class="category-header-description">Beskrivelse</div>
-                        <div class="category-header-unit-price">Pris pr enhet</div>
-                        <div class="category-header-count">Antall enheter</div>
-                        <div class="category-header-total">Total</div>
+                        <div class="category-header-description"><trans params="group: 'bookingfrontend',tag: 'description'"></trans></div>
+                        <div class="category-header-unit-price"><trans params="group: 'bookingfrontend',tag: 'price_unit'"></trans></div>
+                        <div class="category-header-count"><trans params="group: 'bookingfrontend',tag: 'amount'"></div>
+                        <div class="category-header-total"><trans params="group: 'bookingfrontend',tag: 'total'"></trans></div>
                     </div>
                     <div class="category-articles">
                         <!-- ko foreach: { data: resource.groups[groupName], as: 'item' } -->
                         <div class="category-article-row">
                             <div class="item-name" data-bind="text: item.name"></div>
-                            <div class="desc-title">Beskrivelse</div>
+                            <div class="desc-title"><trans params="group: 'bookingfrontend',tag: 'description'"></div>
 
                             <div class="item-description"
                                  data-bind="text: $parents[2].cleanText(item.article_remark)"></div>
-                            <div class="price-title">Pris pr enhet</div>
+                            <div class="price-title"><trans params="group: 'bookingfrontend',tag: 'price_unit'"></trans></div>
 
                             <div class="item-price"
                                  data-bind="text: $parents[2].toLocale(item.price) + (item.unit === 'each' ? '/stk' : '/' + item.unit)"></div>
