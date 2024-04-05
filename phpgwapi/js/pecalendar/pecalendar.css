@@ -9,7 +9,7 @@
   color: #793C8A;
 }
 
-.bg-purple {
+.bg-purple, .calendar .calendar-body .event-temporary {
   background-color: #793C8A;
 }
 
@@ -81,7 +81,7 @@
   color: #28358B;
 }
 
-.bg-blue, .calendar .calendar-body .event-temporary, .calendar .calendar-body .event-event {
+.bg-blue, .calendar .calendar-body .event-event {
   background-color: #28358B;
 }
 
@@ -937,7 +937,7 @@ h4, .h4 {
 .text-normal {
   font-weight: 400;
 }
-.text-bold, .calendar .calendar-body .event > div:first-child > div:nth-child(1) {
+.text-bold {
   font-weight: 700;
 }
 .text-bolder {
@@ -982,6 +982,7 @@ h4, .h4 {
   --time-width: 3em;
   --calendar-rows: 1;
   --header-height: 110px;
+  --day-columns: 12;
 }
 @media all and (max-width: 480px) {
   :root {
@@ -1240,7 +1241,7 @@ h4, .h4 {
 }
 .calendar .calendar-body .content {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(84, 1fr);
   grid-row: 3/span 1;
   grid-column: 2/span 7;
 }
@@ -1296,18 +1297,27 @@ h4, .h4 {
   font-size: 1rem;
   border: 1px solid #FFF;
   line-height: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1.5rem;
 }
-.calendar .calendar-body .event > div:first-child {
+.calendar .calendar-body .event .event-text {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
-.calendar .calendar-body .event > div:first-child > div {
-  font-size: 0.8rem;
-  display: flex;
-  flex-direction: column;
-}
-.calendar .calendar-body .event > div:first-child > div:nth-child(1) {
+.calendar .calendar-body .event .event-text .event-title {
   font-size: 1rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+@media (max-width: 1024px) {
+  .calendar .calendar-body .event .event-text .event-title {
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+  }
 }
 .calendar .calendar-body .event button {
   height: 24px;
@@ -1331,8 +1341,6 @@ h4, .h4 {
   background-color: #E6E3DB;
   border-color: #FFF;
   position: relative;
-  display: flex;
-  justify-content: space-between;
 }
 .calendar .calendar-body .event-allocation .dots {
   height: 16px;
@@ -1343,8 +1351,6 @@ h4, .h4 {
   background-color: #999EC1;
   border-color: #FFF;
   position: relative;
-  display: flex;
-  justify-content: space-between;
 }
 .calendar .calendar-body .event-booking .dots {
   height: 16px;
@@ -1354,8 +1360,6 @@ h4, .h4 {
 .calendar .calendar-body .event-event {
   border-color: #FFF;
   position: relative;
-  display: flex;
-  justify-content: space-between;
 }
 .calendar .calendar-body .event-event .dots {
   height: 16px;
@@ -1363,11 +1367,9 @@ h4, .h4 {
   filter: invert(100%);
 }
 .calendar .calendar-body .event-temporary {
+  opacity: 85%;
   border-color: #FFF;
   position: relative;
-  display: flex;
-  justify-content: space-between;
-  margin-left: 1.5rem;
   z-index: 11; /* Ensure they are on top */
 }
 .calendar .calendar-body .event-temporary.current-temp {
@@ -1394,6 +1396,45 @@ h4, .h4 {
   width: 16px;
 }
 .calendar .calendar-body .event-temporary .dots-container i {
+  color: white;
+}
+.calendar .calendar-body .event-small {
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-right: 10px;
+  font-size: 0.6875rem;
+  line-height: 1.1;
+  border-width: 0;
+  border-radius: 2px;
+  z-index: 1000;
+}
+@media (max-width: 1024px) {
+  .calendar .calendar-body .event-small {
+    font-size: 0.6875rem;
+    line-height: 1.1;
+  }
+}
+.calendar .calendar-body .event-small > div:first-child {
+  display: flex;
+  flex-direction: row;
+}
+.calendar .calendar-body .event-small > div:first-child > div {
+  font-size: inherit;
+  display: flex;
+  flex-direction: row;
+}
+.calendar .calendar-body .event-small > div:first-child > div:not(:last-child):after {
+  content: ","; /* Insert a comma as content */
+  margin-right: 0.25em; /* Add margin after the content */
+}
+.calendar .calendar-body .event-small > div:first-child > div:nth-child(1) {
+  font-size: inherit;
+}
+.calendar .calendar-body .event-small .dots-container {
+  height: 10px;
+  width: 10px;
+}
+.calendar .calendar-body .event-small .dots-container i {
   color: white;
 }
 .calendar .calendar-body .available-slot {

@@ -35,11 +35,9 @@
 			$this->bo_booking								 = CreateObject('booking.bobooking');
 			$this->activity_bo								 = CreateObject('booking.boactivity');
 			self::set_active_menu('booking::buildings::buildings');
-			$this->fields									 = array
-				(
+			$this->fields									 = array(
 				'name'					 => 'string',
 				'homepage'				 => 'url',
-				'description'			 => 'html',
 				'description_json'		 => 'html',
 				'opening_hours'			 => 'html',
 				'email'					 => 'email',
@@ -312,7 +310,7 @@
 			}
 
 			phpgwapi_jquery::load_widget('autocomplete');
-			self::rich_text_editor(array('field_description', 'field_opening_hours'));
+			self::rich_text_editor(array('field_opening_hours'));
 
 			$tabs			 = array();
 			$tabs['generic'] = array('label' => lang('new building'), 'link' => '#building_form');

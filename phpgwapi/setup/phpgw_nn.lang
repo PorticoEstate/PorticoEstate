@@ -201,7 +201,7 @@ username	common	nn	Brukernavn
 new user	login	nn	Ny bruker
 forgotten password	login	nn	Glemt passord eller brukernavn
 use a valid username and password to gain access to %1	login	nn	Angi et gyldig brukernavn og passord for få tilgang til %1
-version	common	nn	versjon
+version	common	nn	Versjon
 you have been successfully logged out	login	nn	Du har nå logget ut
 Info: you have changed domain from "%1" to "%2"	login	nn	Informasjon: Du har endret domene fra "%1" til "%2"
 Password must be at least 8 characters long, not %1	common	nn	Passord må være minst på 8 tegn, du forsøker med %1

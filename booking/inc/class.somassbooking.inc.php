@@ -10,7 +10,7 @@
 				'id' => array('type' => 'int'),
 				'name' => array('type' => 'string', 'query' => true, 'required' => true),
 				'homepage' => array('type' => 'string'),
-				'description' => array('type' => 'string'),
+				'description_json' => array('type' => 'json'),
 				'phone' => array('type' => 'string'),
 				'email' => array('type' => 'string'),
 				'location_code' => array('type' => 'string', 'required' => false),

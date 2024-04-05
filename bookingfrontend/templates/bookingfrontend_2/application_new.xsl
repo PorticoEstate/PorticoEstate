@@ -137,6 +137,9 @@
                             <div class="col-md-6 resource-select">
                                 <select class="js-select-multiple-items " data-bind="foreach: bookableResource"
                                         id="select-multiple">
+                                    <xsl:attribute name="data-placeholder">
+                                        <xsl:value-of select="php:function('lang', 'rent object')"/>
+                                    </xsl:attribute>
                                     <option></option>
                                     <option data-bind="text: name,
                        value: id,
@@ -178,7 +181,8 @@
                                 <div class="font-weight-bold gap-3 d-flex align-items-center">
                                     <h3 class="fas fa-calendar-alt m-0 text-bold"></h3>
                                     <h3 class="m-0 text-bold">
-                                        Leieperiode
+                                        <xsl:value-of
+                                                select="php:function('lang', 'rent period')"/>
                                     </h3>
                                 </div>
                                 <!-- Display Time Chosen -->
@@ -215,12 +219,12 @@
                                                 <span class="far fa-calendar-alt icon" aria-hidden="true"></span>
                                                 <input type="text" onkeydown="return false"
                                                        class="js-basic-datepicker bookingDate"
-                                                       placeholder="Velg dato" id="standard-datepicker"
+                                                       id="standard-datepicker"
                                                        data-bind="textInput: bookingDate">
-                                                    <!--                                                <xsl:attribute name="placeholder">-->
-                                                    <!--                                                    <xsl:value-of select="php:function('lang', 'Choose date')"/>-->
-                                                    <!--                                                </xsl:attribute>-->
-                                                    Velg dato
+                                                                                                    <xsl:attribute name="placeholder">
+                                                    <xsl:value-of select="php:function('lang', 'Choose date')"/>
+                                                                                                    </xsl:attribute>
+<!--                                                    Velg dato-->
 
                                                 </input>
                                             </label>
@@ -264,8 +268,7 @@
                                         <div class="d-flex justify-content-start">
                                             <div>
                                                 <button class="pe-btn pe-btn-secondary" data-bind="click: addDate">+
-                                                    Legg
-                                                    til leieperiode
+                                                    <xsl:value-of select="php:function('lang', 'add_rental_period')"/>
                                                 </button>
                                             </div>
                                         </div>
@@ -301,7 +304,7 @@
                                     <div class="font-weight-bold gap-3 d-flex align-items-center">
                                         <h2 class="fas fa-shapes text-primary"></h2>
                                         <h2>
-                                            Artikkler
+                                            <xsl:value-of select="php:function('lang', 'Articles')"/>
                                         </h2>
                                     </div>
                                 </div>
@@ -537,9 +540,13 @@
                             <button id="backBTN"
                                     class=" pe-btn pe-btn-secondary pe-btn--large align-items-center gap-2"
                                     data-bind="visible: formStep() !== 0, click: () => goPrev()">
-                                <div class="text-bold">
-                                    <xsl:value-of select="php:function('lang', 'cancel')"/>
+                                <div class="text-bold d-flex align-items-center">
+                                    <i class="fa-solid fa-arrow-left-long"></i>
                                 </div>
+                                <div class="text-bold">
+                                    <xsl:value-of select="php:function('lang', 'Previous step')"/>
+                                </div>
+
                             </button>
                         </div>
                         <div class="d-flex gap-4 justify-content-end">

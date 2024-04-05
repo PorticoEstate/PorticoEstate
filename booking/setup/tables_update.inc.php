@@ -6642,4 +6642,237 @@ SQL;
 		}
 	}
 
+	/**
+	 * Update booking version from 0.2.99 to 0.2.100
+	 *
+	 */
+	$test[] = '0.2.99';
 
+	function booking_upgrade0_2_99()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$tables = array(
+			'bb_building',
+			'bb_resource',
+			'bb_organization'
+		);
+
+		foreach ($tables as $table)
+		{
+			$GLOBALS['phpgw_setup']->oProc->DropColumn($table, array(), 'description');
+		}
+
+		$location_id = $GLOBALS['phpgw']->locations->get_id('booking', '.article');
+
+		if (!$location_id)
+		{
+			$GLOBALS['phpgw']->locations->add('.article', 'article', 'booking');
+
+			$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('booking', 'run'));
+
+			$receipt_section_common = $custom_config->add_section(array
+				(
+				'name'	=> 'payment',
+				'descr' => 'payment method config'
+				)
+			);
+
+			$receipt = $custom_config->add_attrib(array
+				(
+				'section_id' => $receipt_section_common['section_id'],
+				'input_type' => 'listbox',
+				'name'		 => 'method',
+				'descr'		 => 'Payment method',
+				'choice'	 => array('Vipps'),
+				)
+			);
+
+			$receipt_section_vipps = $custom_config->add_section(array
+				(
+				'name'	=> 'Vipps',
+				'descr' => 'Vipps config'
+				)
+			);
+
+			$receipt = $custom_config->add_attrib(array
+				(
+				'section_id' => $receipt_section_vipps['section_id'],
+				'input_type' => 'text',
+				'name'		 => 'base_url',
+				'descr'		 => 'base_url',
+				'value'		 => '',
+				)
+			);
+
+			$receipt = $custom_config->add_attrib(array
+				(
+				'section_id' => $receipt_section_vipps['section_id'],
+				'input_type' => 'text',
+				'name'		 => 'client_id',
+				'descr'		 => 'client_id',
+				'value'		 => '',
+				)
+			);
+
+			$receipt = $custom_config->add_attrib(array
+				(
+				'section_id' => $receipt_section_vipps['section_id'],
+				'input_type' => 'password',
+				'name'		 => 'client_secret',
+				'descr'		 => 'client_secret',
+				'value'		 => '',
+				)
+			);
+
+			$receipt = $custom_config->add_attrib(array
+				(
+				'section_id' => $receipt_section_vipps['section_id'],
+				'input_type' => 'password',
+				'name'		 => 'subscription_key',
+				'descr'		 => 'subscription_key',
+				'value'		 => '',
+				)
+			);
+
+			$receipt = $custom_config->add_attrib(array
+				(
+				'section_id' => $receipt_section_vipps['section_id'],
+				'input_type' => 'text',
+				'name'		 => 'msn',
+				'descr'		 => 'Merchant Serial Number',
+				'value'		 => '',
+				)
+			);
+
+			$receipt = $custom_config->add_attrib(array
+				(
+				'section_id' => $receipt_section_vipps['section_id'],
+				'input_type' => 'listbox',
+				'name'		 => 'debug',
+				'descr'		 => 'debug',
+				'choice'	 => array(1),
+				)
+			);
+
+			$receipt = $custom_config->add_attrib(array
+				(
+				'section_id' => $receipt_section_vipps['section_id'],
+				'input_type' => 'listbox',
+				'name'		 => 'active',
+				'descr'		 => 'Aktiv',
+				'choice'	 => array('active'),
+				)
+			);
+
+			$GLOBALS['phpgw_setup']->oProc->m_odb->query('SELECT id FROM fm_ecomva WHERE id > 0 ORDER BY id', __LINE__, __FILE__);
+			$GLOBALS['phpgw_setup']->oProc->next_record();
+			$tax_code = $GLOBALS['phpgw_setup']->oProc->f('id');
+
+			$sql = "SELECT bb_resource.id FROM bb_resource"
+				. " LEFT JOIN bb_article_mapping ON (bb_resource.id = bb_article_mapping.article_id AND bb_article_mapping.article_cat_id = 1)"
+				. " WHERE bb_article_mapping.id IS NULL";
+
+			$GLOBALS['phpgw_setup']->oProc->m_odb->query($sql, __LINE__, __FILE__);
+			$resources = array();
+			while ($GLOBALS['phpgw_setup']->oProc->next_record())
+			{
+				$resources[] = $GLOBALS['phpgw_setup']->oProc->f('id');
+			}
+
+
+			$add_sql = "INSERT INTO bb_article_mapping ("
+				. " article_cat_id, article_id, article_code, unit, tax_code)"
+				. " VALUES (?, ?, ?, ?, ?)";
+
+			$article_cat_id = 1;
+
+			$insert_update = array();
+
+			foreach ($resources as $resource_id)
+			{
+				$article_code = "resource_{$resource_id}";
+
+				$insert_update[] = array(
+					1 => array(
+						'value' => $article_cat_id,
+						'type'	=> PDO::PARAM_INT
+					),
+					2 => array(
+						'value' => $resource_id,
+						'type'	=> PDO::PARAM_INT
+					),
+					3 => array(
+						'value' => $article_code,
+						'type'	=> PDO::PARAM_STR
+					),
+					4 => array(
+						'value' => 'hour',
+						'type'	=> PDO::PARAM_STR
+					),
+					5 => array(
+						'value' => $tax_code,
+						'type'	=> PDO::PARAM_INT
+					),
+				);
+			}
+
+			$GLOBALS['phpgw_setup']->oProc->m_odb->insert($add_sql, $insert_update, __LINE__, __FILE__);
+
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query('DROP VIEW IF EXISTS public.bb_article_view', __LINE__, __FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query(
+			"CREATE OR REPLACE VIEW public.bb_article_view
+			AS
+			SELECT bb_resource.id,
+			   bb_building.name || '::' || bb_resource.name as name,
+			   'Ressurs' || bb_resource.name as description,
+			   bb_resource.active,
+			   1 AS article_cat_id
+			  FROM bb_resource
+			  JOIN bb_building_resource ON bb_building_resource.resource_id = bb_resource.id
+			  JOIN bb_building ON bb_building_resource.building_id = bb_building.id
+		   UNION
+			SELECT bb_service.id,
+			   bb_service.name,
+			   bb_service.description,
+			   bb_service.active,
+			   2 AS article_cat_id
+			  FROM bb_service", __LINE__, __FILE__
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_allocation', 'skip_bas',
+			 array('type' => 'int', 'nullable' => true, 'precision' => '2', 'default' => 0)//Building Automation System" (BAS)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.100';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+	/**
+	 * Update booking version from 0.2.100 to 0.2.101
+	 *
+	 */
+	$test[] = '0.2.100';
+
+	function booking_upgrade0_2_100()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_booking', 'skip_bas',
+			 array('type' => 'int', 'nullable' => true, 'precision' => '2', 'default' => 0)//Building Automation System" (BAS)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_allocation', 'skip_bas',
+			 array('type' => 'int', 'nullable' => true, 'precision' => '2', 'default' => 0)//Building Automation System" (BAS)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.101';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
