@@ -61,24 +61,24 @@
             </div>
             <div class="row">
                 <div class="col-md d-flex gap-3">
-                    <span class="d-flex gap-1">
-                        <span class=""><xsl:value-of select="php:function('lang', 'type')"/>:</span>
-                        <xsl:value-of select="php:function('lang', 'building')"/>
-                    </span>
-                    <span class="slidedown__toggler__info__separator">
-                        <i class="fa-solid fa-circle"></i>
-                    </span>
+<!--                    <span class="d-flex gap-1">-->
+<!--                        <span class=""><xsl:value-of select="php:function('lang', 'type')"/>:</span>-->
+<!--                        <xsl:value-of select="php:function('lang', 'building')"/>-->
+<!--                    </span>-->
+<!--                    <span class="slidedown__toggler__info__separator">-->
+<!--                        <i class="fa-solid fa-circle"></i>-->
+<!--                    </span>-->
                     <span class="d-flex gap-1">
                         <span class=""><xsl:value-of select="php:function('lang', 'district')"/>:</span>
                         <xsl:value-of select="building/part_of_town"/>
                     </span>
-                    <span class="slidedown__toggler__info__separator">
-                        <i class="fa-solid fa-circle"></i>
-                    </span>
-                    <span class="d-flex gap-1">
-                        <span class=""><xsl:value-of select="php:function('lang', 'rental_resources')"/>:</span>
-                        <span data-bind="text: bookableResource().length"/>
-                    </span>
+<!--                    <span class="slidedown__toggler__info__separator">-->
+<!--                        <i class="fa-solid fa-circle"></i>-->
+<!--                    </span>-->
+<!--                    <span class="d-flex gap-1">-->
+<!--                        <span class=""><xsl:value-of select="php:function('lang', 'rental_resources')"/>:</span>-->
+<!--                        <span data-bind="text: bookableResource().length"/>-->
+<!--                    </span>-->
                 </div>
             </div>
             <hr class="divider divider-primary my-4"/>
