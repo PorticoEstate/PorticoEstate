@@ -1668,7 +1668,7 @@
             return !$booking['participant_limit'] ? ($resource_participant_limit ?: (int)$config['participant_limit']) : $booking['participant_limit'];
         }
 
-        private function info_determine_edit_link($booking, $user_can_delete_bookings) {
+        private function info_determine_edit_link($booking) {
             if ($booking['from_'] > Date('Y-m-d H:i:s')) {
                 return self::link([
                     'menuaction' => 'bookingfrontend.uibooking.edit',

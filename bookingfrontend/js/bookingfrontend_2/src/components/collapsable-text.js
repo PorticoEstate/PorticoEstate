@@ -51,7 +51,12 @@ ko.components.register('collapsable-text', {
         <div class="col-sm-12">
             <button class="pe-btn  pe-btn--transparent text-secondary d-flex gap-3"
                     data-bind="click: toggleDescription">
-                <span data-bind="text: descriptionExpanded() ? 'Vis mindre' : 'Vis mer'"></span>
+                <!-- ko if: descriptionExpanded() -->
+                <span><trans params="group: 'bookingfrontend',tag: 'show_less'"></span>
+                <!-- /ko -->
+                <!-- ko ifnot: descriptionExpanded() -->
+                <span><trans params="group: 'bookingfrontend',tag: 'show_more'"></span>
+                <!-- /ko -->
                 <i class="fa"
                    data-bind="css: {'fa-chevron-up': descriptionExpanded(), 'fa-chevron-down': !descriptionExpanded()}"></i>
             </button>

@@ -194,12 +194,14 @@ class PECalendar {
     tempEvent = ko.observable(null);
 
     constructor({building_id, resource_id = null, dateString = null, disableResourceSwap = false}) {
+        luxon.Settings.defaultLocale = getCookie("selected_lang") || 'no';
+
 
         // Initialize the date of the instance
         if (dateString) {
-            this.currentDate(DateTime.fromJSDate(new Date(dateString)).setLocale("no"));
+            this.currentDate(DateTime.fromJSDate(new Date(dateString)).setLocale(luxon.Settings.defaultLocale));
         } else {
-            this.currentDate(DateTime.now().setLocale("no"));
+            this.currentDate(DateTime.now().setLocale(luxon.Settings.defaultLocale));
         }
 
         //
@@ -214,11 +216,12 @@ class PECalendar {
         //     }
         // });
 
-        this.resource_id.subscribe((val) => {
-            if (val !== undefined) {
-                this.calculateStartEndHours()
-            }
-        })
+        // this.resource_id.subscribe((val) => {
+        //     if (val !== undefined) {
+        //         this.calculateStartEndHours()
+        //     }
+        // })
+
 
         this.building_id.subscribe(newBuildingId => {
             this.loadBuildingData();
@@ -377,17 +380,17 @@ class PECalendar {
                 fetch(urlBuildingSchedule).then(async res => (await res.json())?.ResultSet?.Result?.results)
             ]);
             this.resources(buildingData.resources);
+            this.calculateStartEndHours(buildingData?.schedule || [], buildingData.seasons);
             this.seasons(buildingData.seasons);
             this.availableTimeSlots(timeSlotsData);
             this.events(buildingData?.schedule || []);
-            this.calculateStartEndHours();
         } catch (error) {
             console.error('Error loading building data:', error);
         }
     }
 
-    calculateStartEndHours() {
-        const seasonTime = () => {
+    calculateStartEndHours(events, seasons) {
+        const seasonTime = (seasons) => {
             // Convert a time string to its hour representation, considering the end time inclusiveness
             const getInclusiveHourFromTimeString = (timeString, isEndTime) => {
                 const date = new Date(`1970-01-01T${timeString}Z`);
@@ -404,7 +407,7 @@ class PECalendar {
             }
 
             // If there are no seasons defined, exit the function
-            if (!this.seasons()) {
+            if (!seasons) {
                 return [this.startHour(), this.endHour()];
             }
 
@@ -412,7 +415,7 @@ class PECalendar {
             let minTime = 24;
             let maxTime = 0;
             // Determine the minimum and maximum hours based on the seasons' data
-            for (let season of this.seasons()) {
+            for (let season of seasons) {
                 minTime = Math.min(minTime, getInclusiveHourFromTimeString(season.from_, false));
                 maxTime = Math.max(maxTime, getInclusiveHourFromTimeString(season.to_, true));
             }
@@ -420,8 +423,8 @@ class PECalendar {
             // Update the calendar's start and end hours
             return [(minTime), (maxTime)];
         }
-        let [minTime, maxTime] = seasonTime();
-        for (let event of this.events()) {
+        let [minTime, maxTime] = seasonTime(seasons);
+        for (let event of events) {
             const start = +event.from.substring(0, 2);
             const end = +event.to.substring(0, 2) + 1;
 
@@ -788,7 +791,12 @@ class PECalendar {
         return (dateTime.hour * this.hourParts()) + Math.ceil(dateTime.minute / (60 / this.hourParts()));
     }
 
+
     sizedEvents = ko.computed(() => {
+
+        if (!this.resourceEvents() || this.resourceEvents().length === 0) {
+            return []
+        }
         // Organize events by day
         let eventsByDay = this.resourceEvents().reduce((days, event) => {
             const dates = this.getEventDates(event);
@@ -837,7 +845,7 @@ class PECalendar {
     calendarEvents = ko.computed(() => {
         const temps = [...this.tempEvents(), this.tempEvent()].filter(event => event?.resources.some(resource => resource?.id === this.resource_id()))
 
-        const mappedTempEvents  = temps.map((event) => {
+        const mappedTempEvents = temps.map((event) => {
             // Add more properties as needed
             const props = {
                 [`event-${event.type}`]: true,
@@ -1193,7 +1201,7 @@ class PECalendar {
         if (!this.canCreateTemporaryEvent({
             ...this.tempEvent(),
             from: this.dragStart() > endTime ? this.dragStart() : endTime,
-            to: this.dragStart() > endTime ?  endTime : this.dragStart(),
+            to: this.dragStart() > endTime ? endTime : this.dragStart(),
         })) {
             return;
         }
@@ -1405,12 +1413,58 @@ class PECalendar {
         if (!this.sizedEvents || !this.sizedEvents() || this.sizedEvents().length === 0) {
             return;
         }
-        let url = phpGWLink('bookingfrontend/', {
+        const bookings = new Set();
+        const events = new Set();
+
+        for (const sizedEvent of this.sizedEvents()) {
+            switch (sizedEvent.event.type) {
+                case 'booking':
+                    bookings.add(sizedEvent.event.id);
+                    break;
+                case 'event':
+                    events.add(sizedEvent.event.id);
+                    break;
+            }
+        }
+        // console.log(this.sizedEvents());
+        let bookingUrl = phpGWLink('bookingfrontend/', {
             menuaction: 'bookingfrontend.uibooking.info_json',
-            ids: this.sizedEvents().map(e => e.event.id),
+            ids: [...bookings],
         }, true);
-        const res = await fetch(url);
-        this.popperData(await res.json());
+        let eventUrl = phpGWLink('bookingfrontend/', {
+            menuaction: 'bookingfrontend.uievent.info_json',
+            ids: [...events],
+        }, true);
+
+        const res = await Promise.all([
+            (await fetch(bookingUrl)).json(),
+            (await fetch(eventUrl)).json()
+        ]);
+        this.popperData({...res[0], ...res[1]});
+    }
+
+    eventPopperDataEntry(event) {
+        switch (event.type) {
+            case 'booking':
+                return this.popperData()?.bookings?.[event.id];
+            case 'event':
+                return this.popperData()?.events?.[event.id];
+        }
+        return undefined;
+    }
+
+    userCanEdit(event) {
+        switch (event.type) {
+            case 'booking':
+                return this.popperData()?.info_user_can_delete_bookings;
+
+            case 'event':
+                return this.popperData()?.info_user_can_delete_events;
+
+        }
+        return false;
+
+
     }
 
 
@@ -1522,7 +1576,7 @@ if (globalThis['ko']) {
                         </div>
                         <!-- ko ifnot: hasTimeSlots() -->
                         <a class="application-button link-button link-button-primary"
-                           data-bind="attr: { href: applicationURL }">Søknad</a>
+                           data-bind="attr: { href: applicationURL }"><trans>bookingfrontend:application</trans></a>
                         <!-- /ko -->
                     </div>
                     <!-- ko if: combinedTempEvents().length -->
@@ -1584,19 +1638,19 @@ if (globalThis['ko']) {
                                 <img class="event-filter"
                                      src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}"
                                      alt="ellipse">
-                                Arrangement
+                                <trans>bookingfrontend:event</trans>
                             </div>
                             <div class="type text-small">
                                 <img class="booking-filter"
                                      src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}"
                                      alt="ellipse">
-                                Interntildeling
+                                <trans>bookingfrontend:booking</trans>
                             </div>
                             <div class="type text-small">
                                 <img class="allocation-filter"
                                      src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}"
                                      alt="ellipse">
-                                Tildeling
+                                <trans>bookingfrontend:allocation</trans>
                             </div>
                         </div>
                         <!-- /ko -->
@@ -1649,7 +1703,7 @@ if (globalThis['ko']) {
                                  }, 
                                  attr: { 'data-id': $data.event.id }, 
                                  assignHeight: $data.heightREM, 
-                                 click: $data.heightREM() < 1 && $data.event.type !== 'temporary' && $parent.popperData()?.bookings?.[$data.event.id] ? $parent.togglePopper : undefined
+                                 click: $data.heightREM() < 1 && $data.event.type !== 'temporary' && $parent.eventPopperDataEntry($data.event) ? $parent.togglePopper : undefined
                             ">
                             <div class="event-text">
                                 <span class="event-title" data-bind="text: $data.event.name"></span>
@@ -1665,7 +1719,7 @@ if (globalThis['ko']) {
                             </button>
                             <!-- /ko -->
                             <!--                            <div data-bind="text: ko.toJSON($parent.popperData)"></div>-->
-                            <!-- ko if: $data.event.type !== 'temporary' && $parent.popperData()?.bookings?.[$data.event.id] -->
+                            <!-- ko if: $data.event.type !== 'temporary' && $parent.eventPopperDataEntry($data.event) -->
 
                             <button class="dots-container"
                                     data-bind="withAfterRender: { afterRender: (e) => $parent.addPopperAfterRender(e, $data)}, click: $parent.togglePopper, css: {'z-auto': $parent.tempEvent()}">
@@ -1676,68 +1730,94 @@ if (globalThis['ko']) {
                             </button>
 
                             <div class="info"
-                                 data-bind="click: $parent.togglePopper, with: $parent.popperData()?.bookings?.[$data.event.id], as: 'booking'">
+                                 data-bind="click: $parent.togglePopper, with: $parent.eventPopperDataEntry($data.event), as: 'infoData'">
                                 <div class="info-inner">
-                                    <!-- Booking ID -->
+                                    <!-- infoData ID -->
                                     <div>
-                                        <b data-bind="text: '#' + booking.id"></b>
+                                        <b data-bind="text: '#' + infoData.id"></b>
                                     </div>
-                                    <!-- Group Organization Name -->
+                                    <!-- Dynamically display Group Organization Name or Event Name based on type -->
                                     <div>
-                                        <b data-bind="text: booking.info_group.organization_name"></b>
+                                        <!-- ko if: $parent.event.type === 'booking' -->
+                                        <b data-bind="text: infoData.info_group.organization_name"></b>
+                                        <!-- /ko -->
+                                        <!-- ko if: $parent.event.type === 'event' -->
+                                        <b data-bind="text: infoData.name"></b>
+                                        <!-- /ko -->
                                     </div>
-                                    <!-- Group (2018) and Group Name -->
+                                    <!-- Group (2018) and Group Name for bookings or Organizer for events -->
+                                    <!-- ko if: $parent.event.type === 'booking' -->
                                     <div class="mb-3">
                                         <span class="text-bold"><trans>booking:group (2018)</trans>:</span>
-                                        <a data-bind="attr: { href: booking.group_link }, text: booking.info_group.name"></a>
+                                        <a data-bind="attr: { href: infoData.group_link }, text: infoData.info_group.name"></a>
                                     </div>
-                                    <!-- Booking Time -->
+                                    <!-- /ko -->
+                                    <!-- ko if: $parent.event.type === 'event' -->
+                                    <div class="mb-3">
+                                        <span class="text-bold"><trans>event:organizer</trans>:</span>
+                                        <span data-bind="text: infoData.organizer"></span>
+                                    </div>
+                                    <!-- /ko -->
+                                    <!-- infoData Time -->
+                                    <!-- Modify to support event timing if different from booking -->
                                     <div data-bind="text: 'Kl: ' + $component.formatPillTimeInterval($parent.event)">
                                         Kl: FROM - TO
                                     </div>
                                     <!-- Place and Building Name -->
                                     <div>
                                         <span class="text-bold"><trans>bookingfrontend:place</trans>:</span>
-                                        <a data-bind="attr: { href: booking.building_link }, text: booking.building_name"></a>
-                                        (<span data-bind="text: booking.info_resource_info"></span>)
+                                        <a data-bind="attr: { href: infoData.building_link }, text: infoData.building_name"></a>
+                                        (<span data-bind="text: infoData.info_resource_info"></span>)
                                     </div>
-                                    <!-- Participant Limit -->
-                                    <!-- ko if: booking.info_participant_limit > 0 -->
+                                    <!-- Participant Limit (check if applicable to events, otherwise conditionally display for bookings) -->
+                                    <!-- ko if: infoData.info_participant_limit > 0 -->
                                     <div>
                                         <span class="text-bold"><trans>booking:participant limit</trans>:</span>
-                                        <span data-bind="text: booking.info_participant_limit"></span>
+                                        <span data-bind="text: infoData.info_participant_limit"></span>
                                     </div>
                                     <!-- /ko -->
                                     <!-- Actions -->
                                     <div class="actions">
-                                        <!-- Register Participants Link -->
-                                        <a data-bind="attr: { href: $component.cleanUrl(booking.info_show_link), target: '_blank', },click: $component.clickBubbler, clickBubble: false"
+                                        <!-- Register Participants Link (if applicable to events) -->
+                                        <a data-bind="attr: { href: $component.cleanUrl(infoData.info_show_link), target: '_blank', }, click: $component.clickBubbler, clickBubble: false"
                                            class="btn btn-light mt-4">
                                             <trans>booking:register participants</trans>
                                         </a>
-                                        <!-- Edit Booking Link -->
-                                        <!-- ko if: booking.info_edit_link -->
-                                        <a data-bind="attr: { href: $component.cleanUrl(booking.info_edit_link), target: '_blank', }, click: $component.clickBubbler, clickBubble: false"
+                                        <!-- Edit infoData Link -->
+                                        <!-- ko if: infoData.info_edit_link -->
+                                        <a data-bind="attr: { href: $component.cleanUrl(infoData.info_edit_link), target: '_blank', }, click: $component.clickBubbler, clickBubble: false"
                                            class="btn btn-light mt-4">
+                                            <!-- Conditional text based on type -->
+                                            <!-- ko if: $parent.event.type === 'booking' -->
                                             <trans>bookingfrontend:edit booking</trans>
+                                            <!-- /ko -->
+                                            <!-- ko if: $parent.event.type === 'event' -->
+                                            <trans>eventfrontend:edit event</trans>
+                                            <!-- /ko -->
                                         </a>
                                         <!-- /ko -->
-                                        <!-- Cancel Booking Link -->
-                                        <!-- ko if: $component.popperData()?.user_can_delete_bookings -->
-                                        <a data-bind="attr: { href: $component.cleanUrl(booking.info_cancel_link), target: '_blank', },click: $component.clickBubbler, clickBubble: false"
+                                        <!-- Cancel infoData Link -->
+                                        <!-- ko if: $component.userCanEdit($parent.event) -->
+                                        <a data-bind="attr: { href: $component.cleanUrl(infoData.info_cancel_link), target: '_blank', },click: $component.clickBubbler, clickBubble: false"
                                            class="btn btn-light mt-4">
+                                            <!-- Conditional text based on type -->
+                                            <!-- ko if: $parent.event.type === 'booking' -->
                                             <trans>bookingfrontend:cancel booking</trans>
+                                            <!-- /ko -->
+                                            <!-- ko if: $parent.event.type === 'event' -->
+                                            <trans>eventfrontend:cancel event</trans>
+                                            <!-- /ko -->
                                         </a>
                                         <!-- /ko -->
                                         <!-- iCal Link -->
-                                        <!-- ko if: booking.info_ical_link -->
-                                        <a data-bind="attr: { href: $component.cleanUrl(booking.info_ical_link), target: '_blank', }, text: 'iCal',click: $component.clickBubbler, clickBubble: false"
+                                        <!-- ko if: infoData.info_ical_link -->
+                                        <a data-bind="attr: { href: $component.cleanUrl(infoData.info_ical_link), target: '_blank', }, text: 'iCal',click: $component.clickBubbler, clickBubble: false"
                                            class="btn btn-light mt-4"></a>
                                         <!-- /ko -->
                                     </div>
                                 </div>
-
                             </div>
+
                             <!-- /ko -->
 
                         </div>
@@ -1827,4 +1907,20 @@ function GetDateFromSearch(dateString) {
 function CapitalizeFirstLetter(inputString) {
     // Get the first character, capitalize it, and concatenate with the rest of the string
     return inputString.charAt(0).toUpperCase() + inputString.slice(1);
+}
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
 }

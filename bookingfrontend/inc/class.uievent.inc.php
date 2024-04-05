@@ -8,6 +8,7 @@
 		public $public_functions = array
 			(
 			'info' => true,
+            'info_json' => true,
 			'report_numbers' => true,
 			'cancel' => true,
 			'edit' => true,
@@ -708,7 +709,131 @@
 			$GLOBALS['phpgw']->xslttpl->set_output('wml'); // Evil hack to disable page chrome
 		}
 
-		public function show( )
+        public function info_json() {
+
+            $ids = phpgw::get_var('ids', 'string');
+            if ($ids) {
+                $ids = explode(',', $ids);
+            } elseif (!$ids || !is_array($ids)) {
+                $ids = array(phpgw::get_var('id'));
+            }
+            if (empty($ids)) {
+                phpgw::no_access('booking', lang('missing id'));
+            }
+
+            $config = CreateObject('phpgwapi.config', 'booking')->read();
+            $user_can_delete_events = $config['user_can_delete_events'] === 'yes' ? 1 : 0;
+
+            $events_info = [];
+            foreach ($ids as $id) {
+                $event = $this->bo->read_single($id);
+                if (!$event) {
+                    continue; // Skip if the event is not found
+                }
+
+                $event['info_resource_info'] = $this->calculate_resource_info($event['resources']);
+                $event['info_org'] = $this->info_get_org_info($event['customer_organization_number']);
+                $event['info_when'] = $this->info_format_event_time($event['from_'], $event['to_']);
+                $event['info_participant_limit'] = $this->info_calculate_participant_limit($event, $config);
+                $event['info_edit_link'] = $this->info_determine_edit_link($event);
+
+                $event['info_cancel_link'] = $this->info_determine_cancel_link($event, $user_can_delete_events);
+
+                $event['info_ical_link'] = self::link([
+                    'menuaction' => 'bookingfrontend.uiparticipant.ical',
+                    'reservation_type' => 'event',
+                    'reservation_id' => $event['id']
+                ]);
+                $event['info_show_link'] = self::link([
+                    'menuaction' => 'bookingfrontend.uievent.show',
+                    'id' => $event['id']
+                ]);
+
+                $events_info[$id] = $event;
+            }
+
+            return ['events' => $events_info, 'info_user_can_delete_events' => $user_can_delete_events];
+        }
+
+        private function info_get_org_info($customer_organization_number) {
+            if ($customer_organization_number != '') {
+                $orginfo = $this->bo->so->get_org($customer_organization_number);
+                if (!empty($orginfo)) {
+                    $orginfo['link'] = self::link([
+                        'menuaction' => 'bookingfrontend.uiorganization.show',
+                        'id' => $orginfo['id']
+                    ]);
+                    return [
+                        'customer_organization_id' => $orginfo['id'],
+                        'customer_organization_name' => $orginfo['name'],
+                        'org_link' => $orginfo['link']
+                    ];
+                }
+            }
+            return []; // Return an empty array if no organization info is found
+        }
+
+
+        private function calculate_resource_info($resourceIds) {
+            $resources = $this->resource_bo->so->read([
+                'filters' => ['id' => $resourceIds],
+                'sort' => 'name'
+            ]);
+            $resNames = array_map(function($res) {
+                return $res['name'];
+            }, $resources['results']);
+
+            return join(', ', $resNames);
+        }
+
+        private function info_format_event_time($from, $to) {
+            $interval = (new DateTime($from))->diff(new DateTime($to));
+            $when = "";
+            if($interval->days > 0) {
+                $when = pretty_timestamp($from) . ' - ' . pretty_timestamp($to);
+            } else {
+                $end = new DateTime($to);
+                $when = pretty_timestamp($from) . ' - ' . $end->format('H:i');
+            }
+            return $when;
+        }
+
+        private function info_calculate_participant_limit($event, $config) {
+            $resource_participant_limit_gross = $this->resource_bo->so->get_participant_limit($event['resources'], true);
+            $resource_participant_limit = !empty($resource_participant_limit_gross['results'][0]['quantity']) ? $resource_participant_limit_gross['results'][0]['quantity'] : 0;
+            return !$event['participant_limit'] ? ($resource_participant_limit ?: (int)$config['participant_limit']) : $event['participant_limit'];
+        }
+
+        private function info_determine_edit_link($event) {
+            $bouser = CreateObject('bookingfrontend.bouser');
+
+            if ($bouser->is_logged_in() && $this->_is_event_owner($event, $bouser) && $event['from_'] > Date('Y-m-d H:i:s')) {
+                return self::link([
+                    'menuaction' => 'bookingfrontend.uievent.edit',
+                    'id' => $event['id'],
+                    'resource_ids' => $event['resource_ids'],
+                    'from_org' => phpgw::get_var('from_org', 'boolean', 'REQUEST', false)
+                ]);
+            }
+            return null;
+        }
+
+        private function info_determine_cancel_link($event, $user_can_delete_events) {
+            $bouser = CreateObject('bookingfrontend.bouser');
+
+            if ($bouser->is_logged_in() && $this->_is_event_owner($event, $bouser) && $event['from_'] > Date('Y-m-d H:i:s') && $user_can_delete_events) {
+                return self::link([
+                    'menuaction' => 'bookingfrontend.uievent.cancel',
+                    'id' => $event['id'],
+                    'resource_ids' => $event['resource_ids'],
+                    'from_org' => phpgw::get_var('from_org', 'boolean', 'REQUEST', false)
+                ]);
+            }
+            return null;
+        }
+
+
+        public function show( )
 		{
 			$id = phpgw::get_var('id', 'int');
 			if (!$id)

@@ -132,6 +132,7 @@ Needed for the return from the external logout	bookingfrontend	nn	Nødvendig for
 New message	bookingfrontend	nn	Ny melding
 New system message	bookingfrontend	nn	Ny systemmelding
 Next step	bookingfrontend	nn	Gå vidare
+Previous step	bookingfrontend	nn	Gå tilbake
 No available options	bookingfrontend	nn	Ingen tilgjengelige valg
 No rent object chosen	bookingfrontend	nn	Ingen leieobjekt er valgt
 No valid identification returned from login	common	nn	Ingen gyldig identifikasjon returnert frå innlogging.
@@ -269,9 +270,11 @@ apr	bookingfrontend	nn	april
 archived	bookingfrontend	nn	Arkivert
 attachment	bookingfrontend	nn	Vedlegg
 audience	bookingfrontend	nn	Målgruppe/publikum
+amount	bookingfrontend	nn	Antall enheter
 aug	bookingfrontend	nn	august
 available	bookingfrontend	nn	Ledig
 back	bookingfrontend	nn	tilbake
+price_unit	bookingfrontend	nn	Pris pr enhet
 bookable resources	bookingfrontend	nn	Ressursar du kan booke
 booking	bookingfrontend	nn	Interntildeling
 booking district	bookingfrontend	nn	Område/bydel
@@ -299,6 +302,7 @@ choose rent period	bookingfrontend	nn	Velg leigeperiode
 choose target audience	bookingfrontend	nn	Vel målgruppe for arrangement / aktiviteten
 chosen rent object	bookingfrontend	nn	Valde ressursar
 chosen rent period	bookingfrontend	nn	Valde leigeperioder
+rent period	bookingfrontend	nn	Leigeperiode
 city	bookingfrontend	nn	Poststad
 click to sort ascending	bookingfrontend	nn	Klikk for å sortere stigande
 click to sort descending	bookingfrontend	nn	Klikk for å sortere synkande
@@ -536,6 +540,8 @@ selected	bookingfrontend	nn	Valgt
 sep	bookingfrontend	nn	september
 settings	bookingfrontend	nn	Innstillingar
 show only active	bookingfrontend	nn	Skjul
+show_more	bookingfrontend	nn	Vis mer
+show_less	bookingfrontend	nn	Vis mindre
 showing items	bookingfrontend	nn	Viser
 showing items {startRecord} - {endRecord} of {totalRecords}	bookingfrontend	nn	Viser {startRecord} - {endRecord} av {totalRecords}
 site title	bookingfrontend	nn	Tittel på sida
@@ -591,6 +597,16 @@ event_building	bookingfrontend	nn	Arrangement / bygning
 enter_team_organization_name	bookingfrontend	nn	Skriv namn på lag/organisasjon
 show_only_available	bookingfrontend	nn	Vis berre tilgjengelege
 version_choice	bookingfrontend	nn	Versjonsval
+version	bookingfrontend	nn	Versjon
 which_version_do_you_want	bookingfrontend	nn	Kva versjon ønsker du?
 old	bookingfrontend	nn	Gammal
+new	bookingfrontend	nn	Ny
 what_is_aktiv_kommune	bookingfrontend	nn	Kva er Aktiv kommune?
+add_rental_period	bookingfrontend	nn	Legg til leigeperiode
+minute_rate	bookingfrontend	nn	Minuttpris
+hourly_rate	bookingfrontend	nn	Timepris
+daily_rate	bookingfrontend	nn	Dagspris
+hours	bookingfrontend	nn	Timar
+total	bookingfrontend	nn	Total
+minute	bookingfrontend	nn	Minutt
+days	bookingfrontend	nn	Dagar
