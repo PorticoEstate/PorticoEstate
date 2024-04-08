@@ -38,26 +38,26 @@ if (!globalThis['trans']) {
         if (Array.isArray(group)) {
             for (let i = 0; i < group.length; i++) {
                 const translation = processTranslation(group[i]);
-                if(translation) {
-                    console.log("found translation", group[i], tag, translation)
-                }
+                // if(translation) {
+                //     console.log("found translation", group[i], tag, translation)
+                // }
                 if (translation !== null) return translation;
             }
         } else {
             // If group is not an array, process it directly
             const translation = processTranslation(group);
-            if(translation) {
-                console.log("found translation", group, tag, translation)
-            }
+            // if(translation) {
+            //     console.log("found translation", group, tag, translation)
+            // }
             if (translation !== null) return translation;
         }
 
         // If no translation was found in the specified groups, and 'common' wasn't already tried, try 'common'
         if (!Array.isArray(group) || !group.includes('common')) {
             const commonTranslation = processTranslation('common');
-            if(commonTranslation) {
-                console.log("found translation", 'common', tag, translation)
-            }
+            // if(commonTranslation) {
+            //     console.log("found translation", 'common', tag, translation)
+            // }
             if (commonTranslation !== null) return commonTranslation;
         }
 
