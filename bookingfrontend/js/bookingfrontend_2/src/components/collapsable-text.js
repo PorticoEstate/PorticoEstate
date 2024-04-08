@@ -13,6 +13,7 @@ ko.components.register('collapsable-text', {
             self.descriptionExpanded(!self.descriptionExpanded())
         }
         self.afterRenderContent = (element) => {
+            console.log("after element set", element)
             self.contentElement(element);
         }
 
@@ -21,6 +22,7 @@ ko.components.register('collapsable-text', {
             if (!elem) {
                 return true;
             }
+            console.log("setting active", elem.parentElement.scrollHeight, elem.parentElement.clientHeight)
             return (elem.parentElement.scrollHeight > elem.parentElement.clientHeight || elem.parentElement.scrollWidth > elem.parentElement.clientWidth)
         })
 
@@ -28,8 +30,8 @@ ko.components.register('collapsable-text', {
     },
     // language=HTML
     template: `
-        <div class="col-sm-12 d-flex flex-column collapsible-content "
-             data-bind="css: {'collapsed-description': !descriptionExpanded() && isActive}">
+        <div class="col-sm-12 d-flex flex-column collapsible-content collapsed-description"
+             data-bind="css: {'collapsed-description-fade': !descriptionExpanded() && isActive, 'collapsed-description': !descriptionExpanded()}">
             <!-- ko if: content -->
             <p data-bind="html: content,withAfterRender: { afterRender: afterRenderContent}"></p>
             <!-- /ko -->
