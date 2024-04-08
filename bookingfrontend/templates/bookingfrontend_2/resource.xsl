@@ -61,7 +61,7 @@
                     </div>
                 </div>
             </div>
-            <hr class="divider divider-primary my-4"/>
+            <hr class="divider divider-primary my-3"/>
             <div class="row mb-4">
                 <div class="col-sm-12">
                     <h3 class="">
