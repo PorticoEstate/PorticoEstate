@@ -6,6 +6,9 @@
 
 .collapsed-description {
   max-height: 9.55em; /* 3 lines */
+}
+
+.collapsed-description-fade {
   &::after {
     content: '';
     width: 100%;

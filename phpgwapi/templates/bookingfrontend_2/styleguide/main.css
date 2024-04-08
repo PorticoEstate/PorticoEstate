@@ -3009,7 +3009,8 @@ textarea {
 .collapsed-description {
   max-height: 9.55em; /* 3 lines */
 }
-.collapsed-description::after {
+
+.collapsed-description-fade::after {
   content: "";
   width: 100%;
   height: 2.5em;

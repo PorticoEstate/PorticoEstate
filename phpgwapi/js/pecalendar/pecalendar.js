@@ -100,6 +100,9 @@ class PECalendar {
     touchMoving = ko.observable(false);
 
 
+    currentPopper = ko.observable(null)
+
+
     noTimeSlotsMessage = ko.computed(() => {
         if (!this.currentDate()) return null;
 
@@ -239,6 +242,8 @@ class PECalendar {
 
         this.dayColumnSpan(+getComputedStyle(document.documentElement)
             .getPropertyValue('--day-columns'))
+
+
 
     }
 
@@ -1341,6 +1346,7 @@ class PECalendar {
         return true;
     }
 
+
     togglePopper(e, clickEvent) {
         // Identify if the event target or any of its ancestors is an <a> element
         let isLink = false;
@@ -1357,7 +1363,7 @@ class PECalendar {
         }
 
         // Proceed with toggling the popper for non-link clicks
-        console.log(clickEvent.currentTarget);
+        // console.log(clickEvent.currentTarget);
 
         let popperInfo;
         if (clickEvent.currentTarget.className.includes('dots-container')) {
@@ -1380,8 +1386,20 @@ class PECalendar {
 
         if (popperInfo.hasAttribute('data-show')) {
             popperInfo.removeAttribute('data-show');
+            this.currentPopper(null);
+
+
         } else {
             popperInfo.setAttribute('data-show', '');
+            if(this.currentPopper()) {
+                const [oldel, oldInfo] = this.currentPopper();
+
+                oldInfo.removeAttribute('data-show');
+                if (oldel.popper && oldel.popper()) {
+                    oldel.popper().update()
+                }
+            }
+            this.currentPopper([e,popperInfo]);
         }
 
         if (e.popper && e.popper()) {
@@ -1587,7 +1605,9 @@ if (globalThis['ko']) {
                         </div>
                         <!-- ko ifnot: hasTimeSlots() -->
                         <a class="application-button link-button link-button-primary"
-                           data-bind="attr: { href: applicationURL }"><trans>bookingfrontend:application</trans></a>
+                           data-bind="attr: { href: applicationURL }">
+                            <trans>bookingfrontend:application</trans>
+                        </a>
                         <!-- /ko -->
                     </div>
                     <!-- ko if: combinedTempEvents().length -->
@@ -1714,7 +1734,7 @@ if (globalThis['ko']) {
                                  }, 
                                  attr: { 'data-id': $data.event.id }, 
                                  assignHeight: $data.heightREM, 
-                                 click: $data.heightREM() < 1 && $data.event.type !== 'temporary' && $parent.eventPopperDataEntry($data.event) ? $parent.togglePopper : undefined
+                                 click: $data.heightREM() < 1 && $data.event.type !== 'temporary' && $parent.eventPopperDataEntry($data.event) ? (e,c) => $parent.togglePopper(e,c) : undefined
                             ">
                             <div class="event-text">
                                 <span class="event-title" data-bind="text: $data.event.name"></span>
@@ -1733,7 +1753,7 @@ if (globalThis['ko']) {
                             <!-- ko if: $data.event.type !== 'temporary' && $parent.eventPopperDataEntry($data.event) -->
 
                             <button class="dots-container"
-                                    data-bind="withAfterRender: { afterRender: (e) => $parent.addPopperAfterRender(e, $data)}, click: $parent.togglePopper, css: {'z-auto': $parent.tempEvent()}">
+                                    data-bind="withAfterRender: { afterRender: (e) => $parent.addPopperAfterRender(e, $data)}, click: (e,c) => $parent.togglePopper(e,c), css: {'z-auto': $parent.tempEvent()}">
                                 <!--                                <img-->
                                 <!--                                        data-bind="attr: {src: phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/dots.svg', {}, false)}"-->
                                 <!--                                        class="dots"/>-->
@@ -1741,7 +1761,7 @@ if (globalThis['ko']) {
                             </button>
 
                             <div class="info"
-                                 data-bind="click: $parent.togglePopper, with: $parent.eventPopperDataEntry($data.event), as: 'infoData'">
+                                 data-bind="click: (e,c) => $parent.togglePopper(e,c), with: $parent.eventPopperDataEntry($data.event), as: 'infoData'">
                                 <div class="info-inner">
                                     <!-- Display ID for all types -->
                                     <div>
@@ -1768,7 +1788,7 @@ if (globalThis['ko']) {
                                     <!-- /ko -->
                                     <!-- ko if: $parent.event.type === 'event' -->
                                     <div class="mb-3">
-                                        <span class="text-bold"><trans>event:organizer</trans>:</span>
+                                        <span class="text-bold"><trans>booking:organizer</trans>:</span>
                                         <span data-bind="text: infoData.organizer"></span>
                                     </div>
                                     <!-- /ko -->
