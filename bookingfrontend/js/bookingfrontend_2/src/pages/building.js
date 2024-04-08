@@ -2,6 +2,7 @@ import '../components/light-box'
 import '../components/map-modal'
 import '../components/collapsable-text'
 import '../helpers/util';
+import '../helpers/withAfterRender';
 
 
 var booking_month_horizon = 2;
@@ -27,6 +28,22 @@ class BuildingModel {
 		this.items = events;
 		this.resourcesExpanded = ko.observable(false);
 		this.toggleResources = this.toggleResources.bind(this);
+		this.isCollapseActive = ko.observable(true);
+		this.isRendered = ko.observable(false);
+		this.isRendered.subscribe((v) => console.log('render', v))
+		this.isCollapseActive.subscribe((v) => console.log('avtive', v))
+		// this.isCollapseActive2 = ko.computed(() => {
+		// 	if(!this.resourcesContainer) {
+		// 		return true;
+		// 	}
+		// 	const elem = this.resourcesContainer();
+		// 	if (!elem) {
+		// 		return true;
+		// 	}
+		// 	console.log(elem, elem.scrollHeight, elem.clientHeight)
+		//
+		// 	return (elem.parentElement.scrollHeight > elem.parentElement.clientHeight || elem.parentElement.scrollWidth > elem.parentElement.clientWidth)
+		// })
 	}
 	/**
 	 * Toggles the visibility of additional resources.
@@ -34,6 +51,17 @@ class BuildingModel {
 	toggleResources() {
 		this.resourcesExpanded(!this.resourcesExpanded());
 	}
+
+	resourcesContainerAfterRender(changes) {
+		const elem = changes[0];
+		// console.log("YOLO", elem[0].parentElement)
+		// console.log(elem[0].parentElement, elem[0].parentElement.scrollHeight, elem[0].parentElement.clientHeight)
+		this.isCollapseActive(elem.parentElement.scrollHeight > elem.parentElement.clientHeight || elem.parentElement.scrollWidth > elem.parentElement.clientWidth)
+		this.isRendered(true)
+		// this.resourcesContainer(elem);
+	}
+
+
 
 }
 
