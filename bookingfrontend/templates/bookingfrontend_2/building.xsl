@@ -81,12 +81,12 @@
 <!--                    </span>-->
                 </div>
             </div>
-            <hr class="divider divider-primary my-4"/>
+            <hr class="divider divider-primary my-3"/>
 
 
-            <div class="row">
-                <div class="col-sm-12">
-                    <h3 class="">
+            <div class="row  mb-4">
+                <div class="col-sm-12 mb-2">
+                    <h3 class="m-0">
                         <xsl:value-of select="php:function('lang', 'rental_resources')"/>
                     </h3>
                 </div>
@@ -121,8 +121,8 @@
 
 
             <div class="row">
-                <div class="col-sm-12">
-                    <h3 class="">
+                <div class="col-sm-12 mb-2">
+                    <h3 class="m-0">
                         <xsl:value-of select="php:function('lang', 'description')"/>
                     </h3>
                 </div>
@@ -131,7 +131,7 @@
                                   select="building/description"/>
                 </collapsable-text>
             </div>
-            <hr class="divider divider-primary my-4"/>
+            <hr class="divider divider-primary mb-4"/>
 
             <div class="row mb-4">
                 <light-box params="images: imageArray"></light-box>
