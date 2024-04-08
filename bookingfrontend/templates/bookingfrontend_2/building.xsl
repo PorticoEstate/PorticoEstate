@@ -91,7 +91,7 @@
                     </h3>
                 </div>
                 <div class="col-md-10 col-sm-12 d-flex gap-2 flex-wrap bookable-resources-container"
-                     data-bind="foreach: bookableResource,  css: {{ 'expanded': resourcesExpanded }}">
+                     data-bind="foreach: {{data: bookableResource, afterRender: (e) => resourcesContainerAfterRender(e)}},  css: {{ 'expanded': resourcesExpanded }}">
                     <div data-bind="if: resourceItemLink != false">
                         <a class="pe-btn pe-btn-colour-secondary link-text link-text-secondary d-flex gap-3 pe-btn--small"
                            href="" data-bind="attr: {{'href': resourceItemLink }}">
@@ -107,7 +107,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-2 col-sm-12 d-flex justify-content-end align-items-start">
+                <div class="col-md-2 col-sm-12 justify-content-end align-items-start" data-bind="style: {{ display: isCollapseActive() &amp;&amp; isRendered() ? 'flex': 'none' }}">
                     <button class="pe-btn  pe-btn--transparent text-secondary d-flex gap-3"
                             data-bind="click: toggleResources">
                         <span data-bind="if: resourcesExpanded()"><xsl:value-of select="php:function('lang', 'show_less')"/></span>
