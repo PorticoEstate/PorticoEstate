@@ -38,11 +38,11 @@
             </div>
             <div class="row gx-3">
                 <div class="col d-flex flex-column">
-                    <div class="font-weight-bold gap-3 d-flex align-items-center mb-1">
-                        <h1 class="m-0 fa-solid fa-location-dot" style="font-size:32px"></h1>
-                        <h1 class="m-0">
+                    <div class="font-weight-bold gap-2 d-flex align-items-center mb-1">
+                        <h2 class="m-0 fa-solid fa-location-dot" style="font-size:22px"></h2>
+                        <h2 class="m-0">
                             <xsl:value-of select="building/name"/>
-                        </h1>
+                        </h2>
                     </div>
                     <div>
                         <map-modal>
@@ -68,7 +68,7 @@
 <!--                    <span class="slidedown__toggler__info__separator">-->
 <!--                        <i class="fa-solid fa-circle"></i>-->
 <!--                    </span>-->
-                    <span class="d-flex gap-1">
+                    <span class="d-flex gap-1 text-overline">
                         <span class=""><xsl:value-of select="php:function('lang', 'district')"/>:</span>
                         <xsl:value-of select="building/part_of_town"/>
                     </span>
