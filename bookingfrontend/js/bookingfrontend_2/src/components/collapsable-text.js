@@ -1,54 +1,45 @@
+import '../helpers/withAfterRender'
 
 ko.components.register('collapsable-text', {
     viewModel: function (params) {
         self.content = params.content
         self.descriptionExpanded = ko.observable(false);
 
+        self.contentSize = ko.observable(0);
+        self.containerSize = ko.observable(0);
+        self.contentElement = ko.observable(null);
+
         self.toggleDescription = () => {
             self.descriptionExpanded(!self.descriptionExpanded())
         }
-        // // computed observable to check if the button should be visible
-        // self.isContentOverflowing = ko.observable(false);
-        //
-        // // Placeholder for content element reference
-        // self.contentElement = null;
-        //
+        self.afterRenderContent = (element) => {
+            console.log("after element set", element)
+            self.contentElement(element);
+        }
 
-        // // Function to check content height
-        // self.checkContentHeight = () => {
-        //     console.log("CHECK HEIGHT ")
-        //     if (!self.contentElement) return;
-        //
-        //     // Convert em to pixels - assumes 16px base font size, adjust as needed
-        //     const maxHeightEm = 9.55;
-        //     const emSize = parseFloat(getComputedStyle(document.body).fontSize);
-        //     const maxHeightPx = maxHeightEm * emSize;
-        //
-        //     // Update observable based on content height
-        //     self.isContentOverflowing(self.contentElement.scrollHeight > maxHeightPx);
-        // };
-        // // Update the check whenever the content or its expansion state changes
-        // self.descriptionExpanded.subscribe(self.checkContentHeight);
-        // ko.computed(() => {
-        //     if(self.content && self.content()) {
-        //         // do nothing
-        //     }
-        //     ko.tasks.schedule(self.checkContentHeight); // Ensure check runs after DOM updates
-        // });
+        self.isActive = ko.computed(() => {
+            const elem = self.contentElement();
+            if (!elem) {
+                return true;
+            }
+            console.log("setting active", elem.parentElement.scrollHeight, elem.parentElement.clientHeight)
+            return (elem.parentElement.scrollHeight > elem.parentElement.clientHeight || elem.parentElement.scrollWidth > elem.parentElement.clientWidth)
+        })
+
 
     },
     // language=HTML
     template: `
         <div class="col-sm-12 d-flex flex-column collapsible-content collapsed-description"
-             data-bind="css: {'collapsed-description': !descriptionExpanded()}">
+             data-bind="css: {'collapsed-description-fade': !descriptionExpanded() && isActive, 'collapsed-description': !descriptionExpanded()}">
             <!-- ko if: content -->
-            <p data-bind="html: content"></p>
+            <p data-bind="html: content,withAfterRender: { afterRender: afterRenderContent}"></p>
             <!-- /ko -->
             <!-- ko ifnot: content -->
-            <p data-bind="template: { nodes: $componentTemplateNodes }"></p>
+            <p data-bind="template: { nodes: $componentTemplateNodes }, withAfterRender: { afterRender: afterRenderContent}"></p>
             <!-- /ko -->
         </div>
-        <div class="col-sm-12">
+        <div class="col-sm-12 " data-bind="visible: isActive">
             <button class="pe-btn  pe-btn--transparent text-secondary d-flex gap-3"
                     data-bind="click: toggleDescription">
                 <!-- ko if: descriptionExpanded() -->

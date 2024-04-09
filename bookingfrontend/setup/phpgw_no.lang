@@ -21,9 +21,11 @@ Application cart	bookingfrontend	no	Handlekurv
 Apply filter	bookingfrontend	no	Aktiver filter
 Apply for time	bookingfrontend	no	Søk om tid
 Article	bookingfrontend	no	artikkel
+articles	bookingfrontend	no	artikkler
 Associated bookings	bookingfrontend	no	Tilhørende tildelinger/arrangementer
 Back to user list	booking	no	Tilbake til brukerlisten
 Book resource	bookingfrontend	no	Søknad
+booking_calendar	bookingfrontend	no	Bookingkalender
 Booking Cancel information	bookingfrontend	no	Hvis du skal avbestille interntildeling på valgt dato, velg Avbestill-knappen nederst. Skal tiden bli vist som ledig i kalenderen krysser du av for slett tildeling.
 Booking Cancel information2	bookingfrontend	no	Skal du avbestille flere kan du velge Ut sesong eller Avbestill til og velg en dato, du kan også velge intervall (f.eks. annen hver uke).
 Booking Delete information	bookingfrontend	no	Hvis du skal slette interntildeling på valgt dato, velg Slett-knappen nederst.
@@ -305,6 +307,7 @@ chosen rent period	bookingfrontend	no	Valgte leieperioder
 rent period	bookingfrontend	no	Leieperiode
 city	bookingfrontend	no	Poststed
 click to sort ascending	bookingfrontend	no	Klikk for å sortere stigende
+clock_short	bookingfrontend	no	Kl
 click to sort descending	bookingfrontend	no	Klikk for å sortere synkende
 collect users	booking	no	Samle brukere
 contact	bookingfrontend	no	Kontakt
@@ -513,6 +516,7 @@ remove date	bookingfrontend	no	Fjern dato
 rent object	bookingfrontend	no	Leieobjekt
 rent	bookingfrontend	no	Leie
 rent_premises_facilities_equipment	bookingfrontend	no	Lei lokale, anlegg eller utstyr
+rental_resources	bookingfrontend	no	Utleieressurser
 reserved	bookingfrontend	no	Reservert
 reset	bookingfrontend	no	Nullstill
 resource	bookingfrontend	no	Ressurs
@@ -565,6 +569,7 @@ this application is not within a valid season	bookingfrontend	no	Denne søknaden
 title	bookingfrontend	no	Tittel
 to	bookingfrontend	no	Til
 tu	bookingfrontend	no	tir
+type	bookingfrontend	no	Type
 unit	bookingfrontend	no	Enhet
 unit cost	bookingfrontend	no	Enhetspris
 update results	bookingfrontend	no	Oppdater resultater

@@ -60,25 +60,25 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4 d-flex gap-3">
+                <div class="col-md d-flex gap-3">
+<!--                    <span class="d-flex gap-1">-->
+<!--                        <span class=""><xsl:value-of select="php:function('lang', 'type')"/>:</span>-->
+<!--                        <xsl:value-of select="php:function('lang', 'building')"/>-->
+<!--                    </span>-->
+<!--                    <span class="slidedown__toggler__info__separator">-->
+<!--                        <i class="fa-solid fa-circle"></i>-->
+<!--                    </span>-->
                     <span class="d-flex gap-1">
-                        <span class="">Type:</span>
-                        Bygg
-                    </span>
-                    <span class="slidedown__toggler__info__separator">
-                        <i class="fa-solid fa-circle"></i>
-                    </span>
-                    <span class="d-flex gap-1">
-                        <span class="">Bydel:</span>
+                        <span class=""><xsl:value-of select="php:function('lang', 'district')"/>:</span>
                         <xsl:value-of select="building/part_of_town"/>
                     </span>
-                    <span class="slidedown__toggler__info__separator">
-                        <i class="fa-solid fa-circle"></i>
-                    </span>
-                    <span class="d-flex gap-1">
-                        <span class="">Utleieressurser:</span>
-                        <span data-bind="text: bookableResource().length"/>
-                    </span>
+<!--                    <span class="slidedown__toggler__info__separator">-->
+<!--                        <i class="fa-solid fa-circle"></i>-->
+<!--                    </span>-->
+<!--                    <span class="d-flex gap-1">-->
+<!--                        <span class=""><xsl:value-of select="php:function('lang', 'rental_resources')"/>:</span>-->
+<!--                        <span data-bind="text: bookableResource().length"/>-->
+<!--                    </span>-->
                 </div>
             </div>
             <hr class="divider divider-primary my-4"/>
@@ -87,11 +87,11 @@
             <div class="row">
                 <div class="col-sm-12">
                     <h3 class="">
-                        Utleieressurser
+                        <xsl:value-of select="php:function('lang', 'rental_resources')"/>
                     </h3>
                 </div>
                 <div class="col-md-10 col-sm-12 d-flex gap-2 flex-wrap bookable-resources-container"
-                     data-bind="foreach: bookableResource,  css: {{ 'expanded': resourcesExpanded }}">
+                     data-bind="foreach: {{data: bookableResource, afterRender: (e) => resourcesContainerAfterRender(e)}},  css: {{ 'expanded': resourcesExpanded }}">
                     <div data-bind="if: resourceItemLink != false">
                         <a class="pe-btn pe-btn-colour-secondary link-text link-text-secondary d-flex gap-3 pe-btn--small"
                            href="" data-bind="attr: {{'href': resourceItemLink }}">
@@ -107,10 +107,12 @@
                     </div>
                 </div>
 
-                <div class="col-md-2 col-sm-12 d-flex justify-content-end align-items-start">
+                <div class="col-md-2 col-sm-12 justify-content-end align-items-start" data-bind="style: {{ display: isCollapseActive() &amp;&amp; isRendered() ? 'flex': 'none' }}">
                     <button class="pe-btn  pe-btn--transparent text-secondary d-flex gap-3"
                             data-bind="click: toggleResources">
-                        <span data-bind="text: resourcesExpanded() ? 'Vis mindre' : 'Vis mer'"></span>
+                        <span data-bind="if: resourcesExpanded()"><xsl:value-of select="php:function('lang', 'show_less')"/></span>
+                        <span  data-bind="ifnot: resourcesExpanded()"><xsl:value-of select="php:function('lang', 'show_more')"/></span>
+
                         <i class="fa"
                            data-bind="css: {{'fa-chevron-up': resourcesExpanded(), 'fa-chevron-down': !resourcesExpanded()}}"></i>
                     </button>
@@ -144,12 +146,12 @@
                 </div>
                 <div class="col-sm-12 d-flex flex-column">
                     <xsl:if test="building/phone">
-                        <div>Telefon:
+                        <div><xsl:value-of select="php:function('lang', 'phone')"/>:
                             <xsl:value-of select="building/phone"/>
                         </div>
                     </xsl:if>
                     <xsl:if test="building/email">
-                        <div>Epost:
+                        <div><xsl:value-of select="php:function('lang', 'email')"/>:
                             <xsl:value-of select="building/email"/>
                         </div>
                     </xsl:if>
