@@ -77,7 +77,7 @@
 		public function download()
 		{
 			$components	 = phpgwapi_cache::session_get('property', 'preview_components');
-			$components	 = ($components) ? unserialize($components) : array();
+			$components	 = ($components) ? unserialize($components) : array(array());
 
 			$fields = array_keys($components[0]);
 
@@ -472,7 +472,7 @@ HTML;
 		{
 			$columns			 = (array)phpgw::get_var('columns');
 			$attrib_data_types	 = phpgw::get_var('attrib_data_types');
-			$attrib_names		 = phpgw::get_var('attrib_names');
+			$attrib_names		 = (array)phpgw::get_var('attrib_names');
 			$attrib_precision	 = phpgw::get_var('attrib_precision');
 
 			$cached_file = $this->_get_components_cached_file();
@@ -498,6 +498,7 @@ HTML;
 			$import_entity_categories	 = new import_entity_categories($template_id);
 			$import_components			 = new import_components();
 
+			$new_attribs_for_template = array();
 			if (count($attrib_names))
 			{
 				$receipt		 = $import_entity_categories->prepare_attributes_for_template($columns, $attrib_names, $attrib_data_types, $attrib_precision);
@@ -566,6 +567,7 @@ HTML;
 				}
 			}
 
+			$new_entity_categories = array();
 			if (count($building_part_out_table))
 			{
 				asort($building_part_out_table);
@@ -660,7 +662,7 @@ HTML;
 			}
 
 			$import_data = phpgwapi_cache::session_get('property', 'new_components');
-			$import_data = ($import_data) ? unserialize($import_data) : array();
+			$import_data = !empty($import_data) ? unserialize($import_data) : array();
 
 			if (!count($import_data))
 			{
@@ -669,7 +671,7 @@ HTML;
 			}
 
 			$building_part_processed = $import_entity_categories->add_entity_categories();
-			if (count($building_part_processed['not_added']))
+			if (isset($building_part_processed['not_added']) && count($building_part_processed['not_added']))
 			{
 				foreach ($building_part_processed['not_added'] as $k => $v)
 				{
@@ -677,7 +679,7 @@ HTML;
 				}
 			}
 
-			if (count($building_part_processed['added']))
+			if (isset($building_part_processed['added']) && count($building_part_processed['added']))
 			{
 				foreach ($building_part_processed['added'] as $k => $v)
 				{

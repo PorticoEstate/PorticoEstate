@@ -111,12 +111,12 @@
 				$new_categories[$building_part] = $name;
 			}
 
+			$receipt['new_entity_categories'] = $new_categories;
+
 			if ($receipt['error'])
 			{
 				return $receipt;
 			}
-
-			$receipt['new_entity_categories'] = $new_categories;
 
 			return $receipt;
 		}
@@ -127,7 +127,7 @@
 
 			//$new_categories = $this->config_repository['new_entity_categories'];
 			$new_categories	 = phpgwapi_cache::session_get('property', 'new_entity_categories');
-			$new_categories	 = ($new_categories) ? unserialize($new_categories) : array();
+			$new_categories	 = !empty($new_categories) ? unserialize($new_categories) : array();
 
 			if (!count($new_categories))
 			{
@@ -419,12 +419,12 @@
 				}
 			}
 
+			$receipt['new_attribs_for_template'] = $new_attributes;
+
 			if ($receipt['error'])
 			{
 				return $receipt;
 			}
-
-			$receipt['new_attribs_for_template'] = $new_attributes;
 
 			return $receipt;
 		}
