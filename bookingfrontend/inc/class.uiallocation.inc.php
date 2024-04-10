@@ -450,6 +450,8 @@
                     'reservation_type' => 'allocation',
                     'reservation_id' => $allocation['id']
                 ]);
+                $allocation['info_show_link'] = self::link(array('menuaction' => 'bookingfrontend.uiallocation.show',
+                    'id' => $allocation['id']));
 
                 // Add processed allocation to the array
                 $allocations_info[$id] = $allocation;

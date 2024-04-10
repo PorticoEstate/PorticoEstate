@@ -1615,11 +1615,11 @@ if (globalThis['ko']) {
                         <div id="tempEventPills" class="pills"
                              data-bind="foreach: combinedTempEvents(), css: {'collapsed': !showAllTempEventPills()}">
                             <div class="pill pill--secondary">
-                                <div class="pill-date" data-bind="text: $parent.formatPillDateInterval($data)"></div>
+                                <div class="pill-label" data-bind="text: $parent.formatPillDateInterval($data)"></div>
                                 <div class="pill-divider"></div>
                                 <div class="pill-content"
                                      data-bind="text: $parent.formatPillTimeInterval($data)"></div>
-                                <button class="pill-icon" data-bind="click: $parent.removeTempEventPill">&#215;</button>
+                                <button class="pill-icon" data-bind="click: $parent.removeTempEventPill"><i class="pill-cross"></i></button>
                             </div>
                         </div>
                         <button class="pe-btn  pe-btn--transparent text-secondary gap-3 show-more"

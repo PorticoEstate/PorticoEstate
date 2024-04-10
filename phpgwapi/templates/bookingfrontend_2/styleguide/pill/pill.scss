@@ -1,17 +1,21 @@
 .pill {
-  --main-bg-color: #{$purple};
+  --main-bg-color: #{$purple-8};
   --main-divider-color: #{$purple-light};
-  --main-text-color: #{$white};
+  --main-text-color: #{$purple};
   ----main-hightlight-opacity: 100%;
   //align-items: center;
 
   color: var(--main-text-color);
+  background-color: var(--main-bg-color);
   height: 2.5rem; // Fixed height for the pill
-  display: grid;
-  grid-template-areas: "date divider summary action";
-  grid-template-columns: auto min-content auto min-content;
+  display: flex;
+  //grid-template-areas: "date divider summary action";
+  //grid-template-columns: auto min-content auto min-content;
+  //gap: 1rem;
   align-items: stretch;
   width: max-content;
+  border: 1px solid $purple;
+  border-radius: 50px;
 
   &--secondary {
     --main-divider-opacity: 20%;
@@ -45,12 +49,17 @@
   }
 
 
-  .pill-date, .pill-divider, .pill-content, .pill-icon, .pill-time {
+  .pill-label, .pill-divider, .pill-content, .pill-icon, .pill-time, > i:first-child {
     padding-top: 5px;
     padding-bottom: 5px;
-    background-color: var(--main-bg-color); // A custom purple background
+    //background-color: var(--main-bg-color); // A custom purple background
     display: flex;
     align-items: center;
+  }
+
+  & > * {
+    padding-left: 8px; /* Adjust padding if necessary */
+    padding-right: 8px; /* Adjust padding if necessary */
   }
 
   & > :first-child {
@@ -59,11 +68,22 @@
     padding-left: 15px; /* Adjust padding if necessary */
   }
 
-  .pill-date {
-    min-width: 5rem;
-    padding-left: 15px;
+
+  & > :last-child {
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    padding-right: 15px; /* Adjust padding if necessary */
+
+  }
+
+
+  .pill-label, > i:first-child {
+    //min-width: 5rem;
+    //padding-left: 15px;
     grid-area: date;
-    padding-right: 10px;
+    //padding-right: 10px;
+    //font-weight: $text-bold;
+    @include applyFontProperties('label');
     font-weight: $text-bold;
   }
 
@@ -72,18 +92,16 @@
     grid-area: divider;
     position: relative; // Added for absolute positioning of ::after
     width: 1px; // This width is for layout purposes
-    padding-top: 10px;
-    padding-bottom: 10px;
-
+    padding: 10px 2px;
     //background-color: transparent; // Make the actual div transparent
 
     &::after {
       content: ''; // Required for ::after
       position: absolute;
-      left: 0;
+      left: 50%;
       top: 10px; // Align with the padding-top value
       height: calc(100% - 20px); // Adjust height considering the padding
-      width: 100%; // ::after should take the full width of the parent
+      width: 1px; // ::after should take the full width of the parent
       background-color: var(--main-divider-color); // Use the CSS variable for color
       opacity: var(--main-divider-opacity);
     }
@@ -91,18 +109,21 @@
 
   .pill-content, .pill-time {
     grid-area: summary;
-    padding-right: 10px;
-    padding-left: 10px;
+    //padding-right: 10px;
+    //padding-left: 10px;
     flex-grow: 1;
 
   }
+  button.pill-icon {
+    background: none;
 
+  }
   .pill-icon {
-    padding-right: 15px;
-    display: inline-block;
+    //padding-right: 15px;
+    display: flex;
     grid-area: action;
 
-    padding-left: 10px;
+    //padding-left: 10px;
     cursor: pointer;
     font-size: 1.2rem; // Size of the cross icon
     border: none; // Remove the border
@@ -112,6 +133,25 @@
     color: inherit; // Inherit the text color from the parent
     border-top-right-radius: 50px;
     border-bottom-right-radius: 50px;
+    padding-right: .5rem;
+    .pill-cross {
+      --svg: url('data:image/svg+xml,\
+        <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">\
+            <g fill="rgb(0, 0, 0)">\
+        <path d="M14.25 4.8075L13.1925 3.75L9 7.9425L4.8075 3.75L3.75 4.8075L7.9425 9L3.75 13.1925L4.8075 14.25L9 10.0575L13.1925 14.25L14.25 13.1925L10.0575 9L14.25 4.8075Z"/>\
+        </g>\
+      </svg>');
+
+      /* Chrome, still requires prefix in 2022 */
+      -webkit-mask: var(--svg);
+      background-color: var(--main-text-color);
+
+      /* Firefox and Safari */
+      mask: var(--svg);
+      width: 1.5rem;
+      height:auto;
+      aspect-ratio: 1;
+    }
 
     &:hover {
       background-color: var(--main-bg-color);
@@ -119,16 +159,16 @@
     }
 
   }
-
-  > *:only-child  {
-    border-radius: 50px;
+  //&:has(> *:only-child) {
+  //  border-radius: 50%;
+  //  aspect-ratio: 3/4;
+  //}
+  > *:only-child {
+    //border-radius: 50%;
+    padding-left: 0.75rem;
+    padding-right: .75rem;
 
   }
-  .last-child {
-    border-top-right-radius: 50px;
-    border-bottom-right-radius: 50px;
-  }
-
 
 
   .multi-date {
@@ -142,6 +182,7 @@
     .date {
       grid-area: date;
     }
+
     .time {
       grid-area: summary;
     }
