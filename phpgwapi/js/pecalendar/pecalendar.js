@@ -1812,7 +1812,7 @@ if (globalThis['ko']) {
                                     <!-- /ko -->
                                     <!-- Actions (Register, Edit, Cancel, iCal, Add for allocation) -->
                                     <div class="actions">
-                                        <!-- ko if: infoData.info_show_link -->
+                                        <!-- ko if: infoData.info_show_link && infoData.info_participant_limit > 0 -->
 
                                         <a data-bind="attr: { href: $component.cleanUrl(infoData.info_show_link), target: '_blank' }, click: $component.clickBubbler, clickBubble: false"
                                            class="btn btn-light mt-4">
