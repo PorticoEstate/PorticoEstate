@@ -128,10 +128,10 @@
                             <div data-bind="foreach: bookableResource"
                                  class="d-flex flex-row gap-1 flex-wrap pb-2 w-100">
                                 <div class="pill pill--secondary" data-bind="visible: $data.selected">
-                                    <!--                            <div class="pill-date" data-bind="text: $data"></div>-->
+                                    <!--                            <div class="pill-label" data-bind="text: $data"></div>-->
                                     <!--                            <div class="pill-divider"></div>-->
-                                    <div class="pill-date" data-bind="text: $data.name"></div>
-                                    <button class="pill-icon" data-bind="click: $parent.removeRessource">&#215;</button>
+                                    <div class="pill-label" data-bind="text: $data.name"></div>
+                                    <button class="pill-icon" data-bind="click: $parent.removeRessource"><i class="pill-cross"></i></button>
                                 </div>
                             </div>
                             <div class="col-md-6 resource-select">
