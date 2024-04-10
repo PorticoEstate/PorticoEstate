@@ -2709,7 +2709,6 @@ textarea {
 .pill .pill-label, .pill .pill-divider, .pill .pill-content, .pill .pill-icon, .pill .pill-time, .pill > i:first-child {
   padding-top: 5px;
   padding-bottom: 5px;
-  background-color: var(--main-bg-color);
   display: flex;
   align-items: center;
 }
@@ -2758,6 +2757,9 @@ textarea {
 .pill .pill-content, .pill .pill-time {
   grid-area: summary;
   flex-grow: 1;
+}
+.pill button.pill-icon {
+  background: none;
 }
 .pill .pill-icon {
   display: flex;

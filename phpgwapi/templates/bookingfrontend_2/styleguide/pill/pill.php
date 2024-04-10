@@ -101,7 +101,18 @@
             <div class="d-flex flex-column mt-2 text-center">
                 <span>pill</span>
             </div>
-        </div> <div class="col-6 col-sm-4 d-flex flex-column align-items-center">
+        </div>
+        <div class="col-6 col-sm-4 d-flex flex-column align-items-center">
+            <div class="pill">
+                <i class="fa-solid fa-truck-medical"></i>
+                <div class="pill-label">Label</div>
+                <button class="pill-icon"><i class="pill-cross"></i></button>
+            </div>
+            <div class="d-flex flex-column mt-2 text-center">
+                <span>pill</span>
+            </div>
+        </div>
+        <div class="col-6 col-sm-4 d-flex flex-column align-items-center">
             <div class="pill pill">
                 <div class="pill-label">Label</div>
             </div>

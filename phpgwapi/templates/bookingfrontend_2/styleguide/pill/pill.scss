@@ -52,7 +52,7 @@
   .pill-label, .pill-divider, .pill-content, .pill-icon, .pill-time, > i:first-child {
     padding-top: 5px;
     padding-bottom: 5px;
-    background-color: var(--main-bg-color); // A custom purple background
+    //background-color: var(--main-bg-color); // A custom purple background
     display: flex;
     align-items: center;
   }
@@ -114,7 +114,10 @@
     flex-grow: 1;
 
   }
+  button.pill-icon {
+    background: none;
 
+  }
   .pill-icon {
     //padding-right: 15px;
     display: flex;
