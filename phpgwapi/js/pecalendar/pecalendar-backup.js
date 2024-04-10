@@ -1748,7 +1748,7 @@ class PEcalendar {
             // language=HTML
             `
                 <div class="select_building_resource">
-                    <div class="resource-switch" style="visibility: ${this.disableResourceSwap ? 'hidden': 'initial'}">
+                    <div class="resource-switch" style="visibility: ${this.disableResourceSwap ? 'hidden' : 'initial'}">
                         <select id=${this.getId("resources")} class="js-select-basic">
                             ${this.resources ? Object.keys(this.resources).map(
                                     resourceId => '<option value="' + resourceId + '"' + (+resourceId === +this.resource_id() ? " selected" : "") + '>' + this.resources[resourceId].name.trim() + '</option>').join("") : ""}
@@ -1759,9 +1759,10 @@ class PEcalendar {
                 </div>
                 <div class="pending-row">
 
-                    <div id="tempEventPills" class="pills" data-bind="foreach: tempEvents(), css: {'collapsed': !showAll()}">
+                    <div id="tempEventPills" class="pills"
+                         data-bind="foreach: tempEvents(), css: {'collapsed': !showAll()}">
                         <div class="pill pill--secondary">
-                            <div class="pill-date" data-bind="text: $parent.formatPillDate($data)">2. nov</div>
+                            <div class="pill-label" data-bind="text: $parent.formatPillDate($data)">2. nov</div>
                             <div class="pill-divider"></div>
                             <div class="pill-content"
                                  data-bind="text: $parent.formatPillTimeInterval(date, from, to)"></div>
@@ -1770,22 +1771,25 @@ class PEcalendar {
                         <!--        <span class="start-end" data-bind="text: formatDateTimeInterval(date, from, to)"></span>-->
                         <!--        data-bind="text: formatUnixTimeInterval(start, end)"-->
                     </div>
-                    <button class="pe-btn  pe-btn--transparent text-secondary gap-3 show-more" data-bind="click: toggleShowAll, visible: tempEvents().length > 1">
+                    <button class="pe-btn  pe-btn--transparent text-secondary gap-3 show-more"
+                            data-bind="click: toggleShowAll, visible: tempEvents().length > 1">
                         <span data-bind="text: (showAll() ? 'Vis mindre' : 'Vis mer')"></span>
                         <i class="fa"
                            data-bind="css: {'fa-chevron-up': showAll(), 'fa-chevron-down': !showAll()}"></i>
                     </button>
-   <!--                    <div class="js-dropdown dropdown showall-btn" id="select-info">-->
-   <!--                        <button class="js-dropdown-toggler dropdown__toggler " data-toggle="dropdown" type="button"-->
-   <!--                                aria-expanded="false">-->
-   <!--                            Alle Bestillinger <span class="badge" id=${this.getId("badgeCount")}-->
-   <!--                                                    data-bind="visible: (tempEvents().length + selectedTimeSlots().length) > 0, -->
-   <!--        text: tempEvents().length + selectedTimeSlots().length"></span>-->
-   <!--                        </button>-->
-   <!--                        <div class="js-dropdown-content dropdown__content" style="width: 100%">-->
-   <!--                            <div id=${this.getId("tempEventPills")} class="temp-event-pills"></div>-->
-   <!--                        </div>-->
-   <!--                    </div>-->
+                    <!--                    <div class="js-dropdown dropdown showall-btn" id="select-info">-->
+                    <!--                        <button class="js-dropdown-toggler dropdown__toggler " data-toggle="dropdown" type="button"-->
+                    <!--                                aria-expanded="false">-->
+                        <!--                            Alle Bestillinger <span class="badge" id=${this.getId("badgeCount")}
+                        -->
+                    <!--                                                    data-bind="visible: (tempEvents().length + selectedTimeSlots().length) > 0, -->
+                    <!--        text: tempEvents().length + selectedTimeSlots().length"></span>-->
+                    <!--                        </button>-->
+                    <!--                        <div class="js-dropdown-content dropdown__content" style="width: 100%">-->
+                        <!--                            <div id=${this.getId("tempEventPills")}
+                         class="temp-event-pills"></div>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
                 </div>
                 <div class="calendar-settings">
                     <div class="date">
