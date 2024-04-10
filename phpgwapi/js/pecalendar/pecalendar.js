@@ -1812,10 +1812,13 @@ if (globalThis['ko']) {
                                     <!-- /ko -->
                                     <!-- Actions (Register, Edit, Cancel, iCal, Add for allocation) -->
                                     <div class="actions">
+                                        <!-- ko if: infoData.info_show_link && infoData.info_participant_limit > 0 -->
+
                                         <a data-bind="attr: { href: $component.cleanUrl(infoData.info_show_link), target: '_blank' }, click: $component.clickBubbler, clickBubble: false"
                                            class="btn btn-light mt-4">
                                             <trans>booking:register participants</trans>
                                         </a>
+                                        <!-- /ko -->
                                         <!-- Edit Link -->
                                         <!-- ko if: infoData.info_edit_link && $component.userCanEdit($parent.event) -->
                                         <a data-bind="attr: { href: $component.cleanUrl(infoData.info_edit_link), target: '_blank' }, click: $component.clickBubbler, clickBubble: false"
