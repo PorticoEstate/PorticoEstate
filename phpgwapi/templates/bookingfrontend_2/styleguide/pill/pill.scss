@@ -167,6 +167,10 @@
     //border-radius: 50%;
     padding-left: 0.75rem;
     padding-right: .75rem;
+    &.pill-icon {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
 
   }
 
