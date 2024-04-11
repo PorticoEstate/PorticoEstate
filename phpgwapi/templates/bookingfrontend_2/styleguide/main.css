@@ -2794,6 +2794,10 @@ textarea {
   padding-left: 0.75rem;
   padding-right: 0.75rem;
 }
+.pill > *:only-child.pill-icon {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
 .pill .multi-date {
   display: flex;
   flex-direction: row;
