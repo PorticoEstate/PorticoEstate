@@ -1067,6 +1067,16 @@ class PECalendar {
             console.log("touchMoving");
             return;
         }
+        if (this.currentPopper()) {
+            const [oldel, oldInfo] = this.currentPopper();
+
+            oldInfo.removeAttribute('data-show');
+            if (oldel.popper && oldel.popper()) {
+                oldel.popper().update()
+            }
+            this.currentPopper(null);
+
+        }
         if (!(event.target.className === 'calendar-cell' || event.target.classList.contains('event-temporary'))) {
             return;
         }
