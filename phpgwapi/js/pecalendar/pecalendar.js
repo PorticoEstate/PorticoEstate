@@ -1422,10 +1422,10 @@ class PECalendar {
         const midpointTs = (firstDay.ts + lastDay.ts) / 2;
 
         // Determine placement based on comparison of elementDay timestamp with midpoint
-        const placement = elementDay.ts < midpointTs ? 'right' : 'left';
+        const placement = elementDay.ts < midpointTs ? 'right-start' : 'left-start';
 
         // Create Popper with dynamic placement
-        const popper = new Popper(elem, elem.nextElementSibling, {
+        const popper = new Popper(elem.parentElement, elem.nextElementSibling, {
             placement: placement,
         });
         data.popper(popper);
