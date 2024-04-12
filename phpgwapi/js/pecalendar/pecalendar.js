@@ -244,7 +244,6 @@ class PECalendar {
             .getPropertyValue('--day-columns'))
 
 
-
     }
 
     toggleShowAllTempEventPills(event) {
@@ -1348,7 +1347,6 @@ class PECalendar {
 
 
     togglePopper(e, clickEvent) {
-        console.log(e);
         // Identify if the event target or any of its ancestors is an <a> element
         let isLink = false;
         for (let elem = clickEvent.target; elem !== clickEvent.currentTarget; elem = elem.parentNode) {
@@ -1392,7 +1390,7 @@ class PECalendar {
 
         } else {
             popperInfo.setAttribute('data-show', '');
-            if(this.currentPopper()) {
+            if (this.currentPopper()) {
                 const [oldel, oldInfo] = this.currentPopper();
 
                 oldInfo.removeAttribute('data-show');
@@ -1400,7 +1398,7 @@ class PECalendar {
                     oldel.popper().update()
                 }
             }
-            this.currentPopper([e,popperInfo]);
+            this.currentPopper([e, popperInfo]);
         }
 
         if (e.popper && e.popper()) {
@@ -1471,15 +1469,50 @@ class PECalendar {
     }
 
     eventPopperDataEntry(event) {
+        //      case 'event':
+        //                         name = popperData.name;
+        //                         break;
+        //                     case 'allocation':
+        //                         name = popperData.organization_name;
+        //                         break;
+        //                     case 'booking':
+        //                         name = popperData.info_group.organization_name;
+        //                         break;
+        const fallback = {
+            id: event.id,
+            building_name: event.building_name,
+            participant_limit: 0,
+            info_ical_link: phpGWLink('bookingfrontend/', {
+                menuaction: 'bookingfrontend.uiparticipant.ical',
+                reservation_type: event.type,
+                reservation_id: event.id,
+            })
+        };
         switch (event.type) {
             case 'booking':
-                return this.popperData()?.bookings?.[event.id];
+                if (this.popperData()?.bookings?.[event.id]) {
+                    return this.popperData()?.bookings?.[event.id];
+                }
+                fallback.info_group = {}
+                fallback.info_group.organization_name = event.name
+                break;
             case 'event':
-                return this.popperData()?.events?.[event.id];
+
+                if (this.popperData()?.events?.[event.id]) {
+                    return this.popperData()?.events?.[event.id];
+                }
+                fallback.name = event.name
+
+                break;
+
             case 'allocation':
-                return this.popperData()?.allocations?.[event.id];
+                if (this.popperData()?.allocations?.[event.id]) {
+                    return this.popperData()?.allocations?.[event.id];
+                }
+                fallback.organization_name = event.name;
+                break;
         }
-        return undefined;
+        return fallback;
     }
 
     userCanEdit(event) {
@@ -1577,9 +1610,9 @@ class PECalendar {
 
     getEventName(event) {
         let name = event.name;
-        if(!name) {
+        if (!name) {
             const popperData = this.eventPopperDataEntry(event);
-            if(popperData) {
+            if (popperData) {
                 switch (event.type) {
                     case 'event':
                         name = popperData.name;
@@ -1642,7 +1675,8 @@ if (globalThis['ko']) {
                                 <div class="pill-divider"></div>
                                 <div class="pill-content"
                                      data-bind="text: $parent.formatPillTimeInterval($data)"></div>
-                                <button class="pill-icon" data-bind="click: $parent.removeTempEventPill"><i class="pill-cross"></i></button>
+                                <button class="pill-icon" data-bind="click: $parent.removeTempEventPill"><i
+                                        class="pill-cross"></i></button>
                             </div>
                         </div>
                         <button class="pe-btn  pe-btn--transparent text-secondary gap-3 show-more"
