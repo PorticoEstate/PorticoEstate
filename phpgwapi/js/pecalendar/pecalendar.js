@@ -1348,6 +1348,7 @@ class PECalendar {
 
 
     togglePopper(e, clickEvent) {
+        console.log(e);
         // Identify if the event target or any of its ancestors is an <a> element
         let isLink = false;
         for (let elem = clickEvent.target; elem !== clickEvent.currentTarget; elem = elem.parentNode) {
@@ -1574,6 +1575,28 @@ class PECalendar {
         return (startDate >= firstDay && startDate <= lastDay) || (endDate >= firstDay && endDate <= lastDay);
     }
 
+    getEventName(event) {
+        let name = event.name;
+        if(!name) {
+            const popperData = this.eventPopperDataEntry(event);
+            if(popperData) {
+                switch (event.type) {
+                    case 'event':
+                        name = popperData.name;
+                        break;
+                    case 'allocation':
+                        name = popperData.organization_name;
+                        break;
+                    case 'booking':
+                        name = popperData.info_group.organization_name;
+                        break;
+                }
+            }
+        }
+
+        return name;
+    }
+
 
 }
 
@@ -1737,7 +1760,7 @@ if (globalThis['ko']) {
                                  click: $data.heightREM() < 1 && $data.event.type !== 'temporary' && $parent.eventPopperDataEntry($data.event) ? (e,c) => $parent.togglePopper(e,c) : undefined
                             ">
                             <div class="event-text">
-                                <span class="event-title" data-bind="text: $data.event.name"></span>
+                                <span class="event-title" data-bind="text: $parent.getEventName($data.event)"></span>
                                 <!-- ko if: $data.event.resources -->
                                 <!--                                <div data-bind="text: $data.event.resources.filter(r => r.id).map(r => r.name).join(' / ')"></div>-->
                                 <!-- /ko -->
