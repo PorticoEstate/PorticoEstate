@@ -849,7 +849,12 @@ class PECalendar {
     calendarEvents = ko.computed(() => {
         const temps = [...this.tempEvents(), this.tempEvent()].filter(event => event?.resources.some(resource => resource?.id === this.resource_id()))
 
-        const mappedTempEvents = temps.map((event) => {
+        const mappedTempEvents = temps.filter(a => {
+
+            const eventDate = luxon.DateTime.fromISO(a.date);
+            return (this.isDateInRange(eventDate))
+
+        }).map((event) => {
             // Add more properties as needed
             const props = {
                 [`event-${event.type}`]: true,
