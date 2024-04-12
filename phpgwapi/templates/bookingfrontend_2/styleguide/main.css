@@ -2679,7 +2679,7 @@ textarea {
   display: flex;
   align-items: stretch;
   width: max-content;
-  border: 1px solid #793C8A;
+  border: 1px solid var(--main-divider-color);
   border-radius: 50px;
 }
 .pill--secondary {
@@ -2704,6 +2704,18 @@ textarea {
   --main-divider-opacity: 20%;
   --main-bg-color: #FFEE94;
   --main-divider-color: #793C8A;
+  --main-text-color: #000000;
+}
+.pill--plain {
+  --main-divider-opacity: 100%;
+  --main-bg-color: #FFFFFF;
+  --main-divider-color: #D6D6D6;
+  --main-text-color: #000000;
+}
+.pill--gray {
+  --main-divider-opacity: 100%;
+  --main-bg-color: #f5f5f5;
+  --main-divider-color: #D6D6D6;
   --main-text-color: #000000;
 }
 .pill .pill-label, .pill .pill-divider, .pill .pill-content, .pill .pill-icon, .pill .pill-time, .pill > i:first-child {

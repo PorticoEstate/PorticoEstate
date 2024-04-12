@@ -60,6 +60,34 @@
             </div>
         </div>
 
+
+    </div>
+    <div class="row mb-5">
+
+        <div class="col-6 col-sm-4 d-flex flex-column align-items-center">
+            <div class="pill pill--plain">
+                <div class="pill-label">2. nov</div>
+                <div class="pill-divider"></div>
+                <div class="pill-content">11:00-17:00</div>
+                <div class="pill-icon"><i class="pill-cross"></i></div>
+            </div>
+            <div class="d-flex flex-column mt-2 text-center">
+                <span>pill pill--plain</span>
+            </div>
+        </div>
+
+        <div class="col-6 col-sm-4 d-flex flex-column align-items-center">
+            <div class="pill pill--gray">
+                <div class="pill-label">2. nov</div>
+                <div class="pill-divider"></div>
+                <div class="pill-content">11:00-17:00</div>
+                <div class="pill-icon"><i class="pill-cross"></i></div>
+            </div>
+            <div class="d-flex flex-column mt-2 text-center">
+                <span>pill pill--gray</span>
+            </div>
+        </div>
+
     </div>
 
     <div class="row mb-5">
@@ -97,16 +125,6 @@
                 <i class="fa-solid fa-truck-medical"></i>
                 <div class="pill-label">Label</div>
                 <div class="pill-icon"><i class="pill-cross"></i></div>
-            </div>
-            <div class="d-flex flex-column mt-2 text-center">
-                <span>pill</span>
-            </div>
-        </div>
-        <div class="col-6 col-sm-4 d-flex flex-column align-items-center">
-            <div class="pill">
-                <i class="fa-solid fa-truck-medical"></i>
-                <div class="pill-label">Label</div>
-                <button class="pill-icon"><i class="pill-cross"></i></button>
             </div>
             <div class="d-flex flex-column mt-2 text-center">
                 <span>pill</span>

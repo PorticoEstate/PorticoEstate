@@ -14,7 +14,7 @@
   //gap: 1rem;
   align-items: stretch;
   width: max-content;
-  border: 1px solid $purple;
+  border: 1px solid var(--main-divider-color);
   border-radius: 50px;
 
   &--secondary {
@@ -45,6 +45,20 @@
 
     --main-bg-color: #{$yellow-light};
     --main-divider-color: #{$purple};
+    --main-text-color: #{$black};
+  }
+  &--plain {
+    --main-divider-opacity: 100%;
+
+    --main-bg-color: #{$white};
+    --main-divider-color: #{$grey};
+    --main-text-color: #{$black};
+  }
+  &--gray {
+    --main-divider-opacity: 100%;
+
+    --main-bg-color: #{$grey-24};
+    --main-divider-color: #{$grey};
     --main-text-color: #{$black};
   }
 
