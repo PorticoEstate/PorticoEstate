@@ -404,7 +404,6 @@ function PopulatePostedDate() {
 
     if ($("#resource_id").val() && StartTime) {
         GlobalStartTime = StartTime;
-        console.log(StartTime);
         $('#from_').val(formatSingleDate(StartTime));
         $('#to_').val(formatSingleDate(EndTime));
         $('#start_date').val(formatSingleDateWithoutHours(StartTime));
