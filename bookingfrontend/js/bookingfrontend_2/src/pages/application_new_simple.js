@@ -333,8 +333,8 @@ function PopulatePostedDate() {
     }
     if (initialDates != null) {
         for (var i = 0; i < initialDates.length; i++) {
-            var from_ = (initialDates[i].from_).replace(" ", "T");
-            var to_ = (initialDates[i].to_).replace(" ", "T");
+            var from_ = (initialDates[i].from_).replace(" ", "T") + 'Z';
+            var to_ = (initialDates[i].to_).replace(" ", "T") + 'Z';
             am.date.push({
                 from_: formatDateToDateTimeString(new Date(from_)),
                 to_: formatDateToDateTimeString(new Date(to_)),
@@ -659,7 +659,7 @@ window.onload = function () {
     }
 
     form.addEventListener("submit", function (e) {
-        if (!$("#resource_id").val() || !$('#from_').val()) {
+        if (!$("#resource_id").val() || !am.date()) {
             e.preventDefault();
             e.stopPropagation();
             validateInputs();

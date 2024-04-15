@@ -1086,8 +1086,6 @@ h4, .h4 {
     min-height: 2.75rem;
     overflow-y: hidden;
     flex-wrap: wrap;
-    border-top-right-radius: 50px;
-    border-bottom-right-radius: 50px;
     display: flex;
     flex-direction: row;
     gap: 0.275rem;

@@ -2669,17 +2669,18 @@ textarea {
 }
 
 .pill {
-  --main-bg-color: #793C8A;
+  --main-bg-color: #f4f0f6;
   --main-divider-color: #946DA8;
-  --main-text-color: #FFFFFF;
+  --main-text-color: #793C8A;
   ----main-hightlight-opacity: 100%;
   color: var(--main-text-color);
+  background-color: var(--main-bg-color);
   height: 2.5rem;
-  display: grid;
-  grid-template-areas: "date divider summary action";
-  grid-template-columns: auto min-content auto min-content;
+  display: flex;
   align-items: stretch;
   width: max-content;
+  border: 1px solid var(--main-divider-color);
+  border-radius: 50px;
 }
 .pill--secondary {
   --main-divider-opacity: 20%;
@@ -2705,53 +2706,76 @@ textarea {
   --main-divider-color: #793C8A;
   --main-text-color: #000000;
 }
-.pill .pill-date, .pill .pill-divider, .pill .pill-content, .pill .pill-icon, .pill .pill-time {
+.pill--plain {
+  --main-divider-opacity: 100%;
+  --main-bg-color: #FFFFFF;
+  --main-divider-color: #D6D6D6;
+  --main-text-color: #000000;
+}
+.pill--gray {
+  --main-divider-opacity: 100%;
+  --main-bg-color: #f5f5f5;
+  --main-divider-color: #D6D6D6;
+  --main-text-color: #000000;
+}
+.pill .pill-label, .pill .pill-divider, .pill .pill-content, .pill .pill-icon, .pill .pill-time, .pill > i:first-child {
   padding-top: 5px;
   padding-bottom: 5px;
-  background-color: var(--main-bg-color);
   display: flex;
   align-items: center;
+}
+.pill > * {
+  padding-left: 8px; /* Adjust padding if necessary */
+  padding-right: 8px; /* Adjust padding if necessary */
 }
 .pill > :first-child {
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
   padding-left: 15px; /* Adjust padding if necessary */
 }
-.pill .pill-date {
-  min-width: 5rem;
-  padding-left: 15px;
+.pill > :last-child {
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+  padding-right: 15px; /* Adjust padding if necessary */
+}
+.pill .pill-label, .pill > i:first-child {
   grid-area: date;
-  padding-right: 10px;
+  font-size: 1rem;
+  line-height: 1.25rem;
   font-weight: 700;
+}
+@media (max-width: 1024px) {
+  .pill .pill-label, .pill > i:first-child {
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+  }
 }
 .pill .pill-divider {
   grid-area: divider;
   position: relative;
   width: 1px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px 2px;
 }
 .pill .pill-divider::after {
   content: "";
   position: absolute;
-  left: 0;
+  left: 50%;
   top: 10px;
   height: calc(100% - 20px);
-  width: 100%;
+  width: 1px;
   background-color: var(--main-divider-color);
   opacity: var(--main-divider-opacity);
 }
 .pill .pill-content, .pill .pill-time {
   grid-area: summary;
-  padding-right: 10px;
-  padding-left: 10px;
   flex-grow: 1;
 }
+.pill button.pill-icon {
+  background: none;
+}
 .pill .pill-icon {
-  padding-right: 15px;
-  display: inline-block;
+  display: flex;
   grid-area: action;
-  padding-left: 10px;
   cursor: pointer;
   font-size: 1.2rem;
   border: none;
@@ -2761,17 +2785,30 @@ textarea {
   color: inherit;
   border-top-right-radius: 50px;
   border-bottom-right-radius: 50px;
+  padding-right: 0.5rem;
+}
+.pill .pill-icon .pill-cross {
+  --svg: url('data:image/svg+xml,        <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">            <g fill="rgb(0, 0, 0)">        <path d="M14.25 4.8075L13.1925 3.75L9 7.9425L4.8075 3.75L3.75 4.8075L7.9425 9L3.75 13.1925L4.8075 14.25L9 10.0575L13.1925 14.25L14.25 13.1925L10.0575 9L14.25 4.8075Z"/>        </g>      </svg>');
+  /* Chrome, still requires prefix in 2022 */
+  -webkit-mask: var(--svg);
+  background-color: var(--main-text-color);
+  /* Firefox and Safari */
+  mask: var(--svg);
+  width: 1.5rem;
+  height: auto;
+  aspect-ratio: 1;
 }
 .pill .pill-icon:hover {
   background-color: var(--main-bg-color);
   filter: brightness(120%);
 }
 .pill > *:only-child {
-  border-radius: 50px;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
 }
-.pill .last-child {
-  border-top-right-radius: 50px;
-  border-bottom-right-radius: 50px;
+.pill > *:only-child.pill-icon {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 .pill .multi-date {
   display: flex;

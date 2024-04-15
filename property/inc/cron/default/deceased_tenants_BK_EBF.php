@@ -422,6 +422,9 @@ HTML;
 				{
 					$entry['beste_adresse'] = 'Hemmelig';
 					$checklist[$_person_nr]['beste_adresse'] = 'Hemmelig';
+					$checklist[$_person_nr]['objekt_id'] = 'XXXX';
+					$checklist[$_person_nr]['leie_id'] = 'XXX';
+					$checklist[$_person_nr]['flyttenr'] = 'XX';
 				}
 
 				if($entry['hemmeligadresse'] && empty($entry['adressebeskyttelse']))
