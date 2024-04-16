@@ -1063,10 +1063,16 @@ class PECalendar {
     }
 
     handleMouseDown = (_allProps, event) => {
+
         if (this.touchMoving()) {
             console.log("touchMoving");
             return;
         }
+
+        if (!(event.target.className === 'calendar-cell' || event.target.classList.contains('event-temporary'))) {
+            return;
+        }
+
         if (this.currentPopper()) {
             const [oldel, oldInfo] = this.currentPopper();
 
@@ -1076,9 +1082,6 @@ class PECalendar {
             }
             this.currentPopper(null);
 
-        }
-        if (!(event.target.className === 'calendar-cell' || event.target.classList.contains('event-temporary'))) {
-            return;
         }
 
         if (event.target.classList.contains('event-temporary')) {
@@ -1675,7 +1678,7 @@ if (globalThis['ko']) {
 
                         </div>
                         <!-- ko ifnot: hasTimeSlots() -->
-                        <a class="application-button link-button link-button-primary"
+                        <a class="pe-btn pe-btn-primary pe-btn-colour-primary link-text link-text-white d-flex gap-3 "
                            data-bind="attr: { href: applicationURL }">
                             <trans>bookingfrontend:application</trans>
                         </a>
@@ -1836,8 +1839,11 @@ if (globalThis['ko']) {
                                  data-bind="click: (e,c) => $parent.togglePopper(e,c), with: $parent.eventPopperDataEntry($data.event), as: 'infoData'">
                                 <div class="info-inner">
                                     <!-- Display ID for all types -->
-                                    <div>
-                                        <b data-bind="text: '#' + infoData.id"></b>
+                                    <div class="info-title">
+                                        <h3>
+                                            <span data-bind="text: $component.getEventName($parent.event)"></span>
+                                        </h3>
+                                        <span data-bind="text: '(#' + infoData.id +')'"></span>
                                     </div>
                                     <!-- Dynamically display Name or Organization Name based on type -->
                                     <div>
@@ -1883,7 +1889,7 @@ if (globalThis['ko']) {
                                     </div>
                                     <!-- /ko -->
                                     <!-- Actions (Register, Edit, Cancel, iCal, Add for allocation) -->
-                                    <div class="actions">
+                                    <div class="info-actions">
                                         <!-- ko if: infoData.info_show_link && infoData.info_participant_limit > 0 -->
 
                                         <a data-bind="attr: { href: $component.cleanUrl(infoData.info_show_link), target: '_blank' }, click: $component.clickBubbler, clickBubble: false"

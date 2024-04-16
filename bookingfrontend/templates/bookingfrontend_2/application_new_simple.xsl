@@ -65,8 +65,8 @@
                                 </span>
 
                                 <!--                                <span class="selectedItems" id="selected_period"></span>-->
-                                <input class="datetime" id="from_" type="hidden" required="true" name="from_[]"/>
-                                <input class="datetime" id="to_" type="hidden" required="true" name="to_[]"/>
+<!--                                <input class="datetime" id="from_" type="hidden" required="true" name="from_[]"/>-->
+<!--                                <input class="datetime" id="to_" type="hidden" required="true" name="to_[]"/>-->
                                 <div data-bind="foreach: date" class="d-flex flex-row gap-1 flex-wrap">
                                     <input class="datetime" required="true" name="from_[]" hidden="hidden"
                                            data-bind="value: from_"/>
