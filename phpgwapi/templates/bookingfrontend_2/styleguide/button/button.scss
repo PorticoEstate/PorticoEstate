@@ -113,9 +113,13 @@
 
   &--transparent {
     background-color: transparent;
-    border: 0;
+    border: 2px solid transparent;
     padding: 0.5rem;
     min-width: 2.5rem;
+    &:hover,
+    &:active {
+      border: 2px solid;
+    }
   }
 
   &--small-circle {
