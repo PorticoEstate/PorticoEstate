@@ -1035,147 +1035,6 @@ h4, .h4 {
   border-bottom-right-radius: 3.125rem;
 }
 
-.pe-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.5rem 1.25rem;
-  border: 2px solid #793C8A;
-  font-weight: 700;
-  border-radius: 3.125rem;
-}
-.pe-btn:first-child:active:focus-visible {
-  box-shadow: 0 0 0 0.25rem #946da8;
-}
-.pe-btn:hover, .pe-btn:active {
-  border-color: #793C8A;
-}
-.pe-btn:focus {
-  outline: none;
-}
-.pe-btn:focus-visible {
-  border-color: #793C8A;
-  box-shadow: 0 0 0 0.25rem #946da8;
-}
-.pe-btn-primary {
-  background: #793C8A;
-  color: #FFFFFF;
-}
-.pe-btn-primary:hover, .pe-btn-primary:active {
-  background: #FFFFFF;
-  color: #793C8A;
-}
-.pe-btn-primary:focus-visible {
-  background: #793C8A;
-  color: #FFFFFF;
-}
-.pe-btn-secondary {
-  color: #793C8A;
-  background: #FFFFFF;
-}
-.pe-btn-secondary:hover, .pe-btn-secondary:active {
-  background: #793C8A;
-  color: #FFFFFF;
-}
-.pe-btn-secondary:focus-visible {
-  border-color: #793C8A;
-  background: #FFFFFF;
-  color: #793C8A;
-}
-.pe-btn i.fa-solid {
-  font-size: 1.5rem;
-}
-.pe-btn-colour-secondary {
-  border: 2px solid #28358B;
-  color: #28358B;
-  background: #FFFFFF;
-}
-.pe-btn-colour-secondary:hover, .pe-btn-colour-secondary:active {
-  background: #28358B !important;
-  color: #FFFFFF !important;
-  border: 2px solid #28358B;
-}
-.pe-btn-colour-secondary:focus-visible {
-  border-color: #28358B;
-  background: #FFFFFF;
-  color: #28358B;
-}
-.pe-btn--small {
-  font-size: 0.875rem;
-  padding: 0.344rem 1.25rem;
-}
-.pe-btn--large {
-  padding: 0.657rem 1.25rem;
-  font-size: 1.125rem;
-}
-.pe-btn--circle {
-  padding: 1rem;
-}
-.pe-btn:disabled, .pe-btn[disabled] {
-  background: #F5F5F5;
-  color: #D6D6D6;
-  border-color: #D6D6D6;
-  opacity: 1;
-  pointer-events: none;
-}
-.pe-btn--transparent {
-  background-color: transparent;
-  border: 0;
-  padding: 0.5rem;
-  min-width: 2.5rem;
-}
-.pe-btn--small-circle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  font-size: 12px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-.pe-btn--small-circle i {
-  display: flex; /* Ensure the icon itself is also flex */
-  align-items: center; /* Center vertically */
-  justify-content: center; /* Center horizontally */
-  width: 100%; /* Make the icon fill the button to center it properly */
-}
-.pe-btn--small-circle i::before {
-  display: inline-block; /* Allows for text-centering within the flex item */
-  text-align: center;
-  width: 100%; /* Ensures the pseudo-element covers the flex item's area */
-}
-.pe-btn--small-circle:hover, .pe-btn--small-circle:active {
-  background: #e9e0ec;
-  color: #793C8A;
-  fill: #793C8A;
-}
-.pe-btn--small-circle:focus-visible {
-  border-color: #793C8A;
-  background: #FFFFFF;
-  color: #793C8A;
-  fill: #793C8A;
-}
-.pe-btn--small-circle.pe-btn-secondary {
-  color: #000000;
-  fill: #000000;
-  background: #e9e0ec;
-}
-.pe-btn--small-circle.pe-btn-secondary:hover, .pe-btn--small-circle.pe-btn-secondary:active {
-  background: #793C8A;
-  color: #FFFFFF;
-  fill: #FFFFFF;
-}
-.pe-btn--small-circle.pe-btn-secondary:focus-visible {
-  border-color: #793C8A;
-  background: #FFFFFF;
-  color: #793C8A;
-  fill: #793C8A;
-}
-
 a, a:link, a:visited {
   color: #000000;
   text-decoration: underline;
@@ -1224,6 +1083,9 @@ a.link-text-secondary {
 }
 a.link-text-secondary:hover {
   color: #793C8A;
+}
+a.link-text-white {
+  color: #FFFFFF;
 }
 a.link-button {
   padding: 0.713rem 1.5rem;
@@ -1330,6 +1192,164 @@ a.link-button--transparent {
   border: 0;
   padding: 0.5rem;
   min-width: 2.5rem;
+}
+
+.pe-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.875rem 0.625rem;
+  border: 2px solid #793C8A;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.25rem;
+  font-weight: 700;
+}
+@media (max-width: 1024px) {
+  .pe-btn {
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+  }
+}
+.pe-btn:first-child:active:focus-visible {
+  box-shadow: 0 0 0 0.25rem #946da8;
+}
+.pe-btn:hover, .pe-btn:active {
+  border-color: #793C8A;
+}
+.pe-btn:focus {
+  outline: none;
+}
+.pe-btn:focus-visible {
+  border-color: #793C8A;
+  box-shadow: 0 0 0 0.25rem #946da8;
+}
+.pe-btn-primary {
+  background: #793C8A;
+  color: #FFFFFF;
+}
+.pe-btn-primary:hover, .pe-btn-primary:active {
+  background: #FFFFFF;
+  color: #793C8A;
+}
+.pe-btn-primary:focus-visible {
+  background: #793C8A;
+  color: #FFFFFF;
+}
+.pe-btn-secondary {
+  color: #793C8A;
+  background: #FFFFFF;
+}
+.pe-btn-secondary:hover, .pe-btn-secondary:active {
+  background: #793C8A;
+  color: #FFFFFF;
+}
+.pe-btn-secondary:focus-visible {
+  border-color: #793C8A;
+  background: #FFFFFF;
+  color: #793C8A;
+}
+.pe-btn i.fa-solid {
+  font-size: 1.5rem;
+}
+.pe-btn-colour-secondary {
+  border: 2px solid #28358B;
+  color: #28358B;
+  background: #FFFFFF;
+}
+.pe-btn-colour-secondary:hover, .pe-btn-colour-secondary:active {
+  background: #28358B !important;
+  color: #FFFFFF !important;
+  border: 2px solid #28358B;
+}
+.pe-btn-colour-secondary:focus-visible {
+  border-color: #28358B;
+  background: #FFFFFF;
+  color: #28358B;
+}
+.pe-btn--small {
+  font-size: 0.875rem;
+  padding: 0.625rem 0.5rem;
+}
+.pe-btn--large {
+  padding: 1.25rem 0.75rem;
+  font-size: 1.125rem;
+}
+@media (max-width: 1024px) {
+  .pe-btn--large {
+    font-size: 1rem;
+  }
+}
+.pe-btn--circle {
+  border-radius: 3.125rem;
+  padding: 1rem;
+}
+.pe-btn:disabled, .pe-btn[disabled] {
+  background: #F5F5F5;
+  color: #D6D6D6;
+  border-color: #D6D6D6;
+  opacity: 1;
+  pointer-events: none;
+}
+.pe-btn--transparent {
+  background-color: transparent;
+  border: 2px solid transparent;
+  padding: 0.5rem;
+  min-width: 2.5rem;
+}
+.pe-btn--transparent:hover, .pe-btn--transparent:active {
+  border: 2px solid;
+}
+.pe-btn--small-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.pe-btn--small-circle i {
+  display: flex; /* Ensure the icon itself is also flex */
+  align-items: center; /* Center vertically */
+  justify-content: center; /* Center horizontally */
+  width: 100%; /* Make the icon fill the button to center it properly */
+}
+.pe-btn--small-circle i::before {
+  display: inline-block; /* Allows for text-centering within the flex item */
+  text-align: center;
+  width: 100%; /* Ensures the pseudo-element covers the flex item's area */
+}
+.pe-btn--small-circle:hover, .pe-btn--small-circle:active {
+  background: #e9e0ec;
+  color: #793C8A;
+  fill: #793C8A;
+}
+.pe-btn--small-circle:focus-visible {
+  border-color: #793C8A;
+  background: #FFFFFF;
+  color: #793C8A;
+  fill: #793C8A;
+}
+.pe-btn--small-circle.pe-btn-secondary {
+  color: #000000;
+  fill: #000000;
+  background: #e9e0ec;
+}
+.pe-btn--small-circle.pe-btn-secondary:hover, .pe-btn--small-circle.pe-btn-secondary:active {
+  background: #793C8A;
+  color: #FFFFFF;
+  fill: #FFFFFF;
+}
+.pe-btn--small-circle.pe-btn-secondary:focus-visible {
+  border-color: #793C8A;
+  background: #FFFFFF;
+  color: #793C8A;
+  fill: #793C8A;
 }
 
 .choice {

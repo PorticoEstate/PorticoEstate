@@ -1,6 +1,7 @@
 @import '../../templates/bookingfrontend_2/styleguide/colors/colors.scss';
 @import '../../templates/bookingfrontend_2/styleguide/custom.scss';
 @import '../../templates/bookingfrontend_2/styleguide/typography/typography.scss';
+@import '../../templates/bookingfrontend_2/styleguide/effects/effects.scss';
 
 $days-height: 3em;
 $time-width: 3em;
@@ -227,7 +228,7 @@ $column-width: 12; // how many columns in a given timeslot
 
       .application-button {
         max-width: 9rem;
-        max-height: 2.75rem;
+        max-height: 3rem;
         @media screen and (max-width: 840px) {
           max-width: unset;
         }
@@ -656,18 +657,36 @@ $column-width: 12; // how many columns in a given timeslot
     }
 
     .info {
+      padding: 1.5rem;
+      border-radius: $rounded-mini;
+      border: 1px solid $purple;
+      background-color: $grey-light;
+      min-height: 100px;
+      min-width: 100px;
+
       .info-inner {
-        background: #FFF;
         @extend .text-black;
-        padding: 4px 8px;
-        border-radius: 5px;
-        border: 1px solid #000;
-        min-height: 100px;
-        z-index: 12;
-        width: max-content;
+        //min-height: 100px;
         cursor: pointer;
-        font-size: 1rem;
-        position: relative;
+        //font-size: 1rem;
+        //position: relative;
+        width: max-content;
+
+        .info-title {
+          h3{
+            margin: 0;
+          }
+          display: flex;
+          flex-direction: row;
+          gap: 0.5rem;
+          align-items: center;
+        }
+
+        .info-actions {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+        }
       }
 
       display: none;
@@ -675,7 +694,7 @@ $column-width: 12; // how many columns in a given timeslot
     }
 
     .info[data-show] {
-      display: block;
+      display: flex;
     }
 
 

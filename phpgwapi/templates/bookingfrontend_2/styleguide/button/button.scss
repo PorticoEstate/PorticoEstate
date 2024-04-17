@@ -1,11 +1,14 @@
+
 .pe-btn {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0.5rem 1.25rem;
-  border: 2px solid $purple;
-  font-weight: 700;
-  border-radius: $rounded-large;
+  padding: 0.875rem 0.625rem;
+  border:2px solid $purple;
+  border-radius: $rounded-mini;
+  @include applyFontProperties('label');
+  font-weight: $text-bold;
+
 
   &:first-child:active:focus-visible {
     box-shadow: $box-focus-shadow;
@@ -86,15 +89,16 @@
 
   &--small {
     font-size: 0.875rem;
-    padding: 0.344rem 1.25rem;
+    padding: 0.625rem 0.5rem;
   }
 
   &--large {
-    padding: 0.657rem 1.25rem;
-    font-size: 1.125rem;
+    padding: 1.25rem 0.75rem;
+    @include applyFontSize('subtitle')
   }
 
   &--circle {
+    border-radius:$rounded-large;
     padding: 1rem;
   }
 
@@ -109,9 +113,13 @@
 
   &--transparent {
     background-color: transparent;
-    border: 0;
+    border: 2px solid transparent;
     padding: 0.5rem;
     min-width: 2.5rem;
+    &:hover,
+    &:active {
+      border: 2px solid;
+    }
   }
 
   &--small-circle {
