@@ -1293,9 +1293,12 @@ a.link-button--transparent {
 }
 .pe-btn--transparent {
   background-color: transparent;
-  border: 0;
+  border: 2px solid transparent;
   padding: 0.5rem;
   min-width: 2.5rem;
+}
+.pe-btn--transparent:hover, .pe-btn--transparent:active {
+  border: 2px solid;
 }
 .pe-btn--small-circle {
   display: flex;
