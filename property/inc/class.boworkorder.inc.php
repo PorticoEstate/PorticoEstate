@@ -581,6 +581,10 @@
 			{
 				$dummy_contracts[-3] = $this->config['alternative_to_contract_3'];
 			}
+			if(!empty($this->config['alternative_to_contract_4']))
+			{
+				$dummy_contracts[-4] = $this->config['alternative_to_contract_4'];
+			}
 
 			foreach ($workorder as &$entry)
 			{

@@ -244,7 +244,6 @@ class PECalendar {
             .getPropertyValue('--day-columns'))
 
 
-
     }
 
     toggleShowAllTempEventPills(event) {
@@ -850,7 +849,12 @@ class PECalendar {
     calendarEvents = ko.computed(() => {
         const temps = [...this.tempEvents(), this.tempEvent()].filter(event => event?.resources.some(resource => resource?.id === this.resource_id()))
 
-        const mappedTempEvents = temps.map((event) => {
+        const mappedTempEvents = temps.filter(a => {
+
+            const eventDate = luxon.DateTime.fromISO(a.date);
+            return (this.isDateInRange(eventDate))
+
+        }).map((event) => {
             // Add more properties as needed
             const props = {
                 [`event-${event.type}`]: true,
@@ -1059,12 +1063,25 @@ class PECalendar {
     }
 
     handleMouseDown = (_allProps, event) => {
+
         if (this.touchMoving()) {
             console.log("touchMoving");
             return;
         }
+
         if (!(event.target.className === 'calendar-cell' || event.target.classList.contains('event-temporary'))) {
             return;
+        }
+
+        if (this.currentPopper()) {
+            const [oldel, oldInfo] = this.currentPopper();
+
+            oldInfo.removeAttribute('data-show');
+            if (oldel.popper && oldel.popper()) {
+                oldel.popper().update()
+            }
+            this.currentPopper(null);
+
         }
 
         if (event.target.classList.contains('event-temporary')) {
@@ -1252,7 +1269,7 @@ class PECalendar {
         const formattedFromTime = fromTime.toFormat('HH:mm');
         const formattedToTime = toTime.toFormat('HH:mm');
 
-        return `${formattedFromTime}-${formattedToTime}`;
+        return `${formattedFromTime} - ${formattedToTime}`;
     }
 
     /**
@@ -1391,7 +1408,7 @@ class PECalendar {
 
         } else {
             popperInfo.setAttribute('data-show', '');
-            if(this.currentPopper()) {
+            if (this.currentPopper()) {
                 const [oldel, oldInfo] = this.currentPopper();
 
                 oldInfo.removeAttribute('data-show');
@@ -1399,7 +1416,7 @@ class PECalendar {
                     oldel.popper().update()
                 }
             }
-            this.currentPopper([e,popperInfo]);
+            this.currentPopper([e, popperInfo]);
         }
 
         if (e.popper && e.popper()) {
@@ -1418,10 +1435,10 @@ class PECalendar {
         const midpointTs = (firstDay.ts + lastDay.ts) / 2;
 
         // Determine placement based on comparison of elementDay timestamp with midpoint
-        const placement = elementDay.ts < midpointTs ? 'right' : 'left';
+        const placement = elementDay.ts < midpointTs ? 'right-start' : 'left-start';
 
         // Create Popper with dynamic placement
-        const popper = new Popper(elem, elem.nextElementSibling, {
+        const popper = new Popper(elem.parentElement, elem.nextElementSibling, {
             placement: placement,
         });
         data.popper(popper);
@@ -1470,15 +1487,50 @@ class PECalendar {
     }
 
     eventPopperDataEntry(event) {
+        //      case 'event':
+        //                         name = popperData.name;
+        //                         break;
+        //                     case 'allocation':
+        //                         name = popperData.organization_name;
+        //                         break;
+        //                     case 'booking':
+        //                         name = popperData.info_group.organization_name;
+        //                         break;
+        const fallback = {
+            id: event.id,
+            building_name: event.building_name,
+            participant_limit: 0,
+            info_ical_link: phpGWLink('bookingfrontend/', {
+                menuaction: 'bookingfrontend.uiparticipant.ical',
+                reservation_type: event.type,
+                reservation_id: event.id,
+            })
+        };
         switch (event.type) {
             case 'booking':
-                return this.popperData()?.bookings?.[event.id];
+                if (this.popperData()?.bookings?.[event.id]) {
+                    return this.popperData()?.bookings?.[event.id];
+                }
+                fallback.info_group = {}
+                fallback.info_group.organization_name = event.name
+                break;
             case 'event':
-                return this.popperData()?.events?.[event.id];
+
+                if (this.popperData()?.events?.[event.id]) {
+                    return this.popperData()?.events?.[event.id];
+                }
+                fallback.name = event.name
+
+                break;
+
             case 'allocation':
-                return this.popperData()?.allocations?.[event.id];
+                if (this.popperData()?.allocations?.[event.id]) {
+                    return this.popperData()?.allocations?.[event.id];
+                }
+                fallback.organization_name = event.name;
+                break;
         }
-        return undefined;
+        return fallback;
     }
 
     userCanEdit(event) {
@@ -1574,6 +1626,28 @@ class PECalendar {
         return (startDate >= firstDay && startDate <= lastDay) || (endDate >= firstDay && endDate <= lastDay);
     }
 
+    getEventName(event) {
+        let name = event.name;
+        if (!name) {
+            const popperData = this.eventPopperDataEntry(event);
+            if (popperData) {
+                switch (event.type) {
+                    case 'event':
+                        name = popperData.name;
+                        break;
+                    case 'allocation':
+                        name = popperData.organization_name;
+                        break;
+                    case 'booking':
+                        name = popperData.info_group.organization_name;
+                        break;
+                }
+            }
+        }
+
+        return name;
+    }
+
 
 }
 
@@ -1604,7 +1678,7 @@ if (globalThis['ko']) {
 
                         </div>
                         <!-- ko ifnot: hasTimeSlots() -->
-                        <a class="application-button link-button link-button-primary"
+                        <a class="pe-btn pe-btn-primary pe-btn-colour-primary link-text link-text-white d-flex gap-3 "
                            data-bind="attr: { href: applicationURL }">
                             <trans>bookingfrontend:application</trans>
                         </a>
@@ -1615,11 +1689,12 @@ if (globalThis['ko']) {
                         <div id="tempEventPills" class="pills"
                              data-bind="foreach: combinedTempEvents(), css: {'collapsed': !showAllTempEventPills()}">
                             <div class="pill pill--secondary">
-                                <div class="pill-date" data-bind="text: $parent.formatPillDateInterval($data)"></div>
+                                <div class="pill-label" data-bind="text: $parent.formatPillDateInterval($data)"></div>
                                 <div class="pill-divider"></div>
                                 <div class="pill-content"
                                      data-bind="text: $parent.formatPillTimeInterval($data)"></div>
-                                <button class="pill-icon" data-bind="click: $parent.removeTempEventPill">&#215;</button>
+                                <button class="pill-icon" data-bind="click: $parent.removeTempEventPill"><i
+                                        class="pill-cross"></i></button>
                             </div>
                         </div>
                         <button class="pe-btn  pe-btn--transparent text-secondary gap-3 show-more"
@@ -1737,7 +1812,7 @@ if (globalThis['ko']) {
                                  click: $data.heightREM() < 1 && $data.event.type !== 'temporary' && $parent.eventPopperDataEntry($data.event) ? (e,c) => $parent.togglePopper(e,c) : undefined
                             ">
                             <div class="event-text">
-                                <span class="event-title" data-bind="text: $data.event.name"></span>
+                                <span class="event-title" data-bind="text: $parent.getEventName($data.event)"></span>
                                 <!-- ko if: $data.event.resources -->
                                 <!--                                <div data-bind="text: $data.event.resources.filter(r => r.id).map(r => r.name).join(' / ')"></div>-->
                                 <!-- /ko -->
@@ -1764,30 +1839,21 @@ if (globalThis['ko']) {
                                  data-bind="click: (e,c) => $parent.togglePopper(e,c), with: $parent.eventPopperDataEntry($data.event), as: 'infoData'">
                                 <div class="info-inner">
                                     <!-- Display ID for all types -->
-                                    <div>
-                                        <b data-bind="text: '#' + infoData.id"></b>
-                                    </div>
-                                    <!-- Dynamically display Name or Organization Name based on type -->
-                                    <div>
-                                        <!-- ko if: $parent.event.type === 'booking' -->
-                                        <b data-bind="text: infoData.info_group.organization_name"></b>
-                                        <!-- /ko -->
-                                        <!-- ko if: $parent.event.type === 'event' -->
-                                        <b data-bind="text: infoData.name"></b>
-                                        <!-- /ko -->
-                                        <!-- ko if: $parent.event.type === 'allocation' -->
-                                        <b data-bind="text: infoData.organization_name"></b>
-                                        <!-- /ko -->
+                                    <div class="info-title mb-3">
+                                        <h3>
+                                            <span data-bind="text: $component.getEventName($parent.event)"></span>
+                                        </h3>
+                                        <span data-bind="text: '(#' + infoData.id +')'"></span>
                                     </div>
                                     <!-- Group (2018) and Group Name for bookings, Organizer for events, or Display nothing specific for allocations -->
                                     <!-- ko if: $parent.event.type === 'booking' -->
-                                    <div class="mb-3">
+                                    <div>
                                         <span class="text-bold"><trans>booking:group (2018)</trans>:</span>
                                         <a data-bind="attr: { href: infoData.group_link }, text: infoData.info_group.name"></a>
                                     </div>
                                     <!-- /ko -->
                                     <!-- ko if: $parent.event.type === 'event' -->
-                                    <div class="mb-3">
+                                    <div>
                                         <span class="text-bold"><trans>booking:organizer</trans>:</span>
                                         <span data-bind="text: infoData.organizer"></span>
                                     </div>
@@ -1801,7 +1867,10 @@ if (globalThis['ko']) {
                                     <div>
                                         <span class="text-bold"><trans>bookingfrontend:place</trans>:</span>
                                         <a data-bind="attr: { href: infoData.building_link }, text: infoData.building_name"></a>
-                                        (<span data-bind="text: infoData.info_resource_info"></span>)
+                                    </div>
+                                    <div>
+                                        <span class="text-bold"><trans>bookingfrontend:resources</trans>:</span>
+                                        <span data-bind="text: infoData.info_resource_info"></span>
                                     </div>
                                     <!-- Participant Limit (common for all types if applicable) -->
                                     <!-- ko if: infoData.info_participant_limit !== 0 -->
@@ -1811,15 +1880,18 @@ if (globalThis['ko']) {
                                     </div>
                                     <!-- /ko -->
                                     <!-- Actions (Register, Edit, Cancel, iCal, Add for allocation) -->
-                                    <div class="actions">
+                                    <div class="info-actions   mt-4">
+                                        <!-- ko if: infoData.info_show_link && infoData.info_participant_limit > 0 -->
+
                                         <a data-bind="attr: { href: $component.cleanUrl(infoData.info_show_link), target: '_blank' }, click: $component.clickBubbler, clickBubble: false"
-                                           class="btn btn-light mt-4">
+                                           class="pe-btn pe-btn-primary pe-btn--transparent link-text text-primary">
                                             <trans>booking:register participants</trans>
                                         </a>
+                                        <!-- /ko -->
                                         <!-- Edit Link -->
                                         <!-- ko if: infoData.info_edit_link && $component.userCanEdit($parent.event) -->
                                         <a data-bind="attr: { href: $component.cleanUrl(infoData.info_edit_link), target: '_blank' }, click: $component.clickBubbler, clickBubble: false"
-                                           class="btn btn-light mt-4">
+                                           class="pe-btn pe-btn-primary pe-btn--transparent link-text text-primary">
                                             <!-- Conditional text based on type -->
                                             <!-- ko if: $parent.event.type === 'booking' -->
                                             <trans>bookingfrontend:edit booking</trans>
@@ -1835,7 +1907,7 @@ if (globalThis['ko']) {
                                         <!-- Cancel Link -->
                                         <!-- ko if: $component.userCanEdit($parent.event) && infoData.info_cancel_link -->
                                         <a data-bind="attr: { href: $component.cleanUrl(infoData.info_cancel_link), target: '_blank' },click: $component.clickBubbler, clickBubble: false"
-                                           class="btn btn-light mt-4">
+                                           class="pe-btn pe-btn-primary pe-btn--transparent link-text text-primary">
                                             <!-- Conditional text based on type -->
                                             <!-- ko if: $parent.event.type === 'booking' -->
                                             <trans>bookingfrontend:cancel booking</trans>
@@ -1851,7 +1923,7 @@ if (globalThis['ko']) {
                                         <!-- iCal Link -->
                                         <!-- ko if: infoData.info_ical_link -->
                                         <a data-bind="attr: { href: $component.cleanUrl(infoData.info_ical_link), target: '_blank' }, text: 'iCal',click: $component.clickBubbler, clickBubble: false"
-                                           class="btn btn-light mt-4"></a>
+                                           class="pe-btn pe-btn-primary pe-btn--transparent link-text text-primary" ></a>
                                         <!-- /ko -->
                                         <!-- Additional Actions for Allocations -->
                                         <!-- ko if: $parent.event.type === 'allocation' -->

@@ -73,9 +73,7 @@ a {
       color: $purple;
       &:hover {
         color: $blue;
-
       }
-
     }
 
     &-secondary {
@@ -84,6 +82,9 @@ a {
         color: $purple;
 
       }
+    }
+    &-white {
+      color: $white;
     }
 
   }

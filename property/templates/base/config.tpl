@@ -78,6 +78,10 @@
 				<td><input name="newsettings[alternative_to_contract_3]" value="{value_alternative_to_contract_3}" class="pure-u-1"/></td>
 			</tr>
 			<tr>
+				<td>{lang_alternative_to_contract} 4:</td>
+				<td><input name="newsettings[alternative_to_contract_4]" value="{value_alternative_to_contract_4}" class="pure-u-1"/></td>
+			</tr>
+			<tr>
 				<td>{lang_dimb_responsible_1}:</td>
 				<td>
 					<select name="newsettings[dimb_responsible_1]" class="pure-u-1">

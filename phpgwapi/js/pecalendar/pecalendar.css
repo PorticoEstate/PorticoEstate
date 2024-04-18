@@ -977,6 +977,42 @@ h4, .h4 {
   }
 }
 
+.box-shadow {
+  box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15);
+}
+.box-shadow--large {
+  box-shadow: 3px 3px 50px 0px rgba(0, 0, 0, 0.1);
+}
+
+.divider {
+  height: 1px;
+  border-color: rgba(40, 53, 139, 0.2);
+}
+.divider-primary {
+  border-color: rgba(121, 60, 138, 0.2);
+}
+
+.rounded-mini {
+  border-radius: 0.5rem;
+}
+.rounded-small {
+  border-radius: 1rem;
+}
+.rounded-medium {
+  border-radius: 2rem;
+}
+.rounded-medium-bottom {
+  border-bottom-left-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+}
+.rounded-large {
+  border-radius: 3.125rem;
+}
+.rounded-large-bottom {
+  border-bottom-left-radius: 3.125rem;
+  border-bottom-right-radius: 3.125rem;
+}
+
 :root {
   --day-width: 1fr;
   --time-width: 3em;
@@ -1086,8 +1122,6 @@ h4, .h4 {
     min-height: 2.75rem;
     overflow-y: hidden;
     flex-wrap: wrap;
-    border-top-right-radius: 50px;
-    border-bottom-right-radius: 50px;
     display: flex;
     flex-direction: row;
     gap: 0.275rem;
@@ -1116,7 +1150,7 @@ h4, .h4 {
 }
 .calendar .header .select_building_resource .application-button {
   max-width: 9rem;
-  max-height: 2.75rem;
+  max-height: 3rem;
 }
 @media screen and (max-width: 840px) {
   .calendar .header .select_building_resource .application-button {
@@ -1466,23 +1500,35 @@ h4, .h4 {
   color: white;
 }
 .calendar .calendar-body .info {
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #793C8A;
+  background-color: #F5F5F5;
+  min-height: 100px;
+  min-width: 100px;
   display: none;
   z-index: 12;
 }
 .calendar .calendar-body .info .info-inner {
-  background: #FFF;
-  padding: 4px 8px;
-  border-radius: 5px;
-  border: 1px solid #000;
-  min-height: 100px;
-  z-index: 12;
-  width: max-content;
   cursor: pointer;
-  font-size: 1rem;
-  position: relative;
+  width: max-content;
+}
+.calendar .calendar-body .info .info-inner .info-title {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+}
+.calendar .calendar-body .info .info-inner .info-title h3 {
+  margin: 0;
+}
+.calendar .calendar-body .info .info-inner .info-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 .calendar .calendar-body .info[data-show] {
-  display: block;
+  display: flex;
 }
 .calendar .event-filter {
   filter: invert(16%) sepia(22%) saturate(6235%) hue-rotate(219deg) brightness(105%) contrast(91%);
