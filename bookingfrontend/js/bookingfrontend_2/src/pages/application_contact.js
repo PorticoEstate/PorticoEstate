@@ -110,7 +110,11 @@ function check_payment_status()
 
 class ApplicationModel {
 	constructor() {
-		this.typeApplicationRadio = ko.observable();
+		this.isFormVisible = ko.observable(true); // Initially visible, toggle as needed
+
+
+		const defaultTypeApplication = document.getElementById('customer_identifier_type_hidden_field').value;
+		this.typeApplicationRadio = ko.observable(defaultTypeApplication || 'ssn');
 		this.applicationCartItems = ko.computed(() => {
 			console.log(ApplicationCart.applicationCartItems())
 			return ApplicationCart.applicationCartItems()
@@ -120,10 +124,10 @@ class ApplicationModel {
 				window.location.href = phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uisearch.index'}, false);
 			}
 		});
+		this.typeApplicationRadio.subscribe((v) => console.log(v))
 		this.typeApplicationSelected = ko.computed(() => this.typeApplicationRadio() !== "undefined" && this.typeApplicationRadio() !== null);
 		this.typeApplicationValidationMessage = ko.observable(false);
 		this.applicationSuccess = ko.observable(false);
-		this.isFormVisible = ko.observable(true); // Initially visible, toggle as needed
 
 	}
 
@@ -139,27 +143,7 @@ $(document).ready(function ()
 {
 	var am = new ApplicationModel();
 	ko.applyBindings(am, document.getElementById("new-application-partialtwo"));
-	am.typeApplicationRadio($("#customer_identifier_type_hidden_field").val());
 	ApplicationCart.visible(false);
-
-	$("input[name='customer_identifier_type']").change(function ()
-	{
-		var selected = $(this).val();
-
-		if (selected === "organization_number")
-		{
-			$("#customer_organization_number").prop('required', true);
-			$("input[name='customer_organization_number_fallback']").prop('required', true);
-			$("input[name='customer_organization_name']").prop('required', true);
-		}
-		else if (selected === "ssn")
-		{
-			$("#customer_organization_number").prop('required', false);
-			$("input[name='customer_organization_number_fallback']").prop('required', false);
-			$("input[name='customer_organization_name']").prop('required', false);
-		}
-		$('#btnSubmitGroup').hide();
-	});
 
 	var oArgs = {menuaction: 'bookingfrontend.uiorganization.get_organization_list'};
 	var strURL = phpGWLink('bookingfrontend/', oArgs, true);
@@ -207,7 +191,6 @@ $(document).ready(function ()
 
 		$("input[name='customer_organization_number_fallback']").val(data['organization_number']);
 		$("input[name='customer_organization_name']").val(data['name']);
-		$('#btnSubmitGroup').hide();
 
 	});
 
@@ -218,7 +201,6 @@ $(document).ready(function ()
 		$("input[name='customer_organization_name']").prop('readonly', true);
 		$("input[name='customer_organization_name']").val('');
 		$("#customer_organization_number").prop('required', true);
-		$('#btnSubmitGroup').hide();
 	});
 
 	check_payment_status();
@@ -250,7 +232,6 @@ $(document).ready(function ()
 					if (data.status !== "saved")
 					{
 						alert(data.message);
-						$("#btnSubmitGroup").hide();
 						window.location.reload();
 					}
 					else
@@ -278,7 +259,6 @@ $(document).ready(function ()
 							$("#field_responsible_city").val(data.contact_info.responsible_city);
 						}
 
-						$("#btnSubmitGroup").show();
 					}
 					var element = document.getElementById('spinner');
 					if (element)
@@ -298,10 +278,6 @@ $(document).ready(function ()
 			{
 				update_contact_informtation();
 			}
-			else
-			{
-				$("#btnSubmitGroup").hide();
-			}
 		});
 
 		$("#btnSubmit").on("click", function (e)
@@ -309,6 +285,7 @@ $(document).ready(function ()
 			var validated = validate_form(e);
 			if (validated)
 			{
+				update_contact_informtation();
 				$("#application_form").submit();
 			}
 		});
@@ -329,7 +306,6 @@ function add_new_organization()
 	$("input[name='customer_organization_number_fallback']").focus();
 	$("#customer_organization_number").prop('required', false);
 	$("#customer_organization_number").val(null).trigger('change');
-	$('#btnSubmitGroup').hide();
 
 }
 
@@ -339,6 +315,13 @@ function validate_form(e)
 	var error = false;
 	var form = $("#application_form")[0];
 	var isValid = form.checkValidity();
+	if (!isValid) {
+		var list = form.querySelectorAll(':invalid');
+		for (var item of list) {
+			console.log(item);
+			item.setAttribute("style", "background-color: red;")
+		}
+	}
 	if (!isValid)
 	{
 		error = true;

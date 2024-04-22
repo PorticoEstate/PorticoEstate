@@ -615,3 +615,5 @@ hours	bookingfrontend	no	Timer
 total	bookingfrontend	no	Total
 minute	bookingfrontend	no	Minutt
 days	bookingfrontend	no	Dager
+continue	bookingfrontend	no	Fortsett
+billing	bookingfrontend	no	Fakturering
