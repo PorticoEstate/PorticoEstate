@@ -371,6 +371,10 @@
 				{
 					$contract_list[] = array('id' => -3, 'name' => $config['alternative_to_contract_3']);
 				}
+				if (!empty($config['alternative_to_contract_4']))
+				{
+					$contract_list[] = array('id' => -4, 'name' => $config['alternative_to_contract_4']);
+				}
 			}
 
 			if ($selected)
