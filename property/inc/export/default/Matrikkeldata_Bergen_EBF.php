@@ -237,6 +237,24 @@
 
 				$building['maalepkunkt_id'] = implode(', ', $maalepunkter);
 
+
+				//sprinkling:
+
+				$sprinkler_lokasjoner = array();
+
+				$sql = "SELECT DISTINCT location_code FROM fm_bim_item "
+					. " WHERE fm_bim_item.location_id = 35" // sprinkling
+					. " AND fm_bim_item.location_code like '{$building['objekt']}%'";
+
+				$db->query($sql, __LINE__, __FILE__);
+
+				while ($db->next_record())
+				{
+					$sprinkler_lokasjoner[] = $db->f('location_code');
+				}
+
+				$building['sprinkler'] = implode(', ', $sprinkler_lokasjoner);
+
 			}
 
 			return $buildings;
