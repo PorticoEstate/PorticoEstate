@@ -1403,4 +1403,19 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_multi_domain' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '200', 'nullable' => false),
+				'webservicehost' => array('type' => 'text', 'nullable' => true),
+				'user_id' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array(),
+		),
+
 	);
