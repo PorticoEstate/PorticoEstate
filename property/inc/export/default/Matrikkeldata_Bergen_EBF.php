@@ -216,7 +216,7 @@
 					$location_codes[] = $db->f('loc1') . '-' .$db->f('loc2') . '-' . $db->f('loc3')  ;
 				}
 
-				$building['lokation_code'] = implode(', ', $location_codes);
+				$building['innganger'] = count($location_codes);
 
 				$maalepunkter = array();
 //				foreach ($location_codes as $location_code)
