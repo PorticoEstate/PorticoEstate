@@ -87,6 +87,23 @@ var Util = function ()
 }();
 
 
+export function phpGWLink(strURL, oArgs = {}, bAsJSON = false) {
+    var arURLParts = strBaseURL.split('?');
+    var strNewURL = arURLParts[0] + strURL + '?';
+
+    Object.entries(oArgs).forEach(([key, value]) => {
+        strNewURL += `${encodeURIComponent(key)}=${encodeURIComponent(value)}&`;
+    });
+
+    if (bAsJSON) {
+        strNewURL += 'phpgw_return_as=json&';
+    }
+
+    return strNewURL.slice(0, -1); // Remove the last '&' for cleanliness
+}
+
+
+
 $(document).ready(function () {
     $("input[type=radio][name=select_template]").change(function () {
         var template = $(this).val();
@@ -130,3 +147,12 @@ $(document).ready(function () {
     });
 });
 
+export function onDocumentReady(fn) {
+    // see if DOM is already available
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+        // call on next available tick
+        setTimeout(fn, 1);
+    } else {
+        document.addEventListener("DOMContentLoaded", fn);
+    }
+}

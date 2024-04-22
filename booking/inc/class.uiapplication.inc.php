@@ -1175,16 +1175,16 @@
 				{
 					if ($is_partial1)
 					{
-						phpgwapi_cache::message_set(
-							lang("Complete application text booking") .
-							'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
-							lang("Complete applications") .
-							'</button><button onclick="window.location.href = phpGWLink(\'bookingfrontend/\', {})" class="ml-2 btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
-							lang("new application") .
-							'</button>'
-						);
+//						phpgwapi_cache::message_set(
+//							lang("Complete application text booking") .
+//							'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
+//							lang("Complete applications") .
+//							'</button><button onclick="window.location.href = phpGWLink(\'bookingfrontend/\', {})" class="ml-2 btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
+//							lang("new application") .
+//							'</button>'
+//						);
 						// Redirect to same URL so as to present a new, empty form
-						self::redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple, 'resource_id' => $resource_id));
+						self::redirect(array('menuaction' => $this->url_prefix . '.add_contact',  'id' => $resource_id, 'building_id' => $building_id));
 					}
 					else
 					{
@@ -1324,15 +1324,15 @@
 						}
 						else
 						{
-							phpgwapi_cache::message_set(
-								lang("Complete application text booking") .
-								'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
-								lang("Complete applications") .
-								'</button><button onclick="window.location.href = phpGWLink(\'bookingfrontend/\', {})" class="ml-2 btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
-								lang("new application") .
-								'</button>'
-							);
-							self::redirect(array('menuaction' => $this->url_prefix . '.add', 'building_id' => $building_id, 'simple' => $simple));
+//							phpgwapi_cache::message_set(
+//								lang("Complete application text booking") .
+//								'<br/><button onclick="GoToApplicationPartialTwo()" class="btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
+//								lang("Complete applications") .
+//								'</button><button onclick="window.location.href = phpGWLink(\'bookingfrontend/\', {})" class="ml-2 btn btn-light mt-4" data-bind="visible: applicationCartItems().length > 0">' .
+//								lang("new application") .
+//								'</button>'
+//							);
+							self::redirect(array('menuaction' => $this->url_prefix . '.add_contact',  'id' => $resource_id, 'building_id' => $building_id));
 						}
 					}
 					else
@@ -3546,9 +3546,9 @@ JS;
 
 		function delete_partial()
 		{
-			$status = array('deleted' => false);
-			$id = phpgw::get_var('id', 'int', 'POST');
-			$session_id = $GLOBALS['phpgw']->session->get_session_id();
+            $id = phpgw::get_var('id', 'int', 'POST');
+            $status = array('deleted' => false, 'id' => $id);
+            $session_id = $GLOBALS['phpgw']->session->get_session_id();
 			if (!empty($session_id) && $id > 0)
 			{
 				$partials = $this->get_partials($session_id);
