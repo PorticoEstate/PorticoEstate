@@ -2222,7 +2222,7 @@
 							}
 						}
 						/**
-						 * End Direct booking
+						 * End Direct booking, check for collision
 						 */
 						else
 						{

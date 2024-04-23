@@ -1219,13 +1219,13 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'parent_id' => array('type' => 'int', 'nullable' => true, 'precision' => '4'),
-				'status' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
+				'status' => array('type' => 'int', 'nullable' => false, 'precision' => '4', 'default' => 1),
 				'application_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'customer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'timestamp' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
+				'timestamp' => array('type' => 'timestamp', 'nullable' => false, 'default' => 'current_timestamp'),
 				'cancelled' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
-				'reservation_type' => array('type' => 'varchar', 'precision' => '70', 'nullable' => False),
-				'reservation_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'reservation_type' => array('type' => 'varchar', 'precision' => '70', 'nullable' => true),
+				'reservation_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -1403,4 +1403,19 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_multi_domain' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '200', 'nullable' => false),
+				'webservicehost' => array('type' => 'text', 'nullable' => true),
+				'user_id' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array(),
+		),
+
 	);

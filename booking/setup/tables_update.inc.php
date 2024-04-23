@@ -6876,3 +6876,62 @@ SQL;
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+
+	/**
+	 * Update booking version from 0.2.101 to 0.2.102
+	 *
+	 */
+	$test[] = '0.2.101';
+
+	function booking_upgrade0_2_101()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_multi_domain', array(
+			'fd' => array(
+				'id'			 => array('type' => 'auto', 'nullable' => false),
+				'name'			 => array('type' => 'varchar', 'precision' => '200', 'nullable' => false),
+				'webservicehost' => array('type' => 'text', 'nullable' => true),
+				'user_id'		 => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'entry_date'	 => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'modified_date'	 => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array(),
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.102';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
+	/**
+	 * Update booking version from 0.2.102 to 0.2.103
+	 *
+	 */
+	$test[] = '0.2.102';
+
+	function booking_upgrade0_2_102()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_purchase_order', 'reservation_type',
+			array('type' => 'varchar', 'precision' => '70', 'nullable' => true)
+			);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_purchase_order', 'reservation_id',
+			array('type' => 'int', 'precision' => '4', 'nullable' => true)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.103';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
