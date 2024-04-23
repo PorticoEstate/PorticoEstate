@@ -6911,3 +6911,27 @@ SQL;
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.102 to 0.2.103
+	 *
+	 */
+	$test[] = '0.2.102';
+
+	function booking_upgrade0_2_102()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_purchase_order', 'reservation_type',
+			array('type' => 'varchar', 'precision' => '70', 'nullable' => true)
+			);
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('bb_purchase_order', 'reservation_id',
+			array('type' => 'int', 'precision' => '4', 'nullable' => true)
+			);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.103';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
