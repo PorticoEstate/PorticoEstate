@@ -368,11 +368,22 @@
                     case 'POST':
                         // Try to get the value from $_POST first
                         $value = $_POST[$var_name] ?? null;
-                        // If null and expecting JSON, decode JSON from raw input
-                        if (is_null($value) && $value_type === 'json') {
-                            $json_input = file_get_contents('php://input');
-                            $data = json_decode($json_input, true);
-                            $value = $data[$var_name] ?? null;
+                        // If null, attempt to decode JSON from raw input
+                        if (is_null($value)) {
+                            // Verify Content-Type header
+                            if (isset($_SERVER['CONTENT_TYPE']) && $_SERVER['CONTENT_TYPE'] === 'application/json') {
+                                $json_input = file_get_contents('php://input');
+                                $data = json_decode($json_input, true);
+
+                                // Validate and sanitize JSON data (implement your validation logic here)
+                                if (is_array($data) && isset($data[$var_name])) {
+                                    $value = self::clean_value($data[$var_name], 'string', $default);
+                                } else {
+                                    // Handle error - invalid JSON or missing key
+                                }
+                            } else {
+                                // Handle error - unexpected Content-Type
+                            }
                         }
                         break;
 
