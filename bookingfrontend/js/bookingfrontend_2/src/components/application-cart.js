@@ -15,7 +15,7 @@ class ApplicationsCartModel {
     deleteItem(item) {
         console.log("got delete request")
         const requestUrl = phpGWLink('bookingfrontend/', {menuaction: "bookingfrontend.uiapplication.delete_partial"}, true);
-        if (confirm('Do you want to delete this application?')) {ß
+        if (confirm('Do you want to delete this application?')) {
             fetch(requestUrl, {
                 method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({id: item.id})
             })
