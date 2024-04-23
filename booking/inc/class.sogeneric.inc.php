@@ -294,7 +294,7 @@
 						'name'			 => $GLOBALS['phpgw']->translation->translate('multi domain', array(), false, 'booking'),
 						'acl_app'		 => 'booking',
 						'acl_location'	 => '.admin',
-						'menu_selection' => 'bookingfrontend::admin::multi_domain',
+						'menu_selection' => 'admin::bookingfrontend::multi_domain',
 						'default'			 => array(
 							'user_id'		 => array('add' => '$this->account'),
 							'entry_date'	 => array('add' => 'time()'),
