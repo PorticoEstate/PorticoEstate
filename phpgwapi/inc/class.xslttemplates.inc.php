@@ -391,7 +391,7 @@ XSLT;
 
 			$xml = new DOMDocument;
 
-			$this->xmldata = preg_replace('/[\x00-\x1F\x7F]/', '', $this->xmldata); // remove unsupported characters
+			$this->xmldata = mb_ereg_replace('[\x00-\x09\x0B-\x0C\x0E-\x1F\x7F]', '', $this->xmldata); // remove unsupported characters but keep line breaks
 
 			$xml->loadXML($this->xmldata);
 

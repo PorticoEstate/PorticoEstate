@@ -6,6 +6,7 @@
 		function get_menu()
 		{
 			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'bookingfrontend';
 
 			$menus = array();
@@ -14,17 +15,22 @@
 			{
 				$menus['admin'] = array
 					(
-					'index' => array
+					'index'			=> array
 						(
 						'text' => lang('Configuration'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
-							'appname' => 'bookingfrontend'))
+						'url'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
+							'appname'	 => 'bookingfrontend'))
 					),
-					'metasettings' => array
+					'metasettings'	=> array
 						(
 						'text' => lang('Metadata'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uimetasettings.index',
-							'appname' => 'booking'))
+						'url'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uimetasettings.index',
+							'appname'	 => 'booking'))
+					),
+					'multi_domain' => array(
+						'text' => $GLOBALS['phpgw']->translation->translate('multi domain', array(), false, 'booking'),
+						'url'  => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uigeneric.index',
+							'type'		 => 'multi_domain')),
 					),
 				);
 			}

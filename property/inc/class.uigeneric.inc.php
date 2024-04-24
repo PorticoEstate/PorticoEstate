@@ -386,11 +386,10 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
 			$appname										 = $this->location_info['name'];
-			$function_msg									 = lang('list %1', $appname);
-			$GLOBALS['phpgw_info']['flags']['app_header']	 = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}::{$function_msg}";
+			$GLOBALS['phpgw_info']['flags']['app_header']	 = $GLOBALS['phpgw']->translation->translate($this->location_info['acl_app'], array(), false, $this->location_info['acl_app']) . "::{$appname}";
 
 			$data = array(
-				'datatable_name' => $appname . ': ' . $function_msg,
+				'datatable_name' => $appname,
 				'form'			 => array(
 					'toolbar' => array(
 						'item' => array(

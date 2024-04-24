@@ -273,6 +273,36 @@
 						'menu_selection' => 'booking::commerce::article_group'
 					);
 					break;
+				case 'multi_domain':
+					$info	 = array(
+						'table'			 => 'bb_multi_domain',
+						'id'				 => array('name' => 'id', 'type' => 'auto'),
+						'fields'		 => array(
+							array(
+								'name'	 => 'name',
+								'descr'	 => lang('name'),
+								'type'	 => 'varchar'
+							),
+							array(
+								'name'	 => 'webservicehost',
+								'descr'	 => 'WebServiceHost',
+								'type'	 => 'varchar'
+							),
+						),
+						'edit_msg'		 => lang('edit'),
+						'add_msg'		 => lang('add'),
+						'name'			 => $GLOBALS['phpgw']->translation->translate('multi domain', array(), false, 'booking'),
+						'acl_app'		 => 'booking',
+						'acl_location'	 => '.admin',
+						'menu_selection' => 'admin::bookingfrontend::multi_domain',
+						'default'			 => array(
+							'user_id'		 => array('add' => '$this->account'),
+							'entry_date'	 => array('add' => 'time()'),
+							'modified_date'	 => array('edit' => 'time()'),
+						),
+						'check_grant'		 => false
+					);
+					break;
 
 // END BOOKING TABLES
 				default:

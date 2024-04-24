@@ -932,3 +932,4 @@ differentiate org payer	booking	nn	Differensier mellom organisasjon og betaler
 article group	booking	nn	Artikkelgruppe
 buffer deadline	booking	nn	Buffer/frist
 skip bas	booking	nn	Ikkje trigge SD-anlegg
+multi domain	booking	nn	Støtte for kryss-instans

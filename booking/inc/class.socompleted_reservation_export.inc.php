@@ -2137,6 +2137,10 @@
 				$type = $reservation['customer_type'];
 
 				$log_customer_name = '';
+				$organization_number =  '';
+				$customer_number =  '';
+				$payer_organization_number = '';
+
 				if (!empty($reservation['organization_id']))
 				{
 					$org = $this->organization_bo->read_single($reservation['organization_id']);

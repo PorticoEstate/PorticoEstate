@@ -171,7 +171,7 @@
 		{
 			$db = & $GLOBALS['phpgw']->db;
 
-			$sql = "SELECT DISTINCT bygningsnr,fm_location1.loc1 as objekt, loc1_name as navn, fm_owner_category.descr as eiertype, sum(boareal) as leieareal
+			$sql = "SELECT DISTINCT bygningsnr,fm_location1.loc1 as objekt, loc1_name as navn, fm_owner_category.descr as eiertype, sum(boareal) as leieareal, sameie_andeler
 			FROM fm_location4
 			JOIN fm_location1 on fm_location4.loc1 = fm_location1.loc1
 			JOIN fm_owner ON fm_owner.id = fm_location1.owner_id
@@ -180,7 +180,7 @@
 			WHERE fm_location4.category != 99
 			AND bygningsnr IS NOT NULL
 			--AND bygningsnr = 300383295
-			GROUP BY bygningsnr, objekt, navn, eiertype
+			GROUP BY bygningsnr, objekt, navn, eiertype, sameie_andeler
             ORDER BY bygningsnr";
 
 			$db->query($sql, __LINE__, __FILE__);
@@ -216,7 +216,7 @@
 					$location_codes[] = $db->f('loc1') . '-' .$db->f('loc2') . '-' . $db->f('loc3')  ;
 				}
 
-				$building['lokation_code'] = implode(', ', $location_codes);
+				$building['innganger'] = count($location_codes);
 
 				$maalepunkter = array();
 //				foreach ($location_codes as $location_code)
@@ -236,6 +236,24 @@
 				}
 
 				$building['maalepkunkt_id'] = implode(', ', $maalepunkter);
+
+
+				//sprinkling:
+
+				$sprinkler_lokasjoner = array();
+
+				$sql = "SELECT DISTINCT location_code FROM fm_bim_item "
+					. " WHERE fm_bim_item.location_id = 35" // sprinkling
+					. " AND fm_bim_item.location_code like '{$building['objekt']}%'";
+
+				$db->query($sql, __LINE__, __FILE__);
+
+				while ($db->next_record())
+				{
+					$sprinkler_lokasjoner[] = $db->f('location_code');
+				}
+
+				$building['sprinkler'] = implode(', ', $sprinkler_lokasjoner);
 
 			}
 
