@@ -29,6 +29,8 @@ edit permission	booking	en	Edit permission
 admin 1	booking	en	Admin 1
 admin 2	booking	en	Admin 2
 admins	booking	en	Admins
+tax	booking	en	Tax
+sum	booking	en	Sum
 age group	booking	en	Age group
 agegroup	booking	en	Agegroup
 allocation	booking	en	Allocation
@@ -406,9 +408,9 @@ Add Resource	booking	en	Add resource
 %1 e-mails were sent successfully	booking	en	%1 e-mails were sent successfully
 %1 e-mails were not sent successfully	booking	en	%1 e-mails were not sent successfully
 activity_id	booking	en	Activity_id
-contact_email	booking	en	Contact_email
-contact_name	booking	en	Contact_name
-contact_phone	booking	en	Contact_phone
+contact_email	booking	en	Contact email
+contact_name	booking	en	Contact name
+contact_phone	booking	en	Contact phone
 customer_identifier_type	booking	en	Customer_identifier_type
 Or	booking	en	Or
 group_id	booking	en	Group_id
@@ -770,9 +772,9 @@ Resource (2018)	booking	en	Resource (2018)
 Resource categories	booking	en	Resource categories
 Resource category	booking	en	Resource category
 Resources (2018)	booking	en	Resources (2018)
-responsible_city	booking	en	Responsible_city
-responsible_street	booking	en	Responsible_street
-responsible_zip_code	booking	en	Responsible_zip_code
+responsible_city	booking	en	Responsible city
+responsible_street	booking	en	Responsible street
+responsible_zip_code	booking	en	Responsible zip code
 Select a date and time	booking	en	Select a date and time
 Select a target audience	booking	en	Select a target audience
 Selected date and time	booking	en	Selected date and time

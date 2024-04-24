@@ -344,81 +344,76 @@
 			return $this->translation->translate("$key", $vars);
 		}
 
-		/**
-		* Get the value of a variable
-		*
-		* @param string $var_name the name of the variable sought
-		* @param string $value_type the expected data type
-		* @param string $var_type the variable type sought
-		* @param mixed $default the default value
-		* @return mixed the sanitised variable requested
-		*/
-		public static function get_var($var_name, $value_type = 'string', $var_type = 'REQUEST', $default = null)
-		{
-				$value = null;
-				switch ( strtoupper($var_type) )
-				{
-					case 'COOKIE':
-						if ( isset($_COOKIE[$var_name]) )
-						{
-							$value = $_COOKIE[$var_name];
-						}
-						break;
+            /**
+            * Get the value of a variable
+            *
+            * @param string $var_name the name of the variable sought
+            * @param string $value_type the expected data type
+            * @param string $var_type the variable type sought
+            * @param mixed $default the default value
+            * @return mixed the sanitised variable requested
+            */
+            public static function get_var($var_name, $value_type = 'string', $var_type = 'REQUEST', $default = null)
+            {
+                $value = null;
+                switch (strtoupper($var_type)) {
+                    case 'COOKIE':
+                        $value = $_COOKIE[$var_name] ?? null;
+                        break;
 
-					case 'GET':
-						if ( isset($_GET[$var_name]) )
-						{
-							$value = $_GET[$var_name];
-						}
-						break;
+                    case 'GET':
+                        $value = $_GET[$var_name] ?? null;
+                        break;
 
-					case 'POST':
+                    case 'POST':
+                        // Try to get the value from $_POST first
+                        $value = $_POST[$var_name] ?? null;
+                        // If null, attempt to decode JSON from raw input
+                        if (is_null($value)) {
+                            // Verify Content-Type header
+                            if (isset($_SERVER['CONTENT_TYPE']) && $_SERVER['CONTENT_TYPE'] === 'application/json') {
+                                $json_input = file_get_contents('php://input');
+                                $data = json_decode($json_input, true);
 
-						if ( isset($_POST[$var_name]) )
-						{
-							$value = $_POST[$var_name];
-						}
-						break;
+                                // Validate and sanitize JSON data (implement your validation logic here)
+                                if (is_array($data) && isset($data[$var_name])) {
+                                    $value = self::clean_value($data[$var_name], 'string', $default);
+                                } else {
+                                    // Handle error - invalid JSON or missing key
+                                }
+                            } else {
+                                // Handle error - unexpected Content-Type
+                            }
+                        }
+                        break;
 
-					case 'SERVER':
-						if ( isset($_SERVER[$var_name]) )
-						{
-							$value = $_SERVER[$var_name];
-						}
-						break;
+                    case 'SERVER':
+                        $value = $_SERVER[$var_name] ?? null;
+                        break;
 
-					case 'SESSION':
-						if ( isset($_SESSION[$var_name]) )
-						{
-							$value = $_SESSION[$var_name];
-						}
-						break;
+                    case 'SESSION':
+                        $value = $_SESSION[$var_name] ?? null;
+                        break;
 
-					case 'REQUEST':
-					default:
-						if ( isset($_REQUEST[$var_name]) )
-						{
-							$value = $_REQUEST[$var_name];
-						}
-				}
+                    case 'REQUEST':
+                    default:
+                        $value = $_REQUEST[$var_name] ?? null;
+                        break;
+                }
 
-				if ( is_null($value) && is_null($default) )
-				{
-						return null;
-				}
-				else if ( $value !== 0 && ((is_null($value) || !$value) && !is_null($default) ))
-				{
-						return $default;
-				}
+                // Return default if value is null or false and default is provided
+                if (is_null($value) && !is_null($default)) {
+                    return $default;
+                }
 
-				if($value_type === 'json')
-				{
-					return json_encode(self::clean_value($value, 'string', $default));
-				}
+                // Return encoded JSON if requested
+                if ($value_type === 'json') {
+                    return json_encode(self::clean_value($value, 'string', $default));
+                }
 
-				return self::clean_value($value, $value_type, $default);
-			}
-
+                // Clean and return the value
+                return self::clean_value($value, $value_type, $default);
+            }
 			public static function get_ip_address() {
 				$ip_keys = array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR');
 				foreach ($ip_keys as $key)
