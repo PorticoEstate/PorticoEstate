@@ -1823,19 +1823,16 @@ HTML;
 
 				$value_set['ticket'] = $target;
 
-				if (!$value_set['tenant_id'])
-				{
-					$receipt['error'][] = array('msg' => lang('tenant is not defined, claim not issued'));
-				}
-				else
-				{
-					$receipt_claim		 = $boclaim->save($value_set);
-					unset($receipt_claim['id']);
-					$receipt['error']	 = array_merge((array)$receipt['error'], (array)$receipt_claim['error']);
-					$receipt['message']	 = array_merge((array)$receipt['message'], (array)$receipt_claim['message']);
-				}
+				$receipt_claim		 = $boclaim->save($value_set);
+				unset($receipt_claim['id']);
+				$receipt['error']	 = array_merge((array)$receipt['error'], (array)$receipt_claim['error']);
+				$receipt['message']	 = array_merge((array)$receipt['message'], (array)$receipt_claim['message']);
+				
 			}
-
+			else if (!empty($data['charge_tenant']) && empty($data['tenant_id']))
+			{
+				phpgwapi_cache::message_set(lang('tenant is not defined, claim not issued'),	'error');
+			}
 
 			return $receipt;
 		}
