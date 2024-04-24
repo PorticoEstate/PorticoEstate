@@ -2121,6 +2121,7 @@
 
 						$direct_booking = false;
 						$check_direct_booking = 0;
+						$collision_dates = array();
 
 						$from_dates = array();
 						foreach ($application['dates'] as $date)
@@ -2140,7 +2141,6 @@
 						}
 						if($resources['results'] && count($resources['results']) == $check_direct_booking)
 						{
-							$collision_dates = array();
 							foreach ($application['dates'] as &$date)
 							{
 								$collision = $this->bo->so->check_collision($application['resources'], $date['from_'], $date['to_'], $session_id);
@@ -2224,6 +2224,13 @@
 						/**
 						 * End Direct booking, check for collision
 						 */
+						else if($collision_dates)
+						{
+							phpgwapi_cache::message_set('Det er desverre opptatt', 'error');
+							$GLOBALS['phpgw']->db->transaction_abort();
+							$this->delete_partial($application['id']);
+							self::redirect(array());
+						}
 						else
 						{
 							$application['status'] = 'NEW';
@@ -3544,10 +3551,13 @@ JS;
 			return $ret;
 		}
 
-		function delete_partial()
+		function delete_partial($id = 0)
 		{
 			$status = array('deleted' => false);
-			$id = phpgw::get_var('id', 'int', 'POST');
+			if(!$id)
+			{
+				$id = phpgw::get_var('id', 'int', 'POST');
+			}
 			$session_id = $GLOBALS['phpgw']->session->get_session_id();
 			if (!empty($session_id) && $id > 0)
 			{
