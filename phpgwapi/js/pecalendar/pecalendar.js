@@ -196,9 +196,12 @@ class PECalendar {
     dragEnd = ko.observable(null);
     tempEvent = ko.observable(null);
 
-    constructor({building_id, resource_id = null, dateString = null, disableResourceSwap = false}) {
-        luxon.Settings.defaultLocale = getCookie("selected_lang") || 'no';
 
+    instance = undefined;
+
+    constructor({building_id, resource_id = null, dateString = null, disableResourceSwap = false, instance = undefined}) {
+        luxon.Settings.defaultLocale = getCookie("selected_lang") || 'no';
+        this.instance = instance;
 
         // Initialize the date of the instance
         if (dateString) {
@@ -330,7 +333,7 @@ class PECalendar {
             delete reqParams.dates;
         }
 
-        let url = phpGWLink('bookingfrontend/', reqParams, false);
+        let url = phpGWLink('bookingfrontend/', reqParams, false, this.instance);
 
         if (resource.simple_booking === 1) {
             // dateRanges = this.selectedTimeSlots().map(selected => {
@@ -343,7 +346,7 @@ class PECalendar {
                 resource_id: this.resource_id(),
                 simple: true,
                 dates: dateRanges
-            }, false);
+            }, false, this.instance);
         }
 
         return url;
@@ -370,14 +373,14 @@ class PECalendar {
                 menuaction: 'bookingfrontend.uibooking.building_schedule_pe',
                 building_id: this.building_id(),
                 dates_csv: weeksToFetch
-            }, true);
+            }, true, this.instance);
 
             let urlFreeTime = phpGWLink('bookingfrontend/', {
                 menuaction: 'bookingfrontend.uibooking.get_freetime',
                 building_id: this.building_id(),
                 start_date: currDate.toFormat('dd/LL-yyyy'),
                 end_date: maxEndDate.toFormat('dd/LL-yyyy')
-            }, true);
+            }, true, this.instance);
 
             const [timeSlotsData, buildingData] = await Promise.all([
                 fetch(urlFreeTime).then(res => res.json()),
@@ -1468,15 +1471,15 @@ class PECalendar {
         let bookingUrl = phpGWLink('bookingfrontend/', {
             menuaction: 'bookingfrontend.uibooking.info_json',
             ids: [...bookings],
-        }, true);
+        }, true, this.instance);
         let eventUrl = phpGWLink('bookingfrontend/', {
             menuaction: 'bookingfrontend.uievent.info_json',
             ids: [...events],
-        }, true);
+        }, true, this.instance);
         let allocationUrl = phpGWLink('bookingfrontend/', {
             menuaction: 'bookingfrontend.uiallocation.info_json',
             ids: [...allocations],
-        }, true);
+        }, true, this.instance);
 
         const res = await Promise.all([
             (await fetch(bookingUrl)).json(),
@@ -1504,7 +1507,7 @@ class PECalendar {
                 menuaction: 'bookingfrontend.uiparticipant.ical',
                 reservation_type: event.type,
                 reservation_id: event.id,
-            })
+            }, false, this.instance)
         };
         switch (event.type) {
             case 'booking':
@@ -1742,19 +1745,19 @@ if (globalThis['ko']) {
                         <div class="info-types">
                             <div class="type text-small">
                                 <img class="event-filter"
-                                     src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}"
+                                     src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false, this.instance)}"
                                      alt="ellipse">
                                 <trans>bookingfrontend:event</trans>
                             </div>
                             <div class="type text-small">
                                 <img class="booking-filter"
-                                     src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}"
+                                     src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false, this.instance)}"
                                      alt="ellipse">
                                 <trans>bookingfrontend:booking</trans>
                             </div>
                             <div class="type text-small">
                                 <img class="allocation-filter"
-                                     src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false)}"
+                                     src="${phpGWLink('phpgwapi/templates/bookingfrontend_2/svg/ellipse.svg', {}, false, this.instance)}"
                                      alt="ellipse">
                                 <trans>bookingfrontend:allocation</trans>
                             </div>
@@ -1968,7 +1971,7 @@ if (globalThis['ko']) {
                         <div class="time-slot-button">
                             <!-- ko if: $data.overlap === false -->
                             <a class="pe-btn  pe-btn-secondary pe-btn--small link-text "
-                               data-bind="attr: {href: phpGWLink('bookingfrontend/', $data.applicationLink, false)}">Velg
+                               data-bind="attr: {href: phpGWLink('bookingfrontend/', $data.applicationLink, false, this.instance)}">Velg
                             </a>
 
                             <!-- /ko -->
@@ -2038,4 +2041,37 @@ function getCookie(cname) {
         }
     }
     return "";
+}
+/**
+ * Emulate phpGW's link function
+ *
+ * @param String strURL target URL
+ * @param Object oArgs Query String args as associate array object
+ * @param bool bAsJSON ask that the request be returned as JSON (experimental feature)
+ * @param String baseURL (optional) Base URL to use instead of strBaseURL
+ * @returns String URL
+ */
+function phpGWLink(strURL, oArgs, bAsJSON, baseURL) {
+    // console.log(strBaseURL)
+    if (baseURL) {
+        const baseURLParts = (baseURL).split('/').filter(a => a !== '' && !a.includes('http'));
+        baseURL = '//'+baseURLParts.slice(0, baseURLParts.length - 1).join('/') + '/'; // Remove last element (file name)
+    }
+    const urlParts = (baseURL || strBaseURL).split('?');
+    let newURL = urlParts[0] + strURL + '?';
+
+    if (oArgs == null) {
+        oArgs = new Object();
+    }
+    for (const key in oArgs) {
+        newURL += key + '=' + oArgs[key] + '&';
+    }
+    if(urlParts[1]) {
+        newURL += urlParts[1];
+    }
+
+    if (bAsJSON) {
+        newURL += '&phpgw_return_as=json';
+    }
+    return newURL;
 }

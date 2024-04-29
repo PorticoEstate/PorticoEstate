@@ -3,6 +3,7 @@ import '../components/map-modal'
 import '../components/collapsable-text'
 import '../helpers/util';
 import '../helpers/withAfterRender';
+import {ApplicationCart} from "../components/application-cart";
 
 
 var booking_month_horizon = 2;

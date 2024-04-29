@@ -1,4 +1,7 @@
 import '../helpers/util';
+import {phpGWLink} from "../helpers/util";
+import "../components/application-cart";
+import {ModifyIds} from "../helpers/modifyIds";
 
 // Easier way of getting old value from KO on change
 ko.subscribable.fn.subscribeChanged = function (callback) {
@@ -489,7 +492,7 @@ class BookingSearch {
     updateBuildings = (town = null) => {
         this.data.buildings(
             this.data.towns_data().filter(item => town ? town.id === item.id : true)
-                .map(item => ({id: item.b_id, name: htmlDecode(item.b_name)}))
+                .map(item => ({id: item.b_id, name: htmlDecode(item.b_name), original_id: item.original_b_id, remoteInstance: item.remoteInstance}))
                 .sort((a, b) => a.name?.localeCompare(b.name, "no"))
         )
     }
@@ -509,8 +512,8 @@ class BookingSearch {
     }
 
     getTownFromBuilding = (buildings) => {
-        const ids = buildings.map(b => +b.id)
-        return this.data.towns_data().filter(t => ids.includes(+t.b_id));
+        const ids = buildings.map(b => b.id)
+        return this.data.towns_data().filter(t => ids.includes(t.b_id));
     }
 
     cleanTownName = (townName) => {
@@ -558,6 +561,8 @@ class BookingSearch {
                     menuaction: 'bookingfrontend.uibuilding.show',
                     id: buildings[0].id
                 })
+                console.log(resource.name, buildings)
+
                 // language=HTML
                 append.push(`
                             <div class="col-12 mb-4">
@@ -565,11 +570,11 @@ class BookingSearch {
                                     <button class="js-slidedown-toggler slidedown__toggler" type="button" aria-expanded="false">
                                         <span><div class="fa-solid fa-layer-group"></div> ${resource.name}</span>
                                         <span class="slidedown__toggler__info">
-                ${joinWithDot([`<span class="text-overline">${joinWithDot(towns.map(t => this.cleanTownName(t.name)))}</span>`, ...buildings.map(b => {
+                ${joinWithDot([resource.remoteInstance?.name ? `<span class="text-overline">${resource.remoteInstance?.name}</span>`: '',`<span class="text-overline">${joinWithDot(towns.map(t => this.cleanTownName(t.name)))}</span>`, ...buildings.map(b => {
                     const buildingUrl = phpGWLink('bookingfrontend/', {
                         menuaction: 'bookingfrontend.uibuilding.show',
-                        id: b.id
-                    })
+                        id: 'original_id' in b ? b.original_id : b.id
+                    }, false, b.remoteInstance?.webservicehost  || undefined)
                     return `<a href="${buildingUrl}" class="link-text link-text-primary"><i class="fa-solid fa-location-dot"></i>${b.name}</a>`
                 })])}
             </span>
@@ -587,8 +592,9 @@ class BookingSearch {
                                                 ${description_text}
                                             </p>
                                         </div>
-                                        <div id="${calendarId}" class="calendar" data-building-id="${buildings[0].id}"
-                                             data-resource-id="${resource.id}"
+                                        <div id="${calendarId}" class="calendar" data-building-id="${buildings[0].original_id || buildings[0].id}"
+                                             data-resource-id="${resource.original_id || resource.id}"
+                                             data-instance="${resource.remoteInstance?.webservicehost || ''}"
                                              data-date="${getDateFromSearch(this.data.date())}"></div>
                                     </div>
                                 </div>
@@ -752,6 +758,8 @@ class Search {
 
     constructor() {
         const searchEl = document.getElementById("search-header");
+        console.log(remote_search)
+
         ko.cleanNode(searchEl);
         ko.applyBindings(this.ko_search, searchEl);
 
@@ -784,47 +792,80 @@ class Search {
 
     fetchData = () => {
         const self = this;
-        const url = phpGWLink('bookingfrontend/', {
-            menuaction: 'bookingfrontend.uisearch.get_search_data_all',
-            length: -1
-        }, true);
-        $.ajax({
-            url,
-            success: response => {
-                // console.log(response);
-                self.data = {...self.data, ...response};
 
-                self.booking.data.building_resources(response.building_resources);
-                self.booking.data.towns_data(sortOnName(response.towns));
-                self.booking.data.activities(sortOnName(self.data.activities));
-                self.booking.data.resources(sortOnName(self.data.resources.map(resource => ({
-                    ...resource,
-                    name: htmlDecode(resource.name)
-                }))));
-                self.booking.data.facilities(sortOnName(self.data.facilities.map(facility => ({
-                    ...facility,
-                    name: htmlDecode(facility.name)
-                }))));
-                self.booking.data.resource_categories(sortOnName(self.data.resource_categories))
-                self.booking.data.resource_facilities(self.data.resource_facilities)
-                self.booking.data.resource_activities(self.data.resource_activities)
-                self.booking.data.resource_category_activity(self.data.resource_category_activity);
+        const promises = [
+            fetch(phpGWLink('bookingfrontend/', {
+                menuaction: 'bookingfrontend.uisearch.get_search_data_all',
+                length: -1
+            }, true)) // Fetch local data
+                .then(response => response.json()),
+            ...remote_search.map(remote => {
+                const remoteUrl = phpGWLink('bookingfrontend/', {
+                    menuaction: 'bookingfrontend.uisearch.get_search_data_all',
+                    length: -1
+                }, true, remote.webservicehost);
+                return fetch(remoteUrl) // Fetch remote data
+                    .then(response => response.json())
+                    .then(data => ModifyIds(data, remote))
+            })
+        ];
 
-                self.event.data.events(self.data.events);
+        Promise.all(promises).then(responses => {
+            console.log(responses);
+            // Combine local and remote data
+            const combinedData = responses.reduce((acc, data, indx) => {
+                if(indx === 0 ){
+                    return acc;
+                }
+                return {
+                    ...acc,
+                    activities: [...acc.activities, ...data.activities],
+                    buildings: [...acc.buildings, ...data.buildings],
+                    building_resources: [...acc.building_resources, ...data.building_resources],
+                    facilities: [...acc.facilities, ...data.facilities],
+                    resources: [...acc.resources, ...data.resources],
+                    resource_activities: [...acc.resource_activities, ...data.resource_activities],
+                    resource_facilities: [...acc.resource_facilities, ...data.resource_facilities],
+                    resource_categories: [...acc.resource_categories, ...data.resource_categories],
+                    resource_category_activity: [...acc.resource_category_activity, ...data.resource_category_activity],
+                    towns: [...acc.towns, ...data.towns],
+                    organizations: [...acc.organizations, ...data.organizations],
+                };
 
-                self.organization.data.activities(sortOnName(self.data.activities.map(activity => ({
-                    ...activity,
-                    name: htmlDecode(activity.name)
-                }))))
-                self.organization.data.organizations(self.data.organizations.map(organization => ({
-                    ...organization,
-                    name: htmlDecode(organization.name)
-                })));
-            },
-            error: error => {
-                console.log(error);
-            }
-        })
+            }, responses[0]); // Use first response as base
+
+            // Update data and observables
+            self.data = {...self.data, ...combinedData};
+
+            self.booking.data.building_resources(combinedData.building_resources);
+            self.booking.data.towns_data(sortOnName(combinedData.towns));
+            self.booking.data.activities(sortOnName(self.data.activities));
+            self.booking.data.resources(sortOnName(self.data.resources.map(resource => ({
+                ...resource,
+                name: htmlDecode(resource.name)
+            }))));
+            self.booking.data.facilities(sortOnName(self.data.facilities.map(facility => ({
+                ...facility,
+                name: htmlDecode(facility.name)
+            }))));
+            self.booking.data.resource_categories(sortOnName(self.data.resource_categories));
+            self.booking.data.resource_facilities(self.data.resource_facilities);
+            self.booking.data.resource_activities(self.data.resource_activities);
+            self.booking.data.resource_category_activity(self.data.resource_category_activity);
+
+            self.event.data.events(self.data.events);
+
+            self.organization.data.activities(sortOnName(self.data.activities.map(activity => ({
+                ...activity,
+                name: htmlDecode(activity.name)
+            }))));
+            self.organization.data.organizations(self.data.organizations.map(organization => ({
+                ...organization,
+                name: htmlDecode(organization.name)
+            })));
+        }).catch(error => {
+            console.log(error);
+        });
     }
 
 
@@ -992,3 +1033,4 @@ function getCookie(cname) {
     }
     return "";
 }
+

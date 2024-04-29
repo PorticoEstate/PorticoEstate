@@ -376,7 +376,7 @@ HTML;
 								$my_assigned_controls_HTML .= ""
 									. "<td>$_link</td>"
 									. "<td>{$date_str}</td>"
-									. "<td>{$my_control['title']}</td>"
+									. "<td>" . strip_tags($my_control['description']). "</td>"
 									. "<td>{$location_name}</td>"
 						//			. "<td>{$control_area_name}</td>"
 									. "";
@@ -417,7 +417,7 @@ HTML;
 								$my_assigned_controls_HTML .= ""
 									. "<td>$_link</td>"
 									. "<td>$date_str</td>"
-									. "<td>{$my_control['title']}</td>"
+									. "<td>" . strip_tags($my_control['description']). "</td>"
 									. "<td>{$location_name}</td>"
 							//		. "<td>{$control_area_name}</td>"
 									. "";
@@ -436,7 +436,7 @@ HTML;
 
 							$my_assigned_controls_HTML .= ""
 								. "<td><a href='$link'><div class='date'>{$date_str}</div></a></td>"
-								. "<td>{$my_control['title']}</td>"
+								. "<td>" . strip_tags($my_control['description']). "</td>"
 								. "<td>{$location_name}</td>"
 								. "<td>{$control_area_name}</td>";
 						}

@@ -2,6 +2,10 @@ import '../components/time-picker';
 import '../components/time-slot-pill';
 import '../components/map-modal';
 import '../helpers/util';
+import {CreateUrlParams} from "../helpers/formatting";
+
+import {ApplicationCart} from "../components/application-cart";
+
 
 /* global direct_booking */
 var application;
@@ -23,12 +27,12 @@ function applicationModel() {
     self.translationObservable = globalThis['translations'];
     self.building_id = ko.observable();
     self.showErrorMessages = ko.observable(false);
-    if (document.getElementById("applications-cart-content")) {
-
-        self.applicationCartItems = ko.computed(function () {
-            return bc.applicationCartItems();
-        });
-    }
+    // if (document.getElementById("applications-cart-content")) {
+    //
+    //     self.applicationCartItems = ko.computed(function () {
+    //         return bc.applicationCartItems();
+    //     });
+    // }
     self.formStep = ko.observable(0)
 
 
