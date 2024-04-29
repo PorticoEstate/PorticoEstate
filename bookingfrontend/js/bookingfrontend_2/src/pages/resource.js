@@ -1,6 +1,7 @@
 import '../components/light-box'
 import '../components/collapsable-text'
 import '../helpers/util';
+import {ApplicationCart} from "../components/application-cart";
 
 
 var booking_month_horizon = 2;

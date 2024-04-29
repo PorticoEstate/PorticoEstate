@@ -15,11 +15,12 @@ const createJsSlidedowns = () => {
                     const buildingId = calendar.data('building-id');
                     const resourceId = calendar.data('resource-id');
                     const dateString = calendar.data('date');
+                    const instance = calendar.data('instance');
 
 
                     // Create and append the new child element to the calendar
                     let newCalendarChild = $('<pe-calendar>', {
-                        'params': `building_id: ${buildingId}, resource_id: ${resourceId}, dateString: '${dateString}'`
+                        'params': `building_id: ${buildingId}, resource_id: ${resourceId}, dateString: '${dateString}', instance: '${instance}'`
                     });
 
                     calendar.append(newCalendarChild);

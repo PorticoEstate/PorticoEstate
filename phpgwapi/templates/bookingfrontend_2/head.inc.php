@@ -440,7 +440,9 @@ HTML;
       </div>
       <ul class="list-unstyled navbar__section__links">
         <li><a href="{$about}">{$what_is_aktiv_kommune}</a></li>
-        <li><a href="{$faq}">FAQ</a></li>
+        <li><a href="{$faq}"><i class="fa-solid fa-clipboard"></i><span class="badge badge-light">2</span>
+  </span>
+</a></li>
       </ul>
       <!--button type="button" class="pe-btn pe-btn-primary py-3">Logg inn</button-->
     </div>
