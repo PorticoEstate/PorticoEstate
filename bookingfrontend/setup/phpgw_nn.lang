@@ -615,3 +615,6 @@ hours	bookingfrontend	nn	Timar
 total	bookingfrontend	nn	Total
 minute	bookingfrontend	nn	Minutt
 days	bookingfrontend	nn	Dagar
+continue	bookingfrontend	nn	Fortsett
+billing	bookingfrontend	nn	Fakturering
+
