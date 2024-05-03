@@ -190,8 +190,7 @@ HTML;
 		case 'bookingfrontend':
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']	 = 'bookingfrontend';
 			break;
-		default:
-			$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set']	 = 'bookingfrontend';
+		default: // respect the global setting
 			break;
 	}
 
