@@ -368,9 +368,6 @@
                     case 'POST':
                         // Try to get the value from $_POST first
                         $value = $_POST[$var_name] ?? null;
-
-						/*
-						 * Tester som denne kan ha innvirkning på interaksjon med ID-porten
                         // If null, attempt to decode JSON from raw input
                         if (is_null($value)) {
                             // Verify Content-Type header
@@ -388,7 +385,6 @@
                                 // Handle error - unexpected Content-Type
                             }
                         }
-						*/
                         break;
 
                     case 'SERVER':
