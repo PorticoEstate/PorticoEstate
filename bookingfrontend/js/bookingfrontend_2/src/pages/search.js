@@ -561,6 +561,7 @@ class BookingSearch {
                     menuaction: 'bookingfrontend.uibuilding.show',
                     id: buildings[0].id
                 })
+                console.log(resource.name, buildings);
 
                 // language=HTML
                 append.push(`
@@ -572,7 +573,7 @@ class BookingSearch {
                 ${joinWithDot([resource.remoteInstance?.name ? `<span class="text-overline">${resource.remoteInstance?.name}</span>`: '',`<span class="text-overline">${joinWithDot(towns.map(t => this.cleanTownName(t.name)))}</span>`, ...buildings.map(b => {
                     const buildingUrl = phpGWLink('bookingfrontend/', {
                         menuaction: 'bookingfrontend.uibuilding.show',
-                        id: 'original_id' in b ? b.original_id : b.id
+                        id: 'original_id' in b && b.original_id !== undefined ? b.original_id : b.id
                     }, false, b.remoteInstance?.webservicehost  || undefined)
                     return `<a href="${buildingUrl}" class="link-text link-text-primary"><i class="fa-solid fa-location-dot"></i>${b.name}</a>`
                 })])}
