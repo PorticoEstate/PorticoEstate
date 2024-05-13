@@ -87,21 +87,39 @@ var Util = function ()
 }();
 
 
-export function phpGWLink(strURL, oArgs = {}, bAsJSON = false) {
-    var arURLParts = strBaseURL.split('?');
-    var strNewURL = arURLParts[0] + strURL + '?';
+/**
+ * Emulate phpGW's link function
+ *
+ * @param String strURL target URL
+ * @param Object oArgs Query String args as associate array object
+ * @param bool bAsJSON ask that the request be returned as JSON (experimental feature)
+ * @param String baseURL (optional) Base URL to use instead of strBaseURL
+ * @returns String URL
+ */
+export function phpGWLink(strURL, oArgs, bAsJSON, baseURL) {
+    // console.log(strBaseURL)
+    if (baseURL) {
+        const baseURLParts = (baseURL).split('/').filter(a => a !== '' && !a.includes('http'));
+        baseURL = '//'+baseURLParts.slice(0, baseURLParts.length - 1).join('/') + '/'; // Remove last element (file name)
+    }
+    const urlParts = (baseURL || strBaseURL).split('?');
+    let newURL = urlParts[0] + strURL + '?';
 
-    Object.entries(oArgs).forEach(([key, value]) => {
-        strNewURL += `${encodeURIComponent(key)}=${encodeURIComponent(value)}&`;
-    });
-
-    if (bAsJSON) {
-        strNewURL += 'phpgw_return_as=json&';
+    if (oArgs == null) {
+        oArgs = new Object();
+    }
+    for (const key in oArgs) {
+        newURL += key + '=' + oArgs[key] + '&';
+    }
+    if(urlParts[1]) {
+        newURL += urlParts[1];
     }
 
-    return strNewURL.slice(0, -1); // Remove the last '&' for cleanliness
+    if (bAsJSON) {
+        newURL += '&phpgw_return_as=json';
+    }
+    return newURL;
 }
-
 
 
 $(document).ready(function () {

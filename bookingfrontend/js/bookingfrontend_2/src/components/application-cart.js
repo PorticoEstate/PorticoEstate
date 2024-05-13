@@ -5,12 +5,17 @@ class ApplicationsCartModel {
         this.applicationCartItems = ko.observableArray([]);
         this.applicationCartItemsEmpty = ko.observable(false);
         this.visible = ko.observable(true);
+        this.cartElementExpanded = ko.observable(true);
         this.initializeCart();
     }
 
     initializeCart() {
         this.getApplicationsCartItems();
     }
+
+    toggleCartExpansion() {
+        this.cartElementExpanded(!this.cartElementExpanded());
+    };
 
     deleteItem(item) {
         console.log("got delete request")
@@ -36,8 +41,8 @@ class ApplicationsCartModel {
     updateCartItems(data) {
         const {list, total_sum} = data;
         if (total_sum) {
-            document.getElementById("total_sum").textContent = total_sum.toFixed(2);
-            document.getElementById("total_sum_block").style.display = 'block';
+            // document.getElementById("total_sum").textContent = total_sum.toFixed(2);
+            // document.getElementById("total_sum_block").style.display = 'block';
         }
 
         this.applicationCartItemsEmpty(list.length < 1);
@@ -70,9 +75,10 @@ class ApplicationsCartModel {
 
 let ApplicationCart = new ApplicationsCartModel();
 onDocumentReady(() => {
-    if (document.getElementById("applications-cart-content")) {
+    const elem = document.getElementById('application-cart-container') || document.getElementById("applications-cart-content");
+    if (elem) {
         console.log("INITIALISING CART")
-        ko.applyBindings(ApplicationCart, document.getElementById('application-cart-container'));
+        ko.applyBindings(ApplicationCart, elem);
     }
 })
 

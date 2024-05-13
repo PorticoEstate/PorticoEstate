@@ -441,6 +441,8 @@ HTML;
       <ul class="list-unstyled navbar__section__links">
         <li><a href="{$about}">{$what_is_aktiv_kommune}</a></li>
         <li><a href="{$faq}">FAQ</a></li>
+  </span>
+</a></li>
       </ul>
       <!--button type="button" class="pe-btn pe-btn-primary py-3">Logg inn</button-->
     </div>

@@ -272,6 +272,7 @@
     </div>
     <script>
         const landing_sections = JSON.parse(`<xsl:value-of select="landing_sections_json"/>`)
+        const remote_search = JSON.parse(`<xsl:value-of select="multi_domain_list"/>`)
     </script>
 </xsl:template>
 
