@@ -1097,8 +1097,7 @@
 						$fakturalinje['posttype'] = 'FL';
 						$fakturalinje['kundenr'] = $kundenr;
 						$fakturalinje['navn'] = $name;
-						$fakturalinje['deresref'] = $contact_name;
-
+						$fakturalinje['deresref'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $contact_name), 0, 40), 40, ' '); //40 chars long
 						$fakturalinje['adresse1'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $street), 0, 40), 40, ' '); //40 chars long
 						$fakturalinje['adresse2'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $city), 0, 40), 40, ' '); //40 chars long
 						$fakturalinje['postnr'] = str_pad(substr($zip_code, 0, 4), 4, ' '); //4 chars long
@@ -1111,12 +1110,13 @@
 							$fakturalinje['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
 						}
 
-						$fakturalinje['varenr']		 = iconv("utf-8", "ISO-8859-1//TRANSLIT", $_article_code);
+						$fakturalinje['varenr']		 = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $_article_code), 0 ,4), 4, '0', STR_PAD_LEFT);
+
 						$fakturalinje['lopenr']		 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
 						$fakturalinje['pris']		 = str_pad($pris_inkl_mva * 100, 8, '0', STR_PAD_LEFT) . ' ';
-						$fakturalinje['grunnlag']	 = str_pad($order_line['quantity'], 8, '0', STR_PAD_LEFT);//'000000001'; // antall
+						$fakturalinje['grunnlag']	 = str_pad($order_line['quantity'] * 100, 9, '0', STR_PAD_LEFT);//'000000100'; // antall. De 2 siste posisjoner er desimaler.
 						$fakturalinje['belop']		 = str_pad(($order_line['amount'] + $order_line['tax']) * 100, 10, '0', STR_PAD_LEFT) . ' ';
-						$fakturalinje['mvakode']	 = str_pad($order_line['tax_code'], 3, '0');
+						$fakturalinje['mvakode']	 = str_pad($order_line['tax_code'], 3, ' ', STR_PAD_LEFT);
 
 						#				$fakturalinje['saksnr'] = ;
 
@@ -1135,7 +1135,7 @@
 							$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
 						}
 
-						$linjetekst['varenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $_article_code), 4, '0', STR_PAD_LEFT);
+						$linjetekst['varenr']	 = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $_article_code), 0 ,4), 4, '0', STR_PAD_LEFT);
 						$linjetekst['lopenr']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
 						$linjetekst['linjenr']	 = str_pad($linjenr, 2, '0', STR_PAD_LEFT);
 						$linjetekst['tekst']	 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $article_name), 50, ' ');
@@ -1155,8 +1155,7 @@
 					$fakturalinje['posttype'] = 'FL';
 					$fakturalinje['kundenr'] = $kundenr;
 					$fakturalinje['navn'] = $name;
-					$fakturalinje['deresref'] = $contact_name;
-
+					$fakturalinje['deresref'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $contact_name), 0, 40), 40, ' '); //40 chars long
 
 					$fakturalinje['adresse1']	 = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $street), 0, 40), 40, ' '); //40 chars long
 					$fakturalinje['adresse2']	 = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $city), 0, 40), 40, ' '); //40 chars long
@@ -1170,10 +1169,11 @@
 						$fakturalinje['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
 					}
 
-					$fakturalinje['varenr']		 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']), 4, '0', STR_PAD_LEFT);
+					$fakturalinje['varenr']		 = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']), 0 ,4), 4, '0', STR_PAD_LEFT);
+
 					$fakturalinje['lopenr']		 = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr[$kundenr]), 2, '0', STR_PAD_LEFT);
 					$fakturalinje['pris']		 = str_pad($reservation['cost'] * 100, 8, '0', STR_PAD_LEFT) . ' ';
-					$fakturalinje['grunnlag']	 = '000000001';
+					$fakturalinje['grunnlag']	 = '000000100';//De 2 siste posisjoner er desimaler.
 					$fakturalinje['belop']		 = str_pad($reservation['cost'] * 100, 10, '0', STR_PAD_LEFT) . ' ';
 					#				$fakturalinje['saksnr'] = ;
 
